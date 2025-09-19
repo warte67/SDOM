@@ -1,4 +1,8 @@
 /**
+ * @mainpage
+ * # SDOM Documentation
+ * [Back to SDOM on GitHub](https://github.com/warte67/SDOM)
+ *
  * @file SDOM.hpp
  * @brief Common include for SDOM-based projects. Defines macros and utilities.
  * @details
