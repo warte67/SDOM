@@ -1,0 +1,53 @@
+#!/bin/bash
+
+WORKSPACE="/home/jay/Documents/GitHub/SDOM2"
+
+if [ "$1" == "clean" ]; then
+    echo "Cleaning $WORKSPACE/build and $WORKSPACE/examples/test/build ..."
+    sudo rm -rf "$WORKSPACE/build" "$WORKSPACE/examples/test/build"
+fi
+
+# --- Build and install the API library ---
+cd "$WORKSPACE"
+
+if [ ! -d "include/SDOM2" ]; then
+    echo "ERROR: Headers should be in $WORKSPACE/include/SDOM2/"
+    exit 1
+fi
+
+if [ ! -d "build" ]; then
+    mkdir build
+fi
+cd build
+
+if [ ! -f "Makefile" ] || [ ../CMakeLists.txt -nt Makefile ]; then
+    if [ -f "../CMakeLists.txt" ]; then
+        echo "Running cmake..."
+        cmake -DCMAKE_INSTALL_PREFIX="$HOME/.local" ..
+    else
+        echo "Error: CMakeLists.txt not found in $WORKSPACE."
+        exit 1
+    fi
+fi
+
+make -j$(nproc)
+make install
+
+# --- Build the test application ---
+cd "$WORKSPACE/examples/test"
+
+if [ ! -d "build" ]; then
+    mkdir build
+fi
+cd build
+
+if [ ! -f "Makefile" ] || [ ../CMakeLists.txt -nt Makefile ]; then
+    if [ -f "../CMakeLists.txt" ]; then
+        cmake ..
+    else
+        echo "Error: CMakeLists.txt not found in $WORKSPACE/examples/test."
+        exit 1
+    fi
+fi
+
+make -j$(nproc)

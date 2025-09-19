@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Usage: ./rebuild [local]
+# If "local" is passed, install to $HOME/.local, else install system-wide to /usr/local
+# Make sure your headers are in include/SDOM2/ and your CMakeLists.txt uses:
+#   install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/SDOM2 DESTINATION include)
+
+BUILD_DIR="build"
+
+if [ "$1" == "local" ]; then
+    echo "Cleaning build artifacts..."
+    rm -rf "$BUILD_DIR"
+    mkdir "$BUILD_DIR"
+    cd "$BUILD_DIR"
+    echo "Running cmake for local install (Debug)..."
+    cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="$HOME/.local" ..
+    make -j$(nproc)
+    make install
+    exit 0
+fi
+
+# System-wide install (requires sudo for make install)
+rm -rf "$BUILD_DIR"
+mkdir "$BUILD_DIR"
+cd "$BUILD_DIR"
+echo "Running cmake for system install (Release)..."
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+make -j$(nproc)
+sudo make install

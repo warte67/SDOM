@@ -1,41 +1,78 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
+# Ignore build artifacts
+/build/*
+!/build/.gitkeep
 *.o
 *.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
+*.exe
+*.dll
 *.so
 *.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
 *.a
 *.lib
-
-# Executables
-*.exe
+*.pch
+*.pdb
+*.idb
+*.ilk
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+*.stackdump
 *.out
-*.app
+*.dep
+*.d
+*.dSYM/
+*.vcxproj*
+*.xcodeproj*
+*.cmake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+prog
 
-# debug information files
-*.dwo
+# Ignore IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore other temporary files
+*.~
+*.lock
+*.pyc
+*.pyo
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar
+*.gz
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.bak
+*.swp
+*.swo
+*.tmp
+*.log
+*.stackdump
+*.out
+*.dep
+*.d
+*.dSYM/
+*.vcxproj*
+*.xcodeproj*
+*.cmake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+build/error.log
