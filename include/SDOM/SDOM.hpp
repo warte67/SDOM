@@ -96,10 +96,10 @@
 #include <unordered_set>
 #include <vector>
 
-#include "SDOM2/json.hpp" // Include nlohmann/json.hpp    
-// #include "SDOM2/SDOM_SDL_Utils.hpp"
-#include "SDOM2/SDOM_CLR.hpp"
-// #include "SDOM2/SDOM_Core.hpp"
+#include <SDOM/json.hpp> // Include nlohmann/json.hpp
+// #include <SDOM/SDOM_SDL_Utils.hpp>
+#include <SDOM/SDOM_CLR.hpp>
+// #include <SDOM/SDOM_Core.hpp>
 
 /**
  * @namespace SDOM

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['object_20model_0',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]],
-  ['orange_1',['ORANGE',['../classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d',1,'CLR']]]
+  ['normal_0',['NORMAL',['../classCLR.html#ae6ec0e976684b36983d2325ee9bde918',1,'CLR']]]
 ];

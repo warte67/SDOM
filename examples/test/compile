@@ -33,6 +33,12 @@ fi
 make -j$(nproc)
 make install
 
+# --- Generate documentation with Doxygen ---
+if [ -f "$WORKSPACE/docs/Doxyfile" ]; then
+    echo "Running Doxygen from docs folder..."
+    (cd "$WORKSPACE/docs" && doxygen Doxyfile)
+fi
+
 # --- Build the test application ---
 cd "$WORKSPACE/examples/test"
 
