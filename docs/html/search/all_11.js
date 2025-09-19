@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['white_0',['WHITE',['../classCLR.html#ac31a33dfb8b903a027b48eb638fc21a4',1,'CLR']]]
+  ['underline_0',['UNDERLINE',['../classCLR.html#acc3a4f736db8118cef09f0f6000e6702',1,'CLR']]],
+  ['updates_1',['Progress Updates',['../md_progress.html#autotoc_md2',1,'']]]
 ];

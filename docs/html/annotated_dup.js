@@ -1,7 +1,7 @@
 var annotated_dup =
 [
-    [ "SDOM", null, [
-      [ "Exception", "classSDOM_1_1Exception.html", null ]
+    [ "SDOM", "namespaceSDOM.html", [
+      [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ]
     ] ],
-    [ "CLR", "classCLR.html", null ]
+    [ "CLR", "classCLR.html", "classCLR" ]
 ];

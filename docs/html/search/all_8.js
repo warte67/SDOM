@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['lt_5fblue_0',['LT_BLUE',['../classCLR.html#ac9c88a575b06a832e68fe8d62c45135c',1,'CLR']]],
-  ['lt_5fcyan_1',['LT_CYAN',['../classCLR.html#a659340034a5aa7b2149ccc1888ceb694',1,'CLR']]],
-  ['lt_5fgrn_2',['LT_GRN',['../classCLR.html#ab42517ec56b3dc265e62bf4702302266',1,'CLR']]]
+  ['indent_0',['indent',['../classCLR.html#a21785b8bf79fa4970182cdb2dcab57c8',1,'CLR']]],
+  ['indent_5fpop_1',['indent_pop',['../classCLR.html#ab68fec9e4864d10dfe4e06511f92375e',1,'CLR']]],
+  ['indent_5fpush_2',['indent_push',['../classCLR.html#a09a44b42634154b7f08e3529100d1fa0',1,'CLR']]],
+  ['italic_3',['ITALIC',['../classCLR.html#ae71613c60736bf456f5353d5e0b7f31b',1,'CLR']]]
 ];

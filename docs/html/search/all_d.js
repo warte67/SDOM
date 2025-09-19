@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['red_0',['RED',['../classCLR.html#a2ade273b4929536356e6a5a68242a596',1,'CLR']]],
-  ['reset_1',['RESET',['../classCLR.html#a3870d8fb9704714a9b5d35631a67be74',1,'CLR']]],
-  ['return_2',['RETURN',['../classCLR.html#a7a9eedeac52778653bca2160deea4e4d',1,'CLR']]],
-  ['reversed_3',['REVERSED',['../classCLR.html#a361b3fc2802281a419a6fa9205c0c548',1,'CLR']]]
+  ['pad_0',['pad',['../classCLR.html#a165534487bb664d3be544cf1db44c0d3',1,'CLR']]],
+  ['pink_1',['PINK',['../classCLR.html#ac38f58278763ecc6914fbbb61410dbc4',1,'CLR']]],
+  ['progress_20updates_2',['Progress Updates',['../md_progress.html#autotoc_md2',1,'']]],
+  ['progress_2emd_3',['progress.md',['../progress_8md.html',1,'']]],
+  ['project_20description_4',['Project Description',['../md_progress.html',1,'']]],
+  ['purple_5',['PURPLE',['../classCLR.html#aa4cc393e127a4f0b06e598beafa4cb3a',1,'CLR']]]
 ];

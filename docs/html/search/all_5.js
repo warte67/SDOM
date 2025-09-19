@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['get_5fterminal_5fsize_0',['get_terminal_size',['../classCLR.html#a6182f7adc3cbbec8d91ac83c948306d3',1,'CLR']]],
-  ['green_1',['GREEN',['../classCLR.html#a3003dd364e606e44a28d3bf3081f624c',1,'CLR']]],
-  ['grey_2',['GREY',['../classCLR.html#af89e905bfd2feb399c0b6fda7ea2ae07',1,'CLR']]]
+  ['fg_0',['fg',['../classCLR.html#accb58e6431fd7167e1899cfec937f49f',1,'CLR']]],
+  ['fg_5frgb_1',['fg_rgb',['../classCLR.html#a2c2e1040458c8b4f88be7b0e68999faa',1,'CLR']]]
 ];

@@ -1,10 +1,7 @@
 var searchData=
 [
-  ['sdl_20document_20object_20model_0',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]],
-  ['sdom_20documentation_1',['SDOM Documentation',['../index.html#autotoc_md0',1,'']]],
-  ['sdom_20simple_20sdl_20document_20object_20model_2',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]],
-  ['sdom_2ehpp_3',['SDOM.hpp',['../SDOM_8hpp.html',1,'']]],
-  ['sdom_5fclr_2ehpp_4',['SDOM_CLR.hpp',['../SDOM__CLR_8hpp.html',1,'']]],
-  ['simple_20sdl_20document_20object_20model_5',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]],
-  ['strike_6',['STRIKE',['../classCLR.html#a61c1a006f5888c15c2ad5c24d213ab1a',1,'CLR']]]
+  ['red_0',['RED',['../classCLR.html#a2ade273b4929536356e6a5a68242a596',1,'CLR']]],
+  ['reset_1',['RESET',['../classCLR.html#a3870d8fb9704714a9b5d35631a67be74',1,'CLR']]],
+  ['return_2',['RETURN',['../classCLR.html#a7a9eedeac52778653bca2160deea4e4d',1,'CLR']]],
+  ['reversed_3',['REVERSED',['../classCLR.html#a361b3fc2802281a419a6fa9205c0c548',1,'CLR']]]
 ];
