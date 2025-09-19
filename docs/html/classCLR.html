@@ -92,6 +92,9 @@ $(function(){initNavTree('classCLR.html','','classCLR-members'); });
 </div><!--header-->
 <div class="contents">
 
+<p>Static container for ANSI escape sequences and formatting helpers.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="SDOM__CLR_8hpp_source.html">SDOM_CLR.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
@@ -231,7 +234,10 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a1b26474bb6a91bd88c4178c827312818" id="r_a1b26474bb6a91bd88c4178c827312818"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b26474bb6a91bd88c4178c827312818">BG_WHITE</a> = &quot;\e[0;107m&quot;</td></tr>
 <tr class="memdesc:a1b26474bb6a91bd88c4178c827312818"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANSI escape sequence for white background.  <br /></td></tr>
 </table>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Static container for ANSI escape sequences and formatting helpers. </p>
+<p>Provides color and formatting utilities for terminal output. Cannot be instantiated. All members are static. See individual groups for details. </p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="a270a5369a80821f52e34a6be64f8ca89" name="a270a5369a80821f52e34a6be64f8ca89"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a270a5369a80821f52e34a6be64f8ca89">&#9670;&#160;</a></span>bg()</h2>
 
@@ -539,7 +545,7 @@ Static Public Attributes</h2></td></tr>
 <p>This function is not called within an output stream. It should be called directly. Example usage: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> width = 0, height = 0;</div>
 <div class="line"><a class="code hl_function" href="#a6182f7adc3cbbec8d91ac83c948306d3">CLR::get_terminal_size</a>(width, height);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;width=&quot;</span> &lt;&lt; width &lt;&lt; <span class="stringliteral">&quot;, height=&quot;</span> &lt;&lt; height &lt;&lt; std::endl;</div>
-<div class="ttc" id="aclassCLR_html_a6182f7adc3cbbec8d91ac83c948306d3"><div class="ttname"><a href="#a6182f7adc3cbbec8d91ac83c948306d3">CLR::get_terminal_size</a></div><div class="ttdeci">static void get_terminal_size(int &amp;width, int &amp;height)</div><div class="ttdoc">Gets the current terminal size (width and height).</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:225</div></div>
+<div class="ttc" id="aclassCLR_html_a6182f7adc3cbbec8d91ac83c948306d3"><div class="ttname"><a href="#a6182f7adc3cbbec8d91ac83c948306d3">CLR::get_terminal_size</a></div><div class="ttdeci">static void get_terminal_size(int &amp;width, int &amp;height)</div><div class="ttdoc">Gets the current terminal size (width and height).</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:234</div></div>
 </div><!-- fragment --> <dl class="section note"><dt>Note</dt><dd>Only works on supported platforms (Windows, Linux, macOS). </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

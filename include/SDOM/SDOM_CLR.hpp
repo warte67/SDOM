@@ -1,7 +1,4 @@
-/**
- * @file SDOM_CLR.hpp
- * @brief Static container for ANSI escape sequences for terminal text formatting and colorization.
- * @details
+/*** SDOM_CLR.hpp ***********
  *      _____ _      _____        _                 
  *     / ____| |    |  __ \      | |                
  *    | |    | |    | |__) |     | |__  _ __  _ __  
@@ -9,7 +6,13 @@
  *    | |____| |____| | \ \   _  | | | | |_) | |_) |
  *     \_____|______|_|  \_\ (_) |_| |_| .__/| .__/ 
  *                                     | |   | |    
- *                                     |_|   |_|    
+ *                                     |_|   |_|   
+ ***********/
+
+/**
+ * @file SDOM_CLR.hpp
+ * @brief Static container for ANSI escape sequences for terminal text formatting and colorization.
+ * @details
  *
  * Static container object. Cannot be instantiated.
  * Defines a set of ANSI escape sequences to colorize and format text in the terminal.
@@ -45,6 +48,12 @@
     #include <sys/ioctl.h>
 #endif // Windows/Linux
 
+/**
+ * @brief Static container for ANSI escape sequences and formatting helpers.
+ * @details
+ * Provides color and formatting utilities for terminal output. Cannot be instantiated.
+ * All members are static. See individual groups for details.
+ */
 class CLR
 {
 private:
