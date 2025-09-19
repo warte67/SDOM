@@ -2,6 +2,7 @@ var NAVTREEINDEX0 =
 {
 "SDOM_8hpp.html":[3,0,0,0,0],
 "SDOM_8hpp_source.html":[3,0,0,0,0],
+"SDOM__CLR_8hpp.html":[3,0,0,0,1],
 "SDOM__CLR_8hpp_source.html":[3,0,0,0,1],
 "annotated.html":[2,0],
 "classCLR.html":[2,0,1],

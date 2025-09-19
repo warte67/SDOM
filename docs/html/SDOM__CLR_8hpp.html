@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>SDOM - Simple SDL Document Object Model: /home/jay/Documents/GitHub/SDOM/include/SDOM Directory Reference</title>
+<title>SDOM - Simple SDL Document Object Model: /home/jay/Documents/GitHub/SDOM/include/SDOM/SDOM_CLR.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('dir_05baf848637e4bf91faedd6d79d06786.html','',''); });
+$(function(){initNavTree('SDOM__CLR_8hpp.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -88,18 +88,43 @@ $(function(){initNavTree('dir_05baf848637e4bf91faedd6d79d06786.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">SDOM Directory Reference</div></div>
+  <div class="headertitle"><div class="title">SDOM_CLR.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Static container for ANSI escape sequences for terminal text formatting and colorization.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;string&gt;</code><br />
+<code>#include &lt;SDL3/SDL.h&gt;</code><br />
+</div>
+<p><a href="SDOM__CLR_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-files" class="groupheader"><a id="files" name="files"></a>
-Files</h2></td></tr>
-<tr class="memitem:SDOM_2Ehpp" id="r_SDOM_2Ehpp"><td class="memItemLeft" align="right" valign="top"><a href="SDOM_8hpp_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="SDOM_8hpp.html">SDOM.hpp</a></td></tr>
-<tr class="memdesc:SDOM_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common include for SDOM-based projects. Defines macros and utilities. <br /></td></tr>
-<tr class="memitem:SDOM_5FCLR_2Ehpp" id="r_SDOM_5FCLR_2Ehpp"><td class="memItemLeft" align="right" valign="top"><a href="SDOM__CLR_8hpp_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="SDOM__CLR_8hpp.html">SDOM_CLR.hpp</a></td></tr>
-<tr class="memdesc:SDOM__CLR_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static container for ANSI escape sequences for terminal text formatting and colorization. <br /></td></tr>
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:CLR" id="r_CLR"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLR.html">CLR</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a8390de1c62e036e839ec8150711d6539" id="r_a8390de1c62e036e839ec8150711d6539"><td class="memItemLeft" align="right" valign="top"><a id="a8390de1c62e036e839ec8150711d6539" name="a8390de1c62e036e839ec8150711d6539"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>Byte</b>&#160;&#160;&#160;Uint8</td></tr>
+<tr class="memitem:abf4ef44c4c8719bd6d059ca8cdbe0fde" id="r_abf4ef44c4c8719bd6d059ca8cdbe0fde"><td class="memItemLeft" align="right" valign="top"><a id="abf4ef44c4c8719bd6d059ca8cdbe0fde" name="abf4ef44c4c8719bd6d059ca8cdbe0fde"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>Word</b>&#160;&#160;&#160;Uint16</td></tr>
+<tr class="memitem:ab7c54d61bd224727066e004b213ad482" id="r_ab7c54d61bd224727066e004b213ad482"><td class="memItemLeft" align="right" valign="top"><a id="ab7c54d61bd224727066e004b213ad482" name="ab7c54d61bd224727066e004b213ad482"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DWord</b>&#160;&#160;&#160;Uint32</td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Static container for ANSI escape sequences for terminal text formatting and colorization. </p>
+<hr  />
+<p> / ____| | | __ \ | | <br  />
+ | | | | | |__) | | |__ _ __ _ __ <br  />
+ | | | | | _ / | '_ | '_ | '_ \ | |____| |____| | \ \ _ | | | | |_) | |_) | _____|______|_| _\ (_) |_| |_| .__/| .__/ | | | | <br  />
+ |_| |_| <br  />
+</p>
+<p>Static container object. Cannot be instantiated. Defines a set of ANSI escape sequences to colorize and format text in the terminal. May require periodic fflush(stdout). See: <a href="https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences">https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences</a></p>
+<dl class="section author"><dt>Author</dt><dd>Jay Faries (warte67) </dd></dl>
+<dl class="section copyright"><dt>Copyright</dt><dd>GPL v3.0 License </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2025-09-19 </dd></dl>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

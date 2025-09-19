@@ -1,5 +1,7 @@
-/***  CLR.hpp  ****************************
- * 
+/**
+ * @file SDOM_CLR.hpp
+ * @brief Static container for ANSI escape sequences for terminal text formatting and colorization.
+ * @details
  *      _____ _      _____        _                 
  *     / ____| |    |  __ \      | |                
  *    | |    | |    | |__) |     | |__  _ __  _ __  
@@ -8,25 +10,16 @@
  *     \_____|______|_|  \_\ (_) |_| |_| .__/| .__/ 
  *                                     | |   | |    
  *                                     |_|   |_|    
- * 
- * 		(Static Container Object)
- * 		Cannot Be Instantiated
- * 
- * 		Defines a set of ansii escape sequences 
- * 		to be used to colorize and format text
- * 		in the terminal.
- * 
- *      Note: It may be required to periodically
- *          fflush(stdout);   
- * 
- *          /usr/bin/resize -s row col
- * 
- * 	https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
  *
- * Released under the GPL v3.0 License.
- * Original Author: Jay Faries (warte67)
+ * Static container object. Cannot be instantiated.
+ * Defines a set of ANSI escape sequences to colorize and format text in the terminal.
+ * May require periodic fflush(stdout).
+ * See: https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
  *
- ******************/
+ * @author Jay Faries (warte67)
+ * @copyright GPL v3.0 License
+ * @date 2025-09-19
+ */
 #pragma once
 
 #include <string>
