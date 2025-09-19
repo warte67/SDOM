@@ -30,28 +30,10 @@ var NAVTREE =
       [ "Progress Updates", "md_progress.html#autotoc_md2", null ],
       [ "ToDo:", "md_progress.html#autotoc_md3", null ]
     ] ],
-    [ "Deprecated List", "deprecated.html", null ],
-    [ "Namespaces", "namespaces.html", [
-      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
-      [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ],
-        [ "Typedefs", "namespacemembers_type.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ]
-      ] ]
-    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
-      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
-      [ "Class Members", "functions.html", [
-        [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", null ],
-        [ "Typedefs", "functions_type.html", null ],
-        [ "Enumerations", "functions_enum.html", null ],
-        [ "Related Symbols", "functions_rela.html", null ]
-      ] ]
+      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ]
     ] ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ]
@@ -61,10 +43,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"SDOM_8hpp.html",
-"classdetail_1_1iter__impl.html#a94108d1a7563e103534f23eb5c1ee175",
-"functions_func_b.html",
-"structdetail_1_1is__constructible__tuple.html"
+"SDOM_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
