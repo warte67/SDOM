@@ -3,6 +3,8 @@
 [![License](https://img.shields.io/badge/license-ZLIB-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-Doxygen-blue)](https://warte67.github.io/SDOM/)
 
+https://warte67.github.io/SDOM/docs/html/
+
 ## Overview
 The SDOM Framework is a modern C++23 library designed to provide a Document Object Model (DOM) abstraction for SDL3 applications. It enables developers to create and manage graphical user interfaces (GUIs) and interactive elements in a structured, hierarchical manner. The framework is ideal for game development, prototyping, and other cross-platform applications requiring a robust and extensible GUI system. SDOM is designed to be more data-driven, allowing GUI elements to be configured via `.json` files or through the use of initialization structures. This approach enables easier customization, dynamic UI generation, and better separation of logic and presentation.
 
