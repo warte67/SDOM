@@ -141,6 +141,229 @@ namespace SDOM
     // static const SDL_Window* getWindow() { return Core::instance().getWindow(); }
     // static const SDL_Texture* getTexture() { return Core::instance().getTexture(); }
 
+
+    /**
+     * @enum AnchorPoint
+     * @brief Reference points for anchoring child edges to a parent.
+     * @details
+     * Specifies where each edge of a child display object should be anchored
+     * relative to its parent, enabling flexible positioning and layout.
+     * 
+     * The main anchor points correspond to corners, edges, and the center of the parent.
+     * Aliases are provided for convenience and readability.
+     */
+    enum class AnchorPoint : uint8_t
+    {
+        // Main anchor points
+        DEFAULT         = 0,    ///< Default anchor point (same as TOP_LEFT)
+        TOP_LEFT        = 0,    ///< Top-left corner of the parent
+        TOP_CENTER      = 1,    ///< Top-center edge of the parent
+        TOP_RIGHT       = 2,    ///< Top-right corner of the parent
+        MIDDLE_LEFT     = 3,    ///< Middle-left edge of the parent
+        MIDDLE_CENTER   = 4,    ///< Center of the parent
+        MIDDLE_RIGHT    = 5,    ///< Middle-right edge of the parent
+        BOTTOM_LEFT     = 6,    ///< Bottom-left corner of the parent
+        BOTTOM_CENTER   = 7,    ///< Bottom-center edge of the parent
+        BOTTOM_RIGHT    = 8,    ///< Bottom-right corner of the parent
+
+        /// @name Aliases for anchor points
+        ///@{
+        LEFT            = MIDDLE_LEFT,   ///< Alias for MIDDLE_LEFT
+        CENTER          = MIDDLE_CENTER, ///< Alias for MIDDLE_CENTER
+        RIGHT           = MIDDLE_RIGHT,  ///< Alias for MIDDLE_RIGHT
+        TOP             = TOP_CENTER,    ///< Alias for TOP_CENTER
+        MIDDLE          = MIDDLE_CENTER, ///< Alias for MIDDLE_CENTER
+        BOTTOM          = BOTTOM_CENTER, ///< Alias for BOTTOM_CENTER
+        LEFT_TOP        = TOP_LEFT,      ///< Alias for TOP_LEFT
+        CENTER_TOP      = TOP_CENTER,    ///< Alias for TOP_CENTER
+        RIGHT_TOP       = TOP_RIGHT,     ///< Alias for TOP_RIGHT
+        LEFT_MIDDLE     = MIDDLE_LEFT,   ///< Alias for MIDDLE_LEFT
+        CENTER_MIDDLE   = MIDDLE_CENTER, ///< Alias for MIDDLE_CENTER
+        RIGHT_MIDDLE    = MIDDLE_RIGHT,  ///< Alias for MIDDLE_RIGHT
+        LEFT_BOTTOM     = BOTTOM_LEFT,   ///< Alias for BOTTOM_LEFT
+        CENTER_BOTTOM   = BOTTOM_CENTER, ///< Alias for BOTTOM_CENTER
+        RIGHT_BOTTOM    = BOTTOM_RIGHT,  ///< Alias for BOTTOM_RIGHT
+        ///@}
+    };
+
+    /**
+     * @brief Maps AnchorPoint enum values to their corresponding string names.
+     * @details
+     * Used for serialization, debugging, and user interface display.
+     * Only the main anchor points are included; aliases are omitted for clarity.
+     *
+     * Example usage:
+     *   std::string name = anchorPointToString_.at(AnchorPoint::TOP_LEFT); // "top_left"
+     */
+    inline static const std::unordered_map<AnchorPoint, std::string> anchorPointToString_ = {
+        { AnchorPoint::TOP_LEFT,     "top_left" },
+        { AnchorPoint::TOP_CENTER,   "top_center" },
+        { AnchorPoint::TOP_RIGHT,    "top_right" },
+        { AnchorPoint::MIDDLE_LEFT,  "middle_left" },
+        { AnchorPoint::MIDDLE_CENTER,"middle_center" },
+        { AnchorPoint::MIDDLE_RIGHT, "middle_right" },
+        { AnchorPoint::BOTTOM_LEFT,  "bottom_left" },
+        { AnchorPoint::BOTTOM_CENTER,"bottom_center" },
+        { AnchorPoint::BOTTOM_RIGHT, "bottom_right" }
+    };
+
+    /**
+     * @brief Maps string names to AnchorPoint enum values.
+     * @details
+     * Supports multiple naming conventions for flexibility and user convenience:
+     * - Standard names (e.g., "top_left", "center")
+     * - Reversed keys (e.g., "center_middle", "right_top")
+     * - Hyphenated names (e.g., "top-left", "bottom-center")
+     * - Boolean OR style (e.g., "top|left", "center|bottom")
+     *
+     * Supported mappings:
+     * | String Key        | AnchorPoint Value   |
+     * |------------------|--------------------|
+     * | "default"        | DEFAULT            |
+     * | "left"           | LEFT               |
+     * | "center"         | CENTER             |
+     * | "right"          | RIGHT              |
+     * | "top"            | TOP                |
+     * | "top_left"       | TOP_LEFT           |
+     * | "top_center"     | TOP_CENTER         |
+     * | "top_right"      | TOP_RIGHT          |
+     * | "middle"         | MIDDLE             |
+     * | "middle_left"    | MIDDLE_LEFT        |
+     * | "middle_center"  | MIDDLE_CENTER      |
+     * | "middle_right"   | MIDDLE_RIGHT       |
+     * | "bottom"         | BOTTOM             |
+     * | "bottom_left"    | BOTTOM_LEFT        |
+     * | "bottom_center"  | BOTTOM_CENTER      |
+     * | "bottom_right"   | BOTTOM_RIGHT       |
+     * | "center_middle"  | MIDDLE_CENTER      |
+     * | "right_middle"   | MIDDLE_RIGHT       |
+     * | "left_middle"    | MIDDLE_LEFT        |
+     * | "center_top"     | TOP_CENTER         |
+     * | "right_top"      | TOP_RIGHT          |
+     * | "left_top"       | TOP_LEFT           |
+     * | "center_bottom"  | BOTTOM_CENTER      |
+     * | "right_bottom"   | BOTTOM_RIGHT       |
+     * | "left_bottom"    | BOTTOM_LEFT        |
+     *
+     * Example usage:
+     *   AnchorPoint ap = stringToAnchorPoint_.at("center_middle"); // AnchorPoint::MIDDLE_CENTER
+     */
+    inline static const std::unordered_map<std::string, AnchorPoint> stringToAnchorPoint_ = {
+        /// @name Standard names
+        ///@{
+        { "default",        AnchorPoint::DEFAULT },
+        { "left",           AnchorPoint::LEFT },
+        { "center",         AnchorPoint::CENTER },
+        { "right",          AnchorPoint::RIGHT },
+        { "top",            AnchorPoint::TOP },
+        { "top_left",       AnchorPoint::TOP_LEFT },
+        { "top_center",     AnchorPoint::TOP_CENTER },
+        { "top_right",      AnchorPoint::TOP_RIGHT },
+        { "middle",         AnchorPoint::MIDDLE },
+        { "middle_left",    AnchorPoint::MIDDLE_LEFT },
+        { "middle_center",  AnchorPoint::MIDDLE_CENTER },
+        { "middle_right",   AnchorPoint::MIDDLE_RIGHT },
+        { "bottom",         AnchorPoint::BOTTOM },
+        { "bottom_left",    AnchorPoint::BOTTOM_LEFT },
+        { "bottom_center",  AnchorPoint::BOTTOM_CENTER },
+        { "bottom_right",   AnchorPoint::BOTTOM_RIGHT },
+        ///@}
+
+        /// @name Reversed keys for user convenience
+        ///@{
+        { "center_middle",  AnchorPoint::MIDDLE_CENTER },
+        { "right_middle",   AnchorPoint::MIDDLE_RIGHT },
+        { "left_middle",    AnchorPoint::MIDDLE_LEFT },
+        { "center_top",     AnchorPoint::TOP_CENTER },
+        { "right_top",      AnchorPoint::TOP_RIGHT },
+        { "left_top",       AnchorPoint::TOP_LEFT },
+        { "center_bottom",  AnchorPoint::BOTTOM_CENTER },
+        { "right_bottom",   AnchorPoint::BOTTOM_RIGHT },
+        { "left_bottom",    AnchorPoint::BOTTOM_LEFT },
+        ///@}
+
+        /// @name Hyphenated names
+        ///@{
+        { "top-left",       AnchorPoint::TOP_LEFT },
+        { "top-center",     AnchorPoint::TOP_CENTER },
+        { "top-right",      AnchorPoint::TOP_RIGHT },
+        { "middle-left",    AnchorPoint::MIDDLE_LEFT },
+        { "middle-center",  AnchorPoint::MIDDLE_CENTER },
+        { "middle-right",   AnchorPoint::MIDDLE_RIGHT },
+        { "bottom-left",    AnchorPoint::BOTTOM_LEFT },
+        { "bottom-center",  AnchorPoint::BOTTOM_CENTER },
+        { "bottom-right",   AnchorPoint::BOTTOM_RIGHT },
+        { "center-middle",  AnchorPoint::MIDDLE_CENTER },
+        { "right-middle",   AnchorPoint::MIDDLE_RIGHT },
+        { "left-middle",    AnchorPoint::MIDDLE_LEFT },
+        { "center-top",     AnchorPoint::TOP_CENTER },
+        { "right-top",      AnchorPoint::TOP_RIGHT },
+        { "left-top",       AnchorPoint::TOP_LEFT },
+        { "center-bottom",  AnchorPoint::BOTTOM_CENTER },
+        { "right-bottom",   AnchorPoint::BOTTOM_RIGHT },
+        { "left-bottom",    AnchorPoint::BOTTOM_LEFT },
+        ///@}
+
+        /// @name Boolean OR (|) style
+        ///@{
+        { "top|left",       AnchorPoint::TOP_LEFT },
+        { "top|center",     AnchorPoint::TOP_CENTER },
+        { "top|right",      AnchorPoint::TOP_RIGHT },
+        { "middle|left",    AnchorPoint::MIDDLE_LEFT },
+        { "middle|center",  AnchorPoint::MIDDLE_CENTER },
+        { "middle|right",   AnchorPoint::MIDDLE_RIGHT },
+        { "bottom|left",    AnchorPoint::BOTTOM_LEFT },
+        { "bottom|center",  AnchorPoint::BOTTOM_CENTER },
+        { "bottom|right",   AnchorPoint::BOTTOM_RIGHT },
+        { "center|middle",  AnchorPoint::MIDDLE_CENTER },
+        { "right|middle",   AnchorPoint::MIDDLE_RIGHT },
+        { "left|middle",    AnchorPoint::MIDDLE_LEFT },
+        { "center|top",     AnchorPoint::TOP_CENTER },
+        { "right|top",      AnchorPoint::TOP_RIGHT },
+        { "left|top",       AnchorPoint::TOP_LEFT },
+        { "center|bottom",  AnchorPoint::BOTTOM_CENTER },
+        { "right|bottom",   AnchorPoint::BOTTOM_RIGHT },
+        { "left|bottom",    AnchorPoint::BOTTOM_LEFT }
+        ///@}
+    }; // unordered_map stringToAnchorPoint_
+
+    /**
+     * @struct Bounds
+     * @brief Represents a rectangle's position and size in 2D space.
+     * @details
+     * Stores the coordinates of the left, top, right, and bottom edges.
+     * Provides utility methods for calculating width and height.
+     * Useful for layout, collision, and rendering calculations.
+     *
+     * @var Bounds::left
+     *   Left edge coordinate.
+     * @var Bounds::top
+     *   Top edge coordinate.
+     * @var Bounds::right
+     *   Right edge coordinate.
+     * @var Bounds::bottom
+     *   Bottom edge coordinate.
+     */
+    struct Bounds
+    {
+        float left;   ///< Left edge coordinate
+        float top;    ///< Top edge coordinate
+        float right;  ///< Right edge coordinate
+        float bottom; ///< Bottom edge coordinate
+
+        /**
+         * @brief Calculates the width of the bounds.
+         * @return Absolute width (right - left).
+         */
+        float width() const { return abs(right - left); }
+
+        /**
+         * @brief Calculates the height of the bounds.
+         * @return Absolute height (bottom - top).
+         */
+        float height() const { return abs(bottom - top); }
+    };
+
 } // namespace SDOM
 
 /**

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['indent_0',['indent',['../classCLR.html#a21785b8bf79fa4970182cdb2dcab57c8',1,'CLR']]],
-  ['indent_5fpop_1',['indent_pop',['../classCLR.html#ab68fec9e4864d10dfe4e06511f92375e',1,'CLR']]],
-  ['indent_5fpush_2',['indent_push',['../classCLR.html#a09a44b42634154b7f08e3529100d1fa0',1,'CLR']]]
+  ['height_0',['height',['../structSDOM_1_1Bounds.html#ab9e98bf49c90ef9ce80a0827784b8b71',1,'SDOM::Bounds']]],
+  ['hex_1',['hex',['../classCLR.html#a7affcef20a6ac743b04173d8717f03ba',1,'CLR']]]
 ];

@@ -38,8 +38,9 @@
 #ifndef __SDOM_IDataObject_HPP__
 #define __SDOM_IDataObject_HPP__
 
-#include <SDOM.hpp>
-#include <SDOM2/json.hpp> // Include nlohmann/json.hpp
+#include <SDOM/SDOM.hpp>
+#include <SDOM/json.hpp> // Include nlohmann/json.hpp
+#include <SDOM/SDOM_IUnitTest.hpp>
 
 namespace SDOM
 {
@@ -69,7 +70,7 @@ namespace SDOM
      * @author Jay Faries (warte67)
      * @copyright ZLIB License
      */
-    class IDataObject
+    class IDataObject : public SDOM::IUnitTest
     {
     public:
         using Getter = std::function<Json(const IDataObject&)>;
@@ -77,7 +78,8 @@ namespace SDOM
         using Command = std::function<void(IDataObject&, const Json&)>;
 
         /**
-         * @name Initialization and Lifecycle
+         * @name Virtual Methods
+         * @brief All virtual methods for this class.
          * @{
          */
 
@@ -91,7 +93,16 @@ namespace SDOM
          * @brief Called during object shutdown.
          */
         virtual void onQuit() = 0;
+        
+        /**
+         * @brief Runs unit tests for this data object.
+         * @details
+         * Called during startup or explicit unit test runs. Each object should validate its own state and behavior.
+         * @return true if all tests pass, false otherwise.
+         */
+        virtual bool onUnitTest() { return true; }
         /** @} */
+
 
         /**
          * @name Property System

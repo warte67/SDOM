@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['sdl_20document_20object_20model_0',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]],
-  ['sdom_20documentation_1',['SDOM Documentation',['../index.html#autotoc_md0',1,'']]],
-  ['sdom_20simple_20sdl_20document_20object_20model_2',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]],
-  ['simple_20sdl_20document_20object_20model_3',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]]
+  ['5_20extensibility_0',['5. Extensibility',['../md_extensible__factory.html#autotoc_md16',1,'']]]
 ];

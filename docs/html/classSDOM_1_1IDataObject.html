@@ -97,6 +97,16 @@ $(function(){initNavTree('classSDOM_1_1IDataObject.html','','classSDOM_1_1IDataO
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="SDOM__IDataObject_8hpp_source.html">SDOM_IDataObject.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for SDOM::IDataObject:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classSDOM_1_1IDataObject.png" usemap="#SDOM_3A_3AIDataObject_map" alt=""/>
+  <map id="SDOM_3A_3AIDataObject_map" name="SDOM_3A_3AIDataObject_map">
+<area href="classSDOM_1_1IUnitTest.html" title="Interface for unit testing objects in SDOM." alt="SDOM::IUnitTest" shape="rect" coords="0,0,138,24"/>
+<area href="classSDOM_1_1IDisplayObject.html" title="Abstract interface for displayable objects in SDOM." alt="SDOM::IDisplayObject" shape="rect" coords="0,112,138,136"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -106,11 +116,15 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">Initialization and Lifecycle</div></td></tr>
+<tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">Virtual Methods</div></td></tr>
+<tr><td colspan="2" class="ititle"><div class="groupText"><p>All virtual methods for this class. </p>
+</div></td></tr>
 <tr class="memitem:ae7bbc291ea72a2a99a1cce4c86e681cb" id="r_ae7bbc291ea72a2a99a1cce4c86e681cb"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae7bbc291ea72a2a99a1cce4c86e681cb">onInit</a> ()=0</td></tr>
 <tr class="memdesc:ae7bbc291ea72a2a99a1cce4c86e681cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called during object initialization.  <br /></td></tr>
 <tr class="memitem:a8254dbe0378d780dc2665f892430f543" id="r_a8254dbe0378d780dc2665f892430f543"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8254dbe0378d780dc2665f892430f543">onQuit</a> ()=0</td></tr>
 <tr class="memdesc:a8254dbe0378d780dc2665f892430f543"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called during object shutdown.  <br /></td></tr>
+<tr class="memitem:a895dd8cab0329b84dc3c399cd981cbe6" id="r_a895dd8cab0329b84dc3c399cd981cbe6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a895dd8cab0329b84dc3c399cd981cbe6">onUnitTest</a> ()</td></tr>
+<tr class="memdesc:a895dd8cab0329b84dc3c399cd981cbe6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this data object.  <br /></td></tr>
 <tr id="pub-methods-1" class="groupHeader"><td colspan="2"><div class="groupHeader">Property System</div></td></tr>
 <tr class="memitem:a5b1d9c9a136de640cd006fb6216592c9" id="r_a5b1d9c9a136de640cd006fb6216592c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b1d9c9a136de640cd006fb6216592c9">fromJson</a> (const <a class="el" href="namespaceSDOM.html#abe4862bfb43150a4d8e0ad71ffa3e1df">Json</a> &amp;json)</td></tr>
 <tr class="memdesc:a5b1d9c9a136de640cd006fb6216592c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates object state from a JSON object.  <br /></td></tr>
@@ -147,10 +161,10 @@ Static Public Member Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Register a command</span></div>
 <div class="line"><a class="code hl_function" href="#a2c43fdab7e27c9841cdd7d4569434c47">registerCommand</a>(<span class="stringliteral">&quot;reset&quot;</span>, [](IDataObject&amp; o, <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceSDOM.html#abe4862bfb43150a4d8e0ad71ffa3e1df">Json</a>&amp;) { /-- reset logic --/ });</div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html"><div class="ttname"><a href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a></div><div class="ttdoc">Core interface for all data-driven objects in SDOM.</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:73</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html"><div class="ttname"><a href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a></div><div class="ttdoc">Core interface for all data-driven objects in SDOM.</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:74</div></div>
 <div class="ttc" id="aclassSDOM_1_1IDataObject_html_a2c43fdab7e27c9841cdd7d4569434c47"><div class="ttname"><a href="#a2c43fdab7e27c9841cdd7d4569434c47">SDOM::IDataObject::registerCommand</a></div><div class="ttdeci">void registerCommand(const std::string &amp;name, Command cmd)</div><div class="ttdoc">Registers a command.</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.cpp:136</div></div>
 <div class="ttc" id="aclassSDOM_1_1IDataObject_html_a780b503a81e095549da8442c2e934db0"><div class="ttname"><a href="#a780b503a81e095549da8442c2e934db0">SDOM::IDataObject::registerProperty</a></div><div class="ttdeci">void registerProperty(const std::string &amp;name, Getter getter, Setter setter=nullptr)</div><div class="ttdoc">Registers a property with getter and optional setter.</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.cpp:108</div></div>
-<div class="ttc" id="anamespaceSDOM_html_abe4862bfb43150a4d8e0ad71ffa3e1df"><div class="ttname"><a href="namespaceSDOM.html#abe4862bfb43150a4d8e0ad71ffa3e1df">SDOM::Json</a></div><div class="ttdeci">nlohmann::json Json</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:47</div></div>
+<div class="ttc" id="anamespaceSDOM_html_abe4862bfb43150a4d8e0ad71ffa3e1df"><div class="ttname"><a href="namespaceSDOM.html#abe4862bfb43150a4d8e0ad71ffa3e1df">SDOM::Json</a></div><div class="ttdeci">nlohmann::json Json</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:48</div></div>
 </div><!-- fragment --><dl class="section author"><dt>Author</dt><dd>Jay Faries (warte67) </dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>ZLIB License </dd></dl>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
@@ -377,6 +391,8 @@ template&lt;typename T&gt; </div>
 <p>Called during object initialization. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if initialization succeeds, false otherwise. </dd></dl>
 
+<p>Implemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#aa1525c87c0e2d74e5838d69baba95ac6">SDOM::IDisplayObject</a>.</p>
+
 </div>
 </div>
 <a id="a8254dbe0378d780dc2665f892430f543" name="a8254dbe0378d780dc2665f892430f543"></a>
@@ -403,6 +419,40 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 
 <p>Called during object shutdown. </p>
+
+<p>Implemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#a498aba902813d239ba961bc21549f2b0">SDOM::IDisplayObject</a>.</p>
+
+</div>
+</div>
+<a id="a895dd8cab0329b84dc3c399cd981cbe6" name="a895dd8cab0329b84dc3c399cd981cbe6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a895dd8cab0329b84dc3c399cd981cbe6">&#9670;&#160;</a></span>onUnitTest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool SDOM::IDataObject::onUnitTest </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Runs unit tests for this data object. </p>
+<p>Called during startup or explicit unit test runs. Each object should validate its own state and behavior. </p><dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. </dd></dl>
+
+<p>Implements <a class="el" href="classSDOM_1_1IUnitTest.html#ae75010ac7569a312b4a7f29ba6764ad4">SDOM::IUnitTest</a>.</p>
+
+<p>Reimplemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>.</p>
 
 </div>
 </div>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['erase_5fin_5fdisplay_0',['erase_in_display',['../classCLR.html#aeb344a9e40554c7c24fef1407c84dd5d',1,'CLR']]],
-  ['erase_5fin_5fline_1',['erase_in_line',['../classCLR.html#a45a8aa226151649d6dcddd5d3a4bd817',1,'CLR']]],
-  ['exception_2',['Exception',['../classSDOM_1_1Exception.html#a52c9fa366c36fcb7fe48a1ac827a02a0',1,'SDOM::Exception']]]
+  ['cleanall_0',['cleanAll',['../classSDOM_1_1IDisplayObject.html#a5526639873d0e9dd7fab413ed8af90f7',1,'SDOM::IDisplayObject']]],
+  ['command_1',['command',['../classSDOM_1_1IDataObject.html#a9dccc6878d7b48f271a1319e61838c1e',1,'SDOM::IDataObject']]],
+  ['csr_5fpos_2',['csr_pos',['../classCLR.html#a7940da6fea15763023c0f8cbc8606a9d',1,'CLR']]]
 ];

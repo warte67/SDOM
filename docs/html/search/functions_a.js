@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['registercommand_0',['registerCommand',['../classSDOM_1_1IDataObject.html#a2c43fdab7e27c9841cdd7d4569434c47',1,'SDOM::IDataObject']]],
-  ['registerproperty_1',['registerProperty',['../classSDOM_1_1IDataObject.html#a780b503a81e095549da8442c2e934db0',1,'SDOM::IDataObject']]]
+  ['pad_0',['pad',['../classCLR.html#a165534487bb664d3be544cf1db44c0d3',1,'CLR']]],
+  ['printtree_1',['printTree',['../classSDOM_1_1IDisplayObject.html#a853fddbff86054aae8abc808cf55d1b6',1,'SDOM::IDisplayObject']]]
 ];

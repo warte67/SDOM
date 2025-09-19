@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['fg_0',['fg',['../classCLR.html#accb58e6431fd7167e1899cfec937f49f',1,'CLR']]],
-  ['fg_5frgb_1',['fg_rgb',['../classCLR.html#a2c2e1040458c8b4f88be7b0e68999faa',1,'CLR']]],
-  ['fromjson_2',['fromJson',['../classSDOM_1_1IDataObject.html#a5b1d9c9a136de640cd006fb6216592c9',1,'SDOM::IDataObject']]]
+  ['erase_5fin_5fdisplay_0',['erase_in_display',['../classCLR.html#aeb344a9e40554c7c24fef1407c84dd5d',1,'CLR']]],
+  ['erase_5fin_5fline_1',['erase_in_line',['../classCLR.html#a45a8aa226151649d6dcddd5d3a4bd817',1,'CLR']]],
+  ['exception_2',['Exception',['../classSDOM_1_1Exception.html#a52c9fa366c36fcb7fe48a1ac827a02a0',1,'SDOM::Exception']]]
 ];

@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['assert_5feq_0',['ASSERT_EQ',['../SDOM_8hpp.html#a3b2380d7733e1ed07ee0210b3aa11d50',1,'SDOM.hpp']]]
+  ['1_20initializer_20structs_0',['1. Initializer Structs',['../md_extensible__factory.html#autotoc_md11',1,'']]],
+  ['1_20initializer_20structs_20and_20json_20configs_1',['1. Initializer Structs and JSON Configs',['../md_extensible__factory.html#autotoc_md4',1,'']]],
+  ['1a_20standardized_20constructor_20signatures_2',['1a. Standardized Constructor Signatures',['../md_extensible__factory.html#autotoc_md12',1,'']]]
 ];

@@ -1,6 +1,41 @@
 var namespaceSDOM =
 [
+    [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
+    [ "EventTypeHash", "structSDOM_1_1EventTypeHash.html", "structSDOM_1_1EventTypeHash" ],
     [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
     [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
-    [ "Json", "namespaceSDOM.html#abe4862bfb43150a4d8e0ad71ffa3e1df", null ]
+    [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
+    [ "InitDisplayObject", "structSDOM_1_1InitDisplayObject.html", "structSDOM_1_1InitDisplayObject" ],
+    [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
+    [ "Json", "namespaceSDOM.html#abe4862bfb43150a4d8e0ad71ffa3e1df", null ],
+    [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
+      [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
+      [ "TOP_LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1", null ],
+      [ "TOP_CENTER", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae4e8367937db13de78dd9a710df92164", null ],
+      [ "TOP_RIGHT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a901d87dedda8db733f5e6d34c4eb5fe0", null ],
+      [ "MIDDLE_LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a9d4989e254422a15442ed8c59c600f1a", null ],
+      [ "MIDDLE_CENTER", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a86f1955e79bb2163d3c32a6024f420e6", null ],
+      [ "MIDDLE_RIGHT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a0a22e84ed1c4062d7ac11d80bbed3876", null ],
+      [ "BOTTOM_LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a8d81ac82421d1b03da58fccb9174892e", null ],
+      [ "BOTTOM_CENTER", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a3480601794fd3b5473219ae158219fd4", null ],
+      [ "BOTTOM_RIGHT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a341b72aaab1308a3e6667af1e52f5def", null ],
+      [ "Aliases for anchor points", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a9ea1de1b3354868edfdaef29392ef615", null ],
+      [ "LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a684d325a7303f52e64011467ff5c5758", null ],
+      [ "CENTER", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac397289ee45877be0cd49811fe245b4e", null ],
+      [ "RIGHT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a21507b40c80068eda19865706fdc2403", null ],
+      [ "TOP", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a6705777b712ee811e76fb07162081d63", null ],
+      [ "MIDDLE", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a43eedd8685eb86592022f8da962e3474", null ],
+      [ "BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a1fabf63de5c96c78e2a40805bcdeb73b", null ],
+      [ "LEFT_TOP", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5eeb74f28a17e0cdf4b1661c80490df9", null ],
+      [ "CENTER_TOP", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ab952f3308272193e9daddec1708f9bec", null ],
+      [ "RIGHT_TOP", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a0f50eee0f90dd0e5b3ce50c09d416d47", null ],
+      [ "LEFT_MIDDLE", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae68c8b7b353db96c91dfc435970b548b", null ],
+      [ "CENTER_MIDDLE", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980aacb6824fc28ff15285d89734b2943367", null ],
+      [ "RIGHT_MIDDLE", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980af911fa8120055f4b9fbf5d53f3ef719a", null ],
+      [ "LEFT_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a54adef06a90e8b0326376c0eaf7404b1", null ],
+      [ "CENTER_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac40e9cf1d233eb1b6dc84b9f97e83b4e", null ],
+      [ "RIGHT_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8", null ]
+    ] ],
+    [ "anchorPointToString_", "namespaceSDOM.html#ac004759fa5d6cd324931439829e17123", null ],
+    [ "stringToAnchorPoint_", "namespaceSDOM.html#a33cd42f20297f893e13db841931abda0", null ]
 ];

@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['orange_0',['ORANGE',['../classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d',1,'CLR']]]
+  ['left_0',['left',['../structSDOM_1_1Bounds.html#a5268f1526e83122173b7de40f83ac7c4',1,'SDOM::Bounds']]],
+  ['lt_5fblue_1',['LT_BLUE',['../classCLR.html#ac9c88a575b06a832e68fe8d62c45135c',1,'CLR']]],
+  ['lt_5fcyan_2',['LT_CYAN',['../classCLR.html#a659340034a5aa7b2149ccc1888ceb694',1,'CLR']]],
+  ['lt_5fgrn_3',['LT_GRN',['../classCLR.html#ab42517ec56b3dc265e62bf4702302266',1,'CLR']]]
 ];

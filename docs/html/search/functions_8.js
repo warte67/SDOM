@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['oninit_0',['onInit',['../classSDOM_1_1IDataObject.html#ae7bbc291ea72a2a99a1cce4c86e681cb',1,'SDOM::IDataObject']]],
-  ['onquit_1',['onQuit',['../classSDOM_1_1IDataObject.html#a8254dbe0378d780dc2665f892430f543',1,'SDOM::IDataObject']]]
+  ['json_5fvalue_5fcase_5finsensitive_0',['json_value_case_insensitive',['../classSDOM_1_1IDataObject.html#a54d77f5fbab11b64f7971d1c33dea11d',1,'SDOM::IDataObject']]]
 ];

@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['warning_0',['WARNING',['../SDOM_8hpp.html#aaf99b8fcaa4b837f684ea0505ed34487',1,'SDOM.hpp']]],
-  ['what_1',['what',['../classSDOM_1_1Exception.html#a5086ff39082ca706c60f16c22df3dfbb',1,'SDOM::Exception']]],
-  ['white_2',['WHITE',['../classCLR.html#ac31a33dfb8b903a027b48eb638fc21a4',1,'CLR']]],
-  ['word_3',['Word',['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'SDOM_CLR.hpp']]]
+  ['name_0',['name',['../structSDOM_1_1InitDisplayObject.html#a6ba81de25c79a8d94aeb348b0ab07f35',1,'SDOM::InitDisplayObject']]],
+  ['normal_1',['NORMAL',['../classCLR.html#ae6ec0e976684b36983d2325ee9bde918',1,'CLR']]]
 ];

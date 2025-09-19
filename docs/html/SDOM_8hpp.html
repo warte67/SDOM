@@ -124,6 +124,8 @@ $(function(){initNavTree('SDOM_8hpp.html','',''); });
 Classes</h2></td></tr>
 <tr class="memitem:SDOM_3A_3AException" id="r_SDOM_3A_3AException"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Exception.html">SDOM::Exception</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Custom exception class for <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> errors.  <a href="classSDOM_1_1Exception.html#details">More...</a><br /></td></tr>
+<tr class="memitem:SDOM_3A_3ABounds" id="r_SDOM_3A_3ABounds"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1Bounds.html">SDOM::Bounds</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a rectangle's position and size in 2D space.  <a href="structSDOM_1_1Bounds.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -142,6 +144,52 @@ Macros</h2></td></tr>
 <tr class="memdesc:a193f5f73dcccbdbb0e76b2595db67ede"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a debug error (non-fatal) with file and line info in dark text.  <br /></td></tr>
 <tr class="memitem:a3b2380d7733e1ed07ee0210b3aa11d50" id="r_a3b2380d7733e1ed07ee0210b3aa11d50"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b2380d7733e1ed07ee0210b3aa11d50">ASSERT_EQ</a>(val,  expected)</td></tr>
 <tr class="memdesc:a3b2380d7733e1ed07ee0210b3aa11d50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts that two values are equal; throws an error if not.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:adca0aa068ac9fc59e78b78c430a92980" id="r_adca0aa068ac9fc59e78b78c430a92980"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">SDOM::AnchorPoint</a> : uint8_t { <br />
+&#160;&#160;<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee">SDOM::DEFAULT</a> = 0
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">SDOM::TOP_LEFT</a> = 0
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae4e8367937db13de78dd9a710df92164">SDOM::TOP_CENTER</a> = 1
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a901d87dedda8db733f5e6d34c4eb5fe0">SDOM::TOP_RIGHT</a> = 2
+, <br />
+&#160;&#160;<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a9d4989e254422a15442ed8c59c600f1a">SDOM::MIDDLE_LEFT</a> = 3
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a86f1955e79bb2163d3c32a6024f420e6">SDOM::MIDDLE_CENTER</a> = 4
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a0a22e84ed1c4062d7ac11d80bbed3876">SDOM::MIDDLE_RIGHT</a> = 5
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a8d81ac82421d1b03da58fccb9174892e">SDOM::BOTTOM_LEFT</a> = 6
+, <br />
+&#160;&#160;<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a3480601794fd3b5473219ae158219fd4">SDOM::BOTTOM_CENTER</a> = 7
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a341b72aaab1308a3e6667af1e52f5def">SDOM::BOTTOM_RIGHT</a> = 8
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a9ea1de1b3354868edfdaef29392ef615">SDOM::Aliases for anchor points</a>
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a684d325a7303f52e64011467ff5c5758">SDOM::LEFT</a> = MIDDLE_LEFT
+, <br />
+&#160;&#160;<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac397289ee45877be0cd49811fe245b4e">SDOM::CENTER</a> = MIDDLE_CENTER
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a21507b40c80068eda19865706fdc2403">SDOM::RIGHT</a> = MIDDLE_RIGHT
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a6705777b712ee811e76fb07162081d63">SDOM::TOP</a> = TOP_CENTER
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a43eedd8685eb86592022f8da962e3474">SDOM::MIDDLE</a> = MIDDLE_CENTER
+, <br />
+&#160;&#160;<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a1fabf63de5c96c78e2a40805bcdeb73b">SDOM::BOTTOM</a> = BOTTOM_CENTER
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5eeb74f28a17e0cdf4b1661c80490df9">SDOM::LEFT_TOP</a> = TOP_LEFT
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ab952f3308272193e9daddec1708f9bec">SDOM::CENTER_TOP</a> = TOP_CENTER
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a0f50eee0f90dd0e5b3ce50c09d416d47">SDOM::RIGHT_TOP</a> = TOP_RIGHT
+, <br />
+&#160;&#160;<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae68c8b7b353db96c91dfc435970b548b">SDOM::LEFT_MIDDLE</a> = MIDDLE_LEFT
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980aacb6824fc28ff15285d89734b2943367">SDOM::CENTER_MIDDLE</a> = MIDDLE_CENTER
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980af911fa8120055f4b9fbf5d53f3ef719a">SDOM::RIGHT_MIDDLE</a> = MIDDLE_RIGHT
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a54adef06a90e8b0326376c0eaf7404b1">SDOM::LEFT_BOTTOM</a> = BOTTOM_LEFT
+, <br />
+&#160;&#160;<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac40e9cf1d233eb1b6dc84b9f97e83b4e">SDOM::CENTER_BOTTOM</a> = BOTTOM_CENTER
+, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8">SDOM::RIGHT_BOTTOM</a> = BOTTOM_RIGHT
+<br />
+ }</td></tr>
+<tr class="memdesc:adca0aa068ac9fc59e78b78c430a92980"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference points for anchoring child edges to a parent.  <a href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ac004759fa5d6cd324931439829e17123" id="r_ac004759fa5d6cd324931439829e17123"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ac004759fa5d6cd324931439829e17123">SDOM::anchorPointToString_</a></td></tr>
+<tr class="memdesc:ac004759fa5d6cd324931439829e17123"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980" title="Reference points for anchoring child edges to a parent.">AnchorPoint</a> enum values to their corresponding string names.  <br /></td></tr>
+<tr class="memitem:a33cd42f20297f893e13db841931abda0" id="r_a33cd42f20297f893e13db841931abda0"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; std::string, <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a33cd42f20297f893e13db841931abda0">SDOM::stringToAnchorPoint_</a></td></tr>
+<tr class="memdesc:a33cd42f20297f893e13db841931abda0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps string names to <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980" title="Reference points for anchoring child edges to a parent.">AnchorPoint</a> enum values.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Common include for SDOM-based projects. Defines macros and utilities. </p>

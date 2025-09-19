@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['progress_20updates_0',['Progress Updates',['../md_progress.html#autotoc_md2',1,'']]],
-  ['project_20description_1',['Project Description',['../md_progress.html',1,'']]]
+  ['4_20generic_20factory_20create_20method_0',['4. Generic Factory Create Method',['../md_extensible__factory.html#autotoc_md15',1,'']]],
+  ['4_20usage_1',['4. Usage',['../md_extensible__factory.html#autotoc_md7',1,'']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['pink_0',['PINK',['../classCLR.html#ac38f58278763ecc6914fbbb61410dbc4',1,'CLR']]],
-  ['purple_1',['PURPLE',['../classCLR.html#aa4cc393e127a4f0b06e598beafa4cb3a',1,'CLR']]]
+  ['name_0',['name',['../structSDOM_1_1InitDisplayObject.html#a6ba81de25c79a8d94aeb348b0ab07f35',1,'SDOM::InitDisplayObject']]],
+  ['normal_1',['NORMAL',['../classCLR.html#ae6ec0e976684b36983d2325ee9bde918',1,'CLR']]]
 ];

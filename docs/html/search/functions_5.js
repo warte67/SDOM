@@ -1,4 +1,28 @@
 var searchData=
 [
-  ['hex_0',['hex',['../classCLR.html#a7affcef20a6ac743b04173d8717f03ba',1,'CLR']]]
+  ['get_5fterminal_5fsize_0',['get_terminal_size',['../classCLR.html#a6182f7adc3cbbec8d91ac83c948306d3',1,'CLR']]],
+  ['getanchorbottom_1',['getAnchorBottom',['../classSDOM_1_1IDisplayObject.html#a0e028817607353e0439c0d7b2b315266',1,'SDOM::IDisplayObject']]],
+  ['getanchorleft_2',['getAnchorLeft',['../classSDOM_1_1IDisplayObject.html#addaf39525119d04958b868e104170fb6',1,'SDOM::IDisplayObject']]],
+  ['getanchorright_3',['getAnchorRight',['../classSDOM_1_1IDisplayObject.html#a6afd00e9f5372ececdb22bf929726fd6',1,'SDOM::IDisplayObject']]],
+  ['getanchortop_4',['getAnchorTop',['../classSDOM_1_1IDisplayObject.html#afce493dd8732870c672aef5a09277c3a',1,'SDOM::IDisplayObject']]],
+  ['getbottom_5',['getBottom',['../classSDOM_1_1IDisplayObject.html#ada402f39ee80b3e071ac74920340f7a5',1,'SDOM::IDisplayObject']]],
+  ['getcolor_6',['getColor',['../classSDOM_1_1IDisplayObject.html#afc15cab3d8928fd7329dfec33fc93109',1,'SDOM::IDisplayObject']]],
+  ['getcommands_7',['getCommands',['../classSDOM_1_1IDataObject.html#acc1bbafa84a0d84455a9853bf93d03d7',1,'SDOM::IDataObject']]],
+  ['getdirty_8',['getDirty',['../classSDOM_1_1IDisplayObject.html#a4660cb467876a41c2d31fd82009b2c97',1,'SDOM::IDisplayObject']]],
+  ['getfile_9',['getFile',['../classSDOM_1_1Exception.html#ab43de67c687bec7b664a0915db9030bf',1,'SDOM::Exception']]],
+  ['getheight_10',['getHeight',['../classSDOM_1_1IDisplayObject.html#a33fd8c4899f820c1eb7f8641ddd928bd',1,'SDOM::IDisplayObject']]],
+  ['getleft_11',['getLeft',['../classSDOM_1_1IDisplayObject.html#a7e479652966d8c971d871da8a32d4a2f',1,'SDOM::IDisplayObject']]],
+  ['getline_12',['getLine',['../classSDOM_1_1Exception.html#acfb21b46a45340d9d8efec695e7afbab',1,'SDOM::Exception']]],
+  ['getlocalbottom_13',['getLocalBottom',['../classSDOM_1_1IDisplayObject.html#a42fc83030cf0a1ad920736f654fdf6e7',1,'SDOM::IDisplayObject']]],
+  ['getlocalleft_14',['getLocalLeft',['../classSDOM_1_1IDisplayObject.html#a76c46582dd5d3de30419c9aa84b181eb',1,'SDOM::IDisplayObject']]],
+  ['getlocalright_15',['getLocalRight',['../classSDOM_1_1IDisplayObject.html#a9110787e36dd32665bd498991bc78705',1,'SDOM::IDisplayObject']]],
+  ['getlocaltop_16',['getLocalTop',['../classSDOM_1_1IDisplayObject.html#ae3d0f33be77fd218d52d75316045f663',1,'SDOM::IDisplayObject']]],
+  ['getname_17',['getName',['../classSDOM_1_1IDisplayObject.html#ae71b82200a156f593684862c7f9eff8e',1,'SDOM::IDisplayObject']]],
+  ['getproperty_18',['getProperty',['../classSDOM_1_1IDataObject.html#ab1390908afede95eacb5dbf3333ddc9f',1,'SDOM::IDataObject']]],
+  ['getright_19',['getRight',['../classSDOM_1_1IDisplayObject.html#afac989bc4cf8a448605ea0b5defabedd',1,'SDOM::IDisplayObject']]],
+  ['gettabpriority_20',['getTabPriority',['../classSDOM_1_1IDisplayObject.html#a742655ac95eaeb30c4629e1978a7ddca',1,'SDOM::IDisplayObject']]],
+  ['gettop_21',['getTop',['../classSDOM_1_1IDisplayObject.html#a3ab76421405a1be09be35ae2e215efb2',1,'SDOM::IDisplayObject']]],
+  ['getwidth_22',['getWidth',['../classSDOM_1_1IDisplayObject.html#acd625b31a2f66caeabb6848bb26065e1',1,'SDOM::IDisplayObject']]],
+  ['getx_23',['getX',['../classSDOM_1_1IDisplayObject.html#af0dbd5b2d68b64152081ddad87f5fb1f',1,'SDOM::IDisplayObject']]],
+  ['gety_24',['getY',['../classSDOM_1_1IDisplayObject.html#a6a0aef63a4997f367efde402c8f57bc0',1,'SDOM::IDisplayObject']]]
 ];

@@ -92,30 +92,34 @@ $(function(){initNavTree('md_progress.html','',''); });
   <div class="headertitle"><div class="title">Project Description </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md1"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md28"></a></p>
 <p>This project is a C++23 application utilizing SDL3 for graphical rendering and event handling. The goal is to create a simple Document Object Model (DOM) API for SDL3, focusing on building a GUI interface for SDL3 developers to use in their games or other cross-platform applications.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 Progress Updates</h1>
 <ul>
 <li><b>[July 2, 2025]</b> Initial rough draft and proof of concept.</li>
 <li><b>[August 5, 2025]</b> <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> secondary rough draft</li>
 <li><b>[September 19, 2025]</b><ul>
 <li>Proof of concept approved. Main development approved. Work begins officially.</li>
+<li>Improved Doxygen documentation for all major headers and macros.</li>
+<li>Added and refined Doxygen comments for <a class="el" href="SDOM__CLR_8hpp.html" title="Static container for ANSI escape sequences for terminal text formatting and colorization.">SDOM_CLR.hpp</a>, <a class="el" href="SDOM_8hpp.html" title="Common include for SDOM-based projects. Defines macros and utilities.">SDOM.hpp</a>, and <a class="el" href="SDOM__IDataObject_8hpp.html">SDOM_IDataObject.hpp</a>.</li>
+<li>Grouped and documented interface methods in SDOM_IDataObject for clarity and API usability.</li>
+<li>Updated build script to run Doxygen from the correct folder, ensuring documentation builds reliably.</li>
+<li>Fixed Doxyfile issues (footer path, PROJECT_BRIEF syntax) for clean documentation generation.</li>
+<li>Validated Doxygen output for class, group, and member documentation.</li>
+<li><span class="tt">IDataObject</span> designed. This base interface class handles JSON parsing and serialization.</li>
 </ul>
 </li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 ToDo:</h1>
-<ol type="1">
-<li>Refine <a class="el" href="SDOM_8hpp.html" title="Common include for SDOM-based projects. Defines macros and utilities.">SDOM.hpp</a> Includes<ul>
-<li>Remove unnecessary standard and SDL includes.</li>
-<li>Only include what’s needed for macros and exceptions.</li>
-<li>Move heavy/optional includes to implementation files.</li>
-</ul>
-</li>
-<li>Macro Improvements<ul>
-<li>Ensure macros are robust and documented.</li>
-<li>Add Doxygen comments for each macro.</li>
+<ul>
+<li>Develop base framework classes:<ul>
+<li><span class="tt">IDisplayObject</span>: Base interface for display objects. Handles anchoring and positioning relative to parent and child edges. Inherits from <span class="tt">IDataObject</span>.</li>
+<li><span class="tt">IResourceObject</span>: Interface for resource objects managed by the Factory. Inherits from <span class="tt">IDataObject</span>.</li>
+<li><span class="tt">Factory</span>: Owns and manages all resources and display objects. Responsible for their lifetime.</li>
+<li><span class="tt">Core</span>: Singleton that runs the main loop, handles callbacks, error logging, rendering, and event dispatch for the DOM tree.</li>
+<li><span class="tt">Stage</span>: Manages the SDL application window and its resources.</li>
 </ul>
 </li>
 <li>Global Accessors<ul>
@@ -137,7 +141,7 @@ ToDo:</h1>
 <li>Add unit tests for macros and exception handling. </li>
 </ul>
 </li>
-</ol>
+</ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
