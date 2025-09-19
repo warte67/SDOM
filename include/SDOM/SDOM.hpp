@@ -1,11 +1,4 @@
-/**
- * @mainpage
- * # SDOM Documentation
- * [Back to SDOM on GitHub](https://github.com/warte67/SDOM)
- *
- * @file SDOM.hpp
- * @brief Common include for SDOM-based projects. Defines macros and utilities.
- * @details
+/*** SDOM.hpp **************************************
  *    ___ ___   ___  __  __   _              
  *   / __|   \ / _ \|  \/  | | |_  _ __ _ __ 
  *   \__ \ |) | (_) | |\/| |_| ' \| '_ \ '_ \
@@ -17,14 +10,50 @@
  * utilities within the SDOM namespace. It includes type aliases, 
  * such as ID, and provides macros for error handling (ERROR), 
  * warnings (WARNING), and debugging (DEBUG) with formatted output. 
+ * This file helps standardize and simplify code across the project. 
+ * 
+ *   This software is provided 'as-is', without any express or implied
+ *   warranty.  In no event will the authors be held liable for any damages
+ *   arising from the use of this software.
+ *
+ *   Permission is granted to anyone to use this software for any purpose,
+ *   including commercial applications, and to alter it and redistribute it
+ *   freely, subject to the following restrictions:
+ *
+ *   1. The origin of this software must not be misrepresented; you must not
+ *       claim that you wrote the original software. If you use this software
+ *       in a product, an acknowledgment in the product documentation would be
+ *       appreciated but is not required.
+ *   2. Altered source versions must be plainly marked as such, and must not be
+ *       misrepresented as being the original software.
+ *   3. This notice may not be removed or altered from any source distribution.
+ *
+ * Released under the ZLIB License.
+ * Original Author: Jay Faries (warte67)
+ * 
+ **********************/
+
+/**
+ * @mainpage
+ * # SDOM Documentation
+ * [Back to SDOM on GitHub](https://github.com/warte67/SDOM)
+ *
+ * @file SDOM.hpp
+ * @brief Common include for SDOM-based projects. Defines macros and utilities.
+ * @details
+ * The SDOM.hpp header file serves as a centralized location for 
+ * defining commonly used types, global macros, and debugging 
+ * utilities within the SDOM namespace. It includes type aliases, 
+ * such as ID, and provides macros for error handling (ERROR), 
+ * warnings (WARNING), and debugging (DEBUG) with formatted output. 
  * This file helps standardize and simplify code across the project.
  *
  * @copyright Copyright (c) 2025 Jay Faries (warte67)
- * @license ZLIB License
  * @author Jay Faries (https://github.com/warte67/SDOM)
  * @date 2025-09-19
  *
  * @note
+ * ZLIB License:
  *   This software is provided 'as-is', without any express or implied
  *   warranty.  In no event will the authors be held liable for any damages
  *   arising from the use of this software.
@@ -72,8 +101,17 @@
 #include "SDOM2/SDOM_CLR.hpp"
 // #include "SDOM2/SDOM_Core.hpp"
 
+/**
+ * @namespace SDOM
+ * @brief Contains all core classes and utilities for the SDOM library.
+ */
 namespace SDOM 
 {
+    /**
+     * @brief Custom exception class for SDOM errors.
+     * @details Stores an error message, file name, and line number for debugging.
+     * Use with the ERROR macro for standardized error reporting.
+     */
     // Exception class definition
     class Exception : public std::exception 
     {
@@ -105,24 +143,45 @@ namespace SDOM
 
 } // namespace SDOM
 
+/**
+ * @brief Throws an SDOM exception with file and line info.
+ * @param message Error message to report.
+ */
 // Macro for throwing exceptions
 #define ERROR(message) throw SDOM::Exception(message, __FILE__, __LINE__)
+
+
+/**
+ * @brief Shows a warning message with file and line info.
+ * @param message Warning message to display.
+ */
+// Macro for showing warnings
 #define WARNING(message) SDOM::Core::showWarning(message, __FILE__, __LINE__)
 
+/**
+ * @brief Logs a debug message in green text.
+ * @param message Debug message to display.
+ */
+// Macro for debug logging
 #define DEBUG_LOG(message) std::cout << CLR::GREEN << "    " << message << CLR::RESET << std::endl;
 
-    // #define DEBUG_LOG(message) std::cout << CLR::GREEN << \
-    //     "\n      Debug: " << \
-    //     CLR::YELLOW << message << std::endl << CLR::GREEN << \
-    //     "      File:  " << CLR::ORANGE << __FILE__  << CLR::GREEN << std::endl << \
-    //     "      Line:  " << CLR::ORANGE  << __LINE__ << CLR::RESET << "\n" << std::endl;
-
+/**
+ * @brief Logs a debug error (non-fatal) with file and line info in dark text.
+ * @param message Debug error message to display.
+ */
+// Macro for debug errors (non-fatal)
 #define DEBUG_ERR(message) std::cout << CLR::DARK << \
     "\n      Debug: " << \
     CLR::YELLOW << message << std::endl << CLR::DARK << \
     "      File:  " << CLR::ORANGE << __FILE__  << CLR::DARK << std::endl << \
     "      Line:  " << CLR::ORANGE  << __LINE__ << CLR::RESET << "\n" << std::endl;
 
+/**
+ * @brief Asserts that two values are equal; throws an error if not.
+ * @param val Value to test.
+ * @param expected Expected value.
+ */
+// Assertion macro for testing equality
 #define ASSERT_EQ(val, expected) \
     if ((val) != (expected)) { \
         ERROR("Assertion failed: " + std::string(#val) + " == " + std::string(#expected) \

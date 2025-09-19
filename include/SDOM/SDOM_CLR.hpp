@@ -7,6 +7,13 @@
  *     \_____|______|_|  \_\ (_) |_| |_| .__/| .__/ 
  *                                     | |   | |    
  *                                     |_|   |_|   
+ * 
+ * Defines a set of ANSI escape sequences to colorize and format text in the terminal.
+ * 
+ * Static container object. Cannot be instantiated.
+ * May require periodic fflush(stdout).
+ * See: https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
+ * 
  ***********/
 
 /**
