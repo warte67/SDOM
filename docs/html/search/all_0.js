@@ -1,4 +1,27 @@
 var searchData=
 [
-  ['clr_0',['CLR',['../classCLR.html',1,'']]]
+  ['bg_0',['bg',['../classCLR.html#a270a5369a80821f52e34a6be64f8ca89',1,'CLR']]],
+  ['bg_5fblack_1',['BG_BLACK',['../classCLR.html#a37bc9dc667e6556bb1d95d7e614f32d6',1,'CLR']]],
+  ['bg_5fblue_2',['BG_BLUE',['../classCLR.html#a08714fb27425dfaad4ad76d5769cbd83',1,'CLR']]],
+  ['bg_5fbrown_3',['BG_BROWN',['../classCLR.html#ae9a14f0a44472d670b90bfea5584c0be',1,'CLR']]],
+  ['bg_5fcyan_4',['BG_CYAN',['../classCLR.html#a0ba041dec450face8c81ed089e0d18fb',1,'CLR']]],
+  ['bg_5fdark_5',['BG_DARK',['../classCLR.html#aee2342bf220a3efd4fa7e4c2a0c59aac',1,'CLR']]],
+  ['bg_5fdefault_6',['BG_DEFAULT',['../classCLR.html#ab1b8835fd3c575f087aa822aef3233fc',1,'CLR']]],
+  ['bg_5fgreen_7',['BG_GREEN',['../classCLR.html#aadfe23099340f4bad0178394331198de',1,'CLR']]],
+  ['bg_5fgrey_8',['BG_GREY',['../classCLR.html#a10eca9c3f32237ad765c0cc4036b0d3d',1,'CLR']]],
+  ['bg_5flt_5fblue_9',['BG_LT_BLUE',['../classCLR.html#a3c6b11069ec688ba115938d203654ee6',1,'CLR']]],
+  ['bg_5flt_5fcyan_10',['BG_LT_CYAN',['../classCLR.html#af36145a6249228e311a00a5a4beacca1',1,'CLR']]],
+  ['bg_5flt_5fgreen_11',['BG_LT_GREEN',['../classCLR.html#a996bb5b6422c4a7462d6a9d04ca072c5',1,'CLR']]],
+  ['bg_5flt_5fred_12',['BG_LT_RED',['../classCLR.html#a93a90da0fe438206a715d8beee32ecf6',1,'CLR']]],
+  ['bg_5fpink_13',['BG_PINK',['../classCLR.html#a756f6e962d4ba5dc3ab3beeda9258ba2',1,'CLR']]],
+  ['bg_5fpurple_14',['BG_PURPLE',['../classCLR.html#a339d0528a97d3bce16b6fc9beb11175e',1,'CLR']]],
+  ['bg_5fred_15',['BG_RED',['../classCLR.html#a5f904009e333a33e59bcc151ff8c5225',1,'CLR']]],
+  ['bg_5frgb_16',['bg_rgb',['../classCLR.html#a82213ec90d0c4bca2cd4b523bb95550a',1,'CLR']]],
+  ['bg_5fwhite_17',['BG_WHITE',['../classCLR.html#a1b26474bb6a91bd88c4178c827312818',1,'CLR']]],
+  ['bg_5fyellow_18',['BG_YELLOW',['../classCLR.html#ae09789b58191c13f01c0a4104bc601f9',1,'CLR']]],
+  ['black_19',['BLACK',['../classCLR.html#a06d2d403368c990cd9de1292aa7d4b99',1,'CLR']]],
+  ['blinking_20',['BLINKING',['../classCLR.html#a4dd77e6050dafa4c0e36ce01a5400587',1,'CLR']]],
+  ['blue_21',['BLUE',['../classCLR.html#a1d8aa7fe91531370ea99b43cdb55c4d7',1,'CLR']]],
+  ['bold_22',['BOLD',['../classCLR.html#a06931db8ae45986588be7ad57f2c91a2',1,'CLR']]],
+  ['brown_23',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]]
 ];

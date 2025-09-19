@@ -55,118 +55,173 @@ private:
     CLR& operator=(const CLR&) = delete;	// delete the copy assignment operator
     CLR& operator=(CLR&&) = delete;			// delete the move assignment operator
 
+
 public:
 
-    //////////////////////////////////
-    // UTILITY MEMBER FUNCTIONS:
-    //////////////////////////////////
+    /**
+     * @name Utility Member Functions
+     * @brief Functions for generating ANSI escape sequences for terminal formatting.
+     * @{
+     */
 
-    // Returns ANSI escape to change 8-bit foreground color
+    /**
+     * @brief Returns ANSI escape sequence to set 8-bit foreground color.
+     * @param color 8-bit color value (0-255).
+     * @return ANSI escape sequence as a string.
+     */
     inline static const std::string fg(Byte color) 
-    { return "\e[38;5;" + std::to_string(color) + "m"; } 	
+    { return "\e[38;5;" + std::to_string(color) + "m"; } 
 
-    // Returns ANSI escape to change 8-bit background color
+    /**
+     * @brief Returns ANSI escape sequence to set 8-bit background color.
+     * @param color 8-bit color value (0-255).
+     * @return ANSI escape sequence as a string.
+     */
     inline static const std::string bg(Byte color) 
-    { return "\e[48;5;" + std::to_string(color) + "m"; } 	
+    { return "\e[48;5;" + std::to_string(color) + "m"; } 
 
-    // Returns ANSI escape to change 12-bit foreground RGB color
-	inline static const std::string fg_rgb(Byte r, Byte g, Byte b) 
+    /**
+     * @brief Returns ANSI escape sequence to set 24-bit (RGB) foreground color.
+     * @param r Red component (0-255).
+     * @param g Green component (0-255).
+     * @param b Blue component (0-255).
+     * @return ANSI escape sequence as a string.
+     */
+    inline static const std::string fg_rgb(Byte r, Byte g, Byte b) 
     { return "\e[38;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m"; }
-	
-    // Returns ANSI escape to change 12-bit background RGB color
-	inline static const std::string bg_rgb(Byte r, Byte g, Byte b) 
+
+    /**
+     * @brief Returns ANSI escape sequence to set 24-bit (RGB) background color.
+     * @param r Red component (0-255).
+     * @param g Green component (0-255).
+     * @param b Blue component (0-255).
+     * @return ANSI escape sequence as a string.
+     */
+    inline static const std::string bg_rgb(Byte r, Byte g, Byte b) 
     { return "\e[48;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m"; }
 
-    // Moves the cursor to row n, column m. The values are 1-based.
-	inline static const std::string csr_pos(Byte row=1, Byte col=1) 
+    /**
+     * @brief Returns ANSI escape sequence to move the cursor to a specific position.
+     * @param row Row number (1-based).
+     * @param col Column number (1-based).
+     * @return ANSI escape sequence as a string.
+     */
+    inline static const std::string csr_pos(Byte row=1, Byte col=1) 
     { return "\e[" + std::to_string(row) + ";" + std::to_string(col) + "H"; }
 
-    // Clears part of the screen. 
-    //      If n is 0 (or missing), clear from cursor to end of screen. 
-    //      If n is 1, clear from cursor to beginning of the screen. 
-    //      If n is 2, clear entire screen.
-    //      If n is 3, delete all lines saved in the scrollback buffer
+    /**
+     * @brief Returns ANSI escape sequence to clear part of the screen.
+     * @details
+     * - If n is 0 (or missing), clears from cursor to end of screen.
+     * - If n is 1, clears from cursor to beginning of the screen.
+     * - If n is 2, clears entire screen.
+     * - If n is 3, deletes all lines saved in the scrollback buffer.
+     * @param n Mode selector (0-3).
+     * @return ANSI escape sequence as a string.
+     */
     inline static const std::string erase_in_display(Byte n=0)
     { return "\e[" + std::to_string(n) + "J"; }
 
-    // Erases part of the line. Cursor position does not change. 
-    //      If n is 0 (or missing), clear from cursor to the end of the line. 
-    //      If n is 1, clear from cursor to beginning of the line. 
-    //      If n is 2, clear entire line. 
+    /**
+     * @brief Returns ANSI escape sequence to erase part of the current line.
+     * @details
+     * - If n is 0 (or missing), clears from cursor to end of the line.
+     * - If n is 1, clears from cursor to beginning of the line.
+     * - If n is 2, clears entire line.
+     * @param n Mode selector (0-2).
+     * @return ANSI escape sequence as a string.
+     */
     inline static const std::string erase_in_line(Byte n=0)
     { return "\e[" + std::to_string(n) + "K"; }
+    /** @} */
 
 
-    //////////////////////////////////
-    // TYPE SET CONSTANTS:
-    //////////////////////////////////
 
-   	inline static const std::string RESET	    = "\e[0m";
- 	inline static const std::string NORMAL 		= "\e[0m";
-	inline static const std::string RETURN  	= "\e[0m\n";
-	inline static const std::string BOLD		= "\e[1m";
-	inline static const std::string DIM			= "\e[2m";
-	inline static const std::string ITALIC		= "\e[3m";
-	inline static const std::string UNDERLINE 	= "\e[4m";
-	inline static const std::string BLINKING 	= "\e[5m";
-	inline static const std::string REVERSED 	= "\e[7m";
-	inline static const std::string CONCEALED 	= "\e[8m";
-	inline static const std::string STRIKE	 	= "\e[9m";
-    inline static const std::string ERASE_LINE  = "\e[2K\r";
-
-
-    //////////////////////////////////
-	// FOREGROUND COLOR CONSTANTS
-    //////////////////////////////////
-
-	inline static const std::string BLACK		= "\e[0;30m";		
-	inline static const std::string RED			= "\e[0;31m";		
-	inline static const std::string GREEN		= "\e[0;32m";		
-	inline static const std::string BROWN		= "\e[0;33m";		
-	inline static const std::string BLUE		= "\e[0;34m";		
-	inline static const std::string PURPLE		= "\e[0;35m";		
-	inline static const std::string CYAN		= "\e[0;36m";		
-	inline static const std::string GREY		= "\e[0;37m";		
-	inline static const std::string DARK		= "\e[1;30m";		
-	inline static const std::string ORANGE		= "\e[1;31m";		
-	inline static const std::string LT_GRN		= "\e[1;32m";		
-	inline static const std::string YELLOW		= "\e[1;33m";		
-	inline static const std::string LT_BLUE		= "\e[1;34m";		
-	inline static const std::string PINK		= "\e[1;35m";		
-	inline static const std::string LT_CYAN		= "\e[1;36m";		
-	inline static const std::string WHITE		= "\e[1;37m";		
+    /**
+     * @name Type Set Constants
+     * @brief ANSI escape sequences for text formatting attributes.
+     * @{
+     */
+    inline static const std::string RESET	    = "\e[0m";      ///< ANSI escape sequence to reset formatting
+    inline static const std::string NORMAL 		= "\e[0m";      ///< ANSI escape sequence to reset all attributes
+    inline static const std::string RETURN   	= "\e[0m\n";    ///< ANSI escape sequence to reset all attributes and add a newline
+    inline static const std::string BOLD		= "\e[1m";      ///< ANSI escape sequence to set bold text
+    inline static const std::string DIM			= "\e[2m";      ///< ANSI escape sequence to set dim text
+    inline static const std::string ITALIC		= "\e[3m";      ///< ANSI escape sequence to set italic text
+    inline static const std::string UNDERLINE 	= "\e[4m";      ///< ANSI escape sequence to set underline text
+    inline static const std::string BLINKING 	= "\e[5m";      ///< ANSI escape sequence to set blinking text
+    inline static const std::string REVERSED 	= "\e[7m";      ///< ANSI escape sequence to set reversed text
+    inline static const std::string CONCEALED 	= "\e[8m";      ///< ANSI escape sequence to set concealed text
+    inline static const std::string STRIKE	  	= "\e[9m";      ///< ANSI escape sequence to set strikethrough text
+    inline static const std::string ERASE_LINE  = "\e[2K\r";    ///< ANSI escape sequence to erase the entire current line and return cursor to start of line
+    /** @} */
 
 
-    //////////////////////////////////
-	// BACKGROUND COLOR CONSTANTS
-    //////////////////////////////////
 
-	inline static const std::string BG_BLACK	= "\e[0;40m";		
-	inline static const std::string BG_RED		= "\e[0;41m";		
-	inline static const std::string BG_GREEN	= "\e[0;42m";		
-	inline static const std::string BG_BROWN	= "\e[0;43m";		
-	inline static const std::string BG_BLUE		= "\e[0;44m";		
-	inline static const std::string BG_PURPLE	= "\e[0;45m";		
-	inline static const std::string BG_CYAN		= "\e[0;46m";		
-	inline static const std::string BG_GREY		= "\e[0;47m";		
-	inline static const std::string BG_DEFAULT	= "\e[0;49m";		
-	inline static const std::string BG_DARK		= "\e[0;100m";		
-	inline static const std::string BG_LT_RED	= "\e[0;101m";		
-	inline static const std::string BG_LT_GREEN	= "\e[0;102m";		
-	inline static const std::string BG_YELLOW	= "\e[0;103m";		
-	inline static const std::string BG_LT_BLUE	= "\e[0;104m";		
-	inline static const std::string BG_PINK		= "\e[0;105m";		
-	inline static const std::string BG_LT_CYAN	= "\e[0;106m";		
-	inline static const std::string BG_WHITE	= "\e[0;107m";	
+    /**
+     * @name Foreground Color Constants
+     * @brief ANSI escape sequences for foreground text colors.
+     * @{
+     */
+    inline static const std::string BLACK		= "\e[0;30m";   ///< ANSI escape sequence for black foreground
+    inline static const std::string RED			= "\e[0;31m";   ///< ANSI escape sequence for red foreground
+    inline static const std::string GREEN		= "\e[0;32m";   ///< ANSI escape sequence for green foreground
+    inline static const std::string BROWN		= "\e[0;33m";   ///< ANSI escape sequence for brown foreground
+    inline static const std::string BLUE		= "\e[0;34m";   ///< ANSI escape sequence for blue foreground
+    inline static const std::string PURPLE		= "\e[0;35m";   ///< ANSI escape sequence for purple foreground
+    inline static const std::string CYAN		= "\e[0;36m";   ///< ANSI escape sequence for cyan foreground
+    inline static const std::string GREY		= "\e[0;37m";   ///< ANSI escape sequence for grey foreground
+    inline static const std::string DARK		= "\e[1;30m";   ///< ANSI escape sequence for dark grey foreground
+    inline static const std::string ORANGE		= "\e[1;31m";   ///< ANSI escape sequence for orange foreground
+    inline static const std::string LT_GRN		= "\e[1;32m";   ///< ANSI escape sequence for light green foreground
+    inline static const std::string YELLOW		= "\e[1;33m";   ///< ANSI escape sequence for yellow foreground
+    inline static const std::string LT_BLUE		= "\e[1;34m";   ///< ANSI escape sequence for light blue foreground
+    inline static const std::string PINK		= "\e[1;35m";   ///< ANSI escape sequence for pink foreground
+    inline static const std::string LT_CYAN		= "\e[1;36m";   ///< ANSI escape sequence for light cyan foreground
+    inline static const std::string WHITE		= "\e[1;37m";   ///< ANSI escape sequence for white foreground
+    /** @} */
 
 
-    // Unlike the other methods in this class, this one is not called
-    // within an output stream. It is to be called directly.
-    //      Usage:
-    //          int width = 0, height = 0;
-    //          clr::get_terminal_size(width, height);
-    //          std::cout << "width=" << width << ", height=" << height << std::endl;
-    //
+
+    /**
+     * @name Background Color Constants
+     * @brief ANSI escape sequences for background text colors.
+     * @{
+     */
+    inline static const std::string BG_BLACK	= "\e[0;40m";   ///< ANSI escape sequence for black background
+    inline static const std::string BG_RED		= "\e[0;41m";   ///< ANSI escape sequence for red background
+    inline static const std::string BG_GREEN	= "\e[0;42m";   ///< ANSI escape sequence for green background
+    inline static const std::string BG_BROWN	= "\e[0;43m";   ///< ANSI escape sequence for brown background
+    inline static const std::string BG_BLUE	= "\e[0;44m";   ///< ANSI escape sequence for blue background
+    inline static const std::string BG_PURPLE	= "\e[0;45m";   ///< ANSI escape sequence for purple background
+    inline static const std::string BG_CYAN	= "\e[0;46m";   ///< ANSI escape sequence for cyan background
+    inline static const std::string BG_GREY	= "\e[0;47m";   ///< ANSI escape sequence for grey background
+    inline static const std::string BG_DEFAULT	= "\e[0;49m";   ///< ANSI escape sequence for default background
+    inline static const std::string BG_DARK	= "\e[0;100m";  ///< ANSI escape sequence for dark grey background
+    inline static const std::string BG_LT_RED	= "\e[0;101m";  ///< ANSI escape sequence for light red background
+    inline static const std::string BG_LT_GREEN	= "\e[0;102m";  ///< ANSI escape sequence for light green background
+    inline static const std::string BG_YELLOW	= "\e[0;103m";  ///< ANSI escape sequence for yellow background
+    inline static const std::string BG_LT_BLUE	= "\e[0;104m";  ///< ANSI escape sequence for light blue background
+    inline static const std::string BG_PINK	= "\e[0;105m";  ///< ANSI escape sequence for pink background
+    inline static const std::string BG_LT_CYAN	= "\e[0;106m";  ///< ANSI escape sequence for light cyan background
+    inline static const std::string BG_WHITE	= "\e[0;107m";   ///< ANSI escape sequence for white background
+    /** @} */
+
+
+    /**
+     * @brief Gets the current terminal size (width and height).
+     * @details
+     * This function is not called within an output stream. It should be called directly.
+     * Example usage:
+     * @code
+     * int width = 0, height = 0;
+     * CLR::get_terminal_size(width, height);
+     * std::cout << "width=" << width << ", height=" << height << std::endl;
+     * @endcode
+     * @note Only works on supported platforms (Windows, Linux, macOS).
+     * @param width Reference to store the terminal width.
+     * @param height Reference to store the terminal height.
+     */
     inline static void get_terminal_size(int& width, int& height) {
         #if defined(_WIN32)
             CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -181,18 +236,40 @@ public:
         #endif // Windows/Linux
     }   
 
-private:
-    inline static int indent_level = 0;
+    /**
+     * @name Formatting Helper Functions
+     * @brief Utility functions for indentation, hex formatting, and padding.
+     * @{
+     */
 
-public:
+    /**
+     * @brief Increases indentation level and returns corresponding spaces.
+     * @return String of spaces for the new indentation level.
+     */
     inline static std::string indent_push() { 
         return std::string(indent_level++ * 2, ' '); 
-    }    
+    }
+
+    /**
+     * @brief Decreases indentation level and returns corresponding spaces.
+     * @return String of spaces for the new indentation level.
+     */
     inline static std::string indent_pop() { 
         return std::string((indent_level-- > 0 ? indent_level : 0) * 2, ' '); 
     }
+
+    /**
+     * @brief Returns spaces for the current indentation level.
+     * @return String of spaces for the current indentation level.
+     */
     inline static std::string indent() { return std::string(indent_level * 2, ' '); }
 
+    /**
+     * @brief Converts an integer to a zero-padded hexadecimal string.
+     * @param n Number to convert.
+     * @param d Number of hex digits.
+     * @return Hexadecimal string.
+     */
     inline static std::string hex(Uint32 n, Uint8 d)
     {
         std::string s(d, '0');
@@ -200,6 +277,13 @@ public:
             s[i] = "0123456789ABCDEF"[n & 0xF];
         return s;
     };
+
+    /**
+     * @brief Pads a string with spaces to a specified length.
+     * @param text Input string.
+     * @param d Desired length.
+     * @return Padded string.
+     */
     inline static std::string pad(std::string text, Uint8 d)
     {
         std::string ret = text;
@@ -208,4 +292,9 @@ public:
         }
         return ret;
     };
+    /** @} */
+
+private:
+    inline static int indent_level = 0;
+        
 };
