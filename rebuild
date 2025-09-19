@@ -2,8 +2,8 @@
 
 # Usage: ./rebuild [local]
 # If "local" is passed, install to $HOME/.local, else install system-wide to /usr/local
-# Make sure your headers are in include/SDOM2/ and your CMakeLists.txt uses:
-#   install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/SDOM2 DESTINATION include)
+# Make sure your headers are in include/SDOM/ and your CMakeLists.txt uses:
+#   install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/SDOM DESTINATION include)
 
 BUILD_DIR="build"
 

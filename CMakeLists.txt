@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 # Project name and version
-project(SDOM2 VERSION 1.0 LANGUAGES CXX)
+project(SDOM VERSION 1.0 LANGUAGES CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 23)
@@ -40,4 +40,4 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 # Install rules
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 # install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION include)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/SDOM2 DESTINATION include)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/SDOM DESTINATION include)

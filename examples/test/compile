@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WORKSPACE="/home/jay/Documents/GitHub/SDOM2"
+WORKSPACE="/home/jay/Documents/GitHub/SDOM"
 
 if [ "$1" == "clean" ]; then
     echo "Cleaning $WORKSPACE/build and $WORKSPACE/examples/test/build ..."
@@ -10,8 +10,8 @@ fi
 # --- Build and install the API library ---
 cd "$WORKSPACE"
 
-if [ ! -d "include/SDOM2" ]; then
-    echo "ERROR: Headers should be in $WORKSPACE/include/SDOM2/"
+if [ ! -d "include/SDOM" ]; then
+    echo "ERROR: Headers should be in $WORKSPACE/include/SDOM/"
     exit 1
 fi
 
