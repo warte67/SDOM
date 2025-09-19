@@ -1,7 +1,7 @@
 # SDOM: Simple SDL Document Object Model API
 [![Build Status](https://img.shields.io/github/actions/workflow/status/warte67/SDOM/build.yml?branch=master)](https://github.com/warte67/SDOM/actions)
 [![License](https://img.shields.io/badge/license-ZLIB-blue.svg)](LICENSE)
-[![Documentation](https://img.shields.io/badge/docs-Doxygen-blue)](https://warte67.github.io/SDOM/)
+[![Documentation](https://img.shields.io/badge/docs-Doxygen-blue)](https://warte67.github.io/SDOM/docs/html/)
 
 https://warte67.github.io/SDOM/docs/html/
 
