@@ -25,6 +25,11 @@
 var NAVTREE =
 [
   [ "SDOM - Simple SDL Document Object Model", "index.html", [
+    [ "SDOM Documentation", "index.html#autotoc_md0", null ],
+    [ "Project Description", "md_progress.html", [
+      [ "Progress Updates", "md_progress.html#autotoc_md2", null ],
+      [ "ToDo:", "md_progress.html#autotoc_md3", null ]
+    ] ],
     [ "Deprecated List", "deprecated.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -59,7 +64,7 @@ var NAVTREEINDEX =
 "SDOM_8hpp.html",
 "classdetail_1_1iter__impl.html#a94108d1a7563e103534f23eb5c1ee175",
 "functions_func_b.html",
-"structdetail_1_1is__default__constructible.html"
+"structdetail_1_1is__constructible__tuple.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

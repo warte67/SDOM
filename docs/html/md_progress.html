@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>SDOM - Simple SDL Document Object Model: Related Pages</title>
+<title>SDOM - Simple SDL Document Object Model: Project Description</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('pages.html','',''); });
+$(function(){initNavTree('md_progress.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -87,18 +87,66 @@ $(function(){initNavTree('pages.html','',''); });
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">Related Pages</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Project Description </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all related documentation pages:</div><div class="directory">
-<table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="md_progress.html" target="_self">Project Description</a></td><td class="desc"></td></tr>
-<tr id="row_1_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="deprecated.html" target="_self">Deprecated List</a></td><td class="desc"></td></tr>
-</table>
-</div><!-- directory -->
-</div><!-- contents -->
+<div class="textblock"><p><a class="anchor" id="autotoc_md1"></a></p>
+<p>This project is a C++23 application utilizing SDL3 for graphical rendering and event handling. The goal is to create a simple Document Object Model (DOM) API for SDL3, focusing on building a GUI interface for SDL3 developers to use in their games or other cross-platform applications.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+Progress Updates</h1>
+<ul>
+<li><b>[July 2, 2025]</b> Initial rough draft and proof of concept.</li>
+<li><b>[August 5, 2025]</b> SDOM secondary rough draft</li>
+<li><b>[September 19, 2025]</b><ul>
+<li>Proof of concept approved. Main development approved. Work begins officially.</li>
+</ul>
+</li>
+</ul>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+ToDo:</h1>
+<ol type="1">
+<li>Refine <a class="el" href="SDOM_8hpp.html" title="Common include for SDOM-based projects. Defines macros and utilities.">SDOM.hpp</a> Includes<ul>
+<li>Remove unnecessary standard and SDL includes.</li>
+<li>Only include what’s needed for macros and exceptions.</li>
+<li>Move heavy/optional includes to implementation files.</li>
+</ul>
+</li>
+<li>Macro Improvements<ul>
+<li>Ensure macros are robust and documented.</li>
+<li>Add Doxygen comments for each macro.</li>
+</ul>
+</li>
+<li>Global Accessors<ul>
+<li>Decide on global accessor functions (e.g., for SDL objects).</li>
+<li>Document intended usage and limitations.</li>
+</ul>
+</li>
+<li>Language Hooks<ul>
+<li>Plan for hooks to support other languages (e.g., Python bindings).</li>
+<li>Add placeholder comments or sections.</li>
+</ul>
+</li>
+<li>Documentation<ul>
+<li>Add Doxygen comments for all public API elements.</li>
+<li>Update progress.md with daily progress and ToDo items.</li>
+</ul>
+</li>
+<li>Testing<ul>
+<li>Add unit tests for macros and exception handling. </li>
+</ul>
+</li>
+</ol>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
 </div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
 </div><!-- container -->
 <footer>
   <a href="https://github.com/warte67/SDOM">Back to SDOM on GitHub</a>
