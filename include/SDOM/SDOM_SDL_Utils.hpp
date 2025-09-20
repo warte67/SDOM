@@ -38,7 +38,7 @@
 #ifndef __SDOM_SDL_UTILS_HPP__
 #define __SDOM_SDL_UTILS_HPP__
 
-#include "SDOM2/SDOM.hpp"
+#include <SDOM/SDOM.hpp>
 
 namespace SDOM
 {

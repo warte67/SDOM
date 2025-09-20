@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['white_0',['WHITE',['../classCLR.html#ac31a33dfb8b903a027b48eb638fc21a4',1,'CLR']]],
-  ['width_1',['width',['../structSDOM_1_1InitDisplayObject.html#a1776b5d8eb7b90d5976eda2fdcd0bc98',1,'SDOM::InitDisplayObject']]],
-  ['windowflags_2',['windowFlags',['../structSDOM_1_1Core_1_1CoreConfig.html#afa4486ca9134c3cb38417f230399ca83',1,'SDOM::Core::CoreConfig']]],
-  ['windowheight_3',['windowHeight',['../structSDOM_1_1Core_1_1CoreConfig.html#a8c437dc7c49ff80c7904ce46fbca14d9',1,'SDOM::Core::CoreConfig']]],
-  ['windowwidth_4',['windowWidth',['../structSDOM_1_1Core_1_1CoreConfig.html#acd80478dc5e6f4dc3b4f3c591eafd783',1,'SDOM::Core::CoreConfig']]]
+  ['red_0',['RED',['../classCLR.html#a2ade273b4929536356e6a5a68242a596',1,'CLR']]],
+  ['relatedtarget_1',['relatedTarget',['../classSDOM_1_1Event.html#a864aa602f3ae586d9243b3fa2e4e1381',1,'SDOM::Event']]],
+  ['rendererlogicalpresentation_2',['rendererLogicalPresentation',['../structSDOM_1_1Core_1_1CoreConfig.html#aa1c9ec435338446bb4a8043f70b4e3e7',1,'SDOM::Core::CoreConfig']]],
+  ['reset_3',['RESET',['../classCLR.html#a3870d8fb9704714a9b5d35631a67be74',1,'CLR']]],
+  ['resize_4',['Resize',['../classSDOM_1_1EventType.html#aee0bf15b2928ae0cbfe184c893b4c27c',1,'SDOM::EventType']]],
+  ['return_5',['RETURN',['../classCLR.html#a7a9eedeac52778653bca2160deea4e4d',1,'CLR']]],
+  ['reversed_6',['REVERSED',['../classCLR.html#a361b3fc2802281a419a6fa9205c0c548',1,'CLR']]],
+  ['right_7',['right',['../structSDOM_1_1Bounds.html#a94c040502f6cc3d683a928756708db4d',1,'SDOM::Bounds']]]
 ];

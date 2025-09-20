@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['2_20factory_20registration_0',['2. Factory Registration',['../md_extensible__factory.html#autotoc_md42',1,'']]],
-  ['2_20private_20constructors_20friend_20factory_1',['2. Private Constructors &amp;amp; Friend Factory',['../md_extensible__factory.html#autotoc_md50',1,'']]]
+  ['description_0',['Project Description',['../md_progress.html',1,'']]],
+  ['design_1',['SDOM Core Framework Design',['../md_core__framework.html',1,'']]],
+  ['document_20object_20model_2',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]]
 ];

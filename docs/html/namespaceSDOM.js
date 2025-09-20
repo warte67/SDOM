@@ -2,6 +2,8 @@ var namespaceSDOM =
 [
     [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
     [ "Core", "classSDOM_1_1Core.html", "classSDOM_1_1Core" ],
+    [ "Event", "classSDOM_1_1Event.html", "classSDOM_1_1Event" ],
+    [ "EventType", "classSDOM_1_1EventType.html", "classSDOM_1_1EventType" ],
     [ "EventTypeHash", "structSDOM_1_1EventTypeHash.html", "structSDOM_1_1EventTypeHash" ],
     [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
     [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
@@ -9,7 +11,7 @@ var namespaceSDOM =
     [ "InitDisplayObject", "structSDOM_1_1InitDisplayObject.html", "structSDOM_1_1InitDisplayObject" ],
     [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
     [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
-    [ "Json", "namespaceSDOM.html#abe4862bfb43150a4d8e0ad71ffa3e1df", null ],
+    [ "Json", "namespaceSDOM.html#aaf9b01789ed8d0c8a88ed4f61d168937", null ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
       [ "TOP_LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1", null ],

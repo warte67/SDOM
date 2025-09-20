@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['benefits_0',['Benefits',['../md_core__framework.html#autotoc_md23',1,'Benefits'],['../md_extensible__factory.html#autotoc_md45',1,'Benefits'],['../md_extensible__factory.html#autotoc_md62',1,'Benefits']]],
+  ['benefits_0',['benefits',['../md_extensible__factory.html#autotoc_md62',1,'Benefits'],['../md_extensible__factory.html#autotoc_md45',1,'Benefits'],['../md_core__framework.html#autotoc_md23',1,'Benefits']]],
   ['bg_1',['bg',['../classCLR.html#a270a5369a80821f52e34a6be64f8ca89',1,'CLR']]],
   ['bg_5fblack_2',['BG_BLACK',['../classCLR.html#a37bc9dc667e6556bb1d95d7e614f32d6',1,'CLR']]],
   ['bg_5fblue_3',['BG_BLUE',['../classCLR.html#a08714fb27425dfaad4ad76d5769cbd83',1,'CLR']]],
@@ -24,12 +24,13 @@ var searchData=
   ['blinking_21',['BLINKING',['../classCLR.html#a4dd77e6050dafa4c0e36ce01a5400587',1,'CLR']]],
   ['blue_22',['BLUE',['../classCLR.html#a1d8aa7fe91531370ea99b43cdb55c4d7',1,'CLR']]],
   ['bold_23',['BOLD',['../classCLR.html#a06931db8ae45986588be7ad57f2c91a2',1,'CLR']]],
-  ['bottom_24',['BOTTOM',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a1fabf63de5c96c78e2a40805bcdeb73b',1,'SDOM']]],
-  ['bottom_25',['bottom',['../structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99',1,'SDOM::Bounds']]],
-  ['bottom_5fcenter_26',['BOTTOM_CENTER',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a3480601794fd3b5473219ae158219fd4',1,'SDOM']]],
-  ['bottom_5fleft_27',['BOTTOM_LEFT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a8d81ac82421d1b03da58fccb9174892e',1,'SDOM']]],
-  ['bottom_5fright_28',['BOTTOM_RIGHT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a341b72aaab1308a3e6667af1e52f5def',1,'SDOM']]],
-  ['bounds_29',['Bounds',['../structSDOM_1_1Bounds.html',1,'SDOM']]],
-  ['brown_30',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]],
-  ['byte_31',['Byte',['../SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539',1,'SDOM_CLR.hpp']]]
+  ['bottom_24',['bottom',['../structSDOM_1_1Bounds.html#a9f7ce48d21c84daffa17b83355f51481',1,'SDOM::Bounds::bottom'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a1fabf63de5c96c78e2a40805bcdeb73b',1,'SDOM::BOTTOM']]],
+  ['bottom_5fcenter_25',['BOTTOM_CENTER',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a3480601794fd3b5473219ae158219fd4',1,'SDOM']]],
+  ['bottom_5fleft_26',['BOTTOM_LEFT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a8d81ac82421d1b03da58fccb9174892e',1,'SDOM']]],
+  ['bottom_5fright_27',['BOTTOM_RIGHT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a341b72aaab1308a3e6667af1e52f5def',1,'SDOM']]],
+  ['bounds_28',['Bounds',['../structSDOM_1_1Bounds.html',1,'SDOM']]],
+  ['brown_29',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]],
+  ['bubbling_30',['Bubbling',['../classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8a3c482809f52a8017df255cb727400452',1,'SDOM::Event']]],
+  ['button_31',['button',['../classSDOM_1_1Event.html#aae1bbc273d8b8debd62fc8780f499b52',1,'SDOM::Event']]],
+  ['byte_32',['Byte',['../SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539',1,'SDOM_CLR.hpp']]]
 ];

@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['left_0',['left',['../structSDOM_1_1Bounds.html#a5268f1526e83122173b7de40f83ac7c4',1,'SDOM::Bounds']]],
-  ['lt_5fblue_1',['LT_BLUE',['../classCLR.html#ac9c88a575b06a832e68fe8d62c45135c',1,'CLR']]],
-  ['lt_5fcyan_2',['LT_CYAN',['../classCLR.html#a659340034a5aa7b2149ccc1888ceb694',1,'CLR']]],
-  ['lt_5fgrn_3',['LT_GRN',['../classCLR.html#ab42517ec56b3dc265e62bf4702302266',1,'CLR']]]
+  ['inactive_0',['Inactive',['../classSDOM_1_1EventType.html#a5b3a6ef4ebf1de3e3217a5b864bcd9f9',1,'SDOM::EventType']]],
+  ['isclickable_1',['isClickable',['../structSDOM_1_1InitDisplayObject.html#a04e490c166cf49f159edb9f9a67e0a25',1,'SDOM::InitDisplayObject']]],
+  ['isenabled_2',['isEnabled',['../structSDOM_1_1InitDisplayObject.html#ad680ae15819841f92862c81b6409df4e',1,'SDOM::InitDisplayObject']]],
+  ['ishidden_3',['isHidden',['../structSDOM_1_1InitDisplayObject.html#a148a3917ba1dde9625f9d5b1f8d886cb',1,'SDOM::InitDisplayObject']]],
+  ['italic_4',['ITALIC',['../classCLR.html#ae71613c60736bf456f5353d5e0b7f31b',1,'CLR']]]
 ];

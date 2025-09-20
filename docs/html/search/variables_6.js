@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['height_0',['height',['../structSDOM_1_1InitDisplayObject.html#a8e3156d37000391e2395c630e1dde234',1,'SDOM::InitDisplayObject']]]
+  ['green_0',['GREEN',['../classCLR.html#a3003dd364e606e44a28d3bf3081f624c',1,'CLR']]],
+  ['grey_1',['GREY',['../classCLR.html#af89e905bfd2feb399c0b6fda7ea2ae07',1,'CLR']]]
 ];

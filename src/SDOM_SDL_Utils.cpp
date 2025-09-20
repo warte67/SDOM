@@ -36,7 +36,7 @@
  *
  ******************/
 
- #include "SDOM2/SDOM_SDL_Utils.hpp"
+ #include <SDOM/SDOM_SDL_Utils.hpp>
 
 namespace SDOM
 {

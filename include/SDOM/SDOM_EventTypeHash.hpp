@@ -37,8 +37,8 @@
 #ifndef SDOM_EVENT_TYPE_HASH_HPP
 #define SDOM_EVENT_TYPE_HASH_HPP
 
-#include "SDOM2/SDOM_Event.hpp"
-#include "SDOM2/SDOM_EventType.hpp"
+#include <SDOM/SDOM_Event.hpp>
+#include <SDOM/SDOM_EventType.hpp>
 
 namespace SDOM {
 

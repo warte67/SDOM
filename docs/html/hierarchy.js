@@ -6,6 +6,7 @@ var hierarchy =
     [ "std::enable_shared_from_this", null, [
       [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", null ]
     ] ],
+    [ "SDOM::EventType", "classSDOM_1_1EventType.html", null ],
     [ "SDOM::EventTypeHash", "structSDOM_1_1EventTypeHash.html", null ],
     [ "std::exception", null, [
       [ "SDOM::Exception", "classSDOM_1_1Exception.html", null ]
@@ -14,6 +15,7 @@ var hierarchy =
     [ "SDOM::IUnitTest", "classSDOM_1_1IUnitTest.html", [
       [ "SDOM::IDataObject", "classSDOM_1_1IDataObject.html", [
         [ "SDOM::Core", "classSDOM_1_1Core.html", null ],
+        [ "SDOM::Event", "classSDOM_1_1Event.html", null ],
         [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", null ]
       ] ]
     ] ],

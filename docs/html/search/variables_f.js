@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['underline_0',['UNDERLINE',['../classCLR.html#acc3a4f736db8118cef09f0f6000e6702',1,'CLR']]]
+  ['quit_0',['Quit',['../classSDOM_1_1EventType.html#ade80674f9c8c8564ae6f46f48f8f7641',1,'SDOM::EventType']]]
 ];

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['green_0',['GREEN',['../classCLR.html#a3003dd364e606e44a28d3bf3081f624c',1,'CLR']]],
-  ['grey_1',['GREY',['../classCLR.html#af89e905bfd2feb399c0b6fda7ea2ae07',1,'CLR']]]
+  ['felapsedtime_0',['fElapsedTime',['../classSDOM_1_1Event.html#ab14d7ed6c4435d42b3aaf592ebb54fda',1,'SDOM::Event']]],
+  ['focusgained_1',['FocusGained',['../classSDOM_1_1EventType.html#af4fa0ac8739b6ec24c86817ba7384583',1,'SDOM::EventType']]],
+  ['focuslost_2',['FocusLost',['../classSDOM_1_1EventType.html#ae9d92364cfb7d229a12c51a04f0fc1e6',1,'SDOM::EventType']]]
 ];
