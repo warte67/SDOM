@@ -427,7 +427,7 @@ Core::setStage(std::string name);
 
 Example usage:
 ```cpp
-Core& core = getCore();
+Core& core = SDOM::getCore();
 core.setStage("gameplay"); // Switch to the gameplay scene
 ```
 
