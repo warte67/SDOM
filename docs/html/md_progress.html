@@ -92,9 +92,9 @@ $(function(){initNavTree('md_progress.html','',''); });
   <div class="headertitle"><div class="title">Project Description </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md64"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md65"></a></p>
 <p>This project is a C++23 application utilizing SDL3 for graphical rendering and event handling. The goal is to create a simple Document Object Model (DOM) API for SDL3, focusing on building a GUI interface for SDL3 developers to use in their games or other cross-platform applications.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md65"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
 Progress Updates</h1>
 <ul>
 <li><b>[July 2, 2025]</b> Initial rough draft and proof of concept.</li>
@@ -108,10 +108,22 @@ Progress Updates</h1>
 <li>Fixed Doxyfile issues (footer path, PROJECT_BRIEF syntax) for clean documentation generation.</li>
 <li>Validated Doxygen output for class, group, and member documentation.</li>
 <li><span class="tt">IDataObject</span> designed. This base interface class handles JSON parsing and serialization.</li>
+<li>Core class scaffold implemented as a thread-safe singleton.</li>
+<li>Core initializes SDL, window, renderer, and texture with correct sizing and color from config.</li>
+<li>Window and renderer display with correct logical size and background color.</li>
+<li>Configuration via struct, JSON string, and JSON file is working and uses sensible defaults.</li>
+<li>Main loop, event polling, and error handling are scaffolded and ready for extension.</li>
+<li>Added six callback/hook registration methods to <span class="tt">Core</span>: <span class="tt">registerOnInit()</span>, <span class="tt">registerOnQuit()</span>, <span class="tt">registerOnUpdate()</span>, <span class="tt">registerOnEvent()</span>, <span class="tt">registerOnRender()</span>, <span class="tt">registerOnUnitTest()</span>.</li>
+<li>Callbacks are invoked at the appropriate lifecycle and event points, enabling user-defined logic for initialization, quitting, updating, event handling, rendering, and unit testing.</li>
+<li>Added <span class="tt">preserveAspectRatio</span> and <span class="tt">allowTextureResize</span> flags to <span class="tt">CoreConfig</span> for flexible window/texture resizing.</li>
+<li>Window resizing now supports two modes: aspect ratio preservation and free resizing, controlled by config.</li>
+<li>Texture resizing can be disabled via config, allowing fixed-resolution rendering regardless of window size.</li>
+<li>JSON configuration supports both new flags for runtime flexibility.</li>
+<li>Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.</li>
 </ul>
 </li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md67"></a>
 ToDo:</h1>
 <ul>
 <li>Develop base framework classes:<ul>

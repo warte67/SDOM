@@ -6,7 +6,7 @@ var searchData=
   ['default_3',['DEFAULT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee',1,'SDOM']]],
   ['default_20stage_4',['Overriding the Default Stage',['../md_core__framework.html#autotoc_md30',1,'']]],
   ['description_5',['Project Description',['../md_progress.html',1,'']]],
-  ['design_6',['Design',['../md_extensible__factory.html#autotoc_md37',1,'Extensible Factory Design'],['../md_extensible__factory.html#autotoc_md58',1,'Resource Pointer (<span class="tt">resource_ptr</span>) Design'],['../md_core__framework.html',1,'SDOM Core Framework Design']]],
+  ['design_6',['Design',['../md_extensible__factory.html#autotoc_md37',1,'Extensible Factory Design'],['../md_extensible__factory.html#autotoc_md59',1,'Resource Pointer (<span class="tt">resource_ptr</span>) Design'],['../md_core__framework.html',1,'SDOM Core Framework Design']]],
   ['diagram_7',['Composition Diagram',['../md_core__framework.html#autotoc_md19',1,'']]],
   ['dim_8',['DIM',['../classCLR.html#ae6bf249365e22dd06075824ed57ddfea',1,'CLR']]],
   ['display_20texture_20for_20stages_9',['Shared Display Texture for Stages',['../md_core__framework.html#autotoc_md33',1,'']]],

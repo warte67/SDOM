@@ -137,10 +137,12 @@ Initialization Flow:</h2>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 Example Configuration API:</h2>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>CoreConfig {</div>
-<div class="line">    <span class="keywordtype">int</span> pixelWidth;</div>
-<div class="line">    <span class="keywordtype">int</span> pixelHeight;</div>
-<div class="line">    <span class="keywordtype">int</span> windowWidth;</div>
-<div class="line">    <span class="keywordtype">int</span> windowHeight;</div>
+<div class="line">    <span class="keywordtype">float</span> windowWidth;</div>
+<div class="line">    <span class="keywordtype">float</span> windowHeight;</div>
+<div class="line">    <span class="keywordtype">float</span> pixelWidth;   <span class="comment">// Virtual width of a single pixel (for logical scaling; can be fractional/non-square)</span></div>
+<div class="line">    <span class="keywordtype">float</span> pixelHeight;  <span class="comment">// Virtual height of a single pixel (for logical scaling; can be fractional/non-square)</span></div>
+<div class="line">    <span class="keywordtype">bool</span> preserveAspectRatio = <span class="keyword">true</span>;    <span class="comment">// Preserve original aspect ratio when resizing window</span></div>
+<div class="line">    <span class="keywordtype">bool</span> allowTextureResize = <span class="keyword">true</span>;     <span class="comment">// Allow texture resolution to change when resizing window</span></div>
 <div class="line">    SDL_RendererLogicalPresentation rendererFlags;</div>
 <div class="line">    SDL_WindowFlags windowFlags;</div>
 <div class="line">    SDL_PixelFormat colorFormat;</div>
@@ -172,10 +174,12 @@ Example API:</h3>
 <div class="fragment"><div class="line">Core&amp; core = getCore();</div>
 <div class="line">core.configureFromJson(R<span class="stringliteral">&quot;({</span></div>
 <div class="line"><span class="stringliteral">    &quot;core&quot;: {</span></div>
-<div class="line"><span class="stringliteral">        &quot;pixelWidth&quot;: 1280,</span></div>
-<div class="line"><span class="stringliteral">        &quot;pixelHeight&quot;: 720,</span></div>
-<div class="line"><span class="stringliteral">        &quot;windowWidth&quot;: 1280,</span></div>
-<div class="line"><span class="stringliteral">        &quot;windowHeight&quot;: 720,</span></div>
+<div class="line"><span class="stringliteral">        &quot;windowWidth&quot;: 1280.0,</span></div>
+<div class="line"><span class="stringliteral">        &quot;windowHeight&quot;: 720.0,</span></div>
+<div class="line"><span class="stringliteral">        &quot;pixelWidth&quot;: 2.0,</span></div>
+<div class="line"><span class="stringliteral">        &quot;pixelHeight&quot;: 2.0,</span></div>
+<div class="line"><span class="stringliteral">        &quot;allowTextureResize&quot;: false,</span></div>
+<div class="line"><span class="stringliteral">        &quot;preserveAspectRatio&quot;: true,</span></div>
 <div class="line"><span class="stringliteral">        &quot;rendererFlags&quot;: &quot;SDL_LOGICAL_PRESENTATION_LETTERBOX&quot;,</span></div>
 <div class="line"><span class="stringliteral">        &quot;windowFlags&quot;: &quot;SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE&quot;,</span></div>
 <div class="line"><span class="stringliteral">        &quot;colorFormat&quot;: &quot;SDL_PIXELFORMAT_RGBA8888&quot;</span></div>

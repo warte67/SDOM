@@ -9,9 +9,9 @@ var searchData=
   ['windowflags_6',['windowFlags',['../structSDOM_1_1Core_1_1CoreConfig.html#afa4486ca9134c3cb38417f230399ca83',1,'SDOM::Core::CoreConfig']]],
   ['windowflagsfromstring_7',['windowFlagsFromString',['../classSDOM_1_1SDL__Utils.html#ab30d7d6f2ee103ad52b35d0e6a1aa175',1,'SDOM::SDL_Utils']]],
   ['windowflagstostring_8',['windowFlagsToString',['../classSDOM_1_1SDL__Utils.html#aa8a8381ee8fee667d27ef087a3f330c2',1,'SDOM::SDL_Utils']]],
-  ['windowheight_9',['windowHeight',['../structSDOM_1_1Core_1_1CoreConfig.html#a8096aa7bfbaa2ea1ff9a341587fe42c6',1,'SDOM::Core::CoreConfig']]],
-  ['windowwidth_10',['windowWidth',['../structSDOM_1_1Core_1_1CoreConfig.html#a579178cb5ad0bfffc8b07b5e1ef8e922',1,'SDOM::Core::CoreConfig']]],
+  ['windowheight_9',['windowHeight',['../structSDOM_1_1Core_1_1CoreConfig.html#a8c437dc7c49ff80c7904ce46fbca14d9',1,'SDOM::Core::CoreConfig']]],
+  ['windowwidth_10',['windowWidth',['../structSDOM_1_1Core_1_1CoreConfig.html#acd80478dc5e6f4dc3b4f3c591eafd783',1,'SDOM::Core::CoreConfig']]],
   ['with_20global_20accessor_11',['Example Usage (with global accessor)',['../md_core__framework.html#autotoc_md18',1,'']]],
   ['word_12',['Word',['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'SDOM_CLR.hpp']]],
-  ['works_13',['How It Works',['../md_extensible__factory.html#autotoc_md59',1,'']]]
+  ['works_13',['How It Works',['../md_extensible__factory.html#autotoc_md60',1,'']]]
 ];

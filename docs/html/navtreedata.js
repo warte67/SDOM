@@ -69,38 +69,39 @@ var NAVTREE =
     ] ],
     [ "extensible_factory", "md_extensible__factory.html", [
       [ "Extensible Factory Design", "md_extensible__factory.html#autotoc_md37", [
-        [ "Requirements", "md_extensible__factory.html#autotoc_md38", null ],
-        [ "Recommended Approach", "md_extensible__factory.html#autotoc_md39", [
-          [ "1. Initializer Structs and JSON Configs", "md_extensible__factory.html#autotoc_md40", null ],
-          [ "2. Factory Registration", "md_extensible__factory.html#autotoc_md41", null ],
-          [ "3. Factory Create Methods", "md_extensible__factory.html#autotoc_md42", null ],
-          [ "4. Usage", "md_extensible__factory.html#autotoc_md43", null ]
+        [ "Resource Type Management", "md_extensible__factory.html#autotoc_md38", null ],
+        [ "Requirements", "md_extensible__factory.html#autotoc_md39", null ],
+        [ "Recommended Approach", "md_extensible__factory.html#autotoc_md40", [
+          [ "1. Initializer Structs and JSON Configs", "md_extensible__factory.html#autotoc_md41", null ],
+          [ "2. Factory Registration", "md_extensible__factory.html#autotoc_md42", null ],
+          [ "3. Factory Create Methods", "md_extensible__factory.html#autotoc_md43", null ],
+          [ "4. Usage", "md_extensible__factory.html#autotoc_md44", null ]
         ] ],
-        [ "Benefits", "md_extensible__factory.html#autotoc_md44", null ],
-        [ "Implementation Strategy", "md_extensible__factory.html#autotoc_md46", [
-          [ "1. Initializer Structs", "md_extensible__factory.html#autotoc_md47", null ],
-          [ "1a. Standardized Constructor Signatures", "md_extensible__factory.html#autotoc_md48", null ],
-          [ "2. Private Constructors &amp; Friend Factory", "md_extensible__factory.html#autotoc_md49", null ],
-          [ "3. Factory Registration System", "md_extensible__factory.html#autotoc_md50", null ],
-          [ "4. Generic Factory Create Method", "md_extensible__factory.html#autotoc_md51", null ],
-          [ "5. Extensibility", "md_extensible__factory.html#autotoc_md52", null ],
-          [ "6. Error Handling &amp; Validation", "md_extensible__factory.html#autotoc_md53", null ],
-          [ "7. Example Usage", "md_extensible__factory.html#autotoc_md54", null ]
+        [ "Benefits", "md_extensible__factory.html#autotoc_md45", null ],
+        [ "Implementation Strategy", "md_extensible__factory.html#autotoc_md47", [
+          [ "1. Initializer Structs", "md_extensible__factory.html#autotoc_md48", null ],
+          [ "1a. Standardized Constructor Signatures", "md_extensible__factory.html#autotoc_md49", null ],
+          [ "2. Private Constructors &amp; Friend Factory", "md_extensible__factory.html#autotoc_md50", null ],
+          [ "3. Factory Registration System", "md_extensible__factory.html#autotoc_md51", null ],
+          [ "4. Generic Factory Create Method", "md_extensible__factory.html#autotoc_md52", null ],
+          [ "5. Extensibility", "md_extensible__factory.html#autotoc_md53", null ],
+          [ "6. Error Handling &amp; Validation", "md_extensible__factory.html#autotoc_md54", null ],
+          [ "7. Example Usage", "md_extensible__factory.html#autotoc_md55", null ]
         ] ],
-        [ "Standardized Constructors for IDisplayObjects", "md_extensible__factory.html#autotoc_md56", null ],
-        [ "Configuration Format Choice", "md_extensible__factory.html#autotoc_md57", null ],
-        [ "Resource Pointer (<span class=\"tt\">resource_ptr</span>) Design", "md_extensible__factory.html#autotoc_md58", [
-          [ "How It Works", "md_extensible__factory.html#autotoc_md59", null ],
-          [ "Example Usage", "md_extensible__factory.html#autotoc_md60", null ],
-          [ "Benefits", "md_extensible__factory.html#autotoc_md61", null ],
-          [ "Implementation Outline", "md_extensible__factory.html#autotoc_md62", null ],
-          [ "Summary", "md_extensible__factory.html#autotoc_md63", null ]
+        [ "Standardized Constructors for IDisplayObjects", "md_extensible__factory.html#autotoc_md57", null ],
+        [ "Configuration Format Choice", "md_extensible__factory.html#autotoc_md58", null ],
+        [ "Resource Pointer (<span class=\"tt\">resource_ptr</span>) Design", "md_extensible__factory.html#autotoc_md59", [
+          [ "How It Works", "md_extensible__factory.html#autotoc_md60", null ],
+          [ "Example Usage", "md_extensible__factory.html#autotoc_md61", null ],
+          [ "Benefits", "md_extensible__factory.html#autotoc_md62", null ],
+          [ "Implementation Outline", "md_extensible__factory.html#autotoc_md63", null ],
+          [ "Summary", "md_extensible__factory.html#autotoc_md64", null ]
         ] ]
       ] ]
     ] ],
     [ "Project Description", "md_progress.html", [
-      [ "Progress Updates", "md_progress.html#autotoc_md65", null ],
-      [ "ToDo:", "md_progress.html#autotoc_md66", null ]
+      [ "Progress Updates", "md_progress.html#autotoc_md66", null ],
+      [ "ToDo:", "md_progress.html#autotoc_md67", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -117,7 +118,7 @@ var NAVTREE =
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
-        [ "All", "functions.html", null ],
+        [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
@@ -137,8 +138,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "SDOM_8hpp.html",
-"classSDOM_1_1IDisplayObject.html#a8468537ed2a4e40c33821f5ea66771ed",
-"structSDOM_1_1EventTypeHash.html"
+"classSDOM_1_1IDisplayObject.html#a6a0aef63a4997f367efde402c8f57bc0",
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a901d87dedda8db733f5e6d34c4eb5fe0"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

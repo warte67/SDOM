@@ -98,6 +98,25 @@ $(function(){initNavTree('md_extensible__factory.html','',''); });
 <h1 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
 Extensible Factory Design</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
+Resource Type Management</h2>
+<p>In essence, the Factory serves as a simple database for all resource types in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. By tracking each resource's type and unique name, it enables:</p><ul>
+<li>Type-safe lookup and retrieval</li>
+<li>Bulk queries for all resources of a given type (e.g., all Stage objects)</li>
+<li>Centralized management and enumeration of resources This approach makes resource management extensible, efficient, and easy to maintain as the project grows.</li>
+</ul>
+<p>The Factory is responsible for creating, registering, and tracking all resource types in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. This includes:</p><ul>
+<li><b>Stage objects</b> (application windows/root display objects)</li>
+<li><b>DisplayObjects</b> (Button, Label, Group, Checkbox, etc.)</li>
+<li><b>Other resources</b> (bitmap images, TrueType fonts, audio files, etc.)</li>
+</ul>
+<p>Each resource type is registered with the Factory, allowing type-safe creation, lookup, and management. The Factory maintains internal registries for each type, enabling extensibility and centralized resource management. Stages are treated as a specific resource type, distinct from other DisplayObjects, but managed using the same registration and creation mechanisms.</p>
+<p>This approach allows the Factory to:</p><ul>
+<li>Track and enumerate all resources by type and unique name</li>
+<li>Provide APIs for resource creation, retrieval, and destruction</li>
+<li>Support future resource types with minimal changes</li>
+</ul>
+<p>The Core composes the Factory and uses it to create and retrieve resources, while managing the application's active Stage(s) and lifecycle.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
 Requirements</h2>
 <ul>
 <li>All DisplayObjects and ResourceObjects must be created via the Factory; direct construction is forbidden.</li>
@@ -109,15 +128,15 @@ Requirements</h2>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
 Recommended Approach</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
 1. Initializer Structs and JSON Configs</h3>
 <ul>
 <li>Each object type defines an initializer struct for manual construction, including a unique "name" field for each resource.</li>
 <li>JSON configs are used for dynamic/config-based construction, and must include a unique "name" for each resource.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
 2. Factory Registration</h3>
 <ul>
 <li>The Factory registers a creation lambda for each type, accepting either a JSON config or an initializer struct (using <span class="tt">std::any</span> or <span class="tt">std::variant</span>). Resources are registered and tracked by their unique names.</li>
@@ -133,13 +152,13 @@ Recommended Approach</h2>
 <div class="ttc" id="aSDOM_8hpp_html_ae225ab718bd4f5e2221129f026d3d8f1"><div class="ttname"><a href="SDOM_8hpp.html#ae225ab718bd4f5e2221129f026d3d8f1">ERROR</a></div><div class="ttdeci">#define ERROR(message)</div><div class="ttdoc">Throws an SDOM exception with file and line info.</div><div class="ttdef"><b>Definition</b> SDOM.hpp:374</div></div>
 </div><!-- fragment --></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
 3. Factory Create Methods</h3>
 <ul>
 <li>The Factory exposes a generic <span class="tt">create(typeName, args)</span> method, which dispatches to the correct constructor based on argument type.</li>
 <li>Convenience overloads can be provided for common patterns.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
 4. Usage</h3>
 <ul>
 <li>Manual construction: <div class="fragment"><div class="line">InitBox boxInit;</div>
@@ -155,7 +174,7 @@ Recommended Approach</h2>
 <div class="line"><span class="keyword">auto</span> box = factory-&gt;create(<span class="stringliteral">&quot;Box&quot;</span>, boxConfig);</div>
 </div><!-- fragment --></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
 Benefits</h2>
 <ul>
 <li>Centralized, extensible object creation.</li>
@@ -165,9 +184,9 @@ Benefits</h2>
 </ul>
 <hr  />
 <p> This document will be updated as the Factory design evolves.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md46"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
 Implementation Strategy</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
 1. Initializer Structs</h3>
 <ul>
 <li>For each object/resource type, define a C++ struct (e.g., <span class="tt">InitBox</span>, <span class="tt">InitLabel</span>) containing all required fields, including a unique std::string name. These structures are based on the <span class="tt">InitDisplayObject</span> structure.</li>
@@ -196,7 +215,7 @@ Implementation Strategy</h2>
 </div><!-- fragment --></li>
 <li>Ensure these structs can be constructed from JSON (e.g., via a helper function or constructor).</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
 1a. Standardized Constructor Signatures</h3>
 <ul>
 <li>All DisplayObjects should have constructors with a consistent signature:<ul>
@@ -222,7 +241,7 @@ Implementation Strategy</h2>
 </div><!-- fragment --></li>
 <li>This ensures extensibility and consistency for Factory-based creation.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
 2. Private Constructors &amp; Friend Factory</h3>
 <ul>
 <li>In each class, make the constructor protected/private.</li>
@@ -235,7 +254,7 @@ Implementation Strategy</h2>
 <div class="line">};</div>
 </div><!-- fragment --></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
 3. Factory Registration System</h3>
 <ul>
 <li>Use a map to register creation lambdas for each type: <div class="fragment"><div class="line"><span class="keyword">using </span>CreatorFunc = std::function&lt;std::shared_ptr&lt;IDataObject&gt;(<span class="keyword">const</span> std::any&amp;)&gt;;</div>
@@ -251,7 +270,7 @@ Implementation Strategy</h2>
 <div class="line">};</div>
 </div><!-- fragment --></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
 4. Generic Factory Create Method</h3>
 <ul>
 <li>Implement a method to create objects by type name and argument: <div class="fragment"><div class="line">std::shared_ptr&lt;IDataObject&gt; Factory::create(<span class="keyword">const</span> std::string&amp; type, <span class="keyword">const</span> std::any&amp; args) {</div>
@@ -264,21 +283,21 @@ Implementation Strategy</h2>
 </div><!-- fragment --></li>
 <li>Optionally, add type-safe wrappers for common types.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
 5. Extensibility</h3>
 <ul>
 <li>New types can be registered by adding a lambda to the registry.</li>
 <li>No need to modify Factory internals for new types.</li>
 <li>Document the registration pattern for contributors.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
 6. Error Handling &amp; Validation</h3>
 <ul>
 <li>Factory should report errors for unknown types, invalid arguments, or duplicate resource names.</li>
 <li>Factory should also validate destruction requests by name or resource_ptr, and report errors if the resource does not exist.</li>
 <li>Consider using exceptions or logging for diagnostics.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
 7. Example Usage</h3>
 <ul>
 <li>Manual construction: <div class="fragment"><div class="line">  InitBox boxInit;</div>
@@ -301,7 +320,7 @@ Implementation Strategy</h2>
 </ul>
 <hr  />
 <p> This strategy enables centralized, extensible, and type-safe object/resource creation for <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
 Standardized Constructors for IDisplayObjects</h2>
 <ul>
 <li>Every <span class="tt">IDisplayObject</span>-based device will have two constructors:<ul>
@@ -312,7 +331,7 @@ Standardized Constructors for IDisplayObjects</h2>
 <li>This approach ensures flexibility, extensibility, and consistency across all display objects.</li>
 <li>Factory will use these constructors to instantiate objects based on user input or configuration.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md58"></a>
 Configuration Format Choice</h2>
 <ul>
 <li>JSON is the preferred configuration format for object/resource creation.</li>
@@ -320,10 +339,10 @@ Configuration Format Choice</h2>
 <li>XML support could be added in the future if needed, but would require additional maintenance and testing.</li>
 <li>Focus on making JSON robust and extensible for all use cases.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md58"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
 Resource Pointer (<span class="tt">resource_ptr</span>) Design</h2>
 <p>To provide safe, pointer-like access to Factory-managed resources, <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> introduces a custom smart pointer called <span class="tt">resource_ptr</span>. This pointer mimics the syntax and usability of a raw pointer, but internally tracks its resource via a unique name (identifier) and queries the Factory for the current pointer on each access.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
 How It Works</h3>
 <ul>
 <li>Each resource managed by the Factory is assigned a unique std::string name (identifier).</li>
@@ -332,7 +351,7 @@ How It Works</h3>
 <li>If the resource has been destroyed, the Factory returns <span class="tt">nullptr</span>, so the <span class="tt">resource_ptr</span> automatically becomes null and safe to use.</li>
 <li>On assignment, a <span class="tt">resource_ptr</span> must be assigned to a valid Factory-managed resource (by name or pointer); otherwise, it should throw an error or log a warning.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md61"></a>
 Example Usage</h3>
 <div class="fragment"><div class="line">resource_ptr&lt;Box&gt; box = factory-&gt;create&lt;Box&gt;(...);</div>
 <div class="line"><span class="keywordflow">if</span> (box) box-&gt;doSomething();</div>
@@ -343,7 +362,7 @@ Example Usage</h3>
 <div class="line">factory-&gt;destroy(<span class="stringliteral">&quot;myBox&quot;</span>);</div>
 <div class="line"><span class="comment">// Destroy by resource_ptr</span></div>
 <div class="line">factory-&gt;destroy(box);</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md61"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md62"></a>
 Benefits</h3>
 <ul>
 <li>Prevents dangling pointers—users never access deleted resources.</li>
@@ -352,7 +371,7 @@ Benefits</h3>
 <li>No need for manual notification or observer lists; pointer validity is always up-to-date.</li>
 <li>Unique resource names ensure reliable lookup, assignment, and destruction.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md62"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md63"></a>
 Implementation Outline</h3>
 <ul>
 <li><span class="tt">resource_ptr</span> stores a resource name and a Factory reference.</li>
@@ -361,7 +380,7 @@ Implementation Outline</h3>
 <li>The pointer provides all standard pointer operators for seamless integration.</li>
 <li>Assignment to a resource_ptr requires validation against the Factory registry.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md63"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md64"></a>
 Summary</h3>
 <p><span class="tt">resource_ptr</span> combines the safety of smart pointers with the usability of raw pointers, making it ideal for centralized resource management in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. It ensures that all resource references are either valid or null, with no risk of dangling pointers, and requires no extra effort from the user beyond normal pointer usage. Unique resource names and flexible destruction methods further enhance safety and usability. </p>
 </div></div><!-- contents -->

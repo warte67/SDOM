@@ -129,11 +129,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3dfb99c2c13828f5556d3ed27f378bc9" id="r_a3dfb99c2c13828f5556d3ed27f378bc9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3dfb99c2c13828f5556d3ed27f378bc9">onRender</a> ()</td></tr>
 <tr class="memitem:aeff594d7f9097244d6888ab8a5f62f4d" id="r_aeff594d7f9097244d6888ab8a5f62f4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeff594d7f9097244d6888ab8a5f62f4d">onEvent</a> (Event &amp;event)</td></tr>
 <tr class="memitem:ac957e460daa810202bb6d0abb59a50b4" id="r_ac957e460daa810202bb6d0abb59a50b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac957e460daa810202bb6d0abb59a50b4">onUpdate</a> (float fElapsedTime)</td></tr>
+<tr class="memitem:a84c2960a86f69cadd93f8afffd3e9cdf" id="r_a84c2960a86f69cadd93f8afffd3e9cdf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a84c2960a86f69cadd93f8afffd3e9cdf">onWindowResize</a> (int newWidth, int newHeight)</td></tr>
 <tr class="memitem:a1ab4133e73873e2d15f8f9db05ba913f" id="r_a1ab4133e73873e2d15f8f9db05ba913f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ab4133e73873e2d15f8f9db05ba913f">run</a> ()</td></tr>
 <tr class="memdesc:a1ab4133e73873e2d15f8f9db05ba913f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the main application loop.  <br /></td></tr>
 <tr class="memitem:a13722a2130d3cca8191ccb7795479a8b" id="r_a13722a2130d3cca8191ccb7795479a8b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13722a2130d3cca8191ccb7795479a8b">configure</a> (const <a class="el" href="structSDOM_1_1Core_1_1CoreConfig.html">CoreConfig</a> &amp;config)</td></tr>
 <tr class="memitem:a4e2c18eff490229af5a8c02289cc75f4" id="r_a4e2c18eff490229af5a8c02289cc75f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e2c18eff490229af5a8c02289cc75f4">configureFromJson</a> (const std::string &amp;json)</td></tr>
 <tr class="memitem:ae793ad3e0301faefabc0906398d1ab9d" id="r_ae793ad3e0301faefabc0906398d1ab9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae793ad3e0301faefabc0906398d1ab9d">configureFromJsonFile</a> (const std::string &amp;filename)</td></tr>
+<tr class="memitem:a1516d0393583f3d9c7e4d3a8d5a495e0" id="r_a1516d0393583f3d9c7e4d3a8d5a495e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1516d0393583f3d9c7e4d3a8d5a495e0">registerOnInit</a> (std::function&lt; bool()&gt; fn)</td></tr>
+<tr class="memitem:aa39ef543abb9c8266fa25d149fe00ada" id="r_aa39ef543abb9c8266fa25d149fe00ada"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa39ef543abb9c8266fa25d149fe00ada">registerOnQuit</a> (std::function&lt; void()&gt; fn)</td></tr>
+<tr class="memitem:a5f2153271d21265f98ab82a63f084de0" id="r_a5f2153271d21265f98ab82a63f084de0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f2153271d21265f98ab82a63f084de0">registerOnUpdate</a> (std::function&lt; void(float)&gt; fn)</td></tr>
+<tr class="memitem:a5a6f3fa3f33d9f24d08a2242bab15b04" id="r_a5a6f3fa3f33d9f24d08a2242bab15b04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a6f3fa3f33d9f24d08a2242bab15b04">registerOnEvent</a> (std::function&lt; void(const Event &amp;)&gt; fn)</td></tr>
+<tr class="memitem:ad06a2e372107715e5e3f8e865893d9a0" id="r_ad06a2e372107715e5e3f8e865893d9a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad06a2e372107715e5e3f8e865893d9a0">registerOnRender</a> (std::function&lt; void()&gt; fn)</td></tr>
+<tr class="memitem:a9c3241b0fe11b049828e4a04a8a541b0" id="r_a9c3241b0fe11b049828e4a04a8a541b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c3241b0fe11b049828e4a04a8a541b0">registerOnUnitTest</a> (std::function&lt; bool()&gt; fn)</td></tr>
+<tr class="memitem:ade16c7d2ec6378ca518fb2d6399cb4a8" id="r_ade16c7d2ec6378ca518fb2d6399cb4a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade16c7d2ec6378ca518fb2d6399cb4a8">registerOnWindowResize</a> (std::function&lt; void(int, int)&gt; fn)</td></tr>
+<tr class="memitem:a2dab2b3134ee347e201c6789b78743c6" id="r_a2dab2b3134ee347e201c6789b78743c6"><td class="memItemLeft" align="right" valign="top">SDL_Window *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2dab2b3134ee347e201c6789b78743c6">getWindow</a> () const</td></tr>
+<tr class="memitem:a3ebb4eab721a2f9befdd3c3c5f350897" id="r_a3ebb4eab721a2f9befdd3c3c5f350897"><td class="memItemLeft" align="right" valign="top">SDL_Renderer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ebb4eab721a2f9befdd3c3c5f350897">getRenderer</a> () const</td></tr>
+<tr class="memitem:a237897a02ab43ad118a878891dcf99fb" id="r_a237897a02ab43ad118a878891dcf99fb"><td class="memItemLeft" align="right" valign="top">SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a237897a02ab43ad118a878891dcf99fb">getTexture</a> () const</td></tr>
+<tr class="memitem:af7fb678eb00a6c51b65f77bb8dd931db" id="r_af7fb678eb00a6c51b65f77bb8dd931db"><td class="memItemLeft" align="right" valign="top">SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7fb678eb00a6c51b65f77bb8dd931db">getColor</a> () const</td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">Property System</div></td></tr>
 <tr class="memitem:a5b1d9c9a136de640cd006fb6216592c9" id="r_a5b1d9c9a136de640cd006fb6216592c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a5b1d9c9a136de640cd006fb6216592c9">fromJson</a> (const <a class="el" href="namespaceSDOM.html#abe4862bfb43150a4d8e0ad71ffa3e1df">Json</a> &amp;json)</td></tr>
 <tr class="memdesc:a5b1d9c9a136de640cd006fb6216592c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates object state from a JSON object.  <br /></td></tr>
@@ -355,6 +367,31 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="af7fb678eb00a6c51b65f77bb8dd931db" name="af7fb678eb00a6c51b65f77bb8dd931db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7fb678eb00a6c51b65f77bb8dd931db">&#9670;&#160;</a></span>getColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_Color SDOM::Core::getColor </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="acc1bbafa84a0d84455a9853bf93d03d7" name="acc1bbafa84a0d84455a9853bf93d03d7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc1bbafa84a0d84455a9853bf93d03d7">&#9670;&#160;</a></span>getCommands()</h2>
 
@@ -439,6 +476,81 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Property value as JSON. </dd></dl>
+
+</div>
+</div>
+<a id="a3ebb4eab721a2f9befdd3c3c5f350897" name="a3ebb4eab721a2f9befdd3c3c5f350897"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ebb4eab721a2f9befdd3c3c5f350897">&#9670;&#160;</a></span>getRenderer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_Renderer * SDOM::Core::getRenderer </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a237897a02ab43ad118a878891dcf99fb" name="a237897a02ab43ad118a878891dcf99fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a237897a02ab43ad118a878891dcf99fb">&#9670;&#160;</a></span>getTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_Texture * SDOM::Core::getTexture </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2dab2b3134ee347e201c6789b78743c6" name="a2dab2b3134ee347e201c6789b78743c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2dab2b3134ee347e201c6789b78743c6">&#9670;&#160;</a></span>getWindow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_Window * SDOM::Core::getWindow </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -635,6 +747,27 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a id="a84c2960a86f69cadd93f8afffd3e9cdf" name="a84c2960a86f69cadd93f8afffd3e9cdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84c2960a86f69cadd93f8afffd3e9cdf">&#9670;&#160;</a></span>onWindowResize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Core::onWindowResize </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>newWidth</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>newHeight</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2c43fdab7e27c9841cdd7d4569434c47" name="a2c43fdab7e27c9841cdd7d4569434c47"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2c43fdab7e27c9841cdd7d4569434c47">&#9670;&#160;</a></span>registerCommand()</h2>
 
@@ -670,6 +803,181 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a5a6f3fa3f33d9f24d08a2242bab15b04" name="a5a6f3fa3f33d9f24d08a2242bab15b04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a6f3fa3f33d9f24d08a2242bab15b04">&#9670;&#160;</a></span>registerOnEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Core::registerOnEvent </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(const Event &amp;)&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1516d0393583f3d9c7e4d3a8d5a495e0" name="a1516d0393583f3d9c7e4d3a8d5a495e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1516d0393583f3d9c7e4d3a8d5a495e0">&#9670;&#160;</a></span>registerOnInit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Core::registerOnInit </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; bool()&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa39ef543abb9c8266fa25d149fe00ada" name="aa39ef543abb9c8266fa25d149fe00ada"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa39ef543abb9c8266fa25d149fe00ada">&#9670;&#160;</a></span>registerOnQuit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Core::registerOnQuit </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void()&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad06a2e372107715e5e3f8e865893d9a0" name="ad06a2e372107715e5e3f8e865893d9a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad06a2e372107715e5e3f8e865893d9a0">&#9670;&#160;</a></span>registerOnRender()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Core::registerOnRender </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void()&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c3241b0fe11b049828e4a04a8a541b0" name="a9c3241b0fe11b049828e4a04a8a541b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c3241b0fe11b049828e4a04a8a541b0">&#9670;&#160;</a></span>registerOnUnitTest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Core::registerOnUnitTest </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; bool()&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5f2153271d21265f98ab82a63f084de0" name="a5f2153271d21265f98ab82a63f084de0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f2153271d21265f98ab82a63f084de0">&#9670;&#160;</a></span>registerOnUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Core::registerOnUpdate </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(float)&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ade16c7d2ec6378ca518fb2d6399cb4a8" name="ade16c7d2ec6378ca518fb2d6399cb4a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade16c7d2ec6378ca518fb2d6399cb4a8">&#9670;&#160;</a></span>registerOnWindowResize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Core::registerOnWindowResize </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(int, int)&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
