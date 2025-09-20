@@ -1,5 +1,26 @@
 - Initializer structs may inherit from base structs for code reuse and extensibility.
 # Extensible Factory Design
+## Resource Type Management
+In essence, the Factory serves as a simple database for all resource types in SDOM. By tracking each resource's type and unique name, it enables:
+- Type-safe lookup and retrieval
+- Bulk queries for all resources of a given type (e.g., all Stage objects)
+- Centralized management and enumeration of resources
+This approach makes resource management extensible, efficient, and easy to maintain as the project grows.
+
+The Factory is responsible for creating, registering, and tracking all resource types in SDOM. This includes:
+- **Stage objects** (application windows/root display objects)
+- **DisplayObjects** (Button, Label, Group, Checkbox, etc.)
+- **Other resources** (bitmap images, TrueType fonts, audio files, etc.)
+
+Each resource type is registered with the Factory, allowing type-safe creation, lookup, and management. The Factory maintains internal registries for each type, enabling extensibility and centralized resource management. Stages are treated as a specific resource type, distinct from other DisplayObjects, but managed using the same registration and creation mechanisms.
+
+This approach allows the Factory to:
+- Track and enumerate all resources by type and unique name
+- Provide APIs for resource creation, retrieval, and destruction
+- Support future resource types with minimal changes
+
+The Core composes the Factory and uses it to create and retrieve resources, while managing the application's active Stage(s) and lifecycle.
+
 
 ## Requirements
 - All DisplayObjects and ResourceObjects must be created via the Factory; direct construction is forbidden.

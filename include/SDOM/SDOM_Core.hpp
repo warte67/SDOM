@@ -72,7 +72,7 @@ namespace SDOM
             void registerOnUnitTest(std::function<bool()> fn) { fnOnUnitTest = fn; }
             void registerOnWindowResize(std::function<void(int, int)> fn) { fnOnWindowResize = fn; }
 
-            // // Stage Management
+            // // Stage Management (Factory?)
             // void registerStage(const std::string& name, std::shared_ptr<Stage> stage);
             // void setStage(const std::string& name);
 
