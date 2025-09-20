@@ -319,14 +319,16 @@ Example (C)</h2>
 <div class="line">{</div>
 <div class="line">    Core&amp; core = <a class="code hl_function" href="namespaceSDOM.html#ae65864505926b5378f1fcd94afe1aa06">SDOM::getCore</a>();</div>
 <div class="line">    CoreConfig config;</div>
-<div class="line">    config.pixelWidth = 640;</div>
-<div class="line">    config.pixelHeight = 480;</div>
 <div class="line">    config.windowWidth = 1280;</div>
 <div class="line">    config.windowHeight = 960;</div>
+<div class="line">    config.pixelWidth = 2.0;</div>
+<div class="line">    config.pixelHeight = 2.0;</div>
+<div class="line">    config.allowTextureResize = <span class="keyword">true</span>,</div>
+<div class="line">    config.preserveAspectRatio = <span class="keyword">true</span>,</div>
 <div class="line">    config.renderFlags = SDL_LOGICAL_PRESENTATION_LETTERBOX;</div>
 <div class="line">    config.windowFlags = SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE;</div>
 <div class="line">    condig.colorFormat = SDL_PIXELFORMAT_RGBA8888;</div>
-<div class="line">    core.configure(CoreConfig{ });</div>
+<div class="line">    core.configure(config);</div>
 <div class="line"> </div>
 <div class="line">    core.addEventListener(EventType::Init, []() { onInit(); });</div>
 <div class="line">    core.addEventListener(EventType::Quit, []() { onQuit(); });</div>

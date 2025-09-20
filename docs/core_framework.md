@@ -244,14 +244,16 @@ int main()
 {
     Core& core = SDOM::getCore();
     CoreConfig config;
-    config.pixelWidth = 640;
-    config.pixelHeight = 480;
     config.windowWidth = 1280;
     config.windowHeight = 960;
+    config.pixelWidth = 2.0;
+    config.pixelHeight = 2.0;
+    config.allowTextureResize = true,
+    config.preserveAspectRatio = true,
     config.renderFlags = SDL_LOGICAL_PRESENTATION_LETTERBOX;
     config.windowFlags = SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE;
     condig.colorFormat = SDL_PIXELFORMAT_RGBA8888;
-    core.configure(CoreConfig{ });
+    core.configure(config);
 
     core.addEventListener(EventType::Init, []() { onInit(); });
     core.addEventListener(EventType::Quit, []() { onQuit(); });
