@@ -1,12 +1,14 @@
 var namespaceSDOM =
 [
     [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
+    [ "Core", "classSDOM_1_1Core.html", "classSDOM_1_1Core" ],
     [ "EventTypeHash", "structSDOM_1_1EventTypeHash.html", "structSDOM_1_1EventTypeHash" ],
     [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
     [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
     [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
     [ "InitDisplayObject", "structSDOM_1_1InitDisplayObject.html", "structSDOM_1_1InitDisplayObject" ],
     [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
+    [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
     [ "Json", "namespaceSDOM.html#abe4862bfb43150a4d8e0ad71ffa3e1df", null ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
@@ -36,6 +38,8 @@ var namespaceSDOM =
       [ "CENTER_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac40e9cf1d233eb1b6dc84b9f97e83b4e", null ],
       [ "RIGHT_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8", null ]
     ] ],
+    [ "getCore", "namespaceSDOM.html#ae65864505926b5378f1fcd94afe1aa06", null ],
+    [ "trim", "namespaceSDOM.html#a0b2e6cb3f4096b1c8ae989c26ef9e32f", null ],
     [ "anchorPointToString_", "namespaceSDOM.html#ac004759fa5d6cd324931439829e17123", null ],
     [ "stringToAnchorPoint_", "namespaceSDOM.html#a33cd42f20297f893e13db841931abda0", null ]
 ];

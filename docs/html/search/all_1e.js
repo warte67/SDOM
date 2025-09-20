@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['z_5forder_0',['z_order',['../structSDOM_1_1InitDisplayObject.html#aa20e413fb31cf7d6c0a25804431a9bea',1,'SDOM::InitDisplayObject']]]
+  ['y_0',['y',['../structSDOM_1_1InitDisplayObject.html#a42b140679e1eb931a07f7e92096dd83f',1,'SDOM::InitDisplayObject']]],
+  ['yellow_1',['YELLOW',['../classCLR.html#a9c70a18a33cde4874888b21b178000bf',1,'CLR']]]
 ];

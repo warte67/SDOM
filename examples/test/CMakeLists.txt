@@ -29,13 +29,14 @@ include_directories($ENV{HOME}/.local/include)
 # Source files
 file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 list(APPEND SOURCES "${PROJECT_SOURCE_DIR}/main.cpp")
+# list(APPEND SOURCES "${PROJECT_SOURCE_DIR}/examples/test/main.cpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Link to local (user) SDOM2 static library:
-target_link_libraries(prog PRIVATE $ENV{HOME}/.local/lib/libSDOM2.a SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf)
+target_link_libraries(prog PRIVATE $ENV{HOME}/.local/lib/libSDOM.a SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf)
 # Or for system install, comment above and uncomment below:
-# target_link_libraries(prog PRIVATE /usr/local/lib/libSDOM2.a SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf)
+# target_link_libraries(prog PRIVATE /usr/local/lib/libSDOM.a SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf)
 
 # Output directory for the executable
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})

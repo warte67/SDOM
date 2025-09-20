@@ -15,6 +15,18 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - Fixed Doxyfile issues (footer path, PROJECT_BRIEF syntax) for clean documentation generation.
     - Validated Doxygen output for class, group, and member documentation.
     - `IDataObject` designed.  This base interface class handles JSON parsing and serialization.
+    - Core class scaffold implemented as a thread-safe singleton.
+    - Core initializes SDL, window, renderer, and texture with correct sizing and color from config.
+    - Window and renderer display with correct logical size and background color.
+    - Configuration via struct, JSON string, and JSON file is working and uses sensible defaults.
+    - Main loop, event polling, and error handling are scaffolded and ready for extension.
+    - Added six callback/hook registration methods to `Core`: `registerOnInit()`, `registerOnQuit()`, `registerOnUpdate()`, `registerOnEvent()`, `registerOnRender()`, `registerOnUnitTest()`.
+    - Callbacks are invoked at the appropriate lifecycle and event points, enabling user-defined logic for initialization, quitting, updating, event handling, rendering, and unit testing.
+    - Added `preserveAspectRatio` and `allowTextureResize` flags to `CoreConfig` for flexible window/texture resizing.
+    - Window resizing now supports two modes: aspect ratio preservation and free resizing, controlled by config.
+    - Texture resizing can be disabled via config, allowing fixed-resolution rendering regardless of window size.
+    - JSON configuration supports both new flags for runtime flexibility.
+    - Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.
 
   
 # ToDo:

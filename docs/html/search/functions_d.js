@@ -1,5 +1,26 @@
 var searchData=
 [
-  ['tojson_0',['toJson',['../classSDOM_1_1IDataObject.html#a0c142eb622d4097a748782017506590b',1,'SDOM::IDataObject']]],
-  ['triggereventlisteners_1',['triggerEventListeners',['../classSDOM_1_1IDisplayObject.html#ac637eaaabe91258d128acfaa88ae39f9',1,'SDOM::IDisplayObject']]]
+  ['sdl_5futils_0',['SDL_Utils',['../classSDOM_1_1SDL__Utils.html#ad58424ffb980e2133bdb261b07846637',1,'SDOM::SDL_Utils']]],
+  ['setanchorbottom_1',['setAnchorBottom',['../classSDOM_1_1IDisplayObject.html#a76159ff78bb54bea050d2f15a1c63e96',1,'SDOM::IDisplayObject']]],
+  ['setanchorleft_2',['setAnchorLeft',['../classSDOM_1_1IDisplayObject.html#a5e292e0a64127c265cda051908f8fcb1',1,'SDOM::IDisplayObject']]],
+  ['setanchorright_3',['setAnchorRight',['../classSDOM_1_1IDisplayObject.html#a8468537ed2a4e40c33821f5ea66771ed',1,'SDOM::IDisplayObject']]],
+  ['setanchortop_4',['setAnchorTop',['../classSDOM_1_1IDisplayObject.html#ae7525c9e7db2bda1a850805dceee2504',1,'SDOM::IDisplayObject']]],
+  ['setbottom_5',['setBottom',['../classSDOM_1_1IDisplayObject.html#acf1819de3013c87212efa5c370cde38a',1,'SDOM::IDisplayObject']]],
+  ['setclickable_6',['setClickable',['../classSDOM_1_1IDisplayObject.html#a80a500f4517a686367ab08b1aa2c488d',1,'SDOM::IDisplayObject']]],
+  ['setcolor_7',['setColor',['../classSDOM_1_1IDisplayObject.html#a1eae3efeba332531e97d56d9cf638cb5',1,'SDOM::IDisplayObject']]],
+  ['setdirty_8',['setDirty',['../classSDOM_1_1IDisplayObject.html#a90e2d7c4dd39c97d030aa80aabf7e048',1,'SDOM::IDisplayObject']]],
+  ['setenabled_9',['setEnabled',['../classSDOM_1_1IDisplayObject.html#aaf12d174e126294c58abd9b4dbd3acca',1,'SDOM::IDisplayObject']]],
+  ['setheight_10',['setHeight',['../classSDOM_1_1IDisplayObject.html#affc34595a0f3e17e51801c130caa30ab',1,'SDOM::IDisplayObject']]],
+  ['sethidden_11',['setHidden',['../classSDOM_1_1IDisplayObject.html#abd7be10060116e26935e894937d0e95b',1,'SDOM::IDisplayObject']]],
+  ['setleft_12',['setLeft',['../classSDOM_1_1IDisplayObject.html#a4b5b1506255242ae26f9f39ec4e13610',1,'SDOM::IDisplayObject']]],
+  ['setname_13',['setName',['../classSDOM_1_1IDisplayObject.html#a0e679114a25ef0ae800f0843acf44250',1,'SDOM::IDisplayObject']]],
+  ['setproperty_14',['setProperty',['../classSDOM_1_1IDataObject.html#a71647c05acb4a9da4696b9aba861fcf3',1,'SDOM::IDataObject']]],
+  ['setright_15',['setRight',['../classSDOM_1_1IDisplayObject.html#a8c8e652fc4566409d6e5e9f4ce049de5',1,'SDOM::IDisplayObject']]],
+  ['settabenabled_16',['setTabEnabled',['../classSDOM_1_1IDisplayObject.html#a44654ae721dfab2be1b8bd574169ab09',1,'SDOM::IDisplayObject']]],
+  ['settabpriority_17',['setTabPriority',['../classSDOM_1_1IDisplayObject.html#afe477c774f65a9cd9b5bb26e34c0a181',1,'SDOM::IDisplayObject']]],
+  ['settop_18',['setTop',['../classSDOM_1_1IDisplayObject.html#a1ab73450fbdc7b278a871ca14454c92f',1,'SDOM::IDisplayObject']]],
+  ['setvisible_19',['setVisible',['../classSDOM_1_1IDisplayObject.html#ae1a5f6226da48d222aa64e0f8f56f24b',1,'SDOM::IDisplayObject']]],
+  ['setwidth_20',['setWidth',['../classSDOM_1_1IDisplayObject.html#af67ff008cc4eca835ac4e7e81fb7c9eb',1,'SDOM::IDisplayObject']]],
+  ['setx_21',['setX',['../classSDOM_1_1IDisplayObject.html#a82ec9aa6b4ce34ec03e01f9cd002a1be',1,'SDOM::IDisplayObject']]],
+  ['sety_22',['setY',['../classSDOM_1_1IDisplayObject.html#a3eee98020b7f0ce46d9fafe34908992c',1,'SDOM::IDisplayObject']]]
 ];

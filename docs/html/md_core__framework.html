@@ -141,9 +141,9 @@ Example Configuration API:</h2>
 <div class="line">    <span class="keywordtype">int</span> pixelHeight;</div>
 <div class="line">    <span class="keywordtype">int</span> windowWidth;</div>
 <div class="line">    <span class="keywordtype">int</span> windowHeight;</div>
-<div class="line">    Uint32 rendererFlags;</div>
-<div class="line">    Uint32 windowFlags;</div>
-<div class="line">    Uint32 colorFormat;</div>
+<div class="line">    SDL_RendererLogicalPresentation rendererFlags;</div>
+<div class="line">    SDL_WindowFlags windowFlags;</div>
+<div class="line">    SDL_PixelFormat colorFormat;</div>
 <div class="line">    <span class="comment">// ... other options ...</span></div>
 <div class="line">};</div>
 <div class="line"> </div>
@@ -153,7 +153,6 @@ Example Configuration API:</h2>
 </div><!-- fragment --><p><b>Note:</b> <br  />
  All pre-initialization information must be set before calling <span class="tt">run()</span> or starting the main loop. This ensures that the video subsystem is correctly configured and available for all subsequent operations.</p>
 <hr  />
-<p>Let me know if you want this added to a specific section, or if you’d like to expand on configuration struct details or error handling for initialization!## Core Initialization Sequence &amp; Pre-Initialization Configuration</p>
 <p>To ensure proper setup, <span class="tt">onInit()</span> should be called <b>after</b> the SDL Video Subsystem (window, renderer, texture) has been created and initialized. This requires that all necessary configuration parameters are provided to Core <b>before</b> initialization begins.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 Required Pre-Initialization Parameters:</h2>
@@ -166,47 +165,21 @@ Required Pre-Initialization Parameters:</h2>
 <li><b>Other SDL/graphics options:</b> As needed for your application.</li>
 </ul>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
-Initialization Flow:</h2>
-<ol type="1">
-<li><b>Configure Core:</b> <br  />
- Pass all required parameters to Core via a configuration struct or initialization method.</li>
-<li><b>Create SDL Video Subsystem:</b> <br  />
- Core creates the SDL window, renderer, and main display texture using the provided settings.</li>
-<li><b>Call onInit():</b> <br  />
- Once the video subsystem is ready, Core invokes <span class="tt">onInit()</span> to allow application-specific initialization (e.g., loading assets, setting up stages).</li>
-<li><b>Enter Main Loop:</b> <br  />
- Core proceeds with the main SDL loop, event handling, and rendering.</li>
-</ol>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
-Example Configuration API:</h2>
-<div class="fragment"><div class="line"><span class="keyword">struct </span>CoreConfig {</div>
-<div class="line">    <span class="keywordtype">int</span> pixelWidth;</div>
-<div class="line">    <span class="keywordtype">int</span> pixelHeight;</div>
-<div class="line">    <span class="keywordtype">int</span> windowWidth;</div>
-<div class="line">    <span class="keywordtype">int</span> windowHeight;</div>
-<div class="line">    Uint32 rendererFlags;</div>
-<div class="line">    Uint32 windowFlags;</div>
-<div class="line">    Uint32 colorFormat;</div>
-<div class="line">    <span class="comment">// ... other options ...</span></div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line">Core&amp; core = getCore();</div>
-<div class="line">core.configure(CoreConfig{<span class="comment">/* ... */</span>});</div>
-<div class="line">core.run(); <span class="comment">// Internally calls onInit() after SDL setup</span></div>
-</div><!-- fragment --> <h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 Alternative Initialization: JSON Configuration</h2>
 <p>In addition to using a configuration struct, <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> Core can be initialized using a JSON string or by loading configuration from a JSON file. This approach allows for flexible, data-driven setup and easier integration with external tools or scripting environments.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
 Example API:</h3>
 <div class="fragment"><div class="line">Core&amp; core = getCore();</div>
 <div class="line">core.configureFromJson(R<span class="stringliteral">&quot;({</span></div>
-<div class="line"><span class="stringliteral">    &quot;pixelWidth&quot;: 1280,</span></div>
-<div class="line"><span class="stringliteral">    &quot;pixelHeight&quot;: 720,</span></div>
-<div class="line"><span class="stringliteral">    &quot;windowWidth&quot;: 1280,</span></div>
-<div class="line"><span class="stringliteral">    &quot;windowHeight&quot;: 720,</span></div>
-<div class="line"><span class="stringliteral">    &quot;rendererFlags&quot;: 2,</span></div>
-<div class="line"><span class="stringliteral">    &quot;windowFlags&quot;: 1,</span></div>
-<div class="line"><span class="stringliteral">    &quot;colorFormat&quot;: 376840196</span></div>
+<div class="line"><span class="stringliteral">    &quot;core&quot;: {</span></div>
+<div class="line"><span class="stringliteral">        &quot;pixelWidth&quot;: 1280,</span></div>
+<div class="line"><span class="stringliteral">        &quot;pixelHeight&quot;: 720,</span></div>
+<div class="line"><span class="stringliteral">        &quot;windowWidth&quot;: 1280,</span></div>
+<div class="line"><span class="stringliteral">        &quot;windowHeight&quot;: 720,</span></div>
+<div class="line"><span class="stringliteral">        &quot;rendererFlags&quot;: &quot;SDL_LOGICAL_PRESENTATION_LETTERBOX&quot;,</span></div>
+<div class="line"><span class="stringliteral">        &quot;windowFlags&quot;: &quot;SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE&quot;,</span></div>
+<div class="line"><span class="stringliteral">        &quot;colorFormat&quot;: &quot;SDL_PIXELFORMAT_RGBA8888&quot;</span></div>
+<div class="line"><span class="stringliteral">    }</span></div>
 <div class="line"><span class="stringliteral">})&quot;);</span></div>
 <div class="line"><span class="stringliteral">core.run();</span></div>
 </div><!-- fragment --><p> Or, loading from a file: </p><div class="fragment"><div class="line">core.configureFromJsonFile(<span class="stringliteral">&quot;config/core_config.json&quot;</span>);</div>
@@ -215,7 +188,7 @@ Example API:</h3>
  All pre-initialization information must be set before calling <span class="tt">run()</span> or starting the main loop. This ensures that the video subsystem is correctly configured and available for all subsequent operations.</p>
 <hr  />
 <p>Let me know if you want this added to a specific section, or if you’d like to expand on configuration struct details or error handling for initialization!</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 Primary Callbacks</h1>
 <p>The Core exposes the following virtual callback methods, which are invoked during the application lifecycle:</p>
 <div class="fragment"><div class="line"><span class="keyword">virtual</span> <span class="keywordtype">bool</span>  onInit () <span class="keyword">override</span>;</div>
@@ -233,7 +206,7 @@ Primary Callbacks</h1>
 <li><span class="tt">onUnitTest()</span>: Called to run unit tests.</li>
 </ul>
 <p>Each callback is designed to interact directly with the single Stage object, which represents the root of the display hierarchy.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 Hook &amp; Callback Registration</h1>
 <p>To support extensibility across multiple languages (C++, Python, Rust, etc.), the Core framework provides a hook/callback registration system for all primary lifecycle and event methods. Instead of requiring inheritance, users can register function pointers, std::function, or language bindings for each event:</p>
 <ul>
@@ -244,7 +217,7 @@ Hook &amp; Callback Registration</h1>
 <li>Render: <span class="tt">registerOnRender(std::function&lt;void()&gt;)</span></li>
 <li>Unit Test: <span class="tt">registerOnUnitTest(std::function&lt;bool()&gt;)</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 Example (C++)</h2>
 <div class="fragment"><div class="line">Core core;</div>
 <div class="line">core.registerOnInit([]() { <span class="comment">/* ... */</span> <span class="keywordflow">return</span> <span class="keyword">true</span>; });</div>
@@ -253,14 +226,14 @@ Example (C++)</h2>
 <div class="line">core.registerOnEvent([](<span class="keyword">const</span> Event&amp; e) { <span class="comment">/* ... */</span> });</div>
 <div class="line">core.registerOnRender([]() { <span class="comment">/* ... */</span> });</div>
 <div class="line">core.registerOnUnitTest([]() { <span class="comment">/* ... */</span> <span class="keywordflow">return</span> <span class="keyword">true</span>; });</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
 Example (Python/Rust)</h2>
 <p>Bindings can expose similar registration functions, allowing users to set hooks in their language of choice.</p><ul>
 <li>Core stores each hook as a function object.</li>
 <li>At each lifecycle stage, Core checks for a registered hook and invokes it if present.</li>
 <li>Inheritance remains an option for C++ users, but is not required for other languages.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
 Global Accessor Functions</h1>
 <p>The <a class="el" href="SDOM_8hpp.html" title="Common include for SDOM-based projects. Defines macros and utilities.">SDOM.hpp</a> header may define a set of global functions within the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> namespace to provide convenient access to key framework components:</p><ul>
 <li><span class="tt">getCore()</span></li>
@@ -270,7 +243,7 @@ Global Accessor Functions</h1>
 <li>...etc.</li>
 </ul>
 <p>These global accessors allow users to retrieve singleton or shared instances of major subsystems without directly referencing their implementation details. This pattern simplifies initialization and integration, especially for scripting and cross-language bindings.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 Example Usage (with global accessor)</h2>
 <div class="fragment"><div class="line">Core&amp; core = getCore();</div>
 <div class="line">core.registerOnInit([]() {</div>
@@ -298,7 +271,7 @@ Example Usage (with global accessor)</h2>
 <div class="line">    core.run();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
 Composition Diagram</h1>
 <div class="fragment"><div class="line">+-------------------+</div>
 <div class="line">|      Core         |</div>
@@ -313,7 +286,7 @@ Composition Diagram</h1>
 <div class="line">+-------------------+</div>
 <div class="line">|     SDL Loop      |</div>
 <div class="line">+-------------------+</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
 Extensibility &amp; Singleton Pattern</h1>
 <p>The Core object is implemented as a singleton, ensuring a single point of control for the application's lifecycle, event management, and resource handling. Despite the singleton pattern, <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> remains highly extensible:</p>
 <ul>
@@ -322,35 +295,7 @@ Extensibility &amp; Singleton Pattern</h1>
 <li>The singleton ensures global access and coordination, while extensibility is achieved through registration APIs and listener patterns.</li>
 </ul>
 <p>This design balances centralized control with flexible extension points for applications and language bindings.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
-Example Usage</h1>
-<div class="fragment"><div class="line">Core&amp; core = Core::getInstance();</div>
-<div class="line">core.registerOnInit([]() {</div>
-<div class="line">    <span class="comment">// Custom initialization</span></div>
-<div class="line">    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line">});</div>
-<div class="line">core.registerOnQuit([]() {</div>
-<div class="line">    <span class="comment">// Cleanup logic</span></div>
-<div class="line">});</div>
-<div class="line">core.registerOnUpdate([](<span class="keywordtype">float</span> dt) {</div>
-<div class="line">    <span class="comment">// Game logic</span></div>
-<div class="line">});</div>
-<div class="line">core.registerOnEvent([](<span class="keyword">const</span> Event &amp;event) {</div>
-<div class="line">    <span class="comment">// Handle events</span></div>
-<div class="line">});</div>
-<div class="line">core.registerOnRender([]() {</div>
-<div class="line">    <span class="comment">// Render stage</span></div>
-<div class="line">});</div>
-<div class="line">core.registerOnUnitTest([]() {</div>
-<div class="line">    <span class="comment">// Run tests</span></div>
-<div class="line">    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line">});</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">int</span> main() {</div>
-<div class="line">    core.run();</div>
-<div class="line">    <span class="keywordflow">return</span> 0;</div>
-<div class="line">}</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
 EventListener Support</h1>
 <p>In addition to direct hook/callback registration, the Core framework can support external integration through eventListeners. This approach allows users to attach listener objects or functions to specific lifecycle and event types, enabling modular and decoupled handling of application events.</p>
 <ul>
@@ -358,32 +303,44 @@ EventListener Support</h1>
 <li>The Core maintains a list of listeners for each event type and notifies them when the event occurs.</li>
 <li>Listeners can be implemented as objects with event-handling methods, or as standalone functions.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
-Example (C++)</h2>
-<div class="fragment"><div class="line"><span class="keyword">class </span>MyListener {</div>
-<div class="line"><span class="keyword">public</span>:</div>
-<div class="line">    <span class="keywordtype">void</span> onInit() { <span class="comment">/* ... */</span> }</div>
-<div class="line">    <span class="keywordtype">void</span> onQuit() { <span class="comment">/* ... */</span> }</div>
-<div class="line">    <span class="keywordtype">void</span> onUpdate(<span class="keywordtype">float</span> dt) { <span class="comment">/* ... */</span> }</div>
-<div class="line">    <span class="keywordtype">void</span> onEvent(<span class="keyword">const</span> Event&amp; e) { <span class="comment">/* ... */</span> }</div>
-<div class="line">    <span class="keywordtype">void</span> onRender() { <span class="comment">/* ... */</span> }</div>
-<div class="line">};</div>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+Example (C)</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> onInit() { <span class="comment">/* ... */</span> }</div>
+<div class="line"><span class="keywordtype">void</span> onQuit() { <span class="comment">/* ... */</span> }</div>
+<div class="line"><span class="keywordtype">void</span> onUpdate(<span class="keywordtype">float</span> dt) { <span class="comment">/* ... */</span> }</div>
+<div class="line"><span class="keywordtype">void</span> onEvent(<span class="keyword">const</span> Event&amp; e) { <span class="comment">/* ... */</span> }</div>
+<div class="line"><span class="keywordtype">void</span> onRender() { <span class="comment">/* ... */</span> }</div>
 <div class="line"> </div>
-<div class="line">Core core;</div>
-<div class="line">MyListener listener;</div>
-<div class="line">core.addEventListener(EventType::Init, [&amp;listener]() { listener.onInit(); });</div>
-<div class="line">core.addEventListener(EventType::Quit, [&amp;listener]() { listener.onQuit(); });</div>
-<div class="line">core.addEventListener(EventType::Update, [&amp;listener](<span class="keywordtype">float</span> dt) { listener.onUpdate(dt); });</div>
-<div class="line">core.addEventListener(EventType::Event, [&amp;listener](<span class="keyword">const</span> Event&amp; e) { listener.onEvent(e); });</div>
-<div class="line">core.addEventListener(EventType::Render, [&amp;listener]() { listener.onRender(); });</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<div class="line"><span class="keywordtype">int</span> main()</div>
+<div class="line">{</div>
+<div class="line">    Core&amp; core = <a class="code hl_function" href="namespaceSDOM.html#ae65864505926b5378f1fcd94afe1aa06">SDOM::getCore</a>();</div>
+<div class="line">    CoreConfig config;</div>
+<div class="line">    config.pixelWidth = 640;</div>
+<div class="line">    config.pixelHeight = 480;</div>
+<div class="line">    config.windowWidth = 1280;</div>
+<div class="line">    config.windowHeight = 960;</div>
+<div class="line">    config.renderFlags = SDL_LOGICAL_PRESENTATION_LETTERBOX;</div>
+<div class="line">    config.windowFlags = SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE;</div>
+<div class="line">    condig.colorFormat = SDL_PIXELFORMAT_RGBA8888;</div>
+<div class="line">    core.configure(CoreConfig{ });</div>
+<div class="line"> </div>
+<div class="line">    core.addEventListener(EventType::Init, []() { onInit(); });</div>
+<div class="line">    core.addEventListener(EventType::Quit, []() { onQuit(); });</div>
+<div class="line">    core.addEventListener(EventType::Update, [](<span class="keywordtype">float</span> dt) { onUpdate(dt); });</div>
+<div class="line">    core.addEventListener(EventType::Event, [](<span class="keyword">const</span> Event&amp; e) { onEvent(e); });</div>
+<div class="line">    core.addEventListener(EventType::Render, []() { onRender(); });</div>
+<div class="line"> </div>
+<div class="line">    core.run();</div>
+<div class="line">}</div>
+<div class="ttc" id="anamespaceSDOM_html_ae65864505926b5378f1fcd94afe1aa06"><div class="ttname"><a href="namespaceSDOM.html#ae65864505926b5378f1fcd94afe1aa06">SDOM::getCore</a></div><div class="ttdeci">static Core &amp; getCore()</div><div class="ttdef"><b>Definition</b> SDOM.hpp:138</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 Benefits</h2>
 <ul>
 <li>Enables multiple listeners for the same event type</li>
 <li>Decouples event handling from the Core and main application logic</li>
 <li>Facilitates plugin architectures and modular extensions</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 Registering Custom Stage Objects</h1>
 <p>Custom Stage objects can be registered and managed through the Factory system, just like any other DOM object. To use a custom Stage:</p>
 <ol type="1">
@@ -394,7 +351,7 @@ Registering Custom Stage Objects</h1>
 <li><b>Switch to the custom Stage using <span class="tt">Core::setStage(name)</span>.</b></li>
 </ol>
 <p>This approach ensures consistent resource management and makes it easy to extend <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> with new scene types or behaviors.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 Example</h2>
 <div class="fragment"><div class="line"><span class="comment">// Register custom Stage type with Factory</span></div>
 <div class="line">factory-&gt;registerType&lt;CustomStage&gt;(<span class="stringliteral">&quot;CustomStage&quot;</span>);</div>
@@ -407,7 +364,7 @@ Example</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Switch to the custom Stage</span></div>
 <div class="line">core.setStage(<span class="stringliteral">&quot;myCustomStage&quot;</span>);</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
 Integration Methods Summary</h1>
 <p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> Core supports three primary methods for application setup and event handling:</p>
 <ol type="1">
@@ -428,7 +385,7 @@ Integration Methods Summary</h1>
 </ul>
 </li>
 </ol>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 Flexibility &amp; Use Cases</h2>
 <ul>
 <li>Callback registration is best for cross-language bindings and dynamic configuration.</li>
@@ -436,7 +393,7 @@ Flexibility &amp; Use Cases</h2>
 <li>Class-based inheritance provides a traditional OOP approach for C++ and similar languages.</li>
 </ul>
 <p>Applications can mix and match these methods as needed, ensuring <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> remains flexible and accessible to a wide range of development styles and languages.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 Performance Considerations</h1>
 <ul>
 <li>The difference in performance between the three setup types (callback registration, eventListeners, class-based inheritance) is generally negligible for most applications.</li>
@@ -445,7 +402,7 @@ Performance Considerations</h1>
 <li><b>Class-based inheritance</b> performance is similar to direct callbacks, as virtual method dispatch is efficient in modern C++ compilers.</li>
 </ul>
 <p>For most use cases, the choice should be based on flexibility, language integration, and architectural needs rather than raw performance.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 Single Stage, Single Window Rationale</h1>
 <p>A previous iteration of the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> API supported multiple windows and stages, but this introduced significant complexity:</p><ul>
 <li>Each window/stage required separate initialization of external resources (bitmaps, fonts, etc).</li>
@@ -453,7 +410,7 @@ Single Stage, Single Window Rationale</h1>
 <li>Managing multiple renderers and resource lifetimes increases maintenance burden.</li>
 </ul>
 <p>For these reasons, <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> now uses a single stage, single window framework. SDL window/renderer/texture management is encapsulated within the Core object, ensuring centralized control and simplified resource management.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 Overriding the Default Stage</h1>
 <p>If a user defines multiple Stage objects or wishes to override the default stage:</p><ul>
 <li>The Core should maintain a single active Stage instance at any time.</li>
@@ -462,7 +419,7 @@ Overriding the Default Stage</h1>
 <li>Only one Stage should be active and connected to the window/renderer at a time; additional Stage objects should remain inactive until explicitly set as the current stage.</li>
 </ul>
 <p>This approach maintains the simplicity and reliability of the single stage/single window model, while allowing advanced users to swap or override the Stage if needed.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Multiple Stages as Scenes</h1>
 <p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> can support multiple Stage objects, but only one Stage is active at any given time. This enables a flexible scene management system:</p><ul>
 <li>Each Stage instance can represent a different "Scene" (e.g., menu, gameplay, pause screen).</li>
@@ -472,7 +429,7 @@ Multiple Stages as Scenes</h1>
 <li>All rendering, event handling, and updates are directed to the active Stage.</li>
 </ul>
 <p>This approach combines the simplicity of a single window with the flexibility of multi-scene applications, making <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> suitable for games, interactive apps, and complex UIs.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Window Resizing &amp; Texture Resolution</h1>
 <p>Window resizing introduces several design considerations, especially when supporting multiple stages or scenes with their own textures and renderers:</p>
 <ul>
@@ -506,7 +463,7 @@ Window Resizing &amp; Texture Resolution</h1>
 </li>
 </ul>
 <p>This approach balances centralized control with flexibility, ensuring that window resizing is handled consistently and efficiently across all stages and display objects.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 Shared Display Texture for Stages</h1>
 <p>While <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> supports multiple Stage objects for scene management, it is not necessary for each Stage to maintain its own main display texture. If all Stages share the same pixel dimensions as the main display managed by Core, they can simply use the same CoreTexture for rendering.</p>
 <ul>
@@ -515,7 +472,7 @@ Shared Display Texture for Stages</h1>
 <li>If a Stage requires offscreen rendering or special effects, it can create its own auxiliary textures as needed, but the main display texture remains shared.</li>
 </ul>
 <p>By default, <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> encourages sharing the CoreTexture among all Stages unless an application has specific requirements for unique render targets per scene.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Stages as Game States or Modes</h1>
 <p>Supporting multiple Stage objects in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> enables the framework to represent different states or modes within an application or game. For example:</p>
 <ul>
@@ -526,7 +483,7 @@ Stages as Game States or Modes</h1>
 </ul>
 <p>Each Stage encapsulates its own display hierarchy, event handling, and logic, allowing for clean separation of concerns and easy transitions between states. The Core manages which Stage is currently active, enabling fast and reliable switching between modes.</p>
 <p>This design makes <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> well-suited for games and interactive applications that require multiple distinct states or scenes.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
 Changing the Active Stage</h1>
 <p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> provides a simple API for switching the active Stage (scene) by name:</p>
 <div class="fragment"><div class="line">Core::setStage(std::string name);</div>

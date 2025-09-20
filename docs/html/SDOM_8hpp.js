@@ -35,6 +35,7 @@ var SDOM_8hpp =
       [ "SDOM::AnchorPoint::CENTER_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac40e9cf1d233eb1b6dc84b9f97e83b4e", null ],
       [ "SDOM::AnchorPoint::RIGHT_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8", null ]
     ] ],
+    [ "SDOM::getCore", "namespaceSDOM.html#ae65864505926b5378f1fcd94afe1aa06", null ],
     [ "SDOM::anchorPointToString_", "namespaceSDOM.html#ac004759fa5d6cd324931439829e17123", null ],
     [ "SDOM::stringToAnchorPoint_", "namespaceSDOM.html#a33cd42f20297f893e13db841931abda0", null ]
 ];

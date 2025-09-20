@@ -29,6 +29,7 @@ var menudata={children:[
 {text:"Namespace List",url:"namespaces.html"},
 {text:"Namespace Members",url:"namespacemembers.html",children:[
 {text:"All",url:"namespacemembers.html"},
+{text:"Functions",url:"namespacemembers_func.html"},
 {text:"Variables",url:"namespacemembers_vars.html"},
 {text:"Typedefs",url:"namespacemembers_type.html"},
 {text:"Enumerations",url:"namespacemembers_enum.html"}]}]},
@@ -48,6 +49,7 @@ var menudata={children:[
 {text:"h",url:"functions.html#index_h"},
 {text:"i",url:"functions.html#index_i"},
 {text:"j",url:"functions.html#index_j"},
+{text:"k",url:"functions.html#index_k"},
 {text:"l",url:"functions.html#index_l"},
 {text:"n",url:"functions.html#index_n"},
 {text:"o",url:"functions.html#index_o"},
@@ -71,6 +73,7 @@ var menudata={children:[
 {text:"h",url:"functions_func.html#index_h"},
 {text:"i",url:"functions_func.html#index_i"},
 {text:"j",url:"functions_func.html#index_j"},
+{text:"k",url:"functions_func.html#index_k"},
 {text:"o",url:"functions_func.html#index_o"},
 {text:"p",url:"functions_func.html#index_p"},
 {text:"r",url:"functions_func.html#index_r"},

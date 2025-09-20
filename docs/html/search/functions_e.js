@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['what_0',['what',['../classSDOM_1_1Exception.html#a5086ff39082ca706c60f16c22df3dfbb',1,'SDOM::Exception']]],
-  ['width_1',['width',['../structSDOM_1_1Bounds.html#abc92186d5199c0e106509d7ab73ef85b',1,'SDOM::Bounds']]]
+  ['tojson_0',['toJson',['../classSDOM_1_1IDataObject.html#a0c142eb622d4097a748782017506590b',1,'SDOM::IDataObject']]],
+  ['triggereventlisteners_1',['triggerEventListeners',['../classSDOM_1_1IDisplayObject.html#ac637eaaabe91258d128acfaa88ae39f9',1,'SDOM::IDisplayObject']]],
+  ['trim_2',['trim',['../namespaceSDOM.html#a0b2e6cb3f4096b1c8ae989c26ef9e32f',1,'SDOM']]]
 ];

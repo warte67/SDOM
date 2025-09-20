@@ -93,7 +93,7 @@ $(function(){initNavTree('classSDOM_1_1IDataObject.html','','classSDOM_1_1IDataO
 </div><!--header-->
 <div class="contents">
 
-<p>Core interface for all data-driven objects in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>.  
+<p><a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a> interface for all data-driven objects in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="SDOM__IDataObject_8hpp_source.html">SDOM_IDataObject.hpp</a>&gt;</code></p>
@@ -103,8 +103,9 @@ Inheritance diagram for SDOM::IDataObject:</div>
  <div class="center">
   <img src="classSDOM_1_1IDataObject.png" usemap="#SDOM_3A_3AIDataObject_map" alt=""/>
   <map id="SDOM_3A_3AIDataObject_map" name="SDOM_3A_3AIDataObject_map">
-<area href="classSDOM_1_1IUnitTest.html" title="Interface for unit testing objects in SDOM." alt="SDOM::IUnitTest" shape="rect" coords="0,0,138,24"/>
-<area href="classSDOM_1_1IDisplayObject.html" title="Abstract interface for displayable objects in SDOM." alt="SDOM::IDisplayObject" shape="rect" coords="0,112,138,136"/>
+<area href="classSDOM_1_1IUnitTest.html" title="Interface for unit testing objects in SDOM." alt="SDOM::IUnitTest" shape="rect" coords="74,0,212,24"/>
+<area href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM." alt="SDOM::Core" shape="rect" coords="0,112,138,136"/>
+<area href="classSDOM_1_1IDisplayObject.html" title="Abstract interface for displayable objects in SDOM." alt="SDOM::IDisplayObject" shape="rect" coords="148,112,286,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -152,7 +153,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a54d77f5fbab11b64f7971d1c33dea11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a value from a JSON object using case-insensitive key lookup.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Core interface for all data-driven objects in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. </p>
+<div class="textblock"><p><a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a> interface for all data-driven objects in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. </p>
 <p>Provides property and command registration, dynamic serialization/deserialization, and runtime manipulation of object state via JSON. Enables introspection, scripting, and editor integration for resource and display object management. Forms the foundation for robust data binding, configuration, and automation.</p>
 <p>Example usage: </p><div class="fragment"><div class="line"><span class="comment">// Register a property</span></div>
 <div class="line"><a class="code hl_function" href="#a780b503a81e095549da8442c2e934db0">registerProperty</a>(<span class="stringliteral">&quot;x&quot;</span>,</div>
@@ -391,7 +392,7 @@ template&lt;typename T&gt; </div>
 <p>Called during object initialization. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if initialization succeeds, false otherwise. </dd></dl>
 
-<p>Implemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#aa1525c87c0e2d74e5838d69baba95ac6">SDOM::IDisplayObject</a>.</p>
+<p>Implemented in <a class="el" href="classSDOM_1_1Core.html#ac71a3d701929ce7d18e3cbc0eb62216c">SDOM::Core</a>, and <a class="el" href="classSDOM_1_1IDisplayObject.html#aa1525c87c0e2d74e5838d69baba95ac6">SDOM::IDisplayObject</a>.</p>
 
 </div>
 </div>
@@ -420,7 +421,7 @@ template&lt;typename T&gt; </div>
 
 <p>Called during object shutdown. </p>
 
-<p>Implemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#a498aba902813d239ba961bc21549f2b0">SDOM::IDisplayObject</a>.</p>
+<p>Implemented in <a class="el" href="classSDOM_1_1Core.html#ab56b5bf8eaaabca75ae8443ed6d959e3">SDOM::Core</a>, and <a class="el" href="classSDOM_1_1IDisplayObject.html#a498aba902813d239ba961bc21549f2b0">SDOM::IDisplayObject</a>.</p>
 
 </div>
 </div>
@@ -452,7 +453,7 @@ template&lt;typename T&gt; </div>
 
 <p>Implements <a class="el" href="classSDOM_1_1IUnitTest.html#ae75010ac7569a312b4a7f29ba6764ad4">SDOM::IUnitTest</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1Core.html#ae81d8590efccffdc1164e30989b36805">SDOM::Core</a>, and <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>.</p>
 
 </div>
 </div>

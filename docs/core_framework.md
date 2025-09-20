@@ -37,13 +37,15 @@ To ensure proper setup, `onInit()` should be called **after** the SDL Video Subs
 ### Example Configuration API:
 ```cpp
 struct CoreConfig {
-    int pixelWidth;
-    int pixelHeight;
-    int windowWidth;
-    int windowHeight;
-    Uint32 rendererFlags;
-    Uint32 windowFlags;
-    Uint32 colorFormat;
+    float windowWidth;
+    float windowHeight;
+    float pixelWidth;   // Virtual width of a single pixel (for logical scaling; can be fractional/non-square)
+    float pixelHeight;  // Virtual height of a single pixel (for logical scaling; can be fractional/non-square)
+    bool preserveAspectRatio = true;    // Preserve original aspect ratio when resizing window
+    bool allowTextureResize = true;     // Allow texture resolution to change when resizing window
+    SDL_RendererLogicalPresentation rendererFlags;
+    SDL_WindowFlags windowFlags;
+    SDL_PixelFormat colorFormat;
     // ... other options ...
 };
 
@@ -57,8 +59,6 @@ All pre-initialization information must be set before calling `run()` or startin
 
 ---
 
-Let me know if you want this added to a specific section, or if you’d like to expand on configuration struct details or error handling for initialization!## Core Initialization Sequence & Pre-Initialization Configuration
-
 To ensure proper setup, `onInit()` should be called **after** the SDL Video Subsystem (window, renderer, texture) has been created and initialized. This requires that all necessary configuration parameters are provided to Core **before** initialization begins.
 
 ### Required Pre-Initialization Parameters:
@@ -69,33 +69,7 @@ To ensure proper setup, `onInit()` should be called **after** the SDL Video Subs
 - **Color Format:** Desired pixel format for rendering and textures.
 - **Other SDL/graphics options:** As needed for your application.
 
-### Initialization Flow:
-1. **Configure Core:**  
-   Pass all required parameters to Core via a configuration struct or initialization method.
-2. **Create SDL Video Subsystem:**  
-   Core creates the SDL window, renderer, and main display texture using the provided settings.
-3. **Call onInit():**  
-   Once the video subsystem is ready, Core invokes `onInit()` to allow application-specific initialization (e.g., loading assets, setting up stages).
-4. **Enter Main Loop:**  
-   Core proceeds with the main SDL loop, event handling, and rendering.
 
-### Example Configuration API:
-```cpp
-struct CoreConfig {
-    int pixelWidth;
-    int pixelHeight;
-    int windowWidth;
-    int windowHeight;
-    Uint32 rendererFlags;
-    Uint32 windowFlags;
-    Uint32 colorFormat;
-    // ... other options ...
-};
-
-Core& core = getCore();
-core.configure(CoreConfig{/* ... */});
-core.run(); // Internally calls onInit() after SDL setup
-```
 ### Alternative Initialization: JSON Configuration
 
 In addition to using a configuration struct, SDOM Core can be initialized using a JSON string or by loading configuration from a JSON file. This approach allows for flexible, data-driven setup and easier integration with external tools or scripting environments.
@@ -104,13 +78,17 @@ In addition to using a configuration struct, SDOM Core can be initialized using 
 ```cpp
 Core& core = getCore();
 core.configureFromJson(R"({
-    "pixelWidth": 1280,
-    "pixelHeight": 720,
-    "windowWidth": 1280,
-    "windowHeight": 720,
-    "rendererFlags": 2,
-    "windowFlags": 1,
-    "colorFormat": 376840196
+    "core": {
+        "windowWidth": 1280.0,
+        "windowHeight": 720.0,
+        "pixelWidth": 2.0,
+        "pixelHeight": 2.0,
+        "allowTextureResize": false,
+        "preserveAspectRatio": true,
+        "rendererFlags": "SDL_LOGICAL_PRESENTATION_LETTERBOX",
+        "windowFlags": "SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE",
+        "colorFormat": "SDL_PIXELFORMAT_RGBA8888"
+    }
 })");
 core.run();
 ```
@@ -245,35 +223,6 @@ The Core object is implemented as a singleton, ensuring a single point of contro
 
 This design balances centralized control with flexible extension points for applications and language bindings.
 
-## Example Usage
-```cpp
-Core& core = Core::getInstance();
-core.registerOnInit([]() {
-    // Custom initialization
-    return true;
-});
-core.registerOnQuit([]() {
-    // Cleanup logic
-});
-core.registerOnUpdate([](float dt) {
-    // Game logic
-});
-core.registerOnEvent([](const Event &event) {
-    // Handle events
-});
-core.registerOnRender([]() {
-    // Render stage
-});
-core.registerOnUnitTest([]() {
-    // Run tests
-    return true;
-});
-
-int main() {
-    core.run();
-    return 0;
-}
-```
 
 ## EventListener Support
 
@@ -283,24 +232,35 @@ In addition to direct hook/callback registration, the Core framework can support
 - The Core maintains a list of listeners for each event type and notifies them when the event occurs.
 - Listeners can be implemented as objects with event-handling methods, or as standalone functions.
 
-### Example (C++)
+### Example (C)
 ```cpp
-class MyListener {
-public:
-    void onInit() { /* ... */ }
-    void onQuit() { /* ... */ }
-    void onUpdate(float dt) { /* ... */ }
-    void onEvent(const Event& e) { /* ... */ }
-    void onRender() { /* ... */ }
-};
+void onInit() { /* ... */ }
+void onQuit() { /* ... */ }
+void onUpdate(float dt) { /* ... */ }
+void onEvent(const Event& e) { /* ... */ }
+void onRender() { /* ... */ }
 
-Core core;
-MyListener listener;
-core.addEventListener(EventType::Init, [&listener]() { listener.onInit(); });
-core.addEventListener(EventType::Quit, [&listener]() { listener.onQuit(); });
-core.addEventListener(EventType::Update, [&listener](float dt) { listener.onUpdate(dt); });
-core.addEventListener(EventType::Event, [&listener](const Event& e) { listener.onEvent(e); });
-core.addEventListener(EventType::Render, [&listener]() { listener.onRender(); });
+int main()
+{
+    Core& core = SDOM::getCore();
+    CoreConfig config;
+    config.pixelWidth = 640;
+    config.pixelHeight = 480;
+    config.windowWidth = 1280;
+    config.windowHeight = 960;
+    config.renderFlags = SDL_LOGICAL_PRESENTATION_LETTERBOX;
+    config.windowFlags = SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE;
+    condig.colorFormat = SDL_PIXELFORMAT_RGBA8888;
+    core.configure(CoreConfig{ });
+
+    core.addEventListener(EventType::Init, []() { onInit(); });
+    core.addEventListener(EventType::Quit, []() { onQuit(); });
+    core.addEventListener(EventType::Update, [](float dt) { onUpdate(dt); });
+    core.addEventListener(EventType::Event, [](const Event& e) { onEvent(e); });
+    core.addEventListener(EventType::Render, []() { onRender(); });
+
+    core.run();
+}
 ```
 
 ### Benefits
