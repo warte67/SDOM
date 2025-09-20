@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['benefits_0',['Benefits',['../md_extensible__factory.html#autotoc_md8',1,'Benefits'],['../md_extensible__factory.html#autotoc_md25',1,'Benefits']]],
+  ['benefits_0',['Benefits',['../md_core__framework.html#autotoc_md26',1,'Benefits'],['../md_extensible__factory.html#autotoc_md47',1,'Benefits'],['../md_extensible__factory.html#autotoc_md64',1,'Benefits']]],
   ['bg_1',['bg',['../classCLR.html#a270a5369a80821f52e34a6be64f8ca89',1,'CLR']]],
   ['bg_5fblack_2',['BG_BLACK',['../classCLR.html#a37bc9dc667e6556bb1d95d7e614f32d6',1,'CLR']]],
   ['bg_5fblue_3',['BG_BLUE',['../classCLR.html#a08714fb27425dfaad4ad76d5769cbd83',1,'CLR']]],

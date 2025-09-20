@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['extensible_5ffactory_2emd_0',['extensible_factory.md',['../extensible__factory_8md.html',1,'']]]
+  ['core_5fframework_2emd_0',['core_framework.md',['../core__framework_8md.html',1,'']]]
 ];
