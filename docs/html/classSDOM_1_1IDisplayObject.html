@@ -94,6 +94,8 @@ $(document).ready(function(){initNavTree('classSDOM_1_1IDisplayObject.html','');
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classSDOM_1_1IDisplayObject-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">SDOM::IDisplayObject Interface Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
@@ -113,6 +115,7 @@ Inheritance diagram for SDOM::IDisplayObject:</div>
 <area href="classSDOM_1_1IResourceObject.html" title="Base interface for all Factory-managed resources in SDOM." alt="SDOM::IResourceObject" shape="rect" coords="0,112,282,136"/>
 <area href="classSDOM_1_1IDataObject.html" title="Core interface for all data-driven objects in SDOM." alt="SDOM::IDataObject" shape="rect" coords="0,56,282,80"/>
 <area href="classSDOM_1_1IUnitTest.html" title="Interface for unit testing objects in SDOM." alt="SDOM::IUnitTest" shape="rect" coords="0,0,282,24"/>
+<area href="classSDOM_1_1Stage.html" alt="SDOM::Stage" shape="rect" coords="146,224,428,248"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -222,14 +225,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1ab73450fbdc7b278a871ca14454c92f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf1819de3013c87212efa5c370cde38a" id="r_acf1819de3013c87212efa5c370cde38a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#acf1819de3013c87212efa5c370cde38a">setBottom</a> (float p_bottom)</td></tr>
 <tr class="separator:acf1819de3013c87212efa5c370cde38a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76c46582dd5d3de30419c9aa84b181eb" id="r_a76c46582dd5d3de30419c9aa84b181eb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a76c46582dd5d3de30419c9aa84b181eb">getLocalLeft</a> () const</td></tr>
-<tr class="separator:a76c46582dd5d3de30419c9aa84b181eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9110787e36dd32665bd498991bc78705" id="r_a9110787e36dd32665bd498991bc78705"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9110787e36dd32665bd498991bc78705">getLocalRight</a> () const</td></tr>
-<tr class="separator:a9110787e36dd32665bd498991bc78705"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3d0f33be77fd218d52d75316045f663" id="r_ae3d0f33be77fd218d52d75316045f663"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ae3d0f33be77fd218d52d75316045f663">getLocalTop</a> () const</td></tr>
-<tr class="separator:ae3d0f33be77fd218d52d75316045f663"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42fc83030cf0a1ad920736f654fdf6e7" id="r_a42fc83030cf0a1ad920736f654fdf6e7"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a42fc83030cf0a1ad920736f654fdf6e7">getLocalBottom</a> () const</td></tr>
-<tr class="separator:a42fc83030cf0a1ad920736f654fdf6e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0135775f9a27d0c6d2a9d9d6a592fcee" id="r_a0135775f9a27d0c6d2a9d9d6a592fcee"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#a0135775f9a27d0c6d2a9d9d6a592fcee">getName</a> () const</td></tr>
 <tr class="memdesc:a0135775f9a27d0c6d2a9d9d6a592fcee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the unique resource name.  <br /></td></tr>
 <tr class="separator:a0135775f9a27d0c6d2a9d9d6a592fcee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -303,6 +298,46 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a54d77f5fbab11b64f7971d1c33dea11d"><td class="memTemplItemLeft" align="right" valign="top">static T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a54d77f5fbab11b64f7971d1c33dea11d">json_value_case_insensitive</a> (const nlohmann::json &amp;j, const std::string &amp;key, const T &amp;default_value)</td></tr>
 <tr class="memdesc:a54d77f5fbab11b64f7971d1c33dea11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a value from a JSON object using case-insensitive key lookup.  <br /></td></tr>
 <tr class="separator:a54d77f5fbab11b64f7971d1c33dea11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:acbe6825654210c6f0c6c63eede4589ab" id="r_acbe6825654210c6f0c6c63eede4589ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#acbe6825654210c6f0c6c63eede4589ab">IDisplayObject</a> (const <a class="el" href="structSDOM_1_1InitDisplayObject.html">InitDisplayObject</a> &amp;init)</td></tr>
+<tr class="memdesc:acbe6825654210c6f0c6c63eede4589ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor using <a class="el" href="structSDOM_1_1InitDisplayObject.html" title="Initialization structure for IDisplayObject.">InitDisplayObject</a> structure.  <br /></td></tr>
+<tr class="separator:acbe6825654210c6f0c6c63eede4589ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc3752fcba0c77656844a654b4fecf92" id="r_afc3752fcba0c77656844a654b4fecf92"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#afc3752fcba0c77656844a654b4fecf92">IDisplayObject</a> (const <a class="el" href="namespaceSDOM.html#aaf9b01789ed8d0c8a88ed4f61d168937">Json</a> &amp;config)</td></tr>
+<tr class="memdesc:afc3752fcba0c77656844a654b4fecf92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor using JSON configuration.  <br /></td></tr>
+<tr class="separator:afc3752fcba0c77656844a654b4fecf92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c68c6c2c52d9ff7de62600c48794454" id="r_a3c68c6c2c52d9ff7de62600c48794454"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a3c68c6c2c52d9ff7de62600c48794454">IDisplayObject</a> ()</td></tr>
+<tr class="memdesc:a3c68c6c2c52d9ff7de62600c48794454"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (registers JSON properties)  <br /></td></tr>
+<tr class="separator:a3c68c6c2c52d9ff7de62600c48794454"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76c46582dd5d3de30419c9aa84b181eb" id="r_a76c46582dd5d3de30419c9aa84b181eb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a76c46582dd5d3de30419c9aa84b181eb">getLocalLeft</a> () const</td></tr>
+<tr class="separator:a76c46582dd5d3de30419c9aa84b181eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9110787e36dd32665bd498991bc78705" id="r_a9110787e36dd32665bd498991bc78705"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9110787e36dd32665bd498991bc78705">getLocalRight</a> () const</td></tr>
+<tr class="separator:a9110787e36dd32665bd498991bc78705"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3d0f33be77fd218d52d75316045f663" id="r_ae3d0f33be77fd218d52d75316045f663"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ae3d0f33be77fd218d52d75316045f663">getLocalTop</a> () const</td></tr>
+<tr class="separator:ae3d0f33be77fd218d52d75316045f663"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42fc83030cf0a1ad920736f654fdf6e7" id="r_a42fc83030cf0a1ad920736f654fdf6e7"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a42fc83030cf0a1ad920736f654fdf6e7">getLocalBottom</a> () const</td></tr>
+<tr class="separator:a42fc83030cf0a1ad920736f654fdf6e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9b0ffcdace56e0b0edad6c00d38f5b3" id="r_ae9b0ffcdace56e0b0edad6c00d38f5b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ae9b0ffcdace56e0b0edad6c00d38f5b3">setLocalLeft</a> (float value)</td></tr>
+<tr class="separator:ae9b0ffcdace56e0b0edad6c00d38f5b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb3234d9e98839cce304daf9f98f2081" id="r_abb3234d9e98839cce304daf9f98f2081"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#abb3234d9e98839cce304daf9f98f2081">setLocalRight</a> (float value)</td></tr>
+<tr class="separator:abb3234d9e98839cce304daf9f98f2081"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a801eb23ae1a8205b5c1c32e07000afe0" id="r_a801eb23ae1a8205b5c1c32e07000afe0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a801eb23ae1a8205b5c1c32e07000afe0">setLocalTop</a> (float value)</td></tr>
+<tr class="separator:a801eb23ae1a8205b5c1c32e07000afe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abda87b944bd12092c524a44fc2f534c2" id="r_abda87b944bd12092c524a44fc2f534c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#abda87b944bd12092c524a44fc2f534c2">setLocalBottom</a> (float value)</td></tr>
+<tr class="separator:abda87b944bd12092c524a44fc2f534c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a48efaecebb266bcd535f2ef256fbb67a" id="r_a48efaecebb266bcd535f2ef256fbb67a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#a48efaecebb266bcd535f2ef256fbb67a">name_</a></td></tr>
+<tr class="memdesc:a48efaecebb266bcd535f2ef256fbb67a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique resource name.  <br /></td></tr>
+<tr class="separator:a48efaecebb266bcd535f2ef256fbb67a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e370ce55cd0f363220283d9680e5b84" id="r_a9e370ce55cd0f363220283d9680e5b84"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#a9e370ce55cd0f363220283d9680e5b84">filemame_</a></td></tr>
+<tr class="memdesc:a9e370ce55cd0f363220283d9680e5b84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filename associated with the resource.  <br /></td></tr>
+<tr class="separator:a9e370ce55cd0f363220283d9680e5b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78c196e1269467a340a8e557d8e0de36" id="r_a78c196e1269467a340a8e557d8e0de36"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#a78c196e1269467a340a8e557d8e0de36">type_</a></td></tr>
+<tr class="memdesc:a78c196e1269467a340a8e557d8e0de36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extensible string identifier for resource type.  <br /></td></tr>
+<tr class="separator:a78c196e1269467a340a8e557d8e0de36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -387,6 +422,89 @@ Friends</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="acbe6825654210c6f0c6c63eede4589ab" name="acbe6825654210c6f0c6c63eede4589ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbe6825654210c6f0c6c63eede4589ab">&#9670;&#160;</a></span>IDisplayObject() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::IDisplayObject::IDisplayObject </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM_1_1InitDisplayObject.html">InitDisplayObject</a> &amp;&#160;</td>
+          <td class="paramname"><em>init</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor using <a class="el" href="structSDOM_1_1InitDisplayObject.html" title="Initialization structure for IDisplayObject.">InitDisplayObject</a> structure. </p>
+
+</div>
+</div>
+<a id="afc3752fcba0c77656844a654b4fecf92" name="afc3752fcba0c77656844a654b4fecf92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc3752fcba0c77656844a654b4fecf92">&#9670;&#160;</a></span>IDisplayObject() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::IDisplayObject::IDisplayObject </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceSDOM.html#aaf9b01789ed8d0c8a88ed4f61d168937">Json</a> &amp;&#160;</td>
+          <td class="paramname"><em>config</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor using JSON configuration. </p>
+
+</div>
+</div>
+<a id="a3c68c6c2c52d9ff7de62600c48794454" name="a3c68c6c2c52d9ff7de62600c48794454"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c68c6c2c52d9ff7de62600c48794454">&#9670;&#160;</a></span>IDisplayObject() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::IDisplayObject::IDisplayObject </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default constructor (registers JSON properties) </p>
+
+</div>
+</div>
 <a id="afe7bf92f5ca28b59fb6bda0329796642" name="afe7bf92f5ca28b59fb6bda0329796642"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afe7bf92f5ca28b59fb6bda0329796642">&#9670;&#160;</a></span>~IDisplayObject()</h2>
 
@@ -827,7 +945,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -852,7 +970,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -877,7 +995,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -902,7 +1020,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1353,6 +1471,8 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
+<p>Implemented in <a class="el" href="classSDOM_1_1Stage.html#a01d2653adebd45d96705517e7a3d08e3">SDOM::Stage</a>.</p>
+
 </div>
 </div>
 <a id="aa1525c87c0e2d74e5838d69baba95ac6" name="aa1525c87c0e2d74e5838d69baba95ac6"></a>
@@ -1383,6 +1503,8 @@ template&lt;typename T &gt; </div>
 
 <p>Implements <a class="el" href="classSDOM_1_1IDataObject.html#ae7bbc291ea72a2a99a1cce4c86e681cb">SDOM::IDataObject</a>.</p>
 
+<p>Implemented in <a class="el" href="classSDOM_1_1Stage.html#a941e6d1279fec3c6a4dea10751df4f05">SDOM::Stage</a>.</p>
+
 </div>
 </div>
 <a id="a498aba902813d239ba961bc21549f2b0" name="a498aba902813d239ba961bc21549f2b0"></a>
@@ -1412,6 +1534,8 @@ template&lt;typename T &gt; </div>
 
 <p>Implements <a class="el" href="classSDOM_1_1IDataObject.html#a8254dbe0378d780dc2665f892430f543">SDOM::IDataObject</a>.</p>
 
+<p>Implemented in <a class="el" href="classSDOM_1_1Stage.html#a155821bb6fdbe8a38825e087666399ed">SDOM::Stage</a>.</p>
+
 </div>
 </div>
 <a id="aa1f11950c5bbe98f9a367c5d9887826c" name="aa1f11950c5bbe98f9a367c5d9887826c"></a>
@@ -1439,6 +1563,8 @@ template&lt;typename T &gt; </div>
 
 <p>Called to render the display object. </p>
 <p>Called to render the display object </p>
+
+<p>Implemented in <a class="el" href="classSDOM_1_1Stage.html#a880f5ad32322d1bf1ad18f79dfda3ff2">SDOM::Stage</a>.</p>
 
 </div>
 </div>
@@ -1469,6 +1595,8 @@ template&lt;typename T &gt; </div>
 <p>Called during startup or explicit unit test runs. Each object should validate its own state and behavior. </p><dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. Called during startup or explicit unit test runs. </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IResourceObject.html#a4444b16928d0b922d6f727e1b59fcc87">SDOM::IResourceObject</a>.</p>
+
+<p>Implemented in <a class="el" href="classSDOM_1_1Stage.html#ae5ef116a864e4c9648010e4fba685300">SDOM::Stage</a>.</p>
 
 </div>
 </div>
@@ -1504,6 +1632,8 @@ template&lt;typename T &gt; </div>
   </table>
   </dd>
 </dl>
+
+<p>Implemented in <a class="el" href="classSDOM_1_1Stage.html#a255ee599c38e2b3fe4352313e37ba25f">SDOM::Stage</a>.</p>
 
 </div>
 </div>
@@ -1962,6 +2092,110 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="abda87b944bd12092c524a44fc2f534c2" name="abda87b944bd12092c524a44fc2f534c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abda87b944bd12092c524a44fc2f534c2">&#9670;&#160;</a></span>setLocalBottom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp; SDOM::IDisplayObject::setLocalBottom </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae9b0ffcdace56e0b0edad6c00d38f5b3" name="ae9b0ffcdace56e0b0edad6c00d38f5b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9b0ffcdace56e0b0edad6c00d38f5b3">&#9670;&#160;</a></span>setLocalLeft()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp; SDOM::IDisplayObject::setLocalLeft </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abb3234d9e98839cce304daf9f98f2081" name="abb3234d9e98839cce304daf9f98f2081"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb3234d9e98839cce304daf9f98f2081">&#9670;&#160;</a></span>setLocalRight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp; SDOM::IDisplayObject::setLocalRight </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a801eb23ae1a8205b5c1c32e07000afe0" name="a801eb23ae1a8205b5c1c32e07000afe0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a801eb23ae1a8205b5c1c32e07000afe0">&#9670;&#160;</a></span>setLocalTop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp; SDOM::IDisplayObject::setLocalTop </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a97df18b8264fd090df6e992016be0740" name="a97df18b8264fd090df6e992016be0740"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a97df18b8264fd090df6e992016be0740">&#9670;&#160;</a></span>setName()</h2>
 
@@ -2322,6 +2556,79 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a9e370ce55cd0f363220283d9680e5b84" name="a9e370ce55cd0f363220283d9680e5b84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e370ce55cd0f363220283d9680e5b84">&#9670;&#160;</a></span>filemame_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::IResourceObject::filemame_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Filename associated with the resource. </p>
+
+</div>
+</div>
+<a id="a48efaecebb266bcd535f2ef256fbb67a" name="a48efaecebb266bcd535f2ef256fbb67a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48efaecebb266bcd535f2ef256fbb67a">&#9670;&#160;</a></span>name_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::IResourceObject::name_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Unique resource name. </p>
+
+</div>
+</div>
+<a id="a78c196e1269467a340a8e557d8e0de36" name="a78c196e1269467a340a8e557d8e0de36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78c196e1269467a340a8e557d8e0de36">&#9670;&#160;</a></span>type_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::IResourceObject::type_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Extensible string identifier for resource type. </p>
 
 </div>
 </div>

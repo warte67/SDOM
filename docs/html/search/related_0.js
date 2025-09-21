@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['eventmanager_0',['EventManager',['../classSDOM_1_1Event.html#aba45a46c615e2683daffdae82e2d3b8f',1,'SDOM::Event']]]
+  ['core_0',['core',['../classSDOM_1_1Factory.html#a4107254ac74f90d4f91e810d755b98c2',1,'SDOM::Factory::Core'],['../classSDOM_1_1IResourceObject.html#a4107254ac74f90d4f91e810d755b98c2',1,'SDOM::IResourceObject::Core'],['../classSDOM_1_1Stage.html#a4107254ac74f90d4f91e810d755b98c2',1,'SDOM::Stage::Core']]]
 ];

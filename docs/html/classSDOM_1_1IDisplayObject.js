@@ -3,6 +3,9 @@ var classSDOM_1_1IDisplayObject =
     [ "Command", "classSDOM_1_1IDisplayObject.html#a4701e8775b9ab1332f1d9f4c7f8059fb", null ],
     [ "Getter", "classSDOM_1_1IDisplayObject.html#a7532598094b2dc63904f81c925e419ee", null ],
     [ "Setter", "classSDOM_1_1IDisplayObject.html#a8498dacf500cc59715c911080c6de6fa", null ],
+    [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html#acbe6825654210c6f0c6c63eede4589ab", null ],
+    [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html#afc3752fcba0c77656844a654b4fecf92", null ],
+    [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html#a3c68c6c2c52d9ff7de62600c48794454", null ],
     [ "~IDisplayObject", "classSDOM_1_1IDisplayObject.html#afe7bf92f5ca28b59fb6bda0329796642", null ],
     [ "addEventListener", "classSDOM_1_1IDisplayObject.html#aea1f9c8185f6b4f664baef956ba3cfef", null ],
     [ "cleanAll", "classSDOM_1_1IDisplayObject.html#a5526639873d0e9dd7fab413ed8af90f7", null ],
@@ -62,6 +65,10 @@ var classSDOM_1_1IDisplayObject =
     [ "setHeight", "classSDOM_1_1IDisplayObject.html#affc34595a0f3e17e51801c130caa30ab", null ],
     [ "setHidden", "classSDOM_1_1IDisplayObject.html#abd7be10060116e26935e894937d0e95b", null ],
     [ "setLeft", "classSDOM_1_1IDisplayObject.html#a4b5b1506255242ae26f9f39ec4e13610", null ],
+    [ "setLocalBottom", "classSDOM_1_1IDisplayObject.html#abda87b944bd12092c524a44fc2f534c2", null ],
+    [ "setLocalLeft", "classSDOM_1_1IDisplayObject.html#ae9b0ffcdace56e0b0edad6c00d38f5b3", null ],
+    [ "setLocalRight", "classSDOM_1_1IDisplayObject.html#abb3234d9e98839cce304daf9f98f2081", null ],
+    [ "setLocalTop", "classSDOM_1_1IDisplayObject.html#a801eb23ae1a8205b5c1c32e07000afe0", null ],
     [ "setName", "classSDOM_1_1IDisplayObject.html#a97df18b8264fd090df6e992016be0740", null ],
     [ "setProperty", "classSDOM_1_1IDisplayObject.html#a71647c05acb4a9da4696b9aba861fcf3", null ],
     [ "setRight", "classSDOM_1_1IDisplayObject.html#a8c8e652fc4566409d6e5e9f4ce049de5", null ],
@@ -75,5 +82,8 @@ var classSDOM_1_1IDisplayObject =
     [ "setY", "classSDOM_1_1IDisplayObject.html#a3eee98020b7f0ce46d9fafe34908992c", null ],
     [ "toJson", "classSDOM_1_1IDisplayObject.html#a0c142eb622d4097a748782017506590b", null ],
     [ "triggerEventListeners", "classSDOM_1_1IDisplayObject.html#ac637eaaabe91258d128acfaa88ae39f9", null ],
-    [ "Factory", "classSDOM_1_1IDisplayObject.html#a328c093d609680cca505905c6d49901a", null ]
+    [ "Factory", "classSDOM_1_1IDisplayObject.html#a328c093d609680cca505905c6d49901a", null ],
+    [ "filemame_", "classSDOM_1_1IDisplayObject.html#a9e370ce55cd0f363220283d9680e5b84", null ],
+    [ "name_", "classSDOM_1_1IDisplayObject.html#a48efaecebb266bcd535f2ef256fbb67a", null ],
+    [ "type_", "classSDOM_1_1IDisplayObject.html#a78c196e1269467a340a8e557d8e0de36", null ]
 ];

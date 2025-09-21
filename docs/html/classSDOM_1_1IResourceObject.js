@@ -3,6 +3,8 @@ var classSDOM_1_1IResourceObject =
     [ "Command", "classSDOM_1_1IResourceObject.html#a4701e8775b9ab1332f1d9f4c7f8059fb", null ],
     [ "Getter", "classSDOM_1_1IResourceObject.html#a7532598094b2dc63904f81c925e419ee", null ],
     [ "Setter", "classSDOM_1_1IResourceObject.html#a8498dacf500cc59715c911080c6de6fa", null ],
+    [ "IResourceObject", "classSDOM_1_1IResourceObject.html#ace4196b6f9ec04685f73c779546435ab", null ],
+    [ "IResourceObject", "classSDOM_1_1IResourceObject.html#ae09d2bcca83918dc6a4acfb73f0a3b26", null ],
     [ "~IResourceObject", "classSDOM_1_1IResourceObject.html#aec613a51c917161736e5dfa515e2c379", null ],
     [ "command", "classSDOM_1_1IResourceObject.html#a9dccc6878d7b48f271a1319e61838c1e", null ],
     [ "fromJson", "classSDOM_1_1IResourceObject.html#a5b1d9c9a136de640cd006fb6216592c9", null ],
@@ -21,5 +23,10 @@ var classSDOM_1_1IResourceObject =
     [ "setName", "classSDOM_1_1IResourceObject.html#a97df18b8264fd090df6e992016be0740", null ],
     [ "setProperty", "classSDOM_1_1IResourceObject.html#a71647c05acb4a9da4696b9aba861fcf3", null ],
     [ "setType", "classSDOM_1_1IResourceObject.html#a8dc5d38649673c7d54b813671b20ff15", null ],
-    [ "toJson", "classSDOM_1_1IResourceObject.html#a0c142eb622d4097a748782017506590b", null ]
+    [ "toJson", "classSDOM_1_1IResourceObject.html#a0c142eb622d4097a748782017506590b", null ],
+    [ "Core", "classSDOM_1_1IResourceObject.html#a4107254ac74f90d4f91e810d755b98c2", null ],
+    [ "Factory", "classSDOM_1_1IResourceObject.html#a328c093d609680cca505905c6d49901a", null ],
+    [ "filemame_", "classSDOM_1_1IResourceObject.html#a9e370ce55cd0f363220283d9680e5b84", null ],
+    [ "name_", "classSDOM_1_1IResourceObject.html#a48efaecebb266bcd535f2ef256fbb67a", null ],
+    [ "type_", "classSDOM_1_1IResourceObject.html#a78c196e1269467a340a8e557d8e0de36", null ]
 ];

@@ -1,9 +1,10 @@
 var classSDOM_1_1Factory =
 [
     [ "Command", "classSDOM_1_1Factory.html#a4701e8775b9ab1332f1d9f4c7f8059fb", null ],
+    [ "Creator", "classSDOM_1_1Factory.html#aca79e549a859254fa040de62bd8a4188", null ],
     [ "Getter", "classSDOM_1_1Factory.html#a7532598094b2dc63904f81c925e419ee", null ],
     [ "Setter", "classSDOM_1_1Factory.html#a8498dacf500cc59715c911080c6de6fa", null ],
-    [ "Factory", "classSDOM_1_1Factory.html#abd37d663e017d4497dc462b006e435b8", null ],
+    [ "Factory", "classSDOM_1_1Factory.html#affd4d70b6b361b04bdc4fa7d194059e6", null ],
     [ "~Factory", "classSDOM_1_1Factory.html#aa3b8f4b546c18154be9546ea3a251a7f", null ],
     [ "addResource", "classSDOM_1_1Factory.html#acc4fc38bfedc84b3f1191c94413e3ee8", null ],
     [ "command", "classSDOM_1_1Factory.html#a9dccc6878d7b48f271a1319e61838c1e", null ],
@@ -17,6 +18,8 @@ var classSDOM_1_1Factory =
     [ "onUnitTest", "classSDOM_1_1Factory.html#a911541cceb705c99db25cf57be490e09", null ],
     [ "registerCommand", "classSDOM_1_1Factory.html#a2c43fdab7e27c9841cdd7d4569434c47", null ],
     [ "registerProperty", "classSDOM_1_1Factory.html#a780b503a81e095549da8442c2e934db0", null ],
+    [ "registerType", "classSDOM_1_1Factory.html#a7bfd4ed8376c13248898f509232a5171", null ],
     [ "setProperty", "classSDOM_1_1Factory.html#a71647c05acb4a9da4696b9aba861fcf3", null ],
-    [ "toJson", "classSDOM_1_1Factory.html#a0c142eb622d4097a748782017506590b", null ]
+    [ "toJson", "classSDOM_1_1Factory.html#a0c142eb622d4097a748782017506590b", null ],
+    [ "Core", "classSDOM_1_1Factory.html#a4107254ac74f90d4f91e810d755b98c2", null ]
 ];

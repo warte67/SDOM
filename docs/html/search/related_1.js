@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['factory_0',['Factory',['../classSDOM_1_1IDisplayObject.html#a328c093d609680cca505905c6d49901a',1,'SDOM::IDisplayObject']]]
+  ['eventmanager_0',['EventManager',['../classSDOM_1_1Event.html#aba45a46c615e2683daffdae82e2d3b8f',1,'SDOM::Event']]]
 ];

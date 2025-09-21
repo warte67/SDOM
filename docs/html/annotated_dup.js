@@ -11,10 +11,12 @@ var annotated_dup =
       [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
       [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
       [ "InitDisplayObject", "structSDOM_1_1InitDisplayObject.html", "structSDOM_1_1InitDisplayObject" ],
+      [ "InitStageObject", "structSDOM_1_1InitStageObject.html", "structSDOM_1_1InitStageObject" ],
       [ "IResourceObject", "classSDOM_1_1IResourceObject.html", "classSDOM_1_1IResourceObject" ],
       [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
       [ "resource_ptr", "classSDOM_1_1resource__ptr.html", "classSDOM_1_1resource__ptr" ],
-      [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ]
+      [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
+      [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ]
     ] ],
     [ "CLR", "classCLR.html", "classCLR" ]
 ];

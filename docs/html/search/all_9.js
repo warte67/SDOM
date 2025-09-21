@@ -31,7 +31,7 @@ var searchData=
   ['constructor_20signatures_28',['1a. Standardized Constructor Signatures',['../md_extensible__factory.html#autotoc_md49',1,'']]],
   ['constructors_20for_20idisplayobjects_29',['Standardized Constructors for IDisplayObjects',['../md_extensible__factory.html#autotoc_md57',1,'']]],
   ['constructors_20friend_20factory_30',['2. Private Constructors &amp; Friend Factory',['../md_extensible__factory.html#autotoc_md50',1,'']]],
-  ['core_31',['Core',['../classSDOM_1_1Core.html',1,'SDOM']]],
+  ['core_31',['core',['../classSDOM_1_1Stage.html#a4107254ac74f90d4f91e810d755b98c2',1,'SDOM::Stage::Core'],['../classSDOM_1_1IResourceObject.html#a4107254ac74f90d4f91e810d755b98c2',1,'SDOM::IResourceObject::Core'],['../classSDOM_1_1Factory.html#a4107254ac74f90d4f91e810d755b98c2',1,'SDOM::Factory::Core'],['../classSDOM_1_1Core.html',1,'SDOM::Core']]],
   ['core_20framework_20design_32',['SDOM Core Framework Design',['../md_core__framework.html',1,'']]],
   ['core_20initialization_20sequence_20pre_20initialization_20configuration_33',['Core Initialization Sequence &amp; Pre-Initialization Configuration',['../md_core__framework.html#autotoc_md4',1,'']]],
   ['core_20responsibilities_34',['Core Responsibilities',['../md_core__framework.html#autotoc_md3',1,'']]],
@@ -39,9 +39,10 @@ var searchData=
   ['coreconfig_36',['CoreConfig',['../structSDOM_1_1Core_1_1CoreConfig.html',1,'SDOM::Core']]],
   ['create_20method_37',['4. Generic Factory Create Method',['../md_extensible__factory.html#autotoc_md52',1,'']]],
   ['create_20methods_38',['3. Factory Create Methods',['../md_extensible__factory.html#autotoc_md43',1,'']]],
-  ['csr_5fpos_39',['csr_pos',['../classCLR.html#a7940da6fea15763023c0f8cbc8606a9d',1,'CLR']]],
-  ['currentphase_40',['currentPhase',['../classSDOM_1_1Event.html#acfe274676206ac3354d955cd794488e6',1,'SDOM::Event']]],
-  ['currenttarget_41',['currentTarget',['../classSDOM_1_1Event.html#abdf7e460954d551a09d995902b2fcf95',1,'SDOM::Event']]],
-  ['custom_20stage_20objects_42',['Registering Custom Stage Objects',['../md_core__framework.html#autotoc_md24',1,'']]],
-  ['cyan_43',['CYAN',['../classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0',1,'CLR']]]
+  ['creator_39',['creator',['../classSDOM_1_1Stage.html#ad32c2cc36b27e3a57dc848a9f4af8741',1,'SDOM::Stage::Creator()'],['../classSDOM_1_1Factory.html#aca79e549a859254fa040de62bd8a4188',1,'SDOM::Factory::Creator']]],
+  ['csr_5fpos_40',['csr_pos',['../classCLR.html#a7940da6fea15763023c0f8cbc8606a9d',1,'CLR']]],
+  ['currentphase_41',['currentPhase',['../classSDOM_1_1Event.html#acfe274676206ac3354d955cd794488e6',1,'SDOM::Event']]],
+  ['currenttarget_42',['currentTarget',['../classSDOM_1_1Event.html#abdf7e460954d551a09d995902b2fcf95',1,'SDOM::Event']]],
+  ['custom_20stage_20objects_43',['Registering Custom Stage Objects',['../md_core__framework.html#autotoc_md24',1,'']]],
+  ['cyan_44',['CYAN',['../classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0',1,'CLR']]]
 ];

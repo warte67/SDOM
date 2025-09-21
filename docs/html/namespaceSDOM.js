@@ -10,10 +10,12 @@ var namespaceSDOM =
     [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
     [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
     [ "InitDisplayObject", "structSDOM_1_1InitDisplayObject.html", "structSDOM_1_1InitDisplayObject" ],
+    [ "InitStageObject", "structSDOM_1_1InitStageObject.html", "structSDOM_1_1InitStageObject" ],
     [ "IResourceObject", "classSDOM_1_1IResourceObject.html", "classSDOM_1_1IResourceObject" ],
     [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
     [ "resource_ptr", "classSDOM_1_1resource__ptr.html", "classSDOM_1_1resource__ptr" ],
     [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
+    [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ],
     [ "Json", "namespaceSDOM.html#aaf9b01789ed8d0c8a88ed4f61d168937", null ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
@@ -44,6 +46,9 @@ var namespaceSDOM =
       [ "RIGHT_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8", null ]
     ] ],
     [ "getCore", "namespaceSDOM.html#ae65864505926b5378f1fcd94afe1aa06", null ],
+    [ "getRenderer", "namespaceSDOM.html#ad57d41bf07aa1729877e98559ee0b7b7", null ],
+    [ "getTexture", "namespaceSDOM.html#a41c89b1941fbb9aab101b581c5391a99", null ],
+    [ "getWindow", "namespaceSDOM.html#ae6f6524cc3d94ed2464c895eb07bc9f5", null ],
     [ "trim", "namespaceSDOM.html#a0b2e6cb3f4096b1c8ae989c26ef9e32f", null ],
     [ "anchorPointToString_", "namespaceSDOM.html#ac004759fa5d6cd324931439829e17123", null ],
     [ "stringToAnchorPoint_", "namespaceSDOM.html#a33cd42f20297f893e13db841931abda0", null ]

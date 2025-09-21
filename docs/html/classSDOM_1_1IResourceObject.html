@@ -93,6 +93,8 @@ $(document).ready(function(){initNavTree('classSDOM_1_1IResourceObject.html','')
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classSDOM_1_1IResourceObject-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">SDOM::IResourceObject Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
@@ -111,6 +113,7 @@ Inheritance diagram for SDOM::IResourceObject:</div>
 <area href="classSDOM_1_1IDataObject.html" title="Core interface for all data-driven objects in SDOM." alt="SDOM::IDataObject" shape="rect" coords="0,56,150,80"/>
 <area href="classSDOM_1_1IUnitTest.html" title="Interface for unit testing objects in SDOM." alt="SDOM::IUnitTest" shape="rect" coords="0,0,150,24"/>
 <area href="classSDOM_1_1IDisplayObject.html" title="Abstract interface for displayable objects in SDOM." alt="SDOM::IDisplayObject" shape="rect" coords="0,168,150,192"/>
+<area href="classSDOM_1_1Stage.html" alt="SDOM::Stage" shape="rect" coords="0,224,150,248"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -125,6 +128,10 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ace4196b6f9ec04685f73c779546435ab" id="r_ace4196b6f9ec04685f73c779546435ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#ace4196b6f9ec04685f73c779546435ab">IResourceObject</a> ()=delete</td></tr>
+<tr class="separator:ace4196b6f9ec04685f73c779546435ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae09d2bcca83918dc6a4acfb73f0a3b26" id="r_ae09d2bcca83918dc6a4acfb73f0a3b26"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#ae09d2bcca83918dc6a4acfb73f0a3b26">IResourceObject</a> (std::string name=&quot;&quot;, std::string type=&quot;&quot;, std::string filename=&quot;&quot;)</td></tr>
+<tr class="separator:ae09d2bcca83918dc6a4acfb73f0a3b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec613a51c917161736e5dfa515e2c379" id="r_aec613a51c917161736e5dfa515e2c379"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#aec613a51c917161736e5dfa515e2c379">~IResourceObject</a> ()=default</td></tr>
 <tr class="memdesc:aec613a51c917161736e5dfa515e2c379"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor for safe polymorphic deletion.  <br /></td></tr>
 <tr class="separator:aec613a51c917161736e5dfa515e2c379"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,6 +199,25 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a54d77f5fbab11b64f7971d1c33dea11d"><td class="memTemplItemLeft" align="right" valign="top">static T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a54d77f5fbab11b64f7971d1c33dea11d">json_value_case_insensitive</a> (const nlohmann::json &amp;j, const std::string &amp;key, const T &amp;default_value)</td></tr>
 <tr class="memdesc:a54d77f5fbab11b64f7971d1c33dea11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a value from a JSON object using case-insensitive key lookup.  <br /></td></tr>
 <tr class="separator:a54d77f5fbab11b64f7971d1c33dea11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a48efaecebb266bcd535f2ef256fbb67a" id="r_a48efaecebb266bcd535f2ef256fbb67a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#a48efaecebb266bcd535f2ef256fbb67a">name_</a></td></tr>
+<tr class="memdesc:a48efaecebb266bcd535f2ef256fbb67a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique resource name.  <br /></td></tr>
+<tr class="separator:a48efaecebb266bcd535f2ef256fbb67a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e370ce55cd0f363220283d9680e5b84" id="r_a9e370ce55cd0f363220283d9680e5b84"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#a9e370ce55cd0f363220283d9680e5b84">filemame_</a></td></tr>
+<tr class="memdesc:a9e370ce55cd0f363220283d9680e5b84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filename associated with the resource.  <br /></td></tr>
+<tr class="separator:a9e370ce55cd0f363220283d9680e5b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78c196e1269467a340a8e557d8e0de36" id="r_a78c196e1269467a340a8e557d8e0de36"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#a78c196e1269467a340a8e557d8e0de36">type_</a></td></tr>
+<tr class="memdesc:a78c196e1269467a340a8e557d8e0de36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extensible string identifier for resource type.  <br /></td></tr>
+<tr class="separator:a78c196e1269467a340a8e557d8e0de36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a328c093d609680cca505905c6d49901a" id="r_a328c093d609680cca505905c6d49901a"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#a328c093d609680cca505905c6d49901a">Factory</a></td></tr>
+<tr class="separator:a328c093d609680cca505905c6d49901a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4107254ac74f90d4f91e810d755b98c2" id="r_a4107254ac74f90d4f91e810d755b98c2"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html#a4107254ac74f90d4f91e810d755b98c2">Core</a></td></tr>
+<tr class="separator:a4107254ac74f90d4f91e810d755b98c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base interface for all Factory-managed resources in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. </p>
@@ -204,9 +230,22 @@ Static Public Member Functions</h2></td></tr>
 <p>Members:</p><ul>
 <li>name_: Unique resource name assigned by <a class="el" href="classSDOM_1_1Factory.html">Factory</a>.</li>
 <li>filemame_: Filename associated with the resource (may be empty).</li>
-<li>type_: Extensible string identifier for resource type. </li>
+<li>type_: Extensible string identifier for resource type.</li>
 </ul>
-</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<dl class="section note"><dt>Note</dt><dd><b><a class="el" href="classSDOM_1_1Factory.html">Factory</a> Integration Requirement:</b> <br  />
+ Any class inheriting from <a class="el" href="classSDOM_1_1IResourceObject.html" title="Base interface for all Factory-managed resources in SDOM.">IResourceObject</a> must implement a static Creator method with the following signature: <div class="fragment"><div class="line"><span class="keyword">static</span> std::unique_ptr&lt;IResourceObject&gt; Creator(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceSDOM.html#aaf9b01789ed8d0c8a88ed4f61d168937">Json</a>&amp; config);</div>
+<div class="ttc" id="anamespaceSDOM_html_aaf9b01789ed8d0c8a88ed4f61d168937"><div class="ttname"><a href="namespaceSDOM.html#aaf9b01789ed8d0c8a88ed4f61d168937">SDOM::Json</a></div><div class="ttdeci">nlohmann::json Json</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:48</div></div>
+</div><!-- fragment --> This method should construct and return a new instance of the resource from the provided JSON configuration.</dd></dl>
+<p>Example implementation in a derived class: </p><div class="fragment"><div class="line"><span class="keyword">class </span>MyResource : <span class="keyword">public</span> <a class="code hl_class" href="classSDOM_1_1IResourceObject.html">IResourceObject</a> {</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">    <span class="keyword">static</span> std::unique_ptr&lt;IResourceObject&gt; Creator(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceSDOM.html#aaf9b01789ed8d0c8a88ed4f61d168937">Json</a>&amp; config) {</div>
+<div class="line">        <span class="keywordflow">return</span> std::make_unique&lt;MyResource&gt;(config);</div>
+<div class="line">    }</div>
+<div class="line">    MyResource(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceSDOM.html#aaf9b01789ed8d0c8a88ed4f61d168937">Json</a>&amp; config);</div>
+<div class="line">    <span class="comment">// ...</span></div>
+<div class="line">};</div>
+<div class="ttc" id="aclassSDOM_1_1IResourceObject_html"><div class="ttname"><a href="classSDOM_1_1IResourceObject.html">SDOM::IResourceObject</a></div><div class="ttdoc">Base interface for all Factory-managed resources in SDOM.</div><div class="ttdef"><b>Definition</b> SDOM_IResourceObject.hpp:52</div></div>
+</div><!-- fragment --> </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a4701e8775b9ab1332f1d9f4c7f8059fb" name="a4701e8775b9ab1332f1d9f4c7f8059fb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4701e8775b9ab1332f1d9f4c7f8059fb">&#9670;&#160;</a></span>Command</h2>
 
@@ -274,6 +313,73 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ace4196b6f9ec04685f73c779546435ab" name="ace4196b6f9ec04685f73c779546435ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace4196b6f9ec04685f73c779546435ab">&#9670;&#160;</a></span>IResourceObject() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::IResourceObject::IResourceObject </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae09d2bcca83918dc6a4acfb73f0a3b26" name="ae09d2bcca83918dc6a4acfb73f0a3b26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae09d2bcca83918dc6a4acfb73f0a3b26">&#9670;&#160;</a></span>IResourceObject() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::IResourceObject::IResourceObject </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>type</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>filename</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aec613a51c917161736e5dfa515e2c379" name="aec613a51c917161736e5dfa515e2c379"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aec613a51c917161736e5dfa515e2c379">&#9670;&#160;</a></span>~IResourceObject()</h2>
 
@@ -615,7 +721,7 @@ template&lt;typename T &gt; </div>
 <p>Called during object initialization. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if initialization succeeds, false otherwise. </dd></dl>
 
-<p>Implemented in <a class="el" href="classSDOM_1_1Core.html#ac71a3d701929ce7d18e3cbc0eb62216c">SDOM::Core</a>, <a class="el" href="classSDOM_1_1Event.html#aa6208c66c23e9a104a6acdfe8c0ddc7a">SDOM::Event</a>, <a class="el" href="classSDOM_1_1Factory.html#a1bc55fc8103de6cf6821f471c55d741c">SDOM::Factory</a>, and <a class="el" href="classSDOM_1_1IDisplayObject.html#aa1525c87c0e2d74e5838d69baba95ac6">SDOM::IDisplayObject</a>.</p>
+<p>Implemented in <a class="el" href="classSDOM_1_1Core.html#ac71a3d701929ce7d18e3cbc0eb62216c">SDOM::Core</a>, <a class="el" href="classSDOM_1_1Event.html#aa6208c66c23e9a104a6acdfe8c0ddc7a">SDOM::Event</a>, <a class="el" href="classSDOM_1_1Factory.html#a1bc55fc8103de6cf6821f471c55d741c">SDOM::Factory</a>, <a class="el" href="classSDOM_1_1IDisplayObject.html#aa1525c87c0e2d74e5838d69baba95ac6">SDOM::IDisplayObject</a>, and <a class="el" href="classSDOM_1_1Stage.html#a941e6d1279fec3c6a4dea10751df4f05">SDOM::Stage</a>.</p>
 
 </div>
 </div>
@@ -644,7 +750,7 @@ template&lt;typename T &gt; </div>
 
 <p>Called during object shutdown. </p>
 
-<p>Implemented in <a class="el" href="classSDOM_1_1Core.html#ab56b5bf8eaaabca75ae8443ed6d959e3">SDOM::Core</a>, <a class="el" href="classSDOM_1_1Event.html#a350412f6d2ec77b7d301b39b56bf8893">SDOM::Event</a>, <a class="el" href="classSDOM_1_1Factory.html#a2fecc435aebe23174442316d21ac2017">SDOM::Factory</a>, and <a class="el" href="classSDOM_1_1IDisplayObject.html#a498aba902813d239ba961bc21549f2b0">SDOM::IDisplayObject</a>.</p>
+<p>Implemented in <a class="el" href="classSDOM_1_1Core.html#ab56b5bf8eaaabca75ae8443ed6d959e3">SDOM::Core</a>, <a class="el" href="classSDOM_1_1Event.html#a350412f6d2ec77b7d301b39b56bf8893">SDOM::Event</a>, <a class="el" href="classSDOM_1_1Factory.html#a2fecc435aebe23174442316d21ac2017">SDOM::Factory</a>, <a class="el" href="classSDOM_1_1IDisplayObject.html#a498aba902813d239ba961bc21549f2b0">SDOM::IDisplayObject</a>, and <a class="el" href="classSDOM_1_1Stage.html#a155821bb6fdbe8a38825e087666399ed">SDOM::Stage</a>.</p>
 
 </div>
 </div>
@@ -676,7 +782,7 @@ template&lt;typename T &gt; </div>
 
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IDataObject.html#a895dd8cab0329b84dc3c399cd981cbe6">SDOM::IDataObject</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>, and <a class="el" href="classSDOM_1_1Stage.html#ae5ef116a864e4c9648010e4fba685300">SDOM::Stage</a>.</p>
 
 </div>
 </div>
@@ -953,6 +1059,124 @@ template&lt;typename T &gt; </div>
 
 <p>Serializes object state to a JSON object. </p>
 <dl class="section return"><dt>Returns</dt><dd>JSON object representing current state. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Symbol Documentation</h2>
+<a id="a4107254ac74f90d4f91e810d755b98c2" name="a4107254ac74f90d4f91e810d755b98c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4107254ac74f90d4f91e810d755b98c2">&#9670;&#160;</a></span>Core</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classSDOM_1_1Core.html">Core</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a328c093d609680cca505905c6d49901a" name="a328c093d609680cca505905c6d49901a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a328c093d609680cca505905c6d49901a">&#9670;&#160;</a></span>Factory</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classSDOM_1_1Factory.html">Factory</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a9e370ce55cd0f363220283d9680e5b84" name="a9e370ce55cd0f363220283d9680e5b84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e370ce55cd0f363220283d9680e5b84">&#9670;&#160;</a></span>filemame_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::IResourceObject::filemame_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Filename associated with the resource. </p>
+
+</div>
+</div>
+<a id="a48efaecebb266bcd535f2ef256fbb67a" name="a48efaecebb266bcd535f2ef256fbb67a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48efaecebb266bcd535f2ef256fbb67a">&#9670;&#160;</a></span>name_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::IResourceObject::name_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Unique resource name. </p>
+
+</div>
+</div>
+<a id="a78c196e1269467a340a8e557d8e0de36" name="a78c196e1269467a340a8e557d8e0de36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78c196e1269467a340a8e557d8e0de36">&#9670;&#160;</a></span>type_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::IResourceObject::type_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Extensible string identifier for resource type. </p>
 
 </div>
 </div>

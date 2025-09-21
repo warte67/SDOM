@@ -20,5 +20,6 @@ var searchData=
   ['trim_17',['trim',['../namespaceSDOM.html#a0b2e6cb3f4096b1c8ae989c26ef9e32f',1,'SDOM']]],
   ['tt_20resource_5fptr_20tt_20design_18',['Resource Pointer (&lt;tt&gt;resource_ptr&lt;/tt&gt;) Design',['../md_extensible__factory.html#autotoc_md59',1,'']]],
   ['type_19',['type',['../classSDOM_1_1Event.html#a646fd331c0ed1a86515a357e10364c9b',1,'SDOM::Event']]],
-  ['type_20management_20',['Resource Type Management',['../md_extensible__factory.html#autotoc_md38',1,'']]]
+  ['type_20management_20',['Resource Type Management',['../md_extensible__factory.html#autotoc_md38',1,'']]],
+  ['type_5f_21',['type_',['../classSDOM_1_1IResourceObject.html#a78c196e1269467a340a8e557d8e0de36',1,'SDOM::IResourceObject']]]
 ];

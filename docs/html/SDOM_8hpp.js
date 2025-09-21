@@ -36,6 +36,9 @@ var SDOM_8hpp =
       [ "RIGHT_BOTTOM", "SDOM_8hpp.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8", null ]
     ] ],
     [ "getCore", "SDOM_8hpp.html#ae65864505926b5378f1fcd94afe1aa06", null ],
+    [ "getRenderer", "SDOM_8hpp.html#ad57d41bf07aa1729877e98559ee0b7b7", null ],
+    [ "getTexture", "SDOM_8hpp.html#a41c89b1941fbb9aab101b581c5391a99", null ],
+    [ "getWindow", "SDOM_8hpp.html#ae6f6524cc3d94ed2464c895eb07bc9f5", null ],
     [ "anchorPointToString_", "SDOM_8hpp.html#ac004759fa5d6cd324931439829e17123", null ],
     [ "stringToAnchorPoint_", "SDOM_8hpp.html#a33cd42f20297f893e13db841931abda0", null ]
 ];

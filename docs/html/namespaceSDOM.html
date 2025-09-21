@@ -131,6 +131,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1InitDisplayObject.html">InitDisplayObject</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization structure for <a class="el" href="classSDOM_1_1IDisplayObject.html" title="Abstract interface for displayable objects in SDOM.">IDisplayObject</a>.  <a href="structSDOM_1_1InitDisplayObject.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1InitStageObject.html">InitStageObject</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IResourceObject.html">IResourceObject</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base interface for all Factory-managed resources in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>.  <a href="classSDOM_1_1IResourceObject.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,6 +143,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smart pointer for referencing Factory-managed resources by name.  <a href="classSDOM_1_1resource__ptr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1SDL__Utils.html">SDL_Utils</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Stage.html">Stage</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
@@ -192,6 +196,12 @@ Enumerations</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ae65864505926b5378f1fcd94afe1aa06" id="r_ae65864505926b5378f1fcd94afe1aa06"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSDOM_1_1Core.html">Core</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ae65864505926b5378f1fcd94afe1aa06">getCore</a> ()</td></tr>
 <tr class="separator:ae65864505926b5378f1fcd94afe1aa06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad57d41bf07aa1729877e98559ee0b7b7" id="r_ad57d41bf07aa1729877e98559ee0b7b7"><td class="memItemLeft" align="right" valign="top">static const SDL_Renderer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ad57d41bf07aa1729877e98559ee0b7b7">getRenderer</a> ()</td></tr>
+<tr class="separator:ad57d41bf07aa1729877e98559ee0b7b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6f6524cc3d94ed2464c895eb07bc9f5" id="r_ae6f6524cc3d94ed2464c895eb07bc9f5"><td class="memItemLeft" align="right" valign="top">static const SDL_Window *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ae6f6524cc3d94ed2464c895eb07bc9f5">getWindow</a> ()</td></tr>
+<tr class="separator:ae6f6524cc3d94ed2464c895eb07bc9f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41c89b1941fbb9aab101b581c5391a99" id="r_a41c89b1941fbb9aab101b581c5391a99"><td class="memItemLeft" align="right" valign="top">static const SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a41c89b1941fbb9aab101b581c5391a99">getTexture</a> ()</td></tr>
+<tr class="separator:a41c89b1941fbb9aab101b581c5391a99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b2e6cb3f4096b1c8ae989c26ef9e32f" id="r_a0b2e6cb3f4096b1c8ae989c26ef9e32f"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a0b2e6cb3f4096b1c8ae989c26ef9e32f">trim</a> (const std::string &amp;s)</td></tr>
 <tr class="separator:a0b2e6cb3f4096b1c8ae989c26ef9e32f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -313,6 +323,81 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">static <a class="el" href="classSDOM_1_1Core.html">Core</a> &amp; SDOM::getCore </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad57d41bf07aa1729877e98559ee0b7b7" name="ad57d41bf07aa1729877e98559ee0b7b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad57d41bf07aa1729877e98559ee0b7b7">&#9670;&#160;</a></span>getRenderer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static const SDL_Renderer * SDOM::getRenderer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a41c89b1941fbb9aab101b581c5391a99" name="a41c89b1941fbb9aab101b581c5391a99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41c89b1941fbb9aab101b581c5391a99">&#9670;&#160;</a></span>getTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static const SDL_Texture * SDOM::getTexture </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae6f6524cc3d94ed2464c895eb07bc9f5" name="ae6f6524cc3d94ed2464c895eb07bc9f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6f6524cc3d94ed2464c895eb07bc9f5">&#9670;&#160;</a></span>getWindow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static const SDL_Window * SDOM::getWindow </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
