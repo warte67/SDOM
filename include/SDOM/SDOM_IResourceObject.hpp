@@ -26,13 +26,45 @@ namespace SDOM
      *   - name_: Unique resource name assigned by Factory.
      *   - filemame_: Filename associated with the resource (may be empty).
      *   - type_: Extensible string identifier for resource type.
+     * 
+     * @note
+     * **Factory Integration Requirement:**  
+     * Any class inheriting from IResourceObject must implement a static Creator method
+     * with the following signature:
+     * @code
+     * static std::unique_ptr<IResourceObject> Creator(const Json& config);
+     * @endcode
+     * This method should construct and return a new instance of the resource from the provided JSON configuration.
+     *
+     * Example implementation in a derived class:
+     * @code
+     * class MyResource : public IResourceObject {
+     * public:
+     *     static std::unique_ptr<IResourceObject> Creator(const Json& config) {
+     *         return std::make_unique<MyResource>(config);
+     *     }
+     *     MyResource(const Json& config);
+     *     // ...
+     * };
+     * @endcode
      */
     class IResourceObject : public IDataObject
     {
+        friend class Factory; // Allow Factory to create Resource Objects
+        friend class Core;
+        // // Protect the new and delete operator to ensure that 
+        // // the Factory is used for all allocations
+        // static void* operator new(std::size_t size);
+        // static void operator delete(void* ptr);
+
     public:
+        IResourceObject() = delete;
+        IResourceObject(std::string name="", std::string type="", std::string filename = "") : name_(name), type_(type), filemame_(filename) {}
+
+        
         /**
          * @brief Virtual destructor for safe polymorphic deletion.
-         */
+         */ 
         virtual ~IResourceObject() = default;
 
         // Required methods from IDataObject (must be implemented by derived classes):
@@ -44,7 +76,7 @@ namespace SDOM
          * @return Always returns true by default. Override in derived classes for actual tests.
          */
         virtual bool onUnitTest() override { return true; }
-
+        
         /**
          * @brief Gets the unique resource name.
          * @return Resource name as a string.
@@ -84,7 +116,7 @@ namespace SDOM
          */
         IResourceObject& setType(const std::string& newType) { type_ = newType; return *this; }
 
-    private:
+    protected:
         std::string name_;      ///< Unique resource name
         std::string filemame_;  ///< Filename associated with the resource
         std::string type_;      ///< Extensible string identifier for resource type

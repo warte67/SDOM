@@ -40,15 +40,26 @@ namespace SDOM
                 SDL_Color color; // background color
             };
         
-            // Singleton accessor
+            /**
+             * @brief Returns the singleton instance of Core.
+             * 
+             * @details
+             * Core is designed as a singleton to manage the main application loop,
+             * resource factory, event dispatch, and configuration. This accessor`
+             * ensures only one instance exists throughout the application's lifetime.
+             * 
+             * @return Reference to the single Core instance.
+             */            
             static Core& getInstance() { static Core instance; return instance; }
 
-            // IDataObject overrides
+            // ===== Virtual Overrides from IDataObject =====
             virtual bool onInit() override;
             virtual void onQuit() override;
             virtual bool onUnitTest() override;
 
-            // Simulated Core only "overrides"
+            // ===== Core-Driven DOM Dispatch Methods =====
+            // These methods are called by Core to drive the lifecycle and event flow of IDisplayObject trees.
+            // They are not virtual because Core orchestrates the recursion and dispatch, rather than being a display object itself.
             void onRender();
             void onEvent(Event& event);
             void onUpdate(float fElapsedTime);
@@ -77,10 +88,35 @@ namespace SDOM
             // void registerStage(const std::string& name, std::shared_ptr<Stage> stage);
             // void setStage(const std::string& name);
 
-            SDL_Window* getWindow() const { return window_; }
-            SDL_Renderer* getRenderer() const { return renderer_; }
-            SDL_Texture* getTexture() const { return texture_; }
-            SDL_Color getColor() const { return config_.color; }
+            // ===== SDL Resource Accessors =====
+            SDL_Window* getWindow() const       { return window_; }
+            SDL_Renderer* getRenderer() const   { return renderer_; }
+            SDL_Texture* getTexture() const     { return texture_; }
+            SDL_Color getColor() const          { return config_.color; }
+            void setColor(const SDL_Color& color = { 0, 0, 0, 255 }) { config_.color = color; }
+
+            // ==== Configuration Accessors =====
+            CoreConfig& getConfig();
+            float getWindowWidth() const;
+            float getWindowHeight() const;
+            float getPixelWidth() const;
+            float getPixelHeight() const;
+            bool getPreserveAspectRatio() const;
+            bool getAllowTextureResize() const;
+            SDL_RendererLogicalPresentation getRendererLogicalPresentation() const;
+            SDL_WindowFlags getWindowFlags() const;
+            SDL_PixelFormat getPixelFormat() const;
+
+            void setConfig(CoreConfig& config);
+            void setWindowWidth(float width = 800.0f);
+            void setWindowHeight(float height = 600.0f);
+            void setPixelWidth(float width = 2.0f);
+            void setPixelHeight(float height = 2.0f);
+            void setPreserveAspectRatio(bool preserve = true);
+            void setAllowTextureResize(bool allow = true);
+            void setRendererLogicalPresentation(SDL_RendererLogicalPresentation presentation = SDL_LOGICAL_PRESENTATION_LETTERBOX);
+            void setWindowFlags(SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE);
+            void setPixelFormat(SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA8888);
 
         private:
             Core();
@@ -113,6 +149,7 @@ namespace SDOM
             // private helpers
             void startup_SDL();
             void shutdown_SDL();
+            void refreshSDLResources();
     };
 
 } // namespace SDOM

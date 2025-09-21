@@ -136,10 +136,10 @@ namespace SDOM
 
     // inline static const Factory& getFactory() { return Core::getInstance().getFactory(); }
     inline static Core& getCore() { return Core::getInstance(); }
-    // inline static const Stage* getStage() { return Core::instance().getStage().get(); }
-    // inline static const SDL_Renderer* getRenderer() { return Core::instance().getRenderer(); }
-    // inline static const SDL_Window* getWindow() { return Core::instance().getWindow(); }
-    // inline static const SDL_Texture* getTexture() { return Core::instance().getTexture(); }
+    // inline static const Stage* getStage() { return Core::getInstance().getStage().get(); }
+    inline static const SDL_Renderer* getRenderer() { return Core::getInstance().getRenderer(); }
+    inline static const SDL_Window* getWindow() { return Core::getInstance().getWindow(); }
+    inline static const SDL_Texture* getTexture() { return Core::getInstance().getTexture(); }
 
 
     /**

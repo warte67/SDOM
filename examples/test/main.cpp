@@ -21,7 +21,7 @@ int main()
 
     Core& core = getCore();
     core.configureFromJson(R"({
-        "core": {
+        "Core": {
             "windowWidth": 1200,
             "windowHeight": 800,
             "pixelWidth": 2,
@@ -31,7 +31,14 @@ int main()
             "rendererLogicalPresentation": "SDL_LOGICAL_PRESENTATION_LETTERBOX",
             "windowFlags": "SDL_WINDOW_RESIZABLE",
             "pixelFormat": "SDL_PIXELFORMAT_RGBA8888",
-            "color": { "r": 32, "g": 0, "b": 8, "a": 255 }
+            "color": { "r": 0, "g": 0, "b": 0, "a": 255 },
+            "children": [
+                {
+                    "type": "Stage",
+                    "name": "mainStage",
+                    "color": { "r": 32, "g": 32, "b": 32, "a": 255 }
+                }
+            ]
         }
     })");
 

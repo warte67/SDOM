@@ -33,24 +33,25 @@ namespace SDOM
     {
         nlohmann::json j = nlohmann::json::parse(jsonStr);
         CoreConfig config;
-        config.windowWidth = j["core"].value("windowWidth", 1280.0f);
-        config.windowHeight = j["core"].value("windowHeight", 720.0f);
-        config.pixelWidth  = j["core"].value("pixelWidth", 2.0f);
-        config.pixelHeight = j["core"].value("pixelHeight", 2.0f);
-        config.preserveAspectRatio = j["core"].value("preserveAspectRatio", true);
-        config.allowTextureResize = j["core"].value("allowTextureResize", true);
+        auto& coreObj = j["Core"];
+        config.windowWidth = j["Core"].value("windowWidth", 1280.0f);
+        config.windowHeight = j["Core"].value("windowHeight", 720.0f);
+        config.pixelWidth  = j["Core"].value("pixelWidth", 2.0f);
+        config.pixelHeight = j["Core"].value("pixelHeight", 2.0f);
+        config.preserveAspectRatio = j["Core"].value("preserveAspectRatio", true);
+        config.allowTextureResize = j["Core"].value("allowTextureResize", true);
 
         config.rendererLogicalPresentation = SDL_Utils::rendererLogicalPresentationFromString(
-            j["core"].value("rendererLogicalPresentation", "SDL_LOGICAL_PRESENTATION_LETTERBOX"));
+            j["Core"].value("rendererLogicalPresentation", "SDL_LOGICAL_PRESENTATION_LETTERBOX"));
         config.windowFlags = SDL_Utils::windowFlagsFromString(
-            j["core"].value("windowFlags", "SDL_WINDOW_RESIZABLE"));
+            j["Core"].value("windowFlags", "SDL_WINDOW_RESIZABLE"));
         config.pixelFormat = SDL_Utils::pixelFormatFromString(
-            j["core"].value("pixelFormat", "SDL_PIXELFORMAT_RGBA8888"));        
-        if (j["core"].contains("color")) {
-            config.color.r = j["core"]["color"].value("r", 0);
-            config.color.g = j["core"]["color"].value("g", 0);
-            config.color.b = j["core"]["color"].value("b", 0);
-            config.color.a = j["core"]["color"].value("a", 255);
+            j["Core"].value("pixelFormat", "SDL_PIXELFORMAT_RGBA8888"));
+        if (coreObj.contains("color")) {
+            config.color.r = coreObj["color"].value("r", 0);
+            config.color.g = coreObj["color"].value("g", 0);
+            config.color.b = coreObj["color"].value("b", 0);
+            config.color.a = coreObj["color"].value("a", 255);
         } else {
             config.color.r = 0;
             config.color.g = 0;
@@ -58,6 +59,36 @@ namespace SDOM
             config.color.a = 255;
         }
         configure(config);
+
+        // Parse children and create resources ---
+        if (coreObj.contains("children")) 
+        {
+            for (const auto& child : coreObj["children"]) 
+            {
+                std::string type = child.value("type", "");
+                if (!type.empty()) 
+                {
+                    auto& factory = *factory_;
+                    auto it = factory.creators_.find(type);
+                    if (it != factory.creators_.end()) 
+                    {
+                        auto resource = it->second(child);
+                        // Store or attach resource as needed
+                        factory.addResource(child.value("name", ""), std::move(resource));
+                    }
+                }
+            }
+        }
+
+
+        // --- Debug: List all resources in the factory ---
+        std::cout << "Factory resources after configuration:\n";
+        for (const auto& pair : factory_->resources_) {
+            std::cout << "Resource name: " << pair.first
+                    << ", RawType: " << typeid(*pair.second).name() 
+                    << ", Type: " << pair.second->getType() << std::endl;
+        }
+
     }
 
     void Core::configureFromJsonFile(const std::string& filename)
@@ -320,18 +351,21 @@ namespace SDOM
 
     void Core::onRender()
     {
-        // Render the stage
-        if (fnOnRender)
-            fnOnRender();
-        else
-        {
-            SDL_Renderer* renderer = getRenderer();
-            if (renderer==nullptr)
-                ERROR("Stage::onRender() Error: Renderer is null.");
-            SDL_Color color = getColor();
-            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-            SDL_RenderClear(renderer);
-        }
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer)
+            ERROR("Core::onRender() Error: Renderer is null.");
+
+        // Set render target to window (nullptr means default window target)
+        SDL_SetRenderTarget(renderer, nullptr);
+
+        // Clear the entire window to the border color
+        SDL_Color color = getColor();
+        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+        SDL_RenderClear(renderer);
+
+        // Point the render target back to the main texture
+        if (texture_)
+            SDL_SetRenderTarget(renderer, texture_); // set the render target to the proper background texture
     }
 
     void Core::onEvent(Event& event)
@@ -432,5 +466,116 @@ namespace SDOM
     }
 
 
+    Core::CoreConfig& Core::getConfig()                 { return config_; }
+    float Core::getWindowWidth() const                  { return config_.windowWidth; }
+    float Core::getWindowHeight() const                 { return config_.windowHeight; }
+    float Core::getPixelWidth() const                   { return config_.pixelWidth; }
+    float Core::getPixelHeight() const                  { return config_.pixelHeight; }
+    bool Core::getPreserveAspectRatio() const           { return config_.preserveAspectRatio; }
+    bool Core::getAllowTextureResize() const            { return config_.allowTextureResize; }
+    SDL_RendererLogicalPresentation Core::getRendererLogicalPresentation() const { return config_.rendererLogicalPresentation; }
+    SDL_WindowFlags Core::getWindowFlags() const        { return config_.windowFlags; }
+    SDL_PixelFormat Core::getPixelFormat() const        { return config_.pixelFormat; }
+
+    void Core::setConfig(CoreConfig& config)            { config_ = config; refreshSDLResources(); }
+    void Core::setWindowWidth(float width)              { config_.windowWidth = width; refreshSDLResources(); }
+    void Core::setWindowHeight(float height)            { config_.windowHeight = height; refreshSDLResources(); }
+    void Core::setPixelWidth(float width)               { config_.pixelWidth = width; refreshSDLResources(); }
+    void Core::setPixelHeight(float height)             { config_.pixelHeight = height; refreshSDLResources(); }
+    void Core::setPreserveAspectRatio(bool preserve)    { config_.preserveAspectRatio = preserve; refreshSDLResources(); }
+    void Core::setAllowTextureResize(bool allow)        { config_.allowTextureResize = allow; refreshSDLResources(); }
+    void Core::setWindowFlags(SDL_WindowFlags flags)    { config_.windowFlags = flags; refreshSDLResources(); }
+    void Core::setPixelFormat(SDL_PixelFormat format)   { config_.pixelFormat = format; refreshSDLResources(); }
+    void Core::setRendererLogicalPresentation(SDL_RendererLogicalPresentation presentation) { 
+        config_.rendererLogicalPresentation = presentation; refreshSDLResources(); 
+    }
+
+    void Core::refreshSDLResources()
+    {
+        // Store previous config for comparison
+        static CoreConfig prevConfig = config_;
+        // Determine which resources need to be recreated
+        bool recreateWindow = false;
+        bool recreateRenderer = false;
+        bool recreateTexture = false;
+        // Window recreation conditions
+        if (config_.windowWidth != prevConfig.windowWidth ||
+            config_.windowHeight != prevConfig.windowHeight ||
+            config_.windowFlags != prevConfig.windowFlags)
+        {
+            recreateWindow = true;
+            recreateRenderer = true;
+            recreateTexture = true;
+        }
+        // Renderer recreation conditions
+        if (config_.rendererLogicalPresentation != prevConfig.rendererLogicalPresentation)
+        {
+            recreateRenderer = true;
+            recreateTexture = true;
+        }
+        // Texture recreation conditions
+        if (config_.pixelWidth != prevConfig.pixelWidth ||
+            config_.pixelHeight != prevConfig.pixelHeight ||
+            config_.pixelFormat != prevConfig.pixelFormat ||
+            config_.preserveAspectRatio != prevConfig.preserveAspectRatio ||
+            config_.allowTextureResize != prevConfig.allowTextureResize)
+        {
+            recreateTexture = true;
+        }
+        // Destroy and recreate resources as needed
+        if (recreateTexture && texture_) {
+            SDL_DestroyTexture(texture_);
+            texture_ = nullptr;
+        }
+        if (recreateRenderer && renderer_) {
+            SDL_DestroyRenderer(renderer_);
+            renderer_ = nullptr;
+        }
+        if (recreateWindow && window_) {
+            SDL_DestroyWindow(window_);
+            window_ = nullptr;
+        }
+        // Recreate resources in order
+        if (recreateWindow) {
+            window_ = SDL_CreateWindow("Title", config_.windowWidth, config_.windowHeight, config_.windowFlags);
+            if (!window_) ERROR("SDL_CreateWindow() Error: " + std::string(SDL_GetError()));
+        }
+        if (recreateRenderer) {
+            renderer_ = SDL_CreateRenderer(window_, NULL);
+            if (!renderer_) ERROR("SDL_CreateRenderer() Error: " + std::string(SDL_GetError()));
+        }
+        if (recreateTexture) {
+            // Set texture width and height based on pixel size; 
+            //     ensure no divide-by-zero errors
+            int tWidth  = (config_.pixelWidth  != 0.0f)
+                ? static_cast<int>(config_.windowWidth  / config_.pixelWidth)
+                : 1;
+            int tHeight = (config_.pixelHeight != 0.0f)
+                ? static_cast<int>(config_.windowHeight / config_.pixelHeight)
+                : 1;
+
+            texture_ = SDL_CreateTexture(
+                renderer_,
+                config_.pixelFormat,
+                SDL_TEXTUREACCESS_TARGET,
+                tWidth,
+                tHeight
+            );
+            if (!texture_)
+                ERROR("SDL_CreateTexture() Error: " +
+                    std::string(SDL_GetError()));
+
+            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
+            SDL_SetRenderLogicalPresentation(
+                renderer_,
+                tWidth,
+                tHeight,
+                config_.rendererLogicalPresentation
+            );
+        } // END if (recreateTexture)
+
+        // Update previous config
+        prevConfig = config_;
+    } // END void Core::refreshSDLResources()
 
 } // namespace SDOM

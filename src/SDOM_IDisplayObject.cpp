@@ -50,7 +50,7 @@ namespace SDOM
     // IDisplayObject implementation
 
     IDisplayObject::IDisplayObject(const InitDisplayObject& init)
-        : IDisplayObject()
+        : IResourceObject(init.name, "IDisplayObject", "")
     {
         // name_ = init.name;
         setName(init.name);
@@ -74,7 +74,7 @@ namespace SDOM
     }
 
     IDisplayObject::IDisplayObject(const Json& config)
-        : IDisplayObject()
+        : IResourceObject(config.value("name", ""), "IDisplayObject", "")
     {
         // Set anchors from JSON (default to TOP_LEFT if not present)
         setAnchorLeft(stringToAnchorPoint_.count(config.value("anchorLeft", "top_left")) 
@@ -100,7 +100,7 @@ namespace SDOM
         setClickable(config.value("clickable", false));
     }
 
-    IDisplayObject::IDisplayObject()
+    IDisplayObject::IDisplayObject() : IResourceObject("", "IDisplayObject", "")
     {
         // Register properties and commands
         // Registration of properties and commands

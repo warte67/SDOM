@@ -125,7 +125,7 @@ namespace SDOM
     {
         friend class Factory; // Allow Factory to create IDisplayObjects
 
-    private:   // private constructor so only the Factory can create the object
+    protected:   // protected constructor so only the Factory can create the object
         IDisplayObject(const InitDisplayObject& init);  ///< Constructor using InitDisplayObject structure
         IDisplayObject(const Json& config);             ///< Constructor using JSON configuration
         IDisplayObject();                               ///< Default constructor (registers JSON properties)
@@ -280,20 +280,20 @@ namespace SDOM
         IDisplayObject& setTop(float p_top);
         IDisplayObject& setBottom(float p_bottom);
 
+    protected:
+
         // Getters for Local Offsets
         float getLocalLeft() const { return left_; }
         float getLocalRight() const { return right_; }
         float getLocalTop() const { return top_; }
-        float getLocalBottom() const { return bottom_; }     
-
+        float getLocalBottom() const { return bottom_; }  
+        // Setters for Local Offsets
+        IDisplayObject& setLocalLeft(float value) { left_ = value; return *this; }
+        IDisplayObject& setLocalRight(float value) { right_ = value; return *this; }
+        IDisplayObject& setLocalTop(float value) { top_ = value; return *this; }
+        IDisplayObject& setLocalBottom(float value) { bottom_ = value; return *this; }
 
     private:
-
-        // Private the new and delete operator to ensure that 
-        // the Factory is used for all allocations
-        static void* operator new(std::size_t size);
-        static void operator delete(void* ptr);
-
         
         float left_, top_, right_, bottom_; // Calculated bounds based on anchors
         // std::string name_; // Name of the display object

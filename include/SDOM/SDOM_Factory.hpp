@@ -9,14 +9,26 @@ namespace SDOM
         
     class Factory final : public IDataObject
     {
+        friend class Core;  // Core should have direct access to the Factory internals
+
     public:
-        Factory() = default;
+        Factory();
         virtual ~Factory() = default;
 
         // IDataObject overrides
         virtual bool onInit() override { return true; }
         virtual void onQuit() override {}
         virtual bool onUnitTest() override { return true; }
+
+        // Register a resource type with a creation function
+        using Creator = std::function<std::unique_ptr<IResourceObject>(const Json&)>;
+        void registerType(const std::string& typeName, Creator creator);
+
+
+
+
+
+
 
         template<typename T>
         T* getResource(const std::string& name) {
@@ -34,6 +46,20 @@ namespace SDOM
 
     private:
         std::unordered_map<std::string, std::unique_ptr<IResourceObject>> resources_;
+        std::unordered_map<std::string, Creator> creators_;
+
+
+
+        // std::vector<std::shared_ptr<IDisplayObject>> orphanList_;
+        // struct futureChild 
+        // {
+        //     std::shared_ptr<IDisplayObject> child;
+        //     std::shared_ptr<IDisplayObject> parent;
+        //     bool useWorld;
+        //     int worldX;
+        //     int worldY;
+        // };
+        // std::vector<futureChild> futureChildren_;
     };
 
 

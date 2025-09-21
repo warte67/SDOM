@@ -34,8 +34,7 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - Doxygen documentation added for major interfaces (Core, Factory, IResourceObject).
     - Example usage of Core and Factory included in documentation.
     - Circular include and pointer management issues resolved (raw pointer for Factory ownership).
--
-    The SDOM framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.
+    - The SDOM framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.
 
 # ToDo:
 
