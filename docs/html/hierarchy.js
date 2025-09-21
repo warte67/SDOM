@@ -16,8 +16,12 @@ var hierarchy =
       [ "SDOM::IDataObject", "classSDOM_1_1IDataObject.html", [
         [ "SDOM::Core", "classSDOM_1_1Core.html", null ],
         [ "SDOM::Event", "classSDOM_1_1Event.html", null ],
-        [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", null ]
+        [ "SDOM::Factory", "classSDOM_1_1Factory.html", null ],
+        [ "SDOM::IResourceObject", "classSDOM_1_1IResourceObject.html", [
+          [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", null ]
+        ] ]
       ] ]
     ] ],
+    [ "SDOM::resource_ptr< T >", "classSDOM_1_1resource__ptr.html", null ],
     [ "SDOM::SDL_Utils", "classSDOM_1_1SDL__Utils.html", null ]
 ];

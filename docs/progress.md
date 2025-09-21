@@ -28,15 +28,29 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - JSON configuration supports both new flags for runtime flexibility.
     - Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.
 
-  
+- **[September 20, 2025]**
+    - Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.
+    - Event system foundation implemented and documented.
+    - Doxygen documentation added for major interfaces (Core, Factory, IResourceObject).
+    - Example usage of Core and Factory included in documentation.
+    - Circular include and pointer management issues resolved (raw pointer for Factory ownership).
+-
+    The SDOM framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.
+
 # ToDo:
 
 - Develop base framework classes:
   - `IDisplayObject`: Base interface for display objects. Handles anchoring and positioning relative to parent and child edges. Inherits from `IDataObject`.
   - `IResourceObject`: Interface for resource objects managed by the Factory. Inherits from `IDataObject`.
   - `Factory`: Owns and manages all resources and display objects. Responsible for their lifetime.
+    - Expand Factory implementation: add/remove resource methods, type safety, extensibility.
+    - Add comprehensive unit tests for Factory and resource_ptr (including error conditions).
+    - Plan and implement reference counting for resource_ptr (deferred until after initial testing).
+    - Continue improving Doxygen documentation and example usage.
   - `Core`: Singleton that runs the main loop, handles callbacks, error logging, rendering, and event dispatch for the DOM tree.
   - `Stage`: Manages the SDL application window and its resources.
+
+- Add unit tests for macros and exception handling. 
 
 - Global Accessors
     - Decide on global accessor functions (e.g., for SDL objects).

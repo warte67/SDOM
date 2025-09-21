@@ -7,6 +7,7 @@
 
 namespace SDOM
 {
+    class Factory;
     
     /**
      * @class Core
@@ -96,7 +97,9 @@ namespace SDOM
 
             bool bIsRunning_ = true;
             CoreConfig config_;
-            // float orig_aspect_ratio_ = 0.0f;
+
+            // inline static std::unique_ptr<Factory> factory_ = nullptr;
+            inline static Factory* factory_ = nullptr; 
 
             // Callback hooks
             std::function<bool()> fnOnInit = nullptr;

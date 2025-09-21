@@ -122,6 +122,15 @@ Progress Updates</h1>
 <li>Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.</li>
 </ul>
 </li>
+<li><b>[September 20, 2025]</b><ul>
+<li>Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.</li>
+<li>Event system foundation implemented and documented.</li>
+<li>Doxygen documentation added for major interfaces (Core, Factory, IResourceObject).</li>
+<li>Example usage of Core and Factory included in documentation.</li>
+<li>Circular include and pointer management issues resolved (raw pointer for Factory ownership).</li>
+</ul>
+</li>
+<li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md67"></a>
 ToDo:</h1>
@@ -129,11 +138,18 @@ ToDo:</h1>
 <li>Develop base framework classes:<ul>
 <li><code>IDisplayObject</code>: Base interface for display objects. Handles anchoring and positioning relative to parent and child edges. Inherits from <code>IDataObject</code>.</li>
 <li><code>IResourceObject</code>: Interface for resource objects managed by the Factory. Inherits from <code>IDataObject</code>.</li>
-<li><code>Factory</code>: Owns and manages all resources and display objects. Responsible for their lifetime.</li>
+<li><code>Factory</code>: Owns and manages all resources and display objects. Responsible for their lifetime.<ul>
+<li>Expand Factory implementation: add/remove resource methods, type safety, extensibility.</li>
+<li>Add comprehensive unit tests for Factory and resource_ptr (including error conditions).</li>
+<li>Plan and implement reference counting for resource_ptr (deferred until after initial testing).</li>
+<li>Continue improving Doxygen documentation and example usage.</li>
+</ul>
+</li>
 <li><code>Core</code>: Singleton that runs the main loop, handles callbacks, error logging, rendering, and event dispatch for the DOM tree.</li>
 <li><code>Stage</code>: Manages the SDL application window and its resources.</li>
 </ul>
 </li>
+<li>Add unit tests for macros and exception handling.</li>
 <li>Global Accessors<ul>
 <li>Decide on global accessor functions (e.g., for SDL objects).</li>
 <li>Document intended usage and limitations.</li>

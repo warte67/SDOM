@@ -13,5 +13,6 @@ var searchData=
   ['removeeventlistener_10',['removeEventListener',['../classSDOM_1_1IDisplayObject.html#a78e21fd77b1162203a5a80d67d67f131',1,'SDOM::IDisplayObject']]],
   ['rendererlogicalpresentationfromstring_11',['rendererLogicalPresentationFromString',['../classSDOM_1_1SDL__Utils.html#a027dc0dbe963b494fba4ceee1688bf2d',1,'SDOM::SDL_Utils']]],
   ['rendererlogicalpresentationtostring_12',['rendererLogicalPresentationToString',['../classSDOM_1_1SDL__Utils.html#a9c8feadb377ab2d62795efe2d08b9767',1,'SDOM::SDL_Utils']]],
-  ['run_13',['run',['../classSDOM_1_1Core.html#a1ab4133e73873e2d15f8f9db05ba913f',1,'SDOM::Core']]]
+  ['resource_5fptr_13',['resource_ptr',['../classSDOM_1_1resource__ptr.html#a0b84b6bfcf27fde6c37e1c7a71e86e7f',1,'SDOM::resource_ptr::resource_ptr()=default'],['../classSDOM_1_1resource__ptr.html#a583238114a893694ef59b45dcc45b079',1,'SDOM::resource_ptr::resource_ptr(const std::string &amp;name)']]],
+  ['run_14',['run',['../classSDOM_1_1Core.html#a1ab4133e73873e2d15f8f9db05ba913f',1,'SDOM::Core']]]
 ];

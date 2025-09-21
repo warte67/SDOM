@@ -97,37 +97,75 @@ $(document).ready(function(){initNavTree('classSDOM_1_1resource__ptr.html',''); 
 </div><!--header-->
 <div class="contents">
 
+<p>Smart pointer for referencing Factory-managed resources by name.  
+ <a href="classSDOM_1_1resource__ptr.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="SDOM__Factory_8hpp_source.html">SDOM_Factory.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0b84b6bfcf27fde6c37e1c7a71e86e7f" id="r_a0b84b6bfcf27fde6c37e1c7a71e86e7f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a0b84b6bfcf27fde6c37e1c7a71e86e7f">resource_ptr</a> ()=<a class="el" href="classSDOM_1_1resource__ptr.html">default</a></td></tr>
+<tr class="memitem:a0b84b6bfcf27fde6c37e1c7a71e86e7f" id="r_a0b84b6bfcf27fde6c37e1c7a71e86e7f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a0b84b6bfcf27fde6c37e1c7a71e86e7f">resource_ptr</a> ()=default</td></tr>
+<tr class="memdesc:a0b84b6bfcf27fde6c37e1c7a71e86e7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. Creates a null resource pointer.  <br /></td></tr>
 <tr class="separator:a0b84b6bfcf27fde6c37e1c7a71e86e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a583238114a893694ef59b45dcc45b079" id="r_a583238114a893694ef59b45dcc45b079"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a583238114a893694ef59b45dcc45b079">resource_ptr</a> (<a class="el" href="classSDOM_1_1resource__ptr.html">const</a> std::string &amp;name)</td></tr>
+<tr class="memitem:a583238114a893694ef59b45dcc45b079" id="r_a583238114a893694ef59b45dcc45b079"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a583238114a893694ef59b45dcc45b079">resource_ptr</a> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:a583238114a893694ef59b45dcc45b079"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a resource pointer referencing a resource by name.  <br /></td></tr>
 <tr class="separator:a583238114a893694ef59b45dcc45b079"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a457a7a762bb9c93d03f18d0af5a0e9b7" id="r_a457a7a762bb9c93d03f18d0af5a0e9b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1resource__ptr.html">T</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a457a7a762bb9c93d03f18d0af5a0e9b7">get</a> () <a class="el" href="classSDOM_1_1resource__ptr.html">const</a></td></tr>
+<tr class="memitem:a457a7a762bb9c93d03f18d0af5a0e9b7" id="r_a457a7a762bb9c93d03f18d0af5a0e9b7"><td class="memItemLeft" align="right" valign="top">T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a457a7a762bb9c93d03f18d0af5a0e9b7">get</a> () const</td></tr>
+<tr class="memdesc:a457a7a762bb9c93d03f18d0af5a0e9b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the raw pointer to the resource.  <br /></td></tr>
 <tr class="separator:a457a7a762bb9c93d03f18d0af5a0e9b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7985185060ab666d2afa63d3487c8e97" id="r_a7985185060ab666d2afa63d3487c8e97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a7985185060ab666d2afa63d3487c8e97">operator*</a> () <a class="el" href="classSDOM_1_1resource__ptr.html">const</a></td></tr>
+<tr class="memitem:a7985185060ab666d2afa63d3487c8e97" id="r_a7985185060ab666d2afa63d3487c8e97"><td class="memItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a7985185060ab666d2afa63d3487c8e97">operator*</a> () const</td></tr>
+<tr class="memdesc:a7985185060ab666d2afa63d3487c8e97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dereference operator.  <br /></td></tr>
 <tr class="separator:a7985185060ab666d2afa63d3487c8e97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb2eb349636d57b2b0039aac89362282" id="r_abb2eb349636d57b2b0039aac89362282"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1resource__ptr.html">T</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#abb2eb349636d57b2b0039aac89362282">operator-&gt;</a> () <a class="el" href="classSDOM_1_1resource__ptr.html">const</a></td></tr>
+<tr class="memitem:abb2eb349636d57b2b0039aac89362282" id="r_abb2eb349636d57b2b0039aac89362282"><td class="memItemLeft" align="right" valign="top">T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#abb2eb349636d57b2b0039aac89362282">operator-&gt;</a> () const</td></tr>
+<tr class="memdesc:abb2eb349636d57b2b0039aac89362282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arrow operator for member access.  <br /></td></tr>
 <tr class="separator:abb2eb349636d57b2b0039aac89362282"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c4d06b4309a91f2dd9ba86b2ce96895" id="r_a2c4d06b4309a91f2dd9ba86b2ce96895"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a2c4d06b4309a91f2dd9ba86b2ce96895">operator bool</a> () <a class="el" href="classSDOM_1_1resource__ptr.html">const</a></td></tr>
+<tr class="memitem:a2c4d06b4309a91f2dd9ba86b2ce96895" id="r_a2c4d06b4309a91f2dd9ba86b2ce96895"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a2c4d06b4309a91f2dd9ba86b2ce96895">operator bool</a> () const</td></tr>
+<tr class="memdesc:a2c4d06b4309a91f2dd9ba86b2ce96895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean conversion operator.  <br /></td></tr>
 <tr class="separator:a2c4d06b4309a91f2dd9ba86b2ce96895"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e70bf14eb5b4b6a485e510941a3d584" id="r_a8e70bf14eb5b4b6a485e510941a3d584"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a8e70bf14eb5b4b6a485e510941a3d584">operator==</a> (const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a> &amp;other) const</td></tr>
+<tr class="memdesc:a8e70bf14eb5b4b6a485e510941a3d584"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality comparison operator.  <br /></td></tr>
+<tr class="separator:a8e70bf14eb5b4b6a485e510941a3d584"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc6886f799f7096d152dd8ebbdec70f6" id="r_abc6886f799f7096d152dd8ebbdec70f6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#abc6886f799f7096d152dd8ebbdec70f6">operator!=</a> (const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a> &amp;other) const</td></tr>
+<tr class="memdesc:abc6886f799f7096d152dd8ebbdec70f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inequality comparison operator.  <br /></td></tr>
+<tr class="separator:abc6886f799f7096d152dd8ebbdec70f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44c78e3f4e7ef2eb1222a642c51f2790" id="r_a44c78e3f4e7ef2eb1222a642c51f2790"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a44c78e3f4e7ef2eb1222a642c51f2790">operator&lt;</a> (const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a> &amp;other) const</td></tr>
+<tr class="memdesc:a44c78e3f4e7ef2eb1222a642c51f2790"><td class="mdescLeft">&#160;</td><td class="mdescRight">Less-than comparison operator (by resource name).  <br /></td></tr>
+<tr class="separator:a44c78e3f4e7ef2eb1222a642c51f2790"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40ca6576a61a04eae4936edaa6f63593" id="r_a40ca6576a61a04eae4936edaa6f63593"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a40ca6576a61a04eae4936edaa6f63593">operator&gt;</a> (const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a> &amp;other) const</td></tr>
+<tr class="memdesc:a40ca6576a61a04eae4936edaa6f63593"><td class="mdescLeft">&#160;</td><td class="mdescRight">Greater-than comparison operator (by resource name).  <br /></td></tr>
+<tr class="separator:a40ca6576a61a04eae4936edaa6f63593"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3ad7e12f40cea2a4685e3c5b248533c" id="r_ae3ad7e12f40cea2a4685e3c5b248533c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#ae3ad7e12f40cea2a4685e3c5b248533c">operator&lt;=</a> (const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a> &amp;other) const</td></tr>
+<tr class="memdesc:ae3ad7e12f40cea2a4685e3c5b248533c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Less-than-or-equal comparison operator (by resource name).  <br /></td></tr>
+<tr class="separator:ae3ad7e12f40cea2a4685e3c5b248533c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a460d55e69deebe5b0a73b09cd9973ff0" id="r_a460d55e69deebe5b0a73b09cd9973ff0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a460d55e69deebe5b0a73b09cd9973ff0">operator&gt;=</a> (const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a> &amp;other) const</td></tr>
+<tr class="memdesc:a460d55e69deebe5b0a73b09cd9973ff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Greater-than-or-equal comparison operator (by resource name).  <br /></td></tr>
+<tr class="separator:a460d55e69deebe5b0a73b09cd9973ff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7894b71b999726bf1029b35b08364af1" id="r_a7894b71b999726bf1029b35b08364af1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a7894b71b999726bf1029b35b08364af1">operator=</a> (const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a> &amp;other)</td></tr>
+<tr class="memdesc:a7894b71b999726bf1029b35b08364af1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator.  <br /></td></tr>
+<tr class="separator:a7894b71b999726bf1029b35b08364af1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a666fb04023330317a57f71af10037a5d" id="r_a666fb04023330317a57f71af10037a5d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1resource__ptr.html#a666fb04023330317a57f71af10037a5d">getName</a> () const</td></tr>
+<tr class="memdesc:a666fb04023330317a57f71af10037a5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the resource name referenced by this pointer.  <br /></td></tr>
+<tr class="separator:a666fb04023330317a57f71af10037a5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
+class SDOM::resource_ptr&lt; T &gt;</div><p>Smart pointer for referencing Factory-managed resources by name. </p>
+<p>Template class to hold a reference to a resource of type T managed by the <a class="el" href="classSDOM_1_1Factory.html">Factory</a>. The resource is looked up by name when accessed. If the resource is not found, the pointer evaluates to false.</p>
+<p>Usage: resource_ptr&lt;IDisplayObject&gt; ptr("mainStage"); if (ptr) { ptr-&gt;onRender(); } </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0b84b6bfcf27fde6c37e1c7a71e86e7f" name="a0b84b6bfcf27fde6c37e1c7a71e86e7f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0b84b6bfcf27fde6c37e1c7a71e86e7f">&#9670;&#160;</a></span>resource_ptr() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt;::resource_ptr </td>
+          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::resource_ptr </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -140,6 +178,8 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
 </table>
 </div><div class="memdoc">
 
+<p>Default constructor. Creates a null resource pointer. </p>
+
 </div>
 </div>
 <a id="a583238114a893694ef59b45dcc45b079" name="a583238114a893694ef59b45dcc45b079"></a>
@@ -148,15 +188,15 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt;::resource_ptr </td>
+          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::resource_ptr </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSDOM_1_1resource__ptr.html">const</a> std::string &amp;&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
           <td></td>
         </tr>
@@ -168,6 +208,14 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
 </table>
 </div><div class="memdoc">
 
+<p>Constructs a resource pointer referencing a resource by name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the resource. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -177,13 +225,13 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">T</a> * <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt;::get </td>
+          <td class="memname">T * <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::get </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -195,6 +243,39 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Gets the raw pointer to the resource. </p>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to resource of type T, or nullptr if not found. </dd></dl>
+
+</div>
+</div>
+<a id="a666fb04023330317a57f71af10037a5d" name="a666fb04023330317a57f71af10037a5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a666fb04023330317a57f71af10037a5d">&#9670;&#160;</a></span>getName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::getName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the resource name referenced by this pointer. </p>
+<dl class="section return"><dt>Returns</dt><dd>Resource name as a string. </dd></dl>
 
 </div>
 </div>
@@ -204,13 +285,13 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt;<a class="el" href="classSDOM_1_1resource__ptr.html#a0b84b6bfcf27fde6c37e1c7a71e86e7f">::operator</a> <a class="el" href="classSDOM_1_1resource__ptr.html">bool</a> </td>
+          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::operator bool </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -222,6 +303,46 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Boolean conversion operator. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the resource exists, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="abc6886f799f7096d152dd8ebbdec70f6" name="abc6886f799f7096d152dd8ebbdec70f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc6886f799f7096d152dd8ebbdec70f6">&#9670;&#160;</a></span>operator!=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::operator!= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Inequality comparison operator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>Another <a class="el" href="classSDOM_1_1resource__ptr.html" title="Smart pointer for referencing Factory-managed resources by name.">resource_ptr</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if resource names differ. </dd></dl>
 
 </div>
 </div>
@@ -231,13 +352,13 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &amp; <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt;<a class="el" href="classSDOM_1_1resource__ptr.html#a0b84b6bfcf27fde6c37e1c7a71e86e7f">::operator</a>* </td>
+          <td class="memname">T &amp; <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::operator* </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -249,6 +370,9 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Dereference operator. </p>
+<dl class="section return"><dt>Returns</dt><dd>Reference to the resource. </dd></dl>
 
 </div>
 </div>
@@ -258,13 +382,13 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">T</a> * <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; <a class="el" href="classSDOM_1_1resource__ptr.html">T</a> &gt;<a class="el" href="classSDOM_1_1resource__ptr.html#a0b84b6bfcf27fde6c37e1c7a71e86e7f">::operator</a>-&gt; </td>
+          <td class="memname">T * <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::operator-&gt; </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -276,6 +400,231 @@ template&lt;<a class="el" href="classSDOM_1_1resource__ptr.html">typename</a> <a
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Arrow operator for member access. </p>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the resource. </dd></dl>
+
+</div>
+</div>
+<a id="a44c78e3f4e7ef2eb1222a642c51f2790" name="a44c78e3f4e7ef2eb1222a642c51f2790"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44c78e3f4e7ef2eb1222a642c51f2790">&#9670;&#160;</a></span>operator&lt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::operator&lt; </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Less-than comparison operator (by resource name). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>Another <a class="el" href="classSDOM_1_1resource__ptr.html" title="Smart pointer for referencing Factory-managed resources by name.">resource_ptr</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if this resource name is lexicographically less. </dd></dl>
+
+</div>
+</div>
+<a id="ae3ad7e12f40cea2a4685e3c5b248533c" name="ae3ad7e12f40cea2a4685e3c5b248533c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3ad7e12f40cea2a4685e3c5b248533c">&#9670;&#160;</a></span>operator&lt;=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::operator&lt;= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Less-than-or-equal comparison operator (by resource name). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>Another <a class="el" href="classSDOM_1_1resource__ptr.html" title="Smart pointer for referencing Factory-managed resources by name.">resource_ptr</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if this resource name is lexicographically less or equal. </dd></dl>
+
+</div>
+</div>
+<a id="a7894b71b999726bf1029b35b08364af1" name="a7894b71b999726bf1029b35b08364af1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7894b71b999726bf1029b35b08364af1">&#9670;&#160;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a> &amp; <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assignment operator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>Another <a class="el" href="classSDOM_1_1resource__ptr.html" title="Smart pointer for referencing Factory-managed resources by name.">resource_ptr</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Reference to this <a class="el" href="classSDOM_1_1resource__ptr.html" title="Smart pointer for referencing Factory-managed resources by name.">resource_ptr</a>. </dd></dl>
+
+</div>
+</div>
+<a id="a8e70bf14eb5b4b6a485e510941a3d584" name="a8e70bf14eb5b4b6a485e510941a3d584"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e70bf14eb5b4b6a485e510941a3d584">&#9670;&#160;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Equality comparison operator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>Another <a class="el" href="classSDOM_1_1resource__ptr.html" title="Smart pointer for referencing Factory-managed resources by name.">resource_ptr</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if both reference the same resource name. </dd></dl>
+
+</div>
+</div>
+<a id="a40ca6576a61a04eae4936edaa6f63593" name="a40ca6576a61a04eae4936edaa6f63593"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40ca6576a61a04eae4936edaa6f63593">&#9670;&#160;</a></span>operator&gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::operator&gt; </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Greater-than comparison operator (by resource name). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>Another <a class="el" href="classSDOM_1_1resource__ptr.html" title="Smart pointer for referencing Factory-managed resources by name.">resource_ptr</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if this resource name is lexicographically greater. </dd></dl>
+
+</div>
+</div>
+<a id="a460d55e69deebe5b0a73b09cd9973ff0" name="a460d55e69deebe5b0a73b09cd9973ff0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a460d55e69deebe5b0a73b09cd9973ff0">&#9670;&#160;</a></span>operator&gt;=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSDOM_1_1resource__ptr.html">SDOM::resource_ptr</a>&lt; T &gt;::operator&gt;= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1resource__ptr.html">resource_ptr</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Greater-than-or-equal comparison operator (by resource name). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>Another <a class="el" href="classSDOM_1_1resource__ptr.html" title="Smart pointer for referencing Factory-managed resources by name.">resource_ptr</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if this resource name is lexicographically greater or equal. </dd></dl>
 
 </div>
 </div>

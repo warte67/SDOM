@@ -40,7 +40,7 @@
 #define __SDOM_IDISPLAY_OBJECT_HPP__
 
 #include <SDOM/SDOM.hpp>   
-#include <SDOM/SDOM_IDataObject.hpp>
+#include <SDOM/SDOM_IResourceObject.hpp>
 #include <SDOM/SDOM_EventTypeHash.hpp>
 
 namespace SDOM
@@ -121,7 +121,7 @@ namespace SDOM
      * @note
      * This is a pure interface; all methods are expected to be overridden by derived classes.
      */
-    class IDisplayObject : public IDataObject, public std::enable_shared_from_this<IDisplayObject>
+    class IDisplayObject : public IResourceObject, public std::enable_shared_from_this<IDisplayObject>
     {
         friend class Factory; // Allow Factory to create IDisplayObjects
 
@@ -184,8 +184,8 @@ namespace SDOM
 
         void cleanAll();
         void printTree(int depth = 0, bool isLast = true, const std::vector<bool>& hasMoreSiblings = {}) const;
-        std::string getName() const { return name_; }
-        IDisplayObject& setName(const std::string& newName) { name_ = newName; return *this; }
+        // std::string getName() const { return name_; }
+        // IDisplayObject& setName(const std::string& newName) { name_ = newName; return *this; }
         bool getDirty() const { return bIsDirty_; }
         IDisplayObject& setDirty() { bIsDirty_ = true; return *this; }
         bool isDirty() const { return bIsDirty_; }
@@ -296,7 +296,7 @@ namespace SDOM
 
         
         float left_, top_, right_, bottom_; // Calculated bounds based on anchors
-        std::string name_; // Name of the display object
+        // std::string name_; // Name of the display object
         bool bIsDirty_ = false; // Flag to indicate if the display object needs to be redrawn
         SDL_Color color_ = { 255, 255, 255, 255 }; // Default color WHITE
 

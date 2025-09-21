@@ -2,7 +2,7 @@ var searchData=
 [
   ['tabenabled_0',['tabEnabled',['../structSDOM_1_1InitDisplayObject.html#ac7f107058e32f0fc4a24331691d441bd',1,'SDOM::InitDisplayObject']]],
   ['tabpriority_1',['tabPriority',['../structSDOM_1_1InitDisplayObject.html#a0dcefc257c0acff6a83d2e3a79bdf7c7',1,'SDOM::InitDisplayObject']]],
-  ['target_2',['target',['../classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8ac41a31890959544c6523af684561abe5',1,'SDOM::Event::Target'],['../classSDOM_1_1Event.html#a9b9e1a354096956703412f9153e17a89',1,'SDOM::Event::target']]],
+  ['target_2',['target',['../classSDOM_1_1Event.html#a9b9e1a354096956703412f9153e17a89',1,'SDOM::Event::target'],['../classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8ac41a31890959544c6523af684561abe5',1,'SDOM::Event::Target']]],
   ['texture_20for_20stages_3',['Shared Display Texture for Stages',['../md_core__framework.html#autotoc_md33',1,'']]],
   ['texture_20resolution_4',['Window Resizing &amp; Texture Resolution',['../md_core__framework.html#autotoc_md32',1,'']]],
   ['the_20active_20stage_5',['Changing the Active Stage',['../md_core__framework.html#autotoc_md35',1,'']]],

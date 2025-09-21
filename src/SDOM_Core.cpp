@@ -3,18 +3,25 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
+#include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_IResourceObject.hpp>
 
 namespace SDOM
 {
 
     Core::Core() : IDataObject()
     {
-        // Constructor implementation
+        factory_ = new Factory();
+        resource_ptr<IResourceObject>::factory_ = factory_;
     }
 
     Core::~Core()
     {
-        // Destructor implementation
+        if (factory_)
+        {
+            delete factory_;
+            factory_ = nullptr;
+        }
     }
 
     void Core::configure(const CoreConfig& config)

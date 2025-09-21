@@ -6,11 +6,11 @@ if [ "$1" == "clean" ]; then
     echo "Cleaning $WORKSPACE/build and $WORKSPACE/examples/test/build ..."
     sudo rm -rf "$WORKSPACE/build" "$WORKSPACE/examples/test/build"
 
-    # --- Generate documentation with Doxygen ---
-    if [ -f "$WORKSPACE/docs/Doxyfile" ]; then
-        echo "Running Doxygen from docs folder..."
-        (cd "$WORKSPACE/docs" && doxygen Doxyfile)
-    fi
+    # # --- Generate documentation with Doxygen ---
+    # if [ -f "$WORKSPACE/docs/Doxyfile" ]; then
+    #     echo "Running Doxygen from docs folder..."
+    #     (cd "$WORKSPACE/docs" && doxygen Doxyfile)
+    # fi
 fi
 
 # --- Build and install the API library ---

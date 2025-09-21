@@ -9,11 +9,13 @@ var searchData=
   ['sdom_5feventtype_2ecpp_6',['SDOM_EventType.cpp',['../SDOM__EventType_8cpp.html',1,'']]],
   ['sdom_5feventtype_2ehpp_7',['SDOM_EventType.hpp',['../SDOM__EventType_8hpp.html',1,'']]],
   ['sdom_5feventtypehash_2ehpp_8',['SDOM_EventTypeHash.hpp',['../SDOM__EventTypeHash_8hpp.html',1,'']]],
-  ['sdom_5fidataobject_2ecpp_9',['SDOM_IDataObject.cpp',['../SDOM__IDataObject_8cpp.html',1,'']]],
-  ['sdom_5fidataobject_2ehpp_10',['SDOM_IDataObject.hpp',['../SDOM__IDataObject_8hpp.html',1,'']]],
-  ['sdom_5fidisplayobject_2ecpp_11',['SDOM_IDisplayObject.cpp',['../SDOM__IDisplayObject_8cpp.html',1,'']]],
-  ['sdom_5fidisplayobject_2ehpp_12',['SDOM_IDisplayObject.hpp',['../SDOM__IDisplayObject_8hpp.html',1,'']]],
-  ['sdom_5fiunittest_2ehpp_13',['SDOM_IUnitTest.hpp',['../SDOM__IUnitTest_8hpp.html',1,'']]],
-  ['sdom_5fsdl_5futils_2ecpp_14',['SDOM_SDL_Utils.cpp',['../SDOM__SDL__Utils_8cpp.html',1,'']]],
-  ['sdom_5fsdl_5futils_2ehpp_15',['SDOM_SDL_Utils.hpp',['../SDOM__SDL__Utils_8hpp.html',1,'']]]
+  ['sdom_5ffactory_2ehpp_9',['SDOM_Factory.hpp',['../SDOM__Factory_8hpp.html',1,'']]],
+  ['sdom_5fidataobject_2ecpp_10',['SDOM_IDataObject.cpp',['../SDOM__IDataObject_8cpp.html',1,'']]],
+  ['sdom_5fidataobject_2ehpp_11',['SDOM_IDataObject.hpp',['../SDOM__IDataObject_8hpp.html',1,'']]],
+  ['sdom_5fidisplayobject_2ecpp_12',['SDOM_IDisplayObject.cpp',['../SDOM__IDisplayObject_8cpp.html',1,'']]],
+  ['sdom_5fidisplayobject_2ehpp_13',['SDOM_IDisplayObject.hpp',['../SDOM__IDisplayObject_8hpp.html',1,'']]],
+  ['sdom_5firesourceobject_2ehpp_14',['SDOM_IResourceObject.hpp',['../SDOM__IResourceObject_8hpp.html',1,'']]],
+  ['sdom_5fiunittest_2ehpp_15',['SDOM_IUnitTest.hpp',['../SDOM__IUnitTest_8hpp.html',1,'']]],
+  ['sdom_5fsdl_5futils_2ecpp_16',['SDOM_SDL_Utils.cpp',['../SDOM__SDL__Utils_8cpp.html',1,'']]],
+  ['sdom_5fsdl_5futils_2ehpp_17',['SDOM_SDL_Utils.hpp',['../SDOM__SDL__Utils_8hpp.html',1,'']]]
 ];

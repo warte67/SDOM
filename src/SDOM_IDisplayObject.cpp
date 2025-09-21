@@ -52,7 +52,8 @@ namespace SDOM
     IDisplayObject::IDisplayObject(const InitDisplayObject& init)
         : IDisplayObject()
     {
-        name_ = init.name;
+        // name_ = init.name;
+        setName(init.name);
         color_ = init.color;
         z_order_ = init.z_order;
         priority_ = init.priority;
@@ -101,24 +102,12 @@ namespace SDOM
 
     IDisplayObject::IDisplayObject()
     {
-        // // By default, all anchors are TOP_LEFT, so initial left_/top_ are offsets from parent's top-left.
-        // // If you change anchors later, use setAnchor* methods to preserve world position.
-        // name_ = "IDisplayObject";
-        // left_ = 0;
-        // top_ = 0;
-        // right_ = 0;
-        // bottom_ = 0;
-        // bIsDirty_ = false;
-        // priority_ = 0;        
-        // setClickable(false); // Default to not clickable
-        // parent_.reset(); // Initialize parent as an empty weak_ptr
-
         // Register properties and commands
         // Registration of properties and commands
         registerProperty("name",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).name_; },
+            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getName(); },
             [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).name_ = val.get<std::string>();
+                static_cast<IDisplayObject&>(obj).setName(val.get<std::string>());
                 return obj;
             });
 
@@ -383,7 +372,7 @@ namespace SDOM
 
     IDisplayObject::~IDisplayObject()
     {
-        nameRegistry_.erase(name_);
+        nameRegistry_.erase(getName());
         onQuit(); // Call the pure virtual method to ensure derived classes clean up
     }
 
@@ -465,7 +454,7 @@ namespace SDOM
         if (depth > 0) {
             std::cout << (isLast ? "└── " : "├── ");
         }
-        std::cout << name_ << std::endl;
+        std::cout << getName() << std::endl;
 
         // Check if the object is a IDisplayObjectContainer
         if (auto container = dynamic_cast<const IDisplayObject*>(this)) {

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['factory_0',['factory',['../md_extensible__factory.html#autotoc_md50',1,'2. Private Constructors &amp; Friend Factory'],['../classSDOM_1_1IDisplayObject.html#a328c093d609680cca505905c6d49901a',1,'SDOM::IDisplayObject::Factory']]],
+  ['factory_0',['factory',['../md_extensible__factory.html#autotoc_md50',1,'2. Private Constructors &amp; Friend Factory'],['../classSDOM_1_1IDisplayObject.html#a328c093d609680cca505905c6d49901a',1,'SDOM::IDisplayObject::Factory'],['../classSDOM_1_1Factory.html',1,'SDOM::Factory'],['../classSDOM_1_1Factory.html#abd37d663e017d4497dc462b006e435b8',1,'SDOM::Factory::Factory()']]],
   ['factory_20create_20method_1',['4. Generic Factory Create Method',['../md_extensible__factory.html#autotoc_md52',1,'']]],
   ['factory_20create_20methods_2',['3. Factory Create Methods',['../md_extensible__factory.html#autotoc_md43',1,'']]],
   ['factory_20design_3',['Extensible Factory Design',['../md_extensible__factory.html#autotoc_md37',1,'']]],
