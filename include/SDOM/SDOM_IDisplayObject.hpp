@@ -49,6 +49,7 @@ namespace SDOM
     class Event;
     class EventType;
     class EventTypeHash;
+    class IResourceObject;
     class Stage;
 
     /**

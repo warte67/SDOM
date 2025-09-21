@@ -196,8 +196,7 @@ Example API:</h3>
 <h1><a class="anchor" id="autotoc_md13"></a>
 Primary Callbacks</h1>
 <p>The Core exposes the following virtual callback methods, which are invoked during the application lifecycle:</p>
-<div class="fragment"><div class="line"><span class="keyword">virtual</span> <span class="keywordtype">bool</span>  onInit () <span class="keyword">override</span>;</div>
-<div class="line"><span class="keyword">virtual</span> <span class="keywordtype">void</span>  onQuit () <span class="keyword">override</span>;</div>
+<div class="fragment"><div class="line"><span class="keyword">virtual</span> <span class="keywordtype">void</span>  onQuit () <span class="keyword">override</span>;</div>
 <div class="line"><span class="keyword">virtual</span> <span class="keywordtype">void</span>  onUpdate (<span class="keywordtype">float</span> fElapsedTime) = 0;</div>
 <div class="line"><span class="keyword">virtual</span> <span class="keywordtype">void</span>  onEvent (<span class="keyword">const</span> Event &amp;event) = 0;</div>
 <div class="line"><span class="keyword">virtual</span> <span class="keywordtype">void</span>  onRender () = 0;</div>
@@ -274,6 +273,7 @@ Example Usage (with global accessor)</h2>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    core.run();</div>
+<div class="line"> </div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md19"></a>
@@ -286,7 +286,7 @@ Composition Diagram</h1>
 <div class="line">| - Stage           |</div>
 <div class="line">| - ErrorLogger     |</div>
 <div class="line">+-------------------+</div>
-<div class="line">        | (owns)</div>
+<div class="line"> </div>
 <div class="line">        v</div>
 <div class="line">+-------------------+</div>
 <div class="line">|     SDL Loop      |</div>

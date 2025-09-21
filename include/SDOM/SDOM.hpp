@@ -134,7 +134,7 @@ namespace SDOM
     // inline static void quit();
     // inline static void shutdown();
 
-    // inline static const Factory* getFactory() { return Core::instance().getFactory(); }
+    // inline static const Factory& getFactory() { return Core::getInstance().getFactory(); }
     inline static Core& getCore() { return Core::getInstance(); }
     // inline static const Stage* getStage() { return Core::instance().getStage().get(); }
     // inline static const SDL_Renderer* getRenderer() { return Core::instance().getRenderer(); }

@@ -110,7 +110,6 @@ Let me know if you want this added to a specific section, or if you’d like to 
 The Core exposes the following virtual callback methods, which are invoked during the application lifecycle:
 
 ```cpp
-virtual bool  onInit () override;
 virtual void  onQuit () override;
 virtual void  onUpdate (float fElapsedTime) = 0;
 virtual void  onEvent (const Event &event) = 0;
@@ -135,6 +134,7 @@ To support extensibility across multiple languages (C++, Python, Rust, etc.), th
 - Quit: `registerOnQuit(std::function<void()>)`
 - Update: `registerOnUpdate(std::function<void(float)>)`
 - Event: `registerOnEvent(std::function<void(const Event&)>)`
+
 - Render: `registerOnRender(std::function<void()>)`
 - Unit Test: `registerOnUnitTest(std::function<bool()>)`
 
@@ -157,6 +157,7 @@ Bindings can expose similar registration functions, allowing users to set hooks 
 
 ## Global Accessor Functions
 
+
 The SDOM.hpp header may define a set of global functions within the SDOM namespace to provide convenient access to key framework components:
 - `getCore()`
 - `getStage()`
@@ -168,6 +169,7 @@ These global accessors allow users to retrieve singleton or shared instances of 
 
 ### Example Usage (with global accessor)
 ```cpp
+
 Core& core = getCore();
 core.registerOnInit([]() {
     // Custom initialization
@@ -192,6 +194,7 @@ core.registerOnUnitTest([]() {
 
 int main() {
     core.run();
+
     return 0;
 }
 ```
@@ -206,7 +209,7 @@ int main() {
 | - Stage           |
 | - ErrorLogger     |
 +-------------------+
-        | (owns)
+
         v
 +-------------------+
 |     SDL Loop      |
