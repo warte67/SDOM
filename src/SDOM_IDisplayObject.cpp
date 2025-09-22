@@ -49,7 +49,7 @@ namespace SDOM
 {
     // IDisplayObject implementation
 
-    IDisplayObject::IDisplayObject(const InitDisplayObject& init)
+    IDisplayObject::IDisplayObject(const InitStruct& init)
         : IResourceObject(init.name, "IDisplayObject", "")
     {
         // name_ = init.name;
@@ -70,7 +70,7 @@ namespace SDOM
         right_ = init.x + init.width;
         top_ = init.y;
         bottom_ = init.y + init.height;
-        parent_.reset();
+        parent_ = nullptr;
     }
 
     IDisplayObject::IDisplayObject(const Json& config)
@@ -372,7 +372,7 @@ namespace SDOM
 
     IDisplayObject::~IDisplayObject()
     {
-        nameRegistry_.erase(getName());
+        // nameRegistry_.erase(getName());
         onQuit(); // Call the pure virtual method to ensure derived classes clean up
     }
 
@@ -391,9 +391,11 @@ namespace SDOM
     //         return;
     //     }
     //     // child->setParent(std::weak_ptr<IDisplayObject>{}); // is inside DOM traversal
-    //     Factory* factory = Core::instance().getFactory();
-    //     factory->addToFutureChildrenList(child, shared_from_this(), useWorld, worldX, worldY);
+    //     Factory* factory = Core::getInstance().getFactory();
+    //     // factory->addToFutureChildrenList(child, shared_from_this(), useWorld, worldX, worldY);
     // }
+
+
 
     // bool IDisplayObject::removeChild(std::shared_ptr<IDisplayObject> child)
     // {
@@ -438,8 +440,10 @@ namespace SDOM
     void IDisplayObject::cleanAll() 
     {
         bIsDirty_ = false;
-        for (auto& child : children_) {
-            if (child) {
+        for (auto& childHandle : children_) 
+        {
+            if (auto* child = dynamic_cast<IDisplayObject*>(childHandle.get())) 
+            {
                 child->cleanAll();
             }
         }
@@ -448,27 +452,25 @@ namespace SDOM
     void IDisplayObject::printTree(int depth, bool isLast, const std::vector<bool>& hasMoreSiblings) const
     {
         // Print the current node with indentation and tree characters
-        for (size_t i = 0; i < hasMoreSiblings.size(); ++i) {
+        for (size_t i = 0; i < hasMoreSiblings.size(); ++i) 
+        {
             std::cout << (hasMoreSiblings[i] ? "│   " : "    ");
         }
-        if (depth > 0) {
+        if (depth > 0) 
+        {
             std::cout << (isLast ? "└── " : "├── ");
         }
         std::cout << getName() << std::endl;
 
-        // Check if the object is a IDisplayObjectContainer
-        if (auto container = dynamic_cast<const IDisplayObject*>(this)) {
-            for (size_t i = 0; i < container->children_.size(); ++i) {
-                auto& weakChild = container->children_[i];
-                if (!weakChild) {
-                    continue;
-                }
-
-                if (auto& child = weakChild) {
-                    auto newHasMoreSiblings = hasMoreSiblings;
-                    newHasMoreSiblings.push_back(!isLast);
-                    child->printTree(depth + 1, i == container->children_.size() - 1, newHasMoreSiblings);
-                }
+        // Traverse children using ResourceHandle
+        for (size_t i = 0; i < children_.size(); ++i) 
+        {
+            const auto& childHandle = children_[i];
+            if (auto* child = dynamic_cast<IDisplayObject*>(childHandle.get())) 
+            {
+                auto newHasMoreSiblings = hasMoreSiblings;
+                newHasMoreSiblings.push_back(i != children_.size() - 1);
+                child->printTree(depth + 1, i == children_.size() - 1, newHasMoreSiblings);
             }
         }
     }
@@ -833,10 +835,12 @@ namespace SDOM
 
     float IDisplayObject::getLeft() const
     {
-        if (parent_.lock().get() == this) {
+        auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parent == this) 
+        {
             ERROR("Cycle detected: node is its own parent!");
         }
-        if (auto parent = parent_.lock()) {
+        if (parent) {
             switch (anchorLeft_) {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::MIDDLE_LEFT:
@@ -858,10 +862,11 @@ namespace SDOM
 
     float IDisplayObject::getRight() const
     {
-        if (parent_.lock().get() == this) {
+        auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parent == this) {
             ERROR("Cycle detected: node is its own parent!");
         }
-        if (auto parent = parent_.lock()) {
+        if (parent) {
             switch (anchorRight_) {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::MIDDLE_LEFT:
@@ -882,10 +887,11 @@ namespace SDOM
 
     float IDisplayObject::getTop() const
     {
-        if (parent_.lock().get() == this) {
+        auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parent == this) {
             ERROR("Cycle detected: node is its own parent!");
         }
-        if (auto parent = parent_.lock()) {
+        if (parent) {
             switch (anchorTop_) {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::TOP_CENTER:
@@ -906,10 +912,11 @@ namespace SDOM
 
     float IDisplayObject::getBottom() const
     {
-        if (parent_.lock().get() == this) {
+        auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parent == this) {
             ERROR("Cycle detected: node is its own parent!");
         }
-        if (auto parent = parent_.lock()) {
+        if (parent) {
             switch (anchorBottom_) {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::TOP_CENTER:
@@ -932,11 +939,12 @@ namespace SDOM
 
     IDisplayObject& IDisplayObject::setLeft(float p_left)
     {
-        if (parent_.lock().get() == this) {
+        auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parent == this) {
             ERROR("Cycle detected: node is its own parent!");
         }
         float parentAnchor = 0.0f;
-        if (auto parent = parent_.lock()) {
+        if (parent) {
             switch (anchorLeft_) {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::MIDDLE_LEFT:
@@ -962,11 +970,12 @@ namespace SDOM
 
     IDisplayObject& IDisplayObject::setRight(float p_right)
     {
-        if (parent_.lock().get() == this) {
+        auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parent == this) {
             ERROR("Cycle detected: node is its own parent!");
         }
         float parentAnchor = 0.0f;
-        if (auto parent = parent_.lock()) {
+        if (parent) {
             switch (anchorRight_) {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::MIDDLE_LEFT:
@@ -992,11 +1001,12 @@ namespace SDOM
 
     IDisplayObject& IDisplayObject::setTop(float p_top)
     {
-        if (parent_.lock().get() == this) {
+        auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parent == this) {
             ERROR("Cycle detected: node is its own parent!");
         }
         float parentAnchor = 0.0f;
-        if (auto parent = parent_.lock()) {
+        if (parent) {
             switch (anchorTop_) {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::TOP_CENTER:
@@ -1022,11 +1032,12 @@ namespace SDOM
 
     IDisplayObject& IDisplayObject::setBottom(float p_bottom)
     {
-        if (parent_.lock().get() == this) {
+        auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parent == this) {
             ERROR("Cycle detected: node is its own parent!");
         }
         float parentAnchor = 0.0f;
-        if (auto parent = parent_.lock()) {
+        if (parent) {
             switch (anchorBottom_) {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::TOP_CENTER:

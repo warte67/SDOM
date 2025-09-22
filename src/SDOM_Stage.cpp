@@ -7,7 +7,7 @@
 namespace SDOM
 {
 
-    Stage::Stage(const InitStageObject& init) : IDisplayObject(init)
+    Stage::Stage(const InitStruct& init) : IDisplayObject(init)
     {
         type_ = "Stage"; // Hardcoded type for Stage
     }

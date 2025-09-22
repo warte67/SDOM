@@ -41,6 +41,7 @@
 
 #include <SDOM/SDOM.hpp>   
 #include <SDOM/SDOM_IResourceObject.hpp>
+#include <SDOM/SDOM_ResourceHandle.hpp>
 #include <SDOM/SDOM_EventTypeHash.hpp>
 
 namespace SDOM
@@ -51,59 +52,6 @@ namespace SDOM
     class EventTypeHash;
     class IResourceObject;
     class Stage;
-
-    /**
-     * @struct InitDisplayObject
-     * @brief Initialization structure for IDisplayObject.
-     * @details
-     * Contains all properties required to initialize an IDisplayObject instance. This structure
-     * allows explicit, type-safe construction and supports future extensibility. Fields correspond
-     * to display object attributes such as position, size, color, anchors, visibility, and interactivity.
-     *
-     * Example usage:
-     * @code
-     * SDOM::InitDisplayObject init {
-     *     .name = "Button1",
-     *     .color = {255, 255, 255, 255},
-     *     .z_order = 1,
-     *     .priority = 10,
-     *     .isClickable = true,
-     *     .isEnabled = true,
-     *     .isHidden = false,
-     *     .tabPriority = 0,
-     *     .tabEnabled = true,
-     *     .anchorTop = SDOM::AnchorPoint::TOP_LEFT,
-     *     .anchorLeft = SDOM::AnchorPoint::TOP_LEFT,
-     *     .anchorBottom = SDOM::AnchorPoint::TOP_LEFT,
-     *     .anchorRight = SDOM::AnchorPoint::TOP_LEFT,
-     *     .left = 0.0f,
-     *     .right = 100.0f,
-     *     .top = 0.0f,
-     *     .bottom = 50.0f
-     * };
-     * @endcode
-     */
-    struct InitDisplayObject
-    {
-        std::string name = "DisplayObject";                 ///< Name of the display object
-        float x = 0.0f;                                     //< Local x
-        float y = 0.0f;                                     //< Local y
-        float width = 0.0f;                                 //< Local width
-        float height = 0.0f;                                //< Local height
-        SDL_Color color = { 255, 255, 255, 255 };           ///< Color (default WHITE)
-        AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;      ///< Anchor point for the top edge
-        AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;     ///< Anchor point for the left edge
-        AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;   ///< Anchor point for the bottom edge
-        AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;    ///< Anchor point for the right edge
-        int z_order = 0;                                    ///< Z-order for rendering
-        int priority = 0;                                   ///< Rendering priority
-        bool isClickable = true;                            ///< Clickable flag
-        bool isEnabled = true;                              ///< Enabled flag
-        bool isHidden = false;                              ///< Hidden flag
-        int tabPriority = 0;                                ///< Tab order priority
-        bool tabEnabled = true;                             ///< Tab enabled flag
-    };
-
 
     /**
      * @interface IDisplayObject
@@ -121,14 +69,37 @@ namespace SDOM
      * @note
      * This is a pure interface; all methods are expected to be overridden by derived classes.
      */
-    class IDisplayObject : public IResourceObject, public std::enable_shared_from_this<IDisplayObject>
+    class IDisplayObject : public IResourceObject
     {
+
+    public:
+        struct InitStruct
+        {
+            std::string name = "IDisplayObject";                ///< Name of the display object
+            float x = 0.0f;                                     //< Local x
+            float y = 0.0f;                                     //< Local y
+            float width = 0.0f;                                 //< Local width
+            float height = 0.0f;                                //< Local height
+            SDL_Color color = { 255, 255, 255, 255 };           ///< Color (default WHITE)
+            AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;      ///< Anchor point for the top edge
+            AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;     ///< Anchor point for the left edge
+            AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;   ///< Anchor point for the bottom edge
+            AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;    ///< Anchor point for the right edge
+            int z_order = 0;                                    ///< Z-order for rendering
+            int priority = 0;                                   ///< Rendering priority
+            bool isClickable = true;                            ///< Clickable flag
+            bool isEnabled = true;                              ///< Enabled flag
+            bool isHidden = false;                              ///< Hidden flag
+            int tabPriority = 0;                                ///< Tab order priority
+            bool tabEnabled = true;                             ///< Tab enabled flag
+        };
+
         friend class Factory; // Allow Factory to create IDisplayObjects
 
     protected:   // protected constructor so only the Factory can create the object
-        IDisplayObject(const InitDisplayObject& init);  ///< Constructor using InitDisplayObject structure
-        IDisplayObject(const Json& config);             ///< Constructor using JSON configuration
-        IDisplayObject();                               ///< Default constructor (registers JSON properties)
+        IDisplayObject(const InitStruct& init); ///< Constructor using InitDisplayObject structure
+        IDisplayObject(const Json& config);     ///< Constructor using JSON configuration
+        IDisplayObject();                       ///< Default constructor (registers JSON properties)
 
     public:
         /**
@@ -198,10 +169,10 @@ namespace SDOM
         void triggerEventListeners(const Event& event, bool useCapture);       
 
 
-
-        // // old methods - to be refactored
         // void addChild(std::shared_ptr<IDisplayObject> child, bool useWorld=false, int worldX=0, int worldY=0);
         // bool removeChild(std::shared_ptr<IDisplayObject> child);
+
+        // // old methods - to be refactored
         // const std::vector<std::shared_ptr<IDisplayObject>>& getChildren() const { return children_; }
         // IDisplayObject* getParent() const { return parent_.lock().get(); }
         // IDisplayObject& setParent(std::weak_ptr<IDisplayObject> parent) { parent_ = parent; return *this; }
@@ -322,11 +293,13 @@ namespace SDOM
         int tabPriority_ = -1;       // tabPriority (i.e. tabStop within a priority queue)   
         bool tabEnabled_ = false;    // Indicates if the object can be focused via Tab
 
-        std::weak_ptr<IDisplayObject> parent_;
-        std::vector<std::shared_ptr<IDisplayObject>> children_;
+        // std::weak_ptr<IDisplayObject> parent_;
+        // std::vector<std::shared_ptr<IDisplayObject>> children_;
+        ResourceHandle parent_;
+        std::vector<ResourceHandle> children_;
 
-        // Static registry for IDisplayObject name lookup
-        inline static std::unordered_map<std::string, std::shared_ptr<IDisplayObject>> nameRegistry_;
+        // // Static registry for IDisplayObject name lookup (This needs to be in Factory if not already)
+        // inline static std::unordered_map<std::string, ResourceHandle> nameRegistry_;
 
         // Containers to store ListenerEntrys for different event phases
         struct ListenerEntry {

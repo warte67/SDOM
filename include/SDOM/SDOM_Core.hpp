@@ -119,8 +119,10 @@ namespace SDOM
             void setWindowFlags(SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE);
             void setPixelFormat(SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA8888);
 
-
             Factory* getFactory() const { return factory_; }
+
+            bool getIsTraversing() const { return isTraversing_; }
+            void setIsTraversing(bool traversing) { isTraversing_ = traversing; }
 
         private:
             Core();
@@ -136,6 +138,8 @@ namespace SDOM
             SDL_Color color_ = { 0, 0, 0, 255 }; // Default BLACK background color
 
             bool bIsRunning_ = true;
+            bool isTraversing_ = false;
+
             CoreConfig config_;
 
             // inline static std::unique_ptr<Factory> factory_ = nullptr;

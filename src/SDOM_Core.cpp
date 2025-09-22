@@ -71,9 +71,9 @@ namespace SDOM
                 {
                     auto& factory = *factory_;
                     auto it = factory.creators_.find(type);
-                    if (it != factory.creators_.end()) 
+                    if (it != factory.creators_.end() && it->second.fromJson) 
                     {
-                        auto resource = it->second(child);
+                        auto resource = it->second.fromJson(child);
                         // Store or attach resource as needed
                         factory.addResource(child.value("name", ""), std::move(resource));
                     }

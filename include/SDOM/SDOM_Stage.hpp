@@ -6,15 +6,6 @@
 
 namespace SDOM
 {
-    struct InitStageObject : public InitDisplayObject
-    {
-        InitStageObject() : InitDisplayObject() 
-        { 
-            name = "mainStage"; 
-            color = {0, 0, 0, 255}; 
-        }
-    };
-
     class Factory; // Forward declaration
 
     class Stage : public IDisplayObject
@@ -22,20 +13,29 @@ namespace SDOM
         friend class Factory; // Allow Factory to create Stage Objects
         friend class Core;    // Allow Core to access Factory internals if needed
 
+    public:
+        struct InitStruct : public IDisplayObject::InitStruct
+        {
+            InitStruct() : IDisplayObject::InitStruct() 
+            { 
+                name = "mainStage"; 
+                color = {0, 0, 0, 255}; 
+            }
+        };
+
     protected:   // protected constructor so only the Factory can create the object
-        Stage(const InitStageObject& init); ///< Constructor using InitStageObject structure
-        Stage(const Json& config);          ///< Constructor using JSON configuration
+        Stage(const InitStruct& init);  
+        Stage(const Json& config);     
 
     public:
 
-        /**
-         * @brief Static creator function for Factory registration.
-         * @param config JSON configuration for the Stage object.
-         * @return Unique pointer to the created Stage object.
-         */
-        static std::unique_ptr<IResourceObject> Creator(const Json& config) 
-        {
+        // In SDOM_Stage.hpp
+        static std::unique_ptr<IResourceObject> CreateFromJson(const Json& config) {
             return std::unique_ptr<IResourceObject>(new Stage(config));
+        }
+        static std::unique_ptr<IResourceObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
+            const auto& stageInit = static_cast<const Stage::InitStruct&>(baseInit);
+            return std::unique_ptr<IResourceObject>(new Stage(stageInit));
         }
 
         /**

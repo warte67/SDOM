@@ -16,6 +16,8 @@ namespace SDOM
         ResourceHandle(const ResourceHandle& other)
             : name_(other.name_), type_(other.type_) {}
 
+        // construction from nullptr
+        ResourceHandle(std::nullptr_t) { reset(); }
 
         IResourceObject* get() const;
 
@@ -34,14 +36,28 @@ namespace SDOM
         bool operator<=(const ResourceHandle& other)  const { return name_ <= other.name_; }
         bool operator>=(const ResourceHandle& other)  const { return name_ >= other.name_; }
 
-        ResourceHandle& operator=(const ResourceHandle& other)
+        // ResourceHandle& operator=(const ResourceHandle& other)
+        // {
+        //     if (this != &other) {
+        //         name_ = other.name_;
+        //     }
+        //     return *this;
+        // }
+
+        // Allow assignment from nullptr
+        ResourceHandle& operator=(std::nullptr_t) 
         {
-            if (this != &other) {
-                name_ = other.name_;
-            }
+            reset();
             return *this;
         }
 
+        void reset() {
+            // Clear internal state (pointer, name, etc.)
+            // Example:
+            // ptr_ = nullptr;
+            name_.clear();
+            // ...other members...
+        }
         std::string getName() const { return name_; }
 
     private:
