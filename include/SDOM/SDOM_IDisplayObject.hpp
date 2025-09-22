@@ -319,6 +319,7 @@ namespace SDOM
         void attachChild_(ResourceHandle child, ResourceHandle parent, bool useWorld=false, int worldX=0, int worldY=0);
         void removeOrphan_(const ResourceHandle& orphan);
 
+        void registerJson_();
 
     };
 

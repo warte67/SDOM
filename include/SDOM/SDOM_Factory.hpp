@@ -81,6 +81,12 @@ namespace SDOM
         // Add a future child to the future children list
         void addToFutureChildrenList(const ResourceHandle child, const ResourceHandle parent,
             bool useWorld=false, int worldX=0, int worldY=0);
+
+        
+        // ----- JSON -----
+        
+        void initFromJson(const Json& json);
+        void processResource(const Json& resource);
             
 
     private:

@@ -98,9 +98,12 @@ namespace SDOM
         bIsDirty_ = config.value("bIsDirty", false);
         priority_ = config.value("priority", 0);
         setClickable(config.value("clickable", false));
+
+        registerJson_();
+        fromJson(config);
     }
 
-    IDisplayObject::IDisplayObject() : IResourceObject("", "IDisplayObject", "")
+    void IDisplayObject::registerJson_()
     {
         // Register properties and commands
         // Registration of properties and commands

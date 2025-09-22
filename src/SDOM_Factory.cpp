@@ -205,5 +205,73 @@ namespace SDOM
         }
     }
 
+
+
+    void Factory::initFromJson(const Json& json)
+    {
+        // Handle array of resources
+        if (json.contains("resources") && json["resources"].is_array())
+        {
+            for (const auto& resource : json["resources"])
+            {
+                processResource(resource);
+            }
+        }
+
+        // Handle single resource object
+        if (json.contains("resource") && json["resource"].is_object())
+        {
+            processResource(json["resource"]);
+        }
+
+        // Debug: List installed resources
+        auto names = listResourceNames();
+        std::cout << "Factory::initFromJson() --> Installed resources: ";
+        for (const auto& name : names)
+        {
+            std::cout << name << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    void Factory::processResource(const Json& resource)
+    {
+        if (!resource.contains("type") || !resource.contains("name") || !resource.contains("config"))
+        {
+            ERROR("Resource entry is missing required fields: 'type', 'name', or 'config'.");
+            return;
+        }
+        std::string type = resource["type"];
+        std::string name = resource["name"];
+        Json config = resource["config"];
+        auto creatorIt = creators_.find(type);
+        if (creatorIt != creators_.end())
+        {
+            const TypeCreators& creators = creatorIt->second;
+            std::unique_ptr<IResourceObject> resourceObj;
+            if (creators.fromJson) {
+                resourceObj = creators.fromJson(config);
+            }
+            // Optionally, support InitStruct creation if needed:
+            // else if (creators.fromInitStruct) {
+            //     IDisplayObject::InitStruct init = ...; // convert config to InitStruct
+            //     resourceObj = creators.fromInitStruct(init);
+            // }
+            if (resourceObj)
+            {
+                addResource(name, std::move(resourceObj));
+            }
+            else
+            {
+                ERROR("Failed to create resource: " + name + " of type: " + type);
+            }
+        }
+        else
+        {
+            ERROR("Unknown resource type: " + type);
+        }
+    }
     
+
+
 } // namespace SDOM

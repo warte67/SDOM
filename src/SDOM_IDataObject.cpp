@@ -37,9 +37,9 @@
  ******************/
 
 #include <SDOM/SDOM.hpp>
-// #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
-// #include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_Factory.hpp>
 
 namespace SDOM
 {
@@ -55,24 +55,31 @@ namespace SDOM
             }
         }
 
-        // // Recursively initialize children if present in JSON
-        // if (json.contains("children") && json["children"].is_array()) 
-        // {
-        //     for (const auto& childJson : json["children"]) 
-        //     {
-        //         if (auto* displayObj = dynamic_cast<IDisplayObject*>(this)) 
-        //         {
-        //             // Use Factory to create the child object
-        //             std::string typeName = childJson.value("type", "IDisplayObject"); // Default to IDisplayObject
-        //             Factory* factory = Core::instance().getFactory();
-        //             auto child = factory->create(typeName, childJson);
-        //             if (child) 
-        //             {
-        //                 displayObj->addChild(std::dynamic_pointer_cast<IDisplayObject>(child));
-        //             }
-        //         }
-        //     }
-        // }
+        // Recursively initialize children if present in JSON
+        if (json.contains("children") && json["children"].is_array()) 
+        {
+            if (auto* displayObj = dynamic_cast<IDisplayObject*>(this)) 
+            {
+                Factory* factory = Core::getInstance().getFactory();
+                for (const auto& childJson : json["children"]) 
+                {
+                    std::string typeName = childJson.value("type", "IDisplayObject"); // Default to IDisplayObject
+                    ResourceHandle childHandle = factory->create(typeName, childJson);
+                    if (childHandle) 
+                    {
+                        auto childObj = dynamic_cast<IDisplayObject*>(childHandle.get());
+                        if (childObj)
+                            displayObj->addChild(childHandle);
+                        else
+                            std::cout << "Failed to cast child to IDisplayObject for type: " << typeName << std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "Failed to create child of type: " << typeName << std::endl;
+                    }
+                }
+            }
+        }
     }
 
     Json IDataObject::toJson() const
@@ -88,19 +95,19 @@ namespace SDOM
             }
         }
 
-        // // Serialize children if this is an IDisplayObject
-        // if (const auto* displayObj = dynamic_cast<const IDisplayObject*>(this)) 
-        // {
-        //     Json childrenJson = Json::array();
-        //     for (const auto& child : displayObj->getChildren()) 
-        //     {
-        //         if (child) 
-        //         {
-        //             childrenJson.push_back(child->toJson());
-        //         }
-        //     }
-        //     json["children"] = childrenJson;
-        // }
+        // Serialize children if this is an IDisplayObject
+        if (const auto* displayObj = dynamic_cast<const IDisplayObject*>(this)) 
+        {
+            Json childrenJson = Json::array();
+            for (const auto& child : displayObj->getChildren()) 
+            {
+                if (child) 
+                {
+                    childrenJson.push_back(child->toJson());
+                }
+            }
+            json["children"] = childrenJson;
+        }
 
         return json;
     }

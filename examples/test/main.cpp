@@ -37,7 +37,7 @@ int main()
                     "rootStage": "mainStage",
                     "type": "Stage",
                     "name": "mainStage",
-                    "color": { "r": 32, "g": 32, "b": 32, "a": 255 }
+                    "color": { "r": 32, "g": 8, "b": 4, "a": 255 }
                 }
             ]
         }
