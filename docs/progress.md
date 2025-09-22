@@ -48,29 +48,24 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - Confirmed that the Factory now contains a working `Stage` resource.
     - Next step: Implement parent/child relationships for resources and display objects.
     - Unit test framework will be moved to `onUnitTest()` methods once implemented.
+    - **Resource Creation & Initialization:**
+        - Verified that resources (especially Stage) are created via the Factory and properly initialized with onInit().
+        - Debug output confirms lifecycle methods (onInit, onQuit, onUpdate, onRender) are called for the root stage.
+    - **Core & Factory Integration:**
+        - Ensured the root node (mainStage) is set and found by Core, with correct debug output.
+        - Improved resource creation logic to always use Factory::create, guaranteeing initialization and registration.
+    - **Recursive Traversal:**
+        - Implemented and tested recursive lambdas for shutdown (onQuit) and unit testing (onUnitTest), with correct type handling and null checks.
+    - **Bug Fixes & Stability:**
+        - Diagnosed and resolved segmentation faults by adding null checks and debug output.
+        - Tested resource handles and pointer management are more robust and safer, but further testing may be required.
+    - **Testing & Debugging:**
+        - Added debug prints to trace resource creation and lifecycle events.
+        - Validated that the system is ready for expanded DOM tree parsing and more complex resource hierarchies.
 
 # ToDo:
-- Implement parent/child node relationships for resources and display objects.
 - Move resource and pointer tests to `onUnitTest()` methods when available.
-- Continue expanding Factory functionality (add/remove, type safety, extensibility).
 - Add comprehensive unit tests for Factory, resource_ptr, and error conditions.
-- Continue improving documentation and example usage.
-- Develop base framework classes:
-  - `IDisplayObject`: Base interface for display objects. Handles anchoring and positioning relative to parent and child edges. Inherits from `IDataObject`.
-  - `IResourceObject`: Interface for resource objects managed by the Factory. Inherits from `IDataObject`.
-  - `Factory`: Owns and manages all resources and display objects. Responsible for their lifetime.
-    - Expand Factory implementation: add/remove resource methods, type safety, extensibility.
-    - Add comprehensive unit tests for Factory and resource_ptr (including error conditions).
-    - Plan and implement reference counting for resource_ptr (deferred until after initial testing).
-    - Continue improving Doxygen documentation and example usage.
-  - `Core`: Singleton that runs the main loop, handles callbacks, error logging, rendering, and event dispatch for the DOM tree.
-  - `Stage`: Manages the SDL application window and its resources.
-
-- Add unit tests for macros and exception handling. 
-
-- Global Accessors
-    - Decide on global accessor functions (e.g., for SDL objects).
-    - Document intended usage and limitations.
 - Language Hooks
     - Plan for hooks to support other languages (e.g., Python bindings).
     - Add placeholder comments or sections.

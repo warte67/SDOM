@@ -21,26 +21,37 @@ namespace SDOM
     bool Stage::onInit()
     {
         // Stage initialization logic
+        std::cout << "Stage::onInit() called for Stage: " << getName() << std::endl;
         return true;
     }
 
     void Stage::onQuit()
     {
         // Stage shutdown logic
+        std::cout << "Stage::onQuit() called for Stage: " << getName() << std::endl;
     }
 
     void Stage::onUpdate(float fElapsedTime)
     {
         // Stage update logic
+        // std::cout << "Stage::onUpdate() called for Stage: " << getName()
+        //           << " with elapsed time: " << fElapsedTime << " seconds." << std::endl;
     }
 
     void Stage::onEvent(const Event& event)
     {
-        // Stage event handling logic
+        // // Stage event handling logic
+        // std::cout << "Stage::onEvent() called for Stage: " << getName()
+        //           << " with event type: " << event.getTypeName() << std::endl;
     }
 
     void Stage::onRender()
     {
+        // Stage rendering logic
+
+        // std::cout << "Stage::onRender() called for Stage: " << getName() << std::endl;
+
+
         SDL_Renderer* renderer = Core::getInstance().getRenderer();
         if (!renderer)
             ERROR("Core::onRender() Error: Renderer is null.");
@@ -54,6 +65,9 @@ namespace SDOM
     bool Stage::onUnitTest()
     {
         // Stage unit testing logic
+
+        std::cout << "Stage::onUnitTest() called for Stage: " << getName() << std::endl;
+
         return true;
     }
 

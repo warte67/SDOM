@@ -151,6 +151,8 @@ namespace SDOM
             bool bIsRunning_ = true;
             bool isTraversing_ = false;
 
+            ResourceHandle rootNode_; // The root of the resource tree
+
             // ResourceHandle hoveredObject_;
             // ResourceHandle keyboardFocusedObject_;
             // struct TabPriorityComparator {

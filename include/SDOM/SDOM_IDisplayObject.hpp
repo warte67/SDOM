@@ -178,7 +178,6 @@ namespace SDOM
         ResourceHandle getParent() const { return parent_; }
         IDisplayObject& setParent(const ResourceHandle& parent) { parent_ = parent; return *this; }
 
-
         int getMaxPriority() const;
         int getMinPriority() const;
         int getPriority() const { return priority_; }
@@ -189,8 +188,8 @@ namespace SDOM
         std::vector<int> getChildrenPriorities() const;
         IDisplayObject& moveToTop();
         bool hasChild(ResourceHandle child) const;
-        // int getZOrder() const { return z_order_; } // Getter for z_order_
-        // IDisplayObject& setZOrder(int z_order) { z_order_ = z_order; return *this; } // Setter for z_order_
+        int getZOrder() const { return z_order_; } // Getter for z_order_
+        IDisplayObject& setZOrder(int z_order) { z_order_ = z_order; return *this; } // Setter for z_order_
         
         void setKeyboardFocus();
         bool isKeyboardFocused() const;

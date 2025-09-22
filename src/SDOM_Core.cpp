@@ -3,6 +3,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Stage.hpp>
+#include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IResourceObject.hpp>
@@ -28,6 +29,10 @@ namespace SDOM
     void Core::configure(const CoreConfig& config)
     {
         config_ = config;   
+
+        // // After creating/loading resources, set the root node
+        // rootNode_ = factory_->getResourcePtr("mainStage");
+
     }
 
     void Core::configureFromJson(const std::string& jsonStr)
@@ -69,17 +74,29 @@ namespace SDOM
                 std::string type = child.value("type", "");
                 if (!type.empty()) 
                 {
-                    auto& factory = *factory_;
-                    auto it = factory.creators_.find(type);
-                    if (it != factory.creators_.end() && it->second.fromJson) 
-                    {
-                        auto resource = it->second.fromJson(child);
-                        // Store or attach resource as needed
-                        factory.addResource(child.value("name", ""), std::move(resource));
-                    }
+                    factory_->create(type, child);
                 }
             }
         }
+
+        std::string rootStageName = "mainStage"; // default
+        if (j["Core"].contains("rootStage"))
+            rootStageName = j["Core"]["rootStage"].get<std::string>();
+
+        rootNode_ = factory_->getResourcePtr(rootStageName);
+
+        // Debug output
+        if (rootNode_) {
+            auto* stage = dynamic_cast<Stage*>(rootNode_.get());
+            if (stage) {
+                std::cout << "[Core] Root stage '" << rootStageName << "' found: " << stage->getName() << std::endl;
+            } else {
+                std::cout << "[Core] Root node '" << rootStageName << "' found, but is not a Stage." << std::endl;
+            }
+        } else {
+            std::cout << "[Core] Root node '" << rootStageName << "' not found!" << std::endl;
+        }
+
 
 
         // // --- Debug: List all resources in the factory ---
@@ -358,6 +375,9 @@ namespace SDOM
 
     bool Core::onInit()
     {
+        // Note: We do not need to run onInit() for each object here because
+        // the Factory creates each object and calls onInit() as it does so.
+        
         bool ret = true;
         // Initialize the Core
         // ...
@@ -368,15 +388,51 @@ namespace SDOM
         return ret;
     }
 
+
+
     void Core::onQuit()
     {
+        // Lambda for recursive quit handling using std::function
+        std::function<void(IDisplayObject&)> handleQuit;
+        handleQuit = [&handleQuit](IDisplayObject& node) {
+            node.onQuit();
+            for (const auto& child : node.getChildren()) {
+                auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
+                if (childObj) {
+                    handleQuit(*childObj);
+                }
+            }
+        };
+
+        // Call the users registered quit function if available
         if (fnOnQuit)
             fnOnQuit();
+
+        // Call recursive quit on the root node (if it exists)
+        IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
+        if (rootObj)
+            handleQuit(*rootObj);
+
+        // Shutdown SDL
         shutdown_SDL();
     }
 
+
+
     void Core::onRender()
     {
+        // Lambda for recursive render handling using std::function
+        std::function<void(IDisplayObject&)> handleRender;
+        handleRender = [&handleRender](IDisplayObject& node) {
+            node.onRender();
+            for (const auto& child : node.getChildren()) {
+                auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
+                if (childObj) {
+                    handleRender(*childObj);
+                }
+            }
+        };
+
         SDL_Renderer* renderer = getRenderer();
         if (!renderer)
             ERROR("Core::onRender() Error: Renderer is null.");
@@ -392,22 +448,72 @@ namespace SDOM
         // Point the render target back to the main texture
         if (texture_)
             SDL_SetRenderTarget(renderer, texture_); // set the render target to the proper background texture
+
+        // Call recursive render on the root node (if it exists)
+        IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
+        if (rootObj)
+            handleRender(*rootObj);
     }
 
     void Core::onEvent(Event& event)
     {
+        // Lambda for recursive event handling using std::function
+        std::function<void(IDisplayObject&)> handleEvent;
+        handleEvent = [&handleEvent, event](IDisplayObject& node) {
+            node.onEvent(event);
+            for (const auto& child : node.getChildren()) {
+                auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
+                if (childObj) {
+                    handleEvent(*childObj);
+                }
+            }
+        };
+
         if (fnOnEvent)
             fnOnEvent(event);
+        // Call recursive event on the root node (if it exists)
+        IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
+        if (rootObj)
+            handleEvent(*rootObj);
     }
 
     void Core::onUpdate(float fElapsedTime)
     {
+        // Lambda for recursive update handling using std::function
+        std::function<void(IDisplayObject&)> handleUpdate;
+        handleUpdate = [&handleUpdate, fElapsedTime](IDisplayObject& node) {
+            node.onUpdate(fElapsedTime);
+            for (const auto& child : node.getChildren()) {
+                auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
+                if (childObj) {
+                    handleUpdate(*childObj);
+                }
+            }
+        };
+
         if (fnOnUpdate)
             fnOnUpdate(fElapsedTime);
+        // Call recursive update on the root node (if it exists)
+        IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
+        if (rootObj)
+            handleUpdate(*rootObj);
     }
 
     bool Core::onUnitTest()
     {
+        // Lambda for recursive unitTest handling using std::function
+        std::function<bool(IDisplayObject&)> handleUnitTest;
+        handleUnitTest = [&handleUnitTest](IDisplayObject& node) -> bool {
+            bool result = node.onUnitTest();
+            for (const auto& child : node.getChildren()) {
+                auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
+                if (childObj) {
+                    result = handleUnitTest(*childObj) && result;
+                }
+            }
+            return result;
+        };
+
         bool allTestsPassed = true;
 
         // Run Core-specific unit tests here
@@ -417,6 +523,10 @@ namespace SDOM
         if (fnOnUnitTest) {
             allTestsPassed &= fnOnUnitTest();
         }
+        // Call recursive unitTest on the root node (if it exists)
+        IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
+        if (rootObj)
+            allTestsPassed &= handleUnitTest(*rootObj);
 
         return allTestsPassed;
     }

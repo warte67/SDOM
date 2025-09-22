@@ -53,19 +53,22 @@ namespace SDOM
     }
 
 
-    // JSON based object creator
+    // // JSON based object creator
     ResourceHandle Factory::create(const std::string& typeName, const Json& config)
     {
         auto it = creators_.find(typeName);
         if (it != creators_.end() && it->second.fromJson) 
         {
             auto resource = it->second.fromJson(config);
-            if (resource) 
-            {
-                std::string name = config.value("name", "");
-                resources_[name] = std::move(resource);
-                return ResourceHandle(name, typeName);
+            if (!resource) {
+                std::cout << "Factory::create: Failed to create resource of type '" << typeName
+                        << "' from JSON. Resource is nullptr.\n";
+                return ResourceHandle(); // Invalid handle
             }
+            std::string name = config.value("name", "");
+            resources_[name] = std::move(resource);
+            resources_[name]->onInit(); // Initialize the resource
+            return ResourceHandle(name, typeName);
         }
         return ResourceHandle(); // Invalid handle
     }
@@ -74,7 +77,10 @@ namespace SDOM
     ResourceHandle Factory::create(const std::string& typeName, const std::string& jsonStr) 
     {
         Json config = Json::parse(jsonStr);
-        return create(typeName, config);
+        ResourceHandle ret = create(typeName, config);
+        if (ret)
+            ret->onInit(); // Initialize the resource
+        return ret;
     }    
 
     // InitStruct based object creator
@@ -88,6 +94,7 @@ namespace SDOM
             {
                 std::string name = init.name;
                 resources_[name] = std::move(resource);
+                resource->onInit(); // Initialize the resource
                 return ResourceHandle(name, typeName);
             }
         }
