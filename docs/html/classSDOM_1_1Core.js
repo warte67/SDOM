@@ -13,6 +13,7 @@ var classSDOM_1_1Core =
     [ "getColor", "classSDOM_1_1Core.html#af7fb678eb00a6c51b65f77bb8dd931db", null ],
     [ "getCommands", "classSDOM_1_1Core.html#acc1bbafa84a0d84455a9853bf93d03d7", null ],
     [ "getConfig", "classSDOM_1_1Core.html#ab8593fb359bb84dfb3e59ab3f2bdd9b2", null ],
+    [ "getFactory", "classSDOM_1_1Core.html#adb8a048f7cd1613e60a2ff0014c97481", null ],
     [ "getInstance", "classSDOM_1_1Core.html#af8766d12b776f7754fcc6f67b4867b58", null ],
     [ "getPixelFormat", "classSDOM_1_1Core.html#af62ae959811f26bc357ec7b373b98930", null ],
     [ "getPixelHeight", "classSDOM_1_1Core.html#a6d3da1108db0c1ea78e8570baf8d4ef4", null ],

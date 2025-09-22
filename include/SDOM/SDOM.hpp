@@ -101,6 +101,7 @@
 #include <SDOM/SDOM_CLR.hpp>
 #include <SDOM/SDOM_Core.hpp>
 
+
 /**
  * @namespace SDOM
  * @brief Contains all core classes and utilities for the SDOM library.

@@ -131,10 +131,29 @@ Progress Updates</h1>
 <li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.</li>
 </ul>
 </li>
+<li><b>[September 21, 2025]</b><ul>
+<li>Factory resource management and <code>resource_ptr</code> logic fully tested and confirmed:<ul>
+<li>Resources can be added, retrieved, and removed from the Factory.</li>
+<li>Multiple <code>resource_ptr</code> instances correctly reflect resource existence and become invalid after removal.</li>
+<li>Type-safe access via <code>dynamic_cast</code> is working and robust.</li>
+</ul>
+</li>
+<li>Debug output and test scaffolding added to verify resource lifetime and pointer behavior.</li>
+<li>Resolved copy constructor and assignment operator issues for <code>resource_ptr</code>.</li>
+<li>Confirmed that the Factory now contains a working <code>Stage</code> resource.</li>
+<li>Next step: Implement parent/child relationships for resources and display objects.</li>
+<li>Unit test framework will be moved to <code>onUnitTest()</code> methods once implemented.</li>
+</ul>
+</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md67"></a>
 ToDo:</h1>
 <ul>
+<li>Implement parent/child node relationships for resources and display objects.</li>
+<li>Move resource and pointer tests to <code>onUnitTest()</code> methods when available.</li>
+<li>Continue expanding Factory functionality (add/remove, type safety, extensibility).</li>
+<li>Add comprehensive unit tests for Factory, resource_ptr, and error conditions.</li>
+<li>Continue improving documentation and example usage.</li>
 <li>Develop base framework classes:<ul>
 <li><code>IDisplayObject</code>: Base interface for display objects. Handles anchoring and positioning relative to parent and child edges. Inherits from <code>IDataObject</code>.</li>
 <li><code>IResourceObject</code>: Interface for resource objects managed by the Factory. Inherits from <code>IDataObject</code>.</li>

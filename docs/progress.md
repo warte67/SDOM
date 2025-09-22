@@ -35,9 +35,23 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - Example usage of Core and Factory included in documentation.
     - Circular include and pointer management issues resolved (raw pointer for Factory ownership).
     - The SDOM framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.
+- **[September 21, 2025]**
+    - Factory resource management and `resource_ptr` logic fully tested and confirmed:
+        - Resources can be added, retrieved, and removed from the Factory.
+        - Multiple `resource_ptr` instances correctly reflect resource existence and become invalid after removal.
+        - Type-safe access via `dynamic_cast` is working and robust.
+    - Debug output and test scaffolding added to verify resource lifetime and pointer behavior.
+    - Resolved copy constructor and assignment operator issues for `resource_ptr`.
+    - Confirmed that the Factory now contains a working `Stage` resource.
+    - Next step: Implement parent/child relationships for resources and display objects.
+    - Unit test framework will be moved to `onUnitTest()` methods once implemented.
 
 # ToDo:
-
+- Implement parent/child node relationships for resources and display objects.
+- Move resource and pointer tests to `onUnitTest()` methods when available.
+- Continue expanding Factory functionality (add/remove, type safety, extensibility).
+- Add comprehensive unit tests for Factory, resource_ptr, and error conditions.
+- Continue improving documentation and example usage.
 - Develop base framework classes:
   - `IDisplayObject`: Base interface for display objects. Handles anchoring and positioning relative to parent and child edges. Inherits from `IDataObject`.
   - `IResourceObject`: Interface for resource objects managed by the Factory. Inherits from `IDataObject`.

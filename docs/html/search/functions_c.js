@@ -12,8 +12,9 @@ var searchData=
   ['registerproperty_9',['registerProperty',['../classSDOM_1_1IDataObject.html#a780b503a81e095549da8442c2e934db0',1,'SDOM::IDataObject']]],
   ['registertype_10',['registerType',['../classSDOM_1_1Factory.html#a7bfd4ed8376c13248898f509232a5171',1,'SDOM::Factory']]],
   ['removeeventlistener_11',['removeEventListener',['../classSDOM_1_1IDisplayObject.html#a78e21fd77b1162203a5a80d67d67f131',1,'SDOM::IDisplayObject']]],
-  ['rendererlogicalpresentationfromstring_12',['rendererLogicalPresentationFromString',['../classSDOM_1_1SDL__Utils.html#a027dc0dbe963b494fba4ceee1688bf2d',1,'SDOM::SDL_Utils']]],
-  ['rendererlogicalpresentationtostring_13',['rendererLogicalPresentationToString',['../classSDOM_1_1SDL__Utils.html#a9c8feadb377ab2d62795efe2d08b9767',1,'SDOM::SDL_Utils']]],
-  ['resource_5fptr_14',['resource_ptr',['../classSDOM_1_1resource__ptr.html#a0b84b6bfcf27fde6c37e1c7a71e86e7f',1,'SDOM::resource_ptr::resource_ptr()=default'],['../classSDOM_1_1resource__ptr.html#a583238114a893694ef59b45dcc45b079',1,'SDOM::resource_ptr::resource_ptr(const std::string &amp;name)']]],
-  ['run_15',['run',['../classSDOM_1_1Core.html#a1ab4133e73873e2d15f8f9db05ba913f',1,'SDOM::Core']]]
+  ['removeresource_12',['removeResource',['../classSDOM_1_1Factory.html#acfdb8a0a6212ce1063fb25c27aa3226e',1,'SDOM::Factory']]],
+  ['rendererlogicalpresentationfromstring_13',['rendererLogicalPresentationFromString',['../classSDOM_1_1SDL__Utils.html#a027dc0dbe963b494fba4ceee1688bf2d',1,'SDOM::SDL_Utils']]],
+  ['rendererlogicalpresentationtostring_14',['rendererLogicalPresentationToString',['../classSDOM_1_1SDL__Utils.html#a9c8feadb377ab2d62795efe2d08b9767',1,'SDOM::SDL_Utils']]],
+  ['resource_5fptr_15',['resource_ptr',['../classSDOM_1_1resource__ptr.html#ae0cd28a3748e01c80eeb9c336ef9824b',1,'SDOM::resource_ptr::resource_ptr()=default'],['../classSDOM_1_1resource__ptr.html#a6cfe1a145d2ee2a7fbaf1a4004bb1510',1,'SDOM::resource_ptr::resource_ptr(const std::string &amp;name, const std::string &amp;type)'],['../classSDOM_1_1resource__ptr.html#a7cc2aab01c1230219c8e37203aa7cbcf',1,'SDOM::resource_ptr::resource_ptr(const resource_ptr &amp;other)']]],
+  ['run_16',['run',['../classSDOM_1_1Core.html#a1ab4133e73873e2d15f8f9db05ba913f',1,'SDOM::Core']]]
 ];

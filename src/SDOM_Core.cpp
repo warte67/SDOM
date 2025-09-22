@@ -2,9 +2,11 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IResourceObject.hpp>
+#include <SDOM/SDOM_ResourcePointer.hpp>
 
 namespace SDOM
 {
@@ -12,7 +14,6 @@ namespace SDOM
     Core::Core() : IDataObject()
     {
         factory_ = new Factory();
-        resource_ptr<IResourceObject>::factory_ = factory_;
     }
 
     Core::~Core()
@@ -81,14 +82,39 @@ namespace SDOM
         }
 
 
-        // --- Debug: List all resources in the factory ---
-        std::cout << "Factory resources after configuration:\n";
-        for (const auto& pair : factory_->resources_) {
-            std::cout << "Resource name: " << pair.first
-                    << ", RawType: " << typeid(*pair.second).name() 
-                    << ", Type: " << pair.second->getType() << std::endl;
-        }
+        // // --- Debug: List all resources in the factory ---
+        // std::cout << "Factory resources after configuration:\n";
+        // for (const auto& pair : factory_->resources_) {
+        //     std::cout << "Resource name: " << pair.first
+        //             << ", RawType: " << typeid(*pair.second).name() 
+        //             << ", Type: " << pair.second->getType() << std::endl;
+        // }
 
+        // resource_ptr obj = getFactory()->getResourcePtr("mainStage");
+        // std::cout << "Retrieved resource 'mainStage': " 
+        //           << (obj ? "Found" : "Not Found") << std::endl;
+        // std::cout << "obj: " << obj << std::endl;
+        // if (obj) {
+        //     Stage* stage = dynamic_cast<SDOM::Stage*>(obj.get());
+        //     // Use stage...
+        //     std::cout << "Stage pointer: " << stage << std::endl;
+        // }
+
+        // resource_ptr obj1 = getFactory()->getResourcePtr("mainStage");
+        // resource_ptr obj2 = obj1; // Copy the resource_ptr
+        // resource_ptr obj3 = getFactory()->getResourcePtr("mainStage");
+
+        // std::cout << "obj1: " << obj1 << ", obj2: " << obj2 << ", obj3: " << obj3 << std::endl;
+
+        // // Remove the resource from the factory
+        // getFactory()->removeResource("mainStage");
+
+        // // Now both should be nullptr
+        // std::cout << "After removal:" << std::endl;
+        // std::cout << "obj1: " << obj1 << ", obj2: " << obj2 << ", obj3: " << obj3 << std::endl;
+
+        // Stage* stage = dynamic_cast<SDOM::Stage*>(getFactory()->getResourcePtr("mainStage").get());
+        // std::cout << "Stage pointer after removal: " << stage << std::endl;
     }
 
     void Core::configureFromJsonFile(const std::string& filename)

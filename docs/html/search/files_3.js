@@ -17,8 +17,10 @@ var searchData=
   ['sdom_5fidisplayobject_2ehpp_14',['SDOM_IDisplayObject.hpp',['../SDOM__IDisplayObject_8hpp.html',1,'']]],
   ['sdom_5firesourceobject_2ehpp_15',['SDOM_IResourceObject.hpp',['../SDOM__IResourceObject_8hpp.html',1,'']]],
   ['sdom_5fiunittest_2ehpp_16',['SDOM_IUnitTest.hpp',['../SDOM__IUnitTest_8hpp.html',1,'']]],
-  ['sdom_5fsdl_5futils_2ecpp_17',['SDOM_SDL_Utils.cpp',['../SDOM__SDL__Utils_8cpp.html',1,'']]],
-  ['sdom_5fsdl_5futils_2ehpp_18',['SDOM_SDL_Utils.hpp',['../SDOM__SDL__Utils_8hpp.html',1,'']]],
-  ['sdom_5fstage_2ecpp_19',['SDOM_Stage.cpp',['../SDOM__Stage_8cpp.html',1,'']]],
-  ['sdom_5fstage_2ehpp_20',['SDOM_Stage.hpp',['../SDOM__Stage_8hpp.html',1,'']]]
+  ['sdom_5fresourcepointer_2ecpp_17',['SDOM_ResourcePointer.cpp',['../SDOM__ResourcePointer_8cpp.html',1,'']]],
+  ['sdom_5fresourcepointer_2ehpp_18',['SDOM_ResourcePointer.hpp',['../SDOM__ResourcePointer_8hpp.html',1,'']]],
+  ['sdom_5fsdl_5futils_2ecpp_19',['SDOM_SDL_Utils.cpp',['../SDOM__SDL__Utils_8cpp.html',1,'']]],
+  ['sdom_5fsdl_5futils_2ehpp_20',['SDOM_SDL_Utils.hpp',['../SDOM__SDL__Utils_8hpp.html',1,'']]],
+  ['sdom_5fstage_2ecpp_21',['SDOM_Stage.cpp',['../SDOM__Stage_8cpp.html',1,'']]],
+  ['sdom_5fstage_2ehpp_22',['SDOM_Stage.hpp',['../SDOM__Stage_8hpp.html',1,'']]]
 ];

@@ -26,6 +26,6 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "SDOM::resource_ptr< T >", "classSDOM_1_1resource__ptr.html", null ],
+    [ "SDOM::resource_ptr", "classSDOM_1_1resource__ptr.html", null ],
     [ "SDOM::SDL_Utils", "classSDOM_1_1SDL__Utils.html", null ]
 ];

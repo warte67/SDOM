@@ -11,7 +11,8 @@ var classSDOM_1_1Factory =
     [ "fromJson", "classSDOM_1_1Factory.html#a5b1d9c9a136de640cd006fb6216592c9", null ],
     [ "getCommands", "classSDOM_1_1Factory.html#acc1bbafa84a0d84455a9853bf93d03d7", null ],
     [ "getProperty", "classSDOM_1_1Factory.html#ab1390908afede95eacb5dbf3333ddc9f", null ],
-    [ "getResource", "classSDOM_1_1Factory.html#a1ed16e23e93991c68de1f1792fbc7ccc", null ],
+    [ "getResource", "classSDOM_1_1Factory.html#ac514e95b6eeef8139e7fd56eb3ffc2f2", null ],
+    [ "getResourcePtr", "classSDOM_1_1Factory.html#acd3f72fe13412662d83f81a5913fd74d", null ],
     [ "json_value_case_insensitive", "classSDOM_1_1Factory.html#a54d77f5fbab11b64f7971d1c33dea11d", null ],
     [ "onInit", "classSDOM_1_1Factory.html#a1bc55fc8103de6cf6821f471c55d741c", null ],
     [ "onQuit", "classSDOM_1_1Factory.html#a2fecc435aebe23174442316d21ac2017", null ],
@@ -19,6 +20,7 @@ var classSDOM_1_1Factory =
     [ "registerCommand", "classSDOM_1_1Factory.html#a2c43fdab7e27c9841cdd7d4569434c47", null ],
     [ "registerProperty", "classSDOM_1_1Factory.html#a780b503a81e095549da8442c2e934db0", null ],
     [ "registerType", "classSDOM_1_1Factory.html#a7bfd4ed8376c13248898f509232a5171", null ],
+    [ "removeResource", "classSDOM_1_1Factory.html#acfdb8a0a6212ce1063fb25c27aa3226e", null ],
     [ "setProperty", "classSDOM_1_1Factory.html#a71647c05acb4a9da4696b9aba861fcf3", null ],
     [ "toJson", "classSDOM_1_1Factory.html#a0c142eb622d4097a748782017506590b", null ],
     [ "Core", "classSDOM_1_1Factory.html#a4107254ac74f90d4f91e810d755b98c2", null ]

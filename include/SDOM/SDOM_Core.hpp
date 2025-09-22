@@ -8,6 +8,10 @@
 namespace SDOM
 {
     class Factory;
+    class Event;
+    class EventType;
+    class Stage;
+
     
     /**
      * @class Core
@@ -21,9 +25,6 @@ namespace SDOM
      */
     class Core final : public IDataObject
     {
-        class Event;
-        class EventType;
-        class Stage;
 
         public:
             struct CoreConfig 
@@ -117,6 +118,9 @@ namespace SDOM
             void setRendererLogicalPresentation(SDL_RendererLogicalPresentation presentation = SDL_LOGICAL_PRESENTATION_LETTERBOX);
             void setWindowFlags(SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE);
             void setPixelFormat(SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA8888);
+
+
+            Factory* getFactory() const { return factory_; }
 
         private:
             Core();
