@@ -604,4 +604,18 @@ namespace SDOM
         prevConfig = config_;
     } // END void Core::refreshSDLResources()
 
+
+    // void Core::handleTabKeyPress(Stage& stage)
+    // {}
+    // void Core::handleTabKeyPressReverse(Stage& stage)
+    // {}
+    // void Core::setKeyboardFocusedObject(ResourceHandle obj)
+    // {}
+    // ResourceHandle Core::getKeyboardFocusedObject() const
+    // {}
+    // void Core::setMouseHoveredObject(ResourceHandle obj)
+    // {}
+    // ResourceHandle Core::getMouseHoveredObject() const
+    // {}
+
 } // namespace SDOM

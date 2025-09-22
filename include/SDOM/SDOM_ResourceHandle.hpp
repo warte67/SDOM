@@ -4,9 +4,13 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IResourceObject.hpp>
 
+// NOTE: this ~= "ResourceHandle(getName(), getType())"
+
 
 namespace SDOM
 {
+    class Core;
+    
     class ResourceHandle
     {
     public:
@@ -15,7 +19,15 @@ namespace SDOM
         ResourceHandle(const std::string& name, const std::string& type) : name_(name), type_(type) {}
         ResourceHandle(const ResourceHandle& other)
             : name_(other.name_), type_(other.type_) {}
-
+        ResourceHandle& operator=(const ResourceHandle& other) {
+            if (this != &other) {
+                // Copy members here
+                name_ = other.name_;
+                type_ = other.type_;
+                // Copy any other relevant members
+            }
+            return *this;
+        }
         // construction from nullptr
         ResourceHandle(std::nullptr_t) { reset(); }
 

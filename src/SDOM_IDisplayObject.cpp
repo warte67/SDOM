@@ -42,7 +42,7 @@
 #include "SDOM/SDOM_IDisplayObject.hpp"
 // #include "SDOM/SDOM_EventType.hpp"
 // #include "SDOM/SDOM_EventManager.hpp"
-// #include "SDOM/SDOM_Factory.hpp"
+#include "SDOM/SDOM_Factory.hpp"
 // #include "SDOM/SDOM_Stage.hpp"
 
 namespace SDOM
@@ -379,63 +379,119 @@ namespace SDOM
     bool IDisplayObject::onInit()
     {
         // Default implementation, can be overridden by derived classes
-        // registerSelfName(shared_from_this()); // Register this object in the name registry
+        // registerSelfName(); // Register this object in the name registry
         return true; // Indicate successful initialization
     }
 
-    // void IDisplayObject::addChild(std::shared_ptr<IDisplayObject> child, bool useWorld, int worldX, int worldY)
-    // {
-    //     if (!child) 
-    //     {
-    //         ERROR("Attempted to add a null child to IDisplayObject: " + name_);
-    //         return;
-    //     }
-    //     // child->setParent(std::weak_ptr<IDisplayObject>{}); // is inside DOM traversal
-    //     Factory* factory = Core::getInstance().getFactory();
-    //     // factory->addToFutureChildrenList(child, shared_from_this(), useWorld, worldX, worldY);
-    // }
+
+    void IDisplayObject::attachChild_(ResourceHandle p_child, ResourceHandle p_parent, bool useWorld, int worldX, int worldY)
+    {
+        IDisplayObject* child = dynamic_cast<IDisplayObject*>(p_child.get());
+        IDisplayObject* parent = dynamic_cast<IDisplayObject*>(p_parent.get());
+        if (child && parent) 
+        {
+            auto& parentChildren = parent->children_;
+            auto it = std::find(parentChildren.begin(), parentChildren.end(), p_child);
+            if (it == parentChildren.end()) 
+            {
+                // Record world edges BEFORE changing parent
+                float leftWorld = child->getLeft();
+                float rightWorld = child->getRight();
+                float topWorld = child->getTop();
+                float bottomWorld = child->getBottom();
+
+                child->setParent(p_parent); 
+                parentChildren.push_back(p_child);
+
+                if (useWorld)
+                {
+                    child->setLeft(leftWorld);
+                    child->setRight(rightWorld);
+                    child->setTop(topWorld);
+                    child->setBottom(bottomWorld);
+                    child->setX(worldX);
+                    child->setY(worldY);
+                }
+            }
+        }
+    }
+
+    void IDisplayObject::removeOrphan_(const ResourceHandle& orphan) 
+    {
+        IDisplayObject* orphanObj = dynamic_cast<IDisplayObject*>(orphan.get());
+        if (orphanObj) 
+        {
+            IDisplayObject* parent = dynamic_cast<IDisplayObject*>(orphanObj->getParent().get());
+            if (parent) 
+            {
+                auto& parentChildren = parent->children_;
+                auto it = std::find(parentChildren.begin(), parentChildren.end(), orphan);
+                if (it != parentChildren.end()) 
+                {
+                    // Reset orphan's parent using ResourceHandle (nullptr)
+                    orphanObj->setParent(ResourceHandle());
+                    parentChildren.erase(it); // Remove orphan from parent's children
+                }
+            }
+        }
+    }
+
+    void IDisplayObject::addChild(ResourceHandle child, bool useWorld, int worldX, int worldY)
+    {
+        if (!child) 
+        {
+            ERROR("Attempted to add a null child to IDisplayObject: " + name_);
+            return;
+        }
+        Core* core = &Core::getInstance();
+        Factory* factory = core->getFactory();
+        if (core->getIsTraversing())
+        {
+            factory->addToFutureChildrenList(child, ResourceHandle(getName(), child->getType()), useWorld, worldX, worldY);
+        }
+        else
+        {
+            attachChild_(child, ResourceHandle(getName(), getType()), useWorld, worldX, worldY);
+        }
+    }
 
 
+    bool IDisplayObject::removeChild(ResourceHandle child)
+    {
+        if (!child) 
+        {
+            ERROR("removeChild: child handle is null in " + name_);
+            return false;
+        }
+        auto it = std::find(children_.begin(), children_.end(), child);
+        if (it != children_.end()) 
+        {
+            children_.erase(it);
+            // Reset child's parent pointer if possible
+            if (auto* childObj = dynamic_cast<IDisplayObject*>(child.get())) 
+            {
+                childObj->setParent(ResourceHandle());
+            }
+            Core* core = &Core::getInstance();
+            Factory* factory = core->getFactory();
+            if (core->getIsTraversing())
+            {
+                factory->addToOrphanList(child); // Defer orphan removal
+            }
+            else
+            {
+                removeOrphan_(child); // Remove orphan immediately
+            }
+            return true;
+        } 
+        else 
+        {
+            ERROR("removeChild: child not found in children_ vector of " + name_);
+            return false;
+        }
+    }
 
-    // bool IDisplayObject::removeChild(std::shared_ptr<IDisplayObject> child)
-    // {
-    //     // Debug: Check validity of 'children_' and 'child'
-    //     if (children_.empty()) {
-    //         std::cout << "[removeChild] children_ vector is empty for " << name_ << std::endl;
-    //     }
-    //     if (!child) {
-    //         std::cout << "[removeChild] child pointer is null!" << std::endl;
-    //         return false;
-    //     }
-    //     for (size_t i = 0; i < children_.size(); ++i) {
-    //         if (!children_[i]) {
-    //             std::cout << "[removeChild] children_[" << i << "] is null in " << name_ << std::endl;
-    //         }
-    //     }
-    //     // Print addresses for comparison
-    //     std::cout << "[removeChild] this=" << reinterpret_cast<uintptr_t>(this)
-    //               << ", child=" << reinterpret_cast<uintptr_t>(child.get()) << std::endl;
-    //     for (size_t i = 0; i < children_.size(); ++i) {
-    //         std::cout << "[removeChild] children_[" << i << "]=" << reinterpret_cast<uintptr_t>(children_[i].get()) << std::endl;
-    //     }
 
-    //     // Unlink child from parent's children vector
-    //     auto it = std::find(children_.begin(), children_.end(), child);
-    //     if (it != children_.end()) {
-    //         children_.erase(it);
-    //     } else {
-    //         ERROR("removeChild: child not found in children_ vector of " + name_);
-    //     }
-
-    //     // // Reset child's parent pointer
-    //     // child->setParent(std::weak_ptr<IDisplayObject>{}); // still within DOM traversal
-
-    //     // Defer orphan processing if needed
-    //     Factory* factory = Core::instance().getFactory();
-    //     factory->addToOrphanList(child);
-
-    //     return true;
-    // }
 
     void IDisplayObject::cleanAll() 
     {
@@ -527,12 +583,13 @@ namespace SDOM
         }
     }
 
-    // void IDisplayObject::registerSelfName(std::shared_ptr<IDisplayObject> self) 
+    // void IDisplayObject::registerSelfName() 
     // {
+    //     std::string name = getName();
     //     if (nameRegistry_.find(name_) != nameRegistry_.end()) {
     //         ERROR("IDisplayObject name '" + name_ + "' is already registered!");
     //     }
-    //     nameRegistry_[name_] = self;
+    //     nameRegistry_[name_] = ResourceHandle(name_, getType());
     // }  
 
     // std::shared_ptr<IDisplayObject> IDisplayObject::getByName(const std::string& name) 
@@ -550,147 +607,176 @@ namespace SDOM
     //     return search(Core::instance().getStage("mainStage"));
     // }
 
-    // int IDisplayObject::getMaxPriority() const
-    // {
-    //     if (children_.empty()) return priority_;
-    //     return std::max_element(children_.begin(), children_.end(), [](const auto& a, const auto& b) {
-    //         return a->priority_ < b->priority_;
-    //     })->get()->priority_;
-    // }
+    int IDisplayObject::getMaxPriority() const
+    {
+        if (children_.empty()) 
+            return priority_;
+        auto it = std::max_element(
+            children_.begin(), children_.end(),
+            [](const ResourceHandle& a, const ResourceHandle& b) {
+                auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
+                auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
+                int aPriority = aObj ? aObj->priority_ : std::numeric_limits<int>::min();
+                int bPriority = bObj ? bObj->priority_ : std::numeric_limits<int>::min();
+                return aPriority < bPriority;
+            }
+        );
+        auto* maxObj = dynamic_cast<IDisplayObject*>(it->get());
+        return maxObj ? maxObj->priority_ : priority_;
+    }
 
-    // int IDisplayObject::getMinPriority() const
-    // {
-    //     if (children_.empty()) return priority_;
-    //     return std::min_element(children_.begin(), children_.end(), [](const auto& a, const auto& b) {
-    //         return a->priority_ < b->priority_;
-    //     })->get()->priority_;
-    // }
+    int IDisplayObject::getMinPriority() const
+    {
+        if (children_.empty()) return priority_;
+        auto it = std::min_element(
+            children_.begin(), children_.end(),
+            [](const ResourceHandle& a, const ResourceHandle& b) {
+                auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
+                auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
+                // Null children are considered highest priority
+                int aPriority = aObj ? aObj->priority_ : std::numeric_limits<int>::max();
+                int bPriority = bObj ? bObj->priority_ : std::numeric_limits<int>::max();
+                return aPriority < bPriority;
+            }
+        );
+        auto* minObj = dynamic_cast<IDisplayObject*>(it->get());
+        return minObj ? minObj->priority_ : priority_;
+    }
 
-    // IDisplayObject& IDisplayObject::setToHighestPriority()
-    // {
-    //     auto parentShared = parent_.lock(); // Convert weak_ptr to shared_ptr
-    //     priority_ = parentShared ? parentShared->getMaxPriority() + 1 : getMaxPriority() + 1;
-    //     if (parentShared) {
-    //         parentShared->sortChildrenByPriority();
-    //     } else {
-    //         sortChildrenByPriority(); // Ensure children are sorted if this is the root node
-    //     }        
-    //     return *this;
-    // }
+    IDisplayObject& IDisplayObject::setToHighestPriority()
+    {
+        IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parentObj) {
+            priority_ = parentObj->getMaxPriority() + 1;
+            parentObj->sortChildrenByPriority();
+        } else {
+            priority_ = getMaxPriority() + 1;
+            sortChildrenByPriority(); // Ensure children are sorted if this is the root node
+        }
+        return *this;
+    }
 
-    // IDisplayObject& IDisplayObject::setToLowestPriority()
-    // {
-    //     auto parentShared = parent_.lock(); // Convert weak_ptr to shared_ptr
-    //     priority_ = parentShared ? parentShared->getMinPriority() - 1 : getMinPriority() - 1;
-    //     if (parentShared) {
-    //         parentShared->sortChildrenByPriority();
-    //     } else {
-    //         sortChildrenByPriority(); // Ensure children are sorted if this is the root node
-    //     }
-    //     return *this;
-    // }
+    IDisplayObject& IDisplayObject::setToLowestPriority()
+    {
+        IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parentObj) {
+            priority_ = parentObj->getMinPriority() - 1;
+            parentObj->sortChildrenByPriority();
+        } else {
+            priority_ = getMinPriority() - 1;
+            sortChildrenByPriority(); // Ensure children are sorted if this is the root node
+        }
+        return *this;
+    }
 
-    // IDisplayObject& IDisplayObject::sortChildrenByPriority()
-    // {
-    //     // Ensure all children are valid before sorting
-    //     children_.erase(std::remove_if(children_.begin(), children_.end(), [](const auto& child) {
-    //         return !child;
-    //     }), children_.end());
-    //     std::sort(children_.begin(), children_.end(), [](const auto& a, const auto& b) {
-    //         return a->priority_ < b->priority_; // Sort in ascending order
-    //     });
-    //     return *this;
-    // }
+    IDisplayObject& IDisplayObject::sortChildrenByPriority()
+    {
+        // Remove invalid children
+        children_.erase(std::remove_if(children_.begin(), children_.end(), [](const ResourceHandle& child) {
+            return !child;
+        }), children_.end());
 
-    // IDisplayObject& IDisplayObject::setPriority(int newPriority)
-    // {
-    //     priority_ = newPriority;
-    //     auto parentShared = parent_.lock(); // Convert weak_ptr to shared_ptr
-    //     if (parentShared) {
-    //         parentShared->sortChildrenByPriority();
-    //     } else {
-    //         sortChildrenByPriority(); // Ensure children are sorted if this is the root node
-    //     }
-    //     return *this;
-    // }
+        // Sort by priority (ascending)
+        std::sort(children_.begin(), children_.end(), [](const ResourceHandle& a, const ResourceHandle& b) {
+            auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
+            auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
+            int aPriority = aObj ? aObj->priority_ : std::numeric_limits<int>::min();
+            int bPriority = bObj ? bObj->priority_ : std::numeric_limits<int>::min();
+            return aPriority < bPriority;
+        });
 
-    // std::vector<int> IDisplayObject::getChildrenPriorities() const
-    // {
-    //     std::vector<int> priorities;
-    //     for (const auto& child : children_) {
-    //         priorities.push_back(child->priority_);
-    //     }
-    //     return priorities;
-    // }
+        return *this;
+    }
 
-    // IDisplayObject& IDisplayObject::moveToTop()
-    // {
-    //     auto parentShared = parent_.lock();
-    //     if (parentShared) {
-    //         // Set this object's priority to highest among siblings
-    //         int maxPriority = parentShared->getMaxPriority();
-    //         setPriority(maxPriority + 1);
-    //         parentShared->sortChildrenByPriority();
-    //         // Recursively move parent to top
-    //         parentShared->moveToTop();
-    //     } else {
-    //         // If no parent, just set to highest among children (root node)
-    //         setPriority(getMaxPriority() + 1);
-    //         sortChildrenByPriority();
-    //     }
-    //     return *this;
-    // }
+    IDisplayObject& IDisplayObject::setPriority(int newPriority)
+    {
+        priority_ = newPriority;
+        IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parentObj) {
+            parentObj->sortChildrenByPriority();
+        } else {
+            sortChildrenByPriority(); // Ensure children are sorted if this is the root node
+        }
+        return *this;
+    }
 
-    // bool IDisplayObject::hasChild(const std::shared_ptr<IDisplayObject>& child) const
-    // {
-    //     return std::find(children_.begin(), children_.end(), child) != children_.end();
-    // }
+    std::vector<int> IDisplayObject::getChildrenPriorities() const
+    {
+        std::vector<int> priorities;
+        for (const auto& child : children_) {
+            auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
+            priorities.push_back(childObj ? childObj->priority_ : 0);
+        }
+        return priorities;
+    }
 
-    // int IDisplayObject::getTabPriority() const 
-    // { 
-    //     return tabPriority_; 
-    // }
+    IDisplayObject& IDisplayObject::moveToTop()
+    {
+        IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parentObj) {
+            // Set this object's priority to highest among siblings
+            int maxPriority = parentObj->getMaxPriority();
+            setPriority(maxPriority + 1);
+            parentObj->sortChildrenByPriority();
+            // Recursively move parent to top
+            parentObj->moveToTop();
+        } else {
+            // If no parent, just set to highest among children (root node)
+            setPriority(getMaxPriority() + 1);
+            sortChildrenByPriority();
+        }
+        return *this;
+    }
 
-    // IDisplayObject& IDisplayObject::setTabPriority(int index) 
-    // { 
-    //     tabPriority_ = index; 
-    //     return *this; 
-    // }
+    bool IDisplayObject::hasChild(const ResourceHandle child) const
+    {
+        return std::find(children_.begin(), children_.end(), child) != children_.end();
+    }
+
+    int IDisplayObject::getTabPriority() const 
+    { 
+        return tabPriority_; 
+    }
+
+    IDisplayObject& IDisplayObject::setTabPriority(int index) 
+    { 
+        tabPriority_ = index; 
+        return *this; 
+    }
     
-    // bool IDisplayObject::isTabEnabled() const 
-    // { 
-    //     return tabEnabled_; 
-    // }
+    bool IDisplayObject::isTabEnabled() const 
+    { 
+        return tabEnabled_; 
+    }
 
-    // IDisplayObject& IDisplayObject::setTabEnabled(bool enabled) 
-    // { 
-    //     // Initialization logic for Box
-    //     static int s_nextIndex = 0;
-    //     if (enabled)
-    //     {
-    //         tabPriority_ = s_nextIndex;
-    //         s_nextIndex++;    
-    //         tabEnabled_ = true;   
-    //     }
-    //     tabEnabled_ = enabled; 
-    //     return *this; 
-    // }
+    IDisplayObject& IDisplayObject::setTabEnabled(bool enabled) 
+    { 
+        // Initialization logic for Box
+        static int s_nextIndex = 0;
+        if (enabled)
+        {
+            tabPriority_ = s_nextIndex;
+            s_nextIndex++;    
+            tabEnabled_ = true;   
+        }
+        tabEnabled_ = enabled; 
+        return *this; 
+    }
 
     // void IDisplayObject::setKeyboardFocus() 
     // { 
-    //     Core::instance().setKeyboardFocusedObject(shared_from_this()); 
+    //     Core::getInstance().setKeyboardFocusedObject(ResourceHandle(getName(), getType())); 
     // }
-
-
     // bool IDisplayObject::isKeyboardFocused() const
     // {
-    //     auto focused = SDOM::Core::instance().getKeyboardFocusedObject().lock();
-    //     return (focused.get() == this);
+    //     auto focusedObj = SDOM::Core::getInstance().getKeyboardFocusedObject().get();
+    //     return (focusedObj == this);
     // }
+
     // bool IDisplayObject::isMouseHovered() const
     // {
-    //     auto hovered = SDOM::Core::instance().getMouseHoveredObject().lock();
-    //     return (hovered.get() == this);
+    //     auto hoveredObj = SDOM::Core::getInstance().getMouseHoveredObject().get();
+    //     return (hoveredObj == this);
     // }
 
     // bool IDisplayObject::isEnabled() const { return isEnabled_; }
@@ -840,8 +926,10 @@ namespace SDOM
         {
             ERROR("Cycle detected: node is its own parent!");
         }
-        if (parent) {
-            switch (anchorLeft_) {
+        if (parent) 
+        {
+            switch (anchorLeft_) 
+            {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::MIDDLE_LEFT:
                 case AnchorPoint::BOTTOM_LEFT:

@@ -106,4 +106,97 @@ namespace SDOM
         resources_.erase(name);
     }
 
+    std::vector<std::string> Factory::listResourceNames() const
+    {
+        std::vector<std::string> names;
+        for (const auto& pair : resources_) {
+            names.push_back(pair.first);
+        }
+        return names;
+    }
+
+    void Factory::clear()
+    {
+        resources_.clear();
+    }
+
+    void Factory::printRegistry() const
+    {
+        std::cout << "Factory Resource Registry:\n";
+        for (const auto& pair : resources_) {
+            const auto& name = pair.first;
+            const auto& resource = pair.second;
+            std::cout << "  Name: " << name
+                    << ", Type: " << (resource ? resource->getType() : "Unknown")
+                    << "\n";
+        }
+        std::cout << "Total resources: " << resources_.size() << std::endl;
+    }
+
+    
+
+    // ----- Orphan and Future Child Management -----
+
+    void Factory::detachOrphans()
+    {
+        for (auto& orphanHandle : orphanList_)
+        {
+            IDisplayObject* orphan = dynamic_cast<IDisplayObject*>(orphanHandle.get());
+            if (orphan)
+            {
+                ResourceHandle parentHandle = orphan->getParent();
+                IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parentHandle.get());
+                if (parentObj)
+                {
+                    // Remove orphan from parent's children using public removeChild method
+                    parentObj->removeChild(orphanHandle);
+                    // Set orphan's parent to nullptr using public setParent method
+                    orphan->setParent(ResourceHandle());
+                }
+            }
+        }
+        orphanList_.clear();
+    }
+
+    void Factory::attachFutureChildren() 
+    {
+        for (auto& futureChild : futureChildrenList_) 
+        {
+            IDisplayObject* child = dynamic_cast<IDisplayObject*>(futureChild.child.get());
+            if (child)
+            {
+                child->attachChild_(
+                    futureChild.child,
+                    futureChild.parent,
+                    futureChild.preserveWorldPosition,
+                    futureChild.dragStartWorldX,
+                    futureChild.dragStartWorldY
+                );
+            }
+        }
+        futureChildrenList_.clear();
+    }
+
+    void Factory::addToOrphanList(const ResourceHandle orphan) 
+    {
+        if (orphan) 
+        {
+            orphanList_.push_back(orphan);
+        }
+    }
+
+    void Factory::addToFutureChildrenList(const ResourceHandle child, const ResourceHandle parent, bool useWorld, int worldX, int worldY) 
+    {
+        if (child && parent) 
+        {
+
+            // std::cout << "child added to queue: " << child->getName() << " to (" << 
+            //     worldX << ", " << worldY << ", w:" << child->getWidth() 
+            //     << ", h:" << child->getHeight() << ")" << std::endl; 
+
+            futureChildrenList_.push_back({child, parent, useWorld, worldX, worldY});
+        }
+    }
+
+    
 } // namespace SDOM

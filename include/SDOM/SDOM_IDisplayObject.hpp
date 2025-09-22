@@ -169,32 +169,36 @@ namespace SDOM
         void triggerEventListeners(const Event& event, bool useCapture);       
 
 
-        // void addChild(std::shared_ptr<IDisplayObject> child, bool useWorld=false, int worldX=0, int worldY=0);
-        // bool removeChild(std::shared_ptr<IDisplayObject> child);
+        void addChild(ResourceHandle child, bool useWorld=false, int worldX=0, int worldY=0);
+        bool removeChild(ResourceHandle child);
 
-        // // old methods - to be refactored
-        // const std::vector<std::shared_ptr<IDisplayObject>>& getChildren() const { return children_; }
-        // IDisplayObject* getParent() const { return parent_.lock().get(); }
-        // IDisplayObject& setParent(std::weak_ptr<IDisplayObject> parent) { parent_ = parent; return *this; }
-        // int getMaxPriority() const;
-        // int getMinPriority() const;
-        // int getPriority() const { return priority_; }
-        // IDisplayObject& setToHighestPriority();
-        // IDisplayObject& setToLowestPriority();
-        // IDisplayObject& sortChildrenByPriority();
-        // IDisplayObject& setPriority(int priority);
-        // std::vector<int> getChildrenPriorities() const;
-        // IDisplayObject& moveToTop();
-        // bool hasChild(const std::shared_ptr<IDisplayObject>& child) const;
-        // void registerSelfName(std::shared_ptr<IDisplayObject> self);    // Register this object in the name registry
-        // static std::shared_ptr<IDisplayObject> getByName(const std::string& name);
+
+        const std::vector<ResourceHandle>& getChildren() const { return children_; }
+        
+        ResourceHandle getParent() const { return parent_; }
+        IDisplayObject& setParent(const ResourceHandle& parent) { parent_ = parent; return *this; }
+
+
+        int getMaxPriority() const;
+        int getMinPriority() const;
+        int getPriority() const { return priority_; }
+        IDisplayObject& setToHighestPriority();
+        IDisplayObject& setToLowestPriority();
+        IDisplayObject& sortChildrenByPriority();
+        IDisplayObject& setPriority(int priority);
+        std::vector<int> getChildrenPriorities() const;
+        IDisplayObject& moveToTop();
+        bool hasChild(ResourceHandle child) const;
         // int getZOrder() const { return z_order_; } // Getter for z_order_
         // IDisplayObject& setZOrder(int z_order) { z_order_ = z_order; return *this; } // Setter for z_order_
         
-        // void setKeyboardFocus();
-        // bool isKeyboardFocused() const;
-        // bool isMouseHovered() const;
+        void setKeyboardFocus();
+        bool isKeyboardFocused() const;
+        bool isMouseHovered() const;
 
+        // THIS SHOULD ALREADY BE HANDLED BY THE FACTORY
+        // void registerSelfName();    // Register this object in the name registry
+        // static std::shared_ptr<IDisplayObject> getByName(const std::string& name);
 
         bool isClickable() const { return isClickable_; }
         IDisplayObject& setClickable(bool clickable) { isClickable_ = clickable; setDirty(); return *this; }
@@ -209,10 +213,10 @@ namespace SDOM
         IDisplayObject& setVisible(bool visible) { isHidden_ = !visible; setDirty(); return *this; }
 
         // Tab stop management
-        int getTabPriority() const { return tabPriority_; }
-        IDisplayObject& setTabPriority(int index) { tabPriority_ = index; setDirty(); return *this; }
-        bool isTabEnabled() const { return tabEnabled_; }
-        IDisplayObject& setTabEnabled(bool enabled) { tabEnabled_ = enabled; setDirty(); return *this; }
+        int getTabPriority() const;
+        IDisplayObject& setTabPriority(int index);
+        bool isTabEnabled() const;
+        IDisplayObject& setTabEnabled(bool enabled);
 
 
         // Coordinate Accessors:
@@ -312,6 +316,11 @@ namespace SDOM
         // Delete copy constructor and assignment operator
         IDisplayObject(const IDisplayObject& other) = delete;
         // IDisplayObject& operator=(const IDisplayObject& other) = delete;      
+
+        void attachChild_(ResourceHandle child, ResourceHandle parent, bool useWorld=false, int worldX=0, int worldY=0);
+        void removeOrphan_(const ResourceHandle& orphan);
+
+
     };
 
 } // namespace SDOM

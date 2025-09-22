@@ -29,13 +29,13 @@ namespace SDOM
         virtual void onQuit() override {}
         virtual bool onUnitTest() override { return true; }
 
+        // ----- Creation Methods -----
+
         // Register a resource type with a creation function
         using Creator = std::function<std::unique_ptr<IResourceObject>(const Json&)>;
 
         // void registerType(const std::string& typeName, Creator creator);
         void registerType(const std::string& typeName, const TypeCreators& creators);
-
-
         // JSON based object creator
         ResourceHandle create(const std::string& typeName, const Json& config);
         // String (JSON text) based object creator
@@ -43,7 +43,7 @@ namespace SDOM
         // InitStruct based object creator
         ResourceHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);
 
-
+        // ----- Resource Management -----
 
         // Example of Type-safe access:
         //      ResourceHandle ptr("mainStage", "Stage");
@@ -58,29 +58,46 @@ namespace SDOM
         // }
         ResourceHandle getResourcePtr(const std::string& name);
 
-
-
         void addResource(const std::string& name, 
             std::unique_ptr<IResourceObject> resource);
-
         void removeResource(const std::string& name);
 
+        // ----- Utility Methods -----
+        std::vector<std::string> listResourceNames() const;
+        void clear();
+        void printRegistry() const;
+
+        // ----- Orphan and Future Child Management -----
+
+        // Detach all objects in the orphan list
+        void detachOrphans();
+
+        // Attach all future children to their respective parents
+        void attachFutureChildren();
+
+        // Add a child node to the orphan list
+        void addToOrphanList(const ResourceHandle orphan);
+
+        // Add a future child to the future children list
+        void addToFutureChildrenList(const ResourceHandle child, const ResourceHandle parent,
+            bool useWorld=false, int worldX=0, int worldY=0);
+            
 
     private:
         std::unordered_map<std::string, std::unique_ptr<IResourceObject>> resources_;
         std::unordered_map<std::string, TypeCreators> creators_;
 
 
-        // std::vector<ResourceHandle> orphanList_;
-        // struct futureChild 
-        // {
-        //     ResourceHandle child;
-        //     ResourceHandle parent;
-        //     bool preserveWorldPosition; // was bool useWorld;
-        //     int dragStartWorldX;
-        //     int dragStartWorldY;
-        // };
-        // std::vector<futureChild> futureChildren_;
+        std::vector<ResourceHandle> orphanList_;
+        struct futureChild 
+        {
+            ResourceHandle child;
+            ResourceHandle parent;
+            bool preserveWorldPosition; // was bool useWorld;
+            int dragStartWorldX;
+            int dragStartWorldY;
+        };
+        std::vector<futureChild> futureChildrenList_;
     };
 
 }

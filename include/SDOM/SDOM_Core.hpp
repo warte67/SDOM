@@ -4,6 +4,7 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
+#include <SDOM/SDOM_ResourceHandle.hpp>
 
 namespace SDOM
 {
@@ -124,6 +125,16 @@ namespace SDOM
             bool getIsTraversing() const { return isTraversing_; }
             void setIsTraversing(bool traversing) { isTraversing_ = traversing; }
 
+
+
+            // void handleTabKeyPress(Stage& stage);
+            // void handleTabKeyPressReverse(Stage& stage);
+            // void setKeyboardFocusedObject(ResourceHandle obj);
+            // ResourceHandle getKeyboardFocusedObject() const;
+            // void setMouseHoveredObject(ResourceHandle obj);
+            // ResourceHandle getMouseHoveredObject() const;
+
+
         private:
             Core();
             ~Core();
@@ -139,6 +150,19 @@ namespace SDOM
 
             bool bIsRunning_ = true;
             bool isTraversing_ = false;
+
+            // ResourceHandle hoveredObject_;
+            // ResourceHandle keyboardFocusedObject_;
+            // struct TabPriorityComparator {
+            //     bool operator()(const ResourceHandle& a, const ResourceHandle& b) const {
+            //         auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
+            //         auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
+            //         if (!aObj || !bObj) return false; // Handle invalid handles
+            //         return aObj->getTabPriority() < bObj->getTabPriority(); // Higher priority first
+            //     }
+            // };
+            // std::priority_queue<ResourceHandle, std::vector<ResourceHandle>, TabPriorityComparator> tabList_;
+
 
             CoreConfig config_;
 
