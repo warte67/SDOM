@@ -6,7 +6,7 @@
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IResourceObject.hpp>
-#include <SDOM/SDOM_ResourcePointer.hpp>
+#include <SDOM/SDOM_ResourceHandle.hpp>
 
 namespace SDOM
 {
@@ -90,7 +90,7 @@ namespace SDOM
         //             << ", Type: " << pair.second->getType() << std::endl;
         // }
 
-        // resource_ptr obj = getFactory()->getResourcePtr("mainStage");
+        // ResourceHandle obj = getFactory()->getResourcePtr("mainStage");
         // std::cout << "Retrieved resource 'mainStage': " 
         //           << (obj ? "Found" : "Not Found") << std::endl;
         // std::cout << "obj: " << obj << std::endl;
@@ -100,9 +100,9 @@ namespace SDOM
         //     std::cout << "Stage pointer: " << stage << std::endl;
         // }
 
-        // resource_ptr obj1 = getFactory()->getResourcePtr("mainStage");
-        // resource_ptr obj2 = obj1; // Copy the resource_ptr
-        // resource_ptr obj3 = getFactory()->getResourcePtr("mainStage");
+        // ResourceHandle obj1 = getFactory()->getResourcePtr("mainStage");
+        // ResourceHandle obj2 = obj1; // Copy the ResourceHandle
+        // ResourceHandle obj3 = getFactory()->getResourcePtr("mainStage");
 
         // std::cout << "obj1: " << obj1 << ", obj2: " << obj2 << ", obj3: " << obj3 << std::endl;
 

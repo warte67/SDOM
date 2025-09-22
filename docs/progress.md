@@ -36,12 +36,15 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - Circular include and pointer management issues resolved (raw pointer for Factory ownership).
     - The SDOM framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.
 - **[September 21, 2025]**
-    - Factory resource management and `resource_ptr` logic fully tested and confirmed:
+    - Renamed `resource_ptr` to `ResourceHandle` throughout the codebase for clarity.
+        - The new name better reflects its role as an opaque handle or key for resource lookup, rather than a smart pointer with ownership semantics.
+        - Updated all documentation, examples, and comments to use `ResourceHandle`.
+    - Factory resource management and `ResourceHandle` logic fully tested and confirmed:
         - Resources can be added, retrieved, and removed from the Factory.
-        - Multiple `resource_ptr` instances correctly reflect resource existence and become invalid after removal.
+        - Multiple `ResourceHandle` instances correctly reflect resource existence and become invalid after removal.
         - Type-safe access via `dynamic_cast` is working and robust.
     - Debug output and test scaffolding added to verify resource lifetime and pointer behavior.
-    - Resolved copy constructor and assignment operator issues for `resource_ptr`.
+    - Resolved copy constructor and assignment operator issues for `ResourceHandle`.
     - Confirmed that the Factory now contains a working `Stage` resource.
     - Next step: Implement parent/child relationships for resources and display objects.
     - Unit test framework will be moved to `onUnitTest()` methods once implemented.

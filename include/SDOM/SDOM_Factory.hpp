@@ -6,7 +6,7 @@
 
 namespace SDOM 
 {
-    class resource_ptr; // forward declaration
+    class ResourceHandle; // forward declaration
         
     class Factory final : public IDataObject
     {
@@ -30,7 +30,7 @@ namespace SDOM
 
 
         // Example of Type-safe access:
-        //      resource_ptr ptr("mainStage", "Stage");
+        //      ResourceHandle ptr("mainStage", "Stage");
         //      Stage* stage = ptr.as<Stage>();
         IResourceObject* getResource(const std::string& name) 
         {
@@ -43,12 +43,12 @@ namespace SDOM
         }
 
         // Example Usage:
-        // resource_ptr ptr = factory.getResourcePtr("mainStage");
+        // ResourceHandle ptr = factory.getResourcePtr("mainStage");
         // if (ptr) {
         //     Stage* stage = dynamic_cast<Stage*>(ptr.get());
         //     // Use stage...
         // }
-        resource_ptr getResourcePtr(const std::string& name);
+        ResourceHandle getResourcePtr(const std::string& name);
 
 
 
