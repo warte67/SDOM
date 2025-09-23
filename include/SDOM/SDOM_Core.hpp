@@ -12,6 +12,7 @@ namespace SDOM
     class Event;
     class EventType;
     class Stage;
+    class IDisplayObject;
 
     
     /**
@@ -86,9 +87,13 @@ namespace SDOM
             void registerOnUnitTest(std::function<bool()> fn) { fnOnUnitTest = fn; }
             void registerOnWindowResize(std::function<void(int, int)> fn) { fnOnWindowResize = fn; }
 
-            // // Stage Management (Factory?)
-            // void registerStage(const std::string& name, std::shared_ptr<Stage> stage);
-            // void setStage(const std::string& name);
+            // ===== Stage Management =====
+            void setRootNode(const std::string& name);
+            void setRootNode(const ResourceHandle& handle);
+            void setStage(const std::string& name); // Alias for backward compatibility
+            Stage* getStage() const; // Alias for backward compatibility
+            IDisplayObject* getRootNodePtr() const;
+            ResourceHandle getRootNode() const;
 
             // ===== SDL Resource Accessors =====
             SDL_Window* getWindow() const       { return window_; }
@@ -135,6 +140,14 @@ namespace SDOM
             // ResourceHandle getMouseHoveredObject() const;
 
 
+            std::string getWindowTitle() const { return windowTitle_; }
+            void setWindowTitle(const std::string& title) 
+            {
+                windowTitle_ = title;
+                if (window_)
+                    SDL_SetWindowTitle(window_, windowTitle_.c_str());
+            }  
+
         private:
             Core();
             ~Core();
@@ -146,6 +159,7 @@ namespace SDOM
             SDL_Window* window_ = nullptr;
             SDL_Renderer* renderer_ = nullptr;
             SDL_Texture* texture_ = nullptr;
+            std::string windowTitle_ = "SDOM Application";
             SDL_Color color_ = { 0, 0, 0, 255 }; // Default BLACK background color
 
             bool bIsRunning_ = true;

@@ -93,8 +93,8 @@ namespace SDOM
             if (resource) 
             {
                 std::string name = init.name;
-                resources_[name] = std::move(resource);
                 resource->onInit(); // Initialize the resource
+                resources_[name] = std::move(resource);
                 return ResourceHandle(name, typeName);
             }
         }

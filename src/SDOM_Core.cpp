@@ -79,11 +79,12 @@ namespace SDOM
             }
         }
 
+        // set the "mainStage" as the root node
         std::string rootStageName = "mainStage"; // default
         if (j["Core"].contains("rootStage"))
             rootStageName = j["Core"]["rootStage"].get<std::string>();
-
         rootNode_ = factory_->getResourcePtr(rootStageName);
+        setWindowTitle("Stage: " + rootStageName);
 
         // Debug output
         if (rootNode_) {
@@ -157,7 +158,7 @@ namespace SDOM
         // create the main window
         if (!window_)
         {
-            window_ = SDL_CreateWindow("Title", config_.windowWidth, config_.windowHeight, config_.windowFlags);
+            window_ = SDL_CreateWindow(getWindowTitle().c_str(), config_.windowWidth, config_.windowHeight, config_.windowFlags);
             if (!window_) 
             {
                 std::string errorMsg = "SDL_CreateWindow() Error: " + std::string(SDL_GetError());
@@ -688,7 +689,7 @@ namespace SDOM
         }
         // Recreate resources in order
         if (recreateWindow) {
-            window_ = SDL_CreateWindow("Title", config_.windowWidth, config_.windowHeight, config_.windowFlags);
+            window_ = SDL_CreateWindow(getWindowTitle().c_str(), config_.windowWidth, config_.windowHeight, config_.windowFlags);
             if (!window_) ERROR("SDL_CreateWindow() Error: " + std::string(SDL_GetError()));
         }
         if (recreateRenderer) {
@@ -733,27 +734,27 @@ namespace SDOM
     {
         // std::cout << CLR::indent() << "Core::coreTests_()" << std::endl;
         bool allTestsPassed = true;
-        // bool testResult;
+        bool testResult;
 
-        // // SDL_Test: SDL Initialization
-        // testResult = UnitTests::run("Core", "SDL_WasInit(SDL_INIT_VIDEO)", []() { return (SDL_WasInit(SDL_INIT_VIDEO) != 0); });
-        // if (!testResult) { std::cout << CLR::indent() << "SDL was NOT initialized!" << CLR::RESET << std::endl; }
-        // allTestsPassed &= testResult;
+        // SDL_Test: SDL Initialization
+        testResult = UnitTests::run("Core", "SDL_WasInit(SDL_INIT_VIDEO)", []() { return (SDL_WasInit(SDL_INIT_VIDEO) != 0); });
+        if (!testResult) { std::cout << CLR::indent() << "SDL was NOT initialized!" << CLR::RESET << std::endl; }
+        allTestsPassed &= testResult;
 
-        // // SDL_Test: SDL Texture
-        // testResult = UnitTests::run("Core", "SDL Texture Validity", [this]() { return (texture_ != nullptr); });
-        // if (!testResult) { std::cout << CLR::indent() << "SDL Texture is null!" << CLR::RESET << std::endl; }
-        // allTestsPassed &= testResult;
+        // SDL_Test: SDL Texture
+        testResult = UnitTests::run("Core", "SDL Texture Validity", [this]() { return (texture_ != nullptr); });
+        if (!testResult) { std::cout << CLR::indent() << "SDL Texture is null!" << CLR::RESET << std::endl; }
+        allTestsPassed &= testResult;
 
-        // // SDL_Test: SDL Renderer
-        // testResult = UnitTests::run("Core", "SDL Renderer Validity", [this]() { return (renderer_ != nullptr); });
-        // if (!testResult) { std::cout << CLR::indent() << "SDL Renderer is null!" << CLR::RESET << std::endl; }
-        // allTestsPassed &= testResult;
+        // SDL_Test: SDL Renderer
+        testResult = UnitTests::run("Core", "SDL Renderer Validity", [this]() { return (renderer_ != nullptr); });
+        if (!testResult) { std::cout << CLR::indent() << "SDL Renderer is null!" << CLR::RESET << std::endl; }
+        allTestsPassed &= testResult;
 
-        // // SDL_Test: SDL Window
-        // testResult = UnitTests::run("Core", "SDL Window Validity", [this]() { return (window_ != nullptr); });
-        // if (!testResult) { std::cout << CLR::indent() << "SDL Window is null!" << CLR::RESET << std::endl; }
-        // allTestsPassed &= testResult;
+        // SDL_Test: SDL Window
+        testResult = UnitTests::run("Core", "SDL Window Validity", [this]() { return (window_ != nullptr); });
+        if (!testResult) { std::cout << CLR::indent() << "SDL Window is null!" << CLR::RESET << std::endl; }
+        allTestsPassed &= testResult;
 
         // RETURN success or failure
         return allTestsPassed;
@@ -774,5 +775,38 @@ namespace SDOM
     // {}
     // ResourceHandle Core::getMouseHoveredObject() const
     // {}
+
+    void Core::setRootNode(const std::string& name)
+    {
+        ResourceHandle stageHandle = factory_->getResourcePtr(name);
+        if (stageHandle && dynamic_cast<Stage*>(stageHandle.get()))
+        {
+            rootNode_ = stageHandle;
+            setWindowTitle("Stage: " + rootNode_->getName());
+        }
+    }
+    void Core::setRootNode(const ResourceHandle& handle) 
+    { 
+        rootNode_ = handle;     
+        setWindowTitle("Stage: " + rootNode_->getName());
+    }
+    void Core::setStage(const std::string& name) 
+    { 
+        setRootNode(name); 
+    } 
+    // Alias for backward compatibility
+    Stage* Core::getStage() const 
+    { 
+        return dynamic_cast<Stage*>(getRootNodePtr()); 
+    } 
+    // Alias for backward compatibility
+    IDisplayObject* Core::getRootNodePtr() const 
+    { 
+        return dynamic_cast<IDisplayObject*>(rootNode_.get()); 
+    }
+    ResourceHandle Core::getRootNode() const 
+    {
+        return rootNode_; 
+    }
 
 } // namespace SDOM

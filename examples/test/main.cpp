@@ -38,12 +38,23 @@ int main()
             "windowFlags": "SDL_WINDOW_RESIZABLE",
             "pixelFormat": "SDL_PIXELFORMAT_RGBA8888",
             "color": { "r": 0, "g": 0, "b": 0, "a": 255 },
+            "rootStage": "mainStage",
             "children": [
                 {
                     "rootStage": "mainStage",
                     "type": "Stage",
                     "name": "mainStage",
                     "color": { "r": 32, "g": 8, "b": 4, "a": 255 }
+                },
+                {
+                    "type": "Stage",
+                    "name": "stageTwo",
+                    "color": { "r": 16, "g": 32, "b": 8, "a": 255 }
+                },
+                {
+                    "type": "Stage",
+                    "name": "stageThree",
+                    "color": { "r": 8, "g": 16, "b": 32, "a": 255 }
                 }
             ]
         }
@@ -80,6 +91,8 @@ int main()
         // Run Custom Unit Tests
         allTestsPassed &= Core_UnitTests();
         allTestsPassed &= Factory_UnitTests();
+        allTestsPassed &= IDisplayObject_UnitTests();
+        allTestsPassed &= Stage_UnitTests();
 
         // User Test One
         result = UnitTests::run("User", "The first user test", []() { return true; });

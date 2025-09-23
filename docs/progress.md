@@ -79,8 +79,17 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - **Debugging & Issue Resolution:**  
         - Diagnosed and resolved issues with singleton access, reference binding, and infinite recursion in callback registration.
         - Improved understanding of C++ function pointer and lambda usage for flexible test registration.
+    - **Expanded Test Coverage:**  
+        - Added more unit tests for Factory, Stage, and display objects.
+        - Confirmed that the unit test system works well for new features.
+        - Identified the need for a custom test object (e.g., `Box`) to facilitate comprehensive anchoring and coordinate propagation tests.
+        - Planned to add live event tests (drag/drop, deferred add/remove) and prioritize tests for new features as they are developed.
+        - Recognized that coverage for older features will be expanded over time, focusing first on the most critical areas.
+
 
 # ToDo:
+
+- Implement the `Box` object for drag and drop testing as well as stacking to build comprehensive testing of the anchoring system.
 - Move resource and pointer tests to `onUnitTest()` methods when available.
 - Add comprehensive unit tests for Factory, resource_ptr, and error conditions.
 - Language Hooks

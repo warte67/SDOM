@@ -16,26 +16,6 @@ namespace SDOM
         bool allTestsPassed = true;
         bool testResult;
 
-        // SDL_Test: SDL Initialization
-        testResult = UnitTests::run("Core", "SDL_WasInit(SDL_INIT_VIDEO)", []() { return (SDL_WasInit(SDL_INIT_VIDEO) != 0); });
-        if (!testResult) { std::cout << CLR::indent() << "SDL was NOT initialized!" << CLR::RESET << std::endl; }
-        allTestsPassed &= testResult;
-
-        // SDL_Test: SDL Texture
-        testResult = UnitTests::run("Core", "SDL Texture Validity", [&core]() { return (core.getTexture() != nullptr); });
-        if (!testResult) { std::cout << CLR::indent() << "SDL Texture is null!" << CLR::RESET << std::endl; }
-        allTestsPassed &= testResult;
-
-        // SDL_Test: SDL Renderer
-        testResult = UnitTests::run("Core", "SDL Renderer Validity", [&core]() { return (core.getRenderer() != nullptr); });
-        if (!testResult) { std::cout << CLR::indent() << "SDL Renderer is null!" << CLR::RESET << std::endl; }
-        allTestsPassed &= testResult;
-
-        // SDL_Test: SDL Window
-        testResult = UnitTests::run("Core", "SDL Window Validity", [&core]() { return (core.getWindow() != nullptr); });
-        if (!testResult) { std::cout << CLR::indent() << "SDL Window is null!" << CLR::RESET << std::endl; }
-        allTestsPassed &= testResult;
-
         // Config_Test: Window Dimensions
         const auto& expected = core.getConfig();
         testResult = UnitTests::run("Core", "Window Width", [&core, &expected]() {
