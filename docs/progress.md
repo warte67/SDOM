@@ -62,6 +62,23 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - **Testing & Debugging:**
         - Added debug prints to trace resource creation and lifecycle events.
         - Validated that the system is ready for expanded DOM tree parsing and more complex resource hierarchies.
+- **[September 22, 2025]**
+    - **Unit Test Framework Refined:**  
+        - Simplified the unit test system: now every resource implements `onUnitTests()` for built-in tests.
+        - External/custom unit tests are registered and run via the `registerOnUnitTest()` callback, keeping the API minimal and flexible.
+        - Removed unnecessary callback registration logic from `IUnitTest`, relying on virtual methods and user callbacks for extensibility.
+    - **Consistent Naming:**  
+        - Standardized all unit test-related identifiers to use the plural form (`Tests`) for clarity and consistency across the codebase.
+    - **External Test Integration:**  
+        - Users no longer need to register callbacks for external unit tests.  
+        - Instead, external unit test functions (like `Core_UnitTests()` and `Factory_UnitTests()`) are simply called directly from within the already established `registerOnUnitTest()` callback in `main.cpp`.  
+        - This approach makes it straightforward to create and run custom unit tests or build a dedicated test application, while maintaining clear separation between built-in and user-defined tests.
+    - **API Cleanup:**  
+        - Removed redundant or overly complex code from the unit test infrastructure.
+        - Ensured the API remains clean, maintainable, and easy to extend.
+    - **Debugging & Issue Resolution:**  
+        - Diagnosed and resolved issues with singleton access, reference binding, and infinite recursion in callback registration.
+        - Improved understanding of C++ function pointer and lambda usage for flexible test registration.
 
 # ToDo:
 - Move resource and pointer tests to `onUnitTest()` methods when available.

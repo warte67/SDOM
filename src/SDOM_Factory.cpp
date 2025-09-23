@@ -271,7 +271,12 @@ namespace SDOM
             ERROR("Unknown resource type: " + type);
         }
     }
-    
 
+    bool Factory::onUnitTest()
+    {
+        // std::cout << CLR::WHITE << "Factory Default Unit Tests:" << CLR::RESET << std::endl;
+        return true;       
+    } // END Factory::onUnitTest()
 
 } // namespace SDOM
+

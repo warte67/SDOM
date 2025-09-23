@@ -34,14 +34,14 @@ namespace SDOM
     bool Stage::onInit()
     {
         // Stage initialization logic
-        std::cout << "Stage::onInit() called for Stage: " << getName() << std::endl;
+        // std::cout << "Stage::onInit() called for Stage: " << getName() << std::endl;
         return true;
     }
 
     void Stage::onQuit()
     {
         // Stage shutdown logic
-        std::cout << "Stage::onQuit() called for Stage: " << getName() << std::endl;
+        // std::cout << "Stage::onQuit() called for Stage: " << getName() << std::endl;
     }
 
     void Stage::onUpdate(float fElapsedTime)
@@ -79,7 +79,7 @@ namespace SDOM
     {
         // Stage unit testing logic
 
-        std::cout << "Stage::onUnitTest() called for Stage: " << getName() << std::endl;
+        // std::cout << "Stage::onUnitTest() called for Stage: " << getName() << std::endl;
 
         return true;
     }

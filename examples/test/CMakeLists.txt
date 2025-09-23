@@ -21,9 +21,10 @@ find_package(SDL3 REQUIRED CONFIG)
 find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
 
-# Use SDOM2 headers from local or system install
+# Use SDOM headers from local or system install
 # Uncomment the one you want to use:
 include_directories($ENV{HOME}/.local/include)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 # include_directories(/usr/local/include)
 
 # Source files
@@ -33,7 +34,10 @@ list(APPEND SOURCES "${PROJECT_SOURCE_DIR}/main.cpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Link to local (user) SDOM2 static library:
+# # Enable unit tests in SDOM library
+# target_compile_definitions(prog PRIVATE SDOM_ENABLE_UNIT_TESTS)
+
+# Link to local (user) SDOM static library:
 target_link_libraries(prog PRIVATE $ENV{HOME}/.local/lib/libSDOM.a SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf)
 # Or for system install, comment above and uncomment below:
 # target_link_libraries(prog PRIVATE /usr/local/lib/libSDOM.a SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf)

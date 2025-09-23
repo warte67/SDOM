@@ -7,12 +7,18 @@
  * 
  * @copyright Copyright (c) 2025
  * 
- */
+//  */
 
- #include <SDOM/SDOM.hpp>
- #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_Event.hpp>
+#include <SDOM/SDOM_IUnitTest.hpp>
+#include <SDOM/SDOM_IDataObject.hpp>
 
- using namespace SDOM;
+#include "UnitTests.hpp"
+
+using namespace SDOM;
 
 
 int main() 
@@ -43,40 +49,61 @@ int main()
         }
     })");
 
-    // core.registerOnInit([]() {
-    //     std::cout << CLR::GREEN << "Custom OnInit called!" << CLR::RESET << std::endl;
-    //     return true; // Initialization successful
-    // });
+    core.registerOnInit([]() {
+        return true; // Initialization successful
+    });
 
-    // core.registerOnEvent([](const Core::Event& event) {
-    //     // Handle events here
-    //     std::cout << CLR::CYAN << "Event received!" << CLR::RESET << std::endl;
-    // });
+    core.registerOnQuit([]() {
+        // std::cout << CLR::GREEN << "Custom OnQuit called!" << CLR::RESET << std::endl;
+    });
 
-    // core.registerOnQuit([]() {
-    //     std::cout << CLR::PURPLE << "Custom OnQuit called!" << CLR::RESET << std::endl;
-    // });
+    core.registerOnEvent([](const Event& event) {
+        // Handle events here
+        // std::cout << CLR::GREEN << "Event received!" << CLR::RESET << std::endl;
+    });
 
-    // core.registerOnRender([]() {
-    //     // Custom rendering logic here
-    //     std::cout << CLR::BLUE << "Custom Render called!" << CLR::RESET << std::endl;
-    // });
+    core.registerOnUpdate([](float fElapsedTime) {
+        // Update logic here
+        // std::cout << CLR::GREEN << "Custom Update called! Elapsed time: " << fElapsedTime << " seconds" << CLR::RESET << std::endl;
+    });
 
-    // core.registerOnUnitTest([]() {
-    //     std::cout << CLR::GREEN << "Custom Unit Test called!" << CLR::RESET << std::endl;
-    //     return true; // All tests passed
-    // });
+    core.registerOnRender([]() {
+        // Custom rendering logic here
+        // std::cout << CLR::GREEN << "Custom Render called!" << CLR::RESET << std::endl;
+    });
 
-    // core.registerOnUpdate([](float fElapsedTime) {
-    //     // Update logic here
-    //     std::cout << CLR::YELLOW << "Custom Update called! Elapsed time: " << fElapsedTime << " seconds" << CLR::RESET << std::endl;
-    // });
+    core.registerOnUnitTest([]() 
+    {
+        bool allTestsPassed = true;
+        bool result = true;
 
-    core.registerOnWindowResize([](int newWidth, int newHeight) {
-        std::cout << "Window Resized--Width: " << newWidth << "  Height: " << newHeight << std::endl;
+        // Run Custom Unit Tests
+        allTestsPassed &= Core_UnitTests();
+        allTestsPassed &= Factory_UnitTests();
+
+        // User Test One
+        result = UnitTests::run("User", "The first user test", []() { return true; });
+        if (!result) {
+            std::cout << CLR::indent() << "Something Failed (appropriate debug text here)" << CLR::RESET << std::endl;
+        } 
+        allTestsPassed &= result;
+
+        // User Test Two
+        result = UnitTests::run("User", "The second user test", []()  { return true; });
+        if (!result) {
+            std::cout << CLR::indent() << "Something Failed (appropriate debug text here)" << CLR::RESET << std::endl;
+        } 
+        allTestsPassed &= result;
+
+
+        return allTestsPassed;
+    });
+
+    core.registerOnWindowResize([](int newWidth, int newHeight) 
+    {
+        // std::cout << "Window Resized--Width: " << newWidth << "  Height: " << newHeight << std::endl;
     });
 
     core.run();
-
     return 0;
-}
+} // END main()

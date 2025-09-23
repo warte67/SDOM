@@ -72,6 +72,18 @@ namespace SDOM
         }
         std::string getName() const { return name_; }
 
+        std::string str() const {
+            std::ostringstream oss;
+            oss << "name: '" << getName() << "' type: `" << type_ << "` " << get();
+            return oss.str();
+        }
+
+        const char* c_str() const {
+            // Store the formatted string in a member variable to keep it alive
+            formatted_ = str();
+            return formatted_.c_str();
+        }
+
     private:
         // Factory::Factory() { ResourceHandle<IResourceObject>::factory_ = this; }
         friend Core;
@@ -80,6 +92,8 @@ namespace SDOM
         inline static Factory* factory_ = nullptr;
         std::string name_;
         std::string type_;
+
+        mutable std::string formatted_; // to keep the formatted string alive for c_str()
 
     }; // END class ResourceHandle
 

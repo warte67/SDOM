@@ -168,7 +168,7 @@ namespace SDOM
 
             CoreConfig config_;
 
-            // inline static std::unique_ptr<Factory> factory_ = nullptr;
+            // Core Sub-Systems
             inline static Factory* factory_ = nullptr; 
 
             // Callback hooks
@@ -184,6 +184,8 @@ namespace SDOM
             void startup_SDL();
             void shutdown_SDL();
             void refreshSDLResources();
+
+            bool coreTests_();
     };
 
 } // namespace SDOM

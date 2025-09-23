@@ -114,6 +114,13 @@ namespace SDOM
                 return obj;
             });
 
+        registerProperty("type",
+            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getType(); },
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
+                static_cast<IDisplayObject&>(obj).setType(val.get<std::string>());
+                return obj;
+            });
+
 
         registerProperty("x",
             [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getLeft(); },
@@ -245,20 +252,27 @@ namespace SDOM
             });
         
         // registerProperty("parent",
-        //     [](const IDataObject& obj) { return reinterpret_cast<uintptr_t>(static_cast<const IDisplayObject&>(obj).parent_.lock().get()); },
-        //     nullptr); // read-only
+        //     [](const IDataObject& obj) { 
+        //         // Return the parent's ResourceHandle directly
+        //         return static_cast<const IDisplayObject&>(obj).getParent();
+        //     },
+        //     nullptr // read-only
+        // );
+
         // registerProperty("children",
-        //     [](const IDataObject& obj) 
-        //     {
+        //     [](const IDataObject& obj) {
         //         const auto& children = static_cast<const IDisplayObject&>(obj).getChildren();
         //         Json arr = Json::array();
-        //         for (const auto& child : children) 
-        //         {
-        //             if (child) arr.push_back(child->getName());
+        //         for (const auto& childHandle : children) {
+        //             // You can push the ResourceHandle itself, or just its name/type for serialization
+        //             // arr.push_back(childHandle); // If ResourceHandle is serializable to Json
+        //             // Or, for just name/type:
+        //             arr.push_back({ {"name", childHandle.getName()}, {"type", childHandle.getType()} });
         //         }
         //         return arr;
         //     },
-        //     nullptr /* read-only */ );
+        //     nullptr // read-only
+        // );
 
         registerProperty("anchorTop",
             [](const IDataObject& obj) { 

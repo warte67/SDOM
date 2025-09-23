@@ -226,10 +226,13 @@ namespace SDOM
             onInit();   // for now just call onInit(). Later Factory will call onInit() 
                         // for each object as it creates them.
 
-            // For now, just drop out immediately because
-            // we do not yet have an active SDL Window nor a renderer.
-            // bIsRunning_ = false;
-            
+            // Now run user tests after initialization
+            bool testsPassed = onUnitTest();
+            if (!testsPassed) 
+            {
+                ERROR("Unit tests failed. Aborting run.");
+            }
+
             SDL_Event event;
             while (bIsRunning_) 
             {
@@ -503,11 +506,14 @@ namespace SDOM
     {
         // Lambda for recursive unitTest handling using std::function
         std::function<bool(IDisplayObject&)> handleUnitTest;
-        handleUnitTest = [&handleUnitTest](IDisplayObject& node) -> bool {
+        handleUnitTest = [&handleUnitTest](IDisplayObject& node) -> bool 
+        {
             bool result = node.onUnitTest();
-            for (const auto& child : node.getChildren()) {
+            for (const auto& child : node.getChildren()) 
+            {
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
-                if (childObj) {
+                if (childObj) 
+                {
                     result = handleUnitTest(*childObj) && result;
                 }
             }
@@ -515,9 +521,12 @@ namespace SDOM
         };
 
         bool allTestsPassed = true;
+        std::cout << CLR::LT_BLUE << "Starting unit tests..." << CLR::RESET << std::endl;
+        std::cout << CLR::indent_push();
 
         // Run Core-specific unit tests here
-        // ...
+        allTestsPassed &= coreTests_();
+        allTestsPassed &= factory_->onUnitTest();
 
         // Run registered unit test function if available
         if (fnOnUnitTest) {
@@ -527,6 +536,12 @@ namespace SDOM
         IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
         if (rootObj)
             allTestsPassed &= handleUnitTest(*rootObj);
+
+        std::cout << CLR::indent_pop();
+        if (allTestsPassed) 
+            std::cout << CLR::LT_BLUE << "...Unit tests " << CLR::GREEN << "[PASSED]" << CLR::RESET << std::endl;
+        else 
+            std::cout << CLR::LT_BLUE << "...Unit tests " << CLR::RED << "[FAILED]" << CLR::RESET << std::endl;
 
         return allTestsPassed;
     }
@@ -713,6 +728,38 @@ namespace SDOM
         // Update previous config
         prevConfig = config_;
     } // END void Core::refreshSDLResources()
+
+    bool Core::coreTests_()
+    {
+        // std::cout << CLR::indent() << "Core::coreTests_()" << std::endl;
+        bool allTestsPassed = true;
+        // bool testResult;
+
+        // // SDL_Test: SDL Initialization
+        // testResult = UnitTests::run("Core", "SDL_WasInit(SDL_INIT_VIDEO)", []() { return (SDL_WasInit(SDL_INIT_VIDEO) != 0); });
+        // if (!testResult) { std::cout << CLR::indent() << "SDL was NOT initialized!" << CLR::RESET << std::endl; }
+        // allTestsPassed &= testResult;
+
+        // // SDL_Test: SDL Texture
+        // testResult = UnitTests::run("Core", "SDL Texture Validity", [this]() { return (texture_ != nullptr); });
+        // if (!testResult) { std::cout << CLR::indent() << "SDL Texture is null!" << CLR::RESET << std::endl; }
+        // allTestsPassed &= testResult;
+
+        // // SDL_Test: SDL Renderer
+        // testResult = UnitTests::run("Core", "SDL Renderer Validity", [this]() { return (renderer_ != nullptr); });
+        // if (!testResult) { std::cout << CLR::indent() << "SDL Renderer is null!" << CLR::RESET << std::endl; }
+        // allTestsPassed &= testResult;
+
+        // // SDL_Test: SDL Window
+        // testResult = UnitTests::run("Core", "SDL Window Validity", [this]() { return (window_ != nullptr); });
+        // if (!testResult) { std::cout << CLR::indent() << "SDL Window is null!" << CLR::RESET << std::endl; }
+        // allTestsPassed &= testResult;
+
+        // RETURN success or failure
+        return allTestsPassed;
+    } // END bool Core::coreTests_()
+
+
 
 
     // void Core::handleTabKeyPress(Stage& stage)

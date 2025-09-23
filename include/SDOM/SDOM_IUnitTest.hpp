@@ -38,6 +38,7 @@ namespace SDOM
 
         // Optionally add logging/display methods here
         // ...
+
     };
 
 } // namespace SDOM

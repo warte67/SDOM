@@ -27,7 +27,7 @@ namespace SDOM
         // IDataObject overrides
         virtual bool onInit() override { return true; }
         virtual void onQuit() override {}
-        virtual bool onUnitTest() override { return true; }
+        virtual bool onUnitTest() override;
 
         // ----- Creation Methods -----
 
