@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['keytoascii_0',['keyToAscii',['../classSDOM_1_1SDL__Utils.html#ae14d8baba865558a55e68468fddc1b62',1,'SDOM::SDL_Utils']]]
+  ['json_5fvalue_5fcase_5finsensitive_0',['json_value_case_insensitive',['../classSDOM_1_1IDataObject.html#a54d77f5fbab11b64f7971d1c33dea11d',1,'SDOM::IDataObject']]]
 ];

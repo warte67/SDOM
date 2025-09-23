@@ -14,7 +14,7 @@ namespace SDOM
         std::cout << "Factory_UnitTests() called" << std::endl; 
         
         Core& core = getCore();
-        Factory& factory = *core.getFactory();
+        Factory& factory = core.getFactory();
 
         bool allTestsPassed = true;
         bool result; 
@@ -39,7 +39,7 @@ namespace SDOM
         // Test resource retrieval
         result = UnitTests::run("Factory", "Resource Retrieval", [&factory, &debugRet, &handle]() 
         {
-            ResourceHandle testHandle = factory.getResourcePtr("testStage");
+            ResourceHandle testHandle = factory.getResourceHandle("testStage");
             if (testHandle != handle) 
             {
                 debugRet = "Expected handle: " + handle.str() + ", but got: " + testHandle.str();
@@ -121,7 +121,7 @@ namespace SDOM
         result = UnitTests::run("Factory", "Resource Destruction", [&factory, &handle]() 
         {
             factory.removeResource("testStage");
-            ResourceHandle testHandle = factory.getResourcePtr("testStage");
+            ResourceHandle testHandle = factory.getResourceHandle("testStage");
             return testHandle == nullptr;
         });
         if (!result) { std::cout << CLR::indent() << "Resource destruction test failed!" << CLR::RESET << std::endl; }
@@ -164,7 +164,7 @@ namespace SDOM
             ResourceHandle second = factory.create("Stage", config2);
 
             // Retrieve and check if the resource was overwritten
-            ResourceHandle retrieved = factory.getResourcePtr("overwriteTest");
+            ResourceHandle retrieved = factory.getResourceHandle("overwriteTest");
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(retrieved.get());
             if (!obj) {
                 debugRet = "Resource 'overwriteTest' not found after overwrite.";

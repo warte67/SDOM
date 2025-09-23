@@ -16,6 +16,7 @@
 #include <SDOM/SDOM_IUnitTest.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
 
+#include "Box.hpp"
 #include "UnitTests.hpp"
 
 using namespace SDOM;
@@ -25,7 +26,16 @@ int main()
 {
     std::cout << CLR::YELLOW << "Hello, SDOM!" << CLR::RESET << std::endl;
 
+    // Fetch the Core singleton
     Core& core = getCore();
+
+    // register any custom DisplayObject types before configuring the Core
+    core.getFactory().registerType("Box", TypeCreators{
+        Box::CreateFromJson,
+        Box::CreateFromInitStruct
+    });
+
+    // Configure the Core from JSON
     core.configureFromJson(R"({
         "Core": {
             "windowWidth": 1200,
@@ -44,7 +54,27 @@ int main()
                     "rootStage": "mainStage",
                     "type": "Stage",
                     "name": "mainStage",
-                    "color": { "r": 32, "g": 8, "b": 4, "a": 255 }
+                    "color": { "r": 32, "g": 8, "b": 4, "a": 255 },
+                        "children": [
+                            {
+                                "type": "Box",
+                                "name": "box1",
+                                "x": 100,
+                                "y": 100,
+                                "width": 120,
+                                "height": 80,
+                                "color": { "r": 200, "g": 50, "b": 50, "a": 255 }
+                            },
+                            {
+                                "type": "Box",
+                                "name": "box2",
+                                "x": 300,
+                                "y": 150,
+                                "width": 80,
+                                "height": 120,
+                                "color": { "r": 50, "g": 200, "b": 50, "a": 255 }
+                            }
+                        ]
                 },
                 {
                     "type": "Stage",
@@ -61,7 +91,8 @@ int main()
     })");
 
     core.registerOnInit([]() {
-        return true; // Initialization successful
+        // Post SDL user initialization here
+        return true; 
     });
 
     core.registerOnQuit([]() {

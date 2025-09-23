@@ -85,6 +85,16 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
         - Identified the need for a custom test object (e.g., `Box`) to facilitate comprehensive anchoring and coordinate propagation tests.
         - Planned to add live event tests (drag/drop, deferred add/remove) and prioritize tests for new features as they are developed.
         - Recognized that coverage for older features will be expanded over time, focusing first on the most critical areas.
+- **[September 23, 2025]**
+    - **Event System Preliminary Testing:**  
+        - Successfully integrated and tested the event system with live SDL3 events.
+        - Verified that mouse, keyboard, window, and focus events are received and dispatched correctly.
+        - Confirmed that custom display objects (Box) receive and handle events as expected.
+        - Minimal "life tests" for event propagation and Box object interaction are passing.
+        - Debug output confirms event flow from SDL3 through Core, EventManager, and into display objects.
+        - Refactored event dispatch logic for single-stage architecture, simplifying code and improving maintainability.
+        - Cleaned up circular includes and pointer conversion issues, improving build stability.
+        - Next steps: Expand event tests for Box (drag/drop, stacking, anchoring), add more interactive unit tests, and document event system usage.
 
 
 # ToDo:

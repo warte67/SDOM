@@ -10,5 +10,7 @@ var searchData=
   ['mouseleave_7',['MouseLeave',['../classSDOM_1_1EventType.html#abfed425ce83bd025b289317d359194ff',1,'SDOM::EventType']]],
   ['mousemove_8',['MouseMove',['../classSDOM_1_1EventType.html#a8e0fea2c6bc9f0cd0097883f3fc8b714',1,'SDOM::EventType']]],
   ['mousewheel_9',['MouseWheel',['../classSDOM_1_1EventType.html#a2bafcf211ec6a15e358fffcf84f946bc',1,'SDOM::EventType']]],
-  ['move_10',['Move',['../classSDOM_1_1EventType.html#ab0a510c05b5f841d882b89e981a080f3',1,'SDOM::EventType']]]
+  ['mousex_10',['mouseX',['../classSDOM_1_1Stage.html#a5c84356f827dd7cdc5edc42527a21696',1,'SDOM::Stage']]],
+  ['mousey_11',['mouseY',['../classSDOM_1_1Stage.html#a94547f9b6ac923ac1dbfdd83db1ddced',1,'SDOM::Stage']]],
+  ['move_12',['Move',['../classSDOM_1_1EventType.html#ab0a510c05b5f841d882b89e981a080f3',1,'SDOM::EventType']]]
 ];

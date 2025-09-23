@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['model_0',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]]
+  ['framework_20design_0',['SDOM Core Framework Design',['../md_core__framework.html',1,'']]]
 ];

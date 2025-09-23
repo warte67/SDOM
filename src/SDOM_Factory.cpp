@@ -40,7 +40,7 @@ namespace SDOM
         return nullptr;
     }
     
-    ResourceHandle Factory::getResourcePtr(const std::string& name) 
+    ResourceHandle Factory::getResourceHandle(const std::string& name) 
     {
         auto it = resources_.find(name);
         if (it != resources_.end()) 

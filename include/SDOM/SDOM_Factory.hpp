@@ -51,12 +51,12 @@ namespace SDOM
         IResourceObject* getResource(const std::string& name);
 
         // Example Usage:
-        // ResourceHandle ptr = factory.getResourcePtr("mainStage");
+        // ResourceHandle ptr = factory.getResourceHandle("mainStage");
         // if (ptr) {
         //     Stage* stage = dynamic_cast<Stage*>(ptr.get());
         //     // Use stage...
         // }
-        ResourceHandle getResourcePtr(const std::string& name);
+        ResourceHandle getResourceHandle(const std::string& name);
 
         void addResource(const std::string& name, 
             std::unique_ptr<IResourceObject> resource);

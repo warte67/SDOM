@@ -4,6 +4,7 @@
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Event.hpp>
+#include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IResourceObject.hpp>
@@ -15,6 +16,7 @@ namespace SDOM
     Core::Core() : IDataObject()
     {
         factory_ = new Factory();
+        eventManager_ = new EventManager();
     }
 
     Core::~Core()
@@ -23,6 +25,11 @@ namespace SDOM
         {
             delete factory_;
             factory_ = nullptr;
+        }
+        if (eventManager_)
+        {
+            delete eventManager_;
+            eventManager_ = nullptr;
         }
     }
 
@@ -66,16 +73,36 @@ namespace SDOM
         }
         configure(config);
 
-        // Parse children and create resources ---
-        if (coreObj.contains("children")) 
-        {
-            for (const auto& child : coreObj["children"]) 
-            {
-                std::string type = child.value("type", "");
-                if (!type.empty()) 
-                {
-                    factory_->create(type, child);
+        std::function<void(const nlohmann::json&, ResourceHandle)> createResourceRecursive;
+        createResourceRecursive = [&](const nlohmann::json& obj, ResourceHandle parent) {
+            std::string type = obj.value("type", "");
+            ResourceHandle handle;
+            // If there's a type, create the resource
+            if (!type.empty()) {
+                handle = factory_->create(type, obj);
+
+                // Attach to parent if both exist
+                if (parent && handle) {
+                    IDisplayObject* parentPtr = dynamic_cast<IDisplayObject*>(parent.get());
+                    if (parentPtr) {
+                        parentPtr->addChild(handle);
+                    } else {
+                        ERROR("createResourceRecursive: Parent is null or not a valid IDisplayObject.");
+                    }
                 }
+            }
+            // Recursively process children
+            if (obj.contains("children")) {
+                for (const auto& child : obj["children"]) {
+                    createResourceRecursive(child, handle);
+                }
+            }
+        };
+
+        // Parse children and create resources ---
+        if (coreObj.contains("children")) {
+            for (const auto& child : coreObj["children"]) {
+                createResourceRecursive(child, nullptr); // Top-level children have no parent
             }
         }
 
@@ -83,56 +110,18 @@ namespace SDOM
         std::string rootStageName = "mainStage"; // default
         if (j["Core"].contains("rootStage"))
             rootStageName = j["Core"]["rootStage"].get<std::string>();
-        rootNode_ = factory_->getResourcePtr(rootStageName);
+        rootNode_ = factory_->getResourceHandle(rootStageName);
         setWindowTitle("Stage: " + rootStageName);
 
-        // Debug output
-        if (rootNode_) {
-            auto* stage = dynamic_cast<Stage*>(rootNode_.get());
-            if (stage) {
-                std::cout << "[Core] Root stage '" << rootStageName << "' found: " << stage->getName() << std::endl;
-            } else {
-                std::cout << "[Core] Root node '" << rootStageName << "' found, but is not a Stage." << std::endl;
-            }
-        } else {
-            std::cout << "[Core] Root node '" << rootStageName << "' not found!" << std::endl;
+        // --- Debug: List all resources in the factory ---
+        std::cout << "Factory resources after configuration:\n";
+        for (const auto& pair : factory_->resources_) {
+            std::cout << "Resource name: " << pair.first
+                    << ", RawType: " << typeid(*pair.second).name() 
+                    << ", Type: " << pair.second->getType() << std::endl;
         }
 
 
-
-        // // --- Debug: List all resources in the factory ---
-        // std::cout << "Factory resources after configuration:\n";
-        // for (const auto& pair : factory_->resources_) {
-        //     std::cout << "Resource name: " << pair.first
-        //             << ", RawType: " << typeid(*pair.second).name() 
-        //             << ", Type: " << pair.second->getType() << std::endl;
-        // }
-
-        // ResourceHandle obj = getFactory()->getResourcePtr("mainStage");
-        // std::cout << "Retrieved resource 'mainStage': " 
-        //           << (obj ? "Found" : "Not Found") << std::endl;
-        // std::cout << "obj: " << obj << std::endl;
-        // if (obj) {
-        //     Stage* stage = dynamic_cast<SDOM::Stage*>(obj.get());
-        //     // Use stage...
-        //     std::cout << "Stage pointer: " << stage << std::endl;
-        // }
-
-        // ResourceHandle obj1 = getFactory()->getResourcePtr("mainStage");
-        // ResourceHandle obj2 = obj1; // Copy the ResourceHandle
-        // ResourceHandle obj3 = getFactory()->getResourcePtr("mainStage");
-
-        // std::cout << "obj1: " << obj1 << ", obj2: " << obj2 << ", obj3: " << obj3 << std::endl;
-
-        // // Remove the resource from the factory
-        // getFactory()->removeResource("mainStage");
-
-        // // Now both should be nullptr
-        // std::cout << "After removal:" << std::endl;
-        // std::cout << "obj1: " << obj1 << ", obj2: " << obj2 << ", obj3: " << obj3 << std::endl;
-
-        // Stage* stage = dynamic_cast<SDOM::Stage*>(getFactory()->getResourcePtr("mainStage").get());
-        // std::cout << "Stage pointer after removal: " << stage << std::endl;
     }
 
     void Core::configureFromJsonFile(const std::string& filename)
@@ -223,9 +212,20 @@ namespace SDOM
             startup_SDL();
 
             // register and initialize the factory object (after creating SDL resources)
-
             onInit();   // for now just call onInit(). Later Factory will call onInit() 
                         // for each object as it creates them.
+
+            Stage* rootStage = dynamic_cast<Stage*>(rootNode_.get());
+            if (!rootStage)
+            {
+                ERROR("Core::run() Error: Root node is null or not a valid Stage.");
+                return;
+            }
+            else
+            {
+                std::cout << "Core::run() Root node is a valid Stage: " << rootStage->getName() << std::endl;
+                rootStage->printTree();
+            }
 
             // Now run user tests after initialization
             bool testsPassed = onUnitTest();
@@ -258,33 +258,34 @@ namespace SDOM
                     // END TEMPORARY
 
                     // Handle and dispatch events based on the SDL_Event                
-                    // if (eventManager_)
-                    // {                    
-                    //     // Dispatch the event only to the stage with the matching window ID
-                    //     eventManager_->Queue_SDL_Event(*pair.second, event);
-                    //     eventManager_->DispatchQueuedEvents(*pair.second);
-                    //     // handle TAB keypress
-                    //     if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_TAB) 
-                    //     {
-                    //         if (event.key.mod & SDL_KMOD_SHIFT) 
-                    //         {
-                    //             // Shift + Tab: Move focus to the previous object
-                    //             handleTabKeyPressReverse(*pair.second);
-                    //         } 
-                    //         else 
-                    //         {
-                    //             // Tab: Move focus to the next object
-                    //             handleTabKeyPress(*pair.second);
-                    //         }
-                    //     }
-                    //     // handle ESC keypress
-                    //     if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE) 
-                    //     {
-                    //         keyboardFocusedObject_.reset(); // Clear keyboard focus
-                    //     }
-                    // }
+                    if (eventManager_) 
+                    {
+                        Stage* stage = getStage();
+                        eventManager_->Queue_SDL_Event(*stage, event);
+                        eventManager_->DispatchQueuedEvents(*stage);
 
-                    // TODO:  add virtual methods to IDisplayObject::onSDL_Event() to specifically 
+                        // // handle TAB keypress
+                        // if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_TAB) 
+                        // {
+                        //     if (event.key.mod & SDL_KMOD_SHIFT) 
+                        //     {
+                        //         // Shift + Tab: Move focus to the previous object
+                        //         handleTabKeyPressReverse(*stage);
+                        //     } 
+                        //     else 
+                        //     {
+                        //         // Tab: Move focus to the next object
+                        //         handleTabKeyPress(*stage);
+                        //     }
+                        // }
+                        // // handle ESC keypress
+                        // if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE) 
+                        // {
+                        //     keyboardFocusedObject_.reset(); // Clear keyboard focus
+                        // }
+                    }
+
+                    // POSSIBLE TODO:  add virtual methods to IDisplayObject::onSDL_Event() to specifically 
                     //      dispatch raw SDL_Events to?
 
                 }
@@ -293,6 +294,7 @@ namespace SDOM
                 static Uint64 lastTime = SDL_GetPerformanceCounter();
                 Uint64 currentTime = SDL_GetPerformanceCounter();
                 float fElapsedTime = static_cast<float>(currentTime - lastTime) / SDL_GetPerformanceFrequency();
+                this->fElapsedTime_ = fElapsedTime;
 
                 // update this stage and its children
                 if (!renderer_) {
@@ -321,8 +323,8 @@ namespace SDOM
                 // update timing
                 lastTime = currentTime;
 
-                // factory_->detachOrphans(); // Detach orphaned display objects
-                // factory_->attachFutureChildren(); // Attach future children
+                factory_->detachOrphans(); // Detach orphaned display objects
+                factory_->attachFutureChildren(); // Attach future children
 
             }  // END: while (SDL_PollEvent(&event)) 
         }
@@ -391,7 +393,6 @@ namespace SDOM
 
         return ret;
     }
-
 
 
     void Core::onQuit()
@@ -767,18 +768,18 @@ namespace SDOM
     // {}
     // void Core::handleTabKeyPressReverse(Stage& stage)
     // {}
-    // void Core::setKeyboardFocusedObject(ResourceHandle obj)
-    // {}
-    // ResourceHandle Core::getKeyboardFocusedObject() const
-    // {}
-    // void Core::setMouseHoveredObject(ResourceHandle obj)
-    // {}
-    // ResourceHandle Core::getMouseHoveredObject() const
-    // {}
+    void Core::setKeyboardFocusedObject(ResourceHandle obj)
+    { keyboardFocusedObject_ = obj; }
+    ResourceHandle Core::getKeyboardFocusedObject() const
+    { return keyboardFocusedObject_; }
+    void Core::setMouseHoveredObject(ResourceHandle obj)
+    { hoveredObject_ = obj; }
+    ResourceHandle Core::getMouseHoveredObject() const
+    { return hoveredObject_; }
 
     void Core::setRootNode(const std::string& name)
     {
-        ResourceHandle stageHandle = factory_->getResourcePtr(name);
+        ResourceHandle stageHandle = factory_->getResourceHandle(name);
         if (stageHandle && dynamic_cast<Stage*>(stageHandle.get()))
         {
             rootNode_ = stageHandle;

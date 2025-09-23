@@ -55,7 +55,7 @@ namespace SDOM
         
     public:
 
-        using Json = nlohmann::json;
+        // using Json = nlohmann::json;
 
         enum class Phase {
             Capture,

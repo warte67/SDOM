@@ -37,7 +37,7 @@
  ******************/
 
 #include "SDOM/SDOM.hpp"
-// #include "SDOM/SDOM_Core.hpp"
+#include "SDOM/SDOM_Core.hpp"
 // #include "SDOM/SDOM_Stage.hpp"
 #include "SDOM/SDOM_IDisplayObject.hpp"
 // #include "SDOM/SDOM_EventType.hpp"
@@ -461,7 +461,7 @@ namespace SDOM
             return;
         }
         Core* core = &Core::getInstance();
-        Factory* factory = core->getFactory();
+        Factory* factory = &core->getFactory();
         if (core->getIsTraversing())
         {
             factory->addToFutureChildrenList(child, ResourceHandle(getName(), child->getType()), useWorld, worldX, worldY);
@@ -490,7 +490,7 @@ namespace SDOM
                 childObj->setParent(ResourceHandle());
             }
             Core* core = &Core::getInstance();
-            Factory* factory = core->getFactory();
+            Factory* factory = &core->getFactory();
             if (core->getIsTraversing())
             {
                 factory->addToOrphanList(child); // Defer orphan removal
@@ -780,21 +780,21 @@ namespace SDOM
         return *this; 
     }
 
-    // void IDisplayObject::setKeyboardFocus() 
-    // { 
-    //     Core::getInstance().setKeyboardFocusedObject(ResourceHandle(getName(), getType())); 
-    // }
-    // bool IDisplayObject::isKeyboardFocused() const
-    // {
-    //     auto focusedObj = SDOM::Core::getInstance().getKeyboardFocusedObject().get();
-    //     return (focusedObj == this);
-    // }
+    void IDisplayObject::setKeyboardFocus() 
+    { 
+        Core::getInstance().setKeyboardFocusedObject(ResourceHandle(getName(), getType())); 
+    }
+    bool IDisplayObject::isKeyboardFocused() const
+    {
+        auto focusedObj = SDOM::Core::getInstance().getKeyboardFocusedObject().get();
+        return (focusedObj == this);
+    }
 
-    // bool IDisplayObject::isMouseHovered() const
-    // {
-    //     auto hoveredObj = SDOM::Core::getInstance().getMouseHoveredObject().get();
-    //     return (hoveredObj == this);
-    // }
+    bool IDisplayObject::isMouseHovered() const
+    {
+        auto hoveredObj = SDOM::Core::getInstance().getMouseHoveredObject().get();
+        return (hoveredObj == this);
+    }
 
     // bool IDisplayObject::isEnabled() const { return isEnabled_; }
     // IDisplayObject& IDisplayObject::setEnabled(bool enabled) 

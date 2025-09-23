@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['core_20framework_20design_0',['SDOM Core Framework Design',['../md_core__framework.html',1,'']]]
+  ['anchoring_20design_0',['SDOM Display Object Anchoring Design',['../md_display__object__anchoring.html',1,'']]]
 ];

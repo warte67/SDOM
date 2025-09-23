@@ -1,6 +1,7 @@
 // SDOM_Stage.cpp
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 
@@ -10,6 +11,7 @@ namespace SDOM
     Stage::Stage(const InitStruct& init) : IDisplayObject(init)
     {
         type_ = "Stage"; // Hardcoded type for Stage
+        setClickable(true);
     }
 
     Stage::Stage(const Json& config) : IDisplayObject(config)
@@ -28,6 +30,8 @@ namespace SDOM
         // //     setColor(clr);
         // // }
         // // fromJson(config);
+        
+        setClickable(true);
     }
 
 

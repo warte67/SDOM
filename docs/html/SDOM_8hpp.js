@@ -7,6 +7,7 @@ var SDOM_8hpp =
     [ "DEBUG_LOG", "SDOM_8hpp.html#a9b8d56964c8f6c1256e04b7e69928bea", null ],
     [ "ERROR", "SDOM_8hpp.html#ae225ab718bd4f5e2221129f026d3d8f1", null ],
     [ "WARNING", "SDOM_8hpp.html#aaf99b8fcaa4b837f684ea0505ed34487", null ],
+    [ "Json", "SDOM_8hpp.html#af13a1979f9e8f62c101433fac6511cc6", null ],
     [ "AnchorPoint", "SDOM_8hpp.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "SDOM_8hpp.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
       [ "TOP_LEFT", "SDOM_8hpp.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1", null ],
@@ -35,10 +36,14 @@ var SDOM_8hpp =
       [ "CENTER_BOTTOM", "SDOM_8hpp.html#adca0aa068ac9fc59e78b78c430a92980ac40e9cf1d233eb1b6dc84b9f97e83b4e", null ],
       [ "RIGHT_BOTTOM", "SDOM_8hpp.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8", null ]
     ] ],
-    [ "getCore", "SDOM_8hpp.html#ae65864505926b5378f1fcd94afe1aa06", null ],
-    [ "getRenderer", "SDOM_8hpp.html#ad57d41bf07aa1729877e98559ee0b7b7", null ],
-    [ "getTexture", "SDOM_8hpp.html#a41c89b1941fbb9aab101b581c5391a99", null ],
-    [ "getWindow", "SDOM_8hpp.html#ae6f6524cc3d94ed2464c895eb07bc9f5", null ],
+    [ "getCore", "SDOM_8hpp.html#a6b597fe37c57017a7139d0a4cdc84af6", null ],
+    [ "getFactory", "SDOM_8hpp.html#aabaa2df161427871e74767e384bcd058", null ],
+    [ "getRenderer", "SDOM_8hpp.html#a713b7f2d51053c98442edc40eaaf98fb", null ],
+    [ "getStage", "SDOM_8hpp.html#afb1377edb5f90095c4fadb3c9e07a3cc", null ],
+    [ "getTexture", "SDOM_8hpp.html#ac0f36a9f4f98d23fa1da002213470c3f", null ],
+    [ "getWindow", "SDOM_8hpp.html#a8268b397b308040307a0d25fc715124f", null ],
+    [ "quit", "SDOM_8hpp.html#a9c56125987bd1ed7efbcc59e678a2be2", null ],
+    [ "shutdown", "SDOM_8hpp.html#a08d8dca92e8b158e7fcff8931bff26e5", null ],
     [ "anchorPointToString_", "SDOM_8hpp.html#ac004759fa5d6cd324931439829e17123", null ],
     [ "stringToAnchorPoint_", "SDOM_8hpp.html#a33cd42f20297f893e13db841931abda0", null ]
 ];

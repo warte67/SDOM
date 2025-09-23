@@ -94,6 +94,7 @@ $(document).ready(function(){initNavTree('SDOM_8hpp.html',''); initResizable(); 
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -126,7 +127,7 @@ $(document).ready(function(){initNavTree('SDOM_8hpp.html',''); initResizable(); 
 <code>#include &lt;SDOM/json.hpp&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__SDL__Utils_8hpp_source.html">SDOM/SDOM_SDL_Utils.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__CLR_8hpp_source.html">SDOM/SDOM_CLR.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="SDOM__Core_8hpp_source.html">SDOM/SDOM_Core.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="SDOM__UnitTests_8hpp_source.html">SDOM/SDOM_UnitTests.hpp</a>&gt;</code><br />
 </div>
 <p><a href="SDOM_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -162,6 +163,11 @@ Macros</h2></td></tr>
 <tr class="memitem:a3b2380d7733e1ed07ee0210b3aa11d50" id="r_a3b2380d7733e1ed07ee0210b3aa11d50"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="SDOM_8hpp.html#a3b2380d7733e1ed07ee0210b3aa11d50">ASSERT_EQ</a>(val,  expected)</td></tr>
 <tr class="memdesc:a3b2380d7733e1ed07ee0210b3aa11d50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts that two values are equal; throws an error if not.  <br /></td></tr>
 <tr class="separator:a3b2380d7733e1ed07ee0210b3aa11d50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:af13a1979f9e8f62c101433fac6511cc6" id="r_af13a1979f9e8f62c101433fac6511cc6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="SDOM_8hpp.html#af13a1979f9e8f62c101433fac6511cc6">Json</a> = nlohmann::json</td></tr>
+<tr class="separator:af13a1979f9e8f62c101433fac6511cc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -205,14 +211,22 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae65864505926b5378f1fcd94afe1aa06" id="r_ae65864505926b5378f1fcd94afe1aa06"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSDOM_1_1Core.html">Core</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ae65864505926b5378f1fcd94afe1aa06">SDOM::getCore</a> ()</td></tr>
-<tr class="separator:ae65864505926b5378f1fcd94afe1aa06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad57d41bf07aa1729877e98559ee0b7b7" id="r_ad57d41bf07aa1729877e98559ee0b7b7"><td class="memItemLeft" align="right" valign="top">static const SDL_Renderer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ad57d41bf07aa1729877e98559ee0b7b7">SDOM::getRenderer</a> ()</td></tr>
-<tr class="separator:ad57d41bf07aa1729877e98559ee0b7b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6f6524cc3d94ed2464c895eb07bc9f5" id="r_ae6f6524cc3d94ed2464c895eb07bc9f5"><td class="memItemLeft" align="right" valign="top">static const SDL_Window *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ae6f6524cc3d94ed2464c895eb07bc9f5">SDOM::getWindow</a> ()</td></tr>
-<tr class="separator:ae6f6524cc3d94ed2464c895eb07bc9f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41c89b1941fbb9aab101b581c5391a99" id="r_a41c89b1941fbb9aab101b581c5391a99"><td class="memItemLeft" align="right" valign="top">static const SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a41c89b1941fbb9aab101b581c5391a99">SDOM::getTexture</a> ()</td></tr>
-<tr class="separator:a41c89b1941fbb9aab101b581c5391a99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c56125987bd1ed7efbcc59e678a2be2" id="r_a9c56125987bd1ed7efbcc59e678a2be2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a9c56125987bd1ed7efbcc59e678a2be2">SDOM::quit</a> ()</td></tr>
+<tr class="separator:a9c56125987bd1ed7efbcc59e678a2be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08d8dca92e8b158e7fcff8931bff26e5" id="r_a08d8dca92e8b158e7fcff8931bff26e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a08d8dca92e8b158e7fcff8931bff26e5">SDOM::shutdown</a> ()</td></tr>
+<tr class="separator:a08d8dca92e8b158e7fcff8931bff26e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b597fe37c57017a7139d0a4cdc84af6" id="r_a6b597fe37c57017a7139d0a4cdc84af6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1Core.html">Core</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a6b597fe37c57017a7139d0a4cdc84af6">SDOM::getCore</a> ()</td></tr>
+<tr class="separator:a6b597fe37c57017a7139d0a4cdc84af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabaa2df161427871e74767e384bcd058" id="r_aabaa2df161427871e74767e384bcd058"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1Factory.html">Factory</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#aabaa2df161427871e74767e384bcd058">SDOM::getFactory</a> ()</td></tr>
+<tr class="separator:aabaa2df161427871e74767e384bcd058"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb1377edb5f90095c4fadb3c9e07a3cc" id="r_afb1377edb5f90095c4fadb3c9e07a3cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1Stage.html">Stage</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#afb1377edb5f90095c4fadb3c9e07a3cc">SDOM::getStage</a> ()</td></tr>
+<tr class="separator:afb1377edb5f90095c4fadb3c9e07a3cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a713b7f2d51053c98442edc40eaaf98fb" id="r_a713b7f2d51053c98442edc40eaaf98fb"><td class="memItemLeft" align="right" valign="top">SDL_Renderer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a713b7f2d51053c98442edc40eaaf98fb">SDOM::getRenderer</a> ()</td></tr>
+<tr class="separator:a713b7f2d51053c98442edc40eaaf98fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8268b397b308040307a0d25fc715124f" id="r_a8268b397b308040307a0d25fc715124f"><td class="memItemLeft" align="right" valign="top">SDL_Window *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a8268b397b308040307a0d25fc715124f">SDOM::getWindow</a> ()</td></tr>
+<tr class="separator:a8268b397b308040307a0d25fc715124f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0f36a9f4f98d23fa1da002213470c3f" id="r_ac0f36a9f4f98d23fa1da002213470c3f"><td class="memItemLeft" align="right" valign="top">SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ac0f36a9f4f98d23fa1da002213470c3f">SDOM::getTexture</a> ()</td></tr>
+<tr class="separator:ac0f36a9f4f98d23fa1da002213470c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -389,6 +403,21 @@ Permission is granted to anyone to use this software for any purpose, including 
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="af13a1979f9e8f62c101433fac6511cc6" name="af13a1979f9e8f62c101433fac6511cc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af13a1979f9e8f62c101433fac6511cc6">&#9670;&#160;</a></span>Json</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="SDOM_8hpp.html#af13a1979f9e8f62c101433fac6511cc6">Json</a> =  nlohmann::json</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

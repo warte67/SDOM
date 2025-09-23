@@ -89,8 +89,9 @@ namespace SDOM
         virtual bool onUnitTest();                  ///< Called during startup or explicit unit test runs.
         /** @} */
 
-
-
+    public:
+        inline static int mouseX = 0;   // current mouse horizontal coordinate within this stage
+        inline static int mouseY = 0;   // current mouse vertical coordinate within this stage    
     };
 
 } // namespace SDOM

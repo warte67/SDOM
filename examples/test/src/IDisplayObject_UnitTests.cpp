@@ -15,7 +15,7 @@ namespace SDOM
     bool IDisplayObject_UnitTests()
     {
         Core& core = getCore();
-        Factory* factory = core.getFactory();
+        Factory* factory = &core.getFactory();
         std::cout << "IDisplayObject_UnitTests() called" << std::endl;
         bool allTestsPassed = true;
         bool testResult;
@@ -41,7 +41,7 @@ namespace SDOM
 
         // Test:setName and getName
         testResult = UnitTests::run("IDisplayObject", "Set and Get Name", [factory, &dbgStr]() {
-            ResourceHandle stageHandle = factory->getResourcePtr("genericStage");
+            ResourceHandle stageHandle = factory->getResourceHandle("genericStage");
             if (!stageHandle) {
                 dbgStr = "Stage object 'genericStage' not found!";
                 return false;
@@ -59,7 +59,7 @@ namespace SDOM
 
         // Test: setType and getType
         testResult = UnitTests::run("IDisplayObject", "Set and Get Type", [factory, &dbgStr]() {
-            ResourceHandle stageHandle = factory->getResourcePtr("genericStage");
+            ResourceHandle stageHandle = factory->getResourceHandle("genericStage");
             if (!stageHandle) {
                 dbgStr = "Stage object 'genericStage' not found!";
                 return false;
@@ -82,7 +82,7 @@ namespace SDOM
         // Test: Remove the generic stage object
         testResult = UnitTests::run("IDisplayObject", "Remove generic Stage object", [factory, &dbgStr]() {
             factory->removeResource("genericStage");
-            ResourceHandle stageHandle = factory->getResourcePtr("genericStage");
+            ResourceHandle stageHandle = factory->getResourceHandle("genericStage");
             if (stageHandle) {
                 dbgStr = "'genericStage' still exists after removal!";
                 return false;

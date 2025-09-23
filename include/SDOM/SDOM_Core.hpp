@@ -11,6 +11,7 @@ namespace SDOM
     class Factory;
     class Event;
     class EventType;
+    class EventManager;
     class Stage;
     class IDisplayObject;
 
@@ -73,6 +74,9 @@ namespace SDOM
              */
             void run();
 
+            void quit() { bIsRunning_ = false; }
+            void shutdown() { quit(); }
+
             // Configuration & Initialization
             void configure(const CoreConfig& config);
             void configureFromJson(const std::string& json);
@@ -125,7 +129,7 @@ namespace SDOM
             void setWindowFlags(SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE);
             void setPixelFormat(SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA8888);
 
-            Factory* getFactory() const { return factory_; }
+            Factory& getFactory() { return *factory_; }
 
             bool getIsTraversing() const { return isTraversing_; }
             void setIsTraversing(bool traversing) { isTraversing_ = traversing; }
@@ -134,10 +138,10 @@ namespace SDOM
 
             // void handleTabKeyPress(Stage& stage);
             // void handleTabKeyPressReverse(Stage& stage);
-            // void setKeyboardFocusedObject(ResourceHandle obj);
-            // ResourceHandle getKeyboardFocusedObject() const;
-            // void setMouseHoveredObject(ResourceHandle obj);
-            // ResourceHandle getMouseHoveredObject() const;
+            void setKeyboardFocusedObject(ResourceHandle obj);
+            ResourceHandle getKeyboardFocusedObject() const;
+            void setMouseHoveredObject(ResourceHandle obj);
+            ResourceHandle getMouseHoveredObject() const;
 
 
             std::string getWindowTitle() const { return windowTitle_; }
@@ -147,6 +151,8 @@ namespace SDOM
                 if (window_)
                     SDL_SetWindowTitle(window_, windowTitle_.c_str());
             }  
+
+            float getElapsedTime() const { return fElapsedTime_; }  
 
         private:
             Core();
@@ -164,11 +170,13 @@ namespace SDOM
 
             bool bIsRunning_ = true;
             bool isTraversing_ = false;
+            float fElapsedTime_;             // Elapsed time since the last update
+
 
             ResourceHandle rootNode_; // The root of the resource tree
 
-            // ResourceHandle hoveredObject_;
-            // ResourceHandle keyboardFocusedObject_;
+            ResourceHandle hoveredObject_;
+            ResourceHandle keyboardFocusedObject_;
             // struct TabPriorityComparator {
             //     bool operator()(const ResourceHandle& a, const ResourceHandle& b) const {
             //         auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
@@ -184,6 +192,7 @@ namespace SDOM
 
             // Core Sub-Systems
             inline static Factory* factory_ = nullptr; 
+            inline static EventManager* eventManager_ = nullptr;
 
             // Callback hooks
             std::function<bool()> fnOnInit = nullptr;

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['resource_5fptr_0',['resource_ptr',['../classSDOM_1_1resource__ptr.html',1,'SDOM']]]
+  ['resourcehandle_0',['ResourceHandle',['../classSDOM_1_1ResourceHandle.html',1,'SDOM']]]
 ];

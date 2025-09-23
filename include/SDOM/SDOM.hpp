@@ -97,9 +97,11 @@
 #include <vector>
 
 #include <SDOM/json.hpp> // Include nlohmann/json.hpp
+    using Json = nlohmann::json;
+
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_CLR.hpp>
-#include <SDOM/SDOM_Core.hpp>
+// #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
 
 
@@ -130,18 +132,21 @@ namespace SDOM
     };    
 
     // // stand alone SDOM functions
-    // inline static const char* version();
-    // inline static const char* compilationDate();
+    // static const char* version();
+    // static const char* compilationDate();
 
-    // inline static void quit();
-    // inline static void shutdown();
+    class Core;
+    class Factory;
+    class Stage;
 
-    // inline static const Factory& getFactory() { return Core::getInstance().getFactory(); }
-    inline static Core& getCore() { return Core::getInstance(); }
-    // inline static const Stage* getStage() { return Core::getInstance().getStage().get(); }
-    inline static const SDL_Renderer* getRenderer() { return Core::getInstance().getRenderer(); }
-    inline static const SDL_Window* getWindow() { return Core::getInstance().getWindow(); }
-    inline static const SDL_Texture* getTexture() { return Core::getInstance().getTexture(); }
+    void quit();
+    void shutdown();
+    Core& getCore();
+    Factory& getFactory();
+    Stage* getStage();
+    SDL_Renderer* getRenderer();
+    SDL_Window* getWindow();
+    SDL_Texture* getTexture();
 
 
     /**

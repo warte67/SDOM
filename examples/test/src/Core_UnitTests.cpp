@@ -92,7 +92,7 @@ namespace SDOM
 
         // Core::Factory Existence Test
         testResult = UnitTests::run("Core", "Factory Existence", [&core]() {
-            return (core.getFactory() != nullptr);
+            return (&core.getFactory() != nullptr);
         });
         if (!testResult) { std::cout << CLR::indent() << "Factory instance is not valid!" << CLR::RESET << std::endl; }
         allTestsPassed &= testResult;

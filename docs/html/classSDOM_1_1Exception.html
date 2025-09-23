@@ -110,13 +110,13 @@ Inheritance diagram for SDOM::Exception:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a52c9fa366c36fcb7fe48a1ac827a02a0" id="r_a52c9fa366c36fcb7fe48a1ac827a02a0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Exception.html#a52c9fa366c36fcb7fe48a1ac827a02a0">Exception</a> (<a class="el" href="classSDOM_1_1resource__ptr.html">const</a> std::string &amp;<a class="el" href="classSDOM_1_1resource__ptr.html">message</a>, <a class="el" href="classSDOM_1_1resource__ptr.html">const</a> std::string &amp;<a class="el" href="classSDOM_1_1resource__ptr.html">file</a>, <a class="el" href="classSDOM_1_1resource__ptr.html">int</a> <a class="el" href="classSDOM_1_1resource__ptr.html">line</a>)</td></tr>
+<tr class="memitem:a52c9fa366c36fcb7fe48a1ac827a02a0" id="r_a52c9fa366c36fcb7fe48a1ac827a02a0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Exception.html#a52c9fa366c36fcb7fe48a1ac827a02a0">Exception</a> (const std::string &amp;message, const std::string &amp;file, int line)</td></tr>
 <tr class="separator:a52c9fa366c36fcb7fe48a1ac827a02a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5086ff39082ca706c60f16c22df3dfbb" id="r_a5086ff39082ca706c60f16c22df3dfbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1resource__ptr.html">const</a> <a class="el" href="classSDOM_1_1resource__ptr.html">char</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Exception.html#a5086ff39082ca706c60f16c22df3dfbb">what</a> () <a class="el" href="classSDOM_1_1resource__ptr.html">const</a> <a class="el" href="classSDOM_1_1resource__ptr.html">noexcept</a> <a class="el" href="classSDOM_1_1resource__ptr.html">override</a></td></tr>
+<tr class="memitem:a5086ff39082ca706c60f16c22df3dfbb" id="r_a5086ff39082ca706c60f16c22df3dfbb"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Exception.html#a5086ff39082ca706c60f16c22df3dfbb">what</a> () const noexcept override</td></tr>
 <tr class="separator:a5086ff39082ca706c60f16c22df3dfbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab43de67c687bec7b664a0915db9030bf" id="r_ab43de67c687bec7b664a0915db9030bf"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Exception.html#ab43de67c687bec7b664a0915db9030bf">getFile</a> () <a class="el" href="classSDOM_1_1resource__ptr.html">const</a></td></tr>
+<tr class="memitem:ab43de67c687bec7b664a0915db9030bf" id="r_ab43de67c687bec7b664a0915db9030bf"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Exception.html#ab43de67c687bec7b664a0915db9030bf">getFile</a> () const</td></tr>
 <tr class="separator:ab43de67c687bec7b664a0915db9030bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acfb21b46a45340d9d8efec695e7afbab" id="r_acfb21b46a45340d9d8efec695e7afbab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1resource__ptr.html">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Exception.html#acfb21b46a45340d9d8efec695e7afbab">getLine</a> () <a class="el" href="classSDOM_1_1resource__ptr.html">const</a></td></tr>
+<tr class="memitem:acfb21b46a45340d9d8efec695e7afbab" id="r_acfb21b46a45340d9d8efec695e7afbab"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Exception.html#acfb21b46a45340d9d8efec695e7afbab">getLine</a> () const</td></tr>
 <tr class="separator:acfb21b46a45340d9d8efec695e7afbab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -135,19 +135,19 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">SDOM::Exception::Exception </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSDOM_1_1resource__ptr.html">const</a> std::string &amp;&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>message</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSDOM_1_1resource__ptr.html">const</a> std::string &amp;&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>file</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSDOM_1_1resource__ptr.html">int</a>&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>line</em>&#160;</td>
         </tr>
         <tr>
@@ -201,7 +201,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">int</a> SDOM::Exception::getLine </td>
+          <td class="memname">int SDOM::Exception::getLine </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -226,7 +226,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSDOM_1_1resource__ptr.html">const</a> <a class="el" href="classSDOM_1_1resource__ptr.html">char</a> * SDOM::Exception::what </td>
+          <td class="memname">const char * SDOM::Exception::what </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>

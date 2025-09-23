@@ -56,7 +56,7 @@ namespace SDOM
             nullptr); // read-only
         registerProperty("phase",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getPhaseString(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 auto& e = static_cast<Event&>(obj);
                 std::string s = val.get<std::string>();
                 if (s == "Capture") e.setPhase(Phase::Capture);
@@ -66,21 +66,21 @@ namespace SDOM
             });
         registerProperty("target",
             [](const IDataObject& obj) { return reinterpret_cast<uintptr_t>(static_cast<const Event&>(obj).getTarget()); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 auto& e = static_cast<Event&>(obj);
                 e.setTarget(reinterpret_cast<IDisplayObject*>(val.get<uintptr_t>()));
                 return obj;
             });
         registerProperty("currentTarget",
             [](const IDataObject& obj) { return reinterpret_cast<uintptr_t>(static_cast<const Event&>(obj).getCurrentTarget()); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 auto& e = static_cast<Event&>(obj);
                 e.setCurrentTarget(reinterpret_cast<IDisplayObject*>(val.get<uintptr_t>()));
                 return obj;
             });
         registerProperty("relatedTarget",
             [](const IDataObject& obj) { return reinterpret_cast<uintptr_t>(static_cast<const Event&>(obj).getRelatedTarget()); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 auto& e = static_cast<Event&>(obj);
                 e.setRelatedTarget(reinterpret_cast<IDisplayObject*>(val.get<uintptr_t>()));
                 return obj;
@@ -90,80 +90,80 @@ namespace SDOM
             nullptr); // read-only
         registerProperty("disableDefaultBehavior",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).isDefaultBehaviorDisabled(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setDisableDefaultBehavior(val.get<bool>());
                 return obj;
             });
         registerProperty("useCapture",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getUseCapture(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setUseCapture(val.get<bool>());
                 return obj;
             });
         registerProperty("elapsedTime",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getElapsedTime(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setElapsedTime(val.get<float>());
                 return obj;
             });
         registerProperty("payload",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getPayload(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setPayload(val);
                 return obj;
             });
         registerProperty("mouse_x",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getMouseX(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setMouseX(val.get<float>());
                 return obj;
             });
 
         registerProperty("mouse_y",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getMouseY(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setMouseY(val.get<float>());
                 return obj;
             });
 
         registerProperty("wheelX",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getWheelX(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setWheelX(val.get<float>());
                 return obj;
             });
 
         registerProperty("wheelY",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getWheelY(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setWheelY(val.get<float>());
                 return obj;
             });
 
         registerProperty("dragOffsetX",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getDragOffsetX(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setDragOffsetX(val.get<float>());
                 return obj;
             });
 
         registerProperty("dragOffsetY",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getDragOffsetY(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setDragOffsetY(val.get<float>());
                 return obj;
             });
 
         registerProperty("clickCount",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getClickCount(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setClickCount(val.get<int>());
                 return obj;
             });
 
         registerProperty("button",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getButton(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setButton(val.get<uint8_t>());
                 return obj;
             });
@@ -172,28 +172,28 @@ namespace SDOM
 
         registerProperty("scancode",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getScanCode(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setScanCode(val.get<SDL_Scancode>());
                 return obj;
             });
 
         registerProperty("keycode",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getKeycode(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setKeycode(val.get<SDL_Keycode>());
                 return obj;
             });
 
         registerProperty("keymod",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getKeymod(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setKeymod(val.get<Uint16>());
                 return obj;
             });
 
         registerProperty("asciiCode",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).getAsciiCode(); },
-            [](IDataObject& obj, const SDOM::Json& val) -> IDataObject& {
+            [](IDataObject& obj, const Json& val) -> IDataObject& {
                 static_cast<Event&>(obj).setAsciiCode(val.get<int>());
                 return obj;
             });

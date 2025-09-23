@@ -45,7 +45,7 @@
 namespace SDOM
 {
 
-    using Json = nlohmann::json;
+    // using Json = nlohmann::json;
 
     /**
      * @class IDataObject

@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['what_0',['what',['../classSDOM_1_1Exception.html#a5086ff39082ca706c60f16c22df3dfbb',1,'SDOM::Exception']]],
-  ['width_1',['width',['../structSDOM_1_1Bounds.html#abc92186d5199c0e106509d7ab73ef85b',1,'SDOM::Bounds']]],
-  ['windowflagsfromstring_2',['windowFlagsFromString',['../classSDOM_1_1SDL__Utils.html#ab30d7d6f2ee103ad52b35d0e6a1aa175',1,'SDOM::SDL_Utils']]],
-  ['windowflagstostring_3',['windowFlagsToString',['../classSDOM_1_1SDL__Utils.html#aa8a8381ee8fee667d27ef087a3f330c2',1,'SDOM::SDL_Utils']]]
+  ['queue_5fsdl_5fevent_0',['Queue_SDL_Event',['../classSDOM_1_1EventManager.html#aff3182988af133ffc9c0b8b9dff46594',1,'SDOM::EventManager']]],
+  ['quit_1',['quit',['../classSDOM_1_1Core.html#a42a5582607f3fe1540ed6c00afc40283',1,'SDOM::Core::quit()'],['../namespaceSDOM.html#a9c56125987bd1ed7efbcc59e678a2be2',1,'SDOM::quit()']]]
 ];

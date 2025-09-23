@@ -93,8 +93,8 @@ $(document).ready(function(){initNavTree('md_progress.html',''); initResizable()
   <div class="headertitle"><div class="title">Project Description</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md65"></a>This project is a C++23 application utilizing SDL3 for graphical rendering and event handling. The goal is to create a simple Document Object Model (DOM) API for SDL3, focusing on building a GUI interface for SDL3 developers to use in their games or other cross-platform applications.</p>
-<h1><a class="anchor" id="autotoc_md66"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md99"></a>This project is a C++23 application utilizing SDL3 for graphical rendering and event handling. The goal is to create a simple Document Object Model (DOM) API for SDL3, focusing on building a GUI interface for SDL3 developers to use in their games or other cross-platform applications.</p>
+<h1><a class="anchor" id="autotoc_md100"></a>
 Progress Updates</h1>
 <ul>
 <li><b>[July 2, 2025]</b> Initial rough draft and proof of concept.</li>
@@ -132,48 +132,115 @@ Progress Updates</h1>
 </ul>
 </li>
 <li><b>[September 21, 2025]</b><ul>
-<li>Factory resource management and <code>resource_ptr</code> logic fully tested and confirmed:<ul>
+<li>Renamed <code>resource_ptr</code> to <code>ResourceHandle</code> throughout the codebase for clarity.<ul>
+<li>The new name better reflects its role as an opaque handle or key for resource lookup, rather than a smart pointer with ownership semantics.</li>
+<li>Updated all documentation, examples, and comments to use <code>ResourceHandle</code>.</li>
+</ul>
+</li>
+<li>Factory resource management and <code>ResourceHandle</code> logic fully tested and confirmed:<ul>
 <li>Resources can be added, retrieved, and removed from the Factory.</li>
-<li>Multiple <code>resource_ptr</code> instances correctly reflect resource existence and become invalid after removal.</li>
+<li>Multiple <code>ResourceHandle</code> instances correctly reflect resource existence and become invalid after removal.</li>
 <li>Type-safe access via <code>dynamic_cast</code> is working and robust.</li>
 </ul>
 </li>
 <li>Debug output and test scaffolding added to verify resource lifetime and pointer behavior.</li>
-<li>Resolved copy constructor and assignment operator issues for <code>resource_ptr</code>.</li>
+<li>Resolved copy constructor and assignment operator issues for <code>ResourceHandle</code>.</li>
 <li>Confirmed that the Factory now contains a working <code>Stage</code> resource.</li>
 <li>Next step: Implement parent/child relationships for resources and display objects.</li>
 <li>Unit test framework will be moved to <code>onUnitTest()</code> methods once implemented.</li>
+<li><b>Resource Creation &amp; Initialization:</b><ul>
+<li>Verified that resources (especially Stage) are created via the Factory and properly initialized with onInit().</li>
+<li>Debug output confirms lifecycle methods (onInit, onQuit, onUpdate, onRender) are called for the root stage.</li>
+</ul>
+</li>
+<li><b>Core &amp; Factory Integration:</b><ul>
+<li>Ensured the root node (mainStage) is set and found by Core, with correct debug output.</li>
+<li>Improved resource creation logic to always use Factory::create, guaranteeing initialization and registration.</li>
+</ul>
+</li>
+<li><b>Recursive Traversal:</b><ul>
+<li>Implemented and tested recursive lambdas for shutdown (onQuit) and unit testing (onUnitTest), with correct type handling and null checks.</li>
+</ul>
+</li>
+<li><b>Bug Fixes &amp; Stability:</b><ul>
+<li>Diagnosed and resolved segmentation faults by adding null checks and debug output.</li>
+<li>Tested resource handles and pointer management are more robust and safer, but further testing may be required.</li>
+</ul>
+</li>
+<li><b>Testing &amp; Debugging:</b><ul>
+<li>Added debug prints to trace resource creation and lifecycle events.</li>
+<li>Validated that the system is ready for expanded DOM tree parsing and more complex resource hierarchies.</li>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md67"></a>
+</li>
+<li><b>[September 22, 2025]</b><ul>
+<li><b>Unit Test Framework Refined:</b> <br  />
+<ul>
+<li>Simplified the unit test system: now every resource implements <code>onUnitTests()</code> for built-in tests.</li>
+<li>External/custom unit tests are registered and run via the <code>registerOnUnitTest()</code> callback, keeping the API minimal and flexible.</li>
+<li>Removed unnecessary callback registration logic from <code>IUnitTest</code>, relying on virtual methods and user callbacks for extensibility.</li>
+</ul>
+</li>
+<li><b>Consistent Naming:</b> <br  />
+<ul>
+<li>Standardized all unit test-related identifiers to use the plural form (<code>Tests</code>) for clarity and consistency across the codebase.</li>
+</ul>
+</li>
+<li><b>External Test Integration:</b> <br  />
+<ul>
+<li>Users no longer need to register callbacks for external unit tests. <br  />
+</li>
+<li>Instead, external unit test functions (like <code>Core_UnitTests()</code> and <code>Factory_UnitTests()</code>) are simply called directly from within the already established <code>registerOnUnitTest()</code> callback in <code>main.cpp</code>. <br  />
+</li>
+<li>This approach makes it straightforward to create and run custom unit tests or build a dedicated test application, while maintaining clear separation between built-in and user-defined tests.</li>
+</ul>
+</li>
+<li><b>API Cleanup:</b> <br  />
+<ul>
+<li>Removed redundant or overly complex code from the unit test infrastructure.</li>
+<li>Ensured the API remains clean, maintainable, and easy to extend.</li>
+</ul>
+</li>
+<li><b>Debugging &amp; Issue Resolution:</b> <br  />
+<ul>
+<li>Diagnosed and resolved issues with singleton access, reference binding, and infinite recursion in callback registration.</li>
+<li>Improved understanding of C++ function pointer and lambda usage for flexible test registration.</li>
+</ul>
+</li>
+<li><b>Expanded Test Coverage:</b> <br  />
+<ul>
+<li>Added more unit tests for Factory, Stage, and display objects.</li>
+<li>Confirmed that the unit test system works well for new features.</li>
+<li>Identified the need for a custom test object (e.g., <code>Box</code>) to facilitate comprehensive anchoring and coordinate propagation tests.</li>
+<li>Planned to add live event tests (drag/drop, deferred add/remove) and prioritize tests for new features as they are developed.</li>
+<li>Recognized that coverage for older features will be expanded over time, focusing first on the most critical areas.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><b>[September 23, 2025]</b><ul>
+<li><b>Event System Preliminary Testing:</b> <br  />
+<ul>
+<li>Successfully integrated and tested the event system with live SDL3 events.</li>
+<li>Verified that mouse, keyboard, window, and focus events are received and dispatched correctly.</li>
+<li>Confirmed that custom display objects (Box) receive and handle events as expected.</li>
+<li>Minimal "life tests" for event propagation and Box object interaction are passing.</li>
+<li>Debug output confirms event flow from SDL3 through Core, EventManager, and into display objects.</li>
+<li>Refactored event dispatch logic for single-stage architecture, simplifying code and improving maintainability.</li>
+<li>Cleaned up circular includes and pointer conversion issues, improving build stability.</li>
+<li>Next steps: Expand event tests for Box (drag/drop, stacking, anchoring), add more interactive unit tests, and document event system usage.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md101"></a>
 ToDo:</h1>
 <ul>
-<li>Implement parent/child node relationships for resources and display objects.</li>
+<li>Implement the <code>Box</code> object for drag and drop testing as well as stacking to build comprehensive testing of the anchoring system.</li>
 <li>Move resource and pointer tests to <code>onUnitTest()</code> methods when available.</li>
-<li>Continue expanding Factory functionality (add/remove, type safety, extensibility).</li>
 <li>Add comprehensive unit tests for Factory, resource_ptr, and error conditions.</li>
-<li>Continue improving documentation and example usage.</li>
-<li>Develop base framework classes:<ul>
-<li><code>IDisplayObject</code>: Base interface for display objects. Handles anchoring and positioning relative to parent and child edges. Inherits from <code>IDataObject</code>.</li>
-<li><code>IResourceObject</code>: Interface for resource objects managed by the Factory. Inherits from <code>IDataObject</code>.</li>
-<li><code>Factory</code>: Owns and manages all resources and display objects. Responsible for their lifetime.<ul>
-<li>Expand Factory implementation: add/remove resource methods, type safety, extensibility.</li>
-<li>Add comprehensive unit tests for Factory and resource_ptr (including error conditions).</li>
-<li>Plan and implement reference counting for resource_ptr (deferred until after initial testing).</li>
-<li>Continue improving Doxygen documentation and example usage.</li>
-</ul>
-</li>
-<li><code>Core</code>: Singleton that runs the main loop, handles callbacks, error logging, rendering, and event dispatch for the DOM tree.</li>
-<li><code>Stage</code>: Manages the SDL application window and its resources.</li>
-</ul>
-</li>
-<li>Add unit tests for macros and exception handling.</li>
-<li>Global Accessors<ul>
-<li>Decide on global accessor functions (e.g., for SDL objects).</li>
-<li>Document intended usage and limitations.</li>
-</ul>
-</li>
 <li>Language Hooks<ul>
 <li>Plan for hooks to support other languages (e.g., Python bindings).</li>
 <li>Add placeholder comments or sections.</li>

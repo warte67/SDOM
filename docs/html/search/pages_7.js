@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['sdl_20document_20object_20model_0',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]],
-  ['sdom_20core_20framework_20design_1',['SDOM Core Framework Design',['../md_core__framework.html',1,'']]],
-  ['sdom_20simple_20sdl_20document_20object_20model_2',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]],
-  ['simple_20sdl_20document_20object_20model_3',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]]
+  ['project_20description_0',['Project Description',['../md_progress.html',1,'']]],
+  ['propagation_20design_1',['DOM Propagation Design',['../md_dom__propagation.html',1,'']]]
 ];

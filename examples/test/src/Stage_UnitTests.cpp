@@ -14,7 +14,7 @@ namespace SDOM
     bool Stage_UnitTests()
     {
         Core& core = getCore();
-        Factory* factory = core.getFactory();
+        Factory* factory = &core.getFactory();
         std::cout << "Stage_UnitTests() called" << std::endl;
         bool allTestsPassed = true;
         bool testResult;
@@ -22,7 +22,7 @@ namespace SDOM
 
         // Test: Retrieve existing stage "mainStage"
         testResult = UnitTests::run("Stage", "Retrieve 'mainStage'", [factory]() {
-            ResourceHandle stageHandle = factory->getResourcePtr("mainStage");
+            ResourceHandle stageHandle = factory->getResourceHandle("mainStage");
             return (stageHandle && dynamic_cast<Stage*>(stageHandle.get()) != nullptr);
         });
         if (!testResult) { std::cout << CLR::indent() << "Failed to retrieve 'mainStage'!" << CLR::RESET << std::endl; }
@@ -30,7 +30,7 @@ namespace SDOM
 
         // Test: Retrieve non-existing stage "nonExistentStage"
         testResult = UnitTests::run("Stage", "Retrieve non-existent stage", [factory]() {
-            ResourceHandle stageHandle = factory->getResourcePtr("nonExistentStage");
+            ResourceHandle stageHandle = factory->getResourceHandle("nonExistentStage");
             return (stageHandle == nullptr);
         });
         if (!testResult) { std::cout << CLR::indent() << "Non-existent stage retrieval did not return nullptr!" << CLR::RESET << std::endl; }
@@ -57,7 +57,7 @@ namespace SDOM
         // Test: Set stage to "stageTwo" using setRootNode with ResourceHandle
         std::string newStage = "stageTwo";
         testResult = UnitTests::run("Stage", "Set root stage to '" + newStage + "' using ResourceHandle", [&core, factory, &dbgStr, newStage]() {
-            ResourceHandle stageTwoHandle = factory->getResourcePtr(newStage);
+            ResourceHandle stageTwoHandle = factory->getResourceHandle(newStage);
             if (stageTwoHandle && dynamic_cast<Stage*>(stageTwoHandle.get()))
             {
                 core.setRootNode(stageTwoHandle);

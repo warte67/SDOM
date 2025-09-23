@@ -2,7 +2,6 @@ var classSDOM_1_1Event =
 [
     [ "Command", "classSDOM_1_1Event.html#a4701e8775b9ab1332f1d9f4c7f8059fb", null ],
     [ "Getter", "classSDOM_1_1Event.html#a7532598094b2dc63904f81c925e419ee", null ],
-    [ "Json", "classSDOM_1_1Event.html#a87de086d79064ad399b1f6515b65c157", null ],
     [ "Setter", "classSDOM_1_1Event.html#a8498dacf500cc59715c911080c6de6fa", null ],
     [ "Phase", "classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8", [
       [ "Capture", "classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8a44a50f07b4bdc57740901280f9eddaf5", null ],

@@ -60,7 +60,7 @@ namespace SDOM
         {
             if (auto* displayObj = dynamic_cast<IDisplayObject*>(this)) 
             {
-                Factory* factory = Core::getInstance().getFactory();
+                Factory* factory = &Core::getInstance().getFactory();
                 for (const auto& childJson : json["children"]) 
                 {
                     std::string typeName = childJson.value("type", "IDisplayObject"); // Default to IDisplayObject

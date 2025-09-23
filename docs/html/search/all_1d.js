@@ -5,7 +5,7 @@ var searchData=
   ['wheelx_2',['wheelX',['../classSDOM_1_1Event.html#a27778c5f406b0903e10caef5c046b536',1,'SDOM::Event']]],
   ['wheely_3',['wheelY',['../classSDOM_1_1Event.html#adf3ec244eb81fbd741443c9a41e2a13b',1,'SDOM::Event']]],
   ['white_4',['WHITE',['../classCLR.html#ac31a33dfb8b903a027b48eb638fc21a4',1,'CLR']]],
-  ['width_5',['width',['../structSDOM_1_1InitDisplayObject.html#a1776b5d8eb7b90d5976eda2fdcd0bc98',1,'SDOM::InitDisplayObject::width'],['../structSDOM_1_1Bounds.html#abc92186d5199c0e106509d7ab73ef85b',1,'SDOM::Bounds::width()']]],
+  ['width_5',['width',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a6907692b7ad49b726bdcdd2ac462823f',1,'SDOM::IDisplayObject::InitStruct::width'],['../structSDOM_1_1Bounds.html#abc92186d5199c0e106509d7ab73ef85b',1,'SDOM::Bounds::width()']]],
   ['window_20rationale_6',['Single Stage, Single Window Rationale',['../md_core__framework.html#autotoc_md29',1,'']]],
   ['window_20resizing_20texture_20resolution_7',['Window Resizing &amp; Texture Resolution',['../md_core__framework.html#autotoc_md32',1,'']]],
   ['windowflags_8',['windowFlags',['../structSDOM_1_1Core_1_1CoreConfig.html#afa4486ca9134c3cb38417f230399ca83',1,'SDOM::Core::CoreConfig']]],
@@ -15,5 +15,6 @@ var searchData=
   ['windowwidth_12',['windowWidth',['../structSDOM_1_1Core_1_1CoreConfig.html#acd80478dc5e6f4dc3b4f3c591eafd783',1,'SDOM::Core::CoreConfig']]],
   ['with_20global_20accessor_13',['Example Usage (with global accessor)',['../md_core__framework.html#autotoc_md18',1,'']]],
   ['word_14',['Word',['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'SDOM_CLR.hpp']]],
-  ['works_15',['How It Works',['../md_extensible__factory.html#autotoc_md60',1,'']]]
+  ['works_15',['How It Works',['../md_extensible__factory.html#autotoc_md94',1,'']]],
+  ['world_20coordinate_20backpropagation_20traversal_20type_204_16',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_dom__propagation.html#autotoc_md66',1,'']]]
 ];
