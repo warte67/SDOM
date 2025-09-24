@@ -42,54 +42,54 @@
 namespace SDOM
 {
     // Predefined event types (Name, Captures, Bubbles, TargetOnly, Global)
-    const EventType EventType::None("None", false, false, false, false);
-    const EventType EventType::SDL_Event("SDL_Event", false, false, false, true);
-    const EventType EventType::Quit("Quit", false, false, false, true);
-    const EventType EventType::EnterFrame("EnterFrame", false, false, false, false); // should only fire event listeners at target
+    EventType EventType::None("None", false, false, false, false);
+    EventType EventType::SDL_Event("SDL_Event", false, false, false, true);
+    EventType EventType::Quit("Quit", false, false, false, true);
+    EventType EventType::EnterFrame("EnterFrame", false, false, false, false); // should only fire event listeners at target
     // Mouse event types (Name, Captures, Bubbles, TargetOnly, Global)
-    const EventType EventType::MouseButtonUp("MouseButtonUp", true, true, false, false);
-    const EventType EventType::MouseButtonDown("MouseButtonDown", true, true, false, false);
-    const EventType EventType::MouseWheel("MouseWheel", true, true, false, false);
-    const EventType EventType::MouseMove("MouseMove", false, false, true, false);
-    const EventType EventType::MouseClick("MouseClick", true, true, false, false);
-    const EventType EventType::MouseDoubleClick("MouseDoubleClick", true, true, false, false);    
-    const EventType EventType::MouseEnter("MouseEnter", false, false, true, false);
-    const EventType EventType::MouseLeave("MouseLeave", false, false, true, false);
+    EventType EventType::MouseButtonUp("MouseButtonUp", true, true, false, false);
+    EventType EventType::MouseButtonDown("MouseButtonDown", true, true, false, false);
+    EventType EventType::MouseWheel("MouseWheel", true, true, false, false);
+    EventType EventType::MouseMove("MouseMove", false, false, true, false);
+    EventType EventType::MouseClick("MouseClick", true, true, false, false);
+    EventType EventType::MouseDoubleClick("MouseDoubleClick", true, true, false, false);    
+    EventType EventType::MouseEnter("MouseEnter", false, false, true, false);
+    EventType EventType::MouseLeave("MouseLeave", false, false, true, false);
     // Stage event types (Name, Captures, Bubbles, TargetOnly, Global)
-    const EventType EventType::StageClosed("StageClosed", false, false, false, true);
+    EventType EventType::StageClosed("StageClosed", false, false, false, true);
     // Keyboard event types (Name, Captures, Bubbles, TargetOnly, Global)
-    const EventType EventType::KeyDown("KeyDown", true, true, false, false);
-    const EventType EventType::KeyUp("KeyUp", true, true, false, false);
+    EventType EventType::KeyDown("KeyDown", true, true, false, false);
+    EventType EventType::KeyUp("KeyUp", true, true, false, false);
     // Timer event types (Name, Captures, Bubbles, TargetOnly, Global)
-    const EventType EventType::Timer("Timer", false, false, false, false);
-    const EventType EventType::Tick("Tick", false, false, false, false);
-    const EventType EventType::Timeout("Timeout", false, false, false, false);
+    EventType EventType::Timer("Timer", false, false, false, false);
+    EventType EventType::Tick("Tick", false, false, false, false);
+    EventType EventType::Timeout("Timeout", false, false, false, false);
     // Window event types (Name, Captures, Bubbles, TargetOnly, Global)
-    const EventType EventType::FocusGained("FocusGained", false, false, true, false);
-    const EventType EventType::FocusLost("FocusLost", false, false, true, false);
-    const EventType EventType::Resize("Resize", true, true, false, false);
-    const EventType EventType::Move("Move", true, true, false, false);
-    const EventType EventType::Show("Show", false, false, true, false);
-    const EventType EventType::Hide("Hide", false, false, true, false);
-    const EventType EventType::EnterFullscreen("EnterFullscreen", true, true, false, false);
-    const EventType EventType::LeaveFullscreen("LeaveFullscreen", true, true, false, false);
+    EventType EventType::FocusGained("FocusGained", false, false, true, false);
+    EventType EventType::FocusLost("FocusLost", false, false, true, false);
+    EventType EventType::Resize("Resize", true, true, false, false);
+    EventType EventType::Move("Move", true, true, false, false);
+    EventType EventType::Show("Show", false, false, true, false);
+    EventType EventType::Hide("Hide", false, false, true, false);
+    EventType EventType::EnterFullscreen("EnterFullscreen", true, true, false, false);
+    EventType EventType::LeaveFullscreen("LeaveFullscreen", true, true, false, false);
     // General UI event types (Name, Captures, Bubbles, TargetOnly, Global)
-    const EventType EventType::ValueChanged("ValueChanged", true, true, false, false);
-    const EventType EventType::StateChanged("StateChanged", true, true, false, false);
-    const EventType EventType::SelectionChanged("SelectionChanged", true, true, false, false);
-    const EventType EventType::Enabled("Enabled", false, false, true, false);
-    const EventType EventType::Disabled("Disabled", false, false, true, false);
-    const EventType EventType::Visible("Visible", true, true, false, false);
-    const EventType EventType::Hidden("Hidden", true, true, false, false);
+    EventType EventType::ValueChanged("ValueChanged", true, true, false, false);
+    EventType EventType::StateChanged("StateChanged", true, true, false, false);
+    EventType EventType::SelectionChanged("SelectionChanged", true, true, false, false);
+    EventType EventType::Enabled("Enabled", false, false, true, false);
+    EventType EventType::Disabled("Disabled", false, false, true, false);
+    EventType EventType::Visible("Visible", true, true, false, false);
+    EventType EventType::Hidden("Hidden", true, true, false, false);
     // Drag & Drop event types (Name, Captures, Bubbles, TargetOnly, Global)
-    const EventType EventType::Drag("Drag", true, true, false, false);
-    const EventType EventType::Dragging("Dragging", true, true, false, false);
-    const EventType EventType::Drop("Drop", true, true, false, false);
+    EventType EventType::Drag("Drag", true, true, false, false);
+    EventType EventType::Dragging("Dragging", true, true, false, false);
+    EventType EventType::Drop("Drop", true, true, false, false);
     // Clipboard event types (Name, Captures, Bubbles, TargetOnly, Global)
-    const EventType EventType::ClipboardCopy("ClipboardCopy", true, true, false, false);
-    const EventType EventType::ClipboardPaste("ClipboardPaste", true, true, false, false);
+    EventType EventType::ClipboardCopy("ClipboardCopy", true, true, false, false);
+    EventType EventType::ClipboardPaste("ClipboardPaste", true, true, false, false);
     // Custom User event types (Name, Captures, Bubbles, TargetOnly, Global)
-    const EventType EventType::User("User", true, true, false, false);
+    EventType EventType::User("User", true, true, false, false);
 
     // getters
     bool EventType::getCaptures() const 

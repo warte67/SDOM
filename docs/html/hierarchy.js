@@ -24,6 +24,7 @@ var hierarchy =
         [ "SDOM::IResourceObject", "classSDOM_1_1IResourceObject.html", null ]
       ] ]
     ] ],
+    [ "SDOM::IDisplayObject::ListenerEntry", "structSDOM_1_1IDisplayObject_1_1ListenerEntry.html", null ],
     [ "SDOM::SDL_Utils", "classSDOM_1_1SDL__Utils.html", null ],
     [ "SDOM::TypeCreators", "structSDOM_1_1TypeCreators.html", null ],
     [ "SDOM::UnitTests", "classSDOM_1_1UnitTests.html", null ]

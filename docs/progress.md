@@ -35,6 +35,7 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - Example usage of Core and Factory included in documentation.
     - Circular include and pointer management issues resolved (raw pointer for Factory ownership).
     - The SDOM framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.
+
 - ### [September 21, 2025]
     - Renamed `resource_ptr` to `ResourceHandle` throughout the codebase for clarity.
         - The new name better reflects its role as an opaque handle or key for resource lookup, rather than a smart pointer with ownership semantics.
@@ -62,6 +63,7 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - **Testing & Debugging:**
         - Added debug prints to trace resource creation and lifecycle events.
         - Validated that the system is ready for expanded DOM tree parsing and more complex resource hierarchies.
+
 - ### [September 22, 2025]
     - **Unit Test Framework Refined:**  
         - Simplified the unit test system: now every resource implements `onUnitTests()` for built-in tests.
@@ -85,6 +87,7 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
         - Identified the need for a custom test object (e.g., `Box`) to facilitate comprehensive anchoring and coordinate propagation tests.
         - Planned to add live event tests (drag/drop, deferred add/remove) and prioritize tests for new features as they are developed.
         - Recognized that coverage for older features will be expanded over time, focusing first on the most critical areas.
+
 - ### [September 23, 2025]
     - **Event System Preliminary Testing:**  
         - Successfully integrated and tested the event system with live SDL3 events.
@@ -102,20 +105,23 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
         - Improved code readability and maintainability by removing legacy patterns and redundant checks.
         - All major event and display object interactions now use the new handle API.
         - Codebase is stable, with most reference and legacy issues resolved.
+
 - ### [September 24, 2025]
-    - **Factory Refactor:**
-        - Completely revised the `Factory` to use `IDisplayObject` instead of `IResourceObject`.
-        - Planned to reintroduce `IResourceObject` into the `Factory` later, ensuring compatibility with both resource and display object management.
-        - Verified that the `Factory` now supports `IDisplayObject` creation and initialization.
-    - **Box Object:**
-        - The `Box` object is now fully functional, with lifecycle methods (`onInit`, `onRender`, `onUpdate`, etc.) implemented and tested.
-        - `isKeyboardFocused()` and `isMouseFocused()` methods are working correctly. As are the `handleTabKeyPress()` and `handleTabKeyPressReverse()` methods for keyboard focus navigation.
-        - Event listener functionality is the only remaining issue, with the `MouseClick` event listener not firing as expected.
-        - Began troubleshooting the event listener system, focusing on event propagation, listener registration, and dispatch logic.
-    - **Event System:**
-        - Continued debugging and refining the event system to ensure proper propagation and listener execution.
-        - Verified that `EventManager` correctly dispatches events to the stage and its children.
-        - Added debug logs to trace event flow and identify potential issues with `Box` event handling.
+    - **Event System Debugging:**
+        - Resolved compile-time issues with `ListenerEntry` constructor and `push_back` calls in `addEventListener`.
+        - Verified that `addEventListener` correctly registers event listeners for both capture and bubbling phases.
+        - Debugged and confirmed proper event propagation through the DOM hierarchy.
+        - Fixed issues with `stopPropagation()` and `setPhase()` methods, ensuring they work as intended.
+        - Verified that `stopPropagation()` halts event propagation during the target phase, skipping the bubbling phase.
+    - **Box Object Testing:**
+        - Tested `Box` object interactions with the event system:
+            - Verified correct output for capture, target, and bubbling phases.
+            - Confirmed that `stopPropagation()` prevents bubbling as expected.
+        - Stacked `redBox` on `blueBox` and `greenBox` on `redBox` to test event propagation.
+        - Validated event listener behavior for `MouseClick` events in all phases.
+    - **Code Cleanup:**
+        - Removed debug logs and redundant code from `addEventListener` and `triggerEventListeners`.
+        - Simplified event listener registration and dispatch logic.
 
 # ToDo:
 

@@ -163,9 +163,9 @@ namespace SDOM
         SDL_Color getColor() const { return color_; }
         IDisplayObject& setColor(const SDL_Color& color) { color_ = color; return *this; }
         
-        void addEventListener(const EventType& type, std::function<void(const Event&)> listener, bool useCapture = false, int priority = 0);
-        void removeEventListener(const EventType& type, std::function<void(const Event&)> listener, bool useCapture = false);
-        void triggerEventListeners(const Event& event, bool useCapture);       
+        void addEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false, int priority = 0);
+        void removeEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false);
+        void triggerEventListeners(Event& event, bool useCapture);       
 
 
         void addChild(DomHandle child, bool useWorld=false, int worldX=0, int worldY=0);
@@ -275,7 +275,7 @@ namespace SDOM
         std::string name_;      ///< Unique resource name
         std::string type_;      ///< Extensible string identifier for resource type
 
-    private:
+    public:  // temporarily public for testing
         float left_, top_, right_, bottom_; // Calculated bounds based on anchors
         // std::string name_; // Name of the display object
         bool bIsDirty_ = false; // Flag to indicate if the display object needs to be redrawn
@@ -313,12 +313,13 @@ namespace SDOM
 
         // Containers to store ListenerEntrys for different event phases
         struct ListenerEntry {
-            std::function<void(const Event&)> listener;
+            std::function<void(Event&)> listener;
             int priority;
+            EventType eventType; // Debugging field to store the event type name            
         };
         std::unordered_map<EventType, std::vector<ListenerEntry>, EventTypeHash> captureEventListeners;
         std::unordered_map<EventType, std::vector<ListenerEntry>, EventTypeHash> bubblingEventListeners;
-
+      
         // Delete copy constructor and assignment operator
         IDisplayObject(const IDisplayObject& other) = delete;
         // IDisplayObject& operator=(const IDisplayObject& other) = delete;      

@@ -304,7 +304,7 @@ namespace SDOM
         return currentPhase;
     }
 
-    Event& Event::setPhase(SDOM::Event::Phase phase) 
+    Event& Event::setPhase(SDOM::Event::Phase phase)
     {
         std::lock_guard<std::mutex> lock(eventMutex_);
         currentPhase = phase;
@@ -352,7 +352,7 @@ namespace SDOM
         std::lock_guard<std::mutex> lock(eventMutex_);
         return propagationStopped;
     }
-    Event& Event::stopPropagation() 
+    Event& Event::stopPropagation()
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         propagationStopped = true; 

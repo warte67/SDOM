@@ -54,32 +54,6 @@ namespace SDOM
                 setter(*this, json[propName]);
             }
         }
-
-        // Recursively initialize children if present in JSON
-        if (json.contains("children") && json["children"].is_array()) 
-        {
-            if (auto* displayObj = dynamic_cast<IDisplayObject*>(this)) 
-            {
-                Factory* factory = &Core::getInstance().getFactory();
-                for (const auto& childJson : json["children"]) 
-                {
-                    std::string typeName = childJson.value("type", "IDisplayObject"); // Default to IDisplayObject
-                    DomHandle childHandle = factory->create(typeName, childJson);
-                    if (childHandle) 
-                    {
-                        auto childObj = dynamic_cast<IDisplayObject*>(childHandle.get());
-                        if (childObj)
-                            displayObj->addChild(childHandle);
-                        else
-                            std::cout << "Failed to cast child to IDisplayObject for type: " << typeName << std::endl;
-                    }
-                    else
-                    {
-                        std::cout << "Failed to create child of type: " << typeName << std::endl;
-                    }
-                }
-            }
-        }
     }
 
     Json IDataObject::toJson() const

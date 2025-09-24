@@ -15,14 +15,17 @@
 Box::Box(const SDOM::IDisplayObject::InitStruct& init)
 : IDisplayObject(init)
 {
+    std::cout << "Box constructed with InitStruct: " << getName() 
+              << " at address: " << this << std::endl;
     setTabEnabled(true);
     setClickable(true);
 }
 
-
 Box::Box(const Json& config)
 : IDisplayObject(config)
 {
+    std::cout << "Box constructed with Json config: " << getName() 
+              << " at address: " << this << std::endl;
     setTabEnabled(true);
     setClickable(true);
 }
@@ -33,8 +36,9 @@ Box::~Box()
 
 bool Box::onInit()  
 {
+    std::cout << getName() << "::" << "onInit() at address: " << this << std::endl;
     // Add event listener for MouseClick
-    addEventListener(SDOM::EventType::MouseClick, [](const SDOM::Event& event)
+    addEventListener(SDOM::EventType::MouseClick, [](SDOM::Event& event)
     {
         std::cout << CLR::BLUE << "Phase: " << CLR::LT_BLUE << event.getPhaseString() << CLR::NORMAL << std::endl;
         if (event.getTarget() && event.getTarget()->getType() == "blueBox") 
@@ -44,7 +48,21 @@ bool Box::onInit()
         std::cout << CLR::BLUE << "currentTarget: " << CLR::LT_BLUE << event.getCurrentTarget()->getName() << CLR::NORMAL << std::endl;
         std::cout << CLR::BLUE << "target: " << CLR::LT_BLUE << event.getTarget()->getName() << CLR::NORMAL << std::endl;
         std::cout << CLR::BLUE << "relatedTarget: " << CLR::LT_BLUE << (event.getRelatedTarget() ? event.getRelatedTarget()->getName() : "null") << CLR::NORMAL << std::endl;
-    },true);
+    },true); // Use capture phase
+
+    addEventListener(SDOM::EventType::MouseClick, [](SDOM::Event& event)
+    {
+        event.stopPropagation(); // Stop further propagation
+
+        std::cout << CLR::BLUE << "Phase: " << CLR::LT_BLUE << event.getPhaseString() << CLR::NORMAL << std::endl;
+        if (event.getTarget() && event.getTarget()->getType() == "blueBox") 
+        {
+            std::cout << CLR::GREEN << event.getTarget()->getName() << "::" << CLR::LT_GRN << "MouseClick" << CLR::NORMAL << std::endl;
+        }
+        std::cout << CLR::BLUE << "currentTarget: " << CLR::LT_BLUE << event.getCurrentTarget()->getName() << CLR::NORMAL << std::endl;
+        std::cout << CLR::BLUE << "target: " << CLR::LT_BLUE << event.getTarget()->getName() << CLR::NORMAL << std::endl;
+        std::cout << CLR::BLUE << "relatedTarget: " << CLR::LT_BLUE << (event.getRelatedTarget() ? event.getRelatedTarget()->getName() : "null") << CLR::NORMAL << std::endl;
+    },false); // Do not use capture phase
 
     return true;
 }

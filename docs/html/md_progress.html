@@ -97,9 +97,9 @@ $(function(){initNavTree('md_progress.html','',''); });
 <h1 class="doxsection"><a class="anchor" id="autotoc_md111"></a>
 Progress Updates</h1>
 <ul>
-<li><b>[July 2, 2025]</b> Initial rough draft and proof of concept.</li>
-<li><b>[August 5, 2025]</b> <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> secondary rough draft</li>
-<li><b>[September 19, 2025]</b><ul>
+<li>### [July 2, 2025] Initial rough draft and proof of concept.</li>
+<li>### [August 5, 2025] <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> secondary rough draft</li>
+<li>### [September 19, 2025]<ul>
 <li>Proof of concept approved. Main development approved. Work begins officially.</li>
 <li>Improved Doxygen documentation for all major headers and macros.</li>
 <li>Added and refined Doxygen comments for <a class="el" href="SDOM__CLR_8hpp.html" title="Static container for ANSI escape sequences for terminal text formatting and colorization.">SDOM_CLR.hpp</a>, <a class="el" href="SDOM_8hpp.html" title="Common include for SDOM-based projects. Defines macros and utilities.">SDOM.hpp</a>, and <a class="el" href="SDOM__IDataObject_8hpp.html">SDOM_IDataObject.hpp</a>.</li>
@@ -122,7 +122,7 @@ Progress Updates</h1>
 <li>Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.</li>
 </ul>
 </li>
-<li><b>[September 20, 2025]</b><ul>
+<li>### [September 20, 2025]<ul>
 <li>Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.</li>
 <li>Event system foundation implemented and documented.</li>
 <li>Doxygen documentation added for major interfaces (Core, Factory, IResourceObject).</li>
@@ -131,7 +131,7 @@ Progress Updates</h1>
 <li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.</li>
 </ul>
 </li>
-<li><b>[September 21, 2025]</b><ul>
+<li>### [September 21, 2025]<ul>
 <li>Renamed <span class="tt">resource_ptr</span> to <span class="tt">ResourceHandle</span> throughout the codebase for clarity.<ul>
 <li>The new name better reflects its role as an opaque handle or key for resource lookup, rather than a smart pointer with ownership semantics.</li>
 <li>Updated all documentation, examples, and comments to use <span class="tt">ResourceHandle</span>.</li>
@@ -174,7 +174,7 @@ Progress Updates</h1>
 </li>
 </ul>
 </li>
-<li><b>[September 22, 2025]</b><ul>
+<li>### [September 22, 2025]<ul>
 <li><b>Unit Test Framework Refined:</b> <br  />
 <ul>
 <li>Simplified the unit test system: now every resource implements <span class="tt">onUnitTests()</span> for built-in tests.</li>
@@ -219,7 +219,7 @@ Progress Updates</h1>
 </li>
 </ul>
 </li>
-<li><b>[September 23, 2025]</b><ul>
+<li>### [September 23, 2025]<ul>
 <li><b>Event System Preliminary Testing:</b> <br  />
 <ul>
 <li>Successfully integrated and tested the event system with live SDL3 events.</li>
@@ -241,19 +241,30 @@ Progress Updates</h1>
 </li>
 </ul>
 </li>
-<li><b>[September 24, 2025]</b><ul>
-<li><b>Factory Refactor:</b></li>
-<li>Completely revised the <span class="tt">Factory</span> to use <span class="tt">IDisplayObject</span> instead of <span class="tt">IResourceObject</span>.</li>
-<li>Planned to reintroduce <span class="tt">IResourceObject</span> into the <span class="tt">Factory</span> later, ensuring compatibility with both resource and display object management.</li>
-<li>Verified that the <span class="tt">Factory</span> now supports <span class="tt">IDisplayObject</span> creation and initialization.</li>
-<li><b>Box Object:</b></li>
-<li>The <span class="tt">Box</span> object is now fully functional, with lifecycle methods (<span class="tt">onInit</span>, <span class="tt">onRender</span>, <span class="tt">onUpdate</span>, etc.) implemented and tested.</li>
-<li>Event listener functionality is the only remaining issue, with the <span class="tt">MouseClick</span> event listener not firing as expected.</li>
-<li>Began troubleshooting the event listener system, focusing on event propagation, listener registration, and dispatch logic.</li>
-<li><b>Event System:</b></li>
-<li>Continued debugging and refining the event system to ensure proper propagation and listener execution.</li>
-<li>Verified that <span class="tt">EventManager</span> correctly dispatches events to the stage and its children.</li>
-<li>Added debug logs to trace event flow and identify potential issues with <span class="tt">Box</span> event handling.</li>
+<li>### [September 24, 2025]<ul>
+<li><b>Event System Debugging:</b><ul>
+<li>Resolved compile-time issues with <span class="tt">ListenerEntry</span> constructor and <span class="tt">push_back</span> calls in <span class="tt">addEventListener</span>.</li>
+<li>Verified that <span class="tt">addEventListener</span> correctly registers event listeners for both capture and bubbling phases.</li>
+<li>Debugged and confirmed proper event propagation through the DOM hierarchy.</li>
+<li>Fixed issues with <span class="tt">stopPropagation()</span> and <span class="tt">setPhase()</span> methods, ensuring they work as intended.</li>
+<li>Verified that <span class="tt">stopPropagation()</span> halts event propagation during the target phase, skipping the bubbling phase.</li>
+</ul>
+</li>
+<li><b>Box Object Testing:</b><ul>
+<li>Tested <span class="tt">Box</span> object interactions with the event system:<ul>
+<li>Verified correct output for capture, target, and bubbling phases.</li>
+<li>Confirmed that <span class="tt">stopPropagation()</span> prevents bubbling as expected.</li>
+</ul>
+</li>
+<li>Stacked <span class="tt">redBox</span> on <span class="tt">blueBox</span> and <span class="tt">greenBox</span> on <span class="tt">redBox</span> to test event propagation.</li>
+<li>Validated event listener behavior for <span class="tt">MouseClick</span> events in all phases.</li>
+</ul>
+</li>
+<li><b>Code Cleanup:</b><ul>
+<li>Removed debug logs and redundant code from <span class="tt">addEventListener</span> and <span class="tt">triggerEventListeners</span>.</li>
+<li>Simplified event listener registration and dispatch logic.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

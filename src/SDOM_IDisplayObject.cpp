@@ -547,25 +547,9 @@ namespace SDOM
         }
     }
 
-    void IDisplayObject::addEventListener(
-        const EventType& type, 
-        std::function<void(const Event&)> listener, 
-        bool useCapture, 
-        int priority)
-    {
-        auto& targetListeners = useCapture ? captureEventListeners : bubblingEventListeners;
-        targetListeners[type].push_back({std::move(listener), priority});
-
-        // Sort listeners by priority if the new listener has a non-zero priority
-        std::sort(targetListeners[type].begin(), targetListeners[type].end(),
-            [](const ListenerEntry& a, const ListenerEntry& b) {
-                return a.priority > b.priority; // Higher priority first
-            });
-    }
-
     void IDisplayObject::removeEventListener(
-        const EventType& type, 
-        std::function<void(const Event&)> listener, 
+        EventType& type, 
+        std::function<void(Event&)> listener, 
         bool useCapture)
     {
         auto& targetListeners = useCapture ? captureEventListeners : bubblingEventListeners;
@@ -580,24 +564,40 @@ namespace SDOM
         }
     }
 
-    void IDisplayObject::triggerEventListeners(const Event& event, bool useCapture)
+
+    void IDisplayObject::addEventListener(
+        EventType& type, 
+        std::function<void(Event&)> listener, 
+        bool useCapture, 
+        int priority)
+    {
+        auto& targetListeners = useCapture ? captureEventListeners : bubblingEventListeners;
+        targetListeners[type].push_back({std::move(listener), priority, type});
+
+        // Sort listeners by priority if the new listener has a non-zero priority
+        std::sort(targetListeners[type].begin(), targetListeners[type].end(),
+            [](const ListenerEntry& a, const ListenerEntry& b) {
+                return a.priority > b.priority; // Higher priority first
+            });
+    }
+
+
+    void IDisplayObject::triggerEventListeners(Event& event, bool useCapture)
     {
         const auto& targetListeners = useCapture ? captureEventListeners : bubblingEventListeners;
+
         auto it = targetListeners.find(event.getType());
         if (it != targetListeners.end()) 
         {
             for (const auto& entry : it->second) 
             {
                 entry.listener(event);
-                if (event.isPropagationStopped()) 
-                {
-                    break; // Stop further listeners if propagation is stopped
-                }
             }
-        } else {
-            // std::cout << "Debug: No listeners found for event type " << event.getTypeName() << std::endl;
         }
     }
+
+
+
 
     // void IDisplayObject::registerSelfName() 
     // {

@@ -189,11 +189,11 @@ var NAVTREEINDEX =
 [
 "SDOM_8cpp.html",
 "classSDOM_1_1Core.html#ae818f08373cd15cf1656089c633cf645",
-"classSDOM_1_1EventType.html#a166180b1a31e3e3943497dcf126e9dc1",
+"classSDOM_1_1EventType.html#a27577bf1e7a968bc18865f4b0f025279",
 "classSDOM_1_1IDataObject.html#a54d77f5fbab11b64f7971d1c33dea11d",
-"classSDOM_1_1IResourceObject.html#a48efaecebb266bcd535f2ef256fbb67a",
-"classSDOM_1_1Stage.html#ae5ef116a864e4c9648010e4fba685300",
-"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae4e8367937db13de78dd9a710df92164"
+"classSDOM_1_1IDisplayObject.html#af1f3fcd8844ca70fa235842bd176a6ab",
+"classSDOM_1_1Stage.html#a78c24fdc177769b1a7604edaac795117",
+"md_display__object__anchoring.html#autotoc_md48"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

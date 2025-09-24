@@ -175,8 +175,8 @@ namespace SDOM
         DomHandle target = nullptr;                     // Target of the event, usually the object that triggered it    
         DomHandle currentTarget = nullptr;              // Current target during event propagation
         DomHandle relatedTarget = nullptr;              // For events that involve a related target (e.g., drag and drop)
-        Phase currentPhase;                             // Current phase of the event propagation
         SDL_Event sdlEvent;                             // underlying SDL event
+        mutable Phase currentPhase;                     // Current phase of the event propagation
         mutable bool propagationStopped = false;        // Indicates if event propagation is stopped
         mutable bool disableDefaultBehavior = false;    // Indicates if default behavior is disabled
         mutable bool useCapture = false;                // Indicates if the event is in the capture phase

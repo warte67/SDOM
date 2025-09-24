@@ -17,11 +17,14 @@ var searchData=
   ['bg_5fred_14',['BG_RED',['../classCLR.html#a5f904009e333a33e59bcc151ff8c5225',1,'CLR']]],
   ['bg_5fwhite_15',['BG_WHITE',['../classCLR.html#a1b26474bb6a91bd88c4178c827312818',1,'CLR']]],
   ['bg_5fyellow_16',['BG_YELLOW',['../classCLR.html#ae09789b58191c13f01c0a4104bc601f9',1,'CLR']]],
-  ['black_17',['BLACK',['../classCLR.html#a06d2d403368c990cd9de1292aa7d4b99',1,'CLR']]],
-  ['blinking_18',['BLINKING',['../classCLR.html#a4dd77e6050dafa4c0e36ce01a5400587',1,'CLR']]],
-  ['blue_19',['BLUE',['../classCLR.html#a1d8aa7fe91531370ea99b43cdb55c4d7',1,'CLR']]],
-  ['bold_20',['BOLD',['../classCLR.html#a06931db8ae45986588be7ad57f2c91a2',1,'CLR']]],
-  ['bottom_21',['bottom',['../structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99',1,'SDOM::Bounds']]],
-  ['brown_22',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]],
-  ['button_23',['button',['../classSDOM_1_1Event.html#aae1bbc273d8b8debd62fc8780f499b52',1,'SDOM::Event']]]
+  ['bisdirty_5f_17',['bIsDirty_',['../classSDOM_1_1IDisplayObject.html#a7f5754bdccbd440ab6083fead1daa7cf',1,'SDOM::IDisplayObject']]],
+  ['black_18',['BLACK',['../classCLR.html#a06d2d403368c990cd9de1292aa7d4b99',1,'CLR']]],
+  ['blinking_19',['BLINKING',['../classCLR.html#a4dd77e6050dafa4c0e36ce01a5400587',1,'CLR']]],
+  ['blue_20',['BLUE',['../classCLR.html#a1d8aa7fe91531370ea99b43cdb55c4d7',1,'CLR']]],
+  ['bold_21',['BOLD',['../classCLR.html#a06931db8ae45986588be7ad57f2c91a2',1,'CLR']]],
+  ['bottom_22',['bottom',['../structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99',1,'SDOM::Bounds']]],
+  ['bottom_5f_23',['bottom_',['../classSDOM_1_1IDisplayObject.html#a21a0936456c85d904886bba2fa28891f',1,'SDOM::IDisplayObject']]],
+  ['brown_24',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]],
+  ['bubblingeventlisteners_25',['bubblingEventListeners',['../classSDOM_1_1IDisplayObject.html#a6989f335541697be518ad972b5239b47',1,'SDOM::IDisplayObject']]],
+  ['button_26',['button',['../classSDOM_1_1Event.html#aae1bbc273d8b8debd62fc8780f499b52',1,'SDOM::Event']]]
 ];

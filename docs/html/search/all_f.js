@@ -11,8 +11,8 @@ var searchData=
   ['haschild_8',['hasChild',['../classSDOM_1_1IDisplayObject.html#a3ba3ff49254f983c2c9f751cabb4f866',1,'SDOM::IDisplayObject']]],
   ['height_9',['height',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a',1,'SDOM::IDisplayObject::InitStruct::height'],['../structSDOM_1_1Bounds.html#ab9e98bf49c90ef9ce80a0827784b8b71',1,'SDOM::Bounds::height()']]],
   ['hex_10',['hex',['../classCLR.html#a7affcef20a6ac743b04173d8717f03ba',1,'CLR']]],
-  ['hidden_11',['Hidden',['../classSDOM_1_1EventType.html#a619c6a5cc9448a971f181b0478b62c52',1,'SDOM::EventType']]],
-  ['hide_12',['Hide',['../classSDOM_1_1EventType.html#abab2a6f1efc3cf03c811c2cb55d044b1',1,'SDOM::EventType']]],
+  ['hidden_11',['Hidden',['../classSDOM_1_1EventType.html#a8b306f6e94f88e440f688dad65f7b011',1,'SDOM::EventType']]],
+  ['hide_12',['Hide',['../classSDOM_1_1EventType.html#ab0487201266373a8e3b5cffd9fd13994',1,'SDOM::EventType']]],
   ['hierarchical_20anchoring_13',['Hierarchical Anchoring',['../md_display__object__anchoring.html#autotoc_md52',1,'']]],
   ['hook_20callback_20registration_14',['Hook &amp;amp; Callback Registration',['../md_core__framework.html#autotoc_md14',1,'']]],
   ['how_20it_20works_15',['How It Works',['../md_extensible__factory.html#autotoc_md94',1,'']]]

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['idisplayobject_0',['IDisplayObject',['../classSDOM_1_1IDisplayObject.html#a11a0e1744cb654a1569a441df1501866',1,'SDOM::IDisplayObject::IDisplayObject(const InitStruct &amp;init)'],['../classSDOM_1_1IDisplayObject.html#afc3752fcba0c77656844a654b4fecf92',1,'SDOM::IDisplayObject::IDisplayObject(const Json &amp;config)'],['../classSDOM_1_1IDisplayObject.html#a3c68c6c2c52d9ff7de62600c48794454',1,'SDOM::IDisplayObject::IDisplayObject()']]],
+  ['idisplayobject_0',['IDisplayObject',['../classSDOM_1_1IDisplayObject.html#a11a0e1744cb654a1569a441df1501866',1,'SDOM::IDisplayObject::IDisplayObject(const InitStruct &amp;init)'],['../classSDOM_1_1IDisplayObject.html#afc3752fcba0c77656844a654b4fecf92',1,'SDOM::IDisplayObject::IDisplayObject(const Json &amp;config)'],['../classSDOM_1_1IDisplayObject.html#a3c68c6c2c52d9ff7de62600c48794454',1,'SDOM::IDisplayObject::IDisplayObject()'],['../classSDOM_1_1IDisplayObject.html#ab078f5acfa6a288796860a50bcc06526',1,'SDOM::IDisplayObject::IDisplayObject(const IDisplayObject &amp;other)=delete']]],
   ['indent_1',['indent',['../classCLR.html#a21785b8bf79fa4970182cdb2dcab57c8',1,'CLR']]],
   ['indent_5fpop_2',['indent_pop',['../classCLR.html#ab68fec9e4864d10dfe4e06511f92375e',1,'CLR']]],
   ['indent_5fpush_3',['indent_push',['../classCLR.html#a09a44b42634154b7f08e3529100d1fa0',1,'CLR']]],

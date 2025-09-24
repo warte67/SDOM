@@ -49,58 +49,58 @@ namespace SDOM
     {
     public:
         // Predefined event types (* denotes completed)
-        static const EventType None;            // * for no event
-        static const EventType SDL_Event;       // * for raw SDL events
-        static const EventType Quit;            // * for application quit events
-        static const EventType EnterFrame;      // * called every frame (consider dispatching for EventListeners only)
+        static EventType None;            // * for no event
+        static EventType SDL_Event;       // * for raw SDL events
+        static EventType Quit;            // * for application quit events
+        static EventType EnterFrame;      // * called every frame (consider dispatching for EventListeners only)
         // Mouse event types
-        static const EventType MouseButtonUp;   // * for mouse button up events
-        static const EventType MouseButtonDown; // * for mouse button down events
-        static const EventType MouseWheel;      // * for mouse wheel
-        static const EventType MouseMove;       // * for mouse movement
-        static const EventType MouseClick;      // * for single mouse clicks
-        static const EventType MouseDoubleClick;// * for double mouse clicks
-        static const EventType MouseEnter;      // * for mouse entering an object
-        static const EventType MouseLeave;      // * for mouse leaving an object
+        static EventType MouseButtonUp;   // * for mouse button up events
+        static EventType MouseButtonDown; // * for mouse button down events
+        static EventType MouseWheel;      // * for mouse wheel
+        static EventType MouseMove;       // * for mouse movement
+        static EventType MouseClick;      // * for single mouse clicks
+        static EventType MouseDoubleClick;// * for double mouse clicks
+        static EventType MouseEnter;      // * for mouse entering an object
+        static EventType MouseLeave;      // * for mouse leaving an object
         // Stage event types
-        static const EventType StageClosed;     // * for when a stage is closed
+        static EventType StageClosed;     // * for when a stage is closed
         // Keyboard event types
-        static const EventType KeyDown;         // for when a key is pressed down (includes IME or Shift Modified ascii)
-        static const EventType KeyUp;           // for when a key is released
+        static EventType KeyDown;         // for when a key is pressed down (includes IME or Shift Modified ascii)
+        static EventType KeyUp;           // for when a key is released
         // Timer event types
-        static const EventType Timer;           // generic timer event
-        static const EventType Tick;            // periodic update
-        static const EventType Timeout;         // one-shot timer expiration event
+        static EventType Timer;           // generic timer event
+        static EventType Tick;            // periodic update
+        static EventType Timeout;         // one-shot timer expiration event
         // Window event types
-        static const EventType FocusGained;     // * for widgets, windows, or controls
-        static const EventType FocusLost;       // * for widgets, windows, or controls
-        static const EventType Resize;          // * for window or control size changes
-        static const EventType Move;            // * for IDisplayObject position changes
-        static const EventType Show;            // * for visibility changes
-        static const EventType Hide;            // * for visibility changes
-        static const EventType EnterFullscreen; // * for entering fullscreen mode
-        static const EventType LeaveFullscreen; // * for leaving fullscreen mode
+        static EventType FocusGained;     // * for widgets, windows, or controls
+        static EventType FocusLost;       // * for widgets, windows, or controls
+        static EventType Resize;          // * for window or control size changes
+        static EventType Move;            // * for IDisplayObject position changes
+        static EventType Show;            // * for visibility changes
+        static EventType Hide;            // * for visibility changes
+        static EventType EnterFullscreen; // * for entering fullscreen mode
+        static EventType LeaveFullscreen; // * for leaving fullscreen mode
         // General UI event types
-        static const EventType ValueChanged;    // for sliders, text fields, etc.
-        static const EventType StateChanged;    // for checkboxes, radio buttons, etc.
-        static const EventType SelectionChanged; // for list boxes, combo boxes, etc.
+        static EventType ValueChanged;    // for sliders, text fields, etc.
+        static EventType StateChanged;    // for checkboxes, radio buttons, etc.
+        static EventType SelectionChanged; // for list boxes, combo boxes, etc.
 
-        static const EventType Enabled;         // when IDisplayObjects become enabled
-        static const EventType Disabled;        // when IDisplayObjects become disabled
-        static const EventType Active;          // REMOVE ACTIVE
-        static const EventType Inactive;        // REMOVE INACTIVE
-        static const EventType Visible;         // when a IDisplayObject becomes visible
-        static const EventType Hidden;          // when a IDisplayObject becomes hidden
+        static EventType Enabled;         // when IDisplayObjects become enabled
+        static EventType Disabled;        // when IDisplayObjects become disabled
+        static EventType Active;          // REMOVE ACTIVE
+        static EventType Inactive;        // REMOVE INACTIVE
+        static EventType Visible;         // when a IDisplayObject becomes visible
+        static EventType Hidden;          // when a IDisplayObject becomes hidden
         
         // Drag & Drop event types
-        static const EventType Drag;            // * when a drag operation starts
-        static const EventType Dragging;        // * when a drag operation is ongoing
-        static const EventType Drop;            // * when an item is dropped
+        static EventType Drag;            // * when a drag operation starts
+        static EventType Dragging;        // * when a drag operation is ongoing
+        static EventType Drop;            // * when an item is dropped
         // Clipboard event types
-        static const EventType ClipboardCopy;   // when content is copied to the clipboard
-        static const EventType ClipboardPaste;  // when content is pasted from the clipboard
+        static EventType ClipboardCopy;   // when content is copied to the clipboard
+        static EventType ClipboardPaste;  // when content is pasted from the clipboard
         // Custom User event types
-        static const EventType User;            // custom user event type
+        static EventType User;            // custom user event type
 
 
         // NOTE:
