@@ -41,7 +41,7 @@
 
 #include <SDOM/SDOM.hpp>   
 #include <SDOM/SDOM_IResourceObject.hpp>
-#include <SDOM/SDOM_ResourceHandle.hpp>
+#include <SDOM/SDOM_Handle.hpp>
 #include <SDOM/SDOM_EventTypeHash.hpp>
 
 namespace SDOM
@@ -169,14 +169,14 @@ namespace SDOM
         void triggerEventListeners(const Event& event, bool useCapture);       
 
 
-        void addChild(ResourceHandle child, bool useWorld=false, int worldX=0, int worldY=0);
-        bool removeChild(ResourceHandle child);
+        void addChild(DomHandle child, bool useWorld=false, int worldX=0, int worldY=0);
+        bool removeChild(DomHandle child);
 
 
-        const std::vector<ResourceHandle>& getChildren() const { return children_; }
-        
-        ResourceHandle getParent() const { return parent_; }
-        IDisplayObject& setParent(const ResourceHandle& parent) { parent_ = parent; return *this; }
+        const std::vector<DomHandle>& getChildren() const { return children_; }
+
+        DomHandle getParent() const { return parent_; }
+        IDisplayObject& setParent(const DomHandle& parent) { parent_ = parent; return *this; }
 
         int getMaxPriority() const;
         int getMinPriority() const;
@@ -187,7 +187,7 @@ namespace SDOM
         IDisplayObject& setPriority(int priority);
         std::vector<int> getChildrenPriorities() const;
         IDisplayObject& moveToTop();
-        bool hasChild(ResourceHandle child) const;
+        bool hasChild(DomHandle child) const;
         int getZOrder() const { return z_order_; } // Getter for z_order_
         IDisplayObject& setZOrder(int z_order) { z_order_ = z_order; return *this; } // Setter for z_order_
         
@@ -298,11 +298,11 @@ namespace SDOM
 
         // std::weak_ptr<IDisplayObject> parent_;
         // std::vector<std::shared_ptr<IDisplayObject>> children_;
-        ResourceHandle parent_;
-        std::vector<ResourceHandle> children_;
+        DomHandle parent_;
+        std::vector<DomHandle> children_;
 
         // // Static registry for IDisplayObject name lookup (This needs to be in Factory if not already)
-        // inline static std::unordered_map<std::string, ResourceHandle> nameRegistry_;
+        // inline static std::unordered_map<std::string, DomHandle> nameRegistry_;
 
         // Containers to store ListenerEntrys for different event phases
         struct ListenerEntry {
@@ -316,8 +316,8 @@ namespace SDOM
         IDisplayObject(const IDisplayObject& other) = delete;
         // IDisplayObject& operator=(const IDisplayObject& other) = delete;      
 
-        void attachChild_(ResourceHandle child, ResourceHandle parent, bool useWorld=false, int worldX=0, int worldY=0);
-        void removeOrphan_(const ResourceHandle& orphan);
+        void attachChild_(DomHandle child, DomHandle parent, bool useWorld=false, int worldX=0, int worldY=0);
+        void removeOrphan_(const DomHandle& orphan);
 
         void registerJson_();
 

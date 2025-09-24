@@ -93,8 +93,8 @@ $(document).ready(function(){initNavTree('md_progress.html',''); initResizable()
   <div class="headertitle"><div class="title">Project Description</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md99"></a>This project is a C++23 application utilizing SDL3 for graphical rendering and event handling. The goal is to create a simple Document Object Model (DOM) API for SDL3, focusing on building a GUI interface for SDL3 developers to use in their games or other cross-platform applications.</p>
-<h1><a class="anchor" id="autotoc_md100"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md110"></a>This project is a C++23 application utilizing SDL3 for graphical rendering and event handling. The goal is to create a simple Document Object Model (DOM) API for SDL3, focusing on building a GUI interface for SDL3 developers to use in their games or other cross-platform applications.</p>
+<h1><a class="anchor" id="autotoc_md111"></a>
 Progress Updates</h1>
 <ul>
 <li><b>[July 2, 2025]</b> Initial rough draft and proof of concept.</li>
@@ -230,12 +230,19 @@ Progress Updates</h1>
 <li>Refactored event dispatch logic for single-stage architecture, simplifying code and improving maintainability.</li>
 <li>Cleaned up circular includes and pointer conversion issues, improving build stability.</li>
 <li>Next steps: Expand event tests for Box (drag/drop, stacking, anchoring), add more interactive unit tests, and document event system usage.</li>
+<li>Refactored codebase to use new <code>DomHandle</code> and <code>ResHandle</code> types throughout.</li>
+<li>Verified and debugged handle logic, ensuring safe pointer access and robust operator overloading.</li>
+<li>Cleaned up event system: <code>EventManager</code> now fully leverages the handle system, removing unnecessary casts and improving safety.</li>
+<li>Fixed segmentation faults and infinite recursion issues in tree traversal by clarifying handle usage and recursive logic.</li>
+<li>Improved code readability and maintainability by removing legacy patterns and redundant checks.</li>
+<li>All major event and display object interactions now use the new handle API.</li>
+<li>Codebase is stable, with most reference and legacy issues resolved.</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md101"></a>
+<h1><a class="anchor" id="autotoc_md112"></a>
 ToDo:</h1>
 <ul>
 <li>Implement the <code>Box</code> object for drag and drop testing as well as stacking to build comprehensive testing of the anchoring system.</li>

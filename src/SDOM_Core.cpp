@@ -8,7 +8,7 @@
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IResourceObject.hpp>
-#include <SDOM/SDOM_ResourceHandle.hpp>
+#include <SDOM/SDOM_Handle.hpp>
 
 namespace SDOM
 {
@@ -73,22 +73,17 @@ namespace SDOM
         }
         configure(config);
 
-        std::function<void(const nlohmann::json&, ResourceHandle)> createResourceRecursive;
-        createResourceRecursive = [&](const nlohmann::json& obj, ResourceHandle parent) {
+        std::function<void(const nlohmann::json&, DomHandle)> createResourceRecursive;
+        createResourceRecursive = [&](const nlohmann::json& obj, DomHandle parent) {
             std::string type = obj.value("type", "");
-            ResourceHandle handle;
+            DomHandle handle;
             // If there's a type, create the resource
             if (!type.empty()) {
-                handle = factory_->create(type, obj);
+                handle = factory_->create(type, obj); // Make sure factory_->create returns DomHandle
 
                 // Attach to parent if both exist
                 if (parent && handle) {
-                    IDisplayObject* parentPtr = dynamic_cast<IDisplayObject*>(parent.get());
-                    if (parentPtr) {
-                        parentPtr->addChild(handle);
-                    } else {
-                        ERROR("createResourceRecursive: Parent is null or not a valid IDisplayObject.");
-                    }
+                    parent->addChild(handle); // No dynamic_cast needed
                 }
             }
             // Recursively process children
@@ -110,7 +105,7 @@ namespace SDOM
         std::string rootStageName = "mainStage"; // default
         if (j["Core"].contains("rootStage"))
             rootStageName = j["Core"]["rootStage"].get<std::string>();
-        rootNode_ = factory_->getResourceHandle(rootStageName);
+        rootNode_ = factory_->getDomHandle(rootStageName);
         setWindowTitle("Stage: " + rootStageName);
 
         // --- Debug: List all resources in the factory ---
@@ -767,25 +762,25 @@ namespace SDOM
     // {}
     // void Core::handleTabKeyPressReverse(Stage& stage)
     // {}
-    void Core::setKeyboardFocusedObject(ResourceHandle obj)
+    void Core::setKeyboardFocusedObject(DomHandle obj)
     { keyboardFocusedObject_ = obj; }
-    ResourceHandle Core::getKeyboardFocusedObject() const
+    DomHandle Core::getKeyboardFocusedObject() const
     { return keyboardFocusedObject_; }
-    void Core::setMouseHoveredObject(ResourceHandle obj)
+    void Core::setMouseHoveredObject(DomHandle obj)
     { hoveredObject_ = obj; }
-    ResourceHandle Core::getMouseHoveredObject() const
+    DomHandle Core::getMouseHoveredObject() const
     { return hoveredObject_; }
 
     void Core::setRootNode(const std::string& name)
     {
-        ResourceHandle stageHandle = factory_->getResourceHandle(name);
+        DomHandle stageHandle = factory_->getDomHandle(name);
         if (stageHandle && dynamic_cast<Stage*>(stageHandle.get()))
         {
             rootNode_ = stageHandle;
             setWindowTitle("Stage: " + rootNode_->getName());
         }
     }
-    void Core::setRootNode(const ResourceHandle& handle) 
+    void Core::setRootNode(const DomHandle& handle) 
     { 
         rootNode_ = handle;     
         setWindowTitle("Stage: " + rootNode_->getName());
@@ -804,7 +799,7 @@ namespace SDOM
     { 
         return dynamic_cast<IDisplayObject*>(rootNode_.get()); 
     }
-    ResourceHandle Core::getRootNode() const 
+    DomHandle Core::getRootNode() const 
     {
         return rootNode_; 
     }

@@ -4,7 +4,7 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
-#include <SDOM/SDOM_ResourceHandle.hpp>
+#include <SDOM/SDOM_Handle.hpp>
 
 namespace SDOM
 {
@@ -93,11 +93,11 @@ namespace SDOM
 
             // ===== Stage Management =====
             void setRootNode(const std::string& name);
-            void setRootNode(const ResourceHandle& handle);
+            void setRootNode(const DomHandle& handle);
             void setStage(const std::string& name); // Alias for backward compatibility
             Stage* getStage() const; // Alias for backward compatibility
             IDisplayObject* getRootNodePtr() const;
-            ResourceHandle getRootNode() const;
+            DomHandle getRootNode() const;
 
             // ===== SDL Resource Accessors =====
             SDL_Window* getWindow() const       { return window_; }
@@ -138,10 +138,10 @@ namespace SDOM
 
             // void handleTabKeyPress(Stage& stage);
             // void handleTabKeyPressReverse(Stage& stage);
-            void setKeyboardFocusedObject(ResourceHandle obj);
-            ResourceHandle getKeyboardFocusedObject() const;
-            void setMouseHoveredObject(ResourceHandle obj);
-            ResourceHandle getMouseHoveredObject() const;
+            void setKeyboardFocusedObject(DomHandle obj);
+            DomHandle getKeyboardFocusedObject() const;
+            void setMouseHoveredObject(DomHandle obj);
+            DomHandle getMouseHoveredObject() const;
 
 
             std::string getWindowTitle() const { return windowTitle_; }
@@ -173,19 +173,19 @@ namespace SDOM
             float fElapsedTime_;             // Elapsed time since the last update
 
 
-            ResourceHandle rootNode_; // The root of the resource tree
+            DomHandle rootNode_; // The root of the resource tree
 
-            ResourceHandle hoveredObject_;
-            ResourceHandle keyboardFocusedObject_;
+            DomHandle hoveredObject_;
+            DomHandle keyboardFocusedObject_;
             // struct TabPriorityComparator {
-            //     bool operator()(const ResourceHandle& a, const ResourceHandle& b) const {
+            //     bool operator()(const DomHandle& a, const DomHandle& b) const {
             //         auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
             //         auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
             //         if (!aObj || !bObj) return false; // Handle invalid handles
             //         return aObj->getTabPriority() < bObj->getTabPriority(); // Higher priority first
             //     }
             // };
-            // std::priority_queue<ResourceHandle, std::vector<ResourceHandle>, TabPriorityComparator> tabList_;
+            // std::priority_queue<DomHandle, std::vector<DomHandle>, TabPriorityComparator> tabList_;
 
 
             CoreConfig config_;

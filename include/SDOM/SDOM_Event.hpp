@@ -63,7 +63,7 @@ namespace SDOM
             Bubbling
         };    
 
-        Event(EventType type = EventType("None"), ResourceHandle target = nullptr, float fElapsedTime = 0.0f);
+        Event(EventType type = EventType("None"), DomHandle target = nullptr, float fElapsedTime = 0.0f);
 
         virtual ~Event() = default;    
 
@@ -80,14 +80,14 @@ namespace SDOM
         Phase getPhase() const;
         Event& setPhase(Phase phase);
 
-        ResourceHandle getTarget() const;
-        Event& setTarget(ResourceHandle newTarget);
+        DomHandle getTarget() const;
+        Event& setTarget(DomHandle newTarget);
 
-        ResourceHandle getCurrentTarget() const;
-        Event& setCurrentTarget(ResourceHandle newCurrentTarget);
+        DomHandle getCurrentTarget() const;
+        Event& setCurrentTarget(DomHandle newCurrentTarget);
 
-        ResourceHandle getRelatedTarget() const;
-        Event& setRelatedTarget(ResourceHandle newRelatedTarget);
+        DomHandle getRelatedTarget() const;
+        Event& setRelatedTarget(DomHandle newRelatedTarget);
 
         bool isPropagationStopped() const;
         Event& stopPropagation();
@@ -172,9 +172,9 @@ namespace SDOM
 
     protected:
         EventType type;                                 // Type of the event, e.g., KeyDown, MouseClick, etc.
-        ResourceHandle target = nullptr;                // Target of the event, usually the object that triggered it    
-        ResourceHandle currentTarget = nullptr;         // Current target during event propagation
-        ResourceHandle relatedTarget = nullptr;         // For events that involve a related target (e.g., drag and drop)
+        DomHandle target = nullptr;                     // Target of the event, usually the object that triggered it    
+        DomHandle currentTarget = nullptr;              // Current target during event propagation
+        DomHandle relatedTarget = nullptr;              // For events that involve a related target (e.g., drag and drop)
         Phase currentPhase;                             // Current phase of the event propagation
         SDL_Event sdlEvent;                             // underlying SDL event
         mutable bool propagationStopped = false;        // Indicates if event propagation is stopped

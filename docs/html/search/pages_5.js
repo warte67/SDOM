@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['model_0',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]]
+  ['inheritance_20warning_3a_20avoid_20diamond_20inheritance_0',['Inheritance Warning: Avoid Diamond Inheritance',['../md_object__handles.html',1,'']]]
 ];

@@ -8,15 +8,17 @@ var namespaceSDOM =
     [ "EventTypeHash", "structSDOM_1_1EventTypeHash.html", "structSDOM_1_1EventTypeHash" ],
     [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
     [ "Factory", "classSDOM_1_1Factory.html", "classSDOM_1_1Factory" ],
+    [ "Handle", "classSDOM_1_1Handle.html", "classSDOM_1_1Handle" ],
     [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
     [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
     [ "IResourceObject", "classSDOM_1_1IResourceObject.html", "classSDOM_1_1IResourceObject" ],
     [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
-    [ "ResourceHandle", "classSDOM_1_1ResourceHandle.html", "classSDOM_1_1ResourceHandle" ],
     [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
     [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ],
     [ "TypeCreators", "structSDOM_1_1TypeCreators.html", "structSDOM_1_1TypeCreators" ],
     [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
+    [ "DomHandle", "namespaceSDOM.html#a726eeae2d1da0b353ffbca201a53b98c", null ],
+    [ "ResHandle", "namespaceSDOM.html#acf381bf5f6d569f5c53ae442cb6ae529", null ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
       [ "TOP_LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1", null ],
@@ -55,7 +57,7 @@ var namespaceSDOM =
     [ "shutdown", "namespaceSDOM.html#a08d8dca92e8b158e7fcff8931bff26e5", null ],
     [ "trim", "namespaceSDOM.html#a0b2e6cb3f4096b1c8ae989c26ef9e32f", null ],
     [ "anchorPointToString_", "namespaceSDOM.html#ac004759fa5d6cd324931439829e17123", null ],
-    [ "draggedObject", "namespaceSDOM.html#a526663ac6574264ca8a1afe69561148a", null ],
+    [ "draggedObject", "namespaceSDOM.html#a36ca1c1933212978814714ef4641c8fa", null ],
     [ "isDragging", "namespaceSDOM.html#adf53bca06e8a020f771e843c14584582", null ],
     [ "stringToAnchorPoint_", "namespaceSDOM.html#a33cd42f20297f893e13db841931abda0", null ]
 ];

@@ -253,7 +253,7 @@ namespace SDOM
         
         // registerProperty("parent",
         //     [](const IDataObject& obj) { 
-        //         // Return the parent's ResourceHandle directly
+        //         // Return the parent's DomHandle directly
         //         return static_cast<const IDisplayObject&>(obj).getParent();
         //     },
         //     nullptr // read-only
@@ -264,8 +264,8 @@ namespace SDOM
         //         const auto& children = static_cast<const IDisplayObject&>(obj).getChildren();
         //         Json arr = Json::array();
         //         for (const auto& childHandle : children) {
-        //             // You can push the ResourceHandle itself, or just its name/type for serialization
-        //             // arr.push_back(childHandle); // If ResourceHandle is serializable to Json
+        //             // You can push the DomHandle itself, or just its name/type for serialization
+        //             // arr.push_back(childHandle); // If DomHandle is serializable to Json
         //             // Or, for just name/type:
         //             arr.push_back({ {"name", childHandle.getName()}, {"type", childHandle.getType()} });
         //         }
@@ -401,7 +401,7 @@ namespace SDOM
     }
 
 
-    void IDisplayObject::attachChild_(ResourceHandle p_child, ResourceHandle p_parent, bool useWorld, int worldX, int worldY)
+    void IDisplayObject::attachChild_(DomHandle p_child, DomHandle p_parent, bool useWorld, int worldX, int worldY)
     {
         IDisplayObject* child = dynamic_cast<IDisplayObject*>(p_child.get());
         IDisplayObject* parent = dynamic_cast<IDisplayObject*>(p_parent.get());
@@ -433,7 +433,7 @@ namespace SDOM
         }
     }
 
-    void IDisplayObject::removeOrphan_(const ResourceHandle& orphan) 
+    void IDisplayObject::removeOrphan_(const DomHandle& orphan) 
     {
         IDisplayObject* orphanObj = dynamic_cast<IDisplayObject*>(orphan.get());
         if (orphanObj) 
@@ -445,15 +445,15 @@ namespace SDOM
                 auto it = std::find(parentChildren.begin(), parentChildren.end(), orphan);
                 if (it != parentChildren.end()) 
                 {
-                    // Reset orphan's parent using ResourceHandle (nullptr)
-                    orphanObj->setParent(ResourceHandle());
+                    // Reset orphan's parent using DomHandle (nullptr)
+                    orphanObj->setParent(DomHandle());
                     parentChildren.erase(it); // Remove orphan from parent's children
                 }
             }
         }
     }
 
-    void IDisplayObject::addChild(ResourceHandle child, bool useWorld, int worldX, int worldY)
+    void IDisplayObject::addChild(DomHandle child, bool useWorld, int worldX, int worldY)
     {
         if (!child) 
         {
@@ -464,16 +464,16 @@ namespace SDOM
         Factory* factory = &core->getFactory();
         if (core->getIsTraversing())
         {
-            factory->addToFutureChildrenList(child, ResourceHandle(getName(), child->getType()), useWorld, worldX, worldY);
+            factory->addToFutureChildrenList(child, DomHandle(getName(), child->getType()), useWorld, worldX, worldY);
         }
         else
         {
-            attachChild_(child, ResourceHandle(getName(), getType()), useWorld, worldX, worldY);
+            attachChild_(child, DomHandle(getName(), getType()), useWorld, worldX, worldY);
         }
     }
 
 
-    bool IDisplayObject::removeChild(ResourceHandle child)
+    bool IDisplayObject::removeChild(DomHandle child)
     {
         if (!child) 
         {
@@ -487,7 +487,7 @@ namespace SDOM
             // Reset child's parent pointer if possible
             if (auto* childObj = dynamic_cast<IDisplayObject*>(child.get())) 
             {
-                childObj->setParent(ResourceHandle());
+                childObj->setParent(DomHandle());
             }
             Core* core = &Core::getInstance();
             Factory* factory = &core->getFactory();
@@ -535,7 +535,7 @@ namespace SDOM
         }
         std::cout << getName() << std::endl;
 
-        // Traverse children using ResourceHandle
+        // Traverse children using DomHandle
         for (size_t i = 0; i < children_.size(); ++i) 
         {
             const auto& childHandle = children_[i];
@@ -606,7 +606,7 @@ namespace SDOM
     //     if (nameRegistry_.find(name_) != nameRegistry_.end()) {
     //         ERROR("IDisplayObject name '" + name_ + "' is already registered!");
     //     }
-    //     nameRegistry_[name_] = ResourceHandle(name_, getType());
+    //     nameRegistry_[name_] = DomHandle(name_, getType());
     // }  
 
     // std::shared_ptr<IDisplayObject> IDisplayObject::getByName(const std::string& name) 
@@ -630,7 +630,7 @@ namespace SDOM
             return priority_;
         auto it = std::max_element(
             children_.begin(), children_.end(),
-            [](const ResourceHandle& a, const ResourceHandle& b) {
+            [](const DomHandle& a, const DomHandle& b) {
                 auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
                 auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
                 int aPriority = aObj ? aObj->priority_ : std::numeric_limits<int>::min();
@@ -647,7 +647,7 @@ namespace SDOM
         if (children_.empty()) return priority_;
         auto it = std::min_element(
             children_.begin(), children_.end(),
-            [](const ResourceHandle& a, const ResourceHandle& b) {
+            [](const DomHandle& a, const DomHandle& b) {
                 auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
                 auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
                 // Null children are considered highest priority
@@ -689,12 +689,12 @@ namespace SDOM
     IDisplayObject& IDisplayObject::sortChildrenByPriority()
     {
         // Remove invalid children
-        children_.erase(std::remove_if(children_.begin(), children_.end(), [](const ResourceHandle& child) {
+        children_.erase(std::remove_if(children_.begin(), children_.end(), [](const DomHandle& child) {
             return !child;
         }), children_.end());
 
         // Sort by priority (ascending)
-        std::sort(children_.begin(), children_.end(), [](const ResourceHandle& a, const ResourceHandle& b) {
+        std::sort(children_.begin(), children_.end(), [](const DomHandle& a, const DomHandle& b) {
             auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
             auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
             int aPriority = aObj ? aObj->priority_ : std::numeric_limits<int>::min();
@@ -745,7 +745,7 @@ namespace SDOM
         return *this;
     }
 
-    bool IDisplayObject::hasChild(const ResourceHandle child) const
+    bool IDisplayObject::hasChild(const DomHandle child) const
     {
         return std::find(children_.begin(), children_.end(), child) != children_.end();
     }
@@ -782,7 +782,7 @@ namespace SDOM
 
     void IDisplayObject::setKeyboardFocus() 
     { 
-        Core::getInstance().setKeyboardFocusedObject(ResourceHandle(getName(), getType())); 
+        Core::getInstance().setKeyboardFocusedObject(DomHandle(getName(), getType())); 
     }
     bool IDisplayObject::isKeyboardFocused() const
     {

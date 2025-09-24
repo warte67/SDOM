@@ -38,13 +38,13 @@
  ******************/
 
 #include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_ResourceHandle.hpp>
+#include <SDOM/SDOM_Handle.hpp>
 #include <SDOM/SDOM_Event.hpp>
 
 
 namespace SDOM
 {
-    SDOM::Event::Event(EventType type, ResourceHandle target, float fElapsedTime)
+    SDOM::Event::Event(EventType type, DomHandle target, float fElapsedTime)
         : type(type), target(target), currentPhase(Phase::Capture), fElapsedTime(fElapsedTime)
     {
         // Constructor implementation
@@ -75,7 +75,7 @@ namespace SDOM
                 auto& e = static_cast<Event&>(obj);
                 std::string name = val["name"].get<std::string>();
                 std::string type = val["type"].get<std::string>();
-                e.setTarget(ResourceHandle(name, type));
+                e.setTarget(DomHandle(name, type));
                 return obj;
             });
 
@@ -88,7 +88,7 @@ namespace SDOM
                 auto& e = static_cast<Event&>(obj);
                 std::string name = val["name"].get<std::string>();
                 std::string type = val["type"].get<std::string>();
-                e.setCurrentTarget(ResourceHandle(name, type));
+                e.setCurrentTarget(DomHandle(name, type));
                 return obj;
             });
 
@@ -101,7 +101,7 @@ namespace SDOM
                 auto& e = static_cast<Event&>(obj);
                 std::string name = val["name"].get<std::string>();
                 std::string type = val["type"].get<std::string>();
-                e.setRelatedTarget(ResourceHandle(name, type));
+                e.setRelatedTarget(DomHandle(name, type));
                 return obj;
             });
 
@@ -234,7 +234,7 @@ namespace SDOM
                 auto& e = static_cast<Event&>(obj);
                 std::string name = val["name"].get<std::string>();
                 std::string type = val["type"].get<std::string>();
-                e.setTarget(ResourceHandle(name, type));
+                e.setTarget(DomHandle(name, type));
             });
 
         registerCommand("setCurrentTarget",
@@ -242,7 +242,7 @@ namespace SDOM
                 auto& e = static_cast<Event&>(obj);
                 std::string name = val["name"].get<std::string>();
                 std::string type = val["type"].get<std::string>();
-                e.setCurrentTarget(ResourceHandle(name, type));
+                e.setCurrentTarget(DomHandle(name, type));
             });
 
         registerCommand("setRelatedTarget",
@@ -250,7 +250,7 @@ namespace SDOM
                 auto& e = static_cast<Event&>(obj);
                 std::string name = val["name"].get<std::string>();
                 std::string type = val["type"].get<std::string>();
-                e.setRelatedTarget(ResourceHandle(name, type));
+                e.setRelatedTarget(DomHandle(name, type));
             });
         registerCommand("setDisableDefaultBehavior",
             [](IDataObject& obj, const Json& val) {
@@ -311,36 +311,36 @@ namespace SDOM
         return *this;
     }
 
-    ResourceHandle Event::getTarget() const 
+    DomHandle Event::getTarget() const 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         return target;
     }
-    Event& Event::setTarget(const ResourceHandle newTarget) 
+    Event& Event::setTarget(const DomHandle newTarget) 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         target = newTarget;
         return *this;
     }
 
-    ResourceHandle Event::getCurrentTarget() const 
+    DomHandle Event::getCurrentTarget() const 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         return currentTarget;
     }
-    Event& Event::setCurrentTarget(const ResourceHandle newCurrentTarget) 
+    Event& Event::setCurrentTarget(const DomHandle newCurrentTarget) 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         currentTarget = newCurrentTarget;
         return *this;
     }
 
-    ResourceHandle Event::getRelatedTarget() const 
+    DomHandle Event::getRelatedTarget() const 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         return relatedTarget;
     }
-    Event& Event::setRelatedTarget(const ResourceHandle newRelatedTarget) 
+    Event& Event::setRelatedTarget(const DomHandle newRelatedTarget) 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         relatedTarget = newRelatedTarget;

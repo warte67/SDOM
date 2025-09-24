@@ -9,6 +9,8 @@ var hierarchy =
     [ "std::exception", null, [
       [ "SDOM::Exception", "classSDOM_1_1Exception.html", null ]
     ] ],
+    [ "SDOM::Handle< T >", "classSDOM_1_1Handle.html", null ],
+    [ "SDOM::Handle< IDisplayObject >", "classSDOM_1_1Handle.html", null ],
     [ "SDOM::IDisplayObject::InitStruct", "structSDOM_1_1IDisplayObject_1_1InitStruct.html", [
       [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ]
     ] ],
@@ -24,7 +26,6 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "SDOM::ResourceHandle", "classSDOM_1_1ResourceHandle.html", null ],
     [ "SDOM::SDL_Utils", "classSDOM_1_1SDL__Utils.html", null ],
     [ "SDOM::TypeCreators", "structSDOM_1_1TypeCreators.html", null ],
     [ "SDOM::UnitTests", "classSDOM_1_1UnitTests.html", null ]

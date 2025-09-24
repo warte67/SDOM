@@ -35,12 +35,11 @@
  * Original Author: Jay Faries (warte67)
  *
  ******************/
-
- #ifndef __SDOM_EVENT_MANAGER_HPP__
+#pragma once
+#ifndef __SDOM_EVENT_MANAGER_HPP__
 #define __SDOM_EVENT_MANAGER_HPP__
 
 #include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_ResourceHandle.hpp>
 
 // #include <queue>`
 // #include <memory>
@@ -68,7 +67,7 @@ namespace SDOM
         void DispatchQueuedEvents();
 
         // Dispatch a single event to the target node
-        void dispatchEvent(std::unique_ptr<Event> event, ResourceHandle rootNode);
+        void dispatchEvent(std::unique_ptr<Event> event, DomHandle rootNode);
         // Dispatch an event to all nodes on the same stage
         void dispatchEventToAllNodesOnStage(std::unique_ptr<Event> event);
 
@@ -77,7 +76,7 @@ namespace SDOM
 
         // Utility methods
         bool isMouseWithinBounds(IDisplayObject& target) const;
-        ResourceHandle findTopObjectUnderMouse(ResourceHandle rootNode, ResourceHandle excludeNode = ResourceHandle()) const;
+        DomHandle findTopObjectUnderMouse(DomHandle rootNode, DomHandle excludeNode = DomHandle()) const;
 
     private:
         std::queue<std::unique_ptr<Event>> eventQueue; // Queue for storing events

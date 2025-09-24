@@ -64,7 +64,7 @@ namespace SDOM
                 for (const auto& childJson : json["children"]) 
                 {
                     std::string typeName = childJson.value("type", "IDisplayObject"); // Default to IDisplayObject
-                    ResourceHandle childHandle = factory->create(typeName, childJson);
+                    DomHandle childHandle = factory->create(typeName, childJson);
                     if (childHandle) 
                     {
                         auto childObj = dynamic_cast<IDisplayObject*>(childHandle.get());

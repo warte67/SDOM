@@ -7,7 +7,6 @@
 
 namespace SDOM 
 {
-    class ResourceHandle; // forward declaration
     class Stage;
 
     struct TypeCreators 
@@ -38,28 +37,27 @@ namespace SDOM
         // void registerType(const std::string& typeName, Creator creator);
         void registerType(const std::string& typeName, const TypeCreators& creators);
         // JSON based object creator
-        ResourceHandle create(const std::string& typeName, const Json& config);
+        DomHandle create(const std::string& typeName, const Json& config);
         // String (JSON text) based object creator
-        ResourceHandle create(const std::string& typeName, const std::string& jsonStr);
+        DomHandle create(const std::string& typeName, const std::string& jsonStr);
         // InitStruct based object creator
-        ResourceHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);
+        DomHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);
 
         // ----- Resource Management -----
 
-        // Example of Type-safe access:
-        //      ResourceHandle ptr("mainStage", "Stage");
-        //      Stage* stage = ptr.as<Stage>();
-        IResourceObject* getResource(const std::string& name);
+
+        IResourceObject* getResObj(const std::string& name);
+        IDisplayObject* getDomObj(const std::string& name);
 
         // Example Usage:
-        // ResourceHandle ptr = factory.getResourceHandle("mainStage");
+        // DomHandle ptr = factory.getDomHandle("mainStage");
         // if (ptr) {
         //     Stage* stage = dynamic_cast<Stage*>(ptr.get());
         //     // Use stage...
         // }
-        ResourceHandle getResourceHandle(const std::string& name);
+        DomHandle getDomHandle(const std::string& name);
 
-        ResourceHandle getStageHandle();
+        DomHandle getStageHandle();
 
         void addResource(const std::string& name, 
             std::unique_ptr<IResourceObject> resource);
@@ -79,10 +77,10 @@ namespace SDOM
         void attachFutureChildren();
 
         // Add a child node to the orphan list
-        void addToOrphanList(const ResourceHandle orphan);
+        void addToOrphanList(const DomHandle orphan);
 
         // Add a future child to the future children list
-        void addToFutureChildrenList(const ResourceHandle child, const ResourceHandle parent,
+        void addToFutureChildrenList(const DomHandle child, const DomHandle parent,
             bool useWorld=false, int worldX=0, int worldY=0);
 
         
@@ -97,11 +95,11 @@ namespace SDOM
         std::unordered_map<std::string, TypeCreators> creators_;
 
 
-        std::vector<ResourceHandle> orphanList_;
+        std::vector<DomHandle> orphanList_;
         struct futureChild 
         {
-            ResourceHandle child;
-            ResourceHandle parent;
+            DomHandle child;
+            DomHandle parent;
             bool preserveWorldPosition; // was bool useWorld;
             int dragStartWorldX;
             int dragStartWorldY;

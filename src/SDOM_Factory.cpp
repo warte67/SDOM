@@ -1,7 +1,7 @@
 // SDOM_Factory.cpp
 
 #include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_ResourceHandle.hpp>
+#include <SDOM/SDOM_Handle.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Stage.hpp>
 
@@ -10,8 +10,9 @@ namespace SDOM
 
     Factory::Factory() : IDataObject()
     {
-        // make sure the ResourceHandles can access this Factory
-        ResourceHandle::factory_ = this;
+        // make sure the DomHandles can access this Factory
+        DomHandle::factory_ = this;
+        ResHandle::factory_ = this;
 
         // ===== Register built-in types =====
 
@@ -30,41 +31,61 @@ namespace SDOM
         creators_[typeName] = creators;
     }
 
-    IResourceObject* Factory::getResource(const std::string& name) 
+    // IResourceObject* Factory::getResource(const std::string& name) 
+    // {
+    //     auto it = resources_.find(name);
+    //     if (it != resources_.end()) 
+    //     {
+    //         return it->second.get();
+    //     }
+    //     return nullptr;
+    // }
+    IResourceObject* Factory::getResObj(const std::string& name)
     {
         auto it = resources_.find(name);
         if (it != resources_.end()) 
         {
-            return it->second.get();
+            return dynamic_cast<IDisplayObject*>(it->second.get());
         }
         return nullptr;
     }
-    
-    ResourceHandle Factory::getResourceHandle(const std::string& name) 
+    IDisplayObject* Factory::getDomObj(const std::string& name)
     {
         auto it = resources_.find(name);
         if (it != resources_.end()) 
         {
-            // Use the resource's type for the ResourceHandle
-            return ResourceHandle(name, it->second->getType());
+            return dynamic_cast<IDisplayObject*>(it->second.get());
         }
-        // Return an empty ResourceHandle if not found
-        return ResourceHandle();
+        return nullptr;
     }
 
-    ResourceHandle Factory::getStageHandle() 
+
+
+    DomHandle Factory::getDomHandle(const std::string& name) 
+    {
+        auto it = resources_.find(name);
+        if (it != resources_.end()) 
+        {
+            // Use the resource's type for the DomHandle
+            return DomHandle(name, it->second->getType());
+        }
+        // Return an empty DomHandle if not found
+        return DomHandle();
+    }
+
+    DomHandle Factory::getStageHandle() 
     {
         Stage* stage = getStage();
         if (!stage) {
             ERROR("Factory::getStageHandle: No stage available");
-            return ResourceHandle(); // Return an empty/null handle if stage is not available
+            return DomHandle(); // Return an empty/null handle if stage is not available
         }
         std::string stageName = stage->getName();
-        return getResourceHandle(stageName);
+        return getDomHandle(stageName);
     }
 
     // // JSON based object creator
-    ResourceHandle Factory::create(const std::string& typeName, const Json& config)
+    DomHandle Factory::create(const std::string& typeName, const Json& config)
     {
         auto it = creators_.find(typeName);
         if (it != creators_.end() && it->second.fromJson) 
@@ -73,28 +94,28 @@ namespace SDOM
             if (!resource) {
                 std::cout << "Factory::create: Failed to create resource of type '" << typeName
                         << "' from JSON. Resource is nullptr.\n";
-                return ResourceHandle(); // Invalid handle
+                return DomHandle(); // Invalid handle
             }
             std::string name = config.value("name", "");
             resources_[name] = std::move(resource);
             resources_[name]->onInit(); // Initialize the resource
-            return ResourceHandle(name, typeName);
+            return DomHandle(name, typeName);
         }
-        return ResourceHandle(); // Invalid handle
+        return DomHandle(); // Invalid handle
     }
 
     // String (JSON text) based object creator
-    ResourceHandle Factory::create(const std::string& typeName, const std::string& jsonStr) 
+    DomHandle Factory::create(const std::string& typeName, const std::string& jsonStr) 
     {
         Json config = Json::parse(jsonStr);
-        ResourceHandle ret = create(typeName, config);
+        DomHandle ret = create(typeName, config);
         if (ret)
             ret->onInit(); // Initialize the resource
         return ret;
     }    
 
     // InitStruct based object creator
-    ResourceHandle Factory::create(const std::string& typeName, const IDisplayObject::InitStruct& init)
+    DomHandle Factory::create(const std::string& typeName, const IDisplayObject::InitStruct& init)
     {
         auto it = creators_.find(typeName);
         if (it != creators_.end() && it->second.fromInitStruct) 
@@ -105,10 +126,10 @@ namespace SDOM
                 std::string name = init.name;
                 resource->onInit(); // Initialize the resource
                 resources_[name] = std::move(resource);
-                return ResourceHandle(name, typeName);
+                return DomHandle(name, typeName);
             }
         }
-        return ResourceHandle(); // Invalid handle
+        return DomHandle(); // Invalid handle
     }
 
 
@@ -161,14 +182,14 @@ namespace SDOM
             IDisplayObject* orphan = dynamic_cast<IDisplayObject*>(orphanHandle.get());
             if (orphan)
             {
-                ResourceHandle parentHandle = orphan->getParent();
+                DomHandle parentHandle = orphan->getParent();
                 IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parentHandle.get());
                 if (parentObj)
                 {
                     // Remove orphan from parent's children using public removeChild method
                     parentObj->removeChild(orphanHandle);
                     // Set orphan's parent to nullptr using public setParent method
-                    orphan->setParent(ResourceHandle());
+                    orphan->setParent(DomHandle());
                 }
             }
         }
@@ -194,7 +215,7 @@ namespace SDOM
         futureChildrenList_.clear();
     }
 
-    void Factory::addToOrphanList(const ResourceHandle orphan) 
+    void Factory::addToOrphanList(const DomHandle orphan) 
     {
         if (orphan) 
         {
@@ -202,7 +223,7 @@ namespace SDOM
         }
     }
 
-    void Factory::addToFutureChildrenList(const ResourceHandle child, const ResourceHandle parent, bool useWorld, int worldX, int worldY) 
+    void Factory::addToFutureChildrenList(const DomHandle child, const DomHandle parent, bool useWorld, int worldX, int worldY) 
     {
         if (child && parent) 
         {

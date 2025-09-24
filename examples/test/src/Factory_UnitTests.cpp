@@ -22,7 +22,7 @@ namespace SDOM
         std::vector<std::string> originalNames = factory.listResourceNames();
 
         // Test resource creation
-        ResourceHandle handle;
+        DomHandle handle;
         result = UnitTests::run("Factory", "Resource Creation", [&factory, &handle]() {
             Json config = {
                 {"type", "Stage"},
@@ -39,7 +39,7 @@ namespace SDOM
         // Test resource retrieval
         result = UnitTests::run("Factory", "Resource Retrieval", [&factory, &debugRet, &handle]() 
         {
-            ResourceHandle testHandle = factory.getResourceHandle("testStage");
+            DomHandle testHandle = factory.getDomHandle("testStage");
             if (testHandle != handle) 
             {
                 debugRet = "Expected handle: " + handle.str() + ", but got: " + testHandle.str();
@@ -121,7 +121,7 @@ namespace SDOM
         result = UnitTests::run("Factory", "Resource Destruction", [&factory, &handle]() 
         {
             factory.removeResource("testStage");
-            ResourceHandle testHandle = factory.getResourceHandle("testStage");
+            DomHandle testHandle = factory.getDomHandle("testStage");
             return testHandle == nullptr;
         });
         if (!result) { std::cout << CLR::indent() << "Resource destruction test failed!" << CLR::RESET << std::endl; }
@@ -134,8 +134,8 @@ namespace SDOM
                 {"name", "testStage"},
                 {"color", { {"r", 1}, {"g", 2}, {"b", 3}, {"a", 4} }}
             };
-            ResourceHandle first = factory.create("Stage", config);
-            ResourceHandle second = factory.create("Stage", config);
+            DomHandle first = factory.create("Stage", config);
+            DomHandle second = factory.create("Stage", config);
             // Define expected behavior: should not allow duplicate, or should overwrite
             bool ret = first != nullptr && second != nullptr;
             // clean up
@@ -154,17 +154,17 @@ namespace SDOM
                 {"name", "overwriteTest"},
                 {"color", { {"r", 10}, {"g", 20}, {"b", 30}, {"a", 40} }}
             };
-            ResourceHandle first = factory.create("Stage", config1);
+            DomHandle first = factory.create("Stage", config1);
 
             // Overwrite with new config
             Json config2 = {
                 {"name", "overwriteTest"},
                 {"color", { {"r", 15}, {"g", 25}, {"b", 35}, {"a", 45} }}
             };
-            ResourceHandle second = factory.create("Stage", config2);
+            DomHandle second = factory.create("Stage", config2);
 
             // Retrieve and check if the resource was overwritten
-            ResourceHandle retrieved = factory.getResourceHandle("overwriteTest");
+            DomHandle retrieved = factory.getDomHandle("overwriteTest");
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(retrieved.get());
             if (!obj) {
                 debugRet = "Resource 'overwriteTest' not found after overwrite.";

@@ -133,9 +133,23 @@ var NAVTREE =
         ] ]
       ] ]
     ] ],
+    [ "Inheritance Warning: Avoid Diamond Inheritance", "md_object__handles.html", [
+      [ "Two Trees in the Garden", "md_object__handles.html#autotoc_md100", null ],
+      [ "Object Handles in SDOM", "md_object__handles.html#autotoc_md101", [
+        [ "Overview", "md_object__handles.html#autotoc_md102", null ],
+        [ "Handle Types", "md_object__handles.html#autotoc_md103", [
+          [ "1. DomHandle", "md_object__handles.html#autotoc_md104", null ],
+          [ "2. ResHandle", "md_object__handles.html#autotoc_md105", null ]
+        ] ],
+        [ "Design Rationale", "md_object__handles.html#autotoc_md106", null ],
+        [ "Example Usage", "md_object__handles.html#autotoc_md107", null ],
+        [ "Migration Strategy", "md_object__handles.html#autotoc_md108", null ],
+        [ "Best Practices", "md_object__handles.html#autotoc_md109", null ]
+      ] ]
+    ] ],
     [ "Project Description", "md_progress.html", [
-      [ "Progress Updates", "md_progress.html#autotoc_md100", null ],
-      [ "ToDo:", "md_progress.html#autotoc_md101", null ]
+      [ "Progress Updates", "md_progress.html#autotoc_md111", null ],
+      [ "ToDo:", "md_progress.html#autotoc_md112", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -143,6 +157,7 @@ var NAVTREE =
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
+        [ "Typedefs", "namespacemembers_type.html", null ],
         [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
     ] ],
@@ -173,12 +188,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "SDOM_8cpp.html",
-"classSDOM_1_1Core.html#aa39ef543abb9c8266fa25d149fe00ada",
-"classSDOM_1_1Event.html#af898e66319b61dcecb405d7811144cf3",
-"classSDOM_1_1IDataObject.html#a895dd8cab0329b84dc3c399cd981cbe6",
-"classSDOM_1_1IResourceObject.html#a7532598094b2dc63904f81c925e419ee",
-"classSDOM_1_1Stage.html#a9dccc6878d7b48f271a1319e61838c1e",
-"namespaceSDOM.html#aabaa2df161427871e74767e384bcd058"
+"classSDOM_1_1Core.html#a9c3241b0fe11b049828e4a04a8a541b0",
+"classSDOM_1_1Event.html#af5e49b7da66ac7d4c092ddd582524db9",
+"classSDOM_1_1Handle.html#a5a932b51105657877ba889f741f3d47d",
+"classSDOM_1_1IDisplayObject.html#aea1f9c8185f6b4f664baef956ba3cfef",
+"classSDOM_1_1Stage.html#a90e2d7c4dd39c97d030aa80aabf7e048",
+"md_extensible__factory.html#autotoc_md96"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

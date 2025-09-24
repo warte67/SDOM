@@ -95,6 +95,13 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
         - Refactored event dispatch logic for single-stage architecture, simplifying code and improving maintainability.
         - Cleaned up circular includes and pointer conversion issues, improving build stability.
         - Next steps: Expand event tests for Box (drag/drop, stacking, anchoring), add more interactive unit tests, and document event system usage.
+        - Refactored codebase to use new `DomHandle` and `ResHandle` types throughout.
+        - Verified and debugged handle logic, ensuring safe pointer access and robust operator overloading.
+        - Cleaned up event system: `EventManager` now fully leverages the handle system, removing unnecessary casts and improving safety.
+        - Fixed segmentation faults and infinite recursion issues in tree traversal by clarifying handle usage and recursive logic.
+        - Improved code readability and maintainability by removing legacy patterns and redundant checks.
+        - All major event and display object interactions now use the new handle API.
+        - Codebase is stable, with most reference and legacy issues resolved.
 
 
 # ToDo:

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['queue_5fsdl_5fevent_0',['Queue_SDL_Event',['../classSDOM_1_1EventManager.html#aff3182988af133ffc9c0b8b9dff46594',1,'SDOM::EventManager']]],
+  ['queue_5fsdl_5fevent_0',['Queue_SDL_Event',['../classSDOM_1_1EventManager.html#a7ef51b6b24295ea49537303e5cefd7fd',1,'SDOM::EventManager']]],
   ['quit_1',['quit',['../classSDOM_1_1Core.html#a42a5582607f3fe1540ed6c00afc40283',1,'SDOM::Core::quit()'],['../namespaceSDOM.html#a9c56125987bd1ed7efbcc59e678a2be2',1,'SDOM::quit()']]]
 ];

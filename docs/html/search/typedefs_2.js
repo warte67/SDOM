@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['json_0',['Json',['../SDOM_8hpp.html#af13a1979f9e8f62c101433fac6511cc6',1,'SDOM.hpp']]]
+  ['getter_0',['Getter',['../classSDOM_1_1IDataObject.html#a7532598094b2dc63904f81c925e419ee',1,'SDOM::IDataObject']]]
 ];

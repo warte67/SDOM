@@ -102,6 +102,7 @@
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_CLR.hpp>
 // #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_Handle.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
 
 

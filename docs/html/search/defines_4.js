@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['warning_0',['WARNING',['../SDOM_8hpp.html#aaf99b8fcaa4b837f684ea0505ed34487',1,'SDOM.hpp']]],
-  ['word_1',['Word',['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'SDOM_CLR.hpp']]]
+  ['error_0',['ERROR',['../SDOM_8hpp.html#ae225ab718bd4f5e2221129f026d3d8f1',1,'SDOM.hpp']]]
 ];

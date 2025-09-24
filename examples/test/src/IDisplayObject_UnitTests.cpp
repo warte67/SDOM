@@ -25,7 +25,7 @@ namespace SDOM
         testResult = UnitTests::run("IDisplayObject", "Create generic Stage object", [factory, &dbgStr]() {
             Stage::InitStruct initData;
             initData.name = "genericStage";
-            ResourceHandle stageHandle = factory->create("Stage", initData);
+            DomHandle stageHandle = factory->create("Stage", initData);
             if (!stageHandle) {
                 dbgStr = "Failed to create Stage object via InitStruct!";
                 return false;
@@ -41,7 +41,7 @@ namespace SDOM
 
         // Test:setName and getName
         testResult = UnitTests::run("IDisplayObject", "Set and Get Name", [factory, &dbgStr]() {
-            ResourceHandle stageHandle = factory->getResourceHandle("genericStage");
+            DomHandle stageHandle = factory->getDomHandle("genericStage");
             if (!stageHandle) {
                 dbgStr = "Stage object 'genericStage' not found!";
                 return false;
@@ -59,7 +59,7 @@ namespace SDOM
 
         // Test: setType and getType
         testResult = UnitTests::run("IDisplayObject", "Set and Get Type", [factory, &dbgStr]() {
-            ResourceHandle stageHandle = factory->getResourceHandle("genericStage");
+            DomHandle stageHandle = factory->getDomHandle("genericStage");
             if (!stageHandle) {
                 dbgStr = "Stage object 'genericStage' not found!";
                 return false;
@@ -82,7 +82,7 @@ namespace SDOM
         // Test: Remove the generic stage object
         testResult = UnitTests::run("IDisplayObject", "Remove generic Stage object", [factory, &dbgStr]() {
             factory->removeResource("genericStage");
-            ResourceHandle stageHandle = factory->getResourceHandle("genericStage");
+            DomHandle stageHandle = factory->getDomHandle("genericStage");
             if (stageHandle) {
                 dbgStr = "'genericStage' still exists after removal!";
                 return false;
