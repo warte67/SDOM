@@ -56,17 +56,12 @@ void Box::onQuit()
 
 void Box::onEvent(const SDOM::Event& event) 
 {
-    std::cout << "target: " << event.getTarget()->getName() << std::endl;
-    std::cout << "currentTarget: " << (event.getCurrentTarget() ? event.getCurrentTarget()->getName() : "null") << std::endl;
-    std::cout << "relatedTarget: " << (event.getRelatedTarget() ? event.getRelatedTarget()->getName() : "null") << std::endl;
-
-
-
+    // std::cout << "target: " << event.getTarget()->getName() << std::endl;
+    // std::cout << "currentTarget: " << (event.getCurrentTarget() ? event.getCurrentTarget()->getName() : "null") << std::endl;
+    // std::cout << "relatedTarget: " << (event.getRelatedTarget() ? event.getRelatedTarget()->getName() : "null") << std::endl;
 
     // only target phase
     if (event.getPhase() != SDOM::Event::Phase::Target) return;
-
-
 
     if (event.getTarget() == SDOM::getStageHandle()) 
     {
@@ -74,11 +69,7 @@ void Box::onEvent(const SDOM::Event& event)
         return; // Skip event handling for the stage
     }
 
-
-
-
-    std::cout << "Box " << getName() << " received event: " << event.getTypeName() << std::endl;
-
+    // std::cout << "Box " << getName() << " received event: " << event.getTypeName() << std::endl;
 
     if (event.getType() == SDOM::EventType::KeyDown)
     {

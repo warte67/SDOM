@@ -102,11 +102,25 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
         - Improved code readability and maintainability by removing legacy patterns and redundant checks.
         - All major event and display object interactions now use the new handle API.
         - Codebase is stable, with most reference and legacy issues resolved.
-
+- **[September 24, 2025]**
+    - **Factory Refactor:**
+    - Completely revised the `Factory` to use `IDisplayObject` instead of `IResourceObject`.
+    - Planned to reintroduce `IResourceObject` into the `Factory` later, ensuring compatibility with both resource and display object management.
+    - Verified that the `Factory` now supports `IDisplayObject` creation and initialization.
+    - **Box Object:**
+    - The `Box` object is now fully functional, with lifecycle methods (`onInit`, `onRender`, `onUpdate`, etc.) implemented and tested.
+    - Event listener functionality is the only remaining issue, with the `MouseClick` event listener not firing as expected.
+    - Began troubleshooting the event listener system, focusing on event propagation, listener registration, and dispatch logic.
+    - **Event System:**
+    - Continued debugging and refining the event system to ensure proper propagation and listener execution.
+    - Verified that `EventManager` correctly dispatches events to the stage and its children.
+    - Added debug logs to trace event flow and identify potential issues with `Box` event handling.
 
 # ToDo:
-
-- Implement the `Box` object for drag and drop testing as well as stacking to build comprehensive testing of the anchoring system.
+- Resolve the `Box` event listener issue, ensuring that `MouseClick` events are received and processed correctly.
+- Expand event system tests to include drag-and-drop functionality, stacking, and anchoring for `Box` objects.
+- Reintroduce `IResourceObject` into the `Factory` for resource management alongside `IDisplayObject`.
+- Add unit tests for the revised `Factory` and event system to ensure stability and robustness.
 - Move resource and pointer tests to `onUnitTest()` methods when available.
 - Add comprehensive unit tests for Factory, resource_ptr, and error conditions.
 - Language Hooks

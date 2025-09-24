@@ -20,12 +20,12 @@ public:
     struct InitStruct : public SDOM::IDisplayObject::InitStruct {};
     virtual ~Box();
 
-    static std::unique_ptr<IResourceObject> CreateFromJson(const Json& config) {
-        return std::unique_ptr<IResourceObject>(new Box(config));
+    static std::unique_ptr<IDisplayObject> CreateFromJson(const Json& config) {
+        return std::unique_ptr<IDisplayObject>(new Box(config));
     }
-    static std::unique_ptr<IResourceObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
+    static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
         const auto& boxInit = static_cast<const Box::InitStruct&>(baseInit);
-        return std::unique_ptr<IResourceObject>(new Box(boxInit));
+        return std::unique_ptr<IDisplayObject>(new Box(boxInit));
     }
 
     // Override DisplayObject methods

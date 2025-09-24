@@ -30,12 +30,12 @@ namespace SDOM
     public:
 
         // In SDOM_Stage.hpp
-        static std::unique_ptr<IResourceObject> CreateFromJson(const Json& config) {
-            return std::unique_ptr<IResourceObject>(new Stage(config));
+        static std::unique_ptr<IDisplayObject> CreateFromJson(const Json& config) {
+            return std::unique_ptr<IDisplayObject>(new Stage(config));
         }
-        static std::unique_ptr<IResourceObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
+        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
             const auto& stageInit = static_cast<const Stage::InitStruct&>(baseInit);
-            return std::unique_ptr<IResourceObject>(new Stage(stageInit));
+            return std::unique_ptr<IDisplayObject>(new Stage(stageInit));
         }
 
         /**

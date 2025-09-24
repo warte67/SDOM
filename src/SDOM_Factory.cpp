@@ -33,8 +33,8 @@ namespace SDOM
 
     // IResourceObject* Factory::getResource(const std::string& name) 
     // {
-    //     auto it = resources_.find(name);
-    //     if (it != resources_.end()) 
+    //     auto it = displayObjects_.find(name);
+    //     if (it != displayObjects_.end()) 
     //     {
     //         return it->second.get();
     //     }
@@ -42,17 +42,17 @@ namespace SDOM
     // }
     IResourceObject* Factory::getResObj(const std::string& name)
     {
-        auto it = resources_.find(name);
-        if (it != resources_.end()) 
+        auto it = displayObjects_.find(name);
+        if (it != displayObjects_.end()) 
         {
-            return dynamic_cast<IDisplayObject*>(it->second.get());
+            return dynamic_cast<IResourceObject*>(it->second.get());
         }
         return nullptr;
     }
     IDisplayObject* Factory::getDomObj(const std::string& name)
     {
-        auto it = resources_.find(name);
-        if (it != resources_.end()) 
+        auto it = displayObjects_.find(name);
+        if (it != displayObjects_.end()) 
         {
             return dynamic_cast<IDisplayObject*>(it->second.get());
         }
@@ -63,8 +63,8 @@ namespace SDOM
 
     DomHandle Factory::getDomHandle(const std::string& name) 
     {
-        auto it = resources_.find(name);
-        if (it != resources_.end()) 
+        auto it = displayObjects_.find(name);
+        if (it != displayObjects_.end()) 
         {
             // Use the resource's type for the DomHandle
             return DomHandle(name, it->second->getType());
@@ -90,15 +90,15 @@ namespace SDOM
         auto it = creators_.find(typeName);
         if (it != creators_.end() && it->second.fromJson) 
         {
-            auto resource = it->second.fromJson(config);
-            if (!resource) {
-                std::cout << "Factory::create: Failed to create resource of type '" << typeName
-                        << "' from JSON. Resource is nullptr.\n";
+            auto displayObject = it->second.fromJson(config);
+            if (!displayObject) {
+                std::cout << "Factory::create: Failed to create display object of type '" << typeName
+                        << "' from JSON. Display object is nullptr.\n";
                 return DomHandle(); // Invalid handle
             }
             std::string name = config.value("name", "");
-            resources_[name] = std::move(resource);
-            resources_[name]->onInit(); // Initialize the resource
+            displayObjects_[name] = std::move(displayObject);
+            displayObjects_[name]->onInit(); // Initialize the display object
             return DomHandle(name, typeName);
         }
         return DomHandle(); // Invalid handle
@@ -120,12 +120,12 @@ namespace SDOM
         auto it = creators_.find(typeName);
         if (it != creators_.end() && it->second.fromInitStruct) 
         {
-            auto resource = it->second.fromInitStruct(init);
-            if (resource) 
+            auto displayObject = it->second.fromInitStruct(init);
+            if (displayObject) 
             {
                 std::string name = init.name;
-                resource->onInit(); // Initialize the resource
-                resources_[name] = std::move(resource);
+                displayObject->onInit(); // Initialize the display object
+                displayObjects_[name] = std::move(displayObject);
                 return DomHandle(name, typeName);
             }
         }
@@ -133,21 +133,21 @@ namespace SDOM
     }
 
 
-    void Factory::addResource(const std::string& name, 
-        std::unique_ptr<IResourceObject> resource) 
+    void Factory::addDisplayObject(const std::string& name, 
+        std::unique_ptr<IDisplayObject> displayObject) 
     {
-        resources_[name] = std::move(resource);
+        displayObjects_[name] = std::move(displayObject);
     }
     
-    void Factory::removeResource(const std::string& name) 
+    void Factory::removeDisplayObject(const std::string& name) 
     {
-        resources_.erase(name);
+        displayObjects_.erase(name);
     }
 
-    std::vector<std::string> Factory::listResourceNames() const
+    std::vector<std::string> Factory::listDisplayObjectNames() const
     {
         std::vector<std::string> names;
-        for (const auto& pair : resources_) {
+        for (const auto& pair : displayObjects_) {
             names.push_back(pair.first);
         }
         return names;
@@ -155,20 +155,20 @@ namespace SDOM
 
     void Factory::clear()
     {
-        resources_.clear();
+        displayObjects_.clear();
     }
 
     void Factory::printRegistry() const
     {
-        std::cout << "Factory Resource Registry:\n";
-        for (const auto& pair : resources_) {
+        std::cout << "Factory Display Object Registry:\n";
+        for (const auto& pair : displayObjects_) {
             const auto& name = pair.first;
-            const auto& resource = pair.second;
+            const auto& displayObject = pair.second;
             std::cout << "  Name: " << name
-                    << ", Type: " << (resource ? resource->getType() : "Unknown")
+                    << ", Type: " << (displayObject ? displayObject->getType() : "Unknown")
                     << "\n";
         }
-        std::cout << "Total resources: " << resources_.size() << std::endl;
+        std::cout << "Total display objects: " << displayObjects_.size() << std::endl;
     }
 
     
@@ -254,9 +254,9 @@ namespace SDOM
             processResource(json["resource"]);
         }
 
-        // Debug: List installed resources
-        auto names = listResourceNames();
-        std::cout << "Factory::initFromJson() --> Installed resources: ";
+        // Debug: List installed display objects
+        auto names = listDisplayObjectNames();
+        std::cout << "Factory::initFromJson() --> Installed display objects: ";
         for (const auto& name : names)
         {
             std::cout << name << " ";
@@ -278,27 +278,27 @@ namespace SDOM
         if (creatorIt != creators_.end())
         {
             const TypeCreators& creators = creatorIt->second;
-            std::unique_ptr<IResourceObject> resourceObj;
+            std::unique_ptr<IDisplayObject> displayObj;
             if (creators.fromJson) {
-                resourceObj = creators.fromJson(config);
+                displayObj = creators.fromJson(config);
             }
             // Optionally, support InitStruct creation if needed:
             // else if (creators.fromInitStruct) {
             //     IDisplayObject::InitStruct init = ...; // convert config to InitStruct
-            //     resourceObj = creators.fromInitStruct(init);
+            //     displayObj = creators.fromInitStruct(init);
             // }
-            if (resourceObj)
+            if (displayObj)
             {
-                addResource(name, std::move(resourceObj));
+                addDisplayObject(name, std::move(displayObj));
             }
             else
             {
-                ERROR("Failed to create resource: " + name + " of type: " + type);
+                ERROR("Failed to create display object: " + name + " of type: " + type);
             }
         }
         else
         {
-            ERROR("Unknown resource type: " + type);
+            ERROR("Unknown display object type: " + type);
         }
     }
 

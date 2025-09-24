@@ -50,10 +50,9 @@ namespace SDOM
     // IDisplayObject implementation
 
     IDisplayObject::IDisplayObject(const InitStruct& init)
-        : IResourceObject(init.name, "IDisplayObject", "")
+         : IDataObject()
     {
-        // name_ = init.name;
-        setName(init.name);
+        name_ = init.name;
         color_ = init.color;
         z_order_ = init.z_order;
         priority_ = init.priority;
@@ -74,7 +73,7 @@ namespace SDOM
     }
 
     IDisplayObject::IDisplayObject(const Json& config)
-        : IResourceObject(config.value("name", ""), "IDisplayObject", "")
+        : IDataObject()
     {
         // Set anchors from JSON (default to TOP_LEFT if not present)
         setAnchorLeft(stringToAnchorPoint_.count(config.value("anchorLeft", "top_left")) 

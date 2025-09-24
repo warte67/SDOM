@@ -81,7 +81,7 @@ namespace SDOM
 
         // Test: Remove the generic stage object
         testResult = UnitTests::run("IDisplayObject", "Remove generic Stage object", [factory, &dbgStr]() {
-            factory->removeResource("genericStage");
+            factory->removeDisplayObject("genericStage");
             DomHandle stageHandle = factory->getDomHandle("genericStage");
             if (stageHandle) {
                 dbgStr = "'genericStage' still exists after removal!";

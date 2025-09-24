@@ -99,7 +99,7 @@ namespace SDOM
 
         // dispatch event listener only events
         if (!event->getType().getGlobal()   && !event->getType().getTargetOnly() &&
-            !event->getType().getCaptures() && !event->getType().getBubbles())
+            !event->getType().getCaptures() && !event->getType().getBubbles())   
         {
             // Dispatch to the active stage
             auto eventCopy = std::make_unique<Event>(*event);
@@ -230,19 +230,18 @@ namespace SDOM
         std::function<void(DomHandle, Event*)> dispatchToChildren =
             [&](DomHandle nodeHandle, Event* evt)
         {
-            IDisplayObject* node = nodeHandle.get();
-            if (!node) return;
+            if (!nodeHandle) return;
             evt->setPhase(Event::Phase::Target);
             evt->setTarget(nodeHandle);
-            node->triggerEventListeners(*evt, false);
-            for (const auto& child : node->getChildren())
+            nodeHandle->triggerEventListeners(*evt, false);
+            for (const auto& child : nodeHandle->getChildren())
                 dispatchToChildren(child, evt);
         };
         getCore().setIsTraversing(true);
         DomHandle stageHandle = getStageHandle();
         dispatchToChildren(stageHandle, event.get());
         getCore().setIsTraversing(false);
-    }
+    }    
 
 
     bool EventManager::isMouseWithinBounds(IDisplayObject& target) const 
@@ -346,11 +345,6 @@ namespace SDOM
         // Find the top object that is under the mouse cursor
         // Modify findTopObjectUnderMouse to exclude the dragged object
         DomHandle topObject = findTopObjectUnderMouse(node, draggedObject);
-
-        // std::cout << CLR::GREEN << "Top Object under mouse: " << topObject.getName() 
-        //           << " (MouseX: " << stage->mouseX 
-        //           << ", MouseY: " << stage->mouseY << ")" << CLR::NORMAL << std::endl;
-
 
         // alias the SDL_EventType for ease of use:
         SDL_EventType sdl_type = static_cast<SDL_EventType>(sdlEvent.type);

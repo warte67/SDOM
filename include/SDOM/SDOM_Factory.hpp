@@ -11,9 +11,9 @@ namespace SDOM
 
     struct TypeCreators 
     {
-        std::function<std::unique_ptr<IResourceObject>(const Json&)> fromJson;
+        std::function<std::unique_ptr<IDisplayObject>(const Json&)> fromJson;
         // Accept base InitStruct by reference
-        std::function<std::unique_ptr<IResourceObject>(const IDisplayObject::InitStruct&)> fromInitStruct;
+        std::function<std::unique_ptr<IDisplayObject>(const IDisplayObject::InitStruct&)> fromInitStruct;
     };
         
     class Factory final : public IDataObject
@@ -59,12 +59,13 @@ namespace SDOM
 
         DomHandle getStageHandle();
 
-        void addResource(const std::string& name, 
-            std::unique_ptr<IResourceObject> resource);
-        void removeResource(const std::string& name);
+        void addDisplayObject(const std::string& name, 
+            std::unique_ptr<IDisplayObject> displayObject);
+        void removeDisplayObject(const std::string& name);
 
         // ----- Utility Methods -----
-        std::vector<std::string> listResourceNames() const;
+        std::vector<std::string> listDisplayObjectNames() const;
+        // std::vector<std::string> listResourceNames() const;
         void clear();
         void printRegistry() const;
 
@@ -91,7 +92,8 @@ namespace SDOM
             
 
     private:
-        std::unordered_map<std::string, std::unique_ptr<IResourceObject>> resources_;
+        std::unordered_map<std::string, std::unique_ptr<IDisplayObject>> displayObjects_;
+        // std::unordered_map<std::string, std::unique_ptr<IResourceObject>> resources_;
         std::unordered_map<std::string, TypeCreators> creators_;
 
 

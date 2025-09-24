@@ -40,7 +40,7 @@
 #define __SDOM_IDISPLAY_OBJECT_HPP__
 
 #include <SDOM/SDOM.hpp>   
-#include <SDOM/SDOM_IResourceObject.hpp>
+#include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_Handle.hpp>
 #include <SDOM/SDOM_EventTypeHash.hpp>
 
@@ -50,7 +50,6 @@ namespace SDOM
     class Event;
     class EventType;
     class EventTypeHash;
-    class IResourceObject;
     class Stage;
 
     /**
@@ -69,7 +68,7 @@ namespace SDOM
      * @note
      * This is a pure interface; all methods are expected to be overridden by derived classes.
      */
-    class IDisplayObject : public IResourceObject
+    class IDisplayObject : public IDataObject
     {
 
     public:
@@ -178,6 +177,12 @@ namespace SDOM
         DomHandle getParent() const { return parent_; }
         IDisplayObject& setParent(const DomHandle& parent) { parent_ = parent; return *this; }
 
+        std::string getName() const { return name_; }
+        IDisplayObject& setName(const std::string& newName) { name_ = newName; return *this; }
+        std::string getType() const { return type_; }
+        IDisplayObject& setType(const std::string& newType) { type_ = newType; return *this; }
+
+
         int getMaxPriority() const;
         int getMinPriority() const;
         int getPriority() const { return priority_; }
@@ -266,9 +271,11 @@ namespace SDOM
         IDisplayObject& setLocalRight(float value) { right_ = value; return *this; }
         IDisplayObject& setLocalTop(float value) { top_ = value; return *this; }
         IDisplayObject& setLocalBottom(float value) { bottom_ = value; return *this; }
+   
+        std::string name_;      ///< Unique resource name
+        std::string type_;      ///< Extensible string identifier for resource type
 
     private:
-        
         float left_, top_, right_, bottom_; // Calculated bounds based on anchors
         // std::string name_; // Name of the display object
         bool bIsDirty_ = false; // Flag to indicate if the display object needs to be redrawn

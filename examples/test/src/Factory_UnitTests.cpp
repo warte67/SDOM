@@ -19,11 +19,11 @@ namespace SDOM
         bool allTestsPassed = true;
         bool result; 
         std::string debugRet;
-        std::vector<std::string> originalNames = factory.listResourceNames();
+        std::vector<std::string> originalNames = factory.listDisplayObjectNames();
 
-        // Test resource creation
+        // Test display object creation
         DomHandle handle;
-        result = UnitTests::run("Factory", "Resource Creation", [&factory, &handle]() {
+        result = UnitTests::run("Factory", "Display Object Creation", [&factory, &handle]() {
             Json config = {
                 {"type", "Stage"},
                 {"name", "testStage"},
@@ -58,7 +58,7 @@ namespace SDOM
                 debugRet = "Handle is null";
                 return false;
             }
-            IResourceObject* obj = handle.get();
+            IDisplayObject* obj = handle.get();
             if (!obj) 
             {
                 debugRet = "Object is null";
@@ -77,7 +77,7 @@ namespace SDOM
                 debugRet = "Handle is null";
                 return false;
             }
-            IResourceObject* obj = handle.get();
+            IDisplayObject* obj = handle.get();
             if (!obj)
             {
                 debugRet = "Object is null";
@@ -101,7 +101,7 @@ namespace SDOM
                 debugRet = "Handle is null";
                 return false;
             }
-            IResourceObject* obj = handle.get();
+            IDisplayObject* obj = handle.get();
             if (!obj)
             {
                 debugRet = "Object is null";
@@ -120,7 +120,7 @@ namespace SDOM
         // Test destroy resource
         result = UnitTests::run("Factory", "Resource Destruction", [&factory, &handle]() 
         {
-            factory.removeResource("testStage");
+            factory.removeDisplayObject("testStage");
             DomHandle testHandle = factory.getDomHandle("testStage");
             return testHandle == nullptr;
         });
@@ -139,7 +139,7 @@ namespace SDOM
             // Define expected behavior: should not allow duplicate, or should overwrite
             bool ret = first != nullptr && second != nullptr;
             // clean up
-            factory.removeResource("testStage");
+            factory.removeDisplayObject("testStage");
             return ret;
         });
         if (!result) { std::cout << CLR::indent() << "Duplicate resource creation test failed!" << CLR::RESET << std::endl; }
@@ -179,7 +179,7 @@ namespace SDOM
             }
 
             // Clean up
-            factory.removeResource("overwriteTest");
+            factory.removeDisplayObject("overwriteTest");
             return true;
         });
         if (!result) { std::cout << CLR::indent() << debugRet << CLR::RESET << std::endl; }
@@ -188,7 +188,7 @@ namespace SDOM
 
 
         // Last Test: verify original resources remain
-        std::vector<std::string> currentNames = factory.listResourceNames();
+        std::vector<std::string> currentNames = factory.listDisplayObjectNames();
         result = UnitTests::run("Factory", "Original Resources Intact", [&debugRet, &originalNames, &currentNames]() 
         {
             if (originalNames.size() != currentNames.size()) 

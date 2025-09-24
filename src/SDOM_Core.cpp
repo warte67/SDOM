@@ -108,10 +108,10 @@ namespace SDOM
         rootNode_ = factory_->getDomHandle(rootStageName);
         setWindowTitle("Stage: " + rootStageName);
 
-        // --- Debug: List all resources in the factory ---
-        std::cout << "Factory resources after configuration:\n";
-        for (const auto& pair : factory_->resources_) {
-            std::cout << "Resource name: " << pair.first
+        // --- Debug: List all display objects in the factory ---
+        std::cout << "Factory display objects after configuration:\n";
+        for (const auto& pair : factory_->displayObjects_) {
+            std::cout << "Display Object name: " << pair.first
                     << ", RawType: " << typeid(*pair.second).name() 
                     << ", Type: " << pair.second->getType() << std::endl;
         }
