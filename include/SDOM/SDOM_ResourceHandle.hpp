@@ -4,6 +4,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IResourceObject.hpp>
 
+
 // NOTE: this ~= "ResourceHandle(getName(), getType())"
 
 
@@ -71,10 +72,11 @@ namespace SDOM
             // ...other members...
         }
         std::string getName() const { return name_; }
+        std::string getType() const { return type_; }
 
         std::string str() const {
             std::ostringstream oss;
-            oss << "name: '" << getName() << "' type: `" << type_ << "` " << get();
+            oss << "name: '" << getName() << "' type: `" << getType() << "` " << get();
             return oss.str();
         }
 

@@ -38,12 +38,14 @@
  ******************/
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_ResourceHandle.hpp>
 #include <SDOM/SDOM_Event.hpp>
+
 
 namespace SDOM
 {
-    Event::Event(EventType type, IDisplayObject* target, float fElapsedTime)
-            : type(type), target(target), currentPhase(Phase::Capture), fElapsedTime(fElapsedTime)
+    SDOM::Event::Event(EventType type, ResourceHandle target, float fElapsedTime)
+        : type(type), target(target), currentPhase(Phase::Capture), fElapsedTime(fElapsedTime)
     {
         // Constructor implementation
         useCapture = true; // Default to using capture phase
@@ -65,26 +67,44 @@ namespace SDOM
                 return obj;
             });
         registerProperty("target",
-            [](const IDataObject& obj) { return reinterpret_cast<uintptr_t>(static_cast<const Event&>(obj).getTarget()); },
+            [](const IDataObject& obj) { 
+                auto handle = static_cast<const Event&>(obj).getTarget();
+                return Json{{"name", handle.getName()}, {"type", handle.getType()}};
+            },
             [](IDataObject& obj, const Json& val) -> IDataObject& {
                 auto& e = static_cast<Event&>(obj);
-                e.setTarget(reinterpret_cast<IDisplayObject*>(val.get<uintptr_t>()));
+                std::string name = val["name"].get<std::string>();
+                std::string type = val["type"].get<std::string>();
+                e.setTarget(ResourceHandle(name, type));
                 return obj;
             });
+
         registerProperty("currentTarget",
-            [](const IDataObject& obj) { return reinterpret_cast<uintptr_t>(static_cast<const Event&>(obj).getCurrentTarget()); },
+            [](const IDataObject& obj) { 
+                auto handle = static_cast<const Event&>(obj).getCurrentTarget();
+                return Json{{"name", handle.getName()}, {"type", handle.getType()}};
+            },
             [](IDataObject& obj, const Json& val) -> IDataObject& {
                 auto& e = static_cast<Event&>(obj);
-                e.setCurrentTarget(reinterpret_cast<IDisplayObject*>(val.get<uintptr_t>()));
+                std::string name = val["name"].get<std::string>();
+                std::string type = val["type"].get<std::string>();
+                e.setCurrentTarget(ResourceHandle(name, type));
                 return obj;
             });
+
         registerProperty("relatedTarget",
-            [](const IDataObject& obj) { return reinterpret_cast<uintptr_t>(static_cast<const Event&>(obj).getRelatedTarget()); },
+            [](const IDataObject& obj) { 
+                auto handle = static_cast<const Event&>(obj).getRelatedTarget();
+                return Json{{"name", handle.getName()}, {"type", handle.getType()}};
+            },
             [](IDataObject& obj, const Json& val) -> IDataObject& {
                 auto& e = static_cast<Event&>(obj);
-                e.setRelatedTarget(reinterpret_cast<IDisplayObject*>(val.get<uintptr_t>()));
+                std::string name = val["name"].get<std::string>();
+                std::string type = val["type"].get<std::string>();
+                e.setRelatedTarget(ResourceHandle(name, type));
                 return obj;
             });
+
         registerProperty("propagationStopped",
             [](const IDataObject& obj) { return static_cast<const Event&>(obj).isPropagationStopped(); },
             nullptr); // read-only
@@ -211,15 +231,26 @@ namespace SDOM
             });
         registerCommand("setTarget",
             [](IDataObject& obj, const Json& val) {
-                static_cast<Event&>(obj).setTarget(reinterpret_cast<IDisplayObject*>(val.get<uintptr_t>()));
+                auto& e = static_cast<Event&>(obj);
+                std::string name = val["name"].get<std::string>();
+                std::string type = val["type"].get<std::string>();
+                e.setTarget(ResourceHandle(name, type));
             });
+
         registerCommand("setCurrentTarget",
             [](IDataObject& obj, const Json& val) {
-                static_cast<Event&>(obj).setCurrentTarget(reinterpret_cast<IDisplayObject*>(val.get<uintptr_t>()));
+                auto& e = static_cast<Event&>(obj);
+                std::string name = val["name"].get<std::string>();
+                std::string type = val["type"].get<std::string>();
+                e.setCurrentTarget(ResourceHandle(name, type));
             });
+
         registerCommand("setRelatedTarget",
             [](IDataObject& obj, const Json& val) {
-                static_cast<Event&>(obj).setRelatedTarget(reinterpret_cast<IDisplayObject*>(val.get<uintptr_t>()));
+                auto& e = static_cast<Event&>(obj);
+                std::string name = val["name"].get<std::string>();
+                std::string type = val["type"].get<std::string>();
+                e.setRelatedTarget(ResourceHandle(name, type));
             });
         registerCommand("setDisableDefaultBehavior",
             [](IDataObject& obj, const Json& val) {
@@ -280,36 +311,36 @@ namespace SDOM
         return *this;
     }
 
-    IDisplayObject* Event::getTarget() const 
+    ResourceHandle Event::getTarget() const 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         return target;
     }
-    Event& Event::setTarget(IDisplayObject* newTarget) 
+    Event& Event::setTarget(const ResourceHandle newTarget) 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         target = newTarget;
         return *this;
     }
 
-    IDisplayObject* Event::getCurrentTarget() const 
+    ResourceHandle Event::getCurrentTarget() const 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         return currentTarget;
     }
-    Event& Event::setCurrentTarget(IDisplayObject* newCurrentTarget) 
+    Event& Event::setCurrentTarget(const ResourceHandle newCurrentTarget) 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         currentTarget = newCurrentTarget;
         return *this;
     }
 
-    IDisplayObject* Event::getRelatedTarget() const 
+    ResourceHandle Event::getRelatedTarget() const 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         return relatedTarget;
     }
-    Event& Event::setRelatedTarget(IDisplayObject* newRelatedTarget) 
+    Event& Event::setRelatedTarget(const ResourceHandle newRelatedTarget) 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         relatedTarget = newRelatedTarget;

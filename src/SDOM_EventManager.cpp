@@ -41,13 +41,15 @@
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_IResourceObject.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
+#include <SDOM/SDOM_ResourceHandle.hpp>
 
 namespace SDOM 
 {
     // Static variables to track dragging state and the dragged object
     static bool isDragging = false;
-    static IDisplayObject* draggedObject = nullptr;
+    static ResourceHandle draggedObject = nullptr;
 
     // void EventManager::addEvent(std::unique_ptr<Event> event) 
     // {
@@ -61,8 +63,10 @@ namespace SDOM
         eventQueue.push(std::move(event));
     }
 
-    void EventManager::DispatchQueuedEvents(IDisplayObject& rootNode) 
+    void EventManager::DispatchQueuedEvents() 
     {
+        ResourceHandle rootNode = getFactory().getStageHandle();
+        if (!rootNode) return;
         while (!eventQueue.empty()) 
         {
             auto event = std::move(eventQueue.front());
@@ -71,8 +75,11 @@ namespace SDOM
         }
     }
 
-    void EventManager::dispatchEvent(std::unique_ptr<Event> event, IDisplayObject& rootNode) 
+    void EventManager::dispatchEvent(std::unique_ptr<Event> event, ResourceHandle rootHandle)    
     {
+        IDisplayObject* rootNode = dynamic_cast<IDisplayObject*>(rootHandle.get());
+        if (!rootNode) return;
+
         Stage* stage = getStage(); //Core::getInstance().getStage();
         if (!stage) return;
 
@@ -85,8 +92,8 @@ namespace SDOM
             event->setPhase(Event::Phase::Target);
             auto eventCopy = std::make_unique<Event>(*event);
             eventCopy->setPhase(Event::Phase::Target);
-            dispatchEventToAllNodesOnStage(std::move(event), *stage);
-            dispatchEventToAllEventListenersOnStage(std::move(eventCopy), *stage);
+            dispatchEventToAllNodesOnStage(std::move(event));
+            dispatchEventToAllEventListenersOnStage(std::move(eventCopy));
             return;
         }
 
@@ -97,7 +104,7 @@ namespace SDOM
             // Dispatch to the active stage
             auto eventCopy = std::make_unique<Event>(*event);
             eventCopy->setPhase(Event::Phase::Target);
-            dispatchEventToAllEventListenersOnStage(std::move(eventCopy), *stage);
+            dispatchEventToAllEventListenersOnStage(std::move(eventCopy));
             return;
         } 
 
@@ -105,30 +112,30 @@ namespace SDOM
         if (event->getType().getCaptures() && !event->getType().getTargetOnly())
         {
             event->setPhase(Event::Phase::Capture);
-            auto capturePhase = [&](IDisplayObject& rootNode, IDisplayObject& targetNode) -> void 
+            auto capturePhase = [&](ResourceHandle rootHandle, ResourceHandle targetHandle) -> void 
             {
-                std::vector<IDisplayObject*> nodeStack;
+                std::vector<ResourceHandle> nodeStack;
                 // Build the stack from target to root
-                IDisplayObject* currentNode = &targetNode;
-                while (currentNode && currentNode != &rootNode) 
+                ResourceHandle currentHandle = targetHandle;
+                while (currentHandle && currentHandle != rootHandle) 
                 {
-                    currentNode = dynamic_cast<IDisplayObject*>(currentNode->getParent().get());
-                    if (currentNode) 
-                        nodeStack.push_back(currentNode);
-               }
+                    IDisplayObject* currentNode = dynamic_cast<IDisplayObject*>(currentHandle.get());
+                    if (!currentNode) break;
+                    currentHandle = currentNode->getParent();
+                    if (currentHandle)
+                        nodeStack.push_back(currentHandle);
+                }
                 // Process nodes in reverse order (from root to target)
                 while (!nodeStack.empty()) 
                 {
-                    IDisplayObject* node = nodeStack.back();
+                    ResourceHandle nodeHandle = nodeStack.back();
                     nodeStack.pop_back();
-
-                    // Skip nodes that are hidden
-                    if (node->isHidden()) 
+                    IDisplayObject* node = dynamic_cast<IDisplayObject*>(nodeHandle.get());
+                    if (!node || node->isHidden()) 
                         continue;
 
-                    // Dispatch the event
                     event->setPhase(Event::Phase::Capture);
-                    event->setCurrentTarget(node); // Set currentTarget
+                    event->setCurrentTarget(nodeHandle); // Set currentTarget
                     if (node->isEnabled()) 
                     {
                         node->triggerEventListeners(*event, true ); // Trigger capture listeners
@@ -137,22 +144,20 @@ namespace SDOM
                             node->onEvent(*event); // Call the default onEvent method
                         }
                     }
-                    // Stop propagation if requested
                     if (event->isPropagationStopped()) 
                         break;
                 }
-
             };        
-            capturePhase(rootNode, *event->getTarget());
+            capturePhase(rootHandle, event->getTarget());
+        }
 
-        } // end if is allowed to capture
-      
         // Target Phase: Dispatch to the target only 
         event->setPhase(Event::Phase::Target);
-        auto targetNode = event->getTarget();
+        ResourceHandle targetHandle = event->getTarget();
+        IDisplayObject* targetNode = dynamic_cast<IDisplayObject*>(targetHandle.get());
         if (targetNode && targetNode->isEnabled()) 
         {
-            event->setCurrentTarget(targetNode); // Set currentTarget
+            event->setCurrentTarget(targetHandle); // Set currentTarget
             targetNode->triggerEventListeners(*event, false ); // Trigger target listeners
             if (!event->isPropagationStopped() && !event->isDefaultBehaviorDisabled()) 
                 targetNode->onEvent(*event); // Call the default onEvent method
@@ -161,75 +166,75 @@ namespace SDOM
         // Bubbling Phase: Dispatch to the parent nodes
         if (event->getType().getBubbles() && !event->getType().getTargetOnly())
         {
-            auto bubbleTraverse = [&](IDisplayObject& node, auto& self) -> void 
+            auto bubbleTraverse = [&](ResourceHandle nodeHandle, auto& self) -> void 
             {
-                // Skip nodes that are hidden
-                if (node.isHidden()) 
+                IDisplayObject* node = dynamic_cast<IDisplayObject*>(nodeHandle.get());
+                if (!node || node->isHidden()) 
                     return;
 
                 event->setPhase(Event::Phase::Bubbling);
-                event->setCurrentTarget(&node); // Set currentTarget
-                // Skip disabled nodes
-                if (node.isEnabled()) 
+                event->setCurrentTarget(nodeHandle); // Set currentTarget
+                if (node->isEnabled()) 
                 {
-                    node.triggerEventListeners(*event, false ); // Trigger bubbling listeners
+                    node->triggerEventListeners(*event, false ); // Trigger bubbling listeners
                     if (!event->isPropagationStopped() && !event->isDefaultBehaviorDisabled()) 
-                        node.onEvent(*event); // Call the default onEvent method
+                        node->onEvent(*event); // Call the default onEvent method
                 }
-                if (node.getParent() && !event->isPropagationStopped()) 
+                if (node->getParent() && !event->isPropagationStopped()) 
                 {
-                    IDisplayObject* parent = dynamic_cast<IDisplayObject*>(node.getParent().get());
-                    if (parent)
-                        self(*parent, self);
+                    ResourceHandle parentHandle = node->getParent();
+                    if (parentHandle)
+                        self(parentHandle, self);
                 }
             };
 
             // Start bubbling from the parent of the target node
-            if (event->getTarget() && event->getTarget()->getParent() && !event->isPropagationStopped()) 
+            if (targetNode && targetNode->getParent() && !event->isPropagationStopped()) 
             {
-                IDisplayObject* parent = dynamic_cast<IDisplayObject*>(event->getTarget()->getParent().get());
-                if (parent)
-                    bubbleTraverse(*parent, bubbleTraverse);
+                ResourceHandle parentHandle = targetNode->getParent();
+                if (parentHandle)
+                    bubbleTraverse(parentHandle, bubbleTraverse);
             }            
         } // end if is allowed to bubble
     }
 
 
-    void EventManager::dispatchEventToAllNodesOnStage(std::unique_ptr<Event> event, IDisplayObject& rootNode) 
+    void EventManager::dispatchEventToAllNodesOnStage(std::unique_ptr<Event> event) 
     {
-        std::function<void(IDisplayObject&, Event*)> dispatchToChildren =
-            [&](IDisplayObject& node, Event* evt)
+        std::function<void(ResourceHandle, Event*)> dispatchToChildren =
+            [&](ResourceHandle nodeHandle, Event* evt)
         {
+            IDisplayObject* node = dynamic_cast<IDisplayObject*>(nodeHandle.get());
+            if (!node) return;
             evt->setPhase(Event::Phase::Target);
-            evt->setTarget(&node);
-            node.onEvent(*evt);
-            for (const auto& child : node.getChildren())
+            evt->setTarget(nodeHandle);
+            node->onEvent(*evt);
+            for (const auto& child : node->getChildren())
             {
-                IDisplayObject* childPtr = dynamic_cast<IDisplayObject*>(child.get());
-                if (childPtr)
-                    dispatchToChildren(*childPtr, evt);
+                dispatchToChildren(child, evt);
             }
         };
-        dispatchToChildren(rootNode, event.get());
+        ResourceHandle stageHandle = getFactory().getStageHandle();
+        dispatchToChildren(stageHandle, event.get());
     }
 
-    
-    void EventManager::dispatchEventToAllEventListenersOnStage(std::unique_ptr<Event> event, IDisplayObject& rootNode) 
+    void EventManager::dispatchEventToAllEventListenersOnStage(std::unique_ptr<Event> event) 
     {
-        std::function<void(IDisplayObject&, Event*)> dispatchToChildren =
-            [&](IDisplayObject& node, Event* evt)
+        std::function<void(ResourceHandle, Event*)> dispatchToChildren =
+            [&](ResourceHandle nodeHandle, Event* evt)
         {
+            IDisplayObject* node = dynamic_cast<IDisplayObject*>(nodeHandle.get());
+            if (!node) return;
             evt->setPhase(Event::Phase::Target);
-            evt->setTarget(&node);
-            node.triggerEventListeners(*evt, false );
-            for (const auto& child : node.getChildren()) 
+            evt->setTarget(nodeHandle);
+            node->triggerEventListeners(*evt, false);
+            for (const auto& child : node->getChildren())
             {
-                IDisplayObject* childPtr = dynamic_cast<IDisplayObject*>(child.get());
-                if (childPtr)
-                    dispatchToChildren(*childPtr, evt);
+                dispatchToChildren(child, evt);
             }
         };
-        dispatchToChildren(rootNode, event.get());
+        ResourceHandle stageHandle = getFactory().getStageHandle();
+        dispatchToChildren(stageHandle, event.get());
     }
 
 
@@ -252,46 +257,52 @@ namespace SDOM
         return SDL_PointInRect(&mousePoint, &targetRect);
     }
 
-    IDisplayObject& EventManager::findTopObjectUnderMouse(IDisplayObject& rootNode, IDisplayObject* excludeNode) const 
+    ResourceHandle EventManager::findTopObjectUnderMouse(ResourceHandle rootNode, ResourceHandle excludeNode) const 
     {
-        IDisplayObject* targetNode = nullptr; // Reset targetNode
-        int maxDepth = -1;    // Track the maximum depth of the target node
+        ResourceHandle targetHandle; // Reset target handle
+        int maxDepth = -1;           // Track the maximum depth of the target node
 
-        auto traverse = [&](IDisplayObject& node, int depth, auto& self) -> void 
+        auto traverse = [&](ResourceHandle nodeHandle, int depth, auto& self) -> void 
         {
-            if (node.isHidden() || &node == excludeNode)
+            IDisplayObject* node = dynamic_cast<IDisplayObject*>(nodeHandle.get());
+            if (!node || nodeHandle == excludeNode || node->isHidden())
                 return;
 
             // Only consider node as a candidate if it is clickable
-            if (node.isClickable() && isMouseWithinBounds(node)) 
+            if (node->isClickable() && isMouseWithinBounds(*node)) 
             {
-                if (!targetNode || depth > maxDepth || (depth == maxDepth && node.getZOrder() > targetNode->getZOrder())) 
+                if (!targetHandle || depth > maxDepth || 
+                    (depth == maxDepth && node->getZOrder() > dynamic_cast<IDisplayObject*>(targetHandle.get())->getZOrder())) 
                 {
-                    targetNode = &node;
+                    targetHandle = nodeHandle;
                     maxDepth = depth;
                 }
             }
             // Always traverse children, even if node is not clickable
-            for (const auto& child : node.getChildren()) 
+            for (const auto& child : node->getChildren()) 
             {
-                IDisplayObject* childPtr = dynamic_cast<IDisplayObject*>(child.get());
-                if (childPtr) 
-                    self(*childPtr, depth + 1, self);
+                self(child, depth + 1, self);
             }
         };
+
         traverse(rootNode, 0, traverse);
+
         // Default to rootNode if no other node is targeted
-        if (!targetNode) 
-            targetNode = &rootNode; 
-        return *targetNode;
+        if (!targetHandle)
+            targetHandle = rootNode; 
+        return targetHandle;
     }
-    
-    void EventManager::Queue_SDL_Event(IDisplayObject& node, SDL_Event& sdlEvent) 
+
+    void EventManager::Queue_SDL_Event(SDL_Event& sdlEvent) 
     {
         // Convert SDL_Event to SDOM::Event and add to the queue
 
         // Skip processing if the node is not enabled or is hidden
-        if (!node.isEnabled() || node.isHidden())
+        ResourceHandle nodeHandle = getFactory().getStageHandle();
+        IDisplayObject* node = dynamic_cast<IDisplayObject*>(nodeHandle.get());
+        if (!node) return;
+
+        if (!node->isEnabled() || node->isHidden())
             return;
         // fetch the stage instance
         Stage* stage = getStage(); //Core::getInstance().getStage();
@@ -299,11 +310,8 @@ namespace SDOM
 
 
         // find the top object under the mouse
-        IDisplayObject& mouseHoveredObject = findTopObjectUnderMouse(node);
-        ResourceHandle hoveredResource = getFactory().getResourceHandle(mouseHoveredObject.getName());
-        getCore().setMouseHoveredObject(hoveredResource);
-        // SDOM::Core::getInstance().setMouseHoveredObject(&mouseHoveredObject);
-
+        ResourceHandle mouseHoveredObject = findTopObjectUnderMouse(nodeHandle);
+        getCore().setMouseHoveredObject(mouseHoveredObject);
 
         // Scale the SDL event coordinates to the render coordinates
         SDL_Renderer* renderer = getRenderer();
@@ -331,7 +339,7 @@ namespace SDOM
 
         // Find the top object that is under the mouse cursor
         // Modify findTopObjectUnderMouse to exclude the dragged object
-        IDisplayObject& topObject = findTopObjectUnderMouse(node, draggedObject);
+        ResourceHandle topObject = findTopObjectUnderMouse(nodeHandle, draggedObject);
 
         std::cout << CLR::GREEN << "Top Object under mouse: " << topObject.getName() 
                   << " (MouseX: " << stage->mouseX 
@@ -363,7 +371,8 @@ namespace SDOM
             if (activeWindow)
             {
                 // Dispatch EventType::FocusLost
-                auto unfocusEvent = std::make_unique<Event>(EventType::FocusLost, getStage());
+                // auto unfocusEvent = std::make_unique<Event>(EventType::FocusLost, getStage());
+                auto unfocusEvent = std::make_unique<Event>(EventType::FocusLost, getFactory().getStageHandle());
                 unfocusEvent->setSDL_Event(sdlEvent);
                 addEvent(std::move(unfocusEvent));
             }
@@ -375,7 +384,8 @@ namespace SDOM
             if (activeWindow)
             {
                 // Dispatch EventType::FocusGained
-                auto focusEvent = std::make_unique<Event>(EventType::FocusGained, getStage());
+                // auto focusEvent = std::make_unique<Event>(EventType::FocusGained, getStage());
+                auto focusEvent = std::make_unique<Event>(EventType::FocusGained, getFactory().getStageHandle());
                 focusEvent->setSDL_Event(sdlEvent);
                 addEvent(std::move(focusEvent));
             }
@@ -388,7 +398,7 @@ namespace SDOM
             if (activeWindow)
             {
                 // Dispatch EventType::Resize
-                auto resizeEvent = std::make_unique<Event>(EventType::Resize, getStage());
+                auto resizeEvent = std::make_unique<Event>(EventType::Resize, getFactory().getStageHandle());
                 resizeEvent->setSDL_Event(sdlEvent);
                 addEvent(std::move(resizeEvent));
             }
@@ -401,7 +411,7 @@ namespace SDOM
             if (activeWindow)
             {
                 // Dispatch EventType::Show
-                auto showEvent = std::make_unique<Event>(EventType::Show, getStage());
+                auto showEvent = std::make_unique<Event>(EventType::Show, getFactory().getStageHandle());
                 showEvent->setSDL_Event(sdlEvent);
                 addEvent(std::move(showEvent));
             }
@@ -414,7 +424,7 @@ namespace SDOM
             if (activeWindow)
             {
                 // Dispatch EventType::Hide
-                auto hideEvent = std::make_unique<Event>(EventType::Hide, getStage());
+                auto hideEvent = std::make_unique<Event>(EventType::Hide, getFactory().getStageHandle());
                 hideEvent->setSDL_Event(sdlEvent);
                 addEvent(std::move(hideEvent));
             }
@@ -427,7 +437,7 @@ namespace SDOM
             if (activeWindow)
             {
                 // Dispatch EventType::EnterFullscreen
-                auto fullscreenEvent = std::make_unique<Event>(EventType::EnterFullscreen, getStage());
+                auto fullscreenEvent = std::make_unique<Event>(EventType::EnterFullscreen, getFactory().getStageHandle());
                 fullscreenEvent->setSDL_Event(sdlEvent);
                 addEvent(std::move(fullscreenEvent));
             }
@@ -440,7 +450,7 @@ namespace SDOM
             if (activeWindow)
             {
                 // Dispatch EventType::LeaveFullscreen
-                auto leaveFullscreenEvent = std::make_unique<Event>(EventType::LeaveFullscreen, getStage());
+                auto leaveFullscreenEvent = std::make_unique<Event>(EventType::LeaveFullscreen, getFactory().getStageHandle());
                 leaveFullscreenEvent->setSDL_Event(sdlEvent);
                 addEvent(std::move(leaveFullscreenEvent));
             }
@@ -464,7 +474,7 @@ namespace SDOM
                 // Create a KeyDown event
                 auto keyDownEvent = std::make_unique<Event>(
                     EventType::KeyDown,
-                    dynamic_cast<IDisplayObject*>(focusedObject.get()),
+                    focusedObject,
                     getCore().getElapsedTime()
                 );
                 keyDownEvent->sdlEvent = sdlEvent;
@@ -478,10 +488,9 @@ namespace SDOM
             if (sdlEvent.type == SDL_EVENT_KEY_UP)
             {
                 // Create a KeyUp event
-                // auto keyUpEvent = std::make_unique<Event>(EventType::KeyUp, focusedObject.get(), getCore().getElapsedTime());
                 auto keyUpEvent = std::make_unique<Event>(
                     EventType::KeyUp,
-                    dynamic_cast<IDisplayObject*>(focusedObject.get()),
+                    focusedObject,
                     getCore().getElapsedTime()
                 );                
                 keyUpEvent->sdlEvent = sdlEvent;
@@ -503,55 +512,55 @@ namespace SDOM
         // -----------------------------------------------------------------   
         
         // Mouse Statics:
-        static IDisplayObject* s_lastMouseDownObject = nullptr;
+        static ResourceHandle s_lastMouseDownObject = nullptr;
 
         // Handle mouse button up events
         if (sdlEvent.type == SDL_EVENT_MOUSE_BUTTON_UP) 
         {
             float mX = sdlEvent.motion.x;
             float mY = sdlEvent.motion.y;
-            auto buttonEvent = std::make_unique<Event>(EventType::MouseButtonUp, &node, getCore().getElapsedTime());
+            auto buttonEvent = std::make_unique<Event>(EventType::MouseButtonUp, nodeHandle, getCore().getElapsedTime());
             buttonEvent->sdlEvent = sdlEvent;
             buttonEvent->mouse_x = mX;
             buttonEvent->mouse_y = mY;
             buttonEvent->button = sdlEvent.button.button;
             buttonEvent->clickCount = sdlEvent.button.clicks;
-            buttonEvent->setTarget(&topObject);
+            buttonEvent->setTarget(topObject);
             buttonEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
             addEvent(std::move(buttonEvent));
             // find the top object under the mouse
-            IDisplayObject& topObject = findTopObjectUnderMouse(node);
+            ResourceHandle topObject = findTopObjectUnderMouse(nodeHandle);
 
             // Only fire MouseClick if down and up on the same object
-            if (s_lastMouseDownObject == &topObject)
+            if (s_lastMouseDownObject == topObject)
             {
                 // Single Click Event
                 if (sdlEvent.button.clicks == 1) 
                 {
-                    if (topObject.isTabEnabled())
-                    {
-                        topObject.setKeyboardFocus();
-                    }
-                    auto clickEvent = std::make_unique<Event>(EventType::MouseClick, &node, getCore().getElapsedTime());
+                    ResourceHandle top = topObject;
+                    IDisplayObject* topNode = dynamic_cast<IDisplayObject*>(top.get());
+                    if (topNode && topNode->isTabEnabled())
+                        topNode->setKeyboardFocus();
+                    auto clickEvent = std::make_unique<Event>(EventType::MouseClick, nodeHandle, getCore().getElapsedTime());
                     clickEvent->sdlEvent = sdlEvent;
                     clickEvent->mouse_x = mX;
                     clickEvent->mouse_y = mY;
                     clickEvent->button = sdlEvent.button.button;
                     clickEvent->clickCount = sdlEvent.button.clicks;
-                    clickEvent->setTarget(&topObject);
+                    clickEvent->setTarget(topObject);
                     clickEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
                     addEvent(std::move(clickEvent));
                 // Double Click Events (Multiple Click Events)
                 } 
                 else if (sdlEvent.button.clicks > 1) 
                 {
-                    auto doubleClickEvent = std::make_unique<Event>(EventType::MouseDoubleClick, &node, getCore().getElapsedTime());
+                    auto doubleClickEvent = std::make_unique<Event>(EventType::MouseDoubleClick, nodeHandle, getCore().getElapsedTime());
                     doubleClickEvent->sdlEvent = sdlEvent;
                     doubleClickEvent->mouse_x = mX;
                     doubleClickEvent->mouse_y = mY;
                     doubleClickEvent->button = sdlEvent.button.button;
                     doubleClickEvent->clickCount = sdlEvent.button.clicks;
-                    doubleClickEvent->setTarget(&topObject);
+                    doubleClickEvent->setTarget(topObject);
                     doubleClickEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
                     addEvent(std::move(doubleClickEvent));
                 }
@@ -563,27 +572,27 @@ namespace SDOM
         {
             float mX = sdlEvent.motion.x;
             float mY = sdlEvent.motion.y;
-            auto buttonDownEvent = std::make_unique<Event>(EventType::MouseButtonDown, &node, getCore().getElapsedTime());
+            auto buttonDownEvent = std::make_unique<Event>(EventType::MouseButtonDown, nodeHandle, getCore().getElapsedTime());
             buttonDownEvent->sdlEvent = sdlEvent;
             buttonDownEvent->mouse_x = mX;
             buttonDownEvent->mouse_y = mY;
             buttonDownEvent->button = sdlEvent.button.button;
             buttonDownEvent->clickCount = sdlEvent.button.clicks;
-            buttonDownEvent->setTarget(&topObject);
+            buttonDownEvent->setTarget(topObject);
             buttonDownEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
-            s_lastMouseDownObject = &topObject; // record the topObject under mouse
+            s_lastMouseDownObject = topObject; // record the topObject under mouse
             addEvent(std::move(buttonDownEvent));
         }
 
         // Handle mouse wheel events
         if (sdlEvent.type == SDL_EVENT_MOUSE_WHEEL) 
         {
-            auto wheelEvent = std::make_unique<Event>(EventType::MouseWheel, &topObject, getCore().getElapsedTime());
+            auto wheelEvent = std::make_unique<Event>(EventType::MouseWheel, topObject, getCore().getElapsedTime());
             wheelEvent->wheelX = sdlEvent.wheel.x;
             wheelEvent->wheelY = sdlEvent.wheel.y;
-            wheelEvent->setTarget(&topObject);
-            wheelEvent->setCurrentTarget(&topObject); // Set currentTarget
-            wheelEvent->setRelatedTarget(&topObject); // Set relatedTarget
+            wheelEvent->setTarget(topObject);
+            wheelEvent->setCurrentTarget(topObject); // Set currentTarget
+            wheelEvent->setRelatedTarget(topObject); // Set relatedTarget
             wheelEvent->button = sdlEvent.wheel.direction; // Use direction as button for wheel events
             wheelEvent->clickCount = 0; // No click count for wheel events
             wheelEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
@@ -591,50 +600,50 @@ namespace SDOM
         }
 
         // Handle mouse motion events
-        static IDisplayObject* lastHoveredObject = nullptr;
+        static ResourceHandle lastHoveredObject = nullptr;
         if (sdlEvent.type == SDL_EVENT_MOUSE_MOTION) 
         {
             float mX = sdlEvent.motion.x;
             float mY = sdlEvent.motion.y;
-            IDisplayObject& currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);
+            ResourceHandle currentHoveredObject = findTopObjectUnderMouse(nodeHandle, draggedObject);
 
             // Dispatch the motion event
-            auto motionEvent = std::make_unique<Event>(EventType::MouseMove, &currentHoveredObject, getCore().getElapsedTime());
+            auto motionEvent = std::make_unique<Event>(EventType::MouseMove, currentHoveredObject, getCore().getElapsedTime());
             motionEvent->mouse_x = mX;
             motionEvent->mouse_y = mY;
-            motionEvent->setCurrentTarget(&currentHoveredObject);
-            motionEvent->setTarget(&topObject);
+            motionEvent->setCurrentTarget(currentHoveredObject);
+            motionEvent->setTarget(topObject);
             motionEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
             addEvent(std::move(motionEvent));
 
             // Dispatch "leave" event if the mouse left the last hovered object
-            if (lastHoveredObject && lastHoveredObject != &currentHoveredObject) 
+            if (lastHoveredObject && lastHoveredObject != currentHoveredObject) 
             {
                 auto leaveEvent = std::make_unique<Event>(EventType::MouseLeave, lastHoveredObject, getCore().getElapsedTime());
                 leaveEvent->mouse_x = mX;
                 leaveEvent->mouse_y = mY;
                 leaveEvent->setCurrentTarget(lastHoveredObject);
-                leaveEvent->setRelatedTarget(&currentHoveredObject);
+                leaveEvent->setRelatedTarget(currentHoveredObject);
                 leaveEvent->setTarget(lastHoveredObject);
                 leaveEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
                 addEvent(std::move(leaveEvent));
             }
 
             // Dispatch "enter" event if the mouse entered a new object
-            if (&currentHoveredObject != lastHoveredObject) 
+            if (currentHoveredObject != lastHoveredObject) 
             {
-                auto enterEvent = std::make_unique<Event>(EventType::MouseEnter, &currentHoveredObject, getCore().getElapsedTime());
+                auto enterEvent = std::make_unique<Event>(EventType::MouseEnter, currentHoveredObject, getCore().getElapsedTime());
                 enterEvent->mouse_x = mX;
                 enterEvent->mouse_y = mY;
-                enterEvent->setCurrentTarget(&currentHoveredObject);
+                enterEvent->setCurrentTarget(currentHoveredObject);
                 enterEvent->setRelatedTarget(lastHoveredObject);
-                enterEvent->setTarget(&currentHoveredObject);
+                enterEvent->setTarget(currentHoveredObject);
                 enterEvent->fElapsedTime =  getCore().getElapsedTime(); // Set elapsed time for the event
                 addEvent(std::move(enterEvent));
             }
 
             // Update the last hovered object
-            lastHoveredObject = &currentHoveredObject;
+            lastHoveredObject = currentHoveredObject;
         }
 
         // Special Case: Track window leave and enter events
@@ -643,7 +652,7 @@ namespace SDOM
         SDL_Window* currentWindow = SDL_GetMouseFocus();
         float mX = sdlEvent.motion.x;
         float mY = sdlEvent.motion.y;
-        IDisplayObject& currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);
+        ResourceHandle currentHoveredObject = findTopObjectUnderMouse(nodeHandle, draggedObject);
 
         // Check if the focused window has changed
         if (focusedWindow != currentWindow || isDragging) 
@@ -652,7 +661,7 @@ namespace SDOM
             {
                 // std::cout << CLR::GREEN << "Mouse entered window" << CLR::RESET << std::endl;  
                 // Handle mouse enter logic here
-                IDisplayObject* stageObject = getStage();
+                ResourceHandle stageObject = getFactory().getStageHandle();
                 auto enterEvent = std::make_unique<Event>(EventType::MouseEnter, stageObject, getCore().getElapsedTime());
                 enterEvent->mouse_x = mX;
                 enterEvent->mouse_y = mY;
@@ -666,7 +675,7 @@ namespace SDOM
             {
                 // std::cout << CLR::GREEN << "Mouse left window" << CLR::RESET << std::endl;    
                 // Handle mouse leave logic here
-                IDisplayObject* stageObject = getStage();
+                ResourceHandle stageObject = getFactory().getStageHandle();
                 auto leaveEvent = std::make_unique<Event>(EventType::MouseLeave, stageObject, getCore().getElapsedTime());
                 leaveEvent->mouse_x = mX;
                 leaveEvent->mouse_y = mY;
@@ -679,7 +688,7 @@ namespace SDOM
             focusedWindow = currentWindow;
         }
         // Update the last hovered object
-        lastHoveredObject = &currentHoveredObject;
+        lastHoveredObject = currentHoveredObject;
 
         // Static variable to track dragging state
         static float drag_offset_x = 0.0f;
@@ -713,11 +722,15 @@ namespace SDOM
                 {
                     // Start dragging if the mouse has moved significantly
                     isDragging = true;
-                    draggedObject = &topObject; // Set the dragged object to the top object under the mouse
-                    drag_offset_x = mX - draggedObject->getX();
-                    drag_offset_y = mY - draggedObject->getY();
+                    draggedObject = topObject; // Set the dragged object to the top object under the mouse
+                    IDisplayObject* draggedNode = dynamic_cast<IDisplayObject*>(draggedObject.get());
+                    if (draggedNode)
+                    {
+                        drag_offset_x = mX - draggedNode->getX();
+                        drag_offset_y = mY - draggedNode->getY();
+                    }
                     // Create Drag event
-                    auto dragEvent = std::make_unique<Event>(EventType::Drag, &node, getCore().getElapsedTime());
+                    auto dragEvent = std::make_unique<Event>(EventType::Drag, nodeHandle, getCore().getElapsedTime());
                     dragEvent->sdlEvent = sdlEvent;
                     dragEvent->mouse_x = mX;
                     dragEvent->mouse_y = mY;
@@ -726,8 +739,7 @@ namespace SDOM
                     dragEvent->dragOffsetY = drag_offset_y;
                     dragEvent->setTarget(draggedObject);
                     dragEvent->setCurrentTarget(draggedObject);
-                    IDisplayObject* parent = dynamic_cast<IDisplayObject*>(draggedObject->getParent().get());
-                    dragEvent->setRelatedTarget(parent);
+                    dragEvent->setRelatedTarget(draggedNode->getParent());
                     dragEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
                     // Dispatch the Drag event
                     addEvent(std::move(dragEvent));
@@ -741,7 +753,8 @@ namespace SDOM
         if (sdlEvent.type == SDL_EVENT_MOUSE_MOTION && isDragging) 
         {
             // Create Dragging event
-            auto draggingEvent = std::make_unique<Event>(EventType::Dragging, &node, getCore().getElapsedTime());
+            IDisplayObject* draggedNode = dynamic_cast<IDisplayObject*>(draggedObject.get());
+            auto draggingEvent = std::make_unique<Event>(EventType::Dragging, nodeHandle, getCore().getElapsedTime());
             draggingEvent->sdlEvent = sdlEvent;
             draggingEvent->mouse_x = mX;
             draggingEvent->mouse_y = mY;
@@ -750,8 +763,8 @@ namespace SDOM
             draggingEvent->dragOffsetY = drag_offset_y;
             draggingEvent->setTarget(draggedObject);
             draggingEvent->setCurrentTarget(draggedObject);
-            IDisplayObject* parent = dynamic_cast<IDisplayObject*>(draggedObject->getParent().get());
-            draggingEvent->setRelatedTarget(parent);
+            IDisplayObject* parent = dynamic_cast<IDisplayObject*>(draggedNode->getParent().get());
+            draggingEvent->setRelatedTarget(parent->getParent());
             draggingEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
             // Dispatch the Dragging event
             addEvent(std::move(draggingEvent));
@@ -761,9 +774,8 @@ namespace SDOM
         if (sdlEvent.type == SDL_EVENT_MOUSE_BUTTON_UP && isDragging) 
         {
             // Create Drop event
-            Stage* stage = getStage();
-            IDisplayObject& topObject = findTopObjectUnderMouse(*stage, draggedObject);
-            auto dropEvent = std::make_unique<Event>(EventType::Drop, &node, getCore().getElapsedTime());
+            ResourceHandle topObject = findTopObjectUnderMouse(getFactory().getStageHandle(), draggedObject);
+            auto dropEvent = std::make_unique<Event>(EventType::Drop, topObject, getCore().getElapsedTime());
             dropEvent->sdlEvent = sdlEvent;
             dropEvent->mouse_x = mX;
             dropEvent->mouse_y = mY;
@@ -772,7 +784,7 @@ namespace SDOM
             dropEvent->button = sdlEvent.button.button;
             dropEvent->setTarget(draggedObject);
             dropEvent->setCurrentTarget(draggedObject);
-            dropEvent->setRelatedTarget(&topObject);
+            dropEvent->setRelatedTarget(topObject);
             dropEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
             // Dispatch the Drop event
             addEvent(std::move(dropEvent));            

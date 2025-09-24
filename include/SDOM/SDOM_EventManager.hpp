@@ -40,6 +40,7 @@
 #define __SDOM_EVENT_MANAGER_HPP__
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_ResourceHandle.hpp>
 
 // #include <queue>`
 // #include <memory>
@@ -61,23 +62,22 @@ namespace SDOM
         void addEvent(std::unique_ptr<Event> event);
 
         // Queue an SDL_Event as an SDOM::Event
-        void Queue_SDL_Event(IDisplayObject& node, SDL_Event& sdlEvent);
+        void Queue_SDL_Event(SDL_Event& sdlEvent);
 
         // Dispatch all queued events
-        void DispatchQueuedEvents(IDisplayObject& rootNode);
+        void DispatchQueuedEvents();
 
         // Dispatch a single event to the target node
-        void dispatchEvent(std::unique_ptr<Event> event, IDisplayObject& rootNode);
-
+        void dispatchEvent(std::unique_ptr<Event> event, ResourceHandle rootNode);
         // Dispatch an event to all nodes on the same stage
-        void dispatchEventToAllNodesOnStage(std::unique_ptr<Event> event, IDisplayObject& rootNode);
+        void dispatchEventToAllNodesOnStage(std::unique_ptr<Event> event);
 
         // Dispatch an event to all event listeners on the same stage
-        void dispatchEventToAllEventListenersOnStage(std::unique_ptr<Event> event, IDisplayObject& rootNode);
+        void dispatchEventToAllEventListenersOnStage(std::unique_ptr<Event> event);
 
         // Utility methods
         bool isMouseWithinBounds(IDisplayObject& target) const;
-        IDisplayObject& findTopObjectUnderMouse(IDisplayObject& rootNode, IDisplayObject* excludeNode = nullptr) const;
+        ResourceHandle findTopObjectUnderMouse(ResourceHandle rootNode, ResourceHandle excludeNode = ResourceHandle()) const;
 
     private:
         std::queue<std::unique_ptr<Event>> eventQueue; // Queue for storing events

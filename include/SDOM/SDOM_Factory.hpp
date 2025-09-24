@@ -8,6 +8,7 @@
 namespace SDOM 
 {
     class ResourceHandle; // forward declaration
+    class Stage;
 
     struct TypeCreators 
     {
@@ -57,6 +58,8 @@ namespace SDOM
         //     // Use stage...
         // }
         ResourceHandle getResourceHandle(const std::string& name);
+
+        ResourceHandle getStageHandle();
 
         void addResource(const std::string& name, 
             std::unique_ptr<IResourceObject> resource);

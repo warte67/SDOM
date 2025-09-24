@@ -260,9 +260,8 @@ namespace SDOM
                     // Handle and dispatch events based on the SDL_Event                
                     if (eventManager_) 
                     {
-                        Stage* stage = getStage();
-                        eventManager_->Queue_SDL_Event(*stage, event);
-                        eventManager_->DispatchQueuedEvents(*stage);
+                        eventManager_->Queue_SDL_Event(event);
+                        eventManager_->DispatchQueuedEvents();
 
                         // // handle TAB keypress
                         // if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_TAB) 

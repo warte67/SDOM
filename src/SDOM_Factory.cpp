@@ -52,6 +52,16 @@ namespace SDOM
         return ResourceHandle();
     }
 
+    ResourceHandle Factory::getStageHandle() 
+    {
+        Stage* stage = getStage();
+        if (!stage) {
+            ERROR("Factory::getStageHandle: No stage available");
+            return ResourceHandle(); // Return an empty/null handle if stage is not available
+        }
+        std::string stageName = stage->getName();
+        return getResourceHandle(stageName);
+    }
 
     // // JSON based object creator
     ResourceHandle Factory::create(const std::string& typeName, const Json& config)
