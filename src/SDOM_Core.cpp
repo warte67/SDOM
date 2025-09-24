@@ -258,25 +258,25 @@ namespace SDOM
                         eventManager_->Queue_SDL_Event(event);
                         eventManager_->DispatchQueuedEvents();
 
-                        // // handle TAB keypress
-                        // if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_TAB) 
-                        // {
-                        //     if (event.key.mod & SDL_KMOD_SHIFT) 
-                        //     {
-                        //         // Shift + Tab: Move focus to the previous object
-                        //         handleTabKeyPressReverse(*stage);
-                        //     } 
-                        //     else 
-                        //     {
-                        //         // Tab: Move focus to the next object
-                        //         handleTabKeyPress(*stage);
-                        //     }
-                        // }
-                        // // handle ESC keypress
-                        // if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE) 
-                        // {
-                        //     keyboardFocusedObject_.reset(); // Clear keyboard focus
-                        // }
+                        // handle TAB keypress
+                        if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_TAB) 
+                        {
+                            if (event.key.mod & SDL_KMOD_SHIFT) 
+                            {
+                                // Shift + Tab: Move focus to the previous object
+                                handleTabKeyPressReverse();
+                            } 
+                            else 
+                            {
+                                // Tab: Move focus to the next object
+                                handleTabKeyPress();
+                            }
+                        }
+                        // handle ESC keypress
+                        if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE) 
+                        {
+                            keyboardFocusedObject_.reset(); // Clear keyboard focus
+                        }
                     }
 
                     // POSSIBLE TODO:  add virtual methods to IDisplayObject::onSDL_Event() to specifically 
@@ -410,7 +410,11 @@ namespace SDOM
         // Call recursive quit on the root node (if it exists)
         IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
         if (rootObj)
+        {
+            setIsTraversing(true);
             handleQuit(*rootObj);
+            setIsTraversing(false);
+        }
 
         // Shutdown SDL
         shutdown_SDL();
@@ -451,7 +455,11 @@ namespace SDOM
         // Call recursive render on the root node (if it exists)
         IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
         if (rootObj)
+        {
+            setIsTraversing(true);
             handleRender(*rootObj);
+            setIsTraversing(false);
+        }
     }
 
     void Core::onEvent(Event& event)
@@ -473,7 +481,11 @@ namespace SDOM
         // Call recursive event on the root node (if it exists)
         IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
         if (rootObj)
+        {
+            setIsTraversing(true);
             handleEvent(*rootObj);
+            setIsTraversing(false);
+        }
     }
 
     void Core::onUpdate(float fElapsedTime)
@@ -495,7 +507,11 @@ namespace SDOM
         // Call recursive update on the root node (if it exists)
         IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
         if (rootObj)
+        {
+            setIsTraversing(true);
             handleUpdate(*rootObj);
+            setIsTraversing(false);
+        }
     }
 
     bool Core::onUnitTest()
@@ -531,7 +547,11 @@ namespace SDOM
         // Call recursive unitTest on the root node (if it exists)
         IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
         if (rootObj)
+        {
+            setIsTraversing(true);
             allTestsPassed &= handleUnitTest(*rootObj);
+            setIsTraversing(false);
+        }
 
         std::cout << CLR::indent_pop();
         if (allTestsPassed) 
@@ -756,12 +776,145 @@ namespace SDOM
     } // END bool Core::coreTests_()
 
 
+    void Core::handleTabKeyPress()
+    {
+        // Clear the tabList_
+        while (!tabList_.empty()) {
+            tabList_.pop();
+        }
 
+        // Lambda to recursively add the stage and children to the tabList_ if these nodes are tabEnabled_
+        auto populateTabList = [this](auto& populateTabListRef, DomHandle node) -> void 
+        {
+            if (!node.isValid()) return;
 
-    // void Core::handleTabKeyPress(Stage& stage)
-    // {}
-    // void Core::handleTabKeyPressReverse(Stage& stage)
-    // {}
+            // Resolve the DomHandle to an IDisplayObject*
+            IDisplayObject* obj = dynamic_cast<IDisplayObject*>(node.get());
+            if (!obj) return;
+
+            // Check if the object is tab-enabled and has a valid tab priority
+            if (obj->isTabEnabled() && obj->getTabPriority() >= 0) 
+            {
+                tabList_.push(node);
+            }
+
+            // Recursively process children
+            for (const auto& child : obj->getChildren()) 
+            {
+                if (child.isValid()) 
+                {
+                    populateTabListRef(populateTabListRef, child);
+                }
+            }
+        };
+
+        // Populate the tabList_ starting from the stage
+        DomHandle node = getStageHandle();
+        populateTabList(populateTabList, node);
+
+        // Find the current object (keyboardFocusedObject_) with key focus within the tabList_
+        DomHandle currentFocus = keyboardFocusedObject_;
+        DomHandle nextFocus;
+
+        bool foundCurrentFocus = false;
+        std::vector<DomHandle> tempList;
+
+        while (!tabList_.empty()) {
+            auto candidate = tabList_.top();
+            tabList_.pop();
+            tempList.push_back(candidate);
+
+            if (candidate == currentFocus) {
+                foundCurrentFocus = true;
+            } else if (foundCurrentFocus) {
+                nextFocus = candidate;
+                break;
+            }
+        }
+
+        // Wrap around if no next focus is found
+        if (!nextFocus && !tempList.empty()) {
+            nextFocus = tempList.front();
+        }
+
+        // Restore tabList_
+        for (const auto& item : tempList) {
+            tabList_.push(item);
+        }
+
+        // Update the current object (keyboardFocusedObject_) to the next entry in the tabList_        
+        setKeyboardFocusedObject(nextFocus);    // keyboardFocusedObject_ = nextFocus;
+    }// END: void Core::handleTabKeyPress(Stage& stage)
+
+    void Core::handleTabKeyPressReverse()
+    {
+        // Clear the tabList_
+        while (!tabList_.empty()) {
+            tabList_.pop();
+        }
+
+        // Lambda to recursively add the stage and children to the tabList_ if these nodes are tabEnabled_
+        auto populateTabList = [this](auto& populateTabListRef, DomHandle node) -> void 
+        {
+            if (!node.isValid()) return;
+
+            // Resolve the DomHandle to an IDisplayObject*
+            IDisplayObject* obj = dynamic_cast<IDisplayObject*>(node.get());
+            if (!obj) return;
+
+            // Check if the object is tab-enabled and has a valid tab priority
+            if (obj->isTabEnabled() && obj->getTabPriority() >= 0) 
+            {
+                tabList_.push(node);
+            }
+
+            // Recursively process children
+            for (const auto& child : obj->getChildren()) 
+            {
+                if (child.isValid()) 
+                {
+                    populateTabListRef(populateTabListRef, child);
+                }
+            }
+        };
+
+        // Populate the tabList_ starting from the stage
+        DomHandle node = getStageHandle();
+        populateTabList(populateTabList, node);
+
+        // Find the current object (keyboardFocusedObject_) with key focus within the tabList_
+        DomHandle currentFocus = keyboardFocusedObject_;
+        DomHandle previousFocus;
+
+        bool foundCurrentFocus = false;
+        std::vector<DomHandle> tempList;
+
+        while (!tabList_.empty()) {
+            auto candidate = tabList_.top();
+            tabList_.pop();
+            tempList.push_back(candidate);
+
+            if (candidate == currentFocus) {
+                foundCurrentFocus = true;
+            } else if (!foundCurrentFocus) {
+                previousFocus = candidate;
+            }
+        }
+
+        // Wrap around if no previous focus is found
+        if (!foundCurrentFocus && !tempList.empty()) {
+            previousFocus = tempList.back();
+        }
+
+        // Restore tabList_
+        for (const auto& item : tempList) {
+            tabList_.push(item);
+        }
+
+        // Update the current object (keyboardFocusedObject_) to the previous entry in the tabList_
+        setKeyboardFocusedObject(previousFocus);    // keyboardFocusedObject_ = previousFocus;
+    } // END:void Core::handleTabKeyPressReverse(Stage& stage)
+
     void Core::setKeyboardFocusedObject(DomHandle obj)
     { keyboardFocusedObject_ = obj; }
     DomHandle Core::getKeyboardFocusedObject() const

@@ -31,8 +31,8 @@ namespace SDOM
         T* operator->() const { return get(); }
 
         operator bool() const { return get() != nullptr; }
-        bool operator==(const Handle& other)  const { return name_ == other.name_; }
-        bool operator!=(const Handle& other)  const { return name_ != other.name_; }
+        bool operator==(const Handle& other)  const { return name_ == other.name_ && type_ == other.type_ ; }
+        bool operator!=(const Handle& other)  const { return !(*this == other); }
         bool operator<(const Handle& other)   const { return name_ < other.name_; }
         bool operator>(const Handle& other)   const { return name_ > other.name_; }
         bool operator<=(const Handle& other)  const { return name_ <= other.name_; }
@@ -112,6 +112,16 @@ namespace SDOM
         //         *this = Handle(); // Or handle error as needed
         //     }
         // }
+
+        // // helpers
+        // void validate() const {
+        //     if (!get()) {
+        //         ERROR("Handle validation failed: Handle is null. Name: '" + name_ + "', Type: '" + type_ + "'");
+        //     }
+        // }      
+        bool isValid() const {
+            return get() != nullptr;
+        }          
 
         inline static Factory* factory_ = nullptr;
 

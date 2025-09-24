@@ -796,47 +796,6 @@ namespace SDOM
         return (hoveredObj == this);
     }
 
-    // bool IDisplayObject::isEnabled() const { return isEnabled_; }
-    // IDisplayObject& IDisplayObject::setEnabled(bool enabled) 
-    // { 
-    //     // Dispatch EventType::Enabled or EventType::Disabled
-    //     auto eventNode = make_unique<Event>(enabled ? EventType::Enabled : EventType::Disabled, shared_from_this().get());
-    //     EventManager& eventManager = Core::instance().getEventManager();
-    //     eventManager.addEvent(move(eventNode));        
-    //     // set the isEnabled as appropriate
-    //     isEnabled_ = enabled; 
-    //     setDirty(); 
-    //     return *this; 
-    // }
-
-    
-    // bool IDisplayObject::isHidden() const { return isHidden_; }
-    // IDisplayObject& IDisplayObject::setHidden(bool hidden) 
-    // { 
-    //     // Dispatch EventType::Hidden or EventType::Visible
-    //     auto eventNode = make_unique<Event>(hidden ? EventType::Hidden : EventType::Visible, shared_from_this().get());
-    //     EventManager& eventManager = Core::instance().getEventManager();
-    //     eventManager.addEvent(move(eventNode));
-    //     // set the isHidden as appropriate
-    //     isHidden_ = hidden; 
-    //     setDirty(); 
-    //     return *this; 
-    // }
-    // bool IDisplayObject::isVisible() const { return !isHidden_; }
-    // IDisplayObject& IDisplayObject::setVisible(bool visible) 
-    // { 
-    //     // Dispatch EventType::Hidden or EventType::Visible
-    //     auto eventNode = make_unique<Event>(visible ? EventType::Visible : EventType::Hidden, shared_from_this().get());
-    //     EventManager& eventManager = Core::instance().getEventManager();
-    //     eventManager.addEvent(move(eventNode));
-    //     // set isHidden as appropriate
-    //     isHidden_ = !visible; 
-    //     setDirty(); 
-    //     return *this; 
-    // }
-
-
-
     int IDisplayObject::getWidth() const 
     {
         // int w = int(getRight() - getLeft());

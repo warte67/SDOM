@@ -147,8 +147,10 @@ namespace SDOM
                     if (event->isPropagationStopped()) 
                         break;
                 }
-            };        
+            };       
+            getCore().setIsTraversing(true); 
             capturePhase(rootHandle, event->getTarget());
+            getCore().setIsTraversing(false);
         }
         // Target Phase: Dispatch to the target only 
         event->setPhase(Event::Phase::Target);
@@ -194,7 +196,11 @@ namespace SDOM
             {
                 DomHandle parentHandle = targetNode->getParent();
                 if (parentHandle)
+                {
+                    getCore().setIsTraversing(true);
                     bubbleTraverse(parentHandle, bubbleTraverse);
+                    getCore().setIsTraversing(false);
+                }
             }            
         } // end if is allowed to bubble
     }
@@ -213,8 +219,10 @@ namespace SDOM
             for (const auto& child : node->getChildren())
                 dispatchToChildren(child, evt);
         };
-        DomHandle stageHandle = getFactory().getStageHandle();
+        getCore().setIsTraversing(true);
+        DomHandle stageHandle = getStageHandle();
         dispatchToChildren(stageHandle, event.get());
+        getCore().setIsTraversing(false);
     }
 
     void EventManager::dispatchEventToAllEventListenersOnStage(std::unique_ptr<Event> event) 
@@ -230,8 +238,10 @@ namespace SDOM
             for (const auto& child : node->getChildren())
                 dispatchToChildren(child, evt);
         };
-        DomHandle stageHandle = getFactory().getStageHandle();
+        getCore().setIsTraversing(true);
+        DomHandle stageHandle = getStageHandle();
         dispatchToChildren(stageHandle, event.get());
+        getCore().setIsTraversing(false);
     }
 
 
@@ -278,7 +288,9 @@ namespace SDOM
             for (const auto& child : nodeHandle->getChildren()) 
                 self(child, depth + 1, self);
         };
+        getCore().setIsTraversing(true);
         traverse(rootNode, 0, traverse);
+        getCore().setIsTraversing(false);
 
         // Default to rootNode if no other node is targeted
         if (!targetHandle)
@@ -292,8 +304,8 @@ namespace SDOM
         // Convert SDL_Event to SDOM::Event and add to the queue
 
         // Skip processing if the node is not enabled or is hidden
-        DomHandle nodeHandle = getFactory().getStageHandle();
-        IDisplayObject* node = dynamic_cast<IDisplayObject*>(nodeHandle.get());
+        DomHandle node = getStageHandle();
+        // IDisplayObject* node = dynamic_cast<IDisplayObject*>(nodeHandle.get());
         if (!node) return;
 
         if (!node->isEnabled() || node->isHidden())
@@ -304,7 +316,7 @@ namespace SDOM
 
 
         // find the top object under the mouse
-        DomHandle mouseHoveredObject = findTopObjectUnderMouse(nodeHandle);
+        DomHandle mouseHoveredObject = findTopObjectUnderMouse(node);
         getCore().setMouseHoveredObject(mouseHoveredObject);
 
         // Scale the SDL event coordinates to the render coordinates
@@ -333,11 +345,11 @@ namespace SDOM
 
         // Find the top object that is under the mouse cursor
         // Modify findTopObjectUnderMouse to exclude the dragged object
-        DomHandle topObject = findTopObjectUnderMouse(nodeHandle, draggedObject);
+        DomHandle topObject = findTopObjectUnderMouse(node, draggedObject);
 
-        std::cout << CLR::GREEN << "Top Object under mouse: " << topObject.getName() 
-                  << " (MouseX: " << stage->mouseX 
-                  << ", MouseY: " << stage->mouseY << ")" << CLR::NORMAL << std::endl;
+        // std::cout << CLR::GREEN << "Top Object under mouse: " << topObject.getName() 
+        //           << " (MouseX: " << stage->mouseX 
+        //           << ", MouseY: " << stage->mouseY << ")" << CLR::NORMAL << std::endl;
 
 
         // alias the SDL_EventType for ease of use:
@@ -513,7 +525,7 @@ namespace SDOM
         {
             float mX = sdlEvent.motion.x;
             float mY = sdlEvent.motion.y;
-            auto buttonEvent = std::make_unique<Event>(EventType::MouseButtonUp, nodeHandle, getCore().getElapsedTime());
+            auto buttonEvent = std::make_unique<Event>(EventType::MouseButtonUp, node, getCore().getElapsedTime());
             buttonEvent->sdlEvent = sdlEvent;
             buttonEvent->mouse_x = mX;
             buttonEvent->mouse_y = mY;
@@ -523,7 +535,7 @@ namespace SDOM
             buttonEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
             addEvent(std::move(buttonEvent));
             // find the top object under the mouse
-            DomHandle topObject = findTopObjectUnderMouse(nodeHandle);
+            DomHandle topObject = findTopObjectUnderMouse(node);
 
             // Only fire MouseClick if down and up on the same object
             if (s_lastMouseDownObject == topObject)
@@ -535,7 +547,7 @@ namespace SDOM
                     IDisplayObject* topNode = dynamic_cast<IDisplayObject*>(top.get());
                     if (topNode && topNode->isTabEnabled())
                         topNode->setKeyboardFocus();
-                    auto clickEvent = std::make_unique<Event>(EventType::MouseClick, nodeHandle, getCore().getElapsedTime());
+                    auto clickEvent = std::make_unique<Event>(EventType::MouseClick, node, getCore().getElapsedTime());
                     clickEvent->sdlEvent = sdlEvent;
                     clickEvent->mouse_x = mX;
                     clickEvent->mouse_y = mY;
@@ -548,7 +560,7 @@ namespace SDOM
                 } 
                 else if (sdlEvent.button.clicks > 1) 
                 {
-                    auto doubleClickEvent = std::make_unique<Event>(EventType::MouseDoubleClick, nodeHandle, getCore().getElapsedTime());
+                    auto doubleClickEvent = std::make_unique<Event>(EventType::MouseDoubleClick, node, getCore().getElapsedTime());
                     doubleClickEvent->sdlEvent = sdlEvent;
                     doubleClickEvent->mouse_x = mX;
                     doubleClickEvent->mouse_y = mY;
@@ -566,7 +578,7 @@ namespace SDOM
         {
             float mX = sdlEvent.motion.x;
             float mY = sdlEvent.motion.y;
-            auto buttonDownEvent = std::make_unique<Event>(EventType::MouseButtonDown, nodeHandle, getCore().getElapsedTime());
+            auto buttonDownEvent = std::make_unique<Event>(EventType::MouseButtonDown, node, getCore().getElapsedTime());
             buttonDownEvent->sdlEvent = sdlEvent;
             buttonDownEvent->mouse_x = mX;
             buttonDownEvent->mouse_y = mY;
@@ -599,7 +611,7 @@ namespace SDOM
         {
             float mX = sdlEvent.motion.x;
             float mY = sdlEvent.motion.y;
-            DomHandle currentHoveredObject = findTopObjectUnderMouse(nodeHandle, draggedObject);
+            DomHandle currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);
 
             // Dispatch the motion event
             auto motionEvent = std::make_unique<Event>(EventType::MouseMove, currentHoveredObject, getCore().getElapsedTime());
@@ -646,7 +658,7 @@ namespace SDOM
         SDL_Window* currentWindow = SDL_GetMouseFocus();
         float mX = sdlEvent.motion.x;
         float mY = sdlEvent.motion.y;
-        DomHandle currentHoveredObject = findTopObjectUnderMouse(nodeHandle, draggedObject);
+        DomHandle currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);
 
         // Check if the focused window has changed
         if (focusedWindow != currentWindow || isDragging) 
@@ -717,14 +729,15 @@ namespace SDOM
                     // Start dragging if the mouse has moved significantly
                     isDragging = true;
                     draggedObject = topObject; // Set the dragged object to the top object under the mouse
-                    IDisplayObject* draggedNode = dynamic_cast<IDisplayObject*>(draggedObject.get());
-                    if (draggedNode)
-                    {
-                        drag_offset_x = mX - draggedNode->getX();
-                        drag_offset_y = mY - draggedNode->getY();
-                    }
+
+                    if (!draggedObject.isValid()) 
+                        ERROR("draggedObject is invalid.");
+
+                    drag_offset_x = mX - draggedObject->getX();
+                    drag_offset_y = mY - draggedObject->getY();
+
                     // Create Drag event
-                    auto dragEvent = std::make_unique<Event>(EventType::Drag, nodeHandle, getCore().getElapsedTime());
+                    auto dragEvent = std::make_unique<Event>(EventType::Drag, node, getCore().getElapsedTime());
                     dragEvent->sdlEvent = sdlEvent;
                     dragEvent->mouse_x = mX;
                     dragEvent->mouse_y = mY;
@@ -733,13 +746,13 @@ namespace SDOM
                     dragEvent->dragOffsetY = drag_offset_y;
                     dragEvent->setTarget(draggedObject);
                     dragEvent->setCurrentTarget(draggedObject);
-                    dragEvent->setRelatedTarget(draggedNode->getParent());
-                    dragEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
-                    // Dispatch the Drag event
-                    addEvent(std::move(dragEvent));
-                    // Set dragging state to true
-                    isDragging = true;
-                }
+                    DomHandle parent = draggedObject->getParent();
+                    if (parent.isValid()) 
+                        dragEvent->setRelatedTarget(parent);
+                    dragEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event                    
+                    addEvent(std::move(dragEvent)); // Dispatch the Drag event                    
+                    isDragging = true; // Set dragging state to true
+                }                    
             }
         }
 
@@ -747,8 +760,10 @@ namespace SDOM
         if (sdlEvent.type == SDL_EVENT_MOUSE_MOTION && isDragging) 
         {
             // Create Dragging event
-            IDisplayObject* draggedNode = dynamic_cast<IDisplayObject*>(draggedObject.get());
-            auto draggingEvent = std::make_unique<Event>(EventType::Dragging, nodeHandle, getCore().getElapsedTime());
+            // IDisplayObject* draggedNode = dynamic_cast<IDisplayObject*>(draggedObject.get());
+            DomHandle draggedNode = draggedObject;
+            if (!draggedNode.isValid()) return;
+            auto draggingEvent = std::make_unique<Event>(EventType::Dragging, node, getCore().getElapsedTime());
             draggingEvent->sdlEvent = sdlEvent;
             draggingEvent->mouse_x = mX;
             draggingEvent->mouse_y = mY;
@@ -757,7 +772,9 @@ namespace SDOM
             draggingEvent->dragOffsetY = drag_offset_y;
             draggingEvent->setTarget(draggedObject);
             draggingEvent->setCurrentTarget(draggedObject);
-            IDisplayObject* parent = dynamic_cast<IDisplayObject*>(draggedNode->getParent().get());
+            // IDisplayObject* parent = dynamic_cast<IDisplayObject*>(draggedNode->getParent().get());
+            DomHandle parent = draggedNode->getParent();
+            if (!parent.isValid()) return;
             draggingEvent->setRelatedTarget(parent->getParent());
             draggingEvent->fElapsedTime = getCore().getElapsedTime(); // Set elapsed time for the event
             // Dispatch the Dragging event

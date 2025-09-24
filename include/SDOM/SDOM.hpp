@@ -145,6 +145,7 @@ namespace SDOM
     Core& getCore();
     Factory& getFactory();
     Stage* getStage();
+    DomHandle getStageHandle();
     SDL_Renderer* getRenderer();
     SDL_Window* getWindow();
     SDL_Texture* getTexture();

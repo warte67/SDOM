@@ -4,6 +4,7 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
+#include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_Handle.hpp>
 
 namespace SDOM
@@ -136,8 +137,8 @@ namespace SDOM
 
 
 
-            // void handleTabKeyPress(Stage& stage);
-            // void handleTabKeyPressReverse(Stage& stage);
+            void handleTabKeyPress();
+            void handleTabKeyPressReverse();
             void setKeyboardFocusedObject(DomHandle obj);
             DomHandle getKeyboardFocusedObject() const;
             void setMouseHoveredObject(DomHandle obj);
@@ -177,15 +178,18 @@ namespace SDOM
 
             DomHandle hoveredObject_;
             DomHandle keyboardFocusedObject_;
-            // struct TabPriorityComparator {
-            //     bool operator()(const DomHandle& a, const DomHandle& b) const {
-            //         auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
-            //         auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
-            //         if (!aObj || !bObj) return false; // Handle invalid handles
-            //         return aObj->getTabPriority() < bObj->getTabPriority(); // Higher priority first
-            //     }
-            // };
-            // std::priority_queue<DomHandle, std::vector<DomHandle>, TabPriorityComparator> tabList_;
+            struct TabPriorityComparator {
+                bool operator()(const DomHandle& a, const DomHandle& b) const {
+                    // Validate both handles
+                    if (!a.isValid() || !b.isValid()) {
+                        ERROR("Invalid DomHandle detected in TabPriorityComparator.");
+                        return false;
+                    }
+                    // Compare tab priorities
+                    return a->getTabPriority() < b->getTabPriority(); // Higher priority first
+                }
+            };
+            std::priority_queue<DomHandle, std::vector<DomHandle>, TabPriorityComparator> tabList_;
 
 
             CoreConfig config_;

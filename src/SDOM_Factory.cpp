@@ -179,15 +179,14 @@ namespace SDOM
     {
         for (auto& orphanHandle : orphanList_)
         {
-            IDisplayObject* orphan = dynamic_cast<IDisplayObject*>(orphanHandle.get());
+            DomHandle orphan = orphanHandle;
             if (orphan)
             {
-                DomHandle parentHandle = orphan->getParent();
-                IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parentHandle.get());
-                if (parentObj)
+                DomHandle parent = orphan->getParent();
+                if (parent)
                 {
                     // Remove orphan from parent's children using public removeChild method
-                    parentObj->removeChild(orphanHandle);
+                    parent->removeChild(orphanHandle);
                     // Set orphan's parent to nullptr using public setParent method
                     orphan->setParent(DomHandle());
                 }
@@ -200,7 +199,7 @@ namespace SDOM
     {
         for (auto& futureChild : futureChildrenList_) 
         {
-            IDisplayObject* child = dynamic_cast<IDisplayObject*>(futureChild.child.get());
+            DomHandle child = futureChild.child;
             if (child)
             {
                 child->attachChild_(

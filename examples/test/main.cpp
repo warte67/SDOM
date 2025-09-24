@@ -58,7 +58,7 @@ int main()
                         "children": [
                             {
                                 "type": "Box",
-                                "name": "box1",
+                                "name": "redBox",
                                 "x": 100,
                                 "y": 100,
                                 "width": 120,
@@ -67,12 +67,21 @@ int main()
                             },
                             {
                                 "type": "Box",
-                                "name": "box2",
-                                "x": 300,
+                                "name": "greenBox",
+                                "x": 150,
                                 "y": 150,
                                 "width": 80,
                                 "height": 120,
                                 "color": { "r": 50, "g": 200, "b": 50, "a": 255 }
+                            },
+                            {
+                                "type": "Box",
+                                "name": "blueBox",
+                                "x": 240,
+                                "y": 70,
+                                "width": 250,
+                                "height": 225,
+                                "color": { "r": 50, "g": 50, "b": 200, "a": 255 }
                             }
                         ]
                 },
