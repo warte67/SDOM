@@ -4,7 +4,7 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
 
 ## Progress Updates
 
-- ### [July 2, 2025] Initial rough draft and proof of concept.
+- ### [July 2, 2025]  Initial rough draft and proof of concept.
 - ### [August 5, 2025] SDOM secondary rough draft
 - ### [September 19, 2025]
     - Proof of concept approved. Main development approved. Work begins officially.
