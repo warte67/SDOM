@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['factory_0',['factory',['../md_extensible__factory.html#autotoc_md84',1,'2. Private Constructors &amp; Friend Factory'],['../classSDOM_1_1IDisplayObject.html#a328c093d609680cca505905c6d49901a',1,'SDOM::IDisplayObject::Factory'],['../classSDOM_1_1Factory.html',1,'SDOM::Factory'],['../classSDOM_1_1Factory.html#affd4d70b6b361b04bdc4fa7d194059e6',1,'SDOM::Factory::Factory()'],['../classSDOM_1_1Stage.html#a328c093d609680cca505905c6d49901a',1,'SDOM::Stage::Factory'],['../classSDOM_1_1IResourceObject.html#a328c093d609680cca505905c6d49901a',1,'SDOM::IResourceObject::Factory']]],
+  ['factory_0',['Factory',['../md_extensible__factory.html#autotoc_md84',1,'2. Private Constructors &amp; Friend Factory'],['../classSDOM_1_1Factory.html',1,'SDOM::Factory'],['../classSDOM_1_1IDisplayObject.html#a328c093d609680cca505905c6d49901a',1,'SDOM::IDisplayObject::Factory()'],['../classSDOM_1_1IResourceObject.html#a328c093d609680cca505905c6d49901a',1,'SDOM::IResourceObject::Factory()'],['../classSDOM_1_1Stage.html#a328c093d609680cca505905c6d49901a',1,'SDOM::Stage::Factory()'],['../classSDOM_1_1Factory.html#affd4d70b6b361b04bdc4fa7d194059e6',1,'SDOM::Factory::Factory()']]],
   ['factory_20based_20global_20traversal_20type_203_1',['3. Factory-based Global Traversal (Type 3)',['../md_dom__propagation.html#autotoc_md65',1,'']]],
   ['factory_20create_20method_2',['4. Generic Factory Create Method',['../md_extensible__factory.html#autotoc_md86',1,'']]],
   ['factory_20create_20methods_3',['3. Factory Create Methods',['../md_extensible__factory.html#autotoc_md77',1,'']]],
@@ -13,7 +13,7 @@ var searchData=
   ['fg_5frgb_10',['fg_rgb',['../classCLR.html#a2c2e1040458c8b4f88be7b0e68999faa',1,'CLR']]],
   ['filemame_5f_11',['filemame_',['../classSDOM_1_1IResourceObject.html#a9e370ce55cd0f363220283d9680e5b84',1,'SDOM::IResourceObject']]],
   ['findtopobjectundermouse_12',['findTopObjectUnderMouse',['../classSDOM_1_1EventManager.html#a8c27cac446fbc9ab0083d30de016ceb3',1,'SDOM::EventManager']]],
-  ['flexibility_20use_20cases_13',['Flexibility &amp; Use Cases',['../md_core__framework.html#autotoc_md27',1,'']]],
+  ['flexibility_20use_20cases_13',['Flexibility &amp;amp; Use Cases',['../md_core__framework.html#autotoc_md27',1,'']]],
   ['flow_3a_14',['Initialization Flow:',['../md_core__framework.html#autotoc_md6',1,'']]],
   ['focusgained_15',['FocusGained',['../classSDOM_1_1EventType.html#af4fa0ac8739b6ec24c86817ba7384583',1,'SDOM::EventType']]],
   ['focuslost_16',['FocusLost',['../classSDOM_1_1EventType.html#ae9d92364cfb7d229a12c51a04f0fc1e6',1,'SDOM::EventType']]],
@@ -22,8 +22,8 @@ var searchData=
   ['for_20user_20convenience_19',['Reversed versions for user convenience',['../md_display__object__anchoring.html#autotoc_md48',1,'']]],
   ['format_20choice_20',['Configuration Format Choice',['../md_extensible__factory.html#autotoc_md92',1,'']]],
   ['framework_20design_21',['SDOM Core Framework Design',['../md_core__framework.html',1,'']]],
-  ['friend_20factory_22',['2. Private Constructors &amp; Friend Factory',['../md_extensible__factory.html#autotoc_md84',1,'']]],
-  ['frominitstruct_23',['fromInitStruct',['../structSDOM_1_1TypeCreators.html#a05edddb839f249b85b0fb69c1a32a1ac',1,'SDOM::TypeCreators']]],
-  ['fromjson_24',['fromjson',['../classSDOM_1_1IDataObject.html#a5b1d9c9a136de640cd006fb6216592c9',1,'SDOM::IDataObject::fromJson()'],['../structSDOM_1_1TypeCreators.html#a61cd2a24c5b899c68620e21b5e19289c',1,'SDOM::TypeCreators::fromJson']]],
+  ['friend_20factory_22',['2. Private Constructors &amp;amp; Friend Factory',['../md_extensible__factory.html#autotoc_md84',1,'']]],
+  ['frominitstruct_23',['fromInitStruct',['../structSDOM_1_1TypeCreators.html#a15807ffd6629c821a869c22bbbd8d180',1,'SDOM::TypeCreators']]],
+  ['fromjson_24',['fromJson',['../structSDOM_1_1TypeCreators.html#aefd8ec7858a1c0c9ed7d3a57d79f1b46',1,'SDOM::TypeCreators::fromJson'],['../classSDOM_1_1IDataObject.html#a5b1d9c9a136de640cd006fb6216592c9',1,'SDOM::IDataObject::fromJson()']]],
   ['functions_25',['Global Accessor Functions',['../md_core__framework.html#autotoc_md17',1,'']]]
 ];

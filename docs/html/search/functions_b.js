@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['listresourcenames_0',['listResourceNames',['../classSDOM_1_1Factory.html#a78a99ab0fe33d665df369b7c76d519b9',1,'SDOM::Factory']]]
+  ['listdisplayobjectnames_0',['listDisplayObjectNames',['../classSDOM_1_1Factory.html#addc3854eea35335491eab56a4f876411',1,'SDOM::Factory']]]
 ];

@@ -10,6 +10,7 @@ var classSDOM_1_1Handle =
     [ "get", "classSDOM_1_1Handle.html#aa8e43da8d8fed33b4d96384860cac5e6", null ],
     [ "getName", "classSDOM_1_1Handle.html#af4d201068f59a3005fbabb23bf50e36f", null ],
     [ "getType", "classSDOM_1_1Handle.html#a55e82e0ae2bedf5b585711aaa98de461", null ],
+    [ "isValid", "classSDOM_1_1Handle.html#adfe78233d6cae1bd7b66ff32457fbdcb", null ],
     [ "operator bool", "classSDOM_1_1Handle.html#a10cd90e06282bdfd0f02c6e915c4b51c", null ],
     [ "operator!=", "classSDOM_1_1Handle.html#aab40313498c3520581d97df37dc37ad3", null ],
     [ "operator*", "classSDOM_1_1Handle.html#ae8802a2403df05a25958e97d7b5f4c67", null ],

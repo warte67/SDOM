@@ -17,8 +17,8 @@ var namespaceSDOM =
     [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ],
     [ "TypeCreators", "structSDOM_1_1TypeCreators.html", "structSDOM_1_1TypeCreators" ],
     [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
-    [ "DomHandle", "namespaceSDOM.html#a726eeae2d1da0b353ffbca201a53b98c", null ],
-    [ "ResHandle", "namespaceSDOM.html#acf381bf5f6d569f5c53ae442cb6ae529", null ],
+    [ "DomHandle", "namespaceSDOM.html#a54109d3bb3e8279f0ebe607da05abb88", null ],
+    [ "ResHandle", "namespaceSDOM.html#a061df69233ffb2da2feba4566fd72e96", null ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
       [ "TOP_LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1", null ],
@@ -51,6 +51,7 @@ var namespaceSDOM =
     [ "getFactory", "namespaceSDOM.html#aabaa2df161427871e74767e384bcd058", null ],
     [ "getRenderer", "namespaceSDOM.html#a713b7f2d51053c98442edc40eaaf98fb", null ],
     [ "getStage", "namespaceSDOM.html#afb1377edb5f90095c4fadb3c9e07a3cc", null ],
+    [ "getStageHandle", "namespaceSDOM.html#aa8357b19dc2c9d3762404cbfe285d366", null ],
     [ "getTexture", "namespaceSDOM.html#ac0f36a9f4f98d23fa1da002213470c3f", null ],
     [ "getWindow", "namespaceSDOM.html#a8268b397b308040307a0d25fc715124f", null ],
     [ "quit", "namespaceSDOM.html#a9c56125987bd1ed7efbcc59e678a2be2", null ],

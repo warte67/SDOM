@@ -1,17 +1,12 @@
 var searchData=
 [
-  ['rationale_0',['Single Stage, Single Window Rationale',['../md_core__framework.html#autotoc_md29',1,'']]],
-  ['recommended_20approach_1',['Recommended Approach',['../md_extensible__factory.html#autotoc_md40',1,'']]],
-  ['registering_20custom_20stage_20objects_2',['Registering Custom Stage Objects',['../md_core__framework.html#autotoc_md24',1,'']]],
-  ['registration_3',['Registration',['../md_extensible__factory.html#autotoc_md42',1,'2. Factory Registration'],['../md_core__framework.html#autotoc_md14',1,'Hook &amp; Callback Registration']]],
-  ['registration_20system_4',['3. Factory Registration System',['../md_extensible__factory.html#autotoc_md51',1,'']]],
-  ['required_20pre_20initialization_20parameters_3a_5',['Required Pre Initialization Parameters:',['../md_core__framework.html#autotoc_md5',1,'Required Pre-Initialization Parameters:'],['../md_core__framework.html#autotoc_md9',1,'Required Pre-Initialization Parameters:']]],
-  ['requirements_6',['Requirements',['../md_extensible__factory.html#autotoc_md39',1,'']]],
-  ['resizing_20texture_20resolution_7',['Window Resizing &amp;amp; Texture Resolution',['../md_core__framework.html#autotoc_md32',1,'']]],
-  ['resolution_8',['Window Resizing &amp;amp; Texture Resolution',['../md_core__framework.html#autotoc_md32',1,'']]],
-  ['resource_20pointer_20resource_5fptr_20design_9',['Resource Pointer (&lt;span class=&quot;tt&quot;&gt;resource_ptr&lt;/span&gt;) Design',['../md_extensible__factory.html#autotoc_md59',1,'']]],
-  ['resource_20type_20management_10',['Resource Type Management',['../md_extensible__factory.html#autotoc_md38',1,'']]],
-  ['resource_5fptr_20design_11',['Resource Pointer (&lt;span class=&quot;tt&quot;&gt;resource_ptr&lt;/span&gt;) Design',['../md_extensible__factory.html#autotoc_md59',1,'']]],
-  ['responsibilities_12',['Core Responsibilities',['../md_core__framework.html#autotoc_md3',1,'']]],
-  ['rust_13',['Example (Python/Rust)',['../md_core__framework.html#autotoc_md16',1,'']]]
+  ['object_20anchoring_20design_0',['SDOM Display Object Anchoring Design',['../md_display__object__anchoring.html',1,'']]],
+  ['object_20anchoring_20system_20updated_20september_202_202025_1',['Display Object Anchoring System (Updated September 2, 2025)',['../md_display__object__anchoring.html#autotoc_md38',1,'']]],
+  ['object_20handles_20in_20sdom_2',['Object Handles in SDOM',['../md_object__handles.html#autotoc_md101',1,'']]],
+  ['object_20model_3',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]],
+  ['objects_4',['Registering Custom Stage Objects',['../md_core__framework.html#autotoc_md24',1,'']]],
+  ['or_20modes_5',['Stages as Game States or Modes',['../md_core__framework.html#autotoc_md34',1,'']]],
+  ['outline_6',['Implementation Outline',['../md_extensible__factory.html#autotoc_md97',1,'']]],
+  ['overriding_20the_20default_20stage_7',['Overriding the Default Stage',['../md_core__framework.html#autotoc_md30',1,'']]],
+  ['overview_8',['Overview',['../md_core__framework.html#autotoc_md2',1,'Overview'],['../md_display__object__anchoring.html#autotoc_md46',1,'Overview'],['../md_dom__propagation.html#autotoc_md58',1,'Overview'],['../md_object__handles.html#autotoc_md102',1,'Overview']]]
 ];

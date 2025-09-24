@@ -35,6 +35,8 @@ var classSDOM_1_1Core =
     [ "getWindowHeight", "classSDOM_1_1Core.html#a0c56dd9e68a752cdbc4bbf13cc5e2539", null ],
     [ "getWindowTitle", "classSDOM_1_1Core.html#a9eb5a0500bb9fc36ec82cd14e05792e6", null ],
     [ "getWindowWidth", "classSDOM_1_1Core.html#acee3cd809b3199a99e002d64df120901", null ],
+    [ "handleTabKeyPress", "classSDOM_1_1Core.html#a9e424a1d0ce6f6327c6ac6c8102d8406", null ],
+    [ "handleTabKeyPressReverse", "classSDOM_1_1Core.html#ac2fd090610dc01a7480ff3cececde751", null ],
     [ "json_value_case_insensitive", "classSDOM_1_1Core.html#a54d77f5fbab11b64f7971d1c33dea11d", null ],
     [ "onEvent", "classSDOM_1_1Core.html#aeff594d7f9097244d6888ab8a5f62f4d", null ],
     [ "onInit", "classSDOM_1_1Core.html#ac71a3d701929ce7d18e3cbc0eb62216c", null ],

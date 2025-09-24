@@ -10,7 +10,6 @@ var hierarchy =
       [ "SDOM::Exception", "classSDOM_1_1Exception.html", null ]
     ] ],
     [ "SDOM::Handle< T >", "classSDOM_1_1Handle.html", null ],
-    [ "SDOM::Handle< IDisplayObject >", "classSDOM_1_1Handle.html", null ],
     [ "SDOM::IDisplayObject::InitStruct", "structSDOM_1_1IDisplayObject_1_1InitStruct.html", [
       [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ]
     ] ],
@@ -19,11 +18,10 @@ var hierarchy =
         [ "SDOM::Core", "classSDOM_1_1Core.html", null ],
         [ "SDOM::Event", "classSDOM_1_1Event.html", null ],
         [ "SDOM::Factory", "classSDOM_1_1Factory.html", null ],
-        [ "SDOM::IResourceObject", "classSDOM_1_1IResourceObject.html", [
-          [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", [
-            [ "SDOM::Stage", "classSDOM_1_1Stage.html", null ]
-          ] ]
-        ] ]
+        [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", [
+          [ "SDOM::Stage", "classSDOM_1_1Stage.html", null ]
+        ] ],
+        [ "SDOM::IResourceObject", "classSDOM_1_1IResourceObject.html", null ]
       ] ]
     ] ],
     [ "SDOM::SDL_Utils", "classSDOM_1_1SDL__Utils.html", null ],

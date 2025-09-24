@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['framework_20design_0',['SDOM Core Framework Design',['../md_core__framework.html',1,'']]]
+  ['5_20extensibility_0',['5. Extensibility',['../md_extensible__factory.html#autotoc_md87',1,'']]]
 ];

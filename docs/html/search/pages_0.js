@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['anchoring_20design_0',['SDOM Display Object Anchoring Design',['../md_display__object__anchoring.html',1,'']]],
-  ['avoid_20diamond_20inheritance_1',['Inheritance Warning: Avoid Diamond Inheritance',['../md_object__handles.html',1,'']]]
+  ['1_0',['1. Core-based DOM Traversal (Type 1)',['../md_dom__propagation.html#autotoc_md61',1,'']]],
+  ['1_20core_20based_20dom_20traversal_20type_201_1',['1. Core-based DOM Traversal (Type 1)',['../md_dom__propagation.html#autotoc_md61',1,'']]],
+  ['1_20domhandle_2',['1. DomHandle',['../md_object__handles.html#autotoc_md104',1,'']]],
+  ['1_20initializer_20structs_3',['1. Initializer Structs',['../md_extensible__factory.html#autotoc_md82',1,'']]],
+  ['1_20initializer_20structs_20and_20json_20configs_4',['1. Initializer Structs and JSON Configs',['../md_extensible__factory.html#autotoc_md75',1,'']]],
+  ['1a_20standardized_20constructor_20signatures_5',['1a. Standardized Constructor Signatures',['../md_extensible__factory.html#autotoc_md83',1,'']]]
 ];
