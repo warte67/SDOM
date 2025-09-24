@@ -4,9 +4,9 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
 
 ## Progress Updates
 
-- **[July 2, 2025]** Initial rough draft and proof of concept.
-- **[August 5, 2025]** SDOM secondary rough draft
-- **[September 19, 2025]**
+- ### [July 2, 2025] Initial rough draft and proof of concept.
+- ### [August 5, 2025] SDOM secondary rough draft
+- ### [September 19, 2025]
     - Proof of concept approved. Main development approved. Work begins officially.
     - Improved Doxygen documentation for all major headers and macros.
     - Added and refined Doxygen comments for SDOM_CLR.hpp, SDOM.hpp, and SDOM_IDataObject.hpp.
@@ -28,14 +28,14 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - JSON configuration supports both new flags for runtime flexibility.
     - Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.
 
-- **[September 20, 2025]**
+- ### [September 20, 2025]
     - Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.
     - Event system foundation implemented and documented.
     - Doxygen documentation added for major interfaces (Core, Factory, IResourceObject).
     - Example usage of Core and Factory included in documentation.
     - Circular include and pointer management issues resolved (raw pointer for Factory ownership).
     - The SDOM framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.
-- **[September 21, 2025]**
+- ### [September 21, 2025]
     - Renamed `resource_ptr` to `ResourceHandle` throughout the codebase for clarity.
         - The new name better reflects its role as an opaque handle or key for resource lookup, rather than a smart pointer with ownership semantics.
         - Updated all documentation, examples, and comments to use `ResourceHandle`.
@@ -62,7 +62,7 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
     - **Testing & Debugging:**
         - Added debug prints to trace resource creation and lifecycle events.
         - Validated that the system is ready for expanded DOM tree parsing and more complex resource hierarchies.
-- **[September 22, 2025]**
+- ### [September 22, 2025]
     - **Unit Test Framework Refined:**  
         - Simplified the unit test system: now every resource implements `onUnitTests()` for built-in tests.
         - External/custom unit tests are registered and run via the `registerOnUnitTest()` callback, keeping the API minimal and flexible.
@@ -85,7 +85,7 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
         - Identified the need for a custom test object (e.g., `Box`) to facilitate comprehensive anchoring and coordinate propagation tests.
         - Planned to add live event tests (drag/drop, deferred add/remove) and prioritize tests for new features as they are developed.
         - Recognized that coverage for older features will be expanded over time, focusing first on the most critical areas.
-- **[September 23, 2025]**
+- ### [September 23, 2025]
     - **Event System Preliminary Testing:**  
         - Successfully integrated and tested the event system with live SDL3 events.
         - Verified that mouse, keyboard, window, and focus events are received and dispatched correctly.
@@ -102,21 +102,23 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
         - Improved code readability and maintainability by removing legacy patterns and redundant checks.
         - All major event and display object interactions now use the new handle API.
         - Codebase is stable, with most reference and legacy issues resolved.
-- **[September 24, 2025]**
+- ### [September 24, 2025]
     - **Factory Refactor:**
-    - Completely revised the `Factory` to use `IDisplayObject` instead of `IResourceObject`.
-    - Planned to reintroduce `IResourceObject` into the `Factory` later, ensuring compatibility with both resource and display object management.
-    - Verified that the `Factory` now supports `IDisplayObject` creation and initialization.
+        - Completely revised the `Factory` to use `IDisplayObject` instead of `IResourceObject`.
+        - Planned to reintroduce `IResourceObject` into the `Factory` later, ensuring compatibility with both resource and display object management.
+        - Verified that the `Factory` now supports `IDisplayObject` creation and initialization.
     - **Box Object:**
-    - The `Box` object is now fully functional, with lifecycle methods (`onInit`, `onRender`, `onUpdate`, etc.) implemented and tested.
-    - Event listener functionality is the only remaining issue, with the `MouseClick` event listener not firing as expected.
-    - Began troubleshooting the event listener system, focusing on event propagation, listener registration, and dispatch logic.
+        - The `Box` object is now fully functional, with lifecycle methods (`onInit`, `onRender`, `onUpdate`, etc.) implemented and tested.
+        - `isKeyboardFocused()` and `isMouseFocused()` methods are working correctly. As are the `handleTabKeyPress()` and `handleTabKeyPressReverse()` methods for keyboard focus navigation.
+        - Event listener functionality is the only remaining issue, with the `MouseClick` event listener not firing as expected.
+        - Began troubleshooting the event listener system, focusing on event propagation, listener registration, and dispatch logic.
     - **Event System:**
-    - Continued debugging and refining the event system to ensure proper propagation and listener execution.
-    - Verified that `EventManager` correctly dispatches events to the stage and its children.
-    - Added debug logs to trace event flow and identify potential issues with `Box` event handling.
+        - Continued debugging and refining the event system to ensure proper propagation and listener execution.
+        - Verified that `EventManager` correctly dispatches events to the stage and its children.
+        - Added debug logs to trace event flow and identify potential issues with `Box` event handling.
 
 # ToDo:
+
 - Resolve the `Box` event listener issue, ensuring that `MouseClick` events are received and processed correctly.
 - Expand event system tests to include drag-and-drop functionality, stacking, and anchoring for `Box` objects.
 - Reintroduce `IResourceObject` into the `Factory` for resource management alongside `IDisplayObject`.
