@@ -241,7 +241,77 @@ Example Use Cases</h1>
 <li>Align a child to any edge or corner of its parent</li>
 </ul>
 <hr  />
-<p>This anchor system makes <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> display objects highly flexible and professional, supporting modern UI layout needs. </p>
+<p>This anchor system makes <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> display objects highly flexible and professional, supporting modern UI layout needs.</p>
+<hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
+Anchoring Diagrams</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md67"></a>
+1) Parent Anchor Grid and Child Edge Anchors</h2>
+<p>SVG (static image): <img src="diagrams/display_object_anchoring/diagram-01.svg" alt="Anchors Grid" style="pointer-events: none;" class="inline"/></p>
+<details >
+<summary >
+View Mermaid source</summary>
+<p></p>
+<div class="fragment"><div class="line"> -norender</div>
+<div class="line">%% Parent has 9 anchors; child edges reference any of them with offsets</div>
+<div class="line">flowchart TB</div>
+<div class="line">    classDef parent fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d</div>
+<div class="line">    classDef anchor fill:#fff8e6,stroke:#f0ad4e,color:#5a4500</div>
+<div class="line">    classDef child  fill:#f7fff0,stroke:#7bb661,color:#234d20</div>
+<div class="line"> </div>
+<div class="line">    subgraph P[&quot;Parent (9-point anchor grid)&quot;]</div>
+<div class="line">        direction TB</div>
+<div class="line">        %% Top row</div>
+<div class="line">        TL[&quot;top_left&quot;]:::anchor --&gt; TC[&quot;top_center&quot;]:::anchor --&gt; TR[&quot;top_right&quot;]:::anchor</div>
+<div class="line">        %% Middle row</div>
+<div class="line">        ML[&quot;middle_left&quot;]:::anchor --&gt; MC[&quot;middle_center&quot;]:::anchor --&gt; MR[&quot;middle_right&quot;]:::anchor</div>
+<div class="line">        %% Bottom row</div>
+<div class="line">        BL[&quot;bottom_left&quot;]:::anchor --&gt; BC[&quot;bottom_center&quot;]:::anchor --&gt; BR[&quot;bottom_right&quot;]:::anchor</div>
+<div class="line">    end</div>
+<div class="line"> </div>
+<div class="line">    subgraph C[&quot;Child (edges + local offsets)&quot;]</div>
+<div class="line">        direction TB</div>
+<div class="line">        L[&quot;Left edge\nleft_&quot;]:::child</div>
+<div class="line">        T[&quot;Top edge\ntop_&quot;]:::child</div>
+<div class="line">        R[&quot;Right edge\nright_&quot;]:::child</div>
+<div class="line">        B[&quot;Bottom edge\nbottom_&quot;]:::child</div>
+<div class="line">    end</div>
+<div class="line"> </div>
+<div class="line">    %% Example anchoring links (illustrative)</div>
+<div class="line">    L -. anchored to .-&gt; ML</div>
+<div class="line">    T -. anchored to .-&gt; TC</div>
+<div class="line">    R -. anchored to .-&gt; MR</div>
+<div class="line">    B -. anchored to .-&gt; BC</div>
+<div class="line"> </div>
+<div class="line">    %% Notes (rendering might ignore comments in some mmdc versions)</div>
+</div><!-- fragment --><p></p>
+</details>
+<p>Key idea: each edge uses its own parent anchor reference plus a local offset; width/height derive from right-left and bottom-top.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md68"></a>
+2) Anchor Change Recalculation (No Visual Jump)</h2>
+<p>SVG (static image): <img src="diagrams/display_object_anchoring/diagram-02.svg" alt="Anchor Change Flow" style="pointer-events: none;" class="inline"/></p>
+<details >
+<summary >
+View Mermaid source</summary>
+<p></p>
+<div class="fragment"><div class="line"> -norender</div>
+<div class="line">sequenceDiagram</div>
+<div class="line">    autonumber</div>
+<div class="line">    participant User as API Caller</div>
+<div class="line">    participant Child as DisplayObject</div>
+<div class="line">    participant Parent as Parent</div>
+<div class="line">    participant Layout as Layout/Anchoring</div>
+<div class="line"> </div>
+<div class="line">    User-&gt;&gt;Child: setAnchorLeft(newAp)</div>
+<div class="line">    Child-&gt;&gt;Layout: request anchor change</div>
+<div class="line">    Layout-&gt;&gt;Parent: get parent_anchor_x for newAp</div>
+<div class="line">    Layout-&gt;&gt;Child: get current world edges\n(getLeft/Right/Top/Bottom)</div>
+<div class="line">    Note over Layout,Child: Recalculate only the affected local offset\nso the world edge stays fixed</div>
+<div class="line">    Layout--&gt;&gt;Child: left_ = world_left - parent_anchor_x</div>
+<div class="line">    Child--&gt;&gt;User: done (no visual jump)</div>
+</div><!-- fragment --><p></p>
+</details>
+<p>This flow illustrates the invariant maintained during anchor changes: the world edge position remains the same while only the corresponding local offset is updated. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

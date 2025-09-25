@@ -99,7 +99,8 @@ $(function(){initNavTree('md_architecture__overview.html','',''); });
 <summary >
 View Mermaid source</summary>
 <p></p>
-<div class="fragment"><div class="line">%%{init: { &#39;theme&#39;: &#39;neutral&#39;, &#39;flowchart&#39;: { &#39;curve&#39;: &#39;linear&#39; } }}%%</div>
+<div class="fragment"><div class="line"> -norender</div>
+<div class="line">%%{init: { &#39;theme&#39;: &#39;neutral&#39;, &#39;flowchart&#39;: { &#39;curve&#39;: &#39;linear&#39; } }}%%</div>
 <div class="line">flowchart TB</div>
 <div class="line"> </div>
 <div class="line">  %% Styling</div>
@@ -186,7 +187,6 @@ View Mermaid source</summary>
 <div class="line">  CMake --&gt;|builds| EX</div>
 </div><!-- fragment --><p></p>
 </details>
-<p>SVG fallback (static render): <img src="diagrams/architecture_overview/diagram-01.svg" alt="Architecture Diagram" style="pointer-events: none;" class="inline"/></p>
 <p>Notes</p><ul>
 <li>Core composes the SDL video subsystem (window, renderer, main texture) and orchestrates the main loop and callbacks.</li>
 <li>Factory owns and manages both display objects (IDisplayObject) and resource objects (IResourceObject), exposing safe handles for references.</li>
@@ -201,7 +201,8 @@ Runtime Flow (High Level)</h1>
 <summary >
 View Mermaid source</summary>
 <p></p>
-<div class="fragment"><div class="line">sequenceDiagram</div>
+<div class="fragment"><div class="line"> -norender</div>
+<div class="line">sequenceDiagram</div>
 <div class="line">  autonumber</div>
 <div class="line">  participant Prog as examples/test/prog</div>
 <div class="line">  participant Core as SDOM::Core</div>
@@ -227,7 +228,6 @@ View Mermaid source</summary>
 <div class="line">  Core-&gt;&gt;SDL: shutdown</div>
 </div><!-- fragment --><p></p>
 </details>
-<p>SVG fallback (static render): <img src="diagrams/architecture_overview/diagram-02.svg" alt="Runtime Flow" style="pointer-events: none;" class="inline"/></p>
 <p>This complements the per-module documents in the <span class="tt">docs/</span> folder (Core framework, anchoring, DOM propagation, extensible factory, handles, etc.). </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

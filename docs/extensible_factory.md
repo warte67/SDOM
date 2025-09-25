@@ -1,5 +1,5 @@
-- Initializer structs may inherit from base structs for code reuse and extensibility.
 # Extensible Factory Design
+- Initializer structs may inherit from base structs for code reuse and extensibility.
 
 ## Factory Overview (Diagram)
 
@@ -9,7 +9,7 @@ SVG (static image):
 <details>
 <summary>View Mermaid source</summary>
 
-```mermaid
+```mermaid-norender
 flowchart TB
   classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
   classDef mod  fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px
@@ -43,9 +43,6 @@ flowchart TB
 ```
 
 </details>
-
-SVG fallback (static render):
-![Factory Overview](diagrams/extensible_factory/diagram-01.svg)
 
 ## Resource Type Management
 In essence, the Factory serves as a simple database for all resource types in SDOM. By tracking each resource's type and unique name, it enables:

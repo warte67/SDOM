@@ -92,7 +92,7 @@ $(function(){initNavTree('md_object__handles.html','',''); });
   <div class="headertitle"><div class="title">Inheritance Warning: Avoid Diamond Inheritance </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md109"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md113"></a></p>
 <p>Care must be taken to avoid inheriting from leaves of both trees (i.e., from both <span class="tt">IDisplayObject</span> and <span class="tt">IResourceObject</span>).</p>
 <ul>
 <li>Mixing these base types in a single class can lead to diamond inheritance issues, ambiguous member resolution, and unpredictable behavior.</li>
@@ -104,7 +104,7 @@ $(function(){initNavTree('md_object__handles.html','',''); });
 <li>Do not create classes that inherit from both <span class="tt">IDisplayObject</span> and <span class="tt">IResourceObject</span>.</li>
 <li>Keep DOM objects and resource objects strictly separated to maintain clarity and avoid subtle bugs. </li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md110"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md114"></a>
 Two Trees in the Garden</h1>
 <p>In <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>, the architecture is built around two distinct trees, both composed of <span class="tt">IDataObject</span> instances:</p>
 <ol type="1">
@@ -128,14 +128,14 @@ Two Trees in the Garden</h1>
 <li>Handles for each tree (<span class="tt">DomHandle</span> and <span class="tt">ResHandle</span>) ensure type safety and prevent accidental mixing of display objects and resources.</li>
 </ul>
 <p>This dual-tree approach is fundamental to <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>'s design, supporting robust, scalable, and maintainable applications. </p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md111"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md115"></a>
 Object Handles in SDOM</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md112"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md116"></a>
 Overview</h2>
 <p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> uses specialized handle types to manage references to objects and resources in the system. This design ensures type safety, clarity, and robust resource management.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md113"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md117"></a>
 Handle Types</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md114"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md118"></a>
 1. DomHandle</h3>
 <ul>
 <li><b>Purpose:</b> References DOM objects (display objects) in the scene graph.</li>
@@ -143,7 +143,7 @@ Handle Types</h2>
 <li><b>Usage:</b> Used for event targets, parent/child relationships, and DOM traversal.</li>
 <li><b>Benefits:</b> Type-safe access to display object members without casting.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md115"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md119"></a>
 2. ResHandle</h3>
 <ul>
 <li><b>Purpose:</b> References file-based resources (bitmaps, sounds, fonts, etc.).</li>
@@ -151,14 +151,14 @@ Handle Types</h2>
 <li><b>Usage:</b> Used for resource management, loading, and access.</li>
 <li><b>Benefits:</b> Keeps resource logic separate from DOM logic.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md116"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md120"></a>
 Design Rationale</h2>
 <ul>
 <li><b>Separation of Concerns:</b> DOM objects and resources have different lifecycles and usage patterns.</li>
 <li><b>Type Safety:</b> Prevents accidental mixing of handles and objects.</li>
 <li><b>Clarity:</b> Code is easier to read and maintain.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md117"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md121"></a>
 Example Usage</h2>
 <div class="fragment"><div class="line">DomHandle buttonHandle = factory.getDomHandle(<span class="stringliteral">&quot;Button1&quot;</span>);</div>
 <div class="line">IDisplayObject* button = buttonHandle.<a class="code hl_function" href="classSDOM_1_1Handle.html#a8b3bacf802344b24e21d8009e29a5a3f">get</a>();</div>
@@ -166,14 +166,14 @@ Example Usage</h2>
 <div class="line">ResHandle imageHandle = factory.getResHandle(<span class="stringliteral">&quot;LogoImage&quot;</span>);</div>
 <div class="line">IResourceObject* image = imageHandle.<a class="code hl_function" href="classSDOM_1_1Handle.html#a8b3bacf802344b24e21d8009e29a5a3f">get</a>();</div>
 <div class="ttc" id="aclassSDOM_1_1Handle_html_a8b3bacf802344b24e21d8009e29a5a3f"><div class="ttname"><a href="classSDOM_1_1Handle.html#a8b3bacf802344b24e21d8009e29a5a3f">SDOM::Handle::get</a></div><div class="ttdeci">T * get() const</div><div class="ttdef"><b>Definition</b> SDOM_Handle.cpp:13</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md118"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md122"></a>
 Migration Strategy</h2>
 <ul>
 <li>Refactor all existing <span class="tt">ResourceHandle</span> usages for display objects to <span class="tt">DomHandle</span>.</li>
 <li>Introduce <span class="tt">ResHandle</span> for new resource types.</li>
 <li>Update factory and registry to support both handle types.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md119"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md123"></a>
 Best Practices</h2>
 <ul>
 <li>Always use the appropriate handle type for the object/resource.</li>

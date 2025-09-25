@@ -2,7 +2,7 @@ var searchData=
 [
   ['object_20anchoring_20design_0',['SDOM Display Object Anchoring Design',['../md_display__object__anchoring.html',1,'']]],
   ['object_20anchoring_20system_20updated_20september_202_202025_1',['Display Object Anchoring System (Updated September 2, 2025)',['../md_display__object__anchoring.html#autotoc_md46',1,'']]],
-  ['object_20handles_20in_20sdom_2',['Object Handles in SDOM',['../md_object__handles.html#autotoc_md111',1,'']]],
+  ['object_20handles_20in_20sdom_2',['Object Handles in SDOM',['../md_object__handles.html#autotoc_md115',1,'']]],
   ['object_5fhandles_2emd_3',['object_handles.md',['../object__handles_8md.html',1,'']]],
   ['objects_4',['Registering Custom Stage Objects',['../md_core__framework.html#autotoc_md32',1,'']]],
   ['onevent_5',['onEvent',['../classSDOM_1_1Core.html#aeff594d7f9097244d6888ab8a5f62f4d',1,'SDOM::Core::onEvent()'],['../classSDOM_1_1IDisplayObject.html#a56bca009fbe93a9694ecde9e2db8ee26',1,'SDOM::IDisplayObject::onEvent()'],['../classSDOM_1_1Stage.html#a01d2653adebd45d96705517e7a3d08e3',1,'SDOM::Stage::onEvent()']]],
@@ -25,8 +25,8 @@ var searchData=
   ['operator_3e_3d_22',['operator&gt;=',['../classSDOM_1_1Handle.html#a37678d25be2a530a5ceb3159bbf70853',1,'SDOM::Handle']]],
   ['or_20modes_23',['Stages as Game States or Modes',['../md_core__framework.html#autotoc_md42',1,'']]],
   ['orange_24',['ORANGE',['../classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d',1,'CLR']]],
-  ['outline_25',['Implementation Outline',['../md_extensible__factory.html#autotoc_md107',1,'']]],
+  ['outline_25',['Implementation Outline',['../md_extensible__factory.html#autotoc_md111',1,'']]],
   ['overriding_20the_20default_20stage_26',['Overriding the Default Stage',['../md_core__framework.html#autotoc_md38',1,'']]],
-  ['overview_27',['Overview',['../md_core__framework.html#autotoc_md4',1,'Overview'],['../md_display__object__anchoring.html#autotoc_md54',1,'Overview'],['../md_dom__propagation.html#autotoc_md66',1,'Overview'],['../md_object__handles.html#autotoc_md112',1,'Overview'],['../md_architecture__overview.html',1,'SDOM Architecture Overview']]],
-  ['overview_20diagram_28',['Factory Overview (Diagram)',['../md_extensible__factory.html#autotoc_md81',1,'']]]
+  ['overview_27',['Overview',['../md_core__framework.html#autotoc_md4',1,'Overview'],['../md_display__object__anchoring.html#autotoc_md54',1,'Overview'],['../md_dom__propagation.html#autotoc_md70',1,'Overview'],['../md_object__handles.html#autotoc_md116',1,'Overview'],['../md_architecture__overview.html',1,'SDOM Architecture Overview']]],
+  ['overview_20diagram_28',['Factory Overview (Diagram)',['../md_extensible__factory.html#autotoc_md85',1,'']]]
 ];

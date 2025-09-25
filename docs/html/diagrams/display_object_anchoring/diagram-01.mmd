@@ -1,0 +1,31 @@
+%% Parent has 9 anchors; child edges reference any of them with offsets
+flowchart TB
+    classDef parent fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d
+    classDef anchor fill:#fff8e6,stroke:#f0ad4e,color:#5a4500
+    classDef child  fill:#f7fff0,stroke:#7bb661,color:#234d20
+
+    subgraph P["Parent (9-point anchor grid)"]
+        direction TB
+        %% Top row
+        TL["top_left"]:::anchor --> TC["top_center"]:::anchor --> TR["top_right"]:::anchor
+        %% Middle row
+        ML["middle_left"]:::anchor --> MC["middle_center"]:::anchor --> MR["middle_right"]:::anchor
+        %% Bottom row
+        BL["bottom_left"]:::anchor --> BC["bottom_center"]:::anchor --> BR["bottom_right"]:::anchor
+    end
+
+    subgraph C["Child (edges + local offsets)"]
+        direction TB
+        L["Left edge\nleft_"]:::child
+        T["Top edge\ntop_"]:::child
+        R["Right edge\nright_"]:::child
+        B["Bottom edge\nbottom_"]:::child
+    end
+
+    %% Example anchoring links (illustrative)
+    L -. anchored to .-> ML
+    T -. anchored to .-> TC
+    R -. anchored to .-> MR
+    B -. anchored to .-> BC
+
+    %% Notes (rendering might ignore comments in some mmdc versions)

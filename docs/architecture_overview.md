@@ -8,7 +8,7 @@ SVG (static image):
 <details>
 <summary>View Mermaid source</summary>
 
-```mermaid
+```mermaid-norender
 %%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
 flowchart TB
 
@@ -98,9 +98,6 @@ flowchart TB
 
 </details>
 
-SVG fallback (static render):
-![Architecture Diagram](diagrams/architecture_overview/diagram-01.svg)
-
 Notes
 - Core composes the SDL video subsystem (window, renderer, main texture) and orchestrates the main loop and callbacks.
 - Factory owns and manages both display objects (IDisplayObject) and resource objects (IResourceObject), exposing safe handles for references.
@@ -117,7 +114,7 @@ SVG (static image):
 <details>
 <summary>View Mermaid source</summary>
 
-```mermaid
+```mermaid-norender
 sequenceDiagram
   autonumber
   participant Prog as examples/test/prog
@@ -145,8 +142,5 @@ sequenceDiagram
 ```
 
 </details>
-
-SVG fallback (static render):
-![Runtime Flow](diagrams/architecture_overview/diagram-02.svg)
 
 This complements the per-module documents in the `docs/` folder (Core framework, anchoring, DOM propagation, extensible factory, handles, etc.).

@@ -44,6 +44,7 @@ extract_and_export() {
   # We'll number them in order of appearance.
   awk 'BEGIN{inblock=0;count=0} \
     /^```mermaid(\..*|[[:space:]].*|)[[:space:]]*$/ {inblock=1;count++; fname=sprintf("%s/diagram-%02d.mmd", dest, count); print "# extracting to " fname > "/dev/stderr"; next} \
+    /^```mermaid-norender[[:space:]]*$/ {inblock=1;count++; fname=sprintf("%s/diagram-%02d.mmd", dest, count); print "# extracting (norender) to " fname > "/dev/stderr"; next} \
     /^```[[:space:]]*$/ && inblock==1 {inblock=0; next} \
     { if(inblock==1) print > fname }' dest="$dest_dir" "$md_file"
 

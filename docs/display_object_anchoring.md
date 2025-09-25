@@ -127,3 +127,83 @@ Existing JSON and code remain compatible. If anchor fields are not specified, th
 ---
 
 This anchor system makes SDOM display objects highly flexible and professional, supporting modern UI layout needs.
+
+---
+
+## Anchoring Diagrams
+
+### 1) Parent Anchor Grid and Child Edge Anchors
+
+SVG (static image):
+![Anchors Grid](diagrams/display_object_anchoring/diagram-01.svg)
+
+<details>
+<summary>View Mermaid source</summary>
+
+```mermaid-norender
+%% Parent has 9 anchors; child edges reference any of them with offsets
+flowchart TB
+    classDef parent fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d
+    classDef anchor fill:#fff8e6,stroke:#f0ad4e,color:#5a4500
+    classDef child  fill:#f7fff0,stroke:#7bb661,color:#234d20
+
+    subgraph P["Parent (9-point anchor grid)"]
+        direction TB
+        %% Top row
+        TL["top_left"]:::anchor --> TC["top_center"]:::anchor --> TR["top_right"]:::anchor
+        %% Middle row
+        ML["middle_left"]:::anchor --> MC["middle_center"]:::anchor --> MR["middle_right"]:::anchor
+        %% Bottom row
+        BL["bottom_left"]:::anchor --> BC["bottom_center"]:::anchor --> BR["bottom_right"]:::anchor
+    end
+
+    subgraph C["Child (edges + local offsets)"]
+        direction TB
+        L["Left edge\nleft_"]:::child
+        T["Top edge\ntop_"]:::child
+        R["Right edge\nright_"]:::child
+        B["Bottom edge\nbottom_"]:::child
+    end
+
+    %% Example anchoring links (illustrative)
+    L -. anchored to .-> ML
+    T -. anchored to .-> TC
+    R -. anchored to .-> MR
+    B -. anchored to .-> BC
+
+    %% Notes (rendering might ignore comments in some mmdc versions)
+```
+
+</details>
+
+Key idea: each edge uses its own parent anchor reference plus a local offset; width/height derive from right-left and bottom-top.
+
+### 2) Anchor Change Recalculation (No Visual Jump)
+
+SVG (static image):
+![Anchor Change Flow](diagrams/display_object_anchoring/diagram-02.svg)
+
+<details>
+<summary>View Mermaid source</summary>
+
+```mermaid-norender
+sequenceDiagram
+    autonumber
+    participant User as API Caller
+    participant Child as DisplayObject
+    participant Parent as Parent
+    participant Layout as Layout/Anchoring
+
+    User->>Child: setAnchorLeft(newAp)
+    Child->>Layout: request anchor change
+    Layout->>Parent: get parent_anchor_x for newAp
+    Layout->>Child: get current world edges\n(getLeft/Right/Top/Bottom)
+    Note over Layout,Child: Recalculate only the affected local offset\nso the world edge stays fixed
+    Layout-->>Child: left_ = world_left - parent_anchor_x
+    Child-->>User: done (no visual jump)
+
+```
+
+</details>
+
+This flow illustrates the invariant maintained during anchor changes: the world edge position remains the same while only the corresponding local offset is updated.

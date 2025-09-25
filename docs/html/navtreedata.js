@@ -95,73 +95,75 @@ var NAVTREE =
       [ "Hierarchical Anchoring", "md_display__object__anchoring.html#autotoc_md60", null ],
       [ "Backward Compatibility", "md_display__object__anchoring.html#autotoc_md61", null ],
       [ "Benefits", "md_display__object__anchoring.html#autotoc_md62", null ],
-      [ "Example Use Cases", "md_display__object__anchoring.html#autotoc_md63", null ]
+      [ "Example Use Cases", "md_display__object__anchoring.html#autotoc_md63", null ],
+      [ "Anchoring Diagrams", "md_display__object__anchoring.html#autotoc_md66", [
+        [ "1) Parent Anchor Grid and Child Edge Anchors", "md_display__object__anchoring.html#autotoc_md67", null ],
+        [ "2) Anchor Change Recalculation (No Visual Jump)", "md_display__object__anchoring.html#autotoc_md68", null ]
+      ] ]
     ] ],
     [ "DOM Propagation Design", "md_dom__propagation.html", [
-      [ "Overview", "md_dom__propagation.html#autotoc_md66", null ],
-      [ "Event Propagation Diagram", "md_dom__propagation.html#autotoc_md68", null ],
-      [ "Traversal Types", "md_dom__propagation.html#autotoc_md69", [
-        [ "1. Core-based DOM Traversal (Type 1)", "md_dom__propagation.html#autotoc_md70", null ],
-        [ "2. EventManager-based Event Traversal (Type 2)", "md_dom__propagation.html#autotoc_md72", null ],
-        [ "3. Factory-based Global Traversal (Type 3)", "md_dom__propagation.html#autotoc_md74", null ],
-        [ "4. World Coordinate Backpropagation Traversal (Type 4)", "md_dom__propagation.html#autotoc_md75", null ]
+      [ "Overview", "md_dom__propagation.html#autotoc_md70", null ],
+      [ "Event Propagation Diagram", "md_dom__propagation.html#autotoc_md72", null ],
+      [ "Traversal Types", "md_dom__propagation.html#autotoc_md73", [
+        [ "1. Core-based DOM Traversal (Type 1)", "md_dom__propagation.html#autotoc_md74", null ],
+        [ "2. EventManager-based Event Traversal (Type 2)", "md_dom__propagation.html#autotoc_md76", null ],
+        [ "3. Factory-based Global Traversal (Type 3)", "md_dom__propagation.html#autotoc_md78", null ],
+        [ "4. World Coordinate Backpropagation Traversal (Type 4)", "md_dom__propagation.html#autotoc_md79", null ]
       ] ],
-      [ "Traversal Safety and Modification", "md_dom__propagation.html#autotoc_md76", null ],
-      [ "Architectural Separation", "md_dom__propagation.html#autotoc_md77", null ],
-      [ "Next Steps", "md_dom__propagation.html#autotoc_md79", null ]
+      [ "Traversal Safety and Modification", "md_dom__propagation.html#autotoc_md80", null ],
+      [ "Architectural Separation", "md_dom__propagation.html#autotoc_md81", null ],
+      [ "Next Steps", "md_dom__propagation.html#autotoc_md83", null ]
     ] ],
-    [ "extensible_factory", "md_extensible__factory.html", [
-      [ "Extensible Factory Design", "md_extensible__factory.html#autotoc_md80", [
-        [ "Factory Overview (Diagram)", "md_extensible__factory.html#autotoc_md81", null ],
-        [ "Resource Type Management", "md_extensible__factory.html#autotoc_md82", null ],
-        [ "Requirements", "md_extensible__factory.html#autotoc_md83", null ],
-        [ "Recommended Approach", "md_extensible__factory.html#autotoc_md84", [
-          [ "1. Initializer Structs and JSON Configs", "md_extensible__factory.html#autotoc_md85", null ],
-          [ "2. Factory Registration", "md_extensible__factory.html#autotoc_md86", null ],
-          [ "3. Factory Create Methods", "md_extensible__factory.html#autotoc_md87", null ],
-          [ "4. Usage", "md_extensible__factory.html#autotoc_md88", null ]
-        ] ],
-        [ "Benefits", "md_extensible__factory.html#autotoc_md89", null ],
-        [ "Implementation Strategy", "md_extensible__factory.html#autotoc_md91", [
-          [ "1. Initializer Structs", "md_extensible__factory.html#autotoc_md92", null ],
-          [ "1a. Standardized Constructor Signatures", "md_extensible__factory.html#autotoc_md93", null ],
-          [ "2. Private Constructors &amp; Friend Factory", "md_extensible__factory.html#autotoc_md94", null ],
-          [ "3. Factory Registration System", "md_extensible__factory.html#autotoc_md95", null ],
-          [ "4. Generic Factory Create Method", "md_extensible__factory.html#autotoc_md96", null ],
-          [ "5. Extensibility", "md_extensible__factory.html#autotoc_md97", null ],
-          [ "6. Error Handling &amp; Validation", "md_extensible__factory.html#autotoc_md98", null ],
-          [ "7. Example Usage", "md_extensible__factory.html#autotoc_md99", null ]
-        ] ],
-        [ "Standardized Constructors for IDisplayObjects", "md_extensible__factory.html#autotoc_md101", null ],
-        [ "Configuration Format Choice", "md_extensible__factory.html#autotoc_md102", null ],
-        [ "Resource Pointer (<span class=\"tt\">resource_ptr</span>) Design", "md_extensible__factory.html#autotoc_md103", [
-          [ "How It Works", "md_extensible__factory.html#autotoc_md104", null ],
-          [ "Example Usage", "md_extensible__factory.html#autotoc_md105", null ],
-          [ "Benefits", "md_extensible__factory.html#autotoc_md106", null ],
-          [ "Implementation Outline", "md_extensible__factory.html#autotoc_md107", null ],
-          [ "Summary", "md_extensible__factory.html#autotoc_md108", null ]
-        ] ]
+    [ "Extensible Factory Design", "md_extensible__factory.html", [
+      [ "Factory Overview (Diagram)", "md_extensible__factory.html#autotoc_md85", null ],
+      [ "Resource Type Management", "md_extensible__factory.html#autotoc_md86", null ],
+      [ "Requirements", "md_extensible__factory.html#autotoc_md87", null ],
+      [ "Recommended Approach", "md_extensible__factory.html#autotoc_md88", [
+        [ "1. Initializer Structs and JSON Configs", "md_extensible__factory.html#autotoc_md89", null ],
+        [ "2. Factory Registration", "md_extensible__factory.html#autotoc_md90", null ],
+        [ "3. Factory Create Methods", "md_extensible__factory.html#autotoc_md91", null ],
+        [ "4. Usage", "md_extensible__factory.html#autotoc_md92", null ]
+      ] ],
+      [ "Benefits", "md_extensible__factory.html#autotoc_md93", null ],
+      [ "Implementation Strategy", "md_extensible__factory.html#autotoc_md95", [
+        [ "1. Initializer Structs", "md_extensible__factory.html#autotoc_md96", null ],
+        [ "1a. Standardized Constructor Signatures", "md_extensible__factory.html#autotoc_md97", null ],
+        [ "2. Private Constructors &amp; Friend Factory", "md_extensible__factory.html#autotoc_md98", null ],
+        [ "3. Factory Registration System", "md_extensible__factory.html#autotoc_md99", null ],
+        [ "4. Generic Factory Create Method", "md_extensible__factory.html#autotoc_md100", null ],
+        [ "5. Extensibility", "md_extensible__factory.html#autotoc_md101", null ],
+        [ "6. Error Handling &amp; Validation", "md_extensible__factory.html#autotoc_md102", null ],
+        [ "7. Example Usage", "md_extensible__factory.html#autotoc_md103", null ]
+      ] ],
+      [ "Standardized Constructors for IDisplayObjects", "md_extensible__factory.html#autotoc_md105", null ],
+      [ "Configuration Format Choice", "md_extensible__factory.html#autotoc_md106", null ],
+      [ "Resource Pointer (<span class=\"tt\">resource_ptr</span>) Design", "md_extensible__factory.html#autotoc_md107", [
+        [ "How It Works", "md_extensible__factory.html#autotoc_md108", null ],
+        [ "Example Usage", "md_extensible__factory.html#autotoc_md109", null ],
+        [ "Benefits", "md_extensible__factory.html#autotoc_md110", null ],
+        [ "Implementation Outline", "md_extensible__factory.html#autotoc_md111", null ],
+        [ "Summary", "md_extensible__factory.html#autotoc_md112", null ]
       ] ]
     ] ],
     [ "Inheritance Warning: Avoid Diamond Inheritance", "md_object__handles.html", [
-      [ "Two Trees in the Garden", "md_object__handles.html#autotoc_md110", null ],
-      [ "Object Handles in SDOM", "md_object__handles.html#autotoc_md111", [
-        [ "Overview", "md_object__handles.html#autotoc_md112", null ],
-        [ "Handle Types", "md_object__handles.html#autotoc_md113", [
-          [ "1. DomHandle", "md_object__handles.html#autotoc_md114", null ],
-          [ "2. ResHandle", "md_object__handles.html#autotoc_md115", null ]
+      [ "Two Trees in the Garden", "md_object__handles.html#autotoc_md114", null ],
+      [ "Object Handles in SDOM", "md_object__handles.html#autotoc_md115", [
+        [ "Overview", "md_object__handles.html#autotoc_md116", null ],
+        [ "Handle Types", "md_object__handles.html#autotoc_md117", [
+          [ "1. DomHandle", "md_object__handles.html#autotoc_md118", null ],
+          [ "2. ResHandle", "md_object__handles.html#autotoc_md119", null ]
         ] ],
-        [ "Design Rationale", "md_object__handles.html#autotoc_md116", null ],
-        [ "Example Usage", "md_object__handles.html#autotoc_md117", null ],
-        [ "Migration Strategy", "md_object__handles.html#autotoc_md118", null ],
-        [ "Best Practices", "md_object__handles.html#autotoc_md119", null ]
+        [ "Design Rationale", "md_object__handles.html#autotoc_md120", null ],
+        [ "Example Usage", "md_object__handles.html#autotoc_md121", null ],
+        [ "Migration Strategy", "md_object__handles.html#autotoc_md122", null ],
+        [ "Best Practices", "md_object__handles.html#autotoc_md123", null ]
       ] ]
     ] ],
     [ "Project Description", "md_progress.html", [
-      [ "Scripting Flexibility:", "md_progress.html#autotoc_md121", null ],
-      [ "Progress Updates", "md_progress.html#autotoc_md122", null ],
-      [ "Next Steps:", "md_progress.html#autotoc_md123", null ],
-      [ "ToDo:", "md_progress.html#autotoc_md124", null ]
+      [ "Scripting Flexibility:", "md_progress.html#autotoc_md125", null ],
+      [ "Progress Updates", "md_progress.html#autotoc_md126", null ],
+      [ "Next Steps:", "md_progress.html#autotoc_md127", null ],
+      [ "ToDo:", "md_progress.html#autotoc_md128", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -206,7 +208,7 @@ var NAVTREEINDEX =
 "classSDOM_1_1IDisplayObject.html#af0dbd5b2d68b64152081ddad87f5fb1f",
 "classSDOM_1_1Stage.html#a780b503a81e095549da8442c2e934db0",
 "md_display__object__anchoring.html#autotoc_md46",
-"structSDOM_1_1TypeCreators.html#aefd8ec7858a1c0c9ed7d3a57d79f1b46"
+"structSDOM_1_1TypeCreators.html#a15807ffd6629c821a869c22bbbd8d180"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

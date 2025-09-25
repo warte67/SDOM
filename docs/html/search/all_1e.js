@@ -16,6 +16,6 @@ var searchData=
   ['windowwidth_13',['windowWidth',['../structSDOM_1_1Core_1_1CoreConfig.html#acd80478dc5e6f4dc3b4f3c591eafd783',1,'SDOM::Core::CoreConfig']]],
   ['with_20global_20accessor_14',['Example Usage (with global accessor)',['../md_core__framework.html#autotoc_md20',1,'']]],
   ['word_15',['Word',['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'SDOM_CLR.hpp']]],
-  ['works_16',['How It Works',['../md_extensible__factory.html#autotoc_md104',1,'']]],
-  ['world_20coordinate_20backpropagation_20traversal_20type_204_17',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_dom__propagation.html#autotoc_md75',1,'']]]
+  ['works_16',['How It Works',['../md_extensible__factory.html#autotoc_md108',1,'']]],
+  ['world_20coordinate_20backpropagation_20traversal_20type_204_17',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_dom__propagation.html#autotoc_md79',1,'']]]
 ];
