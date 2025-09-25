@@ -1,0 +1,15 @@
+flowchart TB
+    classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
+    classDef mod  fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px
+    classDef dep  fill:#f5f5f5,stroke:#999,color:#333,stroke-width:1px
+
+    Core["Core (Singleton)\n- main loop\n- configure/run"]:::core
+    Factory["Factory"]:::mod
+    EventMgr["EventManager"]:::mod
+    Stage["Stage (Root IDisplayObject)"]:::mod
+    SDL["SDL Video Subsystem\n(window/renderer/texture)"]:::dep
+
+    Core --> Factory
+    Core --> EventMgr
+    Core --> Stage
+    Core --> SDL

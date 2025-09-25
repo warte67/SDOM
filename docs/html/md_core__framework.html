@@ -278,195 +278,67 @@ Example Usage (with global accessor)</h2>
 <div class="line">}</div>
 </div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
 Composition Diagram</h1>
-<div class="fragment"><div class="line">                       ┌─────────────┐</div>
-<div class="line">                       │   Core      │  ← Singleton orchestrator</div>
-<div class="line">                       │─────────────│</div>
-<div class="line">                       │ - SDL loop  │</div>
-<div class="line">                       │ - Factory   │─┐</div>
-<div class="line">                       │ - Events    │ │</div>
-<div class="line">                       │ - Stage     │ │</div>
-<div class="line">                       └─────────────┘ │</div>
-<div class="line">                                       │</div>
-<div class="line">            ┌──────────────────────────┴───────────────────────────┐</div>
-<div class="line">            │                                                      │</div>
-<div class="line">    ┌───────────────┐                                    ┌────────────────┐</div>
-<div class="line">    │   Factory     │                                    │ EventManager   │</div>
-<div class="line">    │───────────────│                                    │────────────────│</div>
-<div class="line">    │ - Creates &amp;   │                                    │ - Handles      │</div>
-<div class="line">    │   stores      │                                    │   event        │</div>
-<div class="line">    │   objects     │                                    │   propagation  │</div>
-<div class="line">    │ - Resolves    │                                    └────────────────┘</div>
-<div class="line">    │   handles     │</div>
-<div class="line">    │ - Orphans /   │</div>
-<div class="line">    │   futureChild │</div>
-<div class="line">    └───────────────┘</div>
-<div class="line">       │               │</div>
-<div class="line">       │               │</div>
-<div class="line">┌──────┴───────┐   ┌───┴─────────┐</div>
-<div class="line">│ IDIsplayObj  │   │ IResourceObj│</div>
-<div class="line">│──────────────│   │─────────────│</div>
-<div class="line">│ - Visual     │   │ - Data      │</div>
-<div class="line">│ - Events     │   │ - Config    │</div>
-<div class="line">│ - Children   │   │ - File      │</div>
-<div class="line">└──────────────┘   └─────────────┘</div>
-<div class="line">       │                  │</div>
-<div class="line">       │                  │</div>
-<div class="line">  ┌────┴─────┐       ┌────┴─────┐</div>
-<div class="line">  │ DomHandle│       │ ResHandle│</div>
-<div class="line">  │ (ref to  │       │ (ref to  │</div>
-<div class="line">  │ IDisplay │       │ IResource│</div>
-<div class="line">  │ Object)  │       │ Object)  │</div>
-<div class="line">  └──────────┘       └──────────┘</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+<p>SVG (static image): <img src="diagrams/core_framework/diagram-01.svg" alt="Core Composition" style="pointer-events: none;" class="inline"/></p>
+<details >
+<summary >
+View Mermaid source</summary>
+<p></p>
+<div class="fragment"><div class="line"> -norender</div>
+<div class="line">flowchart TB</div>
+<div class="line">    classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px</div>
+<div class="line">    classDef mod  fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px</div>
+<div class="line">    classDef dep  fill:#f5f5f5,stroke:#999,color:#333,stroke-width:1px</div>
+<div class="line"> </div>
+<div class="line">    Core[&quot;Core (Singleton)\n- main loop\n- configure/run&quot;]:::core</div>
+<div class="line">    Factory[&quot;Factory&quot;]:::mod</div>
+<div class="line">    EventMgr[&quot;EventManager&quot;]:::mod</div>
+<div class="line">    Stage[&quot;Stage (Root IDisplayObject)&quot;]:::mod</div>
+<div class="line">    SDL[&quot;SDL Video Subsystem\n(window/renderer/texture)&quot;]:::dep</div>
+<div class="line"> </div>
+<div class="line">    Core --&gt; Factory</div>
+<div class="line">    Core --&gt; EventMgr</div>
+<div class="line">    Core --&gt; Stage</div>
+<div class="line">    Core --&gt; SDL</div>
+</div><!-- fragment --><p></p>
+</details>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
 Event Flow</h1>
-<div class="fragment"><div class="line">[Root Stage]</div>
-<div class="line">   |</div>
-<div class="line">   v</div>
-<div class="line">[Child Node]</div>
-<div class="line">   |</div>
-<div class="line">   v</div>
-<div class="line">[Leaf Node]</div>
+<p>SVG (static image): <img src="diagrams/core_framework/diagram-02.svg" alt="Core Event Flow" style="pointer-events: none;" class="inline"/></p>
+<details >
+<summary >
+View Mermaid source</summary>
+<p></p>
+<div class="fragment"><div class="line"> -norender</div>
+<div class="line">sequenceDiagram</div>
+<div class="line">  autonumber</div>
+<div class="line">  participant Core as SDOM::Core</div>
+<div class="line">  participant EM as EventManager</div>
+<div class="line">  participant Stage as Stage (Root)</div>
 <div class="line"> </div>
-<div class="line">Event Propagation Phases:</div>
-<div class="line">1. Capture Phase:   Root -&gt; Target</div>
-<div class="line">2. Target Phase:    Target node receives event</div>
-<div class="line">3. Bubbling Phase:  Target -&gt; Root</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+<div class="line">  Core-&gt;&gt;EM: poll/dispatch()</div>
+<div class="line">  EM-&gt;&gt;Stage: propagate events\n(capture → target → bubble)</div>
+</div><!-- fragment --><p></p>
+</details>
+<p>For details on propagation semantics, see <span class="tt"><a class="el" href="dom__propagation_8md.html">docs/dom_propagation.md</a></span>.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 Unit Tests</h1>
-<div class="fragment"><div class="line">        ┌─────────────┐</div>
-<div class="line">        │   Core      │</div>
-<div class="line">        └─────┬──────┘</div>
-<div class="line">              │</div>
-<div class="line">     ┌────────┴────────┐</div>
-<div class="line">     │                 │</div>
-<div class="line">┌────▼─────┐       ┌───▼────┐</div>
-<div class="line">│ Factory  │       │ Event  │</div>
-<div class="line">│(owns objs│       │System  │</div>
-<div class="line">│ Dom/Res  │       │        │</div>
-<div class="line">└──────────┘       └────────┘</div>
-<div class="line">      ▲                 ▲</div>
-<div class="line">      │                 │</div>
-<div class="line"> implements IUnitTest   implements IUnitTest</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<p>Core exposes <span class="tt">onUnitTest()</span> and can route tests through objects that implement <span class="tt">IUnitTest</span>. Typically, Factory-managed objects (including Stages or specific components) provide focused tests invoked via Core’s test hook.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 Stage</h1>
-<div class="fragment"><div class="line"> ┌─────────────┐</div>
-<div class="line"> │   Core      │</div>
-<div class="line"> └─────┬──────┘</div>
-<div class="line">       │</div>
-<div class="line"> ┌─────▼─────┐</div>
-<div class="line"> │  Factory  │</div>
-<div class="line"> │(creates)  │</div>
-<div class="line"> └─────┬─────┘</div>
-<div class="line">       │</div>
-<div class="line">┌──────▼──────┐</div>
-<div class="line">│   Stage     │  &lt;--- Top-level DisplayObject (root node)</div>
-<div class="line">│(IDisplayObject)│</div>
-<div class="line">└──────┬──────┘</div>
-<div class="line">       │</div>
-<div class="line">┌──────▼──────┐</div>
-<div class="line">│ Child Nodes │  &lt;--- Other IDisplayObjects created by Factory</div>
-<div class="line">└─────────────┘</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+<p>The Stage is the root <span class="tt">IDisplayObject</span>. It’s created via the Factory and orchestrated by Core. Child <span class="tt">IDisplayObject</span>s are attached under Stage; see also <span class="tt"><a class="el" href="architecture__overview_8md.html">docs/architecture_overview.md</a></span> for a full picture.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 SDOM Comprehensive Architecture Diagram</h1>
-<div class="fragment"><div class="line">                                ┌───────────────────┐</div>
-<div class="line">                                │       Core        │</div>
-<div class="line">                                │  (Singleton)      │</div>
-<div class="line">                                │------------------ │</div>
-<div class="line">                                │ + getFactory()    │</div>
-<div class="line">                                │ + getRootNode()   │</div>
-<div class="line">                                │ + onRender()      │</div>
-<div class="line">                                │ + onUpdate()      │</div>
-<div class="line">                                │ + onEvent()       │</div>
-<div class="line">                                │ + run()           │</div>
-<div class="line">                                └───────┬───────────┘</div>
-<div class="line">                                        │</div>
-<div class="line">                    ┌───────────────────┴───────────────────┐</div>
-<div class="line">                    │                                       │</div>
-<div class="line">             ┌──────▼───────┐                        ┌──────▼─────────┐</div>
-<div class="line">             │   Factory    │                        │ EventManager   │</div>
-<div class="line">             │  (Creates)   │                        │ (Dispatches)  │</div>
-<div class="line">             │--------------│                        │---------------│</div>
-<div class="line">             │ + registerType│                        │ + dispatch()  │</div>
-<div class="line">             │ + create()    │                        │ + addListener │</div>
-<div class="line">             │ + getDomObj() │                        │ + removeListener</div>
-<div class="line">             │ + getResObj() │                        └───────────────┘</div>
-<div class="line">             │ + addDisplayObject() │</div>
-<div class="line">             │ + removeDisplayObject() │</div>
-<div class="line">             │ + orphanList / futureChildrenList │</div>
-<div class="line">             └───────┬─────────┘</div>
-<div class="line">                     │</div>
-<div class="line">          ┌──────────┴───────────┐</div>
-<div class="line">          │                      │</div>
-<div class="line"> ┌────────▼─────────┐    ┌───────▼──────────┐</div>
-<div class="line"> │   Stage          │    │ Other IDisplayObj │</div>
-<div class="line"> │ (Root Node)      │    │ (Widgets, Panels) │</div>
-<div class="line"> │----------------- │    │----------------- │</div>
-<div class="line"> │ + onInit()       │    │ + onInit()       │</div>
-<div class="line"> │ + onUpdate()     │    │ + onUpdate()     │</div>
-<div class="line"> │ + onRender()     │    │ + onRender()     │</div>
-<div class="line"> │ + onEvent()      │    │ + onEvent()      │</div>
-<div class="line"> │ Static mouseX/Y  │    │ ...               │</div>
-<div class="line"> └────────┬─────────┘    └─────────┬────────┘</div>
-<div class="line">          │                        │</div>
-<div class="line">          │                        │</div>
-<div class="line">┌─────────▼─────────┐    ┌─────────▼─────────┐</div>
-<div class="line">│ DomHandle          │    │ DomHandle          │</div>
-<div class="line">│ (IDisplayObject)   │    │ (IDisplayObject)   │</div>
-<div class="line">└─────────┬─────────┘    └─────────┬─────────┘</div>
-<div class="line">          │                        │</div>
-<div class="line">          ▼                        ▼</div>
-<div class="line">    Actual DisplayObject          Actual DisplayObject</div>
-<div class="line">   (Stage or Widget instance)   (Button, Panel, Label etc.)</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<p>For the complete library-wide diagram, see <span class="tt"><a class="el" href="architecture__overview_8md.html">docs/architecture_overview.md</a></span>.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
 SDOM Event System Integration</h1>
-<div class="fragment"><div class="line">               ┌──────────────────────┐</div>
-<div class="line">               │       Event          │</div>
-<div class="line">               │---------------------│</div>
-<div class="line">               │ + type: EventType    │</div>
-<div class="line">               │ + target: DomHandle  │</div>
-<div class="line">               │ + currentTarget      │</div>
-<div class="line">               │ + relatedTarget      │</div>
-<div class="line">               │ + phase (Capture/Target/Bubbling) │</div>
-<div class="line">               │ + payload (JSON)     │</div>
-<div class="line">               └─────────┬───────────┘</div>
-<div class="line">                         │</div>
-<div class="line">         ┌───────────────┴───────────────┐</div>
-<div class="line">         │                               │</div>
-<div class="line">┌────────▼──────────┐           ┌────────▼───────────┐</div>
-<div class="line">│ EventType         │           │ EventManager       │</div>
-<div class="line">│------------------ │           │------------------ │</div>
-<div class="line">│ Predefined types   │           │ + addListener()    │</div>
-<div class="line">│ Mouse/Keyboard/UI  │           │ + removeListener() │</div>
-<div class="line">│ Timer / User       │           │ + dispatch()       │</div>
-<div class="line">└───────────────────┘           └───────────────────┘</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+<p>For event object shapes and propagation phases, see <span class="tt"><a class="el" href="dom__propagation_8md.html">docs/dom_propagation.md</a></span> and the Event/EventType API docs.</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 Additional Interfaces and Utilities</h1>
-<div class="fragment"><div class="line">┌─────────────────────┐</div>
-<div class="line">│ IUnitTest           │</div>
-<div class="line">│---------------------│</div>
-<div class="line">│ + onUnitTest()      │</div>
-<div class="line">└─────────┬───────────┘</div>
-<div class="line">          │</div>
-<div class="line">          ▼</div>
-<div class="line">     Implemented by:</div>
-<div class="line">     - Stage</div>
-<div class="line">     - IDisplayObject derivatives</div>
-<div class="line">     - Factory (optional)</div>
-<div class="line"> </div>
-<div class="line">┌─────────────────────┐</div>
-<div class="line">│ Handles             │</div>
-<div class="line">│---------------------│</div>
-<div class="line">│ DomHandle&lt;T&gt;        │</div>
-<div class="line">│ ResHandle&lt;T&gt;        │</div>
-<div class="line">│ + get()             │</div>
-<div class="line">│ + operator-&gt;, *     │</div>
-<div class="line">│ + isValid()         │</div>
-<div class="line">└─────────┬───────────┘</div>
-<div class="line">          │</div>
-<div class="line">          ▼</div>
-<div class="line">     References actual</div>
-<div class="line">     Factory-owned objects</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+<ul>
+<li><span class="tt">IUnitTest</span>: lightweight interface for test hooks (see Unit Tests section).</li>
+<li>Handles: <span class="tt">DomHandle&lt;T&gt;</span> and <span class="tt">ResHandle&lt;T&gt;</span> provide safe references to Factory-owned objects (see <span class="tt"><a class="el" href="object__handles_8md.html">docs/object_handles.md</a></span>).</li>
+</ul>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 Extensibility &amp; Singleton Pattern</h1>
 <p>The Core object is implemented as a singleton, ensuring a single point of control for the application's lifecycle, event management, and resource handling. Despite the singleton pattern, <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> remains highly extensible:</p>
 <ul>

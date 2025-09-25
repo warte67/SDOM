@@ -202,211 +202,76 @@ int main() {
 ```
 
 ## Composition Diagram
-```
-                           ┌─────────────┐
-                           │   Core      │  ← Singleton orchestrator
-                           │─────────────│
-                           │ - SDL loop  │
-                           │ - Factory   │─┐
-                           │ - Events    │ │
-                           │ - Stage     │ │
-                           └─────────────┘ │
-                                           │
-                ┌──────────────────────────┴───────────────────────────┐
-                │                                                      │
-        ┌───────────────┐                                    ┌────────────────┐
-        │   Factory     │                                    │ EventManager   │
-        │───────────────│                                    │────────────────│
-        │ - Creates &   │                                    │ - Handles      │
-        │   stores      │                                    │   event        │
-        │   objects     │                                    │   propagation  │
-        │ - Resolves    │                                    └────────────────┘
-        │   handles     │
-        │ - Orphans /   │
-        │   futureChild │
-        └───────────────┘
-           │               │
-           │               │
-    ┌──────┴───────┐   ┌───┴─────────┐
-    │ IDIsplayObj  │   │ IResourceObj│
-    │──────────────│   │─────────────│
-    │ - Visual     │   │ - Data      │
-    │ - Events     │   │ - Config    │
-    │ - Children   │   │ - File      │
-    └──────────────┘   └─────────────┘
-           │                  │
-           │                  │
-      ┌────┴─────┐       ┌────┴─────┐
-      │ DomHandle│       │ ResHandle│
-      │ (ref to  │       │ (ref to  │
-      │ IDisplay │       │ IResource│
-      │ Object)  │       │ Object)  │
-      └──────────┘       └──────────┘
 
+SVG (static image):
+![Core Composition](diagrams/core_framework/diagram-01.svg)
 
+<details>
+<summary>View Mermaid source</summary>
+
+```mermaid-norender
+flowchart TB
+    classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
+    classDef mod  fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px
+    classDef dep  fill:#f5f5f5,stroke:#999,color:#333,stroke-width:1px
+
+    Core["Core (Singleton)\n- main loop\n- configure/run"]:::core
+    Factory["Factory"]:::mod
+    EventMgr["EventManager"]:::mod
+    Stage["Stage (Root IDisplayObject)"]:::mod
+    SDL["SDL Video Subsystem\n(window/renderer/texture)"]:::dep
+
+    Core --> Factory
+    Core --> EventMgr
+    Core --> Stage
+    Core --> SDL
 ```
+
+</details>
 
 ## Event Flow
-```
-[Root Stage]
-   |
-   v
-[Child Node]
-   |
-   v
-[Leaf Node]
 
-Event Propagation Phases:
-1. Capture Phase:   Root -> Target
-2. Target Phase:    Target node receives event
-3. Bubbling Phase:  Target -> Root
+SVG (static image):
+![Core Event Flow](diagrams/core_framework/diagram-02.svg)
+
+<details>
+<summary>View Mermaid source</summary>
+
+```mermaid-norender
+sequenceDiagram
+  autonumber
+  participant Core as SDOM::Core
+  participant EM as EventManager
+  participant Stage as Stage (Root)
+
+  Core->>EM: poll/dispatch()
+  EM->>Stage: propagate events\n(capture → target → bubble)
 ```
+
+</details>
+
+For details on propagation semantics, see `docs/dom_propagation.md`.
 
 ## Unit Tests
-```
-                 ┌─────────────┐
-                 │   Core      │
-                 └─────┬──────┘
-                       │
-              ┌────────┴────────┐
-              │                 │
-         ┌────▼─────┐       ┌───▼────┐
-         │ Factory  │       │ Event  │
-         │(owns objs│       │System  │
-         │ Dom/Res  │       │        │
-         └──────────┘       └────────┘
-               ▲                 ▲
-               │                 │
-          implements IUnitTest   implements IUnitTest
-```
+
+Core exposes `onUnitTest()` and can route tests through objects that implement `IUnitTest`. Typically, Factory-managed objects (including Stages or specific components) provide focused tests invoked via Core’s test hook.
 
 ## Stage
-```
-            ┌─────────────┐
-            │   Core      │
-            └─────┬──────┘
-                  │
-            ┌─────▼─────┐
-            │  Factory  │
-            │(creates)  │
-            └─────┬─────┘
-                  │
-           ┌──────▼──────┐
-           │   Stage     │  <--- Top-level DisplayObject (root node)
-           │(IDisplayObject)│
-           └──────┬──────┘
-                  │
-           ┌──────▼──────┐
-           │ Child Nodes │  <--- Other IDisplayObjects created by Factory
-           └─────────────┘
-```
+
+The Stage is the root `IDisplayObject`. It’s created via the Factory and orchestrated by Core. Child `IDisplayObject`s are attached under Stage; see also `docs/architecture_overview.md` for a full picture.
 
 ## SDOM Comprehensive Architecture Diagram
-```
-                                       ┌───────────────────┐
-                                       │       Core        │
-                                       │  (Singleton)      │
-                                       │------------------ │
-                                       │ + getFactory()    │
-                                       │ + getRootNode()   │
-                                       │ + onRender()      │
-                                       │ + onUpdate()      │
-                                       │ + onEvent()       │
-                                       │ + run()           │
-                                       └───────┬───────────┘
-                                               │
-                           ┌───────────────────┴───────────────────┐
-                           │                                       │
-                    ┌──────▼───────┐                        ┌──────▼─────────┐
-                    │   Factory    │                        │ EventManager   │
-                    │  (Creates)   │                        │ (Dispatches)  │
-                    │--------------│                        │---------------│
-                    │ + registerType│                        │ + dispatch()  │
-                    │ + create()    │                        │ + addListener │
-                    │ + getDomObj() │                        │ + removeListener
-                    │ + getResObj() │                        └───────────────┘
-                    │ + addDisplayObject() │
-                    │ + removeDisplayObject() │
-                    │ + orphanList / futureChildrenList │
-                    └───────┬─────────┘
-                            │
-                 ┌──────────┴───────────┐
-                 │                      │
-        ┌────────▼─────────┐    ┌───────▼──────────┐
-        │   Stage          │    │ Other IDisplayObj │
-        │ (Root Node)      │    │ (Widgets, Panels) │
-        │----------------- │    │----------------- │
-        │ + onInit()       │    │ + onInit()       │
-        │ + onUpdate()     │    │ + onUpdate()     │
-        │ + onRender()     │    │ + onRender()     │
-        │ + onEvent()      │    │ + onEvent()      │
-        │ Static mouseX/Y  │    │ ...               │
-        └────────┬─────────┘    └─────────┬────────┘
-                 │                        │
-                 │                        │
-       ┌─────────▼─────────┐    ┌─────────▼─────────┐
-       │ DomHandle          │    │ DomHandle          │
-       │ (IDisplayObject)   │    │ (IDisplayObject)   │
-       └─────────┬─────────┘    └─────────┬─────────┘
-                 │                        │
-                 ▼                        ▼
-           Actual DisplayObject          Actual DisplayObject
-          (Stage or Widget instance)   (Button, Panel, Label etc.)
-```
+
+For the complete library-wide diagram, see `docs/architecture_overview.md`.
 
 ## SDOM Event System Integration
-```
-                       ┌──────────────────────┐
-                       │       Event          │
-                       │---------------------│
-                       │ + type: EventType    │
-                       │ + target: DomHandle  │
-                       │ + currentTarget      │
-                       │ + relatedTarget      │
-                       │ + phase (Capture/Target/Bubbling) │
-                       │ + payload (JSON)     │
-                       └─────────┬───────────┘
-                                 │
-                 ┌───────────────┴───────────────┐
-                 │                               │
-        ┌────────▼──────────┐           ┌────────▼───────────┐
-        │ EventType         │           │ EventManager       │
-        │------------------ │           │------------------ │
-        │ Predefined types   │           │ + addListener()    │
-        │ Mouse/Keyboard/UI  │           │ + removeListener() │
-        │ Timer / User       │           │ + dispatch()       │
-        └───────────────────┘           └───────────────────┘
 
-```
+For event object shapes and propagation phases, see `docs/dom_propagation.md` and the Event/EventType API docs.
 
 ## Additional Interfaces and Utilities
-```
-┌─────────────────────┐
-│ IUnitTest           │
-│---------------------│
-│ + onUnitTest()      │
-└─────────┬───────────┘
-          │
-          ▼
-     Implemented by:
-     - Stage
-     - IDisplayObject derivatives
-     - Factory (optional)
 
-┌─────────────────────┐
-│ Handles             │
-│---------------------│
-│ DomHandle<T>        │
-│ ResHandle<T>        │
-│ + get()             │
-│ + operator->, *     │
-│ + isValid()         │
-└─────────┬───────────┘
-          │
-          ▼
-     References actual
-     Factory-owned objects
-```
+- `IUnitTest`: lightweight interface for test hooks (see Unit Tests section).
+- Handles: `DomHandle<T>` and `ResHandle<T>` provide safe references to Factory-owned objects (see `docs/object_handles.md`).
 
 ## Extensibility & Singleton Pattern
 
