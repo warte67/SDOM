@@ -99,6 +99,11 @@ $(function(){initNavTree('md_extensible__factory.html','',''); });
 Extensible Factory Design</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md81"></a>
 Factory Overview (Diagram)</h2>
+<p>SVG (static image): <img src="diagrams/extensible_factory/diagram-01.svg" alt="Factory Overview" style="pointer-events: none;" class="inline"/></p>
+<details >
+<summary >
+View Mermaid source</summary>
+<p></p>
 <div class="fragment"><div class="line">flowchart TB</div>
 <div class="line">  classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px</div>
 <div class="line">  classDef mod  fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px</div>
@@ -129,7 +134,10 @@ Factory Overview (Diagram)</h2>
 <div class="line">  IDisplay --&gt; DomHandle</div>
 <div class="line">  IResource --&gt; ResHandle</div>
 <div class="line">  Factory -. manages .- Stage</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md82"></a>
+</div><!-- fragment --><p></p>
+</details>
+<p>SVG fallback (static render): <img src="diagrams/extensible_factory/diagram-01.svg" alt="Factory Overview" style="pointer-events: none;" class="inline"/></p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md82"></a>
 Resource Type Management</h2>
 <p>In essence, the Factory serves as a simple database for all resource types in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. By tracking each resource's type and unique name, it enables:</p><ul>
 <li>Type-safe lookup and retrieval</li>

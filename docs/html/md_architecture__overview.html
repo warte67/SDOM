@@ -94,6 +94,11 @@ $(function(){initNavTree('md_architecture__overview.html','',''); });
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md0"></a></p>
 <p>This diagram captures the main components of <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>, their relationships, and key external dependencies.</p>
+<p>SVG (static image): <img src="diagrams/architecture_overview/diagram-01.svg" alt="Architecture Diagram" style="pointer-events: none;" class="inline"/></p>
+<details >
+<summary >
+View Mermaid source</summary>
+<p></p>
 <div class="fragment"><div class="line">%%{init: { &#39;theme&#39;: &#39;neutral&#39;, &#39;flowchart&#39;: { &#39;curve&#39;: &#39;linear&#39; } }}%%</div>
 <div class="line">flowchart TB</div>
 <div class="line"> </div>
@@ -179,7 +184,10 @@ $(function(){initNavTree('md_architecture__overview.html','',''); });
 <div class="line"> </div>
 <div class="line">  CMake --&gt;|produces| LIB</div>
 <div class="line">  CMake --&gt;|builds| EX</div>
-</div><!-- fragment --><p>Notes</p><ul>
+</div><!-- fragment --><p></p>
+</details>
+<p>SVG fallback (static render): <img src="diagrams/architecture_overview/diagram-01.svg" alt="Architecture Diagram" style="pointer-events: none;" class="inline"/></p>
+<p>Notes</p><ul>
 <li>Core composes the SDL video subsystem (window, renderer, main texture) and orchestrates the main loop and callbacks.</li>
 <li>Factory owns and manages both display objects (IDisplayObject) and resource objects (IResourceObject), exposing safe handles for references.</li>
 <li>EventManager implements capture → target → bubble propagation phases across the display tree.</li>
@@ -188,6 +196,11 @@ $(function(){initNavTree('md_architecture__overview.html','',''); });
 <hr  />
 <h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
 Runtime Flow (High Level)</h1>
+<p>SVG (static image): <img src="diagrams/architecture_overview/diagram-02.svg" alt="Runtime Flow" style="pointer-events: none;" class="inline"/></p>
+<details >
+<summary >
+View Mermaid source</summary>
+<p></p>
 <div class="fragment"><div class="line">sequenceDiagram</div>
 <div class="line">  autonumber</div>
 <div class="line">  participant Prog as examples/test/prog</div>
@@ -212,7 +225,10 @@ Runtime Flow (High Level)</h1>
 <div class="line">  end</div>
 <div class="line">  Prog--&gt;&gt;Core: onQuit()</div>
 <div class="line">  Core-&gt;&gt;SDL: shutdown</div>
-</div><!-- fragment --><p>This complements the per-module documents in the <span class="tt">docs/</span> folder (Core framework, anchoring, DOM propagation, extensible factory, handles, etc.). </p>
+</div><!-- fragment --><p></p>
+</details>
+<p>SVG fallback (static render): <img src="diagrams/architecture_overview/diagram-02.svg" alt="Runtime Flow" style="pointer-events: none;" class="inline"/></p>
+<p>This complements the per-module documents in the <span class="tt">docs/</span> folder (Core framework, anchoring, DOM propagation, extensible factory, handles, etc.). </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

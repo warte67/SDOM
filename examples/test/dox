@@ -18,3 +18,10 @@ echo "[dox] Running Doxygen..."
 cd "$REPO_ROOT/docs"
 doxygen
 echo "[dox] Done."
+
+# 3) Ensure SVG/PNG diagrams are available alongside generated HTML
+if [[ -d "$REPO_ROOT/docs/diagrams" ]]; then
+	echo "[dox] Copying diagrams to docs/html/diagrams for site compatibility..."
+	mkdir -p "$REPO_ROOT/docs/html/diagrams"
+	cp -rT "$REPO_ROOT/docs/diagrams" "$REPO_ROOT/docs/html/diagrams"
+fi

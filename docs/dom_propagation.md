@@ -16,6 +16,12 @@ This document outlines the three main types of DOM traversal and propagation str
 
 ## Event Propagation Diagram
 
+SVG (static image):
+![Event Propagation](diagrams/dom_propagation/diagram-01.svg)
+
+<details>
+<summary>View Mermaid source</summary>
+
 ```mermaid
 flowchart TB
   classDef phase fill:#f5f5f5,stroke:#999,color:#333
@@ -39,6 +45,8 @@ flowchart TB
 
   %% Notes: some mmdc versions may not render notes reliably
 ```
+
+</details>
 
 SVG fallback (static render):
 ![Event Propagation](diagrams/dom_propagation/diagram-01.svg)

@@ -1,14 +1,3 @@
-# SDOM Architecture Overview
-
-This diagram captures the main components of SDOM, their relationships, and key external dependencies.
-
-SVG (static image):
-![Architecture Diagram](diagrams/architecture_overview/diagram-01.svg)
-
-<details>
-<summary>View Mermaid source</summary>
-
-```mermaid
 %%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
 flowchart TB
 
@@ -94,59 +83,3 @@ flowchart TB
 
   CMake -->|produces| LIB
   CMake -->|builds| EX
-```
-
-</details>
-
-SVG fallback (static render):
-![Architecture Diagram](diagrams/architecture_overview/diagram-01.svg)
-
-Notes
-- Core composes the SDL video subsystem (window, renderer, main texture) and orchestrates the main loop and callbacks.
-- Factory owns and manages both display objects (IDisplayObject) and resource objects (IResourceObject), exposing safe handles for references.
-- EventManager implements capture → target → bubble propagation phases across the display tree.
-- External dependencies include SDL3 family, nlohmann/json, and optionally sol2 + Lua for scripting.
-
----
-
-## Runtime Flow (High Level)
-
-SVG (static image):
-![Runtime Flow](diagrams/architecture_overview/diagram-02.svg)
-
-<details>
-<summary>View Mermaid source</summary>
-
-```mermaid
-sequenceDiagram
-  autonumber
-  participant Prog as examples/test/prog
-  participant Core as SDOM::Core
-  participant SDL as SDL3 Subsystem
-  participant Factory as Factory
-  participant Stage as Stage (Root)
-  participant EM as EventManager
-
-  Prog->>Core: configure(...)
-  Prog->>Core: run()
-  Core->>SDL: init window/renderer/texture
-  Core->>Factory: ensure Stage type registered
-  Core->>Factory: create<Stage>()
-  Factory-->>Core: Stage instance
-  Core->>Stage: onInit()
-  loop Main Loop
-    Core->>EM: poll/dispatch events
-    EM->>Stage: propagate events (capture→target→bubble)
-    Core->>Stage: onUpdate(dt)
-    Core->>Stage: onRender()
-  end
-  Prog-->>Core: onQuit()
-  Core->>SDL: shutdown
-```
-
-</details>
-
-SVG fallback (static render):
-![Runtime Flow](diagrams/architecture_overview/diagram-02.svg)
-
-This complements the per-module documents in the `docs/` folder (Core framework, anchoring, DOM propagation, extensible factory, handles, etc.).

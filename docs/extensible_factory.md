@@ -3,6 +3,12 @@
 
 ## Factory Overview (Diagram)
 
+SVG (static image):
+![Factory Overview](diagrams/extensible_factory/diagram-01.svg)
+
+<details>
+<summary>View Mermaid source</summary>
+
 ```mermaid
 flowchart TB
   classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
@@ -35,6 +41,8 @@ flowchart TB
   IResource --> ResHandle
   Factory -. manages .- Stage
 ```
+
+</details>
 
 SVG fallback (static render):
 ![Factory Overview](diagrams/extensible_factory/diagram-01.svg)
