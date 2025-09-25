@@ -1,8 +1,9 @@
 # SDOM: Simple SDL Document Object Model API
 [![License](https://img.shields.io/badge/license-ZLIB-blue.svg)](LICENSE)
-[![Documentation](https://img.shields.io/badge/docs-Doxygen-blue)](https://warte67.github.io/SDOM/docs/html/)
 
-Doxygen Documentation: https://warte67.github.io/SDOM/docs/html/
+[![Documentation](https://img.shields.io/badge/docs-Doxygen-blue)](https://warte67.github.io/SDOM/)
+
+Doxygen Documentation: https://warte67.github.io/SDOM/
 
 High-level project diagram: see docs/architecture_overview.md
 
