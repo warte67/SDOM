@@ -4,6 +4,7 @@ The Factory is SDOM’s central creation and registry hub. It owns the type regi
 Extensibility comes from registration rather than hardcoding. Each type contributes a small creator lambda that knows how to build an instance from either a type-specific initializer struct (for programmatic construction) or a Lua table/script (Lua can drive creation at init time or during runtime). Constructors remain private/protected, with Factory declared as a friend, so all instantiation passes through consistent validation and naming rules. New types are added by registering another creator; no Factory internals need to change.
 
 At runtime, the Factory tracks every object by type and unique name, supports destruction by name or handle, and ensures lookups are type-safe. Auxiliary stores (e.g., orphans/future-children) allow children to be linked once parents appear, making construction order robust across data-driven scenes. Because handles query the Factory on access, references either resolve to the current object or cleanly read as null after destruction—no dangling pointers. The result is a compact, scalable core for object lifecycle that supports live editing, scripting, and deterministic startup/shutdown across projects of varying size.
+See `docs/scripting_and_configuration.md` for examples of Lua-driven creation and recommended Factory binding patterns (sol2).
 
 ## Factory Overview (Diagram)
 

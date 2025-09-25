@@ -8,6 +8,7 @@ Core is the runtime orchestrator of SDOM. It bootstraps the SDL video subsystem 
 Core coordinates the major subsystems that make up SDOM. It ensures types are registered with the Factory and creates the root Stage (the head of the display tree). Each frame, Core asks the EventManager to propagate input through capture → target → bubble phases across the display hierarchy, then invokes Stage::onUpdate(dt) and Stage::onRender(). By centralizing ownership of the window/renderer and delegating domain work to Stage, Factory, and EventManager, Core keeps responsibilities clean while maintaining tight control of the application lifecycle.
 
 Core is designed for extensibility as well as simplicity. Applications can plug into lifecycle callbacks (init, update, event, render, quit), register hooks from other languages, and manage “scenes” by swapping the active Stage (changing the root of the DOM tree) without reinitializing the engine. Window resizing, presentation policy, and shutdown are handled centrally, while the Factory and typed handles decouple object creation and references from the objects’ lifetimes. The result is a compact core with clear extension points and a reliable runtime model.
+For guidance on scripting and configuration (Lua-first via sol2), see `docs/scripting_and_configuration.md` for recommended bindings, lifecycle hooks, and examples.
 
 ## Core Responsibilities
 - Singleton pattern for global access and lifecycle management
