@@ -16,12 +16,20 @@
 #define SOL_ALL_SAFETIES_ON 1
 #include <sol/sol.hpp>
  
+// For development, define SDOM_USE_INDIVIDUAL_HEADERS and include only 
+// the SDOM headers you need. This speeds up incremental builds and makes 
+// dependencies explicit.
+
+#define SDOM_USE_INDIVIDUAL_HEADERS
 #include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_Core.hpp>
-#include <SDOM/SDOM_Factory.hpp>
-#include <SDOM/SDOM_Event.hpp>
-#include <SDOM/SDOM_IUnitTest.hpp>
-#include <SDOM/SDOM_IDataObject.hpp>
+
+#ifdef SDOM_USE_INDIVIDUAL_HEADERS
+    #include <SDOM/SDOM_Core.hpp>
+    #include <SDOM/SDOM_Factory.hpp>
+    #include <SDOM/SDOM_Event.hpp>
+    #include <SDOM/SDOM_IUnitTest.hpp>
+    #include <SDOM/SDOM_IDataObject.hpp>
+#endif
 
 #include "Box.hpp"
 #include "UnitTests.hpp"

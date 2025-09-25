@@ -3,7 +3,7 @@
  *   / __|   \ / _ \|  \/  | | |_  _ __ _ __ 
  *   \__ \ |) | (_) | |\/| |_| ' \| '_ \ '_ \
  *   |___/___/ \___/|_|  |_(_)_||_| .__/ .__/
- *                               |_|  |_|   
+ *                                |_|  |_|   
  *
  * The SDOM.hpp header file serves as a centralized location for 
  * defining commonly used types, global macros, and debugging 
@@ -12,63 +12,33 @@
  * warnings (WARNING), and debugging (DEBUG) with formatted output. 
  * This file helps standardize and simplify code across the project. 
  * 
- *   This software is provided 'as-is', without any express or implied
- *   warranty.  In no event will the authors be held liable for any damages
- *   arising from the use of this software.
+ * Note:
+ *   SDOM.hpp includes both the umbrella header (SDOM_Front.hpp) for 
+ *   implementation and an interface-safe header (SDOM_Interface.hpp) 
+ *   for type definitions, macros, and utilities. This ensures you 
+ *   have access to all SDOM features with a single include.  For 
+ *   advanced usage, you may include individual SDOM headers as needed.
  *
- *   Permission is granted to anyone to use this software for any purpose,
- *   including commercial applications, and to alter it and redistribute it
- *   freely, subject to the following restrictions:
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
  *
- *   1. The origin of this software must not be misrepresented; you must not
- *       claim that you wrote the original software. If you use this software
- *       in a product, an acknowledgment in the product documentation would be
- *       appreciated but is not required.
- *   2. Altered source versions must be plainly marked as such, and must not be
- *       misrepresented as being the original software.
- *   3. This notice may not be removed or altered from any source distribution.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  *
  * Released under the ZLIB License.
  * Original Author: Jay Faries (warte67)
  * 
  **********************/
-
-/**
- * @mainpage
- * # SDOM Documentation
- * [Back to SDOM on GitHub](https://github.com/warte67/SDOM)
- *
- * @file SDOM.hpp
- * @brief Common include for SDOM-based projects. Defines macros and utilities.
- * @details
- * The SDOM.hpp header file serves as a centralized location for 
- * defining commonly used types, global macros, and debugging 
- * utilities within the SDOM namespace. It includes type aliases, 
- * such as ID, and provides macros for error handling (ERROR), 
- * warnings (WARNING), and debugging (DEBUG) with formatted output. 
- * This file helps standardize and simplify code across the project.
- *
- * @copyright Copyright (c) 2025 Jay Faries (warte67)
- * @author Jay Faries (https://github.com/warte67/SDOM)
- * @date 2025-09-19
- *
- * @note
- * ZLIB License:
- *   This software is provided 'as-is', without any express or implied
- *   warranty.  In no event will the authors be held liable for any damages
- *   arising from the use of this software.
- * @note
- *   Permission is granted to anyone to use this software for any purpose,
- *   including commercial applications, and to alter it and redistribute it
- *   freely, subject to the following restrictions:
- *   1. The origin of this software must not be misrepresented; you must not
- *      claim that you wrote the original software. If you use this software
- *      in a product, an acknowledgment in the product documentation would be
- *      appreciated but is not required.
- *   2. Altered source versions must be plainly marked as such, and must not be
- *      misrepresented as being the original software.
- *   3. This notice may not be removed or altered from any source distribution.
- */
 
 
 #ifndef __SDOM_HPP__
@@ -101,7 +71,6 @@
 
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_CLR.hpp>
-// #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Handle.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
 
@@ -419,6 +388,12 @@ namespace SDOM
         ERROR("Assertion failed: " + std::string(#val) + " == " + std::string(#expected) \
                   + ", actual: " + std::to_string((val)) + ", expected: " + std::to_string((expected))); \
     }
+
+
+
+#ifndef SDOM_USE_INDIVIDUAL_HEADERS
+    #include <SDOM/SDOM_Front.hpp>   // Umbrella header: all SDOM system headers
+#endif
 
 
 #endif // __SDOM_HPP__
