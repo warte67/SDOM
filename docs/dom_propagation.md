@@ -14,6 +14,32 @@ This document outlines the three main types of DOM traversal and propagation str
 
 ---
 
+## Event Propagation Diagram
+
+```mermaid
+flowchart TB
+  classDef phase fill:#f5f5f5,stroke:#999,color:#333
+  classDef node fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d
+
+  Root((Root)):::node
+  P1((Parent)):::node
+  T((Target)):::node
+
+  subgraph Capture[Capture Phase]
+    Root --> P1 --> T
+  end
+
+  subgraph Target[Target Phase]
+    T
+  end
+
+  subgraph Bubble[Bubbling Phase]
+    T --> P1 --> Root
+  end
+
+  %% Notes: some mmdc versions may not render notes reliably
+```
+
 ## Traversal Types
 
 ### 1. Core-based DOM Traversal (Type 1)

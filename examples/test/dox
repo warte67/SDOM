@@ -1,4 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-cd ../../docs
+# Resolve repo root relative to this script
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/../.." && pwd)"
+
+# 1) Regenerate Mermaid diagrams (PNG/SVG)
+if [[ -x "$REPO_ROOT/scripts/export_mermaid.sh" ]]; then
+	echo "[dox] Exporting Mermaid diagrams..."
+	bash "$REPO_ROOT/scripts/export_mermaid.sh"
+else
+	echo "[dox] Warning: scripts/export_mermaid.sh not found or not executable; skipping diagram export" >&2
+fi
+
+# 2) Run Doxygen from the docs directory
+echo "[dox] Running Doxygen..."
+cd "$REPO_ROOT/docs"
 doxygen
+echo "[dox] Done."

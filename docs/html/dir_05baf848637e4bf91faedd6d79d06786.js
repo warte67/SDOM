@@ -8,6 +8,7 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_EventType.hpp", "SDOM__EventType_8hpp.html", "SDOM__EventType_8hpp" ],
     [ "SDOM_EventTypeHash.hpp", "SDOM__EventTypeHash_8hpp.html", "SDOM__EventTypeHash_8hpp" ],
     [ "SDOM_Factory.hpp", "SDOM__Factory_8hpp.html", "SDOM__Factory_8hpp" ],
+    [ "SDOM_Front.hpp", "SDOM__Front_8hpp.html", "SDOM__Front_8hpp" ],
     [ "SDOM_Handle.hpp", "SDOM__Handle_8hpp.html", "SDOM__Handle_8hpp" ],
     [ "SDOM_IDataObject.hpp", "SDOM__IDataObject_8hpp.html", "SDOM__IDataObject_8hpp" ],
     [ "SDOM_IDisplayObject.hpp", "SDOM__IDisplayObject_8hpp.html", "SDOM__IDisplayObject_8hpp" ],

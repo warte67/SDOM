@@ -17,8 +17,8 @@ var namespaceSDOM =
     [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ],
     [ "TypeCreators", "structSDOM_1_1TypeCreators.html", "structSDOM_1_1TypeCreators" ],
     [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
-    [ "DomHandle", "namespaceSDOM.html#a726eeae2d1da0b353ffbca201a53b98c", null ],
-    [ "ResHandle", "namespaceSDOM.html#acf381bf5f6d569f5c53ae442cb6ae529", null ],
+    [ "DomHandle", "namespaceSDOM.html#a54109d3bb3e8279f0ebe607da05abb88", null ],
+    [ "ResHandle", "namespaceSDOM.html#a061df69233ffb2da2feba4566fd72e96", null ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
       [ "TOP_LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1", null ],

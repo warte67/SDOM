@@ -1,5 +1,29 @@
 var searchData=
 [
-  ['object_20anchoring_20design_0',['SDOM Display Object Anchoring Design',['../md_display__object__anchoring.html',1,'']]],
-  ['object_20model_1',['SDOM - Simple SDL Document Object Model',['../index.html',1,'']]]
+  ['accessor_0',['Example Usage (with global accessor)',['../md_core__framework.html#autotoc_md20',1,'']]],
+  ['accessor_20functions_1',['Global Accessor Functions',['../md_core__framework.html#autotoc_md19',1,'']]],
+  ['accessors_20mutators_2',['Anchor Accessors/Mutators',['../md_display__object__anchoring.html#autotoc_md50',1,'']]],
+  ['active_20stage_3',['Changing the Active Stage',['../md_core__framework.html#autotoc_md43',1,'']]],
+  ['additional_20interfaces_20and_20utilities_4',['Additional Interfaces and Utilities',['../md_core__framework.html#autotoc_md27',1,'']]],
+  ['alternative_20initialization_3a_20json_20configuration_5',['Alternative Initialization: JSON Configuration',['../md_core__framework.html#autotoc_md12',1,'']]],
+  ['anchor_20accessors_20mutators_6',['Anchor Accessors/Mutators',['../md_display__object__anchoring.html#autotoc_md50',1,'']]],
+  ['anchor_20naming_20conventions_7',['Anchor Naming Conventions',['../md_display__object__anchoring.html#autotoc_md47',1,'']]],
+  ['anchor_20points_8',['Anchor Points',['../md_display__object__anchoring.html#autotoc_md55',1,'Anchor Points'],['../md_display__object__anchoring.html#autotoc_md51',1,'Changing Anchor Points'],['../md_display__object__anchoring.html#autotoc_md59',1,'Changing Anchor Points']]],
+  ['anchoring_9',['Hierarchical Anchoring',['../md_display__object__anchoring.html#autotoc_md60',1,'']]],
+  ['anchoring_20design_10',['SDOM Display Object Anchoring Design',['../md_display__object__anchoring.html',1,'']]],
+  ['anchoring_20system_20updated_20september_202_202025_11',['Display Object Anchoring System (Updated September 2, 2025)',['../md_display__object__anchoring.html#autotoc_md46',1,'']]],
+  ['and_20drop_20and_20reparenting_12',['Drag-and-Drop and Reparenting',['../md_display__object__anchoring.html#autotoc_md52',1,'']]],
+  ['and_20json_20configs_13',['1. Initializer Structs and JSON Configs',['../md_extensible__factory.html#autotoc_md85',1,'']]],
+  ['and_20modification_14',['Traversal Safety and Modification',['../md_dom__propagation.html#autotoc_md76',1,'']]],
+  ['and_20reparenting_15',['Drag-and-Drop and Reparenting',['../md_display__object__anchoring.html#autotoc_md52',1,'']]],
+  ['and_20size_20calculation_16',['and Size Calculation',['../md_display__object__anchoring.html#autotoc_md49',1,'Position and Size Calculation'],['../md_display__object__anchoring.html#autotoc_md58',1,'Position and Size Calculation']]],
+  ['and_20utilities_17',['Additional Interfaces and Utilities',['../md_core__framework.html#autotoc_md27',1,'']]],
+  ['api_3a_18',['API:',['../md_core__framework.html#autotoc_md13',1,'Example API:'],['../md_core__framework.html#autotoc_md9',1,'Example Configuration API:']]],
+  ['approach_19',['Recommended Approach',['../md_extensible__factory.html#autotoc_md84',1,'']]],
+  ['architectural_20separation_20',['Architectural Separation',['../md_dom__propagation.html#autotoc_md77',1,'']]],
+  ['architecture_20diagram_21',['SDOM Comprehensive Architecture Diagram',['../md_core__framework.html#autotoc_md25',1,'']]],
+  ['architecture_20overview_22',['SDOM Architecture Overview',['../md_architecture__overview.html',1,'']]],
+  ['as_20game_20states_20or_20modes_23',['Stages as Game States or Modes',['../md_core__framework.html#autotoc_md42',1,'']]],
+  ['as_20scenes_24',['Multiple Stages as Scenes',['../md_core__framework.html#autotoc_md39',1,'']]],
+  ['avoid_20diamond_20inheritance_25',['Inheritance Warning: Avoid Diamond Inheritance',['../md_object__handles.html',1,'']]]
 ];

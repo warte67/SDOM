@@ -10,7 +10,6 @@ var hierarchy =
       [ "SDOM::Exception", "classSDOM_1_1Exception.html", null ]
     ] ],
     [ "SDOM::Handle< T >", "classSDOM_1_1Handle.html", null ],
-    [ "SDOM::Handle< IDisplayObject >", "classSDOM_1_1Handle.html", null ],
     [ "SDOM::IDisplayObject::InitStruct", "structSDOM_1_1IDisplayObject_1_1InitStruct.html", [
       [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ]
     ] ],

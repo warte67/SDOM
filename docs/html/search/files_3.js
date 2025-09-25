@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['object_5fhandles_2emd_0',['object_handles.md',['../object__handles_8md.html',1,'']]]
+  ['extensible_5ffactory_2emd_0',['extensible_factory.md',['../extensible__factory_8md.html',1,'']]]
 ];

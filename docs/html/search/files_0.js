@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['core_5fframework_2emd_0',['core_framework.md',['../core__framework_8md.html',1,'']]]
+  ['architecture_5foverview_2emd_0',['architecture_overview.md',['../architecture__overview_8md.html',1,'']]]
 ];

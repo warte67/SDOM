@@ -22,7 +22,7 @@ var searchData=
   ['blinking_19',['BLINKING',['../classCLR.html#a4dd77e6050dafa4c0e36ce01a5400587',1,'CLR']]],
   ['blue_20',['BLUE',['../classCLR.html#a1d8aa7fe91531370ea99b43cdb55c4d7',1,'CLR']]],
   ['bold_21',['BOLD',['../classCLR.html#a06931db8ae45986588be7ad57f2c91a2',1,'CLR']]],
-  ['bottom_22',['bottom',['../structSDOM_1_1Bounds.html#a9f7ce48d21c84daffa17b83355f51481',1,'SDOM::Bounds']]],
+  ['bottom_22',['bottom',['../structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99',1,'SDOM::Bounds']]],
   ['bottom_5f_23',['bottom_',['../classSDOM_1_1IDisplayObject.html#a21a0936456c85d904886bba2fa28891f',1,'SDOM::IDisplayObject']]],
   ['brown_24',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]],
   ['bubblingeventlisteners_25',['bubblingEventListeners',['../classSDOM_1_1IDisplayObject.html#a6989f335541697be518ad972b5239b47',1,'SDOM::IDisplayObject']]],

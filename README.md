@@ -4,6 +4,8 @@
 
 Doxygen Documentation: https://warte67.github.io/SDOM/docs/html/
 
+High-level project diagram: see docs/architecture_overview.md
+
 ## Overview
 The SDOM Framework is a modern C++23 library designed to provide a Document Object Model (DOM) abstraction for SDL3 applications. It enables developers to create and manage graphical user interfaces (GUIs) and interactive elements in a structured, hierarchical manner. The framework is ideal for game development, prototyping, and other cross-platform applications requiring a robust and extensible GUI system. SDOM is designed to be more data-driven, allowing GUI elements to be configured via `.json` files or through the use of initialization structures. This approach enables easier customization, dynamic UI generation, and better separation of logic and presentation.
 
@@ -142,6 +144,15 @@ or
 sudo apt update
 sudo apt install liblua5.4-dev
 ```
+
+Arch:
+```
+sudo pacman -S lua53
+```
+or
+```
+sudo pacman -S lua54
+```
 **Recommended:**  
 Clone Sol2 into a dedicated third-party folder inside your project:
 ```
@@ -165,6 +176,20 @@ Documentation is generated using [Doxygen](https://www.doxygen.nl/):
 doxygen docs/Doxyfile
 ```
 Output will be in the `docs/html/` directory.
+
+Additional docs:
+- Overall architecture diagram: docs/architecture_overview.md
+
+### Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)
+
+We embed Mermaid diagrams in Markdown. To export them as images for inclusion in generated HTML (or for environments without Mermaid support), install mermaid-cli and run the helper script:
+
+```bash
+npm install -g @mermaid-js/mermaid-cli
+bash scripts/export_mermaid.sh
+```
+
+Outputs are written to `docs/diagrams/<doc-name>/diagram-XX.png|svg`.
 
 ## License
 ZLIB License. See source files for details.

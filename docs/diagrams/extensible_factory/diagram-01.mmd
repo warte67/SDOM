@@ -1,0 +1,30 @@
+flowchart TB
+  classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
+  classDef mod  fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px
+  classDef store fill:#fff8e6,stroke:#f0ad4e,color:#5a4500,stroke-width:1px
+  classDef util fill:#f5f5f5,stroke:#999,color:#333,stroke-width:1px
+
+  Core["Core"]:::core
+  Factory["Factory"]:::mod
+  Registry["Registry\n(type -> creator)"]:::store
+  Store["Object Store\n(name -> ptr)"]:::store
+  Orphans["Orphan List"]:::store
+  Future["Future Children"]:::store
+
+  IDisplay["IDisplayObject"]:::mod
+  IResource["IResourceObject"]:::mod
+  DomHandle["DomHandle<T>"]:::util
+  ResHandle["ResHandle<T>"]:::util
+  Stage["Stage (root)"]:::mod
+
+  Core --> Factory
+  Factory --> Registry
+  Factory --> Store
+  Factory --> Orphans
+  Factory --> Future
+
+  Factory -- create --> IDisplay
+  Factory -- create --> IResource
+  IDisplay --> DomHandle
+  IResource --> ResHandle
+  Factory -. manages .- Stage
