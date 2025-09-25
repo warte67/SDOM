@@ -76,3 +76,6 @@ CMakeFiles/
 Makefile
 cmake_install.cmake
 build/error.log
+
+# Ignore generated Doxygen HTML (built locally; published via GitHub Actions)
+docs/html/
