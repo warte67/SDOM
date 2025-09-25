@@ -1,4 +1,4 @@
-# Scripting and Configuration (Lua + C++)
+# Scripting and Configuration (Lua & C++)
 
 SDOM supports two complementary ways to build apps: directly in C++ and via Lua scripting (powered by Sol2). Lua is first‑class but optional—you can adopt it incrementally or run entirely without it. When enabled, Lua accelerates iteration, enables data‑driven scenes, and allows runtime behavior changes without recompilation.
 
