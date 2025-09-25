@@ -127,6 +127,7 @@ By leveraging a high-level scripting language, developers can iterate and protot
             - Confirmed that `stopPropagation()` prevents bubbling as expected.
         - Stacked `redBox` on `blueBox` and `greenBox` on `redBox` to test event propagation.
         - Validated event listener behavior for `MouseClick` events in all phases.
+         The Box object is not perfect, but it works well enough for testing and serves as a proof of concept for an external application using the SDOM API.
     - **Code Cleanup:**
         - Removed debug logs and redundant code from `addEventListener` and `triggerEventListeners`.
         - Simplified event listener registration and dispatch logic.
