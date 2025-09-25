@@ -36,6 +36,9 @@ flowchart TB
   Factory -. manages .- Stage
 ```
 
+SVG fallback (static render):
+![Factory Overview](diagrams/extensible_factory/diagram-01.svg)
+
 ## Resource Type Management
 In essence, the Factory serves as a simple database for all resource types in SDOM. By tracking each resource's type and unique name, it enables:
 - Type-safe lookup and retrieval

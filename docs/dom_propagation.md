@@ -40,6 +40,9 @@ flowchart TB
   %% Notes: some mmdc versions may not render notes reliably
 ```
 
+SVG fallback (static render):
+![Event Propagation](diagrams/dom_propagation/diagram-01.svg)
+
 ## Traversal Types
 
 ### 1. Core-based DOM Traversal (Type 1)
