@@ -1,5 +1,14 @@
-# SDOM Display Object Anchoring Design
-## Display Object Anchoring System (Updated September 2, 2025)
+## Display Object Anchoring System 
+(Updated September 2, 2025)
+
+The Display Object Anchoring System defines layout in SDOM by anchoring each of a child’s four edges to any of nine reference points on its parent (top/middle/bottom × left/center/right). Each edge has its own anchor and local offset (left_, right_, top_, bottom_), so objects can pin, center, or stretch asymmetrically as parents move or resize. World-space geometry is derived from edges—width = right − left and height = bottom − top—yielding predictable, resolution‑independent layout.
+
+When anchors change, the system preserves visual stability. Changing an anchor recalculates only the corresponding local offset so the world position of that edge does not move. The same invariant powers drag‑and‑drop and reparenting: record the world edges, apply the new parent/anchors, then resolve new local offsets from the new parent’s anchor references. This makes interactive editing and runtime scene changes smooth, enabling fixed margins, edge‑to‑edge stretching, and center‑based alignment without jumps.
+
+The API exposes clear accessors for per‑edge anchors and offsets, with sensible defaults that keep existing content working (top‑left if unspecified). Configuration can be supplied in code, via Lua scripts during initialization or at runtime, or from external data; names map directly onto the nine‑point grid with convenient aliases. Because anchoring is edge‑based and hierarchical, complex layouts compose naturally: nested children inherit motion from ancestors yet retain precise rules for how each edge follows the parent. The result is a compact, robust model that behaves well under resizing, scaling, and scene swaps.
+
+
+
 
 ### Anchor Naming Conventions
 - Anchor points are represented as enums in code: `AnchorPoint::TOP_LEFT`, `AnchorPoint::TOP_CENTER`, `AnchorPoint::TOP_RIGHT`, `AnchorPoint::MIDDLE_LEFT`, `AnchorPoint::MIDDLE_CENTER`, `AnchorPoint::MIDDLE_RIGHT`, `AnchorPoint::BOTTOM_LEFT`, `AnchorPoint::BOTTOM_CENTER`, `AnchorPoint::BOTTOM_RIGHT`.

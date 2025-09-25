@@ -1,9 +1,13 @@
-# SDOM Core Framework Design
+# Core Framework Design
 
 See also: overall architecture diagram in docs/architecture_overview.md
 
 ## Overview
-The `Core` object is the central framework of the SDOM API. It is implemented as a Singleton and is responsible for composing the main SDL loop, error logging/trapping, the Factory, and the EventManager. The Core orchestrates the lifecycle and event flow of the application.
+Core is the runtime orchestrator of SDOM. It bootstraps the SDL video subsystem (window, renderer, main texture), owns the main loop, and provides a single place to configure timing, presentation, and error handling. As a singleton, Core gives the application one stable entry point: you configure it up front, call run(), and it drives initialization, updates, event polling/dispatch, rendering, and shutdown in a predictable order.
+
+Core coordinates the major subsystems that make up SDOM. It ensures types are registered with the Factory and creates the root Stage (the head of the display tree). Each frame, Core asks the EventManager to propagate input through capture → target → bubble phases across the display hierarchy, then invokes Stage::onUpdate(dt) and Stage::onRender(). By centralizing ownership of the window/renderer and delegating domain work to Stage, Factory, and EventManager, Core keeps responsibilities clean while maintaining tight control of the application lifecycle.
+
+Core is designed for extensibility as well as simplicity. Applications can plug into lifecycle callbacks (init, update, event, render, quit), register hooks from other languages, and manage “scenes” by swapping the active Stage (changing the root of the DOM tree) without reinitializing the engine. Window resizing, presentation policy, and shutdown are handled centrally, while the Factory and typed handles decouple object creation and references from the objects’ lifetimes. The result is a compact core with clear extension points and a reliable runtime model.
 
 ## Core Responsibilities
 - Singleton pattern for global access and lifecycle management
@@ -271,7 +275,7 @@ For event object shapes and propagation phases, see `docs/dom_propagation.md` an
 ## Additional Interfaces and Utilities
 
 - `IUnitTest`: lightweight interface for test hooks (see Unit Tests section).
-- Handles: `DomHandle<T>` and `ResHandle<T>` provide safe references to Factory-owned objects (see `docs/object_handles.md`).
+- Handles: `DomHandle` and `ResHandle` provide safe references to Factory-owned objects (see `docs/object_handles.md`).
 
 ## Extensibility & Singleton Pattern
 

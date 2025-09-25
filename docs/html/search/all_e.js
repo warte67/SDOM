@@ -1,8 +1,8 @@
 var searchData=
 [
   ['game_20states_20or_20modes_0',['Stages as Game States or Modes',['../md_core__framework.html#autotoc_md42',1,'']]],
-  ['garden_1',['Two Trees in the Garden',['../md_object__handles.html#autotoc_md114',1,'']]],
-  ['generic_20factory_20create_20method_2',['4. Generic Factory Create Method',['../md_extensible__factory.html#autotoc_md100',1,'']]],
+  ['garden_1',['Two Trees in the Garden',['../md_object__handles.html#autotoc_md113',1,'']]],
+  ['generic_20factory_20create_20method_2',['4. Generic Factory Create Method',['../md_extensible__factory.html#autotoc_md98',1,'']]],
   ['get_3',['get',['../classSDOM_1_1Handle.html#a8b3bacf802344b24e21d8009e29a5a3f',1,'SDOM::Handle::get() const'],['../classSDOM_1_1Handle.html#af6b8056ddc0035f0aeb7be697e09e35c',1,'SDOM::Handle::get() const'],['../classSDOM_1_1Handle.html#aa8e43da8d8fed33b4d96384860cac5e6',1,'SDOM::Handle::get() const']]],
   ['get_5fterminal_5fsize_4',['get_terminal_size',['../classCLR.html#a6182f7adc3cbbec8d91ac83c948306d3',1,'CLR']]],
   ['getallowtextureresize_5',['getAllowTextureResize',['../classSDOM_1_1Core.html#ac08668de0a0f0b4a7f903001d51cc224',1,'SDOM::Core']]],
@@ -95,8 +95,9 @@ var searchData=
   ['getzorder_92',['getZOrder',['../classSDOM_1_1IDisplayObject.html#a5143e0bf1003fae334207a1bbc4b9cc6',1,'SDOM::IDisplayObject']]],
   ['global_20accessor_93',['Example Usage (with global accessor)',['../md_core__framework.html#autotoc_md20',1,'']]],
   ['global_20accessor_20functions_94',['Global Accessor Functions',['../md_core__framework.html#autotoc_md19',1,'']]],
-  ['global_20traversal_20type_203_95',['3. Factory-based Global Traversal (Type 3)',['../md_dom__propagation.html#autotoc_md78',1,'']]],
-  ['green_96',['GREEN',['../classCLR.html#a3003dd364e606e44a28d3bf3081f624c',1,'CLR']]],
-  ['grey_97',['GREY',['../classCLR.html#af89e905bfd2feb399c0b6fda7ea2ae07',1,'CLR']]],
-  ['grid_20and_20child_20edge_20anchors_98',['1) Parent Anchor Grid and Child Edge Anchors',['../md_display__object__anchoring.html#autotoc_md67',1,'']]]
+  ['global_20traversal_20type_203_95',['3. Factory-based Global Traversal (Type 3)',['../md_dom__propagation.html#autotoc_md77',1,'']]],
+  ['goals_96',['Goals',['../md_scripting__and__configuration.html#autotoc_md132',1,'']]],
+  ['green_97',['GREEN',['../classCLR.html#a3003dd364e606e44a28d3bf3081f624c',1,'CLR']]],
+  ['grey_98',['GREY',['../classCLR.html#af89e905bfd2feb399c0b6fda7ea2ae07',1,'CLR']]],
+  ['grid_20and_20child_20edge_20anchors_99',['1) Parent Anchor Grid and Child Edge Anchors',['../md_display__object__anchoring.html#autotoc_md66',1,'']]]
 ];

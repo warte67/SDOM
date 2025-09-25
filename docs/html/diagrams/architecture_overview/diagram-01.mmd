@@ -22,41 +22,52 @@ flowchart TB
   subgraph SDOM[SDOM Library]
     direction TB
 
-  Core["Core (Singleton)\n- run(), configure\n- getFactory(), getStage()\n- SDL window/renderer/texture\n- onInit/onUpdate/onEvent/onRender"]:::core
+    %% Top center
+    subgraph TOP[" "]
+      direction TB
+      Core["Core"]:::core
+    end
 
-  Factory["Factory\n- registerType<T>()\n- create<T>()\n- own/manage objects\n- orphan/future-child handling"]:::mod
+    %% Middle row (left-to-right)
+    subgraph MID[" "]
+      direction LR
+      Stage["Stage (Root)"]:::mod
+      Factory["Factory"]:::mod
+      EventMgr["EventManager"]:::mod
+    end
 
-  EventMgr["EventManager\n- add/removeListener\n- dispatch()\n- capture/target/bubble"]:::mod
+    %% Lower row (interfaces, events, handles, utils)
+    subgraph LOW[" "]
+      direction LR
+      IDO["IDisplayObject\n(visual tree)"]:::iface
+      IRO["IResourceObject\n(resource tree)"]:::iface
+      Event["Event"]:::mod
+      EventType["EventType"]:::mod
+      DomHandle["DomHandle"]:::util
+      ResHandle["ResHandle"]:::util
+      SDLUtils["SDOM_SDL_Utils"]:::util
+    end
 
-  Stage["Stage (Root IDisplayObject)"]:::mod
-
-  IDO["IDisplayObject (interface)\n- visual tree\n- events\n- layout/anchor"]:::iface
-
-  IRO["IResourceObject (interface)\n- data/config\n- assets"]:::iface
-
-  DomHandle["DomHandle<T>"]:::util
-  ResHandle["ResHandle<T>"]:::util
-
-    SDLUtils[SDOM_SDL_Utils]:::util
-  UnitTests["IUnitTest / Unit tests"]:::util
-
-    Event[Event]:::mod
-    EventType[EventType]:::mod
-
+    %% Edges from Core
+    Core --> Stage
     Core --> Factory
     Core --> EventMgr
-    Core --> Stage
     Core --> SDLUtils
 
+    %% Factory creates/owns
     Factory --> IDO
     Factory --> IRO
-    IDO --> DomHandle
-    IRO --> ResHandle
 
+    %% Stage contains the visual tree
+    Stage --> IDO
+
+    %% Events
     EventMgr --> Event
     Event --> EventType
 
-    Stage --> IDO
+    %% Handles reference types
+    IDO --> DomHandle
+    IRO --> ResHandle
   end
 
   %% External dependencies

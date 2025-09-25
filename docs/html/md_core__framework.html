@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>SDOM - Simple SDL Document Object Model: SDOM Core Framework Design</title>
+<title>SDOM - Simple SDL Document Object Model: Core Framework Design</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -89,14 +89,16 @@ $(function(){initNavTree('md_core__framework.html','',''); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">SDOM Core Framework Design </div></div>
+  <div class="headertitle"><div class="title">Core Framework Design </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md3"></a></p>
 <p>See also: overall architecture diagram in <a class="el" href="architecture__overview_8md.html">docs/architecture_overview.md</a></p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Overview</h1>
-<p>The <span class="tt">Core</span> object is the central framework of the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> API. It is implemented as a Singleton and is responsible for composing the main SDL loop, error logging/trapping, the Factory, and the EventManager. The Core orchestrates the lifecycle and event flow of the application.</p>
+<p>Core is the runtime orchestrator of <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. It bootstraps the SDL video subsystem (window, renderer, main texture), owns the main loop, and provides a single place to configure timing, presentation, and error handling. As a singleton, Core gives the application one stable entry point: you configure it up front, call run(), and it drives initialization, updates, event polling/dispatch, rendering, and shutdown in a predictable order.</p>
+<p>Core coordinates the major subsystems that make up <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. It ensures types are registered with the Factory and creates the root Stage (the head of the display tree). Each frame, Core asks the EventManager to propagate input through capture → target → bubble phases across the display hierarchy, then invokes Stage::onUpdate(dt) and Stage::onRender(). By centralizing ownership of the window/renderer and delegating domain work to Stage, Factory, and EventManager, Core keeps responsibilities clean while maintaining tight control of the application lifecycle.</p>
+<p>Core is designed for extensibility as well as simplicity. Applications can plug into lifecycle callbacks (init, update, event, render, quit), register hooks from other languages, and manage “scenes” by swapping the active Stage (changing the root of the DOM tree) without reinitializing the engine. Window resizing, presentation policy, and shutdown are handled centrally, while the Factory and typed handles decouple object creation and references from the objects’ lifetimes. The result is a compact core with clear extension points and a reliable runtime model.</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 Core Responsibilities</h1>
 <ul>
@@ -336,7 +338,7 @@ SDOM Event System Integration</h1>
 Additional Interfaces and Utilities</h1>
 <ul>
 <li><span class="tt">IUnitTest</span>: lightweight interface for test hooks (see Unit Tests section).</li>
-<li>Handles: <span class="tt">DomHandle&lt;T&gt;</span> and <span class="tt">ResHandle&lt;T&gt;</span> provide safe references to Factory-owned objects (see <span class="tt"><a class="el" href="object__handles_8md.html">docs/object_handles.md</a></span>).</li>
+<li>Handles: <span class="tt">DomHandle</span> and <span class="tt">ResHandle</span> provide safe references to Factory-owned objects (see <span class="tt"><a class="el" href="object__handles_8md.html">docs/object_handles.md</a></span>).</li>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 Extensibility &amp; Singleton Pattern</h1>

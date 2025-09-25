@@ -1,5 +1,9 @@
 # Extensible Factory Design
-- Initializer structs may inherit from base structs for code reuse and extensibility.
+The Factory is SDOM’s central creation and registry hub. It owns the type registry (type → creator), the object store (name → pointer), and bookkeeping structures used to wire relationships when construction order varies. All engine resources flow through it—Stages, DisplayObjects, and non-visual assets—so Core has a single place to create, look up, enumerate, and destroy objects. By addressing resources by unique name and returning typed handles, the Factory decouples object lifetimes from references, enabling safe reuse, hot-reload patterns, and clear ownership.
+
+Extensibility comes from registration rather than hardcoding. Each type contributes a small creator lambda that knows how to build an instance from either a type-specific initializer struct (for programmatic construction) or a Lua table/script (Lua can drive creation at init time or during runtime). Constructors remain private/protected, with Factory declared as a friend, so all instantiation passes through consistent validation and naming rules. New types are added by registering another creator; no Factory internals need to change.
+
+At runtime, the Factory tracks every object by type and unique name, supports destruction by name or handle, and ensures lookups are type-safe. Auxiliary stores (e.g., orphans/future-children) allow children to be linked once parents appear, making construction order robust across data-driven scenes. Because handles query the Factory on access, references either resolve to the current object or cleanly read as null after destruction—no dangling pointers. The result is a compact, scalable core for object lifecycle that supports live editing, scripting, and deterministic startup/shutdown across projects of varying size.
 
 ## Factory Overview (Diagram)
 
@@ -25,8 +29,8 @@ flowchart TB
 
   IDisplay["IDisplayObject"]:::mod
   IResource["IResourceObject"]:::mod
-  DomHandle["DomHandle<T>"]:::util
-  ResHandle["ResHandle<T>"]:::util
+  DomHandle["DomHandle"]:::util
+  ResHandle["ResHandle"]:::util
   Stage["Stage (root)"]:::mod
 
   Core --> Factory
@@ -69,26 +73,26 @@ The Core composes the Factory and uses it to create and retrieve resources, whil
 ## Requirements
 - All DisplayObjects and ResourceObjects must be created via the Factory; direct construction is forbidden.
 - Constructors for these objects should be private, with Factory declared as a friend.
-- Factory must support both JSON/config-based and InitStructure argument construction for all object types.
+- Factory must support both Lua script/config-based and InitStructure argument construction for all object types.
 - The Factory must be extensible: new object types can be registered without hardcoded Factory methods for each type.
  - Each resource must have a unique std::string name for identification and management.
  - Factory must support resource destruction by both unique name and resource_ptr.
 
 ## Recommended Approach
 
-### 1. Initializer Structs and JSON Configs
+### 1. Initializer Structs and Lua Scripts
 - Each object type defines an initializer struct for manual construction, including a unique "name" field for each resource.
-- JSON configs are used for dynamic/config-based construction, and must include a unique "name" for each resource.
+- Lua tables/scripts are used for dynamic/config-based construction, and must include a unique "name" for each resource.
 
-### 2. Factory Registration
-- The Factory registers a creation lambda for each type, accepting either a JSON config or an initializer struct (using `std::any` or `std::variant`). Resources are registered and tracked by their unique names.
+-### 2. Factory Registration
+- The Factory registers a creation lambda for each type, accepting either a Lua table (e.g., `sol::table`) or an initializer struct (using `std::any` or `std::variant`). Resources are registered and tracked by their unique names.
 - Example:
   ```cpp
   registerType("Box", [](const std::any& args) -> std::shared_ptr<IDataObject> {
       if (args.type() == typeid(BoxInit)) {
           return std::shared_ptr<Box>(new Box(std::any_cast<BoxInit>(args)));
-      } else if (args.type() == typeid(Json)) {
-          return std::shared_ptr<Box>(new Box(std::any_cast<Json>(args)));
+    } else if (args.type() == typeid(sol::table)) {
+      return std::shared_ptr<Box>(new Box(std::any_cast<sol::table>(args)));
       }
       ERROR("Box creation failed: Unknown argument type.");
       return nullptr;
@@ -111,10 +115,12 @@ The Core composes the Factory and uses it to create and retrieve resources, whil
   boxInit.color = SDL_Color(192,128,32,255);
   auto boxObj = factory->create("Box", boxInit);
   ```
-- JSON construction:
+- Lua construction:
   ```cpp
-  Json boxConfig = { {"name", "myBox"}, {"x", 10}, {"y", 20}, {"width", 200}, {"height", 150} };
-  auto box = factory->create("Box", boxConfig);
+  sol::state lua;
+  lua.open_libraries(sol::lib::base);
+  lua.script("box = { name = 'myBox', x = 10, y = 20, width = 200, height = 150 }");
+  auto box = factory->create("Box", lua["box"]);
   ```
 
 ## Benefits
@@ -137,37 +143,37 @@ This document will be updated as the Factory design evolves.
     int x, y, width, height;
     // ...other fields...
   };
-- Ensure these structs can be constructed from JSON (e.g., via a helper function or constructor). Document inheritance and field usage for contributors.
+// Ensure these structs can be constructed from Lua tables (e.g., via a helper function taking `sol::table`). Document inheritance and field usage for contributors.
 // Use a map to register creation lambdas for each type. For type safety, consider using std::variant if the set of argument types is known and limited:
   using CreatorFunc = std::function<std::shared_ptr<IDataObject>(const std::any&)>;
   // Or:
-  // using CreatorFunc = std::function<std::shared_ptr<IDataObject>(const std::variant<BoxInit, Json>&)>;
+  // using CreatorFunc = std::function<std::shared_ptr<IDataObject>(const std::variant<BoxInit, sol::table>&)>;
   std::unordered_map<std::string, CreatorFunc> registry;
   // Register each type at startup:
   registry["Box"] = [](const std::any& args) -> std::shared_ptr<IDataObject> {
     if (args.type() == typeid(BoxInit))
       return std::make_shared<Box>(std::any_cast<BoxInit>(args));
-    if (args.type() == typeid(Json))
-      return std::make_shared<Box>(std::any_cast<Json>(args));
+    if (args.type() == typeid(sol::table))
+      return std::make_shared<Box>(std::any_cast<sol::table>(args));
     // ...error handling...
     return nullptr;
   };
   // For std::variant, use std::get_if<BoxInit>(&args) etc.
-- Factory should report errors for unknown types or invalid arguments. Decide whether to throw exceptions, log errors, or return nullptr for consistency.
+// Factory should report errors for unknown types or invalid arguments. Decide whether to throw exceptions, log errors, or return nullptr for consistency.
   ```
-- Ensure these structs can be constructed from JSON (e.g., via a helper function or constructor).
+- Ensure these structs can be constructed from Lua tables (e.g., via a helper function or constructor).
 
 ### 1a. Standardized Constructor Signatures
 - All DisplayObjects should have constructors with a consistent signature:
   - One accepting the type-specific initializer struct.
-  - One accepting a generic JSON/config object.
+  - One accepting a Lua `sol::table` (or similar) config object.
 - Example:
   ```cpp
   class Label : public IDisplayObject {
       friend class Factory;
   protected:
       Label(const InitLabel& init);   // Label-specific struct
-      Label(const Json& config);      // Generic config
+    Label(const sol::table& config);      // Lua config
       // ...
   };
 
@@ -175,7 +181,7 @@ This document will be updated as the Factory design evolves.
       friend class Factory;
   protected:
       Box(const InitBox& init);       // Box-specific struct
-      Box(const Json& config);        // Generic config
+    Box(const sol::table& config);        // Lua config
       // ...
   };
   ```
@@ -189,7 +195,7 @@ This document will be updated as the Factory design evolves.
       friend class Factory;
   private:
       Box(const BoxInit& init);
-      Box(const Json& config);
+    Box(const sol::table& config);
       // ...
   };
   ```
@@ -205,8 +211,8 @@ This document will be updated as the Factory design evolves.
   registry["Box"] = [](const std::any& args) -> std::shared_ptr<IDataObject> {
       if (args.type() == typeid(BoxInit))
           return std::make_shared<Box>(std::any_cast<BoxInit>(args));
-      if (args.type() == typeid(Json))
-          return std::make_shared<Box>(std::any_cast<Json>(args));
+    if (args.type() == typeid(sol::table))
+      return std::make_shared<Box>(std::any_cast<sol::table>(args));
       // ...error handling...
       return nullptr;
   };
@@ -251,10 +257,12 @@ This document will be updated as the Factory design evolves.
 
 While the PIMPL idiom can be useful for hiding implementation details and reducing compile-time dependencies, it adds complexity—especially in polymorphic designs like SDOM. For this open source project, we prioritize maintainability and extensibility over deep encapsulation. Therefore, PIMPL is not recommended unless a compelling reason arises.
   ```
-- JSON construction:
+- Lua construction:
   ```cpp
-  Json boxConfig = { {"name", "myBox"}, {"x", 10}, {"y", 20}, {"width", 200}, {"height", 150} };
-  auto box = factory->create("Box", boxConfig);
+  sol::state lua;
+  lua.open_libraries(sol::lib::base);
+  lua.script("box = { name = 'myBox', x = 10, y = 20, width = 200, height = 150 }");
+  auto box = factory->create("Box", lua["box"]);
   ```
 
 ---
@@ -262,16 +270,16 @@ This strategy enables centralized, extensible, and type-safe object/resource cre
 
 ## Standardized Constructors for IDisplayObjects
 - Every `IDisplayObject`-based device will have two constructors:
-  - One accepting a `Json` config object for dynamic/config-based creation.
+  - One accepting a Lua `sol::table` config object for dynamic/config-based creation.
   - One accepting a type-specific initialization structure for manual construction.
 - This approach ensures flexibility, extensibility, and consistency across all display objects.
 - Factory will use these constructors to instantiate objects based on user input or configuration.
 
-## Configuration Format Choice
-- JSON is the preferred configuration format for object/resource creation.
-- JSON is widely supported and integrates easily with bindings for Java, Python, C, and Rust.
-- XML support could be added in the future if needed, but would require additional maintenance and testing.
-- Focus on making JSON robust and extensible for all use cases.
+## Scripting and Configuration Choice
+- Lua is the preferred scripting/configuration format for object/resource creation.
+- Lua integrates cleanly with C++ via sol2, supports runtime scripting and live reconfiguration, and maps naturally to SDOM’s data shapes using tables.
+- Other data formats (e.g., JSON) can be supported via small adapters if needed, but Lua is first-class and recommended.
+- Keep the Lua pathway robust and extensible; treat other formats as optional convenience layers.
 
 
 ## Resource Pointer (`resource_ptr`) Design

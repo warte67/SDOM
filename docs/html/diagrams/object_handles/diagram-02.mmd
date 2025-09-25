@@ -1,0 +1,32 @@
+%%{init: {"flowchart": { "rankSpacing": 40, "nodeSpacing": 140 }}}%%
+flowchart TB
+		classDef base fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
+		classDef bad  fill:#ffecec,stroke:#e57373,color:#8a1f1f,stroke-width:1px
+		classDef handle fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px
+
+		%% Top row
+		subgraph TOP[" "]
+			direction TB
+			IDO["IDisplayObject"]:::base
+		end
+
+		%% Middle row (left-to-right): Garden -> Bad
+		subgraph MID[" "]
+			direction LR
+			Garden["Handle&lt;T&gt;<br/>Garden"]:::handle
+			Bad["BadThing<br/>(inherits both)"]:::bad
+		end
+
+		%% Bottom row
+		subgraph BOTTOM[" "]
+			direction TB
+			IRO["IResourceObject"]:::base
+		end
+
+		%% Dotted relation lines from Garden (context, not inheritance)
+		Garden -. related .- IDO
+		Garden -. related .- IRO
+
+		%% Inheritance edges (top/bottom to middle-right)
+		IDO --> Bad
+		IRO --> Bad
