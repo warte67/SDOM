@@ -22,8 +22,14 @@ find_package(SDL3 REQUIRED CONFIG)
 find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
 
+# Find Lua (if installed via package manager, usually as 'lua5.3' or 'lua5.4')
+find_library(LUA_LIB lua5.3) # or lua5.4, depending on your system
+
 # Include directories
 include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/sol2/include)
+include_directories(${PROJECT_SOURCE_DIR}/sol2/include/sol)
+include_directories(/usr/include/lua5.3)
 
 # Source files
 file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
@@ -32,7 +38,7 @@ file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 # Link SDL3, SDL3_image, and SDL3_ttf libraries to the library
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf ${LUA_LIB})
 
 # Output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)

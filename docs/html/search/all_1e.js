@@ -8,7 +8,7 @@ var searchData=
   ['white_5',['WHITE',['../classCLR.html#ac31a33dfb8b903a027b48eb638fc21a4',1,'CLR']]],
   ['width_6',['width',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a6907692b7ad49b726bdcdd2ac462823f',1,'SDOM::IDisplayObject::InitStruct::width'],['../structSDOM_1_1Bounds.html#abc92186d5199c0e106509d7ab73ef85b',1,'SDOM::Bounds::width()']]],
   ['window_20rationale_7',['Single Stage, Single Window Rationale',['../md_core__framework.html#autotoc_md29',1,'']]],
-  ['window_20resizing_20texture_20resolution_8',['Window Resizing &amp;amp; Texture Resolution',['../md_core__framework.html#autotoc_md32',1,'']]],
+  ['window_20resizing_20texture_20resolution_8',['Window Resizing &amp; Texture Resolution',['../md_core__framework.html#autotoc_md32',1,'']]],
   ['windowflags_9',['windowFlags',['../structSDOM_1_1Core_1_1CoreConfig.html#afa4486ca9134c3cb38417f230399ca83',1,'SDOM::Core::CoreConfig']]],
   ['windowflagsfromstring_10',['windowFlagsFromString',['../classSDOM_1_1SDL__Utils.html#ab30d7d6f2ee103ad52b35d0e6a1aa175',1,'SDOM::SDL_Utils']]],
   ['windowflagstostring_11',['windowFlagsToString',['../classSDOM_1_1SDL__Utils.html#aa8a8381ee8fee667d27ef087a3f330c2',1,'SDOM::SDL_Utils']]],

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['6_20error_20handling_20validation_0',['6. Error Handling &amp;amp; Validation',['../md_extensible__factory.html#autotoc_md88',1,'']]]
+  ['inheritance_20warning_3a_20avoid_20diamond_20inheritance_0',['Inheritance Warning: Avoid Diamond Inheritance',['../md_object__handles.html',1,'']]]
 ];

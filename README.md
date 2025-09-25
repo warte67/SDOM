@@ -130,9 +130,34 @@ make -j$(nproc)
 sudo make install
 ```
 
-
-
-
+## Lua and Sol2
+Make sure lua is installed. 
+Debian:
+```
+sudo apt update
+sudo apt install liblua5.3-dev
+```
+or
+```
+sudo apt update
+sudo apt install liblua5.4-dev
+```
+**Recommended:**  
+Clone Sol2 into a dedicated third-party folder inside your project:
+```
+git clone https://github.com/ThePhD/sol2.git
+```
+**Note:** When integrating Sol2 and Lua, make sure to:
+- Add the Sol2 include folder (e.g. include or third_party/sol2/include) to your compiler or IDE’s include path.
+- Add the Lua include folder (e.g. lua5.3 or /usr/include/lua5.4) to your include path.
+- Link to the Lua library (-llua5.3 or -llua5.4) in your build system (Makefile, CMake, etc.).
+Example snippet in CMakeLists.txt:
+```
+include_directories(${CMAKE_SOURCE_DIR}/third_party/sol2/include)
+include_directories(/usr/include/lua5.3)
+find_library(LUA_LIB lua5.3)
+target_link_libraries(your_target PRIVATE ${LUA_LIB})
+```
 
 ## Documentation
 Documentation is generated using [Doxygen](https://www.doxygen.nl/):

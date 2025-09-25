@@ -21,11 +21,22 @@ find_package(SDL3 REQUIRED CONFIG)
 find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
 
+# Find Lua (if installed via package manager, usually as 'lua5.3' or 'lua5.4')
+find_library(LUA_LIB lua5.3) # or lua5.4, depending on your system
+
+
 # Use SDOM headers from local or system install
-# Uncomment the one you want to use:
-include_directories($ENV{HOME}/.local/include)
-include_directories(${PROJECT_SOURCE_DIR}/include)
-# include_directories(/usr/local/include)
+include_directories($ENV{HOME}/.local/include)      # SDL3 Includes (local)
+# include_directories(/usr/local/include)           # SDL3 Includes (system)
+include_directories(${PROJECT_SOURCE_DIR}/include)  # SDOM Includes
+
+# NOTE: The following paths use '../../' because this test project is in a subdirectory.
+# They point to the sol2 headers in the workspace root.
+include_directories(${PROJECT_SOURCE_DIR}/../../sol2/include)       # sol2 Includes
+include_directories(${PROJECT_SOURCE_DIR}/../../sol2/include/sol)   # sol2 Includes
+
+include_directories(/usr/include/lua5.3)    # Lua Includes
+
 
 # Source files
 file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
@@ -38,7 +49,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # target_compile_definitions(prog PRIVATE SDOM_ENABLE_UNIT_TESTS)
 
 # Link to local (user) SDOM static library:
-target_link_libraries(prog PRIVATE $ENV{HOME}/.local/lib/libSDOM.a SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf)
+target_link_libraries(prog PRIVATE $ENV{HOME}/.local/lib/libSDOM.a SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf ${LUA_LIB})
 # Or for system install, comment above and uncomment below:
 # target_link_libraries(prog PRIVATE /usr/local/lib/libSDOM.a SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf)
 

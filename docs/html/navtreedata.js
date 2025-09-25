@@ -29,7 +29,7 @@ var NAVTREE =
     [ "SDOM Core Framework Design", "md_core__framework.html", [
       [ "Overview", "md_core__framework.html#autotoc_md2", null ],
       [ "Core Responsibilities", "md_core__framework.html#autotoc_md3", null ],
-      [ "Core Initialization Sequence &amp; Pre-Initialization Configuration", "md_core__framework.html#autotoc_md4", [
+      [ "Core Initialization Sequence & Pre-Initialization Configuration", "md_core__framework.html#autotoc_md4", [
         [ "Required Pre-Initialization Parameters:", "md_core__framework.html#autotoc_md5", null ],
         [ "Initialization Flow:", "md_core__framework.html#autotoc_md6", null ],
         [ "Example Configuration API:", "md_core__framework.html#autotoc_md7", null ],
@@ -39,7 +39,7 @@ var NAVTREE =
         ] ]
       ] ],
       [ "Primary Callbacks", "md_core__framework.html#autotoc_md13", null ],
-      [ "Hook &amp; Callback Registration", "md_core__framework.html#autotoc_md14", [
+      [ "Hook & Callback Registration", "md_core__framework.html#autotoc_md14", [
         [ "Example (C++)", "md_core__framework.html#autotoc_md15", null ],
         [ "Example (Python/Rust)", "md_core__framework.html#autotoc_md16", null ]
       ] ],
@@ -47,7 +47,7 @@ var NAVTREE =
         [ "Example Usage (with global accessor)", "md_core__framework.html#autotoc_md18", null ]
       ] ],
       [ "Composition Diagram", "md_core__framework.html#autotoc_md19", null ],
-      [ "Extensibility &amp; Singleton Pattern", "md_core__framework.html#autotoc_md20", null ],
+      [ "Extensibility & Singleton Pattern", "md_core__framework.html#autotoc_md20", null ],
       [ "EventListener Support", "md_core__framework.html#autotoc_md21", [
         [ "Example (C)", "md_core__framework.html#autotoc_md22", null ],
         [ "Benefits", "md_core__framework.html#autotoc_md23", null ]
@@ -56,13 +56,13 @@ var NAVTREE =
         [ "Example", "md_core__framework.html#autotoc_md25", null ]
       ] ],
       [ "Integration Methods Summary", "md_core__framework.html#autotoc_md26", [
-        [ "Flexibility &amp; Use Cases", "md_core__framework.html#autotoc_md27", null ]
+        [ "Flexibility & Use Cases", "md_core__framework.html#autotoc_md27", null ]
       ] ],
       [ "Performance Considerations", "md_core__framework.html#autotoc_md28", null ],
       [ "Single Stage, Single Window Rationale", "md_core__framework.html#autotoc_md29", null ],
       [ "Overriding the Default Stage", "md_core__framework.html#autotoc_md30", null ],
       [ "Multiple Stages as Scenes", "md_core__framework.html#autotoc_md31", null ],
-      [ "Window Resizing &amp; Texture Resolution", "md_core__framework.html#autotoc_md32", null ],
+      [ "Window Resizing & Texture Resolution", "md_core__framework.html#autotoc_md32", null ],
       [ "Shared Display Texture for Stages", "md_core__framework.html#autotoc_md33", null ],
       [ "Stages as Game States or Modes", "md_core__framework.html#autotoc_md34", null ],
       [ "Changing the Active Stage", "md_core__framework.html#autotoc_md35", null ]
@@ -115,16 +115,16 @@ var NAVTREE =
         [ "Implementation Strategy", "md_extensible__factory.html#autotoc_md81", [
           [ "1. Initializer Structs", "md_extensible__factory.html#autotoc_md82", null ],
           [ "1a. Standardized Constructor Signatures", "md_extensible__factory.html#autotoc_md83", null ],
-          [ "2. Private Constructors &amp; Friend Factory", "md_extensible__factory.html#autotoc_md84", null ],
+          [ "2. Private Constructors & Friend Factory", "md_extensible__factory.html#autotoc_md84", null ],
           [ "3. Factory Registration System", "md_extensible__factory.html#autotoc_md85", null ],
           [ "4. Generic Factory Create Method", "md_extensible__factory.html#autotoc_md86", null ],
           [ "5. Extensibility", "md_extensible__factory.html#autotoc_md87", null ],
-          [ "6. Error Handling &amp; Validation", "md_extensible__factory.html#autotoc_md88", null ],
+          [ "6. Error Handling & Validation", "md_extensible__factory.html#autotoc_md88", null ],
           [ "7. Example Usage", "md_extensible__factory.html#autotoc_md89", null ]
         ] ],
         [ "Standardized Constructors for IDisplayObjects", "md_extensible__factory.html#autotoc_md91", null ],
         [ "Configuration Format Choice", "md_extensible__factory.html#autotoc_md92", null ],
-        [ "Resource Pointer (<span class=\"tt\">resource_ptr</span>) Design", "md_extensible__factory.html#autotoc_md93", [
+        [ "Resource Pointer (<tt>resource_ptr</tt>) Design", "md_extensible__factory.html#autotoc_md93", [
           [ "How It Works", "md_extensible__factory.html#autotoc_md94", null ],
           [ "Example Usage", "md_extensible__factory.html#autotoc_md95", null ],
           [ "Benefits", "md_extensible__factory.html#autotoc_md96", null ],
@@ -148,8 +148,10 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Project Description", "md_progress.html", [
-      [ "Progress Updates", "md_progress.html#autotoc_md111", null ],
-      [ "ToDo:", "md_progress.html#autotoc_md112", null ]
+      [ "Scripting Flexibility:", "md_progress.html#autotoc_md111", null ],
+      [ "Progress Updates", "md_progress.html#autotoc_md112", null ],
+      [ "Next Steps:", "md_progress.html#autotoc_md113", null ],
+      [ "ToDo:", "md_progress.html#autotoc_md114", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -188,14 +190,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "SDOM_8cpp.html",
-"classSDOM_1_1Core.html#ae818f08373cd15cf1656089c633cf645",
-"classSDOM_1_1EventType.html#a27577bf1e7a968bc18865f4b0f025279",
-"classSDOM_1_1IDataObject.html#a54d77f5fbab11b64f7971d1c33dea11d",
-"classSDOM_1_1IDisplayObject.html#af1f3fcd8844ca70fa235842bd176a6ab",
-"classSDOM_1_1Stage.html#a78c24fdc177769b1a7604edaac795117",
-"md_display__object__anchoring.html#autotoc_md48"
+"classSDOM_1_1Core.html#a9a4483cf794e1c15ee2ac630dba94166",
+"classSDOM_1_1Event.html#af3a872dc47ba1ee24660cbf978a3e7e8",
+"classSDOM_1_1Handle.html#a37678d25be2a530a5ceb3159bbf70853",
+"classSDOM_1_1IDisplayObject.html#ab1390908afede95eacb5dbf3333ddc9f",
+"classSDOM_1_1Stage.html#a514bb1586b9cf3bc4f6043669cf049b2",
+"functions_z.html",
+"structSDOM_1_1Stage_1_1InitStruct.html#a17adc32c048d68ae0d26a9778f7f4827"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronization';
-var SYNCOFFMSG = 'click to enable panel synchronization';
-var LISTOFALLMEMBERS = 'List of all members';
+var SYNCONMSG = 'click to disable panel synchronisation';
+var SYNCOFFMSG = 'click to enable panel synchronisation';

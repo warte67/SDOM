@@ -1,5 +1,13 @@
-## Project Description
+# Project Description
 This project is a C++23 application utilizing SDL3 for graphical rendering and event handling. The goal is to create a simple Document Object Model (DOM) API for SDL3, focusing on building a GUI interface for SDL3 developers to use in their games or other cross-platform applications.
+
+
+## Scripting Flexibility:
+`Lua` integration via `Sol2` will be entirely optional—developers can use as much or as little `Lua` as they wish, or none at all.
+`SDOM` will continue to support direct C++ initialization and configuration.
+As long as language bindings are available, any language can be used to leverage the SDOM API, making the framework flexible for a wide range of development styles and needs.
+
+By leveraging a high-level scripting language, developers can iterate and prototype features quickly, while still relying on C++ for performance-critical components. This hybrid approach combines the agility of scripting with the efficiency of native code, making SDOM both developer-friendly and highly performant.
 
 
 ## Progress Updates
@@ -123,9 +131,17 @@ This project is a C++23 application utilizing SDL3 for graphical rendering and e
         - Removed debug logs and redundant code from `addEventListener` and `triggerEventListeners`.
         - Simplified event listener registration and dispatch logic.
 
+    - **Milestone:** Event System Stability
+        - After extensive debugging and testing, the `EventManager`, `EventListeners`, and overall event system are now stable and behave according to typical DOM specifications.
+        - Both instant and deferred `addChild()` and `removeChild()` operations work reliably, ensuring robust event propagation and hierarchy management.
+        - With the event system confirmed stable, we’ve decided this is the ideal time to begin transitioning from `JSON-based` initialization to `Sol2-powered Lua` scripting.
+
+# Next Steps:
+Our next focus will be on replacing JSON configuration and initialization with Lua scripts using Sol2. This transition will enable more flexible and powerful scripting for unit tests, object setup, dialog scripting, stage scene management, and rapid application prototyping—all within Lua. 
+
 # ToDo:
 
-- Resolve the `Box` event listener issue, ensuring that `MouseClick` events are received and processed correctly.
+- Plan to implement a garbage_collection() function to clean up stray display objects. For now, stray objects are destroyed on application termination.
 - Expand event system tests to include drag-and-drop functionality, stacking, and anchoring for `Box` objects.
 - Reintroduce `IResourceObject` into the `Factory` for resource management alongside `IDisplayObject`.
 - Add unit tests for the revised `Factory` and event system to ensure stability and robustness.

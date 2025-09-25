@@ -7,8 +7,15 @@
  * 
  * @copyright Copyright (c) 2025
  * 
+ * 
+ * 
+ * Note:  sudo apt install liblua5.3-dev  or  sudo apt install liblua5.4-dev
+ * 
 //  */
 
+#define SOL_ALL_SAFETIES_ON 1
+#include <sol/sol.hpp>
+ 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Factory.hpp>
@@ -25,6 +32,12 @@ using namespace SDOM;
 int main() 
 {
     std::cout << CLR::YELLOW << "Hello, SDOM!" << CLR::RESET << std::endl;
+
+	// BEGIN: sol2 LUA basic initial tests
+		sol::state lua;
+		lua.open_libraries(sol::lib::base);
+		lua.script("print('bark bark bark!')");
+	// END: sol2 LUA basic initial tests
 
     // Fetch the Core singleton
     Core& core = getCore();
