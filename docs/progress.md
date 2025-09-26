@@ -140,7 +140,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - After extensive debugging and testing, the `EventManager`, `EventListeners`, and overall event system are now stable and behave according to typical DOM specifications.
         - Both instant and deferred `addChild()` and `removeChild()` operations work reliably, ensuring robust event propagation and hierarchy management.
         - With the event system confirmed stable, we’ve decided this is the ideal time to begin transitioning from `JSON-based` initialization to `Sol2-powered Lua` scripting.
-        
+
 - ### [September 25, 2025]
     - **JSON → Lua Transition Complete:**  
         - All configuration, scripting, and resource creation now use Lua tables via Sol2.
@@ -165,6 +165,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 # Next Steps:
 - Expand Lua scripting examples and documentation.
+    - Add a user-side `Box_UnitTest()` Lua module as an example:
+        - Demonstrate generating multiple boxes in a for loop, removing them, and verifying results via Lua.
+        - Integrate this as a documented example for Lua-driven testing and automation.
 - Add more interactive event tests (drag/drop, stacking, anchoring).
 - Continue improving resource management and garbage collection.
 - Plan for future language hooks (e.g., Python).
