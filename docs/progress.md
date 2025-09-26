@@ -161,7 +161,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Updated documentation to reflect Lua-first configuration and scripting.
         - All examples and tests now use Lua for initialization and setup.
     - **Milestone:**  
-        - SDOM is now fully Lua-configurable and ready for advanced scripting, rapid prototyping, and integration with external tools.
+        - SDOM is now fully Lua-configurable and ready for advanced scripting, rapid prototyping, and integration with external tools. Json features have been removed completely.
 
 # Next Steps:
 - Expand Lua scripting examples and documentation.
