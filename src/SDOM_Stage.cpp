@@ -10,13 +10,18 @@ namespace SDOM
 
     Stage::Stage(const InitStruct& init) : IDisplayObject(init)
     {
-        type_ = "Stage"; // Hardcoded type for Stage
+        if (init.type != TypeName) {
+            ERROR("Error: Stage constructed with incorrect type: " + init.type);
+        }        
         setClickable(true);
     }
 
     Stage::Stage(const sol::table& config) : IDisplayObject(config)
     {
-        type_ = config["type"].valid() ? config["type"].get<std::string>() : "Stage";
+        std::string type = config["type"].valid() ? config["type"].get<std::string>() : TypeName;
+        if (type != TypeName) {
+            ERROR("Error: Stage constructed with incorrect type: " + type);
+        }
         setClickable(true);
     }
 
@@ -69,7 +74,7 @@ namespace SDOM
     {
         // Stage unit testing logic
 
-        // std::cout << "Stage::onUnitTest() called for Stage: " << getName() << std::endl;
+        // std::cout << CLR::CYAN << "Stage::onUnitTest() called for Stage: " << getName() << std::endl;
 
         return true;
     }

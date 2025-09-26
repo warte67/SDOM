@@ -15,8 +15,12 @@
 Box::Box(const SDOM::IDisplayObject::InitStruct& init)
 : IDisplayObject(init)
 {
-    std::cout << "Box constructed with InitStruct: " << getName() 
-              << " at address: " << this << std::endl;
+    // std::cout << "Box constructed with InitStruct: " << getName() 
+    //           << " at address: " << this << std::endl;
+
+    if (init.type != TypeName) {
+        ERROR("Error: Box constructed with incorrect type: " + init.type);
+    }
     setTabEnabled(true);
     setClickable(true);
 }
@@ -24,10 +28,13 @@ Box::Box(const SDOM::IDisplayObject::InitStruct& init)
 Box::Box(const sol::table& config)
 : IDisplayObject(config)
 {
-    std::cout << "Box constructed with Lua config: " << getName() 
-            << " at address: " << this << std::endl;
-            
-    type_ = config["type"].valid() ? config["type"].get<std::string>() : "Box";
+    // std::cout << "Box constructed with Lua config: " << getName() 
+    //         << " at address: " << this << std::endl;            
+
+    std::string type = config["type"].valid() ? config["type"].get<std::string>() : "";
+    if (type != TypeName) {
+        ERROR("Error: Box constructed with incorrect type: " + type);
+    }
     setTabEnabled(true);
     setClickable(true);
 }
@@ -38,7 +45,7 @@ Box::~Box()
 
 bool Box::onInit()  
 {
-    std::cout << getName() << "::" << "onInit() at address: " << this << std::endl;
+    // std::cout << getName() << "::" << "onInit() at address: " << this << std::endl;
     // Add event listener for MouseClick
     addEventListener(SDOM::EventType::MouseClick, [](SDOM::Event& event)
     {
@@ -377,6 +384,8 @@ void Box::onRender()
 
 bool Box::onUnitTest() 
 {
+    // std::cout << CLR::CYAN << "Box::onUnitTest() called for Box: " << getName() << std::endl;
+
     return true;
 }
 

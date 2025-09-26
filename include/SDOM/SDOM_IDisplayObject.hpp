@@ -73,6 +73,11 @@ Requirements:
         - Designed for inheritance and composition.
         - Allows derived classes to extend or override core behavior.
 
+    8. Type Identity and Verification
+        - Must expose a public static type name (e.g., TypeName) for each concrete display object.
+        - Must verify its type during construction (from InitStruct or Lua config) and report errors if mismatched.
+        - Enables safe, consistent creation and identification of display object types across the SDOM framework.        
+
 Non-Requirements:
     - Does not directly manage rendering resources (handled by other systems).
     - Does not implement concrete rendering or event logic (must be provided by derived classes).
@@ -108,14 +113,17 @@ namespace SDOM
     {
 
     public:
+
+        static constexpr const char* TypeName = "IDisplayObject";
         struct InitStruct
         {
-            std::string name = "IDisplayObject";                
+            std::string name = TypeName;     
+            std::string type = TypeName;           
             float x = 0.0f;                                     
             float y = 0.0f;                                     
             float width = 0.0f;                                 
             float height = 0.0f;                                
-            SDL_Color color = { 255, 255, 255, 255 };           
+            SDL_Color color = { 255, 0, 255, 255 };           
             AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;      
             AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;     
             AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;   
@@ -173,6 +181,8 @@ namespace SDOM
         IDisplayObject& setName(const std::string& newName) { name_ = newName; return *this; }
         std::string getType() const { return type_; }
         IDisplayObject& setType(const std::string& newType) { type_ = newType; return *this; }
+
+        Bounds getBounds() const { return { getLeft(), getTop(), getRight(), getBottom() }; }
 
 
         int getMaxPriority() const;

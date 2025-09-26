@@ -76,7 +76,7 @@ int main()
                     children = {
                         {
                             type = "Box",
-                            name = "redBox",
+                            name = "redishBox",
                             x = 100.0,
                             y = 100,
                             width = 120,
@@ -85,7 +85,7 @@ int main()
                         },
                         {
                             type = "Box",
-                            name = "greenBox",
+                            name = "greenishBox",
                             x = 150,
                             y = 150,
                             width = 80,
@@ -94,7 +94,7 @@ int main()
                         },
                         {
                             type = "Box",
-                            name = "blueBox",
+                            name = "blueishBox",
                             x = 240,
                             y = 70,
                             width = 250,
@@ -156,18 +156,15 @@ int main()
         allTestsPassed &= Stage_UnitTests();
 
         // User Test One
-        result = UnitTests::run("User", "The first user test", []() { return true; });
-        if (!result) {
-            std::cout << CLR::indent() << "Something Failed (appropriate debug text here)" << CLR::RESET << std::endl;
-        } 
-        allTestsPassed &= result;
+        result = Box_UnitTests();   // or just:
+        allTestsPassed &= result;   // allTestsPassed = Box_UnitTests();
 
-        // User Test Two
-        result = UnitTests::run("User", "The second user test", []()  { return true; });
-        if (!result) {
-            std::cout << CLR::indent() << "Something Failed (appropriate debug text here)" << CLR::RESET << std::endl;
-        } 
-        allTestsPassed &= result;
+        // // User Test Two
+        // result = UnitTests::run("User", "The second user test", []()  { return true; });
+        // if (!result) {
+        //     std::cout << CLR::indent() << "Something Failed (appropriate debug text here)" << CLR::RESET << std::endl;
+        // } 
+        // allTestsPassed &= result;
 
 
         return allTestsPassed;

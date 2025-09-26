@@ -11,7 +11,7 @@ namespace SDOM
 {
     bool Factory_UnitTests()
     {
-        std::cout << "Factory_UnitTests() called" << std::endl; 
+        // std::cout << "Factory_UnitTests() called" << std::endl; 
         
         Core& core = getCore();
         Factory& factory = core.getFactory();

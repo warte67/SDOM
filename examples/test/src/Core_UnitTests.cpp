@@ -12,7 +12,7 @@ namespace SDOM
     bool Core_UnitTests()
     {
         Core& core = getCore();
-        std::cout << "Core_UnitTests() called" << std::endl;
+        // std::cout << "Core_UnitTests() called" << std::endl;
         bool allTestsPassed = true;
         bool testResult;
 

@@ -9,6 +9,7 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IResourceObject.hpp>
 #include <SDOM/SDOM_Handle.hpp>
+#include <SDOM/SDOM_Utils.hpp> // for parseColor
 
 namespace SDOM
 {
@@ -52,23 +53,17 @@ namespace SDOM
         config.pixelHeight = coreObj["pixelHeight"].get_or(2.0f);
         config.preserveAspectRatio = coreObj["preserveAspectRatio"].get_or(true);
         config.allowTextureResize = coreObj["allowTextureResize"].get_or(true);
-
         config.rendererLogicalPresentation = SDL_Utils::rendererLogicalPresentationFromString(
             coreObj["rendererLogicalPresentation"].get_or(std::string("SDL_LOGICAL_PRESENTATION_LETTERBOX")));
         config.windowFlags = SDL_Utils::windowFlagsFromString(
             coreObj["windowFlags"].get_or(std::string("SDL_WINDOW_RESIZABLE")));
         config.pixelFormat = SDL_Utils::pixelFormatFromString(
             coreObj["pixelFormat"].get_or(std::string("SDL_PIXELFORMAT_RGBA8888")));
-
         if (coreObj["color"].valid()) {
-            sol::table colorTbl = coreObj["color"];
-            config.color.r = colorTbl["r"].get_or(0);
-            config.color.g = colorTbl["g"].get_or(0);
-            config.color.b = colorTbl["b"].get_or(0);
-            config.color.a = colorTbl["a"].get_or(255);
+            config.color = parseColor(coreObj["color"]);
         } else {
             config.color = {0, 0, 0, 255};
-        }
+        }        
         configure(config);
 
         // Recursive resource creation
@@ -333,35 +328,36 @@ namespace SDOM
         catch (const SDOM::Exception& e) 
         {
             // Handle exceptions gracefully
-            int terminalWidth = 0, terminalHeight = 0;
-            CLR::get_terminal_size(terminalWidth, terminalHeight);
+            // int terminalWidth = 0, terminalHeight = 0;
+            // CLR::get_terminal_size(terminalWidth, terminalHeight);
+            // std::cout << std::endl; // Add a blank line before the error box
+            // std::string line1 = "Exception Caught: " + std::string(e.what());
+            // std::string line2 = "File: " + e.getFile();
+            // std::string line3 = "Line: " + std::to_string(e.getLine());
+            // size_t maxWidth = std::max(line1.size(), std::max(line2.size(), line3.size()));
+            // if ((size_t)terminalWidth > maxWidth) 
+            // { // Add padding for the border
+            //     std::string border(maxWidth + 2, '-'); // ASCII horizontal line
+            //     std::cout << CLR::BROWN << "+" << border << "+\n"
+            //             << CLR::BROWN << "| " << CLR::RED << "Exception Caught: " << CLR::WHITE << e.what() << std::string(maxWidth - line1.size(), ' ') << CLR::BROWN << " |\n"
+            //             << CLR::BROWN << "| " << CLR::RED << "File: " << CLR::YELLOW << e.getFile() << std::string(maxWidth - line2.size(), ' ') << CLR::BROWN << " |\n"
+            //             << CLR::BROWN << "| " << CLR::RED << "Line: " << CLR::YELLOW << std::to_string(e.getLine()) << std::string(maxWidth - line3.size(), ' ') << CLR::BROWN << " |\n"
+            //             << CLR::BROWN << "+" << border << "+" << CLR::RESET << std::endl;
+            // } 
+            // else 
+            // {
+            //     std::cout << CLR::RED << "Exception caught: " 
+            //             << CLR::WHITE << e.what()
+            //             << CLR::RED << "\nFile: " 
+            //             << CLR::BROWN << e.getFile() 
+            //             << CLR::RED << "\nLine: " 
+            //             << CLR::BROWN << e.getLine() 
+            //             << CLR::RESET << std::endl;            
+            // }
+            // std::string errStr = "Exception Caught: " + std::string(e.what()) + "\nFile: " + e.getFile() + "\nLine: " + std::to_string(e.getLine());
 
-            std::string line1 = "Exception Caught: " + std::string(e.what());
-            std::string line2 = "File: " + e.getFile();
-            std::string line3 = "Line: " + std::to_string(e.getLine());
+            SDOM::printMessageBox("Exception Caught", e.what(), e.getFile(), e.getLine(), CLR::RED, CLR::WHITE, CLR::BROWN);
 
-            size_t maxWidth = std::max(line1.size(), std::max(line2.size(), line3.size()));
-
-            if ((size_t)terminalWidth > maxWidth) 
-            { // Add padding for the border
-                std::string border(maxWidth + 2, '-'); // ASCII horizontal line
-                std::cout << CLR::BROWN << "+" << border << "+\n"
-                        << CLR::BROWN << "| " << CLR::RED << "Exception Caught: " << CLR::WHITE << e.what() << std::string(maxWidth - line1.size(), ' ') << CLR::BROWN << " |\n"
-                        << CLR::BROWN << "| " << CLR::RED << "File: " << CLR::YELLOW << e.getFile() << std::string(maxWidth - line2.size(), ' ') << CLR::BROWN << " |\n"
-                        << CLR::BROWN << "| " << CLR::RED << "Line: " << CLR::YELLOW << std::to_string(e.getLine()) << std::string(maxWidth - line3.size(), ' ') << CLR::BROWN << " |\n"
-                        << CLR::BROWN << "+" << border << "+" << CLR::RESET << std::endl;
-            } 
-            else 
-            {
-                std::cout << CLR::RED << "Exception caught: " 
-                        << CLR::WHITE << e.what()
-                        << CLR::RED << "\nFile: " 
-                        << CLR::BROWN << e.getFile() 
-                        << CLR::RED << "\nLine: " 
-                        << CLR::BROWN << e.getLine() 
-                        << CLR::RESET << std::endl;            
-            }
-            std::string errStr = "Exception Caught: " + std::string(e.what()) + "\nFile: " + e.getFile() + "\nLine: " + std::to_string(e.getLine());
             // SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Terminal Error", errStr.c_str(), nullptr);
         }
         catch (const std::exception& e) 

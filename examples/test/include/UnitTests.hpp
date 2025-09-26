@@ -7,5 +7,7 @@ namespace SDOM
     bool Factory_UnitTests();
     bool IDisplayObject_UnitTests();
     bool Stage_UnitTests();
+    bool Box_UnitTests();
+    bool LUA_UnitTests();
     // add more unit tests here as needed ...
 }

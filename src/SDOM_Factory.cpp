@@ -4,6 +4,7 @@
 #include <SDOM/SDOM_Handle.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Stage.hpp>
+#include <SDOM/SDOM_Utils.hpp> // for parseColor
 
 namespace SDOM
 {
@@ -40,6 +41,7 @@ namespace SDOM
         }
         return nullptr;
     }
+
     IDisplayObject* Factory::getDomObj(const std::string& name)
     {
         auto it = displayObjects_.find(name);
@@ -49,9 +51,7 @@ namespace SDOM
         }
         return nullptr;
     }
-
-
-
+    
     DomHandle Factory::getDomHandle(const std::string& name) 
     {
         auto it = displayObjects_.find(name);
@@ -88,9 +88,18 @@ namespace SDOM
         }
 
         // Minimum required properties (x, y, width, height now optional)
-        if (!config["name"].valid() || !config["type"].valid() || !config["color"].valid()) {
-            std::cout << "Factory::create: Missing required property in Lua config.\n";
-            return DomHandle();
+        std::vector<std::string> missing;
+        if (!config["name"].valid()) missing.push_back("name");
+        if (!config["type"].valid()) missing.push_back("type");
+
+        if (!missing.empty()) {
+            std::string msg = "Factory::create: Missing required property(s) in Lua config: ";
+            for (size_t i = 0; i < missing.size(); ++i) {
+                msg += "'" + missing[i] + "'";
+                if (i < missing.size() - 1) msg += ", ";
+            }
+            ERROR(msg); // Throws and aborts creation
+            return DomHandle(); // This line is not reached if ERROR throws
         }
 
         auto it = creators_.find(typeName);
@@ -117,13 +126,32 @@ namespace SDOM
             }
             std::string name = config["name"];
             displayObjects_[name] = std::move(displayObject);
-            displayObjects_[name]->onInit();
+            displayObjects_[name]->setType(typeName); // Ensure type is set
 
-            // Optionally set additional properties if present
-            if (config["anchorTop"].valid())    displayObjects_[name]->setAnchorTop(stringToAnchorPoint_.at(config["anchorTop"].get<std::string>()));
-            if (config["anchorLeft"].valid())   displayObjects_[name]->setAnchorLeft(stringToAnchorPoint_.at(config["anchorLeft"].get<std::string>()));
-            if (config["anchorBottom"].valid()) displayObjects_[name]->setAnchorBottom(stringToAnchorPoint_.at(config["anchorBottom"].get<std::string>()));
-            if (config["anchorRight"].valid())  displayObjects_[name]->setAnchorRight(stringToAnchorPoint_.at(config["anchorRight"].get<std::string>()));
+            // --- Set common properties from config ---
+            if (config["color"].valid()) {
+                SDL_Color color = parseColor(config["color"]);
+                displayObjects_[name]->color_ = color;
+            }
+            // set anchorPoints if present
+            auto setAnchorFromConfig = [](const sol::object& obj, auto setter) {
+                if (obj.valid()) {
+                    if (obj.is<std::string>()) {
+                        std::string key = SDOM::normalizeAnchorString(obj.as<std::string>());
+                        auto it = SDOM::stringToAnchorPoint_.find(key);
+                        if (it != SDOM::stringToAnchorPoint_.end())
+                            setter(it->second);
+                    } else if (obj.is<int>()) {
+                        setter(static_cast<SDOM::AnchorPoint>(obj.as<int>()));
+                    }
+                }
+            };
+            setAnchorFromConfig(config["anchorLeft"],   [&](SDOM::AnchorPoint ap){ displayObjects_[name]->setAnchorLeft(ap); });
+            setAnchorFromConfig(config["anchorTop"],    [&](SDOM::AnchorPoint ap){ displayObjects_[name]->setAnchorTop(ap); });
+            setAnchorFromConfig(config["anchorRight"],  [&](SDOM::AnchorPoint ap){ displayObjects_[name]->setAnchorRight(ap); });
+            setAnchorFromConfig(config["anchorBottom"], [&](SDOM::AnchorPoint ap){ displayObjects_[name]->setAnchorBottom(ap); });
+            
+            // set additional properties if present
             if (config["z_order"].valid())      displayObjects_[name]->setZOrder(static_cast<int>(config["z_order"].get<double>()));
             if (config["priority"].valid())     displayObjects_[name]->setPriority(static_cast<int>(config["priority"].get<double>()));
             if (config["isClickable"].valid())  displayObjects_[name]->setClickable(config["isClickable"].get<bool>());
@@ -137,6 +165,9 @@ namespace SDOM
             displayObjects_[name]->setY(y);
             displayObjects_[name]->setWidth(width);
             displayObjects_[name]->setHeight(height);
+
+            // --- Finally initialize the display object ---
+            displayObjects_[name]->onInit();
 
             return DomHandle(name, typeName);
         }
@@ -154,6 +185,7 @@ namespace SDOM
             {
                 std::string name = init.name;
                 displayObject->onInit(); // Initialize the display object
+                displayObject->setType(typeName); // Ensure type is set
                 displayObjects_[name] = std::move(displayObject);
                 return DomHandle(name, typeName);
             }

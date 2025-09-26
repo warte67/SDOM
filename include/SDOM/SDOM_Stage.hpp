@@ -14,11 +14,13 @@ namespace SDOM
         friend class Core;    // Allow Core to access Factory internals if needed
 
     public:
+        static constexpr const char* TypeName = "Stage";
         struct InitStruct : public IDisplayObject::InitStruct
         {
             InitStruct() : IDisplayObject::InitStruct() 
             { 
-                name = "mainStage"; 
+                name = TypeName; 
+                type = TypeName;
                 color = {0, 0, 0, 255}; 
             }
         };

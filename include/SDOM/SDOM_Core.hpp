@@ -99,6 +99,7 @@ namespace SDOM
             Stage* getStage() const; // Alias for backward compatibility
             IDisplayObject* getRootNodePtr() const;
             DomHandle getRootNode() const;
+            DomHandle getStageHandle() const { return getRootNode(); }  // Alias for backward compatibility
 
             // ===== SDL Resource Accessors =====
             SDL_Window* getWindow() const       { return window_; }

@@ -40,9 +40,7 @@
  * 
  **********************/
 
-
-#ifndef __SDOM_HPP__
-#define __SDOM_HPP__
+#pragma once
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -71,10 +69,7 @@
 
 #include <sol/sol.hpp>
 
-#include <SDOM/SDOM_SDL_Utils.hpp>
-#include <SDOM/SDOM_CLR.hpp>
-#include <SDOM/SDOM_Handle.hpp>
-#include <SDOM/SDOM_UnitTests.hpp>
+
 
 
 /**
@@ -107,19 +102,19 @@ namespace SDOM
     // static const char* version();
     // static const char* compilationDate();
 
-    class Core;
-    class Factory;
-    class Stage;
+    // class Core;
+    // class Factory;
+    // class Stage;
 
-    void quit();
-    void shutdown();
-    Core& getCore();
-    Factory& getFactory();
-    Stage* getStage();
-    DomHandle getStageHandle();
-    SDL_Renderer* getRenderer();
-    SDL_Window* getWindow();
-    SDL_Texture* getTexture();
+    // void quit();
+    // void shutdown();
+    // Core& getCore();
+    // Factory& getFactory();
+    // Stage* getStage();
+    // DomHandle getStageHandle();
+    // SDL_Renderer* getRenderer();
+    // SDL_Window* getWindow();
+    // SDL_Texture* getTexture();
 
 
     /**
@@ -261,50 +256,6 @@ namespace SDOM
         { "right_bottom",   AnchorPoint::BOTTOM_RIGHT },
         { "left_bottom",    AnchorPoint::BOTTOM_LEFT },
         ///@}
-
-        /// @name Hyphenated names
-        ///@{
-        { "top-left",       AnchorPoint::TOP_LEFT },
-        { "top-center",     AnchorPoint::TOP_CENTER },
-        { "top-right",      AnchorPoint::TOP_RIGHT },
-        { "middle-left",    AnchorPoint::MIDDLE_LEFT },
-        { "middle-center",  AnchorPoint::MIDDLE_CENTER },
-        { "middle-right",   AnchorPoint::MIDDLE_RIGHT },
-        { "bottom-left",    AnchorPoint::BOTTOM_LEFT },
-        { "bottom-center",  AnchorPoint::BOTTOM_CENTER },
-        { "bottom-right",   AnchorPoint::BOTTOM_RIGHT },
-        { "center-middle",  AnchorPoint::MIDDLE_CENTER },
-        { "right-middle",   AnchorPoint::MIDDLE_RIGHT },
-        { "left-middle",    AnchorPoint::MIDDLE_LEFT },
-        { "center-top",     AnchorPoint::TOP_CENTER },
-        { "right-top",      AnchorPoint::TOP_RIGHT },
-        { "left-top",       AnchorPoint::TOP_LEFT },
-        { "center-bottom",  AnchorPoint::BOTTOM_CENTER },
-        { "right-bottom",   AnchorPoint::BOTTOM_RIGHT },
-        { "left-bottom",    AnchorPoint::BOTTOM_LEFT },
-        ///@}
-
-        /// @name Boolean OR (|) style
-        ///@{
-        { "top|left",       AnchorPoint::TOP_LEFT },
-        { "top|center",     AnchorPoint::TOP_CENTER },
-        { "top|right",      AnchorPoint::TOP_RIGHT },
-        { "middle|left",    AnchorPoint::MIDDLE_LEFT },
-        { "middle|center",  AnchorPoint::MIDDLE_CENTER },
-        { "middle|right",   AnchorPoint::MIDDLE_RIGHT },
-        { "bottom|left",    AnchorPoint::BOTTOM_LEFT },
-        { "bottom|center",  AnchorPoint::BOTTOM_CENTER },
-        { "bottom|right",   AnchorPoint::BOTTOM_RIGHT },
-        { "center|middle",  AnchorPoint::MIDDLE_CENTER },
-        { "right|middle",   AnchorPoint::MIDDLE_RIGHT },
-        { "left|middle",    AnchorPoint::MIDDLE_LEFT },
-        { "center|top",     AnchorPoint::TOP_CENTER },
-        { "right|top",      AnchorPoint::TOP_RIGHT },
-        { "left|top",       AnchorPoint::TOP_LEFT },
-        { "center|bottom",  AnchorPoint::BOTTOM_CENTER },
-        { "right|bottom",   AnchorPoint::BOTTOM_RIGHT },
-        { "left|bottom",    AnchorPoint::BOTTOM_LEFT }
-        ///@}
     }; // unordered_map stringToAnchorPoint_
 
     /**
@@ -342,6 +293,19 @@ namespace SDOM
          * @return Absolute height (bottom - top).
          */
         float height() const { return abs(bottom - top); }
+        
+        // Equality operator with epsilon for floating-point comparison
+        bool operator==(const Bounds& other) const {
+            constexpr float epsilon = 0.0001f;
+            return std::abs(left - other.left)   < epsilon &&
+                std::abs(top - other.top)     < epsilon &&
+                std::abs(right - other.right) < epsilon &&
+                std::abs(bottom - other.bottom) < epsilon;
+        }
+
+        bool operator!=(const Bounds& other) const {
+            return !(*this == other);
+        }
     };
 
 } // namespace SDOM
@@ -359,7 +323,7 @@ namespace SDOM
  * @param message Warning message to display.
  */
 // Macro for showing warnings
-#define WARNING(message) SDOM::Core::showWarning(message, __FILE__, __LINE__)
+#define WARNING(message) SDOM::showWarning(message, __FILE__, __LINE__)
 
 /**
  * @brief Logs a debug message in green text.
@@ -391,13 +355,16 @@ namespace SDOM
                   + ", actual: " + std::to_string((val)) + ", expected: " + std::to_string((expected))); \
     }
 
-
+#include <SDOM/SDOM_SDL_Utils.hpp>
+#include <SDOM/SDOM_CLR.hpp>
+#include <SDOM/SDOM_Handle.hpp>
+#include <SDOM/SDOM_UnitTests.hpp>
+#include <SDOM/SDOM_Utils.hpp>
 
 #ifndef SDOM_USE_INDIVIDUAL_HEADERS
     #include <SDOM/SDOM_Front.hpp>   // Umbrella header: all SDOM system headers
 #endif
 
 
-#endif // __SDOM_HPP__
 
 

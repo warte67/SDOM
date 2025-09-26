@@ -11,33 +11,45 @@ class Box final : public SDOM::IDisplayObject
 {
     friend class SDOM::Factory; // Allow Factory to create IDisplayObjects
 
-protected:
 
-Box(const SDOM::IDisplayObject::InitStruct& init);
-Box(const sol::table& config);
+    public:
 
-public:
-    struct InitStruct : public SDOM::IDisplayObject::InitStruct {};
-    virtual ~Box();
+        static constexpr const char* TypeName = "Box";
+        struct InitStruct : public IDisplayObject::InitStruct
+        {
+            InitStruct() : IDisplayObject::InitStruct() 
+            { 
+                name = TypeName; 
+                type = TypeName; 
+                color = {0, 0, 0, 255}; 
+            }
+        };
 
-    static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-        return std::unique_ptr<IDisplayObject>(new Box(config));
-    }
-    static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-        const auto& boxInit = static_cast<const Box::InitStruct&>(baseInit);
-        return std::unique_ptr<IDisplayObject>(new Box(boxInit));
-    }
+    protected:
+        Box(const SDOM::IDisplayObject::InitStruct& init);
+        Box(const sol::table& config);
 
-    // Override DisplayObject methods
-    virtual bool onInit() override; 
-    virtual void onQuit() override;
-    virtual void onEvent(const SDOM::Event& event) override;
-    virtual void onUpdate(float fElapsedTime) override;
-    virtual void onRender() override;
-    virtual bool onUnitTest() override;
+    public:
+        virtual ~Box();
 
-private:
-    float gray = 0.0f;  // used for keyfocus indication
+        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
+            return std::unique_ptr<IDisplayObject>(new Box(config));
+        }
+        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
+            const auto& boxInit = static_cast<const Box::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new Box(boxInit));
+        }
+
+        // Override DisplayObject methods
+        virtual bool onInit() override; 
+        virtual void onQuit() override;
+        virtual void onEvent(const SDOM::Event& event) override;
+        virtual void onUpdate(float fElapsedTime) override;
+        virtual void onRender() override;
+        virtual bool onUnitTest() override;
+
+    private:
+        float gray = 0.0f;  // used for keyfocus indication
 };
 
 

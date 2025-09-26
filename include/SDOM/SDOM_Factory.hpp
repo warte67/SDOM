@@ -87,11 +87,10 @@ namespace SDOM
             bool useWorld=false, int worldX=0, int worldY=0);
 
         
-        // ----- JSON -----
+        // ----- LUA -----
         
         void initFromLua(const sol::table& lua);
         void processResource(const sol::table& resource);
-            
 
     private:
         std::unordered_map<std::string, std::unique_ptr<IDisplayObject>> displayObjects_;

@@ -16,7 +16,7 @@ namespace SDOM
     {
         Core& core = getCore();
         Factory* factory = &core.getFactory();
-        std::cout << "IDisplayObject_UnitTests() called" << std::endl;
+        // std::cout << "IDisplayObject_UnitTests() called" << std::endl;
         bool allTestsPassed = true;
         bool testResult;
         std::string dbgStr;
