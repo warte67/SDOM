@@ -24,11 +24,16 @@ namespace SDOM
         // Test display object creation
         DomHandle handle;
         result = UnitTests::run("Factory", "Display Object Creation", [&factory, &handle]() {
-            Json config = {
-                {"type", "Stage"},
-                {"name", "testStage"},
-                {"color", { {"r", 7}, {"g", 15}, {"b", 31}, {"a", 63} }}
-            };
+            sol::state lua;
+            lua.open_libraries(sol::lib::base);
+            lua.script(R"(
+                config = {
+                    type = "Stage",
+                    name = "testStage",
+                    color = { r = 7, g = 15, b = 31, a = 63 }
+                }
+            )");
+            sol::table config = lua["config"];
             handle = factory.create("Stage", config);
             return handle != nullptr;
         });
@@ -127,13 +132,19 @@ namespace SDOM
         if (!result) { std::cout << CLR::indent() << "Resource destruction test failed!" << CLR::RESET << std::endl; }
         allTestsPassed &= result;
 
-        /// duplicate resource creation test
+        // duplicate resource creation test
         result = UnitTests::run("Factory", "Duplicate Resource Creation", [&factory]() 
         {
-            Json config = {
-                {"name", "testStage"},
-                {"color", { {"r", 1}, {"g", 2}, {"b", 3}, {"a", 4} }}
-            };
+            sol::state lua;
+            lua.open_libraries(sol::lib::base);
+            lua.script(R"(
+                config = {
+                    type = "Stage",
+                    name = "testStage",
+                    color = { r = 1, g = 2, b = 3, a = 4 }
+                }
+            )");
+            sol::table config = lua["config"];
             DomHandle first = factory.create("Stage", config);
             DomHandle second = factory.create("Stage", config);
             // Define expected behavior: should not allow duplicate, or should overwrite
@@ -149,18 +160,29 @@ namespace SDOM
         // TEST: Resource Overwrite Behavior
         result = UnitTests::run("Factory", "Resource Overwrite Behavior", [&factory, &debugRet]() 
         {
+            sol::state lua;
+            lua.open_libraries(sol::lib::base);
+
             // Create initial resource
-            Json config1 = {
-                {"name", "overwriteTest"},
-                {"color", { {"r", 10}, {"g", 20}, {"b", 30}, {"a", 40} }}
-            };
+            lua.script(R"(
+                config1 = {
+                    type = "Stage",
+                    name = "overwriteTest",
+                    color = { r = 10, g = 20, b = 30, a = 40 }
+                }
+            )");
+            sol::table config1 = lua["config1"];
             DomHandle first = factory.create("Stage", config1);
 
             // Overwrite with new config
-            Json config2 = {
-                {"name", "overwriteTest"},
-                {"color", { {"r", 15}, {"g", 25}, {"b", 35}, {"a", 45} }}
-            };
+            lua.script(R"(
+                config2 = {
+                    type = "Stage",
+                    name = "overwriteTest",
+                    color = { r = 15, g = 25, b = 35, a = 45 }
+                }
+            )");
+            sol::table config2 = lua["config2"];
             DomHandle second = factory.create("Stage", config2);
 
             // Retrieve and check if the resource was overwritten

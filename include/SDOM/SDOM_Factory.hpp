@@ -11,8 +11,7 @@ namespace SDOM
 
     struct TypeCreators 
     {
-        std::function<std::unique_ptr<IDisplayObject>(const Json&)> fromJson;
-        // Accept base InitStruct by reference
+        std::function<std::unique_ptr<IDisplayObject>(const sol::table&)> fromLua;
         std::function<std::unique_ptr<IDisplayObject>(const IDisplayObject::InitStruct&)> fromInitStruct;
     };
         
@@ -32,16 +31,19 @@ namespace SDOM
         // ----- Creation Methods -----
 
         // Register a resource type with a creation function
-        using Creator = std::function<std::unique_ptr<IResourceObject>(const Json&)>;
+        using Creator = std::function<std::unique_ptr<IResourceObject>(const sol::table&)>;
 
         // void registerType(const std::string& typeName, Creator creator);
         void registerType(const std::string& typeName, const TypeCreators& creators);
-        // JSON based object creator
-        DomHandle create(const std::string& typeName, const Json& config);
-        // String (JSON text) based object creator
-        DomHandle create(const std::string& typeName, const std::string& jsonStr);
-        // InitStruct based object creator
+        // Lua-based object creator
+        DomHandle create(const std::string& typeName, const sol::table& config);
+        // InitStruct-based object creator
         DomHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);
+
+        
+        // create a DOM object based on a Lua script string
+        DomHandle create(const std::string& typeName, const std::string& luaScript);
+
 
         // ----- Resource Management -----
 
@@ -87,8 +89,8 @@ namespace SDOM
         
         // ----- JSON -----
         
-        void initFromJson(const Json& json);
-        void processResource(const Json& resource);
+        void initFromLua(const sol::table& lua);
+        void processResource(const sol::table& resource);
             
 
     private:

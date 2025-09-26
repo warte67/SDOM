@@ -23,7 +23,7 @@ namespace SDOM
      *
      * Core manages the main SDL loop, error logging/trapping, the Factory, and the EventManager.
      * It orchestrates the lifecycle and event flow of the application, and inherits from IDataObject
-     * to support JSON configuration and serialization.
+     * to support LUA configuration and serialization.
      *
      * Core is marked as final and cannot be subclassed.
      */
@@ -80,8 +80,8 @@ namespace SDOM
 
             // Configuration & Initialization
             void configure(const CoreConfig& config);
-            void configureFromJson(const std::string& json);
-            void configureFromJsonFile(const std::string& filename);
+            void configureFromLua(const sol::table& config);
+            void configureFromLuaFile(const std::string& filename);
 
             // Callback/Hook Registration
             void registerOnInit(std::function<bool()> fn) { fnOnInit = fn; }

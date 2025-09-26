@@ -14,13 +14,13 @@ class Box final : public SDOM::IDisplayObject
 protected:
 
 Box(const SDOM::IDisplayObject::InitStruct& init);
-Box(const Json& config);
+Box(const sol::table& config);
 
 public:
     struct InitStruct : public SDOM::IDisplayObject::InitStruct {};
     virtual ~Box();
 
-    static std::unique_ptr<IDisplayObject> CreateFromJson(const Json& config) {
+    static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
         return std::unique_ptr<IDisplayObject>(new Box(config));
     }
     static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {

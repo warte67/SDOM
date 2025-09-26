@@ -140,23 +140,43 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - After extensive debugging and testing, the `EventManager`, `EventListeners`, and overall event system are now stable and behave according to typical DOM specifications.
         - Both instant and deferred `addChild()` and `removeChild()` operations work reliably, ensuring robust event propagation and hierarchy management.
         - With the event system confirmed stable, we’ve decided this is the ideal time to begin transitioning from `JSON-based` initialization to `Sol2-powered Lua` scripting.
+        
+- ### [September 25, 2025]
+    - **JSON → Lua Transition Complete:**  
+        - All configuration, scripting, and resource creation now use Lua tables via Sol2.
+        - Factory, Core, and EventManager refactored to accept and process `sol::table` configs.
+        - All display object constructors updated to support Lua-based initialization.
+        - Removed legacy JSON code paths and tests.
+    - **Unit Tests Passing:**  
+        - All core, factory, display object, and stage unit tests now pass with Lua configs.
+        - Verified resource creation, retrieval, type checking, and destruction using Lua.
+        - Event system and Box object tests run successfully with Lua-driven scenes.
+    - **Robust Numeric Handling:**  
+        - Fixed Sol2 numeric type issues by casting Lua numbers to C++ types as needed.
+        - Optional properties (`x`, `y`, `width`, `height`) now default sensibly if missing.
+    - **Improved Type Assignment:**  
+        - All display objects correctly assign and report their type from Lua configs.
+        - Resource handles and type checks now work as expected.
+    - **Documentation and API Consistency:**  
+        - Updated documentation to reflect Lua-first configuration and scripting.
+        - All examples and tests now use Lua for initialization and setup.
+    - **Milestone:**  
+        - SDOM is now fully Lua-configurable and ready for advanced scripting, rapid prototyping, and integration with external tools.
 
 # Next Steps:
-Our next focus will be on replacing JSON configuration and initialization with Lua scripts using Sol2. This transition will enable more flexible and powerful scripting for unit tests, object setup, dialog scripting, stage scene management, and rapid application prototyping—all within Lua. 
+- Expand Lua scripting examples and documentation.
+- Add more interactive event tests (drag/drop, stacking, anchoring).
+- Continue improving resource management and garbage collection.
+- Plan for future language hooks (e.g., Python).
+- Maintain and update Doxygen and Markdown docs as features evolve.
 
 # ToDo:
-
-- Plan to implement a garbage_collection() function to clean up stray display objects. For now, stray objects are destroyed on application termination.
-- Expand event system tests to include drag-and-drop functionality, stacking, and anchoring for `Box` objects.
-- Reintroduce `IResourceObject` into the `Factory` for resource management alongside `IDisplayObject`.
-- Add unit tests for the revised `Factory` and event system to ensure stability and robustness.
-- Move resource and pointer tests to `onUnitTest()` methods when available.
-- Add comprehensive unit tests for Factory, resource_ptr, and error conditions.
-- Language Hooks
-    - Plan for hooks to support other languages (e.g., Python bindings).
-    - Add placeholder comments or sections.
-- Documentation
-    - Add Doxygen comments for all public API elements.
-    - Update progress.md with daily progress and ToDo items.
+- Implement garbage_collection() for display objects.
+- Expand event system tests for Box objects.
+- Reintroduce IResourceObject into Factory.
+- Add more unit tests for Factory and event system.
+- Add language hook placeholders.
+- Add Doxygen comments for all public APIs.
+- Add unit tests for macros and exception handling.
 - Testing
     - Add unit tests for macros and exception handling. 

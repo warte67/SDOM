@@ -14,23 +14,9 @@ namespace SDOM
         setClickable(true);
     }
 
-    Stage::Stage(const Json& config) : IDisplayObject(config)
+    Stage::Stage(const sol::table& config) : IDisplayObject(config)
     {
-        // type_ = "Stage"; // Hardcoded type for Stage
-
-        // // std::cout << "Stage::Stage config:\n" << config.dump(4) << std::endl;
-        // // Parse color from JSON
-        // // if (config.contains("color")) {
-        // //     auto c = config["color"];
-        // //     SDL_Color clr;
-        // //     clr.r = c.value("r", 255);
-        // //     clr.g = c.value("g", 255);
-        // //     clr.b = c.value("b", 255);
-        // //     clr.a = c.value("a", 255);
-        // //     setColor(clr);
-        // // }
-        // // fromJson(config);
-        
+        type_ = config["type"].valid() ? config["type"].get<std::string>() : "Stage";
         setClickable(true);
     }
 

@@ -18,7 +18,7 @@ namespace SDOM
 
         // register the Stage
         registerType("Stage", TypeCreators{
-            Stage::CreateFromJson,
+            Stage::CreateFromLua, // Update to Lua-based creator
             Stage::CreateFromInitStruct
         });
 
@@ -31,15 +31,6 @@ namespace SDOM
         creators_[typeName] = creators;
     }
 
-    // IResourceObject* Factory::getResource(const std::string& name) 
-    // {
-    //     auto it = displayObjects_.find(name);
-    //     if (it != displayObjects_.end()) 
-    //     {
-    //         return it->second.get();
-    //     }
-    //     return nullptr;
-    // }
     IResourceObject* Factory::getResObj(const std::string& name)
     {
         auto it = displayObjects_.find(name);
@@ -84,35 +75,73 @@ namespace SDOM
         return getDomHandle(stageName);
     }
 
-    // // JSON based object creator
-    DomHandle Factory::create(const std::string& typeName, const Json& config)
+    // String (LUA text) based object creator
+    DomHandle Factory::create(const std::string& typeName, const sol::table& config)
     {
+        // Get main texture size for defaults
+        int maxStageWidth = 0;
+        int maxStageHeight = 0;
+        SDL_Texture* texture = getTexture();
+        if (texture) {
+            maxStageWidth = texture->w;
+            maxStageHeight = texture->h;
+        }
+
+        // Minimum required properties (x, y, width, height now optional)
+        if (!config["name"].valid() || !config["type"].valid() || !config["color"].valid()) {
+            std::cout << "Factory::create: Missing required property in Lua config.\n";
+            return DomHandle();
+        }
+
         auto it = creators_.find(typeName);
-        if (it != creators_.end() && it->second.fromJson) 
+        if (it != creators_.end() && it->second.fromLua) 
         {
-            auto displayObject = it->second.fromJson(config);
+            // Set defaults for x, y, width, height if not present
+            int x = config["x"].valid() ? static_cast<int>(config["x"].get<double>()) : 0;
+            int y = config["y"].valid() ? static_cast<int>(config["y"].get<double>()) : 0;
+            int width = config["width"].valid() ? static_cast<int>(config["width"].get<double>()) : maxStageWidth - x;
+            int height = config["height"].valid() ? static_cast<int>(config["height"].get<double>()) : maxStageHeight - y;
+
+            // Optionally, you may want to inject these values into config for the display object constructor:
+            sol::table configCopy = config;
+            configCopy["x"] = x;
+            configCopy["y"] = y;
+            configCopy["width"] = width;
+            configCopy["height"] = height;
+
+            auto displayObject = it->second.fromLua(configCopy);
             if (!displayObject) {
                 std::cout << "Factory::create: Failed to create display object of type '" << typeName
-                        << "' from JSON. Display object is nullptr.\n";
+                        << "' from Lua. Display object is nullptr.\n";
                 return DomHandle(); // Invalid handle
             }
-            std::string name = config.value("name", "");
+            std::string name = config["name"];
             displayObjects_[name] = std::move(displayObject);
-            displayObjects_[name]->onInit(); // Initialize the display object
+            displayObjects_[name]->onInit();
+
+            // Optionally set additional properties if present
+            if (config["anchorTop"].valid())    displayObjects_[name]->setAnchorTop(stringToAnchorPoint_.at(config["anchorTop"].get<std::string>()));
+            if (config["anchorLeft"].valid())   displayObjects_[name]->setAnchorLeft(stringToAnchorPoint_.at(config["anchorLeft"].get<std::string>()));
+            if (config["anchorBottom"].valid()) displayObjects_[name]->setAnchorBottom(stringToAnchorPoint_.at(config["anchorBottom"].get<std::string>()));
+            if (config["anchorRight"].valid())  displayObjects_[name]->setAnchorRight(stringToAnchorPoint_.at(config["anchorRight"].get<std::string>()));
+            if (config["z_order"].valid())      displayObjects_[name]->setZOrder(static_cast<int>(config["z_order"].get<double>()));
+            if (config["priority"].valid())     displayObjects_[name]->setPriority(static_cast<int>(config["priority"].get<double>()));
+            if (config["isClickable"].valid())  displayObjects_[name]->setClickable(config["isClickable"].get<bool>());
+            if (config["isEnabled"].valid())    displayObjects_[name]->setEnabled(config["isEnabled"].get<bool>());
+            if (config["isHidden"].valid())     displayObjects_[name]->setHidden(config["isHidden"].get<bool>());
+            if (config["tabPriority"].valid())  displayObjects_[name]->setTabPriority(static_cast<int>(config["tabPriority"].get<double>()));
+            if (config["tabEnabled"].valid())   displayObjects_[name]->setTabEnabled(config["tabEnabled"].get<bool>());
+
+            // Set x, y, width, height
+            displayObjects_[name]->setX(x);
+            displayObjects_[name]->setY(y);
+            displayObjects_[name]->setWidth(width);
+            displayObjects_[name]->setHeight(height);
+
             return DomHandle(name, typeName);
         }
         return DomHandle(); // Invalid handle
     }
-
-    // String (JSON text) based object creator
-    DomHandle Factory::create(const std::string& typeName, const std::string& jsonStr) 
-    {
-        Json config = Json::parse(jsonStr);
-        DomHandle ret = create(typeName, config);
-        if (ret)
-            ret->onInit(); // Initialize the resource
-        return ret;
-    }    
 
     // InitStruct based object creator
     DomHandle Factory::create(const std::string& typeName, const IDisplayObject::InitStruct& init)
@@ -235,28 +264,28 @@ namespace SDOM
         }
     }
 
-
-
-    void Factory::initFromJson(const Json& json)
+    void Factory::initFromLua(const sol::table& lua)
     {
         // Handle array of resources
-        if (json.contains("resources") && json["resources"].is_array())
+        if (lua["resources"].valid() && lua["resources"].is<sol::table>())
         {
-            for (const auto& resource : json["resources"])
+            sol::table resources = lua["resources"];
+            for (auto& kv : resources)
             {
+                sol::table resource = kv.second.as<sol::table>();
                 processResource(resource);
             }
         }
 
         // Handle single resource object
-        if (json.contains("resource") && json["resource"].is_object())
+        if (lua["resource"].valid() && lua["resource"].is<sol::table>())
         {
-            processResource(json["resource"]);
+            processResource(lua["resource"]);
         }
 
         // Debug: List installed display objects
         auto names = listDisplayObjectNames();
-        std::cout << "Factory::initFromJson() --> Installed display objects: ";
+        std::cout << "Factory::initFromLua() --> Installed display objects: ";
         for (const auto& name : names)
         {
             std::cout << name << " ";
@@ -264,29 +293,24 @@ namespace SDOM
         std::cout << std::endl;
     }
 
-    void Factory::processResource(const Json& resource)
+    void Factory::processResource(const sol::table& resource)
     {
-        if (!resource.contains("type") || !resource.contains("name") || !resource.contains("config"))
+        if (!resource["type"].valid() || !resource["name"].valid() || !resource["config"].valid())
         {
             ERROR("Resource entry is missing required fields: 'type', 'name', or 'config'.");
             return;
         }
         std::string type = resource["type"];
         std::string name = resource["name"];
-        Json config = resource["config"];
+        sol::table config = resource["config"];
         auto creatorIt = creators_.find(type);
         if (creatorIt != creators_.end())
         {
             const TypeCreators& creators = creatorIt->second;
             std::unique_ptr<IDisplayObject> displayObj;
-            if (creators.fromJson) {
-                displayObj = creators.fromJson(config);
+            if (creators.fromLua) {
+                displayObj = creators.fromLua(config);
             }
-            // Optionally, support InitStruct creation if needed:
-            // else if (creators.fromInitStruct) {
-            //     IDisplayObject::InitStruct init = ...; // convert config to InitStruct
-            //     displayObj = creators.fromInitStruct(init);
-            // }
             if (displayObj)
             {
                 addDisplayObject(name, std::move(displayObj));
@@ -302,6 +326,7 @@ namespace SDOM
         }
     }
 
+    
     bool Factory::onUnitTest()
     {
         // std::cout << CLR::WHITE << "Factory Default Unit Tests:" << CLR::RESET << std::endl;

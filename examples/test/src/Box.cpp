@@ -21,11 +21,13 @@ Box::Box(const SDOM::IDisplayObject::InitStruct& init)
     setClickable(true);
 }
 
-Box::Box(const Json& config)
+Box::Box(const sol::table& config)
 : IDisplayObject(config)
 {
-    std::cout << "Box constructed with Json config: " << getName() 
-              << " at address: " << this << std::endl;
+    std::cout << "Box constructed with Lua config: " << getName() 
+            << " at address: " << this << std::endl;
+            
+    type_ = config["type"].valid() ? config["type"].get<std::string>() : "Box";
     setTabEnabled(true);
     setClickable(true);
 }

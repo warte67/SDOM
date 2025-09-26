@@ -4,17 +4,7 @@
  *  \__ \ |) | (_) | |\/| |  | || |) / _` |  _/ _` | (_) | '_ \| / -_) _|  _|_/ _| '_ \ '_ \
  *  |___/___/ \___/|_|  |_|_|___|___/\__,_|\__\__,_|\___/|_.__// \___\__|\__(_)__| .__/ .__/
  *                       |___|                               |__/                |_|  |_|   
- *  
- * The SDOM_IDataObject class defines the core interface for all data-driven objects within 
- * the SDOM framework. It provides a flexible property and command registration system, 
- * enabling dynamic serialization, deserialization, and runtime manipulation of object state 
- * through JSON. By supporting property getters, setters, and commands, IDataObject allows for 
- * introspection, scripting, and editor integration, making it easy to extend and interact with 
- * objects in a generic way. This interface forms the foundation for resource and display object 
- * management in SDOM, facilitating robust data binding, configuration, and automation across 
- * the entire framework.
- * 
- * 
+ *
  *   This software is provided 'as-is', without any express or implied
  *   warranty.  In no event will the authors be held liable for any damages
  *   arising from the use of this software.
@@ -40,50 +30,49 @@
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_Factory.hpp>
-
 namespace SDOM
 {
 
-    void IDataObject::fromJson(const Json& json)
+    void IDataObject::fromLua(const sol::table& lua, sol::state_view lua_state)
     {
-        // Set all registered properties from JSON
-        for (const auto& [propName, setter] : setters_) 
+        for (const auto& [propName, setter] : setters_)
         {
-            if (json.contains(propName) && setter) 
+            if (lua[propName].valid() && setter)
             {
-                setter(*this, json[propName]);
+                setter(*this, lua[propName], lua_state);
             }
         }
     }
 
-    Json IDataObject::toJson() const
+    sol::table IDataObject::toLua(sol::state_view lua) const
     {
-        Json json;
+        sol::table tbl = lua.create_table();
 
         // Serialize all registered properties
-        for (const auto& [propName, getter] : getters_) 
+        for (const auto& [propName, getter] : getters_)
         {
-            if (getter) 
+            if (getter)
             {
-                json[propName] = getter(*this);
+                tbl[propName] = getter(*this, lua);
             }
         }
 
         // Serialize children if this is an IDisplayObject
-        if (const auto* displayObj = dynamic_cast<const IDisplayObject*>(this)) 
+        if (const auto* displayObj = dynamic_cast<const IDisplayObject*>(this))
         {
-            Json childrenJson = Json::array();
-            for (const auto& child : displayObj->getChildren()) 
+            sol::table childrenTbl = lua.create_table();
+            int idx = 1;
+            for (const auto& child : displayObj->getChildren())
             {
-                if (child) 
+                if (child)
                 {
-                    childrenJson.push_back(child->toJson());
+                    childrenTbl[idx++] = child->toLua(lua);
                 }
             }
-            json["children"] = childrenJson;
+            tbl["children"] = childrenTbl;
         }
 
-        return json;
+        return tbl;
     }
 
     void IDataObject::registerProperty(const std::string& name, Getter getter, Setter setter)
@@ -92,26 +81,15 @@ namespace SDOM
         setters_[name] = setter;
     }
 
-    Json IDataObject::getProperty(const std::string& name) const
+    sol::object IDataObject::getProperty(const std::string& name, sol::state_view lua) const
     {
         auto it = getters_.find(name);
-        if (it != getters_.end() && it->second) 
+        if (it != getters_.end() && it->second)
         {
-            return it->second(*this);
+            return it->second(*this, lua);
         }
-        ERROR("Getter property '" + name + "' not found.");  // Throw an error if not found
-        return Json(); // Return empty Json if not found
-    }
-
-    IDataObject& IDataObject::setProperty(const std::string& name, const Json& value)
-    {
-        auto it = setters_.find(name);
-        if (it != setters_.end() && it->second) 
-        {
-            return it->second(*this, value);
-        }
-        ERROR("Setter property '" + name + "' not found.");  // Throw an error if not found
-        return *this;
+        ERROR("Getter property '" + name + "' not found.");
+        return sol::nil;
     }
 
     void IDataObject::registerCommand(const std::string& name, Command cmd)
@@ -119,18 +97,21 @@ namespace SDOM
         commands_[name] = cmd;
     }
 
-    void IDataObject::command(const std::string& name, const Json& args)
+    void IDataObject::command(const std::string& name, sol::object args, sol::state_view lua)
     {
         auto it = commands_.find(name);
-        if (it != commands_.end() && it->second) 
+        if (it != commands_.end() && it->second)
         {
-            it->second(*this, args);
-        } 
-        else 
+            it->second(*this, args, lua);
+        }
+        else
         {
-            ERROR("Command '" + name + "' not found.");  // Throw an error if not found
-        }        
-    }     
+            ERROR("Command '" + name + "' not found.");
+        }
+    }
 
-
+    const std::unordered_map<std::string, IDataObject::Command>& IDataObject::getCommands() const
+    {
+        return commands_;
+    }
 } // namespace SDOM

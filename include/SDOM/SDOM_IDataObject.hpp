@@ -35,171 +35,97 @@
  *
  ******************/
 
+/*
+================================================================================
+SDOM::IDataObject Contract
+
+Intent:
+    - IDataObject is the core interface for all data-driven objects in SDOM.
+    - Provides a flexible, dynamic property and command system for runtime manipulation, introspection, and automation.
+    - Enables serialization and deserialization of object state for scripting, configuration, and editor integration.
+
+Requirements:
+    1. Dynamic Properties
+        - Objects can register named properties with getter/setter functions.
+        - Properties are accessible for reading and writing at runtime.
+        - Properties can be introspected (listed, queried) for editor and scripting use.
+
+    2. Dynamic Commands
+        - Objects can register named commands (methods) callable at runtime.
+        - Commands can accept arguments and perform actions on the object.
+        - Commands are introspectable for automation and scripting.
+
+    3. Serialization/Deserialization
+        - Objects can serialize their state to a data format (now Lua tables).
+        - Objects can be initialized/deserialized from a data format (Lua tables).
+        - Serialization includes all registered properties and children (for hierarchical objects).
+
+    4. Editor/Scripting Integration
+        - Properties and commands are discoverable for external tools (editors, consoles, scripts).
+        - Supports runtime modification and automation.
+
+    5. Extensibility
+        - New properties and commands can be registered at runtime.
+        - Supports inheritance and composition for complex objects.
+
+Non-Requirements:
+    - Not responsible for rendering, event handling, or resource management (handled by other interfaces).
+    - Not tied to a specific serialization format (was JSON, now Lua; could be extended).
+
+Summary:
+    IDataObject is a data-centric, introspectable, and extensible interface for SDOM objects, focused on:
+        - Dynamic property/command registration
+        - Runtime introspection and manipulation
+        - Serialization/deserialization for scripting, configuration, and editor integration
+================================================================================
+*/
+
+
 #ifndef __SDOM_IDataObject_HPP__
 #define __SDOM_IDataObject_HPP__
 
 #include <SDOM/SDOM.hpp>
-#include <SDOM/json.hpp> // Include nlohmann/json.hpp
+#include <sol/sol.hpp>
 #include <SDOM/SDOM_IUnitTest.hpp>
 
 namespace SDOM
 {
 
-    // using Json = nlohmann::json;
-
-    /**
-     * @class IDataObject
-     * @brief Core interface for all data-driven objects in SDOM.
-     * @details
-     * Provides property and command registration, dynamic serialization/deserialization,
-     * and runtime manipulation of object state via JSON. Enables introspection,
-     * scripting, and editor integration for resource and display object management.
-     * Forms the foundation for robust data binding, configuration, and automation.
-     *
-     * Example usage:
-     * @code
-     * // Register a property
-     * registerProperty("x",
-     *     [](const IDataObject& obj) { return obj.x_; },
-     *     [](IDataObject& obj, const Json& val) { obj.x_ = val.get<int>(); });
-     *
-     * // Register a command
-     * registerCommand("reset", [](IDataObject& o, const Json&) { /-- reset logic --/ });
-     * @endcode
-     *
-     * @author Jay Faries (warte67)
-     * @copyright ZLIB License
-     */
     class IDataObject : public SDOM::IUnitTest
     {
     public:
-        using Getter = std::function<Json(const IDataObject&)>;
-        using Setter = std::function<IDataObject&(IDataObject&, const Json&)>;
-        using Command = std::function<void(IDataObject&, const Json&)>;
+        using Getter = std::function<sol::object(const IDataObject&, sol::state_view)>;
+        using Setter = std::function<IDataObject&(IDataObject&, sol::object, sol::state_view)>;
+        using Command = std::function<void(IDataObject&, sol::object, sol::state_view)>;
 
-        /**
-         * @name Virtual Methods
-         * @brief All virtual methods for this class.
-         * @{
-         */
-
-        /**
-         * @brief Called during object initialization.
-         * @return True if initialization succeeds, false otherwise.
-         */
         virtual bool onInit() = 0;
-
-        /**
-         * @brief Called during object shutdown.
-         */
         virtual void onQuit() = 0;
-        
-        /**
-         * @brief Runs unit tests for this data object.
-         * @details
-         * Called during startup or explicit unit test runs. Each object should validate its own state and behavior.
-         * @return true if all tests pass, false otherwise.
-         */
         virtual bool onUnitTest() { return true; }
-        /** @} */
+
+        void fromLua(const sol::table& lua, sol::state_view lua_state);
+        sol::table toLua(sol::state_view lua) const;
 
 
-        /**
-         * @name Property System
-         * @{
-         */
-
-        /**
-         * @brief Populates object state from a JSON object.
-         * @param json JSON object containing state.
-         */
-        void fromJson(const Json& json);
-
-        /**
-         * @brief Serializes object state to a JSON object.
-         * @return JSON object representing current state.
-         */
-        Json toJson() const;
-
-        /**
-         * @brief Registers a property with getter and optional setter.
-         * @param name Property name.
-         * @param getter Function to get property value.
-         * @param setter Function to set property value (optional).
-         */
         void registerProperty(const std::string& name, Getter getter, Setter setter = nullptr);
-
-        /**
-         * @brief Gets the value of a property.
-         * @param name Property name.
-         * @return Property value as JSON.
-         */
-        Json getProperty(const std::string& name) const;
-
-        /**
-         * @brief Sets the value of a property.
-         * @param name Property name.
-         * @param value New value as JSON.
-         * @return Reference to this object (for chaining).
-         */
-        IDataObject& setProperty(const std::string& name, const Json& value);
-        /** @} */
-
-        /**
-         * @name Command System
-         * @{
-         */
-
-        /**
-         * @brief Registers a command.
-         * @param name Command name.
-         * @param cmd Command function.
-         */
+        sol::object getProperty(const std::string& name, sol::state_view lua) const;
         void registerCommand(const std::string& name, Command cmd);
-
-        /**
-         * @brief Executes a command.
-         * @param name Command name.
-         * @param args Arguments as JSON (optional).
-         */
-        void command(const std::string& name, const Json& args = Json{});
-
-        /**
-         * @brief Gets all registered commands.
-         * @return Map of command names to command functions.
-         */
+        void command(const std::string& name, sol::object args, sol::state_view lua);
         const std::unordered_map<std::string, Command>& getCommands() const;
-        /** @} */
 
-        /**
-         * @name JSON Helpers
-         * @{
-         */
-
-        /**
-         * @brief Gets a value from a JSON object using case-insensitive key lookup.
-         * @tparam T Type of value to return.
-         * @param j JSON object.
-         * @param key Key to search for.
-         * @param default_value Value to return if key is not found.
-         * @return Value from JSON or default.
-         */
         template<typename T>
-        static T json_value_case_insensitive(const nlohmann::json& j, const std::string& key, const T& default_value) 
+        static T lua_value_case_insensitive(const sol::table& tbl, const std::string& key, const T& default_value)
         {
-            auto it = std::find_if(j.begin(), j.end(), [&](const auto& item) 
+            for (const auto& kv : tbl)
             {
-                const std::string& k = item.first;
-                return std::equal(k.begin(), k.end(), key.begin(), key.end(),
-                    [](char a, char b) { return std::tolower(a) == std::tolower(b); });
-            });
-            if (it != j.end()) 
-            {
-                return it.value();
+                std::string k = kv.first.as<std::string>();
+                if (std::equal(k.begin(), k.end(), key.begin(), key.end(),
+                    [](char a, char b) { return std::tolower(a) == std::tolower(b); }))
+                {
+                    return kv.second.as<T>();
+                }
             }
             return default_value;
         }
-        /** @} */
 
     private:
         std::unordered_map<std::string, Getter> getters_;

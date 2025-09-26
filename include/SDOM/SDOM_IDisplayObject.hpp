@@ -35,6 +35,58 @@
  * Original Author: Jay Faries (warte67)
  *
  ******************/
+/*
+================================================================================
+SDOM::IDisplayObject Contract
+
+Intent:
+    - IDisplayObject is the abstract base class for all visual and interactive elements in SDOM.
+    - Defines the core interface and behavior for display objects, including rendering, event handling, parent-child hierarchy, anchoring, layout, and property management.
+    - Enables creation of complex, nested GUI structures and serves as the foundation for all concrete display objects (panels, buttons, images, labels, etc.).
+
+Requirements:
+    1. Rendering
+        - Must provide a method to render itself to a display surface.
+        - Supports z-ordering and visibility toggling.
+
+    2. Event Handling
+        - Must handle user input and system events.
+        - Supports event listener registration, removal, and event propagation (capture/bubble).
+
+    3. Hierarchy Management
+        - Supports parent-child relationships for nested GUI structures.
+        - Provides methods to add, remove, and query children and parent.
+        - Supports sorting and prioritizing children.
+
+    4. Layout and Anchoring
+        - Supports flexible positioning, sizing, and anchoring to edges.
+        - Provides accessors and mutators for coordinates, dimensions, and anchor points.
+
+    5. Property Management
+        - Supports dynamic property registration and introspection (via IDataObject).
+        - Properties are accessible for runtime modification and editor integration.
+
+    6. Interactivity
+        - Supports enabling/disabling, hiding/showing, and click/tab focus management.
+
+    7. Extensibility
+        - Designed for inheritance and composition.
+        - Allows derived classes to extend or override core behavior.
+
+Non-Requirements:
+    - Does not directly manage rendering resources (handled by other systems).
+    - Does not implement concrete rendering or event logic (must be provided by derived classes).
+    - Not responsible for serialization format (delegated to IDataObject).
+
+Summary:
+    IDisplayObject is a visual, interactive, and extensible interface for SDOM GUI elements, focused on:
+        - Rendering and event handling
+        - Hierarchical layout and anchoring
+        - Dynamic property management
+        - Interactivity and extensibility
+================================================================================
+*/
+
 
 #ifndef __SDOM_IDISPLAY_OBJECT_HPP__
 #define __SDOM_IDISPLAY_OBJECT_HPP__
@@ -52,110 +104,52 @@ namespace SDOM
     class EventTypeHash;
     class Stage;
 
-    /**
-     * @interface IDisplayObject
-     * @brief Abstract interface for displayable objects in SDOM.
-     * @details
-     * Provides the core API for all objects that can be rendered, positioned, and interacted with in the SDOM system.
-     * Implementations must define methods for drawing, updating, event handling, and layout management.
-     *
-     * Typical responsibilities:
-     * - Rendering to a display surface
-     * - Managing position, size, and bounds
-     * - Handling user input and events
-     * - Supporting layout and anchoring
-     *
-     * @note
-     * This is a pure interface; all methods are expected to be overridden by derived classes.
-     */
     class IDisplayObject : public IDataObject
     {
 
     public:
         struct InitStruct
         {
-            std::string name = "IDisplayObject";                ///< Name of the display object
-            float x = 0.0f;                                     //< Local x
-            float y = 0.0f;                                     //< Local y
-            float width = 0.0f;                                 //< Local width
-            float height = 0.0f;                                //< Local height
-            SDL_Color color = { 255, 255, 255, 255 };           ///< Color (default WHITE)
-            AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;      ///< Anchor point for the top edge
-            AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;     ///< Anchor point for the left edge
-            AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;   ///< Anchor point for the bottom edge
-            AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;    ///< Anchor point for the right edge
-            int z_order = 0;                                    ///< Z-order for rendering
-            int priority = 0;                                   ///< Rendering priority
-            bool isClickable = true;                            ///< Clickable flag
-            bool isEnabled = true;                              ///< Enabled flag
-            bool isHidden = false;                              ///< Hidden flag
-            int tabPriority = 0;                                ///< Tab order priority
-            bool tabEnabled = true;                             ///< Tab enabled flag
+            std::string name = "IDisplayObject";                
+            float x = 0.0f;                                     
+            float y = 0.0f;                                     
+            float width = 0.0f;                                 
+            float height = 0.0f;                                
+            SDL_Color color = { 255, 255, 255, 255 };           
+            AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;      
+            AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;     
+            AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;   
+            AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;    
+            int z_order = 0;                                    
+            int priority = 0;                                   
+            bool isClickable = true;                            
+            bool isEnabled = true;                              
+            bool isHidden = false;                              
+            int tabPriority = 0;                                
+            bool tabEnabled = true;                             
         };
 
         friend class Factory; // Allow Factory to create IDisplayObjects
 
     protected:   // protected constructor so only the Factory can create the object
-        IDisplayObject(const InitStruct& init); ///< Constructor using InitDisplayObject structure
-        IDisplayObject(const Json& config);     ///< Constructor using JSON configuration
-        IDisplayObject();                       ///< Default constructor (registers JSON properties)
+        IDisplayObject(const InitStruct& init); 
+        IDisplayObject(const sol::table& config); // NEW: Lua-based constructor
+        IDisplayObject();                       
 
     public:
-        /**
-         * @brief Destructor.
-         * @note Constructors are private; use Factory to create instances.
-         */
+
         virtual ~IDisplayObject();
 
-        /**
-         * @name Virtual Methods
-         * @brief All virtual methods for this class.
-         * @{
-         */
+        virtual bool onInit() override;
+        virtual void onQuit() override {};
+        virtual void onUpdate(float fElapsedTime)=0;
+        virtual void onEvent(const Event& event)=0;
+        virtual void onRender()=0;
+        virtual bool onUnitTest() { return true; }
 
-        /**
-         * @brief Called during object initialization.
-         * @return True if initialization succeeds, false otherwise.
-         */
-        virtual bool onInit() override;                 ///< Called when the display object is initialized
-                
-        /**
-         * @brief Called during object shutdown.
-         */
-        virtual void onQuit() override {};              ///< Called when the display object is being destroyed
-
-        /**
-         * @brief Called every frame to update the display object
-         * 
-         * @param fElapsedTime Amount of time since the last update (in seconds)
-         */
-        virtual void onUpdate(float fElapsedTime)=0;    ///< Called every frame to update the display object
-
-        /**
-         * @brief Called when an event occurs.
-         * 
-         * @param event The event that occurred.
-         */
-        virtual void onEvent(const Event& event)=0;     ///< Called when an event occurs
-
-        /**
-         * @brief Called to render the display object.
-         */
-        virtual void onRender()=0;                      ///< Called to render the display object
-
-        /**
-         * @brief Runs unit tests for this data object.
-         * @details
-         * Called during startup or explicit unit test runs. Each object should validate its own state and behavior.
-         * @return true if all tests pass, false otherwise.
-         */
-        virtual bool onUnitTest() { return true; }      ///< Called during startup or explicit unit test runs.
-        /** @} */
 
         void cleanAll();
         void printTree(int depth = 0, bool isLast = true, const std::vector<bool>& hasMoreSiblings = {}) const;
-        // std::string getName() const { return name_; }
-        // IDisplayObject& setName(const std::string& newName) { name_ = newName; return *this; }
         bool getDirty() const { return bIsDirty_; }
         IDisplayObject& setDirty() { bIsDirty_ = true; return *this; }
         bool isDirty() const { return bIsDirty_; }
@@ -167,10 +161,8 @@ namespace SDOM
         void removeEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false);
         void triggerEventListeners(Event& event, bool useCapture);       
 
-
         void addChild(DomHandle child, bool useWorld=false, int worldX=0, int worldY=0);
         bool removeChild(DomHandle child);
-
 
         const std::vector<DomHandle>& getChildren() const { return children_; }
 
@@ -199,10 +191,6 @@ namespace SDOM
         void setKeyboardFocus();
         bool isKeyboardFocused() const;
         bool isMouseHovered() const;
-
-        // THIS SHOULD ALREADY BE HANDLED BY THE FACTORY
-        // void registerSelfName();    // Register this object in the name registry
-        // static std::shared_ptr<IDisplayObject> getByName(const std::string& name);
 
         bool isClickable() const { return isClickable_; }
         IDisplayObject& setClickable(bool clickable) { isClickable_ = clickable; setDirty(); return *this; }
@@ -272,8 +260,8 @@ namespace SDOM
         IDisplayObject& setLocalTop(float value) { top_ = value; return *this; }
         IDisplayObject& setLocalBottom(float value) { bottom_ = value; return *this; }
    
-        std::string name_;      ///< Unique resource name
-        std::string type_;      ///< Extensible string identifier for resource type
+        std::string name_;
+        std::string type_;
 
     public:  // temporarily public for testing
         float left_, top_, right_, bottom_; // Calculated bounds based on anchors
@@ -303,13 +291,8 @@ namespace SDOM
         int tabPriority_ = -1;       // tabPriority (i.e. tabStop within a priority queue)   
         bool tabEnabled_ = false;    // Indicates if the object can be focused via Tab
 
-        // std::weak_ptr<IDisplayObject> parent_;
-        // std::vector<std::shared_ptr<IDisplayObject>> children_;
         DomHandle parent_;
         std::vector<DomHandle> children_;
-
-        // // Static registry for IDisplayObject name lookup (This needs to be in Factory if not already)
-        // inline static std::unordered_map<std::string, DomHandle> nameRegistry_;
 
         // Containers to store ListenerEntrys for different event phases
         struct ListenerEntry {
@@ -327,7 +310,7 @@ namespace SDOM
         void attachChild_(DomHandle child, DomHandle parent, bool useWorld=false, int worldX=0, int worldY=0);
         void removeOrphan_(const DomHandle& orphan);
 
-        void registerJson_();
+        void registerLua_();
 
     };
 

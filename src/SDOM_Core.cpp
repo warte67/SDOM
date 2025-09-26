@@ -42,94 +42,102 @@ namespace SDOM
 
     }
 
-    void Core::configureFromJson(const std::string& jsonStr)
+    void Core::configureFromLua(const sol::table& lua)
     {
-        nlohmann::json j = nlohmann::json::parse(jsonStr);
         CoreConfig config;
-        auto& coreObj = j["Core"];
-        config.windowWidth = j["Core"].value("windowWidth", 1280.0f);
-        config.windowHeight = j["Core"].value("windowHeight", 720.0f);
-        config.pixelWidth  = j["Core"].value("pixelWidth", 2.0f);
-        config.pixelHeight = j["Core"].value("pixelHeight", 2.0f);
-        config.preserveAspectRatio = j["Core"].value("preserveAspectRatio", true);
-        config.allowTextureResize = j["Core"].value("allowTextureResize", true);
+        sol::table coreObj = lua["Core"];
+        config.windowWidth = coreObj["windowWidth"].get_or(1280.0f);
+        config.windowHeight = coreObj["windowHeight"].get_or(720.0f);
+        config.pixelWidth  = coreObj["pixelWidth"].get_or(2.0f);
+        config.pixelHeight = coreObj["pixelHeight"].get_or(2.0f);
+        config.preserveAspectRatio = coreObj["preserveAspectRatio"].get_or(true);
+        config.allowTextureResize = coreObj["allowTextureResize"].get_or(true);
 
         config.rendererLogicalPresentation = SDL_Utils::rendererLogicalPresentationFromString(
-            j["Core"].value("rendererLogicalPresentation", "SDL_LOGICAL_PRESENTATION_LETTERBOX"));
+            coreObj["rendererLogicalPresentation"].get_or(std::string("SDL_LOGICAL_PRESENTATION_LETTERBOX")));
         config.windowFlags = SDL_Utils::windowFlagsFromString(
-            j["Core"].value("windowFlags", "SDL_WINDOW_RESIZABLE"));
+            coreObj["windowFlags"].get_or(std::string("SDL_WINDOW_RESIZABLE")));
         config.pixelFormat = SDL_Utils::pixelFormatFromString(
-            j["Core"].value("pixelFormat", "SDL_PIXELFORMAT_RGBA8888"));
-        if (coreObj.contains("color")) {
-            config.color.r = coreObj["color"].value("r", 0);
-            config.color.g = coreObj["color"].value("g", 0);
-            config.color.b = coreObj["color"].value("b", 0);
-            config.color.a = coreObj["color"].value("a", 255);
+            coreObj["pixelFormat"].get_or(std::string("SDL_PIXELFORMAT_RGBA8888")));
+
+        if (coreObj["color"].valid()) {
+            sol::table colorTbl = coreObj["color"];
+            config.color.r = colorTbl["r"].get_or(0);
+            config.color.g = colorTbl["g"].get_or(0);
+            config.color.b = colorTbl["b"].get_or(0);
+            config.color.a = colorTbl["a"].get_or(255);
         } else {
-            config.color.r = 0;
-            config.color.g = 0;
-            config.color.b = 0;
-            config.color.a = 255;
+            config.color = {0, 0, 0, 255};
         }
         configure(config);
 
-        std::function<void(const nlohmann::json&, DomHandle)> createResourceRecursive;
-        createResourceRecursive = [&](const nlohmann::json& obj, DomHandle parent) {
-            std::string type = obj.value("type", "");
+        // Recursive resource creation
+        std::function<void(sol::table, DomHandle)> createResourceRecursive;
+        createResourceRecursive = [&](sol::table obj, DomHandle parent) {
+            std::string type = obj["type"].get_or(std::string(""));
             DomHandle handle;
-            // If there's a type, create the resource
             if (!type.empty()) {
-                handle = factory_->create(type, obj); // Make sure factory_->create returns DomHandle
-
-                // Attach to parent if both exist
+                handle = factory_->create(type, obj);
                 if (parent && handle) {
-                    parent->addChild(handle); // No dynamic_cast needed
+                    parent->addChild(handle);
                 }
             }
-            // Recursively process children
-            if (obj.contains("children")) {
-                for (const auto& child : obj["children"]) {
+            if (obj["children"].valid() && obj["children"].is<sol::table>()) {
+                sol::table children = obj["children"];
+                for (auto& kv : children) {
+                    sol::table child = kv.second.as<sol::table>();
                     createResourceRecursive(child, handle);
                 }
             }
         };
 
-        // Parse children and create resources ---
-        if (coreObj.contains("children")) {
-            for (const auto& child : coreObj["children"]) {
-                createResourceRecursive(child, nullptr); // Top-level children have no parent
+        // Parse children and create resources
+        if (coreObj["children"].valid() && coreObj["children"].is<sol::table>()) {
+            sol::table children = coreObj["children"];
+            for (auto& kv : children) {
+                sol::table child = kv.second.as<sol::table>();
+                createResourceRecursive(child, nullptr);
             }
         }
 
-        // set the "mainStage" as the root node
-        std::string rootStageName = "mainStage"; // default
-        if (j["Core"].contains("rootStage"))
-            rootStageName = j["Core"]["rootStage"].get<std::string>();
+        // Set the "mainStage" as the root node
+        std::string rootStageName = "mainStage";
+        if (coreObj["rootStage"].valid())
+            rootStageName = coreObj["rootStage"].get<std::string>();
         rootNode_ = factory_->getDomHandle(rootStageName);
         setWindowTitle("Stage: " + rootStageName);
 
-        // --- Debug: List all display objects in the factory ---
+        // Debug: List all display objects in the factory
         std::cout << "Factory display objects after configuration:\n";
         for (const auto& pair : factory_->displayObjects_) {
             std::cout << "Display Object name: " << pair.first
-                    << ", RawType: " << typeid(*pair.second).name() 
+                    << ", RawType: " << typeid(*pair.second).name()
                     << ", Type: " << pair.second->getType() << std::endl;
         }
-
-
     }
 
-    void Core::configureFromJsonFile(const std::string& filename)
+    void Core::configureFromLuaFile(const std::string& filename)
     {
         std::ifstream file(filename);
         if (!file.is_open()) {
-            // Handle error: file not found or cannot be opened
             ERROR("Could not open configuration file: " + filename);
             return;
         }
         std::stringstream buffer;
         buffer << file.rdbuf();
-        configureFromJson(buffer.str());
+
+        sol::state lua;
+        lua.open_libraries(sol::lib::base);
+
+        // Load and execute the Lua file
+        lua.script(buffer.str());
+
+        sol::table configTable = lua["config"];
+        if (!configTable.valid()) {
+            ERROR("Lua config file did not produce a valid 'config' table.");
+            return;
+        }
+        configureFromLua(configTable);
     }
 
     void Core::startup_SDL()

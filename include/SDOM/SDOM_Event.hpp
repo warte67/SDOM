@@ -105,28 +105,25 @@ namespace SDOM
         Event& setSDL_Event(const SDL_Event& sdlEvent);
 
         // Payload accessors
-        const nlohmann::json& getPayload() const {
-            std::lock_guard<std::mutex> lock(eventMutex_); 
-            return payload; 
+        const sol::table& getPayload() const {
+            std::lock_guard<std::mutex> lock(eventMutex_);
+            return payload;
         }
-        Event& setPayload(const nlohmann::json& data) {
-            std::lock_guard<std::mutex> lock(eventMutex_); 
-            payload = data; 
-            return *this; 
-        }
-        // Convenience for setting a key/value in the payload
-        template<typename T>
-        Event& setPayloadValue(const std::string& key, const T& value) 
-        {
-            std::lock_guard<std::mutex> lock(eventMutex_); 
-            payload[key] = value; 
-            return *this; 
+        Event& setPayload(const sol::table& data) {
+            std::lock_guard<std::mutex> lock(eventMutex_);
+            payload = data;
+            return *this;
         }
         template<typename T>
-        T getPayloadValue(const std::string& key) const 
-        {
-            std::lock_guard<std::mutex> lock(eventMutex_); 
-            return payload.value(key, T{}); 
+        Event& setPayloadValue(const std::string& key, const T& value) {
+            std::lock_guard<std::mutex> lock(eventMutex_);
+            payload[key] = value;
+            return *this;
+        }
+        template<typename T>
+        T getPayloadValue(const std::string& key) const {
+            std::lock_guard<std::mutex> lock(eventMutex_);
+            return payload[key].get_or(T{});
         }
 
 
@@ -182,7 +179,7 @@ namespace SDOM
         mutable bool useCapture = false;                // Indicates if the event is in the capture phase
         float fElapsedTime = 0.0f;                      // Time elapsed since the last frame
 
-        Json payload;                                   // Generic event-specific data
+        sol::table payload; // Generic event-specific data
 
         // Mouse Event Properties: (Not yet defined as proper JSON properties)
         float mouse_x;              // mouse x-coordinate

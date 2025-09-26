@@ -25,12 +25,12 @@ namespace SDOM
 
     protected:   // protected constructor so only the Factory can create the object
         Stage(const InitStruct& init);  
-        Stage(const Json& config);     
+        Stage(const sol::table& config);
 
     public:
 
         // In SDOM_Stage.hpp
-        static std::unique_ptr<IDisplayObject> CreateFromJson(const Json& config) {
+        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
             return std::unique_ptr<IDisplayObject>(new Stage(config));
         }
         static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {

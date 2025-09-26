@@ -72,215 +72,126 @@ namespace SDOM
         parent_ = nullptr;
     }
 
-    IDisplayObject::IDisplayObject(const Json& config)
+    IDisplayObject::IDisplayObject(const sol::table& config)
         : IDataObject()
     {
-        // Set anchors from JSON (default to TOP_LEFT if not present)
-        setAnchorLeft(stringToAnchorPoint_.count(config.value("anchorLeft", "top_left")) 
-            ? stringToAnchorPoint_.at(config.value("anchorLeft", "top_left")) 
-            : AnchorPoint::TOP_LEFT);
-        setAnchorTop(stringToAnchorPoint_.count(config.value("anchorTop", "top_left")) 
-            ? stringToAnchorPoint_.at(config.value("anchorTop", "top_left")) 
-            : AnchorPoint::TOP_LEFT);
-        setAnchorRight(stringToAnchorPoint_.count(config.value("anchorRight", "top_left")) 
-            ? stringToAnchorPoint_.at(config.value("anchorRight", "top_left")) 
-            : AnchorPoint::TOP_LEFT);
-        setAnchorBottom(stringToAnchorPoint_.count(config.value("anchorBottom", "top_left")) 
-            ? stringToAnchorPoint_.at(config.value("anchorBottom", "top_left")) 
-            : AnchorPoint::TOP_LEFT);
+        name_ = config["name"].get_or(std::string("IDisplayObject"));
 
-        setLeft(config.value("x", 0));
-        setTop(config.value("y", 0));
-        setRight(config.value("x", 0) + config.value("width", 0));
-        setBottom(config.value("y", 0) + config.value("height", 0));
-        
-        bIsDirty_ = config.value("bIsDirty", false);
-        priority_ = config.value("priority", 0);
-        setClickable(config.value("clickable", false));
+        float x      = config["x"].get_or(0.0f);
+        float y      = config["y"].get_or(0.0f);
+        float width  = config["width"].get_or(0.0f);
+        float height = config["height"].get_or(0.0f);
 
-        registerJson_();
-        fromJson(config);
+        setLeft(x);
+        setTop(y);
+        setRight(x + width);
+        setBottom(y + height);
+
+        // SDL_Color expects r, g, b, a fields in a Lua table
+        if (config["color"].valid()) {
+            sol::table colorTbl = config["color"];
+            color_.r = colorTbl["r"].get_or(255);
+            color_.g = colorTbl["g"].get_or(255);
+            color_.b = colorTbl["b"].get_or(255);
+            color_.a = colorTbl["a"].get_or(255);
+        } else {
+            color_ = {255, 255, 255, 255};
+        }
+
+        // Anchor conversion helpers (assume stringToAnchorPoint_ is accessible)
+        auto getAnchor = [&](const char* key) {
+            std::string str = config[key].valid() ? config[key].get<std::string>() : "top_left";
+            auto it = stringToAnchorPoint_.find(str);
+            return it != stringToAnchorPoint_.end() ? it->second : AnchorPoint::TOP_LEFT;
+        };
+
+        setAnchorTop(getAnchor("anchorTop"));
+        setAnchorLeft(getAnchor("anchorLeft"));
+        setAnchorBottom(getAnchor("anchorBottom"));
+        setAnchorRight(getAnchor("anchorRight"));
+
+        z_order_      = config["z_order"].get_or(0);
+        priority_     = config["priority"].get_or(0);
+        isClickable_  = config["isClickable"].get_or(true);
+        isEnabled_    = config["isEnabled"].get_or(true);
+        isHidden_     = config["isHidden"].get_or(false);
+        tabPriority_  = config["tabPriority"].get_or(0);
+        tabEnabled_   = config["tabEnabled"].get_or(true);
+
+        // Register Lua properties and commands
+        registerLua_();
+
+        // Initialize from Lua config table
+        fromLua(config, config.lua_state());
     }
 
-    void IDisplayObject::registerJson_()
+    void IDisplayObject::registerLua_()
     {
-        // Register properties and commands
-        // Registration of properties and commands
-        registerProperty("name",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getName(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setName(val.get<std::string>());
-                return obj;
-            });
+        // Helper to reduce boilerplate for simple properties
+        auto simpleProperty = [&](const std::string& name, auto getter, auto setter) {
+            registerProperty(name,
+                [getter](const IDataObject& obj, sol::state_view lua) {
+                    return sol::make_object(lua, getter(static_cast<const IDisplayObject&>(obj)));
+                },
+                [setter](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+                    setter(static_cast<IDisplayObject&>(obj), val);
+                    return obj;
+                }
+            );
+        };
 
-        registerProperty("type",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getType(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setType(val.get<std::string>());
-                return obj;
-            });
+        // Register properties
+        simpleProperty("name",        [](const IDisplayObject& obj) { return obj.getName(); },        [](IDisplayObject& obj, sol::object val) { obj.setName(val.as<std::string>()); });
+        simpleProperty("x",           [](const IDisplayObject& obj) { return obj.getLeft(); },        [](IDisplayObject& obj, sol::object val) { obj.setLeft(val.as<float>()); });
+        simpleProperty("y",           [](const IDisplayObject& obj) { return obj.getTop(); },         [](IDisplayObject& obj, sol::object val) { obj.setTop(val.as<float>()); });
+        simpleProperty("left",        [](const IDisplayObject& obj) { return obj.getLeft(); },        [](IDisplayObject& obj, sol::object val) { obj.setLeft(val.as<float>()); });
+        simpleProperty("top",         [](const IDisplayObject& obj) { return obj.getTop(); },         [](IDisplayObject& obj, sol::object val) { obj.setTop(val.as<float>()); });
+        simpleProperty("right",       [](const IDisplayObject& obj) { return obj.getRight(); },       [](IDisplayObject& obj, sol::object val) { obj.setRight(val.as<float>()); });
+        simpleProperty("bottom",      [](const IDisplayObject& obj) { return obj.getBottom(); },      [](IDisplayObject& obj, sol::object val) { obj.setBottom(val.as<float>()); });
+        simpleProperty("width",       [](const IDisplayObject& obj) { return obj.getWidth(); },       [](IDisplayObject& obj, sol::object val) { obj.setWidth(val.as<int>()); });
+        simpleProperty("height",      [](const IDisplayObject& obj) { return obj.getHeight(); },      [](IDisplayObject& obj, sol::object val) { obj.setHeight(val.as<int>()); });
+        simpleProperty("priority",    [](const IDisplayObject& obj) { return obj.priority_; },        [](IDisplayObject& obj, sol::object val) { obj.priority_ = val.as<int>(); });
+        simpleProperty("bIsDirty",    [](const IDisplayObject& obj) { return obj.bIsDirty_; },        [](IDisplayObject& obj, sol::object val) { obj.bIsDirty_ = val.as<bool>(); });
+        simpleProperty("clickable",   [](const IDisplayObject& obj) { return obj.isClickable(); },    [](IDisplayObject& obj, sol::object val) { obj.setClickable(val.as<bool>()); });
+        simpleProperty("enabled",     [](const IDisplayObject& obj) { return obj.isEnabled(); },      [](IDisplayObject& obj, sol::object val) { obj.setEnabled(val.as<bool>()); });
+        simpleProperty("hidden",      [](const IDisplayObject& obj) { return obj.isHidden(); },       [](IDisplayObject& obj, sol::object val) { obj.setHidden(val.as<bool>()); });
+        simpleProperty("tabPriority", [](const IDisplayObject& obj) { return obj.getTabPriority(); }, [](IDisplayObject& obj, sol::object val) { obj.setTabPriority(val.as<int>()); });
+        simpleProperty("tabEnabled",  [](const IDisplayObject& obj) { return obj.isTabEnabled(); },   [](IDisplayObject& obj, sol::object val) { obj.setTabEnabled(val.as<bool>()); });
+        simpleProperty("tabPriority", [](const IDisplayObject& obj) { return obj.getTabPriority(); }, [](IDisplayObject& obj, sol::object val) { obj.setTabPriority(val.as<int>()); });
+        simpleProperty("tabEnabled",  [](const IDisplayObject& obj) { return obj.isTabEnabled(); },   [](IDisplayObject& obj, sol::object val) { obj.setTabEnabled(val.as<bool>()); });
+        simpleProperty("z_order",     [](const IDisplayObject& obj) { return obj.getZOrder(); },      [](IDisplayObject& obj, sol::object val) { obj.setZOrder(val.as<int>()); });
 
-
-        registerProperty("x",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getLeft(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setLeft(val.get<int>());
-                return obj;
-            });
-
-        registerProperty("y",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getTop(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setTop(val.get<int>());
-                return obj;
-            });
-
-        registerProperty("left",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getLeft(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setLeft(val.get<int>());
-                return obj;
-            });        
-        registerProperty("top",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getTop(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setTop(val.get<int>());
-                return obj;
-            });
-        registerProperty("right",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getRight(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setRight(val.get<int>());
-                return obj;
-            });
-        registerProperty("bottom",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getBottom(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setBottom(val.get<int>());
-                return obj;
-            });
-
-        registerProperty("width",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getWidth(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setWidth(val.get<int>());
-                return obj;
-            });
-
-        registerProperty("height",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getHeight(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setHeight(val.get<int>());
-                return obj;
-            });
-
-
-        registerProperty("priority",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).priority_; },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).priority_ = val.get<int>();
-                return obj;
-            });
-        registerProperty("bIsDirty",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).bIsDirty_; },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).bIsDirty_ = val.get<bool>();
-                return obj;
-            });
-        registerProperty("clickable",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).isClickable(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setClickable(val.get<bool>());
-                return obj;
-            });
-        registerProperty("enabled",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).isEnabled(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setEnabled(val.get<bool>());
-                return obj;
-            });
-
-            
-        registerProperty("hidden",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).isHidden(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setHidden(val.get<bool>());
-                return obj;
-            });
-        // registerProperty("z_order",
-        //     [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getZOrder(); },
-        //     [](IDataObject& obj, const Json& val) -> IDataObject& {
-        //         static_cast<IDisplayObject&>(obj).setZOrder(val.get<int>());
-        //         return obj;
-        //     });
-
-        // Set color via JSON like: { "color": { "r": 128, "g": 200, "b": 255, "a": 255 } }
         registerProperty("color",
-            [](const IDataObject& obj) { 
+            [](const IDataObject& obj, sol::state_view lua) {
                 SDL_Color c = static_cast<const IDisplayObject&>(obj).getColor();
-                Json j;
-                j["r"] = c.r;
-                j["g"] = c.g;
-                j["b"] = c.b;
-                j["a"] = c.a;
-                return j;
+                sol::table colorTbl = lua.create_table();
+                colorTbl["r"] = c.r;
+                colorTbl["g"] = c.g;
+                colorTbl["b"] = c.b;
+                colorTbl["a"] = c.a;
+                return sol::make_object(lua, colorTbl);
             },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
+            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+                sol::table colorTbl = val.as<sol::table>();
                 SDL_Color color;
-                color.r = val.value("r", 255);
-                color.g = val.value("g", 255);
-                color.b = val.value("b", 255);
-                color.a = val.value("a", 255);
+                color.r = colorTbl["r"].get_or(255);
+                color.g = colorTbl["g"].get_or(255);
+                color.b = colorTbl["b"].get_or(255);
+                color.a = colorTbl["a"].get_or(255);
                 static_cast<IDisplayObject&>(obj).setColor(color);
                 return obj;
             }
         );
 
-        registerProperty("tabPriority",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).getTabPriority(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setTabPriority(val.get<int>());
-                return obj;
-            });
-
-        registerProperty("tabEnabled",
-            [](const IDataObject& obj) { return static_cast<const IDisplayObject&>(obj).isTabEnabled(); },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setTabEnabled(val.get<bool>());
-                return obj;
-            });
-        
-        // registerProperty("parent",
-        //     [](const IDataObject& obj) { 
-        //         // Return the parent's DomHandle directly
-        //         return static_cast<const IDisplayObject&>(obj).getParent();
-        //     },
-        //     nullptr // read-only
-        // );
-
-        // registerProperty("children",
-        //     [](const IDataObject& obj) {
-        //         const auto& children = static_cast<const IDisplayObject&>(obj).getChildren();
-        //         Json arr = Json::array();
-        //         for (const auto& childHandle : children) {
-        //             // You can push the DomHandle itself, or just its name/type for serialization
-        //             // arr.push_back(childHandle); // If DomHandle is serializable to Json
-        //             // Or, for just name/type:
-        //             arr.push_back({ {"name", childHandle.getName()}, {"type", childHandle.getType()} });
-        //         }
-        //         return arr;
-        //     },
-        //     nullptr // read-only
-        // );
-
+        // Anchor properties
         registerProperty("anchorTop",
-            [](const IDataObject& obj) { 
+            [](const IDataObject& obj, sol::state_view lua) {
                 auto ap = static_cast<const IDisplayObject&>(obj).getAnchorTop();
                 auto it = anchorPointToString_.find(ap);
-                return it != anchorPointToString_.end() ? it->second : "default";
+                return sol::make_object(lua, it != anchorPointToString_.end() ? it->second : "default");
             },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                std::string str = val.get<std::string>();
+            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+                std::string str = val.as<std::string>();
                 auto it = stringToAnchorPoint_.find(str);
                 if (it != stringToAnchorPoint_.end()) {
                     static_cast<IDisplayObject&>(obj).setAnchorTop(it->second);
@@ -289,13 +200,13 @@ namespace SDOM
             });
 
         registerProperty("anchorLeft",
-            [](const IDataObject& obj) { 
+            [](const IDataObject& obj, sol::state_view lua) {
                 auto ap = static_cast<const IDisplayObject&>(obj).getAnchorLeft();
                 auto it = anchorPointToString_.find(ap);
-                return it != anchorPointToString_.end() ? it->second : "default";
+                return sol::make_object(lua, it != anchorPointToString_.end() ? it->second : "default");
             },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                std::string str = val.get<std::string>();
+            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+                std::string str = val.as<std::string>();
                 auto it = stringToAnchorPoint_.find(str);
                 if (it != stringToAnchorPoint_.end()) {
                     static_cast<IDisplayObject&>(obj).setAnchorLeft(it->second);
@@ -304,13 +215,13 @@ namespace SDOM
             });
 
         registerProperty("anchorBottom",
-            [](const IDataObject& obj) { 
+            [](const IDataObject& obj, sol::state_view lua) {
                 auto ap = static_cast<const IDisplayObject&>(obj).getAnchorBottom();
                 auto it = anchorPointToString_.find(ap);
-                return it != anchorPointToString_.end() ? it->second : "default";
+                return sol::make_object(lua, it != anchorPointToString_.end() ? it->second : "default");
             },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                std::string str = val.get<std::string>();
+            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+                std::string str = val.as<std::string>();
                 auto it = stringToAnchorPoint_.find(str);
                 if (it != stringToAnchorPoint_.end()) {
                     static_cast<IDisplayObject&>(obj).setAnchorBottom(it->second);
@@ -319,13 +230,13 @@ namespace SDOM
             });
 
         registerProperty("anchorRight",
-            [](const IDataObject& obj) { 
+            [](const IDataObject& obj, sol::state_view lua) {
                 auto ap = static_cast<const IDisplayObject&>(obj).getAnchorRight();
                 auto it = anchorPointToString_.find(ap);
-                return it != anchorPointToString_.end() ? it->second : "default";
+                return sol::make_object(lua, it != anchorPointToString_.end() ? it->second : "default");
             },
-            [](IDataObject& obj, const Json& val) -> IDataObject& {
-                std::string str = val.get<std::string>();
+            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+                std::string str = val.as<std::string>();
                 auto it = stringToAnchorPoint_.find(str);
                 if (it != stringToAnchorPoint_.end()) {
                     static_cast<IDisplayObject&>(obj).setAnchorRight(it->second);
@@ -333,58 +244,21 @@ namespace SDOM
                 return obj;
             });
 
-
-        // // Register commands
-        // registerCommand("addChild",
-        //     [](IDataObject& obj, const Json& val) {
-        //         std::string childName = val.get<std::string>();
-        //         auto childPtr = IDisplayObject::getByName(childName);
-        //         if (childPtr) {
-        //             static_cast<IDisplayObject&>(obj).addChild(childPtr);
-        //         } else {
-        //             ERROR("addChild: No IDisplayObject found with name '" + childName + "'");
-        //         }
-        //     });
-
-        // registerCommand("removeChild",
-        //     [](IDataObject& obj, const Json& val) {
-        //         std::string childName = val.get<std::string>();
-        //         auto childPtr = IDisplayObject::getByName(childName);
-        //         if (childPtr) {
-        //             static_cast<IDisplayObject&>(obj).removeChild(childPtr);
-        //         } else {
-        //             ERROR("removeChild: No IDisplayObject found with name '" + childName + "'");
-        //         }
-        //     });
-
-        // registerCommand("sortChildrenByPriority",
-        //     [](IDataObject& obj, const Json&) {
-        //         static_cast<IDisplayObject&>(obj).sortChildrenByPriority();
-        //     });
-        // registerCommand("setToHighestPriority",
-        //     [](IDataObject& obj, const Json&) {
-        //         static_cast<IDisplayObject&>(obj).setToHighestPriority();
-        //     });
-        // registerCommand("setToLowestPriority",
-        //     [](IDataObject& obj, const Json&) {
-        //         static_cast<IDisplayObject&>(obj).setToLowestPriority();
-        //     });
-        // registerCommand("moveToTop",
-        //     [](IDataObject& obj, const Json&) {
-        //         static_cast<IDisplayObject&>(obj).moveToTop();
-        //     });
+        // Register commands
         registerCommand("cleanAll",
-            [](IDataObject& obj, const Json&) {
+            [](IDataObject& obj, sol::object, sol::state_view) {
                 static_cast<IDisplayObject&>(obj).cleanAll();
             });
+
         registerCommand("printTree",
-            [](IDataObject& obj, const Json&) {
+            [](IDataObject& obj, sol::object, sol::state_view) {
                 static_cast<IDisplayObject&>(obj).printTree(0, true, {});
             });
 
-        // ToDo: Event listeners
-        // ...
+        // Add more commands as needed...
     }
+
+
 
     IDisplayObject::~IDisplayObject()
     {
