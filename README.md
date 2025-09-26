@@ -184,6 +184,12 @@ Additional docs:
 
 We embed Mermaid diagrams in Markdown. To export them as images for inclusion in generated HTML (or for environments without Mermaid support), install mermaid-cli and run the helper script:
 
+Debian:
+```
+sudo apt install nodejs npm
+```
+
+Install Mermaid CLI globally:
 ```bash
 npm install -g @mermaid-js/mermaid-cli
 bash scripts/export_mermaid.sh
