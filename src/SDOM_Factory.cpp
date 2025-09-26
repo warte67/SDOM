@@ -161,6 +161,22 @@ namespace SDOM
         return DomHandle(); // Invalid handle
     }
 
+    DomHandle Factory::create(const std::string& typeName, const std::string& luaScript) {
+        sol::state lua;
+        lua.open_libraries(sol::lib::base);
+
+        // Try to parse and execute the string as a Lua table
+        sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
+
+        if (!result.valid() || !result.is<sol::table>()) {
+            std::cout << "Factory::create: Provided string is not a valid Lua table.\n";
+            return DomHandle();
+        }
+
+        sol::table config = result.as<sol::table>();
+        return create(typeName, config);
+    }
+
 
     void Factory::addDisplayObject(const std::string& name, 
         std::unique_ptr<IDisplayObject> displayObject) 

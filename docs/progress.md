@@ -171,6 +171,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - **Show how to call Lua test functions directly from C++ (e.g., from within `Box_UnitTests.cpp`):**
             - Illustrate invoking Lua-defined test logic from C++ unit test functions.
             - Document the pattern for integrating Lua-side tests with the C++ unit test framework.
+        - **Test the new `Factory::create(typeName, luaScript)` method in `Box_UnitTests`:**
+            - Add unit tests that create Box objects from InitStructs.
+            - Add unit tests that create Box objects from Lua script strings.
+            - Verify error handling for invalid Lua strings and correct creation for valid tables.
 - Add more interactive event tests (drag/drop, stacking, anchoring).
 - Continue improving resource management and garbage collection.
 - Plan for future language hooks (e.g., Python).
