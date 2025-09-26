@@ -168,6 +168,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Add a user-side `Box_UnitTest()` Lua module as an example:
         - Demonstrate generating multiple boxes in a for loop, removing them, and verifying results via Lua.
         - Integrate this as a documented example for Lua-driven testing and automation.
+        - **Show how to call Lua test functions directly from C++ (e.g., from within `Box_UnitTests.cpp`):**
+            - Illustrate invoking Lua-defined test logic from C++ unit test functions.
+            - Document the pattern for integrating Lua-side tests with the C++ unit test framework.
 - Add more interactive event tests (drag/drop, stacking, anchoring).
 - Continue improving resource management and garbage collection.
 - Plan for future language hooks (e.g., Python).
