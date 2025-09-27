@@ -27,7 +27,11 @@
         #include <SDOM/SDOM_EventTypeHash.hpp>
         #include <SDOM/SDOM_Factory.hpp>
         #include <SDOM/SDOM_Front.hpp>
-        #include <SDOM/SDOM_Handle.hpp>
+
+        // #include <SDOM/SDOM_Handle.hpp>
+        #include <SDOM/SDOM_DomHandle.hpp>
+        #include <SDOM/SDOM_ResHandle.hpp>
+
         #include <SDOM/SDOM_IDataObject.hpp>
         #include <SDOM/SDOM_IDisplayObject.hpp>
         #include <SDOM/SDOM_IResourceObject.hpp>

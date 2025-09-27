@@ -105,7 +105,6 @@ namespace SDOM
         void fromLua(const sol::table& lua, sol::state_view lua_state);
         sol::table toLua(sol::state_view lua) const;
 
-
         void registerProperty(const std::string& name, Getter getter, Setter setter = nullptr);
         sol::object getProperty(const std::string& name, sol::state_view lua) const;
         void registerCommand(const std::string& name, Command cmd);
@@ -127,7 +126,25 @@ namespace SDOM
             return default_value;
         }
 
+        friend class Factory;
+        friend class Core;
     private:
+         // ---   New Virtual LUA Registration Methods for Sol2   ---
+        virtual void registerLua_Usertype(sol::state_view lua)      {}  
+        virtual void registerLua_Properties(sol::state_view lua)    {}
+        virtual void registerLua_Commands(sol::state_view lua)      {}
+        virtual void registerLua_Meta(sol::state_view lua)          {}
+        virtual void registerLua_Children(sol::state_view lua)      {}
+        virtual void registerLua_All(sol::state_view lua)           
+        {
+            registerLua_Usertype(lua);
+            registerLua_Properties(lua);
+            registerLua_Commands(lua);
+            registerLua_Meta(lua);
+            registerLua_Children(lua);
+        }
+        // --- End New Virtual LUA Registration Methods for Sol2 ---
+
         std::unordered_map<std::string, Getter> getters_;
         std::unordered_map<std::string, Setter> setters_;
         std::unordered_map<std::string, Command> commands_;

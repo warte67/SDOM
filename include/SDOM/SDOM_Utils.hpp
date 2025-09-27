@@ -18,6 +18,9 @@ namespace SDOM
     SDL_Window* getWindow();
     SDL_Texture* getTexture();
 
+    sol::state& getLua();
+
+
     // helper function to extract SDL_Color from Lua table
     SDL_Color parseColor(const sol::object& colorObj);
 

@@ -32,6 +32,11 @@
 #include <SDOM/SDOM_Factory.hpp>
 namespace SDOM
 {
+    // // Default implementation
+    // bool IDataObject::onInit()
+    // {
+    //     return true;
+    // }
 
     void IDataObject::fromLua(const sol::table& lua, sol::state_view lua_state)
     {

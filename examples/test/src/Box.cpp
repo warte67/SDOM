@@ -5,7 +5,11 @@
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
-#include <SDOM/SDOM_Handle.hpp>
+
+// #include <SDOM/SDOM_Handle.hpp>
+#include <SDOM/SDOM_DomHandle.hpp>
+#include <SDOM/SDOM_ResHandle.hpp>
+
 #include "Box.hpp"
 
 

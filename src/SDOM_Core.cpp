@@ -8,7 +8,11 @@
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IResourceObject.hpp>
-#include <SDOM/SDOM_Handle.hpp>
+
+// #include <SDOM/SDOM_Handle.hpp>
+#include <SDOM/SDOM_DomHandle.hpp>
+#include <SDOM/SDOM_ResHandle.hpp>
+
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
 
 namespace SDOM
@@ -16,8 +20,11 @@ namespace SDOM
 
     Core::Core() : IDataObject()
     {
+        lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string);
         factory_ = new Factory();
         eventManager_ = new EventManager();
+        DomHandle().registerLua_All(getLua());
+        ResHandle().registerLua_All(getLua());
     }
 
     Core::~Core()
@@ -37,10 +44,9 @@ namespace SDOM
     void Core::configure(const CoreConfig& config)
     {
         config_ = config;   
-
-        // // After creating/loading resources, set the root node
-        // rootNode_ = factory_->getResourcePtr("mainStage");
-
+        // Initialize the Factory
+        if (factory_)
+            factory_->onInit();   
     }
 
     void Core::configureFromLua(const sol::table& lua)
@@ -381,11 +387,32 @@ namespace SDOM
     {
         // Note: We do not need to run onInit() for each object here because
         // the Factory creates each object and calls onInit() as it does so.
+
+            // sequenceDiagram
+            //     participant Main
+            //     participant Core
+            //     participant Factory
+                
+            //     Main->>Core: getCore() // Core singleton created
+            //     Core->>Factory: Factory constructed (no registration yet)
+            //     Core->>Core: Core::configure(config)
+            //     Core->>Factory: factory_->onInit()
+            //     Factory->>Factory: registerDomType("Stage", ...)
+            //     Factory->>Factory: Register other built-in types
+            //     Core->>Core: configureFromLua(luaTable)
+            //     Core->>Factory: factory_->create(type, obj) (recursive resource creation)
+            //     Core->>Core: setRootNode("mainStage")
+            //     Core->>Core: run()
+            //     Core->>Core: startup_SDL()
+            //     Core->>Core: onInit()
+            //     Core->>Factory: (optional) factory_->onInit() (if not already called)
+            //     Core->>Core: Event loop, rendering, updates, etc.
+            //     Core->>Core: onQuit()
+            //     Core->>Factory: Factory cleanup        
         
         bool ret = true;
-        // Initialize the Core
-        // ...
 
+        // Call the users registered init function if available
         if (fnOnInit)
             ret &= fnOnInit();
 

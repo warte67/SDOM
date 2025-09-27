@@ -357,7 +357,11 @@ namespace SDOM
 
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_CLR.hpp>
-#include <SDOM/SDOM_Handle.hpp>
+
+// #include <SDOM/SDOM_Handle.hpp>
+#include <SDOM/SDOM_DomHandle.hpp>
+#include <SDOM/SDOM_ResHandle.hpp>
+
 #include <SDOM/SDOM_UnitTests.hpp>
 #include <SDOM/SDOM_Utils.hpp>
 

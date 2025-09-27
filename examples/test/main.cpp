@@ -45,13 +45,12 @@ int main()
     Core& core = getCore();
 
     // register any custom DisplayObject types before configuring the Core
-    core.getFactory().registerType("Box", TypeCreators{
+    core.getFactory().registerDomType("Box", TypeCreators{
         Box::CreateFromLua,
         Box::CreateFromInitStruct
     });
     
-    sol::state lua;
-    lua.open_libraries(sol::lib::base);
+    sol::state& lua = core.getLua(); // Use Core's Lua state
 
     lua.script(R"(
     config = {

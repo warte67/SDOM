@@ -5,7 +5,10 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
-#include <SDOM/SDOM_Handle.hpp>
+
+// #include <SDOM/SDOM_Handle.hpp>
+#include <SDOM/SDOM_DomHandle.hpp>
+#include <SDOM/SDOM_ResHandle.hpp>
 
 namespace SDOM
 {
@@ -156,6 +159,8 @@ namespace SDOM
 
             float getElapsedTime() const { return fElapsedTime_; }  
 
+            sol::state& getLua() { return lua_; }
+
         private:
             Core();
             ~Core();
@@ -194,6 +199,9 @@ namespace SDOM
 
 
             CoreConfig config_;
+
+            // Lua State
+            sol::state lua_;
 
             // Core Sub-Systems
             inline static Factory* factory_ = nullptr; 

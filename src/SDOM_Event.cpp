@@ -38,7 +38,11 @@
  ******************/
 
 #include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_Handle.hpp>
+
+// #include <SDOM/SDOM_Handle.hpp>
+#include <SDOM/SDOM_DomHandle.hpp>
+#include <SDOM/SDOM_ResHandle.hpp>
+
 #include <SDOM/SDOM_Event.hpp>
 
 

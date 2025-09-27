@@ -18,6 +18,8 @@ namespace SDOM
     SDL_Window* getWindow() { return Core::getInstance().getWindow(); }
     SDL_Texture* getTexture() { return Core::getInstance().getTexture(); }  
 
+    sol::state& getLua() { return getCore().getLua(); }    
+
 
 
     // helper function to extract SDL_Color from Lua table

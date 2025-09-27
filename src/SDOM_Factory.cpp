@@ -1,7 +1,11 @@
 // SDOM_Factory.cpp
 
 #include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_Handle.hpp>
+
+// #include <SDOM/SDOM_Handle.hpp>
+#include <SDOM/SDOM_DomHandle.hpp>
+#include <SDOM/SDOM_ResHandle.hpp>
+
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
@@ -13,23 +17,44 @@ namespace SDOM
     {
         // make sure the DomHandles can access this Factory
         DomHandle::factory_ = this;
-        ResHandle::factory_ = this;
+        ResHandle::factory_ = this;    
 
+        // // register the Stage
+        // registerDomType("Stage", TypeCreators{
+        //     Stage::CreateFromLua, // Update to Lua-based creator
+        //     Stage::CreateFromInitStruct
+        // });        
+    }
+
+    bool Factory::onInit()
+    {
         // ===== Register built-in types =====
 
         // register the Stage
-        registerType("Stage", TypeCreators{
+        registerDomType("Stage", TypeCreators{
             Stage::CreateFromLua, // Update to Lua-based creator
             Stage::CreateFromInitStruct
         });
 
-        // Register other built-in types here as needed ...        
+        // Register other built-in types here as needed ...    
+
+        return true;
     }
 
 
-    void Factory::registerType(const std::string& typeName, const TypeCreators& creators)
+    void Factory::registerDomType(const std::string& typeName, const TypeCreators& creators)
     {
         creators_[typeName] = creators;
+
+        IDisplayObject::InitStruct init; // Default init struct
+        init.type = typeName;
+        DomHandle prototypeHandle = create(typeName, init);
+        // IDisplayObject* prototype = prototypeHandle.get();
+        if (prototypeHandle)
+        {
+            prototypeHandle->registerLua_All(SDOM::getLua());
+            destroyDisplayObject(prototypeHandle.get()->getName()); // Clean up prototype
+        }   
     }
 
     IResourceObject* Factory::getResObj(const std::string& name)

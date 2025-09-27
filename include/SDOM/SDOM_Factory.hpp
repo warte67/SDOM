@@ -24,7 +24,7 @@ namespace SDOM
         virtual ~Factory() = default;
 
         // IDataObject overrides
-        virtual bool onInit() override { return true; }
+        virtual bool onInit() override;
         virtual void onQuit() override {}
         virtual bool onUnitTest() override;
 
@@ -33,23 +33,24 @@ namespace SDOM
         // Register a resource type with a creation function
         using Creator = std::function<std::unique_ptr<IResourceObject>(const sol::table&)>;
 
-        // void registerType(const std::string& typeName, Creator creator);
-        void registerType(const std::string& typeName, const TypeCreators& creators);
+        // Register a display object type with creation functions
+        void registerDomType(const std::string& typeName, const TypeCreators& creators);
+        // Register a resource type with a creation functions
+        // void registerResType(const std::string& typeName, const TypeCreators& creators);
+
+
         // Lua-based object creator
         DomHandle create(const std::string& typeName, const sol::table& config);
         // InitStruct-based object creator
-        DomHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);
-
-        
+        DomHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);        
         // create a DOM object based on a Lua script string
         DomHandle create(const std::string& typeName, const std::string& luaScript);
 
 
         // ----- Resource Management -----
-
-
-        IResourceObject* getResObj(const std::string& name);
         IDisplayObject* getDomObj(const std::string& name);
+        IResourceObject* getResObj(const std::string& name);
+
 
         // Example Usage:
         // DomHandle ptr = factory.getDomHandle("mainStage");
@@ -58,6 +59,7 @@ namespace SDOM
         //     // Use stage...
         // }
         DomHandle getDomHandle(const std::string& name);
+        // ResHandle getResHandle(const std::string& name);
 
         DomHandle getStageHandle();
 

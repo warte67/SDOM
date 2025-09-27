@@ -163,6 +163,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - **Milestone:**  
         - SDOM is now fully Lua-configurable and ready for advanced scripting, rapid prototyping, and integration with external tools. Json features have been removed completely.
 
+- ### [September 26, 2025]
 - **Box Unit Tests Complete:**  
     - Finalized comprehensive unit tests for the Box object, covering creation, hierarchy, anchor logic, and world coordinate propagation.
     - All anchor setters and edge references are tested for all anchor points and hierarchy levels.
@@ -180,7 +181,35 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Event system and Lua-driven configuration are stable and fully integrated.
     - Documentation and codebase are up-to-date with recent changes.
 
+- ### [September 27, 2025]    
+## Major Accomplishments
+- **Full transition from JSON to Lua (Sol2) for configuration and scripting.**
+    - All resource and display object creation now uses Lua tables.
+    - Legacy JSON code paths and tests removed.
+- **Factory, Core, and EventManager refactored for Lua-first workflow.**
+    - Factory registers types and initializes Lua bindings via prototype objects.
+    - Core owns the global `sol::state` and opens essential libraries on construction.
+    - Initialization order clarified: Factory type registration now occurs in `Core::configure()` to avoid recursive/static init errors.
+- **DomHandle and ResHandle refactored:**
+    - Now inherit from `IDataObject`, are non-templated, and ready for Sol2 usertype binding.
+    - Explicit Lua registration for handles in `Core::Core()`.
+- **Unit tests and event system stable:**
+    - All major unit tests pass with Lua-driven configs.
+    - Event propagation, listener registration, and DOM hierarchy logic confirmed stable.
+    - Box object serves as a proof-of-concept for external Lua-driven applications.
+- **Orphaned display object management implemented and tested.**
+    - Recursive orphan detection and cleanup now robust.
+- **Documentation and Doxygen updated.**
+    - Markdown docs and Doxygen comments reflect latest API and design changes.
+
 # Next Steps:
+- Expand Lua scripting examples and documentation.
+- Add Lua-side unit tests and demonstrate C++/Lua test integration.
+- Continue improving event system, resource management, and garbage collection.
+- Plan for future language hooks (e.g., Python).
+- Maintain and update docs as features evolve.
+
+# ToDo:
 - Expand Lua scripting examples and documentation.
     - Add a user-side `Box_UnitTest()` Lua module as an example:
         - Demonstrate generating multiple boxes in a for loop, removing them, and verifying results via Lua.
@@ -196,8 +225,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Continue improving resource management and garbage collection.
 - Plan for future language hooks (e.g., Python).
 - Maintain and update Doxygen and Markdown docs as features evolve.
-
-# ToDo:
 - Implement garbage_collection() for display objects.
 - Expand event system tests for Box objects.
 - Reintroduce IResourceObject into Factory.
