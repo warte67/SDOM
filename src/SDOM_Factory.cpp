@@ -216,10 +216,44 @@ namespace SDOM
         displayObjects_[name] = std::move(displayObject);
     }
     
-    void Factory::removeDisplayObject(const std::string& name) 
+    void Factory::destroyDisplayObject(const std::string& name) 
     {
         displayObjects_.erase(name);
     }
+
+    int Factory::countOrphanedDisplayObjects() const {
+        int count = 0;
+        for (const auto& [name, objPtr] : displayObjects_) {
+            auto obj = dynamic_cast<IDisplayObject*>(objPtr.get());
+            if (obj && !obj->getParent() && obj->getType() != "Stage") {
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    std::vector<DomHandle> Factory::getOrphanedDisplayObjects() {
+        std::vector<DomHandle> orphans;
+        for (const auto& [name, objPtr] : displayObjects_) {
+            auto obj = dynamic_cast<IDisplayObject*>(objPtr.get());
+            if (obj && !obj->getParent() && obj->getType() != "Stage") {
+                orphans.push_back(getDomHandle(name));
+            }
+        }
+        return orphans;
+    }
+
+    void Factory::destroyOrphanedDisplayObjects() 
+    {
+        while (countOrphanedDisplayObjects())
+        {
+            auto orphans = getOrphanedDisplayObjects();
+            for (const auto& orphan : orphans) {
+                destroyDisplayObject(orphan->getName());
+            }
+        }
+    }    
+
 
     std::vector<std::string> Factory::listDisplayObjectNames() const
     {

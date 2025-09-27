@@ -163,18 +163,22 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - **Milestone:**  
         - SDOM is now fully Lua-configurable and ready for advanced scripting, rapid prototyping, and integration with external tools. Json features have been removed completely.
 
-### [September 26, 2025]
 - **Box Unit Tests Complete:**  
     - Finalized comprehensive unit tests for the Box object, covering creation, hierarchy, anchor logic, and world coordinate propagation.
     - All anchor setters and edge references are tested for all anchor points and hierarchy levels.
     - Confirmed that the Box object works as a reliable proof of concept for external applications using the SDOM API.
     - Decided to defer exhaustive reference calculation tests for resizing and complex anchor scenarios until a specific layout issue is identified.
     - The Box unit test suite is now robust and maintainable; targeted tests will be added as new bugs or features arise.
+- **Orphaned Display Object Management:**  
+    - Implemented `Factory::countOrphanedDisplayObjects()`, `getOrphanedDisplayObjects()`, and `destroyOrphanedDisplayObjects()` for robust orphan detection and cleanup.
+    - Improved `destroyOrphanedDisplayObjects()` to recursively remove all orphaned objects, including nested orphans, ensuring a clean DOM state after parent removal.
+    - Added unit tests to verify orphan detection and recursive cleanup logic.
+    - Documented the current behavior and discussed future enhancements for selective orphan preservation.
+    - Proposed an `OrphanCleanupPolicy` enum for `IDisplayObject` to allow marking objects as persistent, templates, or editor-only, enabling fine-grained control over orphan cleanup (feature deferred for future implementation).
 - **General Stability:**  
     - All core, factory, display object, and stage unit tests are passing.
     - Event system and Lua-driven configuration are stable and fully integrated.
     - Documentation and codebase are up-to-date with recent changes.
-
 
 # Next Steps:
 - Expand Lua scripting examples and documentation.

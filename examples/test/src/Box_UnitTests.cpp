@@ -316,24 +316,107 @@ namespace SDOM
                         greenBox->setY(greenBox->getY() + delta);
                         moveExpected(delta, delta);
 
-                        // std::cout << "Testing " << box->getName() << " with anchors: "
-                        //         << anchorPointToString_.at(box->getAnchorLeft()) << " | "
-                        //         << anchorPointToString_.at(box->getAnchorTop()) << " | "
-                        //         << anchorPointToString_.at(box->getAnchorRight()) << " | "
-                        //         << anchorPointToString_.at(box->getAnchorBottom()) << " ... ";
-
                         bool ret = moveBoxTest(greenBox, 0, 0); // Only move greenBox, but test all bounds
-                        // if (ret) {
-                        //     std::cout << "passed";
-                        // } else {
-                        //     std::cout << "FAILED";
-                        // }
                         allAnchorsOk &= ret;
-                        // std::cout << std::endl;
                     }
                 }
             }
+
+            // stage->removeChild(greenBox); // Clean up after test
+
+            // std::vector<std::string> displayObjectNames = getFactory().listDisplayObjectNames();
+            // std::cout << "\nDisplay objects in factory:\n";
+            // for (const auto& name : displayObjectNames) {
+            //     auto obj = getFactory().getDomObj(name);
+            //     std::cout << "  " << name;
+            //     if (obj) {
+            //         if (obj->getType() == "Stage") {
+            //             std::cout << " [stage]";
+            //         } else if (!obj->getParent()) {
+            //             // Optionally, check if this object has children (is a tree root)
+            //             if (!obj->getChildren().empty()) {
+            //                 std::cout << " [tree root]";
+            //             } else {
+            //                 std::cout << " (orphan)";
+            //             }
+            //         } else {
+            //             std::cout << " (parent: " << obj->getParent()->getName() << ")";
+            //         }
+            //     }
+            //     std::cout << "\n";
+            // }        
+            // stage->printTree();
+
+
             return allAnchorsOk;
+        });
+    }
+
+    bool test10() 
+    {
+        return UnitTests::run("Box: Test #10", "Destroy the Parent greenBox", []() 
+        {
+            DomHandle stage = SDOM::getCore().getStageHandle();
+            if (!stage) 
+            {
+                std::cout << "\nStage handle is null." << std::endl;
+                return false;
+            }
+            bool allTestsPassed = true; 
+            DomHandle greenBox = getFactory().getDomHandle("greenBox");
+            DomHandle redBox   = getFactory().getDomHandle("redBox");
+            DomHandle orangeBox= getFactory().getDomHandle("orangeBox");
+            DomHandle blueBox  = getFactory().getDomHandle("blueBox");
+
+            getFactory().destroyDisplayObject("greenBox");            
+            DomHandle handle = getFactory().getDomHandle("greenBox");
+            if (handle)    
+            {
+                std::cout << "\ngreenBox was NOT successfully removed from factory." << std::endl;
+                allTestsPassed = false;
+            }
+            if (greenBox)   
+            {
+                std::cout << "\nThe greenBox handle is not null.\n";
+                allTestsPassed = false;
+            }
+            // redBox should now be orphaned (no parent)
+            if (redBox && redBox->getParent())  // redBox parent should automatically become null when greenBox is destroyed
+            {
+                std::cout << "\nThe redBox parent was not cleared when its parent was destroyed." << std::endl;
+                allTestsPassed = false;
+            }  
+            // orangeBox should still have redBox as its parent
+            if (orangeBox && orangeBox->getParent() != redBox) 
+            {
+                std::cout << "\nThe orangeBox parent is not redBox." << std::endl;
+                allTestsPassed = false;
+            }
+            // blueBox should still have orangeBox as its parent
+            if (blueBox && blueBox->getParent() != orangeBox) 
+            {
+                std::cout << "\nThe blueBox parent is not orangeBox." << std::endl;
+                allTestsPassed = false;
+            }
+            return allTestsPassed;
+        });
+    }
+
+    bool test11()
+    {
+        // NOTE: In the future, we may add an OrphanCleanupPolicy or similar flag to IDisplayObject
+        // to allow certain orphaned objects to be preserved (e.g., templates, persistent resources, editor-only objects).
+        // If implemented, Factory::destroyOrphanedDisplayObjects() should skip objects marked for preservation.
+        // This test currently assumes all orphans are eligible for cleanup.        
+        return UnitTests::run("Box: Test #11", "Destroy all orphans", []() 
+        {
+            getFactory().destroyOrphanedDisplayObjects();            
+            if (getFactory().countOrphanedDisplayObjects())
+            {
+                std::cout << "\nThere are still orphaned display objects in the factory." << std::endl;
+                return false;
+            }     
+            return true;
         });
     }
 
@@ -353,7 +436,10 @@ namespace SDOM
             [&]() { return test6(); },
             [&]() { return test7(); },
             [&]() { return test8(); },
-            [&]() { return testHierarchyAnchors(); }
+            [&]() { return testHierarchyAnchors(); },
+            [&]() { return test10(); },
+            [&]() { return test11(); }
+
 
         };
         // Run each test and accumulate results

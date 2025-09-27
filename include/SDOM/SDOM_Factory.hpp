@@ -62,8 +62,14 @@ namespace SDOM
         DomHandle getStageHandle();
 
         void addDisplayObject(const std::string& name, 
-            std::unique_ptr<IDisplayObject> displayObject);
-        void removeDisplayObject(const std::string& name);
+            std::unique_ptr<IDisplayObject> displayObject);    // HUH??? This should not exist
+
+        void destroyDisplayObject(const std::string& name);
+
+        int countOrphanedDisplayObjects() const;
+        std::vector<DomHandle> getOrphanedDisplayObjects();
+        void destroyOrphanedDisplayObjects();
+
 
         // ----- Utility Methods -----
         std::vector<std::string> listDisplayObjectNames() const;

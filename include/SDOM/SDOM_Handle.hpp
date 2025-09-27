@@ -118,10 +118,15 @@ namespace SDOM
         //     if (!get()) {
         //         ERROR("Handle validation failed: Handle is null. Name: '" + name_ + "', Type: '" + type_ + "'");
         //     }
-        // }      
+        // }    
+        
+        
         bool isValid() const {
             return get() != nullptr;
         }          
+
+
+
 
         inline static Factory* factory_ = nullptr;
 

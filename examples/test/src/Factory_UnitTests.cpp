@@ -125,7 +125,7 @@ namespace SDOM
         // Test destroy resource
         result = UnitTests::run("Factory", "Resource Destruction", [&factory, &handle]() 
         {
-            factory.removeDisplayObject("testStage");
+            factory.destroyDisplayObject("testStage");
             DomHandle testHandle = factory.getDomHandle("testStage");
             return testHandle == nullptr;
         });
@@ -150,7 +150,7 @@ namespace SDOM
             // Define expected behavior: should not allow duplicate, or should overwrite
             bool ret = first != nullptr && second != nullptr;
             // clean up
-            factory.removeDisplayObject("testStage");
+            factory.destroyDisplayObject("testStage");
             return ret;
         });
         if (!result) { std::cout << CLR::indent() << "Duplicate resource creation test failed!" << CLR::RESET << std::endl; }
@@ -201,7 +201,7 @@ namespace SDOM
             }
 
             // Clean up
-            factory.removeDisplayObject("overwriteTest");
+            factory.destroyDisplayObject("overwriteTest");
             return true;
         });
         if (!result) { std::cout << CLR::indent() << debugRet << CLR::RESET << std::endl; }
