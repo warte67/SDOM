@@ -115,8 +115,30 @@ namespace SDOM
 
     class IDisplayObject : public IDataObject
     {
+        using SUPER = IDataObject;
 
     public:
+            // Note:Comparison operators for Sol2/Lua ...
+            //      The extra comparison operators in IDisplayObject are only needed 
+            //      to satisfy Sol2's requirements for automagic and Lua meta-methods.
+            bool operator==(const IDisplayObject& other) const {
+                return this == &other;
+            }
+            bool operator<(const IDisplayObject& other) const {
+                return this < &other;
+            }
+            bool operator!=(const IDisplayObject& other) const {
+                return !(*this == other);
+            }
+            bool operator>(const IDisplayObject& other) const {
+                return other < *this;
+            }
+            bool operator<=(const IDisplayObject& other) const {
+                return !(other < *this);
+            }
+            bool operator>=(const IDisplayObject& other) const {
+                return !(*this < other);
+            }
 
         static constexpr const char* TypeName = "IDisplayObject";
         struct InitStruct
@@ -181,8 +203,10 @@ namespace SDOM
         DomHandle getParent() const { return parent_; }
         IDisplayObject& setParent(const DomHandle& parent) { parent_ = parent; return *this; }
 
-        std::string getName() const { return name_; }
-        IDisplayObject& setName(const std::string& newName) { name_ = newName; return *this; }
+        // Moved to IDataObject
+        // std::string getName() const { return name_; }
+        // IDisplayObject& setName(const std::string& newName) { name_ = newName; return *this; }
+
         std::string getType() const { return type_; }
         IDisplayObject& setType(const std::string& newType) { type_ = newType; return *this; }
 
@@ -274,7 +298,7 @@ namespace SDOM
         IDisplayObject& setLocalTop(float value) { top_ = value; return *this; }
         IDisplayObject& setLocalBottom(float value) { bottom_ = value; return *this; }
    
-        std::string name_;
+        // std::string name_;  // moved to IDataObject
         std::string type_;
 
     public:  // temporarily public for testing
@@ -326,6 +350,25 @@ namespace SDOM
 
         void registerLua_();
 
+        // --- LUA Registration --- //
+    protected:
+        virtual void _registerLua_Usertype(sol::state_view lua)      { SUPER::_registerLua_Usertype(lua); }  
+        virtual void _registerLua_Properties(sol::state_view lua)    { SUPER::_registerLua_Properties(lua); }
+        virtual void _registerLua_Commands(sol::state_view lua)      { SUPER::_registerLua_Commands(lua); }
+        virtual void _registerLua_Meta(sol::state_view lua)          { SUPER::_registerLua_Meta(lua); }
+        virtual void _registerLua_Children(sol::state_view lua)      { SUPER::_registerLua_Children(lua); }
+
+        virtual void _registerLua_All(sol::state_view lua) override       
+        {
+            SUPER::_registerLua_All(lua);
+            _registerLua_Usertype(lua);
+            _registerLua_Properties(lua);
+            _registerLua_Commands(lua);
+            _registerLua_Meta(lua);
+            _registerLua_Children(lua);
+
+            std::cout << "IDisplayObject: Registered Lua bindings." << std::endl;
+        }
     };
 
 } // namespace SDOM

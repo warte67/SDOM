@@ -17,13 +17,7 @@ namespace SDOM
     {
         // make sure the DomHandles can access this Factory
         DomHandle::factory_ = this;
-        ResHandle::factory_ = this;    
-
-        // // register the Stage
-        // registerDomType("Stage", TypeCreators{
-        //     Stage::CreateFromLua, // Update to Lua-based creator
-        //     Stage::CreateFromInitStruct
-        // });        
+        ResHandle::factory_ = this;      
     }
 
     bool Factory::onInit()
@@ -49,7 +43,7 @@ namespace SDOM
         IDisplayObject::InitStruct init; // Default init struct
         init.type = typeName;
         DomHandle prototypeHandle = create(typeName, init);
-        // IDisplayObject* prototype = prototypeHandle.get();
+        prototypeHandle->setType(typeName);
         if (prototypeHandle)
         {
             prototypeHandle->registerLua_All(SDOM::getLua());

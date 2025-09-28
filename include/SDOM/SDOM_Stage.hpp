@@ -10,11 +10,14 @@ namespace SDOM
 
     class Stage : public IDisplayObject
     {
+        using SUPER = IDisplayObject; // Note the Super Class for Future Reference
+
         friend class Factory; // Allow Factory to create Stage Objects
         friend class Core;    // Allow Core to access Factory internals if needed
 
     public:
         static constexpr const char* TypeName = "Stage";
+        // --- InitStruct (inherits from IDisplayObject::InitStruct)
         struct InitStruct : public IDisplayObject::InitStruct
         {
             InitStruct() : IDisplayObject::InitStruct() 
@@ -31,7 +34,7 @@ namespace SDOM
 
     public:
 
-        // In SDOM_Stage.hpp
+        // --- Static Creators for this Type --- //
         static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
             return std::unique_ptr<IDisplayObject>(new Stage(config));
         }
@@ -40,60 +43,42 @@ namespace SDOM
             return std::unique_ptr<IDisplayObject>(new Stage(stageInit));
         }
 
-        /**
-         * @brief Destructor.
-         * @note Constructors are private; use Factory to create instances.
-         */
+        // --- Virtual Destructor --- // 
         virtual ~Stage() = default;
 
-        /**
-         * @name Virtual Methods
-         * @brief All virtual methods for this class.
-         * @{
-         */
+        // --- Virtual Methods from IDataObject --- //
+        virtual bool onInit() override;             
+        virtual void onQuit() override;      
 
-        /**
-         * @brief Called during object initialization.
-         * @return True if initialization succeeds, false otherwise.
-         */
-        virtual bool onInit() override;             ///< Called when the display object is initialized
-                
-        /**
-         * @brief Called during object shutdown.
-         */
-        virtual void onQuit() override;             ///< Called when the display object is being destroyed
-
-        /**
-         * @brief Called every frame to update the display object
-         * 
-         * @param fElapsedTime Amount of time since the last update (in seconds)
-         */
-        virtual void onUpdate(float fElapsedTime);  ///< Called every frame to update the display object
-
-        /**
-         * @brief Called when an event occurs.
-         * 
-         * @param event The event that occurred.
-         */
-        virtual void onEvent(const Event& event);   ///< Called when an event occurs
-
-        /**
-         * @brief Called to render the display object.
-         */
-        virtual void onRender();                    ///< Called to render the display object
-
-        /**
-         * @brief Runs unit tests for this data object.
-         * @details
-         * Called during startup or explicit unit test runs. Each object should validate its own state and behavior.
-         * @return true if all tests pass, false otherwise.
-         */
-        virtual bool onUnitTest();                  ///< Called during startup or explicit unit test runs.
-        /** @} */
+        // --- Virtual Methods from IDisplayObject --- //       
+        virtual void onUpdate(float fElapsedTime); 
+        virtual void onEvent(const Event& event); 
+        virtual void onRender(); 
+        virtual bool onUnitTest(); 
 
     public:
         inline static int mouseX = 0;   // current mouse horizontal coordinate within this stage
-        inline static int mouseY = 0;   // current mouse vertical coordinate within this stage    
+        inline static int mouseY = 0;   // current mouse vertical coordinate within this stage 
+
+        // --- LUA Registration --- //
+    protected:
+        virtual void _registerLua_Usertype(sol::state_view lua)      { SUPER::_registerLua_Usertype(lua); }  
+        virtual void _registerLua_Properties(sol::state_view lua)    { SUPER::_registerLua_Properties(lua); }
+        virtual void _registerLua_Commands(sol::state_view lua)      { SUPER::_registerLua_Commands(lua); }
+        virtual void _registerLua_Meta(sol::state_view lua)          { SUPER::_registerLua_Meta(lua); }
+        virtual void _registerLua_Children(sol::state_view lua)      { SUPER::_registerLua_Children(lua); }
+        virtual void _registerLua_All(sol::state_view lua) override       
+        {
+            SUPER::_registerLua_All(lua);
+            _registerLua_Usertype(lua);
+            _registerLua_Properties(lua);
+            _registerLua_Commands(lua);
+            _registerLua_Meta(lua);
+            _registerLua_Children(lua);
+
+            std::cout << "Stage: Registered Lua bindings." << std::endl;
+        }
+
     };
 
 } // namespace SDOM

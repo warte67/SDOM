@@ -44,9 +44,12 @@ namespace SDOM
     void Core::configure(const CoreConfig& config)
     {
         config_ = config;   
-        // Initialize the Factory
-        if (factory_)
-            factory_->onInit();   
+        // Initialize the Factory (but only once)
+        static bool factoryInitialized = false;
+        if (factory_ && !factoryInitialized) {
+            factory_->onInit();
+            factoryInitialized = true;
+        }
     }
 
     void Core::configureFromLua(const sol::table& lua)
@@ -387,6 +390,8 @@ namespace SDOM
     {
         // Note: We do not need to run onInit() for each object here because
         // the Factory creates each object and calls onInit() as it does so.
+
+        // Factory onInit() is called from Core::configure(const CoreConfig& config)
 
             // sequenceDiagram
             //     participant Main

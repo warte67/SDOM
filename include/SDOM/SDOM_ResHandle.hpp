@@ -17,6 +17,8 @@ namespace SDOM
 
     class ResHandle : public IDataObject
     {
+        using SUPER = IDataObject;
+
     public:
 
         ResHandle() = default;
@@ -36,25 +38,17 @@ namespace SDOM
 
         IResourceObject& operator*() const { return *get(); }
         IResourceObject* operator->() const { return get(); }
-
         operator bool() const { return get() != nullptr; }
         bool operator==(const ResHandle& other)  const { return name_ == other.name_ && type_ == other.type_ ; }
         bool operator!=(const ResHandle& other)  const { return !(*this == other); }
-        bool operator<(const ResHandle& other)   const { return name_ < other.name_; }
-        bool operator>(const ResHandle& other)   const { return name_ > other.name_; }
-        bool operator<=(const ResHandle& other)  const { return name_ <= other.name_; }
-        bool operator>=(const ResHandle& other)  const { return name_ >= other.name_; }
-
+        
         ResHandle& operator=(const ResHandle& other) {
             if (this != &other) {
-                // Copy members here
                 name_ = other.name_;
                 type_ = other.type_;
-                // Copy any other relevant members
             }
             return *this;
         }
-
         // Allow assignment from nullptr
         ResHandle& operator=(std::nullptr_t) 
         {
@@ -100,6 +94,15 @@ namespace SDOM
 
         mutable std::string formatted_; // to keep the formatted string alive for c_str()
 
+        // --- LUA Registration --- //
+    protected:
+        virtual void _registerLua_Usertype(sol::state_view lua) override;
+        virtual void _registerLua_Properties(sol::state_view lua) override;
+        virtual void _registerLua_Commands(sol::state_view lua) override;
+        virtual void _registerLua_Meta(sol::state_view lua) override;
+        virtual void _registerLua_Children(sol::state_view lua) override;
+        virtual void _registerLua_All(sol::state_view lua) override;
+        
     }; // END class ResHandle
 
 } // END namespace SDOM

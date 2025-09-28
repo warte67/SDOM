@@ -13,6 +13,7 @@
 #define __SDOM_FRONT_HPP__
     #ifndef SDOM_USE_INDIVIDUAL_HEADERS
 
+        #define SOL_ALL_AUTOMAGIC 0
         #define SOL_ALL_SAFETIES_ON 1
         #include <sol/sol.hpp>
 

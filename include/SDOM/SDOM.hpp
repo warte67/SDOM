@@ -64,9 +64,7 @@
 #include <unordered_set>
 #include <vector>
 
-// #include <SDOM/json.hpp> // Include nlohmann/json.hpp
-//     using Json = nlohmann::json;
-
+// #define SOL_ALL_AUTOMAGIC 0
 #include <sol/sol.hpp>
 
 

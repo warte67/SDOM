@@ -17,6 +17,8 @@ namespace SDOM
 
     class DomHandle : public IDataObject
     {
+        using SUPER = IDataObject;
+
     public:
 
         DomHandle() = default;
@@ -36,31 +38,27 @@ namespace SDOM
 
         IDisplayObject& operator*() const { return *get(); }
         IDisplayObject* operator->() const { return get(); }
-
         operator bool() const { return get() != nullptr; }
-        bool operator==(const DomHandle& other)  const { return name_ == other.name_ && type_ == other.type_ ; }
-        bool operator!=(const DomHandle& other)  const { return !(*this == other); }
-        bool operator<(const DomHandle& other)   const { return name_ < other.name_; }
-        bool operator>(const DomHandle& other)   const { return name_ > other.name_; }
-        bool operator<=(const DomHandle& other)  const { return name_ <= other.name_; }
-        bool operator>=(const DomHandle& other)  const { return name_ >= other.name_; }
+        // bool operator==(const DomHandle& other)  const { return name_ == other.name_ && type_ == other.type_ ; }
+        // bool operator!=(const DomHandle& other)  const { return !(*this == other); }
 
         DomHandle& operator=(const DomHandle& other) {
             if (this != &other) {
-                // Copy members here
                 name_ = other.name_;
                 type_ = other.type_;
-                // Copy any other relevant members
             }
             return *this;
         }
 
-        // Allow assignment from nullptr
-        DomHandle& operator=(std::nullptr_t) 
-        {
-            reset();
-            return *this;
-        }
+        // // Allow assignment from nullptr
+        // DomHandle& operator=(std::nullptr_t) 
+        //     return *this;
+        // Comparison operators
+        bool operator==(std::nullptr_t) const { return get() == nullptr; }
+        bool operator!=(std::nullptr_t) const { return get() != nullptr; }
+        bool operator==(const DomHandle& other) const { return name_ == other.name_ && type_ == other.type_; }
+        bool operator!=(const DomHandle& other) const { return !(*this == other); }
+        // }
 
         void reset() {
             // Clear internal state (pointer, name, etc.)
@@ -100,6 +98,14 @@ namespace SDOM
 
         mutable std::string formatted_; // to keep the formatted string alive for c_str()
 
+        // --- LUA Registration --- //
+    protected:
+        virtual void _registerLua_Usertype(sol::state_view lua) override;
+        virtual void _registerLua_Properties(sol::state_view lua) override;
+        virtual void _registerLua_Commands(sol::state_view lua) override;
+        virtual void _registerLua_Meta(sol::state_view lua) override;
+        virtual void _registerLua_Children(sol::state_view lua) override;
+        virtual void _registerLua_All(sol::state_view lua) override;
     }; // END class DomHandle
 
 } // END namespace SDOM
