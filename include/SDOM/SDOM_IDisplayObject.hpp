@@ -105,6 +105,8 @@ Summary:
 
 #include <SDOM/SDOM_EventTypeHash.hpp>
 
+
+
 namespace SDOM
 {
 
@@ -302,8 +304,13 @@ namespace SDOM
         // --- Lua Registration --- //
         virtual void _registerLua_Usertype(sol::state_view lua);
         virtual void _registerLua(const std::string& typeName, sol::state_view lua);
+        sol::usertype<IDisplayObject> objHandleType_;
+    
     };
 
 } // namespace SDOM
+
+// // include the LUA wrappers for IDisplayObject
+// #include "lua_IDisplayObject.hpp"    
 
 #endif // __SDOM_IDISPLAY_OBJECT_HPP__

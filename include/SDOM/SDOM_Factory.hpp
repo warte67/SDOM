@@ -122,32 +122,24 @@ namespace SDOM
         void registerLuaObjectTypes_test();
 
         template<typename T>
-        void registerLuaUsertype(const std::string& typeName, sol::state_view lua)
+        void registerLuaPropertiesAndCommands(const std::string& typeName, sol::usertype<T>& usertypeTable) 
         {
-            return; // Temporarily disable to avoid issues during transition
-
-            
-            sol::usertype<T> usertype = lua.new_usertype<T>(typeName);
-            const auto* entry = getTypeRegistryEntry(typeName);
+            auto* entry = getTypeRegistryEntry(typeName);
             if (!entry) return;
 
-            // Properties
-            for (const auto& prop : entry->properties) {
-                if (prop.getter) {
-                    usertype[prop.propertyName] = prop.getter;
-                }
-                if (prop.setter) {
+            for (const auto& prop : entry->properties) 
+            {
+                if (prop.getter) usertypeTable[prop.propertyName] = prop.getter;
+                if (prop.setter) 
+                {
                     std::string setterName = "set" + prop.propertyName;
                     setterName[3] = std::toupper(setterName[3]);
-                    usertype[setterName] = prop.setter;
+                    usertypeTable[setterName] = prop.setter;
                 }
             }
-
-            // Commands
-            for (const auto& cmd : entry->commands) {
-                if (cmd.command) {
-                    usertype[cmd.commandName] = cmd.command;
-                }
+            for (const auto& cmd : entry->commands) 
+            {
+                if (cmd.command) usertypeTable[cmd.commandName] = cmd.command;
             }
         }
 

@@ -24,7 +24,7 @@ namespace SDOM
     {
         // --- Lua UserType Registration --- //
         Core& core = Core::getInstance();
-        core._registerLua_Usertype(core.getLua());
+        // core._registerLua_Usertype(core.getLua());
         core._registerLua("Core", core.getLua());
         // core._registerLua_Commands(core.getLua());
 
@@ -38,7 +38,7 @@ namespace SDOM
 
         // Register other built-in types here as needed ...   
         DomHandle prototypeHandle; // Default DomHandle for registration 
-        prototypeHandle._registerLua_Usertype(core.getLua());
+        // prototypeHandle._registerLua_Usertype(core.getLua());
         prototypeHandle._registerLua("DomHandle", core.getLua());
         // ResHandle prototypeResHandle; // Default ResHandle for registration 
         // prototypeResHandle._registerLua_Usertype(core.getLua());
@@ -60,7 +60,7 @@ namespace SDOM
         prototypeHandle->setType(typeName);
         if (prototypeHandle)
         {
-            prototypeHandle->_registerLua_Usertype(SDOM::getLua());
+            // prototypeHandle->_registerLua_Usertype(SDOM::getLua());
             prototypeHandle->_registerLua(typeName, SDOM::getLua());
             destroyDisplayObject(prototypeHandle.get()->getName()); // Clean up prototype
         }   

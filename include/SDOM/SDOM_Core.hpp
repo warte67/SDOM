@@ -139,7 +139,7 @@ namespace SDOM
 
         // --- Object Creation --- //
         DomHandle createDisplayObject(const std::string& typeName, const sol::table& config);
-        DomHandle createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init);
+        DomHandle createDisplayObject(const std::string& typeName, const SDOM::IDisplayObject::InitStruct& init);
         DomHandle createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript);
 
         // --- Object Lookup --- //
@@ -239,6 +239,7 @@ namespace SDOM
         // --- Lua Registration --- //
         virtual void _registerLua_Usertype(sol::state_view lua)  override;  
         virtual void _registerLua(const std::string& typeName, sol::state_view lua);
+        sol::usertype<Core> objHandleType_;
     };
 
 } // namespace SDOM

@@ -1081,23 +1081,38 @@ namespace SDOM
         // std::cout << "Stage: Registered Lua bindings." << std::endl;
     }
 
+
     void Core::_registerLua(const std::string& typeName, sol::state_view lua)
     {
         std::string typeNameLocal = "Core";
         std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+                << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+            
+        return; // Keep to avoid lua issues during development
 
-        // 1. Call base class registration to include inherited properties/commands
-        SUPER::_registerLua(typeName, lua);
+        // 1. Create and save usertype table (no constructor)
+        sol::usertype<Core> objHandleType = lua.new_usertype<Core>(typeName);
+        this->objHandleType_ = objHandleType; // Save in IDataObject
 
-        // 2. Register this class's properties and commands
-        //    factory_->registerLuaProperty(typeName, ...);
-        //    factory_->registerLuaCommand(typeName, ...);
+        // 2. Do NOT call SUPER::_registerLua(typeName, lua);
 
-        // 3. Register the Lua usertype using the registry
-        factory_->registerLuaUsertype<Core>(typeName, lua);
-        // getFactory().registerLuaUsertype<IDisplayObject>(typeName, lua);          
+        // 3. Register properties/commands specific to Core
+        factory_->registerLuaCommand(typeName, "quit",
+            [](IDataObject& obj, sol::object args, sol::state_view lua) {
+                static_cast<Core&>(obj).quit();
+            });
+
+        factory_->registerLuaCommand(typeName, "shutdown",
+            [](IDataObject& obj, sol::object args, sol::state_view lua) {
+                static_cast<Core&>(obj).shutdown();
+            });
+
+        // 4. Register properties/commands using registry
+        factory_->registerLuaPropertiesAndCommands(typeName, objHandleType_);
+
+        // 5. No meta_functions to worry about for Core
     }
+
 
 } // namespace SDOM
 

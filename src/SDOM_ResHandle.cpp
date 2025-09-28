@@ -33,17 +33,58 @@ namespace SDOM
         std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
 
-        // 1. Call base class registration to include inherited properties/commands
+        return;  // JUST RETURN WHILE DEVELOPING
+
+        // 1. Create and save usertype table first
+        sol::usertype<ResHandle> objHandleType = lua.new_usertype<ResHandle>(
+            typeName,
+            sol::constructors<ResHandle(), ResHandle(const std::string&, const std::string&)>()
+        );
+        this->objHandleType_ = objHandleType; // Save in IDataObject
+
+        // 2. Call base registration
         SUPER::_registerLua(typeName, lua);
 
-        // 2. Register this class's properties and commands
-        //    factory_->registerLuaProperty(typeName, ...);
-        //    factory_->registerLuaCommand(typeName, ...);
+        // // 3. Register properties/commands (custom logic)
+        // factory_->registerLuaProperty(typeName, "get",
+        //     [](const IDataObject& obj, sol::state_view lua) { 
+        //         return sol::make_object(lua, static_cast<const ResHandle&>(obj).get()); 
+        //     },
+        //     nullptr);
 
-        // 3. Register the Lua usertype using the registry
-        factory_->registerLuaUsertype<ResHandle>(typeName, lua);
-        // getFactory().registerLuaUsertype<ResHandle>(typeName, lua);          
+        // factory_->registerLuaProperty(typeName, "isValid",
+        //     [](const IDataObject& obj, sol::state_view lua) { 
+        //         return sol::make_object(lua, static_cast<const ResHandle&>(obj).isValid()); 
+        //     },
+        //     nullptr);
+
+        // factory_->registerLuaProperty(typeName, "getName",
+        //     [](const IDataObject& obj, sol::state_view lua) { 
+        //         return sol::make_object(lua, static_cast<const ResHandle&>(obj).getName()); 
+        //     },
+        //     nullptr);
+
+        // factory_->registerLuaProperty(typeName, "getType",
+        //     [](const IDataObject& obj, sol::state_view lua) { 
+        //         return sol::make_object(lua, static_cast<const ResHandle&>(obj).getType()); 
+        //     },
+        //     nullptr);
+
+        // 4. Register properties/commands using registry
+        factory_->registerLuaPropertiesAndCommands(typeName, objHandleType_);
+
+        // 5. Register meta functions
+        objHandleType[sol::meta_function::to_string] = [](ResHandle& h) 
+        {
+            auto obj = h.get();
+            if (obj)
+            {
+                return "ResHandle(" + obj->getName() + ":" + obj->getType() + ")";
+            }
+            return std::string("ResHandle(invalid)");
+        };
     }
+
 
 
 

@@ -411,13 +411,20 @@ void Box::_registerLua(const std::string& typeName, sol::state_view lua)
     std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
                 << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
 
-    // 1. Call base class registration to include inherited properties/commands
+    // 1. Create and save usertype table (no constructor)
+    sol::usertype<Box> objHandleType = lua.new_usertype<Box>(typeName,
+        sol::base_classes, sol::bases<SUPER>()
+        // ...Box-specific methods...
+    );
+
+    this->objHandleType_ = objHandleType;
+
+    // 2. Call base class registration to include inherited properties/commands
     SUPER::_registerLua(typeName, lua);
 
-    // 2. Register this class's properties and commands
-    //    factory_->registerLuaProperty(typeName, ...);
-    //    factory_->registerLuaCommand(typeName, ...);
+    // 3. Register properties/commands (custom logic)
+    // ...
 
-    // 3. Register the Lua usertype using the registry
-    SDOM::getFactory().registerLuaUsertype<Box>(typeName, lua);          
+    // 4. Register the Lua usertype using the registry
+    SDOM::getFactory().registerLuaPropertiesAndCommands(typeName, objHandleType_);             
 }

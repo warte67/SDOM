@@ -241,17 +241,46 @@ namespace SDOM
     {
         std::string typeNameLocal = "IDisplayObject";
         std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+                << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+            
+        return; // Keep to avoid lua issues during development
 
-        // 1. Call base class registration to include inherited properties/commands
-        SUPER::_registerLua(typeName, lua);
+        // 1. Create and save usertype table (no constructor)
+        sol::usertype<IDisplayObject> objHandleType = lua.new_usertype<IDisplayObject>(typeName);
+        this->objHandleType_ = objHandleType; // Save in IDataObject
 
-        // 2. Register this class's properties and commands
-        //    factory_->registerLuaProperty(typeName, ...);
-        //    factory_->registerLuaCommand(typeName, ...);
+        // 2. Register properties using the factory
+        // auto& factory = getFactory();
 
-        // 3. Register the Lua usertype using the registry
-        getFactory().registerLuaUsertype<IDisplayObject>(typeName, lua);
+        // factory.registerLuaProperty(typeName, "getName",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getName());
+        //     },
+        //     [](IDataObject& obj, sol::object value, sol::state_view) {
+        //         static_cast<IDisplayObject&>(obj).setName(value.as<std::string>());
+        //     }
+        // );
+        // factory.registerLuaProperty(typeName, "getType",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getType());
+        //     },
+        //     nullptr
+        // );
+
+        // 3. Register properties/commands specific to IDisplayObject
+        // getFactory().registerLuaCommand(typeName, "quit",
+        //     [](IDataObject& obj, sol::object args, sol::state_view lua) {
+        //         static_cast<Core&>(obj).quit();
+        //     });
+
+        // getFactory().registerLuaCommand(typeName, "shutdown",
+        //     [](IDataObject& obj, sol::object args, sol::state_view lua) {
+        //         static_cast<Core&>(obj).shutdown();
+        //     });       
+        
+        // 4. Register properties/commands using registry
+        getFactory().registerLuaPropertiesAndCommands(typeName, objHandleType_);
+
     } // end _registerLua()
 
 

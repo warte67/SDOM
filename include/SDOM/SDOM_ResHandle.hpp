@@ -98,6 +98,8 @@ namespace SDOM
         // --- LUA Registration --- //
         virtual void _registerLua_Usertype(sol::state_view lua) override;
         virtual void _registerLua(const std::string& typeName, sol::state_view lua);
+        sol::usertype<ResHandle> objHandleType_;
+
         
     }; // END class ResHandle
 

@@ -136,6 +136,8 @@ namespace SDOM
             std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
                       << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
         }   
+        sol::usertype<IDataObject> objHandleType_;
+
         // --- End New Virtual LUA Registration for Sol2 ---
 
 

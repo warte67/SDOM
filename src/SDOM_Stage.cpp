@@ -83,10 +83,11 @@ namespace SDOM
     {
         SUPER::_registerLua_Usertype(lua);
 
-        lua.new_usertype<Stage>("Stage"
-            // Add only Stage-specific methods here, if any
-            // e.g. "specialStageMethod", &Stage::specialStageMethod
+        lua.new_usertype<Stage>("Stage",
+            sol::base_classes, sol::bases<SUPER>()
+            // ...Stage-specific methods...
         );
+
         // std::cout << "Stage: Registered Lua bindings." << std::endl;
     }
 
@@ -96,15 +97,22 @@ namespace SDOM
         std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
 
-        // 1. Call base class registration to include inherited properties/commands
+        // 1. Create and save usertype table (no constructor)
+        sol::usertype<Stage> objHandleType = lua.new_usertype<Stage>(typeName,
+            sol::base_classes, sol::bases<SUPER>()
+            // ...Stage-specific methods...
+        );
+
+        this->objHandleType_ = objHandleType;
+
+        // 2. Call base class registration to include inherited properties/commands
         SUPER::_registerLua(typeName, lua);
 
-        // 2. Register this class's properties and commands
-        //    factory_->registerLuaProperty(typeName, ...);
-        //    factory_->registerLuaCommand(typeName, ...);
+        // 3. Register properties/commands (custom logic)
+        // ...
 
-        // 3. Register the Lua usertype using the registry
-        getFactory().registerLuaUsertype<IDisplayObject>(typeName, lua);          
+        // 4. Register the Lua usertype using the registry
+        getFactory().registerLuaPropertiesAndCommands(typeName, objHandleType_);          
     }
 
 
