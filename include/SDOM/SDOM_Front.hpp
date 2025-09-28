@@ -17,7 +17,7 @@
         #define SOL_ALL_SAFETIES_ON 1
         #include <sol/sol.hpp>
 
-        #include <SDOM/json.hpp>  // This one is going away
+        // #include <SDOM/json.hpp>  // This one is going away
 
         #include <SDOM/SDOM.hpp>
         #include <SDOM/SDOM_CLR.hpp>

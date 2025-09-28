@@ -195,6 +195,19 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Demonstrated robust C++/Lua test integration: Lua scripts return boolean results to C++ test framework, enabling seamless cross-language validation.
         - Codebase and Lua API stability increased, with reliable resource management and hierarchy checks.
 
+### [September 28, 2025]
+
+- **Lua Registration Consolidation:**  
+    - Consolidated all Lua usertype registration logic into a single protected virtual method `_registerLua_Usertype(sol::state_view lua)` in `IDataObject`.
+    - Removed legacy property, command, meta, and children registration methods from `IDataObject`.
+    - Public registration now uses only `registerLua_Usertype()`, simplifying the API and reducing maintenance overhead.
+
+- **Object Type Registration Refactor:**  
+    - Stripped all per-object type registration and registry maps from `IDataObject`.
+    - Planning to move type-level property/command registration and introspection to the Factory, using a centralized registry (`ObjectTypeRegistryEntry`).
+    - This will enable efficient, type-based introspection and Lua binding, reducing memory usage and improving extensibility.
+
+
 # Next Steps:
 ## Centralize Registration
 

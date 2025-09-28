@@ -80,43 +80,4 @@ namespace SDOM
         return tbl;
     }
 
-    void IDataObject::registerProperty(const std::string& name, Getter getter, Setter setter)
-    {
-        getters_[name] = getter;
-        setters_[name] = setter;
-    }
-
-    sol::object IDataObject::getProperty(const std::string& name, sol::state_view lua) const
-    {
-        auto it = getters_.find(name);
-        if (it != getters_.end() && it->second)
-        {
-            return it->second(*this, lua);
-        }
-        ERROR("Getter property '" + name + "' not found.");
-        return sol::nil;
-    }
-
-    void IDataObject::registerCommand(const std::string& name, Command cmd)
-    {
-        commands_[name] = cmd;
-    }
-
-    void IDataObject::command(const std::string& name, sol::object args, sol::state_view lua)
-    {
-        auto it = commands_.find(name);
-        if (it != commands_.end() && it->second)
-        {
-            it->second(*this, args, lua);
-        }
-        else
-        {
-            ERROR("Command '" + name + "' not found.");
-        }
-    }
-
-    const std::unordered_map<std::string, IDataObject::Command>& IDataObject::getCommands() const
-    {
-        return commands_;
-    }
 } // namespace SDOM

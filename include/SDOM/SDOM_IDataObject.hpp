@@ -106,12 +106,6 @@ namespace SDOM
         void fromLua(const sol::table& lua, sol::state_view lua_state);
         sol::table toLua(sol::state_view lua) const;
 
-        void registerProperty(const std::string& name, Getter getter, Setter setter = nullptr);
-        sol::object getProperty(const std::string& name, sol::state_view lua) const;
-        void registerCommand(const std::string& name, Command cmd);
-        void command(const std::string& name, sol::object args, sol::state_view lua);
-        const std::unordered_map<std::string, Command>& getCommands() const;
-
         template<typename T>
         static T lua_value_case_insensitive(const sol::table& tbl, const std::string& key, const T& default_value)
         {
@@ -130,32 +124,15 @@ namespace SDOM
         std::string getName() const { return name_; }
         void setName(const std::string& newName) { name_ = newName; }
 
+        // --- New Virtual LUA Registration for Sol2 ---
     public:
         void registerLua_Usertype(sol::state_view lua)      { this->_registerLua_Usertype(lua); }
-        void registerLua_Properties(sol::state_view lua)    { this->_registerLua_Properties(lua); }
-        void registerLua_Commands(sol::state_view lua)      { this->_registerLua_Commands(lua); }
-        void registerLua_Meta(sol::state_view lua)          { this->_registerLua_Meta(lua); }
-        void registerLua_Children(sol::state_view lua)      { this->_registerLua_Children(lua); }
-        void registerLua_All(sol::state_view lua)           { this->_registerLua_All(lua); }
-
     protected:
-        // ---   New Virtual LUA Registration Methods for Sol2   ---
-        virtual void _registerLua_Usertype(sol::state_view lua)      {}  
-        virtual void _registerLua_Properties(sol::state_view lua)    {}
-        virtual void _registerLua_Commands(sol::state_view lua)      {}
-        virtual void _registerLua_Meta(sol::state_view lua)          {}
-        virtual void _registerLua_Children(sol::state_view lua)      {}
-        virtual void _registerLua_All(sol::state_view lua)           
+        virtual void _registerLua_Usertype(sol::state_view lua)      
         {
-            _registerLua_Usertype(lua);
-            _registerLua_Properties(lua);
-            _registerLua_Commands(lua);
-            _registerLua_Meta(lua);
-            _registerLua_Children(lua);
-
             std::cout << "IDataObject: Registered Lua bindings." << std::endl;
-        }
-        // --- End New Virtual LUA Registration Methods for Sol2 ---
+        }  
+        // --- End New Virtual LUA Registration for Sol2 ---
 
 
     protected:

@@ -58,321 +58,321 @@ namespace SDOM
 
         // Register properties (getter/setter pairs)
 
-        registerProperty("type",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getTypeName());
-            },
-            nullptr // read-only
-        );
+        // registerProperty("type",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getTypeName());
+        //     },
+        //     nullptr // read-only
+        // );
 
-        registerProperty("phase",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getPhaseString());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                auto& e = static_cast<Event&>(obj);
-                std::string s = val.as<std::string>();
-                if (s == "Capture") e.setPhase(Phase::Capture);
-                else if (s == "Target") e.setPhase(Phase::Target);
-                else if (s == "Bubbling") e.setPhase(Phase::Bubbling);
-                return obj;
-            }
-        );
+        // registerProperty("phase",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getPhaseString());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         auto& e = static_cast<Event&>(obj);
+        //         std::string s = val.as<std::string>();
+        //         if (s == "Capture") e.setPhase(Phase::Capture);
+        //         else if (s == "Target") e.setPhase(Phase::Target);
+        //         else if (s == "Bubbling") e.setPhase(Phase::Bubbling);
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("target",
-            [](const IDataObject& obj, sol::state_view lua) {
-                auto handle = static_cast<const Event&>(obj).getTarget();
-                sol::table tbl = lua.create_table();
-                tbl["name"] = handle.getName();
-                tbl["type"] = handle.getType();
-                return sol::make_object(lua, tbl);
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                auto& e = static_cast<Event&>(obj);
-                sol::table tbl = val.as<sol::table>();
-                std::string name = tbl["name"];
-                std::string type = tbl["type"];
-                e.setTarget(DomHandle(name, type));
-                return obj;
-            }
-        );
+        // registerProperty("target",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         auto handle = static_cast<const Event&>(obj).getTarget();
+        //         sol::table tbl = lua.create_table();
+        //         tbl["name"] = handle.getName();
+        //         tbl["type"] = handle.getType();
+        //         return sol::make_object(lua, tbl);
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         auto& e = static_cast<Event&>(obj);
+        //         sol::table tbl = val.as<sol::table>();
+        //         std::string name = tbl["name"];
+        //         std::string type = tbl["type"];
+        //         e.setTarget(DomHandle(name, type));
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("currentTarget",
-            [](const IDataObject& obj, sol::state_view lua) { 
-                auto handle = static_cast<const Event&>(obj).getCurrentTarget();
-                sol::table tbl = lua.create_table();
-                tbl["name"] = handle.getName();
-                tbl["type"] = handle.getType();
-                return sol::make_object(lua, tbl);
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                auto& e = static_cast<Event&>(obj);
-                sol::table tbl = val.as<sol::table>();
-                std::string name = tbl["name"];
-                std::string type = tbl["type"];
-                e.setCurrentTarget(DomHandle(name, type));
-                return obj;
-            }
-        );
+        // registerProperty("currentTarget",
+        //     [](const IDataObject& obj, sol::state_view lua) { 
+        //         auto handle = static_cast<const Event&>(obj).getCurrentTarget();
+        //         sol::table tbl = lua.create_table();
+        //         tbl["name"] = handle.getName();
+        //         tbl["type"] = handle.getType();
+        //         return sol::make_object(lua, tbl);
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         auto& e = static_cast<Event&>(obj);
+        //         sol::table tbl = val.as<sol::table>();
+        //         std::string name = tbl["name"];
+        //         std::string type = tbl["type"];
+        //         e.setCurrentTarget(DomHandle(name, type));
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("relatedTarget",
-            [](const IDataObject& obj, sol::state_view lua) { 
-                auto handle = static_cast<const Event&>(obj).getRelatedTarget();
-                sol::table tbl = lua.create_table();
-                tbl["name"] = handle.getName();
-                tbl["type"] = handle.getType();
-                return sol::make_object(lua, tbl);
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                auto& e = static_cast<Event&>(obj);
-                sol::table tbl = val.as<sol::table>();
-                std::string name = tbl["name"];
-                std::string type = tbl["type"];
-                e.setRelatedTarget(DomHandle(name, type));
-                return obj;
-            }
-        );
+        // registerProperty("relatedTarget",
+        //     [](const IDataObject& obj, sol::state_view lua) { 
+        //         auto handle = static_cast<const Event&>(obj).getRelatedTarget();
+        //         sol::table tbl = lua.create_table();
+        //         tbl["name"] = handle.getName();
+        //         tbl["type"] = handle.getType();
+        //         return sol::make_object(lua, tbl);
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         auto& e = static_cast<Event&>(obj);
+        //         sol::table tbl = val.as<sol::table>();
+        //         std::string name = tbl["name"];
+        //         std::string type = tbl["type"];
+        //         e.setRelatedTarget(DomHandle(name, type));
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("propagationStopped",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).isPropagationStopped());
-            },
-            nullptr // read-only
-        );
+        // registerProperty("propagationStopped",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).isPropagationStopped());
+        //     },
+        //     nullptr // read-only
+        // );
 
-        registerProperty("disableDefaultBehavior",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).isDefaultBehaviorDisabled());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setDisableDefaultBehavior(val.as<bool>());
-                return obj;
-            }
-        );
+        // registerProperty("disableDefaultBehavior",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).isDefaultBehaviorDisabled());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setDisableDefaultBehavior(val.as<bool>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("useCapture",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getUseCapture());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setUseCapture(val.as<bool>());
-                return obj;
-            }
-        );
+        // registerProperty("useCapture",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getUseCapture());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setUseCapture(val.as<bool>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("elapsedTime",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getElapsedTime());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setElapsedTime(val.as<float>());
-                return obj;
-            }
-        );
+        // registerProperty("elapsedTime",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getElapsedTime());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setElapsedTime(val.as<float>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("payload",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return static_cast<const Event&>(obj).getPayload();
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setPayload(val.as<sol::table>());
-                return obj;
-            }
-        );
+        // registerProperty("payload",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return static_cast<const Event&>(obj).getPayload();
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setPayload(val.as<sol::table>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("mouse_x",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getMouseX());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setMouseX(val.as<float>());
-                return obj;
-            }
-        );
+        // registerProperty("mouse_x",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getMouseX());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setMouseX(val.as<float>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("mouse_y",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getMouseY());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setMouseY(val.as<float>());
-                return obj;
-            }
-        );
+        // registerProperty("mouse_y",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getMouseY());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setMouseY(val.as<float>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("wheelX",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getWheelX());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setWheelX(val.as<float>());
-                return obj;
-            }
-        );
+        // registerProperty("wheelX",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getWheelX());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setWheelX(val.as<float>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("wheelY",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getWheelY());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setWheelY(val.as<float>());
-                return obj;
-            }
-        );
+        // registerProperty("wheelY",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getWheelY());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setWheelY(val.as<float>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("dragOffsetX",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getDragOffsetX());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setDragOffsetX(val.as<float>());
-                return obj;
-            }
-        );
+        // registerProperty("dragOffsetX",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getDragOffsetX());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setDragOffsetX(val.as<float>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("dragOffsetY",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getDragOffsetY());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setDragOffsetY(val.as<float>());
-                return obj;
-            }
-        );
+        // registerProperty("dragOffsetY",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getDragOffsetY());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setDragOffsetY(val.as<float>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("clickCount",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getClickCount());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setClickCount(val.as<int>());
-                return obj;
-            }
-        );
+        // registerProperty("clickCount",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getClickCount());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setClickCount(val.as<int>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("button",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getButton());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setButton(val.as<uint8_t>());
-                return obj;
-            }
-        );
+        // registerProperty("button",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getButton());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setButton(val.as<uint8_t>());
+        //         return obj;
+        //     }
+        // );
 
-        // Register Keyboard Event Properties
+        // // Register Keyboard Event Properties
 
-        registerProperty("scancode",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getScanCode());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setScanCode(val.as<SDL_Scancode>());
-                return obj;
-            }
-        );
+        // registerProperty("scancode",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getScanCode());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setScanCode(val.as<SDL_Scancode>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("keycode",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getKeycode());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setKeycode(val.as<SDL_Keycode>());
-                return obj;
-            }
-        );
+        // registerProperty("keycode",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getKeycode());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setKeycode(val.as<SDL_Keycode>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("keymod",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getKeymod());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setKeymod(val.as<Uint16>());
-                return obj;
-            }
-        );
+        // registerProperty("keymod",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getKeymod());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setKeymod(val.as<Uint16>());
+        //         return obj;
+        //     }
+        // );
 
-        registerProperty("asciiCode",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const Event&>(obj).getAsciiCode());
-            },
-            [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
-                static_cast<Event&>(obj).setAsciiCode(val.as<int>());
-                return obj;
-            }
-        );
+        // registerProperty("asciiCode",
+        //     [](const IDataObject& obj, sol::state_view lua) {
+        //         return sol::make_object(lua, static_cast<const Event&>(obj).getAsciiCode());
+        //     },
+        //     [](IDataObject& obj, sol::object val, sol::state_view) -> IDataObject& {
+        //         static_cast<Event&>(obj).setAsciiCode(val.as<int>());
+        //         return obj;
+        //     }
+        // );
 
-        // Register commands (mutating actions)
+        // // Register commands (mutating actions)
 
-        registerCommand("stopPropagation",
-            [](IDataObject& obj, sol::object, sol::state_view) {
-                static_cast<Event&>(obj).stopPropagation();
-            }
-        );
+        // registerCommand("stopPropagation",
+        //     [](IDataObject& obj, sol::object, sol::state_view) {
+        //         static_cast<Event&>(obj).stopPropagation();
+        //     }
+        // );
 
-        registerCommand("setPhase",
-            [](IDataObject& obj, sol::object val, sol::state_view) {
-                auto& e = static_cast<Event&>(obj);
-                std::string s = val.as<std::string>();
-                if (s == "Capture") e.setPhase(Phase::Capture);
-                else if (s == "Target") e.setPhase(Phase::Target);
-                else if (s == "Bubbling") e.setPhase(Phase::Bubbling);
-            }
-        );
+        // registerCommand("setPhase",
+        //     [](IDataObject& obj, sol::object val, sol::state_view) {
+        //         auto& e = static_cast<Event&>(obj);
+        //         std::string s = val.as<std::string>();
+        //         if (s == "Capture") e.setPhase(Phase::Capture);
+        //         else if (s == "Target") e.setPhase(Phase::Target);
+        //         else if (s == "Bubbling") e.setPhase(Phase::Bubbling);
+        //     }
+        // );
 
-        registerCommand("setTarget",
-            [](IDataObject& obj, sol::object val, sol::state_view) {
-                auto& e = static_cast<Event&>(obj);
-                sol::table tbl = val.as<sol::table>();
-                std::string name = tbl["name"];
-                std::string type = tbl["type"];
-                e.setTarget(DomHandle(name, type));
-            }
-        );
+        // registerCommand("setTarget",
+        //     [](IDataObject& obj, sol::object val, sol::state_view) {
+        //         auto& e = static_cast<Event&>(obj);
+        //         sol::table tbl = val.as<sol::table>();
+        //         std::string name = tbl["name"];
+        //         std::string type = tbl["type"];
+        //         e.setTarget(DomHandle(name, type));
+        //     }
+        // );
 
-        registerCommand("setCurrentTarget",
-            [](IDataObject& obj, sol::object val, sol::state_view) {
-                auto& e = static_cast<Event&>(obj);
-                sol::table tbl = val.as<sol::table>();
-                std::string name = tbl["name"];
-                std::string type = tbl["type"];
-                e.setCurrentTarget(DomHandle(name, type));
-            }
-        );
+        // registerCommand("setCurrentTarget",
+        //     [](IDataObject& obj, sol::object val, sol::state_view) {
+        //         auto& e = static_cast<Event&>(obj);
+        //         sol::table tbl = val.as<sol::table>();
+        //         std::string name = tbl["name"];
+        //         std::string type = tbl["type"];
+        //         e.setCurrentTarget(DomHandle(name, type));
+        //     }
+        // );
 
-        registerCommand("setRelatedTarget",
-            [](IDataObject& obj, sol::object val, sol::state_view) {
-                auto& e = static_cast<Event&>(obj);
-                sol::table tbl = val.as<sol::table>();
-                std::string name = tbl["name"];
-                std::string type = tbl["type"];
-                e.setRelatedTarget(DomHandle(name, type));
-            }
-        );
+        // registerCommand("setRelatedTarget",
+        //     [](IDataObject& obj, sol::object val, sol::state_view) {
+        //         auto& e = static_cast<Event&>(obj);
+        //         sol::table tbl = val.as<sol::table>();
+        //         std::string name = tbl["name"];
+        //         std::string type = tbl["type"];
+        //         e.setRelatedTarget(DomHandle(name, type));
+        //     }
+        // );
 
-        registerCommand("setDisableDefaultBehavior",
-            [](IDataObject& obj, sol::object val, sol::state_view) {
-                static_cast<Event&>(obj).setDisableDefaultBehavior(val.as<bool>());
-            }
-        );
+        // registerCommand("setDisableDefaultBehavior",
+        //     [](IDataObject& obj, sol::object val, sol::state_view) {
+        //         static_cast<Event&>(obj).setDisableDefaultBehavior(val.as<bool>());
+        //     }
+        // );
 
-        registerCommand("setUseCapture",
-            [](IDataObject& obj, sol::object val, sol::state_view) {
-                static_cast<Event&>(obj).setUseCapture(val.as<bool>());
-            }
-        );
+        // registerCommand("setUseCapture",
+        //     [](IDataObject& obj, sol::object val, sol::state_view) {
+        //         static_cast<Event&>(obj).setUseCapture(val.as<bool>());
+        //     }
+        // );
 
-        registerCommand("setElapsedTime",
-            [](IDataObject& obj, sol::object val, sol::state_view) {
-                static_cast<Event&>(obj).setElapsedTime(val.as<float>());
-            }
-        );
+        // registerCommand("setElapsedTime",
+        //     [](IDataObject& obj, sol::object val, sol::state_view) {
+        //         static_cast<Event&>(obj).setElapsedTime(val.as<float>());
+        //     }
+        // );
 
-        registerCommand("setPayload",
-            [](IDataObject& obj, sol::object val, sol::state_view) {
-                static_cast<Event&>(obj).setPayload(val.as<sol::table>());
-            }
-        );
+        // registerCommand("setPayload",
+        //     [](IDataObject& obj, sol::object val, sol::state_view) {
+        //         static_cast<Event&>(obj).setPayload(val.as<sol::table>());
+        //     }
+        // );
     }
 
     // virtual methods

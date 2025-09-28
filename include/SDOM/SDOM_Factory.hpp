@@ -85,6 +85,18 @@ namespace SDOM
             int dragStartWorldY;
         };
         std::vector<futureChild> futureChildrenList_;
+
+        // // --- Object Type Registry --- //
+        // struct TypeRegistryEntry
+        // {
+        //     std::string typeName;
+        //     std::unordered_map<std::string, IDataObject::Getter> getters;
+        //     std::unordered_map<std::string, IDataObject::Setter> setters;
+        //     std::unordered_map<std::string, IDataObject::Command> commands;
+        // };
+        // std::unordered_map<std::string, TypeRegistryEntry> typeRegistry_;        
     };
 
 }
+
+

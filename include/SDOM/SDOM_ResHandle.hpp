@@ -94,14 +94,9 @@ namespace SDOM
 
         mutable std::string formatted_; // to keep the formatted string alive for c_str()
 
-        // --- LUA Registration --- //
     protected:
+        // --- LUA Registration --- //
         virtual void _registerLua_Usertype(sol::state_view lua) override;
-        virtual void _registerLua_Properties(sol::state_view lua) override;
-        virtual void _registerLua_Commands(sol::state_view lua) override;
-        virtual void _registerLua_Meta(sol::state_view lua) override;
-        virtual void _registerLua_Children(sol::state_view lua) override;
-        virtual void _registerLua_All(sol::state_view lua) override;
         
     }; // END class ResHandle
 

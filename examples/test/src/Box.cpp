@@ -402,4 +402,5 @@ void Box::_registerLua_Usertype(sol::state_view lua)
         sol::base_classes, sol::bases<IDisplayObject>()
         // ...Box-specific methods...
     );
+    std::cout << "Box: Registered Lua bindings." << std::endl;
 }  

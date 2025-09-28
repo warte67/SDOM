@@ -25,7 +25,7 @@ namespace SDOM
         // --- Lua UserType Registration --- //
         Core& core = Core::getInstance();
         core._registerLua_Usertype(core.getLua());
-        core._registerLua_Commands(core.getLua());
+        // core._registerLua_Commands(core.getLua());
 
         // ===== Register built-in types =====
 
@@ -56,7 +56,7 @@ namespace SDOM
         prototypeHandle->setType(typeName);
         if (prototypeHandle)
         {
-            prototypeHandle->registerLua_All(SDOM::getLua());
+            prototypeHandle->_registerLua_Usertype(SDOM::getLua());
             destroyDisplayObject(prototypeHandle.get()->getName()); // Clean up prototype
         }   
     }
