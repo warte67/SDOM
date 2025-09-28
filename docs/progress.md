@@ -199,7 +199,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 ## Centralize Registration
 
 ```cpp
-// Always use registerProperty() and registerCommand() in your
+// Always use registerProperty() and registerCommand() in the
 // _registerLua_Properties and _registerLua_Commands implementations.
 // This ensures every property/command is tracked and exposed to Lua.
 
@@ -221,8 +221,8 @@ void MyObject::_registerLua_Commands(sol::state_view lua) {
 ## Expose Introspection to Lua
 
 ```cpp
-// Add methods like getPropertyNames() and getCommandNames() to return the keys of your maps.
-// Register these methods in your Lua usertype so Lua scripts can enumerate all available properties and commands.
+// Add methods like getPropertyNames() and getCommandNames() to return the keys of the maps.
+// Register these methods in the Lua usertype so Lua scripts can enumerate all available properties and commands.
 
 std::vector<std::string> getPropertyNames() const {
     std::vector<std::string> names;
@@ -249,8 +249,8 @@ lua.new_usertype<IDataObject>("IDataObject",
 ## Automate Lua Registration
 
 ```cpp
-// In your _registerLua_Usertype, iterate over the maps and register getters/setters/commands with Sol2.
-// This keeps your Lua API and internal tracking in sync.
+// In the _registerLua_Usertype, iterate over the maps and register getters/setters/commands with Sol2.
+// This keeps the Lua API and internal tracking in sync.
 
 virtual void _registerLua_Usertype(sol::state_view lua) override {
     auto& obj = *this;
