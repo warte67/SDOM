@@ -86,8 +86,16 @@ namespace SDOM
             return get() != nullptr;
         }          
 
-        inline static Factory* factory_ = nullptr;
+        // --- LUA Wrapper Functions --- //
 
+        IDisplayObject* get_lua() const { return get(); }
+        bool isValid_lua() const { return isValid(); }
+        std::string getName_lua() const { return getName(); }
+        std::string getType_lua() const { return getType(); }
+
+
+    public:
+        inline static Factory* factory_ = nullptr;
     private:
         // Factory::Factory() { DomHandle<T>::factory_ = this; }
         friend Core;

@@ -11,43 +11,7 @@ namespace SDOM
 {
     class Factory; // Forward declaration
 
-    /**
-     * @class IResourceObject
-     * @brief Base interface for all Factory-managed resources in SDOM.
-     * @details
-     * Inherits from IDataObject. All resources managed by Factory must implement this interface.
-     * 
-     * Required methods (inherited from IDataObject):
-     *   - bool onInit()
-     *   - void onQuit()
-     *   - bool onUnitTest()
-     * 
-     * Members:
-     *   - name_: Unique resource name assigned by Factory.
-     *   - filemame_: Filename associated with the resource (may be empty).
-     *   - type_: Extensible string identifier for resource type.
-     * 
-     * @note
-     * **Factory Integration Requirement:**  
-     * Any class inheriting from IResourceObject must implement a static Creator method
-     * with the following signature:
-     * @code
-     * static std::unique_ptr<IResourceObject> Creator(const Json& config);
-     * @endcode
-     * This method should construct and return a new instance of the resource from the provided JSON configuration.
-     *
-     * Example implementation in a derived class:
-     * @code
-     * class MyResource : public IResourceObject {
-     * public:
-     *     static std::unique_ptr<IResourceObject> Creator(const Json& config) {
-     *         return std::make_unique<MyResource>(config);
-     *     }
-     *     MyResource(const Json& config);
-     *     // ...
-     * };
-     * @endcode
-     */
+
     class IResourceObject : public IDataObject
     {
         friend class Factory; // Allow Factory to create Resource Objects
@@ -61,59 +25,28 @@ namespace SDOM
         IResourceObject() = delete;
         IResourceObject(std::string name="", std::string type="", std::string filename = "") : name_(name), type_(type), filemame_(filename) {}
 
-        
-        /**
-         * @brief Virtual destructor for safe polymorphic deletion.
-         */ 
+
         virtual ~IResourceObject() = default;
 
         // Required methods from IDataObject (must be implemented by derived classes):
         // virtual bool onInit() = 0;
         // virtual void onQuit() = 0;
 
-        /**
-         * @brief Unit test for the resource object.
-         * @return Always returns true by default. Override in derived classes for actual tests.
-         */
         virtual bool onUnitTest() override { return true; }
-        
-        /**
-         * @brief Gets the unique resource name.
-         * @return Resource name as a string.
-         */
+
+        // Default comparison operators for Sol2
+        bool operator==(const IResourceObject&) const { return false; }
+        bool operator!=(const IResourceObject&) const { return true; }
+        bool operator<(const IResourceObject&) const { return false; }
+        bool operator<=(const IResourceObject&) const { return true; }
+        bool operator>(const IResourceObject&) const { return false; }
+        bool operator>=(const IResourceObject&) const { return true; }      
+
         std::string getName() const { return name_; }
-
-        /**
-         * @brief Sets the unique resource name.
-         * @param newName New resource name.
-         * @return Reference to this object.
-         */
         IResourceObject& setName(const std::string& newName) { name_ = newName; return *this; }
-
-        /**
-         * @brief Gets the filename associated with the resource.
-         * @return Filename as a string.
-         */
         std::string getFilename() const { return filemame_; }
-
-        /**
-         * @brief Sets the filename associated with the resource.
-         * @param newFilename New filename.
-         * @return Reference to this object.
-         */
         IResourceObject& setFilename(const std::string& newFilename) { filemame_ = newFilename; return *this; }
-
-        /**
-         * @brief Gets the resource type identifier.
-         * @return Resource type as a string.
-         */
         std::string getType() const { return type_; }
-
-        /**
-         * @brief Sets the resource type identifier.
-         * @param newType New resource type.
-         * @return Reference to this object.
-         */
         IResourceObject& setType(const std::string& newType) { type_ = newType; return *this; }
 
     protected:

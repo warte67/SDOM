@@ -487,8 +487,8 @@ namespace SDOM
         entry.commands.push_back({commandName, command});
     }
 
-    const Factory::ObjectTypeRegistryEntry* 
-            Factory::getTypeRegistryEntry(const std::string& typeName) const
+    Factory::ObjectTypeRegistryEntry* 
+            Factory::getTypeRegistryEntry(const std::string& typeName) 
     {
         auto it = typeRegistry_.find(typeName);
         if (it != typeRegistry_.end())
@@ -496,26 +496,26 @@ namespace SDOM
         return nullptr;
     }
 
-    const Factory::ObjectTypeRegistryEntry::PropertyEntry* 
+    Factory::ObjectTypeRegistryEntry::PropertyEntry* 
             Factory::getPropertyEntry(const std::string& typeName, 
-                                    const std::string& propertyName) const
+                                    const std::string& propertyName) 
     {
         auto entry = getTypeRegistryEntry(typeName);
         if (!entry) return nullptr;
-        for (const auto& prop : entry->properties) {
+        for (auto& prop : entry->properties) {
             if (prop.propertyName == propertyName)
                 return &prop;
         }
         return nullptr;
     }
 
-    const Factory::ObjectTypeRegistryEntry::CommandEntry* 
+    Factory::ObjectTypeRegistryEntry::CommandEntry* 
             Factory::getCommandEntry(const std::string& typeName, 
-                                    const std::string& commandName) const
+                                    const std::string& commandName) 
     {
         auto entry = getTypeRegistryEntry(typeName);
         if (!entry) return nullptr;
-        for (const auto& cmd : entry->commands) {
+        for (auto& cmd : entry->commands) {
             if (cmd.commandName == commandName)
                 return &cmd;
         }

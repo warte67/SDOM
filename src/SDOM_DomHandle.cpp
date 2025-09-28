@@ -42,18 +42,28 @@ namespace SDOM
     {
         std::string typeNameLocal = "DomHandle";
         std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+                << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
 
         // 1. Call base class registration to include inherited properties/commands
         SUPER::_registerLua(typeName, lua);
 
         // 2. Register this class's properties and commands
-        //    factory_->registerLuaProperty(typeName, ...);
-        //    factory_->registerLuaCommand(typeName, ...);
+        factory_->registerLuaProperty(typeName, "get", 
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const DomHandle&>(obj).get_lua()); }, 
+            nullptr);
+        factory_->registerLuaProperty(typeName, "isValid", 
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const DomHandle&>(obj).isValid_lua()); }, 
+            nullptr);
+        factory_->registerLuaProperty(typeName, "getName", 
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const DomHandle&>(obj).getName_lua()); }, 
+            nullptr);
+        factory_->registerLuaProperty(typeName, "getType", 
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const DomHandle&>(obj).getType_lua()); }, 
+            nullptr);
 
         // 3. Register the Lua usertype using the registry
         factory_->registerLuaUsertype<DomHandle>(typeName, lua);
-        // getFactory().registerLuaUsertype<DomHandle>(typeName, lua);          
     }
 
+    
 } // END namespace SDOM
