@@ -1,23 +1,25 @@
-// SDOM_Stage.hpp
-
 #pragma once
 
 #include <SDOM/SDOM_IDisplayObject.hpp>
 
 namespace SDOM
 {
+
     class Factory; // Forward declaration
 
     class Stage : public IDisplayObject
     {
-        using SUPER = IDisplayObject; // Note the Super Class for Future Reference
+        using SUPER = IDisplayObject;
 
+        // --- Friend Classes --- //
         friend class Factory; // Allow Factory to create Stage Objects
         friend class Core;    // Allow Core to access Factory internals if needed
 
     public:
+        // --- Type Info --- //
         static constexpr const char* TypeName = "Stage";
-        // --- InitStruct (inherits from IDisplayObject::InitStruct)
+
+        // --- Initialization Struct --- //
         struct InitStruct : public IDisplayObject::InitStruct
         {
             InitStruct() : IDisplayObject::InitStruct() 
@@ -28,13 +30,13 @@ namespace SDOM
             }
         };
 
-    protected:   // protected constructor so only the Factory can create the object
+    protected:
+        // --- Constructors --- //
         Stage(const InitStruct& init);  
         Stage(const sol::table& config);
 
     public:
-
-        // --- Static Creators for this Type --- //
+        // --- Static Factory Methods --- //
         static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
             return std::unique_ptr<IDisplayObject>(new Stage(config));
         }
@@ -43,28 +45,32 @@ namespace SDOM
             return std::unique_ptr<IDisplayObject>(new Stage(stageInit));
         }
 
-        // --- Virtual Destructor --- // 
+        // --- Destructor --- // 
         virtual ~Stage() = default;
 
-        // --- Virtual Methods from IDataObject --- //
+        // --- Lifecycle Methods (IDataObject) --- //
         virtual bool onInit() override;             
         virtual void onQuit() override;      
 
-        // --- Virtual Methods from IDisplayObject --- //       
-        virtual void onUpdate(float fElapsedTime); 
-        virtual void onEvent(const Event& event); 
-        virtual void onRender(); 
-        virtual bool onUnitTest(); 
+        // --- Core Display Methods (IDisplayObject) --- //       
+        virtual void onUpdate(float fElapsedTime) override; 
+        virtual void onEvent(const Event& event) override; 
+        virtual void onRender() override; 
+        virtual bool onUnitTest() override; 
 
-    public:
+        // --- Stage-Specific State --- //
+        static int getMouseX() { return mouseX; }
+        static void setMouseX(int x) { mouseX = x; }
+        static int getMouseY() { return mouseY; }
+        static void setMouseY(int y) { mouseY = y; }
         inline static int mouseX = 0;   // current mouse horizontal coordinate within this stage
         inline static int mouseY = 0;   // current mouse vertical coordinate within this stage 
 
-        // --- LUA Registration --- //
     protected:
+        // --- Lua Registration --- //
         virtual void _registerLua_Usertype(sol::state_view lua)      { SUPER::_registerLua_Usertype(lua); }  
-        virtual void _registerLua_Properties(sol::state_view lua)    { SUPER::_registerLua_Properties(lua); }
-        virtual void _registerLua_Commands(sol::state_view lua)      { SUPER::_registerLua_Commands(lua); }
+        virtual void _registerLua_Properties(sol::state_view lua);
+        virtual void _registerLua_Commands(sol::state_view lua);
         virtual void _registerLua_Meta(sol::state_view lua)          { SUPER::_registerLua_Meta(lua); }
         virtual void _registerLua_Children(sol::state_view lua)      { SUPER::_registerLua_Children(lua); }
         virtual void _registerLua_All(sol::state_view lua) override       
@@ -78,7 +84,6 @@ namespace SDOM
 
             std::cout << "Stage: Registered Lua bindings." << std::endl;
         }
-
     };
 
 } // namespace SDOM

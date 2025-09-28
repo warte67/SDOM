@@ -1,5 +1,3 @@
-// SDOM_Factory.hpp
-
 #pragma once
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
@@ -9,109 +7,80 @@ namespace SDOM
 {
     class Stage;
 
+    // --- Type Creation Structs --- //
     struct TypeCreators 
     {
         std::function<std::unique_ptr<IDisplayObject>(const sol::table&)> fromLua;
         std::function<std::unique_ptr<IDisplayObject>(const IDisplayObject::InitStruct&)> fromInitStruct;
     };
-        
+
     class Factory final : public IDataObject
     {
         friend class Core;  // Core should have direct access to the Factory internals
 
     public:
+        // --- Lifecycle (IDataObject overrides) --- //
         Factory();
         virtual ~Factory() = default;
-
-        // IDataObject overrides
         virtual bool onInit() override;
         virtual void onQuit() override {}
         virtual bool onUnitTest() override;
 
-        // ----- Creation Methods -----
-
-        // Register a resource type with a creation function
-        using Creator = std::function<std::unique_ptr<IResourceObject>(const sol::table&)>;
-
-        // Register a display object type with creation functions
+        // --- Type Registration --- //
         void registerDomType(const std::string& typeName, const TypeCreators& creators);
-        // Register a resource type with a creation functions
         // void registerResType(const std::string& typeName, const TypeCreators& creators);
 
-
-        // Lua-based object creator
+        // --- Object Creation --- //
         DomHandle create(const std::string& typeName, const sol::table& config);
-        // InitStruct-based object creator
         DomHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);        
-        // create a DOM object based on a Lua script string
         DomHandle create(const std::string& typeName, const std::string& luaScript);
 
-
-        // ----- Resource Management -----
+        // --- Object Lookup --- //
         IDisplayObject* getDomObj(const std::string& name);
         IResourceObject* getResObj(const std::string& name);
-
-
-        // Example Usage:
-        // DomHandle ptr = factory.getDomHandle("mainStage");
-        // if (ptr) {
-        //     Stage* stage = dynamic_cast<Stage*>(ptr.get());
-        //     // Use stage...
-        // }
         DomHandle getDomHandle(const std::string& name);
         // ResHandle getResHandle(const std::string& name);
-
         DomHandle getStageHandle();
 
-        void addDisplayObject(const std::string& name, 
-            std::unique_ptr<IDisplayObject> displayObject);    // HUH??? This should not exist
-
+        // --- Display Object Management --- //
+        void addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject); // Consider refactoring/removal
         void destroyDisplayObject(const std::string& name);
 
+        // --- Orphan Management --- //
         int countOrphanedDisplayObjects() const;
         std::vector<DomHandle> getOrphanedDisplayObjects();
         void destroyOrphanedDisplayObjects();
+        void detachOrphans();
 
+        // --- Future Child Management --- //
+        void attachFutureChildren();
+        void addToOrphanList(const DomHandle orphan);
+        void addToFutureChildrenList(const DomHandle child, const DomHandle parent,
+            bool useWorld=false, int worldX=0, int worldY=0);
 
-        // ----- Utility Methods -----
+        // --- Utility Methods --- //
         std::vector<std::string> listDisplayObjectNames() const;
         // std::vector<std::string> listResourceNames() const;
         void clear();
         void printRegistry() const;
 
-        // ----- Orphan and Future Child Management -----
-
-        // Detach all objects in the orphan list
-        void detachOrphans();
-
-        // Attach all future children to their respective parents
-        void attachFutureChildren();
-
-        // Add a child node to the orphan list
-        void addToOrphanList(const DomHandle orphan);
-
-        // Add a future child to the future children list
-        void addToFutureChildrenList(const DomHandle child, const DomHandle parent,
-            bool useWorld=false, int worldX=0, int worldY=0);
-
-        
-        // ----- LUA -----
-        
+        // --- Lua Integration --- //
         void initFromLua(const sol::table& lua);
         void processResource(const sol::table& resource);
 
     private:
+        // --- Internal Storage --- //
         std::unordered_map<std::string, std::unique_ptr<IDisplayObject>> displayObjects_;
         // std::unordered_map<std::string, std::unique_ptr<IResourceObject>> resources_;
         std::unordered_map<std::string, TypeCreators> creators_;
 
-
+        // --- Orphan & Future Child Lists --- //
         std::vector<DomHandle> orphanList_;
         struct futureChild 
         {
             DomHandle child;
             DomHandle parent;
-            bool preserveWorldPosition; // was bool useWorld;
+            bool preserveWorldPosition;
             int dragStartWorldX;
             int dragStartWorldY;
         };

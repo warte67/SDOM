@@ -147,17 +147,19 @@ int main()
     core.registerOnUnitTest([]() 
     {
         bool allTestsPassed = true;
-        bool result = true;
+        // bool result = true;
 
         // Run Custom Unit Tests
         allTestsPassed &= Core_UnitTests();
         allTestsPassed &= Factory_UnitTests();
         allTestsPassed &= IDisplayObject_UnitTests();
         allTestsPassed &= Stage_UnitTests();
+        allTestsPassed &= Box_UnitTests();
+        allTestsPassed &= LUA_UnitTests();
 
-        // User Test One
-        result = Box_UnitTests();   // or just:
-        allTestsPassed &= result;   // allTestsPassed = Box_UnitTests();
+        // // User Test One
+        // result = Box_UnitTests();   // or just:
+        // allTestsPassed &= result;   // allTestsPassed = Box_UnitTests();
 
         // // User Test Two
         // result = UnitTests::run("User", "The second user test", []()  { return true; });

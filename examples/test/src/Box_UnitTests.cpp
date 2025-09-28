@@ -85,7 +85,8 @@ namespace SDOM
         return UnitTests::run("Box: Test #5", "Verify Box parent cleared after removal", [&testBox2]() {
             DomHandle stage = SDOM::getCore().getStageHandle();
             if (!stage || !testBox2) return false;
-            return (!testBox2->parent_ || testBox2->parent_ != stage);
+            return (!testBox2->getParent() || testBox2->getParent() != stage);
+            // return (!testBox2->parent_ || testBox2->parent_ != stage);
         });
     }
 

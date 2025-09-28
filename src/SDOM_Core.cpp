@@ -23,8 +23,12 @@ namespace SDOM
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string);
         factory_ = new Factory();
         eventManager_ = new EventManager();
-        DomHandle().registerLua_All(getLua());
-        ResHandle().registerLua_All(getLua());
+
+        // _registerLua_Usertype(getLua());
+        // _registerLua_Commands(getLua());
+
+        // DomHandle().registerLua_All(getLua());
+        // ResHandle().registerLua_All(getLua());
     }
 
     Core::~Core()
@@ -43,13 +47,20 @@ namespace SDOM
 
     void Core::configure(const CoreConfig& config)
     {
-        config_ = config;   
+        config_ = config;  
+        
+        // --- Lua UserType Registration --- //
+        Core& core = Core::getInstance();
+        core._registerLua_Usertype(core.getLua());
+        core._registerLua_Commands(core.getLua());
+
         // Initialize the Factory (but only once)
         static bool factoryInitialized = false;
         if (factory_ && !factoryInitialized) {
             factory_->onInit();
             factoryInitialized = true;
         }
+
     }
 
     void Core::configureFromLua(const sol::table& lua)
@@ -993,4 +1004,270 @@ namespace SDOM
         return rootNode_; 
     }
 
+
+
+    // --- Factory Wrappers Implementation --- //
+
+    DomHandle Core::createDisplayObject(const std::string& typeName, const sol::table& config) {
+        return getFactory().create(typeName, config);
+    }
+    DomHandle Core::createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init) {
+        return getFactory().create(typeName, init);
+    }
+    DomHandle Core::createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript) {
+        return getFactory().create(typeName, luaScript);
+    }
+
+    IDisplayObject* Core::getDisplayObject(const std::string& name) {
+        return getFactory().getDomObj(name);
+    }
+    IResourceObject* Core::getResourceObject(const std::string& name) {
+        return getFactory().getResObj(name);
+    }
+    DomHandle Core::getDisplayHandle(const std::string& name) {
+        return getFactory().getDomHandle(name);
+    }
+    DomHandle Core::getFactoryStageHandle() {
+        return getFactory().getStageHandle();
+    }
+
+    void Core::addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject) {
+        getFactory().addDisplayObject(name, std::move(displayObject));
+    }
+    void Core::destroyDisplayObject(const std::string& name) {
+        getFactory().destroyDisplayObject(name);
+    }
+
+    int Core::countOrphanedDisplayObjects() const {
+        return getFactory().countOrphanedDisplayObjects();
+    }
+    std::vector<DomHandle> Core::getOrphanedDisplayObjects() {
+        return getFactory().getOrphanedDisplayObjects();
+    }
+    void Core::destroyOrphanedDisplayObjects() {
+        getFactory().destroyOrphanedDisplayObjects();
+    }
+    void Core::detachOrphans() {
+        getFactory().detachOrphans();
+    }
+
+    void Core::attachFutureChildren() {
+        getFactory().attachFutureChildren();
+    }
+    void Core::addToOrphanList(const DomHandle orphan) {
+        getFactory().addToOrphanList(orphan);
+    }
+    void Core::addToFutureChildrenList(const DomHandle child, const DomHandle parent,
+        bool useWorld, int worldX, int worldY) {
+        getFactory().addToFutureChildrenList(child, parent, useWorld, worldX, worldY);
+    }
+
+    std::vector<std::string> Core::listDisplayObjectNames() const {
+        return getFactory().listDisplayObjectNames();
+    }
+    void Core::clearFactory() {
+        getFactory().clear();
+    }
+    void Core::printFactoryRegistry() const {
+        getFactory().printRegistry();
+    }
+
+    void Core::initFactoryFromLua(const sol::table& lua) {
+        getFactory().initFromLua(lua);
+    }
+    void Core::processFactoryResource(const sol::table& resource) {
+        getFactory().processResource(resource);
+    }
+
+    // --- Lua UserType Registration --- //
+    void Core::_registerLua_Usertype(sol::state_view lua)
+    {
+        SUPER::_registerLua_Usertype(lua);
+
+        lua.new_usertype<Core>("Core",
+            // --- Main Loop & Event Dispatch ---
+            "quit", &Core::quit,
+            "shutdown", &Core::shutdown,
+
+            // --- Stage/Root Node Management ---
+            "setRootNode", sol::resolve<void(const std::string&)>(&Core::setRootNode),
+            "setRootNodeByHandle", sol::resolve<void(const DomHandle&)>(&Core::setRootNode),
+            "setStage", &Core::setStage,
+            "getRootNode", &Core::getRootNode,
+            "getStageHandle", &Core::getStageHandle,
+
+            // --- SDL Resource Accessors ---
+            "getColor", &Core::getColor,
+            "setColor", static_cast<void(Core::*)(const SDL_Color&)>(&Core::setColor),
+
+            // --- Configuration Accessors ---
+            "getPreserveAspectRatio", &Core::getPreserveAspectRatio,
+            "getAllowTextureResize", &Core::getAllowTextureResize,
+            "setPreserveAspectRatio", static_cast<void(Core::*)(bool)>(&Core::setPreserveAspectRatio),
+            "setAllowTextureResize", static_cast<void(Core::*)(bool)>(&Core::setAllowTextureResize),
+
+            // --- Focus & Hover Management ---
+            "handleTabKeyPress", &Core::handleTabKeyPress,
+            "handleTabKeyPressReverse", &Core::handleTabKeyPressReverse,
+            "setKeyboardFocusedObject", &Core::setKeyboardFocusedObject,
+            "getKeyboardFocusedObject", &Core::getKeyboardFocusedObject,
+            "setMouseHoveredObject", &Core::setMouseHoveredObject,
+            "getMouseHoveredObject", &Core::getMouseHoveredObject,
+
+            // --- Window Title & Timing ---
+            "getWindowTitle", &Core::getWindowTitle,
+            "setWindowTitle", &Core::setWindowTitle,
+            "getElapsedTime", &Core::getElapsedTime,
+
+            // --- Factory Wrappers ---
+            "createDisplayObject", sol::resolve<DomHandle(const std::string&, const sol::table&)>(&Core::createDisplayObject),
+            "getDisplayHandle", &Core::getDisplayHandle,
+            "getFactoryStageHandle", &Core::getFactoryStageHandle,
+            "destroyDisplayObject", &Core::destroyDisplayObject,
+
+            // --- Orphan Management ---
+            "countOrphanedDisplayObjects", &Core::countOrphanedDisplayObjects,
+            "getOrphanedDisplayObjects", &Core::getOrphanedDisplayObjects,
+            "destroyOrphanedDisplayObjects", &Core::destroyOrphanedDisplayObjects,
+            "detachOrphans", &Core::detachOrphans,
+
+            // --- Future Child Management ---
+            "attachFutureChildren", &Core::attachFutureChildren,
+            "addToOrphanList", &Core::addToOrphanList,
+            "addToFutureChildrenList", &Core::addToFutureChildrenList,
+
+            // --- Utility Methods ---
+            "listDisplayObjectNames", &Core::listDisplayObjectNames,
+            "clearFactory", &Core::clearFactory,
+            "printFactoryRegistry", &Core::printFactoryRegistry,
+
+            // --- Lua Integration ---
+            "initFactoryFromLua", &Core::initFactoryFromLua,
+            "processFactoryResource", &Core::processFactoryResource
+        );
+
+        lua["Core"] = this;
+    }
+
+
+    // --- Lua Command Registration --- //
+    void Core::_registerLua_Commands(sol::state_view lua)
+    { 
+        SUPER::_registerLua_Commands(lua);
+
+        // --- Main Loop & Event Dispatch ---
+        registerCommand("quit", [this](IDataObject&, sol::object, sol::state_view) { quit(); });
+        registerCommand("shutdown", [this](IDataObject&, sol::object, sol::state_view) { shutdown(); });
+
+        // --- Stage/Root Node Management ---
+        registerCommand("setRootNode", [this](IDataObject&, sol::object val, sol::state_view) {
+            if (val.is<std::string>()) setRootNode(val.as<std::string>());
+            // Optionally: handle DomHandle if needed
+        });
+        registerCommand("setStage", [this](IDataObject&, sol::object val, sol::state_view) {
+            if (val.is<std::string>()) setStage(val.as<std::string>());
+        });
+        registerCommand("getRootNode", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getRootNode());
+        });
+        registerCommand("getStageHandle", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getStageHandle());
+        });
+
+        // --- SDL Resource Accessors ---
+        registerCommand("getColor", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getColor());
+        });
+        registerCommand("setColor", [this](IDataObject&, sol::object val, sol::state_view) {
+            if (val.is<SDL_Color>()) setColor(val.as<SDL_Color>());
+            // Optionally: handle table conversion to SDL_Color
+        });
+
+        // --- Configuration Accessors ---
+        registerCommand("getPreserveAspectRatio", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getPreserveAspectRatio());
+        });
+        registerCommand("getAllowTextureResize", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getAllowTextureResize());
+        });
+        registerCommand("setPreserveAspectRatio", [this](IDataObject&, sol::object val, sol::state_view) {
+            setPreserveAspectRatio(val.as<bool>());
+        });
+        registerCommand("setAllowTextureResize", [this](IDataObject&, sol::object val, sol::state_view) {
+            setAllowTextureResize(val.as<bool>());
+        });
+
+        // --- Focus & Hover Management ---
+        registerCommand("handleTabKeyPress", [this](IDataObject&, sol::object, sol::state_view) { handleTabKeyPress(); });
+        registerCommand("handleTabKeyPressReverse", [this](IDataObject&, sol::object, sol::state_view) { handleTabKeyPressReverse(); });
+        registerCommand("setKeyboardFocusedObject", [this](IDataObject&, sol::object val, sol::state_view) {
+            setKeyboardFocusedObject(val.as<DomHandle>());
+        });
+        registerCommand("getKeyboardFocusedObject", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getKeyboardFocusedObject());
+        });
+        registerCommand("setMouseHoveredObject", [this](IDataObject&, sol::object val, sol::state_view) {
+            setMouseHoveredObject(val.as<DomHandle>());
+        });
+        registerCommand("getMouseHoveredObject", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getMouseHoveredObject());
+        });
+
+        // --- Window Title & Timing ---
+        registerCommand("getWindowTitle", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getWindowTitle());
+        });
+        registerCommand("setWindowTitle", [this](IDataObject&, sol::object val, sol::state_view) {
+            setWindowTitle(val.as<std::string>());
+        });
+        registerCommand("getElapsedTime", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getElapsedTime());
+        });
+
+        // --- Factory Wrappers ---
+        registerCommand("createDisplayObject", [this](IDataObject&, sol::object val, sol::state_view lua) {
+            // Expecting a table with typeName and config
+            if (val.is<sol::table>()) {
+                sol::table tbl = val.as<sol::table>();
+                std::string typeName = tbl["typeName"];
+                sol::table config = tbl["config"];
+                return sol::make_object(lua, createDisplayObject(typeName, config));
+            }
+            return sol::make_object(lua, DomHandle());
+        });
+        registerCommand("createDisplayObjectFromScript", [this](IDataObject&, sol::object val, sol::state_view lua) {
+            if (val.is<sol::table>()) {
+                sol::table tbl = val.as<sol::table>();
+                std::string typeName = tbl["typeName"];
+                std::string script = tbl["script"];
+                return sol::make_object(lua, createDisplayObjectFromScript(typeName, script));
+            }
+            return sol::make_object(lua, DomHandle());
+        });
+        registerCommand("getDisplayHandle", [this](IDataObject&, sol::object val, sol::state_view lua) {
+            return sol::make_object(lua, getDisplayHandle(val.as<std::string>()));
+        });
+        registerCommand("getFactoryStageHandle", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getFactoryStageHandle());
+        });
+        registerCommand("destroyDisplayObject", [this](IDataObject&, sol::object val, sol::state_view) {
+            destroyDisplayObject(val.as<std::string>());
+        });
+
+        // --- Orphan Management ---
+        registerCommand("getOrphanedDisplayObjects", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, getOrphanedDisplayObjects());
+        });
+        registerCommand("destroyOrphanedDisplayObjects", [this](IDataObject&, sol::object, sol::state_view) {
+            destroyOrphanedDisplayObjects();
+        });
+
+        // --- Utility Methods ---
+        registerCommand("listDisplayObjectNames", [this](IDataObject&, sol::object, sol::state_view lua) {
+            return sol::make_object(lua, listDisplayObjectNames());
+        });
+        registerCommand("printFactoryRegistry", [this](IDataObject&, sol::object, sol::state_view) {
+            printFactoryRegistry();
+        });
+    } // END: void Core::_registerLua_Commands(sol::state_view lua)
 } // namespace SDOM

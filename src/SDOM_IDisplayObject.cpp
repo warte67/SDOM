@@ -118,15 +118,41 @@ namespace SDOM
         tabPriority_  = config["tabPriority"].get_or(0);
         tabEnabled_   = config["tabEnabled"].get_or(true);
 
-        // Register Lua properties and commands
-        registerLua_();
+        // // Register Lua properties and commands
+        // registerLua_();
 
         // Initialize from Lua config table
         fromLua(config, config.lua_state());
     }
 
-    void IDisplayObject::registerLua_()
+    IDisplayObject::~IDisplayObject()
     {
+        // nameRegistry_.erase(getName());
+        onQuit(); // Call the pure virtual method to ensure derived classes clean up
+    }
+
+
+    // void IDisplayObject::registerLua_()
+    // {
+    //     // // Register commands
+    //     // registerCommand("cleanAll",
+    //     //     [](IDataObject& obj, sol::object, sol::state_view) {
+    //     //         static_cast<IDisplayObject&>(obj).cleanAll();
+    //     //     });
+
+    //     // registerCommand("printTree",
+    //     //     [](IDataObject& obj, sol::object, sol::state_view) {
+    //     //         static_cast<IDisplayObject&>(obj).printTree(0, true, {});
+    //     //     });
+
+    //     // Add more commands as needed...
+    // }
+
+
+    void IDisplayObject::_registerLua_Properties(sol::state_view lua)    
+    {
+        SUPER::_registerLua_Properties(lua);
+
         // Helper to reduce boilerplate for simple properties
         auto simpleProperty = [&](const std::string& name, auto getter, auto setter) {
             registerProperty(name,
@@ -155,8 +181,6 @@ namespace SDOM
         simpleProperty("clickable",   [](const IDisplayObject& obj) { return obj.isClickable(); },    [](IDisplayObject& obj, sol::object val) { obj.setClickable(val.as<bool>()); });
         simpleProperty("enabled",     [](const IDisplayObject& obj) { return obj.isEnabled(); },      [](IDisplayObject& obj, sol::object val) { obj.setEnabled(val.as<bool>()); });
         simpleProperty("hidden",      [](const IDisplayObject& obj) { return obj.isHidden(); },       [](IDisplayObject& obj, sol::object val) { obj.setHidden(val.as<bool>()); });
-        simpleProperty("tabPriority", [](const IDisplayObject& obj) { return obj.getTabPriority(); }, [](IDisplayObject& obj, sol::object val) { obj.setTabPriority(val.as<int>()); });
-        simpleProperty("tabEnabled",  [](const IDisplayObject& obj) { return obj.isTabEnabled(); },   [](IDisplayObject& obj, sol::object val) { obj.setTabEnabled(val.as<bool>()); });
         simpleProperty("tabPriority", [](const IDisplayObject& obj) { return obj.getTabPriority(); }, [](IDisplayObject& obj, sol::object val) { obj.setTabPriority(val.as<int>()); });
         simpleProperty("tabEnabled",  [](const IDisplayObject& obj) { return obj.isTabEnabled(); },   [](IDisplayObject& obj, sol::object val) { obj.setTabEnabled(val.as<bool>()); });
         simpleProperty("z_order",     [](const IDisplayObject& obj) { return obj.getZOrder(); },      [](IDisplayObject& obj, sol::object val) { obj.setZOrder(val.as<int>()); });
@@ -243,28 +267,173 @@ namespace SDOM
                 }
                 return obj;
             });
+    } // void IDisplayObject::_registerLua_Properties(sol::state_view lua)    
 
-        // Register commands
-        registerCommand("cleanAll",
-            [](IDataObject& obj, sol::object, sol::state_view) {
-                static_cast<IDisplayObject&>(obj).cleanAll();
+
+
+    void IDisplayObject::_registerLua_Commands(sol::state_view lua)
+    {
+        SUPER::_registerLua_Commands(lua);
+
+        // Helper for void commands with no arguments
+        auto voidCommand = [&](const std::string& name, void(IDisplayObject::*method)()) {
+            registerCommand(name,
+                [method](IDataObject& obj, sol::object, sol::state_view) {
+                    (static_cast<IDisplayObject&>(obj).*method)();
+                });
+        };
+
+        // // Helper for getter commands with no arguments (pointer-to-member-function)
+        // auto voidMemberCommand = [&](const std::string& name, void (IDisplayObject::*method)()) {
+        //     registerCommand(name,
+        //         [method](IDataObject& obj, sol::object, sol::state_view) {
+        //             (static_cast<IDisplayObject&>(obj).*method)();
+        //         });
+        // };
+
+        // Helper for setter commands with one argument
+        auto setterCommand = [&](const std::string& name, auto setter) {
+            registerCommand(name,
+                [setter](IDataObject& obj, sol::object val, sol::state_view) {
+                    setter(static_cast<IDisplayObject&>(obj), val);
+                });
+        };
+
+        // Helper for getter commands with no arguments (pointer-to-member-function)
+        auto getterCommand = [&](const std::string& name, auto getter) {
+            registerCommand(name,
+                [getter](IDataObject& obj, sol::object, sol::state_view lua) {
+                    return sol::make_object(lua, (static_cast<IDisplayObject&>(obj).*getter)());
+                });
+        };
+
+        // --- Hierarchy Management --- //
+        setterCommand("addChild", [](IDisplayObject& obj, sol::object val) {
+            obj.addChild(val.as<DomHandle>());
+        });
+        setterCommand("removeChild", [](IDisplayObject& obj, sol::object val) {
+            obj.removeChild(val.as<DomHandle>());
+        });
+        registerCommand("hasChild",
+            [](IDataObject& obj, sol::object childHandle, sol::state_view lua) {
+                auto& displayObj = static_cast<IDisplayObject&>(obj);
+                DomHandle child = childHandle.as<DomHandle>();
+                return sol::make_object(lua, displayObj.hasChild(child)); // Return bool to Lua
             });
 
+        // --- Utility --- //
+        voidCommand("cleanAll", &IDisplayObject::cleanAll);
         registerCommand("printTree",
             [](IDataObject& obj, sol::object, sol::state_view) {
                 static_cast<IDisplayObject&>(obj).printTree(0, true, {});
             });
 
-        // Add more commands as needed...
-    }
+        // --- Focus & Interactivity --- //
+        voidCommand("setKeyboardFocus", &IDisplayObject::setKeyboardFocus);
+        getterCommand("isKeyboardFocused", &IDisplayObject::isKeyboardFocused);
+        getterCommand("isMouseHovered", &IDisplayObject::isMouseHovered);
 
+        // --- Tab Management --- //
+        getterCommand("getTabPriority", &IDisplayObject::getTabPriority);
+        setterCommand("setTabPriority", [](IDisplayObject& obj, sol::object val) {
+            obj.setTabPriority(val.as<int>());
+        });
+        getterCommand("isTabEnabled", &IDisplayObject::isTabEnabled);
+        setterCommand("setTabEnabled", [](IDisplayObject& obj, sol::object val) {
+            obj.setTabEnabled(val.as<bool>());
+        });
 
+        // --- Geometry & Layout --- //
+        getterCommand("getX", &IDisplayObject::getX);
+        setterCommand("setX", [](IDisplayObject& obj, sol::object val) { obj.setX(val.as<int>()); });
+        getterCommand("getY", &IDisplayObject::getY);
+        setterCommand("setY", [](IDisplayObject& obj, sol::object val) { obj.setY(val.as<int>()); });
+        getterCommand("getWidth", &IDisplayObject::getWidth);
+        setterCommand("setWidth", [](IDisplayObject& obj, sol::object val) { obj.setWidth(val.as<int>()); });
+        getterCommand("getHeight", &IDisplayObject::getHeight);
+        setterCommand("setHeight", [](IDisplayObject& obj, sol::object val) { obj.setHeight(val.as<int>()); });
 
-    IDisplayObject::~IDisplayObject()
-    {
-        // nameRegistry_.erase(getName());
-        onQuit(); // Call the pure virtual method to ensure derived classes clean up
-    }
+        // --- Anchor Setters --- //
+        setterCommand("setAnchorTop", [](IDisplayObject& obj, sol::object val) {
+            auto it = stringToAnchorPoint_.find(val.as<std::string>());
+            if (it != stringToAnchorPoint_.end()) obj.setAnchorTop(it->second);
+        });
+        setterCommand("setAnchorLeft", [](IDisplayObject& obj, sol::object val) {
+            auto it = stringToAnchorPoint_.find(val.as<std::string>());
+            if (it != stringToAnchorPoint_.end()) obj.setAnchorLeft(it->second);
+        });
+        setterCommand("setAnchorBottom", [](IDisplayObject& obj, sol::object val) {
+            auto it = stringToAnchorPoint_.find(val.as<std::string>());
+            if (it != stringToAnchorPoint_.end()) obj.setAnchorBottom(it->second);
+        });
+        setterCommand("setAnchorRight", [](IDisplayObject& obj, sol::object val) {
+            auto it = stringToAnchorPoint_.find(val.as<std::string>());
+            if (it != stringToAnchorPoint_.end()) obj.setAnchorRight(it->second);
+        });
+
+        // --- Priority & Z-Order --- //
+        getterCommand("getMaxPriority", &IDisplayObject::getMaxPriority);
+        getterCommand("getMinPriority", &IDisplayObject::getMinPriority);
+        registerCommand("setToHighestPriority",
+            [](IDataObject& obj, sol::object, sol::state_view) {
+                static_cast<IDisplayObject&>(obj).setToHighestPriority();
+            });
+
+        registerCommand("setToLowestPriority",
+            [](IDataObject& obj, sol::object, sol::state_view) {
+                static_cast<IDisplayObject&>(obj).setToLowestPriority();
+            });
+
+        registerCommand("sortChildrenByPriority",
+            [](IDataObject& obj, sol::object, sol::state_view) {
+                static_cast<IDisplayObject&>(obj).sortChildrenByPriority();
+            });
+        setterCommand("setPriority", [](IDisplayObject& obj, sol::object val) { obj.setPriority(val.as<int>()); });
+        getterCommand("getChildrenPriorities", &IDisplayObject::getChildrenPriorities);
+        registerCommand("moveToTop",
+            [](IDataObject& obj, sol::object, sol::state_view) {
+                static_cast<IDisplayObject&>(obj).moveToTop();
+            });        getterCommand("getZOrder", &IDisplayObject::getZOrder);
+        setterCommand("setZOrder", [](IDisplayObject& obj, sol::object val) { obj.setZOrder(val.as<int>()); });
+
+        // --- Visibility & Interactivity --- //
+        setterCommand("setClickable", [](IDisplayObject& obj, sol::object val) { obj.setClickable(val.as<bool>()); });
+        setterCommand("setEnabled", [](IDisplayObject& obj, sol::object val) { obj.setEnabled(val.as<bool>()); });
+        setterCommand("setHidden", [](IDisplayObject& obj, sol::object val) { obj.setHidden(val.as<bool>()); });
+        setterCommand("setVisible", [](IDisplayObject& obj, sol::object val) { obj.setVisible(val.as<bool>()); });
+
+        // --- Event Handling --- //
+        registerCommand("addEventListener",
+            [](IDataObject& obj, sol::object args, sol::state_view lua) {
+                auto& displayObj = static_cast<IDisplayObject&>(obj);
+                sol::table tbl = args.as<sol::table>();
+                EventType type = tbl["type"];
+                std::function<void(Event&)> listener = tbl["listener"];
+                bool useCapture = tbl["useCapture"].get_or(false);
+                int priority = tbl["priority"].get_or(0);
+                displayObj.addEventListener(type, listener, useCapture, priority);
+            });
+
+        registerCommand("removeEventListener",
+            [](IDataObject& obj, sol::object args, sol::state_view lua) {
+                auto& displayObj = static_cast<IDisplayObject&>(obj);
+                sol::table tbl = args.as<sol::table>();
+                EventType type = tbl["type"];
+                std::function<void(Event&)> listener = tbl["listener"];
+                bool useCapture = tbl["useCapture"].get_or(false);
+                displayObj.removeEventListener(type, listener, useCapture);
+            });
+
+        registerCommand("triggerEventListeners",
+            [](IDataObject& obj, sol::object args, sol::state_view lua) {
+                auto& displayObj = static_cast<IDisplayObject&>(obj);
+                sol::table tbl = args.as<sol::table>();
+                Event& event = tbl["event"];
+                bool useCapture = tbl["useCapture"].get_or(false);
+                displayObj.triggerEventListeners(event, useCapture);
+            });
+    } // void IDisplayObject::_registerLua_Commands(sol::state_view lua)
+
 
     bool IDisplayObject::onInit()
     {
@@ -304,7 +473,7 @@ namespace SDOM
                 }
             }
         }
-    }
+    } // IDisplayObject::attachChild_(DomHandle p_child, DomHandle p_parent, bool useWorld, int worldX, int worldY)
 
     void IDisplayObject::removeOrphan_(const DomHandle& orphan) 
     {

@@ -118,101 +118,78 @@ namespace SDOM
         using SUPER = IDataObject;
 
     public:
-            // Note:Comparison operators for Sol2/Lua ...
-            //      The extra comparison operators in IDisplayObject are only needed 
-            //      to satisfy Sol2's requirements for automagic and Lua meta-methods.
-            bool operator==(const IDisplayObject& other) const {
-                return this == &other;
-            }
-            bool operator<(const IDisplayObject& other) const {
-                return this < &other;
-            }
-            bool operator!=(const IDisplayObject& other) const {
-                return !(*this == other);
-            }
-            bool operator>(const IDisplayObject& other) const {
-                return other < *this;
-            }
-            bool operator<=(const IDisplayObject& other) const {
-                return !(other < *this);
-            }
-            bool operator>=(const IDisplayObject& other) const {
-                return !(*this < other);
-            }
+        // --- Comparison Operators (for Sol2/Lua) --- //
+        bool operator==(const IDisplayObject& other) const { return this == &other; }
+        bool operator<(const IDisplayObject& other) const { return this < &other; }
+        bool operator!=(const IDisplayObject& other) const { return !(*this == other); }
+        bool operator>(const IDisplayObject& other) const { return other < *this; }
+        bool operator<=(const IDisplayObject& other) const { return !(other < *this); }
+        bool operator>=(const IDisplayObject& other) const { return !(*this < other); }
 
         static constexpr const char* TypeName = "IDisplayObject";
-        struct InitStruct
-        {
-            std::string name = TypeName;     
-            std::string type = TypeName;           
-            float x = 0.0f;                                     
-            float y = 0.0f;                                     
-            float width = 0.0f;                                 
-            float height = 0.0f;                                
-            SDL_Color color = { 255, 0, 255, 255 };           
-            AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;      
-            AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;     
-            AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;   
-            AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;    
-            int z_order = 0;                                    
-            int priority = 0;                                   
-            bool isClickable = true;                            
-            bool isEnabled = true;                              
-            bool isHidden = false;                              
-            int tabPriority = 0;                                
-            bool tabEnabled = true;                             
+
+        // --- Construction & Initialization --- //
+        struct InitStruct {
+            std::string name = TypeName;
+            std::string type = TypeName;
+            float x = 0.0f, y = 0.0f, width = 0.0f, height = 0.0f;
+            SDL_Color color = {255, 0, 255, 255};
+            AnchorPoint anchorTop = AnchorPoint::TOP_LEFT, anchorLeft = AnchorPoint::TOP_LEFT;
+            AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT, anchorRight = AnchorPoint::TOP_LEFT;
+            int z_order = 0, priority = 0;
+            bool isClickable = true, isEnabled = true, isHidden = false;
+            int tabPriority = 0;
+            bool tabEnabled = true;
         };
 
-        friend class Factory; // Allow Factory to create IDisplayObjects
+        friend class Factory;
 
-    protected:   // protected constructor so only the Factory can create the object
-        IDisplayObject(const InitStruct& init); 
-        IDisplayObject(const sol::table& config); // NEW: Lua-based constructor
-        IDisplayObject();                       
+    protected:
+        IDisplayObject(const InitStruct& init);
+        IDisplayObject(const sol::table& config);
+        IDisplayObject();
 
     public:
-
         virtual ~IDisplayObject();
 
+        // --- Lifecycle & Core Virtuals --- //
         virtual bool onInit() override;
         virtual void onQuit() override {};
-        virtual void onUpdate(float fElapsedTime)=0;
-        virtual void onEvent(const Event& event)=0;
-        virtual void onRender()=0;
+        virtual void onUpdate(float fElapsedTime) = 0;
+        virtual void onEvent(const Event& event) = 0;
+        virtual void onRender() = 0;
         virtual bool onUnitTest() { return true; }
 
-
+        // --- Dirty/State Management --- //
         void cleanAll();
-        void printTree(int depth = 0, bool isLast = true, const std::vector<bool>& hasMoreSiblings = {}) const;
         bool getDirty() const { return bIsDirty_; }
         IDisplayObject& setDirty() { bIsDirty_ = true; return *this; }
         bool isDirty() const { return bIsDirty_; }
 
-        SDL_Color getColor() const { return color_; }
-        IDisplayObject& setColor(const SDL_Color& color) { color_ = color; return *this; }
-        
+        // --- Debug/Utility --- //
+        void printTree(int depth = 0, bool isLast = true, const std::vector<bool>& hasMoreSiblings = {}) const;
+
+        // --- Event Handling --- //
         void addEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false, int priority = 0);
         void removeEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false);
-        void triggerEventListeners(Event& event, bool useCapture);       
+        void triggerEventListeners(Event& event, bool useCapture);
 
-        void addChild(DomHandle child, bool useWorld=false, int worldX=0, int worldY=0);
+        // --- Hierarchy Management --- //
+        void addChild(DomHandle child, bool useWorld = false, int worldX = 0, int worldY = 0);
         bool removeChild(DomHandle child);
-
         const std::vector<DomHandle>& getChildren() const { return children_; }
-
         DomHandle getParent() const { return parent_; }
         IDisplayObject& setParent(const DomHandle& parent) { parent_ = parent; return *this; }
+        bool hasChild(DomHandle child) const;
 
-        // Moved to IDataObject
-        // std::string getName() const { return name_; }
-        // IDisplayObject& setName(const std::string& newName) { name_ = newName; return *this; }
-
+        // --- Type & Property Access --- //
         std::string getType() const { return type_; }
         IDisplayObject& setType(const std::string& newType) { type_ = newType; return *this; }
-
         Bounds getBounds() const { return { getLeft(), getTop(), getRight(), getBottom() }; }
+        SDL_Color getColor() const { return color_; }
+        IDisplayObject& setColor(const SDL_Color& color) { color_ = color; return *this; }
 
-
+        // --- Priority & Z-Order --- //
         int getMaxPriority() const;
         int getMinPriority() const;
         int getPriority() const { return priority_; }
@@ -222,143 +199,114 @@ namespace SDOM
         IDisplayObject& setPriority(int priority);
         std::vector<int> getChildrenPriorities() const;
         IDisplayObject& moveToTop();
-        bool hasChild(DomHandle child) const;
-        int getZOrder() const { return z_order_; } // Getter for z_order_
-        IDisplayObject& setZOrder(int z_order) { z_order_ = z_order; return *this; } // Setter for z_order_
-        
+        int getZOrder() const { return z_order_; }
+        IDisplayObject& setZOrder(int z_order) { z_order_ = z_order; return *this; }
+
+        // --- Focus & Interactivity --- //
         void setKeyboardFocus();
         bool isKeyboardFocused() const;
         bool isMouseHovered() const;
-
         bool isClickable() const { return isClickable_; }
         IDisplayObject& setClickable(bool clickable) { isClickable_ = clickable; setDirty(); return *this; }
-
         bool isEnabled() const { return isEnabled_; }
         IDisplayObject& setEnabled(bool enabled) { isEnabled_ = enabled; setDirty(); return *this; }
-
         bool isHidden() const { return isHidden_; }
         IDisplayObject& setHidden(bool hidden) { isHidden_ = hidden; setDirty(); return *this; }
-
         bool isVisible() const { return !isHidden_; }
         IDisplayObject& setVisible(bool visible) { isHidden_ = !visible; setDirty(); return *this; }
 
-        // Tab stop management
+        // --- Tab Management --- //
         int getTabPriority() const;
         IDisplayObject& setTabPriority(int index);
         bool isTabEnabled() const;
         IDisplayObject& setTabEnabled(bool enabled);
 
+        // --- Geometry & Layout --- //
+        int getX() const;
+        int getY() const;
+        int getWidth() const;
+        int getHeight() const;
+        IDisplayObject& setX(int p_x);
+        IDisplayObject& setY(int p_y);
+        IDisplayObject& setWidth(int width);
+        IDisplayObject& setHeight(int height);
 
-        // Coordinate Accessors:
-        int getX() const;       // get the accumilated ancestrial horizontal coordinate
-        int getY() const;       // get the accumilated ancestrial vertical coordinate
-        int getWidth() const;   // get the width of the object
-        int getHeight() const;  // get the height of the object
-
-        // These setters may need refactoring:
-        IDisplayObject& setX(int p_x);   // convert horizontal world coordinate and save as horizontal offset
-        IDisplayObject& setY(int p_y);   // convert vertical world coordinate and save as vertical offset
-        IDisplayObject& setWidth(int width);    // set the width of the object
-        IDisplayObject& setHeight(int height);  // set the height of the object
-
-        // Edge Anchor Getters:
+        // --- Edge Anchors --- //
         AnchorPoint getAnchorTop() const { return anchorTop_; }
         AnchorPoint getAnchorLeft() const { return anchorLeft_; }
         AnchorPoint getAnchorBottom() const { return anchorBottom_; }
         AnchorPoint getAnchorRight() const { return anchorRight_; }
+        void setAnchorTop(AnchorPoint ap);
+        void setAnchorLeft(AnchorPoint ap);
+        void setAnchorBottom(AnchorPoint ap);
+        void setAnchorRight(AnchorPoint ap);
 
-        // Edge Anchor Setters:
-        void setAnchorTop(AnchorPoint ap);      // adjust y_ and height_ based on new origin point
-        void setAnchorLeft(AnchorPoint ap);     // adjust x_ and width_ based on a new origin point
-        void setAnchorBottom(AnchorPoint ap);   // adjust y_ and height_ based on new origin point
-        void setAnchorRight(AnchorPoint ap);    // adjust x_ and width_ based on a new origin point
-
-        // Edge Position Getters:
+        // --- Edge Positions --- //
         float getLeft() const;
         float getRight() const;
         float getTop() const;
         float getBottom() const;
-
-        // Edge Position setters:
         IDisplayObject& setLeft(float p_left);
         IDisplayObject& setRight(float p_right);
         IDisplayObject& setTop(float p_top);
         IDisplayObject& setBottom(float p_bottom);
 
     protected:
-
-        // Getters for Local Offsets
+        // --- Local Offset Accessors --- //
         float getLocalLeft() const { return left_; }
         float getLocalRight() const { return right_; }
         float getLocalTop() const { return top_; }
-        float getLocalBottom() const { return bottom_; }  
-        // Setters for Local Offsets
+        float getLocalBottom() const { return bottom_; }
         IDisplayObject& setLocalLeft(float value) { left_ = value; return *this; }
         IDisplayObject& setLocalRight(float value) { right_ = value; return *this; }
         IDisplayObject& setLocalTop(float value) { top_ = value; return *this; }
         IDisplayObject& setLocalBottom(float value) { bottom_ = value; return *this; }
-   
-        // std::string name_;  // moved to IDataObject
+
         std::string type_;
 
-    public:  // temporarily public for testing
-        float left_, top_, right_, bottom_; // Calculated bounds based on anchors
-        // std::string name_; // Name of the display object
-        bool bIsDirty_ = false; // Flag to indicate if the display object needs to be redrawn
-        SDL_Color color_ = { 255, 255, 255, 255 }; // Default color WHITE
-
-        // default anchor is TOP_LEFT
-        AnchorPoint anchorTop_    = AnchorPoint::TOP_LEFT;
-        AnchorPoint anchorLeft_   = AnchorPoint::TOP_LEFT;
+    private: // --- Member Variables --- //
+        float left_, top_, right_, bottom_;
+        bool bIsDirty_ = false;
+        SDL_Color color_ = {255, 255, 255, 255};
+        AnchorPoint anchorTop_ = AnchorPoint::TOP_LEFT;
+        AnchorPoint anchorLeft_ = AnchorPoint::TOP_LEFT;
         AnchorPoint anchorBottom_ = AnchorPoint::TOP_LEFT;
-        AnchorPoint anchorRight_  = AnchorPoint::TOP_LEFT;
-
-        int z_order_ = 0; // Default z_order value
-        int priority_ = 0; // Default priority value
-        bool isClickable_ = false; // not clickable by default
-
-        // isEnabled: Determines whether the object is interactive (e.g., clickable). 
-        // If false, the object and its children are grayed out and unclickable.
-        bool isEnabled_ = true; // Default enabled state
-
-        // isHidden: Determines whether the object is rendered. If true, the object 
-        // is not rendered but still responds to events if part of the DOM tree.        
-        bool isHidden_ = false; // Default hidden state
-
-        // tab stops
-        int tabPriority_ = -1;       // tabPriority (i.e. tabStop within a priority queue)   
-        bool tabEnabled_ = false;    // Indicates if the object can be focused via Tab
-
+        AnchorPoint anchorRight_ = AnchorPoint::TOP_LEFT;
+        int z_order_ = 0;
+        int priority_ = 0;
+        bool isClickable_ = false;
+        bool isEnabled_ = true;
+        bool isHidden_ = false;
+        int tabPriority_ = -1;
+        bool tabEnabled_ = false;
         DomHandle parent_;
         std::vector<DomHandle> children_;
 
-        // Containers to store ListenerEntrys for different event phases
+        // --- Event Listener Containers --- //
         struct ListenerEntry {
             std::function<void(Event&)> listener;
             int priority;
-            EventType eventType; // Debugging field to store the event type name            
+            EventType eventType;
         };
         std::unordered_map<EventType, std::vector<ListenerEntry>, EventTypeHash> captureEventListeners;
         std::unordered_map<EventType, std::vector<ListenerEntry>, EventTypeHash> bubblingEventListeners;
-      
-        // Delete copy constructor and assignment operator
-        IDisplayObject(const IDisplayObject& other) = delete;
-        // IDisplayObject& operator=(const IDisplayObject& other) = delete;      
 
-        void attachChild_(DomHandle child, DomHandle parent, bool useWorld=false, int worldX=0, int worldY=0);
+        // --- Internal/Utility --- //
+        IDisplayObject(const IDisplayObject& other) = delete;
+        void attachChild_(DomHandle child, DomHandle parent, bool useWorld = false, int worldX = 0, int worldY = 0);
         void removeOrphan_(const DomHandle& orphan);
 
-        void registerLua_();
+        // --- Lua Registration --- //
+        // void registerLua_();
 
-        // --- LUA Registration --- //
     protected:
-        virtual void _registerLua_Usertype(sol::state_view lua)      { SUPER::_registerLua_Usertype(lua); }  
-        virtual void _registerLua_Properties(sol::state_view lua)    { SUPER::_registerLua_Properties(lua); }
-        virtual void _registerLua_Commands(sol::state_view lua)      { SUPER::_registerLua_Commands(lua); }
+        virtual void _registerLua_Usertype(sol::state_view lua)      { SUPER::_registerLua_Usertype(lua); }
+        virtual void _registerLua_Properties(sol::state_view lua);
+        virtual void _registerLua_Commands(sol::state_view lua);
         virtual void _registerLua_Meta(sol::state_view lua)          { SUPER::_registerLua_Meta(lua); }
         virtual void _registerLua_Children(sol::state_view lua)      { SUPER::_registerLua_Children(lua); }
 
-        virtual void _registerLua_All(sol::state_view lua) override       
+        virtual void _registerLua_All(sol::state_view lua) override
         {
             SUPER::_registerLua_All(lua);
             _registerLua_Usertype(lua);

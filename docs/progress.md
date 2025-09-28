@@ -181,26 +181,25 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Event system and Lua-driven configuration are stable and fully integrated.
     - Documentation and codebase are up-to-date with recent changes.
 
-- ### [September 27, 2025]    
-## Major Accomplishments
-- **Full transition from JSON to Lua (Sol2) for configuration and scripting.**
-    - All resource and display object creation now uses Lua tables.
-    - Legacy JSON code paths and tests removed.
-- **Factory, Core, and EventManager refactored for Lua-first workflow.**
-    - Factory registers types and initializes Lua bindings via prototype objects.
-    - Core owns the global `sol::state` and opens essential libraries on construction.
-    - Initialization order clarified: Factory type registration now occurs in `Core::configure()` to avoid recursive/static init errors.
-- **DomHandle and ResHandle refactored:**
-    - Now inherit from `IDataObject`, are non-templated, and ready for Sol2 usertype binding.
-    - Explicit Lua registration for handles in `Core::Core()`.
-- **Unit tests and event system stable:**
-    - All major unit tests pass with Lua-driven configs.
-    - Event propagation, listener registration, and DOM hierarchy logic confirmed stable.
-    - Box object serves as a proof-of-concept for external Lua-driven applications.
-- **Orphaned display object management implemented and tested.**
-    - Recursive orphan detection and cleanup now robust.
-- **Documentation and Doxygen updated.**
-    - Markdown docs and Doxygen comments reflect latest API and design changes.
+- ### [September 27, 2025]
+    - **Lua Integration Complete:**  
+        - All major Core and Factory methods are now exposed to Lua via Sol2 usertype registration.
+        - Overloaded methods and custom types (DomHandle, SDL_Color) are correctly bound and accessible from Lua scripts.
+        - The Lua API is stable, with all required commands available for scripting, configuration, and test automation.
+    - **C++/Lua Unit Test Integration:**  
+        - Unit tests now run seamlessly across C++ and Lua, with Lua-side tests returning results directly to the C++ test framework.
+        - Demonstrated passing boolean results from Lua to C++ for robust test validation.
+        - All core, factory, display object, and event system tests pass with Lua-driven configs.
+    - **API and Documentation Updates:**  
+        - Updated documentation to reflect the Lua-first workflow and new scripting capabilities.
+        - Added examples for Lua-driven object creation, event handling, and unit testing.
+        - Confirmed that the codebase is stable and ready for expanded Lua scripting and automation.
+    - **Next Steps:**  
+        - Expand Lua scripting examples and documentation.
+        - Add more Lua-side unit tests and demonstrate advanced C++/Lua test integration.
+        - Continue improving event system, resource management, and garbage collection.
+        - Maintain and update docs as features evolve.
+
 
 # Next Steps:
 - Expand Lua scripting examples and documentation.

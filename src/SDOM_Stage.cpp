@@ -79,4 +79,39 @@ namespace SDOM
         return true;
     }
 
+    void Stage::_registerLua_Properties(sol::state_view lua)    
+    { 
+        SUPER::_registerLua_Properties(lua); 
+        // Register Stage-specific properties
+        registerProperty("mouseX",
+            [](const IDataObject&, sol::state_view lua) {
+                return sol::make_object(lua, Stage::getMouseX());
+            },
+            nullptr // read-only
+        );
+
+        registerProperty("mouseY",
+            [](const IDataObject&, sol::state_view lua) {
+                return sol::make_object(lua, Stage::getMouseY());
+            },
+            nullptr // read-only
+        );
+    }
+
+    void Stage::_registerLua_Commands(sol::state_view lua)    
+    { 
+        SUPER::_registerLua_Commands(lua); 
+        // Register Stage-specific commands
+        registerCommand("setMouseX",
+            [](IDataObject&, sol::object val, sol::state_view) {
+                Stage::setMouseX(val.as<int>());
+            });
+
+        registerCommand("setMouseY",
+            [](IDataObject&, sol::object val, sol::state_view) {
+                Stage::setMouseY(val.as<int>());
+            });
+    }
+
+
 } // namespace SDOM
