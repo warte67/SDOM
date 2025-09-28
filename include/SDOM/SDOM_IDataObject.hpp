@@ -126,12 +126,16 @@ namespace SDOM
 
         // --- New Virtual LUA Registration for Sol2 ---
     public:
-        void registerLua_Usertype(sol::state_view lua)      { this->_registerLua_Usertype(lua); }
+        void registerLua_Usertype(sol::state_view lua)                      { this->_registerLua_Usertype(lua); }
+        void registerLua(const std::string& typeName, sol::state_view lua)  { this->_registerLua(typeName, lua); }   
     protected:
-        virtual void _registerLua_Usertype(sol::state_view lua)      
+        virtual void _registerLua_Usertype(sol::state_view lua) {}  // Legacy Code
+        virtual void _registerLua(const std::string& typeName, sol::state_view lua)
         {
-            std::cout << "IDataObject: Registered Lua bindings." << std::endl;
-        }  
+            std::string typeNameLocal = "IDataObject";
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                      << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+        }   
         // --- End New Virtual LUA Registration for Sol2 ---
 
 
@@ -143,8 +147,6 @@ namespace SDOM
 
         std::string name_ = "IDataObject";  // Default name, should be overridden by derived classes
 
-        // // Example property
-        // int x_ = 0;
     };
 
 } // namespace SDOM

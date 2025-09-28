@@ -301,7 +301,7 @@ namespace SDOM
     protected:
         // --- Lua Registration --- //
         virtual void _registerLua_Usertype(sol::state_view lua);
-
+        virtual void _registerLua(const std::string& typeName, sol::state_view lua);
     };
 
 } // namespace SDOM

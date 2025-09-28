@@ -24,7 +24,27 @@ namespace SDOM
         //     "str", &ResHandle::str
         //     // Add other methods/properties as needed
         // );
-        std::cout << "ResHandle: Registered Lua bindings." << std::endl;        
+        // std::cout << "ResHandle: Registered Lua bindings." << std::endl;        
     }
+
+    void ResHandle::_registerLua(const std::string& typeName, sol::state_view lua)
+    {
+        std::string typeNameLocal = "ResHandle";
+        std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+
+        // 1. Call base class registration to include inherited properties/commands
+        SUPER::_registerLua(typeName, lua);
+
+        // 2. Register this class's properties and commands
+        //    factory_->registerLuaProperty(typeName, ...);
+        //    factory_->registerLuaCommand(typeName, ...);
+
+        // 3. Register the Lua usertype using the registry
+        factory_->registerLuaUsertype<ResHandle>(typeName, lua);
+        // getFactory().registerLuaUsertype<ResHandle>(typeName, lua);          
+    }
+
+
 
 } // namespace SDOM

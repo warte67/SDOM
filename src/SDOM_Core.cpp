@@ -336,34 +336,6 @@ namespace SDOM
         catch (const SDOM::Exception& e) 
         {
             // Handle exceptions gracefully
-            // int terminalWidth = 0, terminalHeight = 0;
-            // CLR::get_terminal_size(terminalWidth, terminalHeight);
-            // std::cout << std::endl; // Add a blank line before the error box
-            // std::string line1 = "Exception Caught: " + std::string(e.what());
-            // std::string line2 = "File: " + e.getFile();
-            // std::string line3 = "Line: " + std::to_string(e.getLine());
-            // size_t maxWidth = std::max(line1.size(), std::max(line2.size(), line3.size()));
-            // if ((size_t)terminalWidth > maxWidth) 
-            // { // Add padding for the border
-            //     std::string border(maxWidth + 2, '-'); // ASCII horizontal line
-            //     std::cout << CLR::BROWN << "+" << border << "+\n"
-            //             << CLR::BROWN << "| " << CLR::RED << "Exception Caught: " << CLR::WHITE << e.what() << std::string(maxWidth - line1.size(), ' ') << CLR::BROWN << " |\n"
-            //             << CLR::BROWN << "| " << CLR::RED << "File: " << CLR::YELLOW << e.getFile() << std::string(maxWidth - line2.size(), ' ') << CLR::BROWN << " |\n"
-            //             << CLR::BROWN << "| " << CLR::RED << "Line: " << CLR::YELLOW << std::to_string(e.getLine()) << std::string(maxWidth - line3.size(), ' ') << CLR::BROWN << " |\n"
-            //             << CLR::BROWN << "+" << border << "+" << CLR::RESET << std::endl;
-            // } 
-            // else 
-            // {
-            //     std::cout << CLR::RED << "Exception caught: " 
-            //             << CLR::WHITE << e.what()
-            //             << CLR::RED << "\nFile: " 
-            //             << CLR::BROWN << e.getFile() 
-            //             << CLR::RED << "\nLine: " 
-            //             << CLR::BROWN << e.getLine() 
-            //             << CLR::RESET << std::endl;            
-            // }
-            // std::string errStr = "Exception Caught: " + std::string(e.what()) + "\nFile: " + e.getFile() + "\nLine: " + std::to_string(e.getLine());
-
             SDOM::printMessageBox("Exception Caught", e.what(), e.getFile(), e.getLine(), CLR::RED, CLR::WHITE, CLR::BROWN);
 
             // SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Terminal Error", errStr.c_str(), nullptr);
@@ -390,30 +362,6 @@ namespace SDOM
         // Note: We do not need to run onInit() for each object here because
         // the Factory creates each object and calls onInit() as it does so.
 
-        // Factory onInit() is called from Core::configure(const CoreConfig& config)
-
-            // sequenceDiagram
-            //     participant Main
-            //     participant Core
-            //     participant Factory
-                
-            //     Main->>Core: getCore() // Core singleton created
-            //     Core->>Factory: Factory constructed (no registration yet)
-            //     Core->>Core: Core::configure(config)
-            //     Core->>Factory: factory_->onInit()
-            //     Factory->>Factory: registerDomType("Stage", ...)
-            //     Factory->>Factory: Register other built-in types
-            //     Core->>Core: configureFromLua(luaTable)
-            //     Core->>Factory: factory_->create(type, obj) (recursive resource creation)
-            //     Core->>Core: setRootNode("mainStage")
-            //     Core->>Core: run()
-            //     Core->>Core: startup_SDL()
-            //     Core->>Core: onInit()
-            //     Core->>Factory: (optional) factory_->onInit() (if not already called)
-            //     Core->>Core: Event loop, rendering, updates, etc.
-            //     Core->>Core: onQuit()
-            //     Core->>Factory: Factory cleanup        
-        
         bool ret = true;
 
         // Call the users registered init function if available
@@ -1060,16 +1008,10 @@ namespace SDOM
     void Core::clearFactory() {
         getFactory().clear();
     }
-    void Core::printFactoryRegistry() const {
-        getFactory().printRegistry();
+    void Core::printObjectRegistry() const {
+        getFactory().printObjectRegistry();
     }
 
-    void Core::initFactoryFromLua(const sol::table& lua) {
-        getFactory().initFromLua(lua);
-    }
-    void Core::processFactoryResource(const sol::table& resource) {
-        getFactory().processResource(resource);
-    }
 
     // --- Lua UserType Registration --- //
     void Core::_registerLua_Usertype(sol::state_view lua)
@@ -1132,16 +1074,32 @@ namespace SDOM
             // --- Utility Methods ---
             "listDisplayObjectNames", &Core::listDisplayObjectNames,
             "clearFactory", &Core::clearFactory,
-            "printFactoryRegistry", &Core::printFactoryRegistry,
-
-            // --- Lua Integration ---
-            "initFactoryFromLua", &Core::initFactoryFromLua,
-            "processFactoryResource", &Core::processFactoryResource
+            "printObjectRegistry", &Core::printObjectRegistry
         );
 
         lua["Core"] = this;
-        std::cout << "Stage: Registered Lua bindings." << std::endl;
+        // std::cout << "Stage: Registered Lua bindings." << std::endl;
     }
 
-    
+    void Core::_registerLua(const std::string& typeName, sol::state_view lua)
+    {
+        std::string typeNameLocal = "Core";
+        std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+
+        // 1. Call base class registration to include inherited properties/commands
+        SUPER::_registerLua(typeName, lua);
+
+        // 2. Register this class's properties and commands
+        //    factory_->registerLuaProperty(typeName, ...);
+        //    factory_->registerLuaCommand(typeName, ...);
+
+        // 3. Register the Lua usertype using the registry
+        factory_->registerLuaUsertype<Core>(typeName, lua);
+        // getFactory().registerLuaUsertype<IDisplayObject>(typeName, lua);          
+    }
+
 } // namespace SDOM
+
+
+

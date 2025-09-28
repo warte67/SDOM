@@ -25,6 +25,7 @@ namespace SDOM
         // --- Lua UserType Registration --- //
         Core& core = Core::getInstance();
         core._registerLua_Usertype(core.getLua());
+        core._registerLua("Core", core.getLua());
         // core._registerLua_Commands(core.getLua());
 
         // ===== Register built-in types =====
@@ -38,8 +39,11 @@ namespace SDOM
         // Register other built-in types here as needed ...   
         DomHandle prototypeHandle; // Default DomHandle for registration 
         prototypeHandle._registerLua_Usertype(core.getLua());
+        prototypeHandle._registerLua("DomHandle", core.getLua());
         // ResHandle prototypeResHandle; // Default ResHandle for registration 
         // prototypeResHandle._registerLua_Usertype(core.getLua());
+        // prototypeResHandle._registerLua("ResHandle", core.getLua());
+
 
 
         return true;
@@ -57,6 +61,7 @@ namespace SDOM
         if (prototypeHandle)
         {
             prototypeHandle->_registerLua_Usertype(SDOM::getLua());
+            prototypeHandle->_registerLua(typeName, SDOM::getLua());
             destroyDisplayObject(prototypeHandle.get()->getName()); // Clean up prototype
         }   
     }
@@ -298,7 +303,7 @@ namespace SDOM
         displayObjects_.clear();
     }
 
-    void Factory::printRegistry() const
+    void Factory::printObjectRegistry() const
     {
         std::cout << "Factory Display Object Registry:\n";
         for (const auto& pair : displayObjects_) {
@@ -375,8 +380,42 @@ namespace SDOM
         }
     }
 
+
     void Factory::initFromLua(const sol::table& lua)
     {
+        // Lambda for processing a single resource entry
+        auto processResource = [this](const sol::table& resource) {
+            if (!resource["type"].valid() || !resource["name"].valid() || !resource["config"].valid())
+            {
+                ERROR("Resource entry is missing required fields: 'type', 'name', or 'config'.");
+                return;
+            }
+            std::string type = resource["type"];
+            std::string name = resource["name"];
+            sol::table config = resource["config"];
+            auto creatorIt = creators_.find(type);
+            if (creatorIt != creators_.end())
+            {
+                const TypeCreators& creators = creatorIt->second;
+                std::unique_ptr<IDisplayObject> displayObj;
+                if (creators.fromLua) {
+                    displayObj = creators.fromLua(config);
+                }
+                if (displayObj)
+                {
+                    addDisplayObject(name, std::move(displayObj));
+                }
+                else
+                {
+                    ERROR("Failed to create display object: " + name + " of type: " + type);
+                }
+            }
+            else
+            {
+                ERROR("Unknown display object type: " + type);
+            }
+        };
+
         // Handle array of resources
         if (lua["resources"].valid() && lua["resources"].is<sol::table>())
         {
@@ -402,47 +441,165 @@ namespace SDOM
             std::cout << name << " ";
         }
         std::cout << std::endl;
-    }
+    }    
 
-    void Factory::processResource(const sol::table& resource)
-    {
-        if (!resource["type"].valid() || !resource["name"].valid() || !resource["config"].valid())
-        {
-            ERROR("Resource entry is missing required fields: 'type', 'name', or 'config'.");
-            return;
-        }
-        std::string type = resource["type"];
-        std::string name = resource["name"];
-        sol::table config = resource["config"];
-        auto creatorIt = creators_.find(type);
-        if (creatorIt != creators_.end())
-        {
-            const TypeCreators& creators = creatorIt->second;
-            std::unique_ptr<IDisplayObject> displayObj;
-            if (creators.fromLua) {
-                displayObj = creators.fromLua(config);
-            }
-            if (displayObj)
-            {
-                addDisplayObject(name, std::move(displayObj));
-            }
-            else
-            {
-                ERROR("Failed to create display object: " + name + " of type: " + type);
-            }
-        }
-        else
-        {
-            ERROR("Unknown display object type: " + type);
-        }
-    }
-
-    
     bool Factory::onUnitTest()
     {
         // std::cout << CLR::WHITE << "Factory Default Unit Tests:" << CLR::RESET << std::endl;
         return true;       
     } // END Factory::onUnitTest()
+
+    void Factory::registerLuaProperty(const std::string& typeName,
+                                    const std::string& propertyName,
+                                    IDataObject::Getter getter,
+                                    IDataObject::Setter setter)
+    {
+        auto& entry = typeRegistry_[typeName];
+        entry.typeName = typeName;
+
+        // Check if property already exists, update if so
+        for (auto& prop : entry.properties) {
+            if (prop.propertyName == propertyName) {
+                prop.getter = getter;
+                prop.setter = setter;
+                return;
+            }
+        }
+        // Otherwise, add new property
+        entry.properties.push_back({propertyName, getter, setter});
+    }
+
+    void Factory::registerLuaCommand(const std::string& typeName,
+                                    const std::string& commandName,
+                                    IDataObject::Command command)
+    {
+        auto& entry = typeRegistry_[typeName];
+        entry.typeName = typeName;
+
+        // Check if command already exists, update if so
+        for (auto& cmd : entry.commands) {
+            if (cmd.commandName == commandName) {
+                cmd.command = command;
+                return;
+            }
+        }
+        // Otherwise, add new command
+        entry.commands.push_back({commandName, command});
+    }
+
+    const Factory::ObjectTypeRegistryEntry* 
+            Factory::getTypeRegistryEntry(const std::string& typeName) const
+    {
+        auto it = typeRegistry_.find(typeName);
+        if (it != typeRegistry_.end())
+            return &it->second;
+        return nullptr;
+    }
+
+    const Factory::ObjectTypeRegistryEntry::PropertyEntry* 
+            Factory::getPropertyEntry(const std::string& typeName, 
+                                    const std::string& propertyName) const
+    {
+        auto entry = getTypeRegistryEntry(typeName);
+        if (!entry) return nullptr;
+        for (const auto& prop : entry->properties) {
+            if (prop.propertyName == propertyName)
+                return &prop;
+        }
+        return nullptr;
+    }
+
+    const Factory::ObjectTypeRegistryEntry::CommandEntry* 
+            Factory::getCommandEntry(const std::string& typeName, 
+                                    const std::string& commandName) const
+    {
+        auto entry = getTypeRegistryEntry(typeName);
+        if (!entry) return nullptr;
+        for (const auto& cmd : entry->commands) {
+            if (cmd.commandName == commandName)
+                return &cmd;
+        }
+        return nullptr;
+    }
+
+    void Factory::registerLuaObjectTypes_test()
+    {
+        // --- Box ---
+        std::string boxType = "Box";
+        registerLuaProperty(boxType, "x", nullptr, nullptr);
+        registerLuaProperty(boxType, "y", nullptr, nullptr);
+        registerLuaProperty(boxType, "width", nullptr, nullptr);
+        registerLuaProperty(boxType, "height", nullptr, nullptr);
+        registerLuaProperty(boxType, "color", nullptr, nullptr);
+        registerLuaProperty(boxType, "visible", nullptr, nullptr);
+        registerLuaProperty(boxType, "enabled", nullptr, nullptr);
+        registerLuaProperty(boxType, "zOrder", nullptr, nullptr);
+
+        registerLuaCommand(boxType, "moveTo", nullptr);
+        registerLuaCommand(boxType, "resize", nullptr);
+        registerLuaCommand(boxType, "setColor", nullptr);
+        registerLuaCommand(boxType, "show", nullptr);
+        registerLuaCommand(boxType, "hide", nullptr);
+
+        // --- Stage ---
+        std::string stageType = "Stage";
+        registerLuaProperty(stageType, "width", nullptr, nullptr);
+        registerLuaProperty(stageType, "height", nullptr, nullptr);
+        registerLuaProperty(stageType, "backgroundColor", nullptr, nullptr);
+        registerLuaProperty(stageType, "name", nullptr, nullptr);
+
+        registerLuaCommand(stageType, "addChild", nullptr);
+        registerLuaCommand(stageType, "removeChild", nullptr);
+        registerLuaCommand(stageType, "setBackgroundColor", nullptr);
+        registerLuaCommand(stageType, "resize", nullptr);
+
+        // --- Button ---
+        std::string buttonType = "Button";
+        registerLuaProperty(buttonType, "x", nullptr, nullptr);
+        registerLuaProperty(buttonType, "y", nullptr, nullptr);
+        registerLuaProperty(buttonType, "width", nullptr, nullptr);
+        registerLuaProperty(buttonType, "height", nullptr, nullptr);
+        registerLuaProperty(buttonType, "label", nullptr, nullptr);
+        registerLuaProperty(buttonType, "enabled", nullptr, nullptr);
+        registerLuaProperty(buttonType, "visible", nullptr, nullptr);
+
+        registerLuaCommand(buttonType, "click", nullptr);
+        registerLuaCommand(buttonType, "setLabel", nullptr);
+        registerLuaCommand(buttonType, "show", nullptr);
+        registerLuaCommand(buttonType, "hide", nullptr);
+
+        // --- Label ---
+        std::string labelType = "Label";
+        registerLuaProperty(labelType, "x", nullptr, nullptr);
+        registerLuaProperty(labelType, "y", nullptr, nullptr);
+        registerLuaProperty(labelType, "text", nullptr, nullptr);
+        registerLuaProperty(labelType, "fontSize", nullptr, nullptr);
+        registerLuaProperty(labelType, "color", nullptr, nullptr);
+        registerLuaProperty(labelType, "visible", nullptr, nullptr);
+
+        registerLuaCommand(labelType, "setText", nullptr);
+        registerLuaCommand(labelType, "setColor", nullptr);
+        registerLuaCommand(labelType, "show", nullptr);
+        registerLuaCommand(labelType, "hide", nullptr);
+
+        // Print simulated registration code for all types
+        for (const auto& [typeName, entry] : typeRegistry_) {
+            std::cout << "lua.new_usertype<" << typeName << ">(\"" << typeName << "\",\n";
+            for (const auto& prop : entry.properties) {
+                std::cout << "    \"" << prop.propertyName << "\", /* getter/setter */,\n";
+                std::cout << "    \"set" << char(std::toupper(prop.propertyName[0])) << prop.propertyName.substr(1)
+                        << "\", /* setter */,\n";
+            }
+            for (const auto& cmd : entry.commands) {
+                std::cout << "    \"" << cmd.commandName << "\", /* command */,\n";
+            }
+            std::cout << ");\n\n";
+        }
+    }
+
+
+
+
 
 } // namespace SDOM
 

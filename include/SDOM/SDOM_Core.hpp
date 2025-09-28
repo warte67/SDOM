@@ -168,11 +168,8 @@ namespace SDOM
         // --- Utility Methods --- //
         std::vector<std::string> listDisplayObjectNames() const;
         void clearFactory();
-        void printFactoryRegistry() const;
+        void printObjectRegistry() const;
 
-        // --- Lua Integration --- //
-        void initFactoryFromLua(const sol::table& lua);
-        void processFactoryResource(const sol::table& resource);
 
     private:
         // --- Singleton Enforcement --- //
@@ -241,85 +238,8 @@ namespace SDOM
         friend Factory;
         // --- Lua Registration --- //
         virtual void _registerLua_Usertype(sol::state_view lua)  override;  
-   
+        virtual void _registerLua(const std::string& typeName, sol::state_view lua);
     };
 
 } // namespace SDOM
 
-
-/********
-
-## LUA Commands to Register
-
-### Main Loop & Event Dispatch
-- void quit()
-- void shutdown()
-
-### Stage/Root Node Management
-- void setRootNode(const std::string& name)
-- void setRootNode(const DomHandle& handle)
-- void setStage(const std::string& name)
-- DomHandle getRootNode() const
-- DomHandle getStageHandle() const
-
-### SDL Resource Accessors
-- SDL_Color getColor() const
-- void setColor(const SDL_Color& color = { 0, 0, 0, 255 })
-
-### Configuration Accessors
-- bool getPreserveAspectRatio() const
-- bool getAllowTextureResize() const
-- void setPreserveAspectRatio(bool preserve = true)
-- void setAllowTextureResize(bool allow = true)
-
-### Factory & EventManager Access
-- bool getIsTraversing() const
-- void setIsTraversing(bool traversing)
-
-### Focus & Hover Management
-- void handleTabKeyPress()
-- void handleTabKeyPressReverse()
-- void setKeyboardFocusedObject(DomHandle obj)
-- DomHandle getKeyboardFocusedObject() const
-- void setMouseHoveredObject(DomHandle obj)
-- DomHandle getMouseHoveredObject() const
-
-### Window Title & Timing
-- std::string getWindowTitle() const
-- void setWindowTitle(const std::string& title)
-- float getElapsedTime() const
-
-### Factory Wrappers
-#### Object Creation
-- DomHandle createDisplayObject(const std::string& typeName, const sol::table& config)
-- DomHandle createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init)
-- DomHandle createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript)
-
-#### Object Lookup
-- DomHandle getDisplayHandle(const std::string& name)
-- DomHandle getFactoryStageHandle()
-
-#### Display Object Management
-- void destroyDisplayObject(const std::string& name)
-
-#### Orphan Management
-- int countOrphanedDisplayObjects() const
-- std::vector<DomHandle> getOrphanedDisplayObjects()
-- void destroyOrphanedDisplayObjects()
-- void detachOrphans()
-
-#### Future Child Management
-- void attachFutureChildren()
-- void addToOrphanList(const DomHandle orphan)
-- void addToFutureChildrenList(const DomHandle child, const DomHandle parent, bool useWorld=false, int worldX=0, int worldY=0)
-
-#### Utility Methods
-- std::vector<std::string> listDisplayObjectNames() const
-- void clearFactory()
-- void printFactoryRegistry() const
-
-#### Lua Integration
-- void initFactoryFromLua(const sol::table& lua)
-- void processFactoryResource(const sol::table& resource)
-
-*********/

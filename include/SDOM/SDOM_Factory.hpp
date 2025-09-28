@@ -26,7 +26,7 @@ namespace SDOM
         virtual void onQuit() override {}
         virtual bool onUnitTest() override;
 
-        // --- Type Registration --- //
+        // --- Object Type Registration --- //
         void registerDomType(const std::string& typeName, const TypeCreators& creators);
         // void registerResType(const std::string& typeName, const TypeCreators& creators);
 
@@ -62,11 +62,11 @@ namespace SDOM
         std::vector<std::string> listDisplayObjectNames() const;
         // std::vector<std::string> listResourceNames() const;
         void clear();
-        void printRegistry() const;
+        void printObjectRegistry() const;
 
-        // --- Lua Integration --- //
+        // --- Internal Lua Integration --- //
         void initFromLua(const sol::table& lua);
-        void processResource(const sol::table& resource);
+        // void initLuaProcessResource(const sol::table& resource);
 
     private:
         // --- Internal Storage --- //
@@ -86,16 +86,85 @@ namespace SDOM
         };
         std::vector<futureChild> futureChildrenList_;
 
-        // // --- Object Type Registry --- //
-        // struct TypeRegistryEntry
-        // {
-        //     std::string typeName;
-        //     std::unordered_map<std::string, IDataObject::Getter> getters;
-        //     std::unordered_map<std::string, IDataObject::Setter> setters;
-        //     std::unordered_map<std::string, IDataObject::Command> commands;
-        // };
-        // std::unordered_map<std::string, TypeRegistryEntry> typeRegistry_;        
+    public:
+        // --- Lua Object Type Registry (public) --- //
+        struct ObjectTypeRegistryEntry
+        {
+            std::string typeName;
+
+            struct PropertyEntry {
+                std::string propertyName;
+                IDataObject::Getter getter;
+                IDataObject::Setter setter;
+            };
+            std::vector<PropertyEntry> properties;
+
+            struct CommandEntry {
+                std::string commandName;
+                IDataObject::Command command;
+            };
+            std::vector<CommandEntry> commands;
+        };
+
+        void registerLuaProperty(const std::string& typeName,
+                                const std::string& propertyName,
+                                IDataObject::Getter getter,
+                                IDataObject::Setter setter);
+
+        void registerLuaCommand(const std::string& typeName,
+                            const std::string& commandName,
+                            IDataObject::Command command);    
+
+        const ObjectTypeRegistryEntry* getTypeRegistryEntry(const std::string& typeName) const;
+        const ObjectTypeRegistryEntry::PropertyEntry* getPropertyEntry(const std::string& typeName, const std::string& propertyName) const;
+        const ObjectTypeRegistryEntry::CommandEntry* getCommandEntry(const std::string& typeName, const std::string& commandName) const;                                
+
+        void registerLuaObjectTypes_test();
+
+        template<typename T>
+        void registerLuaUsertype(const std::string& typeName, sol::state_view lua)
+        {
+            return; // Temporary return to avoid lua issues while editing
+
+            // const auto* entry = getTypeRegistryEntry(typeName);
+            // if (!entry) return;
+            // // Build up the registration arguments
+            // std::vector<std::pair<std::string, sol::object>> args;
+            // // Properties: getter/setter pairs
+            // for (const auto& prop : entry->properties) {
+            //     // Getter
+            //     if (prop.getter) {
+            //         args.emplace_back(prop.propertyName, sol::object(lua, sol::in_place_type<IDataObject::Getter>, prop.getter));
+            //     }
+            //     // Setter (as "setX" style)
+            //     if (prop.setter) {
+            //         std::string setterName = "set" + prop.propertyName;
+            //         setterName[3] = std::toupper(setterName[3]);
+            //         args.emplace_back(setterName, sol::object(lua, sol::in_place_type<IDataObject::Setter>, prop.setter));
+            //     }
+            // }
+            // // Commands
+            // for (const auto& cmd : entry->commands) {
+            //     if (cmd.command) {
+            //         args.emplace_back(cmd.commandName, sol::object(lua, sol::in_place_type<IDataObject::Command>, cmd.command));
+            //     }
+            // }
+            // // Now, register with Sol2
+            // // Note: You must know the actual C++ type at compile time (e.g., IDisplayObject, Box, etc.)
+            // // For demonstration, let's assume IDisplayObject:
+            // sol::usertype<T> usertype = lua.new_usertype<T>(typeName);
+            // for (const auto& [name, func] : args) {
+            //     usertype[name] = func;
+            // }
+        }
+
+    private:
+        // --- Lua Object Type Registry (private) --- //
+        std::unordered_map<std::string, ObjectTypeRegistryEntry> typeRegistry_;
+
+
     };
+    
 
 }
 
