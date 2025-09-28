@@ -149,6 +149,109 @@ namespace SDOM
     // }
 
 
+
+    void IDisplayObject::_registerLua_Usertype(sol::state_view lua)
+    {
+        SUPER::_registerLua_Usertype(lua);
+
+        lua.new_usertype<IDisplayObject>("IDisplayObject",
+            // --- Properties ---
+            "getName", &IDisplayObject::getName,
+            "setName", &IDisplayObject::setName,
+            "getType", &IDisplayObject::getType,
+            "getX", &IDisplayObject::getX,
+            "setX", &IDisplayObject::setX,
+            "getY", &IDisplayObject::getY,
+            "setY", &IDisplayObject::setY,
+            "getLeft", &IDisplayObject::getLeft,
+            "setLeft", &IDisplayObject::setLeft,
+            "getRight", &IDisplayObject::getRight,
+            "setRight", &IDisplayObject::setRight,
+            "getTop", &IDisplayObject::getTop,
+            "setTop", &IDisplayObject::setTop,
+            "getBottom", &IDisplayObject::getBottom,
+            "setBottom", &IDisplayObject::setBottom,
+            "getWidth", &IDisplayObject::getWidth,
+            "setWidth", &IDisplayObject::setWidth,
+            "getHeight", &IDisplayObject::getHeight,
+            "setHeight", &IDisplayObject::setHeight,
+            "getPriority", [](IDisplayObject& obj) { return obj.priority_; },
+            "setPriority", &IDisplayObject::setPriority,
+            "isClickable", &IDisplayObject::isClickable,
+            "setClickable", &IDisplayObject::setClickable,
+            "isEnabled", &IDisplayObject::isEnabled,
+            "setEnabled", &IDisplayObject::setEnabled,
+            "isHidden", &IDisplayObject::isHidden,
+            "setHidden", &IDisplayObject::setHidden,
+            "getTabPriority", &IDisplayObject::getTabPriority,
+            "setTabPriority", &IDisplayObject::setTabPriority,
+            "isTabEnabled", &IDisplayObject::isTabEnabled,
+            "setTabEnabled", &IDisplayObject::setTabEnabled,
+            "getZOrder", &IDisplayObject::getZOrder,
+            "setZOrder", &IDisplayObject::setZOrder,
+            "getColor", &IDisplayObject::getColor,
+            "setColor", [](IDisplayObject& obj, sol::table colorTable) {
+                SDL_Color color;
+                color.r = colorTable["r"].get_or(255);
+                color.g = colorTable["g"].get_or(255);
+                color.b = colorTable["b"].get_or(255);
+                color.a = colorTable["a"].get_or(255);
+                obj.setColor(color);
+            },            
+            "getAnchorTop", &IDisplayObject::getAnchorTop,
+            "setAnchorTop", &IDisplayObject::setAnchorTop,
+            "getAnchorLeft", &IDisplayObject::getAnchorLeft,
+            "setAnchorLeft", &IDisplayObject::setAnchorLeft,
+            "getAnchorBottom", &IDisplayObject::getAnchorBottom,
+            "setAnchorBottom", &IDisplayObject::setAnchorBottom,
+            "getAnchorRight", &IDisplayObject::getAnchorRight,
+            "setAnchorRight", &IDisplayObject::setAnchorRight,
+            "bIsDirty", [](IDisplayObject& obj) { return obj.bIsDirty_; },
+            "setBIsDirty", [](IDisplayObject& obj, bool val) { obj.bIsDirty_ = val; },
+
+            // --- Hierarchy Management ---
+            "addChild", &IDisplayObject::addChild_lua,
+            "removeChild", &IDisplayObject::removeChild,
+            "hasChild", &IDisplayObject::hasChild,
+
+            // --- Utility ---
+            "cleanAll", &IDisplayObject::cleanAll,
+            "printTree", &IDisplayObject::printTree_lua,
+
+            // --- Focus & Interactivity ---
+            "setKeyboardFocus", &IDisplayObject::setKeyboardFocus,
+            "isKeyboardFocused", &IDisplayObject::isKeyboardFocused,
+            "isMouseHovered", &IDisplayObject::isMouseHovered,
+
+            // --- Tab Management ---
+            // Already included above
+
+            // --- Priority & Z-Order ---
+            "getMaxPriority", &IDisplayObject::getMaxPriority,
+            "getMinPriority", &IDisplayObject::getMinPriority,
+            "setToHighestPriority", &IDisplayObject::setToHighestPriority,
+            "setToLowestPriority", &IDisplayObject::setToLowestPriority,
+            "sortChildrenByPriority", &IDisplayObject::sortChildrenByPriority,
+            "getChildrenPriorities", &IDisplayObject::getChildrenPriorities,
+            "moveToTop", &IDisplayObject::moveToTop,
+
+            // --- Visibility & Interactivity ---
+            "setVisible", &IDisplayObject::setVisible,
+
+            // --- Event Handling ---
+            // For these, you may need to wrap with lambdas if signatures are not directly compatible
+            "addEventListener", [](IDisplayObject& obj, EventType type, std::function<void(Event&)> listener, bool useCapture, int priority) {
+                obj.addEventListener(type, listener, useCapture, priority);
+            },
+            "removeEventListener", [](IDisplayObject& obj, EventType type, std::function<void(Event&)> listener, bool useCapture) {
+                obj.removeEventListener(type, listener, useCapture);
+            },
+            "triggerEventListeners", [](IDisplayObject& obj, Event& event, bool useCapture) {
+                obj.triggerEventListeners(event, useCapture);
+            }
+        );
+    }
+
     void IDisplayObject::_registerLua_Properties(sol::state_view lua)    
     {
         SUPER::_registerLua_Properties(lua);
@@ -309,7 +412,7 @@ namespace SDOM
 
         // --- Hierarchy Management --- //
         setterCommand("addChild", [](IDisplayObject& obj, sol::object val) {
-            obj.addChild(val.as<DomHandle>());
+            obj.addChild_lua(val.as<DomHandle>());
         });
         setterCommand("removeChild", [](IDisplayObject& obj, sol::object val) {
             obj.removeChild(val.as<DomHandle>());
@@ -325,7 +428,7 @@ namespace SDOM
         voidCommand("cleanAll", &IDisplayObject::cleanAll);
         registerCommand("printTree",
             [](IDataObject& obj, sol::object, sol::state_view) {
-                static_cast<IDisplayObject&>(obj).printTree(0, true, {});
+                static_cast<IDisplayObject&>(obj).printTree_lua();
             });
 
         // --- Focus & Interactivity --- //
@@ -512,6 +615,10 @@ namespace SDOM
         {
             attachChild_(child, DomHandle(getName(), getType()), useWorld, worldX, worldY);
         }
+    }
+    void IDisplayObject::addChild_lua(DomHandle child)
+    {
+        addChild(child, false, 0, 0);
     }
 
 
@@ -789,7 +896,8 @@ namespace SDOM
 
     bool IDisplayObject::hasChild(const DomHandle child) const
     {
-        return std::find(children_.begin(), children_.end(), child) != children_.end();
+        auto it = std::find(children_.begin(), children_.end(), child);
+        return it != children_.end() && child.isValid();
     }
 
     int IDisplayObject::getTabPriority() const 

@@ -68,7 +68,7 @@ namespace SDOM
 
     protected:
         // --- Lua Registration --- //
-        virtual void _registerLua_Usertype(sol::state_view lua)      { SUPER::_registerLua_Usertype(lua); }  
+        virtual void _registerLua_Usertype(sol::state_view lua);
         virtual void _registerLua_Properties(sol::state_view lua);
         virtual void _registerLua_Commands(sol::state_view lua);
         virtual void _registerLua_Meta(sol::state_view lua)          { SUPER::_registerLua_Meta(lua); }

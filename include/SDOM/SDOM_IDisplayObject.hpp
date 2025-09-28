@@ -168,6 +168,7 @@ namespace SDOM
 
         // --- Debug/Utility --- //
         void printTree(int depth = 0, bool isLast = true, const std::vector<bool>& hasMoreSiblings = {}) const;
+        void printTree_lua() const { printTree(); }
 
         // --- Event Handling --- //
         void addEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false, int priority = 0);
@@ -176,6 +177,7 @@ namespace SDOM
 
         // --- Hierarchy Management --- //
         void addChild(DomHandle child, bool useWorld = false, int worldX = 0, int worldY = 0);
+        void addChild_lua(DomHandle child);
         bool removeChild(DomHandle child);
         const std::vector<DomHandle>& getChildren() const { return children_; }
         DomHandle getParent() const { return parent_; }
@@ -300,7 +302,7 @@ namespace SDOM
         // void registerLua_();
 
     protected:
-        virtual void _registerLua_Usertype(sol::state_view lua)      { SUPER::_registerLua_Usertype(lua); }
+        virtual void _registerLua_Usertype(sol::state_view lua);
         virtual void _registerLua_Properties(sol::state_view lua);
         virtual void _registerLua_Commands(sol::state_view lua);
         virtual void _registerLua_Meta(sol::state_view lua)          { SUPER::_registerLua_Meta(lua); }

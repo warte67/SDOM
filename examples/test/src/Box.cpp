@@ -393,3 +393,13 @@ bool Box::onUnitTest()
     return true;
 }
 
+
+
+void Box::_registerLua_Usertype(sol::state_view lua)      
+{ 
+    SUPER::_registerLua_Usertype(lua); 
+    lua.new_usertype<Box>("Box",
+        sol::base_classes, sol::bases<IDisplayObject>()
+        // ...Box-specific methods...
+    );
+}  

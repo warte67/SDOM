@@ -15,13 +15,25 @@ namespace SDOM
 
     void DomHandle::_registerLua_Usertype(sol::state_view lua)      
     { 
+        // std::cout << CLR::YELLOW << "DomHandle: Registered Lua usertype" << CLR::RESET << std::endl;
+
         SUPER::_registerLua_Usertype(lua);
 
         lua.new_usertype<DomHandle>("DomHandle",
-                sol::constructors<DomHandle(), DomHandle(const std::string&, const std::string&)>(),
-                "getName", &DomHandle::getName,
-                "getType", &DomHandle::getType,
-                "isValid", &DomHandle::isValid
+            sol::constructors<DomHandle(), DomHandle(const std::string&, const std::string&)>(),
+            "get", &DomHandle::get,
+            "isValid", &DomHandle::isValid,
+            "getName", &DomHandle::getName,
+            "getType", &DomHandle::getType,
+            sol::meta_function::to_string, [](DomHandle& h) 
+            {
+                auto obj = h.get();
+                if (obj) 
+                {
+                    return "DomHandle(" + obj->getName() + ":" + obj->getType() + ")";
+                }
+                return std::string("DomHandle(invalid)");
+            }
         );
     }
 
@@ -38,6 +50,15 @@ namespace SDOM
     void DomHandle::_registerLua_Meta(sol::state_view lua)          
     { 
         SUPER::_registerLua_Meta(lua); 
+
+        // sol::usertype<DomHandle> domHandleMeta = lua["DomHandle"];
+        // domHandleMeta[sol::meta_function::to_string] = [](DomHandle& h) {
+        //     auto obj = h.get();
+        //     if (obj) {
+        //         return "DomHandle(" + obj->getName() + ":" + obj->getType() + ")";
+        //     }
+        //     return std::string("DomHandle(invalid)");
+        // };
     }
 
     void DomHandle::_registerLua_Children(sol::state_view lua)      

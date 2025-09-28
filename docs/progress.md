@@ -186,27 +186,92 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - All major Core and Factory methods are now exposed to Lua via Sol2 usertype registration.
         - Overloaded methods and custom types (DomHandle, SDL_Color) are correctly bound and accessible from Lua scripts.
         - The Lua API is stable, with all required commands available for scripting, configuration, and test automation.
-    - **C++/Lua Unit Test Integration:**  
-        - Unit tests now run seamlessly across C++ and Lua, with Lua-side tests returning results directly to the C++ test framework.
-        - Demonstrated passing boolean results from Lua to C++ for robust test validation.
-        - All core, factory, display object, and event system tests pass with Lua-driven configs.
-    - **API and Documentation Updates:**  
-        - Updated documentation to reflect the Lua-first workflow and new scripting capabilities.
-        - Added examples for Lua-driven object creation, event handling, and unit testing.
-        - Confirmed that the codebase is stable and ready for expanded Lua scripting and automation.
-    - **Next Steps:**  
-        - Expand Lua scripting examples and documentation.
-        - Add more Lua-side unit tests and demonstrate advanced C++/Lua test integration.
-        - Continue improving event system, resource management, and garbage collection.
-        - Maintain and update docs as features evolve.
-
+    - **Lua/C++ Unit Test Integration Enhanced:**  
+        - Refined Lua-driven unit tests for display object creation, stage hierarchy, and destruction.
+        - Confirmed that DomHandles automatically become invalid (`nullptr`) when their resource is destroyed in the Factory, ensuring safe reference semantics.
+        - Improved `IDisplayObject::hasChild()` logic to check both handle presence and validity, preventing false positives when objects are deleted.
+        - All current unit tests now pass, including tests for creation, addition to stage, and destruction/removal verification.
+        - Added Lua-side debugging utilities: Factory registry and stage tree can be printed directly from Lua scripts for live inspection.
+        - Demonstrated robust C++/Lua test integration: Lua scripts return boolean results to C++ test framework, enabling seamless cross-language validation.
+        - Codebase and Lua API stability increased, with reliable resource management and hierarchy checks.
 
 # Next Steps:
-- Expand Lua scripting examples and documentation.
-- Add Lua-side unit tests and demonstrate C++/Lua test integration.
-- Continue improving event system, resource management, and garbage collection.
-- Plan for future language hooks (e.g., Python).
-- Maintain and update docs as features evolve.
+## Centralize Registration
+
+```cpp
+// Always use registerProperty() and registerCommand() in your
+// _registerLua_Properties and _registerLua_Commands implementations.
+// This ensures every property/command is tracked and exposed to Lua.
+
+void MyObject::_registerLua_Properties(sol::state_view lua) {
+    registerProperty("x", /* getter */, /* setter */);
+    registerProperty("y", /* getter */, /* setter */);
+    // ... more properties ...
+}
+
+void MyObject::_registerLua_Commands(sol::state_view lua) {
+    registerCommand("move", /* command */);
+    registerCommand("resize", /* command */);
+    // ... more commands ...
+}
+```
+
+---
+
+## Expose Introspection to Lua
+
+```cpp
+// Add methods like getPropertyNames() and getCommandNames() to return the keys of your maps.
+// Register these methods in your Lua usertype so Lua scripts can enumerate all available properties and commands.
+
+std::vector<std::string> getPropertyNames() const {
+    std::vector<std::string> names;
+    for (const auto& kv : getters_) names.push_back(kv.first);
+    return names;
+}
+
+std::vector<std::string> getCommandNames() const {
+    std::vector<std::string> names;
+    for (const auto& kv : commands_) names.push_back(kv.first);
+    return names;
+}
+
+// Register in Lua usertype
+lua.new_usertype<IDataObject>("IDataObject",
+    "getPropertyNames", &IDataObject::getPropertyNames,
+    "getCommandNames", &IDataObject::getCommandNames,
+    // ...other methods...
+);
+```
+
+---
+
+## Automate Lua Registration
+
+```cpp
+// In your _registerLua_Usertype, iterate over the maps and register getters/setters/commands with Sol2.
+// This keeps your Lua API and internal tracking in sync.
+
+virtual void _registerLua_Usertype(sol::state_view lua) override {
+    auto& obj = *this;
+    lua.new_usertype<IDataObject>("IDataObject",
+        // Introspection
+        "getPropertyNames", &IDataObject::getPropertyNames,
+        "getCommandNames", &IDataObject::getCommandNames,
+        // Properties
+        "getX", &IDataObject::getX,
+        "setX", &IDataObject::setX,
+        // ...automatically add all registered properties...
+        // Commands
+        "move", &IDataObject::move,
+        "resize", &IDataObject::resize
+        // ...automatically add all registered commands...
+    );
+}
+```
+
+
+
 
 # ToDo:
 - Expand Lua scripting examples and documentation.

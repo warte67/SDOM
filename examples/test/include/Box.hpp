@@ -54,7 +54,7 @@ class Box final : public SDOM::IDisplayObject
 
         // --- LUA Registration --- //
     protected:
-        virtual void _registerLua_Usertype(sol::state_view lua)      { SUPER::_registerLua_Usertype(lua); }  
+        virtual void _registerLua_Usertype(sol::state_view lua);
         virtual void _registerLua_Properties(sol::state_view lua)    { SUPER::_registerLua_Properties(lua); }
         virtual void _registerLua_Commands(sol::state_view lua)      { SUPER::_registerLua_Commands(lua); }
         virtual void _registerLua_Meta(sol::state_view lua)          { SUPER::_registerLua_Meta(lua); }

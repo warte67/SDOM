@@ -79,6 +79,16 @@ namespace SDOM
         return true;
     }
 
+    void Stage::_registerLua_Usertype(sol::state_view lua)
+    {
+        SUPER::_registerLua_Usertype(lua);
+
+        lua.new_usertype<Stage>("Stage"
+            // Add only Stage-specific methods here, if any
+            // e.g. "specialStageMethod", &Stage::specialStageMethod
+        );
+    }
+
     void Stage::_registerLua_Properties(sol::state_view lua)    
     { 
         SUPER::_registerLua_Properties(lua); 

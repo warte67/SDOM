@@ -147,6 +147,7 @@ namespace SDOM
         IResourceObject* getResourceObject(const std::string& name);
         DomHandle getDisplayHandle(const std::string& name);
         DomHandle getFactoryStageHandle();
+        bool hasDisplayObject(const std::string& name) const;
 
         // --- Display Object Management --- //
         void addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject);
@@ -237,6 +238,7 @@ namespace SDOM
         bool coreTests_();
 
     protected:
+        friend Factory;
         // --- Lua Registration --- //
         virtual void _registerLua_Usertype(sol::state_view lua)  override;  
         virtual void _registerLua_Properties(sol::state_view lua) override  { SUPER::_registerLua_Properties(lua); }

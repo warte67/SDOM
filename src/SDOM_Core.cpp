@@ -23,12 +23,6 @@ namespace SDOM
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string);
         factory_ = new Factory();
         eventManager_ = new EventManager();
-
-        // _registerLua_Usertype(getLua());
-        // _registerLua_Commands(getLua());
-
-        // DomHandle().registerLua_All(getLua());
-        // ResHandle().registerLua_All(getLua());
     }
 
     Core::~Core()
@@ -48,11 +42,6 @@ namespace SDOM
     void Core::configure(const CoreConfig& config)
     {
         config_ = config;  
-        
-        // --- Lua UserType Registration --- //
-        Core& core = Core::getInstance();
-        core._registerLua_Usertype(core.getLua());
-        core._registerLua_Commands(core.getLua());
 
         // Initialize the Factory (but only once)
         static bool factoryInitialized = false;
@@ -60,7 +49,6 @@ namespace SDOM
             factory_->onInit();
             factoryInitialized = true;
         }
-
     }
 
     void Core::configureFromLua(const sol::table& lua)
@@ -1030,6 +1018,10 @@ namespace SDOM
     DomHandle Core::getFactoryStageHandle() {
         return getFactory().getStageHandle();
     }
+    bool Core::hasDisplayObject(const std::string& name) const {
+        DomHandle handle = factory_->getDomHandle(name);
+        return handle.isValid();
+    }
 
     void Core::addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject) {
         getFactory().addDisplayObject(name, std::move(displayObject));
@@ -1123,6 +1115,7 @@ namespace SDOM
             "createDisplayObject", sol::resolve<DomHandle(const std::string&, const sol::table&)>(&Core::createDisplayObject),
             "getDisplayHandle", &Core::getDisplayHandle,
             "getFactoryStageHandle", &Core::getFactoryStageHandle,
+            "hasDisplayObject", &Core::hasDisplayObject,            
             "destroyDisplayObject", &Core::destroyDisplayObject,
 
             // --- Orphan Management ---
@@ -1250,6 +1243,10 @@ namespace SDOM
         registerCommand("getFactoryStageHandle", [this](IDataObject&, sol::object, sol::state_view lua) {
             return sol::make_object(lua, getFactoryStageHandle());
         });
+        registerCommand("hasDisplayObject", [this](IDataObject&, sol::object val, sol::state_view lua) {
+            return sol::make_object(lua, hasDisplayObject(val.as<std::string>()));
+        });
+
         registerCommand("destroyDisplayObject", [this](IDataObject&, sol::object val, sol::state_view) {
             destroyDisplayObject(val.as<std::string>());
         });
