@@ -364,7 +364,11 @@ namespace SDOM
 #include <SDOM/SDOM_Utils.hpp>
 
 #ifndef SDOM_USE_INDIVIDUAL_HEADERS
-    #include <SDOM/SDOM_Front.hpp>   // Umbrella header: all SDOM system headers
+    // SDOM_Front.hpp is an umbrella header meant for implementation files only.
+    // Including it from SDOM.hpp can create circular includes (SDOM.hpp -> SDOM_Front.hpp -> SDOM_Core.hpp -> SDOM.hpp)
+    // which may leave class definitions incomplete during header processing. Consumers who want the full
+    // API should include SDOM_Front.hpp directly in .cpp files. Keep this block intentionally empty here
+    // to avoid accidental circular include dependencies.
 #endif
 
 
