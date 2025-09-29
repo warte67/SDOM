@@ -30,8 +30,8 @@ namespace SDOM
 
 	// --- Focus & Hover Management --- //
 	void handleTabKeyPress_lua(Core& core);					// **verified**
-	void handleTabKeyPressReverse_lua(Core& core);				
-	void setKeyboardFocusedObject_lua(Core& core, DomHandle obj);
+	void handleTabKeyPressReverse_lua(Core& core);			// **verified**
+	void setKeyboardFocusedObject_lua(Core& core, DomHandle obj);  // **verified**
 	DomHandle getKeyboardFocusedObject_lua(const Core& core); // **verified**
 	void setMouseHoveredObject_lua(Core& core, DomHandle obj);
 	DomHandle getMouseHoveredObject_lua(const Core& core);

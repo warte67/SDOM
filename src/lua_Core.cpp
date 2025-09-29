@@ -31,21 +31,42 @@ namespace SDOM
 
 		SDL_Event ev;
 		std::memset(&ev, 0, sizeof(ev));
-		if (type == "up") ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
-		else ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
-
-		ev.button.windowID = winID;
-		ev.button.which = 0;
-		ev.button.button = button;
-	ev.button.clicks = 1;
-		ev.button.x = winX;
-		ev.button.y = winY;
-
-		// Also populate motion fields so downstream code that reads motion.x/y will see coords
-		ev.motion.windowID = winID;
-		ev.motion.which = 0;
-		ev.motion.x = winX;
-		ev.motion.y = winY;
+		if (type == "up") {
+			ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
+			// button fields
+			ev.button.windowID = winID;
+			ev.button.which = 0;
+			ev.button.button = button;
+			ev.button.clicks = 1;
+			ev.button.x = winX;
+			ev.button.y = winY;
+			// populate motion fields too
+			ev.motion.windowID = winID;
+			ev.motion.which = 0;
+			ev.motion.x = winX;
+			ev.motion.y = winY;
+		} else if (type == "motion") {
+			// synthesize a pure mouse motion event
+			ev.type = SDL_EVENT_MOUSE_MOTION;
+			ev.motion.windowID = winID;
+			ev.motion.which = 0;
+			ev.motion.x = winX;
+			ev.motion.y = winY;
+			// leave button fields zeroed
+		} else {
+			ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+			ev.button.windowID = winID;
+			ev.button.which = 0;
+			ev.button.button = button;
+			ev.button.clicks = 1;
+			ev.button.x = winX;
+			ev.button.y = winY;
+			// Also populate motion fields so downstream code that reads motion.x/y will see coords
+			ev.motion.windowID = winID;
+			ev.motion.which = 0;
+			ev.motion.x = winX;
+			ev.motion.y = winY;
+		}
 
 		SDL_PushEvent(&ev);
 	}

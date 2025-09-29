@@ -317,9 +317,8 @@ namespace SDOM
         if (!stage) return;
 
 
-        // find the top object under the mouse
-        DomHandle mouseHoveredObject = findTopObjectUnderMouse(node);
-        getCore().setMouseHoveredObject(mouseHoveredObject);
+    // find the top object under the mouse (initial guess)
+    DomHandle mouseHoveredObject = findTopObjectUnderMouse(node);
 
         // Scale the SDL event coordinates to the render coordinates
         SDL_Renderer* renderer = getRenderer();
@@ -345,9 +344,11 @@ namespace SDOM
             stage->mouseY = sdlEvent.wheel.mouse_y;
         }
 
-        // Find the top object that is under the mouse cursor
-        // Modify findTopObjectUnderMouse to exclude the dragged object
-        DomHandle topObject = findTopObjectUnderMouse(node, draggedObject);
+    // Find the top object that is under the mouse cursor (after coordinate conversion)
+    // Modify findTopObjectUnderMouse to exclude the dragged object
+    DomHandle topObject = findTopObjectUnderMouse(node, draggedObject);
+    // Update Core hovered object to the post-conversion topObject so Lua reads correct value
+    getCore().setMouseHoveredObject(topObject);
 
         // alias the SDL_EventType for ease of use:
         SDL_EventType sdl_type = static_cast<SDL_EventType>(sdlEvent.type);

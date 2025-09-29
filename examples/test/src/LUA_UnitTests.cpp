@@ -475,7 +475,41 @@ bool test18_lua()
         return (not stillA) and (not stillB) and (not hasA) and (not hasB)
     )").get<bool>();
 
-    return UnitTests::run("Lua: test #18", "Factory has two orphaned objects and focusA/focusB are orphaned", [=]() { return ok; });
+    return UnitTests::run("Lua: test #18", "Factory contains focusA/focusB as orphans (removed).", [=]() { return ok; });
+}
+
+bool test19_lua()
+{
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+    bool ok = lua.script(R"(
+        local bh = Core:getDisplayHandle('blueishBox')
+        if not bh then return false end
+        local cx = bh:getX() + bh:getWidth() / 2
+        local cy = bh:getY() + bh:getHeight() / 2
+        -- push a motion event to move the mouse to the box center
+        Core:pushMouseEvent({ x = cx, y = cy, type = 'motion' })
+        Core:pumpEventsOnce()
+        local m = Core:getMouseHoveredObject()
+        if not m then return false end
+        local ok = (m:getName() == 'blueishBox')
+        -- setMouseHoveredObject() test: set hovered object to the stage and verify
+        local stage = Core:getStageHandle()
+        if stage then
+            Core:setMouseHoveredObject(stage)
+            local mh = Core:getMouseHoveredObject()
+            if not mh or mh:getName() ~= stage:getName() then return false end
+        else
+            return false
+        end
+
+        -- simulate a click at 0,0 before returning
+        Core:pushMouseEvent({ x = 0, y = 0, type = 'down', button = 1 })
+        Core:pushMouseEvent({ x = 0, y = 0, type = 'up', button = 1 })
+        Core:pumpEventsOnce()
+        return ok
+    )").get<bool>();
+
+    return UnitTests::run("Lua: test #19", "Mouse hover to blueishBox", [=]() { return ok; });
 }
 
 bool LUA_UnitTests() {
@@ -498,7 +532,8 @@ bool LUA_UnitTests() {
         [&]() { return test15_lua(); },
         [&]() { return test16_lua(); },
         [&]() { return test17_lua(); },
-        [&]() { return test18_lua(); }
+        [&]() { return test18_lua(); },
+        [&]() { return test19_lua(); }
     };
     for (auto& test : tests) {
         bool testResult = test();
