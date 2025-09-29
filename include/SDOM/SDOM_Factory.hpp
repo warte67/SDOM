@@ -68,6 +68,11 @@ namespace SDOM
         void initFromLua(const sol::table& lua);
         // void initLuaProcessResource(const sol::table& resource);
 
+        // --- New Factory Methods --- //
+        std::vector<std::string> getPropertyNamesForType(const std::string& typeName) const;
+        std::vector<std::string> getCommandNamesForType(const std::string& typeName) const;
+        std::vector<std::string> getFunctionNamesForType(const std::string& typeName) const;
+
     private:
         // --- Internal Storage --- //
         std::unordered_map<std::string, std::unique_ptr<IDisplayObject>> displayObjects_;

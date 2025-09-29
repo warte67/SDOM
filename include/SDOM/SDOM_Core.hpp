@@ -236,9 +236,8 @@ namespace SDOM
 
     protected:
         friend Factory;
-        // --- Lua Registration --- //
-        virtual void _registerLua_Usertype(sol::state_view lua)  override;  
-        virtual void _registerLua(const std::string& typeName, sol::state_view lua);
+    // --- Lua Registration --- //
+    virtual void _registerLua(const std::string& typeName, sol::state_view lua);
         sol::usertype<Core> objHandleType_;
     };
 

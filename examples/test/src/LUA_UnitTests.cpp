@@ -82,6 +82,38 @@ namespace SDOM
         return UnitTests::run("Lua: test # 4", "Lua binding roundtrip add/hasChild", [ok]() { return ok; });
     }
 
+    bool test5() {
+        // std::vector<std::string> getPropertyNamesForType(const std::string& typeName) const;
+        // std::vector<std::string> getCommandNamesForType(const std::string& typeName) const;
+        // std::vector<std::string> getFunctionNamesForType(const std::string& typeName) const;
+
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        bool ok = lua.script(R"(
+            -- Try a few possible bindings to the Factory/Core introspection API
+            local names = nil
+            if Core.getPropertyNamesForType then
+                names = Core:getPropertyNamesForType("blueishBox")
+            elseif Core.getFactory and Core.getFactory().getPropertyNamesForType then
+                names = Core:getFactory():getPropertyNamesForType("blueishBox")
+            elseif Factory and Factory.getPropertyNamesForType then
+                names = Factory:getPropertyNamesForType("blueishBox")
+            end
+
+            if names and #names > 0 then
+                print("Properties for 'blueishBox':")
+                for i, n in ipairs(names) do
+                    print("  " .. n)
+                end
+                return true
+            else
+                print("No property list available for 'blueishBox' or API not exposed to Lua.")
+                return false
+            end
+        )").get<bool>();
+
+        return UnitTests::run("Lua: test # 5", "blueishBox properties", [ok]() { return ok; });
+    }
+
     // ----- Run all Lua unit tests -----
 
     bool LUA_UnitTests()
@@ -93,7 +125,8 @@ namespace SDOM
             [&]() { return test1(); },
             [&]() { return test2(); },
             [&]() { return test3(); },
-            [&]() { return test4(); }
+            [&]() { return test4(); },
+            [&]() { return test5(); } 
         };
         // Run each test and accumulate results
         for (auto& test : tests) {

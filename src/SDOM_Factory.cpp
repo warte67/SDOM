@@ -449,6 +449,50 @@ namespace SDOM
         return true;       
     } // END Factory::onUnitTest()
 
+
+    std::vector<std::string> Factory::getPropertyNamesForType(const std::string& typeName) const
+    {
+        std::vector<std::string> names;
+        auto it = typeRegistry_.find(typeName);
+        if (it == typeRegistry_.end()) return names;
+        const auto& entry = it->second;
+        // Adjust the following to the actual property container field name in ObjectTypeRegistryEntry
+        for (const auto& prop : entry.properties) {
+            names.push_back(prop.propertyName);
+        }
+        return names;
+    }
+
+    std::vector<std::string> Factory::getCommandNamesForType(const std::string& typeName) const
+    {
+        std::vector<std::string> names;
+        auto it = typeRegistry_.find(typeName);
+        if (it == typeRegistry_.end()) return names;
+        const auto& entry = it->second;
+        // Adjust to actual command container field name
+        for (const auto& cmd : entry.commands) {
+            names.push_back(cmd.commandName);
+        }
+        return names;
+    }
+
+    std::vector<std::string> Factory::getFunctionNamesForType(const std::string& typeName) const
+    {
+        std::vector<std::string> names;
+        auto it = typeRegistry_.find(typeName);
+        if (it == typeRegistry_.end()) return names;
+        const auto& entry = it->second;
+        // Adjust to actual function container field name
+        for (const auto& fn : entry.functions) {
+            names.push_back(fn.functionName);
+        }
+        return names;
+    }
+
+
+
+
+
     void Factory::registerLuaProperty(const std::string& typeName,
                                     const std::string& propertyName,
                                     IDataObject::Getter getter,

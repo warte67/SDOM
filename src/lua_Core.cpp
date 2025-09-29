@@ -56,4 +56,12 @@ namespace SDOM
 	void clearFactory_lua(Core& core) { core.clearFactory(); }
 	void printObjectRegistry_lua(Core& core) { core.printObjectRegistry(); }
 
+	// --- New Factory Methods --- //
+	std::vector<std::string> getPropertyNamesForType_lua(const Core& core, const std::string& typeName) {
+		return core.getFactory().getPropertyNamesForType(typeName); }
+	std::vector<std::string> getCommandNamesForType_lua(const Core& core, const std::string& typeName) {
+		return core.getFactory().getCommandNamesForType(typeName); }
+	std::vector<std::string> getFunctionNamesForType_lua(const Core& core, const std::string& typeName) {
+		return core.getFactory().getFunctionNamesForType(typeName); }
+
 } // end namespace SDOM

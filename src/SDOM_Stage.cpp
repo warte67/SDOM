@@ -79,18 +79,6 @@ namespace SDOM
         return true;
     }
 
-    void Stage::_registerLua_Usertype(sol::state_view lua)
-    {
-        SUPER::_registerLua_Usertype(lua);
-
-        lua.new_usertype<Stage>("Stage",
-            sol::base_classes, sol::bases<SUPER>()
-            // ...Stage-specific methods...
-        );
-
-        // std::cout << "Stage: Registered Lua bindings." << std::endl;
-    }
-
     void Stage::_registerLua(const std::string& typeName, sol::state_view lua)
     {
         std::string typeNameLocal = "Stage";

@@ -53,8 +53,7 @@ class Box final : public SDOM::IDisplayObject
         float gray = 0.0f;  // used for keyfocus indication
 
     protected:
-        // --- LUA Registration --- //
-        virtual void _registerLua_Usertype(sol::state_view lua);
+    // --- LUA Registration --- //
         virtual void _registerLua(const std::string& typeName, sol::state_view lua);
         sol::usertype<Box> objHandleType_;
 

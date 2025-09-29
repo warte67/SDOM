@@ -1016,74 +1016,6 @@ namespace SDOM
 
     // --- Lua UserType Registration --- //
 
-    // This function is deprecated. Use _registerLua() instead.
-    void Core::_registerLua_Usertype(sol::state_view lua)
-    {
-        SUPER::_registerLua_Usertype(lua);
-
-        lua.new_usertype<Core>("Core",
-            // --- Main Loop & Event Dispatch ---
-            "quit", &Core::quit,
-            "shutdown", &Core::shutdown,
-
-            // --- Stage/Root Node Management ---
-            "setRootNode", sol::resolve<void(const std::string&)>(&Core::setRootNode),
-            "setRootNodeByHandle", sol::resolve<void(const DomHandle&)>(&Core::setRootNode),
-            "setStage", &Core::setStage,
-            "getRootNode", &Core::getRootNode,
-            "getStageHandle", &Core::getStageHandle,
-
-            // --- SDL Resource Accessors ---
-            "getColor", &Core::getColor,
-            "setColor", static_cast<void(Core::*)(const SDL_Color&)>(&Core::setColor),
-
-            // --- Configuration Accessors ---
-            "getPreserveAspectRatio", &Core::getPreserveAspectRatio,
-            "getAllowTextureResize", &Core::getAllowTextureResize,
-            "setPreserveAspectRatio", static_cast<void(Core::*)(bool)>(&Core::setPreserveAspectRatio),
-            "setAllowTextureResize", static_cast<void(Core::*)(bool)>(&Core::setAllowTextureResize),
-
-            // --- Focus & Hover Management ---
-            "handleTabKeyPress", &Core::handleTabKeyPress,
-            "handleTabKeyPressReverse", &Core::handleTabKeyPressReverse,
-            "setKeyboardFocusedObject", &Core::setKeyboardFocusedObject,
-            "getKeyboardFocusedObject", &Core::getKeyboardFocusedObject,
-            "setMouseHoveredObject", &Core::setMouseHoveredObject,
-            "getMouseHoveredObject", &Core::getMouseHoveredObject,
-
-            // --- Window Title & Timing ---
-            "getWindowTitle", &Core::getWindowTitle,
-            "setWindowTitle", &Core::setWindowTitle,
-            "getElapsedTime", &Core::getElapsedTime,
-
-            // --- Factory Wrappers ---
-            "createDisplayObject", sol::resolve<DomHandle(const std::string&, const sol::table&)>(&Core::createDisplayObject),
-            "getDisplayHandle", &Core::getDisplayHandle,
-            "getFactoryStageHandle", &Core::getFactoryStageHandle,
-            "hasDisplayObject", &Core::hasDisplayObject,            
-            "destroyDisplayObject", &Core::destroyDisplayObject,
-
-            // --- Orphan Management ---
-            "countOrphanedDisplayObjects", &Core::countOrphanedDisplayObjects,
-            "getOrphanedDisplayObjects", &Core::getOrphanedDisplayObjects,
-            "destroyOrphanedDisplayObjects", &Core::destroyOrphanedDisplayObjects,
-            "detachOrphans", &Core::detachOrphans,
-
-            // --- Future Child Management ---
-            "attachFutureChildren", &Core::attachFutureChildren,
-            "addToOrphanList", &Core::addToOrphanList,
-            "addToFutureChildrenList", &Core::addToFutureChildrenList,
-
-            // --- Utility Methods ---
-            "listDisplayObjectNames", &Core::listDisplayObjectNames,
-            "clearFactory", &Core::clearFactory,
-            "printObjectRegistry", &Core::printObjectRegistry
-        );
-
-        lua["Core"] = this;
-        // std::cout << "Stage: Registered Lua bindings." << std::endl;
-    }
-
 
     void Core::_registerLua(const std::string& typeName, sol::state_view lua)
     {
@@ -1269,6 +1201,27 @@ namespace SDOM
                     Core& core = static_cast<Core&>(obj);
                     printObjectRegistry_lua(core);
                 });
+
+            // --- New Factory Methods --- //
+            factory_->registerLuaFunction(typeName, "getPropertyNamesForType",
+                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
+                    const Core& core = static_cast<const Core&>(obj);
+                    if (args.is<std::string>()) return sol::make_object(lua, getPropertyNamesForType_lua(core, args.as<std::string>()));
+                    return sol::make_object(lua, std::vector<std::string>());
+                });
+            factory_->registerLuaFunction(typeName, "getCommandNamesForType",
+                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
+                    const Core& core = static_cast<const Core&>(obj);
+                    if (args.is<std::string>()) return sol::make_object(lua, getCommandNamesForType_lua(core, args.as<std::string>()));
+                    return sol::make_object(lua, std::vector<std::string>());
+                });
+            factory_->registerLuaFunction(typeName, "getFunctionNamesForType",
+                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
+                    const Core& core = static_cast<const Core&>(obj);
+                    if (args.is<std::string>()) return sol::make_object(lua, getFunctionNamesForType_lua(core, args.as<std::string>()));
+                    return sol::make_object(lua, std::vector<std::string>());
+                });
+
         }
 
         // 4. Register properties/commands using registry (the Factory may have additional bindings)

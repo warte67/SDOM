@@ -395,16 +395,6 @@ bool Box::onUnitTest()
 
 
 
-void Box::_registerLua_Usertype(sol::state_view lua)      
-{ 
-    SUPER::_registerLua_Usertype(lua); 
-    lua.new_usertype<Box>("Box",
-        sol::base_classes, sol::bases<IDisplayObject>()
-        // ...Box-specific methods...
-    );
-}  
-
-
 void Box::_registerLua(const std::string& typeName, sol::state_view lua)
 {
     std::string typeNameLocal = "Box";

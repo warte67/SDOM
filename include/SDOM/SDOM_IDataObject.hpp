@@ -97,17 +97,15 @@ namespace SDOM
     public:
         using Getter = std::function<sol::object(const IDataObject&, sol::state_view)>;
         using Setter = std::function<IDataObject&(IDataObject&, sol::object, sol::state_view)>;
-    using Command = std::function<void(IDataObject&, sol::object, sol::state_view)>;
-    // Function is like Command but returns a sol::object back to Lua. Use this
-    // for queries or any callable that needs to return a value to the caller.
-    using Function = std::function<sol::object(IDataObject&, sol::object, sol::state_view)>;
+        using Command = std::function<void(IDataObject&, sol::object, sol::state_view)>;
+        using Function = std::function<sol::object(IDataObject&, sol::object, sol::state_view)>;
 
         virtual bool onInit() = 0;
         virtual void onQuit() = 0;
         virtual bool onUnitTest() { return true; }
 
-        void fromLua(const sol::table& lua, sol::state_view lua_state);
-        sol::table toLua(sol::state_view lua) const;
+        // void fromLua(const sol::table& lua, sol::state_view lua_state);
+        // sol::table toLua(sol::state_view lua) const;
 
         template<typename T>
         static T lua_value_case_insensitive(const sol::table& tbl, const std::string& key, const T& default_value)
@@ -129,10 +127,9 @@ namespace SDOM
 
         // --- New Virtual LUA Registration for Sol2 ---
     public:
-        void registerLua_Usertype(sol::state_view lua)                      { this->_registerLua_Usertype(lua); }
+        // void registerLua_Usertype(sol::state_view lua)                      { this->_registerLua_Usertype(lua); }
         void registerLua(const std::string& typeName, sol::state_view lua)  { this->_registerLua(typeName, lua); }   
     protected:
-        virtual void _registerLua_Usertype(sol::state_view lua) {}  // Legacy Code
         virtual void _registerLua(const std::string& typeName, sol::state_view lua)
         {
             std::string typeNameLocal = "IDataObject";
