@@ -1097,6 +1097,7 @@ namespace SDOM
         objHandleType["destroyDisplayObject"] = &destroyDisplayObject_lua;
         objHandleType["pumpEventsOnce"] = [](Core& core) { pumpEventsOnce_lua(core); };
         objHandleType["pushMouseEvent"] = [](Core& core, const sol::object& args) { pushMouseEvent_lua(core, args); };
+    objHandleType["pushKeyboardEvent"] = [](Core& core, const sol::object& args) { pushKeyboardEvent_lua(core, args); };
         objHandleType["getPropertyNamesForType"] = [](Core& core, const std::string& t) { return core.getPropertyNamesForType(t); };
         objHandleType["getCommandNamesForType"] = [](Core& core, const std::string& t) { return core.getCommandNamesForType(t); };
         objHandleType["getFunctionNamesForType"] = [](Core& core, const std::string& t) { return core.getFunctionNamesForType(t); };
@@ -1426,6 +1427,11 @@ namespace SDOM
             sol::state_view sv = ts;
             // Forward to pushMouseEvent_lua using the singleton Core
             pushMouseEvent_lua(Core::getInstance(), args);
+            return sol::make_object(sv, sol::nil);
+        });
+        coreTable.set_function("pushKeyboardEvent", [](sol::this_state ts, sol::object /*self*/, sol::object args) {
+            sol::state_view sv = ts;
+            pushKeyboardEvent_lua(Core::getInstance(), args);
             return sol::make_object(sv, sol::nil);
         });
         // Do not overwrite the `Core` global (which should be the userdata

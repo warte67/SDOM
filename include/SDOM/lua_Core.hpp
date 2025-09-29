@@ -29,8 +29,8 @@ namespace SDOM
 	DomHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config);    // **verified**
 
 	// --- Focus & Hover Management --- //
-	void handleTabKeyPress_lua(Core& core);
-	void handleTabKeyPressReverse_lua(Core& core);
+	void handleTabKeyPress_lua(Core& core);							// **REMOVE**
+	void handleTabKeyPressReverse_lua(Core& core);					// **REMOVE**	
 	void setKeyboardFocusedObject_lua(Core& core, DomHandle obj);
 	DomHandle getKeyboardFocusedObject_lua(const Core& core);
 	void setMouseHoveredObject_lua(Core& core, DomHandle obj);
@@ -44,6 +44,9 @@ namespace SDOM
 	// --- Event helpers (exposed to Lua) --- //
 	void pumpEventsOnce_lua(Core& core);
 	void pushMouseEvent_lua(Core& core, const sol::object& args);
+
+	// synthesize keyboard events from Lua: expects table { key=<SDLK_* int>, type="down"|"up", mod=<modifier mask optional> }
+	void pushKeyboardEvent_lua(Core& core, const sol::object& args);
 
 	// --- Object Lookup --- //
 	DomHandle getDisplayHandle_lua(Core& core, const std::string& name);

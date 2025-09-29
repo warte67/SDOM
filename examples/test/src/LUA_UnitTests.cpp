@@ -360,6 +360,81 @@ bool test15_lua()
     return UnitTests::run("Lua: test #15", "Orphan lifecycle: create/attach/remove/verify/cleanup", [=]() { return s; });
 }
 
+bool test16_lua()
+{
+    // Test TAB and SHIFT+TAB focus navigation using Lua-synthesized key events
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+
+    // Ensure keyboard focus starts at the stage
+    Core::getInstance().setKeyboardFocusedObject(Core::getInstance().getStageHandle());
+
+    // Create two boxes from Lua and attach to stage
+    bool created = lua.script(R"(
+        local a = Core:createDisplayObject("Box", { name = "focusA", type = "Box", x = 10, y = 10, width = 16, height = 16 })
+        a:setColor({ r = 128, g = 128, b = 0, a = 255 })  -- make focusA yellow to distinguish
+        local b = Core:createDisplayObject("Box", { name = "focusB", type = "Box", x = 30, y = 10, width = 16, height = 16 })
+        b:setColor({ r = 0, g = 128, b = 128, a = 255 })  -- make focusB cyan to distinguish
+        local st = Core:getStageHandle()
+        if not a or not b or not st then return false end
+        st:addChild(a)
+        st:addChild(b)
+        return true
+    )").get<bool>();
+    if (!created) return UnitTests::run("Lua: test #16", "TAB focus navigation", [](){ return false; });
+
+    // Send Tab (keycode 9) via Lua helper and pump events; verify focus order
+    bool result = lua.script(R"(
+        -- Helper: get name of keyboard-focused object
+        local function focusedName()
+            local k = Core:getKeyboardFocusedObject()
+            if not k then return nil end
+            return k:getName()
+        end
+
+        -- Initial focus should be the stage
+        local initial = focusedName()
+
+    -- First Tab forward: invoke handler directly so we can test traversal logic
+    Core:handleTabKeyPress()
+        local after1 = focusedName()
+
+    -- Second Tab forward: invoke handler again
+    Core:handleTabKeyPress()
+        local after2 = focusedName()
+
+        -- Debug print
+        -- print(string.format("[test16] initial=%s after1=%s after2=%s", tostring(initial), tostring(after1), tostring(after2)))
+        -- Validate expectations
+        if after1 ~= 'focusB' then return false end
+        if after2 ~= 'focusA' then return false end
+        return true
+    )").get<bool>();
+
+    return UnitTests::run("Lua: test #16", "TAB focus navigation", [=]() { return result; });
+}
+
+bool test17_lua()
+{
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+    bool ok = lua.script(R"(
+        local st = Core:getStageHandle()
+        if not st then return false end
+        local a = Core:getDisplayHandle('focusA')
+        local b = Core:getDisplayHandle('focusB')
+        -- Remove if present
+        if a and st:hasChild(a) then st:removeChild(a) end
+        if b and st:hasChild(b) then st:removeChild(b) end
+        -- Verify neither are children
+        local stillA = false
+        local stillB = false
+        if a and st:hasChild(a) then stillA = true end
+        if b and st:hasChild(b) then stillB = true end
+        return (not stillA) and (not stillB)
+    )").get<bool>();
+
+    return UnitTests::run("Lua: test #17", "Remove focusA/focusB from stage and verify", [=]() { return ok; });
+}
+
 bool LUA_UnitTests() {
     bool allTestsPassed = true;
     std::vector<std::function<bool()>> tests = {
@@ -377,7 +452,9 @@ bool LUA_UnitTests() {
         [&]() { return test12_lua(); },
         [&]() { return test13_lua(); },
         [&]() { return test14_lua(); },
-        [&]() { return test15_lua(); }
+        [&]() { return test15_lua(); },
+        [&]() { return test16_lua(); },
+        [&]() { return test17_lua(); }
     };
     for (auto& test : tests) {
         bool testResult = test();

@@ -139,10 +139,28 @@ namespace SDOM
         objHandleType_["getHeight"] = [](DomHandle& dh) -> int {
             IDisplayObject* target = dh.get(); if (!target) return 0; return target->getHeight(); };
 
-        // Finally, apply any remaining registry-driven properties/commands to
-        // the DomHandle usertype (this attaches the forwarding commands above
-        // into the DomHandle metatable so Lua sees them).
-        factory_->registerLuaPropertiesAndCommands(std::string("DomHandle"), objHandleType_);
+        // Forward setColor so DomHandle:setColor({ r=..., g=..., b=..., a=... }) works from Lua
+        objHandleType_["setColor"] = [](DomHandle& dh, sol::object arg) {
+            IDisplayObject* target = dh.get();
+            if (!target) return;
+            if (arg.is<SDL_Color>()) {
+                target->setColor(arg.as<SDL_Color>());
+            } else if (arg.is<sol::table>()) {
+                sol::table t = arg.as<sol::table>();
+                SDL_Color c;
+                c.r = t["r"].get_or(255);
+                c.g = t["g"].get_or(255);
+                c.b = t["b"].get_or(255);
+                c.a = t["a"].get_or(255);
+                target->setColor(c);
+            }
+        };
+
+    // Finally, apply any remaining registry-driven properties/commands to
+    // the DomHandle usertype for the concrete typeName. This attaches the
+    // forwarding commands into the DomHandle metatable so Lua sees them
+    // when a handle refers to an instance of that concrete type.
+    factory_->registerLuaPropertiesAndCommands(typeName, objHandleType_);
     }
 
 

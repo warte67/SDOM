@@ -50,6 +50,30 @@ namespace SDOM
 		SDL_PushEvent(&ev);
 	}
 
+void pushKeyboardEvent_lua(Core& core, const sol::object& args) {
+    if (!args.is<sol::table>()) return;
+    sol::table t = args.as<sol::table>();
+    if (!t["key"].valid()) return;
+    int key = t["key"].get<int>();
+    std::string type = "down";
+    if (t["type"].valid()) type = t["type"].get<std::string>();
+    int mod = 0;
+    if (t["mod"].valid()) mod = t["mod"].get<int>();
+
+    SDL_Event ev;
+    std::memset(&ev, 0, sizeof(ev));
+    if (type == "up") ev.type = SDL_EVENT_KEY_UP;
+    else ev.type = SDL_EVENT_KEY_DOWN;
+
+    ev.key.windowID = core.getWindow() ? SDL_GetWindowID(core.getWindow()) : 0;
+	ev.key.timestamp = SDL_GetTicks();
+	ev.key.repeat = 0;
+	ev.key.mod = mod;
+	ev.key.key = key;
+
+    SDL_PushEvent(&ev);
+}
+
 
 	// --- Main Loop & Event Dispatch --- //
 	void quit_lua(Core& core) { core.quit(); }
