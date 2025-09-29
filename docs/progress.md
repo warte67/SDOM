@@ -195,17 +195,26 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Demonstrated robust C++/Lua test integration: Lua scripts return boolean results to C++ test framework, enabling seamless cross-language validation.
         - Codebase and Lua API stability increased, with reliable resource management and hierarchy checks.
 
-### [September 28, 2025]
 
-- **Lua Registration Consolidation:**  
-    - Consolidated all Lua usertype registration logic into a single protected virtual method `_registerLua_Usertype(sol::state_view lua)` in `IDataObject`.
-    - Removed legacy property, command, meta, and children registration methods from `IDataObject`.
-    - Public registration now uses only `registerLua_Usertype()`, simplifying the API and reducing maintenance overhead.
+- ### [September 28, 2025]
+    - Centralized Lua binding and registration work completed.
+        - The Factory now hosts a registry for Lua-exposed members and supports `registerLuaProperty`, `registerLuaCommand`, and `registerLuaFunction` for curated, centralized bindings.
+        - Bindings are applied in a two-phase approach: a minimal sol2 `usertype<T>` is created for each concrete/native type and then Factory-applied registry entries attach properties/commands/functions. The registry application was made idempotent so explicit usertype bindings are not overwritten.
+    - DomHandle and Core binding fixes.
+        - `DomHandle` is registered under the dedicated Lua name `"DomHandle"` and exposes direct usertype methods (`get`, `isValid`, `getName`, `getType`) as well as direct forwarding commands (`addChild`, `removeChild`, `hasChild`) implemented with the correct Lua colon-call signature (self, arg).
+        - `Core` exposes a minimal usertype and a global forwarder that boxes returned `DomHandle` values correctly (using `sol::make_object` / `sol::this_state`) so returned handles are usable in Lua without conversion errors.
+    - Sol2/runtime issues resolved.
+        - Fixed earlier runtime errors (attempt to call nil methods, userdata/stack-index mismatches) by harmonizing the expected Lua call signatures and ensuring returned handles are properly boxed.
+        - Removed temporary diagnostic prints added during the debugging cycles.
+    - Tests and status.
+        - Added a Lua regression test to the examples test harness. The Lua test suite (tests #1–#4: create, addChild, destroy/remove, binding roundtrip) runs as part of the test binary and currently reports all tests passing on the latest build.
+        - Status: All core C++ unit tests and the Lua-driven tests pass on the current master branch build.
 
-- **Object Type Registration Refactor:**  
-    - Stripped all per-object type registration and registry maps from `IDataObject`.
-    - Planning to move type-level property/command registration and introspection to the Factory, using a centralized registry (`ObjectTypeRegistryEntry`).
-    - This will enable efficient, type-based introspection and Lua binding, reducing memory usage and improving extensibility.
+    - Next small steps (short term):
+        - Tidy informational registration prints (convert to controlled logging or remove) and document the canonical Lua-binding policy for contributors.
+        - Expand Lua examples and add more regression tests (invalid/nil handles, wrong-typed args, double-add/remove edge cases).
+
+
 
 
 # Next Steps:

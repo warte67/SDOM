@@ -65,6 +65,23 @@ namespace SDOM
         return UnitTests::run("Lua: test # 3", "Destroy Box and verify removal", [destroyed]() { return destroyed; });
     }
 
+    bool test4() {
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Create a temporary box from Lua, add to stage via Lua and verify
+        bool ok = lua.script(R"(
+            local h = Core:createDisplayObject("Box", { name = "tempBox", type = "Box", x = 1, y = 1, width = 16, height = 16 })
+            if not h then return false end
+            local stage = Core:getStageHandle()
+            if not stage then return false end
+            stage:addChild(h)
+            local wasAdded = stage:hasChild(h)
+            -- cleanup
+            Core:destroyDisplayObject("tempBox")
+            return wasAdded
+        )").get<bool>();
+        return UnitTests::run("Lua: test # 4", "Lua binding roundtrip add/hasChild", [ok]() { return ok; });
+    }
+
     // ----- Run all Lua unit tests -----
 
     bool LUA_UnitTests()
@@ -74,10 +91,9 @@ namespace SDOM
         // Vector of test functions
         std::vector<std::function<bool()>> tests = {
             [&]() { return test1(); },
-            [&]() { return test2(); }
-            // [&]() { return test3(); }
-
-
+            [&]() { return test2(); },
+            [&]() { return test3(); },
+            [&]() { return test4(); }
         };
         // Run each test and accumulate results
         for (auto& test : tests) {
