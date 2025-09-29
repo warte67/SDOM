@@ -97,7 +97,10 @@ namespace SDOM
     public:
         using Getter = std::function<sol::object(const IDataObject&, sol::state_view)>;
         using Setter = std::function<IDataObject&(IDataObject&, sol::object, sol::state_view)>;
-        using Command = std::function<void(IDataObject&, sol::object, sol::state_view)>;
+    using Command = std::function<void(IDataObject&, sol::object, sol::state_view)>;
+    // Function is like Command but returns a sol::object back to Lua. Use this
+    // for queries or any callable that needs to return a value to the caller.
+    using Function = std::function<sol::object(IDataObject&, sol::object, sol::state_view)>;
 
         virtual bool onInit() = 0;
         virtual void onQuit() = 0;

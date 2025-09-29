@@ -32,7 +32,7 @@ namespace SDOM
 
         // register the Stage
         registerDomType("Stage", TypeCreators{
-            Stage::CreateFromLua, // Update to Lua-based creator
+            Stage::CreateFromLua, 
             Stage::CreateFromInitStruct
         });
 
@@ -485,6 +485,19 @@ namespace SDOM
         }
         // Otherwise, add new command
         entry.commands.push_back({commandName, command});
+    }
+
+    void Factory::registerLuaFunction(const std::string& typeName,
+                                            const std::string& functionName,
+                                            IDataObject::Function function)
+    {
+        auto& entry = typeRegistry_[typeName];
+        entry.typeName = typeName;
+        // If function already exists with same name, replace it
+        for (auto &fe : entry.functions) {
+            if (fe.functionName == functionName) { fe.function = function; return; }
+        }
+        entry.functions.push_back({functionName, function});
     }
 
     Factory::ObjectTypeRegistryEntry* 

@@ -82,8 +82,15 @@ namespace SDOM
             return get() != nullptr;
         }          
 
-        inline static Factory* factory_ = nullptr;
+        // --- LUA Wrapper Functions --- //
 
+        IResourceObject* get_lua(ResHandle* self) const { return self->get(); }
+        bool isValid_lua(ResHandle* self) const { return self->isValid(); }
+        std::string getName_lua(ResHandle* self) const { return self->getName(); }
+        std::string getType_lua(ResHandle* self) const { return self->getType(); }
+
+    public:
+        inline static Factory* factory_ = nullptr;
     private:
         // Factory::Factory() { ResHandle<T>::factory_ = this; }
         friend Core;

@@ -88,10 +88,10 @@ namespace SDOM
 
         // --- LUA Wrapper Functions --- //
 
-        IDisplayObject* get_lua() const { return get(); }
-        bool isValid_lua() const { return isValid(); }
-        std::string getName_lua() const { return getName(); }
-        std::string getType_lua() const { return getType(); }
+        IDisplayObject* get_lua(DomHandle* self) const { return self->get(); }
+        bool isValid_lua(DomHandle* self) const { return self->isValid(); }
+        std::string getName_lua(DomHandle* self) const { return self->getName(); }
+        std::string getType_lua(DomHandle* self) const { return self->getType(); }
 
 
     public:

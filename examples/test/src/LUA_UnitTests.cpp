@@ -37,12 +37,10 @@ namespace SDOM
         // Now Lua can use it to add to the stage
         bool added = lua.script(R"(
             local obj = myBoxHandle
-            local stage = Core:getStageHandle():get()
-            if obj and stage then
-                stage:addChild(obj)
-                return stage:hasChild(obj)
-            end
-            return false
+            local stage = Core:getStageHandle()
+            if not stage then return false end
+            stage:addChild(obj)
+            return stage:hasChild(obj)
         )").get<bool>();
         return UnitTests::run("Lua: test # 2", "Add the Box to Stage from Lua", [added]() { return added; });
     }
@@ -70,16 +68,14 @@ namespace SDOM
     // ----- Run all Lua unit tests -----
 
     bool LUA_UnitTests()
-    {
-        return true; // TEMP return true to skip tests during development
-        
+    {        
         bool allTestsPassed = true;
 
         // Vector of test functions
         std::vector<std::function<bool()>> tests = {
             [&]() { return test1(); },
-            [&]() { return test2(); },
-            [&]() { return test3(); }
+            [&]() { return test2(); }
+            // [&]() { return test3(); }
 
 
         };

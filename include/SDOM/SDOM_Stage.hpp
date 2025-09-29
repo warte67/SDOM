@@ -66,6 +66,12 @@ namespace SDOM
         inline static int mouseX = 0;   // current mouse horizontal coordinate within this stage
         inline static int mouseY = 0;   // current mouse vertical coordinate within this stage 
 
+        // --- Lua Wrappers --- //
+        int getMouseX_lua() const { return getMouseX(); }
+        int getMouseY_lua() const { return getMouseY(); }
+        void setMouseX_lua(int x) { setMouseX(x); }
+        void setMouseY_lua(int y) { setMouseY(y); }
+
     protected:
         // --- Lua Registration --- //
         virtual void _registerLua_Usertype(sol::state_view lua);

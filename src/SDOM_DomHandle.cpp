@@ -13,6 +13,8 @@ namespace SDOM
 
     // --- LUA Registsration --- //
 
+
+    // Depricated: Use Factory registration instead
     void DomHandle::_registerLua_Usertype(sol::state_view lua)      
     { 
         // std::cout << CLR::YELLOW << "DomHandle: Registered Lua usertype" << CLR::RESET << std::endl;
@@ -44,45 +46,30 @@ namespace SDOM
         std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
 
-        return;  // JUST RETURN WHILE DEVELOPING
-
-        // 1. Create and save usertype table first
+        // 1. Create and save a dedicated DomHandle usertype (do NOT reuse the
+        // concrete object typeName here - that would conflict with the
+        // IDisplayObject usertype registration which uses the concrete
+        // typeName). Register the handle under the global name "DomHandle".
         sol::usertype<DomHandle> objHandleType = lua.new_usertype<DomHandle>(
-            typeName,
-            sol::constructors<DomHandle(), DomHandle(const std::string&, const std::string&)>()
+            "DomHandle",
+            sol::constructors<DomHandle(), DomHandle(const std::string&, const std::string&)>(),
+            sol::base_classes, sol::bases<IDataObject>()
         );
         this->objHandleType_ = objHandleType; // Save in IDataObject
 
         // 2. Call base registration
         SUPER::_registerLua(typeName, lua);
 
-        // // 3. Register properties/commands (custom logic)
-        // factory_->registerLuaProperty(typeName, "get",
-        //     [](const IDataObject& obj, sol::state_view lua) { 
-        //         return sol::make_object(lua, static_cast<const DomHandle&>(obj).get()); 
-        //     },
-        //     nullptr);
+        // 3. Register properties/commands (custom logic)
+        // Note: do NOT register basic handle accessors via the Factory here
+        // because they would be applied to the concrete type's registry and
+        // potentially overwrite the direct method bindings below on the
+        // DomHandle usertype. The direct bindings (get/isValid/getName/getType)
+        // are applied explicitly further down.
 
-        // factory_->registerLuaProperty(typeName, "isValid",
-        //     [](const IDataObject& obj, sol::state_view lua) { 
-        //         return sol::make_object(lua, static_cast<const DomHandle&>(obj).isValid()); 
-        //     },
-        //     nullptr);
-
-        // factory_->registerLuaProperty(typeName, "getName",
-        //     [](const IDataObject& obj, sol::state_view lua) { 
-        //         return sol::make_object(lua, static_cast<const DomHandle&>(obj).getName()); 
-        //     },
-        //     nullptr);
-
-        // factory_->registerLuaProperty(typeName, "getType",
-        //     [](const IDataObject& obj, sol::state_view lua) { 
-        //         return sol::make_object(lua, static_cast<const DomHandle&>(obj).getType()); 
-        //     },
-        //     nullptr);
-
-        // 4. Register properties/commands using registry
-        factory_->registerLuaPropertiesAndCommands(typeName, objHandleType_);
+    // NOTE: registry-driven properties/commands will be applied after we
+    // register any forwarding commands/functions below so they are present
+    // when we bind the registry into the usertype.
 
         // 5. Register meta functions
         objHandleType[sol::meta_function::to_string] = [](DomHandle& h) 
@@ -94,6 +81,65 @@ namespace SDOM
             }
             return std::string("DomHandle(invalid)");
         };
+
+        // Ensure direct method bindings exist so method calls (e.g. h:get())
+        // operate on the userdata. Return the DomHandle itself when calling
+        // :get() from Lua so callers receive the handle userdata which has
+        // DomHandle-specific methods (including forwarded addChild/removeChild).
+        objHandleType_["get"] = [](DomHandle& h) -> DomHandle { return h; };
+        objHandleType_["isValid"] = static_cast<bool(DomHandle::*)() const>(&DomHandle::isValid);
+        objHandleType_["getName"] = static_cast<std::string(DomHandle::*)() const>(&DomHandle::getName);
+        objHandleType_["getType"] = static_cast<std::string(DomHandle::*)() const>(&DomHandle::getType);
+
+        // 6. Bind forwarding commands directly on the DomHandle usertype so
+        // they receive parameters in the usual Lua calling convention
+        // (self, arg). Using direct bindings avoids mismatches when the
+        // registry-stored std::function signatures include extra parameters
+        // like sol::state_view which Sol2 may not supply automatically.
+        objHandleType_["addChild"] = [](DomHandle& dh, sol::object arg) {
+            IDisplayObject* target = dh.get();
+            if (!target) return;
+            if (arg.is<DomHandle>()) {
+                target->addChild(arg.as<DomHandle>());
+            } else if (arg.is<sol::table>()) {
+                sol::table t = arg.as<sol::table>();
+                if (t["child"].valid()) {
+                    target->addChild(t["child"].get<DomHandle>());
+                }
+            }
+        };
+
+        objHandleType_["removeChild"] = [](DomHandle& dh, sol::object arg) {
+            IDisplayObject* target = dh.get();
+            if (!target) return;
+            if (arg.is<DomHandle>()) {
+                target->removeChild(arg.as<DomHandle>());
+            } else if (arg.is<sol::table>()) {
+                sol::table t = arg.as<sol::table>();
+                if (t["child"].valid()) {
+                    target->removeChild(t["child"].get<DomHandle>());
+                }
+            }
+        };
+
+        objHandleType_["hasChild"] = [](DomHandle& dh, sol::object arg) -> bool {
+            IDisplayObject* target = dh.get();
+            if (!target) return false;
+            if (arg.is<DomHandle>()) {
+                return target->hasChild(arg.as<DomHandle>());
+            } else if (arg.is<sol::table>()) {
+                sol::table t = arg.as<sol::table>();
+                if (t["child"].valid()) {
+                    return target->hasChild(t["child"].get<DomHandle>());
+                }
+            }
+            return false;
+        };
+
+        // Finally, apply any remaining registry-driven properties/commands to
+        // the DomHandle usertype (this attaches the forwarding commands above
+        // into the DomHandle metatable so Lua sees them).
+        factory_->registerLuaPropertiesAndCommands(std::string("DomHandle"), objHandleType_);
     }
 
 

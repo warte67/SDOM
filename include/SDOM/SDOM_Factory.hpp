@@ -104,6 +104,12 @@ namespace SDOM
                 IDataObject::Command command;
             };
             std::vector<CommandEntry> commands;
+            
+            struct FunctionEntry {
+                std::string functionName;
+                IDataObject::Function function;
+            };
+            std::vector<FunctionEntry> functions;
         };
 
         void registerLuaProperty(const std::string& typeName,
@@ -115,9 +121,14 @@ namespace SDOM
                             const std::string& commandName,
                             IDataObject::Command command);    
 
+        void registerLuaFunction(const std::string& typeName,
+                    const std::string& functionName,
+                    IDataObject::Function function);
+
         ObjectTypeRegistryEntry* getTypeRegistryEntry(const std::string& typeName);
         ObjectTypeRegistryEntry::PropertyEntry* getPropertyEntry(const std::string& typeName, const std::string& propertyName);
-        ObjectTypeRegistryEntry::CommandEntry* getCommandEntry(const std::string& typeName, const std::string& commandName);                                
+        ObjectTypeRegistryEntry::CommandEntry* getCommandEntry(const std::string& typeName, const std::string& commandName);
+        ObjectTypeRegistryEntry::FunctionEntry* getFunctionEntry(const std::string& typeName, const std::string& functionName);
 
         void registerLuaObjectTypes_test();
 
@@ -129,17 +140,27 @@ namespace SDOM
 
             for (const auto& prop : entry->properties) 
             {
-                if (prop.getter) usertypeTable[prop.propertyName] = prop.getter;
+                // Only assign if a getter/setter isn't already present to
+                // avoid overwriting direct usertype bindings created earlier.
+                if (prop.getter) {
+                    sol::object existing = usertypeTable[prop.propertyName];
+                    if (!existing.valid()) usertypeTable[prop.propertyName] = prop.getter;
+                }
                 if (prop.setter) 
                 {
                     std::string setterName = "set" + prop.propertyName;
                     setterName[3] = std::toupper(setterName[3]);
-                    usertypeTable[setterName] = prop.setter;
+                    sol::object existingSetter = usertypeTable[setterName];
+                    if (!existingSetter.valid()) usertypeTable[setterName] = prop.setter;
                 }
             }
             for (const auto& cmd : entry->commands) 
             {
-                if (cmd.command) usertypeTable[cmd.commandName] = cmd.command;
+                if (cmd.command) { sol::object existingCmd = usertypeTable[cmd.commandName]; if (!existingCmd.valid()) usertypeTable[cmd.commandName] = cmd.command; }
+            }
+            for (const auto& fn : entry->functions)
+            {
+                if (fn.function) { sol::object existingFn = usertypeTable[fn.functionName]; if (!existingFn.valid()) usertypeTable[fn.functionName] = fn.function; }
             }
         }
 
