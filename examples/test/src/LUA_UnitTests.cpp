@@ -435,6 +435,49 @@ bool test17_lua()
     return UnitTests::run("Lua: test #17", "Remove focusA/focusB from stage and verify", [=]() { return ok; });
 }
 
+bool test18_lua()
+{
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+    bool ok = lua.script(R"(
+        -- Verify that there are at least two orphaned display objects and that
+        -- 'focusA' and 'focusB' are present among them.
+        local cnt = Core:countOrphanedDisplayObjects()
+        if not cnt or cnt < 2 then return false end
+        local orphans = Core:getOrphanedDisplayObjects()
+        if not orphans then return false end
+        local foundA = false
+        local foundB = false
+        for i,o in ipairs(orphans) do
+            if o and o:getName() == 'focusA' then foundA = true end
+            if o and o:getName() == 'focusB' then foundB = true end
+        end
+        if not (foundA and foundB) then return false end
+
+        -- Destroy the named orphaned objects
+        if foundA then Core:destroyDisplayObject('focusA') end
+        if foundB then Core:destroyDisplayObject('focusB') end
+
+        -- Recount and ensure they are gone
+        local cnt2 = Core:countOrphanedDisplayObjects()
+        local orphans2 = Core:getOrphanedDisplayObjects()
+        local stillA = false
+        local stillB = false
+        if orphans2 then
+            for i,o in ipairs(orphans2) do
+                if o and o:getName() == 'focusA' then stillA = true end
+                if o and o:getName() == 'focusB' then stillB = true end
+            end
+        end
+        -- Also check factory no longer has them
+        local hasA = Core:hasDisplayObject('focusA')
+        local hasB = Core:hasDisplayObject('focusB')
+
+        return (not stillA) and (not stillB) and (not hasA) and (not hasB)
+    )").get<bool>();
+
+    return UnitTests::run("Lua: test #18", "Factory has two orphaned objects and focusA/focusB are orphaned", [=]() { return ok; });
+}
+
 bool LUA_UnitTests() {
     bool allTestsPassed = true;
     std::vector<std::function<bool()>> tests = {
@@ -454,7 +497,8 @@ bool LUA_UnitTests() {
         [&]() { return test14_lua(); },
         [&]() { return test15_lua(); },
         [&]() { return test16_lua(); },
-        [&]() { return test17_lua(); }
+        [&]() { return test17_lua(); },
+        [&]() { return test18_lua(); }
     };
     for (auto& test : tests) {
         bool testResult = test();

@@ -212,10 +212,13 @@ namespace SDOM
         // --- Tab Priority --- //
         struct TabPriorityComparator {
             bool operator()(const DomHandle& a, const DomHandle& b) const {
-                if (!a.isValid() || !b.isValid()) {
-                    ERROR("Invalid DomHandle detected in TabPriorityComparator.");
-                    return false;
-                }
+                // If either handle is invalid, treat invalid handles as lower priority
+                // so they end up at the back of the ordering. Avoid throwing an error
+                // here because handles may become invalid between insertion and
+                // comparison (e.g., when objects are destroyed during traversal).
+                if (!a.isValid() && !b.isValid()) return false;
+                if (!a.isValid()) return true;  // a < b
+                if (!b.isValid()) return false; // a >= b
                 return a->getTabPriority() < b->getTabPriority();
             }
         };

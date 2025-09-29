@@ -29,10 +29,10 @@ namespace SDOM
 	DomHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config);    // **verified**
 
 	// --- Focus & Hover Management --- //
-	void handleTabKeyPress_lua(Core& core);							// **REMOVE**
-	void handleTabKeyPressReverse_lua(Core& core);					// **REMOVE**	
+	void handleTabKeyPress_lua(Core& core);					// **verified**
+	void handleTabKeyPressReverse_lua(Core& core);				
 	void setKeyboardFocusedObject_lua(Core& core, DomHandle obj);
-	DomHandle getKeyboardFocusedObject_lua(const Core& core);
+	DomHandle getKeyboardFocusedObject_lua(const Core& core); // **verified**
 	void setMouseHoveredObject_lua(Core& core, DomHandle obj);
 	DomHandle getMouseHoveredObject_lua(const Core& core);
 
@@ -42,16 +42,16 @@ namespace SDOM
 	float getElapsedTime_lua(const Core& core);
 
 	// --- Event helpers (exposed to Lua) --- //
-	void pumpEventsOnce_lua(Core& core);
-	void pushMouseEvent_lua(Core& core, const sol::object& args);
+	void pumpEventsOnce_lua(Core& core); // **verified**
+	void pushMouseEvent_lua(Core& core, const sol::object& args); // **verified**
 
 	// synthesize keyboard events from Lua: expects table { key=<SDLK_* int>, type="down"|"up", mod=<modifier mask optional> }
 	void pushKeyboardEvent_lua(Core& core, const sol::object& args);
 
 	// --- Object Lookup --- //
-	DomHandle getDisplayHandle_lua(Core& core, const std::string& name);
+	DomHandle getDisplayHandle_lua(Core& core, const std::string& name); // **verified**
 	DomHandle getFactoryStageHandle_lua(Core& core);
-	bool hasDisplayObject_lua(const Core& core, const std::string& name);
+	bool hasDisplayObject_lua(const Core& core, const std::string& name); // **verified**
 
 	// --- Orphan / Future Child Management --- //
 	void destroyDisplayObject_lua(Core& core, const std::string& name); // **verified**
@@ -65,8 +65,8 @@ namespace SDOM
 	void printObjectRegistry_lua(Core& core);
 
 	// --- New Factory Methods --- //
-	std::vector<std::string> getPropertyNamesForType_lua(const Core& core, const std::string& typeName);
-	std::vector<std::string> getCommandNamesForType_lua(const Core& core, const std::string& typeName);
-	std::vector<std::string> getFunctionNamesForType_lua(const Core& core, const std::string& typeName);
+	std::vector<std::string> getPropertyNamesForType_lua(const Core& core, const std::string& typeName); // **verified**
+	std::vector<std::string> getCommandNamesForType_lua(const Core& core, const std::string& typeName); // **verified**
+	std::vector<std::string> getFunctionNamesForType_lua(const Core& core, const std::string& typeName); // **verified**
 
 } // end namespace SDOM
