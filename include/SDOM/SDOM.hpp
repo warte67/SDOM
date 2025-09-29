@@ -80,8 +80,9 @@ namespace SDOM
     /**
      * @brief Custom exception class for SDOM errors.
      * @details Stores an error message, file name, and line number for debugging.
-     * Use with the ERROR macro for standardized error reporting.
-     */
+
+    * Use with the ERROR macro for standardized error reporting.
+    */
     // Exception class definition
     class Exception : public std::exception 
     {
@@ -328,13 +329,19 @@ namespace SDOM
  * @brief Logs a debug message in green text.
  * @param message Debug message to display.
  */
-// Macro for debug logging
-#define DEBUG_LOG(message) std::cout << CLR::GREEN << "    " << message << CLR::RESET << std::endl;
+// Macro for debug logging (statement-safe, parenthesized parameter)
+#define DEBUG_LOG(message) do { std::cout << CLR::GREEN << "[DEBUG] " << (message) << CLR::RESET << std::endl; } while(0)
+
+/**
+ * @brief Logs an informational message to stdout.
+ * @param message Informational message to display.
+ */
+#define INFO(message) std::cout << CLR::YELLOW << "[INFO] " << message << CLR::RESET << std::endl
 
 /**
  * @brief Logs a debug error (non-fatal) with file and line info in dark text.
- * @param message Debug error message to display.
- */
+// Macro for informational logging (statement-safe, parenthesized parameter)
+#define INFO(message) do { std::cout << CLR::YELLOW << "[INFO] " << (message) << CLR::RESET << std::endl; } while(0)
 // Macro for debug errors (non-fatal)
 #define DEBUG_ERR(message) std::cout << CLR::DARK << \
     "\n      Debug: " << \

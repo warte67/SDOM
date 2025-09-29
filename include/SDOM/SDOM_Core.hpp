@@ -49,10 +49,16 @@ namespace SDOM
 
         // --- Main Loop & Event Dispatch --- //
         void run();
-    // Poll and dispatch pending SDL events once (test helper)
-    void pumpEventsOnce();
-        void quit() { bIsRunning_ = false; }
+
+        // Poll and dispatch pending SDL events once (test helper)
+        void pumpEventsOnce();
+        // Signal the main loop to stop. Provide a clear, non-generic message
+        // so test output indicates this was a deliberate shutdown requested
+        // from scripting (e.g. Lua's Core:quit()). Use the INFO logging macro
+        // for consistency with the project's logging helpers.
+        void quit() { INFO("Core: shutdown requested. Performing graceful shutdown..."); bIsRunning_ = false; }
         void shutdown() { quit(); }
+
         void onRender();
         void onEvent(Event& event);
         void onUpdate(float fElapsedTime);

@@ -1075,7 +1075,31 @@ namespace SDOM
         }
         
         // 1. Create and save usertype table (no constructor)
-    sol::usertype<Core> objHandleType = lua.new_usertype<Core>(typeName, sol::no_constructor);
+        sol::usertype<Core> objHandleType = lua.new_usertype<Core>(typeName,
+            sol::no_constructor, sol::base_classes, sol::bases<IDataObject>());
+        // Bind direct methods on the Core usertype to ensure proper colon-call
+        // signatures for Lua callers. These use the thin wrappers defined in
+        // lua_Core.cpp which forward to the Core singleton or member methods.
+        objHandleType["quit"] = [](Core& core) {
+            quit_lua(core);
+            return true;
+        };
+        objHandleType["shutdown"] = [](Core& core) {
+            shutdown_lua(core);
+            return true;
+        };
+        objHandleType["createDisplayObject"] = [](Core& core, const std::string& typeName, const sol::table& cfg) {
+            return createDisplayObject_lua(typeName, cfg);
+        };
+        objHandleType["getDisplayHandle"] = &getDisplayHandle_lua;
+        objHandleType["getStageHandle"] = &getStageHandle_lua;
+        objHandleType["hasDisplayObject"] = &hasDisplayObject_lua;
+        objHandleType["destroyDisplayObject"] = &destroyDisplayObject_lua;
+        objHandleType["pumpEventsOnce"] = [](Core& core) { pumpEventsOnce_lua(core); };
+        objHandleType["pushMouseEvent"] = [](Core& core, const sol::object& args) { pushMouseEvent_lua(core, args); };
+        objHandleType["getPropertyNamesForType"] = [](Core& core, const std::string& t) { return core.getPropertyNamesForType(t); };
+        objHandleType["getCommandNamesForType"] = [](Core& core, const std::string& t) { return core.getCommandNamesForType(t); };
+        objHandleType["getFunctionNamesForType"] = [](Core& core, const std::string& t) { return core.getFunctionNamesForType(t); };
     // Bind commonly-used factory wrapper directly so Lua calls like
     // Core:createDisplayObject("Box", {...}) work as expected.
     objHandleType["createDisplayObject"] = sol::resolve<DomHandle(const std::string&, const sol::table&)>(&Core::createDisplayObject);
@@ -1303,11 +1327,11 @@ namespace SDOM
         if (factory_)
             factory_->registerLuaPropertiesAndCommands(typeName, objHandleType_);
 
-        // 5. Expose the singleton instance to Lua under the type name
-        // Note: some Lua callsites use the colon syntax (Core:method()). To make
-        // those robust, also expose a global `Core` table that forwards to the
-        // singleton. This avoids userdata/pointer mismatch issues.
-        lua[typeName] = this; // keep a userdata binding
+    // 5. Expose the singleton instance to Lua under the type name
+    // Use sol::make_object to create a userdata that matches the previously
+    // created usertype. Assigning the raw C++ pointer directly can result
+    // in a mismatched value (sol::Core*) which breaks method dispatch.
+    lua[typeName] = sol::make_object(lua, this);
 
         // Expose EventType constants to Lua as a table (so Lua code can use EventType.MouseClick)
         try {
@@ -1404,7 +1428,11 @@ namespace SDOM
             pushMouseEvent_lua(Core::getInstance(), args);
             return sol::make_object(sv, sol::nil);
         });
-        lua["Core"] = coreTable;
+        // Do not overwrite the `Core` global (which should be the userdata
+        // instance bound to the C++ singleton). Overwriting it with a plain
+        // table hides usertype methods (e.g. Core:quit()). Expose the
+        // convenience forwarder under a separate name instead.
+        lua["CoreForward"] = coreTable;
     }
 
 

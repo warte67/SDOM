@@ -10,23 +10,23 @@ namespace SDOM
 	class Event;
 
 	// --- Main Loop & Event Dispatch --- //
-	void quit_lua(Core& core);
-	void shutdown_lua(Core& core);
+	void quit_lua(Core& core); // **verified**
+	void shutdown_lua(Core& core); // **verified**
 
 	// --- Stage/Root Node Management --- //
-	void setRootNodeByName_lua(Core& core, const std::string& name);
-	void setRootNodeByHandle_lua(Core& core, const DomHandle& handle);
-	void setStage_lua(Core& core, const std::string& name);
-	IDisplayObject* getRootNodePtr_lua(Core& core);
-	DomHandle getRootNode_lua(Core& core);
-	DomHandle getStageHandle_lua(Core& core);
+		void setRootNodeByName_lua(Core& core, const std::string& name); // **verified**
+		void setRootNodeByHandle_lua(Core& core, const DomHandle& handle); // **verified**
+		void setStage_lua(Core& core, const std::string& name); // **verified**
+		IDisplayObject* getRootNodePtr_lua(Core& core); // **verified**
+		DomHandle getRootNode_lua(Core& core); // **verified**
+		DomHandle getStageHandle_lua(Core& core); // **verified**
 
 	// --- Factory & EventManager Access --- //
-	bool getIsTraversing_lua(const Core& core);
-	Core& setIsTraversing_lua(Core& core, bool traversing);
+	bool getIsTraversing_lua(const Core& core); // **verified**
+	Core& setIsTraversing_lua(Core& core, bool traversing); // **verified**
 
     // --- Object Creation --- //
-    DomHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config);    
+	DomHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config);    // **verified**
 
 	// --- Focus & Hover Management --- //
 	void handleTabKeyPress_lua(Core& core);
@@ -51,10 +51,10 @@ namespace SDOM
 	bool hasDisplayObject_lua(const Core& core, const std::string& name);
 
 	// --- Orphan / Future Child Management --- //
-	void destroyDisplayObject_lua(Core& core, const std::string& name);
-	int countOrphanedDisplayObjects_lua(const Core& core);
-	std::vector<DomHandle> getOrphanedDisplayObjects_lua(Core& core);
-	void destroyOrphanedDisplayObjects_lua(Core& core);
+	void destroyDisplayObject_lua(Core& core, const std::string& name); // **verified**
+	int countOrphanedDisplayObjects_lua(const Core& core); // **verified**
+	std::vector<DomHandle> getOrphanedDisplayObjects_lua(Core& core); // **verified**
+	void destroyOrphanedDisplayObjects_lua(Core& core); // **verified**
 
     // --- Utility Methods --- //
 	std::vector<std::string> listDisplayObjectNames_lua(const Core& core);

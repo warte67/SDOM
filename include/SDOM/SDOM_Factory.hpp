@@ -162,11 +162,29 @@ namespace SDOM
             }
             for (const auto& cmd : entry->commands) 
             {
-                if (cmd.command) { sol::object existingCmd = usertypeTable[cmd.commandName]; if (!existingCmd.valid()) usertypeTable[cmd.commandName] = cmd.command; }
+                if (cmd.command) {
+                    sol::object existingCmd = usertypeTable[cmd.commandName];
+                    if (!existingCmd.valid()) {
+                        // Wrap the stored IDataObject::Command so it receives the Lua state
+                        usertypeTable[cmd.commandName] = [cmd](sol::this_state ts, T& self, sol::object args) {
+                            sol::state_view sv = ts;
+                            cmd.command(static_cast<IDataObject&>(self), args, sv);
+                        };
+                    }
+                }
             }
             for (const auto& fn : entry->functions)
             {
-                if (fn.function) { sol::object existingFn = usertypeTable[fn.functionName]; if (!existingFn.valid()) usertypeTable[fn.functionName] = fn.function; }
+                if (fn.function) {
+                    sol::object existingFn = usertypeTable[fn.functionName];
+                    if (!existingFn.valid()) {
+                        // Wrap the stored IDataObject::Function so it receives the Lua state and returns a sol::object
+                        usertypeTable[fn.functionName] = [fn](sol::this_state ts, T& self, sol::object args) -> sol::object {
+                            sol::state_view sv = ts;
+                            return fn.function(static_cast<IDataObject&>(self), args, sv);
+                        };
+                    }
+                }
             }
         }
 

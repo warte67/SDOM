@@ -256,13 +256,108 @@ bool test9_Lua() {
     return UnitTests::run("Lua: test # 9", "Lua-only event handler + synthetic click", [=]() { return ok; });
 }
 
+// Split the previous step-based test10 into six individual tests for clarity
 bool test10_lua()
 {
     sol::state& lua = SDOM::Core::getInstance().getLua();
-    auto ok = lua.script(R"(
-        Core:quit()
+    bool s = lua.script(R"(
+        local orig = Core:getStageHandle()
+        if not orig or orig:getName() ~= 'mainStage' then return false end
+        return true
     )").get<bool>();
-    return UnitTests::run("Lua: test #10", "Comprehensive Core Lua Wrappers", [=]() { return ok; });
+    return UnitTests::run("Lua: test #10", "Verify initial stage is 'mainStage'", [=]() { return s; });
+}
+
+bool test11_lua()
+{
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+    bool s = lua.script(R"(
+        Core:setRootNode('stageTwo')
+        local s = Core:getStageHandle()
+        if not s or s:getName() ~= 'stageTwo' then return false end
+        return true
+    )").get<bool>();
+    return UnitTests::run("Lua: test #11", "Set root by name to 'stageTwo' and verify", [=]() { return s; });
+}
+
+bool test12_lua()
+{
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+    bool s = lua.script(R"(
+        local h = Core:getDisplayHandle('stageThree')
+        if not h then return false end
+        Core:setRootNode(h)
+        local cur = Core:getStageHandle()
+        if not cur or cur:getName() ~= 'stageThree' then return false end
+        return true
+    )").get<bool>();
+    return UnitTests::run("Lua: test #12", "Set root by handle using 'stageThree' and verify", [=]() { return s; });
+}
+
+bool test13_lua()
+{
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+    bool s = lua.script(R"(
+        Core:setStage('mainStage')
+        local cur = Core:getStageHandle()
+        if not cur or cur:getName() ~= 'mainStage' then return false end
+        return true
+    )").get<bool>();
+    return UnitTests::run("Lua: test #13", "Use alias setStage to return to 'mainStage' and verify", [=]() { return s; });
+}
+
+bool test14_lua()
+{
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+    bool s = lua.script(R"(
+        local orig = Core:getIsTraversing()
+        -- toggle
+        Core:setIsTraversing(not orig)
+        local mid = Core:getIsTraversing()
+        if mid ~= (not orig) then return false end
+        -- restore
+        Core:setIsTraversing(orig)
+        local fin = Core:getIsTraversing()
+        if fin ~= orig then return false end
+        return true
+    )").get<bool>();
+    return UnitTests::run("Lua: test #14", "Toggle getIsTraversing via setIsTraversing and restore", [=]() { return s; });
+}
+
+bool test15_lua()
+{
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+    bool s = lua.script(R"(
+        local before = Core:countOrphanedDisplayObjects()
+        -- create a temp object and attach it to the stage
+        local h = Core:createDisplayObject("Box", { name = "tempOrphan", type = "Box", x = 0, y = 0, width = 8, height = 8 })
+        if not h then return false end
+        local st = Core:getStageHandle()
+        if not st then return false end
+        st:addChild(h)
+        if not st:hasChild(h) then return false end
+        -- ensure orphaning uses the traversing path: toggle traversing on and remove child
+        local orig = Core:getIsTraversing()
+        Core:setIsTraversing(true)
+        st:removeChild(h)
+        Core:setIsTraversing(orig)
+        local mid = Core:countOrphanedDisplayObjects()
+        if mid ~= (before + 1) then return false end
+        local orphans = Core:getOrphanedDisplayObjects()
+        local found = false
+        if orphans then
+            for i,o in ipairs(orphans) do
+                if o and o:getName() == 'tempOrphan' then found = true break end
+            end
+        end
+        if not found then return false end
+        -- cleanup orphans
+        Core:destroyOrphanedDisplayObjects()
+        local fin = Core:countOrphanedDisplayObjects()
+        if fin ~= before then return false end
+        return true
+    )").get<bool>();
+    return UnitTests::run("Lua: test #15", "Orphan lifecycle: create/attach/remove/verify/cleanup", [=]() { return s; });
 }
 
 bool LUA_UnitTests() {
@@ -277,7 +372,12 @@ bool LUA_UnitTests() {
         [&]() { return test7_Lua(); },
         [&]() { return test8_Lua(); },
         [&]() { return test9_Lua(); },
-        [&]() { return test10_lua(); }
+        [&]() { return test10_lua(); },
+        [&]() { return test11_lua(); },
+        [&]() { return test12_lua(); },
+        [&]() { return test13_lua(); },
+        [&]() { return test14_lua(); },
+        [&]() { return test15_lua(); }
     };
     for (auto& test : tests) {
         bool testResult = test();
