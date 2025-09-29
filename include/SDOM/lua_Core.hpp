@@ -33,8 +33,8 @@ namespace SDOM
 	void handleTabKeyPressReverse_lua(Core& core);			// **verified**
 	void setKeyboardFocusedObject_lua(Core& core, DomHandle obj);  // **verified**
 	DomHandle getKeyboardFocusedObject_lua(const Core& core); // **verified**
-	void setMouseHoveredObject_lua(Core& core, DomHandle obj);
-	DomHandle getMouseHoveredObject_lua(const Core& core);
+	void setMouseHoveredObject_lua(Core& core, DomHandle obj);	// **verified**
+	DomHandle getMouseHoveredObject_lua(const Core& core);	// **verified**
 
 	// --- Window Title & Timing --- //
 	std::string getWindowTitle_lua(const Core& core);
