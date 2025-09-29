@@ -4,6 +4,7 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
+#include <atomic>
 // #include <SDOM/SDOM_Event.hpp>
 
 
@@ -51,6 +52,12 @@ class Box final : public SDOM::IDisplayObject
 
     private:
         float gray = 0.0f;  // used for keyfocus indication
+        // Test hook: count clicks received by any Box instance (for unit tests)
+        static std::atomic<int> test_click_count_;
+
+    public:
+        static void resetTestClickCount() { test_click_count_.store(0); }
+        static int getTestClickCount() { return test_click_count_.load(); }
 
     protected:
     // --- LUA Registration --- //

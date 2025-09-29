@@ -352,11 +352,11 @@ namespace SDOM
         // alias the SDL_EventType for ease of use:
         SDL_EventType sdl_type = static_cast<SDL_EventType>(sdlEvent.type);
 
-        // TEST SDL EVENTS        
-        if (sdl_type != SDL_EVENT_MOUSE_MOTION)
-        {
-            std::cout << CLR::YELLOW << "EVENT: " << SDL_Utils::eventTypeToString(sdl_type) << CLR::NORMAL << std::endl;
-        }
+        // // TEST SDL EVENTS        
+        // if (sdl_type != SDL_EVENT_MOUSE_MOTION)
+        // {
+        //     std::cout << CLR::YELLOW << "EVENT: " << SDL_Utils::eventTypeToString(sdl_type) << CLR::NORMAL << std::endl;
+        // }
 
 
         // -----------------------------------------------------------------

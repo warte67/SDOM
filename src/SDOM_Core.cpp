@@ -353,6 +353,7 @@ namespace SDOM
 
             }  // END: while (SDL_PollEvent(&event)) 
         }
+
         catch (const SDOM::Exception& e) 
         {
             // Handle exceptions gracefully
@@ -376,6 +377,33 @@ namespace SDOM
         // properly shutdown
         onQuit();
     } // END: run()
+
+    // Test helper: poll and dispatch any pending SDL events once. This mirrors
+    // the event handling inside Core::run but returns immediately after one
+    // pass. Useful for unit tests that push synthetic SDL events.
+    void Core::pumpEventsOnce()
+    {
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_EVENT_QUIT)
+                bIsRunning_ = false;
+
+            if (event.type == SDL_EVENT_WINDOW_RESIZED)
+            {
+                int newWidth, newHeight;
+                if (!SDL_GetWindowSize(window_, &newWidth, &newHeight))
+                    ERROR("Unable to get the new window size: " + std::string(SDL_GetError()));
+                onWindowResize(newWidth, newHeight);
+            }
+
+            if (eventManager_)
+            {
+                eventManager_->Queue_SDL_Event(event);
+                eventManager_->DispatchQueuedEvents();
+            }
+        }
+    }
 
     bool Core::onInit()
     {

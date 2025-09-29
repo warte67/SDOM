@@ -49,6 +49,8 @@ namespace SDOM
 
         // --- Main Loop & Event Dispatch --- //
         void run();
+    // Poll and dispatch pending SDL events once (test helper)
+    void pumpEventsOnce();
         void quit() { bIsRunning_ = false; }
         void shutdown() { quit(); }
         void onRender();

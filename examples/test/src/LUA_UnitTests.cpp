@@ -6,6 +6,8 @@
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
 #include "UnitTests.hpp"
+// Include Box so test helpers (reset/getTestClickCount) are visible
+#include "Box.hpp"
 // Lua_UnitTests.cpp
 
 // #ifdef SDOM_ENABLE_UNIT_TESTS
@@ -156,6 +158,61 @@ bool test7_Lua() {
     return UnitTests::run("Lua: test # 7", "Verify getCommandNamesForType(blueishBox)", [=]() { return ok; });
 }
 
+bool test8_Lua() {
+    // This test synthesizes an SDL mouse down + up sequence at the center of blueishBox
+    // and pumps events once to cause the EventManager to generate a MouseClick which
+    // should be caught by Box's listener and increment its test counter.
+    using namespace SDOM;
+    // reset counter
+    Box::resetTestClickCount();
+
+    // Determine blueishBox center from the object in the factory
+    DomHandle box = Core::getInstance().getDisplayHandle("blueishBox");
+    if (!box) return UnitTests::run("Lua: test # 8", "Verify synthetic MouseClick triggers Box listener", [](){ return false; });
+
+    int cx = box->getX() + box->getWidth() / 2;
+    int cy = box->getY() + box->getHeight() / 2;
+
+    // Build SDL mouse down
+    SDL_Event down{};
+    down.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+    down.button.windowID = Core::getInstance().getWindow() ? SDL_GetWindowID(Core::getInstance().getWindow()) : 0;
+    down.button.button = SDL_BUTTON_LEFT;
+    down.button.clicks = 1;
+    // Convert from stage/render coords to window coords so SDL_ConvertEventToRenderCoordinates
+    // inside EventManager will map them back to the intended render coordinates.
+    int winX = static_cast<int>(cx * Core::getInstance().getConfig().pixelWidth);
+    int winY = static_cast<int>(cy * Core::getInstance().getConfig().pixelHeight);
+    // Synthesize coordinates in both the button and motion unions to be robust
+    down.button.x = winX;
+    down.button.y = winY;
+    down.motion.x = winX;
+    down.motion.y = winY;
+
+    // Build SDL mouse up
+    SDL_Event up{};
+    up.type = SDL_EVENT_MOUSE_BUTTON_UP;
+    up.button.windowID = down.button.windowID;
+    up.button.button = SDL_BUTTON_LEFT;
+    up.button.clicks = 1;
+    // Use the same scaled window coordinates for the up event
+    up.button.x = winX;
+    up.button.y = winY;
+    up.motion.x = winX;
+    up.motion.y = winY;
+
+    // Push events and pump
+    SDL_PushEvent(&down);
+    SDL_PushEvent(&up);
+
+    // process queued events once
+    Core::getInstance().pumpEventsOnce();
+
+    int count = Box::getTestClickCount();
+    bool ok = (count > 0);
+    return UnitTests::run("Lua: test # 8", "Verify synthetic MouseClick triggers Box listener", [=]() { return ok; });
+}
+
 bool LUA_UnitTests() {
     bool allTestsPassed = true;
     std::vector<std::function<bool()>> tests = {
@@ -166,6 +223,7 @@ bool LUA_UnitTests() {
         [&]() { return test5(); },
         [&]() { return test6_Lua(); }
         ,[&]() { return test7_Lua(); }
+        ,[&]() { return test8_Lua(); }
     };
     for (auto& test : tests) {
         bool testResult = test();

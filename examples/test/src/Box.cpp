@@ -11,10 +11,14 @@
 #include <SDOM/SDOM_ResHandle.hpp>
 
 #include "Box.hpp"
+#include <atomic>
 
 
 
 // Box(const std::string& name, int x = 0, int y = 0, int width = 100, int height = 100);
+
+// Static test counter definition
+std::atomic<int> Box::test_click_count_{0};
 
 Box::Box(const SDOM::IDisplayObject::InitStruct& init)
 : IDisplayObject(init)
@@ -49,33 +53,32 @@ Box::~Box()
 
 bool Box::onInit()  
 {
-    // std::cout << getName() << "::" << "onInit() at address: " << this << std::endl;
-    // Add event listener for MouseClick
-    addEventListener(SDOM::EventType::MouseClick, [](SDOM::Event& event)
+    // Add a test-only event listener for MouseClick that increments a static counter.
+    // This allows unit tests to synthesize SDL events and verify listeners fire.
+    addEventListener(SDOM::EventType::MouseClick, [this](SDOM::Event& event)
     {
-        std::cout << CLR::BLUE << "Phase: " << CLR::LT_BLUE << event.getPhaseString() << CLR::NORMAL << std::endl;
-        if (event.getTarget() && event.getTarget()->getType() == "blueishBox") 
-        {
-            std::cout << CLR::GREEN << event.getTarget()->getName() << "::" << CLR::LT_GRN << "MouseClick" << CLR::NORMAL << std::endl;
+        // Only count clicks where this Box is the target
+        if (event.getTarget() && event.getTarget()->getName() == this->getName()) {
+            Box::test_click_count_.fetch_add(1);
         }
-        std::cout << CLR::BLUE << "currentTarget: " << CLR::LT_BLUE << event.getCurrentTarget()->getName() << CLR::NORMAL << std::endl;
-        std::cout << CLR::BLUE << "target: " << CLR::LT_BLUE << event.getTarget()->getName() << CLR::NORMAL << std::endl;
-        std::cout << CLR::BLUE << "relatedTarget: " << CLR::LT_BLUE << (event.getRelatedTarget() ? event.getRelatedTarget()->getName() : "null") << CLR::NORMAL << std::endl;
-    },true); // Use capture phase
+    }, false);
 
-    addEventListener(SDOM::EventType::MouseClick, [](SDOM::Event& event)
-    {
-        event.stopPropagation(); // Stop further propagation
+    // addEventListener(SDOM::EventType::MouseClick, [](SDOM::Event& event)
+    // {
+    //     event.stopPropagation(); // Stop further propagation
 
-        std::cout << CLR::BLUE << "Phase: " << CLR::LT_BLUE << event.getPhaseString() << CLR::NORMAL << std::endl;
-        if (event.getTarget() && event.getTarget()->getType() == "blueishBox") 
-        {
-            std::cout << CLR::GREEN << event.getTarget()->getName() << "::" << CLR::LT_GRN << "MouseClick" << CLR::NORMAL << std::endl;
-        }
-        std::cout << CLR::BLUE << "currentTarget: " << CLR::LT_BLUE << event.getCurrentTarget()->getName() << CLR::NORMAL << std::endl;
-        std::cout << CLR::BLUE << "target: " << CLR::LT_BLUE << event.getTarget()->getName() << CLR::NORMAL << std::endl;
-        std::cout << CLR::BLUE << "relatedTarget: " << CLR::LT_BLUE << (event.getRelatedTarget() ? event.getRelatedTarget()->getName() : "null") << CLR::NORMAL << std::endl;
-    },false); // Do not use capture phase
+    //     std::cout << CLR::BLUE << "Phase: " << CLR::LT_BLUE << event.getPhaseString() << CLR::NORMAL << std::endl;
+    //     if (event.getTarget() && event.getTarget()->getType() == "Box") 
+    //     {
+    //         std::cout << CLR::GREEN << event.getTarget()->getName() << "::" << CLR::LT_GRN << "MouseClick" << CLR::NORMAL << std::endl;
+    //     }
+    //     std::cout << CLR::BLUE << "currentTarget: " << CLR::LT_BLUE << event.getCurrentTarget()->getName() << CLR::NORMAL << std::endl;
+    //     std::cout << CLR::BLUE << "target: " << CLR::LT_BLUE << event.getTarget()->getName() << CLR::NORMAL << std::endl;
+    //     std::cout << CLR::BLUE << "relatedTarget: " << CLR::LT_BLUE << (event.getRelatedTarget() ? event.getRelatedTarget()->getName() : "null") << CLR::NORMAL << std::endl;
+    // },false); // Do not use capture phase
+
+
+
 
     return true;
 }
