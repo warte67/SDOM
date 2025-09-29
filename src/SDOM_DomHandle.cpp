@@ -42,11 +42,11 @@ namespace SDOM
         // DomHandle usertype. The direct bindings (get/isValid/getName/getType)
         // are applied explicitly further down.
 
-    // NOTE: registry-driven properties/commands will be applied after we
-    // register any forwarding commands/functions below so they are present
-    // when we bind the registry into the usertype.
+        // NOTE: registry-driven properties/commands will be applied after we
+        // register any forwarding commands/functions below so they are present
+        // when we bind the registry into the usertype.
 
-        // 5. Register meta functions
+        // 4. Register meta functions
         objHandleType[sol::meta_function::to_string] = [](DomHandle& h) 
         {
             auto obj = h.get();
@@ -57,6 +57,7 @@ namespace SDOM
             return std::string("DomHandle(invalid)");
         };
 
+        // 5. Register direct bindings for basic handle accessors
         // Ensure direct method bindings exist so method calls (e.g. h:get())
         // operate on the userdata. Return the DomHandle itself when calling
         // :get() from Lua so callers receive the handle userdata which has

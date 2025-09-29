@@ -171,11 +171,11 @@ namespace SDOM
         std::vector<std::string> listDisplayObjectNames() const;
         void clearFactory();
         void printObjectRegistry() const;
-    // Forwarding helpers to Factory for type-level introspection
-    std::vector<std::string> getPropertyNamesForType(const std::string& typeName) const;
-    std::vector<std::string> getCommandNamesForType(const std::string& typeName) const;
-    std::vector<std::string> getFunctionNamesForType(const std::string& typeName) const;
 
+        // --- Forwarding helpers to Factory for type-level introspection --- //
+        std::vector<std::string> getPropertyNamesForType(const std::string& typeName) const;
+        std::vector<std::string> getCommandNamesForType(const std::string& typeName) const;
+        std::vector<std::string> getFunctionNamesForType(const std::string& typeName) const;
 
     private:
         // --- Singleton Enforcement --- //

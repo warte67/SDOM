@@ -378,6 +378,7 @@ namespace SDOM
         onQuit();
     } // END: run()
 
+    
     // Test helper: poll and dispatch any pending SDL events once. This mirrors
     // the event handling inside Core::run but returns immediately after one
     // pass. Useful for unit tests that push synthetic SDL events.

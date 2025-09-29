@@ -560,32 +560,6 @@ namespace SDOM
     }
 
 
-
-
-    // void IDisplayObject::registerSelfName() 
-    // {
-    //     std::string name = getName();
-    //     if (nameRegistry_.find(name_) != nameRegistry_.end()) {
-    //         ERROR("IDisplayObject name '" + name_ + "' is already registered!");
-    //     }
-    //     nameRegistry_[name_] = DomHandle(name_, getType());
-    // }  
-
-    // std::shared_ptr<IDisplayObject> IDisplayObject::getByName(const std::string& name) 
-    // {
-    //     std::function<std::shared_ptr<IDisplayObject>(const std::shared_ptr<IDisplayObject>&)> search;
-    //     search = [&](const std::shared_ptr<IDisplayObject>& node) -> std::shared_ptr<IDisplayObject> {
-    //         if (!node) return nullptr;
-    //         if (node->getName() == name) return node;
-    //         for (const auto& child : node->children_) {
-    //             auto result = search(child);
-    //             if (result) return result;
-    //         }
-    //         return nullptr;
-    //     };
-    //     return search(Core::instance().getStage("mainStage"));
-    // }
-
     int IDisplayObject::getMaxPriority() const
     {
         if (children_.empty()) 
