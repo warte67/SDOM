@@ -54,7 +54,7 @@ bool Box::onInit()
     addEventListener(SDOM::EventType::MouseClick, [](SDOM::Event& event)
     {
         std::cout << CLR::BLUE << "Phase: " << CLR::LT_BLUE << event.getPhaseString() << CLR::NORMAL << std::endl;
-        if (event.getTarget() && event.getTarget()->getType() == "blueBox") 
+        if (event.getTarget() && event.getTarget()->getType() == "blueishBox") 
         {
             std::cout << CLR::GREEN << event.getTarget()->getName() << "::" << CLR::LT_GRN << "MouseClick" << CLR::NORMAL << std::endl;
         }
@@ -68,7 +68,7 @@ bool Box::onInit()
         event.stopPropagation(); // Stop further propagation
 
         std::cout << CLR::BLUE << "Phase: " << CLR::LT_BLUE << event.getPhaseString() << CLR::NORMAL << std::endl;
-        if (event.getTarget() && event.getTarget()->getType() == "blueBox") 
+        if (event.getTarget() && event.getTarget()->getType() == "blueishBox") 
         {
             std::cout << CLR::GREEN << event.getTarget()->getName() << "::" << CLR::LT_GRN << "MouseClick" << CLR::NORMAL << std::endl;
         }
@@ -413,7 +413,40 @@ void Box::_registerLua(const std::string& typeName, sol::state_view lua)
     SUPER::_registerLua(typeName, lua);
 
     // 3. Register properties/commands (custom logic)
-    // ...
+    // Example: register a couple of pseudo functions directly on the Box usertype
+    // so Lua introspection and direct calls can see them. These are lightweight
+    // wrappers that operate on the Box instance.
+    objHandleType["doSomething"] = [](Box& b, sol::object /*args*/, sol::state_view lua) -> sol::object {
+        // Example no-op / diagnostic: print the object name and return true
+        std::cout << "Box::doSomething called on " << b.getName() << std::endl;
+        return sol::make_object(lua, true);
+    };
+
+    objHandleType["resetColor"] = [](Box& b, sol::object /*args*/, sol::state_view lua) -> sol::object {
+        // Reset color to a default purple-ish color used in InitStruct
+        SDL_Color defaultColor = {255, 0, 255, 255};
+        b.setColor(defaultColor);
+        std::cout << "Box::resetColor called on " << b.getName() << std::endl;
+        return sol::make_object(lua, true);
+    };
+
+    // Also register these functions in the Factory's type registry so
+    // introspection (Factory::getFunctionNamesForType) returns them.
+    SDOM::getFactory().registerLuaFunction(typeName, "doSomething",
+        [](IDataObject& dobj, sol::object /*args*/, sol::state_view lua) -> sol::object {
+            Box& b = static_cast<Box&>(dobj);
+            std::cout << "Box::doSomething called on " << b.getName() << std::endl;
+            return sol::make_object(lua, true);
+        });
+
+    SDOM::getFactory().registerLuaFunction(typeName, "resetColor",
+        [](IDataObject& dobj, sol::object /*args*/, sol::state_view lua) -> sol::object {
+            Box& b = static_cast<Box&>(dobj);
+            SDL_Color defaultColor = {255, 0, 255, 255};
+            b.setColor(defaultColor);
+            std::cout << "Box::resetColor called on " << b.getName() << std::endl;
+            return sol::make_object(lua, true);
+        });
 
     // 4. Register the Lua usertype using the registry
     SDOM::getFactory().registerLuaPropertiesAndCommands(typeName, objHandleType_);             

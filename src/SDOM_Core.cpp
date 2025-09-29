@@ -209,6 +209,25 @@ namespace SDOM
         SDL_Quit();
     }
 
+    // --- Core forwarding helpers to Factory ---
+    std::vector<std::string> Core::getPropertyNamesForType(const std::string& typeName) const
+    {
+        if (factory_) return factory_->getPropertyNamesForType(typeName);
+        return {};
+    }
+
+    std::vector<std::string> Core::getCommandNamesForType(const std::string& typeName) const
+    {
+        if (factory_) return factory_->getCommandNamesForType(typeName);
+        return {};
+    }
+
+    std::vector<std::string> Core::getFunctionNamesForType(const std::string& typeName) const
+    {
+        if (factory_) return factory_->getFunctionNamesForType(typeName);
+        return {};
+    }
+
     void Core::run()
     {
         // std::cout << "Core::run()" << std::endl;
@@ -1101,6 +1120,37 @@ namespace SDOM
                     if (args.is<DomHandle>()) setMouseHoveredObject_lua(core, args.as<DomHandle>());
                 });
 
+            // Factory introspection helpers (expose Core wrappers)
+            factory_->registerLuaFunction(typeName, "getPropertyNamesForType",
+                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
+                    Core& core = static_cast<Core&>(obj);
+                    if (!args.is<std::string>()) return sol::make_object(lua, sol::nil);
+                    auto names = core.getPropertyNamesForType(args.as<std::string>());
+                    sol::table t = lua.create_table();
+                    for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
+                    return sol::make_object(lua, t);
+                });
+
+            factory_->registerLuaFunction(typeName, "getCommandNamesForType",
+                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
+                    Core& core = static_cast<Core&>(obj);
+                    if (!args.is<std::string>()) return sol::make_object(lua, sol::nil);
+                    auto names = core.getCommandNamesForType(args.as<std::string>());
+                    sol::table t = lua.create_table();
+                    for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
+                    return sol::make_object(lua, t);
+                });
+
+            factory_->registerLuaFunction(typeName, "getFunctionNamesForType",
+                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
+                    Core& core = static_cast<Core&>(obj);
+                    if (!args.is<std::string>()) return sol::make_object(lua, sol::nil);
+                    auto names = core.getFunctionNamesForType(args.as<std::string>());
+                    sol::table t = lua.create_table();
+                    for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
+                    return sol::make_object(lua, t);
+                });
+
             // Window Title & Timing
             factory_->registerLuaFunction(typeName, "getWindowTitle",
                 [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
@@ -1202,25 +1252,7 @@ namespace SDOM
                     printObjectRegistry_lua(core);
                 });
 
-            // --- New Factory Methods --- //
-            factory_->registerLuaFunction(typeName, "getPropertyNamesForType",
-                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
-                    const Core& core = static_cast<const Core&>(obj);
-                    if (args.is<std::string>()) return sol::make_object(lua, getPropertyNamesForType_lua(core, args.as<std::string>()));
-                    return sol::make_object(lua, std::vector<std::string>());
-                });
-            factory_->registerLuaFunction(typeName, "getCommandNamesForType",
-                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
-                    const Core& core = static_cast<const Core&>(obj);
-                    if (args.is<std::string>()) return sol::make_object(lua, getCommandNamesForType_lua(core, args.as<std::string>()));
-                    return sol::make_object(lua, std::vector<std::string>());
-                });
-            factory_->registerLuaFunction(typeName, "getFunctionNamesForType",
-                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
-                    const Core& core = static_cast<const Core&>(obj);
-                    if (args.is<std::string>()) return sol::make_object(lua, getFunctionNamesForType_lua(core, args.as<std::string>()));
-                    return sol::make_object(lua, std::vector<std::string>());
-                });
+            // (Introspection helpers registered above; avoid duplicate registrations)
 
         }
 
@@ -1258,6 +1290,53 @@ namespace SDOM
         });
         coreTable.set_function("destroyDisplayObject", [](sol::this_state /*ts*/, sol::object /*self*/, const std::string& name) {
             Core::getInstance().destroyDisplayObject(name);
+        });
+        // Expose Factory introspection helpers on the global Core table as convenience wrappers
+        coreTable.set_function("getPropertyNamesForType", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName) {
+            sol::state_view sv = ts;
+            std::string query = typeName;
+            // If the caller passed an instance name, resolve it to the registered type
+            if (Core::getInstance().hasDisplayObject(typeName)) {
+                DomHandle h = Core::getInstance().getDisplayHandle(typeName);
+                if (h.isValid() && h.get()) {
+                    IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
+                    if (obj) query = obj->getType();
+                }
+            }
+            auto names = Core::getInstance().getPropertyNamesForType(query);
+            sol::table t = sv.create_table();
+            for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
+            return sol::make_object(sv, t);
+        });
+        coreTable.set_function("getCommandNamesForType", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName) {
+            sol::state_view sv = ts;
+            std::string query = typeName;
+            if (Core::getInstance().hasDisplayObject(typeName)) {
+                DomHandle h = Core::getInstance().getDisplayHandle(typeName);
+                if (h.isValid() && h.get()) {
+                    IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
+                    if (obj) query = obj->getType();
+                }
+            }
+            auto names = Core::getInstance().getCommandNamesForType(query);
+            sol::table t = sv.create_table();
+            for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
+            return sol::make_object(sv, t);
+        });
+        coreTable.set_function("getFunctionNamesForType", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName) {
+            sol::state_view sv = ts;
+            std::string query = typeName;
+            if (Core::getInstance().hasDisplayObject(typeName)) {
+                DomHandle h = Core::getInstance().getDisplayHandle(typeName);
+                if (h.isValid() && h.get()) {
+                    IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
+                    if (obj) query = obj->getType();
+                }
+            }
+            auto names = Core::getInstance().getFunctionNamesForType(query);
+            sol::table t = sv.create_table();
+            for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
+            return sol::make_object(sv, t);
         });
         lua["Core"] = coreTable;
     }

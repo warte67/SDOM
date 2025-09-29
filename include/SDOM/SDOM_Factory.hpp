@@ -135,7 +135,8 @@ namespace SDOM
         ObjectTypeRegistryEntry::CommandEntry* getCommandEntry(const std::string& typeName, const std::string& commandName);
         ObjectTypeRegistryEntry::FunctionEntry* getFunctionEntry(const std::string& typeName, const std::string& functionName);
 
-        void registerLuaObjectTypes_test();
+    // Deprecated: test-only registration removed. Concrete types should
+    // populate the Factory registry during their own Lua registration.
 
         template<typename T>
         void registerLuaPropertiesAndCommands(const std::string& typeName, sol::usertype<T>& usertypeTable) 
