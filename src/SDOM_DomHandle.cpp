@@ -84,6 +84,21 @@ namespace SDOM
             }
         };
 
+        // Forward addEventListener so DomHandle:addEventListener({...}) works from Lua
+        objHandleType_["addEventListener"] = [](DomHandle& dh, sol::object args) {
+            IDisplayObject* target = dh.get();
+            if (!target) return;
+            if (!args.is<sol::table>()) return;
+            sol::table t = args.as<sol::table>();
+            if (!t["type"].valid() || !t["listener"].valid()) return;
+            EventType& et = t["type"].get<EventType&>();
+            sol::function fn = t["listener"].get<sol::function>();
+            bool useCapture = t["useCapture"].get_or(false);
+            int priority = t["priority"].get_or(0);
+            // wrap the sol::function into a std::function
+            target->addEventListener(et, [fn](Event& e) { fn(e); }, useCapture, priority);
+        };
+
         objHandleType_["removeChild"] = [](DomHandle& dh, sol::object arg) {
             IDisplayObject* target = dh.get();
             if (!target) return;
@@ -110,6 +125,16 @@ namespace SDOM
             }
             return false;
         };
+
+        // Forwarded property getters for convenience in Lua (stage coordinates, size)
+        objHandleType_["getX"] = [](DomHandle& dh) -> int {
+            IDisplayObject* target = dh.get(); if (!target) return 0; return target->getX(); };
+        objHandleType_["getY"] = [](DomHandle& dh) -> int {
+            IDisplayObject* target = dh.get(); if (!target) return 0; return target->getY(); };
+        objHandleType_["getWidth"] = [](DomHandle& dh) -> int {
+            IDisplayObject* target = dh.get(); if (!target) return 0; return target->getWidth(); };
+        objHandleType_["getHeight"] = [](DomHandle& dh) -> int {
+            IDisplayObject* target = dh.get(); if (!target) return 0; return target->getHeight(); };
 
         // Finally, apply any remaining registry-driven properties/commands to
         // the DomHandle usertype (this attaches the forwarding commands above

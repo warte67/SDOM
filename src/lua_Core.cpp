@@ -6,6 +6,51 @@
 namespace SDOM
 {
 
+	// --- Event helpers exposed to Lua --- //
+	void pumpEventsOnce_lua(Core& core) { core.pumpEventsOnce(); }
+
+	void pushMouseEvent_lua(Core& core, const sol::object& args) {
+		// Expect a table with { x=<stage-x>, y=<stage-y>, type="down"|"up", button=<int> }
+		if (!args.is<sol::table>()) return;
+		sol::table t = args.as<sol::table>();
+		if (!t["x"].valid() || !t["y"].valid()) return;
+		float sx = t["x"].get<float>();
+		float sy = t["y"].get<float>();
+		std::string type = "down";
+		if (t["type"].valid()) type = t["type"].get<std::string>();
+		int button = 1;
+		if (t["button"].valid()) button = t["button"].get<int>();
+
+		// Convert stage coords to window coords using pixel scale in Core config
+		const Core::CoreConfig& cfg = core.getConfig();
+		int winX = static_cast<int>(sx * cfg.pixelWidth);
+		int winY = static_cast<int>(sy * cfg.pixelHeight);
+
+		Uint32 winID = 0;
+		if (core.getWindow()) winID = SDL_GetWindowID(core.getWindow());
+
+		SDL_Event ev;
+		std::memset(&ev, 0, sizeof(ev));
+		if (type == "up") ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
+		else ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+
+		ev.button.windowID = winID;
+		ev.button.which = 0;
+		ev.button.button = button;
+	ev.button.clicks = 1;
+		ev.button.x = winX;
+		ev.button.y = winY;
+
+		// Also populate motion fields so downstream code that reads motion.x/y will see coords
+		ev.motion.windowID = winID;
+		ev.motion.which = 0;
+		ev.motion.x = winX;
+		ev.motion.y = winY;
+
+		SDL_PushEvent(&ev);
+	}
+
+
 	// --- Main Loop & Event Dispatch --- //
 	void quit_lua(Core& core) { core.quit(); }
 	void shutdown_lua(Core& core) { core.shutdown(); }

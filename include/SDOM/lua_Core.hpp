@@ -41,6 +41,10 @@ namespace SDOM
 	Core& setWindowTitle_lua(Core& core, const std::string& title);
 	float getElapsedTime_lua(const Core& core);
 
+	// --- Event helpers (exposed to Lua) --- //
+	void pumpEventsOnce_lua(Core& core);
+	void pushMouseEvent_lua(Core& core, const sol::object& args);
+
 	// --- Object Lookup --- //
 	DomHandle getDisplayHandle_lua(Core& core, const std::string& name);
 	DomHandle getFactoryStageHandle_lua(Core& core);

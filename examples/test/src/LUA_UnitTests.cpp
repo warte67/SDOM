@@ -211,6 +211,42 @@ bool test8_Lua() {
     int count = Box::getTestClickCount();
     bool ok = (count > 0);
     return UnitTests::run("Lua: test # 8", "Verify synthetic MouseClick triggers Box listener", [=]() { return ok; });
+} //test8_lua()
+
+bool test9_Lua() {
+    // This test will register an event listener purely from Lua and synthesize
+    // a mouse click from Lua using Core.pushMouseEvent / Core.pumpEventsOnce.
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+
+    // Ensure Box test counter reset
+    Box::resetTestClickCount();
+
+    // Ensure blueishBox exists and is on the stage
+    DomHandle box = Core::getInstance().getDisplayHandle("blueishBox");
+    if (!box) return UnitTests::run("Lua: test # 9", "Lua-only event handler + synthetic click", [](){ return false; });
+
+    // Build and run Lua script that attaches a listener and synthesizes a click
+    auto result = lua.script(R"(
+        local clicked = false
+        local bh = Core:getDisplayHandle("blueishBox")
+        if not bh then return false end
+        -- register listener on the box
+        bh:addEventListener({ type = EventType.MouseClick, listener = function(e) clicked = true end })
+
+    -- compute center in stage coords (use DomHandle forwarded methods)
+    local x = bh:getX() + bh:getWidth() / 2
+    local y = bh:getY() + bh:getHeight() / 2
+
+        -- push down/up and pump from Lua
+        Core:pushMouseEvent({ x = x, y = y, type = "down", button = 1 })
+        Core:pushMouseEvent({ x = x, y = y, type = "up", button = 1 })
+        Core:pumpEventsOnce()
+
+        return clicked
+    )").get<bool>();
+
+    bool ok = result;
+    return UnitTests::run("Lua: test # 9", "Lua-only event handler + synthetic click", [=]() { return ok; });
 }
 
 bool LUA_UnitTests() {
@@ -221,9 +257,10 @@ bool LUA_UnitTests() {
         [&]() { return test3(); },
         [&]() { return test4(); },
         [&]() { return test5(); },
-        [&]() { return test6_Lua(); }
-        ,[&]() { return test7_Lua(); }
-        ,[&]() { return test8_Lua(); }
+        [&]() { return test6_Lua(); },
+        [&]() { return test7_Lua(); },
+        [&]() { return test8_Lua(); },
+        [&]() { return test9_Lua(); }
     };
     for (auto& test : tests) {
         bool testResult = test();

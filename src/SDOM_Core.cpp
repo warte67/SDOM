@@ -1196,6 +1196,16 @@ namespace SDOM
                     return sol::make_object(lua, getElapsedTime_lua(core));
                 });
 
+            // Event helpers (pump/push) - expose to Lua
+            factory_->registerLuaCommand(typeName, "pumpEventsOnce",
+                [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
+                    pumpEventsOnce_lua(static_cast<Core&>(obj));
+                });
+            factory_->registerLuaCommand(typeName, "pushMouseEvent",
+                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
+                    pushMouseEvent_lua(static_cast<Core&>(obj), args);
+                });
+
             // Object Lookup / Factory Wrappers
             factory_->registerLuaFunction(typeName, "createDisplayObject",
                 [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
@@ -1294,6 +1304,19 @@ namespace SDOM
         // singleton. This avoids userdata/pointer mismatch issues.
         lua[typeName] = this; // keep a userdata binding
 
+        // Expose EventType constants to Lua as a table (so Lua code can use EventType.MouseClick)
+        try {
+            sol::usertype<EventType> et_ut = lua.new_usertype<EventType>("EventType", sol::no_constructor);
+            sol::table etbl = lua.create_table();
+            etbl["MouseClick"] = sol::make_object(lua, std::ref(EventType::MouseClick));
+            etbl["MouseButtonDown"] = sol::make_object(lua, std::ref(EventType::MouseButtonDown));
+            etbl["MouseButtonUp"] = sol::make_object(lua, std::ref(EventType::MouseButtonUp));
+            etbl["MouseMove"] = sol::make_object(lua, std::ref(EventType::MouseMove));
+            lua["EventType"] = etbl;
+        } catch (...) {
+            // non-fatal if event type binding fails
+        }
+
         sol::table coreTable = lua.create_table();
         // Ensure returned DomHandle values are boxed as proper Lua userdata by
         // using sol::this_state and sol::make_object so method calls (e.g. :get())
@@ -1365,6 +1388,16 @@ namespace SDOM
             sol::table t = sv.create_table();
             for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
             return sol::make_object(sv, t);
+        });
+        // Event helpers exposed on the global Core table
+        coreTable.set_function("pumpEventsOnce", [](sol::this_state /*ts*/, sol::object /*self*/) {
+            Core::getInstance().pumpEventsOnce();
+        });
+        coreTable.set_function("pushMouseEvent", [](sol::this_state ts, sol::object /*self*/, sol::object args) {
+            sol::state_view sv = ts;
+            // Forward to pushMouseEvent_lua using the singleton Core
+            pushMouseEvent_lua(Core::getInstance(), args);
+            return sol::make_object(sv, sol::nil);
         });
         lua["Core"] = coreTable;
     }
