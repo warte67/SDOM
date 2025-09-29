@@ -195,21 +195,50 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Demonstrated robust C++/Lua test integration: Lua scripts return boolean results to C++ test framework, enabling seamless cross-language validation.
         - Codebase and Lua API stability increased, with reliable resource management and hierarchy checks.
 
-
 - ### [September 28, 2025]
-    - Centralized Lua bindings: Factory now maintains a registry (`registerLuaProperty` / `registerLuaCommand` / `registerLuaFunction`) and applies entries idempotently in a two‑phase process (create minimal sol2 usertype, then attach registry entries).
-    - Lua API & binding fixes: `DomHandle` and `Core` bindings improved (correct boxing/forwarding, colon-call signatures); EventType constants exposed; Sol2 runtime issues (nil-call/userdata mismatches) resolved.
-    - Test helpers: added `Core:pushMouseEvent({x,y,type,button})` and `Core:pumpEventsOnce()` so Lua can synthesize and dispatch SDL events deterministically.
-    - DomHandle Lua conveniences: `addEventListener` forwarding and simple getters (`getX`/`getY`/`getWidth`/`getHeight`) exposed to Lua.
-    - Box test scaffolding: added simple Box functions (doSomething, resetColor) and a click counter used by synthetic-event tests.
-    - Lua-driven tests added/updated:
-        - test5: getPropertyNamesForType("blueishBox")
-        - test6: getFunctionNamesForType("blueishBox")
-        - test7: getCommandNamesForType("blueishBox")
-        - test8: C++-synthesized MouseClick → Box listener
-        - test9: Lua-only listener + synthetic click (restores keyboard focus to Stage)
-    - Cleanup: removed temporary debug instrumentation and test-only Factory helpers.
-    - Status: All core C++ unit tests and Lua-driven tests pass locally.
+    - **Lua Binding Improvements:**
+        - Refined Lua usertype registration to ensure idempotent and consistent bindings.
+        - Verified that all properties, commands, and functions are correctly exposed to Lua for Core, Factory, DomHandle, and IDisplayObject.
+        - Added missing getters (`getX`, `getY`, `getWidth`, `getHeight`) to DomHandle Lua bindings.
+        - Ensured that overloaded methods are properly handled in Lua.
+        - Centralized Lua bindings: Factory now maintains a registry (`registerLuaProperty` / `registerLuaCommand` / `registerLuaFunction`) and applies entries idempotently in a two‑phase process (create minimal sol2 usertype, then attach registry entries).
+        - Lua API & binding fixes: `DomHandle` and `Core` bindings improved (correct boxing/forwarding, colon-call signatures); EventType constants exposed; Sol2 runtime issues (nil-call/userdata mismatches) resolved.
+        - Test helpers: added `Core:pushMouseEvent({x,y,type,button})` and `Core:pumpEventsOnce()` so Lua can synthesize and dispatch SDL events deterministically.
+        - DomHandle Lua conveniences: `addEventListener` forwarding and simple getters (`getX`/`getY`/`getWidth`/`getHeight`) exposed to Lua.
+        - Box test scaffolding: added simple Box functions (doSomething, resetColor) and a click counter used by synthetic-event tests.
+        - Lua-driven tests added/updated:
+            - test5: getPropertyNamesForType("blueishBox")
+            - test6: getFunctionNamesForType("blueishBox")
+            - test7: getCommandNamesForType("blueishBox")
+            - test8: C++-synthesized MouseClick → Box listener
+            - test9: Lua-only listener + synthetic click (restores keyboard focus to Stage)
+        - Cleanup: removed temporary debug instrumentation and test-only Factory helpers.
+        - Status: All core C++ unit tests and Lua-driven tests pass locally.
+    - **Event System Enhancements:**
+        - Improved synthetic event handling in Lua with `Core:pushMouseEvent()` and `Core:pumpEventsOnce()`.
+        - Verified that synthetic events correctly trigger event listeners on display objects.
+    - **Box Object Enhancements:**
+        - Added utility functions to Box for testing purposes (e.g., `doSomething`, `resetColor`).
+        - Implemented a click counter to track interactions during tests.
+    - **Unit Test Expansion:**
+        - Added new Lua-driven unit tests to cover property, command, and function retrieval for custom display objects.
+        - Verified that all existing tests pass successfully with the latest Lua bindings.
+    - **Code Cleanup:**
+        - Removed temporary debug instrumentation and test-only Factory helpers.
+        - Ensured the codebase is clean and maintainable.
+
+- ### [September 29, 2025]
+    - **Lua Binding Debugging:**
+        - Added controlled debug prints to Lua usertype registration to trace binding operations.
+        - Verified that each usertype (DomHandle, IDisplayObject, Stage, Factory, Core) is registered exactly once, preventing conflicts and ensuring consistent behavior.
+        - Debug prints can be toggled with the `DEBUG_REGISTER_LUA` constant in `SDOM.hpp`.
+    - **Binding Consistency:**
+        - Ensured that all Lua bindings are idempotent and do not conflict with each other.
+        - Verified that overloaded methods and custom types are correctly handled in Lua.
+    - **Code Cleanup:**
+        - Removed unnecessary debug prints from production code, leaving controlled logging for future debugging needs.
+        - Ensured the codebase remains clean and maintainable.
+        
 
 # Next Steps (short term):
 - Continue testing ALL properties, commands, and functions in the `Lua_UnitTests`

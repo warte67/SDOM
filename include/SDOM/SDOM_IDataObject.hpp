@@ -89,6 +89,7 @@ Summary:
 // #include <sol/sol.hpp>
 #include <SDOM/SDOM_IUnitTest.hpp>
 
+
 namespace SDOM
 {
 
@@ -132,9 +133,12 @@ namespace SDOM
     protected:
         virtual void _registerLua(const std::string& typeName, sol::state_view lua)
         {
-            std::string typeNameLocal = "IDataObject";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                      << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+            if (DEBUG_REGISTER_LUA)
+            {
+                std::string typeNameLocal = "IDataObject";
+                std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                        << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+            }
         }   
         sol::usertype<IDataObject> objHandleType_;
 

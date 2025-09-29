@@ -21,7 +21,7 @@ namespace SDOM {
 
 DomHandle myBoxHandle;
 
-bool test1() {
+bool test1_Lua() {
     sol::state& lua = SDOM::Core::getInstance().getLua();
     sol::object handle_obj = lua.script(R"(
         Core:createDisplayObject("Box", { 
@@ -38,7 +38,7 @@ bool test1() {
     return UnitTests::run("Lua: test # 1", "Create Box and verify existence", [box_exists]() { return box_exists; });
 }
 
-bool test2() {
+bool test2_Lua() {
     sol::state& lua = SDOM::Core::getInstance().getLua();
     lua["myBoxHandle"] = myBoxHandle;
     bool added = lua.script(R"(
@@ -51,7 +51,7 @@ bool test2() {
     return UnitTests::run("Lua: test # 2", "Add the Box to Stage from Lua", [added]() { return added; });
 }
 
-bool test3() {
+bool test3_Lua() {
     sol::state& lua = SDOM::Core::getInstance().getLua();
     bool destroyed = lua.script(R"(
         local boxHandle = Core:getDisplayHandle("myBox")
@@ -71,7 +71,7 @@ bool test3() {
     return UnitTests::run("Lua: test # 3", "Destroy Box and verify removal", [destroyed]() { return destroyed; });
 }
 
-bool test4() {
+bool test4_Lua() {
     sol::state& lua = SDOM::Core::getInstance().getLua();
     bool ok = lua.script(R"(
         local h = Core:createDisplayObject("Box", { name = "tempBox", type = "Box", x = 1, y = 1, width = 16, height = 16 })
@@ -86,7 +86,7 @@ bool test4() {
     return UnitTests::run("Lua: test # 4", "Lua binding roundtrip add/hasChild", [ok]() { return ok; });
 }
 
-bool test5() {
+bool test5_Lua() {
     sol::state& lua = SDOM::Core::getInstance().getLua();
     auto pfr = lua.script(R"(
         local names = nil
@@ -256,18 +256,28 @@ bool test9_Lua() {
     return UnitTests::run("Lua: test # 9", "Lua-only event handler + synthetic click", [=]() { return ok; });
 }
 
+bool test10_lua()
+{
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+    auto ok = lua.script(R"(
+        Core:quit()
+    )").get<bool>();
+    return UnitTests::run("Lua: test #10", "Comprehensive Core Lua Wrappers", [=]() { return ok; });
+}
+
 bool LUA_UnitTests() {
     bool allTestsPassed = true;
     std::vector<std::function<bool()>> tests = {
-        [&]() { return test1(); },
-        [&]() { return test2(); },
-        [&]() { return test3(); },
-        [&]() { return test4(); },
-        [&]() { return test5(); },
+        [&]() { return test1_Lua(); },
+        [&]() { return test2_Lua(); },
+        [&]() { return test3_Lua(); },
+        [&]() { return test4_Lua(); },
+        [&]() { return test5_Lua(); },
         [&]() { return test6_Lua(); },
         [&]() { return test7_Lua(); },
         [&]() { return test8_Lua(); },
-        [&]() { return test9_Lua(); }
+        [&]() { return test9_Lua(); },
+        [&]() { return test10_lua(); }
     };
     for (auto& test : tests) {
         bool testResult = test();

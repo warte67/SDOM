@@ -111,13 +111,13 @@ namespace SDOM
         rootNode_ = factory_->getDomHandle(rootStageName);
         setWindowTitle("Stage: " + rootStageName);
 
-        // Debug: List all display objects in the factory
-        std::cout << "Factory display objects after configuration:\n";
-        for (const auto& pair : factory_->displayObjects_) {
-            std::cout << "Display Object name: " << pair.first
-                    << ", RawType: " << typeid(*pair.second).name()
-                    << ", Type: " << pair.second->getType() << std::endl;
-        }
+        // // Debug: List all display objects in the factory
+        // std::cout << "Factory display objects after configuration:\n";
+        // for (const auto& pair : factory_->displayObjects_) {
+        //     std::cout << "Display Object name: " << pair.first
+        //             << ", RawType: " << typeid(*pair.second).name()
+        //             << ", Type: " << pair.second->getType() << std::endl;
+        // }
     }
 
     void Core::configureFromLuaFile(const std::string& filename)
@@ -247,11 +247,11 @@ namespace SDOM
                 ERROR("Core::run() Error: Root node is null or not a valid Stage.");
                 return;
             }
-            else
-            {
-                std::cout << "Core::run() Root node is a valid Stage: " << rootStage->getName() << std::endl;
-                rootStage->printTree();
-            }
+            // else
+            // {
+            //     std::cout << "Core::run() Root node is a valid Stage: " << rootStage->getName() << std::endl;
+            //     rootStage->printTree();
+            // }
 
             // Now run user tests after initialization
             bool testsPassed = onUnitTest();
@@ -1067,9 +1067,13 @@ namespace SDOM
 
     void Core::_registerLua(const std::string& typeName, sol::state_view lua)
     {
-        std::string typeNameLocal = "Core";
-        std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+        if (DEBUG_REGISTER_LUA)
+        {
+            std::string typeNameLocal = "Core";
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+        }
+        
         // 1. Create and save usertype table (no constructor)
     sol::usertype<Core> objHandleType = lua.new_usertype<Core>(typeName, sol::no_constructor);
     // Bind commonly-used factory wrapper directly so Lua calls like

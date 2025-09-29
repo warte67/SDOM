@@ -17,10 +17,12 @@ namespace SDOM
 
     void DomHandle::_registerLua(const std::string& typeName, sol::state_view lua)
     {
-        std::string typeNameLocal = "DomHandle";
-        std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-
+        if (DEBUG_REGISTER_LUA)
+        {
+            std::string typeNameLocal = "DomHandle";
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                        << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+        }
         // 1. Create and save a dedicated DomHandle usertype (do NOT reuse the
         // concrete object typeName here - that would conflict with the
         // IDisplayObject usertype registration which uses the concrete

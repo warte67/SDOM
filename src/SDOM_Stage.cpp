@@ -81,10 +81,12 @@ namespace SDOM
 
     void Stage::_registerLua(const std::string& typeName, sol::state_view lua)
     {
-        std::string typeNameLocal = "Stage";
-        std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-
+        if (DEBUG_REGISTER_LUA)
+        {
+            std::string typeNameLocal = "Stage";
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                        << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+        }
         // 1. Create and save usertype table (no constructor)
         sol::usertype<Stage> objHandleType = lua.new_usertype<Stage>(typeName,
             sol::base_classes, sol::bases<SUPER>() );
