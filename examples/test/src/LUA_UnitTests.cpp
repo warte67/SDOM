@@ -233,17 +233,24 @@ bool test9_Lua() {
         -- register listener on the box
         bh:addEventListener({ type = EventType.MouseClick, listener = function(e) clicked = true end })
 
-    -- compute center in stage coords (use DomHandle forwarded methods)
-    local x = bh:getX() + bh:getWidth() / 2
-    local y = bh:getY() + bh:getHeight() / 2
+        -- compute center in stage coords (use DomHandle forwarded methods)
+        local x = bh:getX() + bh:getWidth() / 2
+        local y = bh:getY() + bh:getHeight() / 2
 
         -- push down/up and pump from Lua
         Core:pushMouseEvent({ x = x, y = y, type = "down", button = 1 })
         Core:pushMouseEvent({ x = x, y = y, type = "up", button = 1 })
         Core:pumpEventsOnce()
 
+        -- Click the Stage at 0, 0 to defocus the box
+        Core:pushMouseEvent({ x = 0, y = 0, type = "down", button = 1 })
+        Core:pushMouseEvent({ x = 0, y = 0, type = "up", button = 1 })
+        Core:pumpEventsOnce()
+
         return clicked
     )").get<bool>();
+
+    // SDOM::getCore().setKeyboardFocusedObject(SDOM::getStageHandle());
 
     bool ok = result;
     return UnitTests::run("Lua: test # 9", "Lua-only event handler + synthetic click", [=]() { return ok; });

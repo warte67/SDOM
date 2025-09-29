@@ -197,126 +197,29 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 
 - ### [September 28, 2025]
-    - Centralized Lua binding and registration work completed.
-        - The Factory now hosts a registry for Lua-exposed members and supports `registerLuaProperty`, `registerLuaCommand`, and `registerLuaFunction` for curated, centralized bindings.
-        - Bindings are applied in a two-phase approach: a minimal sol2 `usertype<T>` is created for each concrete/native type and then Factory-applied registry entries attach properties/commands/functions. The registry application was made idempotent so explicit usertype bindings are not overwritten.
-    - DomHandle and Core binding fixes.
-        - `DomHandle` is registered under the dedicated Lua name `"DomHandle"` and exposes direct usertype methods (`get`, `isValid`, `getName`, `getType`) as well as direct forwarding commands (`addChild`, `removeChild`, `hasChild`) implemented with the correct Lua colon-call signature (self, arg).
-        - `Core` exposes a minimal usertype and a global forwarder that boxes returned `DomHandle` values correctly (using `sol::make_object` / `sol::this_state`) so returned handles are usable in Lua without conversion errors.
-    - Sol2/runtime issues resolved.
-        - Fixed earlier runtime errors (attempt to call nil methods, userdata/stack-index mismatches) by harmonizing the expected Lua call signatures and ensuring returned handles are properly boxed.
-        - Removed temporary diagnostic prints added during the debugging cycles.
-    - Tests and status.
-        - Added a Lua regression test to the examples test harness. The Lua test suite (tests #1–#4: create, addChild, destroy/remove, binding roundtrip) runs as part of the test binary and currently reports all tests passing on the latest build.
-        - Status: All core C++ unit tests and the Lua-driven tests pass on the current master branch build.
+    - Centralized Lua bindings: Factory now maintains a registry (`registerLuaProperty` / `registerLuaCommand` / `registerLuaFunction`) and applies entries idempotently in a two‑phase process (create minimal sol2 usertype, then attach registry entries).
+    - Lua API & binding fixes: `DomHandle` and `Core` bindings improved (correct boxing/forwarding, colon-call signatures); EventType constants exposed; Sol2 runtime issues (nil-call/userdata mismatches) resolved.
+    - Test helpers: added `Core:pushMouseEvent({x,y,type,button})` and `Core:pumpEventsOnce()` so Lua can synthesize and dispatch SDL events deterministically.
+    - DomHandle Lua conveniences: `addEventListener` forwarding and simple getters (`getX`/`getY`/`getWidth`/`getHeight`) exposed to Lua.
+    - Box test scaffolding: added simple Box functions (doSomething, resetColor) and a click counter used by synthetic-event tests.
+    - Lua-driven tests added/updated:
+        - test5: getPropertyNamesForType("blueishBox")
+        - test6: getFunctionNamesForType("blueishBox")
+        - test7: getCommandNamesForType("blueishBox")
+        - test8: C++-synthesized MouseClick → Box listener
+        - test9: Lua-only listener + synthetic click (restores keyboard focus to Stage)
+    - Cleanup: removed temporary debug instrumentation and test-only Factory helpers.
+    - Status: All core C++ unit tests and Lua-driven tests pass locally.
 
-    - Next small steps (short term):
-        - Tidy informational registration prints (convert to controlled logging or remove) and document the canonical Lua-binding policy for contributors.
-        - Expand Lua examples and add more regression tests (invalid/nil handles, wrong-typed args, double-add/remove edge cases).
-
-
-
-
-# Next Steps:
-## Centralize Registration
-
-```cpp
-// Always use registerProperty() and registerCommand() in the
-// _registerLua_Properties and _registerLua_Commands implementations.
-// This ensures every property/command is tracked and exposed to Lua.
-
-void MyObject::_registerLua_Properties(sol::state_view lua) {
-    registerProperty("x", /* getter */, /* setter */);
-    registerProperty("y", /* getter */, /* setter */);
-    // ... more properties ...
-}
-
-void MyObject::_registerLua_Commands(sol::state_view lua) {
-    registerCommand("move", /* command */);
-    registerCommand("resize", /* command */);
-    // ... more commands ...
-}
-```
-
----
-
-## Expose Introspection to Lua
-
-```cpp
-// Add methods like getPropertyNames() and getCommandNames() to return the keys of the maps.
-// Register these methods in the Lua usertype so Lua scripts can enumerate all available properties and commands.
-
-std::vector<std::string> getPropertyNames() const {
-    std::vector<std::string> names;
-    for (const auto& kv : getters_) names.push_back(kv.first);
-    return names;
-}
-
-std::vector<std::string> getCommandNames() const {
-    std::vector<std::string> names;
-    for (const auto& kv : commands_) names.push_back(kv.first);
-    return names;
-}
-
-// Register in Lua usertype
-lua.new_usertype<IDataObject>("IDataObject",
-    "getPropertyNames", &IDataObject::getPropertyNames,
-    "getCommandNames", &IDataObject::getCommandNames,
-    // ...other methods...
-);
-```
-
----
-
-## Automate Lua Registration
-
-```cpp
-// In the _registerLua_Usertype, iterate over the maps and register getters/setters/commands with Sol2.
-// This keeps the Lua API and internal tracking in sync.
-
-virtual void _registerLua_Usertype(sol::state_view lua) override {
-    auto& obj = *this;
-    lua.new_usertype<IDataObject>("IDataObject",
-        // Introspection
-        "getPropertyNames", &IDataObject::getPropertyNames,
-        "getCommandNames", &IDataObject::getCommandNames,
-        // Properties
-        "getX", &IDataObject::getX,
-        "setX", &IDataObject::setX,
-        // ...automatically add all registered properties...
-        // Commands
-        "move", &IDataObject::move,
-        "resize", &IDataObject::resize
-        // ...automatically add all registered commands...
-    );
-}
-```
-
-
-
+# Next Steps (short term):
+- Continue testing ALL properties, commands, and functions in the `Lua_UnitTests`
+- Verify simple getters (`getX`/`getY`/`getWidth`/`getHeight`) are exposed correctly.
+- Tidy informational registration prints (convert to controlled logging or remove) and document the canonical Lua-binding policy for contributors. Thouroughly clean up comments and orphaned functions. 
+- Expand Lua examples and add more regression tests (invalid/nil handles, wrong-typed args, double-add/remove edge cases).
 
 # ToDo:
 - Expand Lua scripting examples and documentation.
-    - Add a user-side `Box_UnitTest()` Lua module as an example:
-        - Demonstrate generating multiple boxes in a for loop, removing them, and verifying results via Lua.
-        - Integrate this as a documented example for Lua-driven testing and automation.
-        - **Show how to call Lua test functions directly from C++ (e.g., from within `Box_UnitTests.cpp`):**
-            - Illustrate invoking Lua-defined test logic from C++ unit test functions.
-            - Document the pattern for integrating Lua-side tests with the C++ unit test framework.
-        - **Test the new `Factory::create(typeName, luaScript)` method in `Box_UnitTests`:**
-            - Add unit tests that create Box objects from InitStructs.
-            - Add unit tests that create Box objects from Lua script strings.
-            - Verify error handling for invalid Lua strings and correct creation for valid tables.
-- Add more interactive event tests (drag/drop, stacking, anchoring).
 - Continue improving resource management and garbage collection.
 - Plan for future language hooks (e.g., Python).
 - Maintain and update Doxygen and Markdown docs as features evolve.
 - Implement garbage_collection() for display objects.
-- Expand event system tests for Box objects.
-- Reintroduce IResourceObject into Factory.
-- Add more unit tests for Factory and event system.
-- Add language hook placeholders.
-- Add Doxygen comments for all public APIs.
-- Add unit tests for macros and exception handling.
-- Testing
-    - Add unit tests for macros and exception handling. 
