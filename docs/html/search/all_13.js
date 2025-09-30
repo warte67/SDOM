@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['language_20hooks_20python_20etc_0',['- Extensible for future language hooks (Python, etc.)',['../md_exposing__hooks.html#autotoc_md87',1,'']]],
+  ['layout_1',['Edge-Based Layout',['../md_display__object__anchoring.html#autotoc_md47',1,'']]],
+  ['leavefullscreen_2',['LeaveFullscreen',['../classSDOM_1_1EventType.html#aed0d07f388f2fc133dfe7fffcd9e2735',1,'SDOM::EventType']]],
+  ['left_3',['left',['../structSDOM_1_1Bounds.html#a34add0a44544f1592b60afd1bc2b3b34',1,'SDOM::Bounds::left'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a684d325a7303f52e64011467ff5c5758',1,'SDOM::LEFT']]],
+  ['left_5fbottom_4',['LEFT_BOTTOM',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a54adef06a90e8b0326376c0eaf7404b1',1,'SDOM']]],
+  ['left_5fmiddle_5',['LEFT_MIDDLE',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae68c8b7b353db96c91dfc435970b548b',1,'SDOM']]],
+  ['left_5ftop_6',['LEFT_TOP',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5eeb74f28a17e0cdf4b1661c80490df9',1,'SDOM']]],
+  ['level_7',['Runtime Flow (High Level)',['../md_architecture__overview.html#autotoc_md2',1,'']]],
+  ['like_20interface_20and_20hook_20design_8',['Modern COM-like Interface and Hook Design',['../md_exposing__hooks.html',1,'']]],
+  ['listdisplayobjectnames_9',['listdisplayobjectnames',['../classSDOM_1_1Core.html#af6de99673bf2fc316e654614aa9638e5',1,'SDOM::Core::listDisplayObjectNames()'],['../classSDOM_1_1Factory.html#addc3854eea35335491eab56a4f876411',1,'SDOM::Factory::listDisplayObjectNames()']]],
+  ['listdisplayobjectnames_5flua_10',['listDisplayObjectNames_lua',['../namespaceSDOM.html#a3fb8683f32ff1c87e1abafc470325a17',1,'SDOM']]],
+  ['lt_5fblue_11',['LT_BLUE',['../classCLR.html#ac9c88a575b06a832e68fe8d62c45135c',1,'CLR']]],
+  ['lt_5fcyan_12',['LT_CYAN',['../classCLR.html#a659340034a5aa7b2149ccc1888ceb694',1,'CLR']]],
+  ['lt_5fgrn_13',['LT_GRN',['../classCLR.html#ab42517ec56b3dc265e62bf4702302266',1,'CLR']]],
+  ['lua_14',['lua',['../md_scripting__and__configuration.html#autotoc_md157',1,'Example: Creating with Lua'],['../md_scripting__and__configuration.html#autotoc_md160',1,'SDOM API considerations for Lua']]],
+  ['lua_20c_15',['Scripting and Configuration (Lua &amp; C++)',['../md_scripting__and__configuration.html',1,'']]],
+  ['lua_20integration_16',['Next steps (Lua integration)',['../md_scripting__and__configuration.html#autotoc_md161',1,'']]],
+  ['lua_20integration_20with_20sol2_17',['Example: Lua Integration with Sol2',['../md_exposing__hooks.html#autotoc_md91',1,'']]],
+  ['lua_20script_20integration_18',['3. Lua/Script Integration',['../md_exposing__hooks.html#autotoc_md97',1,'']]],
+  ['lua_20scripts_19',['1. Initializer Structs and Lua Scripts',['../md_extensible__factory.html#autotoc_md109',1,'']]],
+  ['lua_5fcore_2ecpp_20',['lua_Core.cpp',['../lua__Core_8cpp.html',1,'']]],
+  ['lua_5fcore_2ehpp_21',['lua_Core.hpp',['../lua__Core_8hpp.html',1,'']]],
+  ['lua_5fidisplayobject_2ecpp_22',['lua_IDisplayObject.cpp',['../lua__IDisplayObject_8cpp.html',1,'']]],
+  ['lua_5fidisplayobject_2ehpp_23',['lua_IDisplayObject.hpp',['../lua__IDisplayObject_8hpp.html',1,'']]],
+  ['lua_5fvalue_5fcase_5finsensitive_24',['lua_value_case_insensitive',['../classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959',1,'SDOM::IDataObject']]]
+];
