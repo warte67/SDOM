@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['handle_20resolution_20flow_20reference_0',['Optional: Handle Resolution Flow (reference)',['../md_docs_2object__handles.html#autotoc_md148',1,'']]],
-  ['handle_20types_1',['Handle Types',['../md_docs_2object__handles.html#autotoc_md138',1,'']]],
+  ['handle_20resolution_20flow_20reference_0',['Optional: Handle Resolution Flow (reference)',['../md_docs_2object__handles.html#autotoc_md147',1,'']]],
+  ['handle_20types_1',['Handle Types',['../md_docs_2object__handles.html#autotoc_md137',1,'']]],
   ['handles_20in_20sdom_2',['Object Handles in SDOM',['../md_docs_2object__handles.html',1,'']]],
   ['handletabkeypress_3',['handleTabKeyPress',['../classSDOM_1_1Core.html#a9e424a1d0ce6f6327c6ac6c8102d8406',1,'SDOM::Core']]],
   ['handletabkeypress_5flua_4',['handleTabKeyPress_lua',['../namespaceSDOM.html#a2dbd105aa22f1927e971d549c4fd6667',1,'SDOM']]],

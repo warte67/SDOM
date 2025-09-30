@@ -93,15 +93,15 @@ $(document).ready(function(){initNavTree('md_docs_2progress.html',''); initResiz
   <div class="headertitle"><div class="title">Project Description and Development Progress</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md149"></a><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is a C++23 library built on SDL3 that brings a DOM‑like scene graph and GUI toolkit to 2D applications and games. The aim is a small, predictable core for layout, events, and rendering so SDL developers can compose interfaces and in‑game UI with familiar patterns and a minimal API surface.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md148"></a><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is a C++23 library built on SDL3 that brings a DOM‑like scene graph and GUI toolkit to 2D applications and games. The aim is a small, predictable core for layout, events, and rendering so SDL developers can compose interfaces and in‑game UI with familiar patterns and a minimal API surface.</p>
 <p>Architecturally, a single Core orchestrates the SDL runtime (window, renderer, main loop). A Stage serves as the root of the display tree, while an EventManager dispatches input through capture → target → bubble phases. The Factory registers, creates, and tracks resources and display objects by type and unique name, returning typed handles for safe references. Layout is driven by an edge‑based anchoring system that supports asymmetric, responsive designs.</p>
 <p>Scripting and configuration are first‑class with Lua via Sol2 to enable data‑driven scenes, rapid iteration, and test automation. You can also build everything directly in C++—Lua is optional—but when enabled it can construct objects, wire scenes, drive dialog, and swap stages at runtime without recompilation.</p>
 <p>The project emphasizes clear, living documentation. The Markdown design docs are working papers that evolve with the code. Expect them to change as features land and APIs are refined. Public APIs are defined in headers and surfaced via Doxygen, with correctness exercised by unit tests; if a doc briefly diverges from current behavior, treat the code as source‑of‑truth until the docs catch up. Diagrams are authored in Mermaid and exported to static SVG/PNG by the repo’s export pipeline, keeping visuals portable while ensuring the sources remain easy to edit. Progress updates will call out notable documentation changes, and contributions to clarify or correct docs are welcome.</p>
 <p>This page is the hub for progress. The “Progress Updates” below record milestones chronologically with context and notes; the “Next Steps” and “ToDo” sections outline near‑term priorities and open tracks. Check back to see what landed and what’s coming next—and feel free to open issues or proposals as the API stabilizes.</p>
-<h1><a class="anchor" id="autotoc_md150"></a>
+<h1><a class="anchor" id="autotoc_md149"></a>
 Scripting and Configuration</h1>
 <p>Lua (via Sol2) is first‑class but optional—you can script scenes and behavior in Lua, build everything in C++, or mix both. The Factory accepts <code>sol::table</code> configs alongside initializer structs, and Core’s lifecycle hooks make it easy to integrate scripts for iteration and tests. See the dedicated design doc for details and examples: <a class="el" href="md_docs_2scripting__and__configuration.html">Scripting and Configuration (Lua + C++)</a>.</p>
-<h1><a class="anchor" id="autotoc_md151"></a>
+<h1><a class="anchor" id="autotoc_md150"></a>
 Progress Updates</h1>
 <ul>
 <li><b>[July 2, 2025]</b> Initial rough draft and proof of concept.</li>
@@ -463,7 +463,7 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md152"></a>
+<h1><a class="anchor" id="autotoc_md151"></a>
 Next Steps (garbage collection / orphan retention)</h1>
 <p>Proposed approach: add an <code>OrphanRetentionPolicy</code> enum (or a smaller <code>retainOnOrphan</code> boolean for a quick win) on <code>IDisplayObject</code> and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.</p>
 <p>Recommended enum (suggested values):</p><ul>
@@ -482,7 +482,7 @@ Next Steps (garbage collection / orphan retention)</h1>
 <li><code>RetainUntilManual</code> objects should be visible in <code>Factory::listOrphanedObjects()</code> and only removed by explicit destroy.</li>
 <li>Add unit tests for each policy (auto destroy, grace window reparenting, retained objects resisting collection).</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md153"></a>
+<h1><a class="anchor" id="autotoc_md152"></a>
 ToDo:</h1>
 <ul>
 <li>Expand Lua examples and add more regression tests (invalid/nil handles, wrong-typed args, double-add/remove edge cases).</li>
@@ -492,7 +492,7 @@ ToDo:</h1>
 <li>Maintain and update Doxygen and Markdown docs as features evolve.</li>
 <li>Implement garbage_collection() for display objects.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md154"></a>
+<h2><a class="anchor" id="autotoc_md153"></a>
 Current repo/test state (summary)</h2>
 <p>DomHandle_UnitTests.cpp now contains:</p><ul>
 <li>A concise numeric mapping header above the DomHandle tests.</li>
