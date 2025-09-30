@@ -25,6 +25,7 @@ DomHandle myBoxHandle;
 bool DomHandle_Forwards_Reflection();
 // Forward declaration for priority overloads test
 bool DomHandle_Priority_Overloads_UnitTest();
+bool DomHandle_SortAndHighestLowest_UnitTest();
 
 bool test1_Lua() {
     sol::state& lua = SDOM::Core::getInstance().getLua();
@@ -565,7 +566,8 @@ bool LUA_UnitTests() {
         [&]() { return test19_lua(); }, // Mouse hover to blueishBox
     [&]() { return test20_lua(); }, // Verify get/setWindowTitle from Lua
     [&]() { return DomHandle_Forwards_Reflection(); },
-    [&]() { return DomHandle_Priority_Overloads_UnitTest(); }
+    [&]() { return DomHandle_Priority_Overloads_UnitTest(); },
+    [&]() { return DomHandle_SortAndHighestLowest_UnitTest(); }
     };
     for (auto& test : tests) {
         bool testResult = test();

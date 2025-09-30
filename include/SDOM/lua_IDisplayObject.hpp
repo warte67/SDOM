@@ -40,19 +40,20 @@ namespace SDOM
     IDisplayObject& setColor_lua(IDisplayObject& obj, const SDL_Color& color); // **VERIFIED**
 
     // --- Priority & Z-Order --- //
-    int getMaxPriority_lua(const IDisplayObject& obj);
-    int getMinPriority_lua(const IDisplayObject& obj);
-    int getPriority_lua(const IDisplayObject& obj);
-    IDisplayObject& setToHighestPriority_lua(IDisplayObject& obj);
-    IDisplayObject& setToLowestPriority_lua(IDisplayObject& obj);
-    IDisplayObject& sortChildrenByPriority_lua(IDisplayObject& obj);
-    IDisplayObject& setPriority_lua(IDisplayObject& obj, int priority);
-    std::vector<int> getChildrenPriorities_lua(const IDisplayObject& obj);
-    IDisplayObject& moveToTop_lua(IDisplayObject& obj);
-    int getZOrder_lua(const IDisplayObject& obj);
-    IDisplayObject& setZOrder_lua(IDisplayObject& obj, int z_order);
+    int getMaxPriority_lua(const IDisplayObject& obj); // **VERIFIED**
+    int getMinPriority_lua(const IDisplayObject& obj); // **VERIFIED**
+    int getPriority_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setToHighestPriority_lua(IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setToLowestPriority_lua(IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& sortChildrenByPriority_lua(IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setPriority_lua(IDisplayObject& obj, int priority); // **VERIFIED**
+    std::vector<int> getChildrenPriorities_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& moveToTop_lua(IDisplayObject& obj); // **VERIFIED**
+    int getZOrder_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setZOrder_lua(IDisplayObject& obj, int z_order); // **VERIFIED**
 
     // --- Focus & Interactivity --- //
+
     // NOTE: object-level convenience. Calling `h:setKeyboardFocus()` will invoke
     //       `IDisplayObject::setKeyboardFocus()` which sets Core's keyboard focus
     //       via a DomHandle constructed from the object's name/type. To set focus
@@ -72,6 +73,7 @@ namespace SDOM
     IDisplayObject& setVisible_lua(IDisplayObject& obj, bool visible);
 
     // --- Tab Management --- //
+    
     // NOTE: these are object-level/tab-instance helpers (operate on the specific
     //       IDisplayObject). Some tab-related operations are also performed at
     //       a higher/global level (e.g. by Core or the Factory) — when we

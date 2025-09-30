@@ -112,6 +112,10 @@ namespace SDOM
         virtual void _registerLua(const std::string& typeName, sol::state_view lua);
         sol::usertype<DomHandle> objHandleType_;
 
+    private:
+        // Resolve a Lua child spec (string, DomHandle, or table{ child=... | name=... })
+        static DomHandle resolveChildSpec(const sol::object& spec);
+
 
     }; // END class DomHandle
 

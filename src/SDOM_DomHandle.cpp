@@ -5,6 +5,27 @@
 
 namespace SDOM
 {
+    // Implementation of static helper declared in header
+    DomHandle DomHandle::resolveChildSpec(const sol::object& spec)
+    {
+        DomHandle resolved;
+        if (!spec.valid()) return resolved;
+        if (spec.is<std::string>()) {
+            resolved = Core::getInstance().getDisplayObjectHandle(spec.as<std::string>());
+        } else if (spec.is<DomHandle>()) {
+            resolved = spec.as<DomHandle>();
+        } else if (spec.is<sol::table>()) {
+            sol::table t = spec.as<sol::table>();
+            if (t["child"].valid()) {
+                if (t["child"].get_type() == sol::type::string) resolved = Core::getInstance().getDisplayObjectHandle(t["child"].get<std::string>());
+                else resolved = t["child"].get<DomHandle>();
+            } else if (t["name"].valid()) {
+                if (t["name"].get_type() == sol::type::string) resolved = Core::getInstance().getDisplayObjectHandle(t["name"].get<std::string>());
+            }
+        }
+        return resolved;
+    }
+
     IDisplayObject* SDOM::DomHandle::get() const 
     {
         if (!factory_) return nullptr;
@@ -164,6 +185,8 @@ namespace SDOM
             }
         };
 
+        // Child-spec resolver: use the centralized DomHandle::resolveChildSpec
+
         // Forwarded setParent: accept a DomHandle, a string name, or a table { parent = ... }
         objHandleType_["setParent"] = [](DomHandle& dh, sol::object arg) {
             IDisplayObject* child = dh.get();
@@ -207,7 +230,7 @@ namespace SDOM
         };
 
         // Forward addEventListener so DomHandle:addEventListener({...}) works from Lua
-        objHandleType_["addEventListener"] = [](DomHandle& dh, sol::object args) {
+    objHandleType_["addEventListener"] = [](DomHandle& dh, sol::object args) {
             IDisplayObject* target = dh.get();
             if (!target) return;
             if (!args.is<sol::table>()) return;
@@ -418,53 +441,54 @@ namespace SDOM
             std::vector<int> v = target->getChildrenPriorities();
             return sol::make_object(lua, v);
         };
-        objHandleType_["getZOrder"] = [](DomHandle& dh) -> int {
-            IDisplayObject* target = dh.get(); if (!target) return 0; return target->getZOrder(); };
-        objHandleType_["setZOrder"] = [](DomHandle& dh, sol::object arg) {
-            // Accept numeric (dh:setZOrder(5)) or table/handle to set z on a child: (dh:setZOrder(child, 5))
+        objHandleType_["getZOrder"] = [](DomHandle& dh) -> int { IDisplayObject* target = dh.get(); if (!target) return 0; return target->getZOrder(); };
+
+        objHandleType_["setZOrder"] = [](DomHandle& dh, sol::object arg, sol::optional<int> maybeZ) {
             IDisplayObject* target = dh.get(); if (!target) return;
-            if (arg.is<int>()) {
-                target->setZOrder(arg.as<int>());
-                return;
-            }
-            if (arg.is<sol::table>()) {
-                sol::table t = arg.as<sol::table>();
-                int z = t["z"] .get_or(0);
-                if (t["child"].valid()) {
-                    DomHandle child;
-                    if (t["child"].get_type() == sol::type::string) child = Core::getInstance().getDisplayObjectHandle(t["child"].get<std::string>());
-                    else child = t["child"].get<DomHandle>();
-                    if (child) if (auto* childObj = dynamic_cast<IDisplayObject*>(child.get())) childObj->setZOrder(z);
+            // Forms:
+            //  setZOrder(5)
+            //  setZOrder({ z = 5 })
+            //  setZOrder({ child = 'name', z = 5 })
+            //  setZOrder(childHandle, 5)
+            int z = 0;
+            DomHandle child;
+            if (maybeZ) {
+                z = *maybeZ;
+                child = DomHandle::resolveChildSpec(arg);
+            } else {
+                if (arg.is<int>()) z = arg.as<int>();
+                else if (arg.is<sol::table>()) {
+                    sol::table t = arg.as<sol::table>();
+                    z = t["z"].get_or(0);
+                    child = DomHandle::resolveChildSpec(arg);
                 } else {
-                    target->setZOrder(z);
+                    child = DomHandle::resolveChildSpec(arg);
                 }
-                return;
             }
-            if (arg.is<DomHandle>()) {
-                DomHandle child = arg.as<DomHandle>();
-                // no z provided; do nothing
-                (void)child;
+            if (child) {
+                if (auto* ch = dynamic_cast<IDisplayObject*>(child.get())) ch->setZOrder(z);
+            } else {
+                target->setZOrder(z);
             }
         };
 
         objHandleType_["setToHighestPriority"] = [](DomHandle& dh, sol::optional<sol::object> maybeSpec) {
-            IDisplayObject* target = dh.get(); if (!target) return;
-            if (!maybeSpec) { target->setToHighestPriority(); return; }
-            sol::object spec = *maybeSpec; DomHandle child;
-            if (spec.is<std::string>()) child = Core::getInstance().getDisplayObjectHandle(spec.as<std::string>());
-            else if (spec.is<DomHandle>()) child = spec.as<DomHandle>();
-            else if (spec.is<sol::table>()) { sol::table t = spec.as<sol::table>(); if (t["child"].valid()) { if (t["child"].get_type() == sol::type::string) child = Core::getInstance().getDisplayObjectHandle(t["child"].get<std::string>()); else child = t["child"].get<DomHandle>(); } }
+            if (!maybeSpec) { if (auto* t = dh.get()) t->setToHighestPriority(); return; }
+            DomHandle child = DomHandle::resolveChildSpec(*maybeSpec);
             if (child) if (auto* c = dynamic_cast<IDisplayObject*>(child.get())) c->setToHighestPriority();
         };
 
         objHandleType_["setToLowestPriority"] = [](DomHandle& dh, sol::optional<sol::object> maybeSpec) {
-            IDisplayObject* target = dh.get(); if (!target) return;
-            if (!maybeSpec) { target->setToLowestPriority(); return; }
-            sol::object spec = *maybeSpec; DomHandle child;
-            if (spec.is<std::string>()) child = Core::getInstance().getDisplayObjectHandle(spec.as<std::string>());
-            else if (spec.is<DomHandle>()) child = spec.as<DomHandle>();
-            else if (spec.is<sol::table>()) { sol::table t = spec.as<sol::table>(); if (t["child"].valid()) { if (t["child"].get_type() == sol::type::string) child = Core::getInstance().getDisplayObjectHandle(t["child"].get<std::string>()); else child = t["child"].get<DomHandle>(); } }
+            if (!maybeSpec) { if (auto* t = dh.get()) t->setToLowestPriority(); return; }
+            DomHandle child = DomHandle::resolveChildSpec(*maybeSpec);
             if (child) if (auto* c = dynamic_cast<IDisplayObject*>(child.get())) c->setToLowestPriority();
+        };
+
+        objHandleType_["sortChildrenByPriority"] = [](DomHandle& dh, sol::optional<sol::object> maybeSpec) {
+            // Optionally accept a child spec to indicate which parent's children to sort
+            if (!maybeSpec) { if (auto* t = dh.get()) t->sortChildrenByPriority(); return; }
+            DomHandle parent = DomHandle::resolveChildSpec(*maybeSpec);
+            if (parent) if (auto* p = dynamic_cast<IDisplayObject*>(parent.get())) p->sortChildrenByPriority();
         };
 
     // Finally, apply any remaining registry-driven properties/commands to
