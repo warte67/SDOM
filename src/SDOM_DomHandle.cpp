@@ -235,6 +235,27 @@ namespace SDOM
             return sol::make_object(lua, b);
         };
 
+        // Forward setBounds so DomHandle:setBounds({ left=..., top=..., right=..., bottom=... }) works from Lua
+        objHandleType_["setBounds"] = [](DomHandle& dh, sol::object args) {
+            IDisplayObject* target = dh.get();
+            if (!target) return;
+            if (!args.is<sol::table>()) return;
+            sol::table t = args.as<sol::table>();
+            Bounds b;
+            if (t[1].valid() && t[2].valid() && t[3].valid() && t[4].valid()) {
+                b.left = t[1].get<float>();
+                b.top = t[2].get<float>();
+                b.right = t[3].get<float>();
+                b.bottom = t[4].get<float>();
+            } else {
+                b.left = t["left"].get_or(0.0f);
+                b.top = t["top"].get_or(0.0f);
+                b.right = t["right"].get_or(0.0f);
+                b.bottom = t["bottom"].get_or(0.0f);
+            }
+            target->setBounds(b);
+        };
+
         // Forward setColor so DomHandle:setColor({ r=..., g=..., b=..., a=... }) works from Lua
         objHandleType_["setColor"] = [](DomHandle& dh, sol::object arg) {
             IDisplayObject* target = dh.get();
