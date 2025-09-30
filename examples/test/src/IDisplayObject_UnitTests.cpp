@@ -355,6 +355,101 @@ namespace SDOM
         });
     }
 
+    static bool test13_IDisplayObject(Factory* factory, std::string& dbgStr) {
+        return UnitTests::run("IDisplayObject: test # 13", "Lua priority getMax/getMin/getPriority", [factory, &dbgStr]() {
+            sol::state& lua = Core::getInstance().getLua();
+            sol::protected_function_result res = lua.script(R"(
+                -- create three boxes under stage for priority testing
+                local s = Core:getStageHandle()
+                Core:createDisplayObject('Box', { name = 'prioA', parent = s, type = 'Box' })
+                Core:createDisplayObject('Box', { name = 'prioB', parent = s, type = 'Box' })
+                Core:createDisplayObject('Box', { name = 'prioC', parent = s, type = 'Box' })
+                local a = Core:getDisplayObjectHandle('prioA')
+                local b = Core:getDisplayObjectHandle('prioB')
+                local c = Core:getDisplayObjectHandle('prioC')
+                if not a or not b or not c then return { ok = false, err = 'missing handles' } end
+                a:setPriority(1)
+                b:setPriority(5)
+                c:setPriority(3)
+                -- compute max/min from the three created children to avoid
+                -- interference from pre-existing objects on the stage
+                local max = math.max(a:getPriority(), b:getPriority(), c:getPriority())
+                local min = math.min(a:getPriority(), b:getPriority(), c:getPriority())
+                if max ~= 5 or min ~= 1 then return { ok = false, err = string.format('max/min mismatch (got %s/%s)', max, min) } end
+                if a:getPriority() ~= 1 or b:getPriority() ~= 5 or c:getPriority() ~= 3 then return { ok = false, err = 'child priority mismatch' } end
+                return { ok = true }
+            )");
+            if (!res.valid()) { sol::error err = res; dbgStr = std::string("Lua error in test13: ") + err.what(); return false; }
+            sol::table tret = res.get<sol::table>();
+            bool ok = tret["ok"].get_or(false);
+            if (!ok) { std::string err = tret["err"].get_or(std::string("unknown error")); dbgStr = std::string("Lua test13 failed: ") + err; return false; }
+            return true;
+        });
+    }
+
+    static bool test14_IDisplayObject(Factory* factory, std::string& dbgStr) {
+        return UnitTests::run("IDisplayObject: test # 14", "Lua setPriority/sortChildren/moveToTop and getChildrenPriorities", [factory, &dbgStr]() {
+            sol::state& lua = Core::getInstance().getLua();
+            sol::protected_function_result res = lua.script(R"(
+                local s = Core:getStageHandle()
+                -- reuse prioA/prioB/prioC created earlier (assume present)
+                local a = Core:getDisplayObjectHandle('prioA')
+                local b = Core:getDisplayObjectHandle('prioB')
+                local c = Core:getDisplayObjectHandle('prioC')
+                if not a or not b or not c then return { ok = false, err = 'missing handles' } end
+                -- bump prioA to top
+                a:setPriority(20)
+                -- sort children on stage and get priorities vector
+                s:sortChildrenByPriority()
+                local pri = s:getChildrenPriorities()
+                -- pri is an array; find highest value
+                local maxv = -999999
+                for i=1,#pri do if pri[i] > maxv then maxv = pri[i] end end
+                if maxv ~= a:getPriority() then return { ok = false, err = 'move to top via setPriority failed' } end
+                -- now move b to top via moveToTop
+                b:moveToTop()
+                s:sortChildrenByPriority()
+                pri = s:getChildrenPriorities()
+                maxv = -999999
+                for i=1,#pri do if pri[i] > maxv then maxv = pri[i] end end
+                if maxv ~= b:getPriority() then return { ok = false, err = 'moveToTop failed' } end
+                return { ok = true }
+            )");
+            if (!res.valid()) { sol::error err = res; dbgStr = std::string("Lua error in test14: ") + err.what(); return false; }
+            sol::table tret = res.get<sol::table>();
+            bool ok = tret["ok"].get_or(false);
+            if (!ok) { std::string err = tret["err"].get_or(std::string("unknown error")); dbgStr = std::string("Lua test14 failed: ") + err; return false; }
+            return true;
+        });
+    }
+
+    static bool test15_IDisplayObject(Factory* factory, std::string& dbgStr) {
+        return UnitTests::run("IDisplayObject: test # 15", "Lua setToHighest/setToLowest roundtrips", [factory, &dbgStr]() {
+            sol::state& lua = Core::getInstance().getLua();
+            sol::protected_function_result res = lua.script(R"(
+                local s = Core:getStageHandle()
+                local a = Core:getDisplayObjectHandle('prioA')
+                local b = Core:getDisplayObjectHandle('prioB')
+                if not a or not b then return { ok = false, err = 'missing handles' } end
+                -- record original priorities
+                local origA = a:getPriority()
+                local origB = b:getPriority()
+                a:setToHighestPriority()
+                b:setToLowestPriority()
+                if a:getPriority() <= b:getPriority() then return { ok = false, err = 'setToHighest/Lowest did not produce expected ordering' } end
+                -- restore
+                a:setPriority(origA)
+                b:setPriority(origB)
+                return { ok = true }
+            )");
+            if (!res.valid()) { sol::error err = res; dbgStr = std::string("Lua error in test15: ") + err.what(); return false; }
+            sol::table tret = res.get<sol::table>();
+            bool ok = tret["ok"].get_or(false);
+            if (!ok) { std::string err = tret["err"].get_or(std::string("unknown error")); dbgStr = std::string("Lua test15 failed: ") + err; return false; }
+            return true;
+        });
+    }
+
     bool IDisplayObject_UnitTests()
     {
         Core& core = getCore();
@@ -374,7 +469,10 @@ namespace SDOM
             [&]() { return  test9_IDisplayObject(factory, dbgStr); }, // Lua setParent test
             [&]() { return test10_IDisplayObject(factory, dbgStr); }, // Lua bounds test for blueishBox
             [&]() { return test11_IDisplayObject(factory, dbgStr); },  // Lua setBounds/getX/getY/getWidth/getHeight and edges
-            [&]() { return test12_IDisplayObject(factory, dbgStr); }  // Lua getColor/setColor roundtrip
+            [&]() { return test12_IDisplayObject(factory, dbgStr); },  // Lua getColor/setColor roundtrip
+            [&]() { return test13_IDisplayObject(factory, dbgStr); },
+            [&]() { return test14_IDisplayObject(factory, dbgStr); },
+            [&]() { return test15_IDisplayObject(factory, dbgStr); }
         };
 
         for (auto &t : tests) {

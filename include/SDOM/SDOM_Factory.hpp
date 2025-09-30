@@ -35,6 +35,11 @@ namespace SDOM
         DomHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);        
         DomHandle create(const std::string& typeName, const std::string& luaScript);
 
+    // Helper: attach a newly-created display object (by name/type) to a
+    // parent specified in a Lua config value. Accepts string name, DomHandle,
+    // or a nested table { parent = ... }. Returns true if attachment occurred.
+    bool attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig);
+
         // --- Object Lookup --- //
         IDisplayObject* getDomObj(const std::string& name);
         IResourceObject* getResObj(const std::string& name);
@@ -118,22 +123,25 @@ namespace SDOM
         };
 
         void registerLuaProperty(const std::string& typeName,
-                                const std::string& propertyName,
-                                IDataObject::Getter getter,
-                                IDataObject::Setter setter);
+                            const std::string& propertyName,
+                            IDataObject::Getter getter,
+                            IDataObject::Setter setter);
 
         void registerLuaCommand(const std::string& typeName,
                             const std::string& commandName,
                             IDataObject::Command command);    
 
         void registerLuaFunction(const std::string& typeName,
-                    const std::string& functionName,
-                    IDataObject::Function function);
+                            const std::string& functionName,
+                            IDataObject::Function function);
 
         ObjectTypeRegistryEntry* getTypeRegistryEntry(const std::string& typeName);
-        ObjectTypeRegistryEntry::PropertyEntry* getPropertyEntry(const std::string& typeName, const std::string& propertyName);
-        ObjectTypeRegistryEntry::CommandEntry* getCommandEntry(const std::string& typeName, const std::string& commandName);
-        ObjectTypeRegistryEntry::FunctionEntry* getFunctionEntry(const std::string& typeName, const std::string& functionName);
+        ObjectTypeRegistryEntry::PropertyEntry* getPropertyEntry(
+                            const std::string& typeName, const std::string& propertyName);
+        ObjectTypeRegistryEntry::CommandEntry* getCommandEntry(
+                            const std::string& typeName, const std::string& commandName);
+        ObjectTypeRegistryEntry::FunctionEntry* getFunctionEntry(
+                            const std::string& typeName, const std::string& functionName);
 
     // Deprecated: test-only registration removed. Concrete types should
     // populate the Factory registry during their own Lua registration.

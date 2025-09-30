@@ -21,6 +21,11 @@ namespace SDOM {
 
 DomHandle myBoxHandle;
 
+// Forward declaration for reflection test implemented in a separate file
+bool DomHandle_Forwards_Reflection();
+// Forward declaration for priority overloads test
+bool DomHandle_Priority_Overloads_UnitTest();
+
 bool test1_Lua() {
     sol::state& lua = SDOM::Core::getInstance().getLua();
     sol::object handle_obj = lua.script(R"(
@@ -558,7 +563,9 @@ bool LUA_UnitTests() {
         [&]() { return test17_lua(); }, // Remove focusA/focusB from stage and verify
         [&]() { return test18_lua(); }, // Factory contains focusA/focusB as orphans (removed).
         [&]() { return test19_lua(); }, // Mouse hover to blueishBox
-        [&]() { return test20_lua(); }  // Verify get/setWindowTitle from Lua
+    [&]() { return test20_lua(); }, // Verify get/setWindowTitle from Lua
+    [&]() { return DomHandle_Forwards_Reflection(); },
+    [&]() { return DomHandle_Priority_Overloads_UnitTest(); }
     };
     for (auto& test : tests) {
         bool testResult = test();

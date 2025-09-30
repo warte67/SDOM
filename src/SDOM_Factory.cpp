@@ -206,6 +206,11 @@ namespace SDOM
             // --- Finally initialize the display object ---
             displayObjects_[name]->onInit();
 
+            // If the Lua config included a parent, attach this new object to it
+            if (config["parent"].valid()) {
+                attachCreatedObjectToParentFromConfig(name, typeName, config["parent"]);
+            }
+
             return DomHandle(name, typeName);
         }
         return DomHandle(); // Invalid handle
@@ -244,6 +249,31 @@ namespace SDOM
 
         sol::table config = result.as<sol::table>();
         return create(typeName, config);
+    }
+
+    bool Factory::attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig)
+    {
+        DomHandle parentHandle;
+        if (parentConfig.is<std::string>()) {
+            parentHandle = getDomHandle(parentConfig.as<std::string>());
+        } else if (parentConfig.is<DomHandle>()) {
+            parentHandle = parentConfig.as<DomHandle>();
+        } else if (parentConfig.is<sol::table>()) {
+            sol::table t = parentConfig.as<sol::table>();
+            if (t["parent"].valid()) {
+                if (t["parent"].get_type() == sol::type::string) parentHandle = getDomHandle(t["parent"].get<std::string>());
+                else parentHandle = t["parent"].get<DomHandle>();
+            }
+        }
+
+        if (!parentHandle || !parentHandle.get()) return false;
+
+        if (auto* newParentObj = dynamic_cast<IDisplayObject*>(parentHandle.get())) {
+            // Use addChild to ensure parent/child bookkeeping and ordering occurs
+            newParentObj->addChild(DomHandle(name, typeName));
+            return true;
+        }
+        return false;
     }
 
 
