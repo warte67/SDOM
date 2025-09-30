@@ -48,7 +48,24 @@ namespace SDOM
                 "height", sol::property([](const Bounds& b) { return static_cast<int>(b.height()); }),
                 // Also expose float getters if users want the precise values
                 "widthf", &Bounds::width,
-                "heightf", &Bounds::height
+                "heightf", &Bounds::height,
+                // Method-style getters for Lua (b:getLeft(), b:getX(), ...)
+                "getLeft", [](const Bounds& b) { return b.left; },
+                "getTop", [](const Bounds& b) { return b.top; },
+                "getRight", [](const Bounds& b) { return b.right; },
+                "getBottom", [](const Bounds& b) { return b.bottom; },
+                "getX", [](const Bounds& b) { return static_cast<int>(b.left); },
+                "getY", [](const Bounds& b) { return static_cast<int>(b.top); },
+                "getWidth", [](const Bounds& b) { return static_cast<int>(b.width()); },
+                "getHeight", [](const Bounds& b) { return static_cast<int>(b.height()); },
+                // epsilon-aware comparison helper: b:almostEqual(other, eps)
+                "almostEqual", [](const Bounds& a, const Bounds& other, sol::optional<float> eps) {
+                    float e = eps ? *eps : 0.0001f;
+                    return std::abs(a.left - other.left) <= e
+                        && std::abs(a.top - other.top) <= e
+                        && std::abs(a.right - other.right) <= e
+                        && std::abs(a.bottom - other.bottom) <= e;
+                }
             );
         }
 
@@ -225,6 +242,15 @@ namespace SDOM
             IDisplayObject* target = dh.get(); if (!target) return 0; return target->getWidth(); };
         objHandleType_["getHeight"] = [](DomHandle& dh) -> int {
             IDisplayObject* target = dh.get(); if (!target) return 0; return target->getHeight(); };
+        // Edge getters
+        objHandleType_["getLeft"] = [](DomHandle& dh) -> float {
+            IDisplayObject* target = dh.get(); if (!target) return 0.0f; return target->getLeft(); };
+        objHandleType_["getTop"] = [](DomHandle& dh) -> float {
+            IDisplayObject* target = dh.get(); if (!target) return 0.0f; return target->getTop(); };
+        objHandleType_["getRight"] = [](DomHandle& dh) -> float {
+            IDisplayObject* target = dh.get(); if (!target) return 0.0f; return target->getRight(); };
+        objHandleType_["getBottom"] = [](DomHandle& dh) -> float {
+            IDisplayObject* target = dh.get(); if (!target) return 0.0f; return target->getBottom(); };
 
         // getBounds returns a Bounds userdata (was previously a plain table)
         objHandleType_["getBounds"] = [](sol::this_state ts, DomHandle& dh) -> sol::object {

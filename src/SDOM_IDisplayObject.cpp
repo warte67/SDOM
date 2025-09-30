@@ -159,7 +159,24 @@ namespace SDOM
                 "width", sol::property([](const Bounds& b) { return static_cast<int>(b.width()); }),
                 "height", sol::property([](const Bounds& b) { return static_cast<int>(b.height()); }),
                 "widthf", &Bounds::width,
-                "heightf", &Bounds::height
+                "heightf", &Bounds::height,
+                // Method-style getters
+                "getLeft", [](const Bounds& b) { return b.left; },
+                "getTop", [](const Bounds& b) { return b.top; },
+                "getRight", [](const Bounds& b) { return b.right; },
+                "getBottom", [](const Bounds& b) { return b.bottom; },
+                "getX", [](const Bounds& b) { return static_cast<int>(b.left); },
+                "getY", [](const Bounds& b) { return static_cast<int>(b.top); },
+                "getWidth", [](const Bounds& b) { return static_cast<int>(b.width()); },
+                "getHeight", [](const Bounds& b) { return static_cast<int>(b.height()); },
+                // epsilon-aware comparison helper
+                "almostEqual", [](const Bounds& a, const Bounds& other, sol::optional<float> eps) {
+                    float e = eps ? *eps : 0.0001f;
+                    return std::abs(a.left - other.left) <= e
+                        && std::abs(a.top - other.top) <= e
+                        && std::abs(a.right - other.right) <= e
+                        && std::abs(a.bottom - other.bottom) <= e;
+                }
             );
         }
 

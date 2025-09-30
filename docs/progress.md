@@ -242,7 +242,13 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Completed verification of Core/Factory Lua wrapper coverage (get/set window title, event helpers, DomHandle forwards, focus/hover helpers, object lookup, and orphan management commands exposed to Lua).
         - Added `test20_lua` which validates `Core:getWindowTitle()` and `Core:setWindowTitle()` round-trip behavior; the `examples/test/prog` test binary builds and runs with the new test.
         - As requested, the `clearFactory` Lua binding was removed (it can be reintroduced later if needed).
-        
+    - **Lua Bounds / DomHandle updates (today):**
+        - Exposed a typed `Bounds` userdata to Lua (fields: `left/top/right/bottom`, integer/float helpers) and added method-style getters (`getLeft`/`getTop`/`getRight`/`getBottom`/`getX`/`getY`/`getWidth`/`getHeight`) plus an epsilon-aware helper `almostEqual(a,b,eps?)` for robust comparisons.
+        - Synchronized `Bounds` registrations so both `DomHandle` and `IDisplayObject` present a consistent Lua API.
+        - Added/updated DomHandle forwards so Lua can call `h:getBounds()` (returns `Bounds` userdata) and `h:setBounds({...})` (accepts a Lua table), and added edge getters (`getLeft`/`getTop`/`getRight`/`getBottom`) on the handle.
+        - Reworked the IDisplayObject unit tests: made `test10` a Lua-only bounds comparison and added `test11` to drive `setBounds` from Lua and verify `getX`/`getY`/`getWidth`/`getHeight` and edge getters.
+        - Verified the change by building (`./compile`) and running the test binary (`./prog`); all unit tests passed locally.
+    
 
 # Next Steps (short term):
 - Continue testing ALL properties, commands, and functions in the `Lua_UnitTests`

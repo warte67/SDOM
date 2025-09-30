@@ -287,13 +287,11 @@ namespace SDOM
                     return { ok = false, err = string.format('getX/Y/Width/Height mismatch (got %s,%s,%s,%s expected %s,%s,%s,%s)', gx, gy, gw, gh, newX, newY, newW, newH) }
                 end
 
-                -- secondary check: verify left/top/right/bottom via getBounds()
-                local b = h:getBounds()
-                if not b then return { ok = false, err = 'getBounds returned nil' } end
-                local left = b.left or b.x
-                local top = b.top or b.y
-                local right = b.right or (left + (b.width or (b.right - b.left)))
-                local bottom = b.bottom or (top + (b.height or (b.bottom - b.top)))
+                -- secondary check: verify left/top/right/bottom via direct getters
+                local left = h:getLeft()
+                local top = h:getTop()
+                local right = h:getRight()
+                local bottom = h:getBottom()
                 if left ~= newX or top ~= newY or right ~= (newX + newW) or bottom ~= (newY + newH) then
                     return { ok = false, err = string.format('edges mismatch (got l=%s t=%s r=%s b=%s expected l=%s t=%s r=%s b=%s)', left, top, right, bottom, newX, newY, newX+newW, newY+newH) }
                 end
