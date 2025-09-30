@@ -4,8 +4,8 @@ var structSDOM_1_1Bounds =
     [ "operator!=", "structSDOM_1_1Bounds.html#a7864b672b8a72369c15c205ab88eb30b", null ],
     [ "operator==", "structSDOM_1_1Bounds.html#a1ffe30fdc9d75e2c608af7ae6f606249", null ],
     [ "width", "structSDOM_1_1Bounds.html#abc92186d5199c0e106509d7ab73ef85b", null ],
-    [ "bottom", "structSDOM_1_1Bounds.html#a9f7ce48d21c84daffa17b83355f51481", null ],
-    [ "left", "structSDOM_1_1Bounds.html#a34add0a44544f1592b60afd1bc2b3b34", null ],
-    [ "right", "structSDOM_1_1Bounds.html#a94c040502f6cc3d683a928756708db4d", null ],
-    [ "top", "structSDOM_1_1Bounds.html#a72ba4e16fc0c562d45eb7c8440196bc0", null ]
+    [ "bottom", "structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99", null ],
+    [ "left", "structSDOM_1_1Bounds.html#a5268f1526e83122173b7de40f83ac7c4", null ],
+    [ "right", "structSDOM_1_1Bounds.html#a7e4aba8aee2989c0b5166aebf258674f", null ],
+    [ "top", "structSDOM_1_1Bounds.html#a449f1728a2b4af1c8153b685518cdcb9", null ]
 ];

@@ -1,1 +1,15 @@
+sequenceDiagram
+    autonumber
+    participant User as API Caller
+    participant Child as DisplayObject
+    participant Parent as Parent
+    participant Layout as Layout/Anchoring
+
+    User->>Child: setAnchorLeft(newAp)
+    Child->>Layout: request anchor change
+    Layout->>Parent: get parent_anchor_x for newAp
+    Layout->>Child: get current world edges\n(getLeft/Right/Top/Bottom)
+    Note over Layout,Child: Recalculate only the affected local offset\nso the world edge stays fixed
+    Layout-->>Child: left_ = world_left - parent_anchor_x
+    Child-->>User: done (no visual jump)
 

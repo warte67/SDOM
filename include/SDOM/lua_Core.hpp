@@ -12,14 +12,30 @@ namespace SDOM
 	// --- Main Loop & Event Dispatch --- //
 	void quit_lua(Core& core); // **verified**
 	void shutdown_lua(Core& core); // **verified**
+	void run_lua(Core& core); // **verified**
+
+	void configure_lua(const sol::table& config);
+	void configureFromFile_lua(const std::string& filename);
+
+	// --- Callback/Hook Registration --- //
+	void registerOnInit_lua(std::function<bool()> fn);
+	void registerOnQuit_lua(std::function<void()> fn);
+	void registerOnUpdate_lua(std::function<void(float)> fn);
+	void registerOnEvent_lua(std::function<void(const Event&)> fn);
+	void registerOnRender_lua(std::function<void()> fn);
+	void registerOnUnitTest_lua(std::function<bool()> fn);
+	void registerOnWindowResize_lua(std::function<void(int, int)> fn);
+
+	// Generic registration helper: registerOn("Init"|"Update"|...) from Lua
+	void registerOn_lua(const std::string& name, const sol::function& f);
 
 	// --- Stage/Root Node Management --- //
-		void setRootNodeByName_lua(Core& core, const std::string& name); // **verified**
-		void setRootNodeByHandle_lua(Core& core, const DomHandle& handle); // **verified**
-		void setStage_lua(Core& core, const std::string& name); // **verified**
-		IDisplayObject* getRootNodePtr_lua(Core& core); // **verified**
-		DomHandle getRootNode_lua(Core& core); // **verified**
-		DomHandle getStageHandle_lua(Core& core); // **verified**
+	void setRootNodeByName_lua(Core& core, const std::string& name); // **verified**
+	void setRootNodeByHandle_lua(Core& core, const DomHandle& handle); // **verified**
+	void setStage_lua(Core& core, const std::string& name); // **verified**
+	IDisplayObject* getRootNodePtr_lua(Core& core); // **verified**
+	DomHandle getRootNode_lua(Core& core); // **verified**
+	DomHandle getStageHandle_lua(Core& core); // **verified**
 
 	// --- Factory & EventManager Access --- //
 	bool getIsTraversing_lua(const Core& core); // **verified**

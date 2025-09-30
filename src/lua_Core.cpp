@@ -100,6 +100,55 @@ void pushKeyboardEvent_lua(Core& core, const sol::object& args) {
 	void quit_lua(Core& core) { core.quit(); }
 	void shutdown_lua(Core& core) { core.shutdown(); }
 
+	// Start the main loop from Lua. This calls Core::run() on the singleton
+	void run_lua(Core& core) { core.run(); }
+
+	// Configuration from Lua table
+	void configure_lua(const sol::table& config) {
+		Core::getInstance().configureFromLua(config);
+	}
+	// Configuration from Lua file
+	void configureFromFile_lua(const std::string& filename) {
+		Core::getInstance().configureFromLuaFile(filename);
+	}
+
+	// --- Callback/Hook Registration --- //
+	void registerOnInit_lua(std::function<bool()> fn) { getCore()._fnOnInit(fn); }
+	void registerOnQuit_lua(std::function<void()> fn) { getCore()._fnOnQuit(fn); }
+	void registerOnUpdate_lua(std::function<void(float)> fn) { getCore()._fnOnUpdate(fn); }
+	void registerOnEvent_lua(std::function<void(const Event&)> fn) { getCore()._fnOnEvent(fn); }
+	void registerOnRender_lua(std::function<void()> fn) { getCore()._fnOnRender(fn); }
+	void registerOnUnitTest_lua(std::function<bool()> fn) { getCore()._fnOnUnitTest(fn); }
+	void registerOnWindowResize_lua(std::function<void(int, int)> fn) { getCore()._fnOnWindowResize(fn); }
+
+	// Generic registration helper so Lua can call: Core:registerOn("Update", function(dt) ... end)
+	void registerOn_lua(const std::string& name, const sol::function& f)
+	{
+		// Wrap the lua function into a protected function for safety
+		sol::protected_function pf = f;
+		if (name == "Init") {
+			registerOnInit_lua([pf]() -> bool {
+				sol::protected_function_result r = pf();
+				if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnInit error: ") + err.what()); return false; }
+				try { return r.get<bool>(); } catch (...) { return false; }
+			});
+		} else if (name == "Quit") {
+			registerOnQuit_lua([pf]() { sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } });
+		} else if (name == "Update") {
+			registerOnUpdate_lua([pf](float dt) { sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } });
+		} else if (name == "Event") {
+			registerOnEvent_lua([pf](const Event& e) { sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } });
+		} else if (name == "Render") {
+			registerOnRender_lua([pf]() { sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } });
+		} else if (name == "UnitTest") {
+			registerOnUnitTest_lua([pf]() -> bool { sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
+		} else if (name == "WindowResize") {
+			registerOnWindowResize_lua([pf](int w, int h) { sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } });
+		} else {
+			ERROR("Unknown registerOn name: " + name);
+		}
+	}
+
 	// --- Stage/Root Node Management --- //
 	void setRootNodeByName_lua(Core& core, const std::string& name) { core.setRootNode(name); }
 	void setRootNodeByHandle_lua(Core& core, const DomHandle& handle) { core.setRootNode(handle); }

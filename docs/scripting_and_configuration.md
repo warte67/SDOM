@@ -72,3 +72,23 @@ Design docs are living and may evolve. When in doubt, defer to headers/Doxygen a
 - Wire lifecycle hooks (`onInit`, `onUpdate`, `onEvent`, `onRender`, `onUnitTests`) to optional Lua functions.
 - Provide typed creator helpers and validation for common objects (e.g., Box, Label).
 - Add unit tests that load Lua scripts to validate creation, events, and anchoring.
+
+## Module-style configuration and lifecycle registration (recommended)
+
+SDOM supports module-style Lua configuration files that return a `config` table. This keeps globals out of the Lua namespace and is the recommended pattern for portable configs:
+
+```lua
+local config = {
+	Core = { windowWidth = 1024, windowHeight = 768, ... }
+}
+-- Register lifecycle callbacks
+Core:registerOn("Init", function() print("OnInit") end)
+Core:registerOn("Update", function(dt) end)
+
+return config
+```
+
+Notes:
+- The embedded Core Lua state exposes `Core`, `CLR`, and unit-test helpers. The `Core:registerOn(name, fn)` helper accepts short names (Init, Quit, Update, Event, Render, UnitTest, WindowResize) and binds the provided Lua function as a protected callback.
+- Config files may either return the config table (preferred) or set a global `config` (legacy). The host will prefer the returned table and fall back to the global.
+- If you rely on `require` for modular callbacks, ensure `package.path` is set appropriately (examples set a project-relative path in `examples/test/lua/config.lua`).

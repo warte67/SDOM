@@ -6,7 +6,7 @@ At the center is Core, a singleton that configures the system, owns the SDL wind
 
 Creation and lifetime of objects flow through the Factory. Types register themselves once; clients ask the Factory to create by type/name. The Factory maintains a name → pointer registry and returns typed handles rather than raw pointers, which decouples producers of references from the owners of objects. This design makes it straightforward to swap or reload resources, test in isolation, and build tools around a stable naming scheme.
 
-The library integrates cleanly into CMake-based applications as a static archive (libSDOM.a), with an examples/test/prog illustrating usage. External dependencies focus on the SDL3 family (video, image, ttf, mixer). Scripting and data-driven workflows can be layered on top—Lua via sol2 is supported—while configuration can be provided by your preferred format. The result is a small, composable core with clear extension points and a predictable runtime model.
+The library integrates cleanly into CMake-based applications as a static archive (libSDOM.a), with an examples/test/prog illustrating usage. External dependencies focus on the SDL3 family (video, image, ttf, mixer). Scripting and configuration are implemented with Lua (via sol2). All data‑driven workflows and object creation use Lua tables and scripts; JSON configuration is no longer supported. The result is a small, composable core with clear extension points and a predictable runtime model.
 
 ![Architecture Diagram](diagrams/architecture_overview/diagram-01.svg)
 
@@ -93,9 +93,8 @@ flowchart TB
     SDLimg[SDL3_image]:::dep
     SDLttf[SDL3_ttf]:::dep
     SDLmix[SDL3_mixer]:::dep
-    JSON[nlohmann/json]:::dep
-    Sol2[sol2]:::dep
-    Lua[Lua 5.3/5.4]:::dep
+  Sol2[sol2]:::dep
+  Lua[Lua 5.3/5.4]:::dep
   end
 
   %% Edges between areas
@@ -104,7 +103,6 @@ flowchart TB
   Core --> SDLttf
   Core --> SDLmix
 
-  LIB -. uses .-> JSON
   LIB -. optional: bindings .-> Sol2
   Sol2 -. links .-> Lua
 
@@ -118,7 +116,17 @@ Notes
 - Core composes the SDL video subsystem (window, renderer, main texture) and orchestrates the main loop and callbacks.
 - Factory owns and manages both display objects (IDisplayObject) and resource objects (IResourceObject), exposing safe handles for references.
 - EventManager implements capture → target → bubble propagation phases across the display tree.
-- External dependencies include SDL3 family, nlohmann/json, and optionally sol2 + Lua for scripting.
+- External dependencies include the SDL3 family and sol2 + Lua for scripting.
+
+### Migration note: JSON → Lua
+
+SDOM has moved to a Lua-first configuration and scripting model. Native JSON-based configuration (via nlohmann/json) is no longer included. To migrate existing JSON files:
+
+- Convert JSON objects into Lua modules that return tables (for example, JSON `{ "title": "MyApp", "size": [800,600] }` becomes a Lua file that returns `{"title" = "MyApp", size = {800, 600}}`).
+- Arrays in JSON map to numeric-keyed Lua tables; primitives map directly (strings, numbers, booleans).
+- Load configurations from Lua using `require`, `dofile`, or by using the Core-provided Lua state.
+
+For bulk conversions, a small script (Python, Node, or Lua) that reads JSON and emits equivalent Lua table source is recommended. If you need runtime JSON parsing instead of converting files, add a Lua JSON library to your application — SDOM no longer bundles one by default.
 
 ---
 

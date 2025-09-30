@@ -10,7 +10,7 @@ Propagation refers to the process by which changes, events, or updates move thro
 
 To prevent these issues, SDOM defers add/remove actions during traversal, applying them only after traversal completes. Outside of traversal (such as during initialization or setup), nodes can be added or removed immediately, allowing real-time construction and adjustment of the DOM tree.
 
-This document outlines the three main types of DOM traversal and propagation strategies used in SDOM, their responsibilities, and where they are implemented in the architecture.
+This document outlines the four main types of DOM traversal and propagation strategies used in SDOM, their responsibilities, and where they are implemented in the architecture.
 
 ---
 
@@ -111,11 +111,40 @@ To ensure safe modification of the DOM tree during traversal, all three traversa
 This approach maintains the integrity of the DOM tree and event system, preventing undefined behavior and race conditions during traversal.
 
 **Note on Initialization and Active Nodes:**
-During initialization (such as building the DOM tree from JSON or manual setup), the `isTraversing` flag should be false, allowing immediate parent/child modifications. This enables real-time adjustment of relationships as nodes are created and attached, without waiting for a deferred update cycle.
+During initialization (such as building the DOM tree from Lua modules or manual setup), the `isTraversing` flag should be false, allowing immediate parent/child modifications. This enables real-time adjustment of relationships as nodes are created and attached, without waiting for a deferred update cycle.
 
 However, when a node is active (i.e., it is the current target during DOM traversal or event handling), any add/remove child actions will be deferred until traversal completes. For example, if a `Button` object responds to a `MouseClick` event in its `Button::onEvent()` method, it can request add/remove actions on other nodes, but these changes will not take effect until the next update cycle after traversal ends.
 
 The `onEvent()` method can poll the traversal state (e.g., via `Core::getIsTraversing()`) to determine whether changes will be immediate or deferred. This allows event handlers to request structural changes, knowing they will be safely applied after traversal, and that any new links or removals will only be reflected in the DOM tree on the next cycle.
+
+### Deferred actions processing (pseudo)
+When traversal completes, process the deferred queue with validation. Example pseudocode:
+
+```cpp
+// thread-safe deferred queue processing (single-consumer expected)
+void processDeferred() {
+  std::lock_guard<std::mutex> lk(deferredMutex);
+  while (!deferredQueue.empty()) {
+    auto req = std::move(deferredQueue.front());
+    deferredQueue.pop();
+
+    // Validate target and operation
+    if (!isValid(req.target)) {
+      DEBUG_LOG("Deferred request target invalid: " << req.describe());
+      continue;
+    }
+
+    // Apply the change (add/remove/replace)
+    applyRequest(req);
+  }
+}
+```
+
+Processing should run on the main thread immediately after traversal finishes (or at a deterministic point in the update loop). If an operation cannot be applied (target destroyed, invalid parent, etc.), log and skip the request rather than crashing.
+
+### Thread-safety notes
+- Use an atomic ``isTraversing`` or protect traversal state with a mutex when multiple threads may read/write this flag.
+- Protect the deferred request queue with a mutex; prefer a single consumer (the main thread) to avoid complex synchronization.
 
 Traversal safety checks only apply during active traversal phases (rendering, event propagation, etc.).
 
@@ -126,6 +155,23 @@ Traversal safety checks only apply during active traversal phases (rendering, ev
 - **Factory**: Handles global resource traversal (Type 3).
 
 This separation ensures modularity, maintainability, and clarity in the codebase. Each traversal type can be extended or optimized independently.
+
+## Migration note
+If you previously used JSON to programmatically build a DOM (for example, exported from design tools), convert those configuration files into Lua modules that return tables. Lua modules are easier to compose, can contain helper logic, and integrate directly with the runtime Lua state.
+
+Example JSON → Lua mapping:
+
+JSON:
+```json
+{ "type": "Button", "x": 10, "y": 10 }
+```
+
+Lua module:
+```lua
+return { type = "Button", x = 10, y = 10 }
+```
+
+For bulk conversions, a small script to read JSON and write `.lua` files is recommended; alternatively, add a Lua JSON library to your runtime if you must parse JSON at runtime.
 
 
 **Note on Deferred Request Validation (Future Consideration):**

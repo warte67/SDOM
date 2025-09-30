@@ -44,140 +44,26 @@ int main()
 
     // Fetch the Core singleton
     Core& core = getCore();
+    // Use Core's Lua state
+    sol::state& lua = core.getLua(); 
 
     // register any custom DisplayObject types before configuring the Core
     core.getFactory().registerDomType("Box", TypeCreators{
         Box::CreateFromLua,
         Box::CreateFromInitStruct
-    });
-    
-    sol::state& lua = core.getLua(); // Use Core's Lua state
+    });    
 
-    lua.script(R"(
-    config = {
-        Core = {
-            windowWidth = 1200,
-            windowHeight = 800,
-            pixelWidth = 2,
-            pixelHeight = 2,
-            allowTextureResize = true,
-            preserveAspectRatio = true,
-            rendererLogicalPresentation = "SDL_LOGICAL_PRESENTATION_LETTERBOX",
-            windowFlags = "SDL_WINDOW_RESIZABLE",
-            pixelFormat = "SDL_PIXELFORMAT_RGBA8888",
-            color = { r = 0, g = 0, b = 0, a = 255 },
-            rootStage = "mainStage",
-            children = {
-                {
-                    rootStage = "mainStage",
-                    type = "Stage",
-                    name = "mainStage",
-                    color = { r = 32, g = 8, b = 4, a = 255 },
-                    children = {
-                        {
-                            type = "Box",
-                            name = "redishBox",
-                            x = 100.0,
-                            y = 100,
-                            width = 120,
-                            height = 80,
-                            color = { r = 200, g = 50, b = 50, a = 255 }
-                        },
-                        {
-                            type = "Box",
-                            name = "greenishBox",
-                            x = 150,
-                            y = 150,
-                            width = 80,
-                            height = 120,
-                            color = { r = 50, g = 200, b = 50, a = 255 }
-                        },
-                        {
-                            type = "Box",
-                            name = "blueishBox",
-                            x = 240,
-                            y = 70,
-                            width = 250,
-                            height = 225,
-                            color = { r = 50, g = 50, b = 200, a = 255 }
-                        }
-                    }
-                },
-                {
-                    type = "Stage",
-                    name = "stageTwo",
-                    color = { r = 16, g = 32, b = 8, a = 255 }
-                },
-                {
-                    type = "Stage",
-                    name = "stageThree",
-                    color = { r = 8, g = 16, b = 32, a = 255 }
-                }
-            }
-        }
-    }
-    )");
+    // Expose C++ unit test functions to Lua so scripts can call them to run tests
+    // (these are defined in UnitTests.hpp)
+    lua["Core_UnitTests"] = &SDOM::Core_UnitTests;
+    lua["Factory_UnitTests"] = &SDOM::Factory_UnitTests;
+    lua["IDisplayObject_UnitTests"] = &SDOM::IDisplayObject_UnitTests;
+    lua["Stage_UnitTests"] = &SDOM::Stage_UnitTests;
+    lua["Box_UnitTests"] = &SDOM::Box_UnitTests;
+    lua["LUA_UnitTests"] = &SDOM::LUA_UnitTests;
+    lua["DomHandle_UnitTests"] = &SDOM::DomHandle_UnitTests;
 
-    core.configureFromLua(lua["config"]);
-
-    core.registerOnInit([]() {
-        // Post SDL user initialization here
-        return true; 
-    });
-
-    core.registerOnQuit([]() {
-        // std::cout << CLR::GREEN << "Custom OnQuit called!" << CLR::RESET << std::endl;
-    });
-
-    core.registerOnEvent([](const Event& event) {
-        // Handle events here
-        // std::cout << CLR::GREEN << "Event received!" << CLR::RESET << std::endl;
-    });
-
-    core.registerOnUpdate([](float fElapsedTime) {
-        // Update logic here
-        // std::cout << CLR::GREEN << "Custom Update called! Elapsed time: " << fElapsedTime << " seconds" << CLR::RESET << std::endl;
-    });
-
-    core.registerOnRender([]() {
-        // Custom rendering logic here
-        // std::cout << CLR::GREEN << "Custom Render called!" << CLR::RESET << std::endl;
-    });
-
-    core.registerOnUnitTest([]() 
-    {
-        bool allTestsPassed = true;
-        // bool result = true;
-
-        // Run Custom Unit Tests
-        allTestsPassed &= Core_UnitTests();
-        allTestsPassed &= Factory_UnitTests();
-        allTestsPassed &= IDisplayObject_UnitTests();
-        allTestsPassed &= Stage_UnitTests();
-        allTestsPassed &= Box_UnitTests();
-        allTestsPassed &= LUA_UnitTests();
-        allTestsPassed &= DomHandle_UnitTests();
-
-        // // User Test One
-        // result = Box_UnitTests();   // or just:
-        // allTestsPassed &= result;   // allTestsPassed = Box_UnitTests();
-
-        // // User Test Two
-        // result = UnitTests::run("User", "The second user test", []()  { return true; });
-        // if (!result) {
-        //     std::cout << CLR::indent() << "Something Failed (appropriate debug text here)" << CLR::RESET << std::endl;
-        // } 
-        // allTestsPassed &= result;
-
-
-        return allTestsPassed;
-    });
-
-    core.registerOnWindowResize([](int newWidth, int newHeight) 
-    {
-        // std::cout << "Window Resized--Width: " << newWidth << "  Height: " << newHeight << std::endl;
-    });
-
-    core.run();
+    // Configure the Core from a Lua config file
+    core.run("lua/config.lua");
     return 0;
 } // END main()

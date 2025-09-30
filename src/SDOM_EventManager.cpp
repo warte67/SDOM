@@ -144,7 +144,11 @@ namespace SDOM
                         node->triggerEventListeners(*event, true ); // Trigger capture listeners
                         if (!event->isPropagationStopped() && !event->isDefaultBehaviorDisabled()) 
                         {
-                            node->onEvent(*event); // Call the default onEvent method
+                            // Call the default onEvent method
+                            node->onEvent(*event); 
+                            // Call the users registered event function if available
+                            if (getCore()._fnGetOnEvent())
+                                getCore()._fnGetOnEvent()(*event);        
                         }
                     }
                     if (event->isPropagationStopped()) 
@@ -164,7 +168,13 @@ namespace SDOM
             event->setCurrentTarget(targetHandle); // Set currentTarget
             targetNode->triggerEventListeners(*event, false ); // Trigger target listeners
             if (!event->isPropagationStopped() && !event->isDefaultBehaviorDisabled()) 
-                targetNode->onEvent(*event); // Call the default onEvent method
+            {
+                // Call the default onEvent method
+                targetNode->onEvent(*event); 
+                // Call the users registered event function if available
+                if (getCore()._fnGetOnEvent())
+                    getCore()._fnGetOnEvent()(*event);        
+            }
         }
 
         // Bubbling Phase: Dispatch to the parent nodes
@@ -182,7 +192,13 @@ namespace SDOM
                 {
                     node->triggerEventListeners(*event, false ); // Trigger bubbling listeners
                     if (!event->isPropagationStopped() && !event->isDefaultBehaviorDisabled()) 
-                        node->onEvent(*event); // Call the default onEvent method
+                    {
+                        // Call the default onEvent method
+                        node->onEvent(*event); 
+                        // Call the users registered event function if available
+                        if (getCore()._fnGetOnEvent())
+                            getCore()._fnGetOnEvent()(*event);   
+                    }
                 }
                 if (node->getParent() && !event->isPropagationStopped()) 
                 {
@@ -218,7 +234,11 @@ namespace SDOM
             if (!node) return;
             evt->setPhase(Event::Phase::Target);
             evt->setTarget(nodeHandle);
+            // Call the default onEvent method
             node->onEvent(*evt);
+            // Call the users registered event function if available
+            if (getCore()._fnGetOnEvent())
+                getCore()._fnGetOnEvent()(*event);               
             for (const auto& child : node->getChildren())
                 dispatchToChildren(child, evt);
         };

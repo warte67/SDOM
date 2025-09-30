@@ -261,7 +261,27 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - A clean build and test run were executed successfully.    
         - Reworked the DomHandle unit tests for readability and maintainability: added a numeric mapping header, expanded inline descriptions to match `UnitTests::run` strings, and renamed test functions to `DomHandle_test1`..`DomHandle_test10`.
             
+**[September 30, 2025]**
+    **Lua Binding Debugging:**
+        - Added controlled debug prints to Lua usertype registration to trace binding operations.
+        - Verified that each usertype (DomHandle, IDisplayObject, Stage, Factory, Core) is registered exactly once, preventing conflicts and ensuring consistent behavior.
+        - Debug prints can be toggled with the `DEBUG_REGISTER_LUA` constant in `SDOM.hpp`.
+    **Binding Consistency:**
+        - Ensured that all Lua bindings are idempotent and do not conflict with each other.
+        - Verified that overloaded methods and custom types are correctly handled in Lua.
+    **Code Cleanup:**
+        - Removed unnecessary debug prints from production code, leaving controlled logging for future debugging needs.
+        - Ensured the codebase remains clean and maintainable.
+    **Runtime wrappers & module support:**
+        - Added Lua runtime wrappers so the embedded Core can execute scripts directly from Lua: `core.run()` now accepts either a raw Lua string to execute or a filename to load and run.
+        - Enabled module-style scripting by opening `package`/`io` in the embedded state and preferring module-style configs (modules that return a table). This makes `require`-based configs and modular callback files work naturally in the embedded environment.
+    **Core runtime wrappers & module support:**
+        - Added `Core:run()` (exposed to Lua as `core.run`) which accepts either a Lua string or a filename and executes it in the embedded state, enabling runtime script execution and quick iteration.
+        - Enabled module-style scripting by opening `package`/`io` in the embedded Lua state and preferring modules that return a table; this allows `require`-based configs and modular callback files.
 
+
+
+        
 ## Next Steps (garbage collection / orphan retention)
 
 Proposed approach: add an `OrphanRetentionPolicy` enum (or a smaller `retainOnOrphan` boolean for a quick win) on `IDisplayObject` and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.

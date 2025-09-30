@@ -1,1 +1,8 @@
+sequenceDiagram
+  autonumber
+  participant Core as SDOM::Core
+  participant EM as EventManager
+  participant Stage as Stage (Root)
 
+  Core->>EM: poll/dispatch()
+  EM->>Stage: propagate events\n(capture → target → bubble)

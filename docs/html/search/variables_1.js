@@ -21,7 +21,7 @@ var searchData=
   ['blinking_18',['BLINKING',['../classCLR.html#a4dd77e6050dafa4c0e36ce01a5400587',1,'CLR']]],
   ['blue_19',['BLUE',['../classCLR.html#a1d8aa7fe91531370ea99b43cdb55c4d7',1,'CLR']]],
   ['bold_20',['BOLD',['../classCLR.html#a06931db8ae45986588be7ad57f2c91a2',1,'CLR']]],
-  ['bottom_21',['bottom',['../structSDOM_1_1Bounds.html#a9f7ce48d21c84daffa17b83355f51481',1,'SDOM::Bounds']]],
+  ['bottom_21',['bottom',['../structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99',1,'SDOM::Bounds']]],
   ['brown_22',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]],
   ['button_23',['button',['../classSDOM_1_1Event.html#aae1bbc273d8b8debd62fc8780f499b52',1,'SDOM::Event']]]
 ];

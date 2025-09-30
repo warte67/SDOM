@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['idisplayobject_0',['idisplayobject',['../classSDOM_1_1IDisplayObject.html#a648e2c4562a5c3ee569edf8b17b03199',1,'SDOM::IDisplayObject::IDisplayObject(const sol::table &amp;config)'],['../classSDOM_1_1IDisplayObject.html#a3c68c6c2c52d9ff7de62600c48794454',1,'SDOM::IDisplayObject::IDisplayObject()'],['../classSDOM_1_1IDisplayObject.html#a11a0e1744cb654a1569a441df1501866',1,'SDOM::IDisplayObject::IDisplayObject(const InitStruct &amp;init)']]],
+  ['idisplayobject_0',['IDisplayObject',['../classSDOM_1_1IDisplayObject.html#a11a0e1744cb654a1569a441df1501866',1,'SDOM::IDisplayObject::IDisplayObject(const InitStruct &amp;init)'],['../classSDOM_1_1IDisplayObject.html#a648e2c4562a5c3ee569edf8b17b03199',1,'SDOM::IDisplayObject::IDisplayObject(const sol::table &amp;config)'],['../classSDOM_1_1IDisplayObject.html#a3c68c6c2c52d9ff7de62600c48794454',1,'SDOM::IDisplayObject::IDisplayObject()']]],
   ['indent_1',['indent',['../classCLR.html#a21785b8bf79fa4970182cdb2dcab57c8',1,'CLR']]],
   ['indent_5fpop_2',['indent_pop',['../classCLR.html#ab68fec9e4864d10dfe4e06511f92375e',1,'CLR']]],
   ['indent_5fpush_3',['indent_push',['../classCLR.html#a09a44b42634154b7f08e3529100d1fa0',1,'CLR']]],
   ['initfromlua_4',['initFromLua',['../classSDOM_1_1Factory.html#a16dbd2e7748b099a0ebab299c52aa94d',1,'SDOM::Factory']]],
   ['initstruct_5',['InitStruct',['../structSDOM_1_1Stage_1_1InitStruct.html#a2bcf2041b8aea95997d9cf281eb88a78',1,'SDOM::Stage::InitStruct']]],
-  ['iresourceobject_6',['iresourceobject',['../classSDOM_1_1IResourceObject.html#ace4196b6f9ec04685f73c779546435ab',1,'SDOM::IResourceObject::IResourceObject()=delete'],['../classSDOM_1_1IResourceObject.html#ae09d2bcca83918dc6a4acfb73f0a3b26',1,'SDOM::IResourceObject::IResourceObject(std::string name=&quot;&quot;, std::string type=&quot;&quot;, std::string filename=&quot;&quot;)']]],
+  ['iresourceobject_6',['IResourceObject',['../classSDOM_1_1IResourceObject.html#ace4196b6f9ec04685f73c779546435ab',1,'SDOM::IResourceObject::IResourceObject()=delete'],['../classSDOM_1_1IResourceObject.html#ae09d2bcca83918dc6a4acfb73f0a3b26',1,'SDOM::IResourceObject::IResourceObject(std::string name=&quot;&quot;, std::string type=&quot;&quot;, std::string filename=&quot;&quot;)']]],
   ['isclickable_7',['isClickable',['../classSDOM_1_1IDisplayObject.html#aade178775d0c9afbd0f3c49f8dfe02c6',1,'SDOM::IDisplayObject']]],
   ['isclickable_5flua_8',['isClickable_lua',['../namespaceSDOM.html#a8eac7d0171b54fc4e0ff06475010704a',1,'SDOM']]],
   ['isdefaultbehaviordisabled_9',['isDefaultBehaviorDisabled',['../classSDOM_1_1Event.html#ac41257a035dbff8667385b6e12a1c4b6',1,'SDOM::Event']]],
@@ -25,8 +25,8 @@ var searchData=
   ['isregistered_22',['isRegistered',['../classSDOM_1_1EventType.html#a3e88fac9969ef7789937f262f4184041',1,'SDOM::EventType']]],
   ['istabenabled_23',['isTabEnabled',['../classSDOM_1_1IDisplayObject.html#ac833508be5695b4b45a4ffbfd970c3bb',1,'SDOM::IDisplayObject']]],
   ['istabenabled_5flua_24',['isTabEnabled_lua',['../namespaceSDOM.html#a9e138c7d6b1a11c77317ebf18f12a27f',1,'SDOM']]],
-  ['isvalid_25',['isvalid',['../classSDOM_1_1ResHandle.html#ad2ed23aa6a22190e750b71af98fbc12b',1,'SDOM::ResHandle::isValid()'],['../classSDOM_1_1DomHandle.html#a405610dd6927e8015457ab5dd6b5ea38',1,'SDOM::DomHandle::isValid()']]],
-  ['isvalid_5flua_26',['isvalid_lua',['../classSDOM_1_1ResHandle.html#a114680799a4613976d7db8ba14e4b57b',1,'SDOM::ResHandle::isValid_lua()'],['../classSDOM_1_1DomHandle.html#a4ee83bda3a53a6b26c958c2fb6987a59',1,'SDOM::DomHandle::isValid_lua()']]],
+  ['isvalid_25',['isValid',['../classSDOM_1_1DomHandle.html#a405610dd6927e8015457ab5dd6b5ea38',1,'SDOM::DomHandle::isValid()'],['../classSDOM_1_1ResHandle.html#ad2ed23aa6a22190e750b71af98fbc12b',1,'SDOM::ResHandle::isValid()']]],
+  ['isvalid_5flua_26',['isValid_lua',['../classSDOM_1_1DomHandle.html#a4ee83bda3a53a6b26c958c2fb6987a59',1,'SDOM::DomHandle::isValid_lua()'],['../classSDOM_1_1ResHandle.html#a114680799a4613976d7db8ba14e4b57b',1,'SDOM::ResHandle::isValid_lua()']]],
   ['isvisible_27',['isVisible',['../classSDOM_1_1IDisplayObject.html#a59f0351159eb9bac6a1c89b56639d49f',1,'SDOM::IDisplayObject']]],
   ['isvisible_5flua_28',['isVisible_lua',['../namespaceSDOM.html#ad29d637c5cc5f3a70b919c9e30979931',1,'SDOM']]]
 ];

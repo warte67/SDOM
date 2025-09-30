@@ -49,6 +49,8 @@ namespace SDOM
 
         // --- Main Loop & Event Dispatch --- //
         void run();
+        void run(const sol::table& config);      // Convenience overload to configure and run
+        void run(const std::string& configFile); // Convenience overload to load config from Lua file
 
         // Poll and dispatch pending SDL events once (test helper)
         void pumpEventsOnce();
@@ -68,6 +70,7 @@ namespace SDOM
         void configure(const CoreConfig& config);
         void configureFromLua(const sol::table& config);
         void configureFromLuaFile(const std::string& filename);
+        void reconfigure(const CoreConfig& config);
 
         // --- Callback/Hook Registration --- //
         void registerOnInit(std::function<bool()> fn) { fnOnInit = fn; }
@@ -77,6 +80,22 @@ namespace SDOM
         void registerOnRender(std::function<void()> fn) { fnOnRender = fn; }
         void registerOnUnitTest(std::function<bool()> fn) { fnOnUnitTest = fn; }
         void registerOnWindowResize(std::function<void(int, int)> fn) { fnOnWindowResize = fn; }
+
+        // --- Lua Registration Internal Helpers --- //
+        void _fnOnInit(std::function<bool()> fn) { fnOnInit = fn; }
+        void _fnOnQuit(std::function<void()> fn) { fnOnQuit = fn; }
+        void _fnOnUpdate(std::function<void(float)> fn) { fnOnUpdate = fn; }
+        void _fnOnEvent(std::function<void(const Event&)> fn) { fnOnEvent = fn; }
+        void _fnOnRender(std::function<void()> fn) { fnOnRender = fn; }
+        void _fnOnUnitTest(std::function<bool()> fn) { fnOnUnitTest = fn; }
+        void _fnOnWindowResize(std::function<void(int, int)> fn) { fnOnWindowResize = fn; }
+        std::function<bool()> _fnGetOnInit() { return fnOnInit; }
+        std::function<void()> _fnGetOnQuit() { return fnOnQuit; }
+        std::function<void(float)> _fnGetOnUpdate() { return fnOnUpdate; }
+        std::function<void(const Event&)> _fnGetOnEvent() { return fnOnEvent; }
+        std::function<void()> _fnGetOnRender() { return fnOnRender; }
+        std::function<bool()> _fnGetOnUnitTest() { return fnOnUnitTest; }
+        std::function<void(int, int)> _fnGetOnWindowResize() { return fnOnWindowResize; }
 
         // --- Stage/Root Node Management --- //
         void setRootNode(const std::string& name);
@@ -251,9 +270,10 @@ namespace SDOM
 
     protected:
         friend Factory;
-    // --- Lua Registration --- //
-    virtual void _registerLua(const std::string& typeName, sol::state_view lua);
-        sol::usertype<Core> objHandleType_;
+
+        // --- Lua Registration --- //
+        virtual void _registerLua(const std::string& typeName, sol::state_view lua);
+            sol::usertype<Core> objHandleType_;
     };
 
 } // namespace SDOM

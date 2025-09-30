@@ -277,10 +277,10 @@ This strategy enables centralized, extensible, and type-safe object/resource cre
 - Factory will use these constructors to instantiate objects based on user input or configuration.
 
 ## Scripting and Configuration Choice
-- Lua is the preferred scripting/configuration format for object/resource creation.
-- Lua integrates cleanly with C++ via sol2, supports runtime scripting and live reconfiguration, and maps naturally to SDOM’s data shapes using tables.
-- Other data formats (e.g., JSON) can be supported via small adapters if needed, but Lua is first-class and recommended.
-- Keep the Lua pathway robust and extensible; treat other formats as optional convenience layers.
+ - Lua is the preferred scripting/configuration format for object/resource creation.
+ - Lua integrates cleanly with C++ via sol2, supports runtime scripting and live reconfiguration, and maps naturally to SDOM’s data shapes using tables.
+ - Other data formats can be supported via small adapters if needed, but Lua is first-class and recommended.
+ - Keep the Lua pathway robust and extensible; treat other formats as optional convenience layers.
 
 
 ## Resource Pointer (`resource_ptr`) Design

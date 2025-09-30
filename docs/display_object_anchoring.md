@@ -12,7 +12,7 @@ The API exposes clear accessors for per‑edge anchors and offsets, with sensibl
 
 ### Anchor Naming Conventions
 - Anchor points are represented as enums in code: `AnchorPoint::TOP_LEFT`, `AnchorPoint::TOP_CENTER`, `AnchorPoint::TOP_RIGHT`, `AnchorPoint::MIDDLE_LEFT`, `AnchorPoint::MIDDLE_CENTER`, `AnchorPoint::MIDDLE_RIGHT`, `AnchorPoint::BOTTOM_LEFT`, `AnchorPoint::BOTTOM_CENTER`, `AnchorPoint::BOTTOM_RIGHT`.
-- In JSON or config, these may be written as strings: `"top_left"`, `"middle_center"`, etc. The mapping is direct.
+- In Lua or config, these may be written as strings: `"top_left"`, `"middle_center"`, etc. The mapping is direct and bindings accept either the enum or a string alias.
 
 ### Edge-Based Layout
 - Each display object tracks its edges: `left_`, `right_`, `top_`, `bottom_`.
@@ -80,23 +80,33 @@ Each display object can specify anchor points for its four edges (left/X, top/Y,
 
 For convenience, aliases like `left`, `center`, `right`, `top`, `middle`, and `bottom` are also supported.
 
-## JSON Interface
-Anchor points are specified in the JSON configuration for each display object. For backward compatibility, if anchor fields are omitted, all anchors default to `top_left`.
+## Lua Interface
+Anchor points are typically provided from Lua modules or from code. For configuration files, prefer a small Lua module that returns a table. If anchor fields are omitted, anchors default to `top_left`.
 
-Example:
-```json
-{
-    "x": 10,
-    "y": 10,
-    "width": -10,
-    "height": -10,
-    "child_anchor_x": "left",
-    "child_anchor_width": "right",
-    "child_anchor_y": "top",
-    "child_anchor_height": "bottom"
+Example Lua module (`config/layout.lua`):
+
+```lua
+return {
+    x = 10,
+    y = 10,
+    width = -10,
+    height = -10,
+    child_anchor_x = "left",
+    child_anchor_width = "right",
+    child_anchor_y = "top",
+    child_anchor_height = "bottom",
 }
 ```
-This configuration creates a child object with a 10-pixel margin on all sides, stretching as the parent resizes.
+
+C++ (Sol2) usage to load the module and configure an object:
+
+```cpp
+sol::state& lua = core.getLua();
+sol::table cfg = lua.require<sol::table>("config.layout");
+auto childAnchorX = cfg["child_anchor_x"].get_or<std::string>("top_left");
+AnchorPoint ap = parseAnchor(childAnchorX);
+child->setAnchorLeft(ap);
+```
 
 ## Position and Size Calculation
 - **X (left edge):** Anchored to the specified parent anchor point, plus offset.
@@ -118,8 +128,8 @@ When an anchor point is changed, the offset is recalculated so the display objec
 ## Hierarchical Anchoring
 Anchor calculations are recursive: each display object references its parent, which may itself be anchored to its own parent, up to the stage. This enables complex, nested layouts.
 
-## Backward Compatibility
-Existing JSON and code remain compatible. If anchor fields are not specified, the system defaults to `top_left` anchors, preserving current behavior.
+## Backward Compatibility & Migration
+Existing code that sets anchors programmatically remains compatible. Configuration files that used JSON should be converted to Lua modules (small one-to-one mappings) — see the Migration note below.
 
 ## Benefits
 - Flexible, responsive layouts
@@ -216,3 +226,32 @@ sequenceDiagram
 </details>
 
 This flow illustrates the invariant maintained during anchor changes: the world edge position remains the same while only the corresponding local offset is updated.
+
+## Anchor helpers & parsing
+Bindings accept both enumerated values and string names. A small C++ helper simplifies mapping user-facing strings to enums; expose this to Lua so scripts can use readable names.
+
+```cpp
+// simple mapping helper
+AnchorPoint parseAnchor(const std::string &s) {
+    static const std::unordered_map<std::string, AnchorPoint> map = {
+        {"top_left", AnchorPoint::TOP_LEFT}, {"left_top", AnchorPoint::TOP_LEFT}, {"left", AnchorPoint::TOP_LEFT},
+        {"top_center", AnchorPoint::TOP_CENTER}, {"center_top", AnchorPoint::TOP_CENTER}, {"center", AnchorPoint::TOP_CENTER},
+        {"top_right", AnchorPoint::TOP_RIGHT}, {"right_top", AnchorPoint::TOP_RIGHT}, {"right", AnchorPoint::TOP_RIGHT},
+        {"middle_left", AnchorPoint::MIDDLE_LEFT}, {"left_middle", AnchorPoint::MIDDLE_LEFT},
+        {"middle_center", AnchorPoint::MIDDLE_CENTER}, {"center_middle", AnchorPoint::MIDDLE_CENTER},
+        {"middle_right", AnchorPoint::MIDDLE_RIGHT}, {"right_middle", AnchorPoint::MIDDLE_RIGHT},
+        {"bottom_left", AnchorPoint::BOTTOM_LEFT}, {"left_bottom", AnchorPoint::BOTTOM_LEFT},
+        {"bottom_center", AnchorPoint::BOTTOM_CENTER}, {"center_bottom", AnchorPoint::BOTTOM_CENTER},
+        {"bottom_right", AnchorPoint::BOTTOM_RIGHT}, {"right_bottom", AnchorPoint::BOTTOM_RIGHT}
+    };
+    auto it = map.find(s);
+    return it != map.end() ? it->second : AnchorPoint::TOP_LEFT;
+}
+```
+
+Expose `parseAnchor` to Lua via your usual binding so scripts can call `parseAnchor("left")` or pass strings directly where supported.
+
+## Migration note
+- Convert JSON objects into Lua modules that return tables (arrays → numeric-keyed tables; primitives map directly).
+- Example JSON `{ "child_anchor_x": "left" }` maps to Lua `child_anchor_x = "left"` in a module that returns a table.
+- For bulk conversions, a short script (Python/Node/Lua) that reads JSON and writes `.lua` modules is helpful. If runtime JSON parsing is required, add a Lua JSON library to your project — SDOM does not bundle one by default.

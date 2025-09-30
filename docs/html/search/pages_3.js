@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['extensible_20factory_20design_0',['Extensible Factory Design',['../md_docs_2extensible__factory.html',1,'']]]
+  ['4_0',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_docs_2dom__propagation.html#autotoc_md79',1,'']]],
+  ['4_20generic_20factory_20create_20method_1',['4. Generic Factory Create Method',['../md_docs_2extensible__factory.html#autotoc_md123',1,'']]],
+  ['4_20reflection_20and_20metadata_2',['4. Reflection and Metadata',['../md_docs_2exposing__hooks.html#autotoc_md102',1,'']]],
+  ['4_20usage_3',['4. Usage',['../md_docs_2extensible__factory.html#autotoc_md115',1,'']]],
+  ['4_20world_20coordinate_20backpropagation_20traversal_20type_204_4',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_docs_2dom__propagation.html#autotoc_md79',1,'']]]
 ];

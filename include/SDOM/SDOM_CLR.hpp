@@ -34,6 +34,8 @@
 
 #include <string>
 #include <SDL3/SDL.h>
+// Expose CLR helpers to embedded Lua states
+#include <sol/sol.hpp>
 
 // simple types for 8-bit archetecture 
 #ifndef Byte
@@ -107,6 +109,46 @@ public:
     { return "\e[38;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m"; }
 
     /**
+     * @brief Map a single 8-bit index into an RGB color using the bit-pattern {r:3,g:3,b:2}
+     * and return the corresponding ANSI 24-bit foreground escape sequence.
+     * @param clr 8-bit index where bits 7..5 = r (3 bits), 4..2 = g (3 bits), 1..0 = b (2 bits)
+     * @return ANSI escape sequence for 24-bit foreground color.
+     */
+    inline static const std::string fg_color(Byte clr) {
+        // extract bitfields
+        Uint8 r3 = (clr >> 5) & 0x7; // 3 bits
+        Uint8 g3 = (clr >> 2) & 0x7; // 3 bits
+        Uint8 b2 = clr & 0x3;        // 2 bits
+
+        // expand to 0..255 (rounding)
+        Uint8 r8 = (Uint8)((r3 * 255 + 3) / 7);
+        Uint8 g8 = (Uint8)((g3 * 255 + 3) / 7);
+        Uint8 b8 = (Uint8)((b2 * 255 + 1) / 3);
+
+        return fg_rgb(r8, g8, b8);
+    }
+
+    /**
+     * @brief Map a single 8-bit index into an RGB color using the bit-pattern {r:3,g:3,b:2}
+     * and return the corresponding ANSI 24-bit background escape sequence.
+     * @param clr 8-bit index where bits 7..5 = r (3 bits), 4..2 = g (3 bits), 1..0 = b (2 bits)
+     * @return ANSI escape sequence for 24-bit background color.
+     */
+    inline static const std::string bg_color(Byte clr) {
+        // extract bitfields
+        Uint8 r3 = (clr >> 5) & 0x7; // 3 bits
+        Uint8 g3 = (clr >> 2) & 0x7; // 3 bits
+        Uint8 b2 = clr & 0x3;        // 2 bits
+
+        // expand to 0..255 (rounding)
+        Uint8 r8 = (Uint8)((r3 * 255 + 3) / 7);
+        Uint8 g8 = (Uint8)((g3 * 255 + 3) / 7);
+        Uint8 b8 = (Uint8)((b2 * 255 + 1) / 3);
+
+        return bg_rgb(r8, g8, b8);
+    }
+
+    /**
      * @brief Returns ANSI escape sequence to set 24-bit (RGB) background color.
      * @param r Red component (0-255).
      * @param g Green component (0-255).
@@ -122,8 +164,18 @@ public:
      * @param col Column number (1-based).
      * @return ANSI escape sequence as a string.
      */
-    inline static const std::string csr_pos(Byte row=1, Byte col=1) 
+    inline static const std::string set_cursor_pos(Byte row=1, Byte col=1) 
     { return "\e[" + std::to_string(row) + ";" + std::to_string(col) + "H"; }
+
+    /**
+     * @brief Query the terminal for the current cursor position (row, col).
+     * @param row Out parameter for 1-based row index.
+     * @param col Out parameter for 1-based column index.
+     * @return true if cursor position was successfully queried; false otherwise.
+     * @note On POSIX this uses \x1b[6n (CPR) against /dev/tty and requires the terminal
+     * to support the Cursor Position Report sequence. On Windows it queries the console API.
+     */
+    static bool get_cursor_pos(int& row, int& col);
 
     /**
      * @brief Returns ANSI escape sequence to clear part of the screen.
@@ -185,6 +237,7 @@ public:
     inline static const std::string BROWN		= "\e[0;33m";   ///< ANSI escape sequence for brown foreground
     inline static const std::string BLUE		= "\e[0;34m";   ///< ANSI escape sequence for blue foreground
     inline static const std::string PURPLE		= "\e[0;35m";   ///< ANSI escape sequence for purple foreground
+    inline static const std::string MAGENTA		= "\e[0;35m";   ///< ANSI escape sequence for magenta foreground
     inline static const std::string CYAN		= "\e[0;36m";   ///< ANSI escape sequence for cyan foreground
     inline static const std::string GREY		= "\e[0;37m";   ///< ANSI escape sequence for grey foreground
     inline static const std::string DARK		= "\e[1;30m";   ///< ANSI escape sequence for dark grey foreground
@@ -252,6 +305,7 @@ public:
         #endif // Windows/Linux
     }   
 
+
     /**
      * @name Formatting Helper Functions
      * @brief Utility functions for indentation, hex formatting, and padding.
@@ -309,6 +363,14 @@ public:
         return ret;
     };
     /** @} */
+
+    /**
+     * @brief Expose CLR constants and helper functions to a Lua state.
+     * @param lua The lua state to populate with a `CLR` table.
+     * @note Implementation lives in src/SDOM_CLR.cpp to avoid duplicate inline
+     * definitions across translation units.
+     */
+    static void exposeToLua(sol::state& lua);
 
 private:
     inline static int indent_level = 0;

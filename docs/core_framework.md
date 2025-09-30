@@ -66,47 +66,42 @@ All pre-initialization information must be set before calling `run()` or startin
 
 ---
 
-To ensure proper setup, `onInit()` should be called **after** the SDL Video Subsystem (window, renderer, texture) has been created and initialized. This requires that all necessary configuration parameters are provided to Core **before** initialization begins.
+### Alternative Initialization: Lua Configuration
 
-### Required Pre-Initialization Parameters:
-- **Core (Pixel) Resolution:** The logical pixel dimensions for rendering.
-- **Initial Window Size:** The starting size of the SDL window.
-- **Rendering Flags:** SDL renderer creation flags (e.g., hardware acceleration, vsync).
-- **Presentation Flags:** SDL window flags (e.g., resizable, fullscreen).
-- **Color Format:** Desired pixel format for rendering and textures.
-- **Other SDL/graphics options:** As needed for your application.
+SDOM uses Lua (via sol2) as the canonical configuration and scripting mechanism. Instead of JSON configuration, prefer Lua modules that return tables. Below is a minimal example showing a Lua configuration module and how C++ can load it with Sol2.
 
+Example Lua module `config/core_config.lua`:
 
-### Alternative Initialization: JSON Configuration
-
-In addition to using a configuration struct, SDOM Core can be initialized using a JSON string or by loading configuration from a JSON file. This approach allows for flexible, data-driven setup and easier integration with external tools or scripting environments.
-
-#### Example API:
-```cpp
-Core& core = getCore();
-core.configureFromJson(R"({
-    "core": {
-        "windowWidth": 1280.0,
-        "windowHeight": 720.0,
-        "pixelWidth": 2.0,
-        "pixelHeight": 2.0,
-        "allowTextureResize": false,
-        "preserveAspectRatio": true,
-        "rendererFlags": "SDL_LOGICAL_PRESENTATION_LETTERBOX",
-        "windowFlags": "SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE",
-        "colorFormat": "SDL_PIXELFORMAT_RGBA8888"
-    }
-})");
-core.run();
+```lua
+return {
+  core = {
+    windowWidth = 1280,
+    windowHeight = 720,
+    pixelWidth = 2.0,
+    pixelHeight = 2.0,
+    allowTextureResize = false,
+    preserveAspectRatio = true,
+    rendererFlags = "SDL_LOGICAL_PRESENTATION_LETTERBOX",
+    windowFlags = "SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE",
+    colorFormat = "SDL_PIXELFORMAT_RGBA8888",
+  }
+}
 ```
-Or, loading from a file:
+
+Example C++ usage (Sol2):
+
 ```cpp
-core.configureFromJsonFile("config/core_config.json");
+// Load configuration from Lua and hand it to Core
+sol::state& lua = core.getLua();                      // obtain the Core-managed Lua state
+sol::table cfg = lua.require<sol::table>("config.core_config");
+core.configureFromLuaTable(cfg);                      // or core.configure(cfg);
 core.run();
 ```
 
-**Note:**  
-All pre-initialization information must be set before calling `run()` or starting the main loop. This ensures that the video subsystem is correctly configured and available for all subsequent operations.
+Migration note
+- Convert JSON objects into Lua modules that return tables (arrays map to numeric-keyed tables; primitives map directly).
+- For bulk conversions, a small script (Python/Node/Lua) that reads JSON and emits equivalent Lua table source is useful.
+- If you must parse JSON at runtime instead of converting files, add a Lua JSON library to your application — SDOM does not bundle JSON parsing by default.
 
 ---
 
@@ -309,15 +304,15 @@ int main()
 {
     Core& core = SDOM::getCore();
     CoreConfig config;
-    config.windowWidth = 1280;
-    config.windowHeight = 960;
-    config.pixelWidth = 2.0;
-    config.pixelHeight = 2.0;
-    config.allowTextureResize = true,
-    config.preserveAspectRatio = true,
-    config.renderFlags = SDL_LOGICAL_PRESENTATION_LETTERBOX;
-    config.windowFlags = SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE;
-    condig.colorFormat = SDL_PIXELFORMAT_RGBA8888;
+  config.windowWidth = 1280;
+  config.windowHeight = 960;
+  config.pixelWidth = 2.0;
+  config.pixelHeight = 2.0;
+  config.allowTextureResize = true;
+  config.preserveAspectRatio = true;
+  config.renderFlags = SDL_LOGICAL_PRESENTATION_LETTERBOX;
+  config.windowFlags = SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE;
+  config.colorFormat = SDL_PIXELFORMAT_RGBA8888;
     core.configure(config);
 
     core.addEventListener(EventType::Init, []() { onInit(); });
