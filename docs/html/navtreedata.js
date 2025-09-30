@@ -197,33 +197,34 @@ var NAVTREE =
       [ "Safety and Performance", "md_docs_2scripting__and__configuration.html#autotoc_md163", null ],
       [ "Source of Truth", "md_docs_2scripting__and__configuration.html#autotoc_md164", null ],
       [ "SDOM API considerations for Lua", "md_docs_2scripting__and__configuration.html#autotoc_md165", null ],
-      [ "Next steps (Lua integration)", "md_docs_2scripting__and__configuration.html#autotoc_md166", null ]
+      [ "Next steps (Lua integration)", "md_docs_2scripting__and__configuration.html#autotoc_md166", null ],
+      [ "Module-style configuration and lifecycle registration (recommended)", "md_docs_2scripting__and__configuration.html#autotoc_md167", null ]
     ] ],
     [ "SDOM: Simple SDL Document Object Model API", "md_README.html", [
-      [ "Overview", "md_README.html#autotoc_md168", null ],
-      [ "Features", "md_README.html#autotoc_md169", null ],
-      [ "IDataObject: Data-Driven Base Type", "md_README.html#autotoc_md170", [
-        [ "Key Features", "md_README.html#autotoc_md171", null ]
+      [ "Overview", "md_README.html#autotoc_md169", null ],
+      [ "Features", "md_README.html#autotoc_md170", null ],
+      [ "IDataObject: Data-Driven Base Type", "md_README.html#autotoc_md171", [
+        [ "Key Features", "md_README.html#autotoc_md172", null ]
       ] ],
-      [ "Getting Started", "md_README.html#autotoc_md172", [
-        [ "Prerequisites", "md_README.html#autotoc_md173", null ],
-        [ "Building the SDOM Library", "md_README.html#autotoc_md174", null ],
-        [ "Running the Example", "md_README.html#autotoc_md175", null ]
+      [ "Getting Started", "md_README.html#autotoc_md173", [
+        [ "Prerequisites", "md_README.html#autotoc_md174", null ],
+        [ "Building the SDOM Library", "md_README.html#autotoc_md175", null ],
+        [ "Running the Example", "md_README.html#autotoc_md176", null ]
       ] ],
-      [ "Project Structure", "md_README.html#autotoc_md176", null ],
-      [ "SDL3 Build Dependencies", "md_README.html#autotoc_md177", null ],
-      [ "Debian Build Dependencies", "md_README.html#autotoc_md178", null ],
-      [ "Arch Build Dependencies", "md_README.html#autotoc_md179", null ],
-      [ "Freetype on Debian:", "md_README.html#autotoc_md180", null ],
-      [ "Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf", "md_README.html#autotoc_md181", null ],
-      [ "Build per SDL3:", "md_README.html#autotoc_md182", null ],
-      [ "Build and install SDL3 libraries", "md_README.html#autotoc_md183", null ],
-      [ "Lua and Sol2", "md_README.html#autotoc_md184", null ],
-      [ "Documentation", "md_README.html#autotoc_md185", [
-        [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md186", null ]
+      [ "Project Structure", "md_README.html#autotoc_md177", null ],
+      [ "SDL3 Build Dependencies", "md_README.html#autotoc_md178", null ],
+      [ "Debian Build Dependencies", "md_README.html#autotoc_md179", null ],
+      [ "Arch Build Dependencies", "md_README.html#autotoc_md180", null ],
+      [ "Freetype on Debian:", "md_README.html#autotoc_md181", null ],
+      [ "Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf", "md_README.html#autotoc_md182", null ],
+      [ "Build per SDL3:", "md_README.html#autotoc_md183", null ],
+      [ "Build and install SDL3 libraries", "md_README.html#autotoc_md184", null ],
+      [ "Lua and Sol2", "md_README.html#autotoc_md185", null ],
+      [ "Documentation", "md_README.html#autotoc_md186", [
+        [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md187", null ]
       ] ],
-      [ "License", "md_README.html#autotoc_md187", null ],
-      [ "Author", "md_README.html#autotoc_md188", null ]
+      [ "License", "md_README.html#autotoc_md188", null ],
+      [ "Author", "md_README.html#autotoc_md189", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -261,14 +262,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "SDOM_8cpp.html",
-"classSDOM_1_1Core.html#a9eb5a0500bb9fc36ec82cd14e05792e6",
-"classSDOM_1_1Event.html#a606bb58d9c26a3e84899bc565bc849b5",
-"classSDOM_1_1EventType.html#aed0d07f388f2fc133dfe7fffcd9e2735",
-"classSDOM_1_1IDisplayObject.html#a648e2c4562a5c3ee569edf8b17b03199",
-"classSDOM_1_1ResHandle.html#a720e543f1a328fb0ce892aeb6a6a977b",
-"classSDOM_1_1Stage.html#abda87b944bd12092c524a44fc2f534c2",
-"md_docs_2exposing__hooks.html#autotoc_md88",
-"structSDOM_1_1Core_1_1CoreConfig.html#a92fd774fe2171ffa4944d173ebb8be25"
+"classSDOM_1_1Core.html#a81ab01eb51d0da3950b9cb6d93d74fbb",
+"classSDOM_1_1Event.html#a34478c6550444510e2c64194ab7dfe1a",
+"classSDOM_1_1EventType.html#a8b306f6e94f88e440f688dad65f7b011",
+"classSDOM_1_1IDisplayObject.html#a3ab76421405a1be09be35ae2e215efb2",
+"classSDOM_1_1IUnitTest.html",
+"classSDOM_1_1Stage.html#a8bf31785ce47d1bcc093e9d9db5b5c48",
+"md_docs_2display__object__anchoring.html#autotoc_md45",
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac397289ee45877be0cd49811fe245b4e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

@@ -189,7 +189,23 @@ Next steps (Lua integration)</h1>
 <li>Add a Lua demo scene that constructs a Stage and a few DisplayObjects.</li>
 <li>Wire lifecycle hooks (<span class="tt">onInit</span>, <span class="tt">onUpdate</span>, <span class="tt">onEvent</span>, <span class="tt">onRender</span>, <span class="tt">onUnitTests</span>) to optional Lua functions.</li>
 <li>Provide typed creator helpers and validation for common objects (e.g., Box, Label).</li>
-<li>Add unit tests that load Lua scripts to validate creation, events, and anchoring. </li>
+<li>Add unit tests that load Lua scripts to validate creation, events, and anchoring.</li>
+</ul>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md167"></a>
+Module-style configuration and lifecycle registration (recommended)</h1>
+<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> supports module-style Lua configuration files that return a <span class="tt">config</span> table. This keeps globals out of the Lua namespace and is the recommended pattern for portable configs:</p>
+<div class="fragment"><div class="line">local config = {</div>
+<div class="line">    Core = { windowWidth = 1024, windowHeight = 768, ... }</div>
+<div class="line">}</div>
+<div class="line">-- Register lifecycle callbacks</div>
+<div class="line">Core:registerOn(&quot;Init&quot;, function() print(&quot;OnInit&quot;) end)</div>
+<div class="line">Core:registerOn(&quot;Update&quot;, function(dt) end)</div>
+<div class="line"> </div>
+<div class="line">return config</div>
+</div><!-- fragment --><p>Notes:</p><ul>
+<li>The embedded Core Lua state exposes <span class="tt">Core</span>, <span class="tt"><a class="el" href="classCLR.html" title="Static container for ANSI escape sequences and formatting helpers.">CLR</a></span>, and unit-test helpers. The <span class="tt">Core:registerOn(name, fn)</span> helper accepts short names (Init, Quit, Update, Event, Render, UnitTest, WindowResize) and binds the provided Lua function as a protected callback.</li>
+<li>Config files may either return the config table (preferred) or set a global <span class="tt">config</span> (legacy). The host will prefer the returned table and fall back to the global.</li>
+<li>If you rely on <span class="tt">require</span> for modular callbacks, ensure <span class="tt">package.path</span> is set appropriately (examples set a project-relative path in <span class="tt">examples/test/lua/config.lua</span>). </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

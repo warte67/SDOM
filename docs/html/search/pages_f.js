@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['idataobject_3a_20data_20driven_20base_20type_0',['IDataObject: Data-Driven Base Type',['../md_README.html#autotoc_md170',1,'']]],
+  ['idataobject_3a_20data_20driven_20base_20type_0',['IDataObject: Data-Driven Base Type',['../md_README.html#autotoc_md171',1,'']]],
   ['idisplayobjects_1',['Standardized Constructors for IDisplayObjects',['../md_docs_2extensible__factory.html#autotoc_md128',1,'']]],
   ['implementation_20outline_2',['Implementation Outline',['../md_docs_2extensible__factory.html#autotoc_md134',1,'']]],
   ['implementation_20strategy_3',['Implementation Strategy',['../md_docs_2extensible__factory.html#autotoc_md118',1,'']]],
@@ -16,8 +16,8 @@ var searchData=
   ['initialization_3a_20lua_20configuration_13',['Alternative Initialization: Lua Configuration',['../md_docs_2core__framework.html#autotoc_md12',1,'']]],
   ['initializer_20structs_14',['1. Initializer Structs',['../md_docs_2extensible__factory.html#autotoc_md119',1,'']]],
   ['initializer_20structs_20and_20lua_20scripts_15',['1. Initializer Structs and Lua Scripts',['../md_docs_2extensible__factory.html#autotoc_md113',1,'']]],
-  ['install_20sdl3_20libraries_16',['Build and install SDL3 libraries',['../md_README.html#autotoc_md183',1,'']]],
-  ['installing_20sdl3_5fmixer_20sdl3_5fimage_20and_20sdl_5fttf_17',['Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf',['../md_README.html#autotoc_md181',1,'']]],
+  ['install_20sdl3_20libraries_16',['Build and install SDL3 libraries',['../md_README.html#autotoc_md184',1,'']]],
+  ['installing_20sdl3_5fmixer_20sdl3_5fimage_20and_20sdl_5fttf_17',['Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf',['../md_README.html#autotoc_md182',1,'']]],
   ['integration_18',['Integration',['../md_docs_2exposing__hooks.html#autotoc_md101',1,'3. Lua/Script Integration'],['../md_docs_2core__framework.html#autotoc_md25',1,'SDOM Event System Integration']]],
   ['integration_19',['Next steps (Lua integration)',['../md_docs_2scripting__and__configuration.html#autotoc_md166',1,'']]],
   ['integration_20methods_20summary_20',['Integration Methods Summary',['../md_docs_2core__framework.html#autotoc_md33',1,'']]],

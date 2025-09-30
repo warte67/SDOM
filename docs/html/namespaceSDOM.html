@@ -164,6 +164,17 @@ Enumerations</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:aeb88e3bf293940249fee9db1cfa982e1" id="r_aeb88e3bf293940249fee9db1cfa982e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb88e3bf293940249fee9db1cfa982e1">quit_lua</a> (<a class="el" href="classSDOM_1_1Core.html">Core</a> &amp;core)</td></tr>
 <tr class="memitem:ae2fef5677ba60ad4d6b03bd09cfb1bd3" id="r_ae2fef5677ba60ad4d6b03bd09cfb1bd3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2fef5677ba60ad4d6b03bd09cfb1bd3">shutdown_lua</a> (<a class="el" href="classSDOM_1_1Core.html">Core</a> &amp;core)</td></tr>
+<tr class="memitem:a60015b273d74524f0c867ccc1dda4249" id="r_a60015b273d74524f0c867ccc1dda4249"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60015b273d74524f0c867ccc1dda4249">run_lua</a> (<a class="el" href="classSDOM_1_1Core.html">Core</a> &amp;core)</td></tr>
+<tr class="memitem:a572b1e609d4dcd8425a9cda2d1687016" id="r_a572b1e609d4dcd8425a9cda2d1687016"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a572b1e609d4dcd8425a9cda2d1687016">configure_lua</a> (const sol::table &amp;config)</td></tr>
+<tr class="memitem:a7e3de6d3c92d997c8d1349fa90833153" id="r_a7e3de6d3c92d997c8d1349fa90833153"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e3de6d3c92d997c8d1349fa90833153">configureFromFile_lua</a> (const std::string &amp;filename)</td></tr>
+<tr class="memitem:a48c608f3dfaf3b8bc613bbae32f6021b" id="r_a48c608f3dfaf3b8bc613bbae32f6021b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48c608f3dfaf3b8bc613bbae32f6021b">registerOnInit_lua</a> (std::function&lt; bool()&gt; fn)</td></tr>
+<tr class="memitem:afc1a078680f937e327ff9d96467c710a" id="r_afc1a078680f937e327ff9d96467c710a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc1a078680f937e327ff9d96467c710a">registerOnQuit_lua</a> (std::function&lt; void()&gt; fn)</td></tr>
+<tr class="memitem:a8f9719ae9f97d16d30a9b552a67bf430" id="r_a8f9719ae9f97d16d30a9b552a67bf430"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f9719ae9f97d16d30a9b552a67bf430">registerOnUpdate_lua</a> (std::function&lt; void(float)&gt; fn)</td></tr>
+<tr class="memitem:a603bc5740b5f5513f3f8e8cfdd16d91b" id="r_a603bc5740b5f5513f3f8e8cfdd16d91b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a603bc5740b5f5513f3f8e8cfdd16d91b">registerOnEvent_lua</a> (std::function&lt; void(const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;)&gt; fn)</td></tr>
+<tr class="memitem:a93ef993437ff0e0edde2a460f2d27c40" id="r_a93ef993437ff0e0edde2a460f2d27c40"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93ef993437ff0e0edde2a460f2d27c40">registerOnRender_lua</a> (std::function&lt; void()&gt; fn)</td></tr>
+<tr class="memitem:a6644c48db32194e84bcdf4e983c424b0" id="r_a6644c48db32194e84bcdf4e983c424b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6644c48db32194e84bcdf4e983c424b0">registerOnUnitTest_lua</a> (std::function&lt; bool()&gt; fn)</td></tr>
+<tr class="memitem:ac9477da8c80517c4ceebfce7fd7e73c4" id="r_ac9477da8c80517c4ceebfce7fd7e73c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9477da8c80517c4ceebfce7fd7e73c4">registerOnWindowResize_lua</a> (std::function&lt; void(int, int)&gt; fn)</td></tr>
+<tr class="memitem:a406a87a192bdc79f998752010300908f" id="r_a406a87a192bdc79f998752010300908f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a406a87a192bdc79f998752010300908f">registerOn_lua</a> (const std::string &amp;name, const sol::function &amp;f)</td></tr>
 <tr class="memitem:a46a40465bb97a37acfa8b9c5f1fc8782" id="r_a46a40465bb97a37acfa8b9c5f1fc8782"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46a40465bb97a37acfa8b9c5f1fc8782">setRootNodeByName_lua</a> (<a class="el" href="classSDOM_1_1Core.html">Core</a> &amp;core, const std::string &amp;name)</td></tr>
 <tr class="memitem:a235fc37365f74c812ee45bbb8397d86b" id="r_a235fc37365f74c812ee45bbb8397d86b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a235fc37365f74c812ee45bbb8397d86b">setRootNodeByHandle_lua</a> (<a class="el" href="classSDOM_1_1Core.html">Core</a> &amp;core, const <a class="el" href="classSDOM_1_1DomHandle.html">DomHandle</a> &amp;handle)</td></tr>
 <tr class="memitem:ab6e651165c71738da9f651f80981fe80" id="r_ab6e651165c71738da9f651f80981fe80"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab6e651165c71738da9f651f80981fe80">setStage_lua</a> (<a class="el" href="classSDOM_1_1Core.html">Core</a> &amp;core, const std::string &amp;name)</td></tr>
@@ -442,6 +453,40 @@ Variables</h2></td></tr>
           <td class="memname">void SDOM::cleanAll_lua </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a572b1e609d4dcd8425a9cda2d1687016" name="a572b1e609d4dcd8425a9cda2d1687016"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a572b1e609d4dcd8425a9cda2d1687016">&#9670;&#160;</a></span>configure_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::configure_lua </td>
+          <td>(</td>
+          <td class="paramtype">const sol::table &amp;</td>          <td class="paramname"><span class="paramname"><em>config</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7e3de6d3c92d997c8d1349fa90833153" name="a7e3de6d3c92d997c8d1349fa90833153"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e3de6d3c92d997c8d1349fa90833153">&#9670;&#160;</a></span>configureFromFile_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::configureFromFile_lua </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1759,6 +1804,146 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a406a87a192bdc79f998752010300908f" name="a406a87a192bdc79f998752010300908f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a406a87a192bdc79f998752010300908f">&#9670;&#160;</a></span>registerOn_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::registerOn_lua </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const sol::function &amp;</td>          <td class="paramname"><span class="paramname"><em>f</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a603bc5740b5f5513f3f8e8cfdd16d91b" name="a603bc5740b5f5513f3f8e8cfdd16d91b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a603bc5740b5f5513f3f8e8cfdd16d91b">&#9670;&#160;</a></span>registerOnEvent_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::registerOnEvent_lua </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;)&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a48c608f3dfaf3b8bc613bbae32f6021b" name="a48c608f3dfaf3b8bc613bbae32f6021b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48c608f3dfaf3b8bc613bbae32f6021b">&#9670;&#160;</a></span>registerOnInit_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::registerOnInit_lua </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; bool()&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afc1a078680f937e327ff9d96467c710a" name="afc1a078680f937e327ff9d96467c710a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc1a078680f937e327ff9d96467c710a">&#9670;&#160;</a></span>registerOnQuit_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::registerOnQuit_lua </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void()&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a93ef993437ff0e0edde2a460f2d27c40" name="a93ef993437ff0e0edde2a460f2d27c40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93ef993437ff0e0edde2a460f2d27c40">&#9670;&#160;</a></span>registerOnRender_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::registerOnRender_lua </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void()&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6644c48db32194e84bcdf4e983c424b0" name="a6644c48db32194e84bcdf4e983c424b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6644c48db32194e84bcdf4e983c424b0">&#9670;&#160;</a></span>registerOnUnitTest_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::registerOnUnitTest_lua </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; bool()&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8f9719ae9f97d16d30a9b552a67bf430" name="a8f9719ae9f97d16d30a9b552a67bf430"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f9719ae9f97d16d30a9b552a67bf430">&#9670;&#160;</a></span>registerOnUpdate_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::registerOnUpdate_lua </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(float)&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac9477da8c80517c4ceebfce7fd7e73c4" name="ac9477da8c80517c4ceebfce7fd7e73c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9477da8c80517c4ceebfce7fd7e73c4">&#9670;&#160;</a></span>registerOnWindowResize_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::registerOnWindowResize_lua </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(int, int)&gt;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac5bd35edb5583743cbf1950ce8c6b20e" name="ac5bd35edb5583743cbf1950ce8c6b20e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac5bd35edb5583743cbf1950ce8c6b20e">&#9670;&#160;</a></span>removeChild_lua()</h2>
 
@@ -1805,6 +1990,23 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>useCapture</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a60015b273d74524f0c867ccc1dda4249" name="a60015b273d74524f0c867ccc1dda4249"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60015b273d74524f0c867ccc1dda4249">&#9670;&#160;</a></span>run_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::run_lua </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1Core.html">Core</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>core</em></span></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -102,6 +102,8 @@ $(function(){initNavTree('classCLR.html','','classCLR-members'); });
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a6182f7adc3cbbec8d91ac83c948306d3" id="r_a6182f7adc3cbbec8d91ac83c948306d3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6182f7adc3cbbec8d91ac83c948306d3">get_terminal_size</a> (int &amp;width, int &amp;height)</td></tr>
 <tr class="memdesc:a6182f7adc3cbbec8d91ac83c948306d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current terminal size (width and height).  <br /></td></tr>
+<tr class="memitem:a8ac061433144df819feb3ce16f0d0dc8" id="r_a8ac061433144df819feb3ce16f0d0dc8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ac061433144df819feb3ce16f0d0dc8">exposeToLua</a> (sol::state &amp;lua)</td></tr>
+<tr class="memdesc:a8ac061433144df819feb3ce16f0d0dc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expose <a class="el" href="classCLR.html" title="Static container for ANSI escape sequences and formatting helpers.">CLR</a> constants and helper functions to a Lua state.  <br /></td></tr>
 <tr id="pub-static-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">Utility Member Functions</div></td></tr>
 <tr><td colspan="2" class="ititle"><div class="groupText"><p>Functions for generating ANSI escape sequences for terminal formatting. </p>
 </div></td></tr>
@@ -111,10 +113,23 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a270a5369a80821f52e34a6be64f8ca89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns ANSI escape sequence to set 8-bit background color.  <br /></td></tr>
 <tr class="memitem:a2c2e1040458c8b4f88be7b0e68999faa" id="r_a2c2e1040458c8b4f88be7b0e68999faa"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c2e1040458c8b4f88be7b0e68999faa">fg_rgb</a> (<a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> r, <a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> g, <a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> b)</td></tr>
 <tr class="memdesc:a2c2e1040458c8b4f88be7b0e68999faa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns ANSI escape sequence to set 24-bit (RGB) foreground color.  <br /></td></tr>
+<tr class="memitem:a72d2cbc0c4e73a594bb189831b781851" id="r_a72d2cbc0c4e73a594bb189831b781851"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72d2cbc0c4e73a594bb189831b781851">fg_color</a> (<a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> clr)</td></tr>
+<tr class="memdesc:a72d2cbc0c4e73a594bb189831b781851"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map a single 8-bit index into an RGB color using the bit-pattern {r:3,g:3,b:2} and return the corresponding ANSI 24-bit foreground escape sequence.  <br /></td></tr>
+<tr class="memitem:a495f11aee6dc0135ddf319e093dbea9d" id="r_a495f11aee6dc0135ddf319e093dbea9d"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a495f11aee6dc0135ddf319e093dbea9d">bg_color</a> (<a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> clr)</td></tr>
+<tr class="memdesc:a495f11aee6dc0135ddf319e093dbea9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map a single 8-bit index into an RGB color using the bit-pattern {r:3,g:3,b:2} and return the corresponding ANSI 24-bit background escape sequence.  <br /></td></tr>
 <tr class="memitem:a82213ec90d0c4bca2cd4b523bb95550a" id="r_a82213ec90d0c4bca2cd4b523bb95550a"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82213ec90d0c4bca2cd4b523bb95550a">bg_rgb</a> (<a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> r, <a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> g, <a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> b)</td></tr>
 <tr class="memdesc:a82213ec90d0c4bca2cd4b523bb95550a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns ANSI escape sequence to set 24-bit (RGB) background color.  <br /></td></tr>
-<tr class="memitem:a7940da6fea15763023c0f8cbc8606a9d" id="r_a7940da6fea15763023c0f8cbc8606a9d"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7940da6fea15763023c0f8cbc8606a9d">csr_pos</a> (<a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> row=1, <a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> col=1)</td></tr>
-<tr class="memdesc:a7940da6fea15763023c0f8cbc8606a9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns ANSI escape sequence to move the cursor to a specific position.  <br /></td></tr>
+<tr class="memitem:a56eed67fe021dbdd6dd99dcc0e30ea7b" id="r_a56eed67fe021dbdd6dd99dcc0e30ea7b"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56eed67fe021dbdd6dd99dcc0e30ea7b">set_cursor_pos</a> (<a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> row=1, <a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> col=1)</td></tr>
+<tr class="memdesc:a56eed67fe021dbdd6dd99dcc0e30ea7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns ANSI escape sequence to move the cursor to a specific position.  <br /></td></tr>
+<tr class="memitem:a19227b24235b03540ce7e610998e8df9" id="r_a19227b24235b03540ce7e610998e8df9"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19227b24235b03540ce7e610998e8df9">save_cursor</a> ()</td></tr>
+<tr class="memdesc:a19227b24235b03540ce7e610998e8df9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns ANSI escape sequence to save the current cursor position.  <br /></td></tr>
+<tr class="memitem:aa49cf5a83ab2494f854fc105d01d82ee" id="r_aa49cf5a83ab2494f854fc105d01d82ee"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa49cf5a83ab2494f854fc105d01d82ee">restore_cursor</a> ()</td></tr>
+<tr class="memdesc:aa49cf5a83ab2494f854fc105d01d82ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns ANSI escape sequence to restore a previously saved cursor position.  <br /></td></tr>
+<tr class="memitem:a9a5487e769cddf9b64e80394f8f74bea" id="r_a9a5487e769cddf9b64e80394f8f74bea"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a5487e769cddf9b64e80394f8f74bea">write_at</a> (<a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> row, <a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> col, const std::string &amp;s)</td></tr>
+<tr class="memdesc:a9a5487e769cddf9b64e80394f8f74bea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fast helper to write a string at a given terminal position.  <br /></td></tr>
+<tr class="memitem:a81d0c25043e13d8292c35d6ed151b291" id="r_a81d0c25043e13d8292c35d6ed151b291"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81d0c25043e13d8292c35d6ed151b291">draw_debug_text</a> (const std::string &amp;text, int x, int y, int ptsize=12, Uint8 r=255, Uint8 g=255, Uint8 b=255, Uint8 a=255)</td></tr>
+<tr class="memitem:a1ffa5ff9b521d8adc1a7cb52a33b5a87" id="r_a1ffa5ff9b521d8adc1a7cb52a33b5a87"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ffa5ff9b521d8adc1a7cb52a33b5a87">get_cursor_pos</a> (int &amp;row, int &amp;col)</td></tr>
+<tr class="memdesc:a1ffa5ff9b521d8adc1a7cb52a33b5a87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query the terminal for the current cursor position (row, col).  <br /></td></tr>
 <tr class="memitem:aeb344a9e40554c7c24fef1407c84dd5d" id="r_aeb344a9e40554c7c24fef1407c84dd5d"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb344a9e40554c7c24fef1407c84dd5d">erase_in_display</a> (<a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> n=0)</td></tr>
 <tr class="memdesc:aeb344a9e40554c7c24fef1407c84dd5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns ANSI escape sequence to clear part of the screen.  <br /></td></tr>
 <tr class="memitem:a45a8aa226151649d6dcddd5d3a4bd817" id="r_a45a8aa226151649d6dcddd5d3a4bd817"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a45a8aa226151649d6dcddd5d3a4bd817">erase_in_line</a> (<a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a> n=0)</td></tr>
@@ -275,6 +290,40 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a495f11aee6dc0135ddf319e093dbea9d" name="a495f11aee6dc0135ddf319e093dbea9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a495f11aee6dc0135ddf319e093dbea9d">&#9670;&#160;</a></span>bg_color()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string CLR::bg_color </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a></td>          <td class="paramname"><span class="paramname"><em>clr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Map a single 8-bit index into an RGB color using the bit-pattern {r:3,g:3,b:2} and return the corresponding ANSI 24-bit background escape sequence. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">clr</td><td>8-bit index where bits 7..5 = r (3 bits), 4..2 = g (3 bits), 1..0 = b (2 bits) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>ANSI escape sequence for 24-bit background color. </dd></dl>
+
+</div>
+</div>
 <a id="a82213ec90d0c4bca2cd4b523bb95550a" name="a82213ec90d0c4bca2cd4b523bb95550a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a82213ec90d0c4bca2cd4b523bb95550a">&#9670;&#160;</a></span>bg_rgb()</h2>
 
@@ -320,8 +369,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a7940da6fea15763023c0f8cbc8606a9d" name="a7940da6fea15763023c0f8cbc8606a9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7940da6fea15763023c0f8cbc8606a9d">&#9670;&#160;</a></span>csr_pos()</h2>
+<a id="a81d0c25043e13d8292c35d6ed151b291" name="a81d0c25043e13d8292c35d6ed151b291"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81d0c25043e13d8292c35d6ed151b291">&#9670;&#160;</a></span>draw_debug_text()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -330,32 +379,52 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string CLR::csr_pos </td>
+          <td class="memname">bool CLR::draw_debug_text </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a></td>          <td class="paramname"><span class="paramname"><em>row</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>text</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a></td>          <td class="paramname"><span class="paramname"><em>col</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>ptsize</em></span><span class="paramdefsep"> = </span><span class="paramdefval">12</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Uint8</td>          <td class="paramname"><span class="paramname"><em>r</em></span><span class="paramdefsep"> = </span><span class="paramdefval">255</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Uint8</td>          <td class="paramname"><span class="paramname"><em>g</em></span><span class="paramdefsep"> = </span><span class="paramdefval">255</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Uint8</td>          <td class="paramname"><span class="paramname"><em>b</em></span><span class="paramdefsep"> = </span><span class="paramdefval">255</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Uint8</td>          <td class="paramname"><span class="paramname"><em>a</em></span><span class="paramdefsep"> = </span><span class="paramdefval">255</span>&#160;)</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Returns ANSI escape sequence to move the cursor to a specific position. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">row</td><td>Row number (1-based). </td></tr>
-    <tr><td class="paramname">col</td><td>Column number (1-based). </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>ANSI escape sequence as a string. </dd></dl>
 
 </div>
 </div>
@@ -438,6 +507,40 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a8ac061433144df819feb3ce16f0d0dc8" name="a8ac061433144df819feb3ce16f0d0dc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ac061433144df819feb3ce16f0d0dc8">&#9670;&#160;</a></span>exposeToLua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CLR::exposeToLua </td>
+          <td>(</td>
+          <td class="paramtype">sol::state &amp;</td>          <td class="paramname"><span class="paramname"><em>lua</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Expose <a class="el" href="classCLR.html" title="Static container for ANSI escape sequences and formatting helpers.">CLR</a> constants and helper functions to a Lua state. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lua</td><td>The lua state to populate with a <span class="tt"><a class="el" href="classCLR.html" title="Static container for ANSI escape sequences and formatting helpers.">CLR</a></span> table. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Implementation lives in <a class="el" href="SDOM__CLR_8cpp.html">src/SDOM_CLR.cpp</a> to avoid duplicate inline definitions across translation units. </dd></dl>
+
+</div>
+</div>
 <a id="accb58e6431fd7167e1899cfec937f49f" name="accb58e6431fd7167e1899cfec937f49f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#accb58e6431fd7167e1899cfec937f49f">&#9670;&#160;</a></span>fg()</h2>
 
@@ -469,6 +572,40 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ANSI escape sequence as a string. </dd></dl>
+
+</div>
+</div>
+<a id="a72d2cbc0c4e73a594bb189831b781851" name="a72d2cbc0c4e73a594bb189831b781851"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72d2cbc0c4e73a594bb189831b781851">&#9670;&#160;</a></span>fg_color()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string CLR::fg_color </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a></td>          <td class="paramname"><span class="paramname"><em>clr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Map a single 8-bit index into an RGB color using the bit-pattern {r:3,g:3,b:2} and return the corresponding ANSI 24-bit foreground escape sequence. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">clr</td><td>8-bit index where bits 7..5 = r (3 bits), 4..2 = g (3 bits), 1..0 = b (2 bits) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>ANSI escape sequence for 24-bit foreground color. </dd></dl>
 
 </div>
 </div>
@@ -517,6 +654,46 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a1ffa5ff9b521d8adc1a7cb52a33b5a87" name="a1ffa5ff9b521d8adc1a7cb52a33b5a87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ffa5ff9b521d8adc1a7cb52a33b5a87">&#9670;&#160;</a></span>get_cursor_pos()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CLR::get_cursor_pos </td>
+          <td>(</td>
+          <td class="paramtype">int &amp;</td>          <td class="paramname"><span class="paramname"><em>row</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;</td>          <td class="paramname"><span class="paramname"><em>col</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Query the terminal for the current cursor position (row, col). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">row</td><td>Out parameter for 1-based row index. </td></tr>
+    <tr><td class="paramname">col</td><td>Out parameter for 1-based column index. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if cursor position was successfully queried; false otherwise. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>On POSIX this uses \x1b[6n (CPR) against /dev/tty and requires the terminal to support the Cursor Position Report sequence. On Windows it queries the console API. </dd></dl>
+
+</div>
+</div>
 <a id="a6182f7adc3cbbec8d91ac83c948306d3" name="a6182f7adc3cbbec8d91ac83c948306d3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6182f7adc3cbbec8d91ac83c948306d3">&#9670;&#160;</a></span>get_terminal_size()</h2>
 
@@ -548,7 +725,7 @@ Static Public Attributes</h2></td></tr>
 <p>This function is not called within an output stream. It should be called directly. Example usage: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> width = 0, height = 0;</div>
 <div class="line"><a class="code hl_function" href="#a6182f7adc3cbbec8d91ac83c948306d3">CLR::get_terminal_size</a>(width, height);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;width=&quot;</span> &lt;&lt; width &lt;&lt; <span class="stringliteral">&quot;, height=&quot;</span> &lt;&lt; height &lt;&lt; std::endl;</div>
-<div class="ttc" id="aclassCLR_html_a6182f7adc3cbbec8d91ac83c948306d3"><div class="ttname"><a href="#a6182f7adc3cbbec8d91ac83c948306d3">CLR::get_terminal_size</a></div><div class="ttdeci">static void get_terminal_size(int &amp;width, int &amp;height)</div><div class="ttdoc">Gets the current terminal size (width and height).</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:242</div></div>
+<div class="ttc" id="aclassCLR_html_a6182f7adc3cbbec8d91ac83c948306d3"><div class="ttname"><a href="#a6182f7adc3cbbec8d91ac83c948306d3">CLR::get_terminal_size</a></div><div class="ttdeci">static void get_terminal_size(int &amp;width, int &amp;height)</div><div class="ttdoc">Gets the current terminal size (width and height).</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:326</div></div>
 </div><!-- fragment --> <dl class="section note"><dt>Note</dt><dd>Only works on supported platforms (Windows, Linux, macOS). </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -719,6 +896,145 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Padded string. </dd></dl>
+
+</div>
+</div>
+<a id="aa49cf5a83ab2494f854fc105d01d82ee" name="aa49cf5a83ab2494f854fc105d01d82ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa49cf5a83ab2494f854fc105d01d82ee">&#9670;&#160;</a></span>restore_cursor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string CLR::restore_cursor </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns ANSI escape sequence to restore a previously saved cursor position. </p>
+
+</div>
+</div>
+<a id="a19227b24235b03540ce7e610998e8df9" name="a19227b24235b03540ce7e610998e8df9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19227b24235b03540ce7e610998e8df9">&#9670;&#160;</a></span>save_cursor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string CLR::save_cursor </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns ANSI escape sequence to save the current cursor position. </p>
+<dl class="section note"><dt>Note</dt><dd>Many terminals support ESC[s to save and ESC[u to restore. </dd></dl>
+
+</div>
+</div>
+<a id="a56eed67fe021dbdd6dd99dcc0e30ea7b" name="a56eed67fe021dbdd6dd99dcc0e30ea7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56eed67fe021dbdd6dd99dcc0e30ea7b">&#9670;&#160;</a></span>set_cursor_pos()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string CLR::set_cursor_pos </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a></td>          <td class="paramname"><span class="paramname"><em>row</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a></td>          <td class="paramname"><span class="paramname"><em>col</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns ANSI escape sequence to move the cursor to a specific position. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">row</td><td>Row number (1-based). </td></tr>
+    <tr><td class="paramname">col</td><td>Column number (1-based). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>ANSI escape sequence as a string. </dd></dl>
+
+</div>
+</div>
+<a id="a9a5487e769cddf9b64e80394f8f74bea" name="a9a5487e769cddf9b64e80394f8f74bea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a5487e769cddf9b64e80394f8f74bea">&#9670;&#160;</a></span>write_at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CLR::write_at </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a></td>          <td class="paramname"><span class="paramname"><em>row</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539">Byte</a></td>          <td class="paramname"><span class="paramname"><em>col</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Fast helper to write a string at a given terminal position. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">row</td><td>1-based row </td></tr>
+    <tr><td class="paramname">col</td><td>1-based column </td></tr>
+    <tr><td class="paramname">s</td><td>The string to write </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This writes directly to stdout and flushes; use sparingly. </dd></dl>
 
 </div>
 </div>
@@ -1827,8 +2143,9 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/SDOM/<a class="el" href="SDOM__CLR_8hpp_source.html">SDOM_CLR.hpp</a></li>
+<li>src/<a class="el" href="SDOM__CLR_8cpp.html">SDOM_CLR.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

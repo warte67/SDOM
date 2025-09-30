@@ -3,6 +3,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "lua_Core.cpp", "lua__Core_8cpp.html", "lua__Core_8cpp" ],
     [ "lua_IDisplayObject.cpp", "lua__IDisplayObject_8cpp.html", "lua__IDisplayObject_8cpp" ],
     [ "SDOM.cpp", "SDOM_8cpp.html", null ],
+    [ "SDOM_CLR.cpp", "SDOM__CLR_8cpp.html", null ],
     [ "SDOM_Core.cpp", "SDOM__Core_8cpp.html", null ],
     [ "SDOM_DomHandle.cpp", "SDOM__DomHandle_8cpp.html", null ],
     [ "SDOM_Event.cpp", "SDOM__Event_8cpp.html", null ],

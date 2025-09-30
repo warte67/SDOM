@@ -463,6 +463,25 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
+<p><b>[September 30, 2025]</b> <b>Lua Binding Debugging:</b></p><ul>
+<li>Added controlled debug prints to Lua usertype registration to trace binding operations.</li>
+<li>Verified that each usertype (DomHandle, IDisplayObject, Stage, Factory, Core) is registered exactly once, preventing conflicts and ensuring consistent behavior.</li>
+<li>Debug prints can be toggled with the <span class="tt">DEBUG_REGISTER_LUA</span> constant in <span class="tt"><a class="el" href="SDOM_8hpp.html">SDOM.hpp</a></span>. <b>Binding Consistency:</b></li>
+<li>Ensured that all Lua bindings are idempotent and do not conflict with each other.</li>
+<li>Verified that overloaded methods and custom types are correctly handled in Lua. <b>Code Cleanup:</b></li>
+<li>Removed unnecessary debug prints from production code, leaving controlled logging for future debugging needs.</li>
+<li>Ensured the codebase remains clean and maintainable. <b>Runtime wrappers &amp; module support:</b></li>
+<li>Added Lua runtime wrappers so the embedded Core can execute scripts directly from Lua: <span class="tt">core.run()</span> now accepts either a raw Lua string to execute or a filename to load and run.</li>
+<li>Enabled module-style scripting by opening <span class="tt">package</span>/<span class="tt">io</span> in the embedded state and preferring module-style configs (modules that return a table). This makes <span class="tt">require</span>-based configs and modular callback files work naturally in the embedded environment. <b>Core runtime wrappers &amp; module support:</b></li>
+<li>Added <span class="tt">Core:run()</span> (exposed to Lua as <span class="tt">core.run</span>) which accepts either a Lua string or a filename and executes it in the embedded state, enabling runtime script execution and quick iteration.</li>
+<li>Enabled module-style scripting by opening <span class="tt">package</span>/<span class="tt">io</span> in the embedded Lua state and preferring modules that return a table; this allows <span class="tt">require</span>-based configs and modular callback files. <b>Event / DisplayObject hooks (note):</b> <b><a class="el" href="classCLR.html" title="Static container for ANSI escape sequences and formatting helpers.">CLR</a> / Terminal &amp; Debug Text:</b></li>
+<li>Implemented fast terminal helpers in <a class="el" href="classCLR.html" title="Static container for ANSI escape sequences and formatting helpers.">CLR</a> (ANSI save/restore and <a class="el" href="classCLR.html#a9a5487e769cddf9b64e80394f8f74bea" title="Fast helper to write a string at a given terminal position.">CLR.write_at</a>) to avoid expensive /dev/tty cursor-position queries and per-frame blocking.</li>
+<li>Exposed <a class="el" href="classCLR.html#a9a5487e769cddf9b64e80394f8f74bea" title="Fast helper to write a string at a given terminal position.">CLR.write_at</a> and <a class="el" href="classCLR.html#a81d0c25043e13d8292c35d6ed151b291">CLR.draw_debug_text</a> to Lua so scripts can render debug overlays or FPS efficiently.</li>
+<li>Switched draw_debug_text to use SDL3's SDL_RenderDebugText as the primary in-window renderer and documented fallback options for terminals without support.</li>
+<li>Outcome: debug text and FPS overlays update at frame rate with minimal overhead, improving responsiveness and eliminating terminal read latency.</li>
+<li>Added EventType entries for IDisplayObject virtual hooks (Update, Render) so stage/display-object listeners can be registered consistently.</li>
+<li>TODO (left as a note for next shift): wire the dispatch points so these EventTypes are emitted from the IDisplayObject update/render traversal at the correct phases (target/capture/bubble as appropriate). Until dispatched, user Render/Update listeners should be attached via the stage or Core-level callbacks.</li>
+</ul>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md155"></a>
 Next Steps (garbage collection / orphan retention)</h1>
 <p>Proposed approach: add an <span class="tt">OrphanRetentionPolicy</span> enum (or a smaller <span class="tt">retainOnOrphan</span> boolean for a quick win) on <span class="tt">IDisplayObject</span> and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.</p>

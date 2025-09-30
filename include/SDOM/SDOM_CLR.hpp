@@ -36,6 +36,7 @@
 #include <SDL3/SDL.h>
 // Expose CLR helpers to embedded Lua states
 #include <sol/sol.hpp>
+#include <cstdio>
 
 // simple types for 8-bit archetecture 
 #ifndef Byte
@@ -166,6 +167,37 @@ public:
      */
     inline static const std::string set_cursor_pos(Byte row=1, Byte col=1) 
     { return "\e[" + std::to_string(row) + ";" + std::to_string(col) + "H"; }
+
+    /**
+     * @brief Returns ANSI escape sequence to save the current cursor position.
+     * @note Many terminals support ESC[s to save and ESC[u to restore.
+     */
+    inline static const std::string save_cursor() { return "\e[s"; }
+
+    /**
+     * @brief Returns ANSI escape sequence to restore a previously saved cursor position.
+     */
+    inline static const std::string restore_cursor() { return "\e[u"; }
+
+    /**
+     * @brief Fast helper to write a string at a given terminal position.
+     * @param row 1-based row
+     * @param col 1-based column
+     * @param s The string to write
+     * @note This writes directly to stdout and flushes; use sparingly.
+     */
+    inline static void write_at(Byte row, Byte col, const std::string& s) {
+        std::fwrite(save_cursor().c_str(), 1, save_cursor().size(), stdout);
+        std::fwrite(set_cursor_pos(row, col).c_str(), 1, set_cursor_pos(row, col).size(), stdout);
+        std::fwrite(s.c_str(), 1, s.size(), stdout);
+        std::fwrite(restore_cursor().c_str(), 1, restore_cursor().size(), stdout);
+        std::fflush(stdout);
+    }
+
+    // Render debug text into the current SDL renderer at (x,y).
+    // Uses SDL_RenderDebugText when available. Returns true on success.
+    static bool draw_debug_text(const std::string& text, int x, int y, int ptsize = 12,
+                                Uint8 r = 255, Uint8 g = 255, Uint8 b = 255, Uint8 a = 255);
 
     /**
      * @brief Query the terminal for the current cursor position (row, col).

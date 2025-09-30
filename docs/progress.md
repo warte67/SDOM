@@ -278,7 +278,14 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     **Core runtime wrappers & module support:**
         - Added `Core:run()` (exposed to Lua as `core.run`) which accepts either a Lua string or a filename and executes it in the embedded state, enabling runtime script execution and quick iteration.
         - Enabled module-style scripting by opening `package`/`io` in the embedded Lua state and preferring modules that return a table; this allows `require`-based configs and modular callback files.
-
+    **Event / DisplayObject hooks (note):**
+    **CLR / Terminal & Debug Text:**
+        - Implemented fast terminal helpers in CLR (ANSI save/restore and CLR.write_at) to avoid expensive /dev/tty cursor-position queries and per-frame blocking.
+        - Exposed CLR.write_at and CLR.draw_debug_text to Lua so scripts can render debug overlays or FPS efficiently.
+        - Switched draw_debug_text to use SDL3's SDL_RenderDebugText as the primary in-window renderer and documented fallback options for terminals without support.
+        - Outcome: debug text and FPS overlays update at frame rate with minimal overhead, improving responsiveness and eliminating terminal read latency.
+        - Added EventType entries for IDisplayObject virtual hooks (Update, Render) so stage/display-object listeners can be registered consistently.
+        - TODO (left as a note for next shift): wire the dispatch points so these EventTypes are emitted from the IDisplayObject update/render traversal at the correct phases (target/capture/bubble as appropriate). Until dispatched, user Render/Update listeners should be attached via the stage or Core-level callbacks.
 
 
         

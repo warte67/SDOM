@@ -15,6 +15,7 @@
 
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
 #include <SDOM/lua_Core.hpp>
+#include <algorithm>
 
 namespace SDOM
 {
@@ -44,8 +45,8 @@ namespace SDOM
 
     void Core::configure(const CoreConfig& config)
     {
-        config_ = config;  
-
+        // initialize or reconfigure SDL as needed
+        reconfigure(config);
         // Initialize the Factory (but only once)
         static bool factoryInitialized = false;
         if (factory_ && !factoryInitialized) {
@@ -112,14 +113,6 @@ namespace SDOM
             rootStageName = coreObj["rootStage"].get<std::string>();
         rootNode_ = factory_->getDomHandle(rootStageName);
         setWindowTitle("Stage: " + rootStageName);
-
-        // // Debug: List all display objects in the factory
-        // std::cout << "Factory display objects after configuration:\n";
-        // for (const auto& pair : factory_->displayObjects_) {
-        //     std::cout << "Display Object name: " << pair.first
-        //             << ", RawType: " << typeid(*pair.second).name()
-        //             << ", Type: " << pair.second->getType() << std::endl;
-        // }
     }
 
     void Core::configureFromLuaFile(const std::string& filename)
@@ -175,54 +168,6 @@ namespace SDOM
             ERROR(std::string("Error executing Lua config file: ") + e.what());
             return;
         }
-    }
-
-    void Core::startup_SDL()
-    {
-        if (!SDL_Init(SDL_INIT_VIDEO)) 
-        {
-            ERROR("SDL_Init Error: " + std::string(SDL_GetError()));
-        }
-
-        // create the main window
-        if (!window_)
-        {
-            window_ = SDL_CreateWindow(getWindowTitle().c_str(), config_.windowWidth, config_.windowHeight, config_.windowFlags);
-            if (!window_) 
-            {
-                std::string errorMsg = "SDL_CreateWindow() Error: " + std::string(SDL_GetError());
-                ERROR(errorMsg);
-            }
-        }
-        SDL_ShowWindow(window_);     // not needed in SDL3, but included for clarity
-
-        // create the renderer
-        if (!renderer_)
-        {
-            renderer_ = SDL_CreateRenderer(window_, NULL);
-            if (!renderer_) {
-                std::string errorMsg = "SDL_CreateRenderer() Error: " + std::string(SDL_GetError());
-                ERROR(errorMsg);
-            }
-        }
-
-        // create the stage texture
-        if (!texture_)
-        {
-            texture_ = SDL_CreateTexture(renderer_, 
-                config_.pixelFormat, 
-                SDL_TEXTUREACCESS_TARGET, 
-                config_.windowWidth / config_.pixelWidth, 
-                config_.windowHeight / config_.pixelHeight);
-            if (!texture_) {
-                std::string errorMsg = "SDL_CreateTexture() Error: " + std::string(SDL_GetError());
-                ERROR(errorMsg);
-            }
-        }
-        SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);   
-        int tWidth = static_cast<int>(config_.windowWidth / config_.pixelWidth);
-        int tHeight = static_cast<int>(config_.windowHeight / config_.pixelHeight);
-        SDL_SetRenderLogicalPresentation(renderer_, tWidth, tHeight, config_.rendererLogicalPresentation);
     }
 
     void Core::shutdown_SDL()
@@ -301,117 +246,141 @@ namespace SDOM
 
     void Core::reconfigure(const CoreConfig& config)
     {
-        static bool sdlWasInitialized = false;
-        // Initialize SDL if it hasn't been already
-        if (!sdlWasInitialized) {
-            startup_SDL();
-            sdlWasInitialized = true;
-        }
-        else 
+        // Note: reconfigure should be called from the main thread. This
+        // function is not thread-safe; consider adding a deferred-apply
+        // mechanism if configs may be changed from worker threads.
+
+        // Resource recreation matrix (CoreConfig -> SDL resource effect)
+
+        // Config field                | Window    | Renderer  | Texture  | Notes
+        // ----------------------------+-----------+-----------+----------+---------------------------------------------------------
+        // windowWidth                 | Recreate  | Recreate  | Recreate | Immediate: window/renderer/texture rebuilt
+        // windowHeight                | Recreate  | Recreate  | Recreate | Immediate
+        // windowFlags                 | Recreate  | Recreate  | Recreate | Immediate
+        // rendererLogicalPresentation | No change | Recreate  | Recreate | Renderer/texture recreated to apply presentation
+        // pixelWidth                  | No change | No change | Recreate | Texture recreated (pixel sizing)
+        // pixelHeight                 | No change | No change | Recreate | Texture recreated (pixel sizing)
+        // pixelFormat                 | No change | No change | Recreate | Texture recreated (pixel format)
+
+        // Legend:
+        // - "Recreate" = Core will destroy and recreate that SDL resource immediately when the config changes.
+        // - "No change" = Core does not recreate that resource for this field.
+        // - "No change (flag only)" = Core updates the config flag but does not immediately change any SDL resource; the new flag value only affects behavior when the window is next resized (so the actual texture/recreate work happens on/after resize).
+
+
         // reconfigure the SDL resources based on what is being changed
+        bool windowWidth_changed = (config_.windowWidth != config.windowWidth);
+        bool windowHeight_changed = (config_.windowHeight != config.windowHeight);
+        bool windowFlags_changed = (config_.windowFlags != config.windowFlags);
+        bool rendererLogicalPresentation_changed = (config_.rendererLogicalPresentation != config.rendererLogicalPresentation);
+        bool pixelWidth_changed = (config_.pixelWidth != config.pixelWidth);
+        bool pixelHeight_changed = (config_.pixelHeight != config.pixelHeight);
+        bool pixelFormat_changed = (config_.pixelFormat != config.pixelFormat);
+
+        // compute each recreation flag independently (clearer and no
+        // accidental masking of combined changes)
+        bool recreate_window = (windowWidth_changed || windowHeight_changed || windowFlags_changed);
+        bool recreate_renderer = recreate_window || rendererLogicalPresentation_changed;
+        bool recreate_texture = recreate_window || rendererLogicalPresentation_changed || pixelWidth_changed || pixelHeight_changed || pixelFormat_changed;
+
+        if (recreate_window || recreate_renderer || recreate_texture) {
+            DEBUG_LOG("Core::reconfigure(): significant SDL resource reinitialization requested");
+        }        
+
+        // update config_
+        config_.windowWidth = config.windowWidth;
+        config_.windowHeight = config.windowHeight;
+        config_.windowFlags = config.windowFlags;
+        config_.rendererLogicalPresentation = config.rendererLogicalPresentation;
+        config_.pixelWidth = config.pixelWidth;
+        config_.pixelHeight = config.pixelHeight;
+        config_.pixelFormat = config.pixelFormat;
+        config_.preserveAspectRatio = config.preserveAspectRatio;
+        config_.allowTextureResize = config.allowTextureResize;
+
+        // -- initialize or reconfigure SDL resources as needed -- //
+        if (!SDL_WasInit(SDL_INIT_VIDEO)) 
         {
-            // Resource recreation matrix (CoreConfig -> SDL resource effect)
-
-            // Columns: Window | Renderer | Texture
-
-            // Config field                  | Window                 | Renderer               | Texture                  | Notes
-            // ------------------------------+------------------------+------------------------+--------------------------+---------------------------------------------------------
-            // windowWidth                   | Recreate               | Recreate               | Recreate                 | Immediate: window/renderer/texture rebuilt
-            // windowHeight                  | Recreate               | Recreate               | Recreate                 | Immediate
-            // windowFlags                   | Recreate               | Recreate               | Recreate                 | Immediate
-            // rendererLogicalPresentation   | No change              | Recreate               | Recreate                 | Renderer/texture recreated to apply presentation
-            // pixelWidth                    | No change              | No change              | Recreate                 | Texture recreated (pixel sizing)
-            // pixelHeight                   | No change              | No change              | Recreate                 | Texture recreated (pixel sizing)
-            // pixelFormat                   | No change              | No change              | Recreate                 | Texture recreated (pixel format)
-
-            // Legend:
-            // - "Recreate" = Core will destroy and recreate that SDL resource immediately when the config changes.
-            // - "No change" = Core does not recreate that resource for this field.
-            // - "No change (flag only)" = Core updates the config flag but does not immediately change any SDL resource; the new flag value only affects behavior when the window is next resized (so the actual texture/recreate work happens on/after resize).
-
-
-            bool windowWidth_changed = (config_.windowWidth != config.windowWidth);
-            bool windowHeight_changed = (config_.windowHeight != config.windowHeight);
-            bool windowFlags_changed = (config_.windowFlags != config.windowFlags);
-            bool rendererLogicalPresentation_changed = (config_.rendererLogicalPresentation != config.rendererLogicalPresentation);
-            bool pixelWidth_changed = (config_.pixelWidth != config.pixelWidth);
-            bool pixelHeight_changed = (config_.pixelHeight != config.pixelHeight);
-            bool pixelFormat_changed = (config_.pixelFormat != config.pixelFormat);
-
-            // update these flags by checking the difference between properties of config and config_
-            bool recreate_window = false;
-            bool recreate_renderer = false;
-            bool recreate_texture = false;
-            if (windowWidth_changed || windowHeight_changed || windowFlags_changed) {
-                recreate_window = true;
-                recreate_renderer = true;
-                recreate_texture = true;
-            } else if (rendererLogicalPresentation_changed) {
-                recreate_renderer = true;
-                recreate_texture = true;
-            } else if (pixelWidth_changed || pixelHeight_changed || pixelFormat_changed) {
-                recreate_texture = true;
+            if (!SDL_Init(SDL_INIT_VIDEO)) 
+            {
+                std::string errorMsg = "SDL_Init() Error: " + std::string(SDL_GetError());
+                ERROR(errorMsg);
+                return;
             }
-
-            // update config_
-            config_.windowWidth = config.windowWidth;
-            config_.windowHeight = config.windowHeight;
-            config_.windowFlags = config.windowFlags;
-            config_.rendererLogicalPresentation = config.rendererLogicalPresentation;
-            config_.pixelWidth = config.pixelWidth;
-            config_.pixelHeight = config.pixelHeight;
-            config_.pixelFormat = config.pixelFormat;
-            config_.preserveAspectRatio = config.preserveAspectRatio;
-            config_.allowTextureResize = config.allowTextureResize;
-
-            // destroy in reverse order
-            if (recreate_texture && texture_) {
-                SDL_DestroyTexture(texture_);
-                texture_ = nullptr;
-            }
-            if (recreate_renderer && renderer_) {
-                SDL_DestroyRenderer(renderer_);
-                renderer_ = nullptr;
-            }
-            if (recreate_window && window_) {
-                SDL_DestroyWindow(window_);
-                window_ = nullptr;
-            }
-
-            // recreate in normal order
-            if (recreate_window && !window_) {
-                window_ = SDL_CreateWindow(getWindowTitle().c_str(), config.windowWidth, config.windowHeight, config.windowFlags);
-                if (!window_) 
-                {
-                    std::string errorMsg = "SDL_CreateWindow() Error: " + std::string(SDL_GetError());
-                    ERROR(errorMsg);
-                }
-                SDL_ShowWindow(window_);     // not needed in SDL3, but included for clarity
-            }
-            if (recreate_renderer && !renderer_) {
-                renderer_ = SDL_CreateRenderer(window_, NULL);
-                if (!renderer_) {
-                    std::string errorMsg = "SDL_CreateRenderer() Error: " + std::string (SDL_GetError());
-                    ERROR(errorMsg);
-                }
-            }
-            if (recreate_texture && !texture_) {
-                texture_ = SDL_CreateTexture(renderer_, 
-                    config.pixelFormat, 
-                    SDL_TEXTUREACCESS_TARGET, 
-                    config.windowWidth / config.pixelWidth, 
-                    config.windowHeight / config.pixelHeight);
-                if (!texture_) {
-                    std::string errorMsg = "SDL_CreateTexture() Error: " + std::string(SDL_GetError());
-                    ERROR(errorMsg);
-                }
-                SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);   
-                int tWidth = static_cast<int>(config.windowWidth / config.pixelWidth);
-                int tHeight = static_cast<int>(config.windowHeight / config.pixelHeight);
-                SDL_SetRenderLogicalPresentation(renderer_, tWidth, tHeight, config.rendererLogicalPresentation);
-            }
-
         }
+
+        // destroy in reverse order
+        if (recreate_texture && texture_) {
+            SDL_DestroyTexture(texture_);
+            texture_ = nullptr;
+        }
+        if (recreate_renderer && renderer_) {
+            SDL_DestroyRenderer(renderer_);
+            renderer_ = nullptr;
+        }
+        if (recreate_window && window_) {
+            SDL_DestroyWindow(window_);
+            window_ = nullptr;
+        }
+
+        // recreate in normal order
+        if (recreate_window && !window_) {
+            window_ = SDL_CreateWindow(getWindowTitle().c_str(), config.windowWidth, config.windowHeight, config.windowFlags);
+            if (!window_) 
+            {
+                std::string errorMsg = "SDL_CreateWindow() Error: " + std::string(SDL_GetError());
+                ERROR(errorMsg);
+            }
+            SDL_ShowWindow(window_);     // not needed in SDL3, but included for clarity
+        }
+        if (recreate_renderer && !renderer_) {
+            renderer_ = SDL_CreateRenderer(window_, NULL);
+            if (!renderer_) {
+                std::string errorMsg = "SDL_CreateRenderer() Error: " + std::string (SDL_GetError());
+                ERROR(errorMsg);
+            }
+        }
+        if (recreate_texture && !texture_) {
+            // compute texture size safely (avoid divide-by-zero and ensure >=1)
+            int tWidth = 1;
+            int tHeight = 1;
+            if (config.pixelWidth != 0.0f) tWidth = std::max(1, static_cast<int>(config.windowWidth / config.pixelWidth));
+            if (config.pixelHeight != 0.0f) tHeight = std::max(1, static_cast<int>(config.windowHeight / config.pixelHeight));
+
+            texture_ = SDL_CreateTexture(renderer_,
+                config.pixelFormat,
+                SDL_TEXTUREACCESS_TARGET,
+                tWidth,
+                tHeight);
+            if (!texture_) {
+                std::string errorMsg = "SDL_CreateTexture() Error: " + std::string(SDL_GetError());
+                ERROR(errorMsg);
+            }
+            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);   
+            SDL_SetRenderLogicalPresentation(renderer_, tWidth, tHeight, config.rendererLogicalPresentation);
+        }
+        sdlStarted_ = true;
+    }
+
+    void Core::requestConfigApply(const CoreConfig& cfg)
+    {
+        std::lock_guard<std::mutex> lock(pendingConfigMutex_);
+        pendingConfig_ = cfg;
+        pendingConfigRequested_.store(true, std::memory_order_release);
+    }
+
+    void Core::applyPendingConfig()
+    {
+        if (!pendingConfigRequested_.load(std::memory_order_acquire))
+            return;
+        CoreConfig cfg;
+        {
+            std::lock_guard<std::mutex> lock(pendingConfigMutex_);
+            cfg = pendingConfig_;
+            pendingConfigRequested_.store(false, std::memory_order_release);
+        }
+        // Apply on main thread
+        reconfigure(cfg);
     }
 
     void Core::run()
@@ -428,8 +397,8 @@ namespace SDOM
             }
             runWasStarted = true;
 
-            // Ensure SDL is initialized
-            startup_SDL();
+            // // Ensure SDL is initialized
+            // startup_SDL();
 
             // register and initialize the factory object (after creating SDL resources)
             onInit();   // for now just call onInit(). Later Factory will call onInit() 
@@ -455,6 +424,10 @@ namespace SDOM
             }
 
             SDL_Event event;
+
+            // // Apply any pending configuration requested from other threads
+            // applyPendingConfig();
+
             while (bIsRunning_) 
             {
                 while (SDL_PollEvent(&event)) 
@@ -579,6 +552,9 @@ namespace SDOM
     void Core::pumpEventsOnce()
     {
         SDL_Event event;
+// // Apply any pending configuration requested from other threads
+// applyPendingConfig();
+
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_EVENT_QUIT)
@@ -655,38 +631,36 @@ namespace SDOM
 
     void Core::onRender()
     {
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer)
+            ERROR("Core::onRender() Error: Renderer is null.");
+
         // Lambda for recursive render handling using std::function
         std::function<void(IDisplayObject&)> handleRender;
-        handleRender = [&handleRender](IDisplayObject& node) {
+        SDL_Texture* texture = texture_;
+        handleRender = [&handleRender, renderer, texture](IDisplayObject& node) {
             node.onRender();
-            for (const auto& child : node.getChildren()) {
+            for (const auto& child : node.getChildren()) 
+            {
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
-                if (childObj) {
+                if (childObj) 
+                {
+                    // ensure the render target is set correctly before rendering
+                    if (texture)
+                        SDL_SetRenderTarget(renderer, texture);
                     handleRender(*childObj);
                 }
             }
         };
 
-        SDL_Renderer* renderer = getRenderer();
-        if (!renderer)
-            ERROR("Core::onRender() Error: Renderer is null.");
-
-        // Set render target to window (nullptr means default window target)
-        SDL_SetRenderTarget(renderer, nullptr);
-        // Call the users registered render function if available
-        if (fnOnRender)
-            fnOnRender();
-        // Reset render target to window again (in case user changed it)
-        SDL_SetRenderTarget(renderer, nullptr);
+        // set the render target to the proper background texture
+        if (texture_)
+            SDL_SetRenderTarget(renderer, texture_); 
 
         // Clear the entire window to the border color
         SDL_Color color = getColor();
         SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
         SDL_RenderClear(renderer);
-
-        // Point the render target back to the main texture
-        if (texture_)
-            SDL_SetRenderTarget(renderer, texture_); // set the render target to the proper background texture
 
         // Call recursive render on the root node (if it exists)
         IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
@@ -696,6 +670,12 @@ namespace SDOM
             handleRender(*rootObj);
             setIsTraversing(false);
         }
+
+        // Call the users registered render function if available. 
+        // This is called after the entire scene has been rendered
+        // so the user can overlay additional graphics if desired.
+        if (fnOnRender)
+            fnOnRender();        
     }
 
     void Core::onEvent(Event& event)
@@ -899,86 +879,8 @@ namespace SDOM
     {
         // Store previous config for comparison
         static CoreConfig prevConfig = config_;
-        // Determine which resources need to be recreated
-        bool recreateWindow = false;
-        bool recreateRenderer = false;
-        bool recreateTexture = false;
-        // Window recreation conditions
-        if (config_.windowWidth != prevConfig.windowWidth ||
-            config_.windowHeight != prevConfig.windowHeight ||
-            config_.windowFlags != prevConfig.windowFlags)
-        {
-            recreateWindow = true;
-            recreateRenderer = true;
-            recreateTexture = true;
-        }
-        // Renderer recreation conditions
-        if (config_.rendererLogicalPresentation != prevConfig.rendererLogicalPresentation)
-        {
-            recreateRenderer = true;
-            recreateTexture = true;
-        }
-        // Texture recreation conditions
-        if (config_.pixelWidth != prevConfig.pixelWidth ||
-            config_.pixelHeight != prevConfig.pixelHeight ||
-            config_.pixelFormat != prevConfig.pixelFormat ||
-            config_.preserveAspectRatio != prevConfig.preserveAspectRatio ||
-            config_.allowTextureResize != prevConfig.allowTextureResize)
-        {
-            recreateTexture = true;
-        }
-        // Destroy and recreate resources as needed
-        if (recreateTexture && texture_) {
-            SDL_DestroyTexture(texture_);
-            texture_ = nullptr;
-        }
-        if (recreateRenderer && renderer_) {
-            SDL_DestroyRenderer(renderer_);
-            renderer_ = nullptr;
-        }
-        if (recreateWindow && window_) {
-            SDL_DestroyWindow(window_);
-            window_ = nullptr;
-        }
-        // Recreate resources in order
-        if (recreateWindow) {
-            window_ = SDL_CreateWindow(getWindowTitle().c_str(), config_.windowWidth, config_.windowHeight, config_.windowFlags);
-            if (!window_) ERROR("SDL_CreateWindow() Error: " + std::string(SDL_GetError()));
-        }
-        if (recreateRenderer) {
-            renderer_ = SDL_CreateRenderer(window_, NULL);
-            if (!renderer_) ERROR("SDL_CreateRenderer() Error: " + std::string(SDL_GetError()));
-        }
-        if (recreateTexture) {
-            // Set texture width and height based on pixel size; 
-            //     ensure no divide-by-zero errors
-            int tWidth  = (config_.pixelWidth  != 0.0f)
-                ? static_cast<int>(config_.windowWidth  / config_.pixelWidth)
-                : 1;
-            int tHeight = (config_.pixelHeight != 0.0f)
-                ? static_cast<int>(config_.windowHeight / config_.pixelHeight)
-                : 1;
-
-            texture_ = SDL_CreateTexture(
-                renderer_,
-                config_.pixelFormat,
-                SDL_TEXTUREACCESS_TARGET,
-                tWidth,
-                tHeight
-            );
-            if (!texture_)
-                ERROR("SDL_CreateTexture() Error: " +
-                    std::string(SDL_GetError()));
-
-            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
-            SDL_SetRenderLogicalPresentation(
-                renderer_,
-                tWidth,
-                tHeight,
-                config_.rendererLogicalPresentation
-            );
-        } // END if (recreateTexture)
-
+        // initialize or reconfigure SDL resources as needed
+        reconfigure(prevConfig);
         // Update previous config
         prevConfig = config_;
     } // END void Core::refreshSDLResources()
@@ -1569,6 +1471,12 @@ namespace SDOM
                     const Core& core = static_cast<const Core&>(obj);
                     return sol::make_object(lua, getElapsedTime_lua(core));
                 });
+            // Alias for scripts that expect a "delta_time" style name
+            factory_->registerLuaFunction(typeName, "get_delta_time",
+                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
+                    const Core& core = static_cast<const Core&>(obj);
+                    return sol::make_object(lua, getElapsedTime_lua(core));
+                });
 
             // Event helpers (pump/push) - expose to Lua
             factory_->registerLuaCommand(typeName, "pumpEventsOnce",
@@ -1728,6 +1636,10 @@ namespace SDOM
             sol::table t = sv.create_table();
             for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
             return sol::make_object(sv, t);
+        });
+        // Convenience alias used by some Lua callbacks: get_delta_time -> elapsed time per frame
+        coreTable.set_function("get_delta_time", [](sol::this_state /*ts*/, sol::object /*self*/) {
+            return Core::getInstance().getElapsedTime();
         });
         coreTable.set_function("getCommandNamesForType", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName) {
             sol::state_view sv = ts;

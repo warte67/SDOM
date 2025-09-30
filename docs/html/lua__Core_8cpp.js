@@ -1,5 +1,7 @@
 var lua__Core_8cpp =
 [
+    [ "SDOM::configure_lua", "namespaceSDOM.html#a572b1e609d4dcd8425a9cda2d1687016", null ],
+    [ "SDOM::configureFromFile_lua", "namespaceSDOM.html#a7e3de6d3c92d997c8d1349fa90833153", null ],
     [ "SDOM::countOrphanedDisplayObjects_lua", "namespaceSDOM.html#aca94e266c7734ec81c5983d92249434d", null ],
     [ "SDOM::createDisplayObject_lua", "namespaceSDOM.html#ad0387ad6cbc600b6b99a9ac2999d5fc5", null ],
     [ "SDOM::destroyDisplayObject_lua", "namespaceSDOM.html#a464520e1cb9300dd2bf812ef7d493601", null ],
@@ -27,6 +29,15 @@ var lua__Core_8cpp =
     [ "SDOM::pushKeyboardEvent_lua", "namespaceSDOM.html#ab7c90ac65a0479e41661807cebbfea4e", null ],
     [ "SDOM::pushMouseEvent_lua", "namespaceSDOM.html#ae4de2b56916b193e3a1dbaebbf23c3d0", null ],
     [ "SDOM::quit_lua", "namespaceSDOM.html#aeb88e3bf293940249fee9db1cfa982e1", null ],
+    [ "SDOM::registerOn_lua", "namespaceSDOM.html#a406a87a192bdc79f998752010300908f", null ],
+    [ "SDOM::registerOnEvent_lua", "namespaceSDOM.html#a603bc5740b5f5513f3f8e8cfdd16d91b", null ],
+    [ "SDOM::registerOnInit_lua", "namespaceSDOM.html#a48c608f3dfaf3b8bc613bbae32f6021b", null ],
+    [ "SDOM::registerOnQuit_lua", "namespaceSDOM.html#afc1a078680f937e327ff9d96467c710a", null ],
+    [ "SDOM::registerOnRender_lua", "namespaceSDOM.html#a93ef993437ff0e0edde2a460f2d27c40", null ],
+    [ "SDOM::registerOnUnitTest_lua", "namespaceSDOM.html#a6644c48db32194e84bcdf4e983c424b0", null ],
+    [ "SDOM::registerOnUpdate_lua", "namespaceSDOM.html#a8f9719ae9f97d16d30a9b552a67bf430", null ],
+    [ "SDOM::registerOnWindowResize_lua", "namespaceSDOM.html#ac9477da8c80517c4ceebfce7fd7e73c4", null ],
+    [ "SDOM::run_lua", "namespaceSDOM.html#a60015b273d74524f0c867ccc1dda4249", null ],
     [ "SDOM::setIsTraversing_lua", "namespaceSDOM.html#ae91394490fec2fa52df3e88d910e2b33", null ],
     [ "SDOM::setKeyboardFocusedObject_lua", "namespaceSDOM.html#a1f3f6d1985013d12b313e4510ba4a85e", null ],
     [ "SDOM::setMouseHoveredObject_lua", "namespaceSDOM.html#ad9b332a9454cc79d31d642dbde24aa26", null ],

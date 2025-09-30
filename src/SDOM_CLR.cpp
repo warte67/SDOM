@@ -1,3 +1,4 @@
+#include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_CLR.hpp>
 #if defined(__linux__) || defined(__APPLE__)
 #include <termios.h>
@@ -101,6 +102,16 @@ void CLR::exposeToLua(sol::state& lua)
         return std::make_tuple(-1, -1);
     });
 
+    // Fast save/restore helpers and write_at for quick terminal updates
+    clr.set_function("save_cursor", [](){ return CLR::save_cursor(); });
+    clr.set_function("restore_cursor", [](){ return CLR::restore_cursor(); });
+    clr.set_function("write_at", [](int row, int col, const std::string& s){ CLR::write_at(static_cast<unsigned char>(row), static_cast<unsigned char>(col), s); });
+
+    // draw_debug_text: render debug text into the SDL renderer at (x,y)
+    clr.set_function("draw_debug_text", [](const std::string& text, int x, int y, int ptsize, int r, int g, int b, int a) {
+        return CLR::draw_debug_text(text, x, y, ptsize, static_cast<Uint8>(r), static_cast<Uint8>(g), static_cast<Uint8>(b), static_cast<Uint8>(a));
+    });
+
     // publish into lua
     lua["CLR"] = clr;
 }
@@ -167,4 +178,30 @@ void CLR::exposeToLua(sol::state& lua)
         (void)row; (void)col;
         return false;
     #endif
+    }
+
+    bool CLR::draw_debug_text(const std::string& text, int x, int y, int ptsize,
+                              Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+    {
+        // Use Core's renderer if available. Prefer SDL3's built-in debug text renderer
+        // when available via SDL_RenderDebugText(). This avoids pulling in SDL_ttf
+        // and matching platform font paths. That comes later with the IResourceObjects.
+        try {
+            SDOM::Core& core = SDOM::Core::getInstance();
+            SDL_Renderer* renderer = core.getRenderer();
+            if (!renderer) return false;
+            if (!SDL_SetRenderDrawColor(renderer, r, g, b, a)) return false;
+
+            // SDL3 provides a small debug text rendering helper on many builds. Call it
+            // directly to draw UTF-8 text at a float position. If the symbol is not
+            // present in the linked SDL library this will fail at link time; the project
+            // is configured to use SDL3 on target systems where this helper exists.
+            if(!SDL_RenderDebugText(renderer, static_cast<float>(x), static_cast<float>(y), text.c_str())) {
+                ERROR("SDL_RenderDebugText failed");
+                return false;
+            }
+            return true;
+        } catch (...) {
+            return false;
+        }
     }

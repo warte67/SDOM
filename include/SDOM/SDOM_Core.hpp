@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDOM/SDOM.hpp>
+#include <atomic>
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_DomHandle.hpp>
@@ -126,15 +127,15 @@ namespace SDOM
         SDL_PixelFormat getPixelFormat() const;
 
         void setConfig(CoreConfig& config);
-        void setWindowWidth(float width);// = 800.0f);
-        void setWindowHeight(float height);// = 600.0f);
-        void setPixelWidth(float width);// = 2.0f);
-        void setPixelHeight(float height);// = 2.0f);
-        void setPreserveAspectRatio(bool preserve);// = true);
-        void setAllowTextureResize(bool allow);// = true);
-        void setRendererLogicalPresentation(SDL_RendererLogicalPresentation presentation);// = SDL_LOGICAL_PRESENTATION_LETTERBOX);
-        void setWindowFlags(SDL_WindowFlags flags);// = SDL_WINDOW_RESIZABLE);
-        void setPixelFormat(SDL_PixelFormat format);// = SDL_PIXELFORMAT_RGBA8888);
+        void setWindowWidth(float width);
+        void setWindowHeight(float height);
+        void setPixelWidth(float width);
+        void setPixelHeight(float height);
+        void setPreserveAspectRatio(bool preserve);
+        void setAllowTextureResize(bool allow);
+        void setRendererLogicalPresentation(SDL_RendererLogicalPresentation presentation);
+        void setWindowFlags(SDL_WindowFlags flags);
+        void setPixelFormat(SDL_PixelFormat format);
 
         // --- Factory & EventManager Access --- //
         Factory& getFactory() const { return *factory_; }
@@ -223,6 +224,18 @@ namespace SDOM
         bool isTraversing_ = false;
         float fElapsedTime_;             // Elapsed time since the last update
 
+        // Track whether SDL has been started for this Core instance. Using a
+        // member instead of a function-static variable keeps state tied to
+        // the instance lifetime and is easier to reason about in tests.
+        bool sdlStarted_ = false;
+
+        // Deferred-apply support: allow worker threads to request a
+        // CoreConfig change which will be applied on the main thread
+        // during a safe point (start of frame / event pumping).
+        std::mutex pendingConfigMutex_;
+        std::atomic_bool pendingConfigRequested_{false};
+        CoreConfig pendingConfig_;
+
         // --- DOM --- //
         DomHandle rootNode_; // The root of the resource tree
         DomHandle hoveredObject_;
@@ -263,10 +276,15 @@ namespace SDOM
         std::function<void(int, int)> fnOnWindowResize = nullptr;
 
         // --- Private Helpers --- //
-        void startup_SDL();
-        void shutdown_SDL();
-        void refreshSDLResources();
-        bool coreTests_();
+        void shutdown_SDL();    // Gracefully shutdown SDL subsystems and free resources
+        void refreshSDLResources(); // Initialize or refresh SDL resources (window, renderer, texture) as needed
+        bool coreTests_();  // some basic initial internal Core Unit Tests
+
+        // Request that the given config be applied on the main thread
+        // at the next safe point. Thread-safe.
+        void requestConfigApply(const CoreConfig& cfg);
+        // Called on main thread to apply any pending config request.
+        void applyPendingConfig();
 
     protected:
         friend Factory;

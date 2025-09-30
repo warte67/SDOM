@@ -123,4 +123,6 @@ Core:registerOn("Render", callbacks.render.on_render)
 Core:registerOn("UnitTest", callbacks.unittest.on_unit_test)
 Core:registerOn("WindowResize", callbacks.window_resize.on_window_resize)
 
+
+
 return config

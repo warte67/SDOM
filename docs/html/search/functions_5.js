@@ -7,5 +7,6 @@ var searchData=
   ['eventtype_4',['EventType',['../classSDOM_1_1EventType.html#ace3a9596f6806b55dcfb477f8da686ec',1,'SDOM::EventType::EventType(const std::string &amp;name)'],['../classSDOM_1_1EventType.html#a647ab7d38f981dca7b5b00d818e2412c',1,'SDOM::EventType::EventType(const std::string &amp;name, bool captures, bool bubbles, bool targetOnly, bool global)']]],
   ['eventtypefromstring_5',['eventTypeFromString',['../classSDOM_1_1SDL__Utils.html#a15e7cc9c1c4259d53bf6b2ceecc9b3b9',1,'SDOM::SDL_Utils']]],
   ['eventtypetostring_6',['eventTypeToString',['../classSDOM_1_1SDL__Utils.html#ae268fa06a6b1779780566f36eea2fedb',1,'SDOM::SDL_Utils']]],
-  ['exception_7',['Exception',['../classSDOM_1_1Exception.html#a52c9fa366c36fcb7fe48a1ac827a02a0',1,'SDOM::Exception']]]
+  ['exception_7',['Exception',['../classSDOM_1_1Exception.html#a52c9fa366c36fcb7fe48a1ac827a02a0',1,'SDOM::Exception']]],
+  ['exposetolua_8',['exposeToLua',['../classCLR.html#a8ac061433144df819feb3ce16f0d0dc8',1,'CLR']]]
 ];
