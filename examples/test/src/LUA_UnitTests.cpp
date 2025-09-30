@@ -512,28 +512,53 @@ bool test19_lua()
     return UnitTests::run("Lua: test #19", "Mouse hover to blueishBox", [=]() { return ok; });
 }
 
+bool test20_lua()
+{
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+    bool ok = lua.script(R"(
+        -- Grab initial window title and verify
+        local stageTitle = Core:getWindowTitle()
+        if stageTitle ~= 'Stage: mainStage' then return false end
+
+        -- Change to stageTwo and verify
+        Core:setWindowTitle('Stage: stageTwo')
+        local t2 = Core:getWindowTitle()
+        if t2 ~= 'Stage: stageTwo' then return false end
+
+        -- Restore original title and verify
+        Core:setWindowTitle(stageTitle)
+        local t3 = Core:getWindowTitle()
+        if t3 ~= stageTitle then return false end
+
+        return true
+    )").get<bool>();
+
+    return UnitTests::run("Lua: test #20", "Verify get/setWindowTitle from Lua", [=]() { return ok; });
+}
+
 bool LUA_UnitTests() {
     bool allTestsPassed = true;
     std::vector<std::function<bool()>> tests = {
-        [&]() { return test1_Lua(); },
-        [&]() { return test2_Lua(); },
-        [&]() { return test3_Lua(); },
-        [&]() { return test4_Lua(); },
-        [&]() { return test5_Lua(); },
-        [&]() { return test6_Lua(); },
-        [&]() { return test7_Lua(); },
-        [&]() { return test8_Lua(); },
-        [&]() { return test9_Lua(); },
-        [&]() { return test10_lua(); },
-        [&]() { return test11_lua(); },
-        [&]() { return test12_lua(); },
-        [&]() { return test13_lua(); },
-        [&]() { return test14_lua(); },
-        [&]() { return test15_lua(); },
-        [&]() { return test16_lua(); },
-        [&]() { return test17_lua(); },
-        [&]() { return test18_lua(); },
-        [&]() { return test19_lua(); }
+        [&]() { return test1_Lua(); }, // Create Box and verify existence
+        [&]() { return test2_Lua(); }, // Verify get/setPosition from Lua
+        [&]() { return test3_Lua(); }, // Verify get/setSize from Lua
+        [&]() { return test4_Lua(); }, // Lua binding roundtrip add/hasChild
+        [&]() { return test5_Lua(); }, // Verify getPropertyNamesForType(blueishBox)
+        [&]() { return test6_Lua(); }, // Verify getFunctionNamesForType(blueishBox)
+        [&]() { return test7_Lua(); }, // Verify getCommandNamesForType(blueishBox)
+        [&]() { return test8_Lua(); }, // Verify synthetic MouseClick triggers Box listener
+        [&]() { return test9_Lua(); }, // Lua-only event handler + synthetic click
+        [&]() { return test10_lua(); }, // Verify initial stage is 'mainStage'
+        [&]() { return test11_lua(); }, // Set root by name to 'stageTwo' and verify
+        [&]() { return test12_lua(); }, // Set root by handle using 'stageThree' and verify
+        [&]() { return test13_lua(); }, // Use alias setStage to return to 'mainStage' and verify
+        [&]() { return test14_lua(); }, // Toggle getIsTraversing via setIsTraversing and restore
+        [&]() { return test15_lua(); }, // Orphan lifecycle: create/attach/remove/verify/cleanup
+        [&]() { return test16_lua(); }, // TAB focus navigation
+        [&]() { return test17_lua(); }, // Remove focusA/focusB from stage and verify
+        [&]() { return test18_lua(); }, // Factory contains focusA/focusB as orphans (removed).
+        [&]() { return test19_lua(); }, // Mouse hover to blueishBox
+        [&]() { return test20_lua(); }  // Verify get/setWindowTitle from Lua
     };
     for (auto& test : tests) {
         bool testResult = test();

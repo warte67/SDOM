@@ -1309,11 +1309,7 @@ namespace SDOM
                     const Core& core = static_cast<const Core&>(obj);
                     return sol::make_object(lua, listDisplayObjectNames_lua(core));
                 });
-            factory_->registerLuaCommand(typeName, "clearFactory",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
-                    Core& core = static_cast<Core&>(obj);
-                    clearFactory_lua(core);
-                });
+            
             factory_->registerLuaCommand(typeName, "printObjectRegistry",
                 [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
                     Core& core = static_cast<Core&>(obj);

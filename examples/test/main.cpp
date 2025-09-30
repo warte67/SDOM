@@ -152,10 +152,10 @@ int main()
         // Run Custom Unit Tests
         allTestsPassed &= Core_UnitTests();
         allTestsPassed &= Factory_UnitTests();
-        allTestsPassed &= IDisplayObject_UnitTests();
         allTestsPassed &= Stage_UnitTests();
         allTestsPassed &= Box_UnitTests();
         allTestsPassed &= LUA_UnitTests();
+        allTestsPassed &= IDisplayObject_UnitTests();
 
         // // User Test One
         // result = Box_UnitTests();   // or just:

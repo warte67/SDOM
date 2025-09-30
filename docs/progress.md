@@ -238,6 +238,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - **Code Cleanup:**
         - Removed unnecessary debug prints from production code, leaving controlled logging for future debugging needs.
         - Ensured the codebase remains clean and maintainable.
+    - **Core Lua Wrappers Verified:**
+        - Completed verification of Core/Factory Lua wrapper coverage (get/set window title, event helpers, DomHandle forwards, focus/hover helpers, object lookup, and orphan management commands exposed to Lua).
+        - Added `test20_lua` which validates `Core:getWindowTitle()` and `Core:setWindowTitle()` round-trip behavior; the `examples/test/prog` test binary builds and runs with the new test.
+        - As requested, the `clearFactory` Lua binding was removed (it can be reintroduced later if needed).
         
 
 # Next Steps (short term):

@@ -143,7 +143,6 @@ void pushKeyboardEvent_lua(Core& core, const sol::object& args) {
 
 	// --- Utility Methods --- //
 	std::vector<std::string> listDisplayObjectNames_lua(const Core& core) { return core.listDisplayObjectNames(); }
-	void clearFactory_lua(Core& core) { core.clearFactory(); }
 	void printObjectRegistry_lua(Core& core) { core.printObjectRegistry(); }
 
 	// --- New Factory Methods --- //

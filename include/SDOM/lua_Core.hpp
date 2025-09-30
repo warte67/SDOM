@@ -37,9 +37,9 @@ namespace SDOM
 	DomHandle getMouseHoveredObject_lua(const Core& core);	// **verified**
 
 	// --- Window Title & Timing --- //
-	std::string getWindowTitle_lua(const Core& core);
-	Core& setWindowTitle_lua(Core& core, const std::string& title);
-	float getElapsedTime_lua(const Core& core);
+	std::string getWindowTitle_lua(const Core& core);	// **verified**
+	Core& setWindowTitle_lua(Core& core, const std::string& title);	// **verified**
+	float getElapsedTime_lua(const Core& core);	// **verified**
 
 	// --- Event helpers (exposed to Lua) --- //
 	void pumpEventsOnce_lua(Core& core); // **verified**
@@ -60,9 +60,8 @@ namespace SDOM
 	void destroyOrphanedDisplayObjects_lua(Core& core); // **verified**
 
     // --- Utility Methods --- //
-	std::vector<std::string> listDisplayObjectNames_lua(const Core& core);
-	void clearFactory_lua(Core& core);
-	void printObjectRegistry_lua(Core& core);
+	std::vector<std::string> listDisplayObjectNames_lua(const Core& core); // **verified**
+	void printObjectRegistry_lua(Core& core);	// **verified**
 
 	// --- New Factory Methods --- //
 	std::vector<std::string> getPropertyNamesForType_lua(const Core& core, const std::string& typeName); // **verified**

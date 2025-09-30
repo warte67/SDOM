@@ -12,22 +12,22 @@ namespace SDOM
     struct Bounds;
 
     // --- Dirty/State Management --- //
-    void cleanAll_lua(IDisplayObject& obj);
-    bool getDirty_lua(const IDisplayObject& obj);
-    IDisplayObject& setDirty_lua(IDisplayObject& obj);
-    bool isDirty_lua(const IDisplayObject& obj);
+    void cleanAll_lua(IDisplayObject& obj); // **VERIFIED**
+    bool getDirty_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setDirty_lua(IDisplayObject& obj); // **VERIFIED**
+    bool isDirty_lua(const IDisplayObject& obj); // **VERIFIED**
 
     // --- Debug/Utility --- //
-    void printTree_lua(const IDisplayObject& obj);
+    void printTree_lua(const IDisplayObject& obj); // **VERIFIED**
 
     // --- Event Handling --- //
-    void addEventListener_lua(IDisplayObject& obj, EventType& type, sol::function listener, bool useCapture, int priority);
-    void removeEventListener_lua(IDisplayObject& obj, EventType& type, sol::function listener, bool useCapture);
+    void addEventListener_lua(IDisplayObject& obj, EventType& type, sol::function listener, bool useCapture, int priority); // **VERIFIED**
+    void removeEventListener_lua(IDisplayObject& obj, EventType& type, sol::function listener, bool useCapture);  // **VERIFIED**
 
     // --- Hierarchy Management --- //
-    void addChild_lua(IDisplayObject& obj, DomHandle child);
-    bool removeChild_lua(IDisplayObject& obj, DomHandle child);
-    bool hasChild_lua(const IDisplayObject& obj, DomHandle child);
+    void addChild_lua(IDisplayObject& obj, DomHandle child); // **VERIFIED**
+    bool removeChild_lua(IDisplayObject& obj, DomHandle child); // **VERIFIED**
+    bool hasChild_lua(const IDisplayObject& obj, DomHandle child); // **VERIFIED**
     DomHandle getParent_lua(const IDisplayObject& obj);
     IDisplayObject& setParent_lua(IDisplayObject& obj, const DomHandle& parent);
 

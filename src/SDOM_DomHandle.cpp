@@ -66,8 +66,27 @@ namespace SDOM
         // DomHandle-specific methods (including forwarded addChild/removeChild).
         objHandleType_["get"] = [](DomHandle& h) -> DomHandle { return h; };
         objHandleType_["isValid"] = static_cast<bool(DomHandle::*)() const>(&DomHandle::isValid);
-        objHandleType_["getName"] = static_cast<std::string(DomHandle::*)() const>(&DomHandle::getName);
-        objHandleType_["getType"] = static_cast<std::string(DomHandle::*)() const>(&DomHandle::getType);
+        // Forward getName/getType to the underlying object when present so Lua sees
+        // the current object's name/type even if the DomHandle's cached fields differ.
+        objHandleType_["getName"] = [](DomHandle& h) -> std::string {
+            if (auto* obj = h.get()) return obj->getName();
+            return h.getName();
+        };
+        objHandleType_["getType"] = [](DomHandle& h) -> std::string {
+            if (auto* obj = h.get()) return obj->getType();
+            return h.getType();
+        };
+        // Allow Lua to set name/type directly on the handle
+        objHandleType_["setName"] = [](DomHandle& h, const std::string& newName) {
+            if (auto* obj = h.get()) { obj->setName(newName); }
+            // update the handle's cached name so subsequent getName() on the
+            // DomHandle reflects the change even if no underlying object exists
+            h.name_ = newName;
+        };
+        objHandleType_["setType"] = [](DomHandle& h, const std::string& newType) {
+            if (auto* obj = h.get()) { obj->setType(newType); }
+            h.type_ = newType;
+        };
 
         // 6. Bind forwarding commands directly on the DomHandle usertype so
         // they receive parameters in the usual Lua calling convention
@@ -84,6 +103,48 @@ namespace SDOM
                 if (t["child"].valid()) {
                     target->addChild(t["child"].get<DomHandle>());
                 }
+            }
+        };
+
+        // Forwarded setParent: accept a DomHandle, a string name, or a table { parent = ... }
+        objHandleType_["setParent"] = [](DomHandle& dh, sol::object arg) {
+            IDisplayObject* child = dh.get();
+            if (!child) return;
+
+            DomHandle parentHandle;
+            if (arg.is<std::string>()) {
+                std::string name = arg.as<std::string>();
+                parentHandle = Core::getInstance().getDisplayHandle(name);
+            } else if (arg.is<DomHandle>()) {
+                parentHandle = arg.as<DomHandle>();
+            } else if (arg.is<sol::table>()) {
+                sol::table t = arg.as<sol::table>();
+                if (t["parent"].valid()) {
+                    if (t["parent"].get_type() == sol::type::string) {
+                        parentHandle = Core::getInstance().getDisplayHandle(t["parent"].get<std::string>());
+                    } else {
+                        parentHandle = t["parent"].get<DomHandle>();
+                    }
+                }
+            }
+
+            if (!parentHandle) {
+                ERROR("DomHandle:setParent: resolved parent is invalid");
+                return;
+            }
+
+            // Remove child from current parent if present
+            DomHandle oldParent = child->getParent();
+            if (oldParent) {
+                if (auto* oldParentObj = dynamic_cast<IDisplayObject*>(oldParent.get())) {
+                    // use removeChild to update parent's children and handle orphaning
+                    oldParentObj->removeChild(dh);
+                }
+            }
+
+            // Add child to new parent (this will set child's parent and add to parent's children)
+            if (auto* newParentObj = dynamic_cast<IDisplayObject*>(parentHandle.get())) {
+                newParentObj->addChild(dh);
             }
         };
 
