@@ -290,19 +290,56 @@ namespace SDOM
         // Anchors
         factory.registerLuaProperty(typeName, "anchorTop",
             [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorTop()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setAnchorTop(value.as<AnchorPoint>()); return obj; }
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
+                // Accept either an AnchorPoint or a string that will be normalized
+                if (value.is<std::string>()) {
+                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
+                    auto it = SDOM::stringToAnchorPoint_.find(key);
+                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorTop(it->second);
+                } else {
+                    static_cast<IDisplayObject&>(obj).setAnchorTop(value.as<AnchorPoint>());
+                }
+                return obj;
+            }
         );
         factory.registerLuaProperty(typeName, "anchorLeft",
             [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorLeft()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setAnchorLeft(value.as<AnchorPoint>()); return obj; }
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
+                if (value.is<std::string>()) {
+                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
+                    auto it = SDOM::stringToAnchorPoint_.find(key);
+                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorLeft(it->second);
+                } else {
+                    static_cast<IDisplayObject&>(obj).setAnchorLeft(value.as<AnchorPoint>());
+                }
+                return obj;
+            }
         );
         factory.registerLuaProperty(typeName, "anchorBottom",
             [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorBottom()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setAnchorBottom(value.as<AnchorPoint>()); return obj; }
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
+                if (value.is<std::string>()) {
+                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
+                    auto it = SDOM::stringToAnchorPoint_.find(key);
+                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorBottom(it->second);
+                } else {
+                    static_cast<IDisplayObject&>(obj).setAnchorBottom(value.as<AnchorPoint>());
+                }
+                return obj;
+            }
         );
         factory.registerLuaProperty(typeName, "anchorRight",
             [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorRight()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setAnchorRight(value.as<AnchorPoint>()); return obj; }
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
+                if (value.is<std::string>()) {
+                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
+                    auto it = SDOM::stringToAnchorPoint_.find(key);
+                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorRight(it->second);
+                } else {
+                    static_cast<IDisplayObject&>(obj).setAnchorRight(value.as<AnchorPoint>());
+                }
+                return obj;
+            }
         );
 
         // Dirty flags

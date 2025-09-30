@@ -156,6 +156,7 @@ int main()
         allTestsPassed &= Stage_UnitTests();
         allTestsPassed &= Box_UnitTests();
         allTestsPassed &= LUA_UnitTests();
+        allTestsPassed &= DomHandle_UnitTests();
 
         // // User Test One
         // result = Box_UnitTests();   // or just:

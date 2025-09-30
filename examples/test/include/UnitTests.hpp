@@ -9,5 +9,6 @@ namespace SDOM
     bool Stage_UnitTests();
     bool Box_UnitTests();
     bool LUA_UnitTests();
+    bool DomHandle_UnitTests();
     // add more unit tests here as needed ...
 }

@@ -248,17 +248,55 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Added/updated DomHandle forwards so Lua can call `h:getBounds()` (returns `Bounds` userdata) and `h:setBounds({...})` (accepts a Lua table), and added edge getters (`getLeft`/`getTop`/`getRight`/`getBottom`) on the handle.
         - Reworked the IDisplayObject unit tests: made `test10` a Lua-only bounds comparison and added `test11` to drive `setBounds` from Lua and verify `getX`/`getY`/`getWidth`/`getHeight` and edge getters.
         - Verified the change by building (`./compile`) and running the test binary (`./prog`); all unit tests passed locally.
-    
+    - **Lua wrapper headers verified:**
+        - Both primary bulk Lua wrapper headers, `lua_Core.hpp` and `lua_IDisplayObject.hpp`, have complete implementations and are exercised by the `examples/test` Lua unit tests. The test run (`./compile clean && ./prog`) confirms Lua-level coverage for creation, property access, event helpers, DomHandle forwards, anchors/edges, geometry, and factory helpers.
+        - Temporary debug prints used during binding debugging were cleaned up; controlled registration logging remains toggleable via `DEBUG_REGISTER_LUA` in `SDOM.hpp`.
+    - **DomHandle_UnitTests:**
+        DomHandle_UnitTests now contains:
+        - A concise numeric mapping header above the DomHandle tests.
+        - Full human-readable descriptions (matching the strings passed to UnitTests::run) in place of the short mapping comments.
+        - Test functions renamed to DomHandle_test1 … DomHandle_test10.
+        - The tests vector updated to call the new functions and includes matching descriptive comments.
+        - Debug output updated to reference DomHandle_test10 where applicable.
+        - A clean build and test run were executed successfully.    
+        - Reworked the DomHandle unit tests for readability and maintainability: added a numeric mapping header, expanded inline descriptions to match `UnitTests::run` strings, and renamed test functions to `DomHandle_test1`..`DomHandle_test10`.
+            
+            
+## Next Steps (garbage collection / orphan retention)
 
-# Next Steps (short term):
-- Continue testing ALL properties, commands, and functions in the `Lua_UnitTests`
-- Verify simple getters (`getX`/`getY`/`getWidth`/`getHeight`) are exposed correctly.
-- Tidy informational registration prints (convert to controlled logging or remove) and document the canonical Lua-binding policy for contributors. Thouroughly clean up comments and orphaned functions. 
-- Expand Lua examples and add more regression tests (invalid/nil handles, wrong-typed args, double-add/remove edge cases).
+Proposed approach: add an `OrphanRetentionPolicy` enum (or a smaller `retainOnOrphan` boolean for a quick win) on `IDisplayObject` and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.
+
+Recommended enum (suggested values):
+- `OrphanRetentionPolicy::AutoDestroy` — object is eligible for destruction immediately when orphaned. (fast, default for ephemeral runtime objects)
+- `OrphanRetentionPolicy::GracePeriod` — object is eligible only after a configurable grace period has elapsed since it became orphaned; allows reparenting via DomHandle within the grace window.
+- `OrphanRetentionPolicy::RetainUntilManual` — object is never auto-destroyed; requires explicit Factory or user code to destroy. (useful for editor templates and long-lived resources)
+- `OrphanRetentionPolicy::RetainWhenReferenced` — object is retained while any DomHandle or external reference exists; destroyed only once all references are gone and policy conditions met. (optional advanced mode)
+
+Minimal API hints:
+- in `IDisplayObject`: add `OrphanRetentionPolicy orphanPolicy = OrphanRetentionPolicy::GracePeriod;` and `std::chrono::milliseconds orphanGrace{5000};`
+- convenience setters/getters: `setOrphanPolicy(...)`, `getOrphanPolicy()`, `setOrphanGrace(...)`
+- in the Factory: track an `optional<steady_clock::time_point> orphanedAt` per object and implement `collectOrphans()` which checks policy+elapsed time and destroys accordingly.
+
+Notes & test ideas:
+- Reparent before grace expiry should clear `orphanedAt` and prevent destruction.
+- `RetainUntilManual` objects should be visible in `Factory::listOrphanedObjects()` and only removed by explicit destroy.
+- Add unit tests for each policy (auto destroy, grace window reparenting, retained objects resisting collection).
+
 
 # ToDo:
+- Expand Lua examples and add more regression tests (invalid/nil handles, wrong-typed args, double-add/remove edge cases).
 - Expand Lua scripting examples and documentation.
 - Continue improving resource management and garbage collection.
 - Plan for future language hooks (e.g., Python).
 - Maintain and update Doxygen and Markdown docs as features evolve.
 - Implement garbage_collection() for display objects.
+
+## Current repo/test state (summary)
+DomHandle_UnitTests.cpp now contains:
+- A concise numeric mapping header above the DomHandle tests.
+- Full human-readable descriptions (matching the strings passed to UnitTests::run) in place of the short mapping comments.
+- Test functions renamed to DomHandle_test1 … DomHandle_test10.
+- The tests vector updated to call the new functions and includes matching descriptive comments.
+- Debug output updated to reference DomHandle_test10 where applicable.
+- A clean build and test run were executed successfully.
+

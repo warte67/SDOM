@@ -95,23 +95,23 @@ namespace SDOM
     IDisplayObject& setHeight_lua(IDisplayObject& obj, int height); // **VERIFIED**
 
     // --- Edge Anchors --- //
-    AnchorPoint getAnchorTop_lua(const IDisplayObject& obj);
-    AnchorPoint getAnchorLeft_lua(const IDisplayObject& obj);
-    AnchorPoint getAnchorBottom_lua(const IDisplayObject& obj);
-    AnchorPoint getAnchorRight_lua(const IDisplayObject& obj);
-    void setAnchorTop_lua(IDisplayObject& obj, AnchorPoint ap);
-    void setAnchorLeft_lua(IDisplayObject& obj, AnchorPoint ap);
-    void setAnchorBottom_lua(IDisplayObject& obj, AnchorPoint ap);
-    void setAnchorRight_lua(IDisplayObject& obj, AnchorPoint ap);
+    AnchorPoint getAnchorTop_lua(const IDisplayObject& obj); // **VERIFIED**
+    AnchorPoint getAnchorLeft_lua(const IDisplayObject& obj); // **VERIFIED**
+    AnchorPoint getAnchorBottom_lua(const IDisplayObject& obj); // **VERIFIED**
+    AnchorPoint getAnchorRight_lua(const IDisplayObject& obj); // **VERIFIED**
+    void setAnchorTop_lua(IDisplayObject& obj, AnchorPoint ap); // **VERIFIED**
+    void setAnchorLeft_lua(IDisplayObject& obj, AnchorPoint ap); // **VERIFIED**
+    void setAnchorBottom_lua(IDisplayObject& obj, AnchorPoint ap); // **VERIFIED**
+    void setAnchorRight_lua(IDisplayObject& obj, AnchorPoint ap); // **VERIFIED**
 
     // --- Edge Positions --- //
     float getLeft_lua(const IDisplayObject& obj); // **VERIFIED**
     float getRight_lua(const IDisplayObject& obj); // **VERIFIED**
     float getTop_lua(const IDisplayObject& obj); // **VERIFIED**
     float getBottom_lua(const IDisplayObject& obj); // **VERIFIED**
-    IDisplayObject& setLeft_lua(IDisplayObject& obj, float p_left);
-    IDisplayObject& setRight_lua(IDisplayObject& obj, float p_right);
-    IDisplayObject& setTop_lua(IDisplayObject& obj, float p_top);
-    IDisplayObject& setBottom_lua(IDisplayObject& obj, float p_bottom);
+    IDisplayObject& setLeft_lua(IDisplayObject& obj, float p_left); // **VERIFIED**
+    IDisplayObject& setRight_lua(IDisplayObject& obj, float p_right); // **VERIFIED**
+    IDisplayObject& setTop_lua(IDisplayObject& obj, float p_top); // **VERIFIED**
+    IDisplayObject& setBottom_lua(IDisplayObject& obj, float p_bottom); // **VERIFIED**
 }
 
