@@ -446,6 +446,18 @@ namespace SDOM
             sol::table tret = res.get<sol::table>();
             bool ok = tret["ok"].get_or(false);
             if (!ok) { std::string err = tret["err"].get_or(std::string("unknown error")); dbgStr = std::string("Lua test15 failed: ") + err; return false; }
+            // Cleanup the three boxes created earlier in test13 so they don't remain on the stage
+            if (factory) {
+                try {
+                    factory->destroyDisplayObject("prioA");
+                } catch (...) { }
+                try {
+                    factory->destroyDisplayObject("prioB");
+                } catch (...) { }
+                try {
+                    factory->destroyDisplayObject("prioC");
+                } catch (...) { }
+            }
             return true;
         });
     }

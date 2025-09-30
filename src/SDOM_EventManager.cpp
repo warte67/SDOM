@@ -263,7 +263,8 @@ namespace SDOM
             static_cast<int>(target.getWidth()),
             static_cast<int>(target.getHeight())
         };
-        return SDL_PointInRect(&mousePoint, &targetRect);
+        bool inside = SDL_PointInRect(&mousePoint, &targetRect);
+        return inside;
     }
 
     DomHandle EventManager::findTopObjectUnderMouse(DomHandle rootNode, DomHandle excludeNode) const 
@@ -317,8 +318,10 @@ namespace SDOM
         if (!stage) return;
 
 
-    // find the top object under the mouse (initial guess)
-    DomHandle mouseHoveredObject = findTopObjectUnderMouse(node);
+    // (previously there was an initial pre-conversion hit-test here)
+    // Hit-testing must occur after converting window/render coordinates into
+    // logical stage coordinates. The early call was moved below so mouse
+    // coordinates are correct for hit-testing.
 
         // Scale the SDL event coordinates to the render coordinates
         SDL_Renderer* renderer = getRenderer();
@@ -332,16 +335,18 @@ namespace SDOM
             // Special cases for offending event types will need to be handled appropriately 
             // in the future.
 
-        // Set the mouse position in the stage (conceptual code)
-        // This code will need mutex to avoid data races between multiple
-        // stage windows.
-        stage->mouseX = static_cast<float>(sdlEvent.motion.x);
-        stage->mouseY = static_cast<float>(sdlEvent.motion.y);
+        // Set the mouse position in the stage (convert from window/render
+        // coordinates back into logical stage coordinates using the Core
+        // pixel scaling). This prevents mixing window pixels with stage
+        // coordinates during hit-testing and event dispatch.
+        // Use raw SDL coordinates for stage mouse positions (revert pixel scaling)
+    stage->mouseX = static_cast<float>(sdlEvent.motion.x);
+    stage->mouseY = static_cast<float>(sdlEvent.motion.y);
         // correct for the difference in the mouse wheel events
         if (sdlEvent.type == SDL_EVENT_MOUSE_WHEEL) 
         {
-            stage->mouseX = sdlEvent.wheel.mouse_x;
-            stage->mouseY = sdlEvent.wheel.mouse_y;
+            stage->mouseX = static_cast<float>(sdlEvent.wheel.mouse_x);
+            stage->mouseY = static_cast<float>(sdlEvent.wheel.mouse_y);
         }
 
     // Find the top object that is under the mouse cursor (after coordinate conversion)
@@ -521,8 +526,10 @@ namespace SDOM
         // Handle mouse button up events
         if (sdlEvent.type == SDL_EVENT_MOUSE_BUTTON_UP) 
         {
-            float mX = sdlEvent.motion.x;
-            float mY = sdlEvent.motion.y;
+            // Convert to stage coordinates for event payloads and hit-testing
+            // Use raw SDL coordinates for event payloads (revert pixel scaling)
+            float mX = static_cast<float>(sdlEvent.motion.x);
+            float mY = static_cast<float>(sdlEvent.motion.y);
             auto buttonEvent = std::make_unique<Event>(EventType::MouseButtonUp, node, getCore().getElapsedTime());
             buttonEvent->sdlEvent = sdlEvent;
             buttonEvent->mouse_x = mX;
@@ -574,8 +581,9 @@ namespace SDOM
         // Handle mouse button down events
         if (sdlEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN) 
         {
-            float mX = sdlEvent.motion.x;
-            float mY = sdlEvent.motion.y;
+            // Convert to stage coordinates
+            float mX = static_cast<float>(sdlEvent.motion.x) / (getCore().getPixelWidth() != 0.0f ? getCore().getPixelWidth() : 1.0f);
+            float mY = static_cast<float>(sdlEvent.motion.y) / (getCore().getPixelHeight() != 0.0f ? getCore().getPixelHeight() : 1.0f);
             auto buttonDownEvent = std::make_unique<Event>(EventType::MouseButtonDown, node, getCore().getElapsedTime());
             buttonDownEvent->sdlEvent = sdlEvent;
             buttonDownEvent->mouse_x = mX;
@@ -594,6 +602,9 @@ namespace SDOM
             auto wheelEvent = std::make_unique<Event>(EventType::MouseWheel, topObject, getCore().getElapsedTime());
             wheelEvent->wheelX = sdlEvent.wheel.x;
             wheelEvent->wheelY = sdlEvent.wheel.y;
+            // Also include the mouse position in stage coords for listeners
+            wheelEvent->mouse_x = static_cast<float>(sdlEvent.wheel.mouse_x) / (getCore().getPixelWidth() != 0.0f ? getCore().getPixelWidth() : 1.0f);
+            wheelEvent->mouse_y = static_cast<float>(sdlEvent.wheel.mouse_y) / (getCore().getPixelHeight() != 0.0f ? getCore().getPixelHeight() : 1.0f);
             wheelEvent->setTarget(topObject);
             wheelEvent->setCurrentTarget(topObject); // Set currentTarget
             wheelEvent->setRelatedTarget(topObject); // Set relatedTarget
@@ -607,8 +618,10 @@ namespace SDOM
         static DomHandle lastHoveredObject = nullptr;
         if (sdlEvent.type == SDL_EVENT_MOUSE_MOTION) 
         {
-            float mX = sdlEvent.motion.x;
-            float mY = sdlEvent.motion.y;
+            // Convert to stage coordinates for hit-testing and event payloads
+            // Convert to stage coordinates (raw SDL coords, no pixel scaling)
+            float mX = static_cast<float>(sdlEvent.motion.x);
+            float mY = static_cast<float>(sdlEvent.motion.y);
             DomHandle currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);
 
             // Dispatch the motion event
@@ -650,13 +663,14 @@ namespace SDOM
             lastHoveredObject = currentHoveredObject;
         }
 
-        // Special Case: Track window leave and enter events
-        SDL_CaptureMouse(true);
-        static SDL_Window* focusedWindow = SDL_GetMouseFocus();
-        SDL_Window* currentWindow = SDL_GetMouseFocus();
-        float mX = sdlEvent.motion.x;
-        float mY = sdlEvent.motion.y;
-        DomHandle currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);
+    // Special Case: Track window leave and enter events
+    SDL_CaptureMouse(true);
+    static SDL_Window* focusedWindow = SDL_GetMouseFocus();
+    SDL_Window* currentWindow = SDL_GetMouseFocus();
+    // Convert to stage coordinates (raw SDL coords)
+    float mX = static_cast<float>(sdlEvent.motion.x);
+    float mY = static_cast<float>(sdlEvent.motion.y);
+    DomHandle currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);
 
         // Check if the focused window has changed
         if (focusedWindow != currentWindow || isDragging) 

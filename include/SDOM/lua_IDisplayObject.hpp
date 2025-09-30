@@ -60,39 +60,39 @@ namespace SDOM
     //       directly by handle use the Core-level `setKeyboardFocusedObject` wrapper.
     //       (Planned: allow name/string overloads in bindings later.)
 
-    void setKeyboardFocus_lua(IDisplayObject& obj);
-    bool isKeyboardFocused_lua(const IDisplayObject& obj);
-    bool isMouseHovered_lua(const IDisplayObject& obj);
-    bool isClickable_lua(const IDisplayObject& obj);
-    IDisplayObject& setClickable_lua(IDisplayObject& obj, bool clickable);
-    bool isEnabled_lua(const IDisplayObject& obj);
-    IDisplayObject& setEnabled_lua(IDisplayObject& obj, bool enabled);
-    bool isHidden_lua(const IDisplayObject& obj);
-    IDisplayObject& setHidden_lua(IDisplayObject& obj, bool hidden);
-    bool isVisible_lua(const IDisplayObject& obj);
-    IDisplayObject& setVisible_lua(IDisplayObject& obj, bool visible);
+    void setKeyboardFocus_lua(IDisplayObject& obj); // **VERIFIED**
+    bool isKeyboardFocused_lua(const IDisplayObject& obj); // **VERIFIED**
+    bool isMouseHovered_lua(const IDisplayObject& obj); // **VERIFIED**
+    bool isClickable_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setClickable_lua(IDisplayObject& obj, bool clickable); // **VERIFIED**
+    bool isEnabled_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setEnabled_lua(IDisplayObject& obj, bool enabled); // **VERIFIED**
+    bool isHidden_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setHidden_lua(IDisplayObject& obj, bool hidden); // **VERIFIED**
+    bool isVisible_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setVisible_lua(IDisplayObject& obj, bool visible); // **VERIFIED**
 
     // --- Tab Management --- //
-    
+
     // NOTE: these are object-level/tab-instance helpers (operate on the specific
     //       IDisplayObject). Some tab-related operations are also performed at
     //       a higher/global level (e.g. by Core or the Factory) — when we
     //       expand bindings we'll provide the appropriate global variants.
 
-    int getTabPriority_lua(const IDisplayObject& obj);
-    IDisplayObject& setTabPriority_lua(IDisplayObject& obj, int index);
-    bool isTabEnabled_lua(const IDisplayObject& obj);
-    IDisplayObject& setTabEnabled_lua(IDisplayObject& obj, bool enabled);
+    int getTabPriority_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setTabPriority_lua(IDisplayObject& obj, int index); // **VERIFIED**
+    bool isTabEnabled_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setTabEnabled_lua(IDisplayObject& obj, bool enabled); // **VERIFIED**
 
     // --- Geometry & Layout --- //
     int getX_lua(const IDisplayObject& obj); // **VERIFIED**
     int getY_lua(const IDisplayObject& obj); // **VERIFIED**
     int getWidth_lua(const IDisplayObject& obj); // **VERIFIED**
     int getHeight_lua(const IDisplayObject& obj); // **VERIFIED**
-    IDisplayObject& setX_lua(IDisplayObject& obj, int p_x);
-    IDisplayObject& setY_lua(IDisplayObject& obj, int p_y);
-    IDisplayObject& setWidth_lua(IDisplayObject& obj, int width);
-    IDisplayObject& setHeight_lua(IDisplayObject& obj, int height);
+    IDisplayObject& setX_lua(IDisplayObject& obj, int p_x); // **VERIFIED**
+    IDisplayObject& setY_lua(IDisplayObject& obj, int p_y); // **VERIFIED**
+    IDisplayObject& setWidth_lua(IDisplayObject& obj, int width); // **VERIFIED**
+    IDisplayObject& setHeight_lua(IDisplayObject& obj, int height); // **VERIFIED**
 
     // --- Edge Anchors --- //
     AnchorPoint getAnchorTop_lua(const IDisplayObject& obj);

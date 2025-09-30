@@ -288,6 +288,19 @@ namespace SDOM
             IDisplayObject* target = dh.get(); if (!target) return 0; return target->getWidth(); };
         objHandleType_["getHeight"] = [](DomHandle& dh) -> int {
             IDisplayObject* target = dh.get(); if (!target) return 0; return target->getHeight(); };
+        // Geometry setters
+        objHandleType_["setX"] = [](DomHandle& dh, int p_x) {
+            if (auto* t = dh.get()) t->setX(p_x);
+        };
+        objHandleType_["setY"] = [](DomHandle& dh, int p_y) {
+            if (auto* t = dh.get()) t->setY(p_y);
+        };
+        objHandleType_["setWidth"] = [](DomHandle& dh, int width) {
+            if (auto* t = dh.get()) t->setWidth(width);
+        };
+        objHandleType_["setHeight"] = [](DomHandle& dh, int height) {
+            if (auto* t = dh.get()) t->setHeight(height);
+        };
         // Edge getters
         objHandleType_["getLeft"] = [](DomHandle& dh) -> float {
             IDisplayObject* target = dh.get(); if (!target) return 0.0f; return target->getLeft(); };
@@ -297,6 +310,63 @@ namespace SDOM
             IDisplayObject* target = dh.get(); if (!target) return 0.0f; return target->getRight(); };
         objHandleType_["getBottom"] = [](DomHandle& dh) -> float {
             IDisplayObject* target = dh.get(); if (!target) return 0.0f; return target->getBottom(); };
+
+        // --- Focus & Interactivity forwards for DomHandle --- //
+        objHandleType_["setKeyboardFocus"] = [](DomHandle& dh) {
+            if (auto* t = dh.get()) t->setKeyboardFocus();
+        };
+        objHandleType_["isKeyboardFocused"] = [](DomHandle& dh) -> bool {
+            if (auto* t = dh.get()) return t->isKeyboardFocused();
+            return false;
+        };
+        objHandleType_["isMouseHovered"] = [](DomHandle& dh) -> bool {
+            if (auto* t = dh.get()) return t->isMouseHovered();
+            return false;
+        };
+        objHandleType_["isClickable"] = [](DomHandle& dh) -> bool {
+            if (auto* t = dh.get()) return t->isClickable();
+            return false;
+        };
+        objHandleType_["setClickable"] = [](DomHandle& dh, bool clickable) {
+            if (auto* t = dh.get()) t->setClickable(clickable);
+        };
+        objHandleType_["isEnabled"] = [](DomHandle& dh) -> bool {
+            if (auto* t = dh.get()) return t->isEnabled();
+            return false;
+        };
+        objHandleType_["setEnabled"] = [](DomHandle& dh, bool enabled) {
+            if (auto* t = dh.get()) t->setEnabled(enabled);
+        };
+        objHandleType_["isHidden"] = [](DomHandle& dh) -> bool {
+            if (auto* t = dh.get()) return t->isHidden();
+            return false;
+        };
+        objHandleType_["setHidden"] = [](DomHandle& dh, bool hidden) {
+            if (auto* t = dh.get()) t->setHidden(hidden);
+        };
+        objHandleType_["isVisible"] = [](DomHandle& dh) -> bool {
+            if (auto* t = dh.get()) return t->isVisible();
+            return false;
+        };
+        objHandleType_["setVisible"] = [](DomHandle& dh, bool visible) {
+            if (auto* t = dh.get()) t->setVisible(visible);
+        };
+
+        // --- Tab forwards --- //
+        objHandleType_["getTabPriority"] = [](DomHandle& dh) -> int {
+            if (auto* t = dh.get()) return t->getTabPriority();
+            return 0;
+        };
+        objHandleType_["setTabPriority"] = [](DomHandle& dh, int idx) {
+            if (auto* t = dh.get()) t->setTabPriority(idx);
+        };
+        objHandleType_["isTabEnabled"] = [](DomHandle& dh) -> bool {
+            if (auto* t = dh.get()) return t->isTabEnabled();
+            return false;
+        };
+        objHandleType_["setTabEnabled"] = [](DomHandle& dh, bool enabled) {
+            if (auto* t = dh.get()) t->setTabEnabled(enabled);
+        };
 
         // getBounds returns a Bounds userdata (was previously a plain table)
         objHandleType_["getBounds"] = [](sol::this_state ts, DomHandle& dh) -> sol::object {

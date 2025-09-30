@@ -772,15 +772,21 @@ namespace SDOM
 
     IDisplayObject& IDisplayObject::setTabEnabled(bool enabled) 
     { 
-        // Initialization logic for Box
+        // Initialization logic for Box: only auto-assign a tab index when
+        // enabling and no explicit priority has been set (tabPriority_ == 0
+        // is treated as 'unset' here). This avoids overwriting values parsed
+        // from Lua/Factory configuration.
         static int s_nextIndex = 0;
         if (enabled)
         {
-            tabPriority_ = s_nextIndex;
-            s_nextIndex++;    
-            tabEnabled_ = true;   
+            if (tabPriority_ == 0) {
+                tabPriority_ = s_nextIndex;
+                s_nextIndex++;
+            }
+            tabEnabled_ = true;
+        } else {
+            tabEnabled_ = false;
         }
-        tabEnabled_ = enabled; 
         return *this; 
     }
 
