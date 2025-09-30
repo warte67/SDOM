@@ -36,8 +36,8 @@ namespace SDOM
     IDisplayObject& setType_lua(IDisplayObject& obj, const std::string& newType); // **VERIFIED**
     Bounds getBounds_lua(const IDisplayObject& obj); // **VERIFIED**
     IDisplayObject& setBounds_lua(IDisplayObject& obj, const Bounds& b); // **VERIFIED**
-    SDL_Color getColor_lua(const IDisplayObject& obj);
-    IDisplayObject& setColor_lua(IDisplayObject& obj, const SDL_Color& color);
+    SDL_Color getColor_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setColor_lua(IDisplayObject& obj, const SDL_Color& color); // **VERIFIED**
 
     // --- Priority & Z-Order --- //
     int getMaxPriority_lua(const IDisplayObject& obj);
@@ -53,6 +53,12 @@ namespace SDOM
     IDisplayObject& setZOrder_lua(IDisplayObject& obj, int z_order);
 
     // --- Focus & Interactivity --- //
+    // NOTE: object-level convenience. Calling `h:setKeyboardFocus()` will invoke
+    //       `IDisplayObject::setKeyboardFocus()` which sets Core's keyboard focus
+    //       via a DomHandle constructed from the object's name/type. To set focus
+    //       directly by handle use the Core-level `setKeyboardFocusedObject` wrapper.
+    //       (Planned: allow name/string overloads in bindings later.)
+
     void setKeyboardFocus_lua(IDisplayObject& obj);
     bool isKeyboardFocused_lua(const IDisplayObject& obj);
     bool isMouseHovered_lua(const IDisplayObject& obj);
@@ -66,6 +72,11 @@ namespace SDOM
     IDisplayObject& setVisible_lua(IDisplayObject& obj, bool visible);
 
     // --- Tab Management --- //
+    // NOTE: these are object-level/tab-instance helpers (operate on the specific
+    //       IDisplayObject). Some tab-related operations are also performed at
+    //       a higher/global level (e.g. by Core or the Factory) — when we
+    //       expand bindings we'll provide the appropriate global variants.
+
     int getTabPriority_lua(const IDisplayObject& obj);
     IDisplayObject& setTabPriority_lua(IDisplayObject& obj, int index);
     bool isTabEnabled_lua(const IDisplayObject& obj);
@@ -101,118 +112,4 @@ namespace SDOM
     IDisplayObject& setTop_lua(IDisplayObject& obj, float p_top);
     IDisplayObject& setBottom_lua(IDisplayObject& obj, float p_bottom);
 }
-
-
-// ## SDOM::IDisplayObject Public Methods (Grouped)
-
-
-// ### --- Dirty/State Management ---
-// - `void cleanAll()`
-// - `bool getDirty() const`
-// - `IDisplayObject& setDirty()`
-// - `bool isDirty() const`
-
-// ---
-
-// ### --- Debug/Utility ---
-// - `void printTree(int depth = 0, bool isLast = true, const std::vector<bool>& hasMoreSiblings = {}) const`
-
-// ---
-
-// ### --- Event Handling ---
-// - `void addEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false, int priority = 0)`
-// - `void removeEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false)`
-
-// ---
-
-// ### --- Hierarchy Management ---
-// - `void addChild(DomHandle child, bool useWorld = false, int worldX = 0, int worldY = 0)`
-// - `bool removeChild(DomHandle child)`
-// - `const std::vector<DomHandle>& getChildren() const`
-// - `DomHandle getParent() const`
-// - `IDisplayObject& setParent(const DomHandle& parent)`
-// - `bool hasChild(DomHandle child) const`
-
-// ---
-
-// ### --- Type & Property Access ---
-// - `std::string getType() const`
-// - `IDisplayObject& setType(const std::string& newType)`
-// - `Bounds getBounds() const`
-// - `SDL_Color getColor() const`
-// - `IDisplayObject& setColor(const SDL_Color& color)`
-
-// ---
-
-// ### --- Priority & Z-Order ---
-// - `int getMaxPriority() const`
-// - `int getMinPriority() const`
-// - `int getPriority() const`
-// - `IDisplayObject& setToHighestPriority()`
-// - `IDisplayObject& setToLowestPriority()`
-// - `IDisplayObject& sortChildrenByPriority()`
-// - `IDisplayObject& setPriority(int priority)`
-// - `std::vector<int> getChildrenPriorities() const`
-// - `IDisplayObject& moveToTop()`
-// - `int getZOrder() const`
-// - `IDisplayObject& setZOrder(int z_order)`
-
-// ---
-
-// ### --- Focus & Interactivity ---
-// - `void setKeyboardFocus()`
-// - `bool isKeyboardFocused() const`
-// - `bool isMouseHovered() const`
-// - `bool isClickable() const`
-// - `IDisplayObject& setClickable(bool clickable)`
-// - `bool isEnabled() const`
-// - `IDisplayObject& setEnabled(bool enabled)`
-// - `bool isHidden() const`
-// - `IDisplayObject& setHidden(bool hidden)`
-// - `bool isVisible() const`
-// - `IDisplayObject& setVisible(bool visible)`
-
-// ---
-
-// ### --- Tab Management ---
-// - `int getTabPriority() const`
-// - `IDisplayObject& setTabPriority(int index)`
-// - `bool isTabEnabled() const`
-// - `IDisplayObject& setTabEnabled(bool enabled)`
-
-// ---
-
-// ### --- Geometry & Layout ---
-// - `int getX() const`
-// - `int getY() const`
-// - `int getWidth() const`
-// - `int getHeight() const`
-// - `IDisplayObject& setX(int p_x)`
-// - `IDisplayObject& setY(int p_y)`
-// - `IDisplayObject& setWidth(int width)`
-// - `IDisplayObject& setHeight(int height)`
-
-// ---
-
-// ### --- Edge Anchors ---
-// - `AnchorPoint getAnchorTop() const`
-// - `AnchorPoint getAnchorLeft() const`
-// - `AnchorPoint getAnchorBottom() const`
-// - `AnchorPoint getAnchorRight() const`
-// - `void setAnchorTop(AnchorPoint ap)`
-// - `void setAnchorLeft(AnchorPoint ap)`
-// - `void setAnchorBottom(AnchorPoint ap)`
-// - `void setAnchorRight(AnchorPoint ap)`
-
-// ---
-
-// ### --- Edge Positions ---
-// - `float getLeft() const`
-// - `float getRight() const`
-// - `float getTop() const`
-// - `float getBottom() const`
-// - `IDisplayObject& setLeft(float p_left)`
-// - `IDisplayObject& setRight(float p_right)`
-// - `IDisplayObject& setTop(float p_top)`
-// - `IDisplayObject& setBottom(float p_bottom)`
 
