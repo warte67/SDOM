@@ -16,9 +16,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ## Progress Updates
 
-- ### [July 2, 2025]  Initial rough draft and proof of concept.
-- ### [August 5, 2025] SDOM secondary rough draft
-- ### [September 19, 2025]
+- **[July 2, 2025]**  Initial rough draft and proof of concept.
+- **[August 5, 2025]** SDOM secondary rough draft
+- **[September 19, 2025]**
     - Proof of concept approved. Main development approved. Work begins officially.
     - Improved Doxygen documentation for all major headers and macros.
     - Added and refined Doxygen comments for SDOM_CLR.hpp, SDOM.hpp, and SDOM_IDataObject.hpp.
@@ -40,7 +40,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - JSON configuration supports both new flags for runtime flexibility.
     - Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.
 
-- ### [September 20, 2025]
+- **[September 20, 2025]**
     - Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.
     - Event system foundation implemented and documented.
     - Doxygen documentation added for major interfaces (Core, Factory, IResourceObject).
@@ -48,7 +48,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Circular include and pointer management issues resolved (raw pointer for Factory ownership).
     - The SDOM framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.
 
-- ### [September 21, 2025]
+- **[September 21, 2025]**
     - Renamed `resource_ptr` to `ResourceHandle` throughout the codebase for clarity.
         - The new name better reflects its role as an opaque handle or key for resource lookup, rather than a smart pointer with ownership semantics.
         - Updated all documentation, examples, and comments to use `ResourceHandle`.
@@ -76,7 +76,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Added debug prints to trace resource creation and lifecycle events.
         - Validated that the system is ready for expanded DOM tree parsing and more complex resource hierarchies.
 
-- ### [September 22, 2025]
+- **[September 22, 2025]**
     - **Unit Test Framework Refined:**  
         - Simplified the unit test system: now every resource implements `onUnitTests()` for built-in tests.
         - External/custom unit tests are registered and run via the `registerOnUnitTest()` callback, keeping the API minimal and flexible.
@@ -100,7 +100,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Planned to add live event tests (drag/drop, deferred add/remove) and prioritize tests for new features as they are developed.
         - Recognized that coverage for older features will be expanded over time, focusing first on the most critical areas.
 
-- ### [September 23, 2025]
+- **[September 23, 2025]**
     - **Event System Preliminary Testing:**  
         - Successfully integrated and tested the event system with live SDL3 events.
         - Verified that mouse, keyboard, window, and focus events are received and dispatched correctly.
@@ -118,7 +118,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - All major event and display object interactions now use the new handle API.
         - Codebase is stable, with most reference and legacy issues resolved.
 
-- ### [September 24, 2025]
+- **[September 24, 2025]**
     - **Event System Debugging:**
         - Resolved compile-time issues with `ListenerEntry` constructor and `push_back` calls in `addEventListener`.
         - Verified that `addEventListener` correctly registers event listeners for both capture and bubbling phases.
@@ -141,7 +141,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Both instant and deferred `addChild()` and `removeChild()` operations work reliably, ensuring robust event propagation and hierarchy management.
         - With the event system confirmed stable, we’ve decided this is the ideal time to begin transitioning from `JSON-based` initialization to `Sol2-powered Lua` scripting.
 
-- ### [September 25, 2025]
+- **[September 25, 2025]**
     - **JSON → Lua Transition Complete:**  
         - All configuration, scripting, and resource creation now use Lua tables via Sol2.
         - Factory, Core, and EventManager refactored to accept and process `sol::table` configs.
@@ -163,7 +163,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - **Milestone:**  
         - SDOM is now fully Lua-configurable and ready for advanced scripting, rapid prototyping, and integration with external tools. Json features have been removed completely.
 
-- ### [September 26, 2025]
+- **[September 26, 2025]**
 - **Box Unit Tests Complete:**  
     - Finalized comprehensive unit tests for the Box object, covering creation, hierarchy, anchor logic, and world coordinate propagation.
     - All anchor setters and edge references are tested for all anchor points and hierarchy levels.
@@ -181,7 +181,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Event system and Lua-driven configuration are stable and fully integrated.
     - Documentation and codebase are up-to-date with recent changes.
 
-- ### [September 27, 2025]
+- **[September 27, 2025]**
     - **Lua Integration Complete:**  
         - All major Core and Factory methods are now exposed to Lua via Sol2 usertype registration.
         - Overloaded methods and custom types (DomHandle, SDL_Color) are correctly bound and accessible from Lua scripts.
@@ -195,7 +195,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Demonstrated robust C++/Lua test integration: Lua scripts return boolean results to C++ test framework, enabling seamless cross-language validation.
         - Codebase and Lua API stability increased, with reliable resource management and hierarchy checks.
 
-- ### [September 28, 2025]
+- **[September 28, 2025]**
     - **Lua Binding Improvements:**
         - Refined Lua usertype registration to ensure idempotent and consistent bindings.
         - Verified that all properties, commands, and functions are correctly exposed to Lua for Core, Factory, DomHandle, and IDisplayObject.
@@ -227,7 +227,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Removed temporary debug instrumentation and test-only Factory helpers.
         - Ensured the codebase is clean and maintainable.
 
-- ### [September 29, 2025]
+- **[September 29, 2025]**
     - **Lua Binding Debugging:**
         - Added controlled debug prints to Lua usertype registration to trace binding operations.
         - Verified that each usertype (DomHandle, IDisplayObject, Stage, Factory, Core) is registered exactly once, preventing conflicts and ensuring consistent behavior.
@@ -261,7 +261,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - A clean build and test run were executed successfully.    
         - Reworked the DomHandle unit tests for readability and maintainability: added a numeric mapping header, expanded inline descriptions to match `UnitTests::run` strings, and renamed test functions to `DomHandle_test1`..`DomHandle_test10`.
             
-            
+
 ## Next Steps (garbage collection / orphan retention)
 
 Proposed approach: add an `OrphanRetentionPolicy` enum (or a smaller `retainOnOrphan` boolean for a quick win) on `IDisplayObject` and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.

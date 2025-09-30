@@ -104,9 +104,9 @@ Scripting and Configuration</h1>
 <h1><a class="anchor" id="autotoc_md150"></a>
 Progress Updates</h1>
 <ul>
-<li>### [July 2, 2025] Initial rough draft and proof of concept.</li>
-<li>### [August 5, 2025] <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> secondary rough draft</li>
-<li>### [September 19, 2025]<ul>
+<li><b>[July 2, 2025]</b> Initial rough draft and proof of concept.</li>
+<li><b>[August 5, 2025]</b> <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> secondary rough draft</li>
+<li><b>[September 19, 2025]</b><ul>
 <li>Proof of concept approved. Main development approved. Work begins officially.</li>
 <li>Improved Doxygen documentation for all major headers and macros.</li>
 <li>Added and refined Doxygen comments for <a class="el" href="SDOM__CLR_8hpp.html" title="Static container for ANSI escape sequences for terminal text formatting and colorization.">SDOM_CLR.hpp</a>, <a class="el" href="SDOM_8hpp.html">SDOM.hpp</a>, and <a class="el" href="SDOM__IDataObject_8hpp.html">SDOM_IDataObject.hpp</a>.</li>
@@ -129,7 +129,7 @@ Progress Updates</h1>
 <li>Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.</li>
 </ul>
 </li>
-<li>### [September 20, 2025]<ul>
+<li><b>[September 20, 2025]</b><ul>
 <li>Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.</li>
 <li>Event system foundation implemented and documented.</li>
 <li>Doxygen documentation added for major interfaces (Core, Factory, IResourceObject).</li>
@@ -138,7 +138,7 @@ Progress Updates</h1>
 <li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.</li>
 </ul>
 </li>
-<li>### [September 21, 2025]<ul>
+<li><b>[September 21, 2025]</b><ul>
 <li>Renamed <code>resource_ptr</code> to <code>ResourceHandle</code> throughout the codebase for clarity.<ul>
 <li>The new name better reflects its role as an opaque handle or key for resource lookup, rather than a smart pointer with ownership semantics.</li>
 <li>Updated all documentation, examples, and comments to use <code>ResourceHandle</code>.</li>
@@ -181,7 +181,7 @@ Progress Updates</h1>
 </li>
 </ul>
 </li>
-<li>### [September 22, 2025]<ul>
+<li><b>[September 22, 2025]</b><ul>
 <li><b>Unit Test Framework Refined:</b> <br  />
 <ul>
 <li>Simplified the unit test system: now every resource implements <code>onUnitTests()</code> for built-in tests.</li>
@@ -226,7 +226,7 @@ Progress Updates</h1>
 </li>
 </ul>
 </li>
-<li>### [September 23, 2025]<ul>
+<li><b>[September 23, 2025]</b><ul>
 <li><b>Event System Preliminary Testing:</b> <br  />
 <ul>
 <li>Successfully integrated and tested the event system with live SDL3 events.</li>
@@ -248,7 +248,7 @@ Progress Updates</h1>
 </li>
 </ul>
 </li>
-<li>### [September 24, 2025]<ul>
+<li><b>[September 24, 2025]</b><ul>
 <li><b>Event System Debugging:</b><ul>
 <li>Resolved compile-time issues with <code>ListenerEntry</code> constructor and <code>push_back</code> calls in <code>addEventListener</code>.</li>
 <li>Verified that <code>addEventListener</code> correctly registers event listeners for both capture and bubbling phases.</li>
@@ -280,7 +280,7 @@ Progress Updates</h1>
 </li>
 </ul>
 </li>
-<li>### [September 25, 2025]<ul>
+<li><b>[September 25, 2025]</b><ul>
 <li><b>JSON → Lua Transition Complete:</b> <br  />
 <ul>
 <li>All configuration, scripting, and resource creation now use Lua tables via Sol2.</li>
@@ -321,7 +321,7 @@ Progress Updates</h1>
 </li>
 </ul>
 </li>
-<li>### [September 26, 2025]</li>
+<li><b>[September 26, 2025]</b></li>
 <li><b>Box Unit Tests Complete:</b> <br  />
 <ul>
 <li>Finalized comprehensive unit tests for the Box object, covering creation, hierarchy, anchor logic, and world coordinate propagation.</li>
@@ -347,7 +347,7 @@ Progress Updates</h1>
 <li>Documentation and codebase are up-to-date with recent changes.</li>
 </ul>
 </li>
-<li>### [September 27, 2025]<ul>
+<li><b>[September 27, 2025]</b><ul>
 <li><b>Lua Integration Complete:</b> <br  />
 <ul>
 <li>All major Core and Factory methods are now exposed to Lua via Sol2 usertype registration.</li>
@@ -368,7 +368,7 @@ Progress Updates</h1>
 </li>
 </ul>
 </li>
-<li>### [September 28, 2025]<ul>
+<li><b>[September 28, 2025]</b><ul>
 <li><b>Lua Binding Improvements:</b><ul>
 <li>Refined Lua usertype registration to ensure idempotent and consistent bindings.</li>
 <li>Verified that all properties, commands, and functions are correctly exposed to Lua for Core, Factory, DomHandle, and IDisplayObject.</li>
@@ -413,7 +413,7 @@ Progress Updates</h1>
 </li>
 </ul>
 </li>
-<li>### [September 29, 2025]<ul>
+<li><b>[September 29, 2025]</b><ul>
 <li><b>Lua Binding Debugging:</b><ul>
 <li>Added controlled debug prints to Lua usertype registration to trace binding operations.</li>
 <li>Verified that each usertype (DomHandle, IDisplayObject, Stage, Factory, Core) is registered exactly once, preventing conflicts and ensuring consistent behavior.</li>
