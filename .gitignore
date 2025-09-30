@@ -78,4 +78,7 @@ cmake_install.cmake
 build/error.log
 
 # Ignore generated Doxygen HTML (built locally; published via GitHub Actions)
-docs/html/
+# NOTE: docs/html/ was previously ignored. It's commented out so the generated
+# documentation can be committed when desired. Re-enable this line to stop
+# tracking generated docs in the repository.
+# docs/html/
