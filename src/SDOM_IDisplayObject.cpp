@@ -147,6 +147,22 @@ namespace SDOM
         sol::usertype<IDisplayObject> objHandleType = lua.new_usertype<IDisplayObject>(typeName);
         this->objHandleType_ = objHandleType; // Save in IDataObject
 
+        // Ensure Bounds is registered as a userdata for Lua (compatibility)
+        if (!lua["Bounds"].valid()) {
+            lua.new_usertype<Bounds>("Bounds",
+                "left", &Bounds::left,
+                "top", &Bounds::top,
+                "right", &Bounds::right,
+                "bottom", &Bounds::bottom,
+                "x", sol::property([](const Bounds& b) { return static_cast<int>(b.left); }),
+                "y", sol::property([](const Bounds& b) { return static_cast<int>(b.top); }),
+                "width", sol::property([](const Bounds& b) { return static_cast<int>(b.width()); }),
+                "height", sol::property([](const Bounds& b) { return static_cast<int>(b.height()); }),
+                "widthf", &Bounds::width,
+                "heightf", &Bounds::height
+            );
+        }
+
         // 2. Register properties using the factory
         Factory& factory = getFactory();
 
@@ -302,6 +318,37 @@ namespace SDOM
                     DomHandle parent = t["parent"].get<DomHandle>();
                     setParent_lua(static_cast<IDisplayObject&>(obj), parent);
                 }
+            }
+        );
+
+        // Expose setBounds so Lua can call :setBounds({ left=..., top=..., right=..., bottom=... })
+        factory.registerLuaCommand(typeName, "setBounds",
+            [](IDataObject& obj, sol::object args, sol::state_view lua) {
+                if (!args.is<sol::table>()) return;
+                sol::table t = args.as<sol::table>();
+                Bounds b;
+                // Allow either numeric indices or named fields
+                if (t[1].valid() && t[2].valid() && t[3].valid() && t[4].valid()) {
+                    b.left = t[1].get<float>();
+                    b.top = t[2].get<float>();
+                    b.right = t[3].get<float>();
+                    b.bottom = t[4].get<float>();
+                } else {
+                    b.left = t["left"].get_or(0.0f);
+                    b.top = t["top"].get_or(0.0f);
+                    b.right = t["right"].get_or(0.0f);
+                    b.bottom = t["bottom"].get_or(0.0f);
+                }
+                setBounds_lua(static_cast<IDisplayObject&>(obj), b);
+            }
+        );
+
+        // Expose getBounds so Lua can call :getBounds() and receive a Bounds userdata
+        factory.registerLuaFunction(typeName, "getBounds",
+            [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
+                IDisplayObject& dobj = static_cast<IDisplayObject&>(obj);
+                Bounds b = dobj.getBounds();
+                return sol::make_object(lua, b);
             }
         );
 

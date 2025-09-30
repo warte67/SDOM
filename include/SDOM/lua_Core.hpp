@@ -46,11 +46,11 @@ namespace SDOM
 	void pushMouseEvent_lua(Core& core, const sol::object& args); // **verified**
 
 	// synthesize keyboard events from Lua: expects table { key=<SDLK_* int>, type="down"|"up", mod=<modifier mask optional> }
-	void pushKeyboardEvent_lua(Core& core, const sol::object& args);
+	void pushKeyboardEvent_lua(Core& core, const sol::object& args); // **verified**
 
 	// --- Object Lookup --- //
-	DomHandle getDisplayHandle_lua(Core& core, const std::string& name); // **verified**
-	DomHandle getFactoryStageHandle_lua(Core& core);
+	DomHandle getDisplayObjectHandle_lua(Core& core, const std::string& name); // **verified**
+	DomHandle getFactoryStageHandle_lua(Core& core); // **verified**
 	bool hasDisplayObject_lua(const Core& core, const std::string& name); // **verified**
 
 	// --- Orphan / Future Child Management --- //

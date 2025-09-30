@@ -1009,7 +1009,7 @@ namespace SDOM
     IResourceObject* Core::getResourceObject(const std::string& name) {
         return getFactory().getResObj(name);
     }
-    DomHandle Core::getDisplayHandle(const std::string& name) {
+    DomHandle Core::getDisplayObjectHandle(const std::string& name) {
         return getFactory().getDomHandle(name);
     }
     DomHandle Core::getFactoryStageHandle() {
@@ -1091,7 +1091,7 @@ namespace SDOM
         objHandleType["createDisplayObject"] = [](Core& core, const std::string& typeName, const sol::table& cfg) {
             return createDisplayObject_lua(typeName, cfg);
         };
-        objHandleType["getDisplayHandle"] = &getDisplayHandle_lua;
+    objHandleType["getDisplayObjectHandle"] = &getDisplayObjectHandle_lua;
         objHandleType["getStageHandle"] = &getStageHandle_lua;
         objHandleType["hasDisplayObject"] = &hasDisplayObject_lua;
         objHandleType["destroyDisplayObject"] = &destroyDisplayObject_lua;
@@ -1263,10 +1263,10 @@ namespace SDOM
                 });
 
             // Also register the direct member overload for convenience (calls Core::createDisplayObject)
-            factory_->registerLuaFunction(typeName, "getDisplayHandle",
+            factory_->registerLuaFunction(typeName, "getDisplayObjectHandle",
                 [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
                     Core& core = static_cast<Core&>(obj);
-                    if (args.is<std::string>()) return sol::make_object(lua, getDisplayHandle_lua(core, args.as<std::string>()));
+                    if (args.is<std::string>()) return sol::make_object(lua, getDisplayObjectHandle_lua(core, args.as<std::string>()));
                     return sol::make_object(lua, DomHandle());
                 });
             factory_->registerLuaFunction(typeName, "getFactoryStageHandle",
@@ -1352,9 +1352,9 @@ namespace SDOM
             DomHandle h = Core::getInstance().createDisplayObject(typeName, cfg);
             return sol::make_object(sv, h);
         });
-        coreTable.set_function("getDisplayHandle", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
+        coreTable.set_function("getDisplayObjectHandle", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
             sol::state_view sv = ts;
-            DomHandle h = Core::getInstance().getDisplayHandle(name);
+                DomHandle h = Core::getInstance().getDisplayObjectHandle(name);
             return sol::make_object(sv, h);
         });
         coreTable.set_function("getStageHandle", [](sol::this_state ts, sol::object /*self*/) {
@@ -1374,7 +1374,7 @@ namespace SDOM
             std::string query = typeName;
             // If the caller passed an instance name, resolve it to the registered type
             if (Core::getInstance().hasDisplayObject(typeName)) {
-                DomHandle h = Core::getInstance().getDisplayHandle(typeName);
+                DomHandle h = Core::getInstance().getDisplayObjectHandle(typeName);
                 if (h.isValid() && h.get()) {
                     IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
                     if (obj) query = obj->getType();
@@ -1389,7 +1389,7 @@ namespace SDOM
             sol::state_view sv = ts;
             std::string query = typeName;
             if (Core::getInstance().hasDisplayObject(typeName)) {
-                DomHandle h = Core::getInstance().getDisplayHandle(typeName);
+                DomHandle h = Core::getInstance().getDisplayObjectHandle(typeName);
                 if (h.isValid() && h.get()) {
                     IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
                     if (obj) query = obj->getType();
@@ -1404,7 +1404,7 @@ namespace SDOM
             sol::state_view sv = ts;
             std::string query = typeName;
             if (Core::getInstance().hasDisplayObject(typeName)) {
-                DomHandle h = Core::getInstance().getDisplayHandle(typeName);
+                DomHandle h = Core::getInstance().getDisplayObjectHandle(typeName);
                 if (h.isValid() && h.get()) {
                     IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
                     if (obj) query = obj->getType();

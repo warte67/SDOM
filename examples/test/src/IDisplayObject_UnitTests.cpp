@@ -98,7 +98,7 @@ namespace SDOM
             sol::state& lua = Core::getInstance().getLua();
             // Use Lua to set/get the name via DomHandle bindings
             sol::protected_function_result res = lua.script(R"(
-                local h = Core:getDisplayHandle('luaGenericStage')
+                local h = Core:getDisplayObjectHandle('luaGenericStage')
                 if not h then return nil, 'handle missing' end
                 h:setName('luaRenamedStage')
                 return h:getName()
@@ -126,7 +126,7 @@ namespace SDOM
             sol::state& lua = Core::getInstance().getLua();
             // Use Lua to set/get the type via DomHandle bindings
             sol::protected_function_result res = lua.script(R"(
-                local h = Core:getDisplayHandle('luaGenericStage')
+                local h = Core:getDisplayObjectHandle('luaGenericStage')
                 if not h then return nil, 'handle missing' end
                 h:setType('LuaCustomStage')
                 return h:getType()
@@ -175,8 +175,8 @@ namespace SDOM
 
             // From Lua: set blueishBox parent to redishBox using DomHandle method
             sol::protected_function_result res = lua.script(R"(
-                local b = Core:getDisplayHandle('blueishBox')
-                local r = Core:getDisplayHandle('redishBox')
+                local b = Core:getDisplayObjectHandle('blueishBox')
+                local r = Core:getDisplayObjectHandle('redishBox')
                 if not b or not r then return false end
                 -- call the setParent command registered on the concrete type
                 b:setParent({ parent = r })
@@ -192,12 +192,17 @@ namespace SDOM
                 return false;
             }
 
-            // Verify: getParent() of blueishBox is redishBox
-            DomHandle blueParent = blue->getParent();
-            if (!blueParent || blueParent.getName() != "redishBox") {
-                dbgStr = "blueishBox parent is not redishBox";
-                return false;
-            }
+            // Verify: getParent() of blueishBox is redishBox (check from Lua)
+            sol::protected_function_result pres = lua.script(R"(
+                local b = Core:getDisplayObjectHandle('blueishBox')
+                if not b then return nil, 'blueishBox missing' end
+                local p = b:getParent()
+                if not p then return nil, 'parent missing' end
+                return p:getName()
+            )");
+            if (!pres.valid()) { sol::error err = pres; dbgStr = std::string("Lua error checking parent: ") + err.what(); return false; }
+            std::string parentName = pres.get<std::string>();
+            if (parentName != "redishBox") { dbgStr = std::string("blueishBox parent is not redishBox (returned: ") + parentName + ")"; return false; }
 
             // Verify: redishBox has blueishBox as a child
             if (!red->hasChild(blue)) {
@@ -205,6 +210,105 @@ namespace SDOM
                 return false;
             }
 
+            // Cleanup: restore original hierarchy (blueishBox under mainStage)
+            auto result = lua.script(R"(
+                local b = Core:getDisplayObjectHandle('blueishBox')
+                local s = Core:getStageHandle()
+                if not b or not s then return false, 'missing handle' end
+                b:setParent(s)
+                local p = b:getParent()
+                if not p then return false, 'parent nil after setParent' end
+                return p:getName() == s:getName()
+            )");
+            if (!result.valid()) { sol::error err = result; dbgStr = std::string("Lua error restoring parent: ") + err.what(); return false; }
+
+            return true;
+        });
+    }
+
+    static bool test10_IDisplayObject(Factory* factory, std::string& dbgStr) {
+        return UnitTests::run("IDisplayObject: test # 10", "Lua getBounds for blueishBox", [factory, &dbgStr]() {
+            sol::state& lua = Core::getInstance().getLua();
+
+            // Do the entire bounds check in Lua so this test is Lua-only
+            sol::protected_function_result res = lua.script(R"(
+                local EXPECTED = { x = 240, y = 70, width = 250, height = 225 }
+                local h = Core:getDisplayObjectHandle('blueishBox')
+                if not h then return { ok = false, err = 'handle missing' } end
+                local b = h:getBounds()
+                if not b then return { ok = false, err = 'getBounds returned nil' } end
+                -- Support both userdata with fields and legacy table-style access
+                local x = b.x or b.left
+                local y = b.y or b.top
+                local w = b.width or b.right - b.left
+                local h = b.height or b.bottom - b.top
+
+                if x ~= EXPECTED.x or y ~= EXPECTED.y or w ~= EXPECTED.width or h ~= EXPECTED.height then
+                    return { ok = false, err = string.format('blueishBox bounds mismatch (got x=%s, y=%s, w=%s, h=%s) expected (x=%s,y=%s,w=%s,h=%s)', x, y, w, h, EXPECTED.x, EXPECTED.y, EXPECTED.width, EXPECTED.height) }
+                end
+                return { ok = true }
+            )");
+            if (!res.valid()) { sol::error err = res; dbgStr = std::string("Lua error in test10: ") + err.what(); return false; }
+            sol::table tret = res.get<sol::table>();
+            bool ok = tret["ok"].get_or(false);
+            if (!ok) {
+                std::string err = tret["err"].get_or(std::string("unknown error"));
+                dbgStr = std::string("Lua test10 failed: ") + err;
+                return false;
+            }
+            return true;
+        });
+    }
+
+    static bool test11_IDisplayObject(Factory* factory, std::string& dbgStr) {
+        return UnitTests::run("IDisplayObject: test # 11", "Lua setBounds/getX/getY/getWidth/getHeight and edges", [factory, &dbgStr]() {
+            sol::state& lua = Core::getInstance().getLua();
+
+            sol::protected_function_result res = lua.script(R"(
+                local BASE = { x = 240, y = 70, width = 250, height = 225 }
+                local h = Core:getDisplayObjectHandle('blueishBox')
+                if not h then return { ok = false, err = 'handle missing' } end
+
+                -- compute new values (subtract 5 from each)
+                local newX = BASE.x - 5
+                local newY = BASE.y - 5
+                local newW = BASE.width - 5
+                local newH = BASE.height - 5
+
+                -- set bounds on the object (left, top, right, bottom)
+                h:setBounds({ left = newX, top = newY, right = newX + newW, bottom = newY + newH })
+
+                -- verify via getX/getY/getWidth/getHeight
+                local gx = h:getX()
+                local gy = h:getY()
+                local gw = h:getWidth()
+                local gh = h:getHeight()
+                if gx ~= newX or gy ~= newY or gw ~= newW or gh ~= newH then
+                    return { ok = false, err = string.format('getX/Y/Width/Height mismatch (got %s,%s,%s,%s expected %s,%s,%s,%s)', gx, gy, gw, gh, newX, newY, newW, newH) }
+                end
+
+                -- secondary check: verify left/top/right/bottom via getBounds()
+                local b = h:getBounds()
+                if not b then return { ok = false, err = 'getBounds returned nil' } end
+                local left = b.left or b.x
+                local top = b.top or b.y
+                local right = b.right or (left + (b.width or (b.right - b.left)))
+                local bottom = b.bottom or (top + (b.height or (b.bottom - b.top)))
+                if left ~= newX or top ~= newY or right ~= (newX + newW) or bottom ~= (newY + newH) then
+                    return { ok = false, err = string.format('edges mismatch (got l=%s t=%s r=%s b=%s expected l=%s t=%s r=%s b=%s)', left, top, right, bottom, newX, newY, newX+newW, newY+newH) }
+                end
+
+                return { ok = true }
+            )");
+
+            if (!res.valid()) { sol::error err = res; dbgStr = std::string("Lua error in test11: ") + err.what(); return false; }
+            sol::table tret = res.get<sol::table>();
+            bool ok = tret["ok"].get_or(false);
+            if (!ok) {
+                std::string err = tret["err"].get_or(std::string("unknown error"));
+                dbgStr = std::string("Lua test11 failed: ") + err;
+                return false;
+            }
             return true;
         });
     }
@@ -217,15 +321,17 @@ namespace SDOM
         std::string dbgStr;
 
         std::vector<std::function<bool()>> tests = {
-            [&]() { return test1_IDisplayObject(factory, dbgStr); }, // Create generic Stage object
-            [&]() { return test2_IDisplayObject(factory, dbgStr); }, // Set and Get Name
-            [&]() { return test3_IDisplayObject(factory, dbgStr); }, // Set and Get Type
-            [&]() { return test4_IDisplayObject(factory, dbgStr); }, // Destroy generic Stage object
-            [&]() { return test5_IDisplayObject(factory, dbgStr); }, // Lua Create generic Stage object
-            [&]() { return test6_IDisplayObject(factory, dbgStr); }, // Lua Set and Get Name
-            [&]() { return test7_IDisplayObject(factory, dbgStr); }, // Lua Set and Get Type
-            [&]() { return test8_IDisplayObject(factory, dbgStr); }, // Lua Destroy generic Stage object
-            [&]() { return test9_IDisplayObject(factory, dbgStr); }  // Lua setParent test
+            [&]() { return  test1_IDisplayObject(factory, dbgStr); }, // Create generic Stage object
+            [&]() { return  test2_IDisplayObject(factory, dbgStr); }, // Set and Get Name
+            [&]() { return  test3_IDisplayObject(factory, dbgStr); }, // Set and Get Type
+            [&]() { return  test4_IDisplayObject(factory, dbgStr); }, // Destroy generic Stage object
+            [&]() { return  test5_IDisplayObject(factory, dbgStr); }, // Lua Create generic Stage object
+            [&]() { return  test6_IDisplayObject(factory, dbgStr); }, // Lua Set and Get Name
+            [&]() { return  test7_IDisplayObject(factory, dbgStr); }, // Lua Set and Get Type
+            [&]() { return  test8_IDisplayObject(factory, dbgStr); }, // Lua Destroy generic Stage object
+            [&]() { return  test9_IDisplayObject(factory, dbgStr); }, // Lua setParent test
+            [&]() { return test10_IDisplayObject(factory, dbgStr); }, // Lua bounds test for blueishBox
+            [&]() { return test11_IDisplayObject(factory, dbgStr); }  // Lua setBounds/getX/getY/getWidth/getHeight and edges
         };
 
         for (auto &t : tests) {

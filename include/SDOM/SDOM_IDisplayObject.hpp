@@ -183,13 +183,20 @@ namespace SDOM
         bool removeChild(DomHandle child);
         const std::vector<DomHandle>& getChildren() const { return children_; }
         DomHandle getParent() const { return parent_; }
-        IDisplayObject& setParent(const DomHandle& parent) { parent_ = parent; return *this; }
+        IDisplayObject& setParent(const DomHandle& parent) 
+        { 
+            Bounds world = this->getBounds();
+            parent_ = parent; 
+            this->setBounds(world); // Maintain world position when changing parent
+            return *this; 
+        }
         bool hasChild(DomHandle child) const;
 
         // --- Type & Property Access --- //
         std::string getType() const { return type_; }
         IDisplayObject& setType(const std::string& newType) { type_ = newType; return *this; }
         Bounds getBounds() const { return { getLeft(), getTop(), getRight(), getBottom() }; }
+        IDisplayObject& setBounds(const Bounds& b) { setLeft(b.left); setTop(b.top); setRight(b.right); setBottom(b.bottom); return *this; }  // **NEW**
         SDL_Color getColor() const { return color_; }
         IDisplayObject& setColor(const SDL_Color& color) { color_ = color; return *this; }
 

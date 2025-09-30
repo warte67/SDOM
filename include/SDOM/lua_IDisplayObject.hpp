@@ -28,13 +28,14 @@ namespace SDOM
     void addChild_lua(IDisplayObject& obj, DomHandle child); // **VERIFIED**
     bool removeChild_lua(IDisplayObject& obj, DomHandle child); // **VERIFIED**
     bool hasChild_lua(const IDisplayObject& obj, DomHandle child); // **VERIFIED**
-    DomHandle getParent_lua(const IDisplayObject& obj);
-    IDisplayObject& setParent_lua(IDisplayObject& obj, const DomHandle& parent);
+    DomHandle getParent_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setParent_lua(IDisplayObject& obj, const DomHandle& parent); // **VERIFIED**
 
     // --- Type & Property Access --- //
-    std::string getType_lua(const IDisplayObject& obj);
-    IDisplayObject& setType_lua(IDisplayObject& obj, const std::string& newType);
-    Bounds getBounds_lua(const IDisplayObject& obj);
+    std::string getType_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setType_lua(IDisplayObject& obj, const std::string& newType); // **VERIFIED**
+    Bounds getBounds_lua(const IDisplayObject& obj); // **VERIFIED**
+    IDisplayObject& setBounds_lua(IDisplayObject& obj, const Bounds& b); // **VERIFIED**
     SDL_Color getColor_lua(const IDisplayObject& obj);
     IDisplayObject& setColor_lua(IDisplayObject& obj, const SDL_Color& color);
 
@@ -71,10 +72,10 @@ namespace SDOM
     IDisplayObject& setTabEnabled_lua(IDisplayObject& obj, bool enabled);
 
     // --- Geometry & Layout --- //
-    int getX_lua(const IDisplayObject& obj);
-    int getY_lua(const IDisplayObject& obj);
-    int getWidth_lua(const IDisplayObject& obj);
-    int getHeight_lua(const IDisplayObject& obj);
+    int getX_lua(const IDisplayObject& obj); // **VERIFIED**
+    int getY_lua(const IDisplayObject& obj); // **VERIFIED**
+    int getWidth_lua(const IDisplayObject& obj); // **VERIFIED**
+    int getHeight_lua(const IDisplayObject& obj); // **VERIFIED**
     IDisplayObject& setX_lua(IDisplayObject& obj, int p_x);
     IDisplayObject& setY_lua(IDisplayObject& obj, int p_y);
     IDisplayObject& setWidth_lua(IDisplayObject& obj, int width);
@@ -91,10 +92,10 @@ namespace SDOM
     void setAnchorRight_lua(IDisplayObject& obj, AnchorPoint ap);
 
     // --- Edge Positions --- //
-    float getLeft_lua(const IDisplayObject& obj);
-    float getRight_lua(const IDisplayObject& obj);
-    float getTop_lua(const IDisplayObject& obj);
-    float getBottom_lua(const IDisplayObject& obj);
+    float getLeft_lua(const IDisplayObject& obj); // **VERIFIED**
+    float getRight_lua(const IDisplayObject& obj); // **VERIFIED**
+    float getTop_lua(const IDisplayObject& obj); // **VERIFIED**
+    float getBottom_lua(const IDisplayObject& obj); // **VERIFIED**
     IDisplayObject& setLeft_lua(IDisplayObject& obj, float p_left);
     IDisplayObject& setRight_lua(IDisplayObject& obj, float p_right);
     IDisplayObject& setTop_lua(IDisplayObject& obj, float p_top);

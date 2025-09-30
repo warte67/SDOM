@@ -153,7 +153,7 @@ namespace SDOM
         // --- Object Lookup --- //
         IDisplayObject* getDisplayObject(const std::string& name);
         IResourceObject* getResourceObject(const std::string& name);
-        DomHandle getDisplayHandle(const std::string& name);
+        DomHandle getDisplayObjectHandle(const std::string& name);
         DomHandle getFactoryStageHandle();
         bool hasDisplayObject(const std::string& name) const;
 

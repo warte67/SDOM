@@ -34,6 +34,24 @@ namespace SDOM
         );
         this->objHandleType_ = objHandleType; // Save in IDataObject
 
+        // Ensure Bounds is available as a userdata in Lua. Register once per-state.
+        if (!lua["Bounds"].valid()) {
+            lua.new_usertype<Bounds>("Bounds",
+                "left", &Bounds::left,
+                "top", &Bounds::top,
+                "right", &Bounds::right,
+                "bottom", &Bounds::bottom,
+                // Compatibility helpers: integer-style fields like the previous table
+                "x", sol::property([](const Bounds& b) { return static_cast<int>(b.left); }),
+                "y", sol::property([](const Bounds& b) { return static_cast<int>(b.top); }),
+                "width", sol::property([](const Bounds& b) { return static_cast<int>(b.width()); }),
+                "height", sol::property([](const Bounds& b) { return static_cast<int>(b.height()); }),
+                // Also expose float getters if users want the precise values
+                "widthf", &Bounds::width,
+                "heightf", &Bounds::height
+            );
+        }
+
         // 2. Call base registration
         SUPER::_registerLua(typeName, lua);
 
@@ -114,14 +132,14 @@ namespace SDOM
             DomHandle parentHandle;
             if (arg.is<std::string>()) {
                 std::string name = arg.as<std::string>();
-                parentHandle = Core::getInstance().getDisplayHandle(name);
+                parentHandle = Core::getInstance().getDisplayObjectHandle(name);
             } else if (arg.is<DomHandle>()) {
                 parentHandle = arg.as<DomHandle>();
             } else if (arg.is<sol::table>()) {
                 sol::table t = arg.as<sol::table>();
                 if (t["parent"].valid()) {
                     if (t["parent"].get_type() == sol::type::string) {
-                        parentHandle = Core::getInstance().getDisplayHandle(t["parent"].get<std::string>());
+                        parentHandle = Core::getInstance().getDisplayObjectHandle(t["parent"].get<std::string>());
                     } else {
                         parentHandle = t["parent"].get<DomHandle>();
                     }
@@ -190,6 +208,14 @@ namespace SDOM
             return false;
         };
 
+        // Expose getParent so Lua can query an object's parent handle
+        objHandleType_["getParent"] = [](DomHandle& dh) -> DomHandle {
+            if (auto* obj = dh.get()) {
+                return obj->getParent();
+            }
+            return DomHandle();
+        };
+
         // Forwarded property getters for convenience in Lua (stage coordinates, size)
         objHandleType_["getX"] = [](DomHandle& dh) -> int {
             IDisplayObject* target = dh.get(); if (!target) return 0; return target->getX(); };
@@ -199,6 +225,15 @@ namespace SDOM
             IDisplayObject* target = dh.get(); if (!target) return 0; return target->getWidth(); };
         objHandleType_["getHeight"] = [](DomHandle& dh) -> int {
             IDisplayObject* target = dh.get(); if (!target) return 0; return target->getHeight(); };
+
+        // getBounds returns a Bounds userdata (was previously a plain table)
+        objHandleType_["getBounds"] = [](sol::this_state ts, DomHandle& dh) -> sol::object {
+            sol::state_view lua(ts);
+            IDisplayObject* target = dh.get();
+            if (!target) return sol::make_object(lua, sol::nil);
+            Bounds b = target->getBounds();
+            return sol::make_object(lua, b);
+        };
 
         // Forward setColor so DomHandle:setColor({ r=..., g=..., b=..., a=... }) works from Lua
         objHandleType_["setColor"] = [](DomHandle& dh, sol::object arg) {

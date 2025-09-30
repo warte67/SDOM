@@ -131,7 +131,7 @@ void pushKeyboardEvent_lua(Core& core, const sol::object& args) {
 	float getElapsedTime_lua(const Core& core) { return core.getElapsedTime(); }
 
 	// --- Object Lookup --- //
-	DomHandle getDisplayHandle_lua(Core& core, const std::string& name) { return core.getDisplayHandle(name); }
+	DomHandle getDisplayObjectHandle_lua(Core& core, const std::string& name) { return core.getDisplayObjectHandle(name); }
 	DomHandle getFactoryStageHandle_lua(Core& core) { return core.getFactoryStageHandle(); }
 	bool hasDisplayObject_lua(const Core& core, const std::string& name) { return core.hasDisplayObject(name); }
 

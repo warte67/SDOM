@@ -37,6 +37,7 @@ namespace SDOM
     std::string getType_lua(const IDisplayObject& obj) { return obj.getType(); }
     IDisplayObject& setType_lua(IDisplayObject& obj, const std::string& newType) { return obj.setType(newType); }
     Bounds getBounds_lua(const IDisplayObject& obj) { return obj.getBounds(); }
+    IDisplayObject& setBounds_lua(IDisplayObject& obj, const Bounds& b) { return obj.setBounds(b); }
     SDL_Color getColor_lua(const IDisplayObject& obj) { return obj.getColor(); }
     IDisplayObject& setColor_lua(IDisplayObject& obj, const SDL_Color& color) { return obj.setColor(color); }
 
