@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['handle_20resolution_20flow_20reference_0',['Optional: Handle Resolution Flow (reference)',['../md_docs_2object__handles.html#autotoc_md147',1,'']]],
+  ['handle_20types_1',['Handle Types',['../md_docs_2object__handles.html#autotoc_md137',1,'']]],
+  ['handles_20in_20sdom_2',['Object Handles in SDOM',['../md_docs_2object__handles.html',1,'']]],
+  ['handletabkeypress_3',['handleTabKeyPress',['../classSDOM_1_1Core.html#a9e424a1d0ce6f6327c6ac6c8102d8406',1,'SDOM::Core']]],
+  ['handletabkeypress_5flua_4',['handleTabKeyPress_lua',['../namespaceSDOM.html#a2dbd105aa22f1927e971d549c4fd6667',1,'SDOM']]],
+  ['handletabkeypressreverse_5',['handleTabKeyPressReverse',['../classSDOM_1_1Core.html#ac2fd090610dc01a7480ff3cececde751',1,'SDOM::Core']]],
+  ['handletabkeypressreverse_5flua_6',['handleTabKeyPressReverse_lua',['../namespaceSDOM.html#a77af89f042508209a083a8cad5335d03',1,'SDOM']]],
+  ['handling_20validation_7',['6. Error Handling &amp; Validation',['../md_docs_2extensible__factory.html#autotoc_md121',1,'']]],
+  ['haschild_8',['hasChild',['../classSDOM_1_1IDisplayObject.html#a3ba3ff49254f983c2c9f751cabb4f866',1,'SDOM::IDisplayObject']]],
+  ['haschild_5flua_9',['hasChild_lua',['../namespaceSDOM.html#a1c44c855ee0cd215a17a7795d505254e',1,'SDOM']]],
+  ['hasdisplayobject_10',['hasDisplayObject',['../classSDOM_1_1Core.html#a1bcc1a94d235f83308a6204d4ff56215',1,'SDOM::Core']]],
+  ['hasdisplayobject_5flua_11',['hasDisplayObject_lua',['../namespaceSDOM.html#ad33a6e8fae11914f2b765f9241408907',1,'SDOM']]],
+  ['height_12',['height',['../structSDOM_1_1Bounds.html#ab9e98bf49c90ef9ce80a0827784b8b71',1,'SDOM::Bounds::height()'],['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a',1,'SDOM::IDisplayObject::InitStruct::height']]],
+  ['hex_13',['hex',['../classCLR.html#a7affcef20a6ac743b04173d8717f03ba',1,'CLR']]],
+  ['hidden_14',['Hidden',['../classSDOM_1_1EventType.html#a8b306f6e94f88e440f688dad65f7b011',1,'SDOM::EventType']]],
+  ['hide_15',['Hide',['../classSDOM_1_1EventType.html#ab0487201266373a8e3b5cffd9fd13994',1,'SDOM::EventType']]],
+  ['hierarchical_20anchoring_16',['Hierarchical Anchoring',['../md_docs_2display__object__anchoring.html#autotoc_md59',1,'']]],
+  ['high_20level_17',['Runtime Flow (High Level)',['../md_docs_2architecture__overview.html#autotoc_md2',1,'']]],
+  ['hook_20callback_20registration_18',['Hook &amp; Callback Registration',['../md_docs_2core__framework.html#autotoc_md16',1,'']]],
+  ['hook_20design_19',['Modern COM-like Interface and Hook Design',['../md_docs_2exposing__hooks.html',1,'']]],
+  ['hook_20registration_20',['1. Dynamic Hook Registration',['../md_docs_2exposing__hooks.html#autotoc_md95',1,'']]],
+  ['hook_20registration_20in_20c_21',['Example: Dynamic Hook Registration in C++',['../md_docs_2exposing__hooks.html#autotoc_md89',1,'']]],
+  ['hooks_20python_20etc_22',['- Extensible for future language hooks (Python, etc.)',['../md_docs_2exposing__hooks.html#autotoc_md87',1,'']]],
+  ['how_20it_20works_23',['How It Works',['../md_docs_2extensible__factory.html#autotoc_md127',1,'']]]
+];

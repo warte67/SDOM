@@ -358,18 +358,19 @@ namespace SDOM
  * @brief Logs an informational message to stdout.
  * @param message Informational message to display.
  */
-#define INFO(message) std::cout << CLR::YELLOW << "[INFO] " << message << CLR::RESET << std::endl
+// Macro for informational logging (statement-safe, parenthesized parameter)
+#define INFO(message) do { std::cout << CLR::YELLOW << "[INFO] " << (message) << CLR::RESET << std::endl; } while(0)
 
 /**
  * @brief Logs a debug error (non-fatal) with file and line info in dark text.
-// Macro for informational logging (statement-safe, parenthesized parameter)
-#define INFO(message) do { std::cout << CLR::YELLOW << "[INFO] " << (message) << CLR::RESET << std::endl; } while(0)
-// Macro for debug errors (non-fatal)
-#define DEBUG_ERR(message) std::cout << CLR::DARK << \
+ * @param message Debug message to include.
+ */
+// Macro for debug errors (statement-safe)
+#define DEBUG_ERR(message) do { std::cout << CLR::DARK << \
     "\n      Debug: " << \
-    CLR::YELLOW << message << std::endl << CLR::DARK << \
+    CLR::YELLOW << (message) << std::endl << CLR::DARK << \
     "      File:  " << CLR::ORANGE << __FILE__  << CLR::DARK << std::endl << \
-    "      Line:  " << CLR::ORANGE  << __LINE__ << CLR::RESET << "\n" << std::endl;
+    "      Line:  " << CLR::ORANGE  << __LINE__ << CLR::RESET << "\n" << std::endl; } while(0)
 
 /**
  * @brief Asserts that two values are equal; throws an error if not.
