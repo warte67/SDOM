@@ -311,6 +311,50 @@ namespace SDOM
         });
     }
 
+    static bool test12_IDisplayObject(Factory* factory, std::string& dbgStr) {
+        return UnitTests::run("IDisplayObject: test # 12", "Lua getColor/setColor roundtrip", [factory, &dbgStr]() {
+            sol::state& lua = Core::getInstance().getLua();
+
+            sol::protected_function_result res = lua.script(R"(
+                local h = Core:getDisplayObjectHandle('blueishBox')
+                if not h then return { ok = false, err = 'handle missing' } end
+                local c = h:getColor()
+                if not c then return { ok = false, err = 'getColor returned nil' } end
+
+                -- increase r/g/b by 25, clamp to 255
+                local newR = math.min(255, (c.r or c:getR() or 0) + 25)
+                local newG = math.min(255, (c.g or c:getG() or 0) + 25)
+                local newB = math.min(255, (c.b or c:getB() or 0) + 25)
+                local newA = (c.a or c:getA() or 0) - 1
+                if newA < 0 then newA = 0 end
+
+                h:setColor({ r = newR, g = newG, b = newB, a = newA })
+
+                local c2 = h:getColor()
+                if not c2 then return { ok = false, err = 'getColor after setColor returned nil' } end
+
+                if c2.r ~= newR or c2.g ~= newG or c2.b ~= newB or c2.a ~= newA then
+                    return { ok = false, err = string.format('color mismatch after setColor (got r=%s,g=%s,b=%s,a=%s expected r=%s,g=%s,b=%s,a=%s)', c2.r, c2.g, c2.b, c2.a, newR, newG, newB, newA) }
+                end
+
+                -- restore alpha to fully opaque before returning
+                h:setColor({ r = c2.r, g = c2.g, b = c2.b, a = c.a })
+
+                return { ok = true }
+            )");
+
+            if (!res.valid()) { sol::error err = res; dbgStr = std::string("Lua error in test12: ") + err.what(); return false; }
+            sol::table tret = res.get<sol::table>();
+            bool ok = tret["ok"].get_or(false);
+            if (!ok) {
+                std::string err = tret["err"].get_or(std::string("unknown error"));
+                dbgStr = std::string("Lua test12 failed: ") + err;
+                return false;
+            }
+            return true;
+        });
+    }
+
     bool IDisplayObject_UnitTests()
     {
         Core& core = getCore();
@@ -329,7 +373,8 @@ namespace SDOM
             [&]() { return  test8_IDisplayObject(factory, dbgStr); }, // Lua Destroy generic Stage object
             [&]() { return  test9_IDisplayObject(factory, dbgStr); }, // Lua setParent test
             [&]() { return test10_IDisplayObject(factory, dbgStr); }, // Lua bounds test for blueishBox
-            [&]() { return test11_IDisplayObject(factory, dbgStr); }  // Lua setBounds/getX/getY/getWidth/getHeight and edges
+            [&]() { return test11_IDisplayObject(factory, dbgStr); },  // Lua setBounds/getX/getY/getWidth/getHeight and edges
+            [&]() { return test12_IDisplayObject(factory, dbgStr); }  // Lua getColor/setColor roundtrip
         };
 
         for (auto &t : tests) {

@@ -69,6 +69,29 @@ namespace SDOM
             );
         }
 
+        // Ensure SDL_Color is available as a userdata in Lua. Register once per-state.
+        if (!lua["SDL_Color"].valid()) {
+            lua.new_usertype<SDL_Color>("SDL_Color",
+                "r", &SDL_Color::r,
+                "g", &SDL_Color::g,
+                "b", &SDL_Color::b,
+                "a", &SDL_Color::a,
+                // Method-style getters
+                "getR", [](const SDL_Color& c) { return c.r; },
+                "getG", [](const SDL_Color& c) { return c.g; },
+                "getB", [](const SDL_Color& c) { return c.b; },
+                "getA", [](const SDL_Color& c) { return c.a; },
+                // epsilon-aware comparison helper (byte-wise difference)
+                "almostEqual", [](const SDL_Color& a, const SDL_Color& b, sol::optional<int> eps) {
+                    int e = eps ? *eps : 1;
+                    return std::abs(static_cast<int>(a.r) - static_cast<int>(b.r)) <= e
+                        && std::abs(static_cast<int>(a.g) - static_cast<int>(b.g)) <= e
+                        && std::abs(static_cast<int>(a.b) - static_cast<int>(b.b)) <= e
+                        && std::abs(static_cast<int>(a.a) - static_cast<int>(b.a)) <= e;
+                }
+            );
+        }
+
         // 2. Call base registration
         SUPER::_registerLua(typeName, lua);
 
@@ -259,6 +282,15 @@ namespace SDOM
             if (!target) return sol::make_object(lua, sol::nil);
             Bounds b = target->getBounds();
             return sol::make_object(lua, b);
+        };
+
+        // getColor returns an SDL_Color userdata
+        objHandleType_["getColor"] = [](sol::this_state ts, DomHandle& dh) -> sol::object {
+            sol::state_view lua(ts);
+            IDisplayObject* target = dh.get();
+            if (!target) return sol::make_object(lua, sol::nil);
+            SDL_Color c = target->getColor();
+            return sol::make_object(lua, c);
         };
 
         // Forward setBounds so DomHandle:setBounds({ left=..., top=..., right=..., bottom=... }) works from Lua
