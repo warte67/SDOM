@@ -161,6 +161,28 @@ namespace SDOM
         ///@}
     };
 
+    /*
+     * Note: Anchor name normalization
+     * --------------------------------
+     * Canonicalization of user-provided anchor strings is performed by
+     * the helper function SDOM::normalizeAnchorString(const std::string&),
+     * implemented in `src/SDOM_Utils.cpp`.
+     *
+     * Behavior summary:
+     *  - Strips whitespace and lower-cases the input.
+     *  - Recognizes a single operator character joining two keywords
+     *    (one of: '-', '|', '&', '+', ',') and returns the joined form
+     *    using '_' as the separator (e.g. "top+left" -> "top_left").
+     *  - Validates keyword pairs (e.g. disallows "top_bottom" or
+     *    "left_right") and returns an empty string while emitting a
+     *    WARNING on invalid inputs.
+     *
+     * The Factory and other parsers call this function before looking up
+     * entries in `stringToAnchorPoint_` so consumers can pass flexible
+     * anchor names (spaces, different joiners, mixed case) and still
+     * resolve to the canonical enum value.
+     */
+
     /**
      * @brief Maps AnchorPoint enum values to their corresponding string names.
      * @details
