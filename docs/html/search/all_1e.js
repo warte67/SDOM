@@ -1,7 +1,7 @@
 var searchData=
 [
   ['warning_0',['WARNING',['../SDOM_8hpp.html#aaf99b8fcaa4b837f684ea0505ed34487',1,'SDOM.hpp']]],
-  ['warning_3a_20avoid_20diamond_20inheritance_1',['Inheritance Warning: Avoid Diamond Inheritance',['../md_docs_2object__handles.html#autotoc_md142',1,'']]],
+  ['warning_3a_20avoid_20diamond_20inheritance_1',['Inheritance Warning: Avoid Diamond Inheritance',['../md_docs_2object__handles.html#autotoc_md143',1,'']]],
   ['what_2',['what',['../classSDOM_1_1Exception.html#a5086ff39082ca706c60f16c22df3dfbb',1,'SDOM::Exception']]],
   ['wheelx_3',['wheelX',['../classSDOM_1_1Event.html#a27778c5f406b0903e10caef5c046b536',1,'SDOM::Event']]],
   ['wheely_4',['wheelY',['../classSDOM_1_1Event.html#adf3ec244eb81fbd741443c9a41e2a13b',1,'SDOM::Event']]],
@@ -15,7 +15,7 @@ var searchData=
   ['windowheight_12',['windowHeight',['../structSDOM_1_1Core_1_1CoreConfig.html#a8c437dc7c49ff80c7904ce46fbca14d9',1,'SDOM::Core::CoreConfig']]],
   ['windowwidth_13',['windowWidth',['../structSDOM_1_1Core_1_1CoreConfig.html#acd80478dc5e6f4dc3b4f3c591eafd783',1,'SDOM::Core::CoreConfig']]],
   ['with_20global_20accessor_14',['Example Usage (with global accessor)',['../md_docs_2core__framework.html#autotoc_md20',1,'']]],
-  ['with_20lua_15',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md158',1,'']]],
+  ['with_20lua_15',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md159',1,'']]],
   ['with_20sol2_16',['Example: Lua Integration with Sol2',['../md_docs_2exposing__hooks.html#autotoc_md91',1,'']]],
   ['word_17',['Word',['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'SDOM_CLR.hpp']]],
   ['works_18',['How It Works',['../md_docs_2extensible__factory.html#autotoc_md127',1,'']]],

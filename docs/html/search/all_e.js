@@ -1,8 +1,8 @@
 var searchData=
 [
   ['game_20states_20or_20modes_0',['Stages as Game States or Modes',['../md_docs_2core__framework.html#autotoc_md42',1,'']]],
-  ['garbage_20collection_20orphan_20retention_1',['Next Steps (garbage collection / orphan retention)',['../md_docs_2progress.html#autotoc_md151',1,'']]],
-  ['garden_2',['Two Trees in the Garden',['../md_docs_2object__handles.html#autotoc_md135',1,'']]],
+  ['garbage_20collection_20orphan_20retention_1',['Next Steps (garbage collection / orphan retention)',['../md_docs_2progress.html#autotoc_md152',1,'']]],
+  ['garden_2',['Two Trees in the Garden',['../md_docs_2object__handles.html#autotoc_md136',1,'']]],
   ['generic_20factory_20create_20method_3',['4. Generic Factory Create Method',['../md_docs_2extensible__factory.html#autotoc_md119',1,'']]],
   ['get_4',['get',['../classSDOM_1_1ResHandle.html#a2cc7fd1b563f323f069c364bd7a6cd72',1,'SDOM::ResHandle::get()'],['../classSDOM_1_1DomHandle.html#a39851d4bd70584898d54aefb855d76c2',1,'SDOM::DomHandle::get() const']]],
   ['get_5flua_5',['get_lua',['../classSDOM_1_1DomHandle.html#ad9b5c9373ae0959985bf4f296b0fe84b',1,'SDOM::DomHandle::get_lua()'],['../classSDOM_1_1ResHandle.html#a8f0f00b4abd4a0ae2fe8d947bc39da48',1,'SDOM::ResHandle::get_lua()']]],
@@ -125,7 +125,7 @@ var searchData=
   ['getter_122',['getter',['../classSDOM_1_1IDataObject.html#a4a0c20d3b094cfb86ca99b62edbcf602',1,'SDOM::IDataObject::Getter'],['../structSDOM_1_1Factory_1_1ObjectTypeRegistryEntry_1_1PropertyEntry.html#a1c0010a047967cffe742e3b92df44cec',1,'SDOM::Factory::ObjectTypeRegistryEntry::PropertyEntry::getter']]],
   ['getters_5f_123',['getters_',['../classSDOM_1_1IDataObject.html#a56cb8e90fd9a8e993cade99d4240f8d9',1,'SDOM::IDataObject']]],
   ['gettexture_124',['gettexture',['../namespaceSDOM.html#ac0f36a9f4f98d23fa1da002213470c3f',1,'SDOM::getTexture()'],['../classSDOM_1_1Core.html#a237897a02ab43ad118a878891dcf99fb',1,'SDOM::Core::getTexture()']]],
-  ['getting_20started_125',['Getting Started',['../index.html#autotoc_md168',1,'']]],
+  ['getting_20started_125',['Getting Started',['../md_README.html#autotoc_md169',1,'']]],
   ['gettop_126',['getTop',['../classSDOM_1_1IDisplayObject.html#a3ab76421405a1be09be35ae2e215efb2',1,'SDOM::IDisplayObject']]],
   ['gettop_5flua_127',['getTop_lua',['../namespaceSDOM.html#ac6c549f24fc5a7177f7ad6fc8656ab75',1,'SDOM']]],
   ['gettype_128',['gettype',['../classSDOM_1_1DomHandle.html#aaf4ada17fc4fba359ae7af4ba3146ace',1,'SDOM::DomHandle::getType()'],['../classSDOM_1_1IDisplayObject.html#a985007476d5838661335a7e1017f0b3a',1,'SDOM::IDisplayObject::getType()'],['../classSDOM_1_1IResourceObject.html#a1018ecf66774ef5d67f9a008186ef262',1,'SDOM::IResourceObject::getType()'],['../classSDOM_1_1ResHandle.html#a349ad63374f6ee13f9372495f5f61db0',1,'SDOM::ResHandle::getType()'],['../classSDOM_1_1Event.html#a5825019375831e00373e4e375bf68a83',1,'SDOM::Event::getType()']]],
@@ -152,7 +152,7 @@ var searchData=
   ['global_20accessor_149',['Example Usage (with global accessor)',['../md_docs_2core__framework.html#autotoc_md20',1,'']]],
   ['global_20accessor_20functions_150',['Global Accessor Functions',['../md_docs_2core__framework.html#autotoc_md19',1,'']]],
   ['global_20traversal_20type_203_151',['3. Factory-based Global Traversal (Type 3)',['../md_docs_2dom__propagation.html#autotoc_md77',1,'']]],
-  ['goals_152',['Goals',['../md_docs_2scripting__and__configuration.html#autotoc_md155',1,'']]],
+  ['goals_152',['Goals',['../md_docs_2scripting__and__configuration.html#autotoc_md156',1,'']]],
   ['green_153',['GREEN',['../classCLR.html#a3003dd364e606e44a28d3bf3081f624c',1,'CLR']]],
   ['grey_154',['GREY',['../classCLR.html#af89e905bfd2feb399c0b6fda7ea2ae07',1,'CLR']]],
   ['grid_20and_20child_20edge_20anchors_155',['1) Parent Anchor Grid and Child Edge Anchors',['../md_docs_2display__object__anchoring.html#autotoc_md66',1,'']]]
