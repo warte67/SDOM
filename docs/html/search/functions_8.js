@@ -8,6 +8,8 @@ var searchData=
   ['haschild_5flua_5',['hasChild_lua',['../namespaceSDOM.html#a1c44c855ee0cd215a17a7795d505254e',1,'SDOM']]],
   ['hasdisplayobject_6',['hasDisplayObject',['../classSDOM_1_1Core.html#a1bcc1a94d235f83308a6204d4ff56215',1,'SDOM::Core']]],
   ['hasdisplayobject_5flua_7',['hasDisplayObject_lua',['../namespaceSDOM.html#ad33a6e8fae11914f2b765f9241408907',1,'SDOM']]],
-  ['height_8',['height',['../structSDOM_1_1Bounds.html#ab9e98bf49c90ef9ce80a0827784b8b71',1,'SDOM::Bounds']]],
-  ['hex_9',['hex',['../classCLR.html#a7affcef20a6ac743b04173d8717f03ba',1,'CLR']]]
+  ['haseventlisteners_8',['hasEventListeners',['../classSDOM_1_1IDisplayObject.html#ac102134ccecbe1f6eebfce14f4354799',1,'SDOM::IDisplayObject']]],
+  ['haslisteners_9',['hasListeners',['../classSDOM_1_1EventManager.html#a91dd5ef12c7fa10dc9405dadc74d4d0b',1,'SDOM::EventManager']]],
+  ['height_10',['height',['../structSDOM_1_1Bounds.html#ab9e98bf49c90ef9ce80a0827784b8b71',1,'SDOM::Bounds']]],
+  ['hex_11',['hex',['../classCLR.html#a7affcef20a6ac743b04173d8717f03ba',1,'CLR']]]
 ];

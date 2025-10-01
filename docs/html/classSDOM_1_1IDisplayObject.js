@@ -44,6 +44,7 @@ var classSDOM_1_1IDisplayObject =
     [ "getY", "classSDOM_1_1IDisplayObject.html#a6a0aef63a4997f367efde402c8f57bc0", null ],
     [ "getZOrder", "classSDOM_1_1IDisplayObject.html#a5143e0bf1003fae334207a1bbc4b9cc6", null ],
     [ "hasChild", "classSDOM_1_1IDisplayObject.html#a3ba3ff49254f983c2c9f751cabb4f866", null ],
+    [ "hasEventListeners", "classSDOM_1_1IDisplayObject.html#ac102134ccecbe1f6eebfce14f4354799", null ],
     [ "isClickable", "classSDOM_1_1IDisplayObject.html#aade178775d0c9afbd0f3c49f8dfe02c6", null ],
     [ "isDirty", "classSDOM_1_1IDisplayObject.html#af73756bb0bfa49f9ed02a3e655bb9a1b", null ],
     [ "isEnabled", "classSDOM_1_1IDisplayObject.html#ac452d690d98c233a22b72ab565ca83c3", null ],

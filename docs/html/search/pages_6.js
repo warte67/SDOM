@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['7_20example_20usage_0',['7. Example Usage',['../md_docs_2extensible__factory.html#autotoc_md126',1,'']]]
+  ['in_20sdom_0',['Object Handles in SDOM',['../md_docs_2object__handles.html',1,'']]],
+  ['interface_20and_20hook_20design_1',['Modern COM-like Interface and Hook Design',['../md_docs_2exposing__hooks.html',1,'']]]
 ];

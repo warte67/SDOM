@@ -46,6 +46,7 @@ var classSDOM_1_1Event =
     [ "onUnitTest", "classSDOM_1_1Event.html#a895dd8cab0329b84dc3c399cd981cbe6", null ],
     [ "operator=", "classSDOM_1_1Event.html#abbba394f38967aed179a175753b041c7", null ],
     [ "registerLua", "classSDOM_1_1Event.html#a2b23ecae5bcefe1403cc200d654e52c4", null ],
+    [ "registerLua", "classSDOM_1_1Event.html#a4f6b28e5635e88595288a6c66de4a74a", null ],
     [ "setAsciiCode", "classSDOM_1_1Event.html#a58bd5c6d51f3c2f8921f4c9c32a5a68e", null ],
     [ "setButton", "classSDOM_1_1Event.html#ad654e15f6d2d057df2c5d696d42def47", null ],
     [ "setClickCount", "classSDOM_1_1Event.html#a3174e765f8e04c5998c910c24139d3de", null ],

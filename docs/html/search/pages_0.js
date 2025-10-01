@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['1_0',['1. Core-based DOM Traversal (Type 1)',['../md_docs_2dom__propagation.html#autotoc_md74',1,'']]],
-  ['1_20core_20based_20dom_20traversal_20type_201_1',['1. Core-based DOM Traversal (Type 1)',['../md_docs_2dom__propagation.html#autotoc_md74',1,'']]],
-  ['1_20domhandle_2',['1. DomHandle',['../md_docs_2object__handles.html#autotoc_md142',1,'']]],
-  ['1_20dynamic_20hook_20registration_3',['1. Dynamic Hook Registration',['../md_docs_2exposing__hooks.html#autotoc_md99',1,'']]],
-  ['1_20initializer_20structs_4',['1. Initializer Structs',['../md_docs_2extensible__factory.html#autotoc_md119',1,'']]],
-  ['1_20initializer_20structs_20and_20lua_20scripts_5',['1. Initializer Structs and Lua Scripts',['../md_docs_2extensible__factory.html#autotoc_md113',1,'']]],
-  ['1_20parent_20anchor_20grid_20and_20child_20edge_20anchors_6',['1) Parent Anchor Grid and Child Edge Anchors',['../md_docs_2display__object__anchoring.html#autotoc_md65',1,'']]],
-  ['1a_20standardized_20constructor_20signatures_7',['1a. Standardized Constructor Signatures',['../md_docs_2extensible__factory.html#autotoc_md120',1,'']]]
+  ['anchoring_20system_0',['Display Object Anchoring System',['../md_docs_2display__object__anchoring.html',1,'']]],
+  ['and_20configuration_20lua_20c_1',['Scripting and Configuration (Lua &amp; C++)',['../md_docs_2scripting__and__configuration.html',1,'']]],
+  ['and_20development_20progress_2',['Project Description and Development Progress',['../md_docs_2progress.html',1,'']]],
+  ['and_20hook_20design_3',['Modern COM-like Interface and Hook Design',['../md_docs_2exposing__hooks.html',1,'']]],
+  ['api_4',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
+  ['architecture_20overview_5',['Architecture Overview',['../md_docs_2architecture__overview.html',1,'']]]
 ];

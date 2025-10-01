@@ -2,8 +2,8 @@ var searchData=
 [
   ['reconfigure_0',['reconfigure',['../classSDOM_1_1Core.html#a953887ffaf0b6c6917ae8075b6edaa27',1,'SDOM::Core']]],
   ['registerdomtype_1',['registerDomType',['../classSDOM_1_1Factory.html#a8862aa32cdf361e08525216ac7976eb3',1,'SDOM::Factory']]],
-  ['registereventtype_2',['registerEventType',['../classSDOM_1_1EventType.html#aec9dd63c6883007c0cbe3efc17fec4eb',1,'SDOM::EventType']]],
-  ['registerlua_3',['registerLua',['../classSDOM_1_1IDataObject.html#a2b23ecae5bcefe1403cc200d654e52c4',1,'SDOM::IDataObject']]],
+  ['registereventtype_2',['registerEventType',['../classSDOM_1_1EventType.html#a9aa6ac9ec3cbfbac5b3340dd075c827d',1,'SDOM::EventType']]],
+  ['registerlua_3',['registerlua',['../classSDOM_1_1Event.html#a4f6b28e5635e88595288a6c66de4a74a',1,'SDOM::Event::registerLua()'],['../classSDOM_1_1EventType.html#af935779818a609d71a1a9508ffdaa36a',1,'SDOM::EventType::registerLua()'],['../classSDOM_1_1IDataObject.html#a2b23ecae5bcefe1403cc200d654e52c4',1,'SDOM::IDataObject::registerLua()']]],
   ['registerluacommand_4',['registerLuaCommand',['../classSDOM_1_1Factory.html#a097849dee3c2d40d1c37e573c54b6999',1,'SDOM::Factory']]],
   ['registerluafunction_5',['registerLuaFunction',['../classSDOM_1_1Factory.html#ad77051752594c1711f1b280fff35b7cc',1,'SDOM::Factory']]],
   ['registerluapropertiesandcommands_6',['registerLuaPropertiesAndCommands',['../classSDOM_1_1Factory.html#a7844aa93d19c9ca39040770348d2583c',1,'SDOM::Factory']]],
@@ -30,8 +30,8 @@ var searchData=
   ['rendererlogicalpresentationfromstring_27',['rendererLogicalPresentationFromString',['../classSDOM_1_1SDL__Utils.html#a027dc0dbe963b494fba4ceee1688bf2d',1,'SDOM::SDL_Utils']]],
   ['rendererlogicalpresentationtostring_28',['rendererLogicalPresentationToString',['../classSDOM_1_1SDL__Utils.html#a9c8feadb377ab2d62795efe2d08b9767',1,'SDOM::SDL_Utils']]],
   ['reset_29',['reset',['../classSDOM_1_1DomHandle.html#a7679b5e1d85d484f5bd921950c40a56a',1,'SDOM::DomHandle::reset()'],['../classSDOM_1_1ResHandle.html#a7cb07adb12736056ec36feed51027e9e',1,'SDOM::ResHandle::reset()']]],
-  ['reshandle_30',['ResHandle',['../classSDOM_1_1ResHandle.html#af0514a8875b221594cd97f105b9705d1',1,'SDOM::ResHandle::ResHandle()=default'],['../classSDOM_1_1ResHandle.html#ad6a77c6d99c5cae6d473a35bd9cde069',1,'SDOM::ResHandle::ResHandle(const std::string &amp;name, const std::string &amp;type)'],['../classSDOM_1_1ResHandle.html#a9ead078eb628c07626ddc2e9a7bbab6d',1,'SDOM::ResHandle::ResHandle(const ResHandle &amp;other)'],['../classSDOM_1_1ResHandle.html#a209891694c6c2e38dbea61f7bb897be8',1,'SDOM::ResHandle::ResHandle(std::nullptr_t)']]],
+  ['reshandle_30',['reshandle',['../classSDOM_1_1ResHandle.html#a209891694c6c2e38dbea61f7bb897be8',1,'SDOM::ResHandle::ResHandle(std::nullptr_t)'],['../classSDOM_1_1ResHandle.html#a9ead078eb628c07626ddc2e9a7bbab6d',1,'SDOM::ResHandle::ResHandle(const ResHandle &amp;other)'],['../classSDOM_1_1ResHandle.html#ad6a77c6d99c5cae6d473a35bd9cde069',1,'SDOM::ResHandle::ResHandle(const std::string &amp;name, const std::string &amp;type)'],['../classSDOM_1_1ResHandle.html#af0514a8875b221594cd97f105b9705d1',1,'SDOM::ResHandle::ResHandle()=default']]],
   ['restore_5fcursor_31',['restore_cursor',['../classCLR.html#aa49cf5a83ab2494f854fc105d01d82ee',1,'CLR']]],
-  ['run_32',['run',['../classSDOM_1_1Core.html#a1ab4133e73873e2d15f8f9db05ba913f',1,'SDOM::Core::run()'],['../classSDOM_1_1Core.html#ae694d046be7a4da79cf3df5129d37a44',1,'SDOM::Core::run(const sol::table &amp;config)'],['../classSDOM_1_1Core.html#aacf73d22f2e66e7bce842d071d8668c7',1,'SDOM::Core::run(const std::string &amp;configFile)'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run()']]],
+  ['run_32',['run',['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run()'],['../classSDOM_1_1Core.html#aacf73d22f2e66e7bce842d071d8668c7',1,'SDOM::Core::run(const std::string &amp;configFile)'],['../classSDOM_1_1Core.html#ae694d046be7a4da79cf3df5129d37a44',1,'SDOM::Core::run(const sol::table &amp;config)'],['../classSDOM_1_1Core.html#a1ab4133e73873e2d15f8f9db05ba913f',1,'SDOM::Core::run()']]],
   ['run_5flua_33',['run_lua',['../namespaceSDOM.html#a60015b273d74524f0c867ccc1dda4249',1,'SDOM']]]
 ];
