@@ -41,6 +41,53 @@
 namespace SDOM
 {
 
+    void SDL_Utils::registerLua(sol::state_view lua)
+    {
+        try {
+            // Create a helper table for SDL utilities
+            sol::table t = lua.create_table();
+
+            // String/enum conversions
+            t.set_function("pixelFormatToString", [](SDL_PixelFormat f) { return SDL_Utils::pixelFormatToString(f); });
+            t.set_function("pixelFormatFromString", [](const std::string& s) { return SDL_Utils::pixelFormatFromString(s); });
+
+            t.set_function("windowFlagsToString", [](Uint64 f) { return SDL_Utils::windowFlagsToString(f); });
+            t.set_function("windowFlagsFromString", [](const std::string& s) { return SDL_Utils::windowFlagsFromString(s); });
+
+            t.set_function("rendererLogicalPresentationToString", [](Uint32 f) { return SDL_Utils::rendererLogicalPresentationToString(f); });
+            t.set_function("rendererLogicalPresentationFromString", [](const std::string& s) { return SDL_Utils::rendererLogicalPresentationFromString(s); });
+
+            t.set_function("eventTypeToString", [](SDL_EventType et) { return SDL_Utils::eventTypeToString(et); });
+            t.set_function("eventTypeFromString", [](const std::string& s) { return SDL_Utils::eventTypeFromString(s); });
+
+            t.set_function("keyToAscii", [](SDL_Keycode kc, SDL_Keymod km) { return SDL_Utils::keyToAscii(kc, km); });
+
+            // Convert an SDL_Event into a Lua table (returns table or nil on failure)
+            t.set_function("eventToLuaTable", [lua](const SDL_Event& ev) -> sol::object {
+                try {
+                    sol::table tbl = SDL_Utils::eventToLuaTable(ev, lua);
+                    return sol::object(lua, tbl);
+                } catch (const sol::error& e) {
+                    WARNING(std::string("SDL_Utils::eventToLuaTable -> sol::error: ") + e.what());
+                } catch (const std::exception& e) {
+                    WARNING(std::string("SDL_Utils::eventToLuaTable -> exception: ") + e.what());
+                } catch (...) {
+                    WARNING("SDL_Utils::eventToLuaTable -> unknown exception");
+                }
+                return sol::object(lua, sol::lua_nil);
+            });
+
+            // Expose under both names for convenience
+            lua["SDL_Utils"] = t;
+            lua["SDL"] = t; // shorter alias
+        } catch (const sol::error& e) {
+            WARNING(std::string("Failed to register SDL_Utils with Lua: ") + e.what());
+        } catch (const std::exception& e) {
+            WARNING(std::string("Failed to register SDL_Utils with Lua: ") + e.what());
+        } catch (...) {
+            WARNING("Failed to register SDL_Utils with Lua: unknown exception");
+        }
+    } // END SDL_Utils::registerLua()
 
     std::string SDL_Utils::pixelFormatToString(SDL_PixelFormat format)
     {
@@ -112,7 +159,7 @@ namespace SDOM
             case SDL_PIXELFORMAT_MJPG: return "SDL_PIXELFORMAT_MJPG";
             default: return "Unknown";
         }
-    }
+    } // END SDL_Utils::pixelFormatToString()
 
     SDL_PixelFormat SDL_Utils::pixelFormatFromString(const std::string& str)
     {
@@ -182,7 +229,7 @@ namespace SDOM
         if (str == "SDL_PIXELFORMAT_EXTERNAL_OES") return SDL_PIXELFORMAT_EXTERNAL_OES;
         if (str == "SDL_PIXELFORMAT_MJPG") return SDL_PIXELFORMAT_MJPG;
         return SDL_PIXELFORMAT_UNKNOWN; // Return unknown format if not found
-    }
+    } // END SDL_Utils::pixelFormatFromString()
 
     std::string SDL_Utils::windowFlagsToString(Uint64 flags)
     {
@@ -264,21 +311,6 @@ namespace SDOM
             { SDL_WINDOW_TRANSPARENT, "SDL_WINDOW_TRANSPARENT" },
             { SDL_WINDOW_NOT_FOCUSABLE, "SDL_WINDOW_NOT_FOCUSABLE" }
         };
-        // Uint64 flags = 0;
-        // if (str == "0" || str.empty()) return 0;
-        // size_t start = 0, end = 0;
-        // while (end != std::string::npos) {
-        //     end = str.find('|', start);
-        //     std::string token = str.substr(start, end - start);
-        //     for (const auto& info : flagInfos) {
-        //         if (token == info.name) {
-        //             flags |= info.value;
-        //             break;
-        //         }
-        //     }
-        //     start = (end == std::string::npos) ? end : end + 1;
-        // }
-        // return flags;
         
         Uint64 flags = 0;
         if (str == "0" || str.empty()) return 0;
@@ -384,6 +416,7 @@ namespace SDOM
             case SDL_EVENT_JOYSTICK_ADDED: return "SDL_EVENT_JOYSTICK_ADDED"; // A new joystick has been inserted
             case SDL_EVENT_JOYSTICK_REMOVED: return "SDL_EVENT_JOYSTICK_REMOVED"; // An opened joystick has been removed
             case SDL_EVENT_JOYSTICK_BATTERY_UPDATED: return "SDL_EVENT_JOYSTICK_BATTERY_UPDATED"; // Joystick battery level change
+            case SDL_EVENT_JOYSTICK_UPDATE_COMPLETE: return "SDL_EVENT_JOYSTICK_UPDATE_COMPLETE"; // Joystick update has completed
             case SDL_EVENT_GAMEPAD_AXIS_MOTION: return "SDL_EVENT_GAMEPAD_AXIS_MOTION"; // Gamepad axis motion
             case SDL_EVENT_GAMEPAD_BUTTON_DOWN: return "SDL_EVENT_GAMEPAD_BUTTON_DOWN"; // Gamepad button pressed
             case SDL_EVENT_GAMEPAD_BUTTON_UP: return "SDL_EVENT_GAMEPAD_BUTTON_UP"; // Gamepad button released
@@ -394,6 +427,8 @@ namespace SDOM
             case SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION: return "SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION"; // Gamepad touchpad finger was moved
             case SDL_EVENT_GAMEPAD_TOUCHPAD_UP: return "SDL_EVENT_GAMEPAD_TOUCHPAD_UP"; // Gamepad touchpad finger was lifted
             case SDL_EVENT_GAMEPAD_SENSOR_UPDATE: return "SDL_EVENT_GAMEPAD_SENSOR_UPDATE"; // Gamepad sensor was updated
+            case SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED: return "SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED"; // Gamepad Steam Controller handle was updated
+            case SDL_EVENT_GAMEPAD_UPDATE_COMPLETE: return "SDL_EVENT_GAMEPAD_UPDATE_COMPLETE"; // Gamepad update has completed
             case SDL_EVENT_FINGER_DOWN: return "SDL_EVENT_FINGER_DOWN"; // Finger down
             case SDL_EVENT_FINGER_UP: return "SDL_EVENT_FINGER_UP"; // Finger up
             case SDL_EVENT_FINGER_MOTION: return "SDL_EVENT_FINGER_MOTION"; // Finger motion
@@ -405,6 +440,7 @@ namespace SDOM
             case SDL_EVENT_DROP_POSITION: return "SDL_EVENT_DROP_POSITION"; // Drag and drop position
             case SDL_EVENT_AUDIO_DEVICE_ADDED: return "SDL_EVENT_AUDIO_DEVICE_ADDED"; // Audio device added
             case SDL_EVENT_AUDIO_DEVICE_REMOVED: return "SDL_EVENT_AUDIO_DEVICE_REMOVED"; // Audio device removed
+            case SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED: return "SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED"; // Audio device format changed
             case SDL_EVENT_SENSOR_UPDATE: return "SDL_EVENT_SENSOR_UPDATE"; // Sensor updated
             case SDL_EVENT_PEN_PROXIMITY_IN: return "SDL_EVENT_PEN_PROXIMITY_IN"; // Pen proximity in
             case SDL_EVENT_PEN_PROXIMITY_OUT: return "SDL_EVENT_PEN_PROXIMITY_OUT"; // Pen proximity out
@@ -416,9 +452,12 @@ namespace SDOM
             case SDL_EVENT_PEN_AXIS: return "SDL_EVENT_PEN_AXIS"; // Pen axis changed
             case SDL_EVENT_CAMERA_DEVICE_ADDED: return "SDL_EVENT_CAMERA_DEVICE_ADDED"; // Camera device added
             case SDL_EVENT_CAMERA_DEVICE_REMOVED: return "SDL_EVENT_CAMERA_DEVICE_REMOVED"; // Camera device removed
+            case SDL_EVENT_CAMERA_DEVICE_APPROVED: return "SDL_EVENT_CAMERA_DEVICE_APPROVED"; // Camera device approved
+            case SDL_EVENT_CAMERA_DEVICE_DENIED: return "SDL_EVENT_CAMERA_DEVICE_DENIED"; // Camera device denied
             case SDL_EVENT_RENDER_TARGETS_RESET: return "SDL_EVENT_RENDER_TARGETS_RESET"; // Render targets reset
             case SDL_EVENT_RENDER_DEVICE_RESET: return "SDL_EVENT_RENDER_DEVICE_RESET"; // Render device reset
             case SDL_EVENT_RENDER_DEVICE_LOST: return "SDL_EVENT_RENDER_DEVICE_LOST"; // Render device lost
+            case SDL_EVENT_SYSTEM_THEME_CHANGED: return "SDL_EVENT_SYSTEM_THEME_CHANGED"; // The system theme (dark or light) has changed
             case SDL_EVENT_PRIVATE0: return "SDL_EVENT_PRIVATE0"; // Reserved private event 0
             case SDL_EVENT_PRIVATE1: return "SDL_EVENT_PRIVATE1"; // Reserved private event 1
             case SDL_EVENT_PRIVATE2: return "SDL_EVENT_PRIVATE2"; // Reserved private event 2
@@ -428,7 +467,7 @@ namespace SDOM
             case SDL_EVENT_LAST: return "SDL_EVENT_LAST"; // Last event
             default: return "SDL_EVENT_LAST";
         }
-    }
+    } // END SDL_Utils::eventTypeToString()
 
     SDL_EventType SDL_Utils::eventTypeFromString(const std::string& str)
     {
@@ -494,6 +533,7 @@ namespace SDOM
         if (str == "SDL_EVENT_JOYSTICK_ADDED") return SDL_EVENT_JOYSTICK_ADDED;
         if (str == "SDL_EVENT_JOYSTICK_REMOVED") return SDL_EVENT_JOYSTICK_REMOVED;
         if (str == "SDL_EVENT_JOYSTICK_BATTERY_UPDATED") return SDL_EVENT_JOYSTICK_BATTERY_UPDATED;
+        if (str == "SDL_EVENT_JOYSTICK_UPDATE_COMPLETE") return SDL_EVENT_JOYSTICK_UPDATE_COMPLETE;
         if (str == "SDL_EVENT_GAMEPAD_AXIS_MOTION") return SDL_EVENT_GAMEPAD_AXIS_MOTION;
         if (str == "SDL_EVENT_GAMEPAD_BUTTON_DOWN") return SDL_EVENT_GAMEPAD_BUTTON_DOWN;
         if (str == "SDL_EVENT_GAMEPAD_BUTTON_UP") return SDL_EVENT_GAMEPAD_BUTTON_UP;
@@ -504,6 +544,8 @@ namespace SDOM
         if (str == "SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION") return SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION;
         if (str == "SDL_EVENT_GAMEPAD_TOUCHPAD_UP") return SDL_EVENT_GAMEPAD_TOUCHPAD_UP;
         if (str == "SDL_EVENT_GAMEPAD_SENSOR_UPDATE") return SDL_EVENT_GAMEPAD_SENSOR_UPDATE;
+        if (str == "SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED") return SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED;
+        if (str == "SDL_EVENT_GAMEPAD_UPDATE_COMPLETE") return SDL_EVENT_GAMEPAD_UPDATE_COMPLETE;
         if (str == "SDL_EVENT_FINGER_DOWN") return SDL_EVENT_FINGER_DOWN;
         if (str == "SDL_EVENT_FINGER_UP") return SDL_EVENT_FINGER_UP;
         if (str == "SDL_EVENT_FINGER_MOTION") return SDL_EVENT_FINGER_MOTION;
@@ -515,6 +557,7 @@ namespace SDOM
         if (str == "SDL_EVENT_DROP_POSITION") return SDL_EVENT_DROP_POSITION;
         if (str == "SDL_EVENT_AUDIO_DEVICE_ADDED") return SDL_EVENT_AUDIO_DEVICE_ADDED;
         if (str == "SDL_EVENT_AUDIO_DEVICE_REMOVED") return SDL_EVENT_AUDIO_DEVICE_REMOVED;
+        if (str == "SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED") return SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED;
         if (str == "SDL_EVENT_SENSOR_UPDATE") return SDL_EVENT_SENSOR_UPDATE;
         if (str == "SDL_EVENT_PEN_PROXIMITY_IN") return SDL_EVENT_PEN_PROXIMITY_IN;
         if (str == "SDL_EVENT_PEN_PROXIMITY_OUT") return SDL_EVENT_PEN_PROXIMITY_OUT;
@@ -526,9 +569,12 @@ namespace SDOM
         if (str == "SDL_EVENT_PEN_AXIS") return SDL_EVENT_PEN_AXIS;
         if (str == "SDL_EVENT_CAMERA_DEVICE_ADDED") return SDL_EVENT_CAMERA_DEVICE_ADDED;
         if (str == "SDL_EVENT_CAMERA_DEVICE_REMOVED") return SDL_EVENT_CAMERA_DEVICE_REMOVED;
+        if (str == "SDL_EVENT_CAMERA_DEVICE_APPROVED") return SDL_EVENT_CAMERA_DEVICE_APPROVED;
+        if (str == "SDL_EVENT_CAMERA_DEVICE_DENIED") return SDL_EVENT_CAMERA_DEVICE_DENIED;
         if (str == "SDL_EVENT_RENDER_TARGETS_RESET") return SDL_EVENT_RENDER_TARGETS_RESET;
         if (str == "SDL_EVENT_RENDER_DEVICE_RESET") return SDL_EVENT_RENDER_DEVICE_RESET;
         if (str == "SDL_EVENT_RENDER_DEVICE_LOST") return SDL_EVENT_RENDER_DEVICE_LOST;
+        if (str == "SDL_EVENT_SYSTEM_THEME_CHANGED") return SDL_EVENT_SYSTEM_THEME_CHANGED;
         if (str == "SDL_EVENT_PRIVATE0") return SDL_EVENT_PRIVATE0;
         if (str == "SDL_EVENT_PRIVATE1") return SDL_EVENT_PRIVATE1;
         if (str == "SDL_EVENT_PRIVATE2") return SDL_EVENT_PRIVATE2;
@@ -537,7 +583,7 @@ namespace SDOM
         if (str == "SDL_EVENT_USER") return SDL_EVENT_USER;
         if (str == "SDL_EVENT_LAST") return SDL_EVENT_LAST;
         return SDL_EVENT_LAST; // Default/fallback
-    }
+    } // END SDL_Utils::eventTypeFromString()
 
     int SDL_Utils::keyToAscii(SDL_Keycode keycode, SDL_Keymod keymod)
     {
@@ -823,6 +869,532 @@ namespace SDOM
         }
         // Return 0 if the keycode is not found
         return 0;
-    }
+    } // END SDL_Utils::SDLKeycodeToAscii()
 
+    sol::table SDL_Utils::eventToLuaTable(const SDL_Event& se, sol::state_view lua)
+    {
+    sol::table t = lua.create_table();
+    SDL_EventType etype = static_cast<SDL_EventType>(se.type);
+    t["type"] = SDL_Utils::eventTypeToString(etype);
+    // include common timestamp if available
+    try { t["timestamp"] = se.common.timestamp; } catch(...) {}
+
+        switch (etype) {
+            // -- Application Events -- //
+            case SDL_EVENT_TERMINATING:
+            case SDL_EVENT_LOW_MEMORY:
+            case SDL_EVENT_WILL_ENTER_BACKGROUND:
+            case SDL_EVENT_DID_ENTER_BACKGROUND:
+            case SDL_EVENT_WILL_ENTER_FOREGROUND:
+            case SDL_EVENT_DID_ENTER_FOREGROUND:
+            case SDL_EVENT_LOCALE_CHANGED:
+            case SDL_EVENT_SYSTEM_THEME_CHANGED: {
+                sol::table app = lua.create_table();
+                try { app["timestamp"] = se.common.timestamp; } catch(...) {}
+                // Optionally, add a name for the event:
+                app["event"] = SDL_Utils::eventTypeToString(etype);
+                t["app"] = app;
+                break;
+            }      
+            case SDL_EVENT_QUIT: {
+                sol::table q = lua.create_table();
+                try { q["timestamp"] = se.quit.timestamp; } catch(...) {}
+                t["quit"] = q;
+                break;
+            }
+
+            // -- Mouse Events -- //
+            case SDL_EVENT_MOUSE_MOTION: {
+                sol::table m = lua.create_table();
+                try { m["timestamp"] = se.motion.timestamp; } catch(...) {}
+                try { m["windowID"] = se.motion.windowID; } catch(...) {}
+                try { m["which"] = se.motion.which; } catch(...) {}
+                try { m["state"] = static_cast<Uint32>(se.motion.state); } catch(...) {}
+                m["x"] = se.motion.x;
+                m["y"] = se.motion.y;
+                m["xrel"] = se.motion.xrel;
+                m["yrel"] = se.motion.yrel;
+                t["motion"] = m;
+                break;
+            }
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            case SDL_EVENT_MOUSE_BUTTON_UP: {
+                sol::table b = lua.create_table();
+                try { b["timestamp"] = se.button.timestamp; } catch(...) {}
+                try { b["windowID"] = se.button.windowID; } catch(...) {}
+                try { b["which"] = se.button.which; } catch(...) {}
+                try { b["down"] = se.button.down; } catch(...) {}
+                b["button"] = se.button.button;
+                b["clicks"] = se.button.clicks;
+                b["x"] = se.button.x;
+                b["y"] = se.button.y;
+                t["button"] = b;
+                break;
+            }
+            case SDL_EVENT_MOUSE_WHEEL: {
+                sol::table w = lua.create_table();
+                try { w["timestamp"] = se.wheel.timestamp; } catch(...) {}
+                try { w["windowID"] = se.wheel.windowID; } catch(...) {}
+                try { w["which"] = se.wheel.which; } catch(...) {}
+                w["x"] = se.wheel.x;
+                w["y"] = se.wheel.y;
+                try { w["direction"] = static_cast<int>(se.wheel.direction); } catch(...) {}
+                w["mouse_x"] = se.wheel.mouse_x;
+                w["mouse_y"] = se.wheel.mouse_y;
+                try { w["integer_x"] = se.wheel.integer_x; } catch(...) {}
+                try { w["integer_y"] = se.wheel.integer_y; } catch(...) {}
+                t["wheel"] = w;
+                break;
+            }
+            case SDL_EVENT_MOUSE_ADDED:
+            case SDL_EVENT_MOUSE_REMOVED: {
+                sol::table md = lua.create_table();
+                try { md["timestamp"] = se.mdevice.timestamp; } catch(...) {}
+                try { md["which"] = se.mdevice.which; } catch(...) {}
+                t["mdevice"] = md;
+                break;
+            }            
+
+            // -- Keyboard Events -- //
+            case SDL_EVENT_KEY_DOWN:
+            case SDL_EVENT_KEY_UP: {
+                sol::table k = lua.create_table();
+                try { k["timestamp"] = se.key.timestamp; } catch(...) {}
+                try { k["windowID"] = se.key.windowID; } catch(...) {}
+                try { k["which"] = se.key.which; } catch(...) {}
+                k["scancode"] = se.key.scancode;
+                k["keycode"] = se.key.key;
+                try { k["mod"] = se.key.mod; } catch(...) {}
+                try { k["raw"] = se.key.raw; } catch(...) {}
+                try { k["down"] = se.key.down; } catch(...) {}
+                try { k["repeat"] = se.key.repeat; } catch(...) {}
+                t["key"] = k;
+                break;
+            }
+            case SDL_EVENT_TEXT_EDITING: {
+                sol::table edit = lua.create_table();
+                try { edit["timestamp"] = se.edit.timestamp; } catch(...) {}
+                try { edit["windowID"] = se.edit.windowID; } catch(...) {}
+                try { edit["text"] = std::string(se.edit.text ? se.edit.text : ""); } catch(...) { edit["text"] = std::string(); }
+                try { edit["start"] = se.edit.start; } catch(...) {}
+                try { edit["length"] = se.edit.length; } catch(...) {}
+                t["edit"] = edit;
+                break;
+            }
+            // case SDL_EVENT_TEXT_EDITING_CANDIDATES: {
+            //     sol::table cand = lua.create_table();
+            //     try { cand["timestamp"] = se.edit_cands.timestamp; } catch(...) {}
+            //     try { cand["windowID"] = se.edit_cands.windowID; } catch(...) {}
+            //     try { cand["num_candidates"] = se.edit_cands.num_candidates; } catch(...) {}
+            //     try { cand["selected_candidate"] = se.edit_cands.selected_candidate; } catch(...) {}
+            //     try { cand["horizontal"] = se.edit_cands.horizontal; } catch(...) {}
+            //     // candidates: array of strings
+            //     try {
+            //         if (se.edit_cands.candidates && se.edit_cands.num_candidates > 0) {
+            //             sol::table arr = lua.create_table();
+            //             for (int i = 0; i < se.edit_cands.num_candidates; ++i) {
+            //                 arr[i+1] = std::string(se.edit_cands.candidates[i] ? se.edit_cands.candidates[i] : "");
+            //             }
+            //             cand["candidates"] = arr;
+            //         }
+            //     } catch(...) {}
+            //     t["candidates"] = cand;
+            //     break;
+            // }
+            // case SDL_EVENT_KEYMAP_CHANGED: {
+            //     sol::table km = lua.create_table();
+            //     try { km["timestamp"] = se.keymap.timestamp; } catch(...) {}
+            //     t["keymap"] = km;
+            //     break;
+            // }
+            case SDL_EVENT_KEYBOARD_ADDED:
+            case SDL_EVENT_KEYBOARD_REMOVED: {
+                sol::table kd = lua.create_table();
+                try { kd["timestamp"] = se.kdevice.timestamp; } catch(...) {}
+                try { kd["which"] = se.kdevice.which; } catch(...) {}
+                t["kdevice"] = kd;
+                break;
+            }
+            case SDL_EVENT_TEXT_INPUT: {
+                sol::table ti = lua.create_table();
+                try { ti["timestamp"] = se.text.timestamp; } catch(...) {}
+                try { ti["windowID"] = se.text.windowID; } catch(...) {}
+                try {
+                    ti["text"] = std::string(se.text.text);
+                } catch (...) {
+                    // fallback: empty string
+                    ti["text"] = std::string();
+                }
+                t["text"] = ti;
+                break;
+            }
+
+            // -- Drop Events -- //
+            case SDL_EVENT_DROP_BEGIN:
+            case SDL_EVENT_DROP_FILE:
+            case SDL_EVENT_DROP_TEXT:
+            case SDL_EVENT_DROP_COMPLETE:
+            case SDL_EVENT_DROP_POSITION: {
+                sol::table d = lua.create_table();
+                try { d["timestamp"] = se.drop.timestamp; } catch(...) {}
+                try { d["windowID"] = se.drop.windowID; } catch(...) {}
+                try { d["x"] = se.drop.x; } catch(...) {}
+                try { d["y"] = se.drop.y; } catch(...) {}
+                try { d["source"] = std::string(se.drop.source ? se.drop.source : ""); } catch(...) { d["source"] = std::string(); }
+                try { d["data"] = std::string(se.drop.data ? se.drop.data : ""); } catch(...) { d["data"] = std::string(); }
+                t["drop"] = d;
+                break;
+            }
+
+            // -- Clipboard Events -- //
+            case SDL_EVENT_CLIPBOARD_UPDATE: {
+                sol::table cb = lua.create_table();
+                try { cb["timestamp"] = se.clipboard.timestamp; } catch(...) {}
+                try { cb["owner"] = se.clipboard.owner; } catch(...) {}
+                int num = 0;
+                try { num = static_cast<int>(se.clipboard.num_mime_types); cb["num_mime_types"] = num; } catch(...) { cb["num_mime_types"] = 0; }
+                try {
+                    if (se.clipboard.mime_types && num > 0) {
+                        sol::table mt = lua.create_table();
+                        for (int i = 0; i < num; ++i) {
+                            const char* s = se.clipboard.mime_types[i];
+                            mt[i+1] = std::string(s ? s : "");
+                        }
+                        cb["mime_types"] = mt;
+                    }
+                } catch(...) {
+                    // ignore mime_types issues
+                }
+                t["clipboard"] = cb;
+                break;
+            }
+
+            // -- Window Events -- //
+            case SDL_EVENT_WINDOW_SHOWN:
+            case SDL_EVENT_WINDOW_HIDDEN:
+            case SDL_EVENT_WINDOW_EXPOSED:
+            case SDL_EVENT_WINDOW_MOVED:
+            case SDL_EVENT_WINDOW_RESIZED:
+            case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+            case SDL_EVENT_WINDOW_METAL_VIEW_RESIZED:
+            case SDL_EVENT_WINDOW_MINIMIZED:
+            case SDL_EVENT_WINDOW_MAXIMIZED:
+            case SDL_EVENT_WINDOW_RESTORED:
+            case SDL_EVENT_WINDOW_MOUSE_ENTER:
+            case SDL_EVENT_WINDOW_MOUSE_LEAVE:
+            case SDL_EVENT_WINDOW_FOCUS_GAINED:
+            case SDL_EVENT_WINDOW_FOCUS_LOST:
+            case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:
+            case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:
+            case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+            case SDL_EVENT_WINDOW_HIT_TEST:
+            case SDL_EVENT_WINDOW_ICCPROF_CHANGED:
+            case SDL_EVENT_WINDOW_DISPLAY_CHANGED:
+            case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
+            case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
+            case SDL_EVENT_WINDOW_OCCLUDED:
+            case SDL_EVENT_WINDOW_HDR_STATE_CHANGED:
+            case SDL_EVENT_WINDOW_DESTROYED: {
+                sol::table w = lua.create_table();
+                // window events generally contain timestamp, windowID and two integer data fields
+                try { w["timestamp"] = se.window.timestamp; } catch (...) {}
+                try { w["windowID"] = se.window.windowID; } catch (...) {}
+                try { w["data1"] = se.window.data1; } catch (...) {}
+                try { w["data2"] = se.window.data2; } catch (...) {}
+                t["window"] = w;
+                break;
+            }
+            case SDL_EVENT_DISPLAY_ADDED:
+            case SDL_EVENT_DISPLAY_REMOVED:
+            case SDL_EVENT_DISPLAY_MOVED:
+            case SDL_EVENT_DISPLAY_CURRENT_MODE_CHANGED:
+            case SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED:
+            case SDL_EVENT_DISPLAY_DESKTOP_MODE_CHANGED:
+            case SDL_EVENT_DISPLAY_ORIENTATION: {
+                sol::table dv = lua.create_table();
+                try { dv["timestamp"] = se.display.timestamp; } catch (...) {}
+                try { dv["displayID"] = se.display.displayID; } catch (...) {}
+                try { dv["data1"] = se.display.data1; } catch (...) {}
+                try { dv["data2"] = se.display.data2; } catch (...) {}
+                t["display"] = dv;
+                break;
+            }
+
+            // -- Gamepad Events -- //
+            case SDL_EVENT_GAMEPAD_AXIS_MOTION: {
+                sol::table ca = lua.create_table();
+                try { ca["timestamp"] = se.gaxis.timestamp; } catch (...) {}
+                try { ca["which"] = se.gaxis.which; } catch (...) {}
+                try { ca["axis"] = se.gaxis.axis; } catch (...) {}
+                try { ca["value"] = se.gaxis.value; } catch (...) {}
+                t["gaxis"] = ca;
+                break;
+            }
+            case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+            case SDL_EVENT_GAMEPAD_BUTTON_UP: {
+                sol::table cb = lua.create_table();
+                try { cb["timestamp"] = se.gbutton.timestamp; } catch (...) {}
+                try { cb["which"] = se.gbutton.which; } catch (...) {}
+                try { cb["button"] = se.gbutton.button; } catch (...) {}
+                try { cb["down"] = se.gbutton.down; } catch (...) {}
+                t["gbutton"] = cb;
+                break;
+            }
+            case SDL_EVENT_GAMEPAD_ADDED:
+            case SDL_EVENT_GAMEPAD_REMOVED:
+            case SDL_EVENT_GAMEPAD_REMAPPED:
+            case SDL_EVENT_GAMEPAD_UPDATE_COMPLETE:
+            case SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED: {
+                sol::table gd = lua.create_table();
+                try { gd["timestamp"] = se.gdevice.timestamp; } catch(...) {}
+                try { gd["which"] = se.gdevice.which; } catch(...) {}
+                t["gdevice"] = gd;
+                break;
+            }
+            case SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN:
+            case SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION:
+            case SDL_EVENT_GAMEPAD_TOUCHPAD_UP: {
+                sol::table gt = lua.create_table();
+                try { gt["timestamp"] = se.gtouchpad.timestamp; } catch(...) {}
+                try { gt["which"] = se.gtouchpad.which; } catch(...) {}
+                try { gt["touchpad"] = se.gtouchpad.touchpad; } catch(...) {}
+                try { gt["finger"] = se.gtouchpad.finger; } catch(...) {}
+                try { gt["x"] = se.gtouchpad.x; } catch(...) {}
+                try { gt["y"] = se.gtouchpad.y; } catch(...) {}
+                try { gt["pressure"] = se.gtouchpad.pressure; } catch(...) {}
+                t["gtouchpad"] = gt;
+                break;
+            }
+            case SDL_EVENT_GAMEPAD_SENSOR_UPDATE: {
+                sol::table gs = lua.create_table();
+                try { gs["timestamp"] = se.gsensor.timestamp; } catch(...) {}
+                try { gs["which"] = se.gsensor.which; } catch(...) {}
+                try { gs["sensor"] = se.gsensor.sensor; } catch(...) {}
+                try {
+                    sol::table arr = lua.create_table();
+                    arr[1] = se.gsensor.data[0];
+                    arr[2] = se.gsensor.data[1];
+                    arr[3] = se.gsensor.data[2];
+                    gs["data"] = arr;
+                } catch(...) {}
+                try { gs["sensor_timestamp"] = se.gsensor.sensor_timestamp; } catch(...) {}
+                t["gsensor"] = gs;
+                break;
+            }
+
+            // -- Joystick Events -- //
+            case SDL_EVENT_JOYSTICK_AXIS_MOTION: {
+                sol::table ja = lua.create_table();
+                try { ja["timestamp"] = se.jaxis.timestamp; } catch (...) {}
+                try { ja["which"] = se.jaxis.which; } catch (...) {}
+                try { ja["axis"] = se.jaxis.axis; } catch (...) {}
+                try { ja["value"] = se.jaxis.value; } catch (...) {}
+                t["jaxis"] = ja;
+                break;
+            }
+            case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
+            case SDL_EVENT_JOYSTICK_BUTTON_UP: {
+                sol::table jb = lua.create_table();
+                try { jb["timestamp"] = se.jbutton.timestamp; } catch (...) {}
+                try { jb["which"] = se.jbutton.which; } catch (...) {}
+                try { jb["button"] = se.jbutton.button; } catch (...) {}
+                try { jb["down"] = se.jbutton.down; } catch (...) {}
+                t["jbutton"] = jb;
+                break;
+            }
+            case SDL_EVENT_JOYSTICK_ADDED:
+            case SDL_EVENT_JOYSTICK_REMOVED:
+            case SDL_EVENT_JOYSTICK_UPDATE_COMPLETE: {
+                sol::table jd = lua.create_table();
+                try { jd["timestamp"] = se.jdevice.timestamp; } catch(...) {}
+                try { jd["which"] = se.jdevice.which; } catch(...) {}
+                t["jdevice"] = jd;
+                break;
+            }
+            case SDL_EVENT_JOYSTICK_BALL_MOTION: {
+                sol::table jb = lua.create_table();
+                try { jb["timestamp"] = se.jball.timestamp; } catch(...) {}
+                try { jb["which"] = se.jball.which; } catch(...) {}
+                try { jb["ball"] = se.jball.ball; } catch(...) {}
+                try { jb["xrel"] = se.jball.xrel; } catch(...) {}
+                try { jb["yrel"] = se.jball.yrel; } catch(...) {}
+                t["jball"] = jb;
+                break;
+            }
+            case SDL_EVENT_JOYSTICK_HAT_MOTION: {
+                sol::table jh = lua.create_table();
+                try { jh["timestamp"] = se.jhat.timestamp; } catch(...) {}
+                try { jh["which"] = se.jhat.which; } catch(...) {}
+                try { jh["hat"] = se.jhat.hat; } catch(...) {}
+                try { jh["value"] = se.jhat.value; } catch(...) {}
+                t["jhat"] = jh;
+                break;
+            }
+            case SDL_EVENT_JOYSTICK_BATTERY_UPDATED: {
+                sol::table jbat = lua.create_table();
+                try { jbat["timestamp"] = se.jbattery.timestamp; } catch(...) {}
+                try { jbat["which"] = se.jbattery.which; } catch(...) {}
+                try { jbat["state"] = se.jbattery.state; } catch(...) {}
+                try { jbat["percent"] = se.jbattery.percent; } catch(...) {}
+                t["jbattery"] = jbat;
+                break;
+            }
+
+            // -- Touch Events -- //
+            case SDL_EVENT_FINGER_DOWN:
+            case SDL_EVENT_FINGER_UP:
+            case SDL_EVENT_FINGER_MOTION: {
+                sol::table f = lua.create_table();
+                try { f["timestamp"] = se.tfinger.timestamp; } catch (...) {}
+                try { f["touchID"] = se.tfinger.touchID; } catch (...) {}
+                try { f["fingerID"] = se.tfinger.fingerID; } catch (...) {}
+                try { f["x"] = se.tfinger.x; } catch (...) {}
+                try { f["y"] = se.tfinger.y; } catch (...) {}
+                try { f["dx"] = se.tfinger.dx; } catch (...) {}
+                try { f["dy"] = se.tfinger.dy; } catch (...) {}
+                try { f["pressure"] = se.tfinger.pressure; } catch (...) {}
+                try { f["windowID"] = se.tfinger.windowID; } catch (...) {}
+                t["tfinger"] = f;
+                break;
+            }
+
+            // -- Pen Events -- //
+            case SDL_EVENT_PEN_PROXIMITY_IN:
+            case SDL_EVENT_PEN_PROXIMITY_OUT: {
+                sol::table pp = lua.create_table();
+                try { pp["timestamp"] = se.pproximity.timestamp; } catch(...) {}
+                try { pp["windowID"] = se.pproximity.windowID; } catch(...) {}
+                try { pp["which"] = se.pproximity.which; } catch(...) {}
+                t["pproximity"] = pp;
+                break;
+            }
+            case SDL_EVENT_PEN_DOWN:
+            case SDL_EVENT_PEN_UP: {
+                sol::table pt = lua.create_table();
+                try { pt["timestamp"] = se.ptouch.timestamp; } catch(...) {}
+                try { pt["windowID"] = se.ptouch.windowID; } catch(...) {}
+                try { pt["which"] = se.ptouch.which; } catch(...) {}
+                try { pt["pen_state"] = se.ptouch.pen_state; } catch(...) {}
+                try { pt["x"] = se.ptouch.x; } catch(...) {}
+                try { pt["y"] = se.ptouch.y; } catch(...) {}
+                try { pt["eraser"] = se.ptouch.eraser; } catch(...) {}
+                try { pt["down"] = se.ptouch.down; } catch(...) {}
+                t["ptouch"] = pt;
+                break;
+            }
+            case SDL_EVENT_PEN_MOTION: {
+                sol::table pm = lua.create_table();
+                try { pm["timestamp"] = se.pmotion.timestamp; } catch(...) {}
+                try { pm["windowID"] = se.pmotion.windowID; } catch(...) {}
+                try { pm["which"] = se.pmotion.which; } catch(...) {}
+                try { pm["pen_state"] = se.pmotion.pen_state; } catch(...) {}
+                try { pm["x"] = se.pmotion.x; } catch(...) {}
+                try { pm["y"] = se.pmotion.y; } catch(...) {}
+                t["pmotion"] = pm;
+                break;
+            }
+            case SDL_EVENT_PEN_BUTTON_DOWN:
+            case SDL_EVENT_PEN_BUTTON_UP: {
+                sol::table pb = lua.create_table();
+                try { pb["timestamp"] = se.pbutton.timestamp; } catch(...) {}
+                try { pb["windowID"] = se.pbutton.windowID; } catch(...) {}
+                try { pb["which"] = se.pbutton.which; } catch(...) {}
+                try { pb["pen_state"] = se.pbutton.pen_state; } catch(...) {}
+                try { pb["x"] = se.pbutton.x; } catch(...) {}
+                try { pb["y"] = se.pbutton.y; } catch(...) {}
+                try { pb["button"] = se.pbutton.button; } catch(...) {}
+                try { pb["down"] = se.pbutton.down; } catch(...) {}
+                t["pbutton"] = pb;
+                break;
+            }
+            case SDL_EVENT_PEN_AXIS: {
+                sol::table pa = lua.create_table();
+                try { pa["timestamp"] = se.paxis.timestamp; } catch(...) {}
+                try { pa["windowID"] = se.paxis.windowID; } catch(...) {}
+                try { pa["which"] = se.paxis.which; } catch(...) {}
+                try { pa["pen_state"] = se.paxis.pen_state; } catch(...) {}
+                try { pa["x"] = se.paxis.x; } catch(...) {}
+                try { pa["y"] = se.paxis.y; } catch(...) {}
+                try { pa["axis"] = se.paxis.axis; } catch(...) {}
+                try { pa["value"] = se.paxis.value; } catch(...) {}
+                t["paxis"] = pa;
+                break;
+            }
+
+            // -- Audio Hotplug / Device Events -- //
+            case SDL_EVENT_AUDIO_DEVICE_ADDED:
+            case SDL_EVENT_AUDIO_DEVICE_REMOVED:
+            case SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED: {
+                sol::table ad = lua.create_table();
+                try { ad["timestamp"] = se.adevice.timestamp; } catch(...) {}
+                try { ad["which"] = se.adevice.which; } catch(...) {}
+                try { ad["recording"] = se.adevice.recording; } catch(...) {}
+                t["adevice"] = ad;
+                break;
+            }
+
+            // -- Camera Device Events -- //
+            case SDL_EVENT_CAMERA_DEVICE_ADDED:
+            case SDL_EVENT_CAMERA_DEVICE_REMOVED:
+            case SDL_EVENT_CAMERA_DEVICE_APPROVED:
+            case SDL_EVENT_CAMERA_DEVICE_DENIED: {
+                sol::table cd = lua.create_table();
+                try { cd["timestamp"] = se.cdevice.timestamp; } catch(...) {}
+                try { cd["which"] = se.cdevice.which; } catch(...) {}
+                t["cdevice"] = cd;
+                break;
+            }
+
+            // -- Sensor Events -- //
+            case SDL_EVENT_SENSOR_UPDATE: {
+                sol::table s = lua.create_table();
+                try { s["timestamp"] = se.sensor.timestamp; } catch(...) {}
+                try { s["which"] = se.sensor.which; } catch(...) {}
+                try {
+                    sol::table arr = lua.create_table();
+                    for (int i = 0; i < 6; ++i) arr[i+1] = se.sensor.data[i];
+                    s["data"] = arr;
+                } catch(...) {}
+                try { s["sensor_timestamp"] = se.sensor.sensor_timestamp; } catch(...) {}
+                t["sensor"] = s;
+                break;
+            }
+
+            // -- Render Events -- //
+            case SDL_EVENT_RENDER_TARGETS_RESET:
+            case SDL_EVENT_RENDER_DEVICE_RESET:
+            case SDL_EVENT_RENDER_DEVICE_LOST: {
+                sol::table rr = lua.create_table();
+                try { rr["timestamp"] = se.render.timestamp; } catch(...) {}
+                try { rr["windowID"] = se.render.windowID; } catch(...) {}
+                t["render"] = rr;
+                break;
+            }
+
+            // -- User Events -- //
+            case SDL_EVENT_USER: {
+                sol::table ue = lua.create_table();
+                try { ue["timestamp"] = se.user.timestamp; } catch(...) {}
+                try { ue["windowID"] = se.user.windowID; } catch(...) {}
+                try { ue["code"] = se.user.code; } catch(...) {}
+                try {
+                    // expose user data pointers as integer addresses
+                    uintptr_t d1 = reinterpret_cast<uintptr_t>(se.user.data1);
+                    ue["data1"] = static_cast<unsigned long long>(d1);
+                } catch(...) {}
+                try {
+                    uintptr_t d2 = reinterpret_cast<uintptr_t>(se.user.data2);
+                    ue["data2"] = static_cast<unsigned long long>(d2);
+                } catch(...) {}
+                t["user"] = ue;
+                break;
+            }
+            // Add more cases for other SDL_Event types as needed
+            default:
+                // Optionally dump raw bytes or minimal info
+                break;
+        }
+        return t;
+
+    }
 } // namespace SDOM

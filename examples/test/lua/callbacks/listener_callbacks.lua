@@ -1,4 +1,6 @@
 -- Add an event listener to the main stage for Updates
+---@diagnostic disable: undefined-global
+
 -- Attach update+render listeners to a stage
 -- 'stage' is the Stage object (passed from elsewhere or obtained via Core)
 local M = {}
@@ -15,11 +17,15 @@ function M.on_update(evt)
     -- print("OnUpdate LUA: " .. tostring(dt))
 end
 
-function M.on_render(evt)
-    -- draw into the stage (use display objects or CLR.draw_debug_text for debug overlays)
-    -- print("OnRender LUA")
+function M.on_prerender(evt)
+    -- Called BEFORE children are rendered; but after the stage is rendered
+    CLR.draw_debug_text("Stage", 550, 8, 14, 255, 64, 64, 255)
+end
 
-    -- Custom rendering steps can go here
+function M.on_render(evt)
+    -- Called AFTER children are rendered; used as a final overlay
+
+    -- Calculate and display smoothed FPS value
     local instant = 0
     local dt = Core:getElapsedTime()
     if dt and dt > 0 then instant = 1.0 / dt end
@@ -30,8 +36,6 @@ function M.on_render(evt)
     end
     local display = math.floor(ema + 0.5)
 
-    -- print("OnRender LUA: " .. evt:getName())
-
     -- Render FPS into SDL window using CLR.draw_debug_text. Draw at top-left inside the window.
     -- Parameters: text, x, y, ptsize, r,g,b,a
     CLR.draw_debug_text(string.format("FPS: %d", display), 8, 8, 14, 255, 255, 255, 255)
@@ -39,18 +43,39 @@ end
 
 function M.on_init(evt)
     -- Called when an object (or stage) receives OnInit via event listeners
-    print("OnInit LUA: received OnInit event")
     -- evt.relatedTarget may contain the stage or parent info
+    print("OnInit LUA: received OnInit event")
 end
 
 function M.on_quit(evt)
     -- Called when the application is quitting; do cleanup here
-    -- print("OnQuit LUA: received OnQuit event")
+    print("OnQuit LUA: received OnQuit event")
 end
 
 function M.on_event(evt)
     -- Generic event handler example
-    -- print(string.format("OnEvent LUA: type=%s target=%s", tostring(evt and evt.type or ""), tostring(evt and evt.target and evt.target:getName() or "<nil>")))
+    if evt.sdl and evt.sdl.type then
+        if evt.sdl.type ~= "SDL_EVENT_MOUSE_MOTION" then
+            print("SDL Event: " .. evt.sdl.type .. "  name: " .. tostring(evt.name))
+        end
+    else
+        print("LUA.on_event(): received event with no SDL payload, name: " .. tostring(evt.name))
+    end
+end
+
+function M.on_click(evt)
+    -- called when a mouse click event is received
+    print("LUA: received event type: " .. evt.type .. "  name: " .. evt.name )
+
+    -- -- Generic event handler example
+    -- if evt.sdl and evt.sdl.type then
+    --     print("SDL Event: " .. evt.sdl.type .. "  name: " ..evt.name)
+    --     if evt.sdl.button then
+    --         print("At X:" .. evt.sdl.button.x .. "  Y: " .. evt.sdl.button.y)
+    --     end
+    -- else
+    --     print("LUA.on_click(): received event with no SDL payload, name: " .. tostring(evt.name))
+    -- end    
 end
 
 
@@ -61,17 +86,24 @@ function M.attach(stage)
     -- C++ binding recognizes the event type and the listener table form.
     stage:addEventListener({ type = EventType.OnUpdate, listener = M.on_update })  -- VERIFIED
     stage:addEventListener({ type = EventType.OnRender, listener = M.on_render })  -- VERIFIED
-    -- stage:addEventListener({ type = EventType.OnPreRender, listener = M.on_render })  -- OnPreRender  VERIFIED
+    stage:addEventListener({ type = EventType.OnPreRender, listener = M.on_prerender })  -- VERIFIED
 
     -- Register listener-only events (OnInit/OnQuit/OnEvent) on the stage so global event listeners can receive them
-    stage:addEventListener({ type = EventType.OnInit, listener = M.on_init })   -- UNLIKELY
+    stage:addEventListener({ type = EventType.OnInit, listener = M.on_init })   -- VERIFIED
     stage:addEventListener({ type = EventType.OnQuit, listener = M.on_quit })   -- VERIFIED
-    stage:addEventListener({ type = EventType.OnEvent, listener = M.on_event })  -- VERIFIED
 
-    -- Optionally, call OnInit immediately for the stage (if you want stage listeners to initialize now)
+    -- Listen for raw OnEvent notifications (global SDL events) 
+    -- stage:addEventListener({ type = EventType.OnEvent, listener = M.on_event })  -- in-progress
+    stage:addEventListener({ type = EventType.SDL_Event, listener = M.on_event })  -- in-progress
+
+    -- Also listen specifically for MouseMove events so the handler sees the MouseMove event
+    stage:addEventListener({ type = EventType.MouseClick, listener = M.on_click }) -- VERIFIED
+
+    -- Call OnInit immediately for the stage (if you want stage listeners to initialize now)
     -- Note: this is listener-only; Core/Factory also dispatch OnInit when objects are created.
-    -- local evt = { type = "OnInit", target = stage }
-    -- M.on_init(evt)
+    local evt = { type = "OnInit", target = stage }
+    M.on_init(evt)
+
 end
 
 return M

@@ -158,25 +158,27 @@ namespace SDOM
         // // empty registry. It is kept for backward-compatibility and safety.
         // static void registerAll();
 
-        // Register EventType usertype/table in a Lua state so scripts can
-        // access EventType constants and query properties.
-        static void registerLua(sol::state_view lua);
+    // Register EventType usertype/table in a Lua state so scripts can
+    // access EventType constants and query properties.
+    static void registerLua(sol::state_view lua);
 
-        // getters
+        // -- Getters -- //
         bool getCaptures() const;
         bool getBubbles() const;
         bool getTargetOnly() const;
         bool getGlobal() const;
 
-        // setters
+        // -- Setters -- //
         EventType& setCaptures(bool captures);
         EventType& setBubbles(bool bubbles);
         EventType& setTargetOnly(bool targetOnly);
         EventType& setGlobal(bool global);
 
+    // -- Public Lua support -- //        
+
     private:
         std::string name;
-    static inline std::unordered_map<std::string, EventType*> registry;
+        static inline std::unordered_map<std::string, EventType*> registry;
 
         bool captures_ = true;
         bool bubbles_ = true;

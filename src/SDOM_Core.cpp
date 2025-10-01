@@ -25,6 +25,7 @@ namespace SDOM
         // Open base libraries plus package and io so embedded scripts can use
         // `require`/`package` and basic I/O if desired by examples.
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::package, sol::lib::io);
+        SDL_Utils::registerLua(lua_);
         factory_ = new Factory();
         eventManager_ = new EventManager();
     }
@@ -481,13 +482,18 @@ namespace SDOM
                     if (eventManager_ && rootNode_)
                     {
                         DomHandle rootHandle = getStageHandle();
+
+                        // dispatch OnEvent to rootNode_ so global listeners can inspect raw SDL_Events
                         auto ev = std::make_unique<Event>(EventType::OnEvent, rootHandle);
-                        // std::string evtString = SDL_Utils::eventTypeToString(static_cast<SDL_EventType>(event.type));
-                        // DEBUG_LOG("Core::run() Dispatching OnEvent to rootNode_ for SDL_Event type " + evtString);
-                        // relatedTarget can be the stage handle to give context to listeners
+                        ev->setSDL_Event(event);
                         ev->setRelatedTarget(rootHandle);
-                        // Dispatch to event listeners only to avoid duplicating node->onEvent() calls
                         eventManager_->dispatchEvent(std::move(ev), rootHandle);
+
+                        // dispatch SDL_Event to rootNode_ so global listeners can inspect raw SDL_Events
+                        auto sdl_ev = std::make_unique<Event>(EventType::SDL_Event, rootHandle);
+                        sdl_ev->setSDL_Event(event);
+                        sdl_ev->setRelatedTarget(rootHandle);
+                        eventManager_->dispatchEvent(std::move(sdl_ev), rootHandle);
                     }
 
                 }

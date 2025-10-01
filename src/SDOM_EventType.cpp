@@ -43,7 +43,7 @@ namespace SDOM
 {
     // Predefined event types (Name, Captures, Bubbles, TargetOnly, Global)
     EventType EventType::None("None", false, false, false, false);
-    EventType EventType::SDL_Event("SDL_Event", false, false, false, true);
+    EventType EventType::SDL_Event("SDL_Event", true, true, false, false);
     EventType EventType::Quit("Quit", false, false, false, true);
     EventType EventType::EnterFrame("EnterFrame", false, false, false, false); // should only fire event listeners at target
     // Mouse event types (Name, Captures, Bubbles, TargetOnly, Global)
@@ -109,88 +109,55 @@ namespace SDOM
 
 
 
-    // // Ensure registry is populated with the predefined static instances.
-    // // NOTE: Constructors for each static EventType already call
-    // // registerEventType(...). This function is therefore typically
-    // // redundant, but remains to force ODR-use of the statics and avoid
-    // // static-initialization-order issues. Kept for backward-compatibility.
-    // void EventType::registerAll()
-    // {
-    //     // Using addresses of the statics to register them in the map
-    //     registerEventType(None.getName(), &None);
-    //     registerEventType(SDL_Event.getName(), &SDL_Event);
-    //     registerEventType(Quit.getName(), &Quit);
-    //     registerEventType(EnterFrame.getName(), &EnterFrame);
 
-    //     registerEventType(MouseButtonUp.getName(), &MouseButtonUp);
-    //     registerEventType(MouseButtonDown.getName(), &MouseButtonDown);
-    //     registerEventType(MouseWheel.getName(), &MouseWheel);
-    //     registerEventType(MouseMove.getName(), &MouseMove);
-    //     registerEventType(MouseClick.getName(), &MouseClick);
-    //     registerEventType(MouseDoubleClick.getName(), &MouseDoubleClick);
-    //     registerEventType(MouseEnter.getName(), &MouseEnter);
-    //     registerEventType(MouseLeave.getName(), &MouseLeave);
+    /* 
+        Examples:
 
-    //     registerEventType(StageClosed.getName(), &StageClosed);
+        Lookup by field (fast/clear):    
+            ```lua
+            local et = EventType.MouseClick        -- userdata for the MouseClick EventType
+            print(et)                              -- prints "MouseClick" because of __tostring
+            print(et.name)                         -- "MouseClick"
+            print(et.captures)                     -- true/false
+            ```
 
-    //     registerEventType(KeyDown.getName(), &KeyDown);
-    //     registerEventType(KeyUp.getName(), &KeyUp);
+        Lookup by name with call:
+            ```lua
+            local et2 = EventType("MouseClick")    -- same userdata or nil if not found
+            ```
 
-    //     registerEventType(Timer.getName(), &Timer);
-    //     registerEventType(Tick.getName(), &Tick);
-    //     registerEventType(Timeout.getName(), &Timeout);
-
-    //     registerEventType(FocusGained.getName(), &FocusGained);
-    //     registerEventType(FocusLost.getName(), &FocusLost);
-    //     registerEventType(Resize.getName(), &Resize);
-    //     registerEventType(Move.getName(), &Move);
-    //     registerEventType(Show.getName(), &Show);
-    //     registerEventType(Hide.getName(), &Hide);
-    //     registerEventType(EnterFullscreen.getName(), &EnterFullscreen);
-    //     registerEventType(LeaveFullscreen.getName(), &LeaveFullscreen);
-
-    //     registerEventType(ValueChanged.getName(), &ValueChanged);
-    //     registerEventType(StateChanged.getName(), &StateChanged);
-    //     registerEventType(SelectionChanged.getName(), &SelectionChanged);
-    //     registerEventType(Enabled.getName(), &Enabled);
-    //     registerEventType(Disabled.getName(), &Disabled);
-    //     registerEventType(Visible.getName(), &Visible);
-    //     registerEventType(Hidden.getName(), &Hidden);
-
-    //     registerEventType(Drag.getName(), &Drag);
-    //     registerEventType(Dragging.getName(), &Dragging);
-    //     registerEventType(Drop.getName(), &Drop);
-
-    //     registerEventType(ClipboardCopy.getName(), &ClipboardCopy);
-    //     registerEventType(ClipboardPaste.getName(), &ClipboardPaste);
-
-    //     registerEventType(Added.getName(), &Added);
-    //     registerEventType(Removed.getName(), &Removed);
-    //     registerEventType(AddedToStage.getName(), &AddedToStage);
-    //     registerEventType(RemovedFromStage.getName(), &RemovedFromStage);
-
-    //     registerEventType(OnInit.getName(), &OnInit);
-    //     registerEventType(OnQuit.getName(), &OnQuit);
-    //     registerEventType(OnEvent.getName(), &OnEvent);
-    //     registerEventType(OnUpdate.getName(), &OnUpdate);
-    //     registerEventType(OnRender.getName(), &OnRender);
-
-    //     registerEventType(User.getName(), &User);
-    // }
+        Register a new EventType at runtime (visible to Lua immediately):
+            ```lua
+            local new = EventType.register("MyEvent", true, false, false, false)
+            print(new.name)                        -- "MyEvent"
+            print(EventType.MyEvent)               -- also available via EventType.MyEvent
+            ```
+    
+        Method vs property note:
+            In C++, we use getName(), getCaptures(), etc. as methods for clarity and to follow common C++ conventions.
+            In Lua, we expose these as properties (name, captures, etc.) for more idiomatic access, allowing scripts to use
+            `et.name` instead of `et:getName()`, which is more natural in Lua.
+    */
 
     void EventType::registerLua(sol::state_view lua)
     {
         try {
-            // create a simple usertype so EventType values are usable as userdata
-            if (!lua["EventType"].valid()) {
-                lua.new_usertype<EventType>("EventType", sol::no_constructor,
-                    "getName", &EventType::getName,
-                    "getCaptures", &EventType::getCaptures,
-                    "getBubbles", &EventType::getBubbles,
-                    "getTargetOnly", &EventType::getTargetOnly,
-                    "getGlobal", &EventType::getGlobal
+            // Create a userdata type for EventType values so Lua sees instances
+            // as first-class objects, and keep the global `EventType` name
+            // reserved for the lookup/registry table (not the usertype itself).
+            if (!lua["EventTypeObject"].valid()) {
+                lua.new_usertype<EventType>("EventTypeObject", sol::no_constructor,
+                    // expose readable properties (idiomatic from Lua use)
+                    "name", sol::property(&EventType::getName),
+                    "captures", sol::property(&EventType::getCaptures),
+                    "bubbles", sol::property(&EventType::getBubbles),
+                    "targetOnly", sol::property(&EventType::getTargetOnly),
+                    "global", sol::property(&EventType::getGlobal),
+                    // tostring for pretty printing
+                    sol::meta_function::to_string, [](const EventType& et) { return et.getName(); }
                 );
             }
+
             // Populate a table with references to the static EventType instances
             sol::table etbl = lua.create_table();
             const auto& reg = EventType::getRegistry();
@@ -198,14 +165,84 @@ namespace SDOM
                 const std::string& name = kv.first;
                 EventType* ptr = kv.second;
                 if (ptr) {
-                    etbl[name] = sol::make_object(lua, std::ref(*ptr));
+                    // let sol create the userdata for the C++ pointer
+                    etbl[name] = ptr;
                 }
             }
+
+            // Make the table callable: EventType("MouseClick") -> returns entry or nil
+            sol::table meta = lua.create_table();
+            meta[sol::meta_function::call] = [](sol::table t, const std::string& name) -> sol::object {
+                // use table:get to return a sol::object (may be nil) safely
+                return t.get<sol::object>(name);
+            };
+            etbl[sol::metatable_key] = meta;
+
+            // Allow runtime registration from Lua: EventType.register(name, captures, bubbles, targetOnly, global)
+            // Capture the table so we can insert the created EventType into it immediately.
+            etbl.set_function("register", [etbl](const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global) mutable -> EventType* {
+                // allocate a new EventType and let its constructor register it
+                EventType* et = new EventType(name, captures, bubbles, targetOnly, global);
+                // insert into the lua-side table so scripts see the new entry
+                try {
+                    etbl[name] = et;
+                } catch (...) {
+                    // ignore table set failures; the C++ registry still contains the type
+                }
+                return et;
+            });
+
+            // Export the table as the global `EventType` module
             lua["EventType"] = etbl;
         } catch (...) {
             // non-fatal
+            WARNING("Failed to register EventType with Lua");
         }
-    }
+
+/*
+        // Example inside EventType::registerLua(sol::state& lua)
+        lua.new_usertype<SDOM::EventType>(
+            "EventTypeObject",
+            sol::no_constructor,
+            "name", sol::property(&SDOM::EventType::getName),
+            "captures", sol::property(&SDOM::EventType::captures),
+            "bubbles", sol::property(&SDOM::EventType::bubbles),
+            "targetOnly", sol::property(&SDOM::EventType::targetOnly),
+            "global", sol::property(&SDOM::EventType::isGlobal),
+            "toString", [](const SDOM::EventType& et){ return et.getName(); }
+        );
+
+        // create EventType table
+        sol::table et_table = lua.create_table();
+        // populate with existing C++ registered types
+        for (auto const& kv : SDOM::EventType::registry()) {
+            // kv.second is a pointer/reference to EventType
+            et_table[kv.first] = kv.second; // sol will create userdata referencing C++ instance
+        }
+
+        // __call metamethod: EventType("Name") returns the userdata by lookup or nil
+        sol::table et_meta = lua.create_table();
+        et_meta["__call"] = lua.safe_script(R"(
+            return function(t, name)
+                return rawget(t, name) or nil
+            end
+        )");
+        et_table[sol::metatable_key] = et_meta;
+
+        // register function to add new types at runtime
+        et_table.set_function("register", [](const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global){
+            auto *et = SDOM::EventType::createOrGet(name, captures, bubbles, targetOnly, global);
+            // also make available in lua: assume we have saved et_table into lua globals as "EventType"
+            sol::state_view lua = ...; // obtain state
+            sol::table t = lua["EventType"];
+            t[name] = et;
+            return et;
+        });
+
+        // finally set as global
+        lua["EventType"] = et_table;     
+*/   
+    } // END EventType::registerLua(sol::state_view lua)
 
     // getters
     bool EventType::getCaptures() const 

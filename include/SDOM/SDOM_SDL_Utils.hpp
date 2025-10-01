@@ -64,6 +64,10 @@ namespace SDOM
 
         static int keyToAscii(SDL_Keycode keycode, SDL_Keymod keymod);
 
+        static sol::table eventToLuaTable(const SDL_Event& event, sol::state_view lua);
+        static void registerLua(sol::state_view lua);
+
+
     };
 
 } // namespace SDOM

@@ -44,6 +44,7 @@
 #include <SDOM/SDOM_ResHandle.hpp>
 
 #include <SDOM/SDOM_Event.hpp>
+#include <SDOM/SDOM_SDL_Utils.hpp>
 
 
 namespace SDOM
@@ -358,6 +359,18 @@ void SDOM::Event::registerLua(sol::state_view lua)
                 "dt", sol::property([](const Event& e) { return e.getElapsedTime(); }),
                 "type", sol::property([](const Event& e) { return e.getTypeName(); }),
                 "target", sol::property([](const Event& e) { return e.getTarget(); }),
+                // sdl: returns a Lua table representation of the underlying SDL_Event (if any)
+                "sdl", sol::property([](const Event& e, sol::this_state s) -> sol::object {
+                    sol::state_view lua(s);
+                    try {
+                        // Convert the stored SDL_Event into a Lua table using SDL_Utils
+                        sol::table tbl = SDL_Utils::eventToLuaTable(e.getSDL_Event(), lua);
+                        return sol::object(lua, tbl);
+                    } catch (...) {
+                        // Return nil on any failure
+                        return sol::object(lua, sol::lua_nil);
+                    }
+                }),
                 "name", sol::property([](const Event& e) {
                     try {
                         DomHandle dh = e.getTarget();
@@ -379,9 +392,30 @@ void SDOM::Event::registerLua(sol::state_view lua)
                     return e.getTypeName();
                 },
                 "getElapsedTime", &Event::getElapsedTime
+                , sol::meta_function::pairs, [](const Event& e, sol::this_state ts) {
+                    sol::state_view lua(ts);
+                    sol::table t = lua.create_table();
+                    try {
+                        t["type"] = e.getTypeName();
+                    } catch (...) {}
+                    try { t["dt"] = e.getElapsedTime(); } catch (...) {}
+                    try {
+                        DomHandle dh = e.getTarget();
+                        if (dh) {
+                            if (auto* obj = dh.get()) {
+                                t["target"] = obj;
+                            } else {
+                                t["target"] = dh.getName();
+                            }
+                        }
+                    } catch (...) {}
+                    // return the standard pairs iterator over the temp table
+                    return std::make_tuple(lua["pairs"], t, sol::nil);
+                }
             );
         }
     } catch (...) {
         // non-fatal
+        WARNING("Failed to register Event with Lua");
     }
 }
