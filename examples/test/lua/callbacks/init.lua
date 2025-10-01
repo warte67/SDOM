@@ -26,22 +26,11 @@ function M.on_init()
     end
     io.write("\n")
     
-    -- attach per-stage listeners (update + render)
+    -- attach per-stage listeners (delegate to the shared listener_callbacks module)
+    local listeners = require("callbacks.listener_callbacks")
     local stage = Core and Core:getStageHandle() or Core and Core:getDisplayObject("mainStage")
     if stage then
-        -- Update listener: receives evt.dt if posted, otherwise use Core:getElapsedTime()
-        stage:addEventListener("Update", function(evt)
-            local dt = (evt and evt.dt) or (Core and Core:getElapsedTime()) or 0
-            -- per-frame logic here
-            -- e.g. animate or update state using dt
-        end)
-
-        -- Render listener: draws as part of the stage texture (will be cleared by stage)
-        stage:addEventListener("Render", function(evt)
-            -- Draw into the stage (use display objects or CLR.draw_debug_text for debug)
-            -- Example debug text at 8,8 inside the stage:
-            CLR.draw_debug_text(string.format("Stage Render at t=%.2f", Core and Core:getElapsedTime() or 0), 8, 8, 14, 255,255,255,255)
-        end)
+        listeners.attach(stage)
     else
         print("Warning: main stage not found; stage listeners not attached")
     end

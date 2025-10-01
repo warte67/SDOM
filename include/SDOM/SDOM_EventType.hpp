@@ -49,56 +49,71 @@ namespace SDOM
     {
     public:
         // Predefined event types (* denotes completed)
-        static EventType None;            // * for no event
-        static EventType SDL_Event;       // * for raw SDL events
-        static EventType Quit;            // * for application quit events
-        static EventType EnterFrame;      // * called every frame (consider dispatching for EventListeners only)
-        // Mouse event types
-        static EventType MouseButtonUp;   // * for mouse button up events
-        static EventType MouseButtonDown; // * for mouse button down events
-        static EventType MouseWheel;      // * for mouse wheel
-        static EventType MouseMove;       // * for mouse movement
-        static EventType MouseClick;      // * for single mouse clicks
-        static EventType MouseDoubleClick;// * for double mouse clicks
-        static EventType MouseEnter;      // * for mouse entering an object
-        static EventType MouseLeave;      // * for mouse leaving an object
-        // Stage event types
-        static EventType StageClosed;     // * for when a stage is closed
-        // Keyboard event types
-        static EventType KeyDown;         // for when a key is pressed down (includes IME or Shift Modified ascii)
-        static EventType KeyUp;           // for when a key is released
-        // Timer event types
-        static EventType Timer;           // generic timer event
-        static EventType Tick;            // periodic update
-        static EventType Timeout;         // one-shot timer expiration event
-        // Window event types
-        static EventType FocusGained;     // * for widgets, windows, or controls
-        static EventType FocusLost;       // * for widgets, windows, or controls
-        static EventType Resize;          // * for window or control size changes
-        static EventType Move;            // * for IDisplayObject position changes
-        static EventType Show;            // * for visibility changes
-        static EventType Hide;            // * for visibility changes
-        static EventType EnterFullscreen; // * for entering fullscreen mode
-        static EventType LeaveFullscreen; // * for leaving fullscreen mode
+        static EventType None;              // * for no event
+        static EventType SDL_Event;         // * for raw SDL events
+        static EventType Quit;              // * for application quit events
+        static EventType EnterFrame;        // * called every frame (consider dispatching for EventListeners only)
+        // Mouse event types    
+        static EventType MouseButtonUp;     // * for mouse button up events
+        static EventType MouseButtonDown;   // * for mouse button down events
+        static EventType MouseWheel;        // * for mouse wheel
+        static EventType MouseMove;         // * for mouse movement
+        static EventType MouseClick;        // * for single mouse clicks
+        static EventType MouseDoubleClick;  // * for double mouse clicks
+        static EventType MouseEnter;        // * for mouse entering an object
+        static EventType MouseLeave;        // * for mouse leaving an object
+        // Stage event types    
+        static EventType StageClosed;       // * for when a stage is closed
+        // Keyboard event types 
+        static EventType KeyDown;           // for when a key is pressed down (includes IME or Shift Modified ascii)
+        static EventType KeyUp;             // for when a key is released
+        // Timer event types    
+        static EventType Timer;             // generic timer event
+        static EventType Tick;              // periodic update
+        static EventType Timeout;           // one-shot timer expiration event
+        // Window event types   
+        static EventType FocusGained;       // * for widgets, windows, or controls
+        static EventType FocusLost;         // * for widgets, windows, or controls
+        static EventType Resize;            // * for window or control size changes
+        static EventType Move;              // * for IDisplayObject position changes
+        static EventType Show;              // * for visibility changes
+        static EventType Hide;              // * for visibility changes
+        static EventType EnterFullscreen;   // * for entering fullscreen mode
+        static EventType LeaveFullscreen;   // * for leaving fullscreen mode
         // General UI event types
-        static EventType ValueChanged;    // for sliders, text fields, etc.
-        static EventType StateChanged;    // for checkboxes, radio buttons, etc.
-        static EventType SelectionChanged; // for list boxes, combo boxes, etc.
+        static EventType ValueChanged;      // for sliders, text fields, etc.
+        static EventType StateChanged;      // for checkboxes, radio buttons, etc.
+        static EventType SelectionChanged;  // for list boxes, combo boxes, etc.
+        static EventType Enabled;           // when IDisplayObjects become enabled
+        static EventType Disabled;          // when IDisplayObjects become disabled
+        static EventType Active;            // REMOVE ACTIVE
+        static EventType Inactive;          // REMOVE INACTIVE
+        static EventType Visible;           // when a IDisplayObject becomes visible
+        static EventType Hidden;            // when a IDisplayObject becomes hidden        
+        // Drag & Drop event types  
+        static EventType Drag;              // * when a drag operation starts
+        static EventType Dragging;          // * when a drag operation is ongoing
+        static EventType Drop;              // * when an item is dropped
+        // Clipboard event types    
+        static EventType ClipboardCopy;     // when content is copied to the clipboard
+        static EventType ClipboardPaste;    // when content is pasted from the clipboard
 
-        static EventType Enabled;         // when IDisplayObjects become enabled
-        static EventType Disabled;        // when IDisplayObjects become disabled
-        static EventType Active;          // REMOVE ACTIVE
-        static EventType Inactive;        // REMOVE INACTIVE
-        static EventType Visible;         // when a IDisplayObject becomes visible
-        static EventType Hidden;          // when a IDisplayObject becomes hidden
+
+        // Main DisplayObject event types (NEW EventTypes to be added)
         
-        // Drag & Drop event types
-        static EventType Drag;            // * when a drag operation starts
-        static EventType Dragging;        // * when a drag operation is ongoing
-        static EventType Drop;            // * when an item is dropped
-        // Clipboard event types
-        static EventType ClipboardCopy;   // when content is copied to the clipboard
-        static EventType ClipboardPaste;  // when content is pasted from the clipboard
+        // Application lifecycle event types
+        static EventType Added;             // when a DisplayObject is added to the display list
+        static EventType Removed;           // when a DisplayObject is removed from the display list
+        static EventType AddedToStage;      // when a DisplayObject is added to the stage
+        static EventType RemovedFromStage;  // when a DisplayObject is removed from the stage
+        // Event Listener Only Events
+        static EventType OnInit;            // OnInit is Dispatched to EventListeners
+        static EventType OnQuit;            // OnQuit is Dispatched to EventListeners
+        static EventType OnEvent;           // OnEvent is Dispatched to EventListeners
+        static EventType OnUpdate;          // OnUpdate is Dispatched to EventListeners
+        static EventType OnRender;          // OnRender is Dispatched to EventListeners
+
+
         // Custom User event types
         static EventType User;            // custom user event type
 
@@ -162,12 +177,12 @@ namespace SDOM
                
         explicit EventType(const std::string& name) 
             : name(name), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
-        { registerEventType(name); }
+        { registerEventType(name, this); }
 
         explicit EventType(const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global) 
             : name(name), captures_(captures), bubbles_(bubbles), targetOnly_(targetOnly), global_(global) 
         { 
-            registerEventType(name); 
+            registerEventType(name, this); 
         }
 
         const std::string& getName() const { return name; }
@@ -176,15 +191,33 @@ namespace SDOM
         bool operator!=(const EventType& other) const { return name != other.name; }
         bool operator<(const EventType& other) const { return name < other.name; }
 
-        static void registerEventType(const std::string& name) {
+        static void registerEventType(const std::string& name, EventType* ptr) {
             if (registry.find(name) == registry.end()) {
-                registry.insert(name);
+                registry.insert({name, ptr});
             }
         }
 
         static bool isRegistered(const std::string& name) {
             return registry.find(name) != registry.end();
         }
+
+        // Return the internal registry mapping event name -> EventType*
+        static const std::unordered_map<std::string, EventType*>& getRegistry() { return registry; }
+
+    // Ensure all predefined EventType static instances are inserted into
+    // the registry. Calling this from startup code avoids static
+    // initialization order issues on some platforms.
+    // NOTE: Each EventType constructor already registers itself via
+    // registerEventType(name, this). This helper is therefore
+    // usually redundant, but is retained here to force initialization
+    ///ODR-use of the predefined statics in cases where static
+    // initialization order across translation units could lead to an
+    // empty registry. It is kept for backward-compatibility and safety.
+    static void registerAll();
+
+    // Register EventType usertype/table in a Lua state so scripts can
+    // access EventType constants and query properties.
+    static void registerLua(sol::state_view lua);
 
         // getters
         bool getCaptures() const;
@@ -200,7 +233,7 @@ namespace SDOM
 
     private:
         std::string name;
-        static inline std::unordered_set<std::string> registry;
+    static inline std::unordered_map<std::string, EventType*> registry;
 
         bool captures_ = true;
         bool bubbles_ = true;

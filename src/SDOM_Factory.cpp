@@ -7,6 +7,7 @@
 #include <SDOM/SDOM_ResHandle.hpp>
 
 #include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
 
@@ -206,6 +207,17 @@ namespace SDOM
             // --- Finally initialize the display object ---
             displayObjects_[name]->onInit();
 
+            // Dispatch EventType::OnInit so global or pre-registered listeners can observe creation
+            // Included for completeness.  There may still be room to add an event listener.
+            {
+                auto& eventManager = getCore().getEventManager();
+                std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DomHandle(name, typeName));
+                // relatedTarget: stage handle when available
+                DomHandle stageHandle = getCore().getRootNode();
+                if (stageHandle) initEvent->setRelatedTarget(stageHandle);
+                eventManager.dispatchEvent(std::move(initEvent), DomHandle(name, typeName));
+            }
+
             // If the Lua config included a parent, attach this new object to it
             if (config["parent"].valid()) {
                 attachCreatedObjectToParentFromConfig(name, typeName, config["parent"]);
@@ -227,6 +239,15 @@ namespace SDOM
             {
                 std::string name = init.name;
                 displayObject->onInit(); // Initialize the display object
+                // Dispatch EventType::OnInit for this newly-initialized object
+                // Included for completeness.  There may still be room to add an event listener.
+                {
+                    auto& eventManager = getCore().getEventManager();
+                    std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DomHandle(name, typeName));
+                    DomHandle stageHandle = getCore().getRootNode();
+                    if (stageHandle) initEvent->setRelatedTarget(stageHandle);
+                    eventManager.dispatchEvent(std::move(initEvent), DomHandle(name, typeName));
+                }
                 displayObject->setType(typeName); // Ensure type is set
                 displayObjects_[name] = std::move(displayObject);
                 return DomHandle(name, typeName);

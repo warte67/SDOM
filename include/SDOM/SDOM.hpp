@@ -352,7 +352,11 @@ namespace SDOM
  * @param message Debug message to display.
  */
 // Macro for debug logging (statement-safe, parenthesized parameter)
-#define DEBUG_LOG(message) do { std::cout << CLR::GREEN << "[DEBUG] " << (message) << CLR::RESET << std::endl; } while(0)
+#define DEBUG_LOG(...) do { \
+    std::ostringstream _sdom_dbg_oss; \
+    _sdom_dbg_oss << __VA_ARGS__; \
+    std::cout << CLR::GREEN << "[DEBUG] " << _sdom_dbg_oss.str() << CLR::RESET << std::endl; \
+} while(0)
 
 /**
  * @brief Logs an informational message to stdout.

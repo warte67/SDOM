@@ -20,10 +20,25 @@ namespace SDOM
 
     // --- Event Handling --- //
     void addEventListener_lua(IDisplayObject& obj, EventType& type, sol::function listener, bool useCapture, int priority) {
-        obj.addEventListener(type, [listener](Event& e) { listener(e); }, useCapture, priority);
+        obj.addEventListener(type, [listener](Event& e) mutable {
+            sol::protected_function pf = listener;
+            sol::protected_function_result r = pf(e);
+            if (!r.valid()) {
+                sol::error err = r;
+                ERROR(std::string("Lua listener error: ") + err.what());
+            }
+        }, useCapture, priority);
     }
     void removeEventListener_lua(IDisplayObject& obj, EventType& type, sol::function listener, bool useCapture) {
-        obj.removeEventListener(type, [listener](Event& e) { listener(e); }, useCapture);
+        // removal uses function pointer equality; preserve same wrapping behavior
+        obj.removeEventListener(type, [listener](Event& e) mutable {
+            sol::protected_function pf = listener;
+            sol::protected_function_result r = pf(e);
+            if (!r.valid()) {
+                sol::error err = r;
+                ERROR(std::string("Lua listener error (remove): ") + err.what());
+            }
+        }, useCapture);
     }
 
     // --- Hierarchy Management --- //

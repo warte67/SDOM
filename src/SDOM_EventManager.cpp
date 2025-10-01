@@ -360,8 +360,9 @@ namespace SDOM
         // pixel scaling). This prevents mixing window pixels with stage
         // coordinates during hit-testing and event dispatch.
         // Use raw SDL coordinates for stage mouse positions (revert pixel scaling)
-    stage->mouseX = static_cast<float>(sdlEvent.motion.x);
-    stage->mouseY = static_cast<float>(sdlEvent.motion.y);
+        // Log incoming SDL coords for debugging
+        stage->mouseX = static_cast<float>(sdlEvent.motion.x);
+        stage->mouseY = static_cast<float>(sdlEvent.motion.y);
         // correct for the difference in the mouse wheel events
         if (sdlEvent.type == SDL_EVENT_MOUSE_WHEEL) 
         {
@@ -369,11 +370,23 @@ namespace SDOM
             stage->mouseY = static_cast<float>(sdlEvent.wheel.mouse_y);
         }
 
+
+        
     // Find the top object that is under the mouse cursor (after coordinate conversion)
     // Modify findTopObjectUnderMouse to exclude the dragged object
     DomHandle topObject = findTopObjectUnderMouse(node, draggedObject);
     // Update Core hovered object to the post-conversion topObject so Lua reads correct value
     getCore().setMouseHoveredObject(topObject);
+    // Debug log the top object name if available
+    // if (topObject) {
+    //     try {
+    //         std::cout << "[EventManager::Queue_SDL_Event] topObject=" << topObject->getName() << std::endl;
+    //     } catch (...) {
+    //         std::cout << "[EventManager::Queue_SDL_Event] topObject=<unnamed>" << std::endl;
+    //     }
+    // } else {
+    //     std::cout << "[EventManager::Queue_SDL_Event] topObject=<null>" << std::endl;
+    // }
 
         // alias the SDL_EventType for ease of use:
         SDL_EventType sdl_type = static_cast<SDL_EventType>(sdlEvent.type);

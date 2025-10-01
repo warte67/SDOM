@@ -343,3 +343,45 @@ namespace SDOM
     }
 
 } // namespace SDOM
+
+// Lua registration implementation
+void SDOM::Event::registerLua(sol::state_view lua)
+{
+    try {
+        // Ensure EventType usertype exists in the state
+        if (!lua["EventType"].valid()) {
+            lua.new_usertype<EventType>("EventType", sol::no_constructor);
+        }
+
+        if (!lua["Event"].valid()) {
+            lua.new_usertype<Event>("Event", sol::no_constructor,
+                "dt", sol::property([](const Event& e) { return e.getElapsedTime(); }),
+                "type", sol::property([](const Event& e) { return e.getTypeName(); }),
+                "target", sol::property([](const Event& e) { return e.getTarget(); }),
+                "name", sol::property([](const Event& e) {
+                    try {
+                        DomHandle dh = e.getTarget();
+                        if (dh) {
+                            if (auto* obj = dh.get()) return obj->getName();
+                            std::string hn = dh.getName();
+                            if (!hn.empty()) return hn;
+                        }
+                    } catch (...) {}
+                    return e.getTypeName();
+                }),
+                "getName", [](const Event& e) -> std::string {
+                    DomHandle dh = e.getTarget();
+                    if (dh) {
+                        if (auto* obj = dh.get()) return obj->getName();
+                        std::string hn = dh.getName();
+                        if (!hn.empty()) return hn;
+                    }
+                    return e.getTypeName();
+                },
+                "getElapsedTime", &Event::getElapsedTime
+            );
+        }
+    } catch (...) {
+        // non-fatal
+    }
+}

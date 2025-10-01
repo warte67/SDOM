@@ -262,34 +262,42 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Reworked the DomHandle unit tests for readability and maintainability: added a numeric mapping header, expanded inline descriptions to match `UnitTests::run` strings, and renamed test functions to `DomHandle_test1`..`DomHandle_test10`.
             
 **[September 30, 2025]**
-    **Lua Binding Debugging:**
-        - Added controlled debug prints to Lua usertype registration to trace binding operations.
-        - Verified that each usertype (DomHandle, IDisplayObject, Stage, Factory, Core) is registered exactly once, preventing conflicts and ensuring consistent behavior.
-        - Debug prints can be toggled with the `DEBUG_REGISTER_LUA` constant in `SDOM.hpp`.
-    **Binding Consistency:**
-        - Ensured that all Lua bindings are idempotent and do not conflict with each other.
-        - Verified that overloaded methods and custom types are correctly handled in Lua.
-    **Code Cleanup:**
-        - Removed unnecessary debug prints from production code, leaving controlled logging for future debugging needs.
-        - Ensured the codebase remains clean and maintainable.
-    **Runtime wrappers & module support:**
-        - Added Lua runtime wrappers so the embedded Core can execute scripts directly from Lua: `core.run()` now accepts either a raw Lua string to execute or a filename to load and run.
-        - Enabled module-style scripting by opening `package`/`io` in the embedded state and preferring module-style configs (modules that return a table). This makes `require`-based configs and modular callback files work naturally in the embedded environment.
-    **Core runtime wrappers & module support:**
-        - Added `Core:run()` (exposed to Lua as `core.run`) which accepts either a Lua string or a filename and executes it in the embedded state, enabling runtime script execution and quick iteration.
-        - Enabled module-style scripting by opening `package`/`io` in the embedded Lua state and preferring modules that return a table; this allows `require`-based configs and modular callback files.
-    **Event / DisplayObject hooks (note):**
-    **CLR / Terminal & Debug Text:**
-        - Implemented fast terminal helpers in CLR (ANSI save/restore and CLR.write_at) to avoid expensive /dev/tty cursor-position queries and per-frame blocking.
-        - Exposed CLR.write_at and CLR.draw_debug_text to Lua so scripts can render debug overlays or FPS efficiently.
-        - Switched draw_debug_text to use SDL3's SDL_RenderDebugText as the primary in-window renderer and documented fallback options for terminals without support.
-        - Outcome: debug text and FPS overlays update at frame rate with minimal overhead, improving responsiveness and eliminating terminal read latency.
-        - Added EventType entries for IDisplayObject virtual hooks (Update, Render) so stage/display-object listeners can be registered consistently.
-        - TODO (left as a note for next shift): wire the dispatch points so these EventTypes are emitted from the IDisplayObject update/render traversal at the correct phases (target/capture/bubble as appropriate). Until dispatched, user Render/Update listeners should be attached via the stage or Core-level callbacks.
-
+    - **Summary:**
+        - Consolidated work focused on lifecycle event dispatch, Lua bindings robustness, and logging/debug cleanup.  These changes make lifecycle events available to Lua listeners, surface Lua errors, and stabilize the debug/logging surface for continued iteration.
+    - **Event dispatch & lifecycle hooks:**
+        - Factory now emits EventType::OnInit immediately after object initialization (useful for global/stage listeners).
+        - Core dispatches EventType::OnQuit globally during shutdown via EventManager::dispatchEvent().
+        - Core::run() now dispatches stage-level listener events:
+            - EventType::OnEvent — after queued SDL event dispatch
+            - EventType::OnUpdate — immediately before onUpdate traversal
+            - EventType::OnRender — immediately after onRender, before present
+        - For Update/Render/Event hooks we dispatch to event-listeners only (dispatchEventToAllEventListenersOnStage) to avoid duplicating node->onEvent() behavior.
+        - Note: these dispatch points are listeners hooks; they do not replace per-node onUpdate()/onRender() unless an API is added to allow listeners to disable default behavior.
+    - **Lua: Event / EventType bindings & robustness:**
+        - Centralized EventType → Lua exposure using the EventType registry to avoid string mismatches.
+        - Added a Lua usertype for Event exposing: dt (elapsed), type/typeName, target (DomHandle) and convenience accessors name / getName() (prefers target name, falls back to event type).
+        - Made lua listener registration use table form { type = EventType.X, listener = fn } in examples.
+        - Replaced inline lambdas in examples with named callbacks in examples/test/lua/callbacks/listener_callbacks.lua.
+        - Wrapped all Lua callback invocations with sol::protected_function to log Lua errors (no silent failures).
+        - Fixed multiple example Lua issues (missing 'end' in render.lua, undefined EMA vars) so OnUpdate/OnEvent/OnRender prints now appear as expected.
+    - **Debugging & logging:**
+        - Replaced ad-hoc std::cout debug prints with DEBUG_LOG macro and made macro stream-friendly to fix compile-time operator<< usage.
+        - Removed or gated noisy temporary debug prints (e.g., pushMouseEvent_lua) and made them controllable so normal runs are not spammy.
+        - Left a clear, short comment about EventType::registerAll() retained as a static-init-order safety hedge (user EventTypes still register themselves in their constructors).
+    - **Build & verification:**
+        - Fixed compile regressions introduced during iteration; rebuilt examples/test successfully.
+        - Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.
+    - **Short-term TODO (next steps):**
+        - Expand Event Lua binding (mouse_x, mouse_y, button, payload, stopPropagation, disableDefaultBehavior).
+        - Consider adding an API so dispatch returns status (or a shared/inspectable Event) allowing listeners to cancel core default (onUpdate/onRender).
+        - Add unit tests validating lifecycle-event delivery (including orphaned objects).
+        - Add runtime debug toggle (Core::setDebugEnabled or similar) to control DEBUG_LOG without recompilation.
+    - **Notes:**
+        - `registerAll()` remains in place to force-definition of built-in EventType statics and avoid static-init-order pitfalls; user-created EventTypes register themselves on construction and are not affected by registerAll().
+        - Current dispatch design favors predictability and separation between lifecycle callbacks (onUpdate/onRender) and event-listener hooks.
 
         
-## Next Steps (garbage collection / orphan retention)
+## Garbage Collection / Orphan Retention
 
 Proposed approach: add an `OrphanRetentionPolicy` enum (or a smaller `retainOnOrphan` boolean for a quick win) on `IDisplayObject` and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.
 

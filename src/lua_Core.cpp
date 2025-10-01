@@ -26,6 +26,9 @@ namespace SDOM
 		int winX = static_cast<int>(sx * cfg.pixelWidth);
 		int winY = static_cast<int>(sy * cfg.pixelHeight);
 
+		// // Debug logging for synthetic mouse events
+		// std::cout << "[pushMouseEvent_lua] stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button << std::endl;
+
 		Uint32 winID = 0;
 		if (core.getWindow()) winID = SDL_GetWindowID(core.getWindow());
 

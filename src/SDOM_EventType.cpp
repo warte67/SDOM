@@ -88,8 +88,119 @@ namespace SDOM
     // Clipboard event types (Name, Captures, Bubbles, TargetOnly, Global)
     EventType EventType::ClipboardCopy("ClipboardCopy", true, true, false, false);
     EventType EventType::ClipboardPaste("ClipboardPaste", true, true, false, false);
+
+    // Application lifecycle event types
+    EventType EventType::Added("Added", true, true, false, false);
+    EventType EventType::Removed("Removed", true, true, false, false);
+    EventType EventType::AddedToStage("AddedToStage", true, true, false, false);
+    EventType EventType::RemovedFromStage("RemovedFromStage", true, true, false, false);
+    // Event Listener Only Events
+    EventType EventType::OnInit("OnInit", true, true, false, false);
+    EventType EventType::OnQuit("OnQuit", false, false, false, true); // global only
+    EventType EventType::OnEvent("OnEvent", true, true, false, false);
+    EventType EventType::OnUpdate("OnUpdate", true, true, false, false);
+    EventType EventType::OnRender("OnRender", true, true, false, false);
+
     // Custom User event types (Name, Captures, Bubbles, TargetOnly, Global)
     EventType EventType::User("User", true, true, false, false);
+
+    // Ensure registry is populated with the predefined static instances.
+    // NOTE: Constructors for each static EventType already call
+    // registerEventType(...). This function is therefore typically
+    // redundant, but remains to force ODR-use of the statics and avoid
+    // static-initialization-order issues. Kept for backward-compatibility.
+    void EventType::registerAll()
+    {
+        // Using addresses of the statics to register them in the map
+        registerEventType(None.getName(), &None);
+        registerEventType(SDL_Event.getName(), &SDL_Event);
+        registerEventType(Quit.getName(), &Quit);
+        registerEventType(EnterFrame.getName(), &EnterFrame);
+
+        registerEventType(MouseButtonUp.getName(), &MouseButtonUp);
+        registerEventType(MouseButtonDown.getName(), &MouseButtonDown);
+        registerEventType(MouseWheel.getName(), &MouseWheel);
+        registerEventType(MouseMove.getName(), &MouseMove);
+        registerEventType(MouseClick.getName(), &MouseClick);
+        registerEventType(MouseDoubleClick.getName(), &MouseDoubleClick);
+        registerEventType(MouseEnter.getName(), &MouseEnter);
+        registerEventType(MouseLeave.getName(), &MouseLeave);
+
+        registerEventType(StageClosed.getName(), &StageClosed);
+
+        registerEventType(KeyDown.getName(), &KeyDown);
+        registerEventType(KeyUp.getName(), &KeyUp);
+
+        registerEventType(Timer.getName(), &Timer);
+        registerEventType(Tick.getName(), &Tick);
+        registerEventType(Timeout.getName(), &Timeout);
+
+        registerEventType(FocusGained.getName(), &FocusGained);
+        registerEventType(FocusLost.getName(), &FocusLost);
+        registerEventType(Resize.getName(), &Resize);
+        registerEventType(Move.getName(), &Move);
+        registerEventType(Show.getName(), &Show);
+        registerEventType(Hide.getName(), &Hide);
+        registerEventType(EnterFullscreen.getName(), &EnterFullscreen);
+        registerEventType(LeaveFullscreen.getName(), &LeaveFullscreen);
+
+        registerEventType(ValueChanged.getName(), &ValueChanged);
+        registerEventType(StateChanged.getName(), &StateChanged);
+        registerEventType(SelectionChanged.getName(), &SelectionChanged);
+        registerEventType(Enabled.getName(), &Enabled);
+        registerEventType(Disabled.getName(), &Disabled);
+        registerEventType(Visible.getName(), &Visible);
+        registerEventType(Hidden.getName(), &Hidden);
+
+        registerEventType(Drag.getName(), &Drag);
+        registerEventType(Dragging.getName(), &Dragging);
+        registerEventType(Drop.getName(), &Drop);
+
+        registerEventType(ClipboardCopy.getName(), &ClipboardCopy);
+        registerEventType(ClipboardPaste.getName(), &ClipboardPaste);
+
+        registerEventType(Added.getName(), &Added);
+        registerEventType(Removed.getName(), &Removed);
+        registerEventType(AddedToStage.getName(), &AddedToStage);
+        registerEventType(RemovedFromStage.getName(), &RemovedFromStage);
+
+        registerEventType(OnInit.getName(), &OnInit);
+        registerEventType(OnQuit.getName(), &OnQuit);
+        registerEventType(OnEvent.getName(), &OnEvent);
+        registerEventType(OnUpdate.getName(), &OnUpdate);
+        registerEventType(OnRender.getName(), &OnRender);
+
+        registerEventType(User.getName(), &User);
+    }
+
+    void EventType::registerLua(sol::state_view lua)
+    {
+        try {
+            // create a simple usertype so EventType values are usable as userdata
+            if (!lua["EventType"].valid()) {
+                lua.new_usertype<EventType>("EventType", sol::no_constructor,
+                    "getName", &EventType::getName,
+                    "getCaptures", &EventType::getCaptures,
+                    "getBubbles", &EventType::getBubbles,
+                    "getTargetOnly", &EventType::getTargetOnly,
+                    "getGlobal", &EventType::getGlobal
+                );
+            }
+            // Populate a table with references to the static EventType instances
+            sol::table etbl = lua.create_table();
+            const auto& reg = EventType::getRegistry();
+            for (const auto& kv : reg) {
+                const std::string& name = kv.first;
+                EventType* ptr = kv.second;
+                if (ptr) {
+                    etbl[name] = sol::make_object(lua, std::ref(*ptr));
+                }
+            }
+            lua["EventType"] = etbl;
+        } catch (...) {
+            // non-fatal
+        }
+    }
 
     // getters
     bool EventType::getCaptures() const 

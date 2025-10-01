@@ -41,7 +41,7 @@
 // #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 // #include <SDOM/SDOM_EventType.hpp>
-// #include <SDOM/SDOM_EventManager.hpp>
+#include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 // #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/lua_IDisplayObject.hpp>
@@ -491,6 +491,34 @@ namespace SDOM
                     child->setX(worldX);
                     child->setY(worldY);
                 }
+
+                // Dispatch EventType::Added using dispatchEvent for proper capture/bubble/target
+                if (child) {
+                    auto& eventManager = getCore().getEventManager();
+                    std::unique_ptr<Event> addedEvent = std::make_unique<Event>(EventType::Added, p_child);
+                    // Set related target to parent handle for listener use
+                    addedEvent->setRelatedTarget(p_parent);
+                    eventManager.dispatchEvent(std::move(addedEvent), p_child);
+                }
+
+                // Dispatch EventType::AddedToStage if the child is now part of the active stage.
+                DomHandle stageHandle = getCore().getRootNode();
+                if (stageHandle) {
+                    DomHandle cur = p_child;
+                    bool onStage = false;
+                    while (cur) {
+                        if (cur == stageHandle) { onStage = true; break; }
+                        IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
+                        if (!curObj) break;
+                        cur = curObj->getParent();
+                    }
+                    if (onStage) {
+                        auto& eventManager = getCore().getEventManager();
+                        std::unique_ptr<Event> addedToStage = std::make_unique<Event>(EventType::AddedToStage, p_child);
+                        addedToStage->setRelatedTarget(stageHandle);
+                        eventManager.dispatchEvent(std::move(addedToStage), p_child);
+                    }
+                }
             }
         }
     } // IDisplayObject::attachChild_(DomHandle p_child, DomHandle p_parent, bool useWorld, int worldX, int worldY)
@@ -507,9 +535,42 @@ namespace SDOM
                 auto it = std::find(parentChildren.begin(), parentChildren.end(), orphan);
                 if (it != parentChildren.end()) 
                 {
+                    // Capture parent handle before resetting
+                    DomHandle parentHandle = orphanObj->getParent();
                     // Reset orphan's parent using DomHandle (nullptr)
                     orphanObj->setParent(DomHandle());
                     parentChildren.erase(it); // Remove orphan from parent's children
+
+                    // Dispatch EventType::Removed using dispatchEvent for proper capture/bubble/target
+                    if (orphan) {
+                        auto& eventManager = getCore().getEventManager();
+                        std::unique_ptr<Event> removedEvent = std::make_unique<Event>(EventType::Removed, orphan);
+                        removedEvent->setRelatedTarget(parentHandle);
+                        eventManager.dispatchEvent(std::move(removedEvent), orphan);
+                    }
+
+                    // Dispatch EventType::RemovedFromStage if the orphan was on the active stage
+                    // prior to removal (parent chain included the stage).
+                    DomHandle stageHandle = getCore().getRootNode();
+                    if (stageHandle) 
+                    {
+                        DomHandle cur = parentHandle;
+                        bool wasOnStage = false;
+                        while (cur) 
+                        {
+                            if (cur == stageHandle) { wasOnStage = true; break; }
+                            IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
+                            if (!curObj) break;
+                            cur = curObj->getParent();
+                        }
+                        if (wasOnStage) 
+                        {
+                            auto& eventManager = getCore().getEventManager();
+                            std::unique_ptr<Event> removedFromStage = std::make_unique<Event>(EventType::RemovedFromStage, orphan);
+                            removedFromStage->setRelatedTarget(stageHandle);
+                            eventManager.dispatchEvent(std::move(removedFromStage), orphan);
+                        }
+                    }
                 }
             }
         }
@@ -656,6 +717,7 @@ namespace SDOM
         auto it = targetListeners.find(event.getType());
         if (it != targetListeners.end()) 
         {
+            // DEBUG_LOG("Found " << it->second.size() << " listeners for event '" << event.getTypeName() << "' on node '" << getName() << "'");
             for (const auto& entry : it->second) 
             {
                 entry.listener(event);

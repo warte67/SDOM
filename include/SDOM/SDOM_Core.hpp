@@ -139,6 +139,7 @@ namespace SDOM
 
         // --- Factory & EventManager Access --- //
         Factory& getFactory() const { return *factory_; }
+        EventManager& getEventManager() const { return *eventManager_; }
         bool getIsTraversing() const { return isTraversing_; }
         void setIsTraversing(bool traversing) { isTraversing_ = traversing; }
 

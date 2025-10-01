@@ -27,6 +27,12 @@ namespace SDOM
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::package, sol::lib::io);
         factory_ = new Factory();
         eventManager_ = new EventManager();
+    // Ensure EventType registry is populated (safe for static init order).
+    // NOTE: Each EventType constructor registers itself. Calling
+    // EventType::registerAll() is usually unnecessary, but is invoked
+    // here to guard against static-initialization-order issues and kept
+    // for backward-compatibility.
+    EventType::registerAll();
     }
 
     Core::~Core()
@@ -477,8 +483,18 @@ namespace SDOM
                         }
                     }
 
-                    // POSSIBLE TODO:  add virtual methods to IDisplayObject::onSDL_Event() to specifically 
-                    //      dispatch raw SDL_Events to?
+                    // Dispatch EventType::OnEvent to rootNode_ so global listeners can receive raw SDL_Events
+                    if (eventManager_ && rootNode_)
+                    {
+                        DomHandle rootHandle = getStageHandle();
+                        auto ev = std::make_unique<Event>(EventType::OnEvent, rootHandle);
+                        // std::string evtString = SDL_Utils::eventTypeToString(static_cast<SDL_EventType>(event.type));
+                        // DEBUG_LOG("Core::run() Dispatching OnEvent to rootNode_ for SDL_Event type " + evtString);
+                        // relatedTarget can be the stage handle to give context to listeners
+                        ev->setRelatedTarget(rootHandle);
+                        // Dispatch to event listeners only to avoid duplicating node->onEvent() calls
+                        eventManager_->dispatchEvent(std::move(ev), rootHandle);
+                    }
 
                 }
                 
@@ -498,11 +514,32 @@ namespace SDOM
                 }
                 SDL_SetRenderTarget(renderer_, texture_); // set the render target to the proper background texture
 
+                // Dispatch EventType::OnUpdate to rootNode_ so global listeners can perform actions before updating
+                // and have a chance to stopPropagation before onUpdate() is called.
+                if (eventManager_ && rootNode_)
+                {
+                    DomHandle rootHandle = this->getStageHandle();
+                    auto updateEv = std::make_unique<Event>(EventType::OnUpdate, rootHandle);
+                    updateEv->setElapsedTime(fElapsedTime);
+                    updateEv->setRelatedTarget(rootHandle);
+                    eventManager_->dispatchEvent(std::move(updateEv), rootHandle);
+                }
+
                 // Send Updates
                 onUpdate(fElapsedTime);
 
                 // render the stage and its children
                 onRender();
+
+                // Dispatch EventType::OnRender to rootNode_ so global listeners can perform actions after rendering
+                if (eventManager_ && rootNode_)
+                {
+                    DomHandle rootHandle = this->getStageHandle();
+                    auto renderEv = std::make_unique<Event>(EventType::OnRender, rootHandle);
+                    renderEv->setElapsedTime(fElapsedTime);
+                    renderEv->setRelatedTarget(rootHandle);
+                    eventManager_->dispatchEvent(std::move(renderEv), rootHandle);
+                }
 
                 // present this stage
                 if (renderer_ && texture_) 
@@ -600,11 +637,14 @@ namespace SDOM
     {
         // Lambda for recursive quit handling using std::function
         std::function<void(IDisplayObject&)> handleQuit;
-        handleQuit = [&handleQuit](IDisplayObject& node) {
+        handleQuit = [&handleQuit](IDisplayObject& node) 
+        {
             node.onQuit();
-            for (const auto& child : node.getChildren()) {
+            for (const auto& child : node.getChildren()) 
+            {
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
-                if (childObj) {
+                if (childObj) 
+                {
                     handleQuit(*childObj);
                 }
             }
@@ -613,6 +653,26 @@ namespace SDOM
         // Call the users registered quit function if available
         if (fnOnQuit)
             fnOnQuit();
+
+        // Dispatch a global OnQuit event so any event listeners (including global listeners)
+        // can perform cleanup before individual onQuit() methods are called.
+        if (eventManager_)
+        {
+            // Use the root node as the target for the global dispatch if available
+            DomHandle rootHandle;
+            if (rootNode_)
+            {
+                // create a DomHandle referring to the root node
+                rootHandle = DomHandle(rootNode_);
+            }
+
+            auto quitEvent = std::make_unique<Event>(EventType::OnQuit, rootHandle);
+            // relatedTarget can be the root/stage handle too (useful to listeners)
+            quitEvent->setRelatedTarget(rootHandle);
+
+            // Dispatch via the central dispatch so global events reach both nodes and event-listeners
+            eventManager_->dispatchEvent(std::move(quitEvent), rootHandle);
+        }
 
         // Call recursive quit on the root node (if it exists)
         IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
@@ -681,6 +741,7 @@ namespace SDOM
     void Core::onEvent(Event& event)
     {
         // -- Let the event dispatcher handle event propagation --
+        // NOTE:  This never gets called...
 
         // // Lambda for recursive event handling using std::function
         // std::function<void(IDisplayObject&)> handleEvent;
@@ -1209,127 +1270,132 @@ namespace SDOM
         objHandleType["createDisplayObject"] = [](Core& core, const std::string& typeName, const sol::table& cfg) {
             return createDisplayObject_lua(typeName, cfg);
         };
-    objHandleType["getDisplayObjectHandle"] = &getDisplayObjectHandle_lua;
+
+        objHandleType["getDisplayObjectHandle"] = &getDisplayObjectHandle_lua;
         objHandleType["getStageHandle"] = &getStageHandle_lua;
         objHandleType["hasDisplayObject"] = &hasDisplayObject_lua;
         objHandleType["destroyDisplayObject"] = &destroyDisplayObject_lua;
         objHandleType["pumpEventsOnce"] = [](Core& core) { pumpEventsOnce_lua(core); };
-    // Allow both method (colon) and function (dot) call styles in Lua:
-    // - Core:run() => passes the Core userdata as first arg (calls run on that instance)
-    // - Core.run() => no args; call the singleton's run() for convenience
-    // Expose run to Lua with multiple signatures:
-    // - Core:run()                (method, no args)
-    // - Core:run(table)           (method, table config)
-    // - Core:run(string)          (method, filename or script)
-    // - Core.run()                (function-style, forwards to singleton)
-    // - Core.run(table)           (function-style, singleton)
-    // - Core.run(string)          (function-style, singleton)
-    objHandleType["run"] = sol::overload(
-        [](Core& core) { run_lua(core); },
-        [](Core& core, const sol::table& cfg) { core.run(cfg); },
-        [](Core& core, const std::string& s) { core.run(s); },
-        []() { Core::getInstance().run(); },
-        [](const sol::table& cfg) { Core::getInstance().run(cfg); },
-        [](const std::string& s) { Core::getInstance().run(s); }
-    );
+
+        // Allow both method (colon) and function (dot) call styles in Lua:
+        // - Core:run() => passes the Core userdata as first arg (calls run on that instance)
+        // - Core.run() => no args; call the singleton's run() for convenience
+        // Expose run to Lua with multiple signatures:
+        // - Core:run()                (method, no args)
+        // - Core:run(table)           (method, table config)
+        // - Core:run(string)          (method, filename or script)
+        // - Core.run()                (function-style, forwards to singleton)
+        // - Core.run(table)           (function-style, singleton)
+        // - Core.run(string)          (function-style, singleton)
+        objHandleType["run"] = sol::overload(
+            [](Core& core) { run_lua(core); },
+            [](Core& core, const sol::table& cfg) { core.run(cfg); },
+            [](Core& core, const std::string& s) { core.run(s); },
+            []() { Core::getInstance().run(); },
+            [](const sol::table& cfg) { Core::getInstance().run(cfg); },
+            [](const std::string& s) { Core::getInstance().run(s); }
+        );
+
         objHandleType["pushMouseEvent"] = [](Core& core, const sol::object& args) { pushMouseEvent_lua(core, args); };
-    objHandleType["pushKeyboardEvent"] = [](Core& core, const sol::object& args) { pushKeyboardEvent_lua(core, args); };
-            // Configuration helpers: support both method (Core:configure(tbl)) and
-            // function-style calls (Core.configure(tbl)) by providing overloads.
-            objHandleType["configure"] = sol::overload(
-                [](Core& core, const sol::table& cfg) { core.configureFromLua(cfg); },
-                [](const sol::table& cfg) { Core::getInstance().configureFromLua(cfg); }
-            );
-            objHandleType["configureFromFile"] = sol::overload(
-                [](Core& core, const std::string& filename) { core.configureFromLuaFile(filename); },
-                [](const std::string& filename) { Core::getInstance().configureFromLuaFile(filename); }
-            );
-            // Callback / Hook registration bindings
-            objHandleType["registerOnInit"] = sol::overload(
-                [](Core& /*core*/, const sol::function& f) {
-                    registerOnInit_lua([f]() -> bool {
-                        sol::protected_function pf = f;
-                        sol::protected_function_result r = pf();
-                        if (!r.valid()) {
-                            sol::error err = r;
-                            ERROR(std::string("Lua registerOnInit error: ") + err.what());
-                            return false;
-                        }
-                        try { return r.get<bool>(); } catch (...) { return false; }
-                    });
-                },
-                [](const sol::function& f) {
-                    registerOnInit_lua([f]() -> bool {
-                        sol::protected_function pf = f;
-                        sol::protected_function_result r = pf();
-                        if (!r.valid()) {
-                            sol::error err = r;
-                            ERROR(std::string("Lua registerOnInit error: ") + err.what());
-                            return false;
-                        }
-                        try { return r.get<bool>(); } catch (...) { return false; }
-                    });
-                }
-            );
-            objHandleType["registerOnQuit"] = sol::overload(
-                [](Core& /*core*/, const sol::function& f) {
-                    registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } });
-                },
-                [](const sol::function& f) {
-                    registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } });
-                }
-            );
-            objHandleType["registerOnUpdate"] = sol::overload(
-                [](Core& /*core*/, const sol::function& f) {
-                    registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } });
-                },
-                [](const sol::function& f) {
-                    registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } });
-                }
-            );
-            objHandleType["registerOnEvent"] = sol::overload(
-                [](Core& /*core*/, const sol::function& f) {
-                    registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } });
-                },
-                [](const sol::function& f) {
-                    registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } });
-                }
-            );
-            objHandleType["registerOnRender"] = sol::overload(
-                [](Core& /*core*/, const sol::function& f) {
-                    registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } });
-                },
-                [](const sol::function& f) {
-                    registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } });
-                }
-            );
-            objHandleType["registerOnUnitTest"] = sol::overload(
-                [](Core& /*core*/, const sol::function& f) {
-                    registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
-                },
-                [](const sol::function& f) {
-                    registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
-                }
-            );
-            objHandleType["registerOnWindowResize"] = sol::overload(
-                [](Core& /*core*/, const sol::function& f) {
-                    registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } });
-                },
-                [](const sol::function& f) {
-                    registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } });
-                }
-            );
-            // Generic registration helper: Core:registerOn("Update", func) style
-            objHandleType["registerOn"] = sol::overload(
-                [](Core& /*core*/, const std::string& name, const sol::function& f) { registerOn_lua(name, f); },
-                [](const std::string& name, const sol::function& f) { registerOn_lua(name, f); }
-            );
+        objHandleType["pushKeyboardEvent"] = [](Core& core, const sol::object& args) { pushKeyboardEvent_lua(core, args); };
+
+        // Configuration helpers: support both method (Core:configure(tbl)) and
+        // function-style calls (Core.configure(tbl)) by providing overloads.
+        objHandleType["configure"] = sol::overload(
+            [](Core& core, const sol::table& cfg) { core.configureFromLua(cfg); },
+            [](const sol::table& cfg) { Core::getInstance().configureFromLua(cfg); }
+        );
+        objHandleType["configureFromFile"] = sol::overload(
+            [](Core& core, const std::string& filename) { core.configureFromLuaFile(filename); },
+            [](const std::string& filename) { Core::getInstance().configureFromLuaFile(filename); }
+        );
+        // Callback / Hook registration bindings
+        objHandleType["registerOnInit"] = sol::overload(
+            [](Core& /*core*/, const sol::function& f) {
+                registerOnInit_lua([f]() -> bool {
+                    sol::protected_function pf = f;
+                    sol::protected_function_result r = pf();
+                    if (!r.valid()) {
+                        sol::error err = r;
+                        ERROR(std::string("Lua registerOnInit error: ") + err.what());
+                        return false;
+                    }
+                    try { return r.get<bool>(); } catch (...) { return false; }
+                });
+            },
+            [](const sol::function& f) {
+                registerOnInit_lua([f]() -> bool {
+                    sol::protected_function pf = f;
+                    sol::protected_function_result r = pf();
+                    if (!r.valid()) {
+                        sol::error err = r;
+                        ERROR(std::string("Lua registerOnInit error: ") + err.what());
+                        return false;
+                    }
+                    try { return r.get<bool>(); } catch (...) { return false; }
+                });
+            }
+        );
+        objHandleType["registerOnQuit"] = sol::overload(
+            [](Core& /*core*/, const sol::function& f) {
+                registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } });
+            },
+            [](const sol::function& f) {
+                registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } });
+            }
+        );
+        objHandleType["registerOnUpdate"] = sol::overload(
+            [](Core& /*core*/, const sol::function& f) {
+                registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } });
+            },
+            [](const sol::function& f) {
+                registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } });
+            }
+        );
+        objHandleType["registerOnEvent"] = sol::overload(
+            [](Core& /*core*/, const sol::function& f) {
+                registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } });
+            },
+            [](const sol::function& f) {
+                registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } });
+            }
+        );
+        objHandleType["registerOnRender"] = sol::overload(
+            [](Core& /*core*/, const sol::function& f) {
+                registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } });
+            },
+            [](const sol::function& f) {
+                registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } });
+            }
+        );
+        objHandleType["registerOnUnitTest"] = sol::overload(
+            [](Core& /*core*/, const sol::function& f) {
+                registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
+            },
+            [](const sol::function& f) {
+                registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
+            }
+        );
+        objHandleType["registerOnWindowResize"] = sol::overload(
+            [](Core& /*core*/, const sol::function& f) {
+                registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } });
+            },
+            [](const sol::function& f) {
+                registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } });
+            }
+        );
+        // Generic registration helper: Core:registerOn("Update", func) style
+        objHandleType["registerOn"] = sol::overload(
+            [](Core& /*core*/, const std::string& name, const sol::function& f) { registerOn_lua(name, f); },
+            [](const std::string& name, const sol::function& f) { registerOn_lua(name, f); }
+        );
         objHandleType["getPropertyNamesForType"] = [](Core& core, const std::string& t) { return core.getPropertyNamesForType(t); };
         objHandleType["getCommandNamesForType"] = [](Core& core, const std::string& t) { return core.getCommandNamesForType(t); };
         objHandleType["getFunctionNamesForType"] = [](Core& core, const std::string& t) { return core.getFunctionNamesForType(t); };
-    // Bind commonly-used factory wrapper directly so Lua calls like
-    // Core:createDisplayObject("Box", {...}) work as expected.
-    objHandleType["createDisplayObject"] = sol::resolve<DomHandle(const std::string&, const sol::table&)>(&Core::createDisplayObject);
+
+        // Bind commonly-used factory wrapper directly so Lua calls like
+        // Core:createDisplayObject("Box", {...}) work as expected.
+        objHandleType["createDisplayObject"] = sol::resolve<DomHandle(const std::string&, const sol::table&)>(&Core::createDisplayObject);
         this->objHandleType_ = objHandleType; // Save in IDataObject
 
         // 2. Do NOT call SUPER::_registerLua(typeName, lua);
@@ -1583,13 +1649,22 @@ namespace SDOM
     lua[typeName] = sol::make_object(lua, this);
 
         // Expose EventType constants to Lua as a table (so Lua code can use EventType.MouseClick)
+        // Use centralized registration on Event to create the usertypes and
+        // convenience properties/methods. This keeps event binding logic in one
+        // place and avoids duplicating registration in Core.
         try {
-            sol::usertype<EventType> et_ut = lua.new_usertype<EventType>("EventType", sol::no_constructor);
+            Event::registerLua(lua);
+
+            // Populate EventType table from registry
             sol::table etbl = lua.create_table();
-            etbl["MouseClick"] = sol::make_object(lua, std::ref(EventType::MouseClick));
-            etbl["MouseButtonDown"] = sol::make_object(lua, std::ref(EventType::MouseButtonDown));
-            etbl["MouseButtonUp"] = sol::make_object(lua, std::ref(EventType::MouseButtonUp));
-            etbl["MouseMove"] = sol::make_object(lua, std::ref(EventType::MouseMove));
+            const auto& reg = EventType::getRegistry();
+            for (const auto& kv : reg) {
+                const std::string& name = kv.first;
+                EventType* ptr = kv.second;
+                if (ptr) {
+                    etbl[name] = sol::make_object(lua, std::ref(*ptr));
+                }
+            }
             lua["EventType"] = etbl;
         } catch (...) {
             // non-fatal if event type binding fails

@@ -261,6 +261,11 @@ namespace SDOM
             return *this;
         }
 
+        // Register Lua bindings for Event and EventType
+        // This registers the Event userdata and convenience properties/methods
+        // so Lua scripts can use evt.dt, evt.type, evt.target, evt.name, and evt:getName().
+        static void registerLua(sol::state_view lua);
+
     };
 
 } // namespace SDOM

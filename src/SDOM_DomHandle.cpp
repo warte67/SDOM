@@ -240,8 +240,15 @@ namespace SDOM
             sol::function fn = t["listener"].get<sol::function>();
             bool useCapture = t["useCapture"].get_or(false);
             int priority = t["priority"].get_or(0);
-            // wrap the sol::function into a std::function
-            target->addEventListener(et, [fn](Event& e) { fn(e); }, useCapture, priority);
+            // wrap the sol::function into a std::function using a protected call
+            target->addEventListener(et, [fn](Event& e) mutable {
+                sol::protected_function pf = fn;
+                sol::protected_function_result r = pf(e);
+                if (!r.valid()) {
+                    sol::error err = r;
+                    ERROR(std::string("Lua listener error: ") + err.what());
+                }
+            }, useCapture, priority);
         };
 
         objHandleType_["removeChild"] = [](DomHandle& dh, sol::object arg) {
