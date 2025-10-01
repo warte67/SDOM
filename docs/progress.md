@@ -318,7 +318,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Verified: rebuilt the examples and test binary after these changes (`./compile` in `examples/test`) — build completed and `prog` produced successfully.
 
 
-
 ## Short-term TODO (next steps)
         - UnitTest modules for `EventType` and `Event` has been scaffolded. Ready to start implementing comprehensive testing.
         - Expand Event Lua binding (mouse_x, mouse_y, button, payload, stopPropagation, disableDefaultBehavior).
@@ -326,7 +325,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Consider adding an API so dispatch returns status (or a shared/inspectable Event) allowing listeners to cancel core default
         - Add unit tests validating lifecycle-event delivery (including orphaned objects).
         - Add runtime debug toggle (Core::setDebugEnabled or similar) to control DEBUG_LOG without recompilation.
-        
+        - Clean up Core: registerLua() and IDisplayObject::registerLua() be quite a lot more organized and maintainable.
 
 
 ## Garbage Collection / Orphan Retention
