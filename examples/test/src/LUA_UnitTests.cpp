@@ -158,13 +158,15 @@ namespace SDOM {
         return UnitTests::run("Lua: test # 7", "Verify getCommandNamesForType(blueishBox)", [=]() { return ok; });
     }
 
-    bool test8_Lua() {
+    bool test8_Lua() 
+    {
         // This test synthesizes an SDL mouse down + up sequence at the center of blueishBox
         // and pumps events once to cause the EventManager to generate a MouseClick which
         // should be caught by Box's listener and increment its test counter.
         using namespace SDOM;
         // reset counter
         Box::resetTestClickCount();
+
 
         // Determine blueishBox center from the object in the factory
         DomHandle box = Core::getInstance().getDisplayObjectHandle("blueishBox");

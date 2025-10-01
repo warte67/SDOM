@@ -356,6 +356,7 @@ void SDOM::Event::registerLua(sol::state_view lua)
 
         if (!lua["Event"].valid()) {
             lua.new_usertype<Event>("Event", sol::no_constructor,
+                // existing convenience properties
                 "dt", sol::property([](const Event& e) { return e.getElapsedTime(); }),
                 "type", sol::property([](const Event& e) { return e.getTypeName(); }),
                 "target", sol::property([](const Event& e) { return e.getTarget(); }),
@@ -371,6 +372,7 @@ void SDOM::Event::registerLua(sol::state_view lua)
                         return sol::object(lua, sol::lua_nil);
                     }
                 }),
+                // name helpers
                 "name", sol::property([](const Event& e) {
                     try {
                         DomHandle dh = e.getTarget();
@@ -391,8 +393,89 @@ void SDOM::Event::registerLua(sol::state_view lua)
                     }
                     return e.getTypeName();
                 },
-                "getElapsedTime", &Event::getElapsedTime
-                , sol::meta_function::pairs, [](const Event& e, sol::this_state ts) {
+
+                // Payload accessors
+                // getPayload requires access to the Lua state to return a sol::table safely
+                "getPayload", [](const Event& e, sol::this_state ts) -> sol::object {
+                    sol::state_view sv(ts);
+                    try {
+                        return sol::object(sv, e.getPayload());
+                    } catch (...) {
+                        return sol::object(sv, sv.create_table());
+                    }
+                },
+                "setPayload", [](Event& e, const sol::table& t) { e.setPayload(t); return e; },
+
+                // Mouse event accessors (methods)
+                "getMouseX", &Event::getMouseX,
+                "setMouseX", &Event::setMouseX,
+                "getMouseY", &Event::getMouseY,
+                "setMouseY", &Event::setMouseY,
+                "getWheelX", &Event::getWheelX,
+                "setWheelX", &Event::setWheelX,
+                "getWheelY", &Event::getWheelY,
+                "setWheelY", &Event::setWheelY,
+                "getDragOffsetX", &Event::getDragOffsetX,
+                "setDragOffsetX", &Event::setDragOffsetX,
+                "getDragOffsetY", &Event::getDragOffsetY,
+                "setDragOffsetY", &Event::setDragOffsetY,
+                "getClickCount", &Event::getClickCount,
+                "setClickCount", &Event::setClickCount,
+                "getButton", &Event::getButton,
+                "setButton", &Event::setButton,
+
+                // Keyboard accessors (methods)
+                "getScanCode", &Event::getScanCode,
+                "setScanCode", &Event::setScanCode,
+                "getKeycode", &Event::getKeycode,
+                "setKeycode", &Event::setKeycode,
+                "getKeymod", &Event::getKeymod,
+                "setKeymod", &Event::setKeymod,
+                "getAsciiCode", &Event::getAsciiCode,
+                "setAsciiCode", &Event::setAsciiCode,
+
+                // Core/default accessors (methods)
+                "getType", &Event::getType,
+                "getTypeName", &Event::getTypeName,
+                "getPhaseString", &Event::getPhaseString,
+                "getPhase", &Event::getPhase,
+                "setPhase", &Event::setPhase,
+                "getTarget", &Event::getTarget,
+                "setTarget", &Event::setTarget,
+                "getCurrentTarget", &Event::getCurrentTarget,
+                "setCurrentTarget", &Event::setCurrentTarget,
+                "getRelatedTarget", &Event::getRelatedTarget,
+                "setRelatedTarget", &Event::setRelatedTarget,
+                "isPropagationStopped", &Event::isPropagationStopped,
+                "stopPropagation", &Event::stopPropagation,
+                "isDefaultBehaviorDisabled", &Event::isDefaultBehaviorDisabled,
+                "setDisableDefaultBehavior", &Event::setDisableDefaultBehavior,
+                "getUseCapture", &Event::getUseCapture,
+                "setUseCapture", &Event::setUseCapture,
+                "getElapsedTime", &Event::getElapsedTime,
+                "setElapsedTime", &Event::setElapsedTime,
+                "getSDLEvent", &Event::getSDL_Event,
+                "setSDLEvent", &Event::setSDL_Event,
+
+                // Lower-camelcase properties (convenience) - readable and writable where applicable
+                "mouse_x", sol::property(&Event::getMouseX, &Event::setMouseX),
+                "mouse_y", sol::property(&Event::getMouseY, &Event::setMouseY),
+                "wheel_x", sol::property(&Event::getWheelX, &Event::setWheelX),
+                "wheel_y", sol::property(&Event::getWheelY, &Event::setWheelY),
+                "drag_offset_x", sol::property(&Event::getDragOffsetX, &Event::setDragOffsetX),
+                "drag_offset_y", sol::property(&Event::getDragOffsetY, &Event::setDragOffsetY),
+                "click_count", sol::property(&Event::getClickCount, &Event::setClickCount),
+                "button", sol::property(&Event::getButton, &Event::setButton),
+                "scan_code", sol::property(&Event::getScanCode, &Event::setScanCode),
+                "keycode", sol::property(&Event::getKeycode, &Event::setKeycode),
+                "keymod", sol::property(&Event::getKeymod, &Event::setKeymod),
+                "ascii_code", sol::property(&Event::getAsciiCode, &Event::setAsciiCode),
+                // Targets as lower-camelcase properties for Lua convenience
+                "currentTarget", sol::property(&Event::getCurrentTarget, &Event::setCurrentTarget),
+                "relatedTarget", sol::property(&Event::getRelatedTarget, &Event::setRelatedTarget),
+
+                // maintain previous pairs meta-function
+                sol::meta_function::pairs, [](const Event& e, sol::this_state ts) {
                     sol::state_view lua(ts);
                     sol::table t = lua.create_table();
                     try {

@@ -303,11 +303,26 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Fixed compile regressions introduced during iteration; rebuilt examples/test successfully.
         - Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.
 
+**[October 1, 2025]**
+    - Lua/Event binding & SDL event exposure (today):
+        - Expanded `SDL_Utils::eventToLuaTable()` to expose many SDL3 event fields to Lua (mouse, keyboard, gamepad, pen, touch, camera, audio, sensor, render, user, etc.).
+        - Centralized `Event` Lua usertype creation in `SDOM::Event::registerLua()` and added bindings for the full set of Event accessors and mutators so Lua can call methods like `evt:getMouseX()` and use properties `evt.mouseX`.
+        - Added `Event::getName()` (C++ implementation) and switched the Lua `name` property to use the member-pointer binding (single source of truth + proper locking).
+        - Implemented safe `getPayload`/`setPayload` Lua bindings (payload returned as a Lua table via the current Lua state to avoid lifetime issues).
+        - Exposed lower-camelcase convenience properties (e.g., `mouse_x`, `mouse_y`, `wheel_x`, `click_count`, `click_count`, `ascii_code`, etc) as `sol::property` pairs for readable/writable access from Lua.
+        - Verified the project builds cleanly after these changes (`./compile` run in `examples/test` succeeded and unit tests built/run as part of the test binary).
+    - Notes:
+        - Where getters return Lua-managed objects (like `sol::table` payloads) we kept lambda bindings so we can safely create `sol::object` tied to the current `sol::state`.
+        - `SDL_Utils` still exposes `eventToLuaTable` as a Lua helper table (`SDL`/`SDL_Utils`) for direct use; `Event::registerLua()` uses the C++ helper internally for the `sdl` property.
+        - Example update: `examples/test/lua/callbacks/listener_callbacks.lua` was adjusted to colorize the "target:" label using the DomHandle `getColor()` Lua binding and `CLR.fg_rgb(r,g,b)`; the code uses `pcall` fallbacks so it degrades gracefully when color or handle info is unavailable.
+        - Verified: rebuilt the examples and test binary after these changes (`./compile` in `examples/test`) — build completed and `prog` produced successfully.
+
 
 
 ## Short-term TODO (next steps)
         - UnitTest modules for `EventType` and `Event` has been scaffolded. Ready to start implementing comprehensive testing.
         - Expand Event Lua binding (mouse_x, mouse_y, button, payload, stopPropagation, disableDefaultBehavior).
+         - Expand Event Lua binding (remaining helpers / convenience accessors) — largely done (see Oct 1, 2025); consider adding `getPayloadValue`/`setPayloadValue` Lua helpers if desired.
         - Consider adding an API so dispatch returns status (or a shared/inspectable Event) allowing listeners to cancel core default
         - Add unit tests validating lifecycle-event delivery (including orphaned objects).
         - Add runtime debug toggle (Core::setDebugEnabled or similar) to control DEBUG_LOG without recompilation.

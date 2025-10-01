@@ -70,6 +70,15 @@ local config = {
                         width = 250,
                         height = 225,
                         color = { r = 50, g = 50, b = 200, a = 255 }
+                    },
+                    {
+                        type = "Box",
+                        name = "orangishBox",
+                        x = 40,
+                        y = 200,
+                        width = 100,
+                        height = 75,
+                        color = { r = 200, g = 100, b = 50, a = 255 }
                     }
                 }
             },

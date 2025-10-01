@@ -65,17 +65,44 @@ end
 
 function M.on_click(evt)
     -- called when a mouse click event is received
+    -- Helper to pretty-print DomHandle values safely
+    local function prettyHandle(h)
+        if h == nil then return "nil" end
+        -- DomHandle exposes isValid() and getName() in the Lua binding
+        local ok = pcall(function() return h:isValid() end)
+        if ok then
+            if h:isValid() then
+                local name_ok, name = pcall(function() return h:getName() end)
+                if name_ok and name and name ~= "" then return name end
+                return "DomHandle(valid)"
+            end
+            return "DomHandle(invalid)"
+        end
+        -- Fallback to tostring when methods aren't available
+        return tostring(h)
+    end
     print("LUA: received event type: " .. evt.type .. "  name: " .. evt.name )
+    if evt.sdl and evt.sdl.button then
+        print("At X:" .. evt.sdl.button.x .. "  Y: " .. evt.sdl.button.y)
+        -- Colorize the "target:" label using the target's color if available
+        local function colorPrefixForHandle(h)
+            if not h then return "" end
+            local ok, c = pcall(function() return h:getColor() end)
+            if ok and c then
+                -- SDL_Color exposes r,g,b (0-255)
+                local ok2, seq = pcall(function() return CLR.fg_rgb(c.r, c.g, c.b) end)
+                if ok2 and seq then return seq end
+            end
+            return ""
+        end
 
-    -- -- Generic event handler example
-    -- if evt.sdl and evt.sdl.type then
-    --     print("SDL Event: " .. evt.sdl.type .. "  name: " ..evt.name)
-    --     if evt.sdl.button then
-    --         print("At X:" .. evt.sdl.button.x .. "  Y: " .. evt.sdl.button.y)
-    --     end
-    -- else
-    --     print("LUA.on_click(): received event with no SDL payload, name: " .. tostring(evt.name))
-    -- end    
+        local prefix = colorPrefixForHandle(evt.target)
+        local suffix = prefix ~= "" and CLR.RESET or ""
+        print(prefix .. "target: " .. prettyHandle(evt.target) .. suffix)
+        print("relatedTarget: " .. prettyHandle(evt.relatedTarget))
+        print("currentTarget: " .. prettyHandle(evt.currentTarget))
+        print("evt.sdl.button.which: " .. tostring(evt.sdl.button.which) .. "  button: " .. tostring(evt.sdl.button.button) .. "  clicks: " .. tostring(evt.sdl.button.clicks))
+    end
 end
 
 
