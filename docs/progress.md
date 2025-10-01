@@ -303,12 +303,17 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Fixed compile regressions introduced during iteration; rebuilt examples/test successfully.
         - Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.
 
+
+
 ## Short-term TODO (next steps)
+        - UnitTest modules for `EventType` and `Event` has been scaffolded. Ready to start implementing comprehensive testing.
         - Expand Event Lua binding (mouse_x, mouse_y, button, payload, stopPropagation, disableDefaultBehavior).
-        - Consider adding an API so dispatch returns status (or a shared/inspectable Event) allowing listeners to cancel core default (onUpdate/onRender).
+        - Consider adding an API so dispatch returns status (or a shared/inspectable Event) allowing listeners to cancel core default
         - Add unit tests validating lifecycle-event delivery (including orphaned objects).
         - Add runtime debug toggle (Core::setDebugEnabled or similar) to control DEBUG_LOG without recompilation.
         
+
+
 ## Garbage Collection / Orphan Retention
 
 Proposed approach: add an `OrphanRetentionPolicy` enum (or a smaller `retainOnOrphan` boolean for a quick win) on `IDisplayObject` and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.

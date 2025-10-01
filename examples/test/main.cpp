@@ -62,6 +62,8 @@ int main()
     lua["Box_UnitTests"] = &SDOM::Box_UnitTests;
     lua["LUA_UnitTests"] = &SDOM::LUA_UnitTests;
     lua["DomHandle_UnitTests"] = &SDOM::DomHandle_UnitTests;
+    lua["EventType_UnitTests"] = &SDOM::EventType_UnitTests;
+    lua["Event_UnitTests"] = &SDOM::Event_UnitTests;
 
     // Configure the Core from a Lua config file
     core.run("lua/config.lua");

@@ -112,13 +112,11 @@ namespace SDOM
         static EventType OnEvent;           // OnEvent is Dispatched to EventListeners
         static EventType OnUpdate;          // OnUpdate is Dispatched to EventListeners
         static EventType OnRender;          // OnRender is Dispatched to EventListeners
-        static EventType OnPreRender;       // OnPreRender is Dispatched to EventListeners (before stage children render)
-
+        static EventType OnPreRender;       // OnPreRender is Dispatched to EventListeners 
+                                            // (before stage children render)
 
         // Custom User event types
-        static EventType User;            // custom user event type
-
-
+        static EventType User;              // custom user event type
                
         explicit EventType(const std::string& name) 
             : name(name), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
@@ -149,20 +147,20 @@ namespace SDOM
         // Return the internal registry mapping event name -> EventType*
         static const std::unordered_map<std::string, EventType*>& getRegistry() { return registry; }
 
-    // // Ensure all predefined EventType static instances are inserted into
-    // // the registry. Calling this from startup code avoids static
-    // // initialization order issues on some platforms.
-    // // NOTE: Each EventType constructor already registers itself via
-    // // registerEventType(name, this). This helper is therefore
-    // // usually redundant, but is retained here to force initialization
-    // ///ODR-use of the predefined statics in cases where static
-    // // initialization order across translation units could lead to an
-    // // empty registry. It is kept for backward-compatibility and safety.
-    // static void registerAll();
+        // // Ensure all predefined EventType static instances are inserted into
+        // // the registry. Calling this from startup code avoids static
+        // // initialization order issues on some platforms.
+        // // NOTE: Each EventType constructor already registers itself via
+        // // registerEventType(name, this). This helper is therefore
+        // // usually redundant, but is retained here to force initialization
+        // ///ODR-use of the predefined statics in cases where static
+        // // initialization order across translation units could lead to an
+        // // empty registry. It is kept for backward-compatibility and safety.
+        // static void registerAll();
 
-    // Register EventType usertype/table in a Lua state so scripts can
-    // access EventType constants and query properties.
-    static void registerLua(sol::state_view lua);
+        // Register EventType usertype/table in a Lua state so scripts can
+        // access EventType constants and query properties.
+        static void registerLua(sol::state_view lua);
 
         // getters
         bool getCaptures() const;

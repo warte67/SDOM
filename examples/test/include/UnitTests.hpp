@@ -10,5 +10,7 @@ namespace SDOM
     bool Box_UnitTests();
     bool LUA_UnitTests();
     bool DomHandle_UnitTests();
+    bool EventType_UnitTests();
+    bool Event_UnitTests();
     // add more unit tests here as needed ...
 }
