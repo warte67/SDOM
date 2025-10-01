@@ -176,6 +176,7 @@ namespace SDOM
         void addEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false, int priority = 0);
         void removeEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false);
         void triggerEventListeners(Event& event, bool useCapture);
+        bool hasEventListeners(const EventType& type, bool useCapture) const;
 
         // --- Hierarchy Management --- //
         void addChild(DomHandle child, bool useWorld = false, int worldX = 0, int worldY = 0);

@@ -280,6 +280,21 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Replaced inline lambdas in examples with named callbacks in examples/test/lua/callbacks/listener_callbacks.lua.
         - Wrapped all Lua callback invocations with sol::protected_function to log Lua errors (no silent failures).
         - Fixed multiple example Lua issues (missing 'end' in render.lua, undefined EMA vars) so OnUpdate/OnEvent/OnRender prints now appear as expected.
+    - **Event Types & Listener Semantics:**
+        - New lifecycle/event hooks added for fine‑grained listener control:
+        - OnPreRender — listener‑only, per‑node. Fired immediately after a node renders itself and before its children are rendered (useful for backgrounds or setup that should appear under children).
+        - OnRender — listener‑only, per‑node. Fired after a node and all its children have been rendered and before present (useful for overlays, HUDs, screenshots).
+        - OnUpdate — per‑node. Listeners run first for the node, then the node's default onUpdate runs (listeners may call disableDefaultBehavior() to prevent the default).
+        - OnEvent — input/event dispatch using capture → target → bubble phases; listeners run before the default onEvent at the target and may stopPropagation()/disableDefaultBehavior().
+        - OnInit / OnQuit — lifecycle hooks: OnInit is emitted after object creation/initialization, OnQuit is dispatched globally during shutdown.
+    - **Semantics and best practices:**
+        - Listener‑only hooks (OnPreRender/OnRender) are dispatched using the event‑listener path so they do not duplicate node->onEvent() behavior.
+        - Listeners receive the same mutable Event instance, so calling stopPropagation() or disableDefaultBehavior() affects subsequent dispatch and default handlers.
+        - Per‑node events are targeted at the node's DomHandle so node‑attached listeners see a meaningful currentTarget.
+        - Lua examples use the table form `{ type = EventType.X, listener = fn }` and can rely on `evt.name` / `evt:getName()` to get a sensible name (target name or type).
+    - **Performance notes:**
+        - Hot paths check for listeners before constructing per‑frame Event objects (hasListeners fast‑path) to avoid unnecessary allocations when no listeners are registered.
+        - Cache Lua wrapper objects at registration time (sol::protected_function) to avoid per‑dispatch wrapper construction in high‑frequency events such as OnUpdate and mouse motion.
     - **Debugging & logging:**
         - Replaced ad-hoc std::cout debug prints with DEBUG_LOG macro and made macro stream-friendly to fix compile-time operator<< usage.
         - Removed or gated noisy temporary debug prints (e.g., pushMouseEvent_lua) and made them controllable so normal runs are not spammy.
@@ -287,15 +302,12 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - **Build & verification:**
         - Fixed compile regressions introduced during iteration; rebuilt examples/test successfully.
         - Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.
-    - **Short-term TODO (next steps):**
+
+## Short-term TODO (next steps)
         - Expand Event Lua binding (mouse_x, mouse_y, button, payload, stopPropagation, disableDefaultBehavior).
         - Consider adding an API so dispatch returns status (or a shared/inspectable Event) allowing listeners to cancel core default (onUpdate/onRender).
         - Add unit tests validating lifecycle-event delivery (including orphaned objects).
         - Add runtime debug toggle (Core::setDebugEnabled or similar) to control DEBUG_LOG without recompilation.
-    - **Notes:**
-        - `registerAll()` remains in place to force-definition of built-in EventType statics and avoid static-init-order pitfalls; user-created EventTypes register themselves on construction and are not affected by registerAll().
-        - Current dispatch design favors predictability and separation between lifecycle callbacks (onUpdate/onRender) and event-listener hooks.
-
         
 ## Garbage Collection / Orphan Retention
 

@@ -86,30 +86,30 @@ namespace SDOM
         Stage* stage = getStage(); //Core::getInstance().getStage();
         if (!stage) return;
 
-        // dispatch global "only" events
-        if (event->getType().getGlobal())
-        {
-            std::cout << CLR::CYAN << "Dispatching global-only event: " << event->getTypeName() << CLR::NORMAL << std::endl;   
+        // // dispatch global "only" events
+        // if (event->getType().getGlobal())
+        // {
+        //     std::cout << CLR::CYAN << "Dispatching global-only event: " << event->getTypeName() << CLR::NORMAL << std::endl;   
 
-            // Dispatch to the stage
-            event->setPhase(Event::Phase::Target);
-            auto eventCopy = std::make_unique<Event>(*event);
-            eventCopy->setPhase(Event::Phase::Target);
-            dispatchEventToAllNodesOnStage(std::move(event));
-            dispatchEventToAllEventListenersOnStage(std::move(eventCopy));
-            return;
-        }
+        //     // Dispatch to the stage
+        //     event->setPhase(Event::Phase::Target);
+        //     auto eventCopy = std::make_unique<Event>(*event);
+        //     eventCopy->setPhase(Event::Phase::Target);
+        //     dispatchEventToAllNodesOnStage(std::move(event));
+        //     dispatchEventToAllEventListenersOnStage(std::move(eventCopy));
+        //     return;
+        // }
 
-        // dispatch event listener only events
-        if (!event->getType().getGlobal()   && !event->getType().getTargetOnly() &&
-            !event->getType().getCaptures() && !event->getType().getBubbles())   
-        {
-            // Dispatch to the active stage
-            auto eventCopy = std::make_unique<Event>(*event);
-            eventCopy->setPhase(Event::Phase::Target);
-            dispatchEventToAllEventListenersOnStage(std::move(eventCopy));
-            return;
-        } 
+        // // dispatch event listener only events
+        // if (!event->getType().getGlobal()   && !event->getType().getTargetOnly() &&
+        //     !event->getType().getCaptures() && !event->getType().getBubbles())   
+        // {
+        //     // Dispatch to the active stage
+        //     auto eventCopy = std::make_unique<Event>(*event);
+        //     eventCopy->setPhase(Event::Phase::Target);
+        //     dispatchEventToAllEventListenersOnStage(std::move(eventCopy));
+        //     return;
+        // } 
 
         // Capture Phase (if this event is even allowed to capture)
         if (event->getType().getCaptures() && !event->getType().getTargetOnly())
@@ -208,7 +208,7 @@ namespace SDOM
                 }
             };
 
-            // Start bubbling from the parent of the target node
+            // Start bubbling from the parent of the target node`
             DomHandle targetHandle = event->getTarget();
             IDisplayObject* targetNode = targetHandle.get();
             if (targetNode && targetNode->getParent() && !event->isPropagationStopped()) 
@@ -265,7 +265,6 @@ namespace SDOM
         dispatchToChildren(stageHandle, event.get());
         getCore().setIsTraversing(false);
     }    
-
 
     bool EventManager::isMouseWithinBounds(IDisplayObject& target) const 
     {

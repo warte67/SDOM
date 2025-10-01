@@ -61,6 +61,7 @@ function M.attach(stage)
     -- C++ binding recognizes the event type and the listener table form.
     stage:addEventListener({ type = EventType.OnUpdate, listener = M.on_update })  -- VERIFIED
     stage:addEventListener({ type = EventType.OnRender, listener = M.on_render })  -- VERIFIED
+    -- stage:addEventListener({ type = EventType.OnPreRender, listener = M.on_render })  -- OnPreRender  VERIFIED
 
     -- Register listener-only events (OnInit/OnQuit/OnEvent) on the stage so global event listeners can receive them
     stage:addEventListener({ type = EventType.OnInit, listener = M.on_init })   -- UNLIKELY

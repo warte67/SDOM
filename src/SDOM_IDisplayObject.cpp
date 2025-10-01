@@ -725,6 +725,14 @@ namespace SDOM
         }
     }
 
+    bool IDisplayObject::hasEventListeners(const EventType& type, bool useCapture) const
+    {
+        const auto& targetListeners = useCapture ? captureEventListeners : bubblingEventListeners;
+        auto it = targetListeners.find(type);
+        if (it == targetListeners.end()) return false;
+        return !it->second.empty();
+    }
+
 
     int IDisplayObject::getMaxPriority() const
     {

@@ -27,12 +27,6 @@ namespace SDOM
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::package, sol::lib::io);
         factory_ = new Factory();
         eventManager_ = new EventManager();
-    // Ensure EventType registry is populated (safe for static init order).
-    // NOTE: Each EventType constructor registers itself. Calling
-    // EventType::registerAll() is usually unnecessary, but is invoked
-    // here to guard against static-initialization-order issues and kept
-    // for backward-compatibility.
-    EventType::registerAll();
     }
 
     Core::~Core()
@@ -514,16 +508,17 @@ namespace SDOM
                 }
                 SDL_SetRenderTarget(renderer_, texture_); // set the render target to the proper background texture
 
-                // Dispatch EventType::OnUpdate to rootNode_ so global listeners can perform actions before updating
-                // and have a chance to stopPropagation before onUpdate() is called.
-                if (eventManager_ && rootNode_)
-                {
-                    DomHandle rootHandle = this->getStageHandle();
-                    auto updateEv = std::make_unique<Event>(EventType::OnUpdate, rootHandle);
-                    updateEv->setElapsedTime(fElapsedTime);
-                    updateEv->setRelatedTarget(rootHandle);
-                    eventManager_->dispatchEvent(std::move(updateEv), rootHandle);
-                }
+                // // MOVED to Core::onUpdate()
+                // // Dispatch EventType::OnUpdate to rootNode_ so global listeners can perform actions before updating
+                // // and have a chance to stopPropagation before onUpdate() is called.
+                // if (eventManager_ && rootNode_)
+                // {
+                //     DomHandle rootHandle = this->getStageHandle();
+                //     auto updateEv = std::make_unique<Event>(EventType::OnUpdate, rootHandle);
+                //     updateEv->setElapsedTime(fElapsedTime);
+                //     updateEv->setRelatedTarget(rootHandle);
+                //     eventManager_->dispatchEvent(std::move(updateEv), rootHandle);
+                // }
 
                 // Send Updates
                 onUpdate(fElapsedTime);
@@ -531,15 +526,16 @@ namespace SDOM
                 // render the stage and its children
                 onRender();
 
-                // Dispatch EventType::OnRender to rootNode_ so global listeners can perform actions after rendering
-                if (eventManager_ && rootNode_)
-                {
-                    DomHandle rootHandle = this->getStageHandle();
-                    auto renderEv = std::make_unique<Event>(EventType::OnRender, rootHandle);
-                    renderEv->setElapsedTime(fElapsedTime);
-                    renderEv->setRelatedTarget(rootHandle);
-                    eventManager_->dispatchEvent(std::move(renderEv), rootHandle);
-                }
+                // // MOVED To Core::onRender()
+                // // Dispatch EventType::OnRender to rootNode_ so global listeners can perform actions after rendering
+                // if (eventManager_ && rootNode_)
+                // {
+                //     DomHandle rootHandle = this->getStageHandle();
+                //     auto renderEv = std::make_unique<Event>(EventType::OnRender, rootHandle);
+                //     renderEv->setElapsedTime(fElapsedTime);
+                //     renderEv->setRelatedTarget(rootHandle);
+                //     eventManager_->dispatchEvent(std::move(renderEv), rootHandle);
+                // }
 
                 // present this stage
                 if (renderer_ && texture_) 
@@ -589,8 +585,8 @@ namespace SDOM
     void Core::pumpEventsOnce()
     {
         SDL_Event event;
-// // Apply any pending configuration requested from other threads
-// applyPendingConfig();
+        // // Apply any pending configuration requested from other threads
+        // applyPendingConfig();
 
         while (SDL_PollEvent(&event))
         {
@@ -687,8 +683,6 @@ namespace SDOM
         shutdown_SDL();
     }
 
-
-
     void Core::onRender()
     {
         SDL_Renderer* renderer = getRenderer();
@@ -698,8 +692,22 @@ namespace SDOM
         // Lambda for recursive render handling using std::function
         std::function<void(IDisplayObject&)> handleRender;
         SDL_Texture* texture = texture_;
-        handleRender = [&handleRender, renderer, texture](IDisplayObject& node) {
+        handleRender = [this, &handleRender, renderer, texture](IDisplayObject& node) 
+        {
+            // render the node
             node.onRender();
+
+            DomHandle rootHandle = this->getStageHandle();
+            // PreRender EventListeners
+            if (node.hasEventListeners(EventType::OnPreRender, false))
+            {
+                auto preRenderEv = std::make_unique<Event>(EventType::OnPreRender, rootHandle);
+                preRenderEv->setElapsedTime(this->getElapsedTime());
+                preRenderEv->setRelatedTarget(rootHandle);
+                eventManager_->dispatchEvent(std::move(preRenderEv), rootHandle);
+            }
+
+            // render children
             for (const auto& child : node.getChildren()) 
             {
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
@@ -710,6 +718,15 @@ namespace SDOM
                         SDL_SetRenderTarget(renderer, texture);
                     handleRender(*childObj);
                 }
+            }
+
+            // OnRender event listeners
+            if (node.hasEventListeners(EventType::OnRender, false))
+            {
+                auto renderEv = std::make_unique<Event>(EventType::OnRender, rootHandle);
+                renderEv->setElapsedTime(this->getElapsedTime());
+                renderEv->setRelatedTarget(rootHandle);
+                eventManager_->dispatchEvent(std::move(renderEv), rootHandle);        
             }
         };
 
@@ -771,16 +788,31 @@ namespace SDOM
     {
         // Lambda for recursive update handling using std::function
         std::function<void(IDisplayObject&)> handleUpdate;
-        handleUpdate = [&handleUpdate, fElapsedTime](IDisplayObject& node) {
+        handleUpdate = [this, &handleUpdate, fElapsedTime](IDisplayObject& node) 
+        {
+            // Dispatch to event listeners first so they can stopPropagation if needed
+            if (node.hasEventListeners(EventType::OnUpdate, false))
+            {
+                DomHandle rootNode = this->getStageHandle();
+                auto updateEv = std::make_unique<Event>(EventType::OnUpdate, rootNode);
+                updateEv->setElapsedTime(fElapsedTime);
+                updateEv->setRelatedTarget(rootNode);
+                eventManager_->dispatchEvent(std::move(updateEv), rootNode);
+            }
+            
+            // dispatch to the object::onUpdate()
             node.onUpdate(fElapsedTime);
-            for (const auto& child : node.getChildren()) {
+
+            // update children
+            for (const auto& child : node.getChildren()) 
+            {
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
-                if (childObj) {
+                if (childObj) 
+                {
                     handleUpdate(*childObj);
                 }
             }
         };
-
         if (fnOnUpdate)
             fnOnUpdate(fElapsedTime);
         // Call recursive update on the root node (if it exists)

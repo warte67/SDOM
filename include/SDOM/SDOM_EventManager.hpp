@@ -74,6 +74,10 @@ namespace SDOM
         // Dispatch an event to all event listeners on the same stage
         void dispatchEventToAllEventListenersOnStage(std::unique_ptr<Event> event);
 
+        // Returns true if there are any listeners (or node-default handlers)
+        // registered that would receive events of the given type on the current stage.
+        bool hasListeners(const EventType& type) const;
+
         // Utility methods
         bool isMouseWithinBounds(IDisplayObject& target) const;
         DomHandle findTopObjectUnderMouse(DomHandle rootNode, DomHandle excludeNode = DomHandle()) const;

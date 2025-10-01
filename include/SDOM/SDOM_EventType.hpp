@@ -112,68 +112,13 @@ namespace SDOM
         static EventType OnEvent;           // OnEvent is Dispatched to EventListeners
         static EventType OnUpdate;          // OnUpdate is Dispatched to EventListeners
         static EventType OnRender;          // OnRender is Dispatched to EventListeners
+        static EventType OnPreRender;       // OnPreRender is Dispatched to EventListeners (before stage children render)
 
 
         // Custom User event types
         static EventType User;            // custom user event type
 
 
-        // NOTE:
-        //      This information and table will be moved to the constructor of each EventType in the .cpp instead
-        //      of here within the interface .hpp file.  This should help centralize the event type properties.
-        //
-        // 
-        // struct EventTypeProperties
-        // {
-        //     bool Captures;      // Captures by default
-        //     bool Bubbles;       // Bubbles by default
-        //     bool TargetOnly;    // Target-only
-        //     bool Global;        // Global by default
-        // };
-        // const std::unordered_map<EventType, EventTypeProperties> eventTypePropagationTable =
-        // {  //          Event Type:      Captures   Bubbles  TargetOnly  Global
-        //     { EventType::None,              { false, false, false, false }},
-        //     { EventType::SDL_Event,         { false, false, false,  true }},
-        //     { EventType::Quit,              { false, false, false,  true }},
-        //     { EventType::EnterFrame,        { false, false, false, false }},  // only dispatched to eventListeners
-        //     { EventType::MouseButtonUp,     {  true,  true, false, false }},
-        //     { EventType::MouseButtonDown,   {  true,  true, false, false }},
-        //     { EventType::MouseWheel,        {  true,  true, false, false }},
-        //     { EventType::MouseMove,         { false, false,  true, false }},  // target = topmost object under cursor
-        //     { EventType::MouseClick,        {  true,  true, false, false }},
-        //     { EventType::MouseDoubleClick,  {  true,  true, false, false }},
-        //     { EventType::MouseEnter,        { false, false,  true, false }},  // target = Object being entered
-        //     { EventType::MouseLeave,        { false, false,  true, false }},  // target = Object being left
-        //     { EventType::StageClosed,       { false, false, false,  true }},
-        //     { EventType::KeyDown,           {  true,  true, false, false }},
-        //     { EventType::KeyUp,             {  true,  true, false, false }},
-        //     { EventType::Timer,             { false, false, false, false }},  // only dispatched to eventListeners
-        //     { EventType::Tick,              { false, false, false, false }},  // only dispatched to eventListeners
-        //     { EventType::Timeout,           { false, false, false, false }},  // only dispatched to eventListeners
-        //     { EventType::FocusGained,       { false, false,  true, false }},  // target = Object gaining focus
-        //     { EventType::FocusLost,         { false, false,  true, false }},  // target = Object losing focus
-        //     { EventType::Resize,            {  true,  true, false, false }},
-        //     { EventType::Move,              {  true,  true, false, false }},
-        //     { EventType::Show,              { false, false,  true, false }},  // target = Object being shown
-        //     { EventType::Hide,              { false, false,  true, false }},  // target = Object being hidden
-        //     { EventType::EnterFullscreen,   {  true,  true, false, false }},
-        //     { EventType::LeaveFullscreen,   {  true,  true, false, false }},
-        //     { EventType::ValueChanged,      {  true,  true, false, false }},
-        //     { EventType::StateChanged,      {  true,  true, false, false }},
-        //     { EventType::SelectionChanged,  {  true,  true, false, false }},
-        //     { EventType::Enabled,           { false, false,  true, false }},  // target = Object being enabled
-        //     { EventType::Disabled,          { false, false,  true, false }},  // target = Object being disabled
-        //     { EventType::Visible,           {  true,  true, false, false }},
-        //     { EventType::Hidden,            {  true,  true, false, false }},
-        //     { EventType::Drag,              {  true,  true, false, false }},
-        //     { EventType::Dragging,          {  true,  true, false, false }},
-        //     { EventType::Drop,              {  true,  true, false, false }},
-        //     { EventType::ClipboardCopy,     {  true,  true, false, false }},
-        //     { EventType::ClipboardPaste,    {  true,  true, false, false }},
-        //     { EventType::User,              {  true,  true, false, false }}
-        // };
-        // 
-        //
                
         explicit EventType(const std::string& name) 
             : name(name), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
@@ -204,16 +149,16 @@ namespace SDOM
         // Return the internal registry mapping event name -> EventType*
         static const std::unordered_map<std::string, EventType*>& getRegistry() { return registry; }
 
-    // Ensure all predefined EventType static instances are inserted into
-    // the registry. Calling this from startup code avoids static
-    // initialization order issues on some platforms.
-    // NOTE: Each EventType constructor already registers itself via
-    // registerEventType(name, this). This helper is therefore
-    // usually redundant, but is retained here to force initialization
-    ///ODR-use of the predefined statics in cases where static
-    // initialization order across translation units could lead to an
-    // empty registry. It is kept for backward-compatibility and safety.
-    static void registerAll();
+    // // Ensure all predefined EventType static instances are inserted into
+    // // the registry. Calling this from startup code avoids static
+    // // initialization order issues on some platforms.
+    // // NOTE: Each EventType constructor already registers itself via
+    // // registerEventType(name, this). This helper is therefore
+    // // usually redundant, but is retained here to force initialization
+    // ///ODR-use of the predefined statics in cases where static
+    // // initialization order across translation units could lead to an
+    // // empty registry. It is kept for backward-compatibility and safety.
+    // static void registerAll();
 
     // Register EventType usertype/table in a Lua state so scripts can
     // access EventType constants and query properties.
