@@ -38,7 +38,7 @@ namespace SDOM
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
-            [&]() { return GarbageCollection_scaffold(); }    // scaffolding (pseudo-test)
+            [&]() { return GarbageCollection_scaffold(); }    // Garbage Collection Unit Test Scaffolding
 
         };
         for (auto& test : tests) 

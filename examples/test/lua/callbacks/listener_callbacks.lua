@@ -9,12 +9,29 @@ local M = {}
 local ema = nil
 local EMA_ALPHA = 2.0 / (100.0 + 1.0)
 
+local s_iterations = 0
+
 -- Named listener handlers so they can be referenced from other modules or tested directly
 function M.on_update(evt)
     local dt = (evt and evt.dt) or (Core and Core:getElapsedTime() ) or 0
     -- put per-frame stage logic here
-    -- e.g. animate children, update physics, etc.
-    -- print("OnUpdate LUA: " .. tostring(dt))
+
+    
+    -- call this each frame / update
+    s_iterations = s_iterations + 1
+
+    if s_iterations == 25 then
+        local stage = Core:getStageHandle()
+        if stage then
+            local b = Core:getDisplayObjectHandle("blueishBox")
+            if b and stage:hasChild(b) then
+                print("Core.run Info: Stage still has blueishBox after 25 iterations.")
+            else
+                print("Core.run Info: Stage no longer has blueishBox after 25 iterations.")
+            end
+        end
+        Core:shutdown()
+    end
 end
 
 function M.on_prerender(evt)

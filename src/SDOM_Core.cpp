@@ -535,25 +535,24 @@ namespace SDOM
                 factory_->attachFutureChildren(); // Attach future children
                 factory_->garbageCollection(); // Clean up any orphaned objects
 
-                static int s_iterations = 0;
-                if (s_iterations == 25)
-                {
-                    Stage* rootStage = dynamic_cast<Stage*>(rootNode_.get());
-                    if (rootStage)
-                    {
-                        DomHandle blueishBoxHandle = factory_->getDomHandle("blueishBox");
-                        if (rootStage->hasChild(blueishBoxHandle))
-                        {
-                            INFO("Core::run() Info: Stage still has blueishBox after 25 iterations.");
-                        }
-                        else
-                        {
-                            INFO("Core::run() Info: Stage no longer has blueishBox after 25 iterations.");
-                        }   
-                    }
-                }
-
-                s_iterations++;
+                // static int s_iterations = 0;
+                // if (s_iterations == 25)
+                // {
+                //     Stage* rootStage = dynamic_cast<Stage*>(rootNode_.get());
+                //     if (rootStage)
+                //     {
+                //         DomHandle blueishBoxHandle = factory_->getDomHandle("blueishBox");
+                //         if (rootStage->hasChild(blueishBoxHandle))
+                //         {
+                //             INFO("Core::run() Info: Stage still has blueishBox after 25 iterations.");
+                //         }
+                //         else
+                //         {
+                //             INFO("Core::run() Info: Stage no longer has blueishBox after 25 iterations.");
+                //         }   
+                //     }
+                // }
+                // s_iterations++;
 
             }  // END: while (SDL_PollEvent(&event)) 
         }
