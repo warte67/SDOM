@@ -204,6 +204,10 @@ namespace SDOM
         std::vector<std::string> getCommandNamesForType(const std::string& typeName) const;
         std::vector<std::string> getFunctionNamesForType(const std::string& typeName) const;
 
+        // --- For Testing --- //
+        void setStopAfterUnitTests(bool stop) { stopAfterUnitTests_ = stop; }
+        bool getStopAfterUnitTests() { return stopAfterUnitTests_; }
+
     private:
         // --- Singleton Enforcement --- //
         Core();
@@ -229,6 +233,9 @@ namespace SDOM
         // member instead of a function-static variable keeps state tied to
         // the instance lifetime and is easier to reason about in tests.
         bool sdlStarted_ = false;
+
+        // For testing: stop main loop after unit tests
+        bool stopAfterUnitTests_ = false; 
 
         // Deferred-apply support: allow worker threads to request a
         // CoreConfig change which will be applied on the main thread

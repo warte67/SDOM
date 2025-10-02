@@ -14,7 +14,7 @@ namespace SDOM
 
     // Individual test functions (keeps test bodies named and reusable)
     static bool test1_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 1", "Create generic Stage object", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #1", "Create generic Stage object", [factory, &dbgStr]() {
             Stage::InitStruct initData;
             initData.name = "genericStage";
             DomHandle stageHandle = factory->create("Stage", initData);
@@ -31,7 +31,7 @@ namespace SDOM
     }
 
     static bool test2_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 2", "Set and Get Name", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #2", "Set and Get Name", [factory, &dbgStr]() {
             DomHandle stageHandle = factory->getDomHandle("genericStage");
             if (!stageHandle) {
                 dbgStr = "Stage object 'genericStage' not found!";
@@ -48,7 +48,7 @@ namespace SDOM
     }
 
     static bool test3_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 3", "Set and Get Type", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #3", "Set and Get Type", [factory, &dbgStr]() {
             DomHandle stageHandle = factory->getDomHandle("genericStage");
             if (!stageHandle) {
                 dbgStr = "Stage object 'genericStage' not found!";
@@ -65,7 +65,7 @@ namespace SDOM
     }
 
     static bool test4_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 4", "Destroy generic Stage object", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #4", "Destroy generic Stage object", [factory, &dbgStr]() {
             factory->destroyDisplayObject("genericStage");
             DomHandle stageHandle = factory->getDomHandle("genericStage");
             if (stageHandle) {
@@ -78,7 +78,7 @@ namespace SDOM
 
     // Lua-based counterparts: reproduce tests 1-4 via Lua wrappers
     static bool test5_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 5", "Lua Create generic Stage object", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #5", "Lua Create generic Stage object", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
             // Use Factory.create via Core:createDisplayObject or equivalent Lua wrapper
             lua.script(R"(
@@ -94,7 +94,7 @@ namespace SDOM
     }
 
     static bool test6_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 6", "Lua Set and Get Name", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #6", "Lua Set and Get Name", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
             // Use Lua to set/get the name via DomHandle bindings
             sol::protected_function_result res = lua.script(R"(
@@ -122,7 +122,7 @@ namespace SDOM
     }
 
     static bool test7_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 7", "Lua Set and Get Type", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #7", "Lua Set and Get Type", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
             // Use Lua to set/get the type via DomHandle bindings
             sol::protected_function_result res = lua.script(R"(
@@ -150,7 +150,7 @@ namespace SDOM
     }
 
     static bool test8_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 8", "Lua Destroy generic Stage object", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #8", "Lua Destroy generic Stage object", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
             lua.script(std::string("Core:destroyDisplayObject('luaGenericStage')\n"));
             DomHandle h = factory->getDomHandle("luaGenericStage");
@@ -160,7 +160,7 @@ namespace SDOM
     }
 
     static bool test9_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 9", "Lua setParent() moves blueishBox under redishBox", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #9", "Lua setParent() moves blueishBox under redishBox", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
             (void)0;
 
@@ -227,7 +227,7 @@ namespace SDOM
     }
 
     static bool test10_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 10", "Lua getBounds for blueishBox", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #10", "Lua getBounds for blueishBox", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
 
             // Do the entire bounds check in Lua so this test is Lua-only
@@ -261,7 +261,7 @@ namespace SDOM
     }
 
     static bool test11_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 11", "Lua setBounds/getX/getY/getWidth/getHeight and edges", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #11", "Lua setBounds/getX/getY/getWidth/getHeight and edges", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
 
             sol::protected_function_result res = lua.script(R"(
@@ -312,7 +312,7 @@ namespace SDOM
     }
 
     static bool test12_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 12", "Lua getColor/setColor roundtrip", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #12", "Lua getColor/setColor roundtrip", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
 
             sol::protected_function_result res = lua.script(R"(
@@ -356,7 +356,7 @@ namespace SDOM
     }
 
     static bool test13_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 13", "Lua priority getMax/getMin/getPriority", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #13", "Lua priority getMax/getMin/getPriority", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
             sol::protected_function_result res = lua.script(R"(
                 -- create three boxes under stage for priority testing
@@ -388,7 +388,7 @@ namespace SDOM
     }
 
     static bool test14_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 14", "Lua setPriority/sortChildren/moveToTop and getChildrenPriorities", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #14", "Lua setPriority/sortChildren/moveToTop and getChildrenPriorities", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
             sol::protected_function_result res = lua.script(R"(
                 local s = Core:getStageHandle()
@@ -424,7 +424,7 @@ namespace SDOM
     }
 
     static bool test15_IDisplayObject(Factory* factory, std::string& dbgStr) {
-        return UnitTests::run("IDisplayObject: test # 15", "Lua setToHighest/setToLowest roundtrips", [factory, &dbgStr]() {
+        return UnitTests::run("IDisplayObject #15", "Lua setToHighest/setToLowest roundtrips", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
             sol::protected_function_result res = lua.script(R"(
                 local s = Core:getStageHandle()
@@ -480,11 +480,11 @@ namespace SDOM
             [&]() { return  test8_IDisplayObject(factory, dbgStr); }, // Lua Destroy generic Stage object
             [&]() { return  test9_IDisplayObject(factory, dbgStr); }, // Lua setParent test
             [&]() { return test10_IDisplayObject(factory, dbgStr); }, // Lua bounds test for blueishBox
-            [&]() { return test11_IDisplayObject(factory, dbgStr); },  // Lua setBounds/getX/getY/getWidth/getHeight and edges
-            [&]() { return test12_IDisplayObject(factory, dbgStr); },  // Lua getColor/setColor roundtrip
-            [&]() { return test13_IDisplayObject(factory, dbgStr); },
-            [&]() { return test14_IDisplayObject(factory, dbgStr); },
-            [&]() { return test15_IDisplayObject(factory, dbgStr); }
+            [&]() { return test11_IDisplayObject(factory, dbgStr); }, // Lua setBounds/getX/getY/getWidth/getHeight and edges
+            [&]() { return test12_IDisplayObject(factory, dbgStr); }, // Lua getColor/setColor roundtrip
+            [&]() { return test13_IDisplayObject(factory, dbgStr); }, // Lua priority getMax/getMin/getPriority
+            [&]() { return test14_IDisplayObject(factory, dbgStr); }, // Lua setPriority/sortChildren/moveToTop and getChildrenPriorities
+            [&]() { return test15_IDisplayObject(factory, dbgStr); }  // Lua setToHighest/setToLowest roundtrips
         };
 
         for (auto &t : tests) {

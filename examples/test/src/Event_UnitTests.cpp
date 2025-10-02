@@ -6,6 +6,8 @@
 #include <SDOM/SDOM_EventType.hpp>
 #include <SDOM/SDOM_EventTypeHash.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
+#include "UnitTests.hpp"
+
 
 namespace SDOM
 {
@@ -26,7 +28,7 @@ namespace SDOM
             ok = false;
         }
 
-        return UnitTests::run("Event test #1", "Scaffolding Pseudo-Test Description", [=]() { return ok; });
+        return UnitTests::run("Event #1", "Scaffolding Pseudo-Test Description", [=]() { return ok; });
     }   
 
 

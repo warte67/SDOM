@@ -35,7 +35,7 @@ namespace SDOM {
         )");
         myBoxHandle = handle_obj.as<DomHandle>();
         bool box_exists = myBoxHandle.isValid();
-        return UnitTests::run("Lua: test # 1", "Create Box and verify existence", [box_exists]() { return box_exists; });
+        return UnitTests::run("Lua #1", "Create Box and verify existence", [box_exists]() { return box_exists; });
     }
 
     bool test2_Lua() {
@@ -48,7 +48,7 @@ namespace SDOM {
             stage:addChild(obj)
             return stage:hasChild(obj)
         )").get<bool>();
-        return UnitTests::run("Lua: test # 2", "Add the Box to Stage from Lua", [added]() { return added; });
+        return UnitTests::run("Lua #2", "Add the Box to Stage from Lua", [added]() { return added; });
     }
 
     bool test3_Lua() {
@@ -68,7 +68,7 @@ namespace SDOM {
             end
             return false
         )").get<bool>();
-        return UnitTests::run("Lua: test # 3", "Destroy Box and verify removal", [destroyed]() { return destroyed; });
+        return UnitTests::run("Lua #3", "Destroy Box and verify removal", [destroyed]() { return destroyed; });
     }
 
     bool test4_Lua() {
@@ -83,7 +83,7 @@ namespace SDOM {
             Core:destroyDisplayObject("tempBox")
             return wasAdded
         )").get<bool>();
-        return UnitTests::run("Lua: test # 4", "Lua binding roundtrip add/hasChild", [ok]() { return ok; });
+        return UnitTests::run("Lua #4", "Lua binding roundtrip add/hasChild", [ok]() { return ok; });
     }
 
     bool test5_Lua() {
@@ -105,7 +105,7 @@ namespace SDOM {
             return false
         )");
         bool ok = pfr.get<bool>();
-        return UnitTests::run("Lua: test # 5", "Verify getPropertyNamesForType(blueishBox)", [=]() { return ok; });
+        return UnitTests::run("Lua #5", "Verify getPropertyNamesForType(blueishBox)", [=]() { return ok; });
     }
 
     bool test6_Lua() {
@@ -132,7 +132,7 @@ namespace SDOM {
             return false
         )");
         bool ok = pfr.get<bool>();
-        return UnitTests::run("Lua: test # 6", "Verify getFunctionNamesForType(blueishBox)", [=]() { return ok; });
+        return UnitTests::run("Lua #6", "Verify getFunctionNamesForType(blueishBox)", [=]() { return ok; });
     }
 
     bool test7_Lua() {
@@ -155,7 +155,7 @@ namespace SDOM {
             return false
         )");
         bool ok = pfr.get<bool>();
-        return UnitTests::run("Lua: test # 7", "Verify getCommandNamesForType(blueishBox)", [=]() { return ok; });
+        return UnitTests::run("Lua #7", "Verify getCommandNamesForType(blueishBox)", [=]() { return ok; });
     }
 
     bool test8_Lua() 
@@ -170,7 +170,7 @@ namespace SDOM {
 
         // Determine blueishBox center from the object in the factory
         DomHandle box = Core::getInstance().getDisplayObjectHandle("blueishBox");
-        if (!box) return UnitTests::run("Lua: test # 8", "Verify synthetic MouseClick triggers Box listener", [](){ return false; });
+        if (!box) return UnitTests::run("Lua #8", "Verify synthetic MouseClick triggers Box listener", [](){ return false; });
 
         int cx = box->getX() + box->getWidth() / 2;
         int cy = box->getY() + box->getHeight() / 2;
@@ -212,7 +212,7 @@ namespace SDOM {
 
         int count = Box::getTestClickCount();
         bool ok = (count > 0);
-        return UnitTests::run("Lua: test # 8", "Verify synthetic MouseClick triggers Box listener", [=]() { return ok; });
+        return UnitTests::run("Lua #8", "Verify synthetic MouseClick triggers Box listener", [=]() { return ok; });
     } //test8_lua()
 
     bool test9_Lua() {
@@ -225,7 +225,7 @@ namespace SDOM {
 
         // Ensure blueishBox exists and is on the stage
         DomHandle box = Core::getInstance().getDisplayObjectHandle("blueishBox");
-        if (!box) return UnitTests::run("Lua: test # 9", "Lua-only event handler + synthetic click", [](){ return false; });
+        if (!box) return UnitTests::run("Lua: # 9", "Lua-only event handler + synthetic click", [](){ return false; });
 
         // Build and run Lua script that attaches a listener and synthesizes a click
         auto result = lua.script(R"(
@@ -255,7 +255,7 @@ namespace SDOM {
         // SDOM::getCore().setKeyboardFocusedObject(SDOM::getStageHandle());
 
         bool ok = result;
-        return UnitTests::run("Lua: test # 9", "Lua-only event handler + synthetic click", [=]() { return ok; });
+        return UnitTests::run("Lua #9", "Lua-only event handler + synthetic click", [=]() { return ok; });
     }
 
     // Split the previous step-based test10 into six individual tests for clarity
@@ -267,7 +267,7 @@ namespace SDOM {
             if not orig or orig:getName() ~= 'mainStage' then return false end
             return true
         )").get<bool>();
-        return UnitTests::run("Lua: test #10", "Verify initial stage is 'mainStage'", [=]() { return s; });
+        return UnitTests::run("Lua #10", "Verify initial stage is 'mainStage'", [=]() { return s; });
     }
 
     bool test11_lua()
@@ -279,7 +279,7 @@ namespace SDOM {
             if not s or s:getName() ~= 'stageTwo' then return false end
             return true
         )").get<bool>();
-        return UnitTests::run("Lua: test #11", "Set root by name to 'stageTwo' and verify", [=]() { return s; });
+        return UnitTests::run("Lua #11", "Set root by name to 'stageTwo' and verify", [=]() { return s; });
     }
 
     bool test12_lua()
@@ -293,7 +293,7 @@ namespace SDOM {
             if not cur or cur:getName() ~= 'stageThree' then return false end
             return true
         )").get<bool>();
-        return UnitTests::run("Lua: test #12", "Set root by handle using 'stageThree' and verify", [=]() { return s; });
+        return UnitTests::run("Lua #12", "Set root by handle using 'stageThree' and verify", [=]() { return s; });
     }
 
     bool test13_lua()
@@ -305,7 +305,7 @@ namespace SDOM {
             if not cur or cur:getName() ~= 'mainStage' then return false end
             return true
         )").get<bool>();
-        return UnitTests::run("Lua: test #13", "Use alias setStage to return to 'mainStage' and verify", [=]() { return s; });
+        return UnitTests::run("Lua #13", "Use alias setStage to return to 'mainStage' and verify", [=]() { return s; });
     }
 
     bool test14_lua()
@@ -323,7 +323,7 @@ namespace SDOM {
             if fin ~= orig then return false end
             return true
         )").get<bool>();
-        return UnitTests::run("Lua: test #14", "Toggle getIsTraversing via setIsTraversing and restore", [=]() { return s; });
+        return UnitTests::run("Lua #14", "Toggle getIsTraversing via setIsTraversing and restore", [=]() { return s; });
     }
 
     bool test15_lua()
@@ -359,7 +359,7 @@ namespace SDOM {
             if fin ~= before then return false end
             return true
         )").get<bool>();
-        return UnitTests::run("Lua: test #15", "Orphan lifecycle: create/attach/remove/verify/cleanup", [=]() { return s; });
+        return UnitTests::run("Lua #15", "Orphan lifecycle: create/attach/remove/verify/cleanup", [=]() { return s; });
     }
 
     bool test16_lua()
@@ -382,7 +382,7 @@ namespace SDOM {
             st:addChild(b)
             return true
         )").get<bool>();
-        if (!created) return UnitTests::run("Lua: test #16", "TAB focus navigation", [](){ return false; });
+        if (!created) return UnitTests::run("Lua #16", "TAB focus navigation", [](){ return false; });
 
         // Send Tab (keycode 9) via Lua helper and pump events; verify focus order
         bool result = lua.script(R"(
@@ -412,7 +412,7 @@ namespace SDOM {
             return true
         )").get<bool>();
 
-        return UnitTests::run("Lua: test #16", "TAB focus navigation", [=]() { return result; });
+        return UnitTests::run("Lua #16", "TAB focus navigation", [=]() { return result; });
     }
 
     bool test17_lua()
@@ -434,7 +434,7 @@ namespace SDOM {
             return (not stillA) and (not stillB)
         )").get<bool>();
 
-        return UnitTests::run("Lua: test #17", "Remove focusA/focusB from stage and verify", [=]() { return ok; });
+        return UnitTests::run("Lua #17", "Remove focusA/focusB from stage and verify", [=]() { return ok; });
     }
 
     bool test18_lua()
@@ -477,7 +477,7 @@ namespace SDOM {
             return (not stillA) and (not stillB) and (not hasA) and (not hasB)
         )").get<bool>();
 
-        return UnitTests::run("Lua: test #18", "Factory contains focusA/focusB as orphans (removed).", [=]() { return ok; });
+        return UnitTests::run("Lua #18", "Factory contains focusA/focusB as orphans (removed).", [=]() { return ok; });
     }
 
     bool test19_lua()
@@ -511,7 +511,7 @@ namespace SDOM {
             return ok
         )").get<bool>();
 
-        return UnitTests::run("Lua: test #19", "Mouse hover to blueishBox", [=]() { return ok; });
+        return UnitTests::run("Lua #19", "Mouse hover to blueishBox", [=]() { return ok; });
     }
 
     bool test20_lua()
@@ -535,7 +535,7 @@ namespace SDOM {
             return true
         )").get<bool>();
 
-        return UnitTests::run("Lua: test #20", "Verify get/setWindowTitle from Lua", [=]() { return ok; });
+        return UnitTests::run("Lua #20", "Verify get/setWindowTitle from Lua", [=]() { return ok; });
     }
 
     bool test21_lua()
@@ -609,7 +609,7 @@ namespace SDOM {
         return true
         )").get<bool>();
 
-        return UnitTests::run("Lua: test #21", "Anchor string normalization via setters (various joiners)", [=]() { return ok; });
+        return UnitTests::run("Lua #21", "Anchor string normalization via setters (various joiners)", [=]() { return ok; });
     }
 
     bool LUA_UnitTests() {

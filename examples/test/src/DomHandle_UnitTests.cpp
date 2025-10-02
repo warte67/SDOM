@@ -21,16 +21,16 @@ namespace SDOM
 {
 
     // DomHandle unit tests mapping (renamed to numeric identifiers):
-    //  - DomHandle_test1  -> "DomHandle test #1" (forwards/reflection)
-    //  - DomHandle_test2  -> "DomHandle test #2" (clickable)
-    //  - DomHandle_test3  -> "DomHandle test #3" (enabled)
-    //  - DomHandle_test4  -> "DomHandle test #4" (visibility)
-    //  - DomHandle_test5  -> "DomHandle test #5" (keyboard focus)
-    //  - DomHandle_test6  -> "DomHandle test #6" (mouse hover)
-    //  - DomHandle_test7  -> "DomHandle test #7" (tab priority)
-    //  - DomHandle_test8  -> "DomHandle test #8" (geometry getters/setters)
-    //  - DomHandle_test9  -> "DomHandle test #9" (priority overloads)
-    //  - DomHandle_test10 -> "DomHandle test #10" (sort/highest/lowest)
+    //  - DomHandle_test1  -> "DomHandle #1" (forwards/reflection)
+    //  - DomHandle_test2  -> "DomHandle #2" (clickable)
+    //  - DomHandle_test3  -> "DomHandle #3" (enabled)
+    //  - DomHandle_test4  -> "DomHandle #4" (visibility)
+    //  - DomHandle_test5  -> "DomHandle #5" (keyboard focus)
+    //  - DomHandle_test6  -> "DomHandle #6" (mouse hover)
+    //  - DomHandle_test7  -> "DomHandle #7" (tab priority)
+    //  - DomHandle_test8  -> "DomHandle #8" (geometry getters/setters)
+    //  - DomHandle_test9  -> "DomHandle #9" (priority overloads)
+    //  - DomHandle_test10 -> "DomHandle #10" (sort/highest/lowest)
 
     bool DomHandle_test1()
     {
@@ -50,7 +50,7 @@ namespace SDOM
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        return UnitTests::run("DomHandle test #1", "Verify DomHandle forwards for priority/z-order exist and are callable", [=]() { return ok; });
+        return UnitTests::run("DomHandle #1", "Verify DomHandle forwards for priority/z-order exist and are callable", [=]() { return ok; });
     }
 
 
@@ -71,7 +71,7 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_click')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle test #2", "Verify setClickable/isClickable from Lua", [=]() { return result; });
+        return UnitTests::run("DomHandle #2", "Verify setClickable/isClickable from Lua", [=]() { return result; });
     }
 
     bool DomHandle_test3()
@@ -90,7 +90,7 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_enabled')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle test #3", "Verify setEnabled/isEnabled from Lua", [=]() { return result; });
+        return UnitTests::run("DomHandle #3", "Verify setEnabled/isEnabled from Lua", [=]() { return result; });
     }
 
     bool DomHandle_test4()
@@ -113,7 +113,7 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_vis')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle test #4", "Verify setVisible/isVisible and setHidden/isHidden from Lua", [=]() { return result; });
+        return UnitTests::run("DomHandle #4", "Verify setVisible/isVisible and setHidden/isHidden from Lua", [=]() { return result; });
     }
 
     bool DomHandle_test5()
@@ -132,7 +132,7 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_focus')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle test #5", "Verify setKeyboardFocus and Core:getKeyboardFocusedObject", [=]() { return result; });
+        return UnitTests::run("DomHandle #5", "Verify setKeyboardFocus and Core:getKeyboardFocusedObject", [=]() { return result; });
     }
 
     bool DomHandle_test6()
@@ -153,7 +153,7 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_hover')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle test #6", "Verify mouse hover via pushMouseEvent/pumpEventsOnce", [=]() { return result; });
+        return UnitTests::run("DomHandle #6", "Verify mouse hover via pushMouseEvent/pumpEventsOnce", [=]() { return result; });
     }
 
 
@@ -183,7 +183,7 @@ namespace SDOM
             return true
         )").get<bool>();
 
-        return UnitTests::run("DomHandle test #7", "Exercise get/set TabPriority and is/setTabEnabled from Lua", [=]() { return result; });
+        return UnitTests::run("DomHandle #7", "Exercise get/set TabPriority and is/setTabEnabled from Lua", [=]() { return result; });
     }
 
 
@@ -218,7 +218,7 @@ namespace SDOM
             Core:destroyDisplayObject('geom_box')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle test #8", "Exercise setX/setY/setWidth/setHeight and verify getters from Lua", [=]() { return result; });
+        return UnitTests::run("DomHandle #8", "Exercise setX/setY/setWidth/setHeight and verify getters from Lua", [=]() { return result; });
     }
 
 
@@ -272,7 +272,7 @@ namespace SDOM
         )").get<sol::table>();
         bool ok = result["ok"].get_or(false);
         std::string err = result["err"].get_or(std::string());
-        return UnitTests::run("DomHandle test #9", "Exercise setPriority/setZOrder/moveToTop overloads", [=]() { return ok; });
+        return UnitTests::run("DomHandle #9", "Exercise setPriority/setZOrder/moveToTop overloads", [=]() { return ok; });
     }
 
     bool DomHandle_test10()
@@ -348,7 +348,7 @@ namespace SDOM
         if (!ok) {
             std::cout << "[Debug] DomHandle_test10 Lua error: " << err << std::endl;
         }
-            return UnitTests::run("DomHandle test #10", "Verify sortChildrenByPriority and setToHighest/Lowest with child specs", [=]() { return ok; });
+            return UnitTests::run("DomHandle #10", "Verify sortChildrenByPriority and setToHighest/Lowest with child specs", [=]() { return ok; });
     }
 
 

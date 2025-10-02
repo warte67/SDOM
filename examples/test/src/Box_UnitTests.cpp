@@ -14,7 +14,7 @@ namespace SDOM
     DomHandle testBox2;
 
     bool test1(DomHandle& testBox1) {
-        return UnitTests::run("Box: Test #1", "Factory refuses to create with invalid type 'Box1'", [&testBox1]() {
+        return UnitTests::run("Box #1", "Factory refuses to create with invalid type 'Box1'", [&testBox1]() {
             Box::InitStruct init;
             init.name = "testBox1";
             init.x = 50;
@@ -39,7 +39,7 @@ namespace SDOM
     }
 
     bool test2(DomHandle& testBox2) {
-        return UnitTests::run("Box: Test #2", "Factory creates valid Box instance", [&testBox2]() {
+        return UnitTests::run("Box #2", "Factory creates valid Box instance", [&testBox2]() {
             Box::InitStruct init;
             init.name = "testBox2";
             init.x = 325;
@@ -64,7 +64,7 @@ namespace SDOM
     }
 
     bool test3(DomHandle& testBox2) {
-        return UnitTests::run("Box: Test #3", "Add Box as child to Stage", [&testBox2]() {
+        return UnitTests::run("Box #3", "Add Box as child to Stage", [&testBox2]() {
             DomHandle stage = SDOM::getCore().getStageHandle();
             if (!stage || !testBox2) return false;
             stage->addChild(testBox2);
@@ -73,7 +73,7 @@ namespace SDOM
     }
 
     bool test4(DomHandle& testBox2) {
-        return UnitTests::run("Box: Test #4", "Remove Box from Stage", [&testBox2]() {
+        return UnitTests::run("Box #4", "Remove Box from Stage", [&testBox2]() {
             DomHandle stage = SDOM::getCore().getStageHandle();
             if (!stage || !testBox2) return false;
             stage->removeChild(testBox2);
@@ -82,7 +82,7 @@ namespace SDOM
     }
 
     bool test5(DomHandle& testBox2) {
-        return UnitTests::run("Box: Test #5", "Verify Box parent cleared after removal", [&testBox2]() {
+        return UnitTests::run("Box #5", "Verify Box parent cleared after removal", [&testBox2]() {
             DomHandle stage = SDOM::getCore().getStageHandle();
             if (!stage || !testBox2) return false;
             return (!testBox2->getParent() || testBox2->getParent() != stage);
@@ -91,7 +91,7 @@ namespace SDOM
     }
 
     bool test6() {
-        return UnitTests::run("Box: Test #6", "Create Box from Lua and add to Stage", []() {
+        return UnitTests::run("Box #6", "Create Box from Lua and add to Stage", []() {
             sol::state lua;
             lua.open_libraries(sol::lib::base);
             lua.script(R"(
@@ -131,7 +131,7 @@ namespace SDOM
     }
 
     bool test7() {
-        return UnitTests::run("Box: Test #7", "Create Box from Lua with minimal properties", []() {
+        return UnitTests::run("Box #7", "Create Box from Lua with minimal properties", []() {
             sol::state lua;
             lua.open_libraries(sol::lib::base);
             lua.script(R"(
@@ -160,7 +160,7 @@ namespace SDOM
     }
 
     bool test8() {
-        return UnitTests::run("Box: Test #8", "Create Box from Lua with less than minimal properties", []() {
+        return UnitTests::run("Box #8", "Create Box from Lua with less than minimal properties", []() {
             sol::state lua;
             lua.open_libraries(sol::lib::base);
             lua.script(R"(
@@ -193,7 +193,7 @@ namespace SDOM
 
     bool testHierarchyAnchors() 
     {
-        return UnitTests::run("Box: Test #9", "Anchor hierarchy world coordinate tests", []() 
+        return UnitTests::run("Box #9", "Anchor hierarchy world coordinate tests", []() 
         {
             auto makeBox = [](const std::string& name, int x, int y, int w, int h, SDL_Color color) 
             {
@@ -355,7 +355,7 @@ namespace SDOM
 
     bool test10() 
     {
-        return UnitTests::run("Box: Test #10", "Destroy the Parent greenBox", []() 
+        return UnitTests::run("Box #10", "Destroy the Parent greenBox", []() 
         {
             DomHandle stage = SDOM::getCore().getStageHandle();
             if (!stage) 
@@ -409,7 +409,7 @@ namespace SDOM
         // to allow certain orphaned objects to be preserved (e.g., templates, persistent resources, editor-only objects).
         // If implemented, Factory::destroyOrphanedDisplayObjects() should skip objects marked for preservation.
         // This test currently assumes all orphans are eligible for cleanup.        
-        return UnitTests::run("Box: Test #11", "Destroy all orphans", []() 
+        return UnitTests::run("Box #11", "Destroy all orphans", []() 
         {
             getFactory().destroyOrphanedDisplayObjects();            
             if (getFactory().countOrphanedDisplayObjects())

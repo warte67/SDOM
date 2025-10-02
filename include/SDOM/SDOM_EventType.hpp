@@ -162,17 +162,17 @@ namespace SDOM
     // access EventType constants and query properties.
     static void registerLua(sol::state_view lua);
 
-        // -- Getters -- //
-        bool getCaptures() const;
-        bool getBubbles() const;
-        bool getTargetOnly() const;
-        bool getGlobal() const;
+    // -- Getters -- //
+    bool getCaptures() const;
+    bool getBubbles() const;
+    bool getTargetOnly() const;
+    bool getGlobal() const;
 
-        // -- Setters -- //
-        EventType& setCaptures(bool captures);
-        EventType& setBubbles(bool bubbles);
-        EventType& setTargetOnly(bool targetOnly);
-        EventType& setGlobal(bool global);
+    // -- Setters -- //
+    EventType& setCaptures(bool captures);
+    EventType& setBubbles(bool bubbles);
+    EventType& setTargetOnly(bool targetOnly);
+    EventType& setGlobal(bool global);
 
     // -- Public Lua support -- //        
 

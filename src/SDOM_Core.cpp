@@ -876,6 +876,12 @@ namespace SDOM
         else 
             std::cout << CLR::LT_BLUE << "...Unit tests " << CLR::RED << "[FAILED]" << CLR::RESET << std::endl;
 
+        if (stopAfterUnitTests_==true)
+        {
+            INFO("Core: stopping main loop after unit tests.");
+            bIsRunning_ = false; // signal to stop the main loop after unit tests
+        }
+
         return allTestsPassed;
     }
 
@@ -991,22 +997,22 @@ namespace SDOM
         bool testResult;
 
         // SDL_Test: SDL Initialization
-        testResult = UnitTests::run("Core", "SDL_WasInit(SDL_INIT_VIDEO)", []() { return (SDL_WasInit(SDL_INIT_VIDEO) != 0); });
+        testResult = UnitTests::run("Core System #1", "SDL_WasInit(SDL_INIT_VIDEO)", []() { return (SDL_WasInit(SDL_INIT_VIDEO) != 0); });
         if (!testResult) { std::cout << CLR::indent() << "SDL was NOT initialized!" << CLR::RESET << std::endl; }
         allTestsPassed &= testResult;
 
         // SDL_Test: SDL Texture
-        testResult = UnitTests::run("Core", "SDL Texture Validity", [this]() { return (texture_ != nullptr); });
+        testResult = UnitTests::run("Core System #2", "SDL Texture Validity", [this]() { return (texture_ != nullptr); });
         if (!testResult) { std::cout << CLR::indent() << "SDL Texture is null!" << CLR::RESET << std::endl; }
         allTestsPassed &= testResult;
 
         // SDL_Test: SDL Renderer
-        testResult = UnitTests::run("Core", "SDL Renderer Validity", [this]() { return (renderer_ != nullptr); });
+        testResult = UnitTests::run("Core System #3", "SDL Renderer Validity", [this]() { return (renderer_ != nullptr); });
         if (!testResult) { std::cout << CLR::indent() << "SDL Renderer is null!" << CLR::RESET << std::endl; }
         allTestsPassed &= testResult;
 
         // SDL_Test: SDL Window
-        testResult = UnitTests::run("Core", "SDL Window Validity", [this]() { return (window_ != nullptr); });
+        testResult = UnitTests::run("Core System #4", "SDL Window Validity", [this]() { return (window_ != nullptr); });
         if (!testResult) { std::cout << CLR::indent() << "SDL Window is null!" << CLR::RESET << std::endl; }
         allTestsPassed &= testResult;
 

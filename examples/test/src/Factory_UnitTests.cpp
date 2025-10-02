@@ -23,7 +23,7 @@ namespace SDOM
 
         // Test display object creation
         DomHandle handle;
-        result = UnitTests::run("Factory", "Display Object Creation", [&factory, &handle]() {
+        result = UnitTests::run("Factory #1", "Display Object Creation", [&factory, &handle]() {
             sol::state lua;
             lua.open_libraries(sol::lib::base);
             lua.script(R"(
@@ -42,7 +42,7 @@ namespace SDOM
 
 
         // Test resource retrieval
-        result = UnitTests::run("Factory", "Resource Retrieval", [&factory, &debugRet, &handle]() 
+        result = UnitTests::run("Factory #2", "Resource Retrieval", [&factory, &debugRet, &handle]() 
         {
             DomHandle testHandle = factory.getDomHandle("testStage");
             if (testHandle != handle) 
@@ -56,7 +56,7 @@ namespace SDOM
         allTestsPassed &= result;
 
         // Test resource properties
-        result = UnitTests::run("Factory", "Verify Resource Handle", [&factory, &debugRet, &handle]() 
+        result = UnitTests::run("Factory #3", "Verify Resource Handle", [&factory, &debugRet, &handle]() 
         {
             if (!handle) 
             {
@@ -75,7 +75,7 @@ namespace SDOM
         allTestsPassed &= result;
 
         // Test handle type
-        result = UnitTests::run("Factory", "Resource Type", [&factory, &handle, &debugRet]() 
+        result = UnitTests::run("Factory #4", "Resource Type", [&factory, &handle, &debugRet]() 
         {
             if (!handle) 
             {
@@ -99,7 +99,7 @@ namespace SDOM
         allTestsPassed &= result;
 
         // Test handle name
-        result = UnitTests::run("Factory", "Resource Name", [&factory, &handle, &debugRet]() 
+        result = UnitTests::run("Factory #5", "Resource Name", [&factory, &handle, &debugRet]() 
         {
             if (!handle) 
             {
@@ -123,7 +123,7 @@ namespace SDOM
         allTestsPassed &= result;
 
         // Test destroy resource
-        result = UnitTests::run("Factory", "Resource Destruction", [&factory, &handle]() 
+        result = UnitTests::run("Factory #6", "Resource Destruction", [&factory, &handle]() 
         {
             factory.destroyDisplayObject("testStage");
             DomHandle testHandle = factory.getDomHandle("testStage");
@@ -133,7 +133,7 @@ namespace SDOM
         allTestsPassed &= result;
 
         // duplicate resource creation test
-        result = UnitTests::run("Factory", "Duplicate Resource Creation", [&factory]() 
+        result = UnitTests::run("Factory #7", "Duplicate Resource Creation", [&factory]() 
         {
             sol::state lua;
             lua.open_libraries(sol::lib::base);
@@ -158,7 +158,7 @@ namespace SDOM
 
 
         // TEST: Resource Overwrite Behavior
-        result = UnitTests::run("Factory", "Resource Overwrite Behavior", [&factory, &debugRet]() 
+        result = UnitTests::run("Factory #8", "Resource Overwrite Behavior", [&factory, &debugRet]() 
         {
             sol::state lua;
             lua.open_libraries(sol::lib::base);
@@ -211,7 +211,7 @@ namespace SDOM
 
         // Last Test: verify original resources remain
         std::vector<std::string> currentNames = factory.listDisplayObjectNames();
-        result = UnitTests::run("Factory", "Original Resources Intact", [&debugRet, &originalNames, &currentNames]() 
+        result = UnitTests::run("Factory #9", "Original Resources Intact", [&debugRet, &originalNames, &currentNames]() 
         {
             if (originalNames.size() != currentNames.size()) 
             {
