@@ -376,21 +376,19 @@ void SDOM::Event::registerLua(sol::state_view lua)
                 "name", sol::property([](const Event& e) {
                     try {
                         DomHandle dh = e.getTarget();
-                        if (dh) {
-                            if (auto* obj = dh.get()) return obj->getName();
-                            std::string hn = dh.getName();
-                            if (!hn.empty()) return hn;
-                        }
+                        // If there is an underlying object prefer its live name
+                        if (auto* obj = dh.get()) return obj->getName();
+                        // If no underlying object, fall back to the handle's cached name
+                        std::string hn = dh.getName();
+                        if (!hn.empty()) return hn;
                     } catch (...) {}
                     return e.getTypeName();
                 }),
                 "getName", [](const Event& e) -> std::string {
                     DomHandle dh = e.getTarget();
-                    if (dh) {
-                        if (auto* obj = dh.get()) return obj->getName();
-                        std::string hn = dh.getName();
-                        if (!hn.empty()) return hn;
-                    }
+                    if (auto* obj = dh.get()) return obj->getName();
+                    std::string hn = dh.getName();
+                    if (!hn.empty()) return hn;
                     return e.getTypeName();
                 },
 
@@ -477,23 +475,67 @@ void SDOM::Event::registerLua(sol::state_view lua)
                 // maintain previous pairs meta-function
                 sol::meta_function::pairs, [](const Event& e, sol::this_state ts) {
                     sol::state_view lua(ts);
-                    sol::table t = lua.create_table();
+
+                    // iterator state stored in Lua as a user value
+                    struct event_iter_state {
+                        struct item {
+                            std::string key;
+                            // kind: 1 = string, 2 = number, 3 = object pointer
+                            int kind = 0;
+                            std::string sval;
+                            double dval = 0.0;
+                            SDOM::IDataObject* obj = nullptr;
+                        };
+                        std::size_t idx = 0;
+                        std::vector<item> items;
+                    };
+
+                    // populate iterator state with snapshot of keys/values we want to expose
+                    auto st = event_iter_state();
                     try {
-                        t["type"] = e.getTypeName();
+                        st.items.push_back({"type", 1, e.getTypeName(), 0.0, nullptr});
                     } catch (...) {}
-                    try { t["dt"] = e.getElapsedTime(); } catch (...) {}
+                    try {
+                        st.items.push_back({"dt", 2, std::string(), static_cast<double>(e.getElapsedTime()), nullptr});
+                    } catch (...) {}
                     try {
                         DomHandle dh = e.getTarget();
                         if (dh) {
+                            // Prefer live object's name when available, otherwise the handle's cached name
+                            std::string targName;
                             if (auto* obj = dh.get()) {
-                                t["target"] = obj;
+                                try { targName = obj->getName(); } catch(...) { targName.clear(); }
                             } else {
-                                t["target"] = dh.getName();
+                                try { targName = dh.getName(); } catch(...) { targName.clear(); }
+                            }
+                            if (!targName.empty()) {
+                                st.items.push_back({"target", 1, targName, 0.0, nullptr});
                             }
                         }
                     } catch (...) {}
-                    // return the standard pairs iterator over the temp table
-                    return std::make_tuple(lua["pairs"], t, sol::nil);
+
+                    // the 'next' function for our iterator: it advances the index and returns key,value
+                    auto event_next = +[] (sol::user<event_iter_state&> user_st, sol::this_state ts) -> std::tuple<sol::object, sol::object> {
+                        sol::state_view lua(ts);
+                        event_iter_state& s = user_st;
+                        if (s.idx >= s.items.size()) {
+                            return std::make_tuple(sol::object(lua, sol::lua_nil), sol::object(lua, sol::lua_nil));
+                        }
+                        auto &it = s.items[s.idx++];
+                        sol::object k(lua, sol::in_place, it.key);
+                        sol::object v;
+                        if (it.kind == 1) {
+                            v = sol::object(lua, sol::in_place, it.sval);
+                        } else if (it.kind == 2) {
+                            v = sol::object(lua, sol::in_place, it.dval);
+                        } else {
+                            v = sol::object(lua, sol::lua_nil);
+                        }
+                        return std::make_tuple(k, v);
+                    };
+
+                    // return (iterator function, user state, nil)
+                    return std::make_tuple(event_next, sol::user<event_iter_state>(std::move(st)), sol::lua_nil);
                 }
             );
         }
