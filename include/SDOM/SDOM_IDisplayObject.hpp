@@ -119,7 +119,40 @@ namespace SDOM
     {
         using SUPER = IDataObject;
 
+        // --- Orphan Retention Policy --- //  
+        // orphanedAt_ = std::chrono::steady_clock::now();
     public:
+        enum class OrphanRetentionPolicy {
+            GracePeriod,        // Default: Allow a grace period for reparenting before destroying
+            AutoDestroy,        // Automatically destroy when orphaned
+            RetainUntilManual   // Never auto-destroy; must be manually destroyed
+        };
+    private:
+        OrphanRetentionPolicy orphanPolicy_ = OrphanRetentionPolicy::GracePeriod;
+        std::optional<std::chrono::steady_clock::time_point> orphanedAt_;
+        std::chrono::milliseconds orphanGrace_{5000};     // Grace period for orphan retention (default: 5000 ms)
+
+    public:
+        OrphanRetentionPolicy getOrphanPolicy() const { return orphanPolicy_; }
+        IDisplayObject& setOrphanPolicy(OrphanRetentionPolicy policy) { orphanPolicy_ = policy; return *this; }
+        std::chrono::milliseconds getOrphanGrace() const { return orphanGrace_; }
+        IDisplayObject& setOrphanGrace(std::chrono::milliseconds grace) { orphanGrace_ = grace; return *this; }
+        static std::string OrphanRetentionPolicyToString(OrphanRetentionPolicy policy) {
+            switch (policy) {
+                case OrphanRetentionPolicy::AutoDestroy: return "AutoDestroy";
+                case OrphanRetentionPolicy::GracePeriod: return "GracePeriod";
+                case OrphanRetentionPolicy::RetainUntilManual: return "RetainUntilManual";
+                default: return "Unknown";
+            }
+        }
+        static OrphanRetentionPolicy StringToOrphanRetentionPolicy(const std::string& str) {
+            if (str == "AutoDestroy") return OrphanRetentionPolicy::AutoDestroy;
+            if (str == "GracePeriod") return OrphanRetentionPolicy::GracePeriod;
+            if (str == "RetainUntilManual") return OrphanRetentionPolicy::RetainUntilManual;
+            // Default/fallback
+            return OrphanRetentionPolicy::AutoDestroy;
+        }
+
         // --- Comparison Operators (for Sol2/Lua) --- //
         bool operator==(const IDisplayObject& other) const { return this == &other; }
         bool operator<(const IDisplayObject& other) const { return this < &other; }
