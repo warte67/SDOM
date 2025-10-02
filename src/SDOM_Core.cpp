@@ -514,34 +514,11 @@ namespace SDOM
                 }
                 SDL_SetRenderTarget(renderer_, texture_); // set the render target to the proper background texture
 
-                // // MOVED to Core::onUpdate()
-                // // Dispatch EventType::OnUpdate to rootNode_ so global listeners can perform actions before updating
-                // // and have a chance to stopPropagation before onUpdate() is called.
-                // if (eventManager_ && rootNode_)
-                // {
-                //     DomHandle rootHandle = this->getStageHandle();
-                //     auto updateEv = std::make_unique<Event>(EventType::OnUpdate, rootHandle);
-                //     updateEv->setElapsedTime(fElapsedTime);
-                //     updateEv->setRelatedTarget(rootHandle);
-                //     eventManager_->dispatchEvent(std::move(updateEv), rootHandle);
-                // }
-
                 // Send Updates
                 onUpdate(fElapsedTime);
 
                 // render the stage and its children
                 onRender();
-
-                // // MOVED To Core::onRender()
-                // // Dispatch EventType::OnRender to rootNode_ so global listeners can perform actions after rendering
-                // if (eventManager_ && rootNode_)
-                // {
-                //     DomHandle rootHandle = this->getStageHandle();
-                //     auto renderEv = std::make_unique<Event>(EventType::OnRender, rootHandle);
-                //     renderEv->setElapsedTime(fElapsedTime);
-                //     renderEv->setRelatedTarget(rootHandle);
-                //     eventManager_->dispatchEvent(std::move(renderEv), rootHandle);
-                // }
 
                 // present this stage
                 if (renderer_ && texture_) 
@@ -557,6 +534,26 @@ namespace SDOM
                 factory_->detachOrphans(); // Detach orphaned display objects
                 factory_->attachFutureChildren(); // Attach future children
                 factory_->garbageCollection(); // Clean up any orphaned objects
+
+                static int s_iterations = 0;
+                if (s_iterations == 25)
+                {
+                    Stage* rootStage = dynamic_cast<Stage*>(rootNode_.get());
+                    if (rootStage)
+                    {
+                        DomHandle blueishBoxHandle = factory_->getDomHandle("blueishBox");
+                        if (rootStage->hasChild(blueishBoxHandle))
+                        {
+                            INFO("Core::run() Info: Stage still has blueishBox after 25 iterations.");
+                        }
+                        else
+                        {
+                            INFO("Core::run() Info: Stage no longer has blueishBox after 25 iterations.");
+                        }   
+                    }
+                }
+
+                s_iterations++;
 
             }  // END: while (SDL_PollEvent(&event)) 
         }

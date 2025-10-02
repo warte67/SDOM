@@ -12,5 +12,6 @@ namespace SDOM
     bool DomHandle_UnitTests();
     bool EventType_UnitTests();
     bool Event_UnitTests();
+    bool GarbageCollection_UnitTests();
     // add more unit tests here as needed ...
 }

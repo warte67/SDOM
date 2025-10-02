@@ -14,6 +14,7 @@ function M.on_unit_test()
     allTestsPassed = allTestsPassed and DomHandle_UnitTests()
     allTestsPassed = allTestsPassed and EventType_UnitTests()
     allTestsPassed = allTestsPassed and Event_UnitTests()
+    allTestsPassed = allTestsPassed and GarbageCollection_UnitTests()
     return allTestsPassed
 end
 
