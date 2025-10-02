@@ -49,4 +49,4 @@ namespace SDOM
         return allTestsPassed;
     }
 
-} // END namespace SDOM
+} // END namespace SDOM./prog
