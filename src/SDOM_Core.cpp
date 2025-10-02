@@ -556,6 +556,7 @@ namespace SDOM
 
                 factory_->detachOrphans(); // Detach orphaned display objects
                 factory_->attachFutureChildren(); // Attach future children
+                factory_->garbageCollection(); // Clean up any orphaned objects
 
             }  // END: while (SDL_PollEvent(&event)) 
         }

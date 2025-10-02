@@ -634,6 +634,63 @@ namespace SDOM
     }
 
 
+    // bool IDisplayObject::removeChild(DomHandle child)
+    // {
+    //     if (!child) 
+    //     {
+    //         ERROR("removeChild: child handle is null in " + name_);
+    //         return false;
+    //     }
+    //     auto it = std::find(children_.begin(), children_.end(), child);
+    //     if (it != children_.end()) 
+    //     {
+    //             // We'll handle removal according to the child's retention policy.
+    //             // Do NOT erase from children_ here — call removeOrphan_ when we want
+    //             // the canonical removal that dispatches events and updates parent
+    //             // bookkeeping. For deferred removal, erase the child from the
+    //             // parent's children_ vector after scheduling it in the orphan list.
+    //             if (auto* childObj = dynamic_cast<IDisplayObject*>(child.get())) 
+    //             {
+    //                 Core* core = &Core::getInstance();
+    //                 Factory* factory = &core->getFactory();
+
+    //                 // If AutoDestroy and we are not traversing, perform the canonical
+    //                 // removal which will dispatch events and clean up the parent.
+    //                 if (childObj->getOrphanPolicy() == OrphanRetentionPolicy::AutoDestroy && !core->getIsTraversing())
+    //                 {
+    //                     // removeOrphan_ expects the child's parent/children relationship to
+    //                     // still be intact, so call it before touching parent pointers.
+    //                     removeOrphan_(child);
+    //                     // removeOrphan_ removed the child from parent->children_, so we're done.
+    //                 }
+    //                 else
+    //                 {
+    //                     // Defer removal: clear the child's parent, timestamp orphaning,
+    //                     // schedule it for GC, and then remove the handle from the parent's
+    //                     // children_ vector to keep in-memory state consistent.
+    //                     childObj->setParent(DomHandle());
+    //                     if (!childObj->getParent()) {
+    //                         childObj->orphanedAt_ = std::chrono::steady_clock::now();
+    //                     }
+    //                     factory->addToOrphanList(child); // Defer removal
+    //                     // erase from this parent's children_ vector now that we've scheduled it
+    //                     children_.erase(it);
+    //                 }
+    //             }
+    //             else
+    //             {
+    //                 // Non-display objects: we simply erase the handle from children_
+    //                 children_.erase(it);
+    //             }
+    //         return true;
+    //     } 
+    //     else 
+    //     {
+    //         ERROR("removeChild: child not found in children_ vector of " + name_);
+    //         return false;
+    //     }
+    // }
+
     bool IDisplayObject::removeChild(DomHandle child)
     {
         if (!child) 
@@ -689,7 +746,7 @@ namespace SDOM
             ERROR("removeChild: child not found in children_ vector of " + name_);
             return false;
         }
-    }
+    }    
 
     void IDisplayObject::cleanAll() 
     {
