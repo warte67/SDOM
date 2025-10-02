@@ -304,10 +304,6 @@ namespace SDOM
             std::string after_name = t2["name"].get_or(std::string());
             std::string after_getname = t2["getName"].get_or(std::string());
             bool r2 = (after_name == "theTarget") && (after_getname == "theTarget");
-            if (!r1 || !r2) {
-                std::cerr << "[Event_test11] Diagnostic: before(name, getName) = ('" << before_name << "', '" << before_getname << "')\n";
-                std::cerr << "[Event_test11] Diagnostic: after(name, getName)  = ('" << after_name << "', '" << after_getname << "')\n";
-            }
             ok = r1 && r2;
             lua["_tmp_ev"] = sol::nil;
         } catch (const std::exception& e) {
@@ -342,6 +338,41 @@ namespace SDOM
         return UnitTests::run("Event #12", "pairs metamethod includes expected keys", [=]() { return ok; });
     }
 
+    bool Event_test13()
+    {
+        // Event #13: validate pairs(e) returns expected keys and simple types
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        SDOM::Event::registerLua(lua);
+        bool ok = false;
+        try {
+            SDOM::Event ev(SDOM::EventType("UT_Pairs_Check"));
+            ev.setElapsedTime(0.25f);
+            DomHandle dh("pairTarget", "Box");
+            ev.setTarget(dh);
+            lua["_tmp_ev"] = &ev;
+            auto result = lua.script(R"(
+                local e = _tmp_ev
+                local seen = {}
+                for k,v in pairs(e) do
+                    seen[k] = { type = type(v), value = v }
+                end
+                -- we expect 'type' and 'dt' at minimum, and if target present its name as a string
+                if not seen.type then return false end
+                if not seen.dt then return false end
+                if seen.type.type ~= 'string' then return false end
+                if seen.dt.type ~= 'number' then return false end
+                if seen.target and seen.target.type ~= 'string' then return false end
+                return true
+            )");
+            ok = result.get<bool>();
+            lua["_tmp_ev"] = sol::nil;
+        } catch (const std::exception& e) {
+            std::cerr << "[Event_test13] Exception: " << e.what() << std::endl;
+            ok = false;
+        }
+        return UnitTests::run("Event #13", "pairs(e) returns expected simple key/value types", [=]() { return ok; });
+    }
+
 
     bool Event_UnitTests() 
     {
@@ -358,7 +389,8 @@ namespace SDOM
         [&]() { return Event_test9(); },    // target/current/related
         [&]() { return Event_test10(); },   // payload from Lua
         [&]() { return Event_test11(); },   // name/getName behavior
-        [&]() { return Event_test12(); }    // pairs metamethod
+        [&]() { return Event_test12(); },   // pairs metamethod
+        [&]() { return Event_test13(); }    // pairs type validation
     };
         for (auto& test : tests) 
         {
