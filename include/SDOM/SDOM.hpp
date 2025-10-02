@@ -363,7 +363,10 @@ namespace SDOM
  * @param message Informational message to display.
  */
 // Macro for informational logging (statement-safe, parenthesized parameter)
-#define INFO(message) do { std::cout << CLR::YELLOW << "[INFO] " << (message) << CLR::RESET << std::endl; } while(0)
+#define INFO(...) do { \
+    std::ostringstream _sdom_dbg_oss; \
+    _sdom_dbg_oss << __VA_ARGS__; \
+    std::cout << CLR::YELLOW << "[INFO] " << (_sdom_dbg_oss.str()) << CLR::RESET << std::endl; } while(0)
 
 /**
  * @brief Logs a debug error (non-fatal) with file and line info in dark text.

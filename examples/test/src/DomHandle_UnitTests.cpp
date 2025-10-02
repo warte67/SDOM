@@ -140,16 +140,30 @@ namespace SDOM
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
             local b = Core:createDisplayObject('Box', { name = 'li_box_hover', type = 'Box', x = 10, y = 10, width = 20, height = 20 })
-            if not b then return false end
+            if not b then 
+                print("DomHandle_test6: failed to create box")
+                return false 
+            end
             local stage = Core:getStageHandle()
-            if stage and b then stage:addChild(b) end
+            if stage and b then 
+                stage:addChild(b) 
+            else
+                print("DomHandle_test6: failed to get stage or add child")
+                return false
+            end
             local cx = b:getX() + b:getWidth()/2
             local cy = b:getY() + b:getHeight()/2
             Core:pushMouseEvent({ x = cx, y = cy, type = 'motion' })
             Core:pumpEventsOnce()
             local m = Core:getMouseHoveredObject()
-            if not m then return false end
-            if m:getName() ~= 'li_box_hover' then return false end
+            if not m then 
+                print("DomHandle_test6: getMouseHoveredObject returned nil")
+                return false 
+            end
+            if m:getName() ~= 'li_box_hover' then 
+                print("DomHandle_test6: hovered object name mismatch: expected 'li_box_hover', got '"..m:getName().."'")
+                return false 
+            end
             Core:destroyDisplayObject('li_box_hover')
             return true
         )").get<bool>();
@@ -353,9 +367,11 @@ namespace SDOM
 
 
 
-    bool DomHandle_UnitTests() {
+    bool DomHandle_UnitTests() 
+    {
         bool allTestsPassed = true;
-        std::vector<std::function<bool()>> tests = {
+        std::vector<std::function<bool()>> tests = 
+        {
               [&]() { return DomHandle_test1(); },           // Verify DomHandle forwards for priority/z-order exist and are callable
               [&]() { return DomHandle_test2(); },            // Verify setClickable/isClickable from Lua
               [&]() { return DomHandle_test3(); },              // Verify setEnabled/isEnabled from Lua
@@ -367,7 +383,8 @@ namespace SDOM
               [&]() { return DomHandle_test9(); },   // Exercise setPriority/setZOrder/moveToTop overloads
               [&]() { return DomHandle_test10(); }  // Verify sortChildrenByPriority and setToHighest/Lowest with child specs
         };
-        for (auto& test : tests) {
+        for (auto& test : tests) 
+        {
             bool testResult = test();
             allTestsPassed &= testResult;
         }

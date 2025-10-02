@@ -1,6 +1,7 @@
 // lua_Core.cpp
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/lua_Core.hpp>
 
 namespace SDOM
@@ -9,7 +10,8 @@ namespace SDOM
 	// --- Event helpers exposed to Lua --- //
 	void pumpEventsOnce_lua(Core& core) { core.pumpEventsOnce(); }
 
-	void pushMouseEvent_lua(Core& core, const sol::object& args) {
+	void pushMouseEvent_lua(Core& core, const sol::object& args) 
+	{
 		// Expect a table with { x=<stage-x>, y=<stage-y>, type="down"|"up", button=<int> }
 		if (!args.is<sol::table>()) return;
 		sol::table t = args.as<sol::table>();
@@ -21,12 +23,24 @@ namespace SDOM
 		int button = 1;
 		if (t["button"].valid()) button = t["button"].get<int>();
 
-		// Convert stage coords to window coords using pixel scale in Core config
-		const Core::CoreConfig& cfg = core.getConfig();
-		int winX = static_cast<int>(sx * cfg.pixelWidth);
-		int winY = static_cast<int>(sy * cfg.pixelHeight);
+		// Convert stage/render coords to window coords using SDL_RenderCoordinatesToWindow
+		float winX = 0.0f, winY = 0.0f;
+		SDL_Renderer* renderer = core.getRenderer();
+		if (renderer) 
+		{
+			SDL_RenderCoordinatesToWindow(renderer, sx, sy, &winX, &winY);
+	        // INFO("pushMouseEvent_lua: SDL_RenderCoordinatesToWindow stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
+		} 
+		else 
+		{
+			// Fallback: simple scaling (may fail in tiled/letterboxed)
+			const Core::CoreConfig& cfg = core.getConfig();
+			winX = sx * cfg.pixelWidth;
+			winY = sy * cfg.pixelHeight;
+	        // INFO("pushMouseEvent_lua: Fallback scaling stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
+		}
 
-		// // Debug logging for synthetic mouse events
+		// Debug logging for synthetic mouse events
 		// std::cout << "[pushMouseEvent_lua] stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button << std::endl;
 
 		Uint32 winID = 0;
@@ -36,26 +50,22 @@ namespace SDOM
 		std::memset(&ev, 0, sizeof(ev));
 		if (type == "up") {
 			ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
-			// button fields
 			ev.button.windowID = winID;
 			ev.button.which = 0;
 			ev.button.button = button;
 			ev.button.clicks = 1;
 			ev.button.x = winX;
 			ev.button.y = winY;
-			// populate motion fields too
 			ev.motion.windowID = winID;
 			ev.motion.which = 0;
 			ev.motion.x = winX;
 			ev.motion.y = winY;
 		} else if (type == "motion") {
-			// synthesize a pure mouse motion event
 			ev.type = SDL_EVENT_MOUSE_MOTION;
 			ev.motion.windowID = winID;
 			ev.motion.which = 0;
 			ev.motion.x = winX;
 			ev.motion.y = winY;
-			// leave button fields zeroed
 		} else {
 			ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
 			ev.button.windowID = winID;
@@ -64,39 +74,40 @@ namespace SDOM
 			ev.button.clicks = 1;
 			ev.button.x = winX;
 			ev.button.y = winY;
-			// Also populate motion fields so downstream code that reads motion.x/y will see coords
 			ev.motion.windowID = winID;
 			ev.motion.which = 0;
 			ev.motion.x = winX;
 			ev.motion.y = winY;
 		}
 
-		SDL_PushEvent(&ev);
+		// SDL_PushEvent(&ev);
+		core.getEventManager().Queue_SDL_Event(ev);		
 	}
 
-void pushKeyboardEvent_lua(Core& core, const sol::object& args) {
-    if (!args.is<sol::table>()) return;
-    sol::table t = args.as<sol::table>();
-    if (!t["key"].valid()) return;
-    int key = t["key"].get<int>();
-    std::string type = "down";
-    if (t["type"].valid()) type = t["type"].get<std::string>();
-    int mod = 0;
-    if (t["mod"].valid()) mod = t["mod"].get<int>();
+	void pushKeyboardEvent_lua(Core& core, const sol::object& args) {
+		if (!args.is<sol::table>()) return;
+		sol::table t = args.as<sol::table>();
+		if (!t["key"].valid()) return;
+		int key = t["key"].get<int>();
+		std::string type = "down";
+		if (t["type"].valid()) type = t["type"].get<std::string>();
+		int mod = 0;
+		if (t["mod"].valid()) mod = t["mod"].get<int>();
 
-    SDL_Event ev;
-    std::memset(&ev, 0, sizeof(ev));
-    if (type == "up") ev.type = SDL_EVENT_KEY_UP;
-    else ev.type = SDL_EVENT_KEY_DOWN;
+		SDL_Event ev;
+		std::memset(&ev, 0, sizeof(ev));
+		if (type == "up") ev.type = SDL_EVENT_KEY_UP;
+		else ev.type = SDL_EVENT_KEY_DOWN;
 
-    ev.key.windowID = core.getWindow() ? SDL_GetWindowID(core.getWindow()) : 0;
-	ev.key.timestamp = SDL_GetTicks();
-	ev.key.repeat = 0;
-	ev.key.mod = mod;
-	ev.key.key = key;
+		ev.key.windowID = core.getWindow() ? SDL_GetWindowID(core.getWindow()) : 0;
+		ev.key.timestamp = SDL_GetTicks();
+		ev.key.repeat = 0;
+		ev.key.mod = mod;
+		ev.key.key = key;
 
-    SDL_PushEvent(&ev);
-}
+		// SDL_PushEvent(&ev);
+		getCore().getEventManager().Queue_SDL_Event(ev);
+	}
 
 
 	// --- Main Loop & Event Dispatch --- //

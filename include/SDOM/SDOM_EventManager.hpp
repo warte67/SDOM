@@ -82,6 +82,10 @@ namespace SDOM
         bool isMouseWithinBounds(IDisplayObject& target) const;
         DomHandle findTopObjectUnderMouse(DomHandle rootNode, DomHandle excludeNode = DomHandle()) const;
 
+        int getEventQueueSize() const { return static_cast<int>(eventQueue.size()); }
+
+        // Event popEvent() { if (!eventQueue.empty()) return std::move(*eventQueue.front()); return Event(); }
+
     private:
         std::queue<std::unique_ptr<Event>> eventQueue; // Queue for storing events
     };

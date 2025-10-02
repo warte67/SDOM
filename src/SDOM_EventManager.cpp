@@ -36,6 +36,7 @@
  *
  ******************/
 
+#include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Stage.hpp>
@@ -54,11 +55,6 @@ namespace SDOM
     static bool isDragging = false;
     static DomHandle draggedObject = nullptr;
 
-    // void EventManager::addEvent(std::unique_ptr<Event> event) 
-    // {
-    //     std::lock_guard<std::mutex> lock(queueMutex);
-    //     eventQueue.push(std::move(event));
-    // }
 
     void EventManager::addEvent(std::unique_ptr<Event> event) 
     {
@@ -73,8 +69,8 @@ namespace SDOM
         while (!eventQueue.empty()) 
         {
             auto event = std::move(eventQueue.front());
-            eventQueue.pop();
             dispatchEvent(std::move(event), rootNode);
+            eventQueue.pop();
         }
     }
 
@@ -552,6 +548,9 @@ namespace SDOM
         // Handle mouse button up events
         if (sdlEvent.type == SDL_EVENT_MOUSE_BUTTON_UP) 
         {
+
+// INFO("EventManager::Queue_SDL_Event: Mouse Button Up event received... at window X=" << sdlEvent.button.x << " Y=" << sdlEvent.button.y);
+
             // Convert to stage coordinates for event payloads and hit-testing
             // Use raw SDL coordinates for event payloads (revert pixel scaling)
             float mX = static_cast<float>(sdlEvent.motion.x);
@@ -607,6 +606,9 @@ namespace SDOM
         // Handle mouse button down events
         if (sdlEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN) 
         {
+
+// INFO("EventManager::Queue_SDL_Event: Mouse Button Down event received... at window X=" << sdlEvent.button.x << " Y=" << sdlEvent.button.y);
+
             // Convert to stage coordinates
             float mX = static_cast<float>(sdlEvent.motion.x) / (getCore().getPixelWidth() != 0.0f ? getCore().getPixelWidth() : 1.0f);
             float mY = static_cast<float>(sdlEvent.motion.y) / (getCore().getPixelHeight() != 0.0f ? getCore().getPixelHeight() : 1.0f);

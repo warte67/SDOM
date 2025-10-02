@@ -5,6 +5,15 @@
 -- 'stage' is the Stage object (passed from elsewhere or obtained via Core)
 local M = {}
 
+-- Global toggle to enable/disable prints from this listener file
+local ENABLE_PRINTS = false
+
+local function log(...)
+    if ENABLE_PRINTS then
+        print(...)
+    end
+end
+
 -- rolling FPS average state and smoothing factor (match render.lua behavior)
 local ema = nil
 local EMA_ALPHA = 2.0 / (100.0 + 1.0)
@@ -25,9 +34,9 @@ function M.on_update(evt)
         if stage then
             local b = Core:getDisplayObjectHandle("blueishBox")
             if b and stage:hasChild(b) then
-                print("Core.run Info: Stage still has blueishBox after 25 iterations.")
+                log("Core.run Info: Stage still has blueishBox after 25 iterations.")
             else
-                print("Core.run Info: Stage no longer has blueishBox after 25 iterations.")
+                log("Core.run Info: Stage no longer has blueishBox after 25 iterations.")
             end
         end
         -- Core:shutdown()
@@ -61,22 +70,22 @@ end
 function M.on_init(evt)
     -- Called when an object (or stage) receives OnInit via event listeners
     -- evt.relatedTarget may contain the stage or parent info
-    print("OnInit LUA: received OnInit event")
+    log("OnInit LUA: received OnInit event")
 end
 
 function M.on_quit(evt)
     -- Called when the application is quitting; do cleanup here
-    print("OnQuit LUA: received OnQuit event")
+    log("OnQuit LUA: received OnQuit event")
 end
 
 function M.on_event(evt)
     -- Generic event handler example
     if evt.sdl and evt.sdl.type then
         if evt.sdl.type ~= "SDL_EVENT_MOUSE_MOTION" then
-            print("SDL Event: " .. evt.sdl.type .. "  name: " .. tostring(evt.name))
+            log("SDL Event: " .. evt.sdl.type .. "  name: " .. tostring(evt.name))
         end
     else
-        print("LUA.on_event(): received event with no SDL payload, name: " .. tostring(evt.name))
+        log("LUA.on_event(): received event with no SDL payload, name: " .. tostring(evt.name))
     end
 end
 
@@ -98,9 +107,9 @@ function M.on_click(evt)
         -- Fallback to tostring when methods aren't available
         return tostring(h)
     end
-    print("LUA: received event type: " .. evt.type .. "  name: " .. evt.name )
+    log("LUA: received event type: " .. evt.type .. "  name: " .. evt.name )
     if evt.sdl and evt.sdl.button then
-        print("At X:" .. evt.sdl.button.x .. "  Y: " .. evt.sdl.button.y)
+        log("At X:" .. evt.sdl.button.x .. "  Y: " .. evt.sdl.button.y)
         -- Colorize the "target:" label using the target's color if available
         local function colorPrefixForHandle(h)
             if not h then return "" end
@@ -115,10 +124,10 @@ function M.on_click(evt)
 
         local prefix = colorPrefixForHandle(evt.target)
         local suffix = prefix ~= "" and CLR.RESET or ""
-        print(prefix .. "target: " .. prettyHandle(evt.target) .. suffix)
-        print("relatedTarget: " .. prettyHandle(evt.relatedTarget))
-        print("currentTarget: " .. prettyHandle(evt.currentTarget))
-        print("evt.sdl.button.which: " .. tostring(evt.sdl.button.which) .. "  button: " .. tostring(evt.sdl.button.button) .. "  clicks: " .. tostring(evt.sdl.button.clicks))
+        log(prefix .. "target: " .. prettyHandle(evt.target) .. suffix)
+        log("relatedTarget: " .. prettyHandle(evt.relatedTarget))
+        log("currentTarget: " .. prettyHandle(evt.currentTarget))
+        log("evt.sdl.button.which: " .. tostring(evt.sdl.button.which) .. "  button: " .. tostring(evt.sdl.button.button) .. "  clicks: " .. tostring(evt.sdl.button.clicks))
     end
 end
 

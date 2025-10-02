@@ -210,40 +210,82 @@ namespace SDOM
     void Core::run(const sol::table& config)
     {
         configureFromLua(config);
+        // Now run normally
         run();
     }
 
+    // void Core::run(const std::string& configFile)
+    // {
+    //     // If configFile refers to an actual file on disk, load it.
+    //     // Otherwise treat the string as raw Lua script and execute it
+    //     // in this Core's Lua state, then pull the `config` table.
+    //     if (!configFile.empty()) {
+    //         // Portable file-exists check using ifstream to avoid std::filesystem
+    //         std::ifstream infile(configFile);
+    //         if (infile.good()) {
+    //             configureFromLuaFile(configFile);
+    //         } else {
+    //             // Ensure Core usertype is registered in this lua state so the
+    //             // script can reference `Core` (register callbacks, call Core:run, etc.)
+    //             this->_registerLua("Core", lua_);
+    //             // Treat the string as a raw Lua script
+    //             try {
+    //                 lua_.script(configFile);
+    //                 sol::table configTable = lua_["config"];
+    //                 if (configTable.valid()) {
+    //                     configureFromLua(configTable);
+    //                 } else {
+    //                     ERROR("Lua script did not produce a valid 'config' table.");
+    //                 }
+    //             } catch (const sol::error& e) {
+    //                 ERROR(std::string("Error executing Lua script for configuration: ") + e.what());
+    //             }
+    //         }
+    //     }
+    //     // Now run normally
+    //     run();
+    // }
+
     void Core::run(const std::string& configFile)
     {
-        // If configFile refers to an actual file on disk, load it.
-        // Otherwise treat the string as raw Lua script and execute it
-        // in this Core's Lua state, then pull the `config` table.
         if (!configFile.empty()) {
-            // Portable file-exists check using ifstream to avoid std::filesystem
             std::ifstream infile(configFile);
             if (infile.good()) {
                 configureFromLuaFile(configFile);
             } else {
-                // Ensure Core usertype is registered in this lua state so the
-                // script can reference `Core` (register callbacks, call Core:run, etc.)
+                // Try to execute as Lua code
                 this->_registerLua("Core", lua_);
-                // Treat the string as a raw Lua script
                 try {
-                    lua_.script(configFile);
-                    sol::table configTable = lua_["config"];
-                    if (configTable.valid()) {
-                        configureFromLua(configTable);
+                    sol::load_result chunk = lua_.load(configFile);
+                    if (!chunk.valid()) {
+                        sol::error err = chunk;
+                        ERROR(std::string("Failed to load Lua config chunk: ") + err.what());
+                        return;
+                    }
+                    sol::protected_function_result result = chunk();
+                    if (!result.valid()) {
+                        sol::error err = result;
+                        ERROR(std::string("Error executing Lua config chunk: ") + err.what());
+                        return;
+                    }
+                    sol::object ret = result.get<sol::object>();
+                    if (ret.is<sol::table>()) {
+                        configureFromLua(ret.as<sol::table>());
                     } else {
-                        ERROR("Lua script did not produce a valid 'config' table.");
+                        sol::table configTable = lua_["config"];
+                        if (configTable.valid()) {
+                            configureFromLua(configTable);
+                        } else {
+                            ERROR("Lua script did not produce a valid 'config' table.");
+                        }
                     }
                 } catch (const sol::error& e) {
                     ERROR(std::string("Error executing Lua script for configuration: ") + e.what());
                 }
             }
         }
-        // Now run normally
         run();
-    }
+    }    
 
     void Core::reconfigure(const CoreConfig& config)
     {
@@ -442,6 +484,7 @@ namespace SDOM
                         int newWidth, newHeight;
                         if (!SDL_GetWindowSize(window_, &newWidth, &newHeight))
                             ERROR("Unable to get the new window size: " + std::string(SDL_GetError()));
+// INFO("Window resized to " << newWidth << "x" << newHeight);                            
                         onWindowResize(newWidth, newHeight);
                     }
 
@@ -536,21 +579,14 @@ namespace SDOM
                 // factory_->garbageCollection(); // Clean up any orphaned objects
 
                 // static int s_iterations = 0;
-                // if (s_iterations == 25)
+                // if (s_iterations == 0)
                 // {
-                //     Stage* rootStage = dynamic_cast<Stage*>(rootNode_.get());
-                //     if (rootStage)
+                //     // Now run user tests after initialization
+                //     bool testsPassed = onUnitTest();
+                //     if (!testsPassed) 
                 //     {
-                //         DomHandle blueishBoxHandle = factory_->getDomHandle("blueishBox");
-                //         if (rootStage->hasChild(blueishBoxHandle))
-                //         {
-                //             INFO("Core::run() Info: Stage still has blueishBox after 25 iterations.");
-                //         }
-                //         else
-                //         {
-                //             INFO("Core::run() Info: Stage no longer has blueishBox after 25 iterations.");
-                //         }   
-                //     }
+                //         ERROR("Unit tests failed. Aborting run.");
+                //     }                    
                 // }
                 // s_iterations++;
 
@@ -590,7 +626,10 @@ namespace SDOM
         SDL_Event event;
         // // Apply any pending configuration requested from other threads
         // applyPendingConfig();
+        if (!eventManager_)
+            return;
 
+        // std::cout << "Core::pumpEventsOnce(): Dispatching queued event. Remaining queue size: " << eventManager_->getEventQueueSize() << std::endl;
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_EVENT_QUIT)
@@ -603,12 +642,12 @@ namespace SDOM
                     ERROR("Unable to get the new window size: " + std::string(SDL_GetError()));
                 onWindowResize(newWidth, newHeight);
             }
-
-            if (eventManager_)
-            {
-                eventManager_->Queue_SDL_Event(event);
-                eventManager_->DispatchQueuedEvents();
-            }
+            eventManager_->Queue_SDL_Event(event);
+        }
+            // std::cout << "POST -- Core::pumpEventsOnce(): Dispatching queued event. Remaining queue size: " << eventManager_->getEventQueueSize() << std::endl;
+        while (eventManager_->getEventQueueSize() > 0)
+        {
+            eventManager_->DispatchQueuedEvents();  // should pop all queued events
         }
     }
 

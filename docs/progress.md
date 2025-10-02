@@ -16,9 +16,17 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ## Progress Updates
 
-- **[July 2, 2025]**  Initial rough draft and proof of concept.
-- **[August 5, 2025]** SDOM secondary rough draft
-- **[September 19, 2025]**
+
+---   
+- ### [July 2, 2025]
+    - Initial rough draft and proof of concept.
+
+---   
+- ### [August 5, 2025] 
+    - SDOM secondary rough draft
+
+---   
+- ### [September 19, 2025]
     - Proof of concept approved. Main development approved. Work begins officially.
     - Improved Doxygen documentation for all major headers and macros.
     - Added and refined Doxygen comments for SDOM_CLR.hpp, SDOM.hpp, and SDOM_IDataObject.hpp.
@@ -40,7 +48,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - JSON configuration supports both new flags for runtime flexibility.
     - Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.
 
-- **[September 20, 2025]**
+---   
+- ### [September 20, 2025]
     - Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.
     - Event system foundation implemented and documented.
     - Doxygen documentation added for major interfaces (Core, Factory, IResourceObject).
@@ -48,7 +57,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Circular include and pointer management issues resolved (raw pointer for Factory ownership).
     - The SDOM framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.
 
-- **[September 21, 2025]**
+---   
+- ### [September 21, 2025]
     - Renamed `resource_ptr` to `ResourceHandle` throughout the codebase for clarity.
         - The new name better reflects its role as an opaque handle or key for resource lookup, rather than a smart pointer with ownership semantics.
         - Updated all documentation, examples, and comments to use `ResourceHandle`.
@@ -76,7 +86,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Added debug prints to trace resource creation and lifecycle events.
         - Validated that the system is ready for expanded DOM tree parsing and more complex resource hierarchies.
 
-- **[September 22, 2025]**
+---   
+- ### [September 22, 2025]
     - **Unit Test Framework Refined:**  
         - Simplified the unit test system: now every resource implements `onUnitTests()` for built-in tests.
         - External/custom unit tests are registered and run via the `registerOnUnitTest()` callback, keeping the API minimal and flexible.
@@ -100,7 +111,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Planned to add live event tests (drag/drop, deferred add/remove) and prioritize tests for new features as they are developed.
         - Recognized that coverage for older features will be expanded over time, focusing first on the most critical areas.
 
-- **[September 23, 2025]**
+---   
+- ### [September 23, 2025]
     - **Event System Preliminary Testing:**  
         - Successfully integrated and tested the event system with live SDL3 events.
         - Verified that mouse, keyboard, window, and focus events are received and dispatched correctly.
@@ -118,7 +130,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - All major event and display object interactions now use the new handle API.
         - Codebase is stable, with most reference and legacy issues resolved.
 
-- **[September 24, 2025]**
+---   
+- ### [September 24, 2025]
     - **Event System Debugging:**
         - Resolved compile-time issues with `ListenerEntry` constructor and `push_back` calls in `addEventListener`.
         - Verified that `addEventListener` correctly registers event listeners for both capture and bubbling phases.
@@ -141,7 +154,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Both instant and deferred `addChild()` and `removeChild()` operations work reliably, ensuring robust event propagation and hierarchy management.
         - With the event system confirmed stable, we’ve decided this is the ideal time to begin transitioning from `JSON-based` initialization to `Sol2-powered Lua` scripting.
 
-- **[September 25, 2025]**
+---   
+- ### [September 25, 2025]
     - **JSON → Lua Transition Complete:**  
         - All configuration, scripting, and resource creation now use Lua tables via Sol2.
         - Factory, Core, and EventManager refactored to accept and process `sol::table` configs.
@@ -163,25 +177,27 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - **Milestone:**  
         - SDOM is now fully Lua-configurable and ready for advanced scripting, rapid prototyping, and integration with external tools. Json features have been removed completely.
 
-- **[September 26, 2025]**
-- **Box Unit Tests Complete:**  
-    - Finalized comprehensive unit tests for the Box object, covering creation, hierarchy, anchor logic, and world coordinate propagation.
-    - All anchor setters and edge references are tested for all anchor points and hierarchy levels.
-    - Confirmed that the Box object works as a reliable proof of concept for external applications using the SDOM API.
-    - Decided to defer exhaustive reference calculation tests for resizing and complex anchor scenarios until a specific layout issue is identified.
-    - The Box unit test suite is now robust and maintainable; targeted tests will be added as new bugs or features arise.
-- **Orphaned Display Object Management:**  
-    - Implemented `Factory::countOrphanedDisplayObjects()`, `getOrphanedDisplayObjects()`, and `destroyOrphanedDisplayObjects()` for robust orphan detection and cleanup.
-    - Improved `destroyOrphanedDisplayObjects()` to recursively remove all orphaned objects, including nested orphans, ensuring a clean DOM state after parent removal.
-    - Added unit tests to verify orphan detection and recursive cleanup logic.
-    - Documented the current behavior and discussed future enhancements for selective orphan preservation.
-    - Proposed an `OrphanCleanupPolicy` enum for `IDisplayObject` to allow marking objects as persistent, templates, or editor-only, enabling fine-grained control over orphan cleanup (feature deferred for future implementation).
-- **General Stability:**  
-    - All core, factory, display object, and stage unit tests are passing.
-    - Event system and Lua-driven configuration are stable and fully integrated.
-    - Documentation and codebase are up-to-date with recent changes.
+---   
+- ### [September 26, 2025]
+    - **Box Unit Tests Complete:**  
+        - Finalized comprehensive unit tests for the Box object, covering creation, hierarchy, anchor logic, and world coordinate propagation.
+        - All anchor setters and edge references are tested for all anchor points and hierarchy levels.
+        - Confirmed that the Box object works as a reliable proof of concept for external applications using the SDOM API.
+        - Decided to defer exhaustive reference calculation tests for resizing and complex anchor scenarios until a specific layout issue is identified.
+        - The Box unit test suite is now robust and maintainable; targeted tests will be added as new bugs or features arise.
+    - **Orphaned Display Object Management:**  
+        - Implemented `Factory::countOrphanedDisplayObjects()`, `getOrphanedDisplayObjects()`, and `destroyOrphanedDisplayObjects()` for robust orphan detection and cleanup.
+        - Improved `destroyOrphanedDisplayObjects()` to recursively remove all orphaned objects, including nested orphans, ensuring a clean DOM state after parent removal.
+        - Added unit tests to verify orphan detection and recursive cleanup logic.
+        - Documented the current behavior and discussed future enhancements for selective orphan preservation.
+        - Proposed an `OrphanCleanupPolicy` enum for `IDisplayObject` to allow marking objects as persistent, templates, or editor-only, enabling fine-grained control over orphan cleanup (feature deferred for future implementation).
+    - **General Stability:**  
+        - All core, factory, display object, and stage unit tests are passing.
+        - Event system and Lua-driven configuration are stable and fully integrated.
+        - Documentation and codebase are up-to-date with recent changes.
 
-- **[September 27, 2025]**
+---   
+- ### [September 27, 2025]
     - **Lua Integration Complete:**  
         - All major Core and Factory methods are now exposed to Lua via Sol2 usertype registration.
         - Overloaded methods and custom types (DomHandle, SDL_Color) are correctly bound and accessible from Lua scripts.
@@ -195,7 +211,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Demonstrated robust C++/Lua test integration: Lua scripts return boolean results to C++ test framework, enabling seamless cross-language validation.
         - Codebase and Lua API stability increased, with reliable resource management and hierarchy checks.
 
-- **[September 28, 2025]**
+---   
+- ### [September 28, 2025]
     - **Lua Binding Improvements:**
         - Refined Lua usertype registration to ensure idempotent and consistent bindings.
         - Verified that all properties, commands, and functions are correctly exposed to Lua for Core, Factory, DomHandle, and IDisplayObject.
@@ -220,14 +237,15 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - **Box Object Enhancements:**
         - Added utility functions to Box for testing purposes (e.g., `doSomething`, `resetColor`).
         - Implemented a click counter to track interactions during tests.
-    - **Unit Test Expansion:**
+    - **Unit Test Expansion:**  
         - Added new Lua-driven unit tests to cover property, command, and function retrieval for custom display objects.
         - Verified that all existing tests pass successfully with the latest Lua bindings.
     - **Code Cleanup:**
         - Removed temporary debug instrumentation and test-only Factory helpers.
         - Ensured the codebase is clean and maintainable.
 
-- **[September 29, 2025]**
+---   
+- ### [September 29, 2025]
     - **Lua Binding Debugging:**
         - Added controlled debug prints to Lua usertype registration to trace binding operations.
         - Verified that each usertype (DomHandle, IDisplayObject, Stage, Factory, Core) is registered exactly once, preventing conflicts and ensuring consistent behavior.
@@ -259,9 +277,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - The tests vector updated to call the new functions and includes matching descriptive comments.
         - Debug output updated to reference DomHandle_test10 where applicable.
         - A clean build and test run were executed successfully.    
-        - Reworked the DomHandle unit tests for readability and maintainability: added a numeric mapping header, expanded inline descriptions to match `UnitTests::run` strings, and renamed test functions to `DomHandle_test1`..`DomHandle_test10`.
-            
-**[September 30, 2025]**
+        - Reworked the DomHandle unit tests for readability and maintainability: added a numeric mapping header, expanded inline descriptions to match `UnitTests::run` strings, and renamed test functions to `DomHandle_test1`..`DomHandle_test10`.         
+
+---   
+- ### [September 30, 2025]
     - **Summary:**
         - Consolidated work focused on lifecycle event dispatch, Lua bindings robustness, and logging/debug cleanup.  These changes make lifecycle events available to Lua listeners, surface Lua errors, and stabilize the debug/logging surface for continued iteration.
     - **Event dispatch & lifecycle hooks:**
@@ -302,32 +321,64 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - **Build & verification:**
         - Fixed compile regressions introduced during iteration; rebuilt examples/test successfully.
         - Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.
+---
+- ### [October 2, 2025]
+    - **Synthetic Event Handling Robustness:**
+        - Refined synthetic mouse event generation and dispatch to work reliably in both floating and tiled window manager modes.
+        - Ensured all synthetic events use `SDL_RenderCoordinatesToWindow()` for correct mapping from logical to window coordinates, fixing previous issues with negative or out-of-bounds coordinates.
+        - Updated Lua and C++ event helpers to guarantee robust event delivery and handler invocation.
+        - Verified that all mouse-related unit tests (including Lua-driven synthetic click and hover tests) now pass in both environments.
+        - Improved event queue draining in `Core::pumpEventsOnce()` to ensure all queued events are dispatched before returning, eliminating timing issues in Lua event handler tests.
+        - Added diagnostic logging to synthetic event helpers and event handlers for easier debugging and verification of coordinate mapping and event flow.
 
-**[October 1, 2025]**
-    - Lua/Event binding & SDL event exposure (today):
-        - Expanded `SDL_Utils::eventToLuaTable()` to expose many SDL3 event fields to Lua (mouse, keyboard, gamepad, pen, touch, camera, audio, sensor, render, user, etc.).
-        - Centralized `Event` Lua usertype creation in `SDOM::Event::registerLua()` and added bindings for the full set of Event accessors and mutators so Lua can call methods like `evt:getMouseX()` and use properties `evt.mouseX`.
-        - Added `Event::getName()` (C++ implementation) and switched the Lua `name` property to use the member-pointer binding (single source of truth + proper locking).
-        - Implemented safe `getPayload`/`setPayload` Lua bindings (payload returned as a Lua table via the current Lua state to avoid lifetime issues).
-        - Exposed lower-camelcase convenience properties (e.g., `mouse_x`, `mouse_y`, `wheel_x`, `click_count`, `click_count`, `ascii_code`, etc) as `sol::property` pairs for readable/writable access from Lua.
-        - Verified the project builds cleanly after these changes (`./compile` run in `examples/test` succeeded and unit tests built/run as part of the test binary).
-    - Notes:
-        - Where getters return Lua-managed objects (like `sol::table` payloads) we kept lambda bindings so we can safely create `sol::object` tied to the current `sol::state`.
-        - `SDL_Utils` still exposes `eventToLuaTable` as a Lua helper table (`SDL`/`SDL_Utils`) for direct use; `Event::registerLua()` uses the C++ helper internally for the `sdl` property.
-        - Example update: `examples/test/lua/callbacks/listener_callbacks.lua` was adjusted to colorize the "target:" label using the DomHandle `getColor()` Lua binding and `CLR.fg_rgb(r,g,b)`; the code uses `pcall` fallbacks so it degrades gracefully when color or handle info is unavailable.
-        - Verified: rebuilt the examples and test binary after these changes (`./compile` in `examples/test`) — build completed and `prog` produced successfully.
+    - **Unit Test Reliability:**
+        - Addressed timing issues in Lua unit tests by polling for event handler completion, ensuring tests do not return before handlers are invoked.
+        - Confirmed that both Lua and C++ unit tests pass consistently across different compositors and window manager modes.
+        - Documented best practices for synthetic event testing and event queue management.
 
+    - **Documentation & Debugging:**
+        - Updated documentation to reflect recent changes in event dispatch, Lua bindings, and synthetic event handling.
+        - Added notes and troubleshooting tips for running tests under different window managers (floating vs. tiled).
+        - Improved error reporting and debug output for configuration loading and Lua script execution.[October 1, 2025]**
+        - Lua/Event binding & SDL event exposure (today):
+            - Expanded `SDL_Utils::eventToLuaTable()` to expose many SDL3 event fields to Lua (mouse, keyboard, gamepad, pen, touch, camera, audio, sensor, render, user, etc.).
+            - Centralized `Event` Lua usertype creation in `SDOM::Event::registerLua()` and added bindings for the full set of Event accessors and mutators so Lua can call methods like `evt:getMouseX()` and use properties `evt.mouseX`.
+            - Added `Event::getName()` (C++ implementation) and switched the Lua `name` property to use the member-pointer binding (single source of truth + proper locking).
+            - Implemented safe `getPayload`/`setPayload` Lua bindings (payload returned as a Lua table via the current Lua state to avoid lifetime issues).
+            - Exposed lower-camelcase convenience properties (e.g., `mouse_x`, `mouse_y`, `wheel_x`, `click_count`, `click_count`, `ascii_code`, etc) as `sol::property` pairs for readable/writable access from Lua.
+            - Verified the project builds cleanly after these changes (`./compile` run in `examples/test` succeeded and unit tests built/run as part of the test binary).
+        - Notes:
+            - Where getters return Lua-managed objects (like `sol::table` payloads) we kept lambda bindings so we can safely create `sol::object` tied to the current `sol::state`.
+            - `SDL_Utils` still exposes `eventToLuaTable` as a Lua helper table (`SDL`/`SDL_Utils`) for direct use; `Event::registerLua()` uses the C++ helper internally for the `sdl` property.
+            - Example update: `examples/test/lua/callbacks/listener_callbacks.lua` was adjusted to colorize the "target:" label using the DomHandle `getColor()` Lua binding and `CLR.fg_rgb(r,g,b)`; the code uses `pcall` fallbacks so it degrades gracefully when color or handle info is unavailable.
+            - Verified: rebuilt the examples and test binary after these changes (`./compile` in `examples/test`) — build completed and `prog` produced successfully.
+---
+- ### [October 2, 2025]
+    - **Synthetic Event Handling Robustness:**
+        - Refined synthetic mouse event generation and dispatch to work reliably in both floating and tiled window manager modes.
+        - Ensured all synthetic events use `SDL_RenderCoordinatesToWindow()` for correct mapping from logical to window coordinates, fixing previous issues with negative or out-of-bounds coordinates.
+        - Updated Lua and C++ event helpers to guarantee robust event delivery and handler invocation.
+        - Verified that all mouse-related unit tests (including Lua-driven synthetic click and hover tests) now pass in both environments.
+        - Improved event queue draining in `Core::pumpEventsOnce()` to ensure all queued events are dispatched before returning, eliminating timing issues in Lua event handler tests.
+        - Added diagnostic logging to synthetic event helpers and event handlers for easier debugging and verification of coordinate mapping and event flow.
+    - **Unit Test Reliability:**
+        - Addressed timing issues in Lua unit tests by polling for event handler completion, ensuring tests do not return before handlers are invoked.
+        - Confirmed that both Lua and C++ unit tests pass consistently across different compositors and window manager modes.
+        - Documented best practices for synthetic event testing and event queue management.
+    - **Documentation & Debugging:**
+        - Updated documentation to reflect recent changes in event dispatch, Lua bindings, and synthetic event handling.
+        - Added notes and troubleshooting tips for running tests under different window managers (floating vs. tiled).
+        - Improved error reporting and debug output for configuration loading and Lua script execution.
+    - **Short-term TODO (next steps)**
+            - UnitTest modules for `EventType` and `Event` has been scaffolded. Ready to start implementing comprehensive testing.
+            - Expand Event Lua binding (mouse_x, mouse_y, button, payload, stopPropagation, disableDefaultBehavior).
+            - Expand Event Lua binding (remaining helpers / convenience accessors) — largely done (see Oct 1, 2025); consider adding `getPayloadValue`/`setPayloadValue` Lua helpers if desired.
+            - Consider adding an API so dispatch returns status (or a shared/inspectable Event) allowing listeners to cancel core default
+            - Add unit tests validating lifecycle-event delivery (including orphaned objects).
+            - Add runtime debug toggle (Core::setDebugEnabled or similar) to control DEBUG_LOG without recompilation.
+            - Clean up Core: registerLua() and IDisplayObject::registerLua() be quite a lot more organized and maintainable.
 
-## Short-term TODO (next steps)
-        - UnitTest modules for `EventType` and `Event` has been scaffolded. Ready to start implementing comprehensive testing.
-        - Expand Event Lua binding (mouse_x, mouse_y, button, payload, stopPropagation, disableDefaultBehavior).
-         - Expand Event Lua binding (remaining helpers / convenience accessors) — largely done (see Oct 1, 2025); consider adding `getPayloadValue`/`setPayloadValue` Lua helpers if desired.
-        - Consider adding an API so dispatch returns status (or a shared/inspectable Event) allowing listeners to cancel core default
-        - Add unit tests validating lifecycle-event delivery (including orphaned objects).
-        - Add runtime debug toggle (Core::setDebugEnabled or similar) to control DEBUG_LOG without recompilation.
-        - Clean up Core: registerLua() and IDisplayObject::registerLua() be quite a lot more organized and maintainable.
-
-
+---
 ## Garbage Collection / Orphan Retention
 
 Proposed approach: add an `OrphanRetentionPolicy` enum (or a smaller `retainOnOrphan` boolean for a quick win) on `IDisplayObject` and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.

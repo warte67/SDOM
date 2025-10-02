@@ -4,7 +4,9 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
+#include <SDOM/SDOM_EventManager.hpp>
 #include "UnitTests.hpp"
 // Include Box so test helpers (reset/getTestClickCount) are visible
 #include "Box.hpp"
@@ -167,7 +169,6 @@ namespace SDOM {
         // reset counter
         Box::resetTestClickCount();
 
-
         // Determine blueishBox center from the object in the factory
         DomHandle box = Core::getInstance().getDisplayObjectHandle("blueishBox");
         if (!box) return UnitTests::run("Lua #8", "Verify synthetic MouseClick triggers Box listener", [](){ return false; });
@@ -175,16 +176,50 @@ namespace SDOM {
         int cx = box->getX() + box->getWidth() / 2;
         int cy = box->getY() + box->getHeight() / 2;
 
+        // Convert from stage/render coords to window coords so SDL_ConvertEventToRenderCoordinates
+        // inside EventManager will map them back to the intended render coordinates.
+
+// SDL_RenderCoordinatesToWindow(down.button.x, down.button.y, &winX, &winY);
+// SDL_RenderCoordinatesFromWindow(down.button.x, down.button.y, &winX, &winY);        
+
+// bool SDL_GetRenderLogicalPresentationRect(SDL_Renderer *renderer, SDL_FRect *rect);
+// bool SDL_GetWindowSize(SDL_Window *window, int *w, int *h);
+// bool SDL_GetTextureSize(SDL_Texture *texture, float *w, float *h);
+
+// int window_width = 0, window_height = 0;
+// SDL_GetWindowSize(getCore().getWindow(), &window_width, &window_height);
+// INFO("Window -- width: " << window_width << " height: " << window_height);
+
+// float texture_width = 0.0f, texture_height = 0.0f;
+// SDL_GetTextureSize(getCore().getTexture(), &texture_width, &texture_height);
+// INFO("Texture -- width: " << texture_width << " height: " << texture_height);
+
+        // These are logical renderer coordinates (not window coordinates)
+        float renderX = static_cast<float>(cx);
+        float renderY = static_cast<float>(cy);
+
+        float winX = 0.0f, winY = 0.0f;
+        SDL_Renderer* renderer = getRenderer();
+        if (renderer) {
+            // This maps logical renderer coords to window coords, accounting for letterboxing
+            SDL_RenderCoordinatesToWindow(renderer, renderX, renderY, &winX, &winY);
+        } else {
+            // Fallback: simple scaling (may fail in tiled/letterboxed)
+            winX = renderX * getCore().getConfig().pixelWidth;
+            winY = renderY * getCore().getConfig().pixelHeight;
+        }
+
+// INFO("test8_Lua: renderX=" << renderX << " renderY=" << renderY << " -> winX=" << winX << " winY=" << winY);    
+
+
+
         // Build SDL mouse down
         SDL_Event down{};
         down.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
-        down.button.windowID = Core::getInstance().getWindow() ? SDL_GetWindowID(Core::getInstance().getWindow()) : 0;
+        down.button.windowID = getCore().getWindow() ? SDL_GetWindowID(getCore().getWindow()) : 0;
         down.button.button = SDL_BUTTON_LEFT;
         down.button.clicks = 1;
-        // Convert from stage/render coords to window coords so SDL_ConvertEventToRenderCoordinates
-        // inside EventManager will map them back to the intended render coordinates.
-        int winX = static_cast<int>(cx * Core::getInstance().getConfig().pixelWidth);
-        int winY = static_cast<int>(cy * Core::getInstance().getConfig().pixelHeight);
+
         // Synthesize coordinates in both the button and motion unions to be robust
         down.button.x = winX;
         down.button.y = winY;
@@ -197,25 +232,31 @@ namespace SDOM {
         up.button.windowID = down.button.windowID;
         up.button.button = SDL_BUTTON_LEFT;
         up.button.clicks = 1;
+
         // Use the same scaled window coordinates for the up event
         up.button.x = winX;
         up.button.y = winY;
         up.motion.x = winX;
         up.motion.y = winY;
 
-        // Push events and pump
-        SDL_PushEvent(&down);
-        SDL_PushEvent(&up);
+        // // Push events and pump
+        // SDL_PushEvent(&down);
+        // SDL_PushEvent(&up);
+
+        getCore().getEventManager().Queue_SDL_Event(down);
+        getCore().getEventManager().Queue_SDL_Event(up);
 
         // process queued events once
         Core::getInstance().pumpEventsOnce();
 
         int count = Box::getTestClickCount();
         bool ok = (count > 0);
+
         return UnitTests::run("Lua #8", "Verify synthetic MouseClick triggers Box listener", [=]() { return ok; });
     } //test8_lua()
 
-    bool test9_Lua() {
+    bool test9_Lua() 
+    {
         // This test will register an event listener purely from Lua and synthesize
         // a mouse click from Lua using Core.pushMouseEvent / Core.pumpEventsOnce.
         sol::state& lua = SDOM::Core::getInstance().getLua();
@@ -229,11 +270,24 @@ namespace SDOM {
 
         // Build and run Lua script that attaches a listener and synthesizes a click
         auto result = lua.script(R"(
+
+            -- print("\ntest9_lua: registering Lua event listener on blueishBox and synthesizing click...")
+
             local clicked = false
-        local bh = Core:getDisplayObjectHandle("blueishBox")
-            if not bh then return false end
+            local bh = Core:getDisplayObjectHandle("blueishBox")
+            if not bh then 
+                -- print("test9_lua: ERROR - could not get blueishBox handle!")
+                return false 
+            end
+            
             -- register listener on the box
-            bh:addEventListener({ type = EventType.MouseClick, listener = function(e) clicked = true end })
+            bh:addEventListener({ 
+                type = EventType.MouseClick, 
+                listener = function(e) 
+                    print("MouseClick event received! name:", e.name, "type:", e.type, "x:", e.sdl and e.sdl.button and e.sdl.button.x, "y:", e.sdl and e.sdl.button and e.sdl.button.y)
+                    clicked = true 
+                end 
+            })
 
             -- compute center in stage coords (use DomHandle forwarded methods)
             local x = bh:getX() + bh:getWidth() / 2
@@ -248,6 +302,8 @@ namespace SDOM {
             Core:pushMouseEvent({ x = 0, y = 0, type = "down", button = 1 })
             Core:pushMouseEvent({ x = 0, y = 0, type = "up", button = 1 })
             Core:pumpEventsOnce()
+
+            -- print("test9_lua: finished processing events\n")
 
             return clicked
         )").get<bool>();
@@ -612,9 +668,11 @@ namespace SDOM {
         return UnitTests::run("Lua #21", "Anchor string normalization via setters (various joiners)", [=]() { return ok; });
     }
 
-    bool LUA_UnitTests() {
+    bool LUA_UnitTests() 
+    {
         bool allTestsPassed = true;
-        std::vector<std::function<bool()>> tests = {
+        std::vector<std::function<bool()>> tests = 
+        {
             [&]() { return test1_Lua(); }, // Create Box and verify existence
             [&]() { return test2_Lua(); }, // Verify get/setPosition from Lua
             [&]() { return test3_Lua(); }, // Verify get/setSize from Lua
@@ -637,7 +695,8 @@ namespace SDOM {
             [&]() { return test20_lua(); }, // Verify get/setWindowTitle from Lua
             [&]() { return test21_lua(); }  // Anchor string normalization via setters (various joiners)
         };
-        for (auto& test : tests) {
+        for (auto& test : tests)
+        {
             bool testResult = test();
             allTestsPassed &= testResult;
         }
