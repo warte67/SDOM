@@ -45,6 +45,7 @@
 #include <SDOM/SDOM_Factory.hpp>
 // #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/lua_IDisplayObject.hpp>
+#include <execinfo.h>
 
 namespace SDOM
 {
@@ -395,19 +396,14 @@ namespace SDOM
             }
         );
 
+
         // NOTE: addChild/removeChild/hasChild are already bound directly on the
         // IDisplayObject usertype above; avoid re-registering them via the
         // Factory registry to prevent method dispatch/type-mismatch issues.
 
-        factory.registerLuaCommand(typeName, "setParent",
-            [](IDataObject& obj, sol::object args, sol::state_view) {
-                if (args.is<sol::table>()) {
-                    sol::table t = args.as<sol::table>();
-                    DomHandle parent = t["parent"].get<DomHandle>();
-                    setParent_lua(static_cast<IDisplayObject&>(obj), parent);
-                }
-            }
-        );
+        // Note: DomHandle usertype already provides a safe setParent binding.
+        // Avoid registering a duplicate concrete-type `setParent` command which
+        // can conflict when method dispatch is performed on DomHandle userdata.
 
         // Expose setBounds so Lua can call :setBounds({ left=..., top=..., right=..., bottom=... })
         factory.registerLuaCommand(typeName, "setBounds",
