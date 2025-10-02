@@ -56,7 +56,6 @@ namespace SDOM
         std::vector<DomHandle> getOrphanedDisplayObjects();
         void destroyOrphanedDisplayObjects();
         void detachOrphans();
-        void garbageCollection();
 
         // --- Future Child Management --- //
         void attachFutureChildren();

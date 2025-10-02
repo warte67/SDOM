@@ -394,54 +394,6 @@ namespace SDOM
         orphanList_.clear();
     }
 
-    void Factory::garbageCollection()
-    {
-        using namespace std::chrono;
-        auto now = steady_clock::now();
-
-        for (auto it = displayObjects_.begin(); it != displayObjects_.end(); )
-        {
-            IDisplayObject* obj = dynamic_cast<IDisplayObject*>(it->second.get());
-            if (!obj || obj->getType() == "Stage") { ++it; continue; }
-
-            // Check if orphaned (no parent)
-            if (!obj->getParent())
-            {
-                auto policy = obj->getOrphanPolicy();
-
-                // AutoDestroy: destroy immediately
-                if (policy == IDisplayObject::OrphanRetentionPolicy::AutoDestroy)
-                {
-                    it = displayObjects_.erase(it);
-                    continue;
-                }
-
-                // GracePeriod: destroy if grace period has elapsed
-                if (policy == IDisplayObject::OrphanRetentionPolicy::GracePeriod)
-                {
-                    if (!obj->orphanedAt_)
-                        obj->orphanedAt_ = now; // Mark time when orphaned
-
-                    auto grace = obj->orphanGrace_;
-                    if (duration_cast<milliseconds>(now - *obj->orphanedAt_) >= grace)
-                    {
-                        it = displayObjects_.erase(it);
-                        continue;
-                    }
-                }
-
-                // RetainUntilManual: do nothing (object must be destroyed explicitly)
-            }
-            else
-            {
-                // If reparented, clear orphanedAt_
-                if (obj->orphanedAt_) obj->orphanedAt_.reset();
-            }
-
-            ++it;
-        }
-    }
-
     void Factory::attachFutureChildren() 
     {
         for (auto& futureChild : futureChildrenList_) 

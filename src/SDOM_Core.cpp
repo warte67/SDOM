@@ -533,7 +533,7 @@ namespace SDOM
 
                 factory_->detachOrphans(); // Detach orphaned display objects
                 factory_->attachFutureChildren(); // Attach future children
-                factory_->garbageCollection(); // Clean up any orphaned objects
+                // factory_->garbageCollection(); // Clean up any orphaned objects
 
                 // static int s_iterations = 0;
                 // if (s_iterations == 25)
