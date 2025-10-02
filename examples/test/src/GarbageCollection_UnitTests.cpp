@@ -12,7 +12,7 @@
 namespace SDOM
 {
 
-    bool GarbageCollection_scaffold()
+    bool GarbageCollection_test0()
     {
         // GC Scaffold: Garbage Collection Unit Test Scaffolding
         sol::state& lua = SDOM::Core::getInstance().getLua();
@@ -28,7 +28,7 @@ namespace SDOM
             std::cerr << "[GC Scaffold] Lua error: " << e.what() << std::endl;
             ok = false;
         }
-        return UnitTests::run("GC Scaffold", "Garbage Collection Unit Test Scaffolding", [=]() { return ok; });
+        return UnitTests::run("GC #0", "Garbage Collection Unit Test Scaffolding", [=]() { return ok; });
     }
 
 
@@ -38,7 +38,7 @@ namespace SDOM
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
-            [&]() { return GarbageCollection_scaffold(); }    // Garbage Collection Unit Test Scaffolding
+            [&]() { return GarbageCollection_test0(); }    // Garbage Collection Unit Test Scaffolding
 
         };
         for (auto& test : tests) 

@@ -30,7 +30,7 @@ function M.on_update(evt)
                 print("Core.run Info: Stage no longer has blueishBox after 25 iterations.")
             end
         end
-        Core:shutdown()
+        -- Core:shutdown()
     end
 end
 
