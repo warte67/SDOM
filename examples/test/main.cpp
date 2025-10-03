@@ -92,7 +92,7 @@ int main(int argc, char** argv)
     lua["Stage_UnitTests"] = &SDOM::Stage_UnitTests;
     lua["Box_UnitTests"] = &SDOM::Box_UnitTests;
     lua["LUA_UnitTests"] = &SDOM::LUA_UnitTests;
-    lua["DomHandle_UnitTests"] = &SDOM::DomHandle_UnitTests;
+    lua["DisplayObject_UnitTests"] = &SDOM::DisplayObject_UnitTests;
     lua["EventType_UnitTests"] = &SDOM::EventType_UnitTests;
     lua["Event_UnitTests"] = &SDOM::Event_UnitTests;
     lua["GarbageCollection_UnitTests"] = &SDOM::GarbageCollection_UnitTests;

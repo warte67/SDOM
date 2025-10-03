@@ -4,6 +4,9 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
+// Forward-declare Factory to avoid circular include with Factory.hpp
+// Factory implementation is included in the corresponding .cpp file where needed.
+class Factory;
 
 // NOTE: this ~= "DisplayObject(getName(), getType())"
 
@@ -25,6 +28,26 @@ namespace SDOM
         DisplayObject(const DisplayObject& other)
             : name_(other.name_), type_(other.type_) {}
 
+        // Provide explicit copy-assignment to avoid implicitly-declared
+        // deprecated assignment operator warnings when a user-provided
+        // copy constructor exists.
+        DisplayObject& operator=(const DisplayObject& other) {
+            if (this != &other) {
+                name_ = other.name_;
+                type_ = other.type_;
+            }
+            return *this;
+        }
+
+        // Provide move-assignment as well for completeness
+        DisplayObject& operator=(DisplayObject&& other) noexcept {
+            if (this != &other) {
+                name_ = std::move(other.name_);
+                type_ = std::move(other.type_);
+            }
+            return *this;
+        }
+
         // construction from nullptr
         DisplayObject(std::nullptr_t) { reset(); }
 
@@ -35,17 +58,12 @@ namespace SDOM
         virtual void onQuit() override {}
         virtual bool onUnitTest() override { return true; }
 
-        IDisplayObject* get() const
-        {
-            if (!factory_) return nullptr;
-            return factory_->getDomObj(name_);
-        }
+        IDisplayObject* get() const;
 
         template<typename T>
         T* as() const
         {
-            if (!factory_) return nullptr;
-            return dynamic_cast<T*>(factory_->getDomObj(name_));
+            return dynamic_cast<T*>(get());
         }
     
         // Convenience: get raw IDisplayObject pointer (non-owning), or nullptr if not available
@@ -53,13 +71,13 @@ namespace SDOM
         IDisplayObject* operator->() const { return get(); }
         operator bool() const { return get() != nullptr; }
 
-        DisplayObject& operator=(const DisplayObject& other) {
-            if (this != &other) {
-                name_ = other.name_;
-                type_ = other.type_;
-            }
-            return *this;
-        }
+        // DisplayObject& operator=(const DisplayObject& other) {
+        //     if (this != &other) {
+        //         name_ = other.name_;
+        //         type_ = other.type_;
+        //     }
+        //     return *this;
+        // }
 
         // // Allow assignment from nullptr
         // DisplayObject& operator=(std::nullptr_t) 
@@ -126,8 +144,6 @@ namespace SDOM
     private:
         // Resolve a Lua child spec (string, DisplayObject, or table{ child=... | name=... })
         static DisplayObject resolveChildSpec(const sol::object& spec);
-
-        virtual void _registerLua(const std::string& typeName, sol::state_view lua) override {} // Deprecated
 
         virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua) override;
 

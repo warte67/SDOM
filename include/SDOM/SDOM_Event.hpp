@@ -44,10 +44,12 @@
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_EventType.hpp>
 #include <mutex>
+#include <SDOM/SDOM_DisplayObject.hpp>
 
 namespace SDOM
 {
     class IDisplayObject;
+    class DisplayObject;
 
     class Event : public IDataObject
     {
@@ -63,7 +65,7 @@ namespace SDOM
             Bubbling
         };    
 
-        Event(EventType type = EventType("None"), DomHandle target = nullptr, float fElapsedTime = 0.0f);
+        Event(EventType type = EventType("None"), DisplayObject target = nullptr, float fElapsedTime = 0.0f);
 
         virtual ~Event() = default;    
 
@@ -80,14 +82,14 @@ namespace SDOM
         Phase getPhase() const;
         Event& setPhase(Phase phase);
 
-        DomHandle getTarget() const;
-        Event& setTarget(DomHandle newTarget);
+        DisplayObject getTarget() const;
+        Event& setTarget(DisplayObject newTarget);
 
-        DomHandle getCurrentTarget() const;
-        Event& setCurrentTarget(DomHandle newCurrentTarget);
+        DisplayObject getCurrentTarget() const;
+        Event& setCurrentTarget(DisplayObject newCurrentTarget);
 
-        DomHandle getRelatedTarget() const;
-        Event& setRelatedTarget(DomHandle newRelatedTarget);
+        DisplayObject getRelatedTarget() const;
+        Event& setRelatedTarget(DisplayObject newRelatedTarget);
 
         bool isPropagationStopped() const;
         Event& stopPropagation();
@@ -169,9 +171,9 @@ namespace SDOM
 
     protected:
         EventType type;                                 // Type of the event, e.g., KeyDown, MouseClick, etc.
-        DomHandle target = nullptr;                     // Target of the event, usually the object that triggered it    
-        DomHandle currentTarget = nullptr;              // Current target during event propagation
-        DomHandle relatedTarget = nullptr;              // For events that involve a related target (e.g., drag and drop)
+        DisplayObject target = nullptr;                 // Target of the event, usually the object that triggered it    
+        DisplayObject currentTarget = nullptr;          // Current target during event propagation
+        DisplayObject relatedTarget = nullptr;          // For events that involve a related target (e.g., drag and drop)
         SDL_Event sdlEvent;                             // underlying SDL event
         mutable Phase currentPhase;                     // Current phase of the event propagation
         mutable bool propagationStopped = false;        // Indicates if event propagation is stopped

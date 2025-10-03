@@ -179,19 +179,19 @@ namespace SDOM
         bool hasEventListeners(const EventType& type, bool useCapture) const;
 
         // --- Hierarchy Management --- //
-        void addChild(DomHandle child, bool useWorld = false, int worldX = 0, int worldY = 0);
-        void addChild_lua(DomHandle child);
-        bool removeChild(DomHandle child);
-        const std::vector<DomHandle>& getChildren() const { return children_; }
-        DomHandle getParent() const { return parent_; }
-        IDisplayObject& setParent(const DomHandle& parent) 
+        void addChild(DisplayObject child, bool useWorld = false, int worldX = 0, int worldY = 0);
+        void addChild_lua(DisplayObject child);
+        bool removeChild(DisplayObject child);
+        const std::vector<DisplayObject>& getChildren() const { return children_; }
+        DisplayObject getParent() const { return parent_; }
+        IDisplayObject& setParent(const DisplayObject& parent) 
         { 
             Bounds world = this->getBounds();
             parent_ = parent; 
             this->setBounds(world); // Maintain world position when changing parent
             return *this; 
         }
-        bool hasChild(DomHandle child) const;
+        bool hasChild(DisplayObject child) const;
 
         // --- Type & Property Access --- //
         std::string getType() const { return type_; }
@@ -291,8 +291,8 @@ namespace SDOM
         bool isHidden_ = false;
         int tabPriority_ = -1;
         bool tabEnabled_ = false;
-        DomHandle parent_;
-        std::vector<DomHandle> children_;
+        DisplayObject parent_;
+        std::vector<DisplayObject> children_;
 
         // --- Event Listener Containers --- //
         struct ListenerEntry {
@@ -305,8 +305,8 @@ namespace SDOM
 
         // --- Internal/Utility --- //
         IDisplayObject(const IDisplayObject& other) = delete;
-        void attachChild_(DomHandle child, DomHandle parent, bool useWorld = false, int worldX = 0, int worldY = 0);
-        void removeOrphan_(const DomHandle& orphan);
+        void attachChild_(DisplayObject child, DisplayObject parent, bool useWorld = false, int worldX = 0, int worldY = 0);
+        void removeOrphan_(const DisplayObject& orphan);
 
     protected:
         // --- Lua Registration --- //

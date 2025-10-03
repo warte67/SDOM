@@ -167,28 +167,28 @@ namespace SDOM
 
 	// --- Stage/Root Node Management --- //
 	void setRootNodeByName_lua(const std::string& name) { Core::getInstance().setRootNode(name); }
-	void setRootNodeByHandle_lua(const DomHandle& handle) { Core::getInstance().setRootNode(handle); }
+	void setRootNodeByHandle_lua(const DisplayObject& handle) { Core::getInstance().setRootNode(handle); }
 	void setStage_lua(const std::string& name) { Core::getInstance().setStage(name); }
 	IDisplayObject* getRootNodePtr_lua() { return Core::getInstance().getRootNodePtr(); }
-	DomHandle getRootNode_lua() { return Core::getInstance().getRootNode(); }
-	DomHandle getStageHandle_lua() { return Core::getInstance().getStageHandle(); }
+	DisplayObject getRootNode_lua() { return Core::getInstance().getRootNode(); }
+	DisplayObject getStageHandle_lua() { return Core::getInstance().getStageHandle(); }
 
 	// --- Factory & EventManager Access --- //
 	bool getIsTraversing_lua() { return Core::getInstance().getIsTraversing(); }
 	Core* setIsTraversing_lua(bool traversing) { Core::getInstance().setIsTraversing(traversing); return &Core::getInstance(); }
 
     // --- Object Creation --- //
-    DomHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config) {
-        return Core::getInstance().createDisplayObject(typeName, config);
-    }
+	DisplayObject createDisplayObject_lua(const std::string& typeName, const sol::table& config) {
+		return Core::getInstance().createDisplayObject(typeName, config);
+	}
 
 	// --- Focus & Hover Management --- //
 	void handleTabKeyPress_lua() { Core::getInstance().handleTabKeyPress(); }
 	void handleTabKeyPressReverse_lua() { Core::getInstance().handleTabKeyPressReverse(); }
-	void setKeyboardFocusedObject_lua(DomHandle obj) { Core::getInstance().setKeyboardFocusedObject(obj); }
-	DomHandle getKeyboardFocusedObject_lua() { return Core::getInstance().getKeyboardFocusedObject(); }
-	void setMouseHoveredObject_lua(DomHandle obj) { Core::getInstance().setMouseHoveredObject(obj); }
-	DomHandle getMouseHoveredObject_lua() { return Core::getInstance().getMouseHoveredObject(); }
+	void setKeyboardFocusedObject_lua(DisplayObject obj) { Core::getInstance().setKeyboardFocusedObject(obj); }
+	DisplayObject getKeyboardFocusedObject_lua() { return Core::getInstance().getKeyboardFocusedObject(); }
+	void setMouseHoveredObject_lua(DisplayObject obj) { Core::getInstance().setMouseHoveredObject(obj); }
+	DisplayObject getMouseHoveredObject_lua() { return Core::getInstance().getMouseHoveredObject(); }
 
 	// --- Window Title & Timing --- //
 	std::string getWindowTitle_lua() { return Core::getInstance().getWindowTitle(); }
@@ -196,14 +196,14 @@ namespace SDOM
 	float getElapsedTime_lua() { return Core::getInstance().getElapsedTime(); }
 
 	// --- Object Lookup --- //
-	DomHandle getDisplayObjectHandle_lua(const std::string& name) { return Core::getInstance().getDisplayObjectHandle(name); }
-	DomHandle getFactoryStageHandle_lua() { return Core::getInstance().getFactoryStageHandle(); }
+	DisplayObject getDisplayObjectHandle_lua(const std::string& name) { return Core::getInstance().getDisplayObjectHandle(name); }
+	DisplayObject getFactoryStageHandle_lua() { return Core::getInstance().getFactoryStageHandle(); }
 	bool hasDisplayObject_lua(const std::string& name) { return Core::getInstance().hasDisplayObject(name); }
 
 	// --- Orphan / Future Child Management --- //
 	void destroyDisplayObject_lua(const std::string& name) { Core::getInstance().destroyDisplayObject(name); }
 	int countOrphanedDisplayObjects_lua() { return Core::getInstance().countOrphanedDisplayObjects(); }
-	std::vector<DomHandle> getOrphanedDisplayObjects_lua() { return Core::getInstance().getOrphanedDisplayObjects(); }
+	std::vector<DisplayObject> getOrphanedDisplayObjects_lua() { return Core::getInstance().getOrphanedDisplayObjects(); }
 	void destroyOrphanedDisplayObjects_lua() { Core::getInstance().destroyOrphanedDisplayObjects(); }
 
 	// --- Utility Methods --- //

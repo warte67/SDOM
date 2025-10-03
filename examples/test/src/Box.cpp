@@ -8,8 +8,8 @@
 #include <SDOM/SDOM_IDisplayObject.hpp>
 
 // #include <SDOM/SDOM_Handle.hpp>
-#include <SDOM/SDOM_DomHandle.hpp>  // Deprecated
-#include <SDOM/SDOM_ResHandle.hpp>  // Deprecated
+#include <SDOM/SDOM_DisplayObject.hpp>
+// #include <SDOM/SDOM_ResHandle.hpp>  // Deprecated
 
 #include "Box.hpp"
 #include <atomic>
@@ -169,11 +169,11 @@ void Box::onEvent(const SDOM::Event& event)
     float mX = event.getMouseX();
     float mY = event.getMouseY();
 
-    SDOM::DomHandle stage = SDOM::getStageHandle();
+    SDOM::DisplayObject stage = SDOM::getStageHandle();
     static int original_Width = getWidth();
     static int original_Height = getHeight();
-    static SDOM::DomHandle draggedObject = SDOM::DomHandle();
-    static SDOM::DomHandle original_parent = getParent();
+    static SDOM::DisplayObject draggedObject = SDOM::DisplayObject();
+    static SDOM::DisplayObject original_parent = getParent();
 
     // Check which mouse button is used
     Uint8 button = event.getButton();
@@ -183,7 +183,7 @@ void Box::onEvent(const SDOM::Event& event)
     {
         if (event.getType() == SDOM::EventType::Drag) 
         {
-            draggedObject = SDOM::DomHandle(getName(), getType()); 
+            draggedObject = SDOM::DisplayObject(getName(), getType()); 
             if (!draggedObject)
                 ERROR("draggedObject is invalid");
             // Ensure the dragged object is not the stage
@@ -236,7 +236,7 @@ void Box::onEvent(const SDOM::Event& event)
         else if (event.getType() == SDOM::EventType::Drop) 
         {
             // IDisplayObject* relatedTarget = dynamic_cast<Box*>(event.getRelatedTarget());
-            SDOM::DomHandle relatedTarget = event.getRelatedTarget();
+            SDOM::DisplayObject relatedTarget = event.getRelatedTarget();
             if (stage && draggedObject)
                 stage->removeChild(draggedObject);
 
@@ -397,66 +397,6 @@ bool Box::onUnitTest()
     return true;
 }
 
-
-
-void Box::_registerLua(const std::string& typeName, sol::state_view lua)
-{
-    // if (DEBUG_REGISTER_LUA)
-    // {
-    //     std::string typeNameLocal = "Box";
-    //     std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-    //                 << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-    // }
-    // 1. Create and save usertype table (no constructor)
-    sol::usertype<Box> objHandleType = lua.new_usertype<Box>(typeName,
-        sol::base_classes, sol::bases<SUPER>()
-        // ...Box-specific methods...
-    );
-
-    this->objHandleType_ = objHandleType;
-
-    // 2. Call base class registration to include inherited properties/commands
-    SUPER::_registerLua(typeName, lua);
-
-    // 3. Register properties/commands (custom logic)
-    // Example: register a couple of pseudo functions directly on the Box usertype
-    // so Lua introspection and direct calls can see them. These are lightweight
-    // wrappers that operate on the Box instance.
-    objHandleType["doSomething"] = [](Box& b, sol::object /*args*/, sol::state_view lua) -> sol::object {
-        // Example no-op / diagnostic: print the object name and return true
-        std::cout << "Box::doSomething called on " << b.getName() << std::endl;
-        return sol::make_object(lua, true);
-    };
-
-    objHandleType["resetColor"] = [](Box& b, sol::object /*args*/, sol::state_view lua) -> sol::object {
-        // Reset color to a default purple-ish color used in InitStruct
-        SDL_Color defaultColor = {255, 0, 255, 255};
-        b.setColor(defaultColor);
-        std::cout << "Box::resetColor called on " << b.getName() << std::endl;
-        return sol::make_object(lua, true);
-    };
-
-    // Also register these functions in the Factory's type registry so
-    // introspection (Factory::getFunctionNamesForType) returns them.
-    SDOM::getFactory().registerLuaFunction(typeName, "doSomething",
-        [](IDataObject& dobj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-            Box& b = static_cast<Box&>(dobj);
-            std::cout << "Box::doSomething called on " << b.getName() << std::endl;
-            return sol::make_object(lua, true);
-        });
-
-    SDOM::getFactory().registerLuaFunction(typeName, "resetColor",
-        [](IDataObject& dobj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-            Box& b = static_cast<Box&>(dobj);
-            SDL_Color defaultColor = {255, 0, 255, 255};
-            b.setColor(defaultColor);
-            std::cout << "Box::resetColor called on " << b.getName() << std::endl;
-            return sol::make_object(lua, true);
-        });
-
-    // 4. Register the Lua usertype using the registry
-    SDOM::getFactory().registerLuaPropertiesAndCommands(typeName, objHandleType_);             
-}
 
 
  void Box::_registerDisplayObject(const std::string& typeName, sol::state_view lua)

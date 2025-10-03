@@ -5,6 +5,7 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
 #include <SDOM/SDOM_Stage.hpp>
+#include <SDOM/SDOM_DisplayObject.hpp>
 #include "UnitTests.hpp"
 
 namespace SDOM
@@ -22,7 +23,7 @@ namespace SDOM
         std::vector<std::string> originalNames = factory.listDisplayObjectNames();
 
         // Test display object creation
-        DomHandle handle;
+        DisplayObject handle;
         result = UnitTests::run("Factory #1", "Display Object Creation", [&factory, &handle]() {
             sol::state lua;
             lua.open_libraries(sol::lib::base);
@@ -44,7 +45,7 @@ namespace SDOM
         // Test resource retrieval
         result = UnitTests::run("Factory #2", "Resource Retrieval", [&factory, &debugRet, &handle]() 
         {
-            DomHandle testHandle = factory.getDomHandle("testStage");
+            DisplayObject testHandle = factory.getDisplayObjectHandle("testStage");
             if (testHandle != handle) 
             {
                 debugRet = "Expected handle: " + handle.str() + ", but got: " + testHandle.str();
@@ -126,7 +127,7 @@ namespace SDOM
         result = UnitTests::run("Factory #6", "Resource Destruction", [&factory, &handle]() 
         {
             factory.destroyDisplayObject("testStage");
-            DomHandle testHandle = factory.getDomHandle("testStage");
+            DisplayObject testHandle = factory.getDisplayObjectHandle("testStage");
             return testHandle == nullptr;
         });
         if (!result) { std::cout << CLR::indent() << "Resource destruction test failed!" << CLR::RESET << std::endl; }
@@ -145,8 +146,8 @@ namespace SDOM
                 }
             )");
             sol::table config = lua["config"];
-            DomHandle first = factory.create("Stage", config);
-            DomHandle second = factory.create("Stage", config);
+            DisplayObject first = factory.create("Stage", config);
+            DisplayObject second = factory.create("Stage", config);
             // Define expected behavior: should not allow duplicate, or should overwrite
             bool ret = first != nullptr && second != nullptr;
             // clean up
@@ -172,7 +173,7 @@ namespace SDOM
                 }
             )");
             sol::table config1 = lua["config1"];
-            DomHandle first = factory.create("Stage", config1);
+            DisplayObject first = factory.create("Stage", config1);
 
             // Overwrite with new config
             lua.script(R"(
@@ -183,10 +184,10 @@ namespace SDOM
                 }
             )");
             sol::table config2 = lua["config2"];
-            DomHandle second = factory.create("Stage", config2);
+            DisplayObject second = factory.create("Stage", config2);
 
             // Retrieve and check if the resource was overwritten
-            DomHandle retrieved = factory.getDomHandle("overwriteTest");
+            DisplayObject retrieved = factory.getDisplayObjectHandle("overwriteTest");
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(retrieved.get());
             if (!obj) {
                 debugRet = "Resource 'overwriteTest' not found after overwrite.";

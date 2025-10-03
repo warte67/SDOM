@@ -4,8 +4,7 @@
 #include <atomic>
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
-#include <SDOM/SDOM_DomHandle.hpp>
-#include <SDOM/SDOM_ResHandle.hpp>
+#include <SDOM/SDOM_DisplayObject.hpp>
 
 namespace SDOM
 {
@@ -100,12 +99,12 @@ namespace SDOM
 
         // --- Stage/Root Node Management --- //
         void setRootNode(const std::string& name);
-        void setRootNode(const DomHandle& handle);
+    void setRootNode(const DisplayObject& handle);
         void setStage(const std::string& name); // Alias for backward compatibility
         Stage* getStage() const; // Alias for backward compatibility
         IDisplayObject* getRootNodePtr() const;
-        DomHandle getRootNode() const;
-        DomHandle getStageHandle() const { return getRootNode(); }  // Alias for backward compatibility
+    DisplayObject getRootNode() const;
+    DisplayObject getStageHandle() const { return getRootNode(); }  // Alias for backward compatibility
 
         // --- SDL Resource Accessors --- //
         SDL_Window* getWindow() const       { return window_; }
@@ -146,10 +145,10 @@ namespace SDOM
         // --- Focus & Hover Management --- //
         void handleTabKeyPress();
         void handleTabKeyPressReverse();
-        void setKeyboardFocusedObject(DomHandle obj);
-        DomHandle getKeyboardFocusedObject() const;
-        void setMouseHoveredObject(DomHandle obj);
-        DomHandle getMouseHoveredObject() const;
+    void setKeyboardFocusedObject(DisplayObject obj);
+    DisplayObject getKeyboardFocusedObject() const;
+    void setMouseHoveredObject(DisplayObject obj);
+    DisplayObject getMouseHoveredObject() const;
 
         // --- Window Title & Timing --- //
         std::string getWindowTitle() const { return windowTitle_; }
@@ -167,15 +166,14 @@ namespace SDOM
         // --- Factory Wrappers --- //
 
         // --- Object Creation --- //
-        DomHandle createDisplayObject(const std::string& typeName, const sol::table& config);
-        DomHandle createDisplayObject(const std::string& typeName, const SDOM::IDisplayObject::InitStruct& init);
-        DomHandle createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript);
+    DisplayObject createDisplayObject(const std::string& typeName, const sol::table& config);
+    DisplayObject createDisplayObject(const std::string& typeName, const SDOM::IDisplayObject::InitStruct& init);
+    DisplayObject createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript);
 
         // --- Object Lookup --- //
         IDisplayObject* getDisplayObject(const std::string& name);
-        IResourceObject* getResourceObject(const std::string& name);
-        DomHandle getDisplayObjectHandle(const std::string& name);
-        DomHandle getFactoryStageHandle();
+    DisplayObject getDisplayObjectHandle(const std::string& name);
+    DisplayObject getFactoryStageHandle();
         bool hasDisplayObject(const std::string& name) const;
 
         // --- Display Object Management --- //
@@ -184,14 +182,14 @@ namespace SDOM
 
         // --- Orphan Management --- //
         int countOrphanedDisplayObjects() const;
-        std::vector<DomHandle> getOrphanedDisplayObjects();
+    std::vector<DisplayObject> getOrphanedDisplayObjects();
         void destroyOrphanedDisplayObjects();
         void detachOrphans();
 
         // --- Future Child Management --- //
         void attachFutureChildren();
-        void addToOrphanList(const DomHandle orphan);
-        void addToFutureChildrenList(const DomHandle child, const DomHandle parent,
+        void addToOrphanList(const DisplayObject orphan);
+        void addToFutureChildrenList(const DisplayObject child, const DisplayObject parent,
             bool useWorld=false, int worldX=0, int worldY=0);
 
         // --- Utility Methods --- //
@@ -245,13 +243,13 @@ namespace SDOM
         CoreConfig pendingConfig_;
 
         // --- DOM --- //
-        DomHandle rootNode_; // The root of the resource tree
-        DomHandle hoveredObject_;
-        DomHandle keyboardFocusedObject_;
+    DisplayObject rootNode_; // The root of the resource tree
+    DisplayObject hoveredObject_;
+    DisplayObject keyboardFocusedObject_;
 
         // --- Tab Priority --- //
         struct TabPriorityComparator {
-            bool operator()(const DomHandle& a, const DomHandle& b) const {
+            bool operator()(const DisplayObject& a, const DisplayObject& b) const {
                 // If either handle is invalid, treat invalid handles as lower priority
                 // so they end up at the back of the ordering. Avoid throwing an error
                 // here because handles may become invalid between insertion and
@@ -262,7 +260,7 @@ namespace SDOM
                 return a->getTabPriority() < b->getTabPriority();
             }
         };
-        std::priority_queue<DomHandle, std::vector<DomHandle>, TabPriorityComparator> tabList_;
+    std::priority_queue<DisplayObject, std::vector<DisplayObject>, TabPriorityComparator> tabList_;
 
         // --- Configuration --- //
         CoreConfig config_;

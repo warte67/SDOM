@@ -185,7 +185,7 @@ namespace SDOM
     public:
         
         void registerLua(const std::string& typeName, sol::state_view lua)      // Depricated
-        { this->_registerLua(typeName, lua); }                                  // Depricated
+        { }                                  // Depricated
 
         // New preferred Lua binding path
         virtual void registerDisplayObject(const std::string& typeName, sol::state_view lua)
@@ -194,16 +194,6 @@ namespace SDOM
         }
 
     protected:
-        virtual void _registerLua(const std::string& typeName, sol::state_view lua) // Depricated
-        {
-            // if (DEBUG_REGISTER_LUA)
-            // {
-            //     std::string typeNameLocal = "IDataObject";
-            //     std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-            //             << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-            // }
-        }   
-
 
         virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua)
         {

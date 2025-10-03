@@ -8,7 +8,7 @@ namespace SDOM
 {
     class IDisplayObject;
     class EventType;
-    class DomHandle;
+    class DisplayObject;
     struct Bounds;
 
     // --- Dirty/State Management --- //
@@ -25,11 +25,11 @@ namespace SDOM
     void removeEventListener_lua(IDisplayObject* obj, EventType& type, sol::function listener, bool useCapture);  // **VERIFIED**
 
     // --- Hierarchy Management --- //
-    void addChild_lua(IDisplayObject* obj, DomHandle child); // **VERIFIED**
-    bool removeChild_lua(IDisplayObject* obj, DomHandle child); // **VERIFIED**
-    bool hasChild_lua(const IDisplayObject* obj, DomHandle child); // **VERIFIED**
-    DomHandle getParent_lua(const IDisplayObject* obj); // **VERIFIED**
-    IDisplayObject* setParent_lua(IDisplayObject* obj, const DomHandle& parent); // **VERIFIED**
+    void addChild_lua(IDisplayObject* obj, DisplayObject child); // **VERIFIED**
+    bool removeChild_lua(IDisplayObject* obj, DisplayObject child); // **VERIFIED**
+    bool hasChild_lua(const IDisplayObject* obj, DisplayObject child); // **VERIFIED**
+    DisplayObject getParent_lua(const IDisplayObject* obj); // **VERIFIED**
+    IDisplayObject* setParent_lua(IDisplayObject* obj, const DisplayObject& parent); // **VERIFIED**
 
     // --- Type & Property Access --- //
     std::string getType_lua(const IDisplayObject* obj); // **VERIFIED**

@@ -22,7 +22,7 @@ namespace SDOM
 
         // Test: Retrieve existing stage "mainStage"
         testResult = UnitTests::run("Stage #1", "Retrieve 'mainStage'", [factory]() {
-            DomHandle stageHandle = factory->getDomHandle("mainStage");
+            DisplayObject stageHandle = factory->getDisplayObjectHandle("mainStage");
             return (stageHandle && dynamic_cast<Stage*>(stageHandle.get()) != nullptr);
         });
         if (!testResult) { std::cout << CLR::indent() << "Failed to retrieve 'mainStage'!" << CLR::RESET << std::endl; }
@@ -30,7 +30,7 @@ namespace SDOM
 
         // Test: Retrieve non-existing stage "nonExistentStage"
         testResult = UnitTests::run("Stage #2", "Retrieve non-existent stage", [factory]() {
-            DomHandle stageHandle = factory->getDomHandle("nonExistentStage");
+            DisplayObject stageHandle = factory->getDisplayObjectHandle("nonExistentStage");
             return (stageHandle == nullptr);
         });
         if (!testResult) { std::cout << CLR::indent() << "Non-existent stage retrieval did not return nullptr!" << CLR::RESET << std::endl; }
@@ -39,7 +39,7 @@ namespace SDOM
         // // Test: Set root stage to "mainStage"
         // testResult = UnitTests::run("Stage", "Set root stage to 'mainStage'", [&core]() {
         //     core.setStage("mainStage");
-        //     DomHandle rootHandle = core.getRootNode();
+        //     DisplayObject rootHandle = core.getRootNode();
         //     return (rootHandle && dynamic_cast<Stage*>(rootHandle.get()) != nullptr && rootHandle->getName() == "mainStage");
         // });
         // if (!testResult) { std::cout << CLR::indent() << "Failed to set root stage to 'mainStage'!" << CLR::RESET << std::endl; }
@@ -48,20 +48,20 @@ namespace SDOM
         // Test: Set root stage to non-existing stage
         testResult = UnitTests::run("Stage #3", "Set root stage to non-existent stage", [&core]() {
             core.setStage("nonExistentStage");
-            DomHandle rootHandle = core.getRootNode();
+            DisplayObject rootHandle = core.getRootNode();
             return (rootHandle && rootHandle->getName() == "mainStage"); // Should remain unchanged
         });
         if (!testResult) { std::cout << CLR::indent() << "Failed to set root stage to non-existent stage!" << CLR::RESET << std::endl; }
         allTestsPassed &= testResult;
 
-        // Test: Set stage to "stageTwo" using setRootNode with DomHandle
+        // Test: Set stage to "stageTwo" using setRootNode with DisplayObject
         std::string newStage = "stageTwo";
-        testResult = UnitTests::run("Stage #4", "Set root stage to '" + newStage + "' using DomHandle", [&core, factory, &dbgStr, newStage]() {
-            DomHandle stageTwoHandle = factory->getDomHandle(newStage);
+        testResult = UnitTests::run("Stage #4", "Set root stage to '" + newStage + "' using DisplayObject", [&core, factory, &dbgStr, newStage]() {
+            DisplayObject stageTwoHandle = factory->getDisplayObjectHandle(newStage);
             if (stageTwoHandle && dynamic_cast<Stage*>(stageTwoHandle.get()))
             {
                 core.setRootNode(stageTwoHandle);
-                DomHandle rootHandle = core.getRootNode();
+                DisplayObject rootHandle = core.getRootNode();
                 bool nameMatch = (rootHandle && rootHandle->getName() == newStage);
                 // Verify window title matches new stage name
                 bool titleMatch = (core.getWindowTitle() == "Stage: " + newStage);
@@ -80,7 +80,7 @@ namespace SDOM
         newStage = "stageThree";
         testResult = UnitTests::run("Stage #5", "Set root stage to '" + newStage + "' using string name", [&core, &dbgStr, newStage]() {
             core.setRootNode(newStage);
-            DomHandle rootHandle = core.getRootNode();
+            DisplayObject rootHandle = core.getRootNode();
             if (rootHandle && dynamic_cast<Stage*>(rootHandle.get()))
             {
                 bool nameMatch = (rootHandle && rootHandle->getName() == newStage);
@@ -100,7 +100,7 @@ namespace SDOM
         // Test: Set root stage to "mainStage"
         testResult = UnitTests::run("Stage #6", "Set root stage to 'mainStage'", [&core]() {
             core.setStage("mainStage");
-            DomHandle rootHandle = core.getRootNode();
+            DisplayObject rootHandle = core.getRootNode();
             return (rootHandle && dynamic_cast<Stage*>(rootHandle.get()) != nullptr && rootHandle->getName() == "mainStage");
         });
         if (!testResult) { std::cout << CLR::indent() << "Failed to set root stage to 'mainStage'!" << CLR::RESET << std::endl; }

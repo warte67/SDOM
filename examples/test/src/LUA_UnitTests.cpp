@@ -21,7 +21,7 @@
 
 namespace SDOM {
 
-    DomHandle myBoxHandle;
+    DisplayObject myBoxHandle;
 
     bool test1_Lua() {
         sol::state& lua = SDOM::Core::getInstance().getLua();
@@ -35,7 +35,7 @@ namespace SDOM {
             })
         return Core:getDisplayObjectHandle("myBox")
         )");
-        myBoxHandle = handle_obj.as<DomHandle>();
+        myBoxHandle = handle_obj.as<DisplayObject>();
         bool box_exists = myBoxHandle.isValid();
         return UnitTests::run("Lua #1", "Create Box and verify existence", [box_exists]() { return box_exists; });
     }
@@ -170,7 +170,7 @@ namespace SDOM {
         Box::resetTestClickCount();
 
         // Determine blueishBox center from the object in the factory
-        DomHandle box = Core::getInstance().getDisplayObjectHandle("blueishBox");
+        DisplayObject box = Core::getInstance().getDisplayObjectHandle("blueishBox");
         if (!box) return UnitTests::run("Lua #8", "Verify synthetic MouseClick triggers Box listener", [](){ return false; });
 
         int cx = box->getX() + box->getWidth() / 2;
@@ -265,7 +265,7 @@ namespace SDOM {
         Box::resetTestClickCount();
 
         // Ensure blueishBox exists and is on the stage
-        DomHandle box = Core::getInstance().getDisplayObjectHandle("blueishBox");
+        DisplayObject box = Core::getInstance().getDisplayObjectHandle("blueishBox");
         if (!box) return UnitTests::run("Lua: # 9", "Lua-only event handler + synthetic click", [](){ return false; });
 
         // Build and run Lua script that attaches a listener and synthesizes a click
@@ -289,7 +289,7 @@ namespace SDOM {
                 end 
             })
 
-            -- compute center in stage coords (use DomHandle forwarded methods)
+            -- compute center in stage coords (use DisplayObject forwarded methods)
             local x = bh:getX() + bh:getWidth() / 2
             local y = bh:getY() + bh:getHeight() / 2
 

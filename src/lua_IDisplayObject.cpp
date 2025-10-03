@@ -4,7 +4,7 @@
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_EventType.hpp>
 #include <SDOM/SDOM_Event.hpp>
-#include <SDOM/SDOM_DomHandle.hpp>
+#include <SDOM/SDOM_DisplayObject.hpp>
 
 namespace SDOM 
 {
@@ -44,11 +44,11 @@ namespace SDOM
     }
 
     // --- Hierarchy Management --- //
-    void addChild_lua(IDisplayObject* obj, DomHandle child) { if (!obj) return; obj->addChild_lua(child); }
-    bool removeChild_lua(IDisplayObject* obj, DomHandle child) { if (!obj) return false; return obj->removeChild(child); }
-    bool hasChild_lua(const IDisplayObject* obj, DomHandle child) { if (!obj) return false; return obj->hasChild(child); }
-    DomHandle getParent_lua(const IDisplayObject* obj) { if (!obj) return DomHandle(); return obj->getParent(); }
-    IDisplayObject* setParent_lua(IDisplayObject* obj, const DomHandle& parent) { if (!obj) return nullptr; obj->setParent(parent); return obj; }
+    void addChild_lua(IDisplayObject* obj, DisplayObject child) { if (!obj) return; obj->addChild(child); }
+    bool removeChild_lua(IDisplayObject* obj, DisplayObject child) { if (!obj) return false; return obj->removeChild(child); }
+    bool hasChild_lua(const IDisplayObject* obj, DisplayObject child) { if (!obj) return false; return obj->hasChild(child); }
+    DisplayObject getParent_lua(const IDisplayObject* obj) { if (!obj) return DisplayObject(); return obj->getParent(); }
+    IDisplayObject* setParent_lua(IDisplayObject* obj, const DisplayObject& parent) { if (!obj) return nullptr; obj->setParent(parent); return obj; }
 
     // --- Type & Property Access --- //
     std::string getType_lua(const IDisplayObject* obj) { if (!obj) return std::string(); return obj->getType(); }

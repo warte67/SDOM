@@ -17,6 +17,12 @@ namespace SDOM
         // default dtor; ensure emission for vtable
     }
 
+    IDisplayObject* DisplayObject::get() const
+    {
+        if (!factory_) return nullptr;
+        return factory_->getDomObj(name_);
+    }
+
     void DisplayObject::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
     {
         if (DEBUG_REGISTER_LUA)

@@ -5,6 +5,8 @@
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
+#include <SDOM/SDOM_DisplayObject.hpp>
+
 
 #include "UnitTests.hpp"
 

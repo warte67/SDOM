@@ -1,11 +1,13 @@
 #pragma once
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
+#include <SDOM/SDOM_DisplayObject.hpp>
 #include <SDOM/SDOM_IResourceObject.hpp>
 
 namespace SDOM 
 {
     class Stage;
+    class DisplayObject;
 
     // --- Type Creation Structs --- //
     struct TypeCreators 
@@ -31,9 +33,9 @@ namespace SDOM
         // void registerResType(const std::string& typeName, const TypeCreators& creators);
 
         // --- Object Creation --- //
-        DomHandle create(const std::string& typeName, const sol::table& config);
-        DomHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);        
-        DomHandle create(const std::string& typeName, const std::string& luaScript);
+        DisplayObject create(const std::string& typeName, const sol::table& config);
+        DisplayObject create(const std::string& typeName, const IDisplayObject::InitStruct& init);        
+        DisplayObject create(const std::string& typeName, const std::string& luaScript);
 
         // Helper: attach a newly-created display object (by name/type) to a
         // parent specified in a Lua config value. Accepts string name, DomHandle,
@@ -43,9 +45,9 @@ namespace SDOM
         // --- Object Lookup --- //
         IDisplayObject* getDomObj(const std::string& name);
         IResourceObject* getResObj(const std::string& name);
-        DomHandle getDomHandle(const std::string& name);
+        DisplayObject getDisplayObjectHandle(const std::string& name);
         // ResHandle getResHandle(const std::string& name);
-        DomHandle getStageHandle();
+        DisplayObject getStageHandle();
 
         // --- Display Object Management --- //
         void addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject); // Consider refactoring/removal
@@ -53,14 +55,14 @@ namespace SDOM
 
         // --- Orphan Management --- //
         int countOrphanedDisplayObjects() const;
-        std::vector<DomHandle> getOrphanedDisplayObjects();
+        std::vector<DisplayObject> getOrphanedDisplayObjects();
         void destroyOrphanedDisplayObjects();
         void detachOrphans();
 
         // --- Future Child Management --- //
         void attachFutureChildren();
-        void addToOrphanList(const DomHandle orphan);
-        void addToFutureChildrenList(const DomHandle child, const DomHandle parent,
+        void addToOrphanList(const DisplayObject orphan);
+        void addToFutureChildrenList(const DisplayObject child, const DisplayObject parent,
             bool useWorld=false, int worldX=0, int worldY=0);
 
         // --- Utility Methods --- //
@@ -92,12 +94,11 @@ namespace SDOM
         // compatibility while migrating code. Do not add new uses.
         // Removal plan: migrate addToFutureChildrenList / attachFutureChildren
         // to accept DisplayObject handles and drop this type.
-        // [[deprecated("futureChild is deprecated; migrate to DisplayObject-based future-child API")]]
-        std::vector<DomHandle> orphanList_;
+        std::vector<DisplayObject> orphanList_;
         struct futureChild 
         {
-            DomHandle child;
-            DomHandle parent;
+            DisplayObject child;
+            DisplayObject parent;
             bool preserveWorldPosition;
             int dragStartWorldX;
             int dragStartWorldY;

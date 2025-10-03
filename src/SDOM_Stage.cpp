@@ -79,49 +79,6 @@ namespace SDOM
         return true;
     }
 
-    void Stage::_registerLua(const std::string& typeName, sol::state_view lua)
-    {
-        // if (DEBUG_REGISTER_LUA)
-        // {
-        //     std::string typeNameLocal = "Stage";
-        //     std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-        //                 << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-        // }
-        // 1. Create and save usertype table (no constructor)
-        sol::usertype<Stage> objHandleType = lua.new_usertype<Stage>(typeName,
-            sol::base_classes, sol::bases<SUPER>() );
-        this->objHandleType_ = objHandleType;
-
-        // 2. Call base class registration to include inherited properties/commands
-        SUPER::_registerLua(typeName, lua);
-
-        // 3. Register properties/commands (custom logic)
-        // register simple mouse coordinate accessors
-        getFactory().registerLuaProperty(typeName, "mouseX",
-                [](const IDataObject& obj, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, Stage::getMouseX());
-                },
-                [](IDataObject& obj, sol::object val, sol::state_view lua) -> IDataObject& {
-                    if (val.is<int>()) Stage::setMouseX(val.as<int>());
-                    else if (val.is<double>()) Stage::setMouseX(static_cast<int>(val.as<double>()));
-                    return obj;
-                }
-            );
-
-        getFactory().registerLuaProperty(typeName, "mouseY",
-                [](const IDataObject& obj, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, Stage::getMouseY());
-                },
-                [](IDataObject& obj, sol::object val, sol::state_view lua) -> IDataObject& {
-                    if (val.is<int>()) Stage::setMouseY(val.as<int>());
-                    else if (val.is<double>()) Stage::setMouseY(static_cast<int>(val.as<double>()));
-                    return obj;
-                }
-            );
-
-        // 4. Register the Lua usertype using the registry
-        getFactory().registerLuaPropertiesAndCommands(typeName, objHandleType_);          
-    }
 
     void Stage::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
     {

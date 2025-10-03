@@ -6,6 +6,8 @@
 #include <SDOM/SDOM_EventType.hpp>
 #include <SDOM/SDOM_EventTypeHash.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
+#include <SDOM/SDOM_DisplayObject.hpp>
+
 #include "UnitTests.hpp"
 
 
@@ -220,14 +222,14 @@ namespace SDOM
 
     bool Event_test9()
     {
-        // Event #9: target/currentTarget/relatedTarget roundtrip (DomHandle names)
+        // Event #9: target/currentTarget/relatedTarget roundtrip (DisplayObject names)
         sol::state& lua = SDOM::Core::getInstance().getLua();
         SDOM::Event::registerLua(lua);
         bool ok = false;
         try {
-            DomHandle dh1("targetA", "TypeA");
-            DomHandle dh2("currentB", "TypeB");
-            DomHandle dh3("relatedC", "TypeC");
+            DisplayObject dh1("targetA", "TypeA");
+            DisplayObject dh2("currentB", "TypeB");
+            DisplayObject dh3("relatedC", "TypeC");
             SDOM::Event ev(SDOM::EventType("UT_Targets"));
             ev.setTarget(dh1);
             ev.setCurrentTarget(dh2);
@@ -247,7 +249,7 @@ namespace SDOM
             std::cerr << "[Event_test9] Exception: " << e.what() << std::endl;
             ok = false;
         }
-        return UnitTests::run("Event #9", "Targets roundtrip via DomHandle and Lua", [=]() { return ok; });
+        return UnitTests::run("Event #9", "Targets roundtrip via DisplayObject and Lua", [=]() { return ok; });
     }
 
     bool Event_test10()
@@ -294,7 +296,7 @@ namespace SDOM
             std::string before_getname = t1["getName"].get_or(std::string());
             bool r1 = (before_name == "UT_MyType") && (before_getname == "UT_MyType");
             // set a target and re-check
-            DomHandle dh("theTarget", "T");
+            DisplayObject dh("theTarget", "T");
             ev.setTarget(dh);
             auto tbl2 = lua.script(R"(
                 local e = _tmp_ev

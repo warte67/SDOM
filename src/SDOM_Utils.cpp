@@ -13,7 +13,7 @@ namespace SDOM
     Core& getCore() { return Core::getInstance(); }
     Factory& getFactory() { return getCore().getFactory(); }
     Stage* getStage() { return getCore().getStage(); }
-    DomHandle getStageHandle() { return getFactory().getStageHandle(); }
+    DisplayObject getStageHandle() { return getFactory().getStageHandle(); }
     SDL_Renderer* getRenderer() { return Core::getInstance().getRenderer(); }
     SDL_Window* getWindow() { return Core::getInstance().getWindow(); }
     SDL_Texture* getTexture() { return Core::getInstance().getTexture(); }  

@@ -8,11 +8,6 @@
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
-#include <SDOM/SDOM_IResourceObject.hpp>
-
-// #include <SDOM/SDOM_Handle.hpp>
-#include <SDOM/SDOM_DomHandle.hpp>
-#include <SDOM/SDOM_ResHandle.hpp>
 
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
 #include <SDOM/lua_Core.hpp>
@@ -82,19 +77,24 @@ namespace SDOM
         configure(config);
 
         // Recursive resource creation
-        std::function<void(sol::table, DomHandle)> createResourceRecursive;
-        createResourceRecursive = [&](sol::table obj, DomHandle parent) {
+        std::function<void(sol::table, DisplayObject)> createResourceRecursive;
+        createResourceRecursive = [&](sol::table obj, DisplayObject parent) 
+        {
             std::string type = obj["type"].get_or(std::string(""));
-            DomHandle handle;
-            if (!type.empty()) {
+            DisplayObject handle;
+            if (!type.empty()) 
+            {
                 handle = factory_->create(type, obj);
-                if (parent && handle) {
-                    parent->addChild(handle);
+                if (parent.isValid() && handle.isValid()) 
+                {
+                    parent.get()->addChild(handle);
                 }
             }
-            if (obj["children"].valid() && obj["children"].is<sol::table>()) {
+            if (obj["children"].valid() && obj["children"].is<sol::table>()) 
+            {
                 sol::table children = obj["children"];
-                for (auto& kv : children) {
+                for (auto& kv : children) 
+                {
                     sol::table child = kv.second.as<sol::table>();
                     createResourceRecursive(child, handle);
                 }
@@ -102,11 +102,13 @@ namespace SDOM
         };
 
         // Parse children and create resources
-        if (coreObj["children"].valid() && coreObj["children"].is<sol::table>()) {
+        if (coreObj["children"].valid() && coreObj["children"].is<sol::table>()) 
+        {
             sol::table children = coreObj["children"];
-            for (auto& kv : children) {
+            for (auto& kv : children) 
+            {
                 sol::table child = kv.second.as<sol::table>();
-                createResourceRecursive(child, nullptr);
+                createResourceRecursive(child, DisplayObject());
             }
         }
 
@@ -114,14 +116,15 @@ namespace SDOM
         std::string rootStageName = "mainStage";
         if (coreObj["rootStage"].valid())
             rootStageName = coreObj["rootStage"].get<std::string>();
-        rootNode_ = factory_->getDomHandle(rootStageName);
+        rootNode_ = factory_->getDisplayObjectHandle(rootStageName);
         setWindowTitle("Stage: " + rootStageName);
     }
 
     void Core::configureFromLuaFile(const std::string& filename)
     {
         std::ifstream file(filename);
-        if (!file.is_open()) {
+        if (!file.is_open()) 
+        {
             ERROR("Could not open configuration file: " + filename);
             return;
         }
@@ -133,7 +136,8 @@ namespace SDOM
         // are available to the script.
         try {
             // Ensure Core usertype is registered into this lua state
-            this->_registerLua("Core", lua_);
+            // this->_registerLua("Core", lua_);
+            this->_registerDisplayObject("Core", lua_);
 
             // Prefer scripts that return the config table. If the chunk
             // returns a table, use it. Otherwise fall back to a global
@@ -286,7 +290,8 @@ namespace SDOM
                 }
 
                 // Treat as inline Lua code
-                this->_registerLua("Core", lua_);
+                // this->_registerLua("Core", lua_);
+                this->_registerDisplayObject("Core", lua_);
                 try {
                     sol::load_result chunk = lua_.load(configFile);
                     if (!chunk.valid()) {
@@ -556,19 +561,19 @@ namespace SDOM
                     // Dispatch EventType::OnEvent to rootNode_ so global listeners can receive raw SDL_Events
                     if (eventManager_ && rootNode_)
                     {
-                        DomHandle rootHandle = getStageHandle();
+                        DisplayObject rootHandle = getStageHandle();
 
                         // dispatch OnEvent to rootNode_ so global listeners can inspect raw SDL_Events
                         auto ev = std::make_unique<Event>(EventType::OnEvent, rootHandle);
                         ev->setSDL_Event(event);
                         ev->setRelatedTarget(rootHandle);
-                        eventManager_->dispatchEvent(std::move(ev), rootHandle);
+                        eventManager_->dispatchEvent(std::move(ev), DisplayObject(rootHandle.getName(), rootHandle.getType()));
 
                         // dispatch SDL_Event to rootNode_ so global listeners can inspect raw SDL_Events
                         auto sdl_ev = std::make_unique<Event>(EventType::SDL_Event, rootHandle);
                         sdl_ev->setSDL_Event(event);
                         sdl_ev->setRelatedTarget(rootHandle);
-                        eventManager_->dispatchEvent(std::move(sdl_ev), rootHandle);
+                        eventManager_->dispatchEvent(std::move(sdl_ev), DisplayObject(rootHandle.getName(), rootHandle.getType()));
                     }
 
                 }
@@ -729,11 +734,11 @@ namespace SDOM
         if (eventManager_)
         {
             // Use the root node as the target for the global dispatch if available
-            DomHandle rootHandle;
+            DisplayObject rootHandle;
             if (rootNode_)
             {
-                // create a DomHandle referring to the root node
-                rootHandle = DomHandle(rootNode_);
+                // create a DisplayObject referring to the root node
+                rootHandle = rootNode_;
             }
 
             auto quitEvent = std::make_unique<Event>(EventType::OnQuit, rootHandle);
@@ -741,7 +746,7 @@ namespace SDOM
             quitEvent->setRelatedTarget(rootHandle);
 
             // Dispatch via the central dispatch so global events reach both nodes and event-listeners
-            eventManager_->dispatchEvent(std::move(quitEvent), rootHandle);
+            eventManager_->dispatchEvent(std::move(quitEvent), DisplayObject(rootHandle.getName(), rootHandle.getType()));
         }
 
         // Call recursive quit on the root node (if it exists)
@@ -771,14 +776,14 @@ namespace SDOM
             // render the node
             node.onRender();
 
-            DomHandle rootHandle = this->getStageHandle();
+            DisplayObject rootHandle = this->getStageHandle();
             // PreRender EventListeners
             if (node.hasEventListeners(EventType::OnPreRender, false))
             {
                 auto preRenderEv = std::make_unique<Event>(EventType::OnPreRender, rootHandle);
                 preRenderEv->setElapsedTime(this->getElapsedTime());
                 preRenderEv->setRelatedTarget(rootHandle);
-                eventManager_->dispatchEvent(std::move(preRenderEv), rootHandle);
+                eventManager_->dispatchEvent(std::move(preRenderEv), DisplayObject(rootHandle.getName(), rootHandle.getType()));
             }
 
             // render children
@@ -800,7 +805,7 @@ namespace SDOM
                 auto renderEv = std::make_unique<Event>(EventType::OnRender, rootHandle);
                 renderEv->setElapsedTime(this->getElapsedTime());
                 renderEv->setRelatedTarget(rootHandle);
-                eventManager_->dispatchEvent(std::move(renderEv), rootHandle);        
+                eventManager_->dispatchEvent(std::move(renderEv), DisplayObject(rootHandle.getName(), rootHandle.getType()));        
             }
         };
 
@@ -867,7 +872,7 @@ namespace SDOM
             // Dispatch to event listeners first so they can stopPropagation if needed
             if (node.hasEventListeners(EventType::OnUpdate, false))
             {
-                DomHandle rootNode = this->getStageHandle();
+                DisplayObject rootNode = this->getStageHandle();
                 auto updateEv = std::make_unique<Event>(EventType::OnUpdate, rootNode);
                 updateEv->setElapsedTime(fElapsedTime);
                 updateEv->setRelatedTarget(rootNode);
@@ -1097,11 +1102,11 @@ namespace SDOM
         }
 
         // Lambda to recursively add the stage and children to the tabList_ if these nodes are tabEnabled_
-        auto populateTabList = [this](auto& populateTabListRef, DomHandle node) -> void 
+        auto populateTabList = [this](auto& populateTabListRef, DisplayObject node) -> void 
         {
             if (!node.isValid()) return;
 
-            // Resolve the DomHandle to an IDisplayObject*
+            // Resolve the DisplayObject to an IDisplayObject*
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(node.get());
             if (!obj) return;
 
@@ -1121,16 +1126,16 @@ namespace SDOM
             }
         };
 
-        // Populate the tabList_ starting from the stage
-        DomHandle node = getStageHandle();
-        populateTabList(populateTabList, node);
+    // Populate the tabList_ starting from the stage
+    DisplayObject node = getStageHandle();
+    populateTabList(populateTabList, node);
 
         // Find the current object (keyboardFocusedObject_) with key focus within the tabList_
-        DomHandle currentFocus = keyboardFocusedObject_;
-        DomHandle nextFocus;
+    DisplayObject currentFocus = keyboardFocusedObject_;
+    DisplayObject nextFocus;
 
         bool foundCurrentFocus = false;
-        std::vector<DomHandle> tempList;
+    std::vector<DisplayObject> tempList;
 
         while (!tabList_.empty()) {
             auto candidate = tabList_.top();
@@ -1146,7 +1151,7 @@ namespace SDOM
         }
 
         // Wrap around if no next focus is found
-        if (!nextFocus && !tempList.empty()) {
+        if (!nextFocus.isValid() && !tempList.empty()) {
             nextFocus = tempList.front();
         }
 
@@ -1156,7 +1161,7 @@ namespace SDOM
         }
 
         // Update the current object (keyboardFocusedObject_) to the next entry in the tabList_        
-        setKeyboardFocusedObject(nextFocus);    // keyboardFocusedObject_ = nextFocus;
+    setKeyboardFocusedObject(nextFocus);    // keyboardFocusedObject_ = nextFocus;
     }// END: void Core::handleTabKeyPress(Stage& stage)
 
     void Core::handleTabKeyPressReverse()
@@ -1167,11 +1172,11 @@ namespace SDOM
         }
 
         // Lambda to recursively add the stage and children to the tabList_ if these nodes are tabEnabled_
-        auto populateTabList = [this](auto& populateTabListRef, DomHandle node) -> void 
+        auto populateTabList = [this](auto& populateTabListRef, DisplayObject node) -> void 
         {
             if (!node.isValid()) return;
 
-            // Resolve the DomHandle to an IDisplayObject*
+            // Resolve the DisplayObject to an IDisplayObject*
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(node.get());
             if (!obj) return;
 
@@ -1192,30 +1197,29 @@ namespace SDOM
         };
 
         // Populate the tabList_ starting from the stage
-        DomHandle node = getStageHandle();
-        populateTabList(populateTabList, node);
+    DisplayObject node = getStageHandle();
+    populateTabList(populateTabList, node);
 
         // Find the current object (keyboardFocusedObject_) with key focus within the tabList_
-        DomHandle currentFocus = keyboardFocusedObject_;
-        DomHandle previousFocus;
+    DisplayObject currentFocus = keyboardFocusedObject_;
+    DisplayObject previousFocus;
 
         bool foundCurrentFocus = false;
-        std::vector<DomHandle> tempList;
+    std::vector<DisplayObject> tempList;
 
         while (!tabList_.empty()) {
             auto candidate = tabList_.top();
             tabList_.pop();
             tempList.push_back(candidate);
 
-            if (candidate == currentFocus) {
+                if (candidate == currentFocus) {
                 foundCurrentFocus = true;
             } else if (!foundCurrentFocus) {
                 previousFocus = candidate;
             }
         }
-
         // Wrap around if no previous focus is found
-        if (!foundCurrentFocus && !tempList.empty()) {
+        if (!previousFocus.isValid() && !tempList.empty()) {
             previousFocus = tempList.back();
         }
 
@@ -1223,33 +1227,32 @@ namespace SDOM
         for (const auto& item : tempList) {
             tabList_.push(item);
         }
-
         // Update the current object (keyboardFocusedObject_) to the previous entry in the tabList_
         setKeyboardFocusedObject(previousFocus);    // keyboardFocusedObject_ = previousFocus;
     } // END:void Core::handleTabKeyPressReverse(Stage& stage)
 
-    void Core::setKeyboardFocusedObject(DomHandle obj)
+    void Core::setKeyboardFocusedObject(DisplayObject obj)
     { keyboardFocusedObject_ = obj; }
-    DomHandle Core::getKeyboardFocusedObject() const
+    DisplayObject Core::getKeyboardFocusedObject() const
     { return keyboardFocusedObject_; }
-    void Core::setMouseHoveredObject(DomHandle obj)
+    void Core::setMouseHoveredObject(DisplayObject obj)
     { hoveredObject_ = obj; }
-    DomHandle Core::getMouseHoveredObject() const
+    DisplayObject Core::getMouseHoveredObject() const
     { return hoveredObject_; }
 
     void Core::setRootNode(const std::string& name)
     {
-        DomHandle stageHandle = factory_->getDomHandle(name);
-        if (stageHandle && dynamic_cast<Stage*>(stageHandle.get()))
+        DisplayObject stageHandle = factory_->getDisplayObjectHandle(name);
+        if (stageHandle.isValid() && dynamic_cast<Stage*>(stageHandle.get()))
         {
             rootNode_ = stageHandle;
-            setWindowTitle("Stage: " + rootNode_->getName());
+            setWindowTitle("Stage: " + rootNode_.get()->getName());
         }
     }
-    void Core::setRootNode(const DomHandle& handle) 
+    void Core::setRootNode(const DisplayObject& handle) 
     { 
         rootNode_ = handle;     
-        setWindowTitle("Stage: " + rootNode_->getName());
+        if (rootNode_.isValid() && rootNode_.get()) setWindowTitle("Stage: " + rootNode_.get()->getName());
     }
     void Core::setStage(const std::string& name) 
     { 
@@ -1265,7 +1268,7 @@ namespace SDOM
     { 
         return dynamic_cast<IDisplayObject*>(rootNode_.get()); 
     }
-    DomHandle Core::getRootNode() const 
+    DisplayObject Core::getRootNode() const 
     {
         return rootNode_; 
     }
@@ -1274,30 +1277,27 @@ namespace SDOM
 
     // --- Factory Wrappers Implementation --- //
 
-    DomHandle Core::createDisplayObject(const std::string& typeName, const sol::table& config) {
+    DisplayObject Core::createDisplayObject(const std::string& typeName, const sol::table& config) {
         return getFactory().create(typeName, config);
     }
-    DomHandle Core::createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init) {
+    DisplayObject Core::createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init) {
         return getFactory().create(typeName, init);
     }
-    DomHandle Core::createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript) {
+    DisplayObject Core::createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript) {
         return getFactory().create(typeName, luaScript);
     }
 
     IDisplayObject* Core::getDisplayObject(const std::string& name) {
         return getFactory().getDomObj(name);
     }
-    IResourceObject* Core::getResourceObject(const std::string& name) {
-        return getFactory().getResObj(name);
+    DisplayObject Core::getDisplayObjectHandle(const std::string& name) {
+        return getFactory().getDisplayObjectHandle(name);
     }
-    DomHandle Core::getDisplayObjectHandle(const std::string& name) {
-        return getFactory().getDomHandle(name);
-    }
-    DomHandle Core::getFactoryStageHandle() {
+    DisplayObject Core::getFactoryStageHandle() {
         return getFactory().getStageHandle();
     }
     bool Core::hasDisplayObject(const std::string& name) const {
-        DomHandle handle = factory_->getDomHandle(name);
+        DisplayObject handle = factory_->getDisplayObjectHandle(name);
         return handle.isValid();
     }
 
@@ -1311,7 +1311,7 @@ namespace SDOM
     int Core::countOrphanedDisplayObjects() const {
         return getFactory().countOrphanedDisplayObjects();
     }
-    std::vector<DomHandle> Core::getOrphanedDisplayObjects() {
+    std::vector<DisplayObject> Core::getOrphanedDisplayObjects() {
         return getFactory().getOrphanedDisplayObjects();
     }
     void Core::destroyOrphanedDisplayObjects() {
@@ -1324,10 +1324,10 @@ namespace SDOM
     void Core::attachFutureChildren() {
         getFactory().attachFutureChildren();
     }
-    void Core::addToOrphanList(const DomHandle orphan) {
+    void Core::addToOrphanList(const DisplayObject orphan) {
         getFactory().addToOrphanList(orphan);
     }
-    void Core::addToFutureChildrenList(const DomHandle child, const DomHandle parent,
+    void Core::addToFutureChildrenList(const DisplayObject child, const DisplayObject parent,
         bool useWorld, int worldX, int worldY) {
         getFactory().addToFutureChildrenList(child, parent, useWorld, worldX, worldY);
     }
@@ -1348,577 +1348,6 @@ namespace SDOM
 
     void Core::_registerLua(const std::string& typeName, sol::state_view lua)
     {
-        // Avoid duplicate registration: if the typeName is already present in
-        // the Lua state, assume registration has already been performed.
-        try {
-            sol::object existing = lua[typeName];
-            if (existing.valid() && !existing.is<sol::nil_t>()) {
-                return;
-            }
-        } catch (...) {
-            // ignore and continue with registration
-        }
-        // if (DEBUG_REGISTER_LUA)
-        // {
-        //     std::string typeNameLocal = "Core";
-        //     std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-        //             << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-        // }
-        
-        // 1. Create and save usertype table (no constructor)
-        sol::usertype<Core> objHandleType = lua.new_usertype<Core>(typeName,
-            sol::no_constructor, sol::base_classes, sol::bases<IDataObject>());
-        // Bind direct methods on the Core usertype to ensure proper colon-call
-        // signatures for Lua callers. These use the thin wrappers defined in
-        // lua_Core.cpp which forward to the Core singleton or member methods.
-        objHandleType["quit"] = [](Core& core) {
-            quit_lua();
-            return true;
-        };
-        objHandleType["shutdown"] = [](Core& core) {
-            shutdown_lua();
-            return true;
-        };
-        objHandleType["createDisplayObject"] = [](Core& core, const std::string& typeName, const sol::table& cfg) {
-            return createDisplayObject_lua(typeName, cfg);
-        };
-
-        objHandleType["getDisplayObjectHandle"] = [](Core& core, const std::string& name) {
-            return core.getDisplayObjectHandle(name);
-        };
-    objHandleType["getStageHandle"] = &Core::getStageHandle;
-    objHandleType["hasDisplayObject"] = &Core::hasDisplayObject;
-    objHandleType["destroyDisplayObject"] = &Core::destroyDisplayObject;
-    objHandleType["pumpEventsOnce"] = &Core::pumpEventsOnce;
-
-        // Allow both method (colon) and function (dot) call styles in Lua:
-        // - Core:run() => passes the Core userdata as first arg (calls run on that instance)
-        // - Core.run() => no args; call the singleton's run() for convenience
-        // Expose run to Lua with multiple signatures:
-        // - Core:run()                (method, no args)
-        // - Core:run(table)           (method, table config)
-        // - Core:run(string)          (method, filename or script)
-        // - Core.run()                (function-style, forwards to singleton)
-        // - Core.run(table)           (function-style, singleton)
-        // - Core.run(string)          (function-style, singleton)
-        objHandleType["run"] = sol::overload(
-            [](Core& /*core*/) { run_lua(); },
-            [](Core& core, const sol::table& cfg) { core.run(cfg); },
-            [](Core& core, const std::string& s) { core.run(s); },
-            []() { Core::getInstance().run(); },
-            [](const sol::table& cfg) { Core::getInstance().run(cfg); },
-            [](const std::string& s) { Core::getInstance().run(s); }
-        );
-
-    objHandleType["pushMouseEvent"] = [](Core& /*core*/, const sol::object& args) { pushMouseEvent_lua(args); };
-    objHandleType["pushKeyboardEvent"] = [](Core& /*core*/, const sol::object& args) { pushKeyboardEvent_lua(args); };
-
-        // Configuration helpers: support both method (Core:configure(tbl)) and
-        // function-style calls (Core.configure(tbl)) by providing overloads.
-        objHandleType["configure"] = sol::overload(
-            [](Core& core, const sol::table& cfg) { core.configureFromLua(cfg); },
-            [](const sol::table& cfg) { Core::getInstance().configureFromLua(cfg); }
-        );
-        objHandleType["configureFromFile"] = sol::overload(
-            [](Core& core, const std::string& filename) { core.configureFromLuaFile(filename); },
-            [](const std::string& filename) { Core::getInstance().configureFromLuaFile(filename); }
-        );
-        // Callback / Hook registration bindings
-        objHandleType["registerOnInit"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) {
-                registerOnInit_lua([f]() -> bool {
-                    sol::protected_function pf = f;
-                    sol::protected_function_result r = pf();
-                    if (!r.valid()) {
-                        sol::error err = r;
-                        ERROR(std::string("Lua registerOnInit error: ") + err.what());
-                        return false;
-                    }
-                    try { return r.get<bool>(); } catch (...) { return false; }
-                });
-            },
-            [](const sol::function& f) {
-                registerOnInit_lua([f]() -> bool {
-                    sol::protected_function pf = f;
-                    sol::protected_function_result r = pf();
-                    if (!r.valid()) {
-                        sol::error err = r;
-                        ERROR(std::string("Lua registerOnInit error: ") + err.what());
-                        return false;
-                    }
-                    try { return r.get<bool>(); } catch (...) { return false; }
-                });
-            }
-        );
-        objHandleType["registerOnQuit"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) {
-                registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } });
-            },
-            [](const sol::function& f) {
-                registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } });
-            }
-        );
-        objHandleType["registerOnUpdate"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) {
-                registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } });
-            },
-            [](const sol::function& f) {
-                registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } });
-            }
-        );
-        objHandleType["registerOnEvent"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) {
-                registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } });
-            },
-            [](const sol::function& f) {
-                registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } });
-            }
-        );
-        objHandleType["registerOnRender"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) {
-                registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } });
-            },
-            [](const sol::function& f) {
-                registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } });
-            }
-        );
-        objHandleType["registerOnUnitTest"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) {
-                registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
-            },
-            [](const sol::function& f) {
-                registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
-            }
-        );
-        objHandleType["registerOnWindowResize"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) {
-                registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } });
-            },
-            [](const sol::function& f) {
-                registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } });
-            }
-        );
-        // Generic registration helper: Core:registerOn("Update", func) style
-        objHandleType["registerOn"] = sol::overload(
-            [](Core& /*core*/, const std::string& name, const sol::function& f) { registerOn_lua(name, f); },
-            [](const std::string& name, const sol::function& f) { registerOn_lua(name, f); }
-        );
-        objHandleType["getPropertyNamesForType"] = [](Core& core, const std::string& t) { return core.getPropertyNamesForType(t); };
-        objHandleType["getCommandNamesForType"] = [](Core& core, const std::string& t) { return core.getCommandNamesForType(t); };
-        objHandleType["getFunctionNamesForType"] = [](Core& core, const std::string& t) { return core.getFunctionNamesForType(t); };
-
-        // Bind commonly-used factory wrapper directly so Lua calls like
-        // Core:createDisplayObject("Box", {...}) work as expected.
-        objHandleType["createDisplayObject"] = sol::resolve<DomHandle(const std::string&, const sol::table&)>(&Core::createDisplayObject);
-        this->objHandleType_ = objHandleType; // Save in IDataObject
-
-        // 2. Do NOT call SUPER::_registerLua(typeName, lua);
-
-        // 3. Register properties/commands specific to Core using the Factory registry
-        if (factory_) {
-            // Main Loop & Event Dispatch
-            factory_->registerLuaCommand(typeName, "quit",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
-                    quit_lua();
-                });
-            factory_->registerLuaCommand(typeName, "shutdown",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
-                    shutdown_lua();
-                });
-            factory_->registerLuaCommand(typeName, "run",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
-                    run_lua();
-                });
-
-            // Configuration from Lua table/file
-            factory_->registerLuaCommand(typeName, "configure",
-                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
-                    if (args.is<sol::table>()) {
-                        Core& core = static_cast<Core&>(obj);
-                        core.configureFromLua(args.as<sol::table>());
-                    }
-                });
-            factory_->registerLuaCommand(typeName, "configureFromFile",
-                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
-                    if (args.is<std::string>()) {
-                        Core& core = static_cast<Core&>(obj);
-                        core.configureFromLuaFile(args.as<std::string>());
-                    }
-                });
-
-            // Stage / Root Node Management
-            factory_->registerLuaCommand(typeName, "setRootNode",
-                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
-                    if (args.is<std::string>()) {
-                        setRootNodeByName_lua(args.as<std::string>());
-                    } else if (args.is<DomHandle>()) {
-                        setRootNodeByHandle_lua(args.as<DomHandle>());
-                    }
-                });
-            factory_->registerLuaCommand(typeName, "setStage",
-                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
-                    if (args.is<std::string>()) setStage_lua(args.as<std::string>());
-                });
-
-            // Traversal flag (get/set)
-            factory_->registerLuaFunction(typeName, "getIsTraversing",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, getIsTraversing_lua());
-                });
-            factory_->registerLuaCommand(typeName, "setIsTraversing",
-                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
-                    if (args.is<bool>()) setIsTraversing_lua(args.as<bool>());
-                });
-
-            // Focus & Hover Management
-            factory_->registerLuaCommand(typeName, "handleTabKeyPress",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
-                    handleTabKeyPress_lua();
-                });
-            factory_->registerLuaCommand(typeName, "handleTabKeyPressReverse",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
-                    handleTabKeyPressReverse_lua();
-                });
-            factory_->registerLuaFunction(typeName, "getKeyboardFocusedObject",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, getKeyboardFocusedObject_lua());
-                });
-            factory_->registerLuaCommand(typeName, "setKeyboardFocusedObject",
-                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
-                    if (args.is<DomHandle>()) setKeyboardFocusedObject_lua(args.as<DomHandle>());
-                });
-            factory_->registerLuaFunction(typeName, "getMouseHoveredObject",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, getMouseHoveredObject_lua());
-                });
-            factory_->registerLuaCommand(typeName, "setMouseHoveredObject",
-                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
-                    if (args.is<DomHandle>()) setMouseHoveredObject_lua(args.as<DomHandle>());
-                });
-
-            // Factory introspection helpers (expose Core wrappers)
-            factory_->registerLuaFunction(typeName, "getPropertyNamesForType",
-                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
-                    Core& core = static_cast<Core&>(obj);
-                    if (!args.is<std::string>()) return sol::make_object(lua, sol::nil);
-                    auto names = core.getPropertyNamesForType(args.as<std::string>());
-                    sol::table t = lua.create_table();
-                    for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
-                    return sol::make_object(lua, t);
-                });
-
-            factory_->registerLuaFunction(typeName, "getCommandNamesForType",
-                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
-                    Core& core = static_cast<Core&>(obj);
-                    if (!args.is<std::string>()) return sol::make_object(lua, sol::nil);
-                    auto names = core.getCommandNamesForType(args.as<std::string>());
-                    sol::table t = lua.create_table();
-                    for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
-                    return sol::make_object(lua, t);
-                });
-
-            factory_->registerLuaFunction(typeName, "getFunctionNamesForType",
-                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
-                    Core& core = static_cast<Core&>(obj);
-                    if (!args.is<std::string>()) return sol::make_object(lua, sol::nil);
-                    auto names = core.getFunctionNamesForType(args.as<std::string>());
-                    sol::table t = lua.create_table();
-                    for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
-                    return sol::make_object(lua, t);
-                });
-
-            // Window Title & Timing
-            factory_->registerLuaFunction(typeName, "getWindowTitle",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, getWindowTitle_lua());
-                });
-            factory_->registerLuaCommand(typeName, "setWindowTitle",
-                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
-                    if (args.is<std::string>()) setWindowTitle_lua(args.as<std::string>());
-                });
-            factory_->registerLuaFunction(typeName, "getElapsedTime",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, getElapsedTime_lua());
-                });
-            // Alias for scripts that expect a "delta_time" style name
-            factory_->registerLuaFunction(typeName, "get_delta_time",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, getElapsedTime_lua());
-                });
-
-            // Event helpers (pump/push) - expose to Lua
-            factory_->registerLuaCommand(typeName, "pumpEventsOnce",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
-                    pumpEventsOnce_lua();
-                });
-            factory_->registerLuaCommand(typeName, "pushMouseEvent",
-                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
-                    pushMouseEvent_lua(args);
-                });
-
-            // Object Lookup / Factory Wrappers
-            factory_->registerLuaFunction(typeName, "createDisplayObject",
-                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
-                    // Expect args to be either a table (with type/name) or a string+table pair.
-                    // If args is a table, try to extract type and pass through. If args is a string,
-                    // we cannot access the second table directly here, so fallback to calling the
-                    // global Core wrapper which accepts (type, table).
-                    if (args.is<sol::table>()) {
-                        sol::table t = args.as<sol::table>();
-                        if (t["type"].valid()) {
-                            std::string typeName = t["type"].get<std::string>();
-                            DomHandle h = createDisplayObject_lua(typeName, t);
-                            return sol::make_object(lua, h);
-                        }
-                    }
-                    // As a fallback, try to treat args as a string (type name) and call the global wrapper
-                    if (args.is<std::string>()) {
-                        // There's no direct way to get the second arg here; rely on the free-function wrapper
-                        // that may be used via the global Core table instead.
-                        std::string typeName = args.as<std::string>();
-                        // Return invalid handle as we don't have the config table
-                        return sol::make_object(lua, DomHandle());
-                    }
-                    return sol::make_object(lua, DomHandle());
-                });
-
-            // Also register the direct member overload for convenience (calls Core::createDisplayObject)
-            factory_->registerLuaFunction(typeName, "getDisplayObjectHandle",
-                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
-                    if (args.is<std::string>()) return sol::make_object(lua, getDisplayObjectHandle_lua(args.as<std::string>()));
-                    return sol::make_object(lua, DomHandle());
-                });
-            factory_->registerLuaFunction(typeName, "getFactoryStageHandle",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, getFactoryStageHandle_lua());
-                });
-            factory_->registerLuaFunction(typeName, "hasDisplayObject",
-                [](IDataObject& obj, sol::object args, sol::state_view lua) -> sol::object {
-                    if (args.is<std::string>()) return sol::make_object(lua, hasDisplayObject_lua(args.as<std::string>()));
-                    return sol::make_object(lua, false);
-                });
-            factory_->registerLuaCommand(typeName, "destroyDisplayObject",
-                [](IDataObject& obj, sol::object args, sol::state_view /*lua*/) {
-                    if (args.is<std::string>()) destroyDisplayObject_lua(args.as<std::string>());
-                });
-
-            // Orphan / Future Child Management
-            factory_->registerLuaFunction(typeName, "countOrphanedDisplayObjects",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, countOrphanedDisplayObjects_lua());
-                });
-            factory_->registerLuaFunction(typeName, "getOrphanedDisplayObjects",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, getOrphanedDisplayObjects_lua());
-                });
-            factory_->registerLuaCommand(typeName, "destroyOrphanedDisplayObjects",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
-                    destroyOrphanedDisplayObjects_lua();
-                });
-
-            // Utility Methods
-            factory_->registerLuaFunction(typeName, "listDisplayObjectNames",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                    return sol::make_object(lua, listDisplayObjectNames_lua());
-                });
-            
-            factory_->registerLuaCommand(typeName, "printObjectRegistry",
-                [](IDataObject& obj, sol::object /*args*/, sol::state_view /*lua*/) {
-                    printObjectRegistry_lua();
-                });
-
-            // (Introspection helpers registered above; avoid duplicate registrations)
-
-        }
-
-        // 4. Register properties/commands using registry (the Factory may have additional bindings)
-        if (factory_)
-            factory_->registerLuaPropertiesAndCommands(typeName, objHandleType_);
-
-        // 5. Expose the singleton instance to Lua under the type name
-        // Use sol::make_object to create a userdata that matches the previously
-        // created usertype. Assigning the raw C++ pointer directly can result
-        // in a mismatched value (sol::Core*) which breaks method dispatch.
-        lua[typeName] = sol::make_object(lua, this);
-
-        // Expose EventType constants to Lua as a table (so Lua code can use EventType.MouseClick)
-        // Use centralized registration on Event to create the usertypes and
-        // convenience properties/methods. This keeps event binding logic in one
-        // place and avoids duplicating registration in Core.
-        try {
-            Event::registerLua(lua);
-
-            // Populate EventType table from registry
-            sol::table etbl = lua.create_table();
-            const auto& reg = EventType::getRegistry();
-            for (const auto& kv : reg) {
-                const std::string& name = kv.first;
-                EventType* ptr = kv.second;
-                if (ptr) {
-                    etbl[name] = sol::make_object(lua, std::ref(*ptr));
-                }
-            }
-            lua["EventType"] = etbl;
-        } catch (...) {
-            // non-fatal if event type binding fails
-        }
-
-        sol::table coreTable = lua.create_table();
-        // Ensure returned DomHandle values are boxed as proper Lua userdata by
-        // using sol::this_state and sol::make_object so method calls (e.g. :get())
-        // receive a userdata that matches the registered usertype.
-        coreTable.set_function("createDisplayObject", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
-            sol::state_view sv = ts;
-            DomHandle h = Core::getInstance().createDisplayObject(typeName, cfg);
-            return sol::make_object(sv, h);
-        });
-        coreTable.set_function("getDisplayObjectHandle", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
-            sol::state_view sv = ts;
-                DomHandle h = Core::getInstance().getDisplayObjectHandle(name);
-            return sol::make_object(sv, h);
-        });
-        coreTable.set_function("getStageHandle", [](sol::this_state ts, sol::object /*self*/) {
-            sol::state_view sv = ts;
-            DomHandle h = Core::getInstance().getStageHandle();
-            return sol::make_object(sv, h);
-        });
-        coreTable.set_function("hasDisplayObject", [](sol::this_state /*ts*/, sol::object /*self*/, const std::string& name) {
-            return Core::getInstance().hasDisplayObject(name);
-        });
-        coreTable.set_function("destroyDisplayObject", [](sol::this_state /*ts*/, sol::object /*self*/, const std::string& name) {
-            Core::getInstance().destroyDisplayObject(name);
-        });
-        // Expose Factory introspection helpers on the global Core table as convenience wrappers
-        coreTable.set_function("getPropertyNamesForType", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName) {
-            sol::state_view sv = ts;
-            std::string query = typeName;
-            // If the caller passed an instance name, resolve it to the registered type
-            if (Core::getInstance().hasDisplayObject(typeName)) {
-                DomHandle h = Core::getInstance().getDisplayObjectHandle(typeName);
-                if (h.isValid() && h.get()) {
-                    IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
-                    if (obj) query = obj->getType();
-                }
-            }
-            auto names = Core::getInstance().getPropertyNamesForType(query);
-            sol::table t = sv.create_table();
-            for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
-            return sol::make_object(sv, t);
-        });
-        // Convenience alias used by some Lua callbacks: get_delta_time -> elapsed time per frame
-        coreTable.set_function("get_delta_time", [](sol::this_state /*ts*/, sol::object /*self*/) {
-            return Core::getInstance().getElapsedTime();
-        });
-        coreTable.set_function("getCommandNamesForType", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName) {
-            sol::state_view sv = ts;
-            std::string query = typeName;
-            if (Core::getInstance().hasDisplayObject(typeName)) {
-                DomHandle h = Core::getInstance().getDisplayObjectHandle(typeName);
-                if (h.isValid() && h.get()) {
-                    IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
-                    if (obj) query = obj->getType();
-                }
-            }
-            auto names = Core::getInstance().getCommandNamesForType(query);
-            sol::table t = sv.create_table();
-            for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
-            return sol::make_object(sv, t);
-        });
-        coreTable.set_function("getFunctionNamesForType", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName) {
-            sol::state_view sv = ts;
-            std::string query = typeName;
-            if (Core::getInstance().hasDisplayObject(typeName)) {
-                DomHandle h = Core::getInstance().getDisplayObjectHandle(typeName);
-                if (h.isValid() && h.get()) {
-                    IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
-                    if (obj) query = obj->getType();
-                }
-            }
-            auto names = Core::getInstance().getFunctionNamesForType(query);
-            sol::table t = sv.create_table();
-            for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
-            return sol::make_object(sv, t);
-        });
-        // Event helpers exposed on the global Core table
-        coreTable.set_function("pumpEventsOnce", [](sol::this_state /*ts*/, sol::object /*self*/) {
-            Core::getInstance().pumpEventsOnce();
-        });
-        coreTable.set_function("pushMouseEvent", [](sol::this_state ts, sol::object /*self*/, sol::object args) {
-            sol::state_view sv = ts;
-            // Forward to pushMouseEvent_lua using the singleton Core
-            pushMouseEvent_lua(args);
-            return sol::make_object(sv, sol::nil);
-        });
-        coreTable.set_function("pushKeyboardEvent", [](sol::this_state ts, sol::object /*self*/, sol::object args) {
-            sol::state_view sv = ts;
-            pushKeyboardEvent_lua(args);
-            return sol::make_object(sv, sol::nil);
-        });
-        coreTable.set_function("run", [](sol::this_state ts, sol::object /*self*/, sol::optional<sol::object> maybeArg) {
-            sol::state_view sv = ts;
-            if (!maybeArg) {
-                Core::getInstance().run();
-                return sol::make_object(sv, sol::nil);
-            }
-            sol::object arg = *maybeArg;
-            if (arg.is<sol::table>()) {
-                Core::getInstance().run(arg.as<sol::table>());
-                return sol::make_object(sv, sol::nil);
-            }
-            if (arg.is<std::string>()) {
-                Core::getInstance().run(arg.as<std::string>());
-                return sol::make_object(sv, sol::nil);
-            }
-            // Unsupported arg type
-            ERROR("CoreForward.run: unsupported argument type; expected table or string");
-            return sol::make_object(sv, sol::nil);
-        });
-        // Configuration helpers on convenience table
-        coreTable.set_function("configure", [](sol::this_state ts, sol::object /*self*/, const sol::table& cfg) {
-            sol::state_view sv = ts;
-            Core::getInstance().configureFromLua(cfg);
-            return sol::make_object(sv, sol::nil);
-        });
-        coreTable.set_function("configureFromFile", [](sol::this_state ts, sol::object /*self*/, const std::string& filename) {
-            sol::state_view sv = ts;
-            Core::getInstance().configureFromLuaFile(filename);
-            return sol::make_object(sv, sol::nil);
-        });
-        // Callback / Hook registration on convenience table
-        coreTable.set_function("registerOnInit", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            sol::state_view sv = ts;
-            registerOnInit_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnInit error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
-            return sol::make_object(sv, sol::nil);
-        });
-        coreTable.set_function("registerOnQuit", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnQuit error: ") + err.what()); } });
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnUpdate", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnUpdate error: ") + err.what()); } });
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnEvent", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnEvent error: ") + err.what()); } });
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnRender", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnRender error: ") + err.what()); } });
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnUnitTest", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnWindowResize", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnWindowResize error: ") + err.what()); } });
-            return sol::make_object(ts, sol::nil);
-        });
-        // Do not overwrite the `Core` global (which should be the userdata
-        // instance bound to the C++ singleton). Overwriting it with a plain
-        // table hides usertype methods (e.g. Core:quit()). Expose the
-        // convenience forwarder under a separate name instead.
-        lua["CoreForward"] = coreTable;
     }
 
     void Core::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
@@ -1951,11 +1380,11 @@ namespace SDOM
         };
 
         objHandleType["getDisplayObjectHandle"] = [](Core& core, const std::string& name) -> DisplayObject* {
-            DomHandle h = core.getDisplayObjectHandle(name);
+            DisplayObject h = core.getDisplayObjectHandle(name);
             return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
         };
         objHandleType["getStageHandle"] = [](Core& core) -> DisplayObject* {
-            DomHandle h = core.getStageHandle();
+            DisplayObject h = core.getStageHandle();
             return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
         };
         objHandleType["hasDisplayObject"] = &Core::hasDisplayObject;
@@ -2040,7 +1469,7 @@ namespace SDOM
         objHandleType["getFunctionNamesForType"] = [](Core& core, const std::string& t) { return core.getFunctionNamesForType(t); };
 
         objHandleType["createDisplayObject"] = [](Core& core, const std::string& typeName, const sol::table& cfg) -> DisplayObject* {
-            DomHandle h = core.createDisplayObject(typeName, cfg);
+            DisplayObject h = core.createDisplayObject(typeName, cfg);
             return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
         };
 
@@ -2069,19 +1498,19 @@ namespace SDOM
         sol::table coreTable = lua.create_table();
         coreTable.set_function("createDisplayObject", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
             sol::state_view sv = ts;
-            DomHandle h = Core::getInstance().createDisplayObject(typeName, cfg);
+            DisplayObject h = Core::getInstance().createDisplayObject(typeName, cfg);
             DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
             return sol::make_object(sv, p);
         });
         coreTable.set_function("getDisplayObjectHandle", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
             sol::state_view sv = ts;
-            DomHandle h = Core::getInstance().getDisplayObjectHandle(name);
+            DisplayObject h = Core::getInstance().getDisplayObjectHandle(name);
             DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
             return sol::make_object(sv, p);
         });
         coreTable.set_function("getStageHandle", [](sol::this_state ts, sol::object /*self*/) {
             sol::state_view sv = ts;
-            DomHandle h = Core::getInstance().getStageHandle();
+            DisplayObject h = Core::getInstance().getStageHandle();
             DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
             return sol::make_object(sv, p);
         });
@@ -2096,7 +1525,7 @@ namespace SDOM
             sol::state_view sv = ts;
             std::string query = typeName;
             if (Core::getInstance().hasDisplayObject(typeName)) {
-                DomHandle h = Core::getInstance().getDisplayObjectHandle(typeName);
+                DisplayObject h = Core::getInstance().getDisplayObjectHandle(typeName);
                 if (h.isValid() && h.get()) {
                     IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
                     if (obj) query = obj->getType();
@@ -2114,7 +1543,7 @@ namespace SDOM
             sol::state_view sv = ts;
             std::string query = typeName;
             if (Core::getInstance().hasDisplayObject(typeName)) {
-                DomHandle h = Core::getInstance().getDisplayObjectHandle(typeName);
+                DisplayObject h = Core::getInstance().getDisplayObjectHandle(typeName);
                 if (h.isValid() && h.get()) {
                     IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
                     if (obj) query = obj->getType();
@@ -2129,7 +1558,7 @@ namespace SDOM
             sol::state_view sv = ts;
             std::string query = typeName;
             if (Core::getInstance().hasDisplayObject(typeName)) {
-                DomHandle h = Core::getInstance().getDisplayObjectHandle(typeName);
+                DisplayObject h = Core::getInstance().getDisplayObjectHandle(typeName);
                 if (h.isValid() && h.get()) {
                     IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
                     if (obj) query = obj->getType();

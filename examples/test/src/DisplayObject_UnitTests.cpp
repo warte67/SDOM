@@ -1,41 +1,35 @@
-// DomHandle_UnitTests.cpp
+// DisplayObject_UnitTests.cpp
 
 // #ifdef SDOM_ENABLE_UNIT_TESTS
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
+#include <SDOM/SDOM_DisplayObject.hpp>
 #include "UnitTests.hpp"
 // Include Box so test helpers (reset/getTestClickCount) are visible
 #include "Box.hpp"
-// Lua_UnitTests.cpp
 
-// #ifdef SDOM_ENABLE_UNIT_TESTS
-
-#include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_Core.hpp>
-#include <SDOM/SDOM_UnitTests.hpp>
-#include "UnitTests.hpp"
 
 namespace SDOM
 {
 
-    // DomHandle unit tests mapping (renamed to numeric identifiers):
-    //  - DomHandle_test1  -> "DomHandle #1" (forwards/reflection)
-    //  - DomHandle_test2  -> "DomHandle #2" (clickable)
-    //  - DomHandle_test3  -> "DomHandle #3" (enabled)
-    //  - DomHandle_test4  -> "DomHandle #4" (visibility)
-    //  - DomHandle_test5  -> "DomHandle #5" (keyboard focus)
-    //  - DomHandle_test6  -> "DomHandle #6" (mouse hover)
-    //  - DomHandle_test7  -> "DomHandle #7" (tab priority)
-    //  - DomHandle_test8  -> "DomHandle #8" (geometry getters/setters)
-    //  - DomHandle_test9  -> "DomHandle #9" (priority overloads)
-    //  - DomHandle_test10 -> "DomHandle #10" (sort/highest/lowest)
+    // DisplayObject unit tests mapping (renamed to numeric identifiers):
+    //  - DisplayObject_test1  -> "DisplayObject #1" (forwards/reflection)
+    //  - DisplayObject_test2  -> "DisplayObject #2" (clickable)
+    //  - DisplayObject_test3  -> "DisplayObject #3" (enabled)
+    //  - DisplayObject_test4  -> "DisplayObject #4" (visibility)
+    //  - DisplayObject_test5  -> "DisplayObject #5" (keyboard focus)
+    //  - DisplayObject_test6  -> "DisplayObject #6" (mouse hover)
+    //  - DisplayObject_test7  -> "DisplayObject #7" (tab priority)
+    //  - DisplayObject_test8  -> "DisplayObject #8" (geometry getters/setters)
+    //  - DisplayObject_test9  -> "DisplayObject #9" (priority overloads)
+    //  - DisplayObject_test10 -> "DisplayObject #10" (sort/highest/lowest)
 
-    bool DomHandle_test1()
+    bool DisplayObject_test1()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        // Lua script: check for presence of DomHandle methods related to priority/z-order
+        // Lua script: check for presence of DisplayObject methods related to priority/z-order
         auto res = lua.script(R"(
             local methods = { 'getMaxPriority','getMinPriority','getPriority','setToHighestPriority','setToLowestPriority','sortChildrenByPriority','setPriority','moveToTop','getChildrenPriorities','getZOrder','setZOrder' }
             local dh = Core:getStageHandle()
@@ -50,12 +44,12 @@ namespace SDOM
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        return UnitTests::run("DomHandle #1", "Verify DomHandle forwards for priority/z-order exist and are callable", [=]() { return ok; });
+        return UnitTests::run("DisplayObject #1", "Verify DisplayObject forwards for priority/z-order exist and are callable", [=]() { return ok; });
     }
 
 
     // Split tests: clickable, enabled, visibility, keyboard focus, mouse hover
-    bool DomHandle_test2()
+    bool DisplayObject_test2()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
@@ -71,10 +65,10 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_click')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle #2", "Verify setClickable/isClickable from Lua", [=]() { return result; });
+        return UnitTests::run("DisplayObject #2", "Verify setClickable/isClickable from Lua", [=]() { return result; });
     }
 
-    bool DomHandle_test3()
+    bool DisplayObject_test3()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
@@ -90,10 +84,10 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_enabled')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle #3", "Verify setEnabled/isEnabled from Lua", [=]() { return result; });
+        return UnitTests::run("DisplayObject #3", "Verify setEnabled/isEnabled from Lua", [=]() { return result; });
     }
 
-    bool DomHandle_test4()
+    bool DisplayObject_test4()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
@@ -113,10 +107,10 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_vis')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle #4", "Verify setVisible/isVisible and setHidden/isHidden from Lua", [=]() { return result; });
+        return UnitTests::run("DisplayObject #4", "Verify setVisible/isVisible and setHidden/isHidden from Lua", [=]() { return result; });
     }
 
-    bool DomHandle_test5()
+    bool DisplayObject_test5()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
@@ -132,23 +126,23 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_focus')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle #5", "Verify setKeyboardFocus and Core:getKeyboardFocusedObject", [=]() { return result; });
+        return UnitTests::run("DisplayObject #5", "Verify setKeyboardFocus and Core:getKeyboardFocusedObject", [=]() { return result; });
     }
 
-    bool DomHandle_test6()
+    bool DisplayObject_test6()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
             local b = Core:createDisplayObject('Box', { name = 'li_box_hover', type = 'Box', x = 10, y = 10, width = 20, height = 20 })
             if not b then 
-                print("DomHandle_test6: failed to create box")
+                print("DisplayObject_test6: failed to create box")
                 return false 
             end
             local stage = Core:getStageHandle()
             if stage and b then 
                 stage:addChild(b) 
             else
-                print("DomHandle_test6: failed to get stage or add child")
+                print("DisplayObject_test6: failed to get stage or add child")
                 return false
             end
             local cx = b:getX() + b:getWidth()/2
@@ -157,21 +151,21 @@ namespace SDOM
             Core:pumpEventsOnce()
             local m = Core:getMouseHoveredObject()
             if not m then 
-                print("DomHandle_test6: getMouseHoveredObject returned nil")
+                print("DisplayObject_test6: getMouseHoveredObject returned nil")
                 return false 
             end
             if m:getName() ~= 'li_box_hover' then 
-                print("DomHandle_test6: hovered object name mismatch: expected 'li_box_hover', got '"..m:getName().."'")
+                print("DisplayObject_test6: hovered object name mismatch: expected 'li_box_hover', got '"..m:getName().."'")
                 return false 
             end
             Core:destroyDisplayObject('li_box_hover')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle #6", "Verify mouse hover via pushMouseEvent/pumpEventsOnce", [=]() { return result; });
+        return UnitTests::run("DisplayObject #6", "Verify mouse hover via pushMouseEvent/pumpEventsOnce", [=]() { return result; });
     }
 
 
-    bool DomHandle_test7()
+    bool DisplayObject_test7()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -197,11 +191,11 @@ namespace SDOM
             return true
         )").get<bool>();
 
-        return UnitTests::run("DomHandle #7", "Exercise get/set TabPriority and is/setTabEnabled from Lua", [=]() { return result; });
+        return UnitTests::run("DisplayObject #7", "Exercise get/set TabPriority and is/setTabEnabled from Lua", [=]() { return result; });
     }
 
 
-    bool DomHandle_test8()
+    bool DisplayObject_test8()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -232,11 +226,11 @@ namespace SDOM
             Core:destroyDisplayObject('geom_box')
             return true
         )").get<bool>();
-        return UnitTests::run("DomHandle #8", "Exercise setX/setY/setWidth/setHeight and verify getters from Lua", [=]() { return result; });
+        return UnitTests::run("DisplayObject #8", "Exercise setX/setY/setWidth/setHeight and verify getters from Lua", [=]() { return result; });
     }
 
 
-    bool DomHandle_test9()
+    bool DisplayObject_test9()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -286,10 +280,10 @@ namespace SDOM
         )").get<sol::table>();
         bool ok = result["ok"].get_or(false);
         std::string err = result["err"].get_or(std::string());
-        return UnitTests::run("DomHandle #9", "Exercise setPriority/setZOrder/moveToTop overloads", [=]() { return ok; });
+        return UnitTests::run("DisplayObject #9", "Exercise setPriority/setZOrder/moveToTop overloads", [=]() { return ok; });
     }
 
-    bool DomHandle_test10()
+    bool DisplayObject_test10()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -360,28 +354,28 @@ namespace SDOM
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
         if (!ok) {
-            std::cout << "[Debug] DomHandle_test10 Lua error: " << err << std::endl;
+            std::cout << "[Debug] DisplayObject_test10 Lua error: " << err << std::endl;
         }
-            return UnitTests::run("DomHandle #10", "Verify sortChildrenByPriority and setToHighest/Lowest with child specs", [=]() { return ok; });
+            return UnitTests::run("DisplayObject #10", "Verify sortChildrenByPriority and setToHighest/Lowest with child specs", [=]() { return ok; });
     }
 
 
 
-    bool DomHandle_UnitTests() 
+    bool DisplayObject_UnitTests() 
     {
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
-              [&]() { return DomHandle_test1(); },           // Verify DomHandle forwards for priority/z-order exist and are callable
-              [&]() { return DomHandle_test2(); },            // Verify setClickable/isClickable from Lua
-              [&]() { return DomHandle_test3(); },              // Verify setEnabled/isEnabled from Lua
-              [&]() { return DomHandle_test4(); },           // Verify setVisible/isVisible and setHidden/isHidden from Lua
-              [&]() { return DomHandle_test5(); },        // Verify setKeyboardFocus and Core:getKeyboardFocusedObject
-              [&]() { return DomHandle_test6(); },           // Verify mouse hover via pushMouseEvent/pumpEventsOnce
-              [&]() { return DomHandle_test7(); },                  // Exercise get/set TabPriority and is/setTabEnabled from Lua
-              [&]() { return DomHandle_test8(); },             // Exercise setX/setY/setWidth/setHeight and verify getters from Lua
-              [&]() { return DomHandle_test9(); },   // Exercise setPriority/setZOrder/moveToTop overloads
-              [&]() { return DomHandle_test10(); }  // Verify sortChildrenByPriority and setToHighest/Lowest with child specs
+              [&]() { return DisplayObject_test1(); },           // Verify DisplayObject forwards for priority/z-order exist and are callable
+              [&]() { return DisplayObject_test2(); },            // Verify setClickable/isClickable from Lua
+              [&]() { return DisplayObject_test3(); },              // Verify setEnabled/isEnabled from Lua
+              [&]() { return DisplayObject_test4(); },           // Verify setVisible/isVisible and setHidden/isHidden from Lua
+              [&]() { return DisplayObject_test5(); },        // Verify setKeyboardFocus and Core:getKeyboardFocusedObject
+              [&]() { return DisplayObject_test6(); },           // Verify mouse hover via pushMouseEvent/pumpEventsOnce
+              [&]() { return DisplayObject_test7(); },                  // Exercise get/set TabPriority and is/setTabEnabled from Lua
+              [&]() { return DisplayObject_test8(); },             // Exercise setX/setY/setWidth/setHeight and verify getters from Lua
+              [&]() { return DisplayObject_test9(); },   // Exercise setPriority/setZOrder/moveToTop overloads
+              [&]() { return DisplayObject_test10(); }  // Verify sortChildrenByPriority and setToHighest/Lowest with child specs
         };
         for (auto& test : tests) 
         {

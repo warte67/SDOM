@@ -6,6 +6,8 @@
 #include <SDOM/SDOM_EventType.hpp>
 #include <SDOM/SDOM_EventTypeHash.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
+#include <SDOM/SDOM_DisplayObject.hpp>
+
 #include "UnitTests.hpp"
 
 

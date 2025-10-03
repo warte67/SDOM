@@ -3,8 +3,8 @@
 #include <SDOM/SDOM.hpp>
 
 // #include <SDOM/SDOM_Handle.hpp>
-#include <SDOM/SDOM_DomHandle.hpp>  // Deprecated
-#include <SDOM/SDOM_ResHandle.hpp>  // Deprecated
+// #include <SDOM/SDOM_DisplayObject.hpp>  // Deprecated
+// #include <SDOM/SDOM_ResHandle.hpp>  // Deprecated
 #include <SDOM/SDOM_DisplayObject.hpp>
 
 #include <SDOM/SDOM_Factory.hpp>
@@ -17,10 +17,6 @@ namespace SDOM
 
     Factory::Factory() : IDataObject()
     {
-        // make sure the DomHandles can access this Factory
-        DomHandle::factory_ = this; // Deprecated
-        ResHandle::factory_ = this; // Deprecated
-
         // Seed the static factory in the DisplayObject
         DisplayObject::factory_ = this;
     }
@@ -45,8 +41,8 @@ namespace SDOM
     // own Lua properties/commands/functions in their _registerDisplayObject implementations.
 
         // Register other built-in types here as needed ...   
-        DomHandle prototypeHandle_old; // Deprecated
-        prototypeHandle_old._registerLua("DomHandle", core.getLua()); // Deprecated
+        // DisplayObject prototypeHandle_old; // Deprecated
+        // prototypeHandle_old._registerLua("DisplayObject", core.getLua()); // Deprecated
 
 
         DisplayObject prototypeHandle; // Default DisplayObject for registration
@@ -62,13 +58,10 @@ namespace SDOM
 
         IDisplayObject::InitStruct init; // Default init struct
         init.type = typeName;
-        DomHandle prototypeHandle = create(typeName, init);
-        prototypeHandle->setType(typeName);
+        DisplayObject prototypeHandle = create(typeName, init);
         if (prototypeHandle)
         {
-            // prototypeHandle->_registerLua_Usertype(SDOM::getLua());
-            prototypeHandle->_registerLua(typeName, SDOM::getLua()); // Deprecated
-            prototypeHandle->_registerDisplayObject(typeName, SDOM::getLua());
+            prototypeHandle._registerDisplayObject(typeName, SDOM::getLua());
             destroyDisplayObject(prototypeHandle.get()->getName()); // Clean up prototype
         }   
     }
@@ -93,31 +86,31 @@ namespace SDOM
         return nullptr;
     }
     
-    DomHandle Factory::getDomHandle(const std::string& name) 
+    DisplayObject Factory::getDisplayObjectHandle(const std::string& name) 
     {
         auto it = displayObjects_.find(name);
         if (it != displayObjects_.end()) 
         {
-            // Use the resource's type for the DomHandle
-            return DomHandle(name, it->second->getType());
+            // Use the resource's type for the DisplayObject
+            return DisplayObject(name, it->second->getType());
         }
-        // Return an empty DomHandle if not found
-        return DomHandle();
+        // Return an empty DisplayObject if not found
+        return DisplayObject();
     }
 
-    DomHandle Factory::getStageHandle() 
+    DisplayObject Factory::getStageHandle() 
     {
         Stage* stage = getStage();
         if (!stage) {
             ERROR("Factory::getStageHandle: No stage available");
-            return DomHandle(); // Return an empty/null handle if stage is not available
+            return DisplayObject(); // Return an empty/null handle if stage is not available
         }
         std::string stageName = stage->getName();
-        return getDomHandle(stageName);
+        return getDisplayObjectHandle(stageName);
     }
 
     // String (LUA text) based object creator
-    DomHandle Factory::create(const std::string& typeName, const sol::table& config)
+    DisplayObject Factory::create(const std::string& typeName, const sol::table& config)
     {
         // Get main texture size for defaults
         int maxStageWidth = 0;
@@ -140,7 +133,7 @@ namespace SDOM
                 if (i < missing.size() - 1) msg += ", ";
             }
             ERROR(msg); // Throws and aborts creation
-            return DomHandle(); // This line is not reached if ERROR throws
+            return DisplayObject(); // This line is not reached if ERROR throws
         }
 
         auto it = creators_.find(typeName);
@@ -163,7 +156,7 @@ namespace SDOM
             if (!displayObject) {
                 std::cout << "Factory::create: Failed to create display object of type '" << typeName
                         << "' from Lua. Display object is nullptr.\n";
-                return DomHandle(); // Invalid handle
+                return DisplayObject(); // Invalid handle
             }
             std::string name = config["name"];
             displayObjects_[name] = std::move(displayObject);
@@ -214,11 +207,11 @@ namespace SDOM
             // Included for completeness.  There may still be room to add an event listener.
             {
                 auto& eventManager = getCore().getEventManager();
-                std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DomHandle(name, typeName));
+                std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DisplayObject(name, typeName));
                 // relatedTarget: stage handle when available
-                DomHandle stageHandle = getCore().getRootNode();
+                DisplayObject stageHandle = getCore().getRootNode();
                 if (stageHandle) initEvent->setRelatedTarget(stageHandle);
-                eventManager.dispatchEvent(std::move(initEvent), DomHandle(name, typeName));
+                eventManager.dispatchEvent(std::move(initEvent), DisplayObject(name, typeName));
             }
 
             // If the Lua config included a parent, attach this new object to it
@@ -226,13 +219,13 @@ namespace SDOM
                 attachCreatedObjectToParentFromConfig(name, typeName, config["parent"]);
             }
 
-            return DomHandle(name, typeName);
+            return DisplayObject(name, typeName);
         }
-        return DomHandle(); // Invalid handle
+        return DisplayObject(); // Invalid handle
     }
 
     // InitStruct based object creator
-    DomHandle Factory::create(const std::string& typeName, const IDisplayObject::InitStruct& init)
+    DisplayObject Factory::create(const std::string& typeName, const IDisplayObject::InitStruct& init)
     {
         auto it = creators_.find(typeName);
         if (it != creators_.end() && it->second.fromInitStruct) 
@@ -246,20 +239,20 @@ namespace SDOM
                 // Included for completeness.  There may still be room to add an event listener.
                 {
                     auto& eventManager = getCore().getEventManager();
-                    std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DomHandle(name, typeName));
-                    DomHandle stageHandle = getCore().getRootNode();
-                    if (stageHandle) initEvent->setRelatedTarget(stageHandle);
-                    eventManager.dispatchEvent(std::move(initEvent), DomHandle(name, typeName));
+                    std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DisplayObject(name, typeName));
+                        DisplayObject stageHandle = getCore().getRootNode();
+                        if (stageHandle) initEvent->setRelatedTarget(stageHandle);
+                        eventManager.dispatchEvent(std::move(initEvent), DisplayObject(name, typeName));
                 }
                 displayObject->setType(typeName); // Ensure type is set
                 displayObjects_[name] = std::move(displayObject);
-                return DomHandle(name, typeName);
+                    return DisplayObject(name, typeName);
             }
         }
-        return DomHandle(); // Invalid handle
+            return DisplayObject(); // Invalid handle
     }
 
-    DomHandle Factory::create(const std::string& typeName, const std::string& luaScript) {
+    DisplayObject Factory::create(const std::string& typeName, const std::string& luaScript) {
         sol::state lua;
         lua.open_libraries(sol::lib::base);
 
@@ -268,7 +261,7 @@ namespace SDOM
 
         if (!result.valid() || !result.is<sol::table>()) {
             std::cout << "Factory::create: Provided string is not a valid Lua table.\n";
-            return DomHandle();
+            return DisplayObject();
         }
 
         sol::table config = result.as<sol::table>();
@@ -277,16 +270,16 @@ namespace SDOM
 
     bool Factory::attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig)
     {
-        DomHandle parentHandle;
+        DisplayObject parentHandle;
         if (parentConfig.is<std::string>()) {
-            parentHandle = getDomHandle(parentConfig.as<std::string>());
-        } else if (parentConfig.is<DomHandle>()) {
-            parentHandle = parentConfig.as<DomHandle>();
+            parentHandle = getDisplayObjectHandle(parentConfig.as<std::string>());
+        } else if (parentConfig.is<DisplayObject>()) {
+            parentHandle = parentConfig.as<DisplayObject>();
         } else if (parentConfig.is<sol::table>()) {
             sol::table t = parentConfig.as<sol::table>();
             if (t["parent"].valid()) {
-                if (t["parent"].get_type() == sol::type::string) parentHandle = getDomHandle(t["parent"].get<std::string>());
-                else parentHandle = t["parent"].get<DomHandle>();
+                if (t["parent"].get_type() == sol::type::string) parentHandle = getDisplayObjectHandle(t["parent"].get<std::string>());
+                else parentHandle = t["parent"].get<DisplayObject>();
             }
         }
 
@@ -294,7 +287,7 @@ namespace SDOM
 
         if (auto* newParentObj = dynamic_cast<IDisplayObject*>(parentHandle.get())) {
             // Use addChild to ensure parent/child bookkeeping and ordering occurs
-            newParentObj->addChild(DomHandle(name, typeName));
+            newParentObj->addChild(DisplayObject(name, typeName));
             return true;
         }
         return false;
@@ -323,12 +316,12 @@ namespace SDOM
         return count;
     }
 
-    std::vector<DomHandle> Factory::getOrphanedDisplayObjects() {
-        std::vector<DomHandle> orphans;
+    std::vector<DisplayObject> Factory::getOrphanedDisplayObjects() {
+        std::vector<DisplayObject> orphans;
         for (const auto& [name, objPtr] : displayObjects_) {
             auto obj = dynamic_cast<IDisplayObject*>(objPtr.get());
             if (obj && !obj->getParent() && obj->getType() != "Stage") {
-                orphans.push_back(getDomHandle(name));
+                orphans.push_back(getDisplayObjectHandle(name));
             }
         }
         return orphans;
@@ -381,16 +374,16 @@ namespace SDOM
     {
         for (auto& orphanHandle : orphanList_)
         {
-            DomHandle orphan = orphanHandle;
+            DisplayObject orphan = orphanHandle;
             if (orphan)
             {
-                DomHandle parent = orphan->getParent();
+                DisplayObject parent = orphan->getParent();
                 if (parent)
                 {
                     // Remove orphan from parent's children using public removeChild method
                     parent->removeChild(orphanHandle);
                     // Set orphan's parent to nullptr using public setParent method
-                    orphan->setParent(DomHandle());
+                    orphan->setParent(DisplayObject());
                 }
             }
         }
@@ -401,7 +394,7 @@ namespace SDOM
     {
         for (auto& futureChild : futureChildrenList_) 
         {
-            DomHandle child = futureChild.child;
+            DisplayObject child = futureChild.child;
             if (child)
             {
                 child->attachChild_(
@@ -416,7 +409,7 @@ namespace SDOM
         futureChildrenList_.clear();
     }
 
-    void Factory::addToOrphanList(const DomHandle orphan) 
+    void Factory::addToOrphanList(const DisplayObject orphan) 
     {
         if (orphan) 
         {
@@ -424,7 +417,7 @@ namespace SDOM
         }
     }
 
-    void Factory::addToFutureChildrenList(const DomHandle child, const DomHandle parent, bool useWorld, int worldX, int worldY) 
+    void Factory::addToFutureChildrenList(const DisplayObject child, const DisplayObject parent, bool useWorld, int worldX, int worldY) 
     {
         if (child && parent) 
         {

@@ -67,7 +67,7 @@ namespace SDOM
         void DispatchQueuedEvents();
 
         // Dispatch a single event to the target node
-        void dispatchEvent(std::unique_ptr<Event> event, DomHandle rootNode);
+        void dispatchEvent(std::unique_ptr<Event> event, DisplayObject rootNode);
         // Dispatch an event to all nodes on the same stage
         void dispatchEventToAllNodesOnStage(std::unique_ptr<Event> event);
 
@@ -80,7 +80,7 @@ namespace SDOM
 
         // Utility methods
         bool isMouseWithinBounds(IDisplayObject& target) const;
-        DomHandle findTopObjectUnderMouse(DomHandle rootNode, DomHandle excludeNode = DomHandle()) const;
+        DisplayObject findTopObjectUnderMouse(DisplayObject rootNode, DisplayObject excludeNode = DisplayObject()) const;
 
         int getEventQueueSize() const { return static_cast<int>(eventQueue.size()); }
 

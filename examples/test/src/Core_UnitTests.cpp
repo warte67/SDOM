@@ -5,6 +5,8 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp> 
 #include <SDOM/SDOM_UnitTests.hpp>
+#include <SDOM/SDOM_DisplayObject.hpp>
+
 #include "UnitTests.hpp"
 
 namespace SDOM

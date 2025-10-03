@@ -32,52 +32,5 @@
 #include <SDOM/SDOM_Factory.hpp>
 namespace SDOM
 {
-    // // Default implementation
-    // bool IDataObject::onInit()
-    // {
-    //     return true;
-    // }
-
-    // void IDataObject::fromLua(const sol::table& lua, sol::state_view lua_state)
-    // {
-    //     for (const auto& [propName, setter] : setters_)
-    //     {
-    //         if (lua[propName].valid() && setter)
-    //         {
-    //             setter(*this, lua[propName], lua_state);
-    //         }
-    //     }
-    // }
-
-    // sol::table IDataObject::toLua(sol::state_view lua) const
-    // {
-    //     sol::table tbl = lua.create_table();
-
-    //     // Serialize all registered properties
-    //     for (const auto& [propName, getter] : getters_)
-    //     {
-    //         if (getter)
-    //         {
-    //             tbl[propName] = getter(*this, lua);
-    //         }
-    //     }
-
-    //     // Serialize children if this is an IDisplayObject
-    //     if (const auto* displayObj = dynamic_cast<const IDisplayObject*>(this))
-    //     {
-    //         sol::table childrenTbl = lua.create_table();
-    //         int idx = 1;
-    //         for (const auto& child : displayObj->getChildren())
-    //         {
-    //             if (child)
-    //             {
-    //                 childrenTbl[idx++] = child->toLua(lua);
-    //             }
-    //         }
-    //         tbl["children"] = childrenTbl;
-    //     }
-
-    //     return tbl;
-    // }
 
 } // namespace SDOM
