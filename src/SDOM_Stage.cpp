@@ -136,16 +136,30 @@ namespace SDOM
         // Call base class registration to include inherited properties/commands
         SUPER::_registerDisplayObject(typeName, lua);
 
-        // // Create and save usertype table 
-        // SDOM::Factory& factory = SDOM::getFactory();
+        // Create the Stage usertype and bind stage-specific properties directly
+        sol::usertype<Stage> objHandleType = lua.new_usertype<Stage>(typeName,
+            sol::no_constructor, sol::base_classes, sol::bases<SUPER>());
 
-        sol::usertype<Stage> objHandleType = lua.new_usertype<Stage>(typeName, sol::base_classes, sol::bases<SUPER>()
-            // ...Stage-specific methods...
+        // Expose mouseX/mouseY as properties backed by the static Stage getters/setters
+        objHandleType["mouseX"] = sol::property(
+            [](const Stage& /*s*/) { return Stage::getMouseX(); },
+            [](Stage& /*s*/, sol::object val) {
+                if (val.is<int>()) Stage::setMouseX(val.as<int>());
+                else if (val.is<double>()) Stage::setMouseX(static_cast<int>(val.as<double>()));
+            }
+        );
+
+        objHandleType["mouseY"] = sol::property(
+            [](const Stage& /*s*/) { return Stage::getMouseY(); },
+            [](Stage& /*s*/, sol::object val) {
+                if (val.is<int>()) Stage::setMouseY(val.as<int>());
+                else if (val.is<double>()) Stage::setMouseY(static_cast<int>(val.as<double>()));
+            }
         );
 
         // Store the usertype for later use
         this->objHandleType_ = objHandleType;
 
-    } // End Box::_registerDisplayObject()
+    } // End Stage::_registerDisplayObject()
 
 } // namespace SDOM

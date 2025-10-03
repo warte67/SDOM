@@ -475,9 +475,20 @@ void Box::_registerLua(const std::string& typeName, sol::state_view lua)
     // // Create and save usertype table 
     // SDOM::Factory& factory = SDOM::getFactory();
 
-    sol::usertype<Box> objHandleType = lua.new_usertype<Box>(typeName, sol::base_classes, sol::bases<SUPER>()
-        // ...Box-specific methods...
-    );
+    sol::usertype<Box> objHandleType = lua.new_usertype<Box>(typeName, sol::base_classes, sol::bases<SUPER>());
+
+    // Register Box-specific functions directly on the usertype (no Factory)
+    objHandleType["doSomething"] = [](Box& b, sol::object /*args*/, sol::state_view lua) -> sol::object {
+        std::cout << "Box::doSomething called on " << b.getName() << std::endl;
+        return sol::make_object(lua, true);
+    };
+
+    objHandleType["resetColor"] = [](Box& b, sol::object /*args*/, sol::state_view lua) -> sol::object {
+        SDL_Color defaultColor = {255, 0, 255, 255};
+        b.setColor(defaultColor);
+        std::cout << "Box::resetColor called on " << b.getName() << std::endl;
+        return sol::make_object(lua, true);
+    };
 
     // Store the usertype for later use
     this->objHandleType_ = objHandleType;

@@ -3,6 +3,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Stage.hpp>
+#include <SDOM/SDOM_DisplayObject.hpp>
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
@@ -1949,10 +1950,14 @@ namespace SDOM
             return createDisplayObject_lua(typeName, cfg);
         };
 
-        objHandleType["getDisplayObjectHandle"] = [](Core& core, const std::string& name) {
-            return core.getDisplayObjectHandle(name);
+        objHandleType["getDisplayObjectHandle"] = [](Core& core, const std::string& name) -> DisplayObject* {
+            DomHandle h = core.getDisplayObjectHandle(name);
+            return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
         };
-        objHandleType["getStageHandle"] = &Core::getStageHandle;
+        objHandleType["getStageHandle"] = [](Core& core) -> DisplayObject* {
+            DomHandle h = core.getStageHandle();
+            return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+        };
         objHandleType["hasDisplayObject"] = &Core::hasDisplayObject;
         objHandleType["destroyDisplayObject"] = &Core::destroyDisplayObject;
         objHandleType["pumpEventsOnce"] = &Core::pumpEventsOnce;
@@ -2034,7 +2039,10 @@ namespace SDOM
         objHandleType["getCommandNamesForType"] = [](Core& core, const std::string& t) { return core.getCommandNamesForType(t); };
         objHandleType["getFunctionNamesForType"] = [](Core& core, const std::string& t) { return core.getFunctionNamesForType(t); };
 
-        objHandleType["createDisplayObject"] = sol::resolve<DomHandle(const std::string&, const sol::table&)>(&Core::createDisplayObject);
+        objHandleType["createDisplayObject"] = [](Core& core, const std::string& typeName, const sol::table& cfg) -> DisplayObject* {
+            DomHandle h = core.createDisplayObject(typeName, cfg);
+            return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+        };
 
         // Save usertype
         this->objHandleType_ = objHandleType;
@@ -2062,17 +2070,20 @@ namespace SDOM
         coreTable.set_function("createDisplayObject", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
             sol::state_view sv = ts;
             DomHandle h = Core::getInstance().createDisplayObject(typeName, cfg);
-            return sol::make_object(sv, h);
+            DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            return sol::make_object(sv, p);
         });
         coreTable.set_function("getDisplayObjectHandle", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
             sol::state_view sv = ts;
             DomHandle h = Core::getInstance().getDisplayObjectHandle(name);
-            return sol::make_object(sv, h);
+            DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            return sol::make_object(sv, p);
         });
         coreTable.set_function("getStageHandle", [](sol::this_state ts, sol::object /*self*/) {
             sol::state_view sv = ts;
             DomHandle h = Core::getInstance().getStageHandle();
-            return sol::make_object(sv, h);
+            DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            return sol::make_object(sv, p);
         });
         coreTable.set_function("hasDisplayObject", [](sol::this_state /*ts*/, sol::object /*self*/, const std::string& name) {
             return Core::getInstance().hasDisplayObject(name);
