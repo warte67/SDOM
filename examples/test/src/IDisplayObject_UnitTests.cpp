@@ -99,13 +99,16 @@ namespace SDOM
             // Use Lua to set/get the name via DisplayObject bindings
             sol::protected_function_result res = lua.script(R"(
                 -- DEBUG: inspect Core and the bound function before invoking
-                print('DEBUG: Core =', Core)
-                print('DEBUG: Core.getDisplayObject =', Core.getDisplayObject)
+                -- print('DEBUG: Core =', Core)
+                -- print('DEBUG: Core.getDisplayObject =', Core.getDisplayObject)
+
                 -- call as function with explicit self to avoid colon-call metamethod surprises
                 local h = Core.getDisplayObject(Core, 'luaGenericStage')
                 if not h then return nil, 'handle missing' end
+
                 -- print type/tostring for diagnostic
-                print('DEBUG: handle type =', type(h), ' tostring=', tostring(h))
+                -- print('DEBUG: handle type =', type(h), ' tostring=', tostring(h))
+                
                 -- call setName/getName in a protected call so errors are returned instead of thrown
                 local ok, result = pcall(function()
                     h:setName('luaRenamedStage')

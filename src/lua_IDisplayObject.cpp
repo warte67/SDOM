@@ -96,7 +96,8 @@ namespace SDOM
         }, useCapture, priority);
     }
 
-    void removeEventListener_lua_any(IDisplayObject* obj, const sol::object& descriptor, const sol::object& maybe_listener, const sol::object& maybe_useCapture) {
+    void removeEventListener_lua_any(IDisplayObject* obj, const sol::object& descriptor, const sol::object& maybe_listener, const sol::object& maybe_useCapture) 
+    {
         if (!obj) return;
         sol::state_view lua = descriptor.lua_state();
 
@@ -161,8 +162,82 @@ namespace SDOM
     std::string getType_lua(const IDisplayObject* obj) { if (!obj) return std::string(); return obj->getType(); }
     IDisplayObject* setType_lua(IDisplayObject* obj, const std::string& newType) { if (!obj) return nullptr; obj->setType(newType); return obj; }
     Bounds getBounds_lua(const IDisplayObject* obj) { if (!obj) return Bounds(); return obj->getBounds(); }
+    
+    // Accept either a Bounds userdata or a Lua table describing bounds
+    IDisplayObject* setBounds_lua(IDisplayObject* obj, const sol::object& bobj) 
+    {
+        if (!obj) return nullptr;
+        Bounds b{};
+        if (bobj.is<Bounds>()) {
+            try { b = bobj.as<Bounds>(); } catch(...) { return nullptr; }
+        } else if (bobj.is<sol::table>()) {
+            sol::table t = bobj.as<sol::table>();
+            // Support either left/top/right/bottom or x/y/width/height
+            if (t.get<sol::object>("left").valid() && t.get<sol::object>("top").valid()
+                && t.get<sol::object>("right").valid() && t.get<sol::object>("bottom").valid()) {
+                b.left = t.get<float>("left");
+                b.top = t.get<float>("top");
+                b.right = t.get<float>("right");
+                b.bottom = t.get<float>("bottom");
+            } else if (t.get<sol::object>("x").valid() && t.get<sol::object>("y").valid()
+                       && t.get<sol::object>("width").valid() && t.get<sol::object>("height").valid()) {
+                float x = t.get<float>("x");
+                float y = t.get<float>("y");
+                float w = t.get<float>("width");
+                float h = t.get<float>("height");
+                b.left = x;
+                b.top = y;
+                b.right = x + w;
+                b.bottom = y + h;
+            } else {
+                // fallback: try numeric indices [1..4]
+                try {
+                    b.left = t.get<float>(1);
+                    b.top = t.get<float>(2);
+                    b.right = t.get<float>(3);
+                    b.bottom = t.get<float>(4);
+                } catch(...) { return nullptr; }
+            }
+        } else {
+            return nullptr;
+        }
+        obj->setBounds(b);
+        return obj;
+    }
+    // C++ overload: accept a Bounds directly
     IDisplayObject* setBounds_lua(IDisplayObject* obj, const Bounds& b) { if (!obj) return nullptr; obj->setBounds(b); return obj; }
     SDL_Color getColor_lua(const IDisplayObject* obj) { if (!obj) return SDL_Color{0,0,0,0}; return obj->getColor(); }
+    // Accept either SDL_Color userdata or Lua table { r=..., g=..., b=..., a=... }
+    IDisplayObject* setColor_lua(IDisplayObject* obj, const sol::object& colorObj) 
+    {
+        if (!obj) return nullptr;
+        SDL_Color c{0,0,0,255};
+        if (colorObj.is<SDL_Color>()) {
+            try { c = colorObj.as<SDL_Color>(); } catch(...) { return nullptr; }
+        } else if (colorObj.is<sol::table>()) {
+            sol::table t = colorObj.as<sol::table>();
+            sol::object ro = t.get<sol::object>("r");
+            sol::object go = t.get<sol::object>("g");
+            sol::object bo = t.get<sol::object>("b");
+            sol::object ao = t.get<sol::object>("a");
+            auto to_int = [](const sol::object& o, int def) -> int {
+                if (!o.valid()) return def;
+                try { if (o.is<int>()) return o.as<int>(); } catch(...) {}
+                try { if (o.is<long>()) return static_cast<int>(o.as<long>()); } catch(...) {}
+                try { if (o.is<double>()) return static_cast<int>(o.as<double>()); } catch(...) {}
+                return def;
+            };
+            c.r = static_cast<Uint8>(to_int(ro, 0));
+            c.g = static_cast<Uint8>(to_int(go, 0));
+            c.b = static_cast<Uint8>(to_int(bo, 0));
+            c.a = static_cast<Uint8>(to_int(ao, 255));
+        } else {
+            return nullptr;
+        }
+        obj->setColor(c);
+        return obj;
+    }
+    // C++ overload: accept SDL_Color directly
     IDisplayObject* setColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return nullptr; obj->setColor(color); return obj; }
 
     // --- Priority & Z-Order --- //
@@ -172,9 +247,26 @@ namespace SDOM
     IDisplayObject* setToHighestPriority_lua(IDisplayObject* obj) { if (!obj) return nullptr; obj->setToHighestPriority(); return obj; }
     IDisplayObject* setToLowestPriority_lua(IDisplayObject* obj) { if (!obj) return nullptr; obj->setToLowestPriority(); return obj; }
     IDisplayObject* sortChildrenByPriority_lua(IDisplayObject* obj) { if (!obj) return nullptr; obj->sortChildrenByPriority(); return obj; }
-    IDisplayObject* setPriority_lua(IDisplayObject* obj, int priority) { if (!obj) return nullptr; obj->setPriority(priority); return obj; }
-    std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj) { if (!obj) return std::vector<int>(); return obj->getChildrenPriorities(); }
-    IDisplayObject* moveToTop_lua(IDisplayObject* obj) { if (!obj) return nullptr; obj->moveToTop(); return obj; }
+    IDisplayObject* setPriority_lua(IDisplayObject* obj, int priority) 
+    {
+        if (!obj) return nullptr;
+        obj->setPriority(priority);
+        return obj;
+    }
+
+    std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj) 
+    {
+        if (!obj) return std::vector<int>();
+        auto v = obj->getChildrenPriorities();
+        return v;
+    }
+    IDisplayObject* moveToTop_lua(IDisplayObject* obj) 
+    {
+        if (!obj) return nullptr;
+        obj->moveToTop();
+        return obj;
+    }
+
     int getZOrder_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getZOrder(); }
     IDisplayObject* setZOrder_lua(IDisplayObject* obj, int z_order) { if (!obj) return nullptr; obj->setZOrder(z_order); return obj; }
 

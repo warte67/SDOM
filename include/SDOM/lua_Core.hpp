@@ -79,9 +79,9 @@ namespace SDOM
 	std::vector<std::string> listDisplayObjectNames_lua(); // **verified**
 	void printObjectRegistry_lua();	// **verified**
 
-	// --- New Factory Methods --- //
-	std::vector<std::string> getPropertyNamesForType_lua(const std::string& typeName); // **verified**
-	std::vector<std::string> getCommandNamesForType_lua(const std::string& typeName); // **verified**
-	std::vector<std::string> getFunctionNamesForType_lua(const std::string& typeName); // **verified**
+	// // --- DEPRECATED New Factory Methods --- //
+	// std::vector<std::string> getPropertyNamesForType_lua(const std::string& typeName); // **verified**
+	// std::vector<std::string> getCommandNamesForType_lua(const std::string& typeName); // **verified**
+	// std::vector<std::string> getFunctionNamesForType_lua(const std::string& typeName); // **verified**
 
 } // end namespace SDOM

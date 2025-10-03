@@ -100,7 +100,7 @@ void Box::onEvent(const SDOM::Event& event)
 
     if (event.getTarget() == SDOM::getStageHandle()) 
     {
-        DEBUG_LOG("Event handling ignored: target object is the stage.");
+        // DEBUG_LOG("Event handling ignored: target object is the stage.");
         return; // Skip event handling for the stage
     }
 
@@ -189,7 +189,7 @@ void Box::onEvent(const SDOM::Event& event)
             // Ensure the dragged object is not the stage
             if (draggedObject == stage) 
             {
-                DEBUG_LOG("Drag operation ignored: draggedObject is the stage.");
+                // DEBUG_LOG("Drag operation ignored: draggedObject is the stage.");
                 return; // Skip the drag operation
             }
 

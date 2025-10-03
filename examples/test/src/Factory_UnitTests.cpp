@@ -133,7 +133,7 @@ namespace SDOM
         if (!result) { std::cout << CLR::indent() << "Resource destruction test failed!" << CLR::RESET << std::endl; }
         allTestsPassed &= result;
 
-        // duplicate resource creation test
+        // duplicate resource creation test: second creation should fail
         result = UnitTests::run("Factory #7", "Duplicate Resource Creation", [&factory]() 
         {
             sol::state lua;
@@ -146,10 +146,12 @@ namespace SDOM
                 }
             )");
             sol::table config = lua["config"];
-            DisplayObject first = factory.create("Stage", config);
-            DisplayObject second = factory.create("Stage", config);
-            // Define expected behavior: should not allow duplicate, or should overwrite
-            bool ret = first != nullptr && second != nullptr;
+            DisplayObject first;
+            DisplayObject second;
+            try { first = factory.create("Stage", config); } catch (...) { }
+            try { second = factory.create("Stage", config); } catch (...) { }
+            // Expectation: first creation succeeds, second creation should fail (null)
+            bool ret = first != nullptr && second == nullptr;
             // clean up
             factory.destroyDisplayObject("testStage");
             return ret;
@@ -158,7 +160,7 @@ namespace SDOM
         allTestsPassed &= result;
 
 
-        // TEST: Resource Overwrite Behavior
+        // TEST: Resource Overwrite Behavior - with unique-name policy, second create should fail
         result = UnitTests::run("Factory #8", "Resource Overwrite Behavior", [&factory, &debugRet]() 
         {
             sol::state lua;
@@ -173,9 +175,16 @@ namespace SDOM
                 }
             )");
             sol::table config1 = lua["config1"];
-            DisplayObject first = factory.create("Stage", config1);
+            DisplayObject first;
+            DisplayObject second;
+            bool threw = false;
+            try {
+                first = factory.create("Stage", config1);
+            } catch (...) {
+                // creation failed unexpectedly
+            }
 
-            // Overwrite with new config
+            // Attempt to create with same name (should throw)
             lua.script(R"(
                 config2 = {
                     type = "Stage",
@@ -184,20 +193,34 @@ namespace SDOM
                 }
             )");
             sol::table config2 = lua["config2"];
-            DisplayObject second = factory.create("Stage", config2);
+            try {
+                second = factory.create("Stage", config2);
+            } catch (...) {
+                threw = true;
+            }
 
-            // Retrieve and check if the resource was overwritten
-            DisplayObject retrieved = factory.getDisplayObject("overwriteTest");
-            IDisplayObject* obj = dynamic_cast<IDisplayObject*>(retrieved.get());
-            if (!obj) {
-                debugRet = "Resource 'overwriteTest' not found after overwrite.";
+            // Expect second to throw (caught) and original resource to remain unchanged
+            if (!first) {
+                debugRet = "Initial creation failed for 'overwriteTest'.";
+                return false;
+            }
+            if (second || !threw) {
+                debugRet = "Second creation unexpectedly succeeded for 'overwriteTest' (no exception thrown).";
+                // Clean up both if present
+                factory.destroyDisplayObject("overwriteTest");
                 return false;
             }
 
-            // Check if color matches the second config (overwritten)
+            // Retrieve and check that color matches the first config
+            DisplayObject retrieved = factory.getDisplayObject("overwriteTest");
+            IDisplayObject* obj = dynamic_cast<IDisplayObject*>(retrieved.get());
+            if (!obj) {
+                debugRet = "Resource 'overwriteTest' not found after attempted overwrite.";
+                return false;
+            }
             SDL_Color color = obj->getColor();
-            if (color.r != 15 || color.g != 25 || color.b != 35 || color.a != 45) {
-                debugRet = "Resource 'overwriteTest' color was not overwritten correctly.";
+            if (color.r != 10 || color.g != 20 || color.b != 30 || color.a != 40) {
+                debugRet = "Resource 'overwriteTest' color was unexpectedly changed.";
                 return false;
             }
 

@@ -189,7 +189,7 @@ namespace SDOM
 	bool getIsTraversing_lua() { return Core::getInstance().getIsTraversing(); }
 	Core* setIsTraversing_lua(bool traversing) { Core::getInstance().setIsTraversing(traversing); return &Core::getInstance(); }
 
-    // --- Object Creation --- //
+	// --- Object Creation --- //
 	DisplayObject createDisplayObject_lua(const std::string& typeName, const sol::table& config) {
 		return Core::getInstance().createDisplayObject(typeName, config);
 	}
@@ -222,12 +222,12 @@ namespace SDOM
 	std::vector<std::string> listDisplayObjectNames_lua() { return Core::getInstance().listDisplayObjectNames(); }
 	void printObjectRegistry_lua() { Core::getInstance().printObjectRegistry(); }
 
-	// --- New Factory Methods --- //
-	std::vector<std::string> getPropertyNamesForType_lua(const std::string& typeName) {
-		return Core::getInstance().getFactory().getPropertyNamesForType(typeName); }
-	std::vector<std::string> getCommandNamesForType_lua(const std::string& typeName) {
-		return Core::getInstance().getFactory().getCommandNamesForType(typeName); }
-	std::vector<std::string> getFunctionNamesForType_lua(const std::string& typeName) {
-		return Core::getInstance().getFactory().getFunctionNamesForType(typeName); }
+	// // --- DEPRECATED New Factory Methods --- //
+	// std::vector<std::string> getPropertyNamesForType_lua(const std::string& typeName) {
+	// 	return Core::getInstance().getFactory().getPropertyNamesForType(typeName); }
+	// std::vector<std::string> getCommandNamesForType_lua(const std::string& typeName) {
+	// 	return Core::getInstance().getFactory().getCommandNamesForType(typeName); }
+	// std::vector<std::string> getFunctionNamesForType_lua(const std::string& typeName) {
+	// 	return Core::getInstance().getFactory().getFunctionNamesForType(typeName); }
 
 } // end namespace SDOM

@@ -151,7 +151,16 @@ namespace SDOM
         {
             auto& parentChildren = parent->children_;
             auto it = std::find(parentChildren.begin(), parentChildren.end(), p_child);
-            if (it == parentChildren.end()) 
+            // Also prevent adding a child with the same name as an existing child
+            bool nameExists = false;
+            try {
+                std::string newName = p_child.getName();
+                for (const auto& existing : parentChildren) {
+                    if (existing && existing.getName() == newName) { nameExists = true; break; }
+                }
+            } catch(...) { nameExists = false; }
+
+            if (it == parentChildren.end() && !nameExists) 
             {
                 // Record world edges BEFORE changing parent
                 float leftWorld = child->getLeft();
@@ -454,7 +463,6 @@ namespace SDOM
         auto it = targetListeners.find(event.getType());
         if (it != targetListeners.end()) 
         {
-            // DEBUG_LOG("Found " << it->second.size() << " listeners for event '" << event.getTypeName() << "' on node '" << getName() << "'");
             for (const auto& entry : it->second) 
             {
                 entry.listener(event);
@@ -539,6 +547,32 @@ namespace SDOM
         children_.erase(std::remove_if(children_.begin(), children_.end(), [](const DisplayObject& child) {
             return !child;
         }), children_.end());
+
+        // Deduplicate children by name: keep the most-recent occurrence (last in vector)
+        try {
+            std::unordered_set<std::string> seen;
+            std::vector<DisplayObject> newChildren;
+            // Iterate in reverse and keep first-seen (which corresponds to most-recent in original order)
+            for (auto it = children_.rbegin(); it != children_.rend(); ++it) {
+                const DisplayObject& ch = *it;
+                if (!ch) continue;
+                std::string cname;
+                try { cname = ch.getName(); } catch(...) { cname.clear(); }
+                if (cname.empty()) {
+                    newChildren.push_back(ch);
+                } else {
+                    if (seen.find(cname) == seen.end()) {
+                        seen.insert(cname);
+                        newChildren.push_back(ch);
+                    } else {
+                        // duplicate found; skip it
+                    }
+                }
+            }
+            // Restore original order
+            std::reverse(newChildren.begin(), newChildren.end());
+            children_.swap(newChildren);
+        } catch(...) {}
 
         // Sort by priority (ascending)
         std::sort(children_.begin(), children_.end(), [](const DisplayObject& a, const DisplayObject& b) {
@@ -1007,107 +1041,157 @@ namespace SDOM
             sol::base_classes, sol::bases<SUPER>()
         );
 
-        // Basic state and debug
-    objHandleType.set_function("cleanAll", &::SDOM::cleanAll_lua);
-    objHandleType.set_function("getDirty", &::SDOM::getDirty_lua);
-    objHandleType.set_function("setDirty", &::SDOM::setDirty_lua);
-    objHandleType.set_function("isDirty", &::SDOM::isDirty_lua);
-    objHandleType.set_function("printTree", &::SDOM::printTree_lua);
+        // Ensure Bounds is registered as a userdata for Lua (compatibility)
+        if (!lua["Bounds"].valid()) 
+        {
+            lua.new_usertype<Bounds>("Bounds",
+                "left", &Bounds::left,
+                "top", &Bounds::top,
+                "right", &Bounds::right,
+                "bottom", &Bounds::bottom,
+                "x", sol::property([](const Bounds& b) { return static_cast<int>(b.left); }),
+                "y", sol::property([](const Bounds& b) { return static_cast<int>(b.top); }),
+                "width", sol::property([](const Bounds& b) { return static_cast<int>(b.width()); }),
+                "height", sol::property([](const Bounds& b) { return static_cast<int>(b.height()); }),
+                "widthf", &Bounds::width,
+                "heightf", &Bounds::height,
+                "getLeft", [](const Bounds& b) { return b.left; },
+                "getTop", [](const Bounds& b) { return b.top; },
+                "getRight", [](const Bounds& b) { return b.right; },
+                "getBottom", [](const Bounds& b) { return b.bottom; },
+                "getX", [](const Bounds& b) { return static_cast<int>(b.left); },
+                "getY", [](const Bounds& b) { return static_cast<int>(b.top); },
+                "getWidth", [](const Bounds& b) { return static_cast<int>(b.width()); },
+                "getHeight", [](const Bounds& b) { return static_cast<int>(b.height()); },
+                "almostEqual", [](const Bounds& a, const Bounds& other, sol::optional<float> eps) {
+                    float e = eps ? *eps : 0.0001f;
+                    return std::abs(a.left - other.left) <= e
+                        && std::abs(a.top - other.top) <= e
+                        && std::abs(a.right - other.right) <= e
+                        && std::abs(a.bottom - other.bottom) <= e;
+                }
+            );
+        }
+
+        // MOVED TO: SDOM_SDL_Utils.cpp
+        // // Register SDL_Color userdata so Lua can access r/g/b/a and getter helpers
+        // if (!lua["SDL_Color"].valid()) {
+        //     lua.new_usertype<SDL_Color>("SDL_Color",
+        //         "r", &SDL_Color::r,
+        //         "g", &SDL_Color::g,
+        //         "b", &SDL_Color::b,
+        //         "a", &SDL_Color::a,
+        //         "getR", [](const SDL_Color& c) { return c.r; },
+        //         "getG", [](const SDL_Color& c) { return c.g; },
+        //         "getB", [](const SDL_Color& c) { return c.b; },
+        //         "getA", [](const SDL_Color& c) { return c.a; }
+        //     );
+        // }
 
         // Event handling (wrappers expect: IDisplayObject*, EventType&, sol::function, bool, int)
-    // Accept either the typed signature or a flexible Lua table/function descriptor
-    objHandleType.set_function("addEventListener", sol::overload(
-        static_cast<void(*)(IDisplayObject*, EventType&, sol::function, bool, int)>(&::SDOM::addEventListener_lua),
-        static_cast<void(*)(IDisplayObject*, const sol::object&, const sol::object&, const sol::object&, const sol::object&)>(&::SDOM::addEventListener_lua_any),
-        static_cast<void(*)(IDisplayObject*, const sol::object&)>(&::SDOM::addEventListener_lua_any_short)
-    ));
+        // (Accept either the typed signature or a flexible Lua table/function descriptor)
+        objHandleType.set_function("addEventListener", sol::overload(
+            static_cast<void(*)(IDisplayObject*, EventType&, sol::function, bool, int)>(&::SDOM::addEventListener_lua),
+            static_cast<void(*)(IDisplayObject*, const sol::object&, const sol::object&, const sol::object&, const sol::object&)>(&::SDOM::addEventListener_lua_any),
+            static_cast<void(*)(IDisplayObject*, const sol::object&)>(&::SDOM::addEventListener_lua_any_short)
+        ));
 
-    objHandleType.set_function("removeEventListener", sol::overload(
-        static_cast<void(*)(IDisplayObject*, EventType&, sol::function, bool)>(&::SDOM::removeEventListener_lua),
-        static_cast<void(*)(IDisplayObject*, const sol::object&, const sol::object&, const sol::object&)>(&::SDOM::removeEventListener_lua_any),
-        static_cast<void(*)(IDisplayObject*, const sol::object&)>(&::SDOM::removeEventListener_lua_any_short)
-    ));
+        objHandleType.set_function("removeEventListener", sol::overload(
+            static_cast<void(*)(IDisplayObject*, EventType&, sol::function, bool)>(&::SDOM::removeEventListener_lua),
+            static_cast<void(*)(IDisplayObject*, const sol::object&, const sol::object&, const sol::object&)>(&::SDOM::removeEventListener_lua_any),
+            static_cast<void(*)(IDisplayObject*, const sol::object&)>(&::SDOM::removeEventListener_lua_any_short)
+        ));
+        
+        // Basic state and debug
+        objHandleType.set_function("cleanAll", &::SDOM::cleanAll_lua);
+        objHandleType.set_function("getDirty", &::SDOM::getDirty_lua);
+        objHandleType.set_function("setDirty", &::SDOM::setDirty_lua);
+        objHandleType.set_function("isDirty", &::SDOM::isDirty_lua);
+        objHandleType.set_function("printTree", &::SDOM::printTree_lua);
 
-        // Hierarchy management
-    objHandleType.set_function("addChild", &::SDOM::addChild_lua);
-    objHandleType.set_function("removeChild", &::SDOM::removeChild_lua);
-    objHandleType.set_function("hasChild", &::SDOM::hasChild_lua);
-    objHandleType.set_function("getParent", &::SDOM::getParent_lua);
-    objHandleType.set_function("setParent", &::SDOM::setParent_lua);
+            // Hierarchy management
+        objHandleType.set_function("addChild", &::SDOM::addChild_lua);
+        objHandleType.set_function("removeChild", &::SDOM::removeChild_lua);
+        objHandleType.set_function("hasChild", &::SDOM::hasChild_lua);
+        objHandleType.set_function("getParent", &::SDOM::getParent_lua);
+        objHandleType.set_function("setParent", &::SDOM::setParent_lua);
 
-        // Type & property access
-    objHandleType.set_function("getType", &::SDOM::getType_lua);
-    objHandleType.set_function("setType", &::SDOM::setType_lua);
+            // Type & property access
+        objHandleType.set_function("getType", &::SDOM::getType_lua);
+        objHandleType.set_function("setType", &::SDOM::setType_lua);
+
     objHandleType.set_function("getBounds", &::SDOM::getBounds_lua);
-    objHandleType.set_function("setBounds", &::SDOM::setBounds_lua);
-    objHandleType.set_function("getColor", &::SDOM::getColor_lua);
-    objHandleType.set_function("setColor", &::SDOM::setColor_lua);
+    // Bind the Lua-facing overload (takes sol::object) explicitly to avoid overload ambiguity
+    objHandleType.set_function("setBounds", static_cast<IDisplayObject*(*)(IDisplayObject*, const sol::object&)>(&::SDOM::setBounds_lua));
+        objHandleType.set_function("getColor", &::SDOM::getColor_lua);
+    // Bind the Lua-friendly setColor (accepts table or SDL_Color userdata)
+    objHandleType.set_function("setColor", static_cast<IDisplayObject*(*)(IDisplayObject*, const sol::object&)>(&::SDOM::setColor_lua));
 
-        // Priority & Z-Order
-    objHandleType.set_function("getMaxPriority", &::SDOM::getMaxPriority_lua);
-    objHandleType.set_function("getMinPriority", &::SDOM::getMinPriority_lua);
-    objHandleType.set_function("getPriority", &::SDOM::getPriority_lua);
-    objHandleType.set_function("setToHighestPriority", &::SDOM::setToHighestPriority_lua);
-    objHandleType.set_function("setToLowestPriority", &::SDOM::setToLowestPriority_lua);
-    objHandleType.set_function("sortChildrenByPriority", &::SDOM::sortChildrenByPriority_lua);
-    objHandleType.set_function("setPriority", &::SDOM::setPriority_lua);
-    objHandleType.set_function("getChildrenPriorities", &::SDOM::getChildrenPriorities_lua);
-    objHandleType.set_function("moveToTop", &::SDOM::moveToTop_lua);
-    objHandleType.set_function("getZOrder", &::SDOM::getZOrder_lua);
-    objHandleType.set_function("setZOrder", &::SDOM::setZOrder_lua);
+            // Priority & Z-Order
+        objHandleType.set_function("getMaxPriority", &::SDOM::getMaxPriority_lua);
+        objHandleType.set_function("getMinPriority", &::SDOM::getMinPriority_lua);
+        objHandleType.set_function("getPriority", &::SDOM::getPriority_lua);
+        objHandleType.set_function("setToHighestPriority", &::SDOM::setToHighestPriority_lua);
+        objHandleType.set_function("setToLowestPriority", &::SDOM::setToLowestPriority_lua);
+        objHandleType.set_function("sortChildrenByPriority", &::SDOM::sortChildrenByPriority_lua);
+        objHandleType.set_function("setPriority", &::SDOM::setPriority_lua);
+        objHandleType.set_function("getChildrenPriorities", &::SDOM::getChildrenPriorities_lua);
+        objHandleType.set_function("moveToTop", &::SDOM::moveToTop_lua);
+        objHandleType.set_function("getZOrder", &::SDOM::getZOrder_lua);
+        objHandleType.set_function("setZOrder", &::SDOM::setZOrder_lua);
 
-        // Focus & interactivity
-    objHandleType.set_function("setKeyboardFocus", &::SDOM::setKeyboardFocus_lua);
-    objHandleType.set_function("isKeyboardFocused", &::SDOM::isKeyboardFocused_lua);
-    objHandleType.set_function("isMouseHovered", &::SDOM::isMouseHovered_lua);
-    objHandleType.set_function("isClickable", &::SDOM::isClickable_lua);
-    objHandleType.set_function("setClickable", &::SDOM::setClickable_lua);
-    objHandleType.set_function("isEnabled", &::SDOM::isEnabled_lua);
-    objHandleType.set_function("setEnabled", &::SDOM::setEnabled_lua);
-    objHandleType.set_function("isHidden", &::SDOM::isHidden_lua);
-    objHandleType.set_function("setHidden", &::SDOM::setHidden_lua);
-    objHandleType.set_function("isVisible", &::SDOM::isVisible_lua);
-    objHandleType.set_function("setVisible", &::SDOM::setVisible_lua);
+            // Focus & interactivity
+        objHandleType.set_function("setKeyboardFocus", &::SDOM::setKeyboardFocus_lua);
+        objHandleType.set_function("isKeyboardFocused", &::SDOM::isKeyboardFocused_lua);
+        objHandleType.set_function("isMouseHovered", &::SDOM::isMouseHovered_lua);
+        objHandleType.set_function("isClickable", &::SDOM::isClickable_lua);
+        objHandleType.set_function("setClickable", &::SDOM::setClickable_lua);
+        objHandleType.set_function("isEnabled", &::SDOM::isEnabled_lua);
+        objHandleType.set_function("setEnabled", &::SDOM::setEnabled_lua);
+        objHandleType.set_function("isHidden", &::SDOM::isHidden_lua);
+        objHandleType.set_function("setHidden", &::SDOM::setHidden_lua);
+        objHandleType.set_function("isVisible", &::SDOM::isVisible_lua);
+        objHandleType.set_function("setVisible", &::SDOM::setVisible_lua);
 
-        // Tab management
-    objHandleType.set_function("getTabPriority", &::SDOM::getTabPriority_lua);
-    objHandleType.set_function("setTabPriority", &::SDOM::setTabPriority_lua);
-    objHandleType.set_function("isTabEnabled", &::SDOM::isTabEnabled_lua);
-    objHandleType.set_function("setTabEnabled", &::SDOM::setTabEnabled_lua);
+            // Tab management
+        objHandleType.set_function("getTabPriority", &::SDOM::getTabPriority_lua);
+        objHandleType.set_function("setTabPriority", &::SDOM::setTabPriority_lua);
+        objHandleType.set_function("isTabEnabled", &::SDOM::isTabEnabled_lua);
+        objHandleType.set_function("setTabEnabled", &::SDOM::setTabEnabled_lua);
 
-        // Geometry & layout
-    objHandleType.set_function("getX", &::SDOM::getX_lua);
-    objHandleType.set_function("getY", &::SDOM::getY_lua);
-    objHandleType.set_function("getWidth", &::SDOM::getWidth_lua);
-    objHandleType.set_function("getHeight", &::SDOM::getHeight_lua);
-    objHandleType.set_function("setX", &::SDOM::setX_lua);
-    objHandleType.set_function("setY", &::SDOM::setY_lua);
-    objHandleType.set_function("setWidth", &::SDOM::setWidth_lua);
-    objHandleType.set_function("setHeight", &::SDOM::setHeight_lua);
+            // Geometry & layout
+        objHandleType.set_function("getX", &::SDOM::getX_lua);
+        objHandleType.set_function("getY", &::SDOM::getY_lua);
+        objHandleType.set_function("getWidth", &::SDOM::getWidth_lua);
+        objHandleType.set_function("getHeight", &::SDOM::getHeight_lua);
+        objHandleType.set_function("setX", &::SDOM::setX_lua);
+        objHandleType.set_function("setY", &::SDOM::setY_lua);
+        objHandleType.set_function("setWidth", &::SDOM::setWidth_lua);
+        objHandleType.set_function("setHeight", &::SDOM::setHeight_lua);
 
-        // Anchors
-    objHandleType.set_function("getAnchorTop", &::SDOM::getAnchorTop_lua);
-    objHandleType.set_function("getAnchorLeft", &::SDOM::getAnchorLeft_lua);
-    objHandleType.set_function("getAnchorBottom", &::SDOM::getAnchorBottom_lua);
-    objHandleType.set_function("getAnchorRight", &::SDOM::getAnchorRight_lua);
-    objHandleType.set_function("setAnchorTop", &::SDOM::setAnchorTop_lua);
-    objHandleType.set_function("setAnchorLeft", &::SDOM::setAnchorLeft_lua);
-    objHandleType.set_function("setAnchorBottom", &::SDOM::setAnchorBottom_lua);
-    objHandleType.set_function("setAnchorRight", &::SDOM::setAnchorRight_lua);
+            // Anchors
+        objHandleType.set_function("getAnchorTop", &::SDOM::getAnchorTop_lua);
+        objHandleType.set_function("getAnchorLeft", &::SDOM::getAnchorLeft_lua);
+        objHandleType.set_function("getAnchorBottom", &::SDOM::getAnchorBottom_lua);
+        objHandleType.set_function("getAnchorRight", &::SDOM::getAnchorRight_lua);
+        objHandleType.set_function("setAnchorTop", &::SDOM::setAnchorTop_lua);
+        objHandleType.set_function("setAnchorLeft", &::SDOM::setAnchorLeft_lua);
+        objHandleType.set_function("setAnchorBottom", &::SDOM::setAnchorBottom_lua);
+        objHandleType.set_function("setAnchorRight", &::SDOM::setAnchorRight_lua);
 
-        // Edge positions
-    objHandleType.set_function("getLeft", &::SDOM::getLeft_lua);
-    objHandleType.set_function("getRight", &::SDOM::getRight_lua);
-    objHandleType.set_function("getTop", &::SDOM::getTop_lua);
-    objHandleType.set_function("getBottom", &::SDOM::getBottom_lua);
-    objHandleType.set_function("setLeft", &::SDOM::setLeft_lua);
-    objHandleType.set_function("setRight", &::SDOM::setRight_lua);
-    objHandleType.set_function("setTop", &::SDOM::setTop_lua);
-    objHandleType.set_function("setBottom", &::SDOM::setBottom_lua);
+            // Edge positions
+        objHandleType.set_function("getLeft", &::SDOM::getLeft_lua);
+        objHandleType.set_function("getRight", &::SDOM::getRight_lua);
+        objHandleType.set_function("getTop", &::SDOM::getTop_lua);
+        objHandleType.set_function("getBottom", &::SDOM::getBottom_lua);
+        objHandleType.set_function("setLeft", &::SDOM::setLeft_lua);
+        objHandleType.set_function("setRight", &::SDOM::setRight_lua);
+        objHandleType.set_function("setTop", &::SDOM::setTop_lua);
+        objHandleType.set_function("setBottom", &::SDOM::setBottom_lua);
 
-        // Convenience: expose IDataObject::getName/setName for scripts
-    objHandleType.set_function("getName", &::SDOM::IDataObject::getName);
-    objHandleType.set_function("setName", &::SDOM::IDataObject::setName);
+            // Convenience: expose IDataObject::getName/setName for scripts
+        objHandleType.set_function("getName", &::SDOM::IDataObject::getName);
+        objHandleType.set_function("setName", &::SDOM::IDataObject::setName);
 
         // Save the usertype for later use by derived classes
         this->objHandleType_ = objHandleType;

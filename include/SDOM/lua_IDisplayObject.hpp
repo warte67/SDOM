@@ -41,8 +41,14 @@ namespace SDOM
     std::string getType_lua(const IDisplayObject* obj); // **VERIFIED**
     IDisplayObject* setType_lua(IDisplayObject* obj, const std::string& newType); // **VERIFIED**
     Bounds getBounds_lua(const IDisplayObject* obj); // **VERIFIED**
+    // Accept either a Bounds userdata or a Lua table describing bounds
+    IDisplayObject* setBounds_lua(IDisplayObject* obj, const sol::object& bobj); // **VERIFIED**
+    // C++ caller-friendly overload: accept Bounds directly
     IDisplayObject* setBounds_lua(IDisplayObject* obj, const Bounds& b); // **VERIFIED**
     SDL_Color getColor_lua(const IDisplayObject* obj); // **VERIFIED**
+    // Accept either an SDL_Color userdata or a Lua table describing color
+    IDisplayObject* setColor_lua(IDisplayObject* obj, const sol::object& colorObj); // **VERIFIED**
+    // C++ overload: accept SDL_Color directly
     IDisplayObject* setColor_lua(IDisplayObject* obj, const SDL_Color& color); // **VERIFIED**
 
     // --- Priority & Z-Order --- //

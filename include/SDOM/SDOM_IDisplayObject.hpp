@@ -98,6 +98,7 @@ Summary:
 
 #include <SDOM/SDOM.hpp>   
 #include <SDOM/SDOM_IDataObject.hpp>
+#include <iostream>
 
 // // #include <SDOM/SDOM_Handle.hpp>
 // #include <SDOM/SDOM_DomHandle.hpp>
@@ -184,12 +185,60 @@ namespace SDOM
         bool removeChild(DisplayObject child);
         const std::vector<DisplayObject>& getChildren() const { return children_; }
         DisplayObject getParent() const { return parent_; }
-        IDisplayObject& setParent(const DisplayObject& parent) 
-        { 
+        IDisplayObject& setParent(const DisplayObject& parent)
+        {
+            // Preserve world bounds across the parent change
             Bounds world = this->getBounds();
-            parent_ = parent; 
-            this->setBounds(world); // Maintain world position when changing parent
-            return *this; 
+
+            // Remove from old parent's children_ vector if present
+            if (parent_.isValid()) 
+            {
+                IDisplayObject* oldParentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+                if (oldParentObj) 
+                {
+                    DisplayObject me(getName(), getType());
+                    auto& vec = oldParentObj->children_;
+                    // DEBUG_LOG("setParent oldParent='" << oldParentObj->getName() << "' children_count=" << vec.size());
+                    // auto oldCount = vec.size();
+                    vec.erase(std::remove_if(vec.begin(), vec.end(), [&](const DisplayObject& d) { return d == me; }), vec.end());
+                    // if (vec.size() != oldCount) {
+                    //     DEBUG_LOG("setParent removed " << (oldCount - vec.size()) << " matching entries from old parent's children");
+                    // } else {
+                    //     DEBUG_LOG("setParent did NOT find self in old parent's children");
+                    // }
+                    // DEBUG_LOG("setParent oldParent children_count_after=" << vec.size());
+                }
+            }
+
+            // Assign new parent handle
+            parent_ = parent;
+
+            // Add to new parent's children_ vector if not already present
+            if (parent_.isValid()) 
+            {
+                IDisplayObject* newParentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+                if (newParentObj) 
+                {
+                    DisplayObject me(getName(), getType());
+                    auto& vec = newParentObj->children_;
+                    // DEBUG_LOG("setParent newParent='" << newParentObj->getName() << "' children_count_before=" << vec.size());
+                    auto it = std::find(vec.begin(), vec.end(), me);
+                    if (it == vec.end()) 
+                    {
+                        vec.push_back(me);
+                        // DEBUG_LOG("setParent added self to new parent's children");
+                    } 
+                    // else 
+                    // {
+                    //     DEBUG_LOG("setParent self already present in new parent's children");
+                    // }
+                    // DEBUG_LOG("setParent newParent children_count_after=" << vec.size());
+                }
+            }
+
+            // Restore world bounds so the object's world position is unchanged
+            this->setBounds(world);
+            return *this;
         }
         bool hasChild(DisplayObject child) const;
 

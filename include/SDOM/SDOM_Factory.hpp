@@ -72,11 +72,6 @@ namespace SDOM
         void initFromLua(const sol::table& lua);
         // void initLuaProcessResource(const sol::table& resource);
 
-        // --- New Factory Methods --- //
-        std::vector<std::string> getPropertyNamesForType(const std::string& typeName) const;
-        std::vector<std::string> getCommandNamesForType(const std::string& typeName) const;
-        std::vector<std::string> getFunctionNamesForType(const std::string& typeName) const;
-
     private:
         // --- Internal Storage --- //
         std::unordered_map<std::string, std::unique_ptr<IDisplayObject>> displayObjects_;
@@ -85,12 +80,6 @@ namespace SDOM
 
         // --- Orphan & Future Child Lists --- //
 
-        // DEPRECATED: futureChild is legacy and uses DomHandle.
-        // Prefer a DisplayObject-aware future-child API that operates on the new
-        // DisplayObject handle surface. Keep this struct only for backward
-        // compatibility while migrating code. Do not add new uses.
-        // Removal plan: migrate addToFutureChildrenList / attachFutureChildren
-        // to accept DisplayObject handles and drop this type.
         std::vector<DisplayObject> orphanList_;
         struct futureChild 
         {
@@ -105,18 +94,21 @@ namespace SDOM
     public:
         // --- Lua Object Type Registry (public) --- //
 
-        void registerLuaProperty(const std::string& typeName,
-                            const std::string& propertyName,
-                            IDataObject::Getter getter,
-                            IDataObject::Setter setter);
+        // [[deprecated("Factory::registerLuaProperty is deprecated. Use concrete type registration instead.")]]
+        // void registerLuaProperty(const std::string& typeName,
+        //                     const std::string& propertyName,
+        //                     IDataObject::Getter getter,
+        //                     IDataObject::Setter setter);
 
-        void registerLuaCommand(const std::string& typeName,
-                            const std::string& commandName,
-                            IDataObject::Command command);    
+        // [[deprecated("Factory::registerLuaCommand is deprecated. Use concrete type registration instead.")]]
+        // void registerLuaCommand(const std::string& typeName,
+        //                     const std::string& commandName,
+        //                     IDataObject::Command command);    
 
-        void registerLuaFunction(const std::string& typeName,
-                            const std::string& functionName,
-                            IDataObject::Function function);
+        // [[deprecated("Factory::registerLuaProperty is deprecated. Use concrete type registration instead.")]]
+        // void registerLuaFunction(const std::string& typeName,
+        //                     const std::string& functionName,
+        //                     IDataObject::Function function);
 
 
         // -------------------------------------------------------------
@@ -139,94 +131,61 @@ namespace SDOM
         //
         // The types and helpers below remain for backwards compatibility only.
         // They are scheduled        struct ObjectTypeRegistryEntry
-        struct ObjectTypeRegistryEntry
-        {
-            std::string typeName;
+        // struct ObjectTypeRegistryEntry
+        // {
+        //     std::string typeName;
 
-            struct PropertyEntry {
-                std::string propertyName;
-                IDataObject::Getter getter;
-                IDataObject::Setter setter;
-            };
-            std::vector<PropertyEntry> properties;
+        //     struct PropertyEntry {
+        //         std::string propertyName;
+        //         IDataObject::Getter getter;
+        //         IDataObject::Setter setter;
+        //     };
+        //     std::vector<PropertyEntry> properties;
 
-            struct CommandEntry {
-                std::string commandName;
-                IDataObject::Command command;
-            };
-            std::vector<CommandEntry> commands;
+        //     struct CommandEntry {
+        //         std::string commandName;
+        //         IDataObject::Command command;
+        //     };
+        //     std::vector<CommandEntry> commands;
             
-            struct FunctionEntry {
-                std::string functionName;
-                IDataObject::Function function;
-            };
-            std::vector<FunctionEntry> functions;
-        };
+        //     struct FunctionEntry {
+        //         std::string functionName;
+        //         IDataObject::Function function;
+        //     };
+        //     std::vector<FunctionEntry> functions;
+        // };
 
-        // Deprecated, will be removed.
-        ObjectTypeRegistryEntry* getTypeRegistryEntry(const std::string& typeName);
-        ObjectTypeRegistryEntry::PropertyEntry* getPropertyEntry(
-                            const std::string& typeName, const std::string& propertyName);
-        ObjectTypeRegistryEntry::CommandEntry* getCommandEntry(
-                            const std::string& typeName, const std::string& commandName);
-        ObjectTypeRegistryEntry::FunctionEntry* getFunctionEntry(
-                            const std::string& typeName, const std::string& functionName);
+        // // Deprecated, will be removed. Use registerLuaProperty/registerLuaCommand/
+        // // registerLuaFunction and the concrete type registration paths instead.
+        // [[deprecated("Factory::getTypeRegistryEntry is deprecated. Use concrete type registration instead.")]]
+        // ObjectTypeRegistryEntry* getTypeRegistryEntry(const std::string& typeName);
 
-        // Deprecated: test-only registration removed. Concrete types should
-        // populate the Factory registry during their own Lua registration.
-        template<typename T>
-        void registerLuaPropertiesAndCommands(const std::string& typeName, sol::usertype<T>& usertypeTable)  // Deprecated
-        {
-            auto* entry = getTypeRegistryEntry(typeName);
-            if (!entry) return;
+        // [[deprecated("Factory::getPropertyEntry is deprecated. Use concrete type registration instead.")]]
+        // ObjectTypeRegistryEntry::PropertyEntry* getPropertyEntry(
+        //             const std::string& typeName, const std::string& propertyName);
 
-            for (const auto& prop : entry->properties) 
-            {
-                // Only assign if a getter/setter isn't already present to
-                // avoid overwriting direct usertype bindings created earlier.
-                if (prop.getter) {
-                    sol::object existing = usertypeTable[prop.propertyName];
-                    if (!existing.valid()) usertypeTable[prop.propertyName] = prop.getter;
-                }
-                if (prop.setter) 
-                {
-                    std::string setterName = "set" + prop.propertyName;
-                    setterName[3] = std::toupper(setterName[3]);
-                    sol::object existingSetter = usertypeTable[setterName];
-                    if (!existingSetter.valid()) usertypeTable[setterName] = prop.setter;
-                }
-            }
-            for (const auto& cmd : entry->commands) 
-            {
-                if (cmd.command) {
-                    sol::object existingCmd = usertypeTable[cmd.commandName];
-                    if (!existingCmd.valid()) {
-                        // Wrap the stored IDataObject::Command so it receives the Lua state
-                        usertypeTable[cmd.commandName] = [cmd](sol::this_state ts, T& self, sol::object args) {
-                            sol::state_view sv = ts;
-                            cmd.command(static_cast<IDataObject&>(self), args, sv);
-                        };
-                    }
-                }
-            }
-            for (const auto& fn : entry->functions)
-            {
-                if (fn.function) {
-                    sol::object existingFn = usertypeTable[fn.functionName];
-                    if (!existingFn.valid()) {
-                        // Wrap the stored IDataObject::Function so it receives the Lua state and returns a sol::object
-                        usertypeTable[fn.functionName] = [fn](sol::this_state ts, T& self, sol::object args) -> sol::object {
-                            sol::state_view sv = ts;
-                            return fn.function(static_cast<IDataObject&>(self), args, sv);
-                        };
-                    }
-                }
-            }
-        }
+        // [[deprecated("Factory::getCommandEntry is deprecated. Use concrete type registration instead.")]]
+        // ObjectTypeRegistryEntry::CommandEntry* getCommandEntry(
+        //             const std::string& typeName, const std::string& commandName);
+
+        // [[deprecated("Factory::getFunctionEntry is deprecated. Use concrete type registration instead.")]]
+        // ObjectTypeRegistryEntry::FunctionEntry* getFunctionEntry(
+        //             const std::string& typeName, const std::string& functionName);
+
+
+        // [[deprecated("Factory::getPropertyNamesForType is deprecated. Remove.")]]
+        // std::vector<std::string> getPropertyNamesForType(const std::string& typeName) const;
+
+        // [[deprecated("Factory::getCommandNamesForType is deprecated. Remove.")]]
+        // std::vector<std::string> getCommandNamesForType(const std::string& typeName) const;
+
+        // [[deprecated("Factory::getFunctionNamesForType is deprecated. Remove.")]]
+        // std::vector<std::string> getFunctionNamesForType(const std::string& typeName) const;
+
 
     private:
-        // --- Lua Object Type Registry (private) --- //
-        std::unordered_map<std::string, ObjectTypeRegistryEntry> typeRegistry_;
+        // // --- Lua Object Type Registry (private) --- //
+        // std::unordered_map<std::string, ObjectTypeRegistryEntry> typeRegistry_;
 
 
     };

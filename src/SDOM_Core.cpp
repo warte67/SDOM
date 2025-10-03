@@ -203,24 +203,24 @@ namespace SDOM
         SDL_Quit();
     }
 
-    // --- Core forwarding helpers to Factory ---
-    std::vector<std::string> Core::getPropertyNamesForType(const std::string& typeName) const
-    {
-        if (factory_) return factory_->getPropertyNamesForType(typeName);
-        return {};
-    }
+    // // --- Core forwarding helpers to Factory ---
+    // std::vector<std::string> Core::getPropertyNamesForType(const std::string& typeName) const
+    // {
+    //     if (factory_) return factory_->getPropertyNamesForType(typeName);
+    //     return {};
+    // }
 
-    std::vector<std::string> Core::getCommandNamesForType(const std::string& typeName) const
-    {
-        if (factory_) return factory_->getCommandNamesForType(typeName);
-        return {};
-    }
+    // std::vector<std::string> Core::getCommandNamesForType(const std::string& typeName) const
+    // {
+    //     if (factory_) return factory_->getCommandNamesForType(typeName);
+    //     return {};
+    // }
 
-    std::vector<std::string> Core::getFunctionNamesForType(const std::string& typeName) const
-    {
-        if (factory_) return factory_->getFunctionNamesForType(typeName);
-        return {};
-    }
+    // std::vector<std::string> Core::getFunctionNamesForType(const std::string& typeName) const
+    // {
+    //     if (factory_) return factory_->getFunctionNamesForType(typeName);
+    //     return {};
+    // }
 
     void Core::run(const sol::table& config)
     {
@@ -379,10 +379,6 @@ namespace SDOM
         bool recreate_window = (windowWidth_changed || windowHeight_changed || windowFlags_changed);
         bool recreate_renderer = recreate_window || rendererLogicalPresentation_changed;
         bool recreate_texture = recreate_window || rendererLogicalPresentation_changed || pixelWidth_changed || pixelHeight_changed || pixelFormat_changed;
-
-        // if (recreate_window || recreate_renderer || recreate_texture) {
-        //     DEBUG_LOG("Core::reconfigure(): significant SDL resource reinitialization requested");
-        // }        
 
         // update config_
         config_.windowWidth = config.windowWidth;
@@ -1398,8 +1394,8 @@ namespace SDOM
         );
 
         objHandleType["getDisplayObject"] = sol::overload(
-            [](Core& core, const std::string& name) -> DisplayObject { DisplayObject h = core.getDisplayObject(name); try { std::cout << "[dbg:getDisplayObject] called on userdata self name='" << name << "' valid=" << (h.isValid() ? "true" : "false") << std::endl; } catch(...) {} return h; },
-            [](const std::string& name) -> DisplayObject { DisplayObject h = Core::getInstance().getDisplayObject(name); try { std::cout << "[dbg:getDisplayObject] called on singleton name='" << name << "' valid=" << (h.isValid() ? "true" : "false") << std::endl; } catch(...) {} return h; }
+            [](Core& core, const std::string& name) -> DisplayObject { DisplayObject h = core.getDisplayObject(name); return h; },
+            [](const std::string& name) -> DisplayObject { DisplayObject h = Core::getInstance().getDisplayObject(name); return h; }
         );
 
         objHandleType["getStageHandle"] = sol::overload(
@@ -1506,9 +1502,9 @@ namespace SDOM
             [](const std::string& name, const sol::function& f) { registerOn_lua(name, f); }
         );
 
-        objHandleType["getPropertyNamesForType"] = [](Core& core, const std::string& t) { return core.getPropertyNamesForType(t); };
-        objHandleType["getCommandNamesForType"] = [](Core& core, const std::string& t) { return core.getCommandNamesForType(t); };
-        objHandleType["getFunctionNamesForType"] = [](Core& core, const std::string& t) { return core.getFunctionNamesForType(t); };
+        // objHandleType["getPropertyNamesForType"] = [](Core& core, const std::string& t) { return core.getPropertyNamesForType(t); };
+        // objHandleType["getCommandNamesForType"] = [](Core& core, const std::string& t) { return core.getCommandNamesForType(t); };
+        // objHandleType["getFunctionNamesForType"] = [](Core& core, const std::string& t) { return core.getFunctionNamesForType(t); };
 
         objHandleType["createDisplayObject"] = [](Core& core, const std::string& typeName, const sol::table& cfg) -> DisplayObject {
             DisplayObject h = core.createDisplayObject(typeName, cfg);
@@ -1571,25 +1567,46 @@ namespace SDOM
 
             if (name.empty()) return sol::make_object(sv, sol::lua_nil);
             DisplayObject h = getCore().getDisplayObject(name);
-            try {
-                if (h.isValid() && h.get()) std::cout << "[dbg:CoreForward.getDisplayObject] found type='" << h.get()->getType() << "' name='" << h.get()->getName() << "'" << std::endl;
-            } catch(...){}
-            if (h.isValid() && h.get() && h.get()->getType() == "Stage") {
-                try { std::cout << "[dbg:CoreForward.getDisplayObject] returning Stage*" << std::endl; } catch(...){}
-                return sol::make_object(sv, dynamic_cast<Stage*>(h.get()));
-            }
-            try { std::cout << "[dbg:CoreForward.getDisplayObject] returning DisplayObject handle" << std::endl; } catch(...){}
+            // Always return a DisplayObject handle to Lua. Returning raw
+            // Stage* userdata can cause sol2 type confusion when the same
+            // object is later passed into other bindings expecting a
+            // different registered usertype. Using the DisplayObject handle
+            // keeps the Lua API stable and consistent.
+            // try { std::cout << "[dbg:CoreForward.getDisplayObject] returning DisplayObject handle" << std::endl; } catch(...){ }
             return sol::make_object(sv, h);
         });
         coreTable.set_function("getStageHandle", [](sol::this_state ts, sol::object /*self*/) {
             sol::state_view sv = ts;
             DisplayObject h = Core::getInstance().getStageHandle();
-            try { if (h.isValid() && h.get()) std::cout << "[dbg:CoreForward.getStageHandle] stage type='" << h.get()->getType() << "' name='" << h.get()->getName() << "'" << std::endl; } catch(...) {}
+            // Return the DisplayObject handle instead of raw Stage*.
             if (h.isValid() && h.get()) {
-                try { std::cout << "[dbg:CoreForward.getStageHandle] returning Stage*" << std::endl; } catch(...){}
-                return sol::make_object(sv, dynamic_cast<Stage*>(h.get()));
+                return sol::make_object(sv, h);
             }
             return sol::make_object(sv, DisplayObject());
+        });
+        // Allow setting the root node by name or by handle from Lua
+        coreTable.set_function("setRootNode", [](sol::this_state ts, sol::object /*self*/, sol::object maybeArg) {
+            sol::state_view sv = ts;
+            if (!maybeArg.valid()) return sol::make_object(sv, sol::nil);
+            if (maybeArg.is<std::string>()) {
+                std::string name = maybeArg.as<std::string>();
+                setRootNodeByName_lua(name);
+                return sol::make_object(sv, sol::nil);
+            }
+            if (maybeArg.is<DisplayObject>()) {
+                DisplayObject h = maybeArg.as<DisplayObject>();
+                setRootNodeByHandle_lua(h);
+                return sol::make_object(sv, sol::nil);
+            }
+            // If a table or other type was passed, try to resolve as DisplayObject
+            if (maybeArg.is<sol::table>()) {
+                sol::table t = maybeArg.as<sol::table>();
+                // try to get name field
+                if (t["name"].valid()) {
+                    try { std::string name = t.get<std::string>("name"); setRootNodeByName_lua(name); return sol::make_object(sv, sol::nil); } catch(...) {}
+                }
+            }
+            return sol::make_object(sv, sol::nil);
         });
         coreTable.set_function("hasDisplayObject", [](sol::this_state /*ts*/, sol::object /*self*/, const std::string& name) {
             return Core::getInstance().hasDisplayObject(name);
@@ -1598,53 +1615,62 @@ namespace SDOM
             Core::getInstance().destroyDisplayObject(name);
         });
 
-        coreTable.set_function("getPropertyNamesForType", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName) {
-            sol::state_view sv = ts;
-            std::string query = typeName;
-            if (Core::getInstance().hasDisplayObject(typeName)) {
-                DisplayObject h = Core::getInstance().getDisplayObject(typeName);
-                if (h.isValid() && h.get()) {
-                    IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
-                    if (obj) query = obj->getType();
-                }
-            }
-            auto names = Core::getInstance().getPropertyNamesForType(query);
-            sol::table t = sv.create_table();
-            for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
-            return sol::make_object(sv, t);
-        });
         coreTable.set_function("get_delta_time", [](sol::this_state /*ts*/, sol::object /*self*/) {
             return Core::getInstance().getElapsedTime();
         });
-        coreTable.set_function("getCommandNamesForType", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName) {
+        coreTable.set_function("getWindowTitle", [](sol::this_state ts, sol::object /*self*/) {
+            sol::state_view sv = ts; return sol::make_object(sv, Core::getInstance().getWindowTitle());
+        });
+        coreTable.set_function("setWindowTitle", [](sol::this_state ts, sol::object /*self*/, const std::string& title) {
+            sol::state_view sv = ts; Core::getInstance().setWindowTitle(title); return sol::make_object(sv, sol::nil);
+        });
+        // Expose keyboard focus getters/setters to Lua
+        coreTable.set_function("getKeyboardFocusedObject", [](sol::this_state ts, sol::object /*self*/) {
             sol::state_view sv = ts;
-            std::string query = typeName;
-            if (Core::getInstance().hasDisplayObject(typeName)) {
-                DisplayObject h = Core::getInstance().getDisplayObject(typeName);
-                if (h.isValid() && h.get()) {
-                    IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
-                    if (obj) query = obj->getType();
-                }
+            DisplayObject h = Core::getInstance().getKeyboardFocusedObject();
+            if (h.isValid() && h.get()) return sol::make_object(sv, h);
+            return sol::make_object(sv, DisplayObject());
+        });
+        coreTable.set_function("setKeyboardFocusedObject", [](sol::this_state ts, sol::object /*self*/, sol::object maybeArg) {
+            sol::state_view sv = ts;
+            if (!maybeArg.valid()) return sol::make_object(sv, sol::nil);
+            if (maybeArg.is<DisplayObject>()) {
+                DisplayObject h = maybeArg.as<DisplayObject>();
+                Core::getInstance().setKeyboardFocusedObject(h);
+                return sol::make_object(sv, sol::nil);
             }
-            auto names = Core::getInstance().getCommandNamesForType(query);
+            if (maybeArg.is<std::string>()) {
+                std::string name = maybeArg.as<std::string>();
+                DisplayObject h = Core::getInstance().getDisplayObject(name);
+                if (h.isValid()) Core::getInstance().setKeyboardFocusedObject(h);
+                return sol::make_object(sv, sol::nil);
+            }
+            return sol::make_object(sv, sol::nil);
+        });
+        coreTable.set_function("getIsTraversing", [](sol::this_state ts, sol::object /*self*/) {
+            sol::state_view sv = ts; return sol::make_object(sv, getIsTraversing_lua());
+        });
+        coreTable.set_function("setIsTraversing", [](sol::this_state ts, sol::object /*self*/, bool v) {
+            sol::state_view sv = ts; setIsTraversing_lua(v); return sol::make_object(sv, sol::nil);
+        });
+
+        // Orphan lifecycle helpers exposed to Lua
+        coreTable.set_function("countOrphanedDisplayObjects", [](sol::this_state /*ts*/, sol::object /*self*/) {
+            return Core::getInstance().countOrphanedDisplayObjects();
+        });
+        coreTable.set_function("getOrphanedDisplayObjects", [](sol::this_state ts, sol::object /*self*/) {
+            sol::state_view sv = ts;
+            auto orphans = Core::getInstance().getOrphanedDisplayObjects();
             sol::table t = sv.create_table();
-            for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
+            for (size_t i = 0; i < orphans.size(); ++i) t[i+1] = orphans[i];
             return sol::make_object(sv, t);
         });
-        coreTable.set_function("getFunctionNamesForType", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName) {
-            sol::state_view sv = ts;
-            std::string query = typeName;
-            if (Core::getInstance().hasDisplayObject(typeName)) {
-                DisplayObject h = Core::getInstance().getDisplayObject(typeName);
-                if (h.isValid() && h.get()) {
-                    IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
-                    if (obj) query = obj->getType();
-                }
-            }
-            auto names = Core::getInstance().getFunctionNamesForType(query);
-            sol::table t = sv.create_table();
-            for (size_t i = 0; i < names.size(); ++i) t[i+1] = names[i];
-            return sol::make_object(sv, t);
+        coreTable.set_function("destroyOrphanedDisplayObjects", [](sol::this_state ts, sol::object /*self*/) {
+            sol::state_view sv = ts; Core::getInstance().destroyOrphanedDisplayObjects(); return sol::make_object(sv, sol::nil);
+        });
+        // Expose setStage (alias) to Lua
+        coreTable.set_function("setStage", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
+            sol::state_view sv = ts; setStage_lua(name); return sol::make_object(sv, sol::nil);
         });
 
         coreTable.set_function("pumpEventsOnce", [](sol::this_state /*ts*/, sol::object /*self*/) {
@@ -1660,6 +1686,30 @@ namespace SDOM
             pushKeyboardEvent_lua(args);
             return sol::make_object(sv, sol::nil);
         });
+
+        // Expose mouse-hovered object getters/setters to Lua
+        coreTable.set_function("getMouseHoveredObject", [](sol::this_state ts, sol::object /*self*/) {
+            sol::state_view sv = ts;
+            DisplayObject h = Core::getInstance().getMouseHoveredObject();
+            if (h.isValid() && h.get()) return sol::make_object(sv, h);
+            return sol::make_object(sv, DisplayObject());
+        });
+        coreTable.set_function("setMouseHoveredObject", [](sol::this_state ts, sol::object /*self*/, sol::object maybeArg) {
+            sol::state_view sv = ts;
+            if (!maybeArg.valid()) return sol::make_object(sv, sol::nil);
+            if (maybeArg.is<DisplayObject>()) {
+                DisplayObject h = maybeArg.as<DisplayObject>();
+                Core::getInstance().setMouseHoveredObject(h);
+                return sol::make_object(sv, sol::nil);
+            }
+            if (maybeArg.is<std::string>()) {
+                std::string name = maybeArg.as<std::string>();
+                DisplayObject h = Core::getInstance().getDisplayObject(name);
+                if (h.isValid()) Core::getInstance().setMouseHoveredObject(h);
+                return sol::make_object(sv, sol::nil);
+            }
+            return sol::make_object(sv, sol::nil);
+        });
         coreTable.set_function("run", [](sol::this_state ts, sol::object /*self*/, sol::optional<sol::object> maybeArg) {
             sol::state_view sv = ts;
             if (!maybeArg) { Core::getInstance().run(); return sol::make_object(sv, sol::nil); }
@@ -1668,6 +1718,14 @@ namespace SDOM
             if (arg.is<std::string>()) { Core::getInstance().run(arg.as<std::string>()); return sol::make_object(sv, sol::nil); }
             ERROR("CoreForward.run: unsupported argument type; expected table or string");
             return sol::make_object(sv, sol::nil);
+        });
+
+        // Tab-key navigation helpers
+        coreTable.set_function("handleTabKeyPress", [](sol::this_state /*ts*/, sol::object /*self*/) {
+            Core::getInstance().handleTabKeyPress();
+        });
+        coreTable.set_function("handleTabKeyPressReverse", [](sol::this_state /*ts*/, sol::object /*self*/) {
+            Core::getInstance().handleTabKeyPressReverse();
         });
 
         coreTable.set_function("configure", [](sol::this_state ts, sol::object /*self*/, const sol::table& cfg) {

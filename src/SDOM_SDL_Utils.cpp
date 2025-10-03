@@ -43,7 +43,22 @@ namespace SDOM
 
     void SDL_Utils::registerLua(sol::state_view lua)
     {
-        try {
+        // Register SDL_Color userdata so Lua can access r/g/b/a and getter helpers
+        if (!lua["SDL_Color"].valid()) {
+            lua.new_usertype<SDL_Color>("SDL_Color",
+                "r", &SDL_Color::r,
+                "g", &SDL_Color::g,
+                "b", &SDL_Color::b,
+                "a", &SDL_Color::a,
+                "getR", [](const SDL_Color& c) { return c.r; },
+                "getG", [](const SDL_Color& c) { return c.g; },
+                "getB", [](const SDL_Color& c) { return c.b; },
+                "getA", [](const SDL_Color& c) { return c.a; }
+            );
+        }
+                
+        try 
+        {
             // Create a helper table for SDL utilities
             sol::table t = lua.create_table();
 

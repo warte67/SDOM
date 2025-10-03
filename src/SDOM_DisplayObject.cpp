@@ -68,8 +68,19 @@ namespace SDOM
 
         // Register minimal methods here (expand as needed)
         ut.set_function("isValid", &DisplayObject::isValid);
-        ut.set_function("getName", &DisplayObject::getName);
-        ut.set_function("getType", &DisplayObject::getType);
+    // Backwards-compat: return the handle itself for code that calls obj:get():method()
+    ut.set_function("get", [](DisplayObject& self) -> DisplayObject { return self; });
+        // Forward getName/getType to the underlying IDisplayObject when possible
+        ut.set_function("getName", [](DisplayObject& self) -> std::string {
+            IDisplayObject* obj = self.get(); if (obj) return obj->getName(); return self.getName();
+        });
+        ut.set_function("getType", [](DisplayObject& self) -> std::string {
+            IDisplayObject* obj = self.get(); if (obj) return obj->getType(); return self.getType();
+        });
+        // Expose setters that forward to the underlying IDisplayObject when available
+        ut.set_function("setType", [](DisplayObject& self, const std::string& newType) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setType_lua(obj, newType); return sol::lua_nil;
+        });
         // Forward common IDisplayObject operations through the DisplayObject handle
         ut.set_function("addEventListener", sol::overload(
             [](DisplayObject& self, const sol::object& descriptor, const sol::object& maybe_listener, const sol::object& maybe_useCapture, const sol::object& maybe_priority) {
@@ -100,6 +111,10 @@ namespace SDOM
             ::SDOM::addChild_lua(obj, child);
             return sol::lua_nil;
         });
+        ut.set_function("removeChild", [](DisplayObject& self, DisplayObject child) -> bool {
+            IDisplayObject* obj = self.get(); if (!obj) return false;
+            return ::SDOM::removeChild_lua(obj, child);
+        });
         ut.set_function("hasChild", [](DisplayObject& self, DisplayObject child) -> bool {
             IDisplayObject* obj = self.get(); if (!obj) return false;
             return ::SDOM::hasChild_lua(obj, child);
@@ -108,23 +123,26 @@ namespace SDOM
             IDisplayObject* obj = self.get(); if (!obj) return DisplayObject();
             return ::SDOM::getParent_lua(obj);
         });
+        ut.set_function("setName", [](DisplayObject& self, const std::string& newName) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; obj->setName(newName); return sol::lua_nil;
+        });
         // Type & property access
         ut.set_function("getBounds", [](DisplayObject& self) -> Bounds {
             IDisplayObject* obj = self.get(); if (!obj) return Bounds();
             return ::SDOM::getBounds_lua(obj);
         });
-        ut.set_function("setBounds", [](DisplayObject& self, const Bounds& b) {
+        ut.set_function("setBounds", [](DisplayObject& self, const sol::object& bobj) {
             IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
-            ::SDOM::setBounds_lua(obj, b);
+            ::SDOM::setBounds_lua(obj, bobj);
             return sol::lua_nil;
         });
         ut.set_function("getColor", [](DisplayObject& self) -> SDL_Color {
             IDisplayObject* obj = self.get(); if (!obj) return SDL_Color{0,0,0,0};
             return ::SDOM::getColor_lua(obj);
         });
-        ut.set_function("setColor", [](DisplayObject& self, const SDL_Color& c) {
+        ut.set_function("setColor", [](DisplayObject& self, const sol::object& cobj) {
             IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
-            ::SDOM::setColor_lua(obj, c);
+            ::SDOM::setColor_lua(obj, cobj);
             return sol::lua_nil;
         });
 
@@ -138,6 +156,53 @@ namespace SDOM
         ut.set_function("setWidth", [](DisplayObject& self, int w) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setWidth_lua(obj, w); return sol::lua_nil; });
         ut.set_function("setHeight", [](DisplayObject& self, int h) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setHeight_lua(obj, h); return sol::lua_nil; });
 
+    // Priority & Z-Order helpers forwarded from IDisplayObject
+    ut.set_function("setPriority", sol::overload(
+        [](DisplayObject& self, int p) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setPriority_lua(obj, p); return sol::lua_nil; },
+        [](DisplayObject& self, const sol::object& descriptor, int p) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
+            DisplayObject target = DisplayObject::resolveChildSpec(descriptor);
+            IDisplayObject* targetObj = target.get(); if (!targetObj) return sol::lua_nil;
+            ::SDOM::setPriority_lua(targetObj, p);
+            return sol::lua_nil;
+        }
+    ));
+    ut.set_function("getPriority", [](DisplayObject& self) -> int { IDisplayObject* obj = self.get(); if (!obj) return 0; return ::SDOM::getPriority_lua(obj); });
+    ut.set_function("sortChildrenByPriority", [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::sortChildrenByPriority_lua(obj); return sol::lua_nil; });
+    ut.set_function("getChildrenPriorities", [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return std::vector<int>(); return ::SDOM::getChildrenPriorities_lua(obj); });
+    ut.set_function("moveToTop", sol::overload(
+        [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::moveToTop_lua(obj); return sol::lua_nil; },
+        [](DisplayObject& self, const sol::object& descriptor) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
+            DisplayObject target = DisplayObject::resolveChildSpec(descriptor);
+            IDisplayObject* targetObj = target.get(); if (!targetObj) return sol::lua_nil;
+            ::SDOM::moveToTop_lua(targetObj);
+            return sol::lua_nil;
+        }
+    ));
+    // Provide DisplayObject-level overloads that accept an optional child descriptor
+    // so scripts can call stage:setToHighestPriority({ child = 'name' })
+    ut.set_function("setToHighestPriority", sol::overload(
+        [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setToHighestPriority_lua(obj); return sol::lua_nil; },
+        [](DisplayObject& self, const sol::object& descriptor) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
+            DisplayObject target = DisplayObject::resolveChildSpec(descriptor);
+            IDisplayObject* targetObj = target.get(); if (!targetObj) return sol::lua_nil;
+            ::SDOM::setToHighestPriority_lua(targetObj);
+            return sol::lua_nil;
+        }
+    ));
+    ut.set_function("setToLowestPriority", sol::overload(
+        [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setToLowestPriority_lua(obj); return sol::lua_nil; },
+        [](DisplayObject& self, const sol::object& descriptor) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
+            DisplayObject target = DisplayObject::resolveChildSpec(descriptor);
+            IDisplayObject* targetObj = target.get(); if (!targetObj) return sol::lua_nil;
+            ::SDOM::setToLowestPriority_lua(targetObj);
+            return sol::lua_nil;
+        }
+    ));
+
         // Edge positions
         ut.set_function("getLeft", [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return 0.0f; return ::SDOM::getLeft_lua(obj); });
         ut.set_function("getRight", [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return 0.0f; return ::SDOM::getRight_lua(obj); });
@@ -150,18 +215,39 @@ namespace SDOM
         ut.set_function("setParent", sol::overload(
             [](DisplayObject& self, const DisplayObject& parent) -> DisplayObject {
                 IDisplayObject* obj = self.get(); if (!obj) return DisplayObject();
-                try { std::cout << "[dbg:setParent] self='" << self.getName() << "' parent='" << parent.getName() << "'" << std::endl; } catch(...) {}
                 ::SDOM::setParent_lua(obj, parent);
                 return ::SDOM::getParent_lua(obj);
             },
             [](DisplayObject& self, const sol::object& descriptor) -> DisplayObject {
                 IDisplayObject* obj = self.get(); if (!obj) return DisplayObject();
                 DisplayObject parent = DisplayObject::resolveChildSpec(descriptor);
-                try { std::string pname = parent.isValid() ? parent.getName() : std::string("<nil>"); std::cout << "[dbg:setParent] self='" << self.getName() << "' resolved parent='" << pname << "'" << std::endl; } catch(...) {}
                 ::SDOM::setParent_lua(obj, parent);
                 return ::SDOM::getParent_lua(obj);
             }
         ));
+        // Focus, interactivity and tab-related bindings forwarded from IDisplayObject
+        ut.set_function("setKeyboardFocus", [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setKeyboardFocus_lua(obj); return sol::lua_nil; });
+        ut.set_function("isKeyboardFocused", [](DisplayObject& self) -> bool { IDisplayObject* obj = self.get(); if (!obj) return false; return ::SDOM::isKeyboardFocused_lua(obj); });
+        ut.set_function("isMouseHovered", [](DisplayObject& self) -> bool { IDisplayObject* obj = self.get(); if (!obj) return false; return ::SDOM::isMouseHovered_lua(obj); });
+
+        ut.set_function("isClickable", [](DisplayObject& self) -> bool { IDisplayObject* obj = self.get(); if (!obj) return false; return ::SDOM::isClickable_lua(obj); });
+        ut.set_function("setClickable", [](DisplayObject& self, bool clickable) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setClickable_lua(obj, clickable); return sol::lua_nil; });
+
+        ut.set_function("isEnabled", [](DisplayObject& self) -> bool { IDisplayObject* obj = self.get(); if (!obj) return false; return ::SDOM::isEnabled_lua(obj); });
+        ut.set_function("setEnabled", [](DisplayObject& self, bool enabled) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setEnabled_lua(obj, enabled); return sol::lua_nil; });
+
+        ut.set_function("isHidden", [](DisplayObject& self) -> bool { IDisplayObject* obj = self.get(); if (!obj) return false; return ::SDOM::isHidden_lua(obj); });
+        ut.set_function("setHidden", [](DisplayObject& self, bool hidden) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setHidden_lua(obj, hidden); return sol::lua_nil; });
+
+        ut.set_function("isVisible", [](DisplayObject& self) -> bool { IDisplayObject* obj = self.get(); if (!obj) return false; return ::SDOM::isVisible_lua(obj); });
+        ut.set_function("setVisible", [](DisplayObject& self, bool visible) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setVisible_lua(obj, visible); return sol::lua_nil; });
+
+        // Tab navigation helpers
+        ut.set_function("getTabPriority", [](DisplayObject& self) -> int { IDisplayObject* obj = self.get(); if (!obj) return 0; return ::SDOM::getTabPriority_lua(obj); });
+        ut.set_function("setTabPriority", [](DisplayObject& self, int idx) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setTabPriority_lua(obj, idx); return sol::lua_nil; });
+        ut.set_function("isTabEnabled", [](DisplayObject& self) -> bool { IDisplayObject* obj = self.get(); if (!obj) return false; return ::SDOM::isTabEnabled_lua(obj); });
+        ut.set_function("setTabEnabled", [](DisplayObject& self, bool enabled) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setTabEnabled_lua(obj, enabled); return sol::lua_nil; });
+
         // add more bindings later...
 
         // Note: do not use 'this' at file/namespace scope. If you need to cache
