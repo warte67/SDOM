@@ -1734,11 +1734,11 @@ namespace SDOM
         if (factory_)
             factory_->registerLuaPropertiesAndCommands(typeName, objHandleType_);
 
-    // 5. Expose the singleton instance to Lua under the type name
-    // Use sol::make_object to create a userdata that matches the previously
-    // created usertype. Assigning the raw C++ pointer directly can result
-    // in a mismatched value (sol::Core*) which breaks method dispatch.
-    lua[typeName] = sol::make_object(lua, this);
+        // 5. Expose the singleton instance to Lua under the type name
+        // Use sol::make_object to create a userdata that matches the previously
+        // created usertype. Assigning the raw C++ pointer directly can result
+        // in a mismatched value (sol::Core*) which breaks method dispatch.
+        lua[typeName] = sol::make_object(lua, this);
 
         // Expose EventType constants to Lua as a table (so Lua code can use EventType.MouseClick)
         // Use centralized registration on Event to create the usertypes and

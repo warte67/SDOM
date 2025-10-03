@@ -134,14 +134,6 @@ namespace SDOM
 
 
 
-    // Compatibility shim: preserve _registerLua() signature but forward to
-    // the consolidated _registerDisplayObject() implementation. This keeps
-    // external callers working while we centralize registration.
-    void IDisplayObject::_registerLua(const std::string& typeName, sol::state_view lua)
-    {
-        _registerDisplayObject(typeName, lua);
-    }
-
 
     bool IDisplayObject::onInit()
     {
@@ -988,21 +980,24 @@ namespace SDOM
     }
 
 
-    void IDisplayObject::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
+    // Compatibility shim: preserve _registerLua() signature but forward to
+    // the consolidated _registerDisplayObject() implementation. This keeps
+    // external callers working while we centralize registration.
+    void IDisplayObject::_registerLua(const std::string& typeName, sol::state_view lua)
     {
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "IDisplayObject";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
-                    << typeName << CLR::RESET << std::endl;
-        }
+        // if (DEBUG_REGISTER_LUA)
+        // {
+        //     std::string typeNameLocal = "IDisplayObject";
+        //     std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+        //             << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
+        //             << typeName << CLR::RESET << std::endl;
+        // }
 
         // Call base class registration to include inherited properties/commands
-        SUPER::_registerDisplayObject(typeName, lua);
+        SUPER::_registerLua(typeName, lua);
 
         // // Create and save usertype table 
-        // SDOM::Factory& factory = SDOM::getFactory();
+        SDOM::Factory& factory = SDOM::getFactory();
 
         sol::usertype<IDisplayObject> objHandleType = lua.new_usertype<IDisplayObject>(typeName, sol::base_classes, sol::bases<SUPER>()
             // ...IDisplayObject-specific methods...
@@ -1046,7 +1041,6 @@ namespace SDOM
 
         // Register all lua properties/functions/commands using the Factory.
         // Grouped and alphabetized within each group for maintainability.
-        Factory& factory = getFactory();
 
         // ------------------ Properties (alphabetical) ------------------
         factory.registerLuaProperty(typeName, "anchorBottom",
@@ -1310,6 +1304,27 @@ namespace SDOM
 
         // Finally register any registry-driven properties/commands
         factory.registerLuaPropertiesAndCommands(typeName, objHandleType_);
+    }
+
+    void IDisplayObject::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
+    {
+        if (DEBUG_REGISTER_LUA)
+        {
+            std::string typeNameLocal = "IDisplayObject";
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
+                    << typeName << CLR::RESET << std::endl;
+        }
+
+        // Call base class registration to include inherited properties/commands
+        SUPER::_registerDisplayObject(typeName, lua);
+
+        // // Create and save usertype table 
+        // SDOM::Factory& factory = SDOM::getFactory();
+
+        // sol::usertype<IDisplayObject> objHandleType = lua.new_usertype<IDisplayObject>(typeName, sol::base_classes, sol::bases<SUPER>()
+        //     // ...IDisplayObject-specific methods...
+        // );
 
     } // End IDisplayObject::_registerDisplayObject()
 
