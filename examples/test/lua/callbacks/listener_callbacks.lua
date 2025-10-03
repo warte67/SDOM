@@ -32,7 +32,7 @@ function M.on_update(evt)
     if s_iterations == 25 then
         local stage = Core:getStageHandle()
         if stage then
-            local b = Core:getDisplayObjectHandle("blueishBox")
+            local b = Core:getDisplayObject("blueishBox")
             if b and stage:hasChild(b) then
                 log("Core.run Info: Stage still has blueishBox after 25 iterations.")
             else

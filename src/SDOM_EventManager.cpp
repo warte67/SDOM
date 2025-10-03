@@ -366,16 +366,19 @@ namespace SDOM
     DisplayObject topObject = findTopObjectUnderMouse(node, draggedObject);
     // Update Core hovered object to the post-conversion topObject so Lua reads correct value
     getCore().setMouseHoveredObject(topObject);
-    // Debug log the top object name if available
-    // if (topObject) {
-    //     try {
-    //         std::cout << "[EventManager::Queue_SDL_Event] topObject=" << topObject->getName() << std::endl;
-    //     } catch (...) {
-    //         std::cout << "[EventManager::Queue_SDL_Event] topObject=<unnamed>" << std::endl;
-    //     }
-    // } else {
-    //     std::cout << "[EventManager::Queue_SDL_Event] topObject=<null>" << std::endl;
-    // }
+    // Debug info: log converted stage coordinates and which object was chosen as hovered
+    try {
+        INFO("EventManager::Queue_SDL_Event: stage mouse coords=(" << stage->mouseX << "," << stage->mouseY << ") sdl.motion.x=" << sdlEvent.motion.x << " sdl.motion.y=" << sdlEvent.motion.y);
+    } catch(...) {}
+    if (topObject) {
+        try {
+            INFO("EventManager::Queue_SDL_Event: topObject='" << topObject->getName() << "' type='" << topObject->getType() << "' z=" << topObject->getZOrder() << " priority=" << topObject->getPriority());
+        } catch(...) {
+            INFO("EventManager::Queue_SDL_Event: topObject=<unnamed>");
+        }
+    } else {
+        INFO("EventManager::Queue_SDL_Event: topObject=<null>");
+    }
 
         // alias the SDL_EventType for ease of use:
         SDL_EventType sdl_type = static_cast<SDL_EventType>(sdlEvent.type);

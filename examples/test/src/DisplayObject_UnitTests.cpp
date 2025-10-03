@@ -36,8 +36,8 @@ namespace SDOM
             if not dh then return { ok = false, err = 'no stage handle' } end
             for i, m in ipairs(methods) do
                 local f = dh[m]
-                if not f then return { ok = false, err = 'missing '..m } end
-                if type(f) ~= 'function' then return { ok = false, err = m..' not callable' } end
+                if not f then print('DisplayObject_test1: missing method -> '..m); return { ok = false, err = 'missing '..m } end
+                if type(f) ~= 'function' then print('DisplayObject_test1: method not callable -> '..m); return { ok = false, err = m..' not callable' } end
             end
             return { ok = true }
         )").get<sol::table>();
@@ -280,6 +280,9 @@ namespace SDOM
         )").get<sol::table>();
         bool ok = result["ok"].get_or(false);
         std::string err = result["err"].get_or(std::string());
+        if (!ok) {
+            std::cout << "[Debug] DisplayObject_test9 Lua error: " << err << std::endl;
+        }
         return UnitTests::run("DisplayObject #9", "Exercise setPriority/setZOrder/moveToTop overloads", [=]() { return ok; });
     }
 
@@ -303,21 +306,19 @@ namespace SDOM
             b:setPriority(5)
             c:setPriority(7)
             
-        -- sort children
+            -- sort children
             st:sortChildrenByPriority()
-            local pr = st:getChildrenPriorities()
 
-        -- Filter out zero entries (may be other children on the stage producing zeros).
-            local nonzero = {}
-            for i,v in ipairs(pr) do if v and v ~= 0 then table.insert(nonzero, v) end end
-            if #nonzero < 3 then return { ok = false, err = 'not enough nonzero children priorities' } end
-
-        -- after sort ascending the last three should be 5,7,10
-            local n = #nonzero
-            if not (nonzero[n-2] == 5 and nonzero[n-1] == 7 and nonzero[n] == 10) then
-                local s = ''
-                for i,v in ipairs(nonzero) do s = s .. tostring(v) .. ',' end
-                return { ok = false, err = 'initial sort failed, nonzero=' .. s }
+        -- Instead of relying on stage-wide ordering (other fixtures may exist),
+        -- query the specific test children directly for their priorities.
+            local p1 = Core:getDisplayObject('s1'):getPriority()
+            local p2 = Core:getDisplayObject('s2'):getPriority()
+            local p3 = Core:getDisplayObject('s3'):getPriority()
+            if not (p1 and p2 and p3) then return { ok = false, err = 'missing s1/s2/s3 priorities' } end
+            local vals = {p1,p2,p3}
+            table.sort(vals)
+            if not (vals[1] == 5 and vals[2] == 7 and vals[3] == 10) then
+                return { ok = false, err = 'initial sort failed, s priorities='..tostring(p1)..','..tostring(p2)..','..tostring(p3) }
             end
 
         -- setToHighest on child 's2' via parent

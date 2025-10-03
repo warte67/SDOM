@@ -160,16 +160,32 @@ namespace SDOM
                 }
             } catch(...) { nameExists = false; }
 
+            // Diagnostic logging to trace duplicate insertions seen by unit tests
+            try {
+                std::ostringstream dbg;
+                dbg << "attachChild_: parent='" << parent->getName() << "' child='" << p_child.getName() << "' children_before=" << parentChildren.size() << " nameExists=" << (nameExists?"1":"0");
+                INFO(dbg.str());
+            } catch(...) {}
+
             if (it == parentChildren.end() && !nameExists) 
             {
+                try { std::ostringstream dbg; dbg << "attachChild_: pushing child='" << p_child.getName() << "' to parent='" << parent->getName() << "'"; INFO(dbg.str()); } catch(...) {}
                 // Record world edges BEFORE changing parent
                 float leftWorld = child->getLeft();
                 float rightWorld = child->getRight();
                 float topWorld = child->getTop();
                 float bottomWorld = child->getBottom();
 
-                child->setParent(p_parent); 
-                parentChildren.push_back(p_child);
+                child->setParent(p_parent);
+                // setParent may already add the child to the new parent's children_ vector.
+                // Only push_back if it's not present to avoid duplicate entries.
+                auto it_after = std::find(parentChildren.begin(), parentChildren.end(), p_child);
+                if (it_after == parentChildren.end()) {
+                    parentChildren.push_back(p_child);
+                } else {
+                    try { std::ostringstream dbg; dbg << "attachChild_: setParent already added child='" << p_child.getName() << "' to parent='" << parent->getName() << "'"; INFO(dbg.str()); } catch(...) {}
+                }
+                try { std::ostringstream dbg; dbg << "attachChild_: children_after=" << parentChildren.size() << " parent='" << parent->getName() << "'"; INFO(dbg.str()); } catch(...) {}
 
                 if (useWorld)
                 {
@@ -548,6 +564,16 @@ namespace SDOM
             return !child;
         }), children_.end());
 
+        try {
+            std::ostringstream oss;
+            oss << "sortChildrenByPriority: before dedupe children_count=" << children_.size() << " [";
+            for (const auto& ch : children_) {
+                try { oss << (ch ? ch.getName() : std::string("<null>")) << ":" << (ch ? std::to_string(ch.get()->getPriority()) : std::string("0")) << ","; } catch(...) { oss << "<err>"; }
+            }
+            oss << "]";
+            INFO(oss.str());
+        } catch(...) {}
+
         // Deduplicate children by name: keep the most-recent occurrence (last in vector)
         try {
             std::unordered_set<std::string> seen;
@@ -574,6 +600,16 @@ namespace SDOM
             children_.swap(newChildren);
         } catch(...) {}
 
+        try {
+            std::ostringstream oss;
+            oss << "sortChildrenByPriority: after dedupe children_count=" << children_.size() << " [";
+            for (const auto& ch : children_) {
+                try { oss << (ch ? ch.getName() : std::string("<null>")) << ":" << (ch ? std::to_string(ch.get()->getPriority()) : std::string("0")) << ","; } catch(...) { oss << "<err>"; }
+            }
+            oss << "]";
+            INFO(oss.str());
+        } catch(...) {}
+
         // Sort by priority (ascending)
         std::sort(children_.begin(), children_.end(), [](const DisplayObject& a, const DisplayObject& b) {
             auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
@@ -583,6 +619,15 @@ namespace SDOM
             return aPriority < bPriority;
         });
 
+        try {
+            std::ostringstream oss;
+            oss << "sortChildrenByPriority: after sort children_count=" << children_.size() << " [";
+            for (const auto& ch : children_) {
+                try { oss << (ch ? ch.getName() : std::string("<null>")) << ":" << (ch ? std::to_string(ch.get()->getPriority()) : std::string("0")) << ","; } catch(...) { oss << "<err>"; }
+            }
+            oss << "]";
+            INFO(oss.str());
+        } catch(...) {}
         return *this;
     }
 
@@ -1134,7 +1179,22 @@ namespace SDOM
         objHandleType.set_function("setToHighestPriority", &::SDOM::setToHighestPriority_lua);
         objHandleType.set_function("setToLowestPriority", &::SDOM::setToLowestPriority_lua);
         objHandleType.set_function("sortChildrenByPriority", &::SDOM::sortChildrenByPriority_lua);
-        objHandleType.set_function("setPriority", &::SDOM::setPriority_lua);
+        objHandleType.set_function("setPriority", sol::overload(
+            static_cast<IDisplayObject*(*)(IDisplayObject*, int)>(&::SDOM::setPriority_lua),
+            // table descriptor form: setPriority({ priority = N })
+            static_cast<IDisplayObject*(*)(IDisplayObject*, const sol::object&)> ([](IDisplayObject* obj, const sol::object& descriptor) -> IDisplayObject* {
+                if (!obj) return nullptr;
+                if (!descriptor.is<sol::table>()) return obj;
+                sol::table t = descriptor.as<sol::table>();
+                sol::object pobj = t.get<sol::object>("priority");
+                if (!pobj.valid()) return obj;
+                try {
+                    int p = pobj.as<int>();
+                    obj->setPriority(p);
+                } catch(...) {}
+                return obj;
+            })
+        ));
         objHandleType.set_function("getChildrenPriorities", &::SDOM::getChildrenPriorities_lua);
         objHandleType.set_function("moveToTop", &::SDOM::moveToTop_lua);
         objHandleType.set_function("getZOrder", &::SDOM::getZOrder_lua);

@@ -30,7 +30,7 @@ namespace SDOM
 		if (renderer) 
 		{
 			SDL_RenderCoordinatesToWindow(renderer, sx, sy, &winX, &winY);
-	        // INFO("pushMouseEvent_lua: SDL_RenderCoordinatesToWindow stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
+	        INFO("pushMouseEvent_lua: SDL_RenderCoordinatesToWindow stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
 		} 
 		else 
 		{
@@ -38,11 +38,11 @@ namespace SDOM
 			const Core::CoreConfig& cfg = c->getConfig();
 			winX = sx * cfg.pixelWidth;
 			winY = sy * cfg.pixelHeight;
-	        // INFO("pushMouseEvent_lua: Fallback scaling stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
+	        INFO("pushMouseEvent_lua: Fallback scaling stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
 		}
 
 		// Debug logging for synthetic mouse events
-		// std::cout << "[pushMouseEvent_lua] stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button << std::endl;
+		INFO("[pushMouseEvent_lua] stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
 
 	Uint32 winID = 0;
 	if (c->getWindow()) winID = SDL_GetWindowID(c->getWindow());

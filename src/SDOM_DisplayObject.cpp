@@ -36,6 +36,11 @@ namespace SDOM
         // If table, try fields 'parent' or 'name'
         if (spec.is<sol::table>()) {
             sol::table t = spec.as<sol::table>();
+            // Accept 'child' as an alias for 'parent'/'name' used in some Lua helpers
+            sol::object childObj = t.get<sol::object>("child");
+            if (childObj.valid()) {
+                try { return resolveChildSpec(childObj); } catch(...) {}
+            }
             sol::object parentObj = t.get<sol::object>("parent");
             if (parentObj.valid()) {
                 try { return resolveChildSpec(parentObj); } catch(...) {}
@@ -165,11 +170,74 @@ namespace SDOM
             IDisplayObject* targetObj = target.get(); if (!targetObj) return sol::lua_nil;
             ::SDOM::setPriority_lua(targetObj, p);
             return sol::lua_nil;
+        },
+        // Accept a single-table form: setPriority({ priority = N })
+        [](DisplayObject& self, const sol::object& descriptor) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
+            if (!descriptor.is<sol::table>()) return sol::lua_nil;
+            sol::table t = descriptor.as<sol::table>();
+            sol::object pobj = t.get<sol::object>("priority");
+            if (!pobj.valid()) return sol::lua_nil;
+            try {
+                int p = pobj.as<int>();
+                ::SDOM::setPriority_lua(obj, p);
+            } catch(...) {
+                // ignore conversion errors
+            }
+            return sol::lua_nil;
         }
     ));
     ut.set_function("getPriority", [](DisplayObject& self) -> int { IDisplayObject* obj = self.get(); if (!obj) return 0; return ::SDOM::getPriority_lua(obj); });
+    ut.set_function("getMaxPriority", [](DisplayObject& self) -> int { IDisplayObject* obj = self.get(); if (!obj) return 0; return ::SDOM::getMaxPriority_lua(obj); });
+    ut.set_function("getMinPriority", [](DisplayObject& self) -> int { IDisplayObject* obj = self.get(); if (!obj) return 0; return ::SDOM::getMinPriority_lua(obj); });
+    ut.set_function("setToHighestPriority", sol::overload(
+        [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setToHighestPriority_lua(obj); return sol::lua_nil; },
+        [](DisplayObject& self, const sol::object& descriptor) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
+            DisplayObject target = DisplayObject::resolveChildSpec(descriptor);
+            IDisplayObject* targetObj = target.get(); if (!targetObj) return sol::lua_nil;
+            ::SDOM::setToHighestPriority_lua(targetObj);
+            return sol::lua_nil;
+        }
+    ));
+    ut.set_function("setToLowestPriority", sol::overload(
+        [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setToLowestPriority_lua(obj); return sol::lua_nil; },
+        [](DisplayObject& self, const sol::object& descriptor) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
+            DisplayObject target = DisplayObject::resolveChildSpec(descriptor);
+            IDisplayObject* targetObj = target.get(); if (!targetObj) return sol::lua_nil;
+            ::SDOM::setToLowestPriority_lua(targetObj);
+            return sol::lua_nil;
+        }
+    ));
     ut.set_function("sortChildrenByPriority", [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::sortChildrenByPriority_lua(obj); return sol::lua_nil; });
     ut.set_function("getChildrenPriorities", [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return std::vector<int>(); return ::SDOM::getChildrenPriorities_lua(obj); });
+    ut.set_function("getZOrder", [](DisplayObject& self) -> int { IDisplayObject* obj = self.get(); if (!obj) return 0; return ::SDOM::getZOrder_lua(obj); });
+    // setZOrder overloads: numeric, (descriptor, z), and single-table { child=..., z=... }
+    ut.set_function("setZOrder", sol::overload(
+        [](DisplayObject& self, int z) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::setZOrder_lua(obj, z); return sol::lua_nil; },
+        [](DisplayObject& self, const sol::object& descriptor, int z) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
+            DisplayObject target = DisplayObject::resolveChildSpec(descriptor);
+            IDisplayObject* targetObj = target.get(); if (!targetObj) return sol::lua_nil;
+            ::SDOM::setZOrder_lua(targetObj, z);
+            return sol::lua_nil;
+        },
+        [](DisplayObject& self, const sol::object& descriptor) {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
+            if (!descriptor.is<sol::table>()) return sol::lua_nil;
+            sol::table t = descriptor.as<sol::table>();
+            sol::object childObj = t.get<sol::object>("child");
+            sol::object zObj = t.get<sol::object>("z");
+            if (!childObj.valid() || !zObj.valid()) return sol::lua_nil;
+            int z = 0;
+            try { z = zObj.as<int>(); } catch(...) { return sol::lua_nil; }
+            DisplayObject target = DisplayObject::resolveChildSpec(childObj);
+            IDisplayObject* targetObj = target.get(); if (!targetObj) return sol::lua_nil;
+            ::SDOM::setZOrder_lua(targetObj, z);
+            return sol::lua_nil;
+        }
+    ));
     ut.set_function("moveToTop", sol::overload(
         [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; ::SDOM::moveToTop_lua(obj); return sol::lua_nil; },
         [](DisplayObject& self, const sol::object& descriptor) {

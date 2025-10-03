@@ -1618,6 +1618,10 @@ namespace SDOM
         coreTable.set_function("get_delta_time", [](sol::this_state /*ts*/, sol::object /*self*/) {
             return Core::getInstance().getElapsedTime();
         });
+        // Backwards-compatible alias used by some Lua examples/tests
+        coreTable.set_function("getElapsedTime", [](sol::this_state /*ts*/, sol::object /*self*/) {
+            return Core::getInstance().getElapsedTime();
+        });
         coreTable.set_function("getWindowTitle", [](sol::this_state ts, sol::object /*self*/) {
             sol::state_view sv = ts; return sol::make_object(sv, Core::getInstance().getWindowTitle());
         });
