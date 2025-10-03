@@ -5,8 +5,10 @@ var SDOM_8hpp =
     [ "ASSERT_EQ", "SDOM_8hpp.html#a3b2380d7733e1ed07ee0210b3aa11d50", null ],
     [ "DEBUG_ERR", "SDOM_8hpp.html#a193f5f73dcccbdbb0e76b2595db67ede", null ],
     [ "DEBUG_LOG", "SDOM_8hpp.html#a21a2c7330a04ac78200a986f66609369", null ],
+    [ "DEBUG_LUA_TESTS", "SDOM_8hpp.html#ab7cd931b0d8c1fe11b846eb779bfafba", null ],
     [ "ERROR", "SDOM_8hpp.html#ae225ab718bd4f5e2221129f026d3d8f1", null ],
-    [ "INFO", "SDOM_8hpp.html#a809f816dd6df4e17499413cff1926fd4", null ],
+    [ "INFO", "SDOM_8hpp.html#aedf01192151e10a6620567952711ff69", null ],
+    [ "LUA_INFO", "SDOM_8hpp.html#ad37b5952fb01322cea666ba6342b2a43", null ],
     [ "WARNING", "SDOM_8hpp.html#aaf99b8fcaa4b837f684ea0505ed34487", null ],
     [ "AnchorPoint", "SDOM_8hpp.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "SDOM_8hpp.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],

@@ -127,6 +127,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a15e7cc9c1c4259d53bf6b2ceecc9b3b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae14d8baba865558a55e68468fddc1b62" id="r_ae14d8baba865558a55e68468fddc1b62"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1SDL__Utils.html#ae14d8baba865558a55e68468fddc1b62">keyToAscii</a> (SDL_Keycode keycode, SDL_Keymod keymod)</td></tr>
 <tr class="separator:ae14d8baba865558a55e68468fddc1b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa077a66bd09fa07bd0733b396d81ba23" id="r_aa077a66bd09fa07bd0733b396d81ba23"><td class="memItemLeft" align="right" valign="top">static sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1SDL__Utils.html#aa077a66bd09fa07bd0733b396d81ba23">eventToLuaTable</a> (const SDL_Event &amp;event, sol::state_view lua)</td></tr>
+<tr class="separator:aa077a66bd09fa07bd0733b396d81ba23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab104736fb6a0163bfaf0d88965c8fb52" id="r_ab104736fb6a0163bfaf0d88965c8fb52"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1SDL__Utils.html#ab104736fb6a0163bfaf0d88965c8fb52">registerLua</a> (sol::state_view lua)</td></tr>
+<tr class="separator:ab104736fb6a0163bfaf0d88965c8fb52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad58424ffb980e2133bdb261b07846637" name="ad58424ffb980e2133bdb261b07846637"></a>
@@ -180,6 +184,42 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa077a66bd09fa07bd0733b396d81ba23" name="aa077a66bd09fa07bd0733b396d81ba23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa077a66bd09fa07bd0733b396d81ba23">&#9670;&#160;</a></span>eventToLuaTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">sol::table SDOM::SDL_Utils::eventToLuaTable </td>
+          <td>(</td>
+          <td class="paramtype">const SDL_Event &amp;&#160;</td>
+          <td class="paramname"><em>event</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">sol::state_view&#160;</td>
+          <td class="paramname"><em>lua</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a15e7cc9c1c4259d53bf6b2ceecc9b3b9" name="a15e7cc9c1c4259d53bf6b2ceecc9b3b9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a15e7cc9c1c4259d53bf6b2ceecc9b3b9">&#9670;&#160;</a></span>eventTypeFromString()</h2>
 
@@ -308,6 +348,32 @@ Static Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">SDL_PixelFormat&#160;</td>
           <td class="paramname"><em>format</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab104736fb6a0163bfaf0d88965c8fb52" name="ab104736fb6a0163bfaf0d88965c8fb52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab104736fb6a0163bfaf0d88965c8fb52">&#9670;&#160;</a></span>registerLua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::SDL_Utils::registerLua </td>
+          <td>(</td>
+          <td class="paramtype">sol::state_view&#160;</td>
+          <td class="paramname"><em>lua</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

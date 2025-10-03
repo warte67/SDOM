@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['warning_0',['WARNING',['../SDOM_8hpp.html#aaf99b8fcaa4b837f684ea0505ed34487',1,'SDOM.hpp']]],
-  ['word_1',['Word',['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'SDOM_CLR.hpp']]]
+  ['sol_5fall_5fautomagic_0',['SOL_ALL_AUTOMAGIC',['../SDOM__Front_8hpp.html#a9dc66055d822098ff31ce7d9c1b0d80a',1,'SDOM_Front.hpp']]],
+  ['sol_5fall_5fsafeties_5fon_1',['SOL_ALL_SAFETIES_ON',['../SDOM__Front_8hpp.html#af49a65454b3af6c3580a532b5f86028e',1,'SDOM_Front.hpp']]]
 ];

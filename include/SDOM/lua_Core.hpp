@@ -13,14 +13,14 @@ namespace SDOM
 
 	Renaming / Adding Commands Checklist:
 
-	change 	setRootNodeByHandle_lua  		to 	setRootNode_lua
-	change	setStage_lua 					to 	setStageByName_lua
-	change	getRootNode_lua					to	getRoot_lua
-	change	getStageHandle_lua				to	getStage_lua
-	change 	handleTabKeyPress_lua			to	doTabKeyPressForward_lua
-	change 	handleTabKeyPressReverse_lua	to	doTabKeyPressReverse_lua
+	change 	setRootNodeByHandle_lua  		to 	setRootNode_lua					**CHECK**
+	change	setStage_lua 					to 	setStageByName_lua				**CHECK**
+	change	getRootNode_lua					to	getRoot_lua						**CHECK**
+	change	getStageHandle_lua				to	getStage_lua					**CHECK**
+	change 	handleTabKeyPress_lua			to	doTabKeyPressForward_lua		**CHECK**
+	change 	handleTabKeyPressReverse_lua	to	doTabKeyPressReverse_lua		**CHECK**
 
-	add		setStage_lua (const DisplayObject& handle)
+	add		setStage_lua (const DisplayObject& handle)							**CHECK**
 
 	remove 	getRootNodePtr_lua // no need to expose raw pointer to Lua			**CHECK**
 	remove 	getFactoryStageHandle_lua // redundant and obscure					**CHECK**
@@ -49,10 +49,11 @@ namespace SDOM
 
 	// --- Stage/Root Node Management --- //
 	void setRootNodeByName_lua(const std::string& name); 
-	void setRootNodeByHandle_lua(const DisplayObject& handle); 
-	void setStage_lua(const std::string& name); 
-	DisplayObject getRootNode_lua(); 
-	DisplayObject getStageHandle_lua(); 
+	void setRootNode_lua(const DisplayObject& handle); 
+	void setStageByName_lua(const std::string& name); 
+	void setStage_lua(const DisplayObject& handle); 
+	DisplayObject getRoot_lua(); 
+	DisplayObject getStage_lua(); 
 
 	// --- Factory & EventManager Access --- //
 	bool getIsTraversing_lua(); 
@@ -62,8 +63,8 @@ namespace SDOM
 	DisplayObject createDisplayObject_lua(const std::string& typeName, const sol::table& config);    
 
 	// --- Focus & Hover Management --- //
-	void handleTabKeyPress_lua(); 			
-	void handleTabKeyPressReverse_lua(); 			
+	void doTabKeyPressForward_lua();             
+	void doTabKeyPressReverse_lua();             
 	void setKeyboardFocusedObject_lua(DisplayObject obj);  
 	DisplayObject getKeyboardFocusedObject_lua(); 
 	void setMouseHoveredObject_lua(DisplayObject obj);    

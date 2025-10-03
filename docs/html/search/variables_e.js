@@ -8,7 +8,5 @@ var searchData=
   ['preserveaspectratio_5',['preserveAspectRatio',['../structSDOM_1_1Core_1_1CoreConfig.html#a49c119fc86320fa648c4f54c6a4ded8c',1,'SDOM::Core::CoreConfig']]],
   ['priority_6',['priority',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939',1,'SDOM::IDisplayObject::InitStruct']]],
   ['propagationstopped_7',['propagationStopped',['../classSDOM_1_1Event.html#ac1e94d5db34344ef764e31633e7dcec2',1,'SDOM::Event']]],
-  ['properties_8',['properties',['../structSDOM_1_1Factory_1_1ObjectTypeRegistryEntry.html#a50a9585d93343c977d34d08bc0035105',1,'SDOM::Factory::ObjectTypeRegistryEntry']]],
-  ['propertyname_9',['propertyName',['../structSDOM_1_1Factory_1_1ObjectTypeRegistryEntry_1_1PropertyEntry.html#ad7f944fb7f2fb4e7887d3cebce478458',1,'SDOM::Factory::ObjectTypeRegistryEntry::PropertyEntry']]],
-  ['purple_10',['PURPLE',['../classCLR.html#aa4cc393e127a4f0b06e598beafa4cb3a',1,'CLR']]]
+  ['purple_8',['PURPLE',['../classCLR.html#aa4cc393e127a4f0b06e598beafa4cb3a',1,'CLR']]]
 ];

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['key_20concepts_0',['Key Concepts',['../md_docs_2exposing__hooks.html#autotoc_md89',1,'']]],
-  ['key_20features_1',['Key Features',['../md_README.html#autotoc_md173',1,'']]],
+  ['key_20features_1',['Key Features',['../md_README.html#autotoc_md189',1,'']]],
   ['keycode_5f_2',['keycode_',['../classSDOM_1_1Event.html#ad5d36d33d6ba8499825eada138bb46b7',1,'SDOM::Event']]],
   ['keydown_3',['KeyDown',['../classSDOM_1_1EventType.html#ae96a1317171583ed8a634555d756b4a9',1,'SDOM::EventType']]],
   ['keymod_5f_4',['keymod_',['../classSDOM_1_1Event.html#af3a872dc47ba1ee24660cbf978a3e7e8',1,'SDOM::Event']]],

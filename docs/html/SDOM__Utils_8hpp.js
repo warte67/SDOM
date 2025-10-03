@@ -5,7 +5,7 @@ var SDOM__Utils_8hpp =
     [ "getLua", "SDOM__Utils_8hpp.html#a1201135eb3c271921ed846aff8f922f2", null ],
     [ "getRenderer", "SDOM__Utils_8hpp.html#a713b7f2d51053c98442edc40eaaf98fb", null ],
     [ "getStage", "SDOM__Utils_8hpp.html#afb1377edb5f90095c4fadb3c9e07a3cc", null ],
-    [ "getStageHandle", "SDOM__Utils_8hpp.html#aa8357b19dc2c9d3762404cbfe285d366", null ],
+    [ "getStageHandle", "SDOM__Utils_8hpp.html#ac1da19ec9f195d3b835344992e78ef04", null ],
     [ "getTexture", "SDOM__Utils_8hpp.html#ac0f36a9f4f98d23fa1da002213470c3f", null ],
     [ "getWindow", "SDOM__Utils_8hpp.html#a8268b397b308040307a0d25fc715124f", null ],
     [ "normalizeAnchorString", "SDOM__Utils_8hpp.html#ada23a739293dfb38feadc632ee14bb9c", null ],

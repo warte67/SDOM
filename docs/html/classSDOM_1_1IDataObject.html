@@ -108,15 +108,13 @@ Inheritance diagram for SDOM::IDataObject:</div>
  <div class="center">
   <img src="classSDOM_1_1IDataObject.png" usemap="#SDOM::IDataObject_map" alt=""/>
   <map id="SDOM::IDataObject_map" name="SDOM::IDataObject_map">
-<area href="classSDOM_1_1IUnitTest.html" title="Interface for unit testing objects in SDOM." alt="SDOM::IUnitTest" shape="rect" coords="480,0,630,24"/>
-<area href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM." alt="SDOM::Core" shape="rect" coords="0,112,150,136"/>
-<area href="classSDOM_1_1DomHandle.html" alt="SDOM::DomHandle" shape="rect" coords="160,112,310,136"/>
-<area href="classSDOM_1_1Event.html" alt="SDOM::Event" shape="rect" coords="320,112,470,136"/>
-<area href="classSDOM_1_1Factory.html" alt="SDOM::Factory" shape="rect" coords="480,112,630,136"/>
-<area href="classSDOM_1_1IDisplayObject.html" alt="SDOM::IDisplayObject" shape="rect" coords="640,112,790,136"/>
-<area href="classSDOM_1_1IResourceObject.html" alt="SDOM::IResourceObject" shape="rect" coords="800,112,950,136"/>
-<area href="classSDOM_1_1ResHandle.html" alt="SDOM::ResHandle" shape="rect" coords="960,112,1110,136"/>
-<area href="classSDOM_1_1Stage.html" alt="SDOM::Stage" shape="rect" coords="640,168,790,192"/>
+<area href="classSDOM_1_1IUnitTest.html" title="Interface for unit testing objects in SDOM." alt="SDOM::IUnitTest" shape="rect" coords="296,0,434,24"/>
+<area href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM." alt="SDOM::Core" shape="rect" coords="0,112,138,136"/>
+<area href="classSDOM_1_1DisplayObject.html" alt="SDOM::DisplayObject" shape="rect" coords="148,112,286,136"/>
+<area href="classSDOM_1_1Event.html" alt="SDOM::Event" shape="rect" coords="296,112,434,136"/>
+<area href="classSDOM_1_1Factory.html" alt="SDOM::Factory" shape="rect" coords="444,112,582,136"/>
+<area href="classSDOM_1_1IDisplayObject.html" alt="SDOM::IDisplayObject" shape="rect" coords="592,112,730,136"/>
+<area href="classSDOM_1_1Stage.html" alt="SDOM::Stage" shape="rect" coords="592,168,730,192"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -146,6 +144,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1de666cd76bf2ef5c77d3b0380db55fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b23ecae5bcefe1403cc200d654e52c4" id="r_a2b23ecae5bcefe1403cc200d654e52c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a2b23ecae5bcefe1403cc200d654e52c4">registerLua</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
 <tr class="separator:a2b23ecae5bcefe1403cc200d654e52c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85fbcb21f42a7f9d1f072ddfd1c8bf0e" id="r_a85fbcb21f42a7f9d1f072ddfd1c8bf0e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a85fbcb21f42a7f9d1f072ddfd1c8bf0e">registerDisplayObject</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
+<tr class="separator:a85fbcb21f42a7f9d1f072ddfd1c8bf0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -155,8 +155,8 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a3898cdfd7bef99c8f40121eb1d9b58d4" id="r_a3898cdfd7bef99c8f40121eb1d9b58d4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a3898cdfd7bef99c8f40121eb1d9b58d4">_registerLua</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
-<tr class="separator:a3898cdfd7bef99c8f40121eb1d9b58d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a462cd9e7641a3c0251901af49c743234" id="r_a462cd9e7641a3c0251901af49c743234"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a462cd9e7641a3c0251901af49c743234">_registerDisplayObject</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
+<tr class="separator:a462cd9e7641a3c0251901af49c743234"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -229,8 +229,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3898cdfd7bef99c8f40121eb1d9b58d4" name="a3898cdfd7bef99c8f40121eb1d9b58d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3898cdfd7bef99c8f40121eb1d9b58d4">&#9670;&#160;</a></span>_registerLua()</h2>
+<a id="a462cd9e7641a3c0251901af49c743234" name="a462cd9e7641a3c0251901af49c743234"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a462cd9e7641a3c0251901af49c743234">&#9670;&#160;</a></span>_registerDisplayObject()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -239,7 +239,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SDOM::IDataObject::_registerLua </td>
+          <td class="memname">virtual void SDOM::IDataObject::_registerDisplayObject </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>typeName</em>, </td>
@@ -263,7 +263,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classSDOM_1_1Core.html#ae546381b16bc5aaf40872aac6a6ee90b">SDOM::Core</a>, <a class="el" href="classSDOM_1_1DomHandle.html#a1e24a9a15711a43f9fff36261dc4d6e1">SDOM::DomHandle</a>, <a class="el" href="classSDOM_1_1IDisplayObject.html#afb71016b8903348986aa14ce4bbdb18f">SDOM::IDisplayObject</a>, <a class="el" href="classSDOM_1_1ResHandle.html#aca8c66924d0650f723dd0d74835b3ec3">SDOM::ResHandle</a>, and <a class="el" href="classSDOM_1_1Stage.html#aa4aaa1252d92525d58074a2a16188754">SDOM::Stage</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#a64ef0caaf6471f4537e8c7a5f4590cd6">SDOM::IDisplayObject</a>, <a class="el" href="classSDOM_1_1Stage.html#a47e0462038b0c2a09e4d68283878747d">SDOM::Stage</a>, and <a class="el" href="classSDOM_1_1Core.html#a229f36eca09059753f02156aadbd7e54">SDOM::Core</a>.</p>
 
 </div>
 </div>
@@ -359,7 +359,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classSDOM_1_1Core.html#ac71a3d701929ce7d18e3cbc0eb62216c">SDOM::Core</a>, <a class="el" href="classSDOM_1_1DomHandle.html#a58868976c9aab1d0987c2f8f44b0a4ae">SDOM::DomHandle</a>, <a class="el" href="classSDOM_1_1Event.html#aa6208c66c23e9a104a6acdfe8c0ddc7a">SDOM::Event</a>, <a class="el" href="classSDOM_1_1Factory.html#aa129c7c9eea477cb39b0afa9f10f3d08">SDOM::Factory</a>, <a class="el" href="classSDOM_1_1IDisplayObject.html#aa1525c87c0e2d74e5838d69baba95ac6">SDOM::IDisplayObject</a>, <a class="el" href="classSDOM_1_1ResHandle.html#a3d82be4518c1a0deaa0b6906ea17b8d2">SDOM::ResHandle</a>, and <a class="el" href="classSDOM_1_1Stage.html#a941e6d1279fec3c6a4dea10751df4f05">SDOM::Stage</a>.</p>
+<p>Implemented in <a class="el" href="classSDOM_1_1Core.html#ac71a3d701929ce7d18e3cbc0eb62216c">SDOM::Core</a>, <a class="el" href="classSDOM_1_1DisplayObject.html#a3da364032424ec402fd966b45f91cbda">SDOM::DisplayObject</a>, <a class="el" href="classSDOM_1_1Event.html#aa6208c66c23e9a104a6acdfe8c0ddc7a">SDOM::Event</a>, <a class="el" href="classSDOM_1_1Factory.html#aa129c7c9eea477cb39b0afa9f10f3d08">SDOM::Factory</a>, <a class="el" href="classSDOM_1_1IDisplayObject.html#aa1525c87c0e2d74e5838d69baba95ac6">SDOM::IDisplayObject</a>, and <a class="el" href="classSDOM_1_1Stage.html#a941e6d1279fec3c6a4dea10751df4f05">SDOM::Stage</a>.</p>
 
 </div>
 </div>
@@ -386,7 +386,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classSDOM_1_1Core.html#ab56b5bf8eaaabca75ae8443ed6d959e3">SDOM::Core</a>, <a class="el" href="classSDOM_1_1DomHandle.html#ac7e4f4038688ad20ecbefdf5c623a9f0">SDOM::DomHandle</a>, <a class="el" href="classSDOM_1_1Event.html#a350412f6d2ec77b7d301b39b56bf8893">SDOM::Event</a>, <a class="el" href="classSDOM_1_1Factory.html#a2fecc435aebe23174442316d21ac2017">SDOM::Factory</a>, <a class="el" href="classSDOM_1_1IDisplayObject.html#a498aba902813d239ba961bc21549f2b0">SDOM::IDisplayObject</a>, <a class="el" href="classSDOM_1_1ResHandle.html#a4cc0ad7aacc5cccc2e29cfce09e3f79d">SDOM::ResHandle</a>, and <a class="el" href="classSDOM_1_1Stage.html#a155821bb6fdbe8a38825e087666399ed">SDOM::Stage</a>.</p>
+<p>Implemented in <a class="el" href="classSDOM_1_1Core.html#ab56b5bf8eaaabca75ae8443ed6d959e3">SDOM::Core</a>, <a class="el" href="classSDOM_1_1DisplayObject.html#ac82aad64149778a9e6572745206bfeac">SDOM::DisplayObject</a>, <a class="el" href="classSDOM_1_1Event.html#a350412f6d2ec77b7d301b39b56bf8893">SDOM::Event</a>, <a class="el" href="classSDOM_1_1Factory.html#a2fecc435aebe23174442316d21ac2017">SDOM::Factory</a>, <a class="el" href="classSDOM_1_1IDisplayObject.html#a498aba902813d239ba961bc21549f2b0">SDOM::IDisplayObject</a>, and <a class="el" href="classSDOM_1_1Stage.html#a155821bb6fdbe8a38825e087666399ed">SDOM::Stage</a>.</p>
 
 </div>
 </div>
@@ -418,7 +418,43 @@ template&lt;typename T &gt; </div>
 
 <p>Implements <a class="el" href="classSDOM_1_1IUnitTest.html#ae75010ac7569a312b4a7f29ba6764ad4">SDOM::IUnitTest</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>, <a class="el" href="classSDOM_1_1Core.html#ae81d8590efccffdc1164e30989b36805">SDOM::Core</a>, <a class="el" href="classSDOM_1_1DomHandle.html#aaf20ac54f5c69d6819cf31e98bcda551">SDOM::DomHandle</a>, <a class="el" href="classSDOM_1_1Factory.html#a2b4f5adfbf25ca90cc71060408134dbb">SDOM::Factory</a>, <a class="el" href="classSDOM_1_1IResourceObject.html#a4444b16928d0b922d6f727e1b59fcc87">SDOM::IResourceObject</a>, <a class="el" href="classSDOM_1_1ResHandle.html#af8e85cc67d4f8b7aba17c1c2e561f75c">SDOM::ResHandle</a>, and <a class="el" href="classSDOM_1_1Stage.html#a542cdc024058e79a821e16cef570a2bc">SDOM::Stage</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>, <a class="el" href="classSDOM_1_1Core.html#ae81d8590efccffdc1164e30989b36805">SDOM::Core</a>, <a class="el" href="classSDOM_1_1DisplayObject.html#a3b9f63e80e0721fb4eb1e081afd5791d">SDOM::DisplayObject</a>, <a class="el" href="classSDOM_1_1Factory.html#a2b4f5adfbf25ca90cc71060408134dbb">SDOM::Factory</a>, and <a class="el" href="classSDOM_1_1Stage.html#a542cdc024058e79a821e16cef570a2bc">SDOM::Stage</a>.</p>
+
+</div>
+</div>
+<a id="a85fbcb21f42a7f9d1f072ddfd1c8bf0e" name="a85fbcb21f42a7f9d1f072ddfd1c8bf0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85fbcb21f42a7f9d1f072ddfd1c8bf0e">&#9670;&#160;</a></span>registerDisplayObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void SDOM::IDataObject::registerDisplayObject </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>typeName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">sol::state_view&#160;</td>
+          <td class="paramname"><em>lua</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

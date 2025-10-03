@@ -1590,11 +1590,11 @@ namespace SDOM
                 setRootNodeByName_lua(name);
                 return sol::make_object(sv, sol::nil);
             }
-            if (maybeArg.is<DisplayObject>()) {
-                DisplayObject h = maybeArg.as<DisplayObject>();
-                setRootNodeByHandle_lua(h);
-                return sol::make_object(sv, sol::nil);
-            }
+                if (maybeArg.is<DisplayObject>()) {
+                    DisplayObject h = maybeArg.as<DisplayObject>();
+                    setRootNode_lua(h);
+                    return sol::make_object(sv, sol::nil);
+                }
             // If a table or other type was passed, try to resolve as DisplayObject
             if (maybeArg.is<sol::table>()) {
                 sol::table t = maybeArg.as<sol::table>();
@@ -1671,7 +1671,7 @@ namespace SDOM
         });
         // Expose setStage (alias) to Lua
         coreTable.set_function("setStage", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
-            sol::state_view sv = ts; setStage_lua(name); return sol::make_object(sv, sol::nil);
+            sol::state_view sv = ts; setStageByName_lua(name); return sol::make_object(sv, sol::nil);
         });
 
         coreTable.set_function("pumpEventsOnce", [](sol::this_state /*ts*/, sol::object /*self*/) {

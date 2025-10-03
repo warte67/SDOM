@@ -118,28 +118,48 @@ $(document).ready(function(){initNavTree('SDOM__UnitTests_8hpp_source.html','');
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        }</div>
 </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf">   18</a></span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf">printResult</a>(<span class="keyword">const</span> std::string&amp; testName, <span class="keywordtype">bool</span> passed) </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            std::cout &lt;&lt; <span class="stringliteral">&quot;\b\b\b\b&quot;</span>; <span class="comment">// Erase the &quot; ...&quot; part</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>            std::cout &lt;&lt; (passed ? <a class="code hl_variable" href="classCLR.html#a3003dd364e606e44a28d3bf3081f624c">CLR::GREEN</a> + <span class="stringliteral">&quot; [PASSED]&quot;</span> : <a class="code hl_function" href="classCLR.html#a2c2e1040458c8b4f88be7b0e68999faa">CLR::fg_rgb</a>(255, 0, 0) + <span class="stringliteral">&quot; [FAILED]&quot;</span>) &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        }</div>
-</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="comment">// A helper to run and print a test</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Func&gt;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="comment">// static void printTest(const std::string&amp; objName, const std::string&amp; testName) </span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="comment">// {</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="comment">//     std::cout &lt;&lt; CLR::indent() &lt;&lt; CLR::LT_BLUE &lt;&lt; &quot;[&quot; &lt;&lt; objName &lt;&lt; &quot;] &quot; &lt;&lt; CLR::LT_BLUE &lt;&lt; testName &lt;&lt; &quot; &quot;;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="comment">//     CLR::get_cursor_pos(UnitTests::_saved_row, UnitTests::_saved_col);</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="comment">//     std::cout &lt;&lt; &quot;...&quot; &lt;&lt; CLR::RESET;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="comment">//     fflush(stdout); // Ensure immediate output</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="comment">// }</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="foldopen" id="foldopen00026" data-start="{" data-end="}">
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712">   26</a></span>        <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712">run</a>(<span class="keyword">const</span> std::string&amp; objName, <span class="keyword">const</span> std::string&amp; testName, Func&amp;&amp; testFunc) </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf">   26</a></span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf">printResult</a>(<span class="keyword">const</span> std::string&amp; testName, <span class="keywordtype">bool</span> passed) </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            <a class="code hl_function" href="classSDOM_1_1UnitTests.html#a39fad7caf8610114afc0ec5116103565">printTest</a>(objName, testName);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            <span class="keywordtype">bool</span> result = testFunc();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            <a class="code hl_function" href="classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf">printResult</a>(testName, result);</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            <span class="keywordflow">return</span> result;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        }</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            std::cout &lt;&lt; <span class="stringliteral">&quot;\b\b\b\b&quot;</span>; <span class="comment">// Erase the &quot; ...&quot; part</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            std::cout &lt;&lt; (passed ? <a class="code hl_variable" href="classCLR.html#a3003dd364e606e44a28d3bf3081f624c">CLR::GREEN</a> + <span class="stringliteral">&quot; [PASSED]&quot;</span> : <a class="code hl_function" href="classCLR.html#a2c2e1040458c8b4f88be7b0e68999faa">CLR::fg_rgb</a>(255, 0, 0) + <span class="stringliteral">&quot; [FAILED]&quot;</span>) &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        }</div>
 </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    };</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="comment">// static void printResult(const std::string&amp; testName, bool passed) </span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="comment">// {</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="comment">//     CLR::save_cursor();</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="comment">//     CLR::set_cursor_pos(UnitTests::_saved_row, UnitTests::_saved_col);</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="comment">//     std::cout &lt;&lt; (passed ? CLR::GREEN + &quot; [PASSED]&quot; : CLR::fg_rgb(255, 0, 0) + &quot; [FAILED]&quot;) &lt;&lt; CLR::RESET &lt;&lt; std::endl;</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="comment">//     CLR::restore_cursor();</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="comment">// }</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="comment">// A helper to run and print a test</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Func&gt;</div>
+<div class="foldopen" id="foldopen00042" data-start="{" data-end="}">
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712">   42</a></span>        <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712">run</a>(<span class="keyword">const</span> std::string&amp; objName, <span class="keyword">const</span> std::string&amp; testName, Func&amp;&amp; testFunc) </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            <a class="code hl_function" href="classSDOM_1_1UnitTests.html#a39fad7caf8610114afc0ec5116103565">printTest</a>(objName, testName);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <span class="keywordtype">bool</span> result = testFunc();</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <a class="code hl_function" href="classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf">printResult</a>(testName, result);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            <span class="keywordflow">return</span> result;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        }</div>
 </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>} <span class="comment">// namespace SDOM</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">static</span> <span class="keywordtype">int</span> _saved_row;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keyword">static</span> <span class="keywordtype">int</span> _saved_col;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    };</div>
+</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>} <span class="comment">// namespace SDOM</span></div>
 <div class="ttc" id="aSDOM_8hpp_html"><div class="ttname"><a href="SDOM_8hpp.html">SDOM.hpp</a></div></div>
 <div class="ttc" id="aclassCLR_html_a21785b8bf79fa4970182cdb2dcab57c8"><div class="ttname"><a href="classCLR.html#a21785b8bf79fa4970182cdb2dcab57c8">CLR::indent</a></div><div class="ttdeci">static std::string indent()</div><div class="ttdoc">Returns spaces for the current indentation level.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:367</div></div>
 <div class="ttc" id="aclassCLR_html_a2c2e1040458c8b4f88be7b0e68999faa"><div class="ttname"><a href="classCLR.html#a2c2e1040458c8b4f88be7b0e68999faa">CLR::fg_rgb</a></div><div class="ttdeci">static const std::string fg_rgb(Byte r, Byte g, Byte b)</div><div class="ttdoc">Returns ANSI escape sequence to set 24-bit (RGB) foreground color.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:109</div></div>
@@ -147,9 +167,9 @@ $(document).ready(function(){initNavTree('SDOM__UnitTests_8hpp_source.html','');
 <div class="ttc" id="aclassCLR_html_a3870d8fb9704714a9b5d35631a67be74"><div class="ttname"><a href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a></div><div class="ttdeci">static const std::string RESET</div><div class="ttdoc">ANSI escape sequence to reset formatting.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:245</div></div>
 <div class="ttc" id="aclassCLR_html_ac9c88a575b06a832e68fe8d62c45135c"><div class="ttname"><a href="classCLR.html#ac9c88a575b06a832e68fe8d62c45135c">CLR::LT_BLUE</a></div><div class="ttdeci">static const std::string LT_BLUE</div><div class="ttdoc">ANSI escape sequence for light blue foreground.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:279</div></div>
 <div class="ttc" id="aclassSDOM_1_1UnitTests_html"><div class="ttname"><a href="classSDOM_1_1UnitTests.html">SDOM::UnitTests</a></div><div class="ttdef"><b>Definition</b> SDOM_UnitTests.hpp:10</div></div>
-<div class="ttc" id="aclassSDOM_1_1UnitTests_html_a34bb6f0262e356d47013b97a674782bf"><div class="ttname"><a href="classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf">SDOM::UnitTests::printResult</a></div><div class="ttdeci">static void printResult(const std::string &amp;testName, bool passed)</div><div class="ttdef"><b>Definition</b> SDOM_UnitTests.hpp:18</div></div>
+<div class="ttc" id="aclassSDOM_1_1UnitTests_html_a34bb6f0262e356d47013b97a674782bf"><div class="ttname"><a href="classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf">SDOM::UnitTests::printResult</a></div><div class="ttdeci">static void printResult(const std::string &amp;testName, bool passed)</div><div class="ttdef"><b>Definition</b> SDOM_UnitTests.hpp:26</div></div>
 <div class="ttc" id="aclassSDOM_1_1UnitTests_html_a39fad7caf8610114afc0ec5116103565"><div class="ttname"><a href="classSDOM_1_1UnitTests.html#a39fad7caf8610114afc0ec5116103565">SDOM::UnitTests::printTest</a></div><div class="ttdeci">static void printTest(const std::string &amp;objName, const std::string &amp;testName)</div><div class="ttdef"><b>Definition</b> SDOM_UnitTests.hpp:12</div></div>
-<div class="ttc" id="aclassSDOM_1_1UnitTests_html_a70d3dcdfb8d5d04548612a13e822c712"><div class="ttname"><a href="classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712">SDOM::UnitTests::run</a></div><div class="ttdeci">static bool run(const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)</div><div class="ttdef"><b>Definition</b> SDOM_UnitTests.hpp:26</div></div>
+<div class="ttc" id="aclassSDOM_1_1UnitTests_html_a70d3dcdfb8d5d04548612a13e822c712"><div class="ttname"><a href="classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712">SDOM::UnitTests::run</a></div><div class="ttdeci">static bool run(const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)</div><div class="ttdef"><b>Definition</b> SDOM_UnitTests.hpp:42</div></div>
 <div class="ttc" id="anamespaceSDOM_html"><div class="ttname"><a href="namespaceSDOM.html">SDOM</a></div><div class="ttdoc">Contains all core classes and utilities for the SDOM library.</div><div class="ttdef"><b>Definition</b> lua_Core.hpp:8</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -179,10 +179,11 @@ namespace SDOM
 
 	// --- Stage/Root Node Management --- //
 	void setRootNodeByName_lua(const std::string& name) { Core::getInstance().setRootNode(name); }
-	void setRootNodeByHandle_lua(const DisplayObject& handle) { Core::getInstance().setRootNode(handle); }
-	void setStage_lua(const std::string& name) { Core::getInstance().setStage(name); }
-	DisplayObject getRootNode_lua() { return Core::getInstance().getRootNode(); }
-	DisplayObject getStageHandle_lua() { return Core::getInstance().getStageHandle(); }
+	void setRootNode_lua(const DisplayObject& handle) { Core::getInstance().setRootNode(handle); }
+	void setStageByName_lua(const std::string& name) { Core::getInstance().setStage(name); }
+	DisplayObject getRoot_lua() { return Core::getInstance().getRootNode(); }
+	DisplayObject getStage_lua() { return Core::getInstance().getStageHandle(); }
+	void setStage_lua(const DisplayObject& handle) { Core::getInstance().setRootNode(handle); }
 
 	// --- Factory & EventManager Access --- //
 	bool getIsTraversing_lua() { return Core::getInstance().getIsTraversing(); }
@@ -194,8 +195,8 @@ namespace SDOM
 	}
 
 	// --- Focus & Hover Management --- //
-	void handleTabKeyPress_lua() { Core::getInstance().handleTabKeyPress(); }
-	void handleTabKeyPressReverse_lua() { Core::getInstance().handleTabKeyPressReverse(); }
+	void doTabKeyPressForward_lua() { Core::getInstance().handleTabKeyPress(); }
+	void doTabKeyPressReverse_lua() { Core::getInstance().handleTabKeyPressReverse(); }
 	void setKeyboardFocusedObject_lua(DisplayObject obj) { Core::getInstance().setKeyboardFocusedObject(obj); }
 	DisplayObject getKeyboardFocusedObject_lua() { return Core::getInstance().getKeyboardFocusedObject(); }
 	void setMouseHoveredObject_lua(DisplayObject obj) { Core::getInstance().setMouseHoveredObject(obj); }

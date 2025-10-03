@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['reshandle_0',['ResHandle',['../classSDOM_1_1ResHandle.html',1,'SDOM']]]
+  ['unittests_0',['UnitTests',['../classSDOM_1_1UnitTests.html',1,'SDOM']]]
 ];

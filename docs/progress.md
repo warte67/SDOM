@@ -367,6 +367,26 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Prevented duplicate children by name during attachment and added dedupe in sortChildrenByPriority (keeps most‑recent entry).
         - Improved setParent bookkeeping (remove old entries, preserve world bounds, add to new parent), and reduced duplicate insertion regressions.
         - Added Lua overloads for priority/z‑order helpers (accept numeric and table descriptor forms) to match test call shapes.
+    - Identifier updates (bindings & Lua surface):
+        - Performed a sweep of function identifier changes to simplify the Lua/C++ surface and improve consistency:
+            - Renamed (old → new):
+                - getDisplayObjectHandle → getDisplayObject
+                - getStageHandle_lua → getStage_lua
+                - getRootNode_lua → getRoot_lua
+                - setRootNodeByHandle_lua → setRootNode_lua
+                - setStage_lua → setStageByName_lua
+                - handleTabKeyPress_lua → doTabKeyPressForward_lua
+                - handleTabKeyPressReverse_lua → doTabKeyPressReverse_lua
+            - Added:
+                - setStage_lua(const DisplayObject& handle) — set stage by handle (Lua helper)
+                - setRootNode_lua(const DisplayObject& handle) — helper for root node by handle
+                - permissive Lua overloads for addEventListener / removeEventListener (table descriptor + typed args)
+            - Removed / consolidated:
+                - Legacy getDisplayObjectHandle Lua mapping (removed in favor of getDisplayObject)
+                - getRootNodePtr_lua and other raw-pointer helpers (no raw pointer exposure to Lua)
+        - Compatibility & notes:
+            - Where practical, compatibility shims were left or added briefly (inline forwards) to prevent immediate breakage; these can be removed once downstream scripts are updated.
+            - Global `Core` is now consistently exposed as a forwarding table (CoreForward) for predictable colon/dot call semantics; Core userdata remains registered but is not the global to avoid dispatch ambiguity.
     - Build & CI fixes:
         - Restored minimal Factory/Core forwarding stubs for deprecated introspection APIs to resolve linker errors during refactors.
         - Rebuilt and validated examples/test/prog — full unit test suite passes on local runs after fixes.
