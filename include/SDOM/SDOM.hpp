@@ -69,6 +69,12 @@
 
 constexpr bool DEBUG_REGISTER_LUA = true;
 
+// Enable verbose Lua-related test/info logs when set to 1. Default is off.
+#ifndef DEBUG_LUA_TESTS
+#define DEBUG_LUA_TESTS 0
+#endif
+
+
 
 
 /**
@@ -367,6 +373,9 @@ namespace SDOM
     std::ostringstream _sdom_dbg_oss; \
     _sdom_dbg_oss << __VA_ARGS__; \
     std::cout << CLR::YELLOW << "[INFO] " << (_sdom_dbg_oss.str()) << CLR::RESET << std::endl; } while(0)
+
+// Lua-specific informational logging (only active when DEBUG_LUA_TESTS == 1)
+#define LUA_INFO(...) do { if (DEBUG_LUA_TESTS) { std::ostringstream _sdom_lua_dbg_oss; _sdom_lua_dbg_oss << __VA_ARGS__; std::cout << CLR::YELLOW << "[LUA-INFO] " << (_sdom_lua_dbg_oss.str()) << CLR::RESET << std::endl; } } while(0)
 
 /**
  * @brief Logs a debug error (non-fatal) with file and line info in dark text.

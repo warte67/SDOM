@@ -964,7 +964,7 @@ namespace SDOM
 
         if (stopAfterUnitTests_==true)
         {
-            INFO("Core: stopping main loop after unit tests.");
+            LUA_INFO("Core: stopping main loop after unit tests.");
             bIsRunning_ = false; // signal to stop the main loop after unit tests
         }
 

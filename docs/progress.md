@@ -330,12 +330,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Verified that all mouse-related unit tests (including Lua-driven synthetic click and hover tests) now pass in both environments.
         - Improved event queue draining in `Core::pumpEventsOnce()` to ensure all queued events are dispatched before returning, eliminating timing issues in Lua event handler tests.
         - Added diagnostic logging to synthetic event helpers and event handlers for easier debugging and verification of coordinate mapping and event flow.
-
     - **Unit Test Reliability:**
         - Addressed timing issues in Lua unit tests by polling for event handler completion, ensuring tests do not return before handlers are invoked.
         - Confirmed that both Lua and C++ unit tests pass consistently across different compositors and window manager modes.
         - Documented best practices for synthetic event testing and event queue management.
-
     - **Documentation & Debugging:**
         - Updated documentation to reflect recent changes in event dispatch, Lua bindings, and synthetic event handling.
         - Added notes and troubleshooting tips for running tests under different window managers (floating vs. tiled).
@@ -352,31 +350,34 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
             - `SDL_Utils` still exposes `eventToLuaTable` as a Lua helper table (`SDL`/`SDL_Utils`) for direct use; `Event::registerLua()` uses the C++ helper internally for the `sdl` property.
             - Example update: `examples/test/lua/callbacks/listener_callbacks.lua` was adjusted to colorize the "target:" label using the DomHandle `getColor()` Lua binding and `CLR.fg_rgb(r,g,b)`; the code uses `pcall` fallbacks so it degrades gracefully when color or handle info is unavailable.
             - Verified: rebuilt the examples and test binary after these changes (`./compile` in `examples/test`) — build completed and `prog` produced successfully.
----
-- ### [October 2, 2025]
-    - **Synthetic Event Handling Robustness:**
-        - Refined synthetic mouse event generation and dispatch to work reliably in both floating and tiled window manager modes.
-        - Ensured all synthetic events use `SDL_RenderCoordinatesToWindow()` for correct mapping from logical to window coordinates, fixing previous issues with negative or out-of-bounds coordinates.
-        - Updated Lua and C++ event helpers to guarantee robust event delivery and handler invocation.
-        - Verified that all mouse-related unit tests (including Lua-driven synthetic click and hover tests) now pass in both environments.
-        - Improved event queue draining in `Core::pumpEventsOnce()` to ensure all queued events are dispatched before returning, eliminating timing issues in Lua event handler tests.
-        - Added diagnostic logging to synthetic event helpers and event handlers for easier debugging and verification of coordinate mapping and event flow.
-    - **Unit Test Reliability:**
-        - Addressed timing issues in Lua unit tests by polling for event handler completion, ensuring tests do not return before handlers are invoked.
-        - Confirmed that both Lua and C++ unit tests pass consistently across different compositors and window manager modes.
-        - Documented best practices for synthetic event testing and event queue management.
-    - **Documentation & Debugging:**
-        - Updated documentation to reflect recent changes in event dispatch, Lua bindings, and synthetic event handling.
-        - Added notes and troubleshooting tips for running tests under different window managers (floating vs. tiled).
-        - Improved error reporting and debug output for configuration loading and Lua script execution.
-    - **Short-term TODO (next steps)**
-            - UnitTest modules for `EventType` and `Event` has been scaffolded. Ready to start implementing comprehensive testing.
-            - Expand Event Lua binding (mouse_x, mouse_y, button, payload, stopPropagation, disableDefaultBehavior).
-            - Expand Event Lua binding (remaining helpers / convenience accessors) — largely done (see Oct 1, 2025); consider adding `getPayloadValue`/`setPayloadValue` Lua helpers if desired.
-            - Consider adding an API so dispatch returns status (or a shared/inspectable Event) allowing listeners to cancel core default
-            - Add unit tests validating lifecycle-event delivery (including orphaned objects).
-            - Add runtime debug toggle (Core::setDebugEnabled or similar) to control DEBUG_LOG without recompilation.
-            - Clean up Core: registerLua() and IDisplayObject::registerLua() be quite a lot more organized and maintainable.
+---   
+- ### [October 3, 2025]
+    - Cleaned up noisy debug output across the codebase:
+        - Replaced ad-hoc std::cout dbg prints with DEBUG_LOG and gated test‑only logs behind a new DEBUG_LUA_TESTS / LUA_INFO wrapper.
+        - Converted recent INFO() diagnostics used for Lua testing to LUA_INFO so they are off by default.
+    - Stabilized and hardened Lua bindings and factory behavior:
+        - Exposed Bounds as a proper sol2 usertype so Lua can read/write edges and call width()/height().
+        - Ensured SDL_Color and other helper types are Lua‑friendly.
+        - Enforced unique display object names in Factory (creation now throws on duplicates); updated unit tests to catch the exception.
+    - Fixed event / synthetic event issues and test timing:
+        - Pump loop improved to drain the event queue completely before returning, removing timing races in Lua tests.
+        - Synthetic mouse events now use SDL_RenderCoordinatesToWindow and hit‑testing was verified; added targeted instrumentation to confirm coordinate mapping and top‑hit selection.
+        - Mouse hover unit test (Lua #19) diagnostic instrumentation added and the failing hover test was fixed.
+    - Display object / hierarchy fixes:
+        - Prevented duplicate children by name during attachment and added dedupe in sortChildrenByPriority (keeps most‑recent entry).
+        - Improved setParent bookkeeping (remove old entries, preserve world bounds, add to new parent), and reduced duplicate insertion regressions.
+        - Added Lua overloads for priority/z‑order helpers (accept numeric and table descriptor forms) to match test call shapes.
+    - Build & CI fixes:
+        - Restored minimal Factory/Core forwarding stubs for deprecated introspection APIs to resolve linker errors during refactors.
+        - Rebuilt and validated examples/test/prog — full unit test suite passes on local runs after fixes.
+    - Developer ergonomics:
+        - Added DEBUG_LUA_TESTS macro and CMake toggle guidance so Lua test diagnostics can be enabled without editing source.
+        - Left controlled registration logging (DEBUG_REGISTER_LUA) for binding diagnostics.
+    - Next steps:
+        - Finalize remaining small cleanups (remove remaining legacy debug guards).
+        - Add an OrphanRetentionPolicy proof-of-concept and unit tests for orphan collection. 
+        - Consolidate Lua binding idempotency checks and add a CI job that runs the examples/test suite.
+
 
 ---
 ## Garbage Collection / Orphan Retention

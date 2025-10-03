@@ -164,12 +164,12 @@ namespace SDOM
             try {
                 std::ostringstream dbg;
                 dbg << "attachChild_: parent='" << parent->getName() << "' child='" << p_child.getName() << "' children_before=" << parentChildren.size() << " nameExists=" << (nameExists?"1":"0");
-                INFO(dbg.str());
+                LUA_INFO(dbg.str());
             } catch(...) {}
 
             if (it == parentChildren.end() && !nameExists) 
             {
-                try { std::ostringstream dbg; dbg << "attachChild_: pushing child='" << p_child.getName() << "' to parent='" << parent->getName() << "'"; INFO(dbg.str()); } catch(...) {}
+                    try { std::ostringstream dbg; dbg << "attachChild_: pushing child='" << p_child.getName() << "' to parent='" << parent->getName() << "'"; LUA_INFO(dbg.str()); } catch(...) {}
                 // Record world edges BEFORE changing parent
                 float leftWorld = child->getLeft();
                 float rightWorld = child->getRight();
@@ -183,9 +183,9 @@ namespace SDOM
                 if (it_after == parentChildren.end()) {
                     parentChildren.push_back(p_child);
                 } else {
-                    try { std::ostringstream dbg; dbg << "attachChild_: setParent already added child='" << p_child.getName() << "' to parent='" << parent->getName() << "'"; INFO(dbg.str()); } catch(...) {}
+                    try { std::ostringstream dbg; dbg << "attachChild_: setParent already added child='" << p_child.getName() << "' to parent='" << parent->getName() << "'"; LUA_INFO(dbg.str()); } catch(...) {}
                 }
-                try { std::ostringstream dbg; dbg << "attachChild_: children_after=" << parentChildren.size() << " parent='" << parent->getName() << "'"; INFO(dbg.str()); } catch(...) {}
+                try { std::ostringstream dbg; dbg << "attachChild_: children_after=" << parentChildren.size() << " parent='" << parent->getName() << "'"; LUA_INFO(dbg.str()); } catch(...) {}
 
                 if (useWorld)
                 {
@@ -571,7 +571,7 @@ namespace SDOM
                 try { oss << (ch ? ch.getName() : std::string("<null>")) << ":" << (ch ? std::to_string(ch.get()->getPriority()) : std::string("0")) << ","; } catch(...) { oss << "<err>"; }
             }
             oss << "]";
-            INFO(oss.str());
+            LUA_INFO(oss.str());
         } catch(...) {}
 
         // Deduplicate children by name: keep the most-recent occurrence (last in vector)
@@ -607,7 +607,7 @@ namespace SDOM
                 try { oss << (ch ? ch.getName() : std::string("<null>")) << ":" << (ch ? std::to_string(ch.get()->getPriority()) : std::string("0")) << ","; } catch(...) { oss << "<err>"; }
             }
             oss << "]";
-            INFO(oss.str());
+            LUA_INFO(oss.str());
         } catch(...) {}
 
         // Sort by priority (ascending)
@@ -626,7 +626,7 @@ namespace SDOM
                 try { oss << (ch ? ch.getName() : std::string("<null>")) << ":" << (ch ? std::to_string(ch.get()->getPriority()) : std::string("0")) << ","; } catch(...) { oss << "<err>"; }
             }
             oss << "]";
-            INFO(oss.str());
+            LUA_INFO(oss.str());
         } catch(...) {}
         return *this;
     }

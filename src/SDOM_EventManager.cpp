@@ -368,16 +368,16 @@ namespace SDOM
     getCore().setMouseHoveredObject(topObject);
     // Debug info: log converted stage coordinates and which object was chosen as hovered
     try {
-        INFO("EventManager::Queue_SDL_Event: stage mouse coords=(" << stage->mouseX << "," << stage->mouseY << ") sdl.motion.x=" << sdlEvent.motion.x << " sdl.motion.y=" << sdlEvent.motion.y);
+    LUA_INFO("EventManager::Queue_SDL_Event: stage mouse coords=(" << stage->mouseX << "," << stage->mouseY << ") sdl.motion.x=" << sdlEvent.motion.x << " sdl.motion.y=" << sdlEvent.motion.y);
     } catch(...) {}
     if (topObject) {
         try {
-            INFO("EventManager::Queue_SDL_Event: topObject='" << topObject->getName() << "' type='" << topObject->getType() << "' z=" << topObject->getZOrder() << " priority=" << topObject->getPriority());
+            LUA_INFO("EventManager::Queue_SDL_Event: topObject='" << topObject->getName() << "' type='" << topObject->getType() << "' z=" << topObject->getZOrder() << " priority=" << topObject->getPriority());
         } catch(...) {
-            INFO("EventManager::Queue_SDL_Event: topObject=<unnamed>");
+            LUA_INFO("EventManager::Queue_SDL_Event: topObject=<unnamed>");
         }
     } else {
-        INFO("EventManager::Queue_SDL_Event: topObject=<null>");
+    LUA_INFO("EventManager::Queue_SDL_Event: topObject=<null>");
     }
 
         // alias the SDL_EventType for ease of use:
