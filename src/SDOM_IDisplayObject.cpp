@@ -1015,8 +1015,18 @@ namespace SDOM
     objHandleType.set_function("printTree", &::SDOM::printTree_lua);
 
         // Event handling (wrappers expect: IDisplayObject*, EventType&, sol::function, bool, int)
-    objHandleType.set_function("addEventListener", &::SDOM::addEventListener_lua);
-    objHandleType.set_function("removeEventListener", &::SDOM::removeEventListener_lua);
+    // Accept either the typed signature or a flexible Lua table/function descriptor
+    objHandleType.set_function("addEventListener", sol::overload(
+        static_cast<void(*)(IDisplayObject*, EventType&, sol::function, bool, int)>(&::SDOM::addEventListener_lua),
+        static_cast<void(*)(IDisplayObject*, const sol::object&, const sol::object&, const sol::object&, const sol::object&)>(&::SDOM::addEventListener_lua_any),
+        static_cast<void(*)(IDisplayObject*, const sol::object&)>(&::SDOM::addEventListener_lua_any_short)
+    ));
+
+    objHandleType.set_function("removeEventListener", sol::overload(
+        static_cast<void(*)(IDisplayObject*, EventType&, sol::function, bool)>(&::SDOM::removeEventListener_lua),
+        static_cast<void(*)(IDisplayObject*, const sol::object&, const sol::object&, const sol::object&)>(&::SDOM::removeEventListener_lua_any),
+        static_cast<void(*)(IDisplayObject*, const sol::object&)>(&::SDOM::removeEventListener_lua_any_short)
+    ));
 
         // Hierarchy management
     objHandleType.set_function("addChild", &::SDOM::addChild_lua);

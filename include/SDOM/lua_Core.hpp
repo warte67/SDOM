@@ -65,7 +65,7 @@ namespace SDOM
 	void pushKeyboardEvent_lua(const sol::object& args); // **verified**
 
 	// --- Object Lookup --- //
-	DisplayObject getDisplayObjectHandle_lua(const std::string& name); // **verified**
+	DisplayObject getDisplayObject_lua(const std::string& name); // **verified**
 	DisplayObject getFactoryStageHandle_lua(); // **verified**
 	bool hasDisplayObject_lua(const std::string& name); // **verified**
 

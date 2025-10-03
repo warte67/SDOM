@@ -331,7 +331,7 @@ namespace SDOM
             local maxv = nil
             for i,v in ipairs(pr2) do if v and v ~= 0 then if not maxv or v > maxv then maxv = v end end end
             if not maxv then return { ok = false, err = 'no nonzero priorities after setToHighest' } end
-            if not (maxv == Core:getDisplayObjectHandle('s2'):getPriority()) then return { ok = false, err = 'setToHighest failed' } end
+            if not (maxv == Core:getDisplayObject('s2'):getPriority()) then return { ok = false, err = 'setToHighest failed' } end
 
         -- setToLowest on child 's3' via parent
             st:setToLowestPriority({ child = 's3' })
@@ -342,7 +342,7 @@ namespace SDOM
             local minv = nil
             for i,v in ipairs(pr3) do if v and v ~= 0 then if not minv or v < minv then minv = v end end end
             if not minv then return { ok = false, err = 'no nonzero priorities after setToLowest' } end
-            if not (minv == Core:getDisplayObjectHandle('s3'):getPriority()) then return { ok = false, err = 'setToLowest failed' } end
+            if not (minv == Core:getDisplayObject('s3'):getPriority()) then return { ok = false, err = 'setToLowest failed' } end
 
         -- cleanup
             Core:destroyDisplayObject('s1')

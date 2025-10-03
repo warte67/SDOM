@@ -22,7 +22,7 @@ namespace SDOM
 
         // Test: Retrieve existing stage "mainStage"
         testResult = UnitTests::run("Stage #1", "Retrieve 'mainStage'", [factory]() {
-            DisplayObject stageHandle = factory->getDisplayObjectHandle("mainStage");
+            DisplayObject stageHandle = factory->getDisplayObject("mainStage");
             return (stageHandle && dynamic_cast<Stage*>(stageHandle.get()) != nullptr);
         });
         if (!testResult) { std::cout << CLR::indent() << "Failed to retrieve 'mainStage'!" << CLR::RESET << std::endl; }
@@ -30,7 +30,7 @@ namespace SDOM
 
         // Test: Retrieve non-existing stage "nonExistentStage"
         testResult = UnitTests::run("Stage #2", "Retrieve non-existent stage", [factory]() {
-            DisplayObject stageHandle = factory->getDisplayObjectHandle("nonExistentStage");
+            DisplayObject stageHandle = factory->getDisplayObject("nonExistentStage");
             return (stageHandle == nullptr);
         });
         if (!testResult) { std::cout << CLR::indent() << "Non-existent stage retrieval did not return nullptr!" << CLR::RESET << std::endl; }
@@ -57,7 +57,7 @@ namespace SDOM
         // Test: Set stage to "stageTwo" using setRootNode with DisplayObject
         std::string newStage = "stageTwo";
         testResult = UnitTests::run("Stage #4", "Set root stage to '" + newStage + "' using DisplayObject", [&core, factory, &dbgStr, newStage]() {
-            DisplayObject stageTwoHandle = factory->getDisplayObjectHandle(newStage);
+            DisplayObject stageTwoHandle = factory->getDisplayObject(newStage);
             if (stageTwoHandle && dynamic_cast<Stage*>(stageTwoHandle.get()))
             {
                 core.setRootNode(stageTwoHandle);

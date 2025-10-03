@@ -208,7 +208,7 @@ namespace SDOM
 	float getElapsedTime_lua() { return Core::getInstance().getElapsedTime(); }
 
 	// --- Object Lookup --- //
-	DisplayObject getDisplayObjectHandle_lua(const std::string& name) { return Core::getInstance().getDisplayObjectHandle(name); }
+	DisplayObject getDisplayObject_lua(const std::string& name) { return Core::getInstance().getDisplayObject(name); }
 	DisplayObject getFactoryStageHandle_lua() { return Core::getInstance().getFactoryStageHandle(); }
 	bool hasDisplayObject_lua(const std::string& name) { return Core::getInstance().hasDisplayObject(name); }
 

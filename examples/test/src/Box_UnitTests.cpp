@@ -366,13 +366,13 @@ namespace SDOM
                 return false;
             }
             bool allTestsPassed = true; 
-            DisplayObject greenBox = getFactory().getDisplayObjectHandle("greenBox");
-            DisplayObject redBox   = getFactory().getDisplayObjectHandle("redBox");
-            DisplayObject orangeBox= getFactory().getDisplayObjectHandle("orangeBox");
-            DisplayObject blueBox  = getFactory().getDisplayObjectHandle("blueBox");
+            DisplayObject greenBox = getFactory().getDisplayObject("greenBox");
+            DisplayObject redBox   = getFactory().getDisplayObject("redBox");
+            DisplayObject orangeBox= getFactory().getDisplayObject("orangeBox");
+            DisplayObject blueBox  = getFactory().getDisplayObject("blueBox");
 
             getFactory().destroyDisplayObject("greenBox");            
-            DisplayObject handle = getFactory().getDisplayObjectHandle("greenBox");
+            DisplayObject handle = getFactory().getDisplayObject("greenBox");
             if (handle)    
             {
                 std::cout << "\ngreenBox was NOT successfully removed from factory." << std::endl;

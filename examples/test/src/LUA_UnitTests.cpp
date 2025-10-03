@@ -33,7 +33,7 @@ namespace SDOM {
                 width = 200, height = 100,
                 color = { r = 96, g = 0, b = 96, a = 255 }
             })
-        return Core:getDisplayObjectHandle("myBox")
+    return Core:getDisplayObject("myBox")
         )");
         myBoxHandle = handle_obj.as<DisplayObject>();
         bool box_exists = myBoxHandle.isValid();
@@ -56,7 +56,7 @@ namespace SDOM {
     bool test3_Lua() {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool destroyed = lua.script(R"(
-        local boxHandle = Core:getDisplayObjectHandle("myBox")
+            local boxHandle = Core:getDisplayObject("myBox")
             local valid = boxHandle:isValid()
             if valid then
                 Core:destroyDisplayObject("myBox")
@@ -170,7 +170,7 @@ namespace SDOM {
         Box::resetTestClickCount();
 
         // Determine blueishBox center from the object in the factory
-        DisplayObject box = Core::getInstance().getDisplayObjectHandle("blueishBox");
+    DisplayObject box = Core::getInstance().getDisplayObject("blueishBox");
         if (!box) return UnitTests::run("Lua #8", "Verify synthetic MouseClick triggers Box listener", [](){ return false; });
 
         int cx = box->getX() + box->getWidth() / 2;
@@ -265,7 +265,7 @@ namespace SDOM {
         Box::resetTestClickCount();
 
         // Ensure blueishBox exists and is on the stage
-        DisplayObject box = Core::getInstance().getDisplayObjectHandle("blueishBox");
+    DisplayObject box = Core::getInstance().getDisplayObject("blueishBox");
         if (!box) return UnitTests::run("Lua: # 9", "Lua-only event handler + synthetic click", [](){ return false; });
 
         // Build and run Lua script that attaches a listener and synthesizes a click
@@ -274,7 +274,7 @@ namespace SDOM {
             -- print("\ntest9_lua: registering Lua event listener on blueishBox and synthesizing click...")
 
             local clicked = false
-            local bh = Core:getDisplayObjectHandle("blueishBox")
+            local bh = Core:getDisplayObject("blueishBox")
             if not bh then 
                 -- print("test9_lua: ERROR - could not get blueishBox handle!")
                 return false 
@@ -342,7 +342,7 @@ namespace SDOM {
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool s = lua.script(R"(
-        local h = Core:getDisplayObjectHandle('stageThree')
+    local h = Core:getDisplayObject('stageThree')
             if not h then return false end
             Core:setRootNode(h)
             local cur = Core:getStageHandle()
@@ -477,8 +477,8 @@ namespace SDOM {
         bool ok = lua.script(R"(
             local st = Core:getStageHandle()
             if not st then return false end
-        local a = Core:getDisplayObjectHandle('focusA')
-        local b = Core:getDisplayObjectHandle('focusB')
+    local a = Core:getDisplayObject('focusA')
+    local b = Core:getDisplayObject('focusB')
             -- Remove if present
             if a and st:hasChild(a) then st:removeChild(a) end
             if b and st:hasChild(b) then st:removeChild(b) end
@@ -540,7 +540,7 @@ namespace SDOM {
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool ok = lua.script(R"(
-        local bh = Core:getDisplayObjectHandle('blueishBox')
+    local bh = Core:getDisplayObject('blueishBox')
             if not bh then return false end
             local cx = bh:getX() + bh:getWidth() / 2
             local cy = bh:getY() + bh:getHeight() / 2

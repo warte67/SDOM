@@ -43,6 +43,113 @@ namespace SDOM
         }, useCapture);
     }
 
+    // Flexible variant: accepts either a table descriptor or (EventType, function, [useCapture], [priority])
+    void addEventListener_lua_any(IDisplayObject* obj, const sol::object& descriptor, const sol::object& maybe_listener, const sol::object& maybe_useCapture, const sol::object& maybe_priority) {
+        if (!obj) return;
+        sol::state_view lua = descriptor.lua_state();
+
+        EventType* et = nullptr;
+        sol::function listener;
+        bool useCapture = false;
+        int priority = 0;
+
+        // If descriptor is a table, parse fields: type, listener, useCapture, priority
+        if (descriptor.is<sol::table>()) {
+            sol::table t = descriptor.as<sol::table>();
+            sol::object t_type = t.get<sol::object>("type");
+            if (t_type.valid()) {
+                // Try EventType userdata first
+                try { et = t_type.as<EventType*>(); } catch(...) { et = nullptr; }
+                if (!et && t_type.is<std::string>()) {
+                    try {
+                        std::string tn = t_type.as<std::string>();
+                        const auto& reg = EventType::getRegistry();
+                        auto it = reg.find(tn);
+                        if (it != reg.end()) et = it->second;
+                    } catch(...) { et = nullptr; }
+                }
+            }
+            sol::object lobj = t.get<sol::object>("listener");
+            if (lobj.valid() && lobj.is<sol::function>()) listener = lobj.as<sol::function>();
+            sol::object uobj = t.get<sol::object>("useCapture");
+            if (uobj.valid() && uobj.is<bool>()) useCapture = uobj.as<bool>();
+            sol::object pobj = t.get<sol::object>("priority");
+            if (pobj.valid() && pobj.is<int>()) priority = pobj.as<int>();
+        } else {
+            // Otherwise treat as (EventType, function, [useCapture], [priority])
+            try { et = descriptor.as<EventType*>(); } catch(...) { et = nullptr; }
+            try { if (maybe_listener.is<sol::function>()) listener = maybe_listener.as<sol::function>(); } catch(...) {}
+            try { if (maybe_useCapture.is<bool>()) useCapture = maybe_useCapture.as<bool>(); } catch(...) {}
+            try { if (maybe_priority.is<int>()) priority = maybe_priority.as<int>(); } catch(...) {}
+        }
+
+    if (!et) return;
+    if (!listener) return;
+
+        obj->addEventListener(*et, [listener](Event& e) mutable {
+            sol::protected_function pf = listener;
+            sol::protected_function_result r = pf(e);
+            if (!r.valid()) {
+                sol::error err = r;
+                ERROR(std::string("Lua listener error (any): ") + err.what());
+            }
+        }, useCapture, priority);
+    }
+
+    void removeEventListener_lua_any(IDisplayObject* obj, const sol::object& descriptor, const sol::object& maybe_listener, const sol::object& maybe_useCapture) {
+        if (!obj) return;
+        sol::state_view lua = descriptor.lua_state();
+
+        EventType* et = nullptr;
+        sol::function listener;
+        bool useCapture = false;
+
+        if (descriptor.is<sol::table>()) {
+            sol::table t = descriptor.as<sol::table>();
+            sol::object t_type = t.get<sol::object>("type");
+            if (t_type.valid()) {
+                try { et = t_type.as<EventType*>(); } catch(...) { et = nullptr; }
+                if (!et && t_type.is<std::string>()) {
+                    try {
+                        std::string tn = t_type.as<std::string>();
+                        const auto& reg = EventType::getRegistry();
+                        auto it = reg.find(tn);
+                        if (it != reg.end()) et = it->second;
+                    } catch(...) { et = nullptr; }
+                }
+            }
+            sol::object lobj = t.get<sol::object>("listener");
+            if (lobj.valid() && lobj.is<sol::function>()) listener = lobj.as<sol::function>();
+            sol::object uobj = t.get<sol::object>("useCapture");
+            if (uobj.valid() && uobj.is<bool>()) useCapture = uobj.as<bool>();
+        } else {
+            try { et = descriptor.as<EventType*>(); } catch(...) { et = nullptr; }
+            try { if (maybe_listener.is<sol::function>()) listener = maybe_listener.as<sol::function>(); } catch(...) {}
+            try { if (maybe_useCapture.is<bool>()) useCapture = maybe_useCapture.as<bool>(); } catch(...) {}
+        }
+
+        if (!et) return;
+        if (!listener) return;
+
+        obj->removeEventListener(*et, [listener](Event& e) mutable {
+            sol::protected_function pf = listener;
+            sol::protected_function_result r = pf(e);
+            if (!r.valid()) {
+                sol::error err = r;
+                ERROR(std::string("Lua listener error (remove any): ") + err.what());
+            }
+        }, useCapture);
+    }
+
+    // Short wrappers that accept only a descriptor table (common pattern in Lua)
+    void addEventListener_lua_any_short(IDisplayObject* obj, const sol::object& descriptor) {
+        addEventListener_lua_any(obj, descriptor, sol::lua_nil, sol::lua_nil, sol::lua_nil);
+    }
+
+    void removeEventListener_lua_any_short(IDisplayObject* obj, const sol::object& descriptor) {
+        removeEventListener_lua_any(obj, descriptor, sol::lua_nil, sol::lua_nil);
+    }
+
     // --- Hierarchy Management --- //
     void addChild_lua(IDisplayObject* obj, DisplayObject child) { if (!obj) return; obj->addChild(child); }
     bool removeChild_lua(IDisplayObject* obj, DisplayObject child) { if (!obj) return false; return obj->removeChild(child); }

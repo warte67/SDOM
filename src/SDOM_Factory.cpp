@@ -57,16 +57,6 @@ namespace SDOM
         }   
     }
 
-    IResourceObject* Factory::getResObj(const std::string& name)
-    {
-        auto it = displayObjects_.find(name);
-        if (it != displayObjects_.end()) 
-        {
-            return dynamic_cast<IResourceObject*>(it->second.get());
-        }
-        return nullptr;
-    }
-
     IDisplayObject* Factory::getDomObj(const std::string& name)
     {
         auto it = displayObjects_.find(name);
@@ -77,7 +67,7 @@ namespace SDOM
         return nullptr;
     }
     
-    DisplayObject Factory::getDisplayObjectHandle(const std::string& name) 
+    DisplayObject Factory::getDisplayObject(const std::string& name) 
     {
         auto it = displayObjects_.find(name);
         if (it != displayObjects_.end()) 
@@ -97,7 +87,7 @@ namespace SDOM
             return DisplayObject(); // Return an empty/null handle if stage is not available
         }
         std::string stageName = stage->getName();
-        return getDisplayObjectHandle(stageName);
+        return getDisplayObject(stageName);
     }
 
     // String (LUA text) based object creator
@@ -263,13 +253,13 @@ namespace SDOM
     {
         DisplayObject parentHandle;
         if (parentConfig.is<std::string>()) {
-            parentHandle = getDisplayObjectHandle(parentConfig.as<std::string>());
+            parentHandle = getDisplayObject(parentConfig.as<std::string>());
         } else if (parentConfig.is<DisplayObject>()) {
             parentHandle = parentConfig.as<DisplayObject>();
         } else if (parentConfig.is<sol::table>()) {
             sol::table t = parentConfig.as<sol::table>();
             if (t["parent"].valid()) {
-                if (t["parent"].get_type() == sol::type::string) parentHandle = getDisplayObjectHandle(t["parent"].get<std::string>());
+                if (t["parent"].get_type() == sol::type::string) parentHandle = getDisplayObject(t["parent"].get<std::string>());
                 else parentHandle = t["parent"].get<DisplayObject>();
             }
         }
@@ -312,7 +302,7 @@ namespace SDOM
         for (const auto& [name, objPtr] : displayObjects_) {
             auto obj = dynamic_cast<IDisplayObject*>(objPtr.get());
             if (obj && !obj->getParent() && obj->getType() != "Stage") {
-                orphans.push_back(getDisplayObjectHandle(name));
+                orphans.push_back(getDisplayObject(name));
             }
         }
         return orphans;

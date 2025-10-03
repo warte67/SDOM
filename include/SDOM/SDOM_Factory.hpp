@@ -2,7 +2,6 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_DisplayObject.hpp>
-#include <SDOM/SDOM_IResourceObject.hpp>
 
 namespace SDOM 
 {
@@ -44,9 +43,7 @@ namespace SDOM
 
         // --- Object Lookup --- //
         IDisplayObject* getDomObj(const std::string& name);
-        IResourceObject* getResObj(const std::string& name);
-        DisplayObject getDisplayObjectHandle(const std::string& name);
-        // ResHandle getResHandle(const std::string& name);
+        DisplayObject getDisplayObject(const std::string& name);
         DisplayObject getStageHandle();
 
         // --- Display Object Management --- //

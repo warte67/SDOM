@@ -23,6 +23,12 @@ namespace SDOM
     // --- Event Handling --- //
     void addEventListener_lua(IDisplayObject* obj, EventType& type, sol::function listener, bool useCapture, int priority); // **VERIFIED**
     void removeEventListener_lua(IDisplayObject* obj, EventType& type, sol::function listener, bool useCapture);  // **VERIFIED**
+    // Flexible variants that accept a Lua table descriptor or multiple-arg form
+    void addEventListener_lua_any(IDisplayObject* obj, const sol::object& descriptor, const sol::object& maybe_listener, const sol::object& maybe_useCapture, const sol::object& maybe_priority);
+    void removeEventListener_lua_any(IDisplayObject* obj, const sol::object& descriptor, const sol::object& maybe_listener, const sol::object& maybe_useCapture);
+    // Short variants accepting only the descriptor table (common colon-call)
+    void addEventListener_lua_any_short(IDisplayObject* obj, const sol::object& descriptor);
+    void removeEventListener_lua_any_short(IDisplayObject* obj, const sol::object& descriptor);
 
     // --- Hierarchy Management --- //
     void addChild_lua(IDisplayObject* obj, DisplayObject child); // **VERIFIED**

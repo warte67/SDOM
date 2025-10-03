@@ -116,7 +116,7 @@ namespace SDOM
         std::string rootStageName = "mainStage";
         if (coreObj["rootStage"].valid())
             rootStageName = coreObj["rootStage"].get<std::string>();
-        rootNode_ = factory_->getDisplayObjectHandle(rootStageName);
+        rootNode_ = factory_->getDisplayObject(rootStageName);
         setWindowTitle("Stage: " + rootStageName);
     }
 
@@ -158,6 +158,15 @@ namespace SDOM
 
             // If the chunk returned a table, use that as the config.
             sol::object ret = result.get<sol::object>();
+            // If the script overwrote the global `Core` (common when authors
+            // set a config table into Core), restore our forwarding table so
+            // callbacks and later code see the table-based API. The
+            // _registerDisplayObject() created CoreForward.
+            try {
+                if (lua_["CoreForward"].valid()) {
+                    lua_["Core"] = lua_["CoreForward"];
+                }
+            } catch (...) {}
             if (ret.is<sol::table>()) {
                 sol::table configTable = ret.as<sol::table>();
                 configureFromLua(configTable);
@@ -306,6 +315,14 @@ namespace SDOM
                         return;
                     }
                     sol::object ret = result.get<sol::object>();
+                    // Restore Core global to CoreForward (if present) so that
+                    // subsequent code and callbacks use the forwarding table
+                    // instead of any config table the script may have assigned.
+                    try {
+                        if (lua_["CoreForward"].valid()) {
+                            lua_["Core"] = lua_["CoreForward"];
+                        }
+                    } catch (...) {}
                     if (ret.is<sol::table>()) {
                         configureFromLua(ret.as<sol::table>());
                     } else {
@@ -1242,7 +1259,7 @@ namespace SDOM
 
     void Core::setRootNode(const std::string& name)
     {
-        DisplayObject stageHandle = factory_->getDisplayObjectHandle(name);
+        DisplayObject stageHandle = factory_->getDisplayObject(name);
         if (stageHandle.isValid() && dynamic_cast<Stage*>(stageHandle.get()))
         {
             rootNode_ = stageHandle;
@@ -1287,17 +1304,17 @@ namespace SDOM
         return getFactory().create(typeName, luaScript);
     }
 
-    IDisplayObject* Core::getDisplayObject(const std::string& name) {
+    IDisplayObject* Core::getDisplayObjectPtr(const std::string& name) {
         return getFactory().getDomObj(name);
     }
-    DisplayObject Core::getDisplayObjectHandle(const std::string& name) {
-        return getFactory().getDisplayObjectHandle(name);
+    DisplayObject Core::getDisplayObject(const std::string& name) {
+        return getFactory().getDisplayObject(name);
     }
     DisplayObject Core::getFactoryStageHandle() {
         return getFactory().getStageHandle();
     }
     bool Core::hasDisplayObject(const std::string& name) const {
-        DisplayObject handle = factory_->getDisplayObjectHandle(name);
+        DisplayObject handle = factory_->getDisplayObject(name);
         return handle.isValid();
     }
 
@@ -1376,49 +1393,18 @@ namespace SDOM
         objHandleType["quit"] = [](Core& /*core*/) { quit_lua(); return true; };
         objHandleType["shutdown"] = [](Core& /*core*/) { shutdown_lua(); return true; };
         objHandleType["createDisplayObject"] = sol::overload(
-            [](Core& /*core*/, const std::string& typeName, const sol::table& cfg) {
-                return createDisplayObject_lua(typeName, cfg);
-            },
-            [](Core* core, const std::string& typeName, const sol::table& cfg) {
-                if (!core) return (DisplayObject*)nullptr;
-                DisplayObject h = core->createDisplayObject(typeName, cfg);
-                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            },
-            [](const std::string& typeName, const sol::table& cfg) {
-                DisplayObject h = Core::getInstance().createDisplayObject(typeName, cfg);
-                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            }
+            [](Core& core, const std::string& typeName, const sol::table& cfg) -> DisplayObject { return core.createDisplayObject(typeName, cfg); },
+            [](const std::string& typeName, const sol::table& cfg) -> DisplayObject { return Core::getInstance().createDisplayObject(typeName, cfg); }
         );
 
-        objHandleType["getDisplayObjectHandle"] = sol::overload(
-            [](Core& core, const std::string& name) -> DisplayObject* {
-                DisplayObject h = core.getDisplayObjectHandle(name);
-                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            },
-            [](Core* core, const std::string& name) -> DisplayObject* {
-                if (!core) return nullptr;
-                DisplayObject h = core->getDisplayObjectHandle(name);
-                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            },
-            [](const std::string& name) -> DisplayObject* {
-                DisplayObject h = Core::getInstance().getDisplayObjectHandle(name);
-                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            }
+        objHandleType["getDisplayObject"] = sol::overload(
+            [](Core& core, const std::string& name) -> DisplayObject { DisplayObject h = core.getDisplayObject(name); try { std::cout << "[dbg:getDisplayObject] called on userdata self name='" << name << "' valid=" << (h.isValid() ? "true" : "false") << std::endl; } catch(...) {} return h; },
+            [](const std::string& name) -> DisplayObject { DisplayObject h = Core::getInstance().getDisplayObject(name); try { std::cout << "[dbg:getDisplayObject] called on singleton name='" << name << "' valid=" << (h.isValid() ? "true" : "false") << std::endl; } catch(...) {} return h; }
         );
+
         objHandleType["getStageHandle"] = sol::overload(
-            [](Core& core) -> DisplayObject* {
-                DisplayObject h = core.getStageHandle();
-                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            },
-            [](Core* core) -> DisplayObject* {
-                if (!core) return nullptr;
-                DisplayObject h = core->getStageHandle();
-                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            },
-            []() -> DisplayObject* {
-                DisplayObject h = Core::getInstance().getStageHandle();
-                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            }
+            [](Core& core) -> DisplayObject { return core.getStageHandle(); },
+            []() -> DisplayObject { return Core::getInstance().getStageHandle(); }
         );
         objHandleType["hasDisplayObject"] = &Core::hasDisplayObject;
         objHandleType["destroyDisplayObject"] = &Core::destroyDisplayObject;
@@ -1524,9 +1510,9 @@ namespace SDOM
         objHandleType["getCommandNamesForType"] = [](Core& core, const std::string& t) { return core.getCommandNamesForType(t); };
         objHandleType["getFunctionNamesForType"] = [](Core& core, const std::string& t) { return core.getFunctionNamesForType(t); };
 
-        objHandleType["createDisplayObject"] = [](Core& core, const std::string& typeName, const sol::table& cfg) -> DisplayObject* {
+        objHandleType["createDisplayObject"] = [](Core& core, const std::string& typeName, const sol::table& cfg) -> DisplayObject {
             DisplayObject h = core.createDisplayObject(typeName, cfg);
-            return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            return h;
         };
 
         // Save usertype
@@ -1558,27 +1544,52 @@ namespace SDOM
         coreTable.set_function("createDisplayObject", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
             sol::state_view sv = ts;
             DisplayObject h = Core::getInstance().createDisplayObject(typeName, cfg);
-            DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            return sol::make_object(sv, p);
+            return sol::make_object(sv, h);
         });
-        coreTable.set_function("getDisplayObjectHandle", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
+        // Robust CoreForward.getDisplayObject: accept either dot or colon call
+        // shapes. We accept an explicit `self` (may be the table when called via
+        // colon) followed by the name, or a single-name arg when called as a
+        // plain function. Use variadic_args for flexibility.
+        coreTable.set_function("getDisplayObject", [](sol::this_state ts, sol::object maybeSelf, sol::variadic_args va) {
             sol::state_view sv = ts;
-            DisplayObject h = Core::getInstance().getDisplayObjectHandle(name);
-            DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            return sol::make_object(sv, p);
-        });
-        // Backwards compatibility: older scripts call Core:getDisplayObject(name)
-        coreTable.set_function("getDisplayObject", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
-            sol::state_view sv = ts;
-            DisplayObject h = Core::getInstance().getDisplayObjectHandle(name);
-            DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            return sol::make_object(sv, p);
+            std::string name;
+
+            // If maybeSelf is a string then caller used Core.getDisplayObject(name)
+            if (maybeSelf.is<std::string>()) {
+                try { name = maybeSelf.as<std::string>(); } catch(...) { name.clear(); }
+            } else {
+                // Otherwise, the name should be the first variadic arg (colon-call or dot-call with table self)
+                if (va.size() >= 1) {
+                    try { name = (*(va.begin())).as<std::string>(); } catch(...) { name.clear(); }
+                }
+            }
+
+            // If still empty, and there are at least two args (self,name) try the second
+            if (name.empty() && va.size() >= 2) {
+                auto it = va.begin(); ++it; try { name = (*it).as<std::string>(); } catch(...) { name.clear(); }
+            }
+
+            if (name.empty()) return sol::make_object(sv, sol::lua_nil);
+            DisplayObject h = getCore().getDisplayObject(name);
+            try {
+                if (h.isValid() && h.get()) std::cout << "[dbg:CoreForward.getDisplayObject] found type='" << h.get()->getType() << "' name='" << h.get()->getName() << "'" << std::endl;
+            } catch(...){}
+            if (h.isValid() && h.get() && h.get()->getType() == "Stage") {
+                try { std::cout << "[dbg:CoreForward.getDisplayObject] returning Stage*" << std::endl; } catch(...){}
+                return sol::make_object(sv, dynamic_cast<Stage*>(h.get()));
+            }
+            try { std::cout << "[dbg:CoreForward.getDisplayObject] returning DisplayObject handle" << std::endl; } catch(...){}
+            return sol::make_object(sv, h);
         });
         coreTable.set_function("getStageHandle", [](sol::this_state ts, sol::object /*self*/) {
             sol::state_view sv = ts;
             DisplayObject h = Core::getInstance().getStageHandle();
-            DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-            return sol::make_object(sv, p);
+            try { if (h.isValid() && h.get()) std::cout << "[dbg:CoreForward.getStageHandle] stage type='" << h.get()->getType() << "' name='" << h.get()->getName() << "'" << std::endl; } catch(...) {}
+            if (h.isValid() && h.get()) {
+                try { std::cout << "[dbg:CoreForward.getStageHandle] returning Stage*" << std::endl; } catch(...){}
+                return sol::make_object(sv, dynamic_cast<Stage*>(h.get()));
+            }
+            return sol::make_object(sv, DisplayObject());
         });
         coreTable.set_function("hasDisplayObject", [](sol::this_state /*ts*/, sol::object /*self*/, const std::string& name) {
             return Core::getInstance().hasDisplayObject(name);
@@ -1591,7 +1602,7 @@ namespace SDOM
             sol::state_view sv = ts;
             std::string query = typeName;
             if (Core::getInstance().hasDisplayObject(typeName)) {
-                DisplayObject h = Core::getInstance().getDisplayObjectHandle(typeName);
+                DisplayObject h = Core::getInstance().getDisplayObject(typeName);
                 if (h.isValid() && h.get()) {
                     IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
                     if (obj) query = obj->getType();
@@ -1609,7 +1620,7 @@ namespace SDOM
             sol::state_view sv = ts;
             std::string query = typeName;
             if (Core::getInstance().hasDisplayObject(typeName)) {
-                DisplayObject h = Core::getInstance().getDisplayObjectHandle(typeName);
+                DisplayObject h = Core::getInstance().getDisplayObject(typeName);
                 if (h.isValid() && h.get()) {
                     IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
                     if (obj) query = obj->getType();
@@ -1624,7 +1635,7 @@ namespace SDOM
             sol::state_view sv = ts;
             std::string query = typeName;
             if (Core::getInstance().hasDisplayObject(typeName)) {
-                DisplayObject h = Core::getInstance().getDisplayObjectHandle(typeName);
+                DisplayObject h = Core::getInstance().getDisplayObject(typeName);
                 if (h.isValid() && h.get()) {
                     IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
                     if (obj) query = obj->getType();
@@ -1700,8 +1711,11 @@ namespace SDOM
             return sol::make_object(ts, sol::nil);
         });
 
-    // Expose CoreForward (explicit) and also make Core point to the
-    // forwarding table to provide a stable table-based global API.
+    // Expose CoreForward (explicit) and make the global `Core` point to
+    // the forwarding table so scripts can use the table-based API
+    // consistently. The forwarding table dispatches to the Core
+    // singleton internally so both dot- and colon-call styles are
+    // supported.
     lua["CoreForward"] = coreTable;
     lua["Core"] = coreTable;
 
