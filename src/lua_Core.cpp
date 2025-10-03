@@ -144,6 +144,18 @@ namespace SDOM
 		sol::protected_function pf = f;
 		if (name == "Init") {
 			registerOnInit_lua([pf]() -> bool {
+				// Debug: inspect the global Core object in the Lua state at callback time
+				try {
+					sol::state& lua = Core::getInstance().getLua();
+					sol::object coreObj = lua["Core"];
+					std::cout << "[debug-registerOnLua] Core global valid=" << (coreObj.valid() ? "true" : "false") << " ";
+					if (coreObj.valid()) {
+						std::cout << "is<Core*>=" << (coreObj.is<Core*>() ? "true" : "false") << " ";
+						std::cout << "is<std::reference_wrapper<Core>>=" << (coreObj.is<std::reference_wrapper<Core>>() ? "true" : "false") << " ";
+						std::cout << "is<table>=" << (coreObj.is<sol::table>() ? "true" : "false") << " ";
+					}
+					std::cout << std::endl;
+				} catch (...) {}
 				sol::protected_function_result r = pf();
 				if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnInit error: ") + err.what()); return false; }
 				try { return r.get<bool>(); } catch (...) { return false; }

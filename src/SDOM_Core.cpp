@@ -1375,18 +1375,51 @@ namespace SDOM
         // lua_Core.cpp which forward to the Core singleton or member methods.
         objHandleType["quit"] = [](Core& /*core*/) { quit_lua(); return true; };
         objHandleType["shutdown"] = [](Core& /*core*/) { shutdown_lua(); return true; };
-        objHandleType["createDisplayObject"] = [](Core& /*core*/, const std::string& typeName, const sol::table& cfg) {
-            return createDisplayObject_lua(typeName, cfg);
-        };
+        objHandleType["createDisplayObject"] = sol::overload(
+            [](Core& /*core*/, const std::string& typeName, const sol::table& cfg) {
+                return createDisplayObject_lua(typeName, cfg);
+            },
+            [](Core* core, const std::string& typeName, const sol::table& cfg) {
+                if (!core) return (DisplayObject*)nullptr;
+                DisplayObject h = core->createDisplayObject(typeName, cfg);
+                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            },
+            [](const std::string& typeName, const sol::table& cfg) {
+                DisplayObject h = Core::getInstance().createDisplayObject(typeName, cfg);
+                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            }
+        );
 
-        objHandleType["getDisplayObjectHandle"] = [](Core& core, const std::string& name) -> DisplayObject* {
-            DisplayObject h = core.getDisplayObjectHandle(name);
-            return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-        };
-        objHandleType["getStageHandle"] = [](Core& core) -> DisplayObject* {
-            DisplayObject h = core.getStageHandle();
-            return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
-        };
+        objHandleType["getDisplayObjectHandle"] = sol::overload(
+            [](Core& core, const std::string& name) -> DisplayObject* {
+                DisplayObject h = core.getDisplayObjectHandle(name);
+                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            },
+            [](Core* core, const std::string& name) -> DisplayObject* {
+                if (!core) return nullptr;
+                DisplayObject h = core->getDisplayObjectHandle(name);
+                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            },
+            [](const std::string& name) -> DisplayObject* {
+                DisplayObject h = Core::getInstance().getDisplayObjectHandle(name);
+                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            }
+        );
+        objHandleType["getStageHandle"] = sol::overload(
+            [](Core& core) -> DisplayObject* {
+                DisplayObject h = core.getStageHandle();
+                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            },
+            [](Core* core) -> DisplayObject* {
+                if (!core) return nullptr;
+                DisplayObject h = core->getStageHandle();
+                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            },
+            []() -> DisplayObject* {
+                DisplayObject h = Core::getInstance().getStageHandle();
+                return (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            }
+        );
         objHandleType["hasDisplayObject"] = &Core::hasDisplayObject;
         objHandleType["destroyDisplayObject"] = &Core::destroyDisplayObject;
         objHandleType["pumpEventsOnce"] = &Core::pumpEventsOnce;
@@ -1415,6 +1448,18 @@ namespace SDOM
         objHandleType["registerOnInit"] = sol::overload(
             [](Core& /*core*/, const sol::function& f) {
                 registerOnInit_lua([f]() -> bool {
+                    // Debug: inspect the global Core object in the Lua state before calling
+                    try {
+                        sol::state& lua = Core::getInstance().getLua();
+                        sol::object coreObj = lua["Core"];
+                        std::cout << "[debug] Lua Core global valid=" << (coreObj.valid() ? "true" : "false") << " ";
+                        if (coreObj.valid()) {
+                            std::cout << "is<Core*>=" << (coreObj.is<Core*>() ? "true" : "false") << " ";
+                            std::cout << "is<std::reference_wrapper<Core>>=" << (coreObj.is<std::reference_wrapper<Core>>() ? "true" : "false") << " ";
+                            std::cout << "is<table>=" << (coreObj.is<sol::table>() ? "true" : "false") << " ";
+                        }
+                        std::cout << std::endl;
+                    } catch (...) {}
                     sol::protected_function pf = f; sol::protected_function_result r = pf();
                     if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnInit error: ") + err.what()); return false; }
                     try { return r.get<bool>(); } catch (...) { return false; }
@@ -1422,6 +1467,17 @@ namespace SDOM
             },
             [](const sol::function& f) {
                 registerOnInit_lua([f]() -> bool {
+                    try {
+                        sol::state& lua = Core::getInstance().getLua();
+                        sol::object coreObj = lua["Core"];
+                        std::cout << "[debug] Lua Core global valid=" << (coreObj.valid() ? "true" : "false") << " ";
+                        if (coreObj.valid()) {
+                            std::cout << "is<Core*>=" << (coreObj.is<Core*>() ? "true" : "false") << " ";
+                            std::cout << "is<std::reference_wrapper<Core>>=" << (coreObj.is<std::reference_wrapper<Core>>() ? "true" : "false") << " ";
+                            std::cout << "is<table>=" << (coreObj.is<sol::table>() ? "true" : "false") << " ";
+                        }
+                        std::cout << std::endl;
+                    } catch (...) {}
                     sol::protected_function pf = f; sol::protected_function_result r = pf();
                     if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnInit error: ") + err.what()); return false; }
                     try { return r.get<bool>(); } catch (...) { return false; }
@@ -1476,8 +1532,11 @@ namespace SDOM
         // Save usertype
         this->objHandleType_ = objHandleType;
 
-        // Expose the singleton instance to Lua under the type name
-        lua[typeName] = sol::make_object(lua, this);
+    // Do NOT expose the raw Core userdata as the global `Core` since
+    // configuration scripts and other code may treat `Core` as a table.
+    // Instead expose a convenience forwarding table (`CoreForward`) and
+    // also set the global `Core` to that table so Lua callers use the
+    // table-based API which dispatches to the Core singleton internally.
 
         // Register Event types and EventType table (best-effort)
         try {
@@ -1503,6 +1562,13 @@ namespace SDOM
             return sol::make_object(sv, p);
         });
         coreTable.set_function("getDisplayObjectHandle", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
+            sol::state_view sv = ts;
+            DisplayObject h = Core::getInstance().getDisplayObjectHandle(name);
+            DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
+            return sol::make_object(sv, p);
+        });
+        // Backwards compatibility: older scripts call Core:getDisplayObject(name)
+        coreTable.set_function("getDisplayObject", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
             sol::state_view sv = ts;
             DisplayObject h = Core::getInstance().getDisplayObjectHandle(name);
             DisplayObject* p = (h.isValid() && h.get()) ? dynamic_cast<DisplayObject*>(h.get()) : nullptr;
@@ -1604,6 +1670,11 @@ namespace SDOM
             registerOnInit_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnInit error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
             return sol::make_object(ts, sol::nil);
         });
+
+        coreTable.set_function("registerOn", [](sol::this_state ts, sol::object /*self*/, const std::string& name, const sol::function& f) {
+            registerOn_lua(name, f);
+            return sol::make_object(ts, sol::nil);
+        });
         coreTable.set_function("registerOnQuit", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
             registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnQuit error: ") + err.what()); } });
             return sol::make_object(ts, sol::nil);
@@ -1629,7 +1700,10 @@ namespace SDOM
             return sol::make_object(ts, sol::nil);
         });
 
-        lua["CoreForward"] = coreTable;
+    // Expose CoreForward (explicit) and also make Core point to the
+    // forwarding table to provide a stable table-based global API.
+    lua["CoreForward"] = coreTable;
+    lua["Core"] = coreTable;
 
     } // End Core::_registerDisplayObject()
 
