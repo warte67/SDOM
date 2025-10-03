@@ -401,7 +401,7 @@ bool Box::onUnitTest()
 
  void Box::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
  {
-    if (DEBUG_REGISTER_LUA)
+    // if (DEBUG_REGISTER_LUA)
     {
         std::string typeNameLocal = "Box";
         std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 

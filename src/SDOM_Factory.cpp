@@ -24,10 +24,8 @@ namespace SDOM
     bool Factory::onInit()
     {
         // --- Lua UserType Registration --- //
-        Core& core = Core::getInstance();
-        // core._registerLua_Usertype(core.getLua());
-        core._registerLua("Core", core.getLua());
-        // core._registerLua_Commands(core.getLua());
+        Core& core = getCore();
+        core._registerDisplayObject("Core", core.getLua());
 
         // ===== Register built-in types =====
 
@@ -37,14 +35,7 @@ namespace SDOM
             Stage::CreateFromInitStruct
         });
 
-    // Test-only registration removed: concrete types should register their
-    // own Lua properties/commands/functions in their _registerDisplayObject implementations.
-
-        // Register other built-in types here as needed ...   
-        // DisplayObject prototypeHandle_old; // Deprecated
-        // prototypeHandle_old._registerLua("DisplayObject", core.getLua()); // Deprecated
-
-
+        // register the DisplayObject handle
         DisplayObject prototypeHandle; // Default DisplayObject for registration
         prototypeHandle._registerDisplayObject("DisplayObject", core.getLua());
 
@@ -61,7 +52,7 @@ namespace SDOM
         DisplayObject prototypeHandle = create(typeName, init);
         if (prototypeHandle)
         {
-            prototypeHandle._registerDisplayObject(typeName, SDOM::getLua());
+            prototypeHandle->registerDisplayObject(typeName, SDOM::getLua());
             destroyDisplayObject(prototypeHandle.get()->getName()); // Clean up prototype
         }   
     }

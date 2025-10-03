@@ -63,7 +63,7 @@ class Box final : public SDOM::IDisplayObject
     // --- LUA Registration --- //
         sol::usertype<Box> objHandleType_;
 
-        virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua);
+        virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua) override;
 
 
         

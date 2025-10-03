@@ -98,10 +98,21 @@ namespace SDOM
             sol::state& lua = Core::getInstance().getLua();
             // Use Lua to set/get the name via DisplayObject bindings
             sol::protected_function_result res = lua.script(R"(
-                local h = Core:getDisplayObjectHandleHandle('luaGenericStage')
+                -- DEBUG: inspect Core and the bound function before invoking
+                print('DEBUG: Core =', Core)
+                print('DEBUG: Core.getDisplayObjectHandle =', Core.getDisplayObjectHandle)
+                -- call as function with explicit self to avoid colon-call metamethod surprises
+                local h = Core.getDisplayObjectHandle(Core, 'luaGenericStage')
                 if not h then return nil, 'handle missing' end
-                h:setName('luaRenamedStage')
-                return h:getName()
+                -- print type/tostring for diagnostic
+                print('DEBUG: handle type =', type(h), ' tostring=', tostring(h))
+                -- call setName/getName in a protected call so errors are returned instead of thrown
+                local ok, result = pcall(function()
+                    h:setName('luaRenamedStage')
+                    return h:getName()
+                end)
+                if not ok then return nil, result end
+                return result
             )");
             if (!res.valid()) {
                 sol::error err = res;
@@ -126,7 +137,7 @@ namespace SDOM
             sol::state& lua = Core::getInstance().getLua();
             // Use Lua to set/get the type via DisplayObject bindings
             sol::protected_function_result res = lua.script(R"(
-                local h = Core:getDisplayObjectHandleHandle('luaGenericStage')
+                local h = Core:getDisplayObjectHandle('luaGenericStage')
                 if not h then return nil, 'handle missing' end
                 h:setType('LuaCustomStage')
                 return h:getType()
@@ -175,8 +186,8 @@ namespace SDOM
 
             // From Lua: set blueishBox parent to redishBox using DisplayObject method
             sol::protected_function_result res = lua.script(R"(
-                local b = Core:getDisplayObjectHandleHandle('blueishBox')
-                local r = Core:getDisplayObjectHandleHandle('redishBox')
+                local b = Core:getDisplayObjectHandle('blueishBox')
+                local r = Core:getDisplayObjectHandle('redishBox')
                 if not b or not r then return false end
                 -- call the setParent command registered on the concrete type
                 b:setParent({ parent = r })
@@ -194,7 +205,7 @@ namespace SDOM
 
             // Verify: getParent() of blueishBox is redishBox (check from Lua)
             sol::protected_function_result pres = lua.script(R"(
-                local b = Core:getDisplayObjectHandleHandle('blueishBox')
+                local b = Core:getDisplayObjectHandle('blueishBox')
                 if not b then return nil, 'blueishBox missing' end
                 local p = b:getParent()
                 if not p then return nil, 'parent missing' end
@@ -212,7 +223,7 @@ namespace SDOM
 
             // Cleanup: restore original hierarchy (blueishBox under mainStage)
             auto result = lua.script(R"(
-                local b = Core:getDisplayObjectHandleHandle('blueishBox')
+                local b = Core:getDisplayObjectHandle('blueishBox')
                 local s = Core:getStageHandle()
                 if not b or not s then return false, 'missing handle' end
                 b:setParent(s)
@@ -233,7 +244,7 @@ namespace SDOM
             // Do the entire bounds check in Lua so this test is Lua-only
             sol::protected_function_result res = lua.script(R"(
                 local EXPECTED = { x = 240, y = 70, width = 250, height = 225 }
-                local h = Core:getDisplayObjectHandleHandle('blueishBox')
+                local h = Core:getDisplayObjectHandle('blueishBox')
                 if not h then return { ok = false, err = 'handle missing' } end
                 local b = h:getBounds()
                 if not b then return { ok = false, err = 'getBounds returned nil' } end
@@ -266,7 +277,7 @@ namespace SDOM
 
             sol::protected_function_result res = lua.script(R"(
                 local BASE = { x = 240, y = 70, width = 250, height = 225 }
-                local h = Core:getDisplayObjectHandleHandle('blueishBox')
+                local h = Core:getDisplayObjectHandle('blueishBox')
                 if not h then return { ok = false, err = 'handle missing' } end
 
                 -- compute new values (subtract 5 from each)
@@ -316,7 +327,7 @@ namespace SDOM
             sol::state& lua = Core::getInstance().getLua();
 
             sol::protected_function_result res = lua.script(R"(
-                local h = Core:getDisplayObjectHandleHandle('blueishBox')
+                local h = Core:getDisplayObjectHandle('blueishBox')
                 if not h then return { ok = false, err = 'handle missing' } end
                 local c = h:getColor()
                 if not c then return { ok = false, err = 'getColor returned nil' } end
@@ -364,9 +375,9 @@ namespace SDOM
                 Core:createDisplayObject('Box', { name = 'prioA', parent = s, type = 'Box' })
                 Core:createDisplayObject('Box', { name = 'prioB', parent = s, type = 'Box' })
                 Core:createDisplayObject('Box', { name = 'prioC', parent = s, type = 'Box' })
-                local a = Core:getDisplayObjectHandleHandle('prioA')
-                local b = Core:getDisplayObjectHandleHandle('prioB')
-                local c = Core:getDisplayObjectHandleHandle('prioC')
+                local a = Core:getDisplayObjectHandle('prioA')
+                local b = Core:getDisplayObjectHandle('prioB')
+                local c = Core:getDisplayObjectHandle('prioC')
                 if not a or not b or not c then return { ok = false, err = 'missing handles' } end
                 a:setPriority(1)
                 b:setPriority(5)
@@ -393,9 +404,9 @@ namespace SDOM
             sol::protected_function_result res = lua.script(R"(
                 local s = Core:getStageHandle()
                 -- reuse prioA/prioB/prioC created earlier (assume present)
-                local a = Core:getDisplayObjectHandleHandle('prioA')
-                local b = Core:getDisplayObjectHandleHandle('prioB')
-                local c = Core:getDisplayObjectHandleHandle('prioC')
+                local a = Core:getDisplayObjectHandle('prioA')
+                local b = Core:getDisplayObjectHandle('prioB')
+                local c = Core:getDisplayObjectHandle('prioC')
                 if not a or not b or not c then return { ok = false, err = 'missing handles' } end
                 -- bump prioA to top
                 a:setPriority(20)
@@ -428,8 +439,8 @@ namespace SDOM
             sol::state& lua = Core::getInstance().getLua();
             sol::protected_function_result res = lua.script(R"(
                 local s = Core:getStageHandle()
-                local a = Core:getDisplayObjectHandleHandle('prioA')
-                local b = Core:getDisplayObjectHandleHandle('prioB')
+                local a = Core:getDisplayObjectHandle('prioA')
+                local b = Core:getDisplayObjectHandle('prioB')
                 if not a or not b then return { ok = false, err = 'missing handles' } end
                 -- record original priorities
                 local origA = a:getPriority()

@@ -1000,12 +1000,107 @@ namespace SDOM
         // Call base class registration to include inherited properties/commands
         SUPER::_registerDisplayObject(typeName, lua);
 
-        // // Create and save usertype table 
-        // SDOM::Factory& factory = SDOM::getFactory();
+        // Create the IDisplayObject usertype and bind the available Lua helper wrappers
+        sol::usertype<IDisplayObject> objHandleType = lua.new_usertype<IDisplayObject>(
+            typeName,
+            sol::no_constructor,
+            sol::base_classes, sol::bases<SUPER>()
+        );
 
-        // sol::usertype<IDisplayObject> objHandleType = lua.new_usertype<IDisplayObject>(typeName, sol::base_classes, sol::bases<SUPER>()
-        //     // ...IDisplayObject-specific methods...
-        // );
+        // Basic state and debug
+    objHandleType.set_function("cleanAll", &::SDOM::cleanAll_lua);
+    objHandleType.set_function("getDirty", &::SDOM::getDirty_lua);
+    objHandleType.set_function("setDirty", &::SDOM::setDirty_lua);
+    objHandleType.set_function("isDirty", &::SDOM::isDirty_lua);
+    objHandleType.set_function("printTree", &::SDOM::printTree_lua);
+
+        // Event handling (wrappers expect: IDisplayObject*, EventType&, sol::function, bool, int)
+    objHandleType.set_function("addEventListener", &::SDOM::addEventListener_lua);
+    objHandleType.set_function("removeEventListener", &::SDOM::removeEventListener_lua);
+
+        // Hierarchy management
+    objHandleType.set_function("addChild", &::SDOM::addChild_lua);
+    objHandleType.set_function("removeChild", &::SDOM::removeChild_lua);
+    objHandleType.set_function("hasChild", &::SDOM::hasChild_lua);
+    objHandleType.set_function("getParent", &::SDOM::getParent_lua);
+    objHandleType.set_function("setParent", &::SDOM::setParent_lua);
+
+        // Type & property access
+    objHandleType.set_function("getType", &::SDOM::getType_lua);
+    objHandleType.set_function("setType", &::SDOM::setType_lua);
+    objHandleType.set_function("getBounds", &::SDOM::getBounds_lua);
+    objHandleType.set_function("setBounds", &::SDOM::setBounds_lua);
+    objHandleType.set_function("getColor", &::SDOM::getColor_lua);
+    objHandleType.set_function("setColor", &::SDOM::setColor_lua);
+
+        // Priority & Z-Order
+    objHandleType.set_function("getMaxPriority", &::SDOM::getMaxPriority_lua);
+    objHandleType.set_function("getMinPriority", &::SDOM::getMinPriority_lua);
+    objHandleType.set_function("getPriority", &::SDOM::getPriority_lua);
+    objHandleType.set_function("setToHighestPriority", &::SDOM::setToHighestPriority_lua);
+    objHandleType.set_function("setToLowestPriority", &::SDOM::setToLowestPriority_lua);
+    objHandleType.set_function("sortChildrenByPriority", &::SDOM::sortChildrenByPriority_lua);
+    objHandleType.set_function("setPriority", &::SDOM::setPriority_lua);
+    objHandleType.set_function("getChildrenPriorities", &::SDOM::getChildrenPriorities_lua);
+    objHandleType.set_function("moveToTop", &::SDOM::moveToTop_lua);
+    objHandleType.set_function("getZOrder", &::SDOM::getZOrder_lua);
+    objHandleType.set_function("setZOrder", &::SDOM::setZOrder_lua);
+
+        // Focus & interactivity
+    objHandleType.set_function("setKeyboardFocus", &::SDOM::setKeyboardFocus_lua);
+    objHandleType.set_function("isKeyboardFocused", &::SDOM::isKeyboardFocused_lua);
+    objHandleType.set_function("isMouseHovered", &::SDOM::isMouseHovered_lua);
+    objHandleType.set_function("isClickable", &::SDOM::isClickable_lua);
+    objHandleType.set_function("setClickable", &::SDOM::setClickable_lua);
+    objHandleType.set_function("isEnabled", &::SDOM::isEnabled_lua);
+    objHandleType.set_function("setEnabled", &::SDOM::setEnabled_lua);
+    objHandleType.set_function("isHidden", &::SDOM::isHidden_lua);
+    objHandleType.set_function("setHidden", &::SDOM::setHidden_lua);
+    objHandleType.set_function("isVisible", &::SDOM::isVisible_lua);
+    objHandleType.set_function("setVisible", &::SDOM::setVisible_lua);
+
+        // Tab management
+    objHandleType.set_function("getTabPriority", &::SDOM::getTabPriority_lua);
+    objHandleType.set_function("setTabPriority", &::SDOM::setTabPriority_lua);
+    objHandleType.set_function("isTabEnabled", &::SDOM::isTabEnabled_lua);
+    objHandleType.set_function("setTabEnabled", &::SDOM::setTabEnabled_lua);
+
+        // Geometry & layout
+    objHandleType.set_function("getX", &::SDOM::getX_lua);
+    objHandleType.set_function("getY", &::SDOM::getY_lua);
+    objHandleType.set_function("getWidth", &::SDOM::getWidth_lua);
+    objHandleType.set_function("getHeight", &::SDOM::getHeight_lua);
+    objHandleType.set_function("setX", &::SDOM::setX_lua);
+    objHandleType.set_function("setY", &::SDOM::setY_lua);
+    objHandleType.set_function("setWidth", &::SDOM::setWidth_lua);
+    objHandleType.set_function("setHeight", &::SDOM::setHeight_lua);
+
+        // Anchors
+    objHandleType.set_function("getAnchorTop", &::SDOM::getAnchorTop_lua);
+    objHandleType.set_function("getAnchorLeft", &::SDOM::getAnchorLeft_lua);
+    objHandleType.set_function("getAnchorBottom", &::SDOM::getAnchorBottom_lua);
+    objHandleType.set_function("getAnchorRight", &::SDOM::getAnchorRight_lua);
+    objHandleType.set_function("setAnchorTop", &::SDOM::setAnchorTop_lua);
+    objHandleType.set_function("setAnchorLeft", &::SDOM::setAnchorLeft_lua);
+    objHandleType.set_function("setAnchorBottom", &::SDOM::setAnchorBottom_lua);
+    objHandleType.set_function("setAnchorRight", &::SDOM::setAnchorRight_lua);
+
+        // Edge positions
+    objHandleType.set_function("getLeft", &::SDOM::getLeft_lua);
+    objHandleType.set_function("getRight", &::SDOM::getRight_lua);
+    objHandleType.set_function("getTop", &::SDOM::getTop_lua);
+    objHandleType.set_function("getBottom", &::SDOM::getBottom_lua);
+    objHandleType.set_function("setLeft", &::SDOM::setLeft_lua);
+    objHandleType.set_function("setRight", &::SDOM::setRight_lua);
+    objHandleType.set_function("setTop", &::SDOM::setTop_lua);
+    objHandleType.set_function("setBottom", &::SDOM::setBottom_lua);
+
+        // Convenience: expose IDataObject::getName/setName for scripts
+    objHandleType.set_function("getName", &::SDOM::IDataObject::getName);
+    objHandleType.set_function("setName", &::SDOM::IDataObject::setName);
+
+        // Save the usertype for later use by derived classes
+        this->objHandleType_ = objHandleType;
 
     } // End IDisplayObject::_registerDisplayObject()
 
