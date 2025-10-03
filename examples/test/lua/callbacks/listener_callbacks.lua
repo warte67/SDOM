@@ -6,7 +6,7 @@
 local M = {}
 
 -- Global toggle to enable/disable prints from this listener file
-local ENABLE_PRINTS = false
+local ENABLE_PRINTS = true
 
 local function log(...)
     if ENABLE_PRINTS then
@@ -91,18 +91,18 @@ end
 
 function M.on_click(evt)
     -- called when a mouse click event is received
-    -- Helper to pretty-print DomHandle values safely
+    -- Helper to pretty-print DisplayObject values safely
     local function prettyHandle(h)
         if h == nil then return "nil" end
-        -- DomHandle exposes isValid() and getName() in the Lua binding
+        -- DisplayObject exposes isValid() and getName() in the Lua binding
         local ok = pcall(function() return h:isValid() end)
         if ok then
             if h:isValid() then
                 local name_ok, name = pcall(function() return h:getName() end)
                 if name_ok and name and name ~= "" then return name end
-                return "DomHandle(valid)"
+                return "DisplayObject (valid)"
             end
-            return "DomHandle(invalid)"
+            return "DisplayObject (invalid)"
         end
         -- Fallback to tostring when methods aren't available
         return tostring(h)
@@ -128,6 +128,30 @@ function M.on_click(evt)
         log("relatedTarget: " .. prettyHandle(evt.relatedTarget))
         log("currentTarget: " .. prettyHandle(evt.currentTarget))
         log("evt.sdl.button.which: " .. tostring(evt.sdl.button.which) .. "  button: " .. tostring(evt.sdl.button.button) .. "  clicks: " .. tostring(evt.sdl.button.clicks))
+        -- Coerce button to a number when possible (some bindings may pass strings)
+        local braw = evt.sdl.button.button
+        local b = tonumber(braw) or braw
+        local sdltype = evt.sdl.type or ""
+
+        -- Helpful mapping: SDL mouse buttons are typically 1=left, 2=middle, 3=right
+        local function button_name(n)
+            if n == 1 then return "LEFT" end
+            if n == 2 then return "MIDDLE" end
+            if n == 3 then return "RIGHT" end
+            return tostring(n)
+        end
+
+        -- Prefer to detect press/release via the SDL event type if available
+        if sdltype == "SDL_EVENT_MOUSE_BUTTON_DOWN" then
+            log("  state: PRESSED -- " .. button_name(b) .. " (" .. tostring(b) .. ")")
+        elseif sdltype == "SDL_EVENT_MOUSE_BUTTON_UP" then
+            log("  state: RELEASED -- " .. button_name(b) .. " (" .. tostring(b) .. ")")
+            if (b == 3) then
+                log("  (Right-click detected; you could trigger a test function here)")
+                -- shutdown()
+                -- quit()
+            end
+        end
     end
 end
 

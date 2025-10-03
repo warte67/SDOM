@@ -181,7 +181,6 @@ namespace SDOM
 	void setRootNodeByName_lua(const std::string& name) { Core::getInstance().setRootNode(name); }
 	void setRootNodeByHandle_lua(const DisplayObject& handle) { Core::getInstance().setRootNode(handle); }
 	void setStage_lua(const std::string& name) { Core::getInstance().setStage(name); }
-	IDisplayObject* getRootNodePtr_lua() { return Core::getInstance().getRootNodePtr(); }
 	DisplayObject getRootNode_lua() { return Core::getInstance().getRootNode(); }
 	DisplayObject getStageHandle_lua() { return Core::getInstance().getStageHandle(); }
 
@@ -209,7 +208,6 @@ namespace SDOM
 
 	// --- Object Lookup --- //
 	DisplayObject getDisplayObject_lua(const std::string& name) { return Core::getInstance().getDisplayObject(name); }
-	DisplayObject getFactoryStageHandle_lua() { return Core::getInstance().getFactoryStageHandle(); }
 	bool hasDisplayObject_lua(const std::string& name) { return Core::getInstance().hasDisplayObject(name); }
 
 	// --- Orphan / Future Child Management --- //
@@ -222,12 +220,5 @@ namespace SDOM
 	std::vector<std::string> listDisplayObjectNames_lua() { return Core::getInstance().listDisplayObjectNames(); }
 	void printObjectRegistry_lua() { Core::getInstance().printObjectRegistry(); }
 
-	// // --- DEPRECATED New Factory Methods --- //
-	// std::vector<std::string> getPropertyNamesForType_lua(const std::string& typeName) {
-	// 	return Core::getInstance().getFactory().getPropertyNamesForType(typeName); }
-	// std::vector<std::string> getCommandNamesForType_lua(const std::string& typeName) {
-	// 	return Core::getInstance().getFactory().getCommandNamesForType(typeName); }
-	// std::vector<std::string> getFunctionNamesForType_lua(const std::string& typeName) {
-	// 	return Core::getInstance().getFactory().getFunctionNamesForType(typeName); }
 
 } // end namespace SDOM

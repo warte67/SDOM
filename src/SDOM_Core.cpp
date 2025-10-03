@@ -1288,7 +1288,7 @@ namespace SDOM
 
 
 
-    // --- Factory Wrappers Implementation --- //
+    // --- Factory Wrapper Implementations --- //
 
     DisplayObject Core::createDisplayObject(const std::string& typeName, const sol::table& config) {
         return getFactory().create(typeName, config);
@@ -1305,9 +1305,6 @@ namespace SDOM
     }
     DisplayObject Core::getDisplayObject(const std::string& name) {
         return getFactory().getDisplayObject(name);
-    }
-    DisplayObject Core::getFactoryStageHandle() {
-        return getFactory().getStageHandle();
     }
     bool Core::hasDisplayObject(const std::string& name) const {
         DisplayObject handle = factory_->getDisplayObject(name);
@@ -1772,6 +1769,26 @@ namespace SDOM
             registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnWindowResize error: ") + err.what()); } });
             return sol::make_object(ts, sol::nil);
         });
+
+        // Expose quit/shutdown on the CoreForward table for convenience and
+        // also expose them as globals so older Lua scripts that call
+        // `quit()` or `shutdown()` continue to work.
+        coreTable.set_function("quit", [](sol::this_state ts, sol::object /*self*/) {
+            sol::state_view sv = ts;
+            quit_lua();
+            return sol::make_object(sv, true);
+        });
+        coreTable.set_function("shutdown", [](sol::this_state ts, sol::object /*self*/) {
+            sol::state_view sv = ts;
+            shutdown_lua();
+            return sol::make_object(sv, true);
+        });
+
+        // Backwards-compatible globals
+        try {
+            lua["quit"] = &quit_lua;
+            lua["shutdown"] = &shutdown_lua;
+        } catch (...) {}
 
     // Expose CoreForward (explicit) and make the global `Core` point to
     // the forwarding table so scripts can use the table-based API

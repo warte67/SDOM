@@ -170,12 +170,11 @@ namespace SDOM
         DisplayObject createDisplayObject(const std::string& typeName, const SDOM::IDisplayObject::InitStruct& init);
         DisplayObject createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript);
 
-    // --- Object Lookup --- //
-    IDisplayObject* getDisplayObjectPtr(const std::string& name);
-    DisplayObject getDisplayObject(const std::string& name);
-    // Backwards-compatibility: old name retained as a thin wrapper
-    DisplayObject getDisplayObjectHandle(const std::string& name) { return getDisplayObject(name); }
-        DisplayObject getFactoryStageHandle();
+        // --- Object Lookup --- //
+        IDisplayObject* getDisplayObjectPtr(const std::string& name);
+        DisplayObject getDisplayObject(const std::string& name);
+        // Backwards-compatibility: old name retained as a thin wrapper
+        DisplayObject getDisplayObjectHandle(const std::string& name) { return getDisplayObject(name); }
         bool hasDisplayObject(const std::string& name) const;
 
         // --- Display Object Management --- //
@@ -184,7 +183,7 @@ namespace SDOM
 
         // --- Orphan Management --- //
         int countOrphanedDisplayObjects() const;
-    std::vector<DisplayObject> getOrphanedDisplayObjects();
+        std::vector<DisplayObject> getOrphanedDisplayObjects();
         void destroyOrphanedDisplayObjects();
         void detachOrphans();
 
