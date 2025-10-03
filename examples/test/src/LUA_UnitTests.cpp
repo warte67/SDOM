@@ -284,7 +284,7 @@ namespace SDOM {
             bh:addEventListener({ 
                 type = EventType.MouseClick, 
                 listener = function(e) 
-                    print("MouseClick event received! name:", e.name, "type:", e.type, "x:", e.sdl and e.sdl.button and e.sdl.button.x, "y:", e.sdl and e.sdl.button and e.sdl.button.y)
+                    -- print("MouseClick event received! name:", e.name, "type:", e.type, "x:", e.sdl and e.sdl.button and e.sdl.button.x, "y:", e.sdl and e.sdl.button and e.sdl.button.y)
                     clicked = true 
                 end 
             })

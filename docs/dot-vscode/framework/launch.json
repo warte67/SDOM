@@ -8,7 +8,8 @@
             "program": "${workspaceFolder}/examples/test/prog",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build",
+            // "cwd": "${workspaceFolder}/build",
+            "cwd": "${workspaceFolder}/examples/test",
             "environment": [
                 {
                     "name": "LD_LIBRARY_PATH",

@@ -3,8 +3,9 @@
 #include <SDOM/SDOM.hpp>
 
 // #include <SDOM/SDOM_Handle.hpp>
-#include <SDOM/SDOM_DomHandle.hpp>
-#include <SDOM/SDOM_ResHandle.hpp>
+#include <SDOM/SDOM_DomHandle.hpp>  // Deprecated
+#include <SDOM/SDOM_ResHandle.hpp>  // Deprecated
+#include <SDOM/SDOM_DisplayObject.hpp>
 
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
@@ -17,8 +18,11 @@ namespace SDOM
     Factory::Factory() : IDataObject()
     {
         // make sure the DomHandles can access this Factory
-        DomHandle::factory_ = this;
-        ResHandle::factory_ = this;      
+        DomHandle::factory_ = this; // Deprecated
+        ResHandle::factory_ = this; // Deprecated
+
+        // Seed the static factory in the DisplayObject
+        DisplayObject::factory_ = this;
     }
 
     bool Factory::onInit()
@@ -38,17 +42,15 @@ namespace SDOM
         });
 
     // Test-only registration removed: concrete types should register their
-    // own Lua properties/commands/functions in their _registerLua implementations.
+    // own Lua properties/commands/functions in their _registerDisplayObject implementations.
 
         // Register other built-in types here as needed ...   
-        DomHandle prototypeHandle; // Default DomHandle for registration 
-        // prototypeHandle._registerLua_Usertype(core.getLua());
-        prototypeHandle._registerLua("DomHandle", core.getLua());
-        // ResHandle prototypeResHandle; // Default ResHandle for registration 
-        // prototypeResHandle._registerLua_Usertype(core.getLua());
-        // prototypeResHandle._registerLua("ResHandle", core.getLua());
+        DomHandle prototypeHandle_old; // Deprecated
+        prototypeHandle_old._registerLua("DomHandle", core.getLua()); // Deprecated
 
 
+        DisplayObject prototypeHandle; // Default DisplayObject for registration
+        prototypeHandle._registerDisplayObject("DisplayObject", core.getLua());
 
         return true;
     }
@@ -65,7 +67,8 @@ namespace SDOM
         if (prototypeHandle)
         {
             // prototypeHandle->_registerLua_Usertype(SDOM::getLua());
-            prototypeHandle->_registerLua(typeName, SDOM::getLua());
+            prototypeHandle->_registerLua(typeName, SDOM::getLua()); // Deprecated
+            prototypeHandle->_registerDisplayObject(typeName, SDOM::getLua());
             destroyDisplayObject(prototypeHandle.get()->getName()); // Clean up prototype
         }   
     }

@@ -10,9 +10,9 @@ namespace SDOM
 	class Event;
 
 	// --- Main Loop & Event Dispatch --- //
-	void quit_lua(Core& core); // **verified**
-	void shutdown_lua(Core& core); // **verified**
-	void run_lua(Core& core); // **verified**
+	void quit_lua(); // **verified**
+	void shutdown_lua(); // **verified**
+	void run_lua(); // **verified**
 
 	void configure_lua(const sol::table& config);
 	void configureFromFile_lua(const std::string& filename);
@@ -30,58 +30,58 @@ namespace SDOM
 	void registerOn_lua(const std::string& name, const sol::function& f);
 
 	// --- Stage/Root Node Management --- //
-	void setRootNodeByName_lua(Core& core, const std::string& name); // **verified**
-	void setRootNodeByHandle_lua(Core& core, const DomHandle& handle); // **verified**
-	void setStage_lua(Core& core, const std::string& name); // **verified**
-	IDisplayObject* getRootNodePtr_lua(Core& core); // **verified**
-	DomHandle getRootNode_lua(Core& core); // **verified**
-	DomHandle getStageHandle_lua(Core& core); // **verified**
+	void setRootNodeByName_lua(const std::string& name); // **verified**
+	void setRootNodeByHandle_lua(const DomHandle& handle); // **verified**
+	void setStage_lua(const std::string& name); // **verified**
+	IDisplayObject* getRootNodePtr_lua(); // **verified**
+	DomHandle getRootNode_lua(); // **verified**
+	DomHandle getStageHandle_lua(); // **verified**
 
 	// --- Factory & EventManager Access --- //
-	bool getIsTraversing_lua(const Core& core); // **verified**
-	Core& setIsTraversing_lua(Core& core, bool traversing); // **verified**
+	bool getIsTraversing_lua(); // **verified**
+	Core* setIsTraversing_lua(bool traversing); // **verified**
 
     // --- Object Creation --- //
 	DomHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config);    // **verified**
 
 	// --- Focus & Hover Management --- //
-	void handleTabKeyPress_lua(Core& core);					// **verified**
-	void handleTabKeyPressReverse_lua(Core& core);			// **verified**
-	void setKeyboardFocusedObject_lua(Core& core, DomHandle obj);  // **verified**
-	DomHandle getKeyboardFocusedObject_lua(const Core& core); // **verified**
-	void setMouseHoveredObject_lua(Core& core, DomHandle obj);	// **verified**
-	DomHandle getMouseHoveredObject_lua(const Core& core);	// **verified**
+	void handleTabKeyPress_lua(); 			// **verified**
+	void handleTabKeyPressReverse_lua(); 			// **verified**
+	void setKeyboardFocusedObject_lua(DomHandle obj);  // **verified**
+	DomHandle getKeyboardFocusedObject_lua(); // **verified**
+	void setMouseHoveredObject_lua(DomHandle obj);	// **verified**
+	DomHandle getMouseHoveredObject_lua(); 	// **verified**
 
 	// --- Window Title & Timing --- //
-	std::string getWindowTitle_lua(const Core& core);	// **verified**
-	Core& setWindowTitle_lua(Core& core, const std::string& title);	// **verified**
-	float getElapsedTime_lua(const Core& core);	// **verified**
+	std::string getWindowTitle_lua();	// **verified**
+	Core* setWindowTitle_lua(const std::string& title); 	// **verified**
+	float getElapsedTime_lua();	// **verified**
 
 	// --- Event helpers (exposed to Lua) --- //
-	void pumpEventsOnce_lua(Core& core); // **verified**
-	void pushMouseEvent_lua(Core& core, const sol::object& args); // **verified**
+	void pumpEventsOnce_lua(); // **verified**
+	void pushMouseEvent_lua(const sol::object& args); // **verified**
 
 	// synthesize keyboard events from Lua: expects table { key=<SDLK_* int>, type="down"|"up", mod=<modifier mask optional> }
-	void pushKeyboardEvent_lua(Core& core, const sol::object& args); // **verified**
+	void pushKeyboardEvent_lua(const sol::object& args); // **verified**
 
 	// --- Object Lookup --- //
-	DomHandle getDisplayObjectHandle_lua(Core& core, const std::string& name); // **verified**
-	DomHandle getFactoryStageHandle_lua(Core& core); // **verified**
-	bool hasDisplayObject_lua(const Core& core, const std::string& name); // **verified**
+	DomHandle getDisplayObjectHandle_lua(const std::string& name); // **verified**
+	DomHandle getFactoryStageHandle_lua(); // **verified**
+	bool hasDisplayObject_lua(const std::string& name); // **verified**
 
 	// --- Orphan / Future Child Management --- //
-	void destroyDisplayObject_lua(Core& core, const std::string& name); // **verified**
-	int countOrphanedDisplayObjects_lua(const Core& core); // **verified**
-	std::vector<DomHandle> getOrphanedDisplayObjects_lua(Core& core); // **verified**
-	void destroyOrphanedDisplayObjects_lua(Core& core); // **verified**
+	void destroyDisplayObject_lua(const std::string& name); // **verified**
+	int countOrphanedDisplayObjects_lua(); // **verified**
+	std::vector<DomHandle> getOrphanedDisplayObjects_lua(); // **verified**
+	void destroyOrphanedDisplayObjects_lua(); // **verified**
 
-    // --- Utility Methods --- //
-	std::vector<std::string> listDisplayObjectNames_lua(const Core& core); // **verified**
-	void printObjectRegistry_lua(Core& core);	// **verified**
+	// --- Utility Methods --- //
+	std::vector<std::string> listDisplayObjectNames_lua(); // **verified**
+	void printObjectRegistry_lua();	// **verified**
 
 	// --- New Factory Methods --- //
-	std::vector<std::string> getPropertyNamesForType_lua(const Core& core, const std::string& typeName); // **verified**
-	std::vector<std::string> getCommandNamesForType_lua(const Core& core, const std::string& typeName); // **verified**
-	std::vector<std::string> getFunctionNamesForType_lua(const Core& core, const std::string& typeName); // **verified**
+	std::vector<std::string> getPropertyNamesForType_lua(const std::string& typeName); // **verified**
+	std::vector<std::string> getCommandNamesForType_lua(const std::string& typeName); // **verified**
+	std::vector<std::string> getFunctionNamesForType_lua(const std::string& typeName); // **verified**
 
 } // end namespace SDOM

@@ -130,7 +130,7 @@ int main(int argc, char** argv)
         }
     }
 
-    std::cout << "[INFO] Using Lua config: " << configFile << std::endl;
+    // std::cout << "[INFO] Using Lua config: " << configFile << std::endl;
     // Configure the Core from the selected Lua config file
     core.run(configFile);
     return 0;

@@ -3,12 +3,13 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Stage.hpp>
+#include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 
 // #include <SDOM/SDOM_Handle.hpp>
-#include <SDOM/SDOM_DomHandle.hpp>
-#include <SDOM/SDOM_ResHandle.hpp>
+#include <SDOM/SDOM_DomHandle.hpp>  // Deprecated
+#include <SDOM/SDOM_ResHandle.hpp>  // Deprecated
 
 #include "Box.hpp"
 #include <atomic>
@@ -400,12 +401,12 @@ bool Box::onUnitTest()
 
 void Box::_registerLua(const std::string& typeName, sol::state_view lua)
 {
-    if (DEBUG_REGISTER_LUA)
-    {
-        std::string typeNameLocal = "Box";
-        std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-    }
+    // if (DEBUG_REGISTER_LUA)
+    // {
+    //     std::string typeNameLocal = "Box";
+    //     std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+    //                 << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+    // }
     // 1. Create and save usertype table (no constructor)
     sol::usertype<Box> objHandleType = lua.new_usertype<Box>(typeName,
         sol::base_classes, sol::bases<SUPER>()
@@ -456,3 +457,29 @@ void Box::_registerLua(const std::string& typeName, sol::state_view lua)
     // 4. Register the Lua usertype using the registry
     SDOM::getFactory().registerLuaPropertiesAndCommands(typeName, objHandleType_);             
 }
+
+
+ void Box::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
+ {
+    if (DEBUG_REGISTER_LUA)
+    {
+        std::string typeNameLocal = "Box";
+        std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
+                << typeName << CLR::RESET << std::endl;
+    }
+
+    // Call base class registration to include inherited properties/commands
+    SUPER::_registerDisplayObject(typeName, lua);
+
+    // // Create and save usertype table 
+    // SDOM::Factory& factory = SDOM::getFactory();
+
+    sol::usertype<Box> objHandleType = lua.new_usertype<Box>(typeName, sol::base_classes, sol::bases<SUPER>()
+        // ...Box-specific methods...
+    );
+
+    // Store the usertype for later use
+    this->objHandleType_ = objHandleType;
+
+ } // End Box::_registerDisplayObject()

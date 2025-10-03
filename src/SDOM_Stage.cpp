@@ -81,12 +81,12 @@ namespace SDOM
 
     void Stage::_registerLua(const std::string& typeName, sol::state_view lua)
     {
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "Stage";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                        << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-        }
+        // if (DEBUG_REGISTER_LUA)
+        // {
+        //     std::string typeNameLocal = "Stage";
+        //     std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+        //                 << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+        // }
         // 1. Create and save usertype table (no constructor)
         sol::usertype<Stage> objHandleType = lua.new_usertype<Stage>(typeName,
             sol::base_classes, sol::bases<SUPER>() );
@@ -123,6 +123,29 @@ namespace SDOM
         getFactory().registerLuaPropertiesAndCommands(typeName, objHandleType_);          
     }
 
+    void Stage::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
+    {
+        if (DEBUG_REGISTER_LUA)
+        {
+            std::string typeNameLocal = "Stage";
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
+                    << typeName << CLR::RESET << std::endl;
+        }
 
+        // Call base class registration to include inherited properties/commands
+        SUPER::_registerDisplayObject(typeName, lua);
+
+        // // Create and save usertype table 
+        // SDOM::Factory& factory = SDOM::getFactory();
+
+        sol::usertype<Stage> objHandleType = lua.new_usertype<Stage>(typeName, sol::base_classes, sol::bases<SUPER>()
+            // ...Stage-specific methods...
+        );
+
+        // Store the usertype for later use
+        this->objHandleType_ = objHandleType;
+
+    } // End Box::_registerDisplayObject()
 
 } // namespace SDOM

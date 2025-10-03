@@ -38,12 +38,12 @@ namespace SDOM
 
     void DomHandle::_registerLua(const std::string& typeName, sol::state_view lua)
     {
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "DomHandle";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                        << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-        }
+        // if (DEBUG_REGISTER_LUA)
+        // {
+        //     std::string typeNameLocal = "DomHandle";
+        //     std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+        //                 << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+        // }
         // 1. Create and save a dedicated DomHandle usertype (do NOT reuse the
         // concrete object typeName here - that would conflict with the
         // IDisplayObject usertype registration which uses the concrete
@@ -568,11 +568,11 @@ namespace SDOM
             if (parent) if (auto* p = dynamic_cast<IDisplayObject*>(parent.get())) p->sortChildrenByPriority();
         };
 
-    // Finally, apply any remaining registry-driven properties/commands to
-    // the DomHandle usertype for the concrete typeName. This attaches the
-    // forwarding commands into the DomHandle metatable so Lua sees them
-    // when a handle refers to an instance of that concrete type.
-    factory_->registerLuaPropertiesAndCommands(typeName, objHandleType_);
+        // Finally, apply any remaining registry-driven properties/commands to
+        // the DomHandle usertype for the concrete typeName. This attaches the
+        // forwarding commands into the DomHandle metatable so Lua sees them
+        // when a handle refers to an instance of that concrete type.
+        factory_->registerLuaPropertiesAndCommands(typeName, objHandleType_);
     }
 
 

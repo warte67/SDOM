@@ -299,7 +299,10 @@ namespace SDOM
 
         // --- Lua Registration --- //
         virtual void _registerLua(const std::string& typeName, sol::state_view lua);
-            sol::usertype<Core> objHandleType_;
+        sol::usertype<Core> objHandleType_;
+
+        virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua) override;
+
     };
 
 } // namespace SDOM

@@ -71,7 +71,7 @@ Requirements:
 Non-Requirements:
     - Not responsible for rendering, event handling, or resource management (handled by other interfaces).
     - Not tied to a specific serialization format (was JSON, now Lua; could be extended).
-
+`
 Summary:
     IDataObject is a data-centric, introspectable, and extensible interface for SDOM objects, focused on:
         - Dynamic property/command registration
@@ -89,6 +89,61 @@ Summary:
 // #include <sol/sol.hpp>
 #include <SDOM/SDOM_IUnitTest.hpp>
 
+
+/*  Saved a note for the DisplayObject type
+
++    // Return a non-owning raw pointer to the requested concrete type.
++    // Example: auto* box = displayObj.as<Box>();
++    // Returned pointer is non-owning and must not be used after the underlying object is destroyed.
++    template<typename T>
++    T* as() const
++    {
++        if (!handle_.isValid()) return nullptr;
++        return dynamic_cast<T*>(handle_.get());
++    }
++
++    // Convenience: get raw IDisplayObject pointer (non-owning), or nullptr if not available.
++    IDisplayObject* get() const
++    {
++        if (!handle_.isValid()) return nullptr;
++        return dynamic_cast<IDisplayObject*>(handle_.get());
++    }
+
+Terminology (canonical)
+
+- DOM Node (the node / actual object)
+  - The concrete object instance owned by the Factory.
+  - Implements IDisplayObject (virtual interface) and contains the real state and behavior.
+  - Access from C++ via DisplayObject::get() which returns a non‑owned raw pointer (IDisplayObject*).
+
+- DisplayObject (the handle)
+  - A handle/holder to a DOM Node (internally owned by the Factory).
+  - References the lifetime of the DOM Node via Factory ownership semantics.
+  - Provides safe accessors, property APIs and forwards mutators to the underlying DOM Node.
+  - This is the canonical C++ handle type name we keep.
+
+- AssetObject (asset handle)
+  - A handle/holder to a non‑visual resource (texture, sound, data blob) managed by the Factory.
+  - Use AssetHandle (alias) as the handle type exposed to C++ and Lua where appropriate.
+
+- Resource (umbrella)
+  - Generic term encompassing both DisplayObjects (visual) and AssetObjects (non-visual).
+
+Guidelines / invariants
+
+- Be explicit about ownership: DisplayObject == handle (not the owned DOM Node); 
+    DOM Node == Factory-owned object.
+- C++ APIs that need raw-pointer performance should use .get() with lifetime disclaimers.
+- Register a single centralized Lua usertype (DisplayObject) exposing the handle API; 
+    do not expose raw DOM Node internals to Lua.
+- Add helper accessors on the handle as needed rather than exposing implementation details.
+
+Notes on migration
+- DomHandle and ResHandle are deprecated and will be removed shortly. Add short-term type aliases 
+    if needed for compatibility, but prefer DisplayObject / AssetHandle in all new code and docs.
+
+
+*/
 
 namespace SDOM
 {
@@ -128,10 +183,29 @@ namespace SDOM
 
         // --- New Virtual LUA Registration for Sol2 ---
     public:
-        // void registerLua_Usertype(sol::state_view lua)                      { this->_registerLua_Usertype(lua); }
-        void registerLua(const std::string& typeName, sol::state_view lua)  { this->_registerLua(typeName, lua); }   
+        
+        void registerLua(const std::string& typeName, sol::state_view lua)      // Depricated
+        { this->_registerLua(typeName, lua); }                                  // Depricated
+
+        // New preferred Lua binding path
+        virtual void registerDisplayObject(const std::string& typeName, sol::state_view lua)
+        {
+            this->_registerDisplayObject(typeName, lua);
+        }
+
     protected:
-        virtual void _registerLua(const std::string& typeName, sol::state_view lua)
+        virtual void _registerLua(const std::string& typeName, sol::state_view lua) // Depricated
+        {
+            // if (DEBUG_REGISTER_LUA)
+            // {
+            //     std::string typeNameLocal = "IDataObject";
+            //     std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+            //             << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+            // }
+        }   
+
+
+        virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua)
         {
             if (DEBUG_REGISTER_LUA)
             {
@@ -140,6 +214,9 @@ namespace SDOM
                         << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
             }
         }   
+
+
+        
         sol::usertype<IDataObject> objHandleType_;
 
         // --- End New Virtual LUA Registration for Sol2 ---

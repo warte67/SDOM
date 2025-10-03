@@ -134,325 +134,13 @@ namespace SDOM
 
 
 
+    // Compatibility shim: preserve _registerLua() signature but forward to
+    // the consolidated _registerDisplayObject() implementation. This keeps
+    // external callers working while we centralize registration.
     void IDisplayObject::_registerLua(const std::string& typeName, sol::state_view lua)
     {
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "IDisplayObject";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-        }
-
-        // 1. Create and save usertype table (no constructor)
-        sol::usertype<IDisplayObject> objHandleType = lua.new_usertype<IDisplayObject>(typeName);
-        this->objHandleType_ = objHandleType; // Save in IDataObject
-
-        // Ensure Bounds is registered as a userdata for Lua (compatibility)
-        if (!lua["Bounds"].valid()) {
-            lua.new_usertype<Bounds>("Bounds",
-                "left", &Bounds::left,
-                "top", &Bounds::top,
-                "right", &Bounds::right,
-                "bottom", &Bounds::bottom,
-                "x", sol::property([](const Bounds& b) { return static_cast<int>(b.left); }),
-                "y", sol::property([](const Bounds& b) { return static_cast<int>(b.top); }),
-                "width", sol::property([](const Bounds& b) { return static_cast<int>(b.width()); }),
-                "height", sol::property([](const Bounds& b) { return static_cast<int>(b.height()); }),
-                "widthf", &Bounds::width,
-                "heightf", &Bounds::height,
-                // Method-style getters
-                "getLeft", [](const Bounds& b) { return b.left; },
-                "getTop", [](const Bounds& b) { return b.top; },
-                "getRight", [](const Bounds& b) { return b.right; },
-                "getBottom", [](const Bounds& b) { return b.bottom; },
-                "getX", [](const Bounds& b) { return static_cast<int>(b.left); },
-                "getY", [](const Bounds& b) { return static_cast<int>(b.top); },
-                "getWidth", [](const Bounds& b) { return static_cast<int>(b.width()); },
-                "getHeight", [](const Bounds& b) { return static_cast<int>(b.height()); },
-                // epsilon-aware comparison helper
-                "almostEqual", [](const Bounds& a, const Bounds& other, sol::optional<float> eps) {
-                    float e = eps ? *eps : 0.0001f;
-                    return std::abs(a.left - other.left) <= e
-                        && std::abs(a.top - other.top) <= e
-                        && std::abs(a.right - other.right) <= e
-                        && std::abs(a.bottom - other.bottom) <= e;
-                }
-            );
-        }
-
-        // 2. Register properties using the factory
-        Factory& factory = getFactory();
-
-        factory.registerLuaProperty(typeName, "name",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getName());
-            },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
-                static_cast<IDisplayObject&>(obj).setName(value.as<std::string>());
-                return obj;
-            }
-        );
-
-        factory.registerLuaProperty(typeName, "type",
-            [](const IDataObject& obj, sol::state_view lua) {
-                return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getType());
-            }, nullptr
-        );
-
-        // Position and size
-        factory.registerLuaProperty(typeName, "x",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getX()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setX(value.as<int>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "y",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getY()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setY(value.as<int>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "width",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getWidth()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setWidth(value.as<int>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "height",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getHeight()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setHeight(value.as<int>()); return obj; }
-        );
-
-        // Edges
-        factory.registerLuaProperty(typeName, "left",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getLeft()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setLeft(value.as<float>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "right",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getRight()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setRight(value.as<float>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "top",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getTop()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setTop(value.as<float>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "bottom",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getBottom()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setBottom(value.as<float>()); return obj; }
-        );
-
-        // Priority, z-order, visibility & interactivity
-        factory.registerLuaProperty(typeName, "priority",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getPriority()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setPriority(value.as<int>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "zOrder",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getZOrder()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setZOrder(value.as<int>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "clickable",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).isClickable()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setClickable(value.as<bool>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "enabled",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).isEnabled()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setEnabled(value.as<bool>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "hidden",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).isHidden()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setHidden(value.as<bool>()); return obj; }
-        );
-
-        // Tab
-        factory.registerLuaProperty(typeName, "tabPriority",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getTabPriority()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setTabPriority(value.as<int>()); return obj; }
-        );
-        factory.registerLuaProperty(typeName, "tabEnabled",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).isTabEnabled()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setTabEnabled(value.as<bool>()); return obj; }
-        );
-
-        // Color (getter only here; setter via table handled elsewhere)
-        factory.registerLuaProperty(typeName, "color",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getColor()); },
-            [](IDataObject& obj, sol::object value, sol::state_view lua) -> IDataObject& {
-                // Expect either an SDL_Color or a Lua table with r,g,b,a
-                if (value.is<SDL_Color>()) {
-                    static_cast<IDisplayObject&>(obj).setColor(value.as<SDL_Color>());
-                } else if (value.is<sol::table>()) {
-                    sol::table t = value.as<sol::table>();
-                    SDL_Color c;
-                    c.r = t["r"].get_or(255);
-                    c.g = t["g"].get_or(255);
-                    c.b = t["b"].get_or(255);
-                    c.a = t["a"].get_or(255);
-                    static_cast<IDisplayObject&>(obj).setColor(c);
-                }
-                return obj;
-            }
-        );
-
-        // Anchors
-        factory.registerLuaProperty(typeName, "anchorTop",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorTop()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
-                // Accept either an AnchorPoint or a string that will be normalized
-                if (value.is<std::string>()) {
-                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
-                    auto it = SDOM::stringToAnchorPoint_.find(key);
-                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorTop(it->second);
-                } else {
-                    static_cast<IDisplayObject&>(obj).setAnchorTop(value.as<AnchorPoint>());
-                }
-                return obj;
-            }
-        );
-        factory.registerLuaProperty(typeName, "anchorLeft",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorLeft()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
-                if (value.is<std::string>()) {
-                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
-                    auto it = SDOM::stringToAnchorPoint_.find(key);
-                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorLeft(it->second);
-                } else {
-                    static_cast<IDisplayObject&>(obj).setAnchorLeft(value.as<AnchorPoint>());
-                }
-                return obj;
-            }
-        );
-        factory.registerLuaProperty(typeName, "anchorBottom",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorBottom()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
-                if (value.is<std::string>()) {
-                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
-                    auto it = SDOM::stringToAnchorPoint_.find(key);
-                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorBottom(it->second);
-                } else {
-                    static_cast<IDisplayObject&>(obj).setAnchorBottom(value.as<AnchorPoint>());
-                }
-                return obj;
-            }
-        );
-        factory.registerLuaProperty(typeName, "anchorRight",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorRight()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
-                if (value.is<std::string>()) {
-                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
-                    auto it = SDOM::stringToAnchorPoint_.find(key);
-                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorRight(it->second);
-                } else {
-                    static_cast<IDisplayObject&>(obj).setAnchorRight(value.as<AnchorPoint>());
-                }
-                return obj;
-            }
-        );
-
-        // Dirty flags
-        factory.registerLuaProperty(typeName, "dirty",
-            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).isDirty()); },
-            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { if (value.is<bool>()) { if (value.as<bool>()) static_cast<IDisplayObject&>(obj).setDirty(); else static_cast<IDisplayObject&>(obj).cleanAll(); } return obj; }
-        );
-
-        // 3. Register commands (actions)
-        factory.registerLuaCommand(typeName, "cleanAll",
-            [](IDataObject& obj, sol::object, sol::state_view) {
-                cleanAll_lua(static_cast<IDisplayObject&>(obj));
-            }
-        );
-
-        factory.registerLuaCommand(typeName, "printTree",
-            [](IDataObject& obj, sol::object, sol::state_view) {
-                SDOM::printTree_lua(static_cast<const IDisplayObject&>(static_cast<IDisplayObject&>(obj)));
-            }
-        );
-
-        // NOTE: addChild/removeChild/hasChild are already bound directly on the
-        // IDisplayObject usertype above; avoid re-registering them via the
-        // Factory registry to prevent method dispatch/type-mismatch issues.
-
-        factory.registerLuaCommand(typeName, "setParent",
-            [](IDataObject& obj, sol::object args, sol::state_view) {
-                if (args.is<sol::table>()) {
-                    sol::table t = args.as<sol::table>();
-                    DomHandle parent = t["parent"].get<DomHandle>();
-                    setParent_lua(static_cast<IDisplayObject&>(obj), parent);
-                }
-            }
-        );
-
-        // Expose setBounds so Lua can call :setBounds({ left=..., top=..., right=..., bottom=... })
-        factory.registerLuaCommand(typeName, "setBounds",
-            [](IDataObject& obj, sol::object args, sol::state_view lua) {
-                if (!args.is<sol::table>()) return;
-                sol::table t = args.as<sol::table>();
-                Bounds b;
-                // Allow either numeric indices or named fields
-                if (t[1].valid() && t[2].valid() && t[3].valid() && t[4].valid()) {
-                    b.left = t[1].get<float>();
-                    b.top = t[2].get<float>();
-                    b.right = t[3].get<float>();
-                    b.bottom = t[4].get<float>();
-                } else {
-                    b.left = t["left"].get_or(0.0f);
-                    b.top = t["top"].get_or(0.0f);
-                    b.right = t["right"].get_or(0.0f);
-                    b.bottom = t["bottom"].get_or(0.0f);
-                }
-                setBounds_lua(static_cast<IDisplayObject&>(obj), b);
-            }
-        );
-
-        // Expose getBounds so Lua can call :getBounds() and receive a Bounds userdata
-        factory.registerLuaFunction(typeName, "getBounds",
-            [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                IDisplayObject& dobj = static_cast<IDisplayObject&>(obj);
-                Bounds b = dobj.getBounds();
-                return sol::make_object(lua, b);
-            }
-        );
-
-        // Event handling registration (expects a table with fields: type, listener, useCapture, priority)
-        factory.registerLuaCommand(typeName, "addEventListener",
-            [](IDataObject& obj, sol::object args, sol::state_view lua) {
-                if (!args.is<sol::table>()) return;
-                sol::table t = args.as<sol::table>();
-                EventType& type = t["type"].get<EventType&>();
-                sol::function fn = t["listener"].get<sol::function>();
-                bool useCapture = t["useCapture"].get_or(false);
-                int priority = t["priority"].get_or(0);
-                addEventListener_lua(static_cast<IDisplayObject&>(obj), type, fn, useCapture, priority);
-            }
-        );
-
-        factory.registerLuaCommand(typeName, "removeEventListener",
-            [](IDataObject& obj, sol::object args, sol::state_view lua) {
-                if (!args.is<sol::table>()) return;
-                sol::table t = args.as<sol::table>();
-                EventType& type = t["type"].get<EventType&>();
-                sol::function fn = t["listener"].get<sol::function>();
-                bool useCapture = t["useCapture"].get_or(false);
-                removeEventListener_lua(static_cast<IDisplayObject&>(obj), type, fn, useCapture);
-            }
-        );
-
-        // Priority/z-order and misc commands
-        factory.registerLuaCommand(typeName, "setToHighestPriority",
-            [](IDataObject& obj, sol::object, sol::state_view) { setToHighestPriority_lua(static_cast<IDisplayObject&>(obj)); }
-        );
-        factory.registerLuaCommand(typeName, "setToLowestPriority",
-            [](IDataObject& obj, sol::object, sol::state_view) { setToLowestPriority_lua(static_cast<IDisplayObject&>(obj)); }
-        );
-        factory.registerLuaCommand(typeName, "sortChildrenByPriority",
-            [](IDataObject& obj, sol::object, sol::state_view) { sortChildrenByPriority_lua(static_cast<IDisplayObject&>(obj)); }
-        );
-        factory.registerLuaCommand(typeName, "moveToTop",
-            [](IDataObject& obj, sol::object, sol::state_view) { moveToTop_lua(static_cast<IDisplayObject&>(obj)); }
-        );
-
-        // Focus/interactivity
-        factory.registerLuaCommand(typeName, "setKeyboardFocus",
-            [](IDataObject& obj, sol::object, sol::state_view) { setKeyboardFocus_lua(static_cast<IDisplayObject&>(obj)); }
-        );
-
-        // Finally register any registry-driven properties/commands
-        factory.registerLuaPropertiesAndCommands(typeName, objHandleType_);
-
-    } // end _registerLua()
+        _registerDisplayObject(typeName, lua);
+    }
 
 
     bool IDisplayObject::onInit()
@@ -1298,6 +986,332 @@ namespace SDOM
         setDirty();
         return *this;
     }
+
+
+    void IDisplayObject::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
+    {
+        if (DEBUG_REGISTER_LUA)
+        {
+            std::string typeNameLocal = "IDisplayObject";
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
+                    << typeName << CLR::RESET << std::endl;
+        }
+
+        // Call base class registration to include inherited properties/commands
+        SUPER::_registerDisplayObject(typeName, lua);
+
+        // // Create and save usertype table 
+        // SDOM::Factory& factory = SDOM::getFactory();
+
+        sol::usertype<IDisplayObject> objHandleType = lua.new_usertype<IDisplayObject>(typeName, sol::base_classes, sol::bases<SUPER>()
+            // ...IDisplayObject-specific methods...
+        );
+
+        // Store the usertype for later use
+        this->objHandleType_ = objHandleType;
+
+        // Ensure Bounds is registered as a userdata for Lua (compatibility)
+        if (!lua["Bounds"].valid()) {
+            lua.new_usertype<Bounds>("Bounds",
+                "left", &Bounds::left,
+                "top", &Bounds::top,
+                "right", &Bounds::right,
+                "bottom", &Bounds::bottom,
+                "x", sol::property([](const Bounds& b) { return static_cast<int>(b.left); }),
+                "y", sol::property([](const Bounds& b) { return static_cast<int>(b.top); }),
+                "width", sol::property([](const Bounds& b) { return static_cast<int>(b.width()); }),
+                "height", sol::property([](const Bounds& b) { return static_cast<int>(b.height()); }),
+                "widthf", &Bounds::width,
+                "heightf", &Bounds::height,
+                // Method-style getters
+                "getLeft", [](const Bounds& b) { return b.left; },
+                "getTop", [](const Bounds& b) { return b.top; },
+                "getRight", [](const Bounds& b) { return b.right; },
+                "getBottom", [](const Bounds& b) { return b.bottom; },
+                "getX", [](const Bounds& b) { return static_cast<int>(b.left); },
+                "getY", [](const Bounds& b) { return static_cast<int>(b.top); },
+                "getWidth", [](const Bounds& b) { return static_cast<int>(b.width()); },
+                "getHeight", [](const Bounds& b) { return static_cast<int>(b.height()); },
+                // epsilon-aware comparison helper
+                "almostEqual", [](const Bounds& a, const Bounds& other, sol::optional<float> eps) {
+                    float e = eps ? *eps : 0.0001f;
+                    return std::abs(a.left - other.left) <= e
+                        && std::abs(a.top - other.top) <= e
+                        && std::abs(a.right - other.right) <= e
+                        && std::abs(a.bottom - other.bottom) <= e;
+                }
+            );
+        }
+
+        // Register all lua properties/functions/commands using the Factory.
+        // Grouped and alphabetized within each group for maintainability.
+        Factory& factory = getFactory();
+
+        // ------------------ Properties (alphabetical) ------------------
+        factory.registerLuaProperty(typeName, "anchorBottom",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorBottom()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
+                if (value.is<std::string>()) {
+                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
+                    auto it = SDOM::stringToAnchorPoint_.find(key);
+                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorBottom(it->second);
+                } else {
+                    static_cast<IDisplayObject&>(obj).setAnchorBottom(value.as<AnchorPoint>());
+                }
+                return obj;
+            }
+        );
+
+        factory.registerLuaProperty(typeName, "anchorLeft",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorLeft()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
+                if (value.is<std::string>()) {
+                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
+                    auto it = SDOM::stringToAnchorPoint_.find(key);
+                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorLeft(it->second);
+                } else {
+                    static_cast<IDisplayObject&>(obj).setAnchorLeft(value.as<AnchorPoint>());
+                }
+                return obj;
+            }
+        );
+
+        factory.registerLuaProperty(typeName, "anchorRight",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorRight()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
+                if (value.is<std::string>()) {
+                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
+                    auto it = SDOM::stringToAnchorPoint_.find(key);
+                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorRight(it->second);
+                } else {
+                    static_cast<IDisplayObject&>(obj).setAnchorRight(value.as<AnchorPoint>());
+                }
+                return obj;
+            }
+        );
+
+        factory.registerLuaProperty(typeName, "anchorTop",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getAnchorTop()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
+                if (value.is<std::string>()) {
+                    std::string key = SDOM::normalizeAnchorString(value.as<std::string>());
+                    auto it = SDOM::stringToAnchorPoint_.find(key);
+                    if (it != SDOM::stringToAnchorPoint_.end()) static_cast<IDisplayObject&>(obj).setAnchorTop(it->second);
+                } else {
+                    static_cast<IDisplayObject&>(obj).setAnchorTop(value.as<AnchorPoint>());
+                }
+                return obj;
+            }
+        );
+
+        factory.registerLuaProperty(typeName, "bottom",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getBottom()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setBottom(value.as<float>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "clickable",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).isClickable()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setClickable(value.as<bool>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "color",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getColor()); },
+            [](IDataObject& obj, sol::object value, sol::state_view lua) -> IDataObject& {
+                if (value.is<SDL_Color>()) {
+                    static_cast<IDisplayObject&>(obj).setColor(value.as<SDL_Color>());
+                } else if (value.is<sol::table>()) {
+                    sol::table t = value.as<sol::table>();
+                    SDL_Color c;
+                    c.r = t["r"].get_or(255);
+                    c.g = t["g"].get_or(255);
+                    c.b = t["b"].get_or(255);
+                    c.a = t["a"].get_or(255);
+                    static_cast<IDisplayObject&>(obj).setColor(c);
+                }
+                return obj;
+            }
+        );
+
+        factory.registerLuaProperty(typeName, "dirty",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).isDirty()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { if (value.is<bool>()) { if (value.as<bool>()) static_cast<IDisplayObject&>(obj).setDirty(); else static_cast<IDisplayObject&>(obj).cleanAll(); } return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "height",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getHeight()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setHeight(value.as<int>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "left",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getLeft()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setLeft(value.as<float>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "name",
+            [](const IDataObject& obj, sol::state_view lua) {
+                return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getName());
+            },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& {
+                static_cast<IDisplayObject&>(obj).setName(value.as<std::string>());
+                return obj;
+            }
+        );
+
+        factory.registerLuaProperty(typeName, "priority",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getPriority()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setPriority(value.as<int>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "right",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getRight()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setRight(value.as<float>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "tabEnabled",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).isTabEnabled()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setTabEnabled(value.as<bool>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "tabPriority",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getTabPriority()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setTabPriority(value.as<int>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "top",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getTop()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setTop(value.as<float>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "type",
+            [](const IDataObject& obj, sol::state_view lua) {
+                return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getType());
+            }, nullptr
+        );
+
+        factory.registerLuaProperty(typeName, "width",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getWidth()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setWidth(value.as<int>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "x",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getX()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setX(value.as<int>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "y",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getY()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setY(value.as<int>()); return obj; }
+        );
+
+        factory.registerLuaProperty(typeName, "zOrder",
+            [](const IDataObject& obj, sol::state_view lua) { return sol::make_object(lua, static_cast<const IDisplayObject&>(obj).getZOrder()); },
+            [](IDataObject& obj, sol::object value, sol::state_view) -> IDataObject& { static_cast<IDisplayObject&>(obj).setZOrder(value.as<int>()); return obj; }
+        );
+
+        // ------------------ Functions (alphabetical) ------------------
+        factory.registerLuaFunction(typeName, "getBounds",
+            [](IDataObject& obj, sol::object /*args*/, sol::state_view lua) -> sol::object {
+                IDisplayObject& dobj = static_cast<IDisplayObject&>(obj);
+                Bounds b = dobj.getBounds();
+                return sol::make_object(lua, b);
+            }
+        );
+
+        // ------------------ Commands (alphabetical) ------------------
+        factory.registerLuaCommand(typeName, "addEventListener",
+            [](IDataObject& obj, sol::object args, sol::state_view lua) {
+                if (!args.is<sol::table>()) return;
+                sol::table t = args.as<sol::table>();
+                EventType& type = t["type"].get<EventType&>();
+                sol::function fn = t["listener"].get<sol::function>();
+                bool useCapture = t["useCapture"].get_or(false);
+                int priority = t["priority"].get_or(0);
+                addEventListener_lua(&static_cast<IDisplayObject&>(obj), type, fn, useCapture, priority);
+            }
+        );
+
+        factory.registerLuaCommand(typeName, "cleanAll",
+            [](IDataObject& obj, sol::object, sol::state_view) {
+                cleanAll_lua(&static_cast<IDisplayObject&>(obj));
+            }
+        );
+
+        factory.registerLuaCommand(typeName, "moveToTop",
+            [](IDataObject& obj, sol::object, sol::state_view) { moveToTop_lua(&static_cast<IDisplayObject&>(obj)); }
+        );
+
+        factory.registerLuaCommand(typeName, "printTree",
+            [](IDataObject& obj, sol::object, sol::state_view) {
+                SDOM::printTree_lua(&static_cast<const IDisplayObject&>(static_cast<IDisplayObject&>(obj)));
+            }
+        );
+
+        factory.registerLuaCommand(typeName, "removeEventListener",
+            [](IDataObject& obj, sol::object args, sol::state_view lua) {
+                if (!args.is<sol::table>()) return;
+                sol::table t = args.as<sol::table>();
+                EventType& type = t["type"].get<EventType&>();
+                sol::function fn = t["listener"].get<sol::function>();
+                bool useCapture = t["useCapture"].get_or(false);
+                removeEventListener_lua(&static_cast<IDisplayObject&>(obj), type, fn, useCapture);
+            }
+        );
+
+        factory.registerLuaCommand(typeName, "setBounds",
+            [](IDataObject& obj, sol::object args, sol::state_view lua) {
+                if (!args.is<sol::table>()) return;
+                sol::table t = args.as<sol::table>();
+                Bounds b;
+                if (t[1].valid() && t[2].valid() && t[3].valid() && t[4].valid()) {
+                    b.left = t[1].get<float>();
+                    b.top = t[2].get<float>();
+                    b.right = t[3].get<float>();
+                    b.bottom = t[4].get<float>();
+                } else {
+                    b.left = t["left"].get_or(0.0f);
+                    b.top = t["top"].get_or(0.0f);
+                    b.right = t["right"].get_or(0.0f);
+                    b.bottom = t["bottom"].get_or(0.0f);
+                }
+                setBounds_lua(&static_cast<IDisplayObject&>(obj), b);
+            }
+        );
+
+        factory.registerLuaCommand(typeName, "setKeyboardFocus",
+            [](IDataObject& obj, sol::object, sol::state_view) { setKeyboardFocus_lua(&static_cast<IDisplayObject&>(obj)); }
+        );
+
+        factory.registerLuaCommand(typeName, "setParent",
+            [](IDataObject& obj, sol::object args, sol::state_view) {
+                if (args.is<sol::table>()) {
+                    sol::table t = args.as<sol::table>();
+                    DomHandle parent = t["parent"].get<DomHandle>();
+                    setParent_lua(&static_cast<IDisplayObject&>(obj), parent);
+                }
+            }
+        );
+
+        factory.registerLuaCommand(typeName, "setToHighestPriority",
+            [](IDataObject& obj, sol::object, sol::state_view) { setToHighestPriority_lua(&static_cast<IDisplayObject&>(obj)); }
+        );
+
+        factory.registerLuaCommand(typeName, "setToLowestPriority",
+            [](IDataObject& obj, sol::object, sol::state_view) { setToLowestPriority_lua(&static_cast<IDisplayObject&>(obj)); }
+        );
+
+        factory.registerLuaCommand(typeName, "sortChildrenByPriority",
+            [](IDataObject& obj, sol::object, sol::state_view) { sortChildrenByPriority_lua(&static_cast<IDisplayObject&>(obj)); }
+        );
+
+        // NOTE: addChild/removeChild/hasChild are already bound directly on the
+        // IDisplayObject usertype above; avoid re-registering them via the
+        // Factory registry to prevent method dispatch/type-mismatch issues.
+
+        // Finally register any registry-driven properties/commands
+        factory.registerLuaPropertiesAndCommands(typeName, objHandleType_);
+
+    } // End IDisplayObject::_registerDisplayObject()
 
 
 } // namespace SDOM

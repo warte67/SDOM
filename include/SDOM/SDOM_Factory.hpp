@@ -35,10 +35,10 @@ namespace SDOM
         DomHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);        
         DomHandle create(const std::string& typeName, const std::string& luaScript);
 
-    // Helper: attach a newly-created display object (by name/type) to a
-    // parent specified in a Lua config value. Accepts string name, DomHandle,
-    // or a nested table { parent = ... }. Returns true if attachment occurred.
-    bool attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig);
+        // Helper: attach a newly-created display object (by name/type) to a
+        // parent specified in a Lua config value. Accepts string name, DomHandle,
+        // or a nested table { parent = ... }. Returns true if attachment occurred.
+        bool attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig);
 
         // --- Object Lookup --- //
         IDisplayObject* getDomObj(const std::string& name);
@@ -85,6 +85,14 @@ namespace SDOM
         std::unordered_map<std::string, TypeCreators> creators_;
 
         // --- Orphan & Future Child Lists --- //
+
+        // DEPRECATED: futureChild is legacy and uses DomHandle.
+        // Prefer a DisplayObject-aware future-child API that operates on the new
+        // DisplayObject handle surface. Keep this struct only for backward
+        // compatibility while migrating code. Do not add new uses.
+        // Removal plan: migrate addToFutureChildrenList / attachFutureChildren
+        // to accept DisplayObject handles and drop this type.
+        // [[deprecated("futureChild is deprecated; migrate to DisplayObject-based future-child API")]]
         std::vector<DomHandle> orphanList_;
         struct futureChild 
         {
@@ -93,11 +101,46 @@ namespace SDOM
             bool preserveWorldPosition;
             int dragStartWorldX;
             int dragStartWorldY;
-        };
+        };            
         std::vector<futureChild> futureChildrenList_;
 
     public:
         // --- Lua Object Type Registry (public) --- //
+
+        void registerLuaProperty(const std::string& typeName,
+                            const std::string& propertyName,
+                            IDataObject::Getter getter,
+                            IDataObject::Setter setter);
+
+        void registerLuaCommand(const std::string& typeName,
+                            const std::string& commandName,
+                            IDataObject::Command command);    
+
+        void registerLuaFunction(const std::string& typeName,
+                            const std::string& functionName,
+                            IDataObject::Function function);
+
+
+        // -------------------------------------------------------------
+        // DEPRECATED: ObjectTypeRegistry (kept for legacy registerLua())
+        //
+        // Reason:
+        //  - This registry duplicates actual Lua binding code and is fragile:
+        //    keeping registry entries in sync with concrete _registerLua()
+        //    is error-prone and leads to divergence between C++ behavior
+        //    and Lua bindings.
+        //  - New approach: concrete types should populate the centralized
+        //    DisplayObject binding surface via IDataObject::registerDisplayObject()
+        //    or Factory::registerLuaFunction/registerLuaProperty directly.
+        //
+        // Migration:
+        //  1) Stop adding new bindings to ObjectTypeRegistry.
+        //  2) Move per-type bindings into registerDisplayObject() implementations
+        //     that call Factory::registerLuaFunction / registerLuaProperty.
+        //  3) Once all types use the new path, remove ObjectTypeRegistry.
+        //
+        // The types and helpers below remain for backwards compatibility only.
+        // They are scheduled        struct ObjectTypeRegistryEntry
         struct ObjectTypeRegistryEntry
         {
             std::string typeName;
@@ -122,19 +165,7 @@ namespace SDOM
             std::vector<FunctionEntry> functions;
         };
 
-        void registerLuaProperty(const std::string& typeName,
-                            const std::string& propertyName,
-                            IDataObject::Getter getter,
-                            IDataObject::Setter setter);
-
-        void registerLuaCommand(const std::string& typeName,
-                            const std::string& commandName,
-                            IDataObject::Command command);    
-
-        void registerLuaFunction(const std::string& typeName,
-                            const std::string& functionName,
-                            IDataObject::Function function);
-
+        // Deprecated, will be removed.
         ObjectTypeRegistryEntry* getTypeRegistryEntry(const std::string& typeName);
         ObjectTypeRegistryEntry::PropertyEntry* getPropertyEntry(
                             const std::string& typeName, const std::string& propertyName);
@@ -143,11 +174,10 @@ namespace SDOM
         ObjectTypeRegistryEntry::FunctionEntry* getFunctionEntry(
                             const std::string& typeName, const std::string& functionName);
 
-    // Deprecated: test-only registration removed. Concrete types should
-    // populate the Factory registry during their own Lua registration.
-
+        // Deprecated: test-only registration removed. Concrete types should
+        // populate the Factory registry during their own Lua registration.
         template<typename T>
-        void registerLuaPropertiesAndCommands(const std::string& typeName, sol::usertype<T>& usertypeTable) 
+        void registerLuaPropertiesAndCommands(const std::string& typeName, sol::usertype<T>& usertypeTable)  // Deprecated
         {
             auto* entry = getTypeRegistryEntry(typeName);
             if (!entry) return;

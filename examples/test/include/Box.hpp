@@ -61,8 +61,11 @@ class Box final : public SDOM::IDisplayObject
 
     protected:
     // --- LUA Registration --- //
-        virtual void _registerLua(const std::string& typeName, sol::state_view lua);
+        virtual void _registerLua(const std::string& typeName, sol::state_view lua); // Depricated
         sol::usertype<Box> objHandleType_;
+
+        virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua);
+
 
         
 };
