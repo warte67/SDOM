@@ -16,7 +16,7 @@ namespace SDOM
     bool isDirty_lua(const IDisplayObject* obj) { if (!obj) return false; return obj->isDirty(); }
 
     // --- Debug/Utility --- //
-    void printTree_lua(const IDisplayObject* obj) { if (!obj) return; obj->printTree_lua(); }
+    void printTree_lua(const IDisplayObject* obj) { if (!obj) return; obj->printTree(); }
 
     // --- Event Handling --- //
     void addEventListener_lua(IDisplayObject* obj, EventType& type, sol::function listener, bool useCapture, int priority) {
@@ -153,6 +153,7 @@ namespace SDOM
 
     // --- Hierarchy Management --- //
     void addChild_lua(IDisplayObject* obj, DisplayObject child) { if (!obj) return; obj->addChild(child); }
+    DisplayObject getChild_lua(const IDisplayObject* obj, std::string name) { if (!obj) return DisplayObject(); return obj->getChild(name); }
     bool removeChild_lua(IDisplayObject* obj, DisplayObject child) { if (!obj) return false; return obj->removeChild(child); }
     bool hasChild_lua(const IDisplayObject* obj, DisplayObject child) { if (!obj) return false; return obj->hasChild(child); }
     DisplayObject getParent_lua(const IDisplayObject* obj) { if (!obj) return DisplayObject(); return obj->getParent(); }

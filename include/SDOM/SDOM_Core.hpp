@@ -58,6 +58,7 @@ namespace SDOM
         // so test output indicates this was a deliberate shutdown requested
         // from scripting (e.g. Lua's Core:quit()). Use the INFO logging macro
         // for consistency with the project's logging helpers.
+        void isRunning(bool bRunning ) { bIsRunning_ = bRunning; }
         void quit() { INFO("Core: shutdown requested. Performing graceful shutdown..."); bIsRunning_ = false; }
         void shutdown() { quit(); }
 
@@ -145,10 +146,10 @@ namespace SDOM
         // --- Focus & Hover Management --- //
         void handleTabKeyPress();
         void handleTabKeyPressReverse();
-    void setKeyboardFocusedObject(DisplayObject obj);
-    DisplayObject getKeyboardFocusedObject() const;
-    void setMouseHoveredObject(DisplayObject obj);
-    DisplayObject getMouseHoveredObject() const;
+        void setKeyboardFocusedObject(DisplayObject obj);
+        DisplayObject getKeyboardFocusedObject() const;
+        void setMouseHoveredObject(DisplayObject obj);
+        DisplayObject getMouseHoveredObject() const;
 
         // --- Window Title & Timing --- //
         std::string getWindowTitle() const { return windowTitle_; }
@@ -244,9 +245,9 @@ namespace SDOM
         CoreConfig pendingConfig_;
 
         // --- DOM --- //
-    DisplayObject rootNode_; // The root of the resource tree
-    DisplayObject hoveredObject_;
-    DisplayObject keyboardFocusedObject_;
+        DisplayObject rootNode_; // The root of the resource tree
+        DisplayObject hoveredObject_;
+        DisplayObject keyboardFocusedObject_;
 
         // --- Tab Priority --- //
         struct TabPriorityComparator {
@@ -261,7 +262,7 @@ namespace SDOM
                 return a->getTabPriority() < b->getTabPriority();
             }
         };
-    std::priority_queue<DisplayObject, std::vector<DisplayObject>, TabPriorityComparator> tabList_;
+        std::priority_queue<DisplayObject, std::vector<DisplayObject>, TabPriorityComparator> tabList_;
 
         // --- Configuration --- //
         CoreConfig config_;

@@ -33,8 +33,10 @@ namespace SDOM
 
     // --- Hierarchy Management --- //
     void addChild_lua(IDisplayObject* obj, DisplayObject child); 
+    DisplayObject getChild_lua(const IDisplayObject* obj, std::string name);
+
     bool removeChild_lua(IDisplayObject* obj, DisplayObject child); 
-    bool hasChild_lua(const IDisplayObject* obj, DisplayObject child); 
+    bool hasChild_lua(const IDisplayObject* obj, DisplayObject child);                  // STILL NEEDS TO BE BOUND TO LUA
     DisplayObject getParent_lua(const IDisplayObject* obj); 
     IDisplayObject* setParent_lua(IDisplayObject* obj, const DisplayObject& parent); 
 

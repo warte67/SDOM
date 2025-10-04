@@ -221,7 +221,6 @@ Notes & test ideas:
 
         // --- Debug/Utility --- //
         void printTree(int depth = 0, bool isLast = true, const std::vector<bool>& hasMoreSiblings = {}) const;
-        void printTree_lua() const { printTree(); }
 
         // --- Event Handling --- //
         void addEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false, int priority = 0);
@@ -231,65 +230,11 @@ Notes & test ideas:
 
         // --- Hierarchy Management --- //
         void addChild(DisplayObject child, bool useWorld = false, int worldX = 0, int worldY = 0);
-        void addChild_lua(DisplayObject child);
+        DisplayObject getChild(std::string name) const;
         bool removeChild(DisplayObject child);
-        const std::vector<DisplayObject>& getChildren() const { return children_; }
-        DisplayObject getParent() const { return parent_; }
-        IDisplayObject& setParent(const DisplayObject& parent)
-        {
-            // Preserve world bounds across the parent change
-            Bounds world = this->getBounds();
-
-            // Remove from old parent's children_ vector if present
-            if (parent_.isValid()) 
-            {
-                IDisplayObject* oldParentObj = dynamic_cast<IDisplayObject*>(parent_.get());
-                if (oldParentObj) 
-                {
-                    DisplayObject me(getName(), getType());
-                    auto& vec = oldParentObj->children_;
-                    // DEBUG_LOG("setParent oldParent='" << oldParentObj->getName() << "' children_count=" << vec.size());
-                    // auto oldCount = vec.size();
-                    vec.erase(std::remove_if(vec.begin(), vec.end(), [&](const DisplayObject& d) { return d == me; }), vec.end());
-                    // if (vec.size() != oldCount) {
-                    //     DEBUG_LOG("setParent removed " << (oldCount - vec.size()) << " matching entries from old parent's children");
-                    // } else {
-                    //     DEBUG_LOG("setParent did NOT find self in old parent's children");
-                    // }
-                    // DEBUG_LOG("setParent oldParent children_count_after=" << vec.size());
-                }
-            }
-
-            // Assign new parent handle
-            parent_ = parent;
-
-            // Add to new parent's children_ vector if not already present
-            if (parent_.isValid()) 
-            {
-                IDisplayObject* newParentObj = dynamic_cast<IDisplayObject*>(parent_.get());
-                if (newParentObj) 
-                {
-                    DisplayObject me(getName(), getType());
-                    auto& vec = newParentObj->children_;
-                    // DEBUG_LOG("setParent newParent='" << newParentObj->getName() << "' children_count_before=" << vec.size());
-                    auto it = std::find(vec.begin(), vec.end(), me);
-                    if (it == vec.end()) 
-                    {
-                        vec.push_back(me);
-                        // DEBUG_LOG("setParent added self to new parent's children");
-                    } 
-                    // else 
-                    // {
-                    //     DEBUG_LOG("setParent self already present in new parent's children");
-                    // }
-                    // DEBUG_LOG("setParent newParent children_count_after=" << vec.size());
-                }
-            }
-
-            // Restore world bounds so the object's world position is unchanged
-            this->setBounds(world);
-            return *this;
-        }
+        const std::vector<DisplayObject>& getChildren() const;
+        DisplayObject getParent() const;
+        IDisplayObject& setParent(const DisplayObject& parent);
         bool hasChild(DisplayObject child) const;
 
         // --- Type & Property Access --- //

@@ -46,7 +46,7 @@ namespace SDOM
     // Maintenance orphaned objects based on their retention policy
     void Factory::collectGarbage()
     {
-        constexpr bool SHOW_DEBUG = false;
+        constexpr bool SHOW_DEBUG = true;
         // Get the current list of orphaned display objects
         std::vector<DisplayObject> orphanList_ = getOrphanedDisplayObjects();
 

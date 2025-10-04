@@ -510,6 +510,7 @@ namespace SDOM
             // }
 
             // Now run user tests after initialization
+            SDL_Delay(125); // give some time for tiled window to be configured by the OS Compositor 
             bool testsPassed = onUnitTest();
             if (!testsPassed) 
             {

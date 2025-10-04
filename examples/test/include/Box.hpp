@@ -23,7 +23,7 @@ class Box final : public SDOM::IDisplayObject
             { 
                 name = TypeName; 
                 type = TypeName; 
-                color = {0, 0, 0, 255}; 
+                color = {255, 0, 255, 255}; 
             }
         };
 
