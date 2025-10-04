@@ -403,6 +403,24 @@ namespace SDOM
         this->setBounds(world);
         return *this;
     }
+
+    bool IDisplayObject::removeChild(const std::string& name)
+    {
+        if (name.empty()) {
+            ERROR("removeChild: empty name provided for " + name_);
+            return false;
+        }
+        for (const auto& child : children_) {
+            if (!child) continue;
+            try {
+                if (child.getName() == name) {
+                    return removeChild(child);
+                }
+            } catch(...) {}
+        }
+        ERROR("removeChild: child with name '" + name + "' not found in " + name_);
+        return false;
+    }
     
     void IDisplayObject::cleanAll() 
     {
@@ -680,6 +698,114 @@ namespace SDOM
     {
         auto it = std::find(children_.begin(), children_.end(), child);
         return it != children_.end() && child.isValid();
+    }
+
+    // Ancestor/Descendant helpers
+    bool IDisplayObject::isAncestorOf(DisplayObject descendant) const
+    {
+        if (!descendant) return false;
+        // Walk up from descendant's parent to root looking for this
+        IDisplayObject* descObj = dynamic_cast<IDisplayObject*>(descendant.get());
+        if (!descObj) return false;
+        DisplayObject cur = descObj->getParent();
+        while (cur) {
+            // Compare the underlying pointer to this object
+            if (cur.get() == this) return true;
+            IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
+            if (!curObj) break;
+            cur = curObj->getParent();
+        }
+        return false;
+    }
+
+    bool IDisplayObject::isAncestorOf(const std::string& name) const
+    {
+        // Find a child by name and see if this is its ancestor
+        for (const auto& child : children_) {
+            if (!child) continue;
+            try {
+                if (child.getName() == name) return true;
+            } catch(...) {}
+            IDisplayObject* childObj = dynamic_cast<IDisplayObject*>(child.get());
+            if (childObj && childObj->isAncestorOf(name)) return true;
+        }
+        return false;
+    }
+
+    bool IDisplayObject::isDescendantOf(DisplayObject ancestor) const
+    {
+        if (!ancestor) return false;
+        DisplayObject cur = getParent();
+        while (cur) {
+            if (cur == ancestor) return true;
+            IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
+            if (!curObj) break;
+            cur = curObj->getParent();
+        }
+        return false;
+    }
+
+    bool IDisplayObject::isDescendantOf(const std::string& name) const
+    {
+        DisplayObject cur = getParent();
+        while (cur) {
+            try { if (cur.getName() == name) return true; } catch(...) {}
+            IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
+            if (!curObj) break;
+            cur = curObj->getParent();
+        }
+        return false;
+    }
+
+    // Remove this object from its parent (convenience)
+    bool IDisplayObject::removeFromParent()
+    {
+        DisplayObject parentHandle = getParent();
+        if (!parentHandle) return false;
+        IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parentHandle.get());
+        if (!parentObj) return false;
+        // Attempt removal; parentObj->removeChild will perform checks and orphan handling
+        DisplayObject me(getName(), getType());
+        return parentObj->removeChild(me);
+    }
+
+    // (Predicate-style const overloads for removeFromParent were removed to avoid
+    // confusion with the mutating removeFromParent() convenience method.)
+
+    // Recursive descendant removal: search depth-first and remove first match
+    bool IDisplayObject::removeDescendant(DisplayObject descendant)
+    {
+        if (!descendant) return false;
+        // Check direct children first
+        auto it = std::find(children_.begin(), children_.end(), descendant);
+        if (it != children_.end()) {
+            return removeChild(descendant);
+        }
+        // Recurse into children
+        for (auto& child : children_) {
+            if (!child) continue;
+            IDisplayObject* childObj = dynamic_cast<IDisplayObject*>(child.get());
+            if (!childObj) continue;
+            if (childObj->removeDescendant(descendant)) return true;
+        }
+        return false;
+    }
+
+    bool IDisplayObject::removeDescendant(const std::string& descendantName)
+    {
+        // Check direct children first
+        for (const auto& child : children_) {
+            if (!child) continue;
+            try { if (child.getName() == descendantName) return removeChild(child); } catch(...) {}
+        }
+        // Recurse into children
+        for (auto& child : children_) {
+            if (!child) continue;
+            IDisplayObject* childObj = dynamic_cast<IDisplayObject*>(child.get());
+            if (!childObj) continue;
+            if (childObj->removeDescendant(descendantName)) return true;
+        }
+        return false;
     }
 
     int IDisplayObject::getTabPriority() const 
@@ -1161,10 +1287,28 @@ namespace SDOM
 
             // Hierarchy management
         objHandleType.set_function("addChild", &::SDOM::addChild_lua);
-        objHandleType.set_function("removeChild", &::SDOM::removeChild_lua);
+        // Prefer the string overload first so calling removeChild(name) from Lua
+        // resolves to the name-based overload instead of attempting to coerce a
+        // string into a DisplayObject userdata.
+        objHandleType.set_function("removeChild", sol::overload(
+            static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::removeChild_lua),
+            static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::removeChild_lua)
+        ));
         objHandleType.set_function("hasChild", &::SDOM::hasChild_lua);
         objHandleType.set_function("getParent", &::SDOM::getParent_lua);
         objHandleType.set_function("setParent", &::SDOM::setParent_lua);
+
+    // Ancestor/Descendant helpers (Lua)
+    objHandleType.set_function("isAncestorOf", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::isAncestorOf_lua));
+    objHandleType.set_function("isAncestorOfName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::isAncestorOf_lua));
+    objHandleType.set_function("isDescendantOf", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::isDescendantOf_lua));
+    objHandleType.set_function("isDescendantOfName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::isDescendantOf_lua));
+    objHandleType.set_function("removeFromParent", static_cast<bool(*)(IDisplayObject*)>(&::SDOM::removeFromParent_lua));
+    // Provide explicit helpers that map to the correct removeChild wrappers
+    objHandleType.set_function("removeChildByHandle", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::removeChild_lua));
+    objHandleType.set_function("removeChildByName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::removeChild_lua));
+    objHandleType.set_function("removeDescendant", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::removeDescendant_lua));
+    objHandleType.set_function("removeDescendantByName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::removeDescendant_lua));
 
             // Type & property access
         objHandleType.set_function("getType", &::SDOM::getType_lua);

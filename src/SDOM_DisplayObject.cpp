@@ -116,10 +116,17 @@ namespace SDOM
             ::SDOM::addChild_lua(obj, child);
             return sol::lua_nil;
         });
-        ut.set_function("removeChild", [](DisplayObject& self, DisplayObject child) -> bool {
-            IDisplayObject* obj = self.get(); if (!obj) return false;
-            return ::SDOM::removeChild_lua(obj, child);
-        });
+        // Expose removeChild to Lua with two overloads: by handle or by name
+        ut.set_function("removeChild", sol::overload(
+            [](DisplayObject& self, DisplayObject child) -> bool {
+                IDisplayObject* obj = self.get(); if (!obj) return false;
+                return ::SDOM::removeChild_lua(obj, child);
+            },
+            [](DisplayObject& self, const std::string& name) -> bool {
+                IDisplayObject* obj = self.get(); if (!obj) return false;
+                return ::SDOM::removeChild_lua(obj, name);
+            }
+        ));
         ut.set_function("hasChild", [](DisplayObject& self, DisplayObject child) -> bool {
             IDisplayObject* obj = self.get(); if (!obj) return false;
             return ::SDOM::hasChild_lua(obj, child);
@@ -128,9 +135,26 @@ namespace SDOM
             IDisplayObject* obj = self.get(); if (!obj) return DisplayObject();
             return ::SDOM::getParent_lua(obj);
         });
+        // Allow DisplayObject handles in Lua to call removeFromParent() convenience
+        ut.set_function("removeFromParent", [](DisplayObject& self) -> bool {
+            IDisplayObject* obj = self.get(); if (!obj) return false;
+            return ::SDOM::removeFromParent_lua(obj);
+        });
         ut.set_function("setName", [](DisplayObject& self, const std::string& newName) {
             IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil; obj->setName(newName); return sol::lua_nil;
         });
+        // Forward removeDescendant to the underlying IDisplayObject so scripts
+        // can call `handle:removeDescendant(child)` or `handle:removeDescendant("name")` on DisplayObject handles.
+        ut.set_function("removeDescendant", sol::overload(
+            [](DisplayObject& self, DisplayObject descendant) -> bool {
+                IDisplayObject* obj = self.get(); if (!obj) return false;
+                return ::SDOM::removeDescendant_lua(obj, descendant);
+            },
+            [](DisplayObject& self, const std::string& name) -> bool {
+                IDisplayObject* obj = self.get(); if (!obj) return false;
+                return ::SDOM::removeDescendant_lua(obj, name);
+            }
+        ));
         // Type & property access
         ut.set_function("getBounds", [](DisplayObject& self) -> Bounds {
             IDisplayObject* obj = self.get(); if (!obj) return Bounds();

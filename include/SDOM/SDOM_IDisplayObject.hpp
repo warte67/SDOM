@@ -232,10 +232,22 @@ Notes & test ideas:
         void addChild(DisplayObject child, bool useWorld = false, int worldX = 0, int worldY = 0);
         DisplayObject getChild(std::string name) const;
         bool removeChild(DisplayObject child);
+        bool removeChild(const std::string& name);
         const std::vector<DisplayObject>& getChildren() const;
         DisplayObject getParent() const;
         IDisplayObject& setParent(const DisplayObject& parent);
         bool hasChild(DisplayObject child) const;
+
+        // Ancestor/Descendant helpers
+        bool isAncestorOf(DisplayObject descendant) const;
+        bool isAncestorOf(const std::string& name) const;
+        bool isDescendantOf(DisplayObject ancestor) const;
+        bool isDescendantOf(const std::string& name) const;
+        // Remove this object from its parent (convenience). Returns true if removed.
+        bool removeFromParent();
+        // Recursive descendant removal: search depth-first and remove first match. Returns true if removed.
+        bool removeDescendant(DisplayObject descendant);
+        bool removeDescendant(const std::string& descendantName);
 
         // --- Type & Property Access --- //
         std::string getType() const { return type_; }

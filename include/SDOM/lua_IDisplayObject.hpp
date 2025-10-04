@@ -36,9 +36,23 @@ namespace SDOM
     DisplayObject getChild_lua(const IDisplayObject* obj, std::string name);
 
     bool removeChild_lua(IDisplayObject* obj, DisplayObject child); 
-    bool hasChild_lua(const IDisplayObject* obj, DisplayObject child);                  // STILL NEEDS TO BE BOUND TO LUA
+
+    bool removeChild_lua(IDisplayObject* obj, const std::string& name);
+
+    bool hasChild_lua(const IDisplayObject* obj, DisplayObject child); 
     DisplayObject getParent_lua(const IDisplayObject* obj); 
     IDisplayObject* setParent_lua(IDisplayObject* obj, const DisplayObject& parent); 
+
+    // Ancestor/Descendant helpers
+    bool isAncestorOf_lua(IDisplayObject* obj, DisplayObject descendant);
+    bool isAncestorOf_lua(IDisplayObject* obj, const std::string& name);
+    bool isDescendantOf_lua(IDisplayObject* obj, DisplayObject ancestor);
+    bool isDescendantOf_lua(IDisplayObject* obj, const std::string& name);
+    // Remove this object from its parent (convenience). Returns true if removed.
+    bool removeFromParent_lua(IDisplayObject* obj);
+    // Recursive descendant removal: search depth-first and remove first match. Returns true if removed.
+    bool removeDescendant_lua(IDisplayObject* obj, DisplayObject descendant);
+    bool removeDescendant_lua(IDisplayObject* obj, const std::string& descendantName);
 
     // --- Type & Property Access --- //
     std::string getType_lua(const IDisplayObject* obj); 

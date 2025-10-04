@@ -277,7 +277,8 @@ namespace SDOM
                     end
 
                     -- RetainUntilManual: orphan should remain after collect
-                    c:setOrphanRetentionPolicy(IDisplayObject.OrphanRetentionPolicy.RetainUntilManual)
+                    -- Use string form ("manual") via Lua binding helper instead of undefined IDisplayObject table
+                    c:setOrphanRetentionPolicy("manual")
                     Core:collectGarbage()
                     if Core:countOrphanedDisplayObjects() == 0 then 
                         print("Orphan 'gcOrphan' should still be present")
@@ -286,7 +287,8 @@ namespace SDOM
                     end
 
                     -- AutoDestroy: orphan should be removed after collect
-                    c:setOrphanRetentionPolicy(IDisplayObject.OrphanRetentionPolicy.AutoDestroy)
+                    -- Use string form ("auto") via Lua binding helper
+                    c:setOrphanRetentionPolicy("auto")
                     Core:collectGarbage()
 
                     -- verify orphan no longer present
@@ -312,12 +314,11 @@ namespace SDOM
                         return false 
                     end
 
-                    -- ensure factory no longer returns the object
-                    local rem = Core:getDisplayObject("gcOrphanLua")
-                    if rem then 
+                    -- ensure factory no longer returns the object (use hasDisplayObject)
+                    if Core:hasDisplayObject("gcOrphanLua") then
                         print("Factory still has 'gcOrphan' after garbage collection")
                         cleanup()
-                        return false 
+                        return false
                     end
 
                     -- cleanup stage and succeed

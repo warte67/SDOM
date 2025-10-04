@@ -148,8 +148,13 @@ function M.on_click(evt)
             log("  state: RELEASED -- " .. button_name(b) .. " (" .. tostring(b) .. ")")
             if (b == 3) then
                 log("  (Right-click detected; you could trigger a test function here)")
+                local parent = evt.target:getParent()                
+                local s = getStage()
                 evt.target:setOrphanRetentionPolicy("auto") -- "auto", "grace", "manual"
-                evt.currentTarget:removeChild(evt.target)  -- example: remove the clicked object from its parent
+                -- parent:removeChild(evt.target)  -- example: remove the clicked object from its parent
+                -- parent:removeChild(evt.target:getName())  -- example: remove by name
+                -- evt.target:removeFromParent()  -- remove self from parent
+                s:removeDescendant(evt.target)  -- remove self from stage
                 -- shutdown()
                 -- quit()
             end

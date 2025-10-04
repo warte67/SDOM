@@ -402,6 +402,22 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
             - RetainUntilManual → never auto-destroyed.
         - Lua bindings and string helpers to set/get orphan policies from scripts.
 
+---   
+- ### [October 4, 2025]
+    - Quick fixes & Lua binding polish (morning)
+        - Fixed a typo in examples/test Lua callback (evt.taget → evt.target) that caused nil-index errors in right‑click handlers.
+        - Added a safe convenience: `IDisplayObject::removeFromParent()` and Lua bindings so scripts can call `evt.target:removeFromParent()` directly from listeners.
+        - Implemented recursive removal helpers: `removeDescendant(...)` (depth‑first, first match) and exposed them to Lua on both `IDisplayObject` and `DisplayObject` handle usertypes.
+        - Added `removeChild(const std::string&)` overload and corresponding Lua binding so `parent:removeChild("name")` works without userdata coercion; fixed overload registration to avoid Lua/C++ type mismatch.
+        - Removed confusing const predicate overloads that were misnamed (they behaved like hasChild checks); cleaned up their Lua wrappers to avoid ambiguity.
+        - Added a small compatibility helper `getStage()` in Lua bindings to avoid breaking existing example scripts.
+        - Fixed binding registration issues (explicit function-pointer casts / sol::overload) so the new helpers expose unambiguous APIs to Lua.
+        - Rebuilt and ran the examples/test suite — compilation succeeded and unit tests passed locally after the changes.
+    - Next actions
+        - Add unit tests that specifically exercise `removeFromParent()`, `removeDescendant()` (handle/name), and `removeChild(name)` semantics (edge cases, nested removals, event-time removals).
+        - Consider removing temporary compatibility shims (getStage global, any legacy forwards) once examples are migrated to canonical Core/Factory bindings.
+        - Improve docs/comments in headers to clarify difference between strict `removeChild` (direct child) vs. recursive removal and the convenience `removeFromParent()` behavior.        
+
 ---
 ## Observed / Known issues:
 

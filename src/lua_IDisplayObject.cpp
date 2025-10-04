@@ -155,9 +155,19 @@ namespace SDOM
     void addChild_lua(IDisplayObject* obj, DisplayObject child) { if (!obj) return; obj->addChild(child); }
     DisplayObject getChild_lua(const IDisplayObject* obj, std::string name) { if (!obj) return DisplayObject(); return obj->getChild(name); }
     bool removeChild_lua(IDisplayObject* obj, DisplayObject child) { if (!obj) return false; return obj->removeChild(child); }
+    bool removeChild_lua(IDisplayObject* obj, const std::string& name) { if (!obj) return false; return obj->removeChild(name); }
     bool hasChild_lua(const IDisplayObject* obj, DisplayObject child) { if (!obj) return false; return obj->hasChild(child); }
     DisplayObject getParent_lua(const IDisplayObject* obj) { if (!obj) return DisplayObject(); return obj->getParent(); }
     IDisplayObject* setParent_lua(IDisplayObject* obj, const DisplayObject& parent) { if (!obj) return nullptr; obj->setParent(parent); return obj; }
+
+    // Ancestor/Descendant helpers (Lua wrappers)
+    bool isAncestorOf_lua(IDisplayObject* obj, DisplayObject descendant) { if (!obj) return false; return obj->isAncestorOf(descendant); }
+    bool isAncestorOf_lua(IDisplayObject* obj, const std::string& name) { if (!obj) return false; return obj->isAncestorOf(name); }
+    bool isDescendantOf_lua(IDisplayObject* obj, DisplayObject ancestor) { if (!obj) return false; return obj->isDescendantOf(ancestor); }
+    bool isDescendantOf_lua(IDisplayObject* obj, const std::string& name) { if (!obj) return false; return obj->isDescendantOf(name); }
+    bool removeFromParent_lua(IDisplayObject* obj) { if (!obj) return false; return obj->removeFromParent(); }
+    bool removeDescendant_lua(IDisplayObject* obj, DisplayObject descendant) { if (!obj) return false; return obj->removeDescendant(descendant); }
+    bool removeDescendant_lua(IDisplayObject* obj, const std::string& descendantName) { if (!obj) return false; return obj->removeDescendant(descendantName); }
 
     // --- Type & Property Access --- //
     std::string getType_lua(const IDisplayObject* obj) { if (!obj) return std::string(); return obj->getType(); }

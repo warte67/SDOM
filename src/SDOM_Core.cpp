@@ -1670,6 +1670,10 @@ namespace SDOM
         coreTable.set_function("destroyOrphanedDisplayObjects", [](sol::this_state ts, sol::object /*self*/) {
             sol::state_view sv = ts; Core::getInstance().destroyOrphanedDisplayObjects(); return sol::make_object(sv, sol::nil);
         });
+        // Allow Lua to trigger factory garbage collection
+        coreTable.set_function("collectGarbage", [](sol::this_state ts, sol::object /*self*/) {
+            sol::state_view sv = ts; Core::getInstance().getFactory().collectGarbage(); return sol::make_object(sv, sol::nil);
+        });
         // Expose setStage (alias) to Lua
         coreTable.set_function("setStage", [](sol::this_state ts, sol::object /*self*/, const std::string& name) {
             sol::state_view sv = ts; setStageByName_lua(name); return sol::make_object(sv, sol::nil);
@@ -1789,6 +1793,16 @@ namespace SDOM
         try {
             lua["quit"] = &quit_lua;
             lua["shutdown"] = &shutdown_lua;
+        } catch (...) {}
+
+        // Provide a convenience global `getStage()` function for older Lua scripts
+        try {
+            lua["getStage"] = [](sol::this_state ts) {
+                sol::state_view sv = ts;
+                DisplayObject h = Core::getInstance().getStageHandle();
+                if (h.isValid() && h.get()) return sol::make_object(sv, h);
+                return sol::make_object(sv, DisplayObject());
+            };
         } catch (...) {}
 
     // Expose CoreForward (explicit) and make the global `Core` point to
