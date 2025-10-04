@@ -93,8 +93,8 @@ $(document).ready(function(){initNavTree('md_docs_2scripting__and__configuration
   <div class="headertitle"><div class="title">Scripting and Configuration (Lua &amp; C++)</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md175"></a> <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> supports two complementary ways to build apps: directly in C++ and via Lua scripting (powered by Sol2). Lua is first‑class but optional—you can adopt it incrementally or run entirely without it. When enabled, Lua accelerates iteration, enables data‑driven scenes, and allows runtime behavior changes without recompilation.</p>
-<h1><a class="anchor" id="autotoc_md176"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md177"></a> <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> supports two complementary ways to build apps: directly in C++ and via Lua scripting (powered by Sol2). Lua is first‑class but optional—you can adopt it incrementally or run entirely without it. When enabled, Lua accelerates iteration, enables data‑driven scenes, and allows runtime behavior changes without recompilation.</p>
+<h1><a class="anchor" id="autotoc_md178"></a>
 Goals</h1>
 <ul>
 <li>Fast iteration and prototyping for UI, scenes, and behaviors</li>
@@ -102,14 +102,14 @@ Goals</h1>
 <li>Runtime stage/scene swapping and dialog scripting</li>
 <li>Test harnesses that exercise systems without rebuilding</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md177"></a>
+<h1><a class="anchor" id="autotoc_md179"></a>
 Modes of Use</h1>
 <ul>
 <li>C++‑only: Construct everything with initializer structs and APIs.</li>
 <li>C++ + Lua (hybrid): Use Lua for data/config and glue; keep heavy logic in C++.</li>
 <li>Lua‑driven: Define scenes and behavior in Lua; C++ provides performant primitives.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md178"></a>
+<h1><a class="anchor" id="autotoc_md180"></a>
 Integration Points</h1>
 <ul>
 <li>Factory: Types register creator lambdas that accept either a type‑specific initializer struct or a Lua <code>sol::table</code>.</li>
@@ -117,7 +117,7 @@ Integration Points</h1>
 <li>Lifecycle: Core exposes hooks (init, update, event, render, unit tests) that can call into Lua and vice‑versa.</li>
 <li>Scenes: Swap the active Stage (DOM root) at runtime from C++ or Lua.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md179"></a>
+<h1><a class="anchor" id="autotoc_md181"></a>
 Example: Creating with Lua</h1>
 <div class="fragment"><div class="line">sol::state lua;</div>
 <div class="line">lua.open_libraries(sol::lib::base);</div>
@@ -127,17 +127,17 @@ Example: Creating with Lua</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Pass the table to the Factory</span></div>
 <div class="line"><span class="keyword">auto</span> box = factory-&gt;create(<span class="stringliteral">&quot;Box&quot;</span>, lua[<span class="stringliteral">&quot;box&quot;</span>]);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md180"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md182"></a>
 Safety and Performance</h1>
 <ul>
 <li>Typed handles (DomHandle/ResHandle) decouple references from object lifetimes.</li>
 <li>Factory enforces unique names and validates creation; lookups are type‑safe.</li>
 <li>Lua boundaries are thin: parse once, then operate on native objects; keep hot paths in C++.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md181"></a>
+<h1><a class="anchor" id="autotoc_md183"></a>
 Source of Truth</h1>
 <p>Design docs are living and may evolve. When in doubt, defer to headers/Doxygen and unit tests as the canonical behavior, and open an issue or PR to align docs.</p>
-<h1><a class="anchor" id="autotoc_md182"></a>
+<h1><a class="anchor" id="autotoc_md184"></a>
 SDOM API considerations for Lua</h1>
 <ul>
 <li>Binding conventions:<ul>
@@ -182,7 +182,7 @@ SDOM API considerations for Lua</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md183"></a>
+<h1><a class="anchor" id="autotoc_md185"></a>
 Next steps (Lua integration)</h1>
 <ul>
 <li>Bind the Factory and core types to Lua (sol2) with a small, documented surface.</li>
@@ -191,7 +191,7 @@ Next steps (Lua integration)</h1>
 <li>Provide typed creator helpers and validation for common objects (e.g., Box, Label).</li>
 <li>Add unit tests that load Lua scripts to validate creation, events, and anchoring.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md184"></a>
+<h1><a class="anchor" id="autotoc_md186"></a>
 Module-style configuration and lifecycle registration (recommended)</h1>
 <p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> supports module-style Lua configuration files that return a <code>config</code> table. This keeps globals out of the Lua namespace and is the recommended pattern for portable configs:</p>
 <div class="fragment"><div class="line">local config = {</div>

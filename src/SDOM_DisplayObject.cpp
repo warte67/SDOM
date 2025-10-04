@@ -151,6 +151,25 @@ namespace SDOM
             return sol::lua_nil;
         });
 
+        // Orphan retention helpers forwarded to the underlying IDisplayObject
+        ut.set_function("orphanPolicyFromString", [](DisplayObject& self, const std::string& s) -> IDisplayObject::OrphanRetentionPolicy {
+            IDisplayObject* obj = self.get(); if (!obj) return IDisplayObject::OrphanRetentionPolicy::RetainUntilManual;
+            return ::SDOM::orphanPolicyFromString_lua(obj, s);
+        });
+        ut.set_function("orphanPolicyToString", [](DisplayObject& self, IDisplayObject::OrphanRetentionPolicy p) -> std::string {
+            IDisplayObject* obj = self.get(); if (!obj) return std::string();
+            return ::SDOM::orphanPolicyToString_lua(obj, p);
+        });
+        ut.set_function("setOrphanRetentionPolicy", [](DisplayObject& self, const std::string& policyStr) -> sol::object {
+            IDisplayObject* obj = self.get(); if (!obj) return sol::lua_nil;
+            ::SDOM::setOrphanRetentionPolicy_lua(obj, policyStr);
+            return sol::lua_nil;
+        });
+        ut.set_function("getOrphanRetentionPolicyString", [](DisplayObject& self) -> std::string {
+            IDisplayObject* obj = self.get(); if (!obj) return std::string();
+            return ::SDOM::getOrphanRetentionPolicyString_lua(obj);
+        });
+
         // Geometry & layout
         ut.set_function("getX", [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return 0; return ::SDOM::getX_lua(obj); });
         ut.set_function("getY", [](DisplayObject& self) { IDisplayObject* obj = self.get(); if (!obj) return 0; return ::SDOM::getY_lua(obj); });

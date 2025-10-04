@@ -40,5 +40,6 @@ var SDOM_8hpp =
     ] ],
     [ "anchorPointToString_", "SDOM_8hpp.html#ac004759fa5d6cd324931439829e17123", null ],
     [ "DEBUG_REGISTER_LUA", "SDOM_8hpp.html#a7860bad07e6389722d5d09638b46d2f8", null ],
+    [ "ORPHAN_GRACE_PERIOD", "SDOM_8hpp.html#a05b38e54d53b804b5d6da620ec5fc2cc", null ],
     [ "stringToAnchorPoint_", "SDOM_8hpp.html#a33cd42f20297f893e13db841931abda0", null ]
 ];

@@ -116,9 +116,59 @@ namespace SDOM
     class EventTypeHash;
     class Stage;
 
+/*
+## Garbage Collection / Orphan Retention
+
+Proposed approach: add an `OrphanRetentionPolicy` enum (or a smaller `retainOnOrphan` boolean for a quick
+win) on `IDisplayObject` and make the Factory's orphan collector respect each object's policy. This supports 
+editor/templates that should not be destroyed immediately and gives a clear migration path to more 
+sophisticated GC.
+
+Recommended enum (suggested values):
+- `OrphanRetentionPolicy::AutoDestroy` — object is eligible for destruction immediately when orphaned. 
+    (fast, default for ephemeral runtime objects)
+- `OrphanRetentionPolicy::GracePeriod` — object is eligible only after a configurable grace period has 
+    elapsed since it became orphaned; allows reparenting via DisplayObject within the grace window.
+- `OrphanRetentionPolicy::RetainUntilManual` — object is never auto-destroyed; requires explicit Factory 
+    or user code to destroy. (useful for editor templates and long-lived resources)
+- `OrphanRetentionPolicy::RetainWhenReferenced` — object is retained while any DisplayObject or external 
+    reference exists; destroyed only once all references are gone and policy conditions met. (optional 
+    advanced mode)
+
+Minimal API hints:
+- in `IDisplayObject`: add `OrphanRetentionPolicy orphanPolicy = OrphanRetentionPolicy::GracePeriod;` 
+    and `std::chrono::milliseconds orphanGrace{5000};`
+- convenience setters/getters: `setOrphanPolicy(...)`, `getOrphanPolicy()`, `setOrphanGrace(...)`
+- in the Factory: track an `optional<steady_clock::time_point> orphanedAt` per object and implement 
+    `collectOrphans()` which checks policy+elapsed time and destroys accordingly.
+
+Notes & test ideas:
+- Reparent before grace expiry should clear `orphanedAt` and prevent destruction.
+- `RetainUntilManual` objects should be visible in `Factory::listOrphanedObjects()` and only removed by 
+    explicit destroy.
+- Add unit tests for each policy (auto destroy, grace window reparenting, retained objects resisting 
+    collection).
+
+*/
+
     class IDisplayObject : public IDataObject
     {
         using SUPER = IDataObject;
+
+        // --- Orphan Retention --- //
+    public:
+        enum class OrphanRetentionPolicy : int
+        {
+            RetainUntilManual,  // object is never auto-destroyed; requires explicit Factory or user code to destroy.
+            AutoDestroy,        // object is eligible for destruction immediately when orphaned.
+            GracePeriod         // allows reparenting via DisplayObject within the grace window.
+        };
+        OrphanRetentionPolicy getOrphanRetentionPolicy() const { return orphanPolicy_; }
+        IDisplayObject& setOrphanRetentionPolicy(OrphanRetentionPolicy policy) { orphanPolicy_ = policy; return *this; }
+
+    private: 
+        std::chrono::steady_clock::time_point orphanedAt_ = std::chrono::steady_clock::now(); // Time when the object became orphaned
+        OrphanRetentionPolicy orphanPolicy_ = OrphanRetentionPolicy::RetainUntilManual; // Default policy
 
     public:
         // --- Comparison Operators (for Sol2/Lua) --- //

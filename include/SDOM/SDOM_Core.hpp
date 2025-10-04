@@ -99,12 +99,12 @@ namespace SDOM
 
         // --- Stage/Root Node Management --- //
         void setRootNode(const std::string& name);
-    void setRootNode(const DisplayObject& handle);
+        void setRootNode(const DisplayObject& handle);
         void setStage(const std::string& name); // Alias for backward compatibility
         Stage* getStage() const; // Alias for backward compatibility
         IDisplayObject* getRootNodePtr() const;
-    DisplayObject getRootNode() const;
-    DisplayObject getStageHandle() const { return getRootNode(); }  // Alias for backward compatibility
+        DisplayObject getRootNode() const;
+        DisplayObject getStageHandle() const { return getRootNode(); }  // Alias for backward compatibility
 
         // --- SDL Resource Accessors --- //
         SDL_Window* getWindow() const       { return window_; }

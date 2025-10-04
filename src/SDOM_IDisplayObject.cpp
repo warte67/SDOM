@@ -38,13 +38,12 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
-// #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
-// #include <SDOM/SDOM_EventType.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Factory.hpp>
-// #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/lua_IDisplayObject.hpp>
+
+#include <chrono>
 
 namespace SDOM
 {
@@ -132,16 +131,12 @@ namespace SDOM
         onQuit(); // Call the pure virtual method to ensure derived classes clean up
     }
 
-
-
-
     bool IDisplayObject::onInit()
     {
         // Default implementation, can be overridden by derived classes
         // registerSelfName(); // Register this object in the name registry
         return true; // Indicate successful initialization
     }
-
 
     void IDisplayObject::attachChild_(DisplayObject p_child, DisplayObject p_parent, bool useWorld, int worldX, int worldY)
     {
@@ -305,63 +300,6 @@ namespace SDOM
     }
 
 
-    // bool IDisplayObject::removeChild(DisplayObject child)
-    // {
-    //     if (!child) 
-    //     {
-    //         ERROR("removeChild: child handle is null in " + name_);
-    //         return false;
-    //     }
-    //     auto it = std::find(children_.begin(), children_.end(), child);
-    //     if (it != children_.end()) 
-    //     {
-    //             // We'll handle removal according to the child's retention policy.
-    //             // Do NOT erase from children_ here — call removeOrphan_ when we want
-    //             // the canonical removal that dispatches events and updates parent
-    //             // bookkeeping. For deferred removal, erase the child from the
-    //             // parent's children_ vector after scheduling it in the orphan list.
-    //             if (auto* childObj = dynamic_cast<IDisplayObject*>(child.get())) 
-    //             {
-    //                 Core* core = &Core::getInstance();
-    //                 Factory* factory = &core->getFactory();
-
-    //                 // If AutoDestroy and we are not traversing, perform the canonical
-    //                 // removal which will dispatch events and clean up the parent.
-    //                 if (childObj->getOrphanPolicy() == OrphanRetentionPolicy::AutoDestroy && !core->getIsTraversing())
-    //                 {
-    //                     // removeOrphan_ expects the child's parent/children relationship to
-    //                     // still be intact, so call it before touching parent pointers.
-    //                     removeOrphan_(child);
-    //                     // removeOrphan_ removed the child from parent->children_, so we're done.
-    //                 }
-    //                 else
-    //                 {
-    //                     // Defer removal: clear the child's parent, timestamp orphaning,
-    //                     // schedule it for GC, and then remove the handle from the parent's
-    //                     // children_ vector to keep in-memory state consistent.
-    //                     childObj->setParent(DisplayObject());
-    //                     if (!childObj->getParent()) {
-    //                         childObj->orphanedAt_ = std::chrono::steady_clock::now();
-    //                     }
-    //                     factory->addToOrphanList(child); // Defer removal
-    //                     // erase from this parent's children_ vector now that we've scheduled it
-    //                     children_.erase(it);
-    //                 }
-    //             }
-    //             else
-    //             {
-    //                 // Non-display objects: we simply erase the handle from children_
-    //                 children_.erase(it);
-    //             }
-    //         return true;
-    //     } 
-    //     else 
-    //     {
-    //         ERROR("removeChild: child not found in children_ vector of " + name_);
-    //         return false;
-    //     }
-    // }
-
     bool IDisplayObject::removeChild(DisplayObject child)
     {
         if (!child) 
@@ -369,6 +307,12 @@ namespace SDOM
             ERROR("removeChild: child handle is null in " + name_);
             return false;
         }
+        if (child == getCore().getRootNode())
+        {
+            // ERROR("removeChild: cannot remove the root node: " + name_);
+            return false;
+        }
+
         auto it = std::find(children_.begin(), children_.end(), child);
         if (it != children_.end()) 
         {
@@ -380,13 +324,15 @@ namespace SDOM
             }
             Core* core = &Core::getInstance();
             Factory* factory = &core->getFactory();
-            if (core->getIsTraversing())
-            {
-                factory->addToOrphanList(child); // Defer orphan removal
-            }
-            else
+            if (!core->getIsTraversing() && 
+                child->getOrphanRetentionPolicy() == OrphanRetentionPolicy::AutoDestroy)
             {
                 removeOrphan_(child); // Remove orphan immediately
+            }
+            else if (child->getOrphanRetentionPolicy() != OrphanRetentionPolicy::RetainUntilManual)
+            {
+                child->orphanedAt_ = std::chrono::steady_clock::now();
+                factory->addToOrphanList(child); // Defer orphan removal
             }
             return true;
         } 
@@ -1252,6 +1198,14 @@ namespace SDOM
             // Convenience: expose IDataObject::getName/setName for scripts
         objHandleType.set_function("getName", &::SDOM::IDataObject::getName);
         objHandleType.set_function("setName", &::SDOM::IDataObject::setName);
+
+        // Orphan retention helpers: string-based helpers for Lua scripts
+        objHandleType.set_function("orphanPolicyFromString", &::SDOM::orphanPolicyFromString_lua);
+        objHandleType.set_function("orphanPolicyToString", &::SDOM::orphanPolicyToString_lua);
+        // Expose set/get helpers that operate with string names for ease of use in Lua
+        objHandleType.set_function("setOrphanRetentionPolicy", &::SDOM::setOrphanRetentionPolicy_lua);
+        objHandleType.set_function("getOrphanRetentionPolicyString", &::SDOM::getOrphanRetentionPolicyString_lua);
+
 
         // Save the usertype for later use by derived classes
         this->objHandleType_ = objHandleType;

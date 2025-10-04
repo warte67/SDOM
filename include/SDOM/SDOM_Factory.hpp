@@ -55,6 +55,8 @@ namespace SDOM
         std::vector<DisplayObject> getOrphanedDisplayObjects();
         void destroyOrphanedDisplayObjects();
         void detachOrphans();
+        void collectGarbage();  // Maintenance orphaned objects based on their retention policy
+
 
         // --- Future Child Management --- //
         void attachFutureChildren();
@@ -90,102 +92,6 @@ namespace SDOM
             int dragStartWorldY;
         };            
         std::vector<futureChild> futureChildrenList_;
-
-    public:
-        // --- Lua Object Type Registry (public) --- //
-
-        // [[deprecated("Factory::registerLuaProperty is deprecated. Use concrete type registration instead.")]]
-        // void registerLuaProperty(const std::string& typeName,
-        //                     const std::string& propertyName,
-        //                     IDataObject::Getter getter,
-        //                     IDataObject::Setter setter);
-
-        // [[deprecated("Factory::registerLuaCommand is deprecated. Use concrete type registration instead.")]]
-        // void registerLuaCommand(const std::string& typeName,
-        //                     const std::string& commandName,
-        //                     IDataObject::Command command);    
-
-        // [[deprecated("Factory::registerLuaProperty is deprecated. Use concrete type registration instead.")]]
-        // void registerLuaFunction(const std::string& typeName,
-        //                     const std::string& functionName,
-        //                     IDataObject::Function function);
-
-
-        // -------------------------------------------------------------
-        // DEPRECATED: ObjectTypeRegistry (kept for legacy registerLua())
-        //
-        // Reason:
-        //  - This registry duplicates actual Lua binding code and is fragile:
-        //    keeping registry entries in sync with concrete _registerLua()
-        //    is error-prone and leads to divergence between C++ behavior
-        //    and Lua bindings.
-        //  - New approach: concrete types should populate the centralized
-        //    DisplayObject binding surface via IDataObject::registerDisplayObject()
-        //    or Factory::registerLuaFunction/registerLuaProperty directly.
-        //
-        // Migration:
-        //  1) Stop adding new bindings to ObjectTypeRegistry.
-        //  2) Move per-type bindings into registerDisplayObject() implementations
-        //     that call Factory::registerLuaFunction / registerLuaProperty.
-        //  3) Once all types use the new path, remove ObjectTypeRegistry.
-        //
-        // The types and helpers below remain for backwards compatibility only.
-        // They are scheduled        struct ObjectTypeRegistryEntry
-        // struct ObjectTypeRegistryEntry
-        // {
-        //     std::string typeName;
-
-        //     struct PropertyEntry {
-        //         std::string propertyName;
-        //         IDataObject::Getter getter;
-        //         IDataObject::Setter setter;
-        //     };
-        //     std::vector<PropertyEntry> properties;
-
-        //     struct CommandEntry {
-        //         std::string commandName;
-        //         IDataObject::Command command;
-        //     };
-        //     std::vector<CommandEntry> commands;
-            
-        //     struct FunctionEntry {
-        //         std::string functionName;
-        //         IDataObject::Function function;
-        //     };
-        //     std::vector<FunctionEntry> functions;
-        // };
-
-        // // Deprecated, will be removed. Use registerLuaProperty/registerLuaCommand/
-        // // registerLuaFunction and the concrete type registration paths instead.
-        // [[deprecated("Factory::getTypeRegistryEntry is deprecated. Use concrete type registration instead.")]]
-        // ObjectTypeRegistryEntry* getTypeRegistryEntry(const std::string& typeName);
-
-        // [[deprecated("Factory::getPropertyEntry is deprecated. Use concrete type registration instead.")]]
-        // ObjectTypeRegistryEntry::PropertyEntry* getPropertyEntry(
-        //             const std::string& typeName, const std::string& propertyName);
-
-        // [[deprecated("Factory::getCommandEntry is deprecated. Use concrete type registration instead.")]]
-        // ObjectTypeRegistryEntry::CommandEntry* getCommandEntry(
-        //             const std::string& typeName, const std::string& commandName);
-
-        // [[deprecated("Factory::getFunctionEntry is deprecated. Use concrete type registration instead.")]]
-        // ObjectTypeRegistryEntry::FunctionEntry* getFunctionEntry(
-        //             const std::string& typeName, const std::string& functionName);
-
-
-        // [[deprecated("Factory::getPropertyNamesForType is deprecated. Remove.")]]
-        // std::vector<std::string> getPropertyNamesForType(const std::string& typeName) const;
-
-        // [[deprecated("Factory::getCommandNamesForType is deprecated. Remove.")]]
-        // std::vector<std::string> getCommandNamesForType(const std::string& typeName) const;
-
-        // [[deprecated("Factory::getFunctionNamesForType is deprecated. Remove.")]]
-        // std::vector<std::string> getFunctionNamesForType(const std::string& typeName) const;
-
-
-    private:
-        // // --- Lua Object Type Registry (private) --- //
-        // std::unordered_map<std::string, ObjectTypeRegistryEntry> typeRegistry_;
 
 
     };

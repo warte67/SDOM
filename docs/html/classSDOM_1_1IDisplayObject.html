@@ -124,6 +124,11 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a9ed2761595e2f29ab0c0d42c85438dab" id="r_a9ed2761595e2f29ab0c0d42c85438dab"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab">OrphanRetentionPolicy</a> : int { <a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dabaf2a737651c80010466e0e701b2a55591">RetainUntilManual</a>
+, <a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438daba9d04f11fc27ec988820b001b1661cf72">AutoDestroy</a>
+, <a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dabae217fe6799c2b0bfe0740530b5c78200">GracePeriod</a>
+ }</td></tr>
+<tr class="separator:a9ed2761595e2f29ab0c0d42c85438dab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a0c20d3b094cfb86ca99b62edbcf602" id="r_a4a0c20d3b094cfb86ca99b62edbcf602"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a4a0c20d3b094cfb86ca99b62edbcf602">Getter</a> = std::function&lt; sol::object(const <a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a> &amp;, sol::state_view)&gt;</td></tr>
 <tr class="separator:a4a0c20d3b094cfb86ca99b62edbcf602"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6354bf6f9d60a272e0bbbadd834fcbf" id="r_ab6354bf6f9d60a272e0bbbadd834fcbf"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#ab6354bf6f9d60a272e0bbbadd834fcbf">Setter</a> = std::function&lt; <a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a> &amp;(<a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a> &amp;, sol::object, sol::state_view)&gt;</td></tr>
@@ -135,6 +140,10 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a9fb41408c27d953a8ddae6a025fedaa0" id="r_a9fb41408c27d953a8ddae6a025fedaa0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab">OrphanRetentionPolicy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9fb41408c27d953a8ddae6a025fedaa0">getOrphanRetentionPolicy</a> () const</td></tr>
+<tr class="separator:a9fb41408c27d953a8ddae6a025fedaa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8453e36ea5bffdbb6c57da841db2e5ab" id="r_a8453e36ea5bffdbb6c57da841db2e5ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a8453e36ea5bffdbb6c57da841db2e5ab">setOrphanRetentionPolicy</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab">OrphanRetentionPolicy</a> policy)</td></tr>
+<tr class="separator:a8453e36ea5bffdbb6c57da841db2e5ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64489b0d439824790ced90f114d2955b" id="r_a64489b0d439824790ced90f114d2955b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a64489b0d439824790ced90f114d2955b">operator==</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;other) const</td></tr>
 <tr class="separator:a64489b0d439824790ced90f114d2955b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab78aac3a9b8c14589ba2bf9d0344140f" id="r_ab78aac3a9b8c14589ba2bf9d0344140f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ab78aac3a9b8c14589ba2bf9d0344140f">operator&lt;</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;other) const</td></tr>
@@ -463,6 +472,34 @@ Friends</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a9ed2761595e2f29ab0c0d42c85438dab" name="a9ed2761595e2f29ab0c0d42c85438dab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ed2761595e2f29ab0c0d42c85438dab">&#9670;&#160;</a></span>OrphanRetentionPolicy</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab">SDOM::IDisplayObject::OrphanRetentionPolicy</a> : int</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9ed2761595e2f29ab0c0d42c85438dabaf2a737651c80010466e0e701b2a55591" name="a9ed2761595e2f29ab0c0d42c85438dabaf2a737651c80010466e0e701b2a55591"></a>RetainUntilManual&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a9ed2761595e2f29ab0c0d42c85438daba9d04f11fc27ec988820b001b1661cf72" name="a9ed2761595e2f29ab0c0d42c85438daba9d04f11fc27ec988820b001b1661cf72"></a>AutoDestroy&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a9ed2761595e2f29ab0c0d42c85438dabae217fe6799c2b0bfe0740530b5c78200" name="a9ed2761595e2f29ab0c0d42c85438dabae217fe6799c2b0bfe0740530b5c78200"></a>GracePeriod&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 </div>
 </div>
@@ -1182,6 +1219,31 @@ Friends</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9fb41408c27d953a8ddae6a025fedaa0" name="a9fb41408c27d953a8ddae6a025fedaa0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fb41408c27d953a8ddae6a025fedaa0">&#9670;&#160;</a></span>getOrphanRetentionPolicy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab">OrphanRetentionPolicy</a> SDOM::IDisplayObject::getOrphanRetentionPolicy </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2607,6 +2669,32 @@ template&lt;typename T &gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8453e36ea5bffdbb6c57da841db2e5ab" name="a8453e36ea5bffdbb6c57da841db2e5ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8453e36ea5bffdbb6c57da841db2e5ab">&#9670;&#160;</a></span>setOrphanRetentionPolicy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp; SDOM::IDisplayObject::setOrphanRetentionPolicy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab">OrphanRetentionPolicy</a>&#160;</td>
+          <td class="paramname"><em>policy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

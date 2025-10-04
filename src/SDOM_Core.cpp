@@ -624,9 +624,9 @@ namespace SDOM
                 // update timing
                 lastTime = currentTime;
 
-                factory_->detachOrphans(); // Detach orphaned display objects
-                factory_->attachFutureChildren(); // Attach future children
-                // factory_->garbageCollection(); // Clean up any orphaned objects
+                factory_->detachOrphans();          // Detach orphaned display objects
+                factory_->attachFutureChildren();   // Attach future children
+                factory_->collectGarbage();         // Clean up any orphaned objects
 
                 // static int s_iterations = 0;
                 // if (s_iterations == 0)

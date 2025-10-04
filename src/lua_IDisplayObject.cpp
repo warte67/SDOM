@@ -83,8 +83,8 @@ namespace SDOM
             try { if (maybe_priority.is<int>()) priority = maybe_priority.as<int>(); } catch(...) {}
         }
 
-    if (!et) return;
-    if (!listener) return;
+        if (!et) return;
+        if (!listener) return;
 
         obj->addEventListener(*et, [listener](Event& e) mutable {
             sol::protected_function pf = listener;
@@ -319,4 +319,45 @@ namespace SDOM
     IDisplayObject* setTop_lua(IDisplayObject* obj, float p_top) { if (!obj) return nullptr; obj->setTop(p_top); return obj; }
     IDisplayObject* setBottom_lua(IDisplayObject* obj, float p_bottom) { if (!obj) return nullptr; obj->setBottom(p_bottom); return obj; }
 
+    // --- Orphan Retention Policy --- //
+    IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* /*obj*/, const std::string& s)
+    {
+        std::string key = s;
+        std::transform(key.begin(), key.end(), key.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
+
+        if (key == "auto" || key == "autodestroy" || key == "immediate") {
+            return IDisplayObject::OrphanRetentionPolicy::AutoDestroy;
+        }
+        if (key == "grace" || key == "graceperiod" || key == "grace_period") {
+            return IDisplayObject::OrphanRetentionPolicy::GracePeriod;
+        }
+        // default / fallback
+        return IDisplayObject::OrphanRetentionPolicy::RetainUntilManual;
+    }
+
+    std::string orphanPolicyToString_lua(IDisplayObject* /*obj*/, IDisplayObject::OrphanRetentionPolicy p)
+    {
+        switch (p) {
+            case IDisplayObject::OrphanRetentionPolicy::AutoDestroy:   return std::string("auto");
+            case IDisplayObject::OrphanRetentionPolicy::GracePeriod:  return std::string("grace");
+            case IDisplayObject::OrphanRetentionPolicy::RetainUntilManual:
+            default:                                                   return std::string("manual");
+        }
+    }
+
+    IDisplayObject* setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr)
+    {
+        if (!obj) return nullptr;
+        auto p = orphanPolicyFromString_lua(obj, policyStr);
+        obj->setOrphanRetentionPolicy(p);
+        return obj;
+    }
+
+    std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj)
+    {
+        if (!obj) return std::string();
+        auto p = obj->getOrphanRetentionPolicy();
+        return orphanPolicyToString_lua(obj, p);
+    }
 } // namespace SDOM
+

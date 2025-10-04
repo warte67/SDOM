@@ -43,6 +43,80 @@ namespace SDOM
     }
 
 
+    // Maintenance orphaned objects based on their retention policy
+    void Factory::collectGarbage()
+    {
+        constexpr bool SHOW_DEBUG = false;
+        // Get the current list of orphaned display objects
+        std::vector<DisplayObject> orphanList_ = getOrphanedDisplayObjects();
+
+        if (orphanList_.empty()) 
+        {
+            // No orphans to collect
+            return;
+        }
+
+        // Default grace period for GracePeriod policy (ms). Adjust or make configurable if desired.
+        constexpr auto defaultGrace = std::chrono::milliseconds(ORPHAN_GRACE_PERIOD);
+        auto now = std::chrono::steady_clock::now();
+
+        // Collect names to destroy to avoid mutating registries while iterating
+        std::vector<std::string> toDestroy;
+        if (SHOW_DEBUG) std::cout << "Factory::collectGarbage: " << orphanList_.size() << " orphan(s) found\n";
+
+        for (const auto& orphan : orphanList_) 
+        {
+            if (!orphan || !orphan.get()) continue;
+
+            // IDisplayObject is friend of Factory so we can access its internals if needed.
+            IDisplayObject* obj = dynamic_cast<IDisplayObject*>(orphan.get());
+            if (!obj) continue;
+
+            auto policy = obj->getOrphanRetentionPolicy();
+            switch (policy) 
+            {
+                case IDisplayObject::OrphanRetentionPolicy::AutoDestroy:
+                    if (SHOW_DEBUG) std::cout << "  AutoDestroy -> scheduling: " << orphan.getName() << " (type=" << orphan->getType() << ")\n";
+                    toDestroy.push_back(orphan.getName());
+                    break;
+
+                case IDisplayObject::OrphanRetentionPolicy::GracePeriod: 
+                {
+                    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - obj->orphanedAt_);
+                    if (elapsed >= defaultGrace) 
+                    {
+                        if (SHOW_DEBUG) std::cout << "  GracePeriod expired (" << elapsed.count() << "ms) -> scheduling: " << orphan.getName() << "\n";
+                        toDestroy.push_back(orphan.getName());
+                    }
+                    else 
+                    {
+                        if (SHOW_DEBUG) std::cout << "  GracePeriod active (" << elapsed.count() << "ms) -> retaining: " << orphan.getName() << "\n";
+                    }
+                    break;
+                }
+
+                case IDisplayObject::OrphanRetentionPolicy::RetainUntilManual:
+                default:
+                    if (SHOW_DEBUG) std::cout << "  RetainUntilManual -> keeping: " << orphan.getName() << "\n";
+                    break;
+            }
+        }
+
+        if (toDestroy.empty()) 
+        {
+            if (SHOW_DEBUG) std::cout << "No orphaned objects eligible for destruction at this time.\n";
+            return;
+        }
+
+        for (const auto& name : toDestroy) 
+        {
+            if (SHOW_DEBUG) std::cout << "Destroying orphaned DisplayObject: " << name << "\n";
+            destroyDisplayObject(name);
+        }
+    } // end:   void Factory::collectGarbage()
+
+
+    
     void Factory::registerDomType(const std::string& typeName, const TypeCreators& creators)
     {
         creators_[typeName] = creators;
@@ -527,200 +601,6 @@ namespace SDOM
         }
     }
 
-    // // Lightweight introspection shims — return empty lists by default.
-    // // Concrete types may provide richer information via the deprecated
-    // // ObjectTypeRegistry or via concrete registerDisplayObject paths.
-    // std::vector<std::string> Factory::getPropertyNamesForType(const std::string& typeName) const
-    // {
-    //     (void)typeName;
-    //     return std::vector<std::string>();
-    // }
-
-    // std::vector<std::string> Factory::getCommandNamesForType(const std::string& typeName) const
-    // {
-    //     (void)typeName;
-    //     return std::vector<std::string>();
-    // }
-
-    // std::vector<std::string> Factory::getFunctionNamesForType(const std::string& typeName) const
-    // {
-    //     (void)typeName;
-    //     return std::vector<std::string>();
-    // }
-
-
-    // // --- Introspection helpers ---
-    // std::vector<std::string> Factory::getPropertyNamesForType(const std::string& typeName) const
-    // {
-    //     std::vector<std::string> names;
-    //     // Allow callers to pass either a type name (e.g., "Box") or an instance
-    //     // name (e.g., "blueishBox"). If the typeName isn't found in the registry,
-    //     // try resolving it as an instance name and use the instance's type.
-    //     std::string lookup = typeName;
-    //     auto it = typeRegistry_.find(lookup);
-    //     if (it == typeRegistry_.end()) {
-    //         // Try resolve as an instance name
-    //         auto dobj = displayObjects_.find(typeName);
-    //         if (dobj != displayObjects_.end()) {
-    //             lookup = dobj->second->getType();
-    //             it = typeRegistry_.find(lookup);
-    //         }
-    //     }
-    //     if (it == typeRegistry_.end()) return names;
-    //     const auto& entry = it->second;
-    //     // Adjust the following to the actual property container field name in ObjectTypeRegistryEntry
-    //     for (const auto& prop : entry.properties) {
-    //         names.push_back(prop.propertyName);
-    //     }
-    //     return names;
-    // }
-
-    // std::vector<std::string> Factory::getCommandNamesForType(const std::string& typeName) const
-    // {
-    //     std::vector<std::string> names;
-    //     std::string lookup = typeName;
-    //     auto it = typeRegistry_.find(lookup);
-    //     if (it == typeRegistry_.end()) {
-    //         auto dobj = displayObjects_.find(typeName);
-    //         if (dobj != displayObjects_.end()) {
-    //             lookup = dobj->second->getType();
-    //             it = typeRegistry_.find(lookup);
-    //         }
-    //     }
-    //     if (it == typeRegistry_.end()) return names;
-    //     const auto& entry = it->second;
-    //     // Adjust to actual command container field name
-    //     for (const auto& cmd : entry.commands) {
-    //         names.push_back(cmd.commandName);
-    //     }
-    //     return names;
-    // }
-
-    // std::vector<std::string> Factory::getFunctionNamesForType(const std::string& typeName) const
-    // {
-    //     std::vector<std::string> names;
-    //     std::string lookup = typeName;
-    //     auto it = typeRegistry_.find(lookup);
-    //     if (it == typeRegistry_.end()) {
-    //         auto dobj = displayObjects_.find(typeName);
-    //         if (dobj != displayObjects_.end()) {
-    //             lookup = dobj->second->getType();
-    //             it = typeRegistry_.find(lookup);
-    //         }
-    //     }
-    //     if (it == typeRegistry_.end()) return names;
-    //     const auto& entry = it->second;
-    //     // Adjust to actual function container field name
-    //     for (const auto& fn : entry.functions) {
-    //         names.push_back(fn.functionName);
-    //     }
-    //     return names;
-    // }
-
-
-
-
-
-    // void Factory::registerLuaProperty(const std::string& typeName,
-    //                                 const std::string& propertyName,
-    //                                 IDataObject::Getter getter,
-    //                                 IDataObject::Setter setter)
-    // {
-    //     auto& entry = typeRegistry_[typeName];
-    //     entry.typeName = typeName;
-
-    //     // Check if property already exists, update if so
-    //     for (auto& prop : entry.properties) {
-    //         if (prop.propertyName == propertyName) {
-    //             prop.getter = getter;
-    //             prop.setter = setter;
-    //             return;
-    //         }
-    //     }
-    //     // Otherwise, add new property
-    //     entry.properties.push_back({propertyName, getter, setter});
-    // }
-
-    // void Factory::registerLuaCommand(const std::string& typeName,
-    //                                 const std::string& commandName,
-    //                                 IDataObject::Command command)
-    // {
-    //     auto& entry = typeRegistry_[typeName];
-    //     entry.typeName = typeName;
-
-    //     // Check if command already exists, update if so
-    //     for (auto& cmd : entry.commands) {
-    //         if (cmd.commandName == commandName) {
-    //             cmd.command = command;
-    //             return;
-    //         }
-    //     }
-    //     // Otherwise, add new command
-    //     entry.commands.push_back({commandName, command});
-    // }
-
-    // void Factory::registerLuaFunction(const std::string& typeName,
-    //                                         const std::string& functionName,
-    //                                         IDataObject::Function function)
-    // {
-    //     auto& entry = typeRegistry_[typeName];
-    //     entry.typeName = typeName;
-    //     // If function already exists with same name, replace it
-    //     for (auto &fe : entry.functions) {
-    //         if (fe.functionName == functionName) { fe.function = function; return; }
-    //     }
-    //     entry.functions.push_back({functionName, function});
-    // }
-
-    // Factory::ObjectTypeRegistryEntry* 
-    //         Factory::getTypeRegistryEntry(const std::string& typeName) 
-    // {
-    //     auto it = typeRegistry_.find(typeName);
-    //     if (it != typeRegistry_.end())
-    //         return &it->second;
-    //     return nullptr;
-    // }
-
-    // Factory::ObjectTypeRegistryEntry::PropertyEntry* 
-    //         Factory::getPropertyEntry(const std::string& typeName, 
-    //                                 const std::string& propertyName) 
-    // {
-    //     auto entry = getTypeRegistryEntry(typeName);
-    //     if (!entry) return nullptr;
-    //     for (auto& prop : entry->properties) {
-    //         if (prop.propertyName == propertyName)
-    //             return &prop;
-    //     }
-    //     return nullptr;
-    // }
-
-    // Factory::ObjectTypeRegistryEntry::CommandEntry* 
-    //         Factory::getCommandEntry(const std::string& typeName, 
-    //                                 const std::string& commandName) 
-    // {
-    //     auto entry = getTypeRegistryEntry(typeName);
-    //     if (!entry) return nullptr;
-    //     for (auto& cmd : entry->commands) {
-    //         if (cmd.commandName == commandName)
-    //             return &cmd;
-    //     }
-    //     return nullptr;
-    // }
-
-    // Factory::ObjectTypeRegistryEntry::FunctionEntry*
-    //         Factory::getFunctionEntry(const std::string& typeName,
-    //                                 const std::string& functionName)
-    // {
-    //     // Deprecated helper: search the type registry for a function entry.
-    //     auto entry = getTypeRegistryEntry(typeName);
-    //     if (!entry) return nullptr;
-    //     for (auto& fn : entry->functions) {
-    //         if (fn.functionName == functionName) return &fn;
-    //     }
-    //     return nullptr;
-    // }
-
-    // test-only registration removed - implementations moved to individual types
 
     // Provide a simple onUnitTest implementation to satisfy linker and
     // maintain the IDataObject interface. This was accidentally removed

@@ -148,6 +148,8 @@ function M.on_click(evt)
             log("  state: RELEASED -- " .. button_name(b) .. " (" .. tostring(b) .. ")")
             if (b == 3) then
                 log("  (Right-click detected; you could trigger a test function here)")
+                -- evt.target:setOrphanRetentionPolicy("grace") -- "auto", "grace", "manual"
+                -- evt.currentTarget:removeChild(evt.target)  -- example: remove the clicked object from its parent
                 -- shutdown()
                 -- quit()
             end

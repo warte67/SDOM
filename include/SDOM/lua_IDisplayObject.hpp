@@ -3,6 +3,7 @@
 
 #include <sol/sol.hpp>
 #include <SDOM/SDOM.hpp>
+// #include <SDOM/SDOM_IDisplayObject.hpp>
 
 namespace SDOM 
 {
@@ -125,5 +126,12 @@ namespace SDOM
     IDisplayObject* setRight_lua(IDisplayObject* obj, float p_right); 
     IDisplayObject* setTop_lua(IDisplayObject* obj, float p_top); 
     IDisplayObject* setBottom_lua(IDisplayObject* obj, float p_bottom); 
+
+    // --- Orphan Retention Policy --- //
+    IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* obj, const std::string& s);
+    std::string orphanPolicyToString_lua(IDisplayObject* obj, IDisplayObject::OrphanRetentionPolicy p);
+    IDisplayObject* setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr);
+    std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj);
+
 }
 

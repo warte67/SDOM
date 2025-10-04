@@ -74,8 +74,8 @@ constexpr bool DEBUG_REGISTER_LUA = true;
 #define DEBUG_LUA_TESTS 0
 #endif
 
-
-
+// Garbage Collection / Orphan Retention
+constexpr int ORPHAN_GRACE_PERIOD = 5000; // default grace period for orphaned objects (in milliseconds)
 
 /**
  * @namespace SDOM

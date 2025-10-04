@@ -122,7 +122,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Refactored event dispatch logic for single-stage architecture, simplifying code and improving maintainability.
         - Cleaned up circular includes and pointer conversion issues, improving build stability.
         - Next steps: Expand event tests for Box (drag/drop, stacking, anchoring), add more interactive unit tests, and document event system usage.
-        - Refactored codebase to use new `DomHandle` and `ResHandle` types throughout.
+        - Refactored codebase to use new `DisplayObject` and `ResHandle` types throughout.
         - Verified and debugged handle logic, ensuring safe pointer access and robust operator overloading.
         - Cleaned up event system: `EventManager` now fully leverages the handle system, removing unnecessary casts and improving safety.
         - Fixed segmentation faults and infinite recursion issues in tree traversal by clarifying handle usage and recursive logic.
@@ -200,11 +200,11 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - ### [September 27, 2025]
     - **Lua Integration Complete:**  
         - All major Core and Factory methods are now exposed to Lua via Sol2 usertype registration.
-        - Overloaded methods and custom types (DomHandle, SDL_Color) are correctly bound and accessible from Lua scripts.
+        - Overloaded methods and custom types (DisplayObject, SDL_Color) are correctly bound and accessible from Lua scripts.
         - The Lua API is stable, with all required commands available for scripting, configuration, and test automation.
     - **Lua/C++ Unit Test Integration Enhanced:**  
         - Refined Lua-driven unit tests for display object creation, stage hierarchy, and destruction.
-        - Confirmed that DomHandles automatically become invalid (`nullptr`) when their resource is destroyed in the Factory, ensuring safe reference semantics.
+        - Confirmed that DisplayObjects automatically become invalid (`nullptr`) when their resource is destroyed in the Factory, ensuring safe reference semantics.
         - Improved `IDisplayObject::hasChild()` logic to check both handle presence and validity, preventing false positives when objects are deleted.
         - All current unit tests now pass, including tests for creation, addition to stage, and destruction/removal verification.
         - Added Lua-side debugging utilities: Factory registry and stage tree can be printed directly from Lua scripts for live inspection.
@@ -215,13 +215,13 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - ### [September 28, 2025]
     - **Lua Binding Improvements:**
         - Refined Lua usertype registration to ensure idempotent and consistent bindings.
-        - Verified that all properties, commands, and functions are correctly exposed to Lua for Core, Factory, DomHandle, and IDisplayObject.
-        - Added missing getters (`getX`, `getY`, `getWidth`, `getHeight`) to DomHandle Lua bindings.
+        - Verified that all properties, commands, and functions are correctly exposed to Lua for Core, Factory, DisplayObject, and IDisplayObject.
+        - Added missing getters (`getX`, `getY`, `getWidth`, `getHeight`) to DisplayObject Lua bindings.
         - Ensured that overloaded methods are properly handled in Lua.
         - Centralized Lua bindings: Factory now maintains a registry (`registerLuaProperty` / `registerLuaCommand` / `registerLuaFunction`) and applies entries idempotently in a two‑phase process (create minimal sol2 usertype, then attach registry entries).
-        - Lua API & binding fixes: `DomHandle` and `Core` bindings improved (correct boxing/forwarding, colon-call signatures); EventType constants exposed; Sol2 runtime issues (nil-call/userdata mismatches) resolved.
+        - Lua API & binding fixes: `DisplayObject` and `Core` bindings improved (correct boxing/forwarding, colon-call signatures); EventType constants exposed; Sol2 runtime issues (nil-call/userdata mismatches) resolved.
         - Test helpers: added `Core:pushMouseEvent({x,y,type,button})` and `Core:pumpEventsOnce()` so Lua can synthesize and dispatch SDL events deterministically.
-        - DomHandle Lua conveniences: `addEventListener` forwarding and simple getters (`getX`/`getY`/`getWidth`/`getHeight`) exposed to Lua.
+        - DisplayObject Lua conveniences: `addEventListener` forwarding and simple getters (`getX`/`getY`/`getWidth`/`getHeight`) exposed to Lua.
         - Box test scaffolding: added simple Box functions (doSomething, resetColor) and a click counter used by synthetic-event tests.
         - Lua-driven tests added/updated:
             - test5: getPropertyNamesForType("blueishBox")
@@ -248,7 +248,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - ### [September 29, 2025]
     - **Lua Binding Debugging:**
         - Added controlled debug prints to Lua usertype registration to trace binding operations.
-        - Verified that each usertype (DomHandle, IDisplayObject, Stage, Factory, Core) is registered exactly once, preventing conflicts and ensuring consistent behavior.
+        - Verified that each usertype (DisplayObject, IDisplayObject, Stage, Factory, Core) is registered exactly once, preventing conflicts and ensuring consistent behavior.
         - Debug prints can be toggled with the `DEBUG_REGISTER_LUA` constant in `SDOM.hpp`.
     - **Binding Consistency:**
         - Ensured that all Lua bindings are idempotent and do not conflict with each other.
@@ -257,27 +257,27 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Removed unnecessary debug prints from production code, leaving controlled logging for future debugging needs.
         - Ensured the codebase remains clean and maintainable.
     - **Core Lua Wrappers Verified:**
-        - Completed verification of Core/Factory Lua wrapper coverage (get/set window title, event helpers, DomHandle forwards, focus/hover helpers, object lookup, and orphan management commands exposed to Lua).
+        - Completed verification of Core/Factory Lua wrapper coverage (get/set window title, event helpers, DisplayObject forwards, focus/hover helpers, object lookup, and orphan management commands exposed to Lua).
         - Added `test20_lua` which validates `Core:getWindowTitle()` and `Core:setWindowTitle()` round-trip behavior; the `examples/test/prog` test binary builds and runs with the new test.
         - As requested, the `clearFactory` Lua binding was removed (it can be reintroduced later if needed).
-    - **Lua Bounds / DomHandle updates (today):**
+    - **Lua Bounds / DisplayObject updates (today):**
         - Exposed a typed `Bounds` userdata to Lua (fields: `left/top/right/bottom`, integer/float helpers) and added method-style getters (`getLeft`/`getTop`/`getRight`/`getBottom`/`getX`/`getY`/`getWidth`/`getHeight`) plus an epsilon-aware helper `almostEqual(a,b,eps?)` for robust comparisons.
-        - Synchronized `Bounds` registrations so both `DomHandle` and `IDisplayObject` present a consistent Lua API.
-        - Added/updated DomHandle forwards so Lua can call `h:getBounds()` (returns `Bounds` userdata) and `h:setBounds({...})` (accepts a Lua table), and added edge getters (`getLeft`/`getTop`/`getRight`/`getBottom`) on the handle.
+        - Synchronized `Bounds` registrations so both `DisplayObject` and `IDisplayObject` present a consistent Lua API.
+        - Added/updated DisplayObject forwards so Lua can call `h:getBounds()` (returns `Bounds` userdata) and `h:setBounds({...})` (accepts a Lua table), and added edge getters (`getLeft`/`getTop`/`getRight`/`getBottom`) on the handle.
         - Reworked the IDisplayObject unit tests: made `test10` a Lua-only bounds comparison and added `test11` to drive `setBounds` from Lua and verify `getX`/`getY`/`getWidth`/`getHeight` and edge getters.
         - Verified the change by building (`./compile`) and running the test binary (`./prog`); all unit tests passed locally.
     - **Lua wrapper headers verified:**
-        - Both primary bulk Lua wrapper headers, `lua_Core.hpp` and `lua_IDisplayObject.hpp`, have complete implementations and are exercised by the `examples/test` Lua unit tests. The test run (`./compile clean && ./prog`) confirms Lua-level coverage for creation, property access, event helpers, DomHandle forwards, anchors/edges, geometry, and factory helpers.
+        - Both primary bulk Lua wrapper headers, `lua_Core.hpp` and `lua_IDisplayObject.hpp`, have complete implementations and are exercised by the `examples/test` Lua unit tests. The test run (`./compile clean && ./prog`) confirms Lua-level coverage for creation, property access, event helpers, DisplayObject forwards, anchors/edges, geometry, and factory helpers.
         - Temporary debug prints used during binding debugging were cleaned up; controlled registration logging remains toggleable via `DEBUG_REGISTER_LUA` in `SDOM.hpp`.
-    - **DomHandle_UnitTests:**
-        DomHandle_UnitTests now contains:
-        - A concise numeric mapping header above the DomHandle tests.
+    - **DisplayObject_UnitTests:**
+        DisplayObject_UnitTests now contains:
+        - A concise numeric mapping header above the DisplayObject tests.
         - Full human-readable descriptions (matching the strings passed to UnitTests::run) in place of the short mapping comments.
-        - Test functions renamed to DomHandle_test1 … DomHandle_test10.
+        - Test functions renamed to DisplayObject_test1 … DisplayObject_test10.
         - The tests vector updated to call the new functions and includes matching descriptive comments.
-        - Debug output updated to reference DomHandle_test10 where applicable.
+        - Debug output updated to reference DisplayObject_test10 where applicable.
         - A clean build and test run were executed successfully.    
-        - Reworked the DomHandle unit tests for readability and maintainability: added a numeric mapping header, expanded inline descriptions to match `UnitTests::run` strings, and renamed test functions to `DomHandle_test1`..`DomHandle_test10`.         
+        - Reworked the DisplayObject unit tests for readability and maintainability: added a numeric mapping header, expanded inline descriptions to match `UnitTests::run` strings, and renamed test functions to `DisplayObject_test1`..`DisplayObject_test10`.         
 
 ---   
 - ### [September 30, 2025]
@@ -294,7 +294,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Note: these dispatch points are listeners hooks; they do not replace per-node onUpdate()/onRender() unless an API is added to allow listeners to disable default behavior.
     - **Lua: Event / EventType bindings & robustness:**
         - Centralized EventType → Lua exposure using the EventType registry to avoid string mismatches.
-        - Added a Lua usertype for Event exposing: dt (elapsed), type/typeName, target (DomHandle) and convenience accessors name / getName() (prefers target name, falls back to event type).
+        - Added a Lua usertype for Event exposing: dt (elapsed), type/typeName, target (DisplayObject) and convenience accessors name / getName() (prefers target name, falls back to event type).
         - Made lua listener registration use table form { type = EventType.X, listener = fn } in examples.
         - Replaced inline lambdas in examples with named callbacks in examples/test/lua/callbacks/listener_callbacks.lua.
         - Wrapped all Lua callback invocations with sol::protected_function to log Lua errors (no silent failures).
@@ -309,7 +309,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - **Semantics and best practices:**
         - Listener‑only hooks (OnPreRender/OnRender) are dispatched using the event‑listener path so they do not duplicate node->onEvent() behavior.
         - Listeners receive the same mutable Event instance, so calling stopPropagation() or disableDefaultBehavior() affects subsequent dispatch and default handlers.
-        - Per‑node events are targeted at the node's DomHandle so node‑attached listeners see a meaningful currentTarget.
+        - Per‑node events are targeted at the node's DisplayObject so node‑attached listeners see a meaningful currentTarget.
         - Lua examples use the table form `{ type = EventType.X, listener = fn }` and can rely on `evt.name` / `evt:getName()` to get a sensible name (target name or type).
     - **Performance notes:**
         - Hot paths check for listeners before constructing per‑frame Event objects (hasListeners fast‑path) to avoid unnecessary allocations when no listeners are registered.
@@ -348,7 +348,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Notes:
             - Where getters return Lua-managed objects (like `sol::table` payloads) we kept lambda bindings so we can safely create `sol::object` tied to the current `sol::state`.
             - `SDL_Utils` still exposes `eventToLuaTable` as a Lua helper table (`SDL`/`SDL_Utils`) for direct use; `Event::registerLua()` uses the C++ helper internally for the `sdl` property.
-            - Example update: `examples/test/lua/callbacks/listener_callbacks.lua` was adjusted to colorize the "target:" label using the DomHandle `getColor()` Lua binding and `CLR.fg_rgb(r,g,b)`; the code uses `pcall` fallbacks so it degrades gracefully when color or handle info is unavailable.
+            - Example update: `examples/test/lua/callbacks/listener_callbacks.lua` was adjusted to colorize the "target:" label using the DisplayObject `getColor()` Lua binding and `CLR.fg_rgb(r,g,b)`; the code uses `pcall` fallbacks so it degrades gracefully when color or handle info is unavailable.
             - Verified: rebuilt the examples and test binary after these changes (`./compile` in `examples/test`) — build completed and `prog` produced successfully.
 ---   
 - ### [October 3, 2025]
@@ -393,10 +393,22 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Developer ergonomics:
         - Added DEBUG_LUA_TESTS macro and CMake toggle guidance so Lua test diagnostics can be enabled without editing source.
         - Left controlled registration logging (DEBUG_REGISTER_LUA) for binding diagnostics.
-    - Next steps:
-        - Finalize remaining small cleanups (remove remaining legacy debug guards).
-        - Add an OrphanRetentionPolicy proof-of-concept and unit tests for orphan collection. 
-        - Consolidate Lua binding idempotency checks and add a CI job that runs the examples/test suite.
+    - Status: ~90% working — core orphan detection and policy handling are implemented and exercised by the unit tests, but a couple of issues remain under investigation.
+    - Implemented:
+        - OrphanRetentionPolicy on IDisplayObject (Manual / AutoDestroy / GracePeriod).
+        - Factory orphan queue, getOrphanedDisplayObjects(), and a collectGarbage() pass that respects policies:
+            - AutoDestroy → eligible for immediate destruction (when safe).
+            - GracePeriod → retained until grace timeout; reparenting during the window cancels destruction.
+            - RetainUntilManual → never auto-destroyed.
+        - Lua bindings and string helpers to set/get orphan policies from scripts.
+
+---
+## Observed / Known issues:
+
+- A small number of Lua-driven tests show unexpected parent/child state after a Lua descriptor-style setParent call — the child sometimes remains attached to the old parent. Root cause suspected in the wrapper vs. underlying setParent/addChild call path; needs deeper inspection.
+    - Garbage Collection bugs are likely related to these unexpected parent/child states.
+    - More experimentation will be required to identify and irradicate these nasty little roaches.
+- getBounds Lua shape expectations (Lua code expects table-like access) — currently Bounds is exposed as userdata; consider returning a Lua table or expose userdata fields to match tests.
 
 
 ---
@@ -406,9 +418,9 @@ Proposed approach: add an `OrphanRetentionPolicy` enum (or a smaller `retainOnOr
 
 Recommended enum (suggested values):
 - `OrphanRetentionPolicy::AutoDestroy` — object is eligible for destruction immediately when orphaned. (fast, default for ephemeral runtime objects)
-- `OrphanRetentionPolicy::GracePeriod` — object is eligible only after a configurable grace period has elapsed since it became orphaned; allows reparenting via DomHandle within the grace window.
+- `OrphanRetentionPolicy::GracePeriod` — object is eligible only after a configurable grace period has elapsed since it became orphaned; allows reparenting via DisplayObject within the grace window.
 - `OrphanRetentionPolicy::RetainUntilManual` — object is never auto-destroyed; requires explicit Factory or user code to destroy. (useful for editor templates and long-lived resources)
-- `OrphanRetentionPolicy::RetainWhenReferenced` — object is retained while any DomHandle or external reference exists; destroyed only once all references are gone and policy conditions met. (optional advanced mode)
+- `OrphanRetentionPolicy::RetainWhenReferenced` — object is retained while any DisplayObject or external reference exists; destroyed only once all references are gone and policy conditions met. (optional advanced mode)
 
 Minimal API hints:
 - in `IDisplayObject`: add `OrphanRetentionPolicy orphanPolicy = OrphanRetentionPolicy::GracePeriod;` and `std::chrono::milliseconds orphanGrace{5000};`
@@ -430,11 +442,11 @@ Notes & test ideas:
 - Implement garbage_collection() for display objects.
 
 ## Current repo/test state (summary)
-DomHandle_UnitTests.cpp now contains:
-- A concise numeric mapping header above the DomHandle tests.
+DisplayObject_UnitTests.cpp now contains:
+- A concise numeric mapping header above the DisplayObject tests.
 - Full human-readable descriptions (matching the strings passed to UnitTests::run) in place of the short mapping comments.
-- Test functions renamed to DomHandle_test1 … DomHandle_test10.
+- Test functions renamed to DisplayObject_test1 … DisplayObject_test10.
 - The tests vector updated to call the new functions and includes matching descriptive comments.
-- Debug output updated to reference DomHandle_test10 where applicable.
+- Debug output updated to reference DisplayObject_test10 where applicable.
 - A clean build and test run were executed successfully.
 

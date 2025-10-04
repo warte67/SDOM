@@ -5,6 +5,11 @@ var classSDOM_1_1IDisplayObject =
     [ "Function", "classSDOM_1_1IDisplayObject.html#a1258d34382d02dd5613d770a869b86bc", null ],
     [ "Getter", "classSDOM_1_1IDisplayObject.html#a4a0c20d3b094cfb86ca99b62edbcf602", null ],
     [ "Setter", "classSDOM_1_1IDisplayObject.html#ab6354bf6f9d60a272e0bbbadd834fcbf", null ],
+    [ "OrphanRetentionPolicy", "classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab", [
+      [ "RetainUntilManual", "classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dabaf2a737651c80010466e0e701b2a55591", null ],
+      [ "AutoDestroy", "classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438daba9d04f11fc27ec988820b001b1661cf72", null ],
+      [ "GracePeriod", "classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dabae217fe6799c2b0bfe0740530b5c78200", null ]
+    ] ],
     [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html#a11a0e1744cb654a1569a441df1501866", null ],
     [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html#a648e2c4562a5c3ee569edf8b17b03199", null ],
     [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html#a3c68c6c2c52d9ff7de62600c48794454", null ],
@@ -34,6 +39,7 @@ var classSDOM_1_1IDisplayObject =
     [ "getMaxPriority", "classSDOM_1_1IDisplayObject.html#a38e4838139dc7a4faf0639df880812dd", null ],
     [ "getMinPriority", "classSDOM_1_1IDisplayObject.html#a255e103195aec13146fd7b2341546c2a", null ],
     [ "getName", "classSDOM_1_1IDisplayObject.html#a6c4854090319dbc681a275dada027e40", null ],
+    [ "getOrphanRetentionPolicy", "classSDOM_1_1IDisplayObject.html#a9fb41408c27d953a8ddae6a025fedaa0", null ],
     [ "getParent", "classSDOM_1_1IDisplayObject.html#a0b43722291c5edc994b7f8a23a1684ca", null ],
     [ "getPriority", "classSDOM_1_1IDisplayObject.html#ac316c78060747eacf8cb4c6ab84d3855", null ],
     [ "getRight", "classSDOM_1_1IDisplayObject.html#afac989bc4cf8a448605ea0b5defabedd", null ],
@@ -93,6 +99,7 @@ var classSDOM_1_1IDisplayObject =
     [ "setLocalRight", "classSDOM_1_1IDisplayObject.html#abb3234d9e98839cce304daf9f98f2081", null ],
     [ "setLocalTop", "classSDOM_1_1IDisplayObject.html#a801eb23ae1a8205b5c1c32e07000afe0", null ],
     [ "setName", "classSDOM_1_1IDisplayObject.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],
+    [ "setOrphanRetentionPolicy", "classSDOM_1_1IDisplayObject.html#a8453e36ea5bffdbb6c57da841db2e5ab", null ],
     [ "setParent", "classSDOM_1_1IDisplayObject.html#ace085d5480e9dcb9c259a9bab40ad5e1", null ],
     [ "setPriority", "classSDOM_1_1IDisplayObject.html#a0acfe38923fa152340b9733da753545f", null ],
     [ "setRight", "classSDOM_1_1IDisplayObject.html#a8c8e652fc4566409d6e5e9f4ce049de5", null ],

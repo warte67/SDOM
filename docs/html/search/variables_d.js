@@ -7,5 +7,6 @@ var searchData=
   ['onquit_4',['OnQuit',['../classSDOM_1_1EventType.html#a260f4fd31ba8bf046fbc25ec0f719556',1,'SDOM::EventType']]],
   ['onrender_5',['OnRender',['../classSDOM_1_1EventType.html#ad726e9273588749fa020db3209fcd6b7',1,'SDOM::EventType']]],
   ['onupdate_6',['OnUpdate',['../classSDOM_1_1EventType.html#abb6ac6d3e152add976d41c703037a485',1,'SDOM::EventType']]],
-  ['orange_7',['ORANGE',['../classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d',1,'CLR']]]
+  ['orange_7',['ORANGE',['../classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d',1,'CLR']]],
+  ['orphan_5fgrace_5fperiod_8',['ORPHAN_GRACE_PERIOD',['../SDOM_8hpp.html#a05b38e54d53b804b5d6da620ec5fc2cc',1,'SDOM.hpp']]]
 ];

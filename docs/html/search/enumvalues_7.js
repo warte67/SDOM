@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['target_0',['Target',['../classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8ac41a31890959544c6523af684561abe5',1,'SDOM::Event']]],
-  ['top_1',['TOP',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a6705777b712ee811e76fb07162081d63',1,'SDOM']]],
-  ['top_5fcenter_2',['TOP_CENTER',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae4e8367937db13de78dd9a710df92164',1,'SDOM']]],
-  ['top_5fleft_3',['TOP_LEFT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1',1,'SDOM']]],
-  ['top_5fright_4',['TOP_RIGHT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a901d87dedda8db733f5e6d34c4eb5fe0',1,'SDOM']]]
+  ['retainuntilmanual_0',['RetainUntilManual',['../classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dabaf2a737651c80010466e0e701b2a55591',1,'SDOM::IDisplayObject']]],
+  ['right_1',['RIGHT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a21507b40c80068eda19865706fdc2403',1,'SDOM']]],
+  ['right_5fbottom_2',['RIGHT_BOTTOM',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8',1,'SDOM']]],
+  ['right_5fmiddle_3',['RIGHT_MIDDLE',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980af911fa8120055f4b9fbf5d53f3ef719a',1,'SDOM']]],
+  ['right_5ftop_4',['RIGHT_TOP',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a0f50eee0f90dd0e5b3ce50c09d416d47',1,'SDOM']]]
 ];

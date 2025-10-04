@@ -5,6 +5,11 @@ var classSDOM_1_1Stage =
     [ "Function", "classSDOM_1_1Stage.html#a1258d34382d02dd5613d770a869b86bc", null ],
     [ "Getter", "classSDOM_1_1Stage.html#a4a0c20d3b094cfb86ca99b62edbcf602", null ],
     [ "Setter", "classSDOM_1_1Stage.html#ab6354bf6f9d60a272e0bbbadd834fcbf", null ],
+    [ "OrphanRetentionPolicy", "classSDOM_1_1Stage.html#a9ed2761595e2f29ab0c0d42c85438dab", [
+      [ "RetainUntilManual", "classSDOM_1_1Stage.html#a9ed2761595e2f29ab0c0d42c85438dabaf2a737651c80010466e0e701b2a55591", null ],
+      [ "AutoDestroy", "classSDOM_1_1Stage.html#a9ed2761595e2f29ab0c0d42c85438daba9d04f11fc27ec988820b001b1661cf72", null ],
+      [ "GracePeriod", "classSDOM_1_1Stage.html#a9ed2761595e2f29ab0c0d42c85438dabae217fe6799c2b0bfe0740530b5c78200", null ]
+    ] ],
     [ "Stage", "classSDOM_1_1Stage.html#a41ff14c277e9f87df2be41bd60cf7ea4", null ],
     [ "Stage", "classSDOM_1_1Stage.html#ae2e4a2b2a09b359e0e35e7f8f16f41ea", null ],
     [ "~Stage", "classSDOM_1_1Stage.html#a54db12b3a1a2ff7d7cfff112f2de1ab6", null ],
@@ -39,6 +44,7 @@ var classSDOM_1_1Stage =
     [ "getMouseY", "classSDOM_1_1Stage.html#a16ba4ae0d20d77dd70942a66c6f5a964", null ],
     [ "getMouseY_lua", "classSDOM_1_1Stage.html#a3e022aa14edeb9dcf32f6a3326846b43", null ],
     [ "getName", "classSDOM_1_1Stage.html#a6c4854090319dbc681a275dada027e40", null ],
+    [ "getOrphanRetentionPolicy", "classSDOM_1_1Stage.html#a9fb41408c27d953a8ddae6a025fedaa0", null ],
     [ "getParent", "classSDOM_1_1Stage.html#a0b43722291c5edc994b7f8a23a1684ca", null ],
     [ "getPriority", "classSDOM_1_1Stage.html#ac316c78060747eacf8cb4c6ab84d3855", null ],
     [ "getRight", "classSDOM_1_1Stage.html#afac989bc4cf8a448605ea0b5defabedd", null ],
@@ -102,6 +108,7 @@ var classSDOM_1_1Stage =
     [ "setMouseY", "classSDOM_1_1Stage.html#afa71be32ca409ade3bca4254b9f33358", null ],
     [ "setMouseY_lua", "classSDOM_1_1Stage.html#a5fe79d41f4f453abe703ce3be85c0534", null ],
     [ "setName", "classSDOM_1_1Stage.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],
+    [ "setOrphanRetentionPolicy", "classSDOM_1_1Stage.html#a8453e36ea5bffdbb6c57da841db2e5ab", null ],
     [ "setParent", "classSDOM_1_1Stage.html#ace085d5480e9dcb9c259a9bab40ad5e1", null ],
     [ "setPriority", "classSDOM_1_1Stage.html#a0acfe38923fa152340b9733da753545f", null ],
     [ "setRight", "classSDOM_1_1Stage.html#a8c8e652fc4566409d6e5e9f4ce049de5", null ],
