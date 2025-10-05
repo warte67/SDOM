@@ -155,7 +155,7 @@ function M.on_click(evt)
                 -- parent:removeChild(evt.target:getName())  -- example: remove by name
                 -- evt.target:removeFromParent()  -- remove self from parent
                 s:removeDescendant(evt.target)  -- remove self from stage
-                setWindowTitle("Removed " .. prettyHandle(evt.target) .. " from stage") -- this works
+                -- setWindowTitle("Removed " .. prettyHandle(evt.target) .. " from stage") -- this works
                 -- shutdown()
                 -- quit()
             end

@@ -1386,8 +1386,9 @@ namespace SDOM
         // Bind direct methods on the Core usertype to ensure proper colon-call
         // signatures for Lua callers. These use the thin wrappers defined in
         // lua_Core.cpp which forward to the Core singleton or member methods.
-        objHandleType["quit"] = [](Core& /*core*/) { quit_lua(); return true; };
-        objHandleType["shutdown"] = [](Core& /*core*/) { shutdown_lua(); return true; };
+
+        // objHandleType["quit"] = [](Core& /*core*/) { quit_lua(); return true; };
+        // objHandleType["shutdown"] = [](Core& /*core*/) { shutdown_lua(); return true; };
         objHandleType["createDisplayObject"] = sol::overload(
             [](Core& core, const std::string& typeName, const sol::table& cfg) -> DisplayObject { return core.createDisplayObject(typeName, cfg); },
             [](const std::string& typeName, const sol::table& cfg) -> DisplayObject { return Core::getInstance().createDisplayObject(typeName, cfg); }
@@ -1406,101 +1407,101 @@ namespace SDOM
         objHandleType["destroyDisplayObject"] = &Core::destroyDisplayObject;
         objHandleType["pumpEventsOnce"] = &Core::pumpEventsOnce;
 
-        objHandleType["run"] = sol::overload(
-            [](Core& /*core*/) { run_lua(); },
-            [](Core& core, const sol::table& cfg) { core.run(cfg); },
-            [](Core& core, const std::string& s) { core.run(s); },
-            []() { Core::getInstance().run(); },
-            [](const sol::table& cfg) { Core::getInstance().run(cfg); },
-            [](const std::string& s) { Core::getInstance().run(s); }
-        );
+        // objHandleType["run"] = sol::overload(
+        //     [](Core& /*core*/) { run_lua(); },
+        //     [](Core& core, const sol::table& cfg) { core.run(cfg); },
+        //     [](Core& core, const std::string& s) { core.run(s); },
+        //     []() { Core::getInstance().run(); },
+        //     [](const sol::table& cfg) { Core::getInstance().run(cfg); },
+        //     [](const std::string& s) { Core::getInstance().run(s); }
+        // );
 
         objHandleType["pushMouseEvent"] = [](Core& /*core*/, const sol::object& args) { pushMouseEvent_lua(args); };
         objHandleType["pushKeyboardEvent"] = [](Core& /*core*/, const sol::object& args) { pushKeyboardEvent_lua(args); };
 
-        objHandleType["configure"] = sol::overload(
-            [](Core& core, const sol::table& cfg) { core.configureFromLua(cfg); },
-            [](const sol::table& cfg) { Core::getInstance().configureFromLua(cfg); }
-        );
-        objHandleType["configureFromFile"] = sol::overload(
-            [](Core& core, const std::string& filename) { core.configureFromLuaFile(filename); },
-            [](const std::string& filename) { Core::getInstance().configureFromLuaFile(filename); }
-        );
+        // objHandleType["configure"] = sol::overload(
+        //     [](Core& core, const sol::table& cfg) { core.configureFromLua(cfg); },
+        //     [](const sol::table& cfg) { Core::getInstance().configureFromLua(cfg); }
+        // );
+        // objHandleType["configureFromFile"] = sol::overload(
+        //     [](Core& core, const std::string& filename) { core.configureFromLuaFile(filename); },
+        //     [](const std::string& filename) { Core::getInstance().configureFromLuaFile(filename); }
+        // );
 
-        objHandleType["registerOnInit"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) {
-                registerOnInit_lua([f]() -> bool {
-                    // Debug: inspect the global Core object in the Lua state before calling
-                    try {
-                        sol::state& lua = Core::getInstance().getLua();
-                        sol::object coreObj = lua["Core"];
-                        std::cout << "[debug] Lua Core global valid=" << (coreObj.valid() ? "true" : "false") << " ";
-                        if (coreObj.valid()) {
-                            std::cout << "is<Core*>=" << (coreObj.is<Core*>() ? "true" : "false") << " ";
-                            std::cout << "is<std::reference_wrapper<Core>>=" << (coreObj.is<std::reference_wrapper<Core>>() ? "true" : "false") << " ";
-                            std::cout << "is<table>=" << (coreObj.is<sol::table>() ? "true" : "false") << " ";
-                        }
-                        std::cout << std::endl;
-                    } catch (...) {}
-                    sol::protected_function pf = f; sol::protected_function_result r = pf();
-                    if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnInit error: ") + err.what()); return false; }
-                    try { return r.get<bool>(); } catch (...) { return false; }
-                });
-            },
-            [](const sol::function& f) {
-                registerOnInit_lua([f]() -> bool {
-                    try {
-                        sol::state& lua = Core::getInstance().getLua();
-                        sol::object coreObj = lua["Core"];
-                        std::cout << "[debug] Lua Core global valid=" << (coreObj.valid() ? "true" : "false") << " ";
-                        if (coreObj.valid()) {
-                            std::cout << "is<Core*>=" << (coreObj.is<Core*>() ? "true" : "false") << " ";
-                            std::cout << "is<std::reference_wrapper<Core>>=" << (coreObj.is<std::reference_wrapper<Core>>() ? "true" : "false") << " ";
-                            std::cout << "is<table>=" << (coreObj.is<sol::table>() ? "true" : "false") << " ";
-                        }
-                        std::cout << std::endl;
-                    } catch (...) {}
-                    sol::protected_function pf = f; sol::protected_function_result r = pf();
-                    if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnInit error: ") + err.what()); return false; }
-                    try { return r.get<bool>(); } catch (...) { return false; }
-                });
-            }
-        );
+        // objHandleType["registerOnInit"] = sol::overload(
+        //     [](Core& /*core*/, const sol::function& f) {
+        //         registerOnInit_lua([f]() -> bool {
+        //             // Debug: inspect the global Core object in the Lua state before calling
+        //             try {
+        //                 sol::state& lua = Core::getInstance().getLua();
+        //                 sol::object coreObj = lua["Core"];
+        //                 std::cout << "[debug] Lua Core global valid=" << (coreObj.valid() ? "true" : "false") << " ";
+        //                 if (coreObj.valid()) {
+        //                     std::cout << "is<Core*>=" << (coreObj.is<Core*>() ? "true" : "false") << " ";
+        //                     std::cout << "is<std::reference_wrapper<Core>>=" << (coreObj.is<std::reference_wrapper<Core>>() ? "true" : "false") << " ";
+        //                     std::cout << "is<table>=" << (coreObj.is<sol::table>() ? "true" : "false") << " ";
+        //                 }
+        //                 std::cout << std::endl;
+        //             } catch (...) {}
+        //             sol::protected_function pf = f; sol::protected_function_result r = pf();
+        //             if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnInit error: ") + err.what()); return false; }
+        //             try { return r.get<bool>(); } catch (...) { return false; }
+        //         });
+        //     },
+        //     [](const sol::function& f) {
+        //         registerOnInit_lua([f]() -> bool {
+        //             try {
+        //                 sol::state& lua = Core::getInstance().getLua();
+        //                 sol::object coreObj = lua["Core"];
+        //                 std::cout << "[debug] Lua Core global valid=" << (coreObj.valid() ? "true" : "false") << " ";
+        //                 if (coreObj.valid()) {
+        //                     std::cout << "is<Core*>=" << (coreObj.is<Core*>() ? "true" : "false") << " ";
+        //                     std::cout << "is<std::reference_wrapper<Core>>=" << (coreObj.is<std::reference_wrapper<Core>>() ? "true" : "false") << " ";
+        //                     std::cout << "is<table>=" << (coreObj.is<sol::table>() ? "true" : "false") << " ";
+        //                 }
+        //                 std::cout << std::endl;
+        //             } catch (...) {}
+        //             sol::protected_function pf = f; sol::protected_function_result r = pf();
+        //             if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnInit error: ") + err.what()); return false; }
+        //             try { return r.get<bool>(); } catch (...) { return false; }
+        //         });
+        //     }
+        // );
 
-        objHandleType["registerOnQuit"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) { registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } }); },
-            [](const sol::function& f) { registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } }); }
-        );
+        // objHandleType["registerOnQuit"] = sol::overload(
+        //     [](Core& /*core*/, const sol::function& f) { registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } }); },
+        //     [](const sol::function& f) { registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } }); }
+        // );
 
-        objHandleType["registerOnUpdate"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) { registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } }); },
-            [](const sol::function& f) { registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } }); }
-        );
+        // objHandleType["registerOnUpdate"] = sol::overload(
+        //     [](Core& /*core*/, const sol::function& f) { registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } }); },
+        //     [](const sol::function& f) { registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } }); }
+        // );
 
-        objHandleType["registerOnEvent"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) { registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } }); },
-            [](const sol::function& f) { registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } }); }
-        );
+        // objHandleType["registerOnEvent"] = sol::overload(
+        //     [](Core& /*core*/, const sol::function& f) { registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } }); },
+        //     [](const sol::function& f) { registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } }); }
+        // );
 
-        objHandleType["registerOnRender"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) { registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } }); },
-            [](const sol::function& f) { registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } }); }
-        );
+        // objHandleType["registerOnRender"] = sol::overload(
+        //     [](Core& /*core*/, const sol::function& f) { registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } }); },
+        //     [](const sol::function& f) { registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } }); }
+        // );
 
-        objHandleType["registerOnUnitTest"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) { registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } }); },
-            [](const sol::function& f) { registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } }); }
-        );
+        // objHandleType["registerOnUnitTest"] = sol::overload(
+        //     [](Core& /*core*/, const sol::function& f) { registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } }); },
+        //     [](const sol::function& f) { registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } }); }
+        // );
 
-        objHandleType["registerOnWindowResize"] = sol::overload(
-            [](Core& /*core*/, const sol::function& f) { registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } }); },
-            [](const sol::function& f) { registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } }); }
-        );
+        // objHandleType["registerOnWindowResize"] = sol::overload(
+        //     [](Core& /*core*/, const sol::function& f) { registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } }); },
+        //     [](const sol::function& f) { registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } }); }
+        // );
 
-        objHandleType["registerOn"] = sol::overload(
-            [](Core& /*core*/, const std::string& name, const sol::function& f) { registerOn_lua(name, f); },
-            [](const std::string& name, const sol::function& f) { registerOn_lua(name, f); }
-        );
+        // objHandleType["registerOn"] = sol::overload(
+        //     [](Core& /*core*/, const std::string& name, const sol::function& f) { registerOn_lua(name, f); },
+        //     [](const std::string& name, const sol::function& f) { registerOn_lua(name, f); }
+        // );
 
         // objHandleType["getPropertyNamesForType"] = [](Core& core, const std::string& t) { return core.getPropertyNamesForType(t); };
         // objHandleType["getCommandNamesForType"] = [](Core& core, const std::string& t) { return core.getCommandNamesForType(t); };
@@ -1537,6 +1538,67 @@ namespace SDOM
 
         // Create convenience CoreForward table (do NOT overwrite Core global)
         sol::table coreTable = lua.create_table();
+
+        // Helper factories to convert a sol::function into host-side std::function
+        // with consistent sol::protected_function error handling. These are
+        // intentionally simple and explicit per-signature helpers to keep the
+        // code readable and avoid complex template machinery.
+        auto make_bool_callback = [](const sol::function& f) -> std::function<bool()> {
+            return [f]() -> bool {
+                sol::protected_function pf = f;
+                sol::protected_function_result r = pf();
+                if (!r.valid()) {
+                    sol::error err = r;
+                    ERROR(std::string("Lua callback error: ") + err.what());
+                    return false;
+                }
+                try { return r.get<bool>(); } catch (...) { return false; }
+            };
+        };
+
+        auto make_void_callback = [](const sol::function& f) -> std::function<void()> {
+            return [f]() {
+                sol::protected_function pf = f;
+                sol::protected_function_result r = pf();
+                if (!r.valid()) {
+                    sol::error err = r;
+                    ERROR(std::string("Lua callback error: ") + err.what());
+                }
+            };
+        };
+
+        auto make_update_callback = [](const sol::function& f) -> std::function<void(float)> {
+            return [f](float dt) {
+                sol::protected_function pf = f;
+                sol::protected_function_result r = pf(dt);
+                if (!r.valid()) {
+                    sol::error err = r;
+                    ERROR(std::string("Lua callback error: ") + err.what());
+                }
+            };
+        };
+
+        auto make_event_callback = [](const sol::function& f) -> std::function<void(const Event&)> {
+            return [f](const Event& e) {
+                sol::protected_function pf = f;
+                sol::protected_function_result r = pf(e);
+                if (!r.valid()) {
+                    sol::error err = r;
+                    ERROR(std::string("Lua callback error: ") + err.what());
+                }
+            };
+        };
+
+        auto make_resize_callback = [](const sol::function& f) -> std::function<void(int,int)> {
+            return [f](int w, int h) {
+                sol::protected_function pf = f;
+                sol::protected_function_result r = pf(w, h);
+                if (!r.valid()) {
+                    sol::error err = r;
+                    ERROR(std::string("Lua callback error: ") + err.what());
+                }
+            };
+        };
         coreTable.set_function("createDisplayObject", [](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
             sol::state_view sv = ts;
             DisplayObject h = Core::getInstance().createDisplayObject(typeName, cfg);
@@ -1725,15 +1787,15 @@ namespace SDOM
             }
             return sol::make_object(sv, sol::nil);
         });
-        coreTable.set_function("run", [](sol::this_state ts, sol::object /*self*/, sol::optional<sol::object> maybeArg) {
-            sol::state_view sv = ts;
-            if (!maybeArg) { Core::getInstance().run(); return sol::make_object(sv, sol::nil); }
-            sol::object arg = *maybeArg;
-            if (arg.is<sol::table>()) { Core::getInstance().run(arg.as<sol::table>()); return sol::make_object(sv, sol::nil); }
-            if (arg.is<std::string>()) { Core::getInstance().run(arg.as<std::string>()); return sol::make_object(sv, sol::nil); }
-            ERROR("CoreForward.run: unsupported argument type; expected table or string");
-            return sol::make_object(sv, sol::nil);
-        });
+        // coreTable.set_function("run", [](sol::this_state ts, sol::object /*self*/, sol::optional<sol::object> maybeArg) {
+        //     sol::state_view sv = ts;
+        //     if (!maybeArg) { Core::getInstance().run(); return sol::make_object(sv, sol::nil); }
+        //     sol::object arg = *maybeArg;
+        //     if (arg.is<sol::table>()) { Core::getInstance().run(arg.as<sol::table>()); return sol::make_object(sv, sol::nil); }
+        //     if (arg.is<std::string>()) { Core::getInstance().run(arg.as<std::string>()); return sol::make_object(sv, sol::nil); }
+        //     ERROR("CoreForward.run: unsupported argument type; expected table or string");
+        //     return sol::make_object(sv, sol::nil);
+        // });
 
         // Tab-key navigation helpers
         coreTable.set_function("handleTabKeyPress", [](sol::this_state /*ts*/, sol::object /*self*/) {
@@ -1743,183 +1805,114 @@ namespace SDOM
             Core::getInstance().handleTabKeyPressReverse();
         });
 
-        coreTable.set_function("configure", [](sol::this_state ts, sol::object /*self*/, const sol::table& cfg) {
-            sol::state_view sv = ts; Core::getInstance().configureFromLua(cfg); return sol::make_object(sv, sol::nil);
-        });
-        coreTable.set_function("configureFromFile", [](sol::this_state ts, sol::object /*self*/, const std::string& filename) {
-            sol::state_view sv = ts; Core::getInstance().configureFromLuaFile(filename); return sol::make_object(sv, sol::nil);
-        });
+        // coreTable.set_function("configure", [](sol::this_state ts, sol::object /*self*/, const sol::table& cfg) {
+        //     sol::state_view sv = ts; Core::getInstance().configureFromLua(cfg); return sol::make_object(sv, sol::nil);
+        // });
+        // coreTable.set_function("configureFromFile", [](sol::this_state ts, sol::object /*self*/, const std::string& filename) {
+        //     sol::state_view sv = ts; Core::getInstance().configureFromLuaFile(filename); return sol::make_object(sv, sol::nil);
+        // });
 
-        coreTable.set_function("registerOnInit", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnInit_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnInit error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
-            return sol::make_object(ts, sol::nil);
-        });
+        // coreTable.set_function("registerOnInit", [make_bool_callback](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
+        //     registerOnInit_lua(make_bool_callback(f));
+        //     return sol::make_object(ts, sol::nil);
+        // });
 
-        coreTable.set_function("registerOn", [](sol::this_state ts, sol::object /*self*/, const std::string& name, const sol::function& f) {
-            registerOn_lua(name, f);
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnQuit", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnQuit_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnQuit error: ") + err.what()); } });
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnUpdate", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnUpdate_lua([f](float dt) { sol::protected_function pf = f; sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnUpdate error: ") + err.what()); } });
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnEvent", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnEvent_lua([f](const Event& e) { sol::protected_function pf = f; sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnEvent error: ") + err.what()); } });
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnRender", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnRender_lua([f]() { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnRender error: ") + err.what()); } });
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnUnitTest", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnUnitTest_lua([f]() -> bool { sol::protected_function pf = f; sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
-            return sol::make_object(ts, sol::nil);
-        });
-        coreTable.set_function("registerOnWindowResize", [](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
-            registerOnWindowResize_lua([f](int w, int h) { sol::protected_function pf = f; sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua CoreForward.registerOnWindowResize error: ") + err.what()); } });
-            return sol::make_object(ts, sol::nil);
-        });
+        // coreTable.set_function("registerOn", [](sol::this_state ts, sol::object /*self*/, const std::string& name, const sol::function& f) {
+        //     registerOn_lua(name, f);
+        //     return sol::make_object(ts, sol::nil);
+        // });
+        // coreTable.set_function("registerOnQuit", [make_void_callback](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
+        //     registerOnQuit_lua(make_void_callback(f));
+        //     return sol::make_object(ts, sol::nil);
+        // });
+        // coreTable.set_function("registerOnUpdate", [make_update_callback](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
+        //     registerOnUpdate_lua(make_update_callback(f));
+        //     return sol::make_object(ts, sol::nil);
+        // });
+        // coreTable.set_function("registerOnEvent", [make_event_callback](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
+        //     registerOnEvent_lua(make_event_callback(f));
+        //     return sol::make_object(ts, sol::nil);
+        // });
+        // coreTable.set_function("registerOnRender", [make_void_callback](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
+        //     registerOnRender_lua(make_void_callback(f));
+        //     return sol::make_object(ts, sol::nil);
+        // });
+        // coreTable.set_function("registerOnUnitTest", [make_bool_callback](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
+        //     registerOnUnitTest_lua(make_bool_callback(f));
+        //     return sol::make_object(ts, sol::nil);
+        // });
+        // coreTable.set_function("registerOnWindowResize", [make_resize_callback](sol::this_state ts, sol::object /*self*/, const sol::function& f) {
+        //     registerOnWindowResize_lua(make_resize_callback(f));
+        //     return sol::make_object(ts, sol::nil);
+        // });
 
         // Expose quit/shutdown on the CoreForward table for convenience and
         // also expose them as globals so older Lua scripts that call
         // `quit()` or `shutdown()` continue to work.
-        coreTable.set_function("quit", [](sol::this_state ts, sol::object /*self*/) {
-            sol::state_view sv = ts;
-            quit_lua();
-            return sol::make_object(sv, true);
-        });
-        coreTable.set_function("shutdown", [](sol::this_state ts, sol::object /*self*/) {
-            sol::state_view sv = ts;
-            shutdown_lua();
-            return sol::make_object(sv, true);
-        });
+
+        // coreTable.set_function("quit", [](sol::this_state ts, sol::object /*self*/) {
+        //     sol::state_view sv = ts;
+        //     quit_lua();
+        //     return sol::make_object(sv, true);
+        // });
+        // coreTable.set_function("shutdown", [](sol::this_state ts, sol::object /*self*/) {
+        //     sol::state_view sv = ts;
+        //     shutdown_lua();
+        //     return sol::make_object(sv, true);
+        // });
 
         // Expose as globals to Lua (best-effort backward compatibility)
         try {
-            lua["quit"] = &quit_lua;
-            lua["shutdown"] = &shutdown_lua;
+            // lua["quit"] = &quit_lua;
+            // lua["shutdown"] = &shutdown_lua;
 
-            lua["registerOnInit"] = [](sol::this_state ts, const sol::function& f) 
-            {
-                sol::state_view sv = ts;
-                registerOnInit_lua([f]() -> bool 
-                {
-                    sol::protected_function pf = f;
-                    sol::protected_function_result r = pf();
-                    if (!r.valid()) 
-                    {
-                        sol::error err = r;
-                        ERROR(std::string("Lua registerOnInit error: ") + err.what());
-                        return false;
-                    }
-                    try { return r.get<bool>(); }
-                    catch (...) { return false; }
-                });
-                return sol::make_object(sv, sol::nil);
-            };      
+            // lua["registerOnInit"] = [make_bool_callback](sol::this_state ts, const sol::function& f) {
+            //     sol::state_view sv = ts;
+            //     registerOnInit_lua(make_bool_callback(f));
+            //     return sol::make_object(sv, sol::nil);
+            // };
 
-            lua["registerOnQuit"] = [](sol::this_state ts, const sol::function& f) {
-                sol::state_view sv = ts;
-                registerOnQuit_lua([f]() 
-                {
-                    sol::protected_function pf = f;
-                    sol::protected_function_result r = pf();
-                    if (!r.valid()) 
-                    {
-                        sol::error err = r;
-                        ERROR(std::string("Lua registerOnQuit error: ") + err.what());
-                    }
-                });
-                return sol::make_object(sv, sol::nil);
-            };
+            // lua["registerOnQuit"] = [make_void_callback](sol::this_state ts, const sol::function& f) {
+            //     sol::state_view sv = ts;
+            //     registerOnQuit_lua(make_void_callback(f));
+            //     return sol::make_object(sv, sol::nil);
+            // };
 
-            lua["registerOnUpdate"] = [](sol::this_state ts, const sol::function& f) {
-                sol::state_view sv = ts;
-                registerOnUpdate_lua([f](float dt) 
-                {
-                    sol::protected_function pf = f;
-                    sol::protected_function_result r = pf(dt);
-                    if (!r.valid()) 
-                    {
-                        sol::error err = r;
-                        ERROR(std::string("Lua registerOnUpdate error: ") + err.what());
-                    }
-                });
-                return sol::make_object(sv, sol::nil);
-            };
+            // lua["registerOnUpdate"] = [make_update_callback](sol::this_state ts, const sol::function& f) {
+            //     sol::state_view sv = ts;
+            //     registerOnUpdate_lua(make_update_callback(f));
+            //     return sol::make_object(sv, sol::nil);
+            // };
 
-            lua["registerOnEvent"] = [](sol::this_state ts, const sol::function& f) {
-                sol::state_view sv = ts;
-                registerOnEvent_lua([f](const Event& e) 
-                {
-                    sol::protected_function pf = f;
-                    sol::protected_function_result r = pf(e);
-                    if (!r.valid()) 
-                    {
-                        sol::error err = r;
-                        ERROR(std::string("Lua registerOnEvent error: ") + err.what());
-                    }
-                });
-                return sol::make_object(sv, sol::nil);
-            };
+            // lua["registerOnEvent"] = [make_event_callback](sol::this_state ts, const sol::function& f) {
+            //     sol::state_view sv = ts;
+            //     registerOnEvent_lua(make_event_callback(f));
+            //     return sol::make_object(sv, sol::nil);
+            // };
 
-            lua["registerOnRender"] = [](sol::this_state ts, const sol::function& f) {
-                sol::state_view sv = ts;
-                registerOnRender_lua([f]() 
-                {
-                    sol::protected_function pf = f;
-                    sol::protected_function_result r = pf();
-                    if (!r.valid()) 
-                    {
-                        sol::error err = r;
-                        ERROR(std::string("Lua registerOnRender error: ") + err.what());
-                    }
-                });
-                return sol::make_object(sv, sol::nil);
-            };
+            // lua["registerOnRender"] = [make_void_callback](sol::this_state ts, const sol::function& f) {
+            //     sol::state_view sv = ts;
+            //     registerOnRender_lua(make_void_callback(f));
+            //     return sol::make_object(sv, sol::nil);
+            // };
 
-            lua["registerOnUnitTest"] = [](sol::this_state ts, const sol::function& f) {
-                sol::state_view sv = ts;
-                registerOnUnitTest_lua([f]() -> bool 
-                {
-                    sol::protected_function pf = f;
-                    sol::protected_function_result r = pf();
-                    if (!r.valid()) 
-                    {
-                        sol::error err = r;
-                        ERROR(std::string("Lua registerOnUnitTest error: ") + err.what());
-                        return false;
-                    }
-                    try { return r.get<bool>(); }
-                    catch (...) { return false; }
-                });
-                return sol::make_object(sv, sol::nil);
-            };
+            // lua["registerOnUnitTest"] = [make_bool_callback](sol::this_state ts, const sol::function& f) {
+            //     sol::state_view sv = ts;
+            //     registerOnUnitTest_lua(make_bool_callback(f));
+            //     return sol::make_object(sv, sol::nil);
+            // };
 
-            lua["registerOnWindowResize"] = [](sol::this_state ts, const sol::function& f) {
-                sol::state_view sv = ts;
-                registerOnWindowResize_lua([f](int w, int h) 
-                {
-                    sol::protected_function pf = f;
-                    sol::protected_function_result r = pf(w, h);
-                    if (!r.valid()) 
-                    {
-                        sol::error err = r;
-                        ERROR(std::string("Lua registerOnWindowResize error: ") + err.what());
-                    }
-                });
-                return sol::make_object(sv, sol::nil);
-            };
+            // lua["registerOnWindowResize"] = [make_resize_callback](sol::this_state ts, const sol::function& f) {
+            //     sol::state_view sv = ts;
+            //     registerOnWindowResize_lua(make_resize_callback(f));
+            //     return sol::make_object(sv, sol::nil);
+            // };
 
-            lua["registerOn"] = [](sol::this_state ts, const std::string& name, const sol::function& f) {
-                sol::state_view sv = ts;
-                registerOn_lua(name, f);
-                return sol::make_object(sv, sol::nil);
-            };            
+            // lua["registerOn"] = [](sol::this_state ts, const std::string& name, const sol::function& f) {
+            //     sol::state_view sv = ts;
+            //     registerOn_lua(name, f);
+            //     return sol::make_object(sv, sol::nil);
+            // };            
 
             lua["getStage"] = [](sol::this_state ts) {
                 sol::state_view sv = ts;
@@ -1934,6 +1927,288 @@ namespace SDOM
                 return sol::make_object(sv, sol::nil);
             };            
         } catch (...) {}
+
+        // --- Function Registration Lambdas --- //
+
+        auto bind_noarg = [&](const std::string& name, auto func) 
+        {
+            auto fcopy = func; // keep callable alive
+
+            // usertype method (colon-call)
+            objHandleType[name] = [fcopy](Core& /*core*/) 
+            {
+                fcopy();
+                return true;
+            };
+
+            // CoreForward table entry (dot/colon)
+            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/) 
+            {
+                sol::state_view sv = ts;
+                fcopy();
+                return sol::make_object(sv, true);
+            });
+
+            // global alias (best-effort)
+            try 
+            {
+                lua[name] = [fcopy](sol::this_state ts) 
+                {
+                    sol::state_view sv = ts;
+                    fcopy();
+                    return sol::make_object(sv, true);
+                };
+            } catch (...) {}
+        };
+
+        // Binder for host functions that take a single `const sol::table&` argument.
+        auto bind_table = [&](const std::string& name, auto func) 
+        {
+            auto fcopy = func; // keep callable alive
+
+            // usertype method (supports Core:configure({...}))
+            objHandleType[name] = [fcopy](Core& /*core*/, const sol::table& cfg) 
+            {
+                fcopy(cfg);
+                return true; // preserve previous usertype-return convention
+            };
+
+            // CoreForward table entry (supports Core.configure(...) and Core:configure(...))
+            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const sol::table& cfg) 
+            {
+                sol::state_view sv = ts;
+                fcopy(cfg);
+                return sol::make_object(sv, sol::nil);
+            });
+
+            // Global alias (supports configure({...}))
+            try 
+            {
+                lua[name] = [fcopy](sol::this_state ts, const sol::table& cfg) 
+                {
+                    sol::state_view sv = ts;
+                    fcopy(cfg);
+                    return sol::make_object(sv, sol::nil);
+                };
+            } catch (...) {}
+        };
+
+        // Binder for host functions that take a single std::string argument.
+        auto bind_string = [&](const std::string& name, auto func) 
+        {
+            auto fcopy = func; // keep callable alive
+
+            // usertype method (supports Core:configureFromFile("..."))
+            objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) 
+            {
+                fcopy(s);
+                return true;
+            };
+
+            // CoreForward table entry (supports Core.configureFromFile(...) and Core:configureFromFile(...))
+            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& s) 
+            {
+                sol::state_view sv = ts;
+                fcopy(s);
+                return sol::make_object(sv, sol::nil);
+            });
+
+            // Global alias (supports configureFromFile("..."))
+            try 
+            {
+                lua[name] = [fcopy](sol::this_state ts, const std::string& s) 
+                {
+                    sol::state_view sv = ts;
+                    fcopy(s);
+                    return sol::make_object(sv, sol::nil);
+                };
+            } catch (...) {}
+        };
+
+        // bool() callbacks (registerOnInit, registerOnUnitTest)
+        auto bind_callback_bool = [&](const std::string& name, auto registrar) 
+        {
+            auto reg = registrar;
+            auto conv = make_bool_callback; // copy converter into local so inner lambdas can use it
+            // usertype method (colon-call)
+            objHandleType[name] = [reg, conv](Core& /*core*/, const sol::function& f) 
+            {
+                reg(conv(f));
+                return true;
+            };
+            // CoreForward table entry
+            coreTable.set_function(name, [reg, conv](sol::this_state ts, sol::object /*self*/, const sol::function& f) 
+            {
+                sol::state_view sv = ts;
+                reg(conv(f));
+                return sol::make_object(sv, sol::nil);
+            });
+            // global alias
+            try 
+            {
+                lua[name] = [reg, conv](sol::this_state ts, const sol::function& f) 
+                {
+                    sol::state_view sv = ts;
+                    reg(conv(f));
+                    return sol::make_object(sv, sol::nil);
+                };
+            } catch (...) {}
+        };        
+
+        // void() callbacks (registerOnQuit, registerOnRender)
+        auto bind_callback_void = [&](const std::string& name, auto registrar) 
+        {
+            auto reg = registrar;
+            auto conv = make_void_callback;
+            objHandleType[name] = [reg, conv](Core& /*core*/, const sol::function& f) 
+            {
+                reg(conv(f));
+                return true;
+            };
+            coreTable.set_function(name, [reg, conv](sol::this_state ts, sol::object /*self*/, const sol::function& f) 
+            {
+                sol::state_view sv = ts;
+                reg(conv(f));
+                return sol::make_object(sv, sol::nil);
+            });
+            try 
+            {
+                lua[name] = [reg, conv](sol::this_state ts, const sol::function& f) 
+                {
+                    sol::state_view sv = ts;
+                    reg(conv(f));
+                    return sol::make_object(sv, sol::nil);
+                };
+            } catch (...) {}
+        };
+
+        // void(float) callbacks (registerOnUpdate)
+        auto bind_callback_update = [&](const std::string& name, auto registrar) 
+        {
+            auto reg = registrar;
+            auto conv = make_update_callback;
+            objHandleType[name] = [reg, conv](Core& /*core*/, const sol::function& f) 
+            {
+                reg(conv(f));
+                return true;
+            };
+            coreTable.set_function(name, [reg, conv](sol::this_state ts, sol::object /*self*/, const sol::function& f) 
+            {
+                sol::state_view sv = ts;
+                reg(conv(f));
+                return sol::make_object(sv, sol::nil);
+            });
+            try 
+            {
+                lua[name] = [reg, conv](sol::this_state ts, const sol::function& f) 
+                {
+                    sol::state_view sv = ts;
+                    reg(conv(f));
+                    return sol::make_object(sv, sol::nil);
+                };
+            } catch (...) {}
+        };
+
+        // void(const Event&) callbacks (registerOnEvent)
+        auto bind_callback_event = [&](const std::string& name, auto registrar) 
+        {
+            auto reg = registrar;
+            auto conv = make_event_callback;
+            objHandleType[name] = [reg, conv](Core& /*core*/, const sol::function& f) 
+            {
+                reg(conv(f));
+                return true;
+            };
+            coreTable.set_function(name, [reg, conv](sol::this_state ts, sol::object /*self*/, const sol::function& f) 
+            {
+                sol::state_view sv = ts;
+                reg(conv(f));
+                return sol::make_object(sv, sol::nil);
+            });
+            try 
+            {
+                lua[name] = [reg, conv](sol::this_state ts, const sol::function& f) 
+                {
+                    sol::state_view sv = ts;
+                    reg(conv(f));
+                    return sol::make_object(sv, sol::nil);
+                };
+            } catch (...) {}
+        };
+
+        // void(int,int) callbacks (registerOnWindowResize)
+        auto bind_callback_resize = [&](const std::string& name, auto registrar) 
+        {
+            auto reg = registrar;
+            auto conv = make_resize_callback;
+            objHandleType[name] = [reg, conv](Core& /*core*/, const sol::function& f) 
+            {
+                reg(conv(f));
+                return true;
+            };
+            coreTable.set_function(name, [reg, conv](sol::this_state ts, sol::object /*self*/, const sol::function& f) 
+            {
+                sol::state_view sv = ts;
+                reg(conv(f));
+                return sol::make_object(sv, sol::nil);
+            });
+            try 
+            {
+                lua[name] = [reg, conv](sol::this_state ts, const sol::function& f) 
+                {
+                    sol::state_view sv = ts;
+                    reg(conv(f));
+                    return sol::make_object(sv, sol::nil);
+                };
+            } catch (...) {}
+        };
+
+        // Simple string+function forwarder for registerOn(name, func)
+        objHandleType["registerOn"] = [](Core& /*core*/, const std::string& name, const sol::function& f) 
+        {
+            registerOn_lua(name, f);
+            return true;
+        };
+        coreTable.set_function("registerOn", [](sol::this_state ts, sol::object /*self*/, const std::string& name, const sol::function& f) 
+        {
+            sol::state_view sv = ts;
+            registerOn_lua(name, f);
+            return sol::make_object(sv, sol::nil);
+        });
+        try 
+        {
+            lua["registerOn"] = [](sol::this_state ts, const std::string& name, const sol::function& f) 
+            {
+                sol::state_view sv = ts;
+                registerOn_lua(name, f);
+                return sol::make_object(sv, sol::nil);
+            };
+        } catch (...) {}
+
+        // --- Register Core Functions with Lua --- //
+
+        // --- Main Loop & Event Dispatch --- //        
+        bind_noarg("quit", &quit_lua);      
+        bind_noarg("shutdown", &shutdown_lua);
+        bind_noarg("run", &run_lua);
+        bind_table("configure", &configure_lua);
+        bind_string("configureFromFile", &configureFromFile_lua);
+
+	    // --- Callback/Hook Registration --- //
+        bind_callback_bool("registerOnInit", registerOnInit_lua);
+        bind_callback_void("registerOnQuit", registerOnQuit_lua);
+        bind_callback_update("registerOnUpdate", registerOnUpdate_lua);
+        bind_callback_event("registerOnEvent", registerOnEvent_lua);
+        bind_callback_void("registerOnRender", registerOnRender_lua);
+        bind_callback_bool("registerOnUnitTest", registerOnUnitTest_lua);
+        bind_callback_resize("registerOnWindowResize", registerOnWindowResize_lua);
+        // bind_callback("registerOn", registerOn_lua); // custom handling above
+
+
+
+
+
+
 
         // Expose CoreForward (explicit) and make the global `Core` point to
         // the forwarding table so scripts can use the table-based API

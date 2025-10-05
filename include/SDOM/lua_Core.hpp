@@ -36,7 +36,7 @@ namespace SDOM
 	void configureFromFile_lua(const std::string& filename);
 
 	// --- Callback/Hook Registration --- //
-	void registerOnInit_lua(std::function<bool()> fn);						// **GLOBAL LUA**
+	void registerOnInit_lua(std::function<bool()> fn);
 	void registerOnQuit_lua(std::function<void()> fn);
 	void registerOnUpdate_lua(std::function<void(float)> fn);
 	void registerOnEvent_lua(std::function<void(const Event&)> fn);
