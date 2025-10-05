@@ -12,7 +12,7 @@ namespace SDOM
     // --- Dirty/State Management --- //
     void cleanAll_lua(IDisplayObject* obj) { if (!obj) return; obj->cleanAll(); }
     bool getDirty_lua(const IDisplayObject* obj) { if (!obj) return false; return obj->getDirty(); }
-    IDisplayObject* setDirty_lua(IDisplayObject* obj) { if (!obj) return nullptr; obj->setDirty(); return obj; }
+    void setDirty_lua(IDisplayObject* obj) { if (!obj) return; obj->setDirty(); }
     bool isDirty_lua(const IDisplayObject* obj) { if (!obj) return false; return obj->isDirty(); }
 
     // --- Debug/Utility --- //
@@ -158,7 +158,7 @@ namespace SDOM
     bool removeChild_lua(IDisplayObject* obj, const std::string& name) { if (!obj) return false; return obj->removeChild(name); }
     bool hasChild_lua(const IDisplayObject* obj, DisplayObject child) { if (!obj) return false; return obj->hasChild(child); }
     DisplayObject getParent_lua(const IDisplayObject* obj) { if (!obj) return DisplayObject(); return obj->getParent(); }
-    IDisplayObject* setParent_lua(IDisplayObject* obj, const DisplayObject& parent) { if (!obj) return nullptr; obj->setParent(parent); return obj; }
+    void setParent_lua(IDisplayObject* obj, const DisplayObject& parent) { if (!obj) return; obj->setParent(parent); }
 
     // Ancestor/Descendant helpers (Lua wrappers)
     bool isAncestorOf_lua(IDisplayObject* obj, DisplayObject descendant) { if (!obj) return false; return obj->isAncestorOf(descendant); }
@@ -171,16 +171,16 @@ namespace SDOM
 
     // --- Type & Property Access --- //
     std::string getType_lua(const IDisplayObject* obj) { if (!obj) return std::string(); return obj->getType(); }
-    IDisplayObject* setType_lua(IDisplayObject* obj, const std::string& newType) { if (!obj) return nullptr; obj->setType(newType); return obj; }
+    void setType_lua(IDisplayObject* obj, const std::string& newType) { if (!obj) return; obj->setType(newType); }
     Bounds getBounds_lua(const IDisplayObject* obj) { if (!obj) return Bounds(); return obj->getBounds(); }
     
     // Accept either a Bounds userdata or a Lua table describing bounds
-    IDisplayObject* setBounds_lua(IDisplayObject* obj, const sol::object& bobj) 
+    void setBounds_lua(IDisplayObject* obj, const sol::object& bobj) 
     {
-        if (!obj) return nullptr;
+        if (!obj) return;
         Bounds b{};
         if (bobj.is<Bounds>()) {
-            try { b = bobj.as<Bounds>(); } catch(...) { return nullptr; }
+            try { b = bobj.as<Bounds>(); } catch(...) { return; }
         } else if (bobj.is<sol::table>()) {
             sol::table t = bobj.as<sol::table>();
             // Support either left/top/right/bottom or x/y/width/height
@@ -207,24 +207,24 @@ namespace SDOM
                     b.top = t.get<float>(2);
                     b.right = t.get<float>(3);
                     b.bottom = t.get<float>(4);
-                } catch(...) { return nullptr; }
+                } catch(...) { return; }
             }
         } else {
-            return nullptr;
+            return;
         }
         obj->setBounds(b);
-        return obj;
+        return;
     }
     // C++ overload: accept a Bounds directly
-    IDisplayObject* setBounds_lua(IDisplayObject* obj, const Bounds& b) { if (!obj) return nullptr; obj->setBounds(b); return obj; }
+    void setBounds_lua(IDisplayObject* obj, const Bounds& b) { if (!obj) return; obj->setBounds(b); }
     SDL_Color getColor_lua(const IDisplayObject* obj) { if (!obj) return SDL_Color{0,0,0,0}; return obj->getColor(); }
     // Accept either SDL_Color userdata or Lua table { r=..., g=..., b=..., a=... }
-    IDisplayObject* setColor_lua(IDisplayObject* obj, const sol::object& colorObj) 
+    void setColor_lua(IDisplayObject* obj, const sol::object& colorObj) 
     {
-        if (!obj) return nullptr;
+        if (!obj) return;
         SDL_Color c{0,0,0,255};
         if (colorObj.is<SDL_Color>()) {
-            try { c = colorObj.as<SDL_Color>(); } catch(...) { return nullptr; }
+            try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
         } else if (colorObj.is<sol::table>()) {
             sol::table t = colorObj.as<sol::table>();
             sol::object ro = t.get<sol::object>("r");
@@ -243,26 +243,26 @@ namespace SDOM
             c.b = static_cast<Uint8>(to_int(bo, 0));
             c.a = static_cast<Uint8>(to_int(ao, 255));
         } else {
-            return nullptr;
+            return;
         }
         obj->setColor(c);
-        return obj;
+        return;
     }
     // C++ overload: accept SDL_Color directly
-    IDisplayObject* setColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return nullptr; obj->setColor(color); return obj; }
+    void setColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return; obj->setColor(color); }
 
     // --- Priority & Z-Order --- //
     int getMaxPriority_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getMaxPriority(); }
     int getMinPriority_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getMinPriority(); }
     int getPriority_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getPriority(); }
-    IDisplayObject* setToHighestPriority_lua(IDisplayObject* obj) { if (!obj) return nullptr; obj->setToHighestPriority(); return obj; }
-    IDisplayObject* setToLowestPriority_lua(IDisplayObject* obj) { if (!obj) return nullptr; obj->setToLowestPriority(); return obj; }
-    IDisplayObject* sortChildrenByPriority_lua(IDisplayObject* obj) { if (!obj) return nullptr; obj->sortChildrenByPriority(); return obj; }
-    IDisplayObject* setPriority_lua(IDisplayObject* obj, int priority) 
+    void setToHighestPriority_lua(IDisplayObject* obj) { if (!obj) return; obj->setToHighestPriority(); }
+    void setToLowestPriority_lua(IDisplayObject* obj) { if (!obj) return; obj->setToLowestPriority(); }
+    void sortChildrenByPriority_lua(IDisplayObject* obj) { if (!obj) return; obj->sortChildrenByPriority(); }
+    void setPriority_lua(IDisplayObject* obj, int priority) 
     {
-        if (!obj) return nullptr;
+        if (!obj) return;
         obj->setPriority(priority);
-        return obj;
+        return;
     }
 
     std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj) 
@@ -271,44 +271,44 @@ namespace SDOM
         auto v = obj->getChildrenPriorities();
         return v;
     }
-    IDisplayObject* moveToTop_lua(IDisplayObject* obj) 
+    void moveToTop_lua(IDisplayObject* obj) 
     {
-        if (!obj) return nullptr;
+        if (!obj) return;
         obj->moveToTop();
-        return obj;
+        return;
     }
 
     int getZOrder_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getZOrder(); }
-    IDisplayObject* setZOrder_lua(IDisplayObject* obj, int z_order) { if (!obj) return nullptr; obj->setZOrder(z_order); return obj; }
+    void setZOrder_lua(IDisplayObject* obj, int z_order) { if (!obj) return; obj->setZOrder(z_order); }
 
     // --- Focus & Interactivity --- //
     void setKeyboardFocus_lua(IDisplayObject* obj) { if (!obj) return; obj->setKeyboardFocus(); }
     bool isKeyboardFocused_lua(const IDisplayObject* obj) { if (!obj) return false; return obj->isKeyboardFocused(); }
     bool isMouseHovered_lua(const IDisplayObject* obj) { if (!obj) return false; return obj->isMouseHovered(); }
     bool isClickable_lua(const IDisplayObject* obj) { if (!obj) return false; return obj->isClickable(); }
-    IDisplayObject* setClickable_lua(IDisplayObject* obj, bool clickable) { if (!obj) return nullptr; obj->setClickable(clickable); return obj; }
+    void setClickable_lua(IDisplayObject* obj, bool clickable) { if (!obj) return; obj->setClickable(clickable); }
     bool isEnabled_lua(const IDisplayObject* obj) { if (!obj) return false; return obj->isEnabled(); }
-    IDisplayObject* setEnabled_lua(IDisplayObject* obj, bool enabled) { if (!obj) return nullptr; obj->setEnabled(enabled); return obj; }
+    void setEnabled_lua(IDisplayObject* obj, bool enabled) { if (!obj) return; obj->setEnabled(enabled); }
     bool isHidden_lua(const IDisplayObject* obj) { if (!obj) return false; return obj->isHidden(); }
-    IDisplayObject* setHidden_lua(IDisplayObject* obj, bool hidden) { if (!obj) return nullptr; obj->setHidden(hidden); return obj; }
+    void setHidden_lua(IDisplayObject* obj, bool hidden) { if (!obj) return; obj->setHidden(hidden); }
     bool isVisible_lua(const IDisplayObject* obj) { if (!obj) return false; return obj->isVisible(); }
-    IDisplayObject* setVisible_lua(IDisplayObject* obj, bool visible) { if (!obj) return nullptr; obj->setVisible(visible); return obj; }
+    void setVisible_lua(IDisplayObject* obj, bool visible) { if (!obj) return; obj->setVisible(visible); }
 
     // --- Tab Management --- //
     int getTabPriority_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getTabPriority(); }
-    IDisplayObject* setTabPriority_lua(IDisplayObject* obj, int index) { if (!obj) return nullptr; obj->setTabPriority(index); return obj; }
+    void setTabPriority_lua(IDisplayObject* obj, int index) { if (!obj) return; obj->setTabPriority(index); }
     bool isTabEnabled_lua(const IDisplayObject* obj) { if (!obj) return false; return obj->isTabEnabled(); }
-    IDisplayObject* setTabEnabled_lua(IDisplayObject* obj, bool enabled) { if (!obj) return nullptr; obj->setTabEnabled(enabled); return obj; }
+    void setTabEnabled_lua(IDisplayObject* obj, bool enabled) { if (!obj) return; obj->setTabEnabled(enabled); }
 
     // --- Geometry & Layout --- //
     int getX_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getX(); }
     int getY_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getY(); }
     int getWidth_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getWidth(); }
     int getHeight_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getHeight(); }
-    IDisplayObject* setX_lua(IDisplayObject* obj, int p_x) { if (!obj) return nullptr; obj->setX(p_x); return obj; }
-    IDisplayObject* setY_lua(IDisplayObject* obj, int p_y) { if (!obj) return nullptr; obj->setY(p_y); return obj; }
-    IDisplayObject* setWidth_lua(IDisplayObject* obj, int width) { if (!obj) return nullptr; obj->setWidth(width); return obj; }
-    IDisplayObject* setHeight_lua(IDisplayObject* obj, int height) { if (!obj) return nullptr; obj->setHeight(height); return obj; }
+    void setX_lua(IDisplayObject* obj, int p_x) { if (!obj) return; obj->setX(p_x); }
+    void setY_lua(IDisplayObject* obj, int p_y) { if (!obj) return; obj->setY(p_y); }
+    void setWidth_lua(IDisplayObject* obj, int width) { if (!obj) return; obj->setWidth(width); }
+    void setHeight_lua(IDisplayObject* obj, int height) { if (!obj) return; obj->setHeight(height); }
 
     // --- Edge Anchors --- //
     AnchorPoint getAnchorTop_lua(const IDisplayObject* obj) { if (!obj) return AnchorPoint::TOP_LEFT; return obj->getAnchorTop(); }
@@ -325,10 +325,10 @@ namespace SDOM
     float getRight_lua(const IDisplayObject* obj) { if (!obj) return 0.0f; return obj->getRight(); }
     float getTop_lua(const IDisplayObject* obj) { if (!obj) return 0.0f; return obj->getTop(); }
     float getBottom_lua(const IDisplayObject* obj) { if (!obj) return 0.0f; return obj->getBottom(); }
-    IDisplayObject* setLeft_lua(IDisplayObject* obj, float p_left) { if (!obj) return nullptr; obj->setLeft(p_left); return obj; }
-    IDisplayObject* setRight_lua(IDisplayObject* obj, float p_right) { if (!obj) return nullptr; obj->setRight(p_right); return obj; }
-    IDisplayObject* setTop_lua(IDisplayObject* obj, float p_top) { if (!obj) return nullptr; obj->setTop(p_top); return obj; }
-    IDisplayObject* setBottom_lua(IDisplayObject* obj, float p_bottom) { if (!obj) return nullptr; obj->setBottom(p_bottom); return obj; }
+    void setLeft_lua(IDisplayObject* obj, float p_left) { if (!obj) return; obj->setLeft(p_left); }
+    void setRight_lua(IDisplayObject* obj, float p_right) { if (!obj) return; obj->setRight(p_right); }
+    void setTop_lua(IDisplayObject* obj, float p_top) { if (!obj) return; obj->setTop(p_top); }
+    void setBottom_lua(IDisplayObject* obj, float p_bottom) { if (!obj) return; obj->setBottom(p_bottom); }
 
     // --- Orphan Retention Policy --- //
     IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* /*obj*/, const std::string& s)
@@ -356,12 +356,12 @@ namespace SDOM
         }
     }
 
-    IDisplayObject* setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr)
+    void setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr)
     {
-        if (!obj) return nullptr;
+        if (!obj) return;
         auto p = orphanPolicyFromString_lua(obj, policyStr);
         obj->setOrphanRetentionPolicy(p);
-        return obj;
+        return;
     }
 
     std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj)

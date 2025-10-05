@@ -33,8 +33,6 @@ namespace SDOM
     // helper function to validate anchor point assignments in a config table
     bool validateAnchorAssignments(const sol::table& config);
 
-
-
     // helper function to print a message box to the terminal
     void printMessageBox(const std::string& title, const std::string& message, 
                           const std::string& file /* = "" */, int line /* = -1 */, 

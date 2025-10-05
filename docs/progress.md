@@ -417,11 +417,11 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Add unit tests that specifically exercise `removeFromParent()`, `removeDescendant()` (handle/name), and `removeChild(name)` semantics (edge cases, nested removals, event-time removals).
         - Consider removing temporary compatibility shims (getStage global, any legacy forwards) once examples are migrated to canonical Core/Factory bindings.
         - Improve docs/comments in headers to clarify difference between strict `removeChild` (direct child) vs. recursive removal and the convenience `removeFromParent()` behavior.   
-             
+
 ---   
 - ### [October 5, 2025]
     - Refactored Lua Core bindings:
-        - Centralized and simplified Core::_registerDisplayObject() by introducing small per-signature binder lambdas (bind_noarg, bind_table, bind_string, bind_bool_arg, bind_do_arg, bind_return_* and bind_callback_*).
+        - Centralized and simplified Core::_registerDisplayObject() by introducing small per-signature binder lambdas (`bind_noarg`, `bind_table`, `bind_string`, `bind_bool_arg`, `bind_do_arg`, `bind_return_*` and `bind_callback_*`).
         - All Core APIs are now registered consistently in three places: usertype methods (colon-call), CoreForward table entries, and optional global aliases — reducing duplication and eliminating subtle behavioral mismatches.
         - Consolidated all registerOn* callback wrappers with per-signature factories so Lua->C++ callback wiring and error handling is uniform.
         - Added permissive handlers for mixed-argument helpers (e.g., setRootNode / setStage accept string, handle, or name-table), and convenient aliases (setRoot -> setRootNode).
@@ -429,14 +429,12 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Build and unit tests pass locally after the changes.
     - Notes / next steps:
         - Plan to move the binder lambdas into a dedicated implementation (e.g., src/lua_Core_bindings.cpp) and expose small static helpers so other modules (IDisplayObject, Event, EventType, SDL) can reuse the same registration patterns. Postpone that move until Lua smoke tests and CI are stable.
----
-## Observed / Known issues:
-
-- A small number of Lua-driven tests show unexpected parent/child state after a Lua descriptor-style setParent call — the child sometimes remains attached to the old parent. Root cause suspected in the wrapper vs. underlying setParent/addChild call path; needs deeper inspection.
-    - Garbage Collection bugs are likely related to these unexpected parent/child states.
-    - More experimentation will be required to identify and irradicate these nasty little roaches.
-- getBounds Lua shape expectations (Lua code expects table-like access) — currently Bounds is exposed as userdata; consider returning a Lua table or expose userdata fields to match tests.
-
+    - Additional Oct 5 updates (implementation details):
+        - Added a reusable header and implementation for the bind helpers: `include/SDOM/lua_BindHelpers.hpp` and `src/lua_BindHelpers.cpp`. These centralize the per-signature helper implementations previously expressed as local lambdas.
+        - Rewired several Core bindings in `src/SDOM_Core.cpp` to use the new helpers (examples: `quit`, `registerOn`, `setStage`, `setRootNode`, `setRoot`). More inline lambdas remain and will be swept in a follow-up.
+        - Replaced a previously-silent catch around `EventType` registration with visible debug logging (`DEBUG_LOG(...)`) and added a short explanatory comment about lifetime/static-init-order assumptions.
+        - Verified the change locally: ran the project's compile/test flow (`./compile` in `examples/test`), the library and test binary built and installed headers under `~/.local/include/SDOM` and `~/.local/lib/libSDOM.a` updated.
+        - Next short steps: complete a full sweep of remaining inline binding lambdas in `SDOM_Core.cpp`, add a small Lua smoke test exercising name-or-handle binds, and then consider moving the helpers into a dedicated `lua_Core_bindings.cpp` once CI is stable.
 
 ---
 ## Garbage Collection / Orphan Retention

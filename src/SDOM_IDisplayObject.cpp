@@ -1298,28 +1298,29 @@ namespace SDOM
         objHandleType.set_function("getParent", &::SDOM::getParent_lua);
         objHandleType.set_function("setParent", &::SDOM::setParent_lua);
 
-    // Ancestor/Descendant helpers (Lua)
-    objHandleType.set_function("isAncestorOf", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::isAncestorOf_lua));
-    objHandleType.set_function("isAncestorOfName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::isAncestorOf_lua));
-    objHandleType.set_function("isDescendantOf", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::isDescendantOf_lua));
-    objHandleType.set_function("isDescendantOfName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::isDescendantOf_lua));
-    objHandleType.set_function("removeFromParent", static_cast<bool(*)(IDisplayObject*)>(&::SDOM::removeFromParent_lua));
-    // Provide explicit helpers that map to the correct removeChild wrappers
-    objHandleType.set_function("removeChildByHandle", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::removeChild_lua));
-    objHandleType.set_function("removeChildByName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::removeChild_lua));
-    objHandleType.set_function("removeDescendant", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::removeDescendant_lua));
-    objHandleType.set_function("removeDescendantByName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::removeDescendant_lua));
+        // Ancestor/Descendant helpers (Lua)
+        objHandleType.set_function("isAncestorOf", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::isAncestorOf_lua));
+        objHandleType.set_function("isAncestorOfName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::isAncestorOf_lua));
+        objHandleType.set_function("isDescendantOf", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::isDescendantOf_lua));
+        objHandleType.set_function("isDescendantOfName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::isDescendantOf_lua));
+        objHandleType.set_function("removeFromParent", static_cast<bool(*)(IDisplayObject*)>(&::SDOM::removeFromParent_lua));
+        // Provide explicit helpers that map to the correct removeChild wrappers
+        objHandleType.set_function("removeChildByHandle", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::removeChild_lua));
+        objHandleType.set_function("removeChildByName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::removeChild_lua));
+        objHandleType.set_function("removeDescendant", static_cast<bool(*)(IDisplayObject*, DisplayObject)>(&::SDOM::removeDescendant_lua));
+        objHandleType.set_function("removeDescendantByName", static_cast<bool(*)(IDisplayObject*, const std::string&)>(&::SDOM::removeDescendant_lua));
 
             // Type & property access
         objHandleType.set_function("getType", &::SDOM::getType_lua);
         objHandleType.set_function("setType", &::SDOM::setType_lua);
 
-    objHandleType.set_function("getBounds", &::SDOM::getBounds_lua);
-    // Bind the Lua-facing overload (takes sol::object) explicitly to avoid overload ambiguity
-    objHandleType.set_function("setBounds", static_cast<IDisplayObject*(*)(IDisplayObject*, const sol::object&)>(&::SDOM::setBounds_lua));
+        objHandleType.set_function("getBounds", &::SDOM::getBounds_lua);
+
+        // Bind the Lua-facing overload (takes sol::object) explicitly to avoid overload ambiguity
+        objHandleType.set_function("setBounds", static_cast<void(*)(IDisplayObject*, const sol::object&)>(&::SDOM::setBounds_lua));
         objHandleType.set_function("getColor", &::SDOM::getColor_lua);
-    // Bind the Lua-friendly setColor (accepts table or SDL_Color userdata)
-    objHandleType.set_function("setColor", static_cast<IDisplayObject*(*)(IDisplayObject*, const sol::object&)>(&::SDOM::setColor_lua));
+        // Bind the Lua-friendly setColor (accepts table or SDL_Color userdata)
+        objHandleType.set_function("setColor", static_cast<void(*)(IDisplayObject*, const sol::object&)>(&::SDOM::setColor_lua));
 
             // Priority & Z-Order
         objHandleType.set_function("getMaxPriority", &::SDOM::getMaxPriority_lua);
@@ -1329,7 +1330,7 @@ namespace SDOM
         objHandleType.set_function("setToLowestPriority", &::SDOM::setToLowestPriority_lua);
         objHandleType.set_function("sortChildrenByPriority", &::SDOM::sortChildrenByPriority_lua);
         objHandleType.set_function("setPriority", sol::overload(
-            static_cast<IDisplayObject*(*)(IDisplayObject*, int)>(&::SDOM::setPriority_lua),
+            static_cast<void(*)(IDisplayObject*, int)>(&::SDOM::setPriority_lua),
             // table descriptor form: setPriority({ priority = N })
             static_cast<IDisplayObject*(*)(IDisplayObject*, const sol::object&)> ([](IDisplayObject* obj, const sol::object& descriptor) -> IDisplayObject* {
                 if (!obj) return nullptr;
@@ -1405,6 +1406,7 @@ namespace SDOM
         // Orphan retention helpers: string-based helpers for Lua scripts
         objHandleType.set_function("orphanPolicyFromString", &::SDOM::orphanPolicyFromString_lua);
         objHandleType.set_function("orphanPolicyToString", &::SDOM::orphanPolicyToString_lua);
+        
         // Expose set/get helpers that operate with string names for ease of use in Lua
         objHandleType.set_function("setOrphanRetentionPolicy", &::SDOM::setOrphanRetentionPolicy_lua);
         objHandleType.set_function("getOrphanRetentionPolicyString", &::SDOM::getOrphanRetentionPolicyString_lua);
