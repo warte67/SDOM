@@ -1357,6 +1357,8 @@ namespace SDOM
     // --- Lua UserType Registration --- //
 
 
+
+    // DEPRECATED -- use _registerDisplayObject() instead
     void Core::_registerLua(const std::string& typeName, sol::state_view lua)
     {
     }
@@ -1512,11 +1514,11 @@ namespace SDOM
         // Save usertype
         this->objHandleType_ = objHandleType;
 
-    // Do NOT expose the raw Core userdata as the global `Core` since
-    // configuration scripts and other code may treat `Core` as a table.
-    // Instead expose a convenience forwarding table (`CoreForward`) and
-    // also set the global `Core` to that table so Lua callers use the
-    // table-based API which dispatches to the Core singleton internally.
+        // Do NOT expose the raw Core userdata as the global `Core` since
+        // configuration scripts and other code may treat `Core` as a table.
+        // Instead expose a convenience forwarding table (`CoreForward`) and
+        // also set the global `Core` to that table so Lua callers use the
+        // table-based API which dispatches to the Core singleton internally.
 
         // Register Event types and EventType table (best-effort)
         try {
@@ -1544,7 +1546,8 @@ namespace SDOM
         // shapes. We accept an explicit `self` (may be the table when called via
         // colon) followed by the name, or a single-name arg when called as a
         // plain function. Use variadic_args for flexibility.
-        coreTable.set_function("getDisplayObject", [](sol::this_state ts, sol::object maybeSelf, sol::variadic_args va) {
+        coreTable.set_function("getDisplayObject", [](sol::this_state ts, sol::object maybeSelf, sol::variadic_args va) 
+        {
             sol::state_view sv = ts;
             std::string name;
 
@@ -1573,31 +1576,37 @@ namespace SDOM
             // try { std::cout << "[dbg:CoreForward.getDisplayObject] returning DisplayObject handle" << std::endl; } catch(...){ }
             return sol::make_object(sv, h);
         });
-        coreTable.set_function("getStageHandle", [](sol::this_state ts, sol::object /*self*/) {
+        coreTable.set_function("getStageHandle", [](sol::this_state ts, sol::object /*self*/) 
+        {
             sol::state_view sv = ts;
             DisplayObject h = Core::getInstance().getStageHandle();
             // Return the DisplayObject handle instead of raw Stage*.
-            if (h.isValid() && h.get()) {
+            if (h.isValid() && h.get()) 
+            {
                 return sol::make_object(sv, h);
             }
             return sol::make_object(sv, DisplayObject());
         });
         // Allow setting the root node by name or by handle from Lua
-        coreTable.set_function("setRootNode", [](sol::this_state ts, sol::object /*self*/, sol::object maybeArg) {
+        coreTable.set_function("setRootNode", [](sol::this_state ts, sol::object /*self*/, sol::object maybeArg) 
+        {
             sol::state_view sv = ts;
             if (!maybeArg.valid()) return sol::make_object(sv, sol::nil);
-            if (maybeArg.is<std::string>()) {
+            if (maybeArg.is<std::string>()) 
+            {
                 std::string name = maybeArg.as<std::string>();
                 setRootNodeByName_lua(name);
                 return sol::make_object(sv, sol::nil);
             }
-                if (maybeArg.is<DisplayObject>()) {
+                if (maybeArg.is<DisplayObject>()) 
+                {
                     DisplayObject h = maybeArg.as<DisplayObject>();
                     setRootNode_lua(h);
                     return sol::make_object(sv, sol::nil);
                 }
             // If a table or other type was passed, try to resolve as DisplayObject
-            if (maybeArg.is<sol::table>()) {
+            if (maybeArg.is<sol::table>()) 
+            {
                 sol::table t = maybeArg.as<sol::table>();
                 // try to get name field
                 if (t["name"].valid()) {
@@ -1789,29 +1798,150 @@ namespace SDOM
             return sol::make_object(sv, true);
         });
 
-        // Backwards-compatible globals
+        // Expose as globals to Lua (best-effort backward compatibility)
         try {
             lua["quit"] = &quit_lua;
             lua["shutdown"] = &shutdown_lua;
-        } catch (...) {}
 
-        // Provide a convenience global `getStage()` function for older Lua scripts
-        try {
+            lua["registerOnInit"] = [](sol::this_state ts, const sol::function& f) 
+            {
+                sol::state_view sv = ts;
+                registerOnInit_lua([f]() -> bool 
+                {
+                    sol::protected_function pf = f;
+                    sol::protected_function_result r = pf();
+                    if (!r.valid()) 
+                    {
+                        sol::error err = r;
+                        ERROR(std::string("Lua registerOnInit error: ") + err.what());
+                        return false;
+                    }
+                    try { return r.get<bool>(); }
+                    catch (...) { return false; }
+                });
+                return sol::make_object(sv, sol::nil);
+            };      
+
+            lua["registerOnQuit"] = [](sol::this_state ts, const sol::function& f) {
+                sol::state_view sv = ts;
+                registerOnQuit_lua([f]() 
+                {
+                    sol::protected_function pf = f;
+                    sol::protected_function_result r = pf();
+                    if (!r.valid()) 
+                    {
+                        sol::error err = r;
+                        ERROR(std::string("Lua registerOnQuit error: ") + err.what());
+                    }
+                });
+                return sol::make_object(sv, sol::nil);
+            };
+
+            lua["registerOnUpdate"] = [](sol::this_state ts, const sol::function& f) {
+                sol::state_view sv = ts;
+                registerOnUpdate_lua([f](float dt) 
+                {
+                    sol::protected_function pf = f;
+                    sol::protected_function_result r = pf(dt);
+                    if (!r.valid()) 
+                    {
+                        sol::error err = r;
+                        ERROR(std::string("Lua registerOnUpdate error: ") + err.what());
+                    }
+                });
+                return sol::make_object(sv, sol::nil);
+            };
+
+            lua["registerOnEvent"] = [](sol::this_state ts, const sol::function& f) {
+                sol::state_view sv = ts;
+                registerOnEvent_lua([f](const Event& e) 
+                {
+                    sol::protected_function pf = f;
+                    sol::protected_function_result r = pf(e);
+                    if (!r.valid()) 
+                    {
+                        sol::error err = r;
+                        ERROR(std::string("Lua registerOnEvent error: ") + err.what());
+                    }
+                });
+                return sol::make_object(sv, sol::nil);
+            };
+
+            lua["registerOnRender"] = [](sol::this_state ts, const sol::function& f) {
+                sol::state_view sv = ts;
+                registerOnRender_lua([f]() 
+                {
+                    sol::protected_function pf = f;
+                    sol::protected_function_result r = pf();
+                    if (!r.valid()) 
+                    {
+                        sol::error err = r;
+                        ERROR(std::string("Lua registerOnRender error: ") + err.what());
+                    }
+                });
+                return sol::make_object(sv, sol::nil);
+            };
+
+            lua["registerOnUnitTest"] = [](sol::this_state ts, const sol::function& f) {
+                sol::state_view sv = ts;
+                registerOnUnitTest_lua([f]() -> bool 
+                {
+                    sol::protected_function pf = f;
+                    sol::protected_function_result r = pf();
+                    if (!r.valid()) 
+                    {
+                        sol::error err = r;
+                        ERROR(std::string("Lua registerOnUnitTest error: ") + err.what());
+                        return false;
+                    }
+                    try { return r.get<bool>(); }
+                    catch (...) { return false; }
+                });
+                return sol::make_object(sv, sol::nil);
+            };
+
+            lua["registerOnWindowResize"] = [](sol::this_state ts, const sol::function& f) {
+                sol::state_view sv = ts;
+                registerOnWindowResize_lua([f](int w, int h) 
+                {
+                    sol::protected_function pf = f;
+                    sol::protected_function_result r = pf(w, h);
+                    if (!r.valid()) 
+                    {
+                        sol::error err = r;
+                        ERROR(std::string("Lua registerOnWindowResize error: ") + err.what());
+                    }
+                });
+                return sol::make_object(sv, sol::nil);
+            };
+
+            lua["registerOn"] = [](sol::this_state ts, const std::string& name, const sol::function& f) {
+                sol::state_view sv = ts;
+                registerOn_lua(name, f);
+                return sol::make_object(sv, sol::nil);
+            };            
+
             lua["getStage"] = [](sol::this_state ts) {
                 sol::state_view sv = ts;
                 DisplayObject h = Core::getInstance().getStageHandle();
                 if (h.isValid() && h.get()) return sol::make_object(sv, h);
                 return sol::make_object(sv, DisplayObject());
-            };
+            };            
+
+            lua["setWindowTitle"] = [](sol::this_state ts, const std::string& title) {
+                sol::state_view sv = ts;
+                Core::getInstance().setWindowTitle(title);
+                return sol::make_object(sv, sol::nil);
+            };            
         } catch (...) {}
 
-    // Expose CoreForward (explicit) and make the global `Core` point to
-    // the forwarding table so scripts can use the table-based API
-    // consistently. The forwarding table dispatches to the Core
-    // singleton internally so both dot- and colon-call styles are
-    // supported.
-    lua["CoreForward"] = coreTable;
-    lua["Core"] = coreTable;
+        // Expose CoreForward (explicit) and make the global `Core` point to
+        // the forwarding table so scripts can use the table-based API
+        // consistently. The forwarding table dispatches to the Core
+        // singleton internally so both dot- and colon-call styles are
+        // supported.
+        lua["CoreForward"] = coreTable;
+        lua["Core"] = coreTable;
 
     } // End Core::_registerDisplayObject()
 

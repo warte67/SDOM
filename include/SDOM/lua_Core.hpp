@@ -28,24 +28,24 @@ namespace SDOM
 */
 
 	// --- Main Loop & Event Dispatch --- //
-	void quit_lua(); 		// **VERIFIED**
-	void shutdown_lua(); 	// **VERIFIED**
+	void quit_lua();		// **GLOBAL LUA**
+	void shutdown_lua();	// **GLOBAL LUA**
 	void run_lua(); 
 
 	void configure_lua(const sol::table& config);
 	void configureFromFile_lua(const std::string& filename);
 
 	// --- Callback/Hook Registration --- //
-	void registerOnInit_lua(std::function<bool()> fn);						// **VERIFIED**
-	void registerOnQuit_lua(std::function<void()> fn);						// **VERIFIED**	
-	void registerOnUpdate_lua(std::function<void(float)> fn);				// **VERIFIED**
-	void registerOnEvent_lua(std::function<void(const Event&)> fn);			// **VERIFIED**
-	void registerOnRender_lua(std::function<void()> fn);					// **VERIFIED**
-	void registerOnUnitTest_lua(std::function<bool()> fn);					// **VERIFIED**
-	void registerOnWindowResize_lua(std::function<void(int, int)> fn);		// **VERIFIED**
+	void registerOnInit_lua(std::function<bool()> fn);						// **GLOBAL LUA**
+	void registerOnQuit_lua(std::function<void()> fn);
+	void registerOnUpdate_lua(std::function<void(float)> fn);
+	void registerOnEvent_lua(std::function<void(const Event&)> fn);
+	void registerOnRender_lua(std::function<void()> fn);
+	void registerOnUnitTest_lua(std::function<bool()> fn);
+	void registerOnWindowResize_lua(std::function<void(int, int)> fn);
 
 	// Generic registration helper: registerOn("Init"|"Update"|...) from Lua
-	void registerOn_lua(const std::string& name, const sol::function& f);	// **VERIFIED**
+	void registerOn_lua(const std::string& name, const sol::function& f);	// **GLOBAL LUA**
 
 	// --- Stage/Root Node Management --- //
 	void setRootNodeByName_lua(const std::string& name); 

@@ -124,12 +124,12 @@ callbacks.window_resize = require_callback("callbacks.window_resize")
 
 -- Use the generic registerOn helper exposed by the C++ bindings.
 -- This accepts the short name (Init, Update, Event, etc.) and a Lua function.
-Core:registerOn("Init", callbacks.init.on_init)
-Core:registerOn("Quit", callbacks.quit.on_quit)
-Core:registerOn("Event", callbacks.event.on_event)
-Core:registerOn("Update", callbacks.update.on_update)
-Core:registerOn("Render", callbacks.render.on_render)
-Core:registerOn("UnitTest", callbacks.unittest.on_unit_test)
-Core:registerOn("WindowResize", callbacks.window_resize.on_window_resize)
+registerOn("Init", callbacks.init.on_init)
+registerOn("Quit", callbacks.quit.on_quit)
+registerOn("Event", callbacks.event.on_event)
+registerOn("Update", callbacks.update.on_update)
+registerOn("Render", callbacks.render.on_render)
+registerOn("UnitTest", callbacks.unittest.on_unit_test)
+registerOn("WindowResize", callbacks.window_resize.on_window_resize)
 
 return config

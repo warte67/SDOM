@@ -303,6 +303,11 @@ namespace SDOM
 
         virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua) override;
 
+        void _bindCoreUsertype(sol::state_view lua);
+        sol::table _createCoreForwardTable(sol::state_view lua);
+        void _registerCoreGlobals(sol::state_view lua, sol::table coreTable);
+        void _registerCoreCallbacks(sol::state_view lua, sol::table coreTable);        
+
     };
 
 } // namespace SDOM
