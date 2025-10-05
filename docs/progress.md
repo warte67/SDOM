@@ -416,8 +416,19 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Next actions
         - Add unit tests that specifically exercise `removeFromParent()`, `removeDescendant()` (handle/name), and `removeChild(name)` semantics (edge cases, nested removals, event-time removals).
         - Consider removing temporary compatibility shims (getStage global, any legacy forwards) once examples are migrated to canonical Core/Factory bindings.
-        - Improve docs/comments in headers to clarify difference between strict `removeChild` (direct child) vs. recursive removal and the convenience `removeFromParent()` behavior.        
-
+        - Improve docs/comments in headers to clarify difference between strict `removeChild` (direct child) vs. recursive removal and the convenience `removeFromParent()` behavior.   
+             
+---   
+- ### [October 5, 2025]
+    - Refactored Lua Core bindings:
+        - Centralized and simplified Core::_registerDisplayObject() by introducing small per-signature binder lambdas (bind_noarg, bind_table, bind_string, bind_bool_arg, bind_do_arg, bind_return_* and bind_callback_*).
+        - All Core APIs are now registered consistently in three places: usertype methods (colon-call), CoreForward table entries, and optional global aliases — reducing duplication and eliminating subtle behavioral mismatches.
+        - Consolidated all registerOn* callback wrappers with per-signature factories so Lua->C++ callback wiring and error handling is uniform.
+        - Added permissive handlers for mixed-argument helpers (e.g., setRootNode / setStage accept string, handle, or name-table), and convenient aliases (setRoot -> setRootNode).
+        - Improved maintainability: adding new Core functions or aliases requires a single-line registration using the appropriate binder.
+        - Build and unit tests pass locally after the changes.
+    - Notes / next steps:
+        - Plan to move the binder lambdas into a dedicated implementation (e.g., src/lua_Core_bindings.cpp) and expose small static helpers so other modules (IDisplayObject, Event, EventType, SDL) can reuse the same registration patterns. Postpone that move until Lua smoke tests and CI are stable.
 ---
 ## Observed / Known issues:
 

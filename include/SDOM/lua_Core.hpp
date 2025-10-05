@@ -48,49 +48,46 @@ namespace SDOM
 	void registerOn_lua(const std::string& name, const sol::function& f);	// **GLOBAL LUA**
 
 	// --- Stage/Root Node Management --- //
-	void setRootNodeByName_lua(const std::string& name); 
-	void setRootNode_lua(const DisplayObject& handle); 
+	void setRootNodeByName_lua(const std::string& name); 	// Simply use setRootNode(with either string or handle) from Lua -- alias setRoot()
+	void setRootNode_lua(const DisplayObject& handle); 		// Simply use setRootNode(with either string or handle) from Lua -- alias setRoot()
 	void setStageByName_lua(const std::string& name); 
 	void setStage_lua(const DisplayObject& handle); 
-	DisplayObject getRoot_lua(); 
-	DisplayObject getStage_lua(); 
+	DisplayObject getRoot_lua();  // alias "getRootHandle()"
+	DisplayObject getStage_lua(); // alias "getStageHandle()"
 
 	// --- Factory & EventManager Access --- //
 	bool getIsTraversing_lua(); 
-	Core* setIsTraversing_lua(bool traversing); 
+	void setIsTraversing_lua(bool traversing); 
 
-    // --- Object Creation --- //
+    // --- Object Creation and Lookup--- //
 	DisplayObject createDisplayObject_lua(const std::string& typeName, const sol::table& config);    
+	DisplayObject getDisplayObject_lua(const std::string& name); 
+	bool hasDisplayObject_lua(const std::string& name); 
 
 	// --- Focus & Hover Management --- //
 	void doTabKeyPressForward_lua();             
 	void doTabKeyPressReverse_lua();             
-	void setKeyboardFocusedObject_lua(DisplayObject obj);  
+	void setKeyboardFocusedObject_lua(const DisplayObject& handle);  
 	DisplayObject getKeyboardFocusedObject_lua(); 
-	void setMouseHoveredObject_lua(DisplayObject obj);    
+	void setMouseHoveredObject_lua(const DisplayObject& handle);    
 	DisplayObject getMouseHoveredObject_lua();     
 
 	// --- Window Title & Timing --- //
 	std::string getWindowTitle_lua();	
-	Core* setWindowTitle_lua(const std::string& title); 	
-	float getElapsedTime_lua();	
+	void setWindowTitle_lua(const std::string& title); 	
+	float getElapsedTime_lua();	 // alias getDeltaTime()
 
 	// --- Event helpers (exposed to Lua) --- //
 	void pumpEventsOnce_lua(); 
 	void pushMouseEvent_lua(const sol::object& args); 
-
-	// synthesize keyboard events from Lua: expects table { key=<SDLK_* int>, type="down"|"up", mod=<modifier mask optional> }
 	void pushKeyboardEvent_lua(const sol::object& args); 
-
-	// --- Object Lookup --- //
-	DisplayObject getDisplayObject_lua(const std::string& name); 
-	bool hasDisplayObject_lua(const std::string& name); 
 
 	// --- Orphan / Future Child Management --- //
 	void destroyDisplayObject_lua(const std::string& name); 
 	int countOrphanedDisplayObjects_lua(); 
 	std::vector<DisplayObject> getOrphanedDisplayObjects_lua(); 
-	void destroyOrphanedDisplayObjects_lua(); 
+	void destroyOrphanedDisplayObjects_lua();  // aliases:  "destroyOrphanedObjects" and "destroyOrphans"
+	void collectGarbage_lua(); 
 
 	// --- Utility Methods --- //
 	std::vector<std::string> listDisplayObjectNames_lua(); 

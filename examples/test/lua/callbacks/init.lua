@@ -28,7 +28,7 @@ function M.on_init()
     
     -- attach per-stage listeners (delegate to the shared listener_callbacks module)
     local listeners = require("callbacks.listener_callbacks")
-    local stage = Core and Core:getStageHandle() or Core and Core:getDisplayObject("mainStage")
+    local stage = Core and Core:getStage() or Core and Core:getDisplayObject("mainStage")
     if stage then
         listeners.attach(stage)
     else
