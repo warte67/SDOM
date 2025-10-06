@@ -3,7 +3,7 @@ var searchData=
   ['language_20hooks_20python_20etc_0',['- Extensible for future language hooks (Python, etc.)',['../md_docs_2exposing__hooks.html#autotoc_md91',1,'']]],
   ['layout_1',['Edge-Based Layout',['../md_docs_2display__object__anchoring.html#autotoc_md46',1,'']]],
   ['leavefullscreen_2',['LeaveFullscreen',['../classSDOM_1_1EventType.html#aed0d07f388f2fc133dfe7fffcd9e2735',1,'SDOM::EventType']]],
-  ['left_3',['left',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a684d325a7303f52e64011467ff5c5758',1,'SDOM::LEFT'],['../structSDOM_1_1Bounds.html#a34add0a44544f1592b60afd1bc2b3b34',1,'SDOM::Bounds::left']]],
+  ['left_3',['left',['../structSDOM_1_1Bounds.html#a34add0a44544f1592b60afd1bc2b3b34',1,'SDOM::Bounds::left'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a684d325a7303f52e64011467ff5c5758',1,'SDOM::LEFT']]],
   ['left_5fbottom_4',['LEFT_BOTTOM',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a54adef06a90e8b0326376c0eaf7404b1',1,'SDOM']]],
   ['left_5fmiddle_5',['LEFT_MIDDLE',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae68c8b7b353db96c91dfc435970b548b',1,'SDOM']]],
   ['left_5ftop_6',['LEFT_TOP',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5eeb74f28a17e0cdf4b1661c80490df9',1,'SDOM']]],
@@ -28,10 +28,13 @@ var searchData=
   ['lua_20interface_25',['Lua Interface',['../md_docs_2display__object__anchoring.html#autotoc_md55',1,'']]],
   ['lua_20script_20integration_26',['3. Lua/Script Integration',['../md_docs_2exposing__hooks.html#autotoc_md101',1,'']]],
   ['lua_20scripts_27',['1. Initializer Structs and Lua Scripts',['../md_docs_2extensible__factory.html#autotoc_md113',1,'']]],
-  ['lua_5fcore_2ecpp_28',['lua_Core.cpp',['../lua__Core_8cpp.html',1,'']]],
-  ['lua_5fcore_2ehpp_29',['lua_Core.hpp',['../lua__Core_8hpp.html',1,'']]],
-  ['lua_5fidisplayobject_2ecpp_30',['lua_IDisplayObject.cpp',['../lua__IDisplayObject_8cpp.html',1,'']]],
-  ['lua_5fidisplayobject_2ehpp_31',['lua_IDisplayObject.hpp',['../lua__IDisplayObject_8hpp.html',1,'']]],
-  ['lua_5finfo_32',['LUA_INFO',['../SDOM_8hpp.html#ad37b5952fb01322cea666ba6342b2a43',1,'SDOM.hpp']]],
-  ['lua_5fvalue_5fcase_5finsensitive_33',['lua_value_case_insensitive',['../classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959',1,'SDOM::IDataObject']]]
+  ['lua_5fbindhelpers_2ecpp_28',['lua_BindHelpers.cpp',['../lua__BindHelpers_8cpp.html',1,'']]],
+  ['lua_5fbindhelpers_2ehpp_29',['lua_BindHelpers.hpp',['../lua__BindHelpers_8hpp.html',1,'']]],
+  ['lua_5fcore_2ecpp_30',['lua_Core.cpp',['../lua__Core_8cpp.html',1,'']]],
+  ['lua_5fcore_2ehpp_31',['lua_Core.hpp',['../lua__Core_8hpp.html',1,'']]],
+  ['lua_5fidisplayobject_2ecpp_32',['lua_IDisplayObject.cpp',['../lua__IDisplayObject_8cpp.html',1,'']]],
+  ['lua_5fidisplayobject_2ehpp_33',['lua_IDisplayObject.hpp',['../lua__IDisplayObject_8hpp.html',1,'']]],
+  ['lua_5finfo_34',['LUA_INFO',['../SDOM_8hpp.html#ad37b5952fb01322cea666ba6342b2a43',1,'SDOM.hpp']]],
+  ['lua_5fvalue_5fcase_5finsensitive_35',['lua_value_case_insensitive',['../classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959',1,'SDOM::IDataObject']]],
+  ['luahandlename_36',['LuaHandleName',['../classSDOM_1_1DisplayObject.html#a8c70a9cad16846c96927b07d1bcd04f7',1,'SDOM::DisplayObject']]]
 ];

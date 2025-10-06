@@ -1,7 +1,7 @@
 var searchData=
 [
   ['addchild_0',['addChild',['../classSDOM_1_1IDisplayObject.html#a2cd03ba90d4ba3db9a6768e96f2c43b2',1,'SDOM::IDisplayObject']]],
-  ['addchild_5flua_1',['addchild_lua',['../classSDOM_1_1IDisplayObject.html#abb372c7a1f585c48e728e844b607fc53',1,'SDOM::IDisplayObject::addChild_lua()'],['../namespaceSDOM.html#af1a4ea250a0165148b9b69d43c70f640',1,'SDOM::addChild_lua()']]],
+  ['addchild_5flua_1',['addChild_lua',['../namespaceSDOM.html#af1a4ea250a0165148b9b69d43c70f640',1,'SDOM']]],
   ['adddisplayobject_2',['adddisplayobject',['../classSDOM_1_1Core.html#af2a90224986490a59e3b513a718c1f16',1,'SDOM::Core::addDisplayObject()'],['../classSDOM_1_1Factory.html#a22614b0928a7cbeddea12e790beaceda',1,'SDOM::Factory::addDisplayObject()']]],
   ['addevent_3',['addEvent',['../classSDOM_1_1EventManager.html#aaf90967382eb6bff122721bfbad6e484',1,'SDOM::EventManager']]],
   ['addeventlistener_4',['addEventListener',['../classSDOM_1_1IDisplayObject.html#a1068567d65e0780958ce3cfe104ebe4a',1,'SDOM::IDisplayObject']]],

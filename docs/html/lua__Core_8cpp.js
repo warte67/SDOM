@@ -1,5 +1,6 @@
 var lua__Core_8cpp =
 [
+    [ "collectGarbage_lua", "lua__Core_8cpp.html#a5f7a8f6cc10983ede23c44335206e9c7", null ],
     [ "configure_lua", "lua__Core_8cpp.html#a572b1e609d4dcd8425a9cda2d1687016", null ],
     [ "configureFromFile_lua", "lua__Core_8cpp.html#a7e3de6d3c92d997c8d1349fa90833153", null ],
     [ "countOrphanedDisplayObjects_lua", "lua__Core_8cpp.html#aedd46ea1ab9af6b9314aa077a80196dd", null ],
@@ -33,13 +34,13 @@ var lua__Core_8cpp =
     [ "registerOnUpdate_lua", "lua__Core_8cpp.html#a8f9719ae9f97d16d30a9b552a67bf430", null ],
     [ "registerOnWindowResize_lua", "lua__Core_8cpp.html#ac9477da8c80517c4ceebfce7fd7e73c4", null ],
     [ "run_lua", "lua__Core_8cpp.html#aeb6d2443659d6c890178519a86428107", null ],
-    [ "setIsTraversing_lua", "lua__Core_8cpp.html#a35090cc95c93a87c45c10f2854b424b6", null ],
-    [ "setKeyboardFocusedObject_lua", "lua__Core_8cpp.html#afe472d0db5b93ad228ac9aabe4726262", null ],
-    [ "setMouseHoveredObject_lua", "lua__Core_8cpp.html#addf378ac3fca887c7ba42676c964c420", null ],
+    [ "setIsTraversing_lua", "lua__Core_8cpp.html#aa07560d76c844d775d57bdd0704f7b7f", null ],
+    [ "setKeyboardFocusedObject_lua", "lua__Core_8cpp.html#a946184b4440f525f536fbd3aee376b03", null ],
+    [ "setMouseHoveredObject_lua", "lua__Core_8cpp.html#ad7f96bc365390b82893bea020b1a0b21", null ],
     [ "setRootNode_lua", "lua__Core_8cpp.html#a39719ae038a6b9422b565f94bbe4f256", null ],
     [ "setRootNodeByName_lua", "lua__Core_8cpp.html#a870f9dd8d00c2fdf89bb7f47cd519fb1", null ],
     [ "setStage_lua", "lua__Core_8cpp.html#a767251e5b96ebab192b1766e33c59c9f", null ],
     [ "setStageByName_lua", "lua__Core_8cpp.html#a480455949a5b7964dfe14df03ce0eba3", null ],
-    [ "setWindowTitle_lua", "lua__Core_8cpp.html#aeac7f10905ae775dc4d52d63908f74ed", null ],
+    [ "setWindowTitle_lua", "lua__Core_8cpp.html#a4f57cb35054293ba7acbe2c9a483e318", null ],
     [ "shutdown_lua", "lua__Core_8cpp.html#a5954f2e93498bf0f6b59e1d33f170b49", null ]
 ];

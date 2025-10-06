@@ -75,6 +75,7 @@ var classSDOM_1_1Core =
     [ "handleTabKeyPress", "classSDOM_1_1Core.html#a9e424a1d0ce6f6327c6ac6c8102d8406", null ],
     [ "handleTabKeyPressReverse", "classSDOM_1_1Core.html#ac2fd090610dc01a7480ff3cececde751", null ],
     [ "hasDisplayObject", "classSDOM_1_1Core.html#a1bcc1a94d235f83308a6204d4ff56215", null ],
+    [ "isRunning", "classSDOM_1_1Core.html#aad016b86f7299465d7706c76429d5e9c", null ],
     [ "listDisplayObjectNames", "classSDOM_1_1Core.html#af6de99673bf2fc316e654614aa9638e5", null ],
     [ "lua_value_case_insensitive", "classSDOM_1_1Core.html#ac79673e571c58f21de1541a81548a959", null ],
     [ "onEvent", "classSDOM_1_1Core.html#aeff594d7f9097244d6888ab8a5f62f4d", null ],

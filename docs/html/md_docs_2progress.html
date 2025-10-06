@@ -701,39 +701,85 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h1><a class="anchor" id="autotoc_md172"></a>
-Observed / Known issues:</h1>
 <ul>
-<li>A small number of Lua-driven tests show unexpected parent/child state after a Lua descriptor-style setParent call — the child sometimes remains attached to the old parent. Root cause suspected in the wrapper vs. underlying setParent/addChild call path; needs deeper inspection.<ul>
-<li>Garbage Collection bugs are likely related to these unexpected parent/child states.</li>
-<li>More experimentation will be required to identify and irradicate these nasty little roaches.</li>
+<li>### [October 4, 2025]<ul>
+<li>Quick fixes &amp; Lua binding polish (morning)<ul>
+<li>Fixed a typo in examples/test Lua callback (evt.taget → evt.target) that caused nil-index errors in right‑click handlers.</li>
+<li>Added a safe convenience: <code>IDisplayObject::removeFromParent()</code> and Lua bindings so scripts can call <code>evt.target:removeFromParent()</code> directly from listeners.</li>
+<li>Implemented recursive removal helpers: <code>removeDescendant(...)</code> (depth‑first, first match) and exposed them to Lua on both <code>IDisplayObject</code> and <code>DisplayObject</code> handle usertypes.</li>
+<li>Added <code>removeChild(const std::string&amp;)</code> overload and corresponding Lua binding so <code>parent:removeChild("name")</code> works without userdata coercion; fixed overload registration to avoid Lua/C++ type mismatch.</li>
+<li>Removed confusing const predicate overloads that were misnamed (they behaved like hasChild checks); cleaned up their Lua wrappers to avoid ambiguity.</li>
+<li>Added a small compatibility helper <code>getStage()</code> in Lua bindings to avoid breaking existing example scripts.</li>
+<li>Fixed binding registration issues (explicit function-pointer casts / sol::overload) so the new helpers expose unambiguous APIs to Lua.</li>
+<li>Rebuilt and ran the examples/test suite — compilation succeeded and unit tests passed locally after the changes.</li>
 </ul>
 </li>
-<li>getBounds Lua shape expectations (Lua code expects table-like access) — currently Bounds is exposed as userdata; consider returning a Lua table or expose userdata fields to match tests.</li>
+<li>Next actions<ul>
+<li>Add unit tests that specifically exercise <code>removeFromParent()</code>, <code>removeDescendant()</code> (handle/name), and <code>removeChild(name)</code> semantics (edge cases, nested removals, event-time removals).</li>
+<li>Consider removing temporary compatibility shims (getStage global, any legacy forwards) once examples are migrated to canonical Core/Factory bindings.</li>
+<li>Improve docs/comments in headers to clarify difference between strict <code>removeChild</code> (direct child) vs. recursive removal and the convenience <code>removeFromParent()</code> behavior. <br  />
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <hr  />
- <h1><a class="anchor" id="autotoc_md174"></a>
+<ul>
+<li>### [October 5, 2025]<ul>
+<li>Refactored Lua Core bindings:<ul>
+<li>Centralized and simplified Core::<em>registerDisplayObject() by introducing small per-signature binder lambdas (<code>bind_noarg</code>, <code>bind_table</code>, <code>bind_string</code>, <code>bind_bool_arg</code>, <code>bind_do_arg</code>, `bind_return</em>*<code>and</code>bind_callback_*<code>).</code></li>
+<li><code>All Core APIs are now registered consistently in three places: usertype methods (colon-call), CoreForward table entries, and optional global aliases — reducing duplication and eliminating subtle behavioral mismatches.</code></li>
+<li><code>Consolidated all registerOn* callback wrappers with per-signature factories so Lua-&gt;C++ callback wiring and error handling is uniform.</code></li>
+<li><code>Added permissive handlers for mixed-argument helpers (e.g., setRootNode / setStage accept string, handle, or name-table), and convenient aliases (setRoot -&gt; setRootNode).</code></li>
+<li><code>Improved maintainability: adding new Core functions or aliases requires a single-line registration using the appropriate binder.</code></li>
+<li><code>Build and unit tests pass locally after the changes.</code></li>
+</ul>
+</li>
+<li><code>Notes / next steps:<ul>
+<li>Plan to move the binder lambdas into a dedicated implementation (e.g., src/lua_Core_bindings.cpp) and expose small static helpers so other modules (IDisplayObject, Event, EventType, SDL) can reuse the same registration patterns. Postpone that move until Lua smoke tests and CI are stable.</li>
+</ul>
+</code></li>
+<li><code>Additional Oct 5 updates (implementation details):<ul>
+<li>Added a reusable header and implementation for the bind helpers:<a class="el" href="lua__BindHelpers_8hpp.html">include/SDOM/lua_BindHelpers.hpp</a><code>and</code><a class="el" href="lua__BindHelpers_8cpp.html">src/lua_BindHelpers.cpp</a><code>. These centralize the per-signature helper implementations previously expressed as local lambdas.</code></li>
+<li><code>Rewired several Core bindings in</code><a class="el" href="SDOM__Core_8cpp.html">src/SDOM_Core.cpp</a><code>to use the new helpers (examples:</code>quit<code>,</code>registerOn<code>,</code>setStage<code>,</code>setRootNode<code>,</code>setRoot<code>). More inline lambdas remain and will be swept in a follow-up.</code></li>
+<li><code>Replaced a previously-silent catch around</code>EventType<code>registration with visible debug logging (</code><a class="el" href="SDOM_8hpp.html#a21a2c7330a04ac78200a986f66609369" title="Logs a debug message in green text.">DEBUG_LOG(...)</a><code>) and added a short explanatory comment about lifetime/static-init-order assumptions.</code></li>
+<li><code>Verified the change locally: ran the project's compile/test flow (</code>./compile<code>in</code>examples/test<code>), the library and test binary built and installed headers under</code>~/.local/include/SDOM<code>and</code>~/.local/lib/libSDOM.a<code>updated.</code></li>
+<li><code>Next short steps: complete a full sweep of remaining inline binding lambdas in</code><a class="el" href="SDOM__Core_8cpp.html">SDOM_Core.cpp</a><code>, add a small Lua smoke test exercising name-or-handle binds, and then consider moving the helpers into a dedicated</code>lua_Core_bindings.cpp` once CI is stable.</li>
+</ul>
+</code></li>
+</ul>
+</li>
+</ul>
+<p><code></p><hr  />
+<p> </code></p>
+<h1><a class="anchor" id="autotoc_md174"></a>
 Garbage Collection / Orphan Retention</h1>
-<p>Proposed approach: add an <code>OrphanRetentionPolicy</code> enum (or a smaller <code>retainOnOrphan</code> boolean for a quick win) on <code>IDisplayObject</code> and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.</p>
-<p>Recommended enum (suggested values):</p><ul>
+<p><code></code></p>
+<p><code>Proposed approach: add an <code>OrphanRetentionPolicy</code> enum (or a smaller <code>retainOnOrphan</code> boolean for a quick win) on <code>IDisplayObject</code> and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.</code></p>
+<p><code>Recommended enum (suggested values):</p><ul>
 <li><code>OrphanRetentionPolicy::AutoDestroy</code> — object is eligible for destruction immediately when orphaned. (fast, default for ephemeral runtime objects)</li>
 <li><code>OrphanRetentionPolicy::GracePeriod</code> — object is eligible only after a configurable grace period has elapsed since it became orphaned; allows reparenting via DisplayObject within the grace window.</li>
 <li><code>OrphanRetentionPolicy::RetainUntilManual</code> — object is never auto-destroyed; requires explicit Factory or user code to destroy. (useful for editor templates and long-lived resources)</li>
 <li><code>OrphanRetentionPolicy::RetainWhenReferenced</code> — object is retained while any DisplayObject or external reference exists; destroyed only once all references are gone and policy conditions met. (optional advanced mode)</li>
 </ul>
-<p>Minimal API hints:</p><ul>
+<p></code></p>
+<p><code>Minimal API hints:</p><ul>
 <li>in <code>IDisplayObject</code>: add <code>OrphanRetentionPolicy orphanPolicy = OrphanRetentionPolicy::GracePeriod;</code> and <code>std::chrono::milliseconds orphanGrace{5000};</code></li>
 <li>convenience setters/getters: <code>setOrphanPolicy(...)</code>, <code>getOrphanPolicy()</code>, <code>setOrphanGrace(...)</code></li>
 <li>in the Factory: track an <code>optional&lt;steady_clock::time_point&gt; orphanedAt</code> per object and implement <code>collectOrphans()</code> which checks policy+elapsed time and destroys accordingly.</li>
 </ul>
-<p>Notes &amp; test ideas:</p><ul>
+<p></code></p>
+<p><code>Notes &amp; test ideas:</p><ul>
 <li>Reparent before grace expiry should clear <code>orphanedAt</code> and prevent destruction.</li>
 <li><code>RetainUntilManual</code> objects should be visible in <code>Factory::listOrphanedObjects()</code> and only removed by explicit destroy.</li>
 <li>Add unit tests for each policy (auto destroy, grace window reparenting, retained objects resisting collection).</li>
 </ul>
+<p></code></p>
+<p><code></code></p>
 <h1><a class="anchor" id="autotoc_md175"></a>
 ToDo:</h1>
-<ul>
+<p><code></p><ul>
 <li>Expand Lua examples and add more regression tests (invalid/nil handles, wrong-typed args, double-add/remove edge cases).</li>
 <li>Expand Lua scripting examples and documentation.</li>
 <li>Continue improving resource management and garbage collection.</li>
@@ -741,9 +787,11 @@ ToDo:</h1>
 <li>Maintain and update Doxygen and Markdown docs as features evolve.</li>
 <li>Implement garbage_collection() for display objects.</li>
 </ul>
+<p></code></p>
+<p><code></code></p>
 <h2><a class="anchor" id="autotoc_md176"></a>
 Current repo/test state (summary)</h2>
-<p>DisplayObject_UnitTests.cpp now contains:</p><ul>
+<p><code> DisplayObject_UnitTests.cpp now contains:</p><ul>
 <li>A concise numeric mapping header above the DisplayObject tests.</li>
 <li>Full human-readable descriptions (matching the strings passed to UnitTests::run) in place of the short mapping comments.</li>
 <li>Test functions renamed to DisplayObject_test1 … DisplayObject_test10.</li>
@@ -751,6 +799,7 @@ Current repo/test state (summary)</h2>
 <li>Debug output updated to reference DisplayObject_test10 where applicable.</li>
 <li>A clean build and test run were executed successfully. </li>
 </ul>
+<p></code></p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

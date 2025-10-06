@@ -10,7 +10,7 @@ var searchData=
   ['printresult_7',['printResult',['../classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf',1,'SDOM::UnitTests']]],
   ['printtest_8',['printTest',['../classSDOM_1_1UnitTests.html#a39fad7caf8610114afc0ec5116103565',1,'SDOM::UnitTests']]],
   ['printtree_9',['printTree',['../classSDOM_1_1IDisplayObject.html#a853fddbff86054aae8abc808cf55d1b6',1,'SDOM::IDisplayObject']]],
-  ['printtree_5flua_10',['printtree_lua',['../classSDOM_1_1IDisplayObject.html#a1223f52ece2f5e19f150e1ad38751721',1,'SDOM::IDisplayObject::printTree_lua()'],['../namespaceSDOM.html#a004cbe903b03ec8aec96a3af4d1501c6',1,'SDOM::printTree_lua()']]],
+  ['printtree_5flua_10',['printTree_lua',['../namespaceSDOM.html#a004cbe903b03ec8aec96a3af4d1501c6',1,'SDOM']]],
   ['pumpeventsonce_11',['pumpEventsOnce',['../classSDOM_1_1Core.html#acf6416c4261fa977000cad76b49d5605',1,'SDOM::Core']]],
   ['pumpeventsonce_5flua_12',['pumpEventsOnce_lua',['../namespaceSDOM.html#ab58792a80878789b0eddce3ffa67b0ce',1,'SDOM']]],
   ['pushkeyboardevent_5flua_13',['pushKeyboardEvent_lua',['../namespaceSDOM.html#ac078f1de5a48564d4b8597742bf6aa73',1,'SDOM']]],

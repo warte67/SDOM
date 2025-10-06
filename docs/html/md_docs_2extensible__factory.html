@@ -351,7 +351,7 @@ Implementation Strategy</h1>
 <div class="line">## Further Encapsulation: PIMPL Idiom</div>
 <div class="line"> </div>
 <div class="line">While the PIMPL idiom can be useful <span class="keywordflow">for</span> hiding implementation details and reducing compile-time dependencies, it adds complexity—especially in polymorphic designs like <a class="code hl_namespace" href="namespaceSDOM.html">SDOM</a>. For <span class="keyword">this</span> open source project, we prioritize maintainability and extensibility over deep encapsulation. Therefore, PIMPL is not recommended unless a compelling reason arises.</div>
-<div class="ttc" id="anamespaceSDOM_html"><div class="ttname"><a href="namespaceSDOM.html">SDOM</a></div><div class="ttdoc">Contains all core classes and utilities for the SDOM library.</div><div class="ttdef"><b>Definition</b> lua_Core.hpp:8</div></div>
+<div class="ttc" id="anamespaceSDOM_html"><div class="ttname"><a href="namespaceSDOM.html">SDOM</a></div><div class="ttdoc">Contains all core classes and utilities for the SDOM library.</div><div class="ttdef"><b>Definition</b> lua_BindHelpers.hpp:8</div></div>
 </div><!-- fragment --></li>
 <li>Lua construction: <div class="fragment"><div class="line">sol::state lua;</div>
 <div class="line">lua.open_libraries(sol::lib::base);</div>

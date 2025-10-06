@@ -144,18 +144,6 @@ namespace SDOM
 		sol::protected_function pf = f;
 		if (name == "Init") {
 			registerOnInit_lua([pf]() -> bool {
-				// Debug: inspect the global Core object in the Lua state at callback time
-				try {
-					sol::state& lua = Core::getInstance().getLua();
-					sol::object coreObj = lua["Core"];
-					std::cout << "[debug-registerOnLua] Core global valid=" << (coreObj.valid() ? "true" : "false") << " ";
-					if (coreObj.valid()) {
-						std::cout << "is<Core*>=" << (coreObj.is<Core*>() ? "true" : "false") << " ";
-						std::cout << "is<std::reference_wrapper<Core>>=" << (coreObj.is<std::reference_wrapper<Core>>() ? "true" : "false") << " ";
-						std::cout << "is<table>=" << (coreObj.is<sol::table>() ? "true" : "false") << " ";
-					}
-					std::cout << std::endl;
-				} catch (...) {}
 				sol::protected_function_result r = pf();
 				if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnInit error: ") + err.what()); return false; }
 				try { return r.get<bool>(); } catch (...) { return false; }
@@ -210,16 +198,6 @@ namespace SDOM
 	// --- Object Lookup --- //
 	DisplayObject getDisplayObject_lua(const std::string& name) {
 		DisplayObject h = Core::getInstance().getDisplayObject(name);
-		try {
-			if (!h.isValid() || !h.get()) {
-				std::cout << "[DIAG] getDisplayObject_lua('" << name << "') -> invalid handle" << std::endl;
-			} else {
-				IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
-				std::cout << "[DIAG] getDisplayObject_lua('" << name << "') -> handle ptr=" << reinterpret_cast<const void*>(h.get())
-					<< " name='" << (obj ? obj->getName() : std::string("<non-idisplay>"))
-					<< "' type='" << (obj ? obj->getType() : std::string("<unknown>")) << "'" << std::endl;
-			}
-		} catch(...) {}
 		return h;
 	}
 	bool hasDisplayObject_lua(const std::string& name) { return Core::getInstance().hasDisplayObject(name); }

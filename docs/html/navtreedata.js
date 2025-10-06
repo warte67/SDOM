@@ -186,7 +186,6 @@ var NAVTREE =
       [ "Progress Updates", "md_docs_2progress.html#autotoc_md154", null ],
       [ "- Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.", "md_docs_2progress.html#autotoc_md169", null ],
       [ "- Verified: rebuilt the examples and test binary after these changes (<tt>./compile</tt> in <tt>examples/test</tt>) — build completed and <tt>prog</tt> produced successfully.", "md_docs_2progress.html#autotoc_md170", null ],
-      [ "Observed / Known issues:", "md_docs_2progress.html#autotoc_md172", null ],
       [ "Garbage Collection / Orphan Retention", "md_docs_2progress.html#autotoc_md174", null ],
       [ "ToDo:", "md_docs_2progress.html#autotoc_md175", [
         [ "Current repo/test state (summary)", "md_docs_2progress.html#autotoc_md176", null ]
@@ -265,15 +264,16 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "SDOM_8cpp.html",
-"classSDOM_1_1Core.html#a34854eeaa52416c8c25fc143e6e679f2",
-"classSDOM_1_1DisplayObject.html#a8872f9668a96ae9c6d997804e32dbeae",
-"classSDOM_1_1EventManager.html#a5a41d9d4d841c2707db271d2b606890a",
-"classSDOM_1_1Factory.html#af1d614fd777f0cfbc48618f7ab77f49d",
-"classSDOM_1_1IDisplayObject.html#addaf39525119d04958b868e104170fb6",
-"classSDOM_1_1Stage.html#a9ed2761595e2f29ab0c0d42c85438dabaf2a737651c80010466e0e701b2a55591",
-"lua__Core_8hpp_source.html",
-"md_docs_2dom__propagation.html#autotoc_md78",
-"namespaceSDOM.html#afc1a078680f937e327ff9d96467c710a"
+"classSDOM_1_1Core.html#a318167ada37c279681c50133a0771373",
+"classSDOM_1_1DisplayObject.html#a81690275008f3806f234eb91a8d65fcc",
+"classSDOM_1_1Event.html#afdfcb10855505f48c77bec0d3f661faf",
+"classSDOM_1_1Factory.html#acfdf8c26eb5993cfd5e4897125ff6994",
+"classSDOM_1_1IDisplayObject.html#ac316c78060747eacf8cb4c6ab84d3855",
+"classSDOM_1_1Stage.html#a853fddbff86054aae8abc808cf55d1b6",
+"lua__BindHelpers_8hpp.html#afd81c75f9a6783cc79d74cb34cea8d69",
+"lua__IDisplayObject_8hpp.html#aa6c544fd780ecb68a1b274f2a6590544",
+"namespaceSDOM.html#a39719ae038a6b9422b565f94bbe4f256",
+"structSDOM_1_1IDisplayObject_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

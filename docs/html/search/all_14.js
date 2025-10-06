@@ -13,7 +13,7 @@ var searchData=
   ['middle_5fleft_10',['MIDDLE_LEFT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a9d4989e254422a15442ed8c59c600f1a',1,'SDOM']]],
   ['middle_5fright_11',['MIDDLE_RIGHT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a0a22e84ed1c4062d7ac11d80bbed3876',1,'SDOM']]],
   ['migration_12',['Backward Compatibility &amp; Migration',['../md_docs_2display__object__anchoring.html#autotoc_md59',1,'']]],
-  ['migration_20note_13',['migration note',['../md_docs_2display__object__anchoring.html#autotoc_md68',1,'Migration note'],['../md_docs_2dom__propagation.html#autotoc_md84',1,'Migration note']]],
+  ['migration_20note_13',['migration note',['../md_docs_2dom__propagation.html#autotoc_md84',1,'Migration note'],['../md_docs_2display__object__anchoring.html#autotoc_md68',1,'Migration note']]],
   ['migration_20note_3a_20json_20→_20lua_14',['Migration note: JSON → Lua',['../md_docs_2architecture__overview.html#autotoc_md1',1,'']]],
   ['migration_20strategy_15',['Migration Strategy',['../md_docs_2object__handles.html#autotoc_md148',1,'']]],
   ['model_20api_16',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
@@ -37,7 +37,8 @@ var searchData=
   ['mousey_34',['mouseY',['../classSDOM_1_1Stage.html#a94547f9b6ac923ac1dbfdd83db1ddced',1,'SDOM::Stage']]],
   ['move_35',['Move',['../classSDOM_1_1EventType.html#a8f3d3cfcb6ceac2b9283eb37d88f374e',1,'SDOM::EventType']]],
   ['movetotop_36',['moveToTop',['../classSDOM_1_1IDisplayObject.html#a6c2d2b40744947b37db8974dc783d5c1',1,'SDOM::IDisplayObject']]],
-  ['movetotop_5flua_37',['moveToTop_lua',['../namespaceSDOM.html#a3c79a9bc92fb7608784436f7eab3b162',1,'SDOM']]],
-  ['multiple_20stages_20as_20scenes_38',['Multiple Stages as Scenes',['../md_docs_2core__framework.html#autotoc_md38',1,'']]],
-  ['mutators_39',['Anchor Accessors/Mutators',['../md_docs_2display__object__anchoring.html#autotoc_md48',1,'']]]
+  ['movetotop_5flua_37',['moveToTop_lua',['../namespaceSDOM.html#a589153c6d6e3f35a36f35a739cbdd91f',1,'SDOM']]],
+  ['movetotop_5flua_5fany_38',['moveToTop_lua_any',['../namespaceSDOM.html#af044f13099da5fa2b1a769394ad2494d',1,'SDOM']]],
+  ['multiple_20stages_20as_20scenes_39',['Multiple Stages as Scenes',['../md_docs_2core__framework.html#autotoc_md38',1,'']]],
+  ['mutators_40',['Anchor Accessors/Mutators',['../md_docs_2display__object__anchoring.html#autotoc_md48',1,'']]]
 ];
