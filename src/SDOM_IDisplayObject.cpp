@@ -1464,7 +1464,14 @@ namespace SDOM
         bind_R_str_nc("removeDescendantByName", [](IDisplayObject* o, const std::string& n){ return ::SDOM::removeDescendant_lua(o, n); });
 
         // Type & properties (via helpers)
-        bind_R_0("getName",         ::SDOM::getName_lua);
+        // Use handle-aware name getter so bare DisplayObject handles without a live object still return their cached name
+        if (absent("getName")) {
+            handle.set_function("getName", [require_obj](DisplayObject& self) {
+                // Try through live object first for authoritative name, else fall back to handle's cached name
+                try { if (auto* o = dynamic_cast<IDisplayObject*>(self.get())) return ::SDOM::getName_lua(o); } catch(...) {}
+                return ::SDOM::getName_handle_lua(self);
+            });
+        }
         bind_void_str("setName",    ::SDOM::setName_lua);
         bind_R_0("getType",         ::SDOM::getType_lua);
         bind_void_str("setType",    ::SDOM::setType_lua);
@@ -1477,14 +1484,41 @@ namespace SDOM
         bind_R_0("getMaxPriority",            ::SDOM::getMaxPriority_lua);
         bind_R_0("getMinPriority",            ::SDOM::getMinPriority_lua);
         bind_R_0("getPriority",               ::SDOM::getPriority_lua);
-        bind_void_0("setToHighestPriority",   ::SDOM::setToHighestPriority_lua);
-        bind_void_0("setToLowestPriority",    ::SDOM::setToLowestPriority_lua);
         bind_void_0("sortChildrenByPriority", ::SDOM::sortChildrenByPriority_lua);
-        bind_void_i("setPriority",            ::SDOM::setPriority_lua);
+        // Provide both simple and flexible forms using sol::overload where needed
+        if (absent("setToHighestPriority")) {
+            handle.set_function("setToHighestPriority", sol::overload(
+                [require_obj](DisplayObject& self) { ::SDOM::setToHighestPriority_lua(require_obj(self, "setToHighestPriority")); },
+                [require_obj](DisplayObject& self, const sol::object& desc) { ::SDOM::setToHighestPriority_lua_any(require_obj(self, "setToHighestPriority"), desc); }
+            ));
+        }
+        if (absent("setToLowestPriority")) {
+            handle.set_function("setToLowestPriority", sol::overload(
+                [require_obj](DisplayObject& self) { ::SDOM::setToLowestPriority_lua(require_obj(self, "setToLowestPriority")); },
+                [require_obj](DisplayObject& self, const sol::object& desc) { ::SDOM::setToLowestPriority_lua_any(require_obj(self, "setToLowestPriority"), desc); }
+            ));
+        }
+        if (absent("setPriority")) {
+            handle.set_function("setPriority", sol::overload(
+                [require_obj](DisplayObject& self, int pr) { ::SDOM::setPriority_lua(require_obj(self, "setPriority"), pr); },
+                [require_obj](DisplayObject& self, const sol::object& desc) { ::SDOM::setPriority_lua_any(require_obj(self, "setPriority"), desc); },
+                [require_obj](DisplayObject& self, const sol::object& desc, int value) { ::SDOM::setPriority_lua_target(require_obj(self, "setPriority"), desc, value); }
+            ));
+        }
         bind_R_0("getChildrenPriorities",     ::SDOM::getChildrenPriorities_lua);
-        bind_void_0("moveToTop",              ::SDOM::moveToTop_lua);
+        if (absent("moveToTop")) {
+            handle.set_function("moveToTop", sol::overload(
+                [require_obj](DisplayObject& self) { ::SDOM::moveToTop_lua(require_obj(self, "moveToTop")); },
+                [require_obj](DisplayObject& self, const sol::object& desc) { ::SDOM::moveToTop_lua_any(require_obj(self, "moveToTop"), desc); }
+            ));
+        }
         bind_R_0("getZOrder",                 ::SDOM::getZOrder_lua);
-        bind_void_i("setZOrder",              ::SDOM::setZOrder_lua);
+        if (absent("setZOrder")) {
+            handle.set_function("setZOrder", sol::overload(
+                [require_obj](DisplayObject& self, int z) { ::SDOM::setZOrder_lua(require_obj(self, "setZOrder"), z); },
+                [require_obj](DisplayObject& self, const sol::object& desc) { ::SDOM::setZOrder_lua_any(require_obj(self, "setZOrder"), desc); }
+            ));
+        }
 
         // Focus & interactivity
         bind_void_0("setKeyboardFocus",   ::SDOM::setKeyboardFocus_lua);

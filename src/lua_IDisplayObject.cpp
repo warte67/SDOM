@@ -253,6 +253,18 @@ namespace SDOM
     // C++ overload: accept SDL_Color directly
     void setColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return; obj->setColor(color); }
 
+    // Handle-aware name getter for cases where Lua holds only a DisplayObject handle without a live object
+    std::string getName_handle_lua(DisplayObject& self)
+    {
+        try {
+            if (auto* obj = self.get()) {
+                return obj->getName();
+            }
+        } catch(...) {}
+        try { return self.getName(); } catch(...) {}
+        return std::string();
+    }
+
     // --- Priority & Z-Order --- //
     int getMaxPriority_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getMaxPriority(); }
     int getMinPriority_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getMinPriority(); }
@@ -265,6 +277,58 @@ namespace SDOM
         if (!obj) return;
         obj->setPriority(priority);
         return;
+    }
+
+    // Flexible priority setter: accepts a descriptor table and optional numeric value
+    // Usage examples:
+    //  - child:setPriority({ priority = 7 })
+    //  - parent:setPriority({ child = 'name' }, 9)
+    //  - parent:setPriority({ child = DisplayObjectHandle }, 9)
+    void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+    {
+        if (!obj) return;
+        if (!descriptor.valid()) return;
+        if (descriptor.is<sol::table>()) {
+            sol::table t = descriptor.as<sol::table>();
+            // If 'priority' specified, set on self
+            sol::object pobj = t.get<sol::object>("priority");
+            if (pobj.valid()) {
+                try {
+                    int pr = 0;
+                    if (pobj.is<int>()) pr = pobj.as<int>();
+                    else if (pobj.is<double>()) pr = static_cast<int>(pobj.as<double>());
+                    obj->setPriority(pr);
+                } catch(...) { /* ignore */ }
+                return;
+            }
+            // If 'child' provided without explicit value, do nothing here; two-arg overload handles targeted forms
+        }
+    }
+
+    void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value)
+    {
+        if (!obj) return;
+        if (!descriptor.valid()) return;
+        IDisplayObject* target = nullptr;
+        if (descriptor.is<sol::table>()) {
+            sol::table t = descriptor.as<sol::table>();
+            sol::object cobj = t.get<sol::object>("child");
+            if (cobj.valid()) {
+                try {
+                    if (cobj.is<DisplayObject>()) {
+                        DisplayObject h = cobj.as<DisplayObject>();
+                        target = dynamic_cast<IDisplayObject*>(h.get());
+                    } else if (cobj.is<std::string>()) {
+                        std::string name = cobj.as<std::string>();
+                        DisplayObject h = obj->getChild(name);
+                        target = dynamic_cast<IDisplayObject*>(h.get());
+                    }
+                } catch(...) { target = nullptr; }
+            }
+        }
+        if (!target) return;
+        target->setPriority(value);
+        obj->sortChildrenByPriority();
     }
 
     std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj) 
@@ -280,8 +344,118 @@ namespace SDOM
         return;
     }
 
+    // Targeted moveToTop via parent: parent:moveToTop({ child = <name|handle> })
+    void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+    {
+        if (!obj) return;
+        if (!descriptor.valid() || !descriptor.is<sol::table>()) return;
+        sol::table t = descriptor.as<sol::table>();
+        IDisplayObject* target = nullptr;
+        sol::object cobj = t.get<sol::object>("child");
+        if (cobj.valid()) {
+            try {
+                if (cobj.is<DisplayObject>()) {
+                    DisplayObject h = cobj.as<DisplayObject>();
+                    target = dynamic_cast<IDisplayObject*>(h.get());
+                } else if (cobj.is<std::string>()) {
+                    std::string name = cobj.as<std::string>();
+                    DisplayObject h = obj->getChild(name);
+                    target = dynamic_cast<IDisplayObject*>(h.get());
+                }
+            } catch(...) { target = nullptr; }
+        }
+        if (!target) return;
+        target->moveToTop();
+        obj->sortChildrenByPriority();
+    }
+
     int getZOrder_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getZOrder(); }
     void setZOrder_lua(IDisplayObject* obj, int z_order) { if (!obj) return; obj->setZOrder(z_order); }
+
+    // Flexible setZOrder: supports { z = number } on self or { child = <name|handle>, z = number } on parent
+    void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+    {
+        if (!obj) return;
+        if (!descriptor.valid() || !descriptor.is<sol::table>()) return;
+        sol::table t = descriptor.as<sol::table>();
+        int z = 0;
+        try {
+            sol::object zobj = t.get<sol::object>("z");
+            if (zobj.valid()) {
+                if (zobj.is<int>()) z = zobj.as<int>();
+                else if (zobj.is<double>()) z = static_cast<int>(zobj.as<double>());
+            }
+        } catch(...) { /* ignore */ }
+
+        // If child specified, target that child; otherwise set on self
+        IDisplayObject* target = nullptr;
+        sol::object cobj = t.get<sol::object>("child");
+        if (cobj.valid()) {
+            try {
+                if (cobj.is<DisplayObject>()) {
+                    DisplayObject h = cobj.as<DisplayObject>();
+                    target = dynamic_cast<IDisplayObject*>(h.get());
+                } else if (cobj.is<std::string>()) {
+                    std::string name = cobj.as<std::string>();
+                    DisplayObject h = obj->getChild(name);
+                    target = dynamic_cast<IDisplayObject*>(h.get());
+                }
+            } catch(...) { target = nullptr; }
+        } else {
+            target = obj;
+        }
+        if (!target) return;
+        target->setZOrder(z);
+    }
+
+    // Descriptor forms for highest/lowest via parent: parent:setToHighestPriority({ child = ... })
+    void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+    {
+        if (!obj) return;
+        if (!descriptor.valid() || !descriptor.is<sol::table>()) return;
+        sol::table t = descriptor.as<sol::table>();
+        IDisplayObject* target = nullptr;
+        sol::object cobj = t.get<sol::object>("child");
+        if (cobj.valid()) {
+            try {
+                if (cobj.is<DisplayObject>()) {
+                    DisplayObject h = cobj.as<DisplayObject>();
+                    target = dynamic_cast<IDisplayObject*>(h.get());
+                } else if (cobj.is<std::string>()) {
+                    std::string name = cobj.as<std::string>();
+                    DisplayObject h = obj->getChild(name);
+                    target = dynamic_cast<IDisplayObject*>(h.get());
+                }
+            } catch(...) { target = nullptr; }
+        }
+        if (!target) return;
+        target->setToHighestPriority();
+        obj->sortChildrenByPriority();
+    }
+
+    void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+    {
+        if (!obj) return;
+        if (!descriptor.valid() || !descriptor.is<sol::table>()) return;
+        sol::table t = descriptor.as<sol::table>();
+        IDisplayObject* target = nullptr;
+        sol::object cobj = t.get<sol::object>("child");
+        if (cobj.valid()) {
+            try {
+                if (cobj.is<DisplayObject>()) {
+                    DisplayObject h = cobj.as<DisplayObject>();
+                    target = dynamic_cast<IDisplayObject*>(h.get());
+                } else if (cobj.is<std::string>()) {
+                    std::string name = cobj.as<std::string>();
+                    DisplayObject h = obj->getChild(name);
+                    target = dynamic_cast<IDisplayObject*>(h.get());
+                }
+            } catch(...) { target = nullptr; }
+        }
+        if (!target) return;
+        target->setToLowestPriority();
+        obj->sortChildrenByPriority();
+    }
 
     // --- Focus & Interactivity --- //
     void setKeyboardFocus_lua(IDisplayObject* obj) { if (!obj) return; obj->setKeyboardFocus(); }

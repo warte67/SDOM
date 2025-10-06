@@ -68,6 +68,9 @@ namespace SDOM
     // C++ overload: accept SDL_Color directly
     void setColor_lua(IDisplayObject* obj, const SDL_Color& color); 
 
+    // Handle-aware name getter: if underlying object is missing, return the handle's cached name
+    std::string getName_handle_lua(DisplayObject& self);
+
     // --- Priority & Z-Order --- //
     int getMaxPriority_lua(const IDisplayObject* obj); 
     int getMinPriority_lua(const IDisplayObject* obj); 
@@ -76,10 +79,18 @@ namespace SDOM
     void setToLowestPriority_lua(IDisplayObject* obj); 
     void sortChildrenByPriority_lua(IDisplayObject* obj); 
     void setPriority_lua(IDisplayObject* obj, int priority); 
+    // Flexible overloads for priorities (descriptor/targeted forms)
+    void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+    void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value);
     std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj); 
     void moveToTop_lua(IDisplayObject* obj); 
+    void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);
     int getZOrder_lua(const IDisplayObject* obj); 
     void setZOrder_lua(IDisplayObject* obj, int z_order); 
+    void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+    // Descriptor forms for highest/lowest via parent
+    void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+    void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);
 
     // --- Focus & Interactivity --- //
 
