@@ -41,6 +41,7 @@
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/lua_IDisplayObject.hpp>
 
 #include <chrono>
@@ -98,11 +99,24 @@ namespace SDOM
             color_ = {255, 255, 255, 255};
         }
 
-        // Anchor conversion helpers (assume stringToAnchorPoint_ is accessible)
+        // Anchor conversion helpers:
+        // - Accept string or integer enum
+        // - Normalize string joiners/spaces via SDOM::normalizeAnchorString
         auto getAnchor = [&](const char* key) {
-            std::string str = config[key].valid() ? config[key].get<std::string>() : "top_left";
-            auto it = stringToAnchorPoint_.find(str);
-            return it != stringToAnchorPoint_.end() ? it->second : AnchorPoint::TOP_LEFT;
+            if (config[key].valid()) {
+                sol::object o = config[key].get<sol::object>();
+                if (o.is<std::string>()) {
+                    std::string str = o.as<std::string>();
+                    std::string norm = SDOM::normalizeAnchorString(str);
+                    auto it = stringToAnchorPoint_.find(norm);
+                    return it != stringToAnchorPoint_.end() ? it->second : AnchorPoint::TOP_LEFT;
+                } else if (o.is<int>()) {
+                    return static_cast<AnchorPoint>(o.as<int>());
+                } else if (o.is<double>()) {
+                    return static_cast<AnchorPoint>(static_cast<int>(o.as<double>()));
+                }
+            }
+            return AnchorPoint::TOP_LEFT;
         };
 
         setAnchorTop(getAnchor("anchorTop"));
@@ -1199,6 +1213,9 @@ namespace SDOM
 
     void IDisplayObject::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
     {
+        // Call base class registration to include inherited properties/commands
+        SUPER::_registerDisplayObject(typeName, lua);
+
         if (DEBUG_REGISTER_LUA)
         {
             std::string typeNameLocal = "IDisplayObject";
@@ -1206,9 +1223,6 @@ namespace SDOM
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
                     << typeName << CLR::RESET << std::endl;
         }
-
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerDisplayObject(typeName, lua);
 
         // Create the IDisplayObject usertype and bind the available Lua helper wrappers
         sol::usertype<IDisplayObject> objHandleType = lua.new_usertype<IDisplayObject>(

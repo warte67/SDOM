@@ -27,18 +27,15 @@ namespace SDOM
         Core& core = getCore();
         core._registerDisplayObject("Core", core.getLua());
 
-        // ===== Register built-in types =====
+        // // register the DisplayObject handle last so other types can use it
+        // DisplayObject prototypeHandle; // Default DisplayObject for registration
+        // prototypeHandle._registerDisplayObject("DisplayObject", core.getLua());
 
         // register the Stage
         registerDomType("Stage", TypeCreators{
             Stage::CreateFromLua, 
             Stage::CreateFromInitStruct
         });
-
-        // register the DisplayObject handle
-        DisplayObject prototypeHandle; // Default DisplayObject for registration
-        prototypeHandle._registerDisplayObject("DisplayObject", core.getLua());
-
         return true;
     }
 

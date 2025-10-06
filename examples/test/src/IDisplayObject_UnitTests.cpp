@@ -111,8 +111,10 @@ namespace SDOM
                 
                 -- call setName/getName in a protected call so errors are returned instead of thrown
                 local ok, result = pcall(function()
-                    h:setName('luaRenamedStage')
-                    return h:getName()
+                    local obj = h
+                    if not obj then error('underlying object missing') end
+                    obj:setName('luaRenamedStage')
+                    return obj:getName()
                 end)
                 if not ok then return nil, result end
                 return result
@@ -148,8 +150,11 @@ namespace SDOM
             sol::protected_function_result res = lua.script(R"(
                 local h = Core:getDisplayObject('luaGenericStage')
                 if not h then return nil, 'handle missing' end
-                h:setType('LuaCustomStage')
-                return h:getType()
+                -- call via underlying object to access full API
+                local obj = h
+                if not obj then return nil, 'underlying object missing' end
+                obj:setType('LuaCustomStage')
+                return obj:getType()
             )");
             if (!res.valid()) {
                 sol::error err = res;
@@ -198,8 +203,8 @@ namespace SDOM
                 local b = Core:getDisplayObject('blueishBox')
                 local r = Core:getDisplayObject('redishBox')
                 if not b or not r then return false end
-                -- call the setParent command registered on the concrete type
-                b:setParent({ parent = r })
+                -- call the setParent command on the underlying IDisplayObject
+                b:setParent(r)
                 return true
             )");
             if (!res.valid()) { sol::error err = res; dbgStr = std::string("Lua error in test9: ") + err.what(); return false; }
@@ -253,9 +258,11 @@ namespace SDOM
             // Do the entire bounds check in Lua so this test is Lua-only
             sol::protected_function_result res = lua.script(R"(
                 local EXPECTED = { x = 240, y = 70, width = 250, height = 225 }
-                local h = Core:getDisplayObject('blueishBox')
-                if not h then return { ok = false, err = 'handle missing' } end
-                local b = h:getBounds()
+                local b = Core:getDisplayObject('blueishBox')
+                if not b then return { ok = false, err = 'handle missing' } end
+                local obj = b
+                if not obj then return { ok = false, err = 'underlying object missing' } end
+                local b = obj:getBounds()
                 if not b then return { ok = false, err = 'getBounds returned nil' } end
                 -- Support both userdata with fields and legacy table-style access
                 local x = b.x or b.left
@@ -296,22 +303,24 @@ namespace SDOM
                 local newH = BASE.height - 5
 
                 -- set bounds on the object (left, top, right, bottom)
-                h:setBounds({ left = newX, top = newY, right = newX + newW, bottom = newY + newH })
+                local obj = h
+                if not obj then return { ok = false, err = 'underlying object missing' } end
+                obj:setBounds({ left = newX, top = newY, right = newX + newW, bottom = newY + newH })
 
-                -- verify via getX/getY/getWidth/getHeight
-                local gx = h:getX()
-                local gy = h:getY()
-                local gw = h:getWidth()
-                local gh = h:getHeight()
+                -- verify via getX/getY/getWidth/getHeight on the underlying object
+                local gx = obj:getX()
+                local gy = obj:getY()
+                local gw = obj:getWidth()
+                local gh = obj:getHeight()
                 if gx ~= newX or gy ~= newY or gw ~= newW or gh ~= newH then
                     return { ok = false, err = string.format('getX/Y/Width/Height mismatch (got %s,%s,%s,%s expected %s,%s,%s,%s)', gx, gy, gw, gh, newX, newY, newW, newH) }
                 end
 
                 -- secondary check: verify left/top/right/bottom via direct getters
-                local left = h:getLeft()
-                local top = h:getTop()
-                local right = h:getRight()
-                local bottom = h:getBottom()
+                local left = obj:getLeft()
+                local top = obj:getTop()
+                local right = obj:getRight()
+                local bottom = obj:getBottom()
                 if left ~= newX or top ~= newY or right ~= (newX + newW) or bottom ~= (newY + newH) then
                     return { ok = false, err = string.format('edges mismatch (got l=%s t=%s r=%s b=%s expected l=%s t=%s r=%s b=%s)', left, top, right, bottom, newX, newY, newX+newW, newY+newH) }
                 end
@@ -338,7 +347,9 @@ namespace SDOM
             sol::protected_function_result res = lua.script(R"(
                 local h = Core:getDisplayObject('blueishBox')
                 if not h then return { ok = false, err = 'handle missing' } end
-                local c = h:getColor()
+                local obj = h
+                if not obj then return { ok = false, err = 'underlying object missing' } end
+                local c = obj:getColor()
                 if not c then return { ok = false, err = 'getColor returned nil' } end
 
                 -- increase r/g/b by 25, clamp to 255
@@ -348,9 +359,9 @@ namespace SDOM
                 local newA = (c.a or c:getA() or 0) - 1
                 if newA < 0 then newA = 0 end
 
-                h:setColor({ r = newR, g = newG, b = newB, a = newA })
+                obj:setColor({ r = newR, g = newG, b = newB, a = newA })
 
-                local c2 = h:getColor()
+                local c2 = obj:getColor()
                 if not c2 then return { ok = false, err = 'getColor after setColor returned nil' } end
 
                 if c2.r ~= newR or c2.g ~= newG or c2.b ~= newB or c2.a ~= newA then
@@ -358,7 +369,7 @@ namespace SDOM
                 end
 
                 -- restore alpha to fully opaque before returning
-                h:setColor({ r = c2.r, g = c2.g, b = c2.b, a = c.a })
+                obj:setColor({ r = c2.r, g = c2.g, b = c2.b, a = c.a })
 
                 return { ok = true }
             )");

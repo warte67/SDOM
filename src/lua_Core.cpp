@@ -208,7 +208,20 @@ namespace SDOM
 	float getElapsedTime_lua() { return Core::getInstance().getElapsedTime(); }
 
 	// --- Object Lookup --- //
-	DisplayObject getDisplayObject_lua(const std::string& name) { return Core::getInstance().getDisplayObject(name); }
+	DisplayObject getDisplayObject_lua(const std::string& name) {
+		DisplayObject h = Core::getInstance().getDisplayObject(name);
+		try {
+			if (!h.isValid() || !h.get()) {
+				std::cout << "[DIAG] getDisplayObject_lua('" << name << "') -> invalid handle" << std::endl;
+			} else {
+				IDisplayObject* obj = dynamic_cast<IDisplayObject*>(h.get());
+				std::cout << "[DIAG] getDisplayObject_lua('" << name << "') -> handle ptr=" << reinterpret_cast<const void*>(h.get())
+					<< " name='" << (obj ? obj->getName() : std::string("<non-idisplay>"))
+					<< "' type='" << (obj ? obj->getType() : std::string("<unknown>")) << "'" << std::endl;
+			}
+		} catch(...) {}
+		return h;
+	}
 	bool hasDisplayObject_lua(const std::string& name) { return Core::getInstance().hasDisplayObject(name); }
 
 	// --- Orphan / Future Child Management --- //

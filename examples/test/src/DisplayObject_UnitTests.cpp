@@ -259,6 +259,8 @@ namespace SDOM
             if b:getPriority() ~= 7 then return { ok = false, err = 'table setPriority failed' } end
 
         -- Use child-targeted form to set c's priority via parent
+
+
             st:setPriority({ child = 'co' }, 9)
             if c:getPriority() ~= 9 then return { ok = false, err = 'targeted setPriority failed' } end
         -- setZOrder using table on child 'bo'
@@ -321,7 +323,7 @@ namespace SDOM
                 return { ok = false, err = 'initial sort failed, s priorities='..tostring(p1)..','..tostring(p2)..','..tostring(p3) }
             end
 
-        -- setToHighest on child 's2' via parent
+            -- setToHighest on child 's2' via parent
             st:setToHighestPriority({ child = 's2' })
 
         -- now priorities should be something like [7,10,11] or similar depending on implementation, but ensure s2 is highest

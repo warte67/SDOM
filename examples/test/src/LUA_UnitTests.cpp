@@ -64,7 +64,7 @@ namespace SDOM {
                 local stage = Core:getStageHandle()
                 local inStage = false
                 if stage then
-                    inStage = stage:get():hasChild(boxHandle)
+                    inStage = stage:hasChild(boxHandle)
                 end
                 return not inFactory and not inStage
             end
@@ -282,22 +282,20 @@ namespace SDOM {
             local clicked = false
             local bh = Core:getDisplayObject("blueishBox")
             if not bh then 
-                -- print("test9_lua: ERROR - could not get blueishBox handle!")
                 return false 
             end
-            
-            -- register listener on the box
-            bh:addEventListener({ 
+            local obj = bh
+            if not obj then return false end
+
+            -- register listener on the box via the underlying object
+            obj:addEventListener({ 
                 type = EventType.MouseClick, 
-                listener = function(e) 
-                    -- print("MouseClick event received! name:", e.name, "type:", e.type, "x:", e.sdl and e.sdl.button and e.sdl.button.x, "y:", e.sdl and e.sdl.button and e.sdl.button.y)
-                    clicked = true 
-                end 
+                listener = function(e) clicked = true end 
             })
 
-            -- compute center in stage coords (use DisplayObject forwarded methods)
-            local x = bh:getX() + bh:getWidth() / 2
-            local y = bh:getY() + bh:getHeight() / 2
+            -- compute center in stage coords using the underlying object
+            local x = obj:getX() + obj:getWidth() / 2
+            local y = obj:getY() + obj:getHeight() / 2
 
             -- push down/up and pump from Lua
             Core:pushMouseEvent({ x = x, y = y, type = "down", button = 1 })
@@ -435,9 +433,9 @@ namespace SDOM {
         // Create two boxes from Lua and attach to stage
         bool created = lua.script(R"(
             local a = Core:createDisplayObject("Box", { name = "focusA", type = "Box", x = 10, y = 10, width = 16, height = 16 })
-            a:setColor({ r = 128, g = 128, b = 0, a = 255 })  -- make focusA yellow to distinguish
+            if a and a.get then a:setColor({ r = 128, g = 128, b = 0, a = 255 }) end  -- make focusA yellow to distinguish
             local b = Core:createDisplayObject("Box", { name = "focusB", type = "Box", x = 30, y = 10, width = 16, height = 16 })
-            b:setColor({ r = 0, g = 128, b = 128, a = 255 })  -- make focusB cyan to distinguish
+            if b and b.get then b:setColor({ r = 0, g = 128, b = 128, a = 255 }) end  -- make focusB cyan to distinguish
             local st = Core:getStageHandle()
             if not a or not b or not st then return false end
             st:addChild(a)
@@ -546,10 +544,12 @@ namespace SDOM {
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool ok = lua.script(R"(
-    local bh = Core:getDisplayObject('blueishBox')
+            local bh = Core:getDisplayObject('blueishBox')
             if not bh then return false end
-            local cx = bh:getX() + bh:getWidth() / 2
-            local cy = bh:getY() + bh:getHeight() / 2
+            local obj = bh
+            if not obj then return false end
+            local cx = obj:getX() + obj:getWidth() / 2
+            local cy = obj:getY() + obj:getHeight() / 2
             -- push a motion event to move the mouse to the box center
             Core:pushMouseEvent({ x = cx, y = cy, type = 'motion' })
             Core:pumpEventsOnce()
@@ -610,21 +610,21 @@ namespace SDOM {
         -- baseline child to capture reference dimensions
         local base = Core:createDisplayObject("Box", { name = "edgeChildBase", type = "Box", x = 10, y = 10, width = 32, height = 24 })
         if not base then return false end
-        local st = Core:getStageHandle()
-        if not st then return false end
-        st:addChild(p)
-        p:addChild(base)
+    local st = Core:getStageHandle()
+    if not st then return false end
+    st:addChild(p)
+    p:addChild(base)
 
         -- Record reference coordinates for the child
-        local refLeft = base:getLeft()
-        local refTop = base:getTop()
-        local refRight = base:getRight()
-        local refBottom = base:getBottom()
-        local refW = base:getWidth()
-        local refH = base:getHeight()
+    local refLeft = base:getLeft()
+    local refTop = base:getTop()
+    local refRight = base:getRight()
+    local refBottom = base:getBottom()
+    local refW = base:getWidth()
+    local refH = base:getHeight()
 
-        -- remove baseline child; we'll create temporary children for each format
-        p:removeChild(base)
+    -- remove baseline child; we'll create temporary children for each format
+    p:removeChild(base)
         Core:destroyDisplayObject('edgeChildBase')
 
         local formats = {"top_left","top-left","top+left","top|left","top & left"}
@@ -640,15 +640,37 @@ namespace SDOM {
                 local ok, res = pcall(function()
                     local tmp = Core:createDisplayObject('Box', cfg)
                     if not tmp then error('create returned nil') end
-                    p:addChild(tmp)
+                    local okAdd, errAdd = pcall(function() p:addChild(tmp) end)
+                    if not okAdd then error('addChild failed: '..tostring(errAdd)) end
 
                     -- Verify width/height do not change and coordinates are numeric
-                    local w = tmp:getWidth()
-                    local h = tmp:getHeight()
-                    local l = tmp:getLeft()
-                    local t = tmp:getTop()
-                    local r = tmp:getRight()
-                    local b = tmp:getBottom()
+                    local okW, w = pcall(function() return tmp:getWidth() end)
+                    if not okW then 
+                        local dbg = {}
+                        table.insert(dbg, string.format('tmp=%s type=%s', tostring(tmp), type(tmp)))
+                        local ok_isvalid, isv = pcall(function() return tmp.isValid and tmp:isValid() end)
+                        table.insert(dbg, string.format('isHandle=%s isValid=%s', tostring(ok_isvalid), tostring(isv)))
+                        local ok_m, mt = pcall(function() return getmetatable(tmp) end)
+                        if ok_m and type(mt) == 'table' then
+                            local keys = {}
+                            for k,_ in pairs(mt) do table.insert(keys, tostring(k)) end
+                            table.sort(keys)
+                            table.insert(dbg, 'mtkeys={'..table.concat(keys, ',')..'}')
+                        else
+                            table.insert(dbg, 'no metatable')
+                        end
+                        error('getWidth failed: '..tostring(w)..' ['..table.concat(dbg,' | ')..']')
+                    end
+                    local okH, h = pcall(function() return tmp:getHeight() end)
+                    if not okH then error('getHeight failed: '..tostring(h)) end
+                    local okL, l = pcall(function() return tmp:getLeft() end)
+                    if not okL then error('getLeft failed: '..tostring(l)) end
+                    local okT, t = pcall(function() return tmp:getTop() end)
+                    if not okT then error('getTop failed: '..tostring(t)) end
+                    local okR, r = pcall(function() return tmp:getRight() end)
+                    if not okR then error('getRight failed: '..tostring(r)) end
+                    local okB, b = pcall(function() return tmp:getBottom() end)
+                    if not okB then error('getBottom failed: '..tostring(b)) end
                     if w ~= refW or h ~= refH then
                         error(string.format('size mismatch refW=%s refH=%s gotW=%s gotH=%s', tostring(refW), tostring(refH), tostring(w), tostring(h)))
                     end
@@ -660,9 +682,10 @@ namespace SDOM {
                     p:removeChild(tmp)
                     Core:destroyDisplayObject(tmpName)
                 end)
-                    if not ok then
-                        return false
-                    end
+                if not ok then
+                    print(string.format('[Lua21] FAIL edge=%s fmt=%s err=%s', tostring(edge), tostring(fmt), tostring(res)))
+                    return false
+                end
             end
         end
 

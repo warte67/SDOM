@@ -82,6 +82,9 @@ namespace SDOM
 
     void Stage::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
     {
+        // Call base class registration to include inherited properties/commands
+        SUPER::_registerDisplayObject(typeName, lua);
+
         if (DEBUG_REGISTER_LUA)
         {
             std::string typeNameLocal = "Stage";
@@ -89,9 +92,6 @@ namespace SDOM
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
                     << typeName << CLR::RESET << std::endl;
         }
-
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerDisplayObject(typeName, lua);
 
         // Create the Stage usertype and bind stage-specific properties directly
         sol::usertype<Stage> objHandleType = lua.new_usertype<Stage>(typeName,

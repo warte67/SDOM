@@ -401,6 +401,9 @@ bool Box::onUnitTest()
 
  void Box::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
  {
+    // Call base class registration to include inherited properties/commands
+    SUPER::_registerDisplayObject(typeName, lua);
+
     // if (DEBUG_REGISTER_LUA)
     {
         std::string typeNameLocal = "Box";
@@ -408,9 +411,6 @@ bool Box::onUnitTest()
                 << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
                 << typeName << CLR::RESET << std::endl;
     }
-
-    // Call base class registration to include inherited properties/commands
-    SUPER::_registerDisplayObject(typeName, lua);
 
     // // Create and save usertype table 
     // SDOM::Factory& factory = SDOM::getFactory();

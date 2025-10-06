@@ -23,6 +23,11 @@ namespace SDOM
         // Open base libraries plus package and io so embedded scripts can use
         // `require`/`package` and basic I/O if desired by examples.
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::package, sol::lib::io);
+        
+        // register the DisplayObject handle last so other types can use it
+        DisplayObject prototypeHandle; // Default DisplayObject for registration
+        prototypeHandle._registerDisplayObject("DisplayObject", lua_);
+
         SDL_Utils::registerLua(lua_);
         factory_ = new Factory();
         eventManager_ = new EventManager();
@@ -1366,6 +1371,9 @@ namespace SDOM
 
     void Core::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
     {
+        // --- Call base class registration to include inherited properties/commands --- //
+        SUPER::_registerDisplayObject(typeName, lua);
+
         // --- Debug output --- //
         if (DEBUG_REGISTER_LUA)
         {
@@ -1374,9 +1382,6 @@ namespace SDOM
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
                     << typeName << CLR::RESET << std::endl;
         }
-
-        // --- Call base class registration to include inherited properties/commands --- //
-        SUPER::_registerDisplayObject(typeName, lua);
 
         // --- Create the Core usertype (no constructor) and bind methods directly --- //
 

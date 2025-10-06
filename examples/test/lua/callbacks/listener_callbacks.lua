@@ -148,13 +148,21 @@ function M.on_click(evt)
             log("  state: RELEASED -- " .. button_name(b) .. " (" .. tostring(b) .. ")")
             if (b == 3) then
                 log("  (Right-click detected; you could trigger a test function here)")
-                local parent = evt.target:getParent()                
+                local parent = nil
+                if evt.target and evt.target.isValid and evt.target:isValid() then
+                    local ok, p = pcall(function() return evt.target:getParent() end)
+                    if ok then parent = p end
+                end                
                 local s = getStage()
-                evt.target:setOrphanRetentionPolicy("auto") -- "auto", "grace", "manual"
+                if evt.target and evt.target.isValid and evt.target:isValid() then
+                    local ok2 = pcall(function() evt.target:setOrphanRetentionPolicy('auto') end)
+                end -- "auto", "grace", "manual"
                 -- parent:removeChild(evt.target)  -- example: remove the clicked object from its parent
                 -- parent:removeChild(evt.target:getName())  -- example: remove by name
                 -- evt.target:removeFromParent()  -- remove self from parent
-                s:removeDescendant(evt.target)  -- remove self from stage
+                if evt.target and evt.target.isValid and evt.target:isValid() then
+                    s:removeDescendant(evt.target)
+                end  -- remove self from stage
                 -- setWindowTitle("Removed " .. prettyHandle(evt.target) .. " from stage") -- this works
                 -- shutdown()
                 -- quit()
@@ -169,20 +177,20 @@ function M.attach(stage)
 
     -- Register named handlers on the stage using EventType table so the
     -- C++ binding recognizes the event type and the listener table form.
-    stage:addEventListener({ type = EventType.OnUpdate, listener = M.on_update })  -- VERIFIED
-    stage:addEventListener({ type = EventType.OnRender, listener = M.on_render })  -- VERIFIED
-    stage:addEventListener({ type = EventType.OnPreRender, listener = M.on_prerender })  -- VERIFIED
+    stage:addEventListener({ type = EventType.OnUpdate, listener = M.on_update })
+    stage:addEventListener({ type = EventType.OnRender, listener = M.on_render })
+    stage:addEventListener({ type = EventType.OnPreRender, listener = M.on_prerender }) 
 
     -- Register listener-only events (OnInit/OnQuit/OnEvent) on the stage so global event listeners can receive them
-    stage:addEventListener({ type = EventType.OnInit, listener = M.on_init })   -- VERIFIED
-    stage:addEventListener({ type = EventType.OnQuit, listener = M.on_quit })   -- VERIFIED
+    stage:addEventListener({ type = EventType.OnInit, listener = M.on_init })
+    stage:addEventListener({ type = EventType.OnQuit, listener = M.on_quit })
 
     -- Listen for raw OnEvent notifications (global SDL events) 
-    -- stage:addEventListener({ type = EventType.OnEvent, listener = M.on_event })  -- in-progress
-    stage:addEventListener({ type = EventType.SDL_Event, listener = M.on_event })  -- in-progress
+    -- stage:addEventListener({ type = EventType.OnEvent, listener = M.on_event }) 
+    stage:addEventListener({ type = EventType.SDL_Event, listener = M.on_event }) 
 
     -- Also listen specifically for MouseMove events so the handler sees the MouseMove event
-    stage:addEventListener({ type = EventType.MouseClick, listener = M.on_click }) -- VERIFIED
+    stage:addEventListener({ type = EventType.MouseClick, listener = M.on_click }) 
 
     -- Call OnInit immediately for the stage (if you want stage listeners to initialize now)
     -- Note: this is listener-only; Core/Factory also dispatch OnInit when objects are created.
