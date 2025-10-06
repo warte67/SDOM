@@ -56,44 +56,54 @@ namespace SDOM
         return DisplayObject();
     }
 
+    sol::table DisplayObject::ensure_handle_table(sol::state_view lua) 
+    {
+        // Create the handle usertype once (no constructor), or reuse existing.
+        if (!lua[LuaHandleName].valid()) 
+        {
+            lua.new_usertype<DisplayObject>(LuaHandleName, sol::no_constructor);
+        }
+        return lua[LuaHandleName];
+    }
+
+    static inline void set_if_absent(sol::table& handle, const char* name, auto&& fn) 
+    {
+        sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+        if (!cur.valid() || cur == sol::lua_nil) 
+        {
+            handle.set_function(name, std::forward<decltype(fn)>(fn));
+        }
+    }
+
+    void DisplayObject::bind_minimal(sol::state_view lua) 
+    {
+        sol::table handle = ensure_handle_table(lua);
+        // Minimal handle surface ONLY
+        set_if_absent(handle, "isValid", &DisplayObject::isValid);
+        set_if_absent(handle, "getName", &DisplayObject::getName_lua);
+        set_if_absent(handle, "getType", &DisplayObject::getType_lua);
+        set_if_absent(handle, "setName", [](DisplayObject& self, const std::string& newName) { self.setName(newName); });
+        set_if_absent(handle, "setType", [](DisplayObject& self, const std::string& newType) { self.setType(newType); });
+    }
+
     void DisplayObject::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
     {
-        if (DEBUG_REGISTER_LUA)
+        if (DEBUG_REGISTER_LUA) 
         {
-            std::string typeNameLocal = "DisplayObject";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                      << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << "DisplayObject"
+                      << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName
+                      << CLR::RESET << std::endl;
         }
 
-        // Idempotent registration: do nothing if already registered.
-        if (lua["DisplayObject"].valid()) return;
+        // Ensure the shared handle exists and has only minimal helpers.
+        bind_minimal(lua);
 
-        // minimal handle surface — expose only safe, local helpers
-        objHandleType_ = lua.new_usertype<DisplayObject>(
-            (typeName + "Handle").c_str(),
-            sol::no_constructor
-        );
-
-        // Register minimal methods here (expand as needed)
-        objHandleType_.set_function("isValid", &DisplayObject::isValid);
-
-        // Only name/type helpers from IDataObject are allowed on the handle
-        objHandleType_.set_function("getName", &DisplayObject::getName_lua);
-        objHandleType_.set_function("getType", &DisplayObject::getType_lua);
-        // Allow setting name/type through the underlying IDataObject interface semantics
-        objHandleType_.set_function("setName", [](DisplayObject& self, const std::string& newName) {
-            self.setName(newName);
-        });
-        objHandleType_.set_function("setType", [](DisplayObject& self, const std::string& newType) {
-            self.setType(newType);
-        });
-
-        // NOTE: Do NOT add a large set of forwarded bindings on the lightweight
-        // DisplayObject handle.  The rich IDisplayObject API should be bound on
-        // the concrete IDisplayObject usertype.  Keep the handle minimal and
-        // safe for Lua code to hold (name/type helpers only).
-        //
-        // DO NOT ADD ANY MORE LUA BINDINGS HERE        
+        // DO NOT add any other bindings here.
+        // IDisplayObject and each descendant should call:
+        //   auto t = DisplayObject::ensure_handle_table(lua);
+        //   if (t["methodName"] == nil) t.set_function("methodName", ...);
+        // Their methods must be idempotent and must not overwrite existing names.
     }
+
 
 } // namespace SDOM

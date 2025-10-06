@@ -93,30 +93,36 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Create the Stage usertype and bind stage-specific properties directly
-        sol::usertype<Stage> objHandleType = lua.new_usertype<Stage>(typeName,
-            sol::no_constructor, sol::base_classes, sol::bases<SUPER>());
+        // Augment the single shared DisplayObject handle usertype
+        sol::table handle = DisplayObject::ensure_handle_table(lua);
 
-        // Expose mouseX/mouseY as properties backed by the static Stage getters/setters
-        objHandleType["mouseX"] = sol::property(
-            [](const Stage& /*s*/) { return Stage::getMouseX(); },
-            [](Stage& /*s*/, sol::object val) {
-                if (val.is<int>()) Stage::setMouseX(val.as<int>());
-                else if (val.is<double>()) Stage::setMouseX(static_cast<int>(val.as<double>()));
-            }
-        );
+        auto absent = [&](const char* name) -> bool {
+            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            return !cur.valid() || cur == sol::lua_nil;
+        };
 
-        objHandleType["mouseY"] = sol::property(
-            [](const Stage& /*s*/) { return Stage::getMouseY(); },
-            [](Stage& /*s*/, sol::object val) {
-                if (val.is<int>()) Stage::setMouseY(val.as<int>());
-                else if (val.is<double>()) Stage::setMouseY(static_cast<int>(val.as<double>()));
-            }
-        );
+        // Expose mouseX/mouseY as properties backed by static Stage getters/setters
+        if (absent("mouseX")) {
+            handle["mouseX"] = sol::property(
+                [](DisplayObject&) { return Stage::getMouseX(); },
+                [](DisplayObject&, sol::object val) {
+                    if (val.is<int>()) Stage::setMouseX(val.as<int>());
+                    else if (val.is<double>()) Stage::setMouseX(static_cast<int>(val.as<double>()));
+                    else throw sol::error("mouseX expects a number");
+                }
+            );
+        }
 
-        // Store the usertype for later use
-        this->objHandleType_ = objHandleType;
-
+        if (absent("mouseY")) {
+            handle["mouseY"] = sol::property(
+                [](DisplayObject&) { return Stage::getMouseY(); },
+                [](DisplayObject&, sol::object val) {
+                    if (val.is<int>()) Stage::setMouseY(val.as<int>());
+                    else if (val.is<double>()) Stage::setMouseY(static_cast<int>(val.as<double>()));
+                    else throw sol::error("mouseY expects a number");
+                }
+            );
+        }
     } // End Stage::_registerDisplayObject()
 
 } // namespace SDOM

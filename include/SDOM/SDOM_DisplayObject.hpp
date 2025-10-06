@@ -98,8 +98,8 @@ namespace SDOM
         }
         std::string getName() const { return name_; }
         std::string getType() const { return type_; }
-    void setName(const std::string& newName) { name_ = newName; }
-    void setType(const std::string& newType) { type_ = newType; }
+        void setName(const std::string& newName) { name_ = newName; }
+        void setType(const std::string& newType) { type_ = newType; }
 
         std::string str() const {
             std::ostringstream oss;
@@ -123,6 +123,15 @@ namespace SDOM
         bool isValid_lua(DisplayObject* self) const { return self->isValid(); }
         std::string getName_lua(DisplayObject* self) const { return self->getName(); }
         std::string getType_lua(DisplayObject* self) const { return self->getType(); }
+
+        // Shared Lua handle usertype helpers (augmentable by base/descendants)
+        inline static constexpr const char* LuaHandleName = "DisplayObject";
+
+        // Ensure the handle usertype exists in this Lua state and return its table.
+        static sol::table ensure_handle_table(sol::state_view lua);
+        
+        // Bind only the minimal, safe helpers if absent (idempotent).
+        static void bind_minimal(sol::state_view lua);
 
 
     public:

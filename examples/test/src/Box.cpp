@@ -399,38 +399,60 @@ bool Box::onUnitTest()
 
 
 
- void Box::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
- {
-    // Call base class registration to include inherited properties/commands
+void Box::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
+{
+    // Include inherited bindings first
     SUPER::_registerDisplayObject(typeName, lua);
 
     // if (DEBUG_REGISTER_LUA)
     {
         std::string typeNameLocal = "Box";
-        std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
-                << typeName << CLR::RESET << std::endl;
+        std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
+                  << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
+                  << typeName << CLR::RESET << std::endl;
     }
 
-    // // Create and save usertype table 
-    // SDOM::Factory& factory = SDOM::getFactory();
+    // Augment the single shared DisplayObject handle usertype
+    sol::table handle = SDOM::DisplayObject::ensure_handle_table(lua);
 
-    sol::usertype<Box> objHandleType = lua.new_usertype<Box>(typeName, sol::base_classes, sol::bases<SUPER>());
-
-    // Register Box-specific functions directly on the usertype (no Factory)
-    objHandleType["doSomething"] = [](Box& b, sol::object /*args*/, sol::state_view lua) -> sol::object {
-        std::cout << "Box::doSomething called on " << b.getName() << std::endl;
-        return sol::make_object(lua, true);
+    auto absent = [&](const char* name) -> bool {
+        sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+        return !cur.valid() || cur == sol::lua_nil;
     };
 
-    objHandleType["resetColor"] = [](Box& b, sol::object /*args*/, sol::state_view lua) -> sol::object {
-        SDL_Color defaultColor = {255, 0, 255, 255};
-        b.setColor(defaultColor);
-        std::cout << "Box::resetColor called on " << b.getName() << std::endl;
-        return sol::make_object(lua, true);
+    auto require_box = [&](SDOM::DisplayObject& self, const char* method) -> Box* {
+        Box* b = dynamic_cast<Box*>(self.get());
+        if (!b) {
+            std::string msg = std::string(method)
+                + " requires Box; got '" + self.getType() + "' (name='" + self.getName() + "')";
+            throw sol::error(msg);
+        }
+        return b;
     };
 
-    // Store the usertype for later use
-    this->objHandleType_ = objHandleType;
+    // Box-specific methods on the DisplayObject handle, guarded by type
+    if (absent("doSomething")) {
+        handle.set_function("doSomething",
+            [require_box](SDOM::DisplayObject& self, sol::object /*args*/, sol::state_view lua) -> sol::object {
+                Box* b = require_box(self, "doSomething");
+                std::cout << "Box::doSomething called on " << b->getName() << std::endl;
+                return sol::make_object(lua, true);
+            }
+        );
+    }
+
+    if (absent("resetColor")) {
+        handle.set_function("resetColor",
+            [require_box](SDOM::DisplayObject& self, sol::object /*args*/, sol::state_view lua) -> sol::object {
+                Box* b = require_box(self, "resetColor");
+                SDL_Color defaultColor = {255, 0, 255, 255};
+                b->setColor(defaultColor);
+                std::cout << "Box::resetColor called on " << b->getName() << std::endl;
+                return sol::make_object(lua, true);
+            }
+        );
+    }
+
+    // Note: no usertype creation and no this->objHandleType_ assignment.
 
  } // End Box::_registerDisplayObject()
