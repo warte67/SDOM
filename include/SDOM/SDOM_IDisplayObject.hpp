@@ -165,10 +165,14 @@ Notes & test ideas:
         };
         OrphanRetentionPolicy getOrphanRetentionPolicy() const { return orphanPolicy_; }
         IDisplayObject& setOrphanRetentionPolicy(OrphanRetentionPolicy policy) { orphanPolicy_ = policy; return *this; }
+        std::chrono::milliseconds getOrphanGrace() const { return orphanGrace; }
+        IDisplayObject& setOrphanGrace(std::chrono::milliseconds grace) { orphanGrace = grace; return *this; }
 
-    private: 
+    private:
+        std::chrono::milliseconds orphanGrace{ORPHAN_GRACE_PERIOD};
         std::chrono::steady_clock::time_point orphanedAt_ = std::chrono::steady_clock::now(); // Time when the object became orphaned
         OrphanRetentionPolicy orphanPolicy_ = OrphanRetentionPolicy::RetainUntilManual; // Default policy
+
 
     public:
         // --- Comparison Operators (for Sol2/Lua) --- //

@@ -546,5 +546,17 @@ namespace SDOM
         auto p = obj->getOrphanRetentionPolicy();
         return orphanPolicyToString_lua(obj, p);
     }
+
+    int getOrphanGrace_lua(const IDisplayObject* obj)
+    {
+        if (!obj) return 0;
+        return static_cast<int>(obj->getOrphanGrace().count());
+    }
+
+    void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace)
+    {
+        if (!obj) return;
+        obj->setOrphanGrace(grace);
+    }
 } // namespace SDOM
 

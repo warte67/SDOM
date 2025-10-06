@@ -454,27 +454,21 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Maintainability:
         - Binding surface is now uniform and easier to extend; helper pattern reduces boilerplate and mismatches between similar APIs.
         - Next: consider moving common bind helpers into the shared `lua_BindHelpers` so other modules can reuse them, and add brief docs for descriptor-table forms (priority/z-order/moveToTop) in the Lua scripting guide.
-
----
-## Garbage Collection / Orphan Retention
-
-Proposed approach: add an `OrphanRetentionPolicy` enum (or a smaller `retainOnOrphan` boolean for a quick win) on `IDisplayObject` and make the Factory's orphan collector respect each object's policy. This supports editor/templates that should not be destroyed immediately and gives a clear migration path to more sophisticated GC.
-
-Recommended enum (suggested values):
-- `OrphanRetentionPolicy::AutoDestroy` — object is eligible for destruction immediately when orphaned. (fast, default for ephemeral runtime objects)
-- `OrphanRetentionPolicy::GracePeriod` — object is eligible only after a configurable grace period has elapsed since it became orphaned; allows reparenting via DisplayObject within the grace window.
-- `OrphanRetentionPolicy::RetainUntilManual` — object is never auto-destroyed; requires explicit Factory or user code to destroy. (useful for editor templates and long-lived resources)
-- `OrphanRetentionPolicy::RetainWhenReferenced` — object is retained while any DisplayObject or external reference exists; destroyed only once all references are gone and policy conditions met. (optional advanced mode)
-
-Minimal API hints:
-- in `IDisplayObject`: add `OrphanRetentionPolicy orphanPolicy = OrphanRetentionPolicy::GracePeriod;` and `std::chrono::milliseconds orphanGrace{5000};`
-- convenience setters/getters: `setOrphanPolicy(...)`, `getOrphanPolicy()`, `setOrphanGrace(...)`
-- in the Factory: track an `optional<steady_clock::time_point> orphanedAt` per object and implement `collectOrphans()` which checks policy+elapsed time and destroys accordingly.
-
-Notes & test ideas:
-- Reparent before grace expiry should clear `orphanedAt` and prevent destruction.
-- `RetainUntilManual` objects should be visible in `Factory::listOrphanedObjects()` and only removed by explicit destroy.
-- Add unit tests for each policy (auto destroy, grace window reparenting, retained objects resisting collection).
+    - Orphan / garbage-collection work
+        - Exposed orphan-grace accessors to Lua: getOrphanGrace / setOrphanGrace (milliseconds).
+        - Implemented Lua-side GC test (GarbageCollection_test4):
+            - Test temporarily lowers an object's orphan grace to 500ms, removes it, polls Core:collectGarbage(), and verifies the orphan is destroyed within ORPHAN_GRACE_PERIOD + 500ms.
+            - Test restored the original grace period on completion.
+        - Tests updated to time out based on the C++ ORPHAN_GRACE_PERIOD constant for deterministic behavior.
+    - Orphan retention / garbage collection implemented:
+        - Added OrphanRetentionPolicy on IDisplayObject (AutoDestroy, GracePeriod, RetainUntilManual).
+        - Added orphanGrace (ms) and get/set accessors; exposed to Lua (`getOrphanGrace` / `setOrphanGrace`).
+        - Factory now tracks orphanedAt and respects policies in collectGarbage().
+        - Added Lua bindings and unit tests (GarbageCollection_test2..test4) verifying auto-destroy, grace-period behavior, and manual retention.
+        - Tests use ORPHAN_GRACE_PERIOD for deterministic timeouts; SDL.Delay bound for Lua tests.
+    - SDL / test utilities
+        - Bound SDL.Delay to Lua (supports both SDL.Delay(ms) and SDL:Delay(ms) method-call forms) to allow deterministic sleeps from Lua tests.
+        - Added small-step wait loop in tests that repeatedly calls Core:collectGarbage() + SDL:Delay() for responsive detection.
 
 
 # ToDo:
@@ -484,13 +478,3 @@ Notes & test ideas:
 - Plan for future language hooks (e.g., Python).
 - Maintain and update Doxygen and Markdown docs as features evolve.
 - Implement garbage_collection() for display objects.
-
-## Current repo/test state (summary)
-DisplayObject_UnitTests.cpp now contains:
-- A concise numeric mapping header above the DisplayObject tests.
-- Full human-readable descriptions (matching the strings passed to UnitTests::run) in place of the short mapping comments.
-- Test functions renamed to DisplayObject_test1 … DisplayObject_test10.
-- The tests vector updated to call the new functions and includes matching descriptive comments.
-- Debug output updated to reference DisplayObject_test10 where applicable.
-- A clean build and test run were executed successfully.
-

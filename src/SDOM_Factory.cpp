@@ -80,7 +80,8 @@ namespace SDOM
                 case IDisplayObject::OrphanRetentionPolicy::GracePeriod: 
                 {
                     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - obj->orphanedAt_);
-                    if (elapsed >= defaultGrace) 
+                    auto until = obj->getOrphanGrace();
+                    if (elapsed >= until) 
                     {
                         if (SHOW_DEBUG) std::cout << "  GracePeriod expired (" << elapsed.count() << "ms) -> scheduling: " << orphan.getName() << "\n";
                         toDestroy.push_back(orphan.getName());

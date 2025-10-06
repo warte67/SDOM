@@ -160,5 +160,9 @@ namespace SDOM
     void setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr);
     std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj);
 
+    // Lua-accessible accessors for orphan grace (milliseconds)
+    int getOrphanGrace_lua(const IDisplayObject* obj);
+    void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace);
+
 }
 

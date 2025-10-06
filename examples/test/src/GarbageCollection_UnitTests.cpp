@@ -210,6 +210,9 @@ namespace SDOM
             sol::state& lua = Core::getInstance().getLua();
             bool ok = false;
             try {
+                // provide a timeout value to Lua: ORPHAN_GRACE_PERIOD + 500 ms
+                lua["gc_timeout_ms"] = ORPHAN_GRACE_PERIOD + 500;
+
                 auto result = lua.script(R"(
                     -- LUA GC test (mirrors GarbageCollection_test2 but executed from Lua)
                     local function cleanup()
@@ -334,6 +337,98 @@ namespace SDOM
         });
     }     
 
+    // LUA Orphan grace-period auto-collect: create a child, detach it with GracePeriod policy,
+    // wait for ~2 seconds, collect, and verify it was destroyed.
+    bool GarbageCollection_test4()
+    {
+        return UnitTests::run("GC #4", "Orphan grace period auto-collect after delay", [&]() {
+            sol::state& lua = Core::getInstance().getLua();
+            bool ok = false;
+            try {
+                auto result = lua.script(R"(
+                    local function cleanup()
+                        pcall(function() Core:destroyDisplayObject("gcGraceBox") end)
+                        pcall(function() Core:destroyDisplayObject("gcStageGrace") end)
+                    end
+
+                    -- create stage and child
+                    local s = Core:createDisplayObject('Stage', { name = 'gcStageGrace', type = 'Stage' })
+                    if not s then cleanup(); return false end
+                    local c = Core:createDisplayObject('Box', { name = 'gcGraceBox', type = 'Box' })
+                    if not c then cleanup(); return false end
+
+                    -- attach child and set policy
+                    s:addChild(c)
+                    if not s:hasChild(c) then cleanup(); return false end
+                    c:setOrphanRetentionPolicy('grace') -- use string helper; maps to GracePeriod
+
+                    -- temporarily reduce grace period for faster test: save original and set to 500ms
+                    local orig_grace = nil
+                    if type(c.getOrphanGrace) == 'function' and type(c.setOrphanGrace) == 'function' then
+                        orig_grace = c:getOrphanGrace()
+                        c:setOrphanGrace(500)
+                    end
+
+                    -- detach child; should now be orphaned
+                    s:removeChild(c)
+                    if s:hasChild(c) then cleanup(); return false end
+                    if Core:countOrphanedDisplayObjects() == 0 then cleanup(); return false end
+
+                    -- verify orphan list contains our child
+                    local function list_contains(name)
+                        local orphans = Core:getOrphanedDisplayObjects()
+                        for i = 1, #orphans do
+                            local o = orphans[i]
+                            local oname = nil
+                            if type(o) == 'string' then oname = o else
+                                if type(o.getName) == 'function' then oname = o:getName()
+                                elseif type(o.get_name) == 'function' then oname = o:get_name() end
+                            end
+                            if oname == name then return true end
+                        end
+                        return false
+                    end
+                    if not list_contains('gcGraceBox') then cleanup(); return false end
+
+                    -- wait until the garbage has been collected or the timeout is reached
+                    local function wait_for_collect(name, timeout_ms)
+                        local elapsed = 0
+                        local step = 100 -- ms per iteration
+                        while elapsed <= timeout_ms do
+                            Core:collectGarbage()
+                            if not Core:hasDisplayObject(name) then return true end
+                            SDL:Delay(step)
+                            elapsed = elapsed + step
+                        end
+                        return false
+                    end
+
+                    if not wait_for_collect('gcGraceBox', gc_timeout_ms) then
+                        -- restore original grace before failing (only if object still exists)
+                        if orig_grace and Core:hasDisplayObject('gcGraceBox') then pcall(function() c:setOrphanGrace(orig_grace) end) end
+                        cleanup(); return false
+                    end
+
+                    -- restore original grace period if the object still exists
+                    if orig_grace and Core:hasDisplayObject('gcGraceBox') then pcall(function() c:setOrphanGrace(orig_grace) end) end
+
+                    -- verify orphan is no longer listed and object no longer exists
+                    if list_contains('gcGraceBox') then cleanup(); return false end
+                    if Core:hasDisplayObject('gcGraceBox') then cleanup(); return false end
+
+                    -- cleanup stage and succeed
+                    cleanup()
+                    return true
+                )");
+                ok = result.get<bool>();
+            } catch (const sol::error& e) {
+                DEBUG_LOG("Lua GC test4 error: ", e.what());
+                ok = false;
+            }
+            return ok;
+        });
+    }
+
     bool GarbageCollection_UnitTests() 
     {       
         bool allTestsPassed = true;
@@ -342,7 +437,8 @@ namespace SDOM
             [&]() { return GarbageCollection_test0(); },   // Garbage Collection Unit Test Scaffolding
             [&]() { return GarbageCollection_test1(); },   // Factory create/destroy removes object
             [&]() { return GarbageCollection_test2(); },   // Orphan detection and destruction
-            [&]() { return GarbageCollection_test3(); }    // 
+            [&]() { return GarbageCollection_test3(); },   // Lua orphan detection and destruction
+            [&]() { return GarbageCollection_test4(); }    // Lua grace-period auto-collect after delay
 
         };
         for (auto& test : tests) 

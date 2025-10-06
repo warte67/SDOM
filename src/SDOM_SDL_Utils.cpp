@@ -77,6 +77,12 @@ namespace SDOM
 
             t.set_function("keyToAscii", [](SDL_Keycode kc, SDL_Keymod km) { return SDL_Utils::keyToAscii(kc, km); });
 
+            // Allow both SDL.Delay(6000) and SDL:Delay(6000) (method-style which passes the table as first arg)
+            t.set_function("Delay", sol::overload(
+                [](Uint32 ms) { SDL_Delay(ms); },
+                [](const sol::table&, Uint32 ms) { SDL_Delay(ms); }
+            ));
+
             // Convert an SDL_Event into a Lua table (returns table or nil on failure)
             t.set_function("eventToLuaTable", [lua](const SDL_Event& ev) -> sol::object {
                 try {

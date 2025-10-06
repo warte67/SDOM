@@ -1574,6 +1574,11 @@ namespace SDOM
         bind_R_orp("orphanPolicyToString",          ::SDOM::orphanPolicyToString_lua);
         bind_void_str("setOrphanRetentionPolicy",   ::SDOM::setOrphanRetentionPolicy_lua);
         bind_R_0("getOrphanRetentionPolicyString",  ::SDOM::getOrphanRetentionPolicyString_lua);
+            
+        // Expose orphan grace (milliseconds) to Lua
+        bind_R_0("getOrphanGrace",                   ::SDOM::getOrphanGrace_lua);
+        // Accept integer milliseconds from Lua and convert to chrono::milliseconds
+        bind_void_i("setOrphanGrace",                [](IDisplayObject* o, int ms){ ::SDOM::setOrphanGrace_lua(o, std::chrono::milliseconds(ms)); });
 
     } // END: IDisplayObject::_registerDisplayObject()
 
