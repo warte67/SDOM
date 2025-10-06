@@ -369,16 +369,16 @@ namespace SDOM
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
-              [&]() { return DisplayObject_test1(); },           // Verify DisplayObject forwards for priority/z-order exist and are callable
-              [&]() { return DisplayObject_test2(); },            // Verify setClickable/isClickable from Lua
-              [&]() { return DisplayObject_test3(); },              // Verify setEnabled/isEnabled from Lua
-              [&]() { return DisplayObject_test4(); },           // Verify setVisible/isVisible and setHidden/isHidden from Lua
-              [&]() { return DisplayObject_test5(); },        // Verify setKeyboardFocus and Core:getKeyboardFocusedObject
-              [&]() { return DisplayObject_test6(); },           // Verify mouse hover via pushMouseEvent/pumpEventsOnce
-              [&]() { return DisplayObject_test7(); },                  // Exercise get/set TabPriority and is/setTabEnabled from Lua
-              [&]() { return DisplayObject_test8(); },             // Exercise setX/setY/setWidth/setHeight and verify getters from Lua
-              [&]() { return DisplayObject_test9(); },   // Exercise setPriority/setZOrder/moveToTop overloads
-              [&]() { return DisplayObject_test10(); }  // Verify sortChildrenByPriority and setToHighest/Lowest with child specs
+              [&]() { return DisplayObject_test1(); }, // Verify DisplayObject forwards for priority/z-order exist and are callable
+              [&]() { return DisplayObject_test2(); }, // Verify setClickable/isClickable from Lua
+              [&]() { return DisplayObject_test3(); }, // Verify setEnabled/isEnabled from Lua
+              [&]() { return DisplayObject_test4(); }, // Verify setVisible/isVisible and setHidden/isHidden from Lua
+              [&]() { return DisplayObject_test5(); }, // Verify setKeyboardFocus and Core:getKeyboardFocusedObject
+              [&]() { return DisplayObject_test6(); }, // Verify mouse hover via pushMouseEvent/pumpEventsOnce
+              [&]() { return DisplayObject_test7(); }, // Exercise get/set TabPriority and is/setTabEnabled from Lua
+              [&]() { return DisplayObject_test8(); }, // Exercise setX/setY/setWidth/setHeight and verify getters from Lua
+              [&]() { return DisplayObject_test9(); }, // Exercise setPriority/setZOrder/moveToTop overloads
+              [&]() { return DisplayObject_test10(); } // Verify sortChildrenByPriority and setToHighest/Lowest with child specs
         };
         for (auto& test : tests) 
         {

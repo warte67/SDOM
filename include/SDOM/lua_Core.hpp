@@ -6,92 +6,92 @@
 
 namespace SDOM
 {
-	class Core;
-	class Event;
+    class Core;
+    class Event;
 
 /*
 
-	Renaming / Adding Commands Checklist:
+    Renaming / Adding Commands Checklist:
 
-	change 	setRootNodeByHandle_lua  		to 	setRootNode_lua					**CHECK**
-	change	setStage_lua 					to 	setStageByName_lua				**CHECK**
-	change	getRootNode_lua					to	getRoot_lua						**CHECK**
-	change	getStageHandle_lua				to	getStage_lua					**CHECK**
-	change 	handleTabKeyPress_lua			to	doTabKeyPressForward_lua		**CHECK**
-	change 	handleTabKeyPressReverse_lua	to	doTabKeyPressReverse_lua		**CHECK**
+    change 	setRootNodeByHandle_lua  		to 	setRootNode_lua					
+    change	setStage_lua 					to 	setStageByName_lua				
+    change	getRootNode_lua					to	getRoot_lua						
+    change	getStageHandle_lua				to	getStage_lua					
+    change 	handleTabKeyPress_lua			to	doTabKeyPressForward_lua		
+    change 	handleTabKeyPressReverse_lua	to	doTabKeyPressReverse_lua		
 
-	add		setStage_lua (const DisplayObject& handle)							**CHECK**
+    add		setStage_lua (const DisplayObject& handle)							
 
-	remove 	getRootNodePtr_lua // no need to expose raw pointer to Lua			**CHECK**
-	remove 	getFactoryStageHandle_lua // redundant and obscure					**CHECK**
+    remove 	getRootNodePtr_lua // no need to expose raw pointer to Lua			
+    remove 	getFactoryStageHandle_lua // redundant and obscure					
 
 */
 
-	// --- Main Loop & Event Dispatch --- //
-	void quit_lua();		// **GLOBAL LUA**
-	void shutdown_lua();	// **GLOBAL LUA**
-	void run_lua(); 
+    // --- Main Loop & Event Dispatch --- //
+    void quit_lua();		// TESTED (manually from listener_callbacks.lua)
+    void shutdown_lua();	// TESTED (manually from listener_callbacks.lua)
+    void run_lua();         // UNTESTED
 
-	void configure_lua(const sol::table& config);
-	void configureFromFile_lua(const std::string& filename);
+    void configure_lua(const sol::table& config);            // UNTESTED
+    void configureFromFile_lua(const std::string& filename); // UNTESTED
 
-	// --- Callback/Hook Registration --- //
-	void registerOnInit_lua(std::function<bool()> fn);
-	void registerOnQuit_lua(std::function<void()> fn);
-	void registerOnUpdate_lua(std::function<void(float)> fn);
-	void registerOnEvent_lua(std::function<void(const Event&)> fn);
-	void registerOnRender_lua(std::function<void()> fn);
-	void registerOnUnitTest_lua(std::function<bool()> fn);
-	void registerOnWindowResize_lua(std::function<void(int, int)> fn);
+    // --- Callback/Hook Registration --- //
+    void registerOnInit_lua(std::function<bool()> fn);            	// UNTESTED
+    void registerOnQuit_lua(std::function<void()> fn);              // UNTESTED
+    void registerOnUpdate_lua(std::function<void(float)> fn);       // UNTESTED
+    void registerOnEvent_lua(std::function<void(const Event&)> fn); // UNTESTED
+    void registerOnRender_lua(std::function<void()> fn);            // UNTESTED
+    void registerOnUnitTest_lua(std::function<bool()> fn);          // TESTED (unit test harness registers callbacks)
+    void registerOnWindowResize_lua(std::function<void(int, int)> fn); // UNTESTED
 
-	// Generic registration helper: registerOn("Init"|"Update"|...) from Lua
-	void registerOn_lua(const std::string& name, const sol::function& f);	// **GLOBAL LUA**
+    // Generic registration helper: registerOn("Init"|"Update"|...) from Lua
+    void registerOn_lua(const std::string& name, const sol::function& f);	// TESTED (used to register test callbacks)
 
-	// --- Stage/Root Node Management --- //
-	void setRootNodeByName_lua(const std::string& name); 	// Simply use setRootNode(with either string or handle) from Lua -- alias setRoot()
-	void setRootNode_lua(const DisplayObject& handle); 		// Simply use setRootNode(with either string or handle) from Lua -- alias setRoot()
-	void setStageByName_lua(const std::string& name); 
-	void setStage_lua(const DisplayObject& handle); 
-	DisplayObject getRoot_lua();  // alias "getRootHandle()"
-	DisplayObject getStage_lua(); // alias "getStageHandle()"
+    // --- Stage/Root Node Management --- //
+    void setRootNodeByName_lua(const std::string& name); 	// UNTESTED
+    void setRootNode_lua(const DisplayObject& handle); 		// UNTESTED
+    void setStageByName_lua(const std::string& name);       // UNTESTED
+    void setStage_lua(const DisplayObject& handle);         // UNTESTED
+    DisplayObject getRoot_lua();  							// UNTESTED
+    DisplayObject getStage_lua(); 							// UNTESTED
 
-	// --- Factory & EventManager Access --- //
-	bool getIsTraversing_lua(); 
-	void setIsTraversing_lua(bool traversing); 
+    // --- Factory & EventManager Access --- //
+    bool getIsTraversing_lua();     				// UNTESTED
+    void setIsTraversing_lua(bool traversing); 		// UNTESTED
 
     // --- Object Creation and Lookup--- //
-	DisplayObject createDisplayObject_lua(const std::string& typeName, const sol::table& config);    
-	DisplayObject getDisplayObject_lua(const std::string& name); 
-	bool hasDisplayObject_lua(const std::string& name); 
+    DisplayObject createDisplayObject_lua(const std::string& typeName, const sol::table& config);    // TESTED (GC and other tests create objects)
+    DisplayObject getDisplayObject_lua(const std::string& name); 	// UNTESTED
+    bool hasDisplayObject_lua(const std::string& name);          	// TESTED (GC tests check existence)
 
-	// --- Focus & Hover Management --- //
-	void doTabKeyPressForward_lua();             
-	void doTabKeyPressReverse_lua();             
-	void setKeyboardFocusedObject_lua(const DisplayObject& handle);  
-	DisplayObject getKeyboardFocusedObject_lua(); 
-	void setMouseHoveredObject_lua(const DisplayObject& handle);    
-	DisplayObject getMouseHoveredObject_lua();     
+    // --- Focus & Hover Management --- //
+    void doTabKeyPressForward_lua();             					// UNTESTED
+    void doTabKeyPressReverse_lua();            					// UNTESTED
+    void setKeyboardFocusedObject_lua(const DisplayObject& handle); // UNTESTED
+    DisplayObject getKeyboardFocusedObject_lua();                   // UNTESTED
+    void setMouseHoveredObject_lua(const DisplayObject& handle);    // UNTESTED
+    DisplayObject getMouseHoveredObject_lua();                      // UNTESTED
 
-	// --- Window Title & Timing --- //
-	std::string getWindowTitle_lua();	
-	void setWindowTitle_lua(const std::string& title); 	
-	float getElapsedTime_lua();	 // alias getDeltaTime()
+    // --- Window Title & Timing --- //
+    std::string getWindowTitle_lua();	// UNTESTED
+    void setWindowTitle_lua(const std::string& title); 				// UNTESTED
+    float getElapsedTime_lua();	 // alias getDeltaTime() —			// UNTESTED
 
-	// --- Event helpers (exposed to Lua) --- //
-	void pumpEventsOnce_lua(); 
-	void pushMouseEvent_lua(const sol::object& args); 
-	void pushKeyboardEvent_lua(const sol::object& args); 
+    // --- Event helpers (exposed to Lua) --- //
+void pumpEventsOnce_lua();                 						// UNTESTED
+    void pushMouseEvent_lua(const sol::object& args);   		// UNTESTED
+    void pushKeyboardEvent_lua(const sol::object& args);		// UNTESTED
 
-	// --- Orphan / Future Child Management --- //
-	void destroyDisplayObject_lua(const std::string& name); 
-	int countOrphanedDisplayObjects_lua(); 
-	std::vector<DisplayObject> getOrphanedDisplayObjects_lua(); 
-	void destroyOrphanedDisplayObjects_lua();  // aliases:  "destroyOrphanedObjects" and "destroyOrphans"
-	void collectGarbage_lua(); 
+    // --- Orphan / Future Child Management --- //
+    void destroyDisplayObject_lua(const std::string& name);     // TESTED
+    int countOrphanedDisplayObjects_lua();                      // TESTED
+    std::vector<DisplayObject> getOrphanedDisplayObjects_lua(); // TESTED
+    void destroyOrphanedDisplayObjects_lua();  // aliases:  "destroyOrphanedObjects" and "destroyOrphans" // UNTESTED
+    void collectGarbage_lua();                                  // TESTED
 
-	// --- Utility Methods --- //
-	std::vector<std::string> listDisplayObjectNames_lua(); 
-	void printObjectRegistry_lua();	
+    // --- Utility Methods --- //
+    std::vector<std::string> listDisplayObjectNames_lua(); 		// UNTESTED
+    void printObjectRegistry_lua();                        		// UNTESTED	
 
 
 } // end namespace SDOM
