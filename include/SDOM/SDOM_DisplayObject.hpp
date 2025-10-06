@@ -98,6 +98,8 @@ namespace SDOM
         }
         std::string getName() const { return name_; }
         std::string getType() const { return type_; }
+    void setName(const std::string& newName) { name_ = newName; }
+    void setType(const std::string& newType) { type_ = newType; }
 
         std::string str() const {
             std::ostringstream oss;
