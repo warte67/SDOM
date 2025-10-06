@@ -435,6 +435,25 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Replaced a previously-silent catch around `EventType` registration with visible debug logging (`DEBUG_LOG(...)`) and added a short explanatory comment about lifetime/static-init-order assumptions.
         - Verified the change locally: ran the project's compile/test flow (`./compile` in `examples/test`), the library and test binary built and installed headers under `~/.local/include/SDOM` and `~/.local/lib/libSDOM.a` updated.
         - Next short steps: complete a full sweep of remaining inline binding lambdas in `SDOM_Core.cpp`, add a small Lua smoke test exercising name-or-handle binds, and then consider moving the helpers into a dedicated `lua_Core_bindings.cpp` once CI is stable.
+        
+---   
+- ### [October 6, 2025]
+    - Lua binding refactor (IDisplayObject):
+        - Replaced repetitive sol2 wrappers with small, signature-based helper lambdas using a consistent naming scheme: `bind_{return}_{args}` (e.g., `bind_R_0`, `bind_void_i`, `bind_R_do`, `bind_void_str`, `_nc` variants for non-const).
+        - Applied helpers across hierarchy, priority/z-order, focus/interactivity, tab management, geometry/layout, anchors, edge positions, and orphan retention bindings.
+        - Kept `sol::overload` only where flexible call shapes are needed (e.g., `setPriority`, `setZOrder`, `moveToTop`, `setToHighest/LowestPriority`).
+    - Lua wrappers (lua_IDisplayObject.cpp):
+        - Added flexible wrappers that accept descriptor tables and handle-or-name targets:
+            - `setPriority_lua_any`, `setPriority_lua_target`, `setZOrder_lua_any`, `moveToTop_lua_any`, `setToHighestPriority_lua_any`, `setToLowestPriority_lua_any`.
+        - Added a handle-aware `getName_handle_lua` and updated `getName` binding to prefer the live object and fall back to handle name to fix a unit test edge case.
+        - Aligned orphan retention helpers (`orphanPolicyFromString`, `orphanPolicyToString`, `setOrphanRetentionPolicy`, `getOrphanRetentionPolicyString`) to helper binders, including an enum binder (`bind_R_orp`).
+    - Debug/log cleanup:
+        - Removed remaining temporary diagnostics (`[DIAG] ...`, `[debug-registerOnLua] ...`) from Lua bindings; normal output is now clean by default.
+    - Tests:
+        - Rebuilt examples/test; unit tests pass after the binding/wrapper updates.
+    - Maintainability:
+        - Binding surface is now uniform and easier to extend; helper pattern reduces boilerplate and mismatches between similar APIs.
+        - Next: consider moving common bind helpers into the shared `lua_BindHelpers` so other modules can reuse them, and add brief docs for descriptor-table forms (priority/z-order/moveToTop) in the Lua scripting guide.
 
 ---
 ## Garbage Collection / Orphan Retention
