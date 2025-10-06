@@ -432,8 +432,13 @@ namespace SDOM
             }
             SDL_ShowWindow(window_);     // not needed in SDL3, but included for clarity
         }
-        if (recreate_renderer && !renderer_) {
-            renderer_ = SDL_CreateRenderer(window_, NULL);
+        if (recreate_renderer && !renderer_) 
+        {
+            // SDL_Log("Available renderer drivers:");
+            // for (int i = 0; i < SDL_GetNumRenderDrivers(); i++) {
+            //     SDL_Log("%d. %s", i + 1, SDL_GetRenderDriver(i));
+            // }            
+            renderer_ = SDL_CreateRenderer(window_, nullptr);
             if (!renderer_) {
                 std::string errorMsg = "SDL_CreateRenderer() Error: " + std::string (SDL_GetError());
                 ERROR(errorMsg);
