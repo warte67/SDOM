@@ -52,6 +52,9 @@ namespace SDOM
     bool removeDescendant_lua(IDisplayObject* obj, const std::string& descendantName);
 
     // --- Type & Property Access --- //
+    std::string getName_lua(const IDisplayObject* obj); 
+    void setName_lua(IDisplayObject* obj, const std::string& newName);
+    
     std::string getType_lua(const IDisplayObject* obj); 
     void setType_lua(IDisplayObject* obj, const std::string& newType); 
     Bounds getBounds_lua(const IDisplayObject* obj); 

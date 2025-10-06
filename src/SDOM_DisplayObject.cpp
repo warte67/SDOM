@@ -84,6 +84,12 @@ namespace SDOM
         set_if_absent(handle, "getType", &DisplayObject::getType_lua);
         set_if_absent(handle, "setName", [](DisplayObject& self, const std::string& newName) { self.setName(newName); });
         set_if_absent(handle, "setType", [](DisplayObject& self, const std::string& newType) { self.setType(newType); });
+        
+        // DO NOT add any other bindings here.
+        // IDisplayObject and each descendant should call:
+        //   auto t = DisplayObject::ensure_handle_table(lua);
+        //   if (t["methodName"] == nil) t.set_function("methodName", ...);
+        // Their methods must be idempotent and must not overwrite existing names.
     }
 
     void DisplayObject::_registerDisplayObject(const std::string& typeName, sol::state_view lua)

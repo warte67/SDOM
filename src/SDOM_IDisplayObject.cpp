@@ -1241,6 +1241,137 @@ namespace SDOM
             return obj;
         };
 
+        // Tiny helpers following naming: bind_{returnType}_{args}
+        // returnType: void | R
+        // args: 0 | do (DisplayObject) | str (const std::string&)
+        // constness: default uses const IDisplayObject* when possible; _nc variants use IDisplayObject*
+        // Examples:
+        // - bind_void_0:        void f(IDisplayObject*)
+        // - bind_R_0:            R   f(const IDisplayObject*)
+        // - bind_void_do:        void f(IDisplayObject*, DisplayObject)
+        // - bind_R_do:           R   f(const IDisplayObject*, DisplayObject)
+        // - bind_R_str:          R   f(const IDisplayObject*, const std::string&)
+        // - bind_R_0_nc:         R   f(IDisplayObject*)
+        // - bind_R_do_nc:        R   f(IDisplayObject*, DisplayObject)
+        // - bind_R_str_nc:       R   f(IDisplayObject*, const std::string&)
+        [[maybe_unused]] auto bind_void_0 = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self) {
+                    f(require_obj(self, n));
+                });
+            }
+        };
+        [[maybe_unused]] auto bind_R_0 = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self) {
+                    return f(require_obj(self, n));
+                });
+            }
+        };
+        [[maybe_unused]] auto bind_void_do = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const DisplayObject& a) {
+                    f(require_obj(self, n), a);
+                });
+            }
+        };
+        [[maybe_unused]] auto bind_R_do = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const DisplayObject& a) {
+                    return f(require_obj(self, n), a);
+                });
+            }
+        };
+        // One string-argument, returning a value: R f(const IDisplayObject*, const std::string&)
+        [[maybe_unused]] auto bind_R_str = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const std::string& a) {
+                    return f(require_obj(self, n), a);
+                });
+            }
+        };
+        // One string-argument, void return: void f(IDisplayObject*, const std::string&)
+        [[maybe_unused]] auto bind_void_str = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const std::string& a) {
+                    f(require_obj(self, n), a);
+                });
+            }
+        };
+        // One sol::object-argument, void return: void f(IDisplayObject*, const sol::object&)
+        [[maybe_unused]] auto bind_void_obj = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const sol::object& a) {
+                    f(require_obj(self, n), a);
+                });
+            }
+        };
+        // One int-argument, void return: void f(IDisplayObject*, int)
+        [[maybe_unused]] auto bind_void_i = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, int a) {
+                    f(require_obj(self, n), a);
+                });
+            }
+        };
+        // One bool-argument, void return: void f(IDisplayObject*, bool)
+        [[maybe_unused]] auto bind_void_b = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, bool a) {
+                    f(require_obj(self, n), a);
+                });
+            }
+        };
+        // One float-argument, void return: void f(IDisplayObject*, float)
+        [[maybe_unused]] auto bind_void_f = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, float a) {
+                    f(require_obj(self, n), a);
+                });
+            }
+        };
+        // One AnchorPoint-argument, void return: void f(IDisplayObject*, AnchorPoint)
+        [[maybe_unused]] auto bind_void_ap = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, AnchorPoint a) {
+                    f(require_obj(self, n), a);
+                });
+            }
+        };
+        // One OrphanRetentionPolicy-argument, returning a value: R f(const IDisplayObject*, OrphanRetentionPolicy)
+        [[maybe_unused]] auto bind_R_orp = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, IDisplayObject::OrphanRetentionPolicy a) {
+                    return f(require_obj(self, n), a);
+                });
+            }
+        };
+        // Non-const pointer variants for wrappers that mutate or require non-const IDisplayObject*
+        // - bind_R_0_nc:   R f(IDisplayObject*)
+        // - bind_R_do_nc:  R f(IDisplayObject*, T1)
+        // - bind_R_str_nc: R f(IDisplayObject*, const std::string&)
+        [[maybe_unused]] auto bind_R_0_nc = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self) {
+                    return f(require_obj(self, n));
+                });
+            }
+        };
+        [[maybe_unused]] auto bind_R_do_nc = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const DisplayObject& a) {
+                    return f(require_obj(self, n), a);
+                });
+            }
+        };
+        [[maybe_unused]] auto bind_R_str_nc = [&](const char* n, auto f) {
+            if (absent(n)) {
+                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const std::string& a) {
+                    return f(require_obj(self, n), a);
+                });
+            }
+        };
+
         // Ensure Bounds is registered (once)
         if (!lua["Bounds"].valid())
         {
@@ -1303,12 +1434,12 @@ namespace SDOM
             ));
         }
 
-        // Basic state and debug
-        if (absent("cleanAll"))      handle.set_function("cleanAll",      [require_obj](DisplayObject& self){ ::SDOM::cleanAll_lua(require_obj(self, "cleanAll")); });
-        if (absent("getDirty"))      handle.set_function("getDirty",      [require_obj](DisplayObject& self){ return ::SDOM::getDirty_lua(require_obj(self, "getDirty")); });
-        if (absent("setDirty"))      handle.set_function("setDirty",      [require_obj](DisplayObject& self){ ::SDOM::setDirty_lua(require_obj(self, "setDirty")); });
-        if (absent("isDirty"))       handle.set_function("isDirty",       [require_obj](DisplayObject& self){ return ::SDOM::isDirty_lua(require_obj(self, "isDirty")); });
-        if (absent("printTree"))     handle.set_function("printTree",     [require_obj](DisplayObject& self){ ::SDOM::printTree_lua(require_obj(self, "printTree")); });
+        // Basic state and debug (simplified via helpers)
+        bind_void_0("cleanAll",       ::SDOM::cleanAll_lua);
+        bind_R_0("getDirty",          ::SDOM::getDirty_lua);
+        bind_void_0("setDirty",       ::SDOM::setDirty_lua);
+        bind_R_0("isDirty",           ::SDOM::isDirty_lua);
+        bind_void_0("printTree",      ::SDOM::printTree_lua);
 
         // Hierarchy
         if (absent("addChild"))      handle.set_function("addChild",      [require_obj](DisplayObject& self, DisplayObject child){ ::SDOM::addChild_lua(require_obj(self, "addChild"), child); });
@@ -1319,125 +1450,97 @@ namespace SDOM
                 [require_obj](DisplayObject& self, DisplayObject child){ return ::SDOM::removeChild_lua(require_obj(self, "removeChild"), child); }
             ));
         }
-        if (absent("hasChild"))      handle.set_function("hasChild",      [require_obj](DisplayObject& self, DisplayObject child){ return ::SDOM::hasChild_lua(require_obj(self, "hasChild"), child); });
-        if (absent("getParent"))     handle.set_function("getParent",     [require_obj](DisplayObject& self){ return ::SDOM::getParent_lua(require_obj(self, "getParent")); });
-        if (absent("setParent"))     handle.set_function("setParent",     [require_obj](DisplayObject& self, const DisplayObject& p){ ::SDOM::setParent_lua(require_obj(self, "setParent"), p); });
+        bind_R_do("hasChild",                   ::SDOM::hasChild_lua);
+        bind_R_0("getParent",                   ::SDOM::getParent_lua);
+        bind_void_do("setParent",               ::SDOM::setParent_lua);
+        bind_R_do_nc("isAncestorOf",            [](IDisplayObject* o, const DisplayObject& d){ return ::SDOM::isAncestorOf_lua(o, d); });
+        bind_R_str_nc("isAncestorOfName",       [](IDisplayObject* o, const std::string& n){ return ::SDOM::isAncestorOf_lua(o, n); });
+        bind_R_do_nc("isDescendantOf",          [](IDisplayObject* o, const DisplayObject& a){ return ::SDOM::isDescendantOf_lua(o, a); });
+        bind_R_str_nc("isDescendantOfName",     [](IDisplayObject* o, const std::string& n){ return ::SDOM::isDescendantOf_lua(o, n); });
+        bind_R_0_nc("removeFromParent",         [](IDisplayObject* o){ return ::SDOM::removeFromParent_lua(o); });
+        bind_R_do_nc("removeChildByHandle",     [](IDisplayObject* o, const DisplayObject& d){ return ::SDOM::removeChild_lua(o, d); });
+        bind_R_str_nc("removeChildByName",      [](IDisplayObject* o, const std::string& n){ return ::SDOM::removeChild_lua(o, n); });
+        bind_R_do_nc("removeDescendant",        [](IDisplayObject* o, const DisplayObject& d){ return ::SDOM::removeDescendant_lua(o, d); });
+        bind_R_str_nc("removeDescendantByName", [](IDisplayObject* o, const std::string& n){ return ::SDOM::removeDescendant_lua(o, n); });
 
-        if (absent("isAncestorOf"))  handle.set_function("isAncestorOf",  [require_obj](DisplayObject& self, DisplayObject d){ return ::SDOM::isAncestorOf_lua(require_obj(self, "isAncestorOf"), d); });
-        if (absent("isAncestorOfName"))
-                                    handle.set_function("isAncestorOfName", [require_obj](DisplayObject& self, const std::string& n){ return ::SDOM::isAncestorOf_lua(require_obj(self, "isAncestorOfName"), n); });
-        if (absent("isDescendantOf"))handle.set_function("isDescendantOf",[require_obj](DisplayObject& self, DisplayObject a){ return ::SDOM::isDescendantOf_lua(require_obj(self, "isDescendantOf"), a); });
-        if (absent("isDescendantOfName"))
-                                    handle.set_function("isDescendantOfName", [require_obj](DisplayObject& self, const std::string& n){ return ::SDOM::isDescendantOf_lua(require_obj(self, "isDescendantOfName"), n); });
-        if (absent("removeFromParent"))
-                                    handle.set_function("removeFromParent", [require_obj](DisplayObject& self){ return ::SDOM::removeFromParent_lua(require_obj(self, "removeFromParent")); });
-        if (absent("removeChildByHandle"))
-                                    handle.set_function("removeChildByHandle", [require_obj](DisplayObject& self, DisplayObject d){ return ::SDOM::removeChild_lua(require_obj(self, "removeChildByHandle"), d); });
-        if (absent("removeChildByName"))
-                                    handle.set_function("removeChildByName", [require_obj](DisplayObject& self, const std::string& n){ return ::SDOM::removeChild_lua(require_obj(self, "removeChildByName"), n); });
-        if (absent("removeDescendant"))
-                                    handle.set_function("removeDescendant", [require_obj](DisplayObject& self, DisplayObject d){ return ::SDOM::removeDescendant_lua(require_obj(self, "removeDescendant"), d); });
-        if (absent("removeDescendantByName"))
-                                    handle.set_function("removeDescendantByName", [require_obj](DisplayObject& self, const std::string& n){ return ::SDOM::removeDescendant_lua(require_obj(self, "removeDescendantByName"), n); });
-
-        // Type & properties
-        if (absent("getType"))       handle.set_function("getType",       [require_obj](DisplayObject& self){ return ::SDOM::getType_lua(require_obj(self, "getType")); });
-        if (absent("setType"))       handle.set_function("setType",       [require_obj](DisplayObject& self, const std::string& t){ ::SDOM::setType_lua(require_obj(self, "setType"), t); });
-
-        if (absent("getBounds"))     handle.set_function("getBounds",     [require_obj](DisplayObject& self){ return ::SDOM::getBounds_lua(require_obj(self, "getBounds")); });
-        if (absent("setBounds"))     handle.set_function("setBounds",     [require_obj](DisplayObject& self, const sol::object& o){ ::SDOM::setBounds_lua(require_obj(self, "setBounds"), o); });
-
-        if (absent("getColor"))      handle.set_function("getColor",      [require_obj](DisplayObject& self){ return ::SDOM::getColor_lua(require_obj(self, "getColor")); });
-        if (absent("setColor"))      handle.set_function("setColor",      [require_obj](DisplayObject& self, const sol::object& o){ ::SDOM::setColor_lua(require_obj(self, "setColor"), o); });
+        // Type & properties (via helpers)
+        bind_R_0("getName",         ::SDOM::getName_lua);
+        bind_void_str("setName",    ::SDOM::setName_lua);
+        bind_R_0("getType",         ::SDOM::getType_lua);
+        bind_void_str("setType",    ::SDOM::setType_lua);
+        bind_R_0("getBounds",       ::SDOM::getBounds_lua);
+        bind_void_obj("setBounds",  [](IDisplayObject* o, const sol::object& a){ ::SDOM::setBounds_lua(o, a); });
+        bind_R_0("getColor",        ::SDOM::getColor_lua);
+        bind_void_obj("setColor",   [](IDisplayObject* o, const sol::object& a){ ::SDOM::setColor_lua(o, a); });
 
         // Priority & Z-Order
-        if (absent("getMaxPriority"))handle.set_function("getMaxPriority",[require_obj](DisplayObject& self){ return ::SDOM::getMaxPriority_lua(require_obj(self, "getMaxPriority")); });
-        if (absent("getMinPriority"))handle.set_function("getMinPriority",[require_obj](DisplayObject& self){ return ::SDOM::getMinPriority_lua(require_obj(self, "getMinPriority")); });
-        if (absent("getPriority"))   handle.set_function("getPriority",   [require_obj](DisplayObject& self){ return ::SDOM::getPriority_lua(require_obj(self, "getPriority")); });
-        if (absent("setToHighestPriority"))
-                                    handle.set_function("setToHighestPriority", [require_obj](DisplayObject& self){ ::SDOM::setToHighestPriority_lua(require_obj(self, "setToHighestPriority")); });
-        if (absent("setToLowestPriority"))
-                                    handle.set_function("setToLowestPriority", [require_obj](DisplayObject& self){ ::SDOM::setToLowestPriority_lua(require_obj(self, "setToLowestPriority")); });
-        if (absent("sortChildrenByPriority"))
-                                    handle.set_function("sortChildrenByPriority", [require_obj](DisplayObject& self){ ::SDOM::sortChildrenByPriority_lua(require_obj(self, "sortChildrenByPriority")); });
-        if (absent("setPriority"))   handle.set_function("setPriority", sol::overload(
-            [require_obj](DisplayObject& self, int p){ ::SDOM::setPriority_lua(require_obj(self, "setPriority"), p); },
-            [require_obj](DisplayObject& self, const sol::object& desc) {
-                IDisplayObject* obj = require_obj(self, "setPriority");
-                if (!desc.is<sol::table>()) return;
-                sol::table t = desc.as<sol::table>();
-                sol::object pobj = t.get<sol::object>("priority");
-                if (pobj.valid()) {
-                    try { obj->setPriority(pobj.as<int>()); } catch(...) {}
-                }
-            }
-        ));
-        if (absent("getChildrenPriorities"))
-                                    handle.set_function("getChildrenPriorities", [require_obj](DisplayObject& self){ return ::SDOM::getChildrenPriorities_lua(require_obj(self, "getChildrenPriorities")); });
-        if (absent("moveToTop"))     handle.set_function("moveToTop",     [require_obj](DisplayObject& self){ ::SDOM::moveToTop_lua(require_obj(self, "moveToTop")); });
-        if (absent("getZOrder"))     handle.set_function("getZOrder",     [require_obj](DisplayObject& self){ return ::SDOM::getZOrder_lua(require_obj(self, "getZOrder")); });
-        if (absent("setZOrder"))     handle.set_function("setZOrder",     [require_obj](DisplayObject& self, int z){ ::SDOM::setZOrder_lua(require_obj(self, "setZOrder"), z); });
+        bind_R_0("getMaxPriority",            ::SDOM::getMaxPriority_lua);
+        bind_R_0("getMinPriority",            ::SDOM::getMinPriority_lua);
+        bind_R_0("getPriority",               ::SDOM::getPriority_lua);
+        bind_void_0("setToHighestPriority",   ::SDOM::setToHighestPriority_lua);
+        bind_void_0("setToLowestPriority",    ::SDOM::setToLowestPriority_lua);
+        bind_void_0("sortChildrenByPriority", ::SDOM::sortChildrenByPriority_lua);
+        bind_void_i("setPriority",            ::SDOM::setPriority_lua);
+        bind_R_0("getChildrenPriorities",     ::SDOM::getChildrenPriorities_lua);
+        bind_void_0("moveToTop",              ::SDOM::moveToTop_lua);
+        bind_R_0("getZOrder",                 ::SDOM::getZOrder_lua);
+        bind_void_i("setZOrder",              ::SDOM::setZOrder_lua);
 
         // Focus & interactivity
-        if (absent("setKeyboardFocus"))  handle.set_function("setKeyboardFocus",  [require_obj](DisplayObject& self){ ::SDOM::setKeyboardFocus_lua(require_obj(self, "setKeyboardFocus")); });
-        if (absent("isKeyboardFocused")) handle.set_function("isKeyboardFocused", [require_obj](DisplayObject& self){ return ::SDOM::isKeyboardFocused_lua(require_obj(self, "isKeyboardFocused")); });
-        if (absent("isMouseHovered"))    handle.set_function("isMouseHovered",    [require_obj](DisplayObject& self){ return ::SDOM::isMouseHovered_lua(require_obj(self, "isMouseHovered")); });
-        if (absent("isClickable"))       handle.set_function("isClickable",       [require_obj](DisplayObject& self){ return ::SDOM::isClickable_lua(require_obj(self, "isClickable")); });
-        if (absent("setClickable"))      handle.set_function("setClickable",      [require_obj](DisplayObject& self, bool c){ ::SDOM::setClickable_lua(require_obj(self, "setClickable"), c); });
-        if (absent("isEnabled"))         handle.set_function("isEnabled",         [require_obj](DisplayObject& self){ return ::SDOM::isEnabled_lua(require_obj(self, "isEnabled")); });
-        if (absent("setEnabled"))        handle.set_function("setEnabled",        [require_obj](DisplayObject& self, bool e){ ::SDOM::setEnabled_lua(require_obj(self, "setEnabled"), e); });
-        if (absent("isHidden"))          handle.set_function("isHidden",          [require_obj](DisplayObject& self){ return ::SDOM::isHidden_lua(require_obj(self, "isHidden")); });
-        if (absent("setHidden"))         handle.set_function("setHidden",         [require_obj](DisplayObject& self, bool v){ ::SDOM::setHidden_lua(require_obj(self, "setHidden"), v); });
-        if (absent("isVisible"))         handle.set_function("isVisible",         [require_obj](DisplayObject& self){ return ::SDOM::isVisible_lua(require_obj(self, "isVisible")); });
-        if (absent("setVisible"))        handle.set_function("setVisible",        [require_obj](DisplayObject& self, bool v){ ::SDOM::setVisible_lua(require_obj(self, "setVisible"), v); });
+        bind_void_0("setKeyboardFocus",   ::SDOM::setKeyboardFocus_lua);
+        bind_R_0("isKeyboardFocused",     ::SDOM::isKeyboardFocused_lua);
+        bind_R_0("isMouseHovered",        ::SDOM::isMouseHovered_lua);
+        bind_R_0("isClickable",           ::SDOM::isClickable_lua);
+        bind_void_b("setClickable",       ::SDOM::setClickable_lua);
+        bind_R_0("isEnabled",             ::SDOM::isEnabled_lua);
+        bind_void_b("setEnabled",         ::SDOM::setEnabled_lua);
+        bind_R_0("isHidden",              ::SDOM::isHidden_lua);
+        bind_void_b("setHidden",          ::SDOM::setHidden_lua);
+        bind_R_0("isVisible",             ::SDOM::isVisible_lua);
+        bind_void_b("setVisible",         ::SDOM::setVisible_lua);
 
         // Tab management
-        if (absent("getTabPriority")) handle.set_function("getTabPriority", [require_obj](DisplayObject& self){ return ::SDOM::getTabPriority_lua(require_obj(self, "getTabPriority")); });
-        if (absent("setTabPriority")) handle.set_function("setTabPriority", [require_obj](DisplayObject& self, int i){ ::SDOM::setTabPriority_lua(require_obj(self, "setTabPriority"), i); });
-        if (absent("isTabEnabled"))   handle.set_function("isTabEnabled",  [require_obj](DisplayObject& self){ return ::SDOM::isTabEnabled_lua(require_obj(self, "isTabEnabled")); });
-        if (absent("setTabEnabled"))  handle.set_function("setTabEnabled", [require_obj](DisplayObject& self, bool e){ ::SDOM::setTabEnabled_lua(require_obj(self, "setTabEnabled"), e); });
+        bind_R_0("getTabPriority",      ::SDOM::getTabPriority_lua);
+        bind_void_i("setTabPriority",   ::SDOM::setTabPriority_lua);
+        bind_R_0("isTabEnabled",        ::SDOM::isTabEnabled_lua);
+        bind_void_b("setTabEnabled",    ::SDOM::setTabEnabled_lua);
 
         // Geometry & layout
-        if (absent("getX"))      handle.set_function("getX",      [require_obj](DisplayObject& self){ return ::SDOM::getX_lua(require_obj(self, "getX")); });
-        if (absent("getY"))      handle.set_function("getY",      [require_obj](DisplayObject& self){ return ::SDOM::getY_lua(require_obj(self, "getY")); });
-        if (absent("getWidth"))  handle.set_function("getWidth",  [require_obj](DisplayObject& self){ return ::SDOM::getWidth_lua(require_obj(self, "getWidth")); });
-        if (absent("getHeight")) handle.set_function("getHeight", [require_obj](DisplayObject& self){ return ::SDOM::getHeight_lua(require_obj(self, "getHeight")); });
-        if (absent("setX"))      handle.set_function("setX",      [require_obj](DisplayObject& self, int v){ ::SDOM::setX_lua(require_obj(self, "setX"), v); });
-        if (absent("setY"))      handle.set_function("setY",      [require_obj](DisplayObject& self, int v){ ::SDOM::setY_lua(require_obj(self, "setY"), v); });
-        if (absent("setWidth"))  handle.set_function("setWidth",  [require_obj](DisplayObject& self, int v){ ::SDOM::setWidth_lua(require_obj(self, "setWidth"), v); });
-        if (absent("setHeight")) handle.set_function("setHeight", [require_obj](DisplayObject& self, int v){ ::SDOM::setHeight_lua(require_obj(self, "setHeight"), v); });
+        bind_R_0("getX",            ::SDOM::getX_lua);
+        bind_R_0("getY",            ::SDOM::getY_lua);
+        bind_R_0("getWidth",        ::SDOM::getWidth_lua);
+        bind_R_0("getHeight",       ::SDOM::getHeight_lua);
+        bind_void_i("setX",         ::SDOM::setX_lua);
+        bind_void_i("setY",         ::SDOM::setY_lua);
+        bind_void_i("setWidth",     ::SDOM::setWidth_lua);
+        bind_void_i("setHeight",    ::SDOM::setHeight_lua);
 
         // Anchors
-        if (absent("getAnchorTop"))    handle.set_function("getAnchorTop",    [require_obj](DisplayObject& self){ return ::SDOM::getAnchorTop_lua(require_obj(self, "getAnchorTop")); });
-        if (absent("getAnchorLeft"))   handle.set_function("getAnchorLeft",   [require_obj](DisplayObject& self){ return ::SDOM::getAnchorLeft_lua(require_obj(self, "getAnchorLeft")); });
-        if (absent("getAnchorBottom")) handle.set_function("getAnchorBottom", [require_obj](DisplayObject& self){ return ::SDOM::getAnchorBottom_lua(require_obj(self, "getAnchorBottom")); });
-        if (absent("getAnchorRight"))  handle.set_function("getAnchorRight",  [require_obj](DisplayObject& self){ return ::SDOM::getAnchorRight_lua(require_obj(self, "getAnchorRight")); });
-        if (absent("setAnchorTop"))    handle.set_function("setAnchorTop",    [require_obj](DisplayObject& self, AnchorPoint ap){ ::SDOM::setAnchorTop_lua(require_obj(self, "setAnchorTop"), ap); });
-        if (absent("setAnchorLeft"))   handle.set_function("setAnchorLeft",   [require_obj](DisplayObject& self, AnchorPoint ap){ ::SDOM::setAnchorLeft_lua(require_obj(self, "setAnchorLeft"), ap); });
-        if (absent("setAnchorBottom")) handle.set_function("setAnchorBottom", [require_obj](DisplayObject& self, AnchorPoint ap){ ::SDOM::setAnchorBottom_lua(require_obj(self, "setAnchorBottom"), ap); });
-        if (absent("setAnchorRight"))  handle.set_function("setAnchorRight",  [require_obj](DisplayObject& self, AnchorPoint ap){ ::SDOM::setAnchorRight_lua(require_obj(self, "setAnchorRight"), ap); });
+        bind_R_0("getAnchorTop",        ::SDOM::getAnchorTop_lua);
+        bind_R_0("getAnchorLeft",       ::SDOM::getAnchorLeft_lua);
+        bind_R_0("getAnchorBottom",     ::SDOM::getAnchorBottom_lua);
+        bind_R_0("getAnchorRight",      ::SDOM::getAnchorRight_lua);
+        bind_void_ap("setAnchorTop",    ::SDOM::setAnchorTop_lua);
+        bind_void_ap("setAnchorLeft",   ::SDOM::setAnchorLeft_lua);
+        bind_void_ap("setAnchorBottom", ::SDOM::setAnchorBottom_lua);
+        bind_void_ap("setAnchorRight",  ::SDOM::setAnchorRight_lua);
 
         // Edge positions
-        if (absent("getLeft"))   handle.set_function("getLeft",   [require_obj](DisplayObject& self){ return ::SDOM::getLeft_lua(require_obj(self, "getLeft")); });
-        if (absent("getRight"))  handle.set_function("getRight",  [require_obj](DisplayObject& self){ return ::SDOM::getRight_lua(require_obj(self, "getRight")); });
-        if (absent("getTop"))    handle.set_function("getTop",    [require_obj](DisplayObject& self){ return ::SDOM::getTop_lua(require_obj(self, "getTop")); });
-        if (absent("getBottom")) handle.set_function("getBottom", [require_obj](DisplayObject& self){ return ::SDOM::getBottom_lua(require_obj(self, "getBottom")); });
-        if (absent("setLeft"))   handle.set_function("setLeft",   [require_obj](DisplayObject& self, float v){ ::SDOM::setLeft_lua(require_obj(self, "setLeft"), v); });
-        if (absent("setRight"))  handle.set_function("setRight",  [require_obj](DisplayObject& self, float v){ ::SDOM::setRight_lua(require_obj(self, "setRight"), v); });
-        if (absent("setTop"))    handle.set_function("setTop",    [require_obj](DisplayObject& self, float v){ ::SDOM::setTop_lua(require_obj(self, "setTop"), v); });
-        if (absent("setBottom")) handle.set_function("setBottom", [require_obj](DisplayObject& self, float v){ ::SDOM::setBottom_lua(require_obj(self, "setBottom"), v); });
+        bind_R_0("getLeft",         ::SDOM::getLeft_lua);
+        bind_R_0("getRight",        ::SDOM::getRight_lua);
+        bind_R_0("getTop",          ::SDOM::getTop_lua);
+        bind_R_0("getBottom",       ::SDOM::getBottom_lua);
+        bind_void_f("setLeft",      ::SDOM::setLeft_lua);
+        bind_void_f("setRight",     ::SDOM::setRight_lua);
+        bind_void_f("setTop",       ::SDOM::setTop_lua);
+        bind_void_f("setBottom",    ::SDOM::setBottom_lua);
 
         // Orphan retention helpers
-        if (absent("orphanPolicyFromString"))
-            handle.set_function("orphanPolicyFromString", &::SDOM::orphanPolicyFromString_lua);
-        if (absent("orphanPolicyToString"))
-            handle.set_function("orphanPolicyToString", &::SDOM::orphanPolicyToString_lua);
-        if (absent("setOrphanRetentionPolicy"))
-            handle.set_function("setOrphanRetentionPolicy", [require_obj](DisplayObject& self, const std::string& s){ ::SDOM::setOrphanRetentionPolicy_lua(require_obj(self, "setOrphanRetentionPolicy"), s); });
-        if (absent("getOrphanRetentionPolicyString"))
-            handle.set_function("getOrphanRetentionPolicyString", [require_obj](DisplayObject& self){ return ::SDOM::getOrphanRetentionPolicyString_lua(require_obj(self, "getOrphanRetentionPolicyString")); });
+        bind_R_str("orphanPolicyFromString",        ::SDOM::orphanPolicyFromString_lua);
+        bind_R_orp("orphanPolicyToString",          ::SDOM::orphanPolicyToString_lua);
+        bind_void_str("setOrphanRetentionPolicy",   ::SDOM::setOrphanRetentionPolicy_lua);
+        bind_R_0("getOrphanRetentionPolicyString",  ::SDOM::getOrphanRetentionPolicyString_lua);
 
-        // Note: getName/setName are already bound on the minimal handle; do not rebind here.
     } // END: IDisplayObject::_registerDisplayObject()
 
 } // namespace SDOM
