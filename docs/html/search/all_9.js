@@ -2,7 +2,7 @@ var searchData=
 [
   ['backpropagation_20traversal_20type_204_0',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_docs_2dom__propagation.html#autotoc_md79',1,'']]],
   ['backward_20compatibility_20migration_1',['Backward Compatibility &amp; Migration',['../md_docs_2display__object__anchoring.html#autotoc_md59',1,'']]],
-  ['base_20type_2',['IDataObject: Data-Driven Base Type',['../md_README.html#autotoc_md190',1,'']]],
+  ['base_20type_2',['IDataObject: Data-Driven Base Type',['../md_README.html#autotoc_md188',1,'']]],
   ['based_20dom_20traversal_20type_201_3',['1. Core-based DOM Traversal (Type 1)',['../md_docs_2dom__propagation.html#autotoc_md74',1,'']]],
   ['based_20event_20traversal_20type_202_4',['2. EventManager-based Event Traversal (Type 2)',['../md_docs_2dom__propagation.html#autotoc_md76',1,'']]],
   ['based_20global_20traversal_20type_203_5',['3. Factory-based Global Traversal (Type 3)',['../md_docs_2dom__propagation.html#autotoc_md78',1,'']]],
@@ -65,12 +65,12 @@ var searchData=
   ['bounds_62',['Bounds',['../structSDOM_1_1Bounds.html',1,'SDOM']]],
   ['brown_63',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]],
   ['bubbling_64',['Bubbling',['../classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8a3c482809f52a8017df255cb727400452',1,'SDOM::Event']]],
-  ['build_20and_20install_20sdl3_20libraries_65',['Build and install SDL3 libraries',['../md_README.html#autotoc_md203',1,'']]],
+  ['build_20and_20install_20sdl3_20libraries_65',['Build and install SDL3 libraries',['../md_README.html#autotoc_md201',1,'']]],
   ['build_20completed_20and_20tt_20prog_20tt_20produced_20successfully_66',['- Verified: rebuilt the examples and test binary after these changes (&lt;tt&gt;./compile&lt;/tt&gt; in &lt;tt&gt;examples/test&lt;/tt&gt;) — build completed and &lt;tt&gt;prog&lt;/tt&gt; produced successfully.',['../md_docs_2progress.html#autotoc_md170',1,'']]],
-  ['build_20dependencies_67',['build dependencies',['../md_README.html#autotoc_md199',1,'Arch Build Dependencies'],['../md_README.html#autotoc_md198',1,'Debian Build Dependencies'],['../md_README.html#autotoc_md197',1,'SDL3 Build Dependencies']]],
-  ['build_20per_20sdl3_3a_68',['Build per SDL3:',['../md_README.html#autotoc_md202',1,'']]],
-  ['building_20and_20installing_20sdl3_5fmixer_20sdl3_5fimage_20and_20sdl_5fttf_69',['Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf',['../md_README.html#autotoc_md201',1,'']]],
-  ['building_20the_20sdom_20library_70',['Building the SDOM Library',['../md_README.html#autotoc_md194',1,'']]],
+  ['build_20dependencies_67',['build dependencies',['../md_README.html#autotoc_md197',1,'Arch Build Dependencies'],['../md_README.html#autotoc_md196',1,'Debian Build Dependencies'],['../md_README.html#autotoc_md195',1,'SDL3 Build Dependencies']]],
+  ['build_20per_20sdl3_3a_68',['Build per SDL3:',['../md_README.html#autotoc_md200',1,'']]],
+  ['building_20and_20installing_20sdl3_5fmixer_20sdl3_5fimage_20and_20sdl_5fttf_69',['Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf',['../md_README.html#autotoc_md199',1,'']]],
+  ['building_20the_20sdom_20library_70',['Building the SDOM Library',['../md_README.html#autotoc_md192',1,'']]],
   ['button_71',['button',['../classSDOM_1_1Event.html#aae1bbc273d8b8debd62fc8780f499b52',1,'SDOM::Event']]],
   ['byte_72',['Byte',['../SDOM__CLR_8hpp.html#a8390de1c62e036e839ec8150711d6539',1,'SDOM_CLR.hpp']]]
 ];

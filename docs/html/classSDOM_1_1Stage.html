@@ -167,6 +167,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9fb41408c27d953a8ddae6a025fedaa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8453e36ea5bffdbb6c57da841db2e5ab" id="r_a8453e36ea5bffdbb6c57da841db2e5ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a8453e36ea5bffdbb6c57da841db2e5ab">setOrphanRetentionPolicy</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab">OrphanRetentionPolicy</a> policy)</td></tr>
 <tr class="separator:a8453e36ea5bffdbb6c57da841db2e5ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c8906ae32169a62be6fbe41d52704da" id="r_a4c8906ae32169a62be6fbe41d52704da"><td class="memItemLeft" align="right" valign="top">std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a4c8906ae32169a62be6fbe41d52704da">getOrphanGrace</a> () const</td></tr>
+<tr class="separator:a4c8906ae32169a62be6fbe41d52704da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9728356c70a650faae51d6bfd6dac213" id="r_a9728356c70a650faae51d6bfd6dac213"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9728356c70a650faae51d6bfd6dac213">setOrphanGrace</a> (std::chrono::milliseconds grace)</td></tr>
+<tr class="separator:a9728356c70a650faae51d6bfd6dac213"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64489b0d439824790ced90f114d2955b" id="r_a64489b0d439824790ced90f114d2955b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a64489b0d439824790ced90f114d2955b">operator==</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;other) const</td></tr>
 <tr class="separator:a64489b0d439824790ced90f114d2955b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab78aac3a9b8c14589ba2bf9d0344140f" id="r_ab78aac3a9b8c14589ba2bf9d0344140f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ab78aac3a9b8c14589ba2bf9d0344140f">operator&lt;</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;other) const</td></tr>
@@ -1454,6 +1458,31 @@ Friends</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">std::string SDOM::IDataObject::getName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4c8906ae32169a62be6fbe41d52704da" name="a4c8906ae32169a62be6fbe41d52704da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c8906ae32169a62be6fbe41d52704da">&#9670;&#160;</a></span>getOrphanGrace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::chrono::milliseconds SDOM::IDisplayObject::getOrphanGrace </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -3370,6 +3399,32 @@ template&lt;typename T &gt; </div>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>newName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9728356c70a650faae51d6bfd6dac213" name="a9728356c70a650faae51d6bfd6dac213"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9728356c70a650faae51d6bfd6dac213">&#9670;&#160;</a></span>setOrphanGrace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp; SDOM::IDisplayObject::setOrphanGrace </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds&#160;</td>
+          <td class="paramname"><em>grace</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

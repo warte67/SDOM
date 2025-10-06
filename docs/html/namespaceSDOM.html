@@ -507,6 +507,10 @@ Functions</h2></td></tr>
 <tr class="separator:aef6a2e53b274906f1380d1bb5b295605"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5ad579ee169875f1948ef3a29f47814" id="r_af5ad579ee169875f1948ef3a29f47814"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#af5ad579ee169875f1948ef3a29f47814">getOrphanRetentionPolicyString_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="separator:af5ad579ee169875f1948ef3a29f47814"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2edae42e0c29366f5eca1683b817056" id="r_ac2edae42e0c29366f5eca1683b817056"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ac2edae42e0c29366f5eca1683b817056">getOrphanGrace_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
+<tr class="separator:ac2edae42e0c29366f5eca1683b817056"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6ad76e2aa96ee58b9dab16d090226c4" id="r_ad6ad76e2aa96ee58b9dab16d090226c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ad6ad76e2aa96ee58b9dab16d090226c4">setOrphanGrace_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, std::chrono::milliseconds grace)</td></tr>
+<tr class="separator:ad6ad76e2aa96ee58b9dab16d090226c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c56125987bd1ed7efbcc59e678a2be2" id="r_a9c56125987bd1ed7efbcc59e678a2be2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a9c56125987bd1ed7efbcc59e678a2be2">quit</a> ()</td></tr>
 <tr class="separator:a9c56125987bd1ed7efbcc59e678a2be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08d8dca92e8b158e7fcff8931bff26e5" id="r_a08d8dca92e8b158e7fcff8931bff26e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a08d8dca92e8b158e7fcff8931bff26e5">shutdown</a> ()</td></tr>
@@ -2489,6 +2493,24 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="ac2edae42e0c29366f5eca1683b817056" name="ac2edae42e0c29366f5eca1683b817056"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2edae42e0c29366f5eca1683b817056">&#9670;&#160;</a></span>getOrphanGrace_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM::getOrphanGrace_lua </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *&#160;</td>
+          <td class="paramname"><em>obj</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af5ad579ee169875f1948ef3a29f47814" name="af5ad579ee169875f1948ef3a29f47814"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af5ad579ee169875f1948ef3a29f47814">&#9670;&#160;</a></span>getOrphanRetentionPolicyString_lua()</h2>
 
@@ -4410,6 +4432,34 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>newName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad6ad76e2aa96ee58b9dab16d090226c4" name="ad6ad76e2aa96ee58b9dab16d090226c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6ad76e2aa96ee58b9dab16d090226c4">&#9670;&#160;</a></span>setOrphanGrace_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::setOrphanGrace_lua </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::chrono::milliseconds&#160;</td>
+          <td class="paramname"><em>grace</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
