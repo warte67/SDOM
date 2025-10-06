@@ -76,10 +76,7 @@ namespace SDOM
 
         // Register minimal methods here (expand as needed)
         objHandleType_.set_function("isValid", &DisplayObject::isValid);
-        // NOTE: Do NOT add a large set of forwarded bindings on the lightweight
-        // DisplayObject handle.  The rich IDisplayObject API should be bound on
-        // the concrete IDisplayObject usertype.  Keep the handle minimal and
-        // safe for Lua code to hold (name/type helpers only).
+
         // Only name/type helpers from IDataObject are allowed on the handle
         objHandleType_.set_function("getName", &DisplayObject::getName_lua);
         objHandleType_.set_function("getType", &DisplayObject::getType_lua);
@@ -90,6 +87,13 @@ namespace SDOM
         objHandleType_.set_function("setType", [](DisplayObject& self, const std::string& newType) {
             self.setType(newType);
         });
+
+        // NOTE: Do NOT add a large set of forwarded bindings on the lightweight
+        // DisplayObject handle.  The rich IDisplayObject API should be bound on
+        // the concrete IDisplayObject usertype.  Keep the handle minimal and
+        // safe for Lua code to hold (name/type helpers only).
+        //
+        // DO NOT ADD ANY MORE LUA BINDINGS HERE        
     }
 
 } // namespace SDOM
