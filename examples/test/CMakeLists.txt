@@ -22,7 +22,7 @@ find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
 
 # Find Lua (if installed via package manager, usually as 'lua5.3' or 'lua5.4')
-find_library(LUA_LIB lua5.3) # or lua5.4, depending on your system
+find_library(LUA_LIB lua5.4) # or lua5.4, depending on your system
 
 
 # Use SDOM headers from local or system install
@@ -35,7 +35,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)  # SDOM Includes
 include_directories(${PROJECT_SOURCE_DIR}/../../sol2/include)       # sol2 Includes
 include_directories(${PROJECT_SOURCE_DIR}/../../sol2/include/sol)   # sol2 Includes
 
-include_directories(/usr/include/lua5.3)    # Lua Includes
+include_directories(/usr/include/lua5.4)    # Lua Includes
 
 
 # Source files

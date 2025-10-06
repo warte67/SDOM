@@ -23,13 +23,13 @@ find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
 
 # Find Lua (if installed via package manager, usually as 'lua5.3' or 'lua5.4')
-find_library(LUA_LIB lua5.3) # or lua5.4, depending on your system
+find_library(LUA_LIB lua5.4) # or lua5.4, depending on your system
 
 # Include directories
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/sol2/include)
 include_directories(${PROJECT_SOURCE_DIR}/sol2/include/sol)
-include_directories(/usr/include/lua5.3)
+include_directories(/usr/include/lua5.4)
 
 # Source files
 file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
