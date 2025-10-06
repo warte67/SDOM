@@ -6,7 +6,7 @@
 local M = {}
 
 -- Global toggle to enable/disable prints from this listener file
-local ENABLE_PRINTS = true
+local ENABLE_PRINTS = false
 
 local function log(...)
     if ENABLE_PRINTS then
