@@ -488,7 +488,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Consider adding a C++-side string->AnchorPoint Lua wrapper for ergonomic anchor calls from scripts.
     - **Performance Milestone:**  
         - The SDOM main loop is now 98% complete and matches the design for the finished library.
-        - Benchmarks show well over 10,000 frames per second on current hardware.
+        - Benchmarks show well over 10,000 frames per second on development hardware. Roughly 6000-7000 fps on a 15 year old I3 system (roughly 1.5 miliseconds per frame of overhead).
         - The SDOM API introduces only ~100 microseconds of overhead per frame, which is negligible for real-time 2D applications and 2D/3D games. This performance is without extensive post development optimization.
         - This validates the architectural choices and confirms that the system is ready for further feature development and integration.
 
