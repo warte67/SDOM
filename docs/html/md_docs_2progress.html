@@ -805,14 +805,90 @@ Progress Updates</h1>
 <li>Added small-step wait loop in tests that repeatedly calls Core:collectGarbage() + SDL:Delay() for responsive detection.</li>
 </ul>
 </li>
+<li>Completed and consolidated Lua‑driven unit tests for DisplayObject / IDisplayObject:<ul>
+<li>Added/validated tests covering dirty/state management, hierarchy (getChild/getParent), focus &amp; interactivity, geometry &amp; layout, priority/z‑order, anchors/edges, and bounds/color handling (tests #11–#15).</li>
+<li>Anchor tests exercise all 9 AnchorPoint values on each edge and assert that X/Y/Width/Height remain unchanged after each anchor change.</li>
+</ul>
+</li>
+<li>Lua binding fixes and coverage:<ul>
+<li>Added missing Lua binding for getChild on DisplayObject handles.</li>
+<li>Fixed logic bug in isClickable test and improved raw‑string safety for embedded Lua chunks.</li>
+<li>Annotated <a class="el" href="lua__IDisplayObject_8hpp.html">include/SDOM/lua_IDisplayObject.hpp</a> to reflect which wrappers are exercised by unit tests (TESTED / UNTESTED).</li>
+<li>Where Lua-to-C++ type mismatches appeared (anchor setters expecting enum), updated Lua test code to map human-friendly strings to enum indices; considered adding C++ overloads for string names as a follow-up.</li>
+</ul>
+</li>
+<li>Orphan / GC &amp; test utilities:<ul>
+<li>Orphan retention and orphan_grace accessors are exposed to Lua and exercised by garbage‑collection tests; tests temporarily adjust orphanGrace (500ms) for deterministic verification and restore original value after the run.</li>
+<li>Bound SDL.Delay to Lua and added small-step wait loops (Core:collectGarbage + SDL:Delay) used by GC tests for responsive detection.</li>
+</ul>
+</li>
+<li>Stability &amp; validation:<ul>
+<li>Rebuilt examples/test and ran the full test suite; all DisplayObject tests pass locally.</li>
+<li>Cleaned up temporary diagnostic prints; kept controlled debug gating for registration and Lua tests.</li>
+</ul>
+</li>
+<li>Next steps:<ul>
+<li>Add selective unit tests for remaining UNTESTED Lua wrappers (event flexible forms, removeDescendant variants, descriptor overloads) or add small C++ wrapper overloads to accept more permissive Lua call shapes.</li>
+<li>Consider adding a C++-side string-&gt;AnchorPoint Lua wrapper for ergonomic anchor calls from scripts.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p></code></p>
-<p><code></code></p>
-<h1><a class="anchor" id="autotoc_md174"></a>
+<p><code></p><hr  />
+<ul>
+<li><b>Milestone - DisplayObject Complete:</b> <br  />
+<ul>
+<li>With the DisplayObject (IDisplayObject) system now robust, unit-tested, and stable, the next major development track is the AssetObject system for resource management.</li>
+</ul>
+</li>
+<li><b>Planned Feature: IAssetObject &amp; AssetObject Handle</b><ul>
+<li>Introduce an <code>IAssetObject</code> interface and corresponding <code>AssetObject</code> handle, following the same architectural pattern as <code>IDisplayObject</code> and <code>DisplayObject</code>.</li>
+<li>AssetObjects will represent resources managed by the Factory, such as images, sounds, fonts, or other external/internal assets.</li>
+</ul>
+</li>
+<li><b>Design Goals:</b><ul>
+<li>Minimal, type-safe API for asset management.</li>
+<li>Each AssetObject will have:<ul>
+<li><code>getType()</code> and <code>getName()</code> for identification (mirroring DisplayObject).</li>
+<li><code>getFilename()</code> and <code>setFilename()</code> for external asset paths.</li>
+<li><code>isInternal()</code> (or <code>isEmbedded()</code>) flag to denote assets bundled within the binary (embedded resources).</li>
+</ul>
+</li>
+<li>Assets may originate from either external files or internal resources compiled into the binary.</li>
+<li>Factory will provide methods for asset creation, lookup, and destruction, returning AssetObject handles for safe reference.</li>
+</ul>
+</li>
+<li><b>Implementation Plan:</b><ul>
+<li>Scaffold <code>IAssetObject</code> and <code>AssetObject</code> handle classes.</li>
+<li>Extend Factory to register, create, and track AssetObjects by type and name.</li>
+<li>Implement Lua bindings for asset creation, querying, and property access.</li>
+<li>Add unit tests for asset creation, retrieval, and internal/external flags.</li>
+<li>Document the API and usage patterns for both C++ and Lua.</li>
+</ul>
+</li>
+<li><b>Benefits:</b><ul>
+<li>Consistent handle-based API for all resource types.</li>
+<li>Supports both external and embedded resources for flexible deployment.</li>
+<li>Clear separation between DOM objects and resource assets.</li>
+<li>Easy extension for future asset types (audio, fonts, etc.).</li>
+</ul>
+</li>
+<li><b>Next Steps:</b><ul>
+<li>Begin implementation of <code>IAssetObject</code> and <code>AssetObject</code>.</li>
+<li>Update Factory and Lua bindings.</li>
+<li>Add initial unit tests and documentation.</li>
+</ul>
+</li>
+</ul>
+<p></code></p>
+<p><code></p><hr  />
+<p> </code></p>
+<h1><a class="anchor" id="autotoc_md176"></a>
 ToDo:</h1>
 <p><code></p><ul>
+<li>Build out the IAssetObject interface and the AssetObject handle type</li>
 <li>Expand Lua examples and add more regression tests (invalid/nil handles, wrong-typed args, double-add/remove edge cases).</li>
 <li>Expand Lua scripting examples and documentation.</li>
 <li>Continue improving resource management and garbage collection.</li>
