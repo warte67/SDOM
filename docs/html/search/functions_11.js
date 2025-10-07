@@ -1,10 +1,10 @@
 var searchData=
 [
   ['reconfigure_0',['reconfigure',['../classSDOM_1_1Core.html#a953887ffaf0b6c6917ae8075b6edaa27',1,'SDOM::Core']]],
-  ['registerdisplayobject_1',['registerDisplayObject',['../classSDOM_1_1IDataObject.html#a85fbcb21f42a7f9d1f072ddfd1c8bf0e',1,'SDOM::IDataObject']]],
-  ['registerdomtype_2',['registerDomType',['../classSDOM_1_1Factory.html#a8862aa32cdf361e08525216ac7976eb3',1,'SDOM::Factory']]],
-  ['registereventtype_3',['registerEventType',['../classSDOM_1_1EventType.html#a9aa6ac9ec3cbfbac5b3340dd075c827d',1,'SDOM::EventType']]],
-  ['registerlua_4',['registerlua',['../classSDOM_1_1Event.html#a4f6b28e5635e88595288a6c66de4a74a',1,'SDOM::Event::registerLua()'],['../classSDOM_1_1EventType.html#af935779818a609d71a1a9508ffdaa36a',1,'SDOM::EventType::registerLua()'],['../classSDOM_1_1IDataObject.html#a2b23ecae5bcefe1403cc200d654e52c4',1,'SDOM::IDataObject::registerLua()'],['../classSDOM_1_1SDL__Utils.html#ab104736fb6a0163bfaf0d88965c8fb52',1,'SDOM::SDL_Utils::registerLua()']]],
+  ['registerdomtype_1',['registerDomType',['../classSDOM_1_1Factory.html#a8862aa32cdf361e08525216ac7976eb3',1,'SDOM::Factory']]],
+  ['registereventtype_2',['registerEventType',['../classSDOM_1_1EventType.html#a9aa6ac9ec3cbfbac5b3340dd075c827d',1,'SDOM::EventType']]],
+  ['registerlua_3',['registerlua',['../classSDOM_1_1Event.html#a4f6b28e5635e88595288a6c66de4a74a',1,'SDOM::Event::registerLua()'],['../classSDOM_1_1EventType.html#af935779818a609d71a1a9508ffdaa36a',1,'SDOM::EventType::registerLua()'],['../classSDOM_1_1SDL__Utils.html#ab104736fb6a0163bfaf0d88965c8fb52',1,'SDOM::SDL_Utils::registerLua()']]],
+  ['registerluabindings_4',['registerLuaBindings',['../classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f',1,'SDOM::IDataObject']]],
   ['registeron_5flua_5',['registerOn_lua',['../namespaceSDOM.html#a406a87a192bdc79f998752010300908f',1,'SDOM']]],
   ['registeronevent_6',['registerOnEvent',['../classSDOM_1_1Core.html#a5a6f3fa3f33d9f24d08a2242bab15b04',1,'SDOM::Core']]],
   ['registeronevent_5flua_7',['registerOnEvent_lua',['../namespaceSDOM.html#a603bc5740b5f5513f3f8e8cfdd16d91b',1,'SDOM']]],

@@ -92,7 +92,7 @@ namespace SDOM
         // Their methods must be idempotent and must not overwrite existing names.
     }
 
-    void DisplayObject::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
+    void DisplayObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
         if (DEBUG_REGISTER_LUA) 
         {

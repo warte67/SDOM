@@ -2,7 +2,7 @@ var searchData=
 [
   ['tabenabled_0',['tabEnabled',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a2d89b34df7efd356fb474dfe984011e3',1,'SDOM::IDisplayObject::InitStruct']]],
   ['tabpriority_1',['tabPriority',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7',1,'SDOM::IDisplayObject::InitStruct']]],
-  ['target_2',['target',['../classSDOM_1_1Event.html#a96a4bc2222c61d39430efab5180917ec',1,'SDOM::Event::target'],['../classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8ac41a31890959544c6523af684561abe5',1,'SDOM::Event::Target']]],
+  ['target_2',['target',['../classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8ac41a31890959544c6523af684561abe5',1,'SDOM::Event::Target'],['../classSDOM_1_1Event.html#a96a4bc2222c61d39430efab5180917ec',1,'SDOM::Event::target']]],
   ['test_20binary_20after_20these_20changes_20tt_20compile_20tt_20in_20tt_20examples_20test_20tt_20—_20build_20completed_20and_20tt_20prog_20tt_20produced_20successfully_3',['- Verified: rebuilt the examples and test binary after these changes (&lt;tt&gt;./compile&lt;/tt&gt; in &lt;tt&gt;examples/test&lt;/tt&gt;) — build completed and &lt;tt&gt;prog&lt;/tt&gt; produced successfully.',['../md_docs_2progress.html#autotoc_md170',1,'']]],
   ['test_20prog_3a_20unit_20tests_20pass_20observed_20expected_20runtime_20output_20for_20oninit_20onupdate_20onrender_20onevent_20onquit_20lua_20handlers_4',['- Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.',['../md_docs_2progress.html#autotoc_md169',1,'']]],
   ['tests_5',['Unit Tests',['../md_docs_2core__framework.html#autotoc_md22',1,'']]],
@@ -39,14 +39,14 @@ var searchData=
   ['tt_20compile_20tt_20in_20tt_20examples_20test_20tt_20—_20build_20completed_20and_20tt_20prog_20tt_20produced_20successfully_36',['- Verified: rebuilt the examples and test binary after these changes (&lt;tt&gt;./compile&lt;/tt&gt; in &lt;tt&gt;examples/test&lt;/tt&gt;) — build completed and &lt;tt&gt;prog&lt;/tt&gt; produced successfully.',['../md_docs_2progress.html#autotoc_md170',1,'']]],
   ['tt_20resource_5fptr_20tt_20design_37',['Resource Pointer (&lt;tt&gt;resource_ptr&lt;/tt&gt;) Design',['../md_docs_2extensible__factory.html#autotoc_md130',1,'']]],
   ['two_20trees_20in_20the_20garden_38',['Two Trees in the Garden',['../md_docs_2object__handles.html#autotoc_md139',1,'']]],
-  ['type_39',['type',['../md_README.html#autotoc_md190',1,'IDataObject: Data-Driven Base Type'],['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a0faa47d35c52461da9e43a87f5384deb',1,'SDOM::IDisplayObject::InitStruct::type'],['../classSDOM_1_1Event.html#a646fd331c0ed1a86515a357e10364c9b',1,'SDOM::Event::type']]],
+  ['type_39',['type',['../md_README.html#autotoc_md190',1,'IDataObject: Data-Driven Base Type'],['../structSDOM_1_1IAssetObject_1_1InitStruct.html#a943787c07c8eae0928dcc2cfacbde746',1,'SDOM::IAssetObject::InitStruct::type'],['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a0faa47d35c52461da9e43a87f5384deb',1,'SDOM::IDisplayObject::InitStruct::type'],['../classSDOM_1_1Event.html#a646fd331c0ed1a86515a357e10364c9b',1,'SDOM::Event::type']]],
   ['type_201_40',['1. Core-based DOM Traversal (Type 1)',['../md_docs_2dom__propagation.html#autotoc_md74',1,'']]],
   ['type_202_41',['2. EventManager-based Event Traversal (Type 2)',['../md_docs_2dom__propagation.html#autotoc_md76',1,'']]],
   ['type_203_42',['3. Factory-based Global Traversal (Type 3)',['../md_docs_2dom__propagation.html#autotoc_md78',1,'']]],
   ['type_204_43',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_docs_2dom__propagation.html#autotoc_md79',1,'']]],
   ['type_20management_44',['Resource Type Management',['../md_docs_2extensible__factory.html#autotoc_md110',1,'']]],
-  ['type_5f_45',['type_',['../classSDOM_1_1IDisplayObject.html#a8bf31785ce47d1bcc093e9d9db5b5c48',1,'SDOM::IDisplayObject']]],
+  ['type_5f_45',['type_',['../classSDOM_1_1IAssetObject.html#acf24a17e1284129dbef77cfc229bba05',1,'SDOM::IAssetObject::type_'],['../classSDOM_1_1IDisplayObject.html#a8bf31785ce47d1bcc093e9d9db5b5c48',1,'SDOM::IDisplayObject::type_']]],
   ['typecreators_46',['TypeCreators',['../structSDOM_1_1TypeCreators.html',1,'SDOM']]],
-  ['typename_47',['typename',['../classSDOM_1_1Stage.html#a014c36ff960df28e659f4b2c69b12fdd',1,'SDOM::Stage::TypeName'],['../classSDOM_1_1IDisplayObject.html#a42340b92b2f8e59e23dae8598fafc6cc',1,'SDOM::IDisplayObject::TypeName']]],
+  ['typename_47',['typename',['../classSDOM_1_1IAssetObject.html#abcf0f3bc00c85b028222c08e6eeea92d',1,'SDOM::IAssetObject::TypeName'],['../classSDOM_1_1IDisplayObject.html#a42340b92b2f8e59e23dae8598fafc6cc',1,'SDOM::IDisplayObject::TypeName'],['../classSDOM_1_1Stage.html#a014c36ff960df28e659f4b2c69b12fdd',1,'SDOM::Stage::TypeName']]],
   ['types_48',['types',['../md_docs_2object__handles.html#autotoc_md141',1,'Handle Types'],['../md_docs_2dom__propagation.html#autotoc_md73',1,'Traversal Types']]]
 ];

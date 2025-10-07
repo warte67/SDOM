@@ -158,7 +158,7 @@ namespace SDOM
 
         virtual bool onInit() = 0;
         virtual void onQuit() = 0;
-        virtual bool onUnitTest() { return true; }
+        virtual bool onUnitTest() override { return true; }
 
         // void fromLua(const sol::table& lua, sol::state_view lua_state);
         // sol::table toLua(sol::state_view lua) const;
@@ -184,18 +184,18 @@ namespace SDOM
         // --- New Virtual LUA Registration for Sol2 ---
     public:
         
-        void registerLua(const std::string& typeName, sol::state_view lua)      // Depricated
-        { }                                  // Depricated
+        // void registerLua(const std::string& typeName, sol::state_view lua)      // Depricated
+        // { }                                  // Depricated
 
         // New preferred Lua binding path
-        virtual void registerDisplayObject(const std::string& typeName, sol::state_view lua)
+        void registerLuaBindings(const std::string& typeName, sol::state_view lua)
         {
-            this->_registerDisplayObject(typeName, lua);
+            this->_registerLuaBindings(typeName, lua);
         }
 
     protected:
 
-        virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua)
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua)
         {
             if (DEBUG_REGISTER_LUA)
             {
@@ -204,13 +204,10 @@ namespace SDOM
                         << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
             }
         }   
-
-
         
         sol::usertype<IDataObject> objHandleType_;
 
         // --- End New Virtual LUA Registration for Sol2 ---
-
 
     protected:
 

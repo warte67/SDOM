@@ -889,12 +889,15 @@ Progress Updates</h1>
 ToDo:</h1>
 <p><code></p><ul>
 <li>Build out the IAssetObject interface and the AssetObject handle type</li>
-<li>Expand Lua examples and add more regression tests (invalid/nil handles, wrong-typed args, double-add/remove edge cases).</li>
-<li>Expand Lua scripting examples and documentation.</li>
-<li>Continue improving resource management and garbage collection.</li>
-<li>Plan for future language hooks (e.g., Python).</li>
-<li>Maintain and update Doxygen and Markdown docs as features evolve.</li>
-<li>Implement garbage_collection() for display objects. </li>
+<li>Design and implement the AssetObject handle class, mirroring the DisplayObject handle pattern, and integrate with Factory.</li>
+<li>Preload and test two font assets:<ul>
+<li>An 8x8 pixel bitmap font loaded from internal resources (using a SpriteSheetAsset).</li>
+<li>A TrueType font loaded as a separate IAssetObject.</li>
+</ul>
+</li>
+<li>Define and scaffold an IFontObject interface to unify font asset handling (bitmap and TTF).</li>
+<li>Plan and begin implementation of SpriteSheetAsset as an IAssetObject to support bitmap font rendering.</li>
+<li>Add unit tests for asset registration, font loading, and property access. </li>
 </ul>
 <p></code></p>
 </div></div><!-- contents -->

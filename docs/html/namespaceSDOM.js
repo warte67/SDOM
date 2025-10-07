@@ -9,6 +9,7 @@ var namespaceSDOM =
     [ "EventTypeHash", "structSDOM_1_1EventTypeHash.html", "structSDOM_1_1EventTypeHash" ],
     [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
     [ "Factory", "classSDOM_1_1Factory.html", "classSDOM_1_1Factory" ],
+    [ "IAssetObject", "classSDOM_1_1IAssetObject.html", "classSDOM_1_1IAssetObject" ],
     [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
     [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
     [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],

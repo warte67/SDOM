@@ -374,10 +374,9 @@ Notes & test ideas:
 
     protected:
         // --- Lua Registration --- //
-        virtual void _registerLua(const std::string& typeName, sol::state_view lua); // Deprecated
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
         sol::usertype<IDisplayObject> objHandleType_;
 
-        virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua);
     
     };
 

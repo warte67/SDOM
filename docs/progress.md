@@ -486,6 +486,11 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Next steps:
         - Add selective unit tests for remaining UNTESTED Lua wrappers (event flexible forms, removeDescendant variants, descriptor overloads) or add small C++ wrapper overloads to accept more permissive Lua call shapes.
         - Consider adding a C++-side string->AnchorPoint Lua wrapper for ergonomic anchor calls from scripts.
+    - **Performance Milestone:**  
+        - The SDOM main loop is now 98% complete and matches the design for the finished library.
+        - Benchmarks show well over 10,000 frames per second on current hardware.
+        - The SDOM API introduces only ~100 microseconds of overhead per frame, which is negligible for real-time 2D applications and 2D/3D games. This performance is without extensive post development optimization.
+        - This validates the architectural choices and confirms that the system is ready for further feature development and integration.
 
 ---
 - **Milestone - DisplayObject Complete:**  
@@ -520,9 +525,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 ---
 # ToDo:
 - Build out the IAssetObject interface and the AssetObject handle type
-- Expand Lua examples and add more regression tests (invalid/nil handles, wrong-typed args, double-add/remove edge cases).
-- Expand Lua scripting examples and documentation.
-- Continue improving resource management and garbage collection.
-- Plan for future language hooks (e.g., Python).
-- Maintain and update Doxygen and Markdown docs as features evolve.
-- Implement garbage_collection() for display objects.
+- Design and implement the AssetObject handle class, mirroring the DisplayObject handle pattern, and integrate with Factory.
+- Preload and test two font assets:
+    - An 8x8 pixel bitmap font loaded from internal resources (using a SpriteSheetAsset).
+    - A TrueType font loaded as a separate IAssetObject.
+- Define and scaffold an IFontObject interface to unify font asset handling (bitmap and TTF).
+- Plan and begin implementation of SpriteSheetAsset as an IAssetObject to support bitmap font rendering.
+- Add unit tests for asset registration, font loading, and property access.

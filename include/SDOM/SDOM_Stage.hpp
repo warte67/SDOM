@@ -74,9 +74,9 @@ namespace SDOM
 
     protected:
         // --- Lua Registration --- //
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
         sol::usertype<Stage> objHandleType_;
 
-        virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua);
 
     };
 

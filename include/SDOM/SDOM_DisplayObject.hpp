@@ -156,7 +156,7 @@ namespace SDOM
         // Resolve a Lua child spec (string, DisplayObject, or table{ child=... | name=... })
         static DisplayObject resolveChildSpec(const sol::object& spec);
 
-        virtual void _registerDisplayObject(const std::string& typeName, sol::state_view lua) override;
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
     }; // end class DisplayObject
 

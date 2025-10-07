@@ -273,7 +273,7 @@ $(document).ready(function(){initNavTree('SDOM__DisplayObject_8hpp_source.html',
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        <span class="comment">// Resolve a Lua child spec (string, DisplayObject, or table{ child=... | name=... })</span></div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        <span class="keyword">static</span> <a class="code hl_class" href="classSDOM_1_1DisplayObject.html">DisplayObject</a> resolveChildSpec(<span class="keyword">const</span> sol::object&amp; spec);</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> _registerDisplayObject(<span class="keyword">const</span> std::string&amp; typeName, sol::state_view lua) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> _registerLuaBindings(<span class="keyword">const</span> std::string&amp; typeName, sol::state_view lua) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    }; <span class="comment">// end class DisplayObject</span></div>
 </div>

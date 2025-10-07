@@ -80,10 +80,10 @@ namespace SDOM
     }
 
 
-    void Stage::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
+    void Stage::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
         // Call base class registration to include inherited properties/commands
-        SUPER::_registerDisplayObject(typeName, lua);
+        SUPER::_registerLuaBindings(typeName, lua);
 
         if (DEBUG_REGISTER_LUA)
         {

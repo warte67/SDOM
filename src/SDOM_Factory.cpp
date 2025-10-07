@@ -1,12 +1,7 @@
 // SDOM_Factory.cpp
 
 #include <SDOM/SDOM.hpp>
-
-// #include <SDOM/SDOM_Handle.hpp>
-// #include <SDOM/SDOM_DisplayObject.hpp>  // Deprecated
-// #include <SDOM/SDOM_ResHandle.hpp>  // Deprecated
 #include <SDOM/SDOM_DisplayObject.hpp>
-
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Stage.hpp>
@@ -25,11 +20,11 @@ namespace SDOM
     {
         // --- Lua UserType Registration --- //
         Core& core = getCore();
-        core._registerDisplayObject("Core", core.getLua());
+        core._registerLuaBindings("Core", core.getLua());
 
         // // register the DisplayObject handle last so other types can use it
         // DisplayObject prototypeHandle; // Default DisplayObject for registration
-        // prototypeHandle._registerDisplayObject("DisplayObject", core.getLua());
+        // prototypeHandle._registerLuaBindings("DisplayObject", core.getLua());
 
         // register the Stage
         registerDomType("Stage", TypeCreators{
@@ -124,7 +119,7 @@ namespace SDOM
         DisplayObject prototypeHandle = create(typeName, init);
         if (prototypeHandle)
         {
-            prototypeHandle->registerDisplayObject(typeName, SDOM::getLua());
+            prototypeHandle->_registerLuaBindings(typeName, SDOM::getLua());
             destroyDisplayObject(prototypeHandle.get()->getName()); // Clean up prototype
         }   
     }

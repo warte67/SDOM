@@ -399,10 +399,10 @@ bool Box::onUnitTest()
 
 
 
-void Box::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
+void Box::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 {
     // Include inherited bindings first
-    SUPER::_registerDisplayObject(typeName, lua);
+    SUPER::_registerLuaBindings(typeName, lua);
 
     // if (DEBUG_REGISTER_LUA)
     {

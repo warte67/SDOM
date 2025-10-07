@@ -26,7 +26,7 @@ namespace SDOM
         
         // register the DisplayObject handle last so other types can use it
         DisplayObject prototypeHandle; // Default DisplayObject for registration
-        prototypeHandle._registerDisplayObject("DisplayObject", lua_);
+        prototypeHandle._registerLuaBindings("DisplayObject", lua_);
 
         SDL_Utils::registerLua(lua_);
         factory_ = new Factory();
@@ -143,7 +143,7 @@ namespace SDOM
         try {
             // Ensure Core usertype is registered into this lua state
             // this->_registerLua("Core", lua_);
-            this->_registerDisplayObject("Core", lua_);
+            this->_registerLuaBindings("Core", lua_);
 
             // Prefer scripts that return the config table. If the chunk
             // returns a table, use it. Otherwise fall back to a global
@@ -167,7 +167,7 @@ namespace SDOM
             // If the script overwrote the global `Core` (common when authors
             // set a config table into Core), restore our forwarding table so
             // callbacks and later code see the table-based API. The
-            // _registerDisplayObject() created CoreForward.
+            // _registerLuaBindings() created CoreForward.
             try {
                 if (lua_["CoreForward"].valid()) {
                     lua_["Core"] = lua_["CoreForward"];
@@ -306,7 +306,7 @@ namespace SDOM
 
                 // Treat as inline Lua code
                 // this->_registerLua("Core", lua_);
-                this->_registerDisplayObject("Core", lua_);
+                this->_registerLuaBindings("Core", lua_);
                 try {
                     sol::load_result chunk = lua_.load(configFile);
                     if (!chunk.valid()) {
@@ -1368,16 +1368,10 @@ namespace SDOM
     // --- Lua UserType Registration --- //
 
 
-
-    // DEPRECATED -- use _registerDisplayObject() instead
-    void Core::_registerLua(const std::string& typeName, sol::state_view lua)
-    {
-    }
-
-    void Core::_registerDisplayObject(const std::string& typeName, sol::state_view lua)
+    void Core::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
         // --- Call base class registration to include inherited properties/commands --- //
-        SUPER::_registerDisplayObject(typeName, lua);
+        SUPER::_registerLuaBindings(typeName, lua);
 
         // --- Debug output --- //
         if (DEBUG_REGISTER_LUA)
