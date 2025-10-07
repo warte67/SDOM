@@ -128,8 +128,8 @@ namespace SDOM
     {
         if (DEBUG_REGISTER_LUA)
         {
-            std::cout << "Registered " << "AssetObject"
-                      << " Lua bindings for type: " << typeName << std::endl;
+            std::cout << CLR::MAGENTA << "Registered " "AssetObject"
+                                    << " Lua bindings for type: " << typeName << CLR::RESET << std::endl;
         }
 
         // Ensure minimal shared handle exists.
