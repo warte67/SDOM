@@ -1451,6 +1451,7 @@ namespace SDOM
             ));
         }
         bind_R_do("hasChild",                   ::SDOM::hasChild_lua);
+        bind_R_str("getChild",                  ::SDOM::getChild_lua);
         bind_R_0("getParent",                   ::SDOM::getParent_lua);
         bind_void_do("setParent",               ::SDOM::setParent_lua);
         bind_R_do_nc("isAncestorOf",            [](IDisplayObject* o, const DisplayObject& d){ return ::SDOM::isAncestorOf_lua(o, d); });

@@ -356,29 +356,531 @@ namespace SDOM
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        if (!ok) {
-            std::cout << "[Debug] DisplayObject_test10 Lua error: " << err << std::endl;
-        }
-            return UnitTests::run("DisplayObject #10", "Verify sortChildrenByPriority and setToHighest/Lowest with child specs", [=]() { return ok; });
+        if (!ok) { std::cout << "[Debug] DisplayObject_test10 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayObject #10", "Verify sortChildrenByPriority and setToHighest/Lowest with child specs", [=]() { return ok; });
     }
 
+    bool DisplayObject_test11()
+    {
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+
+        auto res = lua.script(R"(
+            -- retrieve the current stage object
+                local st = getStage()
+                if (not st) then
+                    -- print("DisplayObject_test11: failed to get stage")
+                    return { ok = false, err = 'no stage' }
+                end
+
+            -- void cleanAll_lua(IDisplayObject* obj); 
+               --  st:cleanAll() -- nothing to return.  It will work it it works.
+                -- Fail fast if the binding is missing so test surfaces the error
+                if type(st.cleanAll) ~= 'function' then error("Missing Lua binding: IDisplayObject.cleanAll") end
+                st:cleanAll()
+                
+            -- test the dirty accessors / mutators
+                local dirty = st:getDirty() -- save the current state
+                -- print("DisplayObject_test11: initial dirty state is ", tostring(dirty))
+                st:setDirty() -- this SHOULD be setting the dirty flag to true
+                -- print("DisplayObject_test11: secondary dirty state is ", tostring(st:getDirty()))
+
+                if not st:isDirty() then
+                    -- print("DisplayObject_test11: setDirty() failed")
+                    return { ok = false, err = 'setDirty() failed' }
+                end
+
+            -- Hierarchy management (getChild, getParent)
+                local redishBox = st:getChild('redishBox')
+                if not redishBox then
+                    print("DisplayObject_test11: getChild('redishBox') failed")
+                    return { ok = false, err = "getChild('redishBox') failed" }
+                end
+                local parent = redishBox:getParent()
+                if not parent then
+                    print("DisplayObject_test11: getParent() failed")
+                    return { ok = false, err = "getParent() failed" }
+                end
+                if parent ~= st then
+                    print("DisplayObject_test11: getParent() mismatch")
+                    return { ok = false, err = "getParent() mismatch" }
+                end
+
+            -- return success
+                return { ok = true }
+        )").get<sol::table>();
+
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!ok) { std::cout << "[Debug] DisplayObject_test11 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayObject #11", "Dirty DisplayObject and Hierarchy Management", [=]() { return ok; });
+    } // END bool DisplayObject_test11()
+   
+    bool DisplayObject_test12()
+    {
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+
+        auto res = lua.script(R"(
+            -- retrieve the current stage object
+                local st = getStage()
+                if (not st) then
+                    print("DisplayObject_test12: failed to get stage")
+                    return { ok = false, err = 'no stage' }
+                end
+            -- test the bounds of the blueishBox
+                local blueishBox = st:getChild('blueishBox')
+                if not blueishBox then
+                    print("DisplayObject_test12: getChild('blueishBox') failed")
+                    return { ok = false, err = "getChild('blueishBox') failed" }
+                end
+                local b = blueishBox:getBounds()
+                if not b then
+                    print("DisplayObject_test12: getBounds() failed")
+                    return { ok = false, err = "getBounds() failed" }
+                end
+                if not (b.x == 235 and b.y == 65 and b.width == 245 and b.height == 220) then
+                    print("DisplayObject_test12: getBounds() unexpected values")
+                    return { ok = false, err = "getBounds() unexpected values" }
+                end
+            -- get blueishBox color
+                local color = blueishBox:getColor()
+                if not color then
+                    print("DisplayObject_test12: getColor() failed")
+                    return { ok = false, err = "getColor() failed" }
+                end
+                if not (color.r == 75 and color.g == 75 and color.b == 225 and color.a == 255) then
+                    print("DisplayObject_test12: getColor() unexpected values")
+                    return { ok = false, err = "getColor() unexpected values" }
+                end
+            -- set blueishColor bounds to new values
+                blueishBox:setBounds({ x = 240, y = 70, width = 250, height = 225 })
+                local b2 = blueishBox:getBounds()
+                if not b2 then
+                    print("DisplayObject_test12: getBounds() after setBounds failed")
+                    return { ok = false, err = "getBounds() after setBounds failed" }
+                end
+                if not (b2.x == 240 and b2.y == 70 and b2.width == 250 and b2.height == 225) then
+                    print("DisplayObject_test12: setBounds() did not update values")
+                    return { ok = false, err = "setBounds() did not update values" }
+                end
+            -- set blueishBox color to new values
+                blueishBox:setColor({ r = 20, g = 20, b = 128, a = 255 })
+                local color2 = blueishBox:getColor()
+                if not color2 then
+                    print("DisplayObject_test12: getColor() after setColor failed")
+                    return { ok = false, err = "getColor() after setColor failed" }
+                end
+                if not (color2.r == 20 and color2.g == 20 and color2.b == 128 and color2.a == 255) then
+                    print("DisplayObject_test12: setColor() did not update values")
+                    return { ok = false, err = "setColor() did not update values" }
+                end
+
+               return { ok = true }
+        )").get<sol::table>();
+
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!ok) { std::cout << "[Debug] DisplayObject_test11 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayObject #12", "Type and Property Access", [=]() { return ok; });
+    } // END bool DisplayObject_test12()        
+
+    bool DisplayObject_test13()
+    {
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+
+        auto res = lua.script(R"(
+            -- retrieve the current stage object
+                local st = getStage()
+                if (not st) then
+                    -- print("DisplayObject_test13: failed to get stage")
+                    return { ok = false, err = 'no stage' }
+                end
+            
+            -- get handle to the blueishBox
+                local blueishBox = st:getChild('blueishBox')
+                if not blueishBox then
+                    -- print("DisplayObject_test13: getChild('blueishBox') failed")
+                    return { ok = false, err = "getChild('blueishBox') failed" }
+                end
+
+            -- get handle to the redishBox
+                local redishBox = st:getChild('redishBox')
+                if not redishBox then
+                    -- print("DisplayObject_test13: getChild('redishBox') failed")
+                    return { ok = false, err = "getChild('redishBox') failed" }
+                end
+
+            -- fetch the current keyboard focus object
+                local kf = Core:getKeyboardFocusedObject()
+                if not kf then
+                    -- print("DisplayObject_test13: getKeyboardFocusedObject() returned nil")
+                    return { ok = false, err = "getKeyboardFocusedObject() returned nil" }
+                end
+                -- local kfName = kf:getName()
+                -- if kfName == "" then
+                --     kfName = "nil"
+                --     print("DisplayObject_test13: current keyboard focus is '" .. kfName .. "'")    
+                -- end                
+            
+            -- set keyboard focus to blueishBox
+                blueishBox:setKeyboardFocus()
+                local kf2 = Core:getKeyboardFocusedObject()
+                if not kf2 then
+                    -- print("DisplayObject_test13: getKeyboardFocusedObject() after setKeyboardFocus returned nil")
+                    return { ok = false, err = "getKeyboardFocusedObject() after setKeyboardFocus returned nil" }
+                end
+                if kf2 ~= blueishBox then
+                    -- print("DisplayObject_test13: setKeyboardFocus did not update focus to blueishBox")
+                    return { ok = false, err = "setKeyboardFocus did not update focus to blueishBox" }
+                end
+
+            -- test isKeyboardFocused blueishBox
+                if not blueishBox:isKeyboardFocused() then
+                    -- print("DisplayObject_test13: isKeyboardFocused() returned false after setKeyboardFocus")
+                    return { ok = false, err = "isKeyboardFocused() returned false after setKeyboardFocus" }
+                end   
+
+            -- set keyboard focus to redishBox
+                redishBox:setKeyboardFocus()
+                local kf2 = Core:getKeyboardFocusedObject()
+                if not kf2 then
+                    -- print("DisplayObject_test13: getKeyboardFocusedObject() after setKeyboardFocus returned nil")
+                    return { ok = false, err = "getKeyboardFocusedObject() after setKeyboardFocus returned nil" }
+                end
+                if kf2 ~= redishBox then
+                    -- print("DisplayObject_test13: setKeyboardFocus did not update focus to redishBox")
+                    return { ok = false, err = "setKeyboardFocus did not update focus to redishBox" }
+                end
+
+            -- test isKeyboardFocused redishBox
+                if not redishBox:isKeyboardFocused() then
+                    -- print("DisplayObject_test13: isKeyboardFocused() returned false after setKeyboardFocus")
+                    return { ok = false, err = "isKeyboardFocused() returned false after setKeyboardFocus" }
+                end   
+
+            -- test isMouseHovered blueishBox                
+                -- push down/up and pump from Lua
+                Core:pushMouseEvent({ x = 365, y = 182, type = "motion", button = 1 })
+                Core:pumpEventsOnce()
+                local blueHover = Core:getMouseHoveredObject()
+                if not blueHover then
+                    -- print("DisplayObject_test13: getMouseHoveredObject() returned nil after motion over blueishBox")
+                    return { ok = false, err = "getMouseHoveredObject() returned nil after motion over blueishBox" }
+                end
+
+            -- test isClickable redishBox
+                blueishBox:setKeyboardFocus()
+                redishBox:setClickable(false)
+                if redishBox:isClickable() then
+                    -- print("DisplayObject_test13: isClickable() returned true for redishBox")
+                    return { ok = false, err = "isClickable() returned true for redishBox" }
+                end 
+                Core:pushMouseEvent({ x = 160, y = 140, type = "down", button = 1 })
+                Core:pushMouseEvent({ x = 160, y = 140, type = "up", button = 1 })
+                Core:pumpEventsOnce()
+                if (redishBox:isKeyboardFocused()) then
+                    -- print("DisplayObject_test13: redishBox received focus on click while not clickable")
+                    return { ok = false, err = "redishBox received focus on click while not clickable" }
+                end
+                redishBox:setClickable(true)
+
+                -- Click the Stage at 0, 0 to defocus the box
+                Core:pushMouseEvent({ x = 0, y = 0, type = "down", button = 1 })
+                Core:pushMouseEvent({ x = 0, y = 0, type = "up", button = 1 })
+                Core:pumpEventsOnce()
+
+               return { ok = true }
+        )").get<sol::table>();
+
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!ok) { std::cout << "[Debug] DisplayObject_test13 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayObject #13", "Focus and Interactivity", [=]() { return ok; });
+    } // END bool DisplayObject_test13()    
+
+    bool DisplayObject_test14()
+    {
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+
+        auto res = lua.script(R"(
+            -- retrieve the current stage object
+                local st = getStage()
+                if (not st) then
+                    -- print("DisplayObject_test14: failed to get stage")
+                    return { ok = false, err = 'no stage' }
+                end
+
+            -- get handle to the blueishBox
+                local blueishBox = st:getChild('blueishBox')
+                if not blueishBox then
+                    -- print("DisplayObject_test14: getChild('blueishBox') failed")
+                    return { ok = false, err = "getChild('blueishBox') failed" }
+                end
+
+            -- getX/getY/getWidth/getHeight
+                local blueX = blueishBox:getX()
+                local blueY = blueishBox:getY()
+                local blueW = blueishBox:getWidth()
+                local blueH = blueishBox:getHeight()
+                if not (blueX == 240) then
+                    return { ok = false, err = "getX() expected 240, got " .. tostring(blueX) }
+                end
+                if not (blueY == 70) then
+                    return { ok = false, err = "getY() expected 70, got " .. tostring(blueY) }
+                end
+                if not (blueW == 250) then
+                    return { ok = false, err = "getWidth() expected 250, got " .. tostring(blueW) }
+                end
+                if not (blueH == 225) then
+                    return { ok = false, err = "getHeight() expected 225, got " .. tostring(blueH) }
+                end
+
+            -- setX/setY/setWidth/setHeight
+                blueishBox:setX(245)
+                blueishBox:setY(75)
+                blueishBox:setWidth(255)
+                blueishBox:setHeight(230)
+                local blueX2 = blueishBox:getX()
+                local blueY2 = blueishBox:getY()
+                local blueW2 = blueishBox:getWidth()
+                local blueH2 = blueishBox:getHeight()
+                if not (blueX2 == 245) then
+                    return { ok = false, err = "setX() expected 245, got " .. tostring(blueX2) }
+                end
+                if not (blueY2 == 75) then
+                    return { ok = false, err = "setY() expected 75, got " .. tostring(blueY2) }
+                end
+                if not (blueW2 == 255) then
+                    return { ok = false, err = "setWidth() expected 255, got " .. tostring(blueW2) }
+                end
+                if not (blueH2 == 230) then
+                    return { ok = false, err = "setHeight() expected 230, got " .. tostring(blueH2) }
+                end
+
+                return { ok = true }
+        )").get<sol::table>();
+
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!ok) { std::cout << "[Debug] DisplayObject_test14 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayObject #14", "Geometry and Layout", [=]() { return ok; });
+    } // END bool DisplayObject_test14()    
 
 
+    bool DisplayObject_test15()
+    {
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+
+        auto res = lua.script(R"lua(
+            -- retrieve the current stage object
+                local st = getStage()
+                if (not st) then
+                    return { ok = false, err = 'no stage' }
+                end
+
+            -- get handle to the blueishBox
+                local blueishBox = st:getChild('blueishBox')
+                if not blueishBox then
+                    return { ok = false, err = "getChild('blueishBox') failed" }
+                end
+
+            -- getX, getY, getWidth, getHeight to establish baseline
+                local blueX = blueishBox:getX()
+                local blueY = blueishBox:getY()
+                local blueW = blueishBox:getWidth()
+                local blueH = blueishBox:getHeight()
+                if not (blueX == 245) then
+                    return { ok = false, err = "getX() expected 245, got " .. tostring(blueX) }
+                end
+                if not (blueY == 75) then
+                    return { ok = false, err = "getY() expected 75, got " .. tostring(blueY) }
+                end
+                if not (blueW == 255) then
+                    return { ok = false, err = "getWidth() expected 255, got " .. tostring(blueW) }
+                end
+                if not (blueH == 230) then
+                    return { ok = false, err = "getHeight() expected 230, got " .. tostring(blueH) }
+                end
+
+            -- keep originals to verify anchors do not alter geometry
+                local origX, origY, origW, origH = blueX, blueY, blueW, blueH
+
+            -- cycle through all four edge anchors, setting each to a different value
+                local AnchorPoints = {
+                "top_left","top_center","top_right",
+                "middle_left","middle_center","middle_right",
+                "bottom_left","bottom_center","bottom_right"
+                }
+
+                local AnchorPointMap = {
+                    top_left = 0, top_center = 1, top_right = 2,
+                    middle_left = 3, middle_center = 4, middle_right = 5,
+                    bottom_left = 6, bottom_center = 7, bottom_right = 8
+                }
+
+                local edges = {
+                    { set = "setAnchorTop",    get = "getAnchorTop"    },
+                    { set = "setAnchorLeft",   get = "getAnchorLeft"   },
+                    { set = "setAnchorBottom", get = "getAnchorBottom" },
+                    { set = "setAnchorRight",  get = "getAnchorRight"  },
+                }
+
+                local obj = Core:getDisplayObject("blueishBox") or getStage():getChild("blueishBox")
+                if not obj then 
+                    return { ok = false, err = "failed to retrieve blueishBox for anchor tests" }
+                end
+
+                for _, edge in ipairs(edges) do
+                    -- ensure methods exist
+                    assert(type(obj[edge.set]) == "function" and type(obj[edge.get]) == "function",
+                            "missing anchor methods for edge: "..edge.set)
+                    for _, ap in ipairs(AnchorPoints) do
+                        local ap_val = AnchorPointMap[ap] or ap
+                        -- pass numeric enum value to C++ setter
+                        obj[edge.set](obj, ap_val)
+                        local cur = obj[edge.get](obj)
+                        if type(cur) == 'number' then
+                            if cur ~= ap_val then
+                                error(("Anchor mismatch (num): expected %s(%d) got %s for %s"):format(ap, ap_val, tostring(cur), edge.set))
+                            end
+                        else
+                            if cur ~= ap then
+                                error(("Anchor mismatch (str): expected %s got %s for %s"):format(ap, tostring(cur), edge.set))
+                            end
+                        end
+
+                        -- verify geometry unchanged
+                        local nx = obj:getX()
+                        local ny = obj:getY()
+                        local nw = obj:getWidth()
+                        local nh = obj:getHeight()
+                        if nx ~= origX then
+                            return { ok = false, err = string.format("Anchor %s changed X: orig=%s now=%s", ap, tostring(origX), tostring(nx)) }
+                        end
+                        if ny ~= origY then
+                            return { ok = false, err = string.format("Anchor %s changed Y: orig=%s now=%s", ap, tostring(origY), tostring(ny)) }
+                        end
+                        if nw ~= origW then
+                            return { ok = false, err = string.format("Anchor %s changed Width: orig=%s now=%s", ap, tostring(origW), tostring(nw)) }
+                        end
+                        if nh ~= origH then
+                            return { ok = false, err = string.format("Anchor %s changed Height: orig=%s now=%s", ap, tostring(origH), tostring(nh)) }
+                        end
+
+                    end
+                end
+
+            return { ok = true }
+        )lua").get<sol::table>();
+
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!ok) { std::cout << "[Debug] DisplayObject_test15 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayObject #15", "Edge Anchors", [=]() { return ok; });
+    } // END bool DisplayObject_test15()
+
+    bool DisplayObject_test16()
+    {
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+
+        auto res = lua.script(R"lua(
+            -- retrieve the current stage object
+                local st = getStage()
+                if (not st) then
+                    return { ok = false, err = 'no stage' }
+                end
+
+            -- get handle to the blueishBox
+                local blueishBox = st:getChild('blueishBox')
+                if not blueishBox then
+                    return { ok = false, err = "getChild('blueishBox') failed" }
+                end
+
+            -- getLeft/getRight/getTop/getBottom to establish baseline
+                local blueL = blueishBox:getLeft()
+                local blueR = blueishBox:getRight()
+                local blueT = blueishBox:getTop()
+                local blueB = blueishBox:getBottom()
+                if not (blueL == 245) then
+                    return { ok = false, err = "getLeft() expected 245, got " .. tostring(blueL) }
+                end
+                if not (blueR == 500) then
+                    return { ok = false, err = "getRight() expected 500, got " .. tostring(blueR) }
+                end
+                if not (blueT == 75) then
+                    return { ok = false, err = "getTop() expected 75, got " .. tostring(blueT) }
+                end
+                if not (blueB == 305) then
+                    return { ok = false, err = "getBottom() expected 305, got " .. tostring(blueB) }
+                end
+
+            -- setLeft/setRight/setTop/setBottom
+                blueishBox:setLeft(250)
+                blueishBox:setRight(510)
+                blueishBox:setTop(80)
+                blueishBox:setBottom(310)
+                local blueL2 = blueishBox:getLeft()
+                local blueR2 = blueishBox:getRight()
+                local blueT2 = blueishBox:getTop()
+                local blueB2 = blueishBox:getBottom()
+                if not (blueL2 == 250) then
+                    return { ok = false, err = "setLeft() expected 250, got " .. tostring(blueL2) }
+                end
+                if not (blueR2 == 510) then
+                    return { ok = false, err = "setRight() expected 510, got " .. tostring(blueR2) }
+                end
+                if not (blueT2 == 80) then
+                    return { ok = false, err = "setTop() expected 80, got " .. tostring(blueT2) }
+                end
+                if not (blueB2 == 310) then
+                    return { ok = false, err = "setBottom() expected 310, got " .. tostring(blueB2) }
+                end
+
+            -- verify getLeft/getRight/getTop/getBottom agree
+                if (blueishBox:getLeft() ~= blueL2) then
+                    return { ok = false, err = "getLeft() disagrees with blueL2" }
+                end
+                if (blueishBox:getRight() ~= blueR2) then
+                    return { ok = false, err = "getRight() disagrees with blueR2" }
+                end
+                if (blueishBox:getTop() ~= blueT2) then
+                    return { ok = false, err = "getTop() disagrees with blueT2" }
+                end
+                if (blueishBox:getBottom() ~= blueB2) then
+                    return { ok = false, err = "getBottom() disagrees with blueB2" }
+                end
+
+            return { ok = true }
+        )lua").get<sol::table>();
+
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!ok) { std::cout << "[Debug] DisplayObject_test16 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayObject #16", "Edge Positions", [=]() { return ok; });
+    } // END bool DisplayObject_test16()
+
+
+    
     bool DisplayObject_UnitTests() 
     {
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
-              [&]() { return DisplayObject_test1(); }, // Verify DisplayObject forwards for priority/z-order exist and are callable
-              [&]() { return DisplayObject_test2(); }, // Verify setClickable/isClickable from Lua
-              [&]() { return DisplayObject_test3(); }, // Verify setEnabled/isEnabled from Lua
-              [&]() { return DisplayObject_test4(); }, // Verify setVisible/isVisible and setHidden/isHidden from Lua
-              [&]() { return DisplayObject_test5(); }, // Verify setKeyboardFocus and Core:getKeyboardFocusedObject
-              [&]() { return DisplayObject_test6(); }, // Verify mouse hover via pushMouseEvent/pumpEventsOnce
-              [&]() { return DisplayObject_test7(); }, // Exercise get/set TabPriority and is/setTabEnabled from Lua
-              [&]() { return DisplayObject_test8(); }, // Exercise setX/setY/setWidth/setHeight and verify getters from Lua
-              [&]() { return DisplayObject_test9(); }, // Exercise setPriority/setZOrder/moveToTop overloads
-              [&]() { return DisplayObject_test10(); } // Verify sortChildrenByPriority and setToHighest/Lowest with child specs
+              [&]() { return DisplayObject_test1(); },  // Verify DisplayObject forwards for priority/z-order exist and are callable
+              [&]() { return DisplayObject_test2(); },  // Verify setClickable/isClickable from Lua
+              [&]() { return DisplayObject_test3(); },  // Verify setEnabled/isEnabled from Lua
+              [&]() { return DisplayObject_test4(); },  // Verify setVisible/isVisible and setHidden/isHidden from Lua
+              [&]() { return DisplayObject_test5(); },  // Verify setKeyboardFocus and Core:getKeyboardFocusedObject
+              [&]() { return DisplayObject_test6(); },  // Verify mouse hover via pushMouseEvent/pumpEventsOnce
+              [&]() { return DisplayObject_test7(); },  // Exercise get/set TabPriority and is/setTabEnabled from Lua
+              [&]() { return DisplayObject_test8(); },  // Exercise setX/setY/setWidth/setHeight and verify getters from Lua
+              [&]() { return DisplayObject_test9(); },  // Exercise setPriority/setZOrder/moveToTop overloads
+              [&]() { return DisplayObject_test10(); }, // Verify sortChildrenByPriority and setToHighest/Lowest with child specs
+              [&]() { return DisplayObject_test11(); }, // Dirty DisplayObject and Extended Hierarchy Management
+              [&]() { return DisplayObject_test12(); }, // Type and Property Access
+              [&]() { return DisplayObject_test13(); }, // Focus and Interactivity
+              [&]() { return DisplayObject_test14(); }, // Geometry and Layout
+              [&]() { return DisplayObject_test15(); }, // Edge Anchors
+              [&]() { return DisplayObject_test16(); }  // Edge Positions
         };
         for (auto& test : tests) 
         {

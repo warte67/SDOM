@@ -160,12 +160,14 @@ function M.on_click(evt)
                 -- parent:removeChild(evt.target)  -- example: remove the clicked object from its parent
                 -- parent:removeChild(evt.target:getName())  -- example: remove by name
                 -- evt.target:removeFromParent()  -- remove self from parent
-                if evt.target and evt.target.isValid and evt.target:isValid() then
-                    s:removeDescendant(evt.target)
-                end  -- remove self from stage
+                -- if evt.target and evt.target.isValid and evt.target:isValid() then
+                --     s:removeDescendant(evt.target)
+                -- end  -- remove self from stage
                 -- setWindowTitle("Removed " .. prettyHandle(evt.target) .. " from stage") -- this works
                 -- shutdown()
                 -- quit()
+
+                evt.target:printTree();
             end
         end
     end

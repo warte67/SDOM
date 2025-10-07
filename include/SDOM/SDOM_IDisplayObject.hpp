@@ -220,7 +220,11 @@ Notes & test ideas:
         // --- Dirty/State Management --- //
         void cleanAll();
         bool getDirty() const { return bIsDirty_; }
-        IDisplayObject& setDirty() { bIsDirty_ = true; return *this; }
+        IDisplayObject& setDirty() 
+        { 
+            bIsDirty_ = true; 
+            return *this; 
+        }
         bool isDirty() const { return bIsDirty_; }
 
         // --- Debug/Utility --- //

@@ -481,8 +481,8 @@ namespace SDOM {
         bool ok = lua.script(R"(
             local st = Core:getStageHandle()
             if not st then return false end
-    local a = Core:getDisplayObject('focusA')
-    local b = Core:getDisplayObject('focusB')
+            local a = Core:getDisplayObject('focusA')
+            local b = Core:getDisplayObject('focusB')
             -- Remove if present
             if a and st:hasChild(a) then st:removeChild(a) end
             if b and st:hasChild(b) then st:removeChild(b) end
