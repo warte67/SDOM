@@ -62,6 +62,7 @@ namespace SDOM
         // --- Object Lookup --- //
         IDisplayObject* getDomObj(const std::string& name);  // rename to getDisplayObject?  overload?
         IAssetObject* getResObj(const std::string& name);
+        
         DisplayObject getDisplayObject(const std::string& name);
         AssetObject getAssetObject(const std::string& name);
         DisplayObject getStageHandle();
