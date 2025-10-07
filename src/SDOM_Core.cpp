@@ -3,6 +3,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Stage.hpp>
+#include <SDOM/SDOM_AssetObject.hpp>
 #include <SDOM/SDOM_DisplayObject.hpp>
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
@@ -27,6 +28,9 @@ namespace SDOM
         // register the DisplayObject handle last so other types can use it
         DisplayObject prototypeHandle; // Default DisplayObject for registration
         prototypeHandle._registerLuaBindings("DisplayObject", lua_);
+
+        AssetObject prototypeAssetHandle; // Default AssetObject for registration
+        prototypeAssetHandle._registerLuaBindings("AssetObject", lua_);
 
         SDL_Utils::registerLua(lua_);
         factory_ = new Factory();

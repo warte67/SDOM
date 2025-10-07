@@ -2,7 +2,7 @@
 #pragma once
 
 #include <sol/sol.hpp>
-#include <SDOM/SDOM.hpp>
+// #include <SDOM/SDOM.hpp>
 // #include <SDOM/SDOM_IDisplayObject.hpp>
 
 namespace SDOM 

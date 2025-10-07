@@ -1,6 +1,6 @@
 // SDOM_IUnitTest.hpp
 #pragma once
-#include <SDOM/SDOM.hpp>
+// #include <SDOM/SDOM.hpp>
 
 namespace SDOM
 {

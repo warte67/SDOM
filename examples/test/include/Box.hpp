@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <SDOM/SDOM.hpp>
+// #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <atomic>
 // #include <SDOM/SDOM_Event.hpp>

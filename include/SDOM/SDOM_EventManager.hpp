@@ -39,7 +39,7 @@
 #ifndef __SDOM_EVENT_MANAGER_HPP__
 #define __SDOM_EVENT_MANAGER_HPP__
 
-#include <SDOM/SDOM.hpp>
+// #include <SDOM/SDOM.hpp>
 
 // #include <queue>`
 // #include <memory>
@@ -50,6 +50,7 @@ namespace SDOM
 {
     class IDisplayObject;
     class Event;
+    class EventType;
 
     class EventManager 
     {

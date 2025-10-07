@@ -1,5 +1,6 @@
 // SDOM_IAssetObject.cpp
 
+#include <sol/sol.hpp> 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IAssetObject.hpp>
 
@@ -11,7 +12,8 @@ namespace SDOM
         , name_(init.name)
         , type_(init.type)
         , filename_(init.filename)
-        , isInternal_(init.isInternal), isLoaded_(false)
+        , isInternal_(init.isInternal)
+        , isLoaded_(false)
     {
     }
 
@@ -41,28 +43,34 @@ namespace SDOM
 
     void IAssetObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerLuaBindings(typeName, lua);
-
         if (DEBUG_REGISTER_LUA)
         {
-            std::string typeNameLocal = "IAssetObject";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
+            std::cout << "Registered " << "IAssetObject"
+                    << " Lua bindings for type: " << typeName << std::endl;
         }
 
-        // // Bind onto the single augmentable handle: "AssetObject"
-        // sol::table handle = AssetObject::ensure_handle_table(lua);
+        // Create the handle usertype once (no constructor), or reuse existing.
+        if (!lua[typeName].valid())
+        {
+            objHandleType_ = lua.new_usertype<IAssetObject>(typeName, sol::no_constructor);
+        }
 
-        // --- Add properties and methods to the handle as needed --- //
-        sol::table assetHandle = lua["AssetObject"];
-        assetHandle.set_function("getName", &IAssetObject::getName, this);
-        assetHandle.set_function("getType", &IAssetObject::getType, this);
-        assetHandle.set_function("getFilename", &IAssetObject::getFilename, this);
-        assetHandle.set_function("isInternal", &IAssetObject::isInternal, this);
-        assetHandle.set_function("isLoaded", &IAssetObject::isLoaded, this);
+        sol::table handle = lua[typeName];
 
+        // idempotent set-if-absent helper
+        auto set_if_absent = [](sol::table& handle, const char* name, auto&& fn) {
+            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                handle.set_function(name, std::forward<decltype(fn)>(fn));
+            }
+        };
+
+        set_if_absent(handle, "getFilename", &IAssetObject::getFilename);
+        set_if_absent(handle, "isInternal", &IAssetObject::isInternal);
+        set_if_absent(handle, "isLoaded", &IAssetObject::isLoaded);
+        set_if_absent(handle, "load", [](IAssetObject& self) { self.onLoad(); });
+        set_if_absent(handle, "unload", [](IAssetObject& self) { self.onUnload(); });
+        
     } // END  void IAssetObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 } // namespace SDOM

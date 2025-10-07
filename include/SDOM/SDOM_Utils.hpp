@@ -1,13 +1,15 @@
 // SDOM_Utility.hpp
-#include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_Core.hpp>
-#include <SDOM/SDOM_Factory.hpp>
-#include <SDOM/SDOM_CLR.hpp>
+// #include <SDOM/SDOM.hpp>
+// #include <SDOM/SDOM_Core.hpp>
+// #include <SDOM/SDOM_Factory.hpp>
+// #include <SDOM/SDOM_CLR.hpp>
 
 #pragma once
 
 namespace SDOM
 {
+    class Stage;
+    
     void quit();
     void shutdown();
     Core& getCore();

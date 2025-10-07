@@ -2,13 +2,17 @@
 
 #pragma once
 
-#include <SDOM/SDOM.hpp>
+// #include <sol/sol.hpp>
+// #include <string>
+// #include <sstream>
+// #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
-// Forward-declare Factory to avoid circular include with Factory.hpp
-// Factory implementation is included in the corresponding .cpp file where needed.
-class Factory;
 
 // NOTE: this ~= "DisplayObject(getName(), getType())"
+
+
+
+
 
 namespace SDOM
 {
@@ -19,7 +23,6 @@ namespace SDOM
     class DisplayObject : public IDataObject
     {
         using SUPER = IDataObject;
-
 
     public:
 
@@ -152,7 +155,7 @@ namespace SDOM
         // virtual void _registerLua(const std::string& typeName, sol::state_view lua);
         sol::usertype<DisplayObject> objHandleType_;
 
-    private:
+    protected:
         // Resolve a Lua child spec (string, DisplayObject, or table{ child=... | name=... })
         static DisplayObject resolveChildSpec(const sol::object& spec);
 

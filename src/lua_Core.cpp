@@ -2,6 +2,8 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
+#include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/lua_Core.hpp>
 
 namespace SDOM

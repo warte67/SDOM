@@ -1,12 +1,30 @@
 #pragma once
-#include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_IDisplayObject.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
+// #include <SDOM/SDOM.hpp>
+// #include <SDOM/SDOM_IDisplayObject.hpp>
+// #include <SDOM/SDOM_DisplayObject.hpp>
+// #include <SDOM/SDOM_IAssetObject.hpp>
+// #include <SDOM/SDOM_AssetObject.hpp>
+
+#include <string>
+#include <memory>
+#include <functional>
+#include <unordered_map>
+#include <vector>
+#include <sol/sol.hpp>
+
+// include the concrete interface headers so unique_ptr<T> is instantiated with a complete type
+// #include <SDOM/SDOM_IDataObject.hpp>
+#include <SDOM/SDOM_IDisplayObject.hpp>   // required for std::unique_ptr<IDisplayObject>
+#include <SDOM/SDOM_IAssetObject.hpp>     // required for std::unique_ptr<IAssetObject>
+ 
 
 namespace SDOM 
 {
     class Stage;
+    class IDisplayObject;
     class DisplayObject;
+    class IAssetObject;
+    class AssetObject;
 
     // --- Type Creation Structs --- //
     struct TypeCreators 
@@ -42,8 +60,10 @@ namespace SDOM
         bool attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig);
 
         // --- Object Lookup --- //
-        IDisplayObject* getDomObj(const std::string& name);
+        IDisplayObject* getDomObj(const std::string& name);  // rename to getDisplayObject?  overload?
+        IAssetObject* getResObj(const std::string& name);
         DisplayObject getDisplayObject(const std::string& name);
+        AssetObject getAssetObject(const std::string& name);
         DisplayObject getStageHandle();
 
         // --- Display Object Management --- //
@@ -77,7 +97,7 @@ namespace SDOM
     private:
         // --- Internal Storage --- //
         std::unordered_map<std::string, std::unique_ptr<IDisplayObject>> displayObjects_;
-        // std::unordered_map<std::string, std::unique_ptr<IResourceObject>> resources_;
+        std::unordered_map<std::string, std::unique_ptr<IAssetObject>> assetObjects_;
         std::unordered_map<std::string, TypeCreators> creators_;
 
         // --- Orphan & Future Child Lists --- //

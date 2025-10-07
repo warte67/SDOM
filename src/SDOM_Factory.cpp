@@ -1,7 +1,11 @@
 // SDOM_Factory.cpp
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_DisplayObject.hpp>
+#include <SDOM/SDOM_IAssetObject.hpp>
+#include <SDOM/SDOM_AssetObject.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Stage.hpp>
@@ -12,8 +16,9 @@ namespace SDOM
 
     Factory::Factory() : IDataObject()
     {
-        // Seed the static factory in the DisplayObject
+        // Seed the static factory in the DisplayObject and AssetObject handles
         DisplayObject::factory_ = this;
+        AssetObject::factory_ = this;
     }
 
     bool Factory::onInit()
@@ -133,6 +138,16 @@ namespace SDOM
         }
         return nullptr;
     }
+
+    IAssetObject* Factory::getResObj(const std::string& name)
+    {
+        auto it = assetObjects_.find(name);
+        if (it != assetObjects_.end()) 
+        {
+            return dynamic_cast<IAssetObject*>(it->second.get());
+        }
+        return nullptr;
+    }
     
     DisplayObject Factory::getDisplayObject(const std::string& name) 
     {
@@ -146,6 +161,24 @@ namespace SDOM
         return DisplayObject();
     }
 
+    AssetObject Factory::getAssetObject(const std::string& name) 
+    {
+        auto it = assetObjects_.find(name);
+        if (it != assetObjects_.end()) 
+        {
+            AssetObject out;
+            out.name_ = name;
+            out.type_ = it->second->getType();
+            // Try to recover filename if the stored object implements IAssetObject
+            if (auto* res = dynamic_cast<IAssetObject*>(it->second.get())) {
+                out.filename_ = res->getFilename();
+            }
+            return out;
+        }
+        // Return an empty AssetObject if not found
+        return AssetObject();
+    }
+    
     DisplayObject Factory::getStageHandle() 
     {
         Stage* stage = getStage();
@@ -169,7 +202,7 @@ namespace SDOM
             maxStageHeight = texture->h;
         }
 
-    // Minimum required properties (x, y, width, height now optional)
+        // Minimum required properties (x, y, width, height now optional)
         std::vector<std::string> missing;
         if (!config["name"].valid()) missing.push_back("name");
         if (!config["type"].valid()) missing.push_back("type");

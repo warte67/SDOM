@@ -28,8 +28,9 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
-#include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_IDataObject.hpp>
+
 namespace SDOM
 {
 

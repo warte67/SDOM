@@ -1,4 +1,5 @@
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_CLR.hpp>
 #if defined(__linux__) || defined(__APPLE__)
 #include <termios.h>

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <SDOM/SDOM.hpp>
+// #include <SDOM/SDOM.hpp>
 #include <atomic>
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
+// #include <SDOM/SDOM_DisplayObject.hpp>
 
 namespace SDOM
 {
@@ -14,6 +14,7 @@ namespace SDOM
     class EventManager;
     class Stage;
     class IDisplayObject;
+    class DisplayObject;
 
     /**
      * @class Core

@@ -84,66 +84,21 @@ Summary:
 #ifndef __SDOM_IDataObject_HPP__
 #define __SDOM_IDataObject_HPP__
 
-#include <SDOM/SDOM.hpp>
-// #define SOL_ALL_AUTOMAGIC 0
-// #include <sol/sol.hpp>
+// Avoid including the heavy umbrella SDOM.hpp here to prevent include cycles.
+// We still need small utilities used by this header: CLR (for colored prints)
+
+#include <sol/sol.hpp>
+#include <SDOM/SDOM_CLR.hpp>
 #include <SDOM/SDOM_IUnitTest.hpp>
 
+// Ensure DEBUG_REGISTER_LUA exists (normally provided by SDOM.hpp). If the
+// umbrella header is included by a TU it will override this; this definition
+// acts as a safe default when headers are included individually.
+// #ifndef DEBUG_REGISTER_LUA
+// // #define DEBUG_REGISTER_LUA 0
+// constexpr bool DEBUG_REGISTER_LUA = true;
+// #endif
 
-/*  Saved a note for the DisplayObject type
-
-+    // Return a non-owning raw pointer to the requested concrete type.
-+    // Example: auto* box = displayObj.as<Box>();
-+    // Returned pointer is non-owning and must not be used after the underlying object is destroyed.
-+    template<typename T>
-+    T* as() const
-+    {
-+        if (!handle_.isValid()) return nullptr;
-+        return dynamic_cast<T*>(handle_.get());
-+    }
-+
-+    // Convenience: get raw IDisplayObject pointer (non-owning), or nullptr if not available.
-+    IDisplayObject* get() const
-+    {
-+        if (!handle_.isValid()) return nullptr;
-+        return dynamic_cast<IDisplayObject*>(handle_.get());
-+    }
-
-Terminology (canonical)
-
-- DOM Node (the node / actual object)
-  - The concrete object instance owned by the Factory.
-  - Implements IDisplayObject (virtual interface) and contains the real state and behavior.
-  - Access from C++ via DisplayObject::get() which returns a non‑owned raw pointer (IDisplayObject*).
-
-- DisplayObject (the handle)
-  - A handle/holder to a DOM Node (internally owned by the Factory).
-  - References the lifetime of the DOM Node via Factory ownership semantics.
-  - Provides safe accessors, property APIs and forwards mutators to the underlying DOM Node.
-  - This is the canonical C++ handle type name we keep.
-
-- AssetObject (asset handle)
-  - A handle/holder to a non‑visual resource (texture, sound, data blob) managed by the Factory.
-  - Use AssetHandle (alias) as the handle type exposed to C++ and Lua where appropriate.
-
-- Resource (umbrella)
-  - Generic term encompassing both DisplayObjects (visual) and AssetObjects (non-visual).
-
-Guidelines / invariants
-
-- Be explicit about ownership: DisplayObject == handle (not the owned DOM Node); 
-    DOM Node == Factory-owned object.
-- C++ APIs that need raw-pointer performance should use .get() with lifetime disclaimers.
-- Register a single centralized Lua usertype (DisplayObject) exposing the handle API; 
-    do not expose raw DOM Node internals to Lua.
-- Add helper accessors on the handle as needed rather than exposing implementation details.
-
-Notes on migration
-- DomHandle and ResHandle are deprecated and will be removed shortly. Add short-term type aliases 
-    if needed for compatibility, but prefer DisplayObject / AssetHandle in all new code and docs.
-
-
-*/
 
 namespace SDOM
 {
@@ -197,7 +152,7 @@ namespace SDOM
 
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua)
         {
-            if (DEBUG_REGISTER_LUA)
+            // if (DEBUG_REGISTER_LUA)
             {
                 std::string typeNameLocal = "IDataObject";
                 std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 

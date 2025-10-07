@@ -1,5 +1,7 @@
 // lua_BindHelpers.cpp --- Lua binding helpers implementation
 
+#include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
 #include <SDOM/lua_BindHelpers.hpp>
 
 namespace SDOM

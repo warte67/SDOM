@@ -1,5 +1,6 @@
 // SDOM_IAssetObject.hpp
 #pragma once
+// #include <sol/sol.hpp> 
 #include <SDOM/SDOM_IDataObject.hpp>
 
 namespace SDOM
@@ -49,7 +50,7 @@ namespace SDOM
 
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-        sol::usertype<IDisplayObject> objHandleType_;
+        sol::usertype<IAssetObject> objHandleType_;
 
     }; // class IAssetObject
 

@@ -96,15 +96,13 @@ Summary:
 #ifndef __SDOM_IDISPLAY_OBJECT_HPP__
 #define __SDOM_IDISPLAY_OBJECT_HPP__
 
-#include <SDOM/SDOM.hpp>   
+// #include <SDOM/SDOM.hpp>   
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <iostream>
 
-// // #include <SDOM/SDOM_Handle.hpp>
-// #include <SDOM/SDOM_DomHandle.hpp>
-// #include <SDOM/SDOM_ResHandle.hpp>
-
 #include <SDOM/SDOM_EventTypeHash.hpp>
+
+#include <SDOM/SDOM.hpp>
 
 
 

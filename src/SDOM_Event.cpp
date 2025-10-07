@@ -40,6 +40,7 @@
 #include <SDOM/SDOM.hpp>
 
 // #include <SDOM/SDOM_Handle.hpp>
+#include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_DisplayObject.hpp>
 // #include <SDOM/SDOM_ResHandle.hpp>
 

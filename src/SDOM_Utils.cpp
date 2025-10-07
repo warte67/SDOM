@@ -1,9 +1,12 @@
 // SDOM_Utils.cpp
 
-#include <SDOM/SDOM_Utils.hpp>
+#include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_CLR.hpp>
+#include <SDOM/SDOM_Stage.hpp>
+#include <SDOM/SDOM_Utils.hpp>
+
 
 namespace SDOM
 {

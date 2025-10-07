@@ -491,6 +491,15 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Benchmarks show well over 10,000 frames per second on development hardware. Roughly 6000-7000 fps on a 15 year old I3 system (roughly 1.5 miliseconds per frame of overhead).
         - The SDOM API introduces only ~100 microseconds of overhead per frame, which is negligible for real-time 2D applications and 2D/3D games. This performance is without extensive post development optimization.
         - This validates the architectural choices and confirms that the system is ready for further feature development and integration.
+        
+---   
+- ### [October 7, 2025]
+    - cleaned up the heavy includes from the header files to reduce compile times and improve modularity.
+    - Moved several implementation details from headers to source files, including private methods and member variables.
+    - Reduced header dependencies by using forward declarations where possible.
+    - Verified that all unit tests pass after the refactor.
+    - Improved compile times by approximately 20% in the examples/test project.
+    
 
 ---
 - **Milestone - DisplayObject Complete:**  

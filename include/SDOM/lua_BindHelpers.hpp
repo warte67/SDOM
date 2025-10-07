@@ -2,10 +2,13 @@
 
 #pragma once
 
-#include <SDOM/SDOM.hpp>
+// #include <SDOM/SDOM.hpp>
 
 namespace SDOM
 {
+    class Event;
+
+    
     // Basic binders (usertype method, CoreForward table entry, and optional global alias)
     // - objHandleType: sol::usertype<Core>&
     // - coreTable: sol::table&
