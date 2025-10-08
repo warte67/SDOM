@@ -19,8 +19,10 @@ var lua__BindHelpers_8cpp =
     [ "bind_return_vector_string", "lua__BindHelpers_8cpp.html#adbf082d851cc466da1d06e60ae5df27f", null ],
     [ "bind_string", "lua__BindHelpers_8cpp.html#ab2e48e511c6670d022494de910b30ca1", null ],
     [ "bind_string_function_forwarder", "lua__BindHelpers_8cpp.html#afd81c75f9a6783cc79d74cb34cea8d69", null ],
+    [ "bind_string_return_asset", "lua__BindHelpers_8cpp.html#a75f446744a12bf08cf841541a94b526b", null ],
     [ "bind_string_return_bool", "lua__BindHelpers_8cpp.html#a9d89643e08e40b4dbbc1571aa366c8d3", null ],
     [ "bind_string_return_do", "lua__BindHelpers_8cpp.html#adabc370657a0569c59429c9a6c62a2f5", null ],
+    [ "bind_string_table_return_asset", "lua__BindHelpers_8cpp.html#a6801d1d3872dca32429e538b41b83d47", null ],
     [ "bind_string_table_return_do", "lua__BindHelpers_8cpp.html#a31c6c42b9d42c285bebee0740170ae6d", null ],
     [ "bind_table", "lua__BindHelpers_8cpp.html#add31e794f5e908f30d44223f4e976ffb", null ]
 ];

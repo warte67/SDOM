@@ -4,8 +4,11 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "lua_Core.cpp", "lua__Core_8cpp.html", "lua__Core_8cpp" ],
     [ "lua_IDisplayObject.cpp", "lua__IDisplayObject_8cpp.html", "lua__IDisplayObject_8cpp" ],
     [ "SDOM.cpp", "SDOM_8cpp.html", null ],
+    [ "SDOM_AssetObject.cpp", "SDOM__AssetObject_8cpp.html", "SDOM__AssetObject_8cpp" ],
     [ "SDOM_CLR.cpp", "SDOM__CLR_8cpp.html", null ],
     [ "SDOM_Core.cpp", "SDOM__Core_8cpp.html", null ],
+    [ "SDOM_default_bmp_8x8.cpp", "SDOM__default__bmp__8x8_8cpp.html", null ],
+    [ "SDOM_default_icon_8x8.cpp", "SDOM__default__icon__8x8_8cpp.html", null ],
     [ "SDOM_DisplayObject.cpp", "SDOM__DisplayObject_8cpp.html", "SDOM__DisplayObject_8cpp" ],
     [ "SDOM_Event.cpp", "SDOM__Event_8cpp.html", null ],
     [ "SDOM_EventManager.cpp", "SDOM__EventManager_8cpp.html", "SDOM__EventManager_8cpp" ],
@@ -15,6 +18,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_IDataObject.cpp", "SDOM__IDataObject_8cpp.html", null ],
     [ "SDOM_IDisplayObject.cpp", "SDOM__IDisplayObject_8cpp.html", null ],
     [ "SDOM_SDL_Utils.cpp", "SDOM__SDL__Utils_8cpp.html", "SDOM__SDL__Utils_8cpp" ],
+    [ "SDOM_SpriteSheet.cpp", "SDOM__SpriteSheet_8cpp.html", null ],
     [ "SDOM_Stage.cpp", "SDOM__Stage_8cpp.html", null ],
     [ "SDOM_Utils.cpp", "SDOM__Utils_8cpp.html", "SDOM__Utils_8cpp" ]
 ];

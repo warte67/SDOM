@@ -268,6 +268,12 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:ac31a33dfb8b903a027b48eb638fc21a4" id="r_ac31a33dfb8b903a027b48eb638fc21a4"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLR.html#ac31a33dfb8b903a027b48eb638fc21a4">WHITE</a> = &quot;\e[1;37m&quot;</td></tr>
 <tr class="memdesc:ac31a33dfb8b903a027b48eb638fc21a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANSI escape sequence for white foreground.  <br /></td></tr>
 <tr class="separator:ac31a33dfb8b903a027b48eb638fc21a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a135aac68c02461081e49ee6a818cfc52" id="r_a135aac68c02461081e49ee6a818cfc52"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLR.html#a135aac68c02461081e49ee6a818cfc52">LT_MAGENTA</a> = <a class="el" href="classCLR.html#a2c2e1040458c8b4f88be7b0e68999faa">fg_rgb</a>(255, 105, 180)</td></tr>
+<tr class="memdesc:a135aac68c02461081e49ee6a818cfc52"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANSI escape sequence for light magenta (hot pink) foreground.  <br /></td></tr>
+<tr class="separator:a135aac68c02461081e49ee6a818cfc52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42181ec7c82e659318736fa4eaec68ed" id="r_a42181ec7c82e659318736fa4eaec68ed"><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLR.html#a42181ec7c82e659318736fa4eaec68ed">LT_ORANGE</a> = <a class="el" href="classCLR.html#a2c2e1040458c8b4f88be7b0e68999faa">fg_rgb</a>(255, 165, 79)</td></tr>
+<tr class="memdesc:a42181ec7c82e659318736fa4eaec68ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANSI escape sequence for light orange foreground.  <br /></td></tr>
+<tr class="separator:a42181ec7c82e659318736fa4eaec68ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Background Color Constants</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>ANSI escape sequences for background text colors. </p>
 </div></td></tr>
@@ -846,7 +852,7 @@ Static Public Attributes</h2></td></tr>
 <p>This function is not called within an output stream. It should be called directly. Example usage: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> width = 0, height = 0;</div>
 <div class="line"><a class="code hl_function" href="classCLR.html#a6182f7adc3cbbec8d91ac83c948306d3">CLR::get_terminal_size</a>(width, height);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;width=&quot;</span> &lt;&lt; width &lt;&lt; <span class="stringliteral">&quot;, height=&quot;</span> &lt;&lt; height &lt;&lt; std::endl;</div>
-<div class="ttc" id="aclassCLR_html_a6182f7adc3cbbec8d91ac83c948306d3"><div class="ttname"><a href="classCLR.html#a6182f7adc3cbbec8d91ac83c948306d3">CLR::get_terminal_size</a></div><div class="ttdeci">static void get_terminal_size(int &amp;width, int &amp;height)</div><div class="ttdoc">Gets the current terminal size (width and height).</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:326</div></div>
+<div class="ttc" id="aclassCLR_html_a6182f7adc3cbbec8d91ac83c948306d3"><div class="ttname"><a href="classCLR.html#a6182f7adc3cbbec8d91ac83c948306d3">CLR::get_terminal_size</a></div><div class="ttdeci">static void get_terminal_size(int &amp;width, int &amp;height)</div><div class="ttdoc">Gets the current terminal size (width and height).</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:329</div></div>
 </div><!-- fragment --> <dl class="section note"><dt>Note</dt><dd>Only works on supported platforms (Windows, Linux, macOS). </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1978,6 +1984,54 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ANSI escape sequence for light green foreground. </p>
+
+</div>
+</div>
+<a id="a135aac68c02461081e49ee6a818cfc52" name="a135aac68c02461081e49ee6a818cfc52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a135aac68c02461081e49ee6a818cfc52">&#9670;&#160;</a></span>LT_MAGENTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string CLR::LT_MAGENTA = <a class="el" href="classCLR.html#a2c2e1040458c8b4f88be7b0e68999faa">fg_rgb</a>(255, 105, 180)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ANSI escape sequence for light magenta (hot pink) foreground. </p>
+
+</div>
+</div>
+<a id="a42181ec7c82e659318736fa4eaec68ed" name="a42181ec7c82e659318736fa4eaec68ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42181ec7c82e659318736fa4eaec68ed">&#9670;&#160;</a></span>LT_ORANGE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string CLR::LT_ORANGE = <a class="el" href="classCLR.html#a2c2e1040458c8b4f88be7b0e68999faa">fg_rgb</a>(255, 165, 79)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ANSI escape sequence for light orange foreground. </p>
 
 </div>
 </div>

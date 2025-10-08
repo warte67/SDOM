@@ -19,6 +19,8 @@ local ema = nil
 local EMA_ALPHA = 2.0 / (100.0 + 1.0)
 
 local s_iterations = 0
+local idx = 0
+local deltaTimeAccumulator = 0.0
 
 -- Named listener handlers so they can be referenced from other modules or tested directly
 function M.on_update(evt)
@@ -67,7 +69,15 @@ function M.on_render(evt)
         print("Failed to get asset: ut_bmp8_lua2")
         return false
     end
-    ss:drawSprite(50, 50, 51)
+    
+    -- advance idx ten times second using deltaTimeAccumulator
+    deltaTimeAccumulator = deltaTimeAccumulator + dt
+    if deltaTimeAccumulator >= 0.1 then
+        deltaTimeAccumulator = deltaTimeAccumulator - 0.1
+        idx = (idx + 1) % 256
+    end
+    ss:drawSprite(idx, {w = 32, h = 32, x = 16, y = 32})
+    -- ss:drawSprite(idx, 50, 50)
 
     -- Render FPS into SDL window using CLR.draw_debug_text. Draw at top-left inside the window.
     -- Parameters: text, x, y, ptsize, r,g,b,a

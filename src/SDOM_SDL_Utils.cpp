@@ -1457,6 +1457,8 @@ namespace SDOM
         r.y = t["y"].get_or(t[2].get_or(0.0f));
         r.w = t["w"].get_or(t[3].get_or(0.0f));
         r.h = t["h"].get_or(t[4].get_or(0.0f));
+        r.w = t["width"].get_or(r.w);   // allow 'width'
+        r.h = t["height"].get_or(r.h);  // allow 'height'
         return r;
     }
 

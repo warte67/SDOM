@@ -832,6 +832,56 @@ Progress Updates</h1>
 <li>Consider adding a C++-side string-&gt;AnchorPoint Lua wrapper for ergonomic anchor calls from scripts.</li>
 </ul>
 </li>
+<li><b>Performance Milestone:</b> <br  />
+<ul>
+<li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> main loop is now 98% complete and matches the design for the finished library.</li>
+<li>Benchmarks show well over 10,000 frames per second on development hardware. Roughly 6000-7000 fps on a 15 year old I3 system (roughly 1.5 miliseconds per frame of overhead).</li>
+<li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> API introduces only ~100 microseconds of overhead per frame, which is negligible for real-time 2D applications and 2D/3D games. This performance is without extensive post development optimization.</li>
+<li>This validates the architectural choices and confirms that the system is ready for further feature development and integration.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p></code></p>
+<p><code></p><hr  />
+<ul>
+<li>### [October 7, 2025]<ul>
+<li>cleaned up the heavy includes from the header files to reduce compile times and improve modularity.</li>
+<li>Moved several implementation details from headers to source files, including private methods and member variables.</li>
+<li>Reduced header dependencies by using forward declarations where possible.</li>
+<li>Verified that all unit tests pass after the refactor.</li>
+<li>Improved compile times by approximately 20% in the examples/test project.</li>
+<li><code>SpriteSheet</code> refactor and Lua API changes:<ul>
+<li>Added helpers to resolve/ensure the underlying SDL_Texture (resolve_texture / ensure_texture_loaded).</li>
+<li>Reordered <code>drawSprite</code> APIs so spriteIndex is the first parameter for all C++ overloads and Lua wrappers.</li>
+<li>Lua <code>drawSprite</code> wrappers accept (spriteIndex, x, y) or (spriteIndex, dstTable) and the extended variant expects spriteIndex immediately after the object (method call: ss:drawSprite_ext(idx, src, dst)).</li>
+<li>Fixed all example call sites (<code>Box</code> and listener callbacks) to the new signature and dispatch patterns.</li>
+</ul>
+</li>
+<li>Lua bindings and tests:<ul>
+<li>Cleaned up Lua registration: removed onLoad/onUnload aliases from Lua handle surface; kept load/unload semantics.</li>
+<li>Resolved Sol2 numeric/argument ordering issues in wrappers (fixed colon vs dot call mistakes).</li>
+<li>Examples/test Lua callbacks updated and verified; drawSprite works in the onRender path.</li>
+</ul>
+</li>
+<li>Build &amp; workflow notes:<ul>
+<li>Prefer running builds from examples/test:<ul>
+<li>./compile clean (full rebuild from examples/test)</li>
+<li>./compile (incremental)</li>
+<li>./prog (run test binary)</li>
+</ul>
+</li>
+<li>Avoid requiring repository-root ./rebuild under other user permissions.</li>
+</ul>
+</li>
+<li>Next short items:<ul>
+<li>Add a small Factory atomic-registration guard to avoid re-entrancy when creating assets that reference other assets.</li>
+<li>Reintroduce the Texture asset class to store SDL_Textures in the Factory keyed by their filename.</li>
+<li>Refactor SpriteSheet::onLoad() to first verify the AssetObject for the main texture is valid, load it if not.</li>
+<li>Add unit tests to verify texture sharing (two SpriteSheets with same filename reuse one SDL texture).</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -885,7 +935,7 @@ Progress Updates</h1>
 <p></code></p>
 <p><code></p><hr  />
 <p> </code></p>
-<h1><a class="anchor" id="autotoc_md176"></a>
+<h1><a class="anchor" id="autotoc_md177"></a>
 ToDo:</h1>
 <p><code></p><ul>
 <li>Build out the IAssetObject interface and the AssetObject handle type</li>

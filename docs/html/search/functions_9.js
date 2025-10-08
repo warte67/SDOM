@@ -6,7 +6,7 @@ var searchData=
   ['indent_5fpop_3',['indent_pop',['../classCLR.html#ab68fec9e4864d10dfe4e06511f92375e',1,'CLR']]],
   ['indent_5fpush_4',['indent_push',['../classCLR.html#a09a44b42634154b7f08e3529100d1fa0',1,'CLR']]],
   ['initfromlua_5',['initFromLua',['../classSDOM_1_1Factory.html#a16dbd2e7748b099a0ebab299c52aa94d',1,'SDOM::Factory']]],
-  ['initstruct_6',['InitStruct',['../structSDOM_1_1Stage_1_1InitStruct.html#a2bcf2041b8aea95997d9cf281eb88a78',1,'SDOM::Stage::InitStruct']]],
+  ['initstruct_6',['initstruct',['../structSDOM_1_1SpriteSheet_1_1InitStruct.html#adc102043835faf1d54ede4d60a9b499b',1,'SDOM::SpriteSheet::InitStruct::InitStruct()'],['../structSDOM_1_1Stage_1_1InitStruct.html#a2bcf2041b8aea95997d9cf281eb88a78',1,'SDOM::Stage::InitStruct::InitStruct()']]],
   ['isancestorof_7',['isancestorof',['../classSDOM_1_1IDisplayObject.html#ae56706afc0a70097c9be58ead46f00b9',1,'SDOM::IDisplayObject::isAncestorOf(DisplayObject descendant) const'],['../classSDOM_1_1IDisplayObject.html#a5323335a18d5af09677f2d5d1fbbd894',1,'SDOM::IDisplayObject::isAncestorOf(const std::string &amp;name) const']]],
   ['isancestorof_5flua_8',['isancestorof_lua',['../namespaceSDOM.html#a1afeea4a04e70abefc064d4e61eb07ad',1,'SDOM::isAncestorOf_lua(IDisplayObject *obj, DisplayObject descendant)'],['../namespaceSDOM.html#a9bdbbf391d337148e93348d32b1775be',1,'SDOM::isAncestorOf_lua(IDisplayObject *obj, const std::string &amp;name)']]],
   ['isclickable_9',['isClickable',['../classSDOM_1_1IDisplayObject.html#aade178775d0c9afbd0f3c49f8dfe02c6',1,'SDOM::IDisplayObject']]],
@@ -32,7 +32,7 @@ var searchData=
   ['isrunning_29',['isRunning',['../classSDOM_1_1Core.html#aad016b86f7299465d7706c76429d5e9c',1,'SDOM::Core']]],
   ['istabenabled_30',['isTabEnabled',['../classSDOM_1_1IDisplayObject.html#ac833508be5695b4b45a4ffbfd970c3bb',1,'SDOM::IDisplayObject']]],
   ['istabenabled_5flua_31',['isTabEnabled_lua',['../namespaceSDOM.html#aa412380eb5b7d2678ad985f29022d479',1,'SDOM']]],
-  ['isvalid_32',['isValid',['../classSDOM_1_1DisplayObject.html#ab10680417975bf646c3c56ae867ffcbb',1,'SDOM::DisplayObject']]],
+  ['isvalid_32',['isvalid',['../classSDOM_1_1DisplayObject.html#ab10680417975bf646c3c56ae867ffcbb',1,'SDOM::DisplayObject::isValid()'],['../classSDOM_1_1AssetObject.html#a654fa34ae9d8d815981c791bf2e74688',1,'SDOM::AssetObject::isValid()']]],
   ['isvalid_5flua_33',['isValid_lua',['../classSDOM_1_1DisplayObject.html#a0745832f0a804d143ff5f20e1cc9ecfb',1,'SDOM::DisplayObject']]],
   ['isvisible_34',['isVisible',['../classSDOM_1_1IDisplayObject.html#a59f0351159eb9bac6a1c89b56639d49f',1,'SDOM::IDisplayObject']]],
   ['isvisible_5flua_35',['isVisible_lua',['../namespaceSDOM.html#a059e2ea37af0f4e9ecd7bf9b10f4425e',1,'SDOM']]]

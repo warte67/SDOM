@@ -70,22 +70,23 @@ namespace SDOM
         int getSpriteX(int spriteIndex) const;
         int getSpriteY(int spriteIndex) const;
 
+        // New API: spriteIndex comes first in all drawSprite variants
         void drawSprite(
-            int x, int y, 
-            int spriteIndex, 
-            SDL_Color color = {255, 255, 255, 255}, 
-            SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST
-        );
-        void drawSprite
-            (SDL_FRect& destRect, 
-            int spriteIndex, 
+            int spriteIndex,
+            int x, int y,
             SDL_Color color = {255, 255, 255, 255}, 
             SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST
         );
         void drawSprite(
+            int spriteIndex,
+            SDL_FRect& destRect, 
+            SDL_Color color = {255, 255, 255, 255}, 
+            SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST
+        );
+        void drawSprite(
+            int spriteIndex,
             const SDL_FRect& srcRect,   // Offset within the sprite tile (not the sheet)
             const SDL_FRect& dstRect,   // Destination on screen
-            int spriteIndex,
             SDL_Color color = {255, 255, 255, 255},
             SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST
         );
@@ -101,14 +102,15 @@ namespace SDOM
         int getSpriteX_Lua(IAssetObject* obj, int spriteIndex);
         int getSpriteY_Lua(IAssetObject* obj, int spriteIndex);
 
-        void drawSprite_lua( int x, int y, int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST );    
-        void drawSprite_dst_lua( SDL_FRect& destRect, int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST );
+        void drawSprite_lua( int spriteIndex, int x, int y, SDL_Color color, SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST );    
+        void drawSprite_dst_lua( int spriteIndex, SDL_FRect& destRect, SDL_Color color, SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST );
 
+        // For the Lua extended variant the spriteIndex is the 2nd parameter after the object
         void drawSprite_ext_Lua(
             IAssetObject* obj,
+            int spriteIndex,
             sol::table srcRect,                 // {x=,y=,w=,h=} or {x,y,w,h}
             sol::table dstRect,                 // {x=,y=,w=,h=} or {x,y,w,h}
-            int spriteIndex,
             sol::object color = sol::nil,       // table {r,g,b,a} or nil
             sol::object scaleMode = sol::nil    // SDL_Utils::scaleModeFromSol(const sol::object& o)
         );

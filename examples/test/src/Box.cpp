@@ -385,7 +385,7 @@ void Box::onRender()
                     // Ensure loaded (AssetObject::as/get will lazily load, but explicit call is safe)
                     ss->onLoad();
                     static SDL_Color color = {255,255,255,255};
-                    ss->drawSprite(dstRect, spriteIndex, color);
+                    ss->drawSprite(spriteIndex, dstRect, color);
 
                     if (SDL_GetTicks() >= tmr_acc + 50) 
                     {

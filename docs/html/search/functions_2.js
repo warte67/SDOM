@@ -10,7 +10,7 @@ var searchData=
   ['bind_5fcallback_5fupdate_7',['bind_callback_update',['../namespaceSDOM.html#a5f62339efc79be9d0987e002056b5606',1,'SDOM']]],
   ['bind_5fcallback_5fvoid_8',['bind_callback_void',['../namespaceSDOM.html#a52d5799b03d51c3e9e80111b3e333288',1,'SDOM']]],
   ['bind_5fdo_5farg_9',['bind_do_arg',['../namespaceSDOM.html#a5a841a260611620048bfd079a6fb08fc',1,'SDOM']]],
-  ['bind_5fminimal_10',['bind_minimal',['../classSDOM_1_1DisplayObject.html#a10cb628955f32f66ce89fdfd4d90687a',1,'SDOM::DisplayObject']]],
+  ['bind_5fminimal_10',['bind_minimal',['../classSDOM_1_1AssetObject.html#a421fe0e4c098668cc3463de731dc6800',1,'SDOM::AssetObject::bind_minimal()'],['../classSDOM_1_1DisplayObject.html#a10cb628955f32f66ce89fdfd4d90687a',1,'SDOM::DisplayObject::bind_minimal()']]],
   ['bind_5fname_5for_5fhandle_11',['bind_name_or_handle',['../namespaceSDOM.html#a89a7b1a9a8ab59cdf68f703c6c2ce5a0',1,'SDOM']]],
   ['bind_5fnoarg_12',['bind_noarg',['../namespaceSDOM.html#ac96b272a0a5a868c7167a95c27044495',1,'SDOM']]],
   ['bind_5fobject_5farg_13',['bind_object_arg',['../namespaceSDOM.html#ab803548f1ce73da2dc2ed625b7182f70',1,'SDOM']]],
@@ -23,8 +23,10 @@ var searchData=
   ['bind_5freturn_5fvector_5fstring_20',['bind_return_vector_string',['../namespaceSDOM.html#adbf082d851cc466da1d06e60ae5df27f',1,'SDOM']]],
   ['bind_5fstring_21',['bind_string',['../namespaceSDOM.html#ab2e48e511c6670d022494de910b30ca1',1,'SDOM']]],
   ['bind_5fstring_5ffunction_5fforwarder_22',['bind_string_function_forwarder',['../namespaceSDOM.html#afd81c75f9a6783cc79d74cb34cea8d69',1,'SDOM']]],
-  ['bind_5fstring_5freturn_5fbool_23',['bind_string_return_bool',['../namespaceSDOM.html#a9d89643e08e40b4dbbc1571aa366c8d3',1,'SDOM']]],
-  ['bind_5fstring_5freturn_5fdo_24',['bind_string_return_do',['../namespaceSDOM.html#adabc370657a0569c59429c9a6c62a2f5',1,'SDOM']]],
-  ['bind_5fstring_5ftable_5freturn_5fdo_25',['bind_string_table_return_do',['../namespaceSDOM.html#a31c6c42b9d42c285bebee0740170ae6d',1,'SDOM']]],
-  ['bind_5ftable_26',['bind_table',['../namespaceSDOM.html#add31e794f5e908f30d44223f4e976ffb',1,'SDOM']]]
+  ['bind_5fstring_5freturn_5fasset_23',['bind_string_return_asset',['../namespaceSDOM.html#a75f446744a12bf08cf841541a94b526b',1,'SDOM']]],
+  ['bind_5fstring_5freturn_5fbool_24',['bind_string_return_bool',['../namespaceSDOM.html#a9d89643e08e40b4dbbc1571aa366c8d3',1,'SDOM']]],
+  ['bind_5fstring_5freturn_5fdo_25',['bind_string_return_do',['../namespaceSDOM.html#adabc370657a0569c59429c9a6c62a2f5',1,'SDOM']]],
+  ['bind_5fstring_5ftable_5freturn_5fasset_26',['bind_string_table_return_asset',['../namespaceSDOM.html#a6801d1d3872dca32429e538b41b83d47',1,'SDOM']]],
+  ['bind_5fstring_5ftable_5freturn_5fdo_27',['bind_string_table_return_do',['../namespaceSDOM.html#a31c6c42b9d42c285bebee0740170ae6d',1,'SDOM']]],
+  ['bind_5ftable_28',['bind_table',['../namespaceSDOM.html#add31e794f5e908f30d44223f4e976ffb',1,'SDOM']]]
 ];

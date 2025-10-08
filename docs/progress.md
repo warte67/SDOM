@@ -499,7 +499,26 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Reduced header dependencies by using forward declarations where possible.
     - Verified that all unit tests pass after the refactor.
     - Improved compile times by approximately 20% in the examples/test project.
-    
+    - `SpriteSheet` refactor and Lua API changes:
+        - Added helpers to resolve/ensure the underlying SDL_Texture (resolve_texture / ensure_texture_loaded).
+        - Reordered `drawSprite` APIs so spriteIndex is the first parameter for all C++ overloads and Lua wrappers.
+        - Lua `drawSprite` wrappers accept (spriteIndex, x, y) or (spriteIndex, dstTable) and the extended variant expects spriteIndex immediately after the object (method call: ss:drawSprite_ext(idx, src, dst)).
+        - Fixed all example call sites (`Box` and listener callbacks) to the new signature and dispatch patterns.
+    - Lua bindings and tests:
+        - Cleaned up Lua registration: removed onLoad/onUnload aliases from Lua handle surface; kept load/unload semantics.
+        - Resolved Sol2 numeric/argument ordering issues in wrappers (fixed colon vs dot call mistakes).
+        - Examples/test Lua callbacks updated and verified; drawSprite works in the onRender path.
+    - Build & workflow notes:
+        - Prefer running builds from examples/test:
+            - ./compile clean  (full rebuild from examples/test)
+            - ./compile        (incremental)
+            - ./prog           (run test binary)
+        - Avoid requiring repository-root ./rebuild under other user permissions.
+    - Next short items:
+        - Add a small Factory atomic-registration guard to avoid re-entrancy when creating assets that reference other assets.
+        - Reintroduce the Texture asset class to store SDL_Textures in the Factory keyed by their filename.
+        - Refactor SpriteSheet::onLoad() to first verify the AssetObject for the main texture is valid, load it if not.
+        - Add unit tests to verify texture sharing (two SpriteSheets with same filename reuse one SDL texture).
 
 ---
 - **Milestone - DisplayObject Complete:**  

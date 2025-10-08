@@ -54,6 +54,8 @@ var classCLR =
     [ "LT_BLUE", "classCLR.html#ac9c88a575b06a832e68fe8d62c45135c", null ],
     [ "LT_CYAN", "classCLR.html#a659340034a5aa7b2149ccc1888ceb694", null ],
     [ "LT_GRN", "classCLR.html#ab42517ec56b3dc265e62bf4702302266", null ],
+    [ "LT_MAGENTA", "classCLR.html#a135aac68c02461081e49ee6a818cfc52", null ],
+    [ "LT_ORANGE", "classCLR.html#a42181ec7c82e659318736fa4eaec68ed", null ],
     [ "MAGENTA", "classCLR.html#aeea092b02f7a2434ace40805f7be2e06", null ],
     [ "NORMAL", "classCLR.html#ae6ec0e976684b36983d2325ee9bde918", null ],
     [ "ORANGE", "classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d", null ],

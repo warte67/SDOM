@@ -98,6 +98,8 @@ $(document).ready(function(){initNavTree('lua__Core_8cpp.html',''); initResizabl
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="SDOM_8hpp_source.html">SDOM/SDOM.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__EventManager_8hpp_source.html">SDOM/SDOM_EventManager.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="SDOM__Core_8hpp_source.html">SDOM/SDOM_Core.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="SDOM__Factory_8hpp_source.html">SDOM/SDOM_Factory.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="lua__Core_8hpp_source.html">SDOM/lua_Core.hpp</a>&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -180,6 +182,12 @@ Functions</h2></td></tr>
 <tr class="separator:a0cd3d0a237158306617ce0288e9955ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b5997a6b11dff05aef06a2e9630cb9f" id="r_a0b5997a6b11dff05aef06a2e9630cb9f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a0b5997a6b11dff05aef06a2e9630cb9f">SDOM::hasDisplayObject_lua</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:a0b5997a6b11dff05aef06a2e9630cb9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a124c990c9fb4bb7d9dde2d0e7f250371" id="r_a124c990c9fb4bb7d9dde2d0e7f250371"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1AssetObject.html">AssetObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a124c990c9fb4bb7d9dde2d0e7f250371">SDOM::createAssetObject_lua</a> (const std::string &amp;typeName, const sol::table &amp;config)</td></tr>
+<tr class="separator:a124c990c9fb4bb7d9dde2d0e7f250371"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0677a5616bbf9a4bff32663080ef2649" id="r_a0677a5616bbf9a4bff32663080ef2649"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1AssetObject.html">AssetObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a0677a5616bbf9a4bff32663080ef2649">SDOM::getAssetObject_lua</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a0677a5616bbf9a4bff32663080ef2649"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb69b0371ecfe6f8b7686373ddcb2860" id="r_afb69b0371ecfe6f8b7686373ddcb2860"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#afb69b0371ecfe6f8b7686373ddcb2860">SDOM::hasAssetObject_lua</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:afb69b0371ecfe6f8b7686373ddcb2860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f5e202495dfd950ee681ef26ecd8179" id="r_a0f5e202495dfd950ee681ef26ecd8179"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a0f5e202495dfd950ee681ef26ecd8179">SDOM::destroyDisplayObject_lua</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:a0f5e202495dfd950ee681ef26ecd8179"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedd46ea1ab9af6b9314aa077a80196dd" id="r_aedd46ea1ab9af6b9314aa077a80196dd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#aedd46ea1ab9af6b9314aa077a80196dd">SDOM::countOrphanedDisplayObjects_lua</a> ()</td></tr>

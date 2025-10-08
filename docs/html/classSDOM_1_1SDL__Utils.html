@@ -131,6 +131,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:aa077a66bd09fa07bd0733b396d81ba23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab104736fb6a0163bfaf0d88965c8fb52" id="r_ab104736fb6a0163bfaf0d88965c8fb52"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1SDL__Utils.html#ab104736fb6a0163bfaf0d88965c8fb52">registerLua</a> (sol::state_view lua)</td></tr>
 <tr class="separator:ab104736fb6a0163bfaf0d88965c8fb52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a479d5c5b443cc1b058ad3bde4a5930c9" id="r_a479d5c5b443cc1b058ad3bde4a5930c9"><td class="memItemLeft" align="right" valign="top">static SDL_FRect&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1SDL__Utils.html#a479d5c5b443cc1b058ad3bde4a5930c9">tableToFRect</a> (const sol::table &amp;t)</td></tr>
+<tr class="separator:a479d5c5b443cc1b058ad3bde4a5930c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a569aa2a81fb0eb6c7897b5e565779599" id="r_a569aa2a81fb0eb6c7897b5e565779599"><td class="memItemLeft" align="right" valign="top">static SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1SDL__Utils.html#a569aa2a81fb0eb6c7897b5e565779599">colorFromSol</a> (const sol::object &amp;o)</td></tr>
+<tr class="separator:a569aa2a81fb0eb6c7897b5e565779599"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d0511ff63753f1311697d941f6c7fc3" id="r_a3d0511ff63753f1311697d941f6c7fc3"><td class="memItemLeft" align="right" valign="top">static SDL_ScaleMode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1SDL__Utils.html#a3d0511ff63753f1311697d941f6c7fc3">scaleModeFromSol</a> (const sol::object &amp;o)</td></tr>
+<tr class="separator:a3d0511ff63753f1311697d941f6c7fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad58424ffb980e2133bdb261b07846637" name="ad58424ffb980e2133bdb261b07846637"></a>
@@ -184,6 +190,32 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a569aa2a81fb0eb6c7897b5e565779599" name="a569aa2a81fb0eb6c7897b5e565779599"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a569aa2a81fb0eb6c7897b5e565779599">&#9670;&#160;</a></span>colorFromSol()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_Color SDOM::SDL_Utils::colorFromSol </td>
+          <td>(</td>
+          <td class="paramtype">const sol::object &amp;&#160;</td>
+          <td class="paramname"><em>o</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa077a66bd09fa07bd0733b396d81ba23" name="aa077a66bd09fa07bd0733b396d81ba23"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa077a66bd09fa07bd0733b396d81ba23">&#9670;&#160;</a></span>eventToLuaTable()</h2>
 
@@ -426,6 +458,58 @@ Static Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">Uint32&#160;</td>
           <td class="paramname"><em>flags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3d0511ff63753f1311697d941f6c7fc3" name="a3d0511ff63753f1311697d941f6c7fc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d0511ff63753f1311697d941f6c7fc3">&#9670;&#160;</a></span>scaleModeFromSol()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_ScaleMode SDOM::SDL_Utils::scaleModeFromSol </td>
+          <td>(</td>
+          <td class="paramtype">const sol::object &amp;&#160;</td>
+          <td class="paramname"><em>o</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a479d5c5b443cc1b058ad3bde4a5930c9" name="a479d5c5b443cc1b058ad3bde4a5930c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a479d5c5b443cc1b058ad3bde4a5930c9">&#9670;&#160;</a></span>tableToFRect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_FRect SDOM::SDL_Utils::tableToFRect </td>
+          <td>(</td>
+          <td class="paramtype">const sol::table &amp;&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

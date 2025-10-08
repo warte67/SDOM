@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['ensure_5fhandle_5ftable_0',['ensure_handle_table',['../classSDOM_1_1DisplayObject.html#a6844d5fbf5654f0881fabbcc6e053c99',1,'SDOM::DisplayObject']]],
+  ['ensure_5fhandle_5ftable_0',['ensure_handle_table',['../classSDOM_1_1AssetObject.html#a8e1fed5a199dbe16c94b2c6cf9eec0d5',1,'SDOM::AssetObject::ensure_handle_table()'],['../classSDOM_1_1DisplayObject.html#a6844d5fbf5654f0881fabbcc6e053c99',1,'SDOM::DisplayObject::ensure_handle_table()']]],
   ['erase_5fin_5fdisplay_1',['erase_in_display',['../classCLR.html#aeb344a9e40554c7c24fef1407c84dd5d',1,'CLR']]],
   ['erase_5fin_5fline_2',['erase_in_line',['../classCLR.html#a45a8aa226151649d6dcddd5d3a4bd817',1,'CLR']]],
   ['event_3',['event',['../classSDOM_1_1Event.html#aec5181f3e920db220278614ed9d0e63f',1,'SDOM::Event::Event(EventType type=EventType(&quot;None&quot;), DisplayObject target=nullptr, float fElapsedTime=0.0f)'],['../classSDOM_1_1Event.html#af898e66319b61dcecb405d7811144cf3',1,'SDOM::Event::Event(const Event &amp;other)']]],

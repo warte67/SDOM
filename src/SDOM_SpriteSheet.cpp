@@ -243,7 +243,7 @@ namespace SDOM
 
 
 
-    void SpriteSheet::drawSprite(int x, int y, int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode)
+    void SpriteSheet::drawSprite(int spriteIndex, int x, int y, SDL_Color color, SDL_ScaleMode scaleMode)
     {
         // THIS SHOULD BE LOADEDD AT THIS POINT!  (BUT IT'S NOT)
         if (!texture_) onLoad();
@@ -289,7 +289,7 @@ namespace SDOM
         SDL_RenderTexture(renderer, texture_, &srcRect, &destRect);
     }
 
-    void SpriteSheet::drawSprite(SDL_FRect& destRect, int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode)
+    void SpriteSheet::drawSprite(int spriteIndex, SDL_FRect& destRect, SDL_Color color, SDL_ScaleMode scaleMode)
     {
         // THIS SHOULD BE LOADEDD AT THIS POINT!  (BUT IT'S NOT)
         if (!texture_) onLoad();
@@ -330,8 +330,8 @@ namespace SDOM
     }
 
 
-    void SpriteSheet::drawSprite(const SDL_FRect& srcRect, const SDL_FRect& dstRect,
-        int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode)
+    void SpriteSheet::drawSprite(int spriteIndex, const SDL_FRect& srcRect, const SDL_FRect& dstRect,
+        SDL_Color color, SDL_ScaleMode scaleMode)
     {
         // THIS SHOULD BE LOADEDD AT THIS POINT!  (BUT IT'S NOT)
         if (!texture_) onLoad();
@@ -463,20 +463,20 @@ namespace SDOM
     }
 
 
-    void SpriteSheet::drawSprite_lua( int x, int y, int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode /*= SDL_SCALEMODE_NEAREST*/ )
+    void SpriteSheet::drawSprite_lua( int spriteIndex, int x, int y, SDL_Color color, SDL_ScaleMode scaleMode /*= SDL_SCALEMODE_NEAREST*/ )
     {
         // delegate to the concrete implementation
-        drawSprite(x, y, spriteIndex, color, scaleMode);
+            drawSprite(spriteIndex, x, y, color, scaleMode);
     } 
 
-    void SpriteSheet::drawSprite_dst_lua( SDL_FRect& destRect, int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode /*= SDL_SCALEMODE_NEAREST*/ )
+    void SpriteSheet::drawSprite_dst_lua( int spriteIndex, SDL_FRect& destRect, SDL_Color color, SDL_ScaleMode scaleMode /*= SDL_SCALEMODE_NEAREST*/ )
     {
         // delegate to the concrete implementation that renders to a destination rect
-        drawSprite(destRect, spriteIndex, color, scaleMode);
+            drawSprite(spriteIndex, destRect, color, scaleMode);
     }
 
-    void SpriteSheet::drawSprite_ext_Lua( IAssetObject* obj, sol::table srcRect, sol::table dstRect,
-                                    int spriteIndex, sol::object color, sol::object scaleMode)
+    void SpriteSheet::drawSprite_ext_Lua( IAssetObject* obj, int spriteIndex, sol::table srcRect, sol::table dstRect,
+                                    sol::object color, sol::object scaleMode)
     {
         // resolve target instance (defensive)
         SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
@@ -488,7 +488,7 @@ namespace SDOM
         SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
 
         // call concrete draw implementation on the instance
-        ss->drawSprite(s, d, spriteIndex, c, sm);
+        ss->drawSprite(spriteIndex, s, d, c, sm);
     }
 
 
@@ -556,31 +556,59 @@ namespace SDOM
 
         // register named Lua wrappers (AssetObject-based):
         // drawSprite(asset, x, y, index, color?, scaleMode?)
-        reg("drawSprite",
-            [lua, cast_ss_from_asset](AssetObject asset, int x, int y, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
-                SpriteSheet* ss = cast_ss_from_asset(asset);
-                SDL_Color c = SDL_Utils::colorFromSol(color);
-                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
-                ss->drawSprite_lua(x, y, spriteIndex, c, sm);
-            }
-        );
+            // register named Lua wrappers (AssetObject-based):
+            // drawSprite(spriteIndex, x, y)  OR  drawSprite(asset, spriteIndex, dstTable)
+            reg("drawSprite",
+                [lua, cast_ss_from_asset](AssetObject asset, sol::object a, sol::object b, sol::object c, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+                    SpriteSheet* ss = cast_ss_from_asset(asset);
+                    // first arg must be spriteIndex
+                    if (a.get_type() != sol::type::number) {
+                        ERROR("drawSprite: first argument must be spriteIndex (number)");
+                        return;
+                    }
+                    int spriteIndex = a.as<int>();
 
-        // drawSprite_dst(asset, dstTbl, index, color?, scaleMode?)
+                    // If second arg is a table, treat it as a destination rect
+                    if (b.get_type() == sol::type::table) {
+                        sol::table dstTbl = b.as<sol::table>();
+                        SDL_FRect d = SDL_Utils::tableToFRect(dstTbl);
+                        SDL_Color col = SDL_Utils::colorFromSol(color);
+                        SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
+                        ss->drawSprite_dst_lua(spriteIndex, d, col, sm);
+                        return;
+                    }
+
+                    // Otherwise expect numeric x,y in b and c
+                    if (b.get_type() == sol::type::number && c.get_type() == sol::type::number) {
+                        int x = b.as<int>();
+                        int y = c.as<int>();
+                        SDL_Color col = SDL_Utils::colorFromSol(color);
+                        SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
+                        ss->drawSprite_lua(spriteIndex, x, y, col, sm);
+                        return;
+                    }
+
+                    // No valid overload matched: log an error
+                    ERROR("drawSprite: invalid arguments (expected (idx,x,y) or (idx,dstTable))");
+                }
+            );
+
+        // drawSprite_dst( index, dstTbl, color?, scaleMode?)
         reg("drawSprite_dst",
-            [lua, cast_ss_from_asset](AssetObject asset, sol::table dstTbl, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+            [lua, cast_ss_from_asset](AssetObject asset, int spriteIndex, sol::table dstTbl, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
                 SpriteSheet* ss = cast_ss_from_asset(asset);
                 SDL_FRect d = SDL_Utils::tableToFRect(dstTbl);
                 SDL_Color c = SDL_Utils::colorFromSol(color);
                 SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
-                ss->drawSprite_dst_lua(d, spriteIndex, c, sm);
+                ss->drawSprite_dst_lua(spriteIndex, d, c, sm);
             }
         );
 
-        // drawSprite_EX(asset, srcTbl, dstTbl, index, color?, scaleMode?)
+        // drawSprite_EX(asset, index, srcTbl, dstTbl, color?, scaleMode?)
         reg("drawSprite_ext",
-            [lua, cast_ss_from_asset](AssetObject asset, sol::table srcTbl, sol::table dstTbl, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+            [lua, cast_ss_from_asset](AssetObject asset, int spriteIndex, sol::table srcTbl, sol::table dstTbl, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
                 SpriteSheet* ss = cast_ss_from_asset(asset);
-                ss->drawSprite_ext_Lua(ss, srcTbl, dstTbl, spriteIndex, color, scaleMode);
+                ss->drawSprite_ext_Lua(ss, spriteIndex, srcTbl, dstTbl, color, scaleMode);
             }
         );
 
