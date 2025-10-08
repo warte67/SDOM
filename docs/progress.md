@@ -491,7 +491,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Benchmarks show well over 10,000 frames per second on development hardware. Roughly 6000-7000 fps on a 15 year old I3 system (roughly 1.5 miliseconds per frame of overhead).
         - The SDOM API introduces only ~100 microseconds of overhead per frame, which is negligible for real-time 2D applications and 2D/3D games. This performance is without extensive post development optimization.
         - This validates the architectural choices and confirms that the system is ready for further feature development and integration.
-        
+    - **Milestone - DisplayObject Complete:**  
+        - With the DisplayObject (IDisplayObject) system now robust, unit-tested, and stable, the next major development track is the AssetObject system for resource management.        
 ---   
 - ### [October 7, 2025]
     - cleaned up the heavy includes from the header files to reduce compile times and improve modularity.
@@ -520,38 +521,37 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Refactor SpriteSheet::onLoad() to first verify the AssetObject for the main texture is valid, load it if not.
         - Add unit tests to verify texture sharing (two SpriteSheets with same filename reuse one SDL texture).
 
----
-- **Milestone - DisplayObject Complete:**  
-    - With the DisplayObject (IDisplayObject) system now robust, unit-tested, and stable, the next major development track is the AssetObject system for resource management.
-- **Planned Feature: IAssetObject & AssetObject Handle**
-    - Introduce an `IAssetObject` interface and corresponding `AssetObject` handle, following the same architectural pattern as `IDisplayObject` and `DisplayObject`.
-    - AssetObjects will represent resources managed by the Factory, such as images, sounds, fonts, or other external/internal assets.
-- **Design Goals:**
-    - Minimal, type-safe API for asset management.
-    - Each AssetObject will have:
-        - `getType()` and `getName()` for identification (mirroring DisplayObject).
-        - `getFilename()` and `setFilename()` for external asset paths.
-        - `isInternal()` (or `isEmbedded()`) flag to denote assets bundled within the binary (embedded resources).
-    - Assets may originate from either external files or internal resources compiled into the binary.
-    - Factory will provide methods for asset creation, lookup, and destruction, returning AssetObject handles for safe reference.
-- **Implementation Plan:**
-    - Scaffold `IAssetObject` and `AssetObject` handle classes.
-    - Extend Factory to register, create, and track AssetObjects by type and name.
-    - Implement Lua bindings for asset creation, querying, and property access.
-    - Add unit tests for asset creation, retrieval, and internal/external flags.
-    - Document the API and usage patterns for both C++ and Lua.
-- **Benefits:**
-    - Consistent handle-based API for all resource types.
-    - Supports both external and embedded resources for flexible deployment.
-    - Clear separation between DOM objects and resource assets.
-    - Easy extension for future asset types (audio, fonts, etc.).
-- **Next Steps:**
-    - Begin implementation of `IAssetObject` and `AssetObject`.
-    - Update Factory and Lua bindings.
-    - Add initial unit tests and documentation.
+---   
+- ### [October 8, 2025] 
+- drawSprite Lua API / overload consolidation
+    - Consolidated Lua drawSprite wrappers to a single exposed name with deterministic dispatch:
+        - Exposed variants (C++):
+            - `drawSprite(index, x, y, color?, scaleMode?)`          — fast (x,y) draw
+            - `drawSprite(index, dstRectF, color?, scaleMode?)`       — destination-rect draw
+            - `drawSprite(index, srcRectF, dstRectF, color?, scaleMode?)` — source->dest subregion draw
+            - `scaleMode` may be string `"linear"` or `"nearest"` but `"nearest"` is default if omitted.
+        - Lua surface:
+            - Kept three explicit helpers for clarity: `drawSprite` (x,y form), `drawSprite_dst`, `drawSprite_ext`
+            - Also provide a single `drawSprite(...)` dispatcher that inspects argument types/tables and routes to the correct internal overload (heuristic rules documented below).
+    - Dispatcher rules (short):
+        - First argument after the handle must be spriteIndex (number).
+        - (index, number, number, ...) → x,y form.
+        - (index, table, table, ...) → srcTbl + dstTbl → drawSprite_ext.
+        - (index, table, ...) → dstTbl → drawSprite_dst (if ambiguous, src+dst is preferred when two tables are provided).
+        - Optional color table accepted as {r,g,b,a} or {r=..,g=..,b=..,a=..}; scaleMode accepted as string or numeric enum.
+        - Optional rectangle tables accepted as {x=..,y=..,w=..,h=..} or {left=..,top=..,right=..,bottom=..}.
+        - Callers may use explicit `drawSprite_dst` / `drawSprite_ext` to avoid ambiguity.
+    - Linear-filter "clipping" mitigation:
+        - When using "linear" (SDL_SCALEMODE_LINEAR) the renderer now insets source rectangles by ~0.5 texels to reduce neighbor-bleed.
+        - Recommended long-term fixes: export atlas with duplicated-edge 1px padding or build a runtime padded atlas with edge replication (sketches available in the codebase).
+    - Docs & examples updated:
+        - Example call sites in examples/test/lua/callbacks/listener_callbacks.lua updated to use explicit dst/ext forms or pass nil placeholders where appropriate.
+        - Add unit tests for dispatcher patterns to prevent regressions.
+
 
 ---
 # ToDo:
+- Implement a Texture asset class to manage SDL_Texture resources in the Factory.
 - Build out the IAssetObject interface and the AssetObject handle type
 - Design and implement the AssetObject handle class, mirroring the DisplayObject handle pattern, and integrate with Factory.
 - Preload and test two font assets:

@@ -1448,19 +1448,68 @@ namespace SDOM
         return t;
     } // END SDL_Utils::eventToLuaTable()
 
+    // SDL_FRect SDL_Utils::tableToFRect(const sol::table& t)
+    // {
+    //     SDL_FRect r{0,0,0,0};
+    //     if (!t.valid()) return r;
+    //     // keyed lookup first, then array-style
+    //     r.x = t["x"].get_or(t[1].get_or(0.0f));
+    //     r.y = t["y"].get_or(t[2].get_or(0.0f));
+    //     r.w = t["w"].get_or(t[3].get_or(0.0f));
+    //     r.h = t["h"].get_or(t[4].get_or(0.0f));
+    //     r.w = t["width"].get_or(r.w);   // allow 'width'
+    //     r.h = t["height"].get_or(r.h);  // allow 'height'
+    //     return r;
+    // }
+
     SDL_FRect SDL_Utils::tableToFRect(const sol::table& t)
     {
         SDL_FRect r{0,0,0,0};
         if (!t.valid()) return r;
-        // keyed lookup first, then array-style
+
+        // If table uses left/top/right/bottom (or aliases l/t/r/b), prefer that form.
+        bool has_ltrb = t["left"].valid() || t["l"].valid() ||
+                        t["top"].valid()  || t["t"].valid() ||
+                        t["right"].valid()|| t["r"].valid() ||
+                        t["bottom"].valid()|| t["b"].valid();
+
+        if (has_ltrb) 
+        {
+            // left / l / fallback to numeric[1]
+            r.x = t["left"].get_or(t["l"].get_or(t[1].get_or(0.0f)));
+            // top / t / fallback to numeric[2]
+            r.y = t["top"].get_or(t["t"].get_or(t[2].get_or(0.0f)));
+
+            // width: prefer explicit w/width, else try numeric[3]
+            float w = t["w"].get_or(t["width"].get_or(t[3].get_or(0.0f)));
+            // right / r / fallback to numeric[3]
+            bool has_right = t["right"].valid() || t["r"].valid();
+            float right = t["right"].get_or(t["r"].get_or(t[3].get_or(0.0f)));
+
+            // height: prefer explicit h/height, else try numeric[4]
+            float h = t["h"].get_or(t["height"].get_or(t[4].get_or(0.0f)));
+            // bottom / b / fallback to numeric[4]
+            bool has_bottom = t["bottom"].valid() || t["b"].valid();
+            float bottom = t["bottom"].get_or(t["b"].get_or(t[4].get_or(0.0f)));
+
+            // compute final width/height using right/bottom if provided, otherwise use w/h
+            if (has_right) r.w = right - r.x;
+            else r.w = w;
+            if (has_bottom) r.h = bottom - r.y;
+            else r.h = h;
+
+            return r;
+        }
+
+        // keyed lookup first (x,y,w,h or width/height), then array-style
         r.x = t["x"].get_or(t[1].get_or(0.0f));
         r.y = t["y"].get_or(t[2].get_or(0.0f));
-        r.w = t["w"].get_or(t[3].get_or(0.0f));
-        r.h = t["h"].get_or(t[4].get_or(0.0f));
-        r.w = t["width"].get_or(r.w);   // allow 'width'
-        r.h = t["height"].get_or(r.h);  // allow 'height'
+        r.w = t["w"].get_or(t["width"].get_or(t[3].get_or(0.0f)));
+        r.h = t["h"].get_or(t["height"].get_or(t[4].get_or(0.0f)));
+
         return r;
     }
+
 
     SDL_Color SDL_Utils::colorFromSol(const sol::object& o)
     {

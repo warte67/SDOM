@@ -47,6 +47,50 @@ end
 
 function M.on_prerender(evt)
     -- Called BEFORE children are rendered; but after the stage is rendered
+
+    local ss = getAssetObject("ut_bmp8_lua2")
+    if not ss then
+        print("Failed to get asset: ut_bmp8_lua2")
+        return false
+    end
+
+    -- advance idx sixteen times second using deltaTimeAccumulator
+    deltaTimeAccumulator = deltaTimeAccumulator + getElapsedTime()
+    if deltaTimeAccumulator >= 0.0625 then
+        deltaTimeAccumulator = deltaTimeAccumulator - 0.0625
+        idx = (idx + 1) % 256
+    end
+
+    -- ** Works Well **  drawSprite(spriteIndex, x, y, [{color}], [filter = "nearest"|"linear"])
+        -- ss:drawSprite(idx, 16, 32)
+        -- ss:drawSprite(idx, 32, 32, {r=255, g=255, b=128, a=255})
+        -- ss:drawSprite(idx, 48, 32, {r=255, g=192, b=128, a=255}, "linear")
+
+    -- ** Works Well **  drawSprite_dst(spriteIndex, {w,h,x,y}, [{color}], [filter = "nearest"|"linear"])
+        -- local color = { r = 192, g = 64, b = 32, a = 255 }
+        -- local dst = {w = 32, h = 32, x = 16, y = 32}
+        -- ss:drawSprite(idx, dst, color, "nearest")
+        -- ss:drawSprite(idx, dst, {r=255, g=192, b=128, a=255}, "linear")
+
+        -- Alternative calls that should work the same as above:
+            -- local color = { r = 192, g = 64, b = 32, a = 255 }
+            -- local dst = {w = 32, h = 32, x = 16, y = 32}
+            -- ss:drawSprite_dst(idx, dst, color, "nearest")
+            -- ss:drawSprite_dst(idx, dst, {r=255, g=192, b=128, a=255}, "linear")        
+
+    -- ** Works Well **   drawSprite_ext(spriteIndex, {source rect}, {destination rect}, [{color}], [filter = "nearest"|"linear"])
+    --                    Note: This version of drawSprite is used to render a specific sub-rectangle of a single sprite tile 
+    --                    from the sprite sheet into a destination rect on screen, applying color modulation and scale mode.
+    --                    This is useful for rendering only portions of a sprite tile. 
+        ss:drawSprite(idx, {0,4,8,4}, {l=16,t=32,r=48,b=64}, nil, nil)  -- source rect, dest rect, no color, no filter (default "nearest")
+        ss:drawSprite(idx, {0,4,8,4}, {x=56,y=32,w=32,h=32}, {r=255, g=128, b=96, a=255}, nil) -- with color, no filter (default "nearest")
+        ss:drawSprite(idx, {0,4,8,4}, {96,32,32,32}, {r=255, g=192, b=128, a=255}, "linear") -- with color, "linear" filter
+
+        -- Alternative calls that should work the same as above:
+        -- ss:drawSprite_ext(idx, {0,4,8,4}, {16,32,32,32}, nil, nil)  -- source rect, dest rect, no color, no filter (default "nearest")
+        -- ss:drawSprite_ext(idx, {0,4,8,4}, {56,32,32,32}, {r=255, g=128, b=96, a=255}, nil) -- with color, no filter (default "nearest")
+        -- ss:drawSprite_ext(idx, {0,4,8,4}, {96,32,32,32}, {r=255, g=192, b=128, a=255}, "linear") -- with color, "linear" filter
+
     CLR.draw_debug_text("Stage", 550, 8, 14, 255, 64, 64, 255)
 end
 
@@ -63,21 +107,6 @@ function M.on_render(evt)
         ema = EMA_ALPHA * instant + (1.0 - EMA_ALPHA) * ema
     end
     local display = math.floor(ema + 0.5)
-
-    local ss = getAssetObject("ut_bmp8_lua2")
-    if not ss then
-        print("Failed to get asset: ut_bmp8_lua2")
-        return false
-    end
-    
-    -- advance idx ten times second using deltaTimeAccumulator
-    deltaTimeAccumulator = deltaTimeAccumulator + dt
-    if deltaTimeAccumulator >= 0.1 then
-        deltaTimeAccumulator = deltaTimeAccumulator - 0.1
-        idx = (idx + 1) % 256
-    end
-    ss:drawSprite(idx, {w = 32, h = 32, x = 16, y = 32})
-    -- ss:drawSprite(idx, 50, 50)
 
     -- Render FPS into SDL window using CLR.draw_debug_text. Draw at top-left inside the window.
     -- Parameters: text, x, y, ptsize, r,g,b,a

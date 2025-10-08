@@ -1,13 +1,11 @@
 // SDOM_AssetObject.hpp
 #pragma once
-// #include <string>
-// #include <sol/sol.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
-// #include <SDOM/SDOM_Factory.hpp>
-//#include <SDOM/SDOM_IAssetObject.hpp>
 
 namespace SDOM
 {
+    class Core;
+    class Factory;
     class IAssetObject;
 
     // Lightweight handle for IAssetObject (idempotent Lua bindings, no heavy APIs).

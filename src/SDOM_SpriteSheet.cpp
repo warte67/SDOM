@@ -277,6 +277,20 @@ namespace SDOM
         destRect.w = static_cast<float>(spriteWidth_);
         destRect.h = static_cast<float>(spriteHeight_);
 
+        
+        // If using linear filtering, inset the source rect slightly to avoid sampling neighbor texels.
+        if (scaleMode == SDL_SCALEMODE_LINEAR) {
+            const float inset = 0.5f; // half a texel
+            // ensure we don't invert the rect
+            if (srcRect.w > 2.0f * inset && srcRect.h > 2.0f * inset) {
+                srcRect.x += inset;
+                srcRect.y += inset;
+                srcRect.w -= 2.0f * inset;
+                srcRect.h -= 2.0f * inset;
+            }
+        }
+
+
         // Render the sprite
         SDL_Renderer* renderer = getRenderer();
         if (!renderer)
@@ -285,6 +299,7 @@ namespace SDOM
             return;
         }
         SDL_SetTextureColorMod(texture_, color.r, color.g, color.b);
+        SDL_SetTextureAlphaMod(texture_, color.a);
         SDL_SetTextureScaleMode(texture_, scaleMode); 
         SDL_RenderTexture(renderer, texture_, &srcRect, &destRect);
     }
@@ -315,6 +330,20 @@ namespace SDOM
         srcRect.y = static_cast<float>((spriteIndex / spritesPerRow) * spriteHeight_);
         srcRect.w = static_cast<float>(spriteWidth_);
         srcRect.h = static_cast<float>(spriteHeight_);
+
+        
+        // If using linear filtering, inset the source rect slightly to avoid sampling neighbor texels.
+        if (scaleMode == SDL_SCALEMODE_LINEAR) {
+            const float inset = 0.5f; // half a texel
+            // ensure we don't invert the rect
+            if (srcRect.w > 2.0f * inset && srcRect.h > 2.0f * inset) {
+                srcRect.x += inset;
+                srcRect.y += inset;
+                srcRect.w -= 2.0f * inset;
+                srcRect.h -= 2.0f * inset;
+            }
+        }
+
 
         // Render the sprite
         SDL_Renderer* renderer = getRenderer();
@@ -378,6 +407,20 @@ namespace SDOM
         float maxH = static_cast<float>(spriteHeight_) - (sRect.y - static_cast<float>((spriteIndex / spritesPerRow) * spriteHeight_));
         sRect.w = std::clamp(srcRect.w, 0.0f, maxW);
         sRect.h = std::clamp(srcRect.h, 0.0f, maxH);
+
+
+        // If using linear filtering, inset the source rect slightly to avoid sampling neighbor texels.
+        if (scaleMode == SDL_SCALEMODE_LINEAR) {
+            const float inset = 0.5f; // half a texel
+            // ensure we don't invert the rect
+            if (sRect.w > 2.0f * inset && sRect.h > 2.0f * inset) {
+                sRect.x += inset;
+                sRect.y += inset;
+                sRect.w -= 2.0f * inset;
+                sRect.h -= 2.0f * inset;
+            }
+        }
+
 
         // Render the sprite
         SDL_Renderer* renderer = getRenderer();
@@ -507,8 +550,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-    // Augment the single shared AssetObject handle usertype (assets are exposed via AssetObject handles in Lua)
-    sol::table handle = AssetObject::ensure_handle_table(lua);
+        // Augment the single shared AssetObject handle usertype (assets are exposed via AssetObject handles in Lua)
+        sol::table handle = AssetObject::ensure_handle_table(lua);
 
         // Helper to check if a property/command is already registered
         auto absent = [&](const char* name) -> bool {
@@ -554,49 +597,183 @@ namespace SDOM
             }
         );
 
-        // register named Lua wrappers (AssetObject-based):
-        // drawSprite(asset, x, y, index, color?, scaleMode?)
-            // register named Lua wrappers (AssetObject-based):
-            // drawSprite(spriteIndex, x, y)  OR  drawSprite(asset, spriteIndex, dstTable)
-            reg("drawSprite",
-                [lua, cast_ss_from_asset](AssetObject asset, sol::object a, sol::object b, sol::object c, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
-                    SpriteSheet* ss = cast_ss_from_asset(asset);
-                    // first arg must be spriteIndex
-                    if (a.get_type() != sol::type::number) {
-                        ERROR("drawSprite: first argument must be spriteIndex (number)");
-                        return;
-                    }
-                    int spriteIndex = a.as<int>();
+        // // register named Lua wrappers (AssetObject-based):
+        // // drawSprite(spriteIndex, x, y, color?, scaleMode?)
+        // reg("drawSprite",
+        //     [lua, cast_ss_from_asset](AssetObject asset, sol::object a, sol::object b, sol::object c, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+        //         SpriteSheet* ss = cast_ss_from_asset(asset);
 
-                    // If second arg is a table, treat it as a destination rect
-                    if (b.get_type() == sol::type::table) {
-                        sol::table dstTbl = b.as<sol::table>();
-                        SDL_FRect d = SDL_Utils::tableToFRect(dstTbl);
-                        SDL_Color col = SDL_Utils::colorFromSol(color);
-                        SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
-                        ss->drawSprite_dst_lua(spriteIndex, d, col, sm);
-                        return;
-                    }
+        //         // validate required args: spriteIndex, x, y
+        //         if (a.get_type() != sol::type::number ||
+        //             b.get_type() != sol::type::number ||
+        //             c.get_type() != sol::type::number) {
+        //             ERROR("drawSprite: expected arguments (spriteIndex:number, x:number, y:number, [color], [scaleMode])");
+        //             return;
+        //         }
 
-                    // Otherwise expect numeric x,y in b and c
-                    if (b.get_type() == sol::type::number && c.get_type() == sol::type::number) {
-                        int x = b.as<int>();
-                        int y = c.as<int>();
-                        SDL_Color col = SDL_Utils::colorFromSol(color);
-                        SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
-                        ss->drawSprite_lua(spriteIndex, x, y, col, sm);
-                        return;
-                    }
+        //         int spriteIndex = a.as<int>();
+        //         int x = b.as<int>();
+        //         int y = c.as<int>();
 
-                    // No valid overload matched: log an error
-                    ERROR("drawSprite: invalid arguments (expected (idx,x,y) or (idx,dstTable))");
+        //         SDL_Color col = SDL_Utils::colorFromSol(color);
+        //         SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
+
+        //         ss->drawSprite_lua(spriteIndex, x, y, col, sm);
+        //     }
+        // );
+
+        // single Lua entrypoint: drawSprite(...)
+        reg("drawSprite",
+            [lua, cast_ss_from_asset](AssetObject asset, sol::variadic_args va) {
+                SpriteSheet* ss = cast_ss_from_asset(asset);
+                if (!ss) return;
+
+                std::vector<sol::object> args;
+                for (auto v : va) args.push_back(v);
+                if (args.empty()) { ERROR("drawSprite: missing arguments"); return; }
+
+                auto is_table = [](const sol::object& o) -> bool {
+                    return o.valid() && o.get_type() == sol::type::table;
+                };
+
+                auto is_color_table = [](const sol::object& o) -> bool {
+                    if (!o.valid() || o.get_type() != sol::type::table) return false;
+                    sol::table t = o.as<sol::table>();
+                    bool numeric = t[1].valid() && t[2].valid() && t[3].valid();
+                    bool named = (t["r"].valid() && t["g"].valid() && t["b"].valid());
+                    return numeric || named;
+                };
+
+                // auto is_rect_table = [](const sol::object& o) -> bool {
+                //     if (!o.valid() || o.get_type() != sol::type::table) return false;
+                //     sol::table t = o.as<sol::table>();
+                //     bool numeric = t[1].valid() && t[2].valid() && t[3].valid() && t[4].valid();
+                //     bool named = (t["x"].valid() && t["y"].valid() && (t["w"].valid() || t["width"].valid()) && (t["h"].valid() || t["height"].valid()));
+                //     // also accept (w,h,x,y) ordering by checking presence of all four named keys in any order
+                //     bool named_alt = (t["w"].valid() && t["h"].valid() && t["x"].valid() && t["y"].valid());
+                //     return numeric || named || named_alt;
+                // };
+                
+                auto is_rect_table = [](const sol::object& o) -> bool {
+                    if (!o.valid() || o.get_type() != sol::type::table) return false;
+                    sol::table t = o.as<sol::table>();
+
+                    // numeric form: {x, y, w, h} or any 4-element numeric sequence
+                    bool numeric = t[1].valid() && t[2].valid() && t[3].valid() && t[4].valid();
+
+                    // named form: x,y,w,h or x,y,width,height
+                    bool named_xywh = t["x"].valid() && t["y"].valid() &&
+                                      (t["w"].valid() || t["width"].valid()) &&
+                                      (t["h"].valid() || t["height"].valid());
+
+                    // alternate named order: w,h,x,y
+                    bool named_whxy = t["w"].valid() && t["h"].valid() && t["x"].valid() && t["y"].valid();
+
+                    // left/top/right/bottom form, accept aliases "l","t","r","b"
+                    auto has_key = [&](const char* a, const char* b) -> bool {
+                        return t[a].valid() || t[b].valid();
+                    };
+                    bool ltrb = has_key("left","l") && has_key("top","t") && has_key("right","r") && has_key("bottom","b");
+
+                    return numeric || named_xywh || named_whxy || ltrb;
+                };
+
+                // first arg must be index:number
+                sol::object a = args[0];
+                if (a.get_type() != sol::type::number) {
+                    ERROR("drawSprite: first argument must be spriteIndex (number)");
+                    return;
                 }
-            );
+                int spriteIndex = a.as<int>();
+
+                sol::object arg1 = (args.size() >= 2) ? args[1] : sol::nil;
+                sol::object arg2 = (args.size() >= 3) ? args[2] : sol::nil;
+                sol::object arg3 = (args.size() >= 4) ? args[3] : sol::nil;
+                sol::object arg4 = (args.size() >= 5) ? args[4] : sol::nil;
+
+                // CASE A: (index, x, y, [color], [scale])
+                if (arg1.get_type() == sol::type::number && arg2.get_type() == sol::type::number) {
+                    int x = arg1.as<int>();
+                    int y = arg2.as<int>();
+                    SDL_Color col = SDL_Utils::colorFromSol(arg3);
+                    SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(arg4);
+                    ss->drawSprite_lua(spriteIndex, x, y, col, sm);
+                    return;
+                }
+
+                // CASE C: (index, srcTbl, dstTbl, [color], [scale])
+                if (is_rect_table(arg1) && is_rect_table(arg2)) {
+                    sol::table srcTbl = arg1.as<sol::table>();
+                    sol::table dstTbl = arg2.as<sol::table>();
+                    // SDL_Color c = SDL_Utils::colorFromSol(arg3);
+                    // SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(arg4);
+                    ss->drawSprite_ext_Lua(ss, spriteIndex, srcTbl, dstTbl, arg3, arg4);
+                    return;
+                }
+
+                // CASE B: (index, dstTbl, [color], [scale])  -> drawSprite_dst
+                if (is_rect_table(arg1)) {
+                    sol::table dstTbl = arg1.as<sol::table>();
+                    // If second provided and is a color, treat it as color; otherwise treat as scale (or nil)
+                    if (is_color_table(arg2) || arg2 == sol::nil) {
+                        SDL_Color c = SDL_Utils::colorFromSol(arg2);
+                        SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(arg3);
+                        SDL_FRect d = SDL_Utils::tableToFRect(dstTbl);
+                        ss->drawSprite_dst_lua(spriteIndex, d, c, sm);
+                        return;
+                    } else if (is_table(arg2) && !is_color_table(arg2) && arg3 != sol::nil) {
+                        // ambiguous: two tables but second isn't color -> prefer src+dst handled earlier; fallthrough
+                    } else {
+                        SDL_Color c = SDL_Utils::colorFromSol(arg2);
+                        SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(arg3);
+                        SDL_FRect d = SDL_Utils::tableToFRect(dstTbl);
+                        ss->drawSprite_dst_lua(spriteIndex, d, c, sm);
+                        return;
+                    }
+                }
+
+                // nothing matched: helpful debug output
+                {
+                    std::string types = "";
+                    auto tname = [](const sol::object& o)->std::string {
+                        if (!o.valid()) return "nil";
+                        switch (o.get_type()) {
+                            case sol::type::nil: return "nil";
+                            case sol::type::number: return "number";
+                            case sol::type::string: return "string";
+                            case sol::type::table: return "table";
+                            case sol::type::boolean: return "boolean";
+                            default: return "other";
+                        }
+                    };
+                    for (size_t i=0;i<args.size();++i) {
+                        if (i) types += ", ";
+                        types += tname(args[i]);
+                    }
+                    ERROR("drawSprite: invalid argument pattern; types = " + types);
+                }
+            }
+        );
 
         // drawSprite_dst( index, dstTbl, color?, scaleMode?)
         reg("drawSprite_dst",
-            [lua, cast_ss_from_asset](AssetObject asset, int spriteIndex, sol::table dstTbl, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+            [lua, cast_ss_from_asset](AssetObject asset, sol::object a, sol::object b, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
                 SpriteSheet* ss = cast_ss_from_asset(asset);
+
+                // validate spriteIndex
+                if (!a.valid() || a.get_type() != sol::type::number) {
+                    ERROR("drawSprite_dst: first argument must be spriteIndex (number)");
+                    return;
+                }
+                int spriteIndex = a.as<int>();
+
+                // validate destination rect (must be a table)
+                if (!b.valid() || b.get_type() != sol::type::table) {
+                    ERROR("drawSprite_dst: second argument must be a destination table");
+                    return;
+                }
+                sol::table dstTbl = b.as<sol::table>();
+
                 SDL_FRect d = SDL_Utils::tableToFRect(dstTbl);
                 SDL_Color c = SDL_Utils::colorFromSol(color);
                 SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
@@ -606,8 +783,30 @@ namespace SDOM
 
         // drawSprite_EX(asset, index, srcTbl, dstTbl, color?, scaleMode?)
         reg("drawSprite_ext",
-            [lua, cast_ss_from_asset](AssetObject asset, int spriteIndex, sol::table srcTbl, sol::table dstTbl, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+            [lua, cast_ss_from_asset](AssetObject asset, sol::object a, sol::object b, sol::object c, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
                 SpriteSheet* ss = cast_ss_from_asset(asset);
+
+                // validate spriteIndex
+                if (!a.valid() || a.get_type() != sol::type::number) {
+                    ERROR("drawSprite_ext: first argument must be spriteIndex (number)");
+                    return;
+                }
+                int spriteIndex = a.as<int>();
+
+                // validate src rect (must be a table)
+                if (!b.valid() || b.get_type() != sol::type::table) {
+                    ERROR("drawSprite_ext: second argument must be a source rect table");
+                    return;
+                }
+                sol::table srcTbl = b.as<sol::table>();
+
+                // validate dst rect (must be a table)
+                if (!c.valid() || c.get_type() != sol::type::table) {
+                    ERROR("drawSprite_ext: third argument must be a destination rect table");
+                    return;
+                }
+                sol::table dstTbl = c.as<sol::table>();
+
                 ss->drawSprite_ext_Lua(ss, spriteIndex, srcTbl, dstTbl, color, scaleMode);
             }
         );
