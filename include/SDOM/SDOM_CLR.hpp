@@ -280,7 +280,10 @@ public:
     inline static const std::string PINK		= "\e[1;35m";   ///< ANSI escape sequence for pink foreground
     inline static const std::string LT_CYAN		= "\e[1;36m";   ///< ANSI escape sequence for light cyan foreground
     inline static const std::string WHITE		= "\e[1;37m";   ///< ANSI escape sequence for white foreground
-    /** @} */
+    inline static const std::string LT_MAGENTA  = fg_rgb(255, 105, 180); ///< ANSI escape sequence for light magenta (hot pink) foreground
+    inline static const std::string LT_ORANGE   = fg_rgb(255, 165,  79); ///< ANSI escape sequence for light orange foreground
+
+   /** @} */
 
 
 

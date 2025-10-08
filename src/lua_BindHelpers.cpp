@@ -322,6 +322,29 @@ namespace SDOM
 		} catch(...) {}
 	}
 
+	void bind_string_table_return_asset(const std::string& name, std::function<AssetObject(const std::string&, const sol::table&)> func,
+									sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+	{
+		auto fcopy = func;
+		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& typeName, const sol::table& cfg) -> AssetObject {
+			return fcopy(typeName, cfg);
+		};
+		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
+			sol::state_view sv = ts;
+			AssetObject h = fcopy(typeName, cfg);
+			if (h.isValid() && h.get()) return sol::make_object(sv, h);
+			return sol::make_object(sv, AssetObject());
+		});
+		try {
+			lua[name] = [fcopy](sol::this_state ts, const std::string& typeName, const sol::table& cfg) {
+				sol::state_view sv = ts;
+				AssetObject h = fcopy(typeName, cfg);
+				if (h.isValid() && h.get()) return sol::make_object(sv, h);
+				return sol::make_object(sv, AssetObject());
+			};
+		} catch(...) {}
+	}
+
 	void bind_string_return_do(const std::string& name, std::function<DisplayObject(const std::string&)> func,
 							sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{
@@ -343,6 +366,27 @@ namespace SDOM
 		} catch(...) {}
 	}
 
+	void bind_string_return_asset(const std::string& name, std::function<AssetObject(const std::string&)> func,
+							sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+	{
+		auto fcopy = func;
+		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) -> AssetObject { return fcopy(s); };
+		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& s) {
+			sol::state_view sv = ts;
+			AssetObject h = fcopy(s);
+			if (h.isValid() && h.get()) return sol::make_object(sv, h);
+			return sol::make_object(sv, AssetObject());
+		});
+		try {
+			lua[name] = [fcopy](sol::this_state ts, const std::string& s) {
+				sol::state_view sv = ts;
+				AssetObject h = fcopy(s);
+				if (h.isValid() && h.get()) return sol::make_object(sv, h);
+				return sol::make_object(sv, AssetObject());
+			};
+		} catch(...) {}
+	}
+	
 	void bind_string_return_bool(const std::string& name, std::function<bool(const std::string&)> func,
 								sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{

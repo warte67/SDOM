@@ -24,6 +24,11 @@ namespace SDOM
         // Open base libraries plus package and io so embedded scripts can use
         // `require`/`package` and basic I/O if desired by examples.
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::package, sol::lib::io);
+
+        // Register Core and SDL_Utils usertypes
+        SDL_Utils::registerLua(lua_);
+        factory_ = new Factory();
+        eventManager_ = new EventManager();
         
         // register the DisplayObject handle last so other types can use it
         DisplayObject prototypeHandle; // Default DisplayObject for registration
@@ -31,10 +36,6 @@ namespace SDOM
 
         AssetObject prototypeAssetHandle; // Default AssetObject for registration
         prototypeAssetHandle._registerLuaBindings("AssetObject", lua_);
-
-        SDL_Utils::registerLua(lua_);
-        factory_ = new Factory();
-        eventManager_ = new EventManager();
     }
 
     Core::~Core()
@@ -1316,6 +1317,17 @@ namespace SDOM
         return getFactory().create(typeName, luaScript);
     }
 
+    AssetObject Core::createAssetObject(const std::string& typeName, const sol::table& config) {
+        return getFactory().createAsset(typeName, config);
+    }
+    AssetObject Core::createAssetObject(const std::string& typeName, const SDOM::IAssetObject::InitStruct& init) {
+        return getFactory().createAsset(typeName, init);
+    }
+    AssetObject Core::createAssetObjectFromScript(const std::string& typeName, const std::string& luaScript) {
+        return getFactory().createAsset(typeName, luaScript);
+    }
+
+
     IDisplayObject* Core::getDisplayObjectPtr(const std::string& name) {
         return getFactory().getDomObj(name);
     }
@@ -1326,6 +1338,18 @@ namespace SDOM
         DisplayObject handle = factory_->getDisplayObject(name);
         return handle.isValid();
     }
+
+    IAssetObject* Core::getAssetObjectPtr(const std::string& name) {
+        return getFactory().getResObj(name);
+    }
+    AssetObject Core::getAssetObject(const std::string& name) {
+        return getFactory().getAssetObject(name);
+    }
+    bool Core::hasAssetObject(const std::string& name) const {
+        AssetObject handle = factory_->getAssetObject(name);
+        return handle.isValid();   
+    } 
+
 
     void Core::addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject) {
         getFactory().addDisplayObject(name, std::move(displayObject));
@@ -1468,6 +1492,10 @@ namespace SDOM
         SDOM::bind_string_table_return_do("createDisplayObject", createDisplayObject_lua, objHandleType, coreTable, lua);
         SDOM::bind_string_return_do("getDisplayObject", getDisplayObject_lua, objHandleType, coreTable, lua);
         SDOM::bind_string_return_bool("hasDisplayObject", hasDisplayObject_lua, objHandleType, coreTable, lua);
+
+        SDOM::bind_string_table_return_asset("createAssetObject", createAssetObject_lua, objHandleType, coreTable, lua);
+        SDOM::bind_string_return_asset("getAssetObject", getAssetObject_lua, objHandleType, coreTable, lua);
+        SDOM::bind_string_return_bool("hasAssetObject", hasAssetObject_lua, objHandleType, coreTable, lua);
         
 	    // --- Focus & Hover Management --- //
         SDOM::bind_noarg("doTabKeyPressForward", doTabKeyPressForward_lua, objHandleType, coreTable, lua);

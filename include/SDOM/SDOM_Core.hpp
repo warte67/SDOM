@@ -4,6 +4,7 @@
 #include <atomic>
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
+#include <SDOM/SDOM_IAssetObject.hpp>
 // #include <SDOM/SDOM_DisplayObject.hpp>
 
 namespace SDOM
@@ -15,6 +16,8 @@ namespace SDOM
     class Stage;
     class IDisplayObject;
     class DisplayObject;
+    class IAssetObject;
+    class AssetObject;
 
     /**
      * @class Core
@@ -172,12 +175,20 @@ namespace SDOM
         DisplayObject createDisplayObject(const std::string& typeName, const SDOM::IDisplayObject::InitStruct& init);
         DisplayObject createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript);
 
+        AssetObject createAssetObject(const std::string& typeName, const sol::table& config);
+        AssetObject createAssetObject(const std::string& typeName, const SDOM::IAssetObject::InitStruct& init);
+        AssetObject createAssetObjectFromScript(const std::string& typeName, const std::string& luaScript);
+
         // --- Object Lookup --- //
         IDisplayObject* getDisplayObjectPtr(const std::string& name);
         DisplayObject getDisplayObject(const std::string& name);
         // Backwards-compatibility: old name retained as a thin wrapper
         DisplayObject getDisplayObjectHandle(const std::string& name) { return getDisplayObject(name); }
         bool hasDisplayObject(const std::string& name) const;
+
+        IAssetObject* getAssetObjectPtr(const std::string& name);
+        AssetObject getAssetObject(const std::string& name);
+        bool hasAssetObject(const std::string& name) const;
 
         // --- Display Object Management --- //
         void addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject);

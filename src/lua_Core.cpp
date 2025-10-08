@@ -204,6 +204,17 @@ namespace SDOM
 	}
 	bool hasDisplayObject_lua(const std::string& name) { return Core::getInstance().hasDisplayObject(name); }
 
+    AssetObject createAssetObject_lua(const std::string& typeName, const sol::table& config) {
+        return getCore().createAssetObject(typeName, config);
+    }
+    AssetObject getAssetObject_lua(const std::string& name) {
+        return getCore().getAssetObject(name);
+    }
+    bool hasAssetObject_lua(const std::string& name) {
+        return getCore().hasAssetObject(name);
+    }
+
+
 	// --- Orphan / Future Child Management --- //
 	void destroyDisplayObject_lua(const std::string& name) { Core::getInstance().destroyDisplayObject(name); }
 	int countOrphanedDisplayObjects_lua() { return Core::getInstance().countOrphanedDisplayObjects(); }

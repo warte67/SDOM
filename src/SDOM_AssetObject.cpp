@@ -66,15 +66,14 @@ namespace SDOM
                 any = true;
             }
 
-            sol::object filenameObj = t.get<sol::object>("filename");
-            if (filenameObj.valid() && filenameObj.is<std::string>()) {
-                out.filename_ = filenameObj.as<std::string>();
-                any = true;
-            }
-
             sol::object typeObj = t.get<sol::object>("type");
             if (typeObj.valid() && typeObj.is<std::string>()) {
                 out.type_ = typeObj.as<std::string>();
+                any = true;
+            }
+            sol::object filenameObj = t.get<sol::object>("filename");
+            if (filenameObj.valid() && filenameObj.is<std::string>()) {
+                out.filename_ = filenameObj.as<std::string>();
                 any = true;
             }
 
@@ -128,8 +127,8 @@ namespace SDOM
     {
         if (DEBUG_REGISTER_LUA)
         {
-            std::cout << CLR::MAGENTA << "Registered " "AssetObject"
-                                    << " Lua bindings for type: " << typeName << CLR::RESET << std::endl;
+            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << "AssetObject:" << getName()
+                      << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA << typeName << CLR::RESET << std::endl;
         }
 
         // Ensure minimal shared handle exists.

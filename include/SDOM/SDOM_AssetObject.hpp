@@ -19,8 +19,8 @@ namespace SDOM
         static constexpr const char* LuaHandleName = "AssetObject";
 
         AssetObject() : name_(LuaHandleName), type_(LuaHandleName), filename_(LuaHandleName) {}
-
-        AssetObject(const std::string& name, const std::string& type, const std::string& filename) : name_(name), type_(type), filename_(filename) {}
+        AssetObject(const std::string& name, const std::string& type, const std::string& filename)
+            : name_(name), type_(type), filename_(filename) {}
         AssetObject(const AssetObject& other)
             : name_(other.name_), type_(other.type_), filename_(other.filename_) {}
 
@@ -34,6 +34,8 @@ namespace SDOM
 
         // Return the concrete IAssetObject (or nullptr)
         IAssetObject* get() const;
+        template<typename T>
+        T* as() const { return dynamic_cast<T*>(get()); }
 
         bool isValid() const { return get() != nullptr; }
 

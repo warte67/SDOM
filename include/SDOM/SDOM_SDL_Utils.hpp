@@ -67,6 +67,10 @@ namespace SDOM
         static sol::table eventToLuaTable(const SDL_Event& event, sol::state_view lua);
         static void registerLua(sol::state_view lua);
 
+        static SDL_FRect tableToFRect(const sol::table& t);
+        static SDL_Color colorFromSol(const sol::object& o);
+        
+        static SDL_ScaleMode scaleModeFromSol(const sol::object& o);
 
     };
 

@@ -64,6 +64,10 @@ namespace SDOM
     DisplayObject getDisplayObject_lua(const std::string& name); 	// UNTESTED
     bool hasDisplayObject_lua(const std::string& name);          	// TESTED (GC tests check existence)
 
+    AssetObject createAssetObject_lua(const std::string& typeName, const sol::table& config); // UNTESTED
+    AssetObject getAssetObject_lua(const std::string& name);      //  UNTESTED
+    bool hasAssetObject_lua(const std::string& name);            //  UNTESTED
+
     // --- Focus & Hover Management --- //
     void doTabKeyPressForward_lua();             					// UNTESTED
     void doTabKeyPressReverse_lua();            					// UNTESTED

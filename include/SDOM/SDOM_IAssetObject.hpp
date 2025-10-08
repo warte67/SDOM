@@ -41,6 +41,10 @@ namespace SDOM
         bool isInternal() const { return isInternal_; }
         bool isLoaded() const { return isLoaded_; }
 
+        void setType(const std::string& type) { type_ = type; }
+        void setName(const std::string& name) { name_ = name; }
+        void setFilename(const std::string& filename) { filename_ = filename; }
+
     protected:
         std::string name_;
         std::string type_;

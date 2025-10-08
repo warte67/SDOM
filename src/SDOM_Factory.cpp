@@ -11,6 +11,8 @@
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
 
+#include <SDOM/SDOM_SpriteSheet.hpp> // for SpriteSheet registration
+
 namespace SDOM
 {
 
@@ -36,6 +38,32 @@ namespace SDOM
             Stage::CreateFromLua, 
             Stage::CreateFromInitStruct
         });
+
+        // register the SpriteSheet asset
+        registerResType("SpriteSheet", AssetTypeCreators{
+            SpriteSheet::CreateFromLua,
+            SpriteSheet::CreateFromInitStruct
+        });
+        
+        {   // register the default_bmp_8x8 SpriteSheet
+            SpriteSheet::InitStruct init;
+            init.name = "default_bmp_8x8";
+            init.type = "SpriteSheet";
+            init.filename = "default_bmp_8x8";
+            AssetObject spriteSheet = createAsset("SpriteSheet", init);
+            SpriteSheet* spriteSheetPtr = spriteSheet.as<SpriteSheet>();
+            if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("SpriteSheet", core.getLua());
+        }
+        
+        {   // register the default_icon_8x8 SpriteSheet
+            SpriteSheet::InitStruct init;
+            init.name = "default_icon_8x8";
+            init.type = "SpriteSheet";
+            init.filename = "default_icon_8x8";
+            AssetObject spriteSheet = createAsset("SpriteSheet", init);
+            SpriteSheet* spriteSheetPtr = spriteSheet.as<SpriteSheet>();
+            if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("SpriteSheet", core.getLua());
+        }
         return true;
     }
 
@@ -139,6 +167,16 @@ namespace SDOM
         return nullptr;
     }
 
+    void Factory::registerResType(const std::string& typeName, const AssetTypeCreators& creators)
+    {
+        // Register resource type with creators
+        assetCreators_[typeName] = creators;
+
+        // Create a prototype AssetObject for Lua registration
+        AssetObject prototypeHandle(typeName, typeName, typeName);
+        prototypeHandle._registerLuaBindings(typeName, SDOM::getLua());
+    }
+
     IAssetObject* Factory::getResObj(const std::string& name)
     {
         auto it = assetObjects_.find(name);
@@ -169,10 +207,6 @@ namespace SDOM
             AssetObject out;
             out.name_ = name;
             out.type_ = it->second->getType();
-            // Try to recover filename if the stored object implements IAssetObject
-            if (auto* res = dynamic_cast<IAssetObject*>(it->second.get())) {
-                out.filename_ = res->getFilename();
-            }
             return out;
         }
         // Return an empty AssetObject if not found
@@ -369,6 +403,75 @@ namespace SDOM
         sol::table config = result.as<sol::table>();
         return create(typeName, config);
     }
+
+    AssetObject Factory::createAsset(const std::string& typeName, const sol::table& config)
+    {
+        // Check required fields
+        if (!config["name"].valid() || !config["type"].valid() || !config["filename"].valid()) 
+        {
+            ERROR("Factory::createAsset: Missing required property(s) in Lua config: 'name' or 'type' or 'filename'");
+            return AssetObject();
+        }
+        std::string requestedName = config["name"];
+        if (assetObjects_.find(requestedName) != assetObjects_.end()) {
+            ERROR("Factory::createAsset: Asset object with name '" + requestedName + "' already exists");
+            return AssetObject();
+        }
+        std::string filename = config["filename"];
+        if (filename.empty()) {
+            ERROR("Factory::createAsset: 'filename' cannot be empty");
+            return AssetObject();
+        }
+            
+        auto it = assetCreators_.find(typeName);
+        if (it != assetCreators_.end() && it->second.fromLua) 
+        {
+            auto assetObj = it->second.fromLua(config);
+            if (!assetObj) 
+            {
+                ERROR("Factory::createAsset: Failed to create asset object of type '" + typeName + "' from Lua.");
+                return AssetObject();
+            }
+            assetObj->setType(typeName);
+            assetObjects_[requestedName] = std::move(assetObj);
+            assetObjects_[requestedName]->onInit();
+            return AssetObject(requestedName, typeName, filename);
+        }
+        return AssetObject();
+    }
+
+    AssetObject Factory::createAsset(const std::string& typeName, const IAssetObject::InitStruct& init)
+    {
+        if (assetObjects_.find(init.name) != assetObjects_.end()) {
+            ERROR("Factory::createAsset(init): Asset object with name '" + init.name + "' already exists");
+            return AssetObject();
+        }
+        auto it = assetCreators_.find(typeName);
+        if (it != assetCreators_.end() && it->second.fromInitStruct) {
+            auto assetObj = it->second.fromInitStruct(init);
+            if (assetObj) {
+                assetObj->setType(typeName);
+                assetObjects_[init.name] = std::move(assetObj);
+                assetObjects_[init.name]->onInit();
+                return AssetObject(init.name, typeName, init.filename);
+            }
+        }
+        return AssetObject();
+    }
+
+    AssetObject Factory::createAsset(const std::string& typeName, const std::string& luaScript)
+    {
+        sol::state lua;
+        lua.open_libraries(sol::lib::base);
+        sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
+        if (!result.valid() || !result.is<sol::table>()) {
+            ERROR("Factory::createAsset: Provided string is not a valid Lua table.");
+            return AssetObject();
+        }
+        sol::table config = result.as<sol::table>();
+        return createAsset(typeName, config);
+    }
+
 
     bool Factory::attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig)
     {

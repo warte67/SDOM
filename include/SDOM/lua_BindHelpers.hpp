@@ -71,8 +71,14 @@ namespace SDOM
     void bind_string_table_return_do(const std::string& name, std::function<DisplayObject(const std::string&, const sol::table&)> func,
                                     sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
+    void bind_string_table_return_asset(const std::string& name, std::function<AssetObject(const std::string&, const sol::table&)> func,
+                                    sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
+
     // String -> DisplayObject
     void bind_string_return_do(const std::string& name, std::function<DisplayObject(const std::string&)> func,
+                            sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
+
+    void bind_string_return_asset(const std::string& name, std::function<AssetObject(const std::string&)> func,
                             sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
     // String -> bool

@@ -45,8 +45,8 @@ namespace SDOM
     {
         if (DEBUG_REGISTER_LUA)
         {
-            std::cout << "Registered " << "IAssetObject"
-                    << " Lua bindings for type: " << typeName << std::endl;
+            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << "IAssetObject:" << getName()
+                      << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA << typeName << CLR::RESET << std::endl;
         }
 
         // Create the handle usertype once (no constructor), or reuse existing.

@@ -44,8 +44,25 @@ namespace SDOM
     void SDL_Utils::registerLua(sol::state_view lua)
     {
         // Register SDL_Color userdata so Lua can access r/g/b/a and getter helpers
+        // if (!lua["SDL_Color"].valid()) {
+        //     lua.new_usertype<SDL_Color>("SDL_Color",
+        //         "r", &SDL_Color::r,
+        //         "g", &SDL_Color::g,
+        //         "b", &SDL_Color::b,
+        //         "a", &SDL_Color::a,
+        //         "getR", [](const SDL_Color& c) { return c.r; },
+        //         "getG", [](const SDL_Color& c) { return c.g; },
+        //         "getB", [](const SDL_Color& c) { return c.b; },
+        //         "getA", [](const SDL_Color& c) { return c.a; }
+        //     );
+        // }
         if (!lua["SDL_Color"].valid()) {
             lua.new_usertype<SDL_Color>("SDL_Color",
+                // factories: default and (r,g,b,a)
+                sol::factories(
+                    []() { return SDL_Color{255,255,255,255}; },
+                    [](Uint8 r, Uint8 g, Uint8 b, Uint8 a) { return SDL_Color{r,g,b,a}; }
+                ),
                 "r", &SDL_Color::r,
                 "g", &SDL_Color::g,
                 "b", &SDL_Color::b,
@@ -53,7 +70,20 @@ namespace SDOM
                 "getR", [](const SDL_Color& c) { return c.r; },
                 "getG", [](const SDL_Color& c) { return c.g; },
                 "getB", [](const SDL_Color& c) { return c.b; },
-                "getA", [](const SDL_Color& c) { return c.a; }
+                "getA", [](const SDL_Color& c) { return c.a; },
+                // helper to build from a Lua table {r=,g=,b=,a=} or {r,g,b,a}
+                "fromTable", [](const sol::table& t) {
+                    SDL_Color c{255,255,255,255};
+                    if (t["r"].valid()) c.r = static_cast<Uint8>(t["r"].get<int>());
+                    else if (t[1].valid()) c.r = static_cast<Uint8>(t[1].get<int>());
+                    if (t["g"].valid()) c.g = static_cast<Uint8>(t["g"].get<int>());
+                    else if (t[2].valid()) c.g = static_cast<Uint8>(t[2].get<int>());
+                    if (t["b"].valid()) c.b = static_cast<Uint8>(t["b"].get<int>());
+                    else if (t[3].valid()) c.b = static_cast<Uint8>(t[3].get<int>());
+                    if (t["a"].valid()) c.a = static_cast<Uint8>(t["a"].get<int>());
+                    else if (t[4].valid()) c.a = static_cast<Uint8>(t[4].get<int>());
+                    return c;
+                }
             );
         }
                 
@@ -1416,6 +1446,53 @@ namespace SDOM
                 break;
         }
         return t;
+    } // END SDL_Utils::eventToLuaTable()
 
+    SDL_FRect SDL_Utils::tableToFRect(const sol::table& t)
+    {
+        SDL_FRect r{0,0,0,0};
+        if (!t.valid()) return r;
+        // keyed lookup first, then array-style
+        r.x = t["x"].get_or(t[1].get_or(0.0f));
+        r.y = t["y"].get_or(t[2].get_or(0.0f));
+        r.w = t["w"].get_or(t[3].get_or(0.0f));
+        r.h = t["h"].get_or(t[4].get_or(0.0f));
+        return r;
     }
+
+    SDL_Color SDL_Utils::colorFromSol(const sol::object& o)
+    {
+        SDL_Color c{255,255,255,255};
+        if (!o.valid() || o == sol::lua_nil) return c;
+        if (o.is<SDL_Color>()) return o.as<SDL_Color>();
+        if (o.is<sol::table>()) {
+            sol::table t = o.as<sol::table>();
+            c.r = static_cast<Uint8>(t["r"].get_or(t[1].get_or(255)));
+            c.g = static_cast<Uint8>(t["g"].get_or(t[2].get_or(255)));
+            c.b = static_cast<Uint8>(t["b"].get_or(t[3].get_or(255)));
+            c.a = static_cast<Uint8>(t["a"].get_or(t[4].get_or(255)));
+            return c;
+        }
+        if (o.is<int>()) { int v = o.as<int>(); c.r = c.g = c.b = static_cast<Uint8>(v); return c; }
+        return c;
+    }
+
+
+    SDL_ScaleMode SDL_Utils::scaleModeFromSol(const sol::object& o)
+    {
+        if (!o.valid() || o == sol::lua_nil) return SDL_SCALEMODE_NEAREST;
+        if (o.is<std::string>()) {
+            std::string s = o.as<std::string>();
+            if (s == "linear" || s == "SDL_SCALEMODE_LINEAR") return SDL_SCALEMODE_LINEAR;
+            return SDL_SCALEMODE_NEAREST;
+        }
+        if (o.is<int>()) {
+            int v = o.as<int>();
+            return static_cast<SDL_ScaleMode>(v);
+        }
+        return SDL_SCALEMODE_NEAREST;
+    }
+
+
+
 } // namespace SDOM
