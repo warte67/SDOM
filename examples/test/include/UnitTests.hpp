@@ -13,5 +13,6 @@ namespace SDOM
     bool EventType_UnitTests();
     bool Event_UnitTests();
     bool GarbageCollection_UnitTests();
+    bool SpriteSheet_UnitTests();
     // add more unit tests here as needed ...
 }

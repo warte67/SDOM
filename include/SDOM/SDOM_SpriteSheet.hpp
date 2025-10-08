@@ -104,7 +104,7 @@ namespace SDOM
         void drawSprite_lua( int x, int y, int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST );    
         void drawSprite_dst_lua( SDL_FRect& destRect, int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST );
 
-        void drawSprite_EX_Lua(
+        void drawSprite_ext_Lua(
             IAssetObject* obj,
             sol::table srcRect,                 // {x=,y=,w=,h=} or {x,y,w,h}
             sol::table dstRect,                 // {x=,y=,w=,h=} or {x,y,w,h}

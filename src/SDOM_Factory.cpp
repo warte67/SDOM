@@ -228,12 +228,29 @@ namespace SDOM
     DisplayObject Factory::create(const std::string& typeName, const sol::table& config)
     {
         // Get main texture size for defaults
+        // int maxStageWidth = 0;
+        // int maxStageHeight = 0;
+        // SDL_Texture* texture = getTexture();
+        // if (texture) {
+        //     maxStageWidth = texture->w;
+        //     maxStageHeight = texture->h;
+        // }
+
         int maxStageWidth = 0;
         int maxStageHeight = 0;
         SDL_Texture* texture = getTexture();
-        if (texture) {
-            maxStageWidth = texture->w;
-            maxStageHeight = texture->h;
+        if (texture) 
+        {
+            float texW = 0.0f, texH = 0.0f;
+            if (SDL_GetTextureSize(texture, &texW, &texH)) 
+            {
+                maxStageWidth  = static_cast<int>(texW);
+                maxStageHeight = static_cast<int>(texH);
+            } 
+            else 
+            {
+                // fallback: keep 0s (or log)
+            }
         }
 
         // Minimum required properties (x, y, width, height now optional)
@@ -241,9 +258,11 @@ namespace SDOM
         if (!config["name"].valid()) missing.push_back("name");
         if (!config["type"].valid()) missing.push_back("type");
 
-        if (!missing.empty()) {
+        if (!missing.empty()) 
+        {
             std::string msg = "Factory::create: Missing required property(s) in Lua config: ";
-            for (size_t i = 0; i < missing.size(); ++i) {
+            for (size_t i = 0; i < missing.size(); ++i) 
+            {
                 msg += "'" + missing[i] + "'";
                 if (i < missing.size() - 1) msg += ", ";
             }
@@ -253,9 +272,11 @@ namespace SDOM
 
         // Prevent creating an object with a name that already exists in the factory
         std::string requestedName = config["name"];
-        if (!requestedName.empty()) {
+        if (!requestedName.empty()) 
+        {
             auto existing = displayObjects_.find(requestedName);
-            if (existing != displayObjects_.end()) {
+            if (existing != displayObjects_.end()) 
+            {
                 ERROR(std::string("Factory::create: Display object with name '") + requestedName + "' already exists");
                 return DisplayObject();
             }
@@ -278,14 +299,16 @@ namespace SDOM
             configCopy["height"] = height;
 
             auto displayObject = it->second.fromLua(configCopy);
-            if (!displayObject) {
+            if (!displayObject) 
+            {
                 std::cout << "Factory::create: Failed to create display object of type '" << typeName
                         << "' from Lua. Display object is nullptr.\n";
                 return DisplayObject(); // Invalid handle
             }
             std::string name = config["name"];
             // Double-check before inserting (race-safe within this thread)
-            if (!name.empty() && displayObjects_.find(name) != displayObjects_.end()) {
+            if (!name.empty() && displayObjects_.find(name) != displayObjects_.end()) 
+            {
                 ERROR(std::string("Factory::create: Display object with name '") + name + "' already exists (insertion aborted)");
                 return DisplayObject();
             }
@@ -293,19 +316,25 @@ namespace SDOM
             displayObjects_[name]->setType(typeName); // Ensure type is set
 
             // --- Set common properties from config ---
-            if (config["color"].valid()) {
+            if (config["color"].valid())
+            {
                 SDL_Color color = parseColor(config["color"]);
                 displayObjects_[name]->color_ = color;
             }
             // set anchorPoints if present
-            auto setAnchorFromConfig = [](const sol::object& obj, auto setter) {
-                if (obj.valid()) {
-                    if (obj.is<std::string>()) {
+            auto setAnchorFromConfig = [](const sol::object& obj, auto setter) 
+            {
+                if (obj.valid()) 
+                {
+                    if (obj.is<std::string>()) 
+                    {
                         std::string key = SDOM::normalizeAnchorString(obj.as<std::string>());
                         auto it = SDOM::stringToAnchorPoint_.find(key);
                         if (it != SDOM::stringToAnchorPoint_.end())
                             setter(it->second);
-                    } else if (obj.is<int>()) {
+                    } 
+                    else if (obj.is<int>()) 
+                    {
                         setter(static_cast<SDOM::AnchorPoint>(obj.as<int>()));
                     }
                 }
@@ -376,26 +405,29 @@ namespace SDOM
                 {
                     auto& eventManager = getCore().getEventManager();
                     std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DisplayObject(name, typeName));
-                        DisplayObject stageHandle = getCore().getRootNode();
-                        if (stageHandle) initEvent->setRelatedTarget(stageHandle);
-                        eventManager.dispatchEvent(std::move(initEvent), DisplayObject(name, typeName));
+                    DisplayObject stageHandle = getCore().getRootNode();
+                    if (stageHandle) 
+                        initEvent->setRelatedTarget(stageHandle);
+                    eventManager.dispatchEvent(std::move(initEvent), DisplayObject(name, typeName));
                 }
                 displayObject->setType(typeName); // Ensure type is set
                 displayObjects_[name] = std::move(displayObject);
-                    return DisplayObject(name, typeName);
+                return DisplayObject(name, typeName);
             }
         }
-            return DisplayObject(); // Invalid handle
+        return DisplayObject(); // Invalid handle
     }
 
-    DisplayObject Factory::create(const std::string& typeName, const std::string& luaScript) {
+    DisplayObject Factory::create(const std::string& typeName, const std::string& luaScript) 
+    {
         sol::state lua;
         lua.open_libraries(sol::lib::base);
 
         // Try to parse and execute the string as a Lua table
         sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
 
-        if (!result.valid() || !result.is<sol::table>()) {
+        if (!result.valid() || !result.is<sol::table>()) 
+        {
             std::cout << "Factory::create: Provided string is not a valid Lua table.\n";
             return DisplayObject();
         }

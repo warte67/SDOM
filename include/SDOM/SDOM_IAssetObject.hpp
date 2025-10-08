@@ -58,4 +58,10 @@ namespace SDOM
 
     }; // class IAssetObject
 
+    // --- comparison operators: MUST be at namespace scope (not inside the class) --- //
+    inline bool operator<(const IAssetObject& a, const IAssetObject& b) { return a.getName() < b.getName(); }
+    inline bool operator==(const IAssetObject& a, const IAssetObject& b) { return a.getName() == b.getName() && a.getType() == b.getType() && a.getFilename() == b.getFilename(); }
+    inline bool operator<=(const IAssetObject& a, const IAssetObject& b) { return !(b < a); }
+
+
 } // end namespace SDOM

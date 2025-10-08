@@ -15,6 +15,7 @@ function M.on_unit_test()
     allTestsPassed = allTestsPassed and EventType_UnitTests()
     allTestsPassed = allTestsPassed and Event_UnitTests()
     allTestsPassed = allTestsPassed and GarbageCollection_UnitTests()
+    allTestsPassed = allTestsPassed and SpriteSheet_UnitTests()
     return allTestsPassed
 end
 

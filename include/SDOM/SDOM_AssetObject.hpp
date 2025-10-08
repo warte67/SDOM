@@ -4,7 +4,7 @@
 // #include <sol/sol.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
 // #include <SDOM/SDOM_Factory.hpp>
-// #include <SDOM/SDOM_IAssetObject.hpp>
+//#include <SDOM/SDOM_IAssetObject.hpp>
 
 namespace SDOM
 {
@@ -32,11 +32,26 @@ namespace SDOM
         virtual void onQuit() override { }
         virtual bool onUnitTest() override { return true; }
 
+        void reset() {name_.clear(); }
+
         // Return the concrete IAssetObject (or nullptr)
         IAssetObject* get() const;
         template<typename T>
         T* as() const { return dynamic_cast<T*>(get()); }
 
+        IAssetObject& operator*() const { return *get(); }
+        IAssetObject* operator->() const { return get(); }
+        operator bool() const { return get() != nullptr; }
+
+        bool operator==(std::nullptr_t) const { return get() == nullptr; }
+        bool operator!=(std::nullptr_t) const { return get() != nullptr; }
+        bool operator==(const AssetObject& other) const { return name_ == other.name_ && type_ == other.type_ && filename_ == other.filename_; }
+        bool operator!=(const AssetObject& other) const { return !(*this == other); }
+
+        AssetObject& operator=(const AssetObject& other) = default;
+        AssetObject(AssetObject&&) = default;
+        AssetObject& operator=(AssetObject&&) = default;
+        
         bool isValid() const { return get() != nullptr; }
 
         const std::string& getName() const { return name_; }

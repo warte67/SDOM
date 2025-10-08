@@ -36,16 +36,16 @@ namespace SDOM
 
     bool SpriteSheet::onInit()
     {
-        std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onInit()" 
-                  << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
+        // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onInit()" 
+        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Initialization logic for SpriteSheet
         return true;
     }
 
     void SpriteSheet::onQuit()
     {
-        std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onQuit()" 
-                  << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
+        // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onQuit()" 
+        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Cleanup logic for SpriteSheet
         onUnload();
     }
@@ -54,8 +54,8 @@ namespace SDOM
     {
         onUnload();
 
-        std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onLoad()" 
-                  << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
+        // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onLoad()" 
+        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Loading logic for SpriteSheet
 
 
@@ -116,8 +116,8 @@ namespace SDOM
 
     void SpriteSheet::onUnload()
     {
-        std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onUnload()" 
-                  << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
+        // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onUnload()" 
+        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Unloading logic for SpriteSheet
 
         // Free the texture and clear sprite metadata
@@ -131,8 +131,8 @@ namespace SDOM
 
     bool SpriteSheet::onUnitTest()
     {
-        std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onUnitTest()" 
-                  << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
+        // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onUnitTest()" 
+        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Unit test logic for SpriteSheet
         return true;
     }
@@ -179,90 +179,89 @@ namespace SDOM
     {
         if (!texture_)
             ERROR("SpriteSheet::texture_ not loaded");
-        // Get sprite count
+
         int spritesPerRow = 0;
         int spritesPerColumn = 0;
-        float texW;
-        float texH;
+        float texW = 0.0f;
+        float texH = 0.0f;
         if (!SDL_GetTextureSize(texture_, &texW, &texH))
-        {
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
-            // ERROR() macro throws aa terminal exception, so no need for return here
-        }
+
         if (spriteWidth_ > 0)
-            spritesPerRow = texW / spriteWidth_;
+            spritesPerRow = static_cast<int>(texW / spriteWidth_);
         else
             ERROR("SpriteSheet: spriteWidth_ is zero, cannot compute spritesPerRow.");
 
         if (spriteHeight_ > 0)
-            spritesPerColumn = texH / spriteHeight_;
+            spritesPerColumn = static_cast<int>(texH / spriteHeight_);
         else
-            ERROR("SpriteSheet: spriteHeight_ is zero, cannot compute spritesPerColumn.");        
+            ERROR("SpriteSheet: spriteHeight_ is zero, cannot compute spritesPerColumn.");
+
         return spritesPerRow * spritesPerColumn;
     }
 
     int SpriteSheet::getSpriteX(int spriteIndex) const
     {
-        if (!texture_)
-            ERROR("SpriteSheet::texture_ not loaded");
-        float texW;
-        float texH;
+        if (!texture_) ERROR("SpriteSheet::texture_ not loaded");
+
+        float texW = 0.0f, texH = 0.0f;
         if (!SDL_GetTextureSize(texture_, &texW, &texH))
-        {
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
-            // ERROR() macro throws aa terminal exception, so no need for return here
-        }
-        int spritesPerRow = 0;
-        if (spriteWidth_ > 0)
-            spritesPerRow = texW / spriteWidth_;
-        else
-            ERROR("SpriteSheet: spriteWidth_ is zero, cannot compute spritesPerRow.");        
+
+        if (spriteWidth_ <= 0) ERROR("SpriteSheet: spriteWidth_ is zero or negative.");
+
+        int spritesPerRow = static_cast<int>(texW / spriteWidth_);
+        if (spritesPerRow <= 0) ERROR("SpriteSheet: spritesPerRow computed as zero.");
+
+        int total = static_cast<int>(texW / spriteWidth_) * static_cast<int>(texH / spriteHeight_);
+        if (spriteIndex < 0 || spriteIndex >= total)
+            ERROR("SpriteSheet::getSpriteX: spriteIndex out of range.");
+
         return (spriteIndex % spritesPerRow) * spriteWidth_;
     }
 
+
     int SpriteSheet::getSpriteY(int spriteIndex) const
     {
-        if (!texture_)
-            ERROR("SpriteSheet::texture_ not loaded");
-        float texW;
-        float texH;
+        if (!texture_) ERROR("SpriteSheet::texture_ not loaded");
+
+        float texW = 0.0f, texH = 0.0f;
         if (!SDL_GetTextureSize(texture_, &texW, &texH))
-        {
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
-            // ERROR() macro throws aa terminal exception, so no need for return here
-        }
-        int spritesPerRow = 0;
-        if (spriteWidth_ > 0)
-            spritesPerRow = texW / spriteWidth_;
-        else
-            ERROR("SpriteSheet: spriteWidth_ is zero, cannot compute spritesPerRow.");        
+
+        if (spriteWidth_ <= 0) ERROR("SpriteSheet: spriteWidth_ is zero or negative.");
+
+        int spritesPerRow = static_cast<int>(texW / spriteWidth_);
+        if (spritesPerRow <= 0) ERROR("SpriteSheet: spritesPerRow computed as zero.");
+
+        int total = static_cast<int>(texW / spriteWidth_) * static_cast<int>(texH / spriteHeight_);
+        if (spriteIndex < 0 || spriteIndex >= total)
+            ERROR("SpriteSheet::getSpriteY: spriteIndex out of range.");
+
         return (spriteIndex / spritesPerRow) * spriteHeight_;
     }
+
+
 
     void SpriteSheet::drawSprite(int x, int y, int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode)
     {
         // THIS SHOULD BE LOADEDD AT THIS POINT!  (BUT IT'S NOT)
-        if (!texture_)
-            onLoad();
+        if (!texture_) onLoad();
+        if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
 
-        if (!texture_)
-        {
-            ERROR("No texture loaded in SpriteSheet to draw sprite.");
-            return;
-        }
-        float texW;
-        float texH;
+        float texW = 0.0f, texH = 0.0f;
         if (!SDL_GetTextureSize(texture_, &texW, &texH))
-        {
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
-            // ERROR() macro throws aa terminal exception, so no need for return here
-        }
-        int spritesPerRow = texW / spriteWidth_;
-        if (spritesPerRow <= 0)
-        {
+
+        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) ERROR("Invalid sprite dimensions.");
+
+        int spritesPerRow = static_cast<int>(texW / spriteWidth_);
+        if (spritesPerRow <= 0) 
             ERROR("Invalid sprite dimensions or texture size.");
-            return;
-        }
+
+        int total = static_cast<int>(texW / spriteWidth_) * static_cast<int>(texH / spriteHeight_);
+        if (spriteIndex < 0 || spriteIndex >= total) 
+            ERROR("SpriteSheet::drawSprite: spriteIndex out of range.");
 
         // Calculate the source rectangle (sprite position in the texture)
         SDL_FRect srcRect;
@@ -293,27 +292,22 @@ namespace SDOM
     void SpriteSheet::drawSprite(SDL_FRect& destRect, int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode)
     {
         // THIS SHOULD BE LOADEDD AT THIS POINT!  (BUT IT'S NOT)
-        if (!texture_)
-            onLoad();
+        if (!texture_) onLoad();
+        if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
 
-        if (!texture_)
-        {
-            ERROR("No texture loaded in SpriteSheet to draw sprite.");
-            return;
-        }
-        float texW;
-        float texH;
+        float texW = 0.0f, texH = 0.0f;
         if (!SDL_GetTextureSize(texture_, &texW, &texH))
-        {
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
-            // ERROR() macro throws aa terminal exception, so no need for return here
-        }
-        int spritesPerRow = texW / spriteWidth_;
-        if (spritesPerRow <= 0)
-        {
+
+        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) ERROR("Invalid sprite dimensions.");
+
+        int spritesPerRow = static_cast<int>(texW / spriteWidth_);
+        if (spritesPerRow <= 0) 
             ERROR("Invalid sprite dimensions or texture size.");
-            return;
-        }
+
+        int total = static_cast<int>(texW / spriteWidth_) * static_cast<int>(texH / spriteHeight_);
+        if (spriteIndex < 0 || spriteIndex >= total) 
+            ERROR("SpriteSheet::drawSprite: spriteIndex out of range.");
 
         // Calculate the source rectangle (sprite position in the texture)
         SDL_FRect srcRect;
@@ -340,27 +334,22 @@ namespace SDOM
         int spriteIndex, SDL_Color color, SDL_ScaleMode scaleMode)
     {
         // THIS SHOULD BE LOADEDD AT THIS POINT!  (BUT IT'S NOT)
-        if (!texture_)
-            onLoad();
+        if (!texture_) onLoad();
+        if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
 
-        if (!texture_)
-        {
-            ERROR("No texture loaded in SpriteSheet to draw sprite.");
-            return;
-        }
-        float texW;
-        float texH;
+        float texW = 0.0f, texH = 0.0f;
         if (!SDL_GetTextureSize(texture_, &texW, &texH))
-        {
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
-            // ERROR() macro throws aa terminal exception, so no need for return here
-        }
-        int spritesPerRow = texW / spriteWidth_;
-        if (spritesPerRow <= 0)
-        {
+
+        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) ERROR("Invalid sprite dimensions.");
+
+        int spritesPerRow = static_cast<int>(texW / spriteWidth_);
+        if (spritesPerRow <= 0) 
             ERROR("Invalid sprite dimensions or texture size.");
-            return;
-        }
+
+        int total = static_cast<int>(texW / spriteWidth_) * static_cast<int>(texH / spriteHeight_);
+        if (spriteIndex < 0 || spriteIndex >= total) 
+            ERROR("SpriteSheet::drawSprite: spriteIndex out of range.");
 
         // Calculate the source rectangle (sprite position in the texture)
         SDL_FRect sRect;
@@ -486,12 +475,12 @@ namespace SDOM
         drawSprite(destRect, spriteIndex, color, scaleMode);
     }
 
-    void SpriteSheet::drawSprite_EX_Lua( IAssetObject* obj, sol::table srcRect, sol::table dstRect,
+    void SpriteSheet::drawSprite_ext_Lua( IAssetObject* obj, sol::table srcRect, sol::table dstRect,
                                     int spriteIndex, sol::object color, sol::object scaleMode)
     {
         // resolve target instance (defensive)
         SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("drawSprite_EX_Lua: invalid SpriteSheet object"); }
+        if (!ss) { ERROR("drawSprite_ext_Lua: invalid SpriteSheet object"); }
 
         SDL_FRect s = SDL_Utils::tableToFRect(srcRect);
         SDL_FRect d = SDL_Utils::tableToFRect(dstRect);
@@ -563,38 +552,35 @@ namespace SDOM
             }
         );
 
-        // existing table-based drawSprite (srcTbl, dstTbl)
+        // register named Lua wrappers:
+        // drawSprite(obj, x, y, index, color?, scaleMode?)
         reg("drawSprite",
-            [lua, cast_ss](IAssetObject* obj, sol::table srcTbl, sol::table dstTbl, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
-                SpriteSheet* ss = cast_ss(obj);
-                SDL_FRect s = SDL_Utils::tableToFRect(srcTbl);
-                SDL_FRect d = SDL_Utils::tableToFRect(dstTbl);
-                SDL_Color c = SDL_Utils::colorFromSol(color);
-                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
-                ss->drawSprite(s, d, spriteIndex, c, sm);
-            }
-        );
-
-        // register simple x,y variant: drawSprite(obj, x, y, index, color?, scaleMode?)
-        reg("drawSprite",
-            [cast_ss](IAssetObject* obj, int x, int y, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+            [lua, cast_ss](IAssetObject* obj, int x, int y, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
                 SpriteSheet* ss = cast_ss(obj);
                 SDL_Color c = SDL_Utils::colorFromSol(color);
                 SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
-                ss->drawSprite(x, y, spriteIndex, c, sm);
+                ss->drawSprite_lua(x, y, spriteIndex, c, sm);
             }
         );
 
-        // register destination-rect variant: drawSprite(obj, dstTbl, index, color?, scaleMode?)
-        reg("drawSprite",
+        // drawSprite_dst(obj, dstTbl, index, color?, scaleMode?)
+        reg("drawSprite_dst",
             [lua, cast_ss](IAssetObject* obj, sol::table dstTbl, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
                 SpriteSheet* ss = cast_ss(obj);
                 SDL_FRect d = SDL_Utils::tableToFRect(dstTbl);
                 SDL_Color c = SDL_Utils::colorFromSol(color);
                 SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
-                ss->drawSprite(d, spriteIndex, c, sm);
+                ss->drawSprite_dst_lua(d, spriteIndex, c, sm);
             }
         );
 
-    }
-} // namespace SDOM
+        // drawSprite_EX(obj, srcTbl, dstTbl, index, color?, scaleMode?)
+        reg("drawSprite_ext",
+            [lua, cast_ss](IAssetObject* obj, sol::table srcTbl, sol::table dstTbl, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+                SpriteSheet* ss = cast_ss(obj);
+                ss->drawSprite_ext_Lua(obj, srcTbl, dstTbl, spriteIndex, color, scaleMode);
+            }
+        );
+
+    } // END _registerLuaBindings()
+} // namespace SDOM_
