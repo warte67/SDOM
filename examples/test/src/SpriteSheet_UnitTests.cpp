@@ -10,12 +10,13 @@ namespace SDOM
 
     bool SpriteSheet_test0()
     {
-        // GC Scaffold: Garbage Collection Unit Test Scaffolding
+        // SpriteSheet Scaffold: SpriteSheet Unit Test Scaffolding
         sol::state& lua = getLua();
         bool ok = false;
         try {
             // run a simple Lua chunk that returns a boolean and read it safely
             auto result = lua.script(R"(
+                -- NO OP here, just scaffolding
                 return true
             )");
             ok = result.get<bool>();
@@ -132,6 +133,46 @@ namespace SDOM
         return ok;
     }
 
+    bool SpriteSheet_test3() {
+        sol::state& lua = getLua();
+        bool ok = lua.script(R"(
+
+            local ss = Core:createAsset("SpriteSheet", {
+                type = "SpriteSheet",
+                name = "ut_bmp8_lua2",
+                filename = "default_bmp_8x8",
+                spriteWidth = 8,
+                spriteHeight = 8
+            })
+            if not ss then 
+                print("Failed to create SpriteSheet via Lua")
+                return false 
+            end
+            if ss:getName() ~= "ut_bmp8_lua2" then 
+                print("SpriteSheet name mismatch")
+                return false 
+            end
+            ss:onLoad()
+            local count = ss:getSpriteCount()
+            if count <= 0 then 
+                print("SpriteSheet sprite count invalid")
+                return false 
+            end
+            local x0 = ss:getSpriteX(0)
+            local y0 = ss:getSpriteY(0)
+            local xl = ss:getSpriteX(count - 1)
+            local yl = ss:getSpriteY(count - 1)
+            if not x0 or not y0 or not xl or not yl then 
+                print("SpriteSheet sprite index calculations failed")
+                return false 
+            end
+            -- ss:onUnload()
+
+            return true
+        )").get<bool>();
+        return UnitTests::run("Lua #4", "Use the 'default_bmp_8x8' SpriteSheet", [ok]() { return ok; });
+    }
+
     bool SpriteSheet_UnitTests() 
     {
         bool allTestsPassed = true;
@@ -139,8 +180,8 @@ namespace SDOM
         {
             [&]() { return SpriteSheet_test0(); }, // SpriteSheet Unit Test Scaffolding
             [&]() { return SpriteSheet_test1(); }, // create via InitStruct (basic AssetObject/IAssetObject checks)
-            [&]() { return SpriteSheet_test2(); } // Create SpriteSheet via Lua-style table
-
+            [&]() { return SpriteSheet_test2(); }, // Create SpriteSheet via Lua-style table
+            [&]() { return SpriteSheet_test3(); }  // Use the 'default_bmp_8x8' SpriteSheet
         };
 
         for (auto& test : tests)
