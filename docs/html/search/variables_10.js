@@ -9,5 +9,5 @@ var searchData=
   ['resize_6',['Resize',['../classSDOM_1_1EventType.html#a88eef9fc64657294fa605d44f991802b',1,'SDOM::EventType']]],
   ['return_7',['RETURN',['../classCLR.html#a7a9eedeac52778653bca2160deea4e4d',1,'CLR']]],
   ['reversed_8',['REVERSED',['../classCLR.html#a361b3fc2802281a419a6fa9205c0c548',1,'CLR']]],
-  ['right_9',['right',['../structSDOM_1_1Bounds.html#a94c040502f6cc3d683a928756708db4d',1,'SDOM::Bounds']]]
+  ['right_9',['right',['../structSDOM_1_1Bounds.html#a7e4aba8aee2989c0b5166aebf258674f',1,'SDOM::Bounds']]]
 ];

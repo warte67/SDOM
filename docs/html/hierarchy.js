@@ -11,7 +11,8 @@ var hierarchy =
       [ "SDOM::Exception", "classSDOM_1_1Exception.html", null ]
     ] ],
     [ "SDOM::IAssetObject::InitStruct", "structSDOM_1_1IAssetObject_1_1InitStruct.html", [
-      [ "SDOM::SpriteSheet::InitStruct", "structSDOM_1_1SpriteSheet_1_1InitStruct.html", null ]
+      [ "SDOM::SpriteSheet::InitStruct", "structSDOM_1_1SpriteSheet_1_1InitStruct.html", null ],
+      [ "SDOM::Texture::InitStruct", "structSDOM_1_1Texture_1_1InitStruct.html", null ]
     ] ],
     [ "SDOM::IDisplayObject::InitStruct", "structSDOM_1_1IDisplayObject_1_1InitStruct.html", [
       [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ]
@@ -24,7 +25,8 @@ var hierarchy =
         [ "SDOM::Event", "classSDOM_1_1Event.html", null ],
         [ "SDOM::Factory", "classSDOM_1_1Factory.html", null ],
         [ "SDOM::IAssetObject", "classSDOM_1_1IAssetObject.html", [
-          [ "SDOM::SpriteSheet", "classSDOM_1_1SpriteSheet.html", null ]
+          [ "SDOM::SpriteSheet", "classSDOM_1_1SpriteSheet.html", null ],
+          [ "SDOM::Texture", "classSDOM_1_1Texture.html", null ]
         ] ],
         [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", [
           [ "SDOM::Stage", "classSDOM_1_1Stage.html", null ]

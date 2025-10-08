@@ -32,14 +32,14 @@ var NAVTREE =
     [ "Core Framework Design", "md_docs_2core__framework.html", [
       [ "Overview", "md_docs_2core__framework.html#autotoc_md5", null ],
       [ "Core Responsibilities", "md_docs_2core__framework.html#autotoc_md6", null ],
-      [ "Core Initialization Sequence & Pre-Initialization Configuration", "md_docs_2core__framework.html#autotoc_md7", [
+      [ "Core Initialization Sequence &amp; Pre-Initialization Configuration", "md_docs_2core__framework.html#autotoc_md7", [
         [ "Required Pre-Initialization Parameters:", "md_docs_2core__framework.html#autotoc_md8", null ],
         [ "Initialization Flow:", "md_docs_2core__framework.html#autotoc_md9", null ],
         [ "Example Configuration API:", "md_docs_2core__framework.html#autotoc_md10", null ],
         [ "Alternative Initialization: Lua Configuration", "md_docs_2core__framework.html#autotoc_md12", null ]
       ] ],
       [ "Primary Callbacks", "md_docs_2core__framework.html#autotoc_md14", null ],
-      [ "Hook & Callback Registration", "md_docs_2core__framework.html#autotoc_md15", [
+      [ "Hook &amp; Callback Registration", "md_docs_2core__framework.html#autotoc_md15", [
         [ "Example (C++)", "md_docs_2core__framework.html#autotoc_md16", null ],
         [ "Example (Python/Rust)", "md_docs_2core__framework.html#autotoc_md17", null ]
       ] ],
@@ -53,7 +53,7 @@ var NAVTREE =
       [ "SDOM Comprehensive Architecture Diagram", "md_docs_2core__framework.html#autotoc_md24", null ],
       [ "SDOM Event System Integration", "md_docs_2core__framework.html#autotoc_md25", null ],
       [ "Additional Interfaces and Utilities", "md_docs_2core__framework.html#autotoc_md26", null ],
-      [ "Extensibility & Singleton Pattern", "md_docs_2core__framework.html#autotoc_md27", null ],
+      [ "Extensibility &amp; Singleton Pattern", "md_docs_2core__framework.html#autotoc_md27", null ],
       [ "EventListener Support", "md_docs_2core__framework.html#autotoc_md28", [
         [ "Example (C)", "md_docs_2core__framework.html#autotoc_md29", null ],
         [ "Benefits", "md_docs_2core__framework.html#autotoc_md30", null ]
@@ -62,13 +62,13 @@ var NAVTREE =
         [ "Example", "md_docs_2core__framework.html#autotoc_md32", null ]
       ] ],
       [ "Integration Methods Summary", "md_docs_2core__framework.html#autotoc_md33", [
-        [ "Flexibility & Use Cases", "md_docs_2core__framework.html#autotoc_md34", null ]
+        [ "Flexibility &amp; Use Cases", "md_docs_2core__framework.html#autotoc_md34", null ]
       ] ],
       [ "Performance Considerations", "md_docs_2core__framework.html#autotoc_md35", null ],
       [ "Single Stage, Single Window Rationale", "md_docs_2core__framework.html#autotoc_md36", null ],
       [ "Overriding the Default Stage", "md_docs_2core__framework.html#autotoc_md37", null ],
       [ "Multiple Stages as Scenes", "md_docs_2core__framework.html#autotoc_md38", null ],
-      [ "Window Resizing & Texture Resolution", "md_docs_2core__framework.html#autotoc_md39", null ],
+      [ "Window Resizing &amp; Texture Resolution", "md_docs_2core__framework.html#autotoc_md39", null ],
       [ "Shared Display Texture for Stages", "md_docs_2core__framework.html#autotoc_md40", null ],
       [ "Stages as Game States or Modes", "md_docs_2core__framework.html#autotoc_md41", null ],
       [ "Changing the Active Stage", "md_docs_2core__framework.html#autotoc_md42", null ]
@@ -89,14 +89,14 @@ var NAVTREE =
       [ "Position and Size Calculation", "md_docs_2display__object__anchoring.html#autotoc_md56", null ],
       [ "Changing Anchor Points", "md_docs_2display__object__anchoring.html#autotoc_md57", null ],
       [ "Hierarchical Anchoring", "md_docs_2display__object__anchoring.html#autotoc_md58", null ],
-      [ "Backward Compatibility & Migration", "md_docs_2display__object__anchoring.html#autotoc_md59", null ],
+      [ "Backward Compatibility &amp; Migration", "md_docs_2display__object__anchoring.html#autotoc_md59", null ],
       [ "Benefits", "md_docs_2display__object__anchoring.html#autotoc_md60", null ],
       [ "Example Use Cases", "md_docs_2display__object__anchoring.html#autotoc_md61", null ],
       [ "Anchoring Diagrams", "md_docs_2display__object__anchoring.html#autotoc_md64", [
         [ "1) Parent Anchor Grid and Child Edge Anchors", "md_docs_2display__object__anchoring.html#autotoc_md65", null ],
         [ "2) Anchor Change Recalculation (No Visual Jump)", "md_docs_2display__object__anchoring.html#autotoc_md66", null ]
       ] ],
-      [ "Anchor helpers & parsing", "md_docs_2display__object__anchoring.html#autotoc_md67", null ],
+      [ "Anchor helpers &amp; parsing", "md_docs_2display__object__anchoring.html#autotoc_md67", null ],
       [ "Migration note", "md_docs_2display__object__anchoring.html#autotoc_md68", null ]
     ] ],
     [ "DOM Propagation Design", "md_docs_2dom__propagation.html", [
@@ -150,16 +150,16 @@ var NAVTREE =
       [ "Implementation Strategy", "md_docs_2extensible__factory.html#autotoc_md118", [
         [ "1. Initializer Structs", "md_docs_2extensible__factory.html#autotoc_md119", null ],
         [ "1a. Standardized Constructor Signatures", "md_docs_2extensible__factory.html#autotoc_md120", null ],
-        [ "2. Private Constructors & Friend Factory", "md_docs_2extensible__factory.html#autotoc_md121", null ],
+        [ "2. Private Constructors &amp; Friend Factory", "md_docs_2extensible__factory.html#autotoc_md121", null ],
         [ "3. Factory Registration System", "md_docs_2extensible__factory.html#autotoc_md122", null ],
         [ "4. Generic Factory Create Method", "md_docs_2extensible__factory.html#autotoc_md123", null ],
         [ "5. Extensibility", "md_docs_2extensible__factory.html#autotoc_md124", null ],
-        [ "6. Error Handling & Validation", "md_docs_2extensible__factory.html#autotoc_md125", null ],
+        [ "6. Error Handling &amp; Validation", "md_docs_2extensible__factory.html#autotoc_md125", null ],
         [ "7. Example Usage", "md_docs_2extensible__factory.html#autotoc_md126", null ]
       ] ],
       [ "Standardized Constructors for IDisplayObjects", "md_docs_2extensible__factory.html#autotoc_md128", null ],
       [ "Scripting and Configuration Choice", "md_docs_2extensible__factory.html#autotoc_md129", null ],
-      [ "Resource Pointer (<tt>resource_ptr</tt>) Design", "md_docs_2extensible__factory.html#autotoc_md130", [
+      [ "Resource Pointer (<span class=\"tt\">resource_ptr</span>) Design", "md_docs_2extensible__factory.html#autotoc_md130", [
         [ "How It Works", "md_docs_2extensible__factory.html#autotoc_md131", null ],
         [ "Example Usage", "md_docs_2extensible__factory.html#autotoc_md132", null ],
         [ "Benefits", "md_docs_2extensible__factory.html#autotoc_md133", null ],
@@ -185,10 +185,11 @@ var NAVTREE =
       [ "Scripting and Configuration", "md_docs_2progress.html#autotoc_md153", null ],
       [ "Progress Updates", "md_docs_2progress.html#autotoc_md154", null ],
       [ "- Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.", "md_docs_2progress.html#autotoc_md169", null ],
-      [ "- Verified: rebuilt the examples and test binary after these changes (<tt>./compile</tt> in <tt>examples/test</tt>) — build completed and <tt>prog</tt> produced successfully.", "md_docs_2progress.html#autotoc_md170", null ],
+      [ "- Verified: rebuilt the examples and test binary after these changes (<span class=\"tt\">./compile</span> in <span class=\"tt\">examples/test</span>) — build completed and <span class=\"tt\">prog</span> produced successfully.", "md_docs_2progress.html#autotoc_md170", null ],
+      [ "- With the DisplayObject (IDisplayObject) system now robust, unit-tested, and stable, the next major development track is the AssetObject system for resource management.", "md_docs_2progress.html#autotoc_md174", null ],
       [ "ToDo:", "md_docs_2progress.html#autotoc_md177", null ]
     ] ],
-    [ "Scripting and Configuration (Lua & C++)", "md_docs_2scripting__and__configuration.html", [
+    [ "Scripting and Configuration (Lua &amp; C++)", "md_docs_2scripting__and__configuration.html", [
       [ "Goals", "md_docs_2scripting__and__configuration.html#autotoc_md179", null ],
       [ "Modes of Use", "md_docs_2scripting__and__configuration.html#autotoc_md180", null ],
       [ "Integration Points", "md_docs_2scripting__and__configuration.html#autotoc_md181", null ],
@@ -261,18 +262,18 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "SDOM_8cpp.html",
-"classSDOM_1_1AssetObject.html#a4587bdf86569d9c28c7cd6fced998f91",
-"classSDOM_1_1Core.html#ac032164723c1a058ea8f6774d75905db",
-"classSDOM_1_1Event.html#a58bd5c6d51f3c2f8921f4c9c32a5a68e",
-"classSDOM_1_1EventType.html#aba470e5b61a6cc497a8100a06166f00b",
-"classSDOM_1_1IDataObject.html#ab6354bf6f9d60a272e0bbbadd834fcbf",
-"classSDOM_1_1IDisplayObject.html#af67ff008cc4eca835ac4e7e81fb7c9eb",
-"classSDOM_1_1Stage.html#a3eee98020b7f0ce46d9fafe34908992c",
-"functions_func_b.html",
-"lua__IDisplayObject_8cpp.html#a431612bd4dd34aa8fc547b1574e57005",
-"md_docs_2display__object__anchoring.html#autotoc_md67",
-"namespaceSDOM.html#ad8c0c2434ee455c85908251f7c5dec82"
+"classSDOM_1_1Core.html",
+"classSDOM_1_1Core.html#af7fb678eb00a6c51b65f77bb8dd931db",
+"classSDOM_1_1Event.html#abbba394f38967aed179a175753b041c7",
+"classSDOM_1_1Factory.html#a1947ff718446a6a81cd108b87a475d9f",
+"classSDOM_1_1IDisplayObject.html#a3fdf5631454388f0450ae0bb3c91ebd6",
+"classSDOM_1_1SpriteSheet.html#a0a8a635997be903fd97a267e8f6ce15a",
+"classSDOM_1_1Stage.html#a742655ac95eaeb30c4629e1978a7ddca",
+"classSDOM_1_1UnitTests.html#a39fad7caf8610114afc0ec5116103565",
+"md_docs_2object__handles.html#autotoc_md142",
+"namespaceSDOM.html#afeb12b8f8f31fac0fbf418c8e5df2f7b"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
+var LISTOFALLMEMBERS = 'List of all members';

@@ -547,6 +547,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Docs & examples updated:
         - Example call sites in examples/test/lua/callbacks/listener_callbacks.lua updated to use explicit dst/ext forms or pass nil placeholders where appropriate.
         - Add unit tests for dispatcher patterns to prevent regressions.
+    - Passes all current tests
 
 
 ---

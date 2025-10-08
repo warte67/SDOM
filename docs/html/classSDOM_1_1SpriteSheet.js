@@ -31,7 +31,7 @@ var classSDOM_1_1SpriteSheet =
     [ "getSpriteX_Lua", "classSDOM_1_1SpriteSheet.html#aaf3bfa1c775bdd277515f3bd84ae888c", null ],
     [ "getSpriteY", "classSDOM_1_1SpriteSheet.html#aa70b3d4cc02897489ca206f440611613", null ],
     [ "getSpriteY_Lua", "classSDOM_1_1SpriteSheet.html#ad8fdf7af6fd0cd698f153d97c93b0c30", null ],
-    [ "getTexture", "classSDOM_1_1SpriteSheet.html#a08432556658b133be202c801f13ee9b0", null ],
+    [ "getTexture", "classSDOM_1_1SpriteSheet.html#a29eb9244080ce6b7ac1712096ef4bd14", null ],
     [ "getType", "classSDOM_1_1SpriteSheet.html#ad0b85cd8eafe1b2f92a03573e0ea80b9", null ],
     [ "isInternal", "classSDOM_1_1SpriteSheet.html#a5325fd07e789e48321df581822070a62", null ],
     [ "isLoaded", "classSDOM_1_1SpriteSheet.html#a09ce78b7d833fa8060defd2681777ddb", null ],
@@ -63,7 +63,7 @@ var classSDOM_1_1SpriteSheet =
     [ "setters_", "classSDOM_1_1SpriteSheet.html#a8872f9668a96ae9c6d997804e32dbeae", null ],
     [ "spriteHeight_", "classSDOM_1_1SpriteSheet.html#a0ea7dc3f632f2121c95a1b0b036c9174", null ],
     [ "spriteWidth_", "classSDOM_1_1SpriteSheet.html#ac7a5e59ff7a7f4b3a0b56272d687462d", null ],
-    [ "texture_", "classSDOM_1_1SpriteSheet.html#a5614d61400002703541f964066352f43", null ],
+    [ "textureAsset", "classSDOM_1_1SpriteSheet.html#ae0877518d1a6a4106ada102b5a9e1a89", null ],
     [ "type_", "classSDOM_1_1SpriteSheet.html#acf24a17e1284129dbef77cfc229bba05", null ],
     [ "TypeName", "classSDOM_1_1SpriteSheet.html#ab7584b544b2cbe9875685f5475563586", null ]
 ];

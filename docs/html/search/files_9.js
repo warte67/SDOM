@@ -36,7 +36,9 @@ var searchData=
   ['sdom_5fspritesheet_2ehpp_33',['SDOM_SpriteSheet.hpp',['../SDOM__SpriteSheet_8hpp.html',1,'']]],
   ['sdom_5fstage_2ecpp_34',['SDOM_Stage.cpp',['../SDOM__Stage_8cpp.html',1,'']]],
   ['sdom_5fstage_2ehpp_35',['SDOM_Stage.hpp',['../SDOM__Stage_8hpp.html',1,'']]],
-  ['sdom_5funittests_2ehpp_36',['SDOM_UnitTests.hpp',['../SDOM__UnitTests_8hpp.html',1,'']]],
-  ['sdom_5futils_2ecpp_37',['SDOM_Utils.cpp',['../SDOM__Utils_8cpp.html',1,'']]],
-  ['sdom_5futils_2ehpp_38',['SDOM_Utils.hpp',['../SDOM__Utils_8hpp.html',1,'']]]
+  ['sdom_5ftexture_2ecpp_36',['SDOM_Texture.cpp',['../SDOM__Texture_8cpp.html',1,'']]],
+  ['sdom_5ftexture_2ehpp_37',['SDOM_Texture.hpp',['../SDOM__Texture_8hpp.html',1,'']]],
+  ['sdom_5funittests_2ehpp_38',['SDOM_UnitTests.hpp',['../SDOM__UnitTests_8hpp.html',1,'']]],
+  ['sdom_5futils_2ecpp_39',['SDOM_Utils.cpp',['../SDOM__Utils_8cpp.html',1,'']]],
+  ['sdom_5futils_2ehpp_40',['SDOM_Utils.hpp',['../SDOM__Utils_8hpp.html',1,'']]]
 ];

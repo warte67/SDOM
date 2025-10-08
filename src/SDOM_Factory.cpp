@@ -475,6 +475,14 @@ namespace SDOM
             assetObj->setType(typeName);
             assetObjects_[requestedName] = std::move(assetObj);
             assetObjects_[requestedName]->onInit();
+
+            // Register Lua bindings for this concrete asset instance so its methods are available
+            try {
+                assetObjects_[requestedName]->registerLuaBindings(typeName, SDOM::getLua());
+            } catch(...) {
+                ERROR("Factory::createAsset: Failed to register Lua bindings for asset: " + requestedName);
+            }
+            
             return AssetObject(requestedName, typeName, filename);
         }
         return AssetObject();
@@ -493,6 +501,13 @@ namespace SDOM
                 assetObj->setType(typeName);
                 assetObjects_[init.name] = std::move(assetObj);
                 assetObjects_[init.name]->onInit();
+                // Register per-instance Lua bindings so Lua-visible methods exist on the handle
+                try {
+                    assetObjects_[init.name]->registerLuaBindings(typeName, SDOM::getLua());
+                } catch(...) {
+                    ERROR("Factory::createAsset(init): Failed to register Lua bindings for asset: " + init.name);
+                }
+                
                 return AssetObject(init.name, typeName, init.filename);
             }
         }

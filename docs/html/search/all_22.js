@@ -9,5 +9,6 @@ var searchData=
   ['_7eidisplayobject_6',['~IDisplayObject',['../classSDOM_1_1IDisplayObject.html#afe7bf92f5ca28b59fb6bda0329796642',1,'SDOM::IDisplayObject']]],
   ['_7esdl_5futils_7',['~SDL_Utils',['../classSDOM_1_1SDL__Utils.html#abb9e5105a0afac653511588662327389',1,'SDOM::SDL_Utils']]],
   ['_7espritesheet_8',['~SpriteSheet',['../classSDOM_1_1SpriteSheet.html#ae1e22d15504a076982ab3ab84cf02ee1',1,'SDOM::SpriteSheet']]],
-  ['_7estage_9',['~Stage',['../classSDOM_1_1Stage.html#a54db12b3a1a2ff7d7cfff112f2de1ab6',1,'SDOM::Stage']]]
+  ['_7estage_9',['~Stage',['../classSDOM_1_1Stage.html#a54db12b3a1a2ff7d7cfff112f2de1ab6',1,'SDOM::Stage']]],
+  ['_7etexture_10',['~Texture',['../classSDOM_1_1Texture.html#a39cff82635f7235c76f2156b409ac181',1,'SDOM::Texture']]]
 ];

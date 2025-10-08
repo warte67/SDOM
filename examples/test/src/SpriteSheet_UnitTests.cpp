@@ -150,6 +150,7 @@ namespace SDOM
                 spriteWidth = 8,
                 spriteHeight = 8
             })
+
             if not ss then 
                 print("Failed to create SpriteSheet via Lua")
                 return false 

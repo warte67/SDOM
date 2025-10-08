@@ -18,6 +18,7 @@ var namespaceSDOM =
     [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
     [ "SpriteSheet", "classSDOM_1_1SpriteSheet.html", "classSDOM_1_1SpriteSheet" ],
     [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ],
+    [ "Texture", "classSDOM_1_1Texture.html", "classSDOM_1_1Texture" ],
     [ "TypeCreators", "structSDOM_1_1TypeCreators.html", "structSDOM_1_1TypeCreators" ],
     [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [

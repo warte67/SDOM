@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['typecreators_0',['TypeCreators',['../structSDOM_1_1TypeCreators.html',1,'SDOM']]]
+  ['texture_0',['Texture',['../classSDOM_1_1Texture.html',1,'SDOM']]],
+  ['typecreators_1',['TypeCreators',['../structSDOM_1_1TypeCreators.html',1,'SDOM']]]
 ];

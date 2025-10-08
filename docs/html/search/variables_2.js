@@ -6,7 +6,7 @@ var searchData=
   ['color_3',['color',['../structSDOM_1_1Core_1_1CoreConfig.html#ac5205d07b241b8192c50840776c97598',1,'SDOM::Core::CoreConfig::color'],['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35',1,'SDOM::IDisplayObject::InitStruct::color']]],
   ['commands_5f_4',['commands_',['../classSDOM_1_1IDataObject.html#a81ab01eb51d0da3950b9cb6d93d74fbb',1,'SDOM::IDataObject']]],
   ['concealed_5',['CONCEALED',['../classCLR.html#afa703e1483c6595368fe9def2066eec8',1,'CLR']]],
-  ['core_6',['core',['../classSDOM_1_1AssetObject.html#adca5cf147e31e2cc5f6b5eb4c164d9a5',1,'SDOM::AssetObject::Core'],['../classSDOM_1_1SpriteSheet.html#abc59587f33d400af3e064d992c884a05',1,'SDOM::SpriteSheet::Core']]],
+  ['core_6',['Core',['../classSDOM_1_1AssetObject.html#adca5cf147e31e2cc5f6b5eb4c164d9a5',1,'SDOM::AssetObject::Core'],['../classSDOM_1_1SpriteSheet.html#abc59587f33d400af3e064d992c884a05',1,'SDOM::SpriteSheet::Core'],['../classSDOM_1_1Texture.html#a356c05437c222106e30a6671dccd81c4',1,'SDOM::Texture::Core']]],
   ['currentphase_7',['currentPhase',['../classSDOM_1_1Event.html#acfe274676206ac3354d955cd794488e6',1,'SDOM::Event']]],
   ['currenttarget_8',['currentTarget',['../classSDOM_1_1Event.html#aac77818901f6454907035eb419aaed07',1,'SDOM::Event']]],
   ['cyan_9',['CYAN',['../classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0',1,'CLR']]]

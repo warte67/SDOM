@@ -5,7 +5,7 @@ var searchData=
   ['pixelformatfromstring_2',['pixelFormatFromString',['../classSDOM_1_1SDL__Utils.html#afbf04f741d38babee5837dc399abdc86',1,'SDOM::SDL_Utils']]],
   ['pixelformattostring_3',['pixelFormatToString',['../classSDOM_1_1SDL__Utils.html#ad740d47cee3122fe01e097dd35664741',1,'SDOM::SDL_Utils']]],
   ['printmessagebox_4',['printMessageBox',['../namespaceSDOM.html#ae0f1adcc0eb0a047b6e53f9ee15fdd57',1,'SDOM']]],
-  ['printobjectregistry_5',['printobjectregistry',['../classSDOM_1_1Core.html#a12012a49089d5409e2f671d6bb9ba96c',1,'SDOM::Core::printObjectRegistry()'],['../classSDOM_1_1Factory.html#a760cce7209d592610e31a6fc52667b9c',1,'SDOM::Factory::printObjectRegistry()']]],
+  ['printobjectregistry_5',['printObjectRegistry',['../classSDOM_1_1Core.html#a12012a49089d5409e2f671d6bb9ba96c',1,'SDOM::Core::printObjectRegistry()'],['../classSDOM_1_1Factory.html#a760cce7209d592610e31a6fc52667b9c',1,'SDOM::Factory::printObjectRegistry()']]],
   ['printobjectregistry_5flua_6',['printObjectRegistry_lua',['../namespaceSDOM.html#a513ff0175309b33ebb429b2ec19ade7e',1,'SDOM']]],
   ['printresult_7',['printResult',['../classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf',1,'SDOM::UnitTests']]],
   ['printtest_8',['printTest',['../classSDOM_1_1UnitTests.html#a39fad7caf8610114afc0ec5116103565',1,'SDOM::UnitTests']]],
