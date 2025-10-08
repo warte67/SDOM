@@ -11,6 +11,7 @@
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
 
+#include <SDOM/SDOM_Texture.hpp>     // for Texture registration
 #include <SDOM/SDOM_SpriteSheet.hpp> // for SpriteSheet registration
 
 namespace SDOM
@@ -39,31 +40,38 @@ namespace SDOM
             Stage::CreateFromInitStruct
         });
 
+        // register the Texture asset
+        registerResType("Texture", AssetTypeCreators{
+            Texture::CreateFromLua,
+            Texture::CreateFromInitStruct
+        });
+
+        {   // register the default_bmp_8x8 SpriteSheet
+            Texture::InitStruct init;
+            init.name = "default_bmp_8x8";
+            init.type = "Texture";
+            init.filename = "default_bmp_8x8";
+            AssetObject spriteSheet = createAsset("Texture", init);
+            Texture* spriteSheetPtr = spriteSheet.as<Texture>();
+            if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("Texture", core.getLua());
+        }
+        
+        {   // register the default_icon_8x8 SpriteSheet
+            Texture::InitStruct init;
+            init.name = "default_icon_8x8";
+            init.type = "Texture";
+            init.filename = "default_icon_8x8";
+            AssetObject spriteSheet = createAsset("Texture", init);
+            Texture* spriteSheetPtr = spriteSheet.as<Texture>();
+            if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("Texture", core.getLua());
+        }
+
         // register the SpriteSheet asset
         registerResType("SpriteSheet", AssetTypeCreators{
             SpriteSheet::CreateFromLua,
             SpriteSheet::CreateFromInitStruct
         });
-        
-        {   // register the default_bmp_8x8 SpriteSheet
-            SpriteSheet::InitStruct init;
-            init.name = "default_bmp_8x8";
-            init.type = "SpriteSheet";
-            init.filename = "default_bmp_8x8";
-            AssetObject spriteSheet = createAsset("SpriteSheet", init);
-            SpriteSheet* spriteSheetPtr = spriteSheet.as<SpriteSheet>();
-            if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("SpriteSheet", core.getLua());
-        }
-        
-        {   // register the default_icon_8x8 SpriteSheet
-            SpriteSheet::InitStruct init;
-            init.name = "default_icon_8x8";
-            init.type = "SpriteSheet";
-            init.filename = "default_icon_8x8";
-            AssetObject spriteSheet = createAsset("SpriteSheet", init);
-            SpriteSheet* spriteSheetPtr = spriteSheet.as<SpriteSheet>();
-            if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("SpriteSheet", core.getLua());
-        }
+
         return true;
     }
 

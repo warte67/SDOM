@@ -214,24 +214,6 @@ namespace SDOM
         SDL_Quit();
     }
 
-    // // --- Core forwarding helpers to Factory ---
-    // std::vector<std::string> Core::getPropertyNamesForType(const std::string& typeName) const
-    // {
-    //     if (factory_) return factory_->getPropertyNamesForType(typeName);
-    //     return {};
-    // }
-
-    // std::vector<std::string> Core::getCommandNamesForType(const std::string& typeName) const
-    // {
-    //     if (factory_) return factory_->getCommandNamesForType(typeName);
-    //     return {};
-    // }
-
-    // std::vector<std::string> Core::getFunctionNamesForType(const std::string& typeName) const
-    // {
-    //     if (factory_) return factory_->getFunctionNamesForType(typeName);
-    //     return {};
-    // }
 
     void Core::run(const sol::table& config)
     {
@@ -240,37 +222,6 @@ namespace SDOM
         run();
     }
 
-    // void Core::run(const std::string& configFile)
-    // {
-    //     // If configFile refers to an actual file on disk, load it.
-    //     // Otherwise treat the string as raw Lua script and execute it
-    //     // in this Core's Lua state, then pull the `config` table.
-    //     if (!configFile.empty()) {
-    //         // Portable file-exists check using ifstream to avoid std::filesystem
-    //         std::ifstream infile(configFile);
-    //         if (infile.good()) {
-    //             configureFromLuaFile(configFile);
-    //         } else {
-    //             // Ensure Core usertype is registered in this lua state so the
-    //             // script can reference `Core` (register callbacks, call Core:run, etc.)
-    //             this->_registerLua("Core", lua_);
-    //             // Treat the string as a raw Lua script
-    //             try {
-    //                 lua_.script(configFile);
-    //                 sol::table configTable = lua_["config"];
-    //                 if (configTable.valid()) {
-    //                     configureFromLua(configTable);
-    //                 } else {
-    //                     ERROR("Lua script did not produce a valid 'config' table.");
-    //                 }
-    //             } catch (const sol::error& e) {
-    //                 ERROR(std::string("Error executing Lua script for configuration: ") + e.what());
-    //             }
-    //         }
-    //     }
-    //     // Now run normally
-    //     run();
-    // }
 
     void Core::run(const std::string& configFile)
     {

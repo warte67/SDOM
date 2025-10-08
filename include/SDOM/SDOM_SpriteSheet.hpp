@@ -2,9 +2,12 @@
 #pragma once
 
 #include <SDOM/SDOM_IAssetObject.hpp>
+#include <SDOM/SDOM_Texture.hpp>
 
 namespace SDOM
 {
+    class Factory;
+    class Core;
 
     // internal 8x8 bitmap font sprite sheet
     extern unsigned char default_bmp_8x8[];
@@ -62,7 +65,13 @@ namespace SDOM
         void setSpriteWidth(int width);
         void setSpriteHeight(int height);
         void setSpriteSize(int width, int height);
-        SDL_Texture* getTexture() const { return texture_; }
+    SDL_Texture* getTexture() const noexcept
+    {
+        if (!textureAsset.isValid()) return nullptr;
+        Texture* texturePtr = textureAsset.as<Texture>();
+        return texturePtr ? texturePtr->getTexture() : nullptr;
+    }
+ 
         int getSpriteWidth() const;
         int getSpriteHeight() const;
         std::pair<int, int> getSpriteSize() const;
@@ -115,11 +124,20 @@ namespace SDOM
             sol::object scaleMode = sol::nil    // SDL_Utils::scaleModeFromSol(const sol::object& o)
         );
 
+        // SDL_Texture* getTexture()
+        // {
+        //     Texture* texturePtr = textureAsset.as<Texture>();
+        //     return texturePtr ? texturePtr->getTexture() : nullptr;
+        // }
+
     protected:
         friend Factory;
         friend Core;
 
-        SDL_Texture* texture_ = nullptr;
+        // SDL_Texture* texture_ = nullptr; // Deprecated: use textureAsset instead
+
+        AssetObject textureAsset;      // Underlying texture asset for the sprite sheet
+
         int spriteWidth_ = 8;   // Default sprite width
         int spriteHeight_ = 8;  // Default sprite height
 

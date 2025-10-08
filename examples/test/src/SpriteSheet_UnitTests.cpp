@@ -49,36 +49,42 @@ namespace SDOM
             SpriteSheet* ss = asset.as<SpriteSheet>();
             if (!ss) return false;
 
-            if (ss->getSpriteWidth() != 8) return false;
-            if (ss->getSpriteHeight() != 8) return false;
-            if (ss->getName() != "ut_bmp8") return false;
-
-            // attempt load (may throw via ERROR->Exception). catch and fail cleanly.
-            try {
-                ss->onLoad();
-            } catch (...) {
+            if (ss->getSpriteWidth() != 8) {
+                FAIL("SpriteSheet_test1: spriteWidth mismatch: " + std::to_string(ss->getSpriteWidth()));
                 return false;
             }
+            if (ss->getSpriteHeight() != 8) {
+                FAIL("SpriteSheet_test1: spriteHeight mismatch: " + std::to_string(ss->getSpriteHeight()));
+                return false;
+            }
+            if (ss->getName() != "ut_bmp8") {
+                FAIL("SpriteSheet_test1: name mismatch: " + ss->getName());
+                return false;
+            }
+
+            // attempt load (may throw via ERROR->Exception). catch and fail cleanly.
+            try { ss->onLoad(); }  
+            catch (const SDOM::Exception& e) { FAIL(std::string("SpriteSheet_test1: onLoad() exception: ") + e.what()); return false; } 
+            catch (...) { FAIL("SpriteSheet_test1: onLoad() threw exception"); return false; }
 
             // basic texture-backed queries (if texture loaded)
             int count = 0;
-            try {
-                count = ss->getSpriteCount();
-            } catch (...) {
-                return false;
-            }
+            try { count = ss->getSpriteCount(); } 
+            catch (const SDOM::Exception& e) { FAIL(std::string("SpriteSheet_test1: getSpriteCount() exception: ") + e.what()); return false; } 
+            catch (...) { FAIL("SpriteSheet_test1: getSpriteCount() threw exception"); return false; }
             if (count <= 0) return false;
 
             // check first and last index computations (bounds)
-            try {
+            try 
+            {
                 int x0 = ss->getSpriteX(0);
                 int y0 = ss->getSpriteY(0);
                 int xl = ss->getSpriteX(count - 1);
                 int yl = ss->getSpriteY(count - 1);
                 (void)x0; (void)y0; (void)xl; (void)yl;
-            } catch (...) {
-                return false;
-            }
+            } 
+            catch (const SDOM::Exception& e) { FAIL(std::string("SpriteSheet_test1: getSpriteX/Y() exception: ") + e.what()); return false; }                  
+            catch (...) { FAIL("SpriteSheet_test1: getSpriteX/Y() threw exception"); return false; }
 
             // cleanup
             ss->onUnload();

@@ -1,8 +1,11 @@
 // SDOM_SpriteSheet.cpp
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IAssetObject.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
+#include <SDOM/SDOM_Texture.hpp>
 
 namespace SDOM
 {
@@ -39,6 +42,10 @@ namespace SDOM
         // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onInit()" 
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Initialization logic for SpriteSheet
+
+        // if (!textureAsset) 
+        //     ERROR("SpriteSheet::onInit: textureAsset is null for: " + filename_);
+        // return textureAsset->onInit();
         return true;
     }
 
@@ -47,72 +54,58 @@ namespace SDOM
         // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onQuit()" 
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Cleanup logic for SpriteSheet
+        if (textureAsset) textureAsset->onUnload();
         onUnload();
     }
 
     void SpriteSheet::onLoad()
     {
+        //INFO("SpriteSheet::onLoad() called for: " + getName());
         onUnload();
 
-        // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onLoad()" 
-        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
-        // Loading logic for SpriteSheet
-
-
-        SDL_Renderer* renderer = getRenderer();
-        if (!renderer)
+        // does this filename already exist in the factory?
+        IAssetObject* existing = getFactory().getResObj(filename_);
+        if (existing)
         {
-            ERROR("No valid SDL_Renderer available in Core instance.");
+            textureAsset = getFactory().getAssetObject(filename_);
+            if (!textureAsset)
+            {
+                ERROR("SpriteSheet::onLoad: Failed to retrieve existing Texture asset for filename: " + filename_);
+                return;
+            }
+            isLoaded_ = true;
             return;
         }
-
-        // Load the default icon/default_icon_8x8 SpriteSheet from internal memory
-        if (filename_ == "default_icon_8x8")
-        {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(default_icon_8x8)), default_icon_8x8_len);
-            if (!rw)
-            {
-                ERROR("Failed to create SDL_IOStream from default_icon_8x8[]");
-                return;
-            }
-            texture_ = IMG_LoadTexture_IO(renderer, rw, 1); // 1 = close/free rw after use
-            if (!texture_)
-            {
-                ERROR("Failed to load texture from sprite_8x8[]: " + std::string(SDL_GetError()));
-                return;
-            }
-            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
-        }
-        // Load the default Bitmap Font 8x8 SpriteSheet from internal memory
-        else if (filename_ == "default_bmp_8x8")
-        {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(default_bmp_8x8)), default_bmp_8x8_len);
-            if (!rw)
-            {
-                ERROR("Failed to create SDL_IOStream from default_bmp_8x8[]");
-                return;
-            }
-            texture_ = IMG_LoadTexture_IO(renderer, rw, 1); // 1 = close/free rw after use
-            if (!texture_)
-            {
-                ERROR("Failed to load texture from font_8x8[]: " + std::string(SDL_GetError()));
-                return;
-            }
-            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);   
-        }
-        // Load from external file
         else
         {
-            texture_ = IMG_LoadTexture(renderer, filename_.c_str());
-            if (!texture_)
+            // Create a new Texture asset via the Factory
+            Texture::InitStruct init;
+            init.name = filename_;
+            init.type = Texture::TypeName;
+            init.filename = filename_;
+
+            textureAsset = getFactory().createAsset(Texture::TypeName, init);
+            if (!textureAsset)
             {
-                ERROR("Failed to load texture from file: " + filename_ + " - " + std::string(SDL_GetError()));
+                ERROR("SpriteSheet::onLoad: Factory failed to create Texture asset for filename: " + filename_);
                 return;
             }
-            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);   
+            // Defensive: ensure we actually got a Texture, and it is not ourselves
+            Texture* texturePtr = textureAsset.as<Texture>();
+            if (texturePtr)
+            {
+                texturePtr->registerLuaBindings(Texture::TypeName, getLua());
+            }
+            else
+            {
+                ERROR("SpriteSheet::onLoad: Created asset is not a Texture for filename: " + filename_);
+            }
         }
+
+        if (textureAsset) textureAsset->onLoad();
         isLoaded_ = true;
-    }
+        return;
+    } // END onLoad()
 
     void SpriteSheet::onUnload()
     {
@@ -120,12 +113,7 @@ namespace SDOM
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Unloading logic for SpriteSheet
 
-        // Free the texture and clear sprite metadata
-        if (texture_)
-        {
-            SDL_DestroyTexture(texture_);
-            texture_ = nullptr;
-        }
+        if (textureAsset) textureAsset->onUnload();
         isLoaded_ = false;
     }
 
@@ -134,7 +122,8 @@ namespace SDOM
         // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onUnitTest()" 
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Unit test logic for SpriteSheet
-        return true;
+
+        return textureAsset->onUnitTest();
     }
 
      // public methods
@@ -177,6 +166,7 @@ namespace SDOM
 
     int SpriteSheet::getSpriteCount() const
     {
+        SDL_Texture* texture_ = getTexture();
         if (!texture_)
             ERROR("SpriteSheet::texture_ not loaded");
 
@@ -202,6 +192,7 @@ namespace SDOM
 
     int SpriteSheet::getSpriteX(int spriteIndex) const
     {
+        SDL_Texture* texture_ = getTexture();
         if (!texture_) ERROR("SpriteSheet::texture_ not loaded");
 
         float texW = 0.0f, texH = 0.0f;
@@ -223,6 +214,7 @@ namespace SDOM
 
     int SpriteSheet::getSpriteY(int spriteIndex) const
     {
+        SDL_Texture* texture_ = getTexture();
         if (!texture_) ERROR("SpriteSheet::texture_ not loaded");
 
         float texW = 0.0f, texH = 0.0f;
@@ -245,7 +237,7 @@ namespace SDOM
 
     void SpriteSheet::drawSprite(int spriteIndex, int x, int y, SDL_Color color, SDL_ScaleMode scaleMode)
     {
-        // THIS SHOULD BE LOADEDD AT THIS POINT!  (BUT IT'S NOT)
+        SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
         if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
 
@@ -277,7 +269,6 @@ namespace SDOM
         destRect.w = static_cast<float>(spriteWidth_);
         destRect.h = static_cast<float>(spriteHeight_);
 
-        
         // If using linear filtering, inset the source rect slightly to avoid sampling neighbor texels.
         if (scaleMode == SDL_SCALEMODE_LINEAR) {
             const float inset = 0.5f; // half a texel
@@ -289,7 +280,6 @@ namespace SDOM
                 srcRect.h -= 2.0f * inset;
             }
         }
-
 
         // Render the sprite
         SDL_Renderer* renderer = getRenderer();
@@ -306,7 +296,7 @@ namespace SDOM
 
     void SpriteSheet::drawSprite(int spriteIndex, SDL_FRect& destRect, SDL_Color color, SDL_ScaleMode scaleMode)
     {
-        // THIS SHOULD BE LOADEDD AT THIS POINT!  (BUT IT'S NOT)
+        SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
         if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
 
@@ -330,7 +320,6 @@ namespace SDOM
         srcRect.y = static_cast<float>((spriteIndex / spritesPerRow) * spriteHeight_);
         srcRect.w = static_cast<float>(spriteWidth_);
         srcRect.h = static_cast<float>(spriteHeight_);
-
         
         // If using linear filtering, inset the source rect slightly to avoid sampling neighbor texels.
         if (scaleMode == SDL_SCALEMODE_LINEAR) {
@@ -343,7 +332,6 @@ namespace SDOM
                 srcRect.h -= 2.0f * inset;
             }
         }
-
 
         // Render the sprite
         SDL_Renderer* renderer = getRenderer();
@@ -362,7 +350,7 @@ namespace SDOM
     void SpriteSheet::drawSprite(int spriteIndex, const SDL_FRect& srcRect, const SDL_FRect& dstRect,
         SDL_Color color, SDL_ScaleMode scaleMode)
     {
-        // THIS SHOULD BE LOADEDD AT THIS POINT!  (BUT IT'S NOT)
+        SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
         if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
 
@@ -408,7 +396,6 @@ namespace SDOM
         sRect.w = std::clamp(srcRect.w, 0.0f, maxW);
         sRect.h = std::clamp(srcRect.h, 0.0f, maxH);
 
-
         // If using linear filtering, inset the source rect slightly to avoid sampling neighbor texels.
         if (scaleMode == SDL_SCALEMODE_LINEAR) {
             const float inset = 0.5f; // half a texel
@@ -420,7 +407,6 @@ namespace SDOM
                 sRect.h -= 2.0f * inset;
             }
         }
-
 
         // Render the sprite
         SDL_Renderer* renderer = getRenderer();
@@ -597,31 +583,6 @@ namespace SDOM
             }
         );
 
-        // // register named Lua wrappers (AssetObject-based):
-        // // drawSprite(spriteIndex, x, y, color?, scaleMode?)
-        // reg("drawSprite",
-        //     [lua, cast_ss_from_asset](AssetObject asset, sol::object a, sol::object b, sol::object c, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
-        //         SpriteSheet* ss = cast_ss_from_asset(asset);
-
-        //         // validate required args: spriteIndex, x, y
-        //         if (a.get_type() != sol::type::number ||
-        //             b.get_type() != sol::type::number ||
-        //             c.get_type() != sol::type::number) {
-        //             ERROR("drawSprite: expected arguments (spriteIndex:number, x:number, y:number, [color], [scaleMode])");
-        //             return;
-        //         }
-
-        //         int spriteIndex = a.as<int>();
-        //         int x = b.as<int>();
-        //         int y = c.as<int>();
-
-        //         SDL_Color col = SDL_Utils::colorFromSol(color);
-        //         SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
-
-        //         ss->drawSprite_lua(spriteIndex, x, y, col, sm);
-        //     }
-        // );
-
         // single Lua entrypoint: drawSprite(...)
         reg("drawSprite",
             [lua, cast_ss_from_asset](AssetObject asset, sol::variadic_args va) {
@@ -653,7 +614,7 @@ namespace SDOM
                 //     bool named_alt = (t["w"].valid() && t["h"].valid() && t["x"].valid() && t["y"].valid());
                 //     return numeric || named || named_alt;
                 // };
-                
+
                 auto is_rect_table = [](const sol::object& o) -> bool {
                     if (!o.valid() || o.get_type() != sol::type::table) return false;
                     sol::table t = o.as<sol::table>();

@@ -365,6 +365,17 @@ namespace SDOM
 } while(0)
 
 /**
+ * @brief Logs a failure message in red text.
+ * @param message Failure message to display.
+ */
+// Macro for failure logging (statement-safe, parenthesized parameter)
+#define FAIL(...) do { \
+    std::ostringstream _sdom_dbg_oss; \
+    _sdom_dbg_oss << __VA_ARGS__; \
+    std::cout << CLR::RED << "[FAILED] " << _sdom_dbg_oss.str() << CLR::RESET << std::endl; \
+} while(0)
+
+/**
  * @brief Logs an informational message to stdout.
  * @param message Informational message to display.
  */

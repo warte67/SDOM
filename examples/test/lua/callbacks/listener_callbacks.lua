@@ -67,10 +67,10 @@ function M.on_prerender(evt)
         -- ss:drawSprite(idx, 48, 32, {r=255, g=192, b=128, a=255}, "linear")
 
     -- ** Works Well **  drawSprite_dst(spriteIndex, {w,h,x,y}, [{color}], [filter = "nearest"|"linear"])
-        -- local color = { r = 192, g = 64, b = 32, a = 255 }
-        -- local dst = {w = 32, h = 32, x = 16, y = 32}
-        -- ss:drawSprite(idx, dst, color, "nearest")
-        -- ss:drawSprite(idx, dst, {r=255, g=192, b=128, a=255}, "linear")
+        local color = { r = 192, g = 64, b = 32, a = 255 }
+        local dst = {w = 32, h = 32, x = 16, y = 32}
+        ss:drawSprite(idx, dst, color, "nearest")
+        ss:drawSprite(idx, dst, {r=255, g=192, b=128, a=255}, "linear")
 
         -- Alternative calls that should work the same as above:
             -- local color = { r = 192, g = 64, b = 32, a = 255 }
@@ -82,9 +82,9 @@ function M.on_prerender(evt)
     --                    Note: This version of drawSprite is used to render a specific sub-rectangle of a single sprite tile 
     --                    from the sprite sheet into a destination rect on screen, applying color modulation and scale mode.
     --                    This is useful for rendering only portions of a sprite tile. 
-        ss:drawSprite(idx, {0,4,8,4}, {l=16,t=32,r=48,b=64}, nil, nil)  -- source rect, dest rect, no color, no filter (default "nearest")
-        ss:drawSprite(idx, {0,4,8,4}, {x=56,y=32,w=32,h=32}, {r=255, g=128, b=96, a=255}, nil) -- with color, no filter (default "nearest")
-        ss:drawSprite(idx, {0,4,8,4}, {96,32,32,32}, {r=255, g=192, b=128, a=255}, "linear") -- with color, "linear" filter
+        -- ss:drawSprite(idx, {0,4,8,4}, {l=16,t=32,r=48,b=64}, nil, nil)  -- source rect, dest rect, no color, no filter (default "nearest")
+        -- ss:drawSprite(idx, {0,4,8,4}, {x=56,y=32,w=32,h=32}, {r=255, g=128, b=96, a=255}, nil) -- with color, no filter (default "nearest")
+        -- ss:drawSprite(idx, {0,4,8,4}, {96,32,32,32}, {r=255, g=192, b=128, a=255}, "linear") -- with color, "linear" filter
 
         -- Alternative calls that should work the same as above:
         -- ss:drawSprite_ext(idx, {0,4,8,4}, {16,32,32,32}, nil, nil)  -- source rect, dest rect, no color, no filter (default "nearest")
