@@ -12,6 +12,7 @@
 // #include <SDOM/SDOM_ResHandle.hpp>  // Deprecated
 
 #include "Box.hpp"
+#include <SDOM/SDOM_SpriteSheet.hpp>
 #include <atomic>
 
 
@@ -365,29 +366,48 @@ void Box::onRender()
         SDL_RenderFillRect(renderer, &rect);
     }
 
-    // // BEGIN TESTING SpriteSheets and the Factory Loading from JSON ... 
-    //     // Render the SpriteSheet over the Box
-    //     SDL_FRect dstRect = { float(getX()), float(getY()), float(getWidth()), float(getHeight()) };
-    //     static Uint8 spriteIndex = 0; // Example sprite index
-    //     static Uint64 tmr_acc = SDL_GetTicks();
-    //     // auto spriteSheet = Core::instance().getFactory().getResource<SpriteSheet>("font_8x8");
-    //     auto spriteSheet = Core::instance().getFactory()->getResource<SpriteSheet>("XO_SpriteSheet");
-    //     if (spriteSheet)
-    //     {
-    //         static SDL_Color color = {255,255,255,255};
-    //         spriteSheet->drawSprite(dstRect, spriteIndex, color);
-    //         if (SDL_GetTicks() >= tmr_acc + 50) // Corrected condition
-    //         {
-    //             tmr_acc = SDL_GetTicks();    
-    //             spriteIndex++;                          
-    //             color.r = (Uint8)random()%256;
-    //             color.g = (Uint8)random()%256;
-    //             color.b = (Uint8)random()%256;
-    //             color.a = (Uint8)255;
-    //             if (spriteIndex >= spriteSheet->getSpriteCount()) { spriteIndex = 0; }
-    //         }            
-    //     }
-    // // ... END TESTING
+    // BEGIN: SpriteSheet rendering (uses AssetObject / Factory -> SpriteSheet)
+    {
+        SDL_FRect dstRect = { float(getX()), float(getY()), float(getWidth()), float(getHeight()) };
+        static Uint8 spriteIndex = 0; // Example sprite index
+        static Uint64 tmr_acc = SDL_GetTicks();
+
+        // Attempt to resolve a SpriteSheet asset by name from the Factory.
+        // Replace "XO_SpriteSheet" with whichever asset name you want to render.
+        SDOM::AssetObject asset = SDOM::getFactory().getAssetObject("default_incon_8x8"); // default_icon_8x8
+        if (asset.isValid()) 
+        {
+            SDOM::SpriteSheet* ss = asset.as<SDOM::SpriteSheet>();
+            if (ss) 
+            {
+                try
+                {
+                    // Ensure loaded (AssetObject::as/get will lazily load, but explicit call is safe)
+                    ss->onLoad();
+                    static SDL_Color color = {255,255,255,255};
+                    ss->drawSprite(dstRect, spriteIndex, color);
+
+                    if (SDL_GetTicks() >= tmr_acc + 50) 
+                    {
+                        tmr_acc = SDL_GetTicks();
+                        spriteIndex++;
+                        color.r = static_cast<Uint8>(random() % 256);
+                        color.g = static_cast<Uint8>(random() % 256);
+                        color.b = static_cast<Uint8>(random() % 256);
+                        color.a = 255;
+                        int count = 1;
+                        try { count = ss->getSpriteCount(); } catch(...) { count = 1; }
+                        if (count > 0 && spriteIndex >= count) spriteIndex = 0;
+                    }
+                }
+                catch(...) 
+                {
+                    // Drawing failed; ignore and continue.
+                }
+            }
+        }
+    }
+    // END: SpriteSheet rendering
 }
 
 bool Box::onUnitTest() 

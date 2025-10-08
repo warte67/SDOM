@@ -507,8 +507,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared DisplayObject handle usertype
-        sol::table handle = DisplayObject::ensure_handle_table(lua);
+    // Augment the single shared AssetObject handle usertype (assets are exposed via AssetObject handles in Lua)
+    sol::table handle = AssetObject::ensure_handle_table(lua);
 
         // Helper to check if a property/command is already registered
         auto absent = [&](const char* name) -> bool {
@@ -523,26 +523,28 @@ namespace SDOM
             }
         };
 
-        // small helper to validate and cast the IAssetObject -> SpriteSheet*
-        auto cast_ss = [](IAssetObject* obj) -> SpriteSheet* {
-            SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
+        // small helper to validate and cast the AssetObject -> SpriteSheet*
+        auto cast_ss_from_asset = [](const AssetObject& asset) -> SpriteSheet* {
+            if (!asset.isValid()) { ERROR("invalid AssetObject provided to SpriteSheet method"); }
+            IAssetObject* base = asset.get();
+            SpriteSheet* ss = dynamic_cast<SpriteSheet*>(base);
             if (!ss) { ERROR("invalid SpriteSheet object"); }
             return ss;
         };
 
-        // Register SpriteSheet-specific properties and commands here
-        reg("setSpriteWidth", [cast_ss](IAssetObject* obj, int w) { cast_ss(obj)->setSpriteWidth(w); });
-        reg("setSpriteHeight", [cast_ss](IAssetObject* obj, int h) { cast_ss(obj)->setSpriteHeight(h); });
-        reg("setSpriteSize", [cast_ss](IAssetObject* obj, int w, int h) { cast_ss(obj)->setSpriteSize(w, h); });
-        reg("getSpriteWidth", [cast_ss](IAssetObject* obj) -> int { return cast_ss(obj)->getSpriteWidth(); });
-        reg("getSpriteHeight", [cast_ss](IAssetObject* obj) -> int { return cast_ss(obj)->getSpriteHeight(); });
-        reg("getSpriteCount", [cast_ss](IAssetObject* obj) -> int { return cast_ss(obj)->getSpriteCount(); });
-        reg("getSpriteX", [cast_ss](IAssetObject* obj, int idx) -> int { return cast_ss(obj)->getSpriteX(idx); });
-        reg("getSpriteY", [cast_ss](IAssetObject* obj, int idx) -> int { return cast_ss(obj)->getSpriteY(idx); });
+        // Register SpriteSheet-specific properties and commands here (bridge from AssetObject handle)
+        reg("setSpriteWidth", [cast_ss_from_asset](AssetObject asset, int w) { cast_ss_from_asset(asset)->setSpriteWidth(w); });
+        reg("setSpriteHeight", [cast_ss_from_asset](AssetObject asset, int h) { cast_ss_from_asset(asset)->setSpriteHeight(h); });
+        reg("setSpriteSize", [cast_ss_from_asset](AssetObject asset, int w, int h) { cast_ss_from_asset(asset)->setSpriteSize(w, h); });
+        reg("getSpriteWidth", [cast_ss_from_asset](AssetObject asset) -> int { return cast_ss_from_asset(asset)->getSpriteWidth(); });
+        reg("getSpriteHeight", [cast_ss_from_asset](AssetObject asset) -> int { return cast_ss_from_asset(asset)->getSpriteHeight(); });
+        reg("getSpriteCount", [cast_ss_from_asset](AssetObject asset) -> int { return cast_ss_from_asset(asset)->getSpriteCount(); });
+        reg("getSpriteX", [cast_ss_from_asset](AssetObject asset, int idx) -> int { return cast_ss_from_asset(asset)->getSpriteX(idx); });
+        reg("getSpriteY", [cast_ss_from_asset](AssetObject asset, int idx) -> int { return cast_ss_from_asset(asset)->getSpriteY(idx); });
 
         reg("getSpriteSize",
-            [lua, cast_ss](IAssetObject* obj) mutable -> sol::table {
-                SpriteSheet* ss = cast_ss(obj);
+            [lua, cast_ss_from_asset](AssetObject asset) mutable -> sol::table {
+                SpriteSheet* ss = cast_ss_from_asset(asset);
                 sol::table t = lua.create_table();
                 t[1] = ss->getSpriteWidth();
                 t[2] = ss->getSpriteHeight();
@@ -552,21 +554,21 @@ namespace SDOM
             }
         );
 
-        // register named Lua wrappers:
-        // drawSprite(obj, x, y, index, color?, scaleMode?)
+        // register named Lua wrappers (AssetObject-based):
+        // drawSprite(asset, x, y, index, color?, scaleMode?)
         reg("drawSprite",
-            [lua, cast_ss](IAssetObject* obj, int x, int y, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
-                SpriteSheet* ss = cast_ss(obj);
+            [lua, cast_ss_from_asset](AssetObject asset, int x, int y, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+                SpriteSheet* ss = cast_ss_from_asset(asset);
                 SDL_Color c = SDL_Utils::colorFromSol(color);
                 SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
                 ss->drawSprite_lua(x, y, spriteIndex, c, sm);
             }
         );
 
-        // drawSprite_dst(obj, dstTbl, index, color?, scaleMode?)
+        // drawSprite_dst(asset, dstTbl, index, color?, scaleMode?)
         reg("drawSprite_dst",
-            [lua, cast_ss](IAssetObject* obj, sol::table dstTbl, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
-                SpriteSheet* ss = cast_ss(obj);
+            [lua, cast_ss_from_asset](AssetObject asset, sol::table dstTbl, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+                SpriteSheet* ss = cast_ss_from_asset(asset);
                 SDL_FRect d = SDL_Utils::tableToFRect(dstTbl);
                 SDL_Color c = SDL_Utils::colorFromSol(color);
                 SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
@@ -574,11 +576,11 @@ namespace SDOM
             }
         );
 
-        // drawSprite_EX(obj, srcTbl, dstTbl, index, color?, scaleMode?)
+        // drawSprite_EX(asset, srcTbl, dstTbl, index, color?, scaleMode?)
         reg("drawSprite_ext",
-            [lua, cast_ss](IAssetObject* obj, sol::table srcTbl, sol::table dstTbl, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
-                SpriteSheet* ss = cast_ss(obj);
-                ss->drawSprite_ext_Lua(obj, srcTbl, dstTbl, spriteIndex, color, scaleMode);
+            [lua, cast_ss_from_asset](AssetObject asset, sol::table srcTbl, sol::table dstTbl, int spriteIndex, sol::object color = sol::nil, sol::object scaleMode = sol::nil) {
+                SpriteSheet* ss = cast_ss_from_asset(asset);
+                ss->drawSprite_ext_Lua(ss, srcTbl, dstTbl, spriteIndex, color, scaleMode);
             }
         );
 

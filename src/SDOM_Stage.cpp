@@ -103,25 +103,12 @@ namespace SDOM
 
         // Expose mouseX/mouseY as properties backed by static Stage getters/setters
         if (absent("mouseX")) {
-            handle["mouseX"] = sol::property(
-                [](DisplayObject&) { return Stage::getMouseX(); },
-                [](DisplayObject&, sol::object val) {
-                    if (val.is<int>()) Stage::setMouseX(val.as<int>());
-                    else if (val.is<double>()) Stage::setMouseX(static_cast<int>(val.as<double>()));
-                    else throw sol::error("mouseX expects a number");
-                }
-            );
+            // Use member function pointers to avoid complex template deduction
+            handle["mouseX"] = sol::property(static_cast<int (Stage::*)() const>(&Stage::getMouseX_lua), static_cast<void (Stage::*)(int)>(&Stage::setMouseX_lua));
         }
 
         if (absent("mouseY")) {
-            handle["mouseY"] = sol::property(
-                [](DisplayObject&) { return Stage::getMouseY(); },
-                [](DisplayObject&, sol::object val) {
-                    if (val.is<int>()) Stage::setMouseY(val.as<int>());
-                    else if (val.is<double>()) Stage::setMouseY(static_cast<int>(val.as<double>()));
-                    else throw sol::error("mouseY expects a number");
-                }
-            );
+            handle["mouseY"] = sol::property(static_cast<int (Stage::*)() const>(&Stage::getMouseY_lua), static_cast<void (Stage::*)(int)>(&Stage::setMouseY_lua));
         }
     } // End Stage::_registerDisplayObject()
 

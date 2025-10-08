@@ -152,7 +152,6 @@ namespace SDOM
                 print("SpriteSheet name mismatch")
                 return false 
             end
-            ss:onLoad()
             local count = ss:getSpriteCount()
             if count <= 0 then 
                 print("SpriteSheet sprite count invalid")
@@ -166,11 +165,26 @@ namespace SDOM
                 print("SpriteSheet sprite index calculations failed")
                 return false 
             end
-            -- ss:onUnload()
 
             return true
         )").get<bool>();
-        return UnitTests::run("Lua #4", "Use the 'default_bmp_8x8' SpriteSheet", [ok]() { return ok; });
+        return UnitTests::run("SpriteSheet #3", "Use the 'default_bmp_8x8' SpriteSheet", [ok]() { return ok; });
+    }
+
+    bool SpriteSheet_test4() 
+    {
+        sol::state& lua = getLua();
+        bool ok = lua.script(R"(
+
+            local ss = getAssetObject("ut_bmp8_lua2")
+            if not ss then
+                print("Failed to get asset: ut_bmp8_lua2")
+                return false
+            end
+
+            return true
+        )").get<bool>();
+        return UnitTests::run("SpriteSheet #4", "Exercise the 'default_bmp_8x8' SpriteSheet", [ok]() { return ok; });
     }
 
     bool SpriteSheet_UnitTests() 
@@ -181,7 +195,8 @@ namespace SDOM
             [&]() { return SpriteSheet_test0(); }, // SpriteSheet Unit Test Scaffolding
             [&]() { return SpriteSheet_test1(); }, // create via InitStruct (basic AssetObject/IAssetObject checks)
             [&]() { return SpriteSheet_test2(); }, // Create SpriteSheet via Lua-style table
-            [&]() { return SpriteSheet_test3(); }  // Use the 'default_bmp_8x8' SpriteSheet
+            [&]() { return SpriteSheet_test3(); }, // Use the 'default_bmp_8x8' SpriteSheet
+            [&]() { return SpriteSheet_test4(); }  // Exercise the 'default_bmp_8x8' SpriteSheet
         };
 
         for (auto& test : tests)

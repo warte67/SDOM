@@ -1493,7 +1493,9 @@ namespace SDOM
         SDOM::bind_string_return_do("getDisplayObject", getDisplayObject_lua, objHandleType, coreTable, lua);
         SDOM::bind_string_return_bool("hasDisplayObject", hasDisplayObject_lua, objHandleType, coreTable, lua);
 
-        SDOM::bind_string_table_return_asset("createAssetObject", createAssetObject_lua, objHandleType, coreTable, lua);
+    SDOM::bind_string_table_return_asset("createAssetObject", createAssetObject_lua, objHandleType, coreTable, lua);
+    // Alias for historical/shortcut usage: expose Core:createAsset -> createAssetObject
+    SDOM::bind_string_table_return_asset("createAsset", createAssetObject_lua, objHandleType, coreTable, lua);
         SDOM::bind_string_return_asset("getAssetObject", getAssetObject_lua, objHandleType, coreTable, lua);
         SDOM::bind_string_return_bool("hasAssetObject", hasAssetObject_lua, objHandleType, coreTable, lua);
         

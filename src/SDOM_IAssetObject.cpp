@@ -68,8 +68,10 @@ namespace SDOM
         set_if_absent(handle, "getFilename", &IAssetObject::getFilename);
         set_if_absent(handle, "isInternal", &IAssetObject::isInternal);
         set_if_absent(handle, "isLoaded", &IAssetObject::isLoaded);
-        set_if_absent(handle, "load", [](IAssetObject& self) { self.onLoad(); });
-        set_if_absent(handle, "unload", [](IAssetObject& self) { self.onUnload(); });
+    set_if_absent(handle, "load", [](IAssetObject& self) { self.onLoad(); });
+    set_if_absent(handle, "unload", [](IAssetObject& self) { self.onUnload(); });
+    // NOTE: do NOT expose virtual lifecycle method names (onLoad/onUnload) to Lua.
+    // Expose only the stable 'load'/'unload' aliases that map to these operations.
         
     } // END  void IAssetObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

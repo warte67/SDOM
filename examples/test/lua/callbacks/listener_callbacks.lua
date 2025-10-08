@@ -62,6 +62,13 @@ function M.on_render(evt)
     end
     local display = math.floor(ema + 0.5)
 
+    local ss = getAssetObject("ut_bmp8_lua2")
+    if not ss then
+        print("Failed to get asset: ut_bmp8_lua2")
+        return false
+    end
+    ss:drawSprite(50, 50, 51)
+
     -- Render FPS into SDL window using CLR.draw_debug_text. Draw at top-left inside the window.
     -- Parameters: text, x, y, ptsize, r,g,b,a
     CLR.draw_debug_text(string.format("FPS: %d", display), 8, 8, 14, 255, 255, 255, 255)
