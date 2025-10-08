@@ -52,6 +52,7 @@ namespace SDOM
             return std::unique_ptr<IAssetObject>(new SpriteSheet(spriteSheetInit));
         }
 
+        SpriteSheet() = default;
         virtual ~SpriteSheet() = default;
 
         virtual bool onInit() override;
@@ -65,12 +66,12 @@ namespace SDOM
         void setSpriteWidth(int width);
         void setSpriteHeight(int height);
         void setSpriteSize(int width, int height);
-    SDL_Texture* getTexture() const noexcept
-    {
-        if (!textureAsset.isValid()) return nullptr;
-        Texture* texturePtr = textureAsset.as<Texture>();
-        return texturePtr ? texturePtr->getTexture() : nullptr;
-    }
+        SDL_Texture* getTexture() const noexcept
+        {
+            if (!textureAsset.isValid()) return nullptr;
+            Texture* texturePtr = textureAsset.as<Texture>();
+            return texturePtr ? texturePtr->getTexture() : nullptr;
+        }
  
         int getSpriteWidth() const;
         int getSpriteHeight() const;

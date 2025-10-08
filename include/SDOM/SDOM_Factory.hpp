@@ -78,8 +78,11 @@ namespace SDOM
         DisplayObject getStageHandle();
 
         // --- Display Object Management --- //
-        void addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject); // Consider refactoring/removal
+
+        void addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject); // Deprecated: Consider refactoring/removal
+
         void destroyDisplayObject(const std::string& name);
+        void destroyAssetObject(const std::string& name);   // NEW, needs LUA bindings
 
         // --- Orphan Management --- //
         int countOrphanedDisplayObjects() const;
@@ -100,6 +103,7 @@ namespace SDOM
         // std::vector<std::string> listResourceNames() const;
         void clear();
         void printObjectRegistry() const;
+        void printAssetRegistry() const;   // NEW, needs LUA bindings
 
         // --- Internal Lua Integration --- //
         void initFromLua(const sol::table& lua);

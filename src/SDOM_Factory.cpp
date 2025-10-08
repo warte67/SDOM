@@ -647,6 +647,26 @@ namespace SDOM
         displayObjects_.erase(name);
     }
 
+    void Factory::destroyAssetObject(const std::string& name) 
+    {
+        auto it = assetObjects_.find(name);
+        if (it == assetObjects_.end()) return;
+
+        // Ask the object to release runtime resources first
+        try {
+            if (it->second) {
+                it->second->onUnload();
+                it->second->onQuit();
+            }
+        } catch(...) {
+            ERROR("Factory::destroyAssetObject: exception while shutting down asset: " + name);
+        }
+
+        // Finally remove from registry (unique_ptr destructor will run)
+        assetObjects_.erase(it);
+    }
+ 
+
     int Factory::countOrphanedDisplayObjects() const {
         int count = 0;
         for (const auto& [name, objPtr] : displayObjects_) {
@@ -684,7 +704,8 @@ namespace SDOM
     std::vector<std::string> Factory::listDisplayObjectNames() const
     {
         std::vector<std::string> names;
-        for (const auto& pair : displayObjects_) {
+        for (const auto& pair : displayObjects_) 
+        {
             names.push_back(pair.first);
         }
         return names;
@@ -698,7 +719,8 @@ namespace SDOM
     void Factory::printObjectRegistry() const
     {
         std::cout << "Factory Display Object Registry:\n";
-        for (const auto& pair : displayObjects_) {
+        for (const auto& pair : displayObjects_) 
+        {
             const auto& name = pair.first;
             const auto& displayObject = pair.second;
             std::cout << "  Name: " << name
@@ -706,6 +728,21 @@ namespace SDOM
                     << "\n";
         }
         std::cout << "Total display objects: " << displayObjects_.size() << std::endl;
+    }
+
+    void Factory::printAssetRegistry() const
+    {
+        std::cout << "Factory Asset Object Registry:\n";
+        for (const auto& pair : assetObjects_) 
+        {
+            const auto& name = pair.first;
+            const auto& assetObject = pair.second;
+            std::cout << "  Name: " << name
+                    << ", Type: " << (assetObject ? assetObject->getType() : "Unknown")
+                    << ", \n  Filename: " << (assetObject ? assetObject->getFilename() : "Unknown")
+                    << "\n";
+        }
+        std::cout << "Total asset objects: " << assetObjects_.size() << std::endl;
     }
 
     
