@@ -187,12 +187,20 @@ Notes & test ideas:
         struct InitStruct {
             std::string name = TypeName;
             std::string type = TypeName;
-            float x = 0.0f, y = 0.0f, width = 0.0f, height = 0.0f;
+            float x = 0.0f;
+            float y = 0.0f;
+            float width = 0.0f;
+            float height = 0.0f;
             SDL_Color color = {255, 0, 255, 255};
-            AnchorPoint anchorTop = AnchorPoint::TOP_LEFT, anchorLeft = AnchorPoint::TOP_LEFT;
-            AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT, anchorRight = AnchorPoint::TOP_LEFT;
-            int z_order = 0, priority = 0;
-            bool isClickable = true, isEnabled = true, isHidden = false;
+            AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;
+            AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;
+            AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;
+            AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;
+            int z_order = 0;
+            int priority = 0;
+            bool isClickable = true;
+            bool isEnabled = true;
+            bool isHidden = false;
             int tabPriority = 0;
             bool tabEnabled = true;
         };

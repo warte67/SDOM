@@ -552,6 +552,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 # ToDo:
+- Label Constructor Defaults should include IDisplayObject defaults and the InitStruct defaults.  Verify and Fix.
 - Implement a Texture asset class to manage SDL_Texture resources in the Factory.
 - Build out the IAssetObject interface and the AssetObject handle type
 - Design and implement the AssetObject handle class, mirroring the DisplayObject handle pattern, and integrate with Factory.

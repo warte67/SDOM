@@ -89,10 +89,14 @@ namespace SDOM
         init.fontSize_ = 8;
         AssetObject bmpFont = createAsset("BitmapFont", init);
 
-        // register the Label asset
-        registerResType("Label", AssetTypeCreators{
-            BitmapFont::CreateFromLua,
-            BitmapFont::CreateFromInitStruct
+        // register the Label display object
+        registerDomType("Label", TypeCreators{
+            Label::CreateFromLua,
+            // Wrap the init-struct creator to accept the base InitStruct
+            [](const IDisplayObject::InitStruct& baseInit) -> std::unique_ptr<IDisplayObject> {
+                const auto& init = static_cast<const Label::InitStruct&>(baseInit);
+                return Label::CreateFromInitStruct(init);
+            }
         });
 
         return true;
@@ -178,14 +182,37 @@ namespace SDOM
     {
         creators_[typeName] = creators;
 
-        IDisplayObject::InitStruct init; // Default init struct
-        init.type = typeName;
-        DisplayObject prototypeHandle = create(typeName, init);
-        if (prototypeHandle)
-        {
-            prototypeHandle->_registerLuaBindings(typeName, SDOM::getLua());
-            destroyDisplayObject(prototypeHandle.get()->getName()); // Clean up prototype
-        }   
+        // Create a lightweight prototype for Lua registration.
+        // Avoid calling the InitStruct-based creator with a base InitStruct
+        // which may be static_cast'd to a derived InitStruct by the
+        // concrete creator (undefined behaviour). Prefer to use the
+        // fromLua creator to construct a safe temporary prototype.
+        if (creators.fromLua) {
+            try {
+                sol::state_view lua = SDOM::getLua();
+                sol::table proto = lua.create_table();
+                proto["name"] = std::string("__proto:") + typeName;
+                proto["type"] = typeName;
+                proto["x"] = 0;
+                proto["y"] = 0;
+                proto["width"] = 1;
+                proto["height"] = 1;
+                auto prototype = creators.fromLua(proto);
+                if (prototype) {
+                    // Register Lua bindings for the concrete instance so methods
+                    // are available on the shared userdata/handle.
+                    try {
+                        prototype->_registerLuaBindings(typeName, SDOM::getLua());
+                    } catch(...) {
+                        // swallow registration errors for prototypes
+                    }
+                    // prototype unique_ptr will be destroyed here; no need to
+                    // insert into the factory registry.
+                }
+            } catch(...) {
+                // ignore prototype creation failures; registration can proceed
+            }
+        }
     }
 
     IDisplayObject* Factory::getDomObj(const std::string& name)

@@ -106,13 +106,13 @@ namespace SDOM
     {
         static thread_local bool in_onload = false;
         if (in_onload) { 
-            std::cerr << "BitmapFont::onLoad - re-entrant call detected for: " << getName() << std::endl;
+            // std::cerr << "BitmapFont::onLoad - re-entrant call detected for: " << getName() << std::endl;
             return;
         }
         in_onload = true;
 
-        std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onLoad()"
-                << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
+        // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onLoad()"
+        //         << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
 
         if (isLoaded_) onUnload();
 

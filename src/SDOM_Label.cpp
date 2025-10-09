@@ -57,6 +57,8 @@ namespace SDOM
         // runtime/init flags
         setDirty(true); // layout needs building
         lastTokenizedText_.clear();
+        setTabEnabled(init.tabEnabled);
+        setClickable(false); // Labels are not clickable by default
 
         // Resolve font asset by name (store handle only; do not force loading)
         if (!resourceName_.empty())
@@ -81,6 +83,7 @@ namespace SDOM
         {
             DEBUG_LOG("Label '" + name_ + "' has no font resource specified.");
         }
+
     } // END Label::Label(const InitStruct& init)
 
 
@@ -93,6 +96,20 @@ namespace SDOM
         auto get_int = [&](const char* k, int d = 0) -> int 
         {
             return config[k].valid() ? config[k].get<int>() : d;
+        };
+        auto get_float = [&](const char* k, float d = 0.0f) -> float {
+            if (!config[k].valid()) return d;
+            sol::object o = config[k];
+            try {
+                if (o.is<double>()) return static_cast<float>(o.as<double>());
+                if (o.is<int>()) return static_cast<float>(o.as<int>());
+                if (o.is<std::string>()) {
+                    std::string s = o.as<std::string>();
+                    if (s.empty()) return d;
+                    return std::stof(s);
+                }
+            } catch(...) {}
+            return d;
         };
         auto get_bool = [&](const char* k, bool d = false) -> bool 
         {
@@ -120,11 +137,49 @@ namespace SDOM
 
         // Basic fields
         text_ = get_str("text", "");
-        resourceName_ = get_str("resourceName", get_str("font", "default_bmp_8x8") );
+        resourceName_ = get_str("resourceName", get_str("font", "default_bmp_font_8x8") );
         fontType_ = IFontObject::StringToFontType.at(get_str("fontType", "bitmap"));
         fontSize_ = get_int("fontSize", 10);
         fontWidth_ = get_int("fontWidth", fontSize_);
         fontHeight_ = get_int("fontHeight", fontSize_);
+
+        setClickable(get_bool("clickable", false));
+        if (!isClickable()) {
+            DEBUG_LOG("Label '" + name_ + "' is not clickable.");
+        }
+        if (isClickable()) {
+            DEBUG_LOG("Label '" + name_ + "' is clickable.");
+        }
+
+
+        // name_ = get_str("name", name_); // from IDisplayObject   (REQUIRED)
+        // type_ = get_str("type", TypeName); // from IDisplayObject   (REQUIRED)
+
+        float x = get_float("x", 0.0f);
+        float y = get_float("y", 0.0f);
+        float width = get_float("width", 0.0f);
+        float height = get_float("height", 0.0f);
+        float left = get_float("left", x);
+        float top = get_float("top", y);
+        float right = get_float("right", x + width);
+        float bottom = get_float("bottom", y + height);
+        setLeft(left);
+        setTop(top);
+        setRight(right);
+        setBottom(bottom);
+        this->setColor(read_color("color", {255,0,255,255})); // from IDisplayObject
+
+// AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;
+// AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;
+// AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;
+// AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;
+// int z_order = 0;
+// int priority = 0;
+// bool isClickable = true;
+// bool isEnabled = true;
+// bool isHidden = false;
+// int tabPriority = 0;
+// bool tabEnabled = true;
 
         // Normalize width/height -> fallback to fontSize when unspecified/invalid
         if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : 8);
@@ -182,6 +237,19 @@ namespace SDOM
         else
         {
             DEBUG_LOG("Label '" + name_ + "' has no font resource specified.");
+        }
+
+        // Labels are not tabbable by default. If Lua explicitly provided tabEnabled,
+        // honor that value; otherwise force tab disabled to match Label semantics.
+        if (config["tabEnabled"].valid()) {
+            setTabEnabled(config["tabEnabled"].get<bool>());
+        } else {
+            setTabEnabled(false);
+        }
+        if (config["clickable"].valid()) {
+            setClickable(config["clickable"].get<bool>());
+        } else {
+            setClickable(false); // Labels are not clickable by default
         }
     } // END Label::Label(const sol::table& config)
 
@@ -277,8 +345,50 @@ namespace SDOM
     } // END Label::onEvent(const Event& event)
 
     void Label::onRender() 
-    {
+    {       
+        SDL_Renderer* renderer = getRenderer();
 
+        // Pass 1: render a background color if alpha > 0
+        SDL_Color bgndColor = defaultStyle_.backgroundColor;
+        if (bgndColor.a > 0 && defaultStyle_.background) 
+        {
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(renderer, bgndColor.r, bgndColor.g, bgndColor.b, bgndColor.a);
+            SDL_FRect rect = 
+            { 
+                static_cast<float>(getX()), 
+                static_cast<float>(getY()), 
+                static_cast<float>(getWidth()), 
+                static_cast<float>(getHeight()) 
+            };
+            SDL_RenderFillRect(renderer, &rect);
+        }
+
+        // Pass 2: render a border to verify the bounds
+        SDL_Color borderColor = defaultStyle_.borderColor;
+
+        if (defaultStyle_.border) 
+        {
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+
+            // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+
+            SDL_FRect rect = 
+            { 
+                static_cast<float>(getX()), 
+                static_cast<float>(getY()), 
+                static_cast<float>(getWidth()), 
+                static_cast<float>(getHeight()) 
+            };
+            SDL_RenderRect(renderer, &rect);
+        }
+
+        // tokenizeText();
+
+        // // Render the Label
+        // renderLabel();
     } // END Label::onRender()
 
     bool Label::onUnitTest() 
@@ -348,35 +458,35 @@ namespace SDOM
         if (DEBUG_REGISTER_LUA)
         {
             std::string typeNameLocal = "Label:" + getName();
-            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << typeNameLocal 
-                    << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA 
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared AssetObject handle usertype (assets are exposed via AssetObject handles in Lua)
-        sol::table handle = AssetObject::ensure_handle_table(lua);
+        // // Augment the single shared AssetObject handle usertype (assets are exposed via AssetObject handles in Lua)
+        // sol::table handle = AssetObject::ensure_handle_table(lua);
 
-        // Helper to check if a property/command is already registered
-        auto absent = [&](const char* name) -> bool {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-            return !cur.valid() || cur == sol::lua_nil;
-        };
+        // // Helper to check if a property/command is already registered
+        // auto absent = [&](const char* name) -> bool {
+        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+        //     return !cur.valid() || cur == sol::lua_nil;
+        // };
 
-        // Helper to register a property/command if not already present
-        auto reg = [&](const char* name, auto&& fn) {
-            if (absent(name)) {
-                handle.set_function(name, std::forward<decltype(fn)>(fn));
-            }
-        };
+        // // Helper to register a property/command if not already present
+        // auto reg = [&](const char* name, auto&& fn) {
+        //     if (absent(name)) {
+        //         handle.set_function(name, std::forward<decltype(fn)>(fn));
+        //     }
+        // };
 
-        // small helper to validate and cast the AssetObject -> Label*
-        auto cast_label_from_asset = [](const AssetObject& asset) -> Label* {
-            if (!asset.isValid()) { ERROR("invalid AssetObject provided to Label method"); }
-            IAssetObject* base = asset.get();
-            Label* label = dynamic_cast<Label*>(base);
-            if (!label) { ERROR("invalid Label object"); }
-            return label;
-        };
+        // // small helper to validate and cast the AssetObject -> Label*
+        // auto cast_label_from_asset = [](const AssetObject& asset) -> Label* {
+        //     if (!asset.isValid()) { ERROR("invalid AssetObject provided to Label method"); }
+        //     IAssetObject* base = asset.get();
+        //     Label* label = dynamic_cast<Label*>(base);
+        //     if (!label) { ERROR("invalid Label object"); }
+        //     return label;
+        // };
 
         // // Register Label-specific properties and commands here (bridge from AssetObject handle)
         // reg("setLabelWidth", [cast_label_from_asset](AssetObject asset, int w) { cast_label_from_asset(asset)->setLabelWidth(w); });

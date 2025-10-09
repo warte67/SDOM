@@ -92,10 +92,19 @@ namespace SDOM
         createResourceRecursive = [&](sol::table obj, DisplayObject parent) 
         {
             std::string type = obj["type"].get_or(std::string(""));
+            std::string name = obj["name"].get_or(std::string(""));
             DisplayObject handle;
             if (!type.empty()) 
             {
+                // DEBUG_LOG("Core::configureFromLua: creating type='" + type + "' name='" + name + "'");
                 handle = factory_->create(type, obj);
+                if (!handle.isValid()) {
+                    ERROR("Core::configureFromLua: factory->create returned invalid handle for type '" + type + "' name='" + name + "'");
+                } 
+                // else 
+                // {
+                //     DEBUG_LOG("Core::configureFromLua: created handle for '" + type + "' name='" + name + "'");
+                // }
                 if (parent.isValid() && handle.isValid()) 
                 {
                     parent.get()->addChild(handle);
@@ -122,6 +131,12 @@ namespace SDOM
                 createResourceRecursive(child, DisplayObject());
             }
         }
+
+        // // Debug: print factory registries so we can see registered/created types
+        // try {
+        //     factory_->printObjectRegistry();
+        //     factory_->printAssetRegistry();
+        // } catch(...) {}
 
         // Set the "mainStage" as the root node
         std::string rootStageName = "mainStage";

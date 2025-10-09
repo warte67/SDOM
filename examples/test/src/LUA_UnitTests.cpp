@@ -437,7 +437,10 @@ namespace SDOM {
             local b = Core:createDisplayObject("Box", { name = "focusB", type = "Box", x = 30, y = 10, width = 16, height = 16 })
             if b and b.get then b:setColor({ r = 0, g = 128, b = 128, a = 255 }) end  -- make focusB cyan to distinguish
             local st = Core:getStageHandle()
-            if not a or not b or not st then return false end
+            if not a or not b or not st then 
+                print("test16_lua: failed to create focusA/focusB or get stage")
+                return false 
+            end
             st:addChild(a)
             st:addChild(b)
             return true
@@ -447,7 +450,7 @@ namespace SDOM {
         // Send Tab (keycode 9) via Lua helper and pump events; verify focus order
         bool result = lua.script(R"(
             -- Helper: get name of keyboard-focused object
-            local function focusedName()
+                local function focusedName()
                 local k = Core:getKeyboardFocusedObject()
                 if not k then return nil end
                 return k:getName()
@@ -457,18 +460,24 @@ namespace SDOM {
             local initial = focusedName()
 
         -- First Tab forward: invoke handler directly so we can test traversal logic
-        Core:handleTabKeyPress()
+            Core:handleTabKeyPress()
             local after1 = focusedName()
 
         -- Second Tab forward: invoke handler again
-        Core:handleTabKeyPress()
+            Core:handleTabKeyPress()
             local after2 = focusedName()
 
             -- Debug print
             -- print(string.format("[test16] initial=%s after1=%s after2=%s", tostring(initial), tostring(after1), tostring(after2)))
             -- Validate expectations
-            if after1 ~= 'focusB' then return false end
-            if after2 ~= 'focusA' then return false end
+            if after1 ~= 'focusB' then 
+                print("test16_lua: after1 expected focusB, got " .. tostring(after1))
+                return false 
+            end
+            if after2 ~= 'focusA' then 
+                print("test16_lua: after2 expected focusA, got " .. tostring(after2))
+                return false 
+            end
             return true
         )").get<bool>();
 

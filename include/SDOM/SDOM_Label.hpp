@@ -40,7 +40,7 @@ namespace SDOM
             }
             // --- Label-specific properties --- //
             std::string text = "Label";
-            std::string resourceName = "default_bmp_8x8"; // default font
+            std::string resourceName = "default_bmp_font_8x8"; // default font
             IFontObject::FontType fontType = IFontObject::FontType::Bitmap;
             int fontSize = 10;          // for TrueType fonts, or BitmapFont scaling
             int fontWidth = 8;          // for BitmapFont only (-1 to use fontSize)
