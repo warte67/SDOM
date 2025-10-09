@@ -73,6 +73,13 @@ namespace SDOM
                 ERROR("SpriteSheet::onLoad: Failed to retrieve existing Texture asset for filename: " + filename_);
                 return;
             }
+            // Ensure the referenced Texture asset is loaded so getTexture() will be valid.
+            try {
+                textureAsset->onLoad();
+            } catch(...) {
+                ERROR("SpriteSheet::onLoad: Failed to load existing Texture asset for filename: " + filename_);
+                return;
+            }
             isLoaded_ = true;
             return;
         }
@@ -166,7 +173,21 @@ namespace SDOM
 
     int SpriteSheet::getSpriteCount() const
     {
+        // If texture isn't loaded, attempt a guarded lazy-load so callers
+        // that query sprite metadata (tests, etc.) can succeed without
+        // forcing callers to explicitly load the asset first.
+        static thread_local bool s_in_lazy_load = false;
         SDL_Texture* texture_ = getTexture();
+        if (!texture_) 
+        {
+            if (!s_in_lazy_load) 
+            {
+                s_in_lazy_load = true;
+                const_cast<SpriteSheet*>(this)->onLoad();
+                s_in_lazy_load = false;
+            }
+            texture_ = getTexture();
+        }
         if (!texture_)
             ERROR("SpriteSheet::texture_ not loaded");
 
@@ -192,7 +213,16 @@ namespace SDOM
 
     int SpriteSheet::getSpriteX(int spriteIndex) const
     {
+        static thread_local bool s_in_lazy_load = false;
         SDL_Texture* texture_ = getTexture();
+        if (!texture_) {
+            if (!s_in_lazy_load) {
+                s_in_lazy_load = true;
+                const_cast<SpriteSheet*>(this)->onLoad();
+                s_in_lazy_load = false;
+            }
+            texture_ = getTexture();
+        }
         if (!texture_) ERROR("SpriteSheet::texture_ not loaded");
 
         float texW = 0.0f, texH = 0.0f;
@@ -214,7 +244,16 @@ namespace SDOM
 
     int SpriteSheet::getSpriteY(int spriteIndex) const
     {
+        static thread_local bool s_in_lazy_load = false;
         SDL_Texture* texture_ = getTexture();
+        if (!texture_) {
+            if (!s_in_lazy_load) {
+                s_in_lazy_load = true;
+                const_cast<SpriteSheet*>(this)->onLoad();
+                s_in_lazy_load = false;
+            }
+            texture_ = getTexture();
+        }
         if (!texture_) ERROR("SpriteSheet::texture_ not loaded");
 
         float texW = 0.0f, texH = 0.0f;

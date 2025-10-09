@@ -71,8 +71,7 @@ namespace SDOM
 
         // --- Object Lookup --- //
         IDisplayObject* getDomObj(const std::string& name);  // change to getIDisplayObject()
-        IAssetObject* getResObj(const std::string& name);   //change to getIAssetObject()
-        
+        IAssetObject* getResObj(const std::string& name);   //change to getIAssetObject()        
         DisplayObject getDisplayObject(const std::string& name);
         AssetObject getAssetObject(const std::string& name);
         DisplayObject getStageHandle();

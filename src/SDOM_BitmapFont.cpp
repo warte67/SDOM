@@ -1,6 +1,8 @@
 // SDOM_BitmapFont.cpp
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
 #include <SDOM/SDOM_AssetObject.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
@@ -10,10 +12,29 @@ namespace SDOM
 {
     BitmapFont::BitmapFont(const InitStruct& init) : IFontObject(init)
     {
+
+        bitmapFontWidth_ = init.fontWidth;
+        bitmapFontHeight_ = init.fontHeight;
+        if (init.fontWidth < 0)  bitmapFontWidth_ = init.fontSize_;
+        if (init.fontHeight < 0) bitmapFontHeight_ = init.fontSize_;
     }
 
     BitmapFont::BitmapFont(const sol::table& config) : IFontObject(config)
     {
+        // Prefer Lua keys: "size", "width", "height".
+        // Also accept legacy keys: "fontSize", "fontWidth", "fontHeight".
+        if (config["size"].valid())        fontSize_ = config["size"].get<int>(); else fontSize_ = 10;
+        if (config["width"].valid())       bitmapFontWidth_ = config["width"].get<int>(); else bitmapFontWidth_ = 8;
+        if (config["height"].valid())      bitmapFontHeight_ = config["height"].get<int>(); else bitmapFontHeight_ = 8;
+
+        // legacy overrides
+        if (config["fontSize"].valid())    fontSize_ = config["fontSize"].get<int>();
+        if (config["fontWidth"].valid())   bitmapFontWidth_ = config["fontWidth"].get<int>();
+        if (config["fontHeight"].valid())  bitmapFontHeight_ = config["fontHeight"].get<int>();
+
+        // normalize invalid/zero dimensions to fontSize_
+        if (bitmapFontWidth_ <= 0)  bitmapFontWidth_ = fontSize_;
+        if (bitmapFontHeight_ <= 0) bitmapFontHeight_ = fontSize_;
     }
 
 
@@ -21,42 +42,242 @@ namespace SDOM
     {
         // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "~BitmapFont()" 
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
+        // Destructor implementation if needed
+        // ...
     }
 
 
     bool BitmapFont::onInit()
     {
-        // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onInit()" 
-        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
-        // Initialization logic for BitmapFont
-        return true;
-    }
+        SpriteSheet::InitStruct init;
+        init.filename = filename_;
+        init.name = name_ + "_SpriteSheet";
+        init.type = SpriteSheet::TypeName;            // use SpriteSheet type constant
+        init.spriteWidth = bitmapFontWidth_;
+        init.spriteHeight = bitmapFontHeight_;
 
+        AssetObject existing = getFactory().getAssetObject(init.name);
+        if (existing.isValid())
+        {
+            ERROR("BitmapFont::onInit: Asset with name already exists: " + init.name);
+            return false;
+        }
+
+        // create by type, not by name
+        spriteSheet_ = getFactory().createAsset(SpriteSheet::TypeName, init);
+        if (!spriteSheet_)
+        {
+            ERROR("BitmapFont::onInit: Factory failed to create SpriteSheet asset for filename: " + filename_);
+            return false;
+        }
+
+        // Defensive: ensure we actually got a SpriteSheet
+        if (spriteSheet_.as<SpriteSheet>() == nullptr)
+        {
+            ERROR("BitmapFont::onInit: Created asset is not a SpriteSheet for filename: " + filename_);
+            spriteSheet_.reset();
+            return false;
+        }
+
+        // Ensure the asset is loaded (use AssetObject API to do lazy load)
+        spriteSheet_.get(); // ensures onLoad() is invoked
+        return true;
+    } // END onInit()
+    
     void BitmapFont::onQuit()
     {
         // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onQuit()" 
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
-        // Cleanup logic for BitmapFont
-    }
+
+        // If we hold a SpriteSheet handle, ensure it's unloaded and release our reference.
+        if (spriteSheet_.isValid()) 
+        {
+            auto* ss = spriteSheet_.as<SpriteSheet>();
+            if (ss && ss->isLoaded()) 
+            {
+                ss->onUnload();   // unload texture/resources
+            }
+            spriteSheet_.reset(); // drop our handle so the Factory/cache can reclaim if unused
+        }    
+    } // END onQuit()
+
+    // void BitmapFont::onLoad()
+    // {
+    //     // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onLoad()" 
+    //     //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
+    //     // Loading logic for BitmapFont
+    // } // END onLoad()
+
+    // void BitmapFont::onUnload()
+    // {
+    //     // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onUnload()" 
+    //     //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
+    //     // Unloading logic for BitmapFont
+    // }
 
     void BitmapFont::onLoad()
     {
-        // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onLoad()" 
-        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
-        // Loading logic for BitmapFont
+        static thread_local bool in_onload = false;
+        if (in_onload) { 
+            std::cerr << "BitmapFont::onLoad - re-entrant call detected for: " << getName() << std::endl;
+            return;
+        }
+        in_onload = true;
+
+        std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onLoad()"
+                << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
+
+        if (isLoaded_) onUnload();
+
+        // Resolve or create the backing SpriteSheet asset (use AssetObject API)
+        std::string sheetName = name_ + "_SpriteSheet";
+        AssetObject existing = getFactory().getAssetObject(sheetName);
+        if (existing.isValid())
+        {
+            // protect against accidental self-reference
+            IAssetObject* raw = existing.get();
+            if (raw == static_cast<IAssetObject*>(this)) {
+                ERROR("BitmapFont::onLoad: found self as SpriteSheet asset: " + sheetName);
+                in_onload = false;
+                return;
+            }
+            spriteSheet_ = existing;
+        }
+        else
+        {
+            SpriteSheet::InitStruct init;
+            init.name = sheetName;
+            init.type = SpriteSheet::TypeName;
+            init.filename = filename_;
+            init.spriteWidth = bitmapFontWidth_;
+            init.spriteHeight = bitmapFontHeight_;
+
+            spriteSheet_ = getFactory().createAsset(SpriteSheet::TypeName, init);
+            if (!spriteSheet_) {
+                ERROR("BitmapFont::onLoad: Factory failed to create SpriteSheet asset: " + sheetName);
+                in_onload = false;
+                return;
+            }
+
+            // sanity: ensure factory didn't hand back a handle to ourselves
+            IAssetObject* raw = spriteSheet_.get();
+            if (raw == static_cast<IAssetObject*>(this)) {
+                ERROR("BitmapFont::onLoad: Factory returned self for created SpriteSheet: " + sheetName);
+                spriteSheet_.reset();
+                in_onload = false;
+                return;
+            }
+        }
+
+        // Validate & ensure loaded (avoid forcing load that can re-enter this code path)
+        IAssetObject* raw = spriteSheet_.get();
+        SpriteSheet* ss = raw ? dynamic_cast<SpriteSheet*>(raw) : nullptr;
+        if (!ss) {
+            ERROR("BitmapFont::onLoad: resolved asset is not a SpriteSheet: " + sheetName);
+            spriteSheet_.reset();
+            in_onload = false;
+            return;
+        }
+
+        // Only request load if not already loaded (this can still recurse; guard prevents us looping)
+        if (!ss->isLoaded()) {
+            ss->onLoad();
+        }
+
+        // Sync metrics
+        int sw = ss->getSpriteWidth();
+        int sh = ss->getSpriteHeight();
+        if (sw > 0) bitmapFontWidth_ = sw;
+        if (sh > 0) bitmapFontHeight_ = sh;
+
+        isLoaded_ = true;
+        in_onload = false;
+        
     } // END onLoad()
 
     void BitmapFont::onUnload()
     {
         // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onUnload()" 
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
-        // Unloading logic for BitmapFont
-    }
+
+        // Unload/release the sprite sheet we created/hold
+        if (spriteSheet_ && isLoaded_) spriteSheet_->onUnload();
+        isLoaded_ = false;
+    } // END onUnload()
 
     void BitmapFont::create(const sol::table& config)
     {
-        // Create or reconfigure the BitmapFont based on the provided Lua table
-    }
+        // Update basic identity/config from Lua table
+        if (config["name"].valid())     name_ = config["name"].get<std::string>();
+        if (config["filename"].valid()) filename_ = config["filename"].get<std::string>();
+
+        // size/width/height (prefer new keys, accept legacy)
+        if (config["size"].valid())        fontSize_ = config["size"].get<int>();
+        if (config["width"].valid())       bitmapFontWidth_ = config["width"].get<int>();
+        if (config["height"].valid())      bitmapFontHeight_ = config["height"].get<int>();
+
+        if (config["fontSize"].valid())    fontSize_ = config["fontSize"].get<int>();
+        if (config["fontWidth"].valid())   bitmapFontWidth_ = config["fontWidth"].get<int>();
+        if (config["fontHeight"].valid())  bitmapFontHeight_ = config["fontHeight"].get<int>();
+
+        // normalize invalid/zero dimensions to fontSize_
+        if (bitmapFontWidth_ <= 0)  bitmapFontWidth_ = (fontSize_ > 0 ? fontSize_ : 8);
+        if (bitmapFontHeight_ <= 0) bitmapFontHeight_ = (fontSize_ > 0 ? fontSize_ : 8);
+
+        // Optional explicit spriteSheet name; default to "<name>_SpriteSheet"
+        std::string sheetName;
+        if (config["spriteSheetName"].valid()) sheetName = config["spriteSheetName"].get<std::string>();
+        else sheetName = name_.empty() ? std::string("bitmap_sprite_sheet") : (name_ + "_SpriteSheet");
+
+        // If we already hold a spriteSheet, unload and drop it so create/rebind proceeds cleanly.
+        if (spriteSheet_.isValid())
+        {
+            SpriteSheet* ss = spriteSheet_.as<SpriteSheet>();
+            if (ss && ss->isLoaded()) ss->onUnload();
+            spriteSheet_.reset();
+        }
+
+        // Try to reuse an existing factory asset with that name, else create a new SpriteSheet asset.
+        AssetObject existing = getFactory().getAssetObject(sheetName);
+        if (existing.isValid())
+        {
+            spriteSheet_ = existing;
+        }
+        else
+        {
+            SpriteSheet::InitStruct init;
+            init.filename = filename_;
+            init.name = sheetName;
+            init.type = SpriteSheet::TypeName;
+            init.spriteWidth = bitmapFontWidth_;
+            init.spriteHeight = bitmapFontHeight_;
+
+            spriteSheet_ = getFactory().createAsset(SpriteSheet::TypeName, init);
+            if (!spriteSheet_)
+            {
+                ERROR("BitmapFont::create - failed to create SpriteSheet asset: " + sheetName);
+                return;
+            }
+        }
+
+        // Ensure the sprite sheet is loaded and sync metrics
+        SpriteSheet* ss = spriteSheet_.as<SpriteSheet>();
+        if (!ss)
+        {
+            ERROR("BitmapFont::create - resolved asset is not a SpriteSheet: " + sheetName);
+            spriteSheet_.reset();
+            return;
+        }
+        if (!ss->isLoaded()) ss->onLoad();
+
+        int sw = ss->getSpriteWidth();
+        int sh = ss->getSpriteHeight();
+        if (sw > 0) bitmapFontWidth_ = sw;
+        if (sh > 0) bitmapFontHeight_ = sh;
+
+        // mark this font as configured/loaded
+        isLoaded_ = true;
+    } // END create()
 
     void BitmapFont::drawGlyph(Uint32 ch, int x, int y, const FontStyle& style)
     {

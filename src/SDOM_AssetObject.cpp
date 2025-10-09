@@ -20,19 +20,19 @@ namespace SDOM
         if (!factory_) return nullptr;
         IAssetObject* res = factory_->getResObj(name_);
         if (!res) return nullptr;
-        // Ensure the resource is loaded before returning the pointer.
-        try 
-        {
-            if (!res->isLoaded()) { res->onLoad(); }
-        } 
-        catch (const std::exception& e) 
-        {
-            ERROR("AssetObject::get(): onLoad() threw: " + std::string(e.what()));
-        } 
-        catch (...) 
-        {
-            ERROR("AssetObject::get(): onLoad() threw unknown exception");
-        }
+        // // Ensure the resource is loaded before returning the pointer.
+        // try 
+        // {
+        //     if (!res->isLoaded()) { res->onLoad(); }
+        // } 
+        // catch (const std::exception& e) 
+        // {
+        //     ERROR("AssetObject::get(): onLoad() threw: " + std::string(e.what()));
+        // } 
+        // catch (...) 
+        // {
+        //     ERROR("AssetObject::get(): onLoad() threw unknown exception");
+        // }
         return res;    
     }
 

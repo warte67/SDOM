@@ -26,7 +26,9 @@ namespace SDOM
                     type = TypeName;
                     filename = TypeName; // Default filename, can be overridden
                 }
-                int fontSize_ = 8; // Font size property for TrueType fonts (and BitmapFont scaling)
+                int fontSize_ = 10;     // Font size property for TrueType fonts (and BitmapFont scaling)
+                int fontWidth = -1;     // Optional: non-uniform width (bitmap only)          
+                int fontHeight = -1;    // Optional: non-uniform height (bitmap only
             };
 
         protected:
@@ -78,8 +80,8 @@ namespace SDOM
         protected:
             // Bitmap-specific data members
             AssetObject spriteSheet_;
-            int bitmapFontWidth_ = 8;
-            int bitmapFontHeight_ = 8;
+            int bitmapFontWidth_ = -1;
+            int bitmapFontHeight_ = -1;
 
             std::vector<std::vector<SDL_Texture*>> outlineTextures;
 
