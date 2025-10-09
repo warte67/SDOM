@@ -552,13 +552,20 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 # ToDo:
-- Label Constructor Defaults should include IDisplayObject defaults and the InitStruct defaults.  Verify and Fix.
-- Implement a Texture asset class to manage SDL_Texture resources in the Factory.
-- Build out the IAssetObject interface and the AssetObject handle type
-- Design and implement the AssetObject handle class, mirroring the DisplayObject handle pattern, and integrate with Factory.
-- Preload and test two font assets:
-    - An 8x8 pixel bitmap font loaded from internal resources (using a SpriteSheetAsset).
-    - A TrueType font loaded as a separate IAssetObject.
-- Define and scaffold an IFontObject interface to unify font asset handling (bitmap and TTF).
-- Plan and begin implementation of SpriteSheetAsset as an IAssetObject to support bitmap font rendering.
-- Add unit tests for asset registration, font loading, and property access.
+- Label and IDisplayObject Constructor Defaults should include IDisplayObject defaults and the InitStruct defaults.  Verify and Fix. Pattern may be within the Label::Label(sol::table& config)
+- Rename `DisplayObject` to `DisplayHandle` to help separate from the `IDisplayObject` and to imply `Handle` instead of `Object`.
+- Remame `AssetObject` to `AssetHandle` to help separate fro the `IAssetObject` and to help imply `Handle` rather than `Object`.
+
+Use grep limited to .cpp/.hpp (prints filename:line:match). From repo root:
+```bash
+grep -RnIw --include='*.cpp' --include='*.hpp' --exclude-dir=.git --exclude-dir=build 'DisplayObject' . | grep -v 'IDisplayObject'
+```
+
+Or with ripgrep (faster if installed):
+```bash
+rg -n --glob '*.cpp' --glob '*.hpp' '\bDisplayObject\b' --hidden --glob '!{.git,build}'
+```
+
+```bash
+rg -n --glob '*.cpp' --glob '*.hpp' '\bAssetObject\b' --hidden --glob '!{.git,build}'
+```

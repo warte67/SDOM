@@ -27,6 +27,25 @@ namespace SDOM
         if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : 8);
         if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : 8);
 
+        // std::string name = TypeName;
+        // std::string type = TypeName;
+        // float x = 0.0f;
+        // float y = 0.0f;
+        // float width = 0.0f;
+        // float height = 0.0f;
+        // SDL_Color color = {255, 0, 255, 255};
+        // AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;
+        // AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;
+        // AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;
+        // AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;
+        // int z_order = 0;
+        // int priority = 0;
+        // bool isClickable = true;
+        // bool isEnabled = true;
+        // bool isHidden = false;
+        // int tabPriority = 0;
+        // bool tabEnabled = true;
+
         defaultStyle_.alignment = init.alignment;
         defaultStyle_.foregroundColor = init.foregroundColor;
         defaultStyle_.backgroundColor = init.backgroundColor;
@@ -89,6 +108,8 @@ namespace SDOM
 
     Label::Label(const sol::table& config) : IDisplayObject(config)
     {
+        InitStruct init; // to get default values
+
         auto get_str = [&](const char* k, const std::string& d = "") -> std::string 
         {
             return config[k].valid() ? config[k].get<std::string>() : d;
@@ -115,7 +136,7 @@ namespace SDOM
         {
             return config[k].valid() ? config[k].get<bool>() : d;
         };
-        auto read_color = [&](const char* k, SDL_Color d = {255,255,255,255}) -> SDL_Color 
+        auto read_color = [&](const char* k, SDL_Color d = {255,0,255,255}) -> SDL_Color 
         {
             if (!config[k].valid()) return d;
             sol::table t = config[k];
@@ -136,29 +157,20 @@ namespace SDOM
         };
 
         // Basic fields
-        text_ = get_str("text", "");
-        resourceName_ = get_str("resourceName", get_str("font", "default_bmp_font_8x8") );
-        fontType_ = IFontObject::StringToFontType.at(get_str("fontType", "bitmap"));
+        text_ = get_str("text", init.text);
+        resourceName_ = get_str("resourceName", get_str("font", init.resourceName) );
+        fontType_ = IFontObject::StringToFontType.at(get_str("fontType", IFontObject::FontTypeToString.at(init.fontType)));
         fontSize_ = get_int("fontSize", 10);
         fontWidth_ = get_int("fontWidth", fontSize_);
         fontHeight_ = get_int("fontHeight", fontSize_);
 
-        setClickable(get_bool("clickable", false));
-        if (!isClickable()) {
-            DEBUG_LOG("Label '" + name_ + "' is not clickable.");
-        }
-        if (isClickable()) {
-            DEBUG_LOG("Label '" + name_ + "' is clickable.");
-        }
+        name_ = get_str("name", init.name); // from IDisplayObject   (REQUIRED)
+        type_ = get_str("type", TypeName); // from IDisplayObject   (REQUIRED)
 
-
-        // name_ = get_str("name", name_); // from IDisplayObject   (REQUIRED)
-        // type_ = get_str("type", TypeName); // from IDisplayObject   (REQUIRED)
-
-        float x = get_float("x", 0.0f);
-        float y = get_float("y", 0.0f);
-        float width = get_float("width", 0.0f);
-        float height = get_float("height", 0.0f);
+        float x = get_float("x", init.x);
+        float y = get_float("y", init.y);
+        float width = get_float("width", init.width);
+        float height = get_float("height", init.height);
         float left = get_float("left", x);
         float top = get_float("top", y);
         float right = get_float("right", x + width);
@@ -167,19 +179,29 @@ namespace SDOM
         setTop(top);
         setRight(right);
         setBottom(bottom);
-        this->setColor(read_color("color", {255,0,255,255})); // from IDisplayObject
+        this->setColor(read_color("color", init.color)); // from IDisplayObject
 
-// AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;
-// AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;
-// AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;
-// AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;
-// int z_order = 0;
-// int priority = 0;
-// bool isClickable = true;
-// bool isEnabled = true;
-// bool isHidden = false;
-// int tabPriority = 0;
-// bool tabEnabled = true;
+        this->setAnchorLeft(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchorLeft", anchorPointToString_.at(init.anchorLeft)))));
+        this->setAnchorTop(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchorTop", anchorPointToString_.at(init.anchorTop)))));
+        this->setAnchorRight(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchorRight", anchorPointToString_.at(init.anchorRight)))));
+        this->setAnchorBottom(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchorBottom", anchorPointToString_.at(init.anchorBottom)))));
+
+        if (isClickable()) 
+        {
+            DEBUG_LOG("Label '" + name_ + "' isClickable=true; Labels should not be clickable by default.");
+        }
+        else
+        {
+            DEBUG_LOG("Label '" + name_ + "' isClickable=false; Labels should not be clickable by default.");
+        }
+
+        setZOrder(get_int("z_order", init.z_order));
+        setPriority(get_int("priority", init.priority));
+        setClickable(get_bool("clickable", init.isClickable));
+        setEnabled(get_bool("isEnabled", init.isEnabled));
+        setHidden(get_bool("isHidden", init.isHidden));
+        setTabPriority(get_int("tabPriority", init.tabPriority));
+        setTabEnabled(get_bool("tabEnabled", init.tabEnabled));
 
         // Normalize width/height -> fallback to fontSize when unspecified/invalid
         if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : 8);
@@ -239,18 +261,18 @@ namespace SDOM
             DEBUG_LOG("Label '" + name_ + "' has no font resource specified.");
         }
 
-        // Labels are not tabbable by default. If Lua explicitly provided tabEnabled,
-        // honor that value; otherwise force tab disabled to match Label semantics.
-        if (config["tabEnabled"].valid()) {
-            setTabEnabled(config["tabEnabled"].get<bool>());
-        } else {
-            setTabEnabled(false);
-        }
-        if (config["clickable"].valid()) {
-            setClickable(config["clickable"].get<bool>());
-        } else {
-            setClickable(false); // Labels are not clickable by default
-        }
+        // // Labels are not tabbable by default. If Lua explicitly provided tabEnabled,
+        // // honor that value; otherwise force tab disabled to match Label semantics.
+        // if (config["tabEnabled"].valid()) {
+        //     setTabEnabled(config["tabEnabled"].get<bool>());
+        // } else {
+        //     setTabEnabled(false);
+        // }
+        // if (config["clickable"].valid()) {
+        //     setClickable(config["clickable"].get<bool>());
+        // } else {
+        //     setClickable(false); // Labels are not clickable by default
+        // }
     } // END Label::Label(const sol::table& config)
 
     Label::~Label()
