@@ -78,7 +78,7 @@ int main(int argc, char** argv)
     }
     core.setStopAfterUnitTests(stopAfterTests);
 
-    // register any custom DisplayObject types before configuring the Core
+    // register any custom DisplayHandle types before configuring the Core
     core.getFactory().registerDomType("Box", TypeCreators{
         Box::CreateFromLua,
         Box::CreateFromInitStruct
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
     lua["Stage_UnitTests"] = &SDOM::Stage_UnitTests;
     lua["Box_UnitTests"] = &SDOM::Box_UnitTests;
     lua["LUA_UnitTests"] = &SDOM::LUA_UnitTests;
-    lua["DisplayObject_UnitTests"] = &SDOM::DisplayObject_UnitTests;
+    lua["DisplayHandle_UnitTests"] = &SDOM::DisplayHandle_UnitTests;
     lua["EventType_UnitTests"] = &SDOM::EventType_UnitTests;
     lua["Event_UnitTests"] = &SDOM::Event_UnitTests;
     lua["GarbageCollection_UnitTests"] = &SDOM::GarbageCollection_UnitTests;

@@ -1,21 +1,21 @@
-// SDOM_AssetObject.cpp
+// SDOM_AssetHandle.cpp
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IAssetObject.hpp>
-#include <SDOM/SDOM_AssetObject.hpp>
+#include <SDOM/SDOM_AssetHandle.hpp>
 #include <iostream>
 
 namespace SDOM
 {
 
 
-    AssetObject::~AssetObject()
+    AssetHandle::~AssetHandle()
     {
         // default dtor; ensure vtable emission
     }
 
-    IAssetObject* AssetObject::get() const
+    IAssetObject* AssetHandle::get() const
     {
         if (!factory_) return nullptr;
         IAssetObject* res = factory_->getResObj(name_);
@@ -23,19 +23,19 @@ namespace SDOM
         return res;    
     }
 
-    // Resolve an asset spec from Lua: accepts an AssetObject userdata, a string name,
+    // Resolve an asset spec from Lua: accepts an AssetHandle userdata, a string name,
     // or a table with { name = "..." } or { parent = <asset> } style helpers.
-    AssetObject AssetObject::resolveSpec(const sol::object& spec)
+    AssetHandle AssetHandle::resolveSpec(const sol::object& spec)
     {
-        if (!spec.valid()) return AssetObject();
+        if (!spec.valid()) return AssetHandle();
 
-        // if it's already an AssetObject userdata
-        try { if (spec.is<AssetObject>()) return spec.as<AssetObject>(); } catch(...) {}
+        // if it's already an AssetHandle userdata
+        try { if (spec.is<AssetHandle>()) return spec.as<AssetHandle>(); } catch(...) {}
 
         // if it's a simple string, treat it as the asset name
         try {
             if (spec.is<std::string>()) {
-                AssetObject out;
+                AssetHandle out;
                 out.name_ = spec.as<std::string>();
                 return out;
             }
@@ -44,7 +44,7 @@ namespace SDOM
         // if it's a table, accept name / filename / type fields
         if (spec.is<sol::table>()) {
             sol::table t = spec.as<sol::table>();
-            AssetObject out;
+            AssetHandle out;
             bool any = false;
 
             sol::object nameObj = t.get<sol::object>("name");
@@ -70,15 +70,15 @@ namespace SDOM
             }
         }
 
-        return AssetObject();
+        return AssetHandle();
     }
 
 
-    sol::table AssetObject::ensure_handle_table(sol::state_view lua)
+    sol::table AssetHandle::ensure_handle_table(sol::state_view lua)
     {
         if (!lua[LuaHandleName].valid())
         {
-            lua.new_usertype<AssetObject>(LuaHandleName, sol::no_constructor);
+            lua.new_usertype<AssetHandle>(LuaHandleName, sol::no_constructor);
         }
         return lua[LuaHandleName];
     }
@@ -92,29 +92,29 @@ namespace SDOM
         }
     }
 
-    void AssetObject::bind_minimal(sol::state_view lua)
+    void AssetHandle::bind_minimal(sol::state_view lua)
     {
         sol::table handle = ensure_handle_table(lua);
 
-        // Minimal surface similar to DisplayObject; keep lightweight.
-        set_if_absent(handle, "isValid", &AssetObject::isValid);
-        set_if_absent(handle, "getName", &AssetObject::getName_lua);
-        set_if_absent(handle, "getType", &AssetObject::getType_lua);
-        set_if_absent(handle, "getFilename", &AssetObject::getFilename_lua);
-        set_if_absent(handle, "setName", [](AssetObject& self, const std::string& newName) { self.name_ = newName; });
-        set_if_absent(handle, "setType", [](AssetObject& self, const std::string& newType) { self.type_ = newType; });
-        set_if_absent(handle, "setFilename", [](AssetObject& self, const std::string& newFilename) { self.filename_ = newFilename; });
+        // Minimal surface similar to DisplayHandle; keep lightweight.
+        set_if_absent(handle, "isValid", &AssetHandle::isValid);
+        set_if_absent(handle, "getName", &AssetHandle::getName_lua);
+        set_if_absent(handle, "getType", &AssetHandle::getType_lua);
+        set_if_absent(handle, "getFilename", &AssetHandle::getFilename_lua);
+        set_if_absent(handle, "setName", [](AssetHandle& self, const std::string& newName) { self.name_ = newName; });
+        set_if_absent(handle, "setType", [](AssetHandle& self, const std::string& newType) { self.type_ = newType; });
+        set_if_absent(handle, "setFilename", [](AssetHandle& self, const std::string& newFilename) { self.filename_ = newFilename; });
 
         // Concrete IAssetObject implementations should call:
-        //   auto t = AssetObject::ensure_handle_table(lua);
+        //   auto t = AssetHandle::ensure_handle_table(lua);
         //   if (t["methodName"] == nil) t.set_function("methodName", ...);
     }
 
-    void AssetObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    void AssetHandle::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
         if (DEBUG_REGISTER_LUA)
         {
-            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << "AssetObject:" << getName()
+            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << "AssetHandle:" << getName()
                       << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA << typeName << CLR::RESET << std::endl;
         }
 

@@ -3,7 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDOM/SDOM_IFontObject.hpp>
-#include <SDOM/SDOM_AssetObject.hpp>
+#include <SDOM/SDOM_AssetHandle.hpp>
  
 namespace SDOM
 {
@@ -70,7 +70,7 @@ namespace SDOM
             virtual FontStyle getFontStyle() override;
 
             // --- Public BitmapFont-specific methods --- //
-            AssetObject getSpriteSheet() const { return spriteSheet_; }
+            AssetHandle getSpriteSheet() const { return spriteSheet_; }
 
             int getBitmapFontWidth() const { return bitmapFontWidth_; }
             int getBitmapFontHeight() const { return bitmapFontHeight_; }
@@ -79,7 +79,7 @@ namespace SDOM
 
         protected:
             // Bitmap-specific data members
-            AssetObject spriteSheet_;
+            AssetHandle spriteSheet_;
             int bitmapFontWidth_ = -1;
             int bitmapFontHeight_ = -1;
 

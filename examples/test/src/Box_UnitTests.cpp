@@ -6,17 +6,17 @@
 #include <SDOM/SDOM_Core.hpp> 
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 
 #include "Box.hpp"
 #include "UnitTests.hpp"
 
 namespace SDOM
 {
-    DisplayObject testBox1;
-    DisplayObject testBox2;
+    DisplayHandle testBox1;
+    DisplayHandle testBox2;
 
-    bool test1(DisplayObject& testBox1) {
+    bool test1(DisplayHandle& testBox1) {
         return UnitTests::run("Box #1", "Factory refuses to create with invalid type 'Box1'", [&testBox1]() {
             Box::InitStruct init;
             init.name = "testBox1";
@@ -41,7 +41,7 @@ namespace SDOM
         });
     }
 
-    bool test2(DisplayObject& testBox2) {
+    bool test2(DisplayHandle& testBox2) {
         return UnitTests::run("Box #2", "Factory creates valid Box instance", [&testBox2]() {
             Box::InitStruct init;
             init.name = "testBox2";
@@ -66,27 +66,27 @@ namespace SDOM
         });
     }
 
-    bool test3(DisplayObject& testBox2) {
+    bool test3(DisplayHandle& testBox2) {
         return UnitTests::run("Box #3", "Add Box as child to Stage", [&testBox2]() {
-            DisplayObject stage = SDOM::getCore().getStageHandle();
+            DisplayHandle stage = SDOM::getCore().getStageHandle();
             if (!stage || !testBox2) return false;
             stage->addChild(testBox2);
             return stage->hasChild(testBox2);
         });
     }
 
-    bool test4(DisplayObject& testBox2) {
+    bool test4(DisplayHandle& testBox2) {
         return UnitTests::run("Box #4", "Remove Box from Stage", [&testBox2]() {
-            DisplayObject stage = SDOM::getCore().getStageHandle();
+            DisplayHandle stage = SDOM::getCore().getStageHandle();
             if (!stage || !testBox2) return false;
             stage->removeChild(testBox2);
             return !stage->hasChild(testBox2);
         });
     }
 
-    bool test5(DisplayObject& testBox2) {
+    bool test5(DisplayHandle& testBox2) {
         return UnitTests::run("Box #5", "Verify Box parent cleared after removal", [&testBox2]() {
-            DisplayObject stage = SDOM::getCore().getStageHandle();
+            DisplayHandle stage = SDOM::getCore().getStageHandle();
             if (!stage || !testBox2) return false;
             return (!testBox2->getParent() || testBox2->getParent() != stage);
             // return (!testBox2->parent_ || testBox2->parent_ != stage);
@@ -123,8 +123,8 @@ namespace SDOM
             if (!SDOM::validateAnchorAssignments(config)) {
                 return false;
             }
-            DisplayObject testBoxLua = SDOM::getCore().getFactory().create("Box", config);
-            DisplayObject stage = SDOM::getCore().getStageHandle();
+            DisplayHandle testBoxLua = SDOM::getCore().getFactory().create("Box", config);
+            DisplayHandle stage = SDOM::getCore().getStageHandle();
             if (!testBoxLua || testBoxLua->getType() != Box::TypeName || !stage) return false;
             stage->addChild(testBoxLua);
             bool result = stage->hasChild(testBoxLua);
@@ -152,8 +152,8 @@ namespace SDOM
             if (!SDOM::validateAnchorAssignments(config)) {
                 return false;
             }
-            DisplayObject testBoxLua = SDOM::getCore().getFactory().create("Box", config);
-            DisplayObject stage = SDOM::getCore().getStageHandle();
+            DisplayHandle testBoxLua = SDOM::getCore().getFactory().create("Box", config);
+            DisplayHandle stage = SDOM::getCore().getStageHandle();
             if (!testBoxLua || testBoxLua->getType() != Box::TypeName || !stage) return false;
             stage->addChild(testBoxLua);
             bool result = stage->hasChild(testBoxLua);
@@ -181,7 +181,7 @@ namespace SDOM
                 return false;
             }
             try {
-                DisplayObject testBoxLua = SDOM::getCore().getFactory().create("Box", config);
+                DisplayHandle testBoxLua = SDOM::getCore().getFactory().create("Box", config);
                 // If no exception, test fails
                 return false;
             } catch (const SDOM::Exception& e) {
@@ -212,12 +212,12 @@ namespace SDOM
             };
 
             // NOTE: For now the boxes should all fit within their parent
-            DisplayObject greenBox  = makeBox("greenBox", 20, 30, 50, 60, { 0, 128, 0, 255 });  
-            DisplayObject redBox    = makeBox("redBox",   5, 5, 40, 50, { 200, 0, 0, 255 });
-            DisplayObject orangeBox = makeBox("orangeBox",5, 5, 30, 40, { 200, 160, 0, 255 });
-            DisplayObject blueBox   = makeBox("blueBox",  5, 5, 20, 30,  { 0, 0, 200, 255 });
+            DisplayHandle greenBox  = makeBox("greenBox", 20, 30, 50, 60, { 0, 128, 0, 255 });  
+            DisplayHandle redBox    = makeBox("redBox",   5, 5, 40, 50, { 200, 0, 0, 255 });
+            DisplayHandle orangeBox = makeBox("orangeBox",5, 5, 30, 40, { 200, 160, 0, 255 });
+            DisplayHandle blueBox   = makeBox("blueBox",  5, 5, 20, 30,  { 0, 0, 200, 255 });
 
-            DisplayObject stage = SDOM::getCore().getStageHandle();
+            DisplayHandle stage = SDOM::getCore().getStageHandle();
             if (!stage || !greenBox || !redBox || !orangeBox || !blueBox) return false;
 
             stage->addChild(greenBox);
@@ -236,7 +236,7 @@ namespace SDOM
             Bounds expectedOrangeBounds = orangeBox->getBounds();
             Bounds expectedBlueBounds   = blueBox->getBounds();
 
-            auto verifyBounds = [](const Bounds& expected, const DisplayObject& obj) -> bool {
+            auto verifyBounds = [](const Bounds& expected, const DisplayHandle& obj) -> bool {
                 Bounds actual = obj->getBounds();
                 bool match = expected == actual;
                 if (!match) {
@@ -273,7 +273,7 @@ namespace SDOM
                 expectedBlueBounds.top     += dy;
                 expectedBlueBounds.bottom  += dy;
             };
-            auto moveBoxTest = [&](DisplayObject box, int dx, int dy) -> bool {
+            auto moveBoxTest = [&](DisplayHandle box, int dx, int dy) -> bool {
                 int width = box->getWidth();
                 int height = box->getHeight();
                 box->setX(box->getX() + dx);
@@ -290,13 +290,13 @@ namespace SDOM
                 return greenOk && redOk && orangeOk && blueOk;
             };          
 
-            std::vector<DisplayObject> boxes = { greenBox, redBox, orangeBox, blueBox };
+            std::vector<DisplayHandle> boxes = { greenBox, redBox, orangeBox, blueBox };
 
-            std::vector<std::function<void(DisplayObject, SDOM::AnchorPoint)>> anchorSetters = {
-                [](DisplayObject obj, SDOM::AnchorPoint ap) { obj->setAnchorLeft(ap); },
-                [](DisplayObject obj, SDOM::AnchorPoint ap) { obj->setAnchorTop(ap); },
-                [](DisplayObject obj, SDOM::AnchorPoint ap) { obj->setAnchorRight(ap); },
-                [](DisplayObject obj, SDOM::AnchorPoint ap) { obj->setAnchorBottom(ap); }
+            std::vector<std::function<void(DisplayHandle, SDOM::AnchorPoint)>> anchorSetters = {
+                [](DisplayHandle obj, SDOM::AnchorPoint ap) { obj->setAnchorLeft(ap); },
+                [](DisplayHandle obj, SDOM::AnchorPoint ap) { obj->setAnchorTop(ap); },
+                [](DisplayHandle obj, SDOM::AnchorPoint ap) { obj->setAnchorRight(ap); },
+                [](DisplayHandle obj, SDOM::AnchorPoint ap) { obj->setAnchorBottom(ap); }
             };
 
             bool allAnchorsOk = true;         
@@ -360,20 +360,20 @@ namespace SDOM
     {
         return UnitTests::run("Box #10", "Destroy the Parent greenBox", []() 
         {
-            DisplayObject stage = SDOM::getCore().getStageHandle();
+            DisplayHandle stage = SDOM::getCore().getStageHandle();
             if (!stage) 
             {
                 std::cout << "\nStage handle is null." << std::endl;
                 return false;
             }
             bool allTestsPassed = true; 
-            DisplayObject greenBox = getFactory().getDisplayObject("greenBox");
-            DisplayObject redBox   = getFactory().getDisplayObject("redBox");
-            DisplayObject orangeBox= getFactory().getDisplayObject("orangeBox");
-            DisplayObject blueBox  = getFactory().getDisplayObject("blueBox");
+            DisplayHandle greenBox = getFactory().getDisplayObject("greenBox");
+            DisplayHandle redBox   = getFactory().getDisplayObject("redBox");
+            DisplayHandle orangeBox= getFactory().getDisplayObject("orangeBox");
+            DisplayHandle blueBox  = getFactory().getDisplayObject("blueBox");
 
             getFactory().destroyDisplayObject("greenBox");            
-            DisplayObject handle = getFactory().getDisplayObject("greenBox");
+            DisplayHandle handle = getFactory().getDisplayObject("greenBox");
             if (handle)    
             {
                 std::cout << "\ngreenBox was NOT successfully removed from factory." << std::endl;

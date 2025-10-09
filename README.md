@@ -51,6 +51,15 @@ cd examples/test
 ./prog # to run the test example
 ```
 
+### Notable recent changes
+- Symbol rename: DisplayObject -> DisplayHandle and AssetObject -> AssetHandle across the codebase and Lua scripts (Oct 2025).
+  - The code and examples have been updated; some diagrams and docs still reference the old names and will be updated in a follow-up.
+  - Lua compatibility: Lua userdata/type names remain stable where necessary; check the README/changelog for per-release compatibility notes.
+
+### Migration notes
+- If you maintain scripts that referenced the old names, search & replace DisplayObject / AssetObject -> DisplayHandle / AssetHandle.
+- The repository includes transitional aliases during migration for staged rollouts (if present); prefer the new names in new code.
+
 ## Project Structure
 - `src/` — Core SDOM source code
 - `include/SDOM/` — Public headers

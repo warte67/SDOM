@@ -17,7 +17,7 @@ namespace SDOM
         return UnitTests::run("IDisplayObject #1", "Create generic Stage object", [factory, &dbgStr]() {
             Stage::InitStruct initData;
             initData.name = "genericStage";
-            DisplayObject stageHandle = factory->create("Stage", initData);
+            DisplayHandle stageHandle = factory->create("Stage", initData);
             if (!stageHandle) {
                 dbgStr = "Failed to create Stage object via InitStruct!";
                 return false;
@@ -32,7 +32,7 @@ namespace SDOM
 
     static bool test2_IDisplayObject(Factory* factory, std::string& dbgStr) {
         return UnitTests::run("IDisplayObject #2", "Set and Get Name", [factory, &dbgStr]() {
-            DisplayObject stageHandle = factory->getDisplayObject("genericStage");
+            DisplayHandle stageHandle = factory->getDisplayObject("genericStage");
             if (!stageHandle) {
                 dbgStr = "Stage object 'genericStage' not found!";
                 return false;
@@ -49,7 +49,7 @@ namespace SDOM
 
     static bool test3_IDisplayObject(Factory* factory, std::string& dbgStr) {
         return UnitTests::run("IDisplayObject #3", "Set and Get Type", [factory, &dbgStr]() {
-            DisplayObject stageHandle = factory->getDisplayObject("genericStage");
+            DisplayHandle stageHandle = factory->getDisplayObject("genericStage");
             if (!stageHandle) {
                 dbgStr = "Stage object 'genericStage' not found!";
                 return false;
@@ -67,7 +67,7 @@ namespace SDOM
     static bool test4_IDisplayObject(Factory* factory, std::string& dbgStr) {
         return UnitTests::run("IDisplayObject #4", "Destroy generic Stage object", [factory, &dbgStr]() {
             factory->destroyDisplayObject("genericStage");
-            DisplayObject stageHandle = factory->getDisplayObject("genericStage");
+            DisplayHandle stageHandle = factory->getDisplayObject("genericStage");
             if (stageHandle) {
                 dbgStr = "'genericStage' still exists after destruction!";
                 return false;
@@ -84,7 +84,7 @@ namespace SDOM
             lua.script(R"(
                 Core:createDisplayObject('Stage', { name = 'luaGenericStage', type = 'Stage' })
             )");
-            DisplayObject h = factory->getDisplayObject("luaGenericStage");
+            DisplayHandle h = factory->getDisplayObject("luaGenericStage");
             if (!h) {
                 dbgStr = "Lua failed to create 'luaGenericStage'";
                 return false;
@@ -96,7 +96,7 @@ namespace SDOM
     static bool test6_IDisplayObject(Factory* factory, std::string& dbgStr) {
         return UnitTests::run("IDisplayObject #6", "Lua Set and Get Name", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
-            // Use Lua to set/get the name via DisplayObject bindings
+            // Use Lua to set/get the name via DisplayHandle bindings
             sol::protected_function_result res = lua.script(R"(
                 -- DEBUG: inspect Core and the bound function before invoking
                 -- print('DEBUG: Core =', Core)
@@ -133,7 +133,7 @@ namespace SDOM
             std::string newName = obj.as<std::string>();
 
             // restore name from C++ side to be safe for other tests
-            DisplayObject h = factory->getDisplayObject("luaGenericStage");
+            DisplayHandle h = factory->getDisplayObject("luaGenericStage");
             if (h) h->setName("luaGenericStage");
             if (newName != "luaRenamedStage") {
                 dbgStr = std::string("Lua setName/getName failed, returned: ") + newName;
@@ -146,7 +146,7 @@ namespace SDOM
     static bool test7_IDisplayObject(Factory* factory, std::string& dbgStr) {
         return UnitTests::run("IDisplayObject #7", "Lua Set and Get Type", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
-            // Use Lua to set/get the type via DisplayObject bindings
+            // Use Lua to set/get the type via DisplayHandle bindings
             sol::protected_function_result res = lua.script(R"(
                 local h = Core:getDisplayObject('luaGenericStage')
                 if not h then return nil, 'handle missing' end
@@ -164,7 +164,7 @@ namespace SDOM
             std::string newType = res.get<std::string>();
 
             // restore type from C++ side
-            DisplayObject h = factory->getDisplayObject("luaGenericStage");
+            DisplayHandle h = factory->getDisplayObject("luaGenericStage");
             if (h) h->setType("Stage");
             if (newType != "LuaCustomStage") {
                 dbgStr = std::string("Lua setType/getType failed, returned: ") + newType;
@@ -178,7 +178,7 @@ namespace SDOM
         return UnitTests::run("IDisplayObject #8", "Lua Destroy generic Stage object", [factory, &dbgStr]() {
             sol::state& lua = Core::getInstance().getLua();
             lua.script(std::string("Core:destroyDisplayObject('luaGenericStage')\n"));
-            DisplayObject h = factory->getDisplayObject("luaGenericStage");
+            DisplayHandle h = factory->getDisplayObject("luaGenericStage");
             if (h) { dbgStr = "luaGenericStage still exists after Lua destroy"; return false; }
             return true;
         });
@@ -190,15 +190,15 @@ namespace SDOM
             (void)0;
 
             // Ensure both objects exist
-            DisplayObject blue = factory->getDisplayObject("blueishBox");
-            DisplayObject red = factory->getDisplayObject("redishBox");
-            DisplayObject stage = Core::getInstance().getStageHandle();
+            DisplayHandle blue = factory->getDisplayObject("blueishBox");
+            DisplayHandle red = factory->getDisplayObject("redishBox");
+            DisplayHandle stage = Core::getInstance().getStageHandle();
             if (!blue || !red || !stage) {
                 dbgStr = "Required objects (blueishBox/redishBox/mainStage) not found";
                 return false;
             }
 
-            // From Lua: set blueishBox parent to redishBox using DisplayObject method
+            // From Lua: set blueishBox parent to redishBox using DisplayHandle method
             sol::protected_function_result res = lua.script(R"(
                 local b = Core:getDisplayObject('blueishBox')
                 local r = Core:getDisplayObject('redishBox')

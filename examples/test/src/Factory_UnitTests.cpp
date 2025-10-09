@@ -5,7 +5,7 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
 #include <SDOM/SDOM_Stage.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 #include "UnitTests.hpp"
 
 namespace SDOM
@@ -23,7 +23,7 @@ namespace SDOM
         std::vector<std::string> originalNames = factory.listDisplayObjectNames();
 
         // Test display object creation
-        DisplayObject handle;
+        DisplayHandle handle;
         result = UnitTests::run("Factory #1", "Display Object Creation", [&factory, &handle]() {
             sol::state lua;
             lua.open_libraries(sol::lib::base);
@@ -45,7 +45,7 @@ namespace SDOM
         // Test resource retrieval
         result = UnitTests::run("Factory #2", "Resource Retrieval", [&factory, &debugRet, &handle]() 
         {
-            DisplayObject testHandle = factory.getDisplayObject("testStage");
+            DisplayHandle testHandle = factory.getDisplayObject("testStage");
             if (testHandle != handle) 
             {
                 debugRet = "Expected handle: " + handle.str() + ", but got: " + testHandle.str();
@@ -127,7 +127,7 @@ namespace SDOM
         result = UnitTests::run("Factory #6", "Resource Destruction", [&factory, &handle]() 
         {
             factory.destroyDisplayObject("testStage");
-            DisplayObject testHandle = factory.getDisplayObject("testStage");
+            DisplayHandle testHandle = factory.getDisplayObject("testStage");
             return testHandle == nullptr;
         });
         if (!result) { std::cout << CLR::indent() << "Resource destruction test failed!" << CLR::RESET << std::endl; }
@@ -146,8 +146,8 @@ namespace SDOM
                 }
             )");
             sol::table config = lua["config"];
-            DisplayObject first;
-            DisplayObject second;
+            DisplayHandle first;
+            DisplayHandle second;
             try { first = factory.create("Stage", config); } catch (...) { }
             try { second = factory.create("Stage", config); } catch (...) { }
             // Expectation: first creation succeeds, second creation should fail (null)
@@ -175,8 +175,8 @@ namespace SDOM
                 }
             )");
             sol::table config1 = lua["config1"];
-            DisplayObject first;
-            DisplayObject second;
+            DisplayHandle first;
+            DisplayHandle second;
             bool threw = false;
             try {
                 first = factory.create("Stage", config1);
@@ -212,7 +212,7 @@ namespace SDOM
             }
 
             // Retrieve and check that color matches the first config
-            DisplayObject retrieved = factory.getDisplayObject("overwriteTest");
+            DisplayHandle retrieved = factory.getDisplayObject("overwriteTest");
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(retrieved.get());
             if (!obj) {
                 debugRet = "Resource 'overwriteTest' not found after attempted overwrite.";

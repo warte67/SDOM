@@ -169,28 +169,28 @@ namespace SDOM
 
 	// --- Stage/Root Node Management --- //
 	void setRootNodeByName_lua(const std::string& name) { Core::getInstance().setRootNode(name); }
-	void setRootNode_lua(const DisplayObject& handle) { Core::getInstance().setRootNode(handle); }
+	void setRootNode_lua(const DisplayHandle& handle) { Core::getInstance().setRootNode(handle); }
 	void setStageByName_lua(const std::string& name) { Core::getInstance().setStage(name); }
-	DisplayObject getRoot_lua() { return Core::getInstance().getRootNode(); }
-	DisplayObject getStage_lua() { return Core::getInstance().getStageHandle(); }
-	void setStage_lua(const DisplayObject& handle) { Core::getInstance().setRootNode(handle); }
+	DisplayHandle getRoot_lua() { return Core::getInstance().getRootNode(); }
+	DisplayHandle getStage_lua() { return Core::getInstance().getStageHandle(); }
+	void setStage_lua(const DisplayHandle& handle) { Core::getInstance().setRootNode(handle); }
 
 	// --- Factory & EventManager Access --- //
 	bool getIsTraversing_lua() { return Core::getInstance().getIsTraversing(); }
 	void setIsTraversing_lua(bool traversing) { Core::getInstance().setIsTraversing(traversing); }
 
 	// --- Object Creation --- //
-	DisplayObject createDisplayObject_lua(const std::string& typeName, const sol::table& config) {
+	DisplayHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config) {
 		return Core::getInstance().createDisplayObject(typeName, config);
 	}
 
 	// --- Focus & Hover Management --- //
 	void doTabKeyPressForward_lua() { Core::getInstance().handleTabKeyPress(); }
 	void doTabKeyPressReverse_lua() { Core::getInstance().handleTabKeyPressReverse(); }
-	void setKeyboardFocusedObject_lua(const DisplayObject& handle) { Core::getInstance().setKeyboardFocusedObject(handle); }
-	DisplayObject getKeyboardFocusedObject_lua() { return Core::getInstance().getKeyboardFocusedObject(); }
-	void setMouseHoveredObject_lua(const DisplayObject& handle) { Core::getInstance().setMouseHoveredObject(handle); }
-	DisplayObject getMouseHoveredObject_lua() { return Core::getInstance().getMouseHoveredObject(); }
+	void setKeyboardFocusedObject_lua(const DisplayHandle& handle) { Core::getInstance().setKeyboardFocusedObject(handle); }
+	DisplayHandle getKeyboardFocusedObject_lua() { return Core::getInstance().getKeyboardFocusedObject(); }
+	void setMouseHoveredObject_lua(const DisplayHandle& handle) { Core::getInstance().setMouseHoveredObject(handle); }
+	DisplayHandle getMouseHoveredObject_lua() { return Core::getInstance().getMouseHoveredObject(); }
 
 	// --- Window Title & Timing --- //
 	std::string getWindowTitle_lua() { return Core::getInstance().getWindowTitle(); }
@@ -198,16 +198,16 @@ namespace SDOM
 	float getElapsedTime_lua() { return Core::getInstance().getElapsedTime(); }
 
 	// --- Object Lookup --- //
-	DisplayObject getDisplayObject_lua(const std::string& name) {
-		DisplayObject h = Core::getInstance().getDisplayObject(name);
+	DisplayHandle getDisplayObject_lua(const std::string& name) {
+		DisplayHandle h = Core::getInstance().getDisplayObject(name);
 		return h;
 	}
 	bool hasDisplayObject_lua(const std::string& name) { return Core::getInstance().hasDisplayObject(name); }
 
-    AssetObject createAssetObject_lua(const std::string& typeName, const sol::table& config) {
+    AssetHandle createAssetObject_lua(const std::string& typeName, const sol::table& config) {
         return getCore().createAssetObject(typeName, config);
     }
-    AssetObject getAssetObject_lua(const std::string& name) {
+    AssetHandle getAssetObject_lua(const std::string& name) {
         return getCore().getAssetObject(name);
     }
     bool hasAssetObject_lua(const std::string& name) {
@@ -218,7 +218,7 @@ namespace SDOM
 	// --- Orphan / Future Child Management --- //
 	void destroyDisplayObject_lua(const std::string& name) { Core::getInstance().destroyDisplayObject(name); }
 	int countOrphanedDisplayObjects_lua() { return Core::getInstance().countOrphanedDisplayObjects(); }
-	std::vector<DisplayObject> getOrphanedDisplayObjects_lua() { return Core::getInstance().getOrphanedDisplayObjects(); }
+	std::vector<DisplayHandle> getOrphanedDisplayObjects_lua() { return Core::getInstance().getOrphanedDisplayObjects(); }
 	void destroyOrphanedDisplayObjects_lua() { Core::getInstance().destroyOrphanedDisplayObjects(); }
 	void collectGarbage_lua() { Core::getInstance().getFactory().collectGarbage(); }
 

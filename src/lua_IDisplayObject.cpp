@@ -4,7 +4,7 @@
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_EventType.hpp>
 #include <SDOM/SDOM_Event.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 
 namespace SDOM 
 {
@@ -152,21 +152,21 @@ namespace SDOM
     }
 
     // --- Hierarchy Management --- //
-    void addChild_lua(IDisplayObject* obj, DisplayObject child) { if (!obj) return; obj->addChild(child); }
-    DisplayObject getChild_lua(const IDisplayObject* obj, std::string name) { if (!obj) return DisplayObject(); return obj->getChild(name); }
-    bool removeChild_lua(IDisplayObject* obj, DisplayObject child) { if (!obj) return false; return obj->removeChild(child); }
+    void addChild_lua(IDisplayObject* obj, DisplayHandle child) { if (!obj) return; obj->addChild(child); }
+    DisplayHandle getChild_lua(const IDisplayObject* obj, std::string name) { if (!obj) return DisplayHandle(); return obj->getChild(name); }
+    bool removeChild_lua(IDisplayObject* obj, DisplayHandle child) { if (!obj) return false; return obj->removeChild(child); }
     bool removeChild_lua(IDisplayObject* obj, const std::string& name) { if (!obj) return false; return obj->removeChild(name); }
-    bool hasChild_lua(const IDisplayObject* obj, DisplayObject child) { if (!obj) return false; return obj->hasChild(child); }
-    DisplayObject getParent_lua(const IDisplayObject* obj) { if (!obj) return DisplayObject(); return obj->getParent(); }
-    void setParent_lua(IDisplayObject* obj, const DisplayObject& parent) { if (!obj) return; obj->setParent(parent); }
+    bool hasChild_lua(const IDisplayObject* obj, DisplayHandle child) { if (!obj) return false; return obj->hasChild(child); }
+    DisplayHandle getParent_lua(const IDisplayObject* obj) { if (!obj) return DisplayHandle(); return obj->getParent(); }
+    void setParent_lua(IDisplayObject* obj, const DisplayHandle& parent) { if (!obj) return; obj->setParent(parent); }
 
     // Ancestor/Descendant helpers (Lua wrappers)
-    bool isAncestorOf_lua(IDisplayObject* obj, DisplayObject descendant) { if (!obj) return false; return obj->isAncestorOf(descendant); }
+    bool isAncestorOf_lua(IDisplayObject* obj, DisplayHandle descendant) { if (!obj) return false; return obj->isAncestorOf(descendant); }
     bool isAncestorOf_lua(IDisplayObject* obj, const std::string& name) { if (!obj) return false; return obj->isAncestorOf(name); }
-    bool isDescendantOf_lua(IDisplayObject* obj, DisplayObject ancestor) { if (!obj) return false; return obj->isDescendantOf(ancestor); }
+    bool isDescendantOf_lua(IDisplayObject* obj, DisplayHandle ancestor) { if (!obj) return false; return obj->isDescendantOf(ancestor); }
     bool isDescendantOf_lua(IDisplayObject* obj, const std::string& name) { if (!obj) return false; return obj->isDescendantOf(name); }
     bool removeFromParent_lua(IDisplayObject* obj) { if (!obj) return false; return obj->removeFromParent(); }
-    bool removeDescendant_lua(IDisplayObject* obj, DisplayObject descendant) { if (!obj) return false; return obj->removeDescendant(descendant); }
+    bool removeDescendant_lua(IDisplayObject* obj, DisplayHandle descendant) { if (!obj) return false; return obj->removeDescendant(descendant); }
     bool removeDescendant_lua(IDisplayObject* obj, const std::string& descendantName) { if (!obj) return false; return obj->removeDescendant(descendantName); }
 
     // --- Type & Property Access --- //
@@ -253,8 +253,8 @@ namespace SDOM
     // C++ overload: accept SDL_Color directly
     void setColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return; obj->setColor(color); }
 
-    // Handle-aware name getter for cases where Lua holds only a DisplayObject handle without a live object
-    std::string getName_handle_lua(DisplayObject& self)
+    // Handle-aware name getter for cases where Lua holds only a DisplayHandle handle without a live object
+    std::string getName_handle_lua(DisplayHandle& self)
     {
         try {
             if (auto* obj = self.get()) {
@@ -315,12 +315,12 @@ namespace SDOM
             sol::object cobj = t.get<sol::object>("child");
             if (cobj.valid()) {
                 try {
-                    if (cobj.is<DisplayObject>()) {
-                        DisplayObject h = cobj.as<DisplayObject>();
+                    if (cobj.is<DisplayHandle>()) {
+                        DisplayHandle h = cobj.as<DisplayHandle>();
                         target = dynamic_cast<IDisplayObject*>(h.get());
                     } else if (cobj.is<std::string>()) {
                         std::string name = cobj.as<std::string>();
-                        DisplayObject h = obj->getChild(name);
+                        DisplayHandle h = obj->getChild(name);
                         target = dynamic_cast<IDisplayObject*>(h.get());
                     }
                 } catch(...) { target = nullptr; }
@@ -354,12 +354,12 @@ namespace SDOM
         sol::object cobj = t.get<sol::object>("child");
         if (cobj.valid()) {
             try {
-                if (cobj.is<DisplayObject>()) {
-                    DisplayObject h = cobj.as<DisplayObject>();
+                if (cobj.is<DisplayHandle>()) {
+                    DisplayHandle h = cobj.as<DisplayHandle>();
                     target = dynamic_cast<IDisplayObject*>(h.get());
                 } else if (cobj.is<std::string>()) {
                     std::string name = cobj.as<std::string>();
-                    DisplayObject h = obj->getChild(name);
+                    DisplayHandle h = obj->getChild(name);
                     target = dynamic_cast<IDisplayObject*>(h.get());
                 }
             } catch(...) { target = nullptr; }
@@ -392,12 +392,12 @@ namespace SDOM
         sol::object cobj = t.get<sol::object>("child");
         if (cobj.valid()) {
             try {
-                if (cobj.is<DisplayObject>()) {
-                    DisplayObject h = cobj.as<DisplayObject>();
+                if (cobj.is<DisplayHandle>()) {
+                    DisplayHandle h = cobj.as<DisplayHandle>();
                     target = dynamic_cast<IDisplayObject*>(h.get());
                 } else if (cobj.is<std::string>()) {
                     std::string name = cobj.as<std::string>();
-                    DisplayObject h = obj->getChild(name);
+                    DisplayHandle h = obj->getChild(name);
                     target = dynamic_cast<IDisplayObject*>(h.get());
                 }
             } catch(...) { target = nullptr; }
@@ -418,12 +418,12 @@ namespace SDOM
         sol::object cobj = t.get<sol::object>("child");
         if (cobj.valid()) {
             try {
-                if (cobj.is<DisplayObject>()) {
-                    DisplayObject h = cobj.as<DisplayObject>();
+                if (cobj.is<DisplayHandle>()) {
+                    DisplayHandle h = cobj.as<DisplayHandle>();
                     target = dynamic_cast<IDisplayObject*>(h.get());
                 } else if (cobj.is<std::string>()) {
                     std::string name = cobj.as<std::string>();
-                    DisplayObject h = obj->getChild(name);
+                    DisplayHandle h = obj->getChild(name);
                     target = dynamic_cast<IDisplayObject*>(h.get());
                 }
             } catch(...) { target = nullptr; }
@@ -442,12 +442,12 @@ namespace SDOM
         sol::object cobj = t.get<sol::object>("child");
         if (cobj.valid()) {
             try {
-                if (cobj.is<DisplayObject>()) {
-                    DisplayObject h = cobj.as<DisplayObject>();
+                if (cobj.is<DisplayHandle>()) {
+                    DisplayHandle h = cobj.as<DisplayHandle>();
                     target = dynamic_cast<IDisplayObject*>(h.get());
                 } else if (cobj.is<std::string>()) {
                     std::string name = cobj.as<std::string>();
-                    DisplayObject h = obj->getChild(name);
+                    DisplayHandle h = obj->getChild(name);
                     target = dynamic_cast<IDisplayObject*>(h.get());
                 }
             } catch(...) { target = nullptr; }

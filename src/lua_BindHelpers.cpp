@@ -99,14 +99,14 @@ namespace SDOM
 		} catch(...) {}
 	}
 
-	void bind_do_arg(const std::string& name, std::function<void(const DisplayObject&)> func,
+	void bind_do_arg(const std::string& name, std::function<void(const DisplayHandle&)> func,
 					sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{
 		auto fcopy = func;
-		auto resolve_displayobject = [](const sol::object& maybeArg) -> DisplayObject {
-			if (!maybeArg.valid()) return DisplayObject();
+		auto resolve_displayobject = [](const sol::object& maybeArg) -> DisplayHandle {
+			if (!maybeArg.valid()) return DisplayHandle();
 			try {
-				if (maybeArg.is<DisplayObject>()) return maybeArg.as<DisplayObject>();
+				if (maybeArg.is<DisplayHandle>()) return maybeArg.as<DisplayHandle>();
 				if (maybeArg.is<std::string>()) {
 					std::string nm = maybeArg.as<std::string>();
 					return Core::getInstance().getDisplayObject(nm);
@@ -118,24 +118,24 @@ namespace SDOM
 					}
 				}
 			} catch(...) {}
-			return DisplayObject();
+			return DisplayHandle();
 		};
 
 		objHandleType[name] = [fcopy, resolve_displayobject](Core& /*core*/, const sol::object& maybeArg) {
-			DisplayObject h = resolve_displayobject(maybeArg);
+			DisplayHandle h = resolve_displayobject(maybeArg);
 			if (h.isValid()) fcopy(h);
 			return true;
 		};
 		coreTable.set_function(name, [fcopy, resolve_displayobject](sol::this_state ts, sol::object /*self*/, sol::object maybeArg) {
 			sol::state_view sv = ts;
-			DisplayObject h = resolve_displayobject(maybeArg);
+			DisplayHandle h = resolve_displayobject(maybeArg);
 			if (h.isValid()) fcopy(h);
 			return sol::make_object(sv, sol::nil);
 		});
 		try {
 			lua[name] = [fcopy, resolve_displayobject](sol::this_state ts, sol::object maybeArg) {
 				sol::state_view sv = ts;
-				DisplayObject h = resolve_displayobject(maybeArg);
+				DisplayHandle h = resolve_displayobject(maybeArg);
 				if (h.isValid()) fcopy(h);
 				return sol::make_object(sv, sol::nil);
 			};
@@ -164,23 +164,23 @@ namespace SDOM
 		} catch(...) {}
 	}
 
-	void bind_return_displayobject(const std::string& name, std::function<DisplayObject()> func,
+	void bind_return_displayobject(const std::string& name, std::function<DisplayHandle()> func,
 								sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{
 		auto fcopy = func;
-		objHandleType[name] = [fcopy](Core& /*core*/) -> DisplayObject { return fcopy(); };
+		objHandleType[name] = [fcopy](Core& /*core*/) -> DisplayHandle { return fcopy(); };
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/) {
 			sol::state_view sv = ts;
-			DisplayObject h = fcopy();
+			DisplayHandle h = fcopy();
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
-			return sol::make_object(sv, DisplayObject());
+			return sol::make_object(sv, DisplayHandle());
 		});
 		try {
 			lua[name] = [fcopy](sol::this_state ts) {
 				sol::state_view sv = ts;
-				DisplayObject h = fcopy();
+				DisplayHandle h = fcopy();
 				if (h.isValid() && h.get()) return sol::make_object(sv, h);
-				return sol::make_object(sv, DisplayObject());
+				return sol::make_object(sv, DisplayHandle());
 			};
 		} catch(...) {}
 	}
@@ -261,11 +261,11 @@ namespace SDOM
 		} catch(...) {}
 	}
 
-	void bind_return_vector_do(const std::string& name, std::function<std::vector<DisplayObject>()> func,
+	void bind_return_vector_do(const std::string& name, std::function<std::vector<DisplayHandle>()> func,
 							sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{
 		auto fcopy = func;
-		objHandleType[name] = [fcopy](Core& /*core*/) -> std::vector<DisplayObject> { return fcopy(); };
+		objHandleType[name] = [fcopy](Core& /*core*/) -> std::vector<DisplayHandle> { return fcopy(); };
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/) {
 			sol::state_view sv = ts;
 			auto v = fcopy();
@@ -299,90 +299,90 @@ namespace SDOM
 		} catch(...) {}
 	}
 
-	void bind_string_table_return_do(const std::string& name, std::function<DisplayObject(const std::string&, const sol::table&)> func,
+	void bind_string_table_return_do(const std::string& name, std::function<DisplayHandle(const std::string&, const sol::table&)> func,
 									sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{
 		auto fcopy = func;
-		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& typeName, const sol::table& cfg) -> DisplayObject {
+		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& typeName, const sol::table& cfg) -> DisplayHandle {
 			return fcopy(typeName, cfg);
 		};
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
 			sol::state_view sv = ts;
-			DisplayObject h = fcopy(typeName, cfg);
+			DisplayHandle h = fcopy(typeName, cfg);
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
-			return sol::make_object(sv, DisplayObject());
+			return sol::make_object(sv, DisplayHandle());
 		});
 		try {
 			lua[name] = [fcopy](sol::this_state ts, const std::string& typeName, const sol::table& cfg) {
 				sol::state_view sv = ts;
-				DisplayObject h = fcopy(typeName, cfg);
+				DisplayHandle h = fcopy(typeName, cfg);
 				if (h.isValid() && h.get()) return sol::make_object(sv, h);
-				return sol::make_object(sv, DisplayObject());
+				return sol::make_object(sv, DisplayHandle());
 			};
 		} catch(...) {}
 	}
 
-	void bind_string_table_return_asset(const std::string& name, std::function<AssetObject(const std::string&, const sol::table&)> func,
+	void bind_string_table_return_asset(const std::string& name, std::function<AssetHandle(const std::string&, const sol::table&)> func,
 									sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{
 		auto fcopy = func;
-		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& typeName, const sol::table& cfg) -> AssetObject {
+		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& typeName, const sol::table& cfg) -> AssetHandle {
 			return fcopy(typeName, cfg);
 		};
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
 			sol::state_view sv = ts;
-			AssetObject h = fcopy(typeName, cfg);
+			AssetHandle h = fcopy(typeName, cfg);
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
-			return sol::make_object(sv, AssetObject());
+			return sol::make_object(sv, AssetHandle());
 		});
 		try {
 			lua[name] = [fcopy](sol::this_state ts, const std::string& typeName, const sol::table& cfg) {
 				sol::state_view sv = ts;
-				AssetObject h = fcopy(typeName, cfg);
+				AssetHandle h = fcopy(typeName, cfg);
 				if (h.isValid() && h.get()) return sol::make_object(sv, h);
-				return sol::make_object(sv, AssetObject());
+				return sol::make_object(sv, AssetHandle());
 			};
 		} catch(...) {}
 	}
 
-	void bind_string_return_do(const std::string& name, std::function<DisplayObject(const std::string&)> func,
+	void bind_string_return_do(const std::string& name, std::function<DisplayHandle(const std::string&)> func,
 							sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{
 		auto fcopy = func;
-		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) -> DisplayObject { return fcopy(s); };
+		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) -> DisplayHandle { return fcopy(s); };
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& s) {
 			sol::state_view sv = ts;
-			DisplayObject h = fcopy(s);
+			DisplayHandle h = fcopy(s);
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
-			return sol::make_object(sv, DisplayObject());
+			return sol::make_object(sv, DisplayHandle());
 		});
 		try {
 			lua[name] = [fcopy](sol::this_state ts, const std::string& s) {
 				sol::state_view sv = ts;
-				DisplayObject h = fcopy(s);
+				DisplayHandle h = fcopy(s);
 				if (h.isValid() && h.get()) return sol::make_object(sv, h);
-				return sol::make_object(sv, DisplayObject());
+				return sol::make_object(sv, DisplayHandle());
 			};
 		} catch(...) {}
 	}
 
-	void bind_string_return_asset(const std::string& name, std::function<AssetObject(const std::string&)> func,
+	void bind_string_return_asset(const std::string& name, std::function<AssetHandle(const std::string&)> func,
 							sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{
 		auto fcopy = func;
-		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) -> AssetObject { return fcopy(s); };
+		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) -> AssetHandle { return fcopy(s); };
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& s) {
 			sol::state_view sv = ts;
-			AssetObject h = fcopy(s);
+			AssetHandle h = fcopy(s);
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
-			return sol::make_object(sv, AssetObject());
+			return sol::make_object(sv, AssetHandle());
 		});
 		try {
 			lua[name] = [fcopy](sol::this_state ts, const std::string& s) {
 				sol::state_view sv = ts;
-				AssetObject h = fcopy(s);
+				AssetHandle h = fcopy(s);
 				if (h.isValid() && h.get()) return sol::make_object(sv, h);
-				return sol::make_object(sv, AssetObject());
+				return sol::make_object(sv, AssetHandle());
 			};
 		} catch(...) {}
 	}
@@ -579,7 +579,7 @@ namespace SDOM
 		} catch(...) {}
 	}
 
-	void bind_name_or_handle(const std::string& name, std::function<void(const std::string&)> nameFunc, std::function<void(const DisplayObject&)> handleFunc,
+	void bind_name_or_handle(const std::string& name, std::function<void(const std::string&)> nameFunc, std::function<void(const DisplayHandle&)> handleFunc,
 							 sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{
 		auto nfc = nameFunc;
@@ -595,8 +595,8 @@ namespace SDOM
 				nfc(nm);
 				return sol::make_object(sv, sol::nil);
 			}
-			if (maybeArg.is<DisplayObject>()) {
-				DisplayObject h = maybeArg.as<DisplayObject>();
+			if (maybeArg.is<DisplayHandle>()) {
+				DisplayHandle h = maybeArg.as<DisplayHandle>();
 				hfc(h);
 				return sol::make_object(sv, sol::nil);
 			}
@@ -615,7 +615,7 @@ namespace SDOM
 				if (maybeArg.is<std::string>()) {
 					std::string nm = maybeArg.as<std::string>(); nfc(nm); return sol::make_object(sv, sol::nil);
 				}
-				if (maybeArg.is<DisplayObject>()) { DisplayObject h = maybeArg.as<DisplayObject>(); hfc(h); return sol::make_object(sv, sol::nil); }
+				if (maybeArg.is<DisplayHandle>()) { DisplayHandle h = maybeArg.as<DisplayHandle>(); hfc(h); return sol::make_object(sv, sol::nil); }
 				if (maybeArg.is<sol::table>()) { sol::table t = maybeArg.as<sol::table>(); if (t["name"].valid()) { try { std::string nm = t.get<std::string>("name"); nfc(nm); return sol::make_object(sv, sol::nil); } catch(...) {} } }
 				return sol::make_object(sv, sol::nil);
 			};

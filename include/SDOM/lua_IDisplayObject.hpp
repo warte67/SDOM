@@ -9,7 +9,7 @@ namespace SDOM
 {
     class IDisplayObject;
     class EventType;
-    class DisplayObject;
+    class DisplayHandle;
     struct Bounds;
 
     // --- Dirty/State Management --- //
@@ -32,23 +32,23 @@ namespace SDOM
     void removeEventListener_lua_any_short(IDisplayObject* obj, const sol::object& descriptor); // UNTESTED
 
     // --- Hierarchy Management --- //
-    void addChild_lua(IDisplayObject* obj, DisplayObject child);                // TESTED (GC tests use addChild)
-    DisplayObject getChild_lua(const IDisplayObject* obj, std::string name);    // TESTED
-    bool removeChild_lua(IDisplayObject* obj, DisplayObject child);             // TESTED (GC tests use removeChild by handle)
+    void addChild_lua(IDisplayObject* obj, DisplayHandle child);                // TESTED (GC tests use addChild)
+    DisplayHandle getChild_lua(const IDisplayObject* obj, std::string name);    // TESTED
+    bool removeChild_lua(IDisplayObject* obj, DisplayHandle child);             // TESTED (GC tests use removeChild by handle)
     bool removeChild_lua(IDisplayObject* obj, const std::string& name);         // TESTED (removeChild by name used in tests)
-    bool hasChild_lua(const IDisplayObject* obj, DisplayObject child);          // TESTED (GC tests check hasChild)
-    DisplayObject getParent_lua(const IDisplayObject* obj);                     // TESTED
-    void setParent_lua(IDisplayObject* obj, const DisplayObject& parent);       // TESTED (parent manipulation exercised)
+    bool hasChild_lua(const IDisplayObject* obj, DisplayHandle child);          // TESTED (GC tests check hasChild)
+    DisplayHandle getParent_lua(const IDisplayObject* obj);                     // TESTED
+    void setParent_lua(IDisplayObject* obj, const DisplayHandle& parent);       // TESTED (parent manipulation exercised)
 
     // Ancestor/Descendant helpers
-    bool isAncestorOf_lua(IDisplayObject* obj, DisplayObject descendant);       // TESTED
+    bool isAncestorOf_lua(IDisplayObject* obj, DisplayHandle descendant);       // TESTED
     bool isAncestorOf_lua(IDisplayObject* obj, const std::string& name);        // TESTED
-    bool isDescendantOf_lua(IDisplayObject* obj, DisplayObject ancestor);       // TESTED
+    bool isDescendantOf_lua(IDisplayObject* obj, DisplayHandle ancestor);       // TESTED
     bool isDescendantOf_lua(IDisplayObject* obj, const std::string& name);      // TESTED
     // Remove this object from its parent (convenience). Returns true if removed.
     bool removeFromParent_lua(IDisplayObject* obj);                             // TESTED
     // Recursive descendant removal: search depth-first and remove first match. Returns true if removed.
-    bool removeDescendant_lua(IDisplayObject* obj, DisplayObject descendant);   // TESTED
+    bool removeDescendant_lua(IDisplayObject* obj, DisplayHandle descendant);   // TESTED
     bool removeDescendant_lua(IDisplayObject* obj, const std::string& descendantName); // TESTED
 
     // --- Type & Property Access --- //
@@ -64,7 +64,7 @@ namespace SDOM
     // Accept either an SDL_Color userdata or a Lua table describing color
     void setColor_lua(IDisplayObject* obj, const sol::object& colorObj);       // TESTED
     // Handle-aware name getter: if underlying object is missing, return the handle's cached name
-    std::string getName_handle_lua(DisplayObject& self);                       // TESTED (used to avoid invalid handle errors)
+    std::string getName_handle_lua(DisplayHandle& self);                       // TESTED (used to avoid invalid handle errors)
 
     // --- Priority & Z-Order --- //
     int getMaxPriority_lua(const IDisplayObject* obj);              // TESTED

@@ -1,4 +1,4 @@
-// SDOM_DisplayObject.hpp
+// SDOM_DisplayHandle.hpp
 
 #pragma once
 
@@ -8,7 +8,7 @@
 // #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
 
-// NOTE: this ~= "DisplayObject(getName(), getType())"
+// NOTE: this ~= "DisplayHandle(getName(), getType())"
 
 
 
@@ -20,21 +20,21 @@ namespace SDOM
     class Factory;
     class IDisplayObject;
 
-    class DisplayObject : public IDataObject
+    class DisplayHandle : public IDataObject
     {
         using SUPER = IDataObject;
 
     public:
 
-        DisplayObject();
-        DisplayObject(const std::string& name, const std::string& type) : name_(name), type_(type) {}
-        DisplayObject(const DisplayObject& other)
+        DisplayHandle();
+        DisplayHandle(const std::string& name, const std::string& type) : name_(name), type_(type) {}
+        DisplayHandle(const DisplayHandle& other)
             : name_(other.name_), type_(other.type_) {}
 
         // Provide explicit copy-assignment to avoid implicitly-declared
         // deprecated assignment operator warnings when a user-provided
         // copy constructor exists.
-        DisplayObject& operator=(const DisplayObject& other) {
+        DisplayHandle& operator=(const DisplayHandle& other) {
             if (this != &other) {
                 name_ = other.name_;
                 type_ = other.type_;
@@ -43,7 +43,7 @@ namespace SDOM
         }
 
         // Provide move-assignment as well for completeness
-        DisplayObject& operator=(DisplayObject&& other) noexcept {
+        DisplayHandle& operator=(DisplayHandle&& other) noexcept {
             if (this != &other) {
                 name_ = std::move(other.name_);
                 type_ = std::move(other.type_);
@@ -52,9 +52,9 @@ namespace SDOM
         }
 
         // construction from nullptr
-        DisplayObject(std::nullptr_t) { reset(); }
+        DisplayHandle(std::nullptr_t) { reset(); }
 
-        virtual ~DisplayObject();
+        virtual ~DisplayHandle();
 
         // virtual methods from IDataObject
         virtual bool onInit() override { return true; }
@@ -74,7 +74,7 @@ namespace SDOM
         IDisplayObject* operator->() const { return get(); }
         operator bool() const { return get() != nullptr; }
 
-        // DisplayObject& operator=(const DisplayObject& other) {
+        // DisplayHandle& operator=(const DisplayHandle& other) {
         //     if (this != &other) {
         //         name_ = other.name_;
         //         type_ = other.type_;
@@ -83,13 +83,13 @@ namespace SDOM
         // }
 
         // // Allow assignment from nullptr
-        // DisplayObject& operator=(std::nullptr_t) 
+        // DisplayHandle& operator=(std::nullptr_t) 
         //     return *this;
         // Comparison operators
         bool operator==(std::nullptr_t) const { return get() == nullptr; }
         bool operator!=(std::nullptr_t) const { return get() != nullptr; }
-        bool operator==(const DisplayObject& other) const { return name_ == other.name_ && type_ == other.type_; }
-        bool operator!=(const DisplayObject& other) const { return !(*this == other); }
+        bool operator==(const DisplayHandle& other) const { return name_ == other.name_ && type_ == other.type_; }
+        bool operator!=(const DisplayHandle& other) const { return !(*this == other); }
         // }
 
         void reset() {
@@ -122,13 +122,13 @@ namespace SDOM
 
         // --- LUA Wrapper Functions --- //
 
-        IDisplayObject* get_lua(DisplayObject* self) const { return self->get(); }
-        bool isValid_lua(DisplayObject* self) const { return self->isValid(); }
-        std::string getName_lua(DisplayObject* self) const { return self->getName(); }
-        std::string getType_lua(DisplayObject* self) const { return self->getType(); }
+        IDisplayObject* get_lua(DisplayHandle* self) const { return self->get(); }
+        bool isValid_lua(DisplayHandle* self) const { return self->isValid(); }
+        std::string getName_lua(DisplayHandle* self) const { return self->getName(); }
+        std::string getType_lua(DisplayHandle* self) const { return self->getType(); }
 
         // Shared Lua handle usertype helpers (augmentable by base/descendants)
-        inline static constexpr const char* LuaHandleName = "DisplayObject";
+        inline static constexpr const char* LuaHandleName = "DisplayHandle";
 
         // Ensure the handle usertype exists in this Lua state and return its table.
         static sol::table ensure_handle_table(sol::state_view lua);
@@ -140,7 +140,7 @@ namespace SDOM
     public:
         inline static Factory* factory_ = nullptr;
     private:
-        // Factory::Factory() { DisplayObject<T>::factory_ = this; }
+        // Factory::Factory() { DisplayHandle<T>::factory_ = this; }
         friend Core;
         friend Factory;
 
@@ -153,14 +153,14 @@ namespace SDOM
     protected:
         // --- LUA Registration --- //
         // virtual void _registerLua(const std::string& typeName, sol::state_view lua);
-        sol::usertype<DisplayObject> objHandleType_;
+        sol::usertype<DisplayHandle> objHandleType_;
 
     protected:
-        // Resolve a Lua child spec (string, DisplayObject, or table{ child=... | name=... })
-        static DisplayObject resolveChildSpec(const sol::object& spec);
+        // Resolve a Lua child spec (string, DisplayHandle, or table{ child=... | name=... })
+        static DisplayHandle resolveChildSpec(const sol::object& spec);
 
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
-    }; // end class DisplayObject
+    }; // end class DisplayHandle
 
 } // namespace SDOM

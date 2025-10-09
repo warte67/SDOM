@@ -7,9 +7,7 @@
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 
-// #include <SDOM/SDOM_Handle.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
-// #include <SDOM/SDOM_ResHandle.hpp>  // Deprecated
+#include <SDOM/SDOM_DisplayHandle.hpp>
 
 #include "Box.hpp"
 #include <SDOM/SDOM_SpriteSheet.hpp>
@@ -170,11 +168,11 @@ void Box::onEvent(const SDOM::Event& event)
     float mX = event.getMouseX();
     float mY = event.getMouseY();
 
-    SDOM::DisplayObject stage = SDOM::getStageHandle();
+    SDOM::DisplayHandle stage = SDOM::getStageHandle();
     static int original_Width = getWidth();
     static int original_Height = getHeight();
-    static SDOM::DisplayObject draggedObject = SDOM::DisplayObject();
-    static SDOM::DisplayObject original_parent = getParent();
+    static SDOM::DisplayHandle draggedObject = SDOM::DisplayHandle();
+    static SDOM::DisplayHandle original_parent = getParent();
 
     // Check which mouse button is used
     Uint8 button = event.getButton();
@@ -184,7 +182,7 @@ void Box::onEvent(const SDOM::Event& event)
     {
         if (event.getType() == SDOM::EventType::Drag) 
         {
-            draggedObject = SDOM::DisplayObject(getName(), getType()); 
+            draggedObject = SDOM::DisplayHandle(getName(), getType()); 
             if (!draggedObject)
                 ERROR("draggedObject is invalid");
             // Ensure the dragged object is not the stage
@@ -237,7 +235,7 @@ void Box::onEvent(const SDOM::Event& event)
         else if (event.getType() == SDOM::EventType::Drop) 
         {
             // IDisplayObject* relatedTarget = dynamic_cast<Box*>(event.getRelatedTarget());
-            SDOM::DisplayObject relatedTarget = event.getRelatedTarget();
+            SDOM::DisplayHandle relatedTarget = event.getRelatedTarget();
             if (stage && draggedObject)
                 stage->removeChild(draggedObject);
 
@@ -366,7 +364,7 @@ void Box::onRender()
         SDL_RenderFillRect(renderer, &rect);
     }
 
-    // BEGIN: SpriteSheet rendering (uses AssetObject / Factory -> SpriteSheet)
+    // BEGIN: SpriteSheet rendering (uses AssetHandle / Factory -> SpriteSheet)
     {
         SDL_FRect dstRect = { float(getX()), float(getY()), float(getWidth()), float(getHeight()) };
         static Uint8 spriteIndex = 0; // Example sprite index
@@ -374,7 +372,7 @@ void Box::onRender()
 
         // Attempt to resolve a SpriteSheet asset by name from the Factory.
         // Replace "XO_SpriteSheet" with whichever asset name you want to render.
-        SDOM::AssetObject asset = SDOM::getFactory().getAssetObject("default_incon_8x8"); // default_icon_8x8
+        SDOM::AssetHandle asset = SDOM::getFactory().getAssetObject("default_incon_8x8"); // default_icon_8x8
         if (asset.isValid()) 
         {
             SDOM::SpriteSheet* ss = asset.as<SDOM::SpriteSheet>();
@@ -382,7 +380,7 @@ void Box::onRender()
             {
                 try
                 {
-                    // Ensure loaded (AssetObject::as/get will lazily load, but explicit call is safe)
+                    // Ensure loaded (AssetHandle::as/get will lazily load, but explicit call is safe)
                     ss->onLoad();
                     static SDL_Color color = {255,255,255,255};
                     ss->drawSprite(spriteIndex, dstRect, color);
@@ -433,15 +431,15 @@ void Box::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
                   << typeName << CLR::RESET << std::endl;
     }
 
-    // Augment the single shared DisplayObject handle usertype
-    sol::table handle = SDOM::DisplayObject::ensure_handle_table(lua);
+    // Augment the single shared DisplayHandle handle usertype
+    sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
 
     auto absent = [&](const char* name) -> bool {
         sol::object cur = handle.raw_get_or(name, sol::lua_nil);
         return !cur.valid() || cur == sol::lua_nil;
     };
 
-    auto require_box = [&](SDOM::DisplayObject& self, const char* method) -> Box* {
+    auto require_box = [&](SDOM::DisplayHandle& self, const char* method) -> Box* {
         Box* b = dynamic_cast<Box*>(self.get());
         if (!b) {
             std::string msg = std::string(method)
@@ -451,10 +449,10 @@ void Box::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
         return b;
     };
 
-    // Box-specific methods on the DisplayObject handle, guarded by type
+    // Box-specific methods on the DisplayHandle handle, guarded by type
     if (absent("doSomething")) {
         handle.set_function("doSomething",
-            [require_box](SDOM::DisplayObject& self, sol::object /*args*/, sol::state_view lua) -> sol::object {
+            [require_box](SDOM::DisplayHandle& self, sol::object /*args*/, sol::state_view lua) -> sol::object {
                 Box* b = require_box(self, "doSomething");
                 std::cout << "Box::doSomething called on " << b->getName() << std::endl;
                 return sol::make_object(lua, true);
@@ -464,7 +462,7 @@ void Box::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
     if (absent("resetColor")) {
         handle.set_function("resetColor",
-            [require_box](SDOM::DisplayObject& self, sol::object /*args*/, sol::state_view lua) -> sol::object {
+            [require_box](SDOM::DisplayHandle& self, sol::object /*args*/, sol::state_view lua) -> sol::object {
                 Box* b = require_box(self, "resetColor");
                 SDL_Color defaultColor = {255, 0, 255, 255};
                 b->setColor(defaultColor);

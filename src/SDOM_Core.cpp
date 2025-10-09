@@ -3,8 +3,8 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Stage.hpp>
-#include <SDOM/SDOM_AssetObject.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
+#include <SDOM/SDOM_AssetHandle.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
@@ -30,12 +30,12 @@ namespace SDOM
         factory_ = new Factory();
         eventManager_ = new EventManager();
         
-        // register the DisplayObject handle last so other types can use it
-        DisplayObject prototypeHandle; // Default DisplayObject for registration
-        prototypeHandle._registerLuaBindings("DisplayObject", lua_);
+        // register the DisplayHandle handle last so other types can use it
+        DisplayHandle prototypeHandle; // Default DisplayHandle for registration
+        prototypeHandle._registerLuaBindings("DisplayHandle", lua_);
 
-        AssetObject prototypeAssetHandle; // Default AssetObject for registration
-        prototypeAssetHandle._registerLuaBindings("AssetObject", lua_);
+        AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
+        prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
     }
 
     Core::~Core()
@@ -88,12 +88,12 @@ namespace SDOM
         configure(config);
 
         // Recursive resource creation
-        std::function<void(sol::table, DisplayObject)> createResourceRecursive;
-        createResourceRecursive = [&](sol::table obj, DisplayObject parent) 
+        std::function<void(sol::table, DisplayHandle)> createResourceRecursive;
+        createResourceRecursive = [&](sol::table obj, DisplayHandle parent) 
         {
             std::string type = obj["type"].get_or(std::string(""));
             std::string name = obj["name"].get_or(std::string(""));
-            DisplayObject handle;
+            DisplayHandle handle;
             if (!type.empty()) 
             {
                 // DEBUG_LOG("Core::configureFromLua: creating type='" + type + "' name='" + name + "'");
@@ -128,7 +128,7 @@ namespace SDOM
             for (auto& kv : children) 
             {
                 sol::table child = kv.second.as<sol::table>();
-                createResourceRecursive(child, DisplayObject());
+                createResourceRecursive(child, DisplayHandle());
             }
         }
 
@@ -557,19 +557,19 @@ namespace SDOM
                     // Dispatch EventType::OnEvent to rootNode_ so global listeners can receive raw SDL_Events
                     if (eventManager_ && rootNode_)
                     {
-                        DisplayObject rootHandle = getStageHandle();
+                        DisplayHandle rootHandle = getStageHandle();
 
                         // dispatch OnEvent to rootNode_ so global listeners can inspect raw SDL_Events
                         auto ev = std::make_unique<Event>(EventType::OnEvent, rootHandle);
                         ev->setSDL_Event(event);
                         ev->setRelatedTarget(rootHandle);
-                        eventManager_->dispatchEvent(std::move(ev), DisplayObject(rootHandle.getName(), rootHandle.getType()));
+                        eventManager_->dispatchEvent(std::move(ev), DisplayHandle(rootHandle.getName(), rootHandle.getType()));
 
                         // dispatch SDL_Event to rootNode_ so global listeners can inspect raw SDL_Events
                         auto sdl_ev = std::make_unique<Event>(EventType::SDL_Event, rootHandle);
                         sdl_ev->setSDL_Event(event);
                         sdl_ev->setRelatedTarget(rootHandle);
-                        eventManager_->dispatchEvent(std::move(sdl_ev), DisplayObject(rootHandle.getName(), rootHandle.getType()));
+                        eventManager_->dispatchEvent(std::move(sdl_ev), DisplayHandle(rootHandle.getName(), rootHandle.getType()));
                     }
 
                 }
@@ -730,10 +730,10 @@ namespace SDOM
         if (eventManager_)
         {
             // Use the root node as the target for the global dispatch if available
-            DisplayObject rootHandle;
+            DisplayHandle rootHandle;
             if (rootNode_)
             {
-                // create a DisplayObject referring to the root node
+                // create a DisplayHandle referring to the root node
                 rootHandle = rootNode_;
             }
 
@@ -742,7 +742,7 @@ namespace SDOM
             quitEvent->setRelatedTarget(rootHandle);
 
             // Dispatch via the central dispatch so global events reach both nodes and event-listeners
-            eventManager_->dispatchEvent(std::move(quitEvent), DisplayObject(rootHandle.getName(), rootHandle.getType()));
+            eventManager_->dispatchEvent(std::move(quitEvent), DisplayHandle(rootHandle.getName(), rootHandle.getType()));
         }
 
         // Call recursive quit on the root node (if it exists)
@@ -772,14 +772,14 @@ namespace SDOM
             // render the node
             node.onRender();
 
-            DisplayObject rootHandle = this->getStageHandle();
+            DisplayHandle rootHandle = this->getStageHandle();
             // PreRender EventListeners
             if (node.hasEventListeners(EventType::OnPreRender, false))
             {
                 auto preRenderEv = std::make_unique<Event>(EventType::OnPreRender, rootHandle);
                 preRenderEv->setElapsedTime(this->getElapsedTime());
                 preRenderEv->setRelatedTarget(rootHandle);
-                eventManager_->dispatchEvent(std::move(preRenderEv), DisplayObject(rootHandle.getName(), rootHandle.getType()));
+                eventManager_->dispatchEvent(std::move(preRenderEv), DisplayHandle(rootHandle.getName(), rootHandle.getType()));
             }
 
             // render children
@@ -801,7 +801,7 @@ namespace SDOM
                 auto renderEv = std::make_unique<Event>(EventType::OnRender, rootHandle);
                 renderEv->setElapsedTime(this->getElapsedTime());
                 renderEv->setRelatedTarget(rootHandle);
-                eventManager_->dispatchEvent(std::move(renderEv), DisplayObject(rootHandle.getName(), rootHandle.getType()));        
+                eventManager_->dispatchEvent(std::move(renderEv), DisplayHandle(rootHandle.getName(), rootHandle.getType()));        
             }
         };
 
@@ -868,7 +868,7 @@ namespace SDOM
             // Dispatch to event listeners first so they can stopPropagation if needed
             if (node.hasEventListeners(EventType::OnUpdate, false))
             {
-                DisplayObject rootNode = this->getStageHandle();
+                DisplayHandle rootNode = this->getStageHandle();
                 auto updateEv = std::make_unique<Event>(EventType::OnUpdate, rootNode);
                 updateEv->setElapsedTime(fElapsedTime);
                 updateEv->setRelatedTarget(rootNode);
@@ -1098,11 +1098,11 @@ namespace SDOM
         }
 
         // Lambda to recursively add the stage and children to the tabList_ if these nodes are tabEnabled_
-        auto populateTabList = [this](auto& populateTabListRef, DisplayObject node) -> void 
+        auto populateTabList = [this](auto& populateTabListRef, DisplayHandle node) -> void 
         {
             if (!node.isValid()) return;
 
-            // Resolve the DisplayObject to an IDisplayObject*
+            // Resolve the DisplayHandle to an IDisplayObject*
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(node.get());
             if (!obj) return;
 
@@ -1122,16 +1122,16 @@ namespace SDOM
             }
         };
 
-    // Populate the tabList_ starting from the stage
-    DisplayObject node = getStageHandle();
-    populateTabList(populateTabList, node);
+        // Populate the tabList_ starting from the stage
+        DisplayHandle node = getStageHandle();
+        populateTabList(populateTabList, node);
 
-        // Find the current object (keyboardFocusedObject_) with key focus within the tabList_
-    DisplayObject currentFocus = keyboardFocusedObject_;
-    DisplayObject nextFocus;
+            // Find the current object (keyboardFocusedObject_) with key focus within the tabList_
+        DisplayHandle currentFocus = keyboardFocusedObject_;
+        DisplayHandle nextFocus;
 
         bool foundCurrentFocus = false;
-    std::vector<DisplayObject> tempList;
+        std::vector<DisplayHandle> tempList;
 
         while (!tabList_.empty()) {
             auto candidate = tabList_.top();
@@ -1168,11 +1168,11 @@ namespace SDOM
         }
 
         // Lambda to recursively add the stage and children to the tabList_ if these nodes are tabEnabled_
-        auto populateTabList = [this](auto& populateTabListRef, DisplayObject node) -> void 
+        auto populateTabList = [this](auto& populateTabListRef, DisplayHandle node) -> void 
         {
             if (!node.isValid()) return;
 
-            // Resolve the DisplayObject to an IDisplayObject*
+            // Resolve the DisplayHandle to an IDisplayObject*
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(node.get());
             if (!obj) return;
 
@@ -1193,15 +1193,15 @@ namespace SDOM
         };
 
         // Populate the tabList_ starting from the stage
-    DisplayObject node = getStageHandle();
-    populateTabList(populateTabList, node);
+        DisplayHandle node = getStageHandle();
+        populateTabList(populateTabList, node);
 
         // Find the current object (keyboardFocusedObject_) with key focus within the tabList_
-    DisplayObject currentFocus = keyboardFocusedObject_;
-    DisplayObject previousFocus;
+        DisplayHandle currentFocus = keyboardFocusedObject_;
+        DisplayHandle previousFocus;
 
         bool foundCurrentFocus = false;
-    std::vector<DisplayObject> tempList;
+        std::vector<DisplayHandle> tempList;
 
         while (!tabList_.empty()) {
             auto candidate = tabList_.top();
@@ -1227,25 +1227,25 @@ namespace SDOM
         setKeyboardFocusedObject(previousFocus);    // keyboardFocusedObject_ = previousFocus;
     } // END:void Core::handleTabKeyPressReverse(Stage& stage)
 
-    void Core::setKeyboardFocusedObject(DisplayObject obj)
+    void Core::setKeyboardFocusedObject(DisplayHandle obj)
     { keyboardFocusedObject_ = obj; }
-    DisplayObject Core::getKeyboardFocusedObject() const
+    DisplayHandle Core::getKeyboardFocusedObject() const
     { return keyboardFocusedObject_; }
-    void Core::setMouseHoveredObject(DisplayObject obj)
+    void Core::setMouseHoveredObject(DisplayHandle obj)
     { hoveredObject_ = obj; }
-    DisplayObject Core::getMouseHoveredObject() const
+    DisplayHandle Core::getMouseHoveredObject() const
     { return hoveredObject_; }
 
     void Core::setRootNode(const std::string& name)
     {
-        DisplayObject stageHandle = factory_->getDisplayObject(name);
+        DisplayHandle stageHandle = factory_->getDisplayObject(name);
         if (stageHandle.isValid() && dynamic_cast<Stage*>(stageHandle.get()))
         {
             rootNode_ = stageHandle;
             setWindowTitle("Stage: " + rootNode_.get()->getName());
         }
     }
-    void Core::setRootNode(const DisplayObject& handle) 
+    void Core::setRootNode(const DisplayHandle& handle) 
     { 
         rootNode_ = handle;     
         if (rootNode_.isValid() && rootNode_.get()) setWindowTitle("Stage: " + rootNode_.get()->getName());
@@ -1264,7 +1264,7 @@ namespace SDOM
     { 
         return dynamic_cast<IDisplayObject*>(rootNode_.get()); 
     }
-    DisplayObject Core::getRootNode() const 
+    DisplayHandle Core::getRootNode() const 
     {
         return rootNode_; 
     }
@@ -1273,23 +1273,23 @@ namespace SDOM
 
     // --- Factory Wrapper Implementations --- //
 
-    DisplayObject Core::createDisplayObject(const std::string& typeName, const sol::table& config) {
+    DisplayHandle Core::createDisplayObject(const std::string& typeName, const sol::table& config) {
         return getFactory().create(typeName, config);
     }
-    DisplayObject Core::createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init) {
+    DisplayHandle Core::createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init) {
         return getFactory().create(typeName, init);
     }
-    DisplayObject Core::createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript) {
+    DisplayHandle Core::createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript) {
         return getFactory().create(typeName, luaScript);
     }
 
-    AssetObject Core::createAssetObject(const std::string& typeName, const sol::table& config) {
+    AssetHandle Core::createAssetObject(const std::string& typeName, const sol::table& config) {
         return getFactory().createAsset(typeName, config);
     }
-    AssetObject Core::createAssetObject(const std::string& typeName, const SDOM::IAssetObject::InitStruct& init) {
+    AssetHandle Core::createAssetObject(const std::string& typeName, const SDOM::IAssetObject::InitStruct& init) {
         return getFactory().createAsset(typeName, init);
     }
-    AssetObject Core::createAssetObjectFromScript(const std::string& typeName, const std::string& luaScript) {
+    AssetHandle Core::createAssetObjectFromScript(const std::string& typeName, const std::string& luaScript) {
         return getFactory().createAsset(typeName, luaScript);
     }
 
@@ -1297,22 +1297,22 @@ namespace SDOM
     IDisplayObject* Core::getDisplayObjectPtr(const std::string& name) {
         return getFactory().getDomObj(name);
     }
-    DisplayObject Core::getDisplayObject(const std::string& name) {
+    DisplayHandle Core::getDisplayObject(const std::string& name) {
         return getFactory().getDisplayObject(name);
     }
     bool Core::hasDisplayObject(const std::string& name) const {
-        DisplayObject handle = factory_->getDisplayObject(name);
+        DisplayHandle handle = factory_->getDisplayObject(name);
         return handle.isValid();
     }
 
     IAssetObject* Core::getAssetObjectPtr(const std::string& name) {
         return getFactory().getResObj(name);
     }
-    AssetObject Core::getAssetObject(const std::string& name) {
+    AssetHandle Core::getAssetObject(const std::string& name) {
         return getFactory().getAssetObject(name);
     }
     bool Core::hasAssetObject(const std::string& name) const {
-        AssetObject handle = factory_->getAssetObject(name);
+        AssetHandle handle = factory_->getAssetObject(name);
         return handle.isValid();   
     } 
 
@@ -1327,7 +1327,7 @@ namespace SDOM
     int Core::countOrphanedDisplayObjects() const {
         return getFactory().countOrphanedDisplayObjects();
     }
-    std::vector<DisplayObject> Core::getOrphanedDisplayObjects() {
+    std::vector<DisplayHandle> Core::getOrphanedDisplayObjects() {
         return getFactory().getOrphanedDisplayObjects();
     }
     void Core::destroyOrphanedDisplayObjects() {
@@ -1340,10 +1340,10 @@ namespace SDOM
     void Core::attachFutureChildren() {
         getFactory().attachFutureChildren();
     }
-    void Core::addToOrphanList(const DisplayObject orphan) {
+    void Core::addToOrphanList(const DisplayHandle& orphan) {
         getFactory().addToOrphanList(orphan);
     }
-    void Core::addToFutureChildrenList(const DisplayObject child, const DisplayObject parent,
+    void Core::addToFutureChildrenList(const DisplayHandle& child, const DisplayHandle& parent,
         bool useWorld, int worldX, int worldY) {
         getFactory().addToFutureChildrenList(child, parent, useWorld, worldX, worldY);
     }

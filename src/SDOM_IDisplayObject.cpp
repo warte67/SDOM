@@ -1,4 +1,4 @@
-/***  SDOM_DisplayObject.cpp  ****************************
+/***  SDOM_IDisplayObject.cpp  ****************************
  *   ___ ___   ___  __  __   ___  _         _            ___  _     _        _                  
  *  / __|   \ / _ \|  \/  | |   \(_)____ __| |__ _ _  _ / _ \| |__ (_)___ __| |_   __ _ __ _ __ 
  *  \__ \ |) | (_) | |\/| | | |) | (_-< '_ \ / _` | || | (_) | '_ \| / -_) _|  _|_/ _| '_ \ '_ \
@@ -152,7 +152,7 @@ namespace SDOM
         return true; // Indicate successful initialization
     }
 
-    void IDisplayObject::attachChild_(DisplayObject p_child, DisplayObject p_parent, bool useWorld, int worldX, int worldY)
+    void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent, bool useWorld, int worldX, int worldY)
     {
         IDisplayObject* child = dynamic_cast<IDisplayObject*>(p_child.get());
         IDisplayObject* parent = dynamic_cast<IDisplayObject*>(p_parent.get());
@@ -216,9 +216,9 @@ namespace SDOM
                 }
 
                 // Dispatch EventType::AddedToStage if the child is now part of the active stage.
-                DisplayObject stageHandle = getCore().getRootNode();
+                DisplayHandle stageHandle = getCore().getRootNode();
                 if (stageHandle) {
-                    DisplayObject cur = p_child;
+                    DisplayHandle cur = p_child;
                     bool onStage = false;
                     while (cur) {
                         if (cur == stageHandle) { onStage = true; break; }
@@ -235,9 +235,9 @@ namespace SDOM
                 }
             }
         }
-    } // IDisplayObject::attachChild_(DisplayObject p_child, DisplayObject p_parent, bool useWorld, int worldX, int worldY)
+    } // IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent, bool useWorld, int worldX, int worldY)
 
-    void IDisplayObject::removeOrphan_(const DisplayObject& orphan) 
+    void IDisplayObject::removeOrphan_(const DisplayHandle& orphan) 
     {
         IDisplayObject* orphanObj = dynamic_cast<IDisplayObject*>(orphan.get());
         if (orphanObj) 
@@ -250,9 +250,9 @@ namespace SDOM
                 if (it != parentChildren.end()) 
                 {
                     // Capture parent handle before resetting
-                    DisplayObject parentHandle = orphanObj->getParent();
-                    // Reset orphan's parent using DisplayObject (nullptr)
-                    orphanObj->setParent(DisplayObject());
+                    DisplayHandle parentHandle = orphanObj->getParent();
+                    // Reset orphan's parent using DisplayHandle (nullptr)
+                    orphanObj->setParent(DisplayHandle());
                     parentChildren.erase(it); // Remove orphan from parent's children
 
                     // Dispatch EventType::Removed using dispatchEvent for proper capture/bubble/target
@@ -265,10 +265,10 @@ namespace SDOM
 
                     // Dispatch EventType::RemovedFromStage if the orphan was on the active stage
                     // prior to removal (parent chain included the stage).
-                    DisplayObject stageHandle = getCore().getRootNode();
+                    DisplayHandle stageHandle = getCore().getRootNode();
                     if (stageHandle) 
                     {
-                        DisplayObject cur = parentHandle;
+                        DisplayHandle cur = parentHandle;
                         bool wasOnStage = false;
                         while (cur) 
                         {
@@ -290,7 +290,7 @@ namespace SDOM
         }
     }
 
-    void IDisplayObject::addChild(DisplayObject child, bool useWorld, int worldX, int worldY)
+    void IDisplayObject::addChild(DisplayHandle child, bool useWorld, int worldX, int worldY)
     {
         if (!child) 
         {
@@ -301,15 +301,15 @@ namespace SDOM
         Factory* factory = &core->getFactory();
         if (core->getIsTraversing())
         {
-            factory->addToFutureChildrenList(child, DisplayObject(getName(), child->getType()), useWorld, worldX, worldY);
+            factory->addToFutureChildrenList(child, DisplayHandle(getName(), child->getType()), useWorld, worldX, worldY);
         }
         else
         {
-            attachChild_(child, DisplayObject(getName(), getType()), useWorld, worldX, worldY);
+            attachChild_(child, DisplayHandle(getName(), getType()), useWorld, worldX, worldY);
         }
     }
 
-    DisplayObject IDisplayObject::getChild(std::string name) const 
+    DisplayHandle IDisplayObject::getChild(std::string name) const 
     {
         for (const auto& child : children_) 
         {
@@ -327,10 +327,10 @@ namespace SDOM
                 } catch (...) { /* ignore and continue */ }
             }
         }
-        return DisplayObject(); // invalid handle
+        return DisplayHandle(); // invalid handle
     }    
 
-    bool IDisplayObject::removeChild(DisplayObject child)
+    bool IDisplayObject::removeChild(DisplayHandle child)
     {
         if (!child) 
         {
@@ -350,7 +350,7 @@ namespace SDOM
             // Reset child's parent pointer if possible
             if (auto* childObj = dynamic_cast<IDisplayObject*>(child.get())) 
             {
-                childObj->setParent(DisplayObject());
+                childObj->setParent(DisplayHandle());
             }
             Core* core = &Core::getInstance();
             Factory* factory = &core->getFactory();
@@ -373,10 +373,10 @@ namespace SDOM
         }
     }    
 
-    const std::vector<DisplayObject>& IDisplayObject::getChildren() const { return children_; }
-    DisplayObject IDisplayObject::getParent() const { return parent_; }
+    const std::vector<DisplayHandle>& IDisplayObject::getChildren() const { return children_; }
+    DisplayHandle IDisplayObject::getParent() const { return parent_; }
 
-    IDisplayObject& IDisplayObject::setParent(const DisplayObject& parent)
+    IDisplayObject& IDisplayObject::setParent(const DisplayHandle& parent)
     {
         // Preserve world bounds across the parent change
         Bounds world = this->getBounds();
@@ -387,9 +387,9 @@ namespace SDOM
             IDisplayObject* oldParentObj = dynamic_cast<IDisplayObject*>(parent_.get());
             if (oldParentObj) 
             {
-                DisplayObject me(getName(), getType());
+                DisplayHandle me(getName(), getType());
                 auto& vec = oldParentObj->children_;
-                vec.erase(std::remove_if(vec.begin(), vec.end(), [&](const DisplayObject& d) { return d == me; }), vec.end());
+                vec.erase(std::remove_if(vec.begin(), vec.end(), [&](const DisplayHandle& d) { return d == me; }), vec.end());
             }
         }
 
@@ -402,7 +402,7 @@ namespace SDOM
             IDisplayObject* newParentObj = dynamic_cast<IDisplayObject*>(parent_.get());
             if (newParentObj) 
             {
-                DisplayObject me(getName(), getType());
+                DisplayHandle me(getName(), getType());
                 auto& vec = newParentObj->children_;
                 // DEBUG_LOG("setParent newParent='" << newParentObj->getName() << "' children_count_before=" << vec.size());
                 auto it = std::find(vec.begin(), vec.end(), me);
@@ -461,7 +461,7 @@ namespace SDOM
         }
         std::cout << getName() << std::endl;
 
-        // Traverse children using DisplayObject
+        // Traverse children using DisplayHandle
         for (size_t i = 0; i < children_.size(); ++i) 
         {
             const auto& childHandle = children_[i];
@@ -538,7 +538,7 @@ namespace SDOM
             return priority_;
         auto it = std::max_element(
             children_.begin(), children_.end(),
-            [](const DisplayObject& a, const DisplayObject& b) {
+            [](const DisplayHandle& a, const DisplayHandle& b) {
                 auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
                 auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
                 int aPriority = aObj ? aObj->priority_ : std::numeric_limits<int>::min();
@@ -555,7 +555,7 @@ namespace SDOM
         if (children_.empty()) return priority_;
         auto it = std::min_element(
             children_.begin(), children_.end(),
-            [](const DisplayObject& a, const DisplayObject& b) {
+            [](const DisplayHandle& a, const DisplayHandle& b) {
                 auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
                 auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
                 // Null children are considered highest priority
@@ -597,7 +597,7 @@ namespace SDOM
     IDisplayObject& IDisplayObject::sortChildrenByPriority()
     {
         // Remove invalid children
-        children_.erase(std::remove_if(children_.begin(), children_.end(), [](const DisplayObject& child) {
+        children_.erase(std::remove_if(children_.begin(), children_.end(), [](const DisplayHandle& child) {
             return !child;
         }), children_.end());
 
@@ -614,10 +614,10 @@ namespace SDOM
         // Deduplicate children by name: keep the most-recent occurrence (last in vector)
         try {
             std::unordered_set<std::string> seen;
-            std::vector<DisplayObject> newChildren;
+            std::vector<DisplayHandle> newChildren;
             // Iterate in reverse and keep first-seen (which corresponds to most-recent in original order)
             for (auto it = children_.rbegin(); it != children_.rend(); ++it) {
-                const DisplayObject& ch = *it;
+                const DisplayHandle& ch = *it;
                 if (!ch) continue;
                 std::string cname;
                 try { cname = ch.getName(); } catch(...) { cname.clear(); }
@@ -648,7 +648,7 @@ namespace SDOM
         } catch(...) {}
 
         // Sort by priority (ascending)
-        std::sort(children_.begin(), children_.end(), [](const DisplayObject& a, const DisplayObject& b) {
+        std::sort(children_.begin(), children_.end(), [](const DisplayHandle& a, const DisplayHandle& b) {
             auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
             auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
             int aPriority = aObj ? aObj->priority_ : std::numeric_limits<int>::min();
@@ -708,20 +708,20 @@ namespace SDOM
         return *this;
     }
 
-    bool IDisplayObject::hasChild(const DisplayObject child) const
+    bool IDisplayObject::hasChild(const DisplayHandle child) const
     {
         auto it = std::find(children_.begin(), children_.end(), child);
         return it != children_.end() && child.isValid();
     }
 
     // Ancestor/Descendant helpers
-    bool IDisplayObject::isAncestorOf(DisplayObject descendant) const
+    bool IDisplayObject::isAncestorOf(DisplayHandle descendant) const
     {
         if (!descendant) return false;
         // Walk up from descendant's parent to root looking for this
         IDisplayObject* descObj = dynamic_cast<IDisplayObject*>(descendant.get());
         if (!descObj) return false;
-        DisplayObject cur = descObj->getParent();
+        DisplayHandle cur = descObj->getParent();
         while (cur) {
             // Compare the underlying pointer to this object
             if (cur.get() == this) return true;
@@ -746,10 +746,10 @@ namespace SDOM
         return false;
     }
 
-    bool IDisplayObject::isDescendantOf(DisplayObject ancestor) const
+    bool IDisplayObject::isDescendantOf(DisplayHandle ancestor) const
     {
         if (!ancestor) return false;
-        DisplayObject cur = getParent();
+        DisplayHandle cur = getParent();
         while (cur) {
             if (cur == ancestor) return true;
             IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
@@ -761,7 +761,7 @@ namespace SDOM
 
     bool IDisplayObject::isDescendantOf(const std::string& name) const
     {
-        DisplayObject cur = getParent();
+        DisplayHandle cur = getParent();
         while (cur) {
             try { if (cur.getName() == name) return true; } catch(...) {}
             IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
@@ -774,12 +774,12 @@ namespace SDOM
     // Remove this object from its parent (convenience)
     bool IDisplayObject::removeFromParent()
     {
-        DisplayObject parentHandle = getParent();
+        DisplayHandle parentHandle = getParent();
         if (!parentHandle) return false;
         IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parentHandle.get());
         if (!parentObj) return false;
         // Attempt removal; parentObj->removeChild will perform checks and orphan handling
-        DisplayObject me(getName(), getType());
+        DisplayHandle me(getName(), getType());
         return parentObj->removeChild(me);
     }
 
@@ -787,7 +787,7 @@ namespace SDOM
     // confusion with the mutating removeFromParent() convenience method.)
 
     // Recursive descendant removal: search depth-first and remove first match
-    bool IDisplayObject::removeDescendant(DisplayObject descendant)
+    bool IDisplayObject::removeDescendant(DisplayHandle descendant)
     {
         if (!descendant) return false;
         // Check direct children first
@@ -860,7 +860,7 @@ namespace SDOM
 
     void IDisplayObject::setKeyboardFocus() 
     { 
-        Core::getInstance().setKeyboardFocusedObject(DisplayObject(getName(), getType())); 
+        Core::getInstance().setKeyboardFocusedObject(DisplayHandle(getName(), getType())); 
     }
     bool IDisplayObject::isKeyboardFocused() const
     {
@@ -1217,18 +1217,18 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Bind onto the single augmentable handle: "DisplayObject"
-        sol::table handle = DisplayObject::ensure_handle_table(lua);
+        // Bind onto the single augmentable handle: "DisplayHandle"
+        sol::table handle = DisplayHandle::ensure_handle_table(lua);
 
         auto absent = [&](const char* name) -> bool {
             sol::object cur = handle.raw_get_or(name, sol::lua_nil);
             return !cur.valid() || cur == sol::lua_nil;
         };
 
-        auto require_obj = [&](DisplayObject& self, const char* method) -> IDisplayObject* {
+        auto require_obj = [&](DisplayHandle& self, const char* method) -> IDisplayObject* {
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(self.get());
             if (!obj) {
-                std::string msg = std::string("Invalid DisplayObject handle for method '") + method + "'";
+                std::string msg = std::string("Invalid DisplayHandle handle for method '") + method + "'";
                 throw sol::error(msg);
             }
             return obj;
@@ -1236,41 +1236,41 @@ namespace SDOM
 
         // Tiny helpers following naming: bind_{returnType}_{args}
         // returnType: void | R
-        // args: 0 | do (DisplayObject) | str (const std::string&)
+        // args: 0 | do (DisplayHandle) | str (const std::string&)
         // constness: default uses const IDisplayObject* when possible; _nc variants use IDisplayObject*
         // Examples:
         // - bind_void_0:        void f(IDisplayObject*)
         // - bind_R_0:            R   f(const IDisplayObject*)
-        // - bind_void_do:        void f(IDisplayObject*, DisplayObject)
-        // - bind_R_do:           R   f(const IDisplayObject*, DisplayObject)
+        // - bind_void_do:        void f(IDisplayObject*, DisplayHandle)
+        // - bind_R_do:           R   f(const IDisplayObject*, DisplayHandle)
         // - bind_R_str:          R   f(const IDisplayObject*, const std::string&)
         // - bind_R_0_nc:         R   f(IDisplayObject*)
-        // - bind_R_do_nc:        R   f(IDisplayObject*, DisplayObject)
+        // - bind_R_do_nc:        R   f(IDisplayObject*, DisplayHandle)
         // - bind_R_str_nc:       R   f(IDisplayObject*, const std::string&)
         [[maybe_unused]] auto bind_void_0 = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
                     f(require_obj(self, n));
                 });
             }
         };
         [[maybe_unused]] auto bind_R_0 = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
                     return f(require_obj(self, n));
                 });
             }
         };
         [[maybe_unused]] auto bind_void_do = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const DisplayObject& a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
                     f(require_obj(self, n), a);
                 });
             }
         };
         [[maybe_unused]] auto bind_R_do = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const DisplayObject& a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
                     return f(require_obj(self, n), a);
                 });
             }
@@ -1278,7 +1278,7 @@ namespace SDOM
         // One string-argument, returning a value: R f(const IDisplayObject*, const std::string&)
         [[maybe_unused]] auto bind_R_str = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const std::string& a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
                     return f(require_obj(self, n), a);
                 });
             }
@@ -1286,7 +1286,7 @@ namespace SDOM
         // One string-argument, void return: void f(IDisplayObject*, const std::string&)
         [[maybe_unused]] auto bind_void_str = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const std::string& a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
                     f(require_obj(self, n), a);
                 });
             }
@@ -1294,7 +1294,7 @@ namespace SDOM
         // One sol::object-argument, void return: void f(IDisplayObject*, const sol::object&)
         [[maybe_unused]] auto bind_void_obj = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const sol::object& a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const sol::object& a) {
                     f(require_obj(self, n), a);
                 });
             }
@@ -1302,7 +1302,7 @@ namespace SDOM
         // One int-argument, void return: void f(IDisplayObject*, int)
         [[maybe_unused]] auto bind_void_i = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, int a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, int a) {
                     f(require_obj(self, n), a);
                 });
             }
@@ -1310,7 +1310,7 @@ namespace SDOM
         // One bool-argument, void return: void f(IDisplayObject*, bool)
         [[maybe_unused]] auto bind_void_b = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, bool a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, bool a) {
                     f(require_obj(self, n), a);
                 });
             }
@@ -1318,7 +1318,7 @@ namespace SDOM
         // One float-argument, void return: void f(IDisplayObject*, float)
         [[maybe_unused]] auto bind_void_f = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, float a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, float a) {
                     f(require_obj(self, n), a);
                 });
             }
@@ -1326,7 +1326,7 @@ namespace SDOM
         // One AnchorPoint-argument, void return: void f(IDisplayObject*, AnchorPoint)
         [[maybe_unused]] auto bind_void_ap = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, AnchorPoint a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, AnchorPoint a) {
                     f(require_obj(self, n), a);
                 });
             }
@@ -1334,7 +1334,7 @@ namespace SDOM
         // One OrphanRetentionPolicy-argument, returning a value: R f(const IDisplayObject*, OrphanRetentionPolicy)
         [[maybe_unused]] auto bind_R_orp = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, IDisplayObject::OrphanRetentionPolicy a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, IDisplayObject::OrphanRetentionPolicy a) {
                     return f(require_obj(self, n), a);
                 });
             }
@@ -1345,21 +1345,21 @@ namespace SDOM
         // - bind_R_str_nc: R f(IDisplayObject*, const std::string&)
         [[maybe_unused]] auto bind_R_0_nc = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
                     return f(require_obj(self, n));
                 });
             }
         };
         [[maybe_unused]] auto bind_R_do_nc = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const DisplayObject& a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
                     return f(require_obj(self, n), a);
                 });
             }
         };
         [[maybe_unused]] auto bind_R_str_nc = [&](const char* n, auto f) {
             if (absent(n)) {
-                handle.set_function(n, [require_obj, f, n](DisplayObject& self, const std::string& a) {
+                handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
                     return f(require_obj(self, n), a);
                 });
             }
@@ -1401,27 +1401,27 @@ namespace SDOM
         if (absent("addEventListener")) {
             handle.set_function("addEventListener", sol::overload(
                 // typed form
-                [require_obj](DisplayObject& self, EventType& t, sol::function fn, bool useCapture, int prio) {
+                [require_obj](DisplayHandle& self, EventType& t, sol::function fn, bool useCapture, int prio) {
                     ::SDOM::addEventListener_lua(require_obj(self, "addEventListener"), t, std::move(fn), useCapture, prio);
                 },
                 // flexible forms
-                [require_obj](DisplayObject& self, const sol::object& a, const sol::object& b, const sol::object& c, const sol::object& d) {
+                [require_obj](DisplayHandle& self, const sol::object& a, const sol::object& b, const sol::object& c, const sol::object& d) {
                     ::SDOM::addEventListener_lua_any(require_obj(self, "addEventListener"), a, b, c, d);
                 },
-                [require_obj](DisplayObject& self, const sol::object& desc) {
+                [require_obj](DisplayHandle& self, const sol::object& desc) {
                     ::SDOM::addEventListener_lua_any_short(require_obj(self, "addEventListener"), desc);
                 }
             ));
         }
         if (absent("removeEventListener")) {
             handle.set_function("removeEventListener", sol::overload(
-                [require_obj](DisplayObject& self, EventType& t, sol::function fn, bool useCapture) {
+                [require_obj](DisplayHandle& self, EventType& t, sol::function fn, bool useCapture) {
                     ::SDOM::removeEventListener_lua(require_obj(self, "removeEventListener"), t, std::move(fn), useCapture);
                 },
-                [require_obj](DisplayObject& self, const sol::object& a, const sol::object& b, const sol::object& c) {
+                [require_obj](DisplayHandle& self, const sol::object& a, const sol::object& b, const sol::object& c) {
                     ::SDOM::removeEventListener_lua_any(require_obj(self, "removeEventListener"), a, b, c);
                 },
-                [require_obj](DisplayObject& self, const sol::object& desc) {
+                [require_obj](DisplayHandle& self, const sol::object& desc) {
                     ::SDOM::removeEventListener_lua_any_short(require_obj(self, "removeEventListener"), desc);
                 }
             ));
@@ -1435,32 +1435,32 @@ namespace SDOM
         bind_void_0("printTree",      ::SDOM::printTree_lua);
 
         // Hierarchy
-        if (absent("addChild"))      handle.set_function("addChild",      [require_obj](DisplayObject& self, DisplayObject child){ ::SDOM::addChild_lua(require_obj(self, "addChild"), child); });
+        if (absent("addChild"))      handle.set_function("addChild",      [require_obj](DisplayHandle& self, DisplayHandle child){ ::SDOM::addChild_lua(require_obj(self, "addChild"), child); });
         if (absent("removeChild"))   
         {
             handle.set_function("removeChild",   sol::overload(
-                [require_obj](DisplayObject& self, const std::string& name){ return ::SDOM::removeChild_lua(require_obj(self, "removeChild"), name); },
-                [require_obj](DisplayObject& self, DisplayObject child){ return ::SDOM::removeChild_lua(require_obj(self, "removeChild"), child); }
+                [require_obj](DisplayHandle& self, const std::string& name){ return ::SDOM::removeChild_lua(require_obj(self, "removeChild"), name); },
+                [require_obj](DisplayHandle& self, DisplayHandle child){ return ::SDOM::removeChild_lua(require_obj(self, "removeChild"), child); }
             ));
         }
         bind_R_do("hasChild",                   ::SDOM::hasChild_lua);
         bind_R_str("getChild",                  ::SDOM::getChild_lua);
         bind_R_0("getParent",                   ::SDOM::getParent_lua);
         bind_void_do("setParent",               ::SDOM::setParent_lua);
-        bind_R_do_nc("isAncestorOf",            [](IDisplayObject* o, const DisplayObject& d){ return ::SDOM::isAncestorOf_lua(o, d); });
+        bind_R_do_nc("isAncestorOf",            [](IDisplayObject* o, const DisplayHandle& d){ return ::SDOM::isAncestorOf_lua(o, d); });
         bind_R_str_nc("isAncestorOfName",       [](IDisplayObject* o, const std::string& n){ return ::SDOM::isAncestorOf_lua(o, n); });
-        bind_R_do_nc("isDescendantOf",          [](IDisplayObject* o, const DisplayObject& a){ return ::SDOM::isDescendantOf_lua(o, a); });
+        bind_R_do_nc("isDescendantOf",          [](IDisplayObject* o, const DisplayHandle& a){ return ::SDOM::isDescendantOf_lua(o, a); });
         bind_R_str_nc("isDescendantOfName",     [](IDisplayObject* o, const std::string& n){ return ::SDOM::isDescendantOf_lua(o, n); });
         bind_R_0_nc("removeFromParent",         [](IDisplayObject* o){ return ::SDOM::removeFromParent_lua(o); });
-        bind_R_do_nc("removeChildByHandle",     [](IDisplayObject* o, const DisplayObject& d){ return ::SDOM::removeChild_lua(o, d); });
+        bind_R_do_nc("removeChildByHandle",     [](IDisplayObject* o, const DisplayHandle& d){ return ::SDOM::removeChild_lua(o, d); });
         bind_R_str_nc("removeChildByName",      [](IDisplayObject* o, const std::string& n){ return ::SDOM::removeChild_lua(o, n); });
-        bind_R_do_nc("removeDescendant",        [](IDisplayObject* o, const DisplayObject& d){ return ::SDOM::removeDescendant_lua(o, d); });
+        bind_R_do_nc("removeDescendant",        [](IDisplayObject* o, const DisplayHandle& d){ return ::SDOM::removeDescendant_lua(o, d); });
         bind_R_str_nc("removeDescendantByName", [](IDisplayObject* o, const std::string& n){ return ::SDOM::removeDescendant_lua(o, n); });
 
         // Type & properties (via helpers)
-        // Use handle-aware name getter so bare DisplayObject handles without a live object still return their cached name
+        // Use handle-aware name getter so bare DisplayHandle handles without a live object still return their cached name
         if (absent("getName")) {
-            handle.set_function("getName", [require_obj](DisplayObject& self) {
+            handle.set_function("getName", [require_obj](DisplayHandle& self) {
                 // Try through live object first for authoritative name, else fall back to handle's cached name
                 try { if (auto* o = dynamic_cast<IDisplayObject*>(self.get())) return ::SDOM::getName_lua(o); } catch(...) {}
                 return ::SDOM::getName_handle_lua(self);
@@ -1482,35 +1482,35 @@ namespace SDOM
         // Provide both simple and flexible forms using sol::overload where needed
         if (absent("setToHighestPriority")) {
             handle.set_function("setToHighestPriority", sol::overload(
-                [require_obj](DisplayObject& self) { ::SDOM::setToHighestPriority_lua(require_obj(self, "setToHighestPriority")); },
-                [require_obj](DisplayObject& self, const sol::object& desc) { ::SDOM::setToHighestPriority_lua_any(require_obj(self, "setToHighestPriority"), desc); }
+                [require_obj](DisplayHandle& self) { ::SDOM::setToHighestPriority_lua(require_obj(self, "setToHighestPriority")); },
+                [require_obj](DisplayHandle& self, const sol::object& desc) { ::SDOM::setToHighestPriority_lua_any(require_obj(self, "setToHighestPriority"), desc); }
             ));
         }
         if (absent("setToLowestPriority")) {
             handle.set_function("setToLowestPriority", sol::overload(
-                [require_obj](DisplayObject& self) { ::SDOM::setToLowestPriority_lua(require_obj(self, "setToLowestPriority")); },
-                [require_obj](DisplayObject& self, const sol::object& desc) { ::SDOM::setToLowestPriority_lua_any(require_obj(self, "setToLowestPriority"), desc); }
+                [require_obj](DisplayHandle& self) { ::SDOM::setToLowestPriority_lua(require_obj(self, "setToLowestPriority")); },
+                [require_obj](DisplayHandle& self, const sol::object& desc) { ::SDOM::setToLowestPriority_lua_any(require_obj(self, "setToLowestPriority"), desc); }
             ));
         }
         if (absent("setPriority")) {
             handle.set_function("setPriority", sol::overload(
-                [require_obj](DisplayObject& self, int pr) { ::SDOM::setPriority_lua(require_obj(self, "setPriority"), pr); },
-                [require_obj](DisplayObject& self, const sol::object& desc) { ::SDOM::setPriority_lua_any(require_obj(self, "setPriority"), desc); },
-                [require_obj](DisplayObject& self, const sol::object& desc, int value) { ::SDOM::setPriority_lua_target(require_obj(self, "setPriority"), desc, value); }
+                [require_obj](DisplayHandle& self, int pr) { ::SDOM::setPriority_lua(require_obj(self, "setPriority"), pr); },
+                [require_obj](DisplayHandle& self, const sol::object& desc) { ::SDOM::setPriority_lua_any(require_obj(self, "setPriority"), desc); },
+                [require_obj](DisplayHandle& self, const sol::object& desc, int value) { ::SDOM::setPriority_lua_target(require_obj(self, "setPriority"), desc, value); }
             ));
         }
         bind_R_0("getChildrenPriorities",     ::SDOM::getChildrenPriorities_lua);
         if (absent("moveToTop")) {
             handle.set_function("moveToTop", sol::overload(
-                [require_obj](DisplayObject& self) { ::SDOM::moveToTop_lua(require_obj(self, "moveToTop")); },
-                [require_obj](DisplayObject& self, const sol::object& desc) { ::SDOM::moveToTop_lua_any(require_obj(self, "moveToTop"), desc); }
+                [require_obj](DisplayHandle& self) { ::SDOM::moveToTop_lua(require_obj(self, "moveToTop")); },
+                [require_obj](DisplayHandle& self, const sol::object& desc) { ::SDOM::moveToTop_lua_any(require_obj(self, "moveToTop"), desc); }
             ));
         }
         bind_R_0("getZOrder",                 ::SDOM::getZOrder_lua);
         if (absent("setZOrder")) {
             handle.set_function("setZOrder", sol::overload(
-                [require_obj](DisplayObject& self, int z) { ::SDOM::setZOrder_lua(require_obj(self, "setZOrder"), z); },
-                [require_obj](DisplayObject& self, const sol::object& desc) { ::SDOM::setZOrder_lua_any(require_obj(self, "setZOrder"), desc); }
+                [require_obj](DisplayHandle& self, int z) { ::SDOM::setZOrder_lua(require_obj(self, "setZOrder"), z); },
+                [require_obj](DisplayHandle& self, const sol::object& desc) { ::SDOM::setZOrder_lua_any(require_obj(self, "setZOrder"), desc); }
             ));
         }
 

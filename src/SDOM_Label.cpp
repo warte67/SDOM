@@ -7,7 +7,7 @@
 // #include <SDOM/SDOM_TruetypeFont.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
-#include <SDOM/SDOM_AssetObject.hpp>
+#include <SDOM/SDOM_AssetHandle.hpp>
 #include <SDOM/SDOM_Label.hpp>
 #include <SDOM/SDOM_Utils.hpp>
 
@@ -82,7 +82,7 @@ namespace SDOM
         // Resolve font asset by name (store handle only; do not force loading)
         if (!resourceName_.empty())
         {
-            AssetObject asset = getFactory().getAssetObject(resourceName_);
+            AssetHandle asset = getFactory().getAssetObject(resourceName_);
             if (asset.isValid())
             {
                 fontAsset = asset; // keep handle; resolve concrete when needed
@@ -240,7 +240,7 @@ namespace SDOM
         // Resolve font asset by name (store handle only; do not force loading)
         if (!resourceName_.empty())
         {
-            AssetObject asset = getFactory().getAssetObject(resourceName_);
+            AssetHandle asset = getFactory().getAssetObject(resourceName_);
             if (asset.isValid())
             {
                 fontAsset = asset; // keep handle; resolve concrete when needed
@@ -299,7 +299,7 @@ namespace SDOM
         }
 
         // Resolve asset handle (do not create new assets here)
-        AssetObject asset = getFactory().getAssetObject(resourceName_);
+        AssetHandle asset = getFactory().getAssetObject(resourceName_);
         if (!asset.isValid()) 
         {
             ERROR("Label::onInit() --> Resource '" + resourceName_ + "' was not found.");
@@ -339,7 +339,7 @@ namespace SDOM
     void Label::onQuit() 
     {
         // Clear transient layout/token state. Do not force-unload shared font assets
-        // (Factory/AssetObject owns their lifecycle).
+        // (Factory/AssetHandle owns their lifecycle).
         tokenList.clear();
         tokenAlignLists_.clear();
         phraseAlignLists_.clear();
@@ -485,8 +485,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared AssetObject handle usertype (assets are exposed via AssetObject handles in Lua)
-        // sol::table handle = AssetObject::ensure_handle_table(lua);
+        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
+        // sol::table handle = AssetHandle::ensure_handle_table(lua);
 
         // // Helper to check if a property/command is already registered
         // auto absent = [&](const char* name) -> bool {
@@ -501,18 +501,18 @@ namespace SDOM
         //     }
         // };
 
-        // // small helper to validate and cast the AssetObject -> Label*
-        // auto cast_label_from_asset = [](const AssetObject& asset) -> Label* {
-        //     if (!asset.isValid()) { ERROR("invalid AssetObject provided to Label method"); }
+        // // small helper to validate and cast the AssetHandle -> Label*
+        // auto cast_label_from_asset = [](const AssetHandle& asset) -> Label* {
+        //     if (!asset.isValid()) { ERROR("invalid AssetHandle provided to Label method"); }
         //     IAssetObject* base = asset.get();
         //     Label* label = dynamic_cast<Label*>(base);
         //     if (!label) { ERROR("invalid Label object"); }
         //     return label;
         // };
 
-        // // Register Label-specific properties and commands here (bridge from AssetObject handle)
-        // reg("setLabelWidth", [cast_label_from_asset](AssetObject asset, int w) { cast_label_from_asset(asset)->setLabelWidth(w); });
-        // reg("setLabelHeight", [cast_label_from_asset](AssetObject asset, int h) { cast_label_from_asset(asset)->setLabelHeight(h); });
+        // // Register Label-specific properties and commands here (bridge from AssetHandle handle)
+        // reg("setLabelWidth", [cast_label_from_asset](AssetHandle asset, int w) { cast_label_from_asset(asset)->setLabelWidth(w); });
+        // reg("setLabelHeight", [cast_label_from_asset](AssetHandle asset, int h) { cast_label_from_asset(asset)->setLabelHeight(h); });
         // ...
 
 

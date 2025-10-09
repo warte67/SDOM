@@ -107,8 +107,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared AssetObject handle usertype (assets are exposed via AssetObject handles in Lua)
-        sol::table handle = AssetObject::ensure_handle_table(lua);
+        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
+        sol::table handle = AssetHandle::ensure_handle_table(lua);
 
         // Helper to check if a property/command is already registered
         auto absent = [&](const char* name) -> bool {
@@ -123,17 +123,17 @@ namespace SDOM
             }
         };
 
-        // small helper to validate and cast the AssetObject -> IFontObject*
-        auto cast_ifont_from_asset = [](const AssetObject& asset) -> IFontObject* {
-            if (!asset.isValid()) { ERROR("invalid AssetObject provided to IFontObject method"); }
+        // small helper to validate and cast the AssetHandle -> IFontObject*
+        auto cast_ifont_from_asset = [](const AssetHandle& asset) -> IFontObject* {
+            if (!asset.isValid()) { ERROR("invalid AssetHandle provided to IFontObject method"); }
             IAssetObject* base = asset.get();
             IFontObject* ss = dynamic_cast<IFontObject*>(base);
             if (!ss) { ERROR("invalid IFontObject object"); }
             return ss;
         };
 
-        // Register IFontObject-specific properties and commands here (bridge from AssetObject handle)
-        reg("setFontSize", [cast_ifont_from_asset](AssetObject asset, int size) { cast_ifont_from_asset(asset)->setFontSize(size); });
+        // Register IFontObject-specific properties and commands here (bridge from AssetHandle handle)
+        reg("setFontSize", [cast_ifont_from_asset](AssetHandle asset, int size) { cast_ifont_from_asset(asset)->setFontSize(size); });
     } // END _registerLuaBindings()
 
 } // namespace SDOM

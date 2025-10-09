@@ -33,8 +33,8 @@ namespace SDOM
         bool ok = true;
         Factory& factory = getFactory();
 
-        // Test 1: create via InitStruct (basic AssetObject/IAssetObject checks)
-        ok = ok && UnitTests::run("SpriteSheet #1", "create via InitStruct (basic AssetObject/IAssetObject checks)", [&factory]() -> bool 
+        // Test 1: create via InitStruct (basic AssetHandle/IAssetObject checks)
+        ok = ok && UnitTests::run("SpriteSheet #1", "create via InitStruct (basic AssetHandle/IAssetObject checks)", [&factory]() -> bool 
         {
             SpriteSheet::InitStruct init;
             init.name = "ut_bmp8";
@@ -43,7 +43,7 @@ namespace SDOM
             init.spriteWidth  = 8;
             init.spriteHeight = 8;
 
-            AssetObject asset = factory.createAsset("SpriteSheet", init);
+            AssetHandle asset = factory.createAsset("SpriteSheet", init);
             if (!asset.isValid()) return false;
 
             SpriteSheet* ss = asset.as<SpriteSheet>();
@@ -110,7 +110,7 @@ namespace SDOM
             cfg["spriteHeight"] = 8;
 
             // Factory may expose createAsset that accepts sol::table (if implemented)
-            AssetObject asset;
+            AssetHandle asset;
             try {
                 asset = factory.createAsset("SpriteSheet", cfg);
             } catch (...) {
@@ -200,7 +200,7 @@ namespace SDOM
         std::vector<std::function<bool()>> tests = 
         {
             [&]() { return SpriteSheet_test0(); }, // SpriteSheet Unit Test Scaffolding
-            [&]() { return SpriteSheet_test1(); }, // create via InitStruct (basic AssetObject/IAssetObject checks)
+            [&]() { return SpriteSheet_test1(); }, // create via InitStruct (basic AssetHandle/IAssetObject checks)
             [&]() { return SpriteSheet_test2(); }, // Create SpriteSheet via Lua-style table
             [&]() { return SpriteSheet_test3(); }, // Use the 'default_bmp_8x8' SpriteSheet
             [&]() { return SpriteSheet_test4(); }  // Exercise the 'default_bmp_8x8' SpriteSheet

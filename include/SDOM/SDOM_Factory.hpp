@@ -1,9 +1,9 @@
 #pragma once
 // #include <SDOM/SDOM.hpp>
 // #include <SDOM/SDOM_IDisplayObject.hpp>
-// #include <SDOM/SDOM_DisplayObject.hpp>
+// #include <SDOM/SDOM_DisplayHandle.hpp>
 // #include <SDOM/SDOM_IAssetObject.hpp>
-// #include <SDOM/SDOM_AssetObject.hpp>
+// #include <SDOM/SDOM_AssetHandle.hpp>
 
 #include <string>
 #include <memory>
@@ -22,9 +22,9 @@ namespace SDOM
 {
     class Stage;
     class IDisplayObject;
-    class DisplayObject;
+    class DisplayHandle;
     class IAssetObject;
-    class AssetObject;
+    class AssetHandle;
 
     // --- Type Creation Structs --- //
     struct TypeCreators 
@@ -56,13 +56,13 @@ namespace SDOM
         void registerResType(const std::string& typeName, const AssetTypeCreators& creators);  // change to registerAssetObjectType()
 
         // --- Object Creation --- //
-        DisplayObject create(const std::string& typeName, const sol::table& config);
-        DisplayObject create(const std::string& typeName, const IDisplayObject::InitStruct& init);        
-        DisplayObject create(const std::string& typeName, const std::string& luaScript);
+        DisplayHandle create(const std::string& typeName, const sol::table& config);
+        DisplayHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);        
+        DisplayHandle create(const std::string& typeName, const std::string& luaScript);
 
-        AssetObject createAsset(const std::string& typeName, const sol::table& config);
-        AssetObject createAsset(const std::string& typeName, const IAssetObject::InitStruct& init);        
-        AssetObject createAsset(const std::string& typeName, const std::string& luaScript);
+        AssetHandle createAsset(const std::string& typeName, const sol::table& config);
+        AssetHandle createAsset(const std::string& typeName, const IAssetObject::InitStruct& init);        
+        AssetHandle createAsset(const std::string& typeName, const std::string& luaScript);
 
         // Helper: attach a newly-created display object (by name/type) to a
         // parent specified in a Lua config value. Accepts string name, DomHandle,
@@ -72,9 +72,9 @@ namespace SDOM
         // --- Object Lookup --- //
         IDisplayObject* getDomObj(const std::string& name);  // change to getIDisplayObject()
         IAssetObject* getResObj(const std::string& name);   //change to getIAssetObject()        
-        DisplayObject getDisplayObject(const std::string& name);
-        AssetObject getAssetObject(const std::string& name);
-        DisplayObject getStageHandle();
+        DisplayHandle getDisplayObject(const std::string& name);
+        AssetHandle getAssetObject(const std::string& name);
+        DisplayHandle getStageHandle();
 
         // --- Display Object Management --- //
 
@@ -85,7 +85,7 @@ namespace SDOM
 
         // --- Orphan Management --- //
         int countOrphanedDisplayObjects() const;
-        std::vector<DisplayObject> getOrphanedDisplayObjects();
+        std::vector<DisplayHandle> getOrphanedDisplayObjects();
         void destroyOrphanedDisplayObjects();
         void detachOrphans();
         void collectGarbage();  // Maintenance orphaned objects based on their retention policy
@@ -93,8 +93,8 @@ namespace SDOM
 
         // --- Future Child Management --- //
         void attachFutureChildren();
-        void addToOrphanList(const DisplayObject orphan);
-        void addToFutureChildrenList(const DisplayObject child, const DisplayObject parent,
+        void addToOrphanList(const DisplayHandle orphan);
+        void addToFutureChildrenList(const DisplayHandle child, const DisplayHandle parent,
             bool useWorld=false, int worldX=0, int worldY=0);
 
         // --- Utility Methods --- //
@@ -117,11 +117,11 @@ namespace SDOM
 
         // --- Orphan & Future Child Lists --- //
 
-        std::vector<DisplayObject> orphanList_;
+        std::vector<DisplayHandle> orphanList_;
         struct futureChild 
         {
-            DisplayObject child;
-            DisplayObject parent;
+            DisplayHandle child;
+            DisplayHandle parent;
             bool preserveWorldPosition;
             int dragStartWorldX;
             int dragStartWorldY;

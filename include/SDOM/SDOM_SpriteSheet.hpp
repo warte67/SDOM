@@ -137,7 +137,7 @@ namespace SDOM
 
         // SDL_Texture* texture_ = nullptr; // Deprecated: use textureAsset instead
 
-        AssetObject textureAsset;      // Underlying texture asset for the sprite sheet
+        AssetHandle textureAsset;      // Underlying texture asset for the sprite sheet
 
         int spriteWidth_ = 8;   // Default sprite width
         int spriteHeight_ = 8;  // Default sprite height

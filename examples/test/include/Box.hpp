@@ -42,7 +42,7 @@ class Box final : public SDOM::IDisplayObject
             return std::unique_ptr<IDisplayObject>(new Box(boxInit));
         }
 
-        // Override DisplayObject methods
+        // Override DisplayHandle methods
         virtual bool onInit() override; 
         virtual void onQuit() override;
         virtual void onEvent(const SDOM::Event& event) override;

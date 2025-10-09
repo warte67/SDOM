@@ -1,5 +1,4 @@
 // lua_BindHelpers.hpp --- Lua binding helpers
-
 #pragma once
 
 // #include <SDOM/SDOM.hpp>
@@ -30,8 +29,8 @@ namespace SDOM
     void bind_bool_arg(const std::string& name, std::function<void(bool)> func,
                     sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
-    // Single-DisplayObject (or name) argument: void(const DisplayObject&)
-    void bind_do_arg(const std::string& name, std::function<void(const DisplayObject&)> func,
+    // Single-DisplayHandle (or name) argument: void(const DisplayHandle&)
+    void bind_do_arg(const std::string& name, std::function<void(const DisplayHandle&)> func,
                     sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
     // Single-sol::object argument: void(const sol::object&)
@@ -39,8 +38,8 @@ namespace SDOM
                         sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
     // Returners (no-arg) -----------------------------------------------------------
-    // Return DisplayObject: DisplayObject ()
-    void bind_return_displayobject(const std::string& name, std::function<DisplayObject()> func,
+    // Return DisplayHandle: DisplayHandle ()
+    void bind_return_displayobject(const std::string& name, std::function<DisplayHandle()> func,
                                 sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
     // Return bool: bool ()
@@ -59,26 +58,26 @@ namespace SDOM
     void bind_return_int(const std::string& name, std::function<int()> func,
                         sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
-    // Return vector<DisplayObject>: std::vector<DisplayObject> ()
-    void bind_return_vector_do(const std::string& name, std::function<std::vector<DisplayObject>()> func,
+    // Return vector<DisplayHandle>: std::vector<DisplayHandle> ()
+    void bind_return_vector_do(const std::string& name, std::function<std::vector<DisplayHandle>()> func,
                             sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
     // Return vector<string>: std::vector<std::string> ()
     void bind_return_vector_string(const std::string& name, std::function<std::vector<std::string>()> func,
                                 sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
-    // String+table -> DisplayObject
-    void bind_string_table_return_do(const std::string& name, std::function<DisplayObject(const std::string&, const sol::table&)> func,
+    // String+table -> DisplayHandle
+    void bind_string_table_return_do(const std::string& name, std::function<DisplayHandle(const std::string&, const sol::table&)> func,
                                     sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
-    void bind_string_table_return_asset(const std::string& name, std::function<AssetObject(const std::string&, const sol::table&)> func,
+    void bind_string_table_return_asset(const std::string& name, std::function<AssetHandle(const std::string&, const sol::table&)> func,
                                     sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
-    // String -> DisplayObject
-    void bind_string_return_do(const std::string& name, std::function<DisplayObject(const std::string&)> func,
+    // String -> DisplayHandle
+    void bind_string_return_do(const std::string& name, std::function<DisplayHandle(const std::string&)> func,
                             sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
-    void bind_string_return_asset(const std::string& name, std::function<AssetObject(const std::string&)> func,
+    void bind_string_return_asset(const std::string& name, std::function<AssetHandle(const std::string&)> func,
                             sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
     // String -> bool
@@ -112,9 +111,9 @@ namespace SDOM
     void bind_string_function_forwarder(const std::string& name, std::function<void(const std::string&, const sol::function&)> func,
                                         sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
-    // Bind a function that accepts either a name (string/table) or a DisplayObject handle
+    // Bind a function that accepts either a name (string/table) or a DisplayHandle
     // and dispatches to the appropriate host-side overload (e.g. setStage/setRootNode alias)
-    void bind_name_or_handle(const std::string& name, std::function<void(const std::string&)> nameFunc, std::function<void(const DisplayObject&)> handleFunc,
+    void bind_name_or_handle(const std::string& name, std::function<void(const std::string&)> nameFunc, std::function<void(const DisplayHandle&)> handleFunc,
                              sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
     
 

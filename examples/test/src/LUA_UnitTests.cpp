@@ -8,11 +8,8 @@
 #include <SDOM/SDOM_UnitTests.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include "UnitTests.hpp"
-// Include Box so test helpers (reset/getTestClickCount) are visible
-#include "Box.hpp"
-// Lua_UnitTests.cpp
 
-// #ifdef SDOM_ENABLE_UNIT_TESTS
+#include "Box.hpp"
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
@@ -21,7 +18,7 @@
 
 namespace SDOM {
 
-    DisplayObject myBoxHandle;
+    DisplayHandle myBoxHandle;
 
     bool test1_Lua() {
         sol::state& lua = SDOM::Core::getInstance().getLua();
@@ -35,7 +32,7 @@ namespace SDOM {
             })
     return Core:getDisplayObject("myBox")
         )");
-        myBoxHandle = handle_obj.as<DisplayObject>();
+        myBoxHandle = handle_obj.as<DisplayHandle>();
         bool box_exists = myBoxHandle.isValid();
         return UnitTests::run("Lua #1", "Create Box and verify existence", [box_exists]() { return box_exists; });
     }
@@ -176,7 +173,7 @@ namespace SDOM {
         Box::resetTestClickCount();
 
         // Determine blueishBox center from the object in the factory
-    DisplayObject box = Core::getInstance().getDisplayObject("blueishBox");
+    DisplayHandle box = Core::getInstance().getDisplayObject("blueishBox");
         if (!box) return UnitTests::run("Lua #8", "Verify synthetic MouseClick triggers Box listener", [](){ return false; });
 
         int cx = box->getX() + box->getWidth() / 2;
@@ -271,7 +268,7 @@ namespace SDOM {
         Box::resetTestClickCount();
 
         // Ensure blueishBox exists and is on the stage
-    DisplayObject box = Core::getInstance().getDisplayObject("blueishBox");
+        DisplayHandle box = Core::getInstance().getDisplayObject("blueishBox");
         if (!box) return UnitTests::run("Lua: # 9", "Lua-only event handler + synthetic click", [](){ return false; });
 
         // Build and run Lua script that attaches a listener and synthesizes a click
@@ -346,7 +343,7 @@ namespace SDOM {
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool s = lua.script(R"(
-    local h = Core:getDisplayObject('stageThree')
+            local h = Core:getDisplayObject('stageThree')
             if not h then return false end
             Core:setRootNode(h)
             local cur = Core:getStageHandle()

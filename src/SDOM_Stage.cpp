@@ -93,8 +93,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared DisplayObject handle usertype
-        sol::table handle = DisplayObject::ensure_handle_table(lua);
+        // Augment the single shared DisplayHandle handle usertype
+        sol::table handle = DisplayHandle::ensure_handle_table(lua);
 
         auto absent = [&](const char* name) -> bool {
             sol::object cur = handle.raw_get_or(name, sol::lua_nil);
@@ -110,6 +110,6 @@ namespace SDOM
         if (absent("mouseY")) {
             handle["mouseY"] = sol::property(static_cast<int (Stage::*)() const>(&Stage::getMouseY_lua), static_cast<void (Stage::*)(int)>(&Stage::setMouseY_lua));
         }
-    } // End Stage::_registerDisplayObject()
+    } // End Stage::_registerDisplayHandle()
 
 } // namespace SDOM

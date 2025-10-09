@@ -99,13 +99,13 @@ namespace SDOM
         static EventType ClipboardPaste;    // when content is pasted from the clipboard
 
 
-        // Main DisplayObject event types (NEW EventTypes to be added)
+        // Main DisplayHandle event types (NEW EventTypes to be added)
         
         // Application lifecycle event types
-        static EventType Added;             // when a DisplayObject is added to the display list
-        static EventType Removed;           // when a DisplayObject is removed from the display list
-        static EventType AddedToStage;      // when a DisplayObject is added to the stage
-        static EventType RemovedFromStage;  // when a DisplayObject is removed from the stage
+        static EventType Added;             // when a DisplayHandle is added to the display list
+        static EventType Removed;           // when a DisplayHandle is removed from the display list
+        static EventType AddedToStage;      // when a DisplayHandle is added to the stage
+        static EventType RemovedFromStage;  // when a DisplayHandle is removed from the stage
         // Event Listener Only Events
         static EventType OnInit;            // OnInit is Dispatched to EventListeners
         static EventType OnQuit;            // OnQuit is Dispatched to EventListeners

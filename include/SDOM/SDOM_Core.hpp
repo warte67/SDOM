@@ -5,7 +5,7 @@
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_IAssetObject.hpp>
-// #include <SDOM/SDOM_DisplayObject.hpp>
+// #include <SDOM/SDOM_DisplayHandle.hpp>
 
 namespace SDOM
 {
@@ -15,9 +15,9 @@ namespace SDOM
     class EventManager;
     class Stage;
     class IDisplayObject;
-    class DisplayObject;
+    class DisplayHandle;
     class IAssetObject;
-    class AssetObject;
+    class AssetHandle;
 
     /**
      * @class Core
@@ -104,12 +104,12 @@ namespace SDOM
 
         // --- Stage/Root Node Management --- //
         void setRootNode(const std::string& name);
-        void setRootNode(const DisplayObject& handle);
+        void setRootNode(const DisplayHandle& handle);
         void setStage(const std::string& name); // Alias for backward compatibility
         Stage* getStage() const; // Alias for backward compatibility
         IDisplayObject* getRootNodePtr() const;
-        DisplayObject getRootNode() const;
-        DisplayObject getStageHandle() const { return getRootNode(); }  // Alias for backward compatibility
+        DisplayHandle getRootNode() const;
+        DisplayHandle getStageHandle() const { return getRootNode(); }  // Alias for backward compatibility
 
         // --- SDL Resource Accessors --- //
         SDL_Window* getWindow() const       { return window_; }
@@ -150,10 +150,10 @@ namespace SDOM
         // --- Focus & Hover Management --- //
         void handleTabKeyPress();
         void handleTabKeyPressReverse();
-        void setKeyboardFocusedObject(DisplayObject obj);
-        DisplayObject getKeyboardFocusedObject() const;
-        void setMouseHoveredObject(DisplayObject obj);
-        DisplayObject getMouseHoveredObject() const;
+        void setKeyboardFocusedObject(DisplayHandle obj);
+        DisplayHandle getKeyboardFocusedObject() const;
+        void setMouseHoveredObject(DisplayHandle obj);
+        DisplayHandle getMouseHoveredObject() const;
 
         // --- Window Title & Timing --- //
         std::string getWindowTitle() const { return windowTitle_; }
@@ -171,23 +171,23 @@ namespace SDOM
         // --- Factory Wrappers --- //
 
         // --- Object Creation --- //
-        DisplayObject createDisplayObject(const std::string& typeName, const sol::table& config);
-        DisplayObject createDisplayObject(const std::string& typeName, const SDOM::IDisplayObject::InitStruct& init);
-        DisplayObject createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript);
+        DisplayHandle createDisplayObject(const std::string& typeName, const sol::table& config);
+        DisplayHandle createDisplayObject(const std::string& typeName, const SDOM::IDisplayObject::InitStruct& init);
+        DisplayHandle createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript);
 
-        AssetObject createAssetObject(const std::string& typeName, const sol::table& config);
-        AssetObject createAssetObject(const std::string& typeName, const SDOM::IAssetObject::InitStruct& init);
-        AssetObject createAssetObjectFromScript(const std::string& typeName, const std::string& luaScript);
+        AssetHandle createAssetObject(const std::string& typeName, const sol::table& config);
+        AssetHandle createAssetObject(const std::string& typeName, const SDOM::IAssetObject::InitStruct& init);
+        AssetHandle createAssetObjectFromScript(const std::string& typeName, const std::string& luaScript);
 
         // --- Object Lookup --- //
         IDisplayObject* getDisplayObjectPtr(const std::string& name);
-        DisplayObject getDisplayObject(const std::string& name);
+        DisplayHandle getDisplayObject(const std::string& name);
         // Backwards-compatibility: old name retained as a thin wrapper
-        DisplayObject getDisplayObjectHandle(const std::string& name) { return getDisplayObject(name); }
+        DisplayHandle getDisplayObjectHandle(const std::string& name) { return getDisplayObject(name); }
         bool hasDisplayObject(const std::string& name) const;
 
         IAssetObject* getAssetObjectPtr(const std::string& name);
-        AssetObject getAssetObject(const std::string& name);
+        AssetHandle getAssetObject(const std::string& name);
         bool hasAssetObject(const std::string& name) const;
 
         // --- Display Object Management --- //
@@ -196,14 +196,14 @@ namespace SDOM
 
         // --- Orphan Management --- //
         int countOrphanedDisplayObjects() const;
-        std::vector<DisplayObject> getOrphanedDisplayObjects();
+        std::vector<DisplayHandle> getOrphanedDisplayObjects();
         void destroyOrphanedDisplayObjects();
         void detachOrphans();
 
         // --- Future Child Management --- //
         void attachFutureChildren();
-        void addToOrphanList(const DisplayObject orphan);
-        void addToFutureChildrenList(const DisplayObject child, const DisplayObject parent,
+        void addToOrphanList(const DisplayHandle& orphan);
+        void addToFutureChildrenList(const DisplayHandle& child, const DisplayHandle& parent,
             bool useWorld=false, int worldX=0, int worldY=0);
 
         // --- Utility Methods --- //
@@ -257,13 +257,13 @@ namespace SDOM
         CoreConfig pendingConfig_;
 
         // --- DOM --- //
-        DisplayObject rootNode_; // The root of the resource tree
-        DisplayObject hoveredObject_;
-        DisplayObject keyboardFocusedObject_;
+        DisplayHandle rootNode_; // The root of the resource tree
+        DisplayHandle hoveredObject_;
+        DisplayHandle keyboardFocusedObject_;
 
         // --- Tab Priority --- //
         struct TabPriorityComparator {
-            bool operator()(const DisplayObject& a, const DisplayObject& b) const {
+            bool operator()(const DisplayHandle& a, const DisplayHandle& b) const {
                 // If either handle is invalid, treat invalid handles as lower priority
                 // so they end up at the back of the ordering. Avoid throwing an error
                 // here because handles may become invalid between insertion and
@@ -274,7 +274,7 @@ namespace SDOM
                 return a->getTabPriority() < b->getTabPriority();
             }
         };
-        std::priority_queue<DisplayObject, std::vector<DisplayObject>, TabPriorityComparator> tabList_;
+        std::priority_queue<DisplayHandle, std::vector<DisplayHandle>, TabPriorityComparator> tabList_;
 
         // --- Configuration --- //
         CoreConfig config_;

@@ -5,7 +5,7 @@
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 
 #include "Box.hpp"
 #include "UnitTests.hpp"
@@ -44,7 +44,7 @@ namespace SDOM
                 cfg = { type = "Box", name = "gcBox1" }
             )");
             sol::table cfg = lua["cfg"];
-            DisplayObject d;
+            DisplayHandle d;
             try { d = factory.create("Box", cfg); } catch (...) { d = nullptr; }
             bool created = (d != nullptr);
             if (!created) {
@@ -54,7 +54,7 @@ namespace SDOM
             }
             // now destroy and ensure it is gone
             factory.destroyDisplayObject("gcBox1");
-            DisplayObject check = factory.getDisplayObject("gcBox1");
+            DisplayHandle check = factory.getDisplayObject("gcBox1");
             return (check == nullptr);
         });
     }    
@@ -70,7 +70,7 @@ namespace SDOM
             // create a stage
             Stage::InitStruct stageInit; // stageInit.type was preinitialized to "Stage" by Stage::InitStruct
             stageInit.name = "gcStage";
-            DisplayObject stage = factory.create("Stage", stageInit);
+            DisplayHandle stage = factory.create("Stage", stageInit);
             if (!stage) 
             {
                 // cleanup and fail
@@ -82,7 +82,7 @@ namespace SDOM
             // create a box         
             Box::InitStruct boxInit;  // boxInit.type was preinitialized to "Box" by Box::InitStruct
             boxInit.name = "gcOrphan";
-            DisplayObject child = factory.create("Box", boxInit);
+            DisplayHandle child = factory.create("Box", boxInit);
             if (!child) 
             {
                 // cleanup and fail
@@ -188,7 +188,7 @@ namespace SDOM
             }          
             
             // make sure the factory no longer includes 'gcOrphan'
-            DisplayObject remains = factory.getDisplayObject("gcOrphan");
+            DisplayHandle remains = factory.getDisplayObject("gcOrphan");
             if (remains.isValid())
             {
                 DEBUG_LOG("Factory still has 'gcOrphan' after garbage collection in GC_test2");

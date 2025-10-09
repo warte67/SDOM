@@ -1,4 +1,4 @@
-// SDOM_AssetObject.hpp
+// SDOM_AssetHandle.hpp
 #pragma once
 #include <SDOM/SDOM_IDataObject.hpp>
 
@@ -9,21 +9,21 @@ namespace SDOM
     class IAssetObject;
 
     // Lightweight handle for IAssetObject (idempotent Lua bindings, no heavy APIs).
-    class AssetObject : public IDataObject
+    class AssetHandle : public IDataObject
     {
         using SUPER = IDataObject;
 
     public:
-        static constexpr const char* LuaHandleName = "AssetObject";
+        static constexpr const char* LuaHandleName = "AssetHandle";
 
-        AssetObject() : name_(LuaHandleName), type_(LuaHandleName), filename_(LuaHandleName) {}
-        AssetObject(const std::string& name, const std::string& type, const std::string& filename)
+        AssetHandle() : name_(LuaHandleName), type_(LuaHandleName), filename_(LuaHandleName) {}
+        AssetHandle(const std::string& name, const std::string& type, const std::string& filename)
             : name_(name), type_(type), filename_(filename) {}
-        AssetObject(const AssetObject& other)
+        AssetHandle(const AssetHandle& other)
             : name_(other.name_), type_(other.type_), filename_(other.filename_) {}
 
 
-        virtual ~AssetObject();
+        virtual ~AssetHandle();
 
         // virtual methods from IDataObject
         virtual bool onInit() override { return true; }
@@ -43,12 +43,12 @@ namespace SDOM
 
         bool operator==(std::nullptr_t) const { return get() == nullptr; }
         bool operator!=(std::nullptr_t) const { return get() != nullptr; }
-        bool operator==(const AssetObject& other) const { return name_ == other.name_ && type_ == other.type_ && filename_ == other.filename_; }
-        bool operator!=(const AssetObject& other) const { return !(*this == other); }
+        bool operator==(const AssetHandle& other) const { return name_ == other.name_ && type_ == other.type_ && filename_ == other.filename_; }
+        bool operator!=(const AssetHandle& other) const { return !(*this == other); }
 
-        AssetObject& operator=(const AssetObject& other) = default;
-        AssetObject(AssetObject&&) = default;
-        AssetObject& operator=(AssetObject&&) = default;
+        AssetHandle& operator=(const AssetHandle& other) = default;
+        AssetHandle(AssetHandle&&) = default;
+        AssetHandle& operator=(AssetHandle&&) = default;
         
         bool isValid() const { return get() != nullptr; }
 
@@ -61,14 +61,14 @@ namespace SDOM
         std::string getType_lua() const { return getType(); }
         std::string getFilename_lua() const { return getFilename(); }
 
-        // Ensure the shared Lua handle table exists for AssetObject
+        // Ensure the shared Lua handle table exists for AssetHandle
         static sol::table ensure_handle_table(sol::state_view lua);
 
         // Bind the minimal handle surface (idempotent)
         static void bind_minimal(sol::state_view lua);
 
-        // Resolve a Lua spec/object into an AssetObject handle
-        static AssetObject resolveSpec(const sol::object& spec);
+        // Resolve a Lua spec/object into an AssetHandle
+        static AssetHandle resolveSpec(const sol::object& spec);
 
     public:
         inline static Factory* factory_ = nullptr;

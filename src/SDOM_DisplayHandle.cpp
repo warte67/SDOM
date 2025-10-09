@@ -1,4 +1,4 @@
-// SDOM_DisplayObject.hpp
+// SDOM_DisplayHandle.hpp
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
@@ -6,36 +6,36 @@
 #include <functional>
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/lua_IDisplayObject.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 
 namespace SDOM
 {        
 
-    DisplayObject::DisplayObject()
+    DisplayHandle::DisplayHandle()
     {
         // keep lightweight; ctor must be emitted in a TU to provide the class's key function
     }
 
-    DisplayObject::~DisplayObject()
+    DisplayHandle::~DisplayHandle()
     {
         // default dtor; ensure emission for vtable
     }
 
-    IDisplayObject* DisplayObject::get() const
+    IDisplayObject* DisplayHandle::get() const
     {
         if (!factory_) return nullptr;
         return factory_->getDomObj(name_);
     }
 
-    // NOTE: DisplayObject is a lightweight handle. Do not forward rich APIs here.
+    // NOTE: DisplayHandle is a lightweight handle. Do not forward rich APIs here.
 
-    // Resolve child spec from Lua: accepts a DisplayObject userdata, a string name,
-    // or a table with { parent=<DisplayObject|name> } or { name = "..." }.
-    DisplayObject DisplayObject::resolveChildSpec(const sol::object& spec)
+    // Resolve child spec from Lua: accepts a DisplayHandle userdata, a string name,
+    // or a table with { parent=<DisplayHandle|name> } or { name = "..." }.
+    DisplayHandle DisplayHandle::resolveChildSpec(const sol::object& spec)
     {
-        if (!spec.valid()) return DisplayObject();
-        // If it's already a DisplayObject userdata
-        try { if (spec.is<DisplayObject>()) return spec.as<DisplayObject>(); } catch(...) {}
+        if (!spec.valid()) return DisplayHandle();
+        // If it's already a DisplayHandle userdata
+        try { if (spec.is<DisplayHandle>()) return spec.as<DisplayHandle>(); } catch(...) {}
         // If it's a string name
         try { if (spec.is<std::string>()) return getCore().getDisplayObject(spec.as<std::string>()); } catch(...) {}
         // If table, try fields 'parent' or 'name'
@@ -55,15 +55,15 @@ namespace SDOM
                 try { if (nameObj.is<std::string>()) return getCore().getDisplayObject(nameObj.as<std::string>()); } catch(...) {}
             }
         }
-        return DisplayObject();
+        return DisplayHandle();
     }
 
-    sol::table DisplayObject::ensure_handle_table(sol::state_view lua) 
+    sol::table DisplayHandle::ensure_handle_table(sol::state_view lua) 
     {
         // Create the handle usertype once (no constructor), or reuse existing.
         if (!lua[LuaHandleName].valid()) 
         {
-            lua.new_usertype<DisplayObject>(LuaHandleName, sol::no_constructor);
+            lua.new_usertype<DisplayHandle>(LuaHandleName, sol::no_constructor);
         }
         return lua[LuaHandleName];
     }
@@ -77,28 +77,28 @@ namespace SDOM
         }
     }
 
-    void DisplayObject::bind_minimal(sol::state_view lua) 
+    void DisplayHandle::bind_minimal(sol::state_view lua) 
     {
         sol::table handle = ensure_handle_table(lua);
         // Minimal handle surface ONLY
-        set_if_absent(handle, "isValid", &DisplayObject::isValid);
-        set_if_absent(handle, "getName", &DisplayObject::getName_lua);
-        set_if_absent(handle, "getType", &DisplayObject::getType_lua);
-        set_if_absent(handle, "setName", [](DisplayObject& self, const std::string& newName) { self.setName(newName); });
-        set_if_absent(handle, "setType", [](DisplayObject& self, const std::string& newType) { self.setType(newType); });
-        
+        set_if_absent(handle, "isValid", &DisplayHandle::isValid);
+        set_if_absent(handle, "getName", &DisplayHandle::getName_lua);
+        set_if_absent(handle, "getType", &DisplayHandle::getType_lua);
+        set_if_absent(handle, "setName", [](DisplayHandle& self, const std::string& newName) { self.setName(newName); });
+        set_if_absent(handle, "setType", [](DisplayHandle& self, const std::string& newType) { self.setType(newType); });
+
         // DO NOT add any other bindings here.
         // IDisplayObject and each descendant should call:
-        //   auto t = DisplayObject::ensure_handle_table(lua);
+        //   auto t = DisplayHandle::ensure_handle_table(lua);
         //   if (t["methodName"] == nil) t.set_function("methodName", ...);
         // Their methods must be idempotent and must not overwrite existing names.
     }
 
-    void DisplayObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    void DisplayHandle::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
         if (DEBUG_REGISTER_LUA) 
         {
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << "DisplayObject"
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << "DisplayHandle"
                       << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName
                       << CLR::RESET << std::endl;
         }
@@ -108,7 +108,7 @@ namespace SDOM
 
         // DO NOT add any other bindings here.
         // IDisplayObject and each descendant should call:
-        //   auto t = DisplayObject::ensure_handle_table(lua);
+        //   auto t = DisplayHandle::ensure_handle_table(lua);
         //   if (t["methodName"] == nil) t.set_function("methodName", ...);
         // Their methods must be idempotent and must not overwrite existing names.
     }

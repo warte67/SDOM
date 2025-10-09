@@ -145,8 +145,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared AssetObject handle usertype (assets are exposed via AssetObject handles in Lua)
-        sol::table handle = AssetObject::ensure_handle_table(lua);
+        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
+        sol::table handle = AssetHandle::ensure_handle_table(lua);
 
         // Helper to check if a property/command is already registered
         auto absent = [&](const char* name) -> bool {
@@ -161,18 +161,18 @@ namespace SDOM
             }
         };
 
-        // small helper to validate and cast the AssetObject -> Texture*
-        auto cast_tex_from_asset = [](const AssetObject& asset) -> Texture* {
-            if (!asset.isValid()) { ERROR("invalid AssetObject provided to Texture method"); }
+        // small helper to validate and cast the AssetHandle -> Texture*
+        auto cast_tex_from_asset = [](const AssetHandle& asset) -> Texture* {
+            if (!asset.isValid()) { ERROR("invalid AssetHandle provided to Texture method"); }
             IAssetObject* base = asset.get();
             Texture* tex = dynamic_cast<Texture*>(base);
             if (!tex) { ERROR("invalid Texture object"); }
             return tex;
         };
 
-        // Register Texture-specific properties and commands here (bridge from AssetObject handle)
-        reg("getTextureWidth", [cast_tex_from_asset](AssetObject asset) -> float { return cast_tex_from_asset(asset)->getTextureWidth(); });
-        reg("getTextureHeight", [cast_tex_from_asset](AssetObject asset) -> float { return cast_tex_from_asset(asset)->getTextureHeight(); });
+        // Register Texture-specific properties and commands here (bridge from AssetHandle handle)
+        reg("getTextureWidth", [cast_tex_from_asset](AssetHandle asset) -> float { return cast_tex_from_asset(asset)->getTextureWidth(); });
+        reg("getTextureHeight", [cast_tex_from_asset](AssetHandle asset) -> float { return cast_tex_from_asset(asset)->getTextureHeight(); });
 
     }
 

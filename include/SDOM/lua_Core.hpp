@@ -20,7 +20,7 @@ namespace SDOM
     change 	handleTabKeyPress_lua			to	doTabKeyPressForward_lua		
     change 	handleTabKeyPressReverse_lua	to	doTabKeyPressReverse_lua		
 
-    add		setStage_lua (const DisplayObject& handle)							
+    add		setStage_lua (const DisplayHandle& handle)							
 
     remove 	getRootNodePtr_lua // no need to expose raw pointer to Lua			
     remove 	getFactoryStageHandle_lua // redundant and obscure					
@@ -49,32 +49,32 @@ namespace SDOM
 
     // --- Stage/Root Node Management --- //
     void setRootNodeByName_lua(const std::string& name); 	// UNTESTED
-    void setRootNode_lua(const DisplayObject& handle); 		// UNTESTED
+    void setRootNode_lua(const DisplayHandle& handle); 		// UNTESTED
     void setStageByName_lua(const std::string& name);       // UNTESTED
-    void setStage_lua(const DisplayObject& handle);         // UNTESTED
-    DisplayObject getRoot_lua();  							// UNTESTED
-    DisplayObject getStage_lua(); 							// UNTESTED
+    void setStage_lua(const DisplayHandle& handle);         // UNTESTED
+    DisplayHandle getRoot_lua();  							// UNTESTED
+    DisplayHandle getStage_lua(); 							// UNTESTED
 
     // --- Factory & EventManager Access --- //
     bool getIsTraversing_lua();     				// UNTESTED
     void setIsTraversing_lua(bool traversing); 		// UNTESTED
 
     // --- Object Creation and Lookup--- //
-    DisplayObject createDisplayObject_lua(const std::string& typeName, const sol::table& config);    // TESTED (GC and other tests create objects)
-    DisplayObject getDisplayObject_lua(const std::string& name); 	// UNTESTED
+    DisplayHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config);    // TESTED (GC and other tests create objects)
+    DisplayHandle getDisplayObject_lua(const std::string& name); 	// UNTESTED
     bool hasDisplayObject_lua(const std::string& name);          	// TESTED (GC tests check existence)
 
-    AssetObject createAssetObject_lua(const std::string& typeName, const sol::table& config); // UNTESTED
-    AssetObject getAssetObject_lua(const std::string& name);      //  UNTESTED
+    AssetHandle createAssetObject_lua(const std::string& typeName, const sol::table& config); // UNTESTED
+    AssetHandle getAssetObject_lua(const std::string& name);      //  UNTESTED
     bool hasAssetObject_lua(const std::string& name);            //  UNTESTED
 
     // --- Focus & Hover Management --- //
     void doTabKeyPressForward_lua();             					// UNTESTED
     void doTabKeyPressReverse_lua();            					// UNTESTED
-    void setKeyboardFocusedObject_lua(const DisplayObject& handle); // UNTESTED
-    DisplayObject getKeyboardFocusedObject_lua();                   // UNTESTED
-    void setMouseHoveredObject_lua(const DisplayObject& handle);    // UNTESTED
-    DisplayObject getMouseHoveredObject_lua();                      // UNTESTED
+    void setKeyboardFocusedObject_lua(const DisplayHandle& handle); // UNTESTED
+    DisplayHandle getKeyboardFocusedObject_lua();                   // UNTESTED
+    void setMouseHoveredObject_lua(const DisplayHandle& handle);    // UNTESTED
+    DisplayHandle getMouseHoveredObject_lua();                      // UNTESTED
 
     // --- Window Title & Timing --- //
     std::string getWindowTitle_lua();	// UNTESTED
@@ -89,7 +89,7 @@ void pumpEventsOnce_lua();                 						// UNTESTED
     // --- Orphan / Future Child Management --- //
     void destroyDisplayObject_lua(const std::string& name);     // TESTED
     int countOrphanedDisplayObjects_lua();                      // TESTED
-    std::vector<DisplayObject> getOrphanedDisplayObjects_lua(); // TESTED
+    std::vector<DisplayHandle> getOrphanedDisplayObjects_lua(); // TESTED
     void destroyOrphanedDisplayObjects_lua();  // aliases:  "destroyOrphanedObjects" and "destroyOrphans" // UNTESTED
     void collectGarbage_lua();                                  // TESTED
 

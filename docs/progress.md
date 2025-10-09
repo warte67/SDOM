@@ -549,23 +549,18 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Add unit tests for dispatcher patterns to prevent regressions.
     - Passes all current tests
 
+---   
+- ### [October 9, 2025] 
+    - Codebase rename: DisplayObject -> DisplayHandle and AssetObject -> AssetHandle — completed across the C++ sources and Lua scripts.
+        - Renamed `DisplayObject` to `DisplayHandle` to help separate from the `IDisplayObject` and to imply `Handle` instead of `Object`.
+        - Remamed `AssetObject` to `AssetHandle` to help separate fro the `IAssetObject` and to help imply `Handle` rather than `Object`.
+    - Lua bindings: per-instance and prototype handle bindings are registered; unit tests updated to use the new names.
+    - Remaining documentation work: diagrams, design charts and README references still use the old names and must be updated.
 
 ---
 # ToDo:
+- Update architecture diagrams and markdown docs to replace old identifiers with the new Handle names.
+- Verify Label / IDisplayObject constructor default merging (Label::Label(sol::table&)).
+- Add a short migration note in the changelog describing the rename and any Lua compatibility considerations.
 - Label and IDisplayObject Constructor Defaults should include IDisplayObject defaults and the InitStruct defaults.  Verify and Fix. Pattern may be within the Label::Label(sol::table& config)
-- Rename `DisplayObject` to `DisplayHandle` to help separate from the `IDisplayObject` and to imply `Handle` instead of `Object`.
-- Remame `AssetObject` to `AssetHandle` to help separate fro the `IAssetObject` and to help imply `Handle` rather than `Object`.
 
-Use grep limited to .cpp/.hpp (prints filename:line:match). From repo root:
-```bash
-grep -RnIw --include='*.cpp' --include='*.hpp' --exclude-dir=.git --exclude-dir=build 'DisplayObject' . | grep -v 'IDisplayObject'
-```
-
-Or with ripgrep (faster if installed):
-```bash
-rg -n --glob '*.cpp' --glob '*.hpp' '\bDisplayObject\b' --hidden --glob '!{.git,build}'
-```
-
-```bash
-rg -n --glob '*.cpp' --glob '*.hpp' '\bAssetObject\b' --hidden --glob '!{.git,build}'
-```

@@ -162,7 +162,7 @@ namespace SDOM
 
         void setText(std::string p_text);
         std::string getText() const { return text_; }
-        AssetObject getFont() const { return fontAsset; }
+        AssetHandle getFont() const { return fontAsset; }
         IFontObject::FontType getFontType() const { return fontType_; }
         
         FontStyle& getDefaultStyle() { return defaultStyle_; }
@@ -184,7 +184,7 @@ namespace SDOM
         int fontWidth_;             // bitmap font width
         int fontHeight_;            // bitmap font height
         IFontObject::FontType fontType_ = IFontObject::FontType::Bitmap;
-        AssetObject fontAsset;      // Underlying font asset for the Label
+        AssetHandle fontAsset;      // Underlying font asset for the Label
         FontStyle defaultStyle_;    // default style for the label
         std::string resourceName_;  // Optional resource name for preloaded font
 

@@ -9,7 +9,7 @@ namespace SDOM
     bool Stage_UnitTests();
     bool Box_UnitTests();
     bool LUA_UnitTests();
-    bool DisplayObject_UnitTests();
+    bool DisplayHandle_UnitTests();
     bool EventType_UnitTests();
     bool Event_UnitTests();
     bool GarbageCollection_UnitTests();

@@ -41,8 +41,7 @@
 
 // #include <SDOM/SDOM_Handle.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
-// #include <SDOM/SDOM_ResHandle.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
@@ -50,7 +49,7 @@
 
 namespace SDOM
 {
-    SDOM::Event::Event(EventType type, DisplayObject target, float fElapsedTime)
+    SDOM::Event::Event(EventType type, DisplayHandle target, float fElapsedTime)
         : type(type), target(target), currentPhase(Phase::Capture), fElapsedTime(fElapsedTime)
     {
         // Constructor implementation
@@ -98,36 +97,36 @@ namespace SDOM
         return *this;
     }
 
-    DisplayObject Event::getTarget() const 
+    DisplayHandle Event::getTarget() const 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         return target;
     }
-    Event& Event::setTarget(const DisplayObject newTarget) 
+    Event& Event::setTarget(const DisplayHandle newTarget) 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         target = newTarget;
         return *this;
     }
 
-    DisplayObject Event::getCurrentTarget() const 
+    DisplayHandle Event::getCurrentTarget() const 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         return currentTarget;
     }
-    Event& Event::setCurrentTarget(const DisplayObject newCurrentTarget) 
+    Event& Event::setCurrentTarget(const DisplayHandle newCurrentTarget) 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         currentTarget = newCurrentTarget;
         return *this;
     }
 
-    DisplayObject Event::getRelatedTarget() const 
+    DisplayHandle Event::getRelatedTarget() const 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         return relatedTarget;
     }
-    Event& Event::setRelatedTarget(const DisplayObject newRelatedTarget) 
+    Event& Event::setRelatedTarget(const DisplayHandle newRelatedTarget) 
     { 
         std::lock_guard<std::mutex> lock(eventMutex_);
         relatedTarget = newRelatedTarget;
@@ -376,7 +375,7 @@ void SDOM::Event::registerLua(sol::state_view lua)
                 // name helpers
                 "name", sol::property([](const Event& e) {
                     try {
-                        DisplayObject dh = e.getTarget();
+                        DisplayHandle dh = e.getTarget();
                         // If there is an underlying object prefer its live name
                         if (auto* obj = dh.get()) return obj->getName();
                         // If no underlying object, fall back to the handle's cached name
@@ -386,7 +385,7 @@ void SDOM::Event::registerLua(sol::state_view lua)
                     return e.getTypeName();
                 }),
                 "getName", [](const Event& e) -> std::string {
-                    DisplayObject dh = e.getTarget();
+                    DisplayHandle dh = e.getTarget();
                     if (auto* obj = dh.get()) return obj->getName();
                     std::string hn = dh.getName();
                     if (!hn.empty()) return hn;
@@ -500,7 +499,7 @@ void SDOM::Event::registerLua(sol::state_view lua)
                         st.items.push_back({"dt", 2, std::string(), static_cast<double>(e.getElapsedTime()), nullptr});
                     } catch (...) {}
                     try {
-                        DisplayObject dh = e.getTarget();
+                        DisplayHandle dh = e.getTarget();
                         if (dh) {
                             // Prefer live object's name when available, otherwise the handle's cached name
                             std::string targName;

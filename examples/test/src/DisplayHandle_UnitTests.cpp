@@ -1,11 +1,11 @@
-// DisplayObject_UnitTests.cpp
+// DisplayHandle_UnitTests.cpp
 
 // #ifdef SDOM_ENABLE_UNIT_TESTS
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
-#include <SDOM/SDOM_DisplayObject.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 #include "UnitTests.hpp"
 // Include Box so test helpers (reset/getTestClickCount) are visible
 #include "Box.hpp"
@@ -14,42 +14,42 @@
 namespace SDOM
 {
 
-    // DisplayObject unit tests mapping (renamed to numeric identifiers):
-    //  - DisplayObject_test1  -> "DisplayObject #1" (forwards/reflection)
-    //  - DisplayObject_test2  -> "DisplayObject #2" (clickable)
-    //  - DisplayObject_test3  -> "DisplayObject #3" (enabled)
-    //  - DisplayObject_test4  -> "DisplayObject #4" (visibility)
-    //  - DisplayObject_test5  -> "DisplayObject #5" (keyboard focus)
-    //  - DisplayObject_test6  -> "DisplayObject #6" (mouse hover)
-    //  - DisplayObject_test7  -> "DisplayObject #7" (tab priority)
-    //  - DisplayObject_test8  -> "DisplayObject #8" (geometry getters/setters)
-    //  - DisplayObject_test9  -> "DisplayObject #9" (priority overloads)
-    //  - DisplayObject_test10 -> "DisplayObject #10" (sort/highest/lowest)
+    // DisplayHandle unit tests mapping (renamed to numeric identifiers):
+    //  - DisplayHandle_test1  -> "DisplayHandle #1" (forwards/reflection)
+    //  - DisplayHandle_test2  -> "DisplayHandle #2" (clickable)
+    //  - DisplayHandle_test3  -> "DisplayHandle #3" (enabled)
+    //  - DisplayHandle_test4  -> "DisplayHandle #4" (visibility)
+    //  - DisplayHandle_test5  -> "DisplayHandle #5" (keyboard focus)
+    //  - DisplayHandle_test6  -> "DisplayHandle #6" (mouse hover)
+    //  - DisplayHandle_test7  -> "DisplayHandle #7" (tab priority)
+    //  - DisplayHandle_test8  -> "DisplayHandle #8" (geometry getters/setters)
+    //  - DisplayHandle_test9  -> "DisplayHandle #9" (priority overloads)
+    //  - DisplayHandle_test10 -> "DisplayHandle #10" (sort/highest/lowest)
 
-    bool DisplayObject_test1()
+    bool DisplayHandle_test1()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        // Lua script: check for presence of DisplayObject methods related to priority/z-order
+        // Lua script: check for presence of DisplayHandle methods related to priority/z-order
         auto res = lua.script(R"(
             local methods = { 'getMaxPriority','getMinPriority','getPriority','setToHighestPriority','setToLowestPriority','sortChildrenByPriority','setPriority','moveToTop','getChildrenPriorities','getZOrder','setZOrder' }
             local dh = Core:getStageHandle()
             if not dh then return { ok = false, err = 'no stage handle' } end
             for i, m in ipairs(methods) do
                 local f = dh[m]
-                if not f then print('DisplayObject_test1: missing method -> '..m); return { ok = false, err = 'missing '..m } end
-                if type(f) ~= 'function' then print('DisplayObject_test1: method not callable -> '..m); return { ok = false, err = m..' not callable' } end
+                if not f then print('DisplayHandle_test1: missing method -> '..m); return { ok = false, err = 'missing '..m } end
+                if type(f) ~= 'function' then print('DisplayHandle_test1: method not callable -> '..m); return { ok = false, err = m..' not callable' } end
             end
             return { ok = true }
         )").get<sol::table>();
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        return UnitTests::run("DisplayObject #1", "Verify DisplayObject forwards for priority/z-order exist and are callable", [=]() { return ok; });
+        return UnitTests::run("DisplayHandle #1", "Verify DisplayHandle forwards for priority/z-order exist and are callable", [=]() { return ok; });
     }
 
 
     // Split tests: clickable, enabled, visibility, keyboard focus, mouse hover
-    bool DisplayObject_test2()
+    bool DisplayHandle_test2()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
@@ -65,10 +65,10 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_click')
             return true
         )").get<bool>();
-        return UnitTests::run("DisplayObject #2", "Verify setClickable/isClickable from Lua", [=]() { return result; });
+        return UnitTests::run("DisplayHandle #2", "Verify setClickable/isClickable from Lua", [=]() { return result; });
     }
 
-    bool DisplayObject_test3()
+    bool DisplayHandle_test3()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
@@ -84,10 +84,10 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_enabled')
             return true
         )").get<bool>();
-        return UnitTests::run("DisplayObject #3", "Verify setEnabled/isEnabled from Lua", [=]() { return result; });
+        return UnitTests::run("DisplayHandle #3", "Verify setEnabled/isEnabled from Lua", [=]() { return result; });
     }
 
-    bool DisplayObject_test4()
+    bool DisplayHandle_test4()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
@@ -107,10 +107,10 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_vis')
             return true
         )").get<bool>();
-        return UnitTests::run("DisplayObject #4", "Verify setVisible/isVisible and setHidden/isHidden from Lua", [=]() { return result; });
+        return UnitTests::run("DisplayHandle #4", "Verify setVisible/isVisible and setHidden/isHidden from Lua", [=]() { return result; });
     }
 
-    bool DisplayObject_test5()
+    bool DisplayHandle_test5()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
@@ -126,10 +126,10 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_focus')
             return true
         )").get<bool>();
-        return UnitTests::run("DisplayObject #5", "Verify setKeyboardFocus and Core:getKeyboardFocusedObject", [=]() { return result; });
+        return UnitTests::run("DisplayHandle #5", "Verify setKeyboardFocus and Core:getKeyboardFocusedObject", [=]() { return result; });
     }
 
-    bool DisplayObject_test6()
+    bool DisplayHandle_test6()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool result = lua.script(R"(
@@ -161,11 +161,11 @@ namespace SDOM
             Core:destroyDisplayObject('li_box_hover')
             return true
         )").get<bool>();
-        return UnitTests::run("DisplayObject #6", "Verify mouse hover via pushMouseEvent/pumpEventsOnce", [=]() { return result; });
+        return UnitTests::run("DisplayHandle #6", "Verify mouse hover via pushMouseEvent/pumpEventsOnce", [=]() { return result; });
     }
 
 
-    bool DisplayObject_test7()
+    bool DisplayHandle_test7()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -191,11 +191,11 @@ namespace SDOM
             return true
         )").get<bool>();
 
-        return UnitTests::run("DisplayObject #7", "Exercise get/set TabPriority and is/setTabEnabled from Lua", [=]() { return result; });
+        return UnitTests::run("DisplayHandle #7", "Exercise get/set TabPriority and is/setTabEnabled from Lua", [=]() { return result; });
     }
 
 
-    bool DisplayObject_test8()
+    bool DisplayHandle_test8()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -226,11 +226,11 @@ namespace SDOM
             Core:destroyDisplayObject('geom_box')
             return true
         )").get<bool>();
-        return UnitTests::run("DisplayObject #8", "Exercise setX/setY/setWidth/setHeight and verify getters from Lua", [=]() { return result; });
+        return UnitTests::run("DisplayHandle #8", "Exercise setX/setY/setWidth/setHeight and verify getters from Lua", [=]() { return result; });
     }
 
 
-    bool DisplayObject_test9()
+    bool DisplayHandle_test9()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -283,12 +283,12 @@ namespace SDOM
         bool ok = result["ok"].get_or(false);
         std::string err = result["err"].get_or(std::string());
         if (!ok) {
-            std::cout << "[Debug] DisplayObject_test9 Lua error: " << err << std::endl;
+            std::cout << "[Debug] DisplayHandle_test9 Lua error: " << err << std::endl;
         }
-        return UnitTests::run("DisplayObject #9", "Exercise setPriority/setZOrder/moveToTop overloads", [=]() { return ok; });
+        return UnitTests::run("DisplayHandle #9", "Exercise setPriority/setZOrder/moveToTop overloads", [=]() { return ok; });
     }
 
-    bool DisplayObject_test10()
+    bool DisplayHandle_test10()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -356,11 +356,11 @@ namespace SDOM
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        if (!ok) { std::cout << "[Debug] DisplayObject_test10 Lua error: " << err << std::endl; }
-        return UnitTests::run("DisplayObject #10", "Verify sortChildrenByPriority and setToHighest/Lowest with child specs", [=]() { return ok; });
+        if (!ok) { std::cout << "[Debug] DisplayHandle_test10 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayHandle #10", "Verify sortChildrenByPriority and setToHighest/Lowest with child specs", [=]() { return ok; });
     }
 
-    bool DisplayObject_test11()
+    bool DisplayHandle_test11()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -411,11 +411,11 @@ namespace SDOM
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        if (!ok) { std::cout << "[Debug] DisplayObject_test11 Lua error: " << err << std::endl; }
-        return UnitTests::run("DisplayObject #11", "Dirty DisplayObject and Hierarchy Management", [=]() { return ok; });
-    } // END bool DisplayObject_test11()
+        if (!ok) { std::cout << "[Debug] DisplayHandle_test11 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayHandle #11", "Dirty DisplayHandle and Hierarchy Management", [=]() { return ok; });
+    } // END bool DisplayHandle()
    
-    bool DisplayObject_test12()
+    bool DisplayHandle_test12()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -423,54 +423,54 @@ namespace SDOM
             -- retrieve the current stage object
                 local st = getStage()
                 if (not st) then
-                    print("DisplayObject_test12: failed to get stage")
+                    print("DisplayHandle_test12: failed to get stage")
                     return { ok = false, err = 'no stage' }
                 end
             -- test the bounds of the blueishBox
                 local blueishBox = st:getChild('blueishBox')
                 if not blueishBox then
-                    print("DisplayObject_test12: getChild('blueishBox') failed")
+                    print("DisplayHandle_test12: getChild('blueishBox') failed")
                     return { ok = false, err = "getChild('blueishBox') failed" }
                 end
                 local b = blueishBox:getBounds()
                 if not b then
-                    print("DisplayObject_test12: getBounds() failed")
+                    print("DisplayHandle_test12: getBounds() failed")
                     return { ok = false, err = "getBounds() failed" }
                 end
                 if not (b.x == 235 and b.y == 65 and b.width == 245 and b.height == 220) then
-                    print("DisplayObject_test12: getBounds() unexpected values")
+                    print("DisplayHandle_test12: getBounds() unexpected values")
                     return { ok = false, err = "getBounds() unexpected values" }
                 end
             -- get blueishBox color
                 local color = blueishBox:getColor()
                 if not color then
-                    print("DisplayObject_test12: getColor() failed")
+                    print("DisplayHandle_test12: getColor() failed")
                     return { ok = false, err = "getColor() failed" }
                 end
                 if not (color.r == 75 and color.g == 75 and color.b == 225 and color.a == 255) then
-                    print("DisplayObject_test12: getColor() unexpected values")
+                    print("DisplayHandle_test12: getColor() unexpected values")
                     return { ok = false, err = "getColor() unexpected values" }
                 end
             -- set blueishColor bounds to new values
                 blueishBox:setBounds({ x = 240, y = 70, width = 250, height = 225 })
                 local b2 = blueishBox:getBounds()
                 if not b2 then
-                    print("DisplayObject_test12: getBounds() after setBounds failed")
+                    print("DisplayHandle_test12: getBounds() after setBounds failed")
                     return { ok = false, err = "getBounds() after setBounds failed" }
                 end
                 if not (b2.x == 240 and b2.y == 70 and b2.width == 250 and b2.height == 225) then
-                    print("DisplayObject_test12: setBounds() did not update values")
+                    print("DisplayHandle_test12: setBounds() did not update values")
                     return { ok = false, err = "setBounds() did not update values" }
                 end
             -- set blueishBox color to new values
                 blueishBox:setColor({ r = 20, g = 20, b = 128, a = 255 })
                 local color2 = blueishBox:getColor()
                 if not color2 then
-                    print("DisplayObject_test12: getColor() after setColor failed")
+                    print("DisplayHandle_test12: getColor() after setColor failed")
                     return { ok = false, err = "getColor() after setColor failed" }
                 end
                 if not (color2.r == 20 and color2.g == 20 and color2.b == 128 and color2.a == 255) then
-                    print("DisplayObject_test12: setColor() did not update values")
+                    print("DisplayHandle_test12: setColor() did not update values")
                     return { ok = false, err = "setColor() did not update values" }
                 end
 
@@ -479,11 +479,11 @@ namespace SDOM
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        if (!ok) { std::cout << "[Debug] DisplayObject_test11 Lua error: " << err << std::endl; }
-        return UnitTests::run("DisplayObject #12", "Type and Property Access", [=]() { return ok; });
-    } // END bool DisplayObject_test12()        
+        if (!ok) { std::cout << "[Debug] DisplayHandle_test12 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayHandle #12", "Type and Property Access", [=]() { return ok; });
+    } // END bool DisplayHandle_test12()
 
-    bool DisplayObject_test13()
+    bool DisplayHandle_test13()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -491,51 +491,51 @@ namespace SDOM
             -- retrieve the current stage object
                 local st = getStage()
                 if (not st) then
-                    -- print("DisplayObject_test13: failed to get stage")
+                    -- print("DisplayHandle_test13: failed to get stage")
                     return { ok = false, err = 'no stage' }
                 end
             
             -- get handle to the blueishBox
                 local blueishBox = st:getChild('blueishBox')
                 if not blueishBox then
-                    -- print("DisplayObject_test13: getChild('blueishBox') failed")
+                    -- print("DisplayHandle_test13: getChild('blueishBox') failed")
                     return { ok = false, err = "getChild('blueishBox') failed" }
                 end
 
             -- get handle to the redishBox
                 local redishBox = st:getChild('redishBox')
                 if not redishBox then
-                    -- print("DisplayObject_test13: getChild('redishBox') failed")
+                    -- print("DisplayHandle_test13: getChild('redishBox') failed")
                     return { ok = false, err = "getChild('redishBox') failed" }
                 end
 
             -- fetch the current keyboard focus object
                 local kf = Core:getKeyboardFocusedObject()
                 if not kf then
-                    -- print("DisplayObject_test13: getKeyboardFocusedObject() returned nil")
+                    -- print("DisplayHandle_test13: getKeyboardFocusedObject() returned nil")
                     return { ok = false, err = "getKeyboardFocusedObject() returned nil" }
                 end
                 -- local kfName = kf:getName()
                 -- if kfName == "" then
                 --     kfName = "nil"
-                --     print("DisplayObject_test13: current keyboard focus is '" .. kfName .. "'")    
+                --     print("DisplayHandle_test13: current keyboard focus is '" .. kfName .. "'")
                 -- end                
             
             -- set keyboard focus to blueishBox
                 blueishBox:setKeyboardFocus()
                 local kf2 = Core:getKeyboardFocusedObject()
                 if not kf2 then
-                    -- print("DisplayObject_test13: getKeyboardFocusedObject() after setKeyboardFocus returned nil")
+                    -- print("DisplayHandle_test13: getKeyboardFocusedObject() after setKeyboardFocus returned nil")
                     return { ok = false, err = "getKeyboardFocusedObject() after setKeyboardFocus returned nil" }
                 end
                 if kf2 ~= blueishBox then
-                    -- print("DisplayObject_test13: setKeyboardFocus did not update focus to blueishBox")
+                    -- print("DisplayHandle_test13: setKeyboardFocus did not update focus to blueishBox")
                     return { ok = false, err = "setKeyboardFocus did not update focus to blueishBox" }
                 end
 
             -- test isKeyboardFocused blueishBox
                 if not blueishBox:isKeyboardFocused() then
-                    -- print("DisplayObject_test13: isKeyboardFocused() returned false after setKeyboardFocus")
+                    -- print("DisplayHandle_test13: isKeyboardFocused() returned false after setKeyboardFocus")
                     return { ok = false, err = "isKeyboardFocused() returned false after setKeyboardFocus" }
                 end   
 
@@ -543,17 +543,17 @@ namespace SDOM
                 redishBox:setKeyboardFocus()
                 local kf2 = Core:getKeyboardFocusedObject()
                 if not kf2 then
-                    -- print("DisplayObject_test13: getKeyboardFocusedObject() after setKeyboardFocus returned nil")
+                    -- print("DisplayHandle_test13: getKeyboardFocusedObject() after setKeyboardFocus returned nil")
                     return { ok = false, err = "getKeyboardFocusedObject() after setKeyboardFocus returned nil" }
                 end
                 if kf2 ~= redishBox then
-                    -- print("DisplayObject_test13: setKeyboardFocus did not update focus to redishBox")
+                    -- print("DisplayHandle_test13: setKeyboardFocus did not update focus to redishBox")
                     return { ok = false, err = "setKeyboardFocus did not update focus to redishBox" }
                 end
 
             -- test isKeyboardFocused redishBox
                 if not redishBox:isKeyboardFocused() then
-                    -- print("DisplayObject_test13: isKeyboardFocused() returned false after setKeyboardFocus")
+                    -- print("DisplayHandle_test13: isKeyboardFocused() returned false after setKeyboardFocus")
                     return { ok = false, err = "isKeyboardFocused() returned false after setKeyboardFocus" }
                 end   
 
@@ -563,7 +563,7 @@ namespace SDOM
                 Core:pumpEventsOnce()
                 local blueHover = Core:getMouseHoveredObject()
                 if not blueHover then
-                    -- print("DisplayObject_test13: getMouseHoveredObject() returned nil after motion over blueishBox")
+                    -- print("DisplayHandle_test13: getMouseHoveredObject() returned nil after motion over blueishBox")
                     return { ok = false, err = "getMouseHoveredObject() returned nil after motion over blueishBox" }
                 end
 
@@ -571,14 +571,14 @@ namespace SDOM
                 blueishBox:setKeyboardFocus()
                 redishBox:setClickable(false)
                 if redishBox:isClickable() then
-                    -- print("DisplayObject_test13: isClickable() returned true for redishBox")
+                    -- print("DisplayHandle_test13: isClickable() returned true for redishBox")
                     return { ok = false, err = "isClickable() returned true for redishBox" }
                 end 
                 Core:pushMouseEvent({ x = 160, y = 140, type = "down", button = 1 })
                 Core:pushMouseEvent({ x = 160, y = 140, type = "up", button = 1 })
                 Core:pumpEventsOnce()
                 if (redishBox:isKeyboardFocused()) then
-                    -- print("DisplayObject_test13: redishBox received focus on click while not clickable")
+                    -- print("DisplayHandle_test13: redishBox received focus on click while not clickable")
                     return { ok = false, err = "redishBox received focus on click while not clickable" }
                 end
                 redishBox:setClickable(true)
@@ -593,11 +593,11 @@ namespace SDOM
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        if (!ok) { std::cout << "[Debug] DisplayObject_test13 Lua error: " << err << std::endl; }
-        return UnitTests::run("DisplayObject #13", "Focus and Interactivity", [=]() { return ok; });
-    } // END bool DisplayObject_test13()    
+        if (!ok) { std::cout << "[Debug] DisplayHandle_test13 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayHandle #13", "Focus and Interactivity", [=]() { return ok; });
+    } // END bool DisplayHandle_test13()
 
-    bool DisplayObject_test14()
+    bool DisplayHandle_test14()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -605,14 +605,14 @@ namespace SDOM
             -- retrieve the current stage object
                 local st = getStage()
                 if (not st) then
-                    -- print("DisplayObject_test14: failed to get stage")
+                    -- print("DisplayHandle_test14: failed to get stage")
                     return { ok = false, err = 'no stage' }
                 end
 
             -- get handle to the blueishBox
                 local blueishBox = st:getChild('blueishBox')
                 if not blueishBox then
-                    -- print("DisplayObject_test14: getChild('blueishBox') failed")
+                    -- print("DisplayHandle_test14: getChild('blueishBox') failed")
                     return { ok = false, err = "getChild('blueishBox') failed" }
                 end
 
@@ -661,12 +661,12 @@ namespace SDOM
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        if (!ok) { std::cout << "[Debug] DisplayObject_test14 Lua error: " << err << std::endl; }
-        return UnitTests::run("DisplayObject #14", "Geometry and Layout", [=]() { return ok; });
-    } // END bool DisplayObject_test14()    
+        if (!ok) { std::cout << "[Debug] DisplayHandle_test14 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayHandle #14", "Geometry and Layout", [=]() { return ok; });
+    } // END bool DisplayHandle_test14()
 
 
-    bool DisplayObject_test15()
+    bool DisplayHandle_test15()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -774,11 +774,11 @@ namespace SDOM
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        if (!ok) { std::cout << "[Debug] DisplayObject_test15 Lua error: " << err << std::endl; }
-        return UnitTests::run("DisplayObject #15", "Edge Anchors", [=]() { return ok; });
-    } // END bool DisplayObject_test15()
+        if (!ok) { std::cout << "[Debug] DisplayHandle_test15 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayHandle #15", "Edge Anchors", [=]() { return ok; });
+    } // END bool DisplayHandle_test15()
 
-    bool DisplayObject_test16()
+    bool DisplayHandle_test16()
     {
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
@@ -854,33 +854,33 @@ namespace SDOM
 
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
-        if (!ok) { std::cout << "[Debug] DisplayObject_test16 Lua error: " << err << std::endl; }
-        return UnitTests::run("DisplayObject #16", "Edge Positions", [=]() { return ok; });
-    } // END bool DisplayObject_test16()
+        if (!ok) { std::cout << "[Debug] DisplayHandle_test16 Lua error: " << err << std::endl; }
+        return UnitTests::run("DisplayHandle #16", "Edge Positions", [=]() { return ok; });
+    } // END bool DisplayHandle_test16()
 
 
     
-    bool DisplayObject_UnitTests() 
+    bool DisplayHandle_UnitTests() 
     {
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
-              [&]() { return DisplayObject_test1(); },  // Verify DisplayObject forwards for priority/z-order exist and are callable
-              [&]() { return DisplayObject_test2(); },  // Verify setClickable/isClickable from Lua
-              [&]() { return DisplayObject_test3(); },  // Verify setEnabled/isEnabled from Lua
-              [&]() { return DisplayObject_test4(); },  // Verify setVisible/isVisible and setHidden/isHidden from Lua
-              [&]() { return DisplayObject_test5(); },  // Verify setKeyboardFocus and Core:getKeyboardFocusedObject
-              [&]() { return DisplayObject_test6(); },  // Verify mouse hover via pushMouseEvent/pumpEventsOnce
-              [&]() { return DisplayObject_test7(); },  // Exercise get/set TabPriority and is/setTabEnabled from Lua
-              [&]() { return DisplayObject_test8(); },  // Exercise setX/setY/setWidth/setHeight and verify getters from Lua
-              [&]() { return DisplayObject_test9(); },  // Exercise setPriority/setZOrder/moveToTop overloads
-              [&]() { return DisplayObject_test10(); }, // Verify sortChildrenByPriority and setToHighest/Lowest with child specs
-              [&]() { return DisplayObject_test11(); }, // Dirty DisplayObject and Extended Hierarchy Management
-              [&]() { return DisplayObject_test12(); }, // Type and Property Access
-              [&]() { return DisplayObject_test13(); }, // Focus and Interactivity
-              [&]() { return DisplayObject_test14(); }, // Geometry and Layout
-              [&]() { return DisplayObject_test15(); }, // Edge Anchors
-              [&]() { return DisplayObject_test16(); }  // Edge Positions
+              [&]() { return DisplayHandle_test1(); },  // Verify DisplayHandle forwards for priority/z-order exist and are callable
+              [&]() { return DisplayHandle_test2(); },  // Verify setClickable/isClickable from Lua
+              [&]() { return DisplayHandle_test3(); },  // Verify setEnabled/isEnabled from Lua
+              [&]() { return DisplayHandle_test4(); },  // Verify setVisible/isVisible and setHidden/isHidden from Lua
+              [&]() { return DisplayHandle_test5(); },  // Verify setKeyboardFocus and Core:getKeyboardFocusedObject
+              [&]() { return DisplayHandle_test6(); },  // Verify mouse hover via pushMouseEvent/pumpEventsOnce
+              [&]() { return DisplayHandle_test7(); },  // Exercise get/set TabPriority and is/setTabEnabled from Lua
+              [&]() { return DisplayHandle_test8(); },  // Exercise setX/setY/setWidth/setHeight and verify getters from Lua
+              [&]() { return DisplayHandle_test9(); },  // Exercise setPriority/setZOrder/moveToTop overloads
+              [&]() { return DisplayHandle_test10(); }, // Verify sortChildrenByPriority and setToHighest/Lowest with child specs
+              [&]() { return DisplayHandle_test11(); }, // Dirty DisplayHandle and Extended Hierarchy Management
+              [&]() { return DisplayHandle_test12(); }, // Type and Property Access
+              [&]() { return DisplayHandle_test13(); }, // Focus and Interactivity
+              [&]() { return DisplayHandle_test14(); }, // Geometry and Layout
+              [&]() { return DisplayHandle_test15(); }, // Edge Anchors
+              [&]() { return DisplayHandle_test16(); }  // Edge Positions
         };
         for (auto& test : tests) 
         {

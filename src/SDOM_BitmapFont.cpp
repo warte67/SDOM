@@ -4,7 +4,7 @@
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
-#include <SDOM/SDOM_AssetObject.hpp>
+#include <SDOM/SDOM_AssetHandle.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 
@@ -56,7 +56,7 @@ namespace SDOM
         init.spriteWidth = bitmapFontWidth_;
         init.spriteHeight = bitmapFontHeight_;
 
-        AssetObject existing = getFactory().getAssetObject(init.name);
+        AssetHandle existing = getFactory().getAssetObject(init.name);
         if (existing.isValid())
         {
             ERROR("BitmapFont::onInit: Asset with name already exists: " + init.name);
@@ -79,7 +79,7 @@ namespace SDOM
             return false;
         }
 
-        // Ensure the asset is loaded (use AssetObject API to do lazy load)
+        // Ensure the asset is loaded (use AssetHandle API to do lazy load)
         spriteSheet_.get(); // ensures onLoad() is invoked
         return true;
     } // END onInit()
@@ -116,9 +116,9 @@ namespace SDOM
 
         if (isLoaded_) onUnload();
 
-        // Resolve or create the backing SpriteSheet asset (use AssetObject API)
+        // Resolve or create the backing SpriteSheet asset (use AssetHandle API)
         std::string sheetName = name_ + "_SpriteSheet";
-        AssetObject existing = getFactory().getAssetObject(sheetName);
+        AssetHandle existing = getFactory().getAssetObject(sheetName);
         if (existing.isValid())
         {
             // protect against accidental self-reference
@@ -230,7 +230,7 @@ namespace SDOM
         }
 
         // Try to reuse an existing factory asset with that name, else create a new SpriteSheet asset.
-        AssetObject existing = getFactory().getAssetObject(sheetName);
+        AssetHandle existing = getFactory().getAssetObject(sheetName);
         if (existing.isValid())
         {
             spriteSheet_ = existing;
@@ -667,8 +667,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared AssetObject handle usertype (assets are exposed via AssetObject handles in Lua)
-        sol::table handle = AssetObject::ensure_handle_table(lua);
+        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
+        sol::table handle = AssetHandle::ensure_handle_table(lua);
 
         // Helper to check if a property/command is already registered
         auto absent = [&](const char* name) -> bool {
@@ -683,20 +683,20 @@ namespace SDOM
             }
         };
 
-        // small helper to validate and cast the AssetObject -> BitmapFont*
-        auto cast_ss_from_asset = [](const AssetObject& asset) -> BitmapFont* {
-            if (!asset.isValid()) { ERROR("invalid AssetObject provided to BitmapFont method"); }
+        // small helper to validate and cast the AssetHandle -> BitmapFont*
+        auto cast_ss_from_asset = [](const AssetHandle& asset) -> BitmapFont* {
+            if (!asset.isValid()) { ERROR("invalid AssetHandle provided to BitmapFont method"); }
             IAssetObject* base = asset.get();
             BitmapFont* bmp = dynamic_cast<BitmapFont*>(base);
             if (!bmp) { ERROR("invalid BitmapFont object"); }
             return bmp;
         };
 
-        // // Register BitmapFont-specific properties and commands here (bridge from AssetObject handle)
-        reg("setBitmapFontWidth", [cast_ss_from_asset](AssetObject asset, int w) { cast_ss_from_asset(asset)->setBitmapFontWidth(w); });
-        reg("setBitmapFontHeight", [cast_ss_from_asset](AssetObject asset, int h) { cast_ss_from_asset(asset)->setBitmapFontHeight(h); });
-        reg("getBitmapFontWidth", [cast_ss_from_asset](AssetObject asset) { return cast_ss_from_asset(asset)->getBitmapFontWidth(); });
-        reg("getBitmapFontHeight", [cast_ss_from_asset](AssetObject asset) { return cast_ss_from_asset(asset)->getBitmapFontHeight(); });
+        // // Register BitmapFont-specific properties and commands here (bridge from AssetHandle handle)
+        reg("setBitmapFontWidth", [cast_ss_from_asset](AssetHandle asset, int w) { cast_ss_from_asset(asset)->setBitmapFontWidth(w); });
+        reg("setBitmapFontHeight", [cast_ss_from_asset](AssetHandle asset, int h) { cast_ss_from_asset(asset)->setBitmapFontHeight(h); });
+        reg("getBitmapFontWidth", [cast_ss_from_asset](AssetHandle asset) { return cast_ss_from_asset(asset)->getBitmapFontWidth(); });
+        reg("getBitmapFontHeight", [cast_ss_from_asset](AssetHandle asset) { return cast_ss_from_asset(asset)->getBitmapFontHeight(); });
 
 
 

@@ -126,10 +126,10 @@ Recommended enum (suggested values):
 - `OrphanRetentionPolicy::AutoDestroy` — object is eligible for destruction immediately when orphaned. 
     (fast, default for ephemeral runtime objects)
 - `OrphanRetentionPolicy::GracePeriod` — object is eligible only after a configurable grace period has 
-    elapsed since it became orphaned; allows reparenting via DisplayObject within the grace window.
+    elapsed since it became orphaned; allows reparenting via DisplayHandle within the grace window.
 - `OrphanRetentionPolicy::RetainUntilManual` — object is never auto-destroyed; requires explicit Factory 
     or user code to destroy. (useful for editor templates and long-lived resources)
-- `OrphanRetentionPolicy::RetainWhenReferenced` — object is retained while any DisplayObject or external 
+- `OrphanRetentionPolicy::RetainWhenReferenced` — object is retained while any DisplayHandle or external 
     reference exists; destroyed only once all references are gone and policy conditions met. (optional 
     advanced mode)
 
@@ -159,7 +159,7 @@ Notes & test ideas:
         {
             RetainUntilManual,  // object is never auto-destroyed; requires explicit Factory or user code to destroy.
             AutoDestroy,        // object is eligible for destruction immediately when orphaned.
-            GracePeriod         // allows reparenting via DisplayObject within the grace window.
+            GracePeriod         // allows reparenting via DisplayHandle within the grace window.
         };
         OrphanRetentionPolicy getOrphanRetentionPolicy() const { return orphanPolicy_; }
         IDisplayObject& setOrphanRetentionPolicy(OrphanRetentionPolicy policy) { orphanPolicy_ = policy; return *this; }
@@ -248,24 +248,24 @@ Notes & test ideas:
         bool hasEventListeners(const EventType& type, bool useCapture) const;
 
         // --- Hierarchy Management --- //
-        void addChild(DisplayObject child, bool useWorld = false, int worldX = 0, int worldY = 0);
-        DisplayObject getChild(std::string name) const;
-        bool removeChild(DisplayObject child);
+        void addChild(DisplayHandle child, bool useWorld = false, int worldX = 0, int worldY = 0);
+        DisplayHandle getChild(std::string name) const;
+        bool removeChild(DisplayHandle child);
         bool removeChild(const std::string& name);
-        const std::vector<DisplayObject>& getChildren() const;
-        DisplayObject getParent() const;
-        IDisplayObject& setParent(const DisplayObject& parent);
-        bool hasChild(DisplayObject child) const;
+        const std::vector<DisplayHandle>& getChildren() const;
+        DisplayHandle getParent() const;
+        IDisplayObject& setParent(const DisplayHandle& parent);
+        bool hasChild(DisplayHandle child) const;
 
         // Ancestor/Descendant helpers
-        bool isAncestorOf(DisplayObject descendant) const;
+        bool isAncestorOf(DisplayHandle descendant) const;
         bool isAncestorOf(const std::string& name) const;
-        bool isDescendantOf(DisplayObject ancestor) const;
+        bool isDescendantOf(DisplayHandle ancestor) const;
         bool isDescendantOf(const std::string& name) const;
         // Remove this object from its parent (convenience). Returns true if removed.
         bool removeFromParent();
         // Recursive descendant removal: search depth-first and remove first match. Returns true if removed.
-        bool removeDescendant(DisplayObject descendant);
+        bool removeDescendant(DisplayHandle descendant);
         bool removeDescendant(const std::string& descendantName);
 
         // --- Type & Property Access --- //
@@ -366,8 +366,8 @@ Notes & test ideas:
         bool isHidden_ = false;
         int tabPriority_ = -1;
         bool tabEnabled_ = false;
-        DisplayObject parent_;
-        std::vector<DisplayObject> children_;
+        DisplayHandle parent_;
+        std::vector<DisplayHandle> children_;
 
         // --- Event Listener Containers --- //
         struct ListenerEntry {
@@ -380,8 +380,8 @@ Notes & test ideas:
 
         // --- Internal/Utility --- //
         IDisplayObject(const IDisplayObject& other) = delete;
-        void attachChild_(DisplayObject child, DisplayObject parent, bool useWorld = false, int worldX = 0, int worldY = 0);
-        void removeOrphan_(const DisplayObject& orphan);
+        void attachChild_(DisplayHandle child, DisplayHandle parent, bool useWorld = false, int worldX = 0, int worldY = 0);
+        void removeOrphan_(const DisplayHandle& orphan);
 
     protected:
         // --- Lua Registration --- //
