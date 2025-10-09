@@ -166,11 +166,11 @@ namespace SDOM
             static constexpr const char* TypeName = "IFontObject";
 
             enum class FontType { Bitmap, Truetype };
-            std::unordered_map<FontType, std::string> FontTypeToString = {
+            inline static std::unordered_map<FontType, std::string> FontTypeToString = {
                 { FontType::Bitmap,     "bitmap" },
                 { FontType::Truetype,   "truetype" }
             };
-            std::unordered_map<std::string, FontType> StringToFontType = {
+            inline static std::unordered_map<std::string, FontType> StringToFontType = {
                 { "bitmap",     FontType::Bitmap },
                 { "truetype",   FontType::Truetype }
             };

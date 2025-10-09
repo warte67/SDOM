@@ -69,7 +69,25 @@ local config = {
                         y = 70,
                         width = 250,
                         height = 225,
-                        color = { r = 50, g = 50, b = 200, a = 255 }
+                        color = { r = 50, g = 50, b = 200, a = 255 },
+                        children = {
+                            {
+                                type = "Label",
+                                name = "blueishBoxLabel",
+                                x = 4, 
+                                y = 4,
+                                width = 230,
+                                height = 16,
+                                text = "Hello, Label!",
+                                resourceName = "default_bmp_8x8",
+                                fontSize = 8,
+                                fontWidth = 8,
+                                fontHeight = 8,
+                                alignment = "middle_center",
+                                foregroundColor = { r = 255, g = 255, b = 255, a = 255 },
+                                maxWidth = 230
+                            }
+                        }
                     },
                     {
                         type = "Box",

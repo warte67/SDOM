@@ -67,7 +67,7 @@
 // #define SOL_ALL_AUTOMAGIC 0
 #include <sol/sol.hpp>
 
-constexpr bool DEBUG_REGISTER_LUA = false;
+constexpr bool DEBUG_REGISTER_LUA = true;
 
 // Enable verbose Lua-related test/info logs when set to 1. Default is off.
 #ifndef DEBUG_LUA_TESTS

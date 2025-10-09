@@ -23,8 +23,6 @@ namespace SDOM
 
     sol::state& getLua() { return getCore().getLua(); }    
 
-
-
     // helper function to extract SDL_Color from Lua table
     SDL_Color parseColor(const sol::object& colorObj) {
         SDL_Color color = {255, 255, 255, 255};

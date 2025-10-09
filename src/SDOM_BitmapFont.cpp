@@ -15,8 +15,8 @@ namespace SDOM
 
         bitmapFontWidth_ = init.fontWidth;
         bitmapFontHeight_ = init.fontHeight;
-        if (init.fontWidth < 0)  bitmapFontWidth_ = init.fontSize_;
-        if (init.fontHeight < 0) bitmapFontHeight_ = init.fontSize_;
+        if (init.fontWidth < 0)  bitmapFontWidth_ = init.fontSize;
+        if (init.fontHeight < 0) bitmapFontHeight_ = init.fontSize;
     }
 
     BitmapFont::BitmapFont(const sol::table& config) : IFontObject(config)
@@ -101,19 +101,6 @@ namespace SDOM
         }    
     } // END onQuit()
 
-    // void BitmapFont::onLoad()
-    // {
-    //     // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onLoad()" 
-    //     //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
-    //     // Loading logic for BitmapFont
-    // } // END onLoad()
-
-    // void BitmapFont::onUnload()
-    // {
-    //     // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onUnload()" 
-    //     //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
-    //     // Unloading logic for BitmapFont
-    // }
 
     void BitmapFont::onLoad()
     {
@@ -192,7 +179,7 @@ namespace SDOM
 
         isLoaded_ = true;
         in_onload = false;
-        
+
     } // END onLoad()
 
     void BitmapFont::onUnload()
@@ -200,8 +187,13 @@ namespace SDOM
         // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "onUnload()" 
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
 
-        // Unload/release the sprite sheet we created/hold
-        if (spriteSheet_ && isLoaded_) spriteSheet_->onUnload();
+        // Unload/release the sprite sheet we created/hold (safe cast + reset handle)
+        if (spriteSheet_.isValid()) 
+        {
+            SpriteSheet* ss = spriteSheet_.as<SpriteSheet>();
+            if (ss && ss->isLoaded()) ss->onUnload();
+            spriteSheet_.reset();
+        }
         isLoaded_ = false;
     } // END onUnload()
 
@@ -281,40 +273,93 @@ namespace SDOM
 
     void BitmapFont::drawGlyph(Uint32 ch, int x, int y, const FontStyle& style)
     {
-        // Draw a single glyph at the specified position with the given style
-    }
+        if (!spriteSheet_) 
+        {
+            ERROR("SpriteSheet is null in BitmapFont::drawGlyph");
+            return;
+        }
+
+        // Draw Drop Shadow
+        drawDropShadowGlyph(ch, x, y, style);
+
+        // Draw Outline
+        drawOutlineGlyph(ch, x, y, style);
+
+        // Draw Foreground Glyph
+        drawForegroundGlyph(ch, x, y, style);
+    } // END drawGlyph()
 
     void BitmapFont::drawPhrase(const std::string& str, int x, int y, const FontStyle& style)
     {
-        // Draw a phrase (string) at the specified position with the given style
-    }
+        if (!spriteSheet_) return;
+
+        // Pass 3: Foreground
+        int cursorX = x;
+        for (char ch : str) 
+        {
+            drawForegroundGlyph(static_cast<Uint32>(ch), cursorX, y, style);
+            cursorX += getGlyphWidth(ch);
+        }
+    } // END drawPhrase()
 
     void BitmapFont::drawPhraseOutline(const std::string& str, int x, int y, const FontStyle& style)
     {
-        // Draw a phrase with an outline effect
-    }
+        if (!spriteSheet_) return;
+
+        // Pass 2: Outline
+        if (style.outline && style.outlineThickness > 0) 
+        {
+            int cursorX = x;
+            for (char ch : str) 
+            {
+                drawOutlineGlyph(static_cast<Uint32>(ch), cursorX, y, style);
+                cursorX += getGlyphWidth(ch);
+            }
+        }
+    } // END drawPhraseOutline()
 
     void BitmapFont::drawPhraseDropshadow(const std::string& str, int x, int y, const FontStyle& style)
     {
-        // Draw a phrase with a drop shadow effect
-    }
+        if (!spriteSheet_) return;
+
+        // Pass 1: Drop Shadow
+        if (style.dropshadow) 
+        {
+            int cursorX = x;
+            for (char ch : str) 
+            {
+                drawDropShadowGlyph(static_cast<Uint32>(ch), cursorX, y, style);
+                cursorX += getGlyphWidth(ch);
+            }
+        }
+    } // END drawPhraseDropshadow()
 
     bool BitmapFont::getGlyphMetrics(Uint32 ch, int *minx, int *maxx, int *miny, int *maxy, int *advance) const
     {
-        // Retrieve metrics for the specified glyph
-        return false; // Placeholder return value
-    }
+        // Scale all metrics by the font size ratio
+        float ratio = float(fontSize_) / float(bitmapFontHeight_);
+        int scaledWidth = int(ratio * bitmapFontWidth_ + 0.5f);
+        int scaledHeight = int(ratio * bitmapFontHeight_ + 0.5f);
+        if (minx)    *minx    = 0;
+        if (maxx)    *maxx    = scaledWidth;
+        if (miny)    *miny    = 0;
+        if (maxy)    *maxy    = scaledHeight;
+        if (advance) *advance = scaledWidth; // Advance by scaled width for monospace
+        return true;
+    } // END getGlyphMetrics()
 
     int BitmapFont::getGlyphHeight(Uint32 ch) const
     {
-        // Return the height of the specified glyph
-        return bitmapFontHeight_; // Placeholder return value
-    }
+        // Return the scaled height of the specified glyph
+        float ratio = float(fontSize_) / float(bitmapFontHeight_);
+        return int(ratio * bitmapFontHeight_ + 0.5f);
+    } // END getGlyphHeight()
 
     int BitmapFont::getGlyphWidth(Uint32 ch) const
     {
-        // Return the width of the specified glyph
-        return bitmapFontWidth_; // Placeholder return value
+        // Return the scaled width of the specified glyph
+        float ratio = float(fontSize_) / float(bitmapFontHeight_);
+        return int(ratio * bitmapFontWidth_ + 0.5f);
     }
 
     int BitmapFont::getFontAscent()
@@ -344,20 +389,268 @@ namespace SDOM
 
     void BitmapFont::initializeOutlineGlyph(Uint32 ch, int x, int y)
     {
-        // Initialize outline glyph rendering
-    }
+        if (!spriteSheet_) 
+        {
+            ERROR("SpriteSheet is null in BitmapFont::initializeOutlineGlyph");
+            return;
+        }
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer) 
+        {
+            ERROR("Renderer is null in BitmapFont::initializeOutlineGlyph");
+            return;
+        }
+        int spriteIndex = static_cast<int>(ch) - 32;
+        if (spriteIndex < 0)  return;
+
+        // Only draw normally if not italic (to avoid double rendering)
+        SpriteSheet* ss = spriteSheet_.as<SpriteSheet>();
+        if (!ss) 
+        {
+            ERROR("SpriteSheet cast failed in BitmapFont::initializeOutlineGlyph");
+            return;
+        }
+        int spriteCount = ss->getSpriteCount();
+        spriteIndex = std::clamp(spriteIndex, 0, spriteCount - 1);
+
+        SDL_FRect destRect;
+        destRect.x = static_cast<float>(x);
+        destRect.y = static_cast<float>(y);
+        destRect.w = bitmapFontWidth_;
+        destRect.h = bitmapFontHeight_;
+        ss->drawSprite(spriteIndex, destRect, {255,255,255,255}, SDL_SCALEMODE_NEAREST);
+    } // END initializeOutlineGlyph()
+
     void BitmapFont::drawForegroundGlyph(Uint32 ch, int x, int y, const FontStyle& style)
     {
-        // draw the foreground glyph
-    }
+        if (!spriteSheet_) 
+        {
+            ERROR("SpriteSheet is null in BitmapFont::drawForegroundGlyph");
+            return;
+        }
+        SpriteSheet* ss = spriteSheet_.as<SpriteSheet>();
+        if (!ss) 
+        {
+            ERROR("SpriteSheet cast failed in BitmapFont::drawForegroundGlyph");
+            return;
+        }
+        int spriteIndex = static_cast<int>(ch) - 32;
+        if (spriteIndex < 0)  return;
+        
+        SDL_Color color = style.foregroundColor;
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer) {
+            ERROR("Renderer is null in BitmapFont::drawGlyph");
+            return;
+        }
+        SDL_Texture* fontTexture = ss->getTexture();
+        if (!fontTexture) {
+            ERROR("Font texture is null in BitmapFont::drawGlyph");
+            return;
+        }
+        // Apply font styles (bold, underline, etc.) if needed
+        if (style.bold) {
+            spriteIndex = static_cast<int>(ch) + 64; 
+        }
+
+        if (style.italic) 
+        {
+            // Apply italic style
+
+            float ratio = float(style.fontSize) / float(bitmapFontHeight_);
+            int scaledWidth = int(ratio * bitmapFontWidth_);
+            int scaledHeight = int(ratio * bitmapFontHeight_);
+            float slant = 1.0f * ratio; // Slant scales with font size
+
+            int glyphX = ss->getSpriteX(spriteIndex);
+            int glyphY = ss->getSpriteY(spriteIndex);
+            int sheetW = fontTexture->w;
+            int sheetH = fontTexture->h;
+
+            // Texture coordinates (normalized)
+            float u0 = float(glyphX) / sheetW;
+            float v0 = float(glyphY) / sheetH;
+            float u1 = float(glyphX + bitmapFontWidth_) / sheetW;
+            float v1 = float(glyphY + bitmapFontHeight_) / sheetH;
+
+            SDL_Vertex vertices[4] = {
+                // Top-left (skewed right)
+                { { float(x) + slant, float(y) }, { color.r/255.0f, color.g/255.0f, color.b/255.0f, color.a/255.0f }, { u0, v0 } },
+                // Top-right (skewed right)
+                { { float(x + scaledWidth) + slant, float(y) }, { color.r/255.0f, color.g/255.0f, color.b/255.0f, color.a/255.0f }, { u1, v0 } },
+                // Bottom-right
+                { { float(x + scaledWidth) - slant, float(y + scaledHeight) }, { color.r/255.0f, color.g/255.0f, color.b/255.0f, color.a/255.0f }, { u1, v1 } },
+                // Bottom-left
+                { { float(x) - slant, float(y + scaledHeight) }, { color.r/255.0f, color.g/255.0f, color.b/255.0f, color.a/255.0f }, { u0, v1 } }
+            };
+            int indices[6] = { 0, 1, 2, 0, 2, 3 };
+
+            // SDL_SCALEMODE_NEAREST  
+            // SDL_SCALEMODE_LINEAR   
+            // SDL_SCALEMODE_PIXELART 
+            SDL_SetTextureScaleMode(fontTexture, SDL_SCALEMODE_NEAREST);
+
+            if (!SDL_RenderGeometry(renderer, fontTexture, vertices, 4, indices, 6)) {
+                ERROR(std::string("Failed to render skewed glyph: ") + SDL_GetError());
+            }
+
+        }   
+        if (style.underline) 
+        {
+            float ratio = float(style.fontSize) / float(bitmapFontHeight_);
+            int scaledWidth = int(ratio * bitmapFontWidth_);
+            int scaledHeight = int(ratio * bitmapFontHeight_);
+
+            // Underline position: just above the bottom of the glyph box
+            float underlineY = y + scaledHeight - 1;
+            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a - (color.a/3));
+            SDL_RenderLine(renderer, float(x), underlineY, float(x + scaledWidth - 1), underlineY);
+        }
+        if (style.strikethrough) 
+        {
+            float ratio = float(style.fontSize) / float(bitmapFontHeight_);
+            int scaledWidth = int(ratio * bitmapFontWidth_);
+            int scaledHeight = int(ratio * bitmapFontHeight_);
+
+            // Strikethrough position: centered vertically (favoring above center for even heights)
+            float strikeY = y + (scaledHeight / 2) - (scaledHeight % 2 == 0 ? 1 : 0) + 1;
+            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a - (color.a/3));
+            SDL_RenderLine(renderer, float(x), strikeY, float(x + scaledWidth - 1), strikeY);
+        }
+
+        // clamp ch to spriteSheet_->getSpriteCount()
+        if (!style.italic) 
+        {
+            // Only draw normally if not italic (to avoid double rendering)
+            int spriteCount = ss->getSpriteCount();
+            spriteIndex = std::clamp(spriteIndex, 0, spriteCount - 1);
+            // spriteSheet_->drawSprite(x, y, spriteIndex, color);
+
+            // Calculate scaling ratio based on desired font size
+            float scale = float(style.fontSize) / float(bitmapFontHeight_);
+            float destW = bitmapFontWidth_ * scale;
+            float destH = bitmapFontHeight_ * scale;
+
+            SDL_FRect destRect;
+            destRect.x = static_cast<float>(x);
+            destRect.y = static_cast<float>(y);
+            destRect.w = destW;
+            destRect.h = destH;
+            
+            ss->drawSprite(spriteIndex, destRect, color, SDL_SCALEMODE_NEAREST);
+        }
+    } // END drawForegroundGlyph()
+
+    
     void BitmapFont::drawOutlineGlyph(Uint32 ch, int x, int y, const FontStyle& style)
     {
-        // draw the outline glyph
-    }
+        if (!spriteSheet_) 
+        {
+            ERROR("SpriteSheet is null in BitmapFont::drawForegroundGlyph");
+            return;
+        }
+        SpriteSheet* ss = spriteSheet_.as<SpriteSheet>();
+        if (!ss) 
+        {
+            ERROR("SpriteSheet cast failed in BitmapFont::drawForegroundGlyph");
+            return;
+        }
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer) {
+            ERROR("Renderer is null in BitmapFont::drawGlyph");
+            return;
+        }
+        if (style.outline && style.outlineThickness > 0) 
+        {
+            int thickness = std::clamp(style.outlineThickness, 1, maxOutlineThickness); // Clamp to your maxThickness
+            int spriteIndex = static_cast<int>(ch) - 32;
+            // Apply bold if needed
+            if (style.bold) {
+                spriteIndex = static_cast<int>(ch) + 64; 
+            }
+
+            int spriteCount = ss->getSpriteCount();
+            spriteIndex = std::clamp(spriteIndex, 0, spriteCount - 1);
+
+            // Correct scaling: scale the entire outline texture, not just the glyph + thickness
+            float ratio = float(style.fontSize) / float(bitmapFontHeight_);
+            float destW = (bitmapFontWidth_ + thickness * 2) * ratio;
+            float destH = (bitmapFontHeight_ + thickness * 2) * ratio;
+
+            SDL_FRect destRect;
+            destRect.x = x - thickness * ratio;
+            destRect.y = y - thickness * ratio;
+            destRect.w = destW;
+            destRect.h = destH;
+
+            SDL_Texture* outlineTex = outlineTextures[thickness - 1][spriteIndex];
+            if (outlineTex) {
+                SDL_SetTextureColorMod(outlineTex, style.outlineColor.r, style.outlineColor.g, style.outlineColor.b);
+                SDL_SetTextureAlphaMod(outlineTex, style.outlineColor.a);
+                SDL_SetTextureScaleMode(outlineTex, SDL_SCALEMODE_LINEAR);
+                SDL_RenderTexture(renderer, outlineTex, nullptr, &destRect);
+            }
+        }
+    } // END drawOutlineGlyph()
+
+
     void BitmapFont::drawDropShadowGlyph(Uint32 ch, int x, int y, const FontStyle& style)
     {
-        // draw the drop shadow glyph
-    }
+        if (!spriteSheet_) 
+        {
+            ERROR("SpriteSheet is null in BitmapFont::drawForegroundGlyph");
+            return;
+        }
+        SpriteSheet* ss = spriteSheet_.as<SpriteSheet>();
+        if (!ss) 
+        {
+            ERROR("SpriteSheet cast failed in BitmapFont::drawForegroundGlyph");
+            return;
+        }
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer) 
+        {
+            ERROR("Renderer is null in BitmapFont::drawGlyph");
+            return;
+        }
+
+        if (!style.dropshadow || style.dropshadowColor.a == 0)
+            return;
+
+        int thickness = 1;
+
+        // Apply bold if needed
+        int spriteIndex = static_cast<int>(ch) - 32;
+        if (style.bold) {
+            spriteIndex = static_cast<int>(ch) + 64; 
+        }
+
+        int spriteCount = ss->getSpriteCount();
+        spriteIndex = std::clamp(spriteIndex, 0, spriteCount - 1);
+
+        // Calculate destination rectangle (account for outline thickness offset)
+        SDL_FRect destRect;
+        float ratio = float(style.fontSize) / float(bitmapFontHeight_);
+        int scaledWidth = int(ratio * bitmapFontWidth_);
+        int scaledHeight = int(ratio * bitmapFontHeight_);
+        float scaledThickness = ratio * thickness;
+
+        // std::cout << "Drawing drop shadow for char " << char(ch) << " at (" << x << "," << y << ") with offset (" 
+        //           << style.dropshadowOffsetX << "," << style.dropshadowOffsetY << ")\n";
+
+        destRect.x = (x - scaledThickness) + style.dropshadowOffsetX;
+        destRect.y = (y - scaledThickness) + style.dropshadowOffsetY;
+        destRect.w = (scaledWidth + scaledThickness * 2);
+        destRect.h = (scaledHeight + scaledThickness * 2);
+
+        SDL_Texture* outlineTex = outlineTextures[thickness - 1][spriteIndex];
+        if (outlineTex) {
+            SDL_SetTextureColorMod(outlineTex, style.dropshadowColor.r, style.dropshadowColor.g, style.dropshadowColor.b);
+            SDL_SetTextureAlphaMod(outlineTex, style.dropshadowColor.a);
+            SDL_SetTextureScaleMode(outlineTex, SDL_SCALEMODE_LINEAR);
+            SDL_RenderTexture(renderer, outlineTex, nullptr, &destRect);
+        }       
+    } // END drawDropShadowGlyph()
 
     // --- Lua Registration --- //
 

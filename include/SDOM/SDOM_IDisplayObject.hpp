@@ -223,6 +223,11 @@ Notes & test ideas:
             bIsDirty_ = true; 
             return *this; 
         }
+        IDisplayObject& setDirty(bool grime) 
+        { 
+            bIsDirty_ = grime; 
+            return *this; 
+        }
         bool isDirty() const { return bIsDirty_; }
 
         // --- Debug/Utility --- //

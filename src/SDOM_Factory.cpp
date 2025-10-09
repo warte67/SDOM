@@ -14,6 +14,7 @@
 #include <SDOM/SDOM_SpriteSheet.hpp>
 
 #include <SDOM/SDOM_BitmapFont.hpp>
+#include <SDOM/SDOM_Label.hpp>
 
 namespace SDOM
 {
@@ -47,7 +48,7 @@ namespace SDOM
             Texture::CreateFromInitStruct
         });
 
-        {   // register the default_bmp_8x8 SpriteSheet
+        {   // register the default_bmp_8x8 Texture 
             Texture::InitStruct init;
             init.name = "default_bmp_8x8";
             init.type = "Texture";
@@ -57,7 +58,7 @@ namespace SDOM
             if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("Texture", core.getLua());
         }
         
-        {   // register the default_icon_8x8 SpriteSheet
+        {   // register the default_icon_8x8 Texture
             Texture::InitStruct init;
             init.name = "default_icon_8x8";
             init.type = "Texture";
@@ -87,6 +88,12 @@ namespace SDOM
         init.isInternal = true;
         init.fontSize_ = 8;
         AssetObject bmpFont = createAsset("BitmapFont", init);
+
+        // register the Label asset
+        registerResType("Label", AssetTypeCreators{
+            BitmapFont::CreateFromLua,
+            BitmapFont::CreateFromInitStruct
+        });
 
         return true;
     }
