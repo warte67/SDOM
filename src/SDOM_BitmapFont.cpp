@@ -188,6 +188,67 @@ namespace SDOM
         if (sw > 0) bitmapFontWidth_ = sw;
         if (sh > 0) bitmapFontHeight_ = sh;
 
+        // --- Prepare outline textures (pre-rendered per-thickness glyph outlines)
+        // Clean up any existing outline textures first
+        if (!outlineTextures.empty()) {
+            for (auto &vec : outlineTextures) {
+                for (auto *tex : vec) {
+                    if (tex) SDL_DestroyTexture(tex);
+                }
+            }
+            outlineTextures.clear();
+        }
+
+        SDL_Renderer* renderer = getRenderer();
+        if (renderer) {
+            int maxThickness = maxOutlineThickness; // use IFontObject constant
+            int spriteCount = ss->getSpriteCount();
+
+            outlineTextures.resize(maxThickness);
+
+            // Save original render target so we can restore it afterwards
+            SDL_Texture* originalTarget = SDL_GetRenderTarget(renderer);
+
+            for (int t = 1; t <= maxThickness; ++t) {
+                outlineTextures[t-1].resize(spriteCount);
+                for (int i = 0; i < spriteCount; ++i) {
+                    int texW = bitmapFontWidth_ + t * 2;
+                    int texH = bitmapFontHeight_ + t * 2;
+                    SDL_Texture* outTex = SDL_CreateTexture(
+                        renderer,
+                        SDL_PIXELFORMAT_RGBA8888,
+                        SDL_TEXTUREACCESS_TARGET,
+                        texW,
+                        texH
+                    );
+                    if (!outTex) {
+                        ERROR(std::string("Failed to create outline texture: ") + SDL_GetError());
+                        outlineTextures[t-1][i] = nullptr;
+                        continue;
+                    }
+
+                    // Clear the outline texture
+                    SDL_SetRenderTarget(renderer, outTex);
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+                    SDL_RenderClear(renderer);
+
+                    // Render the glyph multiple times offset by dx/dy to form an outline
+                    for (int dx = -t; dx <= t; ++dx) {
+                        for (int dy = -t; dy <= t; ++dy) {
+                            // initializeOutlineGlyph expects a character code (sprite index + 32)
+                            initializeOutlineGlyph(i + 32, dx + t, dy + t);
+                        }
+                    }
+
+                    // Store the created texture
+                    outlineTextures[t-1][i] = outTex;
+                }
+            }
+
+            // Restore original render target
+            SDL_SetRenderTarget(renderer, originalTarget);
+        }
+
         isLoaded_ = true;
         in_onload = false;
 
@@ -204,6 +265,15 @@ namespace SDOM
             SpriteSheet* ss = spriteSheet_.as<SpriteSheet>();
             if (ss && ss->isLoaded()) ss->onUnload();
             spriteSheet_.reset();
+        }
+        // Destroy any outline textures
+        if (!outlineTextures.empty()) {
+            for (auto &vec : outlineTextures) {
+                for (auto *tex : vec) {
+                    if (tex) SDL_DestroyTexture(tex);
+                }
+            }
+            outlineTextures.clear();
         }
         isLoaded_ = false;
     } // END onUnload()

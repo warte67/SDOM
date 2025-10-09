@@ -87,7 +87,7 @@ local config = {
 
                                 -- isClickable = true,
 
-                                text = "Hello, Label! This is a Label inside blueishBox.\nIt should wrap if the text is too long to fit in the box.",
+                                text = "A",
                                 resourceName = "default_bmp_font_8x8",
                                 border = true,
                                 borderColor = { r = 255, g = 255, b = 255, a = 64 },
