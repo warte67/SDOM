@@ -81,10 +81,11 @@ namespace SDOM
         });
 
         // Create the default 8x8 bitmap font asset
-        BitmapFont::InitStruct init;
-        init.name = "default_bmp_font_8x8";
-        init.type = "bitmap";
-        init.filename = "default_bmp_font_8x8";
+    BitmapFont::InitStruct init;
+    init.name = "default_bmp_font_8x8";
+    init.type = "bitmap";
+    // Use the embedded default sprite sheet (default_bmp_8x8) as the backing texture
+    init.filename = "default_bmp_8x8";
         init.isInternal = true;
         init.fontSize_ = 8;
         AssetHandle bmpFont = createAsset("BitmapFont", init);

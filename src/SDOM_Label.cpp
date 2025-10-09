@@ -186,6 +186,15 @@ namespace SDOM
         this->setAnchorRight(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchorRight", anchorPointToString_.at(init.anchorRight)))));
         this->setAnchorBottom(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchorBottom", anchorPointToString_.at(init.anchorBottom)))));
 
+        setZOrder(get_int("z_order", init.z_order));
+        setPriority(get_int("priority", init.priority));
+        setClickable(get_bool("clickable", init.isClickable));
+        setEnabled(get_bool("isEnabled", init.isEnabled));
+        setHidden(get_bool("isHidden", init.isHidden));
+        setTabPriority(get_int("tabPriority", init.tabPriority));
+        setTabEnabled(get_bool("tabEnabled", init.tabEnabled));
+
+        // setClickable(false);
         if (isClickable()) 
         {
             DEBUG_LOG("Label '" + name_ + "' isClickable=true; Labels should not be clickable by default.");
@@ -195,13 +204,6 @@ namespace SDOM
             DEBUG_LOG("Label '" + name_ + "' isClickable=false; Labels should not be clickable by default.");
         }
 
-        setZOrder(get_int("z_order", init.z_order));
-        setPriority(get_int("priority", init.priority));
-        setClickable(get_bool("clickable", init.isClickable));
-        setEnabled(get_bool("isEnabled", init.isEnabled));
-        setHidden(get_bool("isHidden", init.isHidden));
-        setTabPriority(get_int("tabPriority", init.tabPriority));
-        setTabEnabled(get_bool("tabEnabled", init.tabEnabled));
 
         // Normalize width/height -> fallback to fontSize when unspecified/invalid
         if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : 8);

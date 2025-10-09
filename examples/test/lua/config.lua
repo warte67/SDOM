@@ -69,13 +69,14 @@ local config = {
                         y = 70,
                         width = 250,
                         height = 225,
-                        color = { r = 50, g = 50, b = 200, a = 255 },
+                        color = { r = 50, g = 50, b = 200, a = 255 }
+                        ,
                         children = {
                             {
                                 type = "Label",
                                 name = "blueishBoxLabel",
 
-                                anchorLeft = "left",
+                               anchorLeft = "left",
                                 x = 245,
                                 anchorTop = "top",
                                 y = 75,
@@ -84,7 +85,9 @@ local config = {
                                 anchorBottom = "bottom",
                                 height = 215,
 
-                                text = "Hello, Label!",
+                                -- isClickable = true,
+
+                                text = "Hello, Label! This is a Label inside blueishBox.\nIt should wrap if the text is too long to fit in the box.",
                                 resourceName = "default_bmp_font_8x8",
                                 border = true,
                                 borderColor = { r = 255, g = 255, b = 255, a = 64 },

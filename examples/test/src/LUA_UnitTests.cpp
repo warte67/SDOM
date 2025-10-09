@@ -173,7 +173,7 @@ namespace SDOM {
         Box::resetTestClickCount();
 
         // Determine blueishBox center from the object in the factory
-    DisplayHandle box = Core::getInstance().getDisplayObject("blueishBox");
+        DisplayHandle box = Core::getInstance().getDisplayObject("blueishBox");
         if (!box) return UnitTests::run("Lua #8", "Verify synthetic MouseClick triggers Box listener", [](){ return false; });
 
         int cx = box->getX() + box->getWidth() / 2;
@@ -214,8 +214,6 @@ namespace SDOM {
 
 // INFO("test8_Lua: renderX=" << renderX << " renderY=" << renderY << " -> winX=" << winX << " winY=" << winY);    
 
-
-
         // Build SDL mouse down
         SDL_Event down{};
         down.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
@@ -243,9 +241,6 @@ namespace SDOM {
         up.motion.y = winY;
 
         // // Push events and pump
-        // SDL_PushEvent(&down);
-        // SDL_PushEvent(&up);
-
         getCore().getEventManager().Queue_SDL_Event(down);
         getCore().getEventManager().Queue_SDL_Event(up);
 

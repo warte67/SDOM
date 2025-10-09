@@ -345,9 +345,13 @@ namespace SDOM
         // Set the mouse position in the stage (convert from window/render
         // coordinates back into logical stage coordinates using the Core
         // pixel scaling). This prevents mixing window pixels with stage
-        // coordinates during hit-testing and event dispatch.
-        // Use raw SDL coordinates for stage mouse positions (revert pixel scaling)
-        // Log incoming SDL coords for debugging
+        // coordinates during hit-testing and event dispatch.  We must
+        // consistently scale all event coordinates by the current pixel
+        // width/height so hit-tests compare like-for-like values.
+        // Use renderer coordinates directly for stage mouse positions.  The
+        // SDL_ConvertEventToRenderCoordinates() call above converts window
+        // coordinates into renderer/logical coordinates already, and the
+        // display objects and hit-tests operate in that same coordinate space.
         stage->mouseX = static_cast<float>(sdlEvent.motion.x);
         stage->mouseY = static_cast<float>(sdlEvent.motion.y);
         // correct for the difference in the mouse wheel events
@@ -553,7 +557,7 @@ namespace SDOM
 // INFO("EventManager::Queue_SDL_Event: Mouse Button Up event received... at window X=" << sdlEvent.button.x << " Y=" << sdlEvent.button.y);
 
             // Convert to stage coordinates for event payloads and hit-testing
-            // Use raw SDL coordinates for event payloads (revert pixel scaling)
+            // Use logical stage coordinates (scale by pixel dimensions)
             float mX = static_cast<float>(sdlEvent.motion.x);
             float mY = static_cast<float>(sdlEvent.motion.y);
             auto buttonEvent = std::make_unique<Event>(EventType::MouseButtonUp, node, getCore().getElapsedTime());
@@ -610,9 +614,9 @@ namespace SDOM
 
 // INFO("EventManager::Queue_SDL_Event: Mouse Button Down event received... at window X=" << sdlEvent.button.x << " Y=" << sdlEvent.button.y);
 
-            // Convert to stage coordinates
-            float mX = static_cast<float>(sdlEvent.motion.x) / (getCore().getPixelWidth() != 0.0f ? getCore().getPixelWidth() : 1.0f);
-            float mY = static_cast<float>(sdlEvent.motion.y) / (getCore().getPixelHeight() != 0.0f ? getCore().getPixelHeight() : 1.0f);
+            // Convert to stage coordinates (logical coords)
+            float mX = static_cast<float>(sdlEvent.motion.x);
+            float mY = static_cast<float>(sdlEvent.motion.y);
             auto buttonDownEvent = std::make_unique<Event>(EventType::MouseButtonDown, node, getCore().getElapsedTime());
             buttonDownEvent->sdlEvent = sdlEvent;
             buttonDownEvent->mouse_x = mX;
@@ -648,7 +652,7 @@ namespace SDOM
         if (sdlEvent.type == SDL_EVENT_MOUSE_MOTION) 
         {
             // Convert to stage coordinates for hit-testing and event payloads
-            // Convert to stage coordinates (raw SDL coords, no pixel scaling)
+            // Convert to stage coordinates (logical coords)
             float mX = static_cast<float>(sdlEvent.motion.x);
             float mY = static_cast<float>(sdlEvent.motion.y);
             DisplayHandle currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);
@@ -696,7 +700,7 @@ namespace SDOM
     SDL_CaptureMouse(true);
     static SDL_Window* focusedWindow = SDL_GetMouseFocus();
     SDL_Window* currentWindow = SDL_GetMouseFocus();
-    // Convert to stage coordinates (raw SDL coords)
+    // Convert to stage coordinates (renderer/logical coords)
     float mX = static_cast<float>(sdlEvent.motion.x);
     float mY = static_cast<float>(sdlEvent.motion.y);
     DisplayHandle currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);

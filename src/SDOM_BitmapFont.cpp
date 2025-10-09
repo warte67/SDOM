@@ -79,8 +79,19 @@ namespace SDOM
             return false;
         }
 
-        // Ensure the asset is loaded (use AssetHandle API to do lazy load)
-        spriteSheet_.get(); // ensures onLoad() is invoked
+        // Ensure the asset is loaded now (call onLoad at init-time to avoid render-path lazy-load)
+        spriteSheet_.get(); // touch handle
+        SpriteSheet* ss_init = spriteSheet_.as<SpriteSheet>();
+        if (ss_init) {
+            if (!ss_init->isLoaded()) {
+                ss_init->onLoad();
+            }
+            // Sync metrics immediately if available
+            int sw = ss_init->getSpriteWidth();
+            int sh = ss_init->getSpriteHeight();
+            if (sw > 0) bitmapFontWidth_ = sw;
+            if (sh > 0) bitmapFontHeight_ = sh;
+        }
         return true;
     } // END onInit()
     

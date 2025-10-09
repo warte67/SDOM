@@ -67,25 +67,59 @@ namespace SDOM
         IAssetObject* existing = getFactory().getResObj(filename_);
         if (existing)
         {
-            textureAsset = getFactory().getAssetObject(filename_);
+            // Only reuse an existing asset when it is actually a Texture.
+            if (existing->getType() == Texture::TypeName) {
+                textureAsset = getFactory().getAssetObject(filename_);
+                if (!textureAsset)
+                {
+                    ERROR("SpriteSheet::onLoad: Failed to retrieve existing Texture asset for filename: " + filename_);
+                    return;
+                }
+                // Ensure the referenced Texture asset is loaded so getTexture() will be valid.
+                try {
+                    textureAsset->onLoad();
+                } catch(...) {
+                    ERROR("SpriteSheet::onLoad: Failed to load existing Texture asset for filename: " + filename_);
+                    return;
+                }
+                isLoaded_ = true;
+                return;
+            }
+
+            // If there is an existing non-Texture asset with the same name, avoid reusing it.
+            // This can happen when different asset types share the same identifier (e.g. a BitmapFont
+            // named the same as a texture filename). Generate a unique texture asset name instead.
+            std::string baseName = filename_ + "_Texture";
+            std::string newName = baseName;
+            int suffix = 1;
+            while (getFactory().getAssetObject(newName).isValid()) {
+                newName = baseName + "_" + std::to_string(suffix++);
+            }
+
+            Texture::InitStruct init;
+            init.name = newName;
+            init.type = Texture::TypeName;
+            init.filename = filename_;
+
+            textureAsset = getFactory().createAsset(Texture::TypeName, init);
             if (!textureAsset)
             {
-                ERROR("SpriteSheet::onLoad: Failed to retrieve existing Texture asset for filename: " + filename_);
+                ERROR("SpriteSheet::onLoad: Factory failed to create Texture asset for filename: " + filename_ + " (tried name: " + newName + ")");
                 return;
             }
-            // Ensure the referenced Texture asset is loaded so getTexture() will be valid.
-            try {
-                textureAsset->onLoad();
-            } catch(...) {
-                ERROR("SpriteSheet::onLoad: Failed to load existing Texture asset for filename: " + filename_);
-                return;
+            Texture* texturePtr = textureAsset.as<Texture>();
+            if (texturePtr)
+            {
+                texturePtr->registerLuaBindings(Texture::TypeName, getLua());
             }
-            isLoaded_ = true;
-            return;
+            else
+            {
+                ERROR("SpriteSheet::onLoad: Created asset is not a Texture for filename: " + filename_);
+            }
         }
         else
         {
-            // Create a new Texture asset via the Factory
+            // No existing asset with this filename; create a new one using filename as the asset name.
             Texture::InitStruct init;
             init.name = filename_;
             init.type = Texture::TypeName;
