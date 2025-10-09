@@ -4,11 +4,11 @@
 local M = {}
 
 function M.on_init()
-    print(CLR.GREEN .. "Custom OnInit called!" .. CLR.RESET)
+    -- print(CLR.GREEN .. "Custom OnInit called!" .. CLR.RESET)
 
     -- Add a test: color each hex value by the bit-pattern {r:3 g:3 b:2}
     -- Print 16 values per line for readability
-    print(CLR.YELLOW .. "Hex table (colorized by CLR.fg_color):" .. CLR.RESET)
+    print(CLR.YELLOW .. "[init.lua] Hex table function M.on_init(colorized by CLR.fg_color):" .. CLR.RESET)
     for i = 0, 255 do
         if i > 127 then
             io.write(CLR.BLACK) -- switch to black text for light bg

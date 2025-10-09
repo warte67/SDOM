@@ -58,7 +58,7 @@ int main(int argc, char** argv)
         }
     }
 
-    std::cout << CLR::YELLOW << "Hello, SDOM!" << CLR::RESET << std::endl;
+    // std::cout << CLR::YELLOW << "Hello, SDOM!" << CLR::RESET << std::endl;
 
     // Fetch the Core singleton
     Core& core = getCore();

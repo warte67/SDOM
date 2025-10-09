@@ -90,7 +90,7 @@ namespace SDOM
         // dispatch global "only" events
         if (event->getType().getGlobal())
         {
-            std::cout << CLR::CYAN << "Dispatching global-only event: " << event->getTypeName() << CLR::NORMAL << std::endl;   
+            // std::cout << CLR::CYAN << "Dispatching global-only event: " << event->getTypeName() << CLR::NORMAL << std::endl;   
 
             // Dispatch to the stage
             event->setPhase(Event::Phase::Target);
