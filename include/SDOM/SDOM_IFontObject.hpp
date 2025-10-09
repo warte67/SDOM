@@ -228,7 +228,7 @@ namespace SDOM
 
             virtual int getFontAscent() = 0;  // int TTF_GetFontAscent(const TTF_Font *font)
             virtual void setFontSize(int p_size) = 0;
-            virtual void setFontStyle(FontStyle& style) = 0;
+            virtual void setFontStyle(const FontStyle& style) = 0;
             virtual FontStyle getFontStyle() = 0;
 
             int getWordWidth(const std::string& word) const;    

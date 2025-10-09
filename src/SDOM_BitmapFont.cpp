@@ -373,7 +373,7 @@ namespace SDOM
         fontSize_ = p_size;
     }
 
-    void BitmapFont::setFontStyle(FontStyle& style)
+    void BitmapFont::setFontStyle(const FontStyle& style)
     {
         setFontSize(style.fontSize);
     }
@@ -445,7 +445,8 @@ namespace SDOM
         }
         SDL_Texture* fontTexture = ss->getTexture();
         if (!fontTexture) {
-            ERROR("Font texture is null in BitmapFont::drawGlyph");
+            DEBUG_LOG("Font texture is null in BitmapFont::drawGlyph");
+            //ss->onLoad();
             return;
         }
         // Apply font styles (bold, underline, etc.) if needed

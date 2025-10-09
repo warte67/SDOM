@@ -66,7 +66,7 @@ namespace SDOM
 
             virtual int getFontAscent() override;
             virtual void setFontSize(int p_size) override;
-            virtual void setFontStyle(FontStyle& style) override;
+            virtual void setFontStyle(const FontStyle& style) override;
             virtual FontStyle getFontStyle() override;
 
             // --- Public BitmapFont-specific methods --- //
