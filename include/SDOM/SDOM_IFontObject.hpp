@@ -9,7 +9,7 @@ namespace SDOM
 {
     constexpr int maxOutlineThickness = 3; // up to 3, as needed
 
-
+    // Text alignment options
     enum class LabelAlign : uint8_t 
     {
         DEFAULT        = 0b0000, // default to top-left
@@ -30,16 +30,7 @@ namespace SDOM
         BOTTOM_RIGHT   = 0b1111  // bottom-right
     };
 
-    enum class FontType { Bitmap, Truetype };
-    std::unordered_map<FontType, std::string> FontTypeToString = {
-        { FontType::Bitmap,     "bitmap" },
-        { FontType::Truetype,   "truetype" }
-    };
-    std::unordered_map<std::string, FontType> StringToFontType = {
-        { "bitmap",     FontType::Bitmap },
-        { "truetype",   FontType::Truetype }
-    };
-    
+    // Font style structure for rendering options
     struct FontStyle 
     {
         bool bold = false;
@@ -74,6 +65,7 @@ namespace SDOM
         SDL_Color outlineColor = {0, 0, 0, 255};          // Default: black
         SDL_Color dropshadowColor = {0, 0, 0, 128};       // Default: semi-transparent black
     };
+
     // FontStyle inequality operator
     inline bool operator!=(const SDOM::FontStyle& a, const SDOM::FontStyle& b) {
         return
@@ -169,10 +161,20 @@ namespace SDOM
     {
         using SUPER = IAssetObject;
 
-        public:
+        public:        
             // --- Type Info --- //
             static constexpr const char* TypeName = "IFontObject";
 
+            enum class FontType { Bitmap, Truetype };
+            std::unordered_map<FontType, std::string> FontTypeToString = {
+                { FontType::Bitmap,     "bitmap" },
+                { FontType::Truetype,   "truetype" }
+            };
+            std::unordered_map<std::string, FontType> StringToFontType = {
+                { "bitmap",     FontType::Bitmap },
+                { "truetype",   FontType::Truetype }
+            };
+            
             // --- Construction & Initialization --- //
             struct InitStruct : public IAssetObject::InitStruct
             {
@@ -211,8 +213,8 @@ namespace SDOM
             virtual void onQuit() = 0;
 
             // ResourceObject virtual methods
-            virtual void load(const std::string& filePath) = 0; 
-            virtual void unload() = 0;
+            virtual void onLoad() = 0; 
+            virtual void onUnload() = 0;
             virtual void create(const sol::table& config) = 0;     
             
             virtual void drawGlyph(Uint32 ch, int x, int y, const FontStyle& style) = 0;
@@ -224,19 +226,14 @@ namespace SDOM
             virtual int getGlyphHeight(Uint32 ch) const = 0;
             virtual int getGlyphWidth(Uint32 ch) const = 0;
 
-            virtual int getFontAscent() const = 0;  // int TTF_GetFontAscent(const TTF_Font *font)
+            virtual int getFontAscent() = 0;  // int TTF_GetFontAscent(const TTF_Font *font)
             virtual void setFontSize(int p_size) = 0;
-            virtual void setFontStyle(const FontStyle& style) = 0;
-            virtual FontStyle getFontStyle() const = 0;
-        
-            // bool TTF_GetGlyphMetrics(TTF_Font *font, Uint32 ch, int *minx, int *maxx, int *miny, int *maxy, int *advance);
+            virtual void setFontStyle(FontStyle& style) = 0;
+            virtual FontStyle getFontStyle() = 0;
+
             int getWordWidth(const std::string& word) const;    
-            // int TTF_GetFontHeight(const TTF_Font *font)
             int getWordHeight(const std::string& word) const;  
-
-            // void setFontSize(int size) { fontSize_ = size; }
             int getFontSize() const { return fontSize_; }
-
             FontType getFontType() const { return fontType_; }  
 
         protected:

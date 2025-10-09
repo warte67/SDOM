@@ -9,10 +9,11 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Stage.hpp>
-#include <SDOM/SDOM_Utils.hpp> // for parseColor
+#include <SDOM/SDOM_Utils.hpp>
+#include <SDOM/SDOM_Texture.hpp>
+#include <SDOM/SDOM_SpriteSheet.hpp>
 
-#include <SDOM/SDOM_Texture.hpp>     // for Texture registration
-#include <SDOM/SDOM_SpriteSheet.hpp> // for SpriteSheet registration
+#include <SDOM/SDOM_BitmapFont.hpp>
 
 namespace SDOM
 {
@@ -70,6 +71,12 @@ namespace SDOM
         registerResType("SpriteSheet", AssetTypeCreators{
             SpriteSheet::CreateFromLua,
             SpriteSheet::CreateFromInitStruct
+        });
+
+        // register the BitmapFont asset
+        registerResType("BitmapFont", AssetTypeCreators{
+            BitmapFont::CreateFromLua,
+            BitmapFont::CreateFromInitStruct
         });
 
         return true;
