@@ -425,6 +425,7 @@ void Box::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     SUPER::_registerLuaBindings(typeName, lua);
 
     // if (DEBUG_REGISTER_LUA)
+    if (false) // TEMP DISABLE
     {
         std::string typeNameLocal = "Box";
         std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal

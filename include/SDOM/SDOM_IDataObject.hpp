@@ -153,6 +153,7 @@ namespace SDOM
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua)
         {
             // if (DEBUG_REGISTER_LUA)
+            if (false) // TEMP DISABLE
             {
                 std::string typeNameLocal = "IDataObject";
                 std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
