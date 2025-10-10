@@ -194,15 +194,15 @@ namespace SDOM
         setTabPriority(get_int("tabPriority", init.tabPriority));
         setTabEnabled(get_bool("tabEnabled", init.tabEnabled));
 
-        // setClickable(false);
-        if (isClickable()) 
-        {
-            DEBUG_LOG("Label '" + name_ + "' isClickable=true; Labels should not be clickable by default.");
-        }
-        else
-        {
-            DEBUG_LOG("Label '" + name_ + "' isClickable=false; Labels should not be clickable by default.");
-        }
+        // // setClickable(false);
+        // if (isClickable()) 
+        // {
+        //     DEBUG_LOG("Label '" + name_ + "' isClickable=true; Labels should not be clickable by default.");
+        // }
+        // else
+        // {
+        //     DEBUG_LOG("Label '" + name_ + "' isClickable=false; Labels should not be clickable by default.");
+        // }
 
 
         // Normalize width/height -> fallback to fontSize when unspecified/invalid
@@ -225,6 +225,8 @@ namespace SDOM
         defaultStyle_.background = get_bool("background", defaultStyle_.background);
         defaultStyle_.outline = get_bool("outline", defaultStyle_.outline);
         defaultStyle_.dropshadow = get_bool("dropshadow", defaultStyle_.dropshadow);
+
+        defaultStyle_.wordwrap = get_bool("wordwrap", init.wordwrap);
 
         defaultStyle_.padding_horiz = get_int("padding_horiz", defaultStyle_.padding_horiz);
         defaultStyle_.padding_vert = get_int("padding_vert", defaultStyle_.padding_vert);
@@ -274,6 +276,16 @@ namespace SDOM
         else
         {
             DEBUG_LOG("Label '" + name_ + "' has no font resource specified.");
+        }
+
+        // setClickable(false);
+        if (defaultStyle_.wordwrap) 
+        {
+            DEBUG_LOG("Label '" + name_ + "' wordwrap=true; Labels should wrap.");
+        }
+        else
+        {
+            DEBUG_LOG("Label '" + name_ + "' wordwrap=false; Labels should not wrap.");
         }
 
     } // END Label::Label(const sol::table& config)
@@ -362,12 +374,19 @@ namespace SDOM
     void Label::onUpdate(float fElapsedTime) 
     {
         (void)fElapsedTime; // Unused
+        static float s_old_width = getWidth();
+        static float s_old_height = getHeight();
+
+        if (s_old_width != getWidth() || s_old_height != getHeight())
+        {
+            setDirty(true);
+        }
 
         if (lastTokenizedText_ != text_ || isDirty())
         {
             lastTokenizedText_ = text_;
             tokenizeText();
-        }        
+        }    
     } // END Label::onUpdate(float fElapsedTime)
 
     void Label::onEvent(const Event& event) 
@@ -380,7 +399,7 @@ namespace SDOM
         SDL_Renderer* renderer = getRenderer();
 
         // --- DEBUG / Sanity tests (enable temporarily to diagnose glyph corruption) ---
-        const bool DEBUG_RENDER_TEST = true;
+        const bool DEBUG_RENDER_TEST = false;
         if (DEBUG_RENDER_TEST)
         {
             // quick token/phrase diagnostics
@@ -995,15 +1014,20 @@ namespace SDOM
             float maxW = 32767.0f;
             if (auto parent = getParent()) {
                 float parentW = static_cast<float>(parent->getWidth());
-                float leftEdge = static_cast<float>(getX());
+                // compute left edge relative to parent (avoid mixing world and local coords)
+                float leftEdge = static_cast<float>(getX()) - static_cast<float>(parent->getX());
+                float availW = (parentW > leftEdge) ? (parentW - leftEdge) : 0.0f;
                 // If userMaxWidth < 0, use parent's available width
                 if (userMaxWidth < 0.0f) {
-                    maxW = (parentW > leftEdge) ? (parentW - leftEdge) : 0.0f;
+                    maxW = availW;
                 } else {
                     // Use the smaller of userMaxWidth and parent's available width
-                    float availW = (parentW > leftEdge) ? (parentW - leftEdge) : 0.0f;
                     maxW = std::min(userMaxWidth, availW);
                 }
+                // // Debugging info
+                // std::cout << "  _maxSize debug: parentW=" << parentW << " leftEdge=" << leftEdge
+                //           << " userMaxWidth=" << userMaxWidth << " availW=" << availW
+                //           << " -> chosen maxW=" << maxW << std::endl;
             } else if (userMaxWidth > 0.0f) {
                 maxW = userMaxWidth;
             }
@@ -1016,7 +1040,8 @@ namespace SDOM
             float maxH = 32767.0f;
             if (auto parent = getParent()) {
                 float parentH = static_cast<float>(parent->getHeight());
-                float topEdge = static_cast<float>(getY());
+                // compute top edge relative to parent
+                float topEdge = static_cast<float>(getY()) - static_cast<float>(parent->getY());
                 // If userMaxHeight < 0, use parent's available height
                 if (userMaxHeight < 0.0f) {
                     maxH = (parentH > topEdge) ? (parentH - topEdge) : 0.0f;
@@ -1041,6 +1066,16 @@ namespace SDOM
         phraseAlignLists_.clear();
         float maxWidth = 0, maxHeight = 0;
         _maxSize(maxWidth, maxHeight);
+        // Debugging wrapper internals
+        const bool DEBUG_WRAP = false;
+        if (DEBUG_WRAP) {
+            std::cout << CLR::YELLOW << "Label::_buildPhraseAlignLists -- '" << name_ << "'" << CLR::RESET << std::endl;
+            std::cout << "  getWidth()=" << getWidth()
+                      << " defaultStyle_.maxWidth=" << defaultStyle_.maxWidth
+                      << " -> computed maxWidth=" << maxWidth
+                      << " maxHeight=" << maxHeight
+                      << " fontSize=" << fontSize_ << std::endl;
+        }
         font_->setFontSize(fontSize_);
 
         for (auto& [align, tokens] : tokenAlignLists_)

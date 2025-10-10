@@ -76,7 +76,7 @@ local config = {
                                 type = "Label",
                                 name = "blueishBoxLabel",
 
-                               anchorLeft = "left",
+                                anchorLeft = "left",
                                 x = 245,
                                 anchorTop = "top",
                                 y = 75,
@@ -87,14 +87,18 @@ local config = {
 
                                 -- isClickable = true,
 
-                                text = "A",
+                                wordWrap = false,
+                                outline = true,
+                                outlineThickness = 3,
+
+                                text = "The [bold][color=red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river, sunlight catching on ripples as children laugh in the distance. A small breeze stirs the pages of an open book left on the bench, and a bell rings from the town square.",
                                 resourceName = "default_bmp_8x8",
                                 border = true,
                                 borderColor = { r = 255, g = 255, b = 255, a = 64 },
                                 fontSize = 8,
                                 fontWidth = 8,
                                 fontHeight = 8,
-                                alignment = "middle_center",
+                                alignment = "center",
                                 foregroundColor = { r = 255, g = 255, b = 255, a = 255 },
                                 maxWidth = 230
                             }

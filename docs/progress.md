@@ -547,7 +547,17 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Docs & examples updated:
         - Example call sites in examples/test/lua/callbacks/listener_callbacks.lua updated to use explicit dst/ext forms or pass nil placeholders where appropriate.
         - Add unit tests for dispatcher patterns to prevent regressions.
-    - Passes all current tests
+    - Label: wrapping, resource resolution, and rendering fixes
+        - Fixed Label word-wrapping bug: maxWidth computation now uses parent-relative coordinates so inset labels compute correct available width (previously produced one-word-per-line).
+        - Standardized resourceName usage: Lua configs and InitStructs now reference the texture/spritesheet filename (e.g., "default_bmp_8x8"). Label defaults and example configs updated accordingly.
+        - Relaxed Label constructor validation: accept SpriteSheet as deferred font source and perform strict IFontObject validation/loading in onInit(), avoiding premature hard-fails during config parsing.
+        - Added guarded diagnostics for Label render/tokenization to aid debugging; diagnostics are temporary and gated for cleanup.
+        - Verified fixes with the examples/test suite; Label rendering and wrapping now behave correctly in the blueishBox example.
+    - Next steps:
+        - Remove or gate temporary debug prints behind DEBUG flags and clean up warnings.
+        - Add a small unit test explicitly validating that Labels are not tab-enabled by default.
+        - Continue refactor: ensure consistent asset name/filename semantics across Factory and assets.
+     - Passes all current tests
 
 ---   
 - ### [October 9, 2025] 
