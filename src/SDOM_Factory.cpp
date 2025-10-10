@@ -48,16 +48,11 @@ namespace SDOM
             Texture::CreateFromInitStruct
         });
 
-        {   // register the default_bmp_8x8 Texture 
-            Texture::InitStruct init;
-            init.name = "default_bmp_8x8";
-            init.type = "Texture";
-            init.filename = "default_bmp_8x8";
-            AssetHandle spriteSheet = createAsset("Texture", init);
-            Texture* spriteSheetPtr = spriteSheet.as<Texture>();
-            if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("Texture", core.getLua());
-        }
-        
+        // Note: Do NOT pre-register a Texture under the name 'default_bmp_8x8'.
+        // The BitmapFont asset will create (or reuse) the SpriteSheet/Texture for
+        // that filename when initialized. Pre-creating a Texture with the same
+        // registry name conflicts with BitmapFont's intended resource name.
+
         {   // register the default_icon_8x8 Texture
             Texture::InitStruct init;
             init.name = "default_icon_8x8";
@@ -80,15 +75,17 @@ namespace SDOM
             BitmapFont::CreateFromInitStruct
         });
 
-        // Create the default 8x8 bitmap font asset
+    // Create the default 8x8 bitmap font asset.
+    // Use the filename as the canonical resource name so Lua can refer to
+    // the font simply as "default_bmp_8x8". The BitmapFont will create
+    // (or reuse) an internal SpriteSheet named '<filename>_SpriteSheet'.
     BitmapFont::InitStruct init;
-    init.name = "default_bmp_font_8x8";
-    init.type = "bitmap";
-    // Use the embedded default sprite sheet (default_bmp_8x8) as the backing texture
-    init.filename = "default_bmp_8x8";
-        init.isInternal = true;
-        init.fontSize_ = 8;
-        AssetHandle bmpFont = createAsset("BitmapFont", init);
+    init.name = "default_bmp_8x8";                     // registry key == filename
+    init.type = BitmapFont::TypeName;                  // concrete type name
+    init.filename = "default_bmp_8x8";               // underlying texture filename
+    init.isInternal = true;
+    init.fontSize = 8;                                 // member name in InitStruct
+    AssetHandle bmpFont = createAsset("BitmapFont", init);
 
         // register the Label display object
         registerDomType("Label", TypeCreators{

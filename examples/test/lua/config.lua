@@ -88,7 +88,7 @@ local config = {
                                 -- isClickable = true,
 
                                 text = "A",
-                                resourceName = "default_bmp_font_8x8",
+                                resourceName = "default_bmp_8x8",
                                 border = true,
                                 borderColor = { r = 255, g = 255, b = 255, a = 64 },
                                 fontSize = 8,

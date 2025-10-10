@@ -246,12 +246,25 @@ namespace SDOM
             if (asset.isValid())
             {
                 fontAsset = asset; // keep handle; resolve concrete when needed
-                // light sanity check only (no onLoad or heavy calls)
-                if (!fontAsset.as<IFontObject>())
+                // light sanity check only (no onLoad or heavy calls).
+                // Do NOT hard-fail here: some configs may point at a SpriteSheet/Texture
+                // (which can be used as a font source). Defer strict validation to onInit().
+                if (fontAsset.as<IFontObject>())
                 {
-                    ERROR("Label '" + name_ + "' resource '" + resourceName_ + "' is not a valid IFontObject.");
-                    fontAsset.reset();
+                    // OK: asset implements IFontObject
                 }
+                else if (fontAsset.as<SpriteSheet>())
+                {
+                    // Accept SpriteSheet as a fallback font source for now.
+                    DEBUG_LOG("Label '" + name_ + "' resource '" + resourceName_
+                              + "' is a SpriteSheet; accepting as font source (deferred validation).");
+                }
+                else
+                {
+                    // Unknown asset type — log and defer final validation/loading to onInit().
+                    DEBUG_LOG("Label '" + name_ + "' resource '" + resourceName_
+                              + "' is not an IFontObject; deferring validation to onInit().");
+                }            
             }
             else
             {
@@ -365,6 +378,74 @@ namespace SDOM
     void Label::onRender() 
     {       
         SDL_Renderer* renderer = getRenderer();
+
+        // --- DEBUG / Sanity tests (enable temporarily to diagnose glyph corruption) ---
+        const bool DEBUG_RENDER_TEST = true;
+        if (DEBUG_RENDER_TEST)
+        {
+            // quick token/phrase diagnostics
+            std::cout << "Label DEBUG '" << name_ << "' text length=" << text_.size()
+                      << " tokens=" << tokenList.size()
+                      << " phrases=" << phraseAlignLists_.size()
+                      << " resource='" << resourceName_ << "'" << std::endl;
+
+            if (!fontAsset)
+            {
+                std::cout << "Label DEBUG: no fontAsset for label '" << name_ << "'" << std::endl;
+            }
+            else
+            {
+                IFontObject* dbgFont = fontAsset.as<IFontObject>();
+                if (!dbgFont)
+                {
+                    std::cout << "Label DEBUG: fontAsset is not an IFontObject for '" << resourceName_ << "'" << std::endl;
+                }
+                else if (!dbgFont->isLoaded())
+                {
+                    std::cout << "Label DEBUG: font '" << resourceName_ << "' is not loaded yet." << std::endl;
+                }
+                else
+                {
+                    // draw a short sample phrase using the font's draw API to assert rendering pipeline
+                    dbgFont->setFontSize(fontSize_);
+                    FontStyle dbgStyle = defaultStyle_;
+                    dbgStyle.foregroundColor = SDL_Color{255,255,0,255};
+                    dbgStyle.outline = true;
+                    dbgStyle.dropshadow = true;
+                    dbgFont->setFontStyle(dbgStyle);
+
+                    int sampleX = getX() + 4;
+                    int sampleY = getY() + 4;
+                    const std::string sample = "DEBUG: ABC 0123 !@#";
+
+                    // draw all passes explicitly so we exercise each codepath
+                    dbgFont->drawPhraseDropshadow(sample, sampleX, sampleY, dbgStyle);
+                    dbgFont->drawPhraseOutline(sample, sampleX, sampleY, dbgStyle);
+                    dbgFont->drawPhrase(sample, sampleX, sampleY, dbgStyle);
+
+                    // draw vertical guides at glyph boundaries to reveal glyph widths
+                    int x = sampleX;
+                    for (char ch : sample)
+                    {
+                        int gw = dbgFont->getGlyphWidth(ch);
+                        int gh = dbgFont->getGlyphHeight('H');
+                        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+                        SDL_RenderLine(renderer, x, sampleY, x, sampleY + gh);
+                        x += gw;
+                    }
+                    // trailing guide
+                    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+                    SDL_RenderLine(renderer, x, sampleY, x, sampleY + dbgFont->getGlyphHeight('H'));
+                }
+            }
+        }
+        // --- END DEBUG ---
+
+
+
+
+
+
 
         // Pass 1: render a background color if alpha > 0
         SDL_Color bgndColor = defaultStyle_.backgroundColor;
