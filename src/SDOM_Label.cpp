@@ -380,12 +380,15 @@ namespace SDOM
         if (s_old_width != getWidth() || s_old_height != getHeight())
         {
             setDirty(true);
+            s_old_width = getWidth();
+            s_old_height = getHeight();
         }
 
         if (lastTokenizedText_ != text_ || isDirty())
         {
             lastTokenizedText_ = text_;
             tokenizeText();
+            setDirty(false);
         }    
     } // END Label::onUpdate(float fElapsedTime)
 
