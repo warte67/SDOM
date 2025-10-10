@@ -27,6 +27,38 @@ The SDOM Framework is a modern C++23 library designed to provide a Document Obje
 - Register and invoke commands (actions) using `registerCommand()` and `command()`
 - Designed for integration with JSON (using [nlohmann/json](https://github.com/nlohmann/json))
 
+## Identifier Conventions
+
+To ensure clarity and consistency across both C++ and Lua, SDOM uses the following naming conventions:
+
+- **Properties and Data Members:**  
+  Use `snake_case` (all lowercase, words separated by underscores).  
+  Examples: `font_size`, `border_color`, `resource_name`, `tab_enabled`
+
+- **Functions and Methods:**  
+  Use `lowerCamelCase` (first word lowercase, subsequent words capitalized).  
+  Examples: `setFontSize()`, `getWidth()`, `registerLuaBindings()`
+
+- **Classes, Structs, Enums, and Types:**
+  use 'UpperCamelCase` (first word capitcapitalized, subsequent words capitalized)
+  Examples: `Button`, `IDisplayObject`, `Label`, `ListBox`, `ComboBox`
+
+- **Private/Protected Members:**  
+  End with an underscore (`_`).  
+  Example: `name_`, `type_`, `left_`, `anchor_left_`
+
+- **Private/Protected Methods:**  
+  Begin with a single underscore (`_`).  
+  Example: `_registerLuaBindings()`, `_initBounds()`
+
+**Lua Configuration:**  
+- All property keys should be written in `snake_case`.
+- Functions exposed to Lua follow the same `lowerCamelCase` convention as C++.
+
+**Migration Note:**  
+Older code and examples may use `camelCase` or other styles. These will be updated over time. During transition, both forms may be accepted for compatibility. Please be patient and forgive my laziness and bad habbits. This falls into one of those "get it working first, then make it pretty" categories.
+
+---
 
 ## Getting Started
 

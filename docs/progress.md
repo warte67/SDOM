@@ -568,9 +568,48 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Remaining documentation work: diagrams, design charts and README references still use the old names and must be updated.
 
 ---
-# ToDo:
+## ToDo:
 - Update architecture diagrams and markdown docs to replace old identifiers with the new Handle names.
 - Verify Label / IDisplayObject constructor default merging (Label::Label(sol::table&)).
 - Add a short migration note in the changelog describing the rename and any Lua compatibility considerations.
 - Label and IDisplayObject Constructor Defaults should include IDisplayObject defaults and the InitStruct defaults.  Verify and Fix. Pattern may be within the Label::Label(sol::table& config)
+
+
+---
+# Here’s a concise checklist for tomorrow’s work:
+
+## IDisplayObject Property & Lua Binding Audit
+
+**Goals:**
+- Ensure all properties are initialized in both constructors (`InitStruct` and `sol::table`).
+- Expose all properties to Lua via `DisplayHandle` using the new identifier conventions.
+- Use `snake_case` for properties and `lowerCamelCase` for functions in both C++ and Lua.
+- Verify inheritance: derived types in Lua should inherit all properties and functions from `IDisplayObject`.
+
+**Steps:**
+1. **Audit Constructors:**
+   - Review both constructors and ensure every property is initialized.
+   - Add missing properties and document with comment blocks.
+
+2. **Audit Lua Bindings:**
+   - In `_registerLuaBindings`, bind every property to the handle.
+   - Use `snake_case` for property names in Lua.
+   - Ensure all public functions are bound with `lowerCamelCase`.
+
+3. **Test Inheritance:**
+   - In Lua, create derived types and verify they inherit all properties and functions.
+   - Add a simple Lua test script to check property/function access.
+
+4. **Update Documentation:**
+   - Document the conventions and inheritance expectations in the README and code comments.
+
+5. **Refactor for Consistency:**
+   - Rename properties and functions as needed to match conventions.
+   - Add helper lambdas for backward compatibility during transition.
+
+---
+
+**Comment blocks** in the code are a great way to track progress and ensure completeness.
+
+Let me know when you’re ready to start tomorrow, and I’ll help with patches, audits, or migration scripts.
 

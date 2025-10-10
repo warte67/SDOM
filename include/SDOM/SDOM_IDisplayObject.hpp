@@ -308,7 +308,7 @@ Notes & test ideas:
         bool isTabEnabled() const;
         IDisplayObject& setTabEnabled(bool enabled);
 
-        // --- Geometry & Layout --- //
+        // --- Geometry & Layout (In World Coordinates) --- //
         int getX() const;
         int getY() const;
         int getWidth() const;
@@ -328,7 +328,7 @@ Notes & test ideas:
         void setAnchorBottom(AnchorPoint ap);
         void setAnchorRight(AnchorPoint ap);
 
-        // --- Edge Positions --- //
+        // --- Edge Positions (In World Coordinates)--- //
         float getLeft() const;
         float getRight() const;
         float getTop() const;
@@ -349,10 +349,10 @@ Notes & test ideas:
         IDisplayObject& setLocalTop(float value) { top_ = value; return *this; }
         IDisplayObject& setLocalBottom(float value) { bottom_ = value; return *this; }
 
-        std::string type_;
+        std::string type_;  // Type identifier (e.g., "Button", "Panel", etc.)
 
     private: // --- Member Variables --- //
-        float left_, top_, right_, bottom_;
+        float left_, top_, right_, bottom_;  // these are in terms of local not world coordinates
         bool bIsDirty_ = false;
         SDL_Color color_ = {255, 255, 255, 255};
         AnchorPoint anchorTop_ = AnchorPoint::TOP_LEFT;
@@ -368,6 +368,25 @@ Notes & test ideas:
         bool tabEnabled_ = false;
         DisplayHandle parent_;
         std::vector<DisplayHandle> children_;
+
+// std::string name = TypeName;                      // (IDataObject)
+// std::string type = TypeName;                      // (IDisplayObject)
+// float x = 0.0f;                                   // left_ (IDisplayObject)
+// float y = 0.0f;                                   // top_  (IDisplayObject)
+// float width = 0.0f;                               // right_ - left_  (IDisplayObject)
+// float height = 0.0f;                              // bottom_ - top_  (IDisplayObject)
+// SDL_Color color = {255, 0, 255, 255};             // color_ (IDisplayObject)
+// AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;    // anchorTop_ (IDisplayObject)
+// AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;   // anchorLeft_ (IDisplayObject)
+// AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT; // anchorBottom_ (IDisplayObject)
+// AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;  // anchorRight_ (IDisplayObject)
+// int z_order = 0;                                  // z_order_ (IDisplayObject)
+// int priority = 0;                                 // priority_ (IDisplayObject)
+// bool isClickable = true;                          // isClickable_ (IDisplayObject)
+// bool isEnabled = true;                            // isEnabled_ (IDisplayObject)
+// bool isHidden = false;                            // isHidden_ (IDisplayObject)
+// int tabPriority = 0;                              // tabPriority_ (IDisplayObject)
+// bool tabEnabled = true;                           // tabEnabled_ (IDisplayObject)
 
         // --- Event Listener Containers --- //
         struct ListenerEntry {

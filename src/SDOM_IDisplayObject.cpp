@@ -71,6 +71,26 @@ namespace SDOM
         top_ = init.y;
         bottom_ = init.y + init.height;
         parent_ = nullptr;
+
+// --- ALL IDisplayObject Properties: --- //
+// float x = 0.0f;                                   // left_ (IDisplayObject)
+// float y = 0.0f;                                   // top_  (IDisplayObject)
+// float width = 0.0f;                               // right_ - left_  (IDisplayObject)
+// float height = 0.0f;                              // bottom_ - top_  (IDisplayObject)
+// SDL_Color color = {255, 0, 255, 255};             // color_ (IDisplayObject)
+// AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;    // anchorTop_ (IDisplayObject)
+// AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;   // anchorLeft_ (IDisplayObject)
+// AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT; // anchorBottom_ (IDisplayObject)
+// AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;  // anchorRight_ (IDisplayObject)
+// int z_order = 0;                                  // z_order_ (IDisplayObject)
+// int priority = 0;                                 // priority_ (IDisplayObject)
+// bool isClickable = true;                          // isClickable_ (IDisplayObject)
+// bool isEnabled = true;                            // isEnabled_ (IDisplayObject)
+// bool isHidden = false;                            // isHidden_ (IDisplayObject)
+// int tabPriority = 0;                              // tabPriority_ (IDisplayObject)
+// bool tabEnabled = true;                           // tabEnabled_ (IDisplayObject)
+
+
     }
 
     IDisplayObject::IDisplayObject(const sol::table& config)
@@ -131,6 +151,24 @@ namespace SDOM
         isHidden_     = config["isHidden"].get_or(false);
         tabPriority_  = config["tabPriority"].get_or(0);
         tabEnabled_   = config["tabEnabled"].get_or(true);
+
+// --- ALL IDisplayObject Properties: --- //
+// float x = 0.0f;                                   // left_ (IDisplayObject)
+// float y = 0.0f;                                   // top_  (IDisplayObject)
+// float width = 0.0f;                               // right_ - left_  (IDisplayObject)
+// float height = 0.0f;                              // bottom_ - top_  (IDisplayObject)
+// SDL_Color color = {255, 0, 255, 255};             // color_ (IDisplayObject)
+// AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;    // anchorTop_ (IDisplayObject)
+// AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;   // anchorLeft_ (IDisplayObject)
+// AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT; // anchorBottom_ (IDisplayObject)
+// AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;  // anchorRight_ (IDisplayObject)
+// int z_order = 0;                                  // z_order_ (IDisplayObject)
+// int priority = 0;                                 // priority_ (IDisplayObject)
+// bool isClickable = true;                          // isClickable_ (IDisplayObject)
+// bool isEnabled = true;                            // isEnabled_ (IDisplayObject)
+// bool isHidden = false;                            // isHidden_ (IDisplayObject)
+// int tabPriority = 0;                              // tabPriority_ (IDisplayObject)
+// bool tabEnabled = true;                           // tabEnabled_ (IDisplayObject)`
 
         // // Register Lua properties and commands
         // registerLua_();
@@ -1396,6 +1434,23 @@ namespace SDOM
                 }
             );
         }
+// --- ALL IDisplayObject Properties: --- //
+// float x = 0.0f;                                   // left_ (IDisplayObject)
+// float y = 0.0f;                                   // top_  (IDisplayObject)
+// float width = 0.0f;                               // right_ - left_  (IDisplayObject)
+// float height = 0.0f;                              // bottom_ - top_  (IDisplayObject)
+// SDL_Color color = {255, 0, 255, 255};             // color_ (IDisplayObject)
+// AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;    // anchorTop_ (IDisplayObject)
+// AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;   // anchorLeft_ (IDisplayObject)
+// AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT; // anchorBottom_ (IDisplayObject)
+// AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;  // anchorRight_ (IDisplayObject)
+// int z_order = 0;                                  // z_order_ (IDisplayObject)
+// int priority = 0;                                 // priority_ (IDisplayObject)
+// bool isClickable = true;                          // isClickable_ (IDisplayObject)
+// bool isEnabled = true;                            // isEnabled_ (IDisplayObject)
+// bool isHidden = false;                            // isHidden_ (IDisplayObject)
+// int tabPriority = 0;                              // tabPriority_ (IDisplayObject)
+// bool tabEnabled = true;                           // tabEnabled_ (IDisplayObject)
 
         // Event handling
         if (absent("addEventListener")) {
