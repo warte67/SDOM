@@ -76,17 +76,17 @@ local config = {
                                 name = "blueishBoxLabel",
 
                                 anchor_left = "left",       -- verified
-                                -- x = 245,                    -- verified (world coordinates)
-                                left = 5,
+                                x = 245,                    -- verified (world coordinates)
+                                -- left = 5,
                                 anchor_top = "top",         -- verified
-                                -- y = 75,                     -- verified (world coordinates)
-                                top = 5,
+                                y = 75,                     -- verified (world coordinates)
+                                -- top = 5,
                                 anchor_right = "right",     -- verified
-                                -- width = 240,                -- verified (right - left = 240)
-                                right = -5,
+                                width = 240,                -- verified (right - left = 240)
+                                -- right = -5,
                                 anchor_bottom = "bottom",   -- verified
-                                -- height = 215,               -- verified (bottom - top = 215)
-                                bottom = -5,
+                                height = 215,               -- verified (bottom - top = 215)
+                                -- bottom = -5,
 
                                 -- isClickable = true,
 

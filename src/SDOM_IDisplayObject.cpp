@@ -1428,6 +1428,7 @@ namespace SDOM
                 }
             );
         }
+        
 // --- ALL IDisplayObject Properties: --- //
 // float x = 0.0f;                                   // left_ (IDisplayObject)
 // float y = 0.0f;                                   // top_  (IDisplayObject)
