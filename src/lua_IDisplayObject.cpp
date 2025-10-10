@@ -496,7 +496,7 @@ namespace SDOM
     void setAnchorBottom_lua(IDisplayObject* obj, AnchorPoint ap) { if (!obj) return; obj->setAnchorBottom(ap); }
     void setAnchorRight_lua(IDisplayObject* obj, AnchorPoint ap) { if (!obj) return; obj->setAnchorRight(ap); }
 
-    // --- Edge Positions --- //
+    // --- World Edge Positions --- //
     float getLeft_lua(const IDisplayObject* obj) { if (!obj) return 0.0f; return obj->getLeft(); }
     float getRight_lua(const IDisplayObject* obj) { if (!obj) return 0.0f; return obj->getRight(); }
     float getTop_lua(const IDisplayObject* obj) { if (!obj) return 0.0f; return obj->getTop(); }
@@ -505,6 +505,16 @@ namespace SDOM
     void setRight_lua(IDisplayObject* obj, float p_right) { if (!obj) return; obj->setRight(p_right); }
     void setTop_lua(IDisplayObject* obj, float p_top) { if (!obj) return; obj->setTop(p_top); }
     void setBottom_lua(IDisplayObject* obj, float p_bottom) { if (!obj) return; obj->setBottom(p_bottom); }
+
+    // --- Local Edge Position --- //
+    float getLocalLeft_lua(const IDisplayObject* obj) { if (!obj) return 0.0f; return obj->getLocalLeft(); }
+    float getLocalRight_lua(const IDisplayObject* obj) { if (!obj) return 0.0f; return obj->getLocalRight(); }
+    float getLocalTop_lua(const IDisplayObject* obj) { if (!obj) return 0.0f; return obj->getLocalTop(); }
+    float getLocalBottom_lua(const IDisplayObject* obj) { if (!obj) return 0.0f; return obj->getLocalBottom(); }
+    void setLocalLeft_lua(IDisplayObject* obj, float p_left) { if (!obj) return; obj->setLocalLeft(p_left); }
+    void setLocalRight_lua(IDisplayObject* obj, float p_right) { if (!obj) return; obj->setLocalRight(p_right); }
+    void setLocalTop_lua(IDisplayObject* obj, float p_top) { if (!obj) return; obj->setLocalTop(p_top); }
+    void setLocalBottom_lua(IDisplayObject* obj, float p_bottom) { if (!obj) return; obj->setLocalBottom(p_bottom); }   
 
     // --- Orphan Retention Policy --- //
     IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* /*obj*/, const std::string& s)

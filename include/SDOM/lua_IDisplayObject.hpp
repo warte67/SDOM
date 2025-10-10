@@ -126,7 +126,7 @@ namespace SDOM
     void setAnchorBottom_lua(IDisplayObject* obj, AnchorPoint ap);  // TESTED
     void setAnchorRight_lua(IDisplayObject* obj, AnchorPoint ap);   // TESTED
 
-    // --- Edge Positions --- //
+    // --- World Edge Positions --- //
     float getLeft_lua(const IDisplayObject* obj);                   // TESTED
     float getRight_lua(const IDisplayObject* obj);                  // TESTED
     float getTop_lua(const IDisplayObject* obj);                    // TESTED
@@ -135,6 +135,18 @@ namespace SDOM
     void setRight_lua(IDisplayObject* obj, float p_right);          // TESTED
     void setTop_lua(IDisplayObject* obj, float p_top);              // TESTED
     void setBottom_lua(IDisplayObject* obj, float p_bottom);        // TESTED
+
+    // --- Local Edge Positions --- //
+    float getLocalLeft_lua(const IDisplayObject* obj);              
+    float getLocalRight_lua(const IDisplayObject* obj);             
+    float getLocalTop_lua(const IDisplayObject* obj);               
+    float getLocalBottom_lua(const IDisplayObject* obj);            
+    void setLocalLeft_lua(IDisplayObject* obj, float p_left);       
+    void setLocalRight_lua(IDisplayObject* obj, float p_right);     
+    void setLocalTop_lua(IDisplayObject* obj, float p_top);         
+    void setLocalBottom_lua(IDisplayObject* obj, float p_bottom);   
+
+
 
     // --- Orphan Retention Policy --- //
     IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* obj, const std::string& s);    // TESTED

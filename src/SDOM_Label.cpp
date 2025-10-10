@@ -110,6 +110,7 @@ namespace SDOM
     {
         InitStruct init; // to get default values
 
+        // --- Initialization Lambdas --- //
         auto get_str = [&](const char* k, const std::string& d = "") -> std::string 
         {
             return config[k].valid() ? config[k].get<std::string>() : d;
@@ -118,20 +119,20 @@ namespace SDOM
         {
             return config[k].valid() ? config[k].get<int>() : d;
         };
-        auto get_float = [&](const char* k, float d = 0.0f) -> float {
-            if (!config[k].valid()) return d;
-            sol::object o = config[k];
-            try {
-                if (o.is<double>()) return static_cast<float>(o.as<double>());
-                if (o.is<int>()) return static_cast<float>(o.as<int>());
-                if (o.is<std::string>()) {
-                    std::string s = o.as<std::string>();
-                    if (s.empty()) return d;
-                    return std::stof(s);
-                }
-            } catch(...) {}
-            return d;
-        };
+        // auto get_float = [&](const char* k, float d = 0.0f) -> float {
+        //     if (!config[k].valid()) return d;
+        //     sol::object o = config[k];
+        //     try {
+        //         if (o.is<double>()) return static_cast<float>(o.as<double>());
+        //         if (o.is<int>()) return static_cast<float>(o.as<int>());
+        //         if (o.is<std::string>()) {
+        //             std::string s = o.as<std::string>();
+        //             if (s.empty()) return d;
+        //             return std::stof(s);
+        //         }
+        //     } catch(...) {}
+        //     return d;
+        // };
         auto get_bool = [&](const char* k, bool d = false) -> bool 
         {
             return config[k].valid() ? config[k].get<bool>() : d;
@@ -156,54 +157,13 @@ namespace SDOM
             return c;
         };
 
-        // Basic fields
+        // --- Initialized Label Fields --- //
         text_ = get_str("text", init.text);
-        resourceName_ = get_str("resourceName", get_str("font", init.resourceName) );
-        fontType_ = IFontObject::StringToFontType.at(get_str("fontType", IFontObject::FontTypeToString.at(init.fontType)));
-        fontSize_ = get_int("fontSize", 10);
-        fontWidth_ = get_int("fontWidth", fontSize_);
-        fontHeight_ = get_int("fontHeight", fontSize_);
-
-        name_ = get_str("name", init.name); // from IDisplayObject   (REQUIRED)
-        type_ = get_str("type", TypeName); // from IDisplayObject   (REQUIRED)
-
-        float x = get_float("x", init.x);
-        float y = get_float("y", init.y);
-        float width = get_float("width", init.width);
-        float height = get_float("height", init.height);
-        float left = get_float("left", x);
-        float top = get_float("top", y);
-        float right = get_float("right", x + width);
-        float bottom = get_float("bottom", y + height);
-        setLeft(left);
-        setTop(top);
-        setRight(right);
-        setBottom(bottom);
-        this->setColor(read_color("color", init.color)); // from IDisplayObject
-
-        this->setAnchorLeft(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchorLeft", anchorPointToString_.at(init.anchorLeft)))));
-        this->setAnchorTop(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchorTop", anchorPointToString_.at(init.anchorTop)))));
-        this->setAnchorRight(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchorRight", anchorPointToString_.at(init.anchorRight)))));
-        this->setAnchorBottom(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchorBottom", anchorPointToString_.at(init.anchorBottom)))));
-
-        setZOrder(get_int("z_order", init.z_order));
-        setPriority(get_int("priority", init.priority));
-        setClickable(get_bool("clickable", init.isClickable));
-        setEnabled(get_bool("isEnabled", init.isEnabled));
-        setHidden(get_bool("isHidden", init.isHidden));
-        setTabPriority(get_int("tabPriority", init.tabPriority));
-        setTabEnabled(get_bool("tabEnabled", init.tabEnabled));
-
-        // // setClickable(false);
-        // if (isClickable()) 
-        // {
-        //     DEBUG_LOG("Label '" + name_ + "' isClickable=true; Labels should not be clickable by default.");
-        // }
-        // else
-        // {
-        //     DEBUG_LOG("Label '" + name_ + "' isClickable=false; Labels should not be clickable by default.");
-        // }
-
+        resourceName_ = get_str("resource_name", get_str("font", init.resourceName) );
+        fontType_ = IFontObject::StringToFontType.at(get_str("font_type", IFontObject::FontTypeToString.at(init.fontType)));
+        fontSize_ = get_int("font_size", 10);
+        fontWidth_ = get_int("font_width", fontSize_);
+        fontHeight_ = get_int("font_height", fontSize_);
 
         // Normalize width/height -> fallback to fontSize when unspecified/invalid
         if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : 8);
@@ -211,11 +171,11 @@ namespace SDOM
 
         // Style defaults
         defaultStyle_.alignment = stringToLabelAlign_.at(normalizeAnchorString(get_str("alignment", "top_left")));
-        defaultStyle_.foregroundColor = read_color("foregroundColor", defaultStyle_.foregroundColor);
-        defaultStyle_.backgroundColor = read_color("backgroundColor", defaultStyle_.backgroundColor);
-        defaultStyle_.borderColor = read_color("borderColor", defaultStyle_.borderColor);
-        defaultStyle_.outlineColor = read_color("outlineColor", defaultStyle_.outlineColor);
-        defaultStyle_.dropshadowColor = read_color("dropshadowColor", defaultStyle_.dropshadowColor);
+        defaultStyle_.foregroundColor = read_color("foreground_color", defaultStyle_.foregroundColor);
+        defaultStyle_.backgroundColor = read_color("background_color", defaultStyle_.backgroundColor);
+        defaultStyle_.borderColor = read_color("border_color", defaultStyle_.borderColor);
+        defaultStyle_.outlineColor = read_color("outline_color", defaultStyle_.outlineColor);
+        defaultStyle_.dropshadowColor = read_color("dropshadow_color", defaultStyle_.dropshadowColor);
 
         defaultStyle_.bold = get_bool("bold", defaultStyle_.bold);
         defaultStyle_.italic = get_bool("italic", defaultStyle_.italic);
@@ -225,68 +185,70 @@ namespace SDOM
         defaultStyle_.background = get_bool("background", defaultStyle_.background);
         defaultStyle_.outline = get_bool("outline", defaultStyle_.outline);
         defaultStyle_.dropshadow = get_bool("dropshadow", defaultStyle_.dropshadow);
-
         defaultStyle_.wordwrap = get_bool("wordwrap", init.wordwrap);
 
         defaultStyle_.padding_horiz = get_int("padding_horiz", defaultStyle_.padding_horiz);
         defaultStyle_.padding_vert = get_int("padding_vert", defaultStyle_.padding_vert);
-        defaultStyle_.dropshadowOffsetX = get_int("dropshadowOffsetX", defaultStyle_.dropshadowOffsetX);
-        defaultStyle_.dropshadowOffsetY = get_int("dropshadowOffsetY", defaultStyle_.dropshadowOffsetY);
-        defaultStyle_.maxWidth = get_int("maxWidth", defaultStyle_.maxWidth);
-        defaultStyle_.maxHeight = get_int("maxHeight", defaultStyle_.maxHeight);
-        defaultStyle_.borderThickness = get_int("borderThickness", defaultStyle_.borderThickness);
-        defaultStyle_.outlineThickness = get_int("outlineThickness", defaultStyle_.outlineThickness);
+        defaultStyle_.dropshadowOffsetX = get_int("dropshadow_offset_x", defaultStyle_.dropshadowOffsetX);
+        defaultStyle_.dropshadowOffsetY = get_int("dropshadow_offset_y", defaultStyle_.dropshadowOffsetY);
+        defaultStyle_.maxWidth = get_int("max_width", defaultStyle_.maxWidth);
+        defaultStyle_.maxHeight = get_int("max_height", defaultStyle_.maxHeight);
+        defaultStyle_.borderThickness = get_int("border_thickness", defaultStyle_.borderThickness);
+        defaultStyle_.outlineThickness = get_int("outline_thickness", defaultStyle_.outlineThickness);
 
         // runtime/init flags
         setDirty(true); // layout needs building
         lastTokenizedText_.clear();
+        setClickable(get_bool("is_clickable", false)); // Labels are not clickable by default
 
         // Resolve font asset by name (store handle only; do not force loading)
         if (!resourceName_.empty())
         {
             AssetHandle asset = getFactory().getAssetObject(resourceName_);
             if (asset.isValid())
-            {
                 fontAsset = asset; // keep handle; resolve concrete when needed
-                // light sanity check only (no onLoad or heavy calls).
-                // Do NOT hard-fail here: some configs may point at a SpriteSheet/Texture
-                // (which can be used as a font source). Defer strict validation to onInit().
-                if (fontAsset.as<IFontObject>())
-                {
-                    // OK: asset implements IFontObject
-                }
-                else if (fontAsset.as<SpriteSheet>())
-                {
-                    // Accept SpriteSheet as a fallback font source for now.
-                    DEBUG_LOG("Label '" + name_ + "' resource '" + resourceName_
-                              + "' is a SpriteSheet; accepting as font source (deferred validation).");
-                }
-                else
-                {
-                    // Unknown asset type — log and defer final validation/loading to onInit().
-                    DEBUG_LOG("Label '" + name_ + "' resource '" + resourceName_
-                              + "' is not an IFontObject; deferring validation to onInit().");
-                }            
-            }
-            else
-            {
-                DEBUG_LOG("Label '" + name_ + "' could not find font resource: " + resourceName_);
-            }
         }
         else
         {
             DEBUG_LOG("Label '" + name_ + "' has no font resource specified.");
-        }
+        }        
 
-        // setClickable(false);
-        if (defaultStyle_.wordwrap) 
-        {
-            DEBUG_LOG("Label '" + name_ + "' wordwrap=true; Labels should wrap.");
-        }
-        else
-        {
-            DEBUG_LOG("Label '" + name_ + "' wordwrap=false; Labels should not wrap.");
-        }
+        // // Resolve font asset by name (store handle only; do not force loading)
+        // if (!resourceName_.empty())
+        // {
+        //     AssetHandle asset = getFactory().getAssetObject(resourceName_);
+        //     if (asset.isValid())
+        //     {
+        //         fontAsset = asset; // keep handle; resolve concrete when needed
+        //         // light sanity check only (no onLoad or heavy calls).
+        //         // Do NOT hard-fail here: some configs may point at a SpriteSheet/Texture
+        //         // (which can be used as a font source). Defer strict validation to onInit().
+        //         if (fontAsset.as<IFontObject>())
+        //         {
+        //             // OK: asset implements IFontObject
+        //         }
+        //         else if (fontAsset.as<SpriteSheet>())
+        //         {
+        //             // Accept SpriteSheet as a fallback font source for now.
+        //             DEBUG_LOG("Label '" + name_ + "' resource '" + resourceName_
+        //                       + "' is a SpriteSheet; accepting as font source (deferred validation).");
+        //         }
+        //         else
+        //         {
+        //             // Unknown asset type — log and defer final validation/loading to onInit().
+        //             DEBUG_LOG("Label '" + name_ + "' resource '" + resourceName_
+        //                       + "' is not an IFontObject; deferring validation to onInit().");
+        //         }            
+        //     }
+        //     else
+        //     {
+        //         DEBUG_LOG("Label '" + name_ + "' could not find font resource: " + resourceName_);
+        //     }
+        // }
+        // else
+        // {
+        //     DEBUG_LOG("Label '" + name_ + "' has no font resource specified.");
+        // }
 
     } // END Label::Label(const sol::table& config)
 
@@ -464,7 +426,11 @@ namespace SDOM
         // --- END DEBUG ---
 
 
+        // std::cout << getName() << "-- x:" << getX() << " y:" << getY() 
+        //           << " w:" << getWidth() << " h:" << getHeight() << std::endl;
 
+        // std::cout << getName() << "-- left: " << getLeft() << " top: " << getTop()
+        //           << " right: " << getRight() << " bottom: " << getBottom() << std::endl;
 
 
 

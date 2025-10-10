@@ -42,7 +42,7 @@ namespace SDOM
         bool outline = false;
         bool dropshadow = false;
 
-        int fontSize = 10;      // Uniform scaling for both font types
+        int fontSize = 8;           // Uniform scaling for both font types
         // int fontWidth = -1;     // Optional: non-uniform width (bitmap only)          
         // int fontHeight = -1;    // Optional: non-uniform height (bitmap only)
 

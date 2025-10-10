@@ -28,9 +28,9 @@ namespace SDOM
         if (config["height"].valid())      bitmapFontHeight_ = config["height"].get<int>(); else bitmapFontHeight_ = 8;
 
         // legacy overrides
-        if (config["fontSize"].valid())    fontSize_ = config["fontSize"].get<int>();
-        if (config["fontWidth"].valid())   bitmapFontWidth_ = config["fontWidth"].get<int>();
-        if (config["fontHeight"].valid())  bitmapFontHeight_ = config["fontHeight"].get<int>();
+        if (config["font_size"].valid())    fontSize_ = config["font_size"].get<int>();
+        if (config["font_width"].valid())   bitmapFontWidth_ = config["font_width"].get<int>();
+        if (config["font_height"].valid())  bitmapFontHeight_ = config["font_height"].get<int>();
 
         // normalize invalid/zero dimensions to fontSize_
         if (bitmapFontWidth_ <= 0)  bitmapFontWidth_ = fontSize_;

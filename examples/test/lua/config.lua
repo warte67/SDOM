@@ -69,38 +69,41 @@ local config = {
                         y = 70,
                         width = 250,
                         height = 225,
-                        color = { r = 50, g = 50, b = 200, a = 255 }
-                        ,
+                        color = { r = 50, g = 50, b = 200, a = 255 },
                         children = {
                             {
                                 type = "Label",
                                 name = "blueishBoxLabel",
 
-                                anchorLeft = "left",
-                                x = 245,
-                                anchorTop = "top",
-                                y = 75,
-                                anchorRight = "right",
-                                width = 240,
-                                anchorBottom = "bottom",
-                                height = 215,
+                                anchor_left = "left",       -- verified
+                                -- x = 245,                    -- verified (world coordinates)
+                                left = 5,
+                                anchor_top = "top",         -- verified
+                                -- y = 75,                     -- verified (world coordinates)
+                                top = 5,
+                                anchor_right = "right",     -- verified
+                                -- width = 240,                -- verified (right - left = 240)
+                                right = -5,
+                                anchor_bottom = "bottom",   -- verified
+                                -- height = 215,               -- verified (bottom - top = 215)
+                                bottom = -5,
 
                                 -- isClickable = true,
 
-                                wordWrap = false,
-                                outline = true,
-                                outlineThickness = 3,
+                                wordwrap = false,       -- not working yet
+                                outline = true,         -- verified
+                                -- outline_thickness = 1,   -- verified
 
                                 text = "The [bold][color=red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river, sunlight catching on ripples as children laugh in the distance. A small breeze stirs the pages of an open book left on the bench, and a bell rings from the town square.",
-                                resourceName = "default_bmp_8x8",
-                                border = true,
-                                borderColor = { r = 255, g = 255, b = 255, a = 64 },
-                                fontSize = 8,
-                                fontWidth = 8,
-                                fontHeight = 8,
-                                alignment = "center",
-                                foregroundColor = { r = 255, g = 255, b = 255, a = 255 },
-                                maxWidth = 230
+                                resource_name = "default_bmp_8x8",                      -- verified
+                                border = true,                                          -- verified
+                                border_color = { r = 255, g = 255, b = 255, a = 64 },   -- verified
+                                font_size = 8,                                         -- verified
+                                -- font_width = 16,         -- not working yet (should this set the glyph width of the SpriteSheet or scaling?)
+                                -- font_height = 16,        -- not working yet (should this set the glyph height of the SpriteSheet or scaling?)
+                                alignment = "center",       -- mostly working, leading and trailing spaces not trimmed
+                                foreground_color = { r = 255, g = 255, b = 255, a = 255 },  -- verified
+                                max_width = 450             -- verified
                             }
                         }
                     },

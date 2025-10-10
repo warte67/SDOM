@@ -72,110 +72,104 @@ namespace SDOM
         bottom_ = init.y + init.height;
         parent_ = nullptr;
 
-// --- ALL IDisplayObject Properties: --- //
-// float x = 0.0f;                                   // left_ (IDisplayObject)
-// float y = 0.0f;                                   // top_  (IDisplayObject)
-// float width = 0.0f;                               // right_ - left_  (IDisplayObject)
-// float height = 0.0f;                              // bottom_ - top_  (IDisplayObject)
-// SDL_Color color = {255, 0, 255, 255};             // color_ (IDisplayObject)
-// AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;    // anchorTop_ (IDisplayObject)
-// AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;   // anchorLeft_ (IDisplayObject)
-// AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT; // anchorBottom_ (IDisplayObject)
-// AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;  // anchorRight_ (IDisplayObject)
-// int z_order = 0;                                  // z_order_ (IDisplayObject)
-// int priority = 0;                                 // priority_ (IDisplayObject)
-// bool isClickable = true;                          // isClickable_ (IDisplayObject)
-// bool isEnabled = true;                            // isEnabled_ (IDisplayObject)
-// bool isHidden = false;                            // isHidden_ (IDisplayObject)
-// int tabPriority = 0;                              // tabPriority_ (IDisplayObject)
-// bool tabEnabled = true;                           // tabEnabled_ (IDisplayObject)
-
-
     }
 
     IDisplayObject::IDisplayObject(const sol::table& config)
         : IDataObject()
     {
-        name_ = config["name"].get_or(std::string("IDisplayObject"));
+        InitStruct init_default; // default initialization values
 
-        float x      = config["x"].get_or(0.0f);
-        float y      = config["y"].get_or(0.0f);
-        float width  = config["width"].get_or(0.0f);
-        float height = config["height"].get_or(0.0f);
-
-        setLeft(x);
-        setTop(y);
-        setRight(x + width);
-        setBottom(y + height);
-
-        // SDL_Color expects r, g, b, a fields in a Lua table
-        if (config["color"].valid()) {
-            sol::table colorTbl = config["color"];
-            color_.r = colorTbl["r"].get_or(255);
-            color_.g = colorTbl["g"].get_or(255);
-            color_.b = colorTbl["b"].get_or(255);
-            color_.a = colorTbl["a"].get_or(255);
-        } else {
-            color_ = {255, 255, 255, 255};
-        }
-
-        // Anchor conversion helpers:
-        // - Accept string or integer enum
-        // - Normalize string joiners/spaces via SDOM::normalizeAnchorString
-        auto getAnchor = [&](const char* key) {
-            if (config[key].valid()) {
-                sol::object o = config[key].get<sol::object>();
-                if (o.is<std::string>()) {
-                    std::string str = o.as<std::string>();
-                    std::string norm = SDOM::normalizeAnchorString(str);
-                    auto it = stringToAnchorPoint_.find(norm);
-                    return it != stringToAnchorPoint_.end() ? it->second : AnchorPoint::TOP_LEFT;
-                } else if (o.is<int>()) {
-                    return static_cast<AnchorPoint>(o.as<int>());
-                } else if (o.is<double>()) {
-                    return static_cast<AnchorPoint>(static_cast<int>(o.as<double>()));
-                }
-            }
-            return AnchorPoint::TOP_LEFT;
+        // --- Initialization Lambdas --- //
+        auto get_str = [&](const char* k, const std::string& d = "") -> std::string 
+        {
+            return config[k].valid() ? config[k].get<std::string>() : d;
         };
+        auto get_int = [&](const char* k, int d = 0) -> int 
+        {
+            return config[k].valid() ? config[k].get<int>() : d;
+        };
+        auto get_float = [&](const char* k, float d = 0.0f) -> float {
+            if (!config[k].valid()) return d;
+            sol::object o = config[k];
+            try {
+                if (o.is<double>()) return static_cast<float>(o.as<double>());
+                if (o.is<int>()) return static_cast<float>(o.as<int>());
+                if (o.is<std::string>()) {
+                    std::string s = o.as<std::string>();
+                    if (s.empty()) return d;
+                    return std::stof(s);
+                }
+            } catch(...) {}
+            return d;
+        };
+        auto get_bool = [&](const char* k, bool d = false) -> bool 
+        {
+            return config[k].valid() ? config[k].get<bool>() : d;
+        };
+        auto read_color = [&](const char* k, SDL_Color d = {255,0,255,255}) -> SDL_Color 
+        {
+            if (!config[k].valid()) return d;
+            sol::table t = config[k];
+            SDL_Color c = d;
+            if (t["r"].valid()) c.r = (Uint8)t["r"].get<int>();
+            if (t["g"].valid()) c.g = (Uint8)t["g"].get<int>();
+            if (t["b"].valid()) c.b = (Uint8)t["b"].get<int>();
+            if (t["a"].valid()) c.a = (Uint8)t["a"].get<int>();
+            // array-style [r,g,b,a]
+            if (!t["r"].valid() && t[1].valid()) 
+            {
+                c.r = (Uint8)t[1].get<int>();
+                if (t[2].valid()) c.g = (Uint8)t[2].get<int>();
+                if (t[3].valid()) c.b = (Uint8)t[3].get<int>();
+                if (t[4].valid()) c.a = (Uint8)t[4].get<int>();
+            }
+            return c;
+        };        
 
-        setAnchorTop(getAnchor("anchorTop"));
-        setAnchorLeft(getAnchor("anchorLeft"));
-        setAnchorBottom(getAnchor("anchorBottom"));
-        setAnchorRight(getAnchor("anchorRight"));
+        // --- Required Properties --- //
+        name_ = config["name"].get_or(std::string(TypeName));
+        type_ = config["type"].get_or(std::string(TypeName));
 
-        z_order_      = config["z_order"].get_or(0);
-        priority_     = config["priority"].get_or(0);
-        isClickable_  = config["isClickable"].get_or(true);
-        isEnabled_    = config["isEnabled"].get_or(true);
-        isHidden_     = config["isHidden"].get_or(false);
-        tabPriority_  = config["tabPriority"].get_or(0);
-        tabEnabled_   = config["tabEnabled"].get_or(true);
+        // fetch coordinates:
+        float x = get_float("x",     init_default.x);
+        float y = get_float("y",     init_default.y);
+        float width  = config["width"].valid()  ? get_float("width",  init_default.width)
+                      : config["w"].valid()     ? get_float("w",      init_default.width)
+                      : init_default.width;
+        float height = config["height"].valid() ? get_float("height", init_default.height)
+                      : config["h"].valid()     ? get_float("h",      init_default.height)
+                      : init_default.height;
+        // set coordinates:
+        setX( x );
+        setY( y );
+        setWidth(  width );
+        setHeight( height );
+        if (config["left"].valid()) setLeft(get_float("left", x));
+        if (config["top"].valid()) setTop(get_float("top", y));
+        if (config["right"].valid()) setRight(get_float("left") + get_float("right", x + width));
+        if (config["bottom"].valid()) setBottom(get_float("top") + get_float("bottom", y + height));
 
-// --- ALL IDisplayObject Properties: --- //
-// float x = 0.0f;                                   // left_ (IDisplayObject)
-// float y = 0.0f;                                   // top_  (IDisplayObject)
-// float width = 0.0f;                               // right_ - left_  (IDisplayObject)
-// float height = 0.0f;                              // bottom_ - top_  (IDisplayObject)
-// SDL_Color color = {255, 0, 255, 255};             // color_ (IDisplayObject)
-// AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;    // anchorTop_ (IDisplayObject)
-// AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;   // anchorLeft_ (IDisplayObject)
-// AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT; // anchorBottom_ (IDisplayObject)
-// AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;  // anchorRight_ (IDisplayObject)
-// int z_order = 0;                                  // z_order_ (IDisplayObject)
-// int priority = 0;                                 // priority_ (IDisplayObject)
-// bool isClickable = true;                          // isClickable_ (IDisplayObject)
-// bool isEnabled = true;                            // isEnabled_ (IDisplayObject)
-// bool isHidden = false;                            // isHidden_ (IDisplayObject)
-// int tabPriority = 0;                              // tabPriority_ (IDisplayObject)
-// bool tabEnabled = true;                           // tabEnabled_ (IDisplayObject)`
+        // set color
+        color_ = read_color("color", init_default.color);
 
-        // // Register Lua properties and commands
-        // registerLua_();
+        // --- Optional Properties --- //
+        setAnchorLeft(  stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_left", 
+                        anchorPointToString_.at(init_default.anchorLeft)))));
+        setAnchorTop(   stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_top", 
+                        anchorPointToString_.at(init_default.anchorTop)))));
+        setAnchorRight( stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_right", 
+                        anchorPointToString_.at(init_default.anchorRight)))));
+        setAnchorBottom(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_bottom", 
+                        anchorPointToString_.at(init_default.anchorBottom)))));
+        setZOrder(      get_int("z_order",      init_default.z_order     ));
+        setPriority(    get_int("priority",     init_default.priority    ));
+        setClickable(   get_bool("clickable",   init_default.isClickable ));
+        setEnabled(     get_bool("is_enabled",  init_default.isEnabled   ));
+        setHidden(      get_bool("is_hidden",   init_default.isHidden    ));
+        setTabPriority( get_int("tab_priority", init_default.tabPriority ));
+        setTabEnabled(  get_bool("tab_enabled", init_default.tabEnabled  ));
 
-        // // Initialize from Lua config table
-        // fromLua(config, config.lua_state());
-    }
+    } // END IDisplayObject::IDisplayObject(const sol::table& config)
 
     IDisplayObject::~IDisplayObject()
     {
@@ -1608,7 +1602,7 @@ namespace SDOM
         bind_void_ap("setAnchorBottom", ::SDOM::setAnchorBottom_lua);
         bind_void_ap("setAnchorRight",  ::SDOM::setAnchorRight_lua);
 
-        // Edge positions
+        // World Edge positions
         bind_R_0("getLeft",         ::SDOM::getLeft_lua);
         bind_R_0("getRight",        ::SDOM::getRight_lua);
         bind_R_0("getTop",          ::SDOM::getTop_lua);
@@ -1617,6 +1611,16 @@ namespace SDOM
         bind_void_f("setRight",     ::SDOM::setRight_lua);
         bind_void_f("setTop",       ::SDOM::setTop_lua);
         bind_void_f("setBottom",    ::SDOM::setBottom_lua);
+
+        // Local Edge positions
+        bind_R_0("getLocalLeft",         ::SDOM::getLocalLeft_lua);
+        bind_R_0("getLocalRight",        ::SDOM::getLocalRight_lua);
+        bind_R_0("getLocalTop",          ::SDOM::getLocalTop_lua);
+        bind_R_0("getLocalBottom",       ::SDOM::getLocalBottom_lua);
+        bind_void_f("setLocalLeft",      ::SDOM::setLocalLeft_lua);
+        bind_void_f("setLocalRight",     ::SDOM::setLocalRight_lua);
+        bind_void_f("setLocalTop",       ::SDOM::setLocalTop_lua);
+        bind_void_f("setLocalBottom",    ::SDOM::setLocalBottom_lua);
 
         // Orphan retention helpers
         bind_R_str("orphanPolicyFromString",        ::SDOM::orphanPolicyFromString_lua);

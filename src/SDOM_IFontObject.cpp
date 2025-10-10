@@ -47,7 +47,7 @@ namespace SDOM
         // type (required) -> normalize and map to FontType
         std::string requested = config["type"].valid() ? config["type"].get<std::string>() : std::string();
         if (requested.empty()) {
-            ERROR("IFontObject constructed without required field 'type' in config");
+            INFO("IFontObject constructed without required field 'type' in config");
             requested = "bitmap";
         }
         std::transform(requested.begin(), requested.end(), requested.begin(), [](unsigned char c){ return std::tolower(c); });
@@ -56,7 +56,7 @@ namespace SDOM
         if (it != StringToFontType.end()) {
             fontType_ = it->second;
         } else {
-            ERROR("IFontObject constructed with unknown font type: " + requested);
+            INFO("IFontObject constructed with unknown font type: " + requested);
             fontType_ = FontType::Bitmap;
         }
         type_ = FontTypeToString.at(fontType_);

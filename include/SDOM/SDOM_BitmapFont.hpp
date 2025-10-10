@@ -15,7 +15,7 @@ namespace SDOM
 
         public:
             // --- Type Info --- //
-            static constexpr const char* TypeName = "BitmapFont";
+            static constexpr const char* TypeName = "bitmap";
 
             // --- Construction & Initialization --- //
             struct InitStruct : public IFontObject::InitStruct

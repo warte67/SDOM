@@ -153,8 +153,8 @@ Notes & test ideas:
     {
         using SUPER = IDataObject;
 
-        // --- Orphan Retention --- //
     public:
+        // --- Orphan Retention --- //
         enum class OrphanRetentionPolicy : int
         {
             RetainUntilManual,  // object is never auto-destroyed; requires explicit Factory or user code to destroy.
@@ -338,7 +338,6 @@ Notes & test ideas:
         IDisplayObject& setTop(float p_top);
         IDisplayObject& setBottom(float p_bottom);
 
-    protected:
         // --- Local Offset Accessors --- //
         float getLocalLeft() const { return left_; }
         float getLocalRight() const { return right_; }
@@ -349,10 +348,10 @@ Notes & test ideas:
         IDisplayObject& setLocalTop(float value) { top_ = value; return *this; }
         IDisplayObject& setLocalBottom(float value) { bottom_ = value; return *this; }
 
-        std::string type_;  // Type identifier (e.g., "Button", "Panel", etc.)
-
-    private: // --- Member Variables --- //
+    protected: // --- Member Variables --- //
+        // std::string name_;  // defined in IDataObject
         float left_, top_, right_, bottom_;  // these are in terms of local not world coordinates
+        std::string type_;  // Type identifier (e.g., "Button", "Panel", etc.)
         bool bIsDirty_ = false;
         SDL_Color color_ = {255, 255, 255, 255};
         AnchorPoint anchorTop_ = AnchorPoint::TOP_LEFT;
