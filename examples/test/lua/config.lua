@@ -90,6 +90,7 @@ local config = {
                             -- isClickable = true,
 
                             wordwrap = false,       -- not working yet
+
                             outline = true,         -- verified
                             -- outline_thickness = 1,   -- verified
 

@@ -596,6 +596,31 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Bind engine functions as Lua globals for direct access.
         - Update all documentation and examples to reflect the new pattern.
     - **For full details and migration steps, see:**  [docs/startup_refactor.md](../docs/startup_refactor.md)
+    
+---   
+- ### [October 11, 2025]
+    - **Label Wordwrap & Truncation Fixes:**
+        - Implemented correct handling for `wordwrap = false` in Label objects:
+            - Labels now treat each line as a single token when wordwrap is disabled, only breaking on explicit newlines.
+            - Added logic to measure and truncate text so it does not overflow label boundaries; formatting escapes and styles are preserved in truncated output.
+            - Ensured that tokenization and alignment logic do not recurse or loop infinitely; fixed endless loop bug by clarifying call order between `tokenizeText()` and `_buildTokenAlignLists()`.
+        - Verified that Labels render correctly with and without wordwrap, and that long lines are clipped at the label edge.
+        - Updated unit tests and example configs to exercise both wordwrap modes.
+
+    - **Debug Cleanup & Refactoring:**
+        - Removed temporary debug prints and diagnostics from Label and event system code.
+        - Ensured all debug output is gated behind appropriate macros (e.g., `DEBUG_LOG`, `DEBUG_LUA_TESTS`, `LUA_INFO`) for clean production builds.
+        - Rebuilt and validated the codebase after cleanup; all tests pass.
+
+    - **Documentation & Progress Tracking:**
+        - Updated progress.md to reflect completion of the Label property audit, Lua binding audit, and startup refactor.
+        - Added a summary and reference link for the startup refactor ([docs/startup_refactor.md](../docs/startup_refactor.md)).
+        - Confirmed that all recent ToDo items for initialization, property exposure, and Lua inheritance are complete.
+
+    - **Next Steps:**
+        - Continue refactoring asset/resource management (AssetHandle system).
+        - Expand unit tests for edge cases in Label rendering and event handling.
+        - Update architecture diagrams and documentation to reflect recent naming and API changes.
 
 ---
 ## ToDo:

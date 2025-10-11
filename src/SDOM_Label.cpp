@@ -895,12 +895,43 @@ namespace SDOM
     void Label::_buildTokenAlignLists()
     {
         tokenAlignLists_.clear();
+
+        // If wordwrap is disabled, treat the entire text as a single token
+        if (!defaultStyle_.wordwrap) 
+        {
+            // Use tokenList (already built by tokenizeText)
+            IFontObject* font_ = fontAsset.as<IFontObject>();
+            int labelWidth = getWidth();
+            std::vector<LabelToken> truncatedTokens;
+            int widthSoFar = 0;
+            for (const auto& token : tokenList)
+            {
+                int tokenWidth = 0;
+                if (font_) 
+                {
+                    if (token.type == TokenType::Word || token.type == TokenType::Punctuation)
+                        tokenWidth = font_->getWordWidth(token.text);
+                    else if (token.type == TokenType::Space)
+                        tokenWidth = font_->getGlyphWidth(' ');
+                    else if (token.type == TokenType::Tab)
+                        tokenWidth = font_->getGlyphWidth(' ') * 4;
+                }
+                if (widthSoFar + tokenWidth > labelWidth)
+                    break;
+                truncatedTokens.push_back(token);
+                widthSoFar += tokenWidth;
+            }
+            AlignQueue queue = alignXRef_[defaultStyle_.alignment];
+            tokenAlignLists_[queue] = truncatedTokens;
+            return;
+        }
+        // Wordwrap is enabled: distribute tokens into alignment queues
         for (const auto& token : tokenList)
         {
             AlignQueue queueKey = alignXRef_.at(token.style.alignment);
             tokenAlignLists_[queueKey].push_back(token);
         }
-        
+        // DEBUG: dump tokenAlignLists_ contents
         #define DEBUG_TEXT false
         if (DEBUG_TEXT)
         {
