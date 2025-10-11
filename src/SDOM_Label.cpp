@@ -167,6 +167,7 @@ namespace SDOM
         fontWidth_ = get_int("font_width", fontSize_);
         fontHeight_ = get_int("font_height", fontSize_);
 
+
         // Normalize width/height -> fallback to fontSize when unspecified/invalid
         if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : 8);
         if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : 8);
@@ -946,34 +947,6 @@ namespace SDOM
             tokenAlignLists_[queue] = truncatedTokens;
             return;
         }        
-        // if (!defaultStyle_.wordwrap) 
-        // {
-        //     // Use tokenList (already built by tokenizeText)
-        //     IFontObject* font_ = fontAsset.as<IFontObject>();
-        //     int labelWidth = getWidth();
-        //     std::vector<LabelToken> truncatedTokens;
-        //     int widthSoFar = 0;
-        //     for (const auto& token : tokenList)
-        //     {
-        //         int tokenWidth = 0;
-        //         if (font_) 
-        //         {
-        //             if (token.type == TokenType::Word || token.type == TokenType::Punctuation)
-        //                 tokenWidth = font_->getWordWidth(token.text);
-        //             else if (token.type == TokenType::Space)
-        //                 tokenWidth = font_->getGlyphWidth(' ');
-        //             else if (token.type == TokenType::Tab)
-        //                 tokenWidth = font_->getGlyphWidth(' ') * 4;
-        //         }
-        //         if (widthSoFar + tokenWidth > labelWidth)
-        //             break;
-        //         truncatedTokens.push_back(token);
-        //         widthSoFar += tokenWidth;
-        //     }
-        //     AlignQueue queue = alignXRef_[defaultStyle_.alignment];
-        //     tokenAlignLists_[queue] = truncatedTokens;
-        //     return;
-        // }
         // Wordwrap is enabled: distribute tokens into alignment queues
         for (const auto& token : tokenList)
         {
