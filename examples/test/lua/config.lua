@@ -100,8 +100,8 @@ local config = {
                             border = true,                                          -- verified
                             border_color = { r = 255, g = 255, b = 255, a = 64 },   -- verified
                             font_size = 8,                                          -- verified
-                            -- font_width = 8,         -- not working yet (should this set the glyph width of the SpriteSheet or scaling?)
-                            -- font_height = 16,        -- not working yet (should this set the glyph height of the SpriteSheet or scaling?)
+                            font_width = 8,         -- not working yet 
+                            font_height = 12,        -- not working yet
                             alignment = "center",       -- mostly working, leading and trailing spaces not trimmed
                             foreground_color = { r = 255, g = 255, b = 255, a = 255 },  -- verified
                             max_width = 500             -- verified

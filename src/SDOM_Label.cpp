@@ -163,14 +163,14 @@ namespace SDOM
         text_ = get_str("text", init.text);
         resourceName_ = get_str("resource_name", get_str("font", init.resourceName) );
         fontType_ = IFontObject::StringToFontType.at(get_str("font_type", IFontObject::FontTypeToString.at(init.fontType)));
-        fontSize_ = get_int("font_size", 10);
+        fontSize_ = get_int("font_size", init.fontSize);
         fontWidth_ = get_int("font_width", fontSize_);
         fontHeight_ = get_int("font_height", fontSize_);
 
 
         // Normalize width/height -> fallback to fontSize when unspecified/invalid
-        if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : 8);
-        if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : 8);
+        if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : init.fontWidth);
+        if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : init.fontHeight);
 
         // Style defaults
         defaultStyle_.alignment = stringToLabelAlign_.at(normalizeAnchorString(get_str("alignment", "top_left")));

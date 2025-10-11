@@ -12,7 +12,7 @@ namespace SDOM
     class BitmapFont : public IFontObject
     {
             using SUPER = IFontObject;
-
+        
         public:
             // --- Type Info --- //
             static constexpr const char* TypeName = "bitmap";
@@ -26,7 +26,7 @@ namespace SDOM
                     type = TypeName;
                     filename = TypeName; // Default filename, can be overridden
                 }
-                int fontSize = 10;     // Font size property for TrueType fonts (and BitmapFont scaling)
+                int fontSize = 8;     // Font size property for TrueType fonts (and BitmapFont scaling)
                 int fontWidth = -1;     // Optional: non-uniform width (bitmap only)          
                 int fontHeight = -1;    // Optional: non-uniform height (bitmap only
             };

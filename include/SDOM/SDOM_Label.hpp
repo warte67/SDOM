@@ -42,7 +42,7 @@ namespace SDOM
             std::string text = "Label";
             std::string resourceName = "default_bmp_8x8"; // default font
             IFontObject::FontType fontType = IFontObject::FontType::Bitmap;
-            int fontSize = 10;          // for TrueType fonts, or BitmapFont scaling
+            int fontSize = 8;           // for TrueType fonts, or BitmapFont scaling
             int fontWidth = 8;          // for BitmapFont only (-1 to use fontSize)
             int fontHeight = 8;         // for BitmapFont only (-1 to use fontSize)
             LabelAlign alignment = LabelAlign::TOP_LEFT;        // Text alignment (default: top-left)
