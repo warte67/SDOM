@@ -603,11 +603,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Verify Label / IDisplayObject constructor default merging (Label::Label(sol::table&)).
 - Add a short migration note in the changelog describing the rename and any Lua compatibility considerations.
 - Label and IDisplayObject Constructor Defaults should include IDisplayObject defaults and the InitStruct defaults.  Verify and Fix. Pattern may be within the Label::Label(sol::table& config)
+- **Comment blocks** in the code are a great way to track progress and ensure completeness.
+
 
 
 ---
 
-**Comment blocks** in the code are a great way to track progress and ensure completeness.
-
-Let me know when you’re ready to start tomorrow, and I’ll help with patches, audits, or migration scripts.
 
