@@ -907,45 +907,45 @@ namespace SDOM
         tokenAlignLists_.clear();
 
         // If wordwrap is disabled, treat the entire text as a single token
-if (!defaultStyle_.wordwrap) 
-{
-    IFontObject* font_ = fontAsset.as<IFontObject>();
-    int labelWidth = getWidth();
-
-    // Compute parent's available width if needed
-    int parentWidth = labelWidth;
-    if (auto parent = getParent()) {
-        int leftEdge = getX() - parent->getX();
-        int availW = parent->getWidth() - leftEdge;
-        parentWidth = (availW > 0) ? availW : labelWidth;
-    }
-
-    // Use the minimum of labelWidth and parentWidth
-    int effectiveWidth = std::min(labelWidth, parentWidth);
-
-    std::vector<LabelToken> truncatedTokens;
-    int widthSoFar = 0;
-    for (const auto& token : tokenList)
-    {
-        int tokenWidth = 0;
-        if (font_) 
+        if (!defaultStyle_.wordwrap) 
         {
-            if (token.type == TokenType::Word || token.type == TokenType::Punctuation)
-                tokenWidth = font_->getWordWidth(token.text);
-            else if (token.type == TokenType::Space)
-                tokenWidth = font_->getGlyphWidth(' ');
-            else if (token.type == TokenType::Tab)
-                tokenWidth = font_->getGlyphWidth(' ') * 4;
-        }
-        if (widthSoFar + tokenWidth > effectiveWidth)
-            break;
-        truncatedTokens.push_back(token);
-        widthSoFar += tokenWidth;
-    }
-    AlignQueue queue = alignXRef_[defaultStyle_.alignment];
-    tokenAlignLists_[queue] = truncatedTokens;
-    return;
-}        
+            IFontObject* font_ = fontAsset.as<IFontObject>();
+            int labelWidth = getWidth();
+
+            // Compute parent's available width if needed
+            int parentWidth = labelWidth;
+            if (auto parent = getParent()) {
+                int leftEdge = getX() - parent->getX();
+                int availW = parent->getWidth() - leftEdge;
+                parentWidth = (availW > 0) ? availW : labelWidth;
+            }
+
+            // Use the minimum of labelWidth and parentWidth
+            int effectiveWidth = std::min(labelWidth, parentWidth);
+
+            std::vector<LabelToken> truncatedTokens;
+            int widthSoFar = 0;
+            for (const auto& token : tokenList)
+            {
+                int tokenWidth = 0;
+                if (font_) 
+                {
+                    if (token.type == TokenType::Word || token.type == TokenType::Punctuation)
+                        tokenWidth = font_->getWordWidth(token.text);
+                    else if (token.type == TokenType::Space)
+                        tokenWidth = font_->getGlyphWidth(' ');
+                    else if (token.type == TokenType::Tab)
+                        tokenWidth = font_->getGlyphWidth(' ') * 4;
+                }
+                if (widthSoFar + tokenWidth > effectiveWidth)
+                    break;
+                truncatedTokens.push_back(token);
+                widthSoFar += tokenWidth;
+            }
+            AlignQueue queue = alignXRef_[defaultStyle_.alignment];
+            tokenAlignLists_[queue] = truncatedTokens;
+            return;
+        }        
         // if (!defaultStyle_.wordwrap) 
         // {
         //     // Use tokenList (already built by tokenizeText)
@@ -1136,6 +1136,24 @@ if (!defaultStyle_.wordwrap)
         if (!font_) return;
         if (!font_->isLoaded()) return;
 
+        // Trim leading spaces from a line of tokens
+        auto trim_leading_spaces = [&](std::vector<LabelToken>& line) 
+        {
+            while (!line.empty() && line.front().type == TokenType::Space) 
+            {
+                line.erase(line.begin());
+            }
+        };        
+        // trim trailing spaces from a line of tokens and adjust lineWidth
+        auto trim_trailing_spaces = [&](std::vector<LabelToken>& line, float& lineWidth, IFontObject* font) 
+        {
+            while (!line.empty() && line.back().type == TokenType::Space) 
+            {
+                if (font) lineWidth -= font->getGlyphWidth(' ');
+                line.pop_back();
+            }
+        };
+        // Clear existing phraseAlignLists_
         phraseAlignLists_.clear();
         float maxWidth = 0, maxHeight = 0;
         _maxSize(maxWidth, maxHeight);
@@ -1157,9 +1175,11 @@ if (!defaultStyle_.wordwrap)
             std::vector<LabelToken> currentLine;
             float currentLineWidth = 0.0f;
             float totalHeight = 0.0f;
-            auto getLineHeight = [&](const std::vector<LabelToken>& line) -> float {
+            auto getLineHeight = [&](const std::vector<LabelToken>& line) -> float 
+            {
                 float maxH = 0.0f;
-                for (const auto& token : line) {
+                for (const auto& token : line) 
+                {
                     // font_->setFontSize(token.style.fontSize);
                     font_->setFontStyle(token.style);
                     int tokenHeight = font_->getGlyphHeight('H');
@@ -1169,7 +1189,8 @@ if (!defaultStyle_.wordwrap)
             };
 
             size_t i = 0;
-            while (i < tokens.size()) {
+            while (i < tokens.size()) 
+            {
                 const auto& token = tokens[i];
                 bool isVisible = (token.type == TokenType::Word ||
                                 token.type == TokenType::Space ||
@@ -1180,7 +1201,8 @@ if (!defaultStyle_.wordwrap)
                 font_->setFontStyle(token.style);
 
                 // Group word + trailing punctuation for wrapping
-                if (token.type == TokenType::Word && i + 1 < tokens.size() && tokens[i+1].type == TokenType::Punctuation) {
+                if (token.type == TokenType::Word && i + 1 < tokens.size() && tokens[i+1].type == TokenType::Punctuation) 
+                {
                     int wordWidth = font_->getWordWidth(token.text);
                     // font_->setFontSize(tokens[i+1].style.fontSize);
                     font_->setFontStyle(tokens[i+1].style);
@@ -1188,12 +1210,13 @@ if (!defaultStyle_.wordwrap)
                     int punctWidth = font_->getWordWidth(tokens[i+1].text);
                     int clusterWidth = wordWidth + punctWidth;
 
-                    if (maxWidth > 0.0f && currentLineWidth + clusterWidth > maxWidth && !currentLine.empty()) {
+                    if (maxWidth > 0.0f && currentLineWidth + clusterWidth > maxWidth && !currentLine.empty()) 
+                    {
                         // Trim trailing spaces before pushing the line
-                        while (!currentLine.empty() && currentLine.back().type == TokenType::Space) {
-                            currentLineWidth -= font_->getGlyphWidth(' ');
-                            currentLine.pop_back();
-                        }
+                        trim_trailing_spaces(currentLine, currentLineWidth, font_);
+                        // Trim leading spaces before pushing the line
+                        trim_leading_spaces(currentLine);        
+                        // If line is empty after trimming, skip adding it                
                         float lineHeight = getLineHeight(currentLine);
                         if (maxHeight > 0.0f && (totalHeight + lineHeight > maxHeight))
                             break;
@@ -1213,10 +1236,10 @@ if (!defaultStyle_.wordwrap)
                 if (token.type == TokenType::Newline)
                 {
                     // Trim trailing spaces before pushing the line
-                    while (!currentLine.empty() && currentLine.back().type == TokenType::Space) {
-                        currentLineWidth -= font_->getGlyphWidth(' ');
-                        currentLine.pop_back();
-                    }
+                    trim_trailing_spaces(currentLine, currentLineWidth, font_);
+                    // Trim leading spaces before pushing the line
+                    trim_leading_spaces(currentLine);    
+                    // If line is empty after trimming, skip adding it                    
                     float lineHeight = getLineHeight(currentLine);
                     if (maxHeight > 0.0f && (totalHeight + lineHeight > maxHeight))
                         break;
@@ -1242,10 +1265,10 @@ if (!defaultStyle_.wordwrap)
                 if (isVisible && maxWidth > 0.0f && currentLineWidth + tokenWidth > maxWidth && !currentLine.empty())
                 {
                     // Trim trailing spaces before pushing the line
-                    while (!currentLine.empty() && currentLine.back().type == TokenType::Space) {
-                        currentLineWidth -= font_->getGlyphWidth(' ');
-                        currentLine.pop_back();
-                    }
+                    trim_trailing_spaces(currentLine, currentLineWidth, font_);
+                    // Trim leading spaces before pushing the line
+                    trim_leading_spaces(currentLine);             
+                    // If line is empty after trimming, skip adding it           
                     float lineHeight = getLineHeight(currentLine);
                     if (maxHeight > 0.0f && (totalHeight + lineHeight > maxHeight))
                         break;
@@ -1262,10 +1285,10 @@ if (!defaultStyle_.wordwrap)
             // Push last line if not empty and within height
             if (!currentLine.empty()) {
                 // Trim trailing spaces before pushing the line
-                while (!currentLine.empty() && currentLine.back().type == TokenType::Space) {
-                    currentLineWidth -= font_->getGlyphWidth(' ');
-                    currentLine.pop_back();
-                }
+                trim_trailing_spaces(currentLine, currentLineWidth, font_);
+                // Trim leading spaces before pushing the line
+                trim_leading_spaces(currentLine);    
+                // If line is empty after trimming, skip adding it              
                 float lineHeight = getLineHeight(currentLine);
                 if (maxHeight <= 0.0f || (totalHeight + lineHeight <= maxHeight)) {
                     lines.push_back(currentLine);

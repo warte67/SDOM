@@ -80,7 +80,7 @@ local config = {
                             anchor_top = "top",         -- verified
                             y = 75,                     -- verified (world coordinates)
                             -- top = 5,                 -- not working because the Label does not have a parent  
-                            anchor_right = "left",     -- verified
+                            anchor_right = "right",     -- verified
                             width = 240,                -- verified (right - left = 240)
                             -- right = -5,              -- not working because the Label does not have a parent
                             anchor_bottom = "bottom",   -- verified
