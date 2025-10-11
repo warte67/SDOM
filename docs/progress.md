@@ -596,16 +596,16 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Bind engine functions as Lua globals for direct access.
         - Update all documentation and examples to reflect the new pattern.
     - **For full details and migration steps, see:**  [docs/startup_refactor.md](../docs/startup_refactor.md)
-    
+
 ---   
 - ### [October 11, 2025]
-    - **Label Wordwrap & Truncation Fixes:**
-        - Implemented correct handling for `wordwrap = false` in Label objects:
-            - Labels now treat each line as a single token when wordwrap is disabled, only breaking on explicit newlines.
-            - Added logic to measure and truncate text so it does not overflow label boundaries; formatting escapes and styles are preserved in truncated output.
-            - Ensured that tokenization and alignment logic do not recurse or loop infinitely; fixed endless loop bug by clarifying call order between `tokenizeText()` and `_buildTokenAlignLists()`.
-        - Verified that Labels render correctly with and without wordwrap, and that long lines are clipped at the label edge.
-        - Updated unit tests and example configs to exercise both wordwrap modes.
+    - **BitmapFont Scaling & Label Rendering Fixes:**
+        - Resolved BitmapFont scaling issues: glyphs now correctly honor `font_width` and `font_height` for per-axis stretching, matching measurement and rendering.
+        - Cleaned up label rendering logic to properly handle resizing and bounds; labels now clip and cull out-of-bounds text as expected.
+        - Improved word wrapping: leading and trailing spaces are now trimmed from each line during wrapping, ensuring clean text alignment for all alignments.
+        - Added a flag to disable wordwrap; when disabled, labels treat each line as a single token and only break on explicit newlines.
+        - Enhanced culling logic for out-of-bounds text, preventing overflow and ensuring only visible text is rendered.
+        - Verified fixes with updated unit tests and example configs.
 
     - **Debug Cleanup & Refactoring:**
         - Removed temporary debug prints and diagnostics from Label and event system code.
