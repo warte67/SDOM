@@ -30,7 +30,7 @@ namespace SDOM
     // --- Main Loop & Event Dispatch --- //
     void quit_lua();		// TESTED (manually from listener_callbacks.lua)
     void shutdown_lua();	// TESTED (manually from listener_callbacks.lua)
-    void run_lua();         // UNTESTED
+    // void run_lua();         // UNTESTED
 
     void configure_lua(const sol::table& config);            // UNTESTED
     void configureFromFile_lua(const std::string& filename); // UNTESTED
@@ -65,8 +65,8 @@ namespace SDOM
     bool hasDisplayObject_lua(const std::string& name);          	// TESTED (GC tests check existence)
 
     AssetHandle createAssetObject_lua(const std::string& typeName, const sol::table& config); // UNTESTED
-    AssetHandle getAssetObject_lua(const std::string& name);      //  UNTESTED
-    bool hasAssetObject_lua(const std::string& name);            //  UNTESTED
+    AssetHandle getAssetObject_lua(const std::string& name);        //  UNTESTED
+    bool hasAssetObject_lua(const std::string& name);               //  UNTESTED
 
     // --- Focus & Hover Management --- //
     void doTabKeyPressForward_lua();             					// UNTESTED
@@ -82,20 +82,20 @@ namespace SDOM
     float getElapsedTime_lua();	 // alias getDeltaTime() —			// UNTESTED
 
     // --- Event helpers (exposed to Lua) --- //
-void pumpEventsOnce_lua();                 						// UNTESTED
-    void pushMouseEvent_lua(const sol::object& args);   		// UNTESTED
-    void pushKeyboardEvent_lua(const sol::object& args);		// UNTESTED
+void pumpEventsOnce_lua();                 						    // UNTESTED
+    void pushMouseEvent_lua(const sol::object& args);   		    // UNTESTED
+    void pushKeyboardEvent_lua(const sol::object& args);		    // UNTESTED
 
     // --- Orphan / Future Child Management --- //
-    void destroyDisplayObject_lua(const std::string& name);     // TESTED
-    int countOrphanedDisplayObjects_lua();                      // TESTED
-    std::vector<DisplayHandle> getOrphanedDisplayObjects_lua(); // TESTED
+    void destroyDisplayObject_lua(const std::string& name);         // TESTED
+    int countOrphanedDisplayObjects_lua();                          // TESTED
+    std::vector<DisplayHandle> getOrphanedDisplayObjects_lua();     // TESTED
     void destroyOrphanedDisplayObjects_lua();  // aliases:  "destroyOrphanedObjects" and "destroyOrphans" // UNTESTED
-    void collectGarbage_lua();                                  // TESTED
+    void collectGarbage_lua();                                      // TESTED
 
     // --- Utility Methods --- //
-    std::vector<std::string> listDisplayObjectNames_lua(); 		// UNTESTED
-    void printObjectRegistry_lua();                        		// UNTESTED	
+    std::vector<std::string> listDisplayObjectNames_lua(); 		    // UNTESTED
+    void printObjectRegistry_lua();                        		    // UNTESTED	
 
 
 } // end namespace SDOM

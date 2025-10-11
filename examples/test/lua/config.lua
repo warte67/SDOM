@@ -25,112 +25,113 @@
 -- Returning the table below keeps the file usable both as a module (`require "lua/config"`)
 -- and as a direct script loaded by the host.
 local config = {
-    Core = {
-        windowWidth = 1200,
-        windowHeight = 800,
-        pixelWidth = 2,
-        pixelHeight = 2,
-        allowTextureResize = true,
-        preserveAspectRatio = true,
-        rendererLogicalPresentation = "SDL_LOGICAL_PRESENTATION_LETTERBOX",
-        windowFlags = "SDL_WINDOW_RESIZABLE",
-        pixelFormat = "SDL_PIXELFORMAT_RGBA8888",
-        color = { r = 0, g = 0, b = 0, a = 255 },
-        rootStage = "mainStage",
-        children = {
-            {
-                rootStage = "mainStage",
-                type = "Stage",
-                name = "mainStage",
-                color = { r = 32, g = 8, b = 4, a = 255 },
-                children = {
-                    {
-                        type = "Box",
-                        name = "redishBox",
-                        x = 100.0,
-                        y = 100,
-                        width = 120,
-                        height = 80,
-                        color = { r = 200, g = 50, b = 50, a = 255 }
-                    },
-                    {
-                        type = "Box",
-                        name = "greenishBox",
-                        x = 150,
-                        y = 150,
-                        width = 80,
-                        height = 120,
-                        color = { r = 50, g = 200, b = 50, a = 255 }
-                    },
-                    {
-                        type = "Box",
-                        name = "blueishBox",
-                        x = 240,
-                        y = 70,
-                        width = 250,
-                        height = 225,
-                        color = { r = 50, g = 50, b = 200, a = 255 },
-                        children = {
-                            {
-                                type = "Label",
-                                name = "blueishBoxLabel",
+    windowWidth = 1200,
+    windowHeight = 800,
+    pixelWidth = 2,
+    pixelHeight = 2,
+    allowTextureResize = true,
+    preserveAspectRatio = true,
+    rendererLogicalPresentation = "SDL_LOGICAL_PRESENTATION_LETTERBOX",
+    windowFlags = "SDL_WINDOW_RESIZABLE",
+    pixelFormat = "SDL_PIXELFORMAT_RGBA8888",
+    color = { r = 0, g = 0, b = 0, a = 255 },
+    rootStage = "mainStage",
+    children = {
+        {
+            rootStage = "mainStage",
+            type = "Stage",
+            name = "mainStage",
+            color = { r = 32, g = 8, b = 4, a = 255 },
+            children = {
+                {
+                    type = "Box",
+                    name = "redishBox",
+                    x = 100.0,
+                    y = 100,
+                    width = 120,
+                    height = 80,
+                    color = { r = 200, g = 50, b = 50, a = 255 }
+                },
+                {
+                    type = "Box",
+                    name = "greenishBox",
+                    x = 150,
+                    y = 150,
+                    width = 80,
+                    height = 120,
+                    color = { r = 50, g = 200, b = 50, a = 255 }
+                },
+                {
+                    type = "Box",
+                    name = "blueishBox",
+                    x = 240,
+                    y = 70,
+                    width = 250,
+                    height = 225,
+                    color = { r = 50, g = 50, b = 200, a = 255 },
+                    children = {
+                        {
+                            type = "Label",
+                            name = "blueishBoxLabel",
 
-                                anchor_left = "left",       -- verified
-                                x = 245,                    -- verified (world coordinates)
-                                -- left = 5,
-                                anchor_top = "top",         -- verified
-                                y = 75,                     -- verified (world coordinates)
-                                -- top = 5,
-                                anchor_right = "right",     -- verified
-                                width = 240,                -- verified (right - left = 240)
-                                -- right = -5,
-                                anchor_bottom = "bottom",   -- verified
-                                height = 215,               -- verified (bottom - top = 215)
-                                -- bottom = -5,
+                            anchor_left = "left",       -- verified
+                            x = 245,                    -- verified (world coordinates)
+                            -- left = 5,
+                            anchor_top = "top",         -- verified
+                            y = 75,                     -- verified (world coordinates)
+                            -- top = 5,
+                            anchor_right = "right",     -- verified
+                            width = 240,                -- verified (right - left = 240)
+                            -- right = -5,
+                            anchor_bottom = "bottom",   -- verified
+                            height = 215,               -- verified (bottom - top = 215)
+                            -- bottom = -5,
 
-                                -- isClickable = true,
+                            -- isClickable = true,
 
-                                wordwrap = false,       -- not working yet
-                                outline = true,         -- verified
-                                -- outline_thickness = 1,   -- verified
+                            wordwrap = false,       -- not working yet
+                            outline = true,         -- verified
+                            -- outline_thickness = 1,   -- verified
 
-                                text = "The [bold][color=red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river, sunlight catching on ripples as children laugh in the distance. A small breeze stirs the pages of an open book left on the bench, and a bell rings from the town square.",
-                                resource_name = "default_bmp_8x8",                      -- verified
-                                border = true,                                          -- verified
-                                border_color = { r = 255, g = 255, b = 255, a = 64 },   -- verified
-                                font_size = 8,                                         -- verified
-                                -- font_width = 16,         -- not working yet (should this set the glyph width of the SpriteSheet or scaling?)
-                                -- font_height = 16,        -- not working yet (should this set the glyph height of the SpriteSheet or scaling?)
-                                alignment = "center",       -- mostly working, leading and trailing spaces not trimmed
-                                foreground_color = { r = 255, g = 255, b = 255, a = 255 },  -- verified
-                                max_width = 450             -- verified
-                            }
+                            text = "The [bold][color=red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river, sunlight catching on ripples as children laugh in the distance. A small breeze stirs the pages of an open book left on the bench, and a bell rings from the town square.",
+                            resource_name = "default_bmp_8x8",                      -- verified
+                            border = true,                                          -- verified
+                            border_color = { r = 255, g = 255, b = 255, a = 64 },   -- verified
+                            font_size = 8,                                         -- verified
+                            -- font_width = 16,         -- not working yet (should this set the glyph width of the SpriteSheet or scaling?)
+                            -- font_height = 16,        -- not working yet (should this set the glyph height of the SpriteSheet or scaling?)
+                            alignment = "center",       -- mostly working, leading and trailing spaces not trimmed
+                            foreground_color = { r = 255, g = 255, b = 255, a = 255 },  -- verified
+                            max_width = 450             -- verified
                         }
-                    },
-                    {
-                        type = "Box",
-                        name = "orangishBox",
-                        x = 40,
-                        y = 200,
-                        width = 100,
-                        height = 75,
-                        color = { r = 200, g = 100, b = 50, a = 255 }
                     }
+                },
+                {
+                    type = "Box",
+                    name = "orangishBox",
+                    x = 40,
+                    y = 200,
+                    width = 100,
+                    height = 75,
+                    color = { r = 200, g = 100, b = 50, a = 255 }
                 }
-            },
-            {
-                type = "Stage",
-                name = "stageTwo",
-                color = { r = 16, g = 32, b = 8, a = 255 }
-            },
-            {
-                type = "Stage",
-                name = "stageThree",
-                color = { r = 8, g = 16, b = 32, a = 255 }
             }
+        },
+        {
+            type = "Stage",
+            name = "stageTwo",
+            color = { r = 16, g = 32, b = 8, a = 255 }
+        },
+        {
+            type = "Stage",
+            name = "stageThree",
+            color = { r = 8, g = 16, b = 32, a = 255 }
         }
     }
-}
+} -- Closing brace for the config table
+
+-- Configure the test application
+configure(config)
 
 -- The example binary runs with working directory `examples/test`, so use
 -- project-relative paths from there (./lua/...). This avoids duplicating

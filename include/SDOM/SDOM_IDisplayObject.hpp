@@ -350,7 +350,7 @@ Notes & test ideas:
 
     protected: // --- Member Variables --- //
         // std::string name_;  // defined in IDataObject
-        float left_, top_, right_, bottom_;  // these are in terms of local not world coordinates
+    float left_ = 0.0f, top_ = 0.0f, right_ = 0.0f, bottom_ = 0.0f;  // these are in terms of local not world coordinates
         std::string type_;  // Type identifier (e.g., "Button", "Panel", etc.)
         bool bIsDirty_ = false;
         SDL_Color color_ = {255, 255, 255, 255};

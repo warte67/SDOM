@@ -67,7 +67,7 @@ namespace SDOM
     void Core::configureFromLua(const sol::table& lua)
     {
         CoreConfig config;
-        sol::table coreObj = lua["Core"];
+        sol::table coreObj = lua;
         config.windowWidth = coreObj["windowWidth"].get_or(1280.0f);
         config.windowHeight = coreObj["windowHeight"].get_or(720.0f);
         config.pixelWidth  = coreObj["pixelWidth"].get_or(2.0f);
@@ -195,6 +195,30 @@ namespace SDOM
             } catch (...) {}
             if (ret.is<sol::table>()) {
                 sol::table configTable = ret.as<sol::table>();
+                // Defensive: scripts may call the global `configure(table)`
+                // themselves and also return the table. To avoid double-apply
+                // (which can lead to duplicate-named object errors), detect
+                // whether the returned table's rootStage has already been
+                // created and skip re-applying if so.
+                std::string rootStageName = "mainStage";
+                try {
+                    if (configTable["rootStage"].valid())
+                        rootStageName = configTable["rootStage"].get<std::string>();
+                } catch(...) {}
+
+                bool alreadyApplied = false;
+                try {
+                    if (factory_) {
+                        DisplayHandle existing = factory_->getDisplayObject(rootStageName);
+                        if (existing.isValid()) alreadyApplied = true;
+                    }
+                } catch(...) { alreadyApplied = false; }
+
+                if (alreadyApplied) {
+                    INFO(std::string("Lua config file appears to have already applied configuration for rootStage '") + rootStageName + "'; skipping duplicate configure().");
+                    return;
+                }
+
                 configureFromLua(configTable);
                 return;
             }
@@ -230,15 +254,22 @@ namespace SDOM
     }
 
 
-    void Core::run(const sol::table& config)
+    bool Core::run(const sol::table& config)
     {
         configureFromLua(config);
         // Now run normally
-        run();
+        return run();
+    }
+
+    bool Core::run(const CoreConfig& config)
+    {
+        // Apply the provided configuration synchronously and then start the main loop.
+        configure(config);
+        return run();
     }
 
 
-    void Core::run(const std::string& configFile)
+    bool Core::run(const std::string& configFile)
     {
         if (!configFile.empty()) {
             // Prefer an explicit existence check (robust against debugger CWD differences)
@@ -266,13 +297,13 @@ namespace SDOM
 
                 if (!looksLikeCode && containsPathSep) {
                     ERROR(std::string("Config file not found: ") + configFile);
-                    return;
+                    return false;
                 }
 
                 // If it doesn't look like code and no path separators, treat as missing file rather than raw script
                 if (!looksLikeCode) {
                     ERROR(std::string("Config string does not appear to be Lua code and no file found: ") + configFile);
-                    return;
+                    return false;
                 }
 
                 // Treat as inline Lua code
@@ -283,13 +314,13 @@ namespace SDOM
                     if (!chunk.valid()) {
                         sol::error err = chunk;
                         ERROR(std::string("Failed to load Lua config chunk: ") + err.what());
-                        return;
+                        return false;
                     }
                     sol::protected_function_result result = chunk();
                     if (!result.valid()) {
                         sol::error err = result;
                         ERROR(std::string("Error executing Lua config chunk: ") + err.what());
-                        return;
+                        return false;
                     }
                     sol::object ret = result.get<sol::object>();
                     // Restore Core global to CoreForward (if present) so that
@@ -315,7 +346,7 @@ namespace SDOM
                 }
             }
         }
-        run();
+        return run();
     }
 
     void Core::reconfigure(const CoreConfig& config)
@@ -458,17 +489,18 @@ namespace SDOM
         reconfigure(cfg);
     }
 
-    void Core::run()
+    bool Core::run()
     {
         // std::cout << "Core::run()" << std::endl;
 
+        bool overallSuccess = true;
         try
         {
             static bool runWasStarted = false;
             if (runWasStarted) {
                 // just silently return if called a second time.  Recursion here would be inapproprite.
                 // ERROR("Core::run() Error: run() has already been called once. Multiple calls to run() are not allowed.");
-                return;
+                return true;
             }
             runWasStarted = true;
 
@@ -483,7 +515,9 @@ namespace SDOM
             if (!rootStage)
             {
                 ERROR("Core::run() Error: Root node is null or not a valid Stage.");
-                return;
+                overallSuccess = false;
+                onQuit();
+                return false;
             }
             // else
             // {
@@ -494,10 +528,16 @@ namespace SDOM
             // Now run user tests after initialization
             // SDL_Delay(250); // give some time for tiled window to be configured by the OS Compositor 
 
+            // Temporarily ignore real mouse input while running unit tests
+            this->setIgnoreRealInput(true);
             bool testsPassed = onUnitTest();
+            this->setIgnoreRealInput(false);
             if (!testsPassed) 
             {
                 ERROR("Unit tests failed. Aborting run.");
+                overallSuccess = false;
+                // stop the main loop to allow graceful shutdown
+                bIsRunning_ = false;
             }
 
             SDL_Event event;
@@ -509,6 +549,17 @@ namespace SDOM
             {
                 while (SDL_PollEvent(&event)) 
                 {
+                    // If configured to ignore real mouse input, drop any mouse events
+                    if (this->getIgnoreRealInput()) {
+                        // Drop real mouse and keyboard input while unit tests run so
+                        // synthetic events are not interfered with by the user's input.
+                        if (event.type == SDL_EVENT_MOUSE_MOTION || event.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.type == SDL_EVENT_MOUSE_BUTTON_UP || event.type == SDL_EVENT_MOUSE_WHEEL
+                            || event.type == SDL_EVENT_KEY_DOWN || event.type == SDL_EVENT_KEY_UP || event.type == SDL_EVENT_TEXT_INPUT || event.type == SDL_EVENT_TEXT_EDITING
+                            || event.type == SDL_EVENT_WINDOW_FOCUS_GAINED || event.type == SDL_EVENT_WINDOW_FOCUS_LOST) {
+                            // skip these events
+                            continue;
+                        }
+                    }
                     // Global event handling
                     if (event.type == SDL_EVENT_QUIT) 
                         bIsRunning_ = false;
@@ -631,24 +682,24 @@ namespace SDOM
         {
             // Handle exceptions gracefully
             SDOM::printMessageBox("Exception Caught", e.what(), e.getFile(), e.getLine(), CLR::RED, CLR::WHITE, CLR::BROWN);
-
-            // SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Terminal Error", errStr.c_str(), nullptr);
+            overallSuccess = false;
         }
         catch (const std::exception& e) 
         {
             // Handle standard exceptions
             std::cerr << CLR::RED << "Standard exception caught: " << CLR::WHITE << e.what() << CLR::RESET << std::endl;
             std::string errStr = "Exception Caught: " + std::string(e.what());
-            // SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Standard Exception", errStr.c_str(), nullptr);
+            overallSuccess = false;
         }
         catch (...) 
         {
             // Handle unknown exceptions
             std::cerr << CLR::RED << "Unknown exception caught!" << CLR::RESET << std::endl;
-            // SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Unknown Exception", "An unknown error occurred.", nullptr);
+            overallSuccess = false;
         }
         // properly shutdown
         onQuit();
+        return overallSuccess;
     } // END: run()
 
     
@@ -666,6 +717,13 @@ namespace SDOM
         // std::cout << "Core::pumpEventsOnce(): Dispatching queued event. Remaining queue size: " << eventManager_->getEventQueueSize() << std::endl;
         while (SDL_PollEvent(&event))
         {
+            if (this->getIgnoreRealInput()) {
+                if (event.type == SDL_EVENT_MOUSE_MOTION || event.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.type == SDL_EVENT_MOUSE_BUTTON_UP || event.type == SDL_EVENT_MOUSE_WHEEL
+                    || event.type == SDL_EVENT_KEY_DOWN || event.type == SDL_EVENT_KEY_UP || event.type == SDL_EVENT_TEXT_INPUT || event.type == SDL_EVENT_TEXT_EDITING
+                    || event.type == SDL_EVENT_WINDOW_FOCUS_GAINED || event.type == SDL_EVENT_WINDOW_FOCUS_LOST) {
+                    continue;
+                }
+            }
             if (event.type == SDL_EVENT_QUIT)
                 bIsRunning_ = false;
 
@@ -1428,8 +1486,18 @@ namespace SDOM
         // --- Main Loop & Event Dispatch --- //        
         SDOM::bind_noarg("quit", quit_lua, objHandleType, coreTable, lua);
         SDOM::bind_noarg("shutdown", shutdown_lua, objHandleType, coreTable, lua);
-        SDOM::bind_noarg("run", run_lua, objHandleType, coreTable, lua);
+        // SDOM::bind_noarg("run", run_lua, objHandleType, coreTable, lua);
         SDOM::bind_table("configure", configure_lua, objHandleType, coreTable, lua);
+        // Also expose a top-level global `configure(table)` convenience
+        // function that forwards to the Core singleton.  The Core method
+        // bound into `Core` expects a userdata first-argument (the Core
+        // forwarder), so we must expose a separate free function that
+        // accepts a table and calls the singleton directly.
+        try {
+            lua.set_function("configure", [](const sol::table& t) {
+                Core::getInstance().configureFromLua(t);
+            });
+        } catch(...) {}
         SDOM::bind_string("configureFromFile", configureFromFile_lua, objHandleType, coreTable, lua);
 
 	    // --- Callback/Hook Registration --- //

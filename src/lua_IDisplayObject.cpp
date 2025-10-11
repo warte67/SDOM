@@ -174,7 +174,43 @@ namespace SDOM
     void setName_lua(IDisplayObject* obj, const std::string& newName) { if (!obj) return; obj->setName(newName); }
     std::string getType_lua(const IDisplayObject* obj) { if (!obj) return std::string(); return obj->getType(); }
     void setType_lua(IDisplayObject* obj, const std::string& newType) { if (!obj) return; obj->setType(newType); }
-    Bounds getBounds_lua(const IDisplayObject* obj) { if (!obj) return Bounds(); return obj->getBounds(); }
+    Bounds getBounds_lua(const IDisplayObject* obj) { 
+        if (!obj) {
+            // Return a zero-initialized Bounds to avoid leaking uninitialized memory
+            return Bounds{0.0f, 0.0f, 0.0f, 0.0f};
+        }
+        Bounds b = obj->getBounds(); 
+        // If any component is NaN or infinite, fall back to safer getters
+        bool bad = false;
+        try {
+            if (std::isnan(b.left) || std::isnan(b.top) || std::isnan(b.right) || std::isnan(b.bottom)) bad = true;
+            if (std::isinf(b.left) || std::isinf(b.top) || std::isinf(b.right) || std::isinf(b.bottom)) bad = true;
+        } catch(...) { bad = true; }
+        if (bad) {
+            try {
+                int x = obj->getX();
+                int y = obj->getY();
+                int w = obj->getWidth();
+                int h = obj->getHeight();
+                b.left = static_cast<float>(x);
+                b.top = static_cast<float>(y);
+                b.right = static_cast<float>(x + w);
+                b.bottom = static_cast<float>(y + h);
+            } catch(...) {
+                // last resort: zero-out
+                b.left = b.top = b.right = b.bottom = 0.0f;
+            }
+        }
+        try {
+            // Focused debug: log bounds for the particular object that intermittently fails tests
+            if (obj->getName() == "blueishBox") {
+                std::ostringstream oss;
+                oss << "getBounds_lua: blueishBox bounds -> left=" << b.left << " top=" << b.top
+                    << " right=" << b.right << " bottom=" << b.bottom;
+                LUA_INFO(oss.str());
+            }
+        } catch(...) {}
+        return b; }
     
     // Accept either a Bounds userdata or a Lua table describing bounds
     void setBounds_lua(IDisplayObject* obj, const sol::object& bobj) 

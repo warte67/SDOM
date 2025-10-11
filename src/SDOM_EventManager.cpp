@@ -368,19 +368,36 @@ namespace SDOM
     DisplayHandle topObject = findTopObjectUnderMouse(node, draggedObject);
     // Update Core hovered object to the post-conversion topObject so Lua reads correct value
     getCore().setMouseHoveredObject(topObject);
-    // Debug info: log converted stage coordinates and which object was chosen as hovered
-    try {
-    LUA_INFO("EventManager::Queue_SDL_Event: stage mouse coords=(" << stage->mouseX << "," << stage->mouseY << ") sdl.motion.x=" << sdlEvent.motion.x << " sdl.motion.y=" << sdlEvent.motion.y);
-    } catch(...) {}
-    if (topObject) {
-        try {
-            LUA_INFO("EventManager::Queue_SDL_Event: topObject='" << topObject->getName() << "' type='" << topObject->getType() << "' z=" << topObject->getZOrder() << " priority=" << topObject->getPriority());
-        } catch(...) {
-            LUA_INFO("EventManager::Queue_SDL_Event: topObject=<unnamed>");
-        }
-    } else {
-    LUA_INFO("EventManager::Queue_SDL_Event: topObject=<null>");
-    }
+    // // Debug info: log converted stage coordinates and which object was chosen as hovered
+    // try {
+    // LUA_INFO("EventManager::Queue_SDL_Event: stage mouse coords=(" << stage->mouseX << "," << stage->mouseY << ") sdl.motion.x=" << sdlEvent.motion.x << " sdl.motion.y=" << sdlEvent.motion.y);
+    // } catch(...) {}
+    // if (topObject) {
+    //     try {
+    //         LUA_INFO("EventManager::Queue_SDL_Event: topObject='" << topObject->getName() << "' type='" << topObject->getType() << "' z=" << topObject->getZOrder() << " priority=" << topObject->getPriority());
+    //     } catch(...) {
+    //         LUA_INFO("EventManager::Queue_SDL_Event: topObject=<unnamed>");
+    //     }
+    // } else {
+    // LUA_INFO("EventManager::Queue_SDL_Event: topObject=<null>");
+    // }
+
+    // // If we are running unit tests and ignoring real input, emit a compact
+    // // trace line showing the incoming SDL event type, window id, coords and
+    // // the topObject name. This helps diagnose races between synthetic events
+    // // and stray OS/IME/keyboard-repeat events.
+    // try {
+    //     if (getCore().getIgnoreRealInput()) {
+    //         std::string evName = "?";
+    //         try { evName = SDL_Utils::eventTypeToString(static_cast<SDL_EventType>(sdlEvent.type)); } catch(...) { evName = std::to_string(sdlEvent.type); }
+    //         std::string topName = "<null>";
+    //         try { if (topObject) topName = topObject->getName(); } catch(...) { topName = "<err>"; }
+    //         int winid = 0;
+    //         try { winid = SDL_GetWindowID(getCore().getWindow()); } catch(...) { winid = 0; }
+    //         // compact, single-line trace
+    //         INFO("[UNIT-TRACE] ev=" << evName << " win=" << winid << " x=" << sdlEvent.motion.x << " y=" << sdlEvent.motion.y << " top=" << topName);
+    //     }
+    // } catch(...) {}
 
         // alias the SDL_EventType for ease of use:
         SDL_EventType sdl_type = static_cast<SDL_EventType>(sdlEvent.type);

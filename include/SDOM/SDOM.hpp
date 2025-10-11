@@ -305,10 +305,10 @@ namespace SDOM
      */
     struct Bounds
     {
-        float left;   ///< Left edge coordinate
-        float top;    ///< Top edge coordinate
-        float right;  ///< Right edge coordinate
-        float bottom; ///< Bottom edge coordinate
+        float left = 0.0f;   ///< Left edge coordinate
+        float top = 0.0f;    ///< Top edge coordinate
+        float right = 0.0f;  ///< Right edge coordinate
+        float bottom = 0.0f; ///< Bottom edge coordinate
 
         /**
          * @brief Calculates the width of the bounds.

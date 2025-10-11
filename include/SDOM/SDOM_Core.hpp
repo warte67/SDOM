@@ -52,9 +52,11 @@ namespace SDOM
         virtual bool onUnitTest() override;
 
         // --- Main Loop & Event Dispatch --- //
-        void run();
-        void run(const sol::table& config);      // Convenience overload to configure and run
-        void run(const std::string& configFile); // Convenience overload to load config from Lua file
+        // Return true when the run completed successfully (no failing unit tests or runtime errors).
+        bool run();
+        bool run(const CoreConfig& config);          // Convenience overload to configure (from C++) and run
+        bool run(const sol::table& config);      // Convenience overload to configure and run
+        bool run(const std::string& configFile); // Convenience overload to load config from Lua file
 
         // Poll and dispatch pending SDL events once (test helper)
         void pumpEventsOnce();
@@ -220,6 +222,13 @@ namespace SDOM
         void setStopAfterUnitTests(bool stop) { stopAfterUnitTests_ = stop; }
         bool getStopAfterUnitTests() { return stopAfterUnitTests_; }
 
+    // --- Input filtering for tests --- //
+    // When true, real mouse input from SDL_PollEvent() is ignored so
+    // synthetic events queued by unit tests are not interfered with by
+    // the user's mouse movements.
+    void setIgnoreRealInput(bool v) { ignoreRealInput_ = v; }
+    bool getIgnoreRealInput() const { return ignoreRealInput_; }
+
     private:
         // --- Singleton Enforcement --- //
         Core();
@@ -240,6 +249,7 @@ namespace SDOM
         bool bIsRunning_ = true;
         bool isTraversing_ = false;
         float fElapsedTime_;             // Elapsed time since the last update
+    bool ignoreRealInput_ = false; // when true, drop real SDL mouse events during tests
 
         // Track whether SDL has been started for this Core instance. Using a
         // member instead of a function-static variable keeps state tied to

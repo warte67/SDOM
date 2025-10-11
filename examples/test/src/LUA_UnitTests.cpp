@@ -166,7 +166,7 @@ namespace SDOM {
     bool test8_Lua() 
     {
 
-return true;    // Ignore this test for now.
+// return true;    // Ignore this test for now.
 
 
         // This test synthesizes an SDL mouse down + up sequence at the center of blueishBox
@@ -547,7 +547,8 @@ return true;    // Ignore this test for now.
 
     bool test19_lua()
     {
-return true;    // Ignore this test for now.        
+// return true;    // Ignore this test for now.  
+
         sol::state& lua = SDOM::Core::getInstance().getLua();
         bool ok = lua.script(R"(
             local bh = Core:getDisplayObject('blueishBox')

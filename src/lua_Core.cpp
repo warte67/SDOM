@@ -118,8 +118,8 @@ namespace SDOM
 	void quit_lua() { Core::getInstance().quit(); }
 	void shutdown_lua() { Core::getInstance().shutdown(); }
 
-	// Start the main loop from Lua. This calls Core::run() on the singleton
-	void run_lua() { Core::getInstance().run(); }
+	// // Start the main loop from Lua. This calls Core::run() on the singleton
+	// void run_lua() { Core::getInstance().run(); }
 
 	// Configuration from Lua table
 	void configure_lua(const sol::table& config) {

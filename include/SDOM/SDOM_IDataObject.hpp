@@ -106,17 +106,10 @@ namespace SDOM
     class IDataObject : public SDOM::IUnitTest
     {
     public:
-        using Getter = std::function<sol::object(const IDataObject&, sol::state_view)>;
-        using Setter = std::function<IDataObject&(IDataObject&, sol::object, sol::state_view)>;
-        using Command = std::function<void(IDataObject&, sol::object, sol::state_view)>;
-        using Function = std::function<sol::object(IDataObject&, sol::object, sol::state_view)>;
 
         virtual bool onInit() = 0;
         virtual void onQuit() = 0;
         virtual bool onUnitTest() override { return true; }
-
-        // void fromLua(const sol::table& lua, sol::state_view lua_state);
-        // sol::table toLua(sol::state_view lua) const;
 
         template<typename T>
         static T lua_value_case_insensitive(const sol::table& tbl, const std::string& key, const T& default_value)
@@ -138,9 +131,6 @@ namespace SDOM
 
         // --- New Virtual LUA Registration for Sol2 ---
     public:
-        
-        // void registerLua(const std::string& typeName, sol::state_view lua)      // Depricated
-        // { }                                  // Depricated
 
         // New preferred Lua binding path
         void registerLuaBindings(const std::string& typeName, sol::state_view lua)
@@ -166,10 +156,6 @@ namespace SDOM
         // --- End New Virtual LUA Registration for Sol2 ---
 
     protected:
-
-        std::unordered_map<std::string, Getter> getters_;
-        std::unordered_map<std::string, Setter> setters_;
-        std::unordered_map<std::string, Command> commands_;
 
         std::string name_ = "IDataObject";  // Default name, should be overridden by derived classes
 

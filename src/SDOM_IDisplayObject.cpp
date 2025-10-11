@@ -428,6 +428,19 @@ namespace SDOM
         // Assign new parent handle
         parent_ = parent;
 
+        try {
+            if (getName() == "blueishBox" || (parent_.isValid() && parent_.getName() == "redishBox")) {
+                std::ostringstream oss; oss << "[DBG] setParent: child='" << getName() << "' newParent='" << (parent_.isValid() ? parent_.getName() : std::string("<null>")) << "' worldLeft=" << world.left << " worldTop=" << world.top << " worldRight=" << world.right << " worldBottom=" << world.bottom;
+                if (parent_.isValid()) {
+                    IDisplayObject* p = dynamic_cast<IDisplayObject*>(parent_.get());
+                    if (p) {
+                        oss << " parent_left=" << p->left_ << " parent_right=" << p->right_ << " parent_top=" << p->top_ << " parent_bottom=" << p->bottom_;
+                    }
+                }
+                LUA_INFO(oss.str());
+            }
+        } catch(...) {}
+
         // Add to new parent's children_ vector if not already present
         if (parent_.isValid()) 
         {
@@ -952,6 +965,12 @@ namespace SDOM
         float delta = p_x - leftWorld;
         setLeft(leftWorld + delta);
         setRight(rightWorld + delta);
+        try {
+            if (getName() == "blueishBox") {
+                std::ostringstream oss; oss << "[DBG] setX: name=blueishBox leftWorld=" << leftWorld << " rightWorld=" << rightWorld << " delta=" << delta << " -> left_=" << left_ << " right_=" << right_;
+                LUA_INFO(oss.str());
+            }
+        } catch(...) {}
         setDirty();
         return *this;
     }
@@ -963,6 +982,12 @@ namespace SDOM
         float delta = p_y - topWorld;
         setTop(topWorld + delta);
         setBottom(bottomWorld + delta);
+        try {
+            if (getName() == "blueishBox") {
+                std::ostringstream oss; oss << "[DBG] setY: name=blueishBox topWorld=" << topWorld << " bottomWorld=" << bottomWorld << " delta=" << delta << " -> top_=" << top_ << " bottom_=" << bottom_;
+                LUA_INFO(oss.str());
+            }
+        } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1138,6 +1163,7 @@ namespace SDOM
             }
         }
         left_ = p_left - parentAnchor;
+    try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setLeft: name=blueishBox p_left=" << p_left << " parentAnchor=" << parentAnchor << " -> left_=" << left_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1169,6 +1195,7 @@ namespace SDOM
             }
         }
         right_ = p_right - parentAnchor;
+    try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setRight: name=blueishBox p_right=" << p_right << " parentAnchor=" << parentAnchor << " -> right_=" << right_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1200,6 +1227,7 @@ namespace SDOM
             }
         }
         top_ = p_top - parentAnchor;
+    try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setTop: name=blueishBox p_top=" << p_top << " parentAnchor=" << parentAnchor << " -> top_=" << top_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1231,6 +1259,7 @@ namespace SDOM
             }
         }
         bottom_ = p_bottom - parentAnchor;
+    try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setBottom: name=blueishBox p_bottom=" << p_bottom << " parentAnchor=" << parentAnchor << " -> bottom_=" << bottom_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1428,7 +1457,7 @@ namespace SDOM
                 }
             );
         }
-        
+
 // --- ALL IDisplayObject Properties: --- //
 // float x = 0.0f;                                   // left_ (IDisplayObject)
 // float y = 0.0f;                                   // top_  (IDisplayObject)

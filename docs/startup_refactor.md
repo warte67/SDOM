@@ -62,6 +62,38 @@ core.run();
 
 ---
 
+## Step-by-Step Refactoring Strategy
+
+### 1. Deprecate Automatic Table Parsing
+- Remove or mark as deprecated the code that automatically parses global tables named `Core` or `config` for engine startup.
+- Update warnings and documentation to inform users of the new explicit initialization pattern.
+
+### 2. Introduce Explicit Initialization Methods
+- Implement and expose `Core:create()` and `Core:run()` methods in both Lua and C++.
+- Ensure these methods handle configuration parsing, resource creation, and engine startup in a clear, user-driven sequence.
+
+### 3. Bind Engine Functions as Lua Globals
+- Bind essential engine functions (e.g., `create`, `run`, `shutdown`) as global Lua functions for direct access.
+- Internally, reference the engine instance using an obscure identifier (e.g., `__sdom_core_object__`) to avoid naming collisions.
+
+### 4. Maintain Legacy Support During Transition
+- Keep `Core` and `CoreForward` available for backward compatibility, but mark them as deprecated.
+- Document the transition and encourage users to migrate to the new global function pattern.
+
+### 5. Refactor Resource Creation Logic
+- Move resource creation out of config parsing functions and into the explicit `create` method.
+- Ensure that configuration parsing and resource instantiation are clearly separated.
+
+### 6. Update Documentation and Examples
+- Revise all documentation, tutorials, and example scripts to use the new explicit initialization and global function pattern.
+- Clearly explain the new startup sequence and configuration structure.
+
+### 7. Test and Validate
+- Thoroughly test the new startup flow in both Lua and C++ environments.
+- Validate that legacy scripts still work and that new scripts benefit from improved clarity and flexibility.
+
+---
+
 **Benefits:**
 - **Clarity:** Users control when and how the engine starts.
 - **Flexibility:** Supports advanced scripting, multi-stage setups, and custom bootstrapping.
@@ -70,9 +102,3 @@ core.run();
 
 ---
 
-If you want, I can:
-- Draft a new `Core:create()` implementation for Lua and C++.
-- Suggest a migration patch for your current startup logic.
-- Generate updated documentation snippets for your README.
-
-Let me know your preferred next step!

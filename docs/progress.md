@@ -561,11 +561,41 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---   
 - ### [October 9, 2025] 
-    - Codebase rename: DisplayObject -> DisplayHandle and AssetObject -> AssetHandle — completed across the C++ sources and Lua scripts.
-        - Renamed `DisplayObject` to `DisplayHandle` to help separate from the `IDisplayObject` and to imply `Handle` instead of `Object`.
-        - Remamed `AssetObject` to `AssetHandle` to help separate fro the `IAssetObject` and to help imply `Handle` rather than `Object`.
-    - Lua bindings: per-instance and prototype handle bindings are registered; unit tests updated to use the new names.
-    - Remaining documentation work: diagrams, design charts and README references still use the old names and must be updated.
+    - Codebase rename: 
+        - DisplayObject -> DisplayHandle and AssetObject -> AssetHandle — completed across the C++ sources and Lua scripts.
+            - Renamed `DisplayObject` to `DisplayHandle` to help separate from the `IDisplayObject` and to imply `Handle` instead of `Object`.
+            - Remamed `AssetObject` to `AssetHandle` to help separate fro the `IAssetObject` and to help imply `Handle` rather than `Object`.
+        - Lua bindings: 
+            - per-instance and prototype handle bindings are registered; unit tests updated to use the new names.
+        - Remaining documentation work: 
+            - diagrams, design charts and README references still use the old names and must be updated.
+    - **Initialization & Property Audit:**
+        - Audited all constructors (`InitStruct` and `sol::table`) for `IDisplayObject` and related types to ensure every property is initialized with sensible defaults.
+        - Verified that all properties are exposed to Lua via `DisplayHandle` using the new identifier conventions (`snake_case` for properties, `lowerCamelCase` for functions).
+        - Improved inheritance in Lua: derived types now inherit all properties and functions from `IDisplayObject`.
+        - Updated Lua bindings to consistently use `snake_case` for properties and `lowerCamelCase` for functions.
+        - Added and documented missing properties in constructors with clear comment blocks for maintainability.
+        - Added helper lambdas and backward compatibility shims to ease migration to new naming conventions.
+        - Updated documentation and README to clarify property/function naming conventions and inheritance expectations.
+        - All changes verified by new Lua test scripts and unit tests; initialization bugs and missing bindings resolved.
+        - All properties are now initialized in both constructors (`InitStruct` and `sol::table`).
+        - Every property is exposed to Lua via `DisplayHandle` using the new identifier conventions.
+        - Properties use `snake_case` and functions use `lowerCamelCase` in both C++ and Lua.
+        - Inheritance is verified: derived types in Lua inherit all properties and functions from `IDisplayObject`.
+        - Audit of constructors completed; missing properties added and documented with comment blocks.
+        - All Lua bindings audited and updated; properties and functions bound with correct naming conventions.
+        - Lua test scripts confirm inheritance and property/function access.
+        - Documentation and code comments updated to reflect conventions and inheritance expectations.
+        - Refactor for consistency completed; helper lambdas and backward compatibility shims added as needed.
+    - **Startup Refactor**
+        - SDOM’s startup logic has been refactored from legacy, implicit global table parsing (e.g., `Core` or `config`) to an explicit initialization pattern. Now, users must directly call `Core:create(config)` and `Core:run()` in both Lua and C++, separating configuration from resource creation and engine startup. This change improves clarity, flexibility, and maintainability, and aligns SDOM with modern engine integration practices. Legacy support for global tables remains during the transition, but new documentation and examples use the explicit method calls.
+    - **Key changes:**
+        - Deprecate automatic parsing of global tables for startup.
+        - Require explicit calls to `create` and `run` methods.
+        - Separate config parsing from resource creation.
+        - Bind engine functions as Lua globals for direct access.
+        - Update all documentation and examples to reflect the new pattern.
+    - **For full details and migration steps, see:**  [docs/startup_refactor.md](../docs/startup_refactor.md)
 
 ---
 ## ToDo:
@@ -574,38 +604,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Add a short migration note in the changelog describing the rename and any Lua compatibility considerations.
 - Label and IDisplayObject Constructor Defaults should include IDisplayObject defaults and the InitStruct defaults.  Verify and Fix. Pattern may be within the Label::Label(sol::table& config)
 
-
----
-# Here’s a concise checklist for tomorrow’s work:
-
-## IDisplayObject Property & Lua Binding Audit
-
-**Goals:**
-- Ensure all properties are initialized in both constructors (`InitStruct` and `sol::table`).
-- Expose all properties to Lua via `DisplayHandle` using the new identifier conventions.
-- Use `snake_case` for properties and `lowerCamelCase` for functions in both C++ and Lua.
-- Verify inheritance: derived types in Lua should inherit all properties and functions from `IDisplayObject`.
-
-**Steps:**
-1. **Audit Constructors:**
-   - Review both constructors and ensure every property is initialized.
-   - Add missing properties and document with comment blocks.
-
-2. **Audit Lua Bindings:**
-   - In `_registerLuaBindings`, bind every property to the handle.
-   - Use `snake_case` for property names in Lua.
-   - Ensure all public functions are bound with `lowerCamelCase`.
-
-3. **Test Inheritance:**
-   - In Lua, create derived types and verify they inherit all properties and functions.
-   - Add a simple Lua test script to check property/function access.
-
-4. **Update Documentation:**
-   - Document the conventions and inheritance expectations in the README and code comments.
-
-5. **Refactor for Consistency:**
-   - Rename properties and functions as needed to match conventions.
-   - Add helper lambdas for backward compatibility during transition.
 
 ---
 
