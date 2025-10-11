@@ -42,7 +42,6 @@
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_Factory.hpp>
-#include <SDOM/SDOM_IResourceObject.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 
 #include <SDOM/SDOM_DisplayHandle.hpp>
