@@ -46,7 +46,7 @@ namespace SDOM
         if (DEBUG_REGISTER_LUA)
         {
             std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << "IAssetObject:" << getName()
-                      << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA << typeName << CLR::RESET << std::endl;
+                    << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA << typeName << CLR::RESET << std::endl;
         }
 
         // Create the handle usertype once (no constructor), or reuse existing.
@@ -65,14 +65,24 @@ namespace SDOM
             }
         };
 
+        // Accessors
+        set_if_absent(handle, "getType", &IAssetObject::getType);
+        set_if_absent(handle, "getName", &IAssetObject::getName);
         set_if_absent(handle, "getFilename", &IAssetObject::getFilename);
         set_if_absent(handle, "isInternal", &IAssetObject::isInternal);
         set_if_absent(handle, "isLoaded", &IAssetObject::isLoaded);
-    set_if_absent(handle, "load", [](IAssetObject& self) { self.onLoad(); });
-    set_if_absent(handle, "unload", [](IAssetObject& self) { self.onUnload(); });
-    // NOTE: do NOT expose virtual lifecycle method names (onLoad/onUnload) to Lua.
-    // Expose only the stable 'load'/'unload' aliases that map to these operations.
-        
-    } // END  void IAssetObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+
+        // Mutators
+        set_if_absent(handle, "setType", &IAssetObject::setType);
+        set_if_absent(handle, "setName", &IAssetObject::setName);
+        set_if_absent(handle, "setFilename", &IAssetObject::setFilename);
+
+        // Lifecycle aliases
+        set_if_absent(handle, "load", [](IAssetObject& self) { self.onLoad(); });
+        set_if_absent(handle, "unload", [](IAssetObject& self) { self.onUnload(); });
+
+        // NOTE: do NOT expose virtual lifecycle method names (onLoad/onUnload) to Lua.
+        // Expose only the stable 'load'/'unload' aliases that map to these operations.
+    }
 
 } // namespace SDOM

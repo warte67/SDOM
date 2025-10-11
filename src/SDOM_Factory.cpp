@@ -11,8 +11,8 @@
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/SDOM_Texture.hpp>
+#include <SDOM/SDOM_TTFAsset.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
-
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
 
@@ -63,6 +63,23 @@ namespace SDOM
             if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("Texture", core.getLua());
         }
 
+        // register a TTFAsset
+        registerResType("TTFAsset", AssetTypeCreators{
+            TTFAsset::CreateFromLua,
+            TTFAsset::CreateFromInitStruct
+        });    
+        // create the default TTFAsset "default_ttf"
+        TTFAsset::InitStruct ttf_init;
+        ttf_init.name = "default_ttf";          // registry key == filename
+        ttf_init.type = TTFAsset::TypeName;     // concrete type name
+        ttf_init.filename = "default_ttf";      // internal ttf filename
+        ttf_init.isInternal = true;             // is internal
+        ttf_init.internalFontSize = 10;         // member name in InitStruct
+        AssetHandle ttfFont = createAsset("TTFAsset", ttf_init);    
+        
+        // register the TruetypeFont with "default_tttf"
+            
+
         // register the SpriteSheet asset
         registerResType("SpriteSheet", AssetTypeCreators{
             SpriteSheet::CreateFromLua,
@@ -75,17 +92,17 @@ namespace SDOM
             BitmapFont::CreateFromInitStruct
         });
 
-    // Create the default 8x8 bitmap font asset.
-    // Use the filename as the canonical resource name so Lua can refer to
-    // the font simply as "default_bmp_8x8". The BitmapFont will create
-    // (or reuse) an internal SpriteSheet named '<filename>_SpriteSheet'.
-    BitmapFont::InitStruct init;
-    init.name = "default_bmp_8x8";                     // registry key == filename
-    init.type = BitmapFont::TypeName;                  // concrete type name
-    init.filename = "default_bmp_8x8";               // underlying texture filename
-    init.isInternal = true;
-    init.fontSize = 8;                                 // member name in InitStruct
-    AssetHandle bmpFont = createAsset("BitmapFont", init);
+        // Create the default 8x8 bitmap font asset.
+        // Use the filename as the canonical resource name so Lua can refer to
+        // the font simply as "default_bmp_8x8". The BitmapFont will create
+        // (or reuse) an internal SpriteSheet named '<filename>_SpriteSheet'.
+        BitmapFont::InitStruct init;
+        init.name = "default_bmp_8x8";                     // registry key == filename
+        init.type = BitmapFont::TypeName;                  // concrete type name
+        init.filename = "default_bmp_8x8";               // underlying texture filename
+        init.isInternal = true;
+        init.fontSize = 8;                                 // member name in InitStruct
+        AssetHandle bmpFont = createAsset("BitmapFont", init);
 
         // register the Label display object
         registerDomType("Label", TypeCreators{

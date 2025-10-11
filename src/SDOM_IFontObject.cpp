@@ -21,12 +21,12 @@ namespace SDOM
             INFO("IFontObject constructed with unknown font type: " + requested + " — defaulting to 'bitmap'");
             fontType_ = FontType::Bitmap;
         }
-        // store canonical string
         type_ = FontTypeToString.at(fontType_);
-
-        name_ = init.name;          // (std::string)
-        filename_ = init.filename;  // (std::string)
         fontSize_ = (init.fontSize_ > 0) ? init.fontSize_ : 8; // sane default
+
+
+
+        
     }
 
 

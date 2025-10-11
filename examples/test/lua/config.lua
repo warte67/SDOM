@@ -99,15 +99,16 @@ local config = {
                             resource_name = "default_bmp_8x8",                      -- verified
                             border = true,                                          -- verified
                             border_color = { r = 255, g = 255, b = 255, a = 64 },   -- verified
-                            font_size = 8,                                          -- verified
 
                             -- Note: `font_width` and `font_height` only affect BitmapFont rendering.
                             -- For BitmapFonts, these properties allow per-axis stretching of glyphs.
                             -- For TrueType fonts, only `font_size` is used; `font_width` and `font_height` are ignored.
-                            -- If you need non-uniform scaling for TrueType fonts, use a bitmap font or create a custom asset.                            
+                            -- If you need non-uniform scaling for TrueType fonts, use a bitmap font or create a custom asset.   
+                            
+                            font_size = 8,                                          -- verified
 
-                            font_width = 16,         -- verified working now
-                            font_height = 16,        -- verified working now
+                            font_width = 8,         -- verified working now
+                            font_height = 12,        -- verified working now
                             alignment = "center",       -- verified, leading and trailing spaces are now properly trimmed
                             foreground_color = { r = 255, g = 255, b = 255, a = 255 },  -- verified
                             max_width = 500             -- verified

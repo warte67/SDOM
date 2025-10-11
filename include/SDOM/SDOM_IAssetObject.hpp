@@ -34,13 +34,13 @@ namespace SDOM
         virtual void onUnload() = 0;
         virtual bool onUnitTest() override { return true; }
 
-        // accessors (read only)
+        // accessors
         const std::string& getType() const { return type_; }
         const std::string& getName() const { return name_; }
         const std::string& getFilename() const { return filename_; }
         bool isInternal() const { return isInternal_; }
         bool isLoaded() const { return isLoaded_; }
-
+        // mutators
         void setType(const std::string& type) { type_ = type; }
         void setName(const std::string& name) { name_ = name; }
         void setFilename(const std::string& filename) { filename_ = filename; }
