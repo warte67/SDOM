@@ -599,6 +599,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## ToDo:
+- Verify and document verious start up scenarios (C++ only, Lua only, mixed).
 - Update architecture diagrams and markdown docs to replace old identifiers with the new Handle names.
 - Verify Label / IDisplayObject constructor default merging (Label::Label(sol::table&)).
 - Add a short migration note in the changelog describing the rename and any Lua compatibility considerations.
