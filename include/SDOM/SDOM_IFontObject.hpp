@@ -47,6 +47,7 @@ namespace SDOM
         // int fontHeight = -1;    // Optional: non-uniform height (bitmap only)
 
         bool wordwrap = false;         // enable word wrap
+        bool auto_resize = true;       // enable auto resizing to fit text
         int maxWidth = 0;              // maximum allowable width for auto resizing (0 disables auto width)
         int maxHeight = 0;             // maximum allowable height for auto resizing (0 disables auto height)
 
@@ -79,6 +80,7 @@ namespace SDOM
             a.dropshadow        != b.dropshadow        ||
             a.fontSize          != b.fontSize          ||
             a.wordwrap          != b.wordwrap          ||
+            a.auto_resize       != b.auto_resize       ||
             a.maxWidth          != b.maxWidth          ||
             a.maxHeight         != b.maxHeight         ||
             a.borderThickness   != b.borderThickness   ||
@@ -122,6 +124,7 @@ namespace SDOM
             a.dropshadow        == b.dropshadow        &&
             a.fontSize          == b.fontSize          &&
             a.wordwrap          == b.wordwrap          &&
+            a.auto_resize       == b.auto_resize       &&
             a.maxWidth          == b.maxWidth          &&
             a.maxHeight         == b.maxHeight         &&
             a.borderThickness   == b.borderThickness   &&

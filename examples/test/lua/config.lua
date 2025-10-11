@@ -76,22 +76,23 @@ local config = {
 
                             anchor_left = "left",       -- verified
                             x = 245,                    -- verified (world coordinates)
-                            -- left = 5,
+                            -- left = 5,                -- not working because the Label does not have a parent
                             anchor_top = "top",         -- verified
                             y = 75,                     -- verified (world coordinates)
-                            -- top = 5,
-                            anchor_right = "right",     -- verified
+                            -- top = 5,                 -- not working because the Label does not have a parent  
+                            anchor_right = "left",     -- verified
                             width = 240,                -- verified (right - left = 240)
-                            -- right = -5,
+                            -- right = -5,              -- not working because the Label does not have a parent
                             anchor_bottom = "bottom",   -- verified
                             height = 215,               -- verified (bottom - top = 215)
-                            -- bottom = -5,
+                            -- bottom = -5,             -- not working because the Label does not have a parent
 
                             -- isClickable = true,
 
-                            wordwrap = false,       -- not working yet
+                            wordwrap = true,            -- verified
+                            auto_resize = false,        -- 
 
-                            outline = true,         -- verified
+                            outline = true,             -- verified
                             -- outline_thickness = 1,   -- verified
 
                             text = "The [bold][color=red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river, sunlight catching on ripples as children laugh in the distance. A small breeze stirs the pages of an open book left on the bench, and a bell rings from the town square.",
@@ -103,7 +104,7 @@ local config = {
                             -- font_height = 16,        -- not working yet (should this set the glyph height of the SpriteSheet or scaling?)
                             alignment = "center",       -- mostly working, leading and trailing spaces not trimmed
                             foreground_color = { r = 255, g = 255, b = 255, a = 255 },  -- verified
-                            max_width = 450             -- verified
+                            max_width = 350             -- verified
                         }
                     }
                 },

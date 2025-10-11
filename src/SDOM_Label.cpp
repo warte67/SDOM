@@ -65,7 +65,9 @@ namespace SDOM
         defaultStyle_.dropshadowOffsetX = init.dropshadowOffsetX;
         defaultStyle_.dropshadowOffsetY = init.dropshadowOffsetY;
         defaultStyle_.maxWidth = init.maxWidth;           
-        defaultStyle_.maxHeight = init.maxHeight;          
+        defaultStyle_.maxHeight = init.maxHeight;  
+        defaultStyle_.wordwrap = init.wordwrap;
+        defaultStyle_.auto_resize = init.auto_resize;        
         defaultStyle_.borderThickness = init.borderThickness;    
         defaultStyle_.outlineThickness = init.outlineThickness;   
         defaultStyle_.padding_horiz = init.padding_horiz;      
@@ -186,7 +188,7 @@ namespace SDOM
         defaultStyle_.outline = get_bool("outline", defaultStyle_.outline);
         defaultStyle_.dropshadow = get_bool("dropshadow", defaultStyle_.dropshadow);
         defaultStyle_.wordwrap = get_bool("wordwrap", init.wordwrap);
-
+        defaultStyle_.auto_resize = get_bool("auto_resize", true);
         defaultStyle_.padding_horiz = get_int("padding_horiz", defaultStyle_.padding_horiz);
         defaultStyle_.padding_vert = get_int("padding_vert", defaultStyle_.padding_vert);
         defaultStyle_.dropshadowOffsetX = get_int("dropshadow_offset_x", defaultStyle_.dropshadowOffsetX);
@@ -1008,19 +1010,26 @@ namespace SDOM
         float userMaxHeight = static_cast<float>(defaultStyle_.maxHeight);
 
         // If maxWidth == 0, width resizing is disabled; use current width as max
-        if (userMaxWidth == 0.0f) {
+        if (userMaxWidth == 0.0f) 
+        {
             width = static_cast<float>(getWidth());
-        } else {
+        } 
+        else 
+        {
             float maxW = 32767.0f;
-            if (auto parent = getParent()) {
+            if (auto parent = getParent()) 
+            {
                 float parentW = static_cast<float>(parent->getWidth());
                 // compute left edge relative to parent (avoid mixing world and local coords)
                 float leftEdge = static_cast<float>(getX()) - static_cast<float>(parent->getX());
                 float availW = (parentW > leftEdge) ? (parentW - leftEdge) : 0.0f;
                 // If userMaxWidth < 0, use parent's available width
-                if (userMaxWidth < 0.0f) {
+                if (userMaxWidth < 0.0f) 
+                {
                     maxW = availW;
-                } else {
+                } 
+                else 
+                {
                     // Use the smaller of userMaxWidth and parent's available width
                     maxW = std::min(userMaxWidth, availW);
                 }
@@ -1028,31 +1037,46 @@ namespace SDOM
                 // std::cout << "  _maxSize debug: parentW=" << parentW << " leftEdge=" << leftEdge
                 //           << " userMaxWidth=" << userMaxWidth << " availW=" << availW
                 //           << " -> chosen maxW=" << maxW << std::endl;
-            } else if (userMaxWidth > 0.0f) {
+            } 
+            else if (userMaxWidth > 0.0f) 
+            {
                 maxW = userMaxWidth;
             }
             width = maxW;
+            if (defaultStyle_.auto_resize)
+                setWidth(static_cast<int>(width));
         }
         // If maxHeight == 0, height resizing is disabled; use current height as max
-        if (userMaxHeight == 0.0f) {
+        if (userMaxHeight == 0.0f) 
+        {
             height = static_cast<float>(getHeight());
-        } else {
+        } 
+        else 
+        {
             float maxH = 32767.0f;
-            if (auto parent = getParent()) {
+            if (auto parent = getParent()) 
+            {
                 float parentH = static_cast<float>(parent->getHeight());
                 // compute top edge relative to parent
                 float topEdge = static_cast<float>(getY()) - static_cast<float>(parent->getY());
                 // If userMaxHeight < 0, use parent's available height
-                if (userMaxHeight < 0.0f) {
+                if (userMaxHeight < 0.0f) 
+                {
                     maxH = (parentH > topEdge) ? (parentH - topEdge) : 0.0f;
-                } else {
+                } 
+                else 
+                {
                     float availH = (parentH > topEdge) ? (parentH - topEdge) : 0.0f;
                     maxH = std::min(userMaxHeight, availH);
                 }
-            } else if (userMaxHeight > 0.0f) {
+            } 
+            else if (userMaxHeight > 0.0f) 
+            {
                 maxH = userMaxHeight;
             }
             height = maxH;
+            if (defaultStyle_.auto_resize)
+                setHeight(static_cast<int>(height));
         }
     } // END Label::_maxSize(float& width, float& height)
 

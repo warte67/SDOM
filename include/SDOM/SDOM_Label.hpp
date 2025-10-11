@@ -60,6 +60,7 @@ namespace SDOM
             bool outline = false;       // enable outline
             bool dropshadow = false;    // enable drop shadow
             bool wordwrap = false;      // enable word wrap
+            bool auto_resize = true;    // enable auto resizing to fit text
             int maxWidth = 0;           // maximum allowable width for auto resizing (0 disables auto width)
             int maxHeight = 0;          // maximum allowable height for auto resizing (0 disables auto height)
             int borderThickness = 1;    // Border thickness (default: 0)
