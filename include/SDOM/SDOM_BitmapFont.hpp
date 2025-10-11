@@ -12,7 +12,7 @@ namespace SDOM
     class BitmapFont : public IFontObject
     {
             using SUPER = IFontObject;
-        
+
         public:
             // --- Type Info --- //
             static constexpr const char* TypeName = "bitmap";
@@ -84,6 +84,12 @@ namespace SDOM
             int bitmapFontHeight_ = -1;
 
             std::vector<std::vector<SDL_Texture*>> outlineTextures;
+
+            // Active per-style overrides (set via setFontStyle) - do NOT replace
+            // the canonical sprite metrics (bitmapFontWidth_/bitmapFontHeight_).
+            // These are temporary overrides used during measurement/render passes.
+            int activeFontWidth_ = -1;   
+            int activeFontHeight_ = -1;  
 
             void initializeOutlineGlyph(Uint32 ch, int x, int y);
             void drawForegroundGlyph(Uint32 ch, int x, int y, const FontStyle& style);

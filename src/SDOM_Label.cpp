@@ -52,6 +52,9 @@ namespace SDOM
         defaultStyle_.borderColor = init.borderColor;
         defaultStyle_.outlineColor = init.outlineColor;
         defaultStyle_.dropshadowColor = init.dropshadowColor;
+    // propagate bitmap-specific per-axis font metrics into default style
+    defaultStyle_.fontWidth = fontWidth_;
+    defaultStyle_.fontHeight = fontHeight_;
         defaultStyle_.bold = init.bold;
         defaultStyle_.italic = init.italic;
         defaultStyle_.underline = init.underline;
@@ -198,6 +201,10 @@ namespace SDOM
         defaultStyle_.maxHeight = get_int("max_height", defaultStyle_.maxHeight);
         defaultStyle_.borderThickness = get_int("border_thickness", defaultStyle_.borderThickness);
         defaultStyle_.outlineThickness = get_int("outline_thickness", defaultStyle_.outlineThickness);
+
+    // propagate per-axis bitmap font metrics into default style so fonts can read them
+    defaultStyle_.fontWidth = fontWidth_;
+    defaultStyle_.fontHeight = fontHeight_;
 
         // runtime/init flags
         setDirty(true); // layout needs building

@@ -43,8 +43,12 @@ namespace SDOM
         bool dropshadow = false;
 
         int fontSize = 8;           // Uniform scaling for both font types
-        // int fontWidth = -1;     // Optional: non-uniform width (bitmap only)          
-        // int fontHeight = -1;    // Optional: non-uniform height (bitmap only)
+    // Optional non-uniform per-axis size (bitmap fonts only).
+    // When negative/unset the BitmapFont implementation will fall back
+    // to the underlying sprite metrics and scale uniformly using
+    // `fontSize`. TrueType fonts ignore these fields.
+    int fontWidth = -1;     // Optional: non-uniform width (bitmap only)
+    int fontHeight = -1;    // Optional: non-uniform height (bitmap only)
 
         bool wordwrap = false;         // enable word wrap
         bool auto_resize = true;       // enable auto resizing to fit text
@@ -79,6 +83,8 @@ namespace SDOM
             a.outline           != b.outline           ||
             a.dropshadow        != b.dropshadow        ||
             a.fontSize          != b.fontSize          ||
+            a.fontWidth         != b.fontWidth         ||
+            a.fontHeight        != b.fontHeight        ||
             a.wordwrap          != b.wordwrap          ||
             a.auto_resize       != b.auto_resize       ||
             a.maxWidth          != b.maxWidth          ||

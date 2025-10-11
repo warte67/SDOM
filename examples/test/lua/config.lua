@@ -99,7 +99,7 @@ local config = {
                             resource_name = "default_bmp_8x8",                      -- verified
                             border = true,                                          -- verified
                             border_color = { r = 255, g = 255, b = 255, a = 64 },   -- verified
-                            font_size = 8,                                          -- verified
+                            font_size = 16,                                          -- verified
                             font_width = 8,         -- not working yet 
                             font_height = 12,        -- not working yet
                             alignment = "center",       -- mostly working, leading and trailing spaces not trimmed

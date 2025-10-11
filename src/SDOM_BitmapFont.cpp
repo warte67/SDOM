@@ -418,10 +418,15 @@ namespace SDOM
 
     bool BitmapFont::getGlyphMetrics(Uint32 ch, int *minx, int *maxx, int *miny, int *maxy, int *advance) const
     {
-        // Scale all metrics by the font size ratio
-        float ratio = float(fontSize_) / float(bitmapFontHeight_);
-        int scaledWidth = int(ratio * bitmapFontWidth_ + 0.5f);
-        int scaledHeight = int(ratio * bitmapFontHeight_ + 0.5f);
+        // Scale metrics by fontSize and optional per-style overrides.
+        // Default: uniform scaling using fontSize relative to bitmapFontHeight_.
+    float baseRatio = (bitmapFontHeight_ > 0) ? float(fontSize_) / float(bitmapFontHeight_) : 1.0f;
+    int useWidth = (activeFontWidth_ > 0) ? activeFontWidth_ : bitmapFontWidth_;
+    int useHeight = (activeFontHeight_ > 0) ? activeFontHeight_ : bitmapFontHeight_;
+        // If caller passed a FontStyle via a thread-local or external mechanism
+        // we don't have it here, so keep using base metrics. Advance uses width.
+        int scaledWidth = int(baseRatio * useWidth + 0.5f);
+        int scaledHeight = int(baseRatio * useHeight + 0.5f);
         if (minx)    *minx    = 0;
         if (maxx)    *maxx    = scaledWidth;
         if (miny)    *miny    = 0;
@@ -432,16 +437,18 @@ namespace SDOM
 
     int BitmapFont::getGlyphHeight(Uint32 ch) const
     {
-        // Return the scaled height of the specified glyph
-        float ratio = float(fontSize_) / float(bitmapFontHeight_);
-        return int(ratio * bitmapFontHeight_ + 0.5f);
+        // Return the scaled height of the specified glyph using fontSize as base.
+    float ratio = (bitmapFontHeight_ > 0) ? float(fontSize_) / float(bitmapFontHeight_) : 1.0f;
+    int useHeight = (activeFontHeight_ > 0) ? activeFontHeight_ : bitmapFontHeight_;
+    return int(ratio * useHeight + 0.5f);
     } // END getGlyphHeight()
 
     int BitmapFont::getGlyphWidth(Uint32 ch) const
     {
-        // Return the scaled width of the specified glyph
-        float ratio = float(fontSize_) / float(bitmapFontHeight_);
-        return int(ratio * bitmapFontWidth_ + 0.5f);
+        // Return the scaled width of the specified glyph using fontSize as base.
+    float ratio = (bitmapFontHeight_ > 0) ? float(fontSize_) / float(bitmapFontHeight_) : 1.0f;
+    int useWidth = (activeFontWidth_ > 0) ? activeFontWidth_ : bitmapFontWidth_;
+    return int(ratio * useWidth + 0.5f);
     }
 
     int BitmapFont::getFontAscent()
@@ -457,7 +464,11 @@ namespace SDOM
 
     void BitmapFont::setFontStyle(const FontStyle& style)
     {
-        setFontSize(style.fontSize);
+    // Apply uniform font size first
+    setFontSize(style.fontSize);
+    // Store per-style overrides to be used by getGlyphWidth/Height and draw
+    activeFontWidth_ = (style.fontWidth > 0) ? style.fontWidth : -1;
+    activeFontHeight_ = (style.fontHeight > 0) ? style.fontHeight : -1;
     }
 
     FontStyle BitmapFont::getFontStyle()
@@ -539,18 +550,21 @@ namespace SDOM
         if (style.italic) 
         {
             // Apply italic style
-
-            float ratio = float(style.fontSize) / float(bitmapFontHeight_);
-            int scaledWidth = int(ratio * bitmapFontWidth_);
-            int scaledHeight = int(ratio * bitmapFontHeight_);
-            float slant = 1.0f * ratio; // Slant scales with font size
+            int useWidth = (activeFontWidth_ > 0) ? activeFontWidth_ : bitmapFontWidth_;
+            int useHeight = (activeFontHeight_ > 0) ? activeFontHeight_ : bitmapFontHeight_;
+            // Use baseRatio computed from canonical sprite height so measurement and
+            // rendering remain consistent: scaled = baseRatio * useDimension
+            float baseRatio = (bitmapFontHeight_ > 0) ? float(style.fontSize) / float(bitmapFontHeight_) : 1.0f;
+            int scaledWidth = int(baseRatio * useWidth);
+            int scaledHeight = int(baseRatio * useHeight);
+            float slant = 1.0f * baseRatio; // Slant scales with font size
 
             int glyphX = ss->getSpriteX(spriteIndex);
             int glyphY = ss->getSpriteY(spriteIndex);
             int sheetW = fontTexture->w;
             int sheetH = fontTexture->h;
 
-            // Texture coordinates (normalized)
+            // Texture coordinates (normalized) use canonical sprite sizes
             float u0 = float(glyphX) / sheetW;
             float v0 = float(glyphY) / sheetH;
             float u1 = float(glyphX + bitmapFontWidth_) / sheetW;
@@ -580,9 +594,11 @@ namespace SDOM
         }   
         if (style.underline) 
         {
-            float ratio = float(style.fontSize) / float(bitmapFontHeight_);
-            int scaledWidth = int(ratio * bitmapFontWidth_);
-            int scaledHeight = int(ratio * bitmapFontHeight_);
+            int useWidth = (activeFontWidth_ > 0) ? activeFontWidth_ : bitmapFontWidth_;
+            int useHeight = (activeFontHeight_ > 0) ? activeFontHeight_ : bitmapFontHeight_;
+            float baseRatio = (bitmapFontHeight_ > 0) ? float(style.fontSize) / float(bitmapFontHeight_) : 1.0f;
+            int scaledWidth = int(baseRatio * useWidth);
+            int scaledHeight = int(baseRatio * useHeight);
 
             // Underline position: just above the bottom of the glyph box
             float underlineY = y + scaledHeight - 1;
@@ -591,9 +607,11 @@ namespace SDOM
         }
         if (style.strikethrough) 
         {
-            float ratio = float(style.fontSize) / float(bitmapFontHeight_);
-            int scaledWidth = int(ratio * bitmapFontWidth_);
-            int scaledHeight = int(ratio * bitmapFontHeight_);
+            int useWidth = (activeFontWidth_ > 0) ? activeFontWidth_ : bitmapFontWidth_;
+            int useHeight = (activeFontHeight_ > 0) ? activeFontHeight_ : bitmapFontHeight_;
+            float ratio = (useHeight > 0) ? float(style.fontSize) / float(useHeight) : 1.0f;
+            int scaledWidth = int(ratio * useWidth);
+            int scaledHeight = int(ratio * useHeight);
 
             // Strikethrough position: centered vertically (favoring above center for even heights)
             float strikeY = y + (scaledHeight / 2) - (scaledHeight % 2 == 0 ? 1 : 0) + 1;
@@ -609,10 +627,12 @@ namespace SDOM
             spriteIndex = std::clamp(spriteIndex, 0, spriteCount - 1);
             // spriteSheet_->drawSprite(x, y, spriteIndex, color);
 
-            // Calculate scaling ratio based on desired font size
-            float scale = float(style.fontSize) / float(bitmapFontHeight_);
-            float destW = bitmapFontWidth_ * scale;
-            float destH = bitmapFontHeight_ * scale;
+            // Calculate scaling ratio based on desired font size and per-axis overrides
+            int useWidth = (activeFontWidth_ > 0) ? activeFontWidth_ : bitmapFontWidth_;
+            int useHeight = (activeFontHeight_ > 0) ? activeFontHeight_ : bitmapFontHeight_;
+            float baseRatio = (bitmapFontHeight_ > 0) ? float(style.fontSize) / float(bitmapFontHeight_) : 1.0f;
+            float destW = float(useWidth) * baseRatio;
+            float destH = float(useHeight) * baseRatio;
 
             SDL_FRect destRect;
             destRect.x = static_cast<float>(x);
@@ -656,13 +676,19 @@ namespace SDOM
             spriteIndex = std::clamp(spriteIndex, 0, spriteCount - 1);
 
             // Correct scaling: scale the entire outline texture, not just the glyph + thickness
-            float ratio = float(style.fontSize) / float(bitmapFontHeight_);
-            float destW = (bitmapFontWidth_ + thickness * 2) * ratio;
-            float destH = (bitmapFontHeight_ + thickness * 2) * ratio;
+            int useWidth = (activeFontWidth_ > 0) ? activeFontWidth_ : bitmapFontWidth_;
+            int useHeight = (activeFontHeight_ > 0) ? activeFontHeight_ : bitmapFontHeight_;
+            // Use baseRatio derived from canonical sprite height so outline sizing matches foreground
+            float baseRatio = (bitmapFontHeight_ > 0) ? float(style.fontSize) / float(bitmapFontHeight_) : 1.0f;
+            // outlineTextures are built from canonical sprite sizes (bitmapFontWidth_/Height_ + thickness)
+            // scale them by baseRatio and apply per-axis adjustment to match stretched glyphs
+            float destW = (bitmapFontWidth_ + thickness * 2) * baseRatio * (float(useWidth) / float(bitmapFontWidth_));
+            float destH = (bitmapFontHeight_ + thickness * 2) * baseRatio * (float(useHeight) / float(bitmapFontHeight_));
 
             SDL_FRect destRect;
-            destRect.x = x - thickness * ratio;
-            destRect.y = y - thickness * ratio;
+            // center the outline by offsetting by thickness scaled with baseRatio and per-axis ratio
+            destRect.x = x - thickness * baseRatio * (float(useWidth) / float(bitmapFontWidth_));
+            destRect.y = y - thickness * baseRatio * (float(useHeight) / float(bitmapFontHeight_));
             destRect.w = destW;
             destRect.h = destH;
 
@@ -712,11 +738,14 @@ namespace SDOM
         spriteIndex = std::clamp(spriteIndex, 0, spriteCount - 1);
 
         // Calculate destination rectangle (account for outline thickness offset)
-        SDL_FRect destRect;
-        float ratio = float(style.fontSize) / float(bitmapFontHeight_);
-        int scaledWidth = int(ratio * bitmapFontWidth_);
-        int scaledHeight = int(ratio * bitmapFontHeight_);
-        float scaledThickness = ratio * thickness;
+    SDL_FRect destRect;
+    int useWidth = (activeFontWidth_ > 0) ? activeFontWidth_ : bitmapFontWidth_;
+    int useHeight = (activeFontHeight_ > 0) ? activeFontHeight_ : bitmapFontHeight_;
+    // use baseRatio based on canonical sprite height to match foreground rendering
+    float baseRatio = (bitmapFontHeight_ > 0) ? float(style.fontSize) / float(bitmapFontHeight_) : 1.0f;
+    int scaledWidth = int(baseRatio * useWidth);
+    int scaledHeight = int(baseRatio * useHeight);
+    float scaledThickness = baseRatio * thickness;
 
         // std::cout << "Drawing drop shadow for char " << char(ch) << " at (" << x << "," << y << ") with offset (" 
         //           << style.dropshadowOffsetX << "," << style.dropshadowOffsetY << ")\n";
