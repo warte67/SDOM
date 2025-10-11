@@ -188,7 +188,7 @@ namespace SDOM
         defaultStyle_.outline = get_bool("outline", defaultStyle_.outline);
         defaultStyle_.dropshadow = get_bool("dropshadow", defaultStyle_.dropshadow);
         defaultStyle_.wordwrap = get_bool("wordwrap", init.wordwrap);
-        defaultStyle_.auto_resize = get_bool("auto_resize", true);
+        defaultStyle_.auto_resize = get_bool("auto_resize", init.auto_resize);
         defaultStyle_.padding_horiz = get_int("padding_horiz", defaultStyle_.padding_horiz);
         defaultStyle_.padding_vert = get_int("padding_vert", defaultStyle_.padding_vert);
         defaultStyle_.dropshadowOffsetX = get_int("dropshadow_offset_x", defaultStyle_.dropshadowOffsetX);
@@ -799,6 +799,14 @@ namespace SDOM
         int labelY = getY();
         int labelW = getWidth();
         int labelH = getHeight();
+        DisplayHandle parent = getParent();
+        if (parent)
+        {
+            int parentW = parent->getWidth();
+            int parentH = parent->getHeight();
+            labelW = std::min(labelW, parentW);
+            labelH = std::min(labelH, parentH);
+        }
 
         for (const auto& [align, phrases] : phraseAlignLists_)
         {
@@ -899,34 +907,73 @@ namespace SDOM
         tokenAlignLists_.clear();
 
         // If wordwrap is disabled, treat the entire text as a single token
-        if (!defaultStyle_.wordwrap) 
+if (!defaultStyle_.wordwrap) 
+{
+    IFontObject* font_ = fontAsset.as<IFontObject>();
+    int labelWidth = getWidth();
+
+    // Compute parent's available width if needed
+    int parentWidth = labelWidth;
+    if (auto parent = getParent()) {
+        int leftEdge = getX() - parent->getX();
+        int availW = parent->getWidth() - leftEdge;
+        parentWidth = (availW > 0) ? availW : labelWidth;
+    }
+
+    // Use the minimum of labelWidth and parentWidth
+    int effectiveWidth = std::min(labelWidth, parentWidth);
+
+    std::vector<LabelToken> truncatedTokens;
+    int widthSoFar = 0;
+    for (const auto& token : tokenList)
+    {
+        int tokenWidth = 0;
+        if (font_) 
         {
-            // Use tokenList (already built by tokenizeText)
-            IFontObject* font_ = fontAsset.as<IFontObject>();
-            int labelWidth = getWidth();
-            std::vector<LabelToken> truncatedTokens;
-            int widthSoFar = 0;
-            for (const auto& token : tokenList)
-            {
-                int tokenWidth = 0;
-                if (font_) 
-                {
-                    if (token.type == TokenType::Word || token.type == TokenType::Punctuation)
-                        tokenWidth = font_->getWordWidth(token.text);
-                    else if (token.type == TokenType::Space)
-                        tokenWidth = font_->getGlyphWidth(' ');
-                    else if (token.type == TokenType::Tab)
-                        tokenWidth = font_->getGlyphWidth(' ') * 4;
-                }
-                if (widthSoFar + tokenWidth > labelWidth)
-                    break;
-                truncatedTokens.push_back(token);
-                widthSoFar += tokenWidth;
-            }
-            AlignQueue queue = alignXRef_[defaultStyle_.alignment];
-            tokenAlignLists_[queue] = truncatedTokens;
-            return;
+            if (token.type == TokenType::Word || token.type == TokenType::Punctuation)
+                tokenWidth = font_->getWordWidth(token.text);
+            else if (token.type == TokenType::Space)
+                tokenWidth = font_->getGlyphWidth(' ');
+            else if (token.type == TokenType::Tab)
+                tokenWidth = font_->getGlyphWidth(' ') * 4;
         }
+        if (widthSoFar + tokenWidth > effectiveWidth)
+            break;
+        truncatedTokens.push_back(token);
+        widthSoFar += tokenWidth;
+    }
+    AlignQueue queue = alignXRef_[defaultStyle_.alignment];
+    tokenAlignLists_[queue] = truncatedTokens;
+    return;
+}        
+        // if (!defaultStyle_.wordwrap) 
+        // {
+        //     // Use tokenList (already built by tokenizeText)
+        //     IFontObject* font_ = fontAsset.as<IFontObject>();
+        //     int labelWidth = getWidth();
+        //     std::vector<LabelToken> truncatedTokens;
+        //     int widthSoFar = 0;
+        //     for (const auto& token : tokenList)
+        //     {
+        //         int tokenWidth = 0;
+        //         if (font_) 
+        //         {
+        //             if (token.type == TokenType::Word || token.type == TokenType::Punctuation)
+        //                 tokenWidth = font_->getWordWidth(token.text);
+        //             else if (token.type == TokenType::Space)
+        //                 tokenWidth = font_->getGlyphWidth(' ');
+        //             else if (token.type == TokenType::Tab)
+        //                 tokenWidth = font_->getGlyphWidth(' ') * 4;
+        //         }
+        //         if (widthSoFar + tokenWidth > labelWidth)
+        //             break;
+        //         truncatedTokens.push_back(token);
+        //         widthSoFar += tokenWidth;
+        //     }
+        //     AlignQueue queue = alignXRef_[defaultStyle_.alignment];
+        //     tokenAlignLists_[queue] = truncatedTokens;
+        //     return;
+        // }
         // Wordwrap is enabled: distribute tokens into alignment queues
         for (const auto& token : tokenList)
         {
@@ -1019,7 +1066,9 @@ namespace SDOM
             float maxW = 32767.0f;
             if (auto parent = getParent()) 
             {
+                float labelW = static_cast<float>(getWidth());
                 float parentW = static_cast<float>(parent->getWidth());
+                parentW = std::min(parentW, labelW);
                 // compute left edge relative to parent (avoid mixing world and local coords)
                 float leftEdge = static_cast<float>(getX()) - static_cast<float>(parent->getX());
                 float availW = (parentW > leftEdge) ? (parentW - leftEdge) : 0.0f;
