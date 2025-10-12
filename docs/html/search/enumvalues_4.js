@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['graceperiod_0',['GracePeriod',['../classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dabae217fe6799c2b0bfe0740530b5c78200',1,'SDOM::IDisplayObject']]]
+  ['escape_0',['Escape',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429a013ec032d3460d4be4431c6ab1f8f224',1,'SDOM::Label']]]
 ];

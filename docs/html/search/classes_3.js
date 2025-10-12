@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['displayobject_0',['DisplayObject',['../classSDOM_1_1DisplayObject.html',1,'SDOM']]]
+  ['displayhandle_0',['DisplayHandle',['../classSDOM_1_1DisplayHandle.html',1,'SDOM']]]
 ];

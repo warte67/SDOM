@@ -92,25 +92,25 @@ $(function(){initNavTree('md_docs_2display__object__anchoring.html','',''); });
   <div class="headertitle"><div class="title">Display Object Anchoring System </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md44"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md55"></a></p>
 <p>(Updated September 2, 2025)</p>
 <p>The Display Object Anchoring System defines layout in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> by anchoring each of a child’s four edges to any of nine reference points on its parent (top/middle/bottom × left/center/right). Each edge has its own anchor and local offset (left_, right_, top_, bottom_), so objects can pin, center, or stretch asymmetrically as parents move or resize. World-space geometry is derived from edges—width = right − left and height = bottom − top—yielding predictable, resolution‑independent layout.</p>
 <p>When anchors change, the system preserves visual stability. Changing an anchor recalculates only the corresponding local offset so the world position of that edge does not move. The same invariant powers drag‑and‑drop and reparenting: record the world edges, apply the new parent/anchors, then resolve new local offsets from the new parent’s anchor references. This makes interactive editing and runtime scene changes smooth, enabling fixed margins, edge‑to‑edge stretching, and center‑based alignment without jumps.</p>
 <p>The API exposes clear accessors for per‑edge anchors and offsets, with sensible defaults that keep existing content working (top‑left if unspecified). Configuration can be supplied in code, via Lua scripts during initialization or at runtime, or from external data; names map directly onto the nine‑point grid with convenient aliases. Because anchoring is edge‑based and hierarchical, complex layouts compose naturally: nested children inherit motion from ancestors yet retain precise rules for how each edge follows the parent. The result is a compact, robust model that behaves well under resizing, scaling, and scene swaps.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
 Anchor Naming Conventions</h2>
 <ul>
 <li>Anchor points are represented as enums in code: <span class="tt">AnchorPoint::TOP_LEFT</span>, <span class="tt">AnchorPoint::TOP_CENTER</span>, <span class="tt">AnchorPoint::TOP_RIGHT</span>, <span class="tt">AnchorPoint::MIDDLE_LEFT</span>, <span class="tt">AnchorPoint::MIDDLE_CENTER</span>, <span class="tt">AnchorPoint::MIDDLE_RIGHT</span>, <span class="tt">AnchorPoint::BOTTOM_LEFT</span>, <span class="tt">AnchorPoint::BOTTOM_CENTER</span>, <span class="tt">AnchorPoint::BOTTOM_RIGHT</span>.</li>
 <li>In Lua or config, these may be written as strings: <span class="tt">"top_left"</span>, <span class="tt">"middle_center"</span>, etc. The mapping is direct and bindings accept either the enum or a string alias.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md46"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
 Edge-Based Layout</h2>
 <ul>
 <li>Each display object tracks its edges: <span class="tt">left_</span>, <span class="tt">right_</span>, <span class="tt">top_</span>, <span class="tt">bottom_</span>.</li>
 <li>Each edge can have its own anchor point, allowing for asymmetric anchoring.</li>
 <li>All movement, resizing, and anchor changes are performed via edge setters/getters: <span class="tt">setLeft</span>, <span class="tt">setRight</span>, <span class="tt">setTop</span>, <span class="tt">setBottom</span>, <span class="tt">getLeft</span>, <span class="tt">getRight</span>, <span class="tt">getTop</span>, <span class="tt">getBottom</span>.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md58"></a>
 Position and Size Calculation</h2>
 <ul>
 <li>The world position of each edge is calculated as:<ul>
@@ -127,7 +127,7 @@ Position and Size Calculation</h2>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
 Anchor Accessors/Mutators</h2>
 <ul>
 <li>Use the following API methods for anchor management:<ul>
@@ -139,13 +139,13 @@ Anchor Accessors/Mutators</h2>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
 Changing Anchor Points</h2>
 <ul>
 <li>When an anchor is changed, the corresponding local offset (<span class="tt">left_</span>, <span class="tt">right_</span>, etc.) is recalculated so the world position of the edge does not move.</li>
 <li>Only the local offset for the changed anchor is updated; other edges remain unchanged unless their anchors are also changed.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md61"></a>
 Drag-and-Drop and Reparenting</h2>
 <ul>
 <li><b>When reparenting or during drag-and-drop:</b><ul>
@@ -155,16 +155,16 @@ Drag-and-Drop and Reparenting</h2>
 </li>
 <li>This ensures the object's position and size remain correct regardless of anchor configuration or parent changes.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md62"></a>
 Summary</h2>
 <ul>
 <li>The anchoring system is now robust, edge-based, and supports asymmetric anchors.</li>
 <li>All geometry calculations and API methods have been updated to reflect this design. </li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md63"></a>
 Overview</h1>
 <p>This document describes the anchor point system for positioning and sizing display objects in the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> API. Anchoring enables flexible, responsive layouts by allowing each display object to reference its position and size to any of nine anchor points on its parent.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md64"></a>
 Anchor Points</h1>
 <p>Each display object can specify anchor points for its four edges (left/X, top/Y, right/width, bottom/height) in relation to its parent. The nine possible anchor points are:</p>
 <ul>
@@ -178,7 +178,7 @@ Anchor Points</h1>
 <li><span class="tt">bottom_center</span></li>
 <li><span class="tt">bottom_right</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md65"></a>
 Reversed versions for user convenience</h2>
 <ul>
 <li><span class="tt">center_middle</span></li>
@@ -192,7 +192,7 @@ Reversed versions for user convenience</h2>
 <li><span class="tt">left_bottom</span></li>
 </ul>
 <p>For convenience, aliases like <span class="tt">left</span>, <span class="tt">center</span>, <span class="tt">right</span>, <span class="tt">top</span>, <span class="tt">middle</span>, and <span class="tt">bottom</span> are also supported.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
 Lua Interface</h1>
 <p>Anchor points are typically provided from Lua modules or from code. For configuration files, prefer a small Lua module that returns a table. If anchor fields are omitted, anchors default to <span class="tt">top_left</span>.</p>
 <p>Example Lua module (<span class="tt">config/layout.lua</span>):</p>
@@ -212,7 +212,7 @@ Lua Interface</h1>
 <div class="line"><span class="keyword">auto</span> childAnchorX = cfg[<span class="stringliteral">&quot;child_anchor_x&quot;</span>].get_or&lt;std::string&gt;(<span class="stringliteral">&quot;top_left&quot;</span>);</div>
 <div class="line">AnchorPoint ap = parseAnchor(childAnchorX);</div>
 <div class="line">child-&gt;setAnchorLeft(ap);</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md67"></a>
 Position and Size Calculation</h1>
 <ul>
 <li><b>X (left edge):</b> Anchored to the specified parent anchor point, plus offset.</li>
@@ -224,16 +224,16 @@ Position and Size Calculation</h1>
 <div class="line">child.y = parent.anchor_y + offset_y</div>
 <div class="line">child.width = parent.anchor_width - offset_width</div>
 <div class="line">child.height = parent.anchor_height - offset_height</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md68"></a>
 Changing Anchor Points</h1>
 <p>When an anchor point is changed, the offset is recalculated so the display object remains visually in the same position and size. This ensures a smooth user experience and prevents layout jumps.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md58"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md69"></a>
 Hierarchical Anchoring</h1>
 <p>Anchor calculations are recursive: each display object references its parent, which may itself be anchored to its own parent, up to the stage. This enables complex, nested layouts.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md70"></a>
 Backward Compatibility &amp; Migration</h1>
 <p>Existing code that sets anchors programmatically remains compatible. Configuration files that used JSON should be converted to Lua modules (small one-to-one mappings) — see the Migration note below.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md71"></a>
 Benefits</h1>
 <ul>
 <li>Flexible, responsive layouts</li>
@@ -241,7 +241,7 @@ Benefits</h1>
 <li>Consistent positioning and sizing</li>
 <li>Backward compatibility</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md61"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md72"></a>
 Example Use Cases</h1>
 <ul>
 <li>Center a child object within its parent</li>
@@ -251,9 +251,9 @@ Example Use Cases</h1>
 <hr  />
 <p>This anchor system makes <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> display objects highly flexible and professional, supporting modern UI layout needs.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md64"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md75"></a>
 Anchoring Diagrams</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md65"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md76"></a>
 1) Parent Anchor Grid and Child Edge Anchors</h2>
 <p>SVG (static image): <img src="diagrams/display_object_anchoring/diagram-01.svg" alt="Anchors Grid" style="pointer-events: none;" class="inline"/></p>
 <details >
@@ -295,7 +295,7 @@ View Mermaid source</summary>
 </div><!-- fragment --><p></p>
 </details>
 <p>Key idea: each edge uses its own parent anchor reference plus a local offset; width/height derive from right-left and bottom-top.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md77"></a>
 2) Anchor Change Recalculation (No Visual Jump)</h2>
 <p>SVG (static image): <img src="diagrams/display_object_anchoring/diagram-02.svg" alt="Anchor Change Flow" style="pointer-events: none;" class="inline"/></p>
 <details >
@@ -320,7 +320,7 @@ View Mermaid source</summary>
 </div><!-- fragment --><p></p>
 </details>
 <p>This flow illustrates the invariant maintained during anchor changes: the world edge position remains the same while only the corresponding local offset is updated.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md67"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md78"></a>
 Anchor helpers &amp; parsing</h1>
 <p>Bindings accept both enumerated values and string names. A small C++ helper simplifies mapping user-facing strings to enums; expose this to Lua so scripts can use readable names.</p>
 <div class="fragment"><div class="line"><span class="comment">// simple mapping helper</span></div>
@@ -340,7 +340,7 @@ Anchor helpers &amp; parsing</h1>
 <div class="line">    <span class="keywordflow">return</span> it != map.end() ? it-&gt;second : AnchorPoint::TOP_LEFT;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>Expose <span class="tt">parseAnchor</span> to Lua via your usual binding so scripts can call <span class="tt">parseAnchor("left")</span> or pass strings directly where supported.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md68"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md79"></a>
 Migration note</h1>
 <ul>
 <li>Convert JSON objects into Lua modules that return tables (arrays → numeric-keyed tables; primitives map directly).</li>

@@ -92,11 +92,11 @@ $(function(){initNavTree('md_docs_2exposing__hooks.html','',''); });
   <div class="headertitle"><div class="title">Modern COM-like Interface and Hook Design </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md87"></a></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md88"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md129"></a></p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md130"></a>
 Overview</h2>
 <p>This document outlines a modern approach to the classic Microsoft COM (Component Object Model) interface, adapted for C++ with smart pointer resource management and language interoperability. The goal is to provide a robust, extensible, and safe system for exposing hooks to external languages (such as Lua, Python, etc.) and for managing paired lifecycle functions automatically.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md89"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md131"></a>
 Key Concepts</h2>
 <ul>
 <li><b>Smart Pointer Resource Management:</b><ul>
@@ -133,19 +133,19 @@ Key Concepts</h2>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md90"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md132"></a>
 Benefits</h2>
 <ul>
 <li>Automatic resource management and cleanup</li>
 <li>Safe, predictable lifecycle for all paired functions</li>
 <li>Easy integration with external languages and tools </li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md91"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md133"></a>
 - Extensible for future language hooks (Python, etc.)</h1>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md92"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md134"></a>
 Dynamic Extensibility Strategies</h1>
 <p>To make the COM-like hook system dynamically extensible:</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md93"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md135"></a>
 Example: Dynamic Hook Registration in C++</h2>
 <div class="fragment"><div class="line"><span class="comment">// Define a hook function type</span></div>
 <div class="line"><span class="keyword">using </span>HookFunc = std::function&lt;void(<span class="keywordtype">void</span>*)&gt;;</div>
@@ -163,19 +163,19 @@ Example: Dynamic Hook Registration in C++</h2>
 <div class="line">        it-&gt;second(data);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md94"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md136"></a>
 Example: Extern "C" Entry Point</h2>
 <div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> SDOM_RegisterHook(<span class="keyword">const</span> <span class="keywordtype">char</span>* name, HookFunc func) {</div>
 <div class="line">    registerHook(std::string(name), func);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md95"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md137"></a>
 Example: Lua Integration with Sol2</h2>
 <div class="fragment"><div class="line"><span class="comment">// Bind the registration function to Lua</span></div>
 <div class="line">lua.set_function(<span class="stringliteral">&quot;registerHook&quot;</span>, &amp;registerHook);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// In Lua:</span></div>
 <div class="line">registerHook(<span class="stringliteral">&quot;onBoxCreated&quot;</span>, function(box) print(<span class="stringliteral">&quot;Box created:&quot;</span>, box) end)</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md96"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md138"></a>
 Example: Plugin/Module System</h2>
 <div class="fragment"><div class="line"><span class="comment">// Plugin interface</span></div>
 <div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> RegisterPluginHooks() {</div>
@@ -185,7 +185,7 @@ Example: Plugin/Module System</h2>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Load plugin (DLL/shared library) and call RegisterPluginHooks</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md97"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md139"></a>
 Example: Reflection and Metadata</h2>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>HookMetadata {</div>
 <div class="line">    std::string name;</div>
@@ -195,11 +195,11 @@ Example: Reflection and Metadata</h2>
 <div class="line">std::unordered_map&lt;std::string, HookMetadata&gt; hookMetaRegistry;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Register metadata alongside hooks for introspection</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md98"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md140"></a>
 Example: Smart Pointer Resource Management</h2>
 <div class="fragment"><div class="line">std::shared_ptr&lt;Resource&gt; resource = std::make_shared&lt;Resource&gt;();</div>
 <div class="line"><span class="comment">// Hooks and plugins use shared_ptr, so resources are cleaned up automatically</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md99"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md141"></a>
 1. Dynamic Hook Registration</h2>
 <ul>
 <li>Allow users or external modules to register new hooks at runtime.</li>
@@ -211,38 +211,38 @@ Example: Smart Pointer Resource Management</h2>
 <div class="line">}</div>
 </div><!-- fragment --></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md100"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md142"></a>
 2. Extern "C" Entry Points for Registration</h2>
 <ul>
 <li>Expose registration functions as <span class="tt">extern "C"</span> so they can be called from other languages. <div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> SDOM_RegisterHook(<span class="keyword">const</span> <span class="keywordtype">char</span>* name, HookFunc func);</div>
 </div><!-- fragment --></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md101"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md143"></a>
 3. Lua/Script Integration</h2>
 <ul>
 <li>Allow Lua (or other scripting languages) to define and register hooks.</li>
 <li>Use Sol2 to bind registration functions so Lua can call them. <div class="fragment"><div class="line">SDOM_RegisterHook(&quot;onBoxCreated&quot;, function(box) print(&quot;Box created:&quot;, box) end)</div>
 </div><!-- fragment --></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md102"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md144"></a>
 4. Reflection and Metadata</h2>
 <ul>
 <li>Store metadata about hooks (parameters, return types, etc.) for introspection and dynamic invocation.</li>
 <li>Enables scripting languages to discover available hooks and their signatures.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md103"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md145"></a>
 5. Plugin/Module System</h2>
 <ul>
 <li>Support loading external modules (DLLs/shared libraries) that can register hooks at runtime.</li>
 <li>Use a standardized interface for plugins to expose and register their hooks.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md104"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md146"></a>
 6. Smart Pointer and Resource Management</h2>
 <ul>
 <li>Ensure all dynamically registered hooks and resources are managed via smart pointers to prevent leaks and double deletion.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md106"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md148"></a>
 Next Steps</h2>
 <ul>
 <li>Prototype a few hooks for Lua-driven unit tests</li>

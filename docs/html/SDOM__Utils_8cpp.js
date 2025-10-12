@@ -5,7 +5,7 @@ var SDOM__Utils_8cpp =
     [ "SDOM::getLua", "namespaceSDOM.html#a1201135eb3c271921ed846aff8f922f2", null ],
     [ "SDOM::getRenderer", "namespaceSDOM.html#a713b7f2d51053c98442edc40eaaf98fb", null ],
     [ "SDOM::getStage", "namespaceSDOM.html#afb1377edb5f90095c4fadb3c9e07a3cc", null ],
-    [ "SDOM::getStageHandle", "namespaceSDOM.html#ac1da19ec9f195d3b835344992e78ef04", null ],
+    [ "SDOM::getStageHandle", "namespaceSDOM.html#a948893388d065c11120a06334b2f3e4d", null ],
     [ "SDOM::getTexture", "namespaceSDOM.html#ac0f36a9f4f98d23fa1da002213470c3f", null ],
     [ "SDOM::getWindow", "namespaceSDOM.html#a8268b397b308040307a0d25fc715124f", null ],
     [ "SDOM::normalizeAnchorString", "namespaceSDOM.html#ada23a739293dfb38feadc632ee14bb9c", null ],

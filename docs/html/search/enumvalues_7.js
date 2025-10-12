@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['retainuntilmanual_0',['RetainUntilManual',['../classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dabaf2a737651c80010466e0e701b2a55591',1,'SDOM::IDisplayObject']]],
-  ['right_1',['RIGHT',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a21507b40c80068eda19865706fdc2403',1,'SDOM']]],
-  ['right_5fbottom_2',['RIGHT_BOTTOM',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8',1,'SDOM']]],
-  ['right_5fmiddle_3',['RIGHT_MIDDLE',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980af911fa8120055f4b9fbf5d53f3ef719a',1,'SDOM']]],
-  ['right_5ftop_4',['RIGHT_TOP',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a0f50eee0f90dd0e5b3ce50c09d416d47',1,'SDOM']]]
+  ['left_0',['LEFT',['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea684d325a7303f52e64011467ff5c5758',1,'SDOM::Label::LEFT'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a684d325a7303f52e64011467ff5c5758',1,'SDOM::LEFT'],['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da684d325a7303f52e64011467ff5c5758',1,'SDOM::LEFT']]],
+  ['left_5fbottom_1',['LEFT_BOTTOM',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a54adef06a90e8b0326376c0eaf7404b1',1,'SDOM']]],
+  ['left_5fmiddle_2',['LEFT_MIDDLE',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae68c8b7b353db96c91dfc435970b548b',1,'SDOM']]],
+  ['left_5ftop_3',['LEFT_TOP',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5eeb74f28a17e0cdf4b1661c80490df9',1,'SDOM']]]
 ];

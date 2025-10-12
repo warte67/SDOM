@@ -1,7 +1,20 @@
 var searchData=
 [
-  ['name_0',['name',['../structSDOM_1_1IAssetObject_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2',1,'SDOM::IAssetObject::InitStruct::name'],['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a312bd5827cbb79cb02d722c9ec979d3f',1,'SDOM::IDisplayObject::InitStruct::name']]],
-  ['name_5f_1',['name_',['../classSDOM_1_1AssetObject.html#a968e45af65137fe3ced264d48ac5d26a',1,'SDOM::AssetObject::name_'],['../classSDOM_1_1IAssetObject.html#a505bc325aa5116514067b9a58b8e0d25',1,'SDOM::IAssetObject::name_'],['../classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396',1,'SDOM::IDataObject::name_']]],
-  ['none_2',['None',['../classSDOM_1_1EventType.html#a827940aa9803d3113e7d7a7f5b75a1c5',1,'SDOM::EventType']]],
-  ['normal_3',['NORMAL',['../classCLR.html#ae6ec0e976684b36983d2325ee9bde918',1,'CLR']]]
+  ['magenta_0',['MAGENTA',['../classCLR.html#aeea092b02f7a2434ace40805f7be2e06',1,'CLR']]],
+  ['maxheight_1',['maxHeight',['../structSDOM_1_1FontStyle.html#af8fa2542619916891cc977181b031f7f',1,'SDOM::FontStyle::maxHeight'],['../structSDOM_1_1Label_1_1InitStruct.html#a41bcb4685bb4781f1174e0efcfd12450',1,'SDOM::Label::InitStruct::maxHeight']]],
+  ['maxoutlinethickness_2',['maxOutlineThickness',['../namespaceSDOM.html#aae891c3cb463a8719fa20816f7ef0ea4',1,'SDOM']]],
+  ['maxwidth_3',['maxWidth',['../structSDOM_1_1FontStyle.html#a1c291089a8bbd41f694a3d89a64d9834',1,'SDOM::FontStyle::maxWidth'],['../structSDOM_1_1Label_1_1InitStruct.html#aeb8b0693b7f14d2716badd06fb683e1c',1,'SDOM::Label::InitStruct::maxWidth']]],
+  ['mouse_5fx_4',['mouse_x',['../classSDOM_1_1Event.html#a2afe5652e2b08791eaba6e9a9ce6ca49',1,'SDOM::Event']]],
+  ['mouse_5fy_5',['mouse_y',['../classSDOM_1_1Event.html#a0f161178b94de8c20d84b272df039dbc',1,'SDOM::Event']]],
+  ['mousebuttondown_6',['MouseButtonDown',['../classSDOM_1_1EventType.html#a31f1590ddbd964d5b6e027a66d661a5f',1,'SDOM::EventType']]],
+  ['mousebuttonup_7',['MouseButtonUp',['../classSDOM_1_1EventType.html#ab29ab54933d79882a748d271b4c97c47',1,'SDOM::EventType']]],
+  ['mouseclick_8',['MouseClick',['../classSDOM_1_1EventType.html#a4c25405fad906359c693ff66402bd949',1,'SDOM::EventType']]],
+  ['mousedoubleclick_9',['MouseDoubleClick',['../classSDOM_1_1EventType.html#a27577bf1e7a968bc18865f4b0f025279',1,'SDOM::EventType']]],
+  ['mouseenter_10',['MouseEnter',['../classSDOM_1_1EventType.html#a43c6ab739c690ac5718f334da7d19d92',1,'SDOM::EventType']]],
+  ['mouseleave_11',['MouseLeave',['../classSDOM_1_1EventType.html#a848e2743a50b6525d8e002284e26057b',1,'SDOM::EventType']]],
+  ['mousemove_12',['MouseMove',['../classSDOM_1_1EventType.html#adb9ebb54f2c5fe5f718aab8b1d38a0be',1,'SDOM::EventType']]],
+  ['mousewheel_13',['MouseWheel',['../classSDOM_1_1EventType.html#a759e1ae6da3879e2d0681c348d3b9c15',1,'SDOM::EventType']]],
+  ['mousex_14',['mouseX',['../classSDOM_1_1Stage.html#a5c84356f827dd7cdc5edc42527a21696',1,'SDOM::Stage']]],
+  ['mousey_15',['mouseY',['../classSDOM_1_1Stage.html#a94547f9b6ac923ac1dbfdd83db1ddced',1,'SDOM::Stage']]],
+  ['move_16',['Move',['../classSDOM_1_1EventType.html#a8f3d3cfcb6ceac2b9283eb37d88f374e',1,'SDOM::EventType']]]
 ];

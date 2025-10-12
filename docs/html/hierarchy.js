@@ -10,29 +10,45 @@ var hierarchy =
     [ "std::exception", null, [
       [ "SDOM::Exception", "classSDOM_1_1Exception.html", null ]
     ] ],
+    [ "SDOM::FontStyle", "structSDOM_1_1FontStyle.html", null ],
     [ "SDOM::IAssetObject::InitStruct", "structSDOM_1_1IAssetObject_1_1InitStruct.html", [
+      [ "SDOM::IFontObject::InitStruct", "structSDOM_1_1IFontObject_1_1InitStruct.html", [
+        [ "SDOM::BitmapFont::InitStruct", "structSDOM_1_1BitmapFont_1_1InitStruct.html", null ],
+        [ "SDOM::TruetypeFont::InitStruct", "structSDOM_1_1TruetypeFont_1_1InitStruct.html", null ]
+      ] ],
       [ "SDOM::SpriteSheet::InitStruct", "structSDOM_1_1SpriteSheet_1_1InitStruct.html", null ],
+      [ "SDOM::TTFAsset::InitStruct", "structSDOM_1_1TTFAsset_1_1InitStruct.html", null ],
       [ "SDOM::Texture::InitStruct", "structSDOM_1_1Texture_1_1InitStruct.html", null ]
     ] ],
     [ "SDOM::IDisplayObject::InitStruct", "structSDOM_1_1IDisplayObject_1_1InitStruct.html", [
+      [ "SDOM::Label::InitStruct", "structSDOM_1_1Label_1_1InitStruct.html", null ],
       [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ]
     ] ],
     [ "SDOM::IUnitTest", "classSDOM_1_1IUnitTest.html", [
       [ "SDOM::IDataObject", "classSDOM_1_1IDataObject.html", [
-        [ "SDOM::AssetObject", "classSDOM_1_1AssetObject.html", null ],
+        [ "SDOM::AssetHandle", "classSDOM_1_1AssetHandle.html", null ],
         [ "SDOM::Core", "classSDOM_1_1Core.html", null ],
-        [ "SDOM::DisplayObject", "classSDOM_1_1DisplayObject.html", null ],
+        [ "SDOM::DisplayHandle", "classSDOM_1_1DisplayHandle.html", null ],
         [ "SDOM::Event", "classSDOM_1_1Event.html", null ],
         [ "SDOM::Factory", "classSDOM_1_1Factory.html", null ],
         [ "SDOM::IAssetObject", "classSDOM_1_1IAssetObject.html", [
+          [ "SDOM::IFontObject", "classSDOM_1_1IFontObject.html", [
+            [ "SDOM::BitmapFont", "classSDOM_1_1BitmapFont.html", null ],
+            [ "SDOM::TruetypeFont", "classSDOM_1_1TruetypeFont.html", null ]
+          ] ],
           [ "SDOM::SpriteSheet", "classSDOM_1_1SpriteSheet.html", null ],
+          [ "SDOM::TTFAsset", "classSDOM_1_1TTFAsset.html", null ],
           [ "SDOM::Texture", "classSDOM_1_1Texture.html", null ]
         ] ],
         [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", [
+          [ "SDOM::Label", "classSDOM_1_1Label.html", null ],
           [ "SDOM::Stage", "classSDOM_1_1Stage.html", null ]
         ] ]
       ] ]
     ] ],
+    [ "SDOM::Label::LabelToken", "structSDOM_1_1Label_1_1LabelToken.html", null ],
+    [ "SDOM::IDisplayObject::ListenerEntry", "structSDOM_1_1IDisplayObject_1_1ListenerEntry.html", null ],
+    [ "SDOM::Label::PhraseToken", "structSDOM_1_1Label_1_1PhraseToken.html", null ],
     [ "SDOM::SDL_Utils", "classSDOM_1_1SDL__Utils.html", null ],
     [ "SDOM::TypeCreators", "structSDOM_1_1TypeCreators.html", null ],
     [ "SDOM::UnitTests", "classSDOM_1_1UnitTests.html", null ]

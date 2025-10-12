@@ -1,15 +1,12 @@
 var classSDOM_1_1IAssetObject =
 [
     [ "InitStruct", "structSDOM_1_1IAssetObject_1_1InitStruct.html", "structSDOM_1_1IAssetObject_1_1InitStruct" ],
-    [ "Command", "classSDOM_1_1IAssetObject.html#a3fdf5631454388f0450ae0bb3c91ebd6", null ],
-    [ "Function", "classSDOM_1_1IAssetObject.html#a1258d34382d02dd5613d770a869b86bc", null ],
-    [ "Getter", "classSDOM_1_1IAssetObject.html#a4a0c20d3b094cfb86ca99b62edbcf602", null ],
-    [ "Setter", "classSDOM_1_1IAssetObject.html#ab6354bf6f9d60a272e0bbbadd834fcbf", null ],
     [ "IAssetObject", "classSDOM_1_1IAssetObject.html#a2dc02f5d68701d7836df4f9088237305", null ],
     [ "IAssetObject", "classSDOM_1_1IAssetObject.html#ac761425e06f90987b89cc35927acd384", null ],
     [ "IAssetObject", "classSDOM_1_1IAssetObject.html#ac63794daad2e3a1cc030aa16e569bb23", null ],
     [ "~IAssetObject", "classSDOM_1_1IAssetObject.html#a23e51f8ece3db47ba7081cf85b21df47", null ],
     [ "_registerLuaBindings", "classSDOM_1_1IAssetObject.html#a69ac045c116bdee0cd9607660d564af7", null ],
+    [ "as", "classSDOM_1_1IAssetObject.html#a3e68fa1ef3cc5bff3d4e57c813c65a49", null ],
     [ "getFilename", "classSDOM_1_1IAssetObject.html#a99ae73f910e13a89de5c91e264ba50fb", null ],
     [ "getName", "classSDOM_1_1IAssetObject.html#af975331dcde3f417bc8c0dd87d13e14f", null ],
     [ "getType", "classSDOM_1_1IAssetObject.html#ad0b85cd8eafe1b2f92a03573e0ea80b9", null ],
@@ -25,14 +22,11 @@ var classSDOM_1_1IAssetObject =
     [ "setFilename", "classSDOM_1_1IAssetObject.html#ab996c8629d01a716654e3125b4b0a589", null ],
     [ "setName", "classSDOM_1_1IAssetObject.html#ad0998244c5f497a5ce11a534d321328d", null ],
     [ "setType", "classSDOM_1_1IAssetObject.html#a05aeca66d8a195214e0e23d5669bffd7", null ],
-    [ "commands_", "classSDOM_1_1IAssetObject.html#a81ab01eb51d0da3950b9cb6d93d74fbb", null ],
     [ "filename_", "classSDOM_1_1IAssetObject.html#add05647990d22252de1ef584ae622ae5", null ],
-    [ "getters_", "classSDOM_1_1IAssetObject.html#a56cb8e90fd9a8e993cade99d4240f8d9", null ],
     [ "isInternal_", "classSDOM_1_1IAssetObject.html#a95668971d07c16b956e07b34ac8439a6", null ],
     [ "isLoaded_", "classSDOM_1_1IAssetObject.html#adfca3b5c4ff76d9ff2f0c4a36f254998", null ],
     [ "name_", "classSDOM_1_1IAssetObject.html#a505bc325aa5116514067b9a58b8e0d25", null ],
     [ "objHandleType_", "classSDOM_1_1IAssetObject.html#a0dcbb706c499ad4446c6f6eec63b567c", null ],
-    [ "setters_", "classSDOM_1_1IAssetObject.html#a8872f9668a96ae9c6d997804e32dbeae", null ],
     [ "type_", "classSDOM_1_1IAssetObject.html#acf24a17e1284129dbef77cfc229bba05", null ],
     [ "TypeName", "classSDOM_1_1IAssetObject.html#abcf0f3bc00c85b028222c08e6eeea92d", null ]
 ];

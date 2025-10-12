@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['orphanretentionpolicy_0',['OrphanRetentionPolicy',['../classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab',1,'SDOM::IDisplayObject']]]
+  ['fonttype_0',['FontType',['../classSDOM_1_1IFontObject.html#a65dd8d559c0b3cedf12993bffeba6aff',1,'SDOM::IFontObject']]]
 ];

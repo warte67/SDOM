@@ -92,34 +92,32 @@ $(function(){initNavTree('md_docs_2progress.html','',''); });
   <div class="headertitle"><div class="title">Project Description and Development Progress </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md152"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md238"></a></p>
 <p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is a C++23 library built on SDL3 that brings a DOM‑like scene graph and GUI toolkit to 2D applications and games. The aim is a small, predictable core for layout, events, and rendering so SDL developers can compose interfaces and in‑game UI with familiar patterns and a minimal API surface.</p>
 <p>Architecturally, a single Core orchestrates the SDL runtime (window, renderer, main loop). A Stage serves as the root of the display tree, while an EventManager dispatches input through capture → target → bubble phases. The Factory registers, creates, and tracks resources and display objects by type and unique name, returning typed handles for safe references. Layout is driven by an edge‑based anchoring system that supports asymmetric, responsive designs.</p>
 <p>Scripting and configuration are first‑class with Lua via Sol2 to enable data‑driven scenes, rapid iteration, and test automation. You can also build everything directly in C++—Lua is optional—but when enabled it can construct objects, wire scenes, drive dialog, and swap stages at runtime without recompilation.</p>
 <p>The project emphasizes clear, living documentation. The Markdown design docs are working papers that evolve with the code. Expect them to change as features land and APIs are refined. Public APIs are defined in headers and surfaced via Doxygen, with correctness exercised by unit tests; if a doc briefly diverges from current behavior, treat the code as source‑of‑truth until the docs catch up. Diagrams are authored in Mermaid and exported to static SVG/PNG by the repo’s export pipeline, keeping visuals portable while ensuring the sources remain easy to edit. Progress updates will call out notable documentation changes, and contributions to clarify or correct docs are welcome.</p>
 <p>This page is the hub for progress. The “Progress Updates” below record milestones chronologically with context and notes; the “Next Steps” and “ToDo” sections outline near‑term priorities and open tracks. Check back to see what landed and what’s coming next—and feel free to open issues or proposals as the API stabilizes.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md153"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md239"></a>
 Scripting and Configuration</h1>
 <p>Lua (via Sol2) is first‑class but optional—you can script scenes and behavior in Lua, build everything in C++, or mix both. The Factory accepts <span class="tt">sol::table</span> configs alongside initializer structs, and Core’s lifecycle hooks make it easy to integrate scripts for iteration and tests. See the dedicated design doc for details and examples: <a class="el" href="md_docs_2scripting__and__configuration.html">Scripting and Configuration (Lua + C++)</a>.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md154"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md240"></a>
 Progress Updates</h1>
-<hr  />
+<h2 class="doxsection"><a class="anchor" id="autotoc_md241"></a>
+[July 2, 2025]</h2>
 <ul>
-<li>### [July 2, 2025]<ul>
 <li>Initial rough draft and proof of concept.</li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md243"></a>
+[August 5, 2025]</h2>
 <ul>
-<li>### [August 5, 2025]<ul>
 <li><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> secondary rough draft</li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md245"></a>
+[September 19, 2025]</h2>
 <ul>
-<li>### [September 19, 2025]<ul>
 <li>Proof of concept approved. Main development approved. Work begins officially.</li>
 <li>Improved Doxygen documentation for all major headers and macros.</li>
 <li>Added and refined Doxygen comments for <a class="el" href="SDOM__CLR_8hpp.html" title="Static container for ANSI escape sequences for terminal text formatting and colorization.">SDOM_CLR.hpp</a>, <a class="el" href="SDOM_8hpp.html">SDOM.hpp</a>, and <a class="el" href="SDOM__IDataObject_8hpp.html">SDOM_IDataObject.hpp</a>.</li>
@@ -141,11 +139,10 @@ Progress Updates</h1>
 <li>JSON configuration supports both new flags for runtime flexibility.</li>
 <li>Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.</li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md247"></a>
+[September 20, 2025]</h2>
 <ul>
-<li>### [September 20, 2025]<ul>
 <li>Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.</li>
 <li>Event system foundation implemented and documented.</li>
 <li>Doxygen documentation added for major interfaces (Core, Factory, IResourceObject).</li>
@@ -153,11 +150,10 @@ Progress Updates</h1>
 <li>Circular include and pointer management issues resolved (raw pointer for Factory ownership).</li>
 <li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.</li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md249"></a>
+[September 21, 2025]</h2>
 <ul>
-<li>### [September 21, 2025]<ul>
 <li>Renamed <span class="tt">resource_ptr</span> to <span class="tt">ResourceHandle</span> throughout the codebase for clarity.<ul>
 <li>The new name better reflects its role as an opaque handle or key for resource lookup, rather than a smart pointer with ownership semantics.</li>
 <li>Updated all documentation, examples, and comments to use <span class="tt">ResourceHandle</span>.</li>
@@ -199,11 +195,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md251"></a>
+[September 22, 2025]</h2>
 <ul>
-<li>### [September 22, 2025]<ul>
 <li><b>Unit Test Framework Refined:</b> <br  />
 <ul>
 <li>Simplified the unit test system: now every resource implements <span class="tt">onUnitTests()</span> for built-in tests.</li>
@@ -247,11 +242,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md253"></a>
+[September 23, 2025]</h3>
 <ul>
-<li>### [September 23, 2025]<ul>
 <li><b>Event System Preliminary Testing:</b> <br  />
 <ul>
 <li>Successfully integrated and tested the event system with live SDL3 events.</li>
@@ -272,11 +266,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md255"></a>
+[September 24, 2025]</h2>
 <ul>
-<li>### [September 24, 2025]<ul>
 <li><b>Event System Debugging:</b><ul>
 <li>Resolved compile-time issues with <span class="tt">ListenerEntry</span> constructor and <span class="tt">push_back</span> calls in <span class="tt">addEventListener</span>.</li>
 <li>Verified that <span class="tt">addEventListener</span> correctly registers event listeners for both capture and bubbling phases.</li>
@@ -307,11 +300,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md257"></a>
+[September 25, 2025]</h2>
 <ul>
-<li>### [September 25, 2025]<ul>
 <li><b>JSON → Lua Transition Complete:</b> <br  />
 <ul>
 <li>All configuration, scripting, and resource creation now use Lua tables via Sol2.</li>
@@ -351,11 +343,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md259"></a>
+[September 26, 2025]</h2>
 <ul>
-<li>### [September 26, 2025]<ul>
 <li><b>Box Unit Tests Complete:</b> <br  />
 <ul>
 <li>Finalized comprehensive unit tests for the Box object, covering creation, hierarchy, anchor logic, and world coordinate propagation.</li>
@@ -382,11 +373,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md261"></a>
+[September 27, 2025]</h2>
 <ul>
-<li>### [September 27, 2025]<ul>
 <li><b>Lua Integration Complete:</b> <br  />
 <ul>
 <li>All major Core and Factory methods are now exposed to Lua via Sol2 usertype registration.</li>
@@ -406,11 +396,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md263"></a>
+[September 28, 2025]</h2>
 <ul>
-<li>### [September 28, 2025]<ul>
 <li><b>Lua Binding Improvements:</b><ul>
 <li>Refined Lua usertype registration to ensure idempotent and consistent bindings.</li>
 <li>Verified that all properties, commands, and functions are correctly exposed to Lua for Core, Factory, DisplayObject, and IDisplayObject.</li>
@@ -455,11 +444,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md265"></a>
+[September 29, 2025]</h2>
 <ul>
-<li>### [September 29, 2025]<ul>
 <li><b>Lua Binding Debugging:</b><ul>
 <li>Added controlled debug prints to Lua usertype registration to trace binding operations.</li>
 <li>Verified that each usertype (DisplayObject, IDisplayObject, Stage, Factory, Core) is registered exactly once, preventing conflicts and ensuring consistent behavior.</li>
@@ -508,11 +496,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md267"></a>
+[September 30, 2025]</h2>
 <ul>
-<li>### [September 30, 2025]<ul>
 <li><b>Summary:</b><ul>
 <li>Consolidated work focused on lifecycle event dispatch, Lua bindings robustness, and logging/debug cleanup. These changes make lifecycle events available to Lua listeners, surface Lua errors, and stabilize the debug/logging surface for continued iteration.</li>
 </ul>
@@ -567,16 +554,15 @@ Progress Updates</h1>
 </ul>
 </li>
 <li><b>Build &amp; verification:</b><ul>
-<li>Fixed compile regressions introduced during iteration; rebuilt examples/test successfully. </li>
+<li>Fixed compile regressions introduced during iteration; rebuilt examples/test successfully.</li>
+<li>Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.</li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md169"></a>
-- Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.</h1>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md269"></a>
+[October 2, 2025]</h2>
 <ul>
-<li>### [October 2, 2025]<ul>
 <li><b>Synthetic Event Handling Robustness:</b><ul>
 <li>Refined synthetic mouse event generation and dispatch to work reliably in both floating and tiled window manager modes.</li>
 <li>Ensured all synthetic events use <span class="tt">SDL_RenderCoordinatesToWindow()</span> for correct mapping from logical to window coordinates, fixing previous issues with negative or out-of-bounds coordinates.</li>
@@ -608,18 +594,17 @@ Progress Updates</h1>
 <li>Notes:<ul>
 <li>Where getters return Lua-managed objects (like <span class="tt">sol::table</span> payloads) we kept lambda bindings so we can safely create <span class="tt">sol::object</span> tied to the current <span class="tt">sol::state</span>.</li>
 <li><span class="tt">SDL_Utils</span> still exposes <span class="tt">eventToLuaTable</span> as a Lua helper table (<span class="tt">SDL</span>/<span class="tt">SDL_Utils</span>) for direct use; <span class="tt">Event::registerLua()</span> uses the C++ helper internally for the <span class="tt">sdl</span> property.</li>
-<li>Example update: <span class="tt">examples/test/lua/callbacks/listener_callbacks.lua</span> was adjusted to colorize the "target:" label using the DisplayObject <span class="tt">getColor()</span> Lua binding and <span class="tt">CLR.fg_rgb(r,g,b)</span>; the code uses <span class="tt">pcall</span> fallbacks so it degrades gracefully when color or handle info is unavailable. </li>
+<li>Example update: <span class="tt">examples/test/lua/callbacks/listener_callbacks.lua</span> was adjusted to colorize the "target:" label using the DisplayObject <span class="tt">getColor()</span> Lua binding and <span class="tt">CLR.fg_rgb(r,g,b)</span>; the code uses <span class="tt">pcall</span> fallbacks so it degrades gracefully when color or handle info is unavailable.</li>
+<li>Verified: rebuilt the examples and test binary after these changes (<span class="tt">./compile</span> in <span class="tt">examples/test</span>) — build completed and <span class="tt">prog</span> produced successfully.</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md170"></a>
-- Verified: rebuilt the examples and test binary after these changes (<span class="tt">./compile</span> in <span class="tt">examples/test</span>) — build completed and <span class="tt">prog</span> produced successfully.</h1>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md271"></a>
+[October 3, 2025]</h2>
 <ul>
-<li>### [October 3, 2025]<ul>
 <li>Cleaned up noisy debug output across the codebase:<ul>
 <li>Replaced ad-hoc std::cout dbg prints with DEBUG_LOG and gated test‑only logs behind a new DEBUG_LUA_TESTS / LUA_INFO wrapper.</li>
 <li>Converted recent <a class="el" href="SDOM_8hpp.html#aedf01192151e10a6620567952711ff69" title="Logs an informational message to stdout.">INFO()</a> diagnostics used for Lua testing to LUA_INFO so they are off by default.</li>
@@ -698,11 +683,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md273"></a>
+[October 4, 2025]</h2>
 <ul>
-<li>### [October 4, 2025]<ul>
 <li>Quick fixes &amp; Lua binding polish (morning)<ul>
 <li>Fixed a typo in examples/test Lua callback (evt.taget → evt.target) that caused nil-index errors in right‑click handlers.</li>
 <li>Added a safe convenience: <span class="tt">IDisplayObject::removeFromParent()</span> and Lua bindings so scripts can call <span class="tt">evt.target:removeFromParent()</span> directly from listeners.</li>
@@ -722,11 +706,10 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md275"></a>
+[October 5, 2025]</h2>
 <ul>
-<li>### [October 5, 2025]<ul>
 <li>Refactored Lua Core bindings:<ul>
 <li>Centralized and simplified Core::<em>registerDisplayObject() by introducing small per-signature binder lambdas (<span class="tt">bind_noarg</span>, <span class="tt">bind_table</span>, <span class="tt">bind_string</span>, <span class="tt">bind_bool_arg</span>, <span class="tt">bind_do_arg</span>, `bind_return</em>*<span class="tt"> and </span>bind_callback_*<span class="tt">).</span></li>
 <li><span class="tt">All Core APIs are now registered consistently in three places: usertype methods (colon-call), CoreForward table entries, and optional global aliases — reducing duplication and eliminating subtle behavioral mismatches.</span></li>
@@ -757,11 +740,10 @@ Progress Updates</h1>
 </ul>
 </span><a class="el" href="SDOM__Core_8cpp.html">SDOM_Core.cpp</a><span class="tt">, add a small Lua smoke test exercising name-or-handle binds, and then consider moving the helpers into a dedicated </span>lua_Core_bindings.cpp` once CI is stable.</li>
 </ul>
-</li>
-</ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md277"></a>
+[October 6, 2025]</h2>
 <ul>
-<li>### [October 6, 2025]<ul>
 <li>Lua binding refactor (IDisplayObject):<ul>
 <li>Replaced repetitive sol2 wrappers with small, signature-based helper lambdas using a consistent naming scheme: <span class="tt">bind_{return}_{args}</span> (e.g., <span class="tt">bind_R_0</span>, <span class="tt">bind_void_i</span>, <span class="tt">bind_R_do</span>, <span class="tt">bind_void_str</span>, <span class="tt">_nc</span> variants for non-const).</li>
 <li>Applied helpers across hierarchy, priority/z-order, focus/interactivity, tab management, geometry/layout, anchors, edge positions, and orphan retention bindings.</li>
@@ -835,11 +817,6 @@ Progress Updates</h1>
 <li>Cleaned up temporary diagnostic prints; kept controlled debug gating for registration and Lua tests.</li>
 </ul>
 </li>
-<li>Next steps:<ul>
-<li>Add selective unit tests for remaining UNTESTED Lua wrappers (event flexible forms, removeDescendant variants, descriptor overloads) or add small C++ wrapper overloads to accept more permissive Lua call shapes.</li>
-<li>Consider adding a C++-side string-&gt;AnchorPoint Lua wrapper for ergonomic anchor calls from scripts.</li>
-</ul>
-</li>
 <li><b>Performance Milestone:</b> <br  />
 <ul>
 <li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> main loop is now 98% complete and matches the design for the finished library.</li>
@@ -849,14 +826,16 @@ Progress Updates</h1>
 </ul>
 </li>
 <li><b>Milestone - DisplayObject Complete:</b> <br  />
- </li>
+<ul>
+<li>With the DisplayObject (IDisplayObject) system now robust, unit-tested, and stable, the next major development track is the AssetObject system for resource management. <br  />
+</li>
 </ul>
 </li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md174"></a>
-- With the DisplayObject (IDisplayObject) system now robust, unit-tested, and stable, the next major development track is the AssetObject system for resource management.</h1>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md279"></a>
+[October 7, 2025]</h2>
 <ul>
-<li>### [October 7, 2025]<ul>
 <li>cleaned up the heavy includes from the header files to reduce compile times and improve modularity.</li>
 <li>Moved several implementation details from headers to source files, including private methods and member variables.</li>
 <li>Reduced header dependencies by using forward declarations where possible.</li>
@@ -885,19 +864,11 @@ Progress Updates</h1>
 <li>Avoid requiring repository-root ./rebuild under other user permissions.</li>
 </ul>
 </li>
-<li>Next short items:<ul>
-<li>Add a small Factory atomic-registration guard to avoid re-entrancy when creating assets that reference other assets.</li>
-<li>Reintroduce the Texture asset class to store SDL_Textures in the Factory keyed by their filename.</li>
-<li>Refactor SpriteSheet::onLoad() to first verify the AssetObject for the main texture is valid, load it if not.</li>
-<li>Add unit tests to verify texture sharing (two SpriteSheets with same filename reuse one SDL texture).</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 <hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md281"></a>
+[October 8, 2025]</h2>
 <ul>
-<li>### [October 8, 2025]</li>
 <li>drawSprite Lua API / overload consolidation<ul>
 <li>Consolidated Lua drawSprite wrappers to a single exposed name with deterministic dispatch:<ul>
 <li>Exposed variants (C++):<ul>
@@ -910,6 +881,8 @@ Progress Updates</h1>
 <li>Lua surface:<ul>
 <li>Kept three explicit helpers for clarity: <span class="tt">drawSprite</span> (x,y form), <span class="tt">drawSprite_dst</span>, <span class="tt">drawSprite_ext</span></li>
 <li>Also provide a single <span class="tt">drawSprite(...)</span> dispatcher that inspects argument types/tables and routes to the correct internal overload (heuristic rules documented below).</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -934,27 +907,133 @@ Progress Updates</h1>
 <li>Add unit tests for dispatcher patterns to prevent regressions.</li>
 </ul>
 </li>
-<li>Passes all current tests</li>
+<li>Label: wrapping, resource resolution, and rendering fixes<ul>
+<li>Fixed Label word-wrapping bug: maxWidth computation now uses parent-relative coordinates so inset labels compute correct available width (previously produced one-word-per-line).</li>
+<li>Standardized resourceName usage: Lua configs and InitStructs now reference the texture/spritesheet filename (e.g., "default_bmp_8x8"). Label defaults and example configs updated accordingly.</li>
+<li>Relaxed Label constructor validation: accept SpriteSheet as deferred font source and perform strict IFontObject validation/loading in onInit(), avoiding premature hard-fails during config parsing.</li>
+<li>Added guarded diagnostics for Label render/tokenization to aid debugging; diagnostics are temporary and gated for cleanup.</li>
+<li>Verified fixes with the examples/test suite; Label rendering and wrapping now behave correctly in the blueishBox example.</li>
 </ul>
 </li>
 </ul>
 <hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md177"></a>
-ToDo:</h1>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md283"></a>
+[October 9, 2025]</h2>
 <ul>
-<li>Implement a Texture asset class to manage SDL_Texture resources in the Factory.</li>
-<li>Build out the IAssetObject interface and the AssetObject handle type</li>
-<li>Design and implement the AssetObject handle class, mirroring the DisplayObject handle pattern, and integrate with Factory.</li>
-<li>Preload and test two font assets:<ul>
-<li>An 8x8 pixel bitmap font loaded from internal resources (using a SpriteSheetAsset).</li>
-<li>A TrueType font loaded as a separate IAssetObject.</li>
+<li>Codebase rename:<ul>
+<li>DisplayObject -&gt; DisplayHandle and AssetObject -&gt; AssetHandle — completed across the C++ sources and Lua scripts.<ul>
+<li>Renamed <span class="tt">DisplayObject</span> to <span class="tt">DisplayHandle</span> to help separate from the <span class="tt">IDisplayObject</span> and to imply <span class="tt">Handle</span> instead of <span class="tt">Object</span>.</li>
+<li>Remamed <span class="tt">AssetObject</span> to <span class="tt">AssetHandle</span> to help separate fro the <span class="tt">IAssetObject</span> and to help imply <span class="tt">Handle</span> rather than <span class="tt">Object</span>.</li>
 </ul>
 </li>
-<li>Define and scaffold an IFontObject interface to unify font asset handling (bitmap and TTF).</li>
-<li>Plan and begin implementation of SpriteSheetAsset as an IAssetObject to support bitmap font rendering.</li>
-<li>Add unit tests for asset registration, font loading, and property access. </li>
+<li>Lua bindings:<ul>
+<li>per-instance and prototype handle bindings are registered; unit tests updated to use the new names.</li>
 </ul>
-</div></div><!-- contents -->
+</li>
+<li>Remaining documentation work:<ul>
+<li>diagrams, design charts and README references still use the old names and must be updated.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><b>Initialization &amp; Property Audit:</b><ul>
+<li>Audited all constructors (<span class="tt">InitStruct</span> and <span class="tt">sol::table</span>) for <span class="tt">IDisplayObject</span> and related types to ensure every property is initialized with sensible defaults.</li>
+<li>Verified that all properties are exposed to Lua via <span class="tt">DisplayHandle</span> using the new identifier conventions (<span class="tt">snake_case</span> for properties, <span class="tt">lowerCamelCase</span> for functions).</li>
+<li>Improved inheritance in Lua: derived types now inherit all properties and functions from <span class="tt">IDisplayObject</span>.</li>
+<li>Updated Lua bindings to consistently use <span class="tt">snake_case</span> for properties and <span class="tt">lowerCamelCase</span> for functions.</li>
+<li>Added and documented missing properties in constructors with clear comment blocks for maintainability.</li>
+<li>Added helper lambdas and backward compatibility shims to ease migration to new naming conventions.</li>
+<li>Updated documentation and README to clarify property/function naming conventions and inheritance expectations.</li>
+<li>All changes verified by new Lua test scripts and unit tests; initialization bugs and missing bindings resolved.</li>
+<li>All properties are now initialized in both constructors (<span class="tt">InitStruct</span> and <span class="tt">sol::table</span>).</li>
+<li>Every property is exposed to Lua via <span class="tt">DisplayHandle</span> using the new identifier conventions.</li>
+<li>Properties use <span class="tt">snake_case</span> and functions use <span class="tt">lowerCamelCase</span> in both C++ and Lua.</li>
+<li>Inheritance is verified: derived types in Lua inherit all properties and functions from <span class="tt">IDisplayObject</span>.</li>
+<li>Audit of constructors completed; missing properties added and documented with comment blocks.</li>
+<li>All Lua bindings audited and updated; properties and functions bound with correct naming conventions.</li>
+<li>Lua test scripts confirm inheritance and property/function access.</li>
+<li>Documentation and code comments updated to reflect conventions and inheritance expectations.</li>
+<li>Refactor for consistency completed; helper lambdas and backward compatibility shims added as needed.</li>
+</ul>
+</li>
+<li><b>Startup Refactor</b><ul>
+<li>SDOM’s startup logic has been refactored from legacy, implicit global table parsing (e.g., <span class="tt">Core</span> or <span class="tt">config</span>) to an explicit initialization pattern. Now, users must directly call <span class="tt">Core:create(config)</span> and <span class="tt">Core:run()</span> in both Lua and C++, separating configuration from resource creation and engine startup. This change improves clarity, flexibility, and maintainability, and aligns <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> with modern engine integration practices. Legacy support for global tables remains during the transition, but new documentation and examples use the explicit method calls.</li>
+</ul>
+</li>
+<li><b>Key changes:</b><ul>
+<li>Deprecate automatic parsing of global tables for startup.</li>
+<li>Require explicit calls to <span class="tt">create</span> and <span class="tt">run</span> methods.</li>
+<li>Separate config parsing from resource creation.</li>
+<li>Bind engine functions as Lua globals for direct access.</li>
+<li>Update all documentation and examples to reflect the new pattern.</li>
+</ul>
+</li>
+<li><b>For full details and migration steps, see:</b> <a class="el" href="md_docs_2startup__refactor.html">docs/startup_refactor.md</a></li>
+</ul>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md285"></a>
+[October 11, 2025]</h2>
+<ul>
+<li><b>BitmapFont &amp; TruetypeFont Resource Creation Improvements:</b><ul>
+<li>Refactored resource creation so both BitmapFont and TruetypeFont assets can be registered via the config table or manual <span class="tt">createAsset()</span> calls.</li>
+<li>Added automatic TruetypeFont asset creation: a single <span class="tt">createAsset("TruetypeFont", { ... })</span> call now creates the backing TTFAsset internally if needed, simplifying Lua and C++ workflows.</li>
+<li>Normalized resource type strings and property names (e.g., <span class="tt">"TruetypeFont"</span> and <span class="tt">"truetype"</span> both accepted; <span class="tt">font_size</span>/<span class="tt">fontSize</span>/<span class="tt">size</span> all mapped).</li>
+<li>Improved BitmapFont creation: SpriteSheet and Texture dependencies are resolved automatically, and renderer initialization order is guaranteed.</li>
+<li>Verified that config-driven and manual asset creation paths now work identically for all supported font types.</li>
+</ul>
+</li>
+<li><b>Debug &amp; Logging Cleanup:</b><ul>
+<li>Removed noisy debug prints and gated diagnostics behind <span class="tt">DEBUG_LOG</span> and <span class="tt">DEBUG_LUA_TESTS</span> macros.</li>
+<li>Silenced duplicate-config and asset re-registration messages for clean production output.</li>
+<li>Added a config flag to enable resource creation diagnostics for troubleshooting.</li>
+<li>Rebuilt and validated the codebase after cleanup; all tests pass.</li>
+</ul>
+</li>
+<li><b>Label Rendering &amp; Font Scaling Fixes:</b><ul>
+<li>Cleaned up label rendering logic to properly handle resizing, bounds, and culling.</li>
+<li>Improved word wrapping and text alignment for both BitmapFont and TruetypeFont labels.</li>
+<li>Verified per-axis bitmap font scaling and Truetype font size propagation.</li>
+<li>Updated unit tests and example configs to confirm correct rendering and resource usage.</li>
+</ul>
+</li>
+<li><b>TruetypeFont Implementation:</b><ul>
+<li>Hardened TTFAsset and TruetypeFont loading, including SDL_ttf initialization and error handling.</li>
+<li>Factory now exposes a <span class="tt">default_ttf</span> font and falls back to bitmap fonts if Truetype creation fails.</li>
+<li>Fixed asset registration and loading bugs; all assets are now tracked and validated by the Factory.</li>
+<li>Added integration points for future unit tests covering TTFAsset and TruetypeFont.</li>
+</ul>
+</li>
+</ul>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md287"></a>
+Next Steps:</h2>
+<ul>
+<li>Optimize Label rendering performance and batching by rendering to textures and reusing them when not dirty.</li>
+<li>Add unit tests for Label rendering, resizing, and font scaling edge cases.</li>
+<li>Expand Lua test coverage for asset creation and configuration parsing.</li>
+<li>Document the new startup pattern and resource creation workflows in the README and docs.</li>
+<li>Update examples to use the new explicit startup and resource creation methods.</li>
+<li>Continue refactoring asset/resource management (AssetHandle system).</li>
+<li>Expand unit tests for edge cases in Label rendering and event handling.</li>
+<li>Update architecture diagrams and documentation to reflect recent naming and API changes.</li>
+<li>Visual rendering not fully verified: code loads assets and unit tests pass, but visual rendering should be manually confirmed.</li>
+<li>Ensure <span class="tt">TTF_Init()</span> runs before any code that creates/loads <span class="tt">TTFAsset</span> instances; current ordering appears correct (TTF_WasInit() == 1).</li>
+<li>File-based TTF loads log SDL errors on failure; consider automatic fallback to bitmap if desired.</li>
+<li>No dedicated unit tests yet for TTFAsset/TruetypeFont; recommend adding an integration test asserting default_ttf is loaded and TTF_Font* is non-null.</li>
+</ul>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md289"></a>
+ToDo:</h2>
+<ul>
+<li>Verify and document verious start up scenarios (C++ only, Lua only, mixed).</li>
+<li>Update architecture diagrams and markdown docs to replace old identifiers with the new Handle names.</li>
+<li>Verify Label / IDisplayObject constructor default merging (Label::Label(sol::table&amp;)).</li>
+<li>Add a short migration note in the changelog describing the rename and any Lua compatibility considerations.</li>
+<li>Label and IDisplayObject Constructor Defaults should include IDisplayObject defaults and the InitStruct defaults. Verify and Fix. Pattern may be within the Label::Label(sol::table&amp; config)</li>
+<li><b>Comment blocks</b> in the code are a great way to track progress and ensure completeness.</li>
+</ul>
+<hr  />
+ </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

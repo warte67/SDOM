@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['→_20lua_0',['Migration note: JSON → Lua',['../md_docs_2architecture__overview.html#autotoc_md1',1,'']]]
+  ['validate_0',['7. Test and Validate',['../md_docs_2startup__refactor.html#autotoc_md315',1,'']]],
+  ['validation_1',['6. Error Handling &amp;amp; Validation',['../md_docs_2extensible__factory.html#autotoc_md167',1,'']]],
+  ['versions_20for_20user_20convenience_2',['Reversed versions for user convenience',['../md_docs_2display__object__anchoring.html#autotoc_md65',1,'']]],
+  ['visual_20jump_3',['2) Anchor Change Recalculation (No Visual Jump)',['../md_docs_2display__object__anchoring.html#autotoc_md77',1,'']]]
 ];

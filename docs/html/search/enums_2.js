@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['phase_0',['Phase',['../classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8',1,'SDOM::Event']]]
+  ['labelalign_0',['LabelAlign',['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42d',1,'SDOM']]]
 ];

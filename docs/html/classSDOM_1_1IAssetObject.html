@@ -100,23 +100,20 @@ Inheritance diagram for SDOM::IAssetObject:</div>
  <div class="center">
   <img src="classSDOM_1_1IAssetObject.png" usemap="#SDOM_3A_3AIAssetObject_map" alt=""/>
   <map id="SDOM_3A_3AIAssetObject_map" name="SDOM_3A_3AIAssetObject_map">
-<area href="classSDOM_1_1IDataObject.html" alt="SDOM::IDataObject" shape="rect" coords="68,56,195,80"/>
-<area href="classSDOM_1_1IUnitTest.html" title="Interface for unit testing objects in SDOM." alt="SDOM::IUnitTest" shape="rect" coords="68,0,195,24"/>
-<area href="classSDOM_1_1SpriteSheet.html" alt="SDOM::SpriteSheet" shape="rect" coords="0,168,127,192"/>
-<area href="classSDOM_1_1Texture.html" alt="SDOM::Texture" shape="rect" coords="137,168,264,192"/>
+<area href="classSDOM_1_1IDataObject.html" alt="SDOM::IDataObject" shape="rect" coords="282,56,413,80"/>
+<area href="classSDOM_1_1IUnitTest.html" title="Interface for unit testing objects in SDOM." alt="SDOM::IUnitTest" shape="rect" coords="282,0,413,24"/>
+<area href="classSDOM_1_1IFontObject.html" alt="SDOM::IFontObject" shape="rect" coords="70,168,201,192"/>
+<area href="classSDOM_1_1SpriteSheet.html" alt="SDOM::SpriteSheet" shape="rect" coords="211,168,342,192"/>
+<area href="classSDOM_1_1TTFAsset.html" alt="SDOM::TTFAsset" shape="rect" coords="352,168,483,192"/>
+<area href="classSDOM_1_1Texture.html" alt="SDOM::Texture" shape="rect" coords="493,168,624,192"/>
+<area href="classSDOM_1_1BitmapFont.html" alt="SDOM::BitmapFont" shape="rect" coords="0,224,131,248"/>
+<area href="classSDOM_1_1TruetypeFont.html" alt="SDOM::TruetypeFont" shape="rect" coords="141,224,272,248"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:InitStruct" id="r_InitStruct"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html">InitStruct</a></td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a4a0c20d3b094cfb86ca99b62edbcf602" id="r_a4a0c20d3b094cfb86ca99b62edbcf602"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a4a0c20d3b094cfb86ca99b62edbcf602">Getter</a> = std::function&lt;sol::object(const <a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp;, sol::state_view)&gt;</td></tr>
-<tr class="memitem:ab6354bf6f9d60a272e0bbbadd834fcbf" id="r_ab6354bf6f9d60a272e0bbbadd834fcbf"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#ab6354bf6f9d60a272e0bbbadd834fcbf">Setter</a> = std::function&lt;<a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp;(<a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp;, sol::object, sol::state_view)&gt;</td></tr>
-<tr class="memitem:a3fdf5631454388f0450ae0bb3c91ebd6" id="r_a3fdf5631454388f0450ae0bb3c91ebd6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a3fdf5631454388f0450ae0bb3c91ebd6">Command</a> = std::function&lt;void(<a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp;, sol::object, sol::state_view)&gt;</td></tr>
-<tr class="memitem:a1258d34382d02dd5613d770a869b86bc" id="r_a1258d34382d02dd5613d770a869b86bc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a1258d34382d02dd5613d770a869b86bc">Function</a> = std::function&lt;sol::object(<a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp;, sol::object, sol::state_view)&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -138,6 +135,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a05aeca66d8a195214e0e23d5669bffd7" id="r_a05aeca66d8a195214e0e23d5669bffd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a05aeca66d8a195214e0e23d5669bffd7">setType</a> (const std::string &amp;type)</td></tr>
 <tr class="memitem:ad0998244c5f497a5ce11a534d321328d" id="r_ad0998244c5f497a5ce11a534d321328d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0998244c5f497a5ce11a534d321328d">setName</a> (const std::string &amp;name)</td></tr>
 <tr class="memitem:ab996c8629d01a716654e3125b4b0a589" id="r_ab996c8629d01a716654e3125b4b0a589"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab996c8629d01a716654e3125b4b0a589">setFilename</a> (const std::string &amp;filename)</td></tr>
+<tr class="memitem:a3e68fa1ef3cc5bff3d4e57c813c65a49" id="r_a3e68fa1ef3cc5bff3d4e57c813c65a49"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a3e68fa1ef3cc5bff3d4e57c813c65a49 template"><td class="memItemLeft" align="right" valign="top">T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e68fa1ef3cc5bff3d4e57c813c65a49">as</a> ()</td></tr>
 <tr class="memitem:a1947ff718446a6a81cd108b87a475d9f" id="r_a1947ff718446a6a81cd108b87a475d9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
@@ -161,99 +160,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a95668971d07c16b956e07b34ac8439a6" id="r_a95668971d07c16b956e07b34ac8439a6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95668971d07c16b956e07b34ac8439a6">isInternal_</a></td></tr>
 <tr class="memitem:adfca3b5c4ff76d9ff2f0c4a36f254998" id="r_adfca3b5c4ff76d9ff2f0c4a36f254998"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adfca3b5c4ff76d9ff2f0c4a36f254998">isLoaded_</a> = false</td></tr>
 <tr class="memitem:a0dcbb706c499ad4446c6f6eec63b567c" id="r_a0dcbb706c499ad4446c6f6eec63b567c"><td class="memItemLeft" align="right" valign="top">sol::usertype&lt; <a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0dcbb706c499ad4446c6f6eec63b567c">objHandleType_</a></td></tr>
-<tr class="memitem:a56cb8e90fd9a8e993cade99d4240f8d9" id="r_a56cb8e90fd9a8e993cade99d4240f8d9"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, <a class="el" href="classSDOM_1_1IDataObject.html#a4a0c20d3b094cfb86ca99b62edbcf602">Getter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a56cb8e90fd9a8e993cade99d4240f8d9">getters_</a></td></tr>
-<tr class="memitem:a8872f9668a96ae9c6d997804e32dbeae" id="r_a8872f9668a96ae9c6d997804e32dbeae"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, <a class="el" href="classSDOM_1_1IDataObject.html#ab6354bf6f9d60a272e0bbbadd834fcbf">Setter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a8872f9668a96ae9c6d997804e32dbeae">setters_</a></td></tr>
-<tr class="memitem:a81ab01eb51d0da3950b9cb6d93d74fbb" id="r_a81ab01eb51d0da3950b9cb6d93d74fbb"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, <a class="el" href="classSDOM_1_1IDataObject.html#a3fdf5631454388f0450ae0bb3c91ebd6">Command</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a81ab01eb51d0da3950b9cb6d93d74fbb">commands_</a></td></tr>
 </table>
-<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
-<a id="a3fdf5631454388f0450ae0bb3c91ebd6" name="a3fdf5631454388f0450ae0bb3c91ebd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3fdf5631454388f0450ae0bb3c91ebd6">&#9670;&#160;</a></span>Command</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classSDOM_1_1IDataObject.html#a3fdf5631454388f0450ae0bb3c91ebd6">SDOM::IDataObject::Command</a> = std::function&lt;void(<a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp;, sol::object, sol::state_view)&gt;</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inherited">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1258d34382d02dd5613d770a869b86bc" name="a1258d34382d02dd5613d770a869b86bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1258d34382d02dd5613d770a869b86bc">&#9670;&#160;</a></span>Function</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classSDOM_1_1IDataObject.html#a1258d34382d02dd5613d770a869b86bc">SDOM::IDataObject::Function</a> = std::function&lt;sol::object(<a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp;, sol::object, sol::state_view)&gt;</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inherited">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4a0c20d3b094cfb86ca99b62edbcf602" name="a4a0c20d3b094cfb86ca99b62edbcf602"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a0c20d3b094cfb86ca99b62edbcf602">&#9670;&#160;</a></span>Getter</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classSDOM_1_1IDataObject.html#a4a0c20d3b094cfb86ca99b62edbcf602">SDOM::IDataObject::Getter</a> = std::function&lt;sol::object(const <a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp;, sol::state_view)&gt;</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inherited">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab6354bf6f9d60a272e0bbbadd834fcbf" name="ab6354bf6f9d60a272e0bbbadd834fcbf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab6354bf6f9d60a272e0bbbadd834fcbf">&#9670;&#160;</a></span>Setter</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classSDOM_1_1IDataObject.html#ab6354bf6f9d60a272e0bbbadd834fcbf">SDOM::IDataObject::Setter</a> = std::function&lt;<a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp;(<a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp;, sol::object, sol::state_view)&gt;</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inherited">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2dc02f5d68701d7836df4f9088237305" name="a2dc02f5d68701d7836df4f9088237305"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2dc02f5d68701d7836df4f9088237305">&#9670;&#160;</a></span>IAssetObject() <span class="overload">[1/3]</span></h2>
@@ -361,7 +268,34 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">SDOM::IDataObject</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classSDOM_1_1SpriteSheet.html#add5b054c7c7ae78a17771a498ec6933f">SDOM::SpriteSheet</a>, and <a class="el" href="classSDOM_1_1Texture.html#a9fd96c9469d0c9f82bbec530e1c62147">SDOM::Texture</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1BitmapFont.html#aba388256775f9428f12c62dd87d982c1">SDOM::BitmapFont</a>, <a class="el" href="classSDOM_1_1IFontObject.html#afb92bee8dbc157bf90ede71e90e6b221">SDOM::IFontObject</a>, <a class="el" href="classSDOM_1_1SpriteSheet.html#add5b054c7c7ae78a17771a498ec6933f">SDOM::SpriteSheet</a>, <a class="el" href="classSDOM_1_1Texture.html#a9fd96c9469d0c9f82bbec530e1c62147">SDOM::Texture</a>, <a class="el" href="classSDOM_1_1TruetypeFont.html#a2b471663162e96e0bedb2b7d1b93e7f2">SDOM::TruetypeFont</a>, and <a class="el" href="classSDOM_1_1TTFAsset.html#a66dd3f4bae5cda980b24d290189e0b88">SDOM::TTFAsset</a>.</p>
+
+</div>
+</div>
+<a id="a3e68fa1ef3cc5bff3d4e57c813c65a49" name="a3e68fa1ef3cc5bff3d4e57c813c65a49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e68fa1ef3cc5bff3d4e57c813c65a49">&#9670;&#160;</a></span>as()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T * SDOM::IAssetObject::as </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -551,7 +485,7 @@ template&lt;typename T&gt; </div>
 
 <p>Implements <a class="el" href="classSDOM_1_1IDataObject.html#ae7bbc291ea72a2a99a1cce4c86e681cb">SDOM::IDataObject</a>.</p>
 
-<p>Implemented in <a class="el" href="classSDOM_1_1SpriteSheet.html#ae0db65cb8850e61db038ad4b5d8c14b2">SDOM::SpriteSheet</a>, and <a class="el" href="classSDOM_1_1Texture.html#a734c4805baad8737b3508009713027b6">SDOM::Texture</a>.</p>
+<p>Implemented in <a class="el" href="classSDOM_1_1BitmapFont.html#a6b667baa33b7957df5ab4e4c5be427ba">SDOM::BitmapFont</a>, <a class="el" href="classSDOM_1_1IFontObject.html#acc5a41e113d1af70782320ac635a24db">SDOM::IFontObject</a>, <a class="el" href="classSDOM_1_1SpriteSheet.html#ae0db65cb8850e61db038ad4b5d8c14b2">SDOM::SpriteSheet</a>, <a class="el" href="classSDOM_1_1Texture.html#a734c4805baad8737b3508009713027b6">SDOM::Texture</a>, <a class="el" href="classSDOM_1_1TruetypeFont.html#a67c02d0031e8bdc9bd30c19d97f1becc">SDOM::TruetypeFont</a>, and <a class="el" href="classSDOM_1_1TTFAsset.html#a084464a6f797be9f519a134ac8307d4b">SDOM::TTFAsset</a>.</p>
 
 </div>
 </div>
@@ -578,7 +512,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classSDOM_1_1SpriteSheet.html#ace080e82325c66eaa879d5bad93615e2">SDOM::SpriteSheet</a>, and <a class="el" href="classSDOM_1_1Texture.html#a378cb53081a82814ac35523f21f4f9de">SDOM::Texture</a>.</p>
+<p>Implemented in <a class="el" href="classSDOM_1_1BitmapFont.html#a79b4bddd8017644c4570dc321501b319">SDOM::BitmapFont</a>, <a class="el" href="classSDOM_1_1IFontObject.html#a61707fe9b232edb9c786899c5bb40c43">SDOM::IFontObject</a>, <a class="el" href="classSDOM_1_1SpriteSheet.html#ace080e82325c66eaa879d5bad93615e2">SDOM::SpriteSheet</a>, <a class="el" href="classSDOM_1_1Texture.html#a378cb53081a82814ac35523f21f4f9de">SDOM::Texture</a>, <a class="el" href="classSDOM_1_1TruetypeFont.html#ac13f4a9d2b1700304ba43be5b1b8137f">SDOM::TruetypeFont</a>, and <a class="el" href="classSDOM_1_1TTFAsset.html#a3f6ab9e08200ab505cd8730fc5e5b4dc">SDOM::TTFAsset</a>.</p>
 
 </div>
 </div>
@@ -607,7 +541,7 @@ template&lt;typename T&gt; </div>
 
 <p>Implements <a class="el" href="classSDOM_1_1IDataObject.html#a8254dbe0378d780dc2665f892430f543">SDOM::IDataObject</a>.</p>
 
-<p>Implemented in <a class="el" href="classSDOM_1_1SpriteSheet.html#aa72009e1bb14203e4395d2e1b8ee818b">SDOM::SpriteSheet</a>, and <a class="el" href="classSDOM_1_1Texture.html#a6d1e30c73adf981ff4dc3e00deff05fb">SDOM::Texture</a>.</p>
+<p>Implemented in <a class="el" href="classSDOM_1_1BitmapFont.html#a561d56ec8efd8a0592d88d54f65dcc14">SDOM::BitmapFont</a>, <a class="el" href="classSDOM_1_1IFontObject.html#a1fe177919c6611b4bd8a7287eaac44d0">SDOM::IFontObject</a>, <a class="el" href="classSDOM_1_1SpriteSheet.html#aa72009e1bb14203e4395d2e1b8ee818b">SDOM::SpriteSheet</a>, <a class="el" href="classSDOM_1_1Texture.html#a6d1e30c73adf981ff4dc3e00deff05fb">SDOM::Texture</a>, <a class="el" href="classSDOM_1_1TruetypeFont.html#a5c3519a3ab06e49be657cb0c33ccfd95">SDOM::TruetypeFont</a>, and <a class="el" href="classSDOM_1_1TTFAsset.html#a2644badfe5fad0b7d5d381ef86431796">SDOM::TTFAsset</a>.</p>
 
 </div>
 </div>
@@ -639,7 +573,7 @@ template&lt;typename T&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IDataObject.html#accf10992aa1dc65addeb56baab70e1e6">SDOM::IDataObject</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classSDOM_1_1SpriteSheet.html#a5d453c16f04fc228c024e4d47d9e5fad">SDOM::SpriteSheet</a>, and <a class="el" href="classSDOM_1_1Texture.html#ac5de618903b03a169e0ca1d7c10236e3">SDOM::Texture</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1SpriteSheet.html#a5d453c16f04fc228c024e4d47d9e5fad">SDOM::SpriteSheet</a>, <a class="el" href="classSDOM_1_1Texture.html#ac5de618903b03a169e0ca1d7c10236e3">SDOM::Texture</a>, and <a class="el" href="classSDOM_1_1TTFAsset.html#a1ff100abb3175a19ea9c5a7691976d57">SDOM::TTFAsset</a>.</p>
 
 </div>
 </div>
@@ -666,7 +600,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classSDOM_1_1SpriteSheet.html#a780273791a1990a20462b66defc78ebb">SDOM::SpriteSheet</a>, and <a class="el" href="classSDOM_1_1Texture.html#aaa1aabff729ab13581ca7a4539e2e567">SDOM::Texture</a>.</p>
+<p>Implemented in <a class="el" href="classSDOM_1_1BitmapFont.html#af7fb41bc4695e153458177e35a5a8c8d">SDOM::BitmapFont</a>, <a class="el" href="classSDOM_1_1IFontObject.html#aca1c0821605a16e5e4664e9716a2a850">SDOM::IFontObject</a>, <a class="el" href="classSDOM_1_1SpriteSheet.html#a780273791a1990a20462b66defc78ebb">SDOM::SpriteSheet</a>, <a class="el" href="classSDOM_1_1Texture.html#aaa1aabff729ab13581ca7a4539e2e567">SDOM::Texture</a>, <a class="el" href="classSDOM_1_1TruetypeFont.html#ae3063a2261f06d5d6798c30b5179c292">SDOM::TruetypeFont</a>, and <a class="el" href="classSDOM_1_1TTFAsset.html#a1f8278d2d9f1832193160f8944fad520">SDOM::TTFAsset</a>.</p>
 
 </div>
 </div>
@@ -775,28 +709,6 @@ template&lt;typename T&gt; </div>
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a81ab01eb51d0da3950b9cb6d93d74fbb" name="a81ab01eb51d0da3950b9cb6d93d74fbb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81ab01eb51d0da3950b9cb6d93d74fbb">&#9670;&#160;</a></span>commands_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt;std::string, <a class="el" href="classSDOM_1_1IDataObject.html#a3fdf5631454388f0450ae0bb3c91ebd6">Command</a>&gt; SDOM::IDataObject::commands_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="add05647990d22252de1ef584ae622ae5" name="add05647990d22252de1ef584ae622ae5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#add05647990d22252de1ef584ae622ae5">&#9670;&#160;</a></span>filename_</h2>
 
@@ -813,28 +725,6 @@ template&lt;typename T&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a56cb8e90fd9a8e993cade99d4240f8d9" name="a56cb8e90fd9a8e993cade99d4240f8d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56cb8e90fd9a8e993cade99d4240f8d9">&#9670;&#160;</a></span>getters_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt;std::string, <a class="el" href="classSDOM_1_1IDataObject.html#a4a0c20d3b094cfb86ca99b62edbcf602">Getter</a>&gt; SDOM::IDataObject::getters_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -923,28 +813,6 @@ template&lt;typename T&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8872f9668a96ae9c6d997804e32dbeae" name="a8872f9668a96ae9c6d997804e32dbeae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8872f9668a96ae9c6d997804e32dbeae">&#9670;&#160;</a></span>setters_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt;std::string, <a class="el" href="classSDOM_1_1IDataObject.html#ab6354bf6f9d60a272e0bbbadd834fcbf">Setter</a>&gt; SDOM::IDataObject::setters_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

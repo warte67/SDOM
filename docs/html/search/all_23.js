@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['—_20build_20completed_20and_20prog_20produced_20successfully_0',['- Verified: rebuilt the examples and test binary after these changes (&lt;span class=&quot;tt&quot;&gt;./compile&lt;/span&gt; in &lt;span class=&quot;tt&quot;&gt;examples/test&lt;/span&gt;) — build completed and &lt;span class=&quot;tt&quot;&gt;prog&lt;/span&gt; produced successfully.',['../md_docs_2progress.html#autotoc_md170',1,'']]]
+  ['y_0',['y',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#ac3b4c19819ff87fd7886678ef807edcf',1,'SDOM::IDisplayObject::InitStruct']]],
+  ['yellow_1',['YELLOW',['../classCLR.html#a9c70a18a33cde4874888b21b178000bf',1,'CLR']]]
 ];
