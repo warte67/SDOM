@@ -619,13 +619,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Next Steps:
-- **Performance Optimization: Label Texture Caching**
-    - Refactor Label to render text to a texture when dirty, and reuse the cached texture for fast redraws.
-    - Only re-rasterize when text, font, or style changes.
-    - Expected result: high frame rates even with large text blocks or many Labels.
-- keyboard TAB and SHIFT_TAB are hitting on labels (verify). We need to make sure that Labels are not tab stops by default.
+- `IDisplayObject` resizes need to dispatch a resize event to children.
+- keyboard [TAB] and [SHIFT_TAB] are hitting on labels (verify). We need to make sure that `Labels` are not tab stops by default.
 - Optimize Label rendering performance and batching by rendering to textures and reusing them when not dirty.
-- Add unit tests for Label rendering, resizing, and font scaling edge cases.
+- Add unit tests for `Label` rendering, resizing, and font scaling edge cases.
 - Expand Lua test coverage for asset creation and configuration parsing.
 - Document the new startup pattern and resource creation workflows in the README and docs.
 - Update examples to use the new explicit startup and resource creation methods.

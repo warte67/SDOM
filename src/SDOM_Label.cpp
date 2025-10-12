@@ -289,6 +289,22 @@ namespace SDOM
     void Label::onUpdate(float fElapsedTime) 
     {
         (void)fElapsedTime;
+
+
+        // TODO: Fix this to handle parent resizing properly.
+        // Currently disabled because it causes issues with certain layout scenarios.
+        // It would be better to have the parent notify children of size changes.
+        // This is a naive approach that can lead to excessive re-tokenization.
+
+        // if (getParent()->getWidth() != parent_width_ || getParent()->getHeight() != parent_height_)
+        // {
+        //     parent_width_ = getParent()->getWidth();
+        //     parent_height_ = getParent()->getHeight();
+        //     tokenizeText();
+        //     setDirty(true);
+        //     INFO("Parent Size Change");
+        // }
+        
         if (lastTokenizedText_ != text_ || needsTextureRebuild_(getWidth(), getHeight(), getCore().getPixelFormat()))
         {
             lastTokenizedText_ = text_;

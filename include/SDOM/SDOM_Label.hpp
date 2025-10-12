@@ -276,6 +276,8 @@ namespace SDOM
         SDL_PixelFormat current_pixel_format = SDL_PIXELFORMAT_UNKNOWN;
         int current_width = 0;
         int current_height = 0;     
+        int parent_width_ = 0;
+        int parent_height_ = 0;
         bool needsTextureRebuild_(int width, int height, SDL_PixelFormat fmt) const;
         bool rebuildTexture_(int width, int height, SDL_PixelFormat fmt = SDL_PIXELFORMAT_RGBA8888 ); 
 
