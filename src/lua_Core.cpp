@@ -127,14 +127,24 @@ namespace SDOM
 		// before display objects are constructed. This allows Labels and other
 		// display objects to reference resources by name during onInit().
 		try {
-		// Ensure the Factory and its resource type registrations exist before
-		// attempting to create assets. Factory::onInit() is now idempotent so
-		// calling it here is safe and avoids ordering issues where resource
-		// types haven't been registered yet.
+		// Ensure SDL (window/renderer/texture) is initialized before
+		// creating assets that depend on an SDL_Renderer (e.g., BitmapFont
+		// -> SpriteSheet -> Texture). Build a minimal CoreConfig from the
+		// provided table and call configure() — this does not create any
+		// display objects.
 		try {
-			getCore().getFactory().onInit();
-		} catch (...) {
-			DEBUG_LOG("Factory::onInit() threw during configure_lua preprocessing");
+			Core::CoreConfig preCfg = getCore().getConfig();
+			if (config.valid()) {
+				try { if (config["windowWidth"].valid())  preCfg.windowWidth  = config["windowWidth"].get<double>(); } catch(...) {}
+				try { if (config["windowHeight"].valid()) preCfg.windowHeight = config["windowHeight"].get<double>(); } catch(...) {}
+				try { if (config["pixelWidth"].valid())   preCfg.pixelWidth   = config["pixelWidth"].get<double>(); } catch(...) {}
+				try { if (config["pixelHeight"].valid())  preCfg.pixelHeight  = config["pixelHeight"].get<double>(); } catch(...) {}
+				try { if (config["preserveAspectRatio"].valid()) preCfg.preserveAspectRatio = config["preserveAspectRatio"].get<bool>(); } catch(...) {}
+				try { if (config["allowTextureResize"].valid())  preCfg.allowTextureResize  = config["allowTextureResize"].get<bool>(); } catch(...) {}
+			}
+			getCore().configure(preCfg);
+		} catch(...) {
+			DEBUG_LOG("configure_lua: pre-initialization configure() failed");
 		}
 			if (config.valid() && config["resources"].valid()) {
 				sol::table resTbl = config["resources"];
@@ -180,6 +190,13 @@ namespace SDOM
 						// Special-case TrueType: create an underlying TTFAsset first and
 						// then create a TruetypeFont that references the TTFAsset by name.
 						if (typeName == "truetype") {
+							// Normalize font size from any supported key
+							int sizeVal = -1;
+							try {
+								if (r["font_size"].valid()) sizeVal = r["font_size"].get<int>();
+								else if (r["fontSize"].valid()) sizeVal = r["fontSize"].get<int>();
+								else if (r["size"].valid()) sizeVal = r["size"].get<int>();
+							} catch(...) { sizeVal = -1; }
 							std::string ttfAssetName;
 							if (r["ttfAssetName"].valid()) ttfAssetName = r["ttfAssetName"].get<std::string>();
 							else ttfAssetName = name + std::string("_TTFAsset");
@@ -192,8 +209,7 @@ namespace SDOM
 								ttfCfg["type"] = std::string("TTFAsset");
 								ttfCfg["filename"] = filename;
 								// propagate font size if provided
-								if (r["fontSize"].valid()) ttfCfg["internalFontSize"] = r["fontSize"].get<int>();
-								else if (r["size"].valid()) ttfCfg["internalFontSize"] = r["size"].get<int>();
+								if (sizeVal > 0) ttfCfg["internalFontSize"] = sizeVal;
 
 								std::cout << "[CONFIG] creating underlying TTFAsset name='" << ttfAssetName << "' filename='" << filename << "'\n";
 								AssetHandle ttfh = getCore().createAssetObject(std::string("TTFAsset"), ttfCfg);
@@ -208,6 +224,7 @@ namespace SDOM
 							// Now create the public TruetypeFont that references the TTFAsset
 							r["filename"] = ttfAssetName; // TruetypeFont expects filename to be a TTFAsset name
 							r["type"] = std::string("truetype");
+							if (sizeVal > 0) r["fontSize"] = sizeVal; // TruetypeFont expects fontSize/size
 
 							std::cout << "[CONFIG] creating resource name='" << name << "' type='" << std::string("truetype") << "' filename='" << r["filename"].get<std::string>() << "'\n";
 							AssetHandle h = getCore().createAssetObject(std::string("truetype"), r);
