@@ -887,9 +887,11 @@ if (LABEL_DEBUG)
             int widthSoFar = 0;
             // If we still don't have a reliable width, don't truncate: keep tokens.
             bool skipTruncate = (effectiveWidth <= 0);
-            for (const auto& token : tokenList)
+            bool hasAny = false;
+            for (size_t ti = 0; ti < tokenList.size(); ++ti)
             {
-                if (skipTruncate) { truncatedTokens.push_back(token); continue; }
+                const auto& token = tokenList[ti];
+                if (skipTruncate) { truncatedTokens.push_back(token); hasAny = true; continue; }
                 int tokenWidth = 0;
                 if (font_) 
                 {
@@ -900,10 +902,20 @@ if (LABEL_DEBUG)
                     else if (token.type == TokenType::Tab)
                         tokenWidth = font_->getGlyphWidth(' ') * 4;
                 }
+                // Always allow the very first visible token even if it exceeds effectiveWidth;
+                // this ensures we render something and let it be clipped.
+                bool isVisible = (token.type == TokenType::Word || token.type == TokenType::Punctuation || token.type == TokenType::Space || token.type == TokenType::Tab);
+                if (!hasAny && isVisible) {
+                    truncatedTokens.push_back(token);
+                    widthSoFar += tokenWidth;
+                    hasAny = true;
+                    continue;
+                }
                 if (widthSoFar + tokenWidth > effectiveWidth)
                     break;
                 truncatedTokens.push_back(token);
                 widthSoFar += tokenWidth;
+                if (isVisible) hasAny = true;
             }
             AlignQueue queue = alignXRef_[defaultStyle_.alignment];
             tokenAlignLists_[queue] = truncatedTokens;
@@ -1153,7 +1165,8 @@ if (LABEL_DEBUG)
                         trim_leading_spaces(currentLine);        
                         // If line is empty after trimming, skip adding it                
                         float lineHeight = getLineHeight(currentLine);
-                        if (maxHeight > 0.0f && (totalHeight + lineHeight > maxHeight))
+                        // Allow the first line to render even if it exceeds maxHeight
+                        if (maxHeight > 0.0f && (totalHeight + lineHeight > maxHeight) && !lines.empty())
                             break;
                         totalHeight += lineHeight;
                         lines.push_back(currentLine);
@@ -1176,7 +1189,8 @@ if (LABEL_DEBUG)
                     trim_leading_spaces(currentLine);    
                     // If line is empty after trimming, skip adding it                    
                     float lineHeight = getLineHeight(currentLine);
-                    if (maxHeight > 0.0f && (totalHeight + lineHeight > maxHeight))
+                    // Allow the first line to render even if it exceeds maxHeight
+                    if (maxHeight > 0.0f && (totalHeight + lineHeight > maxHeight) && !lines.empty())
                         break;
                     totalHeight += lineHeight;
                     lines.push_back(currentLine);
@@ -1205,7 +1219,8 @@ if (LABEL_DEBUG)
                     trim_leading_spaces(currentLine);             
                     // If line is empty after trimming, skip adding it           
                     float lineHeight = getLineHeight(currentLine);
-                    if (maxHeight > 0.0f && (totalHeight + lineHeight > maxHeight))
+                    // Allow the first line to render even if it exceeds maxHeight
+                    if (maxHeight > 0.0f && (totalHeight + lineHeight > maxHeight) && !lines.empty())
                         break;
                     totalHeight += lineHeight;
                     lines.push_back(currentLine);
@@ -1225,7 +1240,7 @@ if (LABEL_DEBUG)
                 trim_leading_spaces(currentLine);    
                 // If line is empty after trimming, skip adding it              
                 float lineHeight = getLineHeight(currentLine);
-                if (maxHeight <= 0.0f || (totalHeight + lineHeight <= maxHeight)) {
+                if (maxHeight <= 0.0f || (totalHeight + lineHeight <= maxHeight) || lines.empty()) {
                     lines.push_back(currentLine);
                 }
             }

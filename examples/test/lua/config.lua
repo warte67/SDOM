@@ -95,9 +95,9 @@ local config = {
                             anchor_bottom = "bottom",   
                             height = 70,               
                             outline = true,
-                            wordwrap = false,
+                            wordwrap = true,
                             auto_resize = true,
-                            text = "Hello VarelaRound",
+                            text = "Hello [bold][dropshadow]VarelaRound[/dropshadow][/bold], this is a 32 point font size.",
                             resource_name = "VarelaRound32",   -- use the TruetypeFont created above
                             font_size = 32,
                             alignment = "center",
@@ -188,7 +188,7 @@ local config = {
                             -- For TrueType fonts, only `font_size` is used; `font_width` and `font_height` are ignored.
                             -- If you need non-uniform scaling for TrueType fonts, use a bitmap font or create a custom asset.   
                             
-                            font_size = 12,                                          -- verified
+                            font_size = 16,                                          -- verified
 
                             font_width = 8,         -- verified working now
                             font_height = 12,        -- verified working now
