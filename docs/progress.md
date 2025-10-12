@@ -616,6 +616,25 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - This change enables smooth rendering of large text blocks and many Labels without CPU/GPU bottlenecks.
     - Debug logic for texture rebuilds and alignment is now gated and can be toggled for future troubleshooting.
     - All unit tests and example scenes validated after the optimization.
+    
+---
+## [October 12, 2025]
+- **Internal Resource Renaming:**
+    - Renamed all default internal resources for clarity and consistency:
+        - `default_bmp_8x8` → `internal_font_8x8`
+        - `default_bmp_8x12` → `internal_font_8x12`
+        - `default_icon_8x8` → `internal_icon_8x8`
+        - `default_ttf` → `internal_ttf`
+    - Updated all config files, asset registration, and code references to use the new names.
+    - This change makes it clear which resources are engine-provided and improves naming consistency across bitmap and truetype fonts.
+- **BitmapFont Sizing Fixes:**
+    - Fixed logic so BitmapFont assets now correctly default to their backing SpriteSheet's sprite size when `font_width` or `font_height` are not specified by the user.
+    - Ensured both internal and external bitmap fonts render at their intended glyph dimensions (e.g., 8x12 for `internal_font_8x12`).
+    - Added runtime diagnostics to confirm font metrics during asset loading.
+- **Label Rendering Improvements:**
+    - Improved Label logic to always render at least one line or token, even when the available height or width is too small to fit the full content.
+    - This prevents labels from disappearing when their bounds are smaller than the text, ensuring clipped text is still visible.
+    - Verified that Labels now handle extreme resizing gracefully, maintaining visibility of partial text.
 
 ---
 ## Next Steps:

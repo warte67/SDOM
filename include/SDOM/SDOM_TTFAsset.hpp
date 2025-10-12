@@ -28,7 +28,7 @@ namespace SDOM
             { 
                 name = TypeName; 
                 type = TypeName;
-                filename = "_default_ttf"; // Default filename, can be overridden
+                filename = "internal_ttf"; // Default filename, can be overridden
             }
             int internalFontSize = 10;     // Font size property for TrueType fonts
         };
