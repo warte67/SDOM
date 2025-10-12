@@ -96,7 +96,8 @@ local config = {
                             -- outline_thickness = 1,   -- verified
 
                             text = "The [bold][color=red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river, sunlight catching on ripples as children laugh in the distance. A small breeze stirs the pages of an open book left on the bench, and a bell rings from the town square.",
-                            resource_name = "default_bmp_8x8",                      -- verified
+                            -- resource_name = "default_bmp_8x8",                      -- verified
+                            resource_name = "default_ttf", 
                             border = true,                                          -- verified
                             border_color = { r = 255, g = 255, b = 255, a = 64 },   -- verified
 
