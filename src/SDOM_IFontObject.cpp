@@ -18,7 +18,7 @@ namespace SDOM
         }
         else
         {
-            INFO("IFontObject constructed with unknown font type: " + requested + " — defaulting to 'bitmap'");
+            DEBUG_LOG("IFontObject constructed with unknown font type: " + requested + " — defaulting to 'bitmap'");
             fontType_ = FontType::Bitmap;
         }
         type_ = FontTypeToString.at(fontType_);
@@ -47,7 +47,7 @@ namespace SDOM
         // type (required) -> normalize and map to FontType
         std::string requested = config["type"].valid() ? config["type"].get<std::string>() : std::string();
         if (requested.empty()) {
-            INFO("IFontObject constructed without required field 'type' in config");
+            DEBUG_LOG("IFontObject constructed without required field 'type' in config");
             requested = "bitmap";
         }
         std::transform(requested.begin(), requested.end(), requested.begin(), [](unsigned char c){ return std::tolower(c); });
@@ -56,7 +56,7 @@ namespace SDOM
         if (it != StringToFontType.end()) {
             fontType_ = it->second;
         } else {
-            INFO("IFontObject constructed with unknown font type: " + requested);
+            DEBUG_LOG("IFontObject constructed with unknown font type: " + requested);
             fontType_ = FontType::Bitmap;
         }
         type_ = FontTypeToString.at(fontType_);

@@ -54,7 +54,6 @@ namespace SDOM
 
     void TTFAsset::onLoad() 
     {
-        DEBUG_LOG(std::string("TTFAsset::onLoad: filename='") + filename_ + "' size=" + std::to_string(internalFontSize_) + " TTF_WasInit=" + std::to_string(TTF_WasInit()));
         // If already loaded, nothing to do
         if (ttf_font_) return;
 

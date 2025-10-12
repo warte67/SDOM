@@ -181,7 +181,10 @@ namespace SDOM
             };
             inline static std::unordered_map<std::string, FontType> StringToFontType = {
                 { "bitmap",     FontType::Bitmap },
-                { "truetype",   FontType::Truetype }
+                { "truetype",   FontType::Truetype },
+                // Common aliases used by config/type names
+                { "bitmapfont",   FontType::Bitmap },
+                { "truetypefont", FontType::Truetype }
             };
             
             // --- Construction & Initialization --- //

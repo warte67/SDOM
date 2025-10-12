@@ -217,7 +217,6 @@ namespace SDOM
                 } catch(...) { alreadyApplied = false; }
 
                 if (alreadyApplied) {
-                    INFO(std::string("Lua config file appears to have already applied configuration for rootStage '") + rootStageName + "'; skipping duplicate configure().");
                     return;
                 }
 

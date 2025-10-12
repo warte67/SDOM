@@ -146,6 +146,8 @@ namespace SDOM
 		} catch(...) {
 			DEBUG_LOG("configure_lua: pre-initialization configure() failed");
 		}
+			bool logRes = false;
+			try { if (config.valid() && config["debug"].valid()) { sol::table dbg = config["debug"]; if (dbg.valid() && dbg["logResourceCreation"].valid()) logRes = dbg["logResourceCreation"].get<bool>(); } } catch(...) {}
 			if (config.valid() && config["resources"].valid()) {
 				sol::table resTbl = config["resources"];
 				for (std::size_t i = 1; i <= resTbl.size(); ++i) {
@@ -211,14 +213,14 @@ namespace SDOM
 								// propagate font size if provided
 								if (sizeVal > 0) ttfCfg["internalFontSize"] = sizeVal;
 
-								std::cout << "[CONFIG] creating underlying TTFAsset name='" << ttfAssetName << "' filename='" << filename << "'\n";
+								if (logRes) std::cout << "[CONFIG] creating underlying TTFAsset name='" << ttfAssetName << "' filename='" << filename << "'\n";
 								AssetHandle ttfh = getCore().createAssetObject(std::string("TTFAsset"), ttfCfg);
-								std::cout << "[CONFIG] createAsset(TTFAsset) returned isValid=" << (ttfh.isValid() ? "true" : "false") << " for name='" << ttfAssetName << "'\n";
+								if (logRes) std::cout << "[CONFIG] createAsset(TTFAsset) returned isValid=" << (ttfh.isValid() ? "true" : "false") << " for name='" << ttfAssetName << "'\n";
 								if (!ttfh.isValid()) {
-									std::cout << "[CONFIG] FAILED to create underlying TTFAsset: " << ttfAssetName << "\n";
+									if (logRes) std::cout << "[CONFIG] FAILED to create underlying TTFAsset: " << ttfAssetName << "\n";
 								}
 							} else {
-								std::cout << "[CONFIG] underlying TTFAsset already exists: " << ttfAssetName << "\n";
+								if (logRes) std::cout << "[CONFIG] underlying TTFAsset already exists: " << ttfAssetName << "\n";
 							}
 
 							// Now create the public TruetypeFont that references the TTFAsset
@@ -226,22 +228,22 @@ namespace SDOM
 							r["type"] = std::string("truetype");
 							if (sizeVal > 0) r["fontSize"] = sizeVal; // TruetypeFont expects fontSize/size
 
-							std::cout << "[CONFIG] creating resource name='" << name << "' type='" << std::string("truetype") << "' filename='" << r["filename"].get<std::string>() << "'\n";
+							if (logRes) std::cout << "[CONFIG] creating resource name='" << name << "' type='" << std::string("truetype") << "' filename='" << r["filename"].get<std::string>() << "'\n";
 							AssetHandle h = getCore().createAssetObject(std::string("truetype"), r);
-							std::cout << "[CONFIG] createAsset(truetype) returned isValid=" << (h.isValid() ? "true" : "false") << " for name='" << name << "'\n";
+							if (logRes) std::cout << "[CONFIG] createAsset(truetype) returned isValid=" << (h.isValid() ? "true" : "false") << " for name='" << name << "'\n";
 							if (!h.isValid()) {
-								std::cout << "[CONFIG] FAILED to create resource: " << name << " (type=truetype)\n";
+								if (logRes) std::cout << "[CONFIG] FAILED to create resource: " << name << " (type=truetype)\n";
 							} else {
-								std::cout << "[CONFIG] Registered resource: " << name << " (type=truetype)\n";
+								if (logRes) std::cout << "[CONFIG] Registered resource: " << name << " (type=truetype)\n";
 							}
 						} else {
-							std::cout << "[CONFIG] creating resource name='" << name << "' type='" << typeName << "' filename='" << filename << "'\n";
+							if (logRes) std::cout << "[CONFIG] creating resource name='" << name << "' type='" << typeName << "' filename='" << filename << "'\n";
 							AssetHandle h = getCore().createAssetObject(typeName, r);
-							std::cout << "[CONFIG] createAsset returned isValid=" << (h.isValid() ? "true" : "false") << " for name='" << name << "'\n";
+							if (logRes) std::cout << "[CONFIG] createAsset returned isValid=" << (h.isValid() ? "true" : "false") << " for name='" << name << "'\n";
 							if (!h.isValid()) {
-								std::cout << "[CONFIG] FAILED to create resource: " << name << " (type=" << typeName << ")\n";
+								if (logRes) std::cout << "[CONFIG] FAILED to create resource: " << name << " (type=" << typeName << ")\n";
 							} else {
-								std::cout << "[CONFIG] Registered resource: " << name << " (type=" << typeName << ")\n";
+								if (logRes) std::cout << "[CONFIG] Registered resource: " << name << " (type=" << typeName << ")\n";
 							}
 						}
 
