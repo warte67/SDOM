@@ -27,34 +27,14 @@ namespace SDOM
         if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : 8);
         if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : 8);
 
-        // std::string name = TypeName;
-        // std::string type = TypeName;
-        // float x = 0.0f;
-        // float y = 0.0f;
-        // float width = 0.0f;
-        // float height = 0.0f;
-        // SDL_Color color = {255, 0, 255, 255};
-        // AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;
-        // AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;
-        // AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;
-        // AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;
-        // int z_order = 0;
-        // int priority = 0;
-        // bool isClickable = true;
-        // bool isEnabled = true;
-        // bool isHidden = false;
-        // int tabPriority = 0;
-        // bool tabEnabled = true;
-
         defaultStyle_.alignment = init.alignment;
         defaultStyle_.foregroundColor = init.foregroundColor;
         defaultStyle_.backgroundColor = init.backgroundColor;
         defaultStyle_.borderColor = init.borderColor;
         defaultStyle_.outlineColor = init.outlineColor;
         defaultStyle_.dropshadowColor = init.dropshadowColor;
-    // propagate bitmap-specific per-axis font metrics into default style
-    defaultStyle_.fontWidth = fontWidth_;
-    defaultStyle_.fontHeight = fontHeight_;
+        defaultStyle_.fontWidth = fontWidth_;
+        defaultStyle_.fontHeight = fontHeight_;
         defaultStyle_.bold = init.bold;
         defaultStyle_.italic = init.italic;
         defaultStyle_.underline = init.underline;
@@ -202,9 +182,9 @@ namespace SDOM
         defaultStyle_.borderThickness = get_int("border_thickness", defaultStyle_.borderThickness);
         defaultStyle_.outlineThickness = get_int("outline_thickness", defaultStyle_.outlineThickness);
 
-    // propagate per-axis bitmap font metrics into default style so fonts can read them
-    defaultStyle_.fontWidth = fontWidth_;
-    defaultStyle_.fontHeight = fontHeight_;
+        // propagate per-axis bitmap font metrics into default style so fonts can read them
+        defaultStyle_.fontWidth = fontWidth_;
+        defaultStyle_.fontHeight = fontHeight_;
 
         // runtime/init flags
         setDirty(true); // layout needs building
@@ -222,43 +202,6 @@ namespace SDOM
         {
             DEBUG_LOG("Label '" + name_ + "' has no font resource specified.");
         }        
-
-        // // Resolve font asset by name (store handle only; do not force loading)
-        // if (!resourceName_.empty())
-        // {
-        //     AssetHandle asset = getFactory().getAssetObject(resourceName_);
-        //     if (asset.isValid())
-        //     {
-        //         fontAsset = asset; // keep handle; resolve concrete when needed
-        //         // light sanity check only (no onLoad or heavy calls).
-        //         // Do NOT hard-fail here: some configs may point at a SpriteSheet/Texture
-        //         // (which can be used as a font source). Defer strict validation to onInit().
-        //         if (fontAsset.as<IFontObject>())
-        //         {
-        //             // OK: asset implements IFontObject
-        //         }
-        //         else if (fontAsset.as<SpriteSheet>())
-        //         {
-        //             // Accept SpriteSheet as a fallback font source for now.
-        //             DEBUG_LOG("Label '" + name_ + "' resource '" + resourceName_
-        //                       + "' is a SpriteSheet; accepting as font source (deferred validation).");
-        //         }
-        //         else
-        //         {
-        //             // Unknown asset type — log and defer final validation/loading to onInit().
-        //             DEBUG_LOG("Label '" + name_ + "' resource '" + resourceName_
-        //                       + "' is not an IFontObject; deferring validation to onInit().");
-        //         }            
-        //     }
-        //     else
-        //     {
-        //         DEBUG_LOG("Label '" + name_ + "' could not find font resource: " + resourceName_);
-        //     }
-        // }
-        // else
-        // {
-        //     DEBUG_LOG("Label '" + name_ + "' has no font resource specified.");
-        // }
 
     } // END Label::Label(const sol::table& config)
 
@@ -345,23 +288,14 @@ namespace SDOM
 
     void Label::onUpdate(float fElapsedTime) 
     {
-        (void)fElapsedTime; // Unused
-        static float s_old_width = getWidth();
-        static float s_old_height = getHeight();
-
-        if (s_old_width != getWidth() || s_old_height != getHeight())
-        {
-            setDirty(true);
-            s_old_width = getWidth();
-            s_old_height = getHeight();
-        }
-
-        if (lastTokenizedText_ != text_ || isDirty())
+        (void)fElapsedTime;
+        if (lastTokenizedText_ != text_) 
         {
             lastTokenizedText_ = text_;
             tokenizeText();
-            setDirty(false);
-        }    
+            setDirty(true);
+        }
+        // Other dirty triggers can be handled elsewhere (bounds, style, etc.)
     } // END Label::onUpdate(float fElapsedTime)
 
     void Label::onEvent(const Event& event) 
@@ -372,120 +306,58 @@ namespace SDOM
     void Label::onRender() 
     {       
         SDL_Renderer* renderer = getRenderer();
+        SDL_Texture* target = SDL_GetRenderTarget(renderer);
 
-        // --- DEBUG / Sanity tests (enable temporarily to diagnose glyph corruption) ---
-        const bool DEBUG_RENDER_TEST = false;
-        if (DEBUG_RENDER_TEST)
+        if (isDirty()) 
         {
-            // quick token/phrase diagnostics
-            std::cout << "Label DEBUG '" << name_ << "' text length=" << text_.size()
-                      << " tokens=" << tokenList.size()
-                      << " phrases=" << phraseAlignLists_.size()
-                      << " resource='" << resourceName_ << "'" << std::endl;
-
-            if (!fontAsset)
+            if (!rebuildTexture_(getWidth(), getHeight(), getCore().getPixelFormat())) 
             {
-                std::cout << "Label DEBUG: no fontAsset for label '" << name_ << "'" << std::endl;
+                ERROR("Label::onRender() -- texture rebuild failed");
+                return;
             }
-            else
+            if (!SDL_SetRenderTarget(renderer, cachedTexture_)) 
             {
-                IFontObject* dbgFont = fontAsset.as<IFontObject>();
-                if (!dbgFont)
-                {
-                    std::cout << "Label DEBUG: fontAsset is not an IFontObject for '" << resourceName_ << "'" << std::endl;
-                }
-                else if (!dbgFont->isLoaded())
-                {
-                    std::cout << "Label DEBUG: font '" << resourceName_ << "' is not loaded yet." << std::endl;
-                }
-                else
-                {
-                    // draw a short sample phrase using the font's draw API to assert rendering pipeline
-                    dbgFont->setFontSize(fontSize_);
-                    FontStyle dbgStyle = defaultStyle_;
-                    dbgStyle.foregroundColor = SDL_Color{255,255,0,255};
-                    dbgStyle.outline = true;
-                    dbgStyle.dropshadow = true;
-                    dbgFont->setFontStyle(dbgStyle);
-
-                    int sampleX = getX() + 4;
-                    int sampleY = getY() + 4;
-                    const std::string sample = "DEBUG: ABC 0123 !@#";
-
-                    // draw all passes explicitly so we exercise each codepath
-                    dbgFont->drawPhraseDropshadow(sample, sampleX, sampleY, dbgStyle);
-                    dbgFont->drawPhraseOutline(sample, sampleX, sampleY, dbgStyle);
-                    dbgFont->drawPhrase(sample, sampleX, sampleY, dbgStyle);
-
-                    // draw vertical guides at glyph boundaries to reveal glyph widths
-                    int x = sampleX;
-                    for (char ch : sample)
-                    {
-                        int gw = dbgFont->getGlyphWidth(ch);
-                        int gh = dbgFont->getGlyphHeight('H');
-                        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-                        SDL_RenderLine(renderer, x, sampleY, x, sampleY + gh);
-                        x += gw;
-                    }
-                    // trailing guide
-                    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-                    SDL_RenderLine(renderer, x, sampleY, x, sampleY + dbgFont->getGlyphHeight('H'));
-                }
+                ERROR("Label::onRender -- Unable to set render target: " + std::string(SDL_GetError()));
+                return;
             }
+            SDL_RenderClear(renderer);
+            // Pass 1: render background
+            SDL_Color bgndColor = defaultStyle_.backgroundColor;
+            if (bgndColor.a > 0 && defaultStyle_.background) 
+            {
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                SDL_SetRenderDrawColor(renderer, bgndColor.r, bgndColor.g, bgndColor.b, bgndColor.a);
+                SDL_FRect rect = { 0, 0, static_cast<float>(getWidth()), static_cast<float>(getHeight()) };
+                SDL_RenderFillRect(renderer, &rect);
+            }
+            // Pass 2: render border
+            SDL_Color borderColor = defaultStyle_.borderColor;
+            if (defaultStyle_.border) 
+            {
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+                SDL_FRect rect = { 0, 0, static_cast<float>(getWidth()), static_cast<float>(getHeight()) };
+                SDL_RenderRect(renderer, &rect);
+            }
+            // Render the Label
+            renderLabel();
+            setDirty(false);
+            SDL_SetRenderTarget(renderer, target);
         }
-        // --- END DEBUG ---
 
-
-        // std::cout << getName() << "-- x:" << getX() << " y:" << getY() 
-        //           << " w:" << getWidth() << " h:" << getHeight() << std::endl;
-
-        // std::cout << getName() << "-- left: " << getLeft() << " top: " << getTop()
-        //           << " right: " << getRight() << " bottom: " << getBottom() << std::endl;
-
-
-
-
-        // Pass 1: render a background color if alpha > 0
-        SDL_Color bgndColor = defaultStyle_.backgroundColor;
-        if (bgndColor.a > 0 && defaultStyle_.background) 
+        // Draw the cached texture to the screen
+        SDL_FRect dst = 
         {
-            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(renderer, bgndColor.r, bgndColor.g, bgndColor.b, bgndColor.a);
-            SDL_FRect rect = 
-            { 
-                static_cast<float>(getX()), 
-                static_cast<float>(getY()), 
-                static_cast<float>(getWidth()), 
-                static_cast<float>(getHeight()) 
-            };
-            SDL_RenderFillRect(renderer, &rect);
-        }
-
-        // Pass 2: render a border to verify the bounds
-        SDL_Color borderColor = defaultStyle_.borderColor;
-
-        if (defaultStyle_.border) 
+            static_cast<float>(getX()),
+            static_cast<float>(getY()),
+            static_cast<float>(getWidth()),
+            static_cast<float>(getHeight())
+        };
+        if (!SDL_RenderTexture(renderer, cachedTexture_, nullptr, &dst)) 
         {
-            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
-
-            // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-
-            SDL_FRect rect = 
-            { 
-                static_cast<float>(getX()), 
-                static_cast<float>(getY()), 
-                static_cast<float>(getWidth()), 
-                static_cast<float>(getHeight()) 
-            };
-            SDL_RenderRect(renderer, &rect);
+            ERROR("Label::onRender() -- Unable to render to texture: " + std::string(SDL_GetError()));
+            return;
         }
-
-        // tokenizeText();
-
-        // Render the Label
-        renderLabel();
     } // END Label::onRender()
 
     bool Label::onUnitTest() 
@@ -500,7 +372,7 @@ namespace SDOM
             text_ = p_text;
             lastTokenizedText_ = text_;
             tokenizeText();     // Text has changed, retokenize.
-            setDirty();
+            setDirty(true);
         }
     } // END Label::setText(std::string p_text)
 
@@ -1348,6 +1220,50 @@ namespace SDOM
             phraseAlignLists_[align] = std::move(phrases);
         }
     } // END Label::_buildPhraseAlignLists()
+
+    bool Label::needsTextureRebuild_(int width, int height, SDL_PixelFormat fmt) const 
+    {
+        return !cachedTexture_ ||
+            current_pixel_format != fmt ||
+            current_width != width ||
+            current_height != height;
+    } // END bool Label::needsTextureRebuild(int width, int height, SDL_PixelFormat fmt) const 
+
+    bool Label::rebuildTexture_(int width, int height, SDL_PixelFormat fmt) 
+    {
+        // Check if a rebuild is needed
+        if (!needsTextureRebuild_(width, height, fmt))
+            return true;
+        // Destroy old texture if it exists
+        if (cachedTexture_) {
+            SDL_DestroyTexture(cachedTexture_);
+            cachedTexture_ = nullptr;
+        }
+        // Create new texture
+        cachedTexture_ = SDL_CreateTexture(getRenderer(), fmt, SDL_TEXTUREACCESS_TARGET, width, height);
+        if (!cachedTexture_) {
+            ERROR("Label::rebuildTexture_() -- Failed to create resized texture: " + std::string(SDL_GetError()));
+            return false;
+        }
+        if (!SDL_SetTextureBlendMode(cachedTexture_, SDL_BLENDMODE_BLEND))
+        {
+            ERROR("Label::rebuildTexture_() -- Failed to set texture blend mode: " +std::string(SDL_GetError()));
+            return false;
+        }
+        if (!SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND)) 
+        {
+            ERROR("Label::rebuildTexture_() -- Failed to set render draw blend mode: " + std::string(SDL_GetError()));
+            return false;
+        }
+
+        // Update current texture info
+        current_pixel_format = fmt;
+        current_width = width;
+        current_height = height;
+        setDirty(true);
+        return true;
+
+    } // END Label::rebuildTexture_() const 
 
     // --- Lua Registration --- //
 

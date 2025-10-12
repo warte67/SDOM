@@ -4,6 +4,34 @@
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
 
+/*
+
+Set the dirty flag when:
+- the Label bounds change (width, height, position).
+- the text changes.
+- the FontStyle changes.
+- the parent’s bounds change (if the Label is anchored or its layout depends on the parent).
+- the font resource changes (switching fonts or font size).
+- wordwrap or auto_resize flags change.
+- padding or margin changes.
+- visibility toggles (hidden/shown).
+- DPI or scaling factor changes (if supported).
+- the Label is moved between stages or layers (if rendering context changes).
+
+When to rebuild the cachedTexture_:
+- the Cores::getPixelFormat() changes (e.g. due to display mode change).
+- the Labels bounds change (width, height).
+
+When the dirty flag is set:
+1) recreate the Labels texture (if needed)
+2) render to the cachedTexture_
+3) clear the dirty flag
+
+When the dirty flag is not set:
+1) simply render the texture
+
+*/
+
 namespace SDOM
 {
     class Label : public IDisplayObject
@@ -189,6 +217,8 @@ namespace SDOM
         FontStyle defaultStyle_;    // default style for the label
         std::string resourceName_;  // Optional resource name for preloaded font
 
+        SDL_Texture* cachedTexture_ = nullptr;
+
         // first pass token list
         std::vector<LabelToken> tokenList;
 
@@ -242,6 +272,12 @@ namespace SDOM
         void _maxSize(float& width, float& height); // Helper to calculate max size needed
         void _buildPhraseAlignLists();              // Helper to build phrase groups from tokenAlignLists_
 
+        // Utility function to determine if cachedTexture_ needs to be rebuilt
+        SDL_PixelFormat current_pixel_format = SDL_PIXELFORMAT_UNKNOWN;
+        int current_width = 0;
+        int current_height = 0;     
+        bool needsTextureRebuild_(int width, int height, SDL_PixelFormat fmt) const;
+        bool rebuildTexture_(int width, int height, SDL_PixelFormat fmt = SDL_PIXELFORMAT_RGBA8888 ); 
 
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);

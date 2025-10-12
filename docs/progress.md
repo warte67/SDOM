@@ -611,6 +611,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Next Steps:
+- **Performance Optimization: Label Texture Caching**
+    - Refactor Label to render text to a texture when dirty, and reuse the cached texture for fast redraws.
+    - Only re-rasterize when text, font, or style changes.
+    - Expected result: high frame rates even with large text blocks or many Labels.
 - Optimize Label rendering performance and batching by rendering to textures and reusing them when not dirty.
 - Add unit tests for Label rendering, resizing, and font scaling edge cases.
 - Expand Lua test coverage for asset creation and configuration parsing.
