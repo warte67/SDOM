@@ -9,22 +9,10 @@ namespace SDOM
 
     TTFAsset::TTFAsset(const InitStruct& init) : IAssetObject(init)
     {
-        // --- Properties that will need to be initialized from init struct: --- //
-        // struct InitStruct : public IAssetObject::InitStruct
-        // {
-        //     InitStruct() : IAssetObject::InitStruct() 
-        //     { 
-        //         name = TypeName;    // from IAssetObject
-        //         type = TypeName;    // from IAssetObject
-        //         filename = "";      // from IAssetObject
-        //     }
-        //     int internalFontSize_ = 10;     // Font size property for TrueType fonts
-        // };        
-
-    internalFontSize_ = init.internalFontSize;
-    name_ = init.name;
-    type_ = init.type;
-    filename_ = init.filename;
+        internalFontSize_ = init.internalFontSize;
+        name_ = init.name;
+        type_ = init.type;
+        filename_ = init.filename;
 
     } // END:  TTFAsset::TTFAsset(const InitStruct& init)
 
@@ -37,7 +25,8 @@ namespace SDOM
         filename_ = init.filename;
         internalFontSize_ = init.internalFontSize;
         // Read from Lua table if present
-        if (config.valid()) {
+        if (config.valid()) 
+        {
             if (config["name"].valid())        name_ = config["name"];
             if (config["type"].valid())        type_ = config["type"];
             if (config["filename"].valid())    filename_ = config["filename"];

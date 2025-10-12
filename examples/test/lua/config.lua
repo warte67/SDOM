@@ -24,6 +24,15 @@
 --
 -- Returning the table below keeps the file usable both as a module (`require "lua/config"`)
 -- and as a direct script loaded by the host.
+
+-- create a TTF backing asset and a TruetypeFont wrapper (place this BEFORE configure(config))
+createAsset("TTFAsset", {
+  name = "varela_ttf_asset",
+  filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", -- absolute path
+  internalFontSize = 12
+})
+
+
 local config = {
     windowWidth = 1200,
     windowHeight = 800,
@@ -50,7 +59,26 @@ local config = {
                     y = 100,
                     width = 120,
                     height = 80,
-                    color = { r = 200, g = 50, b = 50, a = 255 }
+                    color = { r = 128, g = 16, b = 16, a = 255 },
+
+                        -- add children with a Label using the new TruetypeFont
+                        children = {
+                            {
+                                type = "Label",
+                                name = "redishBoxLabel",
+                                left = 5,
+                                top = 5,
+                                width = 110,
+                                height = 70,
+                                wordwrap = true,
+                                auto_resize = false,
+                                text = "Hello VarelaRound",
+                                resource_name = "VarelaRound",   -- use the TruetypeFont created above
+                                font_size = 14,
+                                alignment = "center",
+                                foreground_color = { r = 255, g = 255, b = 255, a = 255 }
+                            }
+                        }
                 },
                 {
                     type = "Box",
@@ -106,7 +134,7 @@ local config = {
                             -- For TrueType fonts, only `font_size` is used; `font_width` and `font_height` are ignored.
                             -- If you need non-uniform scaling for TrueType fonts, use a bitmap font or create a custom asset.   
                             
-                            font_size = 10,                                          -- verified
+                            font_size = 12,                                          -- verified
 
                             font_width = 8,         -- verified working now
                             font_height = 12,        -- verified working now
