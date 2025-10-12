@@ -606,21 +606,35 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - Added a flag to disable wordwrap; when disabled, labels treat each line as a single token and only break on explicit newlines.
         - Enhanced culling logic for out-of-bounds text, preventing overflow and ensuring only visible text is rendered.
         - Verified fixes with updated unit tests and example configs.
-
     - **Debug Cleanup & Refactoring:**
         - Removed temporary debug prints and diagnostics from Label and event system code.
         - Ensured all debug output is gated behind appropriate macros (e.g., `DEBUG_LOG`, `DEBUG_LUA_TESTS`, `LUA_INFO`) for clean production builds.
         - Rebuilt and validated the codebase after cleanup; all tests pass.
-
-    - **Documentation & Progress Tracking:**
-        - Updated progress.md to reflect completion of the Label property audit, Lua binding audit, and startup refactor.
-        - Added a summary and reference link for the startup refactor ([docs/startup_refactor.md](../docs/startup_refactor.md)).
-        - Confirmed that all recent ToDo items for initialization, property exposure, and Lua inheritance are complete.
+    - **TruetypeFont Implementation:**
+        - Quieted noisy test output and added options to the test rerunner.
+        - Gate Lua debug printing behind a flag to reduce noise.
+        - Fixed Label text tokenization/trimming/wrapping/truncation.
+        - Implemented per-axis bitmap font scaling (`font_width` / `font_height`) and propagated those metrics via FontStyle.
+        - Added basic TrueType support:
+        - `TTFAsset` — manages `TTF_Font*` (can load embedded default TTF or files).
+        - `TruetypeFont` — `IFontObject` wrapper that uses a `TTFAsset`.
+        - Factory now exposes a `default_ttf` font (public `TruetypeFont` referencing an internal `default_ttf_asset`) and falls back to a bitmap font when `Truetype` creation fails.
+        - Fixed TTF load bugs and SDL_ttf initialization ordering (Core now calls `TTF_Init()` with the SDL3-style conditional if (!TTF_Init()) as requested).
+        - Added debug logging around TTF load so failures surface.
+        - Factory previously created a raw `TTFAsset` under the public name; now it creates internal `default_ttf_asset` and a public `TruetypeFont` named `default_ttf`.
+        - `TTFAsset constructor: fixed assignment of `filename_` (was using wrong field).
+        - TTFAsset::onLoad returned early and didn't open fonts — fixed; it now attempts embedded memory IO or file open, sets `isLoaded_`, and logs SDL errors on failure.
+        - `TruetypeFont::onLoad()` didn’t mark the wrapper as loaded — fixed (syncs `fontSize_` as well).
+        - SDL_ttf init ordering: added if (!TTF_Init()) at Core init and TTF_Quit() on shutdown.heritance are complete.
 
     - **Next Steps:**
         - Continue refactoring asset/resource management (AssetHandle system).
         - Expand unit tests for edge cases in Label rendering and event handling.
         - Update architecture diagrams and documentation to reflect recent naming and API changes.
+        - Visual rendering not fully verified: code loads assets and unit tests pass, but visual rendering should be manually confirmed.
+        - Ensure `TTF_Init()` runs before any code that creates/loads `TTFAsset` instances; current ordering appears correct (TTF_WasInit() == 1).
+        - File-based TTF loads log SDL errors on failure; consider automatic fallback to bitmap if desired.
+        - No dedicated unit tests yet for TTFAsset/TruetypeFont; recommend adding an integration test asserting default_ttf is loaded and TTF_Font* is non-null.
 
 ---
 ## ToDo:

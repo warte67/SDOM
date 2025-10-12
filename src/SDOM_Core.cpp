@@ -9,6 +9,7 @@
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
 #include <SDOM/lua_Core.hpp>
@@ -250,6 +251,10 @@ namespace SDOM
             SDL_DestroyWindow(window_);
             window_ = nullptr;
         }
+        // Shutdown SDL_ttf if initialized
+        if (TTF_WasInit()) {
+            TTF_Quit();
+        }
         SDL_Quit();
     }
 
@@ -407,6 +412,12 @@ namespace SDOM
                 std::string errorMsg = "SDL_Init() Error: " + std::string(SDL_GetError());
                 ERROR(errorMsg);
                 return;
+            }
+            // Initialize SDL_ttf for TrueType font support; if it fails
+            // record the error in debug logs. Actual font loads will
+            // produce clear errors if ttf is unavailable.
+            if (!TTF_Init()) {
+                DEBUG_LOG(std::string("TTF_Init() failed: ") + SDL_GetError());
             }
         }
 

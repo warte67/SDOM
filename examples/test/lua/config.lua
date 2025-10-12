@@ -97,7 +97,7 @@ local config = {
 
                             text = "The [bold][color=red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river, sunlight catching on ripples as children laugh in the distance. A small breeze stirs the pages of an open book left on the bench, and a bell rings from the town square.",
                             -- resource_name = "default_bmp_8x8",                      -- verified
-                            resource_name = "default_ttf", 
+                            resource_name = "default_ttf",  -- internal ttf asset name
                             border = true,                                          -- verified
                             border_color = { r = 255, g = 255, b = 255, a = 64 },   -- verified
 
@@ -106,7 +106,7 @@ local config = {
                             -- For TrueType fonts, only `font_size` is used; `font_width` and `font_height` are ignored.
                             -- If you need non-uniform scaling for TrueType fonts, use a bitmap font or create a custom asset.   
                             
-                            font_size = 8,                                          -- verified
+                            font_size = 10,                                          -- verified
 
                             font_width = 8,         -- verified working now
                             font_height = 12,        -- verified working now

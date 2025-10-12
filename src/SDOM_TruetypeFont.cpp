@@ -52,7 +52,18 @@ namespace SDOM
     void TruetypeFont::onLoad() 
     {
         if (ttf_font_handle_.isValid()) {
+            // Forward load to underlying TTFAsset
             ttf_font_handle_.get()->onLoad();
+
+            // If the underlying asset reports loaded, mark this font as loaded too
+            TTFAsset* ttfAsset = ttf_font_handle_->as<TTFAsset>();
+            if (ttfAsset && ttfAsset->isLoaded()) {
+                isLoaded_ = true;
+                int loadedSize = ttfAsset->getFontSize();
+                if (loadedSize > 0) fontSize_ = loadedSize;
+            } else {
+                isLoaded_ = false;
+            }
         }
     } // END: TruetypeFont::onLoad() 
 

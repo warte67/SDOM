@@ -21,10 +21,10 @@ namespace SDOM
         //     int internalFontSize_ = 10;     // Font size property for TrueType fonts
         // };        
 
-        internalFontSize_ = init.internalFontSize;
-        name_ = init.name;
-        type_ = init.type;
-        filename_ = init.type;
+    internalFontSize_ = init.internalFontSize;
+    name_ = init.name;
+    type_ = init.type;
+    filename_ = init.filename;
 
     } // END:  TTFAsset::TTFAsset(const InitStruct& init)
 
@@ -65,7 +65,9 @@ namespace SDOM
 
     void TTFAsset::onLoad() 
     {
-        if (!ttf_font_) return;
+        DEBUG_LOG(std::string("TTFAsset::onLoad: filename='") + filename_ + "' size=" + std::to_string(internalFontSize_) + " TTF_WasInit=" + std::to_string(TTF_WasInit()));
+        // If already loaded, nothing to do
+        if (ttf_font_) return;
 
         // Load internal default ttf font resource
         if (filename_ == "default_ttf")
@@ -73,33 +75,28 @@ namespace SDOM
             SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(_default_ttf)), _default_ttf_len);
             if (!rw)
             {
-                ERROR("Failed to create SDL_IOStream from sprite_8x8[]");
+                ERROR("Failed to create SDL_IOStream from _default_ttf[]");
                 return;
             }
 
+            ttf_font_ = TTF_OpenFontIO(rw, true, internalFontSize_);
             if (!ttf_font_)
             {
-                ttf_font_ = TTF_OpenFontIO(rw, true, internalFontSize_);
-                if (!ttf_font_)
-                {
-                    ERROR("Failed to open TTF font: " + std::string(SDL_GetError()));
-                    return;
-                }
+                ERROR("Failed to open TTF font: " + std::string(SDL_GetError()));
+                return;
             }
+
             isLoaded_ = true;   // Mark as created
             isInternal_ = true; // is an internal resource
         }
         else
         // Load TTF font from file
         {
+            ttf_font_ = TTF_OpenFont(filename_.c_str(), internalFontSize_);
             if (!ttf_font_)
             {
-                ttf_font_ = TTF_OpenFont(filename_.c_str(), internalFontSize_);
-                if (!ttf_font_)
-                {
-                    ERROR("Failed to open TTF font: " + std::string(SDL_GetError()));
-                    return;
-                }
+                ERROR("Failed to open TTF font: " + std::string(SDL_GetError()));
+                return;
             }
             isLoaded_ = true; // Mark as created
             isInternal_ = false; // not an internal resource

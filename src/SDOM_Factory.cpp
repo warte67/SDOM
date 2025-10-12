@@ -12,6 +12,7 @@
 #include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/SDOM_Texture.hpp>
 #include <SDOM/SDOM_TTFAsset.hpp>
+#include <SDOM/SDOM_TruetypeFont.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
@@ -68,16 +69,48 @@ namespace SDOM
             TTFAsset::CreateFromLua,
             TTFAsset::CreateFromInitStruct
         });    
-        // create the default TTFAsset "default_ttf"
+
+        // register the TruetypeFont resource type so factory can create truetype font assets
+        registerResType(TruetypeFont::TypeName, AssetTypeCreators{
+            TruetypeFont::CreateFromLua,
+            TruetypeFont::CreateFromInitStruct
+        });
+
+        // Create an internal TTFAsset for the default TrueType font (do not register under the same public name)
         TTFAsset::InitStruct ttf_init;
-        ttf_init.name = "default_ttf";          // registry key == filename
+        ttf_init.name = "default_ttf_asset";     // internal registry key
         ttf_init.type = TTFAsset::TypeName;     // concrete type name
         ttf_init.filename = "default_ttf";      // internal ttf filename
         ttf_init.isInternal = true;             // is internal
         ttf_init.internalFontSize = 10;         // member name in InitStruct
-        AssetHandle ttfFont = createAsset("TTFAsset", ttf_init);    
-        
-        // register the TruetypeFont with "default_tttf"
+        AssetHandle ttfFontAsset = createAsset("TTFAsset", ttf_init);
+
+        // Create a public truetype font asset named "default_ttf" which references the internal TTFAsset
+        TruetypeFont::InitStruct ttInit;
+        ttInit.name = "default_ttf";           // public registry key expected by Label
+        ttInit.type = TruetypeFont::TypeName;
+    ttInit.filename = "default_ttf_asset";      // filename used by TruetypeFont to find the TTFAsset
+
+        // Attempt to create the truetype font; if TTF isn't available or creation fails, fall back to bitmap font
+        AssetHandle defaultTTFont;
+        try {
+            defaultTTFont = createAsset(TruetypeFont::TypeName, ttInit);
+        } catch (...) {
+            // If creation failed, leave defaultTTFont invalid and fall back below
+            defaultTTFont = AssetHandle();
+        }
+
+        if (!defaultTTFont.isValid()) {
+            // Fallback: create a bitmap font named "default_ttf" that reuses the default 8x8 sprite
+            BitmapFont::InitStruct fbInit;
+            fbInit.name = "default_ttf";
+            fbInit.type = BitmapFont::TypeName;
+            fbInit.filename = "default_bmp_8x8";
+            fbInit.isInternal = true;
+            fbInit.fontSize = 8;
+            AssetHandle fb = createAsset("BitmapFont", fbInit);
+            (void)fb; // silence unused
+        }
             
 
         // register the SpriteSheet asset
