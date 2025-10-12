@@ -619,7 +619,11 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Next Steps:
-- `IDisplayObject` resizes need to dispatch a resize event to children.
+- **Resize Event Propagation (WIP):**
+    - Identified missed resize events in the display tree: base `IDisplayObject` now needs to dispatch a resize event whenever its bounds change.
+    - Child nodes should receive and respond to parent resize events, enabling dynamic layout and responsive UI updates.
+    - Next steps: implement resize event dispatch in `IDisplayObject::setBounds()` and ensure children listen and react to these events for proper layout propagation.
+    - `IDisplayObject` resizes need to dispatch a resize event to children.
 - keyboard [TAB] and [SHIFT_TAB] are hitting on labels (verify). We need to make sure that `Labels` are not tab stops by default.
 - Optimize Label rendering performance and batching by rendering to textures and reusing them when not dirty.
 - Add unit tests for `Label` rendering, resizing, and font scaling edge cases.
