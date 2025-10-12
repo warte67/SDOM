@@ -10,6 +10,7 @@
 #include <SDOM/SDOM_AssetHandle.hpp>
 #include <SDOM/SDOM_Label.hpp>
 #include <SDOM/SDOM_Utils.hpp>
+#include <cmath>
 
 
 namespace SDOM
@@ -348,6 +349,8 @@ namespace SDOM
         //     INFO("Parent Size Change");
         // }
         
+        setDirty(true); // temporary force rebuild every frame
+
         if (lastTokenizedText_ != text_ || needsTextureRebuild_(getWidth(), getHeight(), getCore().getPixelFormat()))
         {
             lastTokenizedText_ = text_;
@@ -1072,11 +1075,13 @@ if (LABEL_DEBUG)
             float maxW = 32767.0f;
             if (auto parent = getParent()) 
             {
-                float labelW = static_cast<float>(getWidth());
+                // float labelW = static_cast<float>(getWidth());
                 float parentW = static_cast<float>(parent->getWidth());
-                parentW = std::min(parentW, labelW);
                 // compute left edge relative to parent (avoid mixing world and local coords)
                 float leftEdge = static_cast<float>(getX()) - static_cast<float>(parent->getX());
+                // Do not clamp parentW to labelW here — clamping caused progressive shrink when
+                // the label kept reducing size. Use the parent's full width to compute available
+                // space from the left edge.
                 float availW = (parentW > leftEdge) ? (parentW - leftEdge) : 0.0f;
                 // If userMaxWidth < 0, use parent's available width
                 if (userMaxWidth < 0.0f) 
@@ -1098,8 +1103,12 @@ if (LABEL_DEBUG)
                 maxW = userMaxWidth;
             }
             width = maxW;
-            if (defaultStyle_.auto_resize)
-                setWidth(static_cast<int>(width));
+            if (defaultStyle_.auto_resize) {
+                // Round to nearest integer to avoid fractional drift toggling size every frame.
+                int newW = static_cast<int>(std::lround(width));
+                if (newW != getWidth())
+                    setWidth(newW);
+            }
         }
         // If maxHeight == 0, height resizing is disabled; use current height as max
         if (userMaxHeight == 0.0f) 
@@ -1130,8 +1139,12 @@ if (LABEL_DEBUG)
                 maxH = userMaxHeight;
             }
             height = maxH;
-            if (defaultStyle_.auto_resize)
-                setHeight(static_cast<int>(height));
+            if (defaultStyle_.auto_resize) {
+                // Round to nearest integer to avoid fractional drift toggling size every frame.
+                int newH = static_cast<int>(std::lround(height));
+                if (newH != getHeight())
+                    setHeight(newH);
+            }
         }
     } // END Label::_maxSize(float& width, float& height)
 
