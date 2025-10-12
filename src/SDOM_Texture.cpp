@@ -74,26 +74,26 @@ namespace SDOM
         }
 
         // special internal names
-        if (filename_ == "default_icon_8x8")
+        if (filename_ == "internal_icon_8x8")
         {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(default_icon_8x8)), default_icon_8x8_len);
-            if (!rw) { ERROR("Failed to create SDL_IOStream from default_icon_8x8[]"); return; }
+            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_icon_8x8)), internal_icon_8x8_len);
+            if (!rw) { ERROR("Failed to create SDL_IOStream from internal_icon_8x8[]"); return; }
             texture_ = IMG_LoadTexture_IO(renderer, rw, 1);
             if (!texture_) { ERROR("Failed to load texture from sprite_8x8[]: " + std::string(SDL_GetError())); return; }
             SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
         }
-        else if (filename_ == "default_bmp_8x8")
+        else if (filename_ == "internal_font_8x8")
         {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(default_bmp_8x8)), default_bmp_8x8_len);
-            if (!rw) { ERROR("Failed to create SDL_IOStream from default_bmp_8x8[]"); return; }
+            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_font_8x8)), internal_font_8x8_len);
+            if (!rw) { ERROR("Failed to create SDL_IOStream from internal_font_8x8[]"); return; }
             texture_ = IMG_LoadTexture_IO(renderer, rw, 1);
             if (!texture_) { ERROR("Failed to load texture from font_8x8[]: " + std::string(SDL_GetError())); return; }
             SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
         }
-        else if (filename_ == "default_bmp_8x12")
+        else if (filename_ == "internal_font_8x12")
         {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(default_bmp_8x12)), default_bmp_8x12_len);
-            if (!rw) { ERROR("Failed to create SDL_IOStream from default_bmp_8x12[]"); return; }
+            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_font_8x12)), internal_font_8x12_len);
+            if (!rw) { ERROR("Failed to create SDL_IOStream from internal_font_8x12[]"); return; }
             texture_ = IMG_LoadTexture_IO(renderer, rw, 1);
             if (!texture_) { ERROR("Failed to load texture from font_8x12[]: " + std::string(SDL_GetError())); return; }
             SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);

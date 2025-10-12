@@ -9,18 +9,18 @@ namespace SDOM
     class Core;
 
     // internal 8x8 bitmap font sprite sheet
-    extern unsigned char default_bmp_8x8[];
-    extern int default_bmp_8x8_len;
+    extern unsigned char internal_font_8x8[];
+    extern int internal_font_8x8_len;
 
     // internal 8x12 bitmap font sprite sheet
-    extern unsigned char default_bmp_8x12[];
-    extern int default_bmp_8x12_len;
+    extern unsigned char internal_font_8x12[];
+    extern int internal_font_8x12_len;
 
     // internal 8x8 icon sprite sheet
-    extern unsigned char default_icon_8x8[];
-    extern int default_icon_8x8_len;
+    extern unsigned char internal_icon_8x8[];
+    extern int internal_icon_8x8_len;
 
-    
+
 
     class Texture : public IAssetObject
     {

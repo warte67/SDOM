@@ -58,12 +58,12 @@ namespace SDOM
         if (ttf_font_) return;
 
         // Load internal default ttf font resource
-        if (filename_ == "default_ttf")
+        if (filename_ == "internal_ttf")
         {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(_default_ttf)), _default_ttf_len);
+            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_ttf)), internal_ttf_len);
             if (!rw)
             {
-                ERROR("Failed to create SDL_IOStream from _default_ttf[]");
+                ERROR("Failed to create SDL_IOStream from internal_ttf[]");
                 return;
             }
 

@@ -10,8 +10,8 @@ namespace SDOM
     class Core;
 
     // internal 8x8 bitmap font sprite sheet
-    extern unsigned char _default_ttf[];
-    extern int _default_ttf_len;
+    extern unsigned char internal_ttf[];
+    extern int internal_ttf_len;
 
     class TTFAsset : public IAssetObject
     {

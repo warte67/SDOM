@@ -52,8 +52,8 @@ local config = {
     {
         { name = "VarelaRound16", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 16 },
         { name = "VarelaRound32", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 32 },
-        { name = "external_bmp_8x8", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png", font_width = 8, font_height = 8 },
-        { name = "external_bmp_8x12", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png", font_width = 8, font_height = 12 }
+        { name = "external_font_8x8", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png", font_width = 8, font_height = 8 },
+        { name = "external_font_8x12", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png", font_width = 8, font_height = 12 }
     },
     windowWidth = 1200,
     windowHeight = 800,
@@ -137,8 +137,8 @@ local config = {
                             auto_resize = false,
                             max_width = 400,
                             text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat",
-                            resource_name = "default_bmp_8x8",   -- use an internally created BitmapFont
-                            -- resource_name = "external_bmp_8x8",   -- use the BitmapFont created above
+                            resource_name = "internal_font_8x8",   -- use an internally created BitmapFont
+                            -- resource_name = "external_font_8x8",   -- use the BitmapFont created above
                             -- font_size = 8,
                             -- font_width = 8,  -- if not specified, will use the backing SpriteSheet's spriteWidth
                             -- font_height = 8, -- if not specified, will use the backing SpriteSheet's spriteHeight
@@ -184,10 +184,10 @@ local config = {
                             -- outline_thickness = 1,   -- verified
 
                             text = "The [bold][color=red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river, sunlight catching on ripples as children laugh in the distance. A small breeze stirs the pages of an open book left on the bench, and a bell rings from the town square.",
-                            -- resource_name = "default_bmp_8x8",                      -- verified
-                            resource_name = "default_ttf",  -- internal ttf asset name
-                            border = true,                                          -- verified
-                            border_color = { r = 255, g = 255, b = 255, a = 64 },   -- verified
+                            -- resource_name = "internal_font_8x8",
+                            resource_name = "internal_ttf",  -- internal ttf asset name
+                            border = true,
+                            border_color = { r = 255, g = 255, b = 255, a = 64 },
 
                             -- Note: `font_width` and `font_height` only affect BitmapFont rendering.
                             -- For BitmapFonts, these properties allow per-axis stretching of glyphs.
@@ -233,8 +233,8 @@ local config = {
                             auto_resize = false,
                             max_width = 400,
                             text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat",
-                            resource_name = "default_bmp_8x12",   -- use an internally created BitmapFont
-                            -- resource_name = "external_bmp_8x12",   -- use the BitmapFont created above
+                            resource_name = "internal_font_8x12",   -- use an internally created BitmapFont
+                            -- resource_name = "external_font_8x12",   -- use the BitmapFont created above
                             -- font_size = 12,
                             -- font_width = 8,      -- if not specified, will use the backing SpriteSheet's spriteWidth
                             -- font_height = 12,    -- if not specified, will use the backing SpriteSheet's spriteHeight

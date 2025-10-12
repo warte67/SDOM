@@ -39,7 +39,7 @@ namespace SDOM
             SpriteSheet::InitStruct init;
             init.name = "ut_bmp8";
             init.type = SpriteSheet::TypeName;
-            init.filename = "default_bmp_8x8";
+            init.filename = "internal_font_8x8";
             init.spriteWidth  = 8;
             init.spriteHeight = 8;
 
@@ -105,7 +105,7 @@ namespace SDOM
             sol::table cfg = lua.create_table();
             cfg["type"] = SpriteSheet::TypeName;
             cfg["name"] = "ut_bmp8_lua";
-            cfg["filename"] = "default_bmp_8x8";
+            cfg["filename"] = "internal_font_8x8";
             cfg["spriteWidth"] = 8;
             cfg["spriteHeight"] = 8;
 
@@ -146,7 +146,7 @@ namespace SDOM
             local ss = Core:createAsset("SpriteSheet", {
                 type = "SpriteSheet",
                 name = "ut_bmp8_lua2",
-                filename = "default_bmp_8x8",
+                filename = "internal_font_8x8",
                 spriteWidth = 8,
                 spriteHeight = 8
             })

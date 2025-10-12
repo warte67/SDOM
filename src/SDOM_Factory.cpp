@@ -96,11 +96,11 @@ namespace SDOM
         });
 
         // Create an internal TTFAsset for the default TrueType font (do not register under the same public name)
-        if (!getResObj("default_ttf_asset")) {
+        if (!getResObj("internal_ttf_asset")) {
             TTFAsset::InitStruct ttf_init;
-            ttf_init.name = "default_ttf_asset";     // internal registry key
+            ttf_init.name = "internal_ttf_asset";     // internal registry key
             ttf_init.type = TTFAsset::TypeName;     // concrete type name
-            ttf_init.filename = "default_ttf";      // internal ttf filename
+            ttf_init.filename = "internal_ttf";      // internal ttf filename
             ttf_init.isInternal = true;             // is internal
             ttf_init.internalFontSize = 10;         // member name in InitStruct
             AssetHandle ttfFontAsset = createAsset("TTFAsset", ttf_init);
@@ -108,11 +108,11 @@ namespace SDOM
         }
 
         // Create a public truetype font asset named "default_ttf" which references the internal TTFAsset
-        if (!getResObj("default_ttf")) {
+        if (!getResObj("internal_ttf")) {
             TruetypeFont::InitStruct ttInit;
-            ttInit.name = "default_ttf";           // public registry key expected by Label
+            ttInit.name = "internal_ttf";           // public registry key expected by Label
             ttInit.type = TruetypeFont::TypeName;
-            ttInit.filename = "default_ttf_asset";      // filename used by TruetypeFont to find the TTFAsset
+            ttInit.filename = "internal_ttf_asset";      // filename used by TruetypeFont to find the TTFAsset
 
             // Attempt to create the truetype font; if TTF isn't available or creation fails, fall back to bitmap font
             AssetHandle defaultTTFont;
@@ -123,17 +123,17 @@ namespace SDOM
                 defaultTTFont = AssetHandle();
             }
 
-            if (!defaultTTFont.isValid()) {
-                // Fallback: create a bitmap font named "default_ttf" that reuses the default 8x8 sprite
-                BitmapFont::InitStruct fbInit;
-                fbInit.name = "default_ttf";
-                fbInit.type = BitmapFont::TypeName;
-                fbInit.filename = "default_bmp_8x8";
-                fbInit.isInternal = true;
-                fbInit.fontSize = 8;
-                AssetHandle fb = createAsset("BitmapFont", fbInit);
-                (void)fb; // silence unused
-            }
+            // if (!defaultTTFont.isValid()) {
+            //     // Fallback: create a bitmap font named "default_ttf" that reuses the default 8x8 sprite
+            //     BitmapFont::InitStruct fbInit;
+            //     fbInit.name = "default_ttf";
+            //     fbInit.type = BitmapFont::TypeName;
+            //     fbInit.filename = "default_bmp_8x8";
+            //     fbInit.isInternal = true;
+            //     fbInit.fontSize = 8;
+            //     AssetHandle fb = createAsset("BitmapFont", fbInit);
+            //     (void)fb; // silence unused
+            // }
         }
             
 
@@ -151,13 +151,13 @@ namespace SDOM
 
         // Create the default 8x8 bitmap font asset if it doesn't exist.
         // Use the filename as the canonical resource name so Lua can refer to
-        // the font simply as "default_bmp_8x8". The BitmapFont will create
+        // the font simply as "internal_font_8x8". The BitmapFont will create
         // (or reuse) an internal SpriteSheet named '<filename>_SpriteSheet'.
-        if (!getResObj("default_bmp_8x8")) {
+        if (!getResObj("internal_font_8x8")) {
             BitmapFont::InitStruct init;
-            init.name = "default_bmp_8x8";      // registry key == filename
+            init.name = "internal_font_8x8";      // registry key == filename
             init.type = BitmapFont::TypeName;   // concrete type name
-            init.filename = "default_bmp_8x8";  // underlying texture filename
+            init.filename = "internal_font_8x8";  // underlying texture filename
             init.isInternal = true;             // is an internal resource
             init.fontSize = 8;                  // member name in InitStruct
             init.fontWidth = 8;                 // font_width for this resource
@@ -165,11 +165,11 @@ namespace SDOM
             AssetHandle bmpFont = createAsset("BitmapFont", init);
             (void)bmpFont;
         }
-        if (!getResObj("default_bmp_8x12")) {
+        if (!getResObj("internal_font_8x12")) {
             BitmapFont::InitStruct init;
-            init.name = "default_bmp_8x12";     // registry key == filename
+            init.name = "internal_font_8x12";     // registry key == filename
             init.type = BitmapFont::TypeName;   // concrete type name
-            init.filename = "default_bmp_8x12"; // underlying texture filename
+            init.filename = "internal_font_8x12"; // underlying texture filename
             init.isInternal = true;             // is an internal resource
             // Set both BitmapFont-specific fontSize and the base IFontObject's
             // fontSize_ so the inherited constructor sees the correct value.
