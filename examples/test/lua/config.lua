@@ -28,10 +28,17 @@
 -- create a TTF backing asset and a TruetypeFont wrapper (place this BEFORE configure(config))
 createAsset("TTFAsset", {
   name = "varela_ttf_asset",
-  filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", -- absolute path
+  -- filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", -- absolute path
+  filename = "./assets/VarelaRound.ttf", -- relative path
   internalFontSize = 12
 })
 
+-- create the TruetypeFont wrapper that Labels will reference
+createAsset("TruetypeFont", {
+  name     = "VarelaRound",        -- resource name used by Labels
+  filename = "varela_ttf_asset",   -- points to the backing TTFAsset by name
+  fontSize = 12
+})
 
 local config = {
     windowWidth = 1200,
@@ -61,24 +68,24 @@ local config = {
                     height = 80,
                     color = { r = 128, g = 16, b = 16, a = 255 },
 
-                        -- add children with a Label using the new TruetypeFont
-                        children = {
-                            {
-                                type = "Label",
-                                name = "redishBoxLabel",
-                                left = 5,
-                                top = 5,
-                                width = 110,
-                                height = 70,
-                                wordwrap = true,
-                                auto_resize = false,
-                                text = "Hello VarelaRound",
-                                resource_name = "VarelaRound",   -- use the TruetypeFont created above
-                                font_size = 14,
-                                alignment = "center",
-                                foreground_color = { r = 255, g = 255, b = 255, a = 255 }
-                            }
+                    -- add children with a Label using the new TruetypeFont
+                    children = {
+                        {
+                            type = "Label",
+                            name = "redishBoxLabel",
+                            left = 5,
+                            top = 5,
+                            width = 110,
+                            height = 70,
+                            wordwrap = true,
+                            auto_resize = false,
+                            text = "Hello VarelaRound",
+                            resource_name = "VarelaRound",   -- use the TruetypeFont created above
+                            font_size = 14,
+                            alignment = "center",
+                            foreground_color = { r = 255, g = 255, b = 255, a = 255 }
                         }
+                    }
                 },
                 {
                     type = "Box",
