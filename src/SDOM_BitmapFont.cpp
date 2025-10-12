@@ -27,14 +27,23 @@ namespace SDOM
         if (config["width"].valid())       bitmapFontWidth_ = config["width"].get<int>(); else bitmapFontWidth_ = init.fontWidth;
         if (config["height"].valid())      bitmapFontHeight_ = config["height"].get<int>(); else bitmapFontHeight_ = init.fontHeight;
 
-        // legacy overrides
-        if (config["font_size"].valid())    fontSize_ = config["font_size"].get<int>(); else fontSize_ = init.fontSize;
-        if (config["font_width"].valid())   bitmapFontWidth_ = config["font_width"].get<int>(); else bitmapFontWidth_ = init.fontWidth;
-        if (config["font_height"].valid())  bitmapFontHeight_ = config["font_height"].get<int>(); else bitmapFontHeight_ = init.fontHeight;
+    // legacy overrides (only apply when present; do not clobber previously
+    // parsed values by assigning defaults here)
+    if (config["font_size"].valid())    fontSize_ = config["font_size"].get<int>();
+    if (config["font_width"].valid())   bitmapFontWidth_ = config["font_width"].get<int>();
+    if (config["font_height"].valid())  bitmapFontHeight_ = config["font_height"].get<int>();
 
         // normalize invalid/zero dimensions to fontSize_
         if (bitmapFontWidth_ <= 0)  bitmapFontWidth_ = fontSize_;
         if (bitmapFontHeight_ <= 0) bitmapFontHeight_ = fontSize_;
+
+        // If the caller did not explicitly supply a fontSize (it equals the Init
+        // default), prefer to adopt the canonical sprite height as the fontSize
+        // so we don't inadvertently scale glyphs (e.g., an 8x12 sprite sheet
+        // should render at 12px tall unless the user requested otherwise).
+        if (fontSize_ == init.fontSize && bitmapFontHeight_ > 0 && bitmapFontHeight_ != fontSize_) {
+            fontSize_ = bitmapFontHeight_;
+        }
     }
 
 
@@ -187,6 +196,15 @@ namespace SDOM
         int sh = ss->getSpriteHeight();
         if (sw > 0) bitmapFontWidth_ = sw;
         if (sh > 0) bitmapFontHeight_ = sh;
+
+        // If user didn't provide fontSize in the create() config, prefer the
+        // sprite sheet height as the nominal fontSize to avoid automatic
+        // scaling to an unrelated default.
+        if (fontSize_ <= 0)
+        {
+            if (bitmapFontHeight_ > 0) fontSize_ = bitmapFontHeight_;
+            else fontSize_ = 8;
+        }
 
         // --- Prepare outline textures (pre-rendered per-thickness glyph outlines)
         // Clean up any existing outline textures first

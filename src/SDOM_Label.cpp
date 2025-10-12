@@ -151,9 +151,13 @@ namespace SDOM
         fontHeight_ = get_int("font_height", fontSize_);
 
 
-        // Normalize width/height -> fallback to fontSize when unspecified/invalid
-        if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : init.fontWidth);
-        if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : init.fontHeight);
+    // Record whether the user provided explicit per-axis values.
+    try { userFontWidthSpecified_ = config["font_width"].valid(); } catch(...) { userFontWidthSpecified_ = false; }
+    try { userFontHeightSpecified_ = config["font_height"].valid(); } catch(...) { userFontHeightSpecified_ = false; }
+
+    // Normalize width/height -> fallback to fontSize when unspecified/invalid
+    if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : init.fontWidth);
+    if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : init.fontHeight);
 
         // Style defaults
         defaultStyle_.alignment = stringToLabelAlign_.at(normalizeAnchorString(get_str("alignment", "top_left")));
@@ -202,6 +206,23 @@ namespace SDOM
         {
             DEBUG_LOG("Label '" + name_ + "' has no font resource specified.");
         }        
+
+        // If the user did not explicitly set font_size on the Label config,
+        // and we have a font asset, adopt the font asset's nominal fontSize so
+        // bitmap fonts render at their native sprite height instead of the
+        // default init font size (often 8px).
+        bool userProvidedFontSize = false;
+        try { userProvidedFontSize = config["font_size"].valid(); } catch(...) { userProvidedFontSize = false; }
+        if (!userProvidedFontSize && fontAsset.isValid()) {
+            IFontObject* f = fontAsset.as<IFontObject>();
+            if (f) {
+                FontStyle fs = f->getFontStyle();
+                if (fs.fontSize > 0) {
+                    fontSize_ = fs.fontSize;
+                    defaultStyle_.fontSize = fontSize_;
+                }
+            }
+        }
 
     } // END Label::Label(const sol::table& config)
 
@@ -258,6 +279,28 @@ namespace SDOM
                 ERROR("Label::onInit() --> Failed to load font resource: " + resourceName_);
                 in_oninit = false;
                 return false;
+            }
+        }
+
+        // If the user did not explicitly supply font_width/font_height for a BitmapFont,
+        // default those Label fields to the sprite dimensions from the backing
+        // SpriteSheet (so bitmap fonts render at their native per-glyph size).
+        BitmapFont* bmp = dynamic_cast<BitmapFont*>(font);
+        if (bmp) {
+            int sw = bmp->getBitmapFontWidth();
+            int sh = bmp->getBitmapFontHeight();
+            if (!userFontWidthSpecified_ && sw > 0) {
+                fontWidth_ = sw;
+                defaultStyle_.fontWidth = fontWidth_;
+            }
+            if (!userFontHeightSpecified_ && sh > 0) {
+                fontHeight_ = sh;
+                defaultStyle_.fontHeight = fontHeight_;
+                // Also adopt fontSize_ from sprite height if Label didn't set it.
+                if (fontSize_ <= 0) {
+                    fontSize_ = sh;
+                    defaultStyle_.fontSize = fontSize_;
+                }
             }
         }
 

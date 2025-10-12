@@ -125,19 +125,22 @@ local config = {
                             x = 155,                    
                             anchor_top = "top",         
                             y = 155,                     
-                            anchor_right = "left",     
+                            -- anchor_right = "left",     
+                            anchor_right = "right",     
                             width = 70,                
-                            anchor_bottom = "top",   
+                            -- anchor_bottom = "top",   
+                            anchor_bottom = "bottom",   
                             height = 110,               
                             outline = true,
                             wordwrap = true,
-                            auto_resize = true,
+                            -- auto_resize = true,
+                            auto_resize = false,
                             max_width = 400,
                             text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat",
-                            resource_name = "external_bmp_8x8",   -- use the BitmapFontcreated above
+                            resource_name = "external_bmp_8x8",   -- use the BitmapFont created above
                             -- font_size = 8,
-                            font_width = 8,
-                            font_height = 8,
+                            -- font_width = 8,  -- if not specified, will use the backing SpriteSheet's spriteWidth
+                            -- font_height = 8, -- if not specified, will use the backing SpriteSheet's spriteHeight
                             alignment = "center",
                             foreground_color = { r = 255, g = 255, b = 255, a = 255 },
                             border = true,
@@ -190,10 +193,9 @@ local config = {
                             -- For TrueType fonts, only `font_size` is used; `font_width` and `font_height` are ignored.
                             -- If you need non-uniform scaling for TrueType fonts, use a bitmap font or create a custom asset.   
                             
-                            font_size = 16,                                          -- verified
-
-                            font_width = 8,         -- verified working now
-                            font_height = 12,        -- verified working now
+                            font_size = 16,
+                            -- font_width = 8,
+                            -- font_height = 12,
                             alignment = "center",       -- verified, leading and trailing spaces are now properly trimmed
                             foreground_color = { r = 255, g = 255, b = 255, a = 255 },  -- verified
                             max_width = 500             -- verified
@@ -218,19 +220,22 @@ local config = {
                             x = 45,                    
                             anchor_top = "top",         
                             y = 205,                     
-                            anchor_right = "left",     
+                            -- anchor_right = "left",     
+                            anchor_right = "right",     
                             width = 90,                
-                            anchor_bottom = "top",   
+                            -- anchor_bottom = "top",   
+                            anchor_bottom = "bottom",   
                             height = 65,               
                             outline = true,
                             wordwrap = true,
-                            auto_resize = true,
+                            -- auto_resize = true,
+                            auto_resize = false,
                             max_width = 400,
                             text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat",
-                            resource_name = "external_bmp_8x12",   -- use the BitmapFontcreated above
-                            -- font_size = 8,
-                            font_width = 8,
-                            font_height = 12,
+                            resource_name = "external_bmp_8x12",   -- use the BitmapFont created above
+                            -- font_size = 12,
+                            -- font_width = 8,      -- if not specified, will use the backing SpriteSheet's spriteWidth
+                            -- font_height = 12,    -- if not specified, will use the backing SpriteSheet's spriteHeight
                             alignment = "center",
                             foreground_color = { r = 255, g = 255, b = 255, a = 255 },
                             border = true,

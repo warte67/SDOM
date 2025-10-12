@@ -217,6 +217,12 @@ namespace SDOM
         FontStyle defaultStyle_;    // default style for the label
         std::string resourceName_;  // Optional resource name for preloaded font
 
+    // Flags to indicate whether the user explicitly provided per-axis
+    // bitmap font metrics in the Lua config. If false, we will default
+    // to the backing SpriteSheet's spriteWidth/spriteHeight in onInit().
+    bool userFontWidthSpecified_ = false;
+    bool userFontHeightSpecified_ = false;
+
         SDL_Texture* cachedTexture_ = nullptr;
 
         // first pass token list

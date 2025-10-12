@@ -260,7 +260,7 @@ namespace SDOM
         if (!texture_) ERROR("SpriteSheet::texture_ not loaded");
 
         float texW = 0.0f, texH = 0.0f;
-        if (!SDL_GetTextureSize(texture_, &texW, &texH))
+    if (!SDL_GetTextureSize(texture_, &texW, &texH))
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
 
         if (spriteWidth_ <= 0) ERROR("SpriteSheet: spriteWidth_ is zero or negative.");
@@ -291,7 +291,7 @@ namespace SDOM
         if (!texture_) ERROR("SpriteSheet::texture_ not loaded");
 
         float texW = 0.0f, texH = 0.0f;
-        if (!SDL_GetTextureSize(texture_, &texW, &texH))
+    if (!SDL_GetTextureSize(texture_, &texW, &texH))
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
 
         if (spriteWidth_ <= 0) ERROR("SpriteSheet: spriteWidth_ is zero or negative.");
@@ -315,7 +315,7 @@ namespace SDOM
         if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
 
         float texW = 0.0f, texH = 0.0f;
-        if (!SDL_GetTextureSize(texture_, &texW, &texH))
+    if (!SDL_GetTextureSize(texture_, &texW, &texH))
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
 
         if (spriteWidth_ <= 0 || spriteHeight_ <= 0) ERROR("Invalid sprite dimensions.");
