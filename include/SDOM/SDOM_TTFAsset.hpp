@@ -57,7 +57,8 @@ namespace SDOM
         virtual void onUnload() override;
         virtual bool onUnitTest() override;
 
-
+        TTF_Font* _getTTFFontPtr() const { return ttf_font_; }
+        int getFontSize() const { return internalFontSize_; }
 
     protected:
         friend Factory;

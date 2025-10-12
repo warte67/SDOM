@@ -45,6 +45,9 @@ namespace SDOM
         void setName(const std::string& name) { name_ = name; }
         void setFilename(const std::string& filename) { filename_ = filename; }
 
+        template <typename T>
+        T* as() { return dynamic_cast<T*>(this); }
+
     protected:
         std::string name_;
         std::string type_;

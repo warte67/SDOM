@@ -1,21 +1,20 @@
-// SDOM_BitmapFont.hpp
+// SDOM_TruetypeFont.hpp
 #pragma once
 
 #include <SDL3/SDL.h>
 #include <SDOM/SDOM_IFontObject.hpp>
+#include <SDOM/SDOM_TTFAsset.hpp>
 #include <SDOM/SDOM_AssetHandle.hpp>
  
 namespace SDOM
 {
-    class SpriteSheet;
-
-    class BitmapFont : public IFontObject
+    class TruetypeFont : public IFontObject
     {
             using SUPER = IFontObject;
 
         public:
             // --- Type Info --- //
-            static constexpr const char* TypeName = "bitmap";
+            static constexpr const char* TypeName = "truetype";
 
             // --- Construction & Initialization --- //
             struct InitStruct : public IFontObject::InitStruct
@@ -26,28 +25,25 @@ namespace SDOM
                     type = TypeName;
                     filename = TypeName; // Default filename, can be overridden
                 }
-                int fontSize = 8;     // Font size property for TrueType fonts (and BitmapFont scaling)
-                int fontWidth = -1;     // Optional: non-uniform width (bitmap only)          
-                int fontHeight = -1;    // Optional: non-uniform height (bitmap only
             };
 
         protected:
-            BitmapFont(const InitStruct& init);
-            BitmapFont(const sol::table& config);
+            TruetypeFont(const InitStruct& init);
+            TruetypeFont(const sol::table& config);
 
         public:
             // --- Static Factory Methods --- //
             static std::unique_ptr<IAssetObject> CreateFromLua(const sol::table& config) {
-                return std::unique_ptr<IAssetObject>(new BitmapFont(config));
+                return std::unique_ptr<IAssetObject>(new TruetypeFont(config));
             }
             static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit) {
-                const auto& fontInit = static_cast<const BitmapFont::InitStruct&>(baseInit);
-                return std::unique_ptr<IAssetObject>(new BitmapFont(fontInit));
+                const auto& fontInit = static_cast<const TruetypeFont::InitStruct&>(baseInit);
+                return std::unique_ptr<IAssetObject>(new TruetypeFont(fontInit));
             }
 
-            virtual ~BitmapFont() override;
+            virtual ~TruetypeFont() override;
 
-            // Override methods from IGlyphObject
+            // --- Override methods from IFontObject --- //
             virtual bool onInit() override;
             virtual void onQuit() override;
 
@@ -69,23 +65,20 @@ namespace SDOM
             virtual void setFontStyle(const FontStyle& style) override;
             virtual FontStyle getFontStyle() override;
 
-            // --- Public BitmapFont-specific methods --- //
-            AssetHandle getResourceHandle() const { return spriteSheet_; }
+            // // --- Public TruetypeFont-specific methods --- //
+            AssetHandle getResourceHandle() const { return ttf_font_handle_; }
 
-            int getBitmapFontWidth() const { return bitmapFontWidth_; }
-            int getBitmapFontHeight() const { return bitmapFontHeight_; }
-            void setBitmapFontWidth(int width) { bitmapFontWidth_ = width; }
-            void setBitmapFontHeight(int height) { bitmapFontHeight_ = height; }
+            // int getBitmapFontWidth() const { return bitmapFontWidth_; }
+            // int getBitmapFontHeight() const { return bitmapFontHeight_; }
+            // void setBitmapFontWidth(int width) { bitmapFontWidth_ = width; }
+            // void setBitmapFontHeight(int height) { bitmapFontHeight_ = height; }
 
         protected:
-
             // Bitmap-specific data members
-            AssetHandle spriteSheet_;
-            int bitmapFontWidth_ = -1;
-            int bitmapFontHeight_ = -1;
+            AssetHandle ttf_font_handle_;
 
-            std::vector<std::vector<SDL_Texture*>> outlineTextures;
-
+            TTF_Font* _getValidTTFFontPtr() const;
+            
             // Active per-style overrides (set via setFontStyle) - do NOT replace
             // the canonical sprite metrics (bitmapFontWidth_/bitmapFontHeight_).
             // These are temporary overrides used during measurement/render passes.
@@ -99,5 +92,7 @@ namespace SDOM
 
             // --- Lua Registration --- //
             virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
-    };
-}
+
+    }; // END: class TruetypeFont
+
+} // END: namespace SDOM

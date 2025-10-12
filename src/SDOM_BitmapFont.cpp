@@ -12,7 +12,6 @@ namespace SDOM
 {
     BitmapFont::BitmapFont(const InitStruct& init) : IFontObject(init)
     {
-
         bitmapFontWidth_ = init.fontWidth;
         bitmapFontHeight_ = init.fontHeight;
         if (init.fontWidth < 0)  bitmapFontWidth_ = init.fontSize;
