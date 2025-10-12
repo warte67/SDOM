@@ -31,12 +31,35 @@ namespace SDOM
 
     bool TruetypeFont::onInit()
     {
+        // Allow two forms:
+        // 1) filename_ is the name of a pre-existing TTFAsset
+        // 2) filename_ is a path to a .ttf file: create a backing TTFAsset automatically
         ttf_font_handle_ = getFactory().getAssetObject(filename_);
-        if (!ttf_font_handle_.isValid()) 
-        {
-            // The ERROR() macro throws a terminal error, so the return false is technically 
-            // unreachable but is included for clarity.
-            ERROR("TruetypeFont: TTFAsset '" + filename_ + "' not found in Factory!");
+        if (!ttf_font_handle_.isValid()) {
+            // attempt to interpret filename_ as a .ttf path
+            std::string lower = filename_;
+            std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+            bool looksLikePath = (lower.find(".ttf") != std::string::npos);
+            if (looksLikePath) {
+                // build a synthetic asset name
+                std::string assetName = name_.empty() ? std::string("truetype_font_asset") : (name_ + std::string("_TTFAsset"));
+                // create TTFAsset init
+                TTFAsset::InitStruct init;
+                init.name = assetName;
+                init.type = TTFAsset::TypeName;
+                init.filename = filename_;
+                // use currently configured font size if available
+                init.internalFontSize = (fontSize_ > 0 ? fontSize_ : 10);
+                AssetHandle h = getFactory().createAsset(TTFAsset::TypeName, init);
+                if (h.isValid()) {
+                    ttf_font_handle_ = h;
+                    // Switch our filename_ to reference the asset by name to match later lookups
+                    filename_ = assetName;
+                }
+            }
+        }
+        if (!ttf_font_handle_.isValid()) {
+            ERROR("TruetypeFont: TTFAsset '" + filename_ + "' not found/created in Factory!");
             return false;
         }
         return true;
@@ -80,9 +103,10 @@ namespace SDOM
         if (config["name"].valid())     name_ = config["name"].get<std::string>();
         if (config["filename"].valid()) filename_ = config["filename"].get<std::string>();
 
-        // Font size (prefer new key, accept legacy)
-        if (config["fontSize"].valid())    fontSize_ = config["fontSize"].get<int>();
-        else if (config["size"].valid())   fontSize_ = config["size"].get<int>();
+        // Font size (accept common variants)
+        if (config["fontSize"].valid())         fontSize_ = config["fontSize"].get<int>();
+        else if (config["size"].valid())        fontSize_ = config["size"].get<int>();
+        else if (config["font_size"].valid())   fontSize_ = config["font_size"].get<int>();
 
         // Optional explicit TTF asset name; default to "<name>_TTFAsset"
         std::string ttfAssetName;
@@ -105,10 +129,14 @@ namespace SDOM
         }
         else
         {
+            // If filename_ looks like a path, create new TTFAsset from file.
+            std::string lower = filename_;
+            std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+            bool looksLikePath = (lower.find(".ttf") != std::string::npos);
             TTFAsset::InitStruct init;
-            init.filename = filename_;
             init.name = ttfAssetName;
             init.type = TTFAsset::TypeName;
+            init.filename = looksLikePath ? filename_ : ttfAssetName;
             init.internalFontSize = fontSize_;
 
             ttf_font_handle_ = getFactory().createAsset(TTFAsset::TypeName, init);

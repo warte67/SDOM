@@ -89,6 +89,11 @@ namespace SDOM
             TruetypeFont::CreateFromLua,
             TruetypeFont::CreateFromInitStruct
         });
+        // Also register a friendly alias matching config usage
+        registerResType("TruetypeFont", AssetTypeCreators{
+            TruetypeFont::CreateFromLua,
+            TruetypeFont::CreateFromInitStruct
+        });
 
         // Create an internal TTFAsset for the default TrueType font (do not register under the same public name)
         if (!getResObj("default_ttf_asset")) {

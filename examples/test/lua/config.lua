@@ -262,34 +262,24 @@ registerOn("UnitTest", callbacks.unittest.on_unit_test)
 registerOn("WindowResize", callbacks.window_resize.on_window_resize)
 
 
--- TESTING ASSET CREATION BELOW (not needed if using config.resources)
--- create TTF backing asset
-createAsset("TTFAsset", {
-  type = "TTFAsset",
-  name = "varela_ttf_asset",
-  filename = "./assets/VarelaRound.ttf",    -- or absolute path
-  internalFontSize = 12
-})
+-- -- TESTING ASSET CREATION BELOW (not needed if using config.resources)
+-- createAsset("TruetypeFont", {
+--     type="TruetypeFont", 
+--     name="VarelaRound", 
+--     filename = "./assets/VarelaRound.ttf", 
+--     font_size = 12})
 
--- create TruetypeFont wrapper that Labels will reference
-createAsset("truetype", {
-  type = "truetype",
-  name = "VarelaRound",
-  filename = "varela_ttf_asset",  -- refers to backing TTFAsset by name
-  fontSize = 12
-})
+-- -- create BitmapFont (creates SpriteSheet/Texture internally)
+-- createAsset("BitmapFont", {
+--   type = "BitmapFont",
+--   name = "external_bmp_8x12",
+--   filename = "./assets/font_8x8.png",
+--   font_width = 8,
+--   font_height = 12
+-- })
 
--- create BitmapFont (creates SpriteSheet/Texture internally)
-createAsset("BitmapFont", {
-  type = "BitmapFont",
-  name = "external_bmp_8x12",
-  filename = "./assets/font_8x8.png",
-  font_width = 8,
-  font_height = 12
-})
-
--- debug check
-print("has VarelaRound:", hasAssetObject("VarelaRound"))
-print("has external_bmp_8x12:", hasAssetObject("external_bmp_8x12"))
+-- -- debug check
+-- print("has VarelaRound:", hasAssetObject("VarelaRound"))
+-- print("has external_bmp_8x12:", hasAssetObject("external_bmp_8x12"))
 
 return config
