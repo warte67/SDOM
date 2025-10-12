@@ -155,15 +155,28 @@ namespace SDOM
         // (or reuse) an internal SpriteSheet named '<filename>_SpriteSheet'.
         if (!getResObj("default_bmp_8x8")) {
             BitmapFont::InitStruct init;
-            init.name = "default_bmp_8x8";                     // registry key == filename
-            init.type = BitmapFont::TypeName;                  // concrete type name
-            init.filename = "default_bmp_8x8";               // underlying texture filename
-            init.isInternal = true;
-            init.fontSize = 8;                                 // member name in InitStruct
+            init.name = "default_bmp_8x8";      // registry key == filename
+            init.type = BitmapFont::TypeName;   // concrete type name
+            init.filename = "default_bmp_8x8";  // underlying texture filename
+            init.isInternal = true;             // is an internal resource
+            // init.fontSize = 8;                  // member name in InitStruct
+            init.fontWidth = 8;                 // font_width for this resource
+            init.fontHeight = 8;                // font_height for this resource            
             AssetHandle bmpFont = createAsset("BitmapFont", init);
             (void)bmpFont;
         }
-
+        if (!getResObj("default_bmp_8x12")) {
+            BitmapFont::InitStruct init;
+            init.name = "default_bmp_8x12";     // registry key == filename
+            init.type = BitmapFont::TypeName;   // concrete type name
+            init.filename = "default_bmp_8x12"; // underlying texture filename
+            init.isInternal = true;             // is an internal resource
+            // init.fontSize = 12;                 // member name in InitStruct
+            init.fontWidth = 8;                 // font_width for this resource
+            init.fontHeight = 12;               // font_height for this resource
+            AssetHandle bmpFont = createAsset("BitmapFont", init);
+            (void)bmpFont;
+        }
         // register the Label display object
         registerDomType("Label", TypeCreators{
             Label::CreateFromLua,

@@ -90,6 +90,14 @@ namespace SDOM
             if (!texture_) { ERROR("Failed to load texture from font_8x8[]: " + std::string(SDL_GetError())); return; }
             SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
         }
+        else if (filename_ == "default_bmp_8x12")
+        {
+            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(default_bmp_8x12)), default_bmp_8x12_len);
+            if (!rw) { ERROR("Failed to create SDL_IOStream from default_bmp_8x12[]"); return; }
+            texture_ = IMG_LoadTexture_IO(renderer, rw, 1);
+            if (!texture_) { ERROR("Failed to load texture from font_8x12[]: " + std::string(SDL_GetError())); return; }
+            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
+        }        
         else
         {
             texture_ = IMG_LoadTexture(renderer, filename_.c_str());
