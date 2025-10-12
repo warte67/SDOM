@@ -93,6 +93,7 @@ void Box::onEvent(const SDOM::Event& event)
     // std::cout << "target: " << event.getTarget()->getName() << std::endl;
     // std::cout << "currentTarget: " << (event.getCurrentTarget() ? event.getCurrentTarget()->getName() : "null") << std::endl;
     // std::cout << "relatedTarget: " << (event.getRelatedTarget() ? event.getRelatedTarget()->getName() : "null") << std::endl;
+    SUPER::onEvent(event); // Call base class event handler
 
     // only target phase
     if (event.getPhase() != SDOM::Event::Phase::Target) return;
@@ -300,7 +301,7 @@ void Box::onEvent(const SDOM::Event& event)
             setWidth(newWidth);
             setHeight(newHeight);
         }
-        // Optionally, handle Drop for right button if you want to finalize the resize
+        // Optionally, handle Drop for right button if we need to finalize the resize
     }        
 }
 
@@ -309,6 +310,8 @@ void Box::onUpdate(float fElapsedTime)
 {
     // properly flash the key focus indication border rectangle
     // Border flashing logic (as before)
+    SUPER::onUpdate(fElapsedTime); // Call base class update handler
+
     static float delta = 1.0f;
     float speed = 500.0f;
 

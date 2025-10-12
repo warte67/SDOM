@@ -44,6 +44,7 @@ namespace SDOM
         // Stage update logic
         // std::cout << "Stage::onUpdate() called for Stage: " << getName()
         //           << " with elapsed time: " << fElapsedTime << " seconds." << std::endl;
+        SUPER::onUpdate(fElapsedTime); // Call base class update handler
     }
 
     void Stage::onEvent(const Event& event)
@@ -51,15 +52,13 @@ namespace SDOM
         // // Stage event handling logic
         // std::cout << "Stage::onEvent() called for Stage: " << getName()
         //           << " with event type: " << event.getTypeName() << std::endl;
+
+        SUPER::onEvent(event); // Call base class event handler
     }
 
     void Stage::onRender()
     {
         // Stage rendering logic
-
-        // std::cout << "Stage::onRender() called for Stage: " << getName() << std::endl;
-
-
         SDL_Renderer* renderer = Core::getInstance().getRenderer();
         if (!renderer)
             ERROR("Core::onRender() Error: Renderer is null.");

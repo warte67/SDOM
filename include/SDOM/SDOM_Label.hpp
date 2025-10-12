@@ -37,6 +37,7 @@ namespace SDOM
     class Label : public IDisplayObject
     {
         using SUPER = IDisplayObject;
+        
     public:
         // --- Type Info --- //
         static constexpr const char* TypeName = "Label";

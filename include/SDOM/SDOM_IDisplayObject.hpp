@@ -217,9 +217,9 @@ Notes & test ideas:
 
         // --- Lifecycle & Core Virtuals --- //
         virtual bool onInit() override;
-        virtual void onQuit() override {};
-        virtual void onUpdate(float fElapsedTime) = 0;
-        virtual void onEvent(const Event& event) = 0;
+        virtual void onQuit() override;
+        virtual void onUpdate(float fElapsedTime);
+        virtual void onEvent(const Event& event);
         virtual void onRender() = 0;
         virtual bool onUnitTest() { return true; }
 
@@ -348,7 +348,7 @@ Notes & test ideas:
         float getLocalRight() const { return right_; }
         float getLocalTop() const { return top_; }
         float getLocalBottom() const { return bottom_; }
-        
+
         IDisplayObject& setLocalLeft(float value) { left_ = value; return *this; }
         IDisplayObject& setLocalRight(float value) { right_ = value; return *this; }
         IDisplayObject& setLocalTop(float value) { top_ = value; return *this; }
@@ -356,7 +356,7 @@ Notes & test ideas:
 
     protected: // --- Member Variables --- //
         // std::string name_;  // defined in IDataObject
-    float left_ = 0.0f, top_ = 0.0f, right_ = 0.0f, bottom_ = 0.0f;  // these are in terms of local not world coordinates
+        float left_ = 0.0f, top_ = 0.0f, right_ = 0.0f, bottom_ = 0.0f;  // these are in terms of local not world coordinates
         std::string type_;  // Type identifier (e.g., "Button", "Panel", etc.)
         bool bIsDirty_ = false;
         SDL_Color color_ = {255, 255, 255, 255};
@@ -374,25 +374,6 @@ Notes & test ideas:
         DisplayHandle parent_;
         std::vector<DisplayHandle> children_;
 
-// std::string name = TypeName;                      // (IDataObject)
-// std::string type = TypeName;                      // (IDisplayObject)
-// float x = 0.0f;                                   // left_ (IDisplayObject)
-// float y = 0.0f;                                   // top_  (IDisplayObject)
-// float width = 0.0f;                               // right_ - left_  (IDisplayObject)
-// float height = 0.0f;                              // bottom_ - top_  (IDisplayObject)
-// SDL_Color color = {255, 0, 255, 255};             // color_ (IDisplayObject)
-// AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;    // anchorTop_ (IDisplayObject)
-// AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;   // anchorLeft_ (IDisplayObject)
-// AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT; // anchorBottom_ (IDisplayObject)
-// AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;  // anchorRight_ (IDisplayObject)
-// int z_order = 0;                                  // z_order_ (IDisplayObject)
-// int priority = 0;                                 // priority_ (IDisplayObject)
-// bool isClickable = true;                          // isClickable_ (IDisplayObject)
-// bool isEnabled = true;                            // isEnabled_ (IDisplayObject)
-// bool isHidden = false;                            // isHidden_ (IDisplayObject)
-// int tabPriority = 0;                              // tabPriority_ (IDisplayObject)
-// bool tabEnabled = true;                           // tabEnabled_ (IDisplayObject)
-
         // --- Event Listener Containers --- //
         struct ListenerEntry {
             std::function<void(Event&)> listener;
@@ -408,12 +389,12 @@ Notes & test ideas:
         void removeOrphan_(const DisplayHandle& orphan);
 
     protected:
+
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
-        sol::usertype<IDisplayObject> objHandleType_;
+        sol::usertype<IDisplayObject> objHandleType_;  
 
-    
-    };
+    };  // END: class IDisplayObject
 
 } // namespace SDOM
 

@@ -43,6 +43,7 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/lua_IDisplayObject.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 
 #include <chrono>
 
@@ -182,6 +183,23 @@ namespace SDOM
         // Default implementation, can be overridden by derived classes
         // registerSelfName(); // Register this object in the name registry
         return true; // Indicate successful initialization
+    }
+
+    void IDisplayObject::onQuit()
+    {
+        // Default implementation, can be overridden by derived classes
+    }
+
+    void IDisplayObject::onUpdate(float fElapsedTime)
+    {
+        // Default implementation, can be overridden by derived classes
+        (void)fElapsedTime; // Unused --- IGNORE ---
+    }   
+
+    void IDisplayObject::onEvent(const Event& event)
+    {
+        // Default implementation, can be overridden by derived classes
+        (void)event; // Unused --- IGNORE ---
     }
 
     void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent, bool useWorld, int worldX, int worldY)
@@ -1163,7 +1181,7 @@ namespace SDOM
             }
         }
         left_ = p_left - parentAnchor;
-    try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setLeft: name=blueishBox p_left=" << p_left << " parentAnchor=" << parentAnchor << " -> left_=" << left_; LUA_INFO(oss.str()); } } catch(...) {}
+        try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setLeft: name=blueishBox p_left=" << p_left << " parentAnchor=" << parentAnchor << " -> left_=" << left_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1195,7 +1213,7 @@ namespace SDOM
             }
         }
         right_ = p_right - parentAnchor;
-    try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setRight: name=blueishBox p_right=" << p_right << " parentAnchor=" << parentAnchor << " -> right_=" << right_; LUA_INFO(oss.str()); } } catch(...) {}
+        try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setRight: name=blueishBox p_right=" << p_right << " parentAnchor=" << parentAnchor << " -> right_=" << right_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1227,7 +1245,7 @@ namespace SDOM
             }
         }
         top_ = p_top - parentAnchor;
-    try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setTop: name=blueishBox p_top=" << p_top << " parentAnchor=" << parentAnchor << " -> top_=" << top_; LUA_INFO(oss.str()); } } catch(...) {}
+        try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setTop: name=blueishBox p_top=" << p_top << " parentAnchor=" << parentAnchor << " -> top_=" << top_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1259,11 +1277,12 @@ namespace SDOM
             }
         }
         bottom_ = p_bottom - parentAnchor;
-    try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setBottom: name=blueishBox p_bottom=" << p_bottom << " parentAnchor=" << parentAnchor << " -> bottom_=" << bottom_; LUA_INFO(oss.str()); } } catch(...) {}
+        try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setBottom: name=blueishBox p_bottom=" << p_bottom << " parentAnchor=" << parentAnchor << " -> bottom_=" << bottom_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
 
+    // --- Lua Registration --- //
 
     void IDisplayObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {

@@ -88,7 +88,8 @@ namespace SDOM
         // Comparison operators
         bool operator==(std::nullptr_t) const { return get() == nullptr; }
         bool operator!=(std::nullptr_t) const { return get() != nullptr; }
-        bool operator==(const DisplayHandle& other) const { return name_ == other.name_ && type_ == other.type_; }
+        // bool operator==(const DisplayHandle& other) const { return name_ == other.name_ && type_ == other.type_; }
+        bool operator==(const DisplayHandle& other) const { return name_ == other.name_; }
         bool operator!=(const DisplayHandle& other) const { return !(*this == other); }
         // }
 

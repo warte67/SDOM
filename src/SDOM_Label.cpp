@@ -155,13 +155,13 @@ namespace SDOM
         fontHeight_ = get_int("font_height", fontSize_);
 
 
-    // Record whether the user provided explicit per-axis values.
-    try { userFontWidthSpecified_ = config["font_width"].valid(); } catch(...) { userFontWidthSpecified_ = false; }
-    try { userFontHeightSpecified_ = config["font_height"].valid(); } catch(...) { userFontHeightSpecified_ = false; }
+        // // Record whether the user provided explicit per-axis values.
+        // try { userFontWidthSpecified_ = config["font_width"].valid(); } catch(...) { userFontWidthSpecified_ = false; }
+        // try { userFontHeightSpecified_ = config["font_height"].valid(); } catch(...) { userFontHeightSpecified_ = false; }
 
-    // Normalize width/height -> fallback to fontSize when unspecified/invalid
-    if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : init.fontWidth);
-    if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : init.fontHeight);
+        // // Normalize width/height -> fallback to fontSize when unspecified/invalid
+        // if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : init.fontWidth);
+        // if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : init.fontHeight);
 
         // Style defaults
         defaultStyle_.alignment = stringToLabelAlign_.at(normalizeAnchorString(get_str("alignment", "top_left")));
@@ -344,7 +344,7 @@ namespace SDOM
 
     void Label::onUpdate(float fElapsedTime) 
     {
-        (void)fElapsedTime;
+        SUPER::onUpdate(fElapsedTime); // Call base class update handler
 
 
         // TODO: Fix this to handle parent resizing properly.
@@ -366,22 +366,27 @@ namespace SDOM
         // Detect parent resize: if the parent's width/height changed since the
         // last frame, we need to re-tokenize and mark dirty so auto_resize and
         // wordwrap can recompute using the new available space.
-        if (auto parent = getParent()) {
+        if (auto parent = getParent()) 
+        {
             int pw = parent->getWidth();
             int ph = parent->getHeight();
-            if (pw != parent_width_ || ph != parent_height_) {
+            if (pw != parent_width_ || ph != parent_height_) 
+            {
                 parent_width_ = pw;
                 parent_height_ = ph;
                 // Only retokenize/rebuild if the label depends on parent sizing
-                if (defaultStyle_.auto_resize || defaultStyle_.wordwrap || defaultStyle_.maxWidth < 0) {
+                if (defaultStyle_.auto_resize || defaultStyle_.wordwrap || defaultStyle_.maxWidth < 0) 
+                {
                     // Recompute layout constraints and apply auto-resize directly so
                     // height updates are not dependent purely on tokenization ordering.
                     float computedW = 0.0f, computedH = 0.0f;
                     _maxSize(computedW, computedH);
-                    if (defaultStyle_.auto_resize) {
+                    if (defaultStyle_.auto_resize) 
+                    {
                         int newW = static_cast<int>(std::lround(computedW));
                         int newH = static_cast<int>(std::lround(computedH));
-                        if (LABEL_PARENT_RESIZE_DEBUG) {
+                        if (LABEL_PARENT_RESIZE_DEBUG) 
+                        {
                             std::cerr << "[Label DEBUG] '" << name_ << "' parent resized: parent=(" << pw << "," << ph << ") computed=(" << computedW << "," << computedH << ") current=(" << getWidth() << "," << getHeight() << ") -> new=(" << newW << "," << newH << ")" << std::endl;
                         }
                         if (newW != getWidth()) setWidth(newW);
@@ -405,7 +410,8 @@ namespace SDOM
 
     void Label::onEvent(const Event& event) 
     {
-        (void)event; // Unused
+        SUPER::onEvent(event); // Call base class event handler
+
     } // END Label::onEvent(const Event& event)
 
     void Label::onRender() 
