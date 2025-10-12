@@ -48,6 +48,7 @@ namespace SDOM
         Factory();
         virtual ~Factory() = default;
         virtual bool onInit() override;
+    bool isInitialized() const { return initialized_; }
         virtual void onQuit() override {}
         virtual bool onUnitTest() override;
 
@@ -109,6 +110,8 @@ namespace SDOM
         // void initLuaProcessResource(const sol::table& resource);
 
     private:
+        // initialization guard to make onInit idempotent
+        bool initialized_ = false;
         // --- Internal Storage --- //
         std::unordered_map<std::string, std::unique_ptr<IDisplayObject>> displayObjects_;
         std::unordered_map<std::string, std::unique_ptr<IAssetObject>> assetObjects_;

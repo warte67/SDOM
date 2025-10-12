@@ -123,6 +123,120 @@ namespace SDOM
 
 	// Configuration from Lua table
 	void configure_lua(const sol::table& config) {
+		// Preprocess a 'resources' array in the config so resources are registered
+		// before display objects are constructed. This allows Labels and other
+		// display objects to reference resources by name during onInit().
+		try {
+		// Ensure the Factory and its resource type registrations exist before
+		// attempting to create assets. Factory::onInit() is now idempotent so
+		// calling it here is safe and avoids ordering issues where resource
+		// types haven't been registered yet.
+		try {
+			getCore().getFactory().onInit();
+		} catch (...) {
+			DEBUG_LOG("Factory::onInit() threw during configure_lua preprocessing");
+		}
+			if (config.valid() && config["resources"].valid()) {
+				sol::table resTbl = config["resources"];
+				for (std::size_t i = 1; i <= resTbl.size(); ++i) {
+					try {
+						sol::object obj = resTbl[i];
+						if (!obj.valid() || !obj.is<sol::table>()) continue;
+						sol::table r = obj.as<sol::table>();
+
+						// Validate name and filename
+						if (!r["name"].valid() || !r["filename"].valid()) {
+							DEBUG_LOG("Skipping resource entry: missing name or filename");
+							continue;
+						}
+						std::string name = r["name"].get<std::string>();
+						std::string filename = r["filename"].get<std::string>();
+
+						// Resolve type: accept explicit or infer from alias/filename
+						std::string typeName;
+						if (r["type"].valid()) {
+							typeName = r["type"].get<std::string>();
+						} else {
+							// Basic inference by extension
+							std::string lower = filename;
+							std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+							if (lower.find(".ttf") != std::string::npos) typeName = "truetype";
+							else if (lower.find(".png") != std::string::npos) typeName = "Texture";
+							else {
+								DEBUG_LOG("Cannot infer resource type for '" << name << "' (" << filename << ")");
+								continue;
+							}
+						}
+
+						// Normalize common aliases
+						if (typeName == "TruetypeFont" || typeName == "truetypefont" || typeName == "Truetype") typeName = "truetype";
+						if (typeName == "TTFAsset") typeName = "TTFAsset"; // keep as-is
+
+						// Ensure the table has required keys for Factory::createAsset
+						r["name"] = name;
+						r["type"] = typeName;
+						r["filename"] = filename;
+
+						// Special-case TrueType: create an underlying TTFAsset first and
+						// then create a TruetypeFont that references the TTFAsset by name.
+						if (typeName == "truetype") {
+							std::string ttfAssetName;
+							if (r["ttfAssetName"].valid()) ttfAssetName = r["ttfAssetName"].get<std::string>();
+							else ttfAssetName = name + std::string("_TTFAsset");
+
+							// If the TTFAsset doesn't already exist, create it
+							if (!getCore().hasAssetObject(ttfAssetName)) {
+								sol::state_view lua = SDOM::getLua();
+								sol::table ttfCfg = lua.create_table();
+								ttfCfg["name"] = ttfAssetName;
+								ttfCfg["type"] = std::string("TTFAsset");
+								ttfCfg["filename"] = filename;
+								// propagate font size if provided
+								if (r["fontSize"].valid()) ttfCfg["internalFontSize"] = r["fontSize"].get<int>();
+								else if (r["size"].valid()) ttfCfg["internalFontSize"] = r["size"].get<int>();
+
+								std::cout << "[CONFIG] creating underlying TTFAsset name='" << ttfAssetName << "' filename='" << filename << "'\n";
+								AssetHandle ttfh = getCore().createAssetObject(std::string("TTFAsset"), ttfCfg);
+								std::cout << "[CONFIG] createAsset(TTFAsset) returned isValid=" << (ttfh.isValid() ? "true" : "false") << " for name='" << ttfAssetName << "'\n";
+								if (!ttfh.isValid()) {
+									std::cout << "[CONFIG] FAILED to create underlying TTFAsset: " << ttfAssetName << "\n";
+								}
+							} else {
+								std::cout << "[CONFIG] underlying TTFAsset already exists: " << ttfAssetName << "\n";
+							}
+
+							// Now create the public TruetypeFont that references the TTFAsset
+							r["filename"] = ttfAssetName; // TruetypeFont expects filename to be a TTFAsset name
+							r["type"] = std::string("truetype");
+
+							std::cout << "[CONFIG] creating resource name='" << name << "' type='" << std::string("truetype") << "' filename='" << r["filename"].get<std::string>() << "'\n";
+							AssetHandle h = getCore().createAssetObject(std::string("truetype"), r);
+							std::cout << "[CONFIG] createAsset(truetype) returned isValid=" << (h.isValid() ? "true" : "false") << " for name='" << name << "'\n";
+							if (!h.isValid()) {
+								std::cout << "[CONFIG] FAILED to create resource: " << name << " (type=truetype)\n";
+							} else {
+								std::cout << "[CONFIG] Registered resource: " << name << " (type=truetype)\n";
+							}
+						} else {
+							std::cout << "[CONFIG] creating resource name='" << name << "' type='" << typeName << "' filename='" << filename << "'\n";
+							AssetHandle h = getCore().createAssetObject(typeName, r);
+							std::cout << "[CONFIG] createAsset returned isValid=" << (h.isValid() ? "true" : "false") << " for name='" << name << "'\n";
+							if (!h.isValid()) {
+								std::cout << "[CONFIG] FAILED to create resource: " << name << " (type=" << typeName << ")\n";
+							} else {
+								std::cout << "[CONFIG] Registered resource: " << name << " (type=" << typeName << ")\n";
+							}
+						}
+
+					} catch (const std::exception& e) {
+						DEBUG_LOG("Exception while processing resource entry: " << e.what());
+					}
+				}
+			}
+		} catch(...) {
+			DEBUG_LOG("Exception while preprocessing resources table (ignored)");
+		}
+
 		Core::getInstance().configureFromLua(config);
 	}
 	// Configuration from Lua file

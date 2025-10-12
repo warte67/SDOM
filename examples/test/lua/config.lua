@@ -25,22 +25,35 @@
 -- Returning the table below keeps the file usable both as a module (`require "lua/config"`)
 -- and as a direct script loaded by the host.
 
--- create a TTF backing asset and a TruetypeFont wrapper (place this BEFORE configure(config))
-createAsset("TTFAsset", {
-  name = "varela_ttf_asset",
-  -- filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", -- absolute path
-  filename = "./assets/VarelaRound.ttf", -- relative path
-  internalFontSize = 12
-})
+-- -- create a TTF backing asset and a TruetypeFont wrapper (place this BEFORE configure(config))
+-- createAsset("TTFAsset", 
+-- {
+--     name = "varela_ttf_asset",
+--     type = "TTFAsset",
+--     filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", -- absolute path
+--     -- filename = "./assets/VarelaRound.ttf", -- relative path
+--     internalFontSize = 12
+-- })
 
--- create the TruetypeFont wrapper that Labels will reference
-createAsset("TruetypeFont", {
-  name     = "VarelaRound",        -- resource name used by Labels
-  filename = "varela_ttf_asset",   -- points to the backing TTFAsset by name
-  fontSize = 12
-})
+-- -- create the TruetypeFont wrapper that Labels will reference
+-- createAsset("truetype", {
+--     name     = "VarelaRound",        -- resource name used by Labels
+--     type = "truetype",
+--     filename = "varela_ttf_asset",   -- points to the backing TTFAsset by name
+--     fontSize = 12
+-- })
+
+-- -- Debug: verify assets exist in factory
+-- print("has asset varela_ttf_asset:", hasAssetObject("varela_ttf_asset"))
+-- print("has asset VarelaRound:", hasAssetObject("VarelaRound"))
 
 local config = {
+    resources = 
+    {
+        { name = "VarelaRound16", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 16 },
+        { name = "VarelaRound32", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 32 },
+        { name = "external_bmp_8x8", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png", font_width = 8, font_height = 8 }
+    },
     windowWidth = 1200,
     windowHeight = 800,
     pixelWidth = 2,
@@ -73,17 +86,24 @@ local config = {
                         {
                             type = "Label",
                             name = "redishBoxLabel",
-                            left = 5,
-                            top = 5,
-                            width = 110,
-                            height = 70,
-                            wordwrap = true,
-                            auto_resize = false,
+                            anchor_left = "left",       
+                            x = 105,                    
+                            anchor_top = "top",         
+                            y = 105,                     
+                            anchor_right = "right",     
+                            width = 110,                
+                            anchor_bottom = "bottom",   
+                            height = 70,               
+                            outline = true,
+                            wordwrap = false,
+                            auto_resize = true,
                             text = "Hello VarelaRound",
-                            resource_name = "VarelaRound",   -- use the TruetypeFont created above
-                            font_size = 14,
+                            resource_name = "VarelaRound32",   -- use the TruetypeFont created above
+                            font_size = 32,
                             alignment = "center",
-                            foreground_color = { r = 255, g = 255, b = 255, a = 255 }
+                            foreground_color = { r = 255, g = 255, b = 255, a = 255 },
+                            border = true,
+                            border_color = { r = 255, g = 255, b = 255, a = 64 }
                         }
                     }
                 },
@@ -94,7 +114,34 @@ local config = {
                     y = 150,
                     width = 80,
                     height = 120,
-                    color = { r = 50, g = 200, b = 50, a = 255 }
+                    color = { r = 32, g = 128, b = 32, a = 255 },
+                    -- add children with a Label using the new TruetypeFont
+                    children = {
+                        {
+                            type = "Label",
+                            name = "greenishBoxLabel",
+                            anchor_left = "left",       
+                            x = 155,                    
+                            anchor_top = "top",         
+                            y = 155,                     
+                            anchor_right = "right",     
+                            width = 70,                
+                            anchor_bottom = "bottom",   
+                            height = 110,               
+                            outline = true,
+                            wordwrap = false,
+                            auto_resize = true,
+                            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat",
+                            resource_name = "external_bmp_8x8",   -- use the BitmapFontcreated above
+                            -- font_size = 8,
+                            font_width = 8,
+                            font_height = 12,
+                            alignment = "center",
+                            foreground_color = { r = 255, g = 255, b = 255, a = 255 },
+                            border = true,
+                            border_color = { r = 255, g = 255, b = 255, a = 64 }
+                        }
+                    }
                 },
                 {
                     type = "Box",

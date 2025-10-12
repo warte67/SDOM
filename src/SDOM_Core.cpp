@@ -37,6 +37,9 @@ namespace SDOM
 
         AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
         prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
+
+        // Note: Factory initialization is performed later (e.g. during
+        // configuration) to avoid recursive-construction ordering issues.
     }
 
     Core::~Core()
@@ -57,11 +60,9 @@ namespace SDOM
     {
         // initialize or reconfigure SDL as needed
         reconfigure(config);
-        // Initialize the Factory (but only once)
-        static bool factoryInitialized = false;
-        if (factory_ && !factoryInitialized) {
+        // Initialize the Factory if it hasn't been initialized yet.
+        if (factory_ && !factory_->isInitialized()) {
             factory_->onInit();
-            factoryInitialized = true;
         }
     }
 
@@ -1505,8 +1506,10 @@ namespace SDOM
         // forwarder), so we must expose a separate free function that
         // accepts a table and calls the singleton directly.
         try {
+            // Expose a top-level `configure(table)` that forwards to our
+            // configure_lua wrapper so the 'resources' preprocessing runs.
             lua.set_function("configure", [](const sol::table& t) {
-                Core::getInstance().configureFromLua(t);
+                SDOM::configure_lua(t);
             });
         } catch(...) {}
         SDOM::bind_string("configureFromFile", configureFromFile_lua, objHandleType, coreTable, lua);

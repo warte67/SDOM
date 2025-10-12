@@ -20,7 +20,7 @@
 namespace SDOM
 {
 
-    Factory::Factory() : IDataObject()
+    Factory::Factory() : IDataObject(), initialized_(false)
     {
         // Seed the static factory in the DisplayHandle and AssetHandle handles
         DisplayHandle::factory_ = this;
@@ -29,6 +29,10 @@ namespace SDOM
 
     bool Factory::onInit()
     {
+        // Make onInit idempotent: if initialization already ran, do nothing.
+        if (initialized_) {
+            return true;
+        }
         // --- Lua UserType Registration --- //
         Core& core = getCore();
         core._registerLuaBindings("Core", core.getLua());
@@ -54,14 +58,24 @@ namespace SDOM
         // that filename when initialized. Pre-creating a Texture with the same
         // registry name conflicts with BitmapFont's intended resource name.
 
-        {   // register the default_icon_8x8 Texture
-            Texture::InitStruct init;
-            init.name = "default_icon_8x8";
-            init.type = "Texture";
-            init.filename = "default_icon_8x8";
-            AssetHandle spriteSheet = createAsset("Texture", init);
-            Texture* spriteSheetPtr = spriteSheet.as<Texture>();
-            if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("Texture", core.getLua());
+        {   // register the default_icon_8x8 Texture (skip if already created)
+            const std::string defaultIconName = "default_icon_8x8";
+            if (!getResObj(defaultIconName)) {
+                Texture::InitStruct init;
+                init.name = defaultIconName;
+                init.type = "Texture";
+                init.filename = defaultIconName;
+                AssetHandle spriteSheet = createAsset("Texture", init);
+                Texture* spriteSheetPtr = spriteSheet.as<Texture>();
+                if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("Texture", core.getLua());
+            } else {
+                // Ensure Lua bindings are registered for existing instance
+                IAssetObject* existing = getResObj(defaultIconName);
+                Texture* spriteSheetPtr = dynamic_cast<Texture*>(existing);
+                if (spriteSheetPtr) {
+                    try { spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); } catch(...) {}
+                }
+            }
         }
 
         // register a TTFAsset
@@ -77,39 +91,44 @@ namespace SDOM
         });
 
         // Create an internal TTFAsset for the default TrueType font (do not register under the same public name)
-        TTFAsset::InitStruct ttf_init;
-        ttf_init.name = "default_ttf_asset";     // internal registry key
-        ttf_init.type = TTFAsset::TypeName;     // concrete type name
-        ttf_init.filename = "default_ttf";      // internal ttf filename
-        ttf_init.isInternal = true;             // is internal
-        ttf_init.internalFontSize = 10;         // member name in InitStruct
-        AssetHandle ttfFontAsset = createAsset("TTFAsset", ttf_init);
-
-        // Create a public truetype font asset named "default_ttf" which references the internal TTFAsset
-        TruetypeFont::InitStruct ttInit;
-        ttInit.name = "default_ttf";           // public registry key expected by Label
-        ttInit.type = TruetypeFont::TypeName;
-    ttInit.filename = "default_ttf_asset";      // filename used by TruetypeFont to find the TTFAsset
-
-        // Attempt to create the truetype font; if TTF isn't available or creation fails, fall back to bitmap font
-        AssetHandle defaultTTFont;
-        try {
-            defaultTTFont = createAsset(TruetypeFont::TypeName, ttInit);
-        } catch (...) {
-            // If creation failed, leave defaultTTFont invalid and fall back below
-            defaultTTFont = AssetHandle();
+        if (!getResObj("default_ttf_asset")) {
+            TTFAsset::InitStruct ttf_init;
+            ttf_init.name = "default_ttf_asset";     // internal registry key
+            ttf_init.type = TTFAsset::TypeName;     // concrete type name
+            ttf_init.filename = "default_ttf";      // internal ttf filename
+            ttf_init.isInternal = true;             // is internal
+            ttf_init.internalFontSize = 10;         // member name in InitStruct
+            AssetHandle ttfFontAsset = createAsset("TTFAsset", ttf_init);
+            (void)ttfFontAsset;
         }
 
-        if (!defaultTTFont.isValid()) {
-            // Fallback: create a bitmap font named "default_ttf" that reuses the default 8x8 sprite
-            BitmapFont::InitStruct fbInit;
-            fbInit.name = "default_ttf";
-            fbInit.type = BitmapFont::TypeName;
-            fbInit.filename = "default_bmp_8x8";
-            fbInit.isInternal = true;
-            fbInit.fontSize = 8;
-            AssetHandle fb = createAsset("BitmapFont", fbInit);
-            (void)fb; // silence unused
+        // Create a public truetype font asset named "default_ttf" which references the internal TTFAsset
+        if (!getResObj("default_ttf")) {
+            TruetypeFont::InitStruct ttInit;
+            ttInit.name = "default_ttf";           // public registry key expected by Label
+            ttInit.type = TruetypeFont::TypeName;
+            ttInit.filename = "default_ttf_asset";      // filename used by TruetypeFont to find the TTFAsset
+
+            // Attempt to create the truetype font; if TTF isn't available or creation fails, fall back to bitmap font
+            AssetHandle defaultTTFont;
+            try {
+                defaultTTFont = createAsset(TruetypeFont::TypeName, ttInit);
+            } catch (...) {
+                // If creation failed, leave defaultTTFont invalid and fall back below
+                defaultTTFont = AssetHandle();
+            }
+
+            if (!defaultTTFont.isValid()) {
+                // Fallback: create a bitmap font named "default_ttf" that reuses the default 8x8 sprite
+                BitmapFont::InitStruct fbInit;
+                fbInit.name = "default_ttf";
+                fbInit.type = BitmapFont::TypeName;
+                fbInit.filename = "default_bmp_8x8";
+                fbInit.isInternal = true;
+                fbInit.fontSize = 8;
+                AssetHandle fb = createAsset("BitmapFont", fbInit);
+                (void)fb; // silence unused
+            }
         }
             
 
@@ -125,17 +144,20 @@ namespace SDOM
             BitmapFont::CreateFromInitStruct
         });
 
-        // Create the default 8x8 bitmap font asset.
+        // Create the default 8x8 bitmap font asset if it doesn't exist.
         // Use the filename as the canonical resource name so Lua can refer to
         // the font simply as "default_bmp_8x8". The BitmapFont will create
         // (or reuse) an internal SpriteSheet named '<filename>_SpriteSheet'.
-        BitmapFont::InitStruct init;
-        init.name = "default_bmp_8x8";                     // registry key == filename
-        init.type = BitmapFont::TypeName;                  // concrete type name
-        init.filename = "default_bmp_8x8";               // underlying texture filename
-        init.isInternal = true;
-        init.fontSize = 8;                                 // member name in InitStruct
-        AssetHandle bmpFont = createAsset("BitmapFont", init);
+        if (!getResObj("default_bmp_8x8")) {
+            BitmapFont::InitStruct init;
+            init.name = "default_bmp_8x8";                     // registry key == filename
+            init.type = BitmapFont::TypeName;                  // concrete type name
+            init.filename = "default_bmp_8x8";               // underlying texture filename
+            init.isInternal = true;
+            init.fontSize = 8;                                 // member name in InitStruct
+            AssetHandle bmpFont = createAsset("BitmapFont", init);
+            (void)bmpFont;
+        }
 
         // register the Label display object
         registerDomType("Label", TypeCreators{
@@ -147,6 +169,7 @@ namespace SDOM
             }
         });
 
+        initialized_ = true;
         return true;
     }
 
