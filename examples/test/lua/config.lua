@@ -52,7 +52,8 @@ local config = {
     {
         { name = "VarelaRound16", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 16 },
         { name = "VarelaRound32", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 32 },
-        { name = "external_bmp_8x8", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png", font_width = 8, font_height = 8 }
+        { name = "external_bmp_8x8", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png", font_width = 8, font_height = 8 },
+        { name = "external_bmp_8x12", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png", font_width = 8, font_height = 12 }
     },
     windowWidth = 1200,
     windowHeight = 800,
@@ -206,7 +207,36 @@ local config = {
                     y = 200,
                     width = 100,
                     height = 75,
-                    color = { r = 200, g = 100, b = 50, a = 255 }
+                    color = { r = 128, g = 64, b = 25, a = 255 },
+                    -- add children with a Label using the new TruetypeFont
+                    children = 
+                    {
+                        {
+                            type = "Label",
+                            name = "orangeishBoxLabel",
+                            anchor_left = "left",       
+                            x = 45,                    
+                            anchor_top = "top",         
+                            y = 205,                     
+                            anchor_right = "left",     
+                            width = 90,                
+                            anchor_bottom = "top",   
+                            height = 65,               
+                            outline = true,
+                            wordwrap = true,
+                            auto_resize = true,
+                            max_width = 400,
+                            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat",
+                            resource_name = "external_bmp_8x12",   -- use the BitmapFontcreated above
+                            -- font_size = 8,
+                            font_width = 8,
+                            font_height = 12,
+                            alignment = "center",
+                            foreground_color = { r = 255, g = 255, b = 255, a = 255 },
+                            border = true,
+                            border_color = { r = 255, g = 255, b = 255, a = 64 }
+                        }
+                    }
                 }
             }
         },
