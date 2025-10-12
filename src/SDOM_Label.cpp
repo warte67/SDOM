@@ -12,6 +12,9 @@
 #include <SDOM/SDOM_Utils.hpp>
 #include <cmath>
 
+// Enable to trace parent resize computations for Labels
+static constexpr bool LABEL_PARENT_RESIZE_DEBUG = false;
+
 
 namespace SDOM
 {
@@ -305,6 +308,15 @@ namespace SDOM
             }
         }
 
+        // Capture initial parent dimensions so we can detect changes later
+        if (auto parent = getParent()) {
+            parent_width_ = parent->getWidth();
+            parent_height_ = parent->getHeight();
+        } else {
+            parent_width_ = 0;
+            parent_height_ = 0;
+        }
+
         in_oninit = false;
         return true;
     } // END Label::onInit()
@@ -349,7 +361,38 @@ namespace SDOM
         //     INFO("Parent Size Change");
         // }
         
-        setDirty(true); // temporary force rebuild every frame
+        // setDirty(true); // temporary force rebuild every frame
+
+        // Detect parent resize: if the parent's width/height changed since the
+        // last frame, we need to re-tokenize and mark dirty so auto_resize and
+        // wordwrap can recompute using the new available space.
+        if (auto parent = getParent()) {
+            int pw = parent->getWidth();
+            int ph = parent->getHeight();
+            if (pw != parent_width_ || ph != parent_height_) {
+                parent_width_ = pw;
+                parent_height_ = ph;
+                // Only retokenize/rebuild if the label depends on parent sizing
+                if (defaultStyle_.auto_resize || defaultStyle_.wordwrap || defaultStyle_.maxWidth < 0) {
+                    // Recompute layout constraints and apply auto-resize directly so
+                    // height updates are not dependent purely on tokenization ordering.
+                    float computedW = 0.0f, computedH = 0.0f;
+                    _maxSize(computedW, computedH);
+                    if (defaultStyle_.auto_resize) {
+                        int newW = static_cast<int>(std::lround(computedW));
+                        int newH = static_cast<int>(std::lround(computedH));
+                        if (LABEL_PARENT_RESIZE_DEBUG) {
+                            std::cerr << "[Label DEBUG] '" << name_ << "' parent resized: parent=(" << pw << "," << ph << ") computed=(" << computedW << "," << computedH << ") current=(" << getWidth() << "," << getHeight() << ") -> new=(" << newW << "," << newH << ")" << std::endl;
+                        }
+                        if (newW != getWidth()) setWidth(newW);
+                        if (newH != getHeight()) setHeight(newH);
+                    }
+                    lastTokenizedText_ = text_;
+                    tokenizeText();
+                    setDirty(true);
+                }
+            }
+        }
 
         if (lastTokenizedText_ != text_ || needsTextureRebuild_(getWidth(), getHeight(), getCore().getPixelFormat()))
         {
@@ -1062,6 +1105,14 @@ if (LABEL_DEBUG)
 
     void Label::_maxSize(float& width, float& height)
     {
+        // If auto_resize is disabled, the Label should not consult parent
+        // dimensions — it stays fixed to its own bounds. Return early.
+        if (!defaultStyle_.auto_resize) {
+            width = static_cast<float>(getWidth());
+            height = static_cast<float>(getHeight());
+            return;
+        }
+
         float userMaxWidth = static_cast<float>(defaultStyle_.maxWidth);
         float userMaxHeight = static_cast<float>(defaultStyle_.maxHeight);
 
@@ -1110,12 +1161,31 @@ if (LABEL_DEBUG)
                     setWidth(newW);
             }
         }
-        // If maxHeight == 0, height resizing is disabled; use current height as max
-        if (userMaxHeight == 0.0f) 
+        // If maxHeight == 0, height resizing is disabled by default; however,
+        // when auto_resize is enabled we want the label to be able to resize
+        // vertically to the parent's available height (symmetry with width).
+        if (userMaxHeight == 0.0f)
         {
-            height = static_cast<float>(getHeight());
-        } 
-        else 
+            // If auto_resize is disabled, respect the Label's own height and do
+            // not consider the parent's available height — the Label should be
+            // fixed to its configured bounds.
+            if (!defaultStyle_.auto_resize) {
+                height = static_cast<float>(getHeight());
+            }
+            else if (getParent()) {
+                // compute parent's available height from label's top edge
+                float parentH = static_cast<float>(getParent()->getHeight());
+                float topEdge = static_cast<float>(getY()) - static_cast<float>(getParent()->getY());
+                float availH = (parentH > topEdge) ? (parentH - topEdge) : 0.0f;
+                height = availH;
+                int newH = static_cast<int>(std::lround(height));
+                if (newH != getHeight())
+                    setHeight(newH);
+            } else {
+                height = static_cast<float>(getHeight());
+            }
+        }
+        else
         {
             float maxH = 32767.0f;
             if (auto parent = getParent()) 

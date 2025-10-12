@@ -628,13 +628,13 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Updated all config files, asset registration, and code references to use the new names.
     - This change makes it clear which resources are engine-provided and improves naming consistency across bitmap and truetype fonts.
 - **BitmapFont Sizing Fixes:**
-    - Fixed logic so BitmapFont assets now correctly default to their backing SpriteSheet's sprite size when `font_width` or `font_height` are not specified by the user.
-    - Ensured both internal and external bitmap fonts render at their intended glyph dimensions (e.g., 8x12 for `internal_font_8x12`).
+    - BitmapFont assets now correctly default to their backing SpriteSheet's sprite size when `font_width` or `font_height` are not specified.
+    - Both internal and external bitmap fonts render at their intended glyph dimensions (e.g., 8x12 for `internal_font_8x12`).
     - Added runtime diagnostics to confirm font metrics during asset loading.
 - **Label Rendering Improvements:**
-    - Improved Label logic to always render at least one line or token, even when the available height or width is too small to fit the full content.
-    - This prevents labels from disappearing when their bounds are smaller than the text, ensuring clipped text is still visible.
-    - Verified that Labels now handle extreme resizing gracefully, maintaining visibility of partial text.
+    - Label logic now always renders at least one line or token, even when the available height or width is too small to fit the full content.
+    - Prevents labels from disappearing when their bounds are smaller than the text, ensuring clipped text is still visible.
+    - Verified that Labels handle extreme resizing gracefully, maintaining visibility of partial text.
 
 ---
 ## Next Steps:
