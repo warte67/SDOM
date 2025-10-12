@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classSDOM_1_1Event.html#a1d18c2ebf74e286748c6567c6a3de821":[16,0,0,6,27],
 "classSDOM_1_1Event.html#a1de666cd76bf2ef5c77d3b0380db55fa":[15,0,0,6,51],
 "classSDOM_1_1Event.html#a1de666cd76bf2ef5c77d3b0380db55fa":[16,0,0,6,51],
 "classSDOM_1_1Event.html#a1ef4b8a04e0d7a9cd0cc9fbee6e98a62":[15,0,0,6,71],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "classSDOM_1_1EventType.html#a577e0d48ef384607e181b462c47a5509":[16,0,0,8,61],
 "classSDOM_1_1EventType.html#a57c2910b0d2dc5779181c67647020f6c":[15,0,0,8,59],
 "classSDOM_1_1EventType.html#a57c2910b0d2dc5779181c67647020f6c":[16,0,0,8,59],
-"classSDOM_1_1EventType.html#a5f5123139834450372826094c09718c3":[15,0,0,8,15],
-"classSDOM_1_1EventType.html#a5f5123139834450372826094c09718c3":[16,0,0,8,15]
+"classSDOM_1_1EventType.html#a5f5123139834450372826094c09718c3":[15,0,0,8,15]
 };

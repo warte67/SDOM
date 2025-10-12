@@ -608,6 +608,14 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Factory now exposes a `default_ttf` font and falls back to bitmap fonts if Truetype creation fails.
     - Fixed asset registration and loading bugs; all assets are now tracked and validated by the Factory.
     - Added integration points for future unit tests covering TTFAsset and TruetypeFont.
+- **Label Render-to-Texture Optimization:**
+    - Refactored Label to render text to a cached texture when dirty, dramatically improving performance.
+    - Labels now only re-rasterize text when text, font, style, or bounds change; otherwise, the cached texture is reused for fast redraws.
+    - Average frame rate increased from ~100 fps to over 4000 fps in typical scenes (on this 15 year old machine).
+    - Even under stress (continually forcing retokenization and redraws), frame rates remain high (~2000 fps), confirming the effectiveness of the optimization.
+    - This change enables smooth rendering of large text blocks and many Labels without CPU/GPU bottlenecks.
+    - Debug logic for texture rebuilds and alignment is now gated and can be toggled for future troubleshooting.
+    - All unit tests and example scenes validated after the optimization.
 
 ---
 ## Next Steps:

@@ -289,7 +289,7 @@ namespace SDOM
     void Label::onUpdate(float fElapsedTime) 
     {
         (void)fElapsedTime;
-        if (lastTokenizedText_ != text_) 
+        if (lastTokenizedText_ != text_ || needsTextureRebuild_(getWidth(), getHeight(), getCore().getPixelFormat()))
         {
             lastTokenizedText_ = text_;
             tokenizeText();
@@ -315,48 +315,57 @@ namespace SDOM
                 ERROR("Label::onRender() -- texture rebuild failed");
                 return;
             }
-            if (!SDL_SetRenderTarget(renderer, cachedTexture_)) 
+            // If we don't have a cached texture (e.g., size is 0x0), skip rendering this frame
+            if (cachedTexture_) 
             {
-                ERROR("Label::onRender -- Unable to set render target: " + std::string(SDL_GetError()));
-                return;
+                if (!SDL_SetRenderTarget(renderer, cachedTexture_)) 
+                {
+                    ERROR("Label::onRender -- Unable to set render target: " + std::string(SDL_GetError()));
+                    return;
+                }
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+                SDL_RenderClear(renderer);
+                // Pass 1: render background
+                SDL_Color bgndColor = defaultStyle_.backgroundColor;
+                if (bgndColor.a > 0 && defaultStyle_.background) 
+                {
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                    SDL_SetRenderDrawColor(renderer, bgndColor.r, bgndColor.g, bgndColor.b, bgndColor.a);
+                    SDL_FRect rect = { 0, 0, static_cast<float>(current_width), static_cast<float>(current_height) };
+                    SDL_RenderFillRect(renderer, &rect);
+                }
+                // Pass 2: render border
+                SDL_Color borderColor = defaultStyle_.borderColor;
+                if (defaultStyle_.border) 
+                {
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                    SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+                    SDL_FRect rect = { 0, 0, static_cast<float>(current_width), static_cast<float>(current_height) };
+                    SDL_RenderRect(renderer, &rect);
+                }
+                // Render the Label
+                renderLabel();
+                SDL_SetRenderTarget(renderer, target);
             }
-            SDL_RenderClear(renderer);
-            // Pass 1: render background
-            SDL_Color bgndColor = defaultStyle_.backgroundColor;
-            if (bgndColor.a > 0 && defaultStyle_.background) 
-            {
-                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-                SDL_SetRenderDrawColor(renderer, bgndColor.r, bgndColor.g, bgndColor.b, bgndColor.a);
-                SDL_FRect rect = { 0, 0, static_cast<float>(getWidth()), static_cast<float>(getHeight()) };
-                SDL_RenderFillRect(renderer, &rect);
-            }
-            // Pass 2: render border
-            SDL_Color borderColor = defaultStyle_.borderColor;
-            if (defaultStyle_.border) 
-            {
-                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-                SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
-                SDL_FRect rect = { 0, 0, static_cast<float>(getWidth()), static_cast<float>(getHeight()) };
-                SDL_RenderRect(renderer, &rect);
-            }
-            // Render the Label
-            renderLabel();
+            // Mark clean even if we skipped rendering due to zero-sized texture
             setDirty(false);
-            SDL_SetRenderTarget(renderer, target);
         }
 
         // Draw the cached texture to the screen
-        SDL_FRect dst = 
+        if (cachedTexture_) 
         {
-            static_cast<float>(getX()),
-            static_cast<float>(getY()),
-            static_cast<float>(getWidth()),
-            static_cast<float>(getHeight())
-        };
-        if (!SDL_RenderTexture(renderer, cachedTexture_, nullptr, &dst)) 
-        {
-            ERROR("Label::onRender() -- Unable to render to texture: " + std::string(SDL_GetError()));
-            return;
+            SDL_FRect dst = 
+            {
+                static_cast<float>(getX()),
+                static_cast<float>(getY()),
+                static_cast<float>(getWidth()),
+                static_cast<float>(getHeight())
+            };
+            if (!SDL_RenderTexture(renderer, cachedTexture_, nullptr, &dst)) 
+            {
+                ERROR("Label::onRender() -- Unable to render to texture: " + std::string(SDL_GetError()));
+                return;
+            }
         }
     } // END Label::onRender()
 
@@ -675,18 +684,43 @@ namespace SDOM
         if (!font_) return;
         if (!font_->isLoaded()) return;
 
-        int labelX = getX();
-        int labelY = getY();
-        int labelW = getWidth();
-        int labelH = getHeight();
-        DisplayHandle parent = getParent();
-        if (parent)
+        // Determine whether we're rendering into the cached texture (local coords)
+        SDL_Renderer* renderer = getRenderer();
+        SDL_Texture* currentTarget = SDL_GetRenderTarget(renderer);
+        bool renderingToTexture = (currentTarget == cachedTexture_);
+
+        // Choose coordinates and sizes appropriate for the current render target.
+        // When rasterizing into the cached texture we use local coords (origin 0,0),
+        // otherwise use world/screen coords so text positions match the final blit.
+        int labelX = renderingToTexture ? 0 : getX();
+        int labelY = renderingToTexture ? 0 : getY();
+        // When rendering into our cached texture, use the texture's actual size
+        // (current_width/current_height) instead of local/world coordinates which
+        // may be zero during layout. When rendering directly to the screen, use
+        // the object's world width/height.
+        int labelW = renderingToTexture ? static_cast<int>(current_width) : getWidth();
+        int labelH = renderingToTexture ? static_cast<int>(current_height) : getHeight();
+
+        // Respect parent clipping/available area when drawing directly to screen only.
+        if (!renderingToTexture)
         {
-            int parentW = parent->getWidth();
-            int parentH = parent->getHeight();
-            labelW = std::min(labelW, parentW);
-            labelH = std::min(labelH, parentH);
+            DisplayHandle parent = getParent();
+            if (parent)
+            {
+                int parentW = parent->getWidth();
+                int parentH = parent->getHeight();
+                labelW = std::min(labelW, parentW);
+                labelH = std::min(labelH, parentH);
+            }
         }
+
+        // Apply padding: center/layout should operate on the inner rect
+        int padX = defaultStyle_.padding_horiz;
+        int padY = defaultStyle_.padding_vert;
+        int innerX = labelX + padX;
+        int innerY = labelY + padY;
+        int innerW = std::max(0, labelW - padX * 2);
+        int innerH = std::max(0, labelH - padY * 2);
 
         for (const auto& [align, phrases] : phraseAlignLists_)
         {
@@ -706,25 +740,25 @@ namespace SDOM
                 totalTextHeight += maxHeight;
             }
 
-            float baseY = labelY;
+            float baseY = static_cast<float>(innerY);
             switch (align) {
                 case AlignQueue::TOP_LEFT:
                 case AlignQueue::TOP_CENTER:
                 case AlignQueue::TOP_RIGHT:
-                    baseY = labelY;
+                    baseY = static_cast<float>(innerY);
                     break;
                 case AlignQueue::MIDDLE_LEFT:
                 case AlignQueue::MIDDLE_CENTER:
                 case AlignQueue::MIDDLE_RIGHT:
-                    baseY = labelY + (labelH - totalTextHeight) / 2.0f;
+                    baseY = static_cast<float>(innerY) + (static_cast<float>(innerH) - totalTextHeight) / 2.0f;
                     break;
                 case AlignQueue::BOTTOM_LEFT:
                 case AlignQueue::BOTTOM_CENTER:
                 case AlignQueue::BOTTOM_RIGHT:
-                    baseY = labelY + (labelH - totalTextHeight);
+                    baseY = static_cast<float>(innerY) + (static_cast<float>(innerH) - totalTextHeight);
                     break;
                 default:
-                    baseY = labelY;
+                    baseY = static_cast<float>(innerY);
             }
 
             float lineY = baseY;
@@ -736,26 +770,68 @@ namespace SDOM
                 for (const auto& phrase : linePhrases)
                     lineWidth += phrase.width;
 
+#define LABEL_DEBUG false
+if (LABEL_DEBUG)
+{
+                // Debug: when rasterizing to texture, show computed inner rect and base positions
+                if (renderingToTexture) {
+                    // compute tentative baseX/baseY so we can print them
+                    float dbg_baseX = static_cast<float>(innerX);
+                    switch (align) {
+                        case AlignQueue::TOP_CENTER:
+                        case AlignQueue::MIDDLE_CENTER:
+                        case AlignQueue::BOTTOM_CENTER:
+                            dbg_baseX = static_cast<float>(innerX) + (static_cast<float>(innerW) / 2.0f) - (lineWidth / 2.0f);
+                            break;
+                        case AlignQueue::TOP_RIGHT:
+                        case AlignQueue::MIDDLE_RIGHT:
+                        case AlignQueue::BOTTOM_RIGHT:
+                            dbg_baseX = static_cast<float>(innerX) + static_cast<float>(innerW) - lineWidth;
+                            break;
+                        default:
+                            dbg_baseX = static_cast<float>(innerX);
+                    }
+                    float dbg_baseY = static_cast<float>(innerY);
+                    switch (align) {
+                        case AlignQueue::MIDDLE_LEFT:
+                        case AlignQueue::MIDDLE_CENTER:
+                        case AlignQueue::MIDDLE_RIGHT:
+                            dbg_baseY = static_cast<float>(innerY) + (static_cast<float>(innerH) - totalTextHeight) / 2.0f;
+                            break;
+                        case AlignQueue::BOTTOM_LEFT:
+                        case AlignQueue::BOTTOM_CENTER:
+                        case AlignQueue::BOTTOM_RIGHT:
+                            dbg_baseY = static_cast<float>(innerY) + (static_cast<float>(innerH) - totalTextHeight);
+                            break;
+                        default:
+                            dbg_baseY = static_cast<float>(innerY);
+                    }
+                    std::cerr << "[Label DEBUG] name='" << name_ << "' inner=(" << innerX << "," << innerY << "," << innerW << "," << innerH << ")"
+                              << " align=" << static_cast<int>(align) << " lineIdx=" << lineIdx << " lineWidth=" << lineWidth
+                              << " dbg_baseX=" << dbg_baseX << " dbg_baseY=" << dbg_baseY << std::endl;
+                }
+} // END LABEL_DEBUG
+
                 // Compute base X for alignment
-                float baseX = labelX;
+                float baseX = static_cast<float>(innerX);
                 switch (align) {
                     case AlignQueue::TOP_LEFT:
                     case AlignQueue::MIDDLE_LEFT:
                     case AlignQueue::BOTTOM_LEFT:
-                        baseX = labelX;
+                        baseX = static_cast<float>(innerX);
                         break;
                     case AlignQueue::TOP_CENTER:
                     case AlignQueue::MIDDLE_CENTER:
                     case AlignQueue::BOTTOM_CENTER:
-                        baseX = labelX + (labelW / 2.0f) - (lineWidth / 2.0f);
+                        baseX = static_cast<float>(innerX) + (static_cast<float>(innerW) / 2.0f) - (lineWidth / 2.0f);
                         break;
                     case AlignQueue::TOP_RIGHT:
                     case AlignQueue::MIDDLE_RIGHT:
                     case AlignQueue::BOTTOM_RIGHT:
-                        baseX = labelX + labelW - lineWidth;
+                        baseX = static_cast<float>(innerX) + static_cast<float>(innerW) - lineWidth;
                         break;
                     default:
-                        baseX = labelX;
+                        baseX = static_cast<float>(innerX);
                 }
 
                 // Render all phrases in this line, left-to-right
@@ -790,13 +866,17 @@ namespace SDOM
         if (!defaultStyle_.wordwrap) 
         {
             IFontObject* font_ = fontAsset.as<IFontObject>();
-            int labelWidth = getWidth();
+            // Prefer a stable width during early layout: fall back through
+            // getWidth() and cached texture width if local width is not yet set.
+            int labelWidth = static_cast<int>(getLocalWidth());
+            if (labelWidth <= 0) labelWidth = getWidth();
+            if (labelWidth <= 0 && static_cast<int>(current_width) > 0) labelWidth = static_cast<int>(current_width);
 
             // Compute parent's available width if needed
             int parentWidth = labelWidth;
             if (auto parent = getParent()) {
-                int leftEdge = getX() - parent->getX();
-                int availW = parent->getWidth() - leftEdge;
+                int leftEdge = static_cast<int>(getLocalX()) - static_cast<int>(parent->getLocalX());
+                int availW = static_cast<int>(parent->getLocalWidth()) - leftEdge;
                 parentWidth = (availW > 0) ? availW : labelWidth;
             }
 
@@ -805,8 +885,11 @@ namespace SDOM
 
             std::vector<LabelToken> truncatedTokens;
             int widthSoFar = 0;
+            // If we still don't have a reliable width, don't truncate: keep tokens.
+            bool skipTruncate = (effectiveWidth <= 0);
             for (const auto& token : tokenList)
             {
+                if (skipTruncate) { truncatedTokens.push_back(token); continue; }
                 int tokenWidth = 0;
                 if (font_) 
                 {
@@ -1234,11 +1317,23 @@ namespace SDOM
         // Check if a rebuild is needed
         if (!needsTextureRebuild_(width, height, fmt))
             return true;
-        // Destroy old texture if it exists
+
+        // Always destroy old texture if dimensions/pixel format changed
         if (cachedTexture_) {
             SDL_DestroyTexture(cachedTexture_);
             cachedTexture_ = nullptr;
         }
+
+        // If target size is zero in either dimension, do not create a texture.
+        // Just update internal state to avoid thrashing and return success.
+        if (width <= 0 || height <= 0) {
+            current_pixel_format = fmt;
+            current_width = width;
+            current_height = height;
+            // Do NOT set dirty here; caller will clear it for this frame.
+            return true;
+        }
+
         // Create new texture
         cachedTexture_ = SDL_CreateTexture(getRenderer(), fmt, SDL_TEXTUREACCESS_TARGET, width, height);
         if (!cachedTexture_) {

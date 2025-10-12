@@ -339,10 +339,16 @@ Notes & test ideas:
         IDisplayObject& setBottom(float p_bottom);
 
         // --- Local Offset Accessors --- //
+        float getLocalX() const { return left_; }
+        float getLocalY() const { return top_; }
+        float getLocalWidth() const { return right_ - left_; }
+        float getLocalHeight() const { return bottom_ - top_; }
+
         float getLocalLeft() const { return left_; }
         float getLocalRight() const { return right_; }
         float getLocalTop() const { return top_; }
         float getLocalBottom() const { return bottom_; }
+        
         IDisplayObject& setLocalLeft(float value) { left_ = value; return *this; }
         IDisplayObject& setLocalRight(float value) { right_ = value; return *this; }
         IDisplayObject& setLocalTop(float value) { top_ = value; return *this; }

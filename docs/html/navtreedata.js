@@ -390,21 +390,21 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "SDOM_8cpp.html",
-"classSDOM_1_1AssetHandle.html#afbb31544072ef034b836e3ab016e1394",
-"classSDOM_1_1Core.html#a6f41dd18595b9a587d3acafef7d2cb10",
-"classSDOM_1_1Event.html#a1de666cd76bf2ef5c77d3b0380db55fa",
-"classSDOM_1_1EventType.html#a625823311d8c48db0a73bc2e0042f414",
-"classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40",
-"classSDOM_1_1IDisplayObject.html#ac857138350fbf670143a8fe5ff0dd9d8",
-"classSDOM_1_1Label.html#a3c2910aa54834bd1fd44e456861832b2a45bd1d5b32931106efbf1a82fe6a732f",
-"classSDOM_1_1Label.html#ac316c78060747eacf8cb4c6ab84d3855",
-"classSDOM_1_1Stage.html#a0e028817607353e0439c0d7b2b315266",
-"classSDOM_1_1Stage.html#acdb615c35241c6c89533ef20e2edd03d",
-"classSDOM_1_1TruetypeFont.html#a4ceb243e2a642ab569bc96e5c6b5d966",
-"md_docs_2core__framework.html#autotoc_md39",
-"namespaceSDOM.html#a1a75e82b386407f34d0341470b94068f",
-"namespacemembers_t.html",
-"structSDOM_1_1Label_1_1InitStruct.html#a81a29070fdca23a51c9293475a774390"
+"classSDOM_1_1AssetHandle.html#afb75184219f7081f20c61ae9405004c1",
+"classSDOM_1_1Core.html#a6eb2feebd746b82d2f722ffb86887ccd",
+"classSDOM_1_1Event.html#a1d18c2ebf74e286748c6567c6a3de821",
+"classSDOM_1_1EventType.html#a5f5123139834450372826094c09718c3",
+"classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58",
+"classSDOM_1_1IDisplayObject.html#ac44b2435f91f670e2b6a43f092f83175",
+"classSDOM_1_1Label.html#a32955242db86e6a8ec1277dd895560c5",
+"classSDOM_1_1Label.html#aacb83eae3c954d0f9a6a1b28b123ec6e",
+"classSDOM_1_1SpriteSheet.html#ad0b85cd8eafe1b2f92a03573e0ea80b9",
+"classSDOM_1_1Stage.html#aade178775d0c9afbd0f3c49f8dfe02c6",
+"classSDOM_1_1TruetypeFont.html#a00d3b7780bc579cfddea49fc2c94f36f",
+"md_README.html#autotoc_md336",
+"md_docs_2startup__refactor.html",
+"namespaceSDOM.html#aee5a09f2769e2e09e2fede8d0f574b9c",
+"structSDOM_1_1Label_1_1InitStruct.html#a21346a5aba31d8d186051c04c105e111"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
