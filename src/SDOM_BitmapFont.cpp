@@ -197,6 +197,17 @@ namespace SDOM
         if (sw > 0) bitmapFontWidth_ = sw;
         if (sh > 0) bitmapFontHeight_ = sh;
 
+        // // Debug: log canonical metrics for the font and backing spritesheet.
+        // {
+        //     SDL_Texture* tex = ss->getTexture();
+        //     float texW = 0.0f, texH = 0.0f;
+        //     if (tex && !SDL_GetTextureSize(tex, &texW, &texH)) {
+        //         INFO("BitmapFont::onLoad - font='" + getName() + "' filename='" + filename_ + "' bitmapFontWidth=" + std::to_string(bitmapFontWidth_) + " bitmapFontHeight=" + std::to_string(bitmapFontHeight_) + " fontSize=" + std::to_string(fontSize_) + " sprite_tex_size=" + std::to_string((int)texW) + "x" + std::to_string((int)texH));
+        //     } else {
+        //         INFO("BitmapFont::onLoad - font='" + getName() + "' filename='" + filename_ + "' bitmapFontWidth=" + std::to_string(bitmapFontWidth_) + " bitmapFontHeight=" + std::to_string(bitmapFontHeight_) + " fontSize=" + std::to_string(fontSize_) + " sprite_tex_size=unknown");
+        //     }
+        // }
+
         // If user didn't provide fontSize in the create() config, prefer the
         // sprite sheet height as the nominal fontSize to avoid automatic
         // scaling to an unrelated default.

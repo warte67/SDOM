@@ -159,7 +159,7 @@ namespace SDOM
             init.type = BitmapFont::TypeName;   // concrete type name
             init.filename = "default_bmp_8x8";  // underlying texture filename
             init.isInternal = true;             // is an internal resource
-            // init.fontSize = 8;                  // member name in InitStruct
+            init.fontSize = 8;                  // member name in InitStruct
             init.fontWidth = 8;                 // font_width for this resource
             init.fontHeight = 8;                // font_height for this resource            
             AssetHandle bmpFont = createAsset("BitmapFont", init);
@@ -171,7 +171,10 @@ namespace SDOM
             init.type = BitmapFont::TypeName;   // concrete type name
             init.filename = "default_bmp_8x12"; // underlying texture filename
             init.isInternal = true;             // is an internal resource
-            // init.fontSize = 12;                 // member name in InitStruct
+            // Set both BitmapFont-specific fontSize and the base IFontObject's
+            // fontSize_ so the inherited constructor sees the correct value.
+            init.fontSize = 12;                 // BitmapFont::InitStruct field
+            init.fontSize_ = 12;                // IFontObject::InitStruct field used by base ctor
             init.fontWidth = 8;                 // font_width for this resource
             init.fontHeight = 12;               // font_height for this resource
             AssetHandle bmpFont = createAsset("BitmapFont", init);
