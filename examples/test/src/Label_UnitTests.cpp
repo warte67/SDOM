@@ -400,14 +400,14 @@ namespace SDOM
             local name = "unitLabelTest5"
             local txt = table.concat({
                 "Pre ",
-                "[border=3]B3 ",
+                "[border = 3]B3 ",
                 "[outline=2]BO32 ",
-                "[pad=4x6]P46 ",
-                "[dropshadow=5,7]D57 ",
+                "[pad=4 x 6]P46 ",
+                "[dropshadow=5, 7]D57 ",
                 "INNER ",
                 "[/outline]O2off ",
                 "NEST ",
-                "[border=1]B1 ",
+                "[border= 1]B1 ",
                 "[/border]B3back ",
                 "[/pad]Pdef ",
                 "[/dropshadow]Ddef ",

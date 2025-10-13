@@ -18,7 +18,6 @@ This document describes the design and implementation strategy for parsing and r
 
 ## Default Escape Sequences
 
-
 ### Color Palette (8 colors)
 - `[color=black]`   — Black (default)
 - `[color=red]`     — Red

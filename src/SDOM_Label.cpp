@@ -621,189 +621,200 @@ namespace SDOM
                 continue;
             }
 
-            // Handle Color Escapes
-            std::vector<std::string> colorTags = {
-                "[color=", "[rgb=", "[rgba=", "[fgnd=", "[bgnd=", "[border=", "[outline=", "[shadow=", "[align=", "[size="
-            };
+            // Handle Escapes/Tags that use an '=' form (color, align, size, numeric tags)
+            // This parser tolerates optional spaces around '=' so tags like "[border = 3]"
+            // or "[border=    3]" will be accepted.
+            if (text_[i] == '[') {
+                // scan to find '=' or closing ']' quickly
+                size_t j = i + 1;
+                while (j < text_.size() && text_[j] != ']' && text_[j] != '=') ++j;
+                if (j < text_.size() && text_[j] == '=') {
+                    // tagName is text_[i+1 .. j-1]
+                    std::string tagName = text_.substr(i + 1, j - (i + 1));
+                    // trim spaces from tagName
+                    auto trim = [](std::string s){ while(!s.empty() && std::isspace((unsigned char)s.front())) s.erase(s.begin()); while(!s.empty() && std::isspace((unsigned char)s.back())) s.pop_back(); return s; };
+                    tagName = to_lower(trim(tagName));
+                    size_t tagLenLocal = (j - i) + 1; // include '='
+                    size_t endPos = text_.find(']', i + tagLenLocal);
+                    if (endPos != std::string::npos) {
+                        std::string escapeContent = text_.substr(i + tagLenLocal, endPos - (i + tagLenLocal));
+                        // trim content
+                        escapeContent = trim(escapeContent);
+                        std::string fullEscape = text_.substr(i, endPos - i + 1);
 
-            auto startsWithCI = [&](const std::string& text, const std::string& prefix) {
-                if (text.size() < prefix.size()) return false;
-                return to_lower(text.substr(0, prefix.size())) == to_lower(prefix);
-            };
-
-            bool foundColorEscape = false;
-            size_t tagLen = 0;
-            std::string matchedTag;
-            for (const auto& tag : colorTags) {
-                if (startsWithCI(text_.substr(i), tag)) {
-                    foundColorEscape = true;
-                    tagLen = tag.size();
-                    matchedTag = tag;
-                    break;
-                }
-            }
-
-            if (foundColorEscape) {
-                size_t endPos = text_.find(']', i + tagLen);
-                if (endPos != std::string::npos)
-                {
-                    std::string escapeContent = text_.substr(i + tagLen, endPos - (i + tagLen));
-                    std::string fullEscape = text_.substr(i, endPos - i + 1);
-
-                    // Special-case: numeric thickness for border/outline (e.g., [border=3], [outline=2])
-                    if ((matchedTag == "[border=" || matchedTag == "[outline=") && !escapeContent.empty()) {
+                        // numeric helpers
                         auto is_number_local = [](const std::string& s) {
+                            if (s.empty()) return false;
                             size_t start = 0;
-                            if (s.size() > 0 && (s[0] == '+' || s[0] == '-')) start = 1;
+                            if (s[0] == '+' || s[0] == '-') start = 1;
                             if (start >= s.size()) return false;
                             return std::all_of(s.begin() + start, s.end(), [](unsigned char c){ return std::isdigit(c); });
                         };
-                        if (is_number_local(escapeContent)) {
-                            if (matchedTag == "[border=") {
-                                borderThicknessStack.push_back(currentStyle.borderThickness);
-                                currentStyle.borderThickness = std::stoi(escapeContent);
-                            } else {
-                                outlineThicknessStack.push_back(currentStyle.outlineThickness);
-                                currentStyle.outlineThickness = std::stoi(escapeContent);
+
+                        // handle border / outline numeric thickness: [border=3], [outline=2]
+                        if ((tagName == "border" || tagName == "outline") && !escapeContent.empty()) {
+                            if (is_number_local(escapeContent)) {
+                                if (tagName == "border") {
+                                    borderThicknessStack.push_back(currentStyle.borderThickness);
+                                    currentStyle.borderThickness = std::stoi(escapeContent);
+                                } else {
+                                    outlineThicknessStack.push_back(currentStyle.outlineThickness);
+                                    currentStyle.outlineThickness = std::stoi(escapeContent);
+                                }
+                                tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
+                                i = endPos + 1;
+                                continue;
                             }
+                        }
+
+                        // color name map
+                        std::unordered_map<std::string, SDL_Color> colorIDs = {
+                            { "black",   SDL_Color{ 0,   0,   0,   255 } },
+                            { "red",     SDL_Color{ 255, 0,   0,   255 } },
+                            { "green",   SDL_Color{ 0,   255, 0,   255 } },
+                            { "yellow",  SDL_Color{ 255, 255, 0,   255 } },
+                            { "blue",    SDL_Color{ 0,   0,   255, 255 } },
+                            { "magenta", SDL_Color{ 255, 0,   255, 255 } },
+                            { "cyan",    SDL_Color{ 0,   255, 255, 255 } },
+                            { "white",   SDL_Color{ 255, 255, 255, 255 } }
+                        };
+
+                        std::unordered_map<std::string, SDL_Color*> colorTargets = {
+                            { "fgnd",       &currentStyle.foregroundColor },
+                            { "bgnd",       &currentStyle.backgroundColor },
+                            { "border",     &currentStyle.borderColor },
+                            { "outline",    &currentStyle.outlineColor },
+                            { "shadow",     &currentStyle.dropshadowColor }
+                        };
+
+                        // [pad=WxH] or [padding=WxH]
+                        if ((tagName == "pad" || tagName == "padding") && !escapeContent.empty()) {
+                            auto findSep = [&](const std::string& s)->size_t {
+                                size_t p = s.find('x'); if (p != std::string::npos) return p;
+                                p = s.find('X'); if (p != std::string::npos) return p;
+                                p = s.find(','); return p;
+                            };
+                            size_t sep = findSep(escapeContent);
+                            if (sep != std::string::npos) {
+                                std::string a = escapeContent.substr(0, sep);
+                                std::string b = escapeContent.substr(sep+1);
+                                // trim already applied to escapeContent, but trim parts as well
+                                auto trim_local = [](std::string s){ while(!s.empty() && std::isspace((unsigned char)s.front())) s.erase(s.begin()); while(!s.empty() && std::isspace((unsigned char)s.back())) s.pop_back(); return s; };
+                                a = trim_local(a); b = trim_local(b);
+                                // reuse is_number_local
+                                if (is_number_local(a) && is_number_local(b)) {
+                                    paddingStack.push_back({currentStyle.padding_horiz, currentStyle.padding_vert});
+                                    currentStyle.padding_horiz = std::stoi(a);
+                                    currentStyle.padding_vert = std::stoi(b);
+                                    tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
+                                    i = endPos + 1;
+                                    continue;
+                                }
+                            }
+                        }
+
+                        // [dropshadow=X,Y]
+                        if (tagName == "dropshadow" && !escapeContent.empty()) {
+                            size_t comma = escapeContent.find(',');
+                            if (comma != std::string::npos) {
+                                std::string a = escapeContent.substr(0, comma);
+                                std::string b = escapeContent.substr(comma+1);
+                                auto trim_local = [](std::string s){ while(!s.empty() && std::isspace((unsigned char)s.front())) s.erase(s.begin()); while(!s.empty() && std::isspace((unsigned char)s.back())) s.pop_back(); return s; };
+                                a = trim_local(a); b = trim_local(b);
+                                if (is_number_local(a) && is_number_local(b)) {
+                                    dropshadowOffsetStack.push_back({currentStyle.dropshadowOffsetX, currentStyle.dropshadowOffsetY});
+                                    currentStyle.dropshadowOffsetX = std::stoi(a);
+                                    currentStyle.dropshadowOffsetY = std::stoi(b);
+                                    tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
+                                    i = endPos + 1;
+                                    continue;
+                                }
+                            }
+                        }
+
+                        // color/fgnd/bgnd/outline/shadow/ color hex parsing and explicit rgb/rgba target handling
+                        std::string colorValue = to_lower(escapeContent);
+                        SDL_Color color = {0,0,0,255};
+                        bool validColor = false;
+                        auto colorIt = colorIDs.find(colorValue);
+                        if (colorIt != colorIDs.end()) {
+                            color = colorIt->second; validColor = true;
+                        } else if (colorValue.length() == 6 || colorValue.length() == 8) {
+                            auto is_hexstr = [](const std::string& s) { return std::all_of(s.begin(), s.end(), [](unsigned char c){ return std::isxdigit(c); }); };
+                            if (is_hexstr(colorValue)) {
+                                color.r = std::stoi(colorValue.substr(0,2), nullptr, 16);
+                                color.g = std::stoi(colorValue.substr(2,2), nullptr, 16);
+                                color.b = std::stoi(colorValue.substr(4,2), nullptr, 16);
+                                if (colorValue.length() == 8) color.a = std::stoi(colorValue.substr(6,2), nullptr, 16);
+                                else color.a = 255;
+                                validColor = true;
+                            }
+                        }
+
+                        if (validColor) {
+                            std::string targetName = "fgnd";
+                            if (tagName == "fgnd") targetName = "fgnd";
+                            else if (tagName == "bgnd") targetName = "bgnd";
+                            else if (tagName == "border") targetName = "border";
+                            else if (tagName == "outline") targetName = "outline";
+                            else if (tagName == "shadow") targetName = "shadow";
+                            auto targetIt = colorTargets.find(targetName);
+                            if (targetIt != colorTargets.end()) *(targetIt->second) = color;
+                        }
+
+                        if (tagName == "rgb" || tagName == "rgba") {
+                            size_t colonPos = escapeContent.find(':');
+                            if (colonPos != std::string::npos) {
+                                std::string hex = escapeContent.substr(0, colonPos);
+                                std::string explicitTarget = to_lower(trim(escapeContent.substr(colonPos + 1)));
+                                SDL_Color color2 = {0,0,0,255};
+                                bool valid2 = false;
+                                auto is_hexstr = [](const std::string& s) { return std::all_of(s.begin(), s.end(), [](unsigned char c){ return std::isxdigit(c); }); };
+                                if ((hex.length() == 6 || hex.length() == 8) && is_hexstr(hex)) {
+                                    color2.r = std::stoi(hex.substr(0,2), nullptr, 16);
+                                    color2.g = std::stoi(hex.substr(2,2), nullptr, 16);
+                                    color2.b = std::stoi(hex.substr(4,2), nullptr, 16);
+                                    if (hex.length() == 8) color2.a = std::stoi(hex.substr(6,2), nullptr, 16);
+                                    else color2.a = 255;
+                                    valid2 = true;
+                                }
+                                if (valid2) {
+                                    auto targetIt = colorTargets.find(explicitTarget);
+                                    if (targetIt != colorTargets.end()) *(targetIt->second) = color2;
+                                }
+                            }
+                        }
+
+                        if (tagName == "align") {
+                            std::string alignValue = to_lower(escapeContent);
+                            auto it = stringToLabelAlign_.find(alignValue);
+                            if (it != stringToLabelAlign_.end()) currentStyle.alignment = it->second;
                             tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
                             i = endPos + 1;
                             continue;
                         }
-                    }
 
-                    // Color name map
-                    std::unordered_map<std::string, SDL_Color> colorIDs = {
-                        { "black",   SDL_Color{ 0,   0,   0,   255 } },
-                        { "red",     SDL_Color{ 255, 0,   0,   255 } },
-                        { "green",   SDL_Color{ 0,   255, 0,   255 } },
-                        { "yellow",  SDL_Color{ 255, 255, 0,   255 } },
-                        { "blue",    SDL_Color{ 0,   0,   255, 255 } },
-                        { "magenta", SDL_Color{ 255, 0,   255, 255 } },
-                        { "cyan",    SDL_Color{ 0,   255, 255, 255 } },
-                        { "white",   SDL_Color{ 255, 255, 255, 255 } }
-                    };
-
-                    std::unordered_map<std::string, SDL_Color*> colorTargets = {
-                        { "fgnd",       &currentStyle.foregroundColor },
-                        { "bgnd",       &currentStyle.backgroundColor },
-                        { "border",     &currentStyle.borderColor },
-                        { "outline",    &currentStyle.outlineColor },
-                        { "shadow",     &currentStyle.dropshadowColor }
-                    };
-
-                    // Determine target from tag
-                    std::string targetName;
-                    if (matchedTag == "[fgnd=")      targetName = "fgnd";
-                    else if (matchedTag == "[bgnd=") targetName = "bgnd";
-                    else if (matchedTag == "[border=") targetName = "border";
-                    else if (matchedTag == "[outline=") targetName = "outline";
-                    else if (matchedTag == "[shadow=")  targetName = "shadow";
-                    else targetName = "fgnd"; // default for [color=], [rgb=], etc.
-
-                    std::string colorValue = escapeContent;
-                    colorValue = to_lower(colorValue);
-
-                    SDL_Color color = {0,0,0,255};
-                    bool validColor = false;
-
-                    // Try colorIDs first
-                    auto colorIt = colorIDs.find(colorValue);
-                    if (colorIt != colorIDs.end()) {
-                        color = colorIt->second;
-                        validColor = true;
-                    } else if (colorValue.length() == 6 || colorValue.length() == 8) {
-                        // ensure the string is valid hex before parsing
-                        auto is_hexstr = [](const std::string& s) {
-                            return std::all_of(s.begin(), s.end(), [](unsigned char c){ return std::isxdigit(c); });
-                        };
-                        if (is_hexstr(colorValue)) {
-                            color.r = std::stoi(colorValue.substr(0,2), nullptr, 16);
-                            color.g = std::stoi(colorValue.substr(2,2), nullptr, 16);
-                            color.b = std::stoi(colorValue.substr(4,2), nullptr, 16);
-                            if (colorValue.length() == 8) {
-                                color.a = std::stoi(colorValue.substr(6,2), nullptr, 16);
-                            } else {
-                                color.a = 255;
-                            }
-                            validColor = true;
+                        if (tagName == "size") {
+                            try {
+                                int newSize = std::stoi(escapeContent);
+                                if (newSize > 0) { fontSize_ = newSize; currentStyle.fontSize = newSize; }
+                            } catch(...) {}
+                            tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
+                            i = endPos + 1;
+                            continue;
                         }
-                    }
 
-                    if (validColor) {
-                        auto targetIt = colorTargets.find(targetName);
-                        if (targetIt != colorTargets.end()) {
-                            *(targetIt->second) = color;
-                        }
-                    }
+                        // Update currentStyle colors from colorTargets
+                        currentStyle.foregroundColor = *colorTargets["fgnd"];
+                        currentStyle.backgroundColor = *colorTargets["bgnd"];
+                        currentStyle.borderColor = *colorTargets["border"];
+                        currentStyle.outlineColor = *colorTargets["outline"];
+                        currentStyle.dropshadowColor = *colorTargets["shadow"];
 
-                    // [rgb=rrggbb:target] and [rgba=rrggbbaa:target] with explicit target
-                    if (matchedTag == "[rgb=" || matchedTag == "[rgba=") {
-                        size_t colonPos = escapeContent.find(':');
-                        if (colonPos != std::string::npos) {
-                            std::string hex = escapeContent.substr(0, colonPos);
-                            std::string explicitTarget = escapeContent.substr(colonPos + 1);
-                            explicitTarget = to_lower(explicitTarget);
-                            SDL_Color color2 = {0,0,0,255};
-                            bool valid2 = false;
-                            auto is_hexstr = [](const std::string& s) {
-                                return std::all_of(s.begin(), s.end(), [](unsigned char c){ return std::isxdigit(c); });
-                            };
-                            if ((hex.length() == 6 || hex.length() == 8) && is_hexstr(hex)) {
-                                color2.r = std::stoi(hex.substr(0,2), nullptr, 16);
-                                color2.g = std::stoi(hex.substr(2,2), nullptr, 16);
-                                color2.b = std::stoi(hex.substr(4,2), nullptr, 16);
-                                if (hex.length() == 8) color2.a = std::stoi(hex.substr(6,2), nullptr, 16);
-                                else color2.a = 255;
-                                valid2 = true;
-                            }
-                            if (valid2) {
-                                auto targetIt = colorTargets.find(explicitTarget);
-                                if (targetIt != colorTargets.end()) {
-                                    *(targetIt->second) = color2;
-                                }
-                            }
-                        }
-                    }
-
-                    // [align={value}]
-                    if (matchedTag == "[align=")
-                    {
-                        std::string alignValue = to_lower(escapeContent);
-                        auto it = stringToLabelAlign_.find(alignValue);
-                        if (it != stringToLabelAlign_.end())
-                        {
-                            currentStyle.alignment = it->second;
-                        }
                         tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
                         i = endPos + 1;
                         continue;
                     }
-
-                    // [size=n]
-                    if (matchedTag == "[size=")
-                    {
-                        int newSize = std::stoi(escapeContent);
-                        if (newSize > 0)
-                        {
-                            fontSize_ = newSize;
-                            currentStyle.fontSize = newSize;
-                        }
-                        tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
-                        i = endPos + 1;
-                        continue;
-                    }
-
-                    // Update currentStyle with new colors
-                    currentStyle.foregroundColor = *colorTargets["fgnd"];
-                    currentStyle.backgroundColor = *colorTargets["bgnd"];
-                    currentStyle.borderColor = *colorTargets["border"];
-                    currentStyle.outlineColor = *colorTargets["outline"];
-                    currentStyle.dropshadowColor = *colorTargets["shadow"];
-
-                    tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
-                    i = endPos + 1;
-                    continue;
                 }
             }
 
@@ -839,91 +850,7 @@ namespace SDOM
                 else { currentStyle.dropshadowOffsetX = defaultStyle_.dropshadowOffsetX; currentStyle.dropshadowOffsetY = defaultStyle_.dropshadowOffsetY; }
             })) continue;
 
-            // Opening numeric tags
-            if (startsWithCI(text_.substr(i), "[border=")) {
-                size_t tagLen = std::string("[border=").size();
-                size_t endPos = text_.find(']', i + tagLen);
-                if (endPos != std::string::npos) {
-                    std::string inner = text_.substr(i + tagLen, endPos - (i + tagLen));
-                    if (is_number(inner)) {
-                        borderThicknessStack.push_back(currentStyle.borderThickness);
-                        currentStyle.borderThickness = std::stoi(inner);
-                        std::string fullEscape = text_.substr(i, endPos - i + 1);
-                        tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
-                        i = endPos + 1;
-                        continue;
-                    }
-                }
-            }
-            if (startsWithCI(text_.substr(i), "[outline=")) {
-                size_t tagLen = std::string("[outline=").size();
-                size_t endPos = text_.find(']', i + tagLen);
-                if (endPos != std::string::npos) {
-                    std::string inner = text_.substr(i + tagLen, endPos - (i + tagLen));
-                    if (is_number(inner)) {
-                        outlineThicknessStack.push_back(currentStyle.outlineThickness);
-                        currentStyle.outlineThickness = std::stoi(inner);
-                        std::string fullEscape = text_.substr(i, endPos - i + 1);
-                        tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
-                        i = endPos + 1;
-                        continue;
-                    }
-                }
-            }
-            if (startsWithCI(text_.substr(i), "[pad=") || startsWithCI(text_.substr(i), "[padding=")) {
-                size_t tagLen = startsWithCI(text_.substr(i), "[pad=") ? std::string("[pad=").size() : std::string("[padding=").size();
-                size_t endPos = text_.find(']', i + tagLen);
-                if (endPos != std::string::npos) {
-                    std::string inner = text_.substr(i + tagLen, endPos - (i + tagLen));
-                    // accept formats like WxH or W x H or W,H
-                    auto findSep = [&](const std::string& s)->size_t {
-                        size_t p = s.find('x'); if (p != std::string::npos) return p;
-                        p = s.find('X'); if (p != std::string::npos) return p;
-                        p = s.find(','); return p;
-                    };
-                    size_t sep = findSep(inner);
-                    if (sep != std::string::npos) {
-                        std::string a = inner.substr(0, sep);
-                        std::string b = inner.substr(sep+1);
-                        // trim spaces
-                        auto trim = [](std::string s){ while(!s.empty() && std::isspace((unsigned char)s.front())) s.erase(s.begin()); while(!s.empty() && std::isspace((unsigned char)s.back())) s.pop_back(); return s; };
-                        a = trim(a); b = trim(b);
-                        if (is_number(a) && is_number(b)) {
-                            paddingStack.push_back({currentStyle.padding_horiz, currentStyle.padding_vert});
-                            currentStyle.padding_horiz = std::stoi(a);
-                            currentStyle.padding_vert = std::stoi(b);
-                            std::string fullEscape = text_.substr(i, endPos - i + 1);
-                            tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
-                            i = endPos + 1;
-                            continue;
-                        }
-                    }
-                }
-            }
-            if (startsWithCI(text_.substr(i), "[dropshadow=")) {
-                size_t tagLen = std::string("[dropshadow=").size();
-                size_t endPos = text_.find(']', i + tagLen);
-                if (endPos != std::string::npos) {
-                    std::string inner = text_.substr(i + tagLen, endPos - (i + tagLen));
-                    // expect X,Y
-                    size_t comma = inner.find(',');
-                    if (comma != std::string::npos) {
-                        std::string a = inner.substr(0, comma);
-                        std::string b = inner.substr(comma+1);
-                        auto trim = [](std::string s){ while(!s.empty() && std::isspace((unsigned char)s.front())) s.erase(s.begin()); while(!s.empty() && std::isspace((unsigned char)s.back())) s.pop_back(); return s; };
-                        a = trim(a); b = trim(b);
-                        if (is_number(a) && is_number(b)) {
-                            dropshadowOffsetStack.push_back({currentStyle.dropshadowOffsetX, currentStyle.dropshadowOffsetY});
-                            currentStyle.dropshadowOffsetX = std::stoi(a);
-                            currentStyle.dropshadowOffsetY = std::stoi(b);
-                            std::string fullEscape = text_.substr(i, endPos - i + 1);
-                            tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
-                            i = endPos + 1;
-                            continue;
-                        }
-                    }
-                }
-            }
+            
 
             // Handle Punctuation
             if (isPunctuation(text_[i]))
