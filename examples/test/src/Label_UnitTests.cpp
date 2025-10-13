@@ -518,9 +518,96 @@ namespace SDOM
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script (mirrors Label_test4 structure, but checks numeric inline escapes)
         auto res = lua.script(R"lua(
-
             -- Label_test6: comprehensive color-escape assertions
+            local name = "unitLabelTest6"
+            local txt = table.concat({
+                "Start ",
+                "[fgnd=lt_red]FRED[/fgnd] ",
+                "[bgnd=lt_blue]BGBLUE[/bgnd] ",
+                "[border=gold]BDGOLD[/border] ",
+                "[outline=md_gray]OLGRAY[/outline] ",
+                "[shadow=00000080]SHALPH[/shadow] ",
+                "[fgnd=FF8800]HEXR[/fgnd] ",
+                "[fgnd=FF880080]HEXRA[/fgnd] ",
+                "[reset]AFTERRESET"
+            })
 
+            -- set distinct defaults so we can assert restoration after [reset]
+            local cfg = {
+                name = name,
+                type = "Label",
+                resource_name = "internal_font_8x8",
+                text = txt,
+                foreground_color = { r = 10, g = 11, b = 12, a = 255 },
+                background_color = { r = 20, g = 21, b = 22, a = 255 },
+                border_color = { r = 30, g = 31, b = 32, a = 255 },
+                outline_color = { r = 40, g = 41, b = 42, a = 255 },
+                dropshadow_color = { r = 50, g = 51, b = 52, a = 128 },
+            }
+
+            local ok = true
+            local err = ""
+
+            local ok_create, h_or_err = pcall(function() return createDisplayObject("Label", cfg) end)
+            if not ok_create then
+                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
+            end
+            local h = h_or_err
+            if not h or not h:isValid() then
+                return { ok = false, err = "failed to create label" }
+            end
+
+            local _ = h:tokenizeText()
+            local tokens = h:getTokenList()
+
+            local function find_word(sub)
+                for i=1,#tokens do
+                    local t = tokens[i]
+                    if t.type == 'word' and tostring(t.text):find(sub, 1, true) then
+                        return i, t
+                    end
+                end
+                return nil, nil
+            end
+
+            local _, tF = find_word('FRED')
+            local _, tBG = find_word('BGBLUE')
+            local _, tBD = find_word('BDGOLD')
+            local _, tOL = find_word('OLGRAY')
+            local _, tSH = find_word('SHALPH')
+            local _, tHEX = find_word('HEXR')
+            local _, tHEXA = find_word('HEXRA')
+            local _, tAF = find_word('AFTERRESET')
+
+            if not (tF and tBG and tBD and tOL and tSH and tHEX and tHEXA and tAF) then
+                return { ok = false, err = 'failed to find expected tokens' }
+            end
+
+            local function expect_color(vec, got, key)
+                if not got then
+                    ok = false
+                    err = err .. string.format('%s missing color; ', tostring(key))
+                    return
+                end
+                if vec.r ~= got.r or vec.g ~= got.g or vec.b ~= got.b or (vec.a and vec.a ~= got.a) then
+                    ok = false
+                    err = err .. string.format('%s mismatch (expected %s,%s,%s,%s got %s,%s,%s,%s); ', tostring(key), tostring(vec.r), tostring(vec.g), tostring(vec.b), tostring(vec.a or 255), tostring(got.r), tostring(got.g), tostring(got.b), tostring(got.a or 255))
+                end
+            end
+
+            -- check colors inside tags (should match named color map / hex values)
+            expect_color({ r=255,g=32,b=32,a=255 }, tF.style.foreground_color, 'fgnd@FRED')           -- lt_red
+            expect_color({ r=32,g=32,b=255,a=255 }, tBG.style.background_color, 'bgnd@BGBLUE')        -- lt_blue
+            expect_color({ r=255,g=215,b=0,a=255 }, tBD.style.border_color, 'border@BDGOLD')         -- gold
+            expect_color({ r=102,g=102,b=102,a=255 }, tOL.style.outline_color, 'outline@OLGRAY')     -- md_gray (102)
+            expect_color({ r=0,g=0,b=0,a=128 }, tSH.style.dropshadow_color, 'shadow@SHALPH')        -- 00000080 (rgba alpha 0x80 = 128)
+            expect_color({ r=0xFF,g=0x88,b=0x00,a=255 }, tHEX.style.foreground_color, 'fgnd@HEXR') -- FF8800
+            expect_color({ r=0xFF,g=0x88,b=0x00,a=0x80 }, tHEXA.style.foreground_color, 'fgnd@HEXRA') -- FF880080
+
+            -- After [reset] the AFTER_RESET token should have default foreground (cfg.foreground_color)
+            expect_color({ r=10,g=11,b=12,a=255 }, tAF.style.foreground_color, 'foreground@AFTERRESET')
+
+            destroyDisplayObject(name)
             return { ok = ok, err = err }
         )lua").get<sol::table>();
         // report and return test condition state

@@ -183,7 +183,7 @@ local config = {
                             outline = true,             -- verified
                             -- outline_thickness = 1,   -- verified
 
-                            text = "The [bold][color=red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river, sunlight catching on ripples as children laugh in the distance. A small breeze stirs the pages of an open book left on the bench, and a bell rings from the town square.",
+                            text = "The [bold][color=lt_red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river, sunlight catching on ripples as children laugh in the distance. A small breeze stirs the pages of an open book left on the bench, and a bell rings from the town square.",
                             -- resource_name = "internal_font_8x8",
                             resource_name = "internal_ttf",  -- internal ttf asset name
                             border = true,

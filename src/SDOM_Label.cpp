@@ -678,12 +678,12 @@ namespace SDOM
                             { "white",      SDL_Color{ 255, 255, 255, 255 } },
 
                             // light colors:
-                            { "lt_red",     SDL_Color{ 255,   0,   0, 255 } },
-                            { "lt_green",   SDL_Color{   0, 255,   0, 255 } },
-                            { "lt_yellow",  SDL_Color{ 255, 255,  96, 255 } },
-                            { "lt_blue",    SDL_Color{   0,   0, 255, 255 } },
-                            { "lt_magenta", SDL_Color{ 255,   0, 255, 255 } },
-                            { "lt_cyan",    SDL_Color{   0,   0, 255, 255 } },
+                            { "lt_red",     SDL_Color{ 255,  32,  32, 255 } },
+                            { "lt_green",   SDL_Color{  32, 255,  32, 255 } },
+                            { "lt_yellow",  SDL_Color{ 255, 255,  32, 255 } },
+                            { "lt_blue",    SDL_Color{  32,  32, 255, 255 } },
+                            { "lt_magenta", SDL_Color{ 255,  32, 255, 255 } },
+                            { "lt_cyan",    SDL_Color{  32, 255, 255, 255 } },
 
                             // normal colors:
                             { "red",        SDL_Color{ 176,   0,   0, 255 } },
