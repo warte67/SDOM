@@ -197,7 +197,9 @@ namespace SDOM
         // runtime/init flags
         setDirty(true); // layout needs building
         lastTokenizedText_.clear();
-        setClickable(get_bool("is_clickable", false)); // Labels are not clickable by default
+        setClickable(get_bool("is_clickable", init.isClickable));
+        setTabPriority(get_int("tab_priority", init.tabPriority));
+        setTabEnabled(get_bool("tab_enabled", init.tabEnabled));
 
         // Resolve font asset by name (store handle only; do not force loading)
         if (!resourceName_.empty())

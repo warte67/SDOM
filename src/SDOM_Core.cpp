@@ -1159,143 +1159,131 @@ namespace SDOM
         return allTestsPassed;
     } // END bool Core::coreTests_()
 
-
     void Core::handleTabKeyPress()
     {
-        // Clear the tabList_
-        while (!tabList_.empty()) {
-            tabList_.pop();
-        }
-
-        // Lambda to recursively add the stage and children to the tabList_ if these nodes are tabEnabled_
-        auto populateTabList = [this](auto& populateTabListRef, DisplayHandle node) -> void 
+        // Collect tab-able objects in a deterministic pre-order into a vector.
+        std::vector<std::pair<DisplayHandle,int>> list; // (handle, originalIndex)
+        int index = 0;
+        std::function<void(DisplayHandle)> collect = [&](DisplayHandle node) 
         {
             if (!node.isValid()) return;
-
-            // Resolve the DisplayHandle to an IDisplayObject*
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(node.get());
             if (!obj) return;
-
-            // Check if the object is tab-enabled and has a valid tab priority
             if (obj->isTabEnabled() && obj->getTabPriority() >= 0) 
             {
-                tabList_.push(node);
+                list.emplace_back(node, index++);
             }
-
-            // Recursively process children
             for (const auto& child : obj->getChildren()) 
             {
-                if (child.isValid()) 
-                {
-                    populateTabListRef(populateTabListRef, child);
-                }
+                collect(child);
             }
         };
+        collect(getStageHandle());
 
-        // Populate the tabList_ starting from the stage
-        DisplayHandle node = getStageHandle();
-        populateTabList(populateTabList, node);
+        if (list.empty()) 
+        {
+            setKeyboardFocusedObject(DisplayHandle());
+            return;
+        }
 
-            // Find the current object (keyboardFocusedObject_) with key focus within the tabList_
-        DisplayHandle currentFocus = keyboardFocusedObject_;
-        DisplayHandle nextFocus;
+        // Sort by tabPriority ascending, tie-breaker = traversal order (original index)
+        std::stable_sort(list.begin(), list.end(),
+            [&](const auto& a, const auto& b)
+            {
+                IDisplayObject* oa = dynamic_cast<IDisplayObject*>(a.first.get());
+                IDisplayObject* ob = dynamic_cast<IDisplayObject*>(b.first.get());
+                int pa = oa ? oa->getTabPriority() : 0;
+                int pb = ob ? ob->getTabPriority() : 0;
+                // Prefer higher tabPriority first (so larger priorities are focused earlier)
+                if (pa != pb) return pa > pb;
+                // Tie-breaker: prefer later traversal items first (higher original index)
+                // This preserves previous LIFO-like ordering where recently added children
+                // were reached earlier when using the stack-based collection.
+                return a.second > b.second;
+            });
 
-        bool foundCurrentFocus = false;
-        std::vector<DisplayHandle> tempList;
+        // Build compact vector of handles
+        std::vector<DisplayHandle> ordered;
+        ordered.reserve(list.size());
+        for (auto &p : list) ordered.push_back(p.first);
 
-        while (!tabList_.empty()) {
-            auto candidate = tabList_.top();
-            tabList_.pop();
-            tempList.push_back(candidate);
-
-            if (candidate == currentFocus) {
-                foundCurrentFocus = true;
-            } else if (foundCurrentFocus) {
-                nextFocus = candidate;
-                break;
+        // find current index
+        int idx = -1;
+        for (size_t i = 0; i < ordered.size(); ++i) 
+        {
+            if (ordered[i] == keyboardFocusedObject_) 
+            { 
+                idx = static_cast<int>(i); break; 
             }
         }
+        // next is (idx+1) mod n, if idx == -1 choose 0
+        DisplayHandle next = ordered[(idx + 1) % ordered.size()];
+        setKeyboardFocusedObject(next);
+    } // END Core::handleTabKeyPress()
 
-        // Wrap around if no next focus is found
-        if (!nextFocus.isValid() && !tempList.empty()) {
-            nextFocus = tempList.front();
-        }
-
-        // Restore tabList_
-        for (const auto& item : tempList) {
-            tabList_.push(item);
-        }
-
-        // Update the current object (keyboardFocusedObject_) to the next entry in the tabList_        
-    setKeyboardFocusedObject(nextFocus);    // keyboardFocusedObject_ = nextFocus;
-    }// END: void Core::handleTabKeyPress(Stage& stage)
 
     void Core::handleTabKeyPressReverse()
     {
-        // Clear the tabList_
-        while (!tabList_.empty()) {
-            tabList_.pop();
-        }
-
-        // Lambda to recursively add the stage and children to the tabList_ if these nodes are tabEnabled_
-        auto populateTabList = [this](auto& populateTabListRef, DisplayHandle node) -> void 
+        // Collect tab-able objects in a deterministic pre-order into a vector.
+        std::vector<std::pair<DisplayHandle,int>> list; // (handle, originalIndex)
+        int index = 0;
+        std::function<void(DisplayHandle)> collect = [&](DisplayHandle node) 
         {
             if (!node.isValid()) return;
-
-            // Resolve the DisplayHandle to an IDisplayObject*
             IDisplayObject* obj = dynamic_cast<IDisplayObject*>(node.get());
             if (!obj) return;
-
-            // Check if the object is tab-enabled and has a valid tab priority
             if (obj->isTabEnabled() && obj->getTabPriority() >= 0) 
             {
-                tabList_.push(node);
+                list.emplace_back(node, index++);
             }
-
-            // Recursively process children
             for (const auto& child : obj->getChildren()) 
             {
-                if (child.isValid()) 
-                {
-                    populateTabListRef(populateTabListRef, child);
-                }
+                collect(child);
             }
         };
+        collect(getStageHandle());
 
-        // Populate the tabList_ starting from the stage
-        DisplayHandle node = getStageHandle();
-        populateTabList(populateTabList, node);
+        if (list.empty()) 
+        {
+            setKeyboardFocusedObject(DisplayHandle());
+            return;
+        }
 
-        // Find the current object (keyboardFocusedObject_) with key focus within the tabList_
-        DisplayHandle currentFocus = keyboardFocusedObject_;
-        DisplayHandle previousFocus;
+        // Sort by tabPriority ascending, tie-breaker = traversal order (original index)
+        std::stable_sort(list.begin(), list.end(),
+            [&](const auto& a, const auto& b)
+            {
+                IDisplayObject* oa = dynamic_cast<IDisplayObject*>(a.first.get());
+                IDisplayObject* ob = dynamic_cast<IDisplayObject*>(b.first.get());
+                int pa = oa ? oa->getTabPriority() : 0;
+                int pb = ob ? ob->getTabPriority() : 0;
+                // Prefer higher tabPriority first (so larger priorities are focused earlier)
+                if (pa != pb) return pa > pb;
+                // Tie-breaker: prefer later traversal items first (higher original index)
+                return a.second > b.second;
+            });
 
-        bool foundCurrentFocus = false;
-        std::vector<DisplayHandle> tempList;
+        // Build compact vector of handles
+        std::vector<DisplayHandle> ordered;
+        ordered.reserve(list.size());
+        for (auto &p : list) ordered.push_back(p.first);
 
-        while (!tabList_.empty()) {
-            auto candidate = tabList_.top();
-            tabList_.pop();
-            tempList.push_back(candidate);
-
-                if (candidate == currentFocus) {
-                foundCurrentFocus = true;
-            } else if (!foundCurrentFocus) {
-                previousFocus = candidate;
+        // find current index
+        int idx = -1;
+        for (size_t i = 0; i < ordered.size(); ++i) 
+        {
+            if (ordered[i] == keyboardFocusedObject_) 
+            { 
+                idx = static_cast<int>(i); break; 
             }
         }
-        // Wrap around if no previous focus is found
-        if (!previousFocus.isValid() && !tempList.empty()) {
-            previousFocus = tempList.back();
-        }
+        // previous is (idx-1 + n) mod n, if idx == -1 choose last
+        int n = static_cast<int>(ordered.size());
+        DisplayHandle prev = (idx == -1) ? ordered.back() : ordered[(idx - 1 + n) % n];
+        setKeyboardFocusedObject(prev);
+    } // END Core::handleTabKeyPressReverse()
 
-        // Restore tabList_
-        for (const auto& item : tempList) {
-            tabList_.push(item);
-        }
-        // Update the current object (keyboardFocusedObject_) to the previous entry in the tabList_
-        setKeyboardFocusedObject(previousFocus);    // keyboardFocusedObject_ = previousFocus;
-    } // END:void Core::handleTabKeyPressReverse(Stage& stage)
+
 
     void Core::setKeyboardFocusedObject(DisplayHandle obj)
     { keyboardFocusedObject_ = obj; }

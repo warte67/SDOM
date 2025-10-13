@@ -635,16 +635,12 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Label logic now always renders at least one line or token, even when the available height or width is too small to fit the full content.
     - Prevents labels from disappearing when their bounds are smaller than the text, ensuring clipped text is still visible.
     - Verified that Labels handle extreme resizing gracefully, maintaining visibility of partial text.
+- **Tab Key Navigation Fixes:**
+    - keyboard [TAB] and [SHIFT_TAB] were hitting on labels. 
+    - The `tab_enabled` and `tab_priority` properties are now working as expected. `Labels` are now not tab stops by default.
 
 ---
 ## Next Steps:
-- **Resize Event Propagation (WIP):**
-    - Identified missed resize events in the display tree: base `IDisplayObject` now needs to dispatch a resize event whenever its bounds change.
-    - Child nodes should receive and respond to parent resize events, enabling dynamic layout and responsive UI updates.
-    - Next steps: implement resize event dispatch in `IDisplayObject::setBounds()` and ensure children listen and react to these events for proper layout propagation.
-    - `IDisplayObject` resizes need to dispatch a resize event to children.
-- keyboard [TAB] and [SHIFT_TAB] are hitting on labels (verify). We need to make sure that `Labels` are not tab stops by default.
-- Optimize Label rendering performance and batching by rendering to textures and reusing them when not dirty.
 - Add unit tests for `Label` rendering, resizing, and font scaling edge cases.
 - Expand Lua test coverage for asset creation and configuration parsing.
 - Document the new startup pattern and resource creation workflows in the README and docs.
