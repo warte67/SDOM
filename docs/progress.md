@@ -643,21 +643,50 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Selection now uses a stable lexicographic rule (z-order primary, depth secondary, traversal sequence tertiary) so the topmost clickable object under the mouse is chosen reliably.
 
 ---
+## [October 13, 2025]
+- Added inline numeric style escapes to Label tokenization:
+  - `[border=N]`, `[outline=N]`, `[pad=WxH]` / `[padding=WxH]`, `[dropshadow=X,Y]`
+  - Parser accepts optional spaces (e.g. `[border = 3]`, `[border=    3]`) and single-number shorthand for padding.
+  - Implemented per-field stacks so nested tags restore previous values correctly.
+  - Defensive numeric parsing (validated before stoi) to avoid exceptions.
+
+- Tokenizer robustness and normalization:
+  - Centralized and normalized escape parsing (trimmed params, alias support for `pad`/`padding`).
+  - Ensured numeric forms have precedence where appropriate while preserving existing color/escape semantics.
+
+- Color palette and mapping updates:
+  - Added `md_gray` (102) to complete the 6-step grayscale ramp.
+  - Extended color map with many named colors (tan, orange, brown, gold, bronze, lime, mint, sea_green, royal_blue, etc.).
+  - Documented named colors and hex escapes (`[RGB=rrggbb]`, `[RGBA=rrggbbaa]`) in label_text_parsing.md.
+
+- Tests
+  - Implemented Label_test1() to validate internal resources created.
+  - Implemented Label_test2() to validate SpriteSheet/BitmapFont asset existence and metrics
+  - Implemented Label_test3() to validate SpriteSheet/BitmapFont asset existence and metrics (LUA)
+  - Implemented Label_test4() to validate Label word/phrase style flags tokenization and inspection
+  - Implemented Label_test5() to validate numeric-style escapes (border/outlines/padding/dropshadow) via Lua unit test.
+  - Implemented Label_test6() to validate color-target escapes (`[fgnd=]`, `[bgnd=]`, `[border=]`, `[outline=]`, `[shadow=]`) using named and hex colors.
+  - Removed temporary debug output from tests.
+  - Built and ran the test suite; label-related tests (including new tests) passed locally.
+
+- Docs and cleanup
+  - Updated docs/label_text_parsing.md with numeric escape syntax, semantics, examples, and the full color list.
+  - Removed debug prints and cleaned up temporary diagnostics used during development.
+
+---
 ## Next Steps:
-- Add unit tests for `Label` rendering, resizing, and font scaling edge cases.
-- Expand Lua test coverage for asset creation and configuration parsing.
-- Document the new startup pattern and resource creation workflows in the README and docs.
-- Update examples to use the new explicit startup and resource creation methods.
-- Continue refactoring asset/resource management (AssetHandle system).
-- Expand unit tests for edge cases in Label rendering and event handling.
-- Update architecture diagrams and documentation to reflect recent naming and API changes.
-- Visual rendering not fully verified: code loads assets and unit tests pass, but visual rendering should be manually confirmed.
-- Ensure `TTF_Init()` runs before any code that creates/loads `TTFAsset` instances; current ordering appears correct (TTF_WasInit() == 1).
-- File-based TTF loads log SDL errors on failure; consider automatic fallback to bitmap if desired.
-- No dedicated unit tests yet for TTFAsset/TruetypeFont; recommend adding an integration test asserting default_ttf is loaded and TTF_Font* is non-null.
+- refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test1()` → `Label_test1()`).
+- Add unit tests for malformed/edge-case escapes (invalid hex, missing params, negative values).
+- Add nested-tag stress tests to exercise stack behavior further.
+- Optionally update README / changelog and open a PR for review.
 
 ---
 ## ToDo:
+- Document the new startup pattern and resource creation workflows in the README and docs.
+- Update examples to use the new explicit startup and resource creation methods.
+- Update architecture diagrams and documentation to reflect recent naming and API changes.
+- Visual rendering not fully verified: code loads assets and unit tests pass, but visual rendering should be manually confirmed.
+- No dedicated unit tests yet for TTFAsset/TruetypeFont; recommend adding an integration test asserting default_ttf is loaded and TTF_Font* is non-null.
 - Verify and document verious start up scenarios (C++ only, Lua only, mixed).
 - Update architecture diagrams and markdown docs to replace old identifiers with the new Handle names.
 - Verify Label / IDisplayObject constructor default merging (Label::Label(sol::table&)).
