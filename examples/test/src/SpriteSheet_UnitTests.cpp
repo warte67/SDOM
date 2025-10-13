@@ -10,88 +10,65 @@ namespace SDOM
 
     bool SpriteSheet_test0()
     {
-        // SpriteSheet Scaffold: SpriteSheet Unit Test Scaffolding
+        std::string testName = "SpriteSheet #0";
+        std::string testDesc = "SpriteSheet Unit Test Scaffolding";
         sol::state& lua = getLua();
-        bool ok = false;
-        try {
-            // run a simple Lua chunk that returns a boolean and read it safely
-            auto result = lua.script(R"(
-                -- NO OP here, just scaffolding
-                return true
-            )");
-            ok = result.get<bool>();
-        } catch (const sol::error& e) {
-            // log the Lua error and mark test as failed
-            std::cerr << "[SpriteSheet Scaffold] Lua error: " << e.what() << std::endl;
-            ok = false;
-        }
-        return UnitTests::run("SpriteSheet #0", "SpriteSheet Unit Test Scaffolding", [=]() { return ok; });
-    }
+        // Lua test script
+        auto res = lua.script(R"lua(
+                -- return { ok = false, err = "unknown error" }
+                return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: SpriteSheet_test0()
+
 
     bool SpriteSheet_test1()
     {
-        bool ok = true;
-        Factory& factory = getFactory();
+        std::string testName = "SpriteSheet #1";
+        std::string testDesc = "create via InitStruct (basic AssetHandle/IAssetObject checks)";
+        sol::state& lua = getLua();
+        // Lua test script performs the same checks as the previous C++ test body.
+        auto res = lua.script(R"lua(
+            local ok = false
+            local err = ""
+            local function do_test()
+                local ss = Core:createAsset("SpriteSheet", {
+                    type = "SpriteSheet",
+                    name = "ut_bmp8",
+                    filename = "internal_font_8x8",
+                    spriteWidth = 8,
+                    spriteHeight = 8
+                })
+                if not ss then error("createAsset returned nil") end
+                if ss:getSpriteWidth() ~= 8 then error("spriteWidth mismatch: " .. tostring(ss:getSpriteWidth())) end
+                if ss:getSpriteHeight() ~= 8 then error("spriteHeight mismatch: " .. tostring(ss:getSpriteHeight())) end
+                if ss:getName() ~= "ut_bmp8" then error("name mismatch: " .. tostring(ss:getName())) end
+                local count = ss:getSpriteCount()
+                if count <= 0 then error("spriteCount invalid: " .. tostring(count)) end
+                -- check first and last index computations (bounds)
+                local x0 = ss:getSpriteX(0)
+                local y0 = ss:getSpriteY(0)
+                local xl = ss:getSpriteX(count - 1)
+                local yl = ss:getSpriteY(count - 1)
+                if not x0 or not y0 or not xl or not yl then error("sprite index calculations failed") end
+                return true
+            end
+            -- run the test
+            local status, msg = pcall(do_test)
+            if not status then err = tostring(msg) else ok = true end
+            return { ok = ok, err = err }
+        )lua").get<sol::table>();
 
-        // Test 1: create via InitStruct (basic AssetHandle/IAssetObject checks)
-        ok = ok && UnitTests::run("SpriteSheet #1", "create via InitStruct (basic AssetHandle/IAssetObject checks)", [&factory]() -> bool 
-        {
-            SpriteSheet::InitStruct init;
-            init.name = "ut_bmp8";
-            init.type = SpriteSheet::TypeName;
-            init.filename = "internal_font_8x8";
-            init.spriteWidth  = 8;
-            init.spriteHeight = 8;
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: SpriteSheet_test1()
 
-            AssetHandle asset = factory.createAsset("SpriteSheet", init);
-            if (!asset.isValid()) return false;
-
-            SpriteSheet* ss = asset.as<SpriteSheet>();
-            if (!ss) return false;
-
-            if (ss->getSpriteWidth() != 8) {
-                FAIL("SpriteSheet_test1: spriteWidth mismatch: " + std::to_string(ss->getSpriteWidth()));
-                return false;
-            }
-            if (ss->getSpriteHeight() != 8) {
-                FAIL("SpriteSheet_test1: spriteHeight mismatch: " + std::to_string(ss->getSpriteHeight()));
-                return false;
-            }
-            if (ss->getName() != "ut_bmp8") {
-                FAIL("SpriteSheet_test1: name mismatch: " + ss->getName());
-                return false;
-            }
-
-            // attempt load (may throw via ERROR->Exception). catch and fail cleanly.
-            try { ss->onLoad(); }  
-            catch (const SDOM::Exception& e) { FAIL(std::string("SpriteSheet_test1: onLoad() exception: ") + e.what()); return false; } 
-            catch (...) { FAIL("SpriteSheet_test1: onLoad() threw exception"); return false; }
-
-            // basic texture-backed queries (if texture loaded)
-            int count = 0;
-            try { count = ss->getSpriteCount(); } 
-            catch (const SDOM::Exception& e) { FAIL(std::string("SpriteSheet_test1: getSpriteCount() exception: ") + e.what()); return false; } 
-            catch (...) { FAIL("SpriteSheet_test1: getSpriteCount() threw exception"); return false; }
-            if (count <= 0) return false;
-
-            // check first and last index computations (bounds)
-            try 
-            {
-                int x0 = ss->getSpriteX(0);
-                int y0 = ss->getSpriteY(0);
-                int xl = ss->getSpriteX(count - 1);
-                int yl = ss->getSpriteY(count - 1);
-                (void)x0; (void)y0; (void)xl; (void)yl;
-            } 
-            catch (const SDOM::Exception& e) { FAIL(std::string("SpriteSheet_test1: getSpriteX/Y() exception: ") + e.what()); return false; }                  
-            catch (...) { FAIL("SpriteSheet_test1: getSpriteX/Y() threw exception"); return false; }
-
-            // cleanup
-            ss->onUnload();
-            return true;
-        });
-        return ok;
-    }
 
     bool SpriteSheet_test2()
     {
