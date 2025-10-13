@@ -638,6 +638,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Tab Key Navigation Fixes:**
     - keyboard [TAB] and [SHIFT_TAB] were hitting on labels. 
     - The `tab_enabled` and `tab_priority` properties are now working as expected. `Labels` are now not tab stops by default.
+- **Event Hit-Testing Fix:**
+    - Fixed bug in EventManager::findTopObjectUnderMouse: the hidden-state check now uses the current node (`node.isHidden()`) instead of `rootNode`, and selection tie-breaks are deterministic.
+    - Selection now uses a stable lexicographic rule (z-order primary, depth secondary, traversal sequence tertiary) so the topmost clickable object under the mouse is chosen reliably.
 
 ---
 ## Next Steps:

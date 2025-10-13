@@ -58,8 +58,8 @@ namespace SDOM
         // that filename when initialized. Pre-creating a Texture with the same
         // registry name conflicts with BitmapFont's intended resource name.
 
-        {   // register the default_icon_8x8 Texture (skip if already created)
-            const std::string defaultIconName = "default_icon_8x8";
+        {   // register the internal_icon_8x8 Texture (skip if already created)
+            const std::string defaultIconName = "internal_icon_8x8";
             if (!getResObj(defaultIconName)) {
                 Texture::InitStruct init;
                 init.name = defaultIconName;
@@ -881,7 +881,7 @@ namespace SDOM
             const auto& assetObject = pair.second;
             std::cout << "  Name: " << name
                     << ", Type: " << (assetObject ? assetObject->getType() : "Unknown")
-                    << ", \n  Filename: " << (assetObject ? assetObject->getFilename() : "Unknown")
+                    << ", Filename: " << (assetObject ? assetObject->getFilename() : "Unknown")
                     << "\n";
         }
         std::cout << "Total asset objects: " << assetObjects_.size() << std::endl;

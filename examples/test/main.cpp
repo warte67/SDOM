@@ -97,6 +97,7 @@ int main(int argc, char** argv)
     lua["Event_UnitTests"] = &SDOM::Event_UnitTests;
     lua["GarbageCollection_UnitTests"] = &SDOM::GarbageCollection_UnitTests;
     lua["SpriteSheet_UnitTests"] = &SDOM::SpriteSheet_UnitTests;
+    lua["Label_UnitTests"] = &SDOM::Label_UnitTests;
     
     // Allow overriding which Lua config to run via command-line.
     // Priority:

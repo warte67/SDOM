@@ -277,26 +277,47 @@ namespace SDOM
     {
         DisplayHandle targetHandle; // Reset target handle
         int maxDepth = -1;      // Track the maximum depth of the target node
+        int maxZ = std::numeric_limits<int>::min();
+        int maxSeq = -1;
+        int seqCounter = 0;
+
         auto traverse = [&](DisplayHandle nodeHandle, int depth, auto& self) -> void 
         {
             if (!nodeHandle || nodeHandle == excludeNode) return;
             auto& node = *nodeHandle; // Dereference DisplayHandle to get IDisplayObject&
-            if (rootNode->isHidden())
+            ++seqCounter; // visitation sequence (monotonic)
+            int seqNow = seqCounter;
+
+            if (node.isHidden())
                 return;
-            // Only consider node as a candidate if it is clickable
+
+            // Only consider node as a candidate if it is clickable and under mouse
             if (node.isClickable() && isMouseWithinBounds(node)) 
             {
-                if (!targetHandle || depth > maxDepth || 
-                    (depth == maxDepth && node.getZOrder() > (*targetHandle).getZOrder())) 
-                {
+                int z = node.getZOrder();
+                bool take = false;
+                if (!targetHandle) {
+                    take = true;
+                } else if (z > maxZ) {
+                    take = true;
+                } else if (z == maxZ) {
+                    if (depth > maxDepth) take = true;
+                    else if (depth == maxDepth && seqNow > maxSeq) take = true;
+                }
+
+                if (take) {
                     targetHandle = nodeHandle;
                     maxDepth = depth;
+                    maxZ = z;
+                    maxSeq = seqNow;
                 }
             }
-            // Always traverse children, even if node is not clickable
+
+            // Traverse children (depth-first)
             for (const auto& child : nodeHandle->getChildren()) 
                 self(child, depth + 1, self);
         };
+
         getCore().setIsTraversing(true);
         traverse(rootNode, 0, traverse);
         getCore().setIsTraversing(false);
@@ -305,7 +326,8 @@ namespace SDOM
         if (!targetHandle)
             targetHandle = rootNode; 
         return targetHandle;
-    }
+    }  // END: findTopObjectUnderMouse()
+
 
     
     void EventManager::Queue_SDL_Event(SDL_Event& sdlEvent) 
