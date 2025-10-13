@@ -1540,8 +1540,8 @@ if (LABEL_DEBUG)
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
-        // sol::table handle = AssetHandle::ensure_handle_table(lua);
+        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
+        sol::table handle = DisplayHandle::ensure_handle_table(lua);
 
         // // Helper to check if a property/command is already registered
         // auto absent = [&](const char* name) -> bool {
@@ -1557,20 +1557,119 @@ if (LABEL_DEBUG)
         // };
 
         // // small helper to validate and cast the AssetHandle -> Label*
-        // auto cast_label_from_asset = [](const AssetHandle& asset) -> Label* {
-        //     if (!asset.isValid()) { ERROR("invalid AssetHandle provided to Label method"); }
-        //     IAssetObject* base = asset.get();
-        //     Label* label = dynamic_cast<Label*>(base);
-        //     if (!label) { ERROR("invalid Label object"); }
-        //     return label;
-        // };
+            // Helper to check if a property/command is already registered (reuse pattern from IDisplayObject)
+            auto absent = [&](const char* name) -> bool {
+                sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+                return !cur.valid() || cur == sol::lua_nil;
+            };
 
-        // // Register Label-specific properties and commands here (bridge from AssetHandle handle)
-        // reg("setLabelWidth", [cast_label_from_asset](AssetHandle asset, int w) { cast_label_from_asset(asset)->setLabelWidth(w); });
-        // reg("setLabelHeight", [cast_label_from_asset](AssetHandle asset, int h) { cast_label_from_asset(asset)->setLabelHeight(h); });
-        // ...
+            // small helper to validate and cast the DisplayHandle -> Label*
+            auto cast_label_from_handle = [](DisplayHandle& h) -> Label* {
+                if (!h.isValid()) { ERROR("invalid DisplayHandle provided to Label method"); }
+                IDisplayObject* base = dynamic_cast<IDisplayObject*>(h.get());
+                Label* label = dynamic_cast<Label*>(base);
+                if (!label) { ERROR("invalid Label object"); }
+                return label;
+            };
 
+            // Register Label inspection accessors on the DisplayHandle shared table
+            if (absent("getTokenList")) {
+                handle.set_function("getTokenList", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
+                    Label* lbl = cast_label_from_handle(self);
+                    sol::state_view sv = SDOM::Core::getInstance().getLua();
+                    sol::table t = sv.create_table();
+                    const auto& list = lbl->getTokenList();
+                    int idx = 1;
+                    for (const auto& tk : list) {
+                        sol::table e = sv.create_table();
+                        // expose type as string for readability
+                        std::string typeStr;
+                        switch (tk.type) {
+                            case Label::TokenType::Word: typeStr = "word"; break;
+                            case Label::TokenType::Escape: typeStr = "escape"; break;
+                            case Label::TokenType::Space: typeStr = "space"; break;
+                            case Label::TokenType::Punctuation: typeStr = "punct"; break;
+                            case Label::TokenType::Newline: typeStr = "newline"; break;
+                            case Label::TokenType::Tab: typeStr = "tab"; break;
+                            default: typeStr = "unknown"; break;
+                        }
+                        e["type"] = typeStr;
+                        e["text"] = tk.text;
+                        // minimal style exposure: fontSize and alignment
+                        sol::table style = sv.create_table();
+                        style["fontSize"] = tk.style.fontSize;
+                        style["align"] = Label::labelAlignToString_.at(tk.style.alignment);
+                        e["style"] = style;
+                        t[idx++] = e;
+                    }
+                    return t;
+                });
+            }
 
+            if (absent("getLastTokenizedText")) {
+                handle.set_function("getLastTokenizedText", [cast_label_from_handle](DisplayHandle& self) -> std::string {
+                    Label* lbl = cast_label_from_handle(self);
+                    return lbl->getLastTokenizedText();
+                });
+            }
+
+            if (absent("getTokenAlignLists")) {
+                handle.set_function("getTokenAlignLists", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
+                    Label* lbl = cast_label_from_handle(self);
+                    sol::state_view sv = SDOM::Core::getInstance().getLua();
+                    sol::table out = sv.create_table();
+                    const auto& m = lbl->getTokenAlignLists();
+                    int outer = 1;
+                    for (const auto& [align, vec] : m) {
+                        sol::table inner = sv.create_table();
+                        int i = 1;
+                        for (const auto& tk : vec) {
+                            sol::table e = sv.create_table();
+                            std::string typeStr;
+                            switch (tk.type) {
+                                case Label::TokenType::Word: typeStr = "word"; break;
+                                case Label::TokenType::Escape: typeStr = "escape"; break;
+                                case Label::TokenType::Space: typeStr = "space"; break;
+                                case Label::TokenType::Punctuation: typeStr = "punct"; break;
+                                case Label::TokenType::Newline: typeStr = "newline"; break;
+                                case Label::TokenType::Tab: typeStr = "tab"; break;
+                                default: typeStr = "unknown"; break;
+                            }
+                            e["type"] = typeStr;
+                            e["text"] = tk.text;
+                            inner[i++] = e;
+                        }
+                        out[outer++] = inner;
+                    }
+                    return out;
+                });
+            }
+
+            if (absent("getPhraseAlignLists")) {
+                handle.set_function("getPhraseAlignLists", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
+                    Label* lbl = cast_label_from_handle(self);
+                    sol::state_view sv = SDOM::Core::getInstance().getLua();
+                    sol::table out = sv.create_table();
+                    const auto& m = lbl->getPhraseAlignLists();
+                    int outer = 1;
+                    for (const auto& [align, vec] : m) {
+                        sol::table inner = sv.create_table();
+                        int i = 1;
+                        for (const auto& ph : vec) {
+                            sol::table e = sv.create_table();
+                            e["text"] = ph.text;
+                            e["lineIndex"] = ph.lineIndex;
+                            e["startX"] = ph.startX;
+                            e["lineY"] = ph.lineY;
+                            e["width"] = ph.width;
+                            e["height"] = ph.height;
+                            inner[i++] = e;
+                        }
+                        out[outer++] = inner;
+                    }
+                    return out;
+                });
+            }
 
     } // END Label::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

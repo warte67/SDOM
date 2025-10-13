@@ -203,6 +203,7 @@ namespace SDOM
         void renderLabel();
         void renderLabelPass(RenderPass pass);
 
+
     protected:
 
         friend Factory;
@@ -218,18 +219,18 @@ namespace SDOM
         FontStyle defaultStyle_;    // default style for the label
         std::string resourceName_;  // Optional resource name for preloaded font
 
-    // Flags to indicate whether the user explicitly provided per-axis
-    // bitmap font metrics in the Lua config. If false, we will default
-    // to the backing SpriteSheet's spriteWidth/spriteHeight in onInit().
-    bool userFontWidthSpecified_ = false;
-    bool userFontHeightSpecified_ = false;
+        // Flags to indicate whether the user explicitly provided per-axis
+        // bitmap font metrics in the Lua config. If false, we will default
+        // to the backing SpriteSheet's spriteWidth/spriteHeight in onInit().
+        bool userFontWidthSpecified_ = false;
+        bool userFontHeightSpecified_ = false;
 
         SDL_Texture* cachedTexture_ = nullptr;
 
-        // first pass token list
+        // --- first pass token list --- //
         std::vector<LabelToken> tokenList;
 
-        // second pass token alignment lists
+        // --- second pass token alignment lists --- //
         enum class AlignQueue : uint8_t 
         {
             TOP_LEFT        = 0b0000,
@@ -270,16 +271,24 @@ namespace SDOM
         };
         std::map<AlignQueue, std::vector<LabelToken>> tokenAlignLists_;
 
-        // final pass phrase alignment lists
+        // --- final pass phrase alignment lists --- //
         std::map<AlignQueue, std::vector<PhraseToken>> phraseAlignLists_;
 
-        // Helper to build alignment lists from tokenList
+    public:
+        // --- Accessors for unit tests / inspection --- //
+        const std::vector<LabelToken>& getTokenList() const { return tokenList; }
+        const std::string& getLastTokenizedText() const { return lastTokenizedText_; }
+        const std::map<AlignQueue, std::vector<LabelToken>>& getTokenAlignLists() const { return tokenAlignLists_; }
+        const std::map<AlignQueue, std::vector<PhraseToken>>& getPhraseAlignLists() const { return phraseAlignLists_; }        
+
+    protected:
+        // --- Helpers to build alignment lists from tokenList --- //
         void _buildTokenAlignLists();               // Helper to build alignment lists from tokenList
         void _debugToken(const LabelToken& token);  // Helper to print token info for debugging
         void _maxSize(float& width, float& height); // Helper to calculate max size needed
         void _buildPhraseAlignLists();              // Helper to build phrase groups from tokenAlignLists_
 
-        // Utility function to determine if cachedTexture_ needs to be rebuilt
+        // --- Utility function to determine if cachedTexture_ needs to be rebuilt --- //
         SDL_PixelFormat current_pixel_format = SDL_PIXELFORMAT_UNKNOWN;
         int current_width = 0;
         int current_height = 0;     
@@ -290,8 +299,6 @@ namespace SDOM
 
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
-
-
     };
 
 } // namespace SDOM
