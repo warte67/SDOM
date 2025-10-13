@@ -393,24 +393,39 @@ namespace SDOM
     bool Label_test5()
     {
         std::string testName = "Label #5";
-        std::string testDesc = "Label word/phrase thickness/padding/offset tokenization and inspection";
+        std::string testDesc = "Label word/phrase border/outline/pad/dropshadow tokenization and inspection";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        // Lua test script
+        // Lua test script (mirrors Label_test4 structure, but checks numeric inline escapes)
         auto res = lua.script(R"lua(
-            -- Label_test5: verify numeric style fields propagate into token.style
             local name = "unitLabelTest5"
-            local txt = "Numeric test ONE TWO THREE"
+            local txt = table.concat({
+                "Pre ",
+                "[border=3]B3 ",
+                "[outline=2]BO32 ",
+                "[pad=4x6]P46 ",
+                "[dropshadow=5,7]D57 ",
+                "INNER ",
+                "[/outline]O2off ",
+                "NEST ",
+                "[border=1]B1 ",
+                "[/border]B3back ",
+                "[/pad]Pdef ",
+                "[/dropshadow]Ddef ",
+                "[/border]Bdef ",
+                "Post"
+            })
             local cfg = {
                 name = name,
                 type = "Label",
                 resource_name = "internal_font_8x8",
                 text = txt,
-                border_thickness = 3,
-                outline_thickness = 2,
-                padding_horiz = 5,
-                padding_vert = 7,
-                dropshadow_offset_x = 4,
-                dropshadow_offset_y = 6,
+                -- default numeric values to 0 so restoration lands at 0
+                border_thickness = 0,
+                outline_thickness = 0,
+                padding_horiz = 0,
+                padding_vert = 0,
+                dropshadow_offset_x = 0,
+                dropshadow_offset_y = 0,
             }
 
             local ok = true
@@ -425,53 +440,66 @@ namespace SDOM
                 return { ok = false, err = "failed to create label" }
             end
 
-            -- Force tokenization
-            local ok_tok, tok_err = pcall(function() return h:tokenizeText() end)
-            if not ok_tok then
-                return { ok = false, err = "tokenizeText failed: " .. tostring(tok_err) }
-            end
+            local _ = h:tokenizeText()
+            local tokens = h:getTokenList()
 
-            local ok_list, list_or_err = pcall(function() return h:getTokenList() end)
-            if not ok_list then
-                return { ok = false, err = "getTokenList failed: " .. tostring(list_or_err) }
-            end
-            local tokens = list_or_err
-            if not tokens or type(tokens) ~= "table" then
-                return { ok = false, err = "getTokenList did not return a table" }
-            end
-
-            -- Find the first word token to inspect style numeric fields
-            local word_idx = nil
-            for i = 1, #tokens do
-                if tokens[i].type == "word" then
-                    word_idx = i
-                    break
+            -- helper to find first word token containing a substring
+            local function find_word(sub)
+                for i=1,#tokens do
+                    local t = tokens[i]
+                    if t.type == 'word' and tostring(t.text):find(sub, 1, true) then
+                        return i, t
+                    end
                 end
-            end
-            if not word_idx then
-                destroyDisplayObject(name)
-                return { ok = false, err = "no word token found" }
+                return nil, nil
             end
 
-            local s = tokens[word_idx].style or {}
-            -- expected numeric values from cfg above
-            local expected = {
-                border_thickness = 3,
-                outline_thickness = 2,
-                padding_horiz = 5,
-                padding_vert = 7,
-                dropshadow_offset_x = 4,
-                dropshadow_offset_y = 6,
-            }
+            local _, tB3 = find_word('B3')
+            local _, tBO32 = find_word('BO32')
+            local _, tP46 = find_word('P46')
+            local _, tD57 = find_word('D57')
+            local _, tO2off = find_word('O2off')
+            local _, tB1 = find_word('B1')
+            local _, tB3back = find_word('B3back')
+            local _, tPdef = find_word('Pdef')
+            local _, tDdef = find_word('Ddef')
+            local _, tBdef = find_word('Bdef')
 
-            for k, v in pairs(expected) do
-                local got = s[k]
-                if not got and got ~= 0 then got = 0 end
-                if got ~= v then
+            if not (tB3 and tBO32 and tP46 and tD57 and tO2off and tB1 and tB3back and tPdef and tDdef and tBdef) then
+                return { ok = false, err = 'failed to find expected tokens' }
+            end
+
+            local function expect(val, got, key)
+                if got ~= val then
                     ok = false
-                    err = err .. string.format("style.%s mismatch (expected %s got %s); ", tostring(k), tostring(v), tostring(got))
+                    err = err .. string.format('%s mismatch (expected %s got %s); ', tostring(key), tostring(val), tostring(got))
                 end
             end
+
+            -- Assertions: values after opens
+            expect(3, tB3.style.border_thickness, 'border_thickness@B3')
+            expect(3, tBO32.style.border_thickness, 'border_thickness@BO32')
+            expect(2, tBO32.style.outline_thickness, 'outline_thickness@BO32')
+            expect(4, tP46.style.padding_horiz, 'padding_horiz@P46')
+            expect(6, tP46.style.padding_vert, 'padding_vert@P46')
+            expect(5, tD57.style.dropshadow_offset_x, 'dropshadow_offset_x@D57')
+            expect(7, tD57.style.dropshadow_offset_y, 'dropshadow_offset_y@D57')
+
+            -- After [/outline], border still 3, outline restored (0)
+            expect(3, tO2off.style.border_thickness, 'border_thickness@O2off')
+            expect(0, tO2off.style.outline_thickness, 'outline_thickness@O2off')
+
+            -- Nested border=1 while outer border=3
+            expect(1, tB1.style.border_thickness, 'border_thickness@B1')
+            -- After closing inner [/border], back to 3
+            expect(3, tB3back.style.border_thickness, 'border_thickness@B3back')
+            -- After [/pad] and [/dropshadow] restore to defaults (0,0)
+            expect(0, tPdef.style.padding_horiz, 'padding_horiz@Pdef')
+            expect(0, tPdef.style.padding_vert, 'padding_vert@Pdef')
+            expect(0, tDdef.style.dropshadow_offset_x, 'dropshadow_offset_x@Ddef')
+            expect(0, tDdef.style.dropshadow_offset_y, 'dropshadow_offset_y@Ddef')
+            -- After final [/border] outer close, border back to default (0)
+            expect(0, tBdef.style.border_thickness, 'border_thickness@Bdef')
 
             destroyDisplayObject(name)
             return { ok = ok, err = err }
@@ -495,7 +523,7 @@ namespace SDOM
             [&]() { return Label_test2(); },    // SpriteSheet/BitmapFont asset existence and metrics
             [&]() { return Label_test3(); },    // SpriteSheet/BitmapFont asset existence and metrics (LUA)
             [&]() { return Label_test4(); },    // Label word/phrase style flags tokenization and inspection
-            [&]() { return Label_test5(); },    // Label word/phrase thickness/padding/offset tokenization and inspection
+            [&]() { return Label_test5(); },    // Label word/phrase border/outline/pad/dropshadow tokenization and inspection
         };
         for (auto& test : tests) 
         {

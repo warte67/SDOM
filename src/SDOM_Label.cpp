@@ -587,10 +587,31 @@ namespace SDOM
             if (handleEscape(i, 9, "[/strike]", [&]{ currentStyle.strikethrough = false; })) continue;
 
             if (handleEscape(i, 9, "[outline]", [&]{ currentStyle.outline = true; })) continue;
-            if (handleEscape(i, 10, "[/outline]", [&]{ currentStyle.outline = false; })) continue;
+            if (handleEscape(i, 10, "[/outline]", [&]{
+                // Toggle outline boolean AND restore outline thickness if we had a numeric override
+                currentStyle.outline = false;
+                if (!outlineThicknessStack.empty()) {
+                    currentStyle.outlineThickness = outlineThicknessStack.back();
+                    outlineThicknessStack.pop_back();
+                } else {
+                    currentStyle.outlineThickness = defaultStyle_.outlineThickness;
+                }
+            })) continue;
 
             if (handleEscape(i, 12, "[dropshadow]", [&]{ currentStyle.dropshadow = true; })) continue;
-            if (handleEscape(i, 13, "[/dropshadow]", [&]{ currentStyle.dropshadow = false; })) continue;
+            if (handleEscape(i, 13, "[/dropshadow]", [&]{
+                // Toggle dropshadow boolean AND restore numeric offsets if they were overridden
+                currentStyle.dropshadow = false;
+                if (!dropshadowOffsetStack.empty()) {
+                    auto d = dropshadowOffsetStack.back();
+                    dropshadowOffsetStack.pop_back();
+                    currentStyle.dropshadowOffsetX = d.first;
+                    currentStyle.dropshadowOffsetY = d.second;
+                } else {
+                    currentStyle.dropshadowOffsetX = defaultStyle_.dropshadowOffsetX;
+                    currentStyle.dropshadowOffsetY = defaultStyle_.dropshadowOffsetY;
+                }
+            })) continue;
 
             if (text_.substr(i, 7) == "[reset]")
             {
@@ -628,6 +649,28 @@ namespace SDOM
                 {
                     std::string escapeContent = text_.substr(i + tagLen, endPos - (i + tagLen));
                     std::string fullEscape = text_.substr(i, endPos - i + 1);
+
+                    // Special-case: numeric thickness for border/outline (e.g., [border=3], [outline=2])
+                    if ((matchedTag == "[border=" || matchedTag == "[outline=") && !escapeContent.empty()) {
+                        auto is_number_local = [](const std::string& s) {
+                            size_t start = 0;
+                            if (s.size() > 0 && (s[0] == '+' || s[0] == '-')) start = 1;
+                            if (start >= s.size()) return false;
+                            return std::all_of(s.begin() + start, s.end(), [](unsigned char c){ return std::isdigit(c); });
+                        };
+                        if (is_number_local(escapeContent)) {
+                            if (matchedTag == "[border=") {
+                                borderThicknessStack.push_back(currentStyle.borderThickness);
+                                currentStyle.borderThickness = std::stoi(escapeContent);
+                            } else {
+                                outlineThicknessStack.push_back(currentStyle.outlineThickness);
+                                currentStyle.outlineThickness = std::stoi(escapeContent);
+                            }
+                            tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
+                            i = endPos + 1;
+                            continue;
+                        }
+                    }
 
                     // Color name map
                     std::unordered_map<std::string, SDL_Color> colorIDs = {
