@@ -125,7 +125,7 @@ Escape sequences are not rendered as text, but affect the rendering of subsequen
 - `[size=8]`  — Sets the font size to 8 (e.g., for retro bitmap fonts).
 
   Note: Inter text size escapes are supported at the beginning of the text string only.  Adding size changes mid string may have undefined results.
-  
+
 ---
 
 ## Numeric Style Escapes (border / outline / padding / dropshadow)
@@ -136,7 +136,11 @@ These escapes allow inline control of numeric rendering parameters that affect p
 ### Syntax
 - `[border=N] ... [/border]` — set border thickness to N for the enclosed tokens.
 - `[outline=N] ... [/outline]` — set outline thickness to N for the enclosed tokens.
-- `[pad=WxH] ... [/pad]` or `[padding=WxH] ... [/padding]` — set horizontal and vertical padding to W and H.
+- `[pad=WxH] ... [/pad]` (alias) or `[padding=WxH] ... [/padding]` — set horizontal and vertical padding to W and H.
+- Parameter variants:
+  - `W` sets both horizontal and vertical padding to W.
+  - `WxH` sets `padding_horiz = W` and `padding_vert = H`.
+- Both closing forms (`[/pad]` and `[/padding]`) are accepted and restore previous values.
   - Example: `[pad=5x7]` sets padding_horiz=5 and padding_vert=7.
 - `[dropshadow=X,Y] ... [/dropshadow]` — set drop shadow offsets dropshadowOffsetX=X and dropshadowOffsetY=Y.
   - Example: `[dropshadow=4,6]` sets dropshadowOffsetX=4 and dropshadowOffsetY=6.

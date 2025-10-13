@@ -518,6 +518,12 @@ namespace SDOM
         tokenList.clear();
         size_t i = 0;
 
+        // Stacks to support nested numeric-style escapes (push old value on open, restore on close)
+        std::vector<int> borderThicknessStack;
+        std::vector<int> outlineThicknessStack;
+        std::vector<std::pair<int,int>> paddingStack; // horiz, vert
+        std::vector<std::pair<int,int>> dropshadowOffsetStack; // x,y
+
         while (i < text_.size())
         {
             // Handle Spaces
@@ -755,6 +761,124 @@ namespace SDOM
                     tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
                     i = endPos + 1;
                     continue;
+                }
+            }
+
+            // Handle Numeric-style Escapes: [border=N], [/border], [outline=N], [/outline],
+            // [pad=WxH]/[padding=WxH], [/pad], [/padding], [dropshadow=X,Y], [/dropshadow]
+            auto is_number = [](const std::string& s) {
+                if (s.empty()) return false;
+                size_t start = 0;
+                if (s[0] == '+' || s[0] == '-') start = 1;
+                if (start >= s.size()) return false;
+                return std::all_of(s.begin() + start, s.end(), [](unsigned char c){ return std::isdigit(c); });
+            };
+
+            // Closing tags: restore from stacks
+            if (handleEscape(i, 9, "[/border]", [&]{
+                if (!borderThicknessStack.empty()) { currentStyle.borderThickness = borderThicknessStack.back(); borderThicknessStack.pop_back(); }
+                else currentStyle.borderThickness = defaultStyle_.borderThickness;
+            })) continue;
+            if (handleEscape(i, 10, "[/outline]", [&]{
+                if (!outlineThicknessStack.empty()) { currentStyle.outlineThickness = outlineThicknessStack.back(); outlineThicknessStack.pop_back(); }
+                else currentStyle.outlineThickness = defaultStyle_.outlineThickness;
+            })) continue;
+            if (handleEscape(i, 6, "[/pad]", [&]{
+                if (!paddingStack.empty()) { auto p = paddingStack.back(); paddingStack.pop_back(); currentStyle.padding_horiz = p.first; currentStyle.padding_vert = p.second; }
+                else { currentStyle.padding_horiz = defaultStyle_.padding_horiz; currentStyle.padding_vert = defaultStyle_.padding_vert; }
+            })) continue;
+            if (handleEscape(i, 11, "[/padding]", [&]{
+                if (!paddingStack.empty()) { auto p = paddingStack.back(); paddingStack.pop_back(); currentStyle.padding_horiz = p.first; currentStyle.padding_vert = p.second; }
+                else { currentStyle.padding_horiz = defaultStyle_.padding_horiz; currentStyle.padding_vert = defaultStyle_.padding_vert; }
+            })) continue;
+            if (handleEscape(i, 12, "[/dropshadow]", [&]{
+                if (!dropshadowOffsetStack.empty()) { auto d = dropshadowOffsetStack.back(); dropshadowOffsetStack.pop_back(); currentStyle.dropshadowOffsetX = d.first; currentStyle.dropshadowOffsetY = d.second; }
+                else { currentStyle.dropshadowOffsetX = defaultStyle_.dropshadowOffsetX; currentStyle.dropshadowOffsetY = defaultStyle_.dropshadowOffsetY; }
+            })) continue;
+
+            // Opening numeric tags
+            if (startsWithCI(text_.substr(i), "[border=")) {
+                size_t tagLen = std::string("[border=").size();
+                size_t endPos = text_.find(']', i + tagLen);
+                if (endPos != std::string::npos) {
+                    std::string inner = text_.substr(i + tagLen, endPos - (i + tagLen));
+                    if (is_number(inner)) {
+                        borderThicknessStack.push_back(currentStyle.borderThickness);
+                        currentStyle.borderThickness = std::stoi(inner);
+                        std::string fullEscape = text_.substr(i, endPos - i + 1);
+                        tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
+                        i = endPos + 1;
+                        continue;
+                    }
+                }
+            }
+            if (startsWithCI(text_.substr(i), "[outline=")) {
+                size_t tagLen = std::string("[outline=").size();
+                size_t endPos = text_.find(']', i + tagLen);
+                if (endPos != std::string::npos) {
+                    std::string inner = text_.substr(i + tagLen, endPos - (i + tagLen));
+                    if (is_number(inner)) {
+                        outlineThicknessStack.push_back(currentStyle.outlineThickness);
+                        currentStyle.outlineThickness = std::stoi(inner);
+                        std::string fullEscape = text_.substr(i, endPos - i + 1);
+                        tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
+                        i = endPos + 1;
+                        continue;
+                    }
+                }
+            }
+            if (startsWithCI(text_.substr(i), "[pad=") || startsWithCI(text_.substr(i), "[padding=")) {
+                size_t tagLen = startsWithCI(text_.substr(i), "[pad=") ? std::string("[pad=").size() : std::string("[padding=").size();
+                size_t endPos = text_.find(']', i + tagLen);
+                if (endPos != std::string::npos) {
+                    std::string inner = text_.substr(i + tagLen, endPos - (i + tagLen));
+                    // accept formats like WxH or W x H or W,H
+                    auto findSep = [&](const std::string& s)->size_t {
+                        size_t p = s.find('x'); if (p != std::string::npos) return p;
+                        p = s.find('X'); if (p != std::string::npos) return p;
+                        p = s.find(','); return p;
+                    };
+                    size_t sep = findSep(inner);
+                    if (sep != std::string::npos) {
+                        std::string a = inner.substr(0, sep);
+                        std::string b = inner.substr(sep+1);
+                        // trim spaces
+                        auto trim = [](std::string s){ while(!s.empty() && std::isspace((unsigned char)s.front())) s.erase(s.begin()); while(!s.empty() && std::isspace((unsigned char)s.back())) s.pop_back(); return s; };
+                        a = trim(a); b = trim(b);
+                        if (is_number(a) && is_number(b)) {
+                            paddingStack.push_back({currentStyle.padding_horiz, currentStyle.padding_vert});
+                            currentStyle.padding_horiz = std::stoi(a);
+                            currentStyle.padding_vert = std::stoi(b);
+                            std::string fullEscape = text_.substr(i, endPos - i + 1);
+                            tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
+                            i = endPos + 1;
+                            continue;
+                        }
+                    }
+                }
+            }
+            if (startsWithCI(text_.substr(i), "[dropshadow=")) {
+                size_t tagLen = std::string("[dropshadow=").size();
+                size_t endPos = text_.find(']', i + tagLen);
+                if (endPos != std::string::npos) {
+                    std::string inner = text_.substr(i + tagLen, endPos - (i + tagLen));
+                    // expect X,Y
+                    size_t comma = inner.find(',');
+                    if (comma != std::string::npos) {
+                        std::string a = inner.substr(0, comma);
+                        std::string b = inner.substr(comma+1);
+                        auto trim = [](std::string s){ while(!s.empty() && std::isspace((unsigned char)s.front())) s.erase(s.begin()); while(!s.empty() && std::isspace((unsigned char)s.back())) s.pop_back(); return s; };
+                        a = trim(a); b = trim(b);
+                        if (is_number(a) && is_number(b)) {
+                            dropshadowOffsetStack.push_back({currentStyle.dropshadowOffsetX, currentStyle.dropshadowOffsetY});
+                            currentStyle.dropshadowOffsetX = std::stoi(a);
+                            currentStyle.dropshadowOffsetY = std::stoi(b);
+                            std::string fullEscape = text_.substr(i, endPos - i + 1);
+                            tokenList.push_back({TokenType::Escape, fullEscape, currentStyle});
+                            i = endPos + 1;
+                            continue;
+                        }
+                    }
                 }
             }
 
