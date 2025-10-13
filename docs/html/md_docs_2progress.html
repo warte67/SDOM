@@ -92,30 +92,30 @@ $(function(){initNavTree('md_docs_2progress.html','',''); });
   <div class="headertitle"><div class="title">Project Description and Development Progress </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md238"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md248"></a></p>
 <p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is a C++23 library built on SDL3 that brings a DOM‑like scene graph and GUI toolkit to 2D applications and games. The aim is a small, predictable core for layout, events, and rendering so SDL developers can compose interfaces and in‑game UI with familiar patterns and a minimal API surface.</p>
 <p>Architecturally, a single Core orchestrates the SDL runtime (window, renderer, main loop). A Stage serves as the root of the display tree, while an EventManager dispatches input through capture → target → bubble phases. The Factory registers, creates, and tracks resources and display objects by type and unique name, returning typed handles for safe references. Layout is driven by an edge‑based anchoring system that supports asymmetric, responsive designs.</p>
 <p>Scripting and configuration are first‑class with Lua via Sol2 to enable data‑driven scenes, rapid iteration, and test automation. You can also build everything directly in C++—Lua is optional—but when enabled it can construct objects, wire scenes, drive dialog, and swap stages at runtime without recompilation.</p>
 <p>The project emphasizes clear, living documentation. The Markdown design docs are working papers that evolve with the code. Expect them to change as features land and APIs are refined. Public APIs are defined in headers and surfaced via Doxygen, with correctness exercised by unit tests; if a doc briefly diverges from current behavior, treat the code as source‑of‑truth until the docs catch up. Diagrams are authored in Mermaid and exported to static SVG/PNG by the repo’s export pipeline, keeping visuals portable while ensuring the sources remain easy to edit. Progress updates will call out notable documentation changes, and contributions to clarify or correct docs are welcome.</p>
 <p>This page is the hub for progress. The “Progress Updates” below record milestones chronologically with context and notes; the “Next Steps” and “ToDo” sections outline near‑term priorities and open tracks. Check back to see what landed and what’s coming next—and feel free to open issues or proposals as the API stabilizes.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md239"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md249"></a>
 Scripting and Configuration</h1>
 <p>Lua (via Sol2) is first‑class but optional—you can script scenes and behavior in Lua, build everything in C++, or mix both. The Factory accepts <span class="tt">sol::table</span> configs alongside initializer structs, and Core’s lifecycle hooks make it easy to integrate scripts for iteration and tests. See the dedicated design doc for details and examples: <a class="el" href="md_docs_2scripting__and__configuration.html">Scripting and Configuration (Lua + C++)</a>.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md240"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md250"></a>
 Progress Updates</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md241"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md251"></a>
 [July 2, 2025]</h2>
 <ul>
 <li>Initial rough draft and proof of concept.</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md243"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md253"></a>
 [August 5, 2025]</h2>
 <ul>
 <li><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> secondary rough draft</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md245"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md255"></a>
 [September 19, 2025]</h2>
 <ul>
 <li>Proof of concept approved. Main development approved. Work begins officially.</li>
@@ -140,7 +140,7 @@ Progress Updates</h1>
 <li>Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md247"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md257"></a>
 [September 20, 2025]</h2>
 <ul>
 <li>Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.</li>
@@ -151,7 +151,7 @@ Progress Updates</h1>
 <li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md249"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md259"></a>
 [September 21, 2025]</h2>
 <ul>
 <li>Renamed <span class="tt">resource_ptr</span> to <span class="tt">ResourceHandle</span> throughout the codebase for clarity.<ul>
@@ -196,7 +196,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md251"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md261"></a>
 [September 22, 2025]</h2>
 <ul>
 <li><b>Unit Test Framework Refined:</b> <br  />
@@ -243,7 +243,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md253"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md263"></a>
 [September 23, 2025]</h3>
 <ul>
 <li><b>Event System Preliminary Testing:</b> <br  />
@@ -267,7 +267,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md255"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md265"></a>
 [September 24, 2025]</h2>
 <ul>
 <li><b>Event System Debugging:</b><ul>
@@ -301,7 +301,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md257"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md267"></a>
 [September 25, 2025]</h2>
 <ul>
 <li><b>JSON → Lua Transition Complete:</b> <br  />
@@ -344,7 +344,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md259"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md269"></a>
 [September 26, 2025]</h2>
 <ul>
 <li><b>Box Unit Tests Complete:</b> <br  />
@@ -374,7 +374,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md261"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md271"></a>
 [September 27, 2025]</h2>
 <ul>
 <li><b>Lua Integration Complete:</b> <br  />
@@ -397,7 +397,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md263"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md273"></a>
 [September 28, 2025]</h2>
 <ul>
 <li><b>Lua Binding Improvements:</b><ul>
@@ -445,7 +445,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md265"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md275"></a>
 [September 29, 2025]</h2>
 <ul>
 <li><b>Lua Binding Debugging:</b><ul>
@@ -497,7 +497,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md267"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md277"></a>
 [September 30, 2025]</h2>
 <ul>
 <li><b>Summary:</b><ul>
@@ -560,7 +560,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md269"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md279"></a>
 [October 2, 2025]</h2>
 <ul>
 <li><b>Synthetic Event Handling Robustness:</b><ul>
@@ -602,7 +602,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md271"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md281"></a>
 [October 3, 2025]</h2>
 <ul>
 <li>Cleaned up noisy debug output across the codebase:<ul>
@@ -684,7 +684,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md273"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md283"></a>
 [October 4, 2025]</h2>
 <ul>
 <li>Quick fixes &amp; Lua binding polish (morning)<ul>
@@ -707,7 +707,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md275"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md285"></a>
 [October 5, 2025]</h2>
 <ul>
 <li>Refactored Lua Core bindings:<ul>
@@ -741,7 +741,7 @@ Progress Updates</h1>
 </span><a class="el" href="SDOM__Core_8cpp.html">SDOM_Core.cpp</a><span class="tt">, add a small Lua smoke test exercising name-or-handle binds, and then consider moving the helpers into a dedicated </span>lua_Core_bindings.cpp` once CI is stable.</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md277"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md287"></a>
 [October 6, 2025]</h2>
 <ul>
 <li>Lua binding refactor (IDisplayObject):<ul>
@@ -833,7 +833,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md279"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md289"></a>
 [October 7, 2025]</h2>
 <ul>
 <li>cleaned up the heavy includes from the header files to reduce compile times and improve modularity.</li>
@@ -866,7 +866,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md281"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md291"></a>
 [October 8, 2025]</h2>
 <ul>
 <li>drawSprite Lua API / overload consolidation<ul>
@@ -917,7 +917,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md283"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md293"></a>
 [October 9, 2025]</h2>
 <ul>
 <li>Codebase rename:<ul>
@@ -971,7 +971,7 @@ Progress Updates</h1>
 <li><b>For full details and migration steps, see:</b> <a class="el" href="md_docs_2startup__refactor.html">docs/startup_refactor.md</a></li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md285"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md295"></a>
 [October 11, 2025]</h2>
 <ul>
 <li><b>BitmapFont &amp; TruetypeFont Resource Creation Improvements:</b><ul>
@@ -1015,17 +1015,44 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md287"></a>
-Next Steps:</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md297"></a>
+[October 12, 2025]</h2>
 <ul>
-<li><b>Performance Optimization: Label Texture Caching</b><ul>
-<li>Refactor Label to render text to a texture when dirty, and reuse the cached texture for fast redraws.</li>
-<li>Only re-rasterize when text, font, or style changes.</li>
-<li>Expected result: high frame rates even with large text blocks or many Labels.</li>
+<li><b>Internal Resource Renaming:</b><ul>
+<li>Renamed all default internal resources for clarity and consistency:<ul>
+<li><span class="tt">default_bmp_8x8</span> → <span class="tt">internal_font_8x8</span></li>
+<li><span class="tt">default_bmp_8x12</span> → <span class="tt">internal_font_8x12</span></li>
+<li><span class="tt">default_icon_8x8</span> → <span class="tt">internal_icon_8x8</span></li>
+<li><span class="tt">default_ttf</span> → <span class="tt">internal_ttf</span></li>
 </ul>
 </li>
-<li>Optimize Label rendering performance and batching by rendering to textures and reusing them when not dirty.</li>
-<li>Add unit tests for Label rendering, resizing, and font scaling edge cases.</li>
+<li>Updated all config files, asset registration, and code references to use the new names.</li>
+<li>This change makes it clear which resources are engine-provided and improves naming consistency across bitmap and truetype fonts.</li>
+</ul>
+</li>
+<li><b>BitmapFont Sizing Fixes:</b><ul>
+<li>BitmapFont assets now correctly default to their backing SpriteSheet's sprite size when <span class="tt">font_width</span> or <span class="tt">font_height</span> are not specified.</li>
+<li>Both internal and external bitmap fonts render at their intended glyph dimensions (e.g., 8x12 for <span class="tt">internal_font_8x12</span>).</li>
+<li>Added runtime diagnostics to confirm font metrics during asset loading.</li>
+</ul>
+</li>
+<li><b>Label Rendering Improvements:</b><ul>
+<li>Label logic now always renders at least one line or token, even when the available height or width is too small to fit the full content.</li>
+<li>Prevents labels from disappearing when their bounds are smaller than the text, ensuring clipped text is still visible.</li>
+<li>Verified that Labels handle extreme resizing gracefully, maintaining visibility of partial text.</li>
+</ul>
+</li>
+<li><b>Tab Key Navigation Fixes:</b><ul>
+<li>keyboard [TAB] and [SHIFT_TAB] were hitting on labels.</li>
+<li>The <span class="tt">tab_enabled</span> and <span class="tt">tab_priority</span> properties are now working as expected. <span class="tt">Labels</span> are now not tab stops by default.</li>
+</ul>
+</li>
+</ul>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md299"></a>
+Next Steps:</h2>
+<ul>
+<li>Add unit tests for <span class="tt">Label</span> rendering, resizing, and font scaling edge cases.</li>
 <li>Expand Lua test coverage for asset creation and configuration parsing.</li>
 <li>Document the new startup pattern and resource creation workflows in the README and docs.</li>
 <li>Update examples to use the new explicit startup and resource creation methods.</li>
@@ -1038,7 +1065,7 @@ Next Steps:</h2>
 <li>No dedicated unit tests yet for TTFAsset/TruetypeFont; recommend adding an integration test asserting default_ttf is loaded and TTF_Font* is non-null.</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md289"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md301"></a>
 ToDo:</h2>
 <ul>
 <li>Verify and document verious start up scenarios (C++ only, Lua only, mixed).</li>

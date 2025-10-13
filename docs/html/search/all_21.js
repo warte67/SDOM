@@ -1,7 +1,7 @@
 var searchData=
 [
   ['warning_0',['WARNING',['../SDOM_8hpp.html#aaf99b8fcaa4b837f684ea0505ed34487',1,'SDOM.hpp']]],
-  ['warning_3a_20avoid_20diamond_20inheritance_1',['Inheritance Warning: Avoid Diamond Inheritance',['../md_docs_2object__handles.html#autotoc_md232',1,'']]],
+  ['warning_3a_20avoid_20diamond_20inheritance_1',['Inheritance Warning: Avoid Diamond Inheritance',['../md_docs_2object__handles.html#autotoc_md242',1,'']]],
   ['what_2',['what',['../classSDOM_1_1Exception.html#a5086ff39082ca706c60f16c22df3dfbb',1,'SDOM::Exception']]],
   ['wheelx_3',['wheelX',['../classSDOM_1_1Event.html#a27778c5f406b0903e10caef5c046b536',1,'SDOM::Event']]],
   ['wheely_4',['wheelY',['../classSDOM_1_1Event.html#adf3ec244eb81fbd741443c9a41e2a13b',1,'SDOM::Event']]],
@@ -15,7 +15,7 @@ var searchData=
   ['windowheight_12',['windowHeight',['../structSDOM_1_1Core_1_1CoreConfig.html#a8c437dc7c49ff80c7904ce46fbca14d9',1,'SDOM::Core::CoreConfig']]],
   ['windowwidth_13',['windowWidth',['../structSDOM_1_1Core_1_1CoreConfig.html#acd80478dc5e6f4dc3b4f3c591eafd783',1,'SDOM::Core::CoreConfig']]],
   ['with_20global_20accessor_14',['Example Usage (with global accessor)',['../md_docs_2core__framework.html#autotoc_md19',1,'']]],
-  ['with_20lua_15',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md295',1,'']]],
+  ['with_20lua_15',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md307',1,'']]],
   ['with_20sol2_16',['Example: Lua Integration with Sol2',['../md_docs_2exposing__hooks.html#autotoc_md137',1,'']]],
   ['with_20word_20wrap_20and_20justification_17',['Line Rendering with Word Wrap and Justification',['../md_docs_2default__bmp__8x8.html#autotoc_md54',1,'']]],
   ['word_18',['Word',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429a07a094a210794e74a0e5e1a1457a92ee',1,'SDOM::Label::Word'],['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'Word:&#160;SDOM_CLR.hpp']]],
@@ -23,10 +23,11 @@ var searchData=
   ['word_20wrap_20and_20justification_20',['Line Rendering with Word Wrap and Justification',['../md_docs_2default__bmp__8x8.html#autotoc_md54',1,'']]],
   ['word_20wrapping_20autosizing_21',['Word Wrapping &amp;amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md204',1,'']]],
   ['wordwrap_22',['wordwrap',['../structSDOM_1_1FontStyle.html#a2a5e4e046feb5c938369ce89c835cfcd',1,'SDOM::FontStyle::wordwrap'],['../structSDOM_1_1Label_1_1InitStruct.html#a86ad9dc28c72f17beb5f88c98c8bad16',1,'SDOM::Label::InitStruct::wordwrap']]],
-  ['works_23',['How It Works',['../md_docs_2extensible__factory.html#autotoc_md173',1,'']]],
-  ['world_20coordinate_20backpropagation_20traversal_20type_204_24',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_docs_2dom__propagation.html#autotoc_md90',1,'']]],
-  ['wrap_20and_20justification_25',['Line Rendering with Word Wrap and Justification',['../md_docs_2default__bmp__8x8.html#autotoc_md54',1,'']]],
-  ['wrapping_20autosizing_26',['Word Wrapping &amp;amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md204',1,'']]],
-  ['wrapping_20rules_27',['Label Sizing and Wrapping Rules',['../md_docs_2label__text__parsing.html#autotoc_md213',1,'']]],
-  ['write_5fat_28',['write_at',['../classCLR.html#a9a5487e769cddf9b64e80394f8f74bea',1,'CLR']]]
+  ['work_20completeness_20notes_23',['Remaining work / completeness notes',['../md_docs_2lua__commands__and__properties.html#autotoc_md230',1,'']]],
+  ['works_24',['How It Works',['../md_docs_2extensible__factory.html#autotoc_md173',1,'']]],
+  ['world_20coordinate_20backpropagation_20traversal_20type_204_25',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_docs_2dom__propagation.html#autotoc_md90',1,'']]],
+  ['wrap_20and_20justification_26',['Line Rendering with Word Wrap and Justification',['../md_docs_2default__bmp__8x8.html#autotoc_md54',1,'']]],
+  ['wrapping_20autosizing_27',['Word Wrapping &amp;amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md204',1,'']]],
+  ['wrapping_20rules_28',['Label Sizing and Wrapping Rules',['../md_docs_2label__text__parsing.html#autotoc_md213',1,'']]],
+  ['write_5fat_29',['write_at',['../classCLR.html#a9a5487e769cddf9b64e80394f8f74bea',1,'CLR']]]
 ];

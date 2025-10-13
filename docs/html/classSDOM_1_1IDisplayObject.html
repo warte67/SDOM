@@ -133,9 +133,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0663374567b9882b112e879ec72318ea" id="r_a0663374567b9882b112e879ec72318ea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0663374567b9882b112e879ec72318ea">operator&gt;=</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;other) const</td></tr>
 <tr class="memitem:afe7bf92f5ca28b59fb6bda0329796642" id="r_afe7bf92f5ca28b59fb6bda0329796642"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe7bf92f5ca28b59fb6bda0329796642">~IDisplayObject</a> ()</td></tr>
 <tr class="memitem:aa1525c87c0e2d74e5838d69baba95ac6" id="r_aa1525c87c0e2d74e5838d69baba95ac6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1525c87c0e2d74e5838d69baba95ac6">onInit</a> () override</td></tr>
-<tr class="memitem:a498aba902813d239ba961bc21549f2b0" id="r_a498aba902813d239ba961bc21549f2b0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a498aba902813d239ba961bc21549f2b0">onQuit</a> () override</td></tr>
-<tr class="memitem:a02774e0c53beadd1ca80c9dda9713bdc" id="r_a02774e0c53beadd1ca80c9dda9713bdc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02774e0c53beadd1ca80c9dda9713bdc">onUpdate</a> (float fElapsedTime)=0</td></tr>
-<tr class="memitem:a56bca009fbe93a9694ecde9e2db8ee26" id="r_a56bca009fbe93a9694ecde9e2db8ee26"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56bca009fbe93a9694ecde9e2db8ee26">onEvent</a> (const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;event)=0</td></tr>
+<tr class="memitem:aff6ba7b3a4b5c542f928dd31c7a10b89" id="r_aff6ba7b3a4b5c542f928dd31c7a10b89"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff6ba7b3a4b5c542f928dd31c7a10b89">onQuit</a> () override</td></tr>
+<tr class="memitem:aa4055d0bf5298fea88fe2bfa6a408faf" id="r_aa4055d0bf5298fea88fe2bfa6a408faf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4055d0bf5298fea88fe2bfa6a408faf">onUpdate</a> (float fElapsedTime)</td></tr>
+<tr class="memitem:ad1493d31db7c354aeb0d609279adaf2e" id="r_ad1493d31db7c354aeb0d609279adaf2e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1493d31db7c354aeb0d609279adaf2e">onEvent</a> (const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;event)</td></tr>
 <tr class="memitem:aa1f11950c5bbe98f9a367c5d9887826c" id="r_aa1f11950c5bbe98f9a367c5d9887826c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1f11950c5bbe98f9a367c5d9887826c">onRender</a> ()=0</td></tr>
 <tr class="memitem:a91f380e8aff044d17e38786d28781e83" id="r_a91f380e8aff044d17e38786d28781e83"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91f380e8aff044d17e38786d28781e83">onUnitTest</a> ()</td></tr>
 <tr class="memdesc:a91f380e8aff044d17e38786d28781e83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
@@ -1712,8 +1712,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a56bca009fbe93a9694ecde9e2db8ee26" name="a56bca009fbe93a9694ecde9e2db8ee26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56bca009fbe93a9694ecde9e2db8ee26">&#9670;&#160;</a></span>onEvent()</h2>
+<a id="ad1493d31db7c354aeb0d609279adaf2e" name="ad1493d31db7c354aeb0d609279adaf2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1493d31db7c354aeb0d609279adaf2e">&#9670;&#160;</a></span>onEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1722,7 +1722,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SDOM::IDisplayObject::onEvent </td>
+          <td class="memname">void SDOM::IDisplayObject::onEvent </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
           <td></td>
@@ -1730,12 +1730,12 @@ template&lt;typename T&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classSDOM_1_1Label.html#ab1f8cf79cadb35f05b139c71787932a5">SDOM::Label</a>, and <a class="el" href="classSDOM_1_1Stage.html#ae86bf067533fbb3791daf53cecbd4208">SDOM::Stage</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1Label.html#ab1f8cf79cadb35f05b139c71787932a5">SDOM::Label</a>, and <a class="el" href="classSDOM_1_1Stage.html#ae86bf067533fbb3791daf53cecbd4208">SDOM::Stage</a>.</p>
 
 </div>
 </div>
@@ -1768,8 +1768,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a498aba902813d239ba961bc21549f2b0" name="a498aba902813d239ba961bc21549f2b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a498aba902813d239ba961bc21549f2b0">&#9670;&#160;</a></span>onQuit()</h2>
+<a id="aff6ba7b3a4b5c542f928dd31c7a10b89" name="aff6ba7b3a4b5c542f928dd31c7a10b89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff6ba7b3a4b5c542f928dd31c7a10b89">&#9670;&#160;</a></span>onQuit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1778,7 +1778,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SDOM::IDisplayObject::onQuit </td>
+          <td class="memname">void SDOM::IDisplayObject::onQuit </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -1786,7 +1786,7 @@ template&lt;typename T&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1856,8 +1856,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a02774e0c53beadd1ca80c9dda9713bdc" name="a02774e0c53beadd1ca80c9dda9713bdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a02774e0c53beadd1ca80c9dda9713bdc">&#9670;&#160;</a></span>onUpdate()</h2>
+<a id="aa4055d0bf5298fea88fe2bfa6a408faf" name="aa4055d0bf5298fea88fe2bfa6a408faf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4055d0bf5298fea88fe2bfa6a408faf">&#9670;&#160;</a></span>onUpdate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1866,7 +1866,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SDOM::IDisplayObject::onUpdate </td>
+          <td class="memname">void SDOM::IDisplayObject::onUpdate </td>
           <td>(</td>
           <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>fElapsedTime</em></span></td><td>)</td>
           <td></td>
@@ -1874,12 +1874,12 @@ template&lt;typename T&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classSDOM_1_1Label.html#a4de312d7cface20c8817a5f27b09127c">SDOM::Label</a>, and <a class="el" href="classSDOM_1_1Stage.html#a49ce233f3b24bcab4eda377b0de573b2">SDOM::Stage</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1Label.html#a4de312d7cface20c8817a5f27b09127c">SDOM::Label</a>, and <a class="el" href="classSDOM_1_1Stage.html#a49ce233f3b24bcab4eda377b0de573b2">SDOM::Stage</a>.</p>
 
 </div>
 </div>

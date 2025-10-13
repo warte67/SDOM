@@ -1,7 +1,7 @@
 var searchData=
 [
   ['game_20states_20or_20modes_0',['Stages as Game States or Modes',['../md_docs_2core__framework.html#autotoc_md41',1,'']]],
-  ['garden_1',['Two Trees in the Garden',['../md_docs_2object__handles.html#autotoc_md225',1,'']]],
+  ['garden_1',['Two Trees in the Garden',['../md_docs_2object__handles.html#autotoc_md235',1,'']]],
   ['general_20events_2',['General Events',['../md_docs_2event__design.html#autotoc_md105',1,'']]],
   ['generic_20factory_20create_20method_3',['4. Generic Factory Create Method',['../md_docs_2extensible__factory.html#autotoc_md165',1,'']]],
   ['get_4',['get',['../classSDOM_1_1AssetHandle.html#a04257920fce9afdbcf5b9db9be24f738',1,'SDOM::AssetHandle::get()'],['../classSDOM_1_1DisplayHandle.html#a34b67c1cbabe355296209b79e5e5b949',1,'SDOM::DisplayHandle::get()']]],
@@ -165,7 +165,7 @@ var searchData=
   ['gettexture_162',['getTexture',['../classSDOM_1_1Core.html#a237897a02ab43ad118a878891dcf99fb',1,'SDOM::Core::getTexture()'],['../classSDOM_1_1SpriteSheet.html#a29eb9244080ce6b7ac1712096ef4bd14',1,'SDOM::SpriteSheet::getTexture()'],['../classSDOM_1_1Texture.html#abe5aeadd7bee6825c3a70434e6917b1c',1,'SDOM::Texture::getTexture()'],['../namespaceSDOM.html#ac0f36a9f4f98d23fa1da002213470c3f',1,'SDOM::getTexture()']]],
   ['gettextureheight_163',['getTextureHeight',['../classSDOM_1_1Texture.html#a497fb4a9cbcb708282658d603f421115',1,'SDOM::Texture']]],
   ['gettexturewidth_164',['getTextureWidth',['../classSDOM_1_1Texture.html#a9a9b8da27fae262532a963c10eab0c82',1,'SDOM::Texture']]],
-  ['getting_20started_165',['Getting Started',['../md_README.html#autotoc_md325',1,'']]],
+  ['getting_20started_165',['Getting Started',['../md_README.html#autotoc_md337',1,'']]],
   ['gettop_166',['getTop',['../classSDOM_1_1IDisplayObject.html#a3ab76421405a1be09be35ae2e215efb2',1,'SDOM::IDisplayObject']]],
   ['gettop_5flua_167',['getTop_lua',['../namespaceSDOM.html#a8ce2c94b307864819ad9da1e88b524ca',1,'SDOM']]],
   ['gettype_168',['getType',['../classSDOM_1_1AssetHandle.html#a4befa6c4e36835e2fa6913d026432e25',1,'SDOM::AssetHandle::getType()'],['../classSDOM_1_1DisplayHandle.html#aead851e82ce4bce3164ffcdc27ce8e72',1,'SDOM::DisplayHandle::getType()'],['../classSDOM_1_1Event.html#a5825019375831e00373e4e375bf68a83',1,'SDOM::Event::getType()'],['../classSDOM_1_1IAssetObject.html#ad0b85cd8eafe1b2f92a03573e0ea80b9',1,'SDOM::IAssetObject::getType()'],['../classSDOM_1_1IDisplayObject.html#a985007476d5838661335a7e1017f0b3a',1,'SDOM::IDisplayObject::getType()']]],
@@ -193,14 +193,15 @@ var searchData=
   ['global_20accessor_190',['Example Usage (with global accessor)',['../md_docs_2core__framework.html#autotoc_md19',1,'']]],
   ['global_20accessor_20functions_191',['Global Accessor Functions',['../md_docs_2core__framework.html#autotoc_md18',1,'']]],
   ['global_20traversal_20type_203_192',['3. Factory-based Global Traversal (Type 3)',['../md_docs_2dom__propagation.html#autotoc_md89',1,'']]],
-  ['globals_193',['3. Bind Engine Functions as Lua Globals',['../md_docs_2startup__refactor.html#autotoc_md311',1,'']]],
-  ['glyph_20index_20catalog_20for_20default_5f8x8_20font_194',['Glyph Index Catalog for default_8x8 Font',['../md_docs_2default__bmp__8x8.html',1,'']]],
-  ['glyphs_195',['Glyphs',['../md_docs_2default__bmp__8x8.html#autotoc_md45',1,'ASCII Glyphs'],['../md_docs_2default__bmp__8x8.html#autotoc_md46',1,'Graphic Glyphs'],['../md_docs_2default__bmp__8x8.html#autotoc_md47',1,'Retro-Inspired Graphic Glyphs']]],
-  ['goals_196',['Goals',['../md_docs_2event__design.html#autotoc_md100',1,'Goals'],['../md_docs_2label__text__parsing.html#autotoc_md181',1,'Goals'],['../md_docs_2scripting__and__configuration.html#autotoc_md292',1,'Goals']]],
-  ['graceperiod_197',['GracePeriod',['../classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dabae217fe6799c2b0bfe0740530b5c78200',1,'SDOM::IDisplayObject']]],
-  ['graphic_20glyphs_198',['Graphic Glyphs',['../md_docs_2default__bmp__8x8.html#autotoc_md46',1,'Graphic Glyphs'],['../md_docs_2default__bmp__8x8.html#autotoc_md47',1,'Retro-Inspired Graphic Glyphs']]],
-  ['green_199',['GREEN',['../classCLR.html#a3003dd364e606e44a28d3bf3081f624c',1,'CLR']]],
-  ['grey_200',['GREY',['../classCLR.html#af89e905bfd2feb399c0b6fda7ea2ae07',1,'CLR']]],
-  ['grid_20and_20child_20edge_20anchors_201',['1) Parent Anchor Grid and Child Edge Anchors',['../md_docs_2display__object__anchoring.html#autotoc_md76',1,'']]],
-  ['grouping_202',['2. Phrase Grouping',['../md_docs_2label__text__parsing.html#autotoc_md217',1,'']]]
+  ['globals_193',['3. Bind Engine Functions as Lua Globals',['../md_docs_2startup__refactor.html#autotoc_md323',1,'']]],
+  ['globals_20core_20lua_20core_20coreforward_194',['Globals / Core (lua &lt;span class=&quot;tt&quot;&gt;Core&lt;/span&gt; / &lt;span class=&quot;tt&quot;&gt;CoreForward&lt;/span&gt;)',['../md_docs_2lua__commands__and__properties.html#autotoc_md223',1,'']]],
+  ['glyph_20index_20catalog_20for_20default_5f8x8_20font_195',['Glyph Index Catalog for default_8x8 Font',['../md_docs_2default__bmp__8x8.html',1,'']]],
+  ['glyphs_196',['Glyphs',['../md_docs_2default__bmp__8x8.html#autotoc_md45',1,'ASCII Glyphs'],['../md_docs_2default__bmp__8x8.html#autotoc_md46',1,'Graphic Glyphs'],['../md_docs_2default__bmp__8x8.html#autotoc_md47',1,'Retro-Inspired Graphic Glyphs']]],
+  ['goals_197',['Goals',['../md_docs_2event__design.html#autotoc_md100',1,'Goals'],['../md_docs_2label__text__parsing.html#autotoc_md181',1,'Goals'],['../md_docs_2scripting__and__configuration.html#autotoc_md304',1,'Goals']]],
+  ['graceperiod_198',['GracePeriod',['../classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dabae217fe6799c2b0bfe0740530b5c78200',1,'SDOM::IDisplayObject']]],
+  ['graphic_20glyphs_199',['Graphic Glyphs',['../md_docs_2default__bmp__8x8.html#autotoc_md46',1,'Graphic Glyphs'],['../md_docs_2default__bmp__8x8.html#autotoc_md47',1,'Retro-Inspired Graphic Glyphs']]],
+  ['green_200',['GREEN',['../classCLR.html#a3003dd364e606e44a28d3bf3081f624c',1,'CLR']]],
+  ['grey_201',['GREY',['../classCLR.html#af89e905bfd2feb399c0b6fda7ea2ae07',1,'CLR']]],
+  ['grid_20and_20child_20edge_20anchors_202',['1) Parent Anchor Grid and Child Edge Anchors',['../md_docs_2display__object__anchoring.html#autotoc_md76',1,'']]],
+  ['grouping_203',['2. Phrase Grouping',['../md_docs_2label__text__parsing.html#autotoc_md217',1,'']]]
 ];

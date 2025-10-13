@@ -209,6 +209,8 @@ var classSDOM_1_1Label =
     [ "name_", "classSDOM_1_1Label.html#aeff0a0985efe5dae1e6aa10e5b206396", null ],
     [ "objHandleType_", "classSDOM_1_1Label.html#a2b199e755c1279f72d128ede557b6fa5", null ],
     [ "parent_", "classSDOM_1_1Label.html#ab3985031f0fbac4d1eee9c8bee5681c9", null ],
+    [ "parent_height_", "classSDOM_1_1Label.html#a0fd61bbd1af443a336015c16f652bbf9", null ],
+    [ "parent_width_", "classSDOM_1_1Label.html#a854ad573c98206958c66634ed8f63a1f", null ],
     [ "phraseAlignLists_", "classSDOM_1_1Label.html#afab5f36c50ae0cf8f55080701152126b", null ],
     [ "priority_", "classSDOM_1_1Label.html#aa018f216f79dcdfebf0b0b3487cec40f", null ],
     [ "resourceName_", "classSDOM_1_1Label.html#a5e49b077beb98ed43fe30e4ac0a2ce80", null ],
@@ -222,5 +224,7 @@ var classSDOM_1_1Label =
     [ "top_", "classSDOM_1_1Label.html#a62eb8e3e0af2965213e8bd49597accf7", null ],
     [ "type_", "classSDOM_1_1Label.html#a8bf31785ce47d1bcc093e9d9db5b5c48", null ],
     [ "TypeName", "classSDOM_1_1Label.html#abcd0ff95f8717b417c3c52b823d333d9", null ],
+    [ "userFontHeightSpecified_", "classSDOM_1_1Label.html#a985d979b48032813395c132af252e5f0", null ],
+    [ "userFontWidthSpecified_", "classSDOM_1_1Label.html#a9211e371b24e39b7bfa0dfdc223217dd", null ],
     [ "z_order_", "classSDOM_1_1Label.html#ae0fdddcd7cbe751c5f018a7f28a50eb1", null ]
 ];

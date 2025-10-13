@@ -1,26 +1,9 @@
 var searchData=
 [
-  ['tabenabled_0',['tabEnabled',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a2d89b34df7efd356fb474dfe984011e3',1,'SDOM::IDisplayObject::InitStruct']]],
-  ['tabenabled_5f_1',['tabEnabled_',['../classSDOM_1_1IDisplayObject.html#a656a5c65b3ae6db74b692269f81cfc39',1,'SDOM::IDisplayObject']]],
-  ['tabpriority_2',['tabPriority',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7',1,'SDOM::IDisplayObject::InitStruct']]],
-  ['tabpriority_5f_3',['tabPriority_',['../classSDOM_1_1IDisplayObject.html#af4b648a1608f7a4dfed63eafd339fefd',1,'SDOM::IDisplayObject']]],
-  ['target_4',['target',['../classSDOM_1_1Event.html#a011acd91f0ce886d9205ecd7b698b73e',1,'SDOM::Event']]],
-  ['text_5',['text',['../structSDOM_1_1Label_1_1InitStruct.html#acd237af730f8bd70733c5cc14f918a60',1,'SDOM::Label::InitStruct::text'],['../structSDOM_1_1Label_1_1LabelToken.html#a3e4dbe17d7114268e1bb34d309527924',1,'SDOM::Label::LabelToken::text'],['../structSDOM_1_1Label_1_1PhraseToken.html#a8527a50b298be0af1d29e56ead9e6d8e',1,'SDOM::Label::PhraseToken::text']]],
-  ['text_5f_6',['text_',['../classSDOM_1_1Label.html#af0a54ff6869705cbd4269253ba03790d',1,'SDOM::Label']]],
-  ['texture_5f_7',['texture_',['../classSDOM_1_1Texture.html#a5f5348d075450939b08f7dc5bd509d4d',1,'SDOM::Texture']]],
-  ['textureasset_8',['textureAsset',['../classSDOM_1_1SpriteSheet.html#a3a5903dfe404f2f20716412152bf2367',1,'SDOM::SpriteSheet']]],
-  ['textureheight_5f_9',['textureHeight_',['../classSDOM_1_1Texture.html#ac98f94389ba93e008296aac2ae07b3a3',1,'SDOM::Texture']]],
-  ['texturewidth_5f_10',['textureWidth_',['../classSDOM_1_1Texture.html#a9f777980f5b1951cfb765cd7c8b8ac7d',1,'SDOM::Texture']]],
-  ['tick_11',['Tick',['../classSDOM_1_1EventType.html#ae7560c4ed82d41b0d15b6b7103f16505',1,'SDOM::EventType']]],
-  ['timeout_12',['Timeout',['../classSDOM_1_1EventType.html#a31ba852cfe7b115dc0484bb9a4d54bc2',1,'SDOM::EventType']]],
-  ['timer_13',['Timer',['../classSDOM_1_1EventType.html#a1711b7f6c22bf1886d475411121fdcc1',1,'SDOM::EventType']]],
-  ['tokenalignlists_5f_14',['tokenAlignLists_',['../classSDOM_1_1Label.html#a98e2820136f947ff3f2f0131398c6b4f',1,'SDOM::Label']]],
-  ['tokenlist_15',['tokenList',['../classSDOM_1_1Label.html#a04e8a526ff1d4cab3db424c433183a95',1,'SDOM::Label']]],
-  ['top_16',['top',['../structSDOM_1_1Bounds.html#a449f1728a2b4af1c8153b685518cdcb9',1,'SDOM::Bounds']]],
-  ['top_5f_17',['top_',['../classSDOM_1_1IDisplayObject.html#a62eb8e3e0af2965213e8bd49597accf7',1,'SDOM::IDisplayObject']]],
-  ['ttf_5ffont_5f_18',['ttf_font_',['../classSDOM_1_1TTFAsset.html#ad572e4042acf780c7a2208ef0cc88e8e',1,'SDOM::TTFAsset']]],
-  ['ttf_5ffont_5fhandle_5f_19',['ttf_font_handle_',['../classSDOM_1_1TruetypeFont.html#ab5e14832dbb25790e312a187a78c5fac',1,'SDOM::TruetypeFont']]],
-  ['type_20',['type',['../classSDOM_1_1Event.html#a646fd331c0ed1a86515a357e10364c9b',1,'SDOM::Event::type'],['../structSDOM_1_1IAssetObject_1_1InitStruct.html#a943787c07c8eae0928dcc2cfacbde746',1,'SDOM::IAssetObject::InitStruct::type'],['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a0faa47d35c52461da9e43a87f5384deb',1,'SDOM::IDisplayObject::InitStruct::type'],['../structSDOM_1_1Label_1_1LabelToken.html#a4f37b1c99559dd3870035eee700e1890',1,'SDOM::Label::LabelToken::type']]],
-  ['type_5f_21',['type_',['../classSDOM_1_1AssetHandle.html#aa3650543b6d546e11118c71f1c4dc1a3',1,'SDOM::AssetHandle::type_'],['../classSDOM_1_1IAssetObject.html#acf24a17e1284129dbef77cfc229bba05',1,'SDOM::IAssetObject::type_'],['../classSDOM_1_1IDisplayObject.html#a8bf31785ce47d1bcc093e9d9db5b5c48',1,'SDOM::IDisplayObject::type_']]],
-  ['typename_22',['TypeName',['../classSDOM_1_1BitmapFont.html#a5613be008b9cb72a51314aa5b8a755dc',1,'SDOM::BitmapFont::TypeName'],['../classSDOM_1_1IAssetObject.html#abcf0f3bc00c85b028222c08e6eeea92d',1,'SDOM::IAssetObject::TypeName'],['../classSDOM_1_1IDisplayObject.html#a42340b92b2f8e59e23dae8598fafc6cc',1,'SDOM::IDisplayObject::TypeName'],['../classSDOM_1_1IFontObject.html#a8baabbb7c2a9ab2077a6f0594bef0d54',1,'SDOM::IFontObject::TypeName'],['../classSDOM_1_1Label.html#abcd0ff95f8717b417c3c52b823d333d9',1,'SDOM::Label::TypeName'],['../classSDOM_1_1SpriteSheet.html#ab7584b544b2cbe9875685f5475563586',1,'SDOM::SpriteSheet::TypeName'],['../classSDOM_1_1Stage.html#a014c36ff960df28e659f4b2c69b12fdd',1,'SDOM::Stage::TypeName'],['../classSDOM_1_1Texture.html#aeae0c671509d31a3e9d15b410e4299c7',1,'SDOM::Texture::TypeName'],['../classSDOM_1_1TruetypeFont.html#ace8f1a63d73f75a0ee0925d350230d19',1,'SDOM::TruetypeFont::TypeName'],['../classSDOM_1_1TTFAsset.html#a96a26f90806c29bc60c120d80f2dfa95',1,'SDOM::TTFAsset::TypeName']]]
+  ['underline_0',['UNDERLINE',['../classCLR.html#acc3a4f736db8118cef09f0f6000e6702',1,'CLR']]],
+  ['underline_1',['underline',['../structSDOM_1_1FontStyle.html#a9d0ce99f4878f9fd2cc61a13cfbcfdae',1,'SDOM::FontStyle::underline'],['../structSDOM_1_1Label_1_1InitStruct.html#a2dc3ce5e9f253cb26e70eb0d84aa5166',1,'SDOM::Label::InitStruct::underline']]],
+  ['usecapture_2',['useCapture',['../classSDOM_1_1Event.html#af5e49b7da66ac7d4c092ddd582524db9',1,'SDOM::Event']]],
+  ['user_3',['User',['../classSDOM_1_1EventType.html#aed0c4427ac3ac52e140f425fdab9452d',1,'SDOM::EventType']]],
+  ['userfontheightspecified_5f_4',['userFontHeightSpecified_',['../classSDOM_1_1Label.html#a985d979b48032813395c132af252e5f0',1,'SDOM::Label']]],
+  ['userfontwidthspecified_5f_5',['userFontWidthSpecified_',['../classSDOM_1_1Label.html#a9211e371b24e39b7bfa0dfdc223217dd',1,'SDOM::Label']]]
 ];
