@@ -62,7 +62,7 @@ namespace SDOM
             if not status then err = tostring(msg) else ok = true end
             return { ok = ok, err = err }
         )lua").get<sol::table>();
-
+        // report and return test condition state
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());
         if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
@@ -72,104 +72,124 @@ namespace SDOM
 
     bool SpriteSheet_test2()
     {
-        bool ok = true;
-        Core& core = getCore();
-        Factory& factory = getFactory();
-
-        // Test 2: create via Factory/Lua-style config table (if supported)
-        ok = ok && UnitTests::run("SpriteSheet #2", "Create SpriteSheet via Lua-style table", [&core, &factory]() -> bool {
-            sol::state_view lua = getLua();
-            sol::table cfg = lua.create_table();
-            cfg["type"] = SpriteSheet::TypeName;
-            cfg["name"] = "ut_bmp8_lua";
-            cfg["filename"] = "internal_font_8x8";
-            cfg["spriteWidth"] = 8;
-            cfg["spriteHeight"] = 8;
-
-            // Factory may expose createAsset that accepts sol::table (if implemented)
-            AssetHandle asset;
-            try {
-                asset = factory.createAsset("SpriteSheet", cfg);
-            } catch (...) {
-                // if createAsset(sol::table) not implemented, consider as not-failing test path
-                return true;
-            }
-
-            if (!asset.isValid()) return false;
-            SpriteSheet* ss = asset.as<SpriteSheet>();
-            if (!ss) return false;
-
-            // basic property check
-            if (ss->getName() != "ut_bmp8_lua") return false;
-
-            // try load/unload
-            try {
-                ss->onLoad();
-                ss->onUnload();
-            } catch (...) {
-                return false;
-            }
-
-            return true;
-        });
-
-        return ok;
-    }
-
-    bool SpriteSheet_test3() {
+        std::string testName = "SpriteSheet #2";
+        std::string testDesc = "Create SpriteSheet via Lua-style table";
         sol::state& lua = getLua();
-        bool ok = lua.script(R"(
+        // Lua test script performs the same checks as the previous C++ test body.
+        auto res = lua.script(R"lua(
+            local ok = false
+            local err = ""
+            local function do_test()
+                local cfg = {
+                    type = "SpriteSheet",
+                    name = "ut_bmp8_lua",
+                    filename = "internal_font_8x8",
+                    spriteWidth = 8,
+                    spriteHeight = 8
+                }
 
-            local ss = Core:createAsset("SpriteSheet", {
-                type = "SpriteSheet",
-                name = "ut_bmp8_lua2",
-                filename = "internal_font_8x8",
-                spriteWidth = 8,
-                spriteHeight = 8
-            })
+                -- attempt creation via Core:createAsset(cfg); if the binding/overload isn't implemented,
+                -- treat that as a non-failing path (mirrors previous C++ catch behavior).
+                local status, asset = pcall(function() return Core:createAsset("SpriteSheet", cfg) end)
+                if not status then
+                    return true
+                end
 
-            if not ss then 
-                print("Failed to create SpriteSheet via Lua")
-                return false 
-            end
-            if ss:getName() ~= "ut_bmp8_lua2" then 
-                print("SpriteSheet name mismatch")
-                return false 
-            end
-            local count = ss:getSpriteCount()
-            if count <= 0 then 
-                print("SpriteSheet sprite count invalid")
-                return false 
-            end
-            local x0 = ss:getSpriteX(0)
-            local y0 = ss:getSpriteY(0)
-            local xl = ss:getSpriteX(count - 1)
-            local yl = ss:getSpriteY(count - 1)
-            if not x0 or not y0 or not xl or not yl then 
-                print("SpriteSheet sprite index calculations failed")
-                return false 
+                if not asset then error("createAsset returned nil") end
+                if asset:getName() ~= "ut_bmp8_lua" then error("name mismatch: " .. tostring(asset:getName())) end
+
+                local count = asset:getSpriteCount()
+                if count <= 0 then error("spriteCount invalid: " .. tostring(count)) end
+
+                -- check first and last index computations (bounds)
+                local x0 = asset:getSpriteX(0)
+                local y0 = asset:getSpriteY(0)
+                local xl = asset:getSpriteX(count - 1)
+                local yl = asset:getSpriteY(count - 1)
+                if not x0 or not y0 or not xl or not yl then error("sprite index calculations failed") end
+
+                return true
             end
 
-            return true
-        )").get<bool>();
-        return UnitTests::run("SpriteSheet #3", "Use the 'default_bmp_8x8' SpriteSheet", [ok]() { return ok; });
-    }
+            local status, msg = pcall(do_test)
+            if not status then err = tostring(msg) else ok = true end
+            return { ok = ok, err = err }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: SpriteSheet_test2()
+
+    bool SpriteSheet_test3()
+    {
+        std::string testName = "SpriteSheet #3";
+        std::string testDesc = "Use the 'default_bmp_8x8' SpriteSheet";
+        sol::state& lua = getLua();
+
+        auto res = lua.script(R"lua(
+            local ok = false
+            local err = ""
+            local function do_test()
+                local ss = Core:createAsset("SpriteSheet", {
+                    type = "SpriteSheet",
+                    name = "ut_bmp8_lua2",
+                    filename = "internal_font_8x8",
+                    spriteWidth = 8,
+                    spriteHeight = 8
+                })
+                if not ss then error("createAsset returned nil") end
+                if ss:getName() ~= "ut_bmp8_lua2" then error("name mismatch: " .. tostring(ss:getName())) end
+
+                local count = ss:getSpriteCount()
+                if count <= 0 then error("spriteCount invalid: " .. tostring(count)) end
+
+                local x0 = ss:getSpriteX(0)
+                local y0 = ss:getSpriteY(0)
+                local xl = ss:getSpriteX(count - 1)
+                local yl = ss:getSpriteY(count - 1)
+                if not x0 or not y0 or not xl or not yl then error("sprite index calculations failed") end
+
+                return true
+            end
+
+            local status, msg = pcall(do_test)
+            if not status then err = tostring(msg) else ok = true end
+            return { ok = ok, err = err }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: SpriteSheet_test3()
 
     bool SpriteSheet_test4() 
     {
+        std::string testName = "SpriteSheet #4";
+        std::string testDesc = "Exercise the 'default_bmp_8x8' SpriteSheet";
         sol::state& lua = getLua();
-        bool ok = lua.script(R"(
 
-            local ss = getAssetObject("ut_bmp8_lua2")
-            if not ss then
-                print("Failed to get asset: ut_bmp8_lua2")
-                return false
+        auto res = lua.script(R"lua(
+            local ok = false
+            local err = ""
+            local function do_test()
+                local ss = getAssetObject("ut_bmp8_lua2")
+                if not ss then error("Failed to get asset: ut_bmp8_lua2") end
+                return true
             end
 
-            return true
-        )").get<bool>();
-        return UnitTests::run("SpriteSheet #4", "Exercise the 'default_bmp_8x8' SpriteSheet", [ok]() { return ok; });
-    }
+            local status, msg = pcall(do_test)
+            if not status then err = tostring(msg) else ok = true end
+            return { ok = ok, err = err }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: SpriteSheet_test4()
 
     bool SpriteSheet_UnitTests() 
     {

@@ -644,41 +644,46 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## [October 13, 2025]
-- Added inline numeric style escapes to Label tokenization:
+- **Added inline numeric style escapes to Label tokenization:**
   - `[border=N]`, `[outline=N]`, `[pad=WxH]` / `[padding=WxH]`, `[dropshadow=X,Y]`
   - Parser accepts optional spaces (e.g. `[border = 3]`, `[border=    3]`) and single-number shorthand for padding.
   - Implemented per-field stacks so nested tags restore previous values correctly.
   - Defensive numeric parsing (validated before stoi) to avoid exceptions.
 
-- Tokenizer robustness and normalization:
+- **Tokenizer robustness and normalization:**
   - Centralized and normalized escape parsing (trimmed params, alias support for `pad`/`padding`).
   - Ensured numeric forms have precedence where appropriate while preserving existing color/escape semantics.
-
-- Color palette and mapping updates:
+- **Color palette and mapping updates:**
   - Added `md_gray` (102) to complete the 6-step grayscale ramp.
   - Extended color map with many named colors (tan, orange, brown, gold, bronze, lime, mint, sea_green, royal_blue, etc.).
   - Documented named colors and hex escapes (`[RGB=rrggbb]`, `[RGBA=rrggbbaa]`) in label_text_parsing.md.
-
-- Tests
+- **Tests:**
   - Implemented Label_test1() to validate internal resources created.
   - Implemented Label_test2() to validate SpriteSheet/BitmapFont asset existence and metrics
   - Implemented Label_test3() to validate SpriteSheet/BitmapFont asset existence and metrics (LUA)
   - Implemented Label_test4() to validate Label word/phrase style flags tokenization and inspection
   - Implemented Label_test5() to validate numeric-style escapes (border/outlines/padding/dropshadow) via Lua unit test.
   - Implemented Label_test6() to validate color-target escapes (`[fgnd=]`, `[bgnd=]`, `[border=]`, `[outline=]`, `[shadow=]`) using named and hex colors.
-  - Removed temporary debug output from tests.
   - Built and ran the test suite; label-related tests (including new tests) passed locally.
-
-- Docs and cleanup
+  - **ToDo:**
+    - Add unit tests for malformed/edge-case escapes (invalid hex, missing params, negative values).
+- **Docs and cleanup:**
   - Updated docs/label_text_parsing.md with numeric escape syntax, semantics, examples, and the full color list.
   - Removed debug prints and cleaned up temporary diagnostics used during development.
 
 ---
 ## Next Steps:
 - refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test1()` → `Label_test1()`).
-- Add unit tests for malformed/edge-case escapes (invalid hex, missing params, negative values).
-- Add nested-tag stress tests to exercise stack behavior further.
-- Optionally update README / changelog and open a PR for review.
+  - Refactor `SpriteSheet_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
+  - Refactor `GarbageCollection_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
+  - Refactor `Event_UnitTests` to utilize proper scaffolding patterns.
+  - Refactor `EventType_UnitTests` to utilize proper scaffolding patterns.
+  - Refactor `DisplayHandle_UnitTests` to utilize proper scaffolding patterns.
+  - Refactor `Lua_UnitTests` to utilize proper scaffolding patterns.
+  - Refactor `Stage_UnitTests` to utilize proper scaffolding patterns.
+  - Refactor `IDisplayObject` to utilize proper scaffolding patterns.
+  - Refactor `Factory` to utilize proper scaffolding patterns.
+  - Refactor `Core` to utilize proper scaffolding patterns.
 
 ---
 ## ToDo:
