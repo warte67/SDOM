@@ -132,11 +132,17 @@ namespace SDOM
 
         AssetHandle textureAsset;      // Underlying texture asset for the sprite sheet
 
+    // Accessor for the underlying texture asset
+    AssetHandle getTextureAsset() const { return textureAsset; }
+
         int spriteWidth_ = 8;   // Default sprite width
         int spriteHeight_ = 8;  // Default sprite height
 
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+
+    // Equality comparison for parameter-based reuse checks
+    bool operator==(const SpriteSheet& other) const;
 
     }; // END class SpriteSheet
 

@@ -306,6 +306,24 @@ namespace SDOM
         return (spriteIndex / spritesPerRow) * spriteHeight_;
     }
 
+    bool SpriteSheet::operator==(const SpriteSheet& other) const
+    {
+        try {
+            if (filename_ != other.filename_) return false;
+            if (spriteWidth_ != other.spriteWidth_) return false;
+            if (spriteHeight_ != other.spriteHeight_) return false;
+            // If both have valid texture assets, compare underlying texture filenames
+            if (textureAsset.isValid() && other.textureAsset.isValid()) {
+                try {
+                    if (textureAsset.getFilename() != other.textureAsset.getFilename()) return false;
+                } catch(...) {}
+            }
+            return true;
+        } catch(...) {
+            return false;
+        }
+    }
+
 
 
     void SpriteSheet::drawSprite(int spriteIndex, int x, int y, SDL_Color color, SDL_ScaleMode scaleMode)

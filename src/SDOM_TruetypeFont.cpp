@@ -50,6 +50,7 @@ namespace SDOM
                 init.filename = filename_;
                 // use currently configured font size if available
                 init.internalFontSize = (fontSize_ > 0 ? fontSize_ : 10);
+                std::cout << "TruetypeFont::onInit -> creating TTFAsset: name='" << init.name << "' filename='" << init.filename << "' size=" << init.internalFontSize << "\n";
                 AssetHandle h = getFactory().createAsset(TTFAsset::TypeName, init);
                 if (h.isValid()) {
                     ttf_font_handle_ = h;

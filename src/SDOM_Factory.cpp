@@ -604,28 +604,81 @@ namespace SDOM
             ERROR("Factory::createAsset: 'filename' cannot be empty");
             return AssetHandle();
         }
+        // If an asset already exists for this filename, consider reusing it.
+        // Special-case TTFAsset: only reuse if font size matches the requested size
+            // Only certain asset types should be reused by filename. Avoid reusing
+            // wrapper types like 'TruetypeFont' which are per-resource wrappers.
+            auto shouldReuseByFilename = [&](const std::string& t) -> bool {
+                return (t == "Texture" || t == TTFAsset::TypeName);
+            };
+
+            if (shouldReuseByFilename(typeName) && typeName == TTFAsset::TypeName) {
+            int desiredSize = 0;
+            try {
+                if (config["internalFontSize"].valid()) desiredSize = config["internalFontSize"].get<int>();
+                else if (config["internal_font_size"].valid()) desiredSize = config["internal_font_size"].get<int>();
+                else if (config["fontSize"].valid()) desiredSize = config["fontSize"].get<int>();
+                else if (config["font_size"].valid()) desiredSize = config["font_size"].get<int>();
+                else if (config["size"].valid()) desiredSize = config["size"].get<int>();
+            } catch(...) { desiredSize = 0; }
+
+            if (desiredSize > 0) {
+                for (const auto& pair : assetObjects_) {
+                    const auto& assetPtr = pair.second;
+                    if (!assetPtr) continue;
+                    try {
+                        if (assetPtr->getFilename() == filename && assetPtr->getType() == TTFAsset::TypeName) {
+                            TTFAsset* existingTTF = dynamic_cast<TTFAsset*>(assetPtr.get());
+                            if (existingTTF && existingTTF->getFontSize() == desiredSize) {
+                                AssetHandle out;
+                                out.name_ = pair.first;
+                                out.type_ = assetPtr->getType();
+                                out.filename_ = assetPtr->getFilename();
+                                // std::cout << "Factory::createAsset: Reusing existing TTFAsset '" << out.getName() << "' for filename '" << filename << "' (size=" << desiredSize << ")\n";
+                                return out;
+                            }
+                        }
+                    } catch(...) {}
+                }
+            }
+            // If desiredSize == 0 we fall through and do not reuse to avoid size-mismatch surprises
+        } else if (shouldReuseByFilename(typeName)) {
+            AssetHandle existing = findAssetByFilename(filename, typeName);
+            if (existing) {
+                // std::cout << "Factory::createAsset: Reusing existing asset '" << existing.getName() << "' for filename '" << filename << "' (type=" << typeName << ")\n";
+                return existing;
+            }
+        }
             
+        // NOTE: Do not reuse SpriteSheet objects here. Even if a SpriteSheet with
+        // matching params exists, create a fresh SpriteSheet instance so the
+        // requested registry name becomes the asset's logical name. Texture
+        // reuse (by filename) remains in place so heavy GPU resources are not
+        // duplicated. This preserves existing unit-test expectations.
+
         auto it = assetCreators_.find(typeName);
         if (it != assetCreators_.end() && it->second.fromLua) 
         {
-            auto assetObj = it->second.fromLua(config);
-            if (!assetObj) 
-            {
-                ERROR("Factory::createAsset: Failed to create asset object of type '" + typeName + "' from Lua.");
-                return AssetHandle();
-            }
-            assetObj->setType(typeName);
-            assetObjects_[requestedName] = std::move(assetObj);
-            assetObjects_[requestedName]->onInit();
+                auto uniqueAssetObj = it->second.fromLua(config);
+                if (!uniqueAssetObj) 
+                {
+                    ERROR("Factory::createAsset: Failed to create asset object of type '" + typeName + "' from Lua.");
+                    return AssetHandle();
+                }
+                uniqueAssetObj->setType(typeName);
+                // convert to shared_ptr for aliasing support
+                std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
+                assetObjects_[requestedName] = sharedAsset;
+                assetObjects_[requestedName]->onInit();
 
-            // Register Lua bindings for this concrete asset instance so its methods are available
-            try {
-                assetObjects_[requestedName]->registerLuaBindings(typeName, SDOM::getLua());
-            } catch(...) {
-                ERROR("Factory::createAsset: Failed to register Lua bindings for asset: " + requestedName);
-            }
+                // Register Lua bindings for this concrete asset instance so its methods are available
+                try {
+                    assetObjects_[requestedName]->registerLuaBindings(typeName, SDOM::getLua());
+                } catch(...) {
+                    ERROR("Factory::createAsset: Failed to register Lua bindings for asset: " + requestedName);
+                }
             
-            return AssetHandle(requestedName, typeName, filename);
+                return AssetHandle(requestedName, typeName, filename);
         }
         return AssetHandle();
     }
@@ -636,12 +689,67 @@ namespace SDOM
             ERROR("Factory::createAsset(init): Asset object with name '" + init.name + "' already exists");
             return AssetHandle();
         }
+        // If an asset already exists for this filename, reuse it instead of creating a duplicate.
+        if (!init.filename.empty()) {
+            // Special-case TTFAsset: only reuse if the existing asset's font size matches.
+            if (typeName == TTFAsset::TypeName) {
+                try {
+                    const auto& ttfInit = static_cast<const TTFAsset::InitStruct&>(init);
+                    int desiredSize = ttfInit.internalFontSize;
+                    for (const auto& pair : assetObjects_) {
+                        const auto& assetPtr = pair.second;
+                        if (!assetPtr) continue;
+                        try {
+                            if (assetPtr->getFilename() == init.filename && assetPtr->getType() == TTFAsset::TypeName) {
+                                TTFAsset* existingTTF = dynamic_cast<TTFAsset*>(assetPtr.get());
+                                if (existingTTF && existingTTF->getFontSize() == desiredSize) {
+                                    AssetHandle out;
+                                    out.name_ = pair.first;
+                                    out.type_ = assetPtr->getType();
+                                    out.filename_ = assetPtr->getFilename();
+                                    if (out.getName() != init.name && !init.name.empty()) {
+                                        // std::cout << "Factory::createAsset(init): Reusing existing TTFAsset '" << out.getName() 
+                                        //             << "' for filename '" << init.filename << "' (requested name='" << init.name << "')\n";
+                                    }
+                                    return out;
+                                }
+                            }
+                        } catch(...) {}
+                    }
+                } catch(...) {
+                    // fall back to generic lookup if cast fails
+                }
+            } else if (typeName == std::string("Texture")) {
+                AssetHandle existing = findAssetByFilename(init.filename, typeName);
+                if (existing) {
+                    if (existing.getName() != init.name && !init.name.empty()) {
+                        // std::cout << "Factory::createAsset(init): Reusing existing asset '" << existing.getName() 
+                        //           << "' for filename '" << init.filename << "' (requested name='" << init.name << "')\n";
+                    }
+                    return existing;
+                }
+            }
+            // SpriteSheet: try to reuse by matching filename and sprite dimensions
+            if (typeName == SpriteSheet::TypeName) {
+                try {
+                    const auto& ssInit = static_cast<const SpriteSheet::InitStruct&>(init);
+                    AssetHandle existingSS = findSpriteSheetByParams(init.filename, ssInit.spriteWidth, ssInit.spriteHeight);
+                    if (existingSS.isValid()) {
+                        // Do not alias or return an existing SpriteSheet; tests expect
+                        // the requested name to be associated with a new object.
+                        // std::cout << "Factory::createAsset(init): Found existing SpriteSheet '" << existingSS.getName() 
+                        //           << "' matching filename '" << init.filename << "' (w=" << ssInit.spriteWidth << ",h=" << ssInit.spriteHeight << ") - creating new instance for '" << init.name << "'\n";
+                    }
+                } catch(...) {}
+            }
+        }
         auto it = assetCreators_.find(typeName);
         if (it != assetCreators_.end() && it->second.fromInitStruct) {
-            auto assetObj = it->second.fromInitStruct(init);
-            if (assetObj) {
-                assetObj->setType(typeName);
-                assetObjects_[init.name] = std::move(assetObj);
+                auto uniqueAssetObj = it->second.fromInitStruct(init);
+            if (uniqueAssetObj) {
+                uniqueAssetObj->setType(typeName);
+                std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
+                assetObjects_[init.name] = sharedAsset;
                 assetObjects_[init.name]->onInit();
                 // Register per-instance Lua bindings so Lua-visible methods exist on the handle
                 try {
@@ -853,6 +961,54 @@ namespace SDOM
         return names;
     }
 
+    AssetHandle Factory::findAssetByFilename(const std::string& filename, const std::string& typeName) const
+    {
+        // Search assetObjects_ for an object whose getFilename() matches the provided filename.
+        for (const auto& pair : assetObjects_) {
+            const std::string& name = pair.first;
+            const auto& assetPtr = pair.second;
+            if (!assetPtr) continue;
+            try {
+                std::string fn = assetPtr->getFilename();
+                if (fn == filename) {
+                    if (typeName.empty() || assetPtr->getType() == typeName) {
+                        AssetHandle out;
+                        out.name_ = name;
+                        out.type_ = assetPtr->getType();
+                        out.filename_ = fn;
+                        return out;
+                    }
+                }
+            } catch(...) {
+                // ignore errors from getFilename/getType
+            }
+        }
+        return AssetHandle();
+    }
+
+    AssetHandle Factory::findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH) const
+    {
+        for (const auto& pair : assetObjects_) {
+            const std::string& name = pair.first;
+            const auto& assetPtr = pair.second;
+            if (!assetPtr) continue;
+            try {
+                if (assetPtr->getType() == SpriteSheet::TypeName && assetPtr->getFilename() == filename) {
+                    const SpriteSheet* ss = dynamic_cast<const SpriteSheet*>(assetPtr.get());
+                    if (!ss) continue;
+                    if (ss->getSpriteWidth() == spriteW && ss->getSpriteHeight() == spriteH) {
+                        AssetHandle out;
+                        out.name_ = name;
+                        out.type_ = ss->getType();
+                        out.filename_ = ss->getFilename();
+                        return out;
+                    }
+                }
+            } catch(...) {}
+        }
+        return AssetHandle();
+    }
+
     void Factory::clear()
     {
         displayObjects_.clear();
@@ -875,16 +1031,190 @@ namespace SDOM
     void Factory::printAssetRegistry() const
     {
         std::cout << "Factory Asset Object Registry:\n";
-        for (const auto& pair : assetObjects_) 
-        {
-            const auto& name = pair.first;
-            const auto& assetObject = pair.second;
-            std::cout << "  Name: " << name
-                    << ", Type: " << (assetObject ? assetObject->getType() : "Unknown")
-                    << ", Filename: " << (assetObject ? assetObject->getFilename() : "Unknown")
-                    << "\n";
+        for (const auto& kv : assetObjects_) {
+            const auto& name = kv.first;
+            const IAssetObject* obj = kv.second.get();
+            std::cout << "  Name: " << name << ", Type: " << obj->getType()
+                    << ", Filename: " << obj->getFilename();
+            if (auto ss = dynamic_cast<const SpriteSheet*>(obj)) {
+                std::cout << ", spriteW=" << ss->getSpriteWidth()
+                        << ", spriteH=" << ss->getSpriteHeight()
+                        << ", count=" << ss->getSpriteCount();
+            }
+            if (auto bf = dynamic_cast<const BitmapFont*>(obj)) {
+                std::cout << ", glyphW=" << bf->getGlyphWidth('W')
+                        << ", glyphH=" << bf->getGlyphHeight('W');
+            }
+            std::cout << '\n';
         }
-        std::cout << "Total asset objects: " << assetObjects_.size() << std::endl;
+        std::cout << "Total asset objects: " << assetObjects_.size() << "\n";
+    }
+
+
+    void Factory::printAssetTree() const
+    {
+        std::cout << "Factory Asset Dependency Tree:\n";
+        // To avoid cycles, track visited asset names
+        std::unordered_set<std::string> visited;
+
+        // Helper to print a single asset and its immediate children
+        auto printNode = [&](const std::string& name, int indent) {
+            auto it = assetObjects_.find(name);
+            if (it == assetObjects_.end()) return;
+            const IAssetObject* obj = it->second.get();
+            if (!obj) return;
+            for (int i = 0; i < indent; ++i) std::cout << "  ";
+            std::cout << "- " << name << " (type=" << obj->getType() << ", file=" << obj->getFilename() << ")\n";
+
+            // If BitmapFont, show SpriteSheet child (use public getter getResourceHandle)
+            if (obj->getType() == BitmapFont::TypeName) {
+                const BitmapFont* bf = dynamic_cast<const BitmapFont*>(obj);
+                if (bf) {
+                    AssetHandle ss = bf->getResourceHandle();
+                    if (ss.isValid()) {
+                        for (int i = 0; i < indent + 1; ++i) std::cout << "  ";
+                        std::cout << "-> SpriteSheet: " << ss.getName() << " (file=" << ss.getFilename() << ")\n";
+                        // follow through to texture
+                        IAssetObject* ssObj = ss.get();
+                        if (ssObj) {
+                            const SpriteSheet* ssp = dynamic_cast<const SpriteSheet*>(ssObj);
+                            if (ssp) {
+                                AssetHandle t = ssp->getTextureAsset();
+                                if (t.isValid()) {
+                                    for (int i = 0; i < indent + 2; ++i) std::cout << "  ";
+                                    std::cout << "-> Texture: " << t.getName() << " (file=" << t.getFilename() << ")\n";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // If TruetypeFont, show TTFAsset child (use public getter getResourceHandle)
+            if (obj->getType() == TruetypeFont::TypeName) {
+                const TruetypeFont* tf = dynamic_cast<const TruetypeFont*>(obj);
+                if (tf) {
+                    AssetHandle ttf = tf->getResourceHandle();
+                    if (ttf.isValid()) {
+                        for (int i = 0; i < indent + 1; ++i) std::cout << "  ";
+                        std::cout << "-> TTFAsset: " << ttf.getName() << " (file=" << ttf.getFilename() << ")\n";
+                    }
+                }
+            }
+        };
+
+        // Iterate over all top-level assets and print their dependencies
+        for (const auto& kv : assetObjects_) {
+            const std::string& name = kv.first;
+            if (visited.count(name)) continue;
+            printNode(name, 0);
+            visited.insert(name);
+        }
+        std::cout << std::flush;
+    }
+
+
+    void Factory::printAssetTreeGrouped() const
+    {
+        std::cout << "Factory Asset Tree (grouped by root resources):\n";
+
+        // Find roots: Textures and TTFAssets
+        std::vector<std::string> textureRoots;
+        std::vector<std::string> ttfRoots;
+        for (const auto& kv : assetObjects_) {
+            const std::string& name = kv.first;
+            const IAssetObject* obj = kv.second.get();
+            if (!obj) continue;
+            if (obj->getType() == Texture::TypeName) textureRoots.push_back(name);
+            if (obj->getType() == TTFAsset::TypeName) ttfRoots.push_back(name);
+        }
+
+        // Helper lambdas to find dependents
+        auto findSpriteSheetsForTexture = [&](const std::string& texName) {
+            std::vector<std::string> out;
+            for (const auto& kv : assetObjects_) {
+                const IAssetObject* obj = kv.second.get();
+                if (!obj) continue;
+                if (obj->getType() == SpriteSheet::TypeName) {
+                    const SpriteSheet* ss = dynamic_cast<const SpriteSheet*>(obj);
+                    if (ss && ss->getFilename() == texName) out.push_back(kv.first);
+                }
+            }
+            return out;
+        };
+
+        auto findBitmapFontsForSpriteSheet = [&](const std::string& sheetName) {
+            std::vector<std::string> out;
+            for (const auto& kv : assetObjects_) {
+                const IAssetObject* obj = kv.second.get();
+                if (!obj) continue;
+                if (obj->getType() == BitmapFont::TypeName) {
+                    const BitmapFont* bf = dynamic_cast<const BitmapFont*>(obj);
+                    if (bf) {
+                        AssetHandle sh = bf->getResourceHandle();
+                        if (sh.isValid() && sh.getName() == sheetName) out.push_back(kv.first);
+                    }
+                }
+            }
+            return out;
+        };
+
+        auto findTruetypesForTTF = [&](const std::string& ttfName) {
+            std::vector<std::string> out;
+            for (const auto& kv : assetObjects_) {
+                const IAssetObject* obj = kv.second.get();
+                if (!obj) continue;
+                if (obj->getType() == TruetypeFont::TypeName) {
+                    const TruetypeFont* tf = dynamic_cast<const TruetypeFont*>(obj);
+                    if (tf) {
+                        AssetHandle rh = tf->getResourceHandle();
+                        if (rh.isValid() && rh.getName() == ttfName) out.push_back(kv.first);
+                    }
+                }
+            }
+            return out;
+        };
+
+        // Print textures and their dependents
+        for (size_t i = 0; i < textureRoots.size(); ++i) {
+            const std::string& tex = textureRoots[i];
+            bool isLastTex = (i + 1 == textureRoots.size() && ttfRoots.empty());
+            std::cout << (isLastTex ? "└── " : "├── ") << tex << "\n";
+
+            auto sheets = findSpriteSheetsForTexture(tex);
+            for (size_t j = 0; j < sheets.size(); ++j) {
+                bool lastSheet = (j + 1 == sheets.size());
+                std::cout << (isLastTex ? "    " : "│   ");
+                std::cout << (lastSheet ? "└── " : "├── ") << sheets[j] << "\n";
+
+                auto fonts = findBitmapFontsForSpriteSheet(sheets[j]);
+                for (size_t k = 0; k < fonts.size(); ++k) {
+                    bool lastFont = (k + 1 == fonts.size());
+                    std::cout << (isLastTex ? "    " : "│   ");
+                    std::cout << (lastSheet ? "    " : "│   ");
+                    std::cout << (lastFont ? "└── " : "├── ") << fonts[k] << "\n";
+                }
+            }
+        }
+
+        // Print TTF roots and their dependents
+        for (size_t i = 0; i < ttfRoots.size(); ++i) {
+            const std::string& ttf = ttfRoots[i];
+            bool isLast = (i + 1 == ttfRoots.size());
+            // Determine connector depending on whether textures were printed
+            bool texturesPrinted = !textureRoots.empty();
+            if (texturesPrinted) std::cout << "├── "; else std::cout << (isLast ? "└── " : "├── ");
+            std::cout << ttf << "\n";
+
+            auto tts = findTruetypesForTTF(ttf);
+            for (size_t j = 0; j < tts.size(); ++j) {
+                bool last = (j + 1 == tts.size());
+                std::cout << (texturesPrinted ? "│   " : "    ");
+                std::cout << (last ? "└── " : "├── ") << tts[j] << "\n";
+            }
+        }
+
+        std::cout << std::flush;
     }
 
     

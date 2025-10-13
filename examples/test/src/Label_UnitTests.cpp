@@ -63,35 +63,6 @@ namespace SDOM
 
     bool Font_test2()
     {
-        // NOTE:
-            // Factory Asset Object Registry:
-            //   Name: internal_font_8x8_Texture_3, Type: Texture, Filename: internal_font_8x8
-            //   Name: ut_bmp8_lua2, Type: SpriteSheet, Filename: internal_font_8x8
-            //   Name: ut_bmp8_lua, Type: SpriteSheet, Filename: internal_font_8x8
-            //   Name: internal_font_8x8_Texture_1, Type: Texture, Filename: internal_font_8x8
-            //   Name: ut_bmp8, Type: SpriteSheet, Filename: internal_font_8x8
-            //   Name: external_font_8x12_SpriteSheet, Type: SpriteSheet, Filename: /home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png
-            //   Name: external_font_8x12, Type: BitmapFont, Filename: /home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png
-            //   Name: external_font_8x8, Type: BitmapFont, Filename: /home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png
-            //   Name: /home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png, Type: Texture, Filename: /home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png
-            //   Name: internal_ttf_asset, Type: TTFAsset, Filename: internal_ttf
-            //   Name: VarelaRound32, Type: truetype, Filename: VarelaRound32_TTFAsset
-            //   Name: internal_font_8x8, Type: BitmapFont, Filename: internal_font_8x8
-            //   Name: /home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png, Type: Texture, Filename: /home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png
-            //   Name: external_font_8x8_SpriteSheet, Type: SpriteSheet, Filename: /home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png
-            //   Name: internal_font_8x8_SpriteSheet, Type: SpriteSheet, Filename: internal_font_8x8
-            //   Name: internal_font_8x8_Texture, Type: Texture, Filename: internal_font_8x8
-            //   Name: internal_font_8x12, Type: BitmapFont, Filename: internal_font_8x12
-            //   Name: VarelaRound16_TTFAsset, Type: TTFAsset, Filename: /home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf
-            //   Name: internal_font_8x8_Texture_2, Type: Texture, Filename: internal_font_8x8
-            //   Name: internal_font_8x12_SpriteSheet, Type: SpriteSheet, Filename: internal_font_8x12
-            //   Name: internal_ttf, Type: truetype, Filename: internal_ttf_asset
-            //   Name: VarelaRound16, Type: truetype, Filename: VarelaRound16_TTFAsset
-            //   Name: internal_icon_8x8, Type: Texture, Filename: internal_icon_8x8
-            //   Name: internal_font_8x12_Texture, Type: Texture, Filename: internal_font_8x12
-            //   Name: VarelaRound32_TTFAsset, Type: TTFAsset, Filename: /home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf
-            // Total asset objects: 25
-
 
         std::string testName = "Font #2";
         std::string testDesc = "SpriteSheet/BitmapFont asset existence and metrics";
@@ -102,6 +73,14 @@ namespace SDOM
         )").get<sol::table>();
 
         // getFactory().printAssetRegistry();
+
+        // // Print the asset dependency tree for debugging/inspection
+        // try { getFactory().printAssetTree(); } catch(...) {}
+
+        // // Print the grouped asset dependency tree for debugging/inspection
+        // try { getFactory().printAssetTreeGrouped(); } catch(...) {}
+
+        // getCore().getRootNode()->printTree();
 
 
         // report and return test condition state

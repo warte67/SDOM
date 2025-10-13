@@ -104,6 +104,8 @@ namespace SDOM
         void clear();
         void printObjectRegistry() const;
         void printAssetRegistry() const;   // NEW, needs LUA bindings
+    void printAssetTree() const;       // Print a dependency tree of assets (BitmapFont->SpriteSheet->Texture, TruetypeFont->TTFAsset)
+    void printAssetTreeGrouped() const; // Grouped view with Texture/TTFAsset roots and dependents indented like printTree()
 
         // --- Internal Lua Integration --- //
         void initFromLua(const sol::table& lua);
@@ -114,7 +116,8 @@ namespace SDOM
         bool initialized_ = false;
         // --- Internal Storage --- //
         std::unordered_map<std::string, std::unique_ptr<IDisplayObject>> displayObjects_;
-        std::unordered_map<std::string, std::unique_ptr<IAssetObject>> assetObjects_;
+    // Use shared_ptr so multiple registry names can alias the same underlying asset
+    std::unordered_map<std::string, std::shared_ptr<IAssetObject>> assetObjects_;
         std::unordered_map<std::string, TypeCreators> creators_;
         std::unordered_map<std::string, AssetTypeCreators> assetCreators_;
 
@@ -130,6 +133,12 @@ namespace SDOM
             int dragStartWorldY;
         };            
         std::vector<futureChild> futureChildrenList_;
+
+    // Helper: find an existing asset by filename (optionally matching type)
+    AssetHandle findAssetByFilename(const std::string& filename, const std::string& typeName = "") const;
+
+    // Helper: find a SpriteSheet asset matching filename and sprite dimensions
+    AssetHandle findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH) const;
 
 
     };
