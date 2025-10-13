@@ -199,7 +199,7 @@ namespace SDOM
         void setDefaultStyle(const FontStyle& style) { defaultStyle_ = style; setDirty(); }
 
         bool isPunctuation(char c);
-        int tokenizeText();
+        int tokenizeText();  // returns tokenList.size
         void renderLabel();
         void renderLabelPass(RenderPass pass);
 

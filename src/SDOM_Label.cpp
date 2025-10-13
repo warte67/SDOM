@@ -663,18 +663,22 @@ namespace SDOM
                     if (colorIt != colorIDs.end()) {
                         color = colorIt->second;
                         validColor = true;
-                    } else if (colorValue.length() == 6) { // RGB hex
-                        color.r = std::stoi(colorValue.substr(0,2), nullptr, 16);
-                        color.g = std::stoi(colorValue.substr(2,2), nullptr, 16);
-                        color.b = std::stoi(colorValue.substr(4,2), nullptr, 16);
-                        color.a = 255;
-                        validColor = true;
-                    } else if (colorValue.length() == 8) { // RGBA hex
-                        color.r = std::stoi(colorValue.substr(0,2), nullptr, 16);
-                        color.g = std::stoi(colorValue.substr(2,2), nullptr, 16);
-                        color.b = std::stoi(colorValue.substr(4,2), nullptr, 16);
-                        color.a = std::stoi(colorValue.substr(6,2), nullptr, 16);
-                        validColor = true;
+                    } else if (colorValue.length() == 6 || colorValue.length() == 8) {
+                        // ensure the string is valid hex before parsing
+                        auto is_hexstr = [](const std::string& s) {
+                            return std::all_of(s.begin(), s.end(), [](unsigned char c){ return std::isxdigit(c); });
+                        };
+                        if (is_hexstr(colorValue)) {
+                            color.r = std::stoi(colorValue.substr(0,2), nullptr, 16);
+                            color.g = std::stoi(colorValue.substr(2,2), nullptr, 16);
+                            color.b = std::stoi(colorValue.substr(4,2), nullptr, 16);
+                            if (colorValue.length() == 8) {
+                                color.a = std::stoi(colorValue.substr(6,2), nullptr, 16);
+                            } else {
+                                color.a = 255;
+                            }
+                            validColor = true;
+                        }
                     }
 
                     if (validColor) {
@@ -693,17 +697,15 @@ namespace SDOM
                             explicitTarget = to_lower(explicitTarget);
                             SDL_Color color2 = {0,0,0,255};
                             bool valid2 = false;
-                            if (hex.length() == 6) {
+                            auto is_hexstr = [](const std::string& s) {
+                                return std::all_of(s.begin(), s.end(), [](unsigned char c){ return std::isxdigit(c); });
+                            };
+                            if ((hex.length() == 6 || hex.length() == 8) && is_hexstr(hex)) {
                                 color2.r = std::stoi(hex.substr(0,2), nullptr, 16);
                                 color2.g = std::stoi(hex.substr(2,2), nullptr, 16);
                                 color2.b = std::stoi(hex.substr(4,2), nullptr, 16);
-                                color2.a = 255;
-                                valid2 = true;
-                            } else if (hex.length() == 8) {
-                                color2.r = std::stoi(hex.substr(0,2), nullptr, 16);
-                                color2.g = std::stoi(hex.substr(2,2), nullptr, 16);
-                                color2.b = std::stoi(hex.substr(4,2), nullptr, 16);
-                                color2.a = std::stoi(hex.substr(6,2), nullptr, 16);
+                                if (hex.length() == 8) color2.a = std::stoi(hex.substr(6,2), nullptr, 16);
+                                else color2.a = 255;
                                 valid2 = true;
                             }
                             if (valid2) {
@@ -1595,10 +1597,38 @@ if (LABEL_DEBUG)
                         }
                         e["type"] = typeStr;
                         e["text"] = tk.text;
-                        // minimal style exposure: fontSize and alignment
+                        // expose full FontStyle to Lua so tests can assert style flags
                         sol::table style = sv.create_table();
+                        // boolean style flags
+                        style["bold"] = tk.style.bold;
+                        style["italic"] = tk.style.italic;
+                        style["underline"] = tk.style.underline;
+                        style["strikethrough"] = tk.style.strikethrough;
+                        style["border"] = tk.style.border;
+                        style["background"] = tk.style.background;
+                        style["outline"] = tk.style.outline;
+                        style["dropshadow"] = tk.style.dropshadow;
+                        // sizing and layout
                         style["fontSize"] = tk.style.fontSize;
+                        style["fontWidth"] = tk.style.fontWidth;
+                        style["fontHeight"] = tk.style.fontHeight;
+                        style["wordwrap"] = tk.style.wordwrap;
+                        style["auto_resize"] = tk.style.auto_resize;
+                        style["maxWidth"] = tk.style.maxWidth;
+                        style["maxHeight"] = tk.style.maxHeight;
+                        style["borderThickness"] = tk.style.borderThickness;
+                        style["outlineThickness"] = tk.style.outlineThickness;
+                        style["padding_horiz"] = tk.style.padding_horiz;
+                        style["padding_vert"] = tk.style.padding_vert;
+                        style["dropshadowOffsetX"] = tk.style.dropshadowOffsetX;
+                        style["dropshadowOffsetY"] = tk.style.dropshadowOffsetY;
                         style["align"] = Label::labelAlignToString_.at(tk.style.alignment);
+                        // colors as subtables
+                        sol::table fg = sv.create_table(); fg["r"] = tk.style.foregroundColor.r; fg["g"] = tk.style.foregroundColor.g; fg["b"] = tk.style.foregroundColor.b; fg["a"] = tk.style.foregroundColor.a; style["foregroundColor"] = fg;
+                        sol::table bg = sv.create_table(); bg["r"] = tk.style.backgroundColor.r; bg["g"] = tk.style.backgroundColor.g; bg["b"] = tk.style.backgroundColor.b; bg["a"] = tk.style.backgroundColor.a; style["backgroundColor"] = bg;
+                        sol::table bord = sv.create_table(); bord["r"] = tk.style.borderColor.r; bord["g"] = tk.style.borderColor.g; bord["b"] = tk.style.borderColor.b; bord["a"] = tk.style.borderColor.a; style["borderColor"] = bord;
+                        sol::table outl = sv.create_table(); outl["r"] = tk.style.outlineColor.r; outl["g"] = tk.style.outlineColor.g; outl["b"] = tk.style.outlineColor.b; outl["a"] = tk.style.outlineColor.a; style["outlineColor"] = outl;
+                        sol::table ds = sv.create_table(); ds["r"] = tk.style.dropshadowColor.r; ds["g"] = tk.style.dropshadowColor.g; ds["b"] = tk.style.dropshadowColor.b; ds["a"] = tk.style.dropshadowColor.a; style["dropshadowColor"] = ds;
                         e["style"] = style;
                         t[idx++] = e;
                     }
