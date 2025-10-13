@@ -61,10 +61,10 @@ namespace SDOM
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
     } // END: Label_test1()
 
-    bool Font_test2()
+    bool Label_test2()
     {
 
-        std::string testName = "Font #2";
+        std::string testName = "Label #2";
         std::string testDesc = "SpriteSheet/BitmapFont asset existence and metrics";
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script
@@ -99,7 +99,7 @@ namespace SDOM
         {
             [&]() { return Label_test0(); },    // scaffolding test
             [&]() { return Label_test1(); },    // internal resources created
-            [&]() { return Font_test2(); }      // SpriteSheet/BitmapFont asset existence and metrics
+            [&]() { return Label_test2(); }      // SpriteSheet/BitmapFont asset existence and metrics
         };
         for (auto& test : tests) 
         {
