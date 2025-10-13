@@ -511,6 +511,25 @@ namespace SDOM
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
     } // END: Label_test5()
 
+    bool Label_test6()
+    {
+        std::string testName = "Label #6";
+        std::string testDesc = "Label color targeted inline escapes tokenization and inspection";
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Lua test script (mirrors Label_test4 structure, but checks numeric inline escapes)
+        auto res = lua.script(R"lua(
+
+            -- Label_test6: comprehensive color-escape assertions
+
+            return { ok = ok, err = err }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Label_test6()
+
 
 
     bool Label_UnitTests() 
@@ -524,6 +543,7 @@ namespace SDOM
             [&]() { return Label_test3(); },    // SpriteSheet/BitmapFont asset existence and metrics (LUA)
             [&]() { return Label_test4(); },    // Label word/phrase style flags tokenization and inspection
             [&]() { return Label_test5(); },    // Label word/phrase border/outline/pad/dropshadow tokenization and inspection
+            [&]() { return Label_test6(); },    // Label color targeted inline escapes tokenization and inspection
         };
         for (auto& test : tests) 
         {
