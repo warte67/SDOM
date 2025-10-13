@@ -389,7 +389,7 @@ namespace SDOM
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
     } // END: Label_test4()
 
-    
+
     bool Label_test5()
     {
         std::string testName = "Label #5";
@@ -397,8 +397,84 @@ namespace SDOM
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script
         auto res = lua.script(R"lua(
-                -- return { ok = false, err = "unknown error" }
-                return { ok = true, err = "" }
+            -- Label_test5: verify numeric style fields propagate into token.style
+            local name = "unitLabelTest5"
+            local txt = "Numeric test ONE TWO THREE"
+            local cfg = {
+                name = name,
+                type = "Label",
+                resource_name = "internal_font_8x8",
+                text = txt,
+                border_thickness = 3,
+                outline_thickness = 2,
+                padding_horiz = 5,
+                padding_vert = 7,
+                dropshadow_offset_x = 4,
+                dropshadow_offset_y = 6,
+            }
+
+            local ok = true
+            local err = ""
+
+            local ok_create, h_or_err = pcall(function() return createDisplayObject("Label", cfg) end)
+            if not ok_create then
+                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
+            end
+            local h = h_or_err
+            if not h or not h:isValid() then
+                return { ok = false, err = "failed to create label" }
+            end
+
+            -- Force tokenization
+            local ok_tok, tok_err = pcall(function() return h:tokenizeText() end)
+            if not ok_tok then
+                return { ok = false, err = "tokenizeText failed: " .. tostring(tok_err) }
+            end
+
+            local ok_list, list_or_err = pcall(function() return h:getTokenList() end)
+            if not ok_list then
+                return { ok = false, err = "getTokenList failed: " .. tostring(list_or_err) }
+            end
+            local tokens = list_or_err
+            if not tokens or type(tokens) ~= "table" then
+                return { ok = false, err = "getTokenList did not return a table" }
+            end
+
+            -- Find the first word token to inspect style numeric fields
+            local word_idx = nil
+            for i = 1, #tokens do
+                if tokens[i].type == "word" then
+                    word_idx = i
+                    break
+                end
+            end
+            if not word_idx then
+                destroyDisplayObject(name)
+                return { ok = false, err = "no word token found" }
+            end
+
+            local s = tokens[word_idx].style or {}
+            -- expected numeric values from cfg above
+            local expected = {
+                border_thickness = 3,
+                outline_thickness = 2,
+                padding_horiz = 5,
+                padding_vert = 7,
+                dropshadow_offset_x = 4,
+                dropshadow_offset_y = 6,
+            }
+
+            for k, v in pairs(expected) do
+                local got = s[k]
+                if not got and got ~= 0 then got = 0 end
+                if got ~= v then
+                    ok = false
+                    err = err .. string.format("style.%s mismatch (expected %s got %s); ", tostring(k), tostring(v), tostring(got))
+                end
+            end
+
+            destroyDisplayObject(name)
+            return { ok = ok, err = err }
         )lua").get<sol::table>();
         // report and return test condition state
         bool ok = res["ok"].get_or(false);

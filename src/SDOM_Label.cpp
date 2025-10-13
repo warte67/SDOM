@@ -1609,19 +1609,19 @@ if (LABEL_DEBUG)
                         style["outline"] = tk.style.outline;
                         style["dropshadow"] = tk.style.dropshadow;
                         // sizing and layout
-                        style["fontSize"] = tk.style.fontSize;
-                        style["fontWidth"] = tk.style.fontWidth;
-                        style["fontHeight"] = tk.style.fontHeight;
+                        style["font_size"] = tk.style.fontSize;
+                        style["font_width"] = tk.style.fontWidth;
+                        style["font_height"] = tk.style.fontHeight;
                         style["wordwrap"] = tk.style.wordwrap;
                         style["auto_resize"] = tk.style.auto_resize;
-                        style["maxWidth"] = tk.style.maxWidth;
-                        style["maxHeight"] = tk.style.maxHeight;
-                        style["borderThickness"] = tk.style.borderThickness;
-                        style["outlineThickness"] = tk.style.outlineThickness;
+                        style["max_width"] = tk.style.maxWidth;
+                        style["max_height"] = tk.style.maxHeight;
+                        style["border_thickness"] = tk.style.borderThickness;
+                        style["outline_thickness"] = tk.style.outlineThickness;
                         style["padding_horiz"] = tk.style.padding_horiz;
                         style["padding_vert"] = tk.style.padding_vert;
-                        style["dropshadowOffsetX"] = tk.style.dropshadowOffsetX;
-                        style["dropshadowOffsetY"] = tk.style.dropshadowOffsetY;
+                        style["dropshadow_offset_x"] = tk.style.dropshadowOffsetX;
+                        style["dropshadow_offset_y"] = tk.style.dropshadowOffsetY;
                         style["align"] = Label::labelAlignToString_.at(tk.style.alignment);
                         // colors as subtables
                         sol::table fg = sv.create_table(); fg["r"] = tk.style.foregroundColor.r; fg["g"] = tk.style.foregroundColor.g; fg["b"] = tk.style.foregroundColor.b; fg["a"] = tk.style.foregroundColor.a; style["foregroundColor"] = fg;

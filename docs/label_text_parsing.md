@@ -124,7 +124,76 @@ Escape sequences are not rendered as text, but affect the rendering of subsequen
 - `[size=16]` — Sets the font size to 16 for all subsequent tokens.
 - `[size=8]`  — Sets the font size to 8 (e.g., for retro bitmap fonts).
 
-Note: Inter text size escapes are supported at the beginning of the text string only.  Adding size changes mid string may have undefined results.
+  Note: Inter text size escapes are supported at the beginning of the text string only.  Adding size changes mid string may have undefined results.
+  
+---
+
+## Numeric Style Escapes (border / outline / padding / dropshadow)
+
+### Overview
+These escapes allow inline control of numeric rendering parameters that affect phrase rendering (thickness, padding, and drop-shadow offsets). They complement boolean style escapes (bold, italic, outline-enable, dropshadow-enable) by letting authors tune numeric values inline.
+
+### Syntax
+- `[border=N] ... [/border]` — set border thickness to N for the enclosed tokens.
+- `[outline=N] ... [/outline]` — set outline thickness to N for the enclosed tokens.
+- `[pad=WxH] ... [/pad]` or `[padding=WxH] ... [/padding]` — set horizontal and vertical padding to W and H.
+  - Example: `[pad=5x7]` sets padding_horiz=5 and padding_vert=7.
+- `[dropshadow=X,Y] ... [/dropshadow]` — set drop shadow offsets dropshadowOffsetX=X and dropshadowOffsetY=Y.
+  - Example: `[dropshadow=4,6]` sets dropshadowOffsetX=4 and dropshadowOffsetY=6.
+
+Notes:
+- Numeric parameters are integer values. Parameters are validated before conversion; malformed params are ignored (no exception thrown) and the default/current value is retained.
+- Short forms and synonyms (`[pad]` vs `[padding]`) are supported for convenience.
+
+### Semantics
+- Opening tag applies the numeric change to the current style for subsequent tokens until the matching closing tag.
+- Closing tag restores the previous numeric value(s). Nested tags are supported; restoration uses per-field stacks (or a snapshot stack) so nested overrides restore correctly.
+- If an opening tag omits a numeric parameter (e.g., `[border]`), the tag may act as an enable toggle or use a documented default — prefer explicit numeric parameters in tests/scripts.
+- The numeric fields are stored in `FontStyle` and exposed to Lua token inspection as:
+  - `borderThickness`, `outlineThickness`, `padding_horiz`, `padding_vert`, `dropshadowOffsetX`, `dropshadowOffsetY`
+
+### Examples
+- Border thickness 3 for the word "BORDER":
+  ```
+  Start [border=3]BORDER[/border] End
+  ```
+  `BORDER` tokens will have `style.borderThickness == 3`.
+- Outline and padding:
+  ```
+  [outline=2]O1[/outline] [pad=5x7]P1[/pad]
+  ```
+  - `O1` will carry `style.outlineThickness == 2`.
+  - `P1` will carry `style.padding_horiz == 5` and `style.padding_vert == 7`.
+- Dropshadow offsets:
+  ```
+  [dropshadow=4,6]Shadowed[/dropshadow]
+  ```
+  - Tokens inside will have `style.dropshadowOffsetX == 4` and `style.dropshadowOffsetY == 6`.
+
+### Implementation Notes
+- Tokenizer responsibilities:
+  - Recognize numeric-parameter escapes and split tag name / parameter string.
+  - Validate numeric parameters (digits, optional separators) before calling std::stoi to avoid exceptions.
+  - Maintain per-field stacks (or a FontStyle snapshot stack) to support nested tags and proper restoration on close.
+  - Record escape tokens with the style state *before* applying the tag action (current tokenizer semantic). Word tokens are recorded with the style state after applying the action.
+- Defaults and documentation:
+  - Ensure header defaults in `SDOM_IFontObject.hpp` and doc defaults match (synchronize default values in docs and headers).
+- Lua bindings / testing:
+  - `DisplayHandle:getTokenList()` returns tokens where `token.style` includes numeric fields named exactly as in `FontStyle`.
+  - Add unit tests (Label_test5) that create labels containing the numeric escapes, call `tokenizeText()`, then assert the expected numeric values are present on the word tokens inside the tags.
+- Error handling:
+  - On malformed numeric params, avoid throwing — log or ignore and continue. Tests should assert presence of values only when syntactically valid parameters are used.
+
+### Test seed suggestion (Label_test5)
+```
+local txt = "Start [border=3]B1[/border] [outline=2]O1[/outline] [pad=5x7]P1[/pad] [dropshadow=4,6]DS1[/dropshadow] End"
+```
+- After `h:setText(txt)` and `h:tokenizeText()`, verify that the relevant word tokens expose:
+  - `style.borderThickness == 3`
+  - `style.outlineThickness == 2`
+  - `style.padding_horiz == 5` and `style.padding_vert == 7`
+  - `style.dropshadowOffsetX == 4` and `style.dropshadowOffsetY == 6`
+
 
 ---
 
