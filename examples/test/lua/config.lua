@@ -98,7 +98,7 @@ local config = {
                             outline = true,
                             wordwrap = true,
                             auto_resize = true,
-                            text = "Hello [bold][dropshadow]VarelaRound[/dropshadow][/bold], this is a 32 point font size.",
+                            text = "[color=white]Hello [bold][dropshadow]VarelaRound[/dropshadow][/bold], this is a 32 point font size.",
                             resource_name = "VarelaRound32",   -- use the TruetypeFont created above
                             font_size = 32,
                             alignment = "center",

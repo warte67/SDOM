@@ -669,14 +669,77 @@ namespace SDOM
 
                         // color name map
                         std::unordered_map<std::string, SDL_Color> colorIDs = {
-                            { "black",   SDL_Color{ 0,   0,   0,   255 } },
-                            { "red",     SDL_Color{ 255, 0,   0,   255 } },
-                            { "green",   SDL_Color{ 0,   255, 0,   255 } },
-                            { "yellow",  SDL_Color{ 255, 255, 0,   255 } },
-                            { "blue",    SDL_Color{ 0,   0,   255, 255 } },
-                            { "magenta", SDL_Color{ 255, 0,   255, 255 } },
-                            { "cyan",    SDL_Color{ 0,   255, 255, 255 } },
-                            { "white",   SDL_Color{ 255, 255, 255, 255 } }
+                            // grayscale gradient (6 steps)
+                            { "black",      SDL_Color{   0,   0,   0, 255 } },
+                            { "dk_gray",    SDL_Color{  51,  51,  51, 255 } },
+                            { "md_gray",    SDL_Color{ 102, 102, 102, 255 } },
+                            { "gray",       SDL_Color{ 153, 153, 153, 255 } },
+                            { "lt_gray",    SDL_Color{ 204, 204, 204, 255 } },
+                            { "white",      SDL_Color{ 255, 255, 255, 255 } },
+
+                            // light colors:
+                            { "lt_red",     SDL_Color{ 255,   0,   0, 255 } },
+                            { "lt_green",   SDL_Color{   0, 255,   0, 255 } },
+                            { "lt_yellow",  SDL_Color{ 255, 255,  96, 255 } },
+                            { "lt_blue",    SDL_Color{   0,   0, 255, 255 } },
+                            { "lt_magenta", SDL_Color{ 255,   0, 255, 255 } },
+                            { "lt_cyan",    SDL_Color{   0,   0, 255, 255 } },
+
+                            // normal colors:
+                            { "red",        SDL_Color{ 176,   0,   0, 255 } },
+                            { "green",      SDL_Color{   0, 176,   0, 255 } },
+                            { "yellow",     SDL_Color{ 255, 255,   0, 255 } },
+                            { "blue",       SDL_Color{   0,   0, 176, 255 } },
+                            { "magenta",    SDL_Color{ 176,   0, 176, 255 } },
+                            { "cyan",       SDL_Color{   0, 176, 176, 255 } },
+
+                            // dark colors:
+                            { "dk_red",     SDL_Color{  96,   0,   0, 255 } },
+                            { "dk_green",   SDL_Color{   0,  96,   0, 255 } },
+                            { "dk_yellow",  SDL_Color{  96,  96,   0, 255 } },
+                            { "dk_blue",    SDL_Color{   0,   0,  96, 255 } },
+                            { "dk_magenta", SDL_Color{  96,   0,  96, 255 } },
+                            { "dk_cyan",    SDL_Color{   0,  96,  96, 255 } }, 
+
+                            // new colors:
+                            { "tan",            SDL_Color{ 255, 204, 153, 255 } }, 
+                            { "orange",         SDL_Color{ 255, 128,   0, 255 } },
+                            { "brown",          SDL_Color{ 128,  96,   0, 255 } },
+                            { "pink",           SDL_Color{ 255, 128, 192, 255 } },
+                            { "purple",         SDL_Color{ 128,   0, 128, 255 } },
+                            { "violet",         SDL_Color{ 165,  42, 255, 255 } },
+                            { "lavender",       SDL_Color{ 230, 230, 250, 255 } },
+                            { "gold",           SDL_Color{ 255, 215,   0, 255 } },
+                            { "silver",         SDL_Color{ 192, 192, 192, 255 } },
+                            { "bronze",         SDL_Color{ 205, 127,  50, 255 } },
+                            { "lime",           SDL_Color{ 128, 255,   0, 255 } },
+                            { "mint",           SDL_Color{ 170, 255, 195, 255 } },
+                            { "dk_olive",       SDL_Color{  64,  64,   0, 255 } },
+                            { "olive",          SDL_Color{  96,  96,   0, 255 } },
+                            { "olive_drab",     SDL_Color{ 107, 142,  35, 255 } },
+                            { "sea_green",      SDL_Color{  46, 139,  87, 255 } },
+                            { "forest_green",   SDL_Color{  34, 139,  34, 255 } },
+                            { "sky_blue",       SDL_Color{ 135, 206, 235, 255 } },
+                            { "royal_blue",     SDL_Color{  65, 105, 225, 255 } },
+                            { "steel_blue",     SDL_Color{  70, 130, 180, 255 } },
+                            { "midnight_blue",  SDL_Color{  25,  25, 112, 255 } },
+                            { "crimson",        SDL_Color{ 220,  20,  60, 255 } },
+                            { "maroon",         SDL_Color{ 128,   0,   0, 255 } },
+                            { "coral",          SDL_Color{ 255, 127,  80, 255 } },
+                            { "salmon",         SDL_Color{ 250, 128, 114, 255 } },
+                            { "khaki",          SDL_Color{ 240, 230, 140, 255 } },
+                            { "beige",          SDL_Color{ 245, 245, 220, 255 } },
+                            { "wheat",          SDL_Color{ 245, 222, 179, 255 } },
+                            { "chocolate",      SDL_Color{ 210, 105,  30, 255 } },
+                            { "sienna",         SDL_Color{ 160,  82,  45, 255 } },
+                            { "peru",           SDL_Color{ 205, 133,  63, 255 } },
+                            { "indigo",         SDL_Color{  75,   0, 130, 255 } },
+                            { "turquoise",      SDL_Color{  64, 224, 208, 255 } },
+                            { "aquamarine",     SDL_Color{ 127, 255, 212, 255 } },
+                            { "chartreuse",     SDL_Color{ 127, 255,   0, 255 } },
+                            { "teal",           SDL_Color{   0, 128, 128, 255 } },
+                            { "navy",           SDL_Color{   0,   0, 128, 255 } }
+
                         };
 
                         std::unordered_map<std::string, SDL_Color*> colorTargets = {
@@ -818,15 +881,15 @@ namespace SDOM
                 }
             }
 
-            // Handle Numeric-style Escapes: [border=N], [/border], [outline=N], [/outline],
-            // [pad=WxH]/[padding=WxH], [/pad], [/padding], [dropshadow=X,Y], [/dropshadow]
-            auto is_number = [](const std::string& s) {
-                if (s.empty()) return false;
-                size_t start = 0;
-                if (s[0] == '+' || s[0] == '-') start = 1;
-                if (start >= s.size()) return false;
-                return std::all_of(s.begin() + start, s.end(), [](unsigned char c){ return std::isdigit(c); });
-            };
+            // // Handle Numeric-style Escapes: [border=N], [/border], [outline=N], [/outline],
+            // // [pad=WxH]/[padding=WxH], [/pad], [/padding], [dropshadow=X,Y], [/dropshadow]
+            // auto is_number = [](const std::string& s) {
+            //     if (s.empty()) return false;
+            //     size_t start = 0;
+            //     if (s[0] == '+' || s[0] == '-') start = 1;
+            //     if (start >= s.size()) return false;
+            //     return std::all_of(s.begin() + start, s.end(), [](unsigned char c){ return std::isdigit(c); });
+            // };
 
             // Closing tags: restore from stacks
             if (handleEscape(i, 9, "[/border]", [&]{
@@ -1718,11 +1781,11 @@ if (LABEL_DEBUG)
                         style["dropshadow_offset_y"] = tk.style.dropshadowOffsetY;
                         style["align"] = Label::labelAlignToString_.at(tk.style.alignment);
                         // colors as subtables
-                        sol::table fg = sv.create_table(); fg["r"] = tk.style.foregroundColor.r; fg["g"] = tk.style.foregroundColor.g; fg["b"] = tk.style.foregroundColor.b; fg["a"] = tk.style.foregroundColor.a; style["foregroundColor"] = fg;
-                        sol::table bg = sv.create_table(); bg["r"] = tk.style.backgroundColor.r; bg["g"] = tk.style.backgroundColor.g; bg["b"] = tk.style.backgroundColor.b; bg["a"] = tk.style.backgroundColor.a; style["backgroundColor"] = bg;
-                        sol::table bord = sv.create_table(); bord["r"] = tk.style.borderColor.r; bord["g"] = tk.style.borderColor.g; bord["b"] = tk.style.borderColor.b; bord["a"] = tk.style.borderColor.a; style["borderColor"] = bord;
-                        sol::table outl = sv.create_table(); outl["r"] = tk.style.outlineColor.r; outl["g"] = tk.style.outlineColor.g; outl["b"] = tk.style.outlineColor.b; outl["a"] = tk.style.outlineColor.a; style["outlineColor"] = outl;
-                        sol::table ds = sv.create_table(); ds["r"] = tk.style.dropshadowColor.r; ds["g"] = tk.style.dropshadowColor.g; ds["b"] = tk.style.dropshadowColor.b; ds["a"] = tk.style.dropshadowColor.a; style["dropshadowColor"] = ds;
+                        sol::table fg = sv.create_table(); fg["r"] = tk.style.foregroundColor.r; fg["g"] = tk.style.foregroundColor.g; fg["b"] = tk.style.foregroundColor.b; fg["a"] = tk.style.foregroundColor.a; style["foreground_color"] = fg;
+                        sol::table bg = sv.create_table(); bg["r"] = tk.style.backgroundColor.r; bg["g"] = tk.style.backgroundColor.g; bg["b"] = tk.style.backgroundColor.b; bg["a"] = tk.style.backgroundColor.a; style["background_color"] = bg;
+                        sol::table bord = sv.create_table(); bord["r"] = tk.style.borderColor.r; bord["g"] = tk.style.borderColor.g; bord["b"] = tk.style.borderColor.b; bord["a"] = tk.style.borderColor.a; style["border_color"] = bord;
+                        sol::table outl = sv.create_table(); outl["r"] = tk.style.outlineColor.r; outl["g"] = tk.style.outlineColor.g; outl["b"] = tk.style.outlineColor.b; outl["a"] = tk.style.outlineColor.a; style["outline_color"] = outl;
+                        sol::table ds = sv.create_table(); ds["r"] = tk.style.dropshadowColor.r; ds["g"] = tk.style.dropshadowColor.g; ds["b"] = tk.style.dropshadowColor.b; ds["a"] = tk.style.dropshadowColor.a; style["dropshadow_color"] = ds;
                         e["style"] = style;
                         t[idx++] = e;
                     }

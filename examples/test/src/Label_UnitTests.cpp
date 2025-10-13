@@ -324,7 +324,7 @@ namespace SDOM
                 if typ == "escape" then
                     -- Color open tags: [bgnd=green], [border=red]
                     if text:match("^%[bgnd=") then
-                        -- background escape sets the backgroundColor on the style immediately
+                        -- background escape sets the background_color on the style immediately
                         in_bgnd = true
                     elseif text:match("^%[border=") then
                         in_border = true
@@ -360,17 +360,17 @@ namespace SDOM
                     end
                     -- for bgnd/border, check color when inside
                     if in_bgnd then
-                        -- green => (0,255,0)
-                        if not (style.backgroundColor and style.backgroundColor.g == 255) then
+                        -- green => (0,176,0)
+                        if not (style.background_color and style.background_color.g == 176) then
                             ok = false
-                            err = err .. string.format("word '%s' backgroundColor not set to green; ", tostring(text))
+                            err = err .. string.format("word '%s' background_color not set to green; ", tostring(text))
                         end
                     end
                     if in_border then
-                        -- red => (255,0,0)
-                        if not (style.borderColor and style.borderColor.r == 255) then
+                        -- red => (176,0,0)
+                        if not (style.border_color and style.border_color.r == 176) then
                             ok = false
-                            err = err .. string.format("word '%s' borderColor not set to red; ", tostring(text))
+                            err = err .. string.format("word '%s' border_color not set to red; ", tostring(text))
                         end
                     end
                     i = i + 1

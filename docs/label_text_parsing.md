@@ -16,19 +16,89 @@ This document describes the design and implementation strategy for parsing and r
 ## Escape Sequence Syntax
 ---
 
-## Default Escape Sequences
+### Supported Color Names
 
-### Color Palette (8 colors)
-- `[color=black]`   — Black (default)
-- `[color=red]`     — Red
-- `[color=green]`   — Green
-- `[color=yellow]`  — Yellow
-- `[color=blue]`    — Blue
-- `[color=magenta]` — Magenta
-- `[color=cyan]`    — Cyan
-- `[color=white]`   — White
+You can use any of the following color names in label escape tags (e.g., `[color=name]`, `[fgnd=name]`, `[bgnd=name]`, `[border=name]`, `[outline=name]`, `[shadow=name]`):
+
+**Grayscale gradient (6 steps):**
+- `black`      — {   0,   0,   0, 255 }
+- `dk_gray`    — {  51,  51,  51, 255 }
+- `md_gray`    — { 102, 102, 102, 255 }
+- `gray`       — { 153, 153, 153, 255 }
+- `lt_gray`    — { 204, 204, 204, 255 }
+- `white`      — { 255, 255, 255, 255 }
+
+**Light colors:**
+- `lt_red`     — { 255,  32,  32, 255 }
+- `lt_green`   — {  32, 255,  32, 255 }
+- `lt_yellow`  — { 255, 255,  32, 255 }
+- `lt_blue`    — {  32,  32, 255, 255 }
+- `lt_magenta` — { 255,  32, 255, 255 }
+- `lt_cyan`    — {  32, 255, 255, 255 }
+
+**Normal colors:**
+- `red`        — { 224,   0,   0, 255 }
+- `green`      — {   0, 224,   0, 255 }
+- `yellow`     — { 224, 224,   0, 255 }
+- `blue`       — {   0,   0, 224, 255 }
+- `magenta`    — { 224,   0, 224, 255 }
+- `cyan`       — {   0, 224, 224, 255 }
+
+**Dark colors:**
+- `dk_red`     — { 192,   0,   0, 255 }
+- `dk_green`   — {   0, 192,   0, 255 }
+- `dk_yellow`  — { 192, 192,   0, 255 }
+- `dk_blue`    — {   0,   0, 192, 255 }
+- `dk_magenta` — { 192,   0, 192, 255 }
+- `dk_cyan`    — {   0, 192, 192, 255 }
+
+**New Colors:**
+- `tan`         — { 255, 204, 153, 255 }
+- `orange`      — { 255, 128,   0, 255 }
+- `brown`       — { 128,  96,   0, 255 }
+- `pink`        — { 255, 128, 192, 255 }
+- `purple`      — { 128,   0, 128, 255 }
+- `violet`      — { 165,  42, 255, 255 }
+- `lavender`    — { 230, 230, 250, 255 }
+- `gold`        — { 255, 215,   0, 255 }
+- `silver`      — { 192, 192, 192, 255 }
+- `bronze`      — { 205, 127,  50, 255 }
+- `lime`        — { 128, 255,   0, 255 }
+- `mint`        — { 170, 255, 195, 255 }
+- `dk_olive`    — {  64,  64,   0, 255 }
+- `olive`       — {  96,  96,   0, 255 }
+- `olive_drab`  — { 107, 142,  35, 255 }
+- `sea_green`   — {  46, 139,  87, 255 }
+- `forest_green`— {  34, 139,  34, 255 }
+- `sky_blue`    — { 135, 206, 235, 255 }
+- `royal_blue`  — {  65, 105, 225, 255 }
+- `steel_blue`  — {  70, 130, 180, 255 }
+- `midnight_blue` — {  25,  25, 112, 255 }
+- `crimson`     — { 220,  20,  60, 255 }
+- `maroon`      — { 128,   0,   0, 255 }
+- `coral`       — { 255, 127,  80, 255 }
+- `salmon`      — { 250, 128, 114, 255 }
+- `khaki`       — { 240, 230, 140, 255 }
+- `beige`       — { 245, 245, 220, 255 }
+- `wheat`       — { 245, 222, 179, 255 }
+- `chocolate`   — { 210, 105,  30, 255 }
+- `sienna`      — { 160,  82,  45, 255 }
+- `peru`        — { 205, 133,  63, 255 }
+- `indigo`      — {  75,   0, 130, 255 }
+- `turquoise`   — {  64, 224, 208, 255 }
+- `aquamarine`  — { 127, 255, 212, 255 }
+- `chartreuse`  — { 127, 255,   0, 255 }
+- `teal`        — {   0, 128, 128, 255 }
+- `navy`        — {   0,   0, 128, 255 }
+
+**Custom Colors:**
 - `[RGB=rrggbb]`   — Set text color to custom 6-digit hex RGB value (e.g., `[RGB=FF8800]`)
 - `[RGBA=rrggbbaa]` — Set text color to custom 8-digit hex RGBA value (e.g., `[RGBA=FF8800FF]`)
+
+**Note:**  
+All color names are case-insensitive.  
+You may use these names in any supported color escape tag.
+
 #### Color Targets:
 ```
 Label::foregroundColor     // "fgnd" (default)
