@@ -113,7 +113,7 @@ local config = {
                     name = "greenishBox",
                     x = 150,
                     y = 150,
-                    width = 80,
+                    width = 180,
                     height = 120,
                     color = { r = 32, g = 128, b = 32, a = 255 },
                     -- add children with a Label using the new TruetypeFont
@@ -127,7 +127,7 @@ local config = {
                             y = 155,                     
                             -- anchor_right = "left",     
                             anchor_right = "right",     
-                            width = 70,                
+                            width = 170,                
                             -- anchor_bottom = "top",   
                             anchor_bottom = "bottom",   
                             height = 110,               

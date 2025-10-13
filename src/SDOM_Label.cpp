@@ -1613,6 +1613,14 @@ if (LABEL_DEBUG)
                 });
             }
 
+            // Expose tokenizeText() so tests or scripts can force re-tokenization and get the token count
+            if (absent("tokenizeText")) {
+                handle.set_function("tokenizeText", [cast_label_from_handle](DisplayHandle& self) -> int {
+                    Label* lbl = cast_label_from_handle(self);
+                    return lbl->tokenizeText();
+                });
+            }
+
             if (absent("getTokenAlignLists")) {
                 handle.set_function("getTokenAlignLists", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
                     Label* lbl = cast_label_from_handle(self);
