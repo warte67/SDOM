@@ -82,7 +82,30 @@ local config = {
                     width = 295,
                     height = 390,
                     -- icon_resource = "external_icon_8x8", -- test icon resource name resolution
-                    color = { r = 64, g = 32, b = 32, a = 255 }
+                    color = { r = 64, g = 32, b = 32, a = 255 },
+                    children = {
+                        {
+                            name = "mainFrameGroup",
+                            type = "Group",
+                            x = 450,
+                            y = 10,
+                            width = 140,
+                            height = 100,
+                            text = "Main Group",
+
+                            font_resource = "external_font_8x12",
+-- font_size = 12,  -- these should be default values from the externally loaded BitmapFont asset
+-- font_width = 8,
+-- font_height = 12, -- if not specified, should use the backing SpriteSheet's spriteHeight
+
+
+                            color = { r = 255, g = 255, b = 255, a = 96 },
+                            label_color = { r = 224, g = 192, b = 192, a = 255 },
+                            -- add children here if desired
+                            children = {
+                            }
+                        }
+                    }
                 },
                 {
                     name = "main_stage_button",
@@ -91,11 +114,12 @@ local config = {
                     y = 370,
                     width = 150,
                     height = 25,
-                    text = "Go to Stage Two",
+                    text = "[color=white]Go to [color=yellow]S[color=white]tage Two",
                     font_resource = "VarelaRound16", -- test font resource name resolution
                     font_size = 16,
                     -- icon_resource = "external_icon_8x8", -- test icon resource name resolution
-                    color = { r = 96, g = 32, b = 16, a = 255 }
+                    label_color = { r = 255, g = 255, b = 255, a = 255 },
+                    color = { r = 96, g = 32, b = 16, a = 255 }                    
                 },
                 {
                     name = "redishBox",
@@ -290,7 +314,7 @@ local config = {
                     name = "stage2_button",
                     type = "Button",
                     x = 5, y = 370, width = 150, height = 25,
-                    text = "Go to Stage Three",
+                    text = "[color=white]Go to [color=yellow]S[color=white]tage Three",
                     font_resource = "VarelaRound16",
                     font_size = 16,
                     color = { r = 32, g = 96, b = 16, a = 255 }
@@ -316,7 +340,7 @@ local config = {
                     name = "stage3_button",
                     type = "Button",
                     x = 5, y = 370, width = 150, height = 25,
-                    text = "Go to Main Stage",
+                    text = "[color=white]Go to Main [color=yellow]S[color=white]tage",
                     font_resource = "VarelaRound16",
                     font_size = 16,
                     color = { r = 16, g = 32, b = 96, a = 255 }

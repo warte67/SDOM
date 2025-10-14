@@ -1,19 +1,18 @@
-// SDOM_Button.hpp
+// SDOM_Group.hpp
 #pragma once
 
-#include <SDOM/SDOM_IButtonObject.hpp>
 #include <SDOM/SDOM_IPanelObject.hpp>
 
 namespace SDOM
 {
 
-    class Button : public IPanelObject, public IButtonObject
+    class Group : public IPanelObject
     {
         using SUPER = SDOM::IPanelObject; 
 
     public:
         // --- Type Info --- //
-        static constexpr const char* TypeName = "Button";
+        static constexpr const char* TypeName = "Group";
 
         // --- Initialization Struct --- //
         struct InitStruct : IPanelObject::InitStruct
@@ -23,10 +22,11 @@ namespace SDOM
                 // from IDisplayObject
                 name = TypeName;
                 type = TypeName;
-                color = {96, 0, 96, 255};   // panel color
-                tabEnabled = true;      // buttons are tab-enabled by default   
+                color = {96, 0, 96, 255};   // Group color
+                tabEnabled = false;     // groups are not tab-enabled by default   
+                isClickable = false;    // groups are not clickable by default
                 // from IPanelObject
-                base_index = PanelBaseIndex::ButtonUp; 
+                base_index = PanelBaseIndex::Group; 
                 icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
                 icon_width = 8;         // default icon width is 8
                 icon_height = 8;        // default icon height is 8
@@ -34,29 +34,29 @@ namespace SDOM
                 font_width = 8;         // default font width is 8
                 font_height = 8;        // default font height is 8
             }
-            std::string text = "Button"; // default button text
+            std::string text = "Group"; // default group text
             int font_size = 8;          // default font size is 8
-            SDL_Color label_color = {255, 255, 255, 255}; // default label color is white
+            SDL_Color label_color_ = {255, 255, 255, 255}; // default label color is white
 
         }; // END: InitStruct
     protected:
         // --- Constructors --- //
-        Button(const InitStruct& init);  
-        Button(const sol::table& config);
+        Group(const InitStruct& init);  
+        Group(const sol::table& config);
 
     public:
 
         // --- Static Factory Methods --- //
         static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new Button(config));
+            return std::unique_ptr<IDisplayObject>(new Group(config));
         }
         static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-            const auto& buttonInit = static_cast<const Button::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new Button(buttonInit));
+            const auto& groupInit = static_cast<const Group::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new Group(groupInit));
         }
 
-        Button() = default;
-        virtual ~Button() = default;     
+        Group() = default;
+        virtual ~Group() = default;     
 
         // --- Virtual Methods --- //
         virtual bool onInit() override;     // Called when the display object is initialized
@@ -68,7 +68,7 @@ namespace SDOM
         DisplayHandle getLabelObject() const { return labelObject_; }
 
     protected:
-        DisplayHandle labelObject_; // internal label object for button text
+        DisplayHandle labelObject_; // internal label object for group text
         std::string text_;     // initialized label text
         std::string font_resource_name_ = "internal_font_8x8"; // default font resource name
         int font_size_ = 8;        // default font size

@@ -18,6 +18,7 @@
 #include <SDOM/SDOM_Label.hpp>
 #include <SDOM/SDOM_Frame.hpp>
 #include <SDOM/SDOM_Button.hpp>
+#include <SDOM/SDOM_Group.hpp>
 
 namespace SDOM
 {
@@ -209,6 +210,12 @@ namespace SDOM
             Button::CreateFromLua,
             Button::CreateFromInitStruct
         }); 
+
+        // register Group
+        registerDomType("Group", TypeCreators{
+            Group::CreateFromLua,
+            Group::CreateFromInitStruct
+        });
 
         // return initialized state
         initialized_ = true;

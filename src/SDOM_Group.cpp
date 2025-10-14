@@ -1,54 +1,57 @@
-// SDOM_Button.cpp
-
-// SDOM_Button.cpp
+// SDOM_Group.cpp
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_TruetypeFont.hpp>
+#include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
-#include <SDOM/SDOM_Button.hpp>
+#include <SDOM/SDOM_Group.hpp>
 
 
 
 namespace SDOM
 {
 
-    Button::Button(const InitStruct& init) : IPanelObject(init)
+    Group::Group(const InitStruct& init) : IPanelObject(init)
     {
         // std::cout << "Box constructed with InitStruct: " << getName() 
         //           << " at address: " << this << std::endl;
 
         if (init.type != TypeName) {
-            ERROR("Error: Button constructed with incorrect type: " + init.type);
+            ERROR("Error: Group constructed with incorrect type: " + init.type);
         }
-        // Button Specific
+        // Group Specific
         text_ = init.text;
         base_index_ = init.base_index;
         font_size_ = init.font_size; 
         font_width_ = init.font_width;
         font_height_ = init.font_height;
         font_resource_ = init.font_resource;
-        label_color_ = init.label_color;
+
+        setTabEnabled(false); // Groups are not tab-enabled by default
+        setClickable(false); // Groups are not clickable by default
+
     }
 
 
-    Button::Button(const sol::table& config) : IPanelObject(config)
+    Group::Group(const sol::table& config) : IPanelObject(config)
     {
         // std::cout << "Box constructed with Lua config: " << getName() 
         //         << " at address: " << this << std::endl;            
 
         std::string type = config["type"].valid() ? config["type"].get<std::string>() : "";
 
-        // INFO("Button::Button(const sol::table& config) -- name: " << getName() 
+        // INFO("Group::Group(const sol::table& config) -- name: " << getName() 
         //         << " type: " << type << " typeName: " << TypeName << std::endl 
         // ); // END INFO()
 
         if (type != TypeName) {
-            ERROR("Error: Button constructed with incorrect type: " + type);
+            ERROR("Error: Group constructed with incorrect type: " + type);
         }
         
         InitStruct init;
 
-        // Apply Lua-provided text property to the Button
+        // Apply Lua-provided text property to the Group
         if (config["text"].valid()) {
             try {
                 text_ = config["text"].get<std::string>();
@@ -56,7 +59,7 @@ namespace SDOM
                 // defensive: ignore non-string values
             }
         }       
-        // Apply Lua-provided font properties to the Button (accept multiple key variants)
+        // Apply Lua-provided font properties to the Group (accept multiple key variants)
         try {
             if (config["font_size"].valid()) font_size_ = config["font_size"].get<int>();
         } catch (...) { /* ignore invalid types */ }
@@ -106,15 +109,17 @@ namespace SDOM
                 label_color_.a = lc["a"].get_or((int)label_color_.a);
             }
         } catch (...) { /* ignore malformed color tables */ }
+
         // non-lua configurable essential init values
-        base_index_ = init.base_index; // default to ButtonUp
+        base_index_ = init.base_index; // default to GroupUp
         
-        setTabEnabled(true); // buttons are tab-enabled by default
+        setTabEnabled(false); // Groups are not tab-enabled by default
+        setClickable(false); // Groups are not clickable by default
     }
 
 
     // --- Virtual Methods --- //
-    bool Button::onInit()
+    bool Group::onInit()
     {
         // create the label object
         if (!labelObject_)
@@ -122,18 +127,23 @@ namespace SDOM
             Label::InitStruct init;
             init.name = getName() + "_label";
             init.type = "Label";
-            init.x = getX() + 4;
-            init.y = getY() + 2;
-            init.width = getWidth() - 8;
-            init.height = getHeight() - 4;
-            init.alignment = LabelAlign::CENTER;
+            init.x = getX() + 8;
+            init.y = (getY() - 2);
+            init.width = getWidth() - 16;
+            init.height = 12;   
+            init.alignment = LabelAlign::TOP_LEFT;
             init.anchorLeft = AnchorPoint::TOP_LEFT;
             init.anchorTop = AnchorPoint::TOP_LEFT; 
-            init.anchorRight = AnchorPoint::BOTTOM_RIGHT;
-            init.anchorBottom = AnchorPoint::BOTTOM_RIGHT;
+            init.anchorRight = AnchorPoint::TOP_LEFT;
+            init.anchorBottom = AnchorPoint::TOP_LEFT;
             init.resourceName = font_resource_name_;
             // init.color = label_color_;
+            init.outlineColor = {0, 0, 0, 255};
+            init.outlineThickness = 1;
+            init.outline = true;
+            init.dropshadow = true;
             init.foregroundColor = label_color_;
+            init.color = label_color_;
             init.isClickable = false;
             init.tabEnabled = false;
             init.text = text_;
@@ -142,31 +152,48 @@ namespace SDOM
             init.fontHeight = font_height_;
             labelObject_ = getFactory().create("Label", init);
             addChild(labelObject_);
+
+            // Center the label vertically within the upper bounds of the Group
+            Label* lbl = labelObject_.as<Label>();
+            if (!lbl) {
+                ERROR("Error: Group::onInit() -- failed to cast labelObject_ to Label*");
+                return false;   
+            }    
+            // SpriteSheet* objSS = spriteSheetAsset_.as<SpriteSheet>();
+            // if (!objSS) {
+            //     ERROR("Error: Group::onInit() -- failed to cast fontAsset_ to SpriteSheet*");
+            //     return false;   
+            // }
+
+            // just use +4 for now to nudge it a bit
+            labelObject_->setY((getY() + 4 ) - (lbl->getGlyphHeight() / 2));
+
+
         }
 
         return SUPER::onInit();
-    } // END: bool Button::onInit()
+    } // END: bool Group::onInit()
 
 
-    void Button::onQuit()
+    void Group::onQuit()
     {
         SUPER::onQuit();
-    } // END: void Button::onQuit()
+    } // END: void Group::onQuit()
 
 
-    void Button::onRender()
+    void Group::onRender()
     {
         SUPER::onRender();
 
-    } // END: void Button::onRender()
+    } // END: void Group::onRender()
 
 
-    void Button::onUpdate(float fElapsedTime)
+    void Group::onUpdate(float fElapsedTime)
     {
-    } // END: void Button::onUpdate(float fElapsedTime)
+    } // END: void Group::onUpdate(float fElapsedTime)
 
 
-    void Button::onEvent(const Event& event)
+    void Group::onEvent(const Event& event)
     {
         // only target phase
         if (event.getPhase() != Event::Phase::Target) 
@@ -174,63 +201,19 @@ namespace SDOM
             return;
         }
 
-        if (event.getType() == EventType::MouseEnter)
-        {
-            base_index_ = PanelBaseIndex::ButtonUpSelected;
-            // std::cout << "Button " << getName() << " is hovered." << std::endl;
-            if (last_base_index_ != base_index_)
-            {
-                setState(ButtonState::Hovered);
-                last_base_index_ = base_index_;
-                setDirty();
-            }
-        }
-        if (event.getType() == EventType::MouseLeave)
-        {
-            base_index_ = PanelBaseIndex::ButtonUp;
-            // std::cout << "Button " << getName() << " is not hovered." << std::endl;
-            if (last_base_index_ != base_index_)
-            {
-                setState(ButtonState::Normal);
-                last_base_index_ = base_index_;
-                setDirty();
-            }
-        }
-        if (event.getType() == EventType::MouseButtonDown)
-        {
-            base_index_ = PanelBaseIndex::ButtonDown;
-            // std::cout << "Button " << getName() << " is pressed." << std::endl;
-            if (last_base_index_ != base_index_)
-            {
-                setState(ButtonState::Pressed);
-                last_base_index_ = base_index_;
-                setDirty();
-            }
-        }
-        if (event.getType() == EventType::MouseButtonUp)
-        {
-            base_index_ = PanelBaseIndex::ButtonDownSelected;
-            // std::cout << "Button " << getName() << " is released." << std::endl;
-            if (last_base_index_ != base_index_)
-            {
-                setState(ButtonState::Hovered);
-                last_base_index_ = base_index_;
-                setDirty();
-            }
-        }
-    } // END: void Button::onEvent(const Event& event)
+    } // END: void Group::onEvent(const Event& event)
 
 
     // --- Lua Registration --- //
 
-    void Button::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    void Group::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
         // Include inherited bindings first
         SUPER::_registerLuaBindings(typeName, lua);
 
         if (DEBUG_REGISTER_LUA)
         {
-            std::string typeNameLocal = "Button";
+            std::string typeNameLocal = "Group";
             std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
                     << typeName << CLR::RESET << std::endl;
@@ -246,7 +229,7 @@ namespace SDOM
             return !cur.valid() || cur == sol::lua_nil;
         };
 
-        // expose 'name' property for Button (maps to getName / setName on the display object)
+        // expose 'name' property for Group (maps to getName / setName on the display object)
         if (absent("name"))
         {
             handle.set("name", sol::property(
@@ -272,17 +255,17 @@ namespace SDOM
                 [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle 
                 {
                     if (!h.isValid()) return SDOM::DisplayHandle();
-                    // ensure this is a Button before casting
-                    if (h->getType() != Button::TypeName) return SDOM::DisplayHandle();
-                    Button* btn = static_cast<Button*>(h.get());
+                    // ensure this is a Group before casting
+                    if (h->getType() != Group::TypeName) return SDOM::DisplayHandle();
+                    Group* btn = static_cast<Group*>(h.get());
                     return btn->getLabelObject();
                 }
             ));
         }
 
-        // --- additional Button-specific bindings can go here --- //
+        // --- additional Group-specific bindings can go here --- //
 
-    } // END: void Button::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    } // END: void Group::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 
 

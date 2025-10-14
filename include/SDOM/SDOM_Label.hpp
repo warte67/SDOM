@@ -194,6 +194,18 @@ namespace SDOM
         std::string getText() const { return text_; }
         AssetHandle getFont() const { return fontAsset; }
         IFontObject::FontType getFontType() const { return fontType_; }
+        int getGlyphHeight() const 
+        { 
+            if (fontAsset)
+            {
+                IFontObject* fontObj = fontAsset.as<IFontObject>();
+                if (fontObj)
+                {
+                    return fontObj->getGlyphHeight('W');
+                }
+            }
+            return 0; 
+        }
         
         FontStyle& getDefaultStyle() { return defaultStyle_; }
         void setDefaultStyle(const FontStyle& style) { defaultStyle_ = style; setDirty(); }
