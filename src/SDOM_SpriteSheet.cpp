@@ -30,9 +30,29 @@ namespace SDOM
         {
             ERROR("Error: SpriteSheet constructed with incorrect type: " + type);
         }
-        // Extract spriteWidth and spriteHeight from config, with defaults
-        spriteWidth_  = config["spriteWidth"].valid()  ? config["spriteWidth"].get<int>()  : 8; // default 8 pixels wide
-        spriteHeight_ = config["spriteHeight"].valid() ? config["spriteHeight"].get<int>() : 8; // default 8 pixels tall
+        // Extract spriteWidth and spriteHeight from config, with defaults.
+        // Accept both camelCase (spriteWidth/spriteHeight) and snake_case
+        // (sprite_width/sprite_height) to make the Lua config authoring
+        // more ergonomic.
+        try {
+            if (config["spriteWidth"].valid()) {
+                spriteWidth_ = config["spriteWidth"].get<int>();
+            } else if (config["sprite_width"].valid()) {
+                spriteWidth_ = config["sprite_width"].get<int>();
+            } else {
+                spriteWidth_ = 8;
+            }
+        } catch(...) { spriteWidth_ = 8; }
+
+        try {
+            if (config["spriteHeight"].valid()) {
+                spriteHeight_ = config["spriteHeight"].get<int>();
+            } else if (config["sprite_height"].valid()) {
+                spriteHeight_ = config["sprite_height"].get<int>();
+            } else {
+                spriteHeight_ = 8;
+            }
+        } catch(...) { spriteHeight_ = 8; }
     }
 
 
@@ -60,7 +80,7 @@ namespace SDOM
 
     void SpriteSheet::onLoad()
     {
-        //INFO("SpriteSheet::onLoad() called for: " + getName());
+        // INFO("SpriteSheet::onLoad() called for: " + getName() + " filename=" + filename_ + " (sprite " + std::to_string(spriteWidth_) + "x" + std::to_string(spriteHeight_) + ")");
         onUnload();
 
         // does this filename already exist in the factory?
@@ -69,6 +89,7 @@ namespace SDOM
         {
             // Only reuse an existing asset when it is actually a Texture.
             if (existing->getType() == Texture::TypeName) {
+                // INFO("SpriteSheet::onLoad: found existing Texture resource for filename: " + filename_ + " (name=" + existing->getName() + ")");
                 textureAsset = getFactory().getAssetObject(filename_);
                 if (!textureAsset)
                 {
@@ -77,12 +98,14 @@ namespace SDOM
                 }
                 // Ensure the referenced Texture asset is loaded so getTexture() will be valid.
                 try {
+                    // INFO("SpriteSheet::onLoad: calling onLoad() on Texture asset: " + textureAsset.getName());
                     textureAsset->onLoad();
                 } catch(...) {
                     ERROR("SpriteSheet::onLoad: Failed to load existing Texture asset for filename: " + filename_);
                     return;
                 }
                 isLoaded_ = true;
+                // INFO("SpriteSheet::onLoad: textureAsset loaded successfully for SpriteSheet: " + getName());
                 return;
             }
 
@@ -110,6 +133,7 @@ namespace SDOM
             Texture* texturePtr = textureAsset.as<Texture>();
             if (texturePtr)
             {
+                // INFO("SpriteSheet::onLoad: created Texture asset '" + textureAsset.getName() + "' for filename: " + filename_);
                 texturePtr->registerLuaBindings(Texture::TypeName, getLua());
             }
             else

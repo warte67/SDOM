@@ -111,13 +111,19 @@ namespace SDOM
         void initFromLua(const sol::table& lua);
         // void initLuaProcessResource(const sol::table& resource);
 
+        // Helper: find an existing asset by filename (optionally matching type)
+        AssetHandle findAssetByFilename(const std::string& filename, const std::string& typeName = "") const;
+
+        // Helper: find a SpriteSheet asset matching filename and sprite dimensions
+        AssetHandle findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH) const;
+
     private:
         // initialization guard to make onInit idempotent
         bool initialized_ = false;
         // --- Internal Storage --- //
         std::unordered_map<std::string, std::unique_ptr<IDisplayObject>> displayObjects_;
-    // Use shared_ptr so multiple registry names can alias the same underlying asset
-    std::unordered_map<std::string, std::shared_ptr<IAssetObject>> assetObjects_;
+        // Use shared_ptr so multiple registry names can alias the same underlying asset
+        std::unordered_map<std::string, std::shared_ptr<IAssetObject>> assetObjects_;
         std::unordered_map<std::string, TypeCreators> creators_;
         std::unordered_map<std::string, AssetTypeCreators> assetCreators_;
 
@@ -135,10 +141,7 @@ namespace SDOM
         std::vector<futureChild> futureChildrenList_;
 
     // Helper: find an existing asset by filename (optionally matching type)
-    AssetHandle findAssetByFilename(const std::string& filename, const std::string& typeName = "") const;
-
     // Helper: find a SpriteSheet asset matching filename and sprite dimensions
-    AssetHandle findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH) const;
 
 
     };

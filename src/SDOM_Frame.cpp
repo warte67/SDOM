@@ -25,19 +25,11 @@ namespace SDOM
         // std::cout << "Box constructed with Lua config: " << getName() 
         //         << " at address: " << this << std::endl;            
 
-
-
         std::string type = config["type"].valid() ? config["type"].get<std::string>() : "";
 
-
-
-
-        INFO("Frame::Frame(const sol::table& config) -- name: " << getName() 
-                << " type: " << type << " typeName: " << TypeName << std::endl 
-        ); // END INFO()
-
-
-
+        // INFO("Frame::Frame(const sol::table& config) -- name: " << getName() 
+        //         << " type: " << type << " typeName: " << TypeName << std::endl 
+        // ); // END INFO()
 
         if (type != TypeName) {
             ERROR("Error: Frame constructed with incorrect type: " + type);

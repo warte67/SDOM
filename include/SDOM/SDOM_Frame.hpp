@@ -25,10 +25,10 @@ namespace SDOM
                 color = {96, 0, 96, 255};   // panel color
                 // from IPanelObject
                 base_index = PanelBaseIndex::Frame; 
-                icon_resource_name = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
+                icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
                 icon_width = 8;        // default icon width is 8
                 icon_height = 8;       // default icon height is 8
-                font_resource_name = "internal_font_8x8"; // Default to internal 8x8 font 
+                font_resource = "internal_font_8x8"; // Default to internal 8x8 font 
                 font_width = 8;        // default font width is 8
                 font_height = 8;       // default font height is 8
             }

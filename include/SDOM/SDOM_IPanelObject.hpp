@@ -93,10 +93,10 @@ namespace SDOM
                 color = {96, 0, 96, 255};   // panel color
             }
             PanelBaseIndex base_index = PanelBaseIndex::Frame;
-            std::string icon_resource_name = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
+            std::string icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
             int icon_width = 8;        // default icon width is 8
             int icon_height = 8;       // default icon height is 8
-            std::string font_resource_name = "internal_font_8x8"; // Default to internal 8x8 font 
+            std::string font_resource = "internal_font_8x8"; // Default to internal 8x8 font 
             int font_width = 8;        // default font width is 8
             int font_height = 8;       // default font height is 8
         };
@@ -133,8 +133,8 @@ namespace SDOM
 
         AssetHandle getSpriteSheet() const { return spriteSheetAsset_; }
         AssetHandle getFontAsset() const { return fontAsset_; }
-        std::string getIconResourceName() const { return icon_resource_name_; }
-        std::string getFontResourceName() const { return font_resource_name_; }
+        std::string getIconResourceName() const { return icon_resource_; }
+        std::string getFontResourceName() const { return font_resource_; }
         int getIconWidth() const { return icon_width_; }
         int getIconHeight() const { return icon_height_; }
         int getFontWidth() const { return font_width_; }
@@ -145,8 +145,8 @@ namespace SDOM
         // std::string name_;       // Name for this panel object (inherited from IDisplayObject)
         AssetHandle spriteSheetAsset_;   // icon based sprite sheet, default: `internal_icon_8x8`
         AssetHandle fontAsset_;     // IFontObject based font resource, default: `internal_font_8x8`
-        std::string icon_resource_name_ = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
-        std::string font_resource_name_ = "internal_font_8x8"; // Default to internal 8x8 font
+        std::string icon_resource_ = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
+        std::string font_resource_ = "internal_font_8x8"; // Default to internal 8x8 font
         int icon_width_ = 8;        // default icon width is 8
         int icon_height_ = 8;       // default icon height is 8
         int font_width_ = 8;        // default font width is 8

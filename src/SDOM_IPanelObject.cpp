@@ -6,18 +6,17 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_AssetHandle.hpp>
+#include <SDOM/SDOM_Texture.hpp>
 #include <SDOM/SDOM_IPanelObject.hpp>
 
 namespace SDOM
 {
     IPanelObject::IPanelObject(const InitStruct& init) : IDisplayObject(init)
     {
-        if (init.type != TypeName) {
-            ERROR("IPanelObject: Stage constructed with incorrect type: " + init.type);
-        }        
+        // Allow derived panel types (e.g., Frame) to pass their concrete type name.
 
-        icon_resource_name_ = init.icon_resource_name;
-        font_resource_name_ = init.font_resource_name;
+        icon_resource_ = init.icon_resource;
+        font_resource_ = init.font_resource;
         icon_width_ = init.icon_width;
         icon_height_ = init.icon_height;
         font_width_ = init.font_width;
@@ -28,10 +27,8 @@ namespace SDOM
 
     IPanelObject::IPanelObject(const sol::table& config) : IDisplayObject(config)
     {
+        // Accept concrete derived types (e.g., "Frame") in the Lua config.
         std::string type = config["type"].valid() ? config["type"].get<std::string>() : TypeName;
-        if (type != TypeName) {
-            ERROR("IPanelObject: Stage constructed with incorrect type: " + type);
-        }
         // --- Initialization Lambdas --- //
         auto get_str = [&](const char* k, const std::string& d = "") -> std::string 
         {
@@ -41,13 +38,26 @@ namespace SDOM
         {
             return config[k].valid() ? config[k].get<int>() : d;
         };
-        InitStruct init;
-        init.icon_resource_name = get_str("icon_resource_name_", init.icon_resource_name);
-        init.font_resource_name = get_str("font_resource_name_", init.font_resource_name);
-        init.icon_width = get_int("icon_width_", init.icon_width);
-        init.icon_height = get_int("icon_height_", init.icon_height);
-        init.font_width = get_int("font_width_", init.font_width);
-        init.font_height = get_int("font_height_", init.font_height);
+    InitStruct init;
+    // Accept both the legacy keys with trailing underscore (e.g. "icon_resource_")
+    // and the more natural keys without the underscore (e.g. "icon_resource").
+    if (config["icon_resource"].valid()) init.icon_resource = config["icon_resource"].get<std::string>();
+    else init.icon_resource = get_str("icon_resource_", init.icon_resource);
+
+    if (config["font_resource"].valid()) init.font_resource = config["font_resource"].get<std::string>();
+    else init.font_resource = get_str("font_resource_", init.font_resource);
+
+    if (config["icon_width"].valid()) init.icon_width = config["icon_width"].get<int>();
+    else init.icon_width = get_int("icon_width_", init.icon_width);
+
+    if (config["icon_height"].valid()) init.icon_height = config["icon_height"].get<int>();
+    else init.icon_height = get_int("icon_height_", init.icon_height);
+
+    if (config["font_width"].valid()) init.font_width = config["font_width"].get<int>();
+    else init.font_width = get_int("font_width_", init.font_width);
+
+    if (config["font_height"].valid()) init.font_height = config["font_height"].get<int>();
+    else init.font_height = get_int("font_height_", init.font_height);
 
         // Convert base_index from string if present
         std::string base_index_str = get_str("base_index_", "frame");
@@ -55,8 +65,8 @@ namespace SDOM
         init.base_index = (it != stringToPanelBaseIndex_.end()) ? it->second : PanelBaseIndex::Frame;
 
         // Assign to members
-        icon_resource_name_ = init.icon_resource_name;
-        font_resource_name_ = init.font_resource_name;
+        icon_resource_ = init.icon_resource;
+        font_resource_ = init.font_resource;
         icon_width_ = init.icon_width;
         icon_height_ = init.icon_height;
         font_width_ = init.font_width;
@@ -71,21 +81,64 @@ namespace SDOM
         // Load sprite sheet asset
         if (!spriteSheetAsset_) 
         {
-            spriteSheetAsset_ = getFactory().getAssetObject(icon_resource_name_);
+            // Try configured name first
+            if (!icon_resource_.empty()) {
+                // INFO("IPanelObject::onInit: attempting to load sprite asset by name: " + icon_resource_);
+                spriteSheetAsset_ = getFactory().getAssetObject(icon_resource_);
+                if (spriteSheetAsset_) {
+                    // INFO("IPanelObject::onInit: found asset '" + spriteSheetAsset_->getName() + "' type='" + spriteSheetAsset_->getType() + "' file='" + spriteSheetAsset_->getFilename() + "'");
+                }
+            }
+
+            // If not found, many resources register a SpriteSheet under the filename + "_SpriteSheet"
+            // If we found a Texture, it's common that a SpriteSheet exists which uses
+            // that texture as its filename. Prefer the SpriteSheet when available.
+            if (spriteSheetAsset_ && spriteSheetAsset_->getType() == Texture::TypeName) 
+            {
+                // INFO("IPanelObject::onInit: resolved asset is a Texture; attempting to find matching SpriteSheet for file: " + spriteSheetAsset_->getFilename());
+                // Use the public API to find any SpriteSheet asset that references the same texture filename
+                AssetHandle candidate = getFactory().findAssetByFilename(spriteSheetAsset_->getFilename(), SpriteSheet::TypeName);
+                if (candidate.isValid()) 
+                {
+                    SpriteSheet* ssPtr = candidate.as<SpriteSheet>();
+                    if (ssPtr && ssPtr->getSpriteWidth() == icon_width_ && ssPtr->getSpriteHeight() == icon_height_) {
+                        // INFO("IPanelObject::onInit: found SpriteSheet '" + candidate.getName() + "' matching texture file='" + candidate.getFilename() + "' and sprite size");
+                        spriteSheetAsset_ = candidate;
+                        icon_resource_ = candidate.getName();
+                    } else {
+                        // INFO("IPanelObject::onInit: found SpriteSheet candidate '" + candidate.getName() + "' but sprite size did not match (expected " + std::to_string(icon_width_) + "x" + std::to_string(icon_height_) + ")");
+                    }
+                } else {
+                    // INFO("IPanelObject::onInit: no SpriteSheet asset found referencing texture file: " + spriteSheetAsset_->getFilename());
+                }
+            }
+
+            if (!spriteSheetAsset_) {
+                std::string alt = icon_resource_ + std::string("_SpriteSheet");
+                // INFO("IPanelObject::onInit: attempting fallback sprite asset name: " + alt);
+                spriteSheetAsset_ = getFactory().getAssetObject(alt);
+                if (spriteSheetAsset_) {
+                    // INFO("IPanelObject::onInit: found fallback asset '" + spriteSheetAsset_->getName() + "' type='" + spriteSheetAsset_->getType() + "' file='" + spriteSheetAsset_->getFilename() + "'");
+                    // Update our internal name to the resolved resource so later diagnostics match
+                    icon_resource_ = alt;
+                }
+            }
+
             if (!spriteSheetAsset_) 
             {
-                ERROR("IPanelObject::onInit: Failed to load sprite sheet asset: " + icon_resource_name_);
+                ERROR("IPanelObject::onInit: Failed to load sprite sheet asset: " + icon_resource_);
+                getFactory().printAssetTree();
                 return false;
             }
         }
 
         // Load font asset
-        if (!font_resource_name_.empty() && !fontAsset_)
+        if (!font_resource_.empty() && !fontAsset_)
         {
-            fontAsset_ = getFactory().getAssetObject(font_resource_name_);
+            fontAsset_ = getFactory().getAssetObject(font_resource_);
             if (!fontAsset_)
             {
-                ERROR("IPanelObject::onInit: Failed to load font asset: " + font_resource_name_);
+                ERROR("IPanelObject::onInit: Failed to load font asset: " + font_resource_);
                 return false;
             }
         }
@@ -147,11 +200,17 @@ namespace SDOM
         SpriteSheet* sprite_sheet = spriteSheetAsset_->as<SpriteSheet>();
         if (!sprite_sheet)
         {
-            ERROR("IPanelObject::renderPanel: sprite asset is not a SpriteSheet");
+            getFactory().printAssetTree();
+            std::string atype = spriteSheetAsset_.isValid() ? spriteSheetAsset_->getType() : std::string("<invalid>");
+            std::string afile = spriteSheetAsset_.isValid() ? spriteSheetAsset_->getFilename() : std::string("<invalid>");
+            ERROR("IPanelObject::renderPanel: sprite asset (" + spriteSheetAsset_->getName() + ") is not a SpriteSheet; resolved type='" + atype + "' file='" + afile + "'");
             return;
         }
 
-        // Top row
+    // Ensure the sprite sheet's underlying texture is loaded before drawing
+    try { sprite_sheet->onLoad(); } catch(...) {}
+
+    // Top row
         sprite_sheet->drawSprite(idx(PTO::TopLeft), {0, 0, fleftW, ftopH}, {fx, fy, fleftW, ftopH}, color);
         if (centerW > 0)
             sprite_sheet->drawSprite(idx(PTO::TopCenter), {0, 0, fcw, ftopH}, {fx + fleftW, fy, fcenterW, ftopH}, color);
@@ -216,7 +275,7 @@ namespace SDOM
             handle.set_function("setIconResourceName", [cast_panel_from_handle](DisplayHandle& self, const std::string& s) {
                 IPanelObject* p = cast_panel_from_handle(self);
                 // set by name and update internal asset handle lazily
-                p->icon_resource_name_ = s;
+                p->icon_resource_ = s;
                 p->spriteSheetAsset_ = AssetHandle();
             });
         }
@@ -230,7 +289,7 @@ namespace SDOM
         if (absent("setFontResourceName")) {
             handle.set_function("setFontResourceName", [cast_panel_from_handle](DisplayHandle& self, const std::string& s) {
                 IPanelObject* p = cast_panel_from_handle(self);
-                p->font_resource_name_ = s;
+                p->font_resource_ = s;
                 p->fontAsset_ = AssetHandle();
             });
         }
@@ -272,14 +331,14 @@ namespace SDOM
             handle.set_function("getSpriteSheet", [cast_panel_from_handle](DisplayHandle& self) -> AssetHandle {
                 IPanelObject* p = cast_panel_from_handle(self);
                 // ensure lazy load
-                if (!p->spriteSheetAsset_) p->spriteSheetAsset_ = getFactory().getAssetObject(p->icon_resource_name_);
+                if (!p->spriteSheetAsset_) p->spriteSheetAsset_ = getFactory().getAssetObject(p->icon_resource_);
                 return p->spriteSheetAsset_;
             });
         }
         if (absent("getFontAsset")) {
             handle.set_function("getFontAsset", [cast_panel_from_handle](DisplayHandle& self) -> AssetHandle {
                 IPanelObject* p = cast_panel_from_handle(self);
-                if (!p->fontAsset_ && !p->font_resource_name_.empty()) p->fontAsset_ = getFactory().getAssetObject(p->font_resource_name_);
+                if (!p->fontAsset_ && !p->font_resource_.empty()) p->fontAsset_ = getFactory().getAssetObject(p->font_resource_);
                 return p->fontAsset_;
             });
         }

@@ -79,6 +79,8 @@ namespace SDOM
             }
         }
 
+        
+
         // register a TTFAsset
         registerResType("TTFAsset", AssetTypeCreators{
             TTFAsset::CreateFromLua,
@@ -131,6 +133,20 @@ namespace SDOM
             SpriteSheet::CreateFromLua,
             SpriteSheet::CreateFromInitStruct
         });
+
+        // Also ensure there is a SpriteSheet wrapper for the internal icon texture
+        const std::string defaultIconSpriteSheetName = std::string("internal_icon_8x8_SpriteSheet");
+        if (!getResObj(defaultIconSpriteSheetName)) {
+            SpriteSheet::InitStruct ssInit;
+            ssInit.name = defaultIconSpriteSheetName;
+            ssInit.type = SpriteSheet::TypeName;
+            ssInit.filename = std::string("internal_icon_8x8"); // underlying texture filename
+            ssInit.spriteWidth = 8;
+            ssInit.spriteHeight = 8;
+            ssInit.isInternal = true;
+            AssetHandle ss = createAsset("SpriteSheet", ssInit);
+            (void)ss;
+        }
 
         // register the BitmapFont asset
         registerResType("BitmapFont", AssetTypeCreators{

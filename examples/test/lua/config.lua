@@ -53,7 +53,8 @@ local config = {
         { name = "VarelaRound16", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 16 },
         { name = "VarelaRound32", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 32 },
         { name = "external_font_8x8", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png", font_width = 8, font_height = 8 },
-        { name = "external_font_8x12", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png", font_width = 8, font_height = 12 }
+        { name = "external_font_8x12", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png", font_width = 8, font_height = 12 },
+        { name = "external_icon_8x8", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/icon_8x8.png", sprite_width = 8, sprite_height = 8 }
     },
     windowWidth = 1200,
     windowHeight = 800,
@@ -77,9 +78,10 @@ local config = {
                     name = "rightFrame",
                     type = "Frame",
                     x = 300,
-                    y = 100,
-                    width = 290,
+                    y = 5,
+                    width = 295,
                     height = 390,
+                    -- icon_resource = "external_icon_8x8", -- test icon resource name resolution
                     color = { r = 64, g = 32, b = 32, a = 255 }
                 },
                 {
@@ -266,7 +268,7 @@ local config = {
             type = "Stage",
             color = { r = 8, g = 16, b = 32, a = 255 }
         }
-    }
+    },
 } -- Closing brace for the config table
 
 -- Configure the test application
