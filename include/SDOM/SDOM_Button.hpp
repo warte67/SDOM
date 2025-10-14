@@ -63,6 +63,8 @@ namespace SDOM
         virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
         virtual void onEvent(const Event& event) override;  // Called when an event occurs
 
+        DisplayHandle getLabelObject() const { return labelObject_; }
+
     protected:
 
         DisplayHandle labelObject_; // internal label object for button text

@@ -95,7 +95,7 @@ local config = {
                     font_resource = "VarelaRound16", -- test font resource name resolution
                     font_size = 16,
                     -- icon_resource = "external_icon_8x8", -- test icon resource name resolution
-                    color = { r = 64, g = 32, b = 32, a = 255 }
+                    color = { r = 96, g = 32, b = 16, a = 255 }
                 },
                 {
                     name = "redishBox",
@@ -283,7 +283,7 @@ local config = {
                     text = "Go to Stage Three",
                     font_resource = "VarelaRound16",
                     font_size = 16,
-                    color = { r = 64, g = 32, b = 32, a = 255 }
+                    color = { r = 32, g = 96, b = 16, a = 255 }
                 }
             }
         },
@@ -299,7 +299,7 @@ local config = {
                     text = "Go to Main Stage",
                     font_resource = "VarelaRound16",
                     font_size = 16,
-                    color = { r = 64, g = 32, b = 32, a = 255 }
+                    color = { r = 16, g = 32, b = 96, a = 255 }
                 }
             }
         }
@@ -366,8 +366,25 @@ local btnObj_2 = getDisplayObject("stage2_button")
 local btnObj_3 = getDisplayObject("stage3_button")
 
 -- use named fields (type, listener)
-btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
-btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
-btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
+-- btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
+-- btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
+-- btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
+
+-- safe listener registration (checks existence and avoids runtime errors)
+if btnObj_1 then
+    pcall(function()
+        btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
+    end)
+end
+if btnObj_2 then
+    pcall(function()
+        btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
+    end)
+end
+if btnObj_3 then
+    pcall(function()
+        btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
+    end)
+end
 
 return config

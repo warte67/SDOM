@@ -170,6 +170,7 @@ namespace SDOM
 
 
     // --- Lua Registration --- //
+
     void Button::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
         // Include inherited bindings first
@@ -187,7 +188,8 @@ namespace SDOM
         sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
 
         // Helper to check if a property/command is already registered
-        auto absent = [&](const char* name) -> bool {
+        auto absent = [&](const char* name) -> bool 
+        {
             sol::object cur = handle.raw_get_or(name, sol::lua_nil);
             return !cur.valid() || cur == sol::lua_nil;
         };
@@ -197,13 +199,31 @@ namespace SDOM
         {
             handle.set("name", sol::property(
                 // getter
-                [](SDOM::DisplayHandle h) -> std::string {
+                [](SDOM::DisplayHandle h) -> std::string 
+                {
                     if (h.isValid()) return h->getName();
                     return std::string();
                 },
                 // setter
-                [](SDOM::DisplayHandle h, const std::string& v) {
+                [](SDOM::DisplayHandle h, const std::string& v) 
+                {
                     if (h.isValid()) h->setName(v);
+                }
+            ));
+        }
+
+        // expose 'label' property that returns the attached label DisplayHandle (read-only)
+        if (absent("label"))
+        {
+            handle.set("label", sol::property(
+                // getter
+                [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle 
+                {
+                    if (!h.isValid()) return SDOM::DisplayHandle();
+                    // ensure this is a Button before casting
+                    if (h->getType() != Button::TypeName) return SDOM::DisplayHandle();
+                    Button* btn = static_cast<Button*>(h.get());
+                    return btn->getLabelObject();
                 }
             ));
         }
@@ -211,6 +231,7 @@ namespace SDOM
         // --- additional Button-specific bindings can go here --- //
 
     } // END: void Button::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+
 
 
 } // END: namespace SDOM
