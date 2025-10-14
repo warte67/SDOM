@@ -21,6 +21,7 @@ var hierarchy =
       [ "SDOM::Texture::InitStruct", "structSDOM_1_1Texture_1_1InitStruct.html", null ]
     ] ],
     [ "SDOM::IDisplayObject::InitStruct", "structSDOM_1_1IDisplayObject_1_1InitStruct.html", [
+      [ "SDOM::IPanelObject::InitStruct", "structSDOM_1_1IPanelObject_1_1InitStruct.html", null ],
       [ "SDOM::Label::InitStruct", "structSDOM_1_1Label_1_1InitStruct.html", null ],
       [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ]
     ] ],
@@ -41,6 +42,7 @@ var hierarchy =
           [ "SDOM::Texture", "classSDOM_1_1Texture.html", null ]
         ] ],
         [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", [
+          [ "SDOM::IPanelObject", "classSDOM_1_1IPanelObject.html", null ],
           [ "SDOM::Label", "classSDOM_1_1Label.html", null ],
           [ "SDOM::Stage", "classSDOM_1_1Stage.html", null ]
         ] ]

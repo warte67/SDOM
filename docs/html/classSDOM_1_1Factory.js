@@ -36,6 +36,8 @@ var classSDOM_1_1Factory =
     [ "onQuit", "classSDOM_1_1Factory.html#a2fecc435aebe23174442316d21ac2017", null ],
     [ "onUnitTest", "classSDOM_1_1Factory.html#a2b4f5adfbf25ca90cc71060408134dbb", null ],
     [ "printAssetRegistry", "classSDOM_1_1Factory.html#a22ef11f7b702e1f2cc767fa8341a77ba", null ],
+    [ "printAssetTree", "classSDOM_1_1Factory.html#ae4702dc9bf035be9bda382634968630b", null ],
+    [ "printAssetTreeGrouped", "classSDOM_1_1Factory.html#a19ec0e9ac0de1f7ba855a801e1566b53", null ],
     [ "printObjectRegistry", "classSDOM_1_1Factory.html#a760cce7209d592610e31a6fc52667b9c", null ],
     [ "registerDomType", "classSDOM_1_1Factory.html#a8862aa32cdf361e08525216ac7976eb3", null ],
     [ "registerLuaBindings", "classSDOM_1_1Factory.html#a1947ff718446a6a81cd108b87a475d9f", null ],

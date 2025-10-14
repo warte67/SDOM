@@ -18,6 +18,7 @@ var annotated_dup =
       [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
       [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
       [ "IFontObject", "classSDOM_1_1IFontObject.html", "classSDOM_1_1IFontObject" ],
+      [ "IPanelObject", "classSDOM_1_1IPanelObject.html", "classSDOM_1_1IPanelObject" ],
       [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
       [ "Label", "classSDOM_1_1Label.html", "classSDOM_1_1Label" ],
       [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],

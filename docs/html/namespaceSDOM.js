@@ -17,6 +17,7 @@ var namespaceSDOM =
     [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
     [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
     [ "IFontObject", "classSDOM_1_1IFontObject.html", "classSDOM_1_1IFontObject" ],
+    [ "IPanelObject", "classSDOM_1_1IPanelObject.html", "classSDOM_1_1IPanelObject" ],
     [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
     [ "Label", "classSDOM_1_1Label.html", "classSDOM_1_1Label" ],
     [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
@@ -72,6 +73,25 @@ var namespaceSDOM =
       [ "BOTTOM_LEFT", "namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da8d81ac82421d1b03da58fccb9174892e", null ],
       [ "BOTTOM_CENTER", "namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da3480601794fd3b5473219ae158219fd4", null ],
       [ "BOTTOM_RIGHT", "namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da341b72aaab1308a3e6667af1e52f5def", null ]
+    ] ],
+    [ "PanelBaseIndex", "namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922c", [
+      [ "ButtonUp", "namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922caf64c6bd570a1159149526b21a7c41936", null ],
+      [ "ButtonUpSelected", "namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922ca3172db59a91fd29f9e9568240880947d", null ],
+      [ "ButtonDown", "namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922cadbe47f32761ac5389cee901a663e7bc0", null ],
+      [ "ButtonDownSelected", "namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922ca8155735fa1cdcf55fbbad31566dc9a6b", null ],
+      [ "Frame", "namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922ca3bb3e8c8a24891ba0f7608bcc96f8b0a", null ],
+      [ "Group", "namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922ca03937134cedab9078be39a77ee3a48a0", null ]
+    ] ],
+    [ "PanelTileOffset", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5", [
+      [ "TopLeft", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5ab32beb056fbfe36afbabc6c88c81ab36", null ],
+      [ "TopCenter", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5a91b8ede24b7f93a98ae4dcaade15d468", null ],
+      [ "TopRight", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5a1d85a557894c340c318493f33bfa8efb", null ],
+      [ "LeftCenter", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5ac7304bf037c39d7f1dcc0f8b81398247", null ],
+      [ "Center", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5a4f1f6016fc9f3f2353c0cc7c67b292bd", null ],
+      [ "RightCenter", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5a5595404fe7046ad0f3796b176c4f257e", null ],
+      [ "BottomLeft", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5a98e5a1c44509157ebcaf46c515c78875", null ],
+      [ "BottomCenter", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5abf7d9c8ad2f89a37cf5378b5fec0b420", null ],
+      [ "BottomRight", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5a9146bfc669fddc88db2c4d89297d0e9a", null ]
     ] ],
     [ "addChild_lua", "namespaceSDOM.html#ad705e9ccdf395990fbda0fb59a94d9bc", null ],
     [ "addEventListener_lua", "namespaceSDOM.html#af14e20308dd12843a90b65dd6cd2a1de", null ],
@@ -285,5 +305,9 @@ var namespaceSDOM =
     [ "internal_ttf_len", "namespaceSDOM.html#af894447a8326743da636f323c57c8854", null ],
     [ "isDragging", "namespaceSDOM.html#adf53bca06e8a020f771e843c14584582", null ],
     [ "maxOutlineThickness", "namespaceSDOM.html#aae891c3cb463a8719fa20816f7ef0ea4", null ],
-    [ "stringToAnchorPoint_", "namespaceSDOM.html#a33cd42f20297f893e13db841931abda0", null ]
+    [ "panelBaseIndexToString_", "namespaceSDOM.html#af0cc30e6979fd8ef2453166a934da51c", null ],
+    [ "panelTileOffsetToString_", "namespaceSDOM.html#a1ba3fe71c30a46b568259105d73972be", null ],
+    [ "stringToAnchorPoint_", "namespaceSDOM.html#a33cd42f20297f893e13db841931abda0", null ],
+    [ "stringToPanelBaseIndex_", "namespaceSDOM.html#a8c2b307c7eb25af276a81bd930409deb", null ],
+    [ "stringToPanelTileOffset_", "namespaceSDOM.html#adeb30b52dfdaf61815eb609cc8e208d8", null ]
 ];

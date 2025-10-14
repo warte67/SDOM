@@ -29,5 +29,5 @@ var searchData=
   ['bind_5fstring_5ftable_5freturn_5fasset_26',['bind_string_table_return_asset',['../namespaceSDOM.html#a347b820c9929d1de5fe431aeba3fd3a9',1,'SDOM']]],
   ['bind_5fstring_5ftable_5freturn_5fdo_27',['bind_string_table_return_do',['../namespaceSDOM.html#a83ad3a88224e314bb4577f55dcf14e87',1,'SDOM']]],
   ['bind_5ftable_28',['bind_table',['../namespaceSDOM.html#add31e794f5e908f30d44223f4e976ffb',1,'SDOM']]],
-  ['bitmapfont_29',['BitmapFont',['../classSDOM_1_1BitmapFont.html#a2baf0fde9547c7446d66be4342a0de22',1,'SDOM::BitmapFont::BitmapFont(const InitStruct &amp;init)'],['../classSDOM_1_1BitmapFont.html#a3897578689db50de002c282e880258a7',1,'SDOM::BitmapFont::BitmapFont(const sol::table &amp;config)']]]
+  ['bitmapfont_29',['bitmapfont',['../classSDOM_1_1BitmapFont.html#a2baf0fde9547c7446d66be4342a0de22',1,'SDOM::BitmapFont::BitmapFont(const InitStruct &amp;init)'],['../classSDOM_1_1BitmapFont.html#a3897578689db50de002c282e880258a7',1,'SDOM::BitmapFont::BitmapFont(const sol::table &amp;config)']]]
 ];
