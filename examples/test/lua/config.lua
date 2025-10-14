@@ -74,8 +74,17 @@ local config = {
             color = { r = 32, g = 8, b = 4, a = 255 },
             children = {
                 {
-                    type = "Box",
+                    name = "rightFrame",
+                    type = "Frame",
+                    x = 300,
+                    y = 100,
+                    width = 290,
+                    height = 390,
+                    color = { r = 64, g = 32, b = 32, a = 255 }
+                },
+                {
                     name = "redishBox",
+                    type = "Box",
                     x = 100.0,
                     y = 100,
                     width = 120,
@@ -85,8 +94,8 @@ local config = {
                     -- add children with a Label using the new TruetypeFont
                     children = {
                         {
-                            type = "Label",
                             name = "redishBoxLabel",
+                            type = "Label",
                             anchor_left = "left",       
                             x = 105,                    
                             anchor_top = "top",         
@@ -109,8 +118,8 @@ local config = {
                     }
                 },
                 {
-                    type = "Box",
                     name = "greenishBox",
+                    type = "Box",
                     x = 150,
                     y = 150,
                     width = 180,
@@ -119,8 +128,8 @@ local config = {
                     -- add children with a Label using the new TruetypeFont
                     children = {
                         {
-                            type = "Label",
                             name = "greenishBoxLabel",
+                            type = "Label",
                             anchor_left = "left",       
                             x = 155,                    
                             anchor_top = "top",         
@@ -150,8 +159,8 @@ local config = {
                     }
                 },
                 {
-                    type = "Box",
                     name = "blueishBox",
+                    type = "Box",
                     x = 240,
                     y = 70,
                     width = 250,
@@ -159,8 +168,8 @@ local config = {
                     color = { r = 50, g = 50, b = 200, a = 255 },
                     children = {
                         {
-                            type = "Label",
                             name = "blueishBoxLabel",
+                            type = "Label",
 
                             anchor_left = "left",       -- verified
                             x = 245,                    -- verified (world coordinates)
@@ -204,8 +213,8 @@ local config = {
                     }
                 },
                 {
-                    type = "Box",
                     name = "orangishBox",
+                    type = "Box",
                     x = 40,
                     y = 200,
                     width = 100,
@@ -215,8 +224,8 @@ local config = {
                     children = 
                     {
                         {
-                            type = "Label",
                             name = "orangeishBoxLabel",
+                            type = "Label",
                             anchor_left = "left",       
                             x = 45,                    
                             anchor_top = "top",         
@@ -248,13 +257,13 @@ local config = {
             }
         },
         {
-            type = "Stage",
             name = "stageTwo",
+            type = "Stage",
             color = { r = 16, g = 32, b = 8, a = 255 }
         },
         {
-            type = "Stage",
             name = "stageThree",
+            type = "Stage",
             color = { r = 8, g = 16, b = 32, a = 255 }
         }
     }

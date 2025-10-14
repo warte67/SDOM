@@ -16,6 +16,7 @@
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
+#include <SDOM/SDOM_Frame.hpp>
 
 namespace SDOM
 {
@@ -178,8 +179,13 @@ namespace SDOM
             }
         });
 
-        // register the IPanelObject Decendants 
-        // ... 
+        // --- Register the IPanelObject Decendants --- //
+
+        // register Frame
+        registerDomType("Frame", TypeCreators{
+            Frame::CreateFromLua,
+            Frame::CreateFromInitStruct
+        });
 
         initialized_ = true;
         return true;
