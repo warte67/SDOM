@@ -122,18 +122,6 @@ namespace SDOM
                 // If creation failed, leave defaultTTFont invalid and fall back below
                 defaultTTFont = AssetHandle();
             }
-
-            // if (!defaultTTFont.isValid()) {
-            //     // Fallback: create a bitmap font named "default_ttf" that reuses the default 8x8 sprite
-            //     BitmapFont::InitStruct fbInit;
-            //     fbInit.name = "default_ttf";
-            //     fbInit.type = BitmapFont::TypeName;
-            //     fbInit.filename = "default_bmp_8x8";
-            //     fbInit.isInternal = true;
-            //     fbInit.fontSize = 8;
-            //     AssetHandle fb = createAsset("BitmapFont", fbInit);
-            //     (void)fb; // silence unused
-            // }
         }
             
 
@@ -189,6 +177,9 @@ namespace SDOM
                 return Label::CreateFromInitStruct(init);
             }
         });
+
+        // register the IPanelObject Decendants 
+        // ... 
 
         initialized_ = true;
         return true;

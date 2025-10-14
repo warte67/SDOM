@@ -667,6 +667,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Built and ran the test suite; label-related tests (including new tests) passed locally.
   - **ToDo:**
     - Add unit tests for malformed/edge-case escapes (invalid hex, missing params, negative values).
+- **IPanelObject**
+  - `IPanelObject` has an interface and basic implementation.  Lua bindings are attached to `ObjectHandle`.
 - **Docs and cleanup:**
   - Updated docs/label_text_parsing.md with numeric escape syntax, semantics, examples, and the full color list.
   - Removed debug prints and cleaned up temporary diagnostics used during development.

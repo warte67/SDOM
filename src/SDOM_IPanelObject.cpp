@@ -80,11 +80,10 @@ namespace SDOM
         }
 
         // Load font asset
-        if (fontAsset_ == nullptr && !font_resource_name_.empty())
-        if (!font_resource_name_.empty())
+        if (!font_resource_name_.empty() && !fontAsset_)
         {
             fontAsset_ = getFactory().getAssetObject(font_resource_name_);
-            if (!fontAsset_) 
+            if (!fontAsset_)
             {
                 ERROR("IPanelObject::onInit: Failed to load font asset: " + font_resource_name_);
                 return false;
@@ -188,24 +187,102 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared DisplayHandle handle usertype
-        // sol::table handle = DisplayHandle::ensure_handle_table(lua);
+        // Augment the single shared DisplayHandle handle usertype
+        sol::table handle = DisplayHandle::ensure_handle_table(lua);
 
-        // auto absent = [&](const char* name) -> bool {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     return !cur.valid() || cur == sol::lua_nil;
-        // };
+        // Helper to check if a property/command is already registered
+        auto absent = [&](const char* name) -> bool {
+            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            return !cur.valid() || cur == sol::lua_nil;
+        };
 
-        // --- these will need to be bound to the handle sol::table --- //
-        // AssetHandle spriteSheet_;
-        // AssetHandle fontObject_; 
-        // std::string icon_resource_name_ = "internal_icon_8x8"; 
-        // std::string font_resource_name_ = "internal_font_8x8"; 
-        // int icon_width_ = 8; 
-        // int icon_height_ = 8; 
-        // int font_width_ = 8;
-        // int font_height_ = 8;
-        // PanelBaseIndex base_index_ = PanelBaseIndex::Frame;
+        // small helper to validate and cast the DisplayHandle -> IPanelObject*
+        auto cast_panel_from_handle = [](DisplayHandle& h) -> IPanelObject* {
+            if (!h.isValid()) { ERROR("invalid DisplayHandle provided to IPanelObject method"); }
+            IDisplayObject* base = dynamic_cast<IDisplayObject*>(h.get());
+            IPanelObject* panel = dynamic_cast<IPanelObject*>(base);
+            if (!panel) { ERROR("invalid IPanelObject object"); }
+            return panel;
+        };
+
+        // Register accessors on the DisplayHandle shared table
+        if (absent("getIconResourceName")) {
+            handle.set_function("getIconResourceName", [cast_panel_from_handle](DisplayHandle& self) -> std::string {
+                IPanelObject* p = cast_panel_from_handle(self);
+                return p->getIconResourceName();
+            });
+        }
+        if (absent("setIconResourceName")) {
+            handle.set_function("setIconResourceName", [cast_panel_from_handle](DisplayHandle& self, const std::string& s) {
+                IPanelObject* p = cast_panel_from_handle(self);
+                // set by name and update internal asset handle lazily
+                p->icon_resource_name_ = s;
+                p->spriteSheetAsset_ = AssetHandle();
+            });
+        }
+
+        if (absent("getFontResourceName")) {
+            handle.set_function("getFontResourceName", [cast_panel_from_handle](DisplayHandle& self) -> std::string {
+                IPanelObject* p = cast_panel_from_handle(self);
+                return p->getFontResourceName();
+            });
+        }
+        if (absent("setFontResourceName")) {
+            handle.set_function("setFontResourceName", [cast_panel_from_handle](DisplayHandle& self, const std::string& s) {
+                IPanelObject* p = cast_panel_from_handle(self);
+                p->font_resource_name_ = s;
+                p->fontAsset_ = AssetHandle();
+            });
+        }
+
+        // icon/font dimensions
+        if (absent("getIconWidth")) { handle.set_function("getIconWidth", [cast_panel_from_handle](DisplayHandle& self) -> int { return cast_panel_from_handle(self)->getIconWidth(); }); }
+        if (absent("setIconWidth")) { handle.set_function("setIconWidth", [cast_panel_from_handle](DisplayHandle& self, int v) { cast_panel_from_handle(self)->icon_width_ = v; }); }
+        if (absent("getIconHeight")) { handle.set_function("getIconHeight", [cast_panel_from_handle](DisplayHandle& self) -> int { return cast_panel_from_handle(self)->getIconHeight(); }); }
+        if (absent("setIconHeight")) { handle.set_function("setIconHeight", [cast_panel_from_handle](DisplayHandle& self, int v) { cast_panel_from_handle(self)->icon_height_ = v; }); }
+        if (absent("getFontWidth")) { handle.set_function("getFontWidth", [cast_panel_from_handle](DisplayHandle& self) -> int { return cast_panel_from_handle(self)->getFontWidth(); }); }
+        if (absent("setFontWidth")) { handle.set_function("setFontWidth", [cast_panel_from_handle](DisplayHandle& self, int v) { cast_panel_from_handle(self)->font_width_ = v; }); }
+        if (absent("getFontHeight")) { handle.set_function("getFontHeight", [cast_panel_from_handle](DisplayHandle& self) -> int { return cast_panel_from_handle(self)->getFontHeight(); }); }
+        if (absent("setFontHeight")) { handle.set_function("setFontHeight", [cast_panel_from_handle](DisplayHandle& self, int v) { cast_panel_from_handle(self)->font_height_ = v; }); }
+
+        // base index getter/setter (expose strings)
+        if (absent("getBaseIndex")) {
+            handle.set_function("getBaseIndex", [cast_panel_from_handle]() -> std::string {
+                // NOTE: this closure doesn't have a DisplayHandle param so fetch panel via Core is not appropriate; provide overload that accepts DisplayHandle
+                return std::string();
+            });
+        }
+        if (absent("getBaseIndex")) {
+            handle.set_function("getBaseIndex", [cast_panel_from_handle](DisplayHandle& self) -> std::string {
+                IPanelObject* p = cast_panel_from_handle(self);
+                auto it = panelBaseIndexToString_.find(p->getBaseIndex());
+                return (it != panelBaseIndexToString_.end()) ? it->second : std::string("frame");
+            });
+        }
+        if (absent("setBaseIndex")) {
+            handle.set_function("setBaseIndex", [cast_panel_from_handle](DisplayHandle& self, const std::string& s) {
+                IPanelObject* p = cast_panel_from_handle(self);
+                auto it = stringToPanelBaseIndex_.find(s);
+                if (it != stringToPanelBaseIndex_.end()) p->base_index_ = it->second;
+            });
+        }
+
+        // Expose AssetHandles for spriteSheet and fontAsset
+        if (absent("getSpriteSheet")) {
+            handle.set_function("getSpriteSheet", [cast_panel_from_handle](DisplayHandle& self) -> AssetHandle {
+                IPanelObject* p = cast_panel_from_handle(self);
+                // ensure lazy load
+                if (!p->spriteSheetAsset_) p->spriteSheetAsset_ = getFactory().getAssetObject(p->icon_resource_name_);
+                return p->spriteSheetAsset_;
+            });
+        }
+        if (absent("getFontAsset")) {
+            handle.set_function("getFontAsset", [cast_panel_from_handle](DisplayHandle& self) -> AssetHandle {
+                IPanelObject* p = cast_panel_from_handle(self);
+                if (!p->fontAsset_ && !p->font_resource_name_.empty()) p->fontAsset_ = getFactory().getAssetObject(p->font_resource_name_);
+                return p->fontAsset_;
+            });
+        }
 
 
     } // END: void IPanelObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
