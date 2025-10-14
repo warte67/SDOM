@@ -308,25 +308,7 @@ void Box::onEvent(const SDOM::Event& event)
 
 void Box::onUpdate(float fElapsedTime) 
 {
-    // properly flash the key focus indication border rectangle
-    // Border flashing logic (as before)
     SUPER::onUpdate(fElapsedTime); // Call base class update handler
-
-    static float delta = 1.0f;
-    float speed = 500.0f;
-
-    gray += (fElapsedTime * speed * delta);
-
-    if (gray >= 192.0f) 
-    {
-        gray = 192.0f;
-        delta = -1.0f;
-    }
-    else if (gray <= 64.0f) 
-    {
-        gray = 64.0f;
-        delta = 1.0f;
-    }
 }
 
 void Box::onRender() 
@@ -337,15 +319,6 @@ void Box::onRender()
     SDL_Color color = getColor();
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderFillRect(renderer, &rect);
-
-    // Render a border if the Box has keyboard focus
-    if (isKeyboardFocused())
-    {
-        // properly flash the key focus indication border rectangle
-        SDL_Color focusColor = { (Uint8)gray, (Uint8)gray, (Uint8)gray, 255 }; // Gray color for focus
-        SDL_SetRenderDrawColor(renderer, focusColor.r, focusColor.g, focusColor.b, focusColor.a); // Border color
-        SDL_RenderRect(renderer, &rect);
-    }
 
     // test hover
     if (isMouseHovered())

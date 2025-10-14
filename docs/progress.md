@@ -684,6 +684,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Lua config/tests:
   - External `SpriteSheet` resource creation and usage verified (`external_icon_8x8` is resolved and used as `Frame` icon/sprites).
   - Wired example button listeners to switch root stages; synthetic and real mouse events exercise listeners successfully.
+- Centralized the keyboard focus pulsing rectangle in the `Core` update and rendering logic.
 
 ---
 ## Next Steps:

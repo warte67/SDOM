@@ -79,6 +79,8 @@ namespace SDOM
 
         // non-lua configurable essential init values
         base_index_ = init.base_index; // default to ButtonUp
+        
+        setTabEnabled(true); // buttons are tab-enabled by default
     }
 
 
@@ -101,6 +103,8 @@ namespace SDOM
             init.anchorRight = AnchorPoint::BOTTOM_RIGHT;
             init.anchorBottom = AnchorPoint::BOTTOM_RIGHT;
             init.resourceName = font_resource_name_;
+            init.isClickable = false;
+            init.tabEnabled = false;
             init.text = text_;
             init.fontSize = font_size_;
             init.fontWidth = font_width_;
@@ -122,12 +126,12 @@ namespace SDOM
     void Button::onRender()
     {
         SUPER::onRender();
+
     } // END: void Button::onRender()
 
 
     void Button::onUpdate(float fElapsedTime)
     {
-        (void)fElapsedTime;
     } // END: void Button::onUpdate(float fElapsedTime)
 
 
@@ -138,33 +142,50 @@ namespace SDOM
         {
             return;
         }
+
         if (event.getType() == EventType::MouseEnter)
         {
             base_index_ = PanelBaseIndex::ButtonUpSelected;
             // std::cout << "Button " << getName() << " is hovered." << std::endl;
-            setState(ButtonState::Hovered);
-            setDirty();
+            if (last_base_index_ != base_index_)
+            {
+                setState(ButtonState::Hovered);
+                last_base_index_ = base_index_;
+                setDirty();
+            }
         }
         if (event.getType() == EventType::MouseLeave)
         {
             base_index_ = PanelBaseIndex::ButtonUp;
             // std::cout << "Button " << getName() << " is not hovered." << std::endl;
-            setState(ButtonState::Normal);
-            setDirty();
+            if (last_base_index_ != base_index_)
+            {
+                setState(ButtonState::Normal);
+                last_base_index_ = base_index_;
+                setDirty();
+            }
         }
         if (event.getType() == EventType::MouseButtonDown)
         {
             base_index_ = PanelBaseIndex::ButtonDown;
             // std::cout << "Button " << getName() << " is pressed." << std::endl;
-            setState(ButtonState::Pressed);
-            setDirty();
+            if (last_base_index_ != base_index_)
+            {
+                setState(ButtonState::Pressed);
+                last_base_index_ = base_index_;
+                setDirty();
+            }
         }
         if (event.getType() == EventType::MouseButtonUp)
         {
             base_index_ = PanelBaseIndex::ButtonDownSelected;
             // std::cout << "Button " << getName() << " is released." << std::endl;
-            setState(ButtonState::Hovered);
-            setDirty();
+            if (last_base_index_ != base_index_)
+            {
+                setState(ButtonState::Hovered);
+                last_base_index_ = base_index_;
+                setDirty();
+            }
         }
     } // END: void Button::onEvent(const Event& event)
 

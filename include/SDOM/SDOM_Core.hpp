@@ -154,6 +154,7 @@ namespace SDOM
         void handleTabKeyPressReverse();
         void setKeyboardFocusedObject(DisplayHandle obj);
         DisplayHandle getKeyboardFocusedObject() const;
+        void clearKeyboardFocusedObject();
         void setMouseHoveredObject(DisplayHandle obj);
         DisplayHandle getMouseHoveredObject() const;
 
@@ -222,12 +223,16 @@ namespace SDOM
         void setStopAfterUnitTests(bool stop) { stopAfterUnitTests_ = stop; }
         bool getStopAfterUnitTests() { return stopAfterUnitTests_; }
 
-    // --- Input filtering for tests --- //
-    // When true, real mouse input from SDL_PollEvent() is ignored so
-    // synthetic events queued by unit tests are not interfered with by
-    // the user's mouse movements.
-    void setIgnoreRealInput(bool v) { ignoreRealInput_ = v; }
-    bool getIgnoreRealInput() const { return ignoreRealInput_; }
+        // --- Input filtering for tests --- //
+        // When true, real mouse input from SDL_PollEvent() is ignored so
+        // synthetic events queued by unit tests are not interfered with by
+        // the user's mouse movements.
+        void setIgnoreRealInput(bool v) { ignoreRealInput_ = v; }
+        bool getIgnoreRealInput() const { return ignoreRealInput_; }
+
+        // --- Keyfocus gray level for testing/focus indication --- //
+        float getKeyfocusGray() const { return keyfocus_gray_; }
+        void setKeyfocusGray(float gray) { keyfocus_gray_ = gray; }
 
     private:
         // --- Singleton Enforcement --- //
@@ -249,7 +254,8 @@ namespace SDOM
         bool bIsRunning_ = true;
         bool isTraversing_ = false;
         float fElapsedTime_;             // Elapsed time since the last update
-    bool ignoreRealInput_ = false; // when true, drop real SDL mouse events during tests
+        bool ignoreRealInput_ = false; // when true, drop real SDL mouse events during tests
+        float keyfocus_gray_ = 0.0f;  // used for keyfocus indication
 
         // Track whether SDL has been started for this Core instance. Using a
         // member instead of a function-static variable keeps state tied to

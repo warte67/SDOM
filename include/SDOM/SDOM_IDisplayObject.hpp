@@ -202,7 +202,7 @@ Notes & test ideas:
             bool isEnabled = true;
             bool isHidden = false;
             int tabPriority = 0;
-            bool tabEnabled = true;
+            bool tabEnabled = false;
         };
 
         friend class Factory;

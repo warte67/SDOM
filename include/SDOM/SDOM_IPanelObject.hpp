@@ -151,7 +151,8 @@ namespace SDOM
         int icon_height_ = 8;       // default icon height is 8
         int font_width_ = 8;        // default font width is 8
         int font_height_ = 8;       // default font height is 8
-        PanelBaseIndex base_index_ = PanelBaseIndex::Frame;
+        PanelBaseIndex base_index_ = PanelBaseIndex::ButtonUp;
+        PanelBaseIndex last_base_index_ = PanelBaseIndex::ButtonUp;
 
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);

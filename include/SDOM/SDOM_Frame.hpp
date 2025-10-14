@@ -23,6 +23,8 @@ namespace SDOM
                 name = TypeName;
                 type = TypeName;
                 color = {96, 0, 96, 255};   // panel color
+                isClickable = false;
+                tabEnabled = false;
                 // from IPanelObject
                 base_index = PanelBaseIndex::Frame; 
                 icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet

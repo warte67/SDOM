@@ -14,6 +14,7 @@ namespace SDOM
             ERROR("Error: Stage constructed with incorrect type: " + init.type);
         }        
         setClickable(true);
+        setTabEnabled(false);
     }
 
     Stage::Stage(const sol::table& config) : IDisplayObject(config)
@@ -23,6 +24,7 @@ namespace SDOM
             ERROR("Error: Stage constructed with incorrect type: " + type);
         }
         setClickable(true);
+        setTabEnabled(false);
     }
 
 

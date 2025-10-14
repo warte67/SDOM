@@ -556,6 +556,8 @@ namespace SDOM
             // // Apply any pending configuration requested from other threads
             // applyPendingConfig();
 
+            clearKeyboardFocusedObject(); // ensure no keyboard focus at start of run loop
+
             while (bIsRunning_) 
             {
                 while (SDL_PollEvent(&event)) 
@@ -862,6 +864,15 @@ namespace SDOM
                     if (texture)
                         SDL_SetRenderTarget(renderer, texture);
                     handleRender(*childObj);
+                    // Render a border if the Box has keyboard focus
+                    if (childObj->isKeyboardFocused())
+                    {
+                        // properly flash the key focus indication border rectangle
+                        SDL_FRect rect = { float(childObj->getX()), float(childObj->getY()), float(childObj->getWidth()), float(childObj->getHeight()) };
+                        SDL_Color focusColor = { (Uint8)keyfocus_gray_, (Uint8)keyfocus_gray_, (Uint8)keyfocus_gray_, 128 }; // Gray color for focus
+                        SDL_SetRenderDrawColor(getRenderer(), focusColor.r, focusColor.g, focusColor.b, focusColor.a); // Border color
+                        SDL_RenderRect(getRenderer(), &rect);
+                    }
                 }
             }
 
@@ -958,6 +969,23 @@ namespace SDOM
                 }
             }
         };
+
+        // Update the Keyfocus Gray
+        static float delta = 1.0f;
+        float speed = 500.0f;
+        keyfocus_gray_ += (fElapsedTime * speed * delta);
+        if (keyfocus_gray_ >= 192.0f) 
+        {
+            keyfocus_gray_ = 192.0f;
+            delta = -1.0f;
+        }
+        else if (keyfocus_gray_ <= 64.0f) 
+        {
+            keyfocus_gray_ = 64.0f;
+            delta = 1.0f;
+        }        
+
+        // Call the users registered update function if available
         if (fnOnUpdate)
             fnOnUpdate(fElapsedTime);
         // Call recursive update on the root node (if it exists)
@@ -1218,6 +1246,7 @@ namespace SDOM
         }
         // next is (idx+1) mod n, if idx == -1 choose 0
         DisplayHandle next = ordered[(idx + 1) % ordered.size()];
+        INFO("Tab Key Pressed: Focusing object: " << (next.isValid() ? next.get()->getName() : "<null>"));
         setKeyboardFocusedObject(next);
     } // END Core::handleTabKeyPress()
 
@@ -1280,6 +1309,7 @@ namespace SDOM
         // previous is (idx-1 + n) mod n, if idx == -1 choose last
         int n = static_cast<int>(ordered.size());
         DisplayHandle prev = (idx == -1) ? ordered.back() : ordered[(idx - 1 + n) % n];
+        INFO("Tab Key Pressed: Focusing object: " << (prev.isValid() ? prev.get()->getName() : "<null>"));
         setKeyboardFocusedObject(prev);
     } // END Core::handleTabKeyPressReverse()
 
@@ -1289,6 +1319,9 @@ namespace SDOM
     { keyboardFocusedObject_ = obj; }
     DisplayHandle Core::getKeyboardFocusedObject() const
     { return keyboardFocusedObject_; }
+    void Core::clearKeyboardFocusedObject() 
+    { setKeyboardFocusedObject(DisplayHandle(nullptr)); }
+
     void Core::setMouseHoveredObject(DisplayHandle obj)
     { hoveredObject_ = obj; }
     DisplayHandle Core::getMouseHoveredObject() const

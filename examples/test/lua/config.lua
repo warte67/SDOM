@@ -139,7 +139,7 @@ local config = {
                     y = 150,
                     width = 180,
                     height = 120,
-                    color = { r = 32, g = 128, b = 32, a = 255 },
+                    color = { r = 16, g = 64, b = 16, a = 255 },
                     -- add children with a Label using the new TruetypeFont
                     children = {
                         {

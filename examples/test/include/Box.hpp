@@ -51,7 +51,6 @@ class Box final : public SDOM::IDisplayObject
         virtual bool onUnitTest() override;
 
     private:
-        float gray = 0.0f;  // used for keyfocus indication
         // Test hook: count clicks received by any Box instance (for unit tests)
         static std::atomic<int> test_click_count_;
 
