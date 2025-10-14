@@ -94,9 +94,9 @@ local config = {
                             text = "Main Group",
 
                             font_resource = "external_font_8x12",
--- font_size = 12,  -- these should be default values from the externally loaded BitmapFont asset
--- font_width = 8,
--- font_height = 12, -- if not specified, should use the backing SpriteSheet's spriteHeight
+font_size = 12,  -- these should be default values from the externally loaded BitmapFont asset
+font_width = 8,
+font_height = 12, -- if not specified, should use the backing SpriteSheet's spriteHeight
 
 
                             color = { r = 255, g = 255, b = 255, a = 96 },
