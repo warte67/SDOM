@@ -91,7 +91,7 @@ local config = {
                     y = 370,
                     width = 150,
                     height = 25,
-                    text = "Click Me",
+                    text = "Go to Stage Two",
                     font_resource = "VarelaRound16", -- test font resource name resolution
                     font_size = 16,
                     -- icon_resource = "external_icon_8x8", -- test icon resource name resolution
@@ -274,12 +274,34 @@ local config = {
         {
             name = "stageTwo",
             type = "Stage",
-            color = { r = 16, g = 32, b = 8, a = 255 }
+            color = { r = 16, g = 32, b = 8, a = 255 },
+            children = {
+                {   -- ensure children are in an array
+                    name = "stage2_button",
+                    type = "Button",
+                    x = 5, y = 370, width = 150, height = 25,
+                    text = "Go to Stage Three",
+                    font_resource = "VarelaRound16",
+                    font_size = 16,
+                    color = { r = 64, g = 32, b = 32, a = 255 }
+                }
+            }
         },
         {
             name = "stageThree",
             type = "Stage",
-            color = { r = 8, g = 16, b = 32, a = 255 }
+            color = { r = 8, g = 16, b = 32, a = 255 },
+            children = {
+                {   -- ensure children are in an array
+                    name = "stage3_button",
+                    type = "Button",
+                    x = 5, y = 370, width = 150, height = 25,
+                    text = "Go to Main Stage",
+                    font_resource = "VarelaRound16",
+                    font_size = 16,
+                    color = { r = 64, g = 32, b = 32, a = 255 }
+                }
+            }
         }
     },
 } -- Closing brace for the config table
@@ -324,24 +346,28 @@ registerOn("UnitTest", callbacks.unittest.on_unit_test)
 registerOn("WindowResize", callbacks.window_resize.on_window_resize)
 
 
--- -- TESTING ASSET CREATION BELOW (not needed if using config.resources)
--- createAsset("TruetypeFont", {
---     type="TruetypeFont", 
---     name="VarelaRound", 
---     filename = "./assets/VarelaRound.ttf", 
---     font_size = 12})
+-- Add an event listener that switches the root stage when the main button is activated.
+local function on_main_stage_button_click(evnt)
+    print("Button clicked! Changing root stage to 'stageTwo'")
+    setRoot("stageTwo") -- switch to stageTwo when button is clicked
+end
+local function on_stage2_button_click(evnt)
+    print("Button clicked! Changing 'stageTwo' stage to 'stageThree'")
+    setRoot("stageThree") -- switch to stageThree when button is clicked
+end
+local function on_stage3_button_click(evnt)
+    print("Button clicked! Changing 'stageThree' stage to 'mainStage'")
+    setRoot("mainStage") -- switch to mainStage when button is clicked
+end
 
--- -- create BitmapFont (creates SpriteSheet/Texture internally)
--- createAsset("BitmapFont", {
---   type = "BitmapFont",
---   name = "external_bmp_8x12",
---   filename = "./assets/font_8x8.png",
---   font_width = 8,
---   font_height = 12
--- })
+-- Get the button display objects by name
+local btnObj_1 = getDisplayObject("main_stage_button")
+local btnObj_2 = getDisplayObject("stage2_button")
+local btnObj_3 = getDisplayObject("stage3_button")
 
--- -- debug check
--- print("has VarelaRound:", hasAssetObject("VarelaRound"))
--- print("has external_bmp_8x12:", hasAssetObject("external_bmp_8x12"))
+-- use named fields (type, listener)
+btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
+btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
+btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
 
 return config

@@ -110,35 +110,6 @@ namespace SDOM
 
 
 
-    /* 
-        Examples:
-
-        Lookup by field (fast/clear):    
-            ```lua
-            local et = EventType.MouseClick        -- userdata for the MouseClick EventType
-            print(et)                              -- prints "MouseClick" because of __tostring
-            print(et.name)                         -- "MouseClick"
-            print(et.captures)                     -- true/false
-            ```
-
-        Lookup by name with call:
-            ```lua
-            local et2 = EventType("MouseClick")    -- same userdata or nil if not found
-            ```
-
-        Register a new EventType at runtime (visible to Lua immediately):
-            ```lua
-            local new = EventType.register("MyEvent", true, false, false, false)
-            print(new.name)                        -- "MyEvent"
-            print(EventType.MyEvent)               -- also available via EventType.MyEvent
-            ```
-    
-        Method vs property note:
-            In C++, we use getName(), getCaptures(), etc. as methods for clarity and to follow common C++ conventions.
-            In Lua, we expose these as properties (name, captures, etc.) for more idiomatic access, allowing scripts to use
-            `et.name` instead of `et:getName()`, which is more natural in Lua.
-    */
-
     void EventType::registerLua(sol::state_view lua)
     {
         try {
@@ -161,10 +132,12 @@ namespace SDOM
             // Populate a table with references to the static EventType instances
             sol::table etbl = lua.create_table();
             const auto& reg = EventType::getRegistry();
-            for (const auto& kv : reg) {
+            for (const auto& kv : reg) 
+            {
                 const std::string& name = kv.first;
                 EventType* ptr = kv.second;
-                if (ptr) {
+                if (ptr) 
+                {
                     // let sol create the userdata for the C++ pointer
                     etbl[name] = ptr;
                 }
@@ -198,51 +171,10 @@ namespace SDOM
             // non-fatal
             WARNING("Failed to register EventType with Lua");
         }
-
-/*
-        // Example inside EventType::registerLua(sol::state& lua)
-        lua.new_usertype<SDOM::EventType>(
-            "EventTypeObject",
-            sol::no_constructor,
-            "name", sol::property(&SDOM::EventType::getName),
-            "captures", sol::property(&SDOM::EventType::captures),
-            "bubbles", sol::property(&SDOM::EventType::bubbles),
-            "targetOnly", sol::property(&SDOM::EventType::targetOnly),
-            "global", sol::property(&SDOM::EventType::isGlobal),
-            "toString", [](const SDOM::EventType& et){ return et.getName(); }
-        );
-
-        // create EventType table
-        sol::table et_table = lua.create_table();
-        // populate with existing C++ registered types
-        for (auto const& kv : SDOM::EventType::registry()) {
-            // kv.second is a pointer/reference to EventType
-            et_table[kv.first] = kv.second; // sol will create userdata referencing C++ instance
-        }
-
-        // __call metamethod: EventType("Name") returns the userdata by lookup or nil
-        sol::table et_meta = lua.create_table();
-        et_meta["__call"] = lua.safe_script(R"(
-            return function(t, name)
-                return rawget(t, name) or nil
-            end
-        )");
-        et_table[sol::metatable_key] = et_meta;
-
-        // register function to add new types at runtime
-        et_table.set_function("register", [](const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global){
-            auto *et = SDOM::EventType::createOrGet(name, captures, bubbles, targetOnly, global);
-            // also make available in lua: assume we have saved et_table into lua globals as "EventType"
-            sol::state_view lua = ...; // obtain state
-            sol::table t = lua["EventType"];
-            t[name] = et;
-            return et;
-        });
-
-        // finally set as global
-        lua["EventType"] = et_table;     
-*/   
+        
     } // END EventType::registerLua(sol::state_view lua)
+
+
 
     // getters
     bool EventType::getCaptures() const 
@@ -261,6 +193,8 @@ namespace SDOM
     { 
         return global_; 
     }
+
+
 
     // setters
     EventType& EventType::setCaptures(bool captures) 

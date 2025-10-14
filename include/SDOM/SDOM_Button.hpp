@@ -1,12 +1,13 @@
 // SDOM_Button.hpp
 #pragma once
 
+#include <SDOM/SDOM_IButtonObject.hpp>
 #include <SDOM/SDOM_IPanelObject.hpp>
 
 namespace SDOM
 {
 
-    class Button : public IPanelObject
+    class Button : public IPanelObject, public IButtonObject
     {
         using SUPER = SDOM::IPanelObject; 
 
@@ -24,7 +25,7 @@ namespace SDOM
                 type = TypeName;
                 color = {96, 0, 96, 255};   // panel color
                 // from IPanelObject
-                base_index = PanelBaseIndex::Frame; 
+                base_index = PanelBaseIndex::ButtonUp; 
                 icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
                 icon_width = 8;        // default icon width is 8
                 icon_height = 8;       // default icon height is 8

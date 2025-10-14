@@ -22,6 +22,7 @@ namespace SDOM
         }
         // Button Specific
         text_ = init.text;
+        base_index_ = init.base_index;
         font_size_ = init.font_size; 
         font_width_ = init.font_width;
         font_height_ = init.font_height;
@@ -43,6 +44,8 @@ namespace SDOM
         if (type != TypeName) {
             ERROR("Error: Button constructed with incorrect type: " + type);
         }
+        
+        InitStruct init;
 
         // Apply Lua-provided text property to the Button
         if (config["text"].valid()) {
@@ -72,7 +75,10 @@ namespace SDOM
         } else if (config["font_resource_name"].valid()) {
             try { font_resource_name_ = config["font_resource_name"].get<std::string>(); }
             catch (...) { /* ignore */ }
-        }         
+        }     
+
+        // non-lua configurable essential init values
+        base_index_ = init.base_index; // default to ButtonUp
     }
 
 
@@ -86,9 +92,9 @@ namespace SDOM
             init.name = getName() + "_label";
             init.type = "Label";
             init.x = getX() + 4;
-            init.y = getY() + 4;
+            init.y = getY() + 2;
             init.width = getWidth() - 8;
-            init.height = getHeight() - 8;
+            init.height = getHeight() - 4;
             init.alignment = LabelAlign::CENTER;
             init.anchorLeft = AnchorPoint::TOP_LEFT;
             init.anchorTop = AnchorPoint::TOP_LEFT; 
@@ -121,15 +127,45 @@ namespace SDOM
 
     void Button::onUpdate(float fElapsedTime)
     {
-        (void) fElapsedTime; // suppress unused parameter warning
-
+        (void)fElapsedTime;
     } // END: void Button::onUpdate(float fElapsedTime)
 
 
     void Button::onEvent(const Event& event)
     {
-        (void)event;    // suppress unused parameter warning
-
+        // only target phase
+        if (event.getPhase() != Event::Phase::Target) 
+        {
+            return;
+        }
+        if (event.getType() == EventType::MouseEnter)
+        {
+            base_index_ = PanelBaseIndex::ButtonUpSelected;
+            // std::cout << "Button " << getName() << " is hovered." << std::endl;
+            setState(ButtonState::Hovered);
+            setDirty();
+        }
+        if (event.getType() == EventType::MouseLeave)
+        {
+            base_index_ = PanelBaseIndex::ButtonUp;
+            // std::cout << "Button " << getName() << " is not hovered." << std::endl;
+            setState(ButtonState::Normal);
+            setDirty();
+        }
+        if (event.getType() == EventType::MouseButtonDown)
+        {
+            base_index_ = PanelBaseIndex::ButtonDown;
+            // std::cout << "Button " << getName() << " is pressed." << std::endl;
+            setState(ButtonState::Pressed);
+            setDirty();
+        }
+        if (event.getType() == EventType::MouseButtonUp)
+        {
+            base_index_ = PanelBaseIndex::ButtonDownSelected;
+            // std::cout << "Button " << getName() << " is released." << std::endl;
+            setState(ButtonState::Hovered);
+            setDirty();
+        }
     } // END: void Button::onEvent(const Event& event)
 
 
