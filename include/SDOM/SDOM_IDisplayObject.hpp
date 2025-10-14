@@ -213,6 +213,7 @@ Notes & test ideas:
         IDisplayObject();
 
     public:
+    
         virtual ~IDisplayObject();
 
         // --- Lifecycle & Core Virtuals --- //

@@ -104,8 +104,8 @@ namespace SDOM
         void clear();
         void printObjectRegistry() const;
         void printAssetRegistry() const;   // NEW, needs LUA bindings
-    void printAssetTree() const;       // Print a dependency tree of assets (BitmapFont->SpriteSheet->Texture, TruetypeFont->TTFAsset)
-    void printAssetTreeGrouped() const; // Grouped view with Texture/TTFAsset roots and dependents indented like printTree()
+        void printAssetTree() const;       // Print a dependency tree of assets (BitmapFont->SpriteSheet->Texture, TruetypeFont->TTFAsset)
+        void printAssetTreeGrouped() const; // Grouped view with Texture/TTFAsset roots and dependents indented like printTree()
 
         // --- Internal Lua Integration --- //
         void initFromLua(const sol::table& lua);
