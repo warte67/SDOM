@@ -91,7 +91,7 @@ function M.on_prerender(evt)
         -- ss:drawSprite_ext(idx, {0,4,8,4}, {56,32,32,32}, {r=255, g=128, b=96, a=255}, nil) -- with color, no filter (default "nearest")
         -- ss:drawSprite_ext(idx, {0,4,8,4}, {96,32,32,32}, {r=255, g=192, b=128, a=255}, "linear") -- with color, "linear" filter
 
-    CLR.draw_debug_text("Stage", 550, 8, 14, 255, 64, 64, 255)
+    CLR.draw_debug_text("Stage", 250, 8, 14, 255, 64, 64, 255)
 end
 
 function M.on_render(evt)

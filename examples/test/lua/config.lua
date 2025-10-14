@@ -75,7 +75,7 @@ local config = {
             color = { r = 32, g = 8, b = 4, a = 255 },
             children = {
                 {
-                    name = "rightFrame",
+                    name = "rightMainFrame",
                     type = "Frame",
                     x = 300,
                     y = 5,
@@ -276,7 +276,17 @@ local config = {
             type = "Stage",
             color = { r = 16, g = 32, b = 8, a = 255 },
             children = {
-                {   -- ensure children are in an array
+                {
+                    name = "rightStage2Frame",
+                    type = "Frame",
+                    x = 300,
+                    y = 5,
+                    width = 295,
+                    height = 390,
+                    -- icon_resource = "external_icon_8x8", -- test icon resource name resolution
+                    color = { r = 32, g = 64, b = 32, a = 255 }
+                },
+                {
                     name = "stage2_button",
                     type = "Button",
                     x = 5, y = 370, width = 150, height = 25,
@@ -292,7 +302,17 @@ local config = {
             type = "Stage",
             color = { r = 8, g = 16, b = 32, a = 255 },
             children = {
-                {   -- ensure children are in an array
+                {
+                    name = "rightStage3Frame",
+                    type = "Frame",
+                    x = 300,
+                    y = 5,
+                    width = 295,
+                    height = 390,
+                    -- icon_resource = "external_icon_8x8", -- test icon resource name resolution
+                    color = { r = 32, g = 32, b = 64, a = 255 }
+                }, 
+                {
                     name = "stage3_button",
                     type = "Button",
                     x = 5, y = 370, width = 150, height = 25,
@@ -348,15 +368,15 @@ registerOn("WindowResize", callbacks.window_resize.on_window_resize)
 
 -- Add an event listener that switches the root stage when the main button is activated.
 local function on_main_stage_button_click(evnt)
-    print("Button clicked! Changing root stage to 'stageTwo'")
+    -- print("Button clicked! Changing root stage to 'stageTwo'")
     setRoot("stageTwo") -- switch to stageTwo when button is clicked
 end
 local function on_stage2_button_click(evnt)
-    print("Button clicked! Changing 'stageTwo' stage to 'stageThree'")
+    -- print("Button clicked! Changing 'stageTwo' stage to 'stageThree'")
     setRoot("stageThree") -- switch to stageThree when button is clicked
 end
 local function on_stage3_button_click(evnt)
-    print("Button clicked! Changing 'stageThree' stage to 'mainStage'")
+    -- print("Button clicked! Changing 'stageThree' stage to 'mainStage'")
     setRoot("mainStage") -- switch to mainStage when button is clicked
 end
 

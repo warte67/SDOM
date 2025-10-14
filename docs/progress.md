@@ -668,10 +668,22 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - **ToDo:**
     - Add unit tests for malformed/edge-case escapes (invalid hex, missing params, negative values).
 - **IPanelObject**
-  - `IPanelObject` has an interface and basic implementation.  Lua bindings are attached to `ObjectHandle`.
+  - `IPanelObject` has an interface and basic implementation.  Lua bindings are attached to `DisplayHandle`.
 - **Docs and cleanup:**
   - Updated docs/label_text_parsing.md with numeric escape syntax, semantics, examples, and the full color list.
   - Removed debug prints and cleaned up temporary diagnostics used during development.
+
+## [October 14, 2025]
+- Added `Frame` scaffolding and registered the `Frame` DOM type with the Factory; SDOM_Frame.cpp implements minimal constructors and defers behavior to `IPanelObject`.
+- `IPanelObject`: improved icon resource resolution (try configured name, then "<name>_SpriteSheet" fallback) and removed temporary debug spam.
+- `SpriteSheet` loader now accepts snake_case keys (sprite_width / sprite_height) from Lua config in addition to camelCase.
+- `Button`:
+  - Lua ctor now applies `text` and font properties (font_size/font_width/font_height/font_resource_name).
+  - Exposed `getLabelObject()` to Lua via the `DisplayHandle` as the `label` property.
+  - Confirmed `addEventListener` Lua usage and documented the expected `{ type = EventType.X, listener = fn }` table form.
+- Lua config/tests:
+  - External `SpriteSheet` resource creation and usage verified (`external_icon_8x8` is resolved and used as `Frame` icon/sprites).
+  - Wired example button listeners to switch root stages; synthetic and real mouse events exercise listeners successfully.
 
 ---
 ## Next Steps:
