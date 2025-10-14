@@ -17,6 +17,7 @@
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
 #include <SDOM/SDOM_Frame.hpp>
+#include <SDOM/SDOM_Button.hpp>
 
 namespace SDOM
 {
@@ -203,8 +204,15 @@ namespace SDOM
             Frame::CreateFromInitStruct
         });
 
+        // register Button
+        registerDomType("Button", TypeCreators{
+            Button::CreateFromLua,
+            Button::CreateFromInitStruct
+        }); 
+
+        // return initialized state
         initialized_ = true;
-        return true;
+        return initialized_;
     }
 
 

@@ -85,6 +85,19 @@ local config = {
                     color = { r = 64, g = 32, b = 32, a = 255 }
                 },
                 {
+                    name = "main_stage_button",
+                    type = "Button",
+                    x = 5,
+                    y = 370,
+                    width = 150,
+                    height = 25,
+                    text = "Click Me",
+                    font_resource = "VarelaRound16", -- test font resource name resolution
+                    font_size = 16,
+                    -- icon_resource = "external_icon_8x8", -- test icon resource name resolution
+                    color = { r = 64, g = 32, b = 32, a = 255 }
+                },
+                {
                     name = "redishBox",
                     type = "Box",
                     x = 100.0,

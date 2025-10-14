@@ -38,26 +38,33 @@ namespace SDOM
         {
             return config[k].valid() ? config[k].get<int>() : d;
         };
-    InitStruct init;
-    // Accept both the legacy keys with trailing underscore (e.g. "icon_resource_")
-    // and the more natural keys without the underscore (e.g. "icon_resource").
-    if (config["icon_resource"].valid()) init.icon_resource = config["icon_resource"].get<std::string>();
-    else init.icon_resource = get_str("icon_resource_", init.icon_resource);
 
-    if (config["font_resource"].valid()) init.font_resource = config["font_resource"].get<std::string>();
-    else init.font_resource = get_str("font_resource_", init.font_resource);
+        InitStruct init;
 
-    if (config["icon_width"].valid()) init.icon_width = config["icon_width"].get<int>();
-    else init.icon_width = get_int("icon_width_", init.icon_width);
+        // Accept both the legacy keys with trailing underscore (e.g. "icon_resource_")
+        // and the more natural keys without the underscore (e.g. "icon_resource").
+        if (config["icon_resource"].valid()) init.icon_resource = config["icon_resource"].get<std::string>();
+        else init.icon_resource = get_str("icon_resource_", init.icon_resource);
+        if (config["font_resource"].valid()) init.font_resource = config["font_resource"].get<std::string>();
+        else init.font_resource = get_str("font_resource_", init.font_resource);
 
-    if (config["icon_height"].valid()) init.icon_height = config["icon_height"].get<int>();
-    else init.icon_height = get_int("icon_height_", init.icon_height);
+        // icon_width and icon_height
+        if (config["icon_width"].valid()) init.icon_width = config["icon_width"].get<int>();
+        else init.icon_width = get_int("icon_width_", init.icon_width);
+        if (config["icon_height"].valid()) init.icon_height = config["icon_height"].get<int>();
+        else init.icon_height = get_int("icon_height_", init.icon_height);
 
-    if (config["font_width"].valid()) init.font_width = config["font_width"].get<int>();
-    else init.font_width = get_int("font_width_", init.font_width);
+        // alias sprite_width and sprite_height
+        if (config["sprite_width"].valid()) init.icon_width = config["sprite_width"].get<int>();
+        else init.icon_width = get_int("sprite_width_", init.icon_width);
+        if (config["sprite_height"].valid()) init.icon_height = config["sprite_height"].get<int>();
+        else init.icon_height = get_int("sprite_height_", init.icon_height);
 
-    if (config["font_height"].valid()) init.font_height = config["font_height"].get<int>();
-    else init.font_height = get_int("font_height_", init.font_height);
+        // font_width and font_height
+        if (config["font_width"].valid()) init.font_width = config["font_width"].get<int>();
+        else init.font_width = get_int("font_width_", init.font_width);
+        if (config["font_height"].valid()) init.font_height = config["font_height"].get<int>();
+        else init.font_height = get_int("font_height_", init.font_height);
 
         // Convert base_index from string if present
         std::string base_index_str = get_str("base_index_", "frame");
