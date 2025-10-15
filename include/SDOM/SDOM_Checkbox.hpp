@@ -71,7 +71,7 @@ namespace SDOM
 
         DisplayHandle getLabelObject() const { return labelObject_; }
 
-        bool isChecked() const { return isChecked_; }
+        bool isChecked() const;
         void setChecked(bool checked);
 
 
@@ -87,7 +87,10 @@ namespace SDOM
         bool isChecked_  = false;
         SDL_Color label_color_ = {255, 255, 255, 255}; // default label color is white
         SDL_Color border_color_ = {0, 0, 0, 128};               // transparent
+        DisplayHandle iconButtonObject_; // internal icon button object for checkbox icon
         IconIndex icon_index_ = IconIndex::Empty_Checkbox;
+        int icon_width_ = 8;        // default icon width
+        int icon_height_ = 8;       // default icon height
         
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);

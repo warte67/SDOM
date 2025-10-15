@@ -87,8 +87,12 @@ namespace SDOM
         IAssetObject* existing = getFactory().getResObj(filename_);
         if (existing)
         {
+            // try {
+            //     INFO(std::string("SpriteSheet::onLoad() - found existing resObj name='") + existing->getName() + " type='" + existing->getType() + "'");
+            // } catch(...) {}
             // Only reuse an existing asset when it is actually a Texture.
-            if (existing->getType() == Texture::TypeName) {
+            if (existing->getType() == Texture::TypeName) 
+            {
                 // INFO("SpriteSheet::onLoad: found existing Texture resource for filename: " + filename_ + " (name=" + existing->getName() + ")");
                 textureAsset = getFactory().getAssetObject(filename_);
                 if (!textureAsset)
@@ -98,7 +102,7 @@ namespace SDOM
                 }
                 // Ensure the referenced Texture asset is loaded so getTexture() will be valid.
                 try {
-                    // INFO("SpriteSheet::onLoad: calling onLoad() on Texture asset: " + textureAsset.getName());
+                    // INFO(std::string("SpriteSheet::onLoad: calling onLoad() on Texture asset: ") + textureAsset.getName());
                     textureAsset->onLoad();
                 } catch(...) {
                     ERROR("SpriteSheet::onLoad: Failed to load existing Texture asset for filename: " + filename_);

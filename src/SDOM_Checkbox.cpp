@@ -36,6 +36,10 @@ namespace SDOM
         use_border_ = init.border;
         label_color_ = init.label_color;
         border_color_ = init.border_color;
+        isChecked_ = init.isChecked;
+        icon_index_ = init.icon_index;
+        icon_width_ = init.icon_width;
+        icon_height_ = init.icon_height;
 
         setTabEnabled(false); // Checkboxs are not tab-enabled by default
         setClickable(true); // Checkboxs are not clickable by default
@@ -70,11 +74,15 @@ namespace SDOM
         // Apply Lua-provided font properties to the Checkbox (accept multiple key variants).
         // If a property is NOT present in the config, leave it as -1 to indicate
         // "unspecified" so the BitmapFont defaults helper can populate it.
-        font_size_ = config["font_size"].valid() ? config["font_size"].get<int>() : -1;
-        font_width_ = config["font_width"].valid() ? config["font_width"].get<int>() : -1;
-        font_height_ = config["font_height"].valid() ? config["font_height"].get<int>() : -1;
+        font_size_ = config["font_size"].valid() ? config["font_size"].get<int>() : init.font_size;
+        font_width_ = config["font_width"].valid() ? config["font_width"].get<int>() : init.font_width;
+        font_height_ = config["font_height"].valid() ? config["font_height"].get<int>() : init.font_height;
+        icon_index_ = config["icon_index"].valid() ? config["icon_index"].get<IconIndex>() : init.icon_index;
+        icon_width_ = config["icon_width"].valid() ? config["icon_width"].get<int>() : init.icon_width;
+        icon_height_ = config["icon_height"].valid() ? config["icon_height"].get<int>() : init.icon_height;
+        isChecked_ = config["is_checked"].valid() ? config["is_checked"].get<bool>() : init.isChecked;
 
-        use_border_ = config["border"].valid() ? config["border"].get<bool>() : false;
+        use_border_ = config["border"].valid() ? config["border"].get<bool>() : init.border;
 
         // INFO("Checkbox::Checkbox() - font_size: " << font_size_ 
         //         << " font_width: " << font_width_ 
@@ -153,6 +161,33 @@ namespace SDOM
     // --- Virtual Methods --- //
     bool Checkbox::onInit()
     {
+        // create the IconButton object
+        if (!iconButtonObject_)
+        {
+            IconButton::InitStruct init;
+            init.name = getName() + "_iconbutton";
+            init.type = "IconButton";
+            init.icon_resource = icon_resource_;
+            init.x = getX();
+            init.y = getY();
+            init.width = 8;
+            init.height = 8;   
+            init.isClickable = false;
+            init.tabEnabled = false;
+            init.color = getColor(); // use the color of the Checkbox to color the icon
+            init.icon_index = isChecked_ ? IconIndex::Checked_Checkbox : IconIndex::Empty_Checkbox;
+            iconButtonObject_ = getFactory().create("IconButton", init);
+            // get child IconButton and ask it for its SpriteSheet
+            if (iconButtonObject_.isValid())
+            {
+                IconButton* ib = iconButtonObject_.as<IconButton>();
+                SpriteSheet* ss = ib ? ib->getSpriteSheet() : nullptr;
+                if (ss && !ss->isLoaded()) ss->onLoad();
+            }
+
+            addChild(iconButtonObject_);
+        }
+
         // create the label object
         if (!labelObject_)
         {
@@ -178,7 +213,7 @@ namespace SDOM
             // init.dropshadow = true;
             init.foregroundColor = label_color_;
             init.borderColor = border_color_;
-            init.color = label_color_;
+            init.color = label_color_;  // label color
             init.isClickable = false;
             init.tabEnabled = false;
             init.text = text_;
@@ -197,6 +232,18 @@ namespace SDOM
             // INFO("Checkbox::onInit() - Label init metrics for '" + init.name + "': resource='" + init.resourceName + "' fontSize=" + std::to_string(init.fontSize) + " fontWidth=" + std::to_string(init.fontWidth) + " fontHeight=" + std::to_string(init.fontHeight));
             labelObject_ = getFactory().create("Label", init);
             addChild(labelObject_);
+        }
+        // center the icon vertically within the Checkbox height
+        if (iconButtonObject_.isValid())
+        {
+            IconButton* iconBtn = iconButtonObject_.as<IconButton>();
+            if (iconBtn)
+            {
+                int iconY = getY() + (getHeight() / 2 - icon_height_ / 2);
+                iconBtn->setY(iconY);
+                // Ensure the child IconButton reflects the current checked state
+                iconBtn->setIconIndex(isChecked_ ? IconIndex::Checked_Checkbox : IconIndex::Empty_Checkbox);
+            }
         }
         return SUPER::onInit();
     } // END: bool Checkbox::onInit()
@@ -221,6 +268,15 @@ namespace SDOM
         Label* label = labelObject_.as<Label>();
         if (!label) { ERROR("Error: Checkbox::onRender() - missing label object for: " + getName()); return; }
 
+        // Debug info: report presence of internal icon and label children
+        try {
+            std::ostringstream dbg;
+            dbg << "[DBG] Checkbox::onRender() - name='" << getName() << "' hasLabel=" << (label ? "yes" : "no");
+            if (iconButtonObject_.isValid()) dbg << " iconChild='" << iconButtonObject_.getName() << "'";
+            else dbg << " iconChild=none";
+            LUA_INFO(dbg.str());
+        } catch(...) {}
+
         // use the border settings from the Label Object
         FontStyle& fontStyle = label->getDefaultStyle();
         SDL_Color borderColor = fontStyle.borderColor;
@@ -236,20 +292,6 @@ namespace SDOM
             SDL_RenderRect(getRenderer(), &rect);
         }
 
-        // render the checkbox icon (checked or unchecked)
-        // AssetHandle iconSheet = getFactory().getAssetObject(icon_resource_);
-        if (!spriteSheetAsset_.isValid())
-        {
-            ERROR("Error: Checkbox::onRender() - invalid icon resource: " + icon_resource_);
-            return;
-        }
-        SpriteSheet* ssObj = spriteSheetAsset_.as<SpriteSheet>();
-        if (ssObj)
-        {
-            int idx = static_cast<int>(base_index_) + (isChecked_ ? 1 : 0);
-            int y_pos = getY() + (getHeight() / 2 - getIconHeight() / 2);
-            ssObj->drawSprite(idx, getX(), y_pos, getColor());
-        }
     } // END: void Checkbox::onRender()
 
 
@@ -276,12 +318,30 @@ namespace SDOM
 
     } // END: void Checkbox::onEvent(const Event& event)
 
+    bool Checkbox::isChecked() const
+    {
+        return isChecked_;
+    } // END: bool isChecked() const
+
+
     void Checkbox::setChecked(bool checked)
     {
         if (isChecked_ == checked) return;   // no-op if unchanged
         // save the previous value and update to the new value
         bool previous = isChecked_;
         isChecked_ = checked;
+
+        // Update internal IconButton child to use the new icon index immediately
+        if (iconButtonObject_.isValid())
+        {
+            IconButton* iconBtn = iconButtonObject_.as<IconButton>();
+            if (iconBtn)
+            {
+                iconBtn->setIconIndex(isChecked_ ? IconIndex::Checked_Checkbox : IconIndex::Empty_Checkbox);
+                // mark child dirty so it redraws with new icon
+                iconBtn->setDirty(true);
+            }
+        }
 
         // Mark for redraw / layout update as appropriate
         setDirty(true); // or whatever your IDisplayObject API uses

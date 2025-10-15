@@ -147,6 +147,16 @@ namespace SDOM
 
         AssetHandle getIconObject() const { return iconSpriteSheet_; }
 
+        IconIndex getIconIndex() const { return icon_index_; }
+        void setIconIndex(IconIndex index) { icon_index_ = index; }
+
+        // Return the raw AssetHandle for the internal SpriteSheet so callers
+        // can manipulate the asset handle without reaching into internals.
+        AssetHandle getSpriteSheetHandle() const { return iconSpriteSheet_; }
+
+        // Convenience: return raw SpriteSheet* (or nullptr) for quick checks.
+        SpriteSheet* getSpriteSheet() const { return iconSpriteSheet_.as<SpriteSheet>(); }
+
     protected:
         AssetHandle iconSpriteSheet_; // internal icon SpriteSheet object for IconButton
         std::string icon_resource_ = "internal_icon_8x8"; // default icon resource name

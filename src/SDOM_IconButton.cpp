@@ -121,6 +121,7 @@ namespace SDOM
         // SUPER::onRender();
 
         SpriteSheet* ss = iconSpriteSheet_.as<SpriteSheet>();
+
         if (ss && ss->isLoaded())
         {
             ss->drawSprite(
