@@ -69,9 +69,12 @@ for i in $(seq 1 "$ITER"); do
       rc=${PIPESTATUS[0]:-$?}
     fi
   else
-    # do not save files; run normally and rely on return code / terminal output
-    "${CMD[@]}"
+    # do not save files; capture the program output so we can inspect it
+    # on failure. We still print the output to the terminal for visibility.
+    output="$("${CMD[@]}" 2>&1)"
     rc=$?
+    # Print the captured output to the terminal so users can see progress
+    echo "$output"
   fi
 
   # Consider a run failed if the binary returned non-zero or the log contains "[FAILED]" or "Lua test" failures
@@ -80,8 +83,16 @@ for i in $(seq 1 "$ITER"); do
   if [ "$rc" -ne 0 ]; then
     failed=1
   else
-    if grep -q "\[FAILED\]" "$LOG" || grep -q "Lua test[0-9]* failed" "$LOG"; then
-      failed=1
+    # If we're saving logs, inspect the saved log file. Otherwise inspect the
+    # captured output stored in the 'output' variable.
+    if [ "$SAVE_ERROR_LOGS" -eq 1 ]; then
+      if grep -q "\[FAILED\]" "$LOG" || grep -q "Lua test[0-9]* failed" "$LOG"; then
+        failed=1
+      fi
+    else
+      if echo "${output:-}" | grep -q "\[FAILED\]" || echo "${output:-}" | grep -q "Lua test[0-9]* failed"; then
+        failed=1
+      fi
     fi
   fi
 
@@ -110,18 +121,24 @@ done
 
 echo
 echo "Summary: $ITER runs, $fail_count failed."
-if [ "$fail_count" -ne 0 ]; then
+  if [ "$fail_count" -ne 0 ]; then
   echo "Failed runs: ${failed_runs[*]}"
   echo "Showing tail of first failed run log:"
   first=${failed_runs[0]}
-  if [ "$NO_LOGS" -eq 1 ]; then
-    # In NO_LOGS mode we captured the last run output in the 'output' variable
-    printf "--- tail of last run (no-log mode) ---\n"
-    echo "${output:-}" | tail -n 200 || true
-  else
-    printf "--- tail of %s ---\n" "$OUT_DIR/run_${first}.log"
-    tail -n 200 "$OUT_DIR/run_${first}.log" || true
-  fi
+    if [ "${NO_LOGS:-0}" -eq 1 ]; then
+      # In NO_LOGS mode we captured the last run output in the 'output' variable
+      printf "--- tail of last run (no-log mode) ---\n"
+      echo "${output:-}" | tail -n 200 || true
+    else
+      if [ "$SAVE_ERROR_LOGS" -eq 1 ]; then
+        printf "--- tail of %s ---\n" "$OUT_DIR/run_${first}.log"
+        tail -n 200 "$OUT_DIR/run_${first}.log" || true
+      else
+        # We didn't save logs, but we captured the failing run output in 'output'.
+        printf "--- tail of last run (captured output) ---\n"
+        echo "${output:-}" | tail -n 200 || true
+      fi
+    fi
 fi
 
 exit $fail_count

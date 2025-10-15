@@ -704,21 +704,26 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## [October 15, 2025]
-- UI controls:
+- **UI controls:**
   - Implemented `Radiobox` (type name: "Radiobox"). `onEvent()` clears sibling radioboxes then selects the clicked control (simple, DOM-style radio semantics). Decided not to add nullable/allow-unselect behavior for now.
   - `Checkbox` now accepts multiple aliases for the checked state in Lua: `is_checked`, `checked`, `is_selected`, and `selected`.
-- Fonts & labels:
+  - Exposed `text` property for `Button`, `Radiobox`, and `Checkbox` to Lua so label text can be read/modified from scripts.
+- **Fonts & labels:**
   - Finalized `IFontObject` improvements: `applyBitmapFontDefaults(...)` fills missing `font_size`/`font_width`/`font_height` from a referenced `BitmapFont` asset.
   - `Label` and label-creating parents (`Button`, `Group`) now detect font type (Bitmap vs Truetype), adopt the font's type/metrics, and preserve unspecified metrics so BitmapFont defaults apply correctly.
   - Added `label_color` parsing/aliases and thread-safe metric resolution so external 8x12 bitmap fonts render at 8x12 without explicit per-control metrics.
-- Group label centering:
+- **Group label centering:**
   - Fixed Group label vertical placement: compute glyph height by font type (Bitmap sprite height or TrueType ascent), obtain panel icon height via `getIconHeight()`, and position the label so its vertical center aligns with the top-line center inside the icon glyphs.
-- Button & Lua bindings:
+- **Button & Lua bindings:**
   - Button Lua ctor applies `text` and font properties (`font_size`/`font_width`/`font_height`/`font_resource` aliases).
   - Exposed `getLabelObject()` to Lua as read-only `label` on the `DisplayHandle`.
-- Cleanups & verification:
-  - Removed temporary debug spam, left gated INFO diagnostics for troubleshooting.
-  - Rebuilt examples/test and ran unit tests — build succeeded and relevant tests passed.
+  - Documented and validated `addEventListener` Lua usage (table form `{ type = EventType.X, listener = fn }`); example listeners switch root stages.
+- **EventType & Lua robustness:**
+  - Hardened `EventType` Sol2 registration with a static guard so the usertype/metatable is always registered exactly once (avoids intermittent sol2 userdata/table mismatches).
+  - Fixed Lua registration ordering issues that could cause intermittent unit-test failures.
+- **Test harness & stability:**
+  - Made `examples/test/repeat_tests.sh` robust: captures program output when logs are not saved, safely handles missing log files, and reliably prints failing run output.
+  - Verified stability with long runs: repeated harness exercised (200 runs) with 0 failures locally.
 
 ---
 ## Next Steps:

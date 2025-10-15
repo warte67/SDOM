@@ -252,7 +252,7 @@ namespace SDOM
             Label* label = labelObject_.as<Label>();
             if (label)
             {
-                int labelY = getY() + (getHeight() / 2 - label->getHeight() / 2);
+                int labelY = getY() + (getHeight() / 2 - label->getHeight() / 2) - 1;
                 label->setY(labelY);
             }
         }        

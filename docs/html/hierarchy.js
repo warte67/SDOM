@@ -13,7 +13,8 @@ var hierarchy =
     [ "SDOM::FontStyle", "structSDOM_1_1FontStyle.html", null ],
     [ "SDOM::IButtonObject", "classSDOM_1_1IButtonObject.html", [
       [ "SDOM::Button", "classSDOM_1_1Button.html", null ],
-      [ "SDOM::Checkbox", "classSDOM_1_1Checkbox.html", null ]
+      [ "SDOM::Checkbox", "classSDOM_1_1Checkbox.html", null ],
+      [ "SDOM::Radiobox", "classSDOM_1_1Radiobox.html", null ]
     ] ],
     [ "SDOM::IAssetObject::InitStruct", "structSDOM_1_1IAssetObject_1_1InitStruct.html", [
       [ "SDOM::IFontObject::InitStruct", "structSDOM_1_1IFontObject_1_1InitStruct.html", [
@@ -29,7 +30,8 @@ var hierarchy =
         [ "SDOM::Button::InitStruct", "structSDOM_1_1Button_1_1InitStruct.html", null ],
         [ "SDOM::Checkbox::InitStruct", "structSDOM_1_1Checkbox_1_1InitStruct.html", null ],
         [ "SDOM::Frame::InitStruct", "structSDOM_1_1Frame_1_1InitStruct.html", null ],
-        [ "SDOM::Group::InitStruct", "structSDOM_1_1Group_1_1InitStruct.html", null ]
+        [ "SDOM::Group::InitStruct", "structSDOM_1_1Group_1_1InitStruct.html", null ],
+        [ "SDOM::Radiobox::InitStruct", "structSDOM_1_1Radiobox_1_1InitStruct.html", null ]
       ] ],
       [ "SDOM::IconButton::InitStruct", "structSDOM_1_1IconButton_1_1InitStruct.html", null ],
       [ "SDOM::Label::InitStruct", "structSDOM_1_1Label_1_1InitStruct.html", null ],
@@ -56,7 +58,8 @@ var hierarchy =
             [ "SDOM::Button", "classSDOM_1_1Button.html", null ],
             [ "SDOM::Checkbox", "classSDOM_1_1Checkbox.html", null ],
             [ "SDOM::Frame", "classSDOM_1_1Frame.html", null ],
-            [ "SDOM::Group", "classSDOM_1_1Group.html", null ]
+            [ "SDOM::Group", "classSDOM_1_1Group.html", null ],
+            [ "SDOM::Radiobox", "classSDOM_1_1Radiobox.html", null ]
           ] ],
           [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", null ],
           [ "SDOM::Label", "classSDOM_1_1Label.html", null ],

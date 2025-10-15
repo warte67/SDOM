@@ -327,8 +327,8 @@ namespace SDOM
         std::string testDesc = "Orphan grace period auto-collect after delay";
         sol::state& lua = Core::getInstance().getLua();
 
-        // provide a timeout value to Lua: ORPHAN_GRACE_PERIOD + 500 ms
-        lua["gc_timeout_ms"] = ORPHAN_GRACE_PERIOD + 500;
+        // provide a timeout value to Lua: ORPHAN_GRACE_PERIOD + 50 ms
+        lua["gc_timeout_ms"] = ORPHAN_GRACE_PERIOD + 50;
 
         // Lua test script
         auto res = lua.script(R"lua(
@@ -382,7 +382,7 @@ namespace SDOM
                 -- wait until the garbage has been collected or the timeout is reached
                 local function wait_for_collect(name, timeout_ms)
                     local elapsed = 0
-                    local step = 100 -- ms per iteration
+                    local step = 10 -- ms per iteration
                     while elapsed <= timeout_ms do
                         Core:collectGarbage()
                         if not Core:hasDisplayObject(name) then return true end

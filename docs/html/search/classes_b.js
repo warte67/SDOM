@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['texture_0',['Texture',['../classSDOM_1_1Texture.html',1,'SDOM']]],
-  ['truetypefont_1',['TruetypeFont',['../classSDOM_1_1TruetypeFont.html',1,'SDOM']]],
-  ['ttfasset_2',['TTFAsset',['../classSDOM_1_1TTFAsset.html',1,'SDOM']]],
-  ['typecreators_3',['TypeCreators',['../structSDOM_1_1TypeCreators.html',1,'SDOM']]]
+  ['sdl_5futils_0',['SDL_Utils',['../classSDOM_1_1SDL__Utils.html',1,'SDOM']]],
+  ['spritesheet_1',['SpriteSheet',['../classSDOM_1_1SpriteSheet.html',1,'SDOM']]],
+  ['stage_2',['Stage',['../classSDOM_1_1Stage.html',1,'SDOM']]]
 ];

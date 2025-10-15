@@ -17,10 +17,11 @@ var searchData=
   ['_7eifontobject_14',['~IFontObject',['../classSDOM_1_1IFontObject.html#a6053d1b03182e5b41874834a86ead199',1,'SDOM::IFontObject']]],
   ['_7eipanelobject_15',['~IPanelObject',['../classSDOM_1_1IPanelObject.html#af0a0e7cca0790ca8a05ab9638fb5e1c0',1,'SDOM::IPanelObject']]],
   ['_7elabel_16',['~Label',['../classSDOM_1_1Label.html#a6f430cd787f3c28b1993c60bff723f44',1,'SDOM::Label']]],
-  ['_7esdl_5futils_17',['~SDL_Utils',['../classSDOM_1_1SDL__Utils.html#abb9e5105a0afac653511588662327389',1,'SDOM::SDL_Utils']]],
-  ['_7espritesheet_18',['~SpriteSheet',['../classSDOM_1_1SpriteSheet.html#ae1e22d15504a076982ab3ab84cf02ee1',1,'SDOM::SpriteSheet']]],
-  ['_7estage_19',['~Stage',['../classSDOM_1_1Stage.html#a54db12b3a1a2ff7d7cfff112f2de1ab6',1,'SDOM::Stage']]],
-  ['_7etexture_20',['~Texture',['../classSDOM_1_1Texture.html#a39cff82635f7235c76f2156b409ac181',1,'SDOM::Texture']]],
-  ['_7etruetypefont_21',['~TruetypeFont',['../classSDOM_1_1TruetypeFont.html#ab3a8016e382dd5468376e05a46c5a3ae',1,'SDOM::TruetypeFont']]],
-  ['_7ettfasset_22',['~TTFAsset',['../classSDOM_1_1TTFAsset.html#aca74ac946791073bbf82bcd8ee642d29',1,'SDOM::TTFAsset']]]
+  ['_7eradiobox_17',['~Radiobox',['../classSDOM_1_1Radiobox.html#a15bbee25b5ee6aabcb0896513351e198',1,'SDOM::Radiobox']]],
+  ['_7esdl_5futils_18',['~SDL_Utils',['../classSDOM_1_1SDL__Utils.html#abb9e5105a0afac653511588662327389',1,'SDOM::SDL_Utils']]],
+  ['_7espritesheet_19',['~SpriteSheet',['../classSDOM_1_1SpriteSheet.html#ae1e22d15504a076982ab3ab84cf02ee1',1,'SDOM::SpriteSheet']]],
+  ['_7estage_20',['~Stage',['../classSDOM_1_1Stage.html#a54db12b3a1a2ff7d7cfff112f2de1ab6',1,'SDOM::Stage']]],
+  ['_7etexture_21',['~Texture',['../classSDOM_1_1Texture.html#a39cff82635f7235c76f2156b409ac181',1,'SDOM::Texture']]],
+  ['_7etruetypefont_22',['~TruetypeFont',['../classSDOM_1_1TruetypeFont.html#ab3a8016e382dd5468376e05a46c5a3ae',1,'SDOM::TruetypeFont']]],
+  ['_7ettfasset_23',['~TTFAsset',['../classSDOM_1_1TTFAsset.html#aca74ac946791073bbf82bcd8ee642d29',1,'SDOM::TTFAsset']]]
 ];

@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['label_5fcolor_0',['label_color',['../structSDOM_1_1Checkbox_1_1InitStruct.html#aee76c4c9a28de89559c2dbdf646b7c45',1,'SDOM::Checkbox::InitStruct::label_color'],['../structSDOM_1_1Button_1_1InitStruct.html#ac1a87a3078a0921efce544bd59308e86',1,'SDOM::Button::InitStruct::label_color']]],
-  ['label_5fcolor_5f_1',['label_color_',['../classSDOM_1_1Button.html#a23a3646ffd3d68592ef042ee187038e7',1,'SDOM::Button::label_color_'],['../classSDOM_1_1Checkbox.html#ad4f2a603f1b3e7d934ad5aedc0b110df',1,'SDOM::Checkbox::label_color_'],['../structSDOM_1_1Group_1_1InitStruct.html#aa3c549defdfaedc3cbf44e9d3e26f859',1,'SDOM::Group::InitStruct::label_color_'],['../classSDOM_1_1Group.html#afbdbc768f429fdc6277adf3aad4a0b4b',1,'SDOM::Group::label_color_']]],
+  ['label_5fcolor_0',['label_color',['../structSDOM_1_1Button_1_1InitStruct.html#ac1a87a3078a0921efce544bd59308e86',1,'SDOM::Button::InitStruct::label_color'],['../structSDOM_1_1Checkbox_1_1InitStruct.html#aee76c4c9a28de89559c2dbdf646b7c45',1,'SDOM::Checkbox::InitStruct::label_color'],['../structSDOM_1_1Radiobox_1_1InitStruct.html#ab41806d5262bf7d9742ceb668452f3bb',1,'SDOM::Radiobox::InitStruct::label_color']]],
+  ['label_5fcolor_5f_1',['label_color_',['../classSDOM_1_1Button.html#a23a3646ffd3d68592ef042ee187038e7',1,'SDOM::Button::label_color_'],['../classSDOM_1_1Checkbox.html#ad4f2a603f1b3e7d934ad5aedc0b110df',1,'SDOM::Checkbox::label_color_'],['../structSDOM_1_1Group_1_1InitStruct.html#aa3c549defdfaedc3cbf44e9d3e26f859',1,'SDOM::Group::InitStruct::label_color_'],['../classSDOM_1_1Group.html#afbdbc768f429fdc6277adf3aad4a0b4b',1,'SDOM::Group::label_color_'],['../classSDOM_1_1Radiobox.html#ae1f1bf0cbeb949e5ae9ce06310b9d664',1,'SDOM::Radiobox::label_color_']]],
   ['label_5fparent_5fresize_5fdebug_2',['LABEL_PARENT_RESIZE_DEBUG',['../SDOM__Label_8cpp.html#ad02881109b9540e1c5f2020a44809548',1,'SDOM_Label.cpp']]],
   ['labelaligntostring_5f_3',['labelAlignToString_',['../classSDOM_1_1Label.html#a3702f224b2b845aae3da34a05a3b762a',1,'SDOM::Label']]],
-  ['labelobject_5f_4',['labelobject_',['../classSDOM_1_1Checkbox.html#added5eab7fcc8989f1dc74891199e2d2',1,'SDOM::Checkbox::labelObject_'],['../classSDOM_1_1Group.html#a4e145767ec0d136d6e552c8adabb9dc5',1,'SDOM::Group::labelObject_'],['../classSDOM_1_1Button.html#a6370652b75a3dbdb0a24cb2290cd237e',1,'SDOM::Button::labelObject_']]],
+  ['labelobject_5f_4',['labelObject_',['../classSDOM_1_1Button.html#a6370652b75a3dbdb0a24cb2290cd237e',1,'SDOM::Button::labelObject_'],['../classSDOM_1_1Checkbox.html#added5eab7fcc8989f1dc74891199e2d2',1,'SDOM::Checkbox::labelObject_'],['../classSDOM_1_1Group.html#a4e145767ec0d136d6e552c8adabb9dc5',1,'SDOM::Group::labelObject_'],['../classSDOM_1_1Radiobox.html#a13d84326863e715f0e36d1437f974b0c',1,'SDOM::Radiobox::labelObject_']]],
   ['last_5fbase_5findex_5f_5',['last_base_index_',['../classSDOM_1_1IPanelObject.html#af3fe7bdbe6270bc0d19291677c448e88',1,'SDOM::IPanelObject']]],
   ['last_5fsize_5f_6',['last_size_',['../classSDOM_1_1TruetypeFont.html#a7fee334b8dd13c5de7d23bd7c5103162',1,'SDOM::TruetypeFont']]],
   ['lasttokenizedtext_5f_7',['lastTokenizedText_',['../classSDOM_1_1Label.html#a75e455bcf7917a37f3536b94c177fa80',1,'SDOM::Label']]],
   ['leavefullscreen_8',['LeaveFullscreen',['../classSDOM_1_1EventType.html#aed0d07f388f2fc133dfe7fffcd9e2735',1,'SDOM::EventType']]],
-  ['left_9',['left',['../structSDOM_1_1Bounds.html#a34add0a44544f1592b60afd1bc2b3b34',1,'SDOM::Bounds']]],
+  ['left_9',['left',['../structSDOM_1_1Bounds.html#a5268f1526e83122173b7de40f83ac7c4',1,'SDOM::Bounds']]],
   ['left_5f_10',['left_',['../classSDOM_1_1IDisplayObject.html#aff25b187c79d6b229d57fba2ae34a3d3',1,'SDOM::IDisplayObject']]],
   ['lineindex_11',['lineIndex',['../structSDOM_1_1Label_1_1PhraseToken.html#a889d0c315deeb35f97ceaf11688add5e',1,'SDOM::Label::PhraseToken']]],
   ['liney_12',['lineY',['../structSDOM_1_1Label_1_1PhraseToken.html#ab4e7e5ead39e0e8539a5e2f8cffbeb16',1,'SDOM::Label::PhraseToken']]],
@@ -19,5 +19,5 @@ var searchData=
   ['lt_5fgrn_16',['LT_GRN',['../classCLR.html#ab42517ec56b3dc265e62bf4702302266',1,'CLR']]],
   ['lt_5fmagenta_17',['LT_MAGENTA',['../classCLR.html#a135aac68c02461081e49ee6a818cfc52',1,'CLR']]],
   ['lt_5forange_18',['LT_ORANGE',['../classCLR.html#a42181ec7c82e659318736fa4eaec68ed',1,'CLR']]],
-  ['luahandlename_19',['luahandlename',['../classSDOM_1_1AssetHandle.html#a89ebec1fc7fbc6690cca6719c0572923',1,'SDOM::AssetHandle::LuaHandleName'],['../classSDOM_1_1DisplayHandle.html#a7f26dd776b5791179616f81c95481ec0',1,'SDOM::DisplayHandle::LuaHandleName']]]
+  ['luahandlename_19',['LuaHandleName',['../classSDOM_1_1AssetHandle.html#a89ebec1fc7fbc6690cca6719c0572923',1,'SDOM::AssetHandle::LuaHandleName'],['../classSDOM_1_1DisplayHandle.html#a7f26dd776b5791179616f81c95481ec0',1,'SDOM::DisplayHandle::LuaHandleName']]]
 ];

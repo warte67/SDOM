@@ -28,6 +28,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_internal_ttf.cpp", "SDOM__internal__ttf_8cpp.html", null ],
     [ "SDOM_IPanelObject.cpp", "SDOM__IPanelObject_8cpp.html", null ],
     [ "SDOM_Label.cpp", "SDOM__Label_8cpp.html", "SDOM__Label_8cpp" ],
+    [ "SDOM_Radiobox.cpp", "SDOM__Radiobox_8cpp.html", null ],
     [ "SDOM_SDL_Utils.cpp", "SDOM__SDL__Utils_8cpp.html", "SDOM__SDL__Utils_8cpp" ],
     [ "SDOM_SpriteSheet.cpp", "SDOM__SpriteSheet_8cpp.html", null ],
     [ "SDOM_Stage.cpp", "SDOM__Stage_8cpp.html", null ],

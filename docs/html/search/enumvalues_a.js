@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['middle_0',['middle',['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea43eedd8685eb86592022f8da962e3474',1,'SDOM::Label::MIDDLE'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a43eedd8685eb86592022f8da962e3474',1,'SDOM::MIDDLE'],['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da43eedd8685eb86592022f8da962e3474',1,'SDOM::MIDDLE']]],
-  ['middle_5fcenter_1',['middle_center',['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea86f1955e79bb2163d3c32a6024f420e6',1,'SDOM::Label::MIDDLE_CENTER'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a86f1955e79bb2163d3c32a6024f420e6',1,'SDOM::MIDDLE_CENTER'],['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da86f1955e79bb2163d3c32a6024f420e6',1,'SDOM::MIDDLE_CENTER']]],
-  ['middle_5fleft_2',['middle_left',['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea9d4989e254422a15442ed8c59c600f1a',1,'SDOM::Label::MIDDLE_LEFT'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a9d4989e254422a15442ed8c59c600f1a',1,'SDOM::MIDDLE_LEFT'],['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da9d4989e254422a15442ed8c59c600f1a',1,'SDOM::MIDDLE_LEFT']]],
-  ['middle_5fright_3',['middle_right',['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea0a22e84ed1c4062d7ac11d80bbed3876',1,'SDOM::Label::MIDDLE_RIGHT'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a0a22e84ed1c4062d7ac11d80bbed3876',1,'SDOM::MIDDLE_RIGHT'],['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da0a22e84ed1c4062d7ac11d80bbed3876',1,'SDOM::MIDDLE_RIGHT']]]
+  ['left_0',['LEFT',['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea684d325a7303f52e64011467ff5c5758',1,'SDOM::Label::LEFT'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a684d325a7303f52e64011467ff5c5758',1,'SDOM::LEFT'],['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da684d325a7303f52e64011467ff5c5758',1,'SDOM::LEFT']]],
+  ['left_5fbottom_1',['LEFT_BOTTOM',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a54adef06a90e8b0326376c0eaf7404b1',1,'SDOM']]],
+  ['left_5fmiddle_2',['LEFT_MIDDLE',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae68c8b7b353db96c91dfc435970b548b',1,'SDOM']]],
+  ['left_5ftop_3',['LEFT_TOP',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5eeb74f28a17e0cdf4b1661c80490df9',1,'SDOM']]],
+  ['leftcenter_4',['LeftCenter',['../namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5ac7304bf037c39d7f1dcc0f8b81398247',1,'SDOM']]]
 ];

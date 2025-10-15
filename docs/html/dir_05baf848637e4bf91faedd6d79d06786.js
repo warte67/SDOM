@@ -28,6 +28,7 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_IPanelObject.hpp", "SDOM__IPanelObject_8hpp.html", "SDOM__IPanelObject_8hpp" ],
     [ "SDOM_IUnitTest.hpp", "SDOM__IUnitTest_8hpp.html", "SDOM__IUnitTest_8hpp" ],
     [ "SDOM_Label.hpp", "SDOM__Label_8hpp.html", "SDOM__Label_8hpp" ],
+    [ "SDOM_Radiobox.hpp", "SDOM__Radiobox_8hpp.html", "SDOM__Radiobox_8hpp" ],
     [ "SDOM_SDL_Utils.hpp", "SDOM__SDL__Utils_8hpp.html", "SDOM__SDL__Utils_8hpp" ],
     [ "SDOM_SpriteSheet.hpp", "SDOM__SpriteSheet_8hpp.html", "SDOM__SpriteSheet_8hpp" ],
     [ "SDOM_Stage.hpp", "SDOM__Stage_8hpp.html", "SDOM__Stage_8hpp" ],

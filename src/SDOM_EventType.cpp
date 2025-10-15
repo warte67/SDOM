@@ -114,10 +114,14 @@ namespace SDOM
     {
         try {
             // Create a userdata type for EventType values so Lua sees instances
-            // as first-class objects, and keep the global `EventType` name
-            // reserved for the lookup/registry table (not the usertype itself).
-            if (!lua["EventTypeObject"].valid()) {
-                lua.new_usertype<EventType>("EventTypeObject", sol::no_constructor,
+            // as first-class objects. Don't rely on the global `EventType` slot
+            // to indicate whether the usertype was registered because we later
+            // export a table into that same global name and that would cause
+            // a race/ordering bug where the usertype registration is skipped.
+            // Use a static guard to register the usertype exactly once.
+            static bool s_eventtype_usertype_registered = false;
+            if (!s_eventtype_usertype_registered) {
+                lua.new_usertype<EventType>("EventType", sol::no_constructor,
                     // expose readable properties (idiomatic from Lua use)
                     "name", sol::property(&EventType::getName),
                     "captures", sol::property(&EventType::getCaptures),
@@ -127,19 +131,21 @@ namespace SDOM
                     // tostring for pretty printing
                     sol::meta_function::to_string, [](const EventType& et) { return et.getName(); }
                 );
+                s_eventtype_usertype_registered = true;
             }
 
             // Populate a table with references to the static EventType instances
             sol::table etbl = lua.create_table();
             const auto& reg = EventType::getRegistry();
-            for (const auto& kv : reg) 
+            for (const auto& kv : reg)
             {
                 const std::string& name = kv.first;
                 EventType* ptr = kv.second;
-                if (ptr) 
+                if (ptr)
                 {
-                    // let sol create the userdata for the C++ pointer
-                    etbl[name] = ptr;
+                    // create a Lua userdata that references the C++ instance so
+                    // Lua sees the registered properties (uses the EventType usertype)
+                    etbl[name] = sol::make_object(lua, std::ref(*ptr));
                 }
             }
 
@@ -153,16 +159,19 @@ namespace SDOM
 
             // Allow runtime registration from Lua: EventType.register(name, captures, bubbles, targetOnly, global)
             // Capture the table so we can insert the created EventType into it immediately.
-            etbl.set_function("register", [etbl](const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global) mutable -> EventType* {
+            etbl.set_function("register", [etbl](sol::this_state ts, const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global) mutable -> sol::object {
+                sol::state_view lua(ts);
                 // allocate a new EventType and let its constructor register it
                 EventType* et = new EventType(name, captures, bubbles, targetOnly, global);
-                // insert into the lua-side table so scripts see the new entry
+                // insert into the lua-side table as a userdata referencing the C++ instance
                 try {
-                    etbl[name] = et;
+                    sol::object obj = sol::make_object(lua, std::ref(*et));
+                    etbl[name] = obj;
+                    return obj;
                 } catch (...) {
                     // ignore table set failures; the C++ registry still contains the type
+                    return sol::nil;
                 }
-                return et;
             });
 
             // Export the table as the global `EventType` module

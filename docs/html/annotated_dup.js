@@ -27,6 +27,7 @@ var annotated_dup =
       [ "IPanelObject", "classSDOM_1_1IPanelObject.html", "classSDOM_1_1IPanelObject" ],
       [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
       [ "Label", "classSDOM_1_1Label.html", "classSDOM_1_1Label" ],
+      [ "Radiobox", "classSDOM_1_1Radiobox.html", "classSDOM_1_1Radiobox" ],
       [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
       [ "SpriteSheet", "classSDOM_1_1SpriteSheet.html", "classSDOM_1_1SpriteSheet" ],
       [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ],

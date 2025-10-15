@@ -361,10 +361,11 @@ namespace SDOM
 void SDOM::Event::registerLua(sol::state_view lua)
 {
     try {
-        // Ensure EventType usertype exists in the state
-        if (!lua["EventType"].valid()) {
-            lua.new_usertype<EventType>("EventType", sol::no_constructor);
-        }
+        // Ensure EventType usertype is fully registered. Delegate to
+        // EventType::registerLua so the canonical usertype (with properties)
+        // is created exactly once and avoids partial registrations when
+        // Event::registerLua is called earlier than EventType::registerLua.
+        EventType::registerLua(lua);
 
         if (!lua["Event"].valid()) {
             lua.new_usertype<Event>("Event", sol::no_constructor,
