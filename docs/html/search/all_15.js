@@ -1,7 +1,7 @@
 var searchData=
 [
   ['key_20concepts_0',['Key Concepts',['../md_docs_2exposing__hooks.html#autotoc_md131',1,'']]],
-  ['key_20features_1',['Key Features',['../md_README.html#autotoc_md355',1,'']]],
+  ['key_20features_1',['Key Features',['../md_README.html#autotoc_md362',1,'']]],
   ['keyboard_20events_2',['Keyboard Events',['../md_docs_2event__design.html#autotoc_md107',1,'']]],
   ['keycode_5f_3',['keycode_',['../classSDOM_1_1Event.html#ad5d36d33d6ba8499825eada138bb46b7',1,'SDOM::Event']]],
   ['keydown_4',['KeyDown',['../classSDOM_1_1EventType.html#ae96a1317171583ed8a634555d756b4a9',1,'SDOM::EventType']]],

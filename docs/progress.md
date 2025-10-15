@@ -673,6 +673,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Updated docs/label_text_parsing.md with numeric escape syntax, semantics, examples, and the full color list.
   - Removed debug prints and cleaned up temporary diagnostics used during development.
 
+---
 ## [October 14, 2025]
 - Added `Frame` scaffolding and registered the `Frame` DOM type with the Factory; SDOM_Frame.cpp implements minimal constructors and defers behavior to `IPanelObject`.
 - `IPanelObject`:
@@ -695,10 +696,15 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Centralized keyboard focus pulsing rectangle in `Core` update/render logic.
   - Removed temporary diagnostics after verification; left gated INFO logs for troubleshooting.
   - Moved the various colors from `Label` to `IDisplayObject` as they are useful in places other than `Label`.
+  - IconButton & Checkbox:
+    - Added a lightweight `IconButton` display object that renders a single sprite index from a spritesheet and exposes IconIndex constants to Lua (IconIndex table + IconButton class constants).
+    - IconIndex mapping centralized (enum ↔ name) and registered early in `Core` so Lua configs can reference `IconIndex.{index}` during startup.
+    - `IconButton` provides safe accessors (getIconIndex/setIconIndex, getSpriteSheetHandle/getSpriteSheet) to avoid leaking internals.
+    - `Checkbox` now composes an `IconButton` for the glyph; `setChecked()` updates the child icon index and queues a `StateChanged` event (payload includes previous/new state). Asset loading is handled by the Factory at creation so icons are ready before first render.
 
 ---
 ## Next Steps:
-- Move Individual Indices to a new `IconButton` object. This should be a very simply button object that simply displays an Icon according to a specific index and responds by dispatching proper events when clicked as appropriate.
+- Implement `Radiobox` and ensure only one sibbling can be set at a time. Dispatch Events.
 - Investigate what I presume are z_order based bugs. Objects are not rendering in proper order. Not sure when this started.
 - Add more EventTypes to support `Checkbox` and `Radiobox`.
 - refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test1()` → `Label_test1()`).
@@ -714,23 +720,66 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Refactor `Core` to utilize proper scaffolding patterns.
   - Add `Group` unit tests to validate Lua property setting and resource resolution.
   - Add `Button` unit tests to validate Lua property setting, label access, and event listener behavior.
+  - Add `Checkbox` unit tests to validate Lua property setting, label access, and event listener behavior.
   - Add `Frame` unit tests to validate Lua property setting and icon rendering.
   - Add `IPanelObject` unit tests to validate Lua property setting and icon rendering.
+  - Add `TTFAsset` unit tests to validate Lua property setting and icon rendering.
+  - Add `TruetypeFont` unit tests to validate Lua property setting and icon rendering.
+  - Add `BitmapFont` unit tests to validate Lua property setting and icon rendering.
 
 ---
 ## ToDo:
 - Document the new startup pattern and resource creation workflows in the README and docs.
 - Update examples to use the new explicit startup and resource creation methods.
 - Update architecture diagrams and documentation to reflect recent naming and API changes.
-- Visual rendering not fully verified: code loads assets and unit tests pass, but visual rendering should be manually confirmed.
-- No dedicated unit tests yet for TTFAsset/TruetypeFont; recommend adding an integration test asserting default_ttf is loaded and TTF_Font* is non-null.
 - Verify and document verious start up scenarios (C++ only, Lua only, mixed).
 - Update architecture diagrams and markdown docs to replace old identifiers with the new Handle names.
-- Verify Label / IDisplayObject constructor default merging (Label::Label(sol::table&)).
-- Add a short migration note in the changelog describing the rename and any Lua compatibility considerations.
-- Label and IDisplayObject Constructor Defaults should include IDisplayObject defaults and the InitStruct defaults.  Verify and Fix. Pattern may be within the Label::Label(sol::table& config)
 - **Comment blocks** in the code are a great way to track progress and ensure completeness.
 
 ---
+- Add a small helper on IDisplayObject to centralize/standardize queuing events (so callers don’t duplicate Event creation/target-setting/payload plumbing). 
+- Add IDisplayObject::queue_event(...) helper to centralize event creation/target/payload/queuing.
+- Add a Checkbox unit/integration test that toggles setChecked() and asserts the child IconButton index and dispatched payload (previous/checked).
+- (Optional) Add a small unit test that asserts IconIndex is present in the Lua state before configs load.
 
+```cpp
+// ...
+protected:
+    // Helper to create & enqueue an event targeted at this display object.
+    // `init_payload` may set payload properties on the Event before enqueue.
+    void queue_event(const EventType& type, std::function<void(Event&)> init_payload = {});
+// ...
+```
+
+```cpp
+#include <SDOM/SDOM_IDisplayObject.hpp>
+#include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_Event.hpp>
+
+namespace SDOM
+{
+    // ...
+    void IDisplayObject::queue_event(const EventType& type, std::function<void(Event&)> init_payload)
+    {
+        EventManager& em = getCore().getEventManager();
+        auto ev = std::make_unique<Event>(type, getDisplayHandle(), getCore().getElapsedTime());
+        ev->setTarget(getDisplayHandle());
+        if (init_payload) {
+            try { init_payload(*ev); } catch (...) { /* swallow payload init errors */ }
+        }
+        em.addEvent(std::move(ev));
+    }
+    // ...
+} // namespace SDOM
+```
+Example usage (Checkbox::setChecked):
+
+- replace manual Event creation with:
+
+```cpp
+queue_event(EventType::StateChanged, [&](Event& ev){
+    ev.setPayloadValue("previous_checked", previous);
+    ev.setPayloadValue("checked", isChecked_);
+});
+```
 

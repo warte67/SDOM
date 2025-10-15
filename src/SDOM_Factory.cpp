@@ -720,7 +720,16 @@ namespace SDOM
                 } catch(...) {
                     ERROR("Factory::createAsset: Failed to register Lua bindings for asset: " + requestedName);
                 }
-            
+
+                // Eagerly load the asset now that it has been initialized and registered.
+                try {
+                    if (!assetObjects_[requestedName]->isLoaded()) {
+                        assetObjects_[requestedName]->onLoad();
+                    }
+                } catch(...) {
+                    ERROR("Factory::createAsset: onLoad() failed for asset: " + requestedName);
+                }
+
                 return AssetHandle(requestedName, typeName, filename);
         }
         return AssetHandle();
@@ -800,7 +809,15 @@ namespace SDOM
                 } catch(...) {
                     ERROR("Factory::createAsset(init): Failed to register Lua bindings for asset: " + init.name);
                 }
-                
+                // Eagerly load the asset now that it has been initialized and registered.
+                try {
+                    if (!assetObjects_[init.name]->isLoaded()) {
+                        assetObjects_[init.name]->onLoad();
+                    }
+                } catch(...) {
+                    ERROR("Factory::createAsset(init): onLoad() failed for asset: " + init.name);
+                }
+
                 return AssetHandle(init.name, typeName, init.filename);
             }
         }

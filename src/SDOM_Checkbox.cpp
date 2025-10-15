@@ -177,14 +177,6 @@ namespace SDOM
             init.color = getColor(); // use the color of the Checkbox to color the icon
             init.icon_index = isChecked_ ? IconIndex::Checked_Checkbox : IconIndex::Empty_Checkbox;
             iconButtonObject_ = getFactory().create("IconButton", init);
-            // get child IconButton and ask it for its SpriteSheet
-            if (iconButtonObject_.isValid())
-            {
-                IconButton* ib = iconButtonObject_.as<IconButton>();
-                SpriteSheet* ss = ib ? ib->getSpriteSheet() : nullptr;
-                if (ss && !ss->isLoaded()) ss->onLoad();
-            }
-
             addChild(iconButtonObject_);
         }
 

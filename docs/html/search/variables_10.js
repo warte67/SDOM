@@ -11,6 +11,6 @@ var searchData=
   ['resourcename_5f_8',['resourceName_',['../classSDOM_1_1Label.html#a5e49b077beb98ed43fe30e4ac0a2ce80',1,'SDOM::Label']]],
   ['return_9',['RETURN',['../classCLR.html#a7a9eedeac52778653bca2160deea4e4d',1,'CLR']]],
   ['reversed_10',['REVERSED',['../classCLR.html#a361b3fc2802281a419a6fa9205c0c548',1,'CLR']]],
-  ['right_11',['right',['../structSDOM_1_1Bounds.html#a7e4aba8aee2989c0b5166aebf258674f',1,'SDOM::Bounds']]],
+  ['right_11',['right',['../structSDOM_1_1Bounds.html#a94c040502f6cc3d683a928756708db4d',1,'SDOM::Bounds']]],
   ['right_5f_12',['right_',['../classSDOM_1_1IDisplayObject.html#a514bb1586b9cf3bc4f6043669cf049b2',1,'SDOM::IDisplayObject']]]
 ];

@@ -1,13 +1,11 @@
 var searchData=
 [
-  ['3_0',['3. Factory-based Global Traversal (Type 3)',['../md_docs_2dom__propagation.html#autotoc_md89',1,'']]],
-  ['3_202025_1',['[October 3, 2025]',['../md_docs_2progress.html#autotoc_md299',1,'']]],
-  ['3_20bind_20engine_20functions_20as_20lua_20globals_2',['3. Bind Engine Functions as Lua Globals',['../md_docs_2startup__refactor.html#autotoc_md344',1,'']]],
-  ['3_20factory_20based_20global_20traversal_20type_203_3',['3. Factory-based Global Traversal (Type 3)',['../md_docs_2dom__propagation.html#autotoc_md89',1,'']]],
-  ['3_20factory_20create_20methods_4',['3. Factory Create Methods',['../md_docs_2extensible__factory.html#autotoc_md156',1,'']]],
-  ['3_20factory_20registration_20system_5',['3. Factory Registration System',['../md_docs_2extensible__factory.html#autotoc_md164',1,'']]],
-  ['3_20lua_20script_20integration_6',['3. Lua/Script Integration',['../md_docs_2exposing__hooks.html#autotoc_md143',1,'']]],
-  ['3_20phrase_20rendering_7',['3. Phrase Rendering',['../md_docs_2label__text__parsing.html#autotoc_md236',1,'']]],
-  ['3_20separate_20config_20parsing_20from_20resource_20creation_8',['3. Separate Config Parsing from Resource Creation',['../md_docs_2startup__refactor.html#autotoc_md337',1,'']]],
-  ['30_202025_9',['[September 30, 2025]',['../md_docs_2progress.html#autotoc_md295',1,'']]]
+  ['c_0',['Scripting and Configuration (Lua &amp; C++)',['../md_docs_2scripting__and__configuration.html',1,'']]],
+  ['c_20→_20lua_20binding_20inventory_1',['Lua commands and properties exposed by SDOM (C++ → Lua binding inventory)',['../md_docs_2lua__commands__and__properties.html',1,'']]],
+  ['catalog_20for_20default_5f8x8_20font_2',['Glyph Index Catalog for default_8x8 Font',['../md_docs_2default__font__8x8.html',1,'']]],
+  ['catalog_20for_20sprite_5f8x8_20font_3',['Icon Index Catalog for sprite_8x8 Font',['../md_docs_2icon__8x8.html',1,'']]],
+  ['com_20like_20interface_20and_20hook_20design_4',['Modern COM-like Interface and Hook Design',['../md_docs_2exposing__hooks.html',1,'']]],
+  ['commands_20and_20properties_20exposed_20by_20sdom_20c_20→_20lua_20binding_20inventory_5',['Lua commands and properties exposed by SDOM (C++ → Lua binding inventory)',['../md_docs_2lua__commands__and__properties.html',1,'']]],
+  ['configuration_20lua_20c_6',['Scripting and Configuration (Lua &amp; C++)',['../md_docs_2scripting__and__configuration.html',1,'']]],
+  ['core_20framework_20design_7',['Core Framework Design',['../md_docs_2core__framework.html',1,'']]]
 ];
