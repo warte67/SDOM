@@ -2,6 +2,7 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_IFontObject.hpp>
 #include <SDOM/SDOM_TruetypeFont.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
@@ -27,6 +28,7 @@ namespace SDOM
         font_width_ = init.font_width;
         font_height_ = init.font_height;
         font_resource_ = init.font_resource;
+        icon_resource_ = init.icon_resource;
 
         setTabEnabled(false); // Groups are not tab-enabled by default
         setClickable(false); // Groups are not clickable by default
@@ -59,25 +61,27 @@ namespace SDOM
                 // defensive: ignore non-string values
             }
         }       
-        // Apply Lua-provided font properties to the Group (accept multiple key variants)
-        try {
-            if (config["font_size"].valid()) font_size_ = config["font_size"].get<int>();
-        } catch (...) { /* ignore invalid types */ }
-
-        try {
-            if (config["font_width"].valid()) font_width_ = config["font_width"].get<int>();
-        } catch (...) { /* ignore invalid types */ }
-
-        try {
-            if (config["font_height"].valid()) font_height_ = config["font_height"].get<int>();
-        } catch (...) { /* ignore invalid types */ }
+        // Apply Lua-provided font properties to the Group (accept multiple key variants).
+        // If a property is NOT present in the config, leave it as -1 to indicate
+        // "unspecified" so the BitmapFont defaults helper can populate it.
+        font_size_ = config["font_size"].valid() ? config["font_size"].get<int>() : -1;
+        font_width_ = config["font_width"].valid() ? config["font_width"].get<int>() : -1;
+        font_height_ = config["font_height"].valid() ? config["font_height"].get<int>() : -1;
 
         // font resource name - accept either 'font_resource' or 'font_resource_name'
         if (config["font_resource"].valid()) {
-            try { font_resource_name_ = config["font_resource"].get<std::string>(); }
+            try { font_resource_ = config["font_resource"].get<std::string>(); }
             catch (...) { /* ignore */ }
         } else if (config["font_resource_name"].valid()) {
-            try { font_resource_name_ = config["font_resource_name"].get<std::string>(); }
+            try { font_resource_ = config["font_resource_name"].get<std::string>(); }
+            catch (...) { /* ignore */ }
+        }     
+        // icon resource name - accept either 'icon_resource' or 'icon_resource_name'
+        if (config["icon_resource"].valid()) {
+            try { icon_resource_ = config["icon_resource"].get<std::string>(); }
+            catch (...) { /* ignore */ }
+        } else if (config["icon_resource_name"].valid()) {
+            try { icon_resource_ = config["icon_resource_name"].get<std::string>(); }
             catch (...) { /* ignore */ }
         }     
 
@@ -136,7 +140,8 @@ namespace SDOM
             init.anchorTop = AnchorPoint::TOP_LEFT; 
             init.anchorRight = AnchorPoint::TOP_LEFT;
             init.anchorBottom = AnchorPoint::TOP_LEFT;
-            init.resourceName = font_resource_name_;
+            init.resourceName = font_resource_;
+
             // init.color = label_color_;
             init.outlineColor = {0, 0, 0, 255};
             init.outlineThickness = 1;
@@ -150,25 +155,73 @@ namespace SDOM
             init.fontSize = font_size_;
             init.fontWidth = font_width_;
             init.fontHeight = font_height_;
+
+            // Fill missing font metrics from referenced BitmapFont asset so
+            // 8x12 bitmap fonts render at native size instead of being
+            // scaled down to 8x8.
+            IFontObject::applyBitmapFontDefaults(getFactory(), init.resourceName,
+                                                init.fontSize, init.fontWidth, init.fontHeight);
+
+            // Debug: report what we will pass into the Label so we can trace
+            // whether defaults were applied correctly.
+            // INFO("Group::onInit() - Label init metrics for '" + init.name + "': resource='" + init.resourceName + "' fontSize=" + std::to_string(init.fontSize) + " fontWidth=" + std::to_string(init.fontWidth) + " fontHeight=" + std::to_string(init.fontHeight));
             labelObject_ = getFactory().create("Label", init);
             addChild(labelObject_);
 
-            // Center the label vertically within the upper bounds of the Group
-            Label* lbl = labelObject_.as<Label>();
-            if (!lbl) {
-                ERROR("Error: Group::onInit() -- failed to cast labelObject_ to Label*");
-                return false;   
-            }    
-            // SpriteSheet* objSS = spriteSheetAsset_.as<SpriteSheet>();
-            // if (!objSS) {
-            //     ERROR("Error: Group::onInit() -- failed to cast fontAsset_ to SpriteSheet*");
-            //     return false;   
-            // }
+            // Is this a BitmapFont or TruetypeFont? Use the label's resolved
+            // font type and query the underlying font asset for an accurate
+            // glyph metric. For Truetype, use the font ascent so the text
+            // aligns visually with the top-line; for Bitmap, use the sprite
+            // height.
+            auto lbl = labelObject_.as<Label>();
+            if (!lbl)
+            {
+                ERROR("Error: Group::onInit() - Failed to cast labelObject_ to Label* for '" + init.name + "'");
+                return false;
+            }
+            IFontObject::FontType fontType = lbl->getFontType();
 
-            // just use +4 for now to nudge it a bit
-            labelObject_->setY((getY() + 4 ) - (lbl->getGlyphHeight() / 2));
+            // Center the label vertically within the upper bounds of the Group.
+            // Avoid relying on the Label's glyph metrics which may not be
+            // initialized yet; instead query the font asset directly and load
+            // it if necessary so we can compute the correct glyph height.
+            int glyphH = 0;
+            if (!init.resourceName.empty())
+            {
+                AssetHandle fh = getFactory().getAssetObject(init.resourceName);
+                if (fh.isValid())
+                {
+                    IFontObject* fo = fh.as<IFontObject>();
+                    if (fo)
+                    {
+                        // Ensure font is loaded so metrics are available
+                        if (!fo->isLoaded()) fo->onLoad();
 
+                        if (fontType == IFontObject::FontType::Bitmap)
+                        {
+                            BitmapFont* bf = dynamic_cast<BitmapFont*>(fo);
+                            if (bf) glyphH = bf->getGlyphHeight('W') / 0.75f; // use 75% of bitmap font height to approximate baseline
+                        }
+                        else if (fontType == IFontObject::FontType::Truetype)
+                        {
+                            TruetypeFont* tf = dynamic_cast<TruetypeFont*>(fo);
+                            if (tf) glyphH = tf->getGlyphHeight('W') / 0.65f;  // use 65% of truetype font ascent to approximate baseline
+                        }
+                    }
+                }
+            }
+            if (glyphH <= 0) glyphH = 8; // safe default
 
+            // Determine the icon glyph height used for the panel's top row
+            int iconH = getIconHeight();
+            if (iconH <= 0) iconH = 8; // fallback default
+            // INFO("Group::onInit() - Label glyph height for '" + init.name + "': " + std::to_string(glyphH)
+            //      + " icon height: " + std::to_string(iconH)
+            // );
+
+            // center the label vertically within the top of the Group
+            labelObject_->setY((getY() + (iconH / 2)) - (glyphH / 2));
+            // labelObject_->setY(getY() - (glyphH/2));
         }
 
         return SUPER::onInit();

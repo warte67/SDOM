@@ -70,7 +70,8 @@ namespace SDOM
     protected:
         DisplayHandle labelObject_; // internal label object for group text
         std::string text_;     // initialized label text
-        std::string font_resource_name_ = "internal_font_8x8"; // default font resource name
+        std::string font_resource_ = "internal_font_8x8"; // default font resource name
+        std::string icon_resource_ = "internal_icon_8x8"; // default icon resource name
         int font_size_ = 8;        // default font size
         int font_width_ = 8;       // default font width
         int font_height_ = 8;      // default font height

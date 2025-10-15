@@ -2,6 +2,8 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
+#include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_BitmapFont.hpp>
 
 namespace SDOM
 {
@@ -135,5 +137,48 @@ namespace SDOM
         // Register IFontObject-specific properties and commands here (bridge from AssetHandle handle)
         reg("setFontSize", [cast_ifont_from_asset](AssetHandle asset, int size) { cast_ifont_from_asset(asset)->setFontSize(size); });
     } // END _registerLuaBindings()
+
+
+    // --- Helper implementation ---
+    void IFontObject::applyBitmapFontDefaults(Factory& factory,
+                                              const std::string& fontResourceName,
+                                              int &outFontSize,
+                                              int &outFontWidth,
+                                              int &outFontHeight)
+    {
+        if (fontResourceName.empty()) return;
+
+        // If the out values are already set to sensible positives, do not
+        // overwrite them. We'll only fill values that are non-positive (<=0)
+        // to preserve explicit user-provided metrics.
+        bool needSize = (outFontSize <= 0);
+        bool needW = (outFontWidth <= 0);
+        bool needH = (outFontHeight <= 0);
+        if (!needSize && !needW && !needH) return; // nothing to do
+
+        AssetHandle asset = factory.getAssetObject(fontResourceName);
+        if (!asset.isValid()) return;
+
+        // Try dynamic cast to BitmapFont
+        IFontObject* ifont = asset.as<IFontObject>();
+        if (!ifont) return;
+
+        // Only bitmap fonts expose sprite metrics we can use
+        BitmapFont* bmp = dynamic_cast<BitmapFont*>(ifont);
+        if (!bmp) return;
+
+        int bmpW = bmp->getBitmapFontWidth();
+        int bmpH = bmp->getBitmapFontHeight();
+        // BitmapFont may also store a nominal font size; prefer that for fontSize
+        FontStyle fs = bmp->getFontStyle();
+
+        if (needW && bmpW > 0) outFontWidth = bmpW;
+        if (needH && bmpH > 0) outFontHeight = bmpH;
+        if (needSize) {
+            if (fs.fontSize > 0) outFontSize = fs.fontSize;
+            else if (outFontHeight > 0) outFontSize = outFontHeight;
+            else if (bmpH > 0) outFontSize = bmpH;
+        }
+    }
 
 } // namespace SDOM

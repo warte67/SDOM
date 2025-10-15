@@ -485,6 +485,11 @@ namespace SDOM
         return 0; // Placeholder return value
     }
 
+    int BitmapFont::getFontSize()
+    {
+        return fontSize_;
+    }
+
     void BitmapFont::setFontSize(int p_size)
     {
         fontSize_ = p_size;

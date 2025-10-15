@@ -57,17 +57,11 @@ namespace SDOM
             }
         }       
         // Apply Lua-provided font properties to the Button (accept multiple key variants)
-        try {
-            if (config["font_size"].valid()) font_size_ = config["font_size"].get<int>();
-        } catch (...) { /* ignore invalid types */ }
-
-        try {
-            if (config["font_width"].valid()) font_width_ = config["font_width"].get<int>();
-        } catch (...) { /* ignore invalid types */ }
-
-        try {
-            if (config["font_height"].valid()) font_height_ = config["font_height"].get<int>();
-        } catch (...) { /* ignore invalid types */ }
+        // Accept font properties; if absent mark as unspecified (-1) to allow
+        // BitmapFont defaults to be applied later.
+        font_size_ = config["font_size"].valid() ? config["font_size"].get<int>() : -1;
+        font_width_ = config["font_width"].valid() ? config["font_width"].get<int>() : -1;
+        font_height_ = config["font_height"].valid() ? config["font_height"].get<int>() : -1;
 
         // font resource name - accept either 'font_resource' or 'font_resource_name'
         if (config["font_resource"].valid()) {
@@ -140,8 +134,15 @@ namespace SDOM
             init.fontSize = font_size_;
             init.fontWidth = font_width_;
             init.fontHeight = font_height_;
+            // Apply BitmapFont defaults for missing metrics if the font resource
+            // references a BitmapFont. This will preserve any explicit values
+            // provided by the user while filling in sensible defaults.
+            IFontObject::applyBitmapFontDefaults(getFactory(), init.resourceName,
+                                                init.fontSize, init.fontWidth, init.fontHeight);
             labelObject_ = getFactory().create("Label", init);
             addChild(labelObject_);
+
+            // INFO("Button::onInit() - Label init metrics for '" + init.name + "': resource='" + init.resourceName + "' fontSize=" + std::to_string(init.fontSize) + " fontWidth=" + std::to_string(init.fontWidth) + " fontHeight=" + std::to_string(init.fontHeight));
         }
 
         return SUPER::onInit();

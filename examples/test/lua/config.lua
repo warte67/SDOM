@@ -93,11 +93,12 @@ local config = {
                             height = 100,
                             text = "Main Group",
 
-                            font_resource = "external_font_8x12",
-font_size = 12,  -- these should be default values from the externally loaded BitmapFont asset
-font_width = 8,
-font_height = 12, -- if not specified, should use the backing SpriteSheet's spriteHeight
-
+                            -- font_resource = "external_font_8x12",
+                            -- font_resource = "VarelaRound16",
+                            font_resource = "internal_ttf",
+                            font_size = 12,  -- these should be default values from the externally loaded BitmapFont asset
+                            -- font_width = 12,
+                            -- font_height = 12, -- if not specified, should use the backing SpriteSheet's spriteHeight
 
                             color = { r = 255, g = 255, b = 255, a = 96 },
                             label_color = { r = 224, g = 192, b = 192, a = 255 },

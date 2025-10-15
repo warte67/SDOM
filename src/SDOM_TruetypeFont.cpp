@@ -427,16 +427,20 @@ namespace SDOM
         return 0;
     } // END: TruetypeFont::getFontAscent() 
 
+    int TruetypeFont::getFontSize() 
+    {
+        return TTF_GetFontSize(_getValidTTFFontPtr());
+    } // END: TruetypeFont::getFontSize() const
+
     void TruetypeFont::setFontSize(int p_size) 
     {
         TTF_Font* ttf_font_ = _getValidTTFFontPtr();
         if (!ttf_font_) return;
         // Only set if size is positive and different from current
-        static int last_size = -1;
-        if (p_size > 0 && p_size != last_size) 
+        if (p_size > 0 && p_size != last_size_) 
         {
             fontSize_ = p_size; 
-            last_size = p_size;
+            last_size_ = p_size;
             if (!TTF_SetFontSize(ttf_font_, p_size))
             {
                 ERROR("Error setting font size: " + std::string(SDL_GetError()) );

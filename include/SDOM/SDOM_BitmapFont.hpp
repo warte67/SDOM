@@ -61,6 +61,7 @@ namespace SDOM
             virtual void drawPhraseDropshadow(const std::string& str, int x, int y, const FontStyle& style) override;
 
             virtual bool getGlyphMetrics(Uint32 ch, int *minx, int *maxx, int *miny, int *maxy, int *advance) const override;
+            virtual int getFontSize() override;
             virtual int getGlyphHeight(Uint32 ch) const override;
             virtual int getGlyphWidth(Uint32 ch) const override;
 

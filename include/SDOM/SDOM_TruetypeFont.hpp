@@ -60,7 +60,8 @@ namespace SDOM
             virtual int getGlyphHeight(Uint32 ch) const override;
             virtual int getGlyphWidth(Uint32 ch) const override;
 
-            virtual int getFontAscent() override;
+            virtual int getFontAscent() override;         
+            virtual int getFontSize() override;    // TTF_GetFontSize(TTF_Font *font);   
             virtual void setFontSize(int p_size) override;
             virtual void setFontStyle(const FontStyle& style) override;
             virtual FontStyle getFontStyle() override;
@@ -78,6 +79,8 @@ namespace SDOM
             AssetHandle ttf_font_handle_;
 
             TTF_Font* _getValidTTFFontPtr() const;
+
+            int last_size_ = 0; // last set font size (points)
             
             // Active per-style overrides (set via setFontStyle) - do NOT replace
             // the canonical sprite metrics (bitmapFontWidth_/bitmapFontHeight_).

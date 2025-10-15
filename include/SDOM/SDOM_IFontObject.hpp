@@ -239,6 +239,7 @@ namespace SDOM
             virtual int getGlyphWidth(Uint32 ch) const = 0;
 
             virtual int getFontAscent() = 0;  // int TTF_GetFontAscent(const TTF_Font *font)
+            virtual int getFontSize() = 0;    // TTF_GetFontSize(TTF_Font *font);
             virtual void setFontSize(int p_size) = 0;
             virtual void setFontStyle(const FontStyle& style) = 0;
             virtual FontStyle getFontStyle() = 0;
@@ -247,6 +248,18 @@ namespace SDOM
             int getWordHeight(const std::string& word) const;  
             int getFontSize() const { return fontSize_; }
             FontType getFontType() const { return fontType_; }  
+
+            // Helper: If a display object has a font resource name pointing to a
+            // BitmapFont asset but did not provide explicit per-axis or size
+            // metrics, this utility fills the provided references with the
+            // BitmapFont's native metrics. This centralizes the fallback logic
+            // so multiple display objects (Button, Label creation helpers, etc.)
+            // can consistently obtain defaults.
+            static void applyBitmapFontDefaults(class Factory& factory,
+                                                const std::string& fontResourceName,
+                                                int &outFontSize,
+                                                int &outFontWidth,
+                                                int &outFontHeight);
 
         protected:
             friend Factory;

@@ -276,6 +276,11 @@ namespace SDOM
         // store the handle for later use
         fontAsset = asset;
 
+        // Adopt the font's declared type (bitmap or truetype) so downstream
+        // rendering logic knows which code path to use. This avoids relying on
+        // the Label's default which may not match the referenced asset.
+        fontType_ = font->getFontType();
+
         // Ensure the font is loaded (guarded by the font implementation)
         if (!font->isLoaded()) 
         {
@@ -285,6 +290,16 @@ namespace SDOM
                 ERROR("Label::onInit() --> Failed to load font resource: " + resourceName_);
                 in_oninit = false;
                 return false;
+            }
+        }
+
+        // For TrueType fonts, if the Label didn't explicitly set a fontSize,
+        // adopt the IFontObject's font size so measurements/rendering use the
+        // font's nominal size.
+        if (fontType_ == IFontObject::FontType::Truetype) {
+            if (fontSize_ <= 0) {
+                fontSize_ = font->getFontSize();
+                defaultStyle_.fontSize = fontSize_;
             }
         }
 
