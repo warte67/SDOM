@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['background_0',['background',['../structSDOM_1_1Label_1_1InitStruct.html#acc85d9e995605d12030b00ee659cbaf2',1,'SDOM::Label::InitStruct::background'],['../structSDOM_1_1FontStyle.html#af478954245de8c56fea5fc18a317d540',1,'SDOM::FontStyle::background']]],
-  ['backgroundcolor_1',['backgroundcolor',['../structSDOM_1_1Label_1_1InitStruct.html#a65c85c0238f5a9fd578741af3da29f8f',1,'SDOM::Label::InitStruct::backgroundColor'],['../structSDOM_1_1FontStyle.html#a6a0b91e25486c048869bf983f5a35605',1,'SDOM::FontStyle::backgroundColor']]],
+  ['background_0',['background',['../structSDOM_1_1FontStyle.html#af478954245de8c56fea5fc18a317d540',1,'SDOM::FontStyle::background'],['../structSDOM_1_1Label_1_1InitStruct.html#acc85d9e995605d12030b00ee659cbaf2',1,'SDOM::Label::InitStruct::background']]],
+  ['backgroundcolor_1',['backgroundColor',['../structSDOM_1_1FontStyle.html#a6a0b91e25486c048869bf983f5a35605',1,'SDOM::FontStyle::backgroundColor'],['../structSDOM_1_1Label_1_1InitStruct.html#a65c85c0238f5a9fd578741af3da29f8f',1,'SDOM::Label::InitStruct::backgroundColor']]],
   ['base_5findex_2',['base_index',['../structSDOM_1_1IPanelObject_1_1InitStruct.html#aaf756622f392d1f3da878cd1e308dbc1',1,'SDOM::IPanelObject::InitStruct']]],
   ['base_5findex_5f_3',['base_index_',['../classSDOM_1_1IPanelObject.html#ad7df3eaceabcbc97a3b3e42e4e6de52d',1,'SDOM::IPanelObject']]],
   ['bg_5fblack_4',['BG_BLACK',['../classCLR.html#a37bc9dc667e6556bb1d95d7e614f32d6',1,'CLR']]],
@@ -27,13 +27,14 @@ var searchData=
   ['black_24',['BLACK',['../classCLR.html#a06d2d403368c990cd9de1292aa7d4b99',1,'CLR']]],
   ['blinking_25',['BLINKING',['../classCLR.html#a4dd77e6050dafa4c0e36ce01a5400587',1,'CLR']]],
   ['blue_26',['BLUE',['../classCLR.html#a1d8aa7fe91531370ea99b43cdb55c4d7',1,'CLR']]],
-  ['bold_27',['bold',['../structSDOM_1_1FontStyle.html#a1bdb3ddac317e40ff8ab334ba01736fe',1,'SDOM::FontStyle::bold'],['../structSDOM_1_1Label_1_1InitStruct.html#acf4236e87c00d994cbb9cd8e3388449f',1,'SDOM::Label::InitStruct::bold'],['../classCLR.html#a06931db8ae45986588be7ad57f2c91a2',1,'CLR::BOLD']]],
-  ['border_28',['border',['../structSDOM_1_1FontStyle.html#a2b774157381b4e079751ebf162fa0345',1,'SDOM::FontStyle::border'],['../structSDOM_1_1Label_1_1InitStruct.html#a87df4ba7bca077656256bba345f5510e',1,'SDOM::Label::InitStruct::border']]],
-  ['bordercolor_29',['bordercolor',['../structSDOM_1_1FontStyle.html#a62b81b6edf01fa2467e338d25a8a4a35',1,'SDOM::FontStyle::borderColor'],['../structSDOM_1_1Label_1_1InitStruct.html#adecf1f89c69d9be4242e5722e043a091',1,'SDOM::Label::InitStruct::borderColor']]],
-  ['borderthickness_30',['borderthickness',['../structSDOM_1_1FontStyle.html#a62133c9f0eaf4c334915a98d2e95b1a2',1,'SDOM::FontStyle::borderThickness'],['../structSDOM_1_1Label_1_1InitStruct.html#a22fc366f4c2c9f0c2ffbf55369f65a4d',1,'SDOM::Label::InitStruct::borderThickness']]],
-  ['bottom_31',['bottom',['../structSDOM_1_1Bounds.html#a9f7ce48d21c84daffa17b83355f51481',1,'SDOM::Bounds']]],
-  ['bottom_5f_32',['bottom_',['../classSDOM_1_1IDisplayObject.html#a21a0936456c85d904886bba2fa28891f',1,'SDOM::IDisplayObject']]],
-  ['brown_33',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]],
-  ['bubblingeventlisteners_34',['bubblingEventListeners',['../classSDOM_1_1IDisplayObject.html#a6989f335541697be518ad972b5239b47',1,'SDOM::IDisplayObject']]],
-  ['button_35',['button',['../classSDOM_1_1Event.html#aae1bbc273d8b8debd62fc8780f499b52',1,'SDOM::Event']]]
+  ['bold_27',['BOLD',['../classCLR.html#a06931db8ae45986588be7ad57f2c91a2',1,'CLR']]],
+  ['bold_28',['bold',['../structSDOM_1_1FontStyle.html#a1bdb3ddac317e40ff8ab334ba01736fe',1,'SDOM::FontStyle::bold'],['../structSDOM_1_1Label_1_1InitStruct.html#acf4236e87c00d994cbb9cd8e3388449f',1,'SDOM::Label::InitStruct::bold']]],
+  ['border_29',['border',['../structSDOM_1_1FontStyle.html#a2b774157381b4e079751ebf162fa0345',1,'SDOM::FontStyle::border'],['../structSDOM_1_1Label_1_1InitStruct.html#a87df4ba7bca077656256bba345f5510e',1,'SDOM::Label::InitStruct::border']]],
+  ['bordercolor_30',['borderColor',['../structSDOM_1_1FontStyle.html#a62b81b6edf01fa2467e338d25a8a4a35',1,'SDOM::FontStyle::borderColor'],['../structSDOM_1_1Label_1_1InitStruct.html#adecf1f89c69d9be4242e5722e043a091',1,'SDOM::Label::InitStruct::borderColor']]],
+  ['borderthickness_31',['borderThickness',['../structSDOM_1_1FontStyle.html#a62133c9f0eaf4c334915a98d2e95b1a2',1,'SDOM::FontStyle::borderThickness'],['../structSDOM_1_1Label_1_1InitStruct.html#a22fc366f4c2c9f0c2ffbf55369f65a4d',1,'SDOM::Label::InitStruct::borderThickness']]],
+  ['bottom_32',['bottom',['../structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99',1,'SDOM::Bounds']]],
+  ['bottom_5f_33',['bottom_',['../classSDOM_1_1IDisplayObject.html#a21a0936456c85d904886bba2fa28891f',1,'SDOM::IDisplayObject']]],
+  ['brown_34',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]],
+  ['bubblingeventlisteners_35',['bubblingEventListeners',['../classSDOM_1_1IDisplayObject.html#a6989f335541697be518ad972b5239b47',1,'SDOM::IDisplayObject']]],
+  ['button_36',['button',['../classSDOM_1_1Event.html#aae1bbc273d8b8debd62fc8780f499b52',1,'SDOM::Event']]]
 ];

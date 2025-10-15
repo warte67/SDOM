@@ -411,25 +411,26 @@ local btnObj_2 = getDisplayObject("stage2_button")
 local btnObj_3 = getDisplayObject("stage3_button")
 
 -- use named fields (type, listener)
--- btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
--- btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
--- btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
+btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
+btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
+btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
 
--- safe listener registration (checks existence and avoids runtime errors)
-if btnObj_1 then
-    pcall(function()
-        btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
-    end)
-end
-if btnObj_2 then
-    pcall(function()
-        btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
-    end)
-end
-if btnObj_3 then
-    pcall(function()
-        btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
-    end)
-end
+-- At this point we want runtime errors if this doesnt go right, so no pcall here.
+-- -- safe listener registration (checks existence and avoids runtime errors)
+-- if btnObj_1 then
+--     pcall(function()
+--         btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
+--     end)
+-- end
+-- if btnObj_2 then
+--     pcall(function()
+--         btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
+--     end)
+-- end
+-- if btnObj_3 then
+--     pcall(function()
+--         btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
+--     end)
+-- end
 
 return config

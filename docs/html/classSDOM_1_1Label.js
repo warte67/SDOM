@@ -68,6 +68,7 @@ var classSDOM_1_1Label =
     [ "getDirty", "classSDOM_1_1Label.html#a4660cb467876a41c2d31fd82009b2c97", null ],
     [ "getFont", "classSDOM_1_1Label.html#a8737d79a6666b10a5f9fe7694e42f1f1", null ],
     [ "getFontType", "classSDOM_1_1Label.html#a6fe14bc09579387a2d95d7221e22ceff", null ],
+    [ "getGlyphHeight", "classSDOM_1_1Label.html#a4c8e110e7fa3f32f4df4b3c7d1132f65", null ],
     [ "getHeight", "classSDOM_1_1Label.html#a33fd8c4899f820c1eb7f8641ddd928bd", null ],
     [ "getLastTokenizedText", "classSDOM_1_1Label.html#a9dd37febc4d1d0e44807b4c39d3571e7", null ],
     [ "getLeft", "classSDOM_1_1Label.html#a7e479652966d8c971d871da8a32d4a2f", null ],

@@ -11,6 +11,9 @@ var hierarchy =
       [ "SDOM::Exception", "classSDOM_1_1Exception.html", null ]
     ] ],
     [ "SDOM::FontStyle", "structSDOM_1_1FontStyle.html", null ],
+    [ "SDOM::IButtonObject", "classSDOM_1_1IButtonObject.html", [
+      [ "SDOM::Button", "classSDOM_1_1Button.html", null ]
+    ] ],
     [ "SDOM::IAssetObject::InitStruct", "structSDOM_1_1IAssetObject_1_1InitStruct.html", [
       [ "SDOM::IFontObject::InitStruct", "structSDOM_1_1IFontObject_1_1InitStruct.html", [
         [ "SDOM::BitmapFont::InitStruct", "structSDOM_1_1BitmapFont_1_1InitStruct.html", null ],
@@ -21,7 +24,11 @@ var hierarchy =
       [ "SDOM::Texture::InitStruct", "structSDOM_1_1Texture_1_1InitStruct.html", null ]
     ] ],
     [ "SDOM::IDisplayObject::InitStruct", "structSDOM_1_1IDisplayObject_1_1InitStruct.html", [
-      [ "SDOM::IPanelObject::InitStruct", "structSDOM_1_1IPanelObject_1_1InitStruct.html", null ],
+      [ "SDOM::IPanelObject::InitStruct", "structSDOM_1_1IPanelObject_1_1InitStruct.html", [
+        [ "SDOM::Button::InitStruct", "structSDOM_1_1Button_1_1InitStruct.html", null ],
+        [ "SDOM::Frame::InitStruct", "structSDOM_1_1Frame_1_1InitStruct.html", null ],
+        [ "SDOM::Group::InitStruct", "structSDOM_1_1Group_1_1InitStruct.html", null ]
+      ] ],
       [ "SDOM::Label::InitStruct", "structSDOM_1_1Label_1_1InitStruct.html", null ],
       [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ]
     ] ],
@@ -42,7 +49,11 @@ var hierarchy =
           [ "SDOM::Texture", "classSDOM_1_1Texture.html", null ]
         ] ],
         [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", [
-          [ "SDOM::IPanelObject", "classSDOM_1_1IPanelObject.html", null ],
+          [ "SDOM::IPanelObject", "classSDOM_1_1IPanelObject.html", [
+            [ "SDOM::Button", "classSDOM_1_1Button.html", null ],
+            [ "SDOM::Frame", "classSDOM_1_1Frame.html", null ],
+            [ "SDOM::Group", "classSDOM_1_1Group.html", null ]
+          ] ],
           [ "SDOM::Label", "classSDOM_1_1Label.html", null ],
           [ "SDOM::Stage", "classSDOM_1_1Stage.html", null ]
         ] ]

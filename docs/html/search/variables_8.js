@@ -2,8 +2,8 @@ var searchData=
 [
   ['icon_5fheight_0',['icon_height',['../structSDOM_1_1IPanelObject_1_1InitStruct.html#aeb7b2f50c351f816444b802cf6923650',1,'SDOM::IPanelObject::InitStruct']]],
   ['icon_5fheight_5f_1',['icon_height_',['../classSDOM_1_1IPanelObject.html#aaf98571996bc9b61188b3c69acc6a974',1,'SDOM::IPanelObject']]],
-  ['icon_5fresource_5fname_2',['icon_resource_name',['../structSDOM_1_1IPanelObject_1_1InitStruct.html#a8d9c1758d33f5a76de59e3b1a7667978',1,'SDOM::IPanelObject::InitStruct']]],
-  ['icon_5fresource_5fname_5f_3',['icon_resource_name_',['../classSDOM_1_1IPanelObject.html#a31288905534ee1733c6e785e84da006f',1,'SDOM::IPanelObject']]],
+  ['icon_5fresource_2',['icon_resource',['../structSDOM_1_1IPanelObject_1_1InitStruct.html#a952800d26de94058a2303a0a0b497fcc',1,'SDOM::IPanelObject::InitStruct']]],
+  ['icon_5fresource_5f_3',['icon_resource_',['../classSDOM_1_1Group.html#a66c650b9d3df90bdc4b2a69d334394af',1,'SDOM::Group::icon_resource_'],['../classSDOM_1_1IPanelObject.html#aeaf04e629e7e3c8083126db2868ea669',1,'SDOM::IPanelObject::icon_resource_']]],
   ['icon_5fwidth_4',['icon_width',['../structSDOM_1_1IPanelObject_1_1InitStruct.html#aeec62e1c3794586975e9fbd908ae53bc',1,'SDOM::IPanelObject::InitStruct']]],
   ['icon_5fwidth_5f_5',['icon_width_',['../classSDOM_1_1IPanelObject.html#a37fa9705ad5ce2bf5d6c1edb6ae8a0b5',1,'SDOM::IPanelObject']]],
   ['inactive_6',['Inactive',['../classSDOM_1_1EventType.html#af2b2778afc2fbe5eefb305c1dbb0c598',1,'SDOM::EventType']]],
@@ -27,5 +27,6 @@ var searchData=
   ['isinternal_24',['isInternal',['../structSDOM_1_1IAssetObject_1_1InitStruct.html#a8c427dfbbfee0c61be93bd450bfa089f',1,'SDOM::IAssetObject::InitStruct']]],
   ['isinternal_5f_25',['isInternal_',['../classSDOM_1_1IAssetObject.html#a95668971d07c16b956e07b34ac8439a6',1,'SDOM::IAssetObject']]],
   ['isloaded_5f_26',['isLoaded_',['../classSDOM_1_1IAssetObject.html#adfca3b5c4ff76d9ff2f0c4a36f254998',1,'SDOM::IAssetObject']]],
-  ['italic_27',['italic',['../structSDOM_1_1Label_1_1InitStruct.html#ac87d14a79bc1f8c929f476e394f9e6b5',1,'SDOM::Label::InitStruct::italic'],['../structSDOM_1_1FontStyle.html#aa65af16390c86efbe3e4f1c154fd6cab',1,'SDOM::FontStyle::italic'],['../classCLR.html#ae71613c60736bf456f5353d5e0b7f31b',1,'CLR::ITALIC']]]
+  ['italic_27',['ITALIC',['../classCLR.html#ae71613c60736bf456f5353d5e0b7f31b',1,'CLR']]],
+  ['italic_28',['italic',['../structSDOM_1_1FontStyle.html#aa65af16390c86efbe3e4f1c154fd6cab',1,'SDOM::FontStyle::italic'],['../structSDOM_1_1Label_1_1InitStruct.html#ac87d14a79bc1f8c929f476e394f9e6b5',1,'SDOM::Label::InitStruct::italic']]]
 ];

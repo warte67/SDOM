@@ -675,16 +675,25 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ## [October 14, 2025]
 - Added `Frame` scaffolding and registered the `Frame` DOM type with the Factory; SDOM_Frame.cpp implements minimal constructors and defers behavior to `IPanelObject`.
-- `IPanelObject`: improved icon resource resolution (try configured name, then "<name>_SpriteSheet" fallback) and removed temporary debug spam.
-- `SpriteSheet` loader now accepts snake_case keys (sprite_width / sprite_height) from Lua config in addition to camelCase.
+- `IPanelObject`:
+  - Improved icon resource resolution (try configured name, then "<name>_SpriteSheet" fallback).
+  - Removed temporary debug spam and added clearer, gated diagnostics.
+- `SpriteSheet` loader: accepts snake_case keys (`sprite_width` / `sprite_height`) from Lua in addition to camelCase.
+- Fonts & BitmapFont defaults:
+  - Added `IFontObject::applyBitmapFontDefaults(...)` to populate missing `font_size`/`font_width`/`font_height` from a referenced `BitmapFont` asset.
+  - Button/Group/Label now treat absent font metrics as unspecified and inherit BitmapFont metrics (e.g., external 8x12 fonts render at 8x12 without explicit metrics).
 - `Button`:
-  - Lua ctor now applies `text` and font properties (font_size/font_width/font_height/font_resource_name).
-  - Exposed `getLabelObject()` to Lua via the `DisplayHandle` as the `label` property.
-  - Confirmed `addEventListener` Lua usage and documented the expected `{ type = EventType.X, listener = fn }` table form.
+  - Lua ctor applies `text` and font properties (`font_size`/`font_width`/`font_height`/`font_resource_name`), accepts common aliases, and preserves unspecified metrics for defaulting.
+  - Exposed `getLabelObject()` to Lua via the `DisplayHandle` as the read-only `label` property.
+  - Documented and validated `addEventListener` Lua usage (table form `{ type = EventType.X, listener = fn }`); example listeners switch root stages.
+- `Group`:
+  - Label creation uses font-type-aware glyph metrics (Bitmap sprite height or TrueType ascent) and centers the label over the top line of the group using the panel icon height.
 - Lua config/tests:
-  - External `SpriteSheet` resource creation and usage verified (`external_icon_8x8` is resolved and used as `Frame` icon/sprites).
-  - Wired example button listeners to switch root stages; synthetic and real mouse events exercise listeners successfully.
-- Centralized the keyboard focus pulsing rectangle in the `Core` update and rendering logic.
+  - External `SpriteSheet` resource creation and usage verified (`external_icon_8x8` resolves and is used as Frame icon).
+  - Example button listeners wired to switch stages; both synthetic and real mouse events exercise listeners successfully.
+- Misc:
+  - Centralized keyboard focus pulsing rectangle in `Core` update/render logic.
+  - Removed temporary diagnostics after verification; left gated INFO logs for troubleshooting.
 
 ---
 ## Next Steps:
@@ -699,6 +708,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Refactor `IDisplayObject` to utilize proper scaffolding patterns.
   - Refactor `Factory` to utilize proper scaffolding patterns.
   - Refactor `Core` to utilize proper scaffolding patterns.
+  - Add `Group` unit tests to validate Lua property setting and resource resolution.
+  - Add `Button` unit tests to validate Lua property setting, label access, and event listener behavior.
+  - Add `Frame` unit tests to validate Lua property setting and icon rendering.
+  - Add `IPanelObject` unit tests to validate Lua property setting and icon rendering.
 
 ---
 ## ToDo:

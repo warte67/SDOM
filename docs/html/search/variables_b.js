@@ -1,9 +1,9 @@
 var searchData=
 [
   ['magenta_0',['MAGENTA',['../classCLR.html#aeea092b02f7a2434ace40805f7be2e06',1,'CLR']]],
-  ['maxheight_1',['maxheight',['../structSDOM_1_1FontStyle.html#af8fa2542619916891cc977181b031f7f',1,'SDOM::FontStyle::maxHeight'],['../structSDOM_1_1Label_1_1InitStruct.html#a41bcb4685bb4781f1174e0efcfd12450',1,'SDOM::Label::InitStruct::maxHeight']]],
+  ['maxheight_1',['maxHeight',['../structSDOM_1_1FontStyle.html#af8fa2542619916891cc977181b031f7f',1,'SDOM::FontStyle::maxHeight'],['../structSDOM_1_1Label_1_1InitStruct.html#a41bcb4685bb4781f1174e0efcfd12450',1,'SDOM::Label::InitStruct::maxHeight']]],
   ['maxoutlinethickness_2',['maxOutlineThickness',['../namespaceSDOM.html#aae891c3cb463a8719fa20816f7ef0ea4',1,'SDOM']]],
-  ['maxwidth_3',['maxwidth',['../structSDOM_1_1Label_1_1InitStruct.html#aeb8b0693b7f14d2716badd06fb683e1c',1,'SDOM::Label::InitStruct::maxWidth'],['../structSDOM_1_1FontStyle.html#a1c291089a8bbd41f694a3d89a64d9834',1,'SDOM::FontStyle::maxWidth']]],
+  ['maxwidth_3',['maxWidth',['../structSDOM_1_1FontStyle.html#a1c291089a8bbd41f694a3d89a64d9834',1,'SDOM::FontStyle::maxWidth'],['../structSDOM_1_1Label_1_1InitStruct.html#aeb8b0693b7f14d2716badd06fb683e1c',1,'SDOM::Label::InitStruct::maxWidth']]],
   ['mouse_5fx_4',['mouse_x',['../classSDOM_1_1Event.html#a2afe5652e2b08791eaba6e9a9ce6ca49',1,'SDOM::Event']]],
   ['mouse_5fy_5',['mouse_y',['../classSDOM_1_1Event.html#a0f161178b94de8c20d84b272df039dbc',1,'SDOM::Event']]],
   ['mousebuttondown_6',['MouseButtonDown',['../classSDOM_1_1EventType.html#a31f1590ddbd964d5b6e027a66d661a5f',1,'SDOM::EventType']]],

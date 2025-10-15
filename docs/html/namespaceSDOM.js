@@ -4,6 +4,7 @@ var namespaceSDOM =
     [ "AssetTypeCreators", "structSDOM_1_1AssetTypeCreators.html", "structSDOM_1_1AssetTypeCreators" ],
     [ "BitmapFont", "classSDOM_1_1BitmapFont.html", "classSDOM_1_1BitmapFont" ],
     [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
+    [ "Button", "classSDOM_1_1Button.html", "classSDOM_1_1Button" ],
     [ "Core", "classSDOM_1_1Core.html", "classSDOM_1_1Core" ],
     [ "DisplayHandle", "classSDOM_1_1DisplayHandle.html", "classSDOM_1_1DisplayHandle" ],
     [ "Event", "classSDOM_1_1Event.html", "classSDOM_1_1Event" ],
@@ -13,7 +14,10 @@ var namespaceSDOM =
     [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
     [ "Factory", "classSDOM_1_1Factory.html", "classSDOM_1_1Factory" ],
     [ "FontStyle", "structSDOM_1_1FontStyle.html", "structSDOM_1_1FontStyle" ],
+    [ "Frame", "classSDOM_1_1Frame.html", "classSDOM_1_1Frame" ],
+    [ "Group", "classSDOM_1_1Group.html", "classSDOM_1_1Group" ],
     [ "IAssetObject", "classSDOM_1_1IAssetObject.html", "classSDOM_1_1IAssetObject" ],
+    [ "IButtonObject", "classSDOM_1_1IButtonObject.html", "classSDOM_1_1IButtonObject" ],
     [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
     [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
     [ "IFontObject", "classSDOM_1_1IFontObject.html", "classSDOM_1_1IFontObject" ],
@@ -55,6 +59,17 @@ var namespaceSDOM =
       [ "LEFT_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a54adef06a90e8b0326376c0eaf7404b1", null ],
       [ "CENTER_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac40e9cf1d233eb1b6dc84b9f97e83b4e", null ],
       [ "RIGHT_BOTTOM", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8", null ]
+    ] ],
+    [ "ButtonState", "namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975", [
+      [ "Normal", "namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975a960b44c579bc2f6818d2daaf9e4c16f0", null ],
+      [ "Hovered", "namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975a3ef193e1ac8f2bc3d7226a29d6b09875", null ],
+      [ "Pressed", "namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975ad78a68f6a85421ae121c2cb5b73a1040", null ],
+      [ "Disabled", "namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975ab9f5c797ebbf55adccdd8539a65a0241", null ],
+      [ "Checked", "namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975a2627637e263ef687fa978b576580b8b1", null ],
+      [ "Unchecked", "namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975a881b3634f18ee4f2c2315bd19b75e0ae", null ],
+      [ "Indeterminate", "namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975aa2d00c353d1f9a5f07852650030dbd53", null ],
+      [ "HoveredChecked", "namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975a00dbf5b95989d98c02149049ae6b1d74", null ],
+      [ "PressedChecked", "namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975a955f600af5dd539954958d03edab354c", null ]
     ] ],
     [ "LabelAlign", "namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42d", [
       [ "DEFAULT", "namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da5b39c8b553c821e7cddc6da64b5bd2ee", null ],

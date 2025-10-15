@@ -21,6 +21,8 @@ var classSDOM_1_1Factory =
     [ "destroyDisplayObject", "classSDOM_1_1Factory.html#a0d021e7300cbd580994d02a1a6fb4497", null ],
     [ "destroyOrphanedDisplayObjects", "classSDOM_1_1Factory.html#a4b99567a8c64e75b8818932d185bfd4b", null ],
     [ "detachOrphans", "classSDOM_1_1Factory.html#af1d614fd777f0cfbc48618f7ab77f49d", null ],
+    [ "findAssetByFilename", "classSDOM_1_1Factory.html#a7c9bd4705f8a020c7d3581c5ed3ff1e9", null ],
+    [ "findSpriteSheetByParams", "classSDOM_1_1Factory.html#aac735a001aaf43f7d410d20d8e69810b", null ],
     [ "getAssetObject", "classSDOM_1_1Factory.html#a111511e00885071e02215ef2e049d14e", null ],
     [ "getDisplayObject", "classSDOM_1_1Factory.html#a4e4abd9e3eabfcdc6c6e832aa6c79286", null ],
     [ "getDomObj", "classSDOM_1_1Factory.html#ab40ef3f6627aefa377d3489eee26e2fb", null ],

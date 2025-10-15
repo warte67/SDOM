@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['labelalign_0',['LabelAlign',['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42d',1,'SDOM']]]
+  ['fonttype_0',['FontType',['../classSDOM_1_1IFontObject.html#a65dd8d559c0b3cedf12993bffeba6aff',1,'SDOM::IFontObject']]]
 ];
