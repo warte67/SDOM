@@ -5,6 +5,7 @@ namespace SDOM
 {
     enum class ButtonState 
     {
+        // Index Groups
         Normal,             // Default, enabled, not hovered or pressed
         Hovered,            // Mouse is over, not pressed
         Pressed,            // Mouse is over, mouse button down
@@ -14,7 +15,6 @@ namespace SDOM
         Indeterminate,      // For tri-state buttons
         HoveredChecked,     // Mouse is over, checked (for toggle buttons)
         PressedChecked      // Mouse is over, pressed, checked
-        // Add more as needed for your UI
     };
 
     class IButtonObject 

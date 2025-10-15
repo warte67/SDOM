@@ -257,7 +257,7 @@ namespace SDOM
 
             // Do the entire bounds check in Lua so this test is Lua-only
             sol::protected_function_result res = lua.script(R"(
-                local EXPECTED = { x = 240, y = 70, width = 250, height = 225 }
+                local EXPECTED = { x = 180, y = 70, width = 250, height = 225 }
                 local b = Core:getDisplayObject('blueishBox')
                 if not b then return { ok = false, err = 'handle missing' } end
                 local obj = b

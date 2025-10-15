@@ -17,7 +17,35 @@ namespace SDOM
         ButtonDown = 18,
         ButtonDownSelected = 27,
         Frame = 36,
-        Group = 45
+        Group = 45,
+        // Individual Indices
+        Hamburger = 54,
+        Left_Arrow_Raised,
+        Right_Arrow_Raised,
+        Up_Arrow_Raised,
+        Down_Arrow_Raised,
+        Left_Arrow_Depressed,
+        Right_Arrow_Depressed,
+        Up_Arrow_Depressed,
+        Down_Arrow_Depressed,
+        Horizontal_Knob,
+        Vertical_Knob,
+        Slider_Tick,
+        HSlider_Rail,
+        VSlider_Rail,
+        Empty_Checkbox,
+        Checked_Checkbox,
+        X_Checkbox,
+        Unselected_Radio,
+        Selected_Radio,
+        Left_HProgress,
+        Empty_HProgress,
+        Thumb_HProgress,
+        Right_HProgress,
+        Top_VProgress,
+        Empty_VProgress,
+        Thumb_VProgress,
+        Bottom_VProgress
     };
     inline static const std::unordered_map<std::string, PanelBaseIndex> stringToPanelBaseIndex_ = 
     {

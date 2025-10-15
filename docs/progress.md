@@ -697,6 +697,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Next Steps:
+- Investigate what I presume are z_order based bugs. Objects are not rendering in proper order. Not sure when this started.
+- Move the various colors from `Label` to `IDisplayObject` as they are useful in places other than `Label`.
+- Add more EventTypes to support `Checkbox` and `Radiobox`.
 - refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test1()` → `Label_test1()`).
   - Refactor `SpriteSheet_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
   - Refactor `GarbageCollection_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]

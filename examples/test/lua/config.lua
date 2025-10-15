@@ -102,8 +102,20 @@ local config = {
 
                             color = { r = 255, g = 255, b = 255, a = 96 },
                             label_color = { r = 224, g = 192, b = 192, a = 255 },
-                            -- add children here if desired
+
                             children = {
+                                {
+                                    name = "mainFrame_checkbox_1",
+                                    type = "Checkbox",
+                                    x = 305,
+                                    y = 10,
+                                    width = 130,    -- w: should work but doesnt
+                                    height = 12,    -- h: should work but doesnt
+                                    color = { r = 255, g = 255, b = 255, a = 128 },
+                                    label_color = { r = 255, g = 255, b = 255, a = 255 },
+                                    text = "Checkbox",
+                                    border = false
+                                }
                             }
                         }
                     }
@@ -201,7 +213,7 @@ local config = {
                 {
                     name = "blueishBox",
                     type = "Box",
-                    x = 240,
+                    x = 180,
                     y = 70,
                     width = 250,
                     height = 225,
@@ -212,7 +224,7 @@ local config = {
                             type = "Label",
 
                             anchor_left = "left",       -- verified
-                            x = 245,                    -- verified (world coordinates)
+                            x = 185,                    -- verified (world coordinates)
                             -- left = 5,                -- not working because the Label does not have a parent
                             anchor_top = "top",         -- verified
                             y = 75,                     -- verified (world coordinates)

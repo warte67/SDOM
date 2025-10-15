@@ -19,6 +19,7 @@
 #include <SDOM/SDOM_Frame.hpp>
 #include <SDOM/SDOM_Button.hpp>
 #include <SDOM/SDOM_Group.hpp>
+#include <SDOM/SDOM_Checkbox.hpp>
 
 namespace SDOM
 {
@@ -215,6 +216,12 @@ namespace SDOM
         registerDomType("Group", TypeCreators{
             Group::CreateFromLua,
             Group::CreateFromInitStruct
+        });
+
+        // register Checkbox
+        registerDomType("Checkbox", TypeCreators{
+            Checkbox::CreateFromLua,
+            Checkbox::CreateFromInitStruct
         });
 
         // return initialized state
