@@ -201,95 +201,13 @@ namespace SDOM
 
         // --- additional IconButton-specific bindings can go here --- //
 
-        // Helper: expose IconIndex enum and convenient IconButton constants to Lua.
-        // Creates a global `IconIndex` table and also adds the same constants to the IconButton class table.
-        {
-            sol::table iconIndexTable = lua.create_table();
-
-            auto make_lua_key = [](const std::string &s) -> std::string {
-                // "empty_checkbox" -> "Empty_Checkbox"
-                std::string out;
-                std::size_t i = 0;
-                while (i < s.size()) {
-                    std::size_t j = s.find('_', i);
-                    if (j == std::string::npos) j = s.size();
-                    std::string part = s.substr(i, j - i);
-                    if (!part.empty()) {
-                        part[0] = static_cast<char>(std::toupper(part[0]));
-                    }
-                    if (!out.empty()) out += "_";
-                    out += part;
-                    i = j + 1;
-                }
-                return out;
-            };
-
-            for (const auto &p : SDOM::icon_index_to_string) {
-                int idx = p.first;
-                const std::string &name = p.second; // e.g. "empty_checkbox"
-                std::string luaKey = make_lua_key(name); // "Empty_Checkbox"
-                iconIndexTable.set(luaKey, idx);
-            }
-
-            // Register global IconIndex table (if not present)
-            sol::object existing = lua["IconIndex"];
-            if (!existing.valid() || existing == sol::lua_nil) {
-                lua["IconIndex"] = iconIndexTable;
-            } else {
-                // merge missing entries into existing table
-                sol::table t = lua["IconIndex"];
-                for (const auto &p : icon_index_to_string) {
-                    std::string k = make_lua_key(p.second);
-                    sol::object cur = t.raw_get<sol::object>(k);
-                    if (!cur.valid() || cur == sol::lua_nil) t.set(k, p.first);
-                }
-            }
-
-            // Also expose constants on the IconButton class/table (typeName)
-            sol::object maybeClass = lua[typeName.c_str()];
-            sol::table classTable;
-            if (!maybeClass.valid() || maybeClass == sol::lua_nil) {
-                classTable = lua.create_table();
-                lua[typeName.c_str()] = classTable;
-            } else {
-                classTable = maybeClass.as<sol::table>();
-            }
-            for (const auto &p : SDOM::icon_index_to_string) {
-                std::string k = make_lua_key(p.second);
-                sol::object cur2 = classTable.raw_get<sol::object>(k);
-                if (!cur2.valid() || cur2 == sol::lua_nil) classTable.set(k, p.first);
-            }
-        }
-
-        // { static_cast<int>(IconIndex::Hamburger), "hamburger" },
-        // { static_cast<int>(IconIndex::Left_Arrow_Raised), "left_arrow_raised" },
-        // { static_cast<int>(IconIndex::Right_Arrow_Raised), "right_arrow_raised" },
-        // { static_cast<int>(IconIndex::Up_Arrow_Raised), "up_arrow_raised" },
-        // { static_cast<int>(IconIndex::Down_Arrow_Raised), "down_arrow_raised" },
-        // { static_cast<int>(IconIndex::Left_Arrow_Depressed), "left_arrow_depressed" },
-        // { static_cast<int>(IconIndex::Right_Arrow_Depressed), "right_arrow_depressed" },
-        // { static_cast<int>(IconIndex::Up_Arrow_Depressed), "up_arrow_depressed" },
-        // { static_cast<int>(IconIndex::Down_Arrow_Depressed), "down_arrow_depressed" },
-        // { static_cast<int>(IconIndex::Horizontal_Knob), "horizontal_knob" },
-        // { static_cast<int>(IconIndex::Vertical_Knob), "vertical_knob" },
-        // { static_cast<int>(IconIndex::Slider_Tick), "slider_tick" },
-        // { static_cast<int>(IconIndex::HSlider_Rail), "hslider_rail" },
-        // { static_cast<int>(IconIndex::VSlider_Rail), "vslider_rail" },
-        // { static_cast<int>(IconIndex::Empty_Checkbox), "empty_checkbox" },
-        // { static_cast<int>(IconIndex::Checked_Checkbox), "checked_checkbox" },
-        // { static_cast<int>(IconIndex::X_Checkbox), "x_checkbox" },
-        // { static_cast<int>(IconIndex::Unselected_Radio), "unselected_radio" },
-        // { static_cast<int>(IconIndex::Selected_Radio), "selected_radio" },
-        // { static_cast<int>(IconIndex::Left_HProgress), "left_hprogress" },
-        // { static_cast<int>(IconIndex::Empty_HProgress), "empty_hprogress" },
-        // { static_cast<int>(IconIndex::Thumb_HProgress), "thumb_hprogress" },
-        // { static_cast<int>(IconIndex::Right_HProgress), "right_hprogress" },
-        // { static_cast<int>(IconIndex::Top_VProgress), "top_vprogress" },
-        // { static_cast<int>(IconIndex::Empty_VProgress), "empty_vprogress" },
-        // { static_cast<int>(IconIndex::Thumb_VProgress), "thumb_vprogress" },
-        // { static_cast<int>(IconIndex::Bottom_VProgress), "bottom_vprogress" }
-
-
+        // NOTE:
+        // IconIndex and IconButton numeric constants are registered centrally
+        // by `Core::_registerLuaBindings` so configuration scripts can
+        // reference them before type-specific registration runs. Avoid
+        // duplicating that global registration here to keep Lua state setup
+        // deterministic. If per-type extension is required later, merge
+        // into the global `IconIndex` table instead of overwriting it.
 
     } // END: void IconButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

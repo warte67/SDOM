@@ -16,6 +16,7 @@
 #include <SDOM/lua_BindHelpers.hpp>
 #include <algorithm>
 #include <filesystem>
+#include <SDOM/SDOM_IconButton.hpp>
 
 namespace SDOM
 {
@@ -1507,6 +1508,65 @@ namespace SDOM
             DEBUG_LOG("Failed to register EventType bindings: " << e.what());
         } catch (...) {
             DEBUG_LOG("Failed to register EventType bindings: unknown exception");
+        }
+
+        // --- Expose IconIndex & IconButton constants early --- //
+        // Some config scripts reference IconIndex.* constants while the
+        // configuration file is being loaded. Register a best-effort global
+        // `IconIndex` table and a convenience `IconButton` class table
+        // containing the same constants so config.lua can use them.
+        try {
+            auto make_lua_key = [](const std::string &s) -> std::string {
+                std::string out;
+                std::size_t i = 0;
+                while (i < s.size()) {
+                    std::size_t j = s.find('_', i);
+                    if (j == std::string::npos) j = s.size();
+                    std::string part = s.substr(i, j - i);
+                    if (!part.empty()) part[0] = static_cast<char>(std::toupper(part[0]));
+                    if (!out.empty()) out += "_";
+                    out += part;
+                    i = j + 1;
+                }
+                return out;
+            };
+
+            sol::table iconIndexTable = lua.create_table();
+            for (const auto &p : SDOM::icon_index_to_string) {
+                int idx = p.first;
+                const std::string &name = p.second;
+                std::string luaKey = make_lua_key(name);
+                iconIndexTable.set(luaKey, idx);
+            }
+
+            sol::object existing = lua["IconIndex"];
+            if (!existing.valid() || existing == sol::lua_nil) {
+                lua["IconIndex"] = iconIndexTable;
+            } else {
+                sol::table t = lua["IconIndex"];
+                for (const auto &p : SDOM::icon_index_to_string) {
+                    std::string k = make_lua_key(p.second);
+                    sol::object cur = t.raw_get<sol::object>(k);
+                    if (!cur.valid() || cur == sol::lua_nil) t.set(k, p.first);
+                }
+            }
+
+            // Also populate a global IconButton table to expose constants
+            sol::object maybeClass = lua["IconButton"];
+            sol::table classTable;
+            if (!maybeClass.valid() || maybeClass == sol::lua_nil) {
+                classTable = lua.create_table();
+                lua["IconButton"] = classTable;
+            } else {
+                classTable = maybeClass.as<sol::table>();
+            }
+            for (const auto &p : SDOM::icon_index_to_string) {
+                std::string k = make_lua_key(p.second);
+                sol::object cur2 = classTable.raw_get<sol::object>(k);
+                if (!cur2.valid() || cur2 == sol::lua_nil) classTable.set(k, p.first);
+            }
+        } catch(...) {
+            // Non-fatal: registration is best-effort
         }
 
 

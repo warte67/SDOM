@@ -129,7 +129,7 @@ local config = {
                             icon_resource = "internal_icon_8x8", -- test icon resource name resolution
                             -- icon_index = 54 -- this works
                             -- icon_index = "hamburger" -- this works
-                            icon_index = IconIndex:Hamburger --this doesn't yet work
+                            icon_index = IconIndex.Hamburger -- use dot form for numeric constant
                         }
                     }
                 },
