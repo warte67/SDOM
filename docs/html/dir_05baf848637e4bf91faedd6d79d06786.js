@@ -33,6 +33,7 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_SpriteSheet.hpp", "SDOM__SpriteSheet_8hpp.html", "SDOM__SpriteSheet_8hpp" ],
     [ "SDOM_Stage.hpp", "SDOM__Stage_8hpp.html", "SDOM__Stage_8hpp" ],
     [ "SDOM_Texture.hpp", "SDOM__Texture_8hpp.html", "SDOM__Texture_8hpp" ],
+    [ "SDOM_TriStateCheckbox.hpp", "SDOM__TriStateCheckbox_8hpp.html", "SDOM__TriStateCheckbox_8hpp" ],
     [ "SDOM_TruetypeFont.hpp", "SDOM__TruetypeFont_8hpp.html", "SDOM__TruetypeFont_8hpp" ],
     [ "SDOM_TTFAsset.hpp", "SDOM__TTFAsset_8hpp.html", "SDOM__TTFAsset_8hpp" ],
     [ "SDOM_UnitTests.hpp", "SDOM__UnitTests_8hpp.html", "SDOM__UnitTests_8hpp" ],

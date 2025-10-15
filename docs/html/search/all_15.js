@@ -8,6 +8,6 @@ var searchData=
   ['keymod_5f_5',['keymod_',['../classSDOM_1_1Event.html#af3a872dc47ba1ee24660cbf978a3e7e8',1,'SDOM::Event']]],
   ['keytoascii_6',['keyToAscii',['../classSDOM_1_1SDL__Utils.html#ae14d8baba865558a55e68468fddc1b62',1,'SDOM::SDL_Utils']]],
   ['keyup_7',['KeyUp',['../classSDOM_1_1EventType.html#a625823311d8c48db0a73bc2e0042f414',1,'SDOM::EventType']]],
-  ['knob_5fhorizontal_8',['Knob_Horizontal',['../namespaceSDOM.html#ac8f03b2406b7c6dabb694bdb8ae4ce90a98dc375da0eb545a7afacd7d5388268d',1,'SDOM']]],
-  ['knob_5fvertical_9',['Knob_Vertical',['../namespaceSDOM.html#ac8f03b2406b7c6dabb694bdb8ae4ce90ab04f772b29529b83791c299f4b101df7',1,'SDOM']]]
+  ['knob_5fhorizontal_8',['Knob_Horizontal',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba98dc375da0eb545a7afacd7d5388268d',1,'SDOM']]],
+  ['knob_5fvertical_9',['Knob_Vertical',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbab04f772b29529b83791c299f4b101df7',1,'SDOM']]]
 ];

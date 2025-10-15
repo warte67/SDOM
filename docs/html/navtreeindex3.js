@@ -1,5 +1,8 @@
 var NAVTREEINDEX3 =
 {
+"classSDOM_1_1Button.html#ae4372c86e504257b8c59214ae2cdfc0d":[19,0,0,4,25],
+"classSDOM_1_1Button.html#ae629e2aa41786d948b8ada4de8df9f5a":[18,0,0,4,11],
+"classSDOM_1_1Button.html#ae629e2aa41786d948b8ada4de8df9f5a":[19,0,0,4,11],
 "classSDOM_1_1Button.html#ae7525c9e7db2bda1a850805dceee2504":[18,0,0,4,102],
 "classSDOM_1_1Button.html#ae7525c9e7db2bda1a850805dceee2504":[19,0,0,4,102],
 "classSDOM_1_1Button.html#ae9b0ffcdace56e0b0edad6c00d38f5b3":[18,0,0,4,115],
@@ -246,8 +249,5 @@ var NAVTREEINDEX3 =
 "classSDOM_1_1Checkbox.html#a83f54c1f027dad7c7cf98cad72ee9955":[19,0,0,5,94],
 "classSDOM_1_1Checkbox.html#a8453e36ea5bffdbb6c57da841db2e5ab":[18,0,0,5,122],
 "classSDOM_1_1Checkbox.html#a8453e36ea5bffdbb6c57da841db2e5ab":[19,0,0,5,122],
-"classSDOM_1_1Checkbox.html#a8468537ed2a4e40c33821f5ea66771ed":[18,0,0,5,102],
-"classSDOM_1_1Checkbox.html#a8468537ed2a4e40c33821f5ea66771ed":[19,0,0,5,102],
-"classSDOM_1_1Checkbox.html#a853fddbff86054aae8abc808cf55d1b6":[18,0,0,5,90],
-"classSDOM_1_1Checkbox.html#a853fddbff86054aae8abc808cf55d1b6":[19,0,0,5,90]
+"classSDOM_1_1Checkbox.html#a8468537ed2a4e40c33821f5ea66771ed":[18,0,0,5,102]
 };

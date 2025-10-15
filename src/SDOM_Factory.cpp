@@ -22,6 +22,7 @@
 #include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_Checkbox.hpp>
 #include <SDOM/SDOM_Radiobox.hpp>
+#include <SDOM/SDOM_TriStateCheckbox.hpp>
 
 namespace SDOM
 {
@@ -221,6 +222,12 @@ namespace SDOM
             Group::CreateFromInitStruct
         });
 
+        // register the IconButton
+        registerDomType("IconButton", TypeCreators{
+            IconButton::CreateFromLua,
+            IconButton::CreateFromInitStruct
+        });
+
         // register Checkbox
         registerDomType("Checkbox", TypeCreators{
             Checkbox::CreateFromLua,
@@ -233,10 +240,10 @@ namespace SDOM
             Radiobox::CreateFromInitStruct
         });
 
-        // register the IconButton
-        registerDomType("IconButton", TypeCreators{
-            IconButton::CreateFromLua,
-            IconButton::CreateFromInitStruct
+        // register the TriStateCheckbox
+        registerDomType("TriStateCheckbox", TypeCreators{
+            TriStateCheckbox::CreateFromLua,
+            TriStateCheckbox::CreateFromInitStruct
         });
 
         // return initialized state

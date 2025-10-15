@@ -6,7 +6,7 @@
 
 namespace SDOM
 {
-    enum class IconIndex 
+    enum class IconIndex : int
     {
         // Individual Indices
         Hamburger = 54,

@@ -226,7 +226,21 @@ local config = {
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
                             text = "font_8x8 Radiobox",
                             -- border = true
-                        }             
+                        },
+                        {
+                            name = "mainFrame_tristate_1",
+                            type = "TriStateCheckbox",
+                            x = 305,
+                            y = 104,
+                            width = 145,    -- w: should work but doesnt
+                            height = 16,    -- h: should work but doesnt
+                            color = { r = 255, g = 255, b = 255, a = 255 },
+                            label_color = { r = 255, g = 255, b = 255, a = 255 },
+                            font_resource = "VarelaRound16",
+                            font_size = 10,
+                            text = "VarelaRound16 TriStateCheckbox",
+                            -- border = true
+                        },                        
                     }
                 },
                 {

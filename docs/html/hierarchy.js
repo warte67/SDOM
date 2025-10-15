@@ -31,7 +31,8 @@ var hierarchy =
         [ "SDOM::Checkbox::InitStruct", "structSDOM_1_1Checkbox_1_1InitStruct.html", null ],
         [ "SDOM::Frame::InitStruct", "structSDOM_1_1Frame_1_1InitStruct.html", null ],
         [ "SDOM::Group::InitStruct", "structSDOM_1_1Group_1_1InitStruct.html", null ],
-        [ "SDOM::Radiobox::InitStruct", "structSDOM_1_1Radiobox_1_1InitStruct.html", null ]
+        [ "SDOM::Radiobox::InitStruct", "structSDOM_1_1Radiobox_1_1InitStruct.html", null ],
+        [ "SDOM::TriStateCheckbox::InitStruct", "structSDOM_1_1TriStateCheckbox_1_1InitStruct.html", null ]
       ] ],
       [ "SDOM::IconButton::InitStruct", "structSDOM_1_1IconButton_1_1InitStruct.html", null ],
       [ "SDOM::Label::InitStruct", "structSDOM_1_1Label_1_1InitStruct.html", null ],
@@ -59,7 +60,8 @@ var hierarchy =
             [ "SDOM::Checkbox", "classSDOM_1_1Checkbox.html", null ],
             [ "SDOM::Frame", "classSDOM_1_1Frame.html", null ],
             [ "SDOM::Group", "classSDOM_1_1Group.html", null ],
-            [ "SDOM::Radiobox", "classSDOM_1_1Radiobox.html", null ]
+            [ "SDOM::Radiobox", "classSDOM_1_1Radiobox.html", null ],
+            [ "SDOM::TriStateCheckbox", "classSDOM_1_1TriStateCheckbox.html", null ]
           ] ],
           [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", null ],
           [ "SDOM::Label", "classSDOM_1_1Label.html", null ],

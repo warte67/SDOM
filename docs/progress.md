@@ -705,6 +705,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 ---
 ## [October 15, 2025]
 - **UI controls:**
+  - Implemented `TriStateCheckbox` (type name: "TristateCheckbox"). `onEvent()` cycles through states (unchecked → checked → indeterminate → unchecked) and queues a `StateChanged` event with previous/new state in the payload.
   - Implemented `Radiobox` (type name: "Radiobox"). `onEvent()` clears sibling radioboxes then selects the clicked control (simple, DOM-style radio semantics). Decided not to add nullable/allow-unselect behavior for now.
   - `Checkbox` now accepts multiple aliases for the checked state in Lua: `is_checked`, `checked`, `is_selected`, and `selected`.
   - Exposed `text` property for `Button`, `Radiobox`, and `Checkbox` to Lua so label text can be read/modified from scripts.
@@ -727,9 +728,13 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Next Steps:
-- Implement `Radiobox` and ensure only one sibbling can be set at a time. Dispatch Events.
+- Better utilize the IButtonObject interface across button-like controls:
+  - Refactor Button, IconButton, Checkbox, Radiobox, and Tristate to inherit from IButtonObject and centralize common state machine and event handling logic.
+  - Replace per-class isChecked_ flags with a single ButtonState stored/managed by IButtonObject (getState/setState).
+  - Refactor `TriStateCheckbox` into `Tristate` for naming consistency and inherit `Checkbox` and `Radiobox` from it to reduce code duplication
+  - Update Factory/Lua type strings and aliases.
+  - Update Lua bindings so `text`, `state`/`checked` aliases, and state-change events are consistently exposed for all button types.
 - Investigate what I presume are z_order based bugs. Objects are not rendering in proper order. Not sure when this started.
-- Add more EventTypes to support `Checkbox` and `Radiobox`.
 - refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test1()` → `Label_test1()`).
   - Refactor `SpriteSheet_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
   - Refactor `GarbageCollection_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
@@ -768,7 +773,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 ```cpp
 // ...
 protected:
-    // Helper to create & enqueue an event targeted at this display object.
+    // Helper to create & enqueue an event tarAnother point, there is an IButtonObject interface that we could leveragegeted at this display object.
     // `init_payload` may set payload properties on the Event before enqueue.
     void queue_event(const EventType& type, std::function<void(Event&)> init_payload = {});
 // ...

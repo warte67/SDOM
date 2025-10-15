@@ -6,8 +6,8 @@ var searchData=
   ['center_5fbottom_3',['CENTER_BOTTOM',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac40e9cf1d233eb1b6dc84b9f97e83b4e',1,'SDOM']]],
   ['center_5fmiddle_4',['CENTER_MIDDLE',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980aacb6824fc28ff15285d89734b2943367',1,'SDOM']]],
   ['center_5ftop_5',['CENTER_TOP',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ab952f3308272193e9daddec1708f9bec',1,'SDOM']]],
-  ['checkbox_5fchecked_6',['Checkbox_Checked',['../namespaceSDOM.html#ac8f03b2406b7c6dabb694bdb8ae4ce90acdb01453d64eaba4edf0729bf16d5d44',1,'SDOM']]],
-  ['checkbox_5fempty_7',['Checkbox_Empty',['../namespaceSDOM.html#ac8f03b2406b7c6dabb694bdb8ae4ce90a1d09fd5db6c096d6cf2a20143c226a70',1,'SDOM']]],
-  ['checkbox_5fx_8',['Checkbox_X',['../namespaceSDOM.html#ac8f03b2406b7c6dabb694bdb8ae4ce90acd043099600735cec890d5d66521534b',1,'SDOM']]],
-  ['checked_9',['Checked',['../namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975a2627637e263ef687fa978b576580b8b1',1,'SDOM']]]
+  ['checkbox_5fchecked_6',['Checkbox_Checked',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbacdb01453d64eaba4edf0729bf16d5d44',1,'SDOM']]],
+  ['checkbox_5fempty_7',['Checkbox_Empty',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba1d09fd5db6c096d6cf2a20143c226a70',1,'SDOM']]],
+  ['checkbox_5fx_8',['Checkbox_X',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbacd043099600735cec890d5d66521534b',1,'SDOM']]],
+  ['checked_9',['Checked',['../namespaceSDOM.html#a70f13a3fa7fdb0d9b59996aa4391c975a2627637e263ef687fa978b576580b8b1',1,'SDOM::Checked'],['../namespaceSDOM.html#a7ebf9539af8038368522bc2e083a7297a2627637e263ef687fa978b576580b8b1',1,'SDOM::Checked']]]
 ];

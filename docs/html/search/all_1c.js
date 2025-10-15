@@ -1,8 +1,8 @@
 var searchData=
 [
   ['radiobox_0',['Radiobox',['../classSDOM_1_1Radiobox.html',1,'SDOM::Radiobox'],['../classSDOM_1_1Radiobox.html#a302da2e2d86c3fc54888e0dce0df81b0',1,'SDOM::Radiobox::Radiobox(const InitStruct &amp;init)'],['../classSDOM_1_1Radiobox.html#aa6907a6211df26ec6e3a5fea37795e84',1,'SDOM::Radiobox::Radiobox(const sol::table &amp;config)'],['../classSDOM_1_1Radiobox.html#ae2f52a836cd94d0762483187c382f1a6',1,'SDOM::Radiobox::Radiobox()=default']]],
-  ['radiobox_5fselected_1',['Radiobox_Selected',['../namespaceSDOM.html#ac8f03b2406b7c6dabb694bdb8ae4ce90ae12828e9d94391588bbe22fa910df017',1,'SDOM']]],
-  ['radiobox_5funselected_2',['Radiobox_Unselected',['../namespaceSDOM.html#ac8f03b2406b7c6dabb694bdb8ae4ce90a10236f59304c30381815e42ec9c60794',1,'SDOM']]],
+  ['radiobox_5fselected_1',['Radiobox_Selected',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbae12828e9d94391588bbe22fa910df017',1,'SDOM']]],
+  ['radiobox_5funselected_2',['Radiobox_Unselected',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba10236f59304c30381815e42ec9c60794',1,'SDOM']]],
   ['rationale_3',['Rationale',['../md_docs_2object__handles.html#autotoc_md264',1,'Design Rationale'],['../md_docs_2core__framework.html#autotoc_md36',1,'Single Stage, Single Window Rationale']]],
   ['readme_2emd_4',['README.md',['../README_8md.html',1,'']]],
   ['rebuildtexture_5f_5',['rebuildTexture_',['../classSDOM_1_1Label.html#a72c5ec2f40dd4b556fc4ced61010439e',1,'SDOM::Label']]],
