@@ -90,7 +90,7 @@ local config = {
                             x = 450,
                             y = 10,
                             width = 140,
-                            height = 100,
+                            height = 70,
                             text = "Main Group",
 
                             -- font_resource = "external_font_8x12",
@@ -102,35 +102,131 @@ local config = {
 
                             color = { r = 255, g = 255, b = 255, a = 96 },
                             label_color = { r = 224, g = 192, b = 192, a = 255 },
-
                             children = {
                                 {
-                                    name = "mainFrame_checkbox_1",
-                                    type = "Checkbox",
-                                    x = 305,
-                                    y = 10,
-                                    width = 130,    -- w: should work but doesnt
-                                    height = 12,    -- h: should work but doesnt
+                                    name = "mainFrameGroup_radiobox_1",
+                                    type = "Radiobox",
+                                    x = 460,
+                                    y = 24,
+                                    width = 120,    -- w: should work but doesnt
+                                    height = 16,    -- h: should work but doesnt
                                     color = { r = 255, g = 255, b = 255, a = 255 },
                                     label_color = { r = 255, g = 255, b = 255, a = 255 },
-                                    text = "Checkbox",
-                                    border = false
-                                }
+                                    font_resource = "internal_ttf",
+                                    font_size = 10,
+                                    text = "First",
+                                    -- border = true
+                                },
+                                {
+                                    name = "mainFrameGroup_radiobox_2",
+                                    type = "Radiobox",
+                                    x = 460,
+                                    y = 40,
+                                    width = 120,    -- w: should work but doesnt
+                                    height = 16,    -- h: should work but doesnt
+                                    color = { r = 255, g = 255, b = 255, a = 255 },
+                                    label_color = { r = 255, g = 255, b = 255, a = 255 },
+                                    font_resource = "VarelaRound16",
+                                    font_size = 10,
+                                    text = "Second",
+                                    checked = true;
+                                    -- border = true
+                                },
+                                {
+                                    name = "mainFrameGroup_radiobox_3",
+                                    type = "Radiobox",
+                                    x = 460,
+                                    y = 56,
+                                    width = 120,    -- w: should work but doesnt
+                                    height = 16,    -- h: should work but doesnt
+                                    color = { r = 255, g = 255, b = 255, a = 255 },
+                                    label_color = { r = 255, g = 255, b = 255, a = 255 },
+                                    text = "Third",
+                                    -- border = true
+                                }                                   
                             }
                         },
                         {
-                            name = "main_stage_hamburger_iconbutton",
-                            type = "IconButton",
-                            x = 150,
-                            y = 8,
-                            width = 8;
-                            height = 8;
+                            name = "mainFrame_checkbox_1",
+                            type = "Checkbox",
+                            x = 305,
+                            y = 10,
+                            width = 145,    -- w: should work but doesnt
+                            height = 16,    -- h: should work but doesnt
                             color = { r = 255, g = 255, b = 255, a = 255 },
-                            icon_resource = "internal_icon_8x8", -- test icon resource name resolution
-                            -- icon_index = 54 -- this works
-                            -- icon_index = "hamburger" -- this works
-                            icon_index = IconIndex.Hamburger -- use dot form for numeric constant
-                        }
+                            label_color = { r = 255, g = 255, b = 255, a = 255 },
+                            font_resource = "internal_ttf",
+                            font_size = 10,
+                            text = "internal_ttf Checkbox",
+                            -- border = true
+                        },
+                        {
+                            name = "mainFrame_checkbox_2",
+                            type = "Checkbox",
+                            x = 305,
+                            y = 26,
+                            width = 145,    -- w: should work but doesnt
+                            height = 16,    -- h: should work but doesnt
+                            color = { r = 255, g = 255, b = 255, a = 255 },
+                            label_color = { r = 255, g = 255, b = 255, a = 255 },
+                            font_resource = "VarelaRound16",
+                            font_size = 10,
+                            text = "VarelaRound16 Checkbox",
+                            -- border = true
+                        },
+                        {
+                            name = "mainFrame_checkbox_3",
+                            type = "Checkbox",
+                            x = 305,
+                            y = 42,
+                            width = 145,    -- w: should work but doesnt
+                            height = 16,    -- h: should work but doesnt
+                            color = { r = 255, g = 255, b = 255, a = 255 },
+                            label_color = { r = 255, g = 255, b = 255, a = 255 },
+                            text = "font_8x8 Checkbox",
+                            -- border = true
+                        },                             
+                        {
+                            name = "mainFrame_radiobox_1",
+                            type = "Radiobox",
+                            x = 305,
+                            y = 56,
+                            width = 145,    -- w: should work but doesnt
+                            height = 16,    -- h: should work but doesnt
+                            color = { r = 255, g = 255, b = 255, a = 255 },
+                            label_color = { r = 255, g = 255, b = 255, a = 255 },
+                            font_resource = "internal_ttf",
+                            font_size = 10,
+                            text = "internal_ttf Radiobox",
+                            selected = true;
+                            -- border = true
+                        },
+                        {
+                            name = "mainFrame_radiobox_2",
+                            type = "Radiobox",
+                            x = 305,
+                            y = 72,
+                            width = 145,    -- w: should work but doesnt
+                            height = 16,    -- h: should work but doesnt
+                            color = { r = 255, g = 255, b = 255, a = 255 },
+                            label_color = { r = 255, g = 255, b = 255, a = 255 },
+                            font_resource = "VarelaRound16",
+                            font_size = 10,
+                            text = "VarelaRound16 Radiobox",
+                            -- border = true
+                        },
+                        {
+                            name = "mainFrame_radiobox_3",
+                            type = "Radiobox",
+                            x = 305,
+                            y = 88,
+                            width = 145,    -- w: should work but doesnt
+                            height = 16,    -- h: should work but doesnt
+                            color = { r = 255, g = 255, b = 255, a = 255 },
+                            label_color = { r = 255, g = 255, b = 255, a = 255 },
+                            text = "font_8x8 Radiobox",
+                            -- border = true
+                        }             
                     }
                 },
                 {
@@ -147,6 +243,19 @@ local config = {
                     label_color = { r = 255, g = 255, b = 255, a = 255 },
                     color = { r = 96, g = 32, b = 16, a = 255 }                    
                 },
+                {
+                    name = "main_stage_hamburger_iconbutton",
+                    type = "IconButton",
+                    x = 150,
+                    y = 8,
+                    width = 8;
+                    height = 8;
+                    color = { r = 255, g = 255, b = 255, a = 255 },
+                    icon_resource = "internal_icon_8x8", -- test icon resource name resolution
+                    -- icon_index = 54 -- this works
+                    -- icon_index = "hamburger" -- this works
+                    icon_index = IconIndex.Hamburger -- use dot form for numeric constant
+                },               
                 {
                     name = "redishBox",
                     type = "Box",

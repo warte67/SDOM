@@ -221,6 +221,26 @@ namespace SDOM
         }
     } // END: void Button::onEvent(const Event& event)
 
+    void Button::setText(const std::string& newText) 
+    {
+        if (text_ != newText)   setDirty(true);
+        text_ = newText;
+        // If the internal label exists, update it immediately
+        if (labelObject_.isValid())
+        {
+            auto lbl = labelObject_.as<Label>();
+            if (lbl)
+            {
+                // defensive: only call if Label implements setText
+                try {
+                    lbl->setText(text_);
+                } catch (...) { /* ignore if not available */ }
+            }
+        }
+    } // END: void Button::setText(const std::string& newText)
+
+
+
 
     // --- Lua Registration --- //
 
@@ -280,6 +300,29 @@ namespace SDOM
                 }
             ));
         }
+        
+        // expose 'text' property for Button -> maps to getText/setText
+        if (absent("text"))
+        {
+            handle.set("text", sol::property(
+                // getter
+                [](SDOM::DisplayHandle h) -> std::string {
+                    if (h.isValid()) {
+                        Button* b = dynamic_cast<Button*>(h.get());
+                        if (b) return b->getText();
+                    }
+                    return std::string();
+                },
+                // setter
+                [](SDOM::DisplayHandle h, const std::string& v) {
+                    if (h.isValid()) {
+                        Button* b = dynamic_cast<Button*>(h.get());
+                        if (b) b->setText(v);
+                    }
+                }
+            ));
+        }
+
 
         // --- additional Button-specific bindings can go here --- //
 

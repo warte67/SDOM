@@ -1,4 +1,4 @@
-// SDOM_Checkbox.cpp
+// SDOM_Radiobox.cpp
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
@@ -10,22 +10,22 @@
 #include <SDOM/SDOM_TruetypeFont.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
-#include <SDOM/SDOM_Checkbox.hpp>
+#include <SDOM/SDOM_Radiobox.hpp>
 
 
 
 namespace SDOM
 {
 
-    Checkbox::Checkbox(const InitStruct& init) : IPanelObject(init)
+    Radiobox::Radiobox(const InitStruct& init) : IPanelObject(init)
     {
         // std::cout << "Box constructed with InitStruct: " << getName() 
         //           << " at address: " << this << std::endl;
 
         if (init.type != TypeName) {
-            ERROR("Error: Checkbox constructed with incorrect type: " + init.type);
+            ERROR("Error: Radiobox constructed with incorrect type: " + init.type);
         }
-        // Checkbox Specific
+        // Radiobox Specific
         text_ = init.text;
         base_index_ = init.base_index;
         font_size_ = init.font_size; 
@@ -41,29 +41,29 @@ namespace SDOM
         icon_width_ = init.icon_width;
         icon_height_ = init.icon_height;
 
-        setTabEnabled(false); // Checkboxs are not tab-enabled by default
-        setClickable(true); // Checkboxs are not clickable by default
+        setTabEnabled(false); // Radioboxs are not tab-enabled by default
+        setClickable(true); // Radioboxs are not clickable by default
     }
 
 
-    Checkbox::Checkbox(const sol::table& config) : IPanelObject(config)
+    Radiobox::Radiobox(const sol::table& config) : IPanelObject(config)
     {
         // std::cout << "Box constructed with Lua config: " << getName() 
         //         << " at address: " << this << std::endl;            
 
         std::string type = config["type"].valid() ? config["type"].get<std::string>() : "";
 
-        // INFO("Checkbox::Checkbox(const sol::table& config) -- name: " << getName() 
+        // INFO("Radiobox::Radiobox(const sol::table& config) -- name: " << getName() 
         //         << " type: " << type << " typeName: " << TypeName << std::endl 
         // ); // END INFO()
 
         if (type != TypeName) {
-            ERROR("Error: Checkbox constructed with incorrect type: " + type);
+            ERROR("Error: Radiobox constructed with incorrect type: " + type);
         }
         
         InitStruct init;
 
-        // Apply Lua-provided text property to the Checkbox
+        // Apply Lua-provided text property to the Radiobox
         if (config["text"].valid()) {
             try {
                 text_ = config["text"].get<std::string>();
@@ -71,7 +71,7 @@ namespace SDOM
                 // defensive: ignore non-string values
             }
         }       
-        // Apply Lua-provided font properties to the Checkbox (accept multiple key variants).
+        // Apply Lua-provided font properties to the Radiobox (accept multiple key variants).
         // If a property is NOT present in the config, leave it as -1 to indicate
         // "unspecified" so the BitmapFont defaults helper can populate it.
         font_size_ = config["font_size"].valid() ? config["font_size"].get<int>() : init.font_size;
@@ -94,7 +94,7 @@ namespace SDOM
         }
         use_border_ = config["border"].valid() ? config["border"].get<bool>() : init.border;
 
-        // INFO("Checkbox::Checkbox() - font_size: " << font_size_ 
+        // INFO("Radiobox::Radiobox() - font_size: " << font_size_ 
         //         << " font_width: " << font_width_ 
         //         << " font_height: " << font_height_ 
         //         << " use_border: " << (use_border_ ? "true" : "false")
@@ -161,15 +161,15 @@ namespace SDOM
         } catch (...) { /* ignore malformed color tables */ }
 
         // non-lua configurable essential init values
-        base_index_ = init.base_index; // default to CheckboxUp
+        base_index_ = init.base_index; // default to RadioboxUp
         
-        setTabEnabled(false); // Checkboxs are not tab-enabled by default
-        setClickable(true); // Checkboxs are not clickable by default
+        setTabEnabled(false); // Radioboxs are not tab-enabled by default
+        setClickable(true); // Radioboxs are not clickable by default
     }
 
 
     // --- Virtual Methods --- //
-    bool Checkbox::onInit()
+    bool Radiobox::onInit()
     {
         // create the IconButton object
         if (!iconButtonObject_)
@@ -184,8 +184,8 @@ namespace SDOM
             init.height = 8;   
             init.isClickable = false;
             init.tabEnabled = false;
-            init.color = getColor(); // use the color of the Checkbox to color the icon
-            init.icon_index = isChecked_ ? IconIndex::Checkbox_Checked : IconIndex::Checkbox_Empty;
+            init.color = getColor(); // use the color of the Radiobox to color the icon
+            init.icon_index = isChecked_ ? IconIndex::Radiobox_Selected : IconIndex::Radiobox_Unselected;
             iconButtonObject_ = getFactory().create("IconButton", init);
             addChild(iconButtonObject_);
         }
@@ -231,11 +231,11 @@ namespace SDOM
 
             // Debug: report what we will pass into the Label so we can trace
             // whether defaults were applied correctly.
-            // INFO("Checkbox::onInit() - Label init metrics for '" + init.name + "': resource='" + init.resourceName + "' fontSize=" + std::to_string(init.fontSize) + " fontWidth=" + std::to_string(init.fontWidth) + " fontHeight=" + std::to_string(init.fontHeight));
+            // INFO("Radiobox::onInit() - Label init metrics for '" + init.name + "': resource='" + init.resourceName + "' fontSize=" + std::to_string(init.fontSize) + " fontWidth=" + std::to_string(init.fontWidth) + " fontHeight=" + std::to_string(init.fontHeight));
             labelObject_ = getFactory().create("Label", init);
             addChild(labelObject_);
         }
-        // center the icon vertically within the Checkbox height
+        // center the icon vertically within the Radiobox height
         if (iconButtonObject_.isValid())
         {
             IconButton* iconBtn = iconButtonObject_.as<IconButton>();
@@ -244,7 +244,7 @@ namespace SDOM
                 int iconY = getY() + (getHeight() / 2 - icon_height_ / 2);
                 iconBtn->setY(iconY);
                 // Ensure the child IconButton reflects the current checked state
-                iconBtn->setIconIndex(isChecked_ ? IconIndex::Checkbox_Checked : IconIndex::Checkbox_Empty);
+                iconBtn->setIconIndex(isChecked_ ? IconIndex::Radiobox_Selected : IconIndex::Radiobox_Unselected);
             }
         }
         if (labelObject_.isValid())
@@ -255,34 +255,34 @@ namespace SDOM
                 int labelY = getY() + (getHeight() / 2 - label->getHeight() / 2);
                 label->setY(labelY);
             }
-        }
+        }        
         return SUPER::onInit();
-    } // END: bool Checkbox::onInit()
+    } // END: bool Radiobox::onInit()
 
 
-    void Checkbox::onQuit()
+    void Radiobox::onQuit()
     {
         SUPER::onQuit();
-    } // END: void Checkbox::onQuit()
+    } // END: void Radiobox::onQuit()
 
 
-    void Checkbox::onRender()
+    void Radiobox::onRender()
     {
         // SUPER::onRender();
 
-        // // temporary: render a border around the bounds of the checkbox
+        // // temporary: render a border around the bounds of the Radiobox
         // SDL_FRect rect = { float(this->getX()), float(this->getY()), float(this->getWidth()), float(this->getHeight()) };
         // SDL_Color focusColor = { 255,255,255, 64 }; // Gray color for focus
         // SDL_SetRenderDrawColor(getRenderer(), focusColor.r, focusColor.g, focusColor.b, focusColor.a); // Border color
         // SDL_RenderRect(getRenderer(), &rect);
 
         Label* label = labelObject_.as<Label>();
-        if (!label) { ERROR("Error: Checkbox::onRender() - missing label object for: " + getName()); return; }
+        if (!label) { ERROR("Error: Radiobox::onRender() - missing label object for: " + getName()); return; }
 
         // Debug info: report presence of internal icon and label children
         try {
             std::ostringstream dbg;
-            dbg << "[DBG] Checkbox::onRender() - name='" << getName() << "' hasLabel=" << (label ? "yes" : "no");
+            dbg << "[DBG] Radiobox::onRender() - name='" << getName() << "' hasLabel=" << (label ? "yes" : "no");
             if (iconButtonObject_.isValid()) dbg << " iconChild='" << iconButtonObject_.getName() << "'";
             else dbg << " iconChild=none";
             LUA_INFO(dbg.str());
@@ -303,39 +303,46 @@ namespace SDOM
             SDL_RenderRect(getRenderer(), &rect);
         }
 
-    } // END: void Checkbox::onRender()
+    } // END: void Radiobox::onRender()
 
 
-    void Checkbox::onUpdate(float fElapsedTime)
+    void Radiobox::onUpdate(float fElapsedTime)
     {
-    } // END: void Checkbox::onUpdate(float fElapsedTime)
+    } // END: void Radiobox::onUpdate(float fElapsedTime)
 
 
-    void Checkbox::onEvent(const Event& event)
+    void Radiobox::onEvent(const Event& event)
     {
         // only target phase
         if (event.getPhase() != Event::Phase::Target) { return; }
         if (event.getType() == EventType::MouseClick) 
         { 
-            // isChecked_ = !isChecked_;
-            setChecked(!isChecked());
-            // dispatch appropriate events
-            // ...
-            // ToDo:  Need new EventTypes
-            //      EventType::Checked
-            //      EventType::Unchecked
-            //      EventType::Indeterminate (the third checkbox state)
+            // clear all sibblings first
+            DisplayHandle parent = getParent();
+            if (parent.isValid())
+            {
+                const auto& children = parent->getChildren();
+                for (const auto& child : children)
+                {
+                    if (!child.isValid()) continue;
+                    if (child->getType() != Radiobox::TypeName) continue;
+                    Radiobox* rb = child.as<Radiobox>();
+                    if (rb && rb->isChecked())
+                    { rb->setChecked(false); }
+                }   
+            }
+            // then mark this one checked
+            setChecked(true);
         }
+    } // END: void Radiobox::onEvent(const Event& event)
 
-    } // END: void Checkbox::onEvent(const Event& event)
-
-    bool Checkbox::isChecked() const
+    bool Radiobox::isChecked() const
     {
         return isChecked_;
     } // END: bool isChecked() const
 
 
-    void Checkbox::setChecked(bool checked)
+    void Radiobox::setChecked(bool checked)
     {
         if (isChecked_ == checked) return;   // no-op if unchanged
         // save the previous value and update to the new value
@@ -348,7 +355,7 @@ namespace SDOM
             IconButton* iconBtn = iconButtonObject_.as<IconButton>();
             if (iconBtn)
             {
-                iconBtn->setIconIndex(isChecked_ ? IconIndex::Checkbox_Checked : IconIndex::Checkbox_Empty);
+                iconBtn->setIconIndex(isChecked_ ? IconIndex::Radiobox_Selected : IconIndex::Radiobox_Unselected);
                 // mark child dirty so it redraws with new icon
                 iconBtn->setDirty(true);
             }
@@ -362,7 +369,7 @@ namespace SDOM
         DisplayHandle thisObj = getFactory().getDisplayObject(getName());
         if (!thisObj.isValid())
         {
-            ERROR("Error: Checkbox::setChecked() - cannot find self object for: " + getName());
+            ERROR("Error: Radiobox::setChecked() - cannot find self object for: " + getName());
             return;
         }
         auto stateChanged = std::make_unique<Event>(EventType::StateChanged, thisObj, getCore().getElapsedTime());
@@ -379,9 +386,9 @@ namespace SDOM
         // Dispatch the event to the event manager
         evtManager.addEvent(std::move(stateChanged));
 
-    } // END: void Checkbox::setChecked(bool checked)
+    } // END: void Radiobox::setChecked(bool checked)
 
-    void Checkbox::setText(const std::string& newText) 
+    void Radiobox::setText(const std::string& newText) 
     {
         if (text_ != newText)   setDirty(true);
         text_ = newText;
@@ -397,20 +404,21 @@ namespace SDOM
                 } catch (...) { /* ignore if not available */ }
             }
         }
-    } // END: void Checkbox::setText(const std::string& newText)
+    } // END: void Radiobox::setText(const std::string& newText)
+
 
 
 
     // --- Lua Registration --- //
 
-    void Checkbox::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    void Radiobox::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
         // Include inherited bindings first
         SUPER::_registerLuaBindings(typeName, lua);
 
         if (DEBUG_REGISTER_LUA)
         {
-            std::string typeNameLocal = "Checkbox";
+            std::string typeNameLocal = "Radiobox";
             std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
                     << typeName << CLR::RESET << std::endl;
@@ -426,7 +434,7 @@ namespace SDOM
             return !cur.valid() || cur == sol::lua_nil;
         };
 
-        // expose 'name' property for Checkbox (maps to getName / setName on the display object)
+        // expose 'name' property for Radiobox (maps to getName / setName on the display object)
         if (absent("name"))
         {
             handle.set("name", sol::property(
@@ -452,14 +460,14 @@ namespace SDOM
                 [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle 
                 {
                     if (!h.isValid()) return SDOM::DisplayHandle();
-                    // ensure this is a Checkbox before casting
-                    if (h->getType() != Checkbox::TypeName) return SDOM::DisplayHandle();
-                    Checkbox* btn = static_cast<Checkbox*>(h.get());
+                    // ensure this is a Radiobox before casting
+                    if (h->getType() != Radiobox::TypeName) return SDOM::DisplayHandle();
+                    Radiobox* btn = static_cast<Radiobox*>(h.get());
                     return btn->getLabelObject();
                 }
             ));
         }
-        
+
         // expose 'text' property for Button -> maps to getText/setText
         if (absent("text"))
         {
@@ -467,7 +475,7 @@ namespace SDOM
                 // getter
                 [](SDOM::DisplayHandle h) -> std::string {
                     if (h.isValid()) {
-                        Checkbox* b = dynamic_cast<Checkbox*>(h.get());
+                        Radiobox* b = dynamic_cast<Radiobox*>(h.get());
                         if (b) return b->getText();
                     }
                     return std::string();
@@ -475,16 +483,15 @@ namespace SDOM
                 // setter
                 [](SDOM::DisplayHandle h, const std::string& v) {
                     if (h.isValid()) {
-                        Checkbox* b = dynamic_cast<Checkbox*>(h.get());
+                        Radiobox* b = dynamic_cast<Radiobox*>(h.get());
                         if (b) b->setText(v);
                     }
                 }
             ));
         }
+        // --- additional Radiobox-specific bindings can go here --- //
 
-        // --- additional Checkbox-specific bindings can go here --- //
-
-    } // END: void Checkbox::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    } // END: void Radiobox::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 
 

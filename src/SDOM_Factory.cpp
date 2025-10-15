@@ -21,6 +21,7 @@
 #include <SDOM/SDOM_Group.hpp>
 #include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_Checkbox.hpp>
+#include <SDOM/SDOM_Radiobox.hpp>
 
 namespace SDOM
 {
@@ -224,6 +225,12 @@ namespace SDOM
         registerDomType("Checkbox", TypeCreators{
             Checkbox::CreateFromLua,
             Checkbox::CreateFromInitStruct
+        });
+
+        // register Radiobox
+        registerDomType("Radiobox", TypeCreators{
+            Radiobox::CreateFromLua,
+            Radiobox::CreateFromInitStruct
         });
 
         // register the IconButton

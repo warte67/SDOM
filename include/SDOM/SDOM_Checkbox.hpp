@@ -35,7 +35,7 @@ namespace SDOM
                 font_width = 8;         // default font width is 8
                 font_height = 8;        // default font height is 8
             }
-            IconIndex icon_index = IconIndex::Empty_Checkbox; 
+            IconIndex icon_index = IconIndex::Checkbox_Empty; 
             std::string text = "Checkbox"; // default Checkbox text
             int font_size = 8;          // default font size is 8
             SDL_Color label_color = {255, 255, 255, 255}; // default label color is white
@@ -70,6 +70,9 @@ namespace SDOM
         virtual void onEvent(const Event& event) override;  // Called when an event occurs
 
         DisplayHandle getLabelObject() const { return labelObject_; }
+        std::string getText() const { return text_; }   
+        void setText(const std::string& newText);
+        DisplayHandle getIconButtonObject() const { return iconButtonObject_; }
 
         bool isChecked() const;
         void setChecked(bool checked);
@@ -88,7 +91,7 @@ namespace SDOM
         SDL_Color label_color_ = {255, 255, 255, 255}; // default label color is white
         SDL_Color border_color_ = {0, 0, 0, 128};               // transparent
         DisplayHandle iconButtonObject_; // internal icon button object for checkbox icon
-        IconIndex icon_index_ = IconIndex::Empty_Checkbox;
+        IconIndex icon_index_ = IconIndex::Checkbox_Empty;
         int icon_width_ = 8;        // default icon width
         int icon_height_ = 8;       // default icon height
         

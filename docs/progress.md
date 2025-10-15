@@ -703,6 +703,24 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - `Checkbox` now composes an `IconButton` for the glyph; `setChecked()` updates the child icon index and queues a `StateChanged` event (payload includes previous/new state). Asset loading is handled by the Factory at creation so icons are ready before first render.
 
 ---
+## [October 15, 2025]
+- UI controls:
+  - Implemented `Radiobox` (type name: "Radiobox"). `onEvent()` clears sibling radioboxes then selects the clicked control (simple, DOM-style radio semantics). Decided not to add nullable/allow-unselect behavior for now.
+  - `Checkbox` now accepts multiple aliases for the checked state in Lua: `is_checked`, `checked`, `is_selected`, and `selected`.
+- Fonts & labels:
+  - Finalized `IFontObject` improvements: `applyBitmapFontDefaults(...)` fills missing `font_size`/`font_width`/`font_height` from a referenced `BitmapFont` asset.
+  - `Label` and label-creating parents (`Button`, `Group`) now detect font type (Bitmap vs Truetype), adopt the font's type/metrics, and preserve unspecified metrics so BitmapFont defaults apply correctly.
+  - Added `label_color` parsing/aliases and thread-safe metric resolution so external 8x12 bitmap fonts render at 8x12 without explicit per-control metrics.
+- Group label centering:
+  - Fixed Group label vertical placement: compute glyph height by font type (Bitmap sprite height or TrueType ascent), obtain panel icon height via `getIconHeight()`, and position the label so its vertical center aligns with the top-line center inside the icon glyphs.
+- Button & Lua bindings:
+  - Button Lua ctor applies `text` and font properties (`font_size`/`font_width`/`font_height`/`font_resource` aliases).
+  - Exposed `getLabelObject()` to Lua as read-only `label` on the `DisplayHandle`.
+- Cleanups & verification:
+  - Removed temporary debug spam, left gated INFO diagnostics for troubleshooting.
+  - Rebuilt examples/test and ran unit tests — build succeeded and relevant tests passed.
+
+---
 ## Next Steps:
 - Implement `Radiobox` and ensure only one sibbling can be set at a time. Dispatch Events.
 - Investigate what I presume are z_order based bugs. Objects are not rendering in proper order. Not sure when this started.
