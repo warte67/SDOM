@@ -1,23 +1,20 @@
-// SDOM_TriStateCheckbox.cpp
+// SDOM_TristateButton.cpp
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Factory.hpp>
-// #include <SDOM/SDOM_EventType.hpp>
-#include <SDOM/SDOM_Event.hpp>
-#include <SDOM/SDOM_EventManager.hpp>
-#include <SDOM/SDOM_IFontObject.hpp>
-#include <SDOM/SDOM_TruetypeFont.hpp>
-#include <SDOM/SDOM_BitmapFont.hpp>
+#include <SDOM/SDOM_IDisplayObject.hpp>
+#include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_Label.hpp>
-#include <SDOM/SDOM_TriStateCheckbox.hpp>
+#include <SDOM/SDOM_IconIndex.hpp>
+#include <SDOM/SDOM_IconButton.hpp>
 
-
+#include <SDOM/SDOM_TristateButton.hpp>
 
 namespace SDOM
 {
 
-    TriStateCheckbox::TriStateCheckbox(const InitStruct& init) : IPanelObject(init)
+    TristateButton::TristateButton(const InitStruct& init) : IDisplayObject(init)
     {
         // std::cout << "Box constructed with InitStruct: " << getName() 
         //           << " at address: " << this << std::endl;
@@ -25,100 +22,118 @@ namespace SDOM
         if (init.type != TypeName) {
             ERROR("Error: TriStateCheckbox constructed with incorrect type: " + init.type);
         }
-        // TriStateCheckbox Specific
+
+        // from IDisplayObject (this should already be set by IDisplayObject constructor; verify and remove)
+        setName(init.name);
+        setType(init.type);
+        setColor(init.color);
+        setTabEnabled(init.tabEnabled);
+        setClickable(init.isClickable);
+
+        // TristateButton Initialization Properties
         text_ = init.text;
-        base_index_ = init.base_index;
-        font_size_ = init.font_size; 
-        font_width_ = init.font_width;
-        font_height_ = init.font_height;
-        font_resource_ = init.font_resource;
-        icon_resource_ = init.icon_resource;
-        use_border_ = init.border;
+        icon_index_ = init.icon_index;
+        font_size_ = init.font_size;
         label_color_ = init.label_color;
         border_color_ = init.border_color;
         state_ = init.state;
+        icon_resource_ = init.icon_resource;
         icon_width_ = init.icon_width;
         icon_height_ = init.icon_height;
+        font_resource_ = init.font_resource; 
+        font_width_ = init.font_width;
+        font_height_ = init.font_height;
+        use_border_ = init.border;
 
-        setTabEnabled(false); // TriStateCheckboxs are not tab-enabled by default
-        setClickable(true); // TriStateCheckboxs are not clickable by default
-    }
+    } // END: TristateButton::TristateButton(const InitStruct& init)
 
-
-    TriStateCheckbox::TriStateCheckbox(const sol::table& config) : IPanelObject(config)
+    TristateButton::TristateButton(const sol::table& config) : IDisplayObject(config)
     {
         // std::cout << "Box constructed with Lua config: " << getName() 
         //         << " at address: " << this << std::endl;            
 
-        std::string type = config["type"].valid() ? config["type"].get<std::string>() : "";
-
-        // INFO("TriStateCheckbox::TriStateCheckbox(const sol::table& config) -- name: " << getName() 
-        //         << " type: " << type << " typeName: " << TypeName << std::endl 
-        // ); // END INFO()
-
-        if (type != TypeName) {
-            ERROR("Error: TriStateCheckbox constructed with incorrect type: " + type);
-        }
-        
         InitStruct init;
 
-        // Apply Lua-provided text property to the TriStateCheckbox
-        if (config["text"].valid()) {
-            try {
-                text_ = config["text"].get<std::string>();
-            } catch (...) {
-                // defensive: ignore non-string values
+        std::string type = config["type"].valid() ? config["type"].get<std::string>() : init.type;
+        if (type != TypeName) {
+            ERROR("Error: TriStateCheckbox constructed with incorrect type: " + type);
+        } 
+
+        // Lambda Helpers
+        auto get_string_if_valid = [](const sol::table& tbl, const char* key) -> std::string {
+            if (tbl[key].valid()) {
+                try {
+                    return tbl[key].get<std::string>();
+                } catch (...) {
+                    // ignore non-string values
+                }
             }
-        }       
+            return {};
+        };  
+        auto get_string_with_fallback = [&](const sol::table& tbl, const char* key1, const char* key2) -> std::string {
+            std::string v = get_string_if_valid(tbl, key1);
+            if (!v.empty()) return v;
+            return get_string_if_valid(tbl, key2);
+        };
+        // Apply Lua-provided strings
+        text_ = get_string_if_valid(config, "text");
+        font_resource_ = get_string_with_fallback(config, "font_resource", "font_resource_name");
+        icon_resource_ = get_string_with_fallback(config, "icon_resource", "icon_resource_name");
+
         // Apply Lua-provided font properties to the TriStateCheckbox (accept multiple key variants).
-        // If a property is NOT present in the config, leave it as -1 to indicate
-        // "unspecified" so the BitmapFont defaults helper can populate it.
         font_size_ = config["font_size"].valid() ? config["font_size"].get<int>() : init.font_size;
         font_width_ = config["font_width"].valid() ? config["font_width"].get<int>() : init.font_width;
         font_height_ = config["font_height"].valid() ? config["font_height"].get<int>() : init.font_height;
         icon_width_ = config["icon_width"].valid() ? config["icon_width"].get<int>() : init.icon_width;
         icon_height_ = config["icon_height"].valid() ? config["icon_height"].get<int>() : init.icon_height;
+        use_border_ = config["border"].valid() ? config["border"].get<bool>() : init.border;
+
+        // icon_index - accept int or string aliases (default to Checkbox_X if invalid)
+        if (config["icon_index"].valid()) {
+            try {
+                sol::object o = config["icon_index"];
+                if (o.get_type() == sol::type::number) {
+                    icon_index_ = static_cast<IconIndex>(o.as<int>());
+                } else if (o.get_type() == sol::type::string) {
+                    std::string s = o.as<std::string>();
+                    for (auto &c : s) c = static_cast<char>(std::tolower(c));
+                    // If you have a string-to-icon-index map, use it here:
+                    auto opt = icon_index_from_name(s); // e.g., returns std::optional<int>
+                    if (opt) {
+                        icon_index_ = *opt;
+                    } else {
+                        icon_index_ = IconIndex::Checkbox_X; // fallback default
+                    }
+                }
+            } catch (...) {
+                icon_index_ = IconIndex::Checkbox_X; // fallback on error
+            }
+        } else {
+            icon_index_ = IconIndex::Checkbox_X; // fallback if not provided
+        }
 
         // parse state allowing int or string aliases
         if (config["state"].valid()) {
             try {
                 sol::object o = config["state"];
                 if (o.get_type() == sol::type::number) {
-                    state_ = static_cast<TriState>(o.as<int>());
+                    buttonState_ = static_cast<ButtonState>(o.as<int>());
                 } else if (o.get_type() == sol::type::string) {
                     std::string s = o.as<std::string>();
                     for (auto &c : s) c = static_cast<char>(std::tolower(c));
-                    if (s == "unchecked" || s == "empty" || s == "0") state_ = TriState::Unchecked;
-                    else if (s == "checked" || s == "set" || s == "1") state_ = TriState::Checked;
-                    else if (s == "indeterminate" || s == "mixed" || s == "2") state_ = TriState::Indeterminate;
+                    auto opt = button_state_from_name(s);
+                    if (opt) {
+                        buttonState_ = *opt;
+                    } else if (s == "0") {
+                        buttonState_ = ButtonState::Inactive;
+                    } else if (s == "1") {
+                        buttonState_ = ButtonState::Active;
+                    } else if (s == "2") {
+                        buttonState_ = ButtonState::Mixed;
+                    }
                 }
             } catch(...) { /* ignore malformed values */ }
         }
-
-        use_border_ = config["border"].valid() ? config["border"].get<bool>() : init.border;
-
-        // INFO("TriStateCheckbox::TriStateCheckbox() - font_size: " << font_size_ 
-        //         << " font_width: " << font_width_ 
-        //         << " font_height: " << font_height_ 
-        //         << " use_border: " << (use_border_ ? "true" : "false")
-        // );
-
-        // font resource name - accept either 'font_resource' or 'font_resource_name'
-        if (config["font_resource"].valid()) {
-            try { font_resource_ = config["font_resource"].get<std::string>(); }
-            catch (...) { /* ignore */ }
-        } else if (config["font_resource_name"].valid()) {
-            try { font_resource_ = config["font_resource_name"].get<std::string>(); }
-            catch (...) { /* ignore */ }
-        }     
-        // icon resource name - accept either 'icon_resource' or 'icon_resource_name'
-        if (config["icon_resource"].valid()) {
-            try { icon_resource_ = config["icon_resource"].get<std::string>(); }
-            catch (...) { /* ignore */ }
-        } else if (config["icon_resource_name"].valid()) {
-            try { icon_resource_ = config["icon_resource_name"].get<std::string>(); }
-            catch (...) { /* ignore */ }
-        }     
 
         // label color - accept snake_case/table { r=.., g=.., b=.., a=.. } or camelCase 'labelColor'
         try {
@@ -162,18 +177,14 @@ namespace SDOM
                 border_color_.a = bc["a"].get_or((int)border_color_.a);
             }
         } catch (...) { /* ignore malformed color tables */ }
-
-        // non-lua configurable essential init values
-        base_index_ = init.base_index; // default to TriStateCheckboxUp
-        
-        setTabEnabled(false); // TriStateCheckboxs are not tab-enabled by default
-        setClickable(true); // TriStateCheckboxs are not clickable by default
-    }
+    } // END: TristateButton::TristateButton(const sol::table& config)
 
 
-    // --- Virtual Methods --- //
-    bool TriStateCheckbox::onInit()
-    {
+
+    // --- Lifecycle & Core Virtuals --- //
+
+    bool TristateButton::onInit() 
+    { 
         // create the IconButton object
         if (!iconButtonObject_)
         {
@@ -264,36 +275,47 @@ namespace SDOM
             }
         }
         return SUPER::onInit();
-    } // END: bool TriStateCheckbox::onInit()
+
+    } // END: bool TristateButton::onInit()
 
 
-    void TriStateCheckbox::onQuit()
+    void TristateButton::onQuit() 
     {
         SUPER::onQuit();
-    } // END: void TriStateCheckbox::onQuit()
+    } // END: void TristateButton::onQuit()
 
 
-    void TriStateCheckbox::onRender()
+    void TristateButton::onUpdate(float) 
     {
-        // SUPER::onRender();
 
-        // // temporary: render a border around the bounds of the TriStateCheckbox
-        // SDL_FRect rect = { float(this->getX()), float(this->getY()), float(this->getWidth()), float(this->getHeight()) };
-        // SDL_Color focusColor = { 255,255,255, 64 }; // Gray color for focus
-        // SDL_SetRenderDrawColor(getRenderer(), focusColor.r, focusColor.g, focusColor.b, focusColor.a); // Border color
-        // SDL_RenderRect(getRenderer(), &rect);
+    } // END: void TristateButton::onUpdate(float) 
 
+
+    void TristateButton::onEvent(const Event& event) 
+    {
+        // only target phase
+        if (event.getPhase() != Event::Phase::Target) { return; }
+        if (event.getType() == EventType::MouseClick) 
+        { 
+            setState(static_cast<ButtonState>((static_cast<int>(getState()) + 1) % 3));
+        }
+
+    } // END: void TristateButton::onEvent(const Event& event)
+
+
+    void TristateButton::onRender() 
+    {
         Label* label = labelObject_.as<Label>();
         if (!label) { ERROR("Error: TriStateCheckbox::onRender() - missing label object for: " + getName()); return; }
 
-        // Debug info: report presence of internal icon and label children
-        try {
-            std::ostringstream dbg;
-            dbg << "[DBG] TriStateCheckbox::onRender() - name='" << getName() << "' hasLabel=" << (label ? "yes" : "no");
-            if (iconButtonObject_.isValid()) dbg << " iconChild='" << iconButtonObject_.getName() << "'";
-            else dbg << " iconChild=none";
-            LUA_INFO(dbg.str());
-        } catch(...) {}
+        // // Debug info: report presence of internal icon and label children
+        // try {
+        //     std::ostringstream dbg;
+        //     dbg << "[DBG] TriStateCheckbox::onRender() - name='" << getName() << "' hasLabel=" << (label ? "yes" : "no");
+        //     if (iconButtonObject_.isValid()) dbg << " iconChild='" << iconButtonObject_.getName() << "'";
+        //     else dbg << " iconChild=none";
+        //     LUA_INFO(dbg.str());
+        // } catch(...) {}
 
         // use the border settings from the Label Object
         FontStyle& fontStyle = label->getDefaultStyle();
@@ -310,80 +332,91 @@ namespace SDOM
             SDL_RenderRect(getRenderer(), &rect);
         }
 
-    } // END: void TriStateCheckbox::onRender()
+    } // END: void TristateButton::onRender()
 
 
-    void TriStateCheckbox::onUpdate(float fElapsedTime)
+
+    // --- Virtual State Accessors (From IButtonObject) --- //
+
+    ButtonState TristateButton::getState() const 
+    { 
+        return buttonState_; 
+    } // END: virtual ButtonState getState() const
+
+
+    void TristateButton::setState(ButtonState state) 
+    { 
+        onStateChanged(buttonState_, state); 
+        // dispatch event
+        queue_event(EventType::StateChanged, [this, state](Event& ev) {
+            ev.setPayloadValue("old_state", static_cast<int>(buttonState_));
+            ev.setPayloadValue("new_state", static_cast<int>(state));
+            ev.setPayloadValue("buttonName", getName());
+        });
+        buttonState_ = state;
+    } // END: virtual void setState(ButtonState state)
+
+
+    // --- Public Accessors --- //
+
+    SpriteSheet* TristateButton::getIconSpriteSheet() const
     {
-        (void)fElapsedTime;
-    } // END: void TriStateCheckbox::onUpdate(float fElapsedTime)
-
-
-    void TriStateCheckbox::onEvent(const Event& event)
-    {
-        // only target phase
-        if (event.getPhase() != Event::Phase::Target) { return; }
-        if (event.getType() == EventType::MouseClick) 
-        { 
-            setState(static_cast<TriState>((static_cast<int>(getState()) + 1) % 3));
-        }
-
-    } // END: void TriStateCheckbox::onEvent(const Event& event)
-
-    TriState TriStateCheckbox::getState() const
-    {
-        return state_;
-    } // END: TriState TriStateCheckbox::getState() const
-
-
-    void TriStateCheckbox::setState(TriState state)
-    {
-        if (state_ == state) return;   // no-op if unchanged
-        // save the previous value and update to the new value
-        TriState previous = state_;
-        state_ = state;
-
-        // Update internal IconButton child to use the new icon index immediately
-        if (iconButtonObject_.isValid())
+        // Defensive: check if icon_resource_ is set
+        if (icon_resource_.empty()) 
         {
-            IconButton* iconBtn = iconButtonObject_.as<IconButton>();
-            if (iconBtn)
-            {
-                int state = static_cast<int>(state_);
-                int iconIndex = state + static_cast<int>(IconIndex::Checkbox_Empty);
-                iconBtn->setIconIndex(static_cast<IconIndex>(iconIndex));
-                // mark child dirty so it redraws with new icon
-                iconBtn->setDirty(true);
-            }
+            DEBUG_LOG("TristateButton::getIconSpriteSheet() - icon_resource_ is empty.");
+            return nullptr;
         }
-
-        // Mark for redraw / layout update as appropriate
-        setDirty(true); // or whatever your IDisplayObject API uses
-
-        // Dispatch EventType::StateChanged
-        EventManager& evtManager = getCore().getEventManager();
-        DisplayHandle thisObj = getFactory().getDisplayObject(getName());
-        if (!thisObj.isValid())
+        // Use Factory or Core to fetch the SpriteSheet asset by name
+        AssetHandle ss_handle = getFactory().getAssetObject(icon_resource_);
+        if (!ss_handle.isValid()) 
         {
-            ERROR("Error: TriStateCheckbox::setChecked() - cannot find self object for: " + getName());
-            return;
+            DEBUG_LOG("TristateButton::getIconSpriteSheet() - Failed to get asset object.");
+            return nullptr;
         }
-        auto stateChanged = std::make_unique<Event>(EventType::StateChanged, thisObj, getCore().getElapsedTime());
-        DisplayHandle target = getFactory().getDisplayObject(getName());
-        stateChanged->setTarget(target);
-        stateChanged->setElapsedTime(getCore().getElapsedTime()); // Set elapsed time for the event
-
-        // optional convenience payload
-        stateChanged->setPayloadValue("previous_state", previous);
-        stateChanged->setPayloadValue("state", state_);
-
-        // Dispatch the event to the event manager
-        evtManager.addEvent(std::move(stateChanged));
-
-    } // END: void TriStateCheckbox::setChecked(bool checked)
+        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(ss_handle.get());
+        return ss;       
+    } // END: SpriteSheet* TristateButton::getIconSpriteSheet() const;
 
 
-    void TriStateCheckbox::setText(const std::string& newText) 
+    Label* TristateButton::getLabel() const
+    {
+        // Defensive: check if labelObject_ is valid
+        if (font_resource_.empty()) 
+        {
+            DEBUG_LOG("TristateButton::getLabel() - font_resource_ is empty.");
+            return nullptr;
+        }
+        // Use Factory or Core to fetch the Font asset by name
+        AssetHandle font_handle = getFactory().getAssetObject(font_resource_);
+        if (!font_handle.isValid()) 
+        {
+            DEBUG_LOG("TristateButton::getLabel() - Failed to get font asset object.");
+            return nullptr;
+        }
+        Label* lbl = dynamic_cast<Label*>(font_handle.get());
+        if (!lbl) 
+        {
+            DEBUG_LOG("TristateButton::getLabel() - Label asset is not a valid Label object.");
+            return nullptr;
+        }
+        return lbl;
+    } // END: Label* TristateButton::getLabel() const;
+
+
+    
+    // --- Protected Virtual Methods (From IButtonObject) --- //
+
+    void TristateButton::onStateChanged(ButtonState, ButtonState) 
+    {
+        // ...
+    } // END: void TristateButton::onStateChanged(ButtonState oldState, ButtonState newState)
+
+
+
+    // --- Public Mutators --- //
+
+    void TristateButton::setText(const std::string& newText) 
     {
         if (text_ != newText)   setDirty(true);
         text_ = newText;
@@ -399,14 +432,17 @@ namespace SDOM
                 } catch (...) { /* ignore if not available */ }
             }
         }
-    } // END: void TriStateCheckbox::setText(const std::string& newText)
+    } // END: void TristateButton::setText(const std::string& newText)
 
 
 
     // --- Lua Registration --- //
 
-    void TriStateCheckbox::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    void TristateButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua) 
     {
+        // Include IButtonObject bindings first
+        IButtonObject::registerLuaBindings(lua);
+
         // Include inherited bindings first
         SUPER::_registerLuaBindings(typeName, lua);
 
@@ -455,8 +491,8 @@ namespace SDOM
                 {
                     if (!h.isValid()) return SDOM::DisplayHandle();
                     // ensure this is a TriStateCheckbox before casting
-                    if (h->getType() != TriStateCheckbox::TypeName) return SDOM::DisplayHandle();
-                    TriStateCheckbox* btn = static_cast<TriStateCheckbox*>(h.get());
+                    if (h->getType() != TristateButton::TypeName) return SDOM::DisplayHandle();
+                    TristateButton* btn = static_cast<TristateButton*>(h.get());
                     return btn->getLabelObject();
                 }
             ));
@@ -469,7 +505,7 @@ namespace SDOM
                 // getter
                 [](SDOM::DisplayHandle h) -> std::string {
                     if (h.isValid()) {
-                        TriStateCheckbox* b = dynamic_cast<TriStateCheckbox*>(h.get());
+                        TristateButton* b = dynamic_cast<TristateButton*>(h.get());
                         if (b) return b->getText();
                     }
                     return std::string();
@@ -477,17 +513,12 @@ namespace SDOM
                 // setter
                 [](SDOM::DisplayHandle h, const std::string& v) {
                     if (h.isValid()) {
-                        TriStateCheckbox* b = dynamic_cast<TriStateCheckbox*>(h.get());
+                        TristateButton* b = dynamic_cast<TristateButton*>(h.get());
                         if (b) b->setText(v);
                     }
                 }
             ));
         }
-
-        // --- additional TriStateCheckbox-specific bindings can go here --- //
-
-    } // END: void TriStateCheckbox::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-
-
+    }
 
 } // END: namespace SDOM

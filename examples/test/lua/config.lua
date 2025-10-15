@@ -229,7 +229,8 @@ local config = {
                         },
                         {
                             name = "mainFrame_tristate_1",
-                            type = "TriStateCheckbox",
+                            -- type = "TriStateCheckbox",
+                            type = "TristateButton",
                             x = 305,
                             y = 104,
                             width = 145,    -- w: should work but doesnt

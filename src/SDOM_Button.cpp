@@ -181,7 +181,7 @@ namespace SDOM
             // std::cout << "Button " << getName() << " is hovered." << std::endl;
             if (last_base_index_ != base_index_)
             {
-                setState(ButtonState::Hovered);
+                setMouseHovered(true);
                 last_base_index_ = base_index_;
                 setDirty();
             }
@@ -192,7 +192,7 @@ namespace SDOM
             // std::cout << "Button " << getName() << " is not hovered." << std::endl;
             if (last_base_index_ != base_index_)
             {
-                setState(ButtonState::Normal);
+                setMouseHovered(false);
                 last_base_index_ = base_index_;
                 setDirty();
             }
@@ -214,7 +214,7 @@ namespace SDOM
             // std::cout << "Button " << getName() << " is released." << std::endl;
             if (last_base_index_ != base_index_)
             {
-                setState(ButtonState::Hovered);
+                setState(ButtonState::Released);
                 last_base_index_ = base_index_;
                 setDirty();
             }
@@ -246,6 +246,9 @@ namespace SDOM
 
     void Button::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
+        // Include IButtonObject bindings first
+        IButtonObject::registerLuaBindings(lua);
+
         // Include inherited bindings first
         SUPER::_registerLuaBindings(typeName, lua);
 

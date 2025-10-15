@@ -254,7 +254,8 @@ Notes & test ideas:
         void removeEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false);
         void triggerEventListeners(Event& event, bool useCapture);
         bool hasEventListeners(const EventType& type, bool useCapture) const;
-
+        void queue_event(const EventType& type, std::function<void(Event&)> init_payload);
+        
         // --- Hierarchy Management --- //
         void addChild(DisplayHandle child, bool useWorld = false, int worldX = 0, int worldY = 0);
         DisplayHandle getChild(std::string name) const;

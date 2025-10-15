@@ -22,7 +22,8 @@
 #include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_Checkbox.hpp>
 #include <SDOM/SDOM_Radiobox.hpp>
-#include <SDOM/SDOM_TriStateCheckbox.hpp>
+#include <SDOM/SDOM_TristateButton.hpp>
+#include <SDOM/SDOM_TriStateCheckbox.hpp>  // DEPRECATED, use SDOM_TristateButton
 
 namespace SDOM
 {
@@ -240,7 +241,13 @@ namespace SDOM
             Radiobox::CreateFromInitStruct
         });
 
-        // register the TriStateCheckbox
+        // register the TristateButton
+        registerDomType("TristateButton", TypeCreators{
+            TristateButton::CreateFromLua,
+            TristateButton::CreateFromInitStruct
+        });
+
+        // register the TriStateCheckbox (DEPRECATED, use TristateButton instead)
         registerDomType("TriStateCheckbox", TypeCreators{
             TriStateCheckbox::CreateFromLua,
             TriStateCheckbox::CreateFromInitStruct

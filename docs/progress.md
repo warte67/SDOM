@@ -709,6 +709,14 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Implemented `Radiobox` (type name: "Radiobox"). `onEvent()` clears sibling radioboxes then selects the clicked control (simple, DOM-style radio semantics). Decided not to add nullable/allow-unselect behavior for now.
   - `Checkbox` now accepts multiple aliases for the checked state in Lua: `is_checked`, `checked`, `is_selected`, and `selected`.
   - Exposed `text` property for `Button`, `Radiobox`, and `Checkbox` to Lua so label text can be read/modified from scripts.
+  - **IButtonObject refactor:**
+    - Refactored `IButtonObject` to serve as a shared base for button-like controls (Button, IconButton, Checkbox, Radiobox, TristateCheckbox).
+    - Centralized logical state management using the `ButtonState` enum with canonical names and aliases (e.g., `Inactive`, `Active`, `Mixed`, `Disabled` and their synonyms).
+    - Added mouse-hovered and key-focused flags to the interface for consistent UI state tracking.
+    - Implemented static, idempotent `registerLuaBindings(sol::state_view lua)` method to expose `ButtonState` constants, conversion helpers, and DisplayHandle-level accessors (`getState`, `setState`, `isMouseHovered`, `setMouseHovered`, `isKeyFocused`, `setKeyFocused`) to Lua.
+    - Ensured Lua bindings are reentrant and safe for multiple inheritance scenarios (e.g., Checkbox and Radiobox inheriting from TristateCheckbox).
+    - Updated derived controls to call `IButtonObject::registerLuaBindings(lua)` in their own Lua registration methods.
+    - All button-like controls now use a unified state machine and expose consistent Lua APIs for state and interaction.
 - **Fonts & labels:**
   - Finalized `IFontObject` improvements: `applyBitmapFontDefaults(...)` fills missing `font_size`/`font_width`/`font_height` from a referenced `BitmapFont` asset.
   - `Label` and label-creating parents (`Button`, `Group`) now detect font type (Bitmap vs Truetype), adopt the font's type/metrics, and preserve unspecified metrics so BitmapFont defaults apply correctly.
@@ -726,6 +734,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Made `examples/test/repeat_tests.sh` robust: captures program output when logs are not saved, safely handles missing log files, and reliably prints failing run output.
   - Verified stability with long runs: repeated harness exercised (200 runs) with 0 failures locally.
 
+  
 ---
 ## Next Steps:
 - Better utilize the IButtonObject interface across button-like controls:

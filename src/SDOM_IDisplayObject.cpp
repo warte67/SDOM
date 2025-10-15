@@ -39,6 +39,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Utils.hpp>
@@ -607,6 +608,19 @@ namespace SDOM
         return !it->second.empty();
     }
 
+    
+    void IDisplayObject::queue_event(const EventType& type, std::function<void(Event&)> init_payload)
+    {
+        EventManager& em = getCore().getEventManager();
+        DisplayHandle self = getFactory().getDisplayObject(getName());
+        auto ev = std::make_unique<Event>(type, self, getCore().getElapsedTime());
+        ev->setTarget(self);
+        if (init_payload) {
+            try { init_payload(*ev); } catch (...) { /* swallow payload init errors */ }
+        }
+        em.addEvent(std::move(ev));
+    } 
+     
 
     int IDisplayObject::getMaxPriority() const
     {
