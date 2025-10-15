@@ -5,6 +5,7 @@
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_IButtonObject.hpp>
 #include <SDOM/SDOM_IconIndex.hpp>
+#include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_Label.hpp>
 
@@ -83,6 +84,7 @@ public:
     DisplayHandle getLabelObject() const { return labelObject_; }
     std::string getText() const { return text_; }   
     DisplayHandle getIconButtonObject() const { return iconButtonObject_; }
+    IconButton* getIconButton() const;
     SpriteSheet* getIconSpriteSheet() const;
     Label* getLabel() const;
     std::string getFontResource() const { return font_resource_; }

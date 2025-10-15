@@ -75,10 +75,13 @@ namespace SDOM
             if (!v.empty()) return v;
             return get_string_if_valid(tbl, key2);
         };
-        // Apply Lua-provided strings
-        text_ = get_string_if_valid(config, "text");
-        font_resource_ = get_string_with_fallback(config, "font_resource", "font_resource_name");
-        icon_resource_ = get_string_with_fallback(config, "icon_resource", "icon_resource_name");
+    // Apply Lua-provided strings (fall back to InitStruct defaults when absent)
+    text_ = get_string_if_valid(config, "text");
+    font_resource_ = get_string_with_fallback(config, "font_resource", "font_resource_name");
+    icon_resource_ = get_string_with_fallback(config, "icon_resource", "icon_resource_name");
+    // If the helpers returned empty (no config provided), fall back to InitStruct defaults
+    if (font_resource_.empty()) font_resource_ = init.font_resource;
+    if (icon_resource_.empty()) icon_resource_ = init.icon_resource;
 
         // Apply Lua-provided font properties to the TriStateCheckbox (accept multiple key variants).
         font_size_ = config["font_size"].valid() ? config["font_size"].get<int>() : init.font_size;
@@ -298,6 +301,8 @@ namespace SDOM
         if (event.getType() == EventType::MouseClick) 
         { 
             setState(static_cast<ButtonState>((static_cast<int>(getState()) + 1) % 3));
+
+            INFO("TristateButton::onEvent() - MouseClick on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
         }
 
     } // END: void TristateButton::onEvent(const Event& event)
@@ -354,10 +359,47 @@ namespace SDOM
             ev.setPayloadValue("buttonName", getName());
         });
         buttonState_ = state;
+        IconButton* ib = getIconButton();
+        if (ib)
+        {
+            int stateInt = static_cast<int>(state_);
+            int iconIndex = stateInt + static_cast<int>(IconIndex::Checkbox_Empty);
+            ib->setIconIndex(static_cast<IconIndex>(iconIndex));
+            setDirty(true);
+        }
+        else
+        {
+            ERROR("Error: TriStateCheckbox::setState() - missing internal IconButton for: " + getName());
+        }
     } // END: virtual void setState(ButtonState state)
 
 
     // --- Public Accessors --- //
+
+    IconButton* TristateButton::getIconButton() const
+    {
+        // Defensive: check if icon_resource) is set
+        if (icon_resource_.empty()) 
+        {
+            DEBUG_LOG("TristateButton::getIconButton() - icon_resource_ is empty.");
+            return nullptr;
+        }
+        // Use Factory or Core to fetch the IconButton asset by name
+        DisplayHandle handle = getFactory().getDisplayObject(icon_resource_);
+        if (!handle.isValid()) 
+        {
+            DEBUG_LOG("TristateButton::getIconButton() - Failed to get display object.");
+            return nullptr;
+        }
+        IconButton* ib = dynamic_cast<IconButton*>(handle.get());
+        if (!ib) 
+        {
+            DEBUG_LOG("TristateButton::getIconButton() - Display object is not a valid IconButton.");
+            return nullptr;
+        }
+        return ib;
+    } // END: IconButton* getIconButton() const
+
 
     SpriteSheet* TristateButton::getIconSpriteSheet() const
     {
