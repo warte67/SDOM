@@ -267,7 +267,7 @@ namespace SDOM
             // ToDo:  Need new EventTypes
             //      EventType::Checked
             //      EventType::Unchecked
-            //      EventType::Indefinate (the third checkbox state)
+            //      EventType::Indeterminate (the third checkbox state)
         }
 
     } // END: void Checkbox::onEvent(const Event& event)
