@@ -98,7 +98,6 @@ namespace SDOM
         static EventType ClipboardCopy;     // when content is copied to the clipboard
         static EventType ClipboardPaste;    // when content is pasted from the clipboard
 
-
         // Main DisplayHandle event types (NEW EventTypes to be added)
         
         // Application lifecycle event types

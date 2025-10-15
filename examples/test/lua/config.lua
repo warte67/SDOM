@@ -111,12 +111,25 @@ local config = {
                                     y = 10,
                                     width = 130,    -- w: should work but doesnt
                                     height = 12,    -- h: should work but doesnt
-                                    color = { r = 255, g = 255, b = 255, a = 128 },
+                                    color = { r = 255, g = 255, b = 255, a = 255 },
                                     label_color = { r = 255, g = 255, b = 255, a = 255 },
                                     text = "Checkbox",
                                     border = false
                                 }
                             }
+                        },
+                        {
+                            name = "main_stage_hamburger_iconbutton",
+                            type = "IconButton",
+                            x = 150,
+                            y = 8,
+                            width = 8;
+                            height = 8;
+                            color = { r = 255, g = 255, b = 255, a = 255 },
+                            icon_resource = "internal_icon_8x8", -- test icon resource name resolution
+                            -- icon_index = 54 -- this works
+                            -- icon_index = "hamburger" -- this works
+                            icon_index = IconIndex:Hamburger --this doesn't yet work
                         }
                     }
                 },

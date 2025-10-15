@@ -54,7 +54,19 @@ namespace SDOM
     {
         // Constructor implementation
         useCapture = true; // Default to using capture phase
+
+        // Ensure payload is a valid Lua table so callers can safely set payload values
+        try {
+            // Attempt to acquire the Core-managed Lua state and create an empty table
+            sol::state_view sv = SDOM::getLua();
+            payload = sv.create_table();
+        } catch (...) {
+            // Non-fatal: if Lua isn't available yet, leave payload in its default state
+            // and warn so debugging is easier.
+            WARNING("Event: unable to initialize Lua payload table (Lua state not available yet)");
+        }
     }
+
 
     // virtual methods
     bool Event::onInit()

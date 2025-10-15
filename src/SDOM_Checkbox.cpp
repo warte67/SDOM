@@ -1,8 +1,11 @@
 // SDOM_Checkbox.cpp
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 // #include <SDOM/SDOM_EventType.hpp>
+#include <SDOM/SDOM_Event.hpp>
+#include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
 #include <SDOM/SDOM_TruetypeFont.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
@@ -261,7 +264,8 @@ namespace SDOM
         if (event.getPhase() != Event::Phase::Target) { return; }
         if (event.getType() == EventType::MouseClick) 
         { 
-            isChecked_ = !isChecked_;
+            // isChecked_ = !isChecked_;
+            setChecked(!isChecked());
             // dispatch appropriate events
             // ...
             // ToDo:  Need new EventTypes
@@ -271,6 +275,41 @@ namespace SDOM
         }
 
     } // END: void Checkbox::onEvent(const Event& event)
+
+    void Checkbox::setChecked(bool checked)
+    {
+        if (isChecked_ == checked) return;   // no-op if unchanged
+        // save the previous value and update to the new value
+        bool previous = isChecked_;
+        isChecked_ = checked;
+
+        // Mark for redraw / layout update as appropriate
+        setDirty(true); // or whatever your IDisplayObject API uses
+
+        // Dispatch EventType::StateChanged
+        EventManager& evtManager = getCore().getEventManager();
+        DisplayHandle thisObj = getFactory().getDisplayObject(getName());
+        if (!thisObj.isValid())
+        {
+            ERROR("Error: Checkbox::setChecked() - cannot find self object for: " + getName());
+            return;
+        }
+        auto stateChanged = std::make_unique<Event>(EventType::StateChanged, thisObj, getCore().getElapsedTime());
+        DisplayHandle target = getFactory().getDisplayObject(getName());
+        stateChanged->setTarget(target);
+        stateChanged->setElapsedTime(getCore().getElapsedTime()); // Set elapsed time for the event
+
+        // optional convenience payload
+        stateChanged->setPayloadValue("previous_checked", previous);
+        stateChanged->setPayloadValue("checked", isChecked_);
+
+        // Dispatch the event to the event manager
+        evtManager.addEvent(std::move(stateChanged));
+
+    } // END: void Checkbox::setChecked(bool checked)
+
+
+
 
 
     // --- Lua Registration --- //

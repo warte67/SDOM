@@ -33,11 +33,14 @@ namespace SDOM
 
         defaultStyle_.alignment = init.alignment;
 
-        // defaultStyle_.foregroundColor = init.foregroundColor;
-        // defaultStyle_.backgroundColor = init.backgroundColor;
-        // defaultStyle_.borderColor = init.borderColor;
-        // defaultStyle_.outlineColor = init.outlineColor;
-        // defaultStyle_.dropshadowColor = init.dropshadowColor;
+        // Propagate color defaults from IDisplayObject (moved there) into the
+        // Label's runtime default style so escapes and reset() see the same
+        // configured defaults.
+        defaultStyle_.foregroundColor = foregroundColor_;
+        defaultStyle_.backgroundColor = backgroundColor_;
+        defaultStyle_.borderColor = borderColor_;
+        defaultStyle_.outlineColor = outlineColor_;
+        defaultStyle_.dropshadowColor = dropshadowColor_;
 
         defaultStyle_.fontWidth = fontWidth_;
         defaultStyle_.fontHeight = fontHeight_;
@@ -167,11 +170,15 @@ namespace SDOM
 
         // Style defaults
         defaultStyle_.alignment = stringToLabelAlign_.at(normalizeAnchorString(get_str("alignment", "top_left")));
-        // defaultStyle_.foregroundColor = read_color("foreground_color", defaultStyle_.foregroundColor);
-        // defaultStyle_.backgroundColor = read_color("background_color", defaultStyle_.backgroundColor);
-        // defaultStyle_.borderColor = read_color("border_color", defaultStyle_.borderColor);
-        // defaultStyle_.outlineColor = read_color("outline_color", defaultStyle_.outlineColor);
-        // defaultStyle_.dropshadowColor = read_color("dropshadow_color", defaultStyle_.dropshadowColor);
+    // Colors are configured on the base IDisplayObject and already copied
+    // into the protected color_* members by the IDisplayObject constructor.
+    // Propagate those into the Label's default style here so escapes and
+    // reset() operate against the intended defaults.
+    defaultStyle_.foregroundColor = foregroundColor_;
+    defaultStyle_.backgroundColor = backgroundColor_;
+    defaultStyle_.borderColor = borderColor_;
+    defaultStyle_.outlineColor = outlineColor_;
+    defaultStyle_.dropshadowColor = dropshadowColor_;
 
         defaultStyle_.bold = get_bool("bold", defaultStyle_.bold);
         defaultStyle_.italic = get_bool("italic", defaultStyle_.italic);

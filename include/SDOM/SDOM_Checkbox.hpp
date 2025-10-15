@@ -1,6 +1,7 @@
 // SDOM_Checkbox.hpp
 #pragma once
 
+#include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_IButtonObject.hpp>
 #include <SDOM/SDOM_IPanelObject.hpp>
 
@@ -26,8 +27,7 @@ namespace SDOM
                 color = {96, 0, 96, 255};   // Checkbox color
                 tabEnabled = false;     // checkboxes are not tab-enabled by default
                 isClickable = true;     // checkboxes are clickable by default
-                // from IPanelObject
-                base_index = PanelBaseIndex::Empty_Checkbox; 
+
                 icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
                 icon_width = 8;         // default icon width is 8
                 icon_height = 8;        // default icon height is 8
@@ -35,6 +35,7 @@ namespace SDOM
                 font_width = 8;         // default font width is 8
                 font_height = 8;        // default font height is 8
             }
+            IconIndex icon_index = IconIndex::Empty_Checkbox; 
             std::string text = "Checkbox"; // default Checkbox text
             int font_size = 8;          // default font size is 8
             SDL_Color label_color = {255, 255, 255, 255}; // default label color is white
@@ -70,6 +71,10 @@ namespace SDOM
 
         DisplayHandle getLabelObject() const { return labelObject_; }
 
+        bool isChecked() const { return isChecked_; }
+        void setChecked(bool checked);
+
+
     protected:
         DisplayHandle labelObject_; // internal label object for group text
         std::string text_;     // initialized label text
@@ -82,7 +87,8 @@ namespace SDOM
         bool isChecked_  = false;
         SDL_Color label_color_ = {255, 255, 255, 255}; // default label color is white
         SDL_Color border_color_ = {0, 0, 0, 128};               // transparent
-
+        IconIndex icon_index_ = IconIndex::Empty_Checkbox;
+        
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
 

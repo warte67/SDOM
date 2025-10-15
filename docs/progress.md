@@ -694,11 +694,12 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Misc:
   - Centralized keyboard focus pulsing rectangle in `Core` update/render logic.
   - Removed temporary diagnostics after verification; left gated INFO logs for troubleshooting.
+  - Moved the various colors from `Label` to `IDisplayObject` as they are useful in places other than `Label`.
 
 ---
 ## Next Steps:
+- Move Individual Indices to a new `IconButton` object. This should be a very simply button object that simply displays an Icon according to a specific index and responds by dispatching proper events when clicked as appropriate.
 - Investigate what I presume are z_order based bugs. Objects are not rendering in proper order. Not sure when this started.
-- Move the various colors from `Label` to `IDisplayObject` as they are useful in places other than `Label`.
 - Add more EventTypes to support `Checkbox` and `Radiobox`.
 - refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test1()` → `Label_test1()`).
   - Refactor `SpriteSheet_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]

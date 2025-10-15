@@ -19,6 +19,7 @@
 #include <SDOM/SDOM_Frame.hpp>
 #include <SDOM/SDOM_Button.hpp>
 #include <SDOM/SDOM_Group.hpp>
+#include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_Checkbox.hpp>
 
 namespace SDOM
@@ -188,6 +189,7 @@ namespace SDOM
             AssetHandle bmpFont = createAsset("BitmapFont", init);
             (void)bmpFont;
         }
+
         // register the Label display object
         registerDomType("Label", TypeCreators{
             Label::CreateFromLua,
@@ -222,6 +224,12 @@ namespace SDOM
         registerDomType("Checkbox", TypeCreators{
             Checkbox::CreateFromLua,
             Checkbox::CreateFromInitStruct
+        });
+
+        // register the IconButton
+        registerDomType("IconButton", TypeCreators{
+            IconButton::CreateFromLua,
+            IconButton::CreateFromInitStruct
         });
 
         // return initialized state
