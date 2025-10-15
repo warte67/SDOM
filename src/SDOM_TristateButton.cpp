@@ -32,7 +32,9 @@ namespace SDOM
 
         // TristateButton Initialization Properties
         text_ = init.text;
-        icon_index_ = init.icon_index;
+        // icon_index_ = init.icon_index;
+        state_ = init.state;
+        iconIndexForState(state_); // set icon index based on initial state
         font_size_ = init.font_size;
         label_color_ = init.label_color;
         border_color_ = init.border_color;
@@ -75,13 +77,15 @@ namespace SDOM
             if (!v.empty()) return v;
             return get_string_if_valid(tbl, key2);
         };
-    // Apply Lua-provided strings (fall back to InitStruct defaults when absent)
-    text_ = get_string_if_valid(config, "text");
-    font_resource_ = get_string_with_fallback(config, "font_resource", "font_resource_name");
-    icon_resource_ = get_string_with_fallback(config, "icon_resource", "icon_resource_name");
-    // If the helpers returned empty (no config provided), fall back to InitStruct defaults
-    if (font_resource_.empty()) font_resource_ = init.font_resource;
-    if (icon_resource_.empty()) icon_resource_ = init.icon_resource;
+
+        // Apply Lua-provided strings (fall back to InitStruct defaults when absent)
+        text_ = get_string_if_valid(config, "text");
+        font_resource_ = get_string_with_fallback(config, "font_resource", "font_resource_name");
+        icon_resource_ = get_string_with_fallback(config, "icon_resource", "icon_resource_name");
+
+        // If the helpers returned empty (no config provided), fall back to InitStruct defaults
+        if (font_resource_.empty()) font_resource_ = init.font_resource;
+        if (icon_resource_.empty()) icon_resource_ = init.icon_resource;
 
         // Apply Lua-provided font properties to the TriStateCheckbox (accept multiple key variants).
         font_size_ = config["font_size"].valid() ? config["font_size"].get<int>() : init.font_size;
@@ -91,52 +95,53 @@ namespace SDOM
         icon_height_ = config["icon_height"].valid() ? config["icon_height"].get<int>() : init.icon_height;
         use_border_ = config["border"].valid() ? config["border"].get<bool>() : init.border;
 
-        // icon_index - accept int or string aliases (default to Checkbox_X if invalid)
-        if (config["icon_index"].valid()) {
-            try {
-                sol::object o = config["icon_index"];
-                if (o.get_type() == sol::type::number) {
-                    icon_index_ = static_cast<IconIndex>(o.as<int>());
-                } else if (o.get_type() == sol::type::string) {
-                    std::string s = o.as<std::string>();
-                    for (auto &c : s) c = static_cast<char>(std::tolower(c));
-                    // If you have a string-to-icon-index map, use it here:
-                    auto opt = icon_index_from_name(s); // e.g., returns std::optional<int>
-                    if (opt) {
-                        icon_index_ = *opt;
-                    } else {
-                        icon_index_ = IconIndex::Checkbox_X; // fallback default
-                    }
-                }
-            } catch (...) {
-                icon_index_ = IconIndex::Checkbox_X; // fallback on error
-            }
-        } else {
-            icon_index_ = IconIndex::Checkbox_X; // fallback if not provided
-        }
+        // // icon_index - accept int or string aliases (default to Checkbox_X if invalid)
+        // if (config["icon_index"].valid()) {
+        //     try {
+        //         sol::object o = config["icon_index"];
+        //         if (o.get_type() == sol::type::number) {
+        //             icon_index_ = static_cast<IconIndex>(o.as<int>());
+        //         } else if (o.get_type() == sol::type::string) {
+        //             std::string s = o.as<std::string>();
+        //             for (auto &c : s) c = static_cast<char>(std::tolower(c));
+        //             // If you have a string-to-icon-index map, use it here:
+        //             auto opt = icon_index_from_name(s); // e.g., returns std::optional<int>
+        //             if (opt) {
+        //                 icon_index_ = *opt;
+        //             } else {
+        //                 icon_index_ = IconIndex::Checkbox_X; // fallback default
+        //             }
+        //         }
+        //     } catch (...) {
+        //         icon_index_ = IconIndex::Checkbox_X; // fallback on error
+        //     }
+        // } else {
+        //     icon_index_ = IconIndex::Checkbox_X; // fallback if not provided
+        // }
 
         // parse state allowing int or string aliases
         if (config["state"].valid()) {
             try {
                 sol::object o = config["state"];
                 if (o.get_type() == sol::type::number) {
-                    buttonState_ = static_cast<ButtonState>(o.as<int>());
+                    state_ = static_cast<ButtonState>(o.as<int>());
                 } else if (o.get_type() == sol::type::string) {
                     std::string s = o.as<std::string>();
                     for (auto &c : s) c = static_cast<char>(std::tolower(c));
                     auto opt = button_state_from_name(s);
                     if (opt) {
-                        buttonState_ = *opt;
+                        state_ = *opt;
                     } else if (s == "0") {
-                        buttonState_ = ButtonState::Inactive;
+                        state_ = ButtonState::Inactive;
                     } else if (s == "1") {
-                        buttonState_ = ButtonState::Active;
+                        state_ = ButtonState::Active;
                     } else if (s == "2") {
-                        buttonState_ = ButtonState::Mixed;
+                        state_ = ButtonState::Mixed;
                     }
                 }
             } catch(...) { /* ignore malformed values */ }
         }
+        iconIndexForState(state_); // set icon index based on initial state
 
         // label color - accept snake_case/table { r=.., g=.., b=.., a=.. } or camelCase 'labelColor'
         try {
@@ -301,8 +306,7 @@ namespace SDOM
         if (event.getType() == EventType::MouseClick) 
         { 
             setState(static_cast<ButtonState>((static_cast<int>(getState()) + 1) % 3));
-
-            INFO("TristateButton::onEvent() - MouseClick on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
+            // INFO("TristateButton::onEvent() - MouseClick on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
         }
 
     } // END: void TristateButton::onEvent(const Event& event)
@@ -359,17 +363,31 @@ namespace SDOM
             ev.setPayloadValue("buttonName", getName());
         });
         buttonState_ = state;
-        IconButton* ib = getIconButton();
+        // Update internal icon button if present. Prefer the internal child handle
+        // created during onInit(); otherwise, try to resolve the conventional
+        // child name '<thisname>_iconbutton' as a fallback.
+        IconButton* ib = nullptr;
+        if (iconButtonObject_.isValid()) {
+            ib = iconButtonObject_.as<IconButton>();
+        } else {
+            // fallback: try to find the child by the conventional name
+            std::string childName = getName() + "_iconbutton";
+            DisplayHandle h = getFactory().getDisplayObject(childName);
+            if (h.isValid()) ib = dynamic_cast<IconButton*>(h.get());
+        }
+
         if (ib)
         {
-            int stateInt = static_cast<int>(state_);
+            int stateInt = static_cast<int>(state);
             int iconIndex = stateInt + static_cast<int>(IconIndex::Checkbox_Empty);
             ib->setIconIndex(static_cast<IconIndex>(iconIndex));
             setDirty(true);
         }
         else
         {
-            ERROR("Error: TriStateCheckbox::setState() - missing internal IconButton for: " + getName());
+            // degrade gracefully: log debug instead of throwing an error so that
+            // callers (including Factory/Init events) won't abort the program.
+            DEBUG_LOG("TristateButton::setState() - internal IconButton not found for: " + getName());
         }
     } // END: virtual void setState(ButtonState state)
 
@@ -378,26 +396,17 @@ namespace SDOM
 
     IconButton* TristateButton::getIconButton() const
     {
-        // Defensive: check if icon_resource) is set
-        if (icon_resource_.empty()) 
-        {
-            DEBUG_LOG("TristateButton::getIconButton() - icon_resource_ is empty.");
-            return nullptr;
+        // Prefer the internal child handle created during onInit()
+        if (iconButtonObject_.isValid()) {
+            return iconButtonObject_.as<IconButton>();
         }
-        // Use Factory or Core to fetch the IconButton asset by name
-        DisplayHandle handle = getFactory().getDisplayObject(icon_resource_);
-        if (!handle.isValid()) 
-        {
-            DEBUG_LOG("TristateButton::getIconButton() - Failed to get display object.");
-            return nullptr;
+        // Fallback: try the conventional child name '<thisname>_iconbutton'
+        std::string childName = getName() + "_iconbutton";
+        DisplayHandle h = getFactory().getDisplayObject(childName);
+        if (h.isValid()) {
+            return dynamic_cast<IconButton*>(h.get());
         }
-        IconButton* ib = dynamic_cast<IconButton*>(handle.get());
-        if (!ib) 
-        {
-            DEBUG_LOG("TristateButton::getIconButton() - Display object is not a valid IconButton.");
-            return nullptr;
-        }
-        return ib;
+        return nullptr;
     } // END: IconButton* getIconButton() const
 
 
@@ -453,6 +462,18 @@ namespace SDOM
     {
         // ...
     } // END: void TristateButton::onStateChanged(ButtonState oldState, ButtonState newState)
+
+    IconIndex TristateButton::iconIndexForState(ButtonState state) const
+    {
+        switch (state) {
+            case ButtonState::Inactive:   return IconIndex::Checkbox_Empty;
+            case ButtonState::Active:     return IconIndex::Checkbox_Checked;
+            case ButtonState::Mixed:      return IconIndex::Checkbox_X;
+            default:                      return IconIndex::Checkbox_Empty;
+        }
+    } // END: IconIndex TristateButton::iconIndexForState(ButtonState state) const
+
+
 
 
 

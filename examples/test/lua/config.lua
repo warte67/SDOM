@@ -239,6 +239,7 @@ local config = {
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
                             font_resource = "VarelaRound16",
                             font_size = 10,
+                            state = "Checked", -- "Unchecked", "Checked", "Indeterminate"
                             text = "VarelaRound16 TriStateCheckbox",
                             -- border = true
                         },                        

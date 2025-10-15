@@ -37,9 +37,9 @@ public:
         int font_size = 8;          // default font size is 8
         SDL_Color label_color = {0, 255, 255, 255}; // default label color is white
         SDL_Color border_color = {0, 0, 0, 128};               // transparent
-        ButtonState state = ButtonState::Indeterminate;     // default to Indeterminate
+        ButtonState state = ButtonState::Unchecked;
         std::string icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
-        IconIndex icon_index = IconIndex::Checkbox_X;
+        // IconIndex icon_index = IconIndex::Checkbox_Empty;
         int icon_width = 8;
         int icon_height = 8;
         std::string font_resource = "internal_font_8x8"; 
@@ -106,6 +106,7 @@ public:
 protected:
     // --- Protected Virtual Methods (From IButtonObject) --- //
     virtual void onStateChanged(ButtonState oldState, ButtonState newState) override;
+    virtual IconIndex iconIndexForState(ButtonState state) const override;
 
     // --- Data Members --- //
     DisplayHandle labelObject_; // internal label object for group text
@@ -116,11 +117,11 @@ protected:
     int font_width_ = 8;       // default font width
     int font_height_ = 8;      // default font height
     bool use_border_ = false;
-    ButtonState state_  = ButtonState::Indeterminate; // current state
+    ButtonState state_  = ButtonState::Unchecked; // current state
     SDL_Color label_color_ = {255, 255, 255, 255}; // default label color is white
     SDL_Color border_color_ = {0, 0, 0, 128};               // transparent
     DisplayHandle iconButtonObject_; // internal icon button object for TriStateCheckbox icon
-    IconIndex icon_index_ = IconIndex::Checkbox_X;
+    IconIndex icon_index_ = IconIndex::Checkbox_Empty;
     int icon_width_ = 8;        // default icon width
     int icon_height_ = 8;       // default icon height    
     
