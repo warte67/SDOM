@@ -192,6 +192,13 @@ Notes & test ideas:
             float width = 0.0f;
             float height = 0.0f;
             SDL_Color color = {255, 0, 255, 255};
+
+            SDL_Color foregroundColor = {255, 255, 255, 255};   // white
+            SDL_Color backgroundColor = {255, 255, 255, 128};   // transparent white
+            SDL_Color borderColor = {0, 0, 0, 128};             // transparent black
+            SDL_Color outlineColor = {0, 0, 0, 255};            // black
+            SDL_Color dropshadowColor = {0, 0, 0, 128};         // semi-transparent black
+
             AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;
             AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;
             AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;
@@ -361,6 +368,13 @@ Notes & test ideas:
         std::string type_;  // Type identifier (e.g., "Button", "Panel", etc.)
         bool bIsDirty_ = false;
         SDL_Color color_ = {255, 255, 255, 255};
+
+        SDL_Color foregroundColor_ = {255, 255, 255, 255};   // white
+        SDL_Color backgroundColor_ = {255, 255, 255, 128};   // transparent
+        SDL_Color borderColor_ = {0, 0, 0, 128};             // transparent
+        SDL_Color outlineColor_ = {0, 0, 0, 255};            // black
+        SDL_Color dropshadowColor_ = {0, 0, 0, 128};         // semi-transparent black
+        
         AnchorPoint anchorTop_ = AnchorPoint::TOP_LEFT;
         AnchorPoint anchorLeft_ = AnchorPoint::TOP_LEFT;
         AnchorPoint anchorBottom_ = AnchorPoint::TOP_LEFT;

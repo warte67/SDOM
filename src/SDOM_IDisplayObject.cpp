@@ -56,6 +56,13 @@ namespace SDOM
     {
         name_ = init.name;
         color_ = init.color;
+
+        foregroundColor_ = init.foregroundColor;
+        backgroundColor_ = init.backgroundColor;
+        borderColor_ = init.borderColor;
+        outlineColor_ = init.outlineColor;
+        dropshadowColor_ = init.dropshadowColor;
+
         z_order_ = init.z_order;
         priority_ = init.priority;
         isClickable_ = init.isClickable;
@@ -103,10 +110,6 @@ namespace SDOM
             } catch(...) {}
             return d;
         };
-        auto get_bool = [&](const char* k, bool d = false) -> bool 
-        {
-            return config[k].valid() ? config[k].get<bool>() : d;
-        };
         auto read_color = [&](const char* k, SDL_Color d = {255,0,255,255}) -> SDL_Color 
         {
             if (!config[k].valid()) return d;
@@ -125,7 +128,11 @@ namespace SDOM
                 if (t[4].valid()) c.a = (Uint8)t[4].get<int>();
             }
             return c;
-        };        
+        };
+        auto get_bool = [&](const char* k, bool d = false) -> bool 
+        {
+            return config[k].valid() ? config[k].get<bool>() : d;
+        };  
 
         // --- Required Properties --- //
         name_ = config["name"].get_or(std::string(TypeName));
@@ -152,6 +159,12 @@ namespace SDOM
 
         // set color
         color_ = read_color("color", init_default.color);
+
+        foregroundColor_ = read_color("foreground_color", init_default.foregroundColor);
+        backgroundColor_ = read_color("background_color", init_default.backgroundColor);
+        borderColor_ = read_color("border_color", init_default.borderColor);
+        outlineColor_ = read_color("outline_color", init_default.outlineColor);
+        dropshadowColor_ = read_color("dropshadow_color", init_default.dropshadowColor);
 
         // --- Optional Properties --- //
         setAnchorLeft(  stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_left", 

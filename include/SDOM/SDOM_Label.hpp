@@ -75,11 +75,13 @@ namespace SDOM
             int fontWidth = 8;          // for BitmapFont only (-1 to use fontSize)
             int fontHeight = 8;         // for BitmapFont only (-1 to use fontSize)
             LabelAlign alignment = LabelAlign::TOP_LEFT;        // Text alignment (default: top-left)
-            SDL_Color foregroundColor = {255, 255, 255, 255};   // white
-            SDL_Color backgroundColor = {0, 0, 0, 0};           // transparent
-            SDL_Color borderColor = {0, 0, 0, 0};               // transparent
-            SDL_Color outlineColor = {0, 0, 0, 255};            // black
-            SDL_Color dropshadowColor = {0, 0, 0, 128};         // semi-transparent black
+
+            // SDL_Color foregroundColor = {255, 255, 255, 255};   // white
+            // SDL_Color backgroundColor = {255, 255, 255, 128};   // transparent
+            // SDL_Color borderColor = {0, 0, 0, 128};             // transparent
+            // SDL_Color outlineColor = {0, 0, 0, 255};            // black
+            // SDL_Color dropshadowColor = {0, 0, 0, 128};         // semi-transparent black
+            
             bool bold = false;          // enable bold text
             bool italic = false;        // enable italic text
             bool underline = false;     // enable underline text

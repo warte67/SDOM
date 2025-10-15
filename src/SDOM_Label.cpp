@@ -32,11 +32,13 @@ namespace SDOM
         if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : 8);
 
         defaultStyle_.alignment = init.alignment;
-        defaultStyle_.foregroundColor = init.foregroundColor;
-        defaultStyle_.backgroundColor = init.backgroundColor;
-        defaultStyle_.borderColor = init.borderColor;
-        defaultStyle_.outlineColor = init.outlineColor;
-        defaultStyle_.dropshadowColor = init.dropshadowColor;
+
+        // defaultStyle_.foregroundColor = init.foregroundColor;
+        // defaultStyle_.backgroundColor = init.backgroundColor;
+        // defaultStyle_.borderColor = init.borderColor;
+        // defaultStyle_.outlineColor = init.outlineColor;
+        // defaultStyle_.dropshadowColor = init.dropshadowColor;
+
         defaultStyle_.fontWidth = fontWidth_;
         defaultStyle_.fontHeight = fontHeight_;
         defaultStyle_.bold = init.bold;
@@ -126,25 +128,25 @@ namespace SDOM
         {
             return config[k].valid() ? config[k].get<bool>() : d;
         };
-        auto read_color = [&](const char* k, SDL_Color d = {255,0,255,255}) -> SDL_Color 
-        {
-            if (!config[k].valid()) return d;
-            sol::table t = config[k];
-            SDL_Color c = d;
-            if (t["r"].valid()) c.r = (Uint8)t["r"].get<int>();
-            if (t["g"].valid()) c.g = (Uint8)t["g"].get<int>();
-            if (t["b"].valid()) c.b = (Uint8)t["b"].get<int>();
-            if (t["a"].valid()) c.a = (Uint8)t["a"].get<int>();
-            // array-style [r,g,b,a]
-            if (!t["r"].valid() && t[1].valid()) 
-            {
-                c.r = (Uint8)t[1].get<int>();
-                if (t[2].valid()) c.g = (Uint8)t[2].get<int>();
-                if (t[3].valid()) c.b = (Uint8)t[3].get<int>();
-                if (t[4].valid()) c.a = (Uint8)t[4].get<int>();
-            }
-            return c;
-        };
+        // auto read_color = [&](const char* k, SDL_Color d = {255,0,255,255}) -> SDL_Color 
+        // {
+        //     if (!config[k].valid()) return d;
+        //     sol::table t = config[k];
+        //     SDL_Color c = d;
+        //     if (t["r"].valid()) c.r = (Uint8)t["r"].get<int>();
+        //     if (t["g"].valid()) c.g = (Uint8)t["g"].get<int>();
+        //     if (t["b"].valid()) c.b = (Uint8)t["b"].get<int>();
+        //     if (t["a"].valid()) c.a = (Uint8)t["a"].get<int>();
+        //     // array-style [r,g,b,a]
+        //     if (!t["r"].valid() && t[1].valid()) 
+        //     {
+        //         c.r = (Uint8)t[1].get<int>();
+        //         if (t[2].valid()) c.g = (Uint8)t[2].get<int>();
+        //         if (t[3].valid()) c.b = (Uint8)t[3].get<int>();
+        //         if (t[4].valid()) c.a = (Uint8)t[4].get<int>();
+        //     }
+        //     return c;
+        // };
 
         // --- Initialized Label Fields --- //
         text_ = get_str("text", init.text);
@@ -165,11 +167,11 @@ namespace SDOM
 
         // Style defaults
         defaultStyle_.alignment = stringToLabelAlign_.at(normalizeAnchorString(get_str("alignment", "top_left")));
-        defaultStyle_.foregroundColor = read_color("foreground_color", defaultStyle_.foregroundColor);
-        defaultStyle_.backgroundColor = read_color("background_color", defaultStyle_.backgroundColor);
-        defaultStyle_.borderColor = read_color("border_color", defaultStyle_.borderColor);
-        defaultStyle_.outlineColor = read_color("outline_color", defaultStyle_.outlineColor);
-        defaultStyle_.dropshadowColor = read_color("dropshadow_color", defaultStyle_.dropshadowColor);
+        // defaultStyle_.foregroundColor = read_color("foreground_color", defaultStyle_.foregroundColor);
+        // defaultStyle_.backgroundColor = read_color("background_color", defaultStyle_.backgroundColor);
+        // defaultStyle_.borderColor = read_color("border_color", defaultStyle_.borderColor);
+        // defaultStyle_.outlineColor = read_color("outline_color", defaultStyle_.outlineColor);
+        // defaultStyle_.dropshadowColor = read_color("dropshadow_color", defaultStyle_.dropshadowColor);
 
         defaultStyle_.bold = get_bool("bold", defaultStyle_.bold);
         defaultStyle_.italic = get_bool("italic", defaultStyle_.italic);
@@ -758,11 +760,11 @@ namespace SDOM
                         };
 
                         std::unordered_map<std::string, SDL_Color*> colorTargets = {
-                            { "fgnd",       &currentStyle.foregroundColor },
-                            { "bgnd",       &currentStyle.backgroundColor },
-                            { "border",     &currentStyle.borderColor },
-                            { "outline",    &currentStyle.outlineColor },
-                            { "shadow",     &currentStyle.dropshadowColor }
+                            { "fgnd",       &foregroundColor_ },
+                            { "bgnd",       &backgroundColor_ },
+                            { "border",     &borderColor_ },
+                            { "outline",    &outlineColor_ },
+                            { "shadow",     &dropshadowColor_ }
                         };
 
                         // [pad=WxH] or [padding=WxH]
