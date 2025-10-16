@@ -704,6 +704,11 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## [October 15, 2025]
+- **Library Maintenance**
+    - Cleaned up both system and local installs of the SDOM API library.
+    - Removed deprecated headers and binaries from `/usr/include/SDOM`, `/usr/local/include/SDOM`, and `/home/jay/.local/include/SDOM`.
+    - Rebuilt and reinstalled the library to ensure only current headers and binaries are present.
+    - Fully removed the deprecated `TriStateCheckbox` object; it has been replaced by the new `TristateButton` implementation.
 - **UI controls:**
   - Implemented `TriStateCheckbox` (type name: "TristateCheckbox"). `onEvent()` cycles through states (unchecked → checked → indeterminate → unchecked) and queues a `StateChanged` event with previous/new state in the payload.
   - Implemented `Radiobox` (type name: "Radiobox"). `onEvent()` clears sibling radioboxes then selects the clicked control (simple, DOM-style radio semantics). Decided not to add nullable/allow-unselect behavior for now.

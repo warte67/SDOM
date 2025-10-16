@@ -391,8 +391,9 @@ namespace SDOM
 
         if (ib)
         {
-            int stateInt = static_cast<int>(state);
-            int iconIndex = stateInt + static_cast<int>(IconIndex::Checkbox_Empty);
+            // int stateInt = static_cast<int>(state);
+            // int iconIndex = stateInt + static_cast<int>(IconIndex::Checkbox_Empty);
+            int iconIndex = static_cast<int>(iconIndexForState(state));
             ib->setIconIndex(static_cast<IconIndex>(iconIndex));
             setDirty(true);
         }

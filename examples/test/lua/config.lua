@@ -148,7 +148,7 @@ local config = {
                         },
                         {
                             name = "mainFrame_checkbox_1",
-                            type = "Checkbox",
+                            type = "CheckButton",
                             x = 305,
                             y = 10,
                             width = 145,    -- w: should work but doesnt
@@ -229,7 +229,6 @@ local config = {
                         },
                         {
                             name = "mainFrame_tristate_1",
-                            -- type = "TriStateCheckbox",
                             type = "TristateButton",
                             x = 305,
                             y = 104,
@@ -239,9 +238,9 @@ local config = {
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
                             font_resource = "VarelaRound16",
                             font_size = 10,
-                            state = "checked", -- "unchecked", "checked", "indeterminate"
+                            -- state = "mixed", -- "unchecked", "checked", "indeterminate"
                             -- state  = 1, -- 0=Unchecked, 1=Checked, 2=Indeterminate
-                            text = "VarelaRound16 TriStateCheckbox",
+                            text = "VarelaRound16 TristateButton",
                             -- border = true
                         },                        
                     }
