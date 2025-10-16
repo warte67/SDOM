@@ -706,7 +706,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 ## [October 15, 2025]
 - **Library Maintenance**
   - Cleaned up both system and local installs of the SDOM API library.
-  - Removed deprecated headers and binaries from `/usr/include/SDOM`, `/usr/local/include/SDOM`, and `/home/jay/.local/include/SDOM`.
+  - Removed deprecated headers and binaries from `/usr/include/SDOM`, `/usr/local/include/SDOM`, and $HOME..`'.local/include/SDOM`.
   - Rebuilt and reinstalled the library to ensure only current headers and binaries are present.
   - Fully removed the deprecated `TriStateCheckbox`, `Checkbox`, and `Radiobox` objects; they have been replaced by the new `TristateButton`, `CheckButton`, and `RadioButton` implementations.
 - **UI controls:**
