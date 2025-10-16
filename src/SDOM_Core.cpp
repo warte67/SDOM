@@ -1,4 +1,7 @@
 // SDOM_Core.cpp
+#include <SDL3_ttf/SDL_ttf.h>
+#include <algorithm>
+#include <filesystem>
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
@@ -9,14 +12,11 @@
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
-#include <SDL3_ttf/SDL_ttf.h>
-
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
 #include <SDOM/lua_Core.hpp>
 #include <SDOM/lua_BindHelpers.hpp>
-#include <algorithm>
-#include <filesystem>
 #include <SDOM/SDOM_IconButton.hpp>
+#include <SDOM/SDOM_ArrowButton.hpp>
 
 namespace SDOM
 {
@@ -1565,6 +1565,15 @@ namespace SDOM
                 sol::object cur2 = classTable.raw_get<sol::object>(k);
                 if (!cur2.valid() || cur2 == sol::lua_nil) classTable.set(k, p.first);
             }
+
+            // Add "direction" for ArrowButton
+            sol::table arrowDirTable = lua.create_table();
+            for (const auto& p : SDOM::ArrowButton::arrow_direction_to_string) {
+                std::string k = p.second;
+                arrowDirTable.set(k, static_cast<int>(p.first));
+            }
+            lua["ArrowDirection"] = arrowDirTable;
+
         } catch(...) {
             // Non-fatal: registration is best-effort
         }

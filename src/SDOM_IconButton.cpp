@@ -15,9 +15,9 @@ namespace SDOM
         // std::cout << "Box constructed with InitStruct: " << getName() 
         //           << " at address: " << this << std::endl;
 
-        if (init.type != TypeName) {
-            ERROR("Error: IconButton constructed with incorrect type: " + init.type);
-        }
+        // if (init.type != TypeName) {
+        //     ERROR("Error: IconButton constructed with incorrect type: " + init.type);
+        // }
         // IconButton Specific
         icon_resource_ = init.icon_resource;
         icon_index_ = init.icon_index;
@@ -41,9 +41,9 @@ namespace SDOM
         //         << " type: " << type << " typeName: " << TypeName << std::endl 
         // ); // END INFO()
 
-        if (type != TypeName) {
-            ERROR("Error: IconButton constructed with incorrect type: " + type);
-        }
+        // if (type != TypeName) {
+        //     ERROR("Error: IconButton constructed with incorrect type: " + type);
+        // }
         
         InitStruct init;
 
@@ -148,7 +148,7 @@ namespace SDOM
         }
         if (event.getType() == EventType::MouseClick)
         {
-            INFO("IconButton::onEvent() - Event: " << event.getTypeName() 
+            INFO(getType() << "::onEvent() - Event: " << event.getTypeName() 
                     << " on IconButton: " << getName() 
                     << " at address: " << this
             ); // END INFO()

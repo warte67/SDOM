@@ -148,6 +148,7 @@ namespace SDOM
         virtual void onStateChanged(ButtonState oldState, ButtonState newState) {}
         virtual IconIndex iconIndexForState(ButtonState state) const { return IconIndex(); }
 
+    public:
         // --- Lua Registration --- //
         static void registerLuaBindings(sol::state_view lua) 
         {

@@ -272,7 +272,18 @@ local config = {
                     -- icon_index = 54 -- this works
                     -- icon_index = "hamburger" -- this works
                     icon_index = IconIndex.Hamburger -- use dot form for numeric constant
-                },               
+                },     
+                {
+                    name = "main_stage_arrowbutton",
+                    type = "ArrowButton",
+                    x = 166,
+                    y = 8,
+                    width = 8,
+                    height = 8,
+                    direction = "up",
+                    color = { r = 255, g = 255, b = 0, a = 255 },
+                    -- icon_resource = "internal_icon_8x8" -- test icon resource name resolution
+                },
                 {
                     name = "redishBox",
                     type = "Box",

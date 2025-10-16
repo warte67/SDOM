@@ -19,13 +19,9 @@ namespace SDOM
         // std::cout << "Box constructed with InitStruct: " << getName() 
         //           << " at address: " << this << std::endl;
 
-        if (init.type != TypeName) {
-            // Allow derived types (e.g., CheckButton, RadioButton) to construct
-            // using the TristateButton base constructor. Previously this threw
-            // an ERROR which terminated startup when derived classes used this
-            // constructor. Log at INFO level instead so callers can continue.
-            INFO("TristateButton::TristateButton(init) - constructed with derived type: " << init.type);
-        }
+        // if (init.type != TypeName) {
+        //     // INFO("TristateButton::TristateButton(init) - constructed with derived type: " << init.type);
+        // }
 
         // from IDisplayObject (this should already be set by IDisplayObject constructor; verify and remove)
         setName(init.name);
@@ -61,11 +57,11 @@ namespace SDOM
 
         InitStruct init;
 
-        std::string type = config["type"].valid() ? config["type"].get<std::string>() : init.type;
-        if (type != TypeName) {
-            // See note above: accept derived type names and only log the mismatch.
-            INFO("TristateButton::TristateButton(lua) - constructed with derived type: " << type);
-        } 
+        // std::string type = config["type"].valid() ? config["type"].get<std::string>() : init.type;
+        // if (type != "TypeName") {
+        //     // See note above: accept derived type names and only log the mismatch.
+        //     INFO("TristateButton::TristateButton(lua) - constructed with derived type: " << type);
+        // } 
 
         // Lambda Helpers
         auto get_string_if_valid = [](const sol::table& tbl, const char* key) -> std::string {

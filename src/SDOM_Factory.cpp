@@ -20,6 +20,7 @@
 #include <SDOM/SDOM_Button.hpp>
 #include <SDOM/SDOM_Group.hpp>
 #include <SDOM/SDOM_IconButton.hpp>
+#include <SDOM/SDOM_ArrowButton.hpp>
 #include <SDOM/SDOM_CheckButton.hpp>
 #include <SDOM/SDOM_RadioButton.hpp>
 #include <SDOM/SDOM_TristateButton.hpp>
@@ -226,6 +227,12 @@ namespace SDOM
         registerDomType("IconButton", TypeCreators{
             IconButton::CreateFromLua,
             IconButton::CreateFromInitStruct
+        });
+
+        // register the ArrowButton
+        registerDomType("ArrowButton", TypeCreators{
+            ArrowButton::CreateFromLua,
+            ArrowButton::CreateFromInitStruct
         });
 
         // register CheckButton

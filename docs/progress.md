@@ -739,10 +739,19 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Test harness & stability:**
   - Made `examples/test/repeat_tests.sh` robust: captures program output when logs are not saved, safely handles missing log files, and reliably prints failing run output.
   - Verified stability with long runs: repeated harness exercised (200 runs) with 0 failures locally.
+
+---
+## [October 16, 2025]
+- **ArrowButton**
+  - Added `ArrowButton` as a descendant of `IconButton`.
+  - `ArrowButton` supports four directions (Up, Down, Left, Right) and two states (Active, Inactive).
+  - Exposed `Direction` constants to Lua via `ArrowButton` class and `IconIndex` table.
+  - Implemented safe accessors (`getDirection`/`setDirection`) and state management.
+  - Added Lua bindings for `ArrowButton`, including constructors and property accessors.
+
   
 
 ## Next Steps for October 16, 2025:
-- Scaffold and implement ArrowButton (inherits from IconButton; supports four directions and two states).
 - Design and implement ProgressBar, Slider, and Scrollbar controls:
     - Use a shared base class (e.g., RangeControl or IBarObject) with orientation, min/max/value, and event logic.
     - Support both horizontal and vertical variants via an orientation property.
