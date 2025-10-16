@@ -131,6 +131,25 @@ namespace SDOM
             ));
         }
 
+        // Expose getDirection and setDirection as Lua methods
+        if (absent("getDirection")) 
+        {
+            handle.set_function("getDirection", [](SDOM::DisplayHandle h) 
+            {
+                auto* ab = h.as<ArrowButton>();
+                return ab ? static_cast<int>(ab->getDirection()) : 0;
+            });
+        }
+        if (absent("setDirection")) 
+        {
+            handle.set_function("setDirection", [](SDOM::DisplayHandle h, int v) 
+            {
+                auto* ab = h.as<ArrowButton>();
+                if (ab && v >= 0 && v < 4) ab->setDirection(static_cast<ArrowButton::ArrowDirection>(v));
+            });
+        }
+
+        
         // --- additional IconButton-specific bindings can go here --- //
 
         // NOTE:
