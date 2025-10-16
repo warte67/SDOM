@@ -20,9 +20,8 @@
 #include <SDOM/SDOM_Button.hpp>
 #include <SDOM/SDOM_Group.hpp>
 #include <SDOM/SDOM_IconButton.hpp>
-#include <SDOM/SDOM_Checkbox.hpp>  // Depricated use SDOM_CheckButton
 #include <SDOM/SDOM_CheckButton.hpp>
-#include <SDOM/SDOM_Radiobox.hpp>
+#include <SDOM/SDOM_RadioButton.hpp>
 #include <SDOM/SDOM_TristateButton.hpp>
 
 namespace SDOM
@@ -229,22 +228,16 @@ namespace SDOM
             IconButton::CreateFromInitStruct
         });
 
-        // register Checkbox
-        registerDomType("Checkbox", TypeCreators{
-            Checkbox::CreateFromLua,
-            Checkbox::CreateFromInitStruct
-        });
-
         // register CheckButton
         registerDomType("CheckButton", TypeCreators{
             CheckButton::CreateFromLua,
             CheckButton::CreateFromInitStruct
         });
 
-        // register Radiobox
-        registerDomType("Radiobox", TypeCreators{
-            Radiobox::CreateFromLua,
-            Radiobox::CreateFromInitStruct
+        // register RadioButton
+        registerDomType("RadioButton", TypeCreators{
+            RadioButton::CreateFromLua,
+            RadioButton::CreateFromInitStruct
         });
 
         // register the TristateButton

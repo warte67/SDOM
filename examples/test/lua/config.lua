@@ -104,8 +104,8 @@ local config = {
                             label_color = { r = 224, g = 192, b = 192, a = 255 },
                             children = {
                                 {
-                                    name = "mainFrameGroup_radiobox_1",
-                                    type = "Radiobox",
+                                    name = "mainFrameGroup_radioButton_1",
+                                    type = "RadioButton",
                                     x = 460,
                                     y = 24,
                                     width = 120,    -- w: should work but doesnt
@@ -114,12 +114,13 @@ local config = {
                                     label_color = { r = 255, g = 255, b = 255, a = 255 },
                                     font_resource = "internal_ttf",
                                     font_size = 10,
+                                    selected = true,
                                     text = "First",
                                     -- border = true
                                 },
                                 {
-                                    name = "mainFrameGroup_radiobox_2",
-                                    type = "Radiobox",
+                                    name = "mainFrameGroup_radioButton_2",
+                                    type = "RadioButton",
                                     x = 460,
                                     y = 40,
                                     width = 120,    -- w: should work but doesnt
@@ -129,12 +130,12 @@ local config = {
                                     font_resource = "VarelaRound16",
                                     font_size = 10,
                                     text = "Second",
-                                    checked = true;
+                                    checked = true,     -- add a second selected radio
                                     -- border = true
                                 },
                                 {
-                                    name = "mainFrameGroup_radiobox_3",
-                                    type = "Radiobox",
+                                    name = "mainFrameGroup_radioButton_3",
+                                    type = "RadioButton",
                                     x = 460,
                                     y = 56,
                                     width = 120,    -- w: should work but doesnt
@@ -187,8 +188,8 @@ local config = {
                             -- border = true
                         },                             
                         {
-                            name = "mainFrame_radiobox_1",
-                            type = "Radiobox",
+                            name = "mainFrame_RadioButton_1",
+                            type = "RadioButton",
                             x = 305,
                             y = 56,
                             width = 145,    -- w: should work but doesnt
@@ -197,13 +198,13 @@ local config = {
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
                             font_resource = "internal_ttf",
                             font_size = 10,
-                            text = "internal_ttf Radiobox",
+                            text = "internal_ttf RadioButton",
                             selected = true;
                             -- border = true
                         },
                         {
-                            name = "mainFrame_radiobox_2",
-                            type = "Radiobox",
+                            name = "mainFrame_RadioButton_2",
+                            type = "RadioButton",
                             x = 305,
                             y = 72,
                             width = 145,    -- w: should work but doesnt
@@ -212,19 +213,19 @@ local config = {
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
                             font_resource = "VarelaRound16",
                             font_size = 10,
-                            text = "VarelaRound16 Radiobox",
+                            text = "VarelaRound16 RadioButton",
                             -- border = true
                         },
                         {
-                            name = "mainFrame_radiobox_3",
-                            type = "Radiobox",
+                            name = "mainFrame_RadioButton_3",
+                            type = "RadioButton",
                             x = 305,
                             y = 88,
                             width = 145,    -- w: should work but doesnt
                             height = 16,    -- h: should work but doesnt
                             color = { r = 255, g = 255, b = 255, a = 255 },
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
-                            text = "font_8x8 Radiobox",
+                            text = "font_8x8 RadioButton",
                             -- border = true
                         },
                         {

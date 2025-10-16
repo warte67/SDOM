@@ -1,4 +1,4 @@
-// SDOM_CheckButton.hpp
+// SDOM_RadioButton.hpp
 #pragma once
 
 #include <SDOM/SDOM_TristateButton.hpp>
@@ -8,13 +8,13 @@ namespace SDOM
 
     using SUPER = SDOM::IDisplayObject; 
 
-    class CheckButton : public TristateButton
+    class RadioButton : public TristateButton
     {
         using SUPER = TristateButton;
 
     public:
         // --- Type Info --- //
-        static constexpr const char* TypeName = "CheckButton";
+        static constexpr const char* TypeName = "RadioButton";
 
         // --- Initialization Struct --- //
         struct InitStruct : TristateButton::InitStruct
@@ -43,28 +43,29 @@ namespace SDOM
                 border = false;        // default to no border
             }
             // Additional CheckButton-specific initialization parameters can be added here in the future.
+            bool selected = false; // whether this radio button is selected (checked) initially
 
         }; // END: InitStruct
 
 
     protected:
         // --- Constructors --- //
-        CheckButton(const InitStruct& init);  
-        CheckButton(const sol::table& config);
+        RadioButton(const InitStruct& init);  
+        RadioButton(const sol::table& config);
 
     public:
         // --- Static Factory Methods --- //
         static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new CheckButton(config));
+            return std::unique_ptr<IDisplayObject>(new RadioButton(config));
         }
         static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-            const auto& CheckButtonInit = static_cast<const CheckButton::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new CheckButton(CheckButtonInit));
+            const auto& RadioButtonInit = static_cast<const RadioButton::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new RadioButton(RadioButtonInit));
         }
 
         // --- Default Constructor and Virtual Destructor --- //
-        CheckButton() = default;
-        virtual ~CheckButton() {};
+        RadioButton() = default;
+        virtual ~RadioButton() {};
 
         // --- Lifecycle & Core Virtuals --- //
         virtual bool onInit() override;
@@ -83,8 +84,11 @@ namespace SDOM
         virtual void onStateChanged(ButtonState oldState, ButtonState newState) override;
         virtual IconIndex iconIndexForState(ButtonState state) const override;
 
+        // --- Protected Helpers --- //
+        void clearSiblings_();
+
         // --- Data Members --- //
-        // ...
+        bool selected_ = false; // whether this radio button is selected (checked)
 
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);

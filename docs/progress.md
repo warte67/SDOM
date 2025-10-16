@@ -708,20 +708,20 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Cleaned up both system and local installs of the SDOM API library.
   - Removed deprecated headers and binaries from `/usr/include/SDOM`, `/usr/local/include/SDOM`, and `/home/jay/.local/include/SDOM`.
   - Rebuilt and reinstalled the library to ensure only current headers and binaries are present.
-  - Fully removed the deprecated `TriStateCheckbox` object; it has been replaced by the new `TristateButton` implementation.
+  - Fully removed the deprecated `TriStateCheckbox`, `Checkbox`, and `Radiobox` objects; they have been replaced by the new `TristateButton`, `CheckButton`, and `RadioButton` implementations.
 - **UI controls:**
-  - Added `CheckButton` as a descendant of `TristateButton`. `Checkbox` and `TriStateCheckbox` are now deprecated.
-  - Implemented `Radiobox` (type name: "Radiobox"). `onEvent()` clears sibling radioboxes then selects the clicked control (simple, DOM-style radio semantics). Decided not to add nullable/allow-unselect behavior for now.
-  - `Checkbox` now accepts multiple aliases for the checked state in Lua: `is_checked`, `checked`, `is_selected`, and `selected`.
-  - Exposed `text` property for `Button`, `Radiobox`, and `Checkbox` to Lua so label text can be read/modified from scripts.
+  - Added `CheckButton` as a descendant of `TristateButton`. `Checkbox` is now removed.
+  - Added `RadioButton` as a descendant of `TristateButton`. `Radiobox` is now removed.
+  - All button-like controls now use a unified state machine and expose consistent Lua APIs for state and interaction.
+  - `CheckButton` and `RadioButton` accept multiple state aliases in Lua (e.g., `is_checked`, `checked`, `is_selected`, `selected`).
+  - Exposed `text` property for `Button`, `RadioButton`, and `CheckButton` to Lua so label text can be read/modified from scripts.
   - **IButtonObject refactor and expansion:**
-    - Expanded `IButtonObject` to better support future button objects (`IconButton`, `CheckButton`, `Radiobox`, `TristateButton`, `ArrowButton`, etc.).
+    - Expanded `IButtonObject` to better support future button objects (`IconButton`, `CheckButton`, `RadioButton`, `TristateButton`, `ArrowButton`, etc.).
     - Centralized logical state management using the `ButtonState` enum with canonical names and aliases (e.g., `Inactive`, `Active`, `Mixed`, `Disabled` and their synonyms).
     - Added mouse-hovered and key-focused flags to the interface for consistent UI state tracking.
     - Implemented static, idempotent `registerLuaBindings(sol::state_view lua)` method to expose `ButtonState` constants, conversion helpers, and DisplayHandle-level accessors (`getState`, `setState`, `isMouseHovered`, `setMouseHovered`, `isKeyFocused`, `setKeyFocused`) to Lua.
-    - Ensured Lua bindings are reentrant and safe for multiple inheritance scenarios (e.g., CheckButton and Radiobox inheriting from TristateButton).
+    - Ensured Lua bindings are reentrant and safe for multiple inheritance scenarios (e.g., CheckButton and RadioButton inheriting from TristateButton).
     - Updated derived controls to call `IButtonObject::registerLuaBindings(lua)` in their own Lua registration methods.
-    - All button-like controls now use a unified state machine and expose consistent Lua APIs for state and interaction.
     - **Bug fix:** Resolved an issue in `TristateButton` where state updates were not reflected correctly. The control was using its own state variable instead of the base object's `buttonState_`. Now all state logic is unified and works as expected.
 - **Fonts & labels:**
   - Finalized `IFontObject` improvements: `applyBitmapFontDefaults(...)` fills missing `font_size`/`font_width`/`font_height` from a referenced `BitmapFont` asset.
@@ -742,13 +742,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   
 ---
 ## Next Steps:
-- Better utilize the IButtonObject interface across button-like controls:
-  - Refactor Button, IconButton, Checkbox, Radiobox, and Tristate to inherit from IButtonObject and centralize common state machine and event handling logic.
-  - Replace per-class isChecked_ flags with a single ButtonState stored/managed by IButtonObject (getState/setState).
-  - Refactor `TriStateCheckbox` into `Tristate` for naming consistency and inherit `Checkbox` and `Radiobox` from it to reduce code duplication
-  - Update Factory/Lua type strings and aliases.
-  - Update Lua bindings so `text`, `state`/`checked` aliases, and state-change events are consistently exposed for all button types.
-- Investigate what I presume are z_order based bugs. Objects are not rendering in proper order. Not sure when this started.
+- Investigate what I presume are z_order based bugs. Objects are not rendering in proper order. Not sure when this started. This happens when Boxes are attached to another box and that box is at a lower level than another one.  This is a Box behavior not a behavior explictly of the SDOM API.
+
 - refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test1()` → `Label_test1()`).
   - Refactor `SpriteSheet_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
   - Refactor `GarbageCollection_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]

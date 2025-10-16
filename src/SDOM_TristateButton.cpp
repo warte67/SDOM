@@ -324,7 +324,7 @@ namespace SDOM
         if (event.getType() == EventType::MouseClick) 
         { 
             setState(static_cast<ButtonState>((static_cast<int>(getState()) + 1) % 3));
-            INFO(getType() +"::onEvent() - MouseClick on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
+            // INFO(getType() +"::onEvent() - MouseClick on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
         }
 
     } // END: void TristateButton::onEvent(const Event& event)
@@ -373,6 +373,9 @@ namespace SDOM
 
     void TristateButton::setState(ButtonState state) 
     { 
+        if (state == buttonState_) return; // no change
+        INFO(getType() +"::setState() - on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
+
         onStateChanged(buttonState_, state); 
         // dispatch event
         queue_event(EventType::StateChanged, [this, state](Event& ev) {
