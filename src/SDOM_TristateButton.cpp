@@ -20,7 +20,11 @@ namespace SDOM
         //           << " at address: " << this << std::endl;
 
         if (init.type != TypeName) {
-            ERROR("Error: TriStateCheckbox constructed with incorrect type: " + init.type);
+            // Allow derived types (e.g., CheckButton, RadioButton) to construct
+            // using the TristateButton base constructor. Previously this threw
+            // an ERROR which terminated startup when derived classes used this
+            // constructor. Log at INFO level instead so callers can continue.
+            INFO("TristateButton::TristateButton(init) - constructed with derived type: " << init.type);
         }
 
         // from IDisplayObject (this should already be set by IDisplayObject constructor; verify and remove)
@@ -59,7 +63,8 @@ namespace SDOM
 
         std::string type = config["type"].valid() ? config["type"].get<std::string>() : init.type;
         if (type != TypeName) {
-            ERROR("Error: TriStateCheckbox constructed with incorrect type: " + type);
+            // See note above: accept derived type names and only log the mismatch.
+            INFO("TristateButton::TristateButton(lua) - constructed with derived type: " << type);
         } 
 
         // Lambda Helpers
@@ -319,7 +324,7 @@ namespace SDOM
         if (event.getType() == EventType::MouseClick) 
         { 
             setState(static_cast<ButtonState>((static_cast<int>(getState()) + 1) % 3));
-            INFO("TristateButton::onEvent() - MouseClick on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
+            INFO(getType() +"::onEvent() - MouseClick on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
         }
 
     } // END: void TristateButton::onEvent(const Event& event)

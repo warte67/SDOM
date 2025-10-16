@@ -28,7 +28,7 @@ namespace SDOM
                 tabEnabled = false;
                 isClickable = true;
                 // from TristateButton 
-                text = "TriStateCheckbox"; // default TriStateCheckbox text
+                text = TypeName; 
                 font_size = 8;          // default font size is 8
                 label_color = {0, 255, 255, 255}; // default label color is white
                 border_color = {0, 0, 0, 128};               // transparent

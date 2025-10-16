@@ -147,7 +147,7 @@ local config = {
                             }
                         },
                         {
-                            name = "mainFrame_checkbox_1",
+                            name = "mainFrame_CheckButton_1",
                             type = "CheckButton",
                             x = 305,
                             y = 10,
@@ -157,12 +157,12 @@ local config = {
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
                             font_resource = "internal_ttf",
                             font_size = 10,
-                            text = "internal_ttf Checkbox",
+                            text = "internal_ttf CheckButton",
                             -- border = true
                         },
                         {
-                            name = "mainFrame_checkbox_2",
-                            type = "Checkbox",
+                            name = "mainFrame_CheckButton_2",
+                            type = "CheckButton",
                             x = 305,
                             y = 26,
                             width = 145,    -- w: should work but doesnt
@@ -171,19 +171,19 @@ local config = {
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
                             font_resource = "VarelaRound16",
                             font_size = 10,
-                            text = "VarelaRound16 Checkbox",
+                            text = "VarelaRound16 CheckButton",
                             -- border = true
                         },
                         {
-                            name = "mainFrame_checkbox_3",
-                            type = "Checkbox",
+                            name = "mainFrame_CheckButton_3",
+                            type = "CheckButton",
                             x = 305,
                             y = 42,
                             width = 145,    -- w: should work but doesnt
                             height = 16,    -- h: should work but doesnt
                             color = { r = 255, g = 255, b = 255, a = 255 },
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
-                            text = "font_8x8 Checkbox",
+                            text = "font_8x8 CheckButton",
                             -- border = true
                         },                             
                         {
