@@ -33,12 +33,13 @@ namespace SDOM
         // TristateButton Initialization Properties
         text_ = init.text;
         // icon_index_ = init.icon_index;
-        state_ = init.state;
-        iconIndexForState(state_); // set icon index based on initial state
+        buttonState_ = init.state;
+        icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state
+
         font_size_ = init.font_size;
         label_color_ = init.label_color;
         border_color_ = init.border_color;
-        state_ = init.state;
+        buttonState_ = init.state;
         icon_resource_ = init.icon_resource;
         icon_width_ = init.icon_width;
         icon_height_ = init.icon_height;
@@ -120,28 +121,40 @@ namespace SDOM
         // }
 
         // parse state allowing int or string aliases
-        if (config["state"].valid()) {
-            try {
+        if (config["state"].valid()) 
+        {
+            try 
+            {
                 sol::object o = config["state"];
-                if (o.get_type() == sol::type::number) {
-                    state_ = static_cast<ButtonState>(o.as<int>());
-                } else if (o.get_type() == sol::type::string) {
+                if (o.get_type() == sol::type::number) 
+                {
+                    buttonState_ = static_cast<ButtonState>(o.as<int>());
+                } 
+                else if (o.get_type() == sol::type::string) 
+                {
                     std::string s = o.as<std::string>();
                     for (auto &c : s) c = static_cast<char>(std::tolower(c));
                     auto opt = button_state_from_name(s);
-                    if (opt) {
-                        state_ = *opt;
-                    } else if (s == "0") {
-                        state_ = ButtonState::Inactive;
-                    } else if (s == "1") {
-                        state_ = ButtonState::Active;
-                    } else if (s == "2") {
-                        state_ = ButtonState::Mixed;
+                    if (opt) 
+                    {
+                        buttonState_ = *opt;
+                    } 
+                    else if (s == "0") 
+                    {
+                        buttonState_ = ButtonState::Inactive;
+                    } 
+                    else if (s == "1") 
+                    {
+                        buttonState_ = ButtonState::Active;
+                    } 
+                    else if (s == "2") 
+                    {
+                        buttonState_ = ButtonState::Mixed;
                     }
                 }
             } catch(...) { /* ignore malformed values */ }
         }
-        iconIndexForState(state_); // set icon index based on initial state
+        icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state
 
         // label color - accept snake_case/table { r=.., g=.., b=.., a=.. } or camelCase 'labelColor'
         try {
@@ -207,9 +220,8 @@ namespace SDOM
             init.isClickable = false;
             init.tabEnabled = false;
             init.color = getColor(); // use the color of the TriStateCheckbox to color the icon
-            int state = static_cast<int>(state_);
-            int iconIndex = state + static_cast<int>(IconIndex::Checkbox_Empty);
-            init.icon_index = static_cast<IconIndex>(iconIndex);
+            init.icon_index = icon_index_;
+// DEBUG_LOG("TristateButton::onInit() - creating IconButton with icon_index: " + std::to_string(static_cast<int>(init.icon_index)) + " for state: " + std::to_string(static_cast<int>(state_)));
             iconButtonObject_ = getFactory().create("IconButton", init);
             addChild(iconButtonObject_);
         }
@@ -268,9 +280,10 @@ namespace SDOM
                 int iconY = getY() + (getHeight() / 2 - icon_height_ / 2);
                 iconBtn->setY(iconY);
                 // Ensure the child IconButton reflects the current checked state
-                int state = static_cast<int>(state_);
-                int iconIndex = state + static_cast<int>(IconIndex::Checkbox_Empty);
-                iconBtn->setIconIndex(static_cast<IconIndex>(iconIndex));
+                // int state = static_cast<int>(state_);
+                // int iconIndex = state + static_cast<int>(IconIndex::Checkbox_Empty);
+                // iconBtn->setIconIndex(static_cast<IconIndex>(iconIndex));
+                iconBtn->setIconIndex(static_cast<IconIndex>(icon_index_));
             }
         }
         if (labelObject_.isValid())
@@ -306,7 +319,7 @@ namespace SDOM
         if (event.getType() == EventType::MouseClick) 
         { 
             setState(static_cast<ButtonState>((static_cast<int>(getState()) + 1) % 3));
-            // INFO("TristateButton::onEvent() - MouseClick on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
+            INFO("TristateButton::onEvent() - MouseClick on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
         }
 
     } // END: void TristateButton::onEvent(const Event& event)

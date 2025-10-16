@@ -22,7 +22,8 @@ var searchData=
   ['_7espritesheet_19',['~SpriteSheet',['../classSDOM_1_1SpriteSheet.html#ae1e22d15504a076982ab3ab84cf02ee1',1,'SDOM::SpriteSheet']]],
   ['_7estage_20',['~Stage',['../classSDOM_1_1Stage.html#a54db12b3a1a2ff7d7cfff112f2de1ab6',1,'SDOM::Stage']]],
   ['_7etexture_21',['~Texture',['../classSDOM_1_1Texture.html#a39cff82635f7235c76f2156b409ac181',1,'SDOM::Texture']]],
-  ['_7etristatecheckbox_22',['~TriStateCheckbox',['../classSDOM_1_1TriStateCheckbox.html#af9f878b35358749150fb8059d9898ef7',1,'SDOM::TriStateCheckbox']]],
-  ['_7etruetypefont_23',['~TruetypeFont',['../classSDOM_1_1TruetypeFont.html#ab3a8016e382dd5468376e05a46c5a3ae',1,'SDOM::TruetypeFont']]],
-  ['_7ettfasset_24',['~TTFAsset',['../classSDOM_1_1TTFAsset.html#aca74ac946791073bbf82bcd8ee642d29',1,'SDOM::TTFAsset']]]
+  ['_7etristatebutton_22',['~TristateButton',['../classSDOM_1_1TristateButton.html#a54dfcd3dce15c37f1db4d416b54ff8b6',1,'SDOM::TristateButton']]],
+  ['_7etristatecheckbox_23',['~TriStateCheckbox',['../classSDOM_1_1TriStateCheckbox.html#af9f878b35358749150fb8059d9898ef7',1,'SDOM::TriStateCheckbox']]],
+  ['_7etruetypefont_24',['~TruetypeFont',['../classSDOM_1_1TruetypeFont.html#ab3a8016e382dd5468376e05a46c5a3ae',1,'SDOM::TruetypeFont']]],
+  ['_7ettfasset_25',['~TTFAsset',['../classSDOM_1_1TTFAsset.html#aca74ac946791073bbf82bcd8ee642d29',1,'SDOM::TTFAsset']]]
 ];

@@ -32,6 +32,7 @@ var annotated_dup =
       [ "SpriteSheet", "classSDOM_1_1SpriteSheet.html", "classSDOM_1_1SpriteSheet" ],
       [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ],
       [ "Texture", "classSDOM_1_1Texture.html", "classSDOM_1_1Texture" ],
+      [ "TristateButton", "classSDOM_1_1TristateButton.html", "classSDOM_1_1TristateButton" ],
       [ "TriStateCheckbox", "classSDOM_1_1TriStateCheckbox.html", "classSDOM_1_1TriStateCheckbox" ],
       [ "TruetypeFont", "classSDOM_1_1TruetypeFont.html", "classSDOM_1_1TruetypeFont" ],
       [ "TTFAsset", "classSDOM_1_1TTFAsset.html", "classSDOM_1_1TTFAsset" ],

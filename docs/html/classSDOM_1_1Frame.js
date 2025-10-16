@@ -91,6 +91,7 @@ var classSDOM_1_1Frame =
     [ "operator>", "classSDOM_1_1Frame.html#a765c1a5a98db78263e66fa63a95711c0", null ],
     [ "operator>=", "classSDOM_1_1Frame.html#a0663374567b9882b112e879ec72318ea", null ],
     [ "printTree", "classSDOM_1_1Frame.html#a853fddbff86054aae8abc808cf55d1b6", null ],
+    [ "queue_event", "classSDOM_1_1Frame.html#a943459da97ec5ed33c8433d9e7291344", null ],
     [ "registerLuaBindings", "classSDOM_1_1Frame.html#a1947ff718446a6a81cd108b87a475d9f", null ],
     [ "removeChild", "classSDOM_1_1Frame.html#a55aaaeb29be7a86966df19702aaef7e0", null ],
     [ "removeChild", "classSDOM_1_1Frame.html#a5934f6442c1a5ef0c39aaeab9ab59260", null ],

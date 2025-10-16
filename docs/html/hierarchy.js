@@ -14,7 +14,9 @@ var hierarchy =
     [ "SDOM::IButtonObject", "classSDOM_1_1IButtonObject.html", [
       [ "SDOM::Button", "classSDOM_1_1Button.html", null ],
       [ "SDOM::Checkbox", "classSDOM_1_1Checkbox.html", null ],
-      [ "SDOM::Radiobox", "classSDOM_1_1Radiobox.html", null ]
+      [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", null ],
+      [ "SDOM::Radiobox", "classSDOM_1_1Radiobox.html", null ],
+      [ "SDOM::TristateButton", "classSDOM_1_1TristateButton.html", null ]
     ] ],
     [ "SDOM::IAssetObject::InitStruct", "structSDOM_1_1IAssetObject_1_1InitStruct.html", [
       [ "SDOM::IFontObject::InitStruct", "structSDOM_1_1IFontObject_1_1InitStruct.html", [
@@ -36,7 +38,8 @@ var hierarchy =
       ] ],
       [ "SDOM::IconButton::InitStruct", "structSDOM_1_1IconButton_1_1InitStruct.html", null ],
       [ "SDOM::Label::InitStruct", "structSDOM_1_1Label_1_1InitStruct.html", null ],
-      [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ]
+      [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ],
+      [ "SDOM::TristateButton::InitStruct", "structSDOM_1_1TristateButton_1_1InitStruct.html", null ]
     ] ],
     [ "SDOM::IUnitTest", "classSDOM_1_1IUnitTest.html", [
       [ "SDOM::IDataObject", "classSDOM_1_1IDataObject.html", [
@@ -65,7 +68,8 @@ var hierarchy =
           ] ],
           [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", null ],
           [ "SDOM::Label", "classSDOM_1_1Label.html", null ],
-          [ "SDOM::Stage", "classSDOM_1_1Stage.html", null ]
+          [ "SDOM::Stage", "classSDOM_1_1Stage.html", null ],
+          [ "SDOM::TristateButton", "classSDOM_1_1TristateButton.html", null ]
         ] ]
       ] ]
     ] ],

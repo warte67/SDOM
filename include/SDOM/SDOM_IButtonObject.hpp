@@ -41,8 +41,7 @@ namespace SDOM
         ButtonState_MAX
     }; // END: enum class ButtonState
 
-    // Mapping tables for ButtonState <-> string
-    inline static const std::unordered_map<int, std::string> button_state_to_string = {
+    inline static const std::vector<std::pair<int, std::string>> button_state_pairs = {
         { static_cast<int>(ButtonState::Inactive),      "inactive" },
         { static_cast<int>(ButtonState::Active),        "active" },
         { static_cast<int>(ButtonState::Mixed),         "mixed" },
@@ -65,39 +64,62 @@ namespace SDOM
         { static_cast<int>(ButtonState::Option),        "option" },
         // Disabled Aliases:
         { static_cast<int>(ButtonState::Faded),         "faded" },
-        { static_cast<int>(ButtonState::Gray),          "gray" },        
+        { static_cast<int>(ButtonState::Gray),          "gray" },
         { static_cast<int>(ButtonState::Grayed),        "grayed" },
         { static_cast<int>(ButtonState::Grey),          "grey" },
         { static_cast<int>(ButtonState::Greyed),        "greyed" },
         // Last Entry
         { static_cast<int>(ButtonState::ButtonState_MAX), "button_state_max" }
-    }; // END: button_state_to_string
+    };
 
-    // reverse mapping
+    // canonical int -> name (first occurrence wins)
+    inline static const std::unordered_map<int, std::string> button_state_to_string = []{
+        std::unordered_map<int,std::string> m;
+        for (auto &p : button_state_pairs) {
+            if (m.find(p.first) == m.end()) m.emplace(p.first, p.second);
+        }
+        return m;
+    }();
+
+    // reverse mapping including all aliases (lowercased keys)
+    #include <algorithm>
+    #include <cctype>
     inline static const std::unordered_map<std::string, int> string_to_button_state = []{
         std::unordered_map<std::string,int> m;
-        for (auto &p : button_state_to_string) m.emplace(p.second, p.first);
+        for (auto &p : button_state_pairs) {
+            std::string key = p.second;
+            std::transform(key.begin(), key.end(), key.begin(), [](unsigned char c){
+                return static_cast<char>(std::tolower(c));
+            });
+            m.emplace(std::move(key), p.first);
+        }
         return m;
-    }(); // END: string_to_button_state
-
-    // Helper functions for ButtonState <-> string conversions
+    }();
+    
+    // Helper functions (ensure they use lowered names)
     inline static std::optional<std::string> button_state_name_from_index(ButtonState idx)
     {
         auto it = button_state_to_string.find(static_cast<int>(idx));
         if (it == button_state_to_string.end()) return std::nullopt;
-        return it->second;
-    } // END: button_state_name_from_index
+        std::string name = it->second;
+        std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c){
+            return static_cast<char>(std::tolower(c));
+        });
+        return name;
+    }
 
-    // returns std::nullopt if name not found
     inline static std::optional<ButtonState> button_state_from_name(const std::string &name)
     {
-        auto it = string_to_button_state.find(name);
+        std::string key = name;
+        std::transform(key.begin(), key.end(), key.begin(), [](unsigned char c){
+            return static_cast<char>(std::tolower(c));
+        });
+        auto it = string_to_button_state.find(key);
         if (it == string_to_button_state.end()) return std::nullopt;
         return static_cast<ButtonState>(it->second);
-    } // END: button_state_from_name
+    }
 
 
-    // --- Interface for Button-like objects (Checkbox, RadioButton, Toggle, etc) --- //
 
     class IButtonObject 
     {

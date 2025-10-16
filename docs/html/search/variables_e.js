@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['padding_5fhoriz_0',['padding_horiz',['../structSDOM_1_1FontStyle.html#a2d52282949580fde9701a2c300423ed6',1,'SDOM::FontStyle::padding_horiz'],['../structSDOM_1_1Label_1_1InitStruct.html#aba8f06bfbe1f57abff690cd1d33ad243',1,'SDOM::Label::InitStruct::padding_horiz']]],
+  ['padding_5fhoriz_0',['padding_horiz',['../structSDOM_1_1Label_1_1InitStruct.html#aba8f06bfbe1f57abff690cd1d33ad243',1,'SDOM::Label::InitStruct::padding_horiz'],['../structSDOM_1_1FontStyle.html#a2d52282949580fde9701a2c300423ed6',1,'SDOM::FontStyle::padding_horiz']]],
   ['padding_5fvert_1',['padding_vert',['../structSDOM_1_1FontStyle.html#a4c7117e18052b72d2650bb79cb8f2d1f',1,'SDOM::FontStyle::padding_vert'],['../structSDOM_1_1Label_1_1InitStruct.html#a0b5b2ef039957bc3d8e38187add77af9',1,'SDOM::Label::InitStruct::padding_vert']]],
   ['panelbaseindextostring_5f_2',['panelBaseIndexToString_',['../namespaceSDOM.html#af0cc30e6979fd8ef2453166a934da51c',1,'SDOM']]],
   ['paneltileoffsettostring_5f_3',['panelTileOffsetToString_',['../namespaceSDOM.html#a1ba3fe71c30a46b568259105d73972be',1,'SDOM']]],

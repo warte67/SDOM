@@ -709,14 +709,15 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Implemented `Radiobox` (type name: "Radiobox"). `onEvent()` clears sibling radioboxes then selects the clicked control (simple, DOM-style radio semantics). Decided not to add nullable/allow-unselect behavior for now.
   - `Checkbox` now accepts multiple aliases for the checked state in Lua: `is_checked`, `checked`, `is_selected`, and `selected`.
   - Exposed `text` property for `Button`, `Radiobox`, and `Checkbox` to Lua so label text can be read/modified from scripts.
-  - **IButtonObject refactor:**
-    - Refactored `IButtonObject` to serve as a shared base for button-like controls (Button, IconButton, Checkbox, Radiobox, TristateCheckbox).
+  - **IButtonObject refactor and expansion:**
+    - Expanded `IButtonObject` to better support future button objects (`IconButton`, `Checkbox`, `Radiobox`, `TristateButton`, `ArrowButton`, etc.).
     - Centralized logical state management using the `ButtonState` enum with canonical names and aliases (e.g., `Inactive`, `Active`, `Mixed`, `Disabled` and their synonyms).
     - Added mouse-hovered and key-focused flags to the interface for consistent UI state tracking.
     - Implemented static, idempotent `registerLuaBindings(sol::state_view lua)` method to expose `ButtonState` constants, conversion helpers, and DisplayHandle-level accessors (`getState`, `setState`, `isMouseHovered`, `setMouseHovered`, `isKeyFocused`, `setKeyFocused`) to Lua.
     - Ensured Lua bindings are reentrant and safe for multiple inheritance scenarios (e.g., Checkbox and Radiobox inheriting from TristateCheckbox).
     - Updated derived controls to call `IButtonObject::registerLuaBindings(lua)` in their own Lua registration methods.
     - All button-like controls now use a unified state machine and expose consistent Lua APIs for state and interaction.
+    - **Bug fix:** Resolved an issue in `TristateButton` where state updates were not reflected correctly. The control was using its own state variable instead of the base object's `buttonState_`. Now all state logic is unified and works as expected.
 - **Fonts & labels:**
   - Finalized `IFontObject` improvements: `applyBitmapFontDefaults(...)` fills missing `font_size`/`font_width`/`font_height` from a referenced `BitmapFont` asset.
   - `Label` and label-creating parents (`Button`, `Group`) now detect font type (Bitmap vs Truetype), adopt the font's type/metrics, and preserve unspecified metrics so BitmapFont defaults apply correctly.
@@ -734,7 +735,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Made `examples/test/repeat_tests.sh` robust: captures program output when logs are not saved, safely handles missing log files, and reliably prints failing run output.
   - Verified stability with long runs: repeated harness exercised (200 runs) with 0 failures locally.
 
-  
 ---
 ## Next Steps:
 - Better utilize the IButtonObject interface across button-like controls:
@@ -772,51 +772,4 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Verify and document verious start up scenarios (C++ only, Lua only, mixed).
 - Update architecture diagrams and markdown docs to replace old identifiers with the new Handle names.
 - **Comment blocks** in the code are a great way to track progress and ensure completeness.
-
----
-- Add a small helper on IDisplayObject to centralize/standardize queuing events (so callers don’t duplicate Event creation/target-setting/payload plumbing). 
-- Add IDisplayObject::queue_event(...) helper to centralize event creation/target/payload/queuing.
-- Add a Checkbox unit/integration test that toggles setChecked() and asserts the child IconButton index and dispatched payload (previous/checked).
-- (Optional) Add a small unit test that asserts IconIndex is present in the Lua state before configs load.
-
-```cpp
-// ...
-protected:
-    // Helper to create & enqueue an event tarAnother point, there is an IButtonObject interface that we could leveragegeted at this display object.
-    // `init_payload` may set payload properties on the Event before enqueue.
-    void queue_event(const EventType& type, std::function<void(Event&)> init_payload = {});
-// ...
-```
-
-```cpp
-#include <SDOM/SDOM_IDisplayObject.hpp>
-#include <SDOM/SDOM_Core.hpp>
-#include <SDOM/SDOM_Event.hpp>
-
-namespace SDOM
-{
-    // ...
-    void IDisplayObject::queue_event(const EventType& type, std::function<void(Event&)> init_payload)
-    {
-        EventManager& em = getCore().getEventManager();
-        auto ev = std::make_unique<Event>(type, getDisplayHandle(), getCore().getElapsedTime());
-        ev->setTarget(getDisplayHandle());
-        if (init_payload) {
-            try { init_payload(*ev); } catch (...) { /* swallow payload init errors */ }
-        }
-        em.addEvent(std::move(ev));
-    }
-    // ...
-} // namespace SDOM
-```
-Example usage (Checkbox::setChecked):
-
-- replace manual Event creation with:
-
-```cpp
-queue_event(EventType::StateChanged, [&](Event& ev){
-    ev.setPayloadValue("previous_checked", previous);
-    ev.setPayloadValue("checked", isChecked_);
-});
-```
 

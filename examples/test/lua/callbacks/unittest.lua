@@ -5,6 +5,7 @@ local M = {}
 
 function M.on_unit_test()
     local allTestsPassed = true
+        
     allTestsPassed = allTestsPassed and Core_UnitTests()
     allTestsPassed = allTestsPassed and Factory_UnitTests()
     allTestsPassed = allTestsPassed and IDisplayObject_UnitTests()
@@ -17,6 +18,7 @@ function M.on_unit_test()
     allTestsPassed = allTestsPassed and GarbageCollection_UnitTests()
     allTestsPassed = allTestsPassed and SpriteSheet_UnitTests()
     allTestsPassed = allTestsPassed and Label_UnitTests()
+
     return allTestsPassed
 end
 

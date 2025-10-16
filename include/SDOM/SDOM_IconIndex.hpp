@@ -72,7 +72,13 @@ namespace SDOM
 
     inline static const std::unordered_map<std::string, int> icon_string_to_index = []{
         std::unordered_map<std::string,int> m;
-        for (auto &p : icon_index_to_string) m.emplace(p.second, p.first);
+        for (auto &p : icon_index_to_string) {
+            std::string key = p.second;
+            std::transform(key.begin(), key.end(), key.begin(), [](unsigned char c){
+                return static_cast<char>(std::tolower(c));
+            });
+            m.emplace(std::move(key), p.first);
+        }
         return m;
     }();
 
@@ -80,14 +86,21 @@ namespace SDOM
     {
         auto it = icon_index_to_string.find(static_cast<int>(idx));
         if (it == icon_index_to_string.end()) return std::nullopt;
-        return it->second;
+        std::string name = it->second;
+        std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c){
+            return static_cast<char>(std::tolower(c));
+        });
+        return name;
     }
 
     inline static std::optional<IconIndex> icon_index_from_name(const std::string &name)
     {
-        auto it = icon_string_to_index.find(name);
+        std::string key = name;
+        std::transform(key.begin(), key.end(), key.begin(), [](unsigned char c){
+            return static_cast<char>(std::tolower(c));
+        });
+        auto it = icon_string_to_index.find(key);
         if (it == icon_string_to_index.end()) return std::nullopt;
         return static_cast<IconIndex>(it->second);
     }
-
 } // END: namespace SDOM

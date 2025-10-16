@@ -117,7 +117,7 @@ protected:
     int font_width_ = 8;       // default font width
     int font_height_ = 8;      // default font height
     bool use_border_ = false;
-    ButtonState state_  = ButtonState::Unchecked; // current state
+    // ButtonState state_  = ButtonState::Unchecked; // current state
     SDL_Color label_color_ = {255, 255, 255, 255}; // default label color is white
     SDL_Color border_color_ = {0, 0, 0, 128};               // transparent
     DisplayHandle iconButtonObject_; // internal icon button object for TriStateCheckbox icon
