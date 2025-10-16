@@ -62,7 +62,7 @@ namespace SDOM
         }; // END: InitStruct
         
     protected:
-        // --- Constructors --- //
+        // --- Protected Constructors --- //
         ArrowButton(const InitStruct& init);  
         ArrowButton(const sol::table& config);
 
