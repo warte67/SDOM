@@ -740,9 +740,24 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Made `examples/test/repeat_tests.sh` robust: captures program output when logs are not saved, safely handles missing log files, and reliably prints failing run output.
   - Verified stability with long runs: repeated harness exercised (200 runs) with 0 failures locally.
   
+
+## Next Steps for October 16, 2025:
+- Scaffold and implement ArrowButton (inherits from IconButton; supports four directions and two states).
+- Design and implement ProgressBar, Slider, and Scrollbar controls:
+    - Use a shared base class (e.g., RangeControl or IBarObject) with orientation, min/max/value, and event logic.
+    - Support both horizontal and vertical variants via an orientation property.
+    - Ensure Scrollbar composes ArrowButtons for increment/decrement controls.
+
 ---
 ## Next Steps:
-- Investigate what I presume are z_order based bugs. Objects are not rendering in proper order. Not sure when this started. This happens when Boxes are attached to another box and that box is at a lower level than another one.  This is a Box behavior not a behavior explictly of the SDOM API.
+- Review and refactor documentation:
+    - Begin organizing markdown docs by topic, add more examples and tutorials.
+    - Plan a thorough documentation revamp (including Doxygen and markdown).
+    - Index docs for easier navigation and update legacy references.
+- Investigate what I presume are z_order based bugs. 
+  - Objects are not rendering in proper order. Not sure when this started. 
+  - This happens when Boxes are attached to another box and that box is at a lower level than another one.  
+  - This is a likely a `Box` behavior not a behavior explictly of the `SDOM API`.
 
 - refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test1()` → `Label_test1()`).
   - Refactor `SpriteSheet_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
