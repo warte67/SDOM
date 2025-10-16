@@ -13,10 +13,11 @@ var hierarchy =
     [ "SDOM::FontStyle", "structSDOM_1_1FontStyle.html", null ],
     [ "SDOM::IButtonObject", "classSDOM_1_1IButtonObject.html", [
       [ "SDOM::Button", "classSDOM_1_1Button.html", null ],
-      [ "SDOM::Checkbox", "classSDOM_1_1Checkbox.html", null ],
       [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", null ],
-      [ "SDOM::Radiobox", "classSDOM_1_1Radiobox.html", null ],
-      [ "SDOM::TristateButton", "classSDOM_1_1TristateButton.html", null ]
+      [ "SDOM::TristateButton", "classSDOM_1_1TristateButton.html", [
+        [ "SDOM::CheckButton", "classSDOM_1_1CheckButton.html", null ],
+        [ "SDOM::RadioButton", "classSDOM_1_1RadioButton.html", null ]
+      ] ]
     ] ],
     [ "SDOM::IAssetObject::InitStruct", "structSDOM_1_1IAssetObject_1_1InitStruct.html", [
       [ "SDOM::IFontObject::InitStruct", "structSDOM_1_1IFontObject_1_1InitStruct.html", [
@@ -30,16 +31,16 @@ var hierarchy =
     [ "SDOM::IDisplayObject::InitStruct", "structSDOM_1_1IDisplayObject_1_1InitStruct.html", [
       [ "SDOM::IPanelObject::InitStruct", "structSDOM_1_1IPanelObject_1_1InitStruct.html", [
         [ "SDOM::Button::InitStruct", "structSDOM_1_1Button_1_1InitStruct.html", null ],
-        [ "SDOM::Checkbox::InitStruct", "structSDOM_1_1Checkbox_1_1InitStruct.html", null ],
         [ "SDOM::Frame::InitStruct", "structSDOM_1_1Frame_1_1InitStruct.html", null ],
-        [ "SDOM::Group::InitStruct", "structSDOM_1_1Group_1_1InitStruct.html", null ],
-        [ "SDOM::Radiobox::InitStruct", "structSDOM_1_1Radiobox_1_1InitStruct.html", null ],
-        [ "SDOM::TriStateCheckbox::InitStruct", "structSDOM_1_1TriStateCheckbox_1_1InitStruct.html", null ]
+        [ "SDOM::Group::InitStruct", "structSDOM_1_1Group_1_1InitStruct.html", null ]
       ] ],
       [ "SDOM::IconButton::InitStruct", "structSDOM_1_1IconButton_1_1InitStruct.html", null ],
       [ "SDOM::Label::InitStruct", "structSDOM_1_1Label_1_1InitStruct.html", null ],
       [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ],
-      [ "SDOM::TristateButton::InitStruct", "structSDOM_1_1TristateButton_1_1InitStruct.html", null ]
+      [ "SDOM::TristateButton::InitStruct", "structSDOM_1_1TristateButton_1_1InitStruct.html", [
+        [ "SDOM::CheckButton::InitStruct", "structSDOM_1_1CheckButton_1_1InitStruct.html", null ],
+        [ "SDOM::RadioButton::InitStruct", "structSDOM_1_1RadioButton_1_1InitStruct.html", null ]
+      ] ]
     ] ],
     [ "SDOM::IUnitTest", "classSDOM_1_1IUnitTest.html", [
       [ "SDOM::IDataObject", "classSDOM_1_1IDataObject.html", [
@@ -60,11 +61,8 @@ var hierarchy =
         [ "SDOM::IDisplayObject", "classSDOM_1_1IDisplayObject.html", [
           [ "SDOM::IPanelObject", "classSDOM_1_1IPanelObject.html", [
             [ "SDOM::Button", "classSDOM_1_1Button.html", null ],
-            [ "SDOM::Checkbox", "classSDOM_1_1Checkbox.html", null ],
             [ "SDOM::Frame", "classSDOM_1_1Frame.html", null ],
-            [ "SDOM::Group", "classSDOM_1_1Group.html", null ],
-            [ "SDOM::Radiobox", "classSDOM_1_1Radiobox.html", null ],
-            [ "SDOM::TriStateCheckbox", "classSDOM_1_1TriStateCheckbox.html", null ]
+            [ "SDOM::Group", "classSDOM_1_1Group.html", null ]
           ] ],
           [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", null ],
           [ "SDOM::Label", "classSDOM_1_1Label.html", null ],

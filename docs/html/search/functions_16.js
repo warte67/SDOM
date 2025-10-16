@@ -3,7 +3,7 @@ var searchData=
   ['_7eassethandle_0',['~AssetHandle',['../classSDOM_1_1AssetHandle.html#a5787c0a2b6ee9d85fae35e182949c8d3',1,'SDOM::AssetHandle']]],
   ['_7ebitmapfont_1',['~BitmapFont',['../classSDOM_1_1BitmapFont.html#af285f1df73d101aafc64df5875869a79',1,'SDOM::BitmapFont']]],
   ['_7ebutton_2',['~Button',['../classSDOM_1_1Button.html#a690d39c9cff2de4d16ca43513c3a4749',1,'SDOM::Button']]],
-  ['_7echeckbox_3',['~Checkbox',['../classSDOM_1_1Checkbox.html#a9db5c6a58aa2a157927664471270eb6e',1,'SDOM::Checkbox']]],
+  ['_7echeckbutton_3',['~CheckButton',['../classSDOM_1_1CheckButton.html#ab04bb4a2066f019fbe3db29cd1b7a169',1,'SDOM::CheckButton']]],
   ['_7edisplayhandle_4',['~DisplayHandle',['../classSDOM_1_1DisplayHandle.html#a89ad82cc86ec382ae034d8ba4c5f3f4b',1,'SDOM::DisplayHandle']]],
   ['_7eevent_5',['~Event',['../classSDOM_1_1Event.html#a753e643590712abaae4e3299ec5beda4',1,'SDOM::Event']]],
   ['_7eeventmanager_6',['~EventManager',['../classSDOM_1_1EventManager.html#a7b26ffa30985a2befc4cd5960dff95c2',1,'SDOM::EventManager']]],
@@ -17,13 +17,12 @@ var searchData=
   ['_7eifontobject_14',['~IFontObject',['../classSDOM_1_1IFontObject.html#a6053d1b03182e5b41874834a86ead199',1,'SDOM::IFontObject']]],
   ['_7eipanelobject_15',['~IPanelObject',['../classSDOM_1_1IPanelObject.html#af0a0e7cca0790ca8a05ab9638fb5e1c0',1,'SDOM::IPanelObject']]],
   ['_7elabel_16',['~Label',['../classSDOM_1_1Label.html#a6f430cd787f3c28b1993c60bff723f44',1,'SDOM::Label']]],
-  ['_7eradiobox_17',['~Radiobox',['../classSDOM_1_1Radiobox.html#a15bbee25b5ee6aabcb0896513351e198',1,'SDOM::Radiobox']]],
+  ['_7eradiobutton_17',['~RadioButton',['../classSDOM_1_1RadioButton.html#afd2fbb0f82dde2ff65ad86645d6785ea',1,'SDOM::RadioButton']]],
   ['_7esdl_5futils_18',['~SDL_Utils',['../classSDOM_1_1SDL__Utils.html#abb9e5105a0afac653511588662327389',1,'SDOM::SDL_Utils']]],
   ['_7espritesheet_19',['~SpriteSheet',['../classSDOM_1_1SpriteSheet.html#ae1e22d15504a076982ab3ab84cf02ee1',1,'SDOM::SpriteSheet']]],
   ['_7estage_20',['~Stage',['../classSDOM_1_1Stage.html#a54db12b3a1a2ff7d7cfff112f2de1ab6',1,'SDOM::Stage']]],
   ['_7etexture_21',['~Texture',['../classSDOM_1_1Texture.html#a39cff82635f7235c76f2156b409ac181',1,'SDOM::Texture']]],
   ['_7etristatebutton_22',['~TristateButton',['../classSDOM_1_1TristateButton.html#a54dfcd3dce15c37f1db4d416b54ff8b6',1,'SDOM::TristateButton']]],
-  ['_7etristatecheckbox_23',['~TriStateCheckbox',['../classSDOM_1_1TriStateCheckbox.html#af9f878b35358749150fb8059d9898ef7',1,'SDOM::TriStateCheckbox']]],
-  ['_7etruetypefont_24',['~TruetypeFont',['../classSDOM_1_1TruetypeFont.html#ab3a8016e382dd5468376e05a46c5a3ae',1,'SDOM::TruetypeFont']]],
-  ['_7ettfasset_25',['~TTFAsset',['../classSDOM_1_1TTFAsset.html#aca74ac946791073bbf82bcd8ee642d29',1,'SDOM::TTFAsset']]]
+  ['_7etruetypefont_23',['~TruetypeFont',['../classSDOM_1_1TruetypeFont.html#ab3a8016e382dd5468376e05a46c5a3ae',1,'SDOM::TruetypeFont']]],
+  ['_7ettfasset_24',['~TTFAsset',['../classSDOM_1_1TTFAsset.html#aca74ac946791073bbf82bcd8ee642d29',1,'SDOM::TTFAsset']]]
 ];

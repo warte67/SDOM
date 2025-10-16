@@ -118,15 +118,34 @@ Notes
 - EventManager implements capture → target → bubble propagation phases across the display tree.
 - External dependencies include the SDL3 family and sol2 + Lua for scripting.
 
-### Migration note: JSON → Lua
+### Migration note: Lua-first configuration
 
-SDOM has moved to a Lua-first configuration and scripting model. Native JSON-based configuration (via nlohmann/json) is no longer included. To migrate existing JSON files:
+SDOM is Lua-first: configuration and scripting are implemented using Lua (via sol2). Native JSON-based configuration is no longer provided or bundled with SDOM. If you have existing JSON configuration files, you have two practical options:
 
-- Convert JSON objects into Lua modules that return tables (for example, JSON `{ "title": "MyApp", "size": [800,600] }` becomes a Lua file that returns `{"title" = "MyApp", size = {800, 600}}`).
+1. Convert JSON files to Lua modules that return tables (recommended). Example conversion:
+
+   JSON (example):
+
+   ```json
+   { "title": "MyApp", "size": [800, 600] }
+   ```
+
+   Lua module (equivalent):
+
+   ```lua
+   return {
+     title = "MyApp",
+     size = { 800, 600 },
+   }
+   ```
+
+   Load the resulting module in C++/Lua with `require` or `dofile` and use the returned table directly.
+
+2. If you must parse JSON at runtime rather than converting files, add a Lua JSON library to your application (for example `lua-cjson` or `dkjson`) or perform parsing in C++ and expose the resulting tables to the SDOM Lua state. SDOM intentionally does not ship or depend on a JSON parser.
+
+Notes:
 - Arrays in JSON map to numeric-keyed Lua tables; primitives map directly (strings, numbers, booleans).
-- Load configurations from Lua using `require`, `dofile`, or by using the Core-provided Lua state.
-
-For bulk conversions, a small script (Python, Node, or Lua) that reads JSON and emits equivalent Lua table source is recommended. If you need runtime JSON parsing instead of converting files, add a Lua JSON library to your application — SDOM no longer bundles one by default.
+- For bulk conversion, a small script (Python, Node, or Lua) that reads JSON and emits equivalent Lua table source can automate the work.
 
 ---
 

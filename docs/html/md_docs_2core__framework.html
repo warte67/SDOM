@@ -362,15 +362,15 @@ Example (C)</h2>
 <div class="line">{</div>
 <div class="line">    Core&amp; core = <a class="code hl_function" href="namespaceSDOM.html#a6b597fe37c57017a7139d0a4cdc84af6">SDOM::getCore</a>();</div>
 <div class="line">    CoreConfig config;</div>
-<div class="line">  config.windowWidth = 1280;</div>
-<div class="line">  config.windowHeight = 960;</div>
-<div class="line">  config.pixelWidth = 2.0;</div>
-<div class="line">  config.pixelHeight = 2.0;</div>
-<div class="line">  config.allowTextureResize = <span class="keyword">true</span>;</div>
-<div class="line">  config.preserveAspectRatio = <span class="keyword">true</span>;</div>
-<div class="line">  config.renderFlags = SDL_LOGICAL_PRESENTATION_LETTERBOX;</div>
-<div class="line">  config.windowFlags = SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE;</div>
-<div class="line">  config.colorFormat = SDL_PIXELFORMAT_RGBA8888;</div>
+<div class="line">    config.windowWidth = 1280;</div>
+<div class="line">    config.windowHeight = 960;</div>
+<div class="line">    config.pixelWidth = 2.0;</div>
+<div class="line">    config.pixelHeight = 2.0;</div>
+<div class="line">    config.allowTextureResize = <span class="keyword">true</span>;</div>
+<div class="line">    config.preserveAspectRatio = <span class="keyword">true</span>;</div>
+<div class="line">    config.renderFlags = SDL_LOGICAL_PRESENTATION_LETTERBOX;</div>
+<div class="line">    config.windowFlags = SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE;</div>
+<div class="line">    config.colorFormat = SDL_PIXELFORMAT_RGBA8888;</div>
 <div class="line">    core.configure(config);</div>
 <div class="line"> </div>
 <div class="line">    core.addEventListener(EventType::Init, []() { onInit(); });</div>

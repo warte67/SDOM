@@ -93,13 +93,13 @@ $(document).ready(function(){initNavTree('md_README.html',''); initResizable(); 
   <div class="headertitle"><div class="title">SDOM: Simple SDL Document Object Model API</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md359"></a>[<img src="https://img.shields.io/badge/license-ZLIB-blue.svg" alt="License" style="pointer-events: none;" class="inline"/>](LICENSE) <a href="https://warte67.github.io/SDOM/"><img src="https://img.shields.io/badge/docs-Doxygen-blue" alt="Documentation" class="inline"/></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md335"></a>[<img src="https://img.shields.io/badge/license-ZLIB-blue.svg" alt="License" style="pointer-events: none;" class="inline"/>](LICENSE) <a href="https://warte67.github.io/SDOM/"><img src="https://img.shields.io/badge/docs-Doxygen-blue" alt="Documentation" class="inline"/></a></p>
 <p>Doxygen Documentation: <a href="https://warte67.github.io/SDOM/">https://warte67.github.io/SDOM/</a></p>
 <p>High-level project diagram: see <a class="el" href="architecture__overview_8md.html">docs/architecture_overview.md</a></p>
-<h1><a class="anchor" id="autotoc_md360"></a>
+<h1><a class="anchor" id="autotoc_md336"></a>
 Overview</h1>
 <p>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> Framework is a modern C++23 library designed to provide a Document Object Model (DOM) abstraction for SDL3 applications. It enables developers to create and manage graphical user interfaces (GUIs) and interactive elements in a structured, hierarchical manner. The framework is ideal for game development, prototyping, and other cross-platform applications requiring a robust and extensible GUI system. <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is designed to be more data-driven, allowing GUI elements to be configured via <code>.json</code> files or through the use of initialization structures. This approach enables easier customization, dynamic UI generation, and better separation of logic and presentation.</p>
-<h1><a class="anchor" id="autotoc_md361"></a>
+<h1><a class="anchor" id="autotoc_md337"></a>
 Features</h1>
 <ul>
 <li>Simple, composable API for UI and document structures</li>
@@ -107,10 +107,10 @@ Features</h1>
 <li>Minimal dependencies (SDL3, SDL3_image, SDL3_ttf)</li>
 <li>Designed for clarity, maintainability, and extensibility</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md362"></a>
+<h1><a class="anchor" id="autotoc_md338"></a>
 IDataObject: Data-Driven Base Type</h1>
 <p><code><a class="el" href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a></code> is a flexible, data-driven base class designed for use in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. It allows you to register property accessors (getters and setters) and commands that can be accessed and manipulated via JSON, enabling dynamic configuration, serialization, and behavior of objects.</p>
-<h2><a class="anchor" id="autotoc_md363"></a>
+<h2><a class="anchor" id="autotoc_md339"></a>
 Key Features</h2>
 <ul>
 <li>Register property accessors for any property using <code>registerProperty()</code></li>
@@ -119,7 +119,7 @@ Key Features</h2>
 <li>Register and invoke commands (actions) using <code>registerCommand()</code> and <code>command()</code></li>
 <li>Designed for integration with JSON (using <a href="https://github.com/nlohmann/json">nlohmann/json</a>)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md364"></a>
+<h1><a class="anchor" id="autotoc_md340"></a>
 Identifier Conventions</h1>
 <p>To ensure clarity and consistency across both C++ and Lua, <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> uses the following naming conventions:</p>
 <ul>
@@ -145,28 +145,28 @@ Identifier Conventions</h1>
 <p><b>Migration Note:</b> <br  />
  Older code and examples may use <code>camelCase</code> or other styles. These will be updated over time. During transition, both forms may be accepted for compatibility. Please be patient and forgive my laziness and bad habbits. This falls into one of those "get it working first, then make it pretty" categories.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md366"></a>
+<h1><a class="anchor" id="autotoc_md342"></a>
 Getting Started</h1>
-<h2><a class="anchor" id="autotoc_md367"></a>
+<h2><a class="anchor" id="autotoc_md343"></a>
 Prerequisites</h2>
 <ul>
 <li>C++23 compatible compiler</li>
 <li>SDL3, SDL3_image, SDL3_ttf development libraries</li>
 <li>CMake 3.20 or newer</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md368"></a>
+<h2><a class="anchor" id="autotoc_md344"></a>
 Building the SDOM Library</h2>
 <div class="fragment"><div class="line">git clone https://github.com/warte67/SDOM.git</div>
 <div class="line">cd SDOM</div>
 <div class="line">./rebuild # to build and install the SDOM library from this folder</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md369"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md345"></a>
 Running the Example</h2>
 <div class="fragment"><div class="line">cd examples/test</div>
 <div class="line">./compile # to only build files which have changed</div>
 <div class="line"># or</div>
 <div class="line">./compile clean # to completely rebuild the library and the test example</div>
 <div class="line">./prog # to run the test example</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md370"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md346"></a>
 Notable recent changes</h2>
 <ul>
 <li>Symbol rename: DisplayObject -&gt; DisplayHandle and AssetObject -&gt; AssetHandle across the codebase and Lua scripts (Oct 2025).<ul>
@@ -175,13 +175,13 @@ Notable recent changes</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md371"></a>
+<h2><a class="anchor" id="autotoc_md347"></a>
 Migration notes</h2>
 <ul>
 <li>If you maintain scripts that referenced the old names, search &amp; replace DisplayObject / AssetObject -&gt; DisplayHandle / AssetHandle.</li>
 <li>The repository includes transitional aliases during migration for staged rollouts (if present); prefer the new names in new code.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md372"></a>
+<h1><a class="anchor" id="autotoc_md348"></a>
 Project Structure</h1>
 <ul>
 <li><code>src/</code> — Core <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> source code</li>
@@ -189,10 +189,10 @@ Project Structure</h1>
 <li><code>examples/</code> — Example applications</li>
 <li><code>docs/</code> — Documentation</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md373"></a>
+<h1><a class="anchor" id="autotoc_md349"></a>
 SDL3 Build Dependencies</h1>
 <p>see: <a href="https://github.com/libsdl-org/SDL/blob/main/docs/README-linux.md#build-dependencies">https://github.com/libsdl-org/SDL/blob/main/docs/README-linux.md#build-dependencies</a></p>
-<h1><a class="anchor" id="autotoc_md374"></a>
+<h1><a class="anchor" id="autotoc_md350"></a>
 Debian Build Dependencies</h1>
 <div class="fragment"><div class="line">sudo apt-get install build-essential git make \</div>
 <div class="line">pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \</div>
@@ -200,19 +200,19 @@ Debian Build Dependencies</h1>
 <div class="line">libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \</div>
 <div class="line">libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \</div>
 <div class="line">libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libfreetype-dev</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md375"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md351"></a>
 Arch Build Dependencies</h1>
 <div class="fragment"><div class="line">sudo pacman -S alsa-lib cmake hidapi ibus jack libdecor libgl libpulse libusb libx11 libxcursor libxext libxinerama libxkbcommon libxrandr libxrender libxss libxtst mesa ninja pipewire sndio vulkan-driver vulkan-headers wayland wayland-protocols</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md376"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md352"></a>
 Freetype on Debian:</h1>
 <p>Freetype may not be installed in Debian by default. </p><div class="fragment"><div class="line">sudo apt install libfreetype-dev</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md377"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md353"></a>
 Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf</h1>
 <p>Clone the repositories: </p><div class="fragment"><div class="line">git clone https://github.com/libsdl-org/SDL.git</div>
 <div class="line">git clone https://github.com/libsdl-org/SDL_mixer.git</div>
 <div class="line">git clone https://github.com/libsdl-org/SDL_image.git</div>
 <div class="line">git clone https://github.com/libsdl-org/SDL_ttf.git</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md378"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md354"></a>
 Build per SDL3:</h1>
 <div class="fragment"><div class="line">git clone https://github.com/libsdl-org/SDL.git</div>
 <div class="line">cd SDL</div>
@@ -220,7 +220,7 @@ Build per SDL3:</h1>
 <div class="line">cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/.local</div>
 <div class="line">make -j$(nproc)</div>
 <div class="line">make install</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md379"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md355"></a>
 Build and install SDL3 libraries</h1>
 <div class="fragment"><div class="line"># build SDL</div>
 <div class="line">cd SDL</div>
@@ -250,7 +250,7 @@ Build and install SDL3 libraries</h1>
 <div class="line">cmake ..</div>
 <div class="line">make -j$(nproc)</div>
 <div class="line">sudo make install</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md380"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md356"></a>
 Lua and Sol2</h1>
 <p>Make sure lua is installed. Debian: </p><div class="fragment"><div class="line">sudo apt update</div>
 <div class="line">sudo apt install liblua5.3-dev</div>
@@ -269,24 +269,24 @@ Lua and Sol2</h1>
 <div class="line">target_link_libraries(your_target PRIVATE ${LUA_LIB})</div>
 </div><!-- fragment --></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md381"></a>
+<h1><a class="anchor" id="autotoc_md357"></a>
 Documentation</h1>
 <p>Documentation is generated using <a href="https://www.doxygen.nl/">Doxygen</a>: </p><div class="fragment"><div class="line">doxygen docs/Doxyfile</div>
 </div><!-- fragment --><p> Output will be in the <code>docs/html/</code> directory.</p>
 <p>Additional docs:</p><ul>
 <li>Overall architecture diagram: <a class="el" href="architecture__overview_8md.html">docs/architecture_overview.md</a></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md382"></a>
+<h2><a class="anchor" id="autotoc_md358"></a>
 Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)</h2>
 <p>We embed Mermaid diagrams in Markdown. To export them as images for inclusion in generated HTML (or for environments without Mermaid support), install mermaid-cli and run the helper script:</p>
 <p>Debian: </p><div class="fragment"><div class="line">sudo apt install nodejs npm</div>
 </div><!-- fragment --><p>Install Mermaid CLI globally: </p><div class="fragment"><div class="line">npm install -g @mermaid-js/mermaid-cli</div>
 <div class="line">bash scripts/export_mermaid.sh</div>
 </div><!-- fragment --><p>Outputs are written to <code>docs/diagrams/&lt;doc-name&gt;/diagram-XX.png|svg</code>.</p>
-<h1><a class="anchor" id="autotoc_md383"></a>
+<h1><a class="anchor" id="autotoc_md359"></a>
 License</h1>
 <p>ZLIB License. See source files for details.</p>
-<h1><a class="anchor" id="autotoc_md384"></a>
+<h1><a class="anchor" id="autotoc_md360"></a>
 Author</h1>
 <p>Jay Faries (<a href="https://github.com/warte67">warte67</a>) </p>
 </div></div><!-- contents -->

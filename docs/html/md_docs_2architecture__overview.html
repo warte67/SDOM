@@ -206,14 +206,25 @@ View Mermaid source</summary>
 <li>External dependencies include the SDL3 family and sol2 + Lua for scripting.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md1"></a>
-Migration note: JSON → Lua</h2>
-<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> has moved to a Lua-first configuration and scripting model. Native JSON-based configuration (via nlohmann/json) is no longer included. To migrate existing JSON files:</p>
-<ul>
-<li>Convert JSON objects into Lua modules that return tables (for example, JSON <code>{ "title": "MyApp", "size": [800,600] }</code> becomes a Lua file that returns <code>{"title" = "MyApp", size = {800, 600}}</code>).</li>
+Migration note: Lua-first configuration</h2>
+<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is Lua-first: configuration and scripting are implemented using Lua (via sol2). Native JSON-based configuration is no longer provided or bundled with <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. If you have existing JSON configuration files, you have two practical options:</p>
+<ol type="1">
+<li><p class="startli">Convert JSON files to Lua modules that return tables (recommended). Example conversion:</p>
+<p class="startli">JSON (example):</p>
+<div class="fragment"><div class="line">{ &quot;title&quot;: &quot;MyApp&quot;, &quot;size&quot;: [800, 600] }</div>
+</div><!-- fragment --><p class="startli">Lua module (equivalent):</p>
+<div class="fragment"><div class="line">return {</div>
+<div class="line">  title = &quot;MyApp&quot;,</div>
+<div class="line">  size = { 800, 600 },</div>
+<div class="line">}</div>
+</div><!-- fragment --><p class="startli">Load the resulting module in C++/Lua with <code>require</code> or <code>dofile</code> and use the returned table directly.</p>
+</li>
+<li>If you must parse JSON at runtime rather than converting files, add a Lua JSON library to your application (for example <code>lua-cjson</code> or <code>dkjson</code>) or perform parsing in C++ and expose the resulting tables to the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> Lua state. <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> intentionally does not ship or depend on a JSON parser.</li>
+</ol>
+<p>Notes:</p><ul>
 <li>Arrays in JSON map to numeric-keyed Lua tables; primitives map directly (strings, numbers, booleans).</li>
-<li>Load configurations from Lua using <code>require</code>, <code>dofile</code>, or by using the Core-provided Lua state.</li>
+<li>For bulk conversion, a small script (Python, Node, or Lua) that reads JSON and emits equivalent Lua table source can automate the work.</li>
 </ul>
-<p>For bulk conversions, a small script (Python, Node, or Lua) that reads JSON and emits equivalent Lua table source is recommended. If you need runtime JSON parsing instead of converting files, add a Lua JSON library to your application — <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> no longer bundles one by default.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md3"></a>
 Runtime Flow (High Level)</h1>

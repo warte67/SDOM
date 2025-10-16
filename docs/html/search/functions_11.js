@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['radiobox_0',['radiobox',['../classSDOM_1_1Radiobox.html#aa6907a6211df26ec6e3a5fea37795e84',1,'SDOM::Radiobox::Radiobox(const sol::table &amp;config)'],['../classSDOM_1_1Radiobox.html#ae2f52a836cd94d0762483187c382f1a6',1,'SDOM::Radiobox::Radiobox()=default'],['../classSDOM_1_1Radiobox.html#a302da2e2d86c3fc54888e0dce0df81b0',1,'SDOM::Radiobox::Radiobox(const InitStruct &amp;init)']]],
+  ['radiobutton_0',['radiobutton',['../classSDOM_1_1RadioButton.html#a57c8ecee3ddff6b5d3d8eafe4dbc9159',1,'SDOM::RadioButton::RadioButton(const sol::table &amp;config)'],['../classSDOM_1_1RadioButton.html#aee95b995fcd1073f89f01c6bc32857e9',1,'SDOM::RadioButton::RadioButton()=default'],['../classSDOM_1_1RadioButton.html#af5e260cd3bc158c19e7bd607b0886ad2',1,'SDOM::RadioButton::RadioButton(const InitStruct &amp;init)']]],
   ['rebuildtexture_5f_1',['rebuildTexture_',['../classSDOM_1_1Label.html#a72c5ec2f40dd4b556fc4ced61010439e',1,'SDOM::Label']]],
   ['reconfigure_2',['reconfigure',['../classSDOM_1_1Core.html#a953887ffaf0b6c6917ae8075b6edaa27',1,'SDOM::Core']]],
   ['registerdomtype_3',['registerDomType',['../classSDOM_1_1Factory.html#a8862aa32cdf361e08525216ac7976eb3',1,'SDOM::Factory']]],

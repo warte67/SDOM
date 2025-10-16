@@ -93,22 +93,22 @@ $(document).ready(function(){initNavTree('md_docs_2IPanelObject.html',''); initR
   <div class="headertitle"><div class="title">Design Goals for &lt;tt&gt;IPanelObject&lt;/tt&gt;</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md184"></a></p><ul>
+<div class="textblock"><p><a class="anchor" id="autotoc_md150"></a></p><ul>
 <li><b>Base class</b> for all scalable UI containers (Panel, Frame, Group, Button, etc.)</li>
 <li><b>Fixed 9-slice grid:</b> uses the predefined index offsets from the default or supplied SpriteSheet (see above tables)</li>
 <li><b>Support for theming/skins:</b> to change appearance, supply a custom SpriteSheet with the same 9-slice layout</li>
 </ul>
 <p>If a user wishes to use a different number of tiles, or render their windows, buttons, group boxes, etc. in a different way, they can create custom DisplayObjects. The 9-slice layout and offsets are fixed for all IPanelObject-based panels. </p>
-<h1><a class="anchor" id="autotoc_md185"></a>
+<h1><a class="anchor" id="autotoc_md151"></a>
 IPanelObject Design Document</h1>
-<h2><a class="anchor" id="autotoc_md186"></a>
+<h2><a class="anchor" id="autotoc_md152"></a>
 What is a 9-slice (9-patch) panel?</h2>
 <p>A <b>9-slice</b> (or 9-patch) panel is a technique for drawing scalable UI elements (like panels, buttons, frames) using a grid of 9 regions:</p><ul>
 <li><b>4 corners:</b> drawn at original size (not stretched)</li>
 <li><b>4 edges:</b> stretched in one direction (horizontally or vertically)</li>
 <li><b>1 center:</b> stretched in both directions</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md187"></a>
+<h2><a class="anchor" id="autotoc_md153"></a>
 What is a 9-slice (9-patch) panel?</h2>
 <p>A <b>9-slice</b> (or 9-patch) panel is a technique for drawing scalable UI elements (like panels, buttons, frames) using a grid of 9 regions:</p><ul>
 <li><b>4 corners:</b> drawn at original size (not stretched) but they may be clipped towards the inside.</li>
@@ -123,10 +123,10 @@ What is a 9-slice (9-patch) panel?</h2>
 <p><b>Edge tiles</b> are stretched only in one direction (horizontally for top/bottom edges, vertically for left/right edges). <br  />
  <b>The center tile</b> is stretched in both directions to fill the remaining space.</p>
 <p>This approach allows us to create resizable, skinnable UI containers that look good at any size, using a single sprite sheet of any tile size, while ensuring that corners always retain their intended appearance—even when the panel is very small.</p>
-<h2><a class="anchor" id="autotoc_md188"></a>
+<h2><a class="anchor" id="autotoc_md154"></a>
 Reference: sprite_8x8 Icon Index Catalog</h2>
 <p>For a complete catalog of the available 9-slice graphics and their indices, see sprite_8x8.md.</p>
-<h3><a class="anchor" id="autotoc_md189"></a>
+<h3><a class="anchor" id="autotoc_md155"></a>
 Predefined 9-Slice Sets in &lt;tt&gt;sprite_8x8&lt;/tt&gt;</h3>
 <p>The default/integrated <code>sprite_8x8</code> SpriteSheet provides several predefined 9-slice sets for UI panels and controls. Each set consists of 9 tiles arranged in a 3x3 grid, with the following index offsets:</p>
 <table class="markdownTable">
@@ -179,7 +179,7 @@ Predefined 9-Slice Sets in &lt;tt&gt;sprite_8x8&lt;/tt&gt;</h3>
 <li><b>Content Anchoring:</b> Content will be attached as child nodes and anchored by their four edges to any of their parent's anchoring reference points. See <a class="el" href="md_docs_2display__object__anchoring.html">display_object_anchoring.md</a> for details.</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md191"></a>
+<h2><a class="anchor" id="autotoc_md157"></a>
 Suggested Steps</h2>
 <ol type="1">
 <li><b>Define the <code>IPanelObject</code> interface:</b><ul>
@@ -234,7 +234,7 @@ Suggested Steps</h2>
 </li>
 </ol>
 <hr  />
-<h2><a class="anchor" id="autotoc_md193"></a>
+<h2><a class="anchor" id="autotoc_md159"></a>
 Interface Sketch</h2>
 <div class="fragment"><div class="line"><span class="keyword">class </span>IPanelObject : <span class="keyword">public</span> IDisplayObject {</div>
 <div class="line"><span class="keyword">public</span>:</div>
@@ -246,7 +246,7 @@ Interface Sketch</h2>
 <div class="line">    <span class="comment">// Uses fixed 9-slice offsets as described above</span></div>
 <div class="line">    <span class="comment">// ...padding, margin, etc...</span></div>
 <div class="line">};</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md194"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md160"></a>
 Note on Button Objects and State Handling</h2>
 <p>The <code>Button</code> class is itself a 9-slice (9-panel) object, typically derived from <code>IPanelObject</code> for layout and rendering. To provide a common interface for button state (such as up, down, hovered, checked, etc.), a minimal <code>IButtonObject</code> interface can be used. This interface should provide:</p>
 <ul>

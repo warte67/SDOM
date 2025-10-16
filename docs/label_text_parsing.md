@@ -1,7 +1,13 @@
 # Label Text Parsing Design Document
 
 ## Overview
-This document describes the design and implementation strategy for parsing and rendering text in the SDOM2 `Label` class, including support for word wrapping, inline style changes, escape sequences, and advanced alignment.
+The Label system in the SDOM API is a lightweight, scriptable text rendering component designed for both retro-style bitmap fonts and modern truetype rendering. It tokenizes input into word and escape tokens so inline formatting (color, bold, outline, padding, dropshadow, alignment, numeric style tweaks) can be applied on a per-token basis. Escape sequences use case‑insensitive square‑bracket tags (e.g., [bold], [color=#RRGGBB], [pad=5x7]) and support nested scopes and explicit resets so authors can compose rich inline styles without separate layout passes.
+
+Rendering is separated into tokenization, layout (wrapping, alignment grouping, autosizing), and phrase rendering phases. Each token carries a LabelStyle/FontStyle snapshot (including numeric fields like borderThickness and dropshadow offsets) so grouping into phrases lets the engine render visually identical runs efficiently. Alignment is encoded compactly (nine alignment modes) and tokens are sorted into the appropriate buckets for deterministic placement and multi-line wrapping behavior.
+
+The Label supports autosizing, clipping to parent bounds, and both per-token and per-phrase style effects. It exposes token information to Lua (e.g., via DisplayHandle:getTokenList()), enabling unit tests and scripts to inspect tokenized output and verify style propagation. The implementation is forgiving: malformed escape parameters are validated and ignored (logged) rather than throwing, which improves robustness for live content authored in Lua.
+
+Finally, the system is designed to be extensible: new escapes can be added with minimal tokenizer changes, and the rendering pipeline cleanly separates font-specific handling (bitmap vs TTF) from token management and layout logic. This makes the Label suitable for game UI text, HUD displays, and retro-styled interfaces while remaining script-friendly and testable.
 
 ---
 
@@ -13,7 +19,24 @@ This document describes the design and implementation strategy for parsing and r
 
 ---
 
+## Retro-Inspired Graphic Glyphs
+
+The graphic glyphs in the `internal_font_8x8` font are designed with a retro aesthetic, reminiscent of the character sets used in vintage computers like the Tandy systems. These glyphs provide a nostalgic yet functional approach to creating visual elements in text-based environments. The four sets of graphic glyphs—line-based, solid-on-clear, dithered-on-clear, and solid-on-dithered—offer a versatile toolkit for rendering simple graphics, icons, and patterns.
+
+Note: This needs to be updated to use the new font_8x8 and icon_8x8 (or icon_10x10) sets.
+
+### Customization Potential
+
+While the space used for these retro-styled graphic glyphs could have been allocated for special characters like Greek math symbols, the nostalgic appeal of these glyphs felt more fitting. Additionally, the design allows for end-user customization, enabling users to redefine or expand the glyph set to suit their specific needs.
+
 ## Escape Sequence Syntax
+The Label escape sequence syntax uses square-bracket tokens (e.g., `[bold]`, `[color=red]`, `[size=12]`) to change rendering state inline. Escape tags are case‑insensitive and come in two forms: simple toggles (`[bold]`, `[reset]`) and parameterized tags (`[color=#RRGGBB]`, `[pad=5x7]`, `[dropshadow=4,6]`). Tags are not rendered as text; instead they update the current FontStyle/LabelStyle that will be applied to subsequently emitted word tokens. Numeric and hex parameters are validated before use; malformed parameters are ignored and do not throw. Use double‑bracket escapes (`[[]` and `[]]`) to emit literal `[` and `]` characters.
+
+Escape sequences are tokenized separately from word tokens so the parser can push and pop style state. Opening tags apply a change that remains in effect until a matching closing tag (e.g., `[/pad]`) or until a `[reset]` is encountered; nested tags are supported and restored in LIFO order. Special parsing rules: escapes inside double-quoted blocks are treated as literal text, bracket escapes are single tokens, and numeric escapes affect specific style fields (borderThickness, outlineThickness, padding_horiz/vert, dropshadowOffsetX/Y). For predictable results prefer explicit parameters and well-formed tags; the tokenizer logs but tolerates malformed or unsupported tags to avoid breaking rendering.// filepath: /home/jay/Documents/GitHub/SDOM/docs/label_text_parsing.md
+The Label escape sequence syntax uses square-bracket tokens (e.g., `[bold]`, `[color=red]`, `[size=12]`) to change rendering state inline. Escape tags are case‑insensitive and come in two forms: simple toggles (`[bold]`, `[reset]`) and parameterized tags (`[color=#RRGGBB]`, `[pad=5x7]`, `[dropshadow=4,6]`). Tags are not rendered as text; instead they update the current FontStyle/LabelStyle that will be applied to subsequently emitted word tokens. Numeric and hex parameters are validated before use; malformed parameters are ignored and do not throw. Use double‑bracket escapes (`[[]` and `[]]`) to emit literal `[` and `]` characters.
+
+Escape sequences are tokenized separately from word tokens so the parser can push and pop style state. Opening tags apply a change that remains in effect until a matching closing tag (e.g., `[/pad]`) or until a `[reset]` is encountered; nested tags are supported and restored in LIFO order. Special parsing rules: escapes inside double-quoted blocks are treated as literal text, bracket escapes are single tokens, and numeric escapes affect specific style fields (borderThickness, outlineThickness, padding_horiz/vert, dropshadowOffsetX/Y). For predictable results prefer explicit parameters and well-formed tags; the tokenizer logs but tolerates malformed or unsupported tags to avoid breaking rendering.
+
 ---
 
 ### Supported Color Names
@@ -111,17 +134,26 @@ FontStyle::dropShadowColor // "shadow"
 - `[color=red:bgnd]`      — sets the background to red
 - `[color=green:border]`  — sets the border to green
 - `[RGB:222222:outline]`  — sets the outline color to dark gray
-- `[RGBA:0000007f:shadow] — sets the drop shadow to transparent black
-
+- `[RGBA:0000007f:shadow]` — sets the drop shadow to transparent black
 
 ### Style
-- `[bold]`       — Bold text
-- `[italic]`     — Italic text
-- `[underline]`  — Underlined text
-- `[strike]`     — Strikethrough text
-- `[outline]`    — Outlined text
-- `[dropshadow]` — Dropshadow text
-- `[reset]`      — Reset all styles to default
+
+Style escapes enable common typographic effects. Most are toggles that remain in effect until a matching closing escape (e.g., `[/bold]`) or a global `[reset]`. Closing escapes are strongly recommended for predictable nesting and restoration of prior styles.
+
+- `[bold] ... [/bold]` — Bold text. If your font supports a bold metric this will use it; otherwise rendering emulates bold where possible.  
+- `[italic] ... [/italic]` — Italic text. Uses an italic font variant if available or a simulated slant.  
+- `[underline] ... [/underline]` — Underlined text. Drawn under the glyphs for the enclosed tokens.  
+- `[strike] ... [/strike]` — Strikethrough (line through text) for the enclosed tokens.  
+- `[outline]` or `[outline=N] ... [/outline]` — Outlined text. Optional numeric parameter `N` sets outline thickness; omit `N` to enable with the default thickness. Closing `[/outline]` restores the previous outline thickness.  
+- `[dropshadow]` or `[dropshadow=X,Y] ... [/dropshadow]` — Enable a drop shadow for enclosed tokens. Optional `X,Y` set the shadow offset; defaults are used if omitted. `[/dropshadow]` restores previous shadow state.  
+- `[reset]` — Immediate full reset: clears all active style, color, alignment, and numeric overrides and restores the baseline LabelStyle. `[reset]` has no separate closing tag.
+
+Notes:
+- Tags are case‑insensitive. Both forms (explicit close `[/tag]` and global `[reset]`) are accepted; prefer explicit closes for nested changes.
+- Numeric/parameterized variants validate inputs and ignore malformed values instead of throwing.
+- Styles stack: entering a style pushes the previous value and `[/tag]` pops it (LIFO). `[reset]` clears the stack entirely.
+- Escape sequences are not rendered as text; they affect subsequent word tokens only.
+
 
 #### Colors:
 ```
@@ -133,7 +165,109 @@ SDL_Color FontStyle::dropShadowColor = {0, 0, 0, 128};   // "shadow"
 ```
 
 ### Alignment
--
+
+Labels support independent horizontal and vertical alignment. Horizontal modes: left, center, right. Vertical modes: top, middle, bottom. Alignment is stored in the LabelStyle (either as two explicit fields or a compact bitfield) and is applied per-token so different parts of the same label can be aligned differently.
+
+Two ways to set alignment:
+- Default / property-level: the label object exposes default alignment flags (e.g., label.align_h and label.align_v). These apply to all tokens unless an inline alignment escape overrides them.
+- Inline escape tags: use `[align=left]`, `[align=center]`, `[align=right]`, `[align=top]`, `[align=middle]`, `[align=bottom]`. Inline tags change only the matching axis:
+  - `[align=left|center|right]` changes horizontal alignment.
+  - `[align=top|middle|bottom]` changes vertical alignment.
+Inline alignment remains in effect until a matching closing tag (e.g., `[/align]`) or `[reset]` restores the previous alignment. Nested alignment tags are supported and restored in LIFO order.
+
+Token grouping and rendering
+- After tokenization every word token carries its LabelStyle snapshot, including the effective alignment for that token.
+- Tokens are sorted into nine alignment groups (horizontal × vertical): TOP_LEFT, TOP_CENTER, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT.
+- Each alignment group is laid out and rendered independently. Within a group, words are wrapped into lines using the label width (minus padding) and then positioned according to the group's horizontal rule. The group's vertical rule controls the overall vertical placement of those lines inside the label bounds.
+- This grouping lets the label mix different alignments (for example a left-aligned header followed by a centered score) while still computing layout deterministically and efficiently.
+
+Precedence and semantics
+- Inline alignment escapes override the label's default alignment for subsequent tokens only. A closing `[/align]` or `[reset]` restores the previous alignment state.
+- If an inline tag specifies a horizontal keyword it changes only the horizontal axis; vertical keywords change only the vertical axis. Using `[align=center]` inside text will center horizontally while leaving vertical alignment unchanged.
+- When `auto_width`/`auto_height` is enabled, alignment calculations use the final computed label bounds (after autosizing). Centering and middle placement are therefore computed against those adjusted bounds. If the label is clipped to its parent, alignment is performed within the clipped bounds.
+
+Examples
+- Inline horizontal override:
+  ```
+  Score: [align=center]1000[/align] Level: 3
+  ```
+  The "1000" token(s) will be centered while surrounding text uses the label default.
+- Inline vertical usage (useful for multi-line composed labels):
+  ```
+  [align=top]Header[/align]
+  [align=middle]Body[/align]
+  [align=bottom]Footer[/align]
+  ```
+
+Implementation notes
+- Store alignment in the LabelStyle (two fields or a compact bitfield). When tokenizing, snapshot the current alignment into the token so layout can proceed purely from token data.
+- When grouping tokens into nine buckets, preserve original token order within each bucket so phrase grouping and wrapping remain deterministic.
+- Because alignment is per-token, phrase formation (runs of identical style) should be done per-alignment group to allow efficient phrase-level rendering (caching TTF surfaces or batching bitmap glyph draws).
+- Tests: add unit tests that create labels mixing `[align=...]` escapes and verify that tokens are placed into the correct alignment buckets and that rendered bounding boxes reflect the requested rules.
+
+Performance
+- The nine-group approach enables parallel/independent layout passes for each alignment mode and reduces branching during rendering. It also makes it straightforward to only re-layout the alignment groups affected by a style change.
+
+### Quick reference
+- Default property: label.align = { horizontal = left|center|right, vertical = top|middle|bottom }
+- Inline tags: `[align=left|center|right|top|middle|bottom]` and `[/align]`
+- Inline tags override default until closed or reset.
+- Tokens are grouped into the nine alignment queues and laid out/rendered per-queue.
+
+---
+
+### Alignment
+
+Labels support independent horizontal and vertical alignment. Horizontal modes: left, center, right. Vertical modes: top, middle, bottom. Alignment is stored in the LabelStyle (either as two explicit fields or a compact bitfield) and is applied per-token so different parts of the same label can be aligned differently.
+
+Two ways to set alignment:
+- Default / property-level: the label object exposes default alignment flags (e.g., label.align_h and label.align_v). These apply to all tokens unless an inline alignment escape overrides them.
+- Inline escape tags: use `[align=left]`, `[align=center]`, `[align=right]`, `[align=top]`, `[align=middle]`, `[align=bottom]`. Inline tags change only the matching axis:
+  - `[align=left|center|right]` changes horizontal alignment.
+  - `[align=top|middle|bottom]` changes vertical alignment.
+Inline alignment remains in effect until a matching closing tag (e.g., `[/align]`) or `[reset]` restores the previous alignment. Nested alignment tags are supported and restored in LIFO order.
+
+Token grouping and rendering
+- After tokenization every word token carries its LabelStyle snapshot, including the effective alignment for that token.
+- Tokens are sorted into nine alignment groups (horizontal × vertical): TOP_LEFT, TOP_CENTER, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT.
+- Each alignment group is laid out and rendered independently. Within a group, words are wrapped into lines using the label width (minus padding) and then positioned according to the group's horizontal rule. The group's vertical rule controls the overall vertical placement of those lines inside the label bounds.
+- This grouping lets the label mix different alignments (for example a left-aligned header followed by a centered score) while still computing layout deterministically and efficiently.
+
+Precedence and semantics
+- Inline alignment escapes override the label's default alignment for subsequent tokens only. A closing `[/align]` or `[reset]` restores the previous alignment state.
+- If an inline tag specifies a horizontal keyword it changes only the horizontal axis; vertical keywords change only the vertical axis. Using `[align=center]` inside text will center horizontally while leaving vertical alignment unchanged.
+- When `auto_width`/`auto_height` is enabled, alignment calculations use the final computed label bounds (after autosizing). Centering and middle placement are therefore computed against those adjusted bounds. If the label is clipped to its parent, alignment is performed within the clipped bounds.
+
+Examples
+- Inline horizontal override:
+  ```
+  Score: [align=center]1000[/align] Level: 3
+  ```
+  The "1000" token(s) will be centered while surrounding text uses the label default.
+- Inline vertical usage (useful for multi-line composed labels):
+  ```
+  [align=top]Header[/align]
+  [align=middle]Body[/align]
+  [align=bottom]Footer[/align]
+  ```
+
+Implementation notes
+- Store alignment in the LabelStyle (two fields or a compact bitfield). When tokenizing, snapshot the current alignment into the token so layout can proceed purely from token data.
+- When grouping tokens into nine buckets, preserve original token order within each bucket so phrase grouping and wrapping remain deterministic.
+- Because alignment is per-token, phrase formation (runs of identical style) should be done per-alignment group to allow efficient phrase-level rendering (caching TTF surfaces or batching bitmap glyph draws).
+- Tests: add unit tests that create labels mixing `[align=...]` escapes and verify that tokens are placed into the correct alignment buckets and that rendered bounding boxes reflect the requested rules.
+
+Performance
+- The nine-group approach enables parallel/independent layout passes for each alignment mode and reduces branching during rendering. It also makes it straightforward to only re-layout the alignment groups affected by a style change.
+
+### Quick reference
+- Default property: label.align = { horizontal = left|center|right, vertical = top|middle|bottom }
+- Inline tags: `[align=left|center|right|top|middle|bottom]` and `[/align]`
+- Inline tags override default until closed or reset.
+- Tokens are grouped into the nine alignment queues and laid out/rendered per-queue.
+
+
+
 #### Bitfield Encoding for Alignment
 
 Alignment values can be encoded as bitfields to represent the nine possible text alignment modes:
@@ -449,8 +583,182 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
 
 ---
 
+## ASCII Glyphs
+
+| Normal Index | Normal Character | Bold Index | Bold Character |
+|--------------|------------------|------------|----------------|
+| 0            | (space)          | 96         | (space)        |
+| 1            | !                | 97         | !              |
+| 2            | "                | 98         | "              |
+| 3            | #                | 99         | #              |
+| 4            | $                | 100        | $              |
+| 5            | %                | 101        | %              |
+| 6            | &                | 102         | &              |
+| 7            | '                | 103        | '              |
+| 8            | (                | 104        | (              |
+| 9            | )                | 105        | )              |
+| 10           | *                | 106        | *              |
+| 11           | +                | 107        | +              |
+| 12           | ,                | 108        | ,              |
+| 13           | -                | 109        | -              |
+| 14           | .                | 110        | .              |
+| 15           | /                | 111        | /              |
+| 16           | 0                | 112        | 0              |
+| 17           | 1                | 113        | 1              |
+| 18           | 2                | 114        | 2              |
+| 19           | 3                | 115        | 3              |
+| 20           | 4                | 116        | 4              |
+| 21           | 5                | 117        | 5              |
+| 22           | 6                | 118        | 6              |
+| 23           | 7                | 119        | 7              |
+| 24           | 8                | 120        | 8              |
+| 25           | 9                | 121        | 9              |
+| 26           | :                | 122        | :              |
+| 27           | ;                | 123        | ;              |
+| 28           | <                | 124        | <              |
+| 29           | =                | 125        | =              |
+| 30           | >                | 126        | >              |
+| 31           | ?                | 127        | ?              |
+| 32           | @                | 128        | @              |
+| 33           | A                | 129        | A              |
+| 34           | B                | 130        | B              |
+| 35           | C                | 131        | C              |
+| 36           | D                | 132        | D              |
+| 37           | E                | 133        | E              |
+| 38           | F                | 134        | F              |
+| 39           | G                | 135        | G              |
+| 40           | H                | 136        | H              |
+| 41           | I                | 137        | I              |
+| 42           | J                | 138        | J              |
+| 43           | K                | 139        | K              |
+| 44           | L                | 140        | L              |
+| 45           | M                | 141        | M              |
+| 46           | N                | 142        | N              |
+| 47           | O                | 143        | O              |
+| 48           | P                | 144        | P              |
+| 49           | Q                | 145        | Q              |
+| 50           | R                | 146        | R              |
+| 51           | S                | 147        | S              |
+| 52           | T                | 148        | T              |
+| 53           | U                | 149        | U              |
+| 54           | V                | 150        | V              |
+| 55           | W                | 151        | W              |
+| 56           | X                | 152        | X              |
+| 57           | Y                | 153        | Y              |
+| 58           | Z                | 154        | Z              |
+| 59           | [                | 155        | [              |
+| 60           | \                | 156        | \              |
+| 61           | ]                | 157        | ]              |
+| 62           | ^                | 158        | ^              |
+| 63           | _                | 159        | _              |
+| 64           | `                | 160        | `              |
+| 65           | a                | 161        | a              |
+| 66           | b                | 162        | b              |
+| 67           | c                | 163        | c              |
+| 68           | d                | 164        | d              |
+| 69           | e                | 165        | e              |
+| 70           | f                | 166        | f              |
+| 71           | g                | 167        | g              |
+| 72           | h                | 168        | h              |
+| 73           | i                | 169        | i              |
+| 74           | j                | 170        | j              |
+| 75           | k                | 171        | k              |
+| 76           | l                | 172        | l              |
+| 77           | m                | 173        | m              |
+| 78           | n                | 174        | n              |
+| 79           | o                | 175        | o              |
+| 80           | p                | 176        | p              |
+| 81           | q                | 177        | q              |
+| 82           | r                | 178        | r              |
+| 83           | s                | 179        | s              |
+| 84           | t                | 180        | t              |
+| 85           | u                | 181        | u              |
+| 86           | v                | 182        | v              |
+| 87           | w                | 183        | w              |
+| 88           | x                | 184        | x              |
+| 89           | y                | 185        | y              |
+| 90           | z                | 186        | z              |
+| 91           | {                | 187        | {              |
+| 92           | \|                | 188        | \|              |
+| 93           | }                | 189        | }              |
+| 94           | ~                | 190        | ~              |
+| 95           | (C)              | 191        | (C)            |
+
+This table represents the first 192 glyphs in the `default_8x8` font. Additional glyphs, such as icons, can be cataloged in subsequent sections.
+
+## Graphic Glyphs
+
+| Index | Icon Description          |
+|-------|---------------------------|
+| 192   | Line None                 |
+| 193   | Line North                |
+| 194   | Line East                 |
+| 195   | Line North-East           |
+| 196   | Line South                |
+| 197   | Line North-South          |
+| 198   | Line East-South           |
+| 199   | Line North-East-South     |
+| 200   | Line West                 |
+| 201   | Line North-West           |
+| 202   | Line East-West            |
+| 203   | Line North-East-West      |
+| 204   | Line South-West           |
+| 205   | Line North-South-West     |
+| 206   | Line East-South-West      |
+| 207   | Line North-East-South-West|
+| 208   | Solid None                 |
+| 209   | Solid Upper-Right          |
+| 210   | Solid Lower-Right          |
+| 211   | Solid Upper-Right, Lower-Right |
+| 212   | Solid Lower-Left           |
+| 213   | Solid Upper-Right, Lower-Left  |
+| 214   | Solid Lower-Right, Lower-Left  |
+| 215   | Solid Upper-Right, Lower-Right, Lower-Left |
+| 216   | Solid Upper-Left           |
+| 217   | Solid Upper-Right, Upper-Left |
+| 218   | Solid Lower-Right, Upper-Left |
+| 219   | Solid Upper-Right, Lower-Right, Upper-Left |
+| 220   | Solid Lower-Left, Upper-Left |
+| 221   | Solid Upper-Right, Lower-Left, Upper-Left |
+| 222   | Solid Lower-Right, Lower-Left, Upper-Left |
+| 223   | Solid Full                 |
+| 224   | Dithered None                 |
+| 225   | Dithered Upper-Right          |
+| 226   | Dithered Lower-Right          |
+| 227   | Dithered Upper-Right, Lower-Right |
+| 228   | Dithered Lower-Left           |
+| 229   | Dithered Upper-Right, Lower-Left  |
+| 230   | Dithered Lower-Right, Lower-Left  |
+| 231   | Dithered Upper-Right, Lower-Right, Lower-Left |
+| 232   | Dithered Upper-Left           |
+| 233   | Dithered Upper-Right, Upper-Left |
+| 234   | Dithered Lower-Right, Upper-Left |
+| 235   | Dithered Upper-Right, Lower-Right, Upper-Left |
+| 236   | Dithered Lower-Left, Upper-Left |
+| 237   | Dithered Upper-Right, Lower-Left, Upper-Left |
+| 238   | Dithered Lower-Right, Lower-Left, Upper-Left |
+| 239   | Dithered Full                 |
+| 240   | Solid on Dithered None                 |
+| 241   | Solid on Dithered Upper-Right          |
+| 242   | Solid on Dithered Lower-Right          |
+| 243   | Solid on Dithered Upper-Right, Lower-Right |
+| 244   | Solid on Dithered Lower-Left           |
+| 245   | Solid on Dithered Upper-Right, Lower-Left  |
+| 246   | Solid on Dithered Lower-Right, Lower-Left  |
+| 247   | Solid on Dithered Upper-Right, Lower-Right, Lower-Left |
+| 248   | Solid on Dithered Upper-Left           |
+| 249   | Solid on Dithered Upper-Right, Upper-Left |
+| 250   | Solid on Dithered Lower-Right, Upper-Left |
+| 251   | Solid on Dithered Upper-Right, Lower-Right, Upper-Left |
+| 252   | Solid on Dithered Lower-Left, Upper-Left |
+| 253   | Solid on Dithered Upper-Right, Lower-Left, Upper-Left |
+| 254   | Solid on Dithered Lower-Right, Lower-Left, Upper-Left |
+| 255   | Solid on Dithered Full                 |
+
+---
+
 ## References
-- SDOM2 `Label` class
+- SDOM `Label` class
 - `LabelStyle` and `FontStyle` structs
 - SDL2/SDL3 rendering best practices
 

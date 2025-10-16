@@ -5,7 +5,7 @@ var namespaceSDOM =
     [ "BitmapFont", "classSDOM_1_1BitmapFont.html", "classSDOM_1_1BitmapFont" ],
     [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
     [ "Button", "classSDOM_1_1Button.html", "classSDOM_1_1Button" ],
-    [ "Checkbox", "classSDOM_1_1Checkbox.html", "classSDOM_1_1Checkbox" ],
+    [ "CheckButton", "classSDOM_1_1CheckButton.html", "classSDOM_1_1CheckButton" ],
     [ "Core", "classSDOM_1_1Core.html", "classSDOM_1_1Core" ],
     [ "DisplayHandle", "classSDOM_1_1DisplayHandle.html", "classSDOM_1_1DisplayHandle" ],
     [ "Event", "classSDOM_1_1Event.html", "classSDOM_1_1Event" ],
@@ -26,17 +26,17 @@ var namespaceSDOM =
     [ "IPanelObject", "classSDOM_1_1IPanelObject.html", "classSDOM_1_1IPanelObject" ],
     [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
     [ "Label", "classSDOM_1_1Label.html", "classSDOM_1_1Label" ],
-    [ "Radiobox", "classSDOM_1_1Radiobox.html", "classSDOM_1_1Radiobox" ],
+    [ "RadioButton", "classSDOM_1_1RadioButton.html", "classSDOM_1_1RadioButton" ],
     [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
     [ "SpriteSheet", "classSDOM_1_1SpriteSheet.html", "classSDOM_1_1SpriteSheet" ],
     [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ],
     [ "Texture", "classSDOM_1_1Texture.html", "classSDOM_1_1Texture" ],
     [ "TristateButton", "classSDOM_1_1TristateButton.html", "classSDOM_1_1TristateButton" ],
-    [ "TriStateCheckbox", "classSDOM_1_1TriStateCheckbox.html", "classSDOM_1_1TriStateCheckbox" ],
     [ "TruetypeFont", "classSDOM_1_1TruetypeFont.html", "classSDOM_1_1TruetypeFont" ],
     [ "TTFAsset", "classSDOM_1_1TTFAsset.html", "classSDOM_1_1TTFAsset" ],
     [ "TypeCreators", "structSDOM_1_1TypeCreators.html", "structSDOM_1_1TypeCreators" ],
     [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
+    [ "SUPER", "namespaceSDOM.html#a4476b3f988f782b37bd84221a9925941", null ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
       [ "TOP_LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1", null ],
@@ -155,11 +155,6 @@ var namespaceSDOM =
       [ "BottomLeft", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5a98e5a1c44509157ebcaf46c515c78875", null ],
       [ "BottomCenter", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5abf7d9c8ad2f89a37cf5378b5fec0b420", null ],
       [ "BottomRight", "namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5a9146bfc669fddc88db2c4d89297d0e9a", null ]
-    ] ],
-    [ "TriState", "namespaceSDOM.html#a7ebf9539af8038368522bc2e083a7297", [
-      [ "Unchecked", "namespaceSDOM.html#a7ebf9539af8038368522bc2e083a7297a881b3634f18ee4f2c2315bd19b75e0ae", null ],
-      [ "Checked", "namespaceSDOM.html#a7ebf9539af8038368522bc2e083a7297a2627637e263ef687fa978b576580b8b1", null ],
-      [ "Indeterminate", "namespaceSDOM.html#a7ebf9539af8038368522bc2e083a7297aa2d00c353d1f9a5f07852650030dbd53", null ]
     ] ],
     [ "addChild_lua", "namespaceSDOM.html#ad705e9ccdf395990fbda0fb59a94d9bc", null ],
     [ "addEventListener_lua", "namespaceSDOM.html#af14e20308dd12843a90b65dd6cd2a1de", null ],
@@ -363,8 +358,6 @@ var namespaceSDOM =
     [ "shutdown_lua", "namespaceSDOM.html#a5954f2e93498bf0f6b59e1d33f170b49", null ],
     [ "sortChildrenByPriority_lua", "namespaceSDOM.html#ad7a204078ea9405c1457b412b62d097e", null ],
     [ "trim", "namespaceSDOM.html#a0b2e6cb3f4096b1c8ae989c26ef9e32f", null ],
-    [ "tristate_index_from_name", "namespaceSDOM.html#acaff4cf7c820b5e212559fc16af8d348", null ],
-    [ "tristate_name_from_index", "namespaceSDOM.html#a5bf868d101b252782bb569017b92aad1", null ],
     [ "validateAnchorAssignments", "namespaceSDOM.html#aaa33b9318af1f912adda349706e19eba", null ],
     [ "validateAnchorPointString", "namespaceSDOM.html#a1727e4f40877b1a80e5317dc9cd632b2", null ],
     [ "anchorPointToString_", "namespaceSDOM.html#ac004759fa5d6cd324931439829e17123", null ],
@@ -388,7 +381,5 @@ var namespaceSDOM =
     [ "string_to_button_state", "namespaceSDOM.html#ada9a03704ec6fd6f257e6f7f84a25a02", null ],
     [ "stringToAnchorPoint_", "namespaceSDOM.html#a33cd42f20297f893e13db841931abda0", null ],
     [ "stringToPanelBaseIndex_", "namespaceSDOM.html#a8c2b307c7eb25af276a81bd930409deb", null ],
-    [ "stringToPanelTileOffset_", "namespaceSDOM.html#adeb30b52dfdaf61815eb609cc8e208d8", null ],
-    [ "tristate_string_to_index", "namespaceSDOM.html#a9daf9da9165fc48772945f891a0b7b2b", null ],
-    [ "tristate_to_string", "namespaceSDOM.html#a38b8c65e920248e491ff1dbfb8d407f8", null ]
+    [ "stringToPanelTileOffset_", "namespaceSDOM.html#adeb30b52dfdaf61815eb609cc8e208d8", null ]
 ];

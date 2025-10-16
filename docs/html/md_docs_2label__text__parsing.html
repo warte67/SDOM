@@ -93,12 +93,15 @@ $(document).ready(function(){initNavTree('md_docs_2label__text__parsing.html',''
   <div class="headertitle"><div class="title">Label Text Parsing Design Document</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md195"></a> </p>
-<h1><a class="anchor" id="autotoc_md196"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md161"></a> </p>
+<h1><a class="anchor" id="autotoc_md162"></a>
 Overview</h1>
-<p>This document describes the design and implementation strategy for parsing and rendering text in the SDOM2 <code>Label</code> class, including support for word wrapping, inline style changes, escape sequences, and advanced alignment.</p>
+<p>The Label system in the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> API is a lightweight, scriptable text rendering component designed for both retro-style bitmap fonts and modern truetype rendering. It tokenizes input into word and escape tokens so inline formatting (color, bold, outline, padding, dropshadow, alignment, numeric style tweaks) can be applied on a per-token basis. Escape sequences use case‑insensitive square‑bracket tags (e.g., [bold], [color=#RRGGBB], [pad=5x7]) and support nested scopes and explicit resets so authors can compose rich inline styles without separate layout passes.</p>
+<p>Rendering is separated into tokenization, layout (wrapping, alignment grouping, autosizing), and phrase rendering phases. Each token carries a LabelStyle/FontStyle snapshot (including numeric fields like borderThickness and dropshadow offsets) so grouping into phrases lets the engine render visually identical runs efficiently. Alignment is encoded compactly (nine alignment modes) and tokens are sorted into the appropriate buckets for deterministic placement and multi-line wrapping behavior.</p>
+<p>The Label supports autosizing, clipping to parent bounds, and both per-token and per-phrase style effects. It exposes token information to Lua (e.g., via DisplayHandle:getTokenList()), enabling unit tests and scripts to inspect tokenized output and verify style propagation. The implementation is forgiving: malformed escape parameters are validated and ignored (logged) rather than throwing, which improves robustness for live content authored in Lua.</p>
+<p>Finally, the system is designed to be extensible: new escapes can be added with minimal tokenizer changes, and the rendering pipeline cleanly separates font-specific handling (bitmap vs TTF) from token management and layout logic. This makes the Label suitable for game UI text, HUD displays, and retro-styled interfaces while remaining script-friendly and testable.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md198"></a>
+<h1><a class="anchor" id="autotoc_md164"></a>
 Goals</h1>
 <ul>
 <li>Support word wrapping and autosizing for labels.</li>
@@ -107,9 +110,20 @@ Goals</h1>
 <li>Efficiently tokenize and process text for rendering.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md200"></a>
-## Escape Sequence Syntax</h1>
-<h2><a class="anchor" id="autotoc_md201"></a>
+<h1><a class="anchor" id="autotoc_md166"></a>
+Retro-Inspired Graphic Glyphs</h1>
+<p>The graphic glyphs in the <code>internal_font_8x8</code> font are designed with a retro aesthetic, reminiscent of the character sets used in vintage computers like the Tandy systems. These glyphs provide a nostalgic yet functional approach to creating visual elements in text-based environments. The four sets of graphic glyphs—line-based, solid-on-clear, dithered-on-clear, and solid-on-dithered—offer a versatile toolkit for rendering simple graphics, icons, and patterns.</p>
+<p>Note: This needs to be updated to use the new font_8x8 and icon_8x8 (or icon_10x10) sets.</p>
+<h2><a class="anchor" id="autotoc_md167"></a>
+Customization Potential</h2>
+<p>While the space used for these retro-styled graphic glyphs could have been allocated for special characters like Greek math symbols, the nostalgic appeal of these glyphs felt more fitting. Additionally, the design allows for end-user customization, enabling users to redefine or expand the glyph set to suit their specific needs.</p>
+<h1><a class="anchor" id="autotoc_md168"></a>
+Escape Sequence Syntax</h1>
+<p>The Label escape sequence syntax uses square-bracket tokens (e.g., <code>[bold]</code>, <code>[color=red]</code>, <code>[size=12]</code>) to change rendering state inline. Escape tags are case‑insensitive and come in two forms: simple toggles (<code>[bold]</code>, <code>[reset]</code>) and parameterized tags (<code>[color=#RRGGBB]</code>, <code>[pad=5x7]</code>, <code>[dropshadow=4,6]</code>). Tags are not rendered as text; instead they update the current FontStyle/LabelStyle that will be applied to subsequently emitted word tokens. Numeric and hex parameters are validated before use; malformed parameters are ignored and do not throw. Use double‑bracket escapes (<code>[[]</code> and <code>[]]</code>) to emit literal <code>[</code> and <code>]</code> characters.</p>
+<p>Escape sequences are tokenized separately from word tokens so the parser can push and pop style state. Opening tags apply a change that remains in effect until a matching closing tag (e.g., <code>[/pad]</code>) or until a <code>[reset]</code> is encountered; nested tags are supported and restored in LIFO order. Special parsing rules: escapes inside double-quoted blocks are treated as literal text, bracket escapes are single tokens, and numeric escapes affect specific style fields (borderThickness, outlineThickness, padding_horiz/vert, dropshadowOffsetX/Y). For predictable results prefer explicit parameters and well-formed tags; the tokenizer logs but tolerates malformed or unsupported tags to avoid breaking rendering.// filepath: /home/jay/Documents/GitHub/SDOM/docs/label_text_parsing.md The Label escape sequence syntax uses square-bracket tokens (e.g., <code>[bold]</code>, <code>[color=red]</code>, <code>[size=12]</code>) to change rendering state inline. Escape tags are case‑insensitive and come in two forms: simple toggles (<code>[bold]</code>, <code>[reset]</code>) and parameterized tags (<code>[color=#RRGGBB]</code>, <code>[pad=5x7]</code>, <code>[dropshadow=4,6]</code>). Tags are not rendered as text; instead they update the current FontStyle/LabelStyle that will be applied to subsequently emitted word tokens. Numeric and hex parameters are validated before use; malformed parameters are ignored and do not throw. Use double‑bracket escapes (<code>[[]</code> and <code>[]]</code>) to emit literal <code>[</code> and <code>]</code> characters.</p>
+<p>Escape sequences are tokenized separately from word tokens so the parser can push and pop style state. Opening tags apply a change that remains in effect until a matching closing tag (e.g., <code>[/pad]</code>) or until a <code>[reset]</code> is encountered; nested tags are supported and restored in LIFO order. Special parsing rules: escapes inside double-quoted blocks are treated as literal text, bracket escapes are single tokens, and numeric escapes affect specific style fields (borderThickness, outlineThickness, padding_horiz/vert, dropshadowOffsetX/Y). For predictable results prefer explicit parameters and well-formed tags; the tokenizer logs but tolerates malformed or unsupported tags to avoid breaking rendering.</p>
+<hr  />
+<h2><a class="anchor" id="autotoc_md170"></a>
 Supported Color Names</h2>
 <p>You can use any of the following color names in label escape tags (e.g., <code>[color=name]</code>, <code>[fgnd=name]</code>, <code>[bgnd=name]</code>, <code>[border=name]</code>, <code>[outline=name]</code>, <code>[shadow=name]</code>):</p>
 <p><b>Grayscale gradient (6 steps):</b></p><ul>
@@ -190,7 +204,7 @@ Supported Color Names</h2>
 <p><b>Note:</b> <br  />
  All color names are case-insensitive. <br  />
  You may use these names in any supported color escape tag.</p>
-<h3><a class="anchor" id="autotoc_md202"></a>
+<h3><a class="anchor" id="autotoc_md171"></a>
 Color Targets:</h3>
 <div class="fragment"><div class="line">Label::foregroundColor     // &quot;fgnd&quot; (default)</div>
 <div class="line">Label::backgroundColor     // &quot;bgnd&quot;</div>
@@ -202,32 +216,135 @@ Color Targets:</h3>
 <li><code>[color=red:bgnd]</code> — sets the background to red</li>
 <li><code>[color=green:border]</code> — sets the border to green</li>
 <li><code>[RGB:222222:outline]</code> — sets the outline color to dark gray</li>
-<li>`[RGBA:0000007f:shadow] — sets the drop shadow to transparent black</li>
+<li><code>[RGBA:0000007f:shadow]</code> — sets the drop shadow to transparent black</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md203"></a>
+<h2><a class="anchor" id="autotoc_md172"></a>
 Style</h2>
+<p>Style escapes enable common typographic effects. Most are toggles that remain in effect until a matching closing escape (e.g., <code>[/bold]</code>) or a global <code>[reset]</code>. Closing escapes are strongly recommended for predictable nesting and restoration of prior styles.</p>
 <ul>
-<li><code>[bold]</code> — Bold text</li>
-<li><code>[italic]</code> — Italic text</li>
-<li><code>[underline]</code> — Underlined text</li>
-<li><code>[strike]</code> — Strikethrough text</li>
-<li><code>[outline]</code> — Outlined text</li>
-<li><code>[dropshadow]</code> — Dropshadow text</li>
-<li><code>[reset]</code> — Reset all styles to default</li>
+<li><code>[bold] ... [/bold]</code> — Bold text. If your font supports a bold metric this will use it; otherwise rendering emulates bold where possible. <br  />
+</li>
+<li><code>[italic] ... [/italic]</code> — Italic text. Uses an italic font variant if available or a simulated slant. <br  />
+</li>
+<li><code>[underline] ... [/underline]</code> — Underlined text. Drawn under the glyphs for the enclosed tokens. <br  />
+</li>
+<li><code>[strike] ... [/strike]</code> — Strikethrough (line through text) for the enclosed tokens. <br  />
+</li>
+<li><code>[outline]</code> or <code>[outline=N] ... [/outline]</code> — Outlined text. Optional numeric parameter <code>N</code> sets outline thickness; omit <code>N</code> to enable with the default thickness. Closing <code>[/outline]</code> restores the previous outline thickness. <br  />
+</li>
+<li><code>[dropshadow]</code> or <code>[dropshadow=X,Y] ... [/dropshadow]</code> — Enable a drop shadow for enclosed tokens. Optional <code>X,Y</code> set the shadow offset; defaults are used if omitted. <code>[/dropshadow]</code> restores previous shadow state. <br  />
+</li>
+<li><code>[reset]</code> — Immediate full reset: clears all active style, color, alignment, and numeric overrides and restores the baseline LabelStyle. <code>[reset]</code> has no separate closing tag.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md204"></a>
+<p>Notes:</p><ul>
+<li>Tags are case‑insensitive. Both forms (explicit close <code>[/tag]</code> and global <code>[reset]</code>) are accepted; prefer explicit closes for nested changes.</li>
+<li>Numeric/parameterized variants validate inputs and ignore malformed values instead of throwing.</li>
+<li>Styles stack: entering a style pushes the previous value and <code>[/tag]</code> pops it (LIFO). <code>[reset]</code> clears the stack entirely.</li>
+<li>Escape sequences are not rendered as text; they affect subsequent word tokens only.</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md173"></a>
 Colors:</h3>
 <div class="fragment"><div class="line">SDL_Color Label::foregroundColor = {255, 255, 255, 255}; // &quot;fgnd&quot; (default)</div>
 <div class="line">SDL_Color Label::backgroundColor = {0, 0, 0, 0};         // &quot;bgnd&quot;</div>
 <div class="line">SDL_Color Label::borderColor = {0, 0, 0, 0};             // &quot;border&quot;</div>
 <div class="line">SDL_Color FontStyle::outlineColor = {0, 0, 0, 255};      // &quot;outline&quot;</div>
 <div class="line">SDL_Color FontStyle::dropShadowColor = {0, 0, 0, 128};   // &quot;shadow&quot;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md205"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md174"></a>
 Alignment</h2>
-<ul>
-<li></li>
+<p>Labels support independent horizontal and vertical alignment. Horizontal modes: left, center, right. Vertical modes: top, middle, bottom. Alignment is stored in the LabelStyle (either as two explicit fields or a compact bitfield) and is applied per-token so different parts of the same label can be aligned differently.</p>
+<p>Two ways to set alignment:</p><ul>
+<li>Default / property-level: the label object exposes default alignment flags (e.g., label.align_h and label.align_v). These apply to all tokens unless an inline alignment escape overrides them.</li>
+<li>Inline escape tags: use <code>[align=left]</code>, <code>[align=center]</code>, <code>[align=right]</code>, <code>[align=top]</code>, <code>[align=middle]</code>, <code>[align=bottom]</code>. Inline tags change only the matching axis:<ul>
+<li><code>[align=left|center|right]</code> changes horizontal alignment.</li>
+<li><code>[align=top|middle|bottom]</code> changes vertical alignment. Inline alignment remains in effect until a matching closing tag (e.g., <code>[/align]</code>) or <code>[reset]</code> restores the previous alignment. Nested alignment tags are supported and restored in LIFO order.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md206"></a>
+</li>
+</ul>
+<p>Token grouping and rendering</p><ul>
+<li>After tokenization every word token carries its LabelStyle snapshot, including the effective alignment for that token.</li>
+<li>Tokens are sorted into nine alignment groups (horizontal × vertical): TOP_LEFT, TOP_CENTER, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT.</li>
+<li>Each alignment group is laid out and rendered independently. Within a group, words are wrapped into lines using the label width (minus padding) and then positioned according to the group's horizontal rule. The group's vertical rule controls the overall vertical placement of those lines inside the label bounds.</li>
+<li>This grouping lets the label mix different alignments (for example a left-aligned header followed by a centered score) while still computing layout deterministically and efficiently.</li>
+</ul>
+<p>Precedence and semantics</p><ul>
+<li>Inline alignment escapes override the label's default alignment for subsequent tokens only. A closing <code>[/align]</code> or <code>[reset]</code> restores the previous alignment state.</li>
+<li>If an inline tag specifies a horizontal keyword it changes only the horizontal axis; vertical keywords change only the vertical axis. Using <code>[align=center]</code> inside text will center horizontally while leaving vertical alignment unchanged.</li>
+<li>When <code>auto_width</code>/<code>auto_height</code> is enabled, alignment calculations use the final computed label bounds (after autosizing). Centering and middle placement are therefore computed against those adjusted bounds. If the label is clipped to its parent, alignment is performed within the clipped bounds.</li>
+</ul>
+<p>Examples</p><ul>
+<li>Inline horizontal override: <div class="fragment"><div class="line">Score: [align=center]1000[/align] Level: 3</div>
+</div><!-- fragment --> The "1000" token(s) will be centered while surrounding text uses the label default.</li>
+<li>Inline vertical usage (useful for multi-line composed labels): <div class="fragment"><div class="line">[align=top]Header[/align]</div>
+<div class="line">[align=middle]Body[/align]</div>
+<div class="line">[align=bottom]Footer[/align]</div>
+</div><!-- fragment --></li>
+</ul>
+<p>Implementation notes</p><ul>
+<li>Store alignment in the LabelStyle (two fields or a compact bitfield). When tokenizing, snapshot the current alignment into the token so layout can proceed purely from token data.</li>
+<li>When grouping tokens into nine buckets, preserve original token order within each bucket so phrase grouping and wrapping remain deterministic.</li>
+<li>Because alignment is per-token, phrase formation (runs of identical style) should be done per-alignment group to allow efficient phrase-level rendering (caching TTF surfaces or batching bitmap glyph draws).</li>
+<li>Tests: add unit tests that create labels mixing <code>[align=...]</code> escapes and verify that tokens are placed into the correct alignment buckets and that rendered bounding boxes reflect the requested rules.</li>
+</ul>
+<p>Performance</p><ul>
+<li>The nine-group approach enables parallel/independent layout passes for each alignment mode and reduces branching during rendering. It also makes it straightforward to only re-layout the alignment groups affected by a style change.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md175"></a>
+Quick reference</h2>
+<ul>
+<li>Default property: label.align = { horizontal = left|center|right, vertical = top|middle|bottom }</li>
+<li>Inline tags: <code>[align=left|center|right|top|middle|bottom]</code> and <code>[/align]</code></li>
+<li>Inline tags override default until closed or reset.</li>
+<li>Tokens are grouped into the nine alignment queues and laid out/rendered per-queue.</li>
+</ul>
+<hr  />
+<h2><a class="anchor" id="autotoc_md177"></a>
+Alignment</h2>
+<p>Labels support independent horizontal and vertical alignment. Horizontal modes: left, center, right. Vertical modes: top, middle, bottom. Alignment is stored in the LabelStyle (either as two explicit fields or a compact bitfield) and is applied per-token so different parts of the same label can be aligned differently.</p>
+<p>Two ways to set alignment:</p><ul>
+<li>Default / property-level: the label object exposes default alignment flags (e.g., label.align_h and label.align_v). These apply to all tokens unless an inline alignment escape overrides them.</li>
+<li>Inline escape tags: use <code>[align=left]</code>, <code>[align=center]</code>, <code>[align=right]</code>, <code>[align=top]</code>, <code>[align=middle]</code>, <code>[align=bottom]</code>. Inline tags change only the matching axis:<ul>
+<li><code>[align=left|center|right]</code> changes horizontal alignment.</li>
+<li><code>[align=top|middle|bottom]</code> changes vertical alignment. Inline alignment remains in effect until a matching closing tag (e.g., <code>[/align]</code>) or <code>[reset]</code> restores the previous alignment. Nested alignment tags are supported and restored in LIFO order.</li>
+</ul>
+</li>
+</ul>
+<p>Token grouping and rendering</p><ul>
+<li>After tokenization every word token carries its LabelStyle snapshot, including the effective alignment for that token.</li>
+<li>Tokens are sorted into nine alignment groups (horizontal × vertical): TOP_LEFT, TOP_CENTER, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT.</li>
+<li>Each alignment group is laid out and rendered independently. Within a group, words are wrapped into lines using the label width (minus padding) and then positioned according to the group's horizontal rule. The group's vertical rule controls the overall vertical placement of those lines inside the label bounds.</li>
+<li>This grouping lets the label mix different alignments (for example a left-aligned header followed by a centered score) while still computing layout deterministically and efficiently.</li>
+</ul>
+<p>Precedence and semantics</p><ul>
+<li>Inline alignment escapes override the label's default alignment for subsequent tokens only. A closing <code>[/align]</code> or <code>[reset]</code> restores the previous alignment state.</li>
+<li>If an inline tag specifies a horizontal keyword it changes only the horizontal axis; vertical keywords change only the vertical axis. Using <code>[align=center]</code> inside text will center horizontally while leaving vertical alignment unchanged.</li>
+<li>When <code>auto_width</code>/<code>auto_height</code> is enabled, alignment calculations use the final computed label bounds (after autosizing). Centering and middle placement are therefore computed against those adjusted bounds. If the label is clipped to its parent, alignment is performed within the clipped bounds.</li>
+</ul>
+<p>Examples</p><ul>
+<li>Inline horizontal override: <div class="fragment"><div class="line">Score: [align=center]1000[/align] Level: 3</div>
+</div><!-- fragment --> The "1000" token(s) will be centered while surrounding text uses the label default.</li>
+<li>Inline vertical usage (useful for multi-line composed labels): <div class="fragment"><div class="line">[align=top]Header[/align]</div>
+<div class="line">[align=middle]Body[/align]</div>
+<div class="line">[align=bottom]Footer[/align]</div>
+</div><!-- fragment --></li>
+</ul>
+<p>Implementation notes</p><ul>
+<li>Store alignment in the LabelStyle (two fields or a compact bitfield). When tokenizing, snapshot the current alignment into the token so layout can proceed purely from token data.</li>
+<li>When grouping tokens into nine buckets, preserve original token order within each bucket so phrase grouping and wrapping remain deterministic.</li>
+<li>Because alignment is per-token, phrase formation (runs of identical style) should be done per-alignment group to allow efficient phrase-level rendering (caching TTF surfaces or batching bitmap glyph draws).</li>
+<li>Tests: add unit tests that create labels mixing <code>[align=...]</code> escapes and verify that tokens are placed into the correct alignment buckets and that rendered bounding boxes reflect the requested rules.</li>
+</ul>
+<p>Performance</p><ul>
+<li>The nine-group approach enables parallel/independent layout passes for each alignment mode and reduces branching during rendering. It also makes it straightforward to only re-layout the alignment groups affected by a style change.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md178"></a>
+Quick reference</h2>
+<ul>
+<li>Default property: label.align = { horizontal = left|center|right, vertical = top|middle|bottom }</li>
+<li>Inline tags: <code>[align=left|center|right|top|middle|bottom]</code> and <code>[/align]</code></li>
+<li>Inline tags override default until closed or reset.</li>
+<li>Tokens are grouped into the nine alignment queues and laid out/rendered per-queue.</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md179"></a>
 Bitfield Encoding for Alignment</h3>
 <p>Alignment values can be encoded as bitfields to represent the nine possible text alignment modes:</p>
 <div class="fragment"><div class="line">left   = 0b0001</div>
@@ -257,7 +374,7 @@ Bitfield Encoding for Alignment</h3>
 <li><code>[align=middle]</code> — Middle align (vertical)</li>
 <li><code>[align=bottom]</code> — Bottom align</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md207"></a>
+<h2><a class="anchor" id="autotoc_md180"></a>
 Special</h2>
 <ul>
 <li><code>[[]</code> — Render <code>[</code> character</li>
@@ -270,7 +387,7 @@ Special</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md208"></a>
+<h2><a class="anchor" id="autotoc_md181"></a>
 Escaping Square Brackets</h2>
 <p>To render literal square brackets in label text, use double brackets:</p>
 <ul>
@@ -279,7 +396,7 @@ Escaping Square Brackets</h2>
 </ul>
 <p>This approach avoids ambiguity with style escape sequences and is user-friendly for authors.</p>
 <p>Escape sequences are not rendered as text, but affect the rendering of subsequent tokens.</p>
-<h2><a class="anchor" id="autotoc_md209"></a>
+<h2><a class="anchor" id="autotoc_md182"></a>
 Font Size</h2>
 <ul>
 <li><code>[size=16]</code> — Sets the font size to 16 for all subsequent tokens.</li>
@@ -288,12 +405,12 @@ Font Size</h2>
 </li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md211"></a>
+<h1><a class="anchor" id="autotoc_md184"></a>
 Numeric Style Escapes (border / outline / padding / dropshadow)</h1>
-<h2><a class="anchor" id="autotoc_md212"></a>
+<h2><a class="anchor" id="autotoc_md185"></a>
 Overview</h2>
 <p>These escapes allow inline control of numeric rendering parameters that affect phrase rendering (thickness, padding, and drop-shadow offsets). They complement boolean style escapes (bold, italic, outline-enable, dropshadow-enable) by letting authors tune numeric values inline.</p>
-<h2><a class="anchor" id="autotoc_md213"></a>
+<h2><a class="anchor" id="autotoc_md186"></a>
 Syntax</h2>
 <ul>
 <li><code>[border=N] ... [/border]</code> — set border thickness to N for the enclosed tokens.</li>
@@ -317,7 +434,7 @@ Syntax</h2>
 <li>Numeric parameters are integer values. Parameters are validated before conversion; malformed params are ignored (no exception thrown) and the default/current value is retained.</li>
 <li>Short forms and synonyms (<code>[pad]</code> vs <code>[padding]</code>) are supported for convenience.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md214"></a>
+<h2><a class="anchor" id="autotoc_md187"></a>
 Semantics</h2>
 <ul>
 <li>Opening tag applies the numeric change to the current style for subsequent tokens until the matching closing tag.</li>
@@ -328,7 +445,7 @@ Semantics</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md215"></a>
+<h2><a class="anchor" id="autotoc_md188"></a>
 Examples</h2>
 <ul>
 <li>Border thickness 3 for the word "BORDER": <div class="fragment"><div class="line">Start [border=3]BORDER[/border] End</div>
@@ -345,7 +462,7 @@ Examples</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md216"></a>
+<h2><a class="anchor" id="autotoc_md189"></a>
 Implementation Notes</h2>
 <ul>
 <li>Tokenizer responsibilities:<ul>
@@ -369,7 +486,7 @@ Implementation Notes</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md217"></a>
+<h2><a class="anchor" id="autotoc_md190"></a>
 Test seed suggestion (Label_test5)</h2>
 <div class="fragment"><div class="line">local txt = &quot;Start [border=3]B1[/border] [outline=2]O1[/outline] [pad=5x7]P1[/pad] [dropshadow=4,6]DS1[/dropshadow] End&quot;</div>
 </div><!-- fragment --><ul>
@@ -382,7 +499,7 @@ Test seed suggestion (Label_test5)</h2>
 </li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md219"></a>
+<h1><a class="anchor" id="autotoc_md192"></a>
 Token Structure</h1>
 <p>Each parsed token represents either a word or an escape sequence:</p>
 <div class="fragment"><div class="line"><span class="keyword">enum class</span> TokenType { <a class="code hl_define" href="SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde">Word</a>, Escape };</div>
@@ -399,14 +516,14 @@ Token Structure</h1>
 <li>Escape: Style change, color, font, alignment</li>
 <li>Bracket Escape: Literal '[' or ']'</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md220"></a>
+<h2><a class="anchor" id="autotoc_md193"></a>
 Word Tokenization Rules</h2>
 <ul>
 <li>Quoted text (enclosed in double quotes) is tokenized as word tokens, but spaces and punctuation within the quoted text are still tokenized as individual word tokens (not grouped).</li>
 <li>Escape sequences occurring within a double-quote block are treated as word tokens, not escape tokens.</li>
 <li>To render a literal double quote character, use the escape sequence <code>["].&lt;/tt&gt;
 - Single quotes are always tokenized as punctuation or as part of a word (e.g., apostrophes).
-@subsubsection autotoc_md221 Example tokenization:
+@subsubsection autotoc_md194 Example tokenization:
 Input: 
 @icode 
 "Hello, [b]world!" 'test' ["]  Output: <div class="fragment"><div class="line">&quot;</div>
@@ -449,7 +566,7 @@ Input:
 <li><code><b>Escape tokens</b>: Instructions to change style, color, alignment, etc.</code></li>
 </ul>
 <p><code></code></p>
-<h2><a class="anchor" id="autotoc_md222"></a>
+<h2><a class="anchor" id="autotoc_md195"></a>
 Escape Tokenization Rules</h2>
 <p><code></code></p>
 <p><code></p><ul>
@@ -462,7 +579,7 @@ Escape Tokenization Rules</h2>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md224"></a>
+<h1><a class="anchor" id="autotoc_md197"></a>
 Parsing Algorithm</h1>
 <p><code></p><ol type="1">
 <li><b>Initialize</b> default <code>LabelStyle</code>.</li>
@@ -477,7 +594,7 @@ Parsing Algorithm</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md226"></a>
+<h1><a class="anchor" id="autotoc_md199"></a>
 Alignment Handling</h1>
 <p><code></p><ul>
 <li>Each word token carries its own alignment (horizontal and vertical) from <code>LabelStyle</code>.</li>
@@ -493,7 +610,7 @@ Alignment Handling</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md228"></a>
+<h1><a class="anchor" id="autotoc_md201"></a>
 Word Wrapping &amp; Autosizing</h1>
 <p><code></p><ul>
 <li>Measure each word using font metrics.</li>
@@ -505,7 +622,7 @@ Word Wrapping &amp; Autosizing</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md230"></a>
+<h1><a class="anchor" id="autotoc_md203"></a>
 Rendering</h1>
 <p><code></p><ul>
 <li>For each line and token:<ul>
@@ -519,7 +636,7 @@ Rendering</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md232"></a>
+<h1><a class="anchor" id="autotoc_md205"></a>
 Extensibility</h1>
 <p><code></p><ul>
 <li>New escape sequences can be added for additional styles (e.g., outline, dropshadow).</li>
@@ -529,7 +646,7 @@ Extensibility</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md234"></a>
+<h1><a class="anchor" id="autotoc_md207"></a>
 Example</h1>
 <p><code> </p><div class="fragment"><div class="line">[bold][color=#00FF00]Score:[reset] 100 [align=right][color=#FF0000]Game Over</div>
 </div><!-- fragment --><ul>
@@ -541,11 +658,11 @@ Example</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md236"></a>
+<h1><a class="anchor" id="autotoc_md209"></a>
 Implementation Notes</h1>
 <p><code></code></p>
 <p><code></code></p>
-<h2><a class="anchor" id="autotoc_md237"></a>
+<h2><a class="anchor" id="autotoc_md210"></a>
 Label Sizing and Wrapping Rules</h2>
 <p><code></code></p>
 <p><code></p><table class="markdownTable">
@@ -575,7 +692,7 @@ Label Sizing and Wrapping Rules</h2>
 </ul>
 <p></code></p>
 <p><code></code></p>
-<h2><a class="anchor" id="autotoc_md238"></a>
+<h2><a class="anchor" id="autotoc_md211"></a>
 Implementation Notes</h2>
 <p><code></p><ul>
 <li>When <code>auto_width</code> or <code>auto_height</code> is true, recalculate the label’s size after tokenizing/layout.</li>
@@ -584,10 +701,10 @@ Implementation Notes</h2>
 </ul>
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md239"></a>
+<h1><a class="anchor" id="autotoc_md212"></a>
 Rendering Phases (Functions):</h1>
 <p><code> </code></p>
-<h2><a class="anchor" id="autotoc_md240"></a>
+<h2><a class="anchor" id="autotoc_md213"></a>
 1. Pre-Render Layout &amp; Bounds Adjustment</h2>
 <p><code></p><ul>
 <li><b>Purpose:</b> Calculate the final size and position of the label before rendering.</li>
@@ -599,7 +716,7 @@ Rendering Phases (Functions):</h1>
 </li>
 </ul>
 <p></code></p>
-<h2><a class="anchor" id="autotoc_md241"></a>
+<h2><a class="anchor" id="autotoc_md214"></a>
 2. Phrase Grouping</h2>
 <p><code></p><ul>
 <li><b>Purpose:</b> Group tokens into “phrases” (runs of tokens with identical rendering attributes and on the same line).- <b>Actions:</b><ul>
@@ -610,7 +727,7 @@ Rendering Phases (Functions):</h1>
 </li>
 </ul>
 <p></code></p>
-<h2><a class="anchor" id="autotoc_md242"></a>
+<h2><a class="anchor" id="autotoc_md215"></a>
 3. Phrase Rendering</h2>
 <p><code></p><ul>
 <li><b>Purpose:</b> Render each phrase efficiently and with correct visual effects.</li>
@@ -630,10 +747,351 @@ Rendering Phases (Functions):</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md244"></a>
+<h1><a class="anchor" id="autotoc_md217"></a>
+ASCII Glyphs</h1>
+<p><code></code></p>
+<p><code></p><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Normal Index   </th><th class="markdownTableHeadNone">Normal Character   </th><th class="markdownTableHeadNone">Bold Index   </th><th class="markdownTableHeadNone">Bold Character    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">0   </td><td class="markdownTableBodyNone">(space)   </td><td class="markdownTableBodyNone">96   </td><td class="markdownTableBodyNone">(space)    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">1   </td><td class="markdownTableBodyNone">!   </td><td class="markdownTableBodyNone">97   </td><td class="markdownTableBodyNone">!    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">2   </td><td class="markdownTableBodyNone">"   </td><td class="markdownTableBodyNone">98   </td><td class="markdownTableBodyNone">"    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">3   </td><td class="markdownTableBodyNone">#   </td><td class="markdownTableBodyNone">99   </td><td class="markdownTableBodyNone">#    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">4   </td><td class="markdownTableBodyNone">$   </td><td class="markdownTableBodyNone">100   </td><td class="markdownTableBodyNone">$    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">5   </td><td class="markdownTableBodyNone">%   </td><td class="markdownTableBodyNone">101   </td><td class="markdownTableBodyNone">%    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">6   </td><td class="markdownTableBodyNone">&amp;   </td><td class="markdownTableBodyNone">102   </td><td class="markdownTableBodyNone">&amp;    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">7   </td><td class="markdownTableBodyNone">'   </td><td class="markdownTableBodyNone">103   </td><td class="markdownTableBodyNone">'    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">8   </td><td class="markdownTableBodyNone">(   </td><td class="markdownTableBodyNone">104   </td><td class="markdownTableBodyNone">(    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">9   </td><td class="markdownTableBodyNone">)   </td><td class="markdownTableBodyNone">105   </td><td class="markdownTableBodyNone">)    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">10   </td><td class="markdownTableBodyNone">*   </td><td class="markdownTableBodyNone">106   </td><td class="markdownTableBodyNone">*    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">11   </td><td class="markdownTableBodyNone">+   </td><td class="markdownTableBodyNone">107   </td><td class="markdownTableBodyNone">+    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">12   </td><td class="markdownTableBodyNone">,   </td><td class="markdownTableBodyNone">108   </td><td class="markdownTableBodyNone">,    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">13   </td><td class="markdownTableBodyNone">-   </td><td class="markdownTableBodyNone">109   </td><td class="markdownTableBodyNone">-    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">14   </td><td class="markdownTableBodyNone">.   </td><td class="markdownTableBodyNone">110   </td><td class="markdownTableBodyNone">.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">15   </td><td class="markdownTableBodyNone">/   </td><td class="markdownTableBodyNone">111   </td><td class="markdownTableBodyNone">/    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">16   </td><td class="markdownTableBodyNone">0   </td><td class="markdownTableBodyNone">112   </td><td class="markdownTableBodyNone">0    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">17   </td><td class="markdownTableBodyNone">1   </td><td class="markdownTableBodyNone">113   </td><td class="markdownTableBodyNone">1    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">18   </td><td class="markdownTableBodyNone">2   </td><td class="markdownTableBodyNone">114   </td><td class="markdownTableBodyNone">2    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">19   </td><td class="markdownTableBodyNone">3   </td><td class="markdownTableBodyNone">115   </td><td class="markdownTableBodyNone">3    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">20   </td><td class="markdownTableBodyNone">4   </td><td class="markdownTableBodyNone">116   </td><td class="markdownTableBodyNone">4    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">21   </td><td class="markdownTableBodyNone">5   </td><td class="markdownTableBodyNone">117   </td><td class="markdownTableBodyNone">5    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">22   </td><td class="markdownTableBodyNone">6   </td><td class="markdownTableBodyNone">118   </td><td class="markdownTableBodyNone">6    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">23   </td><td class="markdownTableBodyNone">7   </td><td class="markdownTableBodyNone">119   </td><td class="markdownTableBodyNone">7    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">24   </td><td class="markdownTableBodyNone">8   </td><td class="markdownTableBodyNone">120   </td><td class="markdownTableBodyNone">8    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">25   </td><td class="markdownTableBodyNone">9   </td><td class="markdownTableBodyNone">121   </td><td class="markdownTableBodyNone">9    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">26   </td><td class="markdownTableBodyNone">:   </td><td class="markdownTableBodyNone">122   </td><td class="markdownTableBodyNone">:    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">27   </td><td class="markdownTableBodyNone">;   </td><td class="markdownTableBodyNone">123   </td><td class="markdownTableBodyNone">;    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">28   </td><td class="markdownTableBodyNone">&lt;   </td><td class="markdownTableBodyNone">124   </td><td class="markdownTableBodyNone">&lt;    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">29   </td><td class="markdownTableBodyNone">=   </td><td class="markdownTableBodyNone">125   </td><td class="markdownTableBodyNone">=    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">30   </td><td class="markdownTableBodyNone">&gt;   </td><td class="markdownTableBodyNone">126   </td><td class="markdownTableBodyNone">&gt;    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">31   </td><td class="markdownTableBodyNone">?   </td><td class="markdownTableBodyNone">127   </td><td class="markdownTableBodyNone">?    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">32   </td><td class="markdownTableBodyNone">@   </td><td class="markdownTableBodyNone">128   </td><td class="markdownTableBodyNone">@    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">33   </td><td class="markdownTableBodyNone">A   </td><td class="markdownTableBodyNone">129   </td><td class="markdownTableBodyNone">A    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">34   </td><td class="markdownTableBodyNone">B   </td><td class="markdownTableBodyNone">130   </td><td class="markdownTableBodyNone">B    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">35   </td><td class="markdownTableBodyNone">C   </td><td class="markdownTableBodyNone">131   </td><td class="markdownTableBodyNone">C    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">36   </td><td class="markdownTableBodyNone">D   </td><td class="markdownTableBodyNone">132   </td><td class="markdownTableBodyNone">D    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">37   </td><td class="markdownTableBodyNone">E   </td><td class="markdownTableBodyNone">133   </td><td class="markdownTableBodyNone">E    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">38   </td><td class="markdownTableBodyNone">F   </td><td class="markdownTableBodyNone">134   </td><td class="markdownTableBodyNone">F    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">39   </td><td class="markdownTableBodyNone">G   </td><td class="markdownTableBodyNone">135   </td><td class="markdownTableBodyNone">G    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">40   </td><td class="markdownTableBodyNone">H   </td><td class="markdownTableBodyNone">136   </td><td class="markdownTableBodyNone">H    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">41   </td><td class="markdownTableBodyNone">I   </td><td class="markdownTableBodyNone">137   </td><td class="markdownTableBodyNone">I    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">42   </td><td class="markdownTableBodyNone">J   </td><td class="markdownTableBodyNone">138   </td><td class="markdownTableBodyNone">J    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">43   </td><td class="markdownTableBodyNone">K   </td><td class="markdownTableBodyNone">139   </td><td class="markdownTableBodyNone">K    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">44   </td><td class="markdownTableBodyNone">L   </td><td class="markdownTableBodyNone">140   </td><td class="markdownTableBodyNone">L    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">45   </td><td class="markdownTableBodyNone">M   </td><td class="markdownTableBodyNone">141   </td><td class="markdownTableBodyNone">M    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">46   </td><td class="markdownTableBodyNone">N   </td><td class="markdownTableBodyNone">142   </td><td class="markdownTableBodyNone">N    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">47   </td><td class="markdownTableBodyNone">O   </td><td class="markdownTableBodyNone">143   </td><td class="markdownTableBodyNone">O    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">48   </td><td class="markdownTableBodyNone">P   </td><td class="markdownTableBodyNone">144   </td><td class="markdownTableBodyNone">P    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">49   </td><td class="markdownTableBodyNone">Q   </td><td class="markdownTableBodyNone">145   </td><td class="markdownTableBodyNone">Q    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">50   </td><td class="markdownTableBodyNone">R   </td><td class="markdownTableBodyNone">146   </td><td class="markdownTableBodyNone">R    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">51   </td><td class="markdownTableBodyNone">S   </td><td class="markdownTableBodyNone">147   </td><td class="markdownTableBodyNone">S    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">52   </td><td class="markdownTableBodyNone">T   </td><td class="markdownTableBodyNone">148   </td><td class="markdownTableBodyNone">T    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">53   </td><td class="markdownTableBodyNone">U   </td><td class="markdownTableBodyNone">149   </td><td class="markdownTableBodyNone">U    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">54   </td><td class="markdownTableBodyNone">V   </td><td class="markdownTableBodyNone">150   </td><td class="markdownTableBodyNone">V    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">55   </td><td class="markdownTableBodyNone">W   </td><td class="markdownTableBodyNone">151   </td><td class="markdownTableBodyNone">W    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">56   </td><td class="markdownTableBodyNone">X   </td><td class="markdownTableBodyNone">152   </td><td class="markdownTableBodyNone">X    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">57   </td><td class="markdownTableBodyNone">Y   </td><td class="markdownTableBodyNone">153   </td><td class="markdownTableBodyNone">Y    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">58   </td><td class="markdownTableBodyNone">Z   </td><td class="markdownTableBodyNone">154   </td><td class="markdownTableBodyNone">Z    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">59   </td><td class="markdownTableBodyNone">[   </td><td class="markdownTableBodyNone">155   </td><td class="markdownTableBodyNone">[    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">60   </td><td class="markdownTableBodyNone">\   </td><td class="markdownTableBodyNone">156   </td><td class="markdownTableBodyNone">\    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">61   </td><td class="markdownTableBodyNone" rowspan="2">]   </td><td class="markdownTableBodyNone">157   </td><td class="markdownTableBodyNone" rowspan="2">]    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">62   </td><td class="markdownTableBodyNone">158    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">63   </td><td class="markdownTableBodyNone">_   </td><td class="markdownTableBodyNone">159   </td><td class="markdownTableBodyNone">_    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">64   </td><td class="markdownTableBodyNone"><code>\ilinebr &lt;/td&gt; &lt;td class="markdownTableBodyNone"&gt; 160 \ilinebr &lt;/td&gt; &lt;td class="markdownTableBodyNone"&gt;</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">65   </td><td class="markdownTableBodyNone">a   </td><td class="markdownTableBodyNone">161   </td><td class="markdownTableBodyNone">a    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">66   </td><td class="markdownTableBodyNone">b   </td><td class="markdownTableBodyNone">162   </td><td class="markdownTableBodyNone">b    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">67   </td><td class="markdownTableBodyNone">c   </td><td class="markdownTableBodyNone">163   </td><td class="markdownTableBodyNone">c    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">68   </td><td class="markdownTableBodyNone">d   </td><td class="markdownTableBodyNone">164   </td><td class="markdownTableBodyNone">d    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">69   </td><td class="markdownTableBodyNone">e   </td><td class="markdownTableBodyNone">165   </td><td class="markdownTableBodyNone">e    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">70   </td><td class="markdownTableBodyNone">f   </td><td class="markdownTableBodyNone">166   </td><td class="markdownTableBodyNone">f    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">71   </td><td class="markdownTableBodyNone">g   </td><td class="markdownTableBodyNone">167   </td><td class="markdownTableBodyNone">g    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">72   </td><td class="markdownTableBodyNone">h   </td><td class="markdownTableBodyNone">168   </td><td class="markdownTableBodyNone">h    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">73   </td><td class="markdownTableBodyNone">i   </td><td class="markdownTableBodyNone">169   </td><td class="markdownTableBodyNone">i    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">74   </td><td class="markdownTableBodyNone">j   </td><td class="markdownTableBodyNone">170   </td><td class="markdownTableBodyNone">j    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">75   </td><td class="markdownTableBodyNone">k   </td><td class="markdownTableBodyNone">171   </td><td class="markdownTableBodyNone">k    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">76   </td><td class="markdownTableBodyNone">l   </td><td class="markdownTableBodyNone">172   </td><td class="markdownTableBodyNone">l    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">77   </td><td class="markdownTableBodyNone">m   </td><td class="markdownTableBodyNone">173   </td><td class="markdownTableBodyNone">m    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">78   </td><td class="markdownTableBodyNone">n   </td><td class="markdownTableBodyNone">174   </td><td class="markdownTableBodyNone">n    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">79   </td><td class="markdownTableBodyNone">o   </td><td class="markdownTableBodyNone">175   </td><td class="markdownTableBodyNone">o    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">80   </td><td class="markdownTableBodyNone">p   </td><td class="markdownTableBodyNone">176   </td><td class="markdownTableBodyNone">p    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">81   </td><td class="markdownTableBodyNone">q   </td><td class="markdownTableBodyNone">177   </td><td class="markdownTableBodyNone">q    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">82   </td><td class="markdownTableBodyNone">r   </td><td class="markdownTableBodyNone">178   </td><td class="markdownTableBodyNone">r    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">83   </td><td class="markdownTableBodyNone">s   </td><td class="markdownTableBodyNone">179   </td><td class="markdownTableBodyNone">s    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">84   </td><td class="markdownTableBodyNone">t   </td><td class="markdownTableBodyNone">180   </td><td class="markdownTableBodyNone">t    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">85   </td><td class="markdownTableBodyNone">u   </td><td class="markdownTableBodyNone">181   </td><td class="markdownTableBodyNone">u    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">86   </td><td class="markdownTableBodyNone">v   </td><td class="markdownTableBodyNone">182   </td><td class="markdownTableBodyNone">v    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">87   </td><td class="markdownTableBodyNone">w   </td><td class="markdownTableBodyNone">183   </td><td class="markdownTableBodyNone">w    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">88   </td><td class="markdownTableBodyNone">x   </td><td class="markdownTableBodyNone">184   </td><td class="markdownTableBodyNone">x    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">89   </td><td class="markdownTableBodyNone">y   </td><td class="markdownTableBodyNone">185   </td><td class="markdownTableBodyNone">y    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">90   </td><td class="markdownTableBodyNone">z   </td><td class="markdownTableBodyNone">186   </td><td class="markdownTableBodyNone">z    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">91   </td><td class="markdownTableBodyNone">{   </td><td class="markdownTableBodyNone">187   </td><td class="markdownTableBodyNone">{    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">92   </td><td class="markdownTableBodyNone">|   </td><td class="markdownTableBodyNone">188   </td><td class="markdownTableBodyNone">|    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">93   </td><td class="markdownTableBodyNone">}   </td><td class="markdownTableBodyNone">189   </td><td class="markdownTableBodyNone">}    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">94   </td><td class="markdownTableBodyNone">~   </td><td class="markdownTableBodyNone">190   </td><td class="markdownTableBodyNone">~    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">95   </td><td class="markdownTableBodyNone">(C)   </td><td class="markdownTableBodyNone">191   </td><td class="markdownTableBodyNone">(C)   </td></tr>
+</table>
+<p></code></p>
+<p><code>This table represents the first 192 glyphs in the <code>default_8x8</code> font. Additional glyphs, such as icons, can be cataloged in subsequent sections.</code></p>
+<p><code></code></p>
+<h1><a class="anchor" id="autotoc_md218"></a>
+Graphic Glyphs</h1>
+<p><code></code></p>
+<p><code></p><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Index   </th><th class="markdownTableHeadNone">Icon Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">192   </td><td class="markdownTableBodyNone">Line None    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">193   </td><td class="markdownTableBodyNone">Line North    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">194   </td><td class="markdownTableBodyNone">Line East    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">195   </td><td class="markdownTableBodyNone">Line North-East    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">196   </td><td class="markdownTableBodyNone">Line South    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">197   </td><td class="markdownTableBodyNone">Line North-South    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">198   </td><td class="markdownTableBodyNone">Line East-South    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">199   </td><td class="markdownTableBodyNone">Line North-East-South    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">200   </td><td class="markdownTableBodyNone">Line West    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">201   </td><td class="markdownTableBodyNone">Line North-West    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">202   </td><td class="markdownTableBodyNone">Line East-West    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">203   </td><td class="markdownTableBodyNone">Line North-East-West    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">204   </td><td class="markdownTableBodyNone">Line South-West    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">205   </td><td class="markdownTableBodyNone">Line North-South-West    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">206   </td><td class="markdownTableBodyNone">Line East-South-West    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">207   </td><td class="markdownTableBodyNone">Line North-East-South-West    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">208   </td><td class="markdownTableBodyNone">Solid None    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">209   </td><td class="markdownTableBodyNone">Solid Upper-Right    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">210   </td><td class="markdownTableBodyNone">Solid Lower-Right    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">211   </td><td class="markdownTableBodyNone">Solid Upper-Right, Lower-Right    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">212   </td><td class="markdownTableBodyNone">Solid Lower-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">213   </td><td class="markdownTableBodyNone">Solid Upper-Right, Lower-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">214   </td><td class="markdownTableBodyNone">Solid Lower-Right, Lower-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">215   </td><td class="markdownTableBodyNone">Solid Upper-Right, Lower-Right, Lower-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">216   </td><td class="markdownTableBodyNone">Solid Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">217   </td><td class="markdownTableBodyNone">Solid Upper-Right, Upper-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">218   </td><td class="markdownTableBodyNone">Solid Lower-Right, Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">219   </td><td class="markdownTableBodyNone">Solid Upper-Right, Lower-Right, Upper-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">220   </td><td class="markdownTableBodyNone">Solid Lower-Left, Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">221   </td><td class="markdownTableBodyNone">Solid Upper-Right, Lower-Left, Upper-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">222   </td><td class="markdownTableBodyNone">Solid Lower-Right, Lower-Left, Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">223   </td><td class="markdownTableBodyNone">Solid Full    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">224   </td><td class="markdownTableBodyNone">Dithered None    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">225   </td><td class="markdownTableBodyNone">Dithered Upper-Right    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">226   </td><td class="markdownTableBodyNone">Dithered Lower-Right    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">227   </td><td class="markdownTableBodyNone">Dithered Upper-Right, Lower-Right    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">228   </td><td class="markdownTableBodyNone">Dithered Lower-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">229   </td><td class="markdownTableBodyNone">Dithered Upper-Right, Lower-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">230   </td><td class="markdownTableBodyNone">Dithered Lower-Right, Lower-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">231   </td><td class="markdownTableBodyNone">Dithered Upper-Right, Lower-Right, Lower-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">232   </td><td class="markdownTableBodyNone">Dithered Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">233   </td><td class="markdownTableBodyNone">Dithered Upper-Right, Upper-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">234   </td><td class="markdownTableBodyNone">Dithered Lower-Right, Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">235   </td><td class="markdownTableBodyNone">Dithered Upper-Right, Lower-Right, Upper-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">236   </td><td class="markdownTableBodyNone">Dithered Lower-Left, Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">237   </td><td class="markdownTableBodyNone">Dithered Upper-Right, Lower-Left, Upper-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">238   </td><td class="markdownTableBodyNone">Dithered Lower-Right, Lower-Left, Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">239   </td><td class="markdownTableBodyNone">Dithered Full    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">240   </td><td class="markdownTableBodyNone">Solid on Dithered None    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">241   </td><td class="markdownTableBodyNone">Solid on Dithered Upper-Right    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">242   </td><td class="markdownTableBodyNone">Solid on Dithered Lower-Right    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">243   </td><td class="markdownTableBodyNone">Solid on Dithered Upper-Right, Lower-Right    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">244   </td><td class="markdownTableBodyNone">Solid on Dithered Lower-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">245   </td><td class="markdownTableBodyNone">Solid on Dithered Upper-Right, Lower-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">246   </td><td class="markdownTableBodyNone">Solid on Dithered Lower-Right, Lower-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">247   </td><td class="markdownTableBodyNone">Solid on Dithered Upper-Right, Lower-Right, Lower-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">248   </td><td class="markdownTableBodyNone">Solid on Dithered Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">249   </td><td class="markdownTableBodyNone">Solid on Dithered Upper-Right, Upper-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">250   </td><td class="markdownTableBodyNone">Solid on Dithered Lower-Right, Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">251   </td><td class="markdownTableBodyNone">Solid on Dithered Upper-Right, Lower-Right, Upper-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">252   </td><td class="markdownTableBodyNone">Solid on Dithered Lower-Left, Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">253   </td><td class="markdownTableBodyNone">Solid on Dithered Upper-Right, Lower-Left, Upper-Left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">254   </td><td class="markdownTableBodyNone">Solid on Dithered Lower-Right, Lower-Left, Upper-Left    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">255   </td><td class="markdownTableBodyNone">Solid on Dithered Full   </td></tr>
+</table>
+<p></code></p>
+<p><code></p><hr  />
+<p></code></p>
+<p><code></code></p>
+<h1><a class="anchor" id="autotoc_md220"></a>
 References</h1>
 <p><code></p><ul>
-<li>SDOM2 <code>Label</code> class</li>
+<li><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> <code>Label</code> class</li>
 <li><code>LabelStyle</code> and <code>FontStyle</code> structs</li>
 <li>SDL2/SDL3 rendering best practices</li>
 </ul>

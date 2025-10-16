@@ -177,10 +177,3 @@ For bulk conversions, a small script to read JSON and write `.lua` files is reco
 **Note on Deferred Request Validation (Future Consideration):**
 When processing deferred add/remove actions after traversal, each request should be validated to ensure the target node is still valid and available. If a requested action cannot be performed (e.g., the target node is destroyed or missing), log an error or warning for debugging, and consider notifying the requesting node so it can handle the failure gracefully. This helps prevent inconsistent DOM states and improves robustness. Further strategies for error handling and notification may be considered in future revisions.
 
----
-
-## Next Steps
-
-- Continue developing the EventManager for robust event propagation.
-- Refactor and document traversal logic in Core and Factory as needed.
-- Ensure all traversal types are well-tested and documented.
