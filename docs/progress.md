@@ -773,7 +773,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Added example/comment to SDOM_IRangeControl_scaffold showing the forwarding pattern and CreateFromLua example.
   
 
-## Next Steps for October 16, 2025:
+## Next Steps for October 17, 2025:
 - Design and implement *Slider*, *ProgressBar*, and *ScrollBar* `IRangeControl` descendants:
   - **`Slider`:**
     - Allow keyboard input for value changes.
