@@ -774,6 +774,11 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   
 
 ## Next Steps for October 17, 2025:
+- Finish the Slider control (step property, keyboard input, sprite-aware rendering).
+- Begin implementation of ScrollBar and ProgressBar as IRangeControl descendants.
+- Add minimal object::onUnitTest() callbacks for all object types to ensure startup health checks.
+- Refactor and expand the examples/test UnitTest rig for comprehensive C++ and Lua property/function coverage.
+---
 - Design and implement *Slider*, *ProgressBar*, and *ScrollBar* `IRangeControl` descendants:
   - **`Slider`:**
     - Allow keyboard input for value changes.
