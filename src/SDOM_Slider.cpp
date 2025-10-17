@@ -86,7 +86,9 @@ namespace SDOM
                     float trackHeight = getHeight();
                     float rel = (mouseY - trackStart) / trackHeight;
                     rel = std::clamp(rel, 0.0f, 1.0f);
-                    float newValue = min_ + rel * (max_ - min_);
+                    // Invert rel so that 0 is bottom and 1 is top for value mapping
+                    float ratio = 1.0f - rel;
+                    float newValue = min_ + ratio * (max_ - min_);
                     newValue = snapToStep(newValue);
                     float oldValue = value_;
                     if (newValue == oldValue) return;
@@ -107,8 +109,7 @@ namespace SDOM
             float wheel_delta = event.getWheelY() * ((step_ > 0.0f) ? step_ : 1.0f);
             if (modState & SDL_KMOD_SHIFT)
                 wheel_delta *= 10.0f; // larger step with SHIFT key
-            if (orientation_ == Orientation::Vertical)
-                wheel_delta = -wheel_delta; // invert for vertical sliders so mouse wheel is in same direction
+            // For vertical sliders, do not invert wheel delta: positive wheel (up) should increase value (move thumb up)
             float oldValue = value_;
             float newValue = snapToStep(std::clamp(value_ + wheel_delta, min_, max_));
             if (newValue == oldValue) return;
@@ -146,16 +147,16 @@ namespace SDOM
             }
             else // vertical
             {
-                // UP and DOWN arrows
+                // UP should increase value (move thumb up), DOWN should decrease
                 if (scancode == SDL_SCANCODE_DOWN)
-                    newValue = value_ + ((step_ > 0.0f) ? step_ : 1.0f);
-                else if (scancode == SDL_SCANCODE_UP)
                     newValue = value_ - ((step_ > 0.0f) ? step_ : 1.0f);
-                // PgUP and PgDN keys
+                else if (scancode == SDL_SCANCODE_UP)
+                    newValue = value_ + ((step_ > 0.0f) ? step_ : 1.0f);
+                // PgUP and PgDN keys: PageUp increases, PageDown decreases
                 if (scancode == SDL_SCANCODE_PAGEUP)
-                    newValue = value_ - ((step_ > 0.0f) ? step_*10.0f : 10.0f);
-                else if (scancode == SDL_SCANCODE_PAGEDOWN)
                     newValue = value_ + ((step_ > 0.0f) ? step_*10.0f : 10.0f);
+                else if (scancode == SDL_SCANCODE_PAGEDOWN)
+                    newValue = value_ - ((step_ > 0.0f) ? step_*10.0f : 10.0f);
                 // HOME and END keys
                 if (scancode == SDL_SCANCODE_HOME)
                     newValue = min_;
@@ -278,7 +279,14 @@ namespace SDOM
             // Draw the thumb
             SDL_Color thumbColor = getForegroundColor();
             // double thumbX = (getX() + ((value_ - min_) / (max_ - min_)) * (getWidth())) - 5;
-            double thumbY = (getY() + ((value_ - min_) / (max_ - min_)) * (getHeight())) - 4;
+            // Compute thumb Y so that min_ is at bottom and max_ at top
+            double range = (max_ - min_);
+            double ratio = 0.0;
+            if (range > 0.0) ratio = (value_ - min_) / range;
+            ratio = std::clamp(ratio, 0.0, 1.0);
+            // invert so 0 => bottom, 1 => top
+            double inv = 1.0 - ratio;
+            double thumbY = (getY() + inv * (getHeight())) - 4;
             if (thumbColor.a > 0)
             {
                 ss->drawSprite(64, // horizontal thumb

@@ -87,12 +87,20 @@ namespace SDOM
                 frameColor, 
                 SDL_SCALEMODE_NEAREST
             );  
-            // stretch the progress bar according to value
-            float w = (getWidth() - 4) * ((value_ - min_) / (max_ - min_));
+            // Calculate a safe normalized ratio in [0,1]. Guard against zero range.
+            float range = (max_ - min_);
+            float ratio = 0.0f;
+            if (range > 0.0f) ratio = (value_ - min_) / range;
+            ratio = std::max(0.0f, std::min(1.0f, ratio));
+
+            // Use an inset inside the frame for the progress "meat" so borders are preserved.
+            const float inset = 2.0f; // matches offsets used for frame drawing
+            float innerWidth = std::max(0.0f, static_cast<float>(getWidth()) - inset*2.0f);
+            float w = innerWidth * ratio;
             SDL_FRect barDstRect = {
-                static_cast<float>(getX()+2), 
-                static_cast<float>(getY()), 
-                w - 4,
+                static_cast<float>(getX() + inset),
+                static_cast<float>(getY()),
+                w,
                 static_cast<float>(getHeight())
             };
             // draw the middle progress bar meat
@@ -125,12 +133,20 @@ namespace SDOM
                 SDL_SCALEMODE_NEAREST
             );  
             // stretch the progress bar according to value
-            float h = (getHeight() - 4) * ((value_ - min_) / (max_ - min_));
+            // Vertical: safe normalized ratio
+            float range = (max_ - min_);
+            float ratio = 0.0f;
+            if (range > 0.0f) ratio = (value_ - min_) / range;
+            ratio = std::max(0.0f, std::min(1.0f, ratio));
+
+            const float inset = 2.0f;
+            float innerHeight = std::max(0.0f, static_cast<float>(getHeight()) - inset*2.0f);
+            float h = innerHeight * ratio;
             SDL_FRect barDstRect = {
-                static_cast<float>(getX()), 
-                static_cast<float>(getY()+2 + (getHeight() - 4 - h)), 
+                static_cast<float>(getX()),
+                static_cast<float>(getY() + inset + (innerHeight - h)),
                 static_cast<float>(getWidth()),
-                h - 4
+                h
             };
             // draw the middle progress bar meat
             ss->drawSprite(79, barDstRect, barColor, SDL_SCALEMODE_NEAREST);  

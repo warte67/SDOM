@@ -301,10 +301,10 @@ local config = {
                             value = 25.0,
                             step = 2.5,  -- test discrete steps
                             icon_resource = "internal_icon_8x8",
-                            -- color = { r = 128, g = 128, b = 128, a = 255 },
-                            -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
-                            -- background_color = { r = 16, g = 16, b = 16, a = 128 }, 
-                            -- border_color = { r = 0, g = 0, b = 0, a = 32 },
+                            color = { r = 0, g = 255, b = 0, a = 255 },
+                            foreground_color = { r = 128, g = 128, b = 128, a = 255 },
+                            background_color = { r = 16, g = 16, b = 16, a = 0 }, 
+                            border_color = { r = 0, g = 0, b = 0, a = 0 },
                         }                      
                     }
                 },
