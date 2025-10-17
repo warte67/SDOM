@@ -1,7 +1,6 @@
 // SDOM_Slider.cpp
 #include <SDOM/SDOM.hpp>
-
-
+#include <SDOM/SDOM_IconIndex.hpp>
 #include <SDOM/SDOM_Slider.hpp>
 
 namespace SDOM
@@ -223,7 +222,7 @@ namespace SDOM
             if (trackColor.a > 0)
             {
                 // draw the track as a stretched sprite
-                ss->drawSprite(66, dsstRect, trackColor, SDL_SCALEMODE_NEAREST);                
+                ss->drawSprite(static_cast<int>(IconIndex::HSlider_Rail), dsstRect, trackColor, SDL_SCALEMODE_NEAREST);
 
                 // draw small ticks along the track
                 double x_min = getX() - 3;
@@ -231,7 +230,7 @@ namespace SDOM
                 double step = (x_max - x_min)/10.0;
                 for (double h = x_min; h <= x_max; h += step)
                 {
-                    ss->drawSprite(65, // small tick mark
+                    ss->drawSprite(static_cast<int>(IconIndex::Slider_Tick), 
                         static_cast<int>(h), 
                         static_cast<int>(getY()), 
                         trackColor, 
@@ -245,7 +244,7 @@ namespace SDOM
             double thumbX = (getX() + ((value_ - min_) / (max_ - min_)) * (getWidth())) - 5;
             if (thumbColor.a > 0)
             {
-                ss->drawSprite(63, // horizontal thumb
+                ss->drawSprite(static_cast<int>(IconIndex::Knob_Horizontal), 
                     static_cast<int>(thumbX), 
                     static_cast<int>(getY()), 
                     thumbColor, 
@@ -260,7 +259,7 @@ namespace SDOM
             if (trackColor.a > 0)
             {
                 // draw the track as a stretched sprite
-                ss->drawSprite(67, dsstRect, trackColor, SDL_SCALEMODE_NEAREST);                
+                ss->drawSprite(static_cast<int>(IconIndex::VSlider_Rail), dsstRect, trackColor, SDL_SCALEMODE_NEAREST);
 
                 // draw small ticks along the track
                 double y_min = getY() - 2.5f;
@@ -268,7 +267,7 @@ namespace SDOM
                 double step = (y_max - y_min)/10.0;
                 for (double v = y_min; v <= y_max; v += step)
                 {
-                    ss->drawSprite(65, // small tick mark
+                    ss->drawSprite(static_cast<int>(IconIndex::Slider_Tick),
                         static_cast<int>(getX()), 
                         static_cast<int>(v), 
                         trackColor, 
@@ -289,7 +288,7 @@ namespace SDOM
             double thumbY = (getY() + inv * (getHeight())) - 4;
             if (thumbColor.a > 0)
             {
-                ss->drawSprite(64, // horizontal thumb
+                ss->drawSprite(static_cast<int>(IconIndex::Knob_Vertical),
                     static_cast<int>(getX()), 
                     static_cast<int>(thumbY), 
                     thumbColor, 

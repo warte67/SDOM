@@ -792,7 +792,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 
 ## Next Steps for October 17, 2025:
-- Begin implementation of ScrollBar as IRangeControl descendants.
 - Add minimal object::onUnitTest() callbacks for all object types to ensure startup health checks.
 - Refactor and expand the examples/test UnitTest rig for comprehensive C++ and Lua property/function coverage.
 ---

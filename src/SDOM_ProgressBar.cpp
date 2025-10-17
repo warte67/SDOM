@@ -1,7 +1,6 @@
 // SDOM_ProgressBar.cpp
 #include <SDOM/SDOM.hpp>
-
-
+#include <SDOM/SDOM_IconIndex.hpp>
 #include <SDOM/SDOM_ProgressBar.hpp>
 
 namespace SDOM
@@ -81,7 +80,7 @@ namespace SDOM
             SDL_Color barColor = getColor();
             SDL_Color frameColor = getForegroundColor();
             // left end
-            ss->drawSprite(73, // Left HProgress 
+            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Left),
                 static_cast<int>(getX() - 6), 
                 static_cast<int>(getY()), 
                 frameColor, 
@@ -104,16 +103,16 @@ namespace SDOM
                 static_cast<float>(getHeight())
             };
             // draw the middle progress bar meat
-            ss->drawSprite(75, barDstRect, barColor, SDL_SCALEMODE_NEAREST);  
+            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Thumb), barDstRect, barColor, SDL_SCALEMODE_NEAREST);  
             SDL_FRect frameRect = {
                 static_cast<float>(getX()+2), 
                 static_cast<float>(getY()), 
                 static_cast<float>(getWidth() - 4),
                 static_cast<float>(getHeight())
             };   
-            ss->drawSprite(74, frameRect, frameColor, SDL_SCALEMODE_NEAREST);
+            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Rail), frameRect, frameColor, SDL_SCALEMODE_NEAREST);
             // right end
-            ss->drawSprite(76, // Right HProgress
+            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Right), 
                 static_cast<int>(getX() + getWidth() - 2), 
                 static_cast<int>(getY()), 
                 frameColor, 
@@ -149,16 +148,16 @@ namespace SDOM
                 h
             };
             // draw the middle progress bar meat
-            ss->drawSprite(79, barDstRect, barColor, SDL_SCALEMODE_NEAREST);  
+            ss->drawSprite(static_cast<int>(IconIndex::VProgress_Thumb), barDstRect, barColor, SDL_SCALEMODE_NEAREST);  
             SDL_FRect frameRect = {
                 static_cast<float>(getX()), 
                 static_cast<float>(getY()+2), 
                 static_cast<float>(getWidth()),
                 static_cast<float>(getHeight() - 4)
             };   
-            ss->drawSprite(78, frameRect, frameColor, SDL_SCALEMODE_NEAREST);
+            ss->drawSprite(static_cast<int>(IconIndex::VProgress_Rail), frameRect, frameColor, SDL_SCALEMODE_NEAREST);
             // bottom end
-            ss->drawSprite(80, // Bottom VProgress
+            ss->drawSprite(static_cast<int>(IconIndex::VProgress_Bottom), 
                 static_cast<int>(getX()), 
                 static_cast<int>(getY() + getHeight() - 2), 
                 frameColor, 

@@ -11,33 +11,33 @@ namespace SDOM
     enum class IconIndex : int
     {
         // Individual Indices
-        Hamburger = 54,
-        Arrow_Left_Raised,
-        Arrow_Right_Raised,
-        Arrow_Up_Raised,
-        Arrow_Down_Raised,
-        Arrow_Left_Depressed,
-        Arrow_Right_Depressed,
-        Arrow_Up_Depressed,
-        Arrow_Down_Depressed,
-        Knob_Horizontal,
-        Knob_Vertical,
-        Slider_Tick,
-        HSlider_Rail,
-        VSlider_Rail,
-        Checkbox_Empty,
-        Checkbox_Checked,
-        Checkbox_X,
-        Radiobox_Unselected,
-        Radiobox_Selected,
-        HProgress_Left,
-        HProgress_Empty,
-        HProgress_Thumb,
-        HProgress_Right,
-        VProgress_Top,
-        VProgress_Empty,
-        VProgress_Thumb,
-        VProgress_Bottom
+        Hamburger = 54,         // | 54    | Hamburger            
+        Arrow_Left_Raised,      // | 55    | Left Arrow Raised    
+        Arrow_Right_Raised,     // | 56    | Right Arrow Raised   
+        Arrow_Up_Raised,        // | 57    | Up Arrow Raised      
+        Arrow_Down_Raised,      // | 58    | Down Arrow Raised    
+        Arrow_Left_Depressed,   // | 59    | Left Arrow Depressed     
+        Arrow_Right_Depressed,  // | 60    | Right Arrow Depressed    
+        Arrow_Up_Depressed,     // | 61    | Up Arrow Depressed   
+        Arrow_Down_Depressed,   // | 62    | Down Arrow Depressed     
+        Knob_Horizontal,        // | 63    | Horizontal Knob      
+        Knob_Vertical,          // | 64    | Vertical Knob        
+        Slider_Tick,            // | 65    | Slider Tick          
+        HSlider_Rail,           // | 66    | HSlider Rail         
+        VSlider_Rail,           // | 67    | VSlider Rail         
+        Checkbox_Empty,         // | 68    | Empty CheckBox       
+        Checkbox_Checked,       // | 69    | Checked Checkbox         
+        Checkbox_X,             // | 70    | X'd Checkbox         
+        Radiobox_Unselected,    // | 71    | Unselected Radio         
+        Radiobox_Selected,      // | 72    | Selected Radio           
+        HProgress_Left,         // | 73    | Left HProgress               
+        HProgress_Rail,         // | 74    | Empty HProgress          
+        HProgress_Thumb,        // | 75    | Thumb HProgress          
+        HProgress_Right,        // | 76    | Right HProgress          
+        VProgress_Top,          // | 77    | Top VProgress            
+        VProgress_Rail,         // | 78    | Empty VProgress              
+        VProgress_Thumb,        // | 79    | Thumb VProgress              
+        VProgress_Bottom        // | 80    | Bottom VProgress             
     };
 
     inline static const std::unordered_map<int, std::string> icon_index_to_string = {
@@ -61,11 +61,11 @@ namespace SDOM
         { static_cast<int>(IconIndex::Radiobox_Unselected), "radiobox_unselected" },
         { static_cast<int>(IconIndex::Radiobox_Selected), "radiobox_selected" },
         { static_cast<int>(IconIndex::HProgress_Left), "hprogress_left" },
-        { static_cast<int>(IconIndex::HProgress_Empty), "hprogress_empty" },
+        { static_cast<int>(IconIndex::HProgress_Rail), "hprogress_rail" },
         { static_cast<int>(IconIndex::HProgress_Thumb), "hprogress_thumb" },
         { static_cast<int>(IconIndex::HProgress_Right), "hprogress_right" },
         { static_cast<int>(IconIndex::VProgress_Top), "vprogress_top" },
-        { static_cast<int>(IconIndex::VProgress_Empty), "vprogress_empty" },
+        { static_cast<int>(IconIndex::VProgress_Rail), "vprogress_rail" },
         { static_cast<int>(IconIndex::VProgress_Thumb), "vprogress_thumb" },
         { static_cast<int>(IconIndex::VProgress_Bottom), "vprogress_bottom" }
     };
