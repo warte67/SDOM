@@ -260,6 +260,22 @@ local config = {
                             -- border_color = { r = 0, g = 0, b = 0, a = 32 },
                         },
                         {
+                            name = "mainFrame_hprogress_1",
+                            orientation = "horizontal",
+                            type = "ProgressBar",
+                            x = 450,
+                            y = 94,
+                            width = 140,
+                            height = 8,
+                            value = 50.0,
+                            step = 2.5,  -- test discrete steps
+                            icon_resource = "internal_icon_8x8",
+                            color = { r = 255, g = 0, b = 0, a = 255 },
+                            foreground_color = { r = 128, g = 128, b = 128, a = 255 },
+                            background_color = { r = 16, g = 16, b = 16, a = 0 }, 
+                            border_color = { r = 0, g = 0, b = 0, a = 0 },
+                        },
+                        {
                             name = "mainFrame_vslider_1",
                             orientation = "vertical",
                             type = "Slider",
@@ -273,7 +289,23 @@ local config = {
                             -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
                             -- background_color = { r = 16, g = 16, b = 16, a = 128 }, 
                             -- border_color = { r = 0, g = 0, b = 0, a = 32 },
-                        }                        
+                        },
+                        {
+                            name = "mainFrame_progress_1",
+                            orientation = "vertical",
+                            type = "ProgressBar",
+                            x = 572,
+                            y = 108,
+                            width = 8,
+                            height = 140,
+                            value = 25.0,
+                            step = 2.5,  -- test discrete steps
+                            icon_resource = "internal_icon_8x8",
+                            -- color = { r = 128, g = 128, b = 128, a = 255 },
+                            -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
+                            -- background_color = { r = 16, g = 16, b = 16, a = 128 }, 
+                            -- border_color = { r = 0, g = 0, b = 0, a = 32 },
+                        }                      
                     }
                 },
                 {

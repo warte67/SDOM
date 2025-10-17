@@ -25,6 +25,7 @@
 #include <SDOM/SDOM_RadioButton.hpp>
 #include <SDOM/SDOM_TristateButton.hpp>
 #include <SDOM/SDOM_Slider.hpp>
+#include <SDOM/SDOM_ProgressBar.hpp>
 
 namespace SDOM
 {
@@ -260,6 +261,12 @@ namespace SDOM
         registerDomType("Slider", TypeCreators{
             Slider::CreateFromLua,
             Slider::CreateFromInitStruct
+        });
+
+        // register the ProgressBar
+        registerDomType("ProgressBar", TypeCreators{
+            ProgressBar::CreateFromLua,
+            ProgressBar::CreateFromInitStruct
         });
 
         // return initialized state
