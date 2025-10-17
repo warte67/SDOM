@@ -768,6 +768,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Slider knob and track are visually represented and mouse based interaction logic is functioning.
   - Slider emits `onValueChanged` events when the value changes.
   - Slider does expose `min`, `max`, `value`, and `orientation` properties to Lua.
+- **`ProgressBar`:**
+  - ProgressBar has been implimented as a read only range control.     
+  - It supports both `vertical` and `horizontal` `Orientation`s.
+  - `setValue()` has been exposed to C++ and Lua.
 - **Defaults Forwarding:**
   - Implemented defaults-forwarding across the display/control constructors:
       Added/used defaults-aware base parsing (IDisplayObject(..., defaults) and IRangeControl(..., defaults)).
@@ -778,13 +782,12 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   
 
 ## Next Steps for October 17, 2025:
-- Finish the Slider control (step property, keyboard input, sprite-aware rendering).
-- Begin implementation of ScrollBar and ProgressBar as IRangeControl descendants.
+- Begin implementation of ScrollBar as IRangeControl descendants.
 - Add minimal object::onUnitTest() callbacks for all object types to ensure startup health checks.
 - Refactor and expand the examples/test UnitTest rig for comprehensive C++ and Lua property/function coverage.
 ---
 - Design and implement *Slider*, *ProgressBar*, and *ScrollBar* `IRangeControl` descendants:
-  - **`Slider`:**
+  - **`Slider`:** and **`ProgressBar`:**
     - The next step is to ensure the Slider can render using external SpriteSheets of varying sizes. The current `internal_icon_8x8` SpriteSheet is quite small for high-resolution displays. I plan to create additional icon sets at 12x12 and 16x16 pixels, which can be registered as internal resources or used for external file load testing (or both). This means the other range control objects should have this option as well.
     - Similar to how BitmapFonts can be scaled in Labels using the `font_size` property (scaling by the ratio `font_size / font_height`), I’d like to support scalable icon sprites for controls. This would allow icons to be rendered at different sizes, either by scaling (with optional retro pixelation) or by selecting the most appropriate SpriteSheet for the current UI scale.
   - **`ScrollBar`:**
@@ -792,9 +795,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - should support page-up/page-down clicks in the track area.
     - should support mouse dragging and keyboard input for value changes.
     - should emit `onValueChanged` events when the value changes.
-    - should support both `vertical` and `horizontal` `Orientation`s.
-  - **`ProgressBar`:**
-    - should be read-only and visually indicate progress.
     - should support both `vertical` and `horizontal` `Orientation`s.
 - Common requirements:
   - All controls should expose `min`, `max`, `value`, and `orientation` properties to Lua.
