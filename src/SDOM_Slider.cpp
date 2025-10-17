@@ -13,6 +13,59 @@ namespace SDOM
 
     Slider::Slider(const sol::table& config) : IRangeControl(config)
     {
+        // If Lua omitted color keys, use the Slider::InitStruct defaults (rather than the
+        // generic IDisplayObject defaults that were used while parsing the base class).
+        // Also treat an explicitly supplied but empty table (e.g. color = {}) as omitted.
+        InitStruct init_default;
+        auto table_is_empty = [&](const sol::table& t)->bool {
+            // Check common color fields and array-style entries
+            if (t["r"].valid() || t["g"].valid() || t["b"].valid() || t["a"].valid()) return false;
+            if (t[1].valid() || t[2].valid() || t[3].valid() || t[4].valid()) return false;
+            return true;
+        };
+
+        // color
+        if (!config["color"].valid() || !config["color"].is<sol::table>()) {
+            color_ = init_default.color;
+        } else {
+            sol::table t = config["color"];
+            if (table_is_empty(t)) color_ = init_default.color;
+        }
+        // foreground_color
+        if (!config["foreground_color"].valid() || !config["foreground_color"].is<sol::table>()) {
+            foregroundColor_ = init_default.foregroundColor;
+        } else {
+            sol::table t = config["foreground_color"];
+            if (table_is_empty(t)) foregroundColor_ = init_default.foregroundColor;
+        }
+        // background_color
+        if (!config["background_color"].valid() || !config["background_color"].is<sol::table>()) {
+            backgroundColor_ = init_default.backgroundColor;
+        } else {
+            sol::table t = config["background_color"];
+            if (table_is_empty(t)) backgroundColor_ = init_default.backgroundColor;
+        }
+        // border_color
+        if (!config["border_color"].valid() || !config["border_color"].is<sol::table>()) {
+            borderColor_ = init_default.borderColor;
+        } else {
+            sol::table t = config["border_color"];
+            if (table_is_empty(t)) borderColor_ = init_default.borderColor;
+        }
+        // outline_color
+        if (!config["outline_color"].valid() || !config["outline_color"].is<sol::table>()) {
+            outlineColor_ = init_default.outlineColor;
+        } else {
+            sol::table t = config["outline_color"];
+            if (table_is_empty(t)) outlineColor_ = init_default.outlineColor;
+        }
+        // dropshadow_color
+        if (!config["dropshadow_color"].valid() || !config["dropshadow_color"].is<sol::table>()) {
+            dropshadowColor_ = init_default.dropshadowColor;
+        } else {
+            sol::table t = config["dropshadow_color"];
+            if (table_is_empty(t)) dropshadowColor_ = init_default.dropshadowColor;
+        }
     } // END: Slider::Slider(const sol::table& config)
 
 
