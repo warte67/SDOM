@@ -761,6 +761,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Implemented minimal constructors and deferred behavior to `IRangeControl`.
   - Registered `Slider` DOM type with the Factory.
   - Both `horizontal` and `vertical` orientations are now being rendered with the default `internal_icon_8x8` SpriteSheet.
+  - Added a new property `step` for quantization of value changes when using a keyboard.
+  - When selected, `PgUP` and `PgDn` change value by step * 10.0. If step is continuous (0.0f) it is treated as 1.0f.
+  - When selected, `HOME` and `END` set value to min or max as would be most relevant by orientation.
   - Slider knob and track are visually represented and mouse based interaction logic is functioning.
   - Slider emits `onValueChanged` events when the value changes.
   - Slider does expose `min`, `max`, `value`, and `orientation` properties to Lua.
@@ -781,8 +784,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 ---
 - Design and implement *Slider*, *ProgressBar*, and *ScrollBar* `IRangeControl` descendants:
   - **`Slider`:**
-    - Allow keyboard input for value changes.
-    - Add a new property `step` for quantization of value changes when using a keyboard.
     - We need to make sure the Slider can render from external SpriteSheets of varying sizes
   - **`ScrollBar`:**
     - composes `ArrowButton`s for increment/decrement controls and a `ThumbTrack` with a draggable `Thumb`.

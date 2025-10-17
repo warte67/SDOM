@@ -252,6 +252,7 @@ local config = {
                             y = 84,
                             width = 140,
                             height = 8,
+                            step = 2.5,  -- test discrete steps
                             icon_resource = "internal_icon_8x8",
                             -- color = { r = 128, g = 128, b = 128, a = 255 },
                             -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
@@ -266,6 +267,7 @@ local config = {
                             y = 108,
                             width = 8,
                             height = 140,
+                            step = 2.5,  -- test discrete steps
                             icon_resource = "internal_icon_8x8",
                             -- color = { r = 128, g = 128, b = 128, a = 255 },
                             -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },

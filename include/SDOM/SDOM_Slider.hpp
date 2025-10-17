@@ -26,6 +26,7 @@ namespace SDOM
                 type = TypeName;
                 tabEnabled = false;
                 isClickable = true;
+                tabEnabled = true;
                 
                 // Default colors for Slider
                 color = { 128, 128, 128, 255 };             // Track Color
@@ -41,8 +42,8 @@ namespace SDOM
                 std::string icon_resource = "internal_icon_8x8"; 
 
             }
-            // Additional Slider Parameters as needed:
-            // e.g., float step = 1.0f; // Step size for each increment/decrement
+            float step = 0.0f; // 0.0 = continuous, >0.0 = discrete steps in units
+
         }; // END: InitStruct
         
     protected:
@@ -73,15 +74,15 @@ namespace SDOM
         virtual bool onUnitTest() override; // Unit test method
 
         // --- Public Accessors --- //
-        // Add custom getters here
+        float getStep() const { return step_; }
 
         // --- Public Mutators --- //
-        // Add custom setters here
+        void setStep(float step) { step_ = step; }
 
     protected:
         // --- Protected Data Members --- //
-        // Add custom data members here
-        
+        float step_ = 0.0f; // 0.0 = continuous, >0.0 = discrete steps in units
+
         // --- Protected Virtual Methods --- //
         virtual void _onValueChanged(float oldValue, float newValue);
 

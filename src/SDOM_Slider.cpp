@@ -9,10 +9,14 @@ namespace SDOM
     // --- Protected Constructors --- //
     Slider::Slider(const InitStruct& init) : IRangeControl(init)
     {
+        step_ = init.step;
     } // END: Slider::Slider(const InitStruct& init)
 
     Slider::Slider(const sol::table& config) : IRangeControl(config, InitStruct())
     {
+        // Parse step from Lua config
+        step_ = lua_value_case_insensitive<float>(config, "step", 0.0f);
+
         // Now that we forwarded Slider::InitStruct into the base parsing, no further
         // default-fixups are necessary here.
     } // END: Slider::Slider(const sol::table& config)
@@ -37,9 +41,18 @@ namespace SDOM
 
     void Slider::onEvent(const Event& event)
     {
+        // First, call the base class event handler
         SUPER::onEvent(event);
-
+        // Then handle Slider-specific events
+        auto snapToStep = [&](float v) -> float {
+            if (step_ > 0.0f)
+                return min_ + std::round((v - min_) / step_) * step_;
+            return v;
+        };
+        // Early return if not a target phase event
         if (event.getPhase() != Event::Phase::Target) { return; } // Only handle target phase events
+
+        // Mouse click or drag
         if (event.getType() == EventType::MouseButtonDown || event.getType() == EventType::Dragging)
         {
             if (!isEnabled() || !isClickable()) return;
@@ -49,18 +62,15 @@ namespace SDOM
             {
                 if (mouseX >= getX() && mouseX <= getX() + getWidth() ) 
                 {
-                    float newValue = 0.0f;
-                    // Match the thumb rendering formula
                     float trackStart = getX();
                     float trackWidth = getWidth();
                     float rel = (mouseX - trackStart) / trackWidth;
                     rel = std::clamp(rel, 0.0f, 1.0f);
-                    newValue = min_ + rel * (max_ - min_);
-                    // newValue = std::clamp(newValue, min_, max_);
+                    float newValue = min_ + rel * (max_ - min_);
+                    newValue = snapToStep(newValue);
                     float oldValue = value_;
                     if (newValue == oldValue) return;
                     setValue(newValue);
-                    // dispatch event
                     queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
                         ev.setPayloadValue("name", getName());
                         ev.setPayloadValue("old_value", oldValue);
@@ -72,18 +82,15 @@ namespace SDOM
             {
                 if (mouseY >= getY() && mouseY <= getY() + getHeight() ) 
                 {
-                    float newValue = 0.0f;
-                    // Match the thumb rendering formula
                     float trackStart = getY();
                     float trackHeight = getHeight();
                     float rel = (mouseY - trackStart) / trackHeight;
                     rel = std::clamp(rel, 0.0f, 1.0f);
-                    newValue = min_ + rel * (max_ - min_);
-                    // newValue = std::clamp(newValue, min_, max_);
+                    float newValue = min_ + rel * (max_ - min_);
+                    newValue = snapToStep(newValue);
                     float oldValue = value_;
                     if (newValue == oldValue) return;
                     setValue(newValue);
-                    // dispatch event
                     queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
                         ev.setPayloadValue("name", getName());
                         ev.setPayloadValue("old_value", oldValue);
@@ -91,7 +98,78 @@ namespace SDOM
                     });
                 }                
             }
-        }            
+        } // END: Mouse click or drag
+
+        // MouseWheel event to adjust the slider value
+        if (event.getType() == EventType::MouseWheel)
+        {
+            float wheel_delta = event.getWheelY() * ((step_ > 0.0f) ? step_ : 1.0f);
+            if (orientation_ == Orientation::Vertical)
+                wheel_delta = -wheel_delta; // invert for vertical sliders so mouse wheel is in same direction
+            float oldValue = value_;
+            float newValue = snapToStep(std::clamp(value_ + wheel_delta, min_, max_));
+            if (newValue == oldValue) return;
+            setValue(newValue);
+            queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                ev.setPayloadValue("name", getName());
+                ev.setPayloadValue("old_value", oldValue);
+                ev.setPayloadValue("new_value", newValue);
+            });
+        } // END: MouseWheel event
+
+        // Key Events to adjust the slider value (if key focused)
+        if (event.getType() == EventType::KeyDown)
+        {
+            SDL_Scancode scancode = event.getScanCode();
+            float oldValue = value_;
+            float newValue = oldValue;
+            if (orientation_ == Orientation::Horizontal)
+            {
+                // LEFT and RIGHT arrows
+                if (scancode == SDL_SCANCODE_LEFT)
+                    newValue = value_ - ((step_ > 0.0f) ? step_ : 1.0f);
+                else if (scancode == SDL_SCANCODE_RIGHT)
+                    newValue = value_ + ((step_ > 0.0f) ? step_ : 1.0f);
+                // PgUP and PgDN keys
+                if (scancode == SDL_SCANCODE_PAGEUP)
+                    newValue = value_ + ((step_ > 0.0f) ? step_*10.0f : 10.0f);
+                else if (scancode == SDL_SCANCODE_PAGEDOWN)
+                    newValue = value_ - ((step_ > 0.0f) ? step_*10.0f : 10.0f);
+                // HOME and END keys
+                if (scancode == SDL_SCANCODE_HOME)
+                    newValue = min_;
+                else if (scancode == SDL_SCANCODE_END)
+                    newValue = max_;
+            }
+            else // vertical
+            {
+                // UP and DOWN arrows
+                if (scancode == SDL_SCANCODE_DOWN)
+                    newValue = value_ + ((step_ > 0.0f) ? step_ : 1.0f);
+                else if (scancode == SDL_SCANCODE_UP)
+                    newValue = value_ - ((step_ > 0.0f) ? step_ : 1.0f);
+                // PgUP and PgDN keys
+                if (scancode == SDL_SCANCODE_PAGEUP)
+                    newValue = value_ - ((step_ > 0.0f) ? step_*10.0f : 10.0f);
+                else if (scancode == SDL_SCANCODE_PAGEDOWN)
+                    newValue = value_ + ((step_ > 0.0f) ? step_*10.0f : 10.0f);
+                // HOME and END keys
+                if (scancode == SDL_SCANCODE_HOME)
+                    newValue = min_;
+                else if (scancode == SDL_SCANCODE_END)
+                    newValue = max_;
+            }
+            newValue = snapToStep(std::clamp(newValue, min_, max_));
+            if (newValue != oldValue)
+            {
+                setValue(newValue);
+                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                    ev.setPayloadValue("name", getName());
+                    ev.setPayloadValue("old_value", oldValue);
+                    ev.setPayloadValue("new_value", newValue);
+                });
+            }
+        } // END: Key Events to adjust the slider value
     } // END: void Slider::onEvent(const Event& event)
 
     void Slider::onUpdate(float fElapsedTime)
@@ -260,31 +338,43 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared DisplayHandle handle usertype
-        // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
+        // Augment the single shared DisplayHandle handle usertype
+        sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
 
-        // // Helper to check if a property/command is already registered
-        // auto absent = [&](const char* name) -> bool 
-        // {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     return !cur.valid() || cur == sol::lua_nil;
-        // };
+        // Helper to check if a property/command is already registered
+        auto absent = [&](const char* name) -> bool 
+        {
+            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            return !cur.valid() || cur == sol::lua_nil;
+        };
 
-        // // EXAMPLE --- Expose min/max/value as properties (getters/setters)
-        // if (absent("min")) {
-        //     handle.set("min", sol::property(
-        //         [](SDOM::DisplayHandle h) -> float {
-        //             auto* r = h.as<IRangeControl>();
-        //             return r ? r->getMin() : 0.0f;
-        //         },
-        //         [](SDOM::DisplayHandle h, double v) {
-        //             auto* r = h.as<IRangeControl>();
-        //             if (r) r->setMin(static_cast<float>(v));
-        //         }
-        //     ));
-        // }
+        // Expose step as a property (get/set)
+        if (absent("step")) {
+            handle.set("step", sol::property(
+                [](SDOM::DisplayHandle h) -> float {
+                    auto* s = h.as<Slider>();
+                    return s ? s->getStep() : 0.0f;
+                },
+                [](SDOM::DisplayHandle h, double v) {
+                    auto* s = h.as<Slider>();
+                    if (s) s->setStep(static_cast<float>(v));
+                }
+            ));
+        }
 
+        // Optionally, expose getStep/setStep as methods
+        if (absent("getStep")) {
+            handle.set("getStep", [](SDOM::DisplayHandle h) -> float {
+                auto* s = h.as<Slider>();
+                return s ? s->getStep() : 0.0f;
+            });
+        }
+        if (absent("setStep")) {
+            handle.set("setStep", [](SDOM::DisplayHandle h, double v) {
+                auto* s = h.as<Slider>();
+                if (s) s->setStep(static_cast<float>(v));
+            });
+        }
     } // END: void Slider::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-
 
 } // END: namespace SDOM
