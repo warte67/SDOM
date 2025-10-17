@@ -276,11 +276,22 @@ local config = {
                             border_color = { r = 0, g = 0, b = 0, a = 0 },
                         },
                         {
+                            name = "mainFrame_hscrollbar_1",
+                            orientation = "horizontal",
+                            type = "ScrollBar",
+                            x = 450,
+                            y = 104,
+                            width = 140,
+                            height = 8,
+                            Icon_resource = "internal_icon_8x8",
+                            alignment = "left",                            
+                        },
+                        {
                             name = "mainFrame_vslider_1",
                             orientation = "vertical",
                             type = "Slider",
                             x = 582,
-                            y = 108,
+                            y = 124,
                             width = 8,
                             height = 140,
                             step = 2.5,  -- test discrete steps
@@ -295,7 +306,7 @@ local config = {
                             orientation = "vertical",
                             type = "ProgressBar",
                             x = 572,
-                            y = 108,
+                            y = 124,
                             width = 8,
                             height = 140,
                             value = 25.0,
@@ -305,7 +316,23 @@ local config = {
                             foreground_color = { r = 128, g = 128, b = 128, a = 255 },
                             background_color = { r = 16, g = 16, b = 16, a = 0 }, 
                             border_color = { r = 0, g = 0, b = 0, a = 0 },
-                        }                      
+                        },
+                        {
+                            name = "mainFrame_vscrollbar_1",
+                            orientation = "vertical",
+                            type = "ScrollBar",
+                            x = 562,
+                            y = 124,
+                            width = 8,
+                            height = 140,
+                            value = 50.0,
+                            step = 2.5,  -- test discrete steps
+                            icon_resource = "internal_icon_8x8",
+                            -- color = { r = 255, g = 0, b = 0, a = 255 },
+                            -- foreground_color = { r = 128, g = 128, b = 128, a = 255 },
+                            -- background_color = { r = 16, g = 16, b = 16, a = 0 }, 
+                            -- border_color = { r = 0, g = 0, b = 0, a = 0 },                            
+                        }
                     }
                 },
                 {

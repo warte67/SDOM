@@ -26,6 +26,7 @@
 #include <SDOM/SDOM_TristateButton.hpp>
 #include <SDOM/SDOM_Slider.hpp>
 #include <SDOM/SDOM_ProgressBar.hpp>
+#include <SDOM/SDOM_ScrollBar.hpp>
 
 namespace SDOM
 {
@@ -268,6 +269,13 @@ namespace SDOM
             ProgressBar::CreateFromLua,
             ProgressBar::CreateFromInitStruct
         });
+
+        // register the ScrollBar
+        registerDomType("ScrollBar", TypeCreators{
+            ScrollBar::CreateFromLua,
+            ScrollBar::CreateFromInitStruct
+        });
+
 
         // return initialized state
         initialized_ = true;
