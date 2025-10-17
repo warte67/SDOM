@@ -111,6 +111,55 @@ namespace SDOM
             return false;
         }
 
+        // Wire arrow button clicks to increment/decrement the scrollbar value
+        if (button_decrease_ptr_) {
+            // Decrease -> move towards min
+            button_decrease_ptr_->addEventListener(SDOM::EventType::MouseClick, [this](SDOM::Event& ev) {
+                if (!isEnabled()) return;
+                float oldValue = getValue();
+                float delta = (step_ > 0.0f) ? step_ : 1.0f;
+                float newValue;
+                if (orientation_ == Orientation::Horizontal) {
+                    // left arrow: decrease value
+                    newValue = std::clamp(getValue() - delta, getMin(), getMax());
+                } else {
+                    // top arrow: increase value (vertical mapping: top => max)
+                    newValue = std::clamp(getValue() + delta, getMin(), getMax());
+                }
+                if (newValue == oldValue) return;
+                setValue(newValue);
+                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& e) {
+                    e.setPayloadValue("name", getName());
+                    e.setPayloadValue("old_value", oldValue);
+                    e.setPayloadValue("new_value", newValue);
+                });
+            });
+        }
+
+        if (button_increase_ptr_) {
+            // Increase -> move towards max
+            button_increase_ptr_->addEventListener(SDOM::EventType::MouseClick, [this](SDOM::Event& ev) {
+                if (!isEnabled()) return;
+                float oldValue = getValue();
+                float delta = (step_ > 0.0f) ? step_ : 1.0f;
+                float newValue;
+                if (orientation_ == Orientation::Horizontal) {
+                    // right arrow: increase value
+                    newValue = std::clamp(getValue() + delta, getMin(), getMax());
+                } else {
+                    // bottom arrow: decrease value (vertical mapping: bottom => min)
+                    newValue = std::clamp(getValue() - delta, getMin(), getMax());
+                }
+                if (newValue == oldValue) return;
+                setValue(newValue);
+                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& e) {
+                    e.setPayloadValue("name", getName());
+                    e.setPayloadValue("old_value", oldValue);
+                    e.setPayloadValue("new_value", newValue);
+                });
+            });
+        }
+
         return ret;
     } // END: bool ScrollBar::onInit()
 
