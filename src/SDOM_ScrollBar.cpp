@@ -121,7 +121,145 @@ namespace SDOM
 
     void ScrollBar::onEvent(const Event& event)
     {
+        // First, call base handler
         SUPER::onEvent(event);
+
+        // Helper to snap to discrete steps
+        auto snapToStep = [&](float v) -> float {
+            if (step_ > 0.0f)
+                return getMin() + std::round((v - getMin()) / step_) * step_;
+            return v;
+        };
+
+        // Only handle target phase events here
+        if (event.getPhase() != Event::Phase::Target) { return; }
+
+        // Mouse click or drag
+        if (event.getType() == EventType::MouseButtonDown || event.getType() == EventType::Dragging)
+        {
+            if (!isEnabled() || !isClickable()) return;
+            float mouseX = event.getMouseX();
+            float mouseY = event.getMouseY();
+
+            if (orientation_ == Orientation::Horizontal)
+            {
+                // Track spans from x+11 to x+width-11
+                float trackStart = static_cast<float>(getX() + 11);
+                float trackWidth = static_cast<float>(getWidth() - 22);
+                if (mouseX >= trackStart && mouseX <= trackStart + trackWidth)
+                {
+                    float rel = (mouseX - trackStart) / std::max(trackWidth, 1.0f);
+                    rel = std::clamp(rel, 0.0f, 1.0f);
+                    float newValue = getMin() + rel * (getMax() - getMin());
+                    newValue = snapToStep(newValue);
+                    float oldValue = getValue();
+                    if (newValue == oldValue) return;
+                    setValue(newValue);
+                    queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                        ev.setPayloadValue("name", getName());
+                        ev.setPayloadValue("old_value", oldValue);
+                        ev.setPayloadValue("new_value", newValue);
+                    });
+                }
+            }
+            else // vertical
+            {
+                // Track spans from y+11 to y+height-11
+                float trackStart = static_cast<float>(getY() + 11);
+                float trackHeight = static_cast<float>(getHeight() - 22);
+                if (mouseY >= trackStart && mouseY <= trackStart + trackHeight)
+                {
+                    float rel = (mouseY - trackStart) / std::max(trackHeight, 1.0f);
+                    rel = std::clamp(rel, 0.0f, 1.0f);
+                    // Invert so top corresponds to max
+                    float ratio = 1.0f - rel;
+                    float newValue = getMin() + ratio * (getMax() - getMin());
+                    newValue = snapToStep(newValue);
+                    float oldValue = getValue();
+                    if (newValue == oldValue) return;
+                    setValue(newValue);
+                    queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                        ev.setPayloadValue("name", getName());
+                        ev.setPayloadValue("old_value", oldValue);
+                        ev.setPayloadValue("new_value", newValue);
+                    });
+                }
+            }
+        } // END: Mouse click or drag
+
+        // MouseWheel event to adjust the scrollbar value
+        if (event.getType() == EventType::MouseWheel)
+        {
+            SDL_Keymod modState = SDL_GetModState();
+            float wheel_delta = event.getWheelY() * ((step_ > 0.0f) ? step_ : 1.0f);
+            if (modState & SDL_KMOD_SHIFT)
+                wheel_delta *= 10.0f; // larger step with SHIFT key
+
+            float oldValue = getValue();
+            float newValue = snapToStep(std::clamp(getValue() + wheel_delta, getMin(), getMax()));
+            if (newValue == oldValue) return;
+            setValue(newValue);
+            queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                ev.setPayloadValue("name", getName());
+                ev.setPayloadValue("old_value", oldValue);
+                ev.setPayloadValue("new_value", newValue);
+            });
+        } // END: MouseWheel event
+
+        // Key Events to adjust the scrollbar value (if key focused)
+        if (event.getType() == EventType::KeyDown)
+        {
+            SDL_Scancode scancode = event.getScanCode();
+            float oldValue = getValue();
+            float newValue = oldValue;
+            if (orientation_ == Orientation::Horizontal)
+            {
+                // LEFT and RIGHT arrows
+                if (scancode == SDL_SCANCODE_LEFT)
+                    newValue = getValue() - ((step_ > 0.0f) ? step_ : 1.0f);
+                else if (scancode == SDL_SCANCODE_RIGHT)
+                    newValue = getValue() + ((step_ > 0.0f) ? step_ : 1.0f);
+                // PgUP and PgDN keys
+                if (scancode == SDL_SCANCODE_PAGEUP)
+                    newValue = getValue() + ((step_ > 0.0f) ? step_*10.0f : 10.0f);
+                else if (scancode == SDL_SCANCODE_PAGEDOWN)
+                    newValue = getValue() - ((step_ > 0.0f) ? step_*10.0f : 10.0f);
+                // HOME and END keys
+                if (scancode == SDL_SCANCODE_HOME)
+                    newValue = getMin();
+                else if (scancode == SDL_SCANCODE_END)
+                    newValue = getMax();
+            }
+            else // vertical
+            {
+                // UP should increase value (move thumb up), DOWN should decrease
+                if (scancode == SDL_SCANCODE_DOWN)
+                    newValue = getValue() - ((step_ > 0.0f) ? step_ : 1.0f);
+                else if (scancode == SDL_SCANCODE_UP)
+                    newValue = getValue() + ((step_ > 0.0f) ? step_ : 1.0f);
+                // PgUP and PgDN keys: PageUp increases, PageDown decreases
+                if (scancode == SDL_SCANCODE_PAGEUP)
+                    newValue = getValue() + ((step_ > 0.0f) ? step_*10.0f : 10.0f);
+                else if (scancode == SDL_SCANCODE_PAGEDOWN)
+                    newValue = getValue() - ((step_ > 0.0f) ? step_*10.0f : 10.0f);
+                // HOME and END keys
+                if (scancode == SDL_SCANCODE_HOME)
+                    newValue = getMin();
+                else if (scancode == SDL_SCANCODE_END)
+                    newValue = getMax();
+            }
+
+            newValue = snapToStep(std::clamp(newValue, getMin(), getMax()));
+            if (newValue != oldValue)
+            {
+                setValue(newValue);
+                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                    ev.setPayloadValue("name", getName());
+                    ev.setPayloadValue("old_value", oldValue);
+                    ev.setPayloadValue("new_value", newValue);
+                });
+            }
+        } // END: Key Events to adjust the scrollbar value
     } // END: void ScrollBar::onEvent(const Event& event)
 
     void ScrollBar::onUpdate(float fElapsedTime)
@@ -184,24 +322,28 @@ namespace SDOM
         float valueRel = (getValue() - getMin()) / valueRange;
         valueRel = std::clamp(valueRel, 0.0f, 1.0f);
 
+        // For vertical orientation we want min at the bottom and max at the top,
+        // so invert the relative position when computing the thumb Y coordinate.
+        float posRel = (orientation_ == Orientation::Horizontal) ? valueRel : (1.0f - valueRel);
+
         int spriteIndex = 0;
         if (orientation_ == Orientation::Horizontal) {
-            thumbRect.x = getX() + 11 + usableTrack * valueRel;
+            thumbRect.x = getX() + 11 + usableTrack * posRel;
             thumbRect.y = static_cast<float>(getY());
             thumbRect.w = thumbLength;
             thumbRect.h = static_cast<float>(getHeight());
             spriteIndex = 75; // Thumb HProgress
         } else {
             thumbRect.x = static_cast<float>(getX());
-            thumbRect.y = getY() + 11 + usableTrack * valueRel;
+            thumbRect.y = getY() + 11 + usableTrack * posRel;
             thumbRect.w = static_cast<float>(getWidth());
             thumbRect.h = thumbLength;
             spriteIndex = 79; // Thumb VProgress
         }
         // Debug output for scrollbar computation
 #ifdef SCROLLBAR_DEBUG
-        fprintf(stderr, "ScrollBar: track=%.2f page=%.2f content=%.2f prop=%.4f thumb=%.2f usable=%.2f valrel=%.4f\n",
-            trackLength, page_size_, content_size_, thumbProportion, thumbLength, usableTrack, valueRel);
+        fprintf(stderr, "ScrollBar: track=%.2f page=%.2f content=%.2f prop=%.4f thumb=%.2f usable=%.2f valrel=%.4f posrel=%.4f\n",
+            trackLength, page_size_, content_size_, thumbProportion, thumbLength, usableTrack, valueRel, posRel);
 #endif
         ss->drawSprite(spriteIndex, thumbRect, getForegroundColor(), SDL_SCALEMODE_NEAREST);
 

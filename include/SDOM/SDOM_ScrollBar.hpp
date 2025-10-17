@@ -43,7 +43,7 @@ namespace SDOM
                 std::string icon_resource = "internal_icon_8x8"; 
             }
             float step = 0.0f;              // 0.0 = continuous, >0.0 = discrete steps in units
-            float page_size = 50.0f;        // visible content size (e.g., lines, pixels)
+            float page_size = 25.0f;        // visible content size (e.g., lines, pixels)
             float content_size = 100.0f;    // total content size (e.g., lines, pixels)
             float min_thumb_length = 8.0f;  // minimum thumb length in pixels
         }; // END: InitStruct
