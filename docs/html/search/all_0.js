@@ -2,9 +2,9 @@ var searchData=
 [
   ['1_0',['1. Core-based DOM Traversal (Type 1)',['../md_docs_2dom__propagation.html#autotoc_md74',1,'']]],
   ['1_20core_20based_20dom_20traversal_20type_201_1',['1. Core-based DOM Traversal (Type 1)',['../md_docs_2dom__propagation.html#autotoc_md74',1,'']]],
-  ['1_20deprecate_20automatic_20table_20parsing_2',['1. Deprecate Automatic Table Parsing',['../md_docs_2startup__refactor.html#autotoc_md329',1,'']]],
+  ['1_20deprecate_20automatic_20table_20parsing_2',['1. Deprecate Automatic Table Parsing',['../md_docs_2startup__refactor.html#autotoc_md332',1,'']]],
   ['1_20displayhandle_3',['1. DisplayHandle',['../md_docs_2object__handles.html#autotoc_md238',1,'']]],
-  ['1_20explicit_20initialization_20pattern_4',['1. Explicit Initialization Pattern',['../md_docs_2startup__refactor.html#autotoc_md322',1,'']]],
+  ['1_20explicit_20initialization_20pattern_4',['1. Explicit Initialization Pattern',['../md_docs_2startup__refactor.html#autotoc_md325',1,'']]],
   ['1_20initializer_20structs_5',['1. Initializer Structs',['../md_docs_2extensible__factory.html#autotoc_md127',1,'']]],
   ['1_20initializer_20structs_20and_20lua_20scripts_6',['1. Initializer Structs and Lua Scripts',['../md_docs_2extensible__factory.html#autotoc_md121',1,'']]],
   ['1_20parent_20anchor_20grid_20and_20child_20edge_20anchors_7',['1) Parent Anchor Grid and Child Edge Anchors',['../md_docs_2display__object__anchoring.html#autotoc_md65',1,'']]],
@@ -15,7 +15,8 @@ var searchData=
   ['14_202025_12',['[October 14, 2025]',['../md_docs_2progress.html#autotoc_md301',1,'']]],
   ['15_202025_13',['[October 15, 2025]',['../md_docs_2progress.html#autotoc_md303',1,'']]],
   ['16_202025_14',['[October 16, 2025]',['../md_docs_2progress.html#autotoc_md305',1,'']]],
-  ['16_202025_3a_15',['Next Steps for October 16, 2025:',['../md_docs_2progress.html#autotoc_md306',1,'']]],
-  ['19_202025_16',['[September 19, 2025]',['../md_docs_2progress.html#autotoc_md255',1,'']]],
-  ['1a_20standardized_20constructor_20signatures_17',['1a. Standardized Constructor Signatures',['../md_docs_2extensible__factory.html#autotoc_md128',1,'']]]
+  ['17_202025_15',['[October 17, 2025]',['../md_docs_2progress.html#autotoc_md307',1,'']]],
+  ['17_202025_3a_16',['Next Steps for October 17, 2025:',['../md_docs_2progress.html#autotoc_md308',1,'']]],
+  ['19_202025_17',['[September 19, 2025]',['../md_docs_2progress.html#autotoc_md255',1,'']]],
+  ['1a_20standardized_20constructor_20signatures_18',['1a. Standardized Constructor Signatures',['../md_docs_2extensible__factory.html#autotoc_md128',1,'']]]
 ];

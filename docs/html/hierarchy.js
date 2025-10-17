@@ -38,6 +38,8 @@ var hierarchy =
       ] ],
       [ "SDOM::IRangeControl::InitStruct", "structSDOM_1_1IRangeControl_1_1InitStruct.html", [
         [ "SDOM::IRangeControl_scaffold::InitStruct", "structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html", null ],
+        [ "SDOM::ProgressBar::InitStruct", "structSDOM_1_1ProgressBar_1_1InitStruct.html", null ],
+        [ "SDOM::ScrollBar::InitStruct", "structSDOM_1_1ScrollBar_1_1InitStruct.html", null ],
         [ "SDOM::Slider::InitStruct", "structSDOM_1_1Slider_1_1InitStruct.html", null ]
       ] ],
       [ "SDOM::IconButton::InitStruct", "structSDOM_1_1IconButton_1_1InitStruct.html", [
@@ -74,6 +76,8 @@ var hierarchy =
           ] ],
           [ "SDOM::IRangeControl", "classSDOM_1_1IRangeControl.html", [
             [ "SDOM::IRangeControl_scaffold", "classSDOM_1_1IRangeControl__scaffold.html", null ],
+            [ "SDOM::ProgressBar", "classSDOM_1_1ProgressBar.html", null ],
+            [ "SDOM::ScrollBar", "classSDOM_1_1ScrollBar.html", null ],
             [ "SDOM::Slider", "classSDOM_1_1Slider.html", null ]
           ] ],
           [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", null ],

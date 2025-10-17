@@ -41,7 +41,11 @@ var searchData=
   ['brown_38',['BROWN',['../classCLR.html#a25a0d43d7e76880b155d0ef0d3f77c4c',1,'CLR']]],
   ['bubblingeventlisteners_39',['bubblingEventListeners',['../classSDOM_1_1IDisplayObject.html#a6989f335541697be518ad972b5239b47',1,'SDOM::IDisplayObject']]],
   ['button_40',['button',['../classSDOM_1_1Event.html#aae1bbc273d8b8debd62fc8780f499b52',1,'SDOM::Event']]],
-  ['button_5fstate_5fpairs_41',['button_state_pairs',['../namespaceSDOM.html#a479fe3b6d6b7a81bb9d305429c19dd71',1,'SDOM']]],
-  ['button_5fstate_5fto_5fstring_42',['button_state_to_string',['../namespaceSDOM.html#a2ddfe0c3e88fd1b6e58620d2b63e769f',1,'SDOM']]],
-  ['buttonstate_5f_43',['buttonState_',['../classSDOM_1_1IButtonObject.html#a13bc73dac82d7465513fe4135cf5eec7',1,'SDOM::IButtonObject']]]
+  ['button_5fdecrease_5f_41',['button_decrease_',['../classSDOM_1_1ScrollBar.html#abed0d72a1153ca3fc9080e378f33735c',1,'SDOM::ScrollBar']]],
+  ['button_5fdecrease_5fptr_5f_42',['button_decrease_ptr_',['../classSDOM_1_1ScrollBar.html#aacdb2577c54d69433e93555ea5ab5e96',1,'SDOM::ScrollBar']]],
+  ['button_5fincrease_5f_43',['button_increase_',['../classSDOM_1_1ScrollBar.html#a01a39cf57fde941f865c59047cc5e17c',1,'SDOM::ScrollBar']]],
+  ['button_5fincrease_5fptr_5f_44',['button_increase_ptr_',['../classSDOM_1_1ScrollBar.html#aca8f763c64085914f41d49b0804a002f',1,'SDOM::ScrollBar']]],
+  ['button_5fstate_5fpairs_45',['button_state_pairs',['../namespaceSDOM.html#a479fe3b6d6b7a81bb9d305429c19dd71',1,'SDOM']]],
+  ['button_5fstate_5fto_5fstring_46',['button_state_to_string',['../namespaceSDOM.html#a2ddfe0c3e88fd1b6e58620d2b63e769f',1,'SDOM']]],
+  ['buttonstate_5f_47',['buttonState_',['../classSDOM_1_1IButtonObject.html#a13bc73dac82d7465513fe4135cf5eec7',1,'SDOM::IButtonObject']]]
 ];

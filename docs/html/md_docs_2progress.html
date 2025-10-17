@@ -1255,9 +1255,20 @@ Progress Updates</h1>
 <li>Implemented minimal constructors and deferred behavior to <span class="tt">IRangeControl</span>.</li>
 <li>Registered <span class="tt">Slider</span> DOM type with the Factory.</li>
 <li>Both <span class="tt">horizontal</span> and <span class="tt">vertical</span> orientations are now being rendered with the default <span class="tt">internal_icon_8x8</span> SpriteSheet.</li>
+<li>Added a new property <span class="tt">step</span> for quantization of value changes when using a keyboard.</li>
+<li>When selected, <span class="tt">PgUP</span> and <span class="tt">PgDn</span> change value by step * 10.0. If step is continuous (0.0f) it is treated as 1.0f.</li>
+<li>Holding <span class="tt">SHIFT</span> while scrolling with the mouse wheel has a similar effect as <span class="tt">PgUP</span> and <span class="tt">PgDN</span>.</li>
+<li>When selected, <span class="tt">HOME</span> and <span class="tt">END</span> set value to min or max as would be most relevant by orientation.</li>
 <li>Slider knob and track are visually represented and mouse based interaction logic is functioning.</li>
 <li>Slider emits <span class="tt">onValueChanged</span> events when the value changes.</li>
 <li>Slider does expose <span class="tt">min</span>, <span class="tt">max</span>, <span class="tt">value</span>, and <span class="tt">orientation</span> properties to Lua.</li>
+</ul>
+</li>
+<li><b><span class="tt">ProgressBar</span>:</b><ul>
+<li>ProgressBar has been implimented as a read only range control. <br  />
+</li>
+<li>It supports both <span class="tt">vertical</span> and <span class="tt">horizontal</span> <span class="tt">Orientation</span>s.</li>
+<li><span class="tt">setValue()</span> has been exposed to C++ and Lua.</li>
 </ul>
 </li>
 <li><b>Defaults Forwarding:</b><ul>
@@ -1268,35 +1279,35 @@ Progress Updates</h1>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md306"></a>
-Next Steps for October 16, 2025:</h2>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md307"></a>
+[October 17, 2025]</h2>
+<ul>
+<li><b>ScrollBar:</b><ul>
+<li>Added <span class="tt">ScrollBar</span> scaffolding as a descendant of <span class="tt">IRangeControl</span>.</li>
+<li>Implemented minimal constructors and deferred behavior to <span class="tt">IRangeControl</span>.</li>
+<li>Registered <span class="tt">ScrollBar</span> DOM type with the Factory.</li>
+<li>Both <span class="tt">horizontal</span> and <span class="tt">vertical</span> orientations are now being rendered with the default <span class="tt">internal_icon_8x8</span> SpriteSheet.</li>
+<li>Composes <span class="tt">ArrowButton</span>s for increment/decrement controls and a <span class="tt">ThumbTrack</span> with a draggable <span class="tt">Thumb</span>.</li>
+<li>Supports both <span class="tt">vertical</span> and <span class="tt">horizontal</span> <span class="tt">Orientation</span>s.</li>
+</ul>
+</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md308"></a>
+Next Steps for October 17, 2025:</h2>
+<ul>
+<li>Begin implementation of ScrollBar as IRangeControl descendants.</li>
+<li>Add minimal object::onUnitTest() callbacks for all object types to ensure startup health checks. </li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md309"></a>
+- Refactor and expand the examples/test UnitTest rig for comprehensive C++ and Lua property/function coverage.</h2>
 <ul>
 <li>Design and implement <em>Slider</em>, <em>ProgressBar</em>, and <em>ScrollBar</em> <span class="tt">IRangeControl</span> descendants:<ul>
-<li><b><span class="tt">Slider</span>:</b><ul>
-<li>Allow keyboard input for value changes.</li>
-<li>Add a new property <span class="tt">step</span> for quantization of value changes when using a keyboard.</li>
-<li>We need to make sure the Slider can render from external SpriteSheets of varying sizes</li>
+<li><b><span class="tt">Slider</span>:</b> and <b><span class="tt">ProgressBar</span>:</b><ul>
+<li>The next step is to ensure the Slider can render using external SpriteSheets of varying sizes. The current <span class="tt">internal_icon_8x8</span> SpriteSheet is quite small for high-resolution displays. I plan to create additional icon sets at 12x12 and 16x16 pixels, which can be registered as internal resources or used for external file load testing (or both). This means the other range control objects should have this option as well.</li>
+<li>Similar to how BitmapFonts can be scaled in Labels using the <span class="tt">font_size</span> property (scaling by the ratio <span class="tt">font_size / font_height</span>), I’d like to support scalable icon sprites for controls. This would allow icons to be rendered at different sizes, either by scaling (with optional retro pixelation) or by selecting the most appropriate SpriteSheet for the current UI scale.</li>
 </ul>
 </li>
-<li><b><span class="tt">ScrollBar</span>:</b><ul>
-<li>composes <span class="tt">ArrowButton</span>s for increment/decrement controls and a <span class="tt">ThumbTrack</span> with a draggable <span class="tt">Thumb</span>.</li>
-<li>should support page-up/page-down clicks in the track area.</li>
-<li>should support mouse dragging and keyboard input for value changes.</li>
-<li>should emit <span class="tt">onValueChanged</span> events when the value changes.</li>
-<li>should support both <span class="tt">vertical</span> and <span class="tt">horizontal</span> <span class="tt">Orientation</span>s.</li>
-</ul>
-</li>
-<li><b><span class="tt">ProgressBar</span>:</b><ul>
-<li>should be read-only and visually indicate progress.</li>
-<li>should support both <span class="tt">vertical</span> and <span class="tt">horizontal</span> <span class="tt">Orientation</span>s.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Common requirements:<ul>
-<li>All controls should expose <span class="tt">min</span>, <span class="tt">max</span>, <span class="tt">value</span>, and <span class="tt">orientation</span> properties to Lua.</li>
-<li>All controls should emit <span class="tt">onValueChanged</span> events when the value changes.</li>
-<li>All controls should support both <span class="tt">vertical</span> and <span class="tt">horizontal</span> <span class="tt">Orientation</span>s.</li>
 </ul>
 </li>
 <li>Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.<ul>
@@ -1305,7 +1316,7 @@ Next Steps for October 16, 2025:</h2>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md308"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md311"></a>
 Next Steps:</h2>
 <ul>
 <li>Review and refactor documentation:<ul>
@@ -1354,7 +1365,7 @@ Next Steps:</h2>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md310"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md313"></a>
 Long Term To Do:</h2>
 <ul>
 <li>Document the new startup pattern and resource creation workflows in the README and docs.</li>

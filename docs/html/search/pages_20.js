@@ -5,7 +5,7 @@ var searchData=
   ['window_20rationale_2',['Single Stage, Single Window Rationale',['../md_docs_2core__framework.html#autotoc_md36',1,'']]],
   ['window_20resizing_20texture_20resolution_3',['Window Resizing &amp;amp; Texture Resolution',['../md_docs_2core__framework.html#autotoc_md39',1,'']]],
   ['with_20global_20accessor_4',['Example Usage (with global accessor)',['../md_docs_2core__framework.html#autotoc_md19',1,'']]],
-  ['with_20lua_5',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md315',1,'']]],
+  ['with_20lua_5',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md318',1,'']]],
   ['word_20tokenization_20rules_6',['Word Tokenization Rules',['../md_docs_2label__text__parsing.html#autotoc_md193',1,'']]],
   ['word_20wrapping_20autosizing_7',['Word Wrapping &amp;amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md201',1,'']]],
   ['work_20completeness_20notes_8',['Remaining work / completeness notes',['../md_docs_2lua__commands__and__properties.html#autotoc_md230',1,'']]],

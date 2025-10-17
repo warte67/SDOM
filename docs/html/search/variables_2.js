@@ -9,11 +9,13 @@ var searchData=
   ['color_6',['color',['../structSDOM_1_1Core_1_1CoreConfig.html#ac5205d07b241b8192c50840776c97598',1,'SDOM::Core::CoreConfig::color'],['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35',1,'SDOM::IDisplayObject::InitStruct::color']]],
   ['color_5f_7',['color_',['../classSDOM_1_1IDisplayObject.html#ac96c75670e97111ee615f2dd7c6c5a43',1,'SDOM::IDisplayObject']]],
   ['concealed_8',['CONCEALED',['../classCLR.html#afa703e1483c6595368fe9def2066eec8',1,'CLR']]],
-  ['core_9',['Core',['../classSDOM_1_1AssetHandle.html#a3f4058eb772531ffeb00b58ffb8287c2',1,'SDOM::AssetHandle::Core'],['../classSDOM_1_1IFontObject.html#a41dc94c0c6b829f8e43561f2105a19ba',1,'SDOM::IFontObject::Core'],['../classSDOM_1_1Label.html#a9d9595e04e3bd70c9d8b2ce589ccf6de',1,'SDOM::Label::Core'],['../classSDOM_1_1SpriteSheet.html#abc59587f33d400af3e064d992c884a05',1,'SDOM::SpriteSheet::Core'],['../classSDOM_1_1Texture.html#a356c05437c222106e30a6671dccd81c4',1,'SDOM::Texture::Core'],['../classSDOM_1_1TTFAsset.html#a9d682d344065b959e4fa646ed3e3fb92',1,'SDOM::TTFAsset::Core']]],
-  ['current_5fheight_10',['current_height',['../classSDOM_1_1Label.html#a4778ce83b69e7385231d7de16ed00e7a',1,'SDOM::Label']]],
-  ['current_5fpixel_5fformat_11',['current_pixel_format',['../classSDOM_1_1Label.html#a987998dd1ddfd5a603a0719b6dfa354f',1,'SDOM::Label']]],
-  ['current_5fwidth_12',['current_width',['../classSDOM_1_1Label.html#a073a7379de79ac49cd5ec103f1958978',1,'SDOM::Label']]],
-  ['currentphase_13',['currentPhase',['../classSDOM_1_1Event.html#acfe274676206ac3354d955cd794488e6',1,'SDOM::Event']]],
-  ['currenttarget_14',['currentTarget',['../classSDOM_1_1Event.html#ad0e1e1487e503fc5ae91d50df4f38955',1,'SDOM::Event']]],
-  ['cyan_15',['CYAN',['../classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0',1,'CLR']]]
+  ['content_5fsize_9',['content_size',['../structSDOM_1_1ScrollBar_1_1InitStruct.html#a8680609e76169ec39741ea886f056782',1,'SDOM::ScrollBar::InitStruct']]],
+  ['content_5fsize_5f_10',['content_size_',['../classSDOM_1_1ScrollBar.html#ac30915c772b6a50ec84f8b490a8cf606',1,'SDOM::ScrollBar']]],
+  ['core_11',['Core',['../classSDOM_1_1AssetHandle.html#a3f4058eb772531ffeb00b58ffb8287c2',1,'SDOM::AssetHandle::Core'],['../classSDOM_1_1IFontObject.html#a41dc94c0c6b829f8e43561f2105a19ba',1,'SDOM::IFontObject::Core'],['../classSDOM_1_1Label.html#a9d9595e04e3bd70c9d8b2ce589ccf6de',1,'SDOM::Label::Core'],['../classSDOM_1_1SpriteSheet.html#abc59587f33d400af3e064d992c884a05',1,'SDOM::SpriteSheet::Core'],['../classSDOM_1_1Texture.html#a356c05437c222106e30a6671dccd81c4',1,'SDOM::Texture::Core'],['../classSDOM_1_1TTFAsset.html#a9d682d344065b959e4fa646ed3e3fb92',1,'SDOM::TTFAsset::Core']]],
+  ['current_5fheight_12',['current_height',['../classSDOM_1_1Label.html#a4778ce83b69e7385231d7de16ed00e7a',1,'SDOM::Label']]],
+  ['current_5fpixel_5fformat_13',['current_pixel_format',['../classSDOM_1_1Label.html#a987998dd1ddfd5a603a0719b6dfa354f',1,'SDOM::Label']]],
+  ['current_5fwidth_14',['current_width',['../classSDOM_1_1Label.html#a073a7379de79ac49cd5ec103f1958978',1,'SDOM::Label']]],
+  ['currentphase_15',['currentPhase',['../classSDOM_1_1Event.html#acfe274676206ac3354d955cd794488e6',1,'SDOM::Event']]],
+  ['currenttarget_16',['currentTarget',['../classSDOM_1_1Event.html#ad0e1e1487e503fc5ae91d50df4f38955',1,'SDOM::Event']]],
+  ['cyan_17',['CYAN',['../classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0',1,'CLR']]]
 ];

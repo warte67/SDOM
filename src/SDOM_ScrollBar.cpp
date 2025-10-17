@@ -62,7 +62,7 @@ namespace SDOM
             init.width = 8;
             init.height = 8;   
             init.isClickable = true;
-            init.tabEnabled = true;
+            init.tabEnabled = false;
             init.color = getColor(); 
             if (orientation_ == Orientation::Horizontal)
                 init.direction = ArrowButton::ArrowDirection::Left;
@@ -94,7 +94,7 @@ namespace SDOM
             init.width = 8;
             init.height = 8;   
             init.isClickable = true;
-            init.tabEnabled = true;
+            init.tabEnabled = false;
             init.color = getColor(); 
             button_increase_ = getFactory().create("ArrowButton", init);
             addChild(button_increase_);
@@ -112,20 +112,10 @@ namespace SDOM
         }
 
         // Wire arrow button clicks to increment/decrement the scrollbar value
-        if (button_decrease_ptr_) {
-            // Decrease -> move towards min
-            button_decrease_ptr_->addEventListener(SDOM::EventType::MouseClick, [this](SDOM::Event& ev) {
-                if (!isEnabled()) return;
-                float oldValue = getValue();
-                float delta = (step_ > 0.0f) ? step_ : 1.0f;
-                float newValue;
-                if (orientation_ == Orientation::Horizontal) {
-                    // left arrow: decrease value
-                    newValue = std::clamp(getValue() - delta, getMin(), getMax());
-                } else {
-                    // top arrow: increase value (vertical mapping: top => max)
-                    newValue = std::clamp(getValue() + delta, getMin(), getMax());
-                }
+        if (button_decrease_ptr_ || button_increase_ptr_)
+        {
+            // Common helpers to perform the change and dispatch ValueChanged
+            auto doChange = [this](float newValue, float oldValue) {
                 if (newValue == oldValue) return;
                 setValue(newValue);
                 queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& e) {
@@ -133,31 +123,46 @@ namespace SDOM
                     e.setPayloadValue("old_value", oldValue);
                     e.setPayloadValue("new_value", newValue);
                 });
-            });
-        }
+            };
 
-        if (button_increase_ptr_) {
-            // Increase -> move towards max
-            button_increase_ptr_->addEventListener(SDOM::EventType::MouseClick, [this](SDOM::Event& ev) {
+            // decrease handler (left or top)
+            auto decreaseHandler = [this, doChange](Event& ev) {
                 if (!isEnabled()) return;
                 float oldValue = getValue();
                 float delta = (step_ > 0.0f) ? step_ : 1.0f;
                 float newValue;
                 if (orientation_ == Orientation::Horizontal) {
-                    // right arrow: increase value
+                    newValue = std::clamp(getValue() - delta, getMin(), getMax());
+                } else {
+                    // top arrow increases value
+                    newValue = std::clamp(getValue() + delta, getMin(), getMax());
+                }
+                doChange(newValue, oldValue);
+            };
+
+            // increase handler (right or bottom)
+            auto increaseHandler = [this, doChange](Event& ev) {
+                if (!isEnabled()) return;
+                float oldValue = getValue();
+                float delta = (step_ > 0.0f) ? step_ : 1.0f;
+                float newValue;
+                if (orientation_ == Orientation::Horizontal) {
                     newValue = std::clamp(getValue() + delta, getMin(), getMax());
                 } else {
-                    // bottom arrow: decrease value (vertical mapping: bottom => min)
+                    // bottom arrow decreases value
                     newValue = std::clamp(getValue() - delta, getMin(), getMax());
                 }
-                if (newValue == oldValue) return;
-                setValue(newValue);
-                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& e) {
-                    e.setPayloadValue("name", getName());
-                    e.setPayloadValue("old_value", oldValue);
-                    e.setPayloadValue("new_value", newValue);
-                });
-            });
+                doChange(newValue, oldValue);
+            };
+
+            if (button_decrease_ptr_) {
+                button_decrease_ptr_->addEventListener(EventType::MouseClick, decreaseHandler);
+                button_decrease_ptr_->addEventListener(EventType::MouseDoubleClick, decreaseHandler);
+            }
+            if (button_increase_ptr_) {
+                button_increase_ptr_->addEventListener(EventType::MouseClick, increaseHandler);
+                button_increase_ptr_->addEventListener(EventType::MouseDoubleClick, increaseHandler);
+            }
         }
 
         return ret;

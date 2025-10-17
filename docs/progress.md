@@ -779,7 +779,17 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Controls updated (defaults forwarded): Slider, Box, Label, Frame, Group, Button, IconButton, CheckButton, RadioButton, TristateButton, ArrowButton, Stage, and IRangeControl_scaffold.
   - Removed local post-constructor color/Init fixes where forwarding made them redundant.
   - Added example/comment to SDOM_IRangeControl_scaffold showing the forwarding pattern and CreateFromLua example.
-  
+
+---
+## [October 17, 2025]
+- **ScrollBar:**
+  - Added `ScrollBar` scaffolding as a descendant of `IRangeControl`.
+  - Implemented minimal constructors and deferred behavior to `IRangeControl`.
+  - Registered `ScrollBar` DOM type with the Factory.
+  - Both `horizontal` and `vertical` orientations are now being rendered with the default `internal_icon_8x8` SpriteSheet.
+  - Composes `ArrowButton`s for increment/decrement controls and a `ThumbTrack` with a draggable `Thumb`.
+  - Supports both `vertical` and `horizontal` `Orientation`s.
+
 
 ## Next Steps for October 17, 2025:
 - Begin implementation of ScrollBar as IRangeControl descendants.
@@ -790,16 +800,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - **`Slider`:** and **`ProgressBar`:**
     - The next step is to ensure the Slider can render using external SpriteSheets of varying sizes. The current `internal_icon_8x8` SpriteSheet is quite small for high-resolution displays. I plan to create additional icon sets at 12x12 and 16x16 pixels, which can be registered as internal resources or used for external file load testing (or both). This means the other range control objects should have this option as well.
     - Similar to how BitmapFonts can be scaled in Labels using the `font_size` property (scaling by the ratio `font_size / font_height`), I’d like to support scalable icon sprites for controls. This would allow icons to be rendered at different sizes, either by scaling (with optional retro pixelation) or by selecting the most appropriate SpriteSheet for the current UI scale.
-  - **`ScrollBar`:**
-    - composes `ArrowButton`s for increment/decrement controls and a `ThumbTrack` with a draggable `Thumb`.
-    - should support page-up/page-down clicks in the track area.
-    - should support mouse dragging and keyboard input for value changes.
-    - should emit `onValueChanged` events when the value changes.
-    - should support both `vertical` and `horizontal` `Orientation`s.
-- Common requirements:
-  - All controls should expose `min`, `max`, `value`, and `orientation` properties to Lua.
-  - All controls should emit `onValueChanged` events when the value changes.
-  - All controls should support both `vertical` and `horizontal` `Orientation`s.
 
 - Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.
   - Use SDOM_IRangeControl_scaffold.hpp / .cpp as a template for future interface implementations.

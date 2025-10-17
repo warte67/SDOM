@@ -21,6 +21,7 @@ var structSDOM_1_1Slider_1_1InitStruct =
     [ "orientation", "structSDOM_1_1Slider_1_1InitStruct.html#aa7f22f4d11ee48d30d70273fa16806bb", null ],
     [ "outlineColor", "structSDOM_1_1Slider_1_1InitStruct.html#ab41dcfc6259800a732c4eccd40452ae6", null ],
     [ "priority", "structSDOM_1_1Slider_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939", null ],
+    [ "step", "structSDOM_1_1Slider_1_1InitStruct.html#a675f603f2dbbb2b4bb7132a0e813997d", null ],
     [ "tabEnabled", "structSDOM_1_1Slider_1_1InitStruct.html#a2d89b34df7efd356fb474dfe984011e3", null ],
     [ "tabPriority", "structSDOM_1_1Slider_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7", null ],
     [ "type", "structSDOM_1_1Slider_1_1InitStruct.html#a0faa47d35c52461da9e43a87f5384deb", null ],

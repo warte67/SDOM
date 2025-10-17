@@ -16,7 +16,7 @@ var searchData=
   ['windowheight_13',['windowHeight',['../structSDOM_1_1Core_1_1CoreConfig.html#a8c437dc7c49ff80c7904ce46fbca14d9',1,'SDOM::Core::CoreConfig']]],
   ['windowwidth_14',['windowWidth',['../structSDOM_1_1Core_1_1CoreConfig.html#acd80478dc5e6f4dc3b4f3c591eafd783',1,'SDOM::Core::CoreConfig']]],
   ['with_20global_20accessor_15',['Example Usage (with global accessor)',['../md_docs_2core__framework.html#autotoc_md19',1,'']]],
-  ['with_20lua_16',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md315',1,'']]],
+  ['with_20lua_16',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md318',1,'']]],
   ['word_17',['Word',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429a07a094a210794e74a0e5e1a1457a92ee',1,'SDOM::Label::Word'],['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'Word:&#160;SDOM_CLR.hpp']]],
   ['word_20tokenization_20rules_18',['Word Tokenization Rules',['../md_docs_2label__text__parsing.html#autotoc_md193',1,'']]],
   ['word_20wrapping_20autosizing_19',['Word Wrapping &amp;amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md201',1,'']]],

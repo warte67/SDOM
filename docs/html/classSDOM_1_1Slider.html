@@ -129,6 +129,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a678acf0c767e31af58fcce0737e99f78" id="r_a678acf0c767e31af58fcce0737e99f78"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a678acf0c767e31af58fcce0737e99f78">onRender</a> () override</td></tr>
 <tr class="memitem:a5754c55838d3795489f1f7e2c7b62853" id="r_a5754c55838d3795489f1f7e2c7b62853"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5754c55838d3795489f1f7e2c7b62853">onUnitTest</a> () override</td></tr>
 <tr class="memdesc:a5754c55838d3795489f1f7e2c7b62853"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
+<tr class="memitem:aac51d77dd80ceed64d69e6db25827db5" id="r_aac51d77dd80ceed64d69e6db25827db5"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac51d77dd80ceed64d69e6db25827db5">getStep</a> () const</td></tr>
+<tr class="memitem:a03a5da8e4fb4caeca373c300e843c094" id="r_a03a5da8e4fb4caeca373c300e843c094"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03a5da8e4fb4caeca373c300e843c094">setStep</a> (float step)</td></tr>
 <tr class="memitem:a7680756eabacf19a5833f0c1d2b64ef8" id="r_a7680756eabacf19a5833f0c1d2b64ef8"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IRangeControl.html#a7680756eabacf19a5833f0c1d2b64ef8">getMin</a> () const</td></tr>
 <tr class="memitem:ae392b0a3b826326f6a475c0ab9be5a55" id="r_ae392b0a3b826326f6a475c0ab9be5a55"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IRangeControl.html#ae392b0a3b826326f6a475c0ab9be5a55">getMax</a> () const</td></tr>
 <tr class="memitem:ade26370ac6b0bc3785016ef7cec0507d" id="r_ade26370ac6b0bc3785016ef7cec0507d"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IRangeControl.html#ade26370ac6b0bc3785016ef7cec0507d">getValue</a> () const</td></tr>
@@ -279,6 +281,7 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr class="memitem:a3eb8e02cd068e5b94179929e46e03c5d" id="r_a3eb8e02cd068e5b94179929e46e03c5d"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3eb8e02cd068e5b94179929e46e03c5d">step_</a> = 0.0f</td></tr>
 <tr class="memitem:a793a800b29637f9f1fab46d939762a90" id="r_a793a800b29637f9f1fab46d939762a90"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IRangeControl.html#a793a800b29637f9f1fab46d939762a90">min_</a> = 0.0f</td></tr>
 <tr class="memitem:a5fc90877969edbb4970c64c5d8237fd9" id="r_a5fc90877969edbb4970c64c5d8237fd9"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IRangeControl.html#a5fc90877969edbb4970c64c5d8237fd9">max_</a> = 100.0f</td></tr>
 <tr class="memitem:ac457530e83b61d67e9a97e2cb8fcb4fb" id="r_ac457530e83b61d67e9a97e2cb8fcb4fb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IRangeControl.html#ac457530e83b61d67e9a97e2cb8fcb4fb">value_</a> = 0.0f</td></tr>
@@ -1675,6 +1678,31 @@ Protected Attributes</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aac51d77dd80ceed64d69e6db25827db5" name="aac51d77dd80ceed64d69e6db25827db5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac51d77dd80ceed64d69e6db25827db5">&#9670;&#160;</a></span>getStep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM::Slider::getStep </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3712,6 +3740,31 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a id="a03a5da8e4fb4caeca373c300e843c094" name="a03a5da8e4fb4caeca373c300e843c094"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03a5da8e4fb4caeca373c300e843c094">&#9670;&#160;</a></span>setStep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Slider::setStep </td>
+          <td>(</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>step</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a44654ae721dfab2be1b8bd574169ab09" name="a44654ae721dfab2be1b8bd574169ab09"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a44654ae721dfab2be1b8bd574169ab09">&#9670;&#160;</a></span>setTabEnabled()</h2>
 
@@ -4743,6 +4796,28 @@ template&lt;typename T&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3eb8e02cd068e5b94179929e46e03c5d" name="a3eb8e02cd068e5b94179929e46e03c5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3eb8e02cd068e5b94179929e46e03c5d">&#9670;&#160;</a></span>step_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM::Slider::step_ = 0.0f</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

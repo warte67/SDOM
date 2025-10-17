@@ -283,6 +283,7 @@ local config = {
                             y = 104,
                             width = 140,
                             height = 8,
+                            step = 5.0,  -- test discrete steps
                             Icon_resource = "internal_icon_8x8",
                             alignment = "left",                            
                         },
@@ -326,7 +327,7 @@ local config = {
                             width = 8,
                             height = 140,
                             value = 50.0,
-                            step = 2.5,  -- test discrete steps
+                            step = 5.0,  -- test discrete steps
                             icon_resource = "internal_icon_8x8",
                             -- color = { r = 255, g = 0, b = 0, a = 255 },
                             -- foreground_color = { r = 128, g = 128, b = 128, a = 255 },
