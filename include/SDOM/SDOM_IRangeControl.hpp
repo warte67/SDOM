@@ -1,7 +1,8 @@
-// IRangeObject.hpp
+// IRangeControl.hpp
 #pragma once
 
 #include <SDOM/SDOM_IDisplayObject.hpp>
+#include <SDOM/SDOM_SpriteSheet.hpp>
 
 namespace SDOM
 {
@@ -18,15 +19,15 @@ namespace SDOM
 
 
 
-    // --- IRangeObject Interface --- //
+    // --- IRangeControl Interface --- //
 
-    class IRangeObject : public IDisplayObject 
+    class IRangeControl : public IDisplayObject 
     {
         using SUPER = IDisplayObject;
 
     public:
         // --- Type Info --- //
-        static constexpr const char* TypeName = "IRangeObject";
+        static constexpr const char* TypeName = "IRangeControl";
 
 
         // --- Initialization Struct --- //
@@ -41,32 +42,33 @@ namespace SDOM
                 tabEnabled = false;
                 isClickable = true;
             }
-            // Additional IRangeObject Parameters
+            // Additional IRangeControl Parameters
             float min = 0.0f;      // Minimum value (0.0% - 100.0%)
             float max = 100.0f;    // Maximum value (0.0% - 100.0%)
             float value = 0.0f;    // Current value (0.0% - 100.0%)
             Orientation orientation = Orientation::Horizontal;
+            std::string icon_resource = "internal_icon_8x8"; 
 
         }; // END: InitStruct
         
     protected:
         // --- Protected Constructors --- //
-        IRangeObject(const InitStruct& init);  
-        IRangeObject(const sol::table& config);
+        IRangeControl(const InitStruct& init);  
+        IRangeControl(const sol::table& config);
 
     public:
         // --- Static Factory Methods --- //
         static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new IRangeObject(config));
+            return std::unique_ptr<IDisplayObject>(new IRangeControl(config));
         }
         static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-            const auto& IRangeObjectInit = static_cast<const IRangeObject::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new IRangeObject(IRangeObjectInit));
+            const auto& IRangeControlInit = static_cast<const IRangeControl::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new IRangeControl(IRangeControlInit));
         }
 
         // --- Default Constructor and Destructor --- //
-        IRangeObject() = default;
-        virtual ~IRangeObject() = default;
+        IRangeControl() = default;
+        virtual ~IRangeControl() = default;
 
         // --- Virtual Methods --- //
         virtual bool onInit() override;     // Called when the display object is initialized
@@ -82,42 +84,14 @@ namespace SDOM
         float getMax() const;
         float getValue() const;
         Orientation getOrientation() const;
+        std::string getIconResource() const;
+
 
         // --- Public Mutators --- //
-        void setMin(float v) 
-        {
-            float clamped = std::max(0.0f, std::min(100.0f, v));
-            if (clamped != min_) 
-            {
-                min_ = clamped;
-                // Optionally clamp value_ if needed
-                setValue(value_);
-                setDirty(true);
-            }
-        } // END: void setMin(float v)
-
-        void setMax(float v) 
-        {
-            float clamped = std::max(0.0f, std::min(100.0f, v));
-            if (clamped != max_) 
-            {
-                max_ = clamped;
-                // Optionally clamp value_ if needed
-                setValue(value_);
-                setDirty(true);
-            }
-        } // END: void setMax(float v)
-
-        void setValue(float v) 
-        {
-            float clamped = std::max(min_, std::min(max_, v));
-            if (clamped != value_) {
-                float old = value_;
-                value_ = clamped;
-                _onValueChanged(old, value_);
-                setDirty(true);
-            }
-        } // END: void setValue(float v)
+        void setMin(float v);
+        void setMax(float v);
+        void setValue(float v);
+        SpriteSheet* getIconSpriteSheet() const { return icon_sprite_sheet_; }
 
     protected:
         // --- Protected Data Members --- //
@@ -125,6 +99,12 @@ namespace SDOM
         float max_ = 100.0f;    // Maximum value (0.0% - 100.0%)
         float value_ = 0.0f;    // Current value (0.0% - 100.0%)
         Orientation orientation_ = Orientation::Horizontal;
+        std::string icon_resource_ = "internal_icon_8x8"; // default icon resource name
+        SpriteSheet* icon_sprite_sheet_ = nullptr; // SpriteSheet for the icon
+
+        // When setMin/setMax update bounds and call setValue, store previous bounds here
+        float pending_old_min_;
+        float pending_old_max_;
 
         // --- Protected Virtual Methods --- //
         void setOrientation(Orientation o);
@@ -134,6 +114,6 @@ namespace SDOM
 
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);        
-    }; // END: class IRangeObject
+    }; // END: class IRangeControl
 
 } // END: namespace SDOM

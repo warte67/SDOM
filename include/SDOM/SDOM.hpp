@@ -50,10 +50,12 @@
 #include <any>
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <functional>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <memory>
 #include <mutex>

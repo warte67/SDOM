@@ -113,23 +113,35 @@ namespace SDOM
         };
         auto read_color = [&](const char* k, SDL_Color d = {255,0,255,255}) -> SDL_Color 
         {
+            // if key missing, return default
             if (!config[k].valid()) return d;
-            sol::table t = config[k];
+
+            // if present but not a table, return default to avoid conversion errors
+            sol::object o = config[k];
+            if (!o.is<sol::table>()) return d;
+
+            sol::table t = o.as<sol::table>();
             SDL_Color c = d;
-            if (t["r"].valid()) c.r = (Uint8)t["r"].get<int>();
-            if (t["g"].valid()) c.g = (Uint8)t["g"].get<int>();
-            if (t["b"].valid()) c.b = (Uint8)t["b"].get<int>();
-            if (t["a"].valid()) c.a = (Uint8)t["a"].get<int>();
-            // array-style [r,g,b,a]
-            if (!t["r"].valid() && t[1].valid()) 
+
+            // Prefer array-style [r,g,b,a] if present
+            if (t[1].valid()) 
             {
-                c.r = (Uint8)t[1].get<int>();
-                if (t[2].valid()) c.g = (Uint8)t[2].get<int>();
-                if (t[3].valid()) c.b = (Uint8)t[3].get<int>();
-                if (t[4].valid()) c.a = (Uint8)t[4].get<int>();
+                c.r = static_cast<Uint8>(t[1].get<int>());
+                if (t[2].valid()) c.g = static_cast<Uint8>(t[2].get<int>());
+                if (t[3].valid()) c.b = static_cast<Uint8>(t[3].get<int>());
+                if (t[4].valid()) c.a = static_cast<Uint8>(t[4].get<int>());
+                return c;
             }
+
+            // Named fields: preserve defaults for any missing channel
+            if (t["r"].valid()) c.r = static_cast<Uint8>(t["r"].get<int>());
+            if (t["g"].valid()) c.g = static_cast<Uint8>(t["g"].get<int>());
+            if (t["b"].valid()) c.b = static_cast<Uint8>(t["b"].get<int>());
+            if (t["a"].valid()) c.a = static_cast<Uint8>(t["a"].get<int>());
+
             return c;
         };
+
         auto get_bool = [&](const char* k, bool d = false) -> bool 
         {
             return config[k].valid() ? config[k].get<bool>() : d;
@@ -160,7 +172,6 @@ namespace SDOM
 
         // set color
         color_ = read_color("color", init_default.color);
-
         foregroundColor_ = read_color("foreground_color", init_default.foregroundColor);
         backgroundColor_ = read_color("background_color", init_default.backgroundColor);
         borderColor_ = read_color("border_color", init_default.borderColor);

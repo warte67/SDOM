@@ -24,6 +24,7 @@
 #include <SDOM/SDOM_CheckButton.hpp>
 #include <SDOM/SDOM_RadioButton.hpp>
 #include <SDOM/SDOM_TristateButton.hpp>
+#include <SDOM/SDOM_Slider.hpp>
 
 namespace SDOM
 {
@@ -49,6 +50,8 @@ namespace SDOM
         // DisplayHandle prototypeHandle; // Default DisplayHandle for registration
         // prototypeHandle._registerLuaBindings("DisplayHandle", core.getLua());
 
+            TTFAsset::InitStruct ttf_init;
+            ttf_init.name = "internal_ttf_asset";     // internal registry key
         // register the Stage
         registerDomType("Stage", TypeCreators{
             Stage::CreateFromLua, 
@@ -251,6 +254,12 @@ namespace SDOM
         registerDomType("TristateButton", TypeCreators{
             TristateButton::CreateFromLua,
             TristateButton::CreateFromInitStruct
+        });
+
+        // register the Slider
+        registerDomType("Slider", TypeCreators{
+            Slider::CreateFromLua,
+            Slider::CreateFromInitStruct
         });
 
         // return initialized state

@@ -748,27 +748,53 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Exposed `Direction` constants to Lua via `ArrowButton` class and `IconIndex` table.
   - Implemented safe accessors (`getDirection`/`setDirection`) and state management.
   - Added Lua bindings for `ArrowButton`, including constructors and property accessors.
+- **IRangeControl**
+  - Added `IRangeControl` interface to support range-based controls (ProgressBar, Slider, Scrollbar).
+  - `IRangeControl` defines properties: `min`, `max`, `value`, `orientation` (horizontal/vertical), and events (`onValueChanged`).
+  - Implemented static `registerLuaBindings(sol::state_view lua)` method to expose `Orientation` constants and accessors (`getMin`, `setMin`, `getMax`, `setMax`, `getValue`, `setValue`, `getOrientation`, `setOrientation`) to Lua.
+  - `horizontal` and `vertical` orientation constants are available in Lua via `IRangeControl.Orientation`.
+  - Ensured Lua bindings are reentrant and safe for multiple inheritance scenarios.
+  - Derived controls should call `SUPER::registerLuaBindings(lua)` in their own Lua registration methods.
 
   
 
 ## Next Steps for October 16, 2025:
-- Design and implement ProgressBar, Slider, and Scrollbar controls:
-    - Use a shared base class (e.g., RangeControl or IBarObject) with orientation, min/max/value, and event logic.
-    - Support both horizontal and vertical variants via an orientation property.
-    - Ensure Scrollbar composes ArrowButtons for increment/decrement controls.
+- Design and implement *Slider*, *ProgressBar*, and *ScrollBar* `IRangeControl` descendants:
+  - **`Slider`:**
+    - composes a `SliderTrack` with a draggable `SliderKnob` handle knob.
+    - should support page-up/page-down clicks in the track area.
+    - should support mouse dragging and keyboard input for value changes.
+    - should emit `onValueChanged` events when the value changes.
+    - should support both `vertical` and `horizontal` `Orientation`s.
+  - **`ScrollBar`:**
+    - composes `ArrowButton`s for increment/decrement controls and a `ThumbTrack` with a draggable `Thumb`.
+    - should support page-up/page-down clicks in the track area.
+    - should support mouse dragging and keyboard input for value changes.
+    - should emit `onValueChanged` events when the value changes.
+    - should support both `vertical` and `horizontal` `Orientation`s.
+  - **`ProgressBar`:**
+    - should be read-only and visually indicate progress.
+    - should support both `vertical` and `horizontal` `Orientation`s.
+- Common requirements:
+  - All controls should expose `min`, `max`, `value`, and `orientation` properties to Lua.
+  - All controls should emit `onValueChanged` events when the value changes.
+  - All controls should support both `vertical` and `horizontal` `Orientation`s.
+
+- Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.
+  - Use SDOM_IRangeControl_scaffold.hpp / .cpp as a template for future interface implementations.
 
 ---
 ## Next Steps:
 - Review and refactor documentation:
-    - Begin organizing markdown docs by topic, add more examples and tutorials.
-    - Plan a thorough documentation revamp (including Doxygen and markdown).
-    - Index docs for easier navigation and update legacy references.
+  - Begin organizing markdown docs by topic, add more examples and tutorials.
+  - Plan a thorough documentation revamp (including Doxygen and markdown).
+  - Index docs for easier navigation and update legacy references.
 - Investigate what I presume are z_order based bugs. 
   - Objects are not rendering in proper order. Not sure when this started. 
   - This happens when Boxes are attached to another box and that box is at a lower level than another one.  
   - This is a likely a `Box` behavior not a behavior explictly of the `SDOM API`.
 
-- refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test1()` → `Label_test1()`).
+- refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test0()` → `Label_test1()`).
   - Refactor `SpriteSheet_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
   - Refactor `GarbageCollection_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
   - Refactor `Event_UnitTests` to utilize proper scaffolding patterns.
@@ -779,17 +805,27 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Refactor `IDisplayObject` to utilize proper scaffolding patterns.
   - Refactor `Factory` to utilize proper scaffolding patterns.
   - Refactor `Core` to utilize proper scaffolding patterns.
-  - Add `Group` unit tests to validate Lua property setting and resource resolution.
-  - Add `Button` unit tests to validate Lua property setting, label access, and event listener behavior.
-  - Add `Checkbox` unit tests to validate Lua property setting, label access, and event listener behavior.
-  - Add `Frame` unit tests to validate Lua property setting and icon rendering.
-  - Add `IPanelObject` unit tests to validate Lua property setting and icon rendering.
-  - Add `TTFAsset` unit tests to validate Lua property setting and icon rendering.
-  - Add `TruetypeFont` unit tests to validate Lua property setting and icon rendering.
-  - Add `BitmapFont` unit tests to validate Lua property setting and icon rendering.
+  - Add `Group` unit tests to validate Lua all property setting and resource resolution.
+  - Add `Button` unit tests to validate Lua all property setting, label access, and event listener behavior.
+  - Add `Checkbox` unit tests to validate Lua all property setting, label access, and event listener behavior.
+  - Add `Frame` unit tests to validate Lua all property setting and icon rendering.
+  - Add `IPanelObject` unit tests to validate Lua all property setting and icon rendering.
+  - Add `TTFAsset` unit tests to validate Lua all property setting and icon rendering.
+  - Add `TruetypeFont` unit tests to validate Lua all property setting and icon rendering.
+  - Add `BitmapFont` unit tests to validate Lua all property setting and icon rendering.
+  - Add `IconButton` unit tests to validate Lua all property setting and icon rendering.
+  - Add `ArrowButton` unit tests to validate Lua all property setting and icon rendering.
+  - Add `IButtonObject` unit tests to validate Lua all property setting and icon rendering.
+  - Add `TristateButton` unit tests to validate Lua all property setting and icon rendering.
+  - Add `CheckButton` unit tests to validate Lua all property setting and icon rendering.
+  - Add `RadioButton` unit tests to validate Lua all property setting and icon rendering.
+  - Add `IRangeControl` unit tests to validate Lua all property setting and icon rendering.
+  - Add `Slider` unit tests to validate Lua all property setting and icon rendering.
+  - Add `ProgressBar` unit tests to validate Lua all property setting and icon rendering.
+  - Add `Scrollbar` unit tests to validate Lua all property setting and icon rendering.
 
 ---
-## ToDo:
+## Long Term To Do:
 - Document the new startup pattern and resource creation workflows in the README and docs.
 - Update examples to use the new explicit startup and resource creation methods.
 - Update architecture diagrams and documentation to reflect recent naming and API changes.

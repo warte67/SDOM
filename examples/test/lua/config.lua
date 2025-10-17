@@ -145,7 +145,7 @@ local config = {
                                     text = "Third",
                                     -- border = true
                                 }                                   
-                            }
+                            } -- mainFrameGroup
                         },
                         {
                             name = "mainFrame_CheckButton_1",
@@ -243,7 +243,35 @@ local config = {
                             -- state  = 1, -- 0=Unchecked, 1=Checked, 2=Indeterminate
                             text = "VarelaRound16 TristateButton",
                             -- border = true
-                        },                        
+                        },
+                        {
+                            name = "mainFrame_hslider_1",
+                            orientation = "horizontal",
+                            type = "Slider",
+                            x = 450,
+                            y = 84,
+                            width = 140,
+                            height = 8,
+                            icon_resource = "internal_icon_8x8",
+                            -- color = { r = 128, g = 128, b = 128, a = 255 },
+                            -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
+                            -- background_color = { r = 16, g = 16, b = 16, a = 128 }, 
+                            -- border_color = { r = 0, g = 0, b = 0, a = 32 },
+                        },
+                        {
+                            name = "mainFrame_vslider_1",
+                            orientation = "vertical",
+                            type = "Slider",
+                            x = 582,
+                            y = 108,
+                            width = 8,
+                            height = 140,
+                            icon_resource = "internal_icon_8x8",
+                            -- color = { r = 128, g = 128, b = 128, a = 255 },
+                            -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
+                            -- background_color = { r = 16, g = 16, b = 16, a = 128 }, 
+                            -- border_color = { r = 0, g = 0, b = 0, a = 32 },
+                        }                        
                     }
                 },
                 {

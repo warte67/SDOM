@@ -284,6 +284,16 @@ Notes & test ideas:
         IDisplayObject& setBounds(const Bounds& b) { setLeft(b.left); setTop(b.top); setRight(b.right); setBottom(b.bottom); return *this; }  // **NEW**
         SDL_Color getColor() const { return color_; }
         IDisplayObject& setColor(const SDL_Color& color) { color_ = color; return *this; }
+        SDL_Color getForegroundColor() const { return foregroundColor_; }
+        IDisplayObject& setForegroundColor(const SDL_Color& color) { foregroundColor_ = color; setDirty(); return *this; }
+        SDL_Color getBackgroundColor() const { return backgroundColor_; }
+        IDisplayObject& setBackgroundColor(const SDL_Color& color) { backgroundColor_ = color; setDirty(); return *this; }
+        SDL_Color getBorderColor() const { return borderColor_; }
+        IDisplayObject& setBorderColor(const SDL_Color& color) { borderColor_ = color; setDirty(); return *this; }
+        SDL_Color getOutlineColor() const { return outlineColor_; }
+        IDisplayObject& setOutlineColor(const SDL_Color& color) { outlineColor_ = color; setDirty(); return *this; }
+        SDL_Color getDropshadowColor() const { return dropshadowColor_; }
+        IDisplayObject& setDropshadowColor(const SDL_Color& color) { dropshadowColor_ = color; setDirty(); return *this; }
 
         // --- Priority & Z-Order --- //
         int getMaxPriority() const;
@@ -362,6 +372,8 @@ Notes & test ideas:
         IDisplayObject& setLocalRight(float value) { right_ = value; return *this; }
         IDisplayObject& setLocalTop(float value) { top_ = value; return *this; }
         IDisplayObject& setLocalBottom(float value) { bottom_ = value; return *this; }
+
+
 
     protected: // --- Member Variables --- //
         // std::string name_;  // defined in IDataObject
