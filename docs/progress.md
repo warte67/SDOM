@@ -763,6 +763,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Both `horizontal` and `vertical` orientations are now being rendered with the default `internal_icon_8x8` SpriteSheet.
   - Added a new property `step` for quantization of value changes when using a keyboard.
   - When selected, `PgUP` and `PgDn` change value by step * 10.0. If step is continuous (0.0f) it is treated as 1.0f.
+  - Holding `SHIFT` while scrolling with the mouse wheel has a similar effect as `PgUP` and `PgDN`.
   - When selected, `HOME` and `END` set value to min or max as would be most relevant by orientation.
   - Slider knob and track are visually represented and mouse based interaction logic is functioning.
   - Slider emits `onValueChanged` events when the value changes.
@@ -784,7 +785,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 ---
 - Design and implement *Slider*, *ProgressBar*, and *ScrollBar* `IRangeControl` descendants:
   - **`Slider`:**
-    - We need to make sure the Slider can render from external SpriteSheets of varying sizes
+    - The next step is to ensure the Slider can render using external SpriteSheets of varying sizes. The current `internal_icon_8x8` SpriteSheet is quite small for high-resolution displays. I plan to create additional icon sets at 12x12 and 16x16 pixels, which can be registered as internal resources or used for external file load testing (or both). This means the other range control objects should have this option as well.
+    - Similar to how BitmapFonts can be scaled in Labels using the `font_size` property (scaling by the ratio `font_size / font_height`), I’d like to support scalable icon sprites for controls. This would allow icons to be rendered at different sizes, either by scaling (with optional retro pixelation) or by selecting the most appropriate SpriteSheet for the current UI scale.
   - **`ScrollBar`:**
     - composes `ArrowButton`s for increment/decrement controls and a `ThumbTrack` with a draggable `Thumb`.
     - should support page-up/page-down clicks in the track area.

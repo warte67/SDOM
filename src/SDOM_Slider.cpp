@@ -103,7 +103,10 @@ namespace SDOM
         // MouseWheel event to adjust the slider value
         if (event.getType() == EventType::MouseWheel)
         {
+            SDL_Keymod modState = SDL_GetModState();
             float wheel_delta = event.getWheelY() * ((step_ > 0.0f) ? step_ : 1.0f);
+            if (modState & SDL_KMOD_SHIFT)
+                wheel_delta *= 10.0f; // larger step with SHIFT key
             if (orientation_ == Orientation::Vertical)
                 wheel_delta = -wheel_delta; // invert for vertical sliders so mouse wheel is in same direction
             float oldValue = value_;
