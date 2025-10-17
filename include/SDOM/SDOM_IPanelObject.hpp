@@ -113,8 +113,10 @@ namespace SDOM
 
     protected:
         // --- Constructors --- //
-        IPanelObject(const InitStruct& init);  
-        IPanelObject(const sol::table& config);
+    IPanelObject(const InitStruct& init);  
+    IPanelObject(const sol::table& config);
+    // Defaults-aware Lua constructor to allow derived InitStruct defaults
+    IPanelObject(const sol::table& config, const InitStruct& defaults);
 
         // IPanelObject();
 

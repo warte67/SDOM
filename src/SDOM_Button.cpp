@@ -31,7 +31,7 @@ namespace SDOM
     }
 
 
-    Button::Button(const sol::table& config) : IPanelObject(config)
+    Button::Button(const sol::table& config) : IPanelObject(config, InitStruct())
     {
         // std::cout << "Box constructed with Lua config: " << getName() 
         //         << " at address: " << this << std::endl;            

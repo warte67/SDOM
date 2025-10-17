@@ -217,6 +217,8 @@ Notes & test ideas:
     protected:
         IDisplayObject(const InitStruct& init);
         IDisplayObject(const sol::table& config);
+        // Defaults-aware constructor: use provided defaults when parsing Lua table.
+        IDisplayObject(const sol::table& config, const InitStruct& defaults);
         IDisplayObject();
 
     public:

@@ -50,12 +50,16 @@ namespace SDOM
 
     } // END: TristateButton::TristateButton(const InitStruct& init)
 
-    TristateButton::TristateButton(const sol::table& config) : IDisplayObject(config)
+    TristateButton::TristateButton(const sol::table& config) : TristateButton(config, InitStruct())
+    {
+    }
+
+    TristateButton::TristateButton(const sol::table& config, const InitStruct& defaults) : IDisplayObject(config, defaults)
     {
         // std::cout << "Box constructed with Lua config: " << getName() 
         //         << " at address: " << this << std::endl;            
 
-        InitStruct init;
+    InitStruct init;
 
         // std::string type = config["type"].valid() ? config["type"].get<std::string>() : init.type;
         // if (type != "TypeName") {

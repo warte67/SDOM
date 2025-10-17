@@ -100,7 +100,7 @@ namespace SDOM
     } // END Label::Label(const InitStruct& init)
 
 
-    Label::Label(const sol::table& config) : IDisplayObject(config)
+    Label::Label(const sol::table& config) : IDisplayObject(config, Label::InitStruct())
     {
         InitStruct init; // to get default values
 

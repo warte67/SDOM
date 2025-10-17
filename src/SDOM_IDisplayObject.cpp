@@ -170,6 +170,114 @@ namespace SDOM
         if (config["right"].valid()) setRight(get_float("left") + get_float("right", x + width));
         if (config["bottom"].valid()) setBottom(get_float("top") + get_float("bottom", y + height));
 
+    // set color
+    color_ = read_color("color", init_default.color);
+    foregroundColor_ = read_color("foreground_color", init_default.foregroundColor);
+    backgroundColor_ = read_color("background_color", init_default.backgroundColor);
+    borderColor_ = read_color("border_color", init_default.borderColor);
+    outlineColor_ = read_color("outline_color", init_default.outlineColor);
+    dropshadowColor_ = read_color("dropshadow_color", init_default.dropshadowColor);
+
+        // --- Optional Properties --- //
+        setAnchorLeft(  stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_left", 
+                        anchorPointToString_.at(init_default.anchorLeft)))));
+        setAnchorTop(   stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_top", 
+                        anchorPointToString_.at(init_default.anchorTop)))));
+        setAnchorRight( stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_right", 
+                        anchorPointToString_.at(init_default.anchorRight)))));
+        setAnchorBottom(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_bottom", 
+                        anchorPointToString_.at(init_default.anchorBottom)))));
+        setZOrder(      get_int("z_order",      init_default.z_order     ));
+        setPriority(    get_int("priority",     init_default.priority    ));
+        setClickable(   get_bool("clickable",   init_default.isClickable ));
+        setEnabled(     get_bool("is_enabled",  init_default.isEnabled   ));
+        setHidden(      get_bool("is_hidden",   init_default.isHidden    ));
+        setTabPriority( get_int("tab_priority", init_default.tabPriority ));
+        setTabEnabled(  get_bool("tab_enabled", init_default.tabEnabled  ));
+
+    } // END IDisplayObject::IDisplayObject(const sol::table& config)
+
+
+    // Defaults-aware Lua constructor: uses provided defaults as the baseline instead of the
+    // internal InitStruct defaults. This lets derived classes pass their InitStruct so that
+    // base parsing will honor derived defaults when Lua omits keys.
+    IDisplayObject::IDisplayObject(const sol::table& config, const InitStruct& defaults)
+        : IDataObject()
+    {
+        InitStruct init_default = defaults;
+
+        // Reuse the same lambdas as the primary Lua ctor by copying logic here.
+        auto get_str = [&](const char* k, const std::string& d = "") -> std::string 
+        {
+            return config[k].valid() ? config[k].get<std::string>() : d;
+        };
+        auto get_int = [&](const char* k, int d = 0) -> int 
+        {
+            return config[k].valid() ? config[k].get<int>() : d;
+        };
+        auto get_float = [&](const char* k, float d = 0.0f) -> float {
+            if (!config[k].valid()) return d;
+            sol::object o = config[k];
+            try {
+                if (o.is<double>()) return static_cast<float>(o.as<double>());
+                if (o.is<int>()) return static_cast<float>(o.as<int>());
+                if (o.is<std::string>()) {
+                    std::string s = o.as<std::string>();
+                    if (s.empty()) return d;
+                    return std::stof(s);
+                }
+            } catch(...) {}
+            return d;
+        };
+        auto read_color = [&](const char* k, SDL_Color d = {255,0,255,255}) -> SDL_Color 
+        {
+            if (!config[k].valid()) return d;
+            sol::object o = config[k];
+            if (!o.is<sol::table>()) return d;
+            sol::table t = o.as<sol::table>();
+            SDL_Color c = d;
+            if (t[1].valid()) 
+            {
+                c.r = static_cast<Uint8>(t[1].get<int>());
+                if (t[2].valid()) c.g = static_cast<Uint8>(t[2].get<int>());
+                if (t[3].valid()) c.b = static_cast<Uint8>(t[3].get<int>());
+                if (t[4].valid()) c.a = static_cast<Uint8>(t[4].get<int>());
+                return c;
+            }
+            if (t["r"].valid()) c.r = static_cast<Uint8>(t["r"].get<int>());
+            if (t["g"].valid()) c.g = static_cast<Uint8>(t["g"].get<int>());
+            if (t["b"].valid()) c.b = static_cast<Uint8>(t["b"].get<int>());
+            if (t["a"].valid()) c.a = static_cast<Uint8>(t["a"].get<int>());
+            return c;
+        };
+        auto get_bool = [&](const char* k, bool d = false) -> bool 
+        {
+            return config[k].valid() ? config[k].get<bool>() : d;
+        };
+
+        // --- Required Properties --- //
+        name_ = config["name"].get_or(std::string(TypeName));
+        type_ = config["type"].get_or(std::string(TypeName));
+
+        // fetch coordinates:
+        float x = get_float("x",     init_default.x);
+        float y = get_float("y",     init_default.y);
+        float width  = config["width"].valid()  ? get_float("width",  init_default.width)
+                      : config["w"].valid()     ? get_float("w",      init_default.width)
+                      : init_default.width;
+        float height = config["height"].valid() ? get_float("height", init_default.height)
+                      : config["h"].valid()     ? get_float("h",      init_default.height)
+                      : init_default.height;
+        // set coordinates:
+        setX( x );
+        setY( y );
+        setWidth(  width );
+        setHeight( height );
+        if (config["left"].valid()) setLeft(get_float("left", x));
+        if (config["top"].valid()) setTop(get_float("top", y));
+        if (config["right"].valid()) setRight(get_float("left") + get_float("right", x + width));
+        if (config["bottom"].valid()) setBottom(get_float("top") + get_float("bottom", y + height));
+
         // set color
         color_ = read_color("color", init_default.color);
         foregroundColor_ = read_color("foreground_color", init_default.foregroundColor);
@@ -195,7 +303,7 @@ namespace SDOM
         setTabPriority( get_int("tab_priority", init_default.tabPriority ));
         setTabEnabled(  get_bool("tab_enabled", init_default.tabEnabled  ));
 
-    } // END IDisplayObject::IDisplayObject(const sol::table& config)
+    } // END IDisplayObject::IDisplayObject(const sol::table& config, const InitStruct& defaults)
 
     IDisplayObject::~IDisplayObject()
     {

@@ -755,17 +755,30 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - `horizontal` and `vertical` orientation constants are available in Lua via `IRangeControl.Orientation`.
   - Ensured Lua bindings are reentrant and safe for multiple inheritance scenarios.
   - Derived controls should call `SUPER::registerLuaBindings(lua)` in their own Lua registration methods.
-
+  - Added a new `IRangeControl_scaffold` to assist in creating new `RangeControl` objects
+- **`Slider`:**
+  - Added `Slider` scaffolding as a descendant of `IRangeControl`.
+  - Implemented minimal constructors and deferred behavior to `IRangeControl`.
+  - Registered `Slider` DOM type with the Factory.
+  - Both `horizontal` and `vertical` orientations are now being rendered with the default `internal_icon_8x8` SpriteSheet.
+  - Slider knob and track are visually represented and mouse based interaction logic is functioning.
+  - Slider emits `onValueChanged` events when the value changes.
+  - Slider does expose `min`, `max`, `value`, and `orientation` properties to Lua.
+- **Defaults Forwarding:**
+  - Implemented defaults-forwarding across the display/control constructors:
+      Added/used defaults-aware base parsing (IDisplayObject(..., defaults) and IRangeControl(..., defaults)).
+      Updated derived Lua ctors to forward their InitStruct() so derived defaults are visible during base parsing.
+  - Controls updated (defaults forwarded): Slider, Box, Label, Frame, Group, Button, IconButton, CheckButton, RadioButton, TristateButton, ArrowButton, Stage, and IRangeControl_scaffold.
+  - Removed local post-constructor color/Init fixes where forwarding made them redundant.
+  - Added example/comment to SDOM_IRangeControl_scaffold showing the forwarding pattern and CreateFromLua example.
   
 
 ## Next Steps for October 16, 2025:
 - Design and implement *Slider*, *ProgressBar*, and *ScrollBar* `IRangeControl` descendants:
   - **`Slider`:**
-    - composes a `SliderTrack` with a draggable `SliderKnob` handle knob.
-    - should support page-up/page-down clicks in the track area.
-    - should support mouse dragging and keyboard input for value changes.
-    - should emit `onValueChanged` events when the value changes.
-    - should support both `vertical` and `horizontal` `Orientation`s.
+    - Allow keyboard input for value changes.
+    - Add a new property `step` for quantization of value changes when using a keyboard.
+    - We need to make sure the Slider can render from external SpriteSheets of varying sizes
   - **`ScrollBar`:**
     - composes `ArrowButton`s for increment/decrement controls and a `ThumbTrack` with a draggable `Thumb`.
     - should support page-up/page-down clicks in the track area.

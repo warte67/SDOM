@@ -17,7 +17,11 @@ namespace SDOM
         setTabEnabled(false);
     }
 
-    Stage::Stage(const sol::table& config) : IDisplayObject(config)
+    Stage::Stage(const sol::table& config) : Stage(config, InitStruct())
+    {
+    }
+
+    Stage::Stage(const sol::table& config, const InitStruct& defaults) : IDisplayObject(config, defaults)
     {
         std::string type = config["type"].valid() ? config["type"].get<std::string>() : TypeName;
         if (type != TypeName) {

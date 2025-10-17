@@ -52,7 +52,9 @@ public:
 protected:
     // --- Constructors --- //
     TristateButton(const InitStruct& init);  
-    TristateButton(const sol::table& config);
+        TristateButton(const sol::table& config);
+        // Defaults-aware Lua constructor: allow derived classes to forward their InitStruct()
+        TristateButton(const sol::table& config, const InitStruct& defaults);
 
 public:
     // --- Static Factory Methods --- //

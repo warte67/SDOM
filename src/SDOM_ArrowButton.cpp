@@ -21,7 +21,7 @@ namespace SDOM
         
     } // END: ArrowButton::ArrowButton(const InitStruct& init)
 
-    ArrowButton::ArrowButton(const sol::table& config) : IconButton(config)
+    ArrowButton::ArrowButton(const sol::table& config) : IconButton(config, ArrowButton::InitStruct())
     {
         // Validate type
         std::string type = config.get_or("type", std::string(TypeName));

@@ -43,7 +43,9 @@ namespace SDOM
     protected:
         // --- Constructors --- //
         IconButton(const InitStruct& init);  
-        IconButton(const sol::table& config);
+    IconButton(const sol::table& config);
+    // Defaults-aware Lua constructor so derived classes can forward their InitStruct()
+    IconButton(const sol::table& config, const InitStruct& defaults);
 
     public:
 

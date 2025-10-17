@@ -1,8 +1,8 @@
 var searchData=
 [
   ['active_0',['Active',['../classSDOM_1_1EventType.html#a412d10af69d7eeee9af0cefff81d415f',1,'SDOM::EventType']]],
-  ['activefontheight_5f_1',['activefontheight_',['../classSDOM_1_1BitmapFont.html#a18caf32fae71b4a2e08f0854d1a0c819',1,'SDOM::BitmapFont::activeFontHeight_'],['../classSDOM_1_1TruetypeFont.html#abd62e7c88d7029d382009558085f0ee7',1,'SDOM::TruetypeFont::activeFontHeight_']]],
-  ['activefontwidth_5f_2',['activefontwidth_',['../classSDOM_1_1BitmapFont.html#a2a3f96722aeb6fe30c97298d8bdfa315',1,'SDOM::BitmapFont::activeFontWidth_'],['../classSDOM_1_1TruetypeFont.html#a1d795e766a10f18274119b2fd723cd1e',1,'SDOM::TruetypeFont::activeFontWidth_']]],
+  ['activefontheight_5f_1',['activeFontHeight_',['../classSDOM_1_1BitmapFont.html#a18caf32fae71b4a2e08f0854d1a0c819',1,'SDOM::BitmapFont::activeFontHeight_'],['../classSDOM_1_1TruetypeFont.html#abd62e7c88d7029d382009558085f0ee7',1,'SDOM::TruetypeFont::activeFontHeight_']]],
+  ['activefontwidth_5f_2',['activeFontWidth_',['../classSDOM_1_1BitmapFont.html#a2a3f96722aeb6fe30c97298d8bdfa315',1,'SDOM::BitmapFont::activeFontWidth_'],['../classSDOM_1_1TruetypeFont.html#a1d795e766a10f18274119b2fd723cd1e',1,'SDOM::TruetypeFont::activeFontWidth_']]],
   ['added_3',['Added',['../classSDOM_1_1EventType.html#ac11d499ea41fc9355b64c18b8241966b',1,'SDOM::EventType']]],
   ['addedtostage_4',['AddedToStage',['../classSDOM_1_1EventType.html#a4ef2c364108bbdcafb94042ea371272f',1,'SDOM::EventType']]],
   ['alignment_5',['alignment',['../structSDOM_1_1FontStyle.html#abaa1e4c8b02dc4471f0d6b2cedc8b37f',1,'SDOM::FontStyle::alignment'],['../structSDOM_1_1Label_1_1InitStruct.html#a341277f3403b87a233856de90612eda6',1,'SDOM::Label::InitStruct::alignment']]],
@@ -17,6 +17,8 @@ var searchData=
   ['anchorright_5f_14',['anchorRight_',['../classSDOM_1_1IDisplayObject.html#a606ab9bf41b5c61e3469b92fe69eeddc',1,'SDOM::IDisplayObject']]],
   ['anchortop_15',['anchorTop',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a5abd3577a9910875ceae2f02a6b2f894',1,'SDOM::IDisplayObject::InitStruct']]],
   ['anchortop_5f_16',['anchorTop_',['../classSDOM_1_1IDisplayObject.html#aad60efcd3f8a36bf6690ff3877bbe179',1,'SDOM::IDisplayObject']]],
-  ['asciicode_5f_17',['asciiCode_',['../classSDOM_1_1Event.html#acdc58e8939e55256a359fedd78729e4f',1,'SDOM::Event']]],
-  ['auto_5fresize_18',['auto_resize',['../structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e',1,'SDOM::FontStyle::auto_resize'],['../structSDOM_1_1Label_1_1InitStruct.html#a46c743df8645554c8dfd24333ad3c194',1,'SDOM::Label::InitStruct::auto_resize']]]
+  ['arrow_5fdirection_5fto_5fstring_17',['arrow_direction_to_string',['../classSDOM_1_1ArrowButton.html#ac888ce60615f353c5649eb1e336f8226',1,'SDOM::ArrowButton']]],
+  ['arrowicontable_18',['ArrowIconTable',['../classSDOM_1_1ArrowButton.html#a7007d8070fbeab8cc2f8240142a84c80',1,'SDOM::ArrowButton']]],
+  ['asciicode_5f_19',['asciiCode_',['../classSDOM_1_1Event.html#acdc58e8939e55256a359fedd78729e4f',1,'SDOM::Event']]],
+  ['auto_5fresize_20',['auto_resize',['../structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e',1,'SDOM::FontStyle::auto_resize'],['../structSDOM_1_1Label_1_1InitStruct.html#a46c743df8645554c8dfd24333ad3c194',1,'SDOM::Label::InitStruct::auto_resize']]]
 ];

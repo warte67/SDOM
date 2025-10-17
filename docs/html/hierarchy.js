@@ -13,7 +13,9 @@ var hierarchy =
     [ "SDOM::FontStyle", "structSDOM_1_1FontStyle.html", null ],
     [ "SDOM::IButtonObject", "classSDOM_1_1IButtonObject.html", [
       [ "SDOM::Button", "classSDOM_1_1Button.html", null ],
-      [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", null ],
+      [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", [
+        [ "SDOM::ArrowButton", "classSDOM_1_1ArrowButton.html", null ]
+      ] ],
       [ "SDOM::TristateButton", "classSDOM_1_1TristateButton.html", [
         [ "SDOM::CheckButton", "classSDOM_1_1CheckButton.html", null ],
         [ "SDOM::RadioButton", "classSDOM_1_1RadioButton.html", null ]
@@ -34,7 +36,13 @@ var hierarchy =
         [ "SDOM::Frame::InitStruct", "structSDOM_1_1Frame_1_1InitStruct.html", null ],
         [ "SDOM::Group::InitStruct", "structSDOM_1_1Group_1_1InitStruct.html", null ]
       ] ],
-      [ "SDOM::IconButton::InitStruct", "structSDOM_1_1IconButton_1_1InitStruct.html", null ],
+      [ "SDOM::IRangeControl::InitStruct", "structSDOM_1_1IRangeControl_1_1InitStruct.html", [
+        [ "SDOM::IRangeControl_scaffold::InitStruct", "structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html", null ],
+        [ "SDOM::Slider::InitStruct", "structSDOM_1_1Slider_1_1InitStruct.html", null ]
+      ] ],
+      [ "SDOM::IconButton::InitStruct", "structSDOM_1_1IconButton_1_1InitStruct.html", [
+        [ "SDOM::ArrowButton::InitStruct", "structSDOM_1_1ArrowButton_1_1InitStruct.html", null ]
+      ] ],
       [ "SDOM::Label::InitStruct", "structSDOM_1_1Label_1_1InitStruct.html", null ],
       [ "SDOM::Stage::InitStruct", "structSDOM_1_1Stage_1_1InitStruct.html", null ],
       [ "SDOM::TristateButton::InitStruct", "structSDOM_1_1TristateButton_1_1InitStruct.html", [
@@ -63,6 +71,10 @@ var hierarchy =
             [ "SDOM::Button", "classSDOM_1_1Button.html", null ],
             [ "SDOM::Frame", "classSDOM_1_1Frame.html", null ],
             [ "SDOM::Group", "classSDOM_1_1Group.html", null ]
+          ] ],
+          [ "SDOM::IRangeControl", "classSDOM_1_1IRangeControl.html", [
+            [ "SDOM::IRangeControl_scaffold", "classSDOM_1_1IRangeControl__scaffold.html", null ],
+            [ "SDOM::Slider", "classSDOM_1_1Slider.html", null ]
           ] ],
           [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", null ],
           [ "SDOM::Label", "classSDOM_1_1Label.html", null ],

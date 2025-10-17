@@ -34,6 +34,8 @@ namespace SDOM
         // --- Constructors --- //
         Stage(const InitStruct& init);  
         Stage(const sol::table& config);
+        // Defaults-aware Lua constructor so derived defaults can be forwarded
+        Stage(const sol::table& config, const InitStruct& defaults);
 
     public:
         // --- Static Factory Methods --- //

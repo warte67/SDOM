@@ -16,7 +16,7 @@ namespace SDOM
         // add custom properties here
     } // END: RadioButton::RadioButton(const InitStruct& init)
 
-    RadioButton::RadioButton(const sol::table& config) : TristateButton(config)
+    RadioButton::RadioButton(const sol::table& config) : TristateButton(config, RadioButton::InitStruct())
     {
         setType(TypeName);
         icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state

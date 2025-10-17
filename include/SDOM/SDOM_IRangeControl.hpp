@@ -55,6 +55,8 @@ namespace SDOM
         // --- Protected Constructors --- //
         IRangeControl(const InitStruct& init);  
         IRangeControl(const sol::table& config);
+        // Defaults-aware Lua constructor which accepts derived InitStruct defaults
+        IRangeControl(const sol::table& config, const InitStruct& defaults);
 
     public:
         // --- Static Factory Methods --- //

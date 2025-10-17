@@ -68,8 +68,16 @@ namespace SDOM
         
     protected:
         // --- Protected Constructors --- //
-        IRangeControl_scaffold(const InitStruct& init);  
-        IRangeControl_scaffold(const sol::table& config);
+            // NOTE: when implementing a Lua constructor for a derived class you should
+            // forward the derived class InitStruct() into the base-class Lua parser
+            // so that derived defaults are applied when the Lua table omits keys.
+            // Example:
+            //   DerivedControl::DerivedControl(const sol::table& config)
+            //     : IRangeControl(config, DerivedControl::InitStruct()) { }
+            // This ensures color/anchor/font defaults from DerivedControl::InitStruct
+            // are used by the IDisplayObject/IRangeControl parsing code.
+            IRangeControl_scaffold(const InitStruct& init);  
+            IRangeControl_scaffold(const sol::table& config);
 
     public:
         // --- Static Factory Methods --- //

@@ -1,5 +1,6 @@
 var namespaceSDOM =
 [
+    [ "ArrowButton", "classSDOM_1_1ArrowButton.html", "classSDOM_1_1ArrowButton" ],
     [ "AssetHandle", "classSDOM_1_1AssetHandle.html", "classSDOM_1_1AssetHandle" ],
     [ "AssetTypeCreators", "structSDOM_1_1AssetTypeCreators.html", "structSDOM_1_1AssetTypeCreators" ],
     [ "BitmapFont", "classSDOM_1_1BitmapFont.html", "classSDOM_1_1BitmapFont" ],
@@ -24,10 +25,13 @@ var namespaceSDOM =
     [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
     [ "IFontObject", "classSDOM_1_1IFontObject.html", "classSDOM_1_1IFontObject" ],
     [ "IPanelObject", "classSDOM_1_1IPanelObject.html", "classSDOM_1_1IPanelObject" ],
+    [ "IRangeControl", "classSDOM_1_1IRangeControl.html", "classSDOM_1_1IRangeControl" ],
+    [ "IRangeControl_scaffold", "classSDOM_1_1IRangeControl__scaffold.html", "classSDOM_1_1IRangeControl__scaffold" ],
     [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
     [ "Label", "classSDOM_1_1Label.html", "classSDOM_1_1Label" ],
     [ "RadioButton", "classSDOM_1_1RadioButton.html", "classSDOM_1_1RadioButton" ],
     [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
+    [ "Slider", "classSDOM_1_1Slider.html", "classSDOM_1_1Slider" ],
     [ "SpriteSheet", "classSDOM_1_1SpriteSheet.html", "classSDOM_1_1SpriteSheet" ],
     [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ],
     [ "Texture", "classSDOM_1_1Texture.html", "classSDOM_1_1Texture" ],
@@ -36,7 +40,7 @@ var namespaceSDOM =
     [ "TTFAsset", "classSDOM_1_1TTFAsset.html", "classSDOM_1_1TTFAsset" ],
     [ "TypeCreators", "structSDOM_1_1TypeCreators.html", "structSDOM_1_1TypeCreators" ],
     [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
-    [ "SUPER", "namespaceSDOM.html#a4476b3f988f782b37bd84221a9925941", null ],
+    [ "SUPER", "namespaceSDOM.html#a30b2979959418fcc8421582cd6cb7c08", null ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
       [ "TOP_LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1", null ],
@@ -136,6 +140,10 @@ var namespaceSDOM =
       [ "BOTTOM_LEFT", "namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da8d81ac82421d1b03da58fccb9174892e", null ],
       [ "BOTTOM_CENTER", "namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da3480601794fd3b5473219ae158219fd4", null ],
       [ "BOTTOM_RIGHT", "namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da341b72aaab1308a3e6667af1e52f5def", null ]
+    ] ],
+    [ "Orientation", "namespaceSDOM.html#a9cb56e905b36976260e5aa56d30ee933", [
+      [ "Horizontal", "namespaceSDOM.html#a9cb56e905b36976260e5aa56d30ee933ac1b5fa03ecdb95d4a45dd1c40b02527f", null ],
+      [ "Vertical", "namespaceSDOM.html#a9cb56e905b36976260e5aa56d30ee933a06ce2a25e5d12c166a36f654dbea6012", null ]
     ] ],
     [ "PanelBaseIndex", "namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922c", [
       [ "ButtonUp", "namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922caf64c6bd570a1159149526b21a7c41936", null ],
@@ -376,9 +384,11 @@ var namespaceSDOM =
     [ "internal_ttf_len", "namespaceSDOM.html#af894447a8326743da636f323c57c8854", null ],
     [ "isDragging", "namespaceSDOM.html#adf53bca06e8a020f771e843c14584582", null ],
     [ "maxOutlineThickness", "namespaceSDOM.html#aae891c3cb463a8719fa20816f7ef0ea4", null ],
+    [ "orientation_to_string", "namespaceSDOM.html#a5121ece23da73f686e3ab61c3fc63339", null ],
     [ "panelBaseIndexToString_", "namespaceSDOM.html#af0cc30e6979fd8ef2453166a934da51c", null ],
     [ "panelTileOffsetToString_", "namespaceSDOM.html#a1ba3fe71c30a46b568259105d73972be", null ],
     [ "string_to_button_state", "namespaceSDOM.html#ada9a03704ec6fd6f257e6f7f84a25a02", null ],
+    [ "string_to_orientation", "namespaceSDOM.html#a7569a3c4255eb2a2cddfdf0cdab60c15", null ],
     [ "stringToAnchorPoint_", "namespaceSDOM.html#a33cd42f20297f893e13db841931abda0", null ],
     [ "stringToPanelBaseIndex_", "namespaceSDOM.html#a8c2b307c7eb25af276a81bd930409deb", null ],
     [ "stringToPanelTileOffset_", "namespaceSDOM.html#adeb30b52dfdaf61815eb609cc8e208d8", null ]

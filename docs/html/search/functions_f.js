@@ -8,7 +8,7 @@ var searchData=
   ['printassettree_5',['printAssetTree',['../classSDOM_1_1Factory.html#ae4702dc9bf035be9bda382634968630b',1,'SDOM::Factory']]],
   ['printassettreegrouped_6',['printAssetTreeGrouped',['../classSDOM_1_1Factory.html#a19ec0e9ac0de1f7ba855a801e1566b53',1,'SDOM::Factory']]],
   ['printmessagebox_7',['printMessageBox',['../namespaceSDOM.html#ae0f1adcc0eb0a047b6e53f9ee15fdd57',1,'SDOM']]],
-  ['printobjectregistry_8',['printobjectregistry',['../classSDOM_1_1Core.html#a12012a49089d5409e2f671d6bb9ba96c',1,'SDOM::Core::printObjectRegistry()'],['../classSDOM_1_1Factory.html#a760cce7209d592610e31a6fc52667b9c',1,'SDOM::Factory::printObjectRegistry()']]],
+  ['printobjectregistry_8',['printObjectRegistry',['../classSDOM_1_1Core.html#a12012a49089d5409e2f671d6bb9ba96c',1,'SDOM::Core::printObjectRegistry()'],['../classSDOM_1_1Factory.html#a760cce7209d592610e31a6fc52667b9c',1,'SDOM::Factory::printObjectRegistry()']]],
   ['printobjectregistry_5flua_9',['printObjectRegistry_lua',['../namespaceSDOM.html#a513ff0175309b33ebb429b2ec19ade7e',1,'SDOM']]],
   ['printresult_10',['printResult',['../classSDOM_1_1UnitTests.html#a34bb6f0262e356d47013b97a674782bf',1,'SDOM::UnitTests']]],
   ['printtest_11',['printTest',['../classSDOM_1_1UnitTests.html#a39fad7caf8610114afc0ec5116103565',1,'SDOM::UnitTests']]],

@@ -1,6 +1,7 @@
 var annotated_dup =
 [
     [ "SDOM", "namespaceSDOM.html", [
+      [ "ArrowButton", "classSDOM_1_1ArrowButton.html", "classSDOM_1_1ArrowButton" ],
       [ "AssetHandle", "classSDOM_1_1AssetHandle.html", "classSDOM_1_1AssetHandle" ],
       [ "AssetTypeCreators", "structSDOM_1_1AssetTypeCreators.html", "structSDOM_1_1AssetTypeCreators" ],
       [ "BitmapFont", "classSDOM_1_1BitmapFont.html", "classSDOM_1_1BitmapFont" ],
@@ -25,10 +26,13 @@ var annotated_dup =
       [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
       [ "IFontObject", "classSDOM_1_1IFontObject.html", "classSDOM_1_1IFontObject" ],
       [ "IPanelObject", "classSDOM_1_1IPanelObject.html", "classSDOM_1_1IPanelObject" ],
+      [ "IRangeControl", "classSDOM_1_1IRangeControl.html", "classSDOM_1_1IRangeControl" ],
+      [ "IRangeControl_scaffold", "classSDOM_1_1IRangeControl__scaffold.html", "classSDOM_1_1IRangeControl__scaffold" ],
       [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
       [ "Label", "classSDOM_1_1Label.html", "classSDOM_1_1Label" ],
       [ "RadioButton", "classSDOM_1_1RadioButton.html", "classSDOM_1_1RadioButton" ],
       [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html", "classSDOM_1_1SDL__Utils" ],
+      [ "Slider", "classSDOM_1_1Slider.html", "classSDOM_1_1Slider" ],
       [ "SpriteSheet", "classSDOM_1_1SpriteSheet.html", "classSDOM_1_1SpriteSheet" ],
       [ "Stage", "classSDOM_1_1Stage.html", "classSDOM_1_1Stage" ],
       [ "Texture", "classSDOM_1_1Texture.html", "classSDOM_1_1Texture" ],

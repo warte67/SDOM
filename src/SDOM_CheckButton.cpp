@@ -14,7 +14,7 @@ namespace SDOM
         // add custom properties here
     } // END: CheckButton::CheckButton(const InitStruct& init)
 
-    CheckButton::CheckButton(const sol::table& config) : TristateButton(config)
+    CheckButton::CheckButton(const sol::table& config) : TristateButton(config, CheckButton::InitStruct())
     {
         setType(TypeName);
         // add custom properties here

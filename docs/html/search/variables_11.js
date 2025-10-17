@@ -19,11 +19,13 @@ var searchData=
   ['statechanged_16',['StateChanged',['../classSDOM_1_1EventType.html#a507abf67445aa60c41314885dd3febb6',1,'SDOM::EventType']]],
   ['strike_17',['STRIKE',['../classCLR.html#a61c1a006f5888c15c2ad5c24d213ab1a',1,'CLR']]],
   ['strikethrough_18',['strikethrough',['../structSDOM_1_1FontStyle.html#a20d523f3f1672a40053581b8fc8e9e6a',1,'SDOM::FontStyle::strikethrough'],['../structSDOM_1_1Label_1_1InitStruct.html#a7d3a638476255e101e9b2337f7644ee8',1,'SDOM::Label::InitStruct::strikethrough']]],
-  ['string_5fto_5fbutton_5fstate_19',['string_to_button_state',['../namespaceSDOM.html#ada9a03704ec6fd6f257e6f7f84a25a02',1,'SDOM']]],
-  ['stringtoanchorpoint_5f_20',['stringToAnchorPoint_',['../namespaceSDOM.html#a33cd42f20297f893e13db841931abda0',1,'SDOM']]],
-  ['stringtofonttype_21',['StringToFontType',['../classSDOM_1_1IFontObject.html#a7eb677b8529df586787017f203264bd8',1,'SDOM::IFontObject']]],
-  ['stringtolabelalign_5f_22',['stringToLabelAlign_',['../classSDOM_1_1Label.html#a97204e7dbb3d5fd7e8ad0ca12ab9265e',1,'SDOM::Label']]],
-  ['stringtopanelbaseindex_5f_23',['stringToPanelBaseIndex_',['../namespaceSDOM.html#a8c2b307c7eb25af276a81bd930409deb',1,'SDOM']]],
-  ['stringtopaneltileoffset_5f_24',['stringToPanelTileOffset_',['../namespaceSDOM.html#adeb30b52dfdaf61815eb609cc8e208d8',1,'SDOM']]],
-  ['style_25',['style',['../structSDOM_1_1Label_1_1LabelToken.html#a0782c88e2178985e8a9417c06c3188f1',1,'SDOM::Label::LabelToken::style'],['../structSDOM_1_1Label_1_1PhraseToken.html#aeb95a25a60bb24a223b08b45439352e6',1,'SDOM::Label::PhraseToken::style']]]
+  ['string_5fto_5farrow_5fdirection_19',['string_to_arrow_direction',['../classSDOM_1_1ArrowButton.html#ab84e8f05ba22315492241344723e9aea',1,'SDOM::ArrowButton']]],
+  ['string_5fto_5fbutton_5fstate_20',['string_to_button_state',['../namespaceSDOM.html#ada9a03704ec6fd6f257e6f7f84a25a02',1,'SDOM']]],
+  ['string_5fto_5forientation_21',['string_to_orientation',['../namespaceSDOM.html#a7569a3c4255eb2a2cddfdf0cdab60c15',1,'SDOM']]],
+  ['stringtoanchorpoint_5f_22',['stringToAnchorPoint_',['../namespaceSDOM.html#a33cd42f20297f893e13db841931abda0',1,'SDOM']]],
+  ['stringtofonttype_23',['StringToFontType',['../classSDOM_1_1IFontObject.html#a7eb677b8529df586787017f203264bd8',1,'SDOM::IFontObject']]],
+  ['stringtolabelalign_5f_24',['stringToLabelAlign_',['../classSDOM_1_1Label.html#a97204e7dbb3d5fd7e8ad0ca12ab9265e',1,'SDOM::Label']]],
+  ['stringtopanelbaseindex_5f_25',['stringToPanelBaseIndex_',['../namespaceSDOM.html#a8c2b307c7eb25af276a81bd930409deb',1,'SDOM']]],
+  ['stringtopaneltileoffset_5f_26',['stringToPanelTileOffset_',['../namespaceSDOM.html#adeb30b52dfdaf61815eb609cc8e208d8',1,'SDOM']]],
+  ['style_27',['style',['../structSDOM_1_1Label_1_1LabelToken.html#a0782c88e2178985e8a9417c06c3188f1',1,'SDOM::Label::LabelToken::style'],['../structSDOM_1_1Label_1_1PhraseToken.html#aeb95a25a60bb24a223b08b45439352e6',1,'SDOM::Label::PhraseToken::style']]]
 ];

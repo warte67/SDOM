@@ -36,7 +36,7 @@ namespace SDOM
     }
 
 
-    Group::Group(const sol::table& config) : IPanelObject(config)
+    Group::Group(const sol::table& config) : IPanelObject(config, Group::InitStruct())
     {
         // std::cout << "Box constructed with Lua config: " << getName() 
         //         << " at address: " << this << std::endl;            

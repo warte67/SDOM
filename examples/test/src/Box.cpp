@@ -34,7 +34,7 @@ Box::Box(const SDOM::IDisplayObject::InitStruct& init)
 }
 
 Box::Box(const sol::table& config)
-: IDisplayObject(config)
+: IDisplayObject(config, Box::InitStruct())
 {
     // std::cout << "Box constructed with Lua config: " << getName() 
     //         << " at address: " << this << std::endl;            

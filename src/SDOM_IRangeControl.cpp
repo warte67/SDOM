@@ -46,6 +46,37 @@ namespace SDOM
     } // END: IRangeControl(const sol::table& config)
 
 
+    IRangeControl::IRangeControl(const sol::table& config, const InitStruct& defaults)
+        : IDisplayObject(config, defaults)
+    {
+        try 
+        {
+            if (config["min"].valid()) min_ = static_cast<float>(config.get_or("min", static_cast<double>(min_)));
+            if (config["max"].valid()) max_ = static_cast<float>(config.get_or("max", static_cast<double>(max_)));
+            if (config["value"].valid()) value_ = static_cast<float>(config.get_or("value", static_cast<double>(value_)));
+            if (config["orientation"].valid()) 
+            {
+                if (config["orientation"].get_type() == sol::type::string) 
+                {
+                    std::string s = config.get<std::string>("orientation");
+                    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+                    auto it = string_to_orientation.find(s);
+                    if (it != string_to_orientation.end()) orientation_ = it->second;
+                } 
+                else if (config["orientation"].get_type() == sol::type::number) 
+                {
+                    int o = config.get<int>("orientation");
+                    orientation_ = (o == 1) ? Orientation::Vertical : Orientation::Horizontal;
+                }
+            }
+            if (config["icon_resource"].valid())
+                icon_resource_ = config.get<std::string>("icon_resource");
+            // ensure value is clamped to min/max
+            setValue(value_);
+        } catch (...) { /* keep defaults on parse errors */ }
+    } // END: IRangeControl(const sol::table& config, const InitStruct& defaults)
+
+
 
     // --- Virtual Methods --- //
 

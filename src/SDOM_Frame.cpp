@@ -20,7 +20,7 @@ namespace SDOM
     }
 
 
-    Frame::Frame(const sol::table& config) : IPanelObject(config)
+    Frame::Frame(const sol::table& config) : IPanelObject(config, Frame::InitStruct())
     {
         // std::cout << "Box constructed with Lua config: " << getName() 
         //         << " at address: " << this << std::endl;            

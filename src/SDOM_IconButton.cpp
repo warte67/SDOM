@@ -30,7 +30,11 @@ namespace SDOM
     }
 
 
-    IconButton::IconButton(const sol::table& config) : IDisplayObject(config)
+    IconButton::IconButton(const sol::table& config) : IconButton(config, InitStruct())
+    {
+    }
+
+    IconButton::IconButton(const sol::table& config, const InitStruct& defaults) : IDisplayObject(config, defaults)
     {
         // std::cout << "Box constructed with Lua config: " << getName() 
         //         << " at address: " << this << std::endl;            
@@ -45,7 +49,7 @@ namespace SDOM
         //     ERROR("Error: IconButton constructed with incorrect type: " + type);
         // }
         
-        InitStruct init;
+    InitStruct init;
 
         // robust parsing for icon_index: accept string names or numeric indices
         auto parse_icon_index = [&](const sol::table& cfg, const char* key, IconIndex def) -> IconIndex 

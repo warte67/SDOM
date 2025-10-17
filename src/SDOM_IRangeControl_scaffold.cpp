@@ -11,7 +11,7 @@ namespace SDOM
     {
     } // END: IRangeControl_scaffold::IRangeControl_scaffold(const InitStruct& init)
 
-    IRangeControl_scaffold::IRangeControl_scaffold(const sol::table& config) : IRangeControl(config)
+    IRangeControl_scaffold::IRangeControl_scaffold(const sol::table& config) : IRangeControl(config, IRangeControl_scaffold::InitStruct())
     {
     } // END: IRangeControl_scaffold::IRangeControl_scaffold(const sol::table& config)
 
