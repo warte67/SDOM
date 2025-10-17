@@ -15,6 +15,13 @@ namespace SDOM
 
     ScrollBar::ScrollBar(const sol::table& config) : IRangeControl(config, ScrollBar::InitStruct())
     {
+        // Initialize members from derived InitStruct defaults so Lua can omit keys
+        InitStruct init_defaults;
+        step_ = init_defaults.step;
+        page_size_ = init_defaults.page_size;
+        content_size_ = init_defaults.content_size;
+        min_thumb_length_ = init_defaults.min_thumb_length;
+
         // Read step from Lua if present
         if (config["step"].valid()) {
             try { step_ = static_cast<float>(config.get_or("step", static_cast<double>(step_))); }
@@ -160,12 +167,17 @@ namespace SDOM
             ? static_cast<float>(getWidth() - 22)
             : static_cast<float>(getHeight() - 22);
 
-        // 1. Thumb length (proportional, clamped)
-        float thumbProportion = page_size_ / std::max(content_size_, 1.0f);
-        float thumbLength = std::max(trackLength * thumbProportion, min_thumb_length_);
+        // 1. Thumb length (proportional to page/content), clamp to [min_thumb_length_, trackLength]
+        float denom = std::max(content_size_, 1.0f);
+        float thumbProportion = page_size_ / denom;
+        float thumbLength = trackLength * thumbProportion;
+        if (thumbLength < min_thumb_length_) thumbLength = min_thumb_length_;
+        if (thumbLength > trackLength) thumbLength = trackLength;
 
-        // 2. Usable track for thumb movement
+        // 2. Usable track for thumb movement (non-negative)
         float usableTrack = trackLength - thumbLength;
+        if (usableTrack < 0.0f) usableTrack = 0.0f;
+
         float valueRange = std::max(getMax() - getMin(), 1.0f);
 
         // 3. Thumb position (relative to value)
@@ -186,6 +198,11 @@ namespace SDOM
             thumbRect.h = thumbLength;
             spriteIndex = 79; // Thumb VProgress
         }
+        // Debug output for scrollbar computation
+#ifdef SCROLLBAR_DEBUG
+        fprintf(stderr, "ScrollBar: track=%.2f page=%.2f content=%.2f prop=%.4f thumb=%.2f usable=%.2f valrel=%.4f\n",
+            trackLength, page_size_, content_size_, thumbProportion, thumbLength, usableTrack, valueRel);
+#endif
         ss->drawSprite(spriteIndex, thumbRect, getForegroundColor(), SDL_SCALEMODE_NEAREST);
 
 
