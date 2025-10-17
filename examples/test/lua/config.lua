@@ -658,14 +658,6 @@ local function on_hslider_value_changed(ev)
                 else
                     progress.value = tonumber(newv) or newv
                 end
-            -- debug: print what the progress object reports back
-            local reported = nil
-            if progress.getValue then
-                reported = progress:getValue()
-            elseif progress.value then
-                reported = progress.value
-            end
-            print(string.format("[debug] set progress to %s (reported %s)", tostring(newv), tostring(reported)))
         end
     end
 end
@@ -674,10 +666,7 @@ local hslider = getDisplayObject("mainFrame_hslider_1")
 local hprogress = getDisplayObject("mainFrame_hprogress_1")
 if hslider and hprogress then
     hslider:addEventListener({ type = EventType.ValueChanged, listener = on_hslider_value_changed })
-    -- Diagnostic: print progress handle info to ensure bindings are present
-    local has_get = (hprogress.getValue ~= nil)
-    local has_set = (hprogress.setValue ~= nil)
-    print(string.format("[diag] hprogress handle=%s getValue=%s setValue=%s", tostring(hprogress), tostring(has_get), tostring(has_set)))
+    -- Use setValue/getValue helpers where possible to ensure C++ setter semantics are used.
     -- Sync initial progress to the slider's current value immediately by calling
     -- the handler directly. If you need to programmatically change the slider
     -- later, prefer using hslider:setValue(v) which will queue a ValueChanged
@@ -707,13 +696,6 @@ local function on_vslider_value_changed(ev)
             else
                 progress.value = tonumber(newv) or newv
             end
-            local reported = nil
-            if progress.getValue then
-                reported = progress:getValue()
-            elseif progress.value then
-                reported = progress.value
-            end
-            print(string.format("[debug] set vprogress to %s (reported %s)", tostring(newv), tostring(reported)))
         end
     end
 end
@@ -729,7 +711,7 @@ if vslider and vprogress then
     else
         vprogress.value = curv
     end
-    print(string.format("[autotest] vslider initial sync hslider=%s, vprogress=%s", tostring(curv), tostring(vprogress.getValue and vprogress:getValue() or vprogress.value)))
+    -- initial sync done
 end
 
 return config

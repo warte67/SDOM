@@ -86,7 +86,6 @@ namespace SDOM
         bool ret = SUPER::onInit();
         if (ret) 
         {
-            factory.printAssetRegistry();
             // Load icon sprite sheet
             std::string resource_name = icon_resource_ + "_SpriteSheet";
             AssetHandle ss = factory.getAssetObject(resource_name);
@@ -255,10 +254,8 @@ namespace SDOM
     {
         float clamped = std::max(min_, std::min(max_, v));
         if (clamped != value_) {
-            float old = value_;
-            // DEBUG: log value changes for tracing
-            INFO("IRangeControl::setValue() - on '" << getName() << "' old=" << old << " new=" << clamped);
-            value_ = clamped;
+                float old = value_;
+                value_ = clamped;
             _onValueChanged(old, value_);
             setDirty(true);
         }
@@ -278,8 +275,7 @@ namespace SDOM
 
     void IRangeControl::_onValueChanged(float oldValue, float newValue)
     {
-        // dispatch event
-        INFO("IRangeControl::_onValueChanged() - on '" << getName() << "' old=" << oldValue << " new=" << newValue);
+    // dispatch event
         queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
             ev.setPayloadValue("name", getName());
             ev.setPayloadValue("old_value", oldValue);
