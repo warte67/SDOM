@@ -469,8 +469,67 @@ namespace SDOM
 
     bool ScrollBar::onUnitTest()
     {
-        return SUPER::onUnitTest();
+        // run base checks first
+        if (!SUPER::onUnitTest()) return false;
+
+        bool ok = true;
+
+        // range sanity: min < max
+        if (!(getMin() < getMax())) {
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' invalid range: min=" << getMin() << " max=" << getMax());
+            ok = false;
+        }
+
+        // value must be within [min, max]
+        if (getValue() < getMin() || getValue() > getMax()) {
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' value out of range: value=" << getValue()
+                      << " (min=" << getMin() << " max=" << getMax() << ")");
+            ok = false;
+        }
+
+        // page/content/thumb invariants
+        if (page_size_ < 0.0f) {
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has negative page_size: " << page_size_);
+            ok = false;
+        }
+        if (content_size_ <= 0.0f) {
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has non-positive content_size: " << content_size_);
+            ok = false;
+        }
+        if (min_thumb_length_ < 0.0f) {
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has negative min_thumb_length: " << min_thumb_length_);
+            ok = false;
+        }
+
+        // compute expected thumb length (cheap, deterministic)
+        float trackLength = (orientation_ == Orientation::Horizontal)
+            ? static_cast<float>(getWidth() - 22)
+            : static_cast<float>(getHeight() - 22);
+        float denom = std::max(content_size_, 1.0f);
+        float thumbProportion = page_size_ / denom;
+        float thumbLength = trackLength * thumbProportion;
+        if (thumbLength < min_thumb_length_) thumbLength = min_thumb_length_;
+        if (thumbLength > trackLength) thumbLength = trackLength;
+
+        if (!(thumbLength >= 0.0f && thumbLength <= trackLength)) {
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' computed thumb length invalid: thumb=" << thumbLength
+                      << " track=" << trackLength);
+            ok = false;
+        }
+
+        // sprite sanity for icon-based rendering
+        SpriteSheet* ss = getIconSpriteSheet();
+        if (ss) {
+            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
+                DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has invalid sprite size: w="
+                          << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
+                ok = false;
+            }
+        }
+
+        return ok;
     } // END: bool ScrollBar::onUnitTest()
+
 
 
 

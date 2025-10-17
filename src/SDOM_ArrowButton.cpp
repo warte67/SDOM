@@ -90,6 +90,38 @@ namespace SDOM
         SUPER::onRender(); // Call (IconButton) base class render
     } // END: void ArrowButton::onRender() 
 
+    bool ArrowButton::onUnitTest() 
+    {
+        // run base checks first
+        if (!SUPER::onUnitTest()) return false;
+
+        bool ok = true;
+
+        // Validate direction enum
+        switch (direction_) {
+            case ArrowDirection::Up:
+            case ArrowDirection::Down:
+            case ArrowDirection::Left:
+            case ArrowDirection::Right:
+                break;
+            default:
+                DEBUG_LOG("[UnitTest] ArrowButton '" << getName() << "' has invalid direction: " << static_cast<int>(direction_));
+                ok = false;
+                break;
+        }
+
+        // If an icon spritesheet is configured, validate its dimensions
+        SpriteSheet* ss = getSpriteSheet();
+        if (ss) {
+            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
+                DEBUG_LOG("[UnitTest] ArrowButton '" << getName() << "' has invalid sprite size: w="
+                          << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
+                ok = false;
+            }
+        }
+
+        return ok;
+    } // END: ArrowButton::onUnitTest()
 
 
 

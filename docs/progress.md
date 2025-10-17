@@ -791,13 +791,11 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Supports both `vertical` and `horizontal` `Orientation`s.
 
 
-## Next Steps for October 17, 2025:
-- Add minimal object::onUnitTest() callbacks for all object types to ensure startup health checks.
+## Next Steps for October 18, 2025:
 - Refactor and expand the examples/test UnitTest rig for comprehensive C++ and Lua property/function coverage.
 ---
-- Design and implement *Slider*, *ProgressBar*, and *ScrollBar* `IRangeControl` descendants:
-  - **`Slider`:** and **`ProgressBar`:**
-    - The next step is to ensure the Slider can render using external SpriteSheets of varying sizes. The current `internal_icon_8x8` SpriteSheet is quite small for high-resolution displays. I plan to create additional icon sets at 12x12 and 16x16 pixels, which can be registered as internal resources or used for external file load testing (or both). This means the other range control objects should have this option as well.
+  - **`Slider`:**, **`ProgressBar`:**, and **`ScrollBar`:**
+    - The next step is to ensure the `Slider` can render using external SpriteSheets of varying sizes. The current `internal_icon_8x8` SpriteSheet is quite small for high-resolution displays. I plan to create additional icon sets at 12x12 and 16x16 pixels, which can be registered as internal resources or used for external file load testing (or both). This means the other range control objects should have this option as well.
     - Similar to how BitmapFonts can be scaled in Labels using the `font_size` property (scaling by the ratio `font_size / font_height`), I’d like to support scalable icon sprites for controls. This would allow icons to be rendered at different sizes, either by scaling (with optional retro pixelation) or by selecting the most appropriate SpriteSheet for the current UI scale.
 
 - Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.

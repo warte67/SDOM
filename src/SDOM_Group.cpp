@@ -253,8 +253,39 @@ namespace SDOM
         {
             return;
         }
-
     } // END: void Group::onEvent(const Event& event)
+
+    bool Group::onUnitTest()
+    {
+        // run base checks first
+        if (!SUPER::onUnitTest()) return false;
+
+        // Basic test: ensure labelObject_ is valid and has correct text
+        if (!labelObject_.isValid())
+        {
+            DEBUG_LOG("[UnitTest] Group '" << getName() << "' labelObject_ is not valid.");
+            return false;
+        }
+
+        auto lbl = labelObject_.as<Label>();
+        if (!lbl)
+        {
+            DEBUG_LOG("[UnitTest] Group '" << getName() << "' labelObject_ is not a Label.");
+            return false;
+        }
+
+        if (lbl->getText() != text_)
+        {
+            DEBUG_LOG("[UnitTest] Group '" << getName() << "' label text mismatch. Expected: '"
+                    << text_ << "' Got: '" << lbl->getText() << "'");
+            return false;
+        }
+
+        // Additional cheap deterministic checks could be added here
+
+        return true; // all tests passed
+    } // END: bool Group::onUnitTest()
+
 
 
     // --- Lua Registration --- //

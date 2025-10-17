@@ -77,12 +77,26 @@ namespace SDOM
 
     bool Stage::onUnitTest()
     {
-        // Stage unit testing logic
+        // run base checks first
+        if (!SUPER::onUnitTest()) return false;
 
-        // std::cout << CLR::CYAN << "Stage::onUnitTest() called for Stage: " << getName() << std::endl;
+        bool ok = true;
 
-        return true;
+        // Stage should have a positive size
+        if (getWidth() <= 0 || getHeight() <= 0) {
+            DEBUG_LOG("[UnitTest] Stage '" << getName() << "' has invalid size: w=" << getWidth() << " h=" << getHeight());
+            ok = false;
+        }
+
+        // Stage should be clickable by default (constructor sets this)
+        if (!isClickable()) {
+            DEBUG_LOG("[UnitTest] Stage '" << getName() << "' should be clickable by default");
+            ok = false;
+        }
+
+        return ok;
     }
+
 
 
     void Stage::_registerLuaBindings(const std::string& typeName, sol::state_view lua)

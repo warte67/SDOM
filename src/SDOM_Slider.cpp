@@ -301,9 +301,42 @@ namespace SDOM
 
     bool Slider::onUnitTest()
     {
-        return SUPER::onUnitTest();
-    } // END: bool Slider::onUnitTest()
+        // run base checks first
+        if (!SUPER::onUnitTest()) return false;
 
+        bool ok = true;
+
+        // step must be non-negative
+        if (step_ < 0.0f) {
+            DEBUG_LOG("[UnitTest] Slider '" << getName() << "' has negative step: " << step_);
+            ok = false;
+        }
+
+        // range sanity: min < max
+        if (!(min_ < max_)) {
+            DEBUG_LOG("[UnitTest] Slider '" << getName() << "' invalid range: min=" << min_ << " max=" << max_);
+            ok = false;
+        }
+
+        // value must be within [min, max]
+        if (value_ < min_ || value_ > max_) {
+            DEBUG_LOG("[UnitTest] Slider '" << getName() << "' value out of range: value=" << value_
+                      << " (min=" << min_ << " max=" << max_ << ")");
+            ok = false;
+        }
+
+        // if an icon spritesheet is assigned, its sprite dimensions should be positive
+        SpriteSheet* ss = getIconSpriteSheet();
+        if (ss) {
+            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
+                DEBUG_LOG("[UnitTest] Slider '" << getName() << "' has invalid sprite size: w=" 
+                          << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight() << ")");
+                ok = false;
+            }
+        }
+
+        return ok;
+    } // END: bool Slider::onUnitTest()
 
 
 

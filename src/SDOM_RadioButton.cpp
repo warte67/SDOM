@@ -92,8 +92,37 @@ namespace SDOM
 
     bool RadioButton::onUnitTest() 
     {
-        return true;
+        // run base checks first
+        if (!SUPER::onUnitTest()) return false;
+
+        bool ok = true;
+
+        // state must be one of the defined enum values
+        ButtonState s = getState();
+        switch (s) {
+            case ButtonState::Inactive:
+            case ButtonState::Active:
+            case ButtonState::Mixed:
+                break;
+            default:
+                DEBUG_LOG("[UnitTest] RadioButton '" << getName() << "' has invalid state: " << static_cast<int>(s));
+                ok = false;
+                break;
+        }
+
+        // icon sprite sanity (if an icon resource is configured)
+        SpriteSheet* ss = getIconSpriteSheet();
+        if (ss) {
+            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
+                DEBUG_LOG("[UnitTest] RadioButton '" << getName() << "' has invalid icon sprite size: w="
+                        << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
+                ok = false;
+            }
+        }
+
+        return ok;
     } // END: RadioButton::onUnitTest()
+
 
     // --- Virtual State Accessors (From IButtonObject) --- //
     ButtonState RadioButton::getState() const

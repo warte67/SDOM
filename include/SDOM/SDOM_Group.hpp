@@ -64,6 +64,7 @@ namespace SDOM
         virtual void onQuit() override;     // Called when the display object is being destroyed
         virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
         virtual void onEvent(const Event& event) override;  // Called when an event occurs
+        virtual bool onUnitTest() override; // Called to perform unit tests on the object
 
         DisplayHandle getLabelObject() const { return labelObject_; }
 

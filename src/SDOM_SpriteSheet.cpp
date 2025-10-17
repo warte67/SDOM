@@ -188,12 +188,36 @@ namespace SDOM
 
     bool SpriteSheet::onUnitTest()
     {
-        // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onUnitTest()" 
-        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
-        // Unit test logic for SpriteSheet
+        // run base checks first
+        if (!SUPER::onUnitTest()) return false;
 
-        return textureAsset->onUnitTest();
-    }
+        bool ok = true;
+
+        // sprite tile dimensions must be positive
+        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) {
+            DEBUG_LOG("[UnitTest] SpriteSheet '" << getName() << "' has invalid sprite size: w="
+                      << spriteWidth_ << " h=" << spriteHeight_);
+            ok = false;
+        }
+
+        // texture asset should exist and pass its own unit tests
+        if (!textureAsset.isValid()) {
+            DEBUG_LOG("[UnitTest] SpriteSheet '" << getName() << "' has no associated Texture asset (filename='" << filename_ << "')");
+            ok = false;
+        } else {
+            try {
+                if (!textureAsset->onUnitTest()) {
+                    DEBUG_LOG("[UnitTest] SpriteSheet '" << getName() << "' Texture asset onUnitTest() failed");
+                    ok = false;
+                }
+            } catch (...) {
+                DEBUG_LOG("[UnitTest] SpriteSheet '" << getName() << "' Texture asset onUnitTest() threw an exception");
+                ok = false;
+            }
+        }
+
+        return ok;
+    } // END onUnitTest()
 
      // public methods
     void SpriteSheet::setSpriteWidth(int width)

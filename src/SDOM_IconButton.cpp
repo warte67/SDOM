@@ -160,6 +160,34 @@ namespace SDOM
 
     } // END: void IconButton::onEvent(const Event& event)
 
+    bool IconButton::onUnitTest()
+    {   
+        // Basic unit test implementation
+        if (!SUPER::onUnitTest()) return false;
+
+        bool ok = true;
+
+        // Check if iconSpriteSheet_ is valid
+        if (!iconSpriteSheet_ || !iconSpriteSheet_.isValid())
+        {
+            DEBUG_LOG("[UnitTest] IconButton '" << getName() << "' has invalid icon sprite sheet.");
+            ok = false;
+        }
+        else
+        {
+            // Validate sprite dimensions
+            SpriteSheet* ss = iconSpriteSheet_.as<SpriteSheet>();
+            if (!ss || ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
+                DEBUG_LOG("[UnitTest] IconButton '" << getName() << "' has invalid sprite size: w="
+                        << (ss ? ss->getSpriteWidth() : 0) << " h=" << (ss ? ss->getSpriteHeight() : 0));
+                ok = false;
+            }
+        }
+
+        return ok;
+    } // END IconButton::onUnitTest()
+
+
 
     // --- Lua Registration --- //
 

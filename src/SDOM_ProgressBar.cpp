@@ -169,8 +169,37 @@ namespace SDOM
 
     bool ProgressBar::onUnitTest()
     {
-        return SUPER::onUnitTest();
+        // run base checks first
+        if (!SUPER::onUnitTest()) return false;
+
+        bool ok = true;
+
+        // range sanity: min < max
+        if (!(min_ < max_)) {
+            DEBUG_LOG("[UnitTest] ProgressBar '" << getName() << "' invalid range: min=" << min_ << " max=" << max_);
+            ok = false;
+        }
+
+        // value must be within [min, max]
+        if (value_ < min_ || value_ > max_) {
+            DEBUG_LOG("[UnitTest] ProgressBar '" << getName() << "' value out of range: value=" << value_
+                      << " (min=" << min_ << " max=" << max_ << ")");
+            ok = false;
+        }
+
+        // if an icon spritesheet is assigned, its sprite dimensions should be positive
+        SpriteSheet* ss = getIconSpriteSheet();
+        if (ss) {
+            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
+                DEBUG_LOG("[UnitTest] ProgressBar '" << getName() << "' has invalid sprite size: w="
+                          << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight() << ")");
+                ok = false;
+            }
+        }
+
+        return ok;
     } // END: bool ProgressBar::onUnitTest()
+
 
 
 

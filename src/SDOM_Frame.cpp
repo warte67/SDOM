@@ -69,6 +69,22 @@ namespace SDOM
 
     } // END: void Frame::onEvent(const Event& event)
 
+    bool Frame::onUnitTest()
+    {
+        // run base checks first
+        if (!SUPER::onUnitTest()) return false;
+
+        bool ok = true;
+
+        // Frame should have a positive size
+        if (getWidth() <= 0 || getHeight() <= 0) {
+            DEBUG_LOG("[UnitTest] Frame '" << getName() << "' has invalid size: w=" << getWidth() << " h=" << getHeight());
+            ok = false;
+        }
+
+        return ok;
+    } // END Frame::onUnitTest()
+
 
     // --- Lua Registration --- //
     void Frame::_registerLuaBindings(const std::string& typeName, sol::state_view lua)

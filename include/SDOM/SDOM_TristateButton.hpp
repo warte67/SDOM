@@ -76,7 +76,7 @@ public:
     virtual void onUpdate(float fElapsedTime) override;
     virtual void onEvent(const Event& event) override;
     virtual void onRender() override;
-    virtual bool onUnitTest() override { return true; }
+    virtual bool onUnitTest() override;
 
     // --- Virtual State Accessors (From IButtonObject) --- //
     virtual ButtonState getState() const;

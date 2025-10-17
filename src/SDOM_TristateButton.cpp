@@ -361,6 +361,40 @@ namespace SDOM
 
     } // END: void TristateButton::onRender()
 
+    bool TristateButton::onUnitTest() 
+    { 
+        // base checks
+        if (!SUPER::onUnitTest()) return false;
+
+        bool ok = true;
+
+        // state must be one of the defined enum values
+        switch (getState()) {
+            case ButtonState::Inactive:
+            case ButtonState::Active:
+            case ButtonState::Mixed:
+                break;
+            default:
+                DEBUG_LOG("[UnitTest] TristateButton '" << getName() << "' has invalid state: " << static_cast<int>(getState()));
+                ok = false;
+                break;
+        }
+
+        // icon sprite sanity (if an icon resource is configured)
+        SpriteSheet* ss = getIconSpriteSheet();
+        if (ss) {
+            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
+                DEBUG_LOG("[UnitTest] TristateButton '" << getName() << "' has invalid icon sprite size: w="
+                        << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
+                ok = false;
+            }
+        }
+
+        return ok;
+    } // bool TristateButton::onUnitTest()
+
+
+
 
 
     // --- Virtual State Accessors (From IButtonObject) --- //

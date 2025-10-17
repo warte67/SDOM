@@ -221,6 +221,11 @@ namespace SDOM
         }
     } // END: void Button::onEvent(const Event& event)
 
+    bool Button::onUnitTest() 
+    {
+        return true;
+    } // END: Button::onUnitTest()
+
     void Button::setText(const std::string& newText) 
     {
         if (text_ != newText)   setDirty(true);

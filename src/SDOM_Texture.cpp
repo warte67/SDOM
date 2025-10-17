@@ -132,11 +132,33 @@ namespace SDOM
 
     bool Texture::onUnitTest()
     {
-        // std::cout << CLR::LT_ORANGE << "Texture::" << CLR::YELLOW << "onUnitTest()" 
-        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
-        // Unit test logic for Texture
-        return true;
-    }
+        // run base checks first
+        if (!SUPER::onUnitTest()) return false;
+
+        bool ok = true;
+
+        // filename should be present (internal assets have names too)
+        if (filename_.empty()) {
+            DEBUG_LOG("[UnitTest] Texture '" << getName() << "' has empty filename");
+            ok = false;
+        }
+
+        // If the texture is loaded, ensure SDL_Texture and dimensions look valid
+        if (isLoaded_) {
+            if (!texture_) {
+                DEBUG_LOG("[UnitTest] Texture '" << getName() << "' is marked loaded but texture_ is null");
+                ok = false;
+            }
+            if (textureWidth_ <= 0 || textureHeight_ <= 0) {
+                DEBUG_LOG("[UnitTest] Texture '" << getName() << "' has invalid size: w="
+                          << textureWidth_ << " h=" << textureHeight_);
+                ok = false;
+            }
+        }
+
+        return ok;
+    } // END Texture::onUnitTest()
+
 
     // --- Lua Regisstration --- //
 
