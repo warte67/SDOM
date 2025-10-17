@@ -291,7 +291,7 @@ local config = {
                             -- border_color = { r = 0, g = 0, b = 0, a = 32 },
                         },
                         {
-                            name = "mainFrame_progress_1",
+                            name = "mainFrame_vprogress_1",
                             orientation = "vertical",
                             type = "ProgressBar",
                             x = 572,
@@ -639,22 +639,97 @@ btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stag
 btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
 btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
 
--- At this point we want runtime errors if this doesnt go right, so no pcall here.
--- -- safe listener registration (checks existence and avoids runtime errors)
--- if btnObj_1 then
---     pcall(function()
---         btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
---     end)
--- end
--- if btnObj_2 then
---     pcall(function()
---         btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
---     end)
--- end
--- if btnObj_3 then
---     pcall(function()
---         btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
---     end)
--- end
+
+
+-- Link sliders to progress bars: when a slider's value changes, update its paired progress bar
+
+local function on_hslider_value_changed(ev)
+    -- Use the Event API to obtain the payload table (ev.payload is not exposed to Lua)
+    local payload = nil
+    if ev.getPayload then
+        payload = ev:getPayload()
+    end
+    local newv = payload and payload.new_value or nil
+    if newv ~= nil then
+        local progress = getDisplayObject("mainFrame_hprogress_1")
+            if progress then
+                if progress.setValue then
+                    progress:setValue(tonumber(newv) or newv)
+                else
+                    progress.value = tonumber(newv) or newv
+                end
+            -- debug: print what the progress object reports back
+            local reported = nil
+            if progress.getValue then
+                reported = progress:getValue()
+            elseif progress.value then
+                reported = progress.value
+            end
+            print(string.format("[debug] set progress to %s (reported %s)", tostring(newv), tostring(reported)))
+        end
+    end
+end
+
+local hslider = getDisplayObject("mainFrame_hslider_1")
+local hprogress = getDisplayObject("mainFrame_hprogress_1")
+if hslider and hprogress then
+    hslider:addEventListener({ type = EventType.ValueChanged, listener = on_hslider_value_changed })
+    -- Diagnostic: print progress handle info to ensure bindings are present
+    local has_get = (hprogress.getValue ~= nil)
+    local has_set = (hprogress.setValue ~= nil)
+    print(string.format("[diag] hprogress handle=%s getValue=%s setValue=%s", tostring(hprogress), tostring(has_get), tostring(has_set)))
+    -- Sync initial progress to the slider's current value immediately by calling
+    -- the handler directly. If you need to programmatically change the slider
+    -- later, prefer using hslider:setValue(v) which will queue a ValueChanged
+    -- event (handled asynchronously by the engine).
+    -- Immediately sync the progress to the slider's current value (avoid relying on queued events)
+    local cur = (hslider.getValue and hslider:getValue() or hslider.value)
+    if hprogress.setValue then
+        hprogress:setValue(cur)
+    else
+        hprogress.value = cur
+    end
+end
+
+-- Vertical slider -> vertical progress wiring
+local function on_vslider_value_changed(ev)
+    -- Use the Event API to obtain the payload table (ev.payload is not exposed to Lua)
+    local payload = nil
+    if ev.getPayload then
+        payload = ev:getPayload()
+    end
+    local newv = payload and payload.new_value or nil
+    if newv ~= nil then
+        local progress = getDisplayObject("mainFrame_vprogress_1")
+        if progress then
+            if progress.setValue then
+                progress:setValue(tonumber(newv) or newv)
+            else
+                progress.value = tonumber(newv) or newv
+            end
+            local reported = nil
+            if progress.getValue then
+                reported = progress:getValue()
+            elseif progress.value then
+                reported = progress.value
+            end
+            print(string.format("[debug] set vprogress to %s (reported %s)", tostring(newv), tostring(reported)))
+        end
+    end
+end
+
+local vslider = getDisplayObject("mainFrame_vslider_1")
+local vprogress = getDisplayObject("mainFrame_vprogress_1")
+if vslider and vprogress then
+    vslider:addEventListener({ type = EventType.ValueChanged, listener = on_vslider_value_changed })
+    -- Sync initial value immediately
+    local curv = (vslider.getValue and vslider:getValue() or vslider.value)
+    if vprogress.setValue then
+        vprogress:setValue(curv)
+    else
+        vprogress.value = curv
+    end
+    print(string.format("[autotest] vslider initial sync hslider=%s, vprogress=%s", tostring(curv), tostring(vprogress.getValue and vprogress:getValue() or vprogress.value)))
+end
 
 return config
