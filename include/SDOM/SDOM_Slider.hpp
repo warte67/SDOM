@@ -26,6 +26,7 @@ namespace SDOM
                 type = TypeName;
                 tabEnabled = false;
                 isClickable = true;
+                
                 // Default colors for Slider
                 color = { 128, 128, 128, 255 };             // Track Color
                 foregroundColor = { 255, 255, 255, 255 };   // Knob Color
