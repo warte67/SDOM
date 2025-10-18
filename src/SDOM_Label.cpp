@@ -1723,7 +1723,7 @@ if (LABEL_DEBUG)
     void Label::setAlignment(const std::string& v) 
     { 
         std::string normalized_v = SDOM::normalizeAnchorString(v);
-        auto it = stringToLabelAlign_.find(v);
+        auto it = stringToLabelAlign_.find(normalized_v);
         if (it != stringToLabelAlign_.end())
         {
             defaultStyle_.alignment = it->second; 
@@ -2035,6 +2035,66 @@ if (LABEL_DEBUG)
                     ));
                 }
 
+                // Also provide legacy function-style getters/setters
+                // getAlignment -> returns integer enum value
+                sol::object cur_getAlign = handle.raw_get_or("getAlignment", sol::lua_nil);
+                if (!cur_getAlign.valid() || cur_getAlign == sol::lua_nil) {
+                    handle.set_function("getAlignment", [](DisplayHandle h)->int { auto* l = h.as<Label>(); return l ? static_cast<int>(l->getAlignment()) : static_cast<int>(LabelAlign::TOP_LEFT); });
+                }
+                // getAlignmentString
+                sol::object cur_getAlignStr = handle.raw_get_or("getAlignmentString", sol::lua_nil);
+                if (!cur_getAlignStr.valid() || cur_getAlignStr == sol::lua_nil) {
+                    handle.set_function("getAlignmentString", [](DisplayHandle h)->std::string { auto* l = h.as<Label>(); return l ? l->getAlignmentString() : std::string("default"); });
+                }
+                // setAlignment: support both numeric enum and string overloads
+                sol::object cur_setAlign = handle.raw_get_or("setAlignment", sol::lua_nil);
+                if (!cur_setAlign.valid() || cur_setAlign == sol::lua_nil) {
+                    handle.set_function("setAlignment",
+                        sol::overload(
+                            [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setAlignment(static_cast<LabelAlign>(v)); },
+                            [](DisplayHandle h, const std::string& v) { auto* l = h.as<Label>(); if (l) l->setAlignment(v); }
+                        )
+                    );
+                }
+
+                // Export the LabelAlign enum as a Lua table (once)
+                // Create a global `LabelAlign` table mapping uppercase names to enum numeric values, if not present.
+                // Tests expect `LabelAlign.TOP_LEFT` etc. to be available in Lua.
+                if (!lua["LabelAlign"].valid() || lua["LabelAlign"] == sol::lua_nil) {
+                    // Create canonical lowercase keys (preferred). Provide case-insensitive
+                    // access via a metatable __index that lowercases lookup keys.
+                    sol::table la = lua.create_table();
+                    la["default"] = static_cast<int>(LabelAlign::DEFAULT);
+                    la["left"] = static_cast<int>(LabelAlign::LEFT);
+                    la["center"] = static_cast<int>(LabelAlign::CENTER);
+                    la["right"] = static_cast<int>(LabelAlign::RIGHT);
+                    la["top"] = static_cast<int>(LabelAlign::TOP);
+                    la["top_left"] = static_cast<int>(LabelAlign::TOP_LEFT);
+                    la["top_center"] = static_cast<int>(LabelAlign::TOP_CENTER);
+                    la["top_right"] = static_cast<int>(LabelAlign::TOP_RIGHT);
+                    la["middle"] = static_cast<int>(LabelAlign::MIDDLE);
+                    la["middle_left"] = static_cast<int>(LabelAlign::MIDDLE_LEFT);
+                    la["middle_center"] = static_cast<int>(LabelAlign::MIDDLE_CENTER);
+                    la["middle_right"] = static_cast<int>(LabelAlign::MIDDLE_RIGHT);
+                    la["bottom"] = static_cast<int>(LabelAlign::BOTTOM);
+                    la["bottom_left"] = static_cast<int>(LabelAlign::BOTTOM_LEFT);
+                    la["bottom_center"] = static_cast<int>(LabelAlign::BOTTOM_CENTER);
+                    la["bottom_right"] = static_cast<int>(LabelAlign::BOTTOM_RIGHT);
+
+                    // metatable __index: case-insensitive string lookup -> lowercase
+                    sol::table mt = lua.create_table();
+                    mt["__index"] = [](sol::table t, const sol::object& key)->sol::object {
+                        if (!key.is<std::string>()) return sol::lua_nil;
+                        std::string k = key.as<std::string>();
+                        std::string lc; lc.resize(k.size());
+                        std::transform(k.begin(), k.end(), lc.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
+                        sol::object ret = t.raw_get_or(lc, sol::lua_nil);
+                        return ret;
+                    };
+                    la[sol::metatable_key] = mt;
+                    lua["LabelAlign"] = la;
+                }
+
                 // Color properties exposed as small tables {r,g,b,a}
                 auto color_to_table = [](sol::state_view sv, const SDL_Color& c) {
                     sol::table t = sv.create_table(); t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a; return t;
@@ -2091,6 +2151,40 @@ if (LABEL_DEBUG)
                         [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); },
                         [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); }
                     ));
+                }
+
+                // Also provide function-style getters/setters for colors for legacy access patterns
+                if (absent("getForegroundColor")) {
+                    handle.set_function("getForegroundColor", [=](DisplayHandle h) -> sol::object {
+                        Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getForegroundColor());
+                    });
+                }
+                if (absent("setForegroundColor")) {
+                    handle.set_function("setForegroundColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setForegroundColor(table_to_color(t)); });
+                }
+                if (absent("getBackgroundColor")) {
+                    handle.set_function("getBackgroundColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBackgroundColor()); });
+                }
+                if (absent("setBackgroundColor")) {
+                    handle.set_function("setBackgroundColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBackgroundColor(table_to_color(t)); });
+                }
+                if (absent("getBorderColor")) {
+                    handle.set_function("getBorderColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBorderColor()); });
+                }
+                if (absent("setBorderColor")) {
+                    handle.set_function("setBorderColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBorderColor(table_to_color(t)); });
+                }
+                if (absent("getOutlineColor")) {
+                    handle.set_function("getOutlineColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getOutlineColor()); });
+                }
+                if (absent("setOutlineColor")) {
+                    handle.set_function("setOutlineColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setOutlineColor(table_to_color(t)); });
+                }
+                if (absent("getDropshadowColor")) {
+                    handle.set_function("getDropshadowColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); });
+                }
+                if (absent("setDropshadowColor")) {
+                    handle.set_function("setDropshadowColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); });
                 }
 
     } // END Label::_registerLuaBindings(const std::string& typeName, sol::state_view lua)

@@ -14,72 +14,85 @@
  *      // --- Accessors for the FontStyle settings --- //
  * 
  *      // Boolean Based Flags Getters
- *      bool getBold() const                    
- *      bool getItalic() const                  
- *      bool getUnderline() const               
- *      bool getStrikethrough() const           
- *      bool getBorder() const                  
- *      bool getBackground() const              
- *      bool getOutline() const                 
- *      bool getDropshadow() const              
- *      bool getWordwrap() const                
- *      bool getAutoResize() const              
+ *      // These boolean getters/setters are exercised by Label_test7 (Lua boolean getter/setter test)
+ *      bool getBold() const                -- CONFIRMED BY UNIT TEST #7
+ *      bool getItalic() const              -- CONFIRMED BY UNIT TEST #7
+ *      bool getUnderline() const           -- CONFIRMED BY UNIT TEST #7
+ *      bool getStrikethrough() const       -- CONFIRMED BY UNIT TEST #7
+ *      bool getBorder() const              -- CONFIRMED BY UNIT TEST #7
+ *      bool getBackground() const          -- CONFIRMED BY UNIT TEST #7
+ *      bool getOutline() const             -- CONFIRMED BY UNIT TEST #7
+ *      bool getDropshadow() const          -- CONFIRMED BY UNIT TEST #7
+ *      bool getWordwrap() const            -- CONFIRMED BY UNIT TEST #7
+ *      bool getAutoResize() const          -- CONFIRMED BY UNIT TEST #7
+ *
  *      // Integer Based Value Getters
- *      int getFontSize() const                 
- *      int getFontWidth() const                
- *      int getFontHeight() const               
- *      int getMaxWidth() const                 
- *      int getMaxHeight() const                
- *      int getBorderThickness() const          
- *      int getOutlineThickness() const         
- *      int getPaddingHoriz() const             
- *      int getPaddingVert() const              
- *      int getDropshadowOffsetX() const        
- *      int getDropshadowOffsetY() const        
+ *      // These integer getters/setters are exercised by Label_test8 (Lua integer getter/setter test)
+ *      int getFontSize() const             -- CONFIRMED BY UNIT TEST #8
+ *      int getFontWidth() const            -- CONFIRMED BY UNIT TEST #8
+ *      int getFontHeight() const           -- CONFIRMED BY UNIT TEST #8
+ *      int getMaxWidth() const             -- CONFIRMED BY UNIT TEST #8
+ *      int getMaxHeight() const            -- CONFIRMED BY UNIT TEST #8
+ *      int getBorderThickness() const      -- CONFIRMED BY UNIT TEST #8
+ *      int getOutlineThickness() const     -- CONFIRMED BY UNIT TEST #8
+ *      int getPaddingHoriz() const         -- CONFIRMED BY UNIT TEST #8
+ *      int getPaddingVert() const          -- CONFIRMED BY UNIT TEST #8
+ *      int getDropshadowOffsetX() const    -- CONFIRMED BY UNIT TEST #8
+ *      int getDropshadowOffsetY() const    -- CONFIRMED BY UNIT TEST #8
+ *
  *      // LabelAlign Table
- *      LabelAlign getAlignment() const         
- *      std::string getAlignmentString() const;
+ *      // Alignment getters/setters are exercised by Label_test9 (Lua enum/string access)
+ *      LabelAlign getAlignment() const          -- CONFIRMED BY UNIT TEST #9
+ *      std::string getAlignmentString() const;  -- CONFIRMED BY UNIT TEST #9
+ *
  *      // SDL_Color getters
- *      SDL_Color getForegroundColor() const    
- *      SDL_Color getBackgroundColor() const    
- *      SDL_Color getBorderColor() const        
- *      SDL_Color getOutlineColor() const       
- *      SDL_Color getDropshadowColor() const    
+ *      // Color functionality is exercised indirectly by Label_test6 (tokenization/color escapes)
+ *      SDL_Color getForegroundColor() const    -- EXERCISED INDIRECTLY BY UNIT TEST #6
+ *      SDL_Color getBackgroundColor() const    -- EXERCISED INDIRECTLY BY UNIT TEST #6
+ *      SDL_Color getBorderColor() const        -- EXERCISED INDIRECTLY BY UNIT TEST #6
+ *      SDL_Color getOutlineColor() const       -- EXERCISED INDIRECTLY BY UNIT TEST #6
+ *      SDL_Color getDropshadowColor() const    -- EXERCISED INDIRECTLY BY UNIT TEST #6
  *
  *      // --- Mutators for the FontStyle settings --- //
  *
  *      // Boolean Based Flags Setters
- *      void setBold(bool v)                    
- *      void setItalic(bool v)                  
- *      void setUnderline(bool v)               
- *      void setStrikethrough(bool v)           
- *      void setBorder(bool v)                  
- *      void setBackground(bool v)              
- *      void setOutline(bool v)                 
- *      void setDropshadow(bool v)              
- *      void setWordwrap(bool v)                
- *      void setAutoResize(bool v)              
+ *      // These setters are exercised by Label_test7
+ *      void setBold(bool v)                    -- CONFIRMED BY UNIT TEST #7
+ *      void setItalic(bool v)                  -- CONFIRMED BY UNIT TEST #7
+ *      void setUnderline(bool v)               -- CONFIRMED BY UNIT TEST #7
+ *      void setStrikethrough(bool v)           -- CONFIRMED BY UNIT TEST #7
+ *      void setBorder(bool v)                  -- CONFIRMED BY UNIT TEST #7
+ *      void setBackground(bool v)              -- CONFIRMED BY UNIT TEST #7
+ *      void setOutline(bool v)                 -- CONFIRMED BY UNIT TEST #7
+ *      void setDropshadow(bool v)              -- CONFIRMED BY UNIT TEST #7
+ *      void setWordwrap(bool v)                -- CONFIRMED BY UNIT TEST #7
+ *      void setAutoResize(bool v)              -- CONFIRMED BY UNIT TEST #7
+ *
  *      // Integer Based Value Setters
- *      void setFontSize(int v)                 
- *      void setFontWidth(int v)                
- *      void setFontHeight(int v)               
- *      void setMaxWidth(int v)                 
- *      void setMaxHeight(int v)                
- *      void setBorderThickness(int v)          
- *      void setOutlineThickness(int v)         
- *      void setPaddingHoriz(int v)             
- *      void setPaddingVert(int v)              
- *      void setDropshadowOffsetX(int v)        
- *      void setDropshadowOffsetY(int v)        
+ *      // These setters are exercised by Label_test8
+ *      void setFontSize(int v)                 -- CONFIRMED BY UNIT TEST #8
+ *      void setFontWidth(int v)                -- CONFIRMED BY UNIT TEST #8
+ *      void setFontHeight(int v)               -- CONFIRMED BY UNIT TEST #8
+ *      void setMaxWidth(int v)                 -- CONFIRMED BY UNIT TEST #8
+ *      void setMaxHeight(int v)                -- CONFIRMED BY UNIT TEST #8
+ *      void setBorderThickness(int v)          -- CONFIRMED BY UNIT TEST #8
+ *      void setOutlineThickness(int v)         -- CONFIRMED BY UNIT TEST #8
+ *      void setPaddingHoriz(int v)             -- CONFIRMED BY UNIT TEST #8
+ *      void setPaddingVert(int v)              -- CONFIRMED BY UNIT TEST #8
+ *      void setDropshadowOffsetX(int v)        -- CONFIRMED BY UNIT TEST #8
+ *      void setDropshadowOffsetY(int v)        -- CONFIRMED BY UNIT TEST #8
+ *
  *      // LabelAlign Table
- *      void setAlignment(LabelAlign v)         
- *      void setAlignment(const std::string& v);
+ *      void setAlignment(LabelAlign v)             -- CONFIRMED BY UNIT TEST #9
+ *      void setAlignment(const std::string& v);    -- CONFIRMED BY UNIT TEST #9
+ *
  *      // SDL_Color setters
- *      void setForegroundColor(SDL_Color v)    
- *      void setBackgroundColor(SDL_Color v)    
- *      void setBorderColor(SDL_Color v)        
- *      void setOutlineColor(SDL_Color v)       
- *      void setDropshadowColor(SDL_Color v)    
+ *      // Color setters/getters are indirectly validated via tokenization/color tests (Label_test6)
+ *      void setForegroundColor(SDL_Color v)    -- EXERCISED INDIRECTLY BY UNIT TEST #6
+ *      void setBackgroundColor(SDL_Color v)    -- EXERCISED INDIRECTLY BY UNIT TEST #6
+ *      void setBorderColor(SDL_Color v)        -- EXERCISED INDIRECTLY BY UNIT TEST #6
+ *      void setOutlineColor(SDL_Color v)       -- EXERCISED INDIRECTLY BY UNIT TEST #6
+ *      void setDropshadowColor(SDL_Color v)    -- EXERCISED INDIRECTLY BY UNIT TEST #6
  *
  ********************************************/
 
@@ -873,20 +886,207 @@ namespace SDOM
     } // END: Label_test8()
 
 
+    bool Label_test9()
+    {
+        std::string testName = "Label #9";
+        std::string testDesc = "LabelAlign Table constants existence and exercise";
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Lua test script: verify LabelAlign table and exercise enum/string setters/getters
+        auto res = lua.script(R"lua(
+            local ok = true
+            local err = ""
+
+            -- Verify LabelAlign table exists
+            if type(LabelAlign) ~= 'table' then
+                return { ok = false, err = "LabelAlign table missing" }
+            end
+
+            -- Expect a few representative lowercase keys to exist (the table canonicalizes to lowercase)
+            local expected_keys = { 'top_left', 'top_center', 'top_right', 'middle_center', 'bottom_right', 'default' }
+            for _, k in ipairs(expected_keys) do
+                if LabelAlign[k] == nil then
+                    return { ok = false, err = "LabelAlign missing key: " .. tostring(k) }
+                end
+            end
+
+            -- Create a label handle
+            local name = "unitLabelTest9"
+            local cfg = { name = name, type = "Label", resource_name = "internal_font_8x8", text = "align test" }
+            local ok_create, h_or_err = pcall(function() return createDisplayObject("Label", cfg) end)
+            if not ok_create then
+                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
+            end
+            local h = h_or_err
+            if not h or not h:isValid() then
+                return { ok = false, err = "failed to create label" }
+            end
+
+            -- Inspect default alignment via both APIs
+            if type(h.getAlignment) ~= 'function' or type(h.getAlignmentString) ~= 'function' then
+                return { ok = false, err = "alignment getters missing" }
+            end
+            local ok_g, align_enum = pcall(function() return h:getAlignment() end)
+            if not ok_g then return { ok = false, err = "getAlignment() threw" } end
+            local ok_gs, align_str = pcall(function() return h:getAlignmentString() end)
+            if not ok_gs then return { ok = false, err = "getAlignmentString() threw" } end
+
+            -- Try setting alignment using enum value
+            local ok_set = pcall(function() h:setAlignment(LabelAlign.middle_center) end)
+            if not ok_set then return { ok = false, err = "setAlignment(enum) threw" } end
+            local ok_check, new_str = pcall(function() return h:getAlignmentString() end)
+            if not ok_check or new_str ~= "middle_center" then
+                return { ok = false, err = "enum set did not produce expected string: " .. tostring(new_str) }
+            end
+
+            -- Try setting alignment using string name
+            local ok_set2 = pcall(function() h:setAlignment("bottom_right") end)
+            if not ok_set2 then return { ok = false, err = "setAlignment(string) threw" } end
+            local ok_check2, new_str2 = pcall(function() return h:getAlignmentString() end)
+            if not ok_check2 then return { ok = false, err = "getAlignmentString() after string set threw" } end
+            if new_str2 ~= "bottom_right" then
+                return { ok = false, err = string.format("string set did not produce expected alignment string (bottom_right) got (%s)", tostring(new_str2)) }
+            end
+
+            -- cleanup
+            destroyDisplayObject(name)
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Label_test9()
+
+    
+    bool Label_test10()
+    {
+        std::string testName = "Label #10";
+        std::string testDesc = "Label Color Verification and Exercise";
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Lua test script
+        auto res = lua.script(R"lua(
+            local ok = true
+            local err = ""
+
+            local name = "unitLabelTest10"
+            local cfg = {
+                name = name,
+                type = "Label",
+                resource_name = "internal_font_8x8",
+                text = "color get/set test",
+                foreground_color = { r = 10, g = 20, b = 30, a = 200 },
+                background_color = { r = 40, g = 50, b = 60, a = 201 },
+                border_color = { r = 70, g = 80, b = 90, a = 202 },
+                outline_color = { r = 100, g = 110, b = 120, a = 203 },
+                dropshadow_color = { r = 130, g = 140, b = 150, a = 204 },
+            }
+
+            local ok_create, h_or_err = pcall(function() return createDisplayObject("Label", cfg) end)
+            if not ok_create then
+                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
+            end
+            local h = h_or_err
+            if not h or not h:isValid() then
+                return { ok = false, err = "failed to create label" }
+            end
+
+            local function expect_color(vec, got, key)
+                -- If the property is a function (legacy binding), call it with the handle to get the table
+                if type(got) == 'function' then
+                    local okf, rv = pcall(function() return got(h) end)
+                    if not okf then
+                        ok = false
+                        err = err .. string.format('%s getter threw; ', tostring(key))
+                        return
+                    end
+                    got = rv
+                end
+
+                -- Try alternate access patterns if direct value is missing:
+                if not got or type(got) ~= 'table' then
+                    local prop_key = key .. "_color"
+                    local alt = h[prop_key]
+                    if type(alt) == 'function' then
+                        local okf, rv = pcall(function() return alt(h) end)
+                        if okf and type(rv) == 'table' then got = rv end
+                    elseif type(alt) == 'table' then
+                        got = alt
+                    else
+                        -- try getter like getForegroundColor
+                        local cap = prop_key:gsub("_(%l)", function(c) return string.upper(c) end)
+                        cap = cap:gsub("^%l", function(c) return string.upper(c) end)
+                        local getter_name = "get" .. cap
+                        local gf = h[getter_name]
+                        if type(gf) == 'function' then
+                            local okg, rvg = pcall(function() return gf(h) end)
+                            if okg and type(rvg) == 'table' then got = rvg end
+                        end
+                    end
+                end
+                if not got or type(got) ~= 'table' then
+                    ok = false
+                    err = err .. string.format('%s missing or not a table; ', tostring(key))
+                    return
+                end
+                local gr = got.r or got[1]
+                local gg = got.g or got[2]
+                local gb = got.b or got[3]
+                local ga = got.a or got[4] or 255
+                if gr ~= vec.r or gg ~= vec.g or gb ~= vec.b or ga ~= (vec.a or 255) then
+                    ok = false
+                    err = err .. string.format('%s mismatch (expected %s,%s,%s,%s got %s,%s,%s,%s); ', tostring(key), tostring(vec.r), tostring(vec.g), tostring(vec.b), tostring(vec.a or 255), tostring(gr), tostring(gg), tostring(gb), tostring(ga))
+                end
+            end
+
+            -- verify initial colors via property access
+            expect_color({ r = 10, g = 20, b = 30, a = 200 }, h.foreground_color, 'foreground')
+            expect_color({ r = 40, g = 50, b = 60, a = 201 }, h.background_color, 'background')
+            expect_color({ r = 70, g = 80, b = 90, a = 202 }, h.border_color, 'border')
+            expect_color({ r = 100, g = 110, b = 120, a = 203 }, h.outline_color, 'outline')
+            expect_color({ r = 130, g = 140, b = 150, a = 204 }, h.dropshadow_color, 'dropshadow')
+
+            -- Set new colors using keyed tables
+            h.foreground_color = { r = 1, g = 2, b = 3, a = 4 }
+            h.background_color = { 9, 8, 7 } -- array style (alpha defaults to 255)
+            h.border_color = { 11, 12, 13, 14 }
+
+            expect_color({ r = 1, g = 2, b = 3, a = 4 }, h.foreground_color, 'foreground_after_set')
+            expect_color({ r = 9, g = 8, b = 7, a = 255 }, h.background_color, 'background_after_set')
+            expect_color({ r = 11, g = 12, b = 13, a = 14 }, h.border_color, 'border_after_set')
+
+            -- Set dropshadow/outline via keyed tables and verify
+            h.outline_color = { r = 21, g = 22, b = 23 } -- alpha default
+            h.dropshadow_color = { r = 31, g = 32, b = 33, a = 34 }
+            expect_color({ r = 21, g = 22, b = 23, a = 255 }, h.outline_color, 'outline_after_set')
+            expect_color({ r = 31, g = 32, b = 33, a = 34 }, h.dropshadow_color, 'dropshadow_after_set')
+
+            destroyDisplayObject(name)
+            return { ok = ok, err = err }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Label_test10()
+
     bool Label_UnitTests() 
     {
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
-            [&]() { return Label_test0(); },    // scaffolding test
-            [&]() { return Label_test1(); },    // internal resources created
-            [&]() { return Label_test2(); },    // SpriteSheet/BitmapFont asset existence and metrics
-            [&]() { return Label_test3(); },    // SpriteSheet/BitmapFont asset existence and metrics (LUA)
-            [&]() { return Label_test4(); },    // Label word/phrase style flags tokenization and inspection
-            [&]() { return Label_test5(); },    // Label word/phrase border/outline/pad/dropshadow tokenization and inspection
-            [&]() { return Label_test6(); },    // Label color targeted inline escapes tokenization and inspection
-            [&]() { return Label_test7(); },    // Label boolean flag getter/setter methods
-            [&]() { return Label_test8(); },    // Label integer value getter/setter methods
+            [&]() { return Label_test0();  },   // scaffolding test
+            [&]() { return Label_test1();  },   // internal resources created
+            [&]() { return Label_test2();  },   // SpriteSheet/BitmapFont asset existence and metrics
+            [&]() { return Label_test3();  },   // SpriteSheet/BitmapFont asset existence and metrics (LUA)
+            [&]() { return Label_test4();  },   // Label word/phrase style flags tokenization and inspection
+            [&]() { return Label_test5();  },   // Label word/phrase border/outline/pad/dropshadow tokenization and inspection
+            [&]() { return Label_test6();  },   // Label color targeted inline escapes tokenization and inspection
+            [&]() { return Label_test7();  },   // Label boolean flag getter/setter methods
+            [&]() { return Label_test8();  },   // Label integer value getter/setter methods
+            [&]() { return Label_test9();  },   // LabelAlign Table constants existence and exercise
+            [&]() { return Label_test10(); },   // Label Color Verification and Exercise
         };
         for (auto& test : tests) 
         {
