@@ -2011,6 +2011,16 @@ if (LABEL_DEBUG)
                     addIntFuncs("setDropshadowOffsetY", "getDropshadowOffsetY", &Label::setDropshadowOffsetY, &Label::getDropshadowOffsetY);
                 }
 
+                // Force-override any conflicting IPanelObject bindings for font width/height
+                // so that Label DisplayHandles call the Label implementations instead of
+                // accidentally invoking panel-style handlers which expect IPanelObject.
+                if (DEBUG_REGISTER_LUA) std::cout << "Registering Label::setFontWidth/getFontWidth override on DisplayHandle" << std::endl;
+                handle.set_function("setFontWidth", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontWidth(v); });
+                handle.set_function("getFontWidth", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontWidth() : 0; });
+                if (DEBUG_REGISTER_LUA) std::cout << "Registering Label::setFontHeight/getFontHeight override on DisplayHandle" << std::endl;
+                handle.set_function("setFontHeight", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontHeight(v); });
+                handle.set_function("getFontHeight", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontHeight() : 0; });
+
                 // Alignment (enum) and alignment_string (string)
                 if (absent("alignment")) {
                     handle.set("alignment", sol::property(

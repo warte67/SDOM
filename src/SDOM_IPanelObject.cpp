@@ -8,6 +8,7 @@
 #include <SDOM/SDOM_AssetHandle.hpp>
 #include <SDOM/SDOM_Texture.hpp>
 #include <SDOM/SDOM_IPanelObject.hpp>
+#include <SDOM/SDOM_Label.hpp>
 
 namespace SDOM
 {
@@ -364,10 +365,54 @@ namespace SDOM
         if (absent("setIconWidth")) { handle.set_function("setIconWidth", [cast_panel_from_handle](DisplayHandle& self, int v) { cast_panel_from_handle(self)->icon_width_ = v; }); }
         if (absent("getIconHeight")) { handle.set_function("getIconHeight", [cast_panel_from_handle](DisplayHandle& self) -> int { return cast_panel_from_handle(self)->getIconHeight(); }); }
         if (absent("setIconHeight")) { handle.set_function("setIconHeight", [cast_panel_from_handle](DisplayHandle& self, int v) { cast_panel_from_handle(self)->icon_height_ = v; }); }
-        if (absent("getFontWidth")) { handle.set_function("getFontWidth", [cast_panel_from_handle](DisplayHandle& self) -> int { return cast_panel_from_handle(self)->getFontWidth(); }); }
-        if (absent("setFontWidth")) { handle.set_function("setFontWidth", [cast_panel_from_handle](DisplayHandle& self, int v) { cast_panel_from_handle(self)->font_width_ = v; }); }
-        if (absent("getFontHeight")) { handle.set_function("getFontHeight", [cast_panel_from_handle](DisplayHandle& self) -> int { return cast_panel_from_handle(self)->getFontHeight(); }); }
-        if (absent("setFontHeight")) { handle.set_function("setFontHeight", [cast_panel_from_handle](DisplayHandle& self, int v) { cast_panel_from_handle(self)->font_height_ = v; }); }
+        if (absent("getFontWidth")) { 
+            if (DEBUG_REGISTER_LUA) std::cout << "Registering IPanelObject::getFontWidth on DisplayHandle" << std::endl;
+            handle.set_function("getFontWidth", [cast_panel_from_handle](DisplayHandle& self) -> int {
+                // Try panel first
+                IPanelObject* p = nullptr;
+                try { p = cast_panel_from_handle(self); } catch(...) { p = nullptr; }
+                if (p) return p->getFontWidth();
+                // If not a panel, try Label as a fallback to avoid invalid cast errors
+                IDisplayObject* base = dynamic_cast<IDisplayObject*>(self.get());
+                Label* l = dynamic_cast<Label*>(base);
+                if (l) return l->getFontWidth();
+                return 0;
+            }); 
+        }
+        if (absent("setFontWidth")) { 
+            if (DEBUG_REGISTER_LUA) std::cout << "Registering IPanelObject::setFontWidth on DisplayHandle" << std::endl;
+            handle.set_function("setFontWidth", [cast_panel_from_handle](DisplayHandle& self, int v) {
+                IPanelObject* p = nullptr;
+                try { p = cast_panel_from_handle(self); } catch(...) { p = nullptr; }
+                if (p) { p->font_width_ = v; return; }
+                IDisplayObject* base = dynamic_cast<IDisplayObject*>(self.get());
+                Label* l = dynamic_cast<Label*>(base);
+                if (l) { l->setFontWidth(v); return; }
+            }); 
+        }
+        if (absent("getFontHeight")) { 
+            if (DEBUG_REGISTER_LUA) std::cout << "Registering IPanelObject::getFontHeight on DisplayHandle" << std::endl;
+            handle.set_function("getFontHeight", [cast_panel_from_handle](DisplayHandle& self) -> int {
+                IPanelObject* p = nullptr;
+                try { p = cast_panel_from_handle(self); } catch(...) { p = nullptr; }
+                if (p) return p->getFontHeight();
+                IDisplayObject* base = dynamic_cast<IDisplayObject*>(self.get());
+                Label* l = dynamic_cast<Label*>(base);
+                if (l) return l->getFontHeight();
+                return 0;
+            }); 
+        }
+        if (absent("setFontHeight")) { 
+            if (DEBUG_REGISTER_LUA) std::cout << "Registering IPanelObject::setFontHeight on DisplayHandle" << std::endl;
+            handle.set_function("setFontHeight", [cast_panel_from_handle](DisplayHandle& self, int v) {
+                IPanelObject* p = nullptr;
+                try { p = cast_panel_from_handle(self); } catch(...) { p = nullptr; }
+                if (p) { p->font_height_ = v; return; }
+                IDisplayObject* base = dynamic_cast<IDisplayObject*>(self.get());
+                Label* l = dynamic_cast<Label*>(base);
+                if (l) { l->setFontHeight(v); return; }
+            }); 
+        }
 
         // base index getter/setter (expose strings)
         if (absent("getBaseIndex")) {
