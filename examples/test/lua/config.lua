@@ -245,6 +245,8 @@ local config = {
                             text = "VarelaRound16 TristateButton",
                             -- border = true
                         },
+-- WORK IN PROGRESS (12x12 ICONS)
+
                         {
                             name = "mainFrame_hslider_1",
                             orientation = "horizontal",
@@ -253,8 +255,8 @@ local config = {
                             y = 84,
                             width = 140,
                             height = 12,
-                            step = 2.5,  -- test discrete steps
                             icon_resource = "internal_icon_12x12",
+                            step = 2.5,  -- test discrete steps
                             -- icon_resource = "internal_icon_8x8",
                             -- color = { r = 128, g = 128, b = 128, a = 255 },
                             -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
@@ -262,7 +264,6 @@ local config = {
                             -- border_color = { r = 0, g = 0, b = 0, a = 32 },
                         },
 
--- WORK IN PROGRESS (12x12 ICONS)
                         {
                             name = "mainFrame_hprogress_1",
                             orientation = "horizontal",
@@ -271,12 +272,11 @@ local config = {
                             y = 98,
                             width = 140,
                             height = 12,
+                            icon_resource = "internal_icon_12x12",
                             value = 50.0,
                             step = 2.5,  -- test discrete steps
-                            icon_resource = "internal_icon_12x12",
                             -- icon_resource = "internal_icon_8x8",
                         },
--- WORK IN PROGRESS
                         {
                             name = "mainFrame_hscrollbar_1",
                             orientation = "horizontal",
@@ -285,8 +285,8 @@ local config = {
                             y = 112,
                             width = 140,
                             height = 12,
-                            step = 5.0,  -- test discrete steps
                             Icon_resource = "internal_icon_12x12",
+                            step = 5.0,  -- test discrete steps
                             alignment = "left",                            
                         },
                         {
@@ -296,9 +296,9 @@ local config = {
                             x = 582,
                             y = 134,
                             width = 12,
+                            icon_resource = "internal_icon_12x12",
                             height = 140,
                             step = 2.5,  -- test discrete steps
-                            icon_resource = "internal_icon_12x12",
                             -- color = { r = 128, g = 128, b = 128, a = 255 },
                             -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
                             -- background_color = { r = 16, g = 16, b = 16, a = 128 }, 
@@ -311,10 +311,10 @@ local config = {
                             x = 568,
                             y = 134,
                             width = 12,
+                            icon_resource = "internal_icon_12x12",
                             height = 140,
                             value = 25.0,
                             step = 2.5,  -- test discrete steps
-                            icon_resource = "internal_icon_12x12",
                             color = { r = 0, g = 255, b = 0, a = 255 },
                             foreground_color = { r = 128, g = 128, b = 128, a = 255 },
                             background_color = { r = 16, g = 16, b = 16, a = 128 }, 
@@ -326,16 +326,18 @@ local config = {
                             type = "ScrollBar",
                             x = 554,
                             y = 134,
-                            width = 8,
+                            width = 12,
+                            -- icon_resource = "internal_icon_12x12",
                             height = 140,
                             value = 50.0,
                             step = 5.0,  -- test discrete steps
-                            icon_resource = "internal_icon_8x8",
                             -- color = { r = 255, g = 0, b = 0, a = 255 },
                             -- foreground_color = { r = 128, g = 128, b = 128, a = 255 },
                             -- background_color = { r = 16, g = 16, b = 16, a = 0 }, 
                             -- border_color = { r = 0, g = 0, b = 0, a = 0 },                            
                         }
+-- WORK IN PROGRESS
+
                     }
                 },
                 {
