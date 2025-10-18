@@ -54,7 +54,8 @@ local config = {
         { name = "VarelaRound32", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 32 },
         { name = "external_font_8x8", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png", font_width = 8, font_height = 8 },
         { name = "external_font_8x12", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png", font_width = 8, font_height = 12 },
-        { name = "external_icon_8x8", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/icon_8x8.png", sprite_width = 8, sprite_height = 8 }
+        { name = "external_icon_8x8", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/icon_8x8.png", sprite_width = 8, sprite_height = 8 },
+        { name = "internal_icon_12x12", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/icon_12x12.png", sprite_width = 12, sprite_height = 12 }
     },
     windowWidth = 1200,
     windowHeight = 800,
@@ -253,12 +254,14 @@ local config = {
                             width = 140,
                             height = 8,
                             step = 2.5,  -- test discrete steps
-                            icon_resource = "internal_icon_8x8",
+                            -- icon_resource = "internal_icon_8x8",
                             -- color = { r = 128, g = 128, b = 128, a = 255 },
                             -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
                             -- background_color = { r = 16, g = 16, b = 16, a = 128 }, 
                             -- border_color = { r = 0, g = 0, b = 0, a = 32 },
                         },
+
+-- WORK IN PROGRESS (12x12 ICONS)
                         {
                             name = "mainFrame_hprogress_1",
                             orientation = "horizontal",
@@ -269,12 +272,10 @@ local config = {
                             height = 8,
                             value = 50.0,
                             step = 2.5,  -- test discrete steps
-                            icon_resource = "internal_icon_8x8",
-                            color = { r = 255, g = 0, b = 0, a = 255 },
-                            foreground_color = { r = 128, g = 128, b = 128, a = 255 },
-                            background_color = { r = 16, g = 16, b = 16, a = 0 }, 
-                            border_color = { r = 0, g = 0, b = 0, a = 0 },
+                            icon_resource = "internal_icon_12x12",
+                            -- icon_resource = "internal_icon_8x8",
                         },
+-- WORK IN PROGRESS
                         {
                             name = "mainFrame_hscrollbar_1",
                             orientation = "horizontal",
@@ -296,7 +297,7 @@ local config = {
                             width = 8,
                             height = 140,
                             step = 2.5,  -- test discrete steps
-                            icon_resource = "internal_icon_8x8",
+                            -- icon_resource = "internal_icon_8x8",
                             -- color = { r = 128, g = 128, b = 128, a = 255 },
                             -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
                             -- background_color = { r = 16, g = 16, b = 16, a = 128 }, 
