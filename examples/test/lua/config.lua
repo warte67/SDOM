@@ -276,6 +276,7 @@ local config = {
                             value = 50.0,
                             step = 2.5,  -- test discrete steps
                             -- icon_resource = "internal_icon_8x8",
+                            color = { r = 255, g = 0, b = 0, a = 255 },
                         },
                         {
                             name = "mainFrame_hscrollbar_1",

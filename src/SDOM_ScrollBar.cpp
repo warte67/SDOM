@@ -343,6 +343,11 @@ namespace SDOM
 
         if (!ss)  ERROR("Slider::onRender(): No valid SpriteSheet for icon.");
 
+        float ss_width = ss->getSpriteWidth();
+        float ss_height = ss->getSpriteHeight();
+        float scale_width = ss_width / 8.0f;
+        float scale_height = ss_height / 8.0f;
+
         SDL_FRect dsstRect = { 
             static_cast<float>(getX()), 
             static_cast<float>(getY()),
@@ -371,8 +376,8 @@ namespace SDOM
         // Render the ScrollBar Thumb
         SDL_FRect thumbRect = { 0, 0, 0, 0 };
         float trackLength = (orientation_ == Orientation::Horizontal)
-            ? static_cast<float>(getWidth() - 22)
-            : static_cast<float>(getHeight() - 22);
+            ? static_cast<float>(getWidth() - 22 * scale_width)
+            : static_cast<float>(getHeight() - 22 * scale_height);
 
         // 1. Thumb length (proportional to page/content), clamp to [min_thumb_length_, trackLength]
         float denom = std::max(content_size_, 1.0f);
@@ -397,14 +402,14 @@ namespace SDOM
 
         int spriteIndex = 0;
         if (orientation_ == Orientation::Horizontal) {
-            thumbRect.x = getX() + 11 + usableTrack * posRel;
+            thumbRect.x = getX() + (11 * scale_width) + usableTrack * posRel;
             thumbRect.y = static_cast<float>(getY());
             thumbRect.w = thumbLength;
             thumbRect.h = static_cast<float>(getHeight());
             spriteIndex = static_cast<int>(IconIndex::HProgress_Thumb);
         } else {
             thumbRect.x = static_cast<float>(getX());
-            thumbRect.y = getY() + 11 + usableTrack * posRel;
+            thumbRect.y = getY() + (11 * scale_height) + usableTrack * posRel;
             thumbRect.w = static_cast<float>(getWidth());
             thumbRect.h = thumbLength;
             spriteIndex = static_cast<int>(IconIndex::VProgress_Thumb);
@@ -426,23 +431,23 @@ namespace SDOM
             {
                 // min end
                 ss->drawSprite(static_cast<int>(IconIndex::HProgress_Left),
-                    static_cast<int>(getX() + 3), 
+                    static_cast<int>(getX() + 3 * scale_width), 
                     static_cast<int>(getY()), 
                     trackColor, 
                     SDL_SCALEMODE_NEAREST
                 );     
                 // middle
                 SDL_FRect midRect = {
-                    static_cast<float>(getX() + 11), 
+                    static_cast<float>(getX() + 11 * scale_width), 
                     static_cast<float>(getY()), 
-                    static_cast<float>(getWidth() - 22), 
+                    static_cast<float>(getWidth() - 22 * scale_width), 
                     static_cast<float>(getHeight())
                 };
                 ss->drawSprite(static_cast<int>(IconIndex::HProgress_Rail), midRect, trackColor, SDL_SCALEMODE_NEAREST);
 
                 // max end
                 ss->drawSprite(static_cast<int>(IconIndex::HProgress_Right),
-                    static_cast<int>(getX() + getWidth() - 11), 
+                    static_cast<int>(getX() + getWidth() - 11 * scale_width), 
                     static_cast<int>(getY()), 
                     trackColor, 
                     SDL_SCALEMODE_NEAREST
@@ -458,23 +463,23 @@ namespace SDOM
                 // min end
                 ss->drawSprite(static_cast<int>(IconIndex::VProgress_Top),
                     static_cast<int>(getX()),
-                    static_cast<int>(getY() + 3),
+                    static_cast<int>(getY() + 3 * scale_height),
                     trackColor,
                     SDL_SCALEMODE_NEAREST
                 );     
                 // middle
                 SDL_FRect midRect = {
                     static_cast<float>(getX()), 
-                    static_cast<float>(getY() + 11), 
-                    static_cast<float>(getWidth() ), 
-                    static_cast<float>(getHeight() - 22)
+                    static_cast<float>(getY() + 11 * scale_height), 
+                    static_cast<float>(getWidth()), 
+                    static_cast<float>(getHeight() - 22 * scale_height)
                 };
                 ss->drawSprite(static_cast<int>(IconIndex::VProgress_Rail), midRect, trackColor, SDL_SCALEMODE_NEAREST);
 
                 // max end
                 ss->drawSprite(static_cast<int>(IconIndex::VProgress_Bottom),
                     static_cast<int>(getX()),
-                    static_cast<int>(getY() + getHeight() - 11),
+                    static_cast<int>(getY() + getHeight() - 11 * scale_height),
                     trackColor, 
                     SDL_SCALEMODE_NEAREST
                 );     
