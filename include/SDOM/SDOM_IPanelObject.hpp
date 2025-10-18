@@ -113,10 +113,10 @@ namespace SDOM
 
     protected:
         // --- Constructors --- //
-    IPanelObject(const InitStruct& init);  
-    IPanelObject(const sol::table& config);
-    // Defaults-aware Lua constructor to allow derived InitStruct defaults
-    IPanelObject(const sol::table& config, const InitStruct& defaults);
+        IPanelObject(const InitStruct& init);  
+        IPanelObject(const sol::table& config);
+        // Defaults-aware Lua constructor to allow derived InitStruct defaults
+        IPanelObject(const sol::table& config, const InitStruct& defaults);
 
         // IPanelObject();
 
@@ -144,6 +144,8 @@ namespace SDOM
         void renderPanel(); // render nine-panel based on the base_index_;
 
         AssetHandle getSpriteSheet() const { return spriteSheetAsset_; }
+        SpriteSheet* getSpriteSheetPtr() const { return spriteSheetAsset_->as<SpriteSheet>(); }
+
         AssetHandle getFontAsset() const { return fontAsset_; }
         std::string getIconResourceName() const { return icon_resource_; }
         std::string getFontResourceName() const { return font_resource_; }

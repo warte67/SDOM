@@ -67,7 +67,7 @@ namespace SDOM
                 if (mouseX >= getX() && mouseX <= getX() + getWidth() ) 
                 {
                     // Use inner rail and anchor mapping so the knob stays fully within the bounds
-                    SpriteSheet* ss = getIconSpriteSheet();
+                    SpriteSheet* ss = getSpriteSheetPtr();
                     float tileW = ss ? ss->getSpriteWidth() : 8.0f;
                     float scale_w = ss ? (tileW / 8.0f) : 1.0f;
 
@@ -103,7 +103,7 @@ namespace SDOM
                 if (mouseY >= getY() && mouseY <= getY() + getHeight() ) 
                 {
                     // Use inner rail and anchor mapping so the knob stays fully within the bounds
-                    SpriteSheet* ss = getIconSpriteSheet();
+                    SpriteSheet* ss = getSpriteSheetPtr();
                     float tileH = ss ? ss->getSpriteHeight() : 8.0f;
                     float scale_h = ss ? (tileH / 8.0f) : 1.0f;
 
@@ -224,7 +224,7 @@ namespace SDOM
 
         // --- Render the Slider Control --- //
 
-        SpriteSheet* ss = getIconSpriteSheet(); 
+        SpriteSheet* ss = getSpriteSheetPtr(); 
         if (!ss)  ERROR("Slider::onRender(): No valid SpriteSheet for icon.");
 
         float ss_width = ss->getSpriteWidth();
@@ -389,7 +389,7 @@ namespace SDOM
         }
 
         // if an icon spritesheet is assigned, its sprite dimensions should be positive
-        SpriteSheet* ss = getIconSpriteSheet();
+        SpriteSheet* ss = getSpriteSheetPtr();
         if (ss) {
             if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
                 DEBUG_LOG("[UnitTest] Slider '" << getName() << "' has invalid sprite size: w=" 

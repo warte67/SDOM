@@ -55,8 +55,6 @@ local config = {
         { name = "external_font_8x8", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png", font_width = 8, font_height = 8 },
         { name = "external_font_8x12", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png", font_width = 8, font_height = 12 },
         { name = "external_icon_8x8", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/icon_8x8.png", sprite_width = 8, sprite_height = 8 }
-        -- , { name = "internal_icon_12x12", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/internal_icon_12x12.png", sprite_width = 12, sprite_height = 12 }
-        -- , { name = "internal_icon_16x16", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/internal_icon_16x16.png", sprite_width = 16, sprite_height = 16 }
     },
     windowWidth = 1200,
     windowHeight = 800,
@@ -83,6 +81,8 @@ local config = {
                     y = 5,
                     width = 295,
                     height = 390,
+                    icon_resource = "internal_icon_16x16",
+                    -- icon_resource = "internal_icon_12x12",
                     -- icon_resource = "external_icon_8x8", -- test icon resource name resolution
                     color = { r = 64, g = 32, b = 32, a = 255 },
                     children = {
@@ -95,10 +95,15 @@ local config = {
                             height = 70,
                             text = "Main Group",
 
+                            icon_resource = "internal_icon_16x16",      
+                            -- icon_resource = "internal_icon_12x12",
+                            -- icon_resource = "external_icon_8x8",                      
+
                             -- font_resource = "external_font_8x12",
                             -- font_resource = "VarelaRound16",
                             font_resource = "internal_ttf",
                             font_size = 12,  -- these should be default values from the externally loaded BitmapFont asset
+                            
                             -- font_width = 12,
                             -- font_height = 12, -- if not specified, should use the backing SpriteSheet's spriteHeight
 
@@ -374,6 +379,11 @@ local config = {
                     y = 370,
                     width = 150,
                     height = 25,
+
+                    icon_resource = "internal_icon_16x16",
+                    -- icon_resource = "internal_icon_12x12",
+                    -- icon_resource = "internal_icon_8x8",
+
                     text = "[color=white]Go to [color=yellow]S[color=white]tage Two",
                     font_resource = "VarelaRound16", -- test font resource name resolution
                     font_size = 16,

@@ -57,7 +57,7 @@ namespace SDOM
             init.type = "ArrowButton";
             init.icon_resource = icon_resource_;
             // determine icon tile size from this ScrollBar's spritesheet if available
-            SpriteSheet* ss_local = getIconSpriteSheet();
+            SpriteSheet* ss_local = getSpriteSheetPtr();
             int iconW = 8;
             int iconH = 8;
             if (ss_local) { iconW = ss_local->getSpriteWidth(); iconH = ss_local->getSpriteHeight(); }
@@ -87,7 +87,7 @@ namespace SDOM
             init.type = "ArrowButton";
             init.icon_resource = icon_resource_;
             // determine icon tile size from this ScrollBar's spritesheet if available
-            SpriteSheet* ss_local = getIconSpriteSheet();
+            SpriteSheet* ss_local = getSpriteSheetPtr();
             int iconW = 8;
             int iconH = 8;
             if (ss_local) { iconW = ss_local->getSpriteWidth(); iconH = ss_local->getSpriteHeight(); }
@@ -215,7 +215,7 @@ namespace SDOM
                 // Compute scaled track and thumb metrics the same way onRender does so
                 // mouse mapping aligns with the visible thumb movement.
                 float scaleW = 1.0f;
-                SpriteSheet* ss_local = getIconSpriteSheet();
+                SpriteSheet* ss_local = getSpriteSheetPtr();
                 if (ss_local) scaleW = static_cast<float>(ss_local->getSpriteWidth()) / 8.0f;
                 float trackStart = static_cast<float>(getX() + 11.0f * scaleW);
                 float trackWidth = static_cast<float>(getWidth() - 22.0f * scaleW);
@@ -257,7 +257,7 @@ namespace SDOM
                 // Track spans from y+11*scale to y+height-11*scale. Compute scale the
                 // same way as onRender: derive it from the icon spritesheet tile size.
                 float scaleH = 1.0f;
-                SpriteSheet* ss_local = getIconSpriteSheet();
+                SpriteSheet* ss_local = getSpriteSheetPtr();
                 if (ss_local) scaleH = static_cast<float>(ss_local->getSpriteHeight()) / 8.0f;
                 float trackStart = static_cast<float>(getY() + 11.0f * scaleH);
                 float trackHeight = static_cast<float>(getHeight() - 22.0f * scaleH);
@@ -385,7 +385,7 @@ namespace SDOM
     void ScrollBar::onRender()
     {
         // SUPER::onRender();
-        SpriteSheet* ss = getIconSpriteSheet(); 
+        SpriteSheet* ss = getSpriteSheetPtr(); 
 
         if (!ss)  ERROR("Slider::onRender(): No valid SpriteSheet for icon.");
 
@@ -585,7 +585,7 @@ namespace SDOM
         }
 
         // sprite sanity for icon-based rendering
-        SpriteSheet* ss = getIconSpriteSheet();
+        SpriteSheet* ss = getSpriteSheetPtr();
         if (ss) {
             if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
                 DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has invalid sprite size: w="

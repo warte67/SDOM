@@ -43,7 +43,7 @@ namespace SDOM
     {
         // SUPER::onRender();
 
-        SpriteSheet* ss = getIconSpriteSheet();
+        SpriteSheet* ss = getSpriteSheetPtr();
         if (!ss) ERROR("Slider::onRender(): No valid SpriteSheet for icon.");
 
         float ss_width = ss->getSpriteWidth();
@@ -202,7 +202,7 @@ namespace SDOM
         }
 
         // if an icon spritesheet is assigned, its sprite dimensions should be positive
-        SpriteSheet* ss = getIconSpriteSheet();
+        SpriteSheet* ss = getSpriteSheetPtr();
         if (ss) {
             if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
                 DEBUG_LOG("[UnitTest] ProgressBar '" << getName() << "' has invalid sprite size: w="

@@ -93,7 +93,7 @@ namespace SDOM
         void setMin(float v);
         void setMax(float v);
         void setValue(float v);
-        SpriteSheet* getIconSpriteSheet() const { return icon_sprite_sheet_; }
+        SpriteSheet* getSpriteSheetPtr() const { return icon_sprite_sheet_; }
 
     protected:
         // --- Protected Data Members --- //

@@ -179,6 +179,19 @@ namespace SDOM
                 }
             }
 
+            // Additional fallback: if the configured name resolved to a Texture but
+            // a SpriteSheet resource of the form <name>_SpriteSheet exists, prefer it.
+            // This handles common usage where Lua config references the texture name
+            // while the engine registers a SpriteSheet wrapper under the '<name>_SpriteSheet' key.
+            if (spriteSheetAsset_ && spriteSheetAsset_->getType() == Texture::TypeName) {
+                std::string altName = icon_resource_ + std::string("_SpriteSheet");
+                AssetHandle altHandle = getFactory().getAssetObject(altName);
+                if (altHandle.isValid() && altHandle->getType() == SpriteSheet::TypeName) {
+                    spriteSheetAsset_ = altHandle;
+                    icon_resource_ = altName;
+                }
+            }
+
             if (!spriteSheetAsset_) {
                 std::string alt = icon_resource_ + std::string("_SpriteSheet");
                 // INFO("IPanelObject::onInit: attempting fallback sprite asset name: " + alt);
@@ -197,6 +210,14 @@ namespace SDOM
                 return false;
             }
         }
+        SpriteSheet* ss = spriteSheetAsset_.as<SpriteSheet>();
+        if (!ss)
+        {
+            ERROR("IPanelObject::onInit: spriteSheetAsset_ is not a SpriteSheet type for asset: " + icon_resource_);
+            return false;
+        }
+        icon_width_ = ss->getSpriteWidth();
+        icon_height_ = ss->getSpriteHeight();
 
         // Load font asset
         if (!font_resource_.empty() && !fontAsset_)
@@ -221,9 +242,9 @@ namespace SDOM
 
     
 
-    // void IPanelObject::onUpdate(float fElapsedTime)=0;
     // void IPanelObject::onEvent(const Event& event)=0;
 
+    // void IPanelObject::onUpdate(float fElapsedTime)=0;
 
 
     void IPanelObject::onRender() 
@@ -236,6 +257,8 @@ namespace SDOM
     void IPanelObject::renderPanel()
     {
         if (!spriteSheetAsset_) return;
+        SpriteSheet* ss = getSpriteSheetPtr(); 
+        if (!ss) { ERROR("IPanelObject::renderPanel(): No valid SpriteSheet for icon."); return; }
 
         int x = getX(), y = getY(), w = getWidth(), h = getHeight();
         int cw = icon_width_, ch = icon_height_;
@@ -253,7 +276,6 @@ namespace SDOM
         float ftopH = static_cast<float>(topH), fbottomH = static_cast<float>(bottomH);
         float fcenterW = static_cast<float>(centerW), fcenterH = static_cast<float>(centerH);
         float fcw = static_cast<float>(cw), fch = static_cast<float>(ch);
-
         int base = static_cast<int>(base_index_);
         auto idx = [base](PanelTileOffset pto) { return base + static_cast<int>(pto); };
         SDL_Color color = getColor();
@@ -263,38 +285,64 @@ namespace SDOM
 
         using PTO = PanelTileOffset;
 
-        SpriteSheet* sprite_sheet = spriteSheetAsset_->as<SpriteSheet>();
-        if (!sprite_sheet)
-        {
-            getFactory().printAssetTree();
-            std::string atype = spriteSheetAsset_.isValid() ? spriteSheetAsset_->getType() : std::string("<invalid>");
-            std::string afile = spriteSheetAsset_.isValid() ? spriteSheetAsset_->getFilename() : std::string("<invalid>");
-            ERROR("IPanelObject::renderPanel: sprite asset (" + spriteSheetAsset_->getName() + ") is not a SpriteSheet; resolved type='" + atype + "' file='" + afile + "'");
-            return;
-        }
+        // SpriteSheet* sprite_sheet = spriteSheetAsset_->as<SpriteSheet>();
+        // if (!sprite_sheet)
+        // {
+        //     getFactory().printAssetTree();
+        //     std::string atype = spriteSheetAsset_.isValid() ? spriteSheetAsset_->getType() : std::string("<invalid>");
+        //     std::string afile = spriteSheetAsset_.isValid() ? spriteSheetAsset_->getFilename() : std::string("<invalid>");
+        //     ERROR("IPanelObject::renderPanel: sprite asset (" + spriteSheetAsset_->getName() + ") is not a SpriteSheet; resolved type='" + atype + "' file='" + afile + "'");
+        //     return;
+        // }
+        // Ensure the sprite sheet's underlying texture is loaded before drawing
+        try { ss->onLoad(); } catch(...) {}
 
-    // Ensure the sprite sheet's underlying texture is loaded before drawing
-    try { sprite_sheet->onLoad(); } catch(...) {}
+        // Top row (src rects use texture pixel sizes)
+        // For 9-slice rendering we treat the sprite tile as the native size (tileW x tileH).
+        // Corners are drawn at native size (clipped if panel smaller). Edges are stretched in one axis.
+        float tileW = static_cast<float>(ss->getSpriteWidth());
+        float tileH = static_cast<float>(ss->getSpriteHeight());
 
-    // Top row
-        sprite_sheet->drawSprite(idx(PTO::TopLeft), {0, 0, fleftW, ftopH}, {fx, fy, fleftW, ftopH}, color);
+        auto make_src_for_clipped = [&](int spriteIndex, float clipW, float clipH, bool alignRight, bool alignBottom) -> SDL_FRect {
+            // srcRect is tile-local (offset within the tile). If clipped, select the appropriate sub-rect
+            float src_w = (clipW >= static_cast<float>(cw)) ? tileW : (tileW * (clipW / static_cast<float>(cw)));
+            float src_h = (clipH >= static_cast<float>(ch)) ? tileH : (tileH * (clipH / static_cast<float>(ch)));
+            float src_x = alignRight ? (tileW - src_w) : 0.0f;
+            float src_y = alignBottom ? (tileH - src_h) : 0.0f;
+            return SDL_FRect{ src_x, src_y, src_w, src_h };
+        };
+
+        // Top-left corner
+        ss->drawSprite(idx(PTO::TopLeft), make_src_for_clipped(idx(PTO::TopLeft), fleftW, ftopH, false, false), {fx, fy, fleftW, ftopH}, color);
+
+        // Top-center (stretch horizontally; clip vertically if needed)
         if (centerW > 0)
-            sprite_sheet->drawSprite(idx(PTO::TopCenter), {0, 0, fcw, ftopH}, {fx + fleftW, fy, fcenterW, ftopH}, color);
-        sprite_sheet->drawSprite(idx(PTO::TopRight), {fcw - frightW, 0, frightW, ftopH}, {fx + fleftW + fcenterW, fy, frightW, ftopH}, color);
+            ss->drawSprite(idx(PTO::TopCenter), make_src_for_clipped(idx(PTO::TopCenter), fcw, ftopH, false, false), {fx + fleftW, fy, fcenterW, ftopH}, color);
 
-        // Middle row
+        // Top-right corner (align src to right)
+        ss->drawSprite(idx(PTO::TopRight), make_src_for_clipped(idx(PTO::TopRight), frightW, ftopH, true, false), {fx + fleftW + fcenterW, fy, frightW, ftopH}, color);
+
+        // Left-center (stretch vertically; clip horizontally if needed)
         if (centerH > 0)
-            sprite_sheet->drawSprite(idx(PTO::LeftCenter), {0, 0, fleftW, fch}, {fx, fy + ftopH, fleftW, fcenterH}, color);
+            ss->drawSprite(idx(PTO::LeftCenter), make_src_for_clipped(idx(PTO::LeftCenter), fleftW, fch, false, false), {fx, fy + ftopH, fleftW, fcenterH}, color);
+
+        // Center (stretch both axes)
         if (centerW > 0 && centerH > 0)
-            sprite_sheet->drawSprite(idx(PTO::Center), {0, 0, fcw, fch}, {fx + fleftW, fy + ftopH, fcenterW, fcenterH}, color);
-        if (centerH > 0)
-            sprite_sheet->drawSprite(idx(PTO::RightCenter), {fcw - frightW, 0, frightW, fch}, {fx + fleftW + fcenterW, fy + ftopH, frightW, fcenterH}, color);
+            ss->drawSprite(idx(PTO::Center), SDL_FRect{0,0,tileW,tileH}, {fx + fleftW, fy + ftopH, fcenterW, fcenterH}, color);
 
-        // Bottom row
-        sprite_sheet->drawSprite(idx(PTO::BottomLeft), {0, fch - fbottomH, fleftW, fbottomH}, {fx, fy + ftopH + fcenterH, fleftW, fbottomH}, color);
+        // Right-center (stretch vertically; align src to right if clipped horizontally)
+        if (centerH > 0)
+            ss->drawSprite(idx(PTO::RightCenter), make_src_for_clipped(idx(PTO::RightCenter), frightW, fch, true, false), {fx + fleftW + fcenterW, fy + ftopH, frightW, fcenterH}, color);
+
+        // Bottom-left corner (align src to bottom)
+        ss->drawSprite(idx(PTO::BottomLeft), make_src_for_clipped(idx(PTO::BottomLeft), fleftW, fbottomH, false, true), {fx, fy + ftopH + fcenterH, fleftW, fbottomH}, color);
+
+        // Bottom-center (stretch horizontally; align src to bottom if clipped vertically)
         if (centerW > 0)
-            sprite_sheet->drawSprite(idx(PTO::BottomCenter), {0, fch - fbottomH, fcw, fbottomH}, {fx + fleftW, fy + ftopH + fcenterH, fcenterW, fbottomH}, color);
-        sprite_sheet->drawSprite(idx(PTO::BottomRight), {fcw - frightW, fch - fbottomH, frightW, fbottomH}, {fx + fleftW + fcenterW, fy + ftopH + fcenterH, frightW, fbottomH}, color);
+            ss->drawSprite(idx(PTO::BottomCenter), make_src_for_clipped(idx(PTO::BottomCenter), fcw, fbottomH, false, true), {fx + fleftW, fy + ftopH + fcenterH, fcenterW, fbottomH}, color);
+
+        // Bottom-right corner (align src to right+bottom)
+        ss->drawSprite(idx(PTO::BottomRight), make_src_for_clipped(idx(PTO::BottomRight), frightW, fbottomH, true, true), {fx + fleftW + fcenterW, fy + ftopH + fcenterH, frightW, fbottomH}, color);
     } // END: void IPanelObject::renderPanel()
 
 
