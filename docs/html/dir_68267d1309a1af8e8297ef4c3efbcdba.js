@@ -25,6 +25,8 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_IFontObject.cpp", "SDOM__IFontObject_8cpp.html", null ],
     [ "SDOM_internal_font_8x12.cpp", "SDOM__internal__font__8x12_8cpp.html", null ],
     [ "SDOM_internal_font_8x8.cpp", "SDOM__internal__font__8x8_8cpp.html", null ],
+    [ "SDOM_internal_icon_12x12.cpp", "SDOM__internal__icon__12x12_8cpp.html", null ],
+    [ "SDOM_internal_icon_16x16.cpp", "SDOM__internal__icon__16x16_8cpp.html", null ],
     [ "SDOM_internal_icon_8x8.cpp", "SDOM__internal__icon__8x8_8cpp.html", null ],
     [ "SDOM_internal_ttf.cpp", "SDOM__internal__ttf_8cpp.html", null ],
     [ "SDOM_IPanelObject.cpp", "SDOM__IPanelObject_8cpp.html", null ],

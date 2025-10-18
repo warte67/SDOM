@@ -20,6 +20,14 @@ namespace SDOM
     extern unsigned char internal_icon_8x8[];
     extern int internal_icon_8x8_len;
 
+    // internal 12x12 icon sprite sheet
+    extern unsigned char internal_icon_12x12[];
+    extern int internal_icon_12x12_len;
+
+    // internal 16x16 icon sprite sheet
+    extern unsigned char internal_icon_16x16[];
+    extern int internal_icon_16x16_len;
+
 
 
     class Texture : public IAssetObject

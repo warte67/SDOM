@@ -168,6 +168,13 @@ namespace SDOM
             { "internal_font_8x12_Texture",     "Texture",     "internal_font_8x12" },
             { "internal_ttf",                   "truetype",    "internal_ttf_asset" },
             { "internal_icon_8x8",              "Texture",     "internal_icon_8x8" },
+            { "internal_icon_8x8_SpriteSheet",  "SpriteSheet", "internal_icon_8x8" },
+            { "internal_icon_12x12",            "Texture",      "internal_icon_12x12" },
+            { "internal_icon_12x12_SpriteSheet", "SpriteSheet", "internal_icon_12x12" },
+            { "internal_icon_16x16",            "Texture",     "internal_icon_16x16" }, 
+            { "internal_icon_12x12_SpriteSheet", "SpriteSheet", "internal_icon_12x12" },
+
+            // ...
         };
 
         bool ok = true;

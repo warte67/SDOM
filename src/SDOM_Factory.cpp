@@ -71,27 +71,32 @@ namespace SDOM
         // that filename when initialized. Pre-creating a Texture with the same
         // registry name conflicts with BitmapFont's intended resource name.
 
-        {   // register the internal_icon_8x8 Texture (skip if already created)
-            const std::string defaultIconName = "internal_icon_8x8";
-            if (!getResObj(defaultIconName)) {
-                Texture::InitStruct init;
-                init.name = defaultIconName;
-                init.type = "Texture";
-                init.filename = defaultIconName;
-                AssetHandle spriteSheet = createAsset("Texture", init);
-                Texture* spriteSheetPtr = spriteSheet.as<Texture>();
-                if (spriteSheetPtr) spriteSheetPtr->_registerLuaBindings("Texture", core.getLua());
-            } else {
-                // Ensure Lua bindings are registered for existing instance
-                IAssetObject* existing = getResObj(defaultIconName);
-                Texture* spriteSheetPtr = dynamic_cast<Texture*>(existing);
-                if (spriteSheetPtr) {
-                    try { spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); } catch(...) {}
+        // register a few internal icon Textures (skip if already created)
+        {
+            auto ensureTexture = [&](const std::string& defaultIconName) {
+                if (!getResObj(defaultIconName)) {
+                    Texture::InitStruct init;
+                    init.name = defaultIconName;
+                    init.type = "Texture";
+                    init.filename = defaultIconName;
+                    AssetHandle spriteSheet = createAsset("Texture", init);
+                    if (auto* spriteSheetPtr = spriteSheet.as<Texture>()) {
+                        try { spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); } catch(...) {}
+                    }
+                } else {
+                    // Ensure Lua bindings are registered for existing instance
+                    IAssetObject* existing = getResObj(defaultIconName);
+                    if (auto* spriteSheetPtr = dynamic_cast<Texture*>(existing)) {
+                        try { spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); } catch(...) {}
+                    }
                 }
-            }
+            };
+
+            ensureTexture("internal_icon_8x8");
+            ensureTexture("internal_icon_12x12");
+            ensureTexture("internal_icon_16x16");
         }
 
-        
 
         // register a TTFAsset
         registerResType("TTFAsset", AssetTypeCreators{
@@ -147,18 +152,27 @@ namespace SDOM
         });
 
         // Also ensure there is a SpriteSheet wrapper for the internal icon texture
-        const std::string defaultIconSpriteSheetName = std::string("internal_icon_8x8_SpriteSheet");
-        if (!getResObj(defaultIconSpriteSheetName)) {
-            SpriteSheet::InitStruct ssInit;
-            ssInit.name = defaultIconSpriteSheetName;
-            ssInit.type = SpriteSheet::TypeName;
-            ssInit.filename = std::string("internal_icon_8x8"); // underlying texture filename
-            ssInit.spriteWidth = 8;
-            ssInit.spriteHeight = 8;
-            ssInit.isInternal = true;
-            AssetHandle ss = createAsset("SpriteSheet", ssInit);
-            (void)ss;
+        {
+            auto ensureSpriteSheet = [&](const std::string& spriteSheetName, const std::string& textureFilename, int spriteW, int spriteH) {
+                if (!getResObj(spriteSheetName)) {
+                    SpriteSheet::InitStruct ssInit;
+                    ssInit.name = spriteSheetName;
+                    ssInit.type = SpriteSheet::TypeName;
+                    ssInit.filename = textureFilename; // underlying texture filename
+                    ssInit.spriteWidth = spriteW;
+                    ssInit.spriteHeight = spriteH;
+                    ssInit.isInternal = true;
+                    AssetHandle ss = createAsset("SpriteSheet", ssInit);
+                    (void)ss;
+                }
+            };
+
+            ensureSpriteSheet("internal_icon_8x8_SpriteSheet",  "internal_icon_8x8",  8,  8);
+            ensureSpriteSheet("internal_icon_12x12_SpriteSheet", "internal_icon_12x12", 12, 12);
+            ensureSpriteSheet("internal_icon_16x16_SpriteSheet", "internal_icon_16x16", 16, 16);
         }
+
+
 
         // register the BitmapFont asset
         registerResType("BitmapFont", AssetTypeCreators{
