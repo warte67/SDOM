@@ -138,6 +138,51 @@ FontStyle::dropShadowColor // "shadow"
 
 ### Style
 
+## Lua bindings: property-style vs legacy get/set functions
+
+The Label Lua bindings expose most style fields in two symmetric forms so existing scripts and newer code can both work:
+
+- Property-style (preferred): properties are readable and writable as plain Lua values/tables on the `DisplayHandle` returned from `createDisplayObject`.
+- Legacy function-style (compat): getters/setters named `getXxx...` / `setXxx...` are also provided to preserve older code.
+
+Common mappings (examples):
+
+- Colors
+  - Property-style: `h.foreground_color`, `h.background_color`, `h.border_color`, `h.outline_color`, `h.dropshadow_color` (tables with keys `r,g,b,a` or array-style `[r,g,b,a]`).
+  - Function-style: `h:getForegroundColor()`, `h:setForegroundColor(tbl)` etc.
+
+- Font flags and booleans
+  - Property-style: `h.bold`, `h.italic`, `h.underline`, `h.strikethrough`, `h.outline`, `h.dropshadow`, `h.wordwrap`, `h.auto_resize` (booleans).
+  - Function-style: `h:getBold()`, `h:setBold(true)` etc.
+
+Example Lua (both styles):
+
+```lua
+local h = createDisplayObject("Label", { name = "lbl", type = "Label", resource_name = "internal_font_8x8" })
+
+-- property-style read
+local fg = h.foreground_color        -- table { r=..., g=..., b=..., a=... }
+
+-- function-style read
+local fg2 = h:getForegroundColor()  -- equivalent table
+
+-- property-style write
+h.foreground_color = { r = 255, g = 128, b = 0, a = 255 }
+
+-- function-style write
+h:setForegroundColor({ 255, 128, 0, 255 })
+
+-- boolean property
+h.bold = true
+
+-- boolean legacy setter
+h:setBold(true)
+```
+
+Notes:
+- Both access forms are implemented to be equivalent; tests exercise both styles to ensure parity. Use property-style for new code for clarity, and function-style when maintaining older scripts.
+
+
 Style escapes enable common typographic effects. Most are toggles that remain in effect until a matching closing escape (e.g., `[/bold]`) or a global `[reset]`. Closing escapes are strongly recommended for predictable nesting and restoration of prior styles.
 
 - `[bold] ... [/bold]` — Bold text. If your font supports a bold metric this will use it; otherwise rendering emulates bold where possible.  

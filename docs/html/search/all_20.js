@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['validate_0',['7. Test and Validate',['../md_docs_2startup__refactor.html#autotoc_md336',1,'']]],
+  ['validate_0',['7. Test and Validate',['../md_docs_2startup__refactor.html#autotoc_md339',1,'']]],
   ['validateanchorassignments_1',['validateAnchorAssignments',['../namespaceSDOM.html#aaa33b9318af1f912adda349706e19eba',1,'SDOM']]],
   ['validateanchorpointstring_2',['validateAnchorPointString',['../namespaceSDOM.html#a1727e4f40877b1a80e5317dc9cd632b2',1,'SDOM']]],
   ['validation_3',['6. Error Handling &amp; Validation',['../md_docs_2extensible__factory.html#autotoc_md133',1,'']]],
@@ -15,5 +15,6 @@ var searchData=
   ['vprogress_5frail_12',['VProgress_Rail',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbac80d5173244d130893f34f8811b60a66',1,'SDOM']]],
   ['vprogress_5fthumb_13',['VProgress_Thumb',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba59a6081cdd7c8721bae3ba0737421e3c',1,'SDOM']]],
   ['vprogress_5ftop_14',['VProgress_Top',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbaff1ae41f44037afaab0c0b7e3389429d',1,'SDOM']]],
-  ['vslider_5frail_15',['VSlider_Rail',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba85a065792c512733be61732d541402f4',1,'SDOM']]]
+  ['vs_20legacy_20get_20set_20functions_15',['Lua bindings: property-style vs legacy get/set functions',['../md_docs_2label__text__parsing.html#autotoc_md173',1,'']]],
+  ['vslider_5frail_16',['VSlider_Rail',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba85a065792c512733be61732d541402f4',1,'SDOM']]]
 ];

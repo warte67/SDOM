@@ -93,29 +93,29 @@ $(document).ready(function(){initNavTree('md_docs_2progress.html',''); initResiz
   <div class="headertitle"><div class="title">Project Description and Development Progress</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md248"></a><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is a C++23 library built on SDL3 that brings a DOM‑like scene graph and GUI toolkit to 2D applications and games. The aim is a small, predictable core for layout, events, and rendering so SDL developers can compose interfaces and in‑game UI with familiar patterns and a minimal API surface.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md249"></a><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is a C++23 library built on SDL3 that brings a DOM‑like scene graph and GUI toolkit to 2D applications and games. The aim is a small, predictable core for layout, events, and rendering so SDL developers can compose interfaces and in‑game UI with familiar patterns and a minimal API surface.</p>
 <p>Architecturally, a single Core orchestrates the SDL runtime (window, renderer, main loop). A Stage serves as the root of the display tree, while an EventManager dispatches input through capture → target → bubble phases. The Factory registers, creates, and tracks resources and display objects by type and unique name, returning typed handles for safe references. Layout is driven by an edge‑based anchoring system that supports asymmetric, responsive designs.</p>
 <p>Scripting and configuration are first‑class with Lua via Sol2 to enable data‑driven scenes, rapid iteration, and test automation. You can also build everything directly in C++—Lua is optional—but when enabled it can construct objects, wire scenes, drive dialog, and swap stages at runtime without recompilation.</p>
 <p>The project emphasizes clear, living documentation. The Markdown design docs are working papers that evolve with the code. Expect them to change as features land and APIs are refined. Public APIs are defined in headers and surfaced via Doxygen, with correctness exercised by unit tests; if a doc briefly diverges from current behavior, treat the code as source‑of‑truth until the docs catch up. Diagrams are authored in Mermaid and exported to static SVG/PNG by the repo’s export pipeline, keeping visuals portable while ensuring the sources remain easy to edit. Progress updates will call out notable documentation changes, and contributions to clarify or correct docs are welcome.</p>
 <p>This page is the hub for progress. The “Progress Updates” below record milestones chronologically with context and notes; the “Next Steps” and “ToDo” sections outline near‑term priorities and open tracks. Check back to see what landed and what’s coming next—and feel free to open issues or proposals as the API stabilizes.</p>
-<h1><a class="anchor" id="autotoc_md249"></a>
+<h1><a class="anchor" id="autotoc_md250"></a>
 Scripting and Configuration</h1>
 <p>Lua (via Sol2) is first‑class but optional—you can script scenes and behavior in Lua, build everything in C++, or mix both. The Factory accepts <code>sol::table</code> configs alongside initializer structs, and Core’s lifecycle hooks make it easy to integrate scripts for iteration and tests. See the dedicated design doc for details and examples: <a class="el" href="md_docs_2scripting__and__configuration.html">Scripting and Configuration (Lua + C++)</a>.</p>
-<h1><a class="anchor" id="autotoc_md250"></a>
+<h1><a class="anchor" id="autotoc_md251"></a>
 Progress Updates</h1>
-<h2><a class="anchor" id="autotoc_md251"></a>
+<h2><a class="anchor" id="autotoc_md252"></a>
 [July 2, 2025]</h2>
 <ul>
 <li>Initial rough draft and proof of concept.</li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md253"></a>
+ <h2><a class="anchor" id="autotoc_md254"></a>
 [August 5, 2025]</h2>
 <ul>
 <li><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> secondary rough draft</li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md255"></a>
+ <h2><a class="anchor" id="autotoc_md256"></a>
 [September 19, 2025]</h2>
 <ul>
 <li>Proof of concept approved. Main development approved. Work begins officially.</li>
@@ -140,7 +140,7 @@ Progress Updates</h1>
 <li>Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.</li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md257"></a>
+ <h2><a class="anchor" id="autotoc_md258"></a>
 [September 20, 2025]</h2>
 <ul>
 <li>Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.</li>
@@ -151,7 +151,7 @@ Progress Updates</h1>
 <li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.</li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md259"></a>
+ <h2><a class="anchor" id="autotoc_md260"></a>
 [September 21, 2025]</h2>
 <ul>
 <li>Renamed <code>resource_ptr</code> to <code>ResourceHandle</code> throughout the codebase for clarity.<ul>
@@ -196,7 +196,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md261"></a>
+ <h2><a class="anchor" id="autotoc_md262"></a>
 [September 22, 2025]</h2>
 <ul>
 <li><b>Unit Test Framework Refined:</b> <br  />
@@ -243,7 +243,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h3><a class="anchor" id="autotoc_md263"></a>
+ <h3><a class="anchor" id="autotoc_md264"></a>
 [September 23, 2025]</h3>
 <ul>
 <li><b>Event System Preliminary Testing:</b> <br  />
@@ -267,7 +267,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md265"></a>
+ <h2><a class="anchor" id="autotoc_md266"></a>
 [September 24, 2025]</h2>
 <ul>
 <li><b>Event System Debugging:</b><ul>
@@ -301,7 +301,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md267"></a>
+ <h2><a class="anchor" id="autotoc_md268"></a>
 [September 25, 2025]</h2>
 <ul>
 <li><b>JSON → Lua Transition Complete:</b> <br  />
@@ -344,7 +344,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md269"></a>
+ <h2><a class="anchor" id="autotoc_md270"></a>
 [September 26, 2025]</h2>
 <ul>
 <li><b>Box Unit Tests Complete:</b> <br  />
@@ -374,7 +374,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md271"></a>
+ <h2><a class="anchor" id="autotoc_md272"></a>
 [September 27, 2025]</h2>
 <ul>
 <li><b>Lua Integration Complete:</b> <br  />
@@ -397,7 +397,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md273"></a>
+ <h2><a class="anchor" id="autotoc_md274"></a>
 [September 28, 2025]</h2>
 <ul>
 <li><b>Lua Binding Improvements:</b><ul>
@@ -445,7 +445,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md275"></a>
+ <h2><a class="anchor" id="autotoc_md276"></a>
 [September 29, 2025]</h2>
 <ul>
 <li><b>Lua Binding Debugging:</b><ul>
@@ -497,7 +497,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md277"></a>
+ <h2><a class="anchor" id="autotoc_md278"></a>
 [September 30, 2025]</h2>
 <ul>
 <li><b>Summary:</b><ul>
@@ -560,7 +560,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md279"></a>
+ <h2><a class="anchor" id="autotoc_md280"></a>
 [October 2, 2025]</h2>
 <ul>
 <li><b>Synthetic Event Handling Robustness:</b><ul>
@@ -602,7 +602,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md281"></a>
+ <h2><a class="anchor" id="autotoc_md282"></a>
 [October 3, 2025]</h2>
 <ul>
 <li>Cleaned up noisy debug output across the codebase:<ul>
@@ -684,7 +684,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md283"></a>
+ <h2><a class="anchor" id="autotoc_md284"></a>
 [October 4, 2025]</h2>
 <ul>
 <li>Quick fixes &amp; Lua binding polish (morning)<ul>
@@ -707,7 +707,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2><a class="anchor" id="autotoc_md285"></a>
+ <h2><a class="anchor" id="autotoc_md286"></a>
 [October 5, 2025]</h2>
 <ul>
 <li>Refactored Lua Core bindings:<ul>
@@ -734,7 +734,7 @@ Progress Updates</h1>
 </ul>
 <p><code></p><hr  />
 <p> </code></p>
-<h2><a class="anchor" id="autotoc_md287"></a>
+<h2><a class="anchor" id="autotoc_md288"></a>
 [October 6, 2025]</h2>
 <p><code></p><ul>
 <li>Lua binding refactor (IDisplayObject):<ul>
@@ -828,7 +828,7 @@ Progress Updates</h1>
 <p></code></p>
 <p><code></p><hr  />
 <p> </code></p>
-<h2><a class="anchor" id="autotoc_md289"></a>
+<h2><a class="anchor" id="autotoc_md290"></a>
 [October 7, 2025]</h2>
 <p><code></p><ul>
 <li>cleaned up the heavy includes from the header files to reduce compile times and improve modularity.</li>
@@ -863,7 +863,7 @@ Progress Updates</h1>
 <p></code></p>
 <p><code></p><hr  />
 <p> </code></p>
-<h2><a class="anchor" id="autotoc_md291"></a>
+<h2><a class="anchor" id="autotoc_md292"></a>
 [October 8, 2025]</h2>
 <p><code></p><ul>
 <li>drawSprite Lua API / overload consolidation<ul>
@@ -916,7 +916,7 @@ Progress Updates</h1>
 <p></code></p>
 <p><code></p><hr  />
 <p> </code></p>
-<h2><a class="anchor" id="autotoc_md293"></a>
+<h2><a class="anchor" id="autotoc_md294"></a>
 [October 9, 2025]</h2>
 <p><code></p><ul>
 <li>Codebase rename:<ul>
@@ -972,7 +972,7 @@ Progress Updates</h1>
 <p></code></p>
 <p><code></p><hr  />
 <p> </code></p>
-<h2><a class="anchor" id="autotoc_md295"></a>
+<h2><a class="anchor" id="autotoc_md296"></a>
 [October 11, 2025]</h2>
 <p><code></p><ul>
 <li><b>BitmapFont &amp; TruetypeFont Resource Creation Improvements:</b><ul>
@@ -1018,7 +1018,7 @@ Progress Updates</h1>
 <p></code></p>
 <p><code></p><hr  />
 <p> </code></p>
-<h2><a class="anchor" id="autotoc_md297"></a>
+<h2><a class="anchor" id="autotoc_md298"></a>
 [October 12, 2025]</h2>
 <p><code></p><ul>
 <li><b>Internal Resource Renaming:</b><ul>
@@ -1059,7 +1059,7 @@ Progress Updates</h1>
 <p></code></p>
 <p><code></p><hr  />
 <p> </code></p>
-<h2><a class="anchor" id="autotoc_md299"></a>
+<h2><a class="anchor" id="autotoc_md300"></a>
 [October 13, 2025]</h2>
 <p><code></p><ul>
 <li><b>Added inline numeric style escapes to Label tokenization:</b><ul>
@@ -1107,7 +1107,7 @@ Progress Updates</h1>
 <p></code></p>
 <p><code></p><hr  />
 <p> </code></p>
-<h2><a class="anchor" id="autotoc_md301"></a>
+<h2><a class="anchor" id="autotoc_md302"></a>
 [October 14, 2025]</h2>
 <p><code></p><ul>
 <li>Added <code>Frame</code> scaffolding and registered the <code>Frame</code> DOM type with the Factory; <a class="el" href="SDOM__Frame_8cpp.html">SDOM_Frame.cpp</a> implements minimal constructors and defers behavior to <code>IPanelObject</code>.</li>
@@ -1154,7 +1154,7 @@ Progress Updates</h1>
 <p></code></p>
 <p><code></p><hr  />
 <p> </code></p>
-<h2><a class="anchor" id="autotoc_md303"></a>
+<h2><a class="anchor" id="autotoc_md304"></a>
 [October 15, 2025]</h2>
 <p><code></p><ul>
 <li><b>Library Maintenance</b><ul>
@@ -1210,7 +1210,7 @@ Progress Updates</h1>
 <p></code></p>
 <p><code><code><code><code><code><code><code><code></p><hr  />
 <p> </code></code></code></code></code></code></code></code></p>
-<h2><a class="anchor" id="autotoc_md305"></a>
+<h2><a class="anchor" id="autotoc_md306"></a>
 [October 16, 2025]</h2>
 <p><code><code><code><code><code><code><code><code></p><ul>
 <li><b>ArrowButton</b><ul>
@@ -1263,7 +1263,7 @@ Progress Updates</h1>
 <p></code></code></code></code></code></code></code></code></p>
 <p><code><code><code><code><code><code><code><code></p><hr  />
 <p> </code></code></code></code></code></code></code></code></p>
-<h2><a class="anchor" id="autotoc_md307"></a>
+<h2><a class="anchor" id="autotoc_md308"></a>
 [October 17, 2025]</h2>
 <p><code><code><code><code><code><code><code><code></p><ul>
 <li><b>ScrollBar:</b><ul>
@@ -1298,22 +1298,23 @@ Progress Updates</h1>
 <p></code></code></code></code></code></code></code></code></p>
 <p><code><code><code><code><code><code><code><code></p><hr  />
 <p> </code></code></code></code></code></code></code></code></p>
-<h2><a class="anchor" id="autotoc_md309"></a>
+<h2><a class="anchor" id="autotoc_md310"></a>
+[October 18, 2025]</h2>
+<p><code><code><code><code><code><code><code><code></p><ul>
+<li>Refactored <code>SpriteSheet_UnitTests</code> to utilize proper scaffolding patterns.</li>
+<li>Refactored <code>GarbageCollection_UnitTests</code> to utilize proper scaffolding patterns.</li>
+<li>Refactored <code>Event_UnitTests</code> to utilize proper scaffolding patterns.</li>
+<li>Refactored <code>EventType_UnitTests</code> to utilize proper scaffolding patterns.</li>
+<li>Refactored <code>DisplayHandle_UnitTests</code> to utilize proper scaffolding patterns.</li>
+<li>Refactored <code>Lua_UnitTests</code> to utilize proper scaffolding patterns.</li>
+</ul>
+<p></code></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code><code></p><hr  />
+<p> </code></code></code></code></code></code></code></code></p>
+<h2><a class="anchor" id="autotoc_md312"></a>
 Next Steps:</h2>
 <p><code><code><code><code><code><code><code><code></p><ul>
-<li>Refactor the UnitTest functions to use the newest test function pattern (e.g., <code>Label_test0()</code> → <code>Label_test1()</code>).<ul>
-<li>Refactor <code>SpriteSheet_UnitTests</code> to utilize proper scaffolding patterns. [COMPLETE]</li>
-<li>Refactor <code>GarbageCollection_UnitTests</code> to utilize proper scaffolding patterns. [COMPLETE]</li>
-<li>Refactor <code>Event_UnitTests</code> to utilize proper scaffolding patterns.</li>
-<li>Refactor <code>EventType_UnitTests</code> to utilize proper scaffolding patterns.</li>
-<li>Refactor <code>DisplayHandle_UnitTests</code> to utilize proper scaffolding patterns.</li>
-<li>Refactor <code>Lua_UnitTests</code> to utilize proper scaffolding patterns.</li>
-<li>Refactor <code>Stage_UnitTests</code> to utilize proper scaffolding patterns.</li>
-<li>Refactor <code>IDisplayObject</code> to utilize proper scaffolding patterns.</li>
-<li>Refactor <code>Factory</code> to utilize proper scaffolding patterns.</li>
-<li>Refactor <code>Core</code> to utilize proper scaffolding patterns.</li>
-</ul>
-</li>
+<li><code>Button</code>, <code>IconButton</code>, and <code>Frame</code> need to make use of multi-sized SpriteSheets like the RangeControls now do.</li>
 <li>Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:<ul>
 <li>Add <code>Group</code> unit tests to validate Lua all property setting and resource resolution.</li>
 <li>Add <code>Button</code> unit tests to validate Lua all property setting, label access, and event listener behavior.</li>
@@ -1339,9 +1340,16 @@ Next Steps:</h2>
 <p></code></code></code></code></code></code></code></code></p>
 <p><code><code><code><code><code><code><code><code></p><hr  />
 <p> </code></code></code></code></code></code></code></code></p>
-<h2><a class="anchor" id="autotoc_md311"></a>
+<h2><a class="anchor" id="autotoc_md314"></a>
 Long Term To Do:</h2>
 <p><code><code><code><code><code><code><code><code></p><ul>
+<li>Refactor the UnitTest functions to use the newest test function pattern (e.g., <code>Label_test0()</code> → <code>Label_test1()</code>).<ul>
+<li>Refactor <code>Stage_UnitTests</code> systematically test all Stage properties and methods via Lua.</li>
+<li>Refactor <code>IDisplayObject</code> systematically test all IDisplayObject properties and methods via Lua.</li>
+<li>Refactor <code>Factory</code> systematically test all Factory methods via Lua.</li>
+<li>Refactor <code>Core</code> systematically test all Core methods via Lua.</li>
+</ul>
+</li>
 <li>Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.<ul>
 <li>Use <a class="el" href="SDOM__IRangeControl__scaffold_8hpp.html">SDOM_IRangeControl_scaffold.hpp</a> / .cpp as a template for future interface implementations.</li>
 </ul>

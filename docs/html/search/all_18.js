@@ -7,16 +7,16 @@ var searchData=
   ['needstexturerebuild_5f_4',['needsTextureRebuild_',['../classSDOM_1_1Label.html#ac6ab2b5402d976be3a536136629e0562',1,'SDOM::Label']]],
   ['newline_5',['Newline',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429a755fee300780823fcf4df98383331745',1,'SDOM::Label']]],
   ['next_20steps_6',['Next Steps',['../md_docs_2event__design.html#autotoc_md102',1,'']]],
-  ['next_20steps_20lua_20integration_7',['Next steps (Lua integration)',['../md_docs_2scripting__and__configuration.html#autotoc_md320',1,'']]],
-  ['next_20steps_3a_8',['Next Steps:',['../md_docs_2progress.html#autotoc_md309',1,'']]],
+  ['next_20steps_20lua_20integration_7',['Next steps (Lua integration)',['../md_docs_2scripting__and__configuration.html#autotoc_md323',1,'']]],
+  ['next_20steps_3a_8',['Next Steps:',['../md_docs_2progress.html#autotoc_md312',1,'']]],
   ['no_20visual_20jump_9',['2) Anchor Change Recalculation (No Visual Jump)',['../md_docs_2display__object__anchoring.html#autotoc_md66',1,'']]],
   ['none_10',['None',['../classSDOM_1_1EventType.html#a827940aa9803d3113e7d7a7f5b75a1c5',1,'SDOM::EventType']]],
   ['normal_11',['NORMAL',['../classCLR.html#ae6ec0e976684b36983d2325ee9bde918',1,'CLR']]],
   ['normalizeanchorstring_12',['normalizeAnchorString',['../namespaceSDOM.html#ada23a739293dfb38feadc632ee14bb9c',1,'SDOM']]],
-  ['notable_20recent_20changes_13',['Notable recent changes',['../md_README.html#autotoc_md350',1,'']]],
+  ['notable_20recent_20changes_13',['Notable recent changes',['../md_README.html#autotoc_md353',1,'']]],
   ['note_14',['note',['../md_docs_2display__object__anchoring.html#autotoc_md68',1,'Migration note'],['../md_docs_2dom__propagation.html#autotoc_md84',1,'Migration note']]],
   ['note_20on_20button_20objects_20and_20state_20handling_15',['Note on Button Objects and State Handling',['../md_docs_2IPanelObject.html#autotoc_md160',1,'']]],
   ['note_3a_20lua_20first_20configuration_16',['Migration note: Lua-first configuration',['../md_docs_2architecture__overview.html#autotoc_md1',1,'']]],
-  ['notes_17',['notes',['../md_docs_2label__text__parsing.html#autotoc_md189',1,'Implementation Notes'],['../md_docs_2label__text__parsing.html#autotoc_md209',1,'Implementation Notes'],['../md_docs_2label__text__parsing.html#autotoc_md211',1,'Implementation Notes'],['../md_README.html#autotoc_md351',1,'Migration notes'],['../md_docs_2event__design.html#autotoc_md103',1,'Notes'],['../md_docs_2lua__commands__and__properties.html#autotoc_md230',1,'Remaining work / completeness notes'],['../md_docs_2dom__propagation.html#autotoc_md82',1,'Thread-safety notes']]],
-  ['numeric_20style_20escapes_20border_20outline_20padding_20dropshadow_18',['Numeric Style Escapes (border / outline / padding / dropshadow)',['../md_docs_2label__text__parsing.html#autotoc_md184',1,'']]]
+  ['notes_17',['notes',['../md_docs_2label__text__parsing.html#autotoc_md190',1,'Implementation Notes'],['../md_docs_2label__text__parsing.html#autotoc_md210',1,'Implementation Notes'],['../md_docs_2label__text__parsing.html#autotoc_md212',1,'Implementation Notes'],['../md_README.html#autotoc_md354',1,'Migration notes'],['../md_docs_2event__design.html#autotoc_md103',1,'Notes'],['../md_docs_2lua__commands__and__properties.html#autotoc_md231',1,'Remaining work / completeness notes'],['../md_docs_2dom__propagation.html#autotoc_md82',1,'Thread-safety notes']]],
+  ['numeric_20style_20escapes_20border_20outline_20padding_20dropshadow_18',['Numeric Style Escapes (border / outline / padding / dropshadow)',['../md_docs_2label__text__parsing.html#autotoc_md185',1,'']]]
 ];

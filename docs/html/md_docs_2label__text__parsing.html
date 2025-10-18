@@ -220,6 +220,49 @@ Color Targets:</h3>
 </ul>
 <h2><a class="anchor" id="autotoc_md172"></a>
 Style</h2>
+<h1><a class="anchor" id="autotoc_md173"></a>
+Lua bindings: property-style vs legacy get/set functions</h1>
+<p>The Label Lua bindings expose most style fields in two symmetric forms so existing scripts and newer code can both work:</p>
+<ul>
+<li>Property-style (preferred): properties are readable and writable as plain Lua values/tables on the <code>DisplayHandle</code> returned from <code>createDisplayObject</code>.</li>
+<li>Legacy function-style (compat): getters/setters named <code>getXxx...</code> / <code>setXxx...</code> are also provided to preserve older code.</li>
+</ul>
+<p>Common mappings (examples):</p>
+<ul>
+<li>Colors<ul>
+<li>Property-style: <code>h.foreground_color</code>, <code>h.background_color</code>, <code>h.border_color</code>, <code>h.outline_color</code>, <code>h.dropshadow_color</code> (tables with keys <code>r,g,b,a</code> or array-style <code>[r,g,b,a]</code>).</li>
+<li>Function-style: <code>h:getForegroundColor()</code>, <code>h:setForegroundColor(tbl)</code> etc.</li>
+</ul>
+</li>
+<li>Font flags and booleans<ul>
+<li>Property-style: <code>h.bold</code>, <code>h.italic</code>, <code>h.underline</code>, <code>h.strikethrough</code>, <code>h.outline</code>, <code>h.dropshadow</code>, <code>h.wordwrap</code>, <code>h.auto_resize</code> (booleans).</li>
+<li>Function-style: <code>h:getBold()</code>, <code>h:setBold(true)</code> etc.</li>
+</ul>
+</li>
+</ul>
+<p>Example Lua (both styles):</p>
+<div class="fragment"><div class="line">local h = createDisplayObject(&quot;Label&quot;, { name = &quot;lbl&quot;, type = &quot;Label&quot;, resource_name = &quot;internal_font_8x8&quot; })</div>
+<div class="line"> </div>
+<div class="line">-- property-style read</div>
+<div class="line">local fg = h.foreground_color        -- table { r=..., g=..., b=..., a=... }</div>
+<div class="line"> </div>
+<div class="line">-- function-style read</div>
+<div class="line">local fg2 = h:getForegroundColor()  -- equivalent table</div>
+<div class="line"> </div>
+<div class="line">-- property-style write</div>
+<div class="line">h.foreground_color = { r = 255, g = 128, b = 0, a = 255 }</div>
+<div class="line"> </div>
+<div class="line">-- function-style write</div>
+<div class="line">h:setForegroundColor({ 255, 128, 0, 255 })</div>
+<div class="line"> </div>
+<div class="line">-- boolean property</div>
+<div class="line">h.bold = true</div>
+<div class="line"> </div>
+<div class="line">-- boolean legacy setter</div>
+<div class="line">h:setBold(true)</div>
+</div><!-- fragment --><p>Notes:</p><ul>
+<li>Both access forms are implemented to be equivalent; tests exercise both styles to ensure parity. Use property-style for new code for clarity, and function-style when maintaining older scripts.</li>
+</ul>
 <p>Style escapes enable common typographic effects. Most are toggles that remain in effect until a matching closing escape (e.g., <code>[/bold]</code>) or a global <code>[reset]</code>. Closing escapes are strongly recommended for predictable nesting and restoration of prior styles.</p>
 <ul>
 <li><code>[bold] ... [/bold]</code> — Bold text. If your font supports a bold metric this will use it; otherwise rendering emulates bold where possible. <br  />
@@ -242,14 +285,14 @@ Style</h2>
 <li>Styles stack: entering a style pushes the previous value and <code>[/tag]</code> pops it (LIFO). <code>[reset]</code> clears the stack entirely.</li>
 <li>Escape sequences are not rendered as text; they affect subsequent word tokens only.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md173"></a>
+<h3><a class="anchor" id="autotoc_md174"></a>
 Colors:</h3>
 <div class="fragment"><div class="line">SDL_Color Label::foregroundColor = {255, 255, 255, 255}; // &quot;fgnd&quot; (default)</div>
 <div class="line">SDL_Color Label::backgroundColor = {0, 0, 0, 0};         // &quot;bgnd&quot;</div>
 <div class="line">SDL_Color Label::borderColor = {0, 0, 0, 0};             // &quot;border&quot;</div>
 <div class="line">SDL_Color FontStyle::outlineColor = {0, 0, 0, 255};      // &quot;outline&quot;</div>
 <div class="line">SDL_Color FontStyle::dropShadowColor = {0, 0, 0, 128};   // &quot;shadow&quot;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md174"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md175"></a>
 Alignment</h2>
 <p>Labels support independent horizontal and vertical alignment. Horizontal modes: left, center, right. Vertical modes: top, middle, bottom. Alignment is stored in the LabelStyle (either as two explicit fields or a compact bitfield) and is applied per-token so different parts of the same label can be aligned differently.</p>
 <p>Two ways to set alignment:</p><ul>
@@ -288,7 +331,7 @@ Alignment</h2>
 <p>Performance</p><ul>
 <li>The nine-group approach enables parallel/independent layout passes for each alignment mode and reduces branching during rendering. It also makes it straightforward to only re-layout the alignment groups affected by a style change.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md175"></a>
+<h2><a class="anchor" id="autotoc_md176"></a>
 Quick reference</h2>
 <ul>
 <li>Default property: label.align = { horizontal = left|center|right, vertical = top|middle|bottom }</li>
@@ -297,7 +340,7 @@ Quick reference</h2>
 <li>Tokens are grouped into the nine alignment queues and laid out/rendered per-queue.</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md177"></a>
+<h2><a class="anchor" id="autotoc_md178"></a>
 Alignment</h2>
 <p>Labels support independent horizontal and vertical alignment. Horizontal modes: left, center, right. Vertical modes: top, middle, bottom. Alignment is stored in the LabelStyle (either as two explicit fields or a compact bitfield) and is applied per-token so different parts of the same label can be aligned differently.</p>
 <p>Two ways to set alignment:</p><ul>
@@ -336,7 +379,7 @@ Alignment</h2>
 <p>Performance</p><ul>
 <li>The nine-group approach enables parallel/independent layout passes for each alignment mode and reduces branching during rendering. It also makes it straightforward to only re-layout the alignment groups affected by a style change.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md178"></a>
+<h2><a class="anchor" id="autotoc_md179"></a>
 Quick reference</h2>
 <ul>
 <li>Default property: label.align = { horizontal = left|center|right, vertical = top|middle|bottom }</li>
@@ -344,7 +387,7 @@ Quick reference</h2>
 <li>Inline tags override default until closed or reset.</li>
 <li>Tokens are grouped into the nine alignment queues and laid out/rendered per-queue.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md179"></a>
+<h3><a class="anchor" id="autotoc_md180"></a>
 Bitfield Encoding for Alignment</h3>
 <p>Alignment values can be encoded as bitfields to represent the nine possible text alignment modes:</p>
 <div class="fragment"><div class="line">left   = 0b0001</div>
@@ -374,7 +417,7 @@ Bitfield Encoding for Alignment</h3>
 <li><code>[align=middle]</code> — Middle align (vertical)</li>
 <li><code>[align=bottom]</code> — Bottom align</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md180"></a>
+<h2><a class="anchor" id="autotoc_md181"></a>
 Special</h2>
 <ul>
 <li><code>[[]</code> — Render <code>[</code> character</li>
@@ -387,7 +430,7 @@ Special</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md181"></a>
+<h2><a class="anchor" id="autotoc_md182"></a>
 Escaping Square Brackets</h2>
 <p>To render literal square brackets in label text, use double brackets:</p>
 <ul>
@@ -396,7 +439,7 @@ Escaping Square Brackets</h2>
 </ul>
 <p>This approach avoids ambiguity with style escape sequences and is user-friendly for authors.</p>
 <p>Escape sequences are not rendered as text, but affect the rendering of subsequent tokens.</p>
-<h2><a class="anchor" id="autotoc_md182"></a>
+<h2><a class="anchor" id="autotoc_md183"></a>
 Font Size</h2>
 <ul>
 <li><code>[size=16]</code> — Sets the font size to 16 for all subsequent tokens.</li>
@@ -405,12 +448,12 @@ Font Size</h2>
 </li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md184"></a>
+<h1><a class="anchor" id="autotoc_md185"></a>
 Numeric Style Escapes (border / outline / padding / dropshadow)</h1>
-<h2><a class="anchor" id="autotoc_md185"></a>
+<h2><a class="anchor" id="autotoc_md186"></a>
 Overview</h2>
 <p>These escapes allow inline control of numeric rendering parameters that affect phrase rendering (thickness, padding, and drop-shadow offsets). They complement boolean style escapes (bold, italic, outline-enable, dropshadow-enable) by letting authors tune numeric values inline.</p>
-<h2><a class="anchor" id="autotoc_md186"></a>
+<h2><a class="anchor" id="autotoc_md187"></a>
 Syntax</h2>
 <ul>
 <li><code>[border=N] ... [/border]</code> — set border thickness to N for the enclosed tokens.</li>
@@ -434,7 +477,7 @@ Syntax</h2>
 <li>Numeric parameters are integer values. Parameters are validated before conversion; malformed params are ignored (no exception thrown) and the default/current value is retained.</li>
 <li>Short forms and synonyms (<code>[pad]</code> vs <code>[padding]</code>) are supported for convenience.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md187"></a>
+<h2><a class="anchor" id="autotoc_md188"></a>
 Semantics</h2>
 <ul>
 <li>Opening tag applies the numeric change to the current style for subsequent tokens until the matching closing tag.</li>
@@ -445,7 +488,7 @@ Semantics</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md188"></a>
+<h2><a class="anchor" id="autotoc_md189"></a>
 Examples</h2>
 <ul>
 <li>Border thickness 3 for the word "BORDER": <div class="fragment"><div class="line">Start [border=3]BORDER[/border] End</div>
@@ -462,7 +505,7 @@ Examples</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md189"></a>
+<h2><a class="anchor" id="autotoc_md190"></a>
 Implementation Notes</h2>
 <ul>
 <li>Tokenizer responsibilities:<ul>
@@ -486,7 +529,7 @@ Implementation Notes</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md190"></a>
+<h2><a class="anchor" id="autotoc_md191"></a>
 Test seed suggestion (Label_test5)</h2>
 <div class="fragment"><div class="line">local txt = &quot;Start [border=3]B1[/border] [outline=2]O1[/outline] [pad=5x7]P1[/pad] [dropshadow=4,6]DS1[/dropshadow] End&quot;</div>
 </div><!-- fragment --><ul>
@@ -499,7 +542,7 @@ Test seed suggestion (Label_test5)</h2>
 </li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md192"></a>
+<h1><a class="anchor" id="autotoc_md193"></a>
 Token Structure</h1>
 <p>Each parsed token represents either a word or an escape sequence:</p>
 <div class="fragment"><div class="line"><span class="keyword">enum class</span> TokenType { <a class="code hl_define" href="SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde">Word</a>, Escape };</div>
@@ -516,14 +559,14 @@ Token Structure</h1>
 <li>Escape: Style change, color, font, alignment</li>
 <li>Bracket Escape: Literal '[' or ']'</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md193"></a>
+<h2><a class="anchor" id="autotoc_md194"></a>
 Word Tokenization Rules</h2>
 <ul>
 <li>Quoted text (enclosed in double quotes) is tokenized as word tokens, but spaces and punctuation within the quoted text are still tokenized as individual word tokens (not grouped).</li>
 <li>Escape sequences occurring within a double-quote block are treated as word tokens, not escape tokens.</li>
 <li>To render a literal double quote character, use the escape sequence <code>["].&lt;/tt&gt;
 - Single quotes are always tokenized as punctuation or as part of a word (e.g., apostrophes).
-@subsubsection autotoc_md194 Example tokenization:
+@subsubsection autotoc_md195 Example tokenization:
 Input: 
 @icode 
 "Hello, [b]world!" 'test' ["]  Output: <div class="fragment"><div class="line">&quot;</div>
@@ -566,7 +609,7 @@ Input:
 <li><code><b>Escape tokens</b>: Instructions to change style, color, alignment, etc.</code></li>
 </ul>
 <p><code></code></p>
-<h2><a class="anchor" id="autotoc_md195"></a>
+<h2><a class="anchor" id="autotoc_md196"></a>
 Escape Tokenization Rules</h2>
 <p><code></code></p>
 <p><code></p><ul>
@@ -579,7 +622,7 @@ Escape Tokenization Rules</h2>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md197"></a>
+<h1><a class="anchor" id="autotoc_md198"></a>
 Parsing Algorithm</h1>
 <p><code></p><ol type="1">
 <li><b>Initialize</b> default <code>LabelStyle</code>.</li>
@@ -594,7 +637,7 @@ Parsing Algorithm</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md199"></a>
+<h1><a class="anchor" id="autotoc_md200"></a>
 Alignment Handling</h1>
 <p><code></p><ul>
 <li>Each word token carries its own alignment (horizontal and vertical) from <code>LabelStyle</code>.</li>
@@ -610,7 +653,7 @@ Alignment Handling</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md201"></a>
+<h1><a class="anchor" id="autotoc_md202"></a>
 Word Wrapping &amp; Autosizing</h1>
 <p><code></p><ul>
 <li>Measure each word using font metrics.</li>
@@ -622,7 +665,7 @@ Word Wrapping &amp; Autosizing</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md203"></a>
+<h1><a class="anchor" id="autotoc_md204"></a>
 Rendering</h1>
 <p><code></p><ul>
 <li>For each line and token:<ul>
@@ -636,7 +679,7 @@ Rendering</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md205"></a>
+<h1><a class="anchor" id="autotoc_md206"></a>
 Extensibility</h1>
 <p><code></p><ul>
 <li>New escape sequences can be added for additional styles (e.g., outline, dropshadow).</li>
@@ -646,7 +689,7 @@ Extensibility</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md207"></a>
+<h1><a class="anchor" id="autotoc_md208"></a>
 Example</h1>
 <p><code> </p><div class="fragment"><div class="line">[bold][color=#00FF00]Score:[reset] 100 [align=right][color=#FF0000]Game Over</div>
 </div><!-- fragment --><ul>
@@ -658,11 +701,11 @@ Example</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md209"></a>
+<h1><a class="anchor" id="autotoc_md210"></a>
 Implementation Notes</h1>
 <p><code></code></p>
 <p><code></code></p>
-<h2><a class="anchor" id="autotoc_md210"></a>
+<h2><a class="anchor" id="autotoc_md211"></a>
 Label Sizing and Wrapping Rules</h2>
 <p><code></code></p>
 <p><code></p><table class="markdownTable">
@@ -692,7 +735,7 @@ Label Sizing and Wrapping Rules</h2>
 </ul>
 <p></code></p>
 <p><code></code></p>
-<h2><a class="anchor" id="autotoc_md211"></a>
+<h2><a class="anchor" id="autotoc_md212"></a>
 Implementation Notes</h2>
 <p><code></p><ul>
 <li>When <code>auto_width</code> or <code>auto_height</code> is true, recalculate the label’s size after tokenizing/layout.</li>
@@ -701,10 +744,10 @@ Implementation Notes</h2>
 </ul>
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md212"></a>
+<h1><a class="anchor" id="autotoc_md213"></a>
 Rendering Phases (Functions):</h1>
 <p><code> </code></p>
-<h2><a class="anchor" id="autotoc_md213"></a>
+<h2><a class="anchor" id="autotoc_md214"></a>
 1. Pre-Render Layout &amp; Bounds Adjustment</h2>
 <p><code></p><ul>
 <li><b>Purpose:</b> Calculate the final size and position of the label before rendering.</li>
@@ -716,7 +759,7 @@ Rendering Phases (Functions):</h1>
 </li>
 </ul>
 <p></code></p>
-<h2><a class="anchor" id="autotoc_md214"></a>
+<h2><a class="anchor" id="autotoc_md215"></a>
 2. Phrase Grouping</h2>
 <p><code></p><ul>
 <li><b>Purpose:</b> Group tokens into “phrases” (runs of tokens with identical rendering attributes and on the same line).- <b>Actions:</b><ul>
@@ -727,7 +770,7 @@ Rendering Phases (Functions):</h1>
 </li>
 </ul>
 <p></code></p>
-<h2><a class="anchor" id="autotoc_md215"></a>
+<h2><a class="anchor" id="autotoc_md216"></a>
 3. Phrase Rendering</h2>
 <p><code></p><ul>
 <li><b>Purpose:</b> Render each phrase efficiently and with correct visual effects.</li>
@@ -747,7 +790,7 @@ Rendering Phases (Functions):</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md217"></a>
+<h1><a class="anchor" id="autotoc_md218"></a>
 ASCII Glyphs</h1>
 <p><code></code></p>
 <p><code></p><table class="markdownTable">
@@ -949,7 +992,7 @@ ASCII Glyphs</h1>
 <p></code></p>
 <p><code>This table represents the first 192 glyphs in the <code>default_8x8</code> font. Additional glyphs, such as icons, can be cataloged in subsequent sections.</code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md218"></a>
+<h1><a class="anchor" id="autotoc_md219"></a>
 Graphic Glyphs</h1>
 <p><code></code></p>
 <p><code></p><table class="markdownTable">
@@ -1088,7 +1131,7 @@ Graphic Glyphs</h1>
 <p><code></p><hr  />
 <p></code></p>
 <p><code></code></p>
-<h1><a class="anchor" id="autotoc_md220"></a>
+<h1><a class="anchor" id="autotoc_md221"></a>
 References</h1>
 <p><code></p><ul>
 <li><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> <code>Label</code> class</li>

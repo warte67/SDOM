@@ -93,7 +93,7 @@ $(document).ready(function(){initNavTree('md_docs_2lua__commands__and__propertie
   <div class="headertitle"><div class="title">Lua commands and properties exposed by SDOM (C++ → Lua binding inventory)</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md222"></a> This document lists the Lua API surface exported from the C++ <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> core. It maps Lua-visible names to their container (global/CoreForward, DisplayHandle, AssetHandle, Event, SDL helpers), the binding helper style used, and the implementing C++ symbol and source file where the binding is registered.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md223"></a> This document lists the Lua API surface exported from the C++ <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> core. It maps Lua-visible names to their container (global/CoreForward, DisplayHandle, AssetHandle, Event, SDL helpers), the binding helper style used, and the implementing C++ symbol and source file where the binding is registered.</p>
 <p>Notes</p><ul>
 <li>The binding system uses sol2. Most functions are registered by small helper wrappers in <code><a class="el" href="lua__BindHelpers_8cpp.html">src/lua_BindHelpers.cpp</a></code> which attach three things where applicable: a method on the Core userdata, an entry in the <code>CoreForward</code> forwarding table, and a best-effort global alias (inside a try/catch so failures are non-fatal).</li>
 <li>Display- and Asset-level APIs are attached to shared, idempotent handle tables created by <code>DisplayHandle::ensure_handle_table(lua)</code> and <code>AssetHandle::ensure_handle_table(lua)</code>. Individual object types augment these shared tables with type-specific functions — modules always check for absence before setting a function so multiple modules can safely augment the same handle surface.</li>
@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('md_docs_2lua__commands__and__propertie
 <p>How to read entries</p><ul>
 <li>Lua name —&gt; Container (helper used) —&gt; Implementing C++ symbol / registration site</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md223"></a>
+<h1><a class="anchor" id="autotoc_md224"></a>
 Globals / Core (lua &lt;tt&gt;Core&lt;/tt&gt; / &lt;tt&gt;CoreForward&lt;/tt&gt;)</h1>
 <p>All Core-level functions are registered in <code>Core::_registerLuaBindings</code> (file: <code><a class="el" href="SDOM__Core_8cpp.html">src/SDOM_Core.cpp</a></code>). These use helpers in <code><a class="el" href="lua__BindHelpers_8cpp.html">src/lua_BindHelpers.cpp</a></code> which simultaneously register: Core usertype method, <code>CoreForward</code> table entry, and sometimes a top-level global alias.</p>
 <ul>
@@ -157,7 +157,7 @@ Globals / Core (lua &lt;tt&gt;Core&lt;/tt&gt; / &lt;tt&gt;CoreForward&lt;/tt&gt;
 </li>
 </ul>
 <p>For the full Core function list, see <code><a class="el" href="SDOM__Core_8cpp.html">src/SDOM_Core.cpp</a></code> inside <code>_registerLuaBindings</code> where each call to <code>SDOM::bind_*</code> shows the mapping.</p>
-<h1><a class="anchor" id="autotoc_md224"></a>
+<h1><a class="anchor" id="autotoc_md225"></a>
 DisplayHandle methods (registered by &lt;tt&gt;IDisplayObject::_registerLuaBindings&lt;/tt&gt;)</h1>
 <p>Registration site: <code><a class="el" href="SDOM__IDisplayObject_8cpp.html">src/SDOM_IDisplayObject.cpp</a></code>. All methods are attached to the shared handle table <code>DisplayHandle</code> returned by <code>DisplayHandle::ensure_handle_table(lua)</code>. Each method registration uses an <code>absent()</code> guard so augmentation is idempotent.</p>
 <p>Categories and representative methods (Lua name —&gt; wrapper style —&gt; C++ symbol):</p>
@@ -223,7 +223,7 @@ DisplayHandle methods (registered by &lt;tt&gt;IDisplayObject::_registerLuaBindi
 </li>
 </ul>
 <p>Note: each <code><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>::*_lua</code> symbol is defined in the C++ codebase (many in <code><a class="el" href="SDOM__IDisplayObject_8cpp.html">src/SDOM_IDisplayObject.cpp</a></code> or <code>src/lua_IDisplayObject.hpp</code> wrappers). For a line-by-line mapping, search for <code>handle.set_function(</code> and the function names in <code><a class="el" href="SDOM__IDisplayObject_8cpp.html">src/SDOM_IDisplayObject.cpp</a></code>.</p>
-<h1><a class="anchor" id="autotoc_md225"></a>
+<h1><a class="anchor" id="autotoc_md226"></a>
 Exhaustive DisplayHandle mapping (line-by-line)</h1>
 <p>Below is a complete, ordered mapping of every <code>handle.set_function(...)</code> registration found in <code><a class="el" href="SDOM__IDisplayObject_8cpp.html">src/SDOM_IDisplayObject.cpp</a></code> (the display-handle augmentations). Each entry shows: Lua method name → registration style / helper → implementing C++ symbol(s) and source file where the wrapper is defined.</p>
 <p>(Annotated <a href="file:line">file:line</a> references)</p>
@@ -277,7 +277,7 @@ Exhaustive DisplayHandle mapping (line-by-line)</h1>
 <p>Notes:</p><ul>
 <li>Nearly every wrapper referenced above is implemented in <code><a class="el" href="lua__IDisplayObject_8cpp.html">src/lua_IDisplayObject.cpp</a></code> (this file contains the user-facing Lua wrappers named with the <code>_lua</code> suffix). The <code>DisplayHandle::bind_minimal</code> helper (in <code><a class="el" href="SDOM__DisplayHandle_8cpp.html">src/SDOM_DisplayHandle.cpp</a></code>) registers the minimal handle surface (<code>isValid</code>, <code>getName</code>, <code>getType</code>, <code>setName</code>, <code>setType</code>) where <code>getName</code>/<code>getType</code> resolution for raw handles is implemented in <code><a class="el" href="SDOM__DisplayHandle_8hpp.html">include/SDOM/SDOM_DisplayHandle.hpp</a></code> as small inline adapters (<code>getName_lua</code>, <code>getType_lua</code>).</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md226"></a>
+<h1><a class="anchor" id="autotoc_md227"></a>
 AssetHandle and per-asset augmentations</h1>
 <p>Minimal AssetHandle bindings (idempotent) are registered in <code><a class="el" href="SDOM__AssetHandle_8cpp.html">src/SDOM_AssetHandle.cpp</a></code> via <code>AssetHandle::bind_minimal</code>:</p>
 <ul>
@@ -302,7 +302,7 @@ AssetHandle and per-asset augmentations</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md227"></a>
+<h1><a class="anchor" id="autotoc_md228"></a>
 Event and EventType bindings</h1>
 <p>Registration: <code><a class="el" href="SDOM__Event_8cpp.html">src/SDOM_Event.cpp</a></code></p>
 <ul>
@@ -318,7 +318,7 @@ Event and EventType bindings</h1>
 </li>
 <li><code>EventType</code> usertype is registered and a read-only <code>EventType</code> table is populated in <code>Core::_registerLuaBindings</code> from the C++ EventType registry.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md228"></a>
+<h1><a class="anchor" id="autotoc_md229"></a>
 SDL helpers (lua &lt;tt&gt;SDL_Utils&lt;/tt&gt; / &lt;tt&gt;SDL&lt;/tt&gt;)</h1>
 <p>Registration: <code><a class="el" href="SDOM__SDL__Utils_8cpp.html">src/SDOM_SDL_Utils.cpp</a></code></p>
 <ul>
@@ -334,7 +334,7 @@ SDL helpers (lua &lt;tt&gt;SDL_Utils&lt;/tt&gt; / &lt;tt&gt;SDL&lt;/tt&gt;)</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md229"></a>
+<h1><a class="anchor" id="autotoc_md230"></a>
 Binding helper summary (src/lua_BindHelpers.cpp)</h1>
 <p>The helpers centralize registration semantics and reduce duplication. Important helper behaviors:</p>
 <ul>
@@ -360,7 +360,7 @@ Binding helper summary (src/lua_BindHelpers.cpp)</h1>
 </li>
 </ul>
 <p>See <code><a class="el" href="lua__BindHelpers_8cpp.html">src/lua_BindHelpers.cpp</a></code> for precise conversion semantics and examples.</p>
-<h1><a class="anchor" id="autotoc_md230"></a>
+<h1><a class="anchor" id="autotoc_md231"></a>
 Remaining work / completeness notes</h1>
 <ul>
 <li>This document covers Core-global functions, the DisplayHandle surface (categories + examples), AssetHandle minimal bindings and a sample per-asset augmentation (Texture), Event and SDL helper bindings, and the binding helper behaviors.</li>

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['warning_0',['WARNING',['../SDOM_8hpp.html#aaf99b8fcaa4b837f684ea0505ed34487',1,'SDOM.hpp']]],
-  ['warning_3a_20avoid_20diamond_20inheritance_1',['Inheritance Warning: Avoid Diamond Inheritance',['../md_docs_2object__handles.html#autotoc_md242',1,'']]],
+  ['warning_3a_20avoid_20diamond_20inheritance_1',['Inheritance Warning: Avoid Diamond Inheritance',['../md_docs_2object__handles.html#autotoc_md243',1,'']]],
   ['what_2',['what',['../classSDOM_1_1Exception.html#a5086ff39082ca706c60f16c22df3dfbb',1,'SDOM::Exception']]],
   ['what_20is_20a_209_20slice_209_20patch_20panel_3',['what is a 9 slice 9 patch panel',['../md_docs_2IPanelObject.html#autotoc_md153',1,'What is a 9-slice (9-patch) panel?'],['../md_docs_2IPanelObject.html#autotoc_md152',1,'What is a 9-slice (9-patch) panel?']]],
   ['wheelx_4',['wheelX',['../classSDOM_1_1Event.html#a27778c5f406b0903e10caef5c046b536',1,'SDOM::Event']]],
@@ -16,15 +16,15 @@ var searchData=
   ['windowheight_13',['windowHeight',['../structSDOM_1_1Core_1_1CoreConfig.html#a8c437dc7c49ff80c7904ce46fbca14d9',1,'SDOM::Core::CoreConfig']]],
   ['windowwidth_14',['windowWidth',['../structSDOM_1_1Core_1_1CoreConfig.html#acd80478dc5e6f4dc3b4f3c591eafd783',1,'SDOM::Core::CoreConfig']]],
   ['with_20global_20accessor_15',['Example Usage (with global accessor)',['../md_docs_2core__framework.html#autotoc_md19',1,'']]],
-  ['with_20lua_16',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md316',1,'']]],
+  ['with_20lua_16',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md319',1,'']]],
   ['word_17',['word',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429a07a094a210794e74a0e5e1a1457a92ee',1,'SDOM::Label::Word'],['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'Word:&#160;SDOM_CLR.hpp']]],
-  ['word_20tokenization_20rules_18',['Word Tokenization Rules',['../md_docs_2label__text__parsing.html#autotoc_md193',1,'']]],
-  ['word_20wrapping_20autosizing_19',['Word Wrapping &amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md201',1,'']]],
+  ['word_20tokenization_20rules_18',['Word Tokenization Rules',['../md_docs_2label__text__parsing.html#autotoc_md194',1,'']]],
+  ['word_20wrapping_20autosizing_19',['Word Wrapping &amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md202',1,'']]],
   ['wordwrap_20',['wordwrap',['../structSDOM_1_1FontStyle.html#a2a5e4e046feb5c938369ce89c835cfcd',1,'SDOM::FontStyle::wordwrap'],['../structSDOM_1_1Label_1_1InitStruct.html#a86ad9dc28c72f17beb5f88c98c8bad16',1,'SDOM::Label::InitStruct::wordwrap']]],
-  ['work_20completeness_20notes_21',['Remaining work / completeness notes',['../md_docs_2lua__commands__and__properties.html#autotoc_md230',1,'']]],
+  ['work_20completeness_20notes_21',['Remaining work / completeness notes',['../md_docs_2lua__commands__and__properties.html#autotoc_md231',1,'']]],
   ['works_22',['How It Works',['../md_docs_2extensible__factory.html#autotoc_md139',1,'']]],
   ['world_20coordinate_20backpropagation_20traversal_20type_204_23',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_docs_2dom__propagation.html#autotoc_md79',1,'']]],
-  ['wrapping_20autosizing_24',['Word Wrapping &amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md201',1,'']]],
-  ['wrapping_20rules_25',['Label Sizing and Wrapping Rules',['../md_docs_2label__text__parsing.html#autotoc_md210',1,'']]],
+  ['wrapping_20autosizing_24',['Word Wrapping &amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md202',1,'']]],
+  ['wrapping_20rules_25',['Label Sizing and Wrapping Rules',['../md_docs_2label__text__parsing.html#autotoc_md211',1,'']]],
   ['write_5fat_26',['write_at',['../classCLR.html#a9a5487e769cddf9b64e80394f8f74bea',1,'CLR']]]
 ];
