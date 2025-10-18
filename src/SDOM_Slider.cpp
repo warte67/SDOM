@@ -245,8 +245,7 @@ namespace SDOM
             }
             // Draw the thumb
             SDL_Color thumbColor = getForegroundColor();
-            // double thumbX = ( getX() + ((value_ - min_) / (max_ - min_)) * (getWidth() + 8) ) - 3;
-            double thumbX = (getX() + ((value_ - min_) / (max_ - min_)) * (getWidth())) - 5;
+            double thumbX = (getX() + ((value_ - min_) / (max_ - min_)) * (getWidth())) - 3.5 * scale_width;
             if (thumbColor.a > 0)
             {
                 ss->drawSprite(static_cast<int>(IconIndex::Knob_Horizontal), 
@@ -290,7 +289,7 @@ namespace SDOM
             ratio = std::clamp(ratio, 0.0, 1.0);
             // invert so 0 => bottom, 1 => top
             double inv = 1.0 - ratio;
-            double thumbY = (getY() + inv * (getHeight())) - 4;
+            double thumbY = (getY() + inv * (getHeight())) - 4 * scale_height;
             if (thumbColor.a > 0)
             {
                 ss->drawSprite(static_cast<int>(IconIndex::Knob_Vertical),
