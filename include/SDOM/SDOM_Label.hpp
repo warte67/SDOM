@@ -1,6 +1,7 @@
 // SDOM_Label.hpp
 #pragma once
 
+#include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
 
@@ -216,6 +217,78 @@ namespace SDOM
         int tokenizeText();  // returns tokenList.size
         void renderLabel();
         void renderLabelPass(RenderPass pass);
+
+
+        // --- Accessors for the FontStyle settings --- //
+
+        // Boolean Based Flags Getters
+        bool getBold() const                    { return defaultStyle_.bold; }
+        bool getItalic() const                  { return defaultStyle_.italic; }
+        bool getUnderline() const               { return defaultStyle_.underline; }
+        bool getStrikethrough() const           { return defaultStyle_.strikethrough; }
+        bool getBorder() const                  { return defaultStyle_.border; }
+        bool getBackground() const              { return defaultStyle_.background; }
+        bool getOutline() const                 { return defaultStyle_.outline; }
+        bool getDropshadow() const              { return defaultStyle_.dropshadow; }
+        bool getWordwrap() const                { return defaultStyle_.wordwrap; }
+        bool getAutoResize() const              { return defaultStyle_.auto_resize; }
+        // Integer Based Value Getters
+        int getFontSize() const                 { return defaultStyle_.fontSize; }
+        int getFontWidth() const                { return defaultStyle_.fontWidth; }
+        int getFontHeight() const               { return defaultStyle_.fontHeight; }
+        int getMaxWidth() const                 { return defaultStyle_.maxWidth; }
+        int getMaxHeight() const                { return defaultStyle_.maxHeight; }
+        int getBorderThickness() const          { return defaultStyle_.borderThickness; }
+        int getOutlineThickness() const         { return defaultStyle_.outlineThickness; }
+        int getPaddingHoriz() const             { return defaultStyle_.padding_horiz; }
+        int getPaddingVert() const              { return defaultStyle_.padding_vert; }
+        int getDropshadowOffsetX() const        { return defaultStyle_.dropshadowOffsetX; }
+        int getDropshadowOffsetY() const        { return defaultStyle_.dropshadowOffsetY; }
+        // We need to make sure the enums and string are properly using the SDOM_Utils helpers
+        LabelAlign getAlignment() const         { return defaultStyle_.alignment; }
+        std::string getAlignmentString() const;
+        // SDL_Color getters
+        SDL_Color getForegroundColor() const    { return defaultStyle_.foregroundColor; }
+        SDL_Color getBackgroundColor() const    { return defaultStyle_.backgroundColor; }
+        SDL_Color getBorderColor() const        { return defaultStyle_.borderColor; }
+        SDL_Color getOutlineColor() const       { return defaultStyle_.outlineColor; }
+        SDL_Color getDropshadowColor() const    { return defaultStyle_.dropshadowColor; }
+
+
+        // --- Mutators for the FontStyle settings --- //
+
+        // Boolean Based Flags Setters
+        void setBold(bool v)                    { defaultStyle_.bold = v; setDirty(); }
+        void setItalic(bool v)                  { defaultStyle_.italic = v; setDirty(); }
+        void setUnderline(bool v)               { defaultStyle_.underline = v; setDirty(); }
+        void setStrikethrough(bool v)           { defaultStyle_.strikethrough = v; setDirty(); }
+        void setBorder(bool v)                  { defaultStyle_.border = v; setDirty(); }
+        void setBackground(bool v)              { defaultStyle_.background = v; setDirty(); }
+        void setOutline(bool v)                 { defaultStyle_.outline = v; setDirty(); }
+        void setDropshadow(bool v)              { defaultStyle_.dropshadow = v; setDirty(); }
+        void setWordwrap(bool v)                { defaultStyle_.wordwrap = v; setDirty(); }
+        void setAutoResize(bool v)              { defaultStyle_.auto_resize = v; setDirty(); }
+        // Integer Based Value Setters
+        void setFontSize(int v)                 { defaultStyle_.fontSize = v; setDirty(); }
+        void setFontWidth(int v)                { defaultStyle_.fontWidth = v; setDirty(); }
+        void setFontHeight(int v)               { defaultStyle_.fontHeight = v; setDirty(); }
+        void setMaxWidth(int v)                 { defaultStyle_.maxWidth = v; setDirty(); }
+        void setMaxHeight(int v)                { defaultStyle_.maxHeight = v; setDirty(); }
+        void setBorderThickness(int v)          { defaultStyle_.borderThickness = v; setDirty(); }
+        void setOutlineThickness(int v)         { defaultStyle_.outlineThickness = v; setDirty(); }
+        void setPaddingHoriz(int v)             { defaultStyle_.padding_horiz = v; setDirty(); }
+        void setPaddingVert(int v)              { defaultStyle_.padding_vert = v; setDirty(); }
+        void setDropshadowOffsetX(int v)        { defaultStyle_.dropshadowOffsetX = v; setDirty(); }
+        void setDropshadowOffsetY(int v)        { defaultStyle_.dropshadowOffsetY = v; setDirty(); }
+        // We need to make sure the enums and string are properly using the SDOM_Utils helpers
+        void setAlignment(LabelAlign v)         { defaultStyle_.alignment = v; setDirty(); }
+        void setAlignment(const std::string& v);
+        // SDL_Color setters
+        void setForegroundColor(SDL_Color v)    { defaultStyle_.foregroundColor = v; setDirty(); }
+        void setBackgroundColor(SDL_Color v)    { defaultStyle_.backgroundColor = v; setDirty(); }
+        void setBorderColor(SDL_Color v)        { defaultStyle_.borderColor = v; setDirty(); }
+        void setOutlineColor(SDL_Color v)       { defaultStyle_.outlineColor = v; setDirty(); }
+        void setDropshadowColor(SDL_Color v)    { defaultStyle_.dropshadowColor = v; setDirty(); }
 
 
     protected:

@@ -1708,6 +1708,30 @@ if (LABEL_DEBUG)
 
     } // END Label::rebuildTexture_() const 
 
+    // --- C++ / LUA Accessor and Mutator Implentations --- //
+    
+    std::string Label::getAlignmentString() const 
+    { 
+        auto it = labelAlignToString_.find(defaultStyle_.alignment);
+        if (it != labelAlignToString_.end())
+        {
+            return it->second;
+        }
+        return "default";
+    } // END Label::getAlignmentString() const
+
+    void Label::setAlignment(const std::string& v) 
+    { 
+        std::string normalized_v = SDOM::normalizeAnchorString(v);
+        auto it = stringToLabelAlign_.find(v);
+        if (it != stringToLabelAlign_.end())
+        {
+            defaultStyle_.alignment = it->second; 
+            setDirty(); 
+        }
+    } // END Label::setAlignment(const std::string& v)
+
+
     // --- Lua Registration --- //
 
     void Label::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
