@@ -263,8 +263,9 @@ local config = {
                             -- icon_resource = "internal_icon_8x8",
                             -- color = { r = 128, g = 128, b = 128, a = 255 },
                             -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
-                            -- background_color = { r = 16, g = 16, b = 16, a = 128 }, 
-                            -- border_color = { r = 0, g = 0, b = 0, a = 32 },
+                            background_color = { r = 16, g = 16, b = 16, a = 0 }, 
+                            border_color = { r = 0, g = 0, b = 0, a = 0 },
+
                         },
 
                         {
@@ -282,6 +283,7 @@ local config = {
                             step = 2.5,  -- test discrete steps
                             -- icon_resource = "internal_icon_8x8",
                             color = { r = 255, g = 0, b = 0, a = 255 },
+                            background_color = { r = 16, g = 16, b = 16, a = 0 }, 
                         },
                         {
                             name = "mainFrame_hscrollbar_1",
@@ -295,7 +297,8 @@ local config = {
                             height = 16,
                             icon_resource = "internal_icon_16x16",
                             step = 5.0,  -- test discrete steps
-                            alignment = "left",                            
+                            alignment = "left",            
+                            border_color = { r = 0, g = 0, b = 0, a = 128 },                
                         },
                         {
                             name = "mainFrame_vslider_1",
@@ -311,8 +314,8 @@ local config = {
                             step = 2.5,  -- test discrete steps
                             -- color = { r = 128, g = 128, b = 128, a = 255 },
                             -- foreground_color = { r = 255, g = 255, b = 255, a = 255 },
-                            -- background_color = { r = 16, g = 16, b = 16, a = 128 }, 
-                            -- border_color = { r = 0, g = 0, b = 0, a = 32 },
+                            background_color = { r = 16, g = 16, b = 16, a = 0 }, 
+                            border_color = { r = 0, g = 0, b = 0, a = 0 },
                         },
                         {
                             name = "mainFrame_vprogress_1",
@@ -329,7 +332,7 @@ local config = {
                             step = 2.5,  -- test discrete steps
                             color = { r = 0, g = 255, b = 0, a = 255 },
                             foreground_color = { r = 128, g = 128, b = 128, a = 255 },
-                            background_color = { r = 16, g = 16, b = 16, a = 128 }, 
+                            background_color = { r = 16, g = 16, b = 16, a = 0 }, 
                             border_color = { r = 0, g = 0, b = 0, a = 0 },
                         },
                         {

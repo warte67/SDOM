@@ -43,21 +43,19 @@ namespace SDOM
     {
         // SUPER::onRender();
 
-        // --- Render the Slider Control --- //
-
-        SpriteSheet* ss = getIconSpriteSheet(); 
-        if (!ss)  ERROR("Slider::onRender(): No valid SpriteSheet for icon.");
+        SpriteSheet* ss = getIconSpriteSheet();
+        if (!ss) ERROR("Slider::onRender(): No valid SpriteSheet for icon.");
 
         float ss_width = ss->getSpriteWidth();
         float ss_height = ss->getSpriteHeight();
         float scale_width = ss_width / 8.0f;
         float scale_height = ss_height / 8.0f;
 
-        SDL_FRect dstRect = { 
-            static_cast<float>(getX()), 
+        SDL_FRect dstRect = {
+            static_cast<float>(getX()),
             static_cast<float>(getY()),
-            static_cast<float>(getWidth()), 
-            static_cast<float>(getHeight()) 
+            static_cast<float>(getWidth()),
+            static_cast<float>(getHeight())
         };
 
         // Render Background Color
@@ -78,98 +76,109 @@ namespace SDOM
             SDL_RenderRect(getRenderer(), &dstRect);
         }
 
-        // draw the progress bar min end
         if (orientation_ == Orientation::Horizontal)
         {
-            // Horizontal Progress Bar
             SDL_Color barColor = getColor();
             SDL_Color frameColor = getForegroundColor();
-            // left end
+
+            // scaled insets (use same scale for frame & fill)
+            const float insetX = 2.0f * scale_width;
+            const float leftEndX = 6.0f * scale_width;   // where left cap is drawn relative to getX()
+            const float rightEndX = 2.0f * scale_width;  // where right cap is drawn relative to right edge
+
+            // draw left cap (pixel-snapped)
             ss->drawSprite(static_cast<int>(IconIndex::HProgress_Left),
-                static_cast<int>(getX() - 6.0f * scale_width), 
-                static_cast<int>(getY()), 
-                frameColor, 
+                static_cast<int>(std::lround(getX() - leftEndX)),
+                static_cast<int>(std::lround(getY())),
+                frameColor,
                 SDL_SCALEMODE_NEAREST
-            );  
-            // Calculate a safe normalized ratio in [0,1]. Guard against zero range.
+            );
+
+            // safe normalized ratio in [0,1]
             float range = (max_ - min_);
             float ratio = 0.0f;
             if (range > 0.0f) ratio = (value_ - min_) / range;
             ratio = std::max(0.0f, std::min(1.0f, ratio));
 
-            // Use an inset inside the frame for the progress "meat" so borders are preserved.
-            const float inset = 2.0f; // matches offsets used for frame drawing
-            float innerWidth = std::max(0.0f, static_cast<float>(getWidth()) - inset*2.0f);
-            float w = innerWidth * ratio;
-            SDL_FRect barDstRect = {
-                static_cast<float>(getX() + inset),
+            // rail/frame rect uses the same scaled insets
+            SDL_FRect frameRect = {
+                static_cast<float>(getX() + insetX),
                 static_cast<float>(getY()),
-                w,
+                static_cast<float>(std::max(0.0f, static_cast<float>(getWidth()) - insetX * 2.0f)),
                 static_cast<float>(getHeight())
             };
-            // draw the middle progress bar meat
-            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Thumb), barDstRect, barColor, SDL_SCALEMODE_NEAREST);  
-            SDL_FRect frameRect = {
-                static_cast<float>(getX() + 2 * scale_width), 
-                static_cast<float>(getY()), 
-                static_cast<float>(getWidth() - 4 * scale_width),
-                static_cast<float>(getHeight())
-            };   
+            // progress "meat" inside the rail/frame
+            float innerWidth = frameRect.w; // already accounts for insetX*2
+            float fillW = innerWidth * ratio;
+            SDL_FRect barDstRect = {
+                static_cast<float>(frameRect.x),
+                static_cast<float>(frameRect.y),
+                fillW,
+                static_cast<float>(frameRect.h)
+            };
+            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Thumb), barDstRect, barColor, SDL_SCALEMODE_NEAREST);
             ss->drawSprite(static_cast<int>(IconIndex::HProgress_Rail), frameRect, frameColor, SDL_SCALEMODE_NEAREST);
-            // right end
-            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Right), 
-                static_cast<int>(getX() + getWidth() - 2 * scale_width), 
-                static_cast<int>(getY()), 
-                frameColor, 
+
+
+            // draw right cap (pixel-snapped)
+            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Right),
+                static_cast<int>(std::lround(getX() + getWidth() - rightEndX)),
+                static_cast<int>(std::lround(getY())),
+                frameColor,
                 SDL_SCALEMODE_NEAREST
             );
         }
         else
         {
-            // Vertical Progress Bar
             SDL_Color barColor = getColor();
             SDL_Color frameColor = getForegroundColor();
-            // top end
+
+            // scaled insets (vertical)
+            const float insetY = 2.0f * scale_height;
+            const float topEndY = 6.0f * scale_height;
+            const float bottomEndY = 2.0f * scale_height;
+
+            // top cap (uses literal index for top if necessary)
             ss->drawSprite(77, // Top VProgress
-                static_cast<int>(getX()), 
-                static_cast<int>(getY() - 6 * scale_height), 
-                frameColor, 
+                static_cast<int>(std::lround(getX())),
+                static_cast<int>(std::lround(getY() - topEndY)),
+                frameColor,
                 SDL_SCALEMODE_NEAREST
-            );  
-            // stretch the progress bar according to value
-            // Vertical: safe normalized ratio
+            );
+
+            // safe normalized ratio
             float range = (max_ - min_);
             float ratio = 0.0f;
             if (range > 0.0f) ratio = (value_ - min_) / range;
             ratio = std::max(0.0f, std::min(1.0f, ratio));
 
-            const float inset = 2.0f;
-            float innerHeight = std::max(0.0f, static_cast<float>(getHeight()) - inset*2.0f);
-            float h = innerHeight * ratio;
-            SDL_FRect barDstRect = {
-                static_cast<float>(getX()),
-                static_cast<float>(getY() + inset + (innerHeight - h)),
-                static_cast<float>(getWidth()),
-                h
-            };
-            // draw the middle progress bar meat
-            ss->drawSprite(static_cast<int>(IconIndex::VProgress_Thumb), barDstRect, barColor, SDL_SCALEMODE_NEAREST);  
+            // rail/frame rect uses scaled insets
             SDL_FRect frameRect = {
-                static_cast<float>(getX()), 
-                static_cast<float>(getY() + 2 * scale_height), 
+                static_cast<float>(getX()),
+                static_cast<float>(getY() + insetY),
                 static_cast<float>(getWidth()),
-                static_cast<float>(getHeight() - 4 * scale_height)
-            };   
+                static_cast<float>(std::max(0.0f, static_cast<float>(getHeight()) - insetY * 2.0f))
+            };
+            // progress "meat" inside the rail/frame (grows from bottom)
+            float innerHeight = frameRect.h;
+            float fillH = innerHeight * ratio;
+            SDL_FRect barDstRect = {
+                static_cast<float>(frameRect.x),
+                static_cast<float>(frameRect.y + (innerHeight - fillH)),
+                static_cast<float>(frameRect.w),
+                fillH
+            };
+            ss->drawSprite(static_cast<int>(IconIndex::VProgress_Thumb), barDstRect, barColor, SDL_SCALEMODE_NEAREST);
             ss->drawSprite(static_cast<int>(IconIndex::VProgress_Rail), frameRect, frameColor, SDL_SCALEMODE_NEAREST);
-            // bottom end
-            ss->drawSprite(static_cast<int>(IconIndex::VProgress_Bottom), 
-                static_cast<int>(getX()), 
-                static_cast<int>(getY() + getHeight() - 2 * scale_height), 
-                frameColor, 
+
+            // bottom cap
+            ss->drawSprite(static_cast<int>(IconIndex::VProgress_Bottom),
+                static_cast<int>(std::lround(getX())),
+                static_cast<int>(std::lround(getY() + getHeight() - bottomEndY)),
+                frameColor,
                 SDL_SCALEMODE_NEAREST
             );
         }
-
     } // END: void ProgressBar::onRender()
 
     bool ProgressBar::onUnitTest()
