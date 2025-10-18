@@ -543,28 +543,28 @@ namespace SDOM
 
         // range sanity: min < max
         if (!(getMin() < getMax())) {
-            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' invalid range: min=" << getMin() << " max=" << getMax());
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' invalid range: min=" << getMin() << " max=" << getMax());
             ok = false;
         }
 
         // value must be within [min, max]
         if (getValue() < getMin() || getValue() > getMax()) {
-            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' value out of range: value=" << getValue()
-            //           << " (min=" << getMin() << " max=" << getMax() << ")");
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' value out of range: value=" << getValue()
+                      << " (min=" << getMin() << " max=" << getMax() << ")");
             ok = false;
         }
 
         // page/content/thumb invariants
         if (page_size_ < 0.0f) {
-            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has negative page_size: " << page_size_);
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has negative page_size: " << page_size_);
             ok = false;
         }
         if (content_size_ <= 0.0f) {
-            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has non-positive content_size: " << content_size_);
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has non-positive content_size: " << content_size_);
             ok = false;
         }
         if (min_thumb_length_ < 0.0f) {
-            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has negative min_thumb_length: " << min_thumb_length_);
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has negative min_thumb_length: " << min_thumb_length_);
             ok = false;
         }
 
@@ -579,8 +579,8 @@ namespace SDOM
         if (thumbLength > trackLength) thumbLength = trackLength;
 
         if (!(thumbLength >= 0.0f && thumbLength <= trackLength)) {
-            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' computed thumb length invalid: thumb=" << thumbLength
-            //           << " track=" << trackLength);
+            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' computed thumb length invalid: thumb=" << thumbLength
+                      << " track=" << trackLength);
             ok = false;
         }
 
@@ -588,8 +588,8 @@ namespace SDOM
         SpriteSheet* ss = getIconSpriteSheet();
         if (ss) {
             if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
-                // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has invalid sprite size: w="
-                //           << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
+                DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has invalid sprite size: w="
+                          << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
                 ok = false;
             }
         }
