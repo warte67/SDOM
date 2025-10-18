@@ -1914,6 +1914,209 @@ if (LABEL_DEBUG)
                 });
             }
 
+                // --- Expose FontStyle getters/setters as properties on DisplayHandle ---
+                // Boolean flags
+                if (absent("bold")) {
+                    handle.set("bold", sol::property(
+                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getBold() : false; },
+                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setBold(v); }
+                    ));
+                }
+                if (absent("italic")) {
+                    handle.set("italic", sol::property(
+                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getItalic() : false; },
+                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setItalic(v); }
+                    ));
+                }
+                if (absent("underline")) {
+                    handle.set("underline", sol::property(
+                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getUnderline() : false; },
+                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setUnderline(v); }
+                    ));
+                }
+                if (absent("strikethrough")) {
+                    handle.set("strikethrough", sol::property(
+                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getStrikethrough() : false; },
+                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setStrikethrough(v); }
+                    ));
+                }
+                if (absent("border")) {
+                    handle.set("border", sol::property(
+                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getBorder() : false; },
+                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setBorder(v); }
+                    ));
+                }
+                if (absent("background_flag")) {
+                    handle.set("background_flag", sol::property(
+                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getBackground() : false; },
+                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setBackground(v); }
+                    ));
+                }
+                if (absent("outline")) {
+                    handle.set("outline", sol::property(
+                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getOutline() : false; },
+                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setOutline(v); }
+                    ));
+                }
+                if (absent("dropshadow")) {
+                    handle.set("dropshadow", sol::property(
+                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getDropshadow() : false; },
+                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setDropshadow(v); }
+                    ));
+                }
+                if (absent("wordwrap")) {
+                    handle.set("wordwrap", sol::property(
+                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getWordwrap() : false; },
+                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setWordwrap(v); }
+                    ));
+                }
+                if (absent("auto_resize")) {
+                    handle.set("auto_resize", sol::property(
+                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getAutoResize() : false; },
+                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setAutoResize(v); }
+                    ));
+                }
+
+                // Integer properties
+                if (absent("font_size")) {
+                    handle.set("font_size", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getFontSize() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setFontSize(v); }
+                    ));
+                }
+                if (absent("font_width")) {
+                    handle.set("font_width", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getFontWidth() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setFontWidth(v); }
+                    ));
+                }
+                if (absent("font_height")) {
+                    handle.set("font_height", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getFontHeight() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setFontHeight(v); }
+                    ));
+                }
+                if (absent("max_width")) {
+                    handle.set("max_width", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getMaxWidth() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setMaxWidth(v); }
+                    ));
+                }
+                if (absent("max_height")) {
+                    handle.set("max_height", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getMaxHeight() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setMaxHeight(v); }
+                    ));
+                }
+                if (absent("border_thickness")) {
+                    handle.set("border_thickness", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getBorderThickness() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setBorderThickness(v); }
+                    ));
+                }
+                if (absent("outline_thickness")) {
+                    handle.set("outline_thickness", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getOutlineThickness() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setOutlineThickness(v); }
+                    ));
+                }
+                if (absent("padding_horiz")) {
+                    handle.set("padding_horiz", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getPaddingHoriz() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setPaddingHoriz(v); }
+                    ));
+                }
+                if (absent("padding_vert")) {
+                    handle.set("padding_vert", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getPaddingVert() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setPaddingVert(v); }
+                    ));
+                }
+                if (absent("dropshadow_offset_x")) {
+                    handle.set("dropshadow_offset_x", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getDropshadowOffsetX() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setDropshadowOffsetX(v); }
+                    ));
+                }
+                if (absent("dropshadow_offset_y")) {
+                    handle.set("dropshadow_offset_y", sol::property(
+                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getDropshadowOffsetY() : 0; },
+                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setDropshadowOffsetY(v); }
+                    ));
+                }
+
+                // Alignment (enum) and alignment_string (string)
+                if (absent("alignment")) {
+                    handle.set("alignment", sol::property(
+                        [](DisplayHandle h) -> LabelAlign { auto* l = h.as<Label>(); return l ? l->getAlignment() : LabelAlign::TOP_LEFT; },
+                        [](DisplayHandle h, LabelAlign v) { auto* l = h.as<Label>(); if (l) l->setAlignment(v); }
+                    ));
+                }
+                if (absent("alignment_string")) {
+                    handle.set("alignment_string", sol::property(
+                        [](DisplayHandle h) -> std::string { auto* l = h.as<Label>(); return l ? l->getAlignmentString() : std::string("default"); },
+                        [](DisplayHandle h, const std::string& v) { auto* l = h.as<Label>(); if (l) l->setAlignment(v); }
+                    ));
+                }
+
+                // Color properties exposed as small tables {r,g,b,a}
+                auto color_to_table = [](sol::state_view sv, const SDL_Color& c) {
+                    sol::table t = sv.create_table(); t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a; return t;
+                };
+                auto table_to_color = [](const sol::table& t) {
+                    SDL_Color c = {255,255,255,255};
+                    if (t["r"].valid()) c.r = static_cast<Uint8>(t["r"].get<int>());
+                    if (t["g"].valid()) c.g = static_cast<Uint8>(t["g"].get<int>());
+                    if (t["b"].valid()) c.b = static_cast<Uint8>(t["b"].get<int>());
+                    if (t["a"].valid()) c.a = static_cast<Uint8>(t["a"].get<int>());
+                    // array style
+                    if (!t["r"].valid() && t[1].valid()) {
+                        c.r = static_cast<Uint8>(t[1].get<int>());
+                        if (t[2].valid()) c.g = static_cast<Uint8>(t[2].get<int>());
+                        if (t[3].valid()) c.b = static_cast<Uint8>(t[3].get<int>());
+                        if (t[4].valid()) c.a = static_cast<Uint8>(t[4].get<int>());
+                    }
+                    return c;
+                };
+
+                if (absent("foreground_color")) {
+                    handle.set("foreground_color", sol::property(
+                        [=](DisplayHandle h) -> sol::object {
+                            Label* l = h.as<Label>();
+                            sol::state_view sv = SDOM::Core::getInstance().getLua();
+                            if (!l) return sol::nil;
+                            return color_to_table(sv, l->getForegroundColor());
+                        },
+                        [&](DisplayHandle h, sol::table t) {
+                            Label* l = h.as<Label>(); if (!l) return; l->setForegroundColor(table_to_color(t));
+                        }
+                    ));
+                }
+                if (absent("background_color")) {
+                    handle.set("background_color", sol::property(
+                        [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBackgroundColor()); },
+                        [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBackgroundColor(table_to_color(t)); }
+                    ));
+                }
+                if (absent("border_color")) {
+                    handle.set("border_color", sol::property(
+                        [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBorderColor()); },
+                        [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBorderColor(table_to_color(t)); }
+                    ));
+                }
+                if (absent("outline_color")) {
+                    handle.set("outline_color", sol::property(
+                        [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getOutlineColor()); },
+                        [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setOutlineColor(table_to_color(t)); }
+                    ));
+                }
+                if (absent("dropshadow_color")) {
+                    handle.set("dropshadow_color", sol::property(
+                        [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); },
+                        [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); }
+                    ));
+                }
+
     } // END Label::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 } // END namespace SDOM

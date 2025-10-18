@@ -6,6 +6,82 @@
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
 
+/**** Label UnitTests: **********************
+ *  We need to ensure that all of these helpers are properly bound to LUA.  If the
+ *  Lua functions work correctly, we then can assume the C++ versions work as well
+ *  since the LUA functions are bound to the C++ versions.
+ *  
+ *      // --- Accessors for the FontStyle settings --- //
+ * 
+ *      // Boolean Based Flags Getters
+ *      bool getBold() const                    
+ *      bool getItalic() const                  
+ *      bool getUnderline() const               
+ *      bool getStrikethrough() const           
+ *      bool getBorder() const                  
+ *      bool getBackground() const              
+ *      bool getOutline() const                 
+ *      bool getDropshadow() const              
+ *      bool getWordwrap() const                
+ *      bool getAutoResize() const              
+ *      // Integer Based Value Getters
+ *      int getFontSize() const                 
+ *      int getFontWidth() const                
+ *      int getFontHeight() const               
+ *      int getMaxWidth() const                 
+ *      int getMaxHeight() const                
+ *      int getBorderThickness() const          
+ *      int getOutlineThickness() const         
+ *      int getPaddingHoriz() const             
+ *      int getPaddingVert() const              
+ *      int getDropshadowOffsetX() const        
+ *      int getDropshadowOffsetY() const        
+ *      // LabelAlign Table
+ *      LabelAlign getAlignment() const         
+ *      std::string getAlignmentString() const;
+ *      // SDL_Color getters
+ *      SDL_Color getForegroundColor() const    
+ *      SDL_Color getBackgroundColor() const    
+ *      SDL_Color getBorderColor() const        
+ *      SDL_Color getOutlineColor() const       
+ *      SDL_Color getDropshadowColor() const    
+ *
+ *      // --- Mutators for the FontStyle settings --- //
+ *
+ *      // Boolean Based Flags Setters
+ *      void setBold(bool v)                    
+ *      void setItalic(bool v)                  
+ *      void setUnderline(bool v)               
+ *      void setStrikethrough(bool v)           
+ *      void setBorder(bool v)                  
+ *      void setBackground(bool v)              
+ *      void setOutline(bool v)                 
+ *      void setDropshadow(bool v)              
+ *      void setWordwrap(bool v)                
+ *      void setAutoResize(bool v)              
+ *      // Integer Based Value Setters
+ *      void setFontSize(int v)                 
+ *      void setFontWidth(int v)                
+ *      void setFontHeight(int v)               
+ *      void setMaxWidth(int v)                 
+ *      void setMaxHeight(int v)                
+ *      void setBorderThickness(int v)          
+ *      void setOutlineThickness(int v)         
+ *      void setPaddingHoriz(int v)             
+ *      void setPaddingVert(int v)              
+ *      void setDropshadowOffsetX(int v)        
+ *      void setDropshadowOffsetY(int v)        
+ *      // LabelAlign Table
+ *      void setAlignment(LabelAlign v)         
+ *      void setAlignment(const std::string& v);
+ *      // SDL_Color setters
+ *      void setForegroundColor(SDL_Color v)    
+ *      void setBackgroundColor(SDL_Color v)    
+ *      void setBorderColor(SDL_Color v)        
+ *      void setOutlineColor(SDL_Color v)       
+ *      void setDropshadowColor(SDL_Color v)    
+ *
+ ********************************************/
 
 
 namespace SDOM
@@ -618,6 +694,96 @@ namespace SDOM
     } // END: Label_test6()
 
 
+    bool Label_test7()
+    {
+        std::string testName = "Label #7";
+        std::string testDesc = "LUA: Label boolean flag getter/setter methods";
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+
+        auto res = lua.script(R"lua(
+            -- Create a label and exercise boolean style getters/setters.
+            local name = "unitLabelTest7"
+            local cfg = {
+                name = name,
+                type = "Label",
+                resource_name = "internal_font_8x8",
+                text = "Bool flags test"
+            }
+
+            local ok_create, h_or_err = pcall(function() return createDisplayObject("Label", cfg) end)
+            if not ok_create then
+                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
+            end
+            local h = h_or_err
+            if not h or not h:isValid() then
+                return { ok = false, err = "failed to create label" }
+            end
+
+            local flags = {
+                "Bold",
+                "Italic",
+                "Underline",
+                "Strikethrough",
+                "Border",
+                "Background",
+                "Outline",
+                "Dropshadow",
+                "Wordwrap",
+                "AutoResize"
+            }
+
+            for _, suffix in ipairs(flags) do
+                local setter = "set" .. suffix
+                local getter = "get" .. suffix
+
+                -- Ensure binding exists
+                if type(h[setter]) ~= "function" then
+                    return { ok = false, err = "missing setter binding: " .. setter }
+                end
+                if type(h[getter]) ~= "function" then
+                    return { ok = false, err = "missing getter binding: " .. getter }
+                end
+
+                -- Set true -> expect getter to return true
+                local ok_s, s_err = pcall(function() h[setter](h, true) end)
+                if not ok_s then
+                    return { ok = false, err = "setter failed for " .. setter .. " : " .. tostring(s_err) }
+                end
+                local ok_g, val = pcall(function() return h[getter](h) end)
+                if not ok_g then
+                    return { ok = false, err = "getter failed for " .. getter }
+                end
+                if not val then
+                    return { ok = false, err = getter .. " did not return true after " .. setter .. "(true)" }
+                end
+
+                -- Set false -> expect getter to return false
+                ok_s, s_err = pcall(function() h[setter](h, false) end)
+                if not ok_s then
+                    return { ok = false, err = "setter failed for " .. setter .. " : " .. tostring(s_err) }
+                end
+                ok_g, val = pcall(function() return h[getter](h) end)
+                if not ok_g then
+                    return { ok = false, err = "getter failed for " .. getter }
+                end
+                if val then
+                    return { ok = false, err = getter .. " did not return false after " .. setter .. "(false)" }
+                end
+            end
+
+            -- cleanup
+            destroyDisplayObject(name)
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Label_test7()
+
+
+
 
     bool Label_UnitTests() 
     {
@@ -631,6 +797,7 @@ namespace SDOM
             [&]() { return Label_test4(); },    // Label word/phrase style flags tokenization and inspection
             [&]() { return Label_test5(); },    // Label word/phrase border/outline/pad/dropshadow tokenization and inspection
             [&]() { return Label_test6(); },    // Label color targeted inline escapes tokenization and inspection
+            [&]() { return Label_test7(); },    // Label boolean flag getter/setter methods
         };
         for (auto& test : tests) 
         {
