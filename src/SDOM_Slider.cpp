@@ -189,6 +189,11 @@ namespace SDOM
         SpriteSheet* ss = getIconSpriteSheet(); 
         if (!ss)  ERROR("Slider::onRender(): No valid SpriteSheet for icon.");
 
+        float ss_width = ss->getSpriteWidth();
+        float ss_height = ss->getSpriteHeight();
+        float scale_width = ss_width / 8.0f;
+        float scale_height = ss_height / 8.0f;
+        
         SDL_FRect dsstRect = { 
             static_cast<float>(getX()), 
             static_cast<float>(getY()),
@@ -225,8 +230,8 @@ namespace SDOM
                 ss->drawSprite(static_cast<int>(IconIndex::HSlider_Rail), dsstRect, trackColor, SDL_SCALEMODE_NEAREST);
 
                 // draw small ticks along the track
-                double x_min = getX() - 3;
-                double x_max = getX() + getWidth() - 4;
+                double x_min = getX() - 3 * scale_width;
+                double x_max = getX() + getWidth() - 4 * scale_height;
                 double step = (x_max - x_min)/10.0;
                 for (double h = x_min; h <= x_max; h += step)
                 {
@@ -262,8 +267,8 @@ namespace SDOM
                 ss->drawSprite(static_cast<int>(IconIndex::VSlider_Rail), dsstRect, trackColor, SDL_SCALEMODE_NEAREST);
 
                 // draw small ticks along the track
-                double y_min = getY() - 2.5f;
-                double y_max = getY() + getHeight() - 4;
+                double y_min = getY() - 2.5f * scale_height;
+                double y_max = getY() + getHeight() - 4 * scale_height;
                 double step = (y_max - y_min)/10.0;
                 for (double v = y_min; v <= y_max; v += step)
                 {
