@@ -55,7 +55,7 @@ local config = {
         { name = "external_font_8x8", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png", font_width = 8, font_height = 8 },
         { name = "external_font_8x12", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png", font_width = 8, font_height = 12 },
         { name = "external_icon_8x8", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/icon_8x8.png", sprite_width = 8, sprite_height = 8 },
-        { name = "internal_icon_12x12", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/icon_12x12.png", sprite_width = 12, sprite_height = 12 }
+    { name = "internal_icon_12x12", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/internal_icon_12x12.png", sprite_width = 12, sprite_height = 12 }
     },
     windowWidth = 1200,
     windowHeight = 800,
@@ -267,12 +267,12 @@ local config = {
                             orientation = "horizontal",
                             type = "ProgressBar",
                             x = 450,
-                            y = 94,
+                            y = 98,
                             width = 140,
                             height = 8,
                             value = 50.0,
                             step = 2.5,  -- test discrete steps
-                            icon_resource = "internal_icon_12x12",
+                            -- icon_resource = "internal_icon_12x12",
                             -- icon_resource = "internal_icon_8x8",
                         },
 -- WORK IN PROGRESS
@@ -281,7 +281,7 @@ local config = {
                             orientation = "horizontal",
                             type = "ScrollBar",
                             x = 450,
-                            y = 104,
+                            y = 112,
                             width = 140,
                             height = 8,
                             step = 5.0,  -- test discrete steps
@@ -293,7 +293,7 @@ local config = {
                             orientation = "vertical",
                             type = "Slider",
                             x = 582,
-                            y = 124,
+                            y = 134,
                             width = 8,
                             height = 140,
                             step = 2.5,  -- test discrete steps
@@ -308,7 +308,7 @@ local config = {
                             orientation = "vertical",
                             type = "ProgressBar",
                             x = 572,
-                            y = 124,
+                            y = 134,
                             width = 8,
                             height = 140,
                             value = 25.0,
@@ -324,7 +324,7 @@ local config = {
                             orientation = "vertical",
                             type = "ScrollBar",
                             x = 562,
-                            y = 124,
+                            y = 134,
                             width = 8,
                             height = 140,
                             value = 50.0,

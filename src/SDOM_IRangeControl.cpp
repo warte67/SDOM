@@ -89,9 +89,15 @@ namespace SDOM
             // Load icon sprite sheet
             std::string resource_name = icon_resource_ + "_SpriteSheet";
             AssetHandle ss = factory.getAssetObject(resource_name);
+            if (!ss.isValid()) {
+                // Also accept a SpriteSheet or Texture registered under the plain
+                // icon resource name (common when resources are created from Lua)
+                ss = factory.getAssetObject(icon_resource_);
+            }
+
             if (ss.isValid())
             {
-                // If the asset exists, ensure it is a SpriteSheet
+                // If the asset exists, handle either SpriteSheet or Texture
                 icon_sprite_sheet_ = ss.as<SpriteSheet>();
                 if (icon_sprite_sheet_)
                 {
@@ -100,21 +106,108 @@ namespace SDOM
                 }
                 else
                 {
-                    // Found an asset with that name but wrong type
-                    ERROR("Error: IRangeControl '" + getName() + "' found asset '" + icon_resource_ + "' but it is not a SpriteSheet");
-                    ret = false;
+                    // If the registered asset is a Texture, create a SpriteSheet wrapper
+                    IAssetObject* obj = ss.get();
+                    if (obj && obj->getType() == Texture::TypeName)
+                    {
+                        // Create a SpriteSheet that references the existing texture filename.
+                        // Prefer to reuse the sprite tile size from any existing SpriteSheet
+                        // registered for the same filename so we don't default to 8x8.
+                        int chosenW = 8;
+                        int chosenH = 8;
+                        try {
+                            // If a SpriteSheet with matching filename exists, use its tile size
+                            AssetHandle candidate = factory.findAssetByFilename(icon_resource_, SpriteSheet::TypeName);
+                            if (candidate.isValid()) {
+                                AssetHandle candidateSS = candidate;
+                                SpriteSheet* ssPtr = candidateSS.as<SpriteSheet>();
+                                if (ssPtr) {
+                                    chosenW = ssPtr->getSpriteWidth();
+                                    chosenH = ssPtr->getSpriteHeight();
+                                }
+                            } else {
+                                // Try name-based inference as a fallback (e.g., icon_12x12)
+                                auto pos = icon_resource_.rfind('_');
+                                if (pos != std::string::npos && pos + 1 < icon_resource_.size()) {
+                                    std::string suffix = icon_resource_.substr(pos + 1);
+                                    auto xPos = suffix.find('x');
+                                    if (xPos != std::string::npos) {
+                                        std::string wstr = suffix.substr(0, xPos);
+                                        std::string hstr = suffix.substr(xPos + 1);
+                                        if (!wstr.empty() && !hstr.empty()) {
+                                            int w = std::stoi(wstr);
+                                            int h = std::stoi(hstr);
+                                            if (w > 0 && h > 0) {
+                                                chosenW = w;
+                                                chosenH = h;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } catch(...) {}
+
+                        SpriteSheet::InitStruct init;
+                        init.name = resource_name;
+                        init.type = "SpriteSheet";
+                        init.filename = icon_resource_;
+                        init.isInternal = true;
+                        init.spriteWidth = chosenW;
+                        init.spriteHeight = chosenH;
+
+                        AssetHandle created = factory.createAsset("SpriteSheet", init);
+                        if (created.isValid()) {
+                            icon_sprite_sheet_ = created.as<SpriteSheet>();
+                            if (icon_sprite_sheet_ && !icon_sprite_sheet_->isLoaded()) icon_sprite_sheet_->onLoad();
+                        } else {
+                            ERROR("Error: IRangeControl '" + getName() + "' failed to create SpriteSheet wrapper for Texture resource '" + icon_resource_ + "'");
+                            ret = false;
+                        }
+                    }
+                    else
+                    {
+                        // Found an asset with that name but wrong type
+                        ERROR("Error: IRangeControl '" + getName() + "' found asset '" + icon_resource_ + "' but it is not a SpriteSheet or Texture");
+                        ret = false;
+                    }
                 }
             }
             else
             {
-                // Asset not found — create the SpriteSheet asset
+                // Asset not found — create the SpriteSheet asset.
+                // Try to infer sprite tile size from the icon resource name by
+                // parsing a trailing pattern like "_12x12". If parsing fails
+                // fall back to the historical default of 8x8.
+                int inferredW = 8;
+                int inferredH = 8;
+                try {
+                    // Look for the last '_' and then look for an 'x' between numbers
+                    auto pos = icon_resource_.rfind('_');
+                    if (pos != std::string::npos && pos + 1 < icon_resource_.size()) {
+                        std::string suffix = icon_resource_.substr(pos + 1);
+                        auto xPos = suffix.find('x');
+                        if (xPos != std::string::npos) {
+                            std::string wstr = suffix.substr(0, xPos);
+                            std::string hstr = suffix.substr(xPos + 1);
+                            if (!wstr.empty() && !hstr.empty()) {
+                                int w = std::stoi(wstr);
+                                int h = std::stoi(hstr);
+                                if (w > 0 && h > 0) {
+                                    inferredW = w;
+                                    inferredH = h;
+                                }
+                            }
+                        }
+                    }
+                } catch (...) { /* if parsing fails, keep defaults */ }
+
                 SpriteSheet::InitStruct init;
                 init.name = resource_name;
                 init.type = "SpriteSheet";
                 init.filename = icon_resource_;
                 init.isInternal = true;
-                init.spriteWidth = 8;
-                init.spriteHeight = 8;
+                init.spriteWidth = inferredW;
+                init.spriteHeight = inferredH;
                 ss = factory.createAsset("SpriteSheet", init);
                 if (ss.isValid())
                 {
