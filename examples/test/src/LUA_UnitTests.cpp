@@ -20,8 +20,30 @@ namespace SDOM {
 
     DisplayHandle myBoxHandle;
 
-    bool test1_Lua() {
+    bool Lua_test0()
+    {
+        std::string testName = "Lua #0";
+        std::string testDesc = "Lua UnitTest Scaffolding";
+        sol::state& lua = getCore().getLua();
+        // Lua test script
+        auto res = lua.script(R"lua(
+                -- return { ok = false, err = "unknown error" }
+                return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Lua_test0()
+
+
+    bool Lua_test1() 
+    {
+        std::string testName = "Lua #1";
+        std::string testDesc = "Create Box and verify existence";
         sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Lua test script
         sol::object handle_obj = lua.script(R"(
             Core:createDisplayObject("Box", { 
                 name = "myBox", 
@@ -30,31 +52,56 @@ namespace SDOM {
                 width = 200, height = 100,
                 color = { r = 96, g = 0, b = 96, a = 255 }
             })
-    return Core:getDisplayObject("myBox")
+            return Core:getDisplayObject("myBox")
         )");
-        myBoxHandle = handle_obj.as<DisplayHandle>();
-        bool box_exists = myBoxHandle.isValid();
-        return UnitTests::run("Lua #1", "Create Box and verify existence", [box_exists]() { return box_exists; });
-    }
+        bool box_exists = false;
+        if (handle_obj.valid() && handle_obj.is<DisplayHandle>()) 
+        {
+            myBoxHandle = handle_obj.as<DisplayHandle>();
+            box_exists = myBoxHandle.isValid();
+        } else {
+            box_exists = false;
+        }
+        return UnitTests::run(testName, testDesc, [=]() { return box_exists; });
+    } // END: Lua_test1()
 
-    bool test2_Lua() {
+
+    bool Lua_test2() 
+    {
+        std::string testName = "Lua #2";
+        std::string testDesc = "Add the Box to Stage from Lua";
         sol::state& lua = SDOM::Core::getInstance().getLua();
         lua["myBoxHandle"] = myBoxHandle;
-        bool added = lua.script(R"(
+        auto res = lua.script(R"lua(
             local obj = myBoxHandle
+            if not obj then return { ok = false, err = 'myBoxHandle is nil' } end
             local stage = Core:getStageHandle()
-            if not stage then return false end
+            if not stage then return { ok = false, err = 'no stage' } end
             stage:addChild(obj)
-            return stage:hasChild(obj)
-        )").get<bool>();
-        return UnitTests::run("Lua #2", "Add the Box to Stage from Lua", [added]() { return added; });
-    }
+            local added = stage:hasChild(obj)
+            return { ok = added, err = "" }
+        )lua").get<sol::table>();
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Lua_test2()
 
-    bool test3_Lua() {
+
+    bool Lua_test3() 
+    {
+        std::string testName = "Lua #3";
+        std::string testDesc = "Destroy Box and verify removal";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool destroyed = lua.script(R"(
+        auto res = lua.script(R"lua(
             local boxHandle = Core:getDisplayObject("myBox")
-            local valid = boxHandle:isValid()
+            if not boxHandle then return { ok = false, err = 'myBox handle nil' } end
+            local valid = false
+            if boxHandle and boxHandle.isValid then
+                -- safe call in case handle is userdata without isValid
+                local ok, v = pcall(function() return boxHandle:isValid() end)
+                if ok and v then valid = true end
+            end
             if valid then
                 Core:destroyDisplayObject("myBox")
                 local inFactory = Core:hasDisplayObject("myBox")
@@ -63,29 +110,41 @@ namespace SDOM {
                 if stage then
                     inStage = stage:hasChild(boxHandle)
                 end
-                return not inFactory and not inStage
+                return { ok = (not inFactory and not inStage), err = "" }
             end
-            return false
-        )").get<bool>();
-        return UnitTests::run("Lua #3", "Destroy Box and verify removal", [destroyed]() { return destroyed; });
-    }
+            return { ok = false, err = 'myBox not valid before destroy' }
+        )lua").get<sol::table>();
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Lua_test3()
 
-    bool test4_Lua() {
+
+    bool Lua_test4() 
+    {
+        std::string testName = "Lua #4";
+        std::string testDesc = "Lua binding roundtrip add/hasChild";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool ok = lua.script(R"(
+        auto res = lua.script(R"lua(
             local h = Core:createDisplayObject("Box", { name = "tempBox", type = "Box", x = 1, y = 1, width = 16, height = 16 })
-            if not h then return false end
+            if not h then return { ok = false, err = 'create tempBox failed' } end
             local stage = Core:getStageHandle()
-            if not stage then return false end
+            if not stage then Core:destroyDisplayObject('tempBox'); return { ok = false, err = 'no stage' } end
             stage:addChild(h)
             local wasAdded = stage:hasChild(h)
             Core:destroyDisplayObject("tempBox")
-            return wasAdded
-        )").get<bool>();
-        return UnitTests::run("Lua #4", "Lua binding roundtrip add/hasChild", [ok]() { return ok; });
-    }
+            return { ok = wasAdded, err = "" }
+        )lua").get<sol::table>();
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Lua_test4()
 
-    bool test5_Lua() {
+
+    bool Lua_test5() 
+    {
         // sol::state& lua = SDOM::Core::getInstance().getLua();
         // auto pfr = lua.script(R"(
         //     local names = nil
@@ -109,7 +168,8 @@ namespace SDOM {
         return UnitTests::run("Lua #5", "(DEPRECATED) getPropertyNamesForType(blueishBox)", [=]() { return ok; });
     }
 
-    bool test6_Lua() {
+    bool Lua_test6() 
+    {
         // sol::state& lua = SDOM::Core::getInstance().getLua();
         // auto pfr = lua.script(R"(
         //     local names = nil
@@ -138,7 +198,8 @@ namespace SDOM {
         return UnitTests::run("Lua #6", "(DEPRECATED) getFunctionNamesForType(blueishBox)", [=]() { return ok; });
     }
 
-    bool test7_Lua() {
+    bool Lua_test7() 
+    {
         // sol::state& lua = SDOM::Core::getInstance().getLua();
         // auto pfr = lua.script(R"(
         //     local names = nil
@@ -163,12 +224,9 @@ namespace SDOM {
         return UnitTests::run("Lua #7", "(DEPRECATED) getCommandNamesForType(blueishBox)", [=]() { return ok; });
     }
 
-    bool test8_Lua() 
+    bool Lua_test8() 
     {
-
 return true;    // Ignore this test for now.
-
-
         // This test synthesizes an SDL mouse down + up sequence at the center of blueishBox
         // and pumps events once to cause the EventManager to generate a MouseClick which
         // should be caught by Box's listener and increment its test counter.
@@ -255,9 +313,9 @@ return true;    // Ignore this test for now.
         bool ok = (count > 0);
 
         return UnitTests::run("Lua #8", "Verify synthetic MouseClick triggers Box listener", [=]() { return ok; });
-    } //test8_lua()
+    } //Lua_test8()
 
-    bool test9_Lua() 
+    bool Lua_test9() 
     {
 return true;  // Ignore this test for now.
         // This test will register an event listener purely from Lua and synthesize
@@ -313,95 +371,135 @@ return true;  // Ignore this test for now.
 
         bool ok = result;
         return UnitTests::run("Lua #9", "Lua-only event handler + synthetic click", [=]() { return ok; });
-    }
+    } //Lua_test9()
 
     // Split the previous step-based test10 into six individual tests for clarity
-    bool test10_lua()
+    bool Lua_test10()
     {
+        std::string testName = "Lua #10";
+        std::string testDesc = "Verify initial stage is 'mainStage'";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool s = lua.script(R"(
+        auto res = lua.script(R"lua(
             local orig = Core:getStageHandle()
-            if not orig or orig:getName() ~= 'mainStage' then return false end
-            return true
-        )").get<bool>();
-        return UnitTests::run("Lua #10", "Verify initial stage is 'mainStage'", [=]() { return s; });
-    }
+            if not orig or orig:getName() ~= 'mainStage' then
+                return { ok = false, err = "initial stage is not 'mainStage'" }
+            end
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test10()
 
-    bool test11_lua()
+
+    bool Lua_test11()
     {
+        std::string testName = "Lua #11";
+        std::string testDesc = "Set root by name to 'stageTwo' and verify";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool s = lua.script(R"(
+        auto res = lua.script(R"lua(
             Core:setRootNode('stageTwo')
             local s = Core:getStageHandle()
-            if not s or s:getName() ~= 'stageTwo' then return false end
-            return true
-        )").get<bool>();
-        return UnitTests::run("Lua #11", "Set root by name to 'stageTwo' and verify", [=]() { return s; });
-    }
+            if not s or s:getName() ~= 'stageTwo' then
+                return { ok = false, err = "setRootNode('stageTwo') did not select stageTwo" }
+            end
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test11()
 
-    bool test12_lua()
+
+    bool Lua_test12()
     {
+        std::string testName = "Lua #12";
+        std::string testDesc = "Set root by handle using 'stageThree' and verify";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool s = lua.script(R"(
+        auto res = lua.script(R"lua(
             local h = Core:getDisplayObject('stageThree')
-            if not h then return false end
+            if not h then return { ok = false, err = "Core:getDisplayObject('stageThree') returned nil" } end
             Core:setRootNode(h)
             local cur = Core:getStageHandle()
-            if not cur or cur:getName() ~= 'stageThree' then return false end
-            return true
-        )").get<bool>();
-        return UnitTests::run("Lua #12", "Set root by handle using 'stageThree' and verify", [=]() { return s; });
-    }
+            if not cur or cur:getName() ~= 'stageThree' then
+                return { ok = false, err = "setRootNode(handle) did not select stageThree" }
+            end
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test12()
 
-    bool test13_lua()
+
+    bool Lua_test13()
     {
+        std::string testName = "Lua #13";
+        std::string testDesc = "Use alias setStage to return to 'mainStage' and verify";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool s = lua.script(R"(
+        auto res = lua.script(R"lua(
             Core:setStage('mainStage')
             local cur = Core:getStageHandle()
-            if not cur or cur:getName() ~= 'mainStage' then return false end
-            return true
-        )").get<bool>();
-        return UnitTests::run("Lua #13", "Use alias setStage to return to 'mainStage' and verify", [=]() { return s; });
-    }
+            if not cur or cur:getName() ~= 'mainStage' then
+                return { ok = false, err = "setStage('mainStage') did not restore mainStage" }
+            end
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test13()
 
-    bool test14_lua()
+
+    bool Lua_test14()
     {
+        std::string testName = "Lua #14";
+        std::string testDesc = "Toggle getIsTraversing via setIsTraversing and restore";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool s = lua.script(R"(
+        auto res = lua.script(R"lua(
             local orig = Core:getIsTraversing()
             -- toggle
             Core:setIsTraversing(not orig)
             local mid = Core:getIsTraversing()
-            if mid ~= (not orig) then return false end
+            if mid ~= (not orig) then return { ok = false, err = 'toggle failed' } end
             -- restore
             Core:setIsTraversing(orig)
             local fin = Core:getIsTraversing()
-            if fin ~= orig then return false end
-            return true
-        )").get<bool>();
-        return UnitTests::run("Lua #14", "Toggle getIsTraversing via setIsTraversing and restore", [=]() { return s; });
-    }
+            if fin ~= orig then return { ok = false, err = 'restore failed' } end
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test14()
 
-    bool test15_lua()
+
+    bool Lua_test15()
     {
+        std::string testName = "Lua #15";
+        std::string testDesc = "Orphan lifecycle: create/attach/remove/verify/cleanup";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool s = lua.script(R"(
+        auto res = lua.script(R"lua(
             local before = Core:countOrphanedDisplayObjects()
             -- create a temp object and attach it to the stage
             local h = Core:createDisplayObject("Box", { name = "tempOrphan", type = "Box", x = 0, y = 0, width = 8, height = 8 })
-            if not h then return false end
+            if not h then return { ok = false, err = 'create tempOrphan failed' } end
             local st = Core:getStageHandle()
-            if not st then return false end
+            if not st then Core:destroyDisplayObject('tempOrphan'); return { ok = false, err = 'no stage' } end
             st:addChild(h)
-            if not st:hasChild(h) then return false end
+            if not st:hasChild(h) then Core:destroyDisplayObject('tempOrphan'); return { ok = false, err = 'attach failed' } end
             -- ensure orphaning uses the traversing path: toggle traversing on and remove child
             local orig = Core:getIsTraversing()
             Core:setIsTraversing(true)
             st:removeChild(h)
             Core:setIsTraversing(orig)
             local mid = Core:countOrphanedDisplayObjects()
-            if mid ~= (before + 1) then return false end
+            if mid ~= (before + 1) then return { ok = false, err = 'orphan count mismatch' } end
             local orphans = Core:getOrphanedDisplayObjects()
             local found = false
             if orphans then
@@ -409,84 +507,85 @@ return true;  // Ignore this test for now.
                     if o and o:getName() == 'tempOrphan' then found = true break end
                 end
             end
-            if not found then return false end
+            if not found then return { ok = false, err = 'tempOrphan not found among orphans' } end
             -- cleanup orphans
             Core:destroyOrphanedDisplayObjects()
             local fin = Core:countOrphanedDisplayObjects()
-            if fin ~= before then return false end
-            return true
-        )").get<bool>();
-        return UnitTests::run("Lua #15", "Orphan lifecycle: create/attach/remove/verify/cleanup", [=]() { return s; });
-    }
+            if fin ~= before then return { ok = false, err = 'cleanup did not restore orphan count' } end
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test15()
 
-    bool test16_lua()
+
+    bool Lua_test16()
     {
-        // Test TAB and SHIFT+TAB focus navigation using Lua-synthesized key events
+        std::string testName = "Lua #16";
+        std::string testDesc = "TAB focus navigation";
         sol::state& lua = SDOM::Core::getInstance().getLua();
 
         // Ensure keyboard focus starts at the stage
         Core::getInstance().setKeyboardFocusedObject(Core::getInstance().getStageHandle());
 
         // Create two boxes from Lua and attach to stage
-        bool created = lua.script(R"(
+        auto createdRes = lua.script(R"lua(
             local a = Core:createDisplayObject("Box", { name = "focusA", type = "Box", x = 10, y = 10, width = 16, height = 16 })
-            if a and a.get then a:setColor({ r = 128, g = 128, b = 0, a = 255 }) end  -- make focusA yellow to distinguish
+            if a and a.get then a:setColor({ r = 128, g = 128, b = 0, a = 255 }) end
             local b = Core:createDisplayObject("Box", { name = "focusB", type = "Box", x = 30, y = 10, width = 16, height = 16 })
-            if b and b.get then b:setColor({ r = 0, g = 128, b = 128, a = 255 }) end  -- make focusB cyan to distinguish
+            if b and b.get then b:setColor({ r = 0, g = 128, b = 128, a = 255 }) end
             local st = Core:getStageHandle()
-            if not a or not b or not st then 
-                print("test16_lua: failed to create focusA/focusB or get stage")
-                return false 
-            end
+            if not a or not b or not st then return { ok = false, err = 'create or stage failed' } end
             st:addChild(a)
             st:addChild(b)
-            return true
-        )").get<bool>();
-        if (!created) return UnitTests::run("Lua #16", "TAB focus navigation", [](){ return false; });
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
 
-        // Send Tab (keycode 9) via Lua helper and pump events; verify focus order
-        bool result = lua.script(R"(
-            -- Helper: get name of keyboard-focused object
-                local function focusedName()
+        bool created = createdRes["ok"].get_or(false);
+        std::string cerr = createdRes["err"].get_or(std::string());
+        if (!created) {
+            if (!cerr.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << cerr << CLR::RESET << std::endl;
+            return UnitTests::run(testName, testDesc, [](){ return false; });
+        }
+
+        // Send Tab (via handler) and verify focus order
+        auto navRes = lua.script(R"lua(
+            local function focusedName()
                 local k = Core:getKeyboardFocusedObject()
                 if not k then return nil end
                 return k:getName()
             end
 
-            -- Initial focus should be the stage
-            local initial = focusedName()
-
-        -- First Tab forward: invoke handler directly so we can test traversal logic
+            -- First Tab forward
             Core:handleTabKeyPress()
             local after1 = focusedName()
 
-        -- Second Tab forward: invoke handler again
+            -- Second Tab forward
             Core:handleTabKeyPress()
             local after2 = focusedName()
 
-            -- Debug print
-            -- print(string.format("[test16] initial=%s after1=%s after2=%s", tostring(initial), tostring(after1), tostring(after2)))
-            -- Validate expectations
-            if after1 ~= 'focusB' then 
-                print("test16_lua: after1 expected focusB, got " .. tostring(after1))
-                return false 
-            end
-            if after2 ~= 'focusA' then 
-                print("test16_lua: after2 expected focusA, got " .. tostring(after2))
-                return false 
-            end
-            return true
-        )").get<bool>();
+            if after1 ~= 'focusB' then return { ok = false, err = 'after1 expected focusB, got '..tostring(after1) } end
+            if after2 ~= 'focusA' then return { ok = false, err = 'after2 expected focusA, got '..tostring(after2) } end
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
 
-        return UnitTests::run("Lua #16", "TAB focus navigation", [=]() { return result; });
-    }
+        bool ok = navRes["ok"].get_or(false);
+        std::string err = navRes["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test16()
 
-    bool test17_lua()
+
+    bool Lua_test17()
     {
+        std::string testName = "Lua #17";
+        std::string testDesc = "Remove focusA/focusB from stage and verify";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool ok = lua.script(R"(
+        auto res = lua.script(R"lua(
             local st = Core:getStageHandle()
-            if not st then return false end
+            if not st then return { ok = false, err = 'no stage' } end
             local a = Core:getDisplayObject('focusA')
             local b = Core:getDisplayObject('focusB')
             -- Remove if present
@@ -497,36 +596,41 @@ return true;  // Ignore this test for now.
             local stillB = false
             if a and st:hasChild(a) then stillA = true end
             if b and st:hasChild(b) then stillB = true end
-            return (not stillA) and (not stillB)
-        )").get<bool>();
+            return { ok = (not stillA) and (not stillB), err = "" }
+        )lua").get<sol::table>();
 
-        return UnitTests::run("Lua #17", "Remove focusA/focusB from stage and verify", [=]() { return ok; });
-    }
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test17()
 
-    bool test18_lua()
+
+    bool Lua_test18()
     {
+        std::string testName = "Lua #18";
+        std::string testDesc = "Factory contains focusA/focusB as orphans (removed).";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool ok = lua.script(R"(
+        auto res = lua.script(R"lua(
             -- Verify that there are at least two orphaned display objects and that
             -- 'focusA' and 'focusB' are present among them.
             local cnt = Core:countOrphanedDisplayObjects()
-            if not cnt or cnt < 2 then return false end
+            if not cnt or cnt < 2 then return { ok = false, err = 'not enough orphans' } end
             local orphans = Core:getOrphanedDisplayObjects()
-            if not orphans then return false end
+            if not orphans then return { ok = false, err = 'getOrphanedDisplayObjects returned nil' } end
             local foundA = false
             local foundB = false
             for i,o in ipairs(orphans) do
                 if o and o:getName() == 'focusA' then foundA = true end
                 if o and o:getName() == 'focusB' then foundB = true end
             end
-            if not (foundA and foundB) then return false end
+            if not (foundA and foundB) then return { ok = false, err = 'focusA/focusB not found among orphans' } end
 
             -- Destroy the named orphaned objects
             if foundA then Core:destroyDisplayObject('focusA') end
             if foundB then Core:destroyDisplayObject('focusB') end
 
             -- Recount and ensure they are gone
-            local cnt2 = Core:countOrphanedDisplayObjects()
             local orphans2 = Core:getOrphanedDisplayObjects()
             local stillA = false
             local stillB = false
@@ -540,13 +644,20 @@ return true;  // Ignore this test for now.
             local hasA = Core:hasDisplayObject('focusA')
             local hasB = Core:hasDisplayObject('focusB')
 
-            return (not stillA) and (not stillB) and (not hasA) and (not hasB)
-        )").get<bool>();
+            if (stillA or stillB or hasA or hasB) then
+                return { ok = false, err = 'focusA/focusB still present after destroy' }
+            end
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
 
-        return UnitTests::run("Lua #18", "Factory contains focusA/focusB as orphans (removed).", [=]() { return ok; });
-    }
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test18()
 
-    bool test19_lua()
+
+    bool Lua_test19()
     {
 return true;    // Ignore this test for now.  
 
@@ -582,155 +693,154 @@ return true;    // Ignore this test for now.
         )").get<bool>();
 
         return UnitTests::run("Lua #19", "Mouse hover to blueishBox", [=]() { return ok; });
-    }
+    } // Lua_test19()
 
-    bool test20_lua()
+    
+    bool Lua_test20()
     {
+        std::string testName = "Lua #20";
+        std::string testDesc = "Verify get/setWindowTitle from Lua";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool ok = lua.script(R"(
+
+        auto res = lua.script(R"lua(
             -- Grab initial window title and verify
             local stageTitle = Core:getWindowTitle()
-            if stageTitle ~= 'Stage: mainStage' then return false end
+            if stageTitle ~= 'Stage: mainStage' then return { ok = false, err = 'unexpected initial window title' } end
 
             -- Change to stageTwo and verify
             Core:setWindowTitle('Stage: stageTwo')
             local t2 = Core:getWindowTitle()
-            if t2 ~= 'Stage: stageTwo' then return false end
+            if t2 ~= 'Stage: stageTwo' then return { ok = false, err = 'setWindowTitle to stageTwo failed' } end
 
             -- Restore original title and verify
             Core:setWindowTitle(stageTitle)
             local t3 = Core:getWindowTitle()
-            if t3 ~= stageTitle then return false end
+            if t3 ~= stageTitle then return { ok = false, err = 'restore of window title failed' } end
 
-            return true
-        )").get<bool>();
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
 
-        return UnitTests::run("Lua #20", "Verify get/setWindowTitle from Lua", [=]() { return ok; });
-    }
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test20()
 
-    bool test21_lua()
+
+    bool Lua_test21()
     {
+        std::string testName = "Lua #21";
+        std::string testDesc = "Anchor string normalization via setters (various joiners)";
         sol::state& lua = SDOM::Core::getInstance().getLua();
-        bool ok = lua.script(R"(
+
+        auto res = lua.script(R"lua(
             -- Create a medium parent box and a smaller child box, attach child to parent and parent to stage
-        local p = Core:createDisplayObject("Box", { name = "edgeParent", type = "Box", x = 40, y = 40, width = 160, height = 120 })
-        if not p then return false end
-        -- baseline child to capture reference dimensions
-        local base = Core:createDisplayObject("Box", { name = "edgeChildBase", type = "Box", x = 10, y = 10, width = 32, height = 24 })
-        if not base then return false end
-    local st = Core:getStageHandle()
-    if not st then return false end
-    st:addChild(p)
-    p:addChild(base)
+            local p = Core:createDisplayObject("Box", { name = "edgeParent", type = "Box", x = 40, y = 40, width = 160, height = 120 })
+            if not p then return { ok = false, err = 'create edgeParent failed' } end
+            local base = Core:createDisplayObject("Box", { name = "edgeChildBase", type = "Box", x = 10, y = 10, width = 32, height = 24 })
+            if not base then return { ok = false, err = 'create edgeChildBase failed' } end
+            local st = Core:getStageHandle()
+            if not st then Core:destroyDisplayObject('edgeChildBase'); return { ok = false, err = 'no stage' } end
+            st:addChild(p)
+            p:addChild(base)
 
-        -- Record reference coordinates for the child
-    local refLeft = base:getLeft()
-    local refTop = base:getTop()
-    local refRight = base:getRight()
-    local refBottom = base:getBottom()
-    local refW = base:getWidth()
-    local refH = base:getHeight()
+            -- Record reference coordinates for the child
+            local refLeft = base:getLeft()
+            local refTop = base:getTop()
+            local refRight = base:getRight()
+            local refBottom = base:getBottom()
+            local refW = base:getWidth()
+            local refH = base:getHeight()
 
-    -- remove baseline child; we'll create temporary children for each format
-    p:removeChild(base)
-        Core:destroyDisplayObject('edgeChildBase')
+            -- remove baseline child; we'll create temporary children for each format
+            p:removeChild(base)
+            Core:destroyDisplayObject('edgeChildBase')
 
-        local formats = {"top_left","top-left","top+left","top|left","top & left"}
-        local edges = { "anchorTop", "anchorLeft", "anchorBottom", "anchorRight" }
+            local formats = {"top_left","top-left","top+left","top|left","top & left"}
+            local edges = { "anchorTop", "anchorLeft", "anchorBottom", "anchorRight" }
 
-        for _,edge in ipairs(edges) do
-            for _,fmt in ipairs(formats) do
-                -- Create temporary child via Factory with anchor set in config (Factory normalizes strings)
-                local tmpName = string.format('edgeChild_tmp_%s_%s', edge, fmt:gsub('%W', '_'))
-                local cfg = { name = tmpName, type = 'Box', x = 10, y = 10, width = refW, height = refH }
-                cfg[edge] = fmt
-                -- debug: trying edge/format (removed)
-                local ok, res = pcall(function()
-                    local tmp = Core:createDisplayObject('Box', cfg)
-                    if not tmp then error('create returned nil') end
-                    local okAdd, errAdd = pcall(function() p:addChild(tmp) end)
-                    if not okAdd then error('addChild failed: '..tostring(errAdd)) end
+            for _,edge in ipairs(edges) do
+                for _,fmt in ipairs(formats) do
+                    -- Create temporary child via Factory with anchor set in config (Factory normalizes strings)
+                    local tmpName = string.format('edgeChild_tmp_%s_%s', edge, fmt:gsub('%W', '_'))
+                    local cfg = { name = tmpName, type = 'Box', x = 10, y = 10, width = refW, height = refH }
+                    cfg[edge] = fmt
+                    local ok, res = pcall(function()
+                        local tmp = Core:createDisplayObject('Box', cfg)
+                        if not tmp then error('create returned nil') end
+                        local okAdd, errAdd = pcall(function() p:addChild(tmp) end)
+                        if not okAdd then error('addChild failed: '..tostring(errAdd)) end
 
-                    -- Verify width/height do not change and coordinates are numeric
-                    local okW, w = pcall(function() return tmp:getWidth() end)
-                    if not okW then 
-                        local dbg = {}
-                        table.insert(dbg, string.format('tmp=%s type=%s', tostring(tmp), type(tmp)))
-                        local ok_isvalid, isv = pcall(function() return tmp.isValid and tmp:isValid() end)
-                        table.insert(dbg, string.format('isHandle=%s isValid=%s', tostring(ok_isvalid), tostring(isv)))
-                        local ok_m, mt = pcall(function() return getmetatable(tmp) end)
-                        if ok_m and type(mt) == 'table' then
-                            local keys = {}
-                            for k,_ in pairs(mt) do table.insert(keys, tostring(k)) end
-                            table.sort(keys)
-                            table.insert(dbg, 'mtkeys={'..table.concat(keys, ',')..'}')
-                        else
-                            table.insert(dbg, 'no metatable')
+                        -- Verify width/height do not change and coordinates are numeric
+                        local okW, w = pcall(function() return tmp:getWidth() end)
+                        if not okW then error('getWidth failed: '..tostring(w)) end
+                        local okH, h = pcall(function() return tmp:getHeight() end)
+                        if not okH then error('getHeight failed: '..tostring(h)) end
+                        local okL, l = pcall(function() return tmp:getLeft() end)
+                        if not okL then error('getLeft failed: '..tostring(l)) end
+                        local okT, t = pcall(function() return tmp:getTop() end)
+                        if not okT then error('getTop failed: '..tostring(t)) end
+                        local okR, r = pcall(function() return tmp:getRight() end)
+                        if not okR then error('getRight failed: '..tostring(r)) end
+                        local okB, b = pcall(function() return tmp:getBottom() end)
+                        if not okB then error('getBottom failed: '..tostring(b)) end
+                        if w ~= refW or h ~= refH then
+                            error(string.format('size mismatch refW=%s refH=%s gotW=%s gotH=%s', tostring(refW), tostring(refH), tostring(w), tostring(h)))
                         end
-                        error('getWidth failed: '..tostring(w)..' ['..table.concat(dbg,' | ')..']')
-                    end
-                    local okH, h = pcall(function() return tmp:getHeight() end)
-                    if not okH then error('getHeight failed: '..tostring(h)) end
-                    local okL, l = pcall(function() return tmp:getLeft() end)
-                    if not okL then error('getLeft failed: '..tostring(l)) end
-                    local okT, t = pcall(function() return tmp:getTop() end)
-                    if not okT then error('getTop failed: '..tostring(t)) end
-                    local okR, r = pcall(function() return tmp:getRight() end)
-                    if not okR then error('getRight failed: '..tostring(r)) end
-                    local okB, b = pcall(function() return tmp:getBottom() end)
-                    if not okB then error('getBottom failed: '..tostring(b)) end
-                    if w ~= refW or h ~= refH then
-                        error(string.format('size mismatch refW=%s refH=%s gotW=%s gotH=%s', tostring(refW), tostring(refH), tostring(w), tostring(h)))
-                    end
-                    if type(l) ~= 'number' or type(t) ~= 'number' or type(r) ~= 'number' or type(b) ~= 'number' then
-                        error(string.format('non-numeric edge value l=%s t=%s r=%s b=%s', tostring(l), tostring(t), tostring(r), tostring(b)))
-                    end
+                        if type(l) ~= 'number' or type(t) ~= 'number' or type(r) ~= 'number' or type(b) ~= 'number' then
+                            error(string.format('non-numeric edge value l=%s t=%s r=%s b=%s', tostring(l), tostring(t), tostring(r), tostring(b)))
+                        end
 
-                    -- cleanup temporary
-                    p:removeChild(tmp)
-                    Core:destroyDisplayObject(tmpName)
-                end)
-                if not ok then
-                    print(string.format('[Lua21] FAIL edge=%s fmt=%s err=%s', tostring(edge), tostring(fmt), tostring(res)))
-                    return false
+                        -- cleanup temporary
+                        p:removeChild(tmp)
+                        Core:destroyDisplayObject(tmpName)
+                    end)
+                    if not ok then
+                        print(string.format('[Lua21] FAIL edge=%s fmt=%s err=%s', tostring(edge), tostring(fmt), tostring(res)))
+                        return { ok = false, err = string.format('edge=%s fmt=%s err=%s', tostring(edge), tostring(fmt), tostring(res)) }
+                    end
                 end
             end
-        end
 
-        -- cleanup
-        Core:destroyDisplayObject('edgeParent')
-        return true
-        )").get<bool>();
+            -- cleanup
+            Core:destroyDisplayObject('edgeParent')
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
 
-        return UnitTests::run("Lua #21", "Anchor string normalization via setters (various joiners)", [=]() { return ok; });
-    }
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // Lua_test21()
+
 
     bool LUA_UnitTests() 
     {
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
-            [&]() { return test1_Lua(); }, // Create Box and verify existence
-            [&]() { return test2_Lua(); }, // Verify get/setPosition from Lua
-            [&]() { return test3_Lua(); }, // Verify get/setSize from Lua
-            [&]() { return test4_Lua(); }, // Lua binding roundtrip add/hasChild
-            [&]() { return test5_Lua(); }, // Verify getPropertyNamesForType(blueishBox)
-            [&]() { return test6_Lua(); }, // Verify getFunctionNamesForType(blueishBox)
-            [&]() { return test7_Lua(); }, // Verify getCommandNamesForType(blueishBox)
-            [&]() { return test8_Lua(); }, // Verify synthetic MouseClick triggers Box listener
-            [&]() { return test9_Lua(); }, // Lua-only event handler + synthetic click
-            [&]() { return test10_lua(); }, // Verify initial stage is 'mainStage'
-            [&]() { return test11_lua(); }, // Set root by name to 'stageTwo' and verify
-            [&]() { return test12_lua(); }, // Set root by handle using 'stageThree' and verify
-            [&]() { return test13_lua(); }, // Use alias setStage to return to 'mainStage' and verify
-            [&]() { return test14_lua(); }, // Toggle getIsTraversing via setIsTraversing and restore
-            [&]() { return test15_lua(); }, // Orphan lifecycle: create/attach/remove/verify/cleanup
-            [&]() { return test16_lua(); }, // TAB focus navigation
-            [&]() { return test17_lua(); }, // Remove focusA/focusB from stage and verify
-            [&]() { return test18_lua(); }, // Factory contains focusA/focusB as orphans (removed).
-            [&]() { return test19_lua(); }, // Mouse hover to blueishBox
-            [&]() { return test20_lua(); }, // Verify get/setWindowTitle from Lua
-            [&]() { return test21_lua(); }  // Anchor string normalization via setters (various joiners)
+            [&]() { return Lua_test0();  }, // Lua UnitTest Scaffolding
+            [&]() { return Lua_test1();  }, // Create Box and verify existence
+            [&]() { return Lua_test2();  }, // Verify get/setPosition from Lua
+            [&]() { return Lua_test3();  }, // Verify get/setSize from Lua
+            [&]() { return Lua_test4();  }, // Lua binding roundtrip add/hasChild
+            [&]() { return Lua_test5();  }, // Verify getPropertyNamesForType(blueishBox)
+            [&]() { return Lua_test6();  }, // Verify getFunctionNamesForType(blueishBox)
+            [&]() { return Lua_test7();  }, // Verify getCommandNamesForType(blueishBox)
+            [&]() { return Lua_test8();  }, // Verify synthetic MouseClick triggers Box listener
+            [&]() { return Lua_test9();  }, // Lua-only event handler + synthetic click
+            [&]() { return Lua_test10(); }, // Verify initial stage is 'mainStage'
+            [&]() { return Lua_test11(); }, // Set root by name to 'stageTwo' and verify
+            [&]() { return Lua_test12(); }, // Set root by handle using 'stageThree' and verify
+            [&]() { return Lua_test13(); }, // Use alias setStage to return to 'mainStage' and verify
+            [&]() { return Lua_test14(); }, // Toggle getIsTraversing via setIsTraversing and restore
+            [&]() { return Lua_test15(); }, // Orphan lifecycle: create/attach/remove/verify/cleanup
+            [&]() { return Lua_test16(); }, // TAB focus navigation
+            [&]() { return Lua_test17(); }, // Remove focusA/focusB from stage and verify
+            [&]() { return Lua_test18(); }, // Factory contains focusA/focusB as orphans (removed).
+            [&]() { return Lua_test19(); }, // Mouse hover to blueishBox
+            [&]() { return Lua_test20(); }, // Verify get/setWindowTitle from Lua
+            [&]() { return Lua_test21(); }  // Anchor string normalization via setters (various joiners)
         };
         for (auto& test : tests)
         {

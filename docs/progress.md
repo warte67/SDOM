@@ -790,7 +790,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Composes `ArrowButton`s for increment/decrement controls and a `ThumbTrack` with a draggable `Thumb`.
   - Supports both `vertical` and `horizontal` `Orientation`s.
   - **Now supports alternate icon sprite sizes:** ScrollBar can use any registered SpriteSheet (e.g., 8x8, 12x12, 16x16), and the thumb and track are positioned and scaled correctly for all sizes.
-
 - **Slider:**
   - Added `Slider` scaffolding as a descendant of `IRangeControl`.
   - Registered `Slider` DOM type with the Factory.
@@ -800,7 +799,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Emits `onValueChanged` events when the value changes.
   - **Now supports alternate icon sprite sizes:** Slider can use any registered SpriteSheet (e.g., 8x8, 12x12, 16x16), and the knob and track are positioned and scaled correctly for all sizes.
   - **Knob padding:** Introduced `kKnobPaddingFraction` to reduce the active size of the knob, ensuring the visible part of the knob sprite aligns with the rail ends even if the sprite has transparent padding.
-
 - **ProgressBar:**
   - Implemented as a read-only range control.
   - Supports both `vertical` and `horizontal` `Orientation`s.
@@ -808,19 +806,19 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - **Now supports alternate icon sprite sizes:** ProgressBar can use any registered SpriteSheet (e.g., 8x8, 12x12, 16x16), and the bar and track are positioned and scaled correctly for all sizes.
 
 ---
+## [October 18, 2025]
+- Refactored `SpriteSheet_UnitTests` to utilize proper scaffolding patterns.
+- Refactored `GarbageCollection_UnitTests` to utilize proper scaffolding patterns.
+- Refactored `Event_UnitTests` to utilize proper scaffolding patterns.
+- Refactored `EventType_UnitTests` to utilize proper scaffolding patterns.
+- Refactored `DisplayHandle_UnitTests` to utilize proper scaffolding patterns.
+- Refactored `Lua_UnitTests` to utilize proper scaffolding patterns.
+
+
+---
 ## Next Steps:
 - `Button`, `IconButton`, and `Frame` need to make use of multi-sized SpriteSheets like the RangeControls now do.
-- Refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test0()` → `Label_test1()`).
-  - Refactor `SpriteSheet_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
-  - Refactor `GarbageCollection_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
-  - Refactor `Event_UnitTests` to utilize proper scaffolding patterns.
-  - Refactor `EventType_UnitTests` to utilize proper scaffolding patterns.
-  - Refactor `DisplayHandle_UnitTests` to utilize proper scaffolding patterns.
-  - Refactor `Lua_UnitTests` to utilize proper scaffolding patterns.
-  - Refactor `Stage_UnitTests` to utilize proper scaffolding patterns.
-  - Refactor `IDisplayObject` to utilize proper scaffolding patterns.
-  - Refactor `Factory` to utilize proper scaffolding patterns.
-  - Refactor `Core` to utilize proper scaffolding patterns.
+
 - Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:
   - Add `Group` unit tests to validate Lua all property setting and resource resolution.
   - Add `Button` unit tests to validate Lua all property setting, label access, and event listener behavior.
@@ -843,6 +841,12 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Long Term To Do:
+- Refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test0()` → `Label_test1()`).
+  - Refactor `Stage_UnitTests` systematically test all Stage properties and methods via Lua.
+  - Refactor `IDisplayObject` systematically test all IDisplayObject properties and methods via Lua.
+  - Refactor `Factory` systematically test all Factory methods via Lua.
+  - Refactor `Core` systematically test all Core methods via Lua.
+
 - Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.
   - Use SDOM_IRangeControl_scaffold.hpp / .cpp as a template for future interface implementations.
 - Review and refactor documentation:

@@ -18,7 +18,8 @@ function M.on_unit_test()
     allTestsPassed = allTestsPassed and GarbageCollection_UnitTests()
     allTestsPassed = allTestsPassed and SpriteSheet_UnitTests()
     allTestsPassed = allTestsPassed and Label_UnitTests()
-
+    allTestsPassed = allTestsPassed and Group_UnitTests()
+    -- add more unit tests here as needed ...
     return allTestsPassed
 end
 

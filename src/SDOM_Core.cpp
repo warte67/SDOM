@@ -1247,7 +1247,7 @@ namespace SDOM
         }
         // next is (idx+1) mod n, if idx == -1 choose 0
         DisplayHandle next = ordered[(idx + 1) % ordered.size()];
-        INFO("Tab Key Pressed: Focusing object: " << (next.isValid() ? next.get()->getName() : "<null>"));
+        // INFO("Tab Key Pressed: Focusing object: " << (next.isValid() ? next.get()->getName() : "<null>"));
         setKeyboardFocusedObject(next);
     } // END Core::handleTabKeyPress()
 
@@ -1310,7 +1310,7 @@ namespace SDOM
         // previous is (idx-1 + n) mod n, if idx == -1 choose last
         int n = static_cast<int>(ordered.size());
         DisplayHandle prev = (idx == -1) ? ordered.back() : ordered[(idx - 1 + n) % n];
-        INFO("Tab Key Pressed: Focusing object: " << (prev.isValid() ? prev.get()->getName() : "<null>"));
+        // INFO("Tab Key Pressed: Focusing object: " << (prev.isValid() ? prev.get()->getName() : "<null>"));
         setKeyboardFocusedObject(prev);
     } // END Core::handleTabKeyPressReverse()
 

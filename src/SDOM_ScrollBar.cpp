@@ -278,14 +278,14 @@ namespace SDOM
                     float mousePosForThumb = mouseY - (thumbLength * 0.5f);
                     float rel = (mousePosForThumb - trackStart) / std::max(usableTrack, 1.0f);
                     rel = std::clamp(rel, 0.0f, 1.0f);
-                    try {
-                        DEBUG_LOG(std::string("[ScrollBarDiag] '") + getName() + " V mouseY=" + std::to_string(mouseY)
-                                  + " mousePosForThumb=" + std::to_string(mousePosForThumb)
-                                  + " trackStart=" + std::to_string(trackStart)
-                                  + " usableTrack=" + std::to_string(usableTrack)
-                                  + " thumbLength=" + std::to_string(thumbLength)
-                                  + " rel=" + std::to_string(rel));
-                    } catch(...) {}
+                    // try {
+                    //     DEBUG_LOG(std::string("[ScrollBarDiag] '") + getName() + " V mouseY=" + std::to_string(mouseY)
+                    //               + " mousePosForThumb=" + std::to_string(mousePosForThumb)
+                    //               + " trackStart=" + std::to_string(trackStart)
+                    //               + " usableTrack=" + std::to_string(usableTrack)
+                    //               + " thumbLength=" + std::to_string(thumbLength)
+                    //               + " rel=" + std::to_string(rel));
+                    // } catch(...) {}
                     // Invert so top corresponds to max
                     float ratio = 1.0f - rel;
                     float newValue = getMin() + ratio * (getMax() - getMin());
