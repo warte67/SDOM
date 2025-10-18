@@ -789,30 +789,28 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Both `horizontal` and `vertical` orientations are now being rendered with the default `internal_icon_8x8` SpriteSheet.
   - Composes `ArrowButton`s for increment/decrement controls and a `ThumbTrack` with a draggable `Thumb`.
   - Supports both `vertical` and `horizontal` `Orientation`s.
+  - **Now supports alternate icon sprite sizes:** ScrollBar can use any registered SpriteSheet (e.g., 8x8, 12x12, 16x16), and the thumb and track are positioned and scaled correctly for all sizes.
 
+- **Slider:**
+  - Added `Slider` scaffolding as a descendant of `IRangeControl`.
+  - Registered `Slider` DOM type with the Factory.
+  - Both `horizontal` and `vertical` orientations are now rendered with the default `internal_icon_8x8` SpriteSheet.
+  - Added a `step` property for quantized value changes (keyboard and mouse wheel).
+  - Slider knob and track are visually represented and mouse-based interaction logic is functioning.
+  - Emits `onValueChanged` events when the value changes.
+  - **Now supports alternate icon sprite sizes:** Slider can use any registered SpriteSheet (e.g., 8x8, 12x12, 16x16), and the knob and track are positioned and scaled correctly for all sizes.
+  - **Knob padding:** Introduced `kKnobPaddingFraction` to reduce the active size of the knob, ensuring the visible part of the knob sprite aligns with the rail ends even if the sprite has transparent padding.
 
-## Next Steps for October 18, 2025:
-- Refactor and expand the examples/test UnitTest rig for comprehensive C++ and Lua property/function coverage.
----
-  - **`Slider`:**, **`ProgressBar`:**, and **`ScrollBar`:**
-    - The next step is to ensure the `Slider` can render using external SpriteSheets of varying sizes. The current `internal_icon_8x8` SpriteSheet is quite small for high-resolution displays. I plan to create additional icon sets at 12x12 and 16x16 pixels, which can be registered as internal resources or used for external file load testing (or both). This means the other range control objects should have this option as well.
-    - Similar to how BitmapFonts can be scaled in Labels using the `font_size` property (scaling by the ratio `font_size / font_height`), I’d like to support scalable icon sprites for controls. This would allow icons to be rendered at different sizes, either by scaling (with optional retro pixelation) or by selecting the most appropriate SpriteSheet for the current UI scale.
-
-- Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.
-  - Use SDOM_IRangeControl_scaffold.hpp / .cpp as a template for future interface implementations.
+- **ProgressBar:**
+  - Implemented as a read-only range control.
+  - Supports both `vertical` and `horizontal` `Orientation`s.
+  - `setValue()` is exposed to C++ and Lua.
+  - **Now supports alternate icon sprite sizes:** ProgressBar can use any registered SpriteSheet (e.g., 8x8, 12x12, 16x16), and the bar and track are positioned and scaled correctly for all sizes.
 
 ---
 ## Next Steps:
-- Review and refactor documentation:
-  - Begin organizing markdown docs by topic, add more examples and tutorials.
-  - Plan a thorough documentation revamp (including Doxygen and markdown).
-  - Index docs for easier navigation and update legacy references.
-- Investigate what I presume are z_order based bugs. 
-  - Objects are not rendering in proper order. Not sure when this started. 
-  - This happens when Boxes are attached to another box and that box is at a lower level than another one.  
-  - This is a likely a `Box` behavior not a behavior explictly of the `SDOM API`.
-
-- refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test0()` → `Label_test1()`).
+- `Button`, `IconButton`, and `Frame` need to make use of multi-sized SpriteSheets like the RangeControls now do.
+- Refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test0()` → `Label_test1()`).
   - Refactor `SpriteSheet_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
   - Refactor `GarbageCollection_UnitTests` to utilize proper scaffolding patterns. [COMPLETE]
   - Refactor `Event_UnitTests` to utilize proper scaffolding patterns.
@@ -823,6 +821,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Refactor `IDisplayObject` to utilize proper scaffolding patterns.
   - Refactor `Factory` to utilize proper scaffolding patterns.
   - Refactor `Core` to utilize proper scaffolding patterns.
+- Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:
   - Add `Group` unit tests to validate Lua all property setting and resource resolution.
   - Add `Button` unit tests to validate Lua all property setting, label access, and event listener behavior.
   - Add `Checkbox` unit tests to validate Lua all property setting, label access, and event listener behavior.
@@ -844,6 +843,16 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Long Term To Do:
+- Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.
+  - Use SDOM_IRangeControl_scaffold.hpp / .cpp as a template for future interface implementations.
+- Review and refactor documentation:
+  - Begin organizing markdown docs by topic, add more examples and tutorials.
+  - Plan a thorough documentation revamp (including Doxygen and markdown).
+  - Index docs for easier navigation and update legacy references.
+- Investigate what I presume are z_order based bugs. 
+  - Objects are not rendering in proper order. Not sure when this started. 
+  - This happens when Boxes are attached to another box and that box is at a lower level than another one.  
+  - This is a likely a `Box` behavior not a behavior explictly of the `SDOM API`.
 - Document the new startup pattern and resource creation workflows in the README and docs.
 - Update examples to use the new explicit startup and resource creation methods.
 - Update architecture diagrams and documentation to reflect recent naming and API changes.

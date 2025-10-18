@@ -42,7 +42,7 @@ var namespaceSDOM =
     [ "TTFAsset", "classSDOM_1_1TTFAsset.html", "classSDOM_1_1TTFAsset" ],
     [ "TypeCreators", "structSDOM_1_1TypeCreators.html", "structSDOM_1_1TypeCreators" ],
     [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
-    [ "SUPER", "namespaceSDOM.html#a30b2979959418fcc8421582cd6cb7c08", null ],
+    [ "SUPER", "namespaceSDOM.html#a4476b3f988f782b37bd84221a9925941", null ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],
       [ "TOP_LEFT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1", null ],
@@ -117,11 +117,11 @@ var namespaceSDOM =
       [ "Radiobox_Unselected", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba10236f59304c30381815e42ec9c60794", null ],
       [ "Radiobox_Selected", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbae12828e9d94391588bbe22fa910df017", null ],
       [ "HProgress_Left", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba84314361fe6262fc425e0bba140443ac", null ],
-      [ "HProgress_Empty", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbaeb9885fcc857f2617486d444e24009b6", null ],
+      [ "HProgress_Rail", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba7fea06bf1742d60afa5d0fe04a95b9c0", null ],
       [ "HProgress_Thumb", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba3d653d35fd8963888e68f38daec7d6e3", null ],
       [ "HProgress_Right", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba0ae70fce45e6ace65aee3cb153da6a1c", null ],
       [ "VProgress_Top", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbaff1ae41f44037afaab0c0b7e3389429d", null ],
-      [ "VProgress_Empty", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba35469efabe5c520c7c9562582f8c5873", null ],
+      [ "VProgress_Rail", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbac80d5173244d130893f34f8811b60a66", null ],
       [ "VProgress_Thumb", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba59a6081cdd7c8721bae3ba0737421e3c", null ],
       [ "VProgress_Bottom", "namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba61f75d322ee33243eb1da6f64cc57f85", null ]
     ] ],

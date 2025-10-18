@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['8_202025_0',['[October 8, 2025]',['../md_docs_2progress.html#autotoc_md291',1,'']]]
+  ['handles_20in_20sdom_0',['Object Handles in SDOM',['../md_docs_2object__handles.html',1,'']]]
 ];

@@ -1,22 +1,9 @@
 var searchData=
 [
-  ['1_0',['1. Core-based DOM Traversal (Type 1)',['../md_docs_2dom__propagation.html#autotoc_md74',1,'']]],
-  ['1_20core_20based_20dom_20traversal_20type_201_1',['1. Core-based DOM Traversal (Type 1)',['../md_docs_2dom__propagation.html#autotoc_md74',1,'']]],
-  ['1_20deprecate_20automatic_20table_20parsing_2',['1. Deprecate Automatic Table Parsing',['../md_docs_2startup__refactor.html#autotoc_md332',1,'']]],
-  ['1_20displayhandle_3',['1. DisplayHandle',['../md_docs_2object__handles.html#autotoc_md238',1,'']]],
-  ['1_20explicit_20initialization_20pattern_4',['1. Explicit Initialization Pattern',['../md_docs_2startup__refactor.html#autotoc_md325',1,'']]],
-  ['1_20initializer_20structs_5',['1. Initializer Structs',['../md_docs_2extensible__factory.html#autotoc_md127',1,'']]],
-  ['1_20initializer_20structs_20and_20lua_20scripts_6',['1. Initializer Structs and Lua Scripts',['../md_docs_2extensible__factory.html#autotoc_md121',1,'']]],
-  ['1_20parent_20anchor_20grid_20and_20child_20edge_20anchors_7',['1) Parent Anchor Grid and Child Edge Anchors',['../md_docs_2display__object__anchoring.html#autotoc_md65',1,'']]],
-  ['1_20pre_20render_20layout_20bounds_20adjustment_8',['1. Pre-Render Layout &amp;amp; Bounds Adjustment',['../md_docs_2label__text__parsing.html#autotoc_md213',1,'']]],
-  ['11_202025_9',['[October 11, 2025]',['../md_docs_2progress.html#autotoc_md295',1,'']]],
-  ['12_202025_10',['[October 12, 2025]',['../md_docs_2progress.html#autotoc_md297',1,'']]],
-  ['13_202025_11',['[October 13, 2025]',['../md_docs_2progress.html#autotoc_md299',1,'']]],
-  ['14_202025_12',['[October 14, 2025]',['../md_docs_2progress.html#autotoc_md301',1,'']]],
-  ['15_202025_13',['[October 15, 2025]',['../md_docs_2progress.html#autotoc_md303',1,'']]],
-  ['16_202025_14',['[October 16, 2025]',['../md_docs_2progress.html#autotoc_md305',1,'']]],
-  ['17_202025_15',['[October 17, 2025]',['../md_docs_2progress.html#autotoc_md307',1,'']]],
-  ['17_202025_3a_16',['Next Steps for October 17, 2025:',['../md_docs_2progress.html#autotoc_md308',1,'']]],
-  ['19_202025_17',['[September 19, 2025]',['../md_docs_2progress.html#autotoc_md255',1,'']]],
-  ['1a_20standardized_20constructor_20signatures_18',['1a. Standardized Constructor Signatures',['../md_docs_2extensible__factory.html#autotoc_md128',1,'']]]
+  ['anchoring_20system_0',['Display Object Anchoring System',['../md_docs_2display__object__anchoring.html',1,'']]],
+  ['and_20configuration_20lua_20c_1',['Scripting and Configuration (Lua &amp; C++)',['../md_docs_2scripting__and__configuration.html',1,'']]],
+  ['and_20development_20progress_2',['Project Description and Development Progress',['../md_docs_2progress.html',1,'']]],
+  ['and_20properties_20exposed_20by_20sdom_20c_20→_20lua_20binding_20inventory_3',['Lua commands and properties exposed by SDOM (C++ → Lua binding inventory)',['../md_docs_2lua__commands__and__properties.html',1,'']]],
+  ['api_4',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
+  ['architecture_20overview_5',['Architecture Overview',['../md_docs_2architecture__overview.html',1,'']]]
 ];

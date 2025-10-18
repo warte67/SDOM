@@ -29,8 +29,8 @@ var searchData=
   ['bind_5fstring_5ftable_5freturn_5fasset_26',['bind_string_table_return_asset',['../namespaceSDOM.html#a347b820c9929d1de5fe431aeba3fd3a9',1,'SDOM']]],
   ['bind_5fstring_5ftable_5freturn_5fdo_27',['bind_string_table_return_do',['../namespaceSDOM.html#a83ad3a88224e314bb4577f55dcf14e87',1,'SDOM']]],
   ['bind_5ftable_28',['bind_table',['../namespaceSDOM.html#add31e794f5e908f30d44223f4e976ffb',1,'SDOM']]],
-  ['bitmapfont_29',['BitmapFont',['../classSDOM_1_1BitmapFont.html#a2baf0fde9547c7446d66be4342a0de22',1,'SDOM::BitmapFont::BitmapFont(const InitStruct &amp;init)'],['../classSDOM_1_1BitmapFont.html#a3897578689db50de002c282e880258a7',1,'SDOM::BitmapFont::BitmapFont(const sol::table &amp;config)']]],
-  ['button_30',['Button',['../classSDOM_1_1Button.html#a3f5a2b3218690f7fad57cad0874a3be1',1,'SDOM::Button::Button(const InitStruct &amp;init)'],['../classSDOM_1_1Button.html#ad0b93e6902abcae4f6f284882f2b9743',1,'SDOM::Button::Button(const sol::table &amp;config)'],['../classSDOM_1_1Button.html#a8934695a5c881a5988ec0941e17308e6',1,'SDOM::Button::Button()=default']]],
+  ['bitmapfont_29',['bitmapfont',['../classSDOM_1_1BitmapFont.html#a2baf0fde9547c7446d66be4342a0de22',1,'SDOM::BitmapFont::BitmapFont(const InitStruct &amp;init)'],['../classSDOM_1_1BitmapFont.html#a3897578689db50de002c282e880258a7',1,'SDOM::BitmapFont::BitmapFont(const sol::table &amp;config)']]],
+  ['button_30',['button',['../classSDOM_1_1Button.html#ad0b93e6902abcae4f6f284882f2b9743',1,'SDOM::Button::Button(const sol::table &amp;config)'],['../classSDOM_1_1Button.html#a3f5a2b3218690f7fad57cad0874a3be1',1,'SDOM::Button::Button(const InitStruct &amp;init)'],['../classSDOM_1_1Button.html#a8934695a5c881a5988ec0941e17308e6',1,'SDOM::Button::Button()=default']]],
   ['button_5fstate_5ffrom_5fname_31',['button_state_from_name',['../namespaceSDOM.html#a3a45e0003ad804fd5fefc445f76fe414',1,'SDOM']]],
   ['button_5fstate_5fname_5ffrom_5findex_32',['button_state_name_from_index',['../namespaceSDOM.html#a4052112dcedd171e968bb3d5d55d16f5',1,'SDOM']]]
 ];

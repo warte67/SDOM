@@ -88,7 +88,7 @@ var classSDOM_1_1Group =
     [ "onInit", "classSDOM_1_1Group.html#af2d3fdf7570263eb26ece32d39e5321d", null ],
     [ "onQuit", "classSDOM_1_1Group.html#a4c562f5dd8a9f6ce2e1b529ce783dcba", null ],
     [ "onRender", "classSDOM_1_1Group.html#a0ba51de5ab275178ddc7c6659132da0f", null ],
-    [ "onUnitTest", "classSDOM_1_1Group.html#a91f380e8aff044d17e38786d28781e83", null ],
+    [ "onUnitTest", "classSDOM_1_1Group.html#a5173780dc24d55f3987fc776a6c233e5", null ],
     [ "onUpdate", "classSDOM_1_1Group.html#ac7811e017522c94461a241c514ca879c", null ],
     [ "operator!=", "classSDOM_1_1Group.html#a9df7d876aa3bdab412a4284982029f72", null ],
     [ "operator<", "classSDOM_1_1Group.html#ab78aac3a9b8c14589ba2bf9d0344140f", null ],
