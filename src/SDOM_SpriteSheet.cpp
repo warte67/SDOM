@@ -91,6 +91,7 @@ namespace SDOM
             //     INFO(std::string("SpriteSheet::onLoad() - found existing resObj name='") + existing->getName() + " type='" + existing->getType() + "'");
             // } catch(...) {}
             // Only reuse an existing asset when it is actually a Texture.
+            // If the existing asset is a Texture, reuse it directly
             if (existing->getType() == Texture::TypeName) 
             {
                 // INFO("SpriteSheet::onLoad: found existing Texture resource for filename: " + filename_ + " (name=" + existing->getName() + ")");
@@ -111,6 +112,57 @@ namespace SDOM
                 isLoaded_ = true;
                 // INFO("SpriteSheet::onLoad: textureAsset loaded successfully for SpriteSheet: " + getName());
                 return;
+            }
+
+            // If the existing asset is itself a SpriteSheet, prefer to reuse its texture
+            if (existing->getType() == SpriteSheet::TypeName) {
+                SpriteSheet* existingSS = dynamic_cast<SpriteSheet*>(existing);
+                if (existingSS) {
+                    // If the existing SpriteSheet already has a textureAsset, reuse it
+                    if (existingSS->textureAsset.isValid()) {
+                        textureAsset = existingSS->textureAsset;
+                        if (!textureAsset) {
+                            ERROR("SpriteSheet::onLoad: Failed to retrieve texture asset from existing SpriteSheet for filename: " + filename_);
+                            return;
+                        }
+                        try {
+                            textureAsset->onLoad();
+                        } catch(...) {
+                            ERROR("SpriteSheet::onLoad: Failed to load texture asset from existing SpriteSheet for filename: " + filename_);
+                            return;
+                        }
+                        isLoaded_ = true;
+                        return;
+                    }
+                    // Otherwise, use the existing SpriteSheet's filename to create a Texture asset
+                    std::string srcFilename;
+                    try { srcFilename = existingSS->getFilename(); } catch(...) { srcFilename = filename_; }
+                    std::string baseName = srcFilename + "_Texture";
+                    std::string newName = baseName;
+                    int suffix = 1;
+                    while (getFactory().getAssetObject(newName).isValid()) {
+                        newName = baseName + "_" + std::to_string(suffix++);
+                    }
+                    Texture::InitStruct init;
+                    init.name = newName;
+                    init.type = Texture::TypeName;
+                    init.filename = srcFilename;
+
+                    textureAsset = getFactory().createAsset(Texture::TypeName, init);
+                    if (!textureAsset)
+                    {
+                        ERROR("SpriteSheet::onLoad: Factory failed to create Texture asset for filename: " + srcFilename + " (tried name: " + newName + ")");
+                        return;
+                    }
+                    Texture* texturePtr = textureAsset.as<Texture>();
+                    if (texturePtr)
+                    {
+                        texturePtr->registerLuaBindings(Texture::TypeName, getLua());
+                    }
+                }
+                else {
+                    // fallback to existing code path below
+                }
             }
 
             // If there is an existing non-Texture asset with the same name, avoid reusing it.

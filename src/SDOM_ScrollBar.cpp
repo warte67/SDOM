@@ -56,10 +56,18 @@ namespace SDOM
             init.name = getName() + "_arrowbutton_min";
             init.type = "ArrowButton";
             init.icon_resource = icon_resource_;
+            // determine icon tile size from this ScrollBar's spritesheet if available
+            SpriteSheet* ss_local = getIconSpriteSheet();
+            int iconW = 8;
+            int iconH = 8;
+            if (ss_local) { iconW = ss_local->getSpriteWidth(); iconH = ss_local->getSpriteHeight(); }
             init.x = getX();
             init.y = getY();
-            init.width = 8;
-            init.height = 8;   
+            init.width = iconW;
+            init.height = iconH;
+            // ensure the ArrowButton uses the same icon tile size
+            init.icon_width = iconW;
+            init.icon_height = iconH;
             init.isClickable = true;
             init.tabEnabled = false;
             init.color = getColor(); 
@@ -78,20 +86,28 @@ namespace SDOM
             init.name = getName() + "_arrowbutton_max";
             init.type = "ArrowButton";
             init.icon_resource = icon_resource_;
+            // determine icon tile size from this ScrollBar's spritesheet if available
+            SpriteSheet* ss_local = getIconSpriteSheet();
+            int iconW = 8;
+            int iconH = 8;
+            if (ss_local) { iconW = ss_local->getSpriteWidth(); iconH = ss_local->getSpriteHeight(); }
             if (orientation_ == Orientation::Horizontal)
             {
-                init.x = getX() + getWidth() - 8;
+                init.x = getX() + getWidth() - iconW;
                 init.y = getY();
                 init.direction = ArrowButton::ArrowDirection::Right;                
             }
             else
             {
                 init.x = getX();
-                init.y = getY() + getHeight() - 8;
+                init.y = getY() + getHeight() - iconH;
                 init.direction = ArrowButton::ArrowDirection::Down;
             }
-            init.width = 8;
-            init.height = 8;   
+            init.width = iconW;
+            init.height = iconH;   
+            // ensure the ArrowButton uses the same icon tile size
+            init.icon_width = iconW;
+            init.icon_height = iconH;
             init.isClickable = true;
             init.tabEnabled = false;
             init.color = getColor(); 

@@ -93,20 +93,122 @@ namespace SDOM
     // --- Virtual Methods --- //
     bool IconButton::onInit()
     {
-        // create the label object
+        // create or locate the icon SpriteSheet asset
         if (!iconSpriteSheet_)
         {
-            SpriteSheet::InitStruct init_struct;
-            init_struct.name = getName() + "_IconSpriteSheet";
-            init_struct.type = SpriteSheet::TypeName;
-            init_struct.filename = icon_resource_;
-            init_struct.spriteWidth = icon_width_;
-            init_struct.spriteHeight = icon_height_;
-            iconSpriteSheet_ = getFactory().createAsset("SpriteSheet", init_struct);
-            if (!iconSpriteSheet_ || !iconSpriteSheet_.isValid())
+            Factory& factory = getFactory();
+            // Prefer an already-registered SpriteSheet or Texture asset under the resource name
+            AssetHandle ssHandle = factory.getAssetObject(icon_resource_);
+            if (!ssHandle.isValid()) {
+                // Accept alternate naming convention: '<resource>_SpriteSheet'
+                ssHandle = factory.getAssetObject(icon_resource_ + "_SpriteSheet");
+            }
+
+            if (ssHandle.isValid())
             {
-                ERROR("IconButton::onInit() - Failed to create or load icon SpriteSheet asset: " + icon_resource_);
-                return false;
+                // If it's a SpriteSheet, reuse the AssetHandle directly
+                iconSpriteSheet_ = ssHandle;
+                SpriteSheet* ssPtr = iconSpriteSheet_.as<SpriteSheet>();
+                if (ssPtr && !ssPtr->isLoaded()) ssPtr->onLoad();
+                else
+                {
+                    // If it's a Texture, create a SpriteSheet wrapper using a reasonable tile size
+                    IAssetObject* obj = ssHandle.get();
+                    if (obj && obj->getType() == Texture::TypeName)
+                    {
+                        int chosenW = icon_width_ > 0 ? icon_width_ : 8;
+                        int chosenH = icon_height_ > 0 ? icon_height_ : 8;
+                        try {
+                            // If a SpriteSheet with matching filename exists, use its tile size
+                            AssetHandle candidate = factory.findAssetByFilename(icon_resource_, SpriteSheet::TypeName);
+                            if (candidate.isValid()) {
+                                SpriteSheet* ssPtr = candidate.as<SpriteSheet>();
+                                if (ssPtr) {
+                                    chosenW = ssPtr->getSpriteWidth();
+                                    chosenH = ssPtr->getSpriteHeight();
+                                }
+                            } else {
+                                // Try name-based inference (e.g., icon_12x12)
+                                auto pos = icon_resource_.rfind('_');
+                                if (pos != std::string::npos && pos + 1 < icon_resource_.size()) {
+                                    std::string suffix = icon_resource_.substr(pos + 1);
+                                    auto xPos = suffix.find('x');
+                                    if (xPos != std::string::npos) {
+                                        std::string wstr = suffix.substr(0, xPos);
+                                        std::string hstr = suffix.substr(xPos + 1);
+                                        if (!wstr.empty() && !hstr.empty()) {
+                                            int w = std::stoi(wstr);
+                                            int h = std::stoi(hstr);
+                                            if (w > 0 && h > 0) { chosenW = w; chosenH = h; }
+                                        }
+                                    }
+                                }
+                            }
+                        } catch(...) {}
+
+                        SpriteSheet::InitStruct init_struct;
+                        init_struct.name = getName() + "_IconSpriteSheet";
+                        init_struct.type = SpriteSheet::TypeName;
+                        init_struct.filename = icon_resource_;
+                        init_struct.spriteWidth = chosenW;
+                        init_struct.spriteHeight = chosenH;
+                        init_struct.isInternal = true;
+                        AssetHandle created = factory.createAsset("SpriteSheet", init_struct);
+                        if (created.isValid()) {
+                            iconSpriteSheet_ = created;
+                            SpriteSheet* createdPtr = iconSpriteSheet_.as<SpriteSheet>();
+                            if (createdPtr && !createdPtr->isLoaded()) createdPtr->onLoad();
+                        } else {
+                            ERROR("IconButton::onInit() - Failed to create SpriteSheet wrapper for Texture resource: " + icon_resource_);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        // Found an asset with that name but it's not a SpriteSheet/Texture.
+                        // Try to locate any SpriteSheet registered for the same filename.
+                        AssetHandle candidate = factory.findAssetByFilename(icon_resource_, SpriteSheet::TypeName);
+                        if (candidate.isValid()) {
+                            iconSpriteSheet_ = candidate;
+                            SpriteSheet* ssPtr2 = iconSpriteSheet_.as<SpriteSheet>();
+                            if (ssPtr2 && !ssPtr2->isLoaded()) ssPtr2->onLoad();
+                        } else {
+                            // As a last resort, create a SpriteSheet wrapper using the resource name as filename
+                            SpriteSheet::InitStruct init_struct2;
+                            init_struct2.name = getName() + "_IconSpriteSheet";
+                            init_struct2.type = SpriteSheet::TypeName;
+                            init_struct2.filename = icon_resource_;
+                            init_struct2.spriteWidth = (icon_width_ > 0) ? icon_width_ : 8;
+                            init_struct2.spriteHeight = (icon_height_ > 0) ? icon_height_ : 8;
+                            init_struct2.isInternal = true;
+                            AssetHandle created2 = factory.createAsset("SpriteSheet", init_struct2);
+                            if (created2.isValid()) {
+                                iconSpriteSheet_ = created2;
+                                SpriteSheet* createdPtr2 = iconSpriteSheet_.as<SpriteSheet>();
+                                if (createdPtr2 && !createdPtr2->isLoaded()) createdPtr2->onLoad();
+                            } else {
+                                ERROR("IconButton::onInit() - Found asset '" + icon_resource_ + "' but it is not a SpriteSheet or Texture, and failed to create a wrapper.");
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // No pre-registered asset: create the SpriteSheet asset using provided icon_resource_ as filename
+                SpriteSheet::InitStruct init_struct;
+                init_struct.name = getName() + "_IconSpriteSheet";
+                init_struct.type = SpriteSheet::TypeName;
+                init_struct.filename = icon_resource_;
+                init_struct.spriteWidth = (icon_width_ > 0) ? icon_width_ : 8;
+                init_struct.spriteHeight = (icon_height_ > 0) ? icon_height_ : 8;
+                iconSpriteSheet_ = factory.createAsset("SpriteSheet", init_struct);
+                if (!iconSpriteSheet_ || !iconSpriteSheet_.isValid())
+                {
+                    ERROR("IconButton::onInit() - Failed to create or load icon SpriteSheet asset: " + icon_resource_);
+                    return false;
+                }
             }
         }
 

@@ -285,7 +285,7 @@ local config = {
                             y = 112,
                             width = 140,
                             height = 12,
-                            Icon_resource = "internal_icon_12x12",
+                            icon_resource = "internal_icon_12x12",
                             step = 5.0,  -- test discrete steps
                             alignment = "left",                            
                         },
@@ -327,7 +327,7 @@ local config = {
                             x = 554,
                             y = 134,
                             width = 12,
-                            -- icon_resource = "internal_icon_12x12",
+                            icon_resource = "internal_icon_12x12",
                             height = 140,
                             value = 50.0,
                             step = 5.0,  -- test discrete steps
