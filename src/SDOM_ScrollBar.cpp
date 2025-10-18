@@ -212,12 +212,33 @@ namespace SDOM
 
             if (orientation_ == Orientation::Horizontal)
             {
-                // Track spans from x+11 to x+width-11
-                float trackStart = static_cast<float>(getX() + 11);
-                float trackWidth = static_cast<float>(getWidth() - 22);
+                // Compute scaled track and thumb metrics the same way onRender does so
+                // mouse mapping aligns with the visible thumb movement.
+                float scaleW = 1.0f;
+                SpriteSheet* ss_local = getIconSpriteSheet();
+                if (ss_local) scaleW = static_cast<float>(ss_local->getSpriteWidth()) / 8.0f;
+                float trackStart = static_cast<float>(getX() + 11.0f * scaleW);
+                float trackWidth = static_cast<float>(getWidth() - 22.0f * scaleW);
+
+                // compute thumb length proportional to page/content (same as onRender)
+                float denom = std::max(content_size_, 1.0f);
+                float thumbProportion = page_size_ / denom;
+                float trackLength = trackWidth; // same semantic as onRender's trackLength
+                float thumbLength = trackLength * thumbProportion;
+                if (thumbLength < min_thumb_length_) thumbLength = min_thumb_length_;
+                if (thumbLength > trackLength) thumbLength = trackLength;
+
+                float usableTrack = trackLength - thumbLength;
+                if (usableTrack < 0.0f) usableTrack = 0.0f;
+
                 if (mouseX >= trackStart && mouseX <= trackStart + trackWidth)
                 {
-                    float rel = (mouseX - trackStart) / std::max(trackWidth, 1.0f);
+                    // Center the thumb under the cursor by offsetting the mouse
+                    // coordinate by half the thumb length before mapping into the
+                    // usable track. This keeps the cursor visually centered in the
+                    // thumb while dragging.
+                    float mousePosForThumb = mouseX - (thumbLength * 0.5f);
+                    float rel = (mousePosForThumb - trackStart) / std::max(usableTrack, 1.0f);
                     rel = std::clamp(rel, 0.0f, 1.0f);
                     float newValue = getMin() + rel * (getMax() - getMin());
                     newValue = snapToStep(newValue);
@@ -233,13 +254,38 @@ namespace SDOM
             }
             else // vertical
             {
-                // Track spans from y+11 to y+height-11
-                float trackStart = static_cast<float>(getY() + 11);
-                float trackHeight = static_cast<float>(getHeight() - 22);
+                // Track spans from y+11*scale to y+height-11*scale. Compute scale the
+                // same way as onRender: derive it from the icon spritesheet tile size.
+                float scaleH = 1.0f;
+                SpriteSheet* ss_local = getIconSpriteSheet();
+                if (ss_local) scaleH = static_cast<float>(ss_local->getSpriteHeight()) / 8.0f;
+                float trackStart = static_cast<float>(getY() + 11.0f * scaleH);
+                float trackHeight = static_cast<float>(getHeight() - 22.0f * scaleH);
                 if (mouseY >= trackStart && mouseY <= trackStart + trackHeight)
                 {
-                    float rel = (mouseY - trackStart) / std::max(trackHeight, 1.0f);
+                    // Vertical mapping: compute thumbLength/usableTrack same as onRender
+                    float denom = std::max(content_size_, 1.0f);
+                    float thumbProportion = page_size_ / denom;
+                    float trackLength = trackHeight;
+                    float thumbLength = trackLength * thumbProportion;
+                    if (thumbLength < min_thumb_length_) thumbLength = min_thumb_length_;
+                    if (thumbLength > trackLength) thumbLength = trackLength;
+                    float usableTrack = trackLength - thumbLength;
+                    if (usableTrack < 0.0f) usableTrack = 0.0f;
+
+                    // Center the thumb under the cursor vertically by offsetting
+                    // the mouse coordinate by half the thumb length.
+                    float mousePosForThumb = mouseY - (thumbLength * 0.5f);
+                    float rel = (mousePosForThumb - trackStart) / std::max(usableTrack, 1.0f);
                     rel = std::clamp(rel, 0.0f, 1.0f);
+                    try {
+                        DEBUG_LOG(std::string("[ScrollBarDiag] '") + getName() + " V mouseY=" + std::to_string(mouseY)
+                                  + " mousePosForThumb=" + std::to_string(mousePosForThumb)
+                                  + " trackStart=" + std::to_string(trackStart)
+                                  + " usableTrack=" + std::to_string(usableTrack)
+                                  + " thumbLength=" + std::to_string(thumbLength)
+                                  + " rel=" + std::to_string(rel));
+                    } catch(...) {}
                     // Invert so top corresponds to max
                     float ratio = 1.0f - rel;
                     float newValue = getMin() + ratio * (getMax() - getMin());
@@ -497,28 +543,28 @@ namespace SDOM
 
         // range sanity: min < max
         if (!(getMin() < getMax())) {
-            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' invalid range: min=" << getMin() << " max=" << getMax());
+            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' invalid range: min=" << getMin() << " max=" << getMax());
             ok = false;
         }
 
         // value must be within [min, max]
         if (getValue() < getMin() || getValue() > getMax()) {
-            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' value out of range: value=" << getValue()
-                      << " (min=" << getMin() << " max=" << getMax() << ")");
+            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' value out of range: value=" << getValue()
+            //           << " (min=" << getMin() << " max=" << getMax() << ")");
             ok = false;
         }
 
         // page/content/thumb invariants
         if (page_size_ < 0.0f) {
-            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has negative page_size: " << page_size_);
+            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has negative page_size: " << page_size_);
             ok = false;
         }
         if (content_size_ <= 0.0f) {
-            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has non-positive content_size: " << content_size_);
+            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has non-positive content_size: " << content_size_);
             ok = false;
         }
         if (min_thumb_length_ < 0.0f) {
-            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has negative min_thumb_length: " << min_thumb_length_);
+            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has negative min_thumb_length: " << min_thumb_length_);
             ok = false;
         }
 
@@ -533,8 +579,8 @@ namespace SDOM
         if (thumbLength > trackLength) thumbLength = trackLength;
 
         if (!(thumbLength >= 0.0f && thumbLength <= trackLength)) {
-            DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' computed thumb length invalid: thumb=" << thumbLength
-                      << " track=" << trackLength);
+            // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' computed thumb length invalid: thumb=" << thumbLength
+            //           << " track=" << trackLength);
             ok = false;
         }
 
@@ -542,8 +588,8 @@ namespace SDOM
         SpriteSheet* ss = getIconSpriteSheet();
         if (ss) {
             if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
-                DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has invalid sprite size: w="
-                          << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
+                // DEBUG_LOG("[UnitTest] ScrollBar '" << getName() << "' has invalid sprite size: w="
+                //           << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
                 ok = false;
             }
         }
