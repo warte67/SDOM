@@ -807,17 +807,21 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## [October 18, 2025]
-- Refactored `SpriteSheet_UnitTests` to utilize proper scaffolding patterns.
-- Refactored `GarbageCollection_UnitTests` to utilize proper scaffolding patterns.
-- Refactored `Event_UnitTests` to utilize proper scaffolding patterns.
-- Refactored `EventType_UnitTests` to utilize proper scaffolding patterns.
-- Refactored `DisplayHandle_UnitTests` to utilize proper scaffolding patterns.
-- Refactored `Lua_UnitTests` to utilize proper scaffolding patterns.
+- Refactored `IPanelObject` to properly render different sized icon SpriteSheet assets.
+  - `Button`, `IconButton`, and `Frame` now make use of multi-sized `SpriteSheets` like the `RangeControls` now do.
+
+- **UnitTest Refactoring:**
+  - Refactored `SpriteSheet_UnitTests` to utilize proper scaffolding patterns.
+  - Refactored `GarbageCollection_UnitTests` to utilize proper scaffolding patterns.
+  - Refactored `Event_UnitTests` to utilize proper scaffolding patterns.
+  - Refactored `EventType_UnitTests` to utilize proper scaffolding patterns.
+  - Refactored `DisplayHandle_UnitTests` to utilize proper scaffolding patterns.
+  - Refactored `Lua_UnitTests` to utilize proper scaffolding patterns.
 
 
 ---
 ## Next Steps:
-- `Button`, `IconButton`, and `Frame` need to make use of multi-sized SpriteSheets like the RangeControls now do.
+- `Checkbox` and `Radiobox` need to make use of multi-sized `SpriteSheets` like the `RangeControls` now do.
 
 - Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:
   - Add `Group` unit tests to validate Lua all property setting and resource resolution.
