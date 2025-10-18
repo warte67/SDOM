@@ -46,12 +46,12 @@
  *      std::string getAlignmentString() const;  -- CONFIRMED BY UNIT TEST #9
  *
  *      // SDL_Color getters
- *      // Color functionality is exercised indirectly by Label_test6 (tokenization/color escapes)
- *      SDL_Color getForegroundColor() const    -- EXERCISED INDIRECTLY BY UNIT TEST #6
- *      SDL_Color getBackgroundColor() const    -- EXERCISED INDIRECTLY BY UNIT TEST #6
- *      SDL_Color getBorderColor() const        -- EXERCISED INDIRECTLY BY UNIT TEST #6
- *      SDL_Color getOutlineColor() const       -- EXERCISED INDIRECTLY BY UNIT TEST #6
- *      SDL_Color getDropshadowColor() const    -- EXERCISED INDIRECTLY BY UNIT TEST #6
+ *      // Color functionality is confirmed by Label_test10 (explicit Lua get/set tests); previously exercised indirectly by Label_test6
+ *      SDL_Color getForegroundColor() const    -- CONFIRMED BY UNIT TEST #10
+ *      SDL_Color getBackgroundColor() const    -- CONFIRMED BY UNIT TEST #10
+ *      SDL_Color getBorderColor() const        -- CONFIRMED BY UNIT TEST #10
+ *      SDL_Color getOutlineColor() const       -- CONFIRMED BY UNIT TEST #10
+ *      SDL_Color getDropshadowColor() const    -- CONFIRMED BY UNIT TEST #10
  *
  *      // --- Mutators for the FontStyle settings --- //
  *
@@ -87,12 +87,12 @@
  *      void setAlignment(const std::string& v);    -- CONFIRMED BY UNIT TEST #9
  *
  *      // SDL_Color setters
- *      // Color setters/getters are indirectly validated via tokenization/color tests (Label_test6)
- *      void setForegroundColor(SDL_Color v)    -- EXERCISED INDIRECTLY BY UNIT TEST #6
- *      void setBackgroundColor(SDL_Color v)    -- EXERCISED INDIRECTLY BY UNIT TEST #6
- *      void setBorderColor(SDL_Color v)        -- EXERCISED INDIRECTLY BY UNIT TEST #6
- *      void setOutlineColor(SDL_Color v)       -- EXERCISED INDIRECTLY BY UNIT TEST #6
- *      void setDropshadowColor(SDL_Color v)    -- EXERCISED INDIRECTLY BY UNIT TEST #6
+ *      // Color setters/getters are confirmed by Label_test10 (explicit Lua get/set tests); previously exercised indirectly by Label_test6
+ *      void setForegroundColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
+ *      void setBackgroundColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
+ *      void setBorderColor(SDL_Color v)        -- CONFIRMED BY UNIT TEST #10
+ *      void setOutlineColor(SDL_Color v)       -- CONFIRMED BY UNIT TEST #10
+ *      void setDropshadowColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
  *
  ********************************************/
 
@@ -1045,6 +1045,30 @@ namespace SDOM
             expect_color({ r = 70, g = 80, b = 90, a = 202 }, h.border_color, 'border')
             expect_color({ r = 100, g = 110, b = 120, a = 203 }, h.outline_color, 'outline')
             expect_color({ r = 130, g = 140, b = 150, a = 204 }, h.dropshadow_color, 'dropshadow')
+
+            -- Explicitly verify function-style getters return the same values
+            local function expect_via_getter(vec, getter_name, key)
+                local gf = h[getter_name]
+                if type(gf) ~= 'function' then
+                    ok = false
+                    err = err .. string.format('%s getter missing; ', tostring(getter_name))
+                    return
+                end
+                local okg, rvg = pcall(function() return gf(h) end)
+                if not okg or type(rvg) ~= 'table' then
+                    ok = false
+                    err = err .. string.format('%s getter failed or did not return table; ', tostring(getter_name))
+                    return
+                end
+                -- reuse existing expect_color for comparison (it accepts table-like values)
+                expect_color(vec, rvg, key .. '_via_getter')
+            end
+
+            expect_via_getter({ r = 10, g = 20, b = 30, a = 200 }, 'getForegroundColor', 'foreground')
+            expect_via_getter({ r = 40, g = 50, b = 60, a = 201 }, 'getBackgroundColor', 'background')
+            expect_via_getter({ r = 70, g = 80, b = 90, a = 202 }, 'getBorderColor', 'border')
+            expect_via_getter({ r = 100, g = 110, b = 120, a = 203 }, 'getOutlineColor', 'outline')
+            expect_via_getter({ r = 130, g = 140, b = 150, a = 204 }, 'getDropshadowColor', 'dropshadow')
 
             -- Set new colors using keyed tables
             h.foreground_color = { r = 1, g = 2, b = 3, a = 4 }
