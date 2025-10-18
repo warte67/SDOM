@@ -783,6 +783,94 @@ namespace SDOM
     } // END: Label_test7()
 
 
+    bool Label_test8()
+    {
+        std::string testName = "Label #8";
+        std::string testDesc = "Label integer value getter/setter methods";
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Lua test script
+        auto res = lua.script(R"lua(
+            -- Create a label and exercise integer style getters/setters.
+            local name = "unitLabelTest8"
+            local cfg = {
+                name = name,
+                type = "Label",
+                resource_name = "internal_font_8x8",
+                text = "Integer getters/setters test"
+            }
+
+            local ok_create, h_or_err = pcall(function() return createDisplayObject("Label", cfg) end)
+            if not ok_create then
+                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
+            end
+            local h = h_or_err
+            if not h or not h:isValid() then
+                return { ok = false, err = "failed to create label" }
+            end
+
+            local props = {
+                "FontSize",
+                "FontWidth",
+                "FontHeight",
+                "MaxWidth",
+                "MaxHeight",
+                "BorderThickness",
+                "OutlineThickness",
+                "PaddingHoriz",
+                "PaddingVert",
+                "DropshadowOffsetX",
+                "DropshadowOffsetY",
+            }
+
+            for i, suffix in ipairs(props) do
+                local setter = "set" .. suffix
+                local getter = "get" .. suffix
+
+                if type(h[setter]) ~= "function" then
+                    return { ok = false, err = "missing setter binding: " .. setter }
+                end
+                if type(h[getter]) ~= "function" then
+                    return { ok = false, err = "missing getter binding: " .. getter }
+                end
+
+                local v1 = 100 + i
+                local ok_s, s_err = pcall(function() h[setter](h, v1) end)
+                if not ok_s then
+                    return { ok = false, err = "setter failed for " .. setter .. " : " .. tostring(s_err) }
+                end
+
+                local ok_g, val = pcall(function() return h[getter](h) end)
+                if not ok_g then
+                    return { ok = false, err = "getter failed for " .. getter }
+                end
+                if val ~= v1 then
+                    return { ok = false, err = getter .. " returned " .. tostring(val) .. " expected " .. tostring(v1) }
+                end
+
+                -- Try a second value
+                local v2 = v1 + 7
+                ok_s, s_err = pcall(function() h[setter](h, v2) end)
+                if not ok_s then
+                    return { ok = false, err = "setter failed for " .. setter .. " : " .. tostring(s_err) }
+                end
+                ok_g, val = pcall(function() return h[getter](h) end)
+                if not ok_g then
+                    return { ok = false, err = "getter failed for " .. getter }
+                end
+                if val ~= v2 then
+                    return { ok = false, err = getter .. " returned " .. tostring(val) .. " expected " .. tostring(v2) }
+                end
+            end
+
+            destroyDisplayObject(name)
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Label_test8()
 
 
     bool Label_UnitTests() 
@@ -798,6 +886,7 @@ namespace SDOM
             [&]() { return Label_test5(); },    // Label word/phrase border/outline/pad/dropshadow tokenization and inspection
             [&]() { return Label_test6(); },    // Label color targeted inline escapes tokenization and inspection
             [&]() { return Label_test7(); },    // Label boolean flag getter/setter methods
+            [&]() { return Label_test8(); },    // Label integer value getter/setter methods
         };
         for (auto& test : tests) 
         {

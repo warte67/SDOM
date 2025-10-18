@@ -1915,134 +1915,100 @@ if (LABEL_DEBUG)
             }
 
                 // --- Expose FontStyle getters/setters as properties on DisplayHandle ---
-                // Boolean flags
-                if (absent("bold")) {
-                    handle.set("bold", sol::property(
-                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getBold() : false; },
-                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setBold(v); }
-                    ));
+                // Boolean flags (use helper to reduce duplication)
+                {
+                    auto addBoolProp = [&](const char* name, auto getter, auto setter) {
+                        if (absent(name)) {
+                            handle.set(name, sol::property(
+                                [getter](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? (l->*getter)() : false; },
+                                [setter](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) (l->*setter)(v); }
+                            ));
+                        }
+                    };
+
+                    addBoolProp("bold", &Label::getBold, &Label::setBold);
+                    addBoolProp("italic", &Label::getItalic, &Label::setItalic);
+                    addBoolProp("underline", &Label::getUnderline, &Label::setUnderline);
+                    addBoolProp("strikethrough", &Label::getStrikethrough, &Label::setStrikethrough);
+                    addBoolProp("border", &Label::getBorder, &Label::setBorder);
+                    addBoolProp("background_flag", &Label::getBackground, &Label::setBackground);
+                    addBoolProp("outline", &Label::getOutline, &Label::setOutline);
+                    addBoolProp("dropshadow", &Label::getDropshadow, &Label::setDropshadow);
+                    addBoolProp("wordwrap", &Label::getWordwrap, &Label::setWordwrap);
+                    addBoolProp("auto_resize", &Label::getAutoResize, &Label::setAutoResize);
                 }
-                if (absent("italic")) {
-                    handle.set("italic", sol::property(
-                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getItalic() : false; },
-                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setItalic(v); }
-                    ));
-                }
-                if (absent("underline")) {
-                    handle.set("underline", sol::property(
-                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getUnderline() : false; },
-                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setUnderline(v); }
-                    ));
-                }
-                if (absent("strikethrough")) {
-                    handle.set("strikethrough", sol::property(
-                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getStrikethrough() : false; },
-                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setStrikethrough(v); }
-                    ));
-                }
-                if (absent("border")) {
-                    handle.set("border", sol::property(
-                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getBorder() : false; },
-                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setBorder(v); }
-                    ));
-                }
-                if (absent("background_flag")) {
-                    handle.set("background_flag", sol::property(
-                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getBackground() : false; },
-                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setBackground(v); }
-                    ));
-                }
-                if (absent("outline")) {
-                    handle.set("outline", sol::property(
-                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getOutline() : false; },
-                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setOutline(v); }
-                    ));
-                }
-                if (absent("dropshadow")) {
-                    handle.set("dropshadow", sol::property(
-                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getDropshadow() : false; },
-                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setDropshadow(v); }
-                    ));
-                }
-                if (absent("wordwrap")) {
-                    handle.set("wordwrap", sol::property(
-                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getWordwrap() : false; },
-                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setWordwrap(v); }
-                    ));
-                }
-                if (absent("auto_resize")) {
-                    handle.set("auto_resize", sol::property(
-                        [](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? l->getAutoResize() : false; },
-                        [](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) l->setAutoResize(v); }
-                    ));
+                // --- Also provide function-style getters/setters for legacy tests --- //
+                {
+                    auto addBoolFuncs = [&](const char* setName, const char* getName, auto setter, auto getter) {
+                        if (absent(setName)) {
+                            handle.set_function(setName, [setter](DisplayHandle h, bool v){ auto* l = h.as<Label>(); if (l) (l->*setter)(v); });
+                        }
+                        if (absent(getName)) {
+                            handle.set_function(getName, [getter](DisplayHandle h)->bool{ auto* l = h.as<Label>(); return l ? (l->*getter)() : false; });
+                        }
+                    };
+
+                    addBoolFuncs("setBold", "getBold", &Label::setBold, &Label::getBold);
+                    addBoolFuncs("setItalic", "getItalic", &Label::setItalic, &Label::getItalic);
+                    addBoolFuncs("setUnderline", "getUnderline", &Label::setUnderline, &Label::getUnderline);
+                    addBoolFuncs("setStrikethrough", "getStrikethrough", &Label::setStrikethrough, &Label::getStrikethrough);
+                    addBoolFuncs("setBorder", "getBorder", &Label::setBorder, &Label::getBorder);
+                    addBoolFuncs("setBackground", "getBackground", &Label::setBackground, &Label::getBackground);
+                    addBoolFuncs("setOutline", "getOutline", &Label::setOutline, &Label::getOutline);
+                    addBoolFuncs("setDropshadow", "getDropshadow", &Label::setDropshadow, &Label::getDropshadow);
+                    addBoolFuncs("setWordwrap", "getWordwrap", &Label::setWordwrap, &Label::getWordwrap);
+                    addBoolFuncs("setAutoResize", "getAutoResize", &Label::setAutoResize, &Label::getAutoResize);
                 }
 
-                // Integer properties
-                if (absent("font_size")) {
-                    handle.set("font_size", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getFontSize() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setFontSize(v); }
-                    ));
+                // Integer properties (use helper to reduce duplication)
+                {
+                    auto addIntProp = [&](const char* name, auto getter, auto setter) {
+                        if (absent(name)) {
+                            handle.set(name, sol::property(
+                                [getter](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? (l->*getter)() : 0; },
+                                [setter](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) (l->*setter)(v); }
+                            ));
+                        }
+                    };
+
+                    addIntProp("font_size", &Label::getFontSize, &Label::setFontSize);
+                    addIntProp("font_width", &Label::getFontWidth, &Label::setFontWidth);
+                    addIntProp("font_height", &Label::getFontHeight, &Label::setFontHeight);
+                    addIntProp("max_width", &Label::getMaxWidth, &Label::setMaxWidth);
+                    addIntProp("max_height", &Label::getMaxHeight, &Label::setMaxHeight);
+                    addIntProp("border_thickness", &Label::getBorderThickness, &Label::setBorderThickness);
+                    addIntProp("outline_thickness", &Label::getOutlineThickness, &Label::setOutlineThickness);
+                    addIntProp("padding_horiz", &Label::getPaddingHoriz, &Label::setPaddingHoriz);
+                    addIntProp("padding_vert", &Label::getPaddingVert, &Label::setPaddingVert);
+                    addIntProp("dropshadow_offset_x", &Label::getDropshadowOffsetX, &Label::setDropshadowOffsetX);
+                    addIntProp("dropshadow_offset_y", &Label::getDropshadowOffsetY, &Label::setDropshadowOffsetY);
                 }
-                if (absent("font_width")) {
-                    handle.set("font_width", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getFontWidth() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setFontWidth(v); }
-                    ));
-                }
-                if (absent("font_height")) {
-                    handle.set("font_height", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getFontHeight() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setFontHeight(v); }
-                    ));
-                }
-                if (absent("max_width")) {
-                    handle.set("max_width", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getMaxWidth() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setMaxWidth(v); }
-                    ));
-                }
-                if (absent("max_height")) {
-                    handle.set("max_height", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getMaxHeight() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setMaxHeight(v); }
-                    ));
-                }
-                if (absent("border_thickness")) {
-                    handle.set("border_thickness", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getBorderThickness() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setBorderThickness(v); }
-                    ));
-                }
-                if (absent("outline_thickness")) {
-                    handle.set("outline_thickness", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getOutlineThickness() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setOutlineThickness(v); }
-                    ));
-                }
-                if (absent("padding_horiz")) {
-                    handle.set("padding_horiz", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getPaddingHoriz() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setPaddingHoriz(v); }
-                    ));
-                }
-                if (absent("padding_vert")) {
-                    handle.set("padding_vert", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getPaddingVert() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setPaddingVert(v); }
-                    ));
-                }
-                if (absent("dropshadow_offset_x")) {
-                    handle.set("dropshadow_offset_x", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getDropshadowOffsetX() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setDropshadowOffsetX(v); }
-                    ));
-                }
-                if (absent("dropshadow_offset_y")) {
-                    handle.set("dropshadow_offset_y", sol::property(
-                        [](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? l->getDropshadowOffsetY() : 0; },
-                        [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setDropshadowOffsetY(v); }
-                    ));
+                // --- Also provide function-style getters/setters for integer legacy tests --- //
+                {
+                    auto addIntFuncs = [&](const char* setName, const char* getName, auto setter, auto getter) {
+                        // register setter if not already present
+                        sol::object curSet = handle.raw_get_or(setName, sol::lua_nil);
+                        if (!curSet.valid() || curSet == sol::lua_nil) {
+                            handle.set_function(setName, [setter](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) (l->*setter)(v); });
+                        }
+                        // register getter if not already present
+                        sol::object curGet = handle.raw_get_or(getName, sol::lua_nil);
+                        if (!curGet.valid() || curGet == sol::lua_nil) {
+                            handle.set_function(getName, [getter](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? (l->*getter)() : 0; });
+                        }
+                    };
+
+                    addIntFuncs("setFontSize", "getFontSize", &Label::setFontSize, &Label::getFontSize);
+                    addIntFuncs("setFontWidth", "getFontWidth", &Label::setFontWidth, &Label::getFontWidth);
+                    addIntFuncs("setFontHeight", "getFontHeight", &Label::setFontHeight, &Label::getFontHeight);
+                    addIntFuncs("setMaxWidth", "getMaxWidth", &Label::setMaxWidth, &Label::getMaxWidth);
+                    addIntFuncs("setMaxHeight", "getMaxHeight", &Label::setMaxHeight, &Label::getMaxHeight);
+                    addIntFuncs("setBorderThickness", "getBorderThickness", &Label::setBorderThickness, &Label::getBorderThickness);
+                    addIntFuncs("setOutlineThickness", "getOutlineThickness", &Label::setOutlineThickness, &Label::getOutlineThickness);
+                    addIntFuncs("setPaddingHoriz", "getPaddingHoriz", &Label::setPaddingHoriz, &Label::getPaddingHoriz);
+                    addIntFuncs("setPaddingVert", "getPaddingVert", &Label::setPaddingVert, &Label::getPaddingVert);
+                    addIntFuncs("setDropshadowOffsetX", "getDropshadowOffsetX", &Label::setDropshadowOffsetX, &Label::getDropshadowOffsetX);
+                    addIntFuncs("setDropshadowOffsetY", "getDropshadowOffsetY", &Label::setDropshadowOffsetY, &Label::getDropshadowOffsetY);
                 }
 
                 // Alignment (enum) and alignment_string (string)
