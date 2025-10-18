@@ -3,6 +3,11 @@
 #include <SDOM/SDOM_IconIndex.hpp>
 #include <SDOM/SDOM_Slider.hpp>
 
+// Per-side padding fraction of the knob sprite that is visually "transparent".
+// Example: 0.25 means a 16px tile uses the middle 8px for the visible thumb,
+// so we extend travel by 4px on each side (scaled with the sprite tile size).
+namespace { constexpr float kKnobPaddingFraction = 0.45f; }
+
 namespace SDOM
 {
     // --- Protected Constructors --- //
@@ -61,10 +66,26 @@ namespace SDOM
             {
                 if (mouseX >= getX() && mouseX <= getX() + getWidth() ) 
                 {
-                    float trackStart = getX();
-                    float trackWidth = getWidth();
-                    float rel = (mouseX - trackStart) / trackWidth;
+                    // Use inner rail and anchor mapping so the knob stays fully within the bounds
+                    SpriteSheet* ss = getIconSpriteSheet();
+                    float tileW = ss ? ss->getSpriteWidth() : 8.0f;
+                    float scale_w = ss ? (tileW / 8.0f) : 1.0f;
+
+                    const float insetX = 2.0f * scale_w;
+                    float railX = getX() + insetX;
+                    float railW = std::max(0.0f, getWidth() - insetX * 2.0f);
+
+                    // Extend travel by per-side padding so the visible inner core can reach the caps
+                    float padX = tileW * kKnobPaddingFraction;
+                    float leftMin = railX - padX;
+                    float leftMax = railX + railW - tileW + padX;
+                    float usable = std::max(0.0f, leftMax - leftMin);
+                    // center the cursor in the knob while dragging, but clamp the knob inside the extended rail range
+                    float desiredAnchor = mouseX - tileW * 0.5f; // knob left edge desired
+                    float clampedAnchor = std::clamp(desiredAnchor, leftMin, leftMax);
+                    float rel = (usable > 0.0f) ? ((clampedAnchor - leftMin) / usable) : 0.0f;
                     rel = std::clamp(rel, 0.0f, 1.0f);
+
                     float newValue = min_ + rel * (max_ - min_);
                     newValue = snapToStep(newValue);
                     float oldValue = value_;
@@ -81,12 +102,29 @@ namespace SDOM
             {
                 if (mouseY >= getY() && mouseY <= getY() + getHeight() ) 
                 {
-                    float trackStart = getY();
-                    float trackHeight = getHeight();
-                    float rel = (mouseY - trackStart) / trackHeight;
-                    rel = std::clamp(rel, 0.0f, 1.0f);
-                    // Invert rel so that 0 is bottom and 1 is top for value mapping
-                    float ratio = 1.0f - rel;
+                    // Use inner rail and anchor mapping so the knob stays fully within the bounds
+                    SpriteSheet* ss = getIconSpriteSheet();
+                    float tileH = ss ? ss->getSpriteHeight() : 8.0f;
+                    float scale_h = ss ? (tileH / 8.0f) : 1.0f;
+
+                    const float insetY = 2.0f * scale_h;
+                    float railY = getY() + insetY;
+                    float railH = std::max(0.0f, getHeight() - insetY * 2.0f);
+
+                    // Extend travel by per-side padding so the visible inner core can reach the caps
+                    float padY = tileH * kKnobPaddingFraction;
+                    float topMin = railY - padY;
+                    float topMax = railY + railH - tileH + padY;
+                    float usable = std::max(0.0f, topMax - topMin);
+                    // center the cursor in the knob while dragging, but clamp the knob inside the extended rail range
+                    float desiredAnchor = mouseY - tileH * 0.5f; // knob top edge desired
+                    float clampedAnchor = std::clamp(desiredAnchor, topMin, topMax);
+
+                    // For vertical: bottom is min (ratio 0), top is max (ratio 1)
+                    float relTopToBottom = (usable > 0.0f) ? ((clampedAnchor - topMin) / usable) : 0.0f; // 0 at top, 1 at bottom
+                    relTopToBottom = std::clamp(relTopToBottom, 0.0f, 1.0f);
+                    float ratio = 1.0f - relTopToBottom; // convert to 0=>bottom, 1=>top ratio
+
                     float newValue = min_ + ratio * (max_ - min_);
                     newValue = snapToStep(newValue);
                     float oldValue = value_;
@@ -243,14 +281,28 @@ namespace SDOM
                     );            
                 }        
             }
-            // Draw the thumb
+            // Draw the thumb so its LEFT edge moves over the usable rail span
             SDL_Color thumbColor = getForegroundColor();
-            double thumbX = (getX() + ((value_ - min_) / (max_ - min_)) * (getWidth())) - 3.5 * scale_width;
+            float tileW = ss->getSpriteWidth();
+            const float insetX = 2.0f * scale_width;
+            float railX = getX() + insetX;
+            float railW = std::max(0.0f, getWidth() - insetX * 2.0f);
+
+            // Extend travel by per-side padding so the visible inner core can reach the caps
+            float padX = tileW * kKnobPaddingFraction;
+            double leftMin = railX - padX;
+            double leftMax = railX + railW - tileW + padX;
+            double usable = std::max(0.0, leftMax - leftMin);
+
+            double range = (max_ - min_);
+            double ratio = (range > 0.0) ? ((value_ - min_) / range) : 0.0;
+            ratio = std::clamp(ratio, 0.0, 1.0);
+            double thumbLeft = leftMin + ratio * usable;
             if (thumbColor.a > 0)
             {
                 ss->drawSprite(static_cast<int>(IconIndex::Knob_Horizontal), 
-                    static_cast<int>(thumbX), 
-                    static_cast<int>(getY()), 
+                    static_cast<int>(std::lround(thumbLeft)), 
+                    static_cast<int>(std::lround(getY())), 
                     thumbColor, 
                     SDL_SCALEMODE_NEAREST
                 );                   
@@ -279,22 +331,29 @@ namespace SDOM
                     );            
                 }        
             }
-            // Draw the thumb
+            // Draw the thumb so its TOP edge moves over the usable rail span
             SDL_Color thumbColor = getForegroundColor();
-            // double thumbX = (getX() + ((value_ - min_) / (max_ - min_)) * (getWidth())) - 5;
-            // Compute thumb Y so that min_ is at bottom and max_ at top
+            float tileH = ss->getSpriteHeight();
+            const float insetY = 2.0f * scale_height;
+            float railY = getY() + insetY;
+            float railH = std::max(0.0f, getHeight() - insetY * 2.0f);
+
+            // Extend travel by per-side padding so the visible inner core can reach the caps
+            float padY = tileH * kKnobPaddingFraction;
+            double topMin = railY - padY;
+            double topMax = railY + railH - tileH + padY;
+            double usable = std::max(0.0, topMax - topMin);
+
             double range = (max_ - min_);
-            double ratio = 0.0;
-            if (range > 0.0) ratio = (value_ - min_) / range;
+            double ratio = (range > 0.0) ? ((value_ - min_) / range) : 0.0;
             ratio = std::clamp(ratio, 0.0, 1.0);
-            // invert so 0 => bottom, 1 => top
-            double inv = 1.0 - ratio;
-            double thumbY = (getY() + inv * (getHeight())) - 4 * scale_height;
+            // For vertical: 0 at bottom, 1 at top → anchor goes from bottom to top
+            double thumbTop = topMin + (1.0 - ratio) * usable;
             if (thumbColor.a > 0)
             {
                 ss->drawSprite(static_cast<int>(IconIndex::Knob_Vertical),
-                    static_cast<int>(getX()), 
-                    static_cast<int>(thumbY), 
+                    static_cast<int>(std::lround(getX())), 
+                    static_cast<int>(std::lround(thumbTop)), 
                     thumbColor, 
                     SDL_SCALEMODE_NEAREST
                 );                   
