@@ -115,8 +115,8 @@ namespace SDOM
                 return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
             end
 
-            -- print("getLabelText(): " .. group_obj:getLabelText())
-            print("label_text: " .. group_obj.label_text)
+            print("getLabelText(): " .. group_obj:getLabelText())
+            -- print("label_text: " .. group_obj.label_text)
 
             -- cleanup and return
             destroyDisplayObject(group_name)  -- **BUG:**  This is NOT destroying the children!
