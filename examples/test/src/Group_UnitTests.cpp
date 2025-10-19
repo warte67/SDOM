@@ -115,8 +115,28 @@ namespace SDOM
                 return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
             end
 
-            print("getLabelText(): " .. group_obj:getLabelText())
-            -- print("label_text: " .. group_obj.label_text)
+            -- print("getLabelText(): " .. group_obj:getLabelText())
+
+            -- secondary check: fetch composed label handle (try type-specific accessors)
+            local lbl = nil
+            if type(group_obj.getGroupLabel) == "function" then
+                lbl = group_obj:getGroupLabel()
+            elseif type(group_obj.getLabel) == "function" then
+                lbl = group_obj:getLabel()
+            end
+
+            if lbl then
+                local lbltxt = nil
+                if type(lbl.text) == "string" then
+                    lbltxt = lbl.text
+                elseif type(lbl.getText) == "function" then
+                    lbltxt = lbl:getText()
+                end
+                if lbltxt and lbltxt ~= txt then
+                    destroyDisplayObject(group_name)
+                    return { ok = false, err = "composed Label text mismatch: got='" .. tostring(lbltxt) .. "' expected='" .. tostring(txt) .. "'" }
+                end
+            end
 
             -- cleanup and return
             destroyDisplayObject(group_name)  -- **BUG:**  This is NOT destroying the children!
