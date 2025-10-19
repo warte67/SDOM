@@ -344,23 +344,23 @@ namespace SDOM
             return !cur.valid() || cur == sol::lua_nil;
         };
 
-        // expose 'name' property for Group (maps to getName / setName on the display object)
-        if (absent("name"))
-        {
-            handle.set("name", sol::property(
-                // getter
-                [](SDOM::DisplayHandle h) -> std::string 
-                {
-                    if (h.isValid()) return h->getName();
-                    return std::string();
-                },
-                // setter
-                [](SDOM::DisplayHandle h, const std::string& v) 
-                {
-                    if (h.isValid()) h->setName(v);
-                }
-            ));
-        }
+        // // expose 'name' property for Group (maps to getName / setName on the display object)
+        // if (absent("name"))
+        // {
+        //     handle.set("name", sol::property(
+        //         // getter
+        //         [](SDOM::DisplayHandle h) -> std::string 
+        //         {
+        //             if (h.isValid()) return h->getName();
+        //             return std::string();
+        //         },
+        //         // setter
+        //         [](SDOM::DisplayHandle h, const std::string& v) 
+        //         {
+        //             if (h.isValid()) h->setName(v);
+        //         }
+        //     ));
+        // }
 
         // expose 'label' property that returns the attached label DisplayHandle (read-only)
         if (absent("label"))
@@ -379,8 +379,8 @@ namespace SDOM
         }
 
         // label text property + legacy get/set
-        if (absent("labelText")) {
-            handle.set("labelText", sol::property(
+        if (absent("label_text")) {
+            handle.set("label_text", sol::property(
                 [](SDOM::DisplayHandle h) -> std::string {
                     if (!h.isValid()) return std::string();
                     if (h->getType() != Group::TypeName) return std::string();
@@ -417,8 +417,8 @@ namespace SDOM
         }
 
         // label color property + legacy get/set
-        if (absent("labelColor")) {
-            handle.set("labelColor", sol::property(
+        if (absent("label_color")) {
+            handle.set("label_color", sol::property(
                 [](SDOM::DisplayHandle h) -> SDL_Color {
                     if (!h.isValid()) return SDL_Color{255,255,255,255};
                     if (h->getType() != Group::TypeName) return SDL_Color{255,255,255,255};
