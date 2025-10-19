@@ -210,6 +210,8 @@ Notes & test ideas:
             bool isHidden = false;
             int tabPriority = 0;
             bool tabEnabled = false;
+            bool hasBorder = true;
+            bool hasBackground = true;
         };
 
         friend class Factory;
@@ -309,6 +311,10 @@ Notes & test ideas:
         IDisplayObject& moveToTop();
         int getZOrder() const { return z_order_; }
         IDisplayObject& setZOrder(int z_order) { z_order_ = z_order; return *this; }
+        bool getBorder() const { return border_; }
+        bool getBackground() const { return background_; }
+        IDisplayObject& setBorder(bool hasBorder) { border_ = hasBorder; setDirty(); return *this; }
+        IDisplayObject& setBackground(bool hasBackground) { background_ = hasBackground; setDirty(); return *this; }
 
         // --- Focus & Interactivity --- //
         void setKeyboardFocus();
@@ -401,6 +407,8 @@ Notes & test ideas:
         bool isHidden_ = false;
         int tabPriority_ = -1;
         bool tabEnabled_ = false;
+        bool border_ = false;
+        bool background_ = false;
         DisplayHandle parent_;
         std::vector<DisplayHandle> children_;
 

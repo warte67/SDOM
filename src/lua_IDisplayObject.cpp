@@ -408,6 +408,11 @@ namespace SDOM
     int getZOrder_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getZOrder(); }
     void setZOrder_lua(IDisplayObject* obj, int z_order) { if (!obj) return; obj->setZOrder(z_order); }
 
+    bool getBorder_lua(const IDisplayObject* obj) { return obj ? obj->getBorder() : false; }
+    bool getBackground_lua(const IDisplayObject* obj) { return obj ? obj->getBackground() : false; }
+    void setBorder_lua(IDisplayObject* obj, bool hasBorder) { if (obj) obj->setBorder(hasBorder); }
+    void setBackground_lua(IDisplayObject* obj, bool hasBackground) { if (obj) obj->setBackground(hasBackground); }
+
     // Flexible setZOrder: supports { z = number } on self or { child = <name|handle>, z = number } on parent
     void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor)
     {

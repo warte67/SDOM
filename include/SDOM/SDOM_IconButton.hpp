@@ -33,11 +33,15 @@ namespace SDOM
                 color = {96, 0, 96, 255};   // IconButton color
                 tabEnabled = false;     // IconButtons are not tab-enabled by default   
                 isClickable = false;    // IconButtons are not clickable by default
+                hasBackground = false;    // default: no background   
+                hasBorder = false;        // default: no border
+
             }
             IconIndex icon_index = IconIndex::Hamburger; // default icon is Hamburger menu
             std::string icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
             int icon_width = 8;         // default icon width is 8
             int icon_height = 8;        // default icon height is 8
+
 
         }; // END: InitStruct
     protected:

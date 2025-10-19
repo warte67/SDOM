@@ -394,7 +394,7 @@ namespace SDOM
         float scale_width = ss_width / 8.0f;
         float scale_height = ss_height / 8.0f;
 
-        SDL_FRect dsstRect = { 
+        SDL_FRect dstRect = { 
             static_cast<float>(getX()), 
             static_cast<float>(getY()),
             static_cast<float>(getWidth()), 
@@ -407,7 +407,7 @@ namespace SDOM
         {
             SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
             SDL_SetRenderDrawColor(getRenderer(), bgColor.r, bgColor.g, bgColor.b, bgColor.a);
-            SDL_RenderFillRect(getRenderer(), &dsstRect);
+            SDL_RenderFillRect(getRenderer(), &dstRect);
         }
 
         // Render Border Color
@@ -416,7 +416,7 @@ namespace SDOM
         {
             SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
             SDL_SetRenderDrawColor(getRenderer(), borderColor.r, borderColor.g, borderColor.b, borderColor.a);
-            SDL_RenderRect(getRenderer(), &dsstRect);
+            SDL_RenderRect(getRenderer(), &dstRect);
         }
 
         // Render the ScrollBar Thumb

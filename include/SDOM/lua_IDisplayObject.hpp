@@ -83,6 +83,12 @@ namespace SDOM
     int getZOrder_lua(const IDisplayObject* obj);                               // TESTED
     void setZOrder_lua(IDisplayObject* obj, int z_order);                       // TESTED
     void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor); // TESTED
+
+    bool getBorder_lua(const IDisplayObject* obj);
+    bool getBackground_lua(const IDisplayObject* obj);
+    void setBorder_lua(IDisplayObject* obj, bool hasBorder);
+    void setBackground_lua(IDisplayObject* obj, bool hasBackground);
+
     // Descriptor forms for highest/lowest via parent
     void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor); // TESTED
     void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);  // TESTED

@@ -226,15 +226,47 @@ namespace SDOM
     {
         // SUPER::onRender();
 
-        SpriteSheet* ss = iconSpriteSheet_.as<SpriteSheet>();
+        SDL_FRect dstRect = { 
+            static_cast<float>(getX()), 
+            static_cast<float>(getY()),
+            static_cast<float>(getWidth()), 
+            static_cast<float>(getHeight()) 
+        };
 
+        // Render Background Color
+        SDL_Color bgColor = getBackgroundColor();
+        if (bgColor.a > 0 && background_)
+        {
+            SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(getRenderer(), bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+            SDL_RenderFillRect(getRenderer(), &dstRect);
+        }
+
+        // Render Border Color
+        SDL_Color borderColor = getBorderColor();
+        if (borderColor.a > 0 && border_)
+        {
+            SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(getRenderer(), borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+            SDL_RenderRect(getRenderer(), &dstRect);
+        }
+
+
+        SpriteSheet* ss = iconSpriteSheet_.as<SpriteSheet>();
         if (ss && ss->isLoaded())
         {
-            ss->drawSprite(
-                static_cast<int>(icon_index_), // icon index
-                static_cast<int>(getX()),
-                static_cast<int>(getY()),
-                getColor());
+            SDL_FRect dstRect = {
+                static_cast<float>(getX()),
+                static_cast<float>(getY()),
+                static_cast<float>(getWidth()),
+                static_cast<float>(getHeight())
+            };
+            ss-> drawSprite(
+                 static_cast<int>(icon_index_), // icon index
+                dstRect, 
+                getColor(),
+                SDL_SCALEMODE_NEAREST
+            );
         }
 
     } // END: void IconButton::onRender()

@@ -69,6 +69,8 @@ namespace SDOM
         isClickable_ = init.isClickable;
         isEnabled_ = init.isEnabled;
         isHidden_ = init.isHidden;
+        background_ = init.hasBackground;
+        border_ = init.hasBorder;
         tabPriority_ = init.tabPriority;
         tabEnabled_ = init.tabEnabled;
         anchorTop_ = init.anchorTop;
@@ -170,13 +172,13 @@ namespace SDOM
         if (config["right"].valid()) setRight(get_float("left") + get_float("right", x + width));
         if (config["bottom"].valid()) setBottom(get_float("top") + get_float("bottom", y + height));
 
-    // set color
-    color_ = read_color("color", init_default.color);
-    foregroundColor_ = read_color("foreground_color", init_default.foregroundColor);
-    backgroundColor_ = read_color("background_color", init_default.backgroundColor);
-    borderColor_ = read_color("border_color", init_default.borderColor);
-    outlineColor_ = read_color("outline_color", init_default.outlineColor);
-    dropshadowColor_ = read_color("dropshadow_color", init_default.dropshadowColor);
+        // set color
+        color_ = read_color("color", init_default.color);
+        foregroundColor_ = read_color("foreground_color", init_default.foregroundColor);
+        backgroundColor_ = read_color("background_color", init_default.backgroundColor);
+        borderColor_ = read_color("border_color", init_default.borderColor);
+        outlineColor_ = read_color("outline_color", init_default.outlineColor);
+        dropshadowColor_ = read_color("dropshadow_color", init_default.dropshadowColor);
 
         // --- Optional Properties --- //
         setAnchorLeft(  stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_left", 
@@ -187,6 +189,7 @@ namespace SDOM
                         anchorPointToString_.at(init_default.anchorRight)))));
         setAnchorBottom(stringToAnchorPoint_.at(normalizeAnchorString( get_str("anchor_bottom", 
                         anchorPointToString_.at(init_default.anchorBottom)))));
+
         setZOrder(      get_int("z_order",      init_default.z_order     ));
         setPriority(    get_int("priority",     init_default.priority    ));
         setClickable(   get_bool("clickable",   init_default.isClickable ));
@@ -194,6 +197,8 @@ namespace SDOM
         setHidden(      get_bool("is_hidden",   init_default.isHidden    ));
         setTabPriority( get_int("tab_priority", init_default.tabPriority ));
         setTabEnabled(  get_bool("tab_enabled", init_default.tabEnabled  ));
+        setBackground(  get_bool("background", init_default.hasBackground) );
+        setBorder(      get_bool("border",     init_default.hasBorder) );
 
     } // END IDisplayObject::IDisplayObject(const sol::table& config)
 
@@ -302,6 +307,8 @@ namespace SDOM
         setHidden(      get_bool("is_hidden",   init_default.isHidden    ));
         setTabPriority( get_int("tab_priority", init_default.tabPriority ));
         setTabEnabled(  get_bool("tab_enabled", init_default.tabEnabled  ));
+        setBackground(  get_bool("background", init_default.hasBackground) );
+        setBorder(      get_bool("border",     init_default.hasBorder) );
 
     } // END IDisplayObject::IDisplayObject(const sol::table& config, const InitStruct& defaults)
 
@@ -1778,14 +1785,18 @@ namespace SDOM
         bind_void_b("setTabEnabled",    ::SDOM::setTabEnabled_lua);
 
         // Geometry & layout
-        bind_R_0("getX",            ::SDOM::getX_lua);
-        bind_R_0("getY",            ::SDOM::getY_lua);
-        bind_R_0("getWidth",        ::SDOM::getWidth_lua);
-        bind_R_0("getHeight",       ::SDOM::getHeight_lua);
-        bind_void_i("setX",         ::SDOM::setX_lua);
-        bind_void_i("setY",         ::SDOM::setY_lua);
-        bind_void_i("setWidth",     ::SDOM::setWidth_lua);
-        bind_void_i("setHeight",    ::SDOM::setHeight_lua);
+        bind_R_0("getX",                ::SDOM::getX_lua);
+        bind_R_0("getY",                ::SDOM::getY_lua);
+        bind_R_0("getWidth",            ::SDOM::getWidth_lua);
+        bind_R_0("getHeight",           ::SDOM::getHeight_lua);
+        bind_void_i("setX",             ::SDOM::setX_lua);
+        bind_void_i("setY",             ::SDOM::setY_lua);
+        bind_void_i("setWidth",         ::SDOM::setWidth_lua);
+        bind_void_i("setHeight",        ::SDOM::setHeight_lua);
+        bind_R_0("getBorder",           ::SDOM::getBorder_lua);
+        bind_void_b("setBorder",        ::SDOM::setBorder_lua);
+        bind_R_0("getBackground",       ::SDOM::getBackground_lua);
+        bind_void_b("setBackground",    ::SDOM::setBackground_lua);
 
         // Anchors
         bind_R_0("getAnchorTop",        ::SDOM::getAnchorTop_lua);

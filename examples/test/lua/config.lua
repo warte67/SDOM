@@ -440,10 +440,15 @@ local config = {
                     type = "IconButton",
                     x = 150,
                     y = 8,
-                    width = 8;
-                    height = 8;
+                    width = 16;     -- Icon Button is NOT Stretching
+                    height = 16;    -- Icon Button is ONLY using 8x8 icon SpriteSheet?
                     color = { r = 255, g = 255, b = 255, a = 255 },
-                    icon_resource = "internal_icon_8x8", -- test icon resource name resolution
+                    icon_resource = "internal_icon_16x16",
+                    -- icon_resource = "internal_icon_12x12",
+                    -- icon_resource = "internal_icon_8x8",
+
+                    border = true,
+
                     -- icon_index = 54 -- this works
                     -- icon_index = "hamburger" -- this works
                     icon_index = IconIndex.Hamburger -- use dot form for numeric constant
@@ -451,12 +456,22 @@ local config = {
                 {
                     name = "main_stage_arrowbutton",
                     type = "ArrowButton",
-                    x = 166,
+                    x = 182,
                     y = 8,
-                    width = 8,
-                    height = 8,
+                    width = 16,     -- Arrow Button is NOT Stretching
+                    height = 16,
                     direction = "up",
                     color = { r = 255, g = 255, b = 0, a = 255 },
+
+                    icon_resource = "internal_icon_16x16",
+                    -- icon_resource = "internal_icon_12x12",
+                    -- icon_resource = "internal_icon_8x8",
+
+                    border = false,
+                    border_color = { r = 255, g = 255, b = 255, a = 128 },
+                    background = false,
+                    background_color = { r = 0, g = 0, b = 0, a = 64 },
+
                     -- icon_resource = "internal_icon_8x8" -- test icon resource name resolution
                 },
                 {

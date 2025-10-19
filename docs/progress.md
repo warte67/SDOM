@@ -804,14 +804,19 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Supports both `vertical` and `horizontal` `Orientation`s.
   - `setValue()` is exposed to C++ and Lua.
   - **Now supports alternate icon sprite sizes:** ProgressBar can use any registered SpriteSheet (e.g., 8x8, 12x12, 16x16), and the bar and track are positioned and scaled correctly for all sizes.
+- **IconButton and ArrowButton**
+  - Both are now scaling to width and height.
+  - `IconButton` now correctly uses the proper icon SpriteSheet,
+  - The `border` flag doesnt seem to have any effect on `IconButton` based objects.
+    - Check with `border_color` and `background_color` these should work with `IconButton` objects
 
 ---
 ## [October 18, 2025]
+
 - **Universally support multiple icon set sizes:**
   - Refactored `IPanelObject` to properly render different sized icon SpriteSheet assets.
   - `Button`, `IconButton`, and `Frame` now make use of multi-sized `SpriteSheets` like the `RangeControls` now do.
   - `Checkbox` and `Radiobox` now make use of multi-sized `SpriteSheets` like the `RangeControls` now do.
-
 - **UnitTest Refactoring:**
   - Refactored `SpriteSheet_UnitTests` to utilize proper scaffolding patterns.
   - Refactored `GarbageCollection_UnitTests` to utilize proper scaffolding patterns.
@@ -819,6 +824,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Refactored `EventType_UnitTests` to utilize proper scaffolding patterns.
   - Refactored `DisplayHandle_UnitTests` to utilize proper scaffolding patterns.
   - Refactored `Lua_UnitTests` to utilize proper scaffolding patterns.
+- **Border and Background Flags:**
+  - moved to `IDisplayObject` with accessors `getBorder()` and `getBackground()` as getters and `setBorder()` and s`etBackground()` as mutators,
+  - Properties are likewise `border` and `background` in Lua.
 
 
 ---
