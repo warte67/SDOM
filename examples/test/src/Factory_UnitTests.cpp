@@ -8,6 +8,9 @@
 #include <SDOM/SDOM_DisplayHandle.hpp>
 #include "UnitTests.hpp"
 
+// NOTE: Apparently destroyObject() is not destroying children nodes
+
+
 namespace SDOM
 {
     bool Factory_UnitTests()

@@ -379,8 +379,8 @@ namespace SDOM
         }
 
         // label text property + legacy get/set
-        if (absent("labelText")) {
-            handle.set("labelText", sol::property(
+        if (absent("label_text")) {
+            handle.set("label_text", sol::property(
                 [](SDOM::DisplayHandle h) -> std::string {
                     if (!h.isValid()) return std::string();
                     if (h->getType() != Group::TypeName) return std::string();
@@ -417,8 +417,8 @@ namespace SDOM
         }
 
         // label color property + legacy get/set
-        if (absent("labelColor")) {
-            handle.set("labelColor", sol::property(
+        if (absent("label_color")) {
+            handle.set("label_color", sol::property(
                 [](SDOM::DisplayHandle h) -> SDL_Color {
                     if (!h.isValid()) return SDL_Color{255,255,255,255};
                     if (h->getType() != Group::TypeName) return SDL_Color{255,255,255,255};

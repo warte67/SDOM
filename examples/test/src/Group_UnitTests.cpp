@@ -76,13 +76,12 @@ namespace SDOM
             local ok = true
             local err = ""
 
-            -- local ok_create, h_or_err = pcall(function() return createDisplayObject("Label", cfg) end)
-            local ok_create, h_or_err = createDisplayObject("Label", cfg)
+            local group_obj = createDisplayObject("Group", cfg)
 
-            if not ok_create then
+            if not group_obj then
                 return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
             end
-            destroyDisplayObject(group_name)
+            destroyDisplayObject(group_name)  -- **BUG:**  This is NOT destroying the children!
             return { ok = true, err = "" }
         )lua").get<sol::table>();
         // report and return test condition state
@@ -91,6 +90,44 @@ namespace SDOM
         if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
     } // END: Group_test1()
+
+
+    bool Group_test2()
+    {
+        std::string testName = "Group #2";
+        std::string testDesc = "Label property and function symmetry";
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Lua test script
+        auto res = lua.script(R"lua(
+            -- return { ok = false, err = "unknown error" }
+            local group_name = "ut_group_2"
+            local txt = "Group Label"
+            local cfg = { 
+                name = group_name, 
+                type = "Group", 
+                font_resource = "internal_font_8x8", 
+                text = txt 
+            }
+            local ok = true
+            local err = ""
+            local group_obj = createDisplayObject("Group", cfg)            
+            if not group_obj then
+                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
+            end
+
+            -- print("getLabelText(): " .. group_obj:getLabelText())
+            print("label_text: " .. group_obj.label_text)
+
+            -- cleanup and return
+            destroyDisplayObject(group_name)  -- **BUG:**  This is NOT destroying the children!
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Group_test2()
 
 
 
@@ -103,6 +140,7 @@ namespace SDOM
         {
             [&]() { return Group_test0(); },   // UnitTest Scafolding
             [&]() { return Group_test1(); },   // Create and Bindings
+            [&]() { return Group_test2(); }    // Label property and function symmetry
         };
         for (auto& test : tests) 
         {
