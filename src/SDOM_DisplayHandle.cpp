@@ -58,6 +58,10 @@ namespace SDOM
         return DisplayHandle();
     }
 
+    // Ensure the shared handle usertype exists. This returns the minimal
+    // handle table which contains only core helpers. Per-type bindings
+    // should be placed into per-type tables created by
+    // ensure_type_bind_table().
     sol::table DisplayHandle::ensure_handle_table(sol::state_view lua) 
     {
         // Create the handle usertype once (no constructor), or reuse existing.
@@ -65,7 +69,51 @@ namespace SDOM
         {
             lua.new_usertype<DisplayHandle>(LuaHandleName, sol::no_constructor);
         }
+
+        // Ensure we have a minimal metatable installed that will route
+        // lookups to per-type tables when necessary. bind_minimal will
+        // populate the minimal function surface and set up the dispatcher.
+        bind_minimal(lua);
+
         return lua[LuaHandleName];
+    }
+
+    // Create or return a per-type binding table. If parentTypeName is
+    // provided, the returned table will have a metatable __index pointing
+    // to the parent's table so inheritance works.
+    sol::table DisplayHandle::ensure_type_bind_table(sol::state_view lua, const std::string& typeName, const std::string& parentTypeName)
+    {
+        // Create a central registry table: SDOM_Bindings
+        sol::table bindingsRoot;
+        if (!lua["SDOM_Bindings"].valid())
+        {
+            bindingsRoot = lua.create_table();
+            lua["SDOM_Bindings"] = bindingsRoot;
+        }
+        else
+        {
+            bindingsRoot = lua["SDOM_Bindings"];
+        }
+
+        // If the per-type table already exists, return it.
+        if (bindingsRoot[typeName].valid())
+        {
+            return bindingsRoot[typeName];
+        }
+
+        sol::table t = lua.create_table();
+        bindingsRoot[typeName] = t;
+
+        // If parent provided and parent table exists, set up metatable __index
+        if (!parentTypeName.empty() && bindingsRoot[parentTypeName].valid())
+        {
+            sol::table parent = bindingsRoot[parentTypeName];
+            sol::table mt = lua.create_table();
+            mt["__index"] = parent;
+            t[sol::metatable_key] = mt;
+        }
+
+        return t;
     }
 
     static inline void set_if_absent(sol::table& handle, const char* name, auto&& fn) 
@@ -79,13 +127,53 @@ namespace SDOM
 
     void DisplayHandle::bind_minimal(sol::state_view lua) 
     {
-        sol::table handle = ensure_handle_table(lua);
+        // Ensure the DisplayHandle usertype/global exists so that reading
+        // lua[LuaHandleName] yields a table (not nil). Some callers invoke
+        // bind_minimal directly without creating the usertype first.
+        if (!lua[LuaHandleName].valid()) {
+            lua.new_usertype<DisplayHandle>(LuaHandleName, sol::no_constructor);
+        }
+        sol::table handle = lua[LuaHandleName];
         // Minimal handle surface ONLY
-        set_if_absent(handle, "isValid", &DisplayHandle::isValid);
-        set_if_absent(handle, "getName", &DisplayHandle::getName_lua);
-        set_if_absent(handle, "getType", &DisplayHandle::getType_lua);
-        set_if_absent(handle, "setName", [](DisplayHandle& self, const std::string& newName) { self.setName(newName); });
-        set_if_absent(handle, "setType", [](DisplayHandle& self, const std::string& newType) { self.setType(newType); });
+    // Bind minimal helpers as lambdas that accept the userdata (DisplayHandle&)
+    // This ensures the Lua-colon call (obj:method()) correctly supplies the
+    // userdata as the first argument and avoids mismatched argument errors.
+    set_if_absent(handle, "isValid", [](DisplayHandle& self) { return self.isValid(); });
+    set_if_absent(handle, "getName", [](DisplayHandle& self) { return self.getName(); });
+    set_if_absent(handle, "getType", [](DisplayHandle& self) { return self.getType(); });
+    set_if_absent(handle, "setName", [](DisplayHandle& self, const std::string& newName) { self.setName(newName); });
+    set_if_absent(handle, "setType", [](DisplayHandle& self, const std::string& newType) { self.setType(newType); });
+
+        // Install dispatcher metamethods on the handle usertype so that
+        // lookups not present on the minimal table are forwarded to the
+        // per-type binding tables inside SDOM_Bindings.
+        // Only install once.
+        sol::table mt = handle[sol::metatable_key];
+        if (!mt.valid()) mt = lua.create_table();
+
+        if (!mt["__index"].valid())
+        {
+            // __index will check SDOM_Bindings[type] first, then fall back
+            // to the minimal handle table (which is 'handle' itself).
+            mt["__index"] = [=](DisplayHandle& h, const std::string& key) -> sol::object {
+                sol::state_view L = lua;
+                sol::table bindingsRoot = L["SDOM_Bindings"];
+                try {
+                    std::string rtype = h.getType();
+                    if (!rtype.empty() && bindingsRoot.valid() && bindingsRoot[rtype].valid())
+                    {
+                        sol::table t = bindingsRoot[rtype];
+                        sol::object v = t.raw_get_or(key, sol::lua_nil);
+                        if (v.valid() && v != sol::lua_nil) return v;
+                    }
+                } catch(...) {}
+                // fallback: return whatever is on the minimal handle table
+                sol::table minimal = L[LuaHandleName];
+                sol::object v = minimal.raw_get_or(key, sol::lua_nil);
+                return v;
+            };
+            handle[sol::metatable_key] = mt;
+        }
 
         // DO NOT add any other bindings here.
         // IDisplayObject and each descendant should call:

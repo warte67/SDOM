@@ -172,6 +172,8 @@ namespace SDOM
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/) {
 			sol::state_view sv = ts;
 			DisplayHandle h = fcopy();
+			// Ensure DisplayHandle usertype exists before constructing userdata
+			try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
 			return sol::make_object(sv, DisplayHandle());
 		});
@@ -309,6 +311,8 @@ namespace SDOM
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
 			sol::state_view sv = ts;
 			DisplayHandle h = fcopy(typeName, cfg);
+			// Ensure DisplayHandle usertype exists before constructing userdata
+			try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
 			return sol::make_object(sv, DisplayHandle());
 		});
@@ -353,6 +357,8 @@ namespace SDOM
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& s) {
 			sol::state_view sv = ts;
 			DisplayHandle h = fcopy(s);
+			// Ensure DisplayHandle usertype exists before constructing userdata
+			try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
 			return sol::make_object(sv, DisplayHandle());
 		});
