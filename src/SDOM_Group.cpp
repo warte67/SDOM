@@ -439,6 +439,52 @@ namespace SDOM
             });
         }
 
+        // Provide a function alias getLabel() in addition to the 'label' property
+        // so callers can use either form: group.label or group:getLabel().
+        if (absent("getLabel")) {
+            handle.set_function("getLabel", [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle {
+                if (!h.isValid()) return SDOM::DisplayHandle();
+                if (h->getType() != Group::TypeName) return SDOM::DisplayHandle();
+                Group* g = static_cast<Group*>(h.get());
+                return g->getLabel();
+            });
+        }
+
+        // Convenience accessors for sprite dimensions and group color
+        if (absent("getSpriteWidth")) {
+            handle.set_function("getSpriteWidth", [](SDOM::DisplayHandle h) -> int {
+                if (!h.isValid()) return 0;
+                if (h->getType() != Group::TypeName) return 0;
+                Group* g = static_cast<Group*>(h.get());
+                return g->getSpriteWidth();
+            });
+        }
+        if (absent("getSpriteHeight")) {
+            handle.set_function("getSpriteHeight", [](SDOM::DisplayHandle h) -> int {
+                if (!h.isValid()) return 0;
+                if (h->getType() != Group::TypeName) return 0;
+                Group* g = static_cast<Group*>(h.get());
+                return g->getSpriteHeight();
+            });
+        }
+
+        if (absent("getGroupColor")) {
+            handle.set_function("getGroupColor", [](SDOM::DisplayHandle h) -> SDL_Color {
+                if (!h.isValid()) return SDL_Color{255,255,255,255};
+                if (h->getType() != Group::TypeName) return SDL_Color{255,255,255,255};
+                Group* g = static_cast<Group*>(h.get());
+                return g->getGroupColor();
+            });
+        }
+        if (absent("setGroupColor")) {
+            handle.set_function("setGroupColor", [](SDOM::DisplayHandle h, SDL_Color c) {
+                if (!h.isValid()) return;
+                if (h->getType() != Group::TypeName) return;
+                Group* g = static_cast<Group*>(h.get());
+                g->setGroupColor(c);
+            });
+        }
+
         // Note: Group intentionally does not register legacy font getters/setters
         // (getFontSize/getFontWidth/getFontHeight and their setters) to avoid
         // clobbering the Label bindings on the shared DisplayHandle usertype.
