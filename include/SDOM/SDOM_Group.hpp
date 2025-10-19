@@ -5,6 +5,7 @@
 
 namespace SDOM
 {
+    class Label;
 
     class Group : public IPanelObject
     {

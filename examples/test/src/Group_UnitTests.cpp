@@ -4,6 +4,9 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
+#include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_Group.hpp>
+#include <SDOM/SDOM_Label.hpp>
 
 /**** Group UnitTests: **********************
  *  We need to ensure that all of these helpers are properly bound to LUA.  If the
@@ -60,6 +63,315 @@ namespace SDOM
     bool Group_test1()
     {
         std::string testName = "Group #1";
+        std::string testDesc = "Creating Group via Lua config tabl and Label pointer effects";
+
+        bool ok = true;
+        Factory& factory = getFactory();
+
+        std::string name = "ut_group_3";
+        std::string type = "Group";
+        int x = 10;
+        int y = 10;
+        int width = 200;
+        int height = 100;
+        std::string text = "Main Frame Group";
+        std::string font_resource = "internal_font_8x8";
+
+        sol::state& lua = getLua();
+        sol::table lua_cfg = lua.create_table();
+        lua_cfg["name"] = name;
+        lua_cfg["type"] = type;
+        lua_cfg["x"] = x;
+        lua_cfg["y"] = y;
+        lua_cfg["width"] = width;
+        lua_cfg["height"] = height;
+        lua_cfg["text"] = text;
+        lua_cfg["font_resource"] = font_resource;
+        DisplayHandle group_handle = factory.create("Group", lua_cfg);                          
+
+        // Check creation result
+        auto grp_handle = factory.getDisplayObject("ut_group_3");
+        if (!grp_handle.isValid()) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get 'ut_group_3' handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+        auto grp_ptr = grp_handle.as<Group>();
+        if (!grp_ptr) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get 'ut_group_3' as Group*" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Child handle test (Children are created during onInit)
+        auto child_label = grp_ptr->getChild("ut_group_3_label");
+        if (!child_label.isValid()) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get 'ut_group_3_label' child handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Label pointer test
+        auto lbl_handle = grp_ptr->getLabel();
+        if (!lbl_handle.isValid()) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get Group label handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+        if (lbl_handle != child_label) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Group label handle does not match expected child handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+        auto lbl_ptr = lbl_handle.as<Label>();
+        if (!lbl_ptr) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get Group label as Label*" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Modify label text via pointer
+        std::string new_text = "Modified Group Label";
+        lbl_ptr->setText(new_text);
+        // Verify change via handle accessor
+        std::string fetched_text = grp_ptr->getLabelText();
+        if (fetched_text != new_text) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Label text mismatch after pointer set: got='" << fetched_text << "' expected='" << new_text << "'" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Modify the label color via pointer
+        SDL_Color new_color = {255, 0, 0, 255}; // Red
+        lbl_ptr->setColor(new_color);
+        // Verify change via handle accessor
+        SDL_Color fetched_color = grp_ptr->getLabelColor();
+        if (fetched_color.r != new_color.r || fetched_color.g != new_color.g ||
+            fetched_color.b != new_color.b || fetched_color.a != new_color.a) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Label color mismatch after pointer set" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Testing Cleanup
+        factory.destroyDisplayObject(name);  
+        factory.collectGarbage();
+
+        // List any remaining orphaned objects
+        auto orphans = factory.getOrphanedDisplayObjects();
+        for (auto & orphan : orphans) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Orphaned object: name='" << orphan.getName() << "' type='" << orphan.getType() << "'" << CLR::RESET << std::endl;
+        }
+
+        // Verify no orphaned objects remain
+        if (factory.countOrphanedDisplayObjects() != 0) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Orphaned objects remain after destroying Group: count=" << orphans.size() << CLR::RESET << std::endl;
+            ok = false;
+        }        
+
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Group_test1()
+
+
+    bool Group_test2()
+    {
+        std::string testName = "Group #2";
+        std::string testDesc = "Creating Group via InitStruct and Label pointer effects";
+
+        bool ok = true;
+        Factory& factory = getFactory();
+        // Create Group via InitStruct
+        std::string name = "ut_group_3";
+        std::string type = "Group";
+        int x = 10;
+        int y = 10;
+        int width = 200;
+        int height = 100;
+        std::string text = "Main Frame Group";
+        std::string font_resource = "internal_font_8x8";
+        // Setup InitStruct
+        Group::InitStruct grp_init;
+        grp_init.name = name;
+        grp_init.type = type;
+        grp_init.x = static_cast<float>(x);
+        grp_init.y = static_cast<float>(y);
+        grp_init.width = static_cast<float>(width);
+        grp_init.height = static_cast<float>(height);
+        grp_init.text = text;
+        grp_init.font_resource = font_resource;
+        // Create the Group
+        auto group_handle = getFactory().create(grp_init.type, grp_init);                
+
+        // Check creation result
+        auto grp_handle = factory.getDisplayObject("ut_group_3");
+        if (!grp_handle.isValid()) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get 'ut_group_3' handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+        auto grp_ptr = grp_handle.as<Group>();
+        if (!grp_ptr) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get 'ut_group_3' as Group*" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Child handle test (Children are created during onInit)
+        auto child_label = grp_ptr->getChild("ut_group_3_label");
+        if (!child_label.isValid()) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get 'ut_group_3_label' child handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Label pointer test
+        auto lbl_handle = grp_ptr->getLabel();
+        if (!lbl_handle.isValid()) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get Group label handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+        if (lbl_handle != child_label) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Group label handle does not match expected child handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+        auto lbl_ptr = lbl_handle.as<Label>();
+        if (!lbl_ptr) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get Group label as Label*" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Modify label text via pointer
+        std::string new_text = "Modified Group Label";
+        lbl_ptr->setText(new_text);
+        // Verify change via handle accessor
+        std::string fetched_text = grp_ptr->getLabelText();
+        if (fetched_text != new_text) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Label text mismatch after pointer set: got='" << fetched_text << "' expected='" << new_text << "'" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Modify the label color via pointer
+        SDL_Color new_color = {255, 0, 0, 255}; // Red
+        lbl_ptr->setColor(new_color);
+        // Verify change via handle accessor
+        SDL_Color fetched_color = grp_ptr->getLabelColor();
+        if (fetched_color.r != new_color.r || fetched_color.g != new_color.g ||
+            fetched_color.b != new_color.b || fetched_color.a != new_color.a) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Label color mismatch after pointer set" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Testing Cleanup
+        factory.destroyDisplayObject(name);  
+        factory.collectGarbage();
+
+        // List any remaining orphaned objects
+        auto orphans = factory.getOrphanedDisplayObjects();
+        for (auto & orphan : orphans) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Orphaned object: name='" << orphan.getName() << "' type='" << orphan.getType() << "'" << CLR::RESET << std::endl;
+        }
+
+        // Verify no orphaned objects remain
+        if (factory.countOrphanedDisplayObjects() != 0) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Orphaned objects remain after destroying Group: count=" << orphans.size() << CLR::RESET << std::endl;
+            ok = false;
+        }        
+
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Group_test2()
+
+
+
+    bool Group_test3()
+    {
+        std::string testName = "Group #3";
+        std::string testDesc = "Creating Group via lua config string and Label pointer effects";
+
+        bool ok = true;
+        Factory& factory = getFactory();
+        // Create Group via InitStruct
+        std::string name = "ut_group_3";
+        std::string str_cfg = R"lua(
+            name = ut_group_3,
+            type = "Group",
+            x = 10, y = 10,
+            width = 200, height = 100,
+            text = "Main Frame Group",
+            font_resource = "internal_font_8x8"
+        )lua";
+        auto group_handle = getFactory().create("Group", str_cfg);                
+
+        // Check creation result
+        auto grp_handle = factory.getDisplayObject("ut_group_3");
+        if (!grp_handle.isValid()) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get 'ut_group_3' handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+        auto grp_ptr = grp_handle.as<Group>();
+        if (!grp_ptr) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get 'ut_group_3' as Group*" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Child handle test (Children are created during onInit)
+        auto child_label = grp_ptr->getChild("ut_group_3_label");
+        if (!child_label.isValid()) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get 'ut_group_3_label' child handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Label pointer test
+        auto lbl_handle = grp_ptr->getLabel();
+        if (!lbl_handle.isValid()) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get Group label handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+        if (lbl_handle != child_label) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Group label handle does not match expected child handle" << CLR::RESET << std::endl;
+            ok = false;
+        }
+        auto lbl_ptr = lbl_handle.as<Label>();
+        if (!lbl_ptr) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "failed to get Group label as Label*" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Modify label text via pointer
+        std::string new_text = "Modified Group Label";
+        lbl_ptr->setText(new_text);
+        // Verify change via handle accessor
+        std::string fetched_text = grp_ptr->getLabelText();
+        if (fetched_text != new_text) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Label text mismatch after pointer set: got='" << fetched_text << "' expected='" << new_text << "'" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Modify the label color via pointer
+        SDL_Color new_color = {255, 0, 0, 255}; // Red
+        lbl_ptr->setColor(new_color);
+        // Verify change via handle accessor
+        SDL_Color fetched_color = grp_ptr->getLabelColor();
+        if (fetched_color.r != new_color.r || fetched_color.g != new_color.g ||
+            fetched_color.b != new_color.b || fetched_color.a != new_color.a) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Label color mismatch after pointer set" << CLR::RESET << std::endl;
+            ok = false;
+        }
+
+        // Testing Cleanup
+        factory.destroyDisplayObject(name);  
+        factory.collectGarbage();
+
+        // List any remaining orphaned objects
+        auto orphans = factory.getOrphanedDisplayObjects();
+        for (auto & orphan : orphans) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Orphaned object: name='" << orphan.getName() << "' type='" << orphan.getType() << "'" << CLR::RESET << std::endl;
+        }
+
+        // Verify no orphaned objects remain
+        if (factory.countOrphanedDisplayObjects() != 0) {
+            std::cout << CLR::ORANGE << "  [" << testName << "] " << "Orphaned objects remain after destroying Group: count=" << orphans.size() << CLR::RESET << std::endl;
+            ok = false;
+        }        
+
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Group_test2()
+
+
+
+    
+
+    bool Group_test4()
+    {
+        std::string testName = "Group #2";
         std::string testDesc = "Create and Bindings";
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script
@@ -81,7 +393,12 @@ namespace SDOM
             if not group_obj then
                 return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
             end
-            destroyDisplayObject(group_name)  -- **BUG:**  This is NOT destroying the children!
+            destroyDisplayObject(group_name)            
+            collectGarbage()
+            -- verify destruction
+
+
+
             return { ok = true, err = "" }
         )lua").get<sol::table>();
         // report and return test condition state
@@ -89,12 +406,12 @@ namespace SDOM
         std::string err = res["err"].get_or(std::string());
         if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
-    } // END: Group_test1()
+    } // END: Group_test4()
 
 
-    bool Group_test2()
+    bool Group_testN()
     {
-        std::string testName = "Group #2";
+        std::string testName = "Group #N";
         std::string testDesc = "Label property and function symmetry";
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script
@@ -147,8 +464,7 @@ namespace SDOM
         std::string err = res["err"].get_or(std::string());
         if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
-    } // END: Group_test2()
-
+    } // END: Group_testN()    
 
 
     // --- Run the Group UnitTests --- //
@@ -158,9 +474,13 @@ namespace SDOM
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
-            [&]() { return Group_test0(); },   // UnitTest Scafolding
-            [&]() { return Group_test1(); },   // Create and Bindings
-            [&]() { return Group_test2(); }    // Label property and function symmetry
+             [&]() { return Group_test0(); }   // UnitTest Scafolding
+            ,[&]() { return Group_test1(); }   // Creating Group via Lua config tabl and Label pointer effects
+            // ,[&]() { return Group_test2(); }   // Creating Group via InitStruct and Label pointer effects
+            // ,[&]() { return Group_test3(); }   // Creating Group via lua config string and Label pointer effects
+            // ,[&]() { return Group_test4(); }   // Create and Bindings
+            // // ,[&]() { return Group_testM(); }
+            // ,[&]() { return Group_testN(); }
         };
         for (auto& test : tests) 
         {

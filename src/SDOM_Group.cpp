@@ -337,7 +337,7 @@ namespace SDOM
         // Register bindings into a per-type binding table instead of the
         // global DisplayHandle table. The DisplayHandle dispatcher will
         // route lookups to this table at runtime.
-        sol::table handle = SDOM::DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
+        sol::table handle = DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
 
         // Helper to check if a property/command is already registered
         auto absent = [&](const char* name) -> bool 
@@ -346,23 +346,6 @@ namespace SDOM
             return !cur.valid() || cur == sol::lua_nil;
         };
 
-        // expose 'name' property for Group (maps to getName / setName on the display object)
-        if (absent("name"))
-        {
-            handle.set("name", sol::property(
-                // getter
-                [](SDOM::DisplayHandle h) -> std::string 
-                {
-                    if (h.isValid()) return h->getName();
-                    return std::string();
-                },
-                // setter
-                [](SDOM::DisplayHandle h, const std::string& v) 
-                {
-                    if (h.isValid()) h->setName(v);
-                }
-            ));
-        }
 
         // expose 'label' property that returns the attached label DisplayHandle (read-only)
         if (absent("label"))

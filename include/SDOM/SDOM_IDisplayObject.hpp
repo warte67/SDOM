@@ -169,7 +169,7 @@ Notes & test ideas:
     private:
         std::chrono::milliseconds orphanGrace{ORPHAN_GRACE_PERIOD};
         std::chrono::steady_clock::time_point orphanedAt_ = std::chrono::steady_clock::now(); // Time when the object became orphaned
-        OrphanRetentionPolicy orphanPolicy_ = OrphanRetentionPolicy::RetainUntilManual; // Default policy
+        OrphanRetentionPolicy orphanPolicy_ = OrphanRetentionPolicy::AutoDestroy; // Default policy
 
 
     public:
