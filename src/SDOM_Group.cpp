@@ -288,6 +288,37 @@ namespace SDOM
 
 
 
+    // --- Label Helpers (C++ / LUA)--- //
+
+    DisplayHandle Group::getLabel() const           { return labelObject_; }
+    std::string Group::getLabelText() const         { auto* label = getLabelPtr(); return label ? label->getText() : ""; }
+    SDL_Color Group::getLabelColor() const          { auto* label = getLabelPtr(); return label ? label->getColor() : SDL_Color{255,255,255,255}; }
+    void Group::setLabelText(const std::string& t)  { if (auto* label = getLabelPtr()) label->setText(t); }
+    void Group::setLabelColor(SDL_Color c)          { if (auto* label = getLabelPtr()) label->setColor(c); }
+    void Group::setFontSize(int s)                  { if (auto* label = getLabelPtr()) label->setFontSize(s); }
+    void Group::setFontWidth(int w)                 { if (auto* label = getLabelPtr()) label->setFontWidth(w); }
+    void Group::setFontHeight(int h)                { if (auto* label = getLabelPtr()) label->setFontHeight(h); }
+    int Group::getFontSize() const                  { auto* label = getLabelPtr(); return label ? label->getFontSize() : 0; }
+    int Group::getFontWidth() const                 { auto* label = getLabelPtr(); return label ? label->getFontWidth() : 0; }
+    int Group::getFontHeight() const                { auto* label = getLabelPtr(); return label ? label->getFontHeight() : 0; }
+
+
+    // --- SpriteSheet Helpers (C++ / LUA)--- //           
+
+    AssetHandle Group::getSpriteSheet() const       { return IPanelObject::getSpriteSheet(); }
+    SDL_Color Group::getGroupColor() const          { return this->getColor(); }
+    void Group::setGroupColor(const SDL_Color& c)   { this->setColor(c); }
+    int Group::getSpriteWidth() const               { auto* ss = getSpriteSheetPtr(); return ss ? ss->getSpriteWidth() : 0; }
+    int Group::getSpriteHeight() const              { auto* ss = getSpriteSheetPtr(); return ss ? ss->getSpriteHeight() : 0; }
+
+
+    // --- Raw Pointer Accessors (for C++ only) --- //
+
+    Label* Group::getLabelPtr() const               { return labelObject_ ? labelObject_.as<Label>() : nullptr; }
+    SpriteSheet* Group::getSpriteSheetPtr() const   { auto handle = getSpriteSheet(); return handle ? handle.as<SpriteSheet>() : nullptr; }
+
+
+
     // --- Lua Registration --- //
 
     void Group::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
@@ -342,7 +373,7 @@ namespace SDOM
                     // ensure this is a Group before casting
                     if (h->getType() != Group::TypeName) return SDOM::DisplayHandle();
                     Group* btn = static_cast<Group*>(h.get());
-                    return btn->getLabelObject();
+                    return btn->getLabel();
                 }
             ));
         }

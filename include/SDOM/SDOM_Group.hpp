@@ -60,97 +60,54 @@ namespace SDOM
 
         // --- Virtual Methods --- //
 
-        virtual bool onInit() override;     // Called when the display object is initialized
-        virtual void onRender() override;   // Called to render the display object
-        virtual void onQuit() override;     // Called when the display object is being destroyed
+        virtual bool onInit() override;                     // Called when the display object is initialized
+        virtual void onRender() override;                   // Called to render the display object
+        virtual void onQuit() override;                     // Called when the display object is being destroyed
         virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
         virtual void onEvent(const Event& event) override;  // Called when an event occurs
-        virtual bool onUnitTest() override; // Called to perform unit tests on the object
+        virtual bool onUnitTest() override;                 // Called to perform unit tests on the object
 
 
         // --- Label Helpers (C++ / LUA)--- //
 
-        DisplayHandle getLabelObject() const { return labelObject_; }     
+        DisplayHandle getLabel() const;                     // get the internal label object handle
+        std::string getLabelText() const;                   // get the label text
+        void setLabelText(const std::string& txt);          // set the label text
+        SDL_Color getLabelColor() const;                    // get the label color
 
-        std::string getLabelText() const 
-        {
-            auto* label = getLabelPtr();
-            return label ? label->getText() : "";
-        }
+        int getFontSize() const;                            // Font Size Scales either Truetype or BitmapFonts
+        int getFontWidth() const;                           // only relevant to BitmapFonts
+        int getFontHeight() const;                          // only relevant to BitmapFonts
 
-        void setLabelText(const std::string& txt) 
-        {
-            auto* label = getLabelPtr();
-            if (label) label->setText(txt);
-        }
+        void setFontSize(int s);                            // Adjust the size of either Truetype or Bitmap based fonts
+        void setFontWidth(int w);                           // Adjust the width of the BitmapFont (no effect on Truetype)
+        void setFontHeight(int h);                          // Adjust the height of the BitmapFont (no effect on Truetype)
 
-        SDL_Color getLabelColor() const 
-        {
-            auto* label = getLabelPtr();
-            return label ? label->getColor() : SDL_Color{255,255,255,255};
-        }
-
-        void setLabelColor(SDL_Color c) 
-        {
-            auto* label = getLabelPtr();
-            if (label) label->setColor(c);
-        }
+        void setLabelColor(SDL_Color c);                    // set the label color
 
 
         // --- SpriteSheet Helpers (C++ / LUA)--- //           
 
-        AssetHandle getSpriteSheet() const { return IPanelObject::getSpriteSheet(); }
-        int getIconTileWidth() const 
-        {
-            auto* ss = getSpriteSheetPtr();
-            return ss ? ss->getSpriteWidth() : 0;
-        }
-
-        int getIconTileHeight() const 
-        {
-            auto* ss = getSpriteSheetPtr();
-            return ss ? ss->getSpriteHeight() : 0;
-        }
-
-        SDL_Color getGroupColor() const 
-        {
-            return this->getColor();
-        }   
-
-        void setGroupColor(const SDL_Color& c) 
-        {
-            this->setColor(c);
-        }
-
+        AssetHandle getSpriteSheet() const;                 // get the internal sprite sheet object handle
+        int getSpriteWidth() const;                         // get the icon tile width
+        int getSpriteHeight() const;                        // get the icon tile height
+        SDL_Color getGroupColor() const;                    // get the group color
+        void setGroupColor(const SDL_Color& c);             // set the group color
 
         // --- Raw Pointer Accessors (for C++ only) --- //
 
-        Label* getLabelPtr() const 
-        {
-            if (labelObject_) 
-            {
-                return labelObject_.as<Label>();
-            }
-            return nullptr;
-        }
-        SpriteSheet* getSpriteSheetPtr() const
-        {
-            if (auto handle = getSpriteSheet()) 
-            {
-                return handle.as<SpriteSheet>();
-            }
-            return nullptr;
-        }
+        Label* getLabelPtr() const;                         // get the internal label object pointer
+        SpriteSheet* getSpriteSheetPtr() const;             // get the internal sprite sheet object pointer
 
     protected:
-        DisplayHandle labelObject_; // internal label object for group text
-        std::string text_;     // initialized label text
-        std::string font_resource_ = "internal_font_8x8"; // default font resource name
-        std::string icon_resource_ = "internal_icon_8x8"; // default icon resource name
-        int font_size_ = 8;        // default font size (used during initialization)
-        int font_width_ = 8;       // default font width (used during initialization)
-        int font_height_ = 8;      // default font height (used during initialization)
-        SDL_Color label_color_ = {255, 255, 255, 255}; // default label color is white
+        DisplayHandle labelObject_;                         // internal label object for group text
+        std::string text_;                                  // initialized label text
+        std::string font_resource_ = "internal_font_8x8";   // default font resource name
+        std::string icon_resource_ = "internal_icon_8x8";   // default icon resource name
+        int font_size_ = 8;                                 // intended for use during initialization only
+        int font_width_ = 8;                                // intended for use during initialization only
+        int font_height_ = 8;                               // intended for use during initialization only
+        SDL_Color label_color_ = {255, 255, 255, 255};      // default label color is white
 
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
