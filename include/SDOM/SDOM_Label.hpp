@@ -226,8 +226,6 @@ namespace SDOM
         bool getItalic() const                  { return defaultStyle_.italic; }
         bool getUnderline() const               { return defaultStyle_.underline; }
         bool getStrikethrough() const           { return defaultStyle_.strikethrough; }
-        // bool getBorder() const                  { return defaultStyle_.border; }
-        // bool getBackground() const              { return defaultStyle_.background; }
         bool getOutline() const                 { return defaultStyle_.outline; }
         bool getDropshadow() const              { return defaultStyle_.dropshadow; }
         bool getWordwrap() const                { return defaultStyle_.wordwrap; }
@@ -262,8 +260,6 @@ namespace SDOM
         void setItalic(bool v)                  { defaultStyle_.italic = v; setDirty(); }
         void setUnderline(bool v)               { defaultStyle_.underline = v; setDirty(); }
         void setStrikethrough(bool v)           { defaultStyle_.strikethrough = v; setDirty(); }
-        // void setBorder(bool v)                  { defaultStyle_.border = v; setDirty(); }
-        // void setBackground(bool v)              { defaultStyle_.background = v; setDirty(); }
         void setOutline(bool v)                 { defaultStyle_.outline = v; setDirty(); }
         void setDropshadow(bool v)              { defaultStyle_.dropshadow = v; setDirty(); }
         void setWordwrap(bool v)                { defaultStyle_.wordwrap = v; setDirty(); }

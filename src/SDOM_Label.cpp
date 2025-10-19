@@ -239,6 +239,8 @@ namespace SDOM
             }
         }
 
+        
+
     } // END Label::Label(const sol::table& config)
 
     Label::~Label()
@@ -257,7 +259,8 @@ namespace SDOM
         }
         in_oninit = true;
 
-        if (resourceName_.empty()) 
+    
+    if (resourceName_.empty()) 
         {
             ERROR("Label::onInit() --> No font resource specified.");
             in_oninit = false;
@@ -282,7 +285,7 @@ namespace SDOM
             return false;
         }
 
-        // store the handle for later use
+    // store the handle for later use
         fontAsset = asset;
 
         // Adopt the font's declared type (bitmap or truetype) so downstream
@@ -333,6 +336,8 @@ namespace SDOM
                 }
             }
         }
+
+        
 
         // Capture initial parent dimensions so we can detect changes later
         if (auto parent = getParent()) {
@@ -1998,7 +2003,11 @@ if (LABEL_DEBUG)
                         }
                     };
 
-                    addIntFuncs("setFontSize", "getFontSize", &Label::setFontSize, &Label::getFontSize);
+                    // Add debug-friendly wrappers so we can trace unexpected test failures
+                    // Force-override any existing get/set for FontSize so Label's
+                    // debug wrappers are guaranteed to be called during unit tests.
+                    handle.set_function("setFontSize", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontSize(v); });
+                    handle.set_function("getFontSize", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontSize() : 0; });
                     addIntFuncs("setFontWidth", "getFontWidth", &Label::setFontWidth, &Label::getFontWidth);
                     addIntFuncs("setFontHeight", "getFontHeight", &Label::setFontHeight, &Label::getFontHeight);
                     addIntFuncs("setMaxWidth", "getMaxWidth", &Label::setMaxWidth, &Label::getMaxWidth);

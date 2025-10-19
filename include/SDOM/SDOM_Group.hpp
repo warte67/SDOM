@@ -78,11 +78,9 @@ namespace SDOM
         int getFontSize() const;                            // Font Size Scales either Truetype or BitmapFonts
         int getFontWidth() const;                           // only relevant to BitmapFonts
         int getFontHeight() const;                          // only relevant to BitmapFonts
-
         void setFontSize(int s);                            // Adjust the size of either Truetype or Bitmap based fonts
         void setFontWidth(int w);                           // Adjust the width of the BitmapFont (no effect on Truetype)
         void setFontHeight(int h);                          // Adjust the height of the BitmapFont (no effect on Truetype)
-
         void setLabelColor(SDL_Color c);                    // set the label color
 
 
