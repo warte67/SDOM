@@ -337,12 +337,12 @@ namespace SDOM
         // Register bindings into a per-type binding table instead of the
         // global DisplayHandle table. The DisplayHandle dispatcher will
         // route lookups to this table at runtime.
-        sol::table handle = DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
+        sol::table per_type_handle = DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
 
         // Helper to check if a property/command is already registered
         auto absent = [&](const char* name) -> bool 
         {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            sol::object cur = per_type_handle.raw_get_or(name, sol::lua_nil);
             return !cur.valid() || cur == sol::lua_nil;
         };
 
@@ -350,7 +350,7 @@ namespace SDOM
         // expose 'label' property that returns the attached label DisplayHandle (read-only)
         if (absent("label"))
         {
-            handle.set("label", sol::property(
+            per_type_handle.set("label", sol::property(
                 // getter
                 [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle 
                 {
@@ -365,7 +365,7 @@ namespace SDOM
 
         // label text property + legacy get/set
         if (absent("label_text")) {
-            handle.set("label_text", sol::property(
+            per_type_handle.set("label_text", sol::property(
                 [](SDOM::DisplayHandle h) -> std::string {
                     if (!h.isValid()) return std::string();
                     if (h->getType() != Group::TypeName) return std::string();
@@ -383,7 +383,7 @@ namespace SDOM
             ));
         }
         if (absent("getLabelText")) {
-            handle.set_function("getLabelText", [](SDOM::DisplayHandle h) -> std::string {
+            per_type_handle.set_function("getLabelText", [](SDOM::DisplayHandle h) -> std::string {
                 if (!h.isValid()) return std::string();
                 if (h->getType() != Group::TypeName) return std::string();
                 Group* g = static_cast<Group*>(h.get());
@@ -392,7 +392,7 @@ namespace SDOM
             });
         }
         if (absent("setLabelText")) {
-            handle.set_function("setLabelText", [](SDOM::DisplayHandle h, const std::string& v) {
+            per_type_handle.set_function("setLabelText", [](SDOM::DisplayHandle h, const std::string& v) {
                 if (!h.isValid()) return;
                 if (h->getType() != Group::TypeName) return;
                 Group* g = static_cast<Group*>(h.get());
@@ -403,7 +403,7 @@ namespace SDOM
 
         // label color property + legacy get/set
         if (absent("label_color")) {
-            handle.set("label_color", sol::property(
+            per_type_handle.set("label_color", sol::property(
                 [](SDOM::DisplayHandle h) -> SDL_Color {
                     if (!h.isValid()) return SDL_Color{255,255,255,255};
                     if (h->getType() != Group::TypeName) return SDL_Color{255,255,255,255};
@@ -421,7 +421,7 @@ namespace SDOM
             ));
         }
         if (absent("getLabelColor")) {
-            handle.set_function("getLabelColor", [](SDOM::DisplayHandle h) -> SDL_Color {
+            per_type_handle.set_function("getLabelColor", [](SDOM::DisplayHandle h) -> SDL_Color {
                 if (!h.isValid()) return SDL_Color{255,255,255,255};
                 if (h->getType() != Group::TypeName) return SDL_Color{255,255,255,255};
                 Group* g = static_cast<Group*>(h.get());
@@ -430,7 +430,7 @@ namespace SDOM
             });
         }
         if (absent("setLabelColor")) {
-            handle.set_function("setLabelColor", [](SDOM::DisplayHandle h, SDL_Color c) {
+            per_type_handle.set_function("setLabelColor", [](SDOM::DisplayHandle h, SDL_Color c) {
                 if (!h.isValid()) return;
                 if (h->getType() != Group::TypeName) return;
                 Group* g = static_cast<Group*>(h.get());
@@ -442,7 +442,7 @@ namespace SDOM
         // Provide a function alias getLabel() in addition to the 'label' property
         // so callers can use either form: group.label or group:getLabel().
         if (absent("getLabel")) {
-            handle.set_function("getLabel", [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle {
+            per_type_handle.set_function("getLabel", [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle {
                 if (!h.isValid()) return SDOM::DisplayHandle();
                 if (h->getType() != Group::TypeName) return SDOM::DisplayHandle();
                 Group* g = static_cast<Group*>(h.get());
@@ -452,7 +452,7 @@ namespace SDOM
 
         // Convenience accessors for sprite dimensions and group color
         if (absent("getSpriteWidth")) {
-            handle.set_function("getSpriteWidth", [](SDOM::DisplayHandle h) -> int {
+            per_type_handle.set_function("getSpriteWidth", [](SDOM::DisplayHandle h) -> int {
                 if (!h.isValid()) return 0;
                 if (h->getType() != Group::TypeName) return 0;
                 Group* g = static_cast<Group*>(h.get());
@@ -460,7 +460,7 @@ namespace SDOM
             });
         }
         if (absent("getSpriteHeight")) {
-            handle.set_function("getSpriteHeight", [](SDOM::DisplayHandle h) -> int {
+            per_type_handle.set_function("getSpriteHeight", [](SDOM::DisplayHandle h) -> int {
                 if (!h.isValid()) return 0;
                 if (h->getType() != Group::TypeName) return 0;
                 Group* g = static_cast<Group*>(h.get());
@@ -469,7 +469,7 @@ namespace SDOM
         }
 
         if (absent("getGroupColor")) {
-            handle.set_function("getGroupColor", [](SDOM::DisplayHandle h) -> SDL_Color {
+            per_type_handle.set_function("getGroupColor", [](SDOM::DisplayHandle h) -> SDL_Color {
                 if (!h.isValid()) return SDL_Color{255,255,255,255};
                 if (h->getType() != Group::TypeName) return SDL_Color{255,255,255,255};
                 Group* g = static_cast<Group*>(h.get());
@@ -477,7 +477,7 @@ namespace SDOM
             });
         }
         if (absent("setGroupColor")) {
-            handle.set_function("setGroupColor", [](SDOM::DisplayHandle h, SDL_Color c) {
+            per_type_handle.set_function("setGroupColor", [](SDOM::DisplayHandle h, SDL_Color c) {
                 if (!h.isValid()) return;
                 if (h->getType() != Group::TypeName) return;
                 Group* g = static_cast<Group*>(h.get());
@@ -493,7 +493,7 @@ namespace SDOM
 
         // expose sprite sheet and font resource getters/setters
         if (absent("getSpriteSheet")) {
-            handle.set_function("getSpriteSheet", [](SDOM::DisplayHandle h) -> AssetHandle {
+            per_type_handle.set_function("getSpriteSheet", [](SDOM::DisplayHandle h) -> AssetHandle {
                 if (!h.isValid()) return AssetHandle();
                 if (h->getType() != Group::TypeName) return AssetHandle();
                 Group* g = static_cast<Group*>(h.get());
@@ -501,7 +501,7 @@ namespace SDOM
             });
         }
         if (absent("getFontResourceName")) {
-            handle.set_function("getFontResourceName", [](SDOM::DisplayHandle h) -> std::string {
+            per_type_handle.set_function("getFontResourceName", [](SDOM::DisplayHandle h) -> std::string {
                 if (!h.isValid()) return std::string();
                 if (h->getType() != Group::TypeName) return std::string();
                 Group* g = static_cast<Group*>(h.get());
