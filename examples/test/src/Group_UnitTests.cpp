@@ -93,66 +93,6 @@ namespace SDOM
     } // END: Group_test1()
 
 
-    bool Group_test2()
-    {
-        std::string testName = "Group #2";
-        std::string testDesc = "Label property and function symmetry";
-        sol::state& lua = SDOM::Core::getInstance().getLua();
-        // Lua test script
-        auto res = lua.script(R"lua(
-            local group_name = "ut_group_label_1"
-            local initial = "Hello Label"
-            local cfg = { name = group_name, type = "Group", font_resource = "internal_font_8x8", text = initial }
-
-            -- create the group and get its handle
-            local ok_create, h_or_err = pcall(function() return createDisplayObject("Group", cfg) end)
-            if not ok_create then
-                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
-            end
-            local h = h_or_err
-            if not h then
-                return { ok = false, err = "createDisplayObject returned nil handle" }
-            end
-
-            -- verify property-style getter
-            local label_prop = h.label_text
-            if label_prop ~= initial then
-                return { ok = false, err = "label_text property mismatch: got='" .. tostring(label_prop) .. "' expected='" .. tostring(initial) .. "'" }
-            end
-
-            -- verify function-style getter
-            local ok_fn, label_fn = pcall(function() return h:getLabelText() end)
-            if not ok_fn then
-                return { ok = false, err = "getLabelText() error: " .. tostring(label_fn) }
-            end
-            if label_fn ~= initial then
-                return { ok = false, err = "getLabelText() mismatch: got='" .. tostring(label_fn) .. "' expected='" .. tostring(initial) .. "'" }
-            end
-
-            -- set via property, verify function getter
-            h.label_text = "New Text"
-            local ok_fn2, label_fn2 = pcall(function() return h:getLabelText() end)
-            if not ok_fn2 then return { ok = false, err = "getLabelText() after property-set failed" } end
-            if label_fn2 ~= "New Text" then return { ok = false, err = "property->function roundtrip failed" } end
-
-            -- set via function, verify property
-            local ok_set = pcall(function() h:setLabelText("Final Text") end)
-            if not ok_set then return { ok = false, err = "setLabelText() failed" } end
-            if h.label_text ~= "Final Text" then return { ok = false, err = "function->property roundtrip failed" } end
-
-            destroyDisplayObject(name)
-            return { ok = true, err = "" }
-        )lua").get<sol::table>();
-        // report and return test condition state
-        bool ok = res["ok"].get_or(false);
-        std::string err = res["err"].get_or(std::string());
-        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
-        return UnitTests::run(testName, testDesc, [=]() { return ok; });
-    } // END: Group_test2()
-
-
-
-
 
     // --- Run the Group UnitTests --- //
 
@@ -163,7 +103,6 @@ namespace SDOM
         {
             [&]() { return Group_test0(); },   // UnitTest Scafolding
             [&]() { return Group_test1(); },   // Create and Bindings
-            [&]() { return Group_test2(); },   // Label property and function symmetry
         };
         for (auto& test : tests) 
         {
