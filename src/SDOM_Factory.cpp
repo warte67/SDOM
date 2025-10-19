@@ -44,6 +44,17 @@ namespace SDOM
         if (initialized_) {
             return true;
         }
+        // Ensure the central Lua bindings root exists before any types register
+        try {
+            sol::state& lua = SDOM::getLua();
+            if (!lua["SDOM_Bindings"].valid()) {
+                sol::table bindingsRoot = lua.create_table();
+                lua["SDOM_Bindings"] = bindingsRoot;
+                // std::cout << "[Factory::onInit] created SDOM_Bindings root table" << std::endl;
+            } else {
+                // std::cout << "[Factory::onInit] SDOM_Bindings root already present" << std::endl;
+            }
+        } catch(...) {}
         // --- Lua UserType Registration --- //
         Core& core = getCore();
         core._registerLuaBindings("Core", core.getLua());
@@ -293,8 +304,56 @@ namespace SDOM
 
         // return initialized state
         initialized_ = true;
+
+        // Diagnostic: list everything in SDOM_Bindings["Group"]
+        if (false)
+        {
+            try {
+                sol::state& lua = SDOM::getLua();
+                sol::table bindingsRoot = lua["SDOM_Bindings"];
+                if (bindingsRoot.valid() && bindingsRoot["Group"].valid()) {
+                    sol::table g = bindingsRoot["Group"];
+                    sol::function tostring_fn = lua["tostring"];
+                    std::cout << "[Factory::onInit] SDOM_Bindings['Group'] contents:\n";
+                    for (auto& kv : g) {
+                        sol::object key = kv.first;
+                        sol::object val = kv.second;
+                        std::string keyStr;
+                        try {
+                            if (key.valid()) {
+                                if (key.is<std::string>()) keyStr = key.as<std::string>();
+                                else keyStr = tostring_fn(key);
+                            } else {
+                                keyStr = "<invalid key>";
+                            }
+                        } catch(...) { keyStr = "<key?>"; }
+
+                        std::string valStr;
+                        try {
+                            if (val.valid()) valStr = tostring_fn(val);
+                            else valStr = "<nil>";
+                        } catch(...) { valStr = "<value?>"; }
+
+                        bool rawPresent = false;
+                        try {
+                            if (key.is<std::string>()) {
+                                sol::object raw = g.raw_get_or(key.as<std::string>(), sol::lua_nil);
+                                rawPresent = (raw.valid() && raw != sol::lua_nil);
+                            }
+                        } catch(...) { rawPresent = false; }
+
+                        int valType = static_cast<int>(val.get_type());
+                        std::cout << "  key='" << keyStr << "' raw=" << (rawPresent ? "Y" : "N")
+                                << " type=" << valType << " val=" << valStr << "\n";
+                    }
+                } else {
+                    std::cout << "[Factory::onInit] Group bindings table missing entirely\n";
+                }
+            } catch(...) {}
+        }
+
         return initialized_;
-    }
+    } // END: bool Factory::onInit()
 
 
     // Maintenance orphaned objects based on their retention policy
@@ -553,8 +612,8 @@ namespace SDOM
             auto displayObject = it->second.fromLua(configCopy);
             if (!displayObject) 
             {
-                std::cout << "Factory::create: Failed to create display object of type '" << typeName
-                        << "' from Lua. Display object is nullptr.\n";
+                // std::cout << "Factory::create: Failed to create display object of type '" << typeName
+                //         << "' from Lua. Display object is nullptr.\n";
                 return DisplayHandle(); // Invalid handle
             }
             std::string name = config["name"];

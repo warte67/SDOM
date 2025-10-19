@@ -41,9 +41,9 @@ namespace SDOM
         template<typename Func>
         static bool run(const std::string& objName, const std::string& testName, Func&& testFunc) 
         {
-            printTest(objName, testName);
+            if (UNIT_TESTS_ENABLED)   printTest(objName, testName);
             bool result = testFunc();
-            printResult(testName, result);
+            if (UNIT_TESTS_ENABLED)   printResult(testName, result);
             return result;
         }
 

@@ -83,7 +83,7 @@ namespace SDOM
     // to the parent's table so inheritance works.
     sol::table DisplayHandle::ensure_type_bind_table(sol::state_view lua, const std::string& typeName, const std::string& parentTypeName)
     {
-        // Create a central registry table: SDOM_Bindings
+        // Create the central registry table: SDOM_Bindings
         sol::table bindingsRoot;
         if (!lua["SDOM_Bindings"].valid())
         {
@@ -95,14 +95,28 @@ namespace SDOM
             bindingsRoot = lua["SDOM_Bindings"];
         }
 
-        // If the per-type table already exists, return it.
+        // If the per-type table already exists, return it (diagnostic).
         if (bindingsRoot[typeName].valid())
         {
+            // try {
+            //     sol::function tostring_fn = lua["tostring"];
+            //     std::string existing = tostring_fn(bindingsRoot[typeName]);
+            //     std::cout << "[ensure_type_bind_table] returning existing table for type=" << typeName
+            //               << " table=" << existing << std::endl;
+            // } catch(...) {}
             return bindingsRoot[typeName];
         }
 
+        // Create and store a new per-type table.
         sol::table t = lua.create_table();
         bindingsRoot[typeName] = t;
+
+        // try {
+        //     sol::function tostring_fn = lua["tostring"];
+        //     std::string created = tostring_fn(t);
+        //     std::cout << "[ensure_type_bind_table] created table for type=" << typeName
+        //               << " table=" << created << std::endl;
+        // } catch(...) {}
 
         // If parent provided and parent table exists, set up metatable __index
         if (!parentTypeName.empty() && bindingsRoot[parentTypeName].valid())
@@ -111,10 +125,24 @@ namespace SDOM
             sol::table mt = lua.create_table();
             mt["__index"] = parent;
             t[sol::metatable_key] = mt;
+            try {
+                sol::function tostring_fn = lua["tostring"];
+                std::string parent_table_str;
+                try {
+                    sol::object obj = tostring_fn(parent);
+                    parent_table_str = (obj.valid() && obj.is<std::string>()) ? obj.as<std::string>() : "<non-string>";
+                } catch(...) {
+                    parent_table_str = "<tostring-failed>";
+                }
+                // std::cout << "[ensure_type_bind_table] set parent index for type=" << typeName
+                //           << " parent=" << parentTypeName
+                //           << " parent_table=" << parent_table_str << std::endl;
+            } catch(...) {}
         }
 
         return t;
     }
+
 
     static inline void set_if_absent(sol::table& handle, const char* name, auto&& fn) 
     {
@@ -135,14 +163,17 @@ namespace SDOM
         }
         sol::table handle = lua[LuaHandleName];
         // Minimal handle surface ONLY
-    // Bind minimal helpers as lambdas that accept the userdata (DisplayHandle&)
-    // This ensures the Lua-colon call (obj:method()) correctly supplies the
-    // userdata as the first argument and avoids mismatched argument errors.
-    set_if_absent(handle, "isValid", [](DisplayHandle& self) { return self.isValid(); });
-    set_if_absent(handle, "getName", [](DisplayHandle& self) { return self.getName(); });
-    set_if_absent(handle, "getType", [](DisplayHandle& self) { return self.getType(); });
-    set_if_absent(handle, "setName", [](DisplayHandle& self, const std::string& newName) { self.setName(newName); });
-    set_if_absent(handle, "setType", [](DisplayHandle& self, const std::string& newType) { self.setType(newType); });
+
+
+        // Bind minimal helpers as lambdas that accept the userdata (DisplayHandle&)
+        // This ensures the Lua-colon call (obj:method()) correctly supplies the
+        // userdata as the first argument and avoids mismatched argument errors.
+        set_if_absent(handle, "isValid", [](DisplayHandle& self) { return self.isValid(); });
+        set_if_absent(handle, "getName", [](DisplayHandle& self) { return self.getName(); });
+        set_if_absent(handle, "getType", [](DisplayHandle& self) { return self.getType(); });
+        set_if_absent(handle, "setName", [](DisplayHandle& self, const std::string& newName) { self.setName(newName); });
+        set_if_absent(handle, "setType", [](DisplayHandle& self, const std::string& newType) { self.setType(newType); });
+
 
         // Install dispatcher metamethods on the handle usertype so that
         // lookups not present on the minimal table are forwarded to the
@@ -158,19 +189,28 @@ namespace SDOM
             mt["__index"] = [=](DisplayHandle& h, const std::string& key) -> sol::object {
                 sol::state_view L = lua;
                 sol::table bindingsRoot = L["SDOM_Bindings"];
+                std::string rtype;
+                try { rtype = h.getType(); } catch(...) { rtype = std::string(); }
+                // try { std::cout << "[DisplayHandle::__index] lookup type='" << rtype << "' key='" << key << "'" << std::endl; } catch(...) {}
                 try {
-                    std::string rtype = h.getType();
                     if (!rtype.empty() && bindingsRoot.valid() && bindingsRoot[rtype].valid())
                     {
                         sol::table t = bindingsRoot[rtype];
-                        sol::object v = t.raw_get_or(key, sol::lua_nil);
-                        if (v.valid() && v != sol::lua_nil) return v;
+                        // Use operator[] so Lua's metatable __index chain is respected.
+                        sol::object v = t[key];
+                        if (v.valid() && v != sol::lua_nil) {
+                            // try { std::cout << "[DisplayHandle::__index] found in type table for key='" << key << "'" << std::endl; } catch(...) {}
+                            return v;
+                        } else {
+                            // try { std::cout << "[DisplayHandle::__index] not found in type table for key='" << key << "' (fallback)" << std::endl; } catch(...) {}
+                        }
                     }
                 } catch(...) {}
-                // fallback: return whatever is on the minimal handle table
+                // fallback: return whatever is on the minimal handle table using operator[]
                 sol::table minimal = L[LuaHandleName];
-                sol::object v = minimal.raw_get_or(key, sol::lua_nil);
-                return v;
+                sol::object mv = minimal[key];
+                // try { if (mv.valid() && mv != sol::lua_nil) std::cout << "[DisplayHandle::__index] found in minimal table for key='" << key << "'" << std::endl; else std::cout << "[DisplayHandle::__index] not found anywhere for key='" << key << "'" << std::endl; } catch(...) {}
+                return mv;
             };
             handle[sol::metatable_key] = mt;
         }

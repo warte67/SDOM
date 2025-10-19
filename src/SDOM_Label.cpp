@@ -2161,6 +2161,33 @@ if (LABEL_DEBUG)
             ));
         }
 
+        // Expose Label text as a property and legacy getText/setText functions
+        if (absent("text")) {
+            handle.set("text", sol::property(
+                [](DisplayHandle h) -> sol::object {
+                    Label* l = h.as<Label>();
+                    sol::state_view sv = SDOM::Core::getInstance().getLua();
+                    if (!l) return sol::nil;
+                    return sol::make_object(sv, l->getText());
+                },
+                [](DisplayHandle h, const std::string& v) {
+                    Label* l = h.as<Label>(); if (!l) return; l->setText(v);
+                }
+            ));
+        }
+
+        if (absent("getText")) {
+            handle.set_function("getText", [=](DisplayHandle h) -> std::string {
+                Label* l = h.as<Label>(); return l ? l->getText() : std::string();
+            });
+        }
+
+        if (absent("setText")) {
+            handle.set_function("setText", [=](DisplayHandle h, const std::string& v) {
+                Label* l = h.as<Label>(); if (l) l->setText(v);
+            });
+        }
+
         // Also provide function-style getters/setters for colors for legacy access patterns
         if (absent("getForegroundColor")) {
             handle.set_function("getForegroundColor", [=](DisplayHandle h) -> sol::object {

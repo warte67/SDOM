@@ -339,18 +339,20 @@ namespace SDOM
         // route lookups to this table at runtime.
         sol::table handle = DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
 
-        // Helper to check if a property/command is already registered
-        auto absent = [&](const char* name) -> bool 
+        // Check direct presence on the per-type table (bypass any __index
+        // metamethods). Always re-query the exact per-type table so we don't
+        // get false positives from fallbacks on the shared handle.
+        auto absent_raw = [&](const char* name) -> bool
         {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            sol::table per = DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
+            sol::object cur = per.raw_get_or(name, sol::lua_nil);
             return !cur.valid() || cur == sol::lua_nil;
         };
 
-
         // expose 'label' property that returns the attached label DisplayHandle (read-only)
-        if (absent("label"))
+        if (absent_raw("label"))
         {
-            handle.set("label", sol::property(
+            handle.raw_set("label", sol::property(
                 // getter
                 [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle 
                 {
@@ -364,8 +366,8 @@ namespace SDOM
         }
 
         // label text property + legacy get/set
-        if (absent("label_text")) {
-            handle.set("label_text", sol::property(
+        if (absent_raw("label_text")) {
+            handle.raw_set("label_text", sol::property(
                 [](SDOM::DisplayHandle h) -> std::string {
                     if (!h.isValid()) return std::string();
                     if (h->getType() != Group::TypeName) return std::string();
@@ -382,8 +384,8 @@ namespace SDOM
                 }
             ));
         }
-        if (absent("getLabelText")) {
-            handle.set_function("getLabelText", [](SDOM::DisplayHandle h) -> std::string {
+        if (absent_raw("getLabelText")) {
+            handle.raw_set("getLabelText", [](SDOM::DisplayHandle h) -> std::string {
                 if (!h.isValid()) return std::string();
                 if (h->getType() != Group::TypeName) return std::string();
                 Group* g = static_cast<Group*>(h.get());
@@ -391,8 +393,8 @@ namespace SDOM
                 return l ? l->getText() : std::string();
             });
         }
-        if (absent("setLabelText")) {
-            handle.set_function("setLabelText", [](SDOM::DisplayHandle h, const std::string& v) {
+        if (absent_raw("setLabelText")) {
+            handle.raw_set("setLabelText", [](SDOM::DisplayHandle h, const std::string& v) {
                 if (!h.isValid()) return;
                 if (h->getType() != Group::TypeName) return;
                 Group* g = static_cast<Group*>(h.get());
@@ -402,8 +404,8 @@ namespace SDOM
         }
 
         // label color property + legacy get/set
-        if (absent("label_color")) {
-            handle.set("label_color", sol::property(
+        if (absent_raw("label_color")) {
+            handle.raw_set("label_color", sol::property(
                 [](SDOM::DisplayHandle h) -> SDL_Color {
                     if (!h.isValid()) return SDL_Color{255,255,255,255};
                     if (h->getType() != Group::TypeName) return SDL_Color{255,255,255,255};
@@ -420,8 +422,8 @@ namespace SDOM
                 }
             ));
         }
-        if (absent("getLabelColor")) {
-            handle.set_function("getLabelColor", [](SDOM::DisplayHandle h) -> SDL_Color {
+        if (absent_raw("getLabelColor")) {
+            handle.raw_set("getLabelColor", [](SDOM::DisplayHandle h) -> SDL_Color {
                 if (!h.isValid()) return SDL_Color{255,255,255,255};
                 if (h->getType() != Group::TypeName) return SDL_Color{255,255,255,255};
                 Group* g = static_cast<Group*>(h.get());
@@ -429,8 +431,8 @@ namespace SDOM
                 return l ? l->getColor() : SDL_Color{255,255,255,255};
             });
         }
-        if (absent("setLabelColor")) {
-            handle.set_function("setLabelColor", [](SDOM::DisplayHandle h, SDL_Color c) {
+        if (absent_raw("setLabelColor")) {
+            handle.raw_set("setLabelColor", [](SDOM::DisplayHandle h, SDL_Color c) {
                 if (!h.isValid()) return;
                 if (h->getType() != Group::TypeName) return;
                 Group* g = static_cast<Group*>(h.get());
@@ -439,69 +441,70 @@ namespace SDOM
             });
         }
 
-        // Provide a function alias getLabel() in addition to the 'label' property
-        // so callers can use either form: group.label or group:getLabel().
-        if (absent("getLabel")) {
-            handle.set_function("getLabel", [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle {
+        // getLabel alias
+        if (absent_raw("getLabel")) {
+            handle.raw_set("getLabel", [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle {
                 if (!h.isValid()) return SDOM::DisplayHandle();
-                if (h->getType() != Group::TypeName) return SDOM::DisplayHandle();
+                try { if (h->getType() != Group::TypeName) return SDOM::DisplayHandle(); } catch(...) { return SDOM::DisplayHandle(); }
                 Group* g = static_cast<Group*>(h.get());
-                return g->getLabel();
+                SDOM::DisplayHandle out = g ? g->getLabel() : SDOM::DisplayHandle();
+                try {
+                    sol::state_view L = SDOM::getLua();
+                    sol::function tostring_fn = L["tostring"];
+                    std::string s = out.isValid() ? std::string("valid") : std::string("invalid");
+                    std::cout << "[Group::getLabel.binding] returning label handle: " << s << " type=" << (out.isValid() ? out.getType() : std::string("<nil>")) << " luaobj=" << (out.isValid() ? tostring_fn(out) : std::string("<nil>")) << std::endl;
+                } catch(...) {}
+                return out;
             });
         }
 
-        // Convenience accessors for sprite dimensions and group color
-        if (absent("getSpriteWidth")) {
-            handle.set_function("getSpriteWidth", [](SDOM::DisplayHandle h) -> int {
+        // sprite width/height
+        if (absent_raw("getSpriteWidth")) {
+            handle.raw_set("getSpriteWidth", [](SDOM::DisplayHandle h) -> int {
                 if (!h.isValid()) return 0;
-                if (h->getType() != Group::TypeName) return 0;
+                try { if (h->getType() != Group::TypeName) return 0; } catch(...) { return 0; }
                 Group* g = static_cast<Group*>(h.get());
-                return g->getSpriteWidth();
+                return g ? g->getSpriteWidth() : 0;
             });
         }
-        if (absent("getSpriteHeight")) {
-            handle.set_function("getSpriteHeight", [](SDOM::DisplayHandle h) -> int {
+        if (absent_raw("getSpriteHeight")) {
+            handle.raw_set("getSpriteHeight", [](SDOM::DisplayHandle h) -> int {
                 if (!h.isValid()) return 0;
-                if (h->getType() != Group::TypeName) return 0;
+                try { if (h->getType() != Group::TypeName) return 0; } catch(...) { return 0; }
                 Group* g = static_cast<Group*>(h.get());
-                return g->getSpriteHeight();
+                return g ? g->getSpriteHeight() : 0;
             });
         }
 
-        if (absent("getGroupColor")) {
-            handle.set_function("getGroupColor", [](SDOM::DisplayHandle h) -> SDL_Color {
-                if (!h.isValid()) return SDL_Color{255,255,255,255};
-                if (h->getType() != Group::TypeName) return SDL_Color{255,255,255,255};
+        // group color accessors
+        if (absent_raw("getGroupColor")) {
+            handle.raw_set("getGroupColor", [](SDOM::DisplayHandle h) -> SDL_Color {
+                if (!h.isValid()) return SDL_Color{0,0,0,0};
+                try { if (h->getType() != Group::TypeName) return SDL_Color{0,0,0,0}; } catch(...) { return SDL_Color{0,0,0,0}; }
                 Group* g = static_cast<Group*>(h.get());
-                return g->getGroupColor();
+                return g ? g->getGroupColor() : SDL_Color{0,0,0,0};
             });
         }
-        if (absent("setGroupColor")) {
-            handle.set_function("setGroupColor", [](SDOM::DisplayHandle h, SDL_Color c) {
+        if (absent_raw("setGroupColor")) {
+            handle.raw_set("setGroupColor", [](SDOM::DisplayHandle h, SDL_Color c) {
                 if (!h.isValid()) return;
-                if (h->getType() != Group::TypeName) return;
+                try { if (h->getType() != Group::TypeName) return; } catch(...) { return; }
                 Group* g = static_cast<Group*>(h.get());
-                g->setGroupColor(c);
+                if (g) g->setGroupColor(c);
             });
         }
-
-        // Note: Group intentionally does not register legacy font getters/setters
-        // (getFontSize/getFontWidth/getFontHeight and their setters) to avoid
-        // clobbering the Label bindings on the shared DisplayHandle usertype.
-        // Consumers should access the group's label via getLabel() and modify
-        // label properties directly when needed.
 
         // expose sprite sheet and font resource getters/setters
-        if (absent("getSpriteSheet")) {
-            handle.set_function("getSpriteSheet", [](SDOM::DisplayHandle h) -> AssetHandle {
+        if (absent_raw("getSpriteSheet")) {
+            handle.raw_set("getSpriteSheet", [](SDOM::DisplayHandle h) -> AssetHandle {
                 if (!h.isValid()) return AssetHandle();
                 if (h->getType() != Group::TypeName) return AssetHandle();
                 Group* g = static_cast<Group*>(h.get());
                 return g->getSpriteSheet();
             });
         }
-        if (absent("getFontResourceName")) {
-            handle.set_function("getFontResourceName", [](SDOM::DisplayHandle h) -> std::string {
+        if (absent_raw("getFontResourceName")) {
+            handle.raw_set("getFontResourceName", [](SDOM::DisplayHandle h) -> std::string {
                 if (!h.isValid()) return std::string();
                 if (h->getType() != Group::TypeName) return std::string();
                 Group* g = static_cast<Group*>(h.get());
@@ -509,8 +512,77 @@ namespace SDOM
             });
         }
 
+        // Pragmatic fallback: ensure core Group methods are also present on the
+        // minimal DisplayHandle global so colon-style calls (obj:getLabel())
+        // resolve even if the per-type dispatcher doesn't find them for some
+        // runtime reason. These are idempotent and check the handle type.
+        try {
+            sol::table minimal = DisplayHandle::ensure_handle_table(lua);
+            auto absent_min = [&](const char* name)->bool {
+                sol::object cur = minimal.raw_get_or(name, sol::lua_nil);
+                return !cur.valid() || cur == sol::lua_nil;
+            };
+            if (absent_min("getLabel")) {
+                minimal.set_function("getLabel", [](DisplayHandle h) -> DisplayHandle {
+                    if (!h.isValid()) return DisplayHandle();
+                    if (h->getType() != Group::TypeName) return DisplayHandle();
+                    Group* g = static_cast<Group*>(h.get());
+                    DisplayHandle out = g ? g->getLabel() : DisplayHandle();
+                    try {
+                        sol::state_view L = SDOM::getLua();
+                        sol::function tostring_fn = L["tostring"];
+                        std::string s = out.isValid() ? std::string("valid") : std::string("invalid");
+                        std::cout << "[Group::getLabel.fallback] returning label handle: " << s << " type=" << (out.isValid() ? out.getType() : std::string("<nil>")) << " luaobj=" << (out.isValid() ? tostring_fn(out) : std::string("<nil>")) << std::endl;
+                    } catch(...) {}
+                    return out;
+                });
+            }
+            if (absent_min("getLabelText")) {
+                minimal.set_function("getLabelText", [](DisplayHandle h) -> std::string {
+                    if (!h.isValid()) return std::string();
+                    if (h->getType() != Group::TypeName) return std::string();
+                    Group* g = static_cast<Group*>(h.get());
+                    Label* l = g ? g->getLabelPtr() : nullptr;
+                    return l ? l->getText() : std::string();
+                });
+            }
+            if (absent_min("getSpriteWidth")) {
+                minimal.set_function("getSpriteWidth", [](DisplayHandle h) -> int {
+                    if (!h.isValid()) return 0;
+                    if (h->getType() != Group::TypeName) return 0;
+                    Group* g = static_cast<Group*>(h.get());
+                    return g ? g->getSpriteWidth() : 0;
+                });
+            }
+            if (absent_min("getSpriteHeight")) {
+                minimal.set_function("getSpriteHeight", [](DisplayHandle h) -> int {
+                    if (!h.isValid()) return 0;
+                    if (h->getType() != Group::TypeName) return 0;
+                    Group* g = static_cast<Group*>(h.get());
+                    return g ? g->getSpriteHeight() : 0;
+                });
+            }
+        } catch(...) {}
+
 
         // --- additional Group-specific bindings can go here --- //
+
+        // try {
+        //     sol::function tostring_fn = lua["tostring"];
+        //     std::string handle_str = tostring_fn(handle);
+        //     std::cout << "[Group::_registerLuaBindings] handle table=" << handle_str << std::endl;
+        //     std::vector<std::string> dbg_keys = {"label","getLabel","getSpriteWidth","getSpriteHeight","getLabelText","getLabelColor","getFontResourceName"};
+        //     for (const auto& k : dbg_keys) {
+        //         sol::object raw = handle.raw_get_or(k, sol::lua_nil);
+        //         sol::object op = handle[k];
+        //         std::string rawS, opS;
+        //         try { rawS = raw.valid() ? tostring_fn(raw) : std::string("<nil>"); } catch(...) { rawS = "<raw-tostring-failed>"; }
+        //         try { opS = op.valid() ? tostring_fn(op) : std::string("<nil>"); } catch(...) { opS = "<op-tostring-failed>"; }
+        //         std::cout << "  key='" << k << "' raw=" << ((raw.valid() && raw != sol::lua_nil) ? "Y" : "N")
+        //                   << " op=" << ((op.valid() && op != sol::lua_nil) ? "Y" : "N")
+        //                   << " rawVal=" << rawS << " opVal=" << opS << std::endl;
+        //     }
+        // } catch(...) {}
 
     } // END: void Group::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

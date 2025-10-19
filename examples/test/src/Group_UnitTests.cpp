@@ -445,6 +445,17 @@ namespace SDOM
                 end
             end
 
+            -- Get the Label and verify text
+            local label_obj = group_obj:getLabel()
+            if not label_obj then
+                return { ok = false, err = "getLabel() returned nil" }
+            end
+            local label_text = label_obj:getText()
+            if label_text ~= txt then
+                return { ok = false, err = "Label text mismatch: got='" .. tostring(label_text) .. "' expected='" .. tostring(txt) .. "'" }
+            end 
+
+
 
 
             -- cleanup and return
@@ -540,6 +551,7 @@ namespace SDOM
 
     bool Group_UnitTests() 
     {
+        std::string objName = "Group UnitTests";
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
@@ -555,6 +567,8 @@ namespace SDOM
             bool testResult = test();
             allTestsPassed &= testResult;
         }
+        std::cout << CLR::indent() << CLR::LT_BLUE << "[" << objName << "] " << CLR::RESET;
+        std::cout << (allTestsPassed ? CLR::GREEN + " [PASSED]" : CLR::fg_rgb(255, 0, 0) + " [FAILED]") << CLR::RESET << std::endl;          
         return allTestsPassed;
     } // END: Group_UnitTests()
 

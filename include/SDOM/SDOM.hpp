@@ -70,6 +70,8 @@
 #include <sol/sol.hpp>
 
 constexpr bool DEBUG_REGISTER_LUA = false;
+#define UNIT_TESTS_ENABLED true
+
 
 // Enable verbose Lua-related test/info logs when set to 1. Default is off.
 #ifndef DEBUG_LUA_TESTS
