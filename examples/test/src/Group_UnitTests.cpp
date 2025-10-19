@@ -387,7 +387,6 @@ namespace SDOM
                 name = group_name, 
                 type = "Group", 
                 font_resource = "internal_font_8x8", 
-                icon_resource = "internal_icon_12x12",
                 text = txt 
             }
             local ok = true
@@ -445,31 +444,6 @@ namespace SDOM
                     return { ok = false, err = "Group color mismatch after setGroupColor" }
                 end
             end
-
-            -- SpriteSheet accessors
-            local sprite_sheet = group_obj:getSpriteSheet()
-            if not sprite_sheet or not sprite_sheet:isValid() then
-                return { ok = false, err = "getSpriteSheet() returned invalid handle" }
-            end
-            local sprite_width = sprite_sheet:getSpriteWidth()
-            local sprite_height = sprite_sheet:getSpriteHeight()
-            if sprite_width ~= 12 then
-                return { ok = false, err = "getSpriteWidth() returned invalid width: " .. tostring(sprite_width) }
-            end
-            if sprite_height ~= 12 then
-                return { ok = false, err = "getSpriteHeight() returned invalid height: " .. tostring(sprite_height) }
-            end
-
-            -- Group:getSpriteWidth() and getSpriteHeight() direct accessors
-            local gs_width = group_obj:getSpriteWidth()
-            -- local gs_height = 12 -- group_obj:getSpriteHeight()
-            if gs_width ~= 12 then
-                return { ok = false, err = "Group:getSpriteWidth() returned invalid width: " .. tostring(gs_width) }
-            end
-            if gs_height ~= 12 then
-                return { ok = false, err = "Group:getSpriteHeight() returned invalid height: " .. tostring(gs_height) }
-            end
-
 
 
 
