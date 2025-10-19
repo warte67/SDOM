@@ -59,13 +59,31 @@ namespace SDOM
 
     bool Group_test1()
     {
-        std::string testName = "Group #0";
+        std::string testName = "Group #1";
         std::string testDesc = "Create and Bindings";
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script
         auto res = lua.script(R"lua(
-                -- return { ok = false, err = "unknown error" }
-                return { ok = true, err = "" }
+            -- return { ok = false, err = "unknown error" }
+            local group_name = "ut_group_1"
+            local txt = "Group Label"
+            local cfg = { 
+                name = group_name, 
+                type = "Group", 
+                font_resource = "internal_font_8x8", 
+                text = txt 
+            }
+            local ok = true
+            local err = ""
+
+            -- local ok_create, h_or_err = pcall(function() return createDisplayObject("Label", cfg) end)
+            local ok_create, h_or_err = createDisplayObject("Label", cfg)
+
+            if not ok_create then
+                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
+            end
+            destroyDisplayObject(group_name)
+            return { ok = true, err = "" }
         )lua").get<sol::table>();
         // report and return test condition state
         bool ok = res["ok"].get_or(false);
