@@ -134,15 +134,15 @@ namespace SDOM
             lua.new_usertype<DisplayHandle>(LuaHandleName, sol::no_constructor);
         }
         sol::table handle = lua[LuaHandleName];
-        // Minimal handle surface ONLY
-    // Bind minimal helpers as lambdas that accept the userdata (DisplayHandle&)
-    // This ensures the Lua-colon call (obj:method()) correctly supplies the
-    // userdata as the first argument and avoids mismatched argument errors.
-    set_if_absent(handle, "isValid", [](DisplayHandle& self) { return self.isValid(); });
-    set_if_absent(handle, "getName", [](DisplayHandle& self) { return self.getName(); });
-    set_if_absent(handle, "getType", [](DisplayHandle& self) { return self.getType(); });
-    set_if_absent(handle, "setName", [](DisplayHandle& self, const std::string& newName) { self.setName(newName); });
-    set_if_absent(handle, "setType", [](DisplayHandle& self, const std::string& newType) { self.setType(newType); });
+
+        // Bind minimal helpers as lambdas that accept the userdata (DisplayHandle&)
+        // This ensures the Lua-colon call (obj:method()) correctly supplies the
+        // userdata as the first argument and avoids mismatched argument errors.
+        set_if_absent(handle, "isValid", [](DisplayHandle& self) { return self.isValid(); });
+        set_if_absent(handle, "getName", [](DisplayHandle& self) { return self.getName(); });
+        set_if_absent(handle, "getType", [](DisplayHandle& self) { return self.getType(); });
+        set_if_absent(handle, "setName", [](DisplayHandle& self, const std::string& newName) { self.setName(newName); });
+        set_if_absent(handle, "setType", [](DisplayHandle& self, const std::string& newType) { self.setType(newType); });
 
         // Install dispatcher metamethods on the handle usertype so that
         // lookups not present on the minimal table are forwarded to the
