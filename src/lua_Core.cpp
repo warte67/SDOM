@@ -281,7 +281,19 @@ namespace SDOM
 			registerOnInit_lua([pf]() -> bool {
 				sol::protected_function_result r = pf();
 				if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnInit error: ") + err.what()); return false; }
-				try { return r.get<bool>(); } catch (...) { return false; }
+				// Ensure the function returned at least one value before attempting to get<bool>()
+				try {
+					if (r.return_count() <= 0) {
+						ERROR(std::string("Lua registerOnInit error: no return value (expected boolean)"));
+						return false;
+					}
+					return r.get<bool>();
+				} catch (const std::exception& e) {
+					ERROR(std::string("Lua registerOnInit error: bad return type: ") + e.what());
+					return false;
+				} catch (...) {
+					return false;
+				}
 			});
 		} else if (name == "Quit") {
 			registerOnQuit_lua([pf]() { sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } });
@@ -292,7 +304,22 @@ namespace SDOM
 		} else if (name == "Render") {
 			registerOnRender_lua([pf]() { sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } });
 		} else if (name == "UnitTest") {
-			registerOnUnitTest_lua([pf]() -> bool { sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; } try { return r.get<bool>(); } catch (...) { return false; } });
+			registerOnUnitTest_lua([pf]() -> bool {
+				sol::protected_function_result r = pf();
+				if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUnitTest error: ") + err.what()); return false; }
+				try {
+					if (r.return_count() <= 0) {
+						ERROR(std::string("Lua registerOnUnitTest error: no return value (expected boolean)"));
+						return false;
+					}
+					return r.get<bool>();
+				} catch (const std::exception& e) {
+					ERROR(std::string("Lua registerOnUnitTest error: bad return type: ") + e.what());
+					return false;
+				} catch (...) {
+					return false;
+				}
+			});
 		} else if (name == "WindowResize") {
 			registerOnWindowResize_lua([pf](int w, int h) { sol::protected_function_result r = pf(w, h); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnWindowResize error: ") + err.what()); } });
 		} else {

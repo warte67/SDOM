@@ -651,9 +651,16 @@ namespace SDOM
             if (displayObject) 
             {
                 std::string name = init.name;
-                displayObject->onInit(); // Initialize the display object
+                // Insert into the registry and set type BEFORE calling onInit so
+                // child objects created during onInit can locate their parent
+                // via the Factory (getDomObj/getDisplayObject).
+                displayObject->setType(typeName); // Ensure type is set
+                displayObjects_[name] = std::move(displayObject);
+
+                // Initialize the display object now that it's in the registry
+                displayObjects_[name]->onInit();
+
                 // Dispatch EventType::OnInit for this newly-initialized object
-                // Included for completeness.  There may still be room to add an event listener.
                 {
                     auto& eventManager = getCore().getEventManager();
                     std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DisplayHandle(name, typeName));
@@ -662,8 +669,7 @@ namespace SDOM
                         initEvent->setRelatedTarget(stageHandle);
                     eventManager.dispatchEvent(std::move(initEvent), DisplayHandle(name, typeName));
                 }
-                displayObject->setType(typeName); // Ensure type is set
-                displayObjects_[name] = std::move(displayObject);
+
                 return DisplayHandle(name, typeName);
             }
         }
@@ -672,8 +678,10 @@ namespace SDOM
 
     DisplayHandle Factory::create(const std::string& typeName, const std::string& luaScript) 
     {
-        sol::state lua;
-        lua.open_libraries(sol::lib::base);
+        // Use the global SDOM Lua state instead of creating a fresh state. This
+        // ensures created tables/functions are visible to the rest of the
+        // application and preserves registered bindings and globals.
+        sol::state& lua = SDOM::getLua();
 
         // Try to parse and execute the string as a Lua table
         sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
@@ -885,8 +893,8 @@ namespace SDOM
 
     AssetHandle Factory::createAsset(const std::string& typeName, const std::string& luaScript)
     {
-        sol::state lua;
-        lua.open_libraries(sol::lib::base);
+        // Use global Lua state so created tables are visible to the rest of the app
+        sol::state& lua = SDOM::getLua();
         sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
         if (!result.valid() || !result.is<sol::table>()) {
             ERROR("Factory::createAsset: Provided string is not a valid Lua table.");

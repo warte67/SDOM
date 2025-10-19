@@ -63,7 +63,7 @@ namespace SDOM
     bool Group_test1()
     {
         std::string testName = "Group #1";
-        std::string testDesc = "Creating Group via Lua config tabl and Label pointer effects";
+        std::string testDesc = "Creating Group via Lua config table with Label pointer effects";
 
         bool ok = true;
         Factory& factory = getFactory();
@@ -168,7 +168,7 @@ namespace SDOM
     bool Group_test2()
     {
         std::string testName = "Group #2";
-        std::string testDesc = "Creating Group via InitStruct and Label pointer effects";
+        std::string testDesc = "Creating Group via InitStruct with Label pointer effects";
 
         bool ok = true;
         Factory& factory = getFactory();
@@ -274,20 +274,23 @@ namespace SDOM
     bool Group_test3()
     {
         std::string testName = "Group #3";
-        std::string testDesc = "Creating Group via lua config string and Label pointer effects";
+        std::string testDesc = "Creating Group via lua config string with Label pointer effects";
 
         bool ok = true;
         Factory& factory = getFactory();
         // Create Group via InitStruct
         std::string name = "ut_group_3";
-        std::string str_cfg = R"lua(
-            name = ut_group_3,
+        // Provide a valid Lua table expression as a string. The previous
+        // literal omitted braces and quotes around the name which caused Lua
+        // parsing/runtime errors when evaluated.
+        std::string str_cfg = R"lua({
+            name = "ut_group_3",
             type = "Group",
             x = 10, y = 10,
             width = 200, height = 100,
             text = "Main Frame Group",
             font_resource = "internal_font_8x8"
-        )lua";
+        })lua";
         auto group_handle = getFactory().create("Group", str_cfg);                
 
         // Check creation result
@@ -371,7 +374,7 @@ namespace SDOM
 
     bool Group_test4()
     {
-        std::string testName = "Group #2";
+        std::string testName = "Group #4";
         std::string testDesc = "Create and Bindings";
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script
@@ -396,8 +399,11 @@ namespace SDOM
             destroyDisplayObject(group_name)            
             collectGarbage()
             -- verify destruction
-
-
+            local orphans = getOrphanedDisplayObjects()
+            if #orphans > 0 then
+                ok = false
+                err = "Orphaned objects remain after destroying Group: count=" .. tostring(#orphans)
+            end
 
             return { ok = true, err = "" }
         )lua").get<sol::table>();
@@ -409,15 +415,15 @@ namespace SDOM
     } // END: Group_test4()
 
 
-    bool Group_testN()
+    bool Group_test5()
     {
-        std::string testName = "Group #N";
+        std::string testName = "Group #5";
         std::string testDesc = "Label property and function symmetry";
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script
         auto res = lua.script(R"lua(
             -- return { ok = false, err = "unknown error" }
-            local group_name = "ut_group_2"
+            local group_name = "ut_group_1"
             local txt = "Group Label"
             local cfg = { 
                 name = group_name, 
@@ -435,12 +441,13 @@ namespace SDOM
             -- print("getLabelText(): " .. group_obj:getLabelText())
 
             -- secondary check: fetch composed label handle (try type-specific accessors)
+
             local lbl = nil
-            if type(group_obj.getGroupLabel) == "function" then
-                lbl = group_obj:getGroupLabel()
-            elseif type(group_obj.getLabel) == "function" then
+            if type(group_obj.getLabel) == "function" then
                 lbl = group_obj:getLabel()
             end
+
+
 
             if lbl then
                 local lbltxt = nil
@@ -456,7 +463,14 @@ namespace SDOM
             end
 
             -- cleanup and return
-            destroyDisplayObject(group_name)  -- **BUG:**  This is NOT destroying the children!
+            destroyDisplayObject(group_name)
+            collectGarbage()
+            -- verify destruction
+            local orphans = getOrphanedDisplayObjects()
+            if #orphans > 0 then
+                ok = false
+                err = "Orphaned objects remain after destroying Group: count=" .. tostring(#orphans)
+            end            
             return { ok = true, err = "" }
         )lua").get<sol::table>();
         // report and return test condition state
@@ -474,13 +488,12 @@ namespace SDOM
         bool allTestsPassed = true;
         std::vector<std::function<bool()>> tests = 
         {
-             [&]() { return Group_test0(); }   // UnitTest Scafolding
-            ,[&]() { return Group_test1(); }   // Creating Group via Lua config tabl and Label pointer effects
-            // ,[&]() { return Group_test2(); }   // Creating Group via InitStruct and Label pointer effects
-            // ,[&]() { return Group_test3(); }   // Creating Group via lua config string and Label pointer effects
-            // ,[&]() { return Group_test4(); }   // Create and Bindings
-            // // ,[&]() { return Group_testM(); }
-            // ,[&]() { return Group_testN(); }
+             [&]() { return Group_test0(); }    // UnitTest Scafolding
+            ,[&]() { return Group_test1(); }    // Creating Group via Lua config table with Label pointer effects
+            ,[&]() { return Group_test2(); }    // Creating Group via InitStruct with Label pointer effects
+            ,[&]() { return Group_test3(); }    // Creating Group via lua config string with Label pointer effects
+            ,[&]() { return Group_test4(); }    // Create and Bindings
+            ,[&]() { return Group_test5(); }    // Label property and function symmetry
         };
         for (auto& test : tests) 
         {
