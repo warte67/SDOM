@@ -333,14 +333,14 @@ namespace SDOM
 	// --- Object Lookup --- //
 	DisplayHandle getDisplayObject_lua(const std::string& name) {
 		DisplayHandle h = Core::getInstance().getDisplayObject(name);
-		// Debug: log returned handle validity
-		try {
-			if (h.isValid() && h.get()) {
-				std::cout << "[DEBUG] getDisplayObject_lua returning handle name='" << h.getName() << "' type='" << h.getType() << "' valid=1\n";
-			} else {
-				std::cout << "[DEBUG] getDisplayObject_lua returning invalid handle (nil) for name='" << name << "'\n";
-			}
-		} catch(...) {}
+		// // Debug: log returned handle validity
+		// try {
+		// 	if (h.isValid() && h.get()) {
+		// 		std::cout << "[DEBUG] getDisplayObject_lua returning handle name='" << h.getName() << "' type='" << h.getType() << "' valid=1\n";
+		// 	} else {
+		// 		std::cout << "[DEBUG] getDisplayObject_lua returning invalid handle (nil) for name='" << name << "'\n";
+		// 	}
+		// } catch(...) {}
 		return h;
 	}
 	bool hasDisplayObject_lua(const std::string& name) { return Core::getInstance().hasDisplayObject(name); }

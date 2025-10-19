@@ -812,7 +812,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## [October 18, 2025]
-
 - **Universally support multiple icon set sizes:**
   - Refactored `IPanelObject` to properly render different sized icon SpriteSheet assets.
   - `Button`, `IconButton`, and `Frame` now make use of multi-sized `SpriteSheets` like the `RangeControls` now do.
@@ -827,6 +826,20 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Border and Background Flags:**
   - moved to `IDisplayObject` with accessors `getBorder()` and `getBackground()` as getters and `setBorder()` and s`etBackground()` as mutators,
   - Properties are likewise `border` and `background` in Lua.
+
+
+---
+### [October 19, 2025]
+
+- Implemented per-type Lua binding registry and dispatcher:
+  - Added DisplayHandle::ensure_type_bind_table(...) and a SDOM_Bindings registry.
+  - DisplayHandle now routes lookups to per-type binding tables via a __index dispatcher.
+- Migrated Group::_registerLuaBindings to register into the Group per-type table (demo migration).
+- Reverted temporary debug prints and cleaned up diagnostic logging introduced during investigation.
+- Added a focused registration-order regression unit test (create + immediate method call) to catch userdata/binding order regressions; test added and executed locally.
+- Status: Group migration complete as demo; Label migration pending and scheduled for tomorrow.
+- Next: migrate Label bindings to per-type tables, run full test suite, and iterate on any remaining compatibility shims if needed.
+
 
 
 ---

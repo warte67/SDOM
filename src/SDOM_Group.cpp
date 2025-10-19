@@ -334,10 +334,10 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-    // Register bindings into a per-type binding table instead of the
-    // global DisplayHandle table. The DisplayHandle dispatcher will
-    // route lookups to this table at runtime.
-    sol::table handle = SDOM::DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
+        // Register bindings into a per-type binding table instead of the
+        // global DisplayHandle table. The DisplayHandle dispatcher will
+        // route lookups to this table at runtime.
+        sol::table handle = SDOM::DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
 
         // Helper to check if a property/command is already registered
         auto absent = [&](const char* name) -> bool 

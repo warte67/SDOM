@@ -98,24 +98,25 @@ namespace SDOM
             sol::state& lua = Core::getInstance().getLua();
             // Use Lua to set/get the name via DisplayHandle bindings
             sol::protected_function_result res = lua.script(R"(
-                -- DEBUG: inspect Core and the bound function before invoking
-                print('DEBUG: Core =', Core)
-                print('DEBUG: Core.getDisplayObject =', Core.getDisplayObject)
+               -- -- DEBUG: inspect Core and the bound function before invoking
+               -- print('DEBUG: Core =', Core)
+               -- print('DEBUG: Core.getDisplayObject =', Core.getDisplayObject)
 
                 -- call as function with explicit self to avoid colon-call metamethod surprises
                 local h = Core.getDisplayObject(Core, 'luaGenericStage')
                 if not h then return nil, 'handle missing' end
 
                 -- print type/tostring for diagnostic
-                print('DEBUG: handle is type:', type(h), ' tostring=', tostring(h))
+                -- print('DEBUG: handle is type:', type(h), ' tostring=', tostring(h))
+
                 -- attempt to inspect metatable keys
-                local mt = getmetatable(h)
-                print('DEBUG: handle metatable:', mt)
-                if mt then
-                    local keys = {}
-                    for k,v in pairs(mt) do keys[#keys+1]=k end
-                    print('DEBUG: metatable keys:', table.concat(keys,','))
-                end
+                -- local mt = getmetatable(h)
+                -- print('DEBUG: handle metatable:', mt)
+                -- if mt then
+                --     local keys = {}
+                --     for k,v in pairs(mt) do keys[#keys+1]=k end
+                --     print('DEBUG: metatable keys:', table.concat(keys,','))
+                -- end
 
                 -- call setName/getName in a protected call so errors are returned instead of thrown
                 local ok, result = pcall(function()
