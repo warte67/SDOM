@@ -430,7 +430,7 @@ namespace SDOM
     void TristateButton::setState(ButtonState state) 
     { 
         if (state == buttonState_) return; // no change
-        INFO(getType() +"::setState() - on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
+        // INFO(getType() +"::setState() - on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
 
         onStateChanged(buttonState_, state); 
         // dispatch event

@@ -831,7 +831,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Next Steps:
-
+- Add LUA payload as events are dispatched from the EventManager, not directly as a result of DisplayObject::onEvent().
 - **Standardize the DisplayObject interface for C++ and LUA:**
   - `Label` should now be the model for standardization for C++ and LUA
   - Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:

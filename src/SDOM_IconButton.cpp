@@ -286,10 +286,25 @@ namespace SDOM
         }
         if (event.getType() == EventType::MouseClick)
         {
-            INFO(getType() << "::onEvent() - Event: " << event.getTypeName() 
-                    << " on IconButton: " << getName() 
-                    << " at address: " << this
-            ); // END INFO()
+            // INFO(getType() << "::onEvent() - Event: " << event.getTypeName() 
+            //         << " on IconButton: " << getName() 
+            //         << " at address: " << this
+            // ); // END INFO()
+
+            // NO! Don't do this here.  Instead we should add payload when the EventManager
+            //      dispatches events.
+
+                        // // dispatch ButtonClick event
+                        // queue_event(EventType::MouseClick, [this, event](Event& ev) {
+                        //     ev.setPayloadValue("mousse_button", static_cast<int>(event.getButton()));
+                        //     ev.setPayloadValue("name", getName());
+                        // });
+                        // // dispatch Mouse Multi Click Event
+                        // queue_event(EventType::MouseDoubleClick, [this, event](Event& ev) {
+                        //     ev.setPayloadValue("mousse_button", static_cast<int>(event.getButton()));
+                        //     ev.setPayloadValue("mouse_click_count", static_cast<int>(event.getClickCount()));
+                        //     ev.setPayloadValue("name", getName());
+                        // });            
         }
 
     } // END: void IconButton::onEvent(const Event& event)
