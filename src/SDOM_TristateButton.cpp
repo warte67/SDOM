@@ -237,10 +237,10 @@ namespace SDOM
             Label::InitStruct init;
             init.name = getName() + "_label";
             init.type = "Label";
-            init.x = getX() + 12;
-            init.y = getY() + 0;
-            init.width = getWidth() - 12;
-            init.height = 12;   
+            init.x = getX() + 12;     // adjusted below
+            init.y = getY() + 0;      // adjusted below
+            init.width = getWidth();  // adjusted below
+            init.height = 12;         // adjusted below
             init.alignment = LabelAlign::MIDDLE_LEFT;
             init.anchorLeft = AnchorPoint::TOP_LEFT;
             init.anchorTop = AnchorPoint::TOP_LEFT; 
@@ -291,15 +291,37 @@ namespace SDOM
                 iconBtn->setIconIndex(static_cast<IconIndex>(icon_index_));
             }
         }
+        IconButton* icn = iconButtonObject_.as<IconButton>();
+        if (!icn)
+        {
+            ERROR("Error: TristateButton::onInit() - iconButtonObject_ is not an IconButton for '" + getName() + "'");
+            return false;
+        }
+        SpriteSheet* ss = icn->getSpriteSheetPtr();
+        if (ss == nullptr)
+        {
+            ERROR("Error: TristateButton::onInit() - iconButtonObject_ is not a SpriteSheet for '" + getName() + "'");
+            return false;
+        }
+        icn->setWidth(ss->getSpriteWidth());
+        icn->setHeight(ss->getSpriteHeight());
+        icn->setX(getX() ); // - ss->getSpriteWidth()/2);
+        int iconButtonY = getY() + (getHeight() / 2 - icn->getHeight() / 2) - 0;
+        icn->setY(iconButtonY);
         if (labelObject_.isValid())
         {
             Label* label = labelObject_.as<Label>();
             if (label)
             {
+                int labelX = getX() + icn->getWidth() + 4;
+                label->setX(labelX);
+                label->setWidth(getWidth() - icn->getWidth() - 4);
                 int labelY = getY() + (getHeight() / 2 - label->getHeight() / 2) - 1;
                 label->setY(labelY);
             }
         }
+
+
         return SUPER::onInit();
 
     } // END: bool TristateButton::onInit()

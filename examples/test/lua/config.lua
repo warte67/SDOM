@@ -120,9 +120,12 @@ local config = {
                                     color = { r = 255, g = 255, b = 255, a = 255 },
                                     label_color = { r = 255, g = 255, b = 255, a = 255 },
                                     font_resource = "internal_ttf",
+                                    icon_resource = "internal_icon_16x16",
+                                    -- icon_resource = "internal_icon_12x12",
+                                    -- icon_resource = "internal_icon_8x8",
                                     font_size = 10,
                                     selected = true,
-                                    text = "First",
+                                    text = "16x16 Icon First",
                                     -- border = true
                                 },
                                 {
@@ -135,8 +138,11 @@ local config = {
                                     color = { r = 255, g = 255, b = 255, a = 255 },
                                     label_color = { r = 255, g = 255, b = 255, a = 255 },
                                     font_resource = "VarelaRound16",
+                                    -- icon_resource = "internal_icon_16x16",
+                                    icon_resource = "internal_icon_12x12",
+                                    -- icon_resource = "internal_icon_8x8",
                                     font_size = 10,
-                                    text = "Second",
+                                    text = "12x12 Icon Second",
                                     checked = true,     -- add a second selected radio
                                     -- border = true
                                 },
@@ -149,7 +155,10 @@ local config = {
                                     height = 16,    -- h: should work but doesnt
                                     color = { r = 255, g = 255, b = 255, a = 255 },
                                     label_color = { r = 255, g = 255, b = 255, a = 255 },
-                                    text = "Third",
+                                    -- icon_resource = "internal_icon_16x16",
+                                    -- icon_resource = "internal_icon_12x12",
+                                    icon_resource = "internal_icon_8x8",
+                                    text = "8x8 Icon Third",
                                     -- border = true
                                 }                                   
                             } -- mainFrameGroup
@@ -163,6 +172,11 @@ local config = {
                             height = 16,    -- h: should work but doesnt
                             color = { r = 255, g = 255, b = 255, a = 255 },
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
+
+                            -- icon_resource = "internal_icon_16x16",
+                            icon_resource = "internal_icon_12x12",
+                            -- icon_resource = "internal_icon_8x8",
+
                             font_resource = "internal_ttf",
                             font_size = 10,
                             text = "internal_ttf CheckButton",
@@ -177,6 +191,11 @@ local config = {
                             height = 16,    -- h: should work but doesnt
                             color = { r = 255, g = 255, b = 255, a = 255 },
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
+
+                            -- icon_resource = "internal_icon_16x16",
+                            icon_resource = "internal_icon_12x12",
+                            -- icon_resource = "internal_icon_8x8",
+
                             font_resource = "VarelaRound16",
                             font_size = 10,
                             text = "VarelaRound16 CheckButton",
@@ -191,6 +210,11 @@ local config = {
                             height = 16,    -- h: should work but doesnt
                             color = { r = 255, g = 255, b = 255, a = 255 },
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
+
+                            -- icon_resource = "internal_icon_16x16",
+                            icon_resource = "internal_icon_12x12",
+                            -- icon_resource = "internal_icon_8x8",
+
                             text = "font_8x8 CheckButton",
                             -- border = true
                         },                             
@@ -203,6 +227,11 @@ local config = {
                             height = 16,    -- h: should work but doesnt
                             color = { r = 255, g = 255, b = 255, a = 255 },
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
+
+                            -- icon_resource = "internal_icon_16x16",
+                            icon_resource = "internal_icon_12x12",
+                            -- icon_resource = "internal_icon_8x8",
+
                             font_resource = "internal_ttf",
                             font_size = 10,
                             text = "internal_ttf RadioButton",
@@ -218,6 +247,11 @@ local config = {
                             height = 16,    -- h: should work but doesnt
                             color = { r = 255, g = 255, b = 255, a = 255 },
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
+
+                            -- icon_resource = "internal_icon_16x16",
+                            icon_resource = "internal_icon_12x12",
+                            -- icon_resource = "internal_icon_8x8",
+
                             font_resource = "VarelaRound16",
                             font_size = 10,
                             text = "VarelaRound16 RadioButton",
@@ -232,6 +266,11 @@ local config = {
                             height = 16,    -- h: should work but doesnt
                             color = { r = 255, g = 255, b = 255, a = 255 },
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
+
+                            -- icon_resource = "internal_icon_16x16",
+                            icon_resource = "internal_icon_12x12",
+                            -- icon_resource = "internal_icon_8x8",
+
                             text = "font_8x8 RadioButton",
                             -- border = true
                         },
@@ -244,6 +283,11 @@ local config = {
                             height = 16,    -- h: should work but doesnt
                             color = { r = 255, g = 255, b = 255, a = 255 },
                             label_color = { r = 255, g = 255, b = 255, a = 255 },
+
+                            -- icon_resource = "internal_icon_16x16",
+                            icon_resource = "internal_icon_12x12",
+                            -- icon_resource = "internal_icon_8x8",
+
                             font_resource = "VarelaRound16",
                             font_size = 10,
                             -- state = "mixed", -- "unchecked", "checked", "indeterminate"

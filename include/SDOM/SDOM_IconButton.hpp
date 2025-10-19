@@ -43,9 +43,9 @@ namespace SDOM
     protected:
         // --- Constructors --- //
         IconButton(const InitStruct& init);  
-    IconButton(const sol::table& config);
-    // Defaults-aware Lua constructor so derived classes can forward their InitStruct()
-    IconButton(const sol::table& config, const InitStruct& defaults);
+        IconButton(const sol::table& config);
+        // Defaults-aware Lua constructor so derived classes can forward their InitStruct()
+        IconButton(const sol::table& config, const InitStruct& defaults);
 
     public:
 
@@ -79,7 +79,7 @@ namespace SDOM
         AssetHandle getSpriteSheetHandle() const { return iconSpriteSheet_; }
 
         // Convenience: return raw SpriteSheet* (or nullptr) for quick checks.
-        SpriteSheet* getSpriteSheet() const { return iconSpriteSheet_.as<SpriteSheet>(); }
+        SpriteSheet* getSpriteSheetPtr() const { return iconSpriteSheet_.as<SpriteSheet>(); }
 
     protected:
         AssetHandle iconSpriteSheet_; // internal icon SpriteSheet object for IconButton

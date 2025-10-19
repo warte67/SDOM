@@ -111,7 +111,7 @@ namespace SDOM
         }
 
         // If an icon spritesheet is configured, validate its dimensions
-        SpriteSheet* ss = getSpriteSheet();
+        SpriteSheet* ss = getSpriteSheetPtr();
         if (ss) {
             if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
                 DEBUG_LOG("[UnitTest] ArrowButton '" << getName() << "' has invalid sprite size: w="

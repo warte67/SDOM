@@ -807,8 +807,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## [October 18, 2025]
-- Refactored `IPanelObject` to properly render different sized icon SpriteSheet assets.
+- **Universally support multiple icon set sizes:**
+  - Refactored `IPanelObject` to properly render different sized icon SpriteSheet assets.
   - `Button`, `IconButton`, and `Frame` now make use of multi-sized `SpriteSheets` like the `RangeControls` now do.
+  - `Checkbox` and `Radiobox` now make use of multi-sized `SpriteSheets` like the `RangeControls` now do.
 
 - **UnitTest Refactoring:**
   - Refactored `SpriteSheet_UnitTests` to utilize proper scaffolding patterns.
@@ -821,27 +823,28 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Next Steps:
-- `Checkbox` and `Radiobox` need to make use of multi-sized `SpriteSheets` like the `RangeControls` now do.
 
-- Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:
-  - Add `Group` unit tests to validate Lua all property setting and resource resolution.
-  - Add `Button` unit tests to validate Lua all property setting, label access, and event listener behavior.
-  - Add `Checkbox` unit tests to validate Lua all property setting, label access, and event listener behavior.
-  - Add `Frame` unit tests to validate Lua all property setting and icon rendering.
-  - Add `IPanelObject` unit tests to validate Lua all property setting and icon rendering.
-  - Add `TTFAsset` unit tests to validate Lua all property setting and icon rendering.
-  - Add `TruetypeFont` unit tests to validate Lua all property setting and icon rendering.
-  - Add `BitmapFont` unit tests to validate Lua all property setting and icon rendering.
-  - Add `IconButton` unit tests to validate Lua all property setting and icon rendering.
-  - Add `ArrowButton` unit tests to validate Lua all property setting and icon rendering.
-  - Add `IButtonObject` unit tests to validate Lua all property setting and icon rendering.
-  - Add `TristateButton` unit tests to validate Lua all property setting and icon rendering.
-  - Add `CheckButton` unit tests to validate Lua all property setting and icon rendering.
-  - Add `RadioButton` unit tests to validate Lua all property setting and icon rendering.
-  - Add `IRangeControl` unit tests to validate Lua all property setting and icon rendering.
-  - Add `Slider` unit tests to validate Lua all property setting and icon rendering.
-  - Add `ProgressBar` unit tests to validate Lua all property setting and icon rendering.
-  - Add `Scrollbar` unit tests to validate Lua all property setting and icon rendering.
+- **Standardize the DisplayObject interface for C++ and LUA:**
+  - `Label` should now be the model for standardization for C++ and LUA
+  - Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:
+    - Add `Group` unit tests to validate Lua all property setting and resource resolution.
+    - Add `Button` unit tests to validate Lua all property setting, label access, and event listener behavior.
+    - Add `Checkbox` unit tests to validate Lua all property setting, label access, and event listener behavior.
+    - Add `Frame` unit tests to validate Lua all property setting and icon rendering.
+    - Add `IPanelObject` unit tests to validate Lua all property setting and icon rendering.
+    - Add `TTFAsset` unit tests to validate Lua all property setting and icon rendering.
+    - Add `TruetypeFont` unit tests to validate Lua all property setting and icon rendering.
+    - Add `BitmapFont` unit tests to validate Lua all property setting and icon rendering.
+    - Add `IconButton` unit tests to validate Lua all property setting and icon rendering.
+    - Add `ArrowButton` unit tests to validate Lua all property setting and icon rendering.
+    - Add `IButtonObject` unit tests to validate Lua all property setting and icon rendering.
+    - Add `TristateButton` unit tests to validate Lua all property setting and icon rendering.
+    - Add `CheckButton` unit tests to validate Lua all property setting and icon rendering.
+    - Add `RadioButton` unit tests to validate Lua all property setting and icon rendering.
+    - Add `IRangeControl` unit tests to validate Lua all property setting and icon rendering.
+    - Add `Slider` unit tests to validate Lua all property setting and icon rendering.
+    - Add `ProgressBar` unit tests to validate Lua all property setting and icon rendering.
+    - Add `Scrollbar` unit tests to validate Lua all property setting and icon rendering.
 
 ---
 ## Long Term To Do:
