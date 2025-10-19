@@ -1768,33 +1768,110 @@ if (LABEL_DEBUG)
         //     }
         // };
 
-        // // small helper to validate and cast the AssetHandle -> Label*
-            // Helper to check if a property/command is already registered (reuse pattern from IDisplayObject)
-            auto absent = [&](const char* name) -> bool {
-                sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-                return !cur.valid() || cur == sol::lua_nil;
-            };
+        // Helper to check if a property/command is already registered (reuse pattern from IDisplayObject)
+        auto absent = [&](const char* name) -> bool {
+            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            return !cur.valid() || cur == sol::lua_nil;
+        };
 
-            // small helper to validate and cast the DisplayHandle -> Label*
-            auto cast_label_from_handle = [](DisplayHandle& h) -> Label* {
-                if (!h.isValid()) { ERROR("invalid DisplayHandle provided to Label method"); }
-                IDisplayObject* base = dynamic_cast<IDisplayObject*>(h.get());
-                Label* label = dynamic_cast<Label*>(base);
-                if (!label) { ERROR("invalid Label object"); }
-                return label;
-            };
+        // small helper to validate and cast the DisplayHandle -> Label*
+        auto cast_label_from_handle = [](DisplayHandle& h) -> Label* {
+            if (!h.isValid()) { ERROR("invalid DisplayHandle provided to Label method"); }
+            IDisplayObject* base = dynamic_cast<IDisplayObject*>(h.get());
+            Label* label = dynamic_cast<Label*>(base);
+            if (!label) { ERROR("invalid Label object"); }
+            return label;
+        };
 
-            // Register Label inspection accessors on the DisplayHandle shared table
-            if (absent("getTokenList")) {
-                handle.set_function("getTokenList", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
-                    Label* lbl = cast_label_from_handle(self);
-                    sol::state_view sv = SDOM::Core::getInstance().getLua();
-                    sol::table t = sv.create_table();
-                    const auto& list = lbl->getTokenList();
-                    int idx = 1;
-                    for (const auto& tk : list) {
+        // Register Label inspection accessors on the DisplayHandle shared table
+        if (absent("getTokenList")) {
+            handle.set_function("getTokenList", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
+                Label* lbl = cast_label_from_handle(self);
+                sol::state_view sv = SDOM::Core::getInstance().getLua();
+                sol::table t = sv.create_table();
+                const auto& list = lbl->getTokenList();
+                int idx = 1;
+                for (const auto& tk : list) {
+                    sol::table e = sv.create_table();
+                    // expose type as string for readability
+                    std::string typeStr;
+                    switch (tk.type) {
+                        case Label::TokenType::Word: typeStr = "word"; break;
+                        case Label::TokenType::Escape: typeStr = "escape"; break;
+                        case Label::TokenType::Space: typeStr = "space"; break;
+                        case Label::TokenType::Punctuation: typeStr = "punct"; break;
+                        case Label::TokenType::Newline: typeStr = "newline"; break;
+                        case Label::TokenType::Tab: typeStr = "tab"; break;
+                        default: typeStr = "unknown"; break;
+                    }
+                    e["type"] = typeStr;
+                    e["text"] = tk.text;
+                    // expose full FontStyle to Lua so tests can assert style flags
+                    sol::table style = sv.create_table();
+                    // boolean style flags
+                    style["bold"] = tk.style.bold;
+                    style["italic"] = tk.style.italic;
+                    style["underline"] = tk.style.underline;
+                    style["strikethrough"] = tk.style.strikethrough;
+                    style["border"] = tk.style.border;
+                    style["background"] = tk.style.background;
+                    style["outline"] = tk.style.outline;
+                    style["dropshadow"] = tk.style.dropshadow;
+                    // sizing and layout
+                    style["font_size"] = tk.style.fontSize;
+                    style["font_width"] = tk.style.fontWidth;
+                    style["font_height"] = tk.style.fontHeight;
+                    style["wordwrap"] = tk.style.wordwrap;
+                    style["auto_resize"] = tk.style.auto_resize;
+                    style["max_width"] = tk.style.maxWidth;
+                    style["max_height"] = tk.style.maxHeight;
+                    style["border_thickness"] = tk.style.borderThickness;
+                    style["outline_thickness"] = tk.style.outlineThickness;
+                    style["padding_horiz"] = tk.style.padding_horiz;
+                    style["padding_vert"] = tk.style.padding_vert;
+                    style["dropshadow_offset_x"] = tk.style.dropshadowOffsetX;
+                    style["dropshadow_offset_y"] = tk.style.dropshadowOffsetY;
+                    style["align"] = Label::labelAlignToString_.at(tk.style.alignment);
+                    // colors as subtables
+                    sol::table fg = sv.create_table(); fg["r"] = tk.style.foregroundColor.r; fg["g"] = tk.style.foregroundColor.g; fg["b"] = tk.style.foregroundColor.b; fg["a"] = tk.style.foregroundColor.a; style["foreground_color"] = fg;
+                    sol::table bg = sv.create_table(); bg["r"] = tk.style.backgroundColor.r; bg["g"] = tk.style.backgroundColor.g; bg["b"] = tk.style.backgroundColor.b; bg["a"] = tk.style.backgroundColor.a; style["background_color"] = bg;
+                    sol::table bord = sv.create_table(); bord["r"] = tk.style.borderColor.r; bord["g"] = tk.style.borderColor.g; bord["b"] = tk.style.borderColor.b; bord["a"] = tk.style.borderColor.a; style["border_color"] = bord;
+                    sol::table outl = sv.create_table(); outl["r"] = tk.style.outlineColor.r; outl["g"] = tk.style.outlineColor.g; outl["b"] = tk.style.outlineColor.b; outl["a"] = tk.style.outlineColor.a; style["outline_color"] = outl;
+                    sol::table ds = sv.create_table(); ds["r"] = tk.style.dropshadowColor.r; ds["g"] = tk.style.dropshadowColor.g; ds["b"] = tk.style.dropshadowColor.b; ds["a"] = tk.style.dropshadowColor.a; style["dropshadow_color"] = ds;
+                    e["style"] = style;
+                    t[idx++] = e;
+                }
+                return t;
+            });
+        }
+
+        if (absent("getLastTokenizedText")) {
+            handle.set_function("getLastTokenizedText", [cast_label_from_handle](DisplayHandle& self) -> std::string {
+                Label* lbl = cast_label_from_handle(self);
+                return lbl->getLastTokenizedText();
+            });
+        }
+
+        // Expose tokenizeText() so tests or scripts can force re-tokenization and get the token count
+        if (absent("tokenizeText")) {
+            handle.set_function("tokenizeText", [cast_label_from_handle](DisplayHandle& self) -> int {
+                Label* lbl = cast_label_from_handle(self);
+                return lbl->tokenizeText();
+            });
+        }
+
+        if (absent("getTokenAlignLists")) {
+            handle.set_function("getTokenAlignLists", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
+                Label* lbl = cast_label_from_handle(self);
+                sol::state_view sv = SDOM::Core::getInstance().getLua();
+                sol::table out = sv.create_table();
+                const auto& m = lbl->getTokenAlignLists();
+                int outer = 1;
+                for (const auto& [align, vec] : m) {
+                    sol::table inner = sv.create_table();
+                    int i = 1;
+                    for (const auto& tk : vec) {
                         sol::table e = sv.create_table();
-                        // expose type as string for readability
                         std::string typeStr;
                         switch (tk.type) {
                             case Label::TokenType::Word: typeStr = "word"; break;
@@ -1807,394 +1884,316 @@ if (LABEL_DEBUG)
                         }
                         e["type"] = typeStr;
                         e["text"] = tk.text;
-                        // expose full FontStyle to Lua so tests can assert style flags
-                        sol::table style = sv.create_table();
-                        // boolean style flags
-                        style["bold"] = tk.style.bold;
-                        style["italic"] = tk.style.italic;
-                        style["underline"] = tk.style.underline;
-                        style["strikethrough"] = tk.style.strikethrough;
-                        style["border"] = tk.style.border;
-                        style["background"] = tk.style.background;
-                        style["outline"] = tk.style.outline;
-                        style["dropshadow"] = tk.style.dropshadow;
-                        // sizing and layout
-                        style["font_size"] = tk.style.fontSize;
-                        style["font_width"] = tk.style.fontWidth;
-                        style["font_height"] = tk.style.fontHeight;
-                        style["wordwrap"] = tk.style.wordwrap;
-                        style["auto_resize"] = tk.style.auto_resize;
-                        style["max_width"] = tk.style.maxWidth;
-                        style["max_height"] = tk.style.maxHeight;
-                        style["border_thickness"] = tk.style.borderThickness;
-                        style["outline_thickness"] = tk.style.outlineThickness;
-                        style["padding_horiz"] = tk.style.padding_horiz;
-                        style["padding_vert"] = tk.style.padding_vert;
-                        style["dropshadow_offset_x"] = tk.style.dropshadowOffsetX;
-                        style["dropshadow_offset_y"] = tk.style.dropshadowOffsetY;
-                        style["align"] = Label::labelAlignToString_.at(tk.style.alignment);
-                        // colors as subtables
-                        sol::table fg = sv.create_table(); fg["r"] = tk.style.foregroundColor.r; fg["g"] = tk.style.foregroundColor.g; fg["b"] = tk.style.foregroundColor.b; fg["a"] = tk.style.foregroundColor.a; style["foreground_color"] = fg;
-                        sol::table bg = sv.create_table(); bg["r"] = tk.style.backgroundColor.r; bg["g"] = tk.style.backgroundColor.g; bg["b"] = tk.style.backgroundColor.b; bg["a"] = tk.style.backgroundColor.a; style["background_color"] = bg;
-                        sol::table bord = sv.create_table(); bord["r"] = tk.style.borderColor.r; bord["g"] = tk.style.borderColor.g; bord["b"] = tk.style.borderColor.b; bord["a"] = tk.style.borderColor.a; style["border_color"] = bord;
-                        sol::table outl = sv.create_table(); outl["r"] = tk.style.outlineColor.r; outl["g"] = tk.style.outlineColor.g; outl["b"] = tk.style.outlineColor.b; outl["a"] = tk.style.outlineColor.a; style["outline_color"] = outl;
-                        sol::table ds = sv.create_table(); ds["r"] = tk.style.dropshadowColor.r; ds["g"] = tk.style.dropshadowColor.g; ds["b"] = tk.style.dropshadowColor.b; ds["a"] = tk.style.dropshadowColor.a; style["dropshadow_color"] = ds;
-                        e["style"] = style;
-                        t[idx++] = e;
+                        inner[i++] = e;
                     }
-                    return t;
-                });
-            }
+                    out[outer++] = inner;
+                }
+                return out;
+            });
+        }
 
-            if (absent("getLastTokenizedText")) {
-                handle.set_function("getLastTokenizedText", [cast_label_from_handle](DisplayHandle& self) -> std::string {
-                    Label* lbl = cast_label_from_handle(self);
-                    return lbl->getLastTokenizedText();
-                });
-            }
+        if (absent("getPhraseAlignLists")) {
+            handle.set_function("getPhraseAlignLists", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
+                Label* lbl = cast_label_from_handle(self);
+                sol::state_view sv = SDOM::Core::getInstance().getLua();
+                sol::table out = sv.create_table();
+                const auto& m = lbl->getPhraseAlignLists();
+                int outer = 1;
+                for (const auto& [align, vec] : m) {
+                    sol::table inner = sv.create_table();
+                    int i = 1;
+                    for (const auto& ph : vec) {
+                        sol::table e = sv.create_table();
+                        e["text"] = ph.text;
+                        e["lineIndex"] = ph.lineIndex;
+                        e["startX"] = ph.startX;
+                        e["lineY"] = ph.lineY;
+                        e["width"] = ph.width;
+                        e["height"] = ph.height;
+                        inner[i++] = e;
+                    }
+                    out[outer++] = inner;
+                }
+                return out;
+            });
+        }
 
-            // Expose tokenizeText() so tests or scripts can force re-tokenization and get the token count
-            if (absent("tokenizeText")) {
-                handle.set_function("tokenizeText", [cast_label_from_handle](DisplayHandle& self) -> int {
-                    Label* lbl = cast_label_from_handle(self);
-                    return lbl->tokenizeText();
-                });
-            }
+        // --- Expose FontStyle getters/setters as properties on DisplayHandle ---
+        // Boolean flags (use helper to reduce duplication)
+        {
+            auto addBoolProp = [&](const char* name, auto getter, auto setter) {
+                if (absent(name)) {
+                    handle.set(name, sol::property(
+                        [getter](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? (l->*getter)() : false; },
+                        [setter](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) (l->*setter)(v); }
+                    ));
+                }
+            };
 
-            if (absent("getTokenAlignLists")) {
-                handle.set_function("getTokenAlignLists", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
-                    Label* lbl = cast_label_from_handle(self);
+            addBoolProp("bold", &Label::getBold, &Label::setBold);
+            addBoolProp("italic", &Label::getItalic, &Label::setItalic);
+            addBoolProp("underline", &Label::getUnderline, &Label::setUnderline);
+            addBoolProp("strikethrough", &Label::getStrikethrough, &Label::setStrikethrough);
+            addBoolProp("border", &Label::getBorder, &Label::setBorder);
+            addBoolProp("background_flag", &Label::getBackground, &Label::setBackground);
+            addBoolProp("outline", &Label::getOutline, &Label::setOutline);
+            addBoolProp("dropshadow", &Label::getDropshadow, &Label::setDropshadow);
+            addBoolProp("wordwrap", &Label::getWordwrap, &Label::setWordwrap);
+            addBoolProp("auto_resize", &Label::getAutoResize, &Label::setAutoResize);
+        }
+        // --- Also provide function-style getters/setters for legacy tests --- //
+        {
+            auto addBoolFuncs = [&](const char* setName, const char* getName, auto setter, auto getter) {
+                if (absent(setName)) {
+                    handle.set_function(setName, [setter](DisplayHandle h, bool v){ auto* l = h.as<Label>(); if (l) (l->*setter)(v); });
+                }
+                if (absent(getName)) {
+                    handle.set_function(getName, [getter](DisplayHandle h)->bool{ auto* l = h.as<Label>(); return l ? (l->*getter)() : false; });
+                }
+            };
+
+            addBoolFuncs("setBold", "getBold", &Label::setBold, &Label::getBold);
+            addBoolFuncs("setItalic", "getItalic", &Label::setItalic, &Label::getItalic);
+            addBoolFuncs("setUnderline", "getUnderline", &Label::setUnderline, &Label::getUnderline);
+            addBoolFuncs("setStrikethrough", "getStrikethrough", &Label::setStrikethrough, &Label::getStrikethrough);
+            addBoolFuncs("setBorder", "getBorder", &Label::setBorder, &Label::getBorder);
+            addBoolFuncs("setBackground", "getBackground", &Label::setBackground, &Label::getBackground);
+            addBoolFuncs("setOutline", "getOutline", &Label::setOutline, &Label::getOutline);
+            addBoolFuncs("setDropshadow", "getDropshadow", &Label::setDropshadow, &Label::getDropshadow);
+            addBoolFuncs("setWordwrap", "getWordwrap", &Label::setWordwrap, &Label::getWordwrap);
+            addBoolFuncs("setAutoResize", "getAutoResize", &Label::setAutoResize, &Label::getAutoResize);
+        }
+
+        // Integer properties (use helper to reduce duplication)
+        {
+            auto addIntProp = [&](const char* name, auto getter, auto setter) {
+                if (absent(name)) {
+                    handle.set(name, sol::property(
+                        [getter](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? (l->*getter)() : 0; },
+                        [setter](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) (l->*setter)(v); }
+                    ));
+                }
+            };
+
+            addIntProp("font_size", &Label::getFontSize, &Label::setFontSize);
+            addIntProp("font_width", &Label::getFontWidth, &Label::setFontWidth);
+            addIntProp("font_height", &Label::getFontHeight, &Label::setFontHeight);
+            addIntProp("max_width", &Label::getMaxWidth, &Label::setMaxWidth);
+            addIntProp("max_height", &Label::getMaxHeight, &Label::setMaxHeight);
+            addIntProp("border_thickness", &Label::getBorderThickness, &Label::setBorderThickness);
+            addIntProp("outline_thickness", &Label::getOutlineThickness, &Label::setOutlineThickness);
+            addIntProp("padding_horiz", &Label::getPaddingHoriz, &Label::setPaddingHoriz);
+            addIntProp("padding_vert", &Label::getPaddingVert, &Label::setPaddingVert);
+            addIntProp("dropshadow_offset_x", &Label::getDropshadowOffsetX, &Label::setDropshadowOffsetX);
+            addIntProp("dropshadow_offset_y", &Label::getDropshadowOffsetY, &Label::setDropshadowOffsetY);
+        }
+        // --- Also provide function-style getters/setters for integer legacy tests --- //
+        {
+            auto addIntFuncs = [&](const char* setName, const char* getName, auto setter, auto getter) {
+                // register setter if not already present
+                sol::object curSet = handle.raw_get_or(setName, sol::lua_nil);
+                if (!curSet.valid() || curSet == sol::lua_nil) {
+                    handle.set_function(setName, [setter](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) (l->*setter)(v); });
+                }
+                // register getter if not already present
+                sol::object curGet = handle.raw_get_or(getName, sol::lua_nil);
+                if (!curGet.valid() || curGet == sol::lua_nil) {
+                    handle.set_function(getName, [getter](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? (l->*getter)() : 0; });
+                }
+            };
+
+            // Add debug-friendly wrappers so we can trace unexpected test failures
+            // Force-override any existing get/set for FontSize so Label's
+            // debug wrappers are guaranteed to be called during unit tests.
+            handle.set_function("setFontSize", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontSize(v); });
+            handle.set_function("getFontSize", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontSize() : 0; });
+            addIntFuncs("setFontWidth", "getFontWidth", &Label::setFontWidth, &Label::getFontWidth);
+            addIntFuncs("setFontHeight", "getFontHeight", &Label::setFontHeight, &Label::getFontHeight);
+            addIntFuncs("setMaxWidth", "getMaxWidth", &Label::setMaxWidth, &Label::getMaxWidth);
+            addIntFuncs("setMaxHeight", "getMaxHeight", &Label::setMaxHeight, &Label::getMaxHeight);
+            addIntFuncs("setBorderThickness", "getBorderThickness", &Label::setBorderThickness, &Label::getBorderThickness);
+            addIntFuncs("setOutlineThickness", "getOutlineThickness", &Label::setOutlineThickness, &Label::getOutlineThickness);
+            addIntFuncs("setPaddingHoriz", "getPaddingHoriz", &Label::setPaddingHoriz, &Label::getPaddingHoriz);
+            addIntFuncs("setPaddingVert", "getPaddingVert", &Label::setPaddingVert, &Label::getPaddingVert);
+            addIntFuncs("setDropshadowOffsetX", "getDropshadowOffsetX", &Label::setDropshadowOffsetX, &Label::getDropshadowOffsetX);
+            addIntFuncs("setDropshadowOffsetY", "getDropshadowOffsetY", &Label::setDropshadowOffsetY, &Label::getDropshadowOffsetY);
+        }
+
+        // Force-override any conflicting IPanelObject bindings for font width/height
+        // so that Label DisplayHandles call the Label implementations instead of
+        // accidentally invoking panel-style handlers which expect IPanelObject.
+        if (DEBUG_REGISTER_LUA) std::cout << "Registering Label::setFontWidth/getFontWidth override on DisplayHandle" << std::endl;
+        handle.set_function("setFontWidth", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontWidth(v); });
+        handle.set_function("getFontWidth", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontWidth() : 0; });
+        if (DEBUG_REGISTER_LUA) std::cout << "Registering Label::setFontHeight/getFontHeight override on DisplayHandle" << std::endl;
+        handle.set_function("setFontHeight", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontHeight(v); });
+        handle.set_function("getFontHeight", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontHeight() : 0; });
+
+        // Alignment (enum) and alignment_string (string)
+        if (absent("alignment")) {
+            handle.set("alignment", sol::property(
+                [](DisplayHandle h) -> LabelAlign { auto* l = h.as<Label>(); return l ? l->getAlignment() : LabelAlign::TOP_LEFT; },
+                [](DisplayHandle h, LabelAlign v) { auto* l = h.as<Label>(); if (l) l->setAlignment(v); }
+            ));
+        }
+        if (absent("alignment_string")) {
+            handle.set("alignment_string", sol::property(
+                [](DisplayHandle h) -> std::string { auto* l = h.as<Label>(); return l ? l->getAlignmentString() : std::string("default"); },
+                [](DisplayHandle h, const std::string& v) { auto* l = h.as<Label>(); if (l) l->setAlignment(v); }
+            ));
+        }
+
+        // Also provide legacy function-style getters/setters
+        // getAlignment -> returns integer enum value
+        sol::object cur_getAlign = handle.raw_get_or("getAlignment", sol::lua_nil);
+        if (!cur_getAlign.valid() || cur_getAlign == sol::lua_nil) {
+            handle.set_function("getAlignment", [](DisplayHandle h)->int { auto* l = h.as<Label>(); return l ? static_cast<int>(l->getAlignment()) : static_cast<int>(LabelAlign::TOP_LEFT); });
+        }
+        // getAlignmentString
+        sol::object cur_getAlignStr = handle.raw_get_or("getAlignmentString", sol::lua_nil);
+        if (!cur_getAlignStr.valid() || cur_getAlignStr == sol::lua_nil) {
+            handle.set_function("getAlignmentString", [](DisplayHandle h)->std::string { auto* l = h.as<Label>(); return l ? l->getAlignmentString() : std::string("default"); });
+        }
+        // setAlignment: support both numeric enum and string overloads
+        sol::object cur_setAlign = handle.raw_get_or("setAlignment", sol::lua_nil);
+        if (!cur_setAlign.valid() || cur_setAlign == sol::lua_nil) {
+            handle.set_function("setAlignment",
+                sol::overload(
+                    [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setAlignment(static_cast<LabelAlign>(v)); },
+                    [](DisplayHandle h, const std::string& v) { auto* l = h.as<Label>(); if (l) l->setAlignment(v); }
+                )
+            );
+        }
+
+        // Export the LabelAlign enum as a Lua table (once)
+        // Create a global `LabelAlign` table mapping uppercase names to enum numeric values, if not present.
+        // Tests expect `LabelAlign.TOP_LEFT` etc. to be available in Lua.
+        if (!lua["LabelAlign"].valid() || lua["LabelAlign"] == sol::lua_nil) {
+            // Create canonical lowercase keys (preferred). Provide case-insensitive
+            // access via a metatable __index that lowercases lookup keys.
+            sol::table la = lua.create_table();
+            la["default"] = static_cast<int>(LabelAlign::DEFAULT);
+            la["left"] = static_cast<int>(LabelAlign::LEFT);
+            la["center"] = static_cast<int>(LabelAlign::CENTER);
+            la["right"] = static_cast<int>(LabelAlign::RIGHT);
+            la["top"] = static_cast<int>(LabelAlign::TOP);
+            la["top_left"] = static_cast<int>(LabelAlign::TOP_LEFT);
+            la["top_center"] = static_cast<int>(LabelAlign::TOP_CENTER);
+            la["top_right"] = static_cast<int>(LabelAlign::TOP_RIGHT);
+            la["middle"] = static_cast<int>(LabelAlign::MIDDLE);
+            la["middle_left"] = static_cast<int>(LabelAlign::MIDDLE_LEFT);
+            la["middle_center"] = static_cast<int>(LabelAlign::MIDDLE_CENTER);
+            la["middle_right"] = static_cast<int>(LabelAlign::MIDDLE_RIGHT);
+            la["bottom"] = static_cast<int>(LabelAlign::BOTTOM);
+            la["bottom_left"] = static_cast<int>(LabelAlign::BOTTOM_LEFT);
+            la["bottom_center"] = static_cast<int>(LabelAlign::BOTTOM_CENTER);
+            la["bottom_right"] = static_cast<int>(LabelAlign::BOTTOM_RIGHT);
+
+            // metatable __index: case-insensitive string lookup -> lowercase
+            sol::table mt = lua.create_table();
+            mt["__index"] = [](sol::table t, const sol::object& key)->sol::object {
+                if (!key.is<std::string>()) return sol::lua_nil;
+                std::string k = key.as<std::string>();
+                std::string lc; lc.resize(k.size());
+                std::transform(k.begin(), k.end(), lc.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
+                sol::object ret = t.raw_get_or(lc, sol::lua_nil);
+                return ret;
+            };
+            la[sol::metatable_key] = mt;
+            lua["LabelAlign"] = la;
+        }
+
+        // Color properties exposed as small tables {r,g,b,a}
+        auto color_to_table = [](sol::state_view sv, const SDL_Color& c) {
+            sol::table t = sv.create_table(); t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a; return t;
+        };
+        auto table_to_color = [](const sol::table& t) {
+            SDL_Color c = {255,255,255,255};
+            if (t["r"].valid()) c.r = static_cast<Uint8>(t["r"].get<int>());
+            if (t["g"].valid()) c.g = static_cast<Uint8>(t["g"].get<int>());
+            if (t["b"].valid()) c.b = static_cast<Uint8>(t["b"].get<int>());
+            if (t["a"].valid()) c.a = static_cast<Uint8>(t["a"].get<int>());
+            // array style
+            if (!t["r"].valid() && t[1].valid()) {
+                c.r = static_cast<Uint8>(t[1].get<int>());
+                if (t[2].valid()) c.g = static_cast<Uint8>(t[2].get<int>());
+                if (t[3].valid()) c.b = static_cast<Uint8>(t[3].get<int>());
+                if (t[4].valid()) c.a = static_cast<Uint8>(t[4].get<int>());
+            }
+            return c;
+        };
+
+        if (absent("foreground_color")) {
+            handle.set("foreground_color", sol::property(
+                [=](DisplayHandle h) -> sol::object {
+                    Label* l = h.as<Label>();
                     sol::state_view sv = SDOM::Core::getInstance().getLua();
-                    sol::table out = sv.create_table();
-                    const auto& m = lbl->getTokenAlignLists();
-                    int outer = 1;
-                    for (const auto& [align, vec] : m) {
-                        sol::table inner = sv.create_table();
-                        int i = 1;
-                        for (const auto& tk : vec) {
-                            sol::table e = sv.create_table();
-                            std::string typeStr;
-                            switch (tk.type) {
-                                case Label::TokenType::Word: typeStr = "word"; break;
-                                case Label::TokenType::Escape: typeStr = "escape"; break;
-                                case Label::TokenType::Space: typeStr = "space"; break;
-                                case Label::TokenType::Punctuation: typeStr = "punct"; break;
-                                case Label::TokenType::Newline: typeStr = "newline"; break;
-                                case Label::TokenType::Tab: typeStr = "tab"; break;
-                                default: typeStr = "unknown"; break;
-                            }
-                            e["type"] = typeStr;
-                            e["text"] = tk.text;
-                            inner[i++] = e;
-                        }
-                        out[outer++] = inner;
-                    }
-                    return out;
-                });
-            }
+                    if (!l) return sol::nil;
+                    return color_to_table(sv, l->getForegroundColor());
+                },
+                [&](DisplayHandle h, sol::table t) {
+                    Label* l = h.as<Label>(); if (!l) return; l->setForegroundColor(table_to_color(t));
+                }
+            ));
+        }
+        if (absent("background_color")) {
+            handle.set("background_color", sol::property(
+                [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBackgroundColor()); },
+                [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBackgroundColor(table_to_color(t)); }
+            ));
+        }
+        if (absent("border_color")) {
+            handle.set("border_color", sol::property(
+                [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBorderColor()); },
+                [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBorderColor(table_to_color(t)); }
+            ));
+        }
+        if (absent("outline_color")) {
+            handle.set("outline_color", sol::property(
+                [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getOutlineColor()); },
+                [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setOutlineColor(table_to_color(t)); }
+            ));
+        }
+        if (absent("dropshadow_color")) {
+            handle.set("dropshadow_color", sol::property(
+                [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); },
+                [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); }
+            ));
+        }
 
-            if (absent("getPhraseAlignLists")) {
-                handle.set_function("getPhraseAlignLists", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
-                    Label* lbl = cast_label_from_handle(self);
-                    sol::state_view sv = SDOM::Core::getInstance().getLua();
-                    sol::table out = sv.create_table();
-                    const auto& m = lbl->getPhraseAlignLists();
-                    int outer = 1;
-                    for (const auto& [align, vec] : m) {
-                        sol::table inner = sv.create_table();
-                        int i = 1;
-                        for (const auto& ph : vec) {
-                            sol::table e = sv.create_table();
-                            e["text"] = ph.text;
-                            e["lineIndex"] = ph.lineIndex;
-                            e["startX"] = ph.startX;
-                            e["lineY"] = ph.lineY;
-                            e["width"] = ph.width;
-                            e["height"] = ph.height;
-                            inner[i++] = e;
-                        }
-                        out[outer++] = inner;
-                    }
-                    return out;
-                });
-            }
-
-                // --- Expose FontStyle getters/setters as properties on DisplayHandle ---
-                // Boolean flags (use helper to reduce duplication)
-                {
-                    auto addBoolProp = [&](const char* name, auto getter, auto setter) {
-                        if (absent(name)) {
-                            handle.set(name, sol::property(
-                                [getter](DisplayHandle h) -> bool { auto* l = h.as<Label>(); return l ? (l->*getter)() : false; },
-                                [setter](DisplayHandle h, bool v) { auto* l = h.as<Label>(); if (l) (l->*setter)(v); }
-                            ));
-                        }
-                    };
-
-                    addBoolProp("bold", &Label::getBold, &Label::setBold);
-                    addBoolProp("italic", &Label::getItalic, &Label::setItalic);
-                    addBoolProp("underline", &Label::getUnderline, &Label::setUnderline);
-                    addBoolProp("strikethrough", &Label::getStrikethrough, &Label::setStrikethrough);
-                    addBoolProp("border", &Label::getBorder, &Label::setBorder);
-                    addBoolProp("background_flag", &Label::getBackground, &Label::setBackground);
-                    addBoolProp("outline", &Label::getOutline, &Label::setOutline);
-                    addBoolProp("dropshadow", &Label::getDropshadow, &Label::setDropshadow);
-                    addBoolProp("wordwrap", &Label::getWordwrap, &Label::setWordwrap);
-                    addBoolProp("auto_resize", &Label::getAutoResize, &Label::setAutoResize);
-                }
-                // --- Also provide function-style getters/setters for legacy tests --- //
-                {
-                    auto addBoolFuncs = [&](const char* setName, const char* getName, auto setter, auto getter) {
-                        if (absent(setName)) {
-                            handle.set_function(setName, [setter](DisplayHandle h, bool v){ auto* l = h.as<Label>(); if (l) (l->*setter)(v); });
-                        }
-                        if (absent(getName)) {
-                            handle.set_function(getName, [getter](DisplayHandle h)->bool{ auto* l = h.as<Label>(); return l ? (l->*getter)() : false; });
-                        }
-                    };
-
-                    addBoolFuncs("setBold", "getBold", &Label::setBold, &Label::getBold);
-                    addBoolFuncs("setItalic", "getItalic", &Label::setItalic, &Label::getItalic);
-                    addBoolFuncs("setUnderline", "getUnderline", &Label::setUnderline, &Label::getUnderline);
-                    addBoolFuncs("setStrikethrough", "getStrikethrough", &Label::setStrikethrough, &Label::getStrikethrough);
-                    addBoolFuncs("setBorder", "getBorder", &Label::setBorder, &Label::getBorder);
-                    addBoolFuncs("setBackground", "getBackground", &Label::setBackground, &Label::getBackground);
-                    addBoolFuncs("setOutline", "getOutline", &Label::setOutline, &Label::getOutline);
-                    addBoolFuncs("setDropshadow", "getDropshadow", &Label::setDropshadow, &Label::getDropshadow);
-                    addBoolFuncs("setWordwrap", "getWordwrap", &Label::setWordwrap, &Label::getWordwrap);
-                    addBoolFuncs("setAutoResize", "getAutoResize", &Label::setAutoResize, &Label::getAutoResize);
-                }
-
-                // Integer properties (use helper to reduce duplication)
-                {
-                    auto addIntProp = [&](const char* name, auto getter, auto setter) {
-                        if (absent(name)) {
-                            handle.set(name, sol::property(
-                                [getter](DisplayHandle h) -> int { auto* l = h.as<Label>(); return l ? (l->*getter)() : 0; },
-                                [setter](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) (l->*setter)(v); }
-                            ));
-                        }
-                    };
-
-                    addIntProp("font_size", &Label::getFontSize, &Label::setFontSize);
-                    addIntProp("font_width", &Label::getFontWidth, &Label::setFontWidth);
-                    addIntProp("font_height", &Label::getFontHeight, &Label::setFontHeight);
-                    addIntProp("max_width", &Label::getMaxWidth, &Label::setMaxWidth);
-                    addIntProp("max_height", &Label::getMaxHeight, &Label::setMaxHeight);
-                    addIntProp("border_thickness", &Label::getBorderThickness, &Label::setBorderThickness);
-                    addIntProp("outline_thickness", &Label::getOutlineThickness, &Label::setOutlineThickness);
-                    addIntProp("padding_horiz", &Label::getPaddingHoriz, &Label::setPaddingHoriz);
-                    addIntProp("padding_vert", &Label::getPaddingVert, &Label::setPaddingVert);
-                    addIntProp("dropshadow_offset_x", &Label::getDropshadowOffsetX, &Label::setDropshadowOffsetX);
-                    addIntProp("dropshadow_offset_y", &Label::getDropshadowOffsetY, &Label::setDropshadowOffsetY);
-                }
-                // --- Also provide function-style getters/setters for integer legacy tests --- //
-                {
-                    auto addIntFuncs = [&](const char* setName, const char* getName, auto setter, auto getter) {
-                        // register setter if not already present
-                        sol::object curSet = handle.raw_get_or(setName, sol::lua_nil);
-                        if (!curSet.valid() || curSet == sol::lua_nil) {
-                            handle.set_function(setName, [setter](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) (l->*setter)(v); });
-                        }
-                        // register getter if not already present
-                        sol::object curGet = handle.raw_get_or(getName, sol::lua_nil);
-                        if (!curGet.valid() || curGet == sol::lua_nil) {
-                            handle.set_function(getName, [getter](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? (l->*getter)() : 0; });
-                        }
-                    };
-
-                    // Add debug-friendly wrappers so we can trace unexpected test failures
-                    // Force-override any existing get/set for FontSize so Label's
-                    // debug wrappers are guaranteed to be called during unit tests.
-                    handle.set_function("setFontSize", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontSize(v); });
-                    handle.set_function("getFontSize", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontSize() : 0; });
-                    addIntFuncs("setFontWidth", "getFontWidth", &Label::setFontWidth, &Label::getFontWidth);
-                    addIntFuncs("setFontHeight", "getFontHeight", &Label::setFontHeight, &Label::getFontHeight);
-                    addIntFuncs("setMaxWidth", "getMaxWidth", &Label::setMaxWidth, &Label::getMaxWidth);
-                    addIntFuncs("setMaxHeight", "getMaxHeight", &Label::setMaxHeight, &Label::getMaxHeight);
-                    addIntFuncs("setBorderThickness", "getBorderThickness", &Label::setBorderThickness, &Label::getBorderThickness);
-                    addIntFuncs("setOutlineThickness", "getOutlineThickness", &Label::setOutlineThickness, &Label::getOutlineThickness);
-                    addIntFuncs("setPaddingHoriz", "getPaddingHoriz", &Label::setPaddingHoriz, &Label::getPaddingHoriz);
-                    addIntFuncs("setPaddingVert", "getPaddingVert", &Label::setPaddingVert, &Label::getPaddingVert);
-                    addIntFuncs("setDropshadowOffsetX", "getDropshadowOffsetX", &Label::setDropshadowOffsetX, &Label::getDropshadowOffsetX);
-                    addIntFuncs("setDropshadowOffsetY", "getDropshadowOffsetY", &Label::setDropshadowOffsetY, &Label::getDropshadowOffsetY);
-                }
-
-                // Force-override any conflicting IPanelObject bindings for font width/height
-                // so that Label DisplayHandles call the Label implementations instead of
-                // accidentally invoking panel-style handlers which expect IPanelObject.
-                if (DEBUG_REGISTER_LUA) std::cout << "Registering Label::setFontWidth/getFontWidth override on DisplayHandle" << std::endl;
-                handle.set_function("setFontWidth", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontWidth(v); });
-                handle.set_function("getFontWidth", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontWidth() : 0; });
-                if (DEBUG_REGISTER_LUA) std::cout << "Registering Label::setFontHeight/getFontHeight override on DisplayHandle" << std::endl;
-                handle.set_function("setFontHeight", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontHeight(v); });
-                handle.set_function("getFontHeight", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontHeight() : 0; });
-
-                // Alignment (enum) and alignment_string (string)
-                if (absent("alignment")) {
-                    handle.set("alignment", sol::property(
-                        [](DisplayHandle h) -> LabelAlign { auto* l = h.as<Label>(); return l ? l->getAlignment() : LabelAlign::TOP_LEFT; },
-                        [](DisplayHandle h, LabelAlign v) { auto* l = h.as<Label>(); if (l) l->setAlignment(v); }
-                    ));
-                }
-                if (absent("alignment_string")) {
-                    handle.set("alignment_string", sol::property(
-                        [](DisplayHandle h) -> std::string { auto* l = h.as<Label>(); return l ? l->getAlignmentString() : std::string("default"); },
-                        [](DisplayHandle h, const std::string& v) { auto* l = h.as<Label>(); if (l) l->setAlignment(v); }
-                    ));
-                }
-
-                // Also provide legacy function-style getters/setters
-                // getAlignment -> returns integer enum value
-                sol::object cur_getAlign = handle.raw_get_or("getAlignment", sol::lua_nil);
-                if (!cur_getAlign.valid() || cur_getAlign == sol::lua_nil) {
-                    handle.set_function("getAlignment", [](DisplayHandle h)->int { auto* l = h.as<Label>(); return l ? static_cast<int>(l->getAlignment()) : static_cast<int>(LabelAlign::TOP_LEFT); });
-                }
-                // getAlignmentString
-                sol::object cur_getAlignStr = handle.raw_get_or("getAlignmentString", sol::lua_nil);
-                if (!cur_getAlignStr.valid() || cur_getAlignStr == sol::lua_nil) {
-                    handle.set_function("getAlignmentString", [](DisplayHandle h)->std::string { auto* l = h.as<Label>(); return l ? l->getAlignmentString() : std::string("default"); });
-                }
-                // setAlignment: support both numeric enum and string overloads
-                sol::object cur_setAlign = handle.raw_get_or("setAlignment", sol::lua_nil);
-                if (!cur_setAlign.valid() || cur_setAlign == sol::lua_nil) {
-                    handle.set_function("setAlignment",
-                        sol::overload(
-                            [](DisplayHandle h, int v) { auto* l = h.as<Label>(); if (l) l->setAlignment(static_cast<LabelAlign>(v)); },
-                            [](DisplayHandle h, const std::string& v) { auto* l = h.as<Label>(); if (l) l->setAlignment(v); }
-                        )
-                    );
-                }
-
-                // Export the LabelAlign enum as a Lua table (once)
-                // Create a global `LabelAlign` table mapping uppercase names to enum numeric values, if not present.
-                // Tests expect `LabelAlign.TOP_LEFT` etc. to be available in Lua.
-                if (!lua["LabelAlign"].valid() || lua["LabelAlign"] == sol::lua_nil) {
-                    // Create canonical lowercase keys (preferred). Provide case-insensitive
-                    // access via a metatable __index that lowercases lookup keys.
-                    sol::table la = lua.create_table();
-                    la["default"] = static_cast<int>(LabelAlign::DEFAULT);
-                    la["left"] = static_cast<int>(LabelAlign::LEFT);
-                    la["center"] = static_cast<int>(LabelAlign::CENTER);
-                    la["right"] = static_cast<int>(LabelAlign::RIGHT);
-                    la["top"] = static_cast<int>(LabelAlign::TOP);
-                    la["top_left"] = static_cast<int>(LabelAlign::TOP_LEFT);
-                    la["top_center"] = static_cast<int>(LabelAlign::TOP_CENTER);
-                    la["top_right"] = static_cast<int>(LabelAlign::TOP_RIGHT);
-                    la["middle"] = static_cast<int>(LabelAlign::MIDDLE);
-                    la["middle_left"] = static_cast<int>(LabelAlign::MIDDLE_LEFT);
-                    la["middle_center"] = static_cast<int>(LabelAlign::MIDDLE_CENTER);
-                    la["middle_right"] = static_cast<int>(LabelAlign::MIDDLE_RIGHT);
-                    la["bottom"] = static_cast<int>(LabelAlign::BOTTOM);
-                    la["bottom_left"] = static_cast<int>(LabelAlign::BOTTOM_LEFT);
-                    la["bottom_center"] = static_cast<int>(LabelAlign::BOTTOM_CENTER);
-                    la["bottom_right"] = static_cast<int>(LabelAlign::BOTTOM_RIGHT);
-
-                    // metatable __index: case-insensitive string lookup -> lowercase
-                    sol::table mt = lua.create_table();
-                    mt["__index"] = [](sol::table t, const sol::object& key)->sol::object {
-                        if (!key.is<std::string>()) return sol::lua_nil;
-                        std::string k = key.as<std::string>();
-                        std::string lc; lc.resize(k.size());
-                        std::transform(k.begin(), k.end(), lc.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
-                        sol::object ret = t.raw_get_or(lc, sol::lua_nil);
-                        return ret;
-                    };
-                    la[sol::metatable_key] = mt;
-                    lua["LabelAlign"] = la;
-                }
-
-                // Color properties exposed as small tables {r,g,b,a}
-                auto color_to_table = [](sol::state_view sv, const SDL_Color& c) {
-                    sol::table t = sv.create_table(); t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a; return t;
-                };
-                auto table_to_color = [](const sol::table& t) {
-                    SDL_Color c = {255,255,255,255};
-                    if (t["r"].valid()) c.r = static_cast<Uint8>(t["r"].get<int>());
-                    if (t["g"].valid()) c.g = static_cast<Uint8>(t["g"].get<int>());
-                    if (t["b"].valid()) c.b = static_cast<Uint8>(t["b"].get<int>());
-                    if (t["a"].valid()) c.a = static_cast<Uint8>(t["a"].get<int>());
-                    // array style
-                    if (!t["r"].valid() && t[1].valid()) {
-                        c.r = static_cast<Uint8>(t[1].get<int>());
-                        if (t[2].valid()) c.g = static_cast<Uint8>(t[2].get<int>());
-                        if (t[3].valid()) c.b = static_cast<Uint8>(t[3].get<int>());
-                        if (t[4].valid()) c.a = static_cast<Uint8>(t[4].get<int>());
-                    }
-                    return c;
-                };
-
-                if (absent("foreground_color")) {
-                    handle.set("foreground_color", sol::property(
-                        [=](DisplayHandle h) -> sol::object {
-                            Label* l = h.as<Label>();
-                            sol::state_view sv = SDOM::Core::getInstance().getLua();
-                            if (!l) return sol::nil;
-                            return color_to_table(sv, l->getForegroundColor());
-                        },
-                        [&](DisplayHandle h, sol::table t) {
-                            Label* l = h.as<Label>(); if (!l) return; l->setForegroundColor(table_to_color(t));
-                        }
-                    ));
-                }
-                if (absent("background_color")) {
-                    handle.set("background_color", sol::property(
-                        [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBackgroundColor()); },
-                        [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBackgroundColor(table_to_color(t)); }
-                    ));
-                }
-                if (absent("border_color")) {
-                    handle.set("border_color", sol::property(
-                        [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBorderColor()); },
-                        [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBorderColor(table_to_color(t)); }
-                    ));
-                }
-                if (absent("outline_color")) {
-                    handle.set("outline_color", sol::property(
-                        [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getOutlineColor()); },
-                        [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setOutlineColor(table_to_color(t)); }
-                    ));
-                }
-                if (absent("dropshadow_color")) {
-                    handle.set("dropshadow_color", sol::property(
-                        [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); },
-                        [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); }
-                    ));
-                }
-
-                // Also provide function-style getters/setters for colors for legacy access patterns
-                if (absent("getForegroundColor")) {
-                    handle.set_function("getForegroundColor", [=](DisplayHandle h) -> sol::object {
-                        Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getForegroundColor());
-                    });
-                }
-                if (absent("setForegroundColor")) {
-                    handle.set_function("setForegroundColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setForegroundColor(table_to_color(t)); });
-                }
-                if (absent("getBackgroundColor")) {
-                    handle.set_function("getBackgroundColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBackgroundColor()); });
-                }
-                if (absent("setBackgroundColor")) {
-                    handle.set_function("setBackgroundColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBackgroundColor(table_to_color(t)); });
-                }
-                if (absent("getBorderColor")) {
-                    handle.set_function("getBorderColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBorderColor()); });
-                }
-                if (absent("setBorderColor")) {
-                    handle.set_function("setBorderColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBorderColor(table_to_color(t)); });
-                }
-                if (absent("getOutlineColor")) {
-                    handle.set_function("getOutlineColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getOutlineColor()); });
-                }
-                if (absent("setOutlineColor")) {
-                    handle.set_function("setOutlineColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setOutlineColor(table_to_color(t)); });
-                }
-                if (absent("getDropshadowColor")) {
-                    handle.set_function("getDropshadowColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); });
-                }
-                if (absent("setDropshadowColor")) {
-                    handle.set_function("setDropshadowColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); });
-                }
+        // Also provide function-style getters/setters for colors for legacy access patterns
+        if (absent("getForegroundColor")) {
+            handle.set_function("getForegroundColor", [=](DisplayHandle h) -> sol::object {
+                Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getForegroundColor());
+            });
+        }
+        if (absent("setForegroundColor")) {
+            handle.set_function("setForegroundColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setForegroundColor(table_to_color(t)); });
+        }
+        if (absent("getBackgroundColor")) {
+            handle.set_function("getBackgroundColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBackgroundColor()); });
+        }
+        if (absent("setBackgroundColor")) {
+            handle.set_function("setBackgroundColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBackgroundColor(table_to_color(t)); });
+        }
+        if (absent("getBorderColor")) {
+            handle.set_function("getBorderColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBorderColor()); });
+        }
+        if (absent("setBorderColor")) {
+            handle.set_function("setBorderColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBorderColor(table_to_color(t)); });
+        }
+        if (absent("getOutlineColor")) {
+            handle.set_function("getOutlineColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getOutlineColor()); });
+        }
+        if (absent("setOutlineColor")) {
+            handle.set_function("setOutlineColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setOutlineColor(table_to_color(t)); });
+        }
+        if (absent("getDropshadowColor")) {
+            handle.set_function("getDropshadowColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); });
+        }
+        if (absent("setDropshadowColor")) {
+            handle.set_function("setDropshadowColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); });
+        }
 
     } // END Label::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

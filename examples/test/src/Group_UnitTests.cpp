@@ -442,10 +442,7 @@ namespace SDOM
 
             -- secondary check: fetch composed label handle (try type-specific accessors)
 
-            local lbl = nil
-            if type(group_obj.getLabel) == "function" then
-                lbl = group_obj:getLabel()
-            end
+            local lbl = group_obj:getLabel()
 
 
 
