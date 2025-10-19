@@ -445,7 +445,7 @@ namespace SDOM
                 end
             end
 
-            -- Get the Label and verify text
+            -- Get the Label using getLabel() and verify text
             local label_obj = group_obj:getLabel()
             if not label_obj then
                 return { ok = false, err = "getLabel() returned nil" }
@@ -455,8 +455,11 @@ namespace SDOM
                 return { ok = false, err = "Label text mismatch: got='" .. tostring(label_text) .. "' expected='" .. tostring(txt) .. "'" }
             end 
 
-
-
+            -- Get the label using label_text property and verify text
+            -- local label_text_via_prop = group_obj.label_text
+            -- if label_text_via_prop ~= txt then
+            --     return { ok = false, err = "Label text (via property) mismatch: got='" .. tostring(label_text_via_prop) .. "' expected='" .. tostring(txt) .. "'" }
+            -- end
 
             -- cleanup and return
             destroyDisplayObject(group_name)            
