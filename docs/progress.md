@@ -873,22 +873,23 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Fully Refactor UnitTests for Core and Factory while implementing appropriate global LUA functions:**
     - Refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test0()` → `Label_test1()`).
   - Refactor `Stage_UnitTests` systematically test all Stage properties and methods via Lua.
-  - Refactor `IDisplayObject` systematically test all IDisplayObject properties and methods via Lua.
-  - Refactor `Factory` systematically test all Factory methods via Lua.
-  - Refactor `Core` systematically test all Core methods via Lua.
+  - Refactor `IDisplayObject_UnitTests` systematically test all IDisplayObject properties and methods via Lua.
+  - Refactor `Factory_UnitTests` systematically test all Factory methods via Lua.
+  - Refactor `Core_UnitTests` systematically test all Core methods via Lua.
 
 ---
 ## Long Term To Do:
-- Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.
-  - Use SDOM_IRangeControl_scaffold.hpp / .cpp as a template for future interface implementations.
+- Add default scaffolds for creating new `DisplayObjects`, `AssetObjects`, and `ButtonObjectsm` to streamline future development.
+  - Use `SDOM_IRangeControl_scaffold.hpp` / `.cpp` as a template for future interface implementations.
 - Review and refactor documentation:
   - Begin organizing markdown docs by topic, add more examples and tutorials.
   - Plan a thorough documentation revamp (including Doxygen and markdown).
   - Index docs for easier navigation and update legacy references.
 - Investigate what I presume are z_order based bugs. 
   - Objects are not rendering in proper order. Not sure when this started. 
-  - This happens when Boxes are attached to another box and that box is at a lower level than another one.  
+  - This happens when `Boxes` are attached to another box and that box is at a lower level than another one.  
   - This is a likely a `Box` behavior not a behavior explictly of the `SDOM API`.
+  - Render-To-Texture `DisplayObject` texture caching is a good idea for more complex `DisplayObjects`.
 - Document the new startup pattern and resource creation workflows in the README and docs.
 - Update examples to use the new explicit startup and resource creation methods.
 - Update architecture diagrams and documentation to reflect recent naming and API changes.
