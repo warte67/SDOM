@@ -505,6 +505,15 @@ namespace SDOM
                     return l ? l->getText() : std::string();
                 });
             }
+            if (absent_min("setLabelText")) {
+                minimal.set_function("setLabelText", [](DisplayHandle h, const std::string& v) {
+                    if (!h.isValid()) return;
+                    if (h->getType() != Group::TypeName) return;
+                    Group* g = static_cast<Group*>(h.get());
+                    Label* l = g ? g->getLabelPtr() : nullptr;
+                    if (l) l->setText(v);
+                });
+            }
             // Intentionally omit registering `label_text` as a property on the
             // minimal DisplayHandle. Exposing `label_text` as a property on the
             // shared usertype leads to name collisions between types (Group,

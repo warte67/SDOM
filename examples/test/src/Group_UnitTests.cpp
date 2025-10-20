@@ -484,7 +484,7 @@ namespace SDOM
     bool Group_test5()
     {
         std::string testName = "Group #5";
-        std::string testDesc = "Label Text function symmetry";
+        std::string testDesc = "Label Text and Color function symmetry";
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script
         auto res = lua.script(R"lua(
@@ -504,12 +504,32 @@ namespace SDOM
                 return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
             end
 
+            -- Test getLabel()
+            local label_obj = group_obj:getLabel()
+            if not label_obj then
+                destroyDisplayObject(group_name)
+                collectGarbage()            
+                return { ok = false, err = "getLabel() returned nil" }
+            end
+            -- verify label text
+            local label_text = label_obj:getText()
+            if label_text ~= txt then
+                destroyDisplayObject(group_name)
+                collectGarbage()            
+                return { ok = false, err = "Label text mismatch: got='" .. tostring(label_text) .. "' expected='" .. tostring(txt) .. "'" }
+            end
+
             -- Initial Test getLabelText()
             local lbl = group_obj:getLabelText()
             if not lbl then
+                destroyDisplayObject(group_name)
+                collectGarbage()            
                 return { ok = false, err = "getLabelText() returned nil" }
             end
+            -- verify label text
             if lbl ~= txt then
+                destroyDisplayObject(group_name)
+                collectGarbage()
                 return { ok = false, err = "Label text mismatch: got='" .. tostring(lbl) .. "' expected='" .. tostring(txt) .. "'" }
             end
 
@@ -518,7 +538,21 @@ namespace SDOM
             group_obj:setLabelText(new_txt)
             local fetched_txt = group_obj:getLabelText()
             if fetched_txt ~= new_txt then
+                destroyDisplayObject(group_name)
+                collectGarbage()
                 return { ok = false, err = "Label text mismatch after setLabelText: got='" .. tostring(fetched_txt) .. "' expected='" .. tostring(new_txt) .. "'" }
+            end
+
+            -- Initial Test getLabelColor() and setLabelColor()
+            local initial_color = group_obj:getLabelColor()
+            local new_color = { r = 64, g = 192, b = 128, a = 255 } -- Greenish
+            group_obj:setLabelColor(new_color)
+            local fetched_color = group_obj:getLabelColor()
+            if fetched_color.r ~= new_color.r or fetched_color.g ~= new_color.g or
+                fetched_color.b ~= new_color.b or fetched_color.a ~= new_color.a then
+                destroyDisplayObject(group_name)
+                collectGarbage()
+                return { ok = false, err = "Label color mismatch after setLabelColor" }
             end
 
             -- cleanup and return
