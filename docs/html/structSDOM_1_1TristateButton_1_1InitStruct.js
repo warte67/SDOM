@@ -16,6 +16,8 @@ var structSDOM_1_1TristateButton_1_1InitStruct =
     [ "font_size", "structSDOM_1_1TristateButton_1_1InitStruct.html#a34722a6f90128ce6c7da06cb0deabab8", null ],
     [ "font_width", "structSDOM_1_1TristateButton_1_1InitStruct.html#aec74b5fc09572ea26053675e69e477b5", null ],
     [ "foregroundColor", "structSDOM_1_1TristateButton_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69", null ],
+    [ "hasBackground", "structSDOM_1_1TristateButton_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a", null ],
+    [ "hasBorder", "structSDOM_1_1TristateButton_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08", null ],
     [ "height", "structSDOM_1_1TristateButton_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a", null ],
     [ "icon_height", "structSDOM_1_1TristateButton_1_1InitStruct.html#a8d79067a8ea2093f86ee7adfef9b9392", null ],
     [ "icon_resource", "structSDOM_1_1TristateButton_1_1InitStruct.html#a0fd1f7cd9ba3544a2bae6ad16dd796be", null ],

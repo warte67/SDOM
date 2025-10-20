@@ -1294,6 +1294,15 @@ Progress Updates</h1>
 <li><b>Now supports alternate icon sprite sizes:</b> ProgressBar can use any registered SpriteSheet (e.g., 8x8, 12x12, 16x16), and the bar and track are positioned and scaled correctly for all sizes.</li>
 </ul>
 </li>
+<li><b>IconButton and ArrowButton</b><ul>
+<li>Both are now scaling to width and height.</li>
+<li><code>IconButton</code> now correctly uses the proper icon SpriteSheet,</li>
+<li>The <code>border</code> flag doesnt seem to have any effect on <code>IconButton</code> based objects.<ul>
+<li>Check with <code>border_color</code> and <code>background_color</code> these should work with <code>IconButton</code> objects</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <p></code></code></code></code></code></code></code></code></p>
 <p><code><code><code><code><code><code><code><code></p><hr  />
@@ -1301,6 +1310,13 @@ Progress Updates</h1>
 <h2><a class="anchor" id="autotoc_md310"></a>
 [October 18, 2025]</h2>
 <p><code><code><code><code><code><code><code><code></p><ul>
+<li><b>Universally support multiple icon set sizes:</b><ul>
+<li>Refactored <code>IPanelObject</code> to properly render different sized icon SpriteSheet assets.</li>
+<li><code>Button</code>, <code>IconButton</code>, and <code>Frame</code> now make use of multi-sized <code>SpriteSheets</code> like the <code>RangeControls</code> now do.</li>
+<li><code>Checkbox</code> and <code>Radiobox</code> now make use of multi-sized <code>SpriteSheets</code> like the <code>RangeControls</code> now do.</li>
+</ul>
+</li>
+<li><b>UnitTest Refactoring:</b><ul>
 <li>Refactored <code>SpriteSheet_UnitTests</code> to utilize proper scaffolding patterns.</li>
 <li>Refactored <code>GarbageCollection_UnitTests</code> to utilize proper scaffolding patterns.</li>
 <li>Refactored <code>Event_UnitTests</code> to utilize proper scaffolding patterns.</li>
@@ -1308,13 +1324,47 @@ Progress Updates</h1>
 <li>Refactored <code>DisplayHandle_UnitTests</code> to utilize proper scaffolding patterns.</li>
 <li>Refactored <code>Lua_UnitTests</code> to utilize proper scaffolding patterns.</li>
 </ul>
+</li>
+<li><b>Border and Background Flags:</b><ul>
+<li>moved to <code>IDisplayObject</code> with accessors <code>getBorder()</code> and <code>getBackground()</code> as getters and <code>setBorder()</code> and s<code>etBackground()</code> as mutators,</li>
+<li>Properties are likewise <code>border</code> and <code>background</code> in Lua.</li>
+</ul>
+</li>
+</ul>
 <p></code></code></code></code></code></code></code></code></p>
 <p><code><code><code><code><code><code><code><code></p><hr  />
 <p> </code></code></code></code></code></code></code></code></p>
-<h2><a class="anchor" id="autotoc_md312"></a>
+<h3><a class="anchor" id="autotoc_md312"></a>
+[October 19, 2025]</h3>
+<p><code><code><code><code><code><code><code><code></code></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code><code><b>- Implemented per-type Lua binding registry and dispatcher:</b> <br  />
+</p><ul>
+<li>Added <code>DisplayHandle::ensure_type_bind_table(...)</code> and a <code>SDOM_Bindings</code> registry.<ul>
+<li><code>DisplayHandle</code> now routes lookups to per-type binding tables via a <code>__index</code> dispatcher.</li>
+</ul>
+</li>
+<li>Migrated <code>Group::_registerLuaBindings</code> to register into the <code>Group</code> per-type table (demo migration).</li>
+<li>Completed per-item (per-type) binding migration for <code>Label</code>:<ul>
+<li>Moved <code>Label</code>-specific bindings into the <code>Label</code> per-type table.</li>
+<li>Removed <code>Label</code> color properties from the handle surface and ensured <code>IDisplayObject</code> color accessors are authoritative.</li>
+<li>Updated <code>Label</code> tokenization to consume <code>IDisplayObject</code> colors; <code>FontStyle</code> token tables continue to expose color data for tokens.</li>
+<li>Ran examples/test unit suite — <code>Label</code>-related tests (<code>Label_test6</code>, <code>Label_test10</code>, <code>Label_test11</code>) now pass locally.</li>
+</ul>
+</li>
+<li>Reverted temporary debug prints and cleaned up diagnostic logging introduced during investigation.</li>
+<li>Added a focused registration-order regression unit test (create + immediate method call) to catch userdata/binding order regressions; test added and executed locally.</li>
+<li><b>Status</b>: <code>Group</code> and <code>Label</code> migrations complete; per-type binding dispatcher and fallback compatibility shims in place.</li>
+<li><b>Next</b>: sweep remaining types (<code>Button</code>, <code>Frame</code>, <code>IconButton</code>, etc) to per-type tables, run full CI, and remove temporary backward-compatibility aliases where safe. All of the DisplayObjects will need to be swept to per-type tables and then fully tested with their own respective UnitTests.</li>
+</ul>
+<p></code></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code><code></p><hr  />
+<p> </code></code></code></code></code></code></code></code></p>
+<h2><a class="anchor" id="autotoc_md314"></a>
 Next Steps:</h2>
 <p><code><code><code><code><code><code><code><code></p><ul>
-<li><code>Button</code>, <code>IconButton</code>, and <code>Frame</code> need to make use of multi-sized SpriteSheets like the RangeControls now do.</li>
+<li>Add LUA payload as events are dispatched from the EventManager, not directly as a result of DisplayObject::onEvent().</li>
+<li><b>Standardize the DisplayObject interface for C++ and LUA:</b><ul>
+<li><code>Label</code> should now be the model for standardization for C++ and LUA</li>
 <li>Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:<ul>
 <li>Add <code>Group</code> unit tests to validate Lua all property setting and resource resolution.</li>
 <li>Add <code>Button</code> unit tests to validate Lua all property setting, label access, and event listener behavior.</li>
@@ -1337,19 +1387,24 @@ Next Steps:</h2>
 </ul>
 </li>
 </ul>
+</li>
+<li><b>Fully Refactor UnitTests for Core and Factory while implementing appropriate global LUA functions:</b><ul>
+<li>Refactor the UnitTest functions to use the newest test function pattern (e.g., <code>Label_test0()</code> → <code>Label_test1()</code>).</li>
+</ul>
+</li>
+</ul>
 <p></code></code></code></code></code></code></code></code></p>
-<p><code><code><code><code><code><code><code><code></p><hr  />
-<p> </code></code></code></code></code></code></code></code></p>
-<h2><a class="anchor" id="autotoc_md314"></a>
-Long Term To Do:</h2>
-<p><code><code><code><code><code><code><code><code></p><ul>
-<li>Refactor the UnitTest functions to use the newest test function pattern (e.g., <code>Label_test0()</code> → <code>Label_test1()</code>).<ul>
-<li>Refactor <code>Stage_UnitTests</code> systematically test all Stage properties and methods via Lua.</li>
+<p><code><code><code><code><code><code><code><code>Refactor <code>Stage_UnitTests</code> systematically test all Stage properties and methods via Lua.</p><ul>
 <li>Refactor <code>IDisplayObject</code> systematically test all IDisplayObject properties and methods via Lua.</li>
 <li>Refactor <code>Factory</code> systematically test all Factory methods via Lua.</li>
 <li>Refactor <code>Core</code> systematically test all Core methods via Lua.</li>
 </ul>
-</li>
+<p></code></code></code></code></code></code></code></code></p>
+<p><code><code><code><code><code><code><code><code></p><hr  />
+<p> </code></code></code></code></code></code></code></code></p>
+<h2><a class="anchor" id="autotoc_md316"></a>
+Long Term To Do:</h2>
+<p><code><code><code><code><code><code><code><code></p><ul>
 <li>Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.<ul>
 <li>Use <a class="el" href="SDOM__IRangeControl__scaffold_8hpp.html">SDOM_IRangeControl_scaffold.hpp</a> / .cpp as a template for future interface implementations.</li>
 </ul>

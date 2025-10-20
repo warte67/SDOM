@@ -10,6 +10,7 @@ var classSDOM_1_1DisplayHandle =
     [ "bind_minimal", "classSDOM_1_1DisplayHandle.html#a68a3fc9384e6ab6bdc416fb11e010390", null ],
     [ "c_str", "classSDOM_1_1DisplayHandle.html#a2dc4f0f7f6af8b9e6ed74edb234bb511", null ],
     [ "ensure_handle_table", "classSDOM_1_1DisplayHandle.html#a50958eaf5c8ab37729cba09a4937b81c", null ],
+    [ "ensure_type_bind_table", "classSDOM_1_1DisplayHandle.html#a04f81db86f131b49f3f72d509c6e5a96", null ],
     [ "get", "classSDOM_1_1DisplayHandle.html#a34b67c1cbabe355296209b79e5e5b949", null ],
     [ "get_lua", "classSDOM_1_1DisplayHandle.html#aad40707cc666ec8c6c8e447521584076", null ],
     [ "getName", "classSDOM_1_1DisplayHandle.html#ae7a0b51a3e8ea3e93bac11b276f3e09d", null ],

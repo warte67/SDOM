@@ -15,6 +15,8 @@ var structSDOM_1_1Group_1_1InitStruct =
     [ "font_size", "structSDOM_1_1Group_1_1InitStruct.html#a00a2d38f7196eb193f5659b5abe6de1f", null ],
     [ "font_width", "structSDOM_1_1Group_1_1InitStruct.html#ad46a8b92a7c9ff721e1edb631c9d95ff", null ],
     [ "foregroundColor", "structSDOM_1_1Group_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69", null ],
+    [ "hasBackground", "structSDOM_1_1Group_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a", null ],
+    [ "hasBorder", "structSDOM_1_1Group_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08", null ],
     [ "height", "structSDOM_1_1Group_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a", null ],
     [ "icon_height", "structSDOM_1_1Group_1_1InitStruct.html#aeb7b2f50c351f816444b802cf6923650", null ],
     [ "icon_resource", "structSDOM_1_1Group_1_1InitStruct.html#a952800d26de94058a2303a0a0b497fcc", null ],

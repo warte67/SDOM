@@ -10,6 +10,7 @@ var SDOM_8hpp =
     [ "FAIL", "SDOM_8hpp.html#ac8d1eaf65528f86b445cf6e45b2d72c9", null ],
     [ "INFO", "SDOM_8hpp.html#aedf01192151e10a6620567952711ff69", null ],
     [ "LUA_INFO", "SDOM_8hpp.html#ad37b5952fb01322cea666ba6342b2a43", null ],
+    [ "UNIT_TESTS_ENABLED", "SDOM_8hpp.html#a7c571a0694bc144f311b87cc6ad2a600", null ],
     [ "WARNING", "SDOM_8hpp.html#aaf99b8fcaa4b837f684ea0505ed34487", null ],
     [ "AnchorPoint", "SDOM_8hpp.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "SDOM_8hpp.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],

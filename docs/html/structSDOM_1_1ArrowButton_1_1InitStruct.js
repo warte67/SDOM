@@ -11,6 +11,8 @@ var structSDOM_1_1ArrowButton_1_1InitStruct =
     [ "direction", "structSDOM_1_1ArrowButton_1_1InitStruct.html#a5cfabecee6c35564b7ead3512372a8b8", null ],
     [ "dropshadowColor", "structSDOM_1_1ArrowButton_1_1InitStruct.html#a0df9d711df2ac9ede2bf91e826db29cc", null ],
     [ "foregroundColor", "structSDOM_1_1ArrowButton_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69", null ],
+    [ "hasBackground", "structSDOM_1_1ArrowButton_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a", null ],
+    [ "hasBorder", "structSDOM_1_1ArrowButton_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08", null ],
     [ "height", "structSDOM_1_1ArrowButton_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a", null ],
     [ "icon_height", "structSDOM_1_1ArrowButton_1_1InitStruct.html#aa917a65f5f40de21fd831196a3392430", null ],
     [ "icon_index", "structSDOM_1_1ArrowButton_1_1InitStruct.html#aaa657c32225ce73ad6b81418225cb4ea", null ],

@@ -831,15 +831,19 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 ---
 ### [October 19, 2025]
 
-- Implemented per-type Lua binding registry and dispatcher:
-  - Added DisplayHandle::ensure_type_bind_table(...) and a SDOM_Bindings registry.
-  - DisplayHandle now routes lookups to per-type binding tables via a __index dispatcher.
-- Migrated Group::_registerLuaBindings to register into the Group per-type table (demo migration).
+**- Implemented per-type Lua binding registry and dispatcher:**  
+- Added `DisplayHandle::ensure_type_bind_table(...)` and a `SDOM_Bindings` registry.
+  - `DisplayHandle` now routes lookups to per-type binding tables via a `__index` dispatcher.
+- Migrated `Group::_registerLuaBindings` to register into the `Group` per-type table (demo migration).
+- Completed per-item (per-type) binding migration for `Label`:
+  - Moved `Label`-specific bindings into the `Label` per-type table.
+  - Removed `Label` color properties from the handle surface and ensured `IDisplayObject` color accessors are authoritative.
+  - Updated `Label` tokenization to consume `IDisplayObject` colors; `FontStyle` token tables continue to expose color data for tokens.
+  - Ran examples/test unit suite — `Label`-related tests (`Label_test6`, `Label_test10`, `Label_test11`) now pass locally.
 - Reverted temporary debug prints and cleaned up diagnostic logging introduced during investigation.
 - Added a focused registration-order regression unit test (create + immediate method call) to catch userdata/binding order regressions; test added and executed locally.
-- Status: Group migration complete as demo; Label migration pending and scheduled for tomorrow.
-- Next: migrate Label bindings to per-type tables, run full test suite, and iterate on any remaining compatibility shims if needed.
-
+- **Status**: `Group` and `Label` migrations complete; per-type binding dispatcher and fallback compatibility shims in place.
+- **Next**: sweep remaining types (`Button`, `Frame`, `IconButton`, etc) to per-type tables, run full CI, and remove temporary backward-compatibility aliases where safe. All of the DisplayObjects will need to be swept to per-type tables and then fully tested with their own respective UnitTests.
 
 
 ---
@@ -866,15 +870,15 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Add `Slider` unit tests to validate Lua all property setting and icon rendering.
     - Add `ProgressBar` unit tests to validate Lua all property setting and icon rendering.
     - Add `Scrollbar` unit tests to validate Lua all property setting and icon rendering.
-
----
-## Long Term To Do:
-- Refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test0()` → `Label_test1()`).
+- **Fully Refactor UnitTests for Core and Factory while implementing appropriate global LUA functions:**
+    - Refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test0()` → `Label_test1()`).
   - Refactor `Stage_UnitTests` systematically test all Stage properties and methods via Lua.
   - Refactor `IDisplayObject` systematically test all IDisplayObject properties and methods via Lua.
   - Refactor `Factory` systematically test all Factory methods via Lua.
   - Refactor `Core` systematically test all Core methods via Lua.
 
+---
+## Long Term To Do:
 - Add default scaffolds for creating new DisplayObjects, AssetObjects, and ButtonObjectsm to streamline future development.
   - Use SDOM_IRangeControl_scaffold.hpp / .cpp as a template for future interface implementations.
 - Review and refactor documentation:

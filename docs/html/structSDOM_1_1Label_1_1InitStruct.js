@@ -23,6 +23,8 @@ var structSDOM_1_1Label_1_1InitStruct =
     [ "fontType", "structSDOM_1_1Label_1_1InitStruct.html#a3af34cca46893f8389914b8c4219fa20", null ],
     [ "fontWidth", "structSDOM_1_1Label_1_1InitStruct.html#a8a984e5cd9e6e7a64565c518d0e48524", null ],
     [ "foregroundColor", "structSDOM_1_1Label_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69", null ],
+    [ "hasBackground", "structSDOM_1_1Label_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a", null ],
+    [ "hasBorder", "structSDOM_1_1Label_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08", null ],
     [ "height", "structSDOM_1_1Label_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a", null ],
     [ "isClickable", "structSDOM_1_1Label_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085", null ],
     [ "isEnabled", "structSDOM_1_1Label_1_1InitStruct.html#acda95a896651eee200d55e80ea104150", null ],
