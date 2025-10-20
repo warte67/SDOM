@@ -67,6 +67,12 @@ namespace SDOM
                 isHidden = false;
                 tabPriority = 0;
                 tabEnabled = false; // Labels are not tabbable by default
+
+                foregroundColor = {255, 255, 255, 255};   // white
+                backgroundColor = {255, 255, 255, 128};   // transparent
+                borderColor = {0, 0, 0, 128};             // transparent
+                outlineColor = {0, 0, 0, 255};            // black
+                dropshadowColor = {0, 0, 0, 128};         // semi-transparent black
             }
             // --- Label-specific properties --- //
             std::string text = "Label";
@@ -76,19 +82,13 @@ namespace SDOM
             int fontWidth = 8;          // for BitmapFont only (-1 to use fontSize)
             int fontHeight = 8;         // for BitmapFont only (-1 to use fontSize)
             LabelAlign alignment = LabelAlign::TOP_LEFT;        // Text alignment (default: top-left)
-
-            // SDL_Color foregroundColor = {255, 255, 255, 255};   // white
-            // SDL_Color backgroundColor = {255, 255, 255, 128};   // transparent
-            // SDL_Color borderColor = {0, 0, 0, 128};             // transparent
-            // SDL_Color outlineColor = {0, 0, 0, 255};            // black
-            // SDL_Color dropshadowColor = {0, 0, 0, 128};         // semi-transparent black
             
             bool bold = false;          // enable bold text
             bool italic = false;        // enable italic text
             bool underline = false;     // enable underline text
             bool strikethrough = false; // enable strikethrough text
-                                                                            bool border = false;        // enable border
-                                                                            bool background = false;    // enable background
+            bool border = false;        // enable border
+            bool background = false;    // enable background
             bool outline = false;       // enable outline
             bool dropshadow = false;    // enable drop shadow
             bool wordwrap = false;      // enable word wrap
@@ -288,7 +288,7 @@ namespace SDOM
         IFontObject::FontType fontType_ = IFontObject::FontType::Bitmap;
         AssetHandle fontAsset;      // Underlying font asset for the Label
         FontStyle defaultStyle_;    // default style for the label
-        std::string resourceName_;  // Optional resource name for preloaded font
+        std::string resourceName_;  // change this to font_resource_ (for consistency)
 
         // Flags to indicate whether the user explicitly provided per-axis
         // bitmap font metrics in the Lua config. If false, we will default

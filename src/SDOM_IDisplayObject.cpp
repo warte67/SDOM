@@ -1851,19 +1851,94 @@ namespace SDOM
         bind_void_str("setType",    ::SDOM::setType_lua);
         bind_R_0("getBounds",       ::SDOM::getBounds_lua);
         bind_void_obj("setBounds",  [](IDisplayObject* o, const sol::object& a){ ::SDOM::setBounds_lua(o, a); });
-        bind_R_0("getColor",        ::SDOM::getColor_lua);
-        bind_void_obj("setColor",   [](IDisplayObject* o, const sol::object& a){ ::SDOM::setColor_lua(o, a); });
+
         // Per-color accessors: foreground/background/border/outline/dropshadow
-        bind_R_0("getForegroundColor", ::SDOM::getForegroundColor_lua);
+        // Register function-style getters that RETURN Lua tables (r,g,b,a)
+        auto reg_get_color_table = [&](const char* name, auto getter) {
+            // per-type table first
+            if (per_type_handle.valid()) {
+                if (absent_per_type(name)) {
+                    per_type_handle.set_function(name, [getter](DisplayHandle h) -> sol::object {
+                        IDisplayObject* o = dynamic_cast<IDisplayObject*>(h.get());
+                        if (!o) return sol::lua_nil;
+                        sol::state_view sv = SDOM::Core::getInstance().getLua();
+                        SDL_Color c = getter(o);
+                        sol::table t = sv.create_table(); t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a; return t;
+                    });
+                }
+            }
+            if (absent(name)) {
+                handle.set_function(name, [getter](DisplayHandle h) -> sol::object {
+                    IDisplayObject* o = dynamic_cast<IDisplayObject*>(h.get());
+                    if (!o) return sol::lua_nil;
+                    sol::state_view sv = SDOM::Core::getInstance().getLua();
+                    SDL_Color c = getter(o);
+                    sol::table t = sv.create_table(); t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a; return t;
+                });
+            }
+        };
+        // Register getColor to return a Lua table {r,g,b,a} for consistency
+        reg_get_color_table("getColor", ::SDOM::getColor_lua);
+        bind_void_obj("setColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setColor_lua(o, a); });
+        reg_get_color_table("getForegroundColor", ::SDOM::getForegroundColor_lua);
         bind_void_obj("setForegroundColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setForegroundColor_lua(o, a); });
-        bind_R_0("getBackgroundColor", ::SDOM::getBackgroundColor_lua);
+        reg_get_color_table("getBackgroundColor", ::SDOM::getBackgroundColor_lua);
         bind_void_obj("setBackgroundColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setBackgroundColor_lua(o, a); });
-        bind_R_0("getBorderColor", ::SDOM::getBorderColor_lua);
+        reg_get_color_table("getBorderColor", ::SDOM::getBorderColor_lua);
         bind_void_obj("setBorderColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setBorderColor_lua(o, a); });
-        bind_R_0("getOutlineColor", ::SDOM::getOutlineColor_lua);
+        reg_get_color_table("getOutlineColor", ::SDOM::getOutlineColor_lua);
         bind_void_obj("setOutlineColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setOutlineColor_lua(o, a); });
-        bind_R_0("getDropshadowColor", ::SDOM::getDropshadowColor_lua);
+        reg_get_color_table("getDropshadowColor", ::SDOM::getDropshadowColor_lua);
         bind_void_obj("setDropshadowColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setDropshadowColor_lua(o, a); });
+
+        // Also expose property-style accessors so Lua code can use h.foreground_color = {..}
+        auto addColorProp = [&](const char* propName, auto getterFunc, auto setterFunc) {
+            if (absent(propName)) {
+                handle.set(propName, sol::property(
+                    [getterFunc](DisplayHandle h) -> sol::object {
+                        IDisplayObject* o = dynamic_cast<IDisplayObject*>(h.get());
+                        if (!o) return sol::lua_nil;
+                        sol::state_view sv = SDOM::Core::getInstance().getLua();
+                        SDL_Color c = getterFunc(o);
+                        sol::table t = sv.create_table(); t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a; return t;
+                    },
+                    [setterFunc](DisplayHandle h, const sol::object& v) {
+                        IDisplayObject* o = dynamic_cast<IDisplayObject*>(h.get());
+                        if (!o) return;
+                        setterFunc(o, v);
+                    }
+                ));
+                if (per_type_handle.valid() && absent_per_type(propName)) {
+                    per_type_handle.set(propName, sol::property(
+                        [getterFunc](DisplayHandle h) -> sol::object {
+                            IDisplayObject* o = dynamic_cast<IDisplayObject*>(h.get());
+                            if (!o) return sol::lua_nil;
+                            sol::state_view sv = SDOM::Core::getInstance().getLua();
+                            SDL_Color c = getterFunc(o);
+                            sol::table t = sv.create_table(); t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a; return t;
+                        },
+                        [setterFunc](DisplayHandle h, const sol::object& v) {
+                            IDisplayObject* o = dynamic_cast<IDisplayObject*>(h.get());
+                            if (!o) return;
+                            setterFunc(o, v);
+                        }
+                    ));
+                }
+            }
+        };
+
+        addColorProp("foreground_color", [](const IDisplayObject* o){ return o->getForegroundColor(); }, [](IDisplayObject* o, const sol::object& v){ ::SDOM::setForegroundColor_lua(o, v); });
+        addColorProp("background_color", [](const IDisplayObject* o){ return o->getBackgroundColor(); }, [](IDisplayObject* o, const sol::object& v){ ::SDOM::setBackgroundColor_lua(o, v); });
+        addColorProp("border_color",     [](const IDisplayObject* o){ return o->getBorderColor(); },     [](IDisplayObject* o, const sol::object& v){ ::SDOM::setBorderColor_lua(o, v); });
+        addColorProp("outline_color",    [](const IDisplayObject* o){ return o->getOutlineColor(); },    [](IDisplayObject* o, const sol::object& v){ ::SDOM::setOutlineColor_lua(o, v); });
+        addColorProp("dropshadow_color", [](const IDisplayObject* o){ return o->getDropshadowColor(); }, [](IDisplayObject* o, const sol::object& v){ ::SDOM::setDropshadowColor_lua(o, v); });
+
+    // Backwards-compatible aliases using the old `text_*` names
+    addColorProp("text_foreground_color", [](const IDisplayObject* o){ return o->getForegroundColor(); }, [](IDisplayObject* o, const sol::object& v){ ::SDOM::setForegroundColor_lua(o, v); });
+    addColorProp("text_background_color", [](const IDisplayObject* o){ return o->getBackgroundColor(); }, [](IDisplayObject* o, const sol::object& v){ ::SDOM::setBackgroundColor_lua(o, v); });
+    addColorProp("text_border_color",     [](const IDisplayObject* o){ return o->getBorderColor(); },     [](IDisplayObject* o, const sol::object& v){ ::SDOM::setBorderColor_lua(o, v); });
+    addColorProp("text_outline_color",    [](const IDisplayObject* o){ return o->getOutlineColor(); },    [](IDisplayObject* o, const sol::object& v){ ::SDOM::setOutlineColor_lua(o, v); });
+    addColorProp("text_dropshadow_color", [](const IDisplayObject* o){ return o->getDropshadowColor(); }, [](IDisplayObject* o, const sol::object& v){ ::SDOM::setDropshadowColor_lua(o, v); });
 
         // Priority & Z-Order
         bind_R_0("getMaxPriority",            ::SDOM::getMaxPriority_lua);
