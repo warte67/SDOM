@@ -64,6 +64,7 @@ namespace SDOM
 
         LabelAlign alignment = LabelAlign::TOP_LEFT;      // Text alignment (default: top-left)
 
+        // directly specified colors for various text elements
         SDL_Color foregroundColor = {255, 255, 255, 255}; // Text color (default: white)
         SDL_Color backgroundColor = {0, 0, 0, 0};         // Background color (default: transparent)
         SDL_Color borderColor = {0, 0, 0, 0};             // Border color (default: transparent)
@@ -95,27 +96,7 @@ namespace SDOM
             a.padding_vert      != b.padding_vert      ||
             a.dropshadowOffsetX != b.dropshadowOffsetX ||
             a.dropshadowOffsetY != b.dropshadowOffsetY ||
-            a.alignment         != b.alignment         ||
-            a.foregroundColor.r != b.foregroundColor.r ||
-            a.foregroundColor.g != b.foregroundColor.g ||
-            a.foregroundColor.b != b.foregroundColor.b ||
-            a.foregroundColor.a != b.foregroundColor.a ||
-            a.backgroundColor.r != b.backgroundColor.r ||
-            a.backgroundColor.g != b.backgroundColor.g ||
-            a.backgroundColor.b != b.backgroundColor.b ||
-            a.backgroundColor.a != b.backgroundColor.a ||
-            a.borderColor.r     != b.borderColor.r     ||
-            a.borderColor.g     != b.borderColor.g     ||
-            a.borderColor.b     != b.borderColor.b     ||
-            a.borderColor.a     != b.borderColor.a     ||
-            a.outlineColor.r    != b.outlineColor.r    ||
-            a.outlineColor.g    != b.outlineColor.g    ||
-            a.outlineColor.b    != b.outlineColor.b    ||
-            a.outlineColor.a    != b.outlineColor.a    ||
-            a.dropshadowColor.r != b.dropshadowColor.r ||
-            a.dropshadowColor.g != b.dropshadowColor.g ||
-            a.dropshadowColor.b != b.dropshadowColor.b ||
-            a.dropshadowColor.a != b.dropshadowColor.a;
+            a.alignment         != b.alignment;       
     }
     // FontStyle equality operator
     inline bool operator==(const SDOM::FontStyle& a, const SDOM::FontStyle& b) {
@@ -139,27 +120,7 @@ namespace SDOM
             a.padding_vert      == b.padding_vert      &&
             a.dropshadowOffsetX == b.dropshadowOffsetX &&
             a.dropshadowOffsetY == b.dropshadowOffsetY &&
-            a.alignment         == b.alignment         &&
-            a.foregroundColor.r == b.foregroundColor.r &&
-            a.foregroundColor.g == b.foregroundColor.g &&
-            a.foregroundColor.b == b.foregroundColor.b &&
-            a.foregroundColor.a == b.foregroundColor.a &&
-            a.backgroundColor.r == b.backgroundColor.r &&
-            a.backgroundColor.g == b.backgroundColor.g &&
-            a.backgroundColor.b == b.backgroundColor.b &&
-            a.backgroundColor.a == b.backgroundColor.a &&
-            a.borderColor.r     == b.borderColor.r     &&
-            a.borderColor.g     == b.borderColor.g     &&
-            a.borderColor.b     == b.borderColor.b     &&
-            a.borderColor.a     == b.borderColor.a     &&
-            a.outlineColor.r    == b.outlineColor.r    &&
-            a.outlineColor.g    == b.outlineColor.g    &&
-            a.outlineColor.b    == b.outlineColor.b    &&
-            a.outlineColor.a    == b.outlineColor.a    &&
-            a.dropshadowColor.r == b.dropshadowColor.r &&
-            a.dropshadowColor.g == b.dropshadowColor.g &&
-            a.dropshadowColor.b == b.dropshadowColor.b &&
-            a.dropshadowColor.a == b.dropshadowColor.a;
+            a.alignment         == b.alignment;       
     }
 
 

@@ -497,7 +497,7 @@ namespace SDOM
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
                 SDL_RenderClear(renderer);
                 // Pass 1: render background
-                SDL_Color bgndColor = defaultStyle_.backgroundColor;
+                SDL_Color bgndColor = backgroundColor_;
                 if (bgndColor.a > 0 && defaultStyle_.background) 
                 {
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -506,7 +506,7 @@ namespace SDOM
                     SDL_RenderFillRect(renderer, &rect);
                 }
                 // Pass 2: render border
-                SDL_Color borderColor = defaultStyle_.borderColor;
+                SDL_Color borderColor = borderColor_;
                 if (defaultStyle_.border) 
                 {
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -572,15 +572,7 @@ namespace SDOM
 
         defaultStyle_.fontSize = fontSize_;
 
-        // Propagate color defaults from IDisplayObject (moved there) into the
-        // Label's runtime default style so escapes and reset() see the same
-        // configured defaults.
-        defaultStyle_.foregroundColor = foregroundColor_;
-        defaultStyle_.backgroundColor = backgroundColor_;
-        defaultStyle_.borderColor = borderColor_;
-        defaultStyle_.outlineColor = outlineColor_;
-        defaultStyle_.dropshadowColor = dropshadowColor_;
-        
+
         // Also ensure fontWidth/fontHeight are current in default style
         FontStyle currentStyle = defaultStyle_;
         tokenList.clear();
@@ -936,6 +928,11 @@ namespace SDOM
                         }
 
                         // Update currentStyle colors from colorTargets
+                        foregroundColor_ = *colorTargets["fgnd"];
+                        backgroundColor_ = *colorTargets["bgnd"];
+                        borderColor_ = *colorTargets["border"];
+                        outlineColor_ = *colorTargets["outline"];
+                        dropshadowColor_ = *colorTargets["shadow"];
                         currentStyle.foregroundColor = *colorTargets["fgnd"];
                         currentStyle.backgroundColor = *colorTargets["bgnd"];
                         currentStyle.borderColor = *colorTargets["border"];
