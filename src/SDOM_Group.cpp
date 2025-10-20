@@ -411,6 +411,57 @@ namespace SDOM
             });
         }
 
+        // --- Font metric accessors/mutators for Group --- //
+        if (absent_raw("getFontSize")) {
+            handle.raw_set("getFontSize", [](SDOM::DisplayHandle h) -> int {
+                if (!h.isValid()) return 0;
+                try { if (h->getType() != Group::TypeName) return 0; } catch(...) { return 0; }
+                Group* g = static_cast<Group*>(h.get());
+                return g ? g->getFontSize() : 0;
+            });
+        }
+        if (absent_raw("getFontWidth")) {
+            handle.raw_set("getFontWidth", [](SDOM::DisplayHandle h) -> int {
+                if (!h.isValid()) return 0;
+                try { if (h->getType() != Group::TypeName) return 0; } catch(...) { return 0; }
+                Group* g = static_cast<Group*>(h.get());
+                return g ? g->getFontWidth() : 0;
+            });
+        }
+        if (absent_raw("getFontHeight")) {
+            handle.raw_set("getFontHeight", [](SDOM::DisplayHandle h) -> int {
+                if (!h.isValid()) return 0;
+                try { if (h->getType() != Group::TypeName) return 0; } catch(...) { return 0; }
+                Group* g = static_cast<Group*>(h.get());
+                return g ? g->getFontHeight() : 0;
+            });
+        }
+
+        if (absent_raw("setFontSize")) {
+            handle.raw_set("setFontSize", [](SDOM::DisplayHandle h, int s) {
+                if (!h.isValid()) return;
+                try { if (h->getType() != Group::TypeName) return; } catch(...) { return; }
+                Group* g = static_cast<Group*>(h.get());
+                if (g) g->setFontSize(s);
+            });
+        }
+        if (absent_raw("setFontWidth")) {
+            handle.raw_set("setFontWidth", [](SDOM::DisplayHandle h, int w) {
+                if (!h.isValid()) return;
+                try { if (h->getType() != Group::TypeName) return; } catch(...) { return; }
+                Group* g = static_cast<Group*>(h.get());
+                if (g) g->setFontWidth(w);
+            });
+        }
+        if (absent_raw("setFontHeight")) {
+            handle.raw_set("setFontHeight", [](SDOM::DisplayHandle h, int hh) {
+                if (!h.isValid()) return;
+                try { if (h->getType() != Group::TypeName) return; } catch(...) { return; }
+                Group* g = static_cast<Group*>(h.get());
+                if (g) g->setFontHeight(hh);
+            });
+        }
+
         // group color accessors
         if (absent_raw("getGroupColor")) {
             handle.raw_set("getGroupColor", [](SDOM::DisplayHandle h) -> SDL_Color {

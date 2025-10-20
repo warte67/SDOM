@@ -31,6 +31,11 @@ namespace SDOM
         if (fontWidth_ <= 0)  fontWidth_  = (fontSize_ > 0 ? fontSize_ : 8);
         if (fontHeight_ <= 0) fontHeight_ = (fontSize_ > 0 ? fontSize_ : 8);
 
+        // Ensure defaultStyle_ has a sensible fontSize early so getters
+        // exposed on DisplayHandle (which read defaultStyle_.fontSize)
+        // return the expected value even before onInit() completes.
+        defaultStyle_.fontSize = fontSize_;
+
         defaultStyle_.alignment = init.alignment;
 
         // Propagate color defaults from IDisplayObject (moved there) into the
@@ -158,6 +163,10 @@ namespace SDOM
         fontSize_ = get_int("font_size", init.fontSize);
         fontWidth_ = get_int("font_width", fontSize_);
         fontHeight_ = get_int("font_height", fontSize_);
+
+    // Mirror the initial fontSize into defaultStyle_ so Lua-visible
+    // getters return the expected size immediately after construction.
+    defaultStyle_.fontSize = fontSize_;
 
 
         // // Record whether the user provided explicit per-axis values.

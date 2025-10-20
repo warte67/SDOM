@@ -574,12 +574,12 @@ namespace SDOM
 
     bool Group_test6()
     {
-        // int getFontSize() const;                            // NOT YET TESTED
-        // int getFontWidth() const;                           // NOT YET TESTED
-        // int getFontHeight() const;                          // NOT YET TESTED
-        // void setFontSize(int s);                            // NOT YET TESTED
-        // void setFontWidth(int w);                           // NOT YET TESTED
-        // void setFontHeight(int h);                          // NOT YET TESTED
+        // int getFontSize() const;
+        // int getFontWidth() const;
+        // int getFontHeight() const;
+        // void setFontSize(int s);
+        // void setFontWidth(int w);
+        // void setFontHeight(int h);
 
         std::string testName = "Group #6";
         std::string testDesc = "Font metrics getters/setters (Lua symmetry)";
