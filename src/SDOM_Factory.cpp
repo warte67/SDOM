@@ -455,6 +455,10 @@ namespace SDOM
                     // Register Lua bindings for the concrete instance so methods
                     // are available on the shared userdata/handle.
                     try {
+                        if (DEBUG_REGISTER_LUA) {
+                            printf("[TRACE] Factory::registerDomType prototype->_registerLuaBindings for type='%s' lua_state=%p\n",
+                                   typeName.c_str(), (void*)SDOM::getLua().lua_state());
+                        }
                         prototype->_registerLuaBindings(typeName, SDOM::getLua());
                     } catch(...) {
                         // swallow registration errors for prototypes

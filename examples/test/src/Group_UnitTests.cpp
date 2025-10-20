@@ -7,6 +7,7 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Group.hpp>
 #include <SDOM/SDOM_Label.hpp>
+#include <SDOM/SDOM_LuaRegistry.hpp>
 
 /*** Group UnitTests: **********************
  *  Current coverage/status (after running ./compile && ./prog):
@@ -671,7 +672,7 @@ namespace SDOM
 
     bool Group_test7()
     {
-return true;
+// return true;
         // int getFontSize() const;
         // int getFontWidth() const;
         // int getFontHeight() const;
@@ -681,13 +682,37 @@ return true;
 
         std::string testName = "Group #7";
         std::string testDesc = "Font metrics getters/setters (Lua symmetry)";
-        sol::state& lua = SDOM::Core::getInstance().getLua();
-        // Lua test script
-        auto res = lua.script(R"lua(
+    sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Debug: dump the C++ Lua binding registry to see what is authoritative for Group
+        try { SDOM::getLuaBindingRegistry().dump(); } catch(...) {}
+        // Debug: inspect legacy Lua per-type table for Group
+        try {
+            sol::object bindings = lua["SDOM_Bindings"];
+            if (bindings.valid() && bindings.get_type() == sol::type::table) {
+                sol::table br = bindings.as<sol::table>();
+                sol::object grp = br.raw_get_or("Group", sol::lua_nil);
+                if (grp.valid() && grp.get_type() == sol::type::table) {
+                    sol::table gt = grp.as<sol::table>();
+                    std::cout << "SDOM_Bindings[Group] keys:";
+                    for (auto& kv : gt) {
+                        try {
+                            if (kv.first.is<std::string>()) std::cout << " " << kv.first.as<std::string>();
+                        } catch(...) {}
+                    }
+                    std::cout << std::endl;
+                } else {
+                    std::cout << "SDOM_Bindings[Group] is missing or not a table" << std::endl;
+                }
+            } else {
+                std::cout << "SDOM_Bindings root missing or not table" << std::endl;
+            }
+        } catch(...) {}
+        // Split the Lua script so we can inspect bindings after creation
+        std::string create_chunk = R"lua(
             -- Create Group
             local group_name = "ut_group_1"
             local txt = "Some Random Text"
-            local cfg = { 
+            cfg = { 
                 name = group_name, 
                 type = "Group", 
                 font_resource = "internal_font_8x8", 
@@ -696,97 +721,105 @@ return true;
                 font_height = 8,
                 text = txt 
             }
+            group_obj = createDisplayObject("Group", cfg)
+            return (group_obj ~= nil)
+        )lua";
+
+        bool created = false;
+        try { created = lua.script(create_chunk).get<bool>(); } catch(...) { created = false; }
+        if (!created) {
+            return UnitTests::run(testName, testDesc, [=]() { return false; });
+        }
+
+        // After creation, dump registry and per-type table for Group
+        try { SDOM::getLuaBindingRegistry().dump(); } catch(...) {}
+        try {
+            sol::object bindings = lua["SDOM_Bindings"];
+            if (bindings.valid() && bindings.get_type() == sol::type::table) {
+                sol::table br = bindings.as<sol::table>();
+                sol::object grp = br.raw_get_or("Group", sol::lua_nil);
+                if (grp.valid() && grp.get_type() == sol::type::table) {
+                    sol::table gt = grp.as<sol::table>();
+                    std::cout << "SDOM_Bindings[Group] keys after creation:";
+                    for (auto& kv : gt) {
+                        try {
+                            if (kv.first.is<std::string>()) std::cout << " " << kv.first.as<std::string>();
+                        } catch(...) {}
+                    }
+                    std::cout << std::endl;
+                } else {
+                    std::cout << "SDOM_Bindings[Group] is missing or not a table after creation" << std::endl;
+                }
+            } else {
+                std::cout << "SDOM_Bindings root missing or not table after creation" << std::endl;
+            }
+        } catch(...) {}
+
+        // Now run the rest of the test in Lua, assuming 'group_obj' and 'cfg' exist in the global env
+        std::string test_chunk = R"lua(
             local ok = true
             local err = ""
-            local group_obj = createDisplayObject("Group", cfg)            
-            if not group_obj then
-                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
-            end
-
-
--- after local group_obj = createDisplayObject("Group", cfg)
-local t = SDOM_Bindings["Group"]
-print("SDOM_Bindings['Group'] exists:", t ~= nil)
-print("rawget per-type getFontSize:", rawget(t, "getFontSize"))
-print("per-type operator[] getFontSize:", t and t.getFontSize)
-print("DisplayHandle rawget getFontSize:", rawget(DisplayHandle, "getFontSize"))
-print("DisplayHandle operator[] getFontSize:", DisplayHandle.getFontSize)
-
--- resolve the function and try both call forms
-local f_op = t and t.getFontSize     -- operator[] lookup
-local f_raw = rawget(t, "getFontSize") -- raw lookup on per-type
-local f_min_op = DisplayHandle.getFontSize
-local f_min_raw = rawget(DisplayHandle, "getFontSize")
-
-print("call f_op (as func) -> pcall:", pcall(function() print('f_op()', f_op and f_op(group_obj)) end))
-print("call f_min_op (as func) -> pcall:", pcall(function() print('f_min_op()', f_min_op and f_min_op(group_obj)) end))
-
--- Inspect label child directly from Lua via existing helpers:
-local lbl = group_obj:getLabel()
-print("group_obj:getLabel() ->", lbl and tostring(lbl) or "<nil>")
-if lbl then
-  print("label:getFontSize() ->", pcall(function() print(lbl:getFontSize()) end))
-end            
-
             -- Test getFontSize() and setFontSize()
             local initial_size = group_obj:getFontSize()
             if (initial_size ~= 8) then
-                destroyDisplayObject(group_name)
-                collectGarbage()            
+                destroyDisplayObject(cfg.name)
+                collectGarbage()
                 return { ok = false, err = "Initial font size mismatch: got=" .. tostring(initial_size) .. " expected=8" }
             end
             local new_size = initial_size + 4
             group_obj:setFontSize(new_size)
             local fetched_size = group_obj:getFontSize()
             if fetched_size ~= new_size then
-                destroyDisplayObject(group_name)
-                collectGarbage()            
+                destroyDisplayObject(cfg.name)
+                collectGarbage()
                 return { ok = false, err = "Font size mismatch after setFontSize: got=" .. tostring(fetched_size) .. " expected=" .. tostring(new_size) }
-            end 
+            end
 
             -- Test getFontWidth() and setFontWidth()
             local initial_width = group_obj:getFontWidth()
             if (initial_width ~= 8) then
-                destroyDisplayObject(group_name)
-                collectGarbage()            
+                destroyDisplayObject(cfg.name)
+                collectGarbage()
                 return { ok = false, err = "Initial font width mismatch: got=" .. tostring(initial_width) .. " expected=8" }
             end
             local new_width = initial_width + 2
             group_obj:setFontWidth(new_width)
             local fetched_width = group_obj:getFontWidth()
             if fetched_width ~= new_width then
-                destroyDisplayObject(group_name)
-                collectGarbage()            
+                destroyDisplayObject(cfg.name)
+                collectGarbage()
                 return { ok = false, err = "Font width mismatch after setFontWidth: got=" .. tostring(fetched_width) .. " expected=" .. tostring(new_width) }
             end
 
             -- Test getFontHeight() and setFontHeight()
             local initial_height = group_obj:getFontHeight()
             if (initial_height ~= 8) then
-                destroyDisplayObject(group_name)
-                collectGarbage()            
+                destroyDisplayObject(cfg.name)
+                collectGarbage()
                 return { ok = false, err = "Initial font height mismatch: got=" .. tostring(initial_height) .. " expected=8" }
             end
             local new_height = initial_height + 3
             group_obj:setFontHeight(new_height)
             local fetched_height = group_obj:getFontHeight()
             if fetched_height ~= new_height then
-                destroyDisplayObject(group_name)
-                collectGarbage()            
+                destroyDisplayObject(cfg.name)
+                collectGarbage()
                 return { ok = false, err = "Font height mismatch after setFontHeight: got=" .. tostring(fetched_height) .. " expected=" .. tostring(new_height) }
             end
 
             -- cleanup and return
-            destroyDisplayObject(group_name)
+            destroyDisplayObject(cfg.name)
             collectGarbage()
             -- verify destruction
             local orphans = getOrphanedDisplayObjects()
             if #orphans > 0 then
                 ok = false
                 err = "Orphaned objects remain after destroying Group: count=" .. tostring(#orphans)
-            end             
+            end
             return { ok = true, err = "" }
-        )lua").get<sol::table>();
+        )lua";
+
+        auto res = lua.script(test_chunk).get<sol::table>();
         // report and return test condition state
         bool ok = res["ok"].get_or(false);
         std::string err = res["err"].get_or(std::string());

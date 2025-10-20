@@ -369,6 +369,31 @@ namespace SDOM
                 return { ok = false, err = "failed to create label" }
             end
 
+            -- Focused diagnostic: inspect the getter object for FontSize immediately after creation
+            do
+                local g = h["getFontSize"]
+                -- Use a concise, easily-grep-able tag
+                print(string.format("[LABEL_DIAG8] h['getFontSize'] type=%s tostring=%s", type(g), tostring(g)))
+                if type(g) == 'function' then
+                    local okg, rv = pcall(function() return g(h) end)
+                    print(string.format("[LABEL_DIAG8] direct pcall ok=%s rv=%s", tostring(okg), tostring(rv)))
+                else
+                    -- also show h.getFontSize property if present
+                    local alt = h.getFontSize
+                    print(string.format("[LABEL_DIAG8] h.getFontSize type=%s tostring=%s", type(alt), tostring(alt)))
+                end
+                -- Also inspect the global minimal handle function (DisplayHandle.getFontSize)
+                local dh = DisplayHandle
+                if type(dh) == 'table' then
+                    local dg = dh.getFontSize
+                    print(string.format("[LABEL_DIAG8] DisplayHandle.getFontSize type=%s tostring=%s", type(dg), tostring(dg)))
+                    if type(dg) == 'function' then
+                        local okinfo, info = pcall(function() return debug.getinfo(dg) end)
+                        print(string.format("[LABEL_DIAG8] debug.getinfo ok=%s info=%s", tostring(okinfo), tostring(info)))
+                    end
+                end
+            end
+
             -- Force tokenization to ensure deterministic tokens
             local ok_tok, tok_err = pcall(function() return h:tokenizeText() end)
             if not ok_tok then
@@ -854,12 +879,16 @@ namespace SDOM
                 end
 
                 local v1 = 100 + i
+                -- Focused per-iteration diagnostics to trace setter/getter behavior
+                print(string.format("[LABEL_LOOP] Iter=%d setter=%s getter=%s", i, tostring(h[setter]), tostring(h[getter])))
                 local ok_s, s_err = pcall(function() h[setter](h, v1) end)
+                print(string.format("[LABEL_LOOP] after setter pcall ok=%s err=%s", tostring(ok_s), tostring(s_err)))
                 if not ok_s then
                     return { ok = false, err = "setter failed for " .. setter .. " : " .. tostring(s_err) }
                 end
 
                 local ok_g, val = pcall(function() return h[getter](h) end)
+                print(string.format("[LABEL_LOOP] after getter pcall ok=%s val=%s", tostring(ok_g), tostring(val)))
                 if not ok_g then
                     return { ok = false, err = "getter failed for " .. getter }
                 end

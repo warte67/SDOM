@@ -40,6 +40,7 @@
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
+#include <SDOM/SDOM_LuaRegisterHelpers.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Utils.hpp>
@@ -1498,7 +1499,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_void_0 = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self) {
                         f(require_obj(self, n));
                     });
                 }
@@ -1512,7 +1513,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_R_0 = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self) {
                         return f(require_obj(self, n));
                     });
                 }
@@ -1526,7 +1527,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_void_do = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
                         f(require_obj(self, n), a);
                     });
                 }
@@ -1540,7 +1541,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_R_do = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
                         return f(require_obj(self, n), a);
                     });
                 }
@@ -1555,7 +1556,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_R_str = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
                         return f(require_obj(self, n), a);
                     });
                 }
@@ -1570,7 +1571,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_void_str = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
                         f(require_obj(self, n), a);
                     });
                 }
@@ -1585,7 +1586,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_void_obj = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const sol::object& a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, const sol::object& a) {
                         f(require_obj(self, n), a);
                     });
                 }
@@ -1600,7 +1601,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_void_i = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, int a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, int a) {
                         f(require_obj(self, n), a);
                     });
                 }
@@ -1615,7 +1616,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_void_b = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, bool a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, bool a) {
                         f(require_obj(self, n), a);
                     });
                 }
@@ -1630,7 +1631,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_void_f = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, float a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, float a) {
                         f(require_obj(self, n), a);
                     });
                 }
@@ -1645,7 +1646,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_void_ap = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, AnchorPoint a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, AnchorPoint a) {
                         f(require_obj(self, n), a);
                     });
                 }
@@ -1660,7 +1661,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_R_orp = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, IDisplayObject::OrphanRetentionPolicy a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, IDisplayObject::OrphanRetentionPolicy a) {
                         return f(require_obj(self, n), a);
                     });
                 }
@@ -1678,7 +1679,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_R_0_nc = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self) {
                         return f(require_obj(self, n));
                     });
                 }
@@ -1692,7 +1693,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_R_do_nc = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
                         return f(require_obj(self, n), a);
                     });
                 }
@@ -1706,7 +1707,7 @@ namespace SDOM
         [[maybe_unused]] auto bind_R_str_nc = [&](const char* n, auto f) {
             if (per_type_handle.valid()) {
                 if (absent_per_type(n)) {
-                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
+                    SDOM::register_per_type(lua, typeName, n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
                         return f(require_obj(self, n), a);
                     });
                 }

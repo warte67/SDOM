@@ -7,6 +7,7 @@
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
 #include <SDOM/SDOM_Group.hpp>
+#include <SDOM/SDOM_LuaRegisterHelpers.hpp>
 
 
 
@@ -333,12 +334,32 @@ namespace SDOM
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
                     << typeName << CLR::RESET << std::endl;
         }
+        if (DEBUG_REGISTER_LUA) {
+            printf("[TRACE] Group::_registerLuaBindings called for type='%s' lua_state=%p\n", typeName.c_str(), (void*)lua.lua_state());
+        }
 
         // Register bindings into a per-type binding table instead of the
         // global DisplayHandle table. The DisplayHandle dispatcher will
         // route lookups to this table at runtime.
         sol::table handle = DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
 
+        // Diagnostic: report that Group::_registerLuaBindings ran and show
+        // whether a few key bindings are already present on the per-type
+        // table (raw access) so we can detect missing registrations.
+        if (handle.valid() && DEBUG_REGISTER_LUA) {
+            try {
+                sol::table raw = DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
+                auto has_key = [&](const char* n)->bool {
+                    sol::object o = raw.raw_get_or(n, sol::lua_nil);
+                    return o.valid() && o != sol::lua_nil;
+                };
+                std::cout << "[DEBUG] Group::_registerLuaBindings called for typeName='" << typeName << "' per-type table presence:"
+                          << " getLabel=" << (has_key("getLabel")?"Y":"N")
+                          << " getLabelText=" << (has_key("getLabelText")?"Y":"N")
+                          << " getFontSize=" << (has_key("getFontSize")?"Y":"N")
+                          << std::endl;
+            } catch(...) { /* ignore */ }
+        }
         // Check direct presence on the per-type table (bypass any __index
         // metamethods). Always re-query the exact per-type table so we don't
         // get false positives from fallbacks on the shared handle.
@@ -412,8 +433,10 @@ namespace SDOM
         }
 
         // --- Font metric accessors/mutators for Group --- //
+        // Register via register_per_type to populate the authoritative C++ registry
+        // as well as the legacy per-type Lua table.
         if (absent_raw("getFontSize")) {
-            handle.raw_set("getFontSize", [](SDOM::DisplayHandle h) -> int {
+            SDOM::register_per_type(lua, typeName, "getFontSize", [](SDOM::DisplayHandle h) -> int {
                 if (!h.isValid()) return 0;
                 try { if (h->getType() != Group::TypeName) return 0; } catch(...) { return 0; }
                 Group* g = static_cast<Group*>(h.get());
@@ -421,7 +444,7 @@ namespace SDOM
             });
         }
         if (absent_raw("getFontWidth")) {
-            handle.raw_set("getFontWidth", [](SDOM::DisplayHandle h) -> int {
+            SDOM::register_per_type(lua, typeName, "getFontWidth", [](SDOM::DisplayHandle h) -> int {
                 if (!h.isValid()) return 0;
                 try { if (h->getType() != Group::TypeName) return 0; } catch(...) { return 0; }
                 Group* g = static_cast<Group*>(h.get());
@@ -429,7 +452,7 @@ namespace SDOM
             });
         }
         if (absent_raw("getFontHeight")) {
-            handle.raw_set("getFontHeight", [](SDOM::DisplayHandle h) -> int {
+            SDOM::register_per_type(lua, typeName, "getFontHeight", [](SDOM::DisplayHandle h) -> int {
                 if (!h.isValid()) return 0;
                 try { if (h->getType() != Group::TypeName) return 0; } catch(...) { return 0; }
                 Group* g = static_cast<Group*>(h.get());
@@ -438,7 +461,7 @@ namespace SDOM
         }
 
         if (absent_raw("setFontSize")) {
-            handle.raw_set("setFontSize", [](SDOM::DisplayHandle h, int s) {
+            SDOM::register_per_type(lua, typeName, "setFontSize", [](SDOM::DisplayHandle h, int s) {
                 if (!h.isValid()) return;
                 try { if (h->getType() != Group::TypeName) return; } catch(...) { return; }
                 Group* g = static_cast<Group*>(h.get());
@@ -446,7 +469,7 @@ namespace SDOM
             });
         }
         if (absent_raw("setFontWidth")) {
-            handle.raw_set("setFontWidth", [](SDOM::DisplayHandle h, int w) {
+            SDOM::register_per_type(lua, typeName, "setFontWidth", [](SDOM::DisplayHandle h, int w) {
                 if (!h.isValid()) return;
                 try { if (h->getType() != Group::TypeName) return; } catch(...) { return; }
                 Group* g = static_cast<Group*>(h.get());
@@ -454,7 +477,7 @@ namespace SDOM
             });
         }
         if (absent_raw("setFontHeight")) {
-            handle.raw_set("setFontHeight", [](SDOM::DisplayHandle h, int hh) {
+            SDOM::register_per_type(lua, typeName, "setFontHeight", [](SDOM::DisplayHandle h, int hh) {
                 if (!h.isValid()) return;
                 try { if (h->getType() != Group::TypeName) return; } catch(...) { return; }
                 Group* g = static_cast<Group*>(h.get());
@@ -589,6 +612,56 @@ namespace SDOM
                     if (h->getType() != Group::TypeName) return 0;
                     Group* g = static_cast<Group*>(h.get());
                     return g ? g->getSpriteHeight() : 0;
+                });
+            }
+            // Minimal fallback for font metric accessors so Lua colon-style
+            // calls resolve even if per-type bindings or registry lookups fail.
+            if (absent_min("getFontSize")) {
+                minimal.set_function("getFontSize", [](DisplayHandle h) -> int {
+                    if (!h.isValid()) return 0;
+                    if (h->getType() != Group::TypeName) return 0;
+                    Group* g = static_cast<Group*>(h.get());
+                    return g ? g->getFontSize() : 0;
+                });
+            }
+            if (absent_min("getFontWidth")) {
+                minimal.set_function("getFontWidth", [](DisplayHandle h) -> int {
+                    if (!h.isValid()) return 0;
+                    if (h->getType() != Group::TypeName) return 0;
+                    Group* g = static_cast<Group*>(h.get());
+                    return g ? g->getFontWidth() : 0;
+                });
+            }
+            if (absent_min("getFontHeight")) {
+                minimal.set_function("getFontHeight", [](DisplayHandle h) -> int {
+                    if (!h.isValid()) return 0;
+                    if (h->getType() != Group::TypeName) return 0;
+                    Group* g = static_cast<Group*>(h.get());
+                    return g ? g->getFontHeight() : 0;
+                });
+            }
+            if (absent_min("setFontSize")) {
+                minimal.set_function("setFontSize", [](DisplayHandle h, int s) {
+                    if (!h.isValid()) return;
+                    if (h->getType() != Group::TypeName) return;
+                    Group* g = static_cast<Group*>(h.get());
+                    if (g) g->setFontSize(s);
+                });
+            }
+            if (absent_min("setFontWidth")) {
+                minimal.set_function("setFontWidth", [](DisplayHandle h, int w) {
+                    if (!h.isValid()) return;
+                    if (h->getType() != Group::TypeName) return;
+                    Group* g = static_cast<Group*>(h.get());
+                    if (g) g->setFontWidth(w);
+                });
+            }
+            if (absent_min("setFontHeight")) {
+                minimal.set_function("setFontHeight", [](DisplayHandle h, int hh) {
+                    if (!h.isValid()) return;
+                    if (h->getType() != Group::TypeName) return;
+                    Group* g = static_cast<Group*>(h.get());
+                    if (g) g->setFontHeight(hh);
                 });
             }
         } catch(...) {}
