@@ -1102,6 +1102,52 @@ namespace SDOM
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
     } // END: Label_test10()
 
+
+    bool Label_test11()
+    {
+        std::string testName = "Label #11";
+        std::string testDesc = "Label Per Item Lua Binding Tests";
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Registration-order regression test:
+        // Create a DisplayHandle from Lua and immediately call a few methods
+        // that must be present even on a clean registration order.
+        auto res = lua.script(R"lua(
+            local name = "unitLabelTest11"
+            local cfg = { name = name, type = "Label", resource_name = "internal_font_8x8", text = "regression test" }
+            -- create the label and immediately call methods/properties
+            local ok_create, h_or_err = pcall(function() return createDisplayObject("Label", cfg) end)
+            if not ok_create then return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) } end
+            local h = h_or_err
+            if not h or not h:isValid() then return { ok = false, err = "failed to create label" } end
+
+            -- Immediately call tokenizeText and getTokenList
+            local ok_tok, tok_err = pcall(function() return h:tokenizeText() end)
+            if not ok_tok then return { ok = false, err = "tokenizeText failed: " .. tostring(tok_err) } end
+            local ok_list, list_or_err = pcall(function() return h:getTokenList() end)
+            if not ok_list then return { ok = false, err = "getTokenList failed: " .. tostring(list_or_err) } end
+
+            -- Also verify some properties and getters/setters are callable
+            if type(h.getText) ~= 'function' and type(h.text) ~= 'table' then return { ok = false, err = "text getter missing" } end
+            if type(h.setText) ~= 'function' and type(h.text) ~= 'table' then return { ok = false, err = "text setter missing" } end
+
+            -- Try property-style set/get for a color; use pcall to capture errors
+            local ok_set, set_err = pcall(function() h.foreground_color = { r=2,g=3,b=4,a=5 } end)
+            if not ok_set then return { ok = false, err = "setting foreground_color failed: " .. tostring(set_err) } end
+            local ok_get, fg = pcall(function() return h.foreground_color end)
+            if not ok_get then return { ok = false, err = "getting foreground_color failed" } end
+
+            -- cleanup
+            destroyDisplayObject(name)
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Label_test11()
+
+
     bool Label_UnitTests() 
     {
         std::string objName = "Label UnitTests";
@@ -1119,6 +1165,7 @@ namespace SDOM
             [&]() { return Label_test8();  },   // Label integer value getter/setter methods
             [&]() { return Label_test9();  },   // LabelAlign Table constants existence and exercise
             [&]() { return Label_test10(); },   // Label Color Verification and Exercise
+            [&]() { return Label_test11(); },   // Label Per Item Lua Binding Tests
         };
         for (auto& test : tests) 
         {
