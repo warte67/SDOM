@@ -215,6 +215,63 @@ namespace SDOM
             handle[sol::metatable_key] = mt;
         }
 
+        // Install a __newindex metamethod that forwards assignments on the
+        // userdata to the appropriate per-type or minimal setter function.
+        // This avoids Lua trying to write into the userdata (which sol2
+        // disallows) while keeping assignment semantics for properties.
+        if (!mt["__newindex"].valid()) {
+            mt["__newindex"] = [=](DisplayHandle& h, const std::string& key, const sol::object& val) {
+                sol::state_view L = lua;
+                sol::table bindingsRoot = L["SDOM_Bindings"];
+                std::string rtype;
+                try { rtype = h.getType(); } catch(...) { rtype = std::string(); }
+
+                // Helper to compute setter name: snake_case -> CamelCase with 'set' prefix
+                auto make_setter = [](const std::string& k)->std::string {
+                    std::string out = "set";
+                    bool cap = true;
+                    for (char c : k) {
+                        if (c == '_') { cap = true; continue; }
+                        if (cap) { out.push_back(static_cast<char>(std::toupper(static_cast<unsigned char>(c)))); cap = false; }
+                        else out.push_back(c);
+                    }
+                    return out;
+                };
+
+                std::string setter = make_setter(key);
+
+                // Try per-type table first
+                try {
+                    if (!rtype.empty() && bindingsRoot.valid() && bindingsRoot[rtype].valid()) {
+                        sol::table t = bindingsRoot[rtype];
+                        sol::object cand = t.raw_get_or(key, sol::lua_nil);
+                        // If the per-type table has a property entry or a setter function
+                        sol::object fnobj = t.raw_get_or(setter, sol::lua_nil);
+                        if (fnobj.valid() && fnobj != sol::lua_nil && fnobj.is<sol::function>()) {
+                            sol::function f = fnobj.as<sol::function>();
+                            // Call the setter with (DisplayHandle, value). Let sol2 coerce types.
+                            try { f(h, val); return; } catch(...) {}
+                        }
+                    }
+                } catch(...) {}
+
+                // Fallback: try minimal handle table
+                try {
+                    sol::table minimal = L[LuaHandleName];
+                    sol::object fnobj = minimal.raw_get_or(setter, sol::lua_nil);
+                    if (fnobj.valid() && fnobj != sol::lua_nil && fnobj.is<sol::function>()) {
+                        sol::function f = fnobj.as<sol::function>();
+                        try { f(h, val); return; } catch(...) {}
+                    }
+                } catch(...) {}
+
+                // If we get here, no setter was found. Let Lua/runtime raise the usual error by doing nothing
+                // (sol2 will report that new_index is not defined). Alternatively, we could log/debug.
+                return;
+            };
+            handle[sol::metatable_key] = mt;
+        }
+
         // DO NOT add any other bindings here.
         // IDisplayObject and each descendant should call:
         //   auto t = DisplayHandle::ensure_handle_table(lua);

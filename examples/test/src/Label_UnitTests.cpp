@@ -47,11 +47,11 @@
  *
  *      // SDL_Color getters
  *      // Color functionality is confirmed by Label_test10 (explicit Lua get/set tests); previously exercised indirectly by Label_test6
- *      SDL_Color getForegroundColor() const    -- CONFIRMED BY UNIT TEST #10
- *      SDL_Color getBackgroundColor() const    -- CONFIRMED BY UNIT TEST #10
- *      SDL_Color getBorderColor() const        -- CONFIRMED BY UNIT TEST #10
- *      SDL_Color getOutlineColor() const       -- CONFIRMED BY UNIT TEST #10
- *      SDL_Color getDropshadowColor() const    -- CONFIRMED BY UNIT TEST #10
+ *      SDL_Color getTextForegroundColor() const    -- CONFIRMED BY UNIT TEST #10
+ *      SDL_Color getTextBackgroundColor() const    -- CONFIRMED BY UNIT TEST #10
+ *      SDL_Color getTextBorderColor() const        -- CONFIRMED BY UNIT TEST #10
+ *      SDL_Color getTextOutlineColor() const       -- CONFIRMED BY UNIT TEST #10
+ *      SDL_Color getTextDropshadowColor() const    -- CONFIRMED BY UNIT TEST #10
  *
  *      // --- Mutators for the FontStyle settings --- //
  *
@@ -88,11 +88,11 @@
  *
  *      // SDL_Color setters
  *      // Color setters/getters are confirmed by Label_test10 (explicit Lua get/set tests); previously exercised indirectly by Label_test6
- *      void setForegroundColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
- *      void setBackgroundColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
- *      void setBorderColor(SDL_Color v)        -- CONFIRMED BY UNIT TEST #10
- *      void setOutlineColor(SDL_Color v)       -- CONFIRMED BY UNIT TEST #10
- *      void setDropshadowColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
+ *      void setTextForegroundColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
+ *      void setTextBackgroundColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
+ *      void setTextBorderColor(SDL_Color v)        -- CONFIRMED BY UNIT TEST #10
+ *      void setTextOutlineColor(SDL_Color v)       -- CONFIRMED BY UNIT TEST #10
+ *      void setTextDropshadowColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
  *
  ********************************************/
 
@@ -420,7 +420,7 @@ namespace SDOM
                 if typ == "escape" then
                     -- Color open tags: [bgnd=green], [border=red]
                     if text:match("^%[bgnd=") then
-                        -- background escape sets the background_color on the style immediately
+                        -- background escape sets the text_background_color on the style immediately
                         in_bgnd = true
                     elseif text:match("^%[border=") then
                         in_border = true
@@ -457,14 +457,14 @@ namespace SDOM
                     -- for bgnd/border, check color when inside
                     if in_bgnd then
                         -- green => (0,176,0)
-                        if not (style.background_color and style.background_color.g == 176) then
+                            if not (style.background_color and style.background_color.g == 176) then
                             ok = false
-                            err = err .. string.format("word '%s' background_color not set to green; ", tostring(text))
+                            err = err .. string.format("word '%s' text_background_color not set to green; ", tostring(text))
                         end
                     end
                     if in_border then
                         -- red => (176,0,0)
-                        if not (style.border_color and style.border_color.r == 176) then
+                            if not (style.text_border_color and style.text_border_color.r == 176) then
                             ok = false
                             err = err .. string.format("word '%s' border_color not set to red; ", tostring(text))
                         end
@@ -634,11 +634,11 @@ namespace SDOM
                 type = "Label",
                 resource_name = "internal_font_8x8",
                 text = txt,
-                foreground_color = { r = 10, g = 11, b = 12, a = 255 },
+                text_foreground_color = { r = 10, g = 11, b = 12, a = 255 },
                 background_color = { r = 20, g = 21, b = 22, a = 255 },
                 border_color = { r = 30, g = 31, b = 32, a = 255 },
-                outline_color = { r = 40, g = 41, b = 42, a = 255 },
-                dropshadow_color = { r = 50, g = 51, b = 52, a = 128 },
+                text_outline_color = { r = 40, g = 41, b = 42, a = 255 },
+                text_dropshadow_color = { r = 50, g = 51, b = 52, a = 128 },
             }
 
             local ok = true
@@ -692,13 +692,13 @@ namespace SDOM
             end
 
             -- check colors inside tags (should match named color map / hex values)
-            expect_color({ r=255,g=32,b=32,a=255 }, tF.style.foreground_color, 'fgnd@FRED')           -- lt_red
-            expect_color({ r=32,g=32,b=255,a=255 }, tBG.style.background_color, 'bgnd@BGBLUE')        -- lt_blue
-            expect_color({ r=255,g=215,b=0,a=255 }, tBD.style.border_color, 'border@BDGOLD')         -- gold
-            expect_color({ r=102,g=102,b=102,a=255 }, tOL.style.outline_color, 'outline@OLGRAY')     -- md_gray (102)
-            expect_color({ r=0,g=0,b=0,a=128 }, tSH.style.dropshadow_color, 'shadow@SHALPH')        -- 00000080 (rgba alpha 0x80 = 128)
-            expect_color({ r=0xFF,g=0x88,b=0x00,a=255 }, tHEX.style.foreground_color, 'fgnd@HEXR') -- FF8800
-            expect_color({ r=0xFF,g=0x88,b=0x00,a=0x80 }, tHEXA.style.foreground_color, 'fgnd@HEXRA') -- FF880080
+            expect_color({ r=255,g=32,b=32,a=255 }, tF.style.text_foreground_color, 'fgnd@FRED')           -- lt_red
+            expect_color({ r=32,g=32,b=255,a=255 }, tBG.style.text_background_color, 'bgnd@BGBLUE')        -- lt_blue
+            expect_color({ r=255,g=215,b=0,a=255 }, tBD.style.text_border_color, 'border@BDGOLD')         -- gold
+            expect_color({ r=102,g=102,b=102,a=255 }, tOL.style.text_outline_color, 'outline@OLGRAY')     -- md_gray (102)
+            expect_color({ r=0,g=0,b=0,a=128 }, tSH.style.text_dropshadow_color, 'shadow@SHALPH')        -- 00000080 (rgba alpha 0x80 = 128)
+            expect_color({ r=0xFF,g=0x88,b=0x00,a=255 }, tHEX.style.text_foreground_color, 'fgnd@HEXR') -- FF8800
+            expect_color({ r=0xFF,g=0x88,b=0x00,a=0x80 }, tHEXA.style.text_foreground_color, 'fgnd@HEXRA') -- FF880080
 
             -- After [reset] the AFTER_RESET token should have default foreground (cfg.foreground_color)
             expect_color({ r=10,g=11,b=12,a=255 }, tAF.style.foreground_color, 'foreground@AFTERRESET')
@@ -982,11 +982,11 @@ namespace SDOM
                 type = "Label",
                 resource_name = "internal_font_8x8",
                 text = "color get/set test",
-                foreground_color = { r = 10, g = 20, b = 30, a = 200 },
-                background_color = { r = 40, g = 50, b = 60, a = 201 },
-                border_color = { r = 70, g = 80, b = 90, a = 202 },
-                outline_color = { r = 100, g = 110, b = 120, a = 203 },
-                dropshadow_color = { r = 130, g = 140, b = 150, a = 204 },
+                text_foreground_color = { r = 10, g = 20, b = 30, a = 200 },
+                text_background_color = { r = 40, g = 50, b = 60, a = 201 },
+                text_border_color = { r = 70, g = 80, b = 90, a = 202 },
+                text_outline_color = { r = 100, g = 110, b = 120, a = 203 },
+                text_dropshadow_color = { r = 130, g = 140, b = 150, a = 204 },
             }
 
             local ok_create, h_or_err = pcall(function() return createDisplayObject("Label", cfg) end)
@@ -1047,11 +1047,11 @@ namespace SDOM
             end
 
             -- verify initial colors via property access
-            expect_color({ r = 10, g = 20, b = 30, a = 200 }, h.foreground_color, 'foreground')
-            expect_color({ r = 40, g = 50, b = 60, a = 201 }, h.background_color, 'background')
-            expect_color({ r = 70, g = 80, b = 90, a = 202 }, h.border_color, 'border')
-            expect_color({ r = 100, g = 110, b = 120, a = 203 }, h.outline_color, 'outline')
-            expect_color({ r = 130, g = 140, b = 150, a = 204 }, h.dropshadow_color, 'dropshadow')
+            expect_color({ r = 10, g = 20, b = 30, a = 200 }, h.text_foreground_color, 'foreground')
+            expect_color({ r = 40, g = 50, b = 60, a = 201 }, h.text_background_color, 'background')
+            expect_color({ r = 70, g = 80, b = 90, a = 202 }, h.text_border_color, 'border')
+            expect_color({ r = 100, g = 110, b = 120, a = 203 }, h.text_outline_color, 'outline')
+            expect_color({ r = 130, g = 140, b = 150, a = 204 }, h.text_dropshadow_color, 'dropshadow')
 
             -- Explicitly verify function-style getters return the same values
             local function expect_via_getter(vec, getter_name, key)
@@ -1071,26 +1071,26 @@ namespace SDOM
                 expect_color(vec, rvg, key .. '_via_getter')
             end
 
-            expect_via_getter({ r = 10, g = 20, b = 30, a = 200 }, 'getForegroundColor', 'foreground')
-            expect_via_getter({ r = 40, g = 50, b = 60, a = 201 }, 'getBackgroundColor', 'background')
-            expect_via_getter({ r = 70, g = 80, b = 90, a = 202 }, 'getBorderColor', 'border')
-            expect_via_getter({ r = 100, g = 110, b = 120, a = 203 }, 'getOutlineColor', 'outline')
-            expect_via_getter({ r = 130, g = 140, b = 150, a = 204 }, 'getDropshadowColor', 'dropshadow')
+                expect_via_getter({ r = 10, g = 20, b = 30, a = 200 }, 'getTextForegroundColor', 'foreground')
+                expect_via_getter({ r = 40, g = 50, b = 60, a = 201 }, 'getTextBackgroundColor', 'background')
+                expect_via_getter({ r = 70, g = 80, b = 90, a = 202 }, 'getTextBorderColor', 'border')
+                expect_via_getter({ r = 100, g = 110, b = 120, a = 203 }, 'getTextOutlineColor', 'outline')
+                expect_via_getter({ r = 130, g = 140, b = 150, a = 204 }, 'getTextDropshadowColor', 'dropshadow')
 
             -- Set new colors using keyed tables
-            h.foreground_color = { r = 1, g = 2, b = 3, a = 4 }
-            h.background_color = { 9, 8, 7 } -- array style (alpha defaults to 255)
-            h.border_color = { 11, 12, 13, 14 }
+            h.text_foreground_color = { r = 1, g = 2, b = 3, a = 4 }
+            h.text_background_color = { 9, 8, 7 } -- array style (alpha defaults to 255)
+            h.text_border_color = { 11, 12, 13, 14 }
 
-            expect_color({ r = 1, g = 2, b = 3, a = 4 }, h.foreground_color, 'foreground_after_set')
-            expect_color({ r = 9, g = 8, b = 7, a = 255 }, h.background_color, 'background_after_set')
-            expect_color({ r = 11, g = 12, b = 13, a = 14 }, h.border_color, 'border_after_set')
+            expect_color({ r = 1, g = 2, b = 3, a = 4 }, h.text_foreground_color, 'foreground_after_set')
+            expect_color({ r = 9, g = 8, b = 7, a = 255 }, h.text_background_color, 'background_after_set')
+            expect_color({ r = 11, g = 12, b = 13, a = 14 }, h.text_border_color, 'border_after_set')
 
             -- Set dropshadow/outline via keyed tables and verify
-            h.outline_color = { r = 21, g = 22, b = 23 } -- alpha default
-            h.dropshadow_color = { r = 31, g = 32, b = 33, a = 34 }
-            expect_color({ r = 21, g = 22, b = 23, a = 255 }, h.outline_color, 'outline_after_set')
-            expect_color({ r = 31, g = 32, b = 33, a = 34 }, h.dropshadow_color, 'dropshadow_after_set')
+            h.text_outline_color = { r = 21, g = 22, b = 23 } -- alpha default
+            h.text_dropshadow_color = { r = 31, g = 32, b = 33, a = 34 }
+            expect_color({ r = 21, g = 22, b = 23, a = 255 }, h.text_outline_color, 'outline_after_set')
+            expect_color({ r = 31, g = 32, b = 33, a = 34 }, h.text_dropshadow_color, 'dropshadow_after_set')
 
             destroyDisplayObject(name)
             return { ok = ok, err = err }
@@ -1131,9 +1131,9 @@ namespace SDOM
             if type(h.setText) ~= 'function' and type(h.text) ~= 'table' then return { ok = false, err = "text setter missing" } end
 
             -- Try property-style set/get for a color; use pcall to capture errors
-            local ok_set, set_err = pcall(function() h.foreground_color = { r=2,g=3,b=4,a=5 } end)
+            local ok_set, set_err = pcall(function() h.text_foreground_color = { r=2,g=3,b=4,a=5 } end)
             if not ok_set then return { ok = false, err = "setting foreground_color failed: " .. tostring(set_err) } end
-            local ok_get, fg = pcall(function() return h.foreground_color end)
+            local ok_get, fg = pcall(function() return h.text_foreground_color end)
             if not ok_get then return { ok = false, err = "getting foreground_color failed" } end
 
             -- cleanup

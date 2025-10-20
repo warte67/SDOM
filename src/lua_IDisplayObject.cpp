@@ -289,6 +289,167 @@ namespace SDOM
     // C++ overload: accept SDL_Color directly
     void setColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return; obj->setColor(color); }
 
+    // --- Per-color getters/setters ---
+    SDL_Color getForegroundColor_lua(const IDisplayObject* obj) { if (!obj) return SDL_Color{0,0,0,0}; return obj->getForegroundColor(); }
+    void setForegroundColor_lua(IDisplayObject* obj, const sol::object& colorObj)
+    {
+        if (!obj) return;
+        SDL_Color c{0,0,0,255};
+        if (colorObj.is<SDL_Color>()) {
+            try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
+        } else if (colorObj.is<sol::table>()) {
+            sol::table t = colorObj.as<sol::table>();
+            sol::object ro = t.get<sol::object>("r");
+            sol::object go = t.get<sol::object>("g");
+            sol::object bo = t.get<sol::object>("b");
+            sol::object ao = t.get<sol::object>("a");
+            auto to_int = [](const sol::object& o, int def) -> int {
+                if (!o.valid()) return def;
+                try { if (o.is<int>()) return o.as<int>(); } catch(...) {}
+                try { if (o.is<long>()) return static_cast<int>(o.as<long>()); } catch(...) {}
+                try { if (o.is<double>()) return static_cast<int>(o.as<double>()); } catch(...) {}
+                return def;
+            };
+            c.r = static_cast<Uint8>(to_int(ro, 0));
+            c.g = static_cast<Uint8>(to_int(go, 0));
+            c.b = static_cast<Uint8>(to_int(bo, 0));
+            c.a = static_cast<Uint8>(to_int(ao, 255));
+        } else {
+            return;
+        }
+        obj->setForegroundColor(c);
+        return;
+    }
+    void setForegroundColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return; obj->setForegroundColor(color); }
+
+    SDL_Color getBackgroundColor_lua(const IDisplayObject* obj) { if (!obj) return SDL_Color{0,0,0,0}; return obj->getBackgroundColor(); }
+    void setBackgroundColor_lua(IDisplayObject* obj, const sol::object& colorObj)
+    {
+        if (!obj) return;
+        SDL_Color c{0,0,0,255};
+        if (colorObj.is<SDL_Color>()) {
+            try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
+        } else if (colorObj.is<sol::table>()) {
+            sol::table t = colorObj.as<sol::table>();
+            sol::object ro = t.get<sol::object>("r");
+            sol::object go = t.get<sol::object>("g");
+            sol::object bo = t.get<sol::object>("b");
+            sol::object ao = t.get<sol::object>("a");
+            auto to_int = [](const sol::object& o, int def) -> int {
+                if (!o.valid()) return def;
+                try { if (o.is<int>()) return o.as<int>(); } catch(...) {}
+                try { if (o.is<long>()) return static_cast<int>(o.as<long>()); } catch(...) {}
+                try { if (o.is<double>()) return static_cast<int>(o.as<double>()); } catch(...) {}
+                return def;
+            };
+            c.r = static_cast<Uint8>(to_int(ro, 0));
+            c.g = static_cast<Uint8>(to_int(go, 0));
+            c.b = static_cast<Uint8>(to_int(bo, 0));
+            c.a = static_cast<Uint8>(to_int(ao, 255));
+        } else {
+            return;
+        }
+        obj->setBackgroundColor(c);
+        return;
+    }
+    void setBackgroundColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return; obj->setBackgroundColor(color); }
+
+    SDL_Color getBorderColor_lua(const IDisplayObject* obj) { if (!obj) return SDL_Color{0,0,0,0}; return obj->getBorderColor(); }
+    void setBorderColor_lua(IDisplayObject* obj, const sol::object& colorObj)
+    {
+        if (!obj) return;
+        SDL_Color c{0,0,0,255};
+        if (colorObj.is<SDL_Color>()) {
+            try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
+        } else if (colorObj.is<sol::table>()) {
+            sol::table t = colorObj.as<sol::table>();
+            sol::object ro = t.get<sol::object>("r");
+            sol::object go = t.get<sol::object>("g");
+            sol::object bo = t.get<sol::object>("b");
+            sol::object ao = t.get<sol::object>("a");
+            auto to_int = [](const sol::object& o, int def) -> int {
+                if (!o.valid()) return def;
+                try { if (o.is<int>()) return o.as<int>(); } catch(...) {}
+                try { if (o.is<long>()) return static_cast<int>(o.as<long>()); } catch(...) {}
+                try { if (o.is<double>()) return static_cast<int>(o.as<double>()); } catch(...) {}
+                return def;
+            };
+            c.r = static_cast<Uint8>(to_int(ro, 0));
+            c.g = static_cast<Uint8>(to_int(go, 0));
+            c.b = static_cast<Uint8>(to_int(bo, 0));
+            c.a = static_cast<Uint8>(to_int(ao, 255));
+        } else {
+            return;
+        }
+        obj->setBorderColor(c);
+        return;
+    }
+    void setBorderColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return; obj->setBorderColor(color); }
+
+    SDL_Color getOutlineColor_lua(const IDisplayObject* obj) { if (!obj) return SDL_Color{0,0,0,0}; return obj->getOutlineColor(); }
+    void setOutlineColor_lua(IDisplayObject* obj, const sol::object& colorObj)
+    {
+        if (!obj) return;
+        SDL_Color c{0,0,0,255};
+        if (colorObj.is<SDL_Color>()) {
+            try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
+        } else if (colorObj.is<sol::table>()) {
+            sol::table t = colorObj.as<sol::table>();
+            sol::object ro = t.get<sol::object>("r");
+            sol::object go = t.get<sol::object>("g");
+            sol::object bo = t.get<sol::object>("b");
+            sol::object ao = t.get<sol::object>("a");
+            auto to_int = [](const sol::object& o, int def) -> int {
+                if (!o.valid()) return def;
+                try { if (o.is<int>()) return o.as<int>(); } catch(...) {}
+                try { if (o.is<long>()) return static_cast<int>(o.as<long>()); } catch(...) {}
+                try { if (o.is<double>()) return static_cast<int>(o.as<double>()); } catch(...) {}
+                return def;
+            };
+            c.r = static_cast<Uint8>(to_int(ro, 0));
+            c.g = static_cast<Uint8>(to_int(go, 0));
+            c.b = static_cast<Uint8>(to_int(bo, 0));
+            c.a = static_cast<Uint8>(to_int(ao, 255));
+        } else {
+            return;
+        }
+        obj->setOutlineColor(c);
+        return;
+    }
+    void setOutlineColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return; obj->setOutlineColor(color); }
+
+    SDL_Color getDropshadowColor_lua(const IDisplayObject* obj) { if (!obj) return SDL_Color{0,0,0,0}; return obj->getDropshadowColor(); }
+    void setDropshadowColor_lua(IDisplayObject* obj, const sol::object& colorObj)
+    {
+        if (!obj) return;
+        SDL_Color c{0,0,0,255};
+        if (colorObj.is<SDL_Color>()) {
+            try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
+        } else if (colorObj.is<sol::table>()) {
+            sol::table t = colorObj.as<sol::table>();
+            sol::object ro = t.get<sol::object>("r");
+            sol::object go = t.get<sol::object>("g");
+            sol::object bo = t.get<sol::object>("b");
+            sol::object ao = t.get<sol::object>("a");
+            auto to_int = [](const sol::object& o, int def) -> int {
+                if (!o.valid()) return def;
+                try { if (o.is<int>()) return o.as<int>(); } catch(...) {}
+                try { if (o.is<long>()) return static_cast<int>(o.as<long>()); } catch(...) {}
+                try { if (o.is<double>()) return static_cast<int>(o.as<double>()); } catch(...) {}
+                return def;
+            };
+            c.r = static_cast<Uint8>(to_int(ro, 0));
+            c.g = static_cast<Uint8>(to_int(go, 0));
+            c.b = static_cast<Uint8>(to_int(bo, 0));
+            c.a = static_cast<Uint8>(to_int(ao, 255));
+        } else {
+            return;
+        }
+        obj->setDropshadowColor(c);
+        return;
+    }
+    void setDropshadowColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return; obj->setDropshadowColor(color); }
+
     // Handle-aware name getter for cases where Lua holds only a DisplayHandle handle without a live object
     std::string getName_handle_lua(DisplayHandle& self)
     {

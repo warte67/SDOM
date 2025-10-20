@@ -63,6 +63,17 @@ namespace SDOM
     SDL_Color getColor_lua(const IDisplayObject* obj);                         // TESTED
     // Accept either an SDL_Color userdata or a Lua table describing color
     void setColor_lua(IDisplayObject* obj, const sol::object& colorObj);       // TESTED
+    // Per-color helpers (foreground/background/border/outline/dropshadow)
+    SDL_Color getForegroundColor_lua(const IDisplayObject* obj);
+    void setForegroundColor_lua(IDisplayObject* obj, const sol::object& colorObj);
+    SDL_Color getBackgroundColor_lua(const IDisplayObject* obj);
+    void setBackgroundColor_lua(IDisplayObject* obj, const sol::object& colorObj);
+    SDL_Color getBorderColor_lua(const IDisplayObject* obj);
+    void setBorderColor_lua(IDisplayObject* obj, const sol::object& colorObj);
+    SDL_Color getOutlineColor_lua(const IDisplayObject* obj);
+    void setOutlineColor_lua(IDisplayObject* obj, const sol::object& colorObj);
+    SDL_Color getDropshadowColor_lua(const IDisplayObject* obj);
+    void setDropshadowColor_lua(IDisplayObject* obj, const sol::object& colorObj);
     // Handle-aware name getter: if underlying object is missing, return the handle's cached name
     std::string getName_handle_lua(DisplayHandle& self);                       // TESTED (used to avoid invalid handle errors)
 

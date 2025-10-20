@@ -245,12 +245,6 @@ namespace SDOM
         // We need to make sure the enums and string are properly using the SDOM_Utils helpers
         LabelAlign getAlignment() const         { return defaultStyle_.alignment; }
         std::string getAlignmentString() const;
-        // SDL_Color getters
-        SDL_Color getForegroundColor() const    { return defaultStyle_.foregroundColor; }
-        SDL_Color getBackgroundColor() const    { return defaultStyle_.backgroundColor; }
-        SDL_Color getBorderColor() const        { return defaultStyle_.borderColor; }
-        SDL_Color getOutlineColor() const       { return defaultStyle_.outlineColor; }
-        SDL_Color getDropshadowColor() const    { return defaultStyle_.dropshadowColor; }
 
 
         // --- Mutators for the FontStyle settings --- //
@@ -279,12 +273,6 @@ namespace SDOM
         // We need to make sure the enums and string are properly using the SDOM_Utils helpers
         void setAlignment(LabelAlign v)         { defaultStyle_.alignment = v; setDirty(); }
         void setAlignment(const std::string& v);
-        // SDL_Color setters
-        void setForegroundColor(SDL_Color v)    { defaultStyle_.foregroundColor = v; setDirty(); }
-        void setBackgroundColor(SDL_Color v)    { defaultStyle_.backgroundColor = v; setDirty(); }
-        void setBorderColor(SDL_Color v)        { defaultStyle_.borderColor = v; setDirty(); }
-        void setOutlineColor(SDL_Color v)       { defaultStyle_.outlineColor = v; setDirty(); }
-        void setDropshadowColor(SDL_Color v)    { defaultStyle_.dropshadowColor = v; setDirty(); }
 
 
     protected:

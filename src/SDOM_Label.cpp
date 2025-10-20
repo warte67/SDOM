@@ -173,12 +173,41 @@ namespace SDOM
     // Colors are configured on the base IDisplayObject and already copied
     // into the protected color_* members by the IDisplayObject constructor.
     // Propagate those into the Label's default style here so escapes and
-    // reset() operate against the intended defaults.
+    // reset() operate against the intended defaults. Also allow Label to
+    // accept text-specific color keys (text_foreground_color, etc.) from
+    // the Lua config and override the propagated values when present.
     defaultStyle_.foregroundColor = foregroundColor_;
     defaultStyle_.backgroundColor = backgroundColor_;
     defaultStyle_.borderColor = borderColor_;
     defaultStyle_.outlineColor = outlineColor_;
     defaultStyle_.dropshadowColor = dropshadowColor_;
+
+    // Helper to read color tables from the Label's config (accept keyed r/g/b/a or array [r,g,b,a])
+    auto read_color_from_config = [&](const char* key, SDL_Color& outColor) {
+        if (!config[key].valid()) return;
+        try {
+            if (config[key].get_type() == sol::type::table) {
+                sol::table t = config[key];
+                if (t["r"].valid()) outColor.r = static_cast<Uint8>(t["r"].get<int>());
+                if (t["g"].valid()) outColor.g = static_cast<Uint8>(t["g"].get<int>());
+                if (t["b"].valid()) outColor.b = static_cast<Uint8>(t["b"].get<int>());
+                if (t["a"].valid()) outColor.a = static_cast<Uint8>(t["a"].get<int>());
+                // array-style
+                if (!t["r"].valid() && t[1].valid()) {
+                    outColor.r = static_cast<Uint8>(t[1].get<int>());
+                    if (t[2].valid()) outColor.g = static_cast<Uint8>(t[2].get<int>());
+                    if (t[3].valid()) outColor.b = static_cast<Uint8>(t[3].get<int>());
+                    if (t[4].valid()) outColor.a = static_cast<Uint8>(t[4].get<int>());
+                }
+            }
+        } catch(...) {}
+    };
+
+    read_color_from_config("text_foreground_color", defaultStyle_.foregroundColor);
+    read_color_from_config("text_background_color", defaultStyle_.backgroundColor);
+    read_color_from_config("text_border_color", defaultStyle_.borderColor);
+    read_color_from_config("text_outline_color", defaultStyle_.outlineColor);
+    read_color_from_config("text_dropshadow_color", defaultStyle_.dropshadowColor);
 
         defaultStyle_.bold = get_bool("bold", defaultStyle_.bold);
         defaultStyle_.italic = get_bool("italic", defaultStyle_.italic);
@@ -543,6 +572,16 @@ namespace SDOM
 
         defaultStyle_.fontSize = fontSize_;
 
+        // Propagate color defaults from IDisplayObject (moved there) into the
+        // Label's runtime default style so escapes and reset() see the same
+        // configured defaults.
+        defaultStyle_.foregroundColor = foregroundColor_;
+        defaultStyle_.backgroundColor = backgroundColor_;
+        defaultStyle_.borderColor = borderColor_;
+        defaultStyle_.outlineColor = outlineColor_;
+        defaultStyle_.dropshadowColor = dropshadowColor_;
+        
+        // Also ensure fontWidth/fontHeight are current in default style
         FontStyle currentStyle = defaultStyle_;
         tokenList.clear();
         size_t i = 0;
@@ -2147,100 +2186,11 @@ if (LABEL_DEBUG)
             lua["LabelAlign"] = la;
         }
 
-        // Color properties exposed as small tables {r,g,b,a}
-        auto color_to_table = [](sol::state_view sv, const SDL_Color& c) {
-            sol::table t = sv.create_table(); t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a; return t;
-        };
-        auto table_to_color = [](const sol::table& t) {
-            SDL_Color c = {255,255,255,255};
-            if (t["r"].valid()) c.r = static_cast<Uint8>(t["r"].get<int>());
-            if (t["g"].valid()) c.g = static_cast<Uint8>(t["g"].get<int>());
-            if (t["b"].valid()) c.b = static_cast<Uint8>(t["b"].get<int>());
-            if (t["a"].valid()) c.a = static_cast<Uint8>(t["a"].get<int>());
-            // array style
-            if (!t["r"].valid() && t[1].valid()) {
-                c.r = static_cast<Uint8>(t[1].get<int>());
-                if (t[2].valid()) c.g = static_cast<Uint8>(t[2].get<int>());
-                if (t[3].valid()) c.b = static_cast<Uint8>(t[3].get<int>());
-                if (t[4].valid()) c.a = static_cast<Uint8>(t[4].get<int>());
-            }
-            return c;
-        };
-
-        if (absent("foreground_color")) {
-            handle.set("foreground_color", sol::property(
-                [=](DisplayHandle h) -> sol::object {
-                    Label* l = h.as<Label>();
-                    sol::state_view sv = SDOM::Core::getInstance().getLua();
-                    if (!l) return sol::nil;
-                    return color_to_table(sv, l->getForegroundColor());
-                },
-                [&](DisplayHandle h, sol::table t) {
-                    Label* l = h.as<Label>(); if (!l) return; l->setForegroundColor(table_to_color(t));
-                }
-            ));
-            if (per_type_handle.valid() && absent_per_type("foreground_color")) {
-                per_type_handle.set("foreground_color", sol::property(
-                    [=](DisplayHandle h) -> sol::object {
-                        Label* l = h.as<Label>();
-                        sol::state_view sv = SDOM::Core::getInstance().getLua();
-                        if (!l) return sol::nil;
-                        return color_to_table(sv, l->getForegroundColor());
-                    },
-                    [&](DisplayHandle h, sol::table t) {
-                        Label* l = h.as<Label>(); if (!l) return; l->setForegroundColor(table_to_color(t));
-                    }
-                ));
-            }
-        }
-        if (absent("background_color")) {
-            handle.set("background_color", sol::property(
-                [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBackgroundColor()); },
-                [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBackgroundColor(table_to_color(t)); }
-            ));
-            if (per_type_handle.valid() && absent_per_type("background_color")) {
-                per_type_handle.set("background_color", sol::property(
-                    [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBackgroundColor()); },
-                    [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBackgroundColor(table_to_color(t)); }
-                ));
-            }
-        }
-        if (absent("border_color")) {
-            handle.set("border_color", sol::property(
-                [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBorderColor()); },
-                [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBorderColor(table_to_color(t)); }
-            ));
-            if (per_type_handle.valid() && absent_per_type("border_color")) {
-                per_type_handle.set("border_color", sol::property(
-                    [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBorderColor()); },
-                    [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBorderColor(table_to_color(t)); }
-                ));
-            }
-        }
-        if (absent("outline_color")) {
-            handle.set("outline_color", sol::property(
-                [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getOutlineColor()); },
-                [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setOutlineColor(table_to_color(t)); }
-            ));
-            if (per_type_handle.valid() && absent_per_type("outline_color")) {
-                per_type_handle.set("outline_color", sol::property(
-                    [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getOutlineColor()); },
-                    [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setOutlineColor(table_to_color(t)); }
-                ));
-            }
-        }
-        if (absent("dropshadow_color")) {
-            handle.set("dropshadow_color", sol::property(
-                [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); },
-                [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); }
-            ));
-            if (per_type_handle.valid() && absent_per_type("dropshadow_color")) {
-                per_type_handle.set("dropshadow_color", sol::property(
-                    [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); },
-                    [&](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); }
-                ));
-            }
-        }
+        // NOTE: Label text color properties were intentionally removed from the
+        // per-type Lua binding surface to avoid collisions with IDisplayObject's
+        // display-level color API. Tokenization copies the display colors into
+        // `defaultStyle_` at runtime so inline escapes and [reset] behave as
+        // expected. Use IDisplayObject color getters/setters instead.
 
         // Expose Label text as a property and legacy getText/setText functions
         if (absent("text")) {
@@ -2284,49 +2234,6 @@ if (LABEL_DEBUG)
             if (per_type_handle.valid() && absent_per_type("setText")) per_type_handle.set_function("setText", [=](DisplayHandle h, const std::string& v) { Label* l = h.as<Label>(); if (l) l->setText(v); });
         }
 
-        // Also provide function-style getters/setters for colors for legacy access patterns
-        if (absent("getForegroundColor")) {
-            handle.set_function("getForegroundColor", [=](DisplayHandle h) -> sol::object {
-                Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getForegroundColor());
-            });
-            if (per_type_handle.valid() && absent_per_type("getForegroundColor")) per_type_handle.set_function("getForegroundColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getForegroundColor()); });
-        }
-        if (absent("setForegroundColor")) {
-            handle.set_function("setForegroundColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setForegroundColor(table_to_color(t)); });
-            if (per_type_handle.valid() && absent_per_type("setForegroundColor")) per_type_handle.set_function("setForegroundColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setForegroundColor(table_to_color(t)); });
-        }
-        if (absent("getBackgroundColor")) {
-            handle.set_function("getBackgroundColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBackgroundColor()); });
-            if (per_type_handle.valid() && absent_per_type("getBackgroundColor")) per_type_handle.set_function("getBackgroundColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBackgroundColor()); });
-        }
-        if (absent("setBackgroundColor")) {
-            handle.set_function("setBackgroundColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBackgroundColor(table_to_color(t)); });
-            if (per_type_handle.valid() && absent_per_type("setBackgroundColor")) per_type_handle.set_function("setBackgroundColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBackgroundColor(table_to_color(t)); });
-        }
-        if (absent("getBorderColor")) {
-            handle.set_function("getBorderColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBorderColor()); });
-            if (per_type_handle.valid() && absent_per_type("getBorderColor")) per_type_handle.set_function("getBorderColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getBorderColor()); });
-        }
-        if (absent("setBorderColor")) {
-            handle.set_function("setBorderColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBorderColor(table_to_color(t)); });
-            if (per_type_handle.valid() && absent_per_type("setBorderColor")) per_type_handle.set_function("setBorderColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setBorderColor(table_to_color(t)); });
-        }
-        if (absent("getOutlineColor")) {
-            handle.set_function("getOutlineColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getOutlineColor()); });
-            if (per_type_handle.valid() && absent_per_type("getOutlineColor")) per_type_handle.set_function("getOutlineColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getOutlineColor()); });
-        }
-        if (absent("setOutlineColor")) {
-            handle.set_function("setOutlineColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setOutlineColor(table_to_color(t)); });
-            if (per_type_handle.valid() && absent_per_type("setOutlineColor")) per_type_handle.set_function("setOutlineColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setOutlineColor(table_to_color(t)); });
-        }
-        if (absent("getDropshadowColor")) {
-            handle.set_function("getDropshadowColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); });
-            if (per_type_handle.valid() && absent_per_type("getDropshadowColor")) per_type_handle.set_function("getDropshadowColor", [=](DisplayHandle h) -> sol::object { Label* l = h.as<Label>(); sol::state_view sv = SDOM::Core::getInstance().getLua(); if (!l) return sol::nil; return color_to_table(sv, l->getDropshadowColor()); });
-        }
-        if (absent("setDropshadowColor")) {
-            handle.set_function("setDropshadowColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); });
-            if (per_type_handle.valid() && absent_per_type("setDropshadowColor")) per_type_handle.set_function("setDropshadowColor", [=](DisplayHandle h, sol::table t) { Label* l = h.as<Label>(); if (!l) return; l->setDropshadowColor(table_to_color(t)); });
-        }
 
     } // END Label::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

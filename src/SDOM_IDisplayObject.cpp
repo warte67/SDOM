@@ -1853,6 +1853,17 @@ namespace SDOM
         bind_void_obj("setBounds",  [](IDisplayObject* o, const sol::object& a){ ::SDOM::setBounds_lua(o, a); });
         bind_R_0("getColor",        ::SDOM::getColor_lua);
         bind_void_obj("setColor",   [](IDisplayObject* o, const sol::object& a){ ::SDOM::setColor_lua(o, a); });
+        // Per-color accessors: foreground/background/border/outline/dropshadow
+        bind_R_0("getForegroundColor", ::SDOM::getForegroundColor_lua);
+        bind_void_obj("setForegroundColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setForegroundColor_lua(o, a); });
+        bind_R_0("getBackgroundColor", ::SDOM::getBackgroundColor_lua);
+        bind_void_obj("setBackgroundColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setBackgroundColor_lua(o, a); });
+        bind_R_0("getBorderColor", ::SDOM::getBorderColor_lua);
+        bind_void_obj("setBorderColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setBorderColor_lua(o, a); });
+        bind_R_0("getOutlineColor", ::SDOM::getOutlineColor_lua);
+        bind_void_obj("setOutlineColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setOutlineColor_lua(o, a); });
+        bind_R_0("getDropshadowColor", ::SDOM::getDropshadowColor_lua);
+        bind_void_obj("setDropshadowColor", [](IDisplayObject* o, const sol::object& a){ ::SDOM::setDropshadowColor_lua(o, a); });
 
         // Priority & Z-Order
         bind_R_0("getMaxPriority",            ::SDOM::getMaxPriority_lua);
