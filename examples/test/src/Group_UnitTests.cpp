@@ -35,8 +35,8 @@
  *       AssetHandle getSpriteSheet() const;                 // NOT YET TESTED
  *       int getSpriteWidth() const;                         // NOT YET TESTED
  *       int getSpriteHeight() const;                        // NOT YET TESTED
- *       SDL_Color getGroupColor() const;                    // TESTED (Lua)
- *       void setGroupColor(const SDL_Color& c);             // TESTED (Lua)
+ *       SDL_Color getGroupColor() const;                    // NOT YET TESTED
+ *       void setGroupColor(const SDL_Color& c);             // NOT YET TESTED
  *
  * *********************************************/
 
@@ -484,13 +484,13 @@ namespace SDOM
     bool Group_test5()
     {
         std::string testName = "Group #5";
-        std::string testDesc = "Label property and function symmetry";
+        std::string testDesc = "Label Text function symmetry";
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script
         auto res = lua.script(R"lua(
             -- return { ok = false, err = "unknown error" }
             local group_name = "ut_group_1"
-            local txt = "Group Label"
+            local txt = "Some Random Text"
             local cfg = { 
                 name = group_name, 
                 type = "Group", 
@@ -504,32 +504,22 @@ namespace SDOM
                 return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
             end
 
-            -- print("getLabelText(): " .. group_obj:getLabelText())
+            -- Initial Test getLabelText()
+            local lbl = group_obj:getLabelText()
+            if not lbl then
+                return { ok = false, err = "getLabelText() returned nil" }
+            end
+            if lbl ~= txt then
+                return { ok = false, err = "Label text mismatch: got='" .. tostring(lbl) .. "' expected='" .. tostring(txt) .. "'" }
+            end
 
-            -- secondary check: fetch composed label handle (try type-specific accessors)
-
-            -- local lbl = group_obj.label
-            -- local lbl_via_func = group_obj:getLabel()
-            -- if lbl_via_func then
-            --     if not lbl then
-            --         lbl = lbl_via_func
-            --     end
-            -- end
-
-
-
-            -- if lbl then
-            --     local lbltxt = nil
-            --     if type(lbl.text) == "string" then
-            --         lbltxt = lbl.text
-            --     elseif type(lbl.getText) == "function" then
-            --         lbltxt = lbl:getText()
-            --     end
-            --     if lbltxt and lbltxt ~= txt then
-            --         destroyDisplayObject(group_name)
-            --         return { ok = false, err = "composed Label text mismatch: got='" .. tostring(lbltxt) .. "' expected='" .. tostring(txt) .. "'" }
-            --     end
-            -- end
+            -- Initial Test setLabelText()
+            local new_txt = "A Different String"
+            group_obj:setLabelText(new_txt)
+            local fetched_txt = group_obj:getLabelText()
+            if fetched_txt ~= new_txt then
+                return { ok = false, err = "Label text mismatch after setLabelText: got='" .. tostring(fetched_txt) .. "' expected='" .. tostring(new_txt) .. "'" }
+            end
 
             -- cleanup and return
             destroyDisplayObject(group_name)
@@ -547,7 +537,7 @@ namespace SDOM
         std::string err = res["err"].get_or(std::string());
         if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
-    } // END: Group_testN()    
+    } // END: Group_test5()    
 
 
     // --- Run the Group UnitTests --- //
@@ -563,7 +553,7 @@ namespace SDOM
             ,[&]() { return Group_test2(); }    // Creating Group via InitStruct with Label pointer effects
             ,[&]() { return Group_test3(); }    // Creating Group via lua config string with Label pointer effects
             ,[&]() { return Group_test4(); }    // Create and Bindings
-            // ,[&]() { return Group_test5(); }    // Label property and function symmetry
+            ,[&]() { return Group_test5(); }    // Label property and function symmetry
         };
         for (auto& test : tests) 
         {

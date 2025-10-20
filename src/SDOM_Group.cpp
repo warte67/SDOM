@@ -505,24 +505,13 @@ namespace SDOM
                     return l ? l->getText() : std::string();
                 });
             }
-            if (absent_min("label_text")) {
-                minimal.set("label_text", sol::property(
-                    [](DisplayHandle h) -> std::string {
-                        if (!h.isValid()) return std::string();
-                        if (h->getType() != Group::TypeName) return std::string();
-                        Group* g = static_cast<Group*>(h.get());
-                        Label* l = g ? g->getLabelPtr() : nullptr;
-                        return l ? l->getText() : std::string();
-                    },
-                    [](DisplayHandle h, const std::string& v) {
-                        if (!h.isValid()) return;
-                        if (h->getType() != Group::TypeName) return;
-                        Group* g = static_cast<Group*>(h.get());
-                        Label* l = g ? g->getLabelPtr() : nullptr;
-                        if (l) l->setText(v);
-                    }
-                ));
-            }
+            // Intentionally omit registering `label_text` as a property on the
+            // minimal DisplayHandle. Exposing `label_text` as a property on the
+            // shared usertype leads to name collisions between types (Group,
+            // Label, Button, etc.). If a property cannot be safely provided
+            // per-type without polluting the shared namespace, prefer the
+            // function-style accessors (getLabel/getLabelText/setLabelText)
+            // which are registered above and avoid ambiguous semantics.
             if (absent_min("getSpriteWidth")) {
                 minimal.set_function("getSpriteWidth", [](DisplayHandle h) -> int {
                     if (!h.isValid()) return 0;
