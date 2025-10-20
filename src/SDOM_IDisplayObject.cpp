@@ -1450,11 +1450,26 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Bind onto the single augmentable handle: "DisplayHandle"
+        // Keep the existing shared handle for compatibility and also create
+        // a per-type binding table so derived types can be migrated
+        // incrementally from the shared table into per-type tables.
         sol::table handle = DisplayHandle::ensure_handle_table(lua);
+        sol::table per_type_handle = DisplayHandle::ensure_type_bind_table(lua, typeName); // parent type can be provided where available
+
 
         auto absent = [&](const char* name) -> bool {
             sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            return !cur.valid() || cur == sol::lua_nil;
+        };
+
+        // Check whether a binding is present on the per-type table. When
+        // migrating bindings we prefer to install into `per_type_handle`
+        // so types can override or extend the shared DisplayHandle surface
+        // without clobbering it. This mirrors `absent` but for the
+        // per-type table.
+        auto absent_per_type = [&](const char* name) -> bool {
+            if (!per_type_handle.valid()) return true; // treat as absent when no per-type table
+            sol::object cur = per_type_handle.raw_get_or(name, sol::lua_nil);
             return !cur.valid() || cur == sol::lua_nil;
         };
 
@@ -1481,6 +1496,13 @@ namespace SDOM
         // - bind_R_do_nc:        R   f(IDisplayObject*, DisplayHandle)
         // - bind_R_str_nc:       R   f(IDisplayObject*, const std::string&)
         [[maybe_unused]] auto bind_void_0 = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
+                        f(require_obj(self, n));
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
                     f(require_obj(self, n));
@@ -1488,6 +1510,13 @@ namespace SDOM
             }
         };
         [[maybe_unused]] auto bind_R_0 = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
+                        return f(require_obj(self, n));
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
                     return f(require_obj(self, n));
@@ -1495,6 +1524,13 @@ namespace SDOM
             }
         };
         [[maybe_unused]] auto bind_void_do = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
+                        f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
                     f(require_obj(self, n), a);
@@ -1502,6 +1538,13 @@ namespace SDOM
             }
         };
         [[maybe_unused]] auto bind_R_do = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
+                        return f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
                     return f(require_obj(self, n), a);
@@ -1510,6 +1553,13 @@ namespace SDOM
         };
         // One string-argument, returning a value: R f(const IDisplayObject*, const std::string&)
         [[maybe_unused]] auto bind_R_str = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
+                        return f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
                     return f(require_obj(self, n), a);
@@ -1518,6 +1568,13 @@ namespace SDOM
         };
         // One string-argument, void return: void f(IDisplayObject*, const std::string&)
         [[maybe_unused]] auto bind_void_str = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
+                        f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
                     f(require_obj(self, n), a);
@@ -1526,6 +1583,13 @@ namespace SDOM
         };
         // One sol::object-argument, void return: void f(IDisplayObject*, const sol::object&)
         [[maybe_unused]] auto bind_void_obj = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const sol::object& a) {
+                        f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const sol::object& a) {
                     f(require_obj(self, n), a);
@@ -1534,6 +1598,13 @@ namespace SDOM
         };
         // One int-argument, void return: void f(IDisplayObject*, int)
         [[maybe_unused]] auto bind_void_i = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, int a) {
+                        f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, int a) {
                     f(require_obj(self, n), a);
@@ -1542,6 +1613,13 @@ namespace SDOM
         };
         // One bool-argument, void return: void f(IDisplayObject*, bool)
         [[maybe_unused]] auto bind_void_b = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, bool a) {
+                        f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, bool a) {
                     f(require_obj(self, n), a);
@@ -1550,6 +1628,13 @@ namespace SDOM
         };
         // One float-argument, void return: void f(IDisplayObject*, float)
         [[maybe_unused]] auto bind_void_f = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, float a) {
+                        f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, float a) {
                     f(require_obj(self, n), a);
@@ -1558,6 +1643,13 @@ namespace SDOM
         };
         // One AnchorPoint-argument, void return: void f(IDisplayObject*, AnchorPoint)
         [[maybe_unused]] auto bind_void_ap = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, AnchorPoint a) {
+                        f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, AnchorPoint a) {
                     f(require_obj(self, n), a);
@@ -1566,6 +1658,13 @@ namespace SDOM
         };
         // One OrphanRetentionPolicy-argument, returning a value: R f(const IDisplayObject*, OrphanRetentionPolicy)
         [[maybe_unused]] auto bind_R_orp = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, IDisplayObject::OrphanRetentionPolicy a) {
+                        return f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, IDisplayObject::OrphanRetentionPolicy a) {
                     return f(require_obj(self, n), a);
@@ -1577,6 +1676,13 @@ namespace SDOM
         // - bind_R_do_nc:  R f(IDisplayObject*, T1)
         // - bind_R_str_nc: R f(IDisplayObject*, const std::string&)
         [[maybe_unused]] auto bind_R_0_nc = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
+                        return f(require_obj(self, n));
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self) {
                     return f(require_obj(self, n));
@@ -1584,6 +1690,13 @@ namespace SDOM
             }
         };
         [[maybe_unused]] auto bind_R_do_nc = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
+                        return f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const DisplayHandle& a) {
                     return f(require_obj(self, n), a);
@@ -1591,6 +1704,13 @@ namespace SDOM
             }
         };
         [[maybe_unused]] auto bind_R_str_nc = [&](const char* n, auto f) {
+            if (per_type_handle.valid()) {
+                if (absent_per_type(n)) {
+                    per_type_handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
+                        return f(require_obj(self, n), a);
+                    });
+                }
+            }
             if (absent(n)) {
                 handle.set_function(n, [require_obj, f, n](DisplayHandle& self, const std::string& a) {
                     return f(require_obj(self, n), a);
@@ -1630,27 +1750,27 @@ namespace SDOM
             );
         }
 
-// --- ALL IDisplayObject Properties: --- //
-// float x = 0.0f;                                   // left_ (IDisplayObject)
-// float y = 0.0f;                                   // top_  (IDisplayObject)
-// float width = 0.0f;                               // right_ - left_  (IDisplayObject)
-// float height = 0.0f;                              // bottom_ - top_  (IDisplayObject)
-// SDL_Color color = {255, 0, 255, 255};             // color_ (IDisplayObject)
-// AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;    // anchorTop_ (IDisplayObject)
-// AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;   // anchorLeft_ (IDisplayObject)
-// AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT; // anchorBottom_ (IDisplayObject)
-// AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;  // anchorRight_ (IDisplayObject)
-// int z_order = 0;                                  // z_order_ (IDisplayObject)
-// int priority = 0;                                 // priority_ (IDisplayObject)
-// bool isClickable = true;                          // isClickable_ (IDisplayObject)
-// bool isEnabled = true;                            // isEnabled_ (IDisplayObject)
-// bool isHidden = false;                            // isHidden_ (IDisplayObject)
-// int tabPriority = 0;                              // tabPriority_ (IDisplayObject)
-// bool tabEnabled = true;                           // tabEnabled_ (IDisplayObject)
+        // --- ALL IDisplayObject Properties: --- //
+        // float x = 0.0f;                                   // left_ (IDisplayObject)
+        // float y = 0.0f;                                   // top_  (IDisplayObject)
+        // float width = 0.0f;                               // right_ - left_  (IDisplayObject)
+        // float height = 0.0f;                              // bottom_ - top_  (IDisplayObject)
+        // SDL_Color color = {255, 0, 255, 255};             // color_ (IDisplayObject)
+        // AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;    // anchorTop_ (IDisplayObject)
+        // AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;   // anchorLeft_ (IDisplayObject)
+        // AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT; // anchorBottom_ (IDisplayObject)
+        // AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;  // anchorRight_ (IDisplayObject)
+        // int z_order = 0;                                  // z_order_ (IDisplayObject)
+        // int priority = 0;                                 // priority_ (IDisplayObject)
+        // bool isClickable = true;                          // isClickable_ (IDisplayObject)
+        // bool isEnabled = true;                            // isEnabled_ (IDisplayObject)
+        // bool isHidden = false;                            // isHidden_ (IDisplayObject)
+        // int tabPriority = 0;                              // tabPriority_ (IDisplayObject)
+        // bool tabEnabled = true;                           // tabEnabled_ (IDisplayObject)
 
         // Event handling
         if (absent("addEventListener")) {
-            handle.set_function("addEventListener", sol::overload(
+            auto add_fn = sol::overload(
                 // typed form
                 [require_obj](DisplayHandle& self, EventType& t, sol::function fn, bool useCapture, int prio) {
                     ::SDOM::addEventListener_lua(require_obj(self, "addEventListener"), t, std::move(fn), useCapture, prio);
@@ -1662,10 +1782,15 @@ namespace SDOM
                 [require_obj](DisplayHandle& self, const sol::object& desc) {
                     ::SDOM::addEventListener_lua_any_short(require_obj(self, "addEventListener"), desc);
                 }
-            ));
+            );
+            handle.set_function("addEventListener", add_fn);
+            if (per_type_handle.valid()) {
+                // Only set into per-type table if it's not already defined there
+                if (absent_per_type("addEventListener")) per_type_handle.set_function("addEventListener", add_fn);
+            }
         }
         if (absent("removeEventListener")) {
-            handle.set_function("removeEventListener", sol::overload(
+            auto rem_fn = sol::overload(
                 [require_obj](DisplayHandle& self, EventType& t, sol::function fn, bool useCapture) {
                     ::SDOM::removeEventListener_lua(require_obj(self, "removeEventListener"), t, std::move(fn), useCapture);
                 },
@@ -1675,7 +1800,11 @@ namespace SDOM
                 [require_obj](DisplayHandle& self, const sol::object& desc) {
                     ::SDOM::removeEventListener_lua_any_short(require_obj(self, "removeEventListener"), desc);
                 }
-            ));
+            );
+            handle.set_function("removeEventListener", rem_fn);
+            if (per_type_handle.valid()) {
+                if (absent_per_type("removeEventListener")) per_type_handle.set_function("removeEventListener", rem_fn);
+            }
         }
 
         // Basic state and debug (simplified via helpers)
