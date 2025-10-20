@@ -1754,23 +1754,23 @@ if (LABEL_DEBUG)
 
         // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
         sol::table handle = DisplayHandle::ensure_handle_table(lua);
-
-        // // Helper to check if a property/command is already registered
-        // auto absent = [&](const char* name) -> bool {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     return !cur.valid() || cur == sol::lua_nil;
-        // };
-
-        // // Helper to register a property/command if not already present
-        // auto reg = [&](const char* name, auto&& fn) {
-        //     if (absent(name)) {
-        //         handle.set_function(name, std::forward<decltype(fn)>(fn));
-        //     }
-        // };
+        // Also obtain/create the per-type binding table so we can incrementally
+        // migrate Label-specific bindings into a per-type table without
+        // breaking existing consumers that rely on the shared `handle`.
+        sol::table per_type_handle = DisplayHandle::ensure_type_bind_table(lua, typeName);
 
         // Helper to check if a property/command is already registered (reuse pattern from IDisplayObject)
         auto absent = [&](const char* name) -> bool {
             sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            return !cur.valid() || cur == sol::lua_nil;
+        };
+
+        // Mirror of `absent` for the per-type table. When migrating we prefer
+        // to install into `per_type_handle` so types can override the shared
+        // surface; treat missing per-type table as 'absent'.
+        auto absent_per_type = [&](const char* name) -> bool {
+            if (!per_type_handle.valid()) return true;
+            sol::object cur = per_type_handle.raw_get_or(name, sol::lua_nil);
             return !cur.valid() || cur == sol::lua_nil;
         };
 
@@ -1785,7 +1785,7 @@ if (LABEL_DEBUG)
 
         // Register Label inspection accessors on the DisplayHandle shared table
         if (absent("getTokenList")) {
-            handle.set_function("getTokenList", [cast_label_from_handle](DisplayHandle& self) -> sol::table {
+            auto getTokenList_fn = [cast_label_from_handle](DisplayHandle& self) -> sol::table {
                 Label* lbl = cast_label_from_handle(self);
                 sol::state_view sv = SDOM::Core::getInstance().getLua();
                 sol::table t = sv.create_table();
@@ -1842,22 +1842,28 @@ if (LABEL_DEBUG)
                     t[idx++] = e;
                 }
                 return t;
-            });
+            };
+            handle.set_function("getTokenList", getTokenList_fn);
+            if (per_type_handle.valid() && absent_per_type("getTokenList")) per_type_handle.set_function("getTokenList", getTokenList_fn);
         }
 
         if (absent("getLastTokenizedText")) {
-            handle.set_function("getLastTokenizedText", [cast_label_from_handle](DisplayHandle& self) -> std::string {
+            auto getLastTokenizedText_fn = [cast_label_from_handle](DisplayHandle& self) -> std::string {
                 Label* lbl = cast_label_from_handle(self);
                 return lbl->getLastTokenizedText();
-            });
+            };
+            handle.set_function("getLastTokenizedText", getLastTokenizedText_fn);
+            if (per_type_handle.valid() && absent_per_type("getLastTokenizedText")) per_type_handle.set_function("getLastTokenizedText", getLastTokenizedText_fn);
         }
 
         // Expose tokenizeText() so tests or scripts can force re-tokenization and get the token count
         if (absent("tokenizeText")) {
-            handle.set_function("tokenizeText", [cast_label_from_handle](DisplayHandle& self) -> int {
+            auto tokenizeText_fn = [cast_label_from_handle](DisplayHandle& self) -> int {
                 Label* lbl = cast_label_from_handle(self);
                 return lbl->tokenizeText();
-            });
+            };
+            handle.set_function("tokenizeText", tokenizeText_fn);
+            if (per_type_handle.valid() && absent_per_type("tokenizeText")) per_type_handle.set_function("tokenizeText", tokenizeText_fn);
         }
 
         if (absent("getTokenAlignLists")) {
