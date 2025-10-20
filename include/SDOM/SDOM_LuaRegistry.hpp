@@ -16,18 +16,7 @@ struct LuaBindingRegistry {
     void register_fn(const std::string& type, const std::string& name, Fn fn) {
         std::lock_guard<std::mutex> lk(m);
         map[type][name] = std::move(fn);
-        try {
-            if (type == "Group" && name == "getFontSize") {
-                std::cout << "[TRACE_REG] LuaBindingRegistry::register_fn stored Group.getFontSize; registry size for Group=" << map[type].size();
-                try { std::cout << " fn_lua_state=" << (void*)map[type][name].lua_state(); } catch(...) {}
-                std::cout << std::endl;
-            }
-            if (type == "Label" && name == "getFontSize") {
-                std::cout << "[TRACE_REG] LuaBindingRegistry::register_fn stored Label.getFontSize; registry size for Label=" << map[type].size();
-                try { std::cout << " fn_lua_state=" << (void*)map[type][name].lua_state(); } catch(...) {}
-                std::cout << std::endl;
-            }
-        } catch(...) {}
+        // Debug prints removed. Kept function to register protected_function.
     }
 
     bool has(const std::string& type, const std::string& name) {
@@ -41,10 +30,7 @@ struct LuaBindingRegistry {
         Fn &fn = map.at(type).at(name);
         // Focused trace: report the stored protected_function object address and its lua_State
         try {
-            std::cout << "[TRACE_REG] LuaBindingRegistry::get returning " << type << "." << name
-                      << " registry_fn_addr=" << (void*)&fn
-                      << " fn_lua_state=" << (void*)fn.lua_state()
-                      << std::endl;
+            (void)type; (void)name;
         } catch(...) {}
         return fn;
     }

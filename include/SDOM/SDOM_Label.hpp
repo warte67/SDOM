@@ -232,7 +232,7 @@ namespace SDOM
         bool getAutoResize() const              { return defaultStyle_.auto_resize; }
         // Integer Based Value Getters
         int getFontSize() const                 { 
-            try { std::cout << "[CPP_LABEL] getFontSize called this=" << (void*)this << " defaultStyle_.fontSize=" << defaultStyle_.fontSize << " fontSize_=" << fontSize_ << std::endl; } catch(...) {}
+            (void)this; (void)defaultStyle_.fontSize; (void)fontSize_;
             return defaultStyle_.fontSize; 
         }
         int getFontWidth() const                { return defaultStyle_.fontWidth; }
@@ -263,14 +263,14 @@ namespace SDOM
         void setAutoResize(bool v)              { defaultStyle_.auto_resize = v; setDirty(); }
         // Integer Based Value Setters
         void setFontSize(int v)                 { 
-            try { std::cout << "[CPP_LABEL] setFontSize called this=" << (void*)this << " old_default=" << defaultStyle_.fontSize << " old_fontSize_=" << fontSize_ << " new=" << v << std::endl; } catch(...) {}
+            (void)this; (void)defaultStyle_.fontSize; (void)fontSize_; (void)v;
             defaultStyle_.fontSize = v; setDirty(); 
         }
         void setFontWidth(int v)                { 
-            try { std::cout << "[CPP_LABEL] setFontWidth called this=" << (void*)this << " old_default=" << defaultStyle_.fontWidth << " old_fontWidth_=" << fontWidth_ << " new=" << v << std::endl; } catch(...) {}
+            (void)this; (void)defaultStyle_.fontWidth; (void)fontWidth_; (void)v;
             defaultStyle_.fontWidth = v; setDirty(); }
         void setFontHeight(int v)               { 
-            try { std::cout << "[CPP_LABEL] setFontHeight called this=" << (void*)this << " old_default=" << defaultStyle_.fontHeight << " old_fontHeight_=" << fontHeight_ << " new=" << v << std::endl; } catch(...) {}
+            (void)this; (void)defaultStyle_.fontHeight; (void)fontHeight_; (void)v;
             defaultStyle_.fontHeight = v; setDirty(); }
         void setMaxWidth(int v)                 { defaultStyle_.maxWidth = v; setDirty(); }
         void setMaxHeight(int v)                { defaultStyle_.maxHeight = v; setDirty(); }

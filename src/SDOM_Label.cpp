@@ -2070,51 +2070,19 @@ if (LABEL_DEBUG)
                 }
             };
 
-            // Register debug-friendly wrappers into the per-type binding table
-            // and the authoritative C++ registry so they are preferred over the
-            // minimal shared handle surface. This prevents the minimal handle
-            // from shadowing per-type bindings during lookups.
-            try {
-                // Setter
-                register_per_type(lua, typeName, "setFontSize", [](DisplayHandle h, int v){ auto* l = h.as<Label>();
-                    try { std::cout << "[DBG_LABEL] setFontSize called; label_ptr=" << (void*)l << " value=" << v << std::endl; } catch(...) {}
-                    if (l) l->setFontSize(v);
-                });
-                // Getter
-                register_per_type(lua, typeName, "getFontSize", [](DisplayHandle h)->int{ auto* l = h.as<Label>();
-                    try { std::cout << "[DBG_LABEL] getFontSize called; label_ptr=" << (void*)l;
-                        if (l) std::cout << " defaultStyle.fontSize=" << l->defaultStyle_.fontSize << " fontSize_=" << l->fontSize_;
-                        std::cout << std::endl; } catch(...) {}
-                    return l ? l->getFontSize() : 0;
-                });
-                try { std::cout << "[DBG_LABEL_REG] installed getFontSize/setFontSize (per-type/registry)" << std::endl; } catch(...) {}
-            } catch(...) {}
-                addIntFuncs("setFontWidth", "getFontWidth", &Label::setFontWidth, &Label::getFontWidth);
-                addIntFuncs("setFontHeight", "getFontHeight", &Label::setFontHeight, &Label::getFontHeight);
-                // Also register authoritative per-type/registry entries for font width/height
-                try {
-                    register_per_type(lua, typeName, "setFontWidth", [](DisplayHandle h, int v){ auto* l = h.as<Label>();
-                        try { std::cout << "[DBG_LABEL] setFontWidth called; label_ptr=" << (void*)l << " value=" << v << std::endl; } catch(...) {}
-                        if (l) l->setFontWidth(v);
-                    });
-                    register_per_type(lua, typeName, "getFontWidth", [](DisplayHandle h)->int{ auto* l = h.as<Label>();
-                        try { std::cout << "[DBG_LABEL] getFontWidth called; label_ptr=" << (void*)l;
-                            if (l) std::cout << " fontWidth_=" << l->fontWidth_ << " defaultStyle.fontWidth=" << l->defaultStyle_.fontWidth;
-                            std::cout << std::endl; } catch(...) {}
-                        return l ? l->getFontWidth() : 0;
-                    });
-                    register_per_type(lua, typeName, "setFontHeight", [](DisplayHandle h, int v){ auto* l = h.as<Label>();
-                        try { std::cout << "[DBG_LABEL] setFontHeight called; label_ptr=" << (void*)l << " value=" << v << std::endl; } catch(...) {}
-                        if (l) l->setFontHeight(v);
-                    });
-                    register_per_type(lua, typeName, "getFontHeight", [](DisplayHandle h)->int{ auto* l = h.as<Label>();
-                        try { std::cout << "[DBG_LABEL] getFontHeight called; label_ptr=" << (void*)l;
-                            if (l) std::cout << " fontHeight_=" << l->fontHeight_ << " defaultStyle.fontHeight=" << l->defaultStyle_.fontHeight;
-                            std::cout << std::endl; } catch(...) {}
-                        return l ? l->getFontHeight() : 0;
-                    });
-                    try { std::cout << "[DBG_LABEL_REG] installed getFontWidth/getFontHeight (per-type/registry)" << std::endl; } catch(...) {}
-                } catch(...) {}
+            // Register per-type function-style setters/getters into the authoritative registry
+            // so they take precedence over the minimal shared handle surface.
+            register_per_type(lua, typeName, "setFontSize", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontSize(v); });
+            register_per_type(lua, typeName, "getFontSize", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontSize() : 0; });
+
+            addIntFuncs("setFontWidth", "getFontWidth", &Label::setFontWidth, &Label::getFontWidth);
+            addIntFuncs("setFontHeight", "getFontHeight", &Label::setFontHeight, &Label::getFontHeight);
+
+            // Also register authoritative per-type/registry entries for font width/height
+            register_per_type(lua, typeName, "setFontWidth", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontWidth(v); });
+            register_per_type(lua, typeName, "getFontWidth", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontWidth() : 0; });
+            register_per_type(lua, typeName, "setFontHeight", [](DisplayHandle h, int v){ auto* l = h.as<Label>(); if (l) l->setFontHeight(v); });
+            register_per_type(lua, typeName, "getFontHeight", [](DisplayHandle h)->int{ auto* l = h.as<Label>(); return l ? l->getFontHeight() : 0; });
             addIntFuncs("setMaxWidth", "getMaxWidth", &Label::setMaxWidth, &Label::getMaxWidth);
             addIntFuncs("setMaxHeight", "getMaxHeight", &Label::setMaxHeight, &Label::getMaxHeight);
             addIntFuncs("setBorderThickness", "getBorderThickness", &Label::setBorderThickness, &Label::getBorderThickness);

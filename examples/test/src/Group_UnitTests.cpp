@@ -683,31 +683,7 @@ namespace SDOM
         std::string testName = "Group #7";
         std::string testDesc = "Font metrics getters/setters (Lua symmetry)";
     sol::state& lua = SDOM::Core::getInstance().getLua();
-        // Debug: dump the C++ Lua binding registry to see what is authoritative for Group
-        try { SDOM::getLuaBindingRegistry().dump(); } catch(...) {}
-        // Debug: inspect legacy Lua per-type table for Group
-        try {
-            sol::object bindings = lua["SDOM_Bindings"];
-            if (bindings.valid() && bindings.get_type() == sol::type::table) {
-                sol::table br = bindings.as<sol::table>();
-                sol::object grp = br.raw_get_or("Group", sol::lua_nil);
-                if (grp.valid() && grp.get_type() == sol::type::table) {
-                    sol::table gt = grp.as<sol::table>();
-                    std::cout << "SDOM_Bindings[Group] keys:";
-                    for (auto& kv : gt) {
-                        try {
-                            if (kv.first.is<std::string>()) std::cout << " " << kv.first.as<std::string>();
-                        } catch(...) {}
-                    }
-                    std::cout << std::endl;
-                } else {
-                    std::cout << "SDOM_Bindings[Group] is missing or not a table" << std::endl;
-                }
-            } else {
-                std::cout << "SDOM_Bindings root missing or not table" << std::endl;
-            }
-        } catch(...) {}
-        // Split the Lua script so we can inspect bindings after creation
+        // Prepare Lua to create a Group and exercise font metric getters/setters
         std::string create_chunk = R"lua(
             -- Create Group
             local group_name = "ut_group_1"
@@ -731,29 +707,7 @@ namespace SDOM
             return UnitTests::run(testName, testDesc, [=]() { return false; });
         }
 
-        // After creation, dump registry and per-type table for Group
-        try { SDOM::getLuaBindingRegistry().dump(); } catch(...) {}
-        try {
-            sol::object bindings = lua["SDOM_Bindings"];
-            if (bindings.valid() && bindings.get_type() == sol::type::table) {
-                sol::table br = bindings.as<sol::table>();
-                sol::object grp = br.raw_get_or("Group", sol::lua_nil);
-                if (grp.valid() && grp.get_type() == sol::type::table) {
-                    sol::table gt = grp.as<sol::table>();
-                    std::cout << "SDOM_Bindings[Group] keys after creation:";
-                    for (auto& kv : gt) {
-                        try {
-                            if (kv.first.is<std::string>()) std::cout << " " << kv.first.as<std::string>();
-                        } catch(...) {}
-                    }
-                    std::cout << std::endl;
-                } else {
-                    std::cout << "SDOM_Bindings[Group] is missing or not a table after creation" << std::endl;
-                }
-            } else {
-                std::cout << "SDOM_Bindings root missing or not table after creation" << std::endl;
-            }
-        } catch(...) {}
+        // No debug dumps here; proceed directly to Lua tests
 
         // Now run the rest of the test in Lua, assuming 'group_obj' and 'cfg' exist in the global env
         std::string test_chunk = R"lua(

@@ -38,25 +38,25 @@ inline void register_per_type(sol::state_view lua, const std::string& type, cons
     }
     if (pf.valid()) {
         if (type == "Label" && (name == "getFontSize" || name == "setFontSize")) {
-            try { std::cout << "[TRACE_REG] register_per_type: pf.valid for " << type << "." << name << " lua_state=" << (void*)pf.lua_state() << std::endl; } catch(...) {}
+            (void)pf;
         }
         // Special-case verbose print for Group.getFontSize to trace registration timing
         if (type == "Group" && name == "getFontSize") {
-            try { std::cout << "[TRACE_REG] About to register Group.getFontSize on lua_state=" << (void*)lua.lua_state() << std::endl; } catch(...) {}
+            (void)lua;
         }
         if (type == "Label" && name == "getFontSize") {
-            try { std::cout << "[TRACE_REG] About to register Label.getFontSize on lua_state=" << (void*)lua.lua_state() << std::endl; } catch(...) {}
+            (void)lua;
         }
         getLuaBindingRegistry().register_fn(type, name, pf);
         if (type == "Group" && name == "getFontSize") {
-            try { std::cout << "[TRACE_REG] Registered Group.getFontSize (registry now has it?)=" << (getLuaBindingRegistry().has(type, name)?"Y":"N") << " registry_lua_state=" << (void*)getLuaBindingRegistry().get(type, name).lua_state() << std::endl; } catch(...) {}
+            (void)type; (void)name;
         }
         if (type == "Label" && name == "getFontSize") {
-            try { std::cout << "[TRACE_REG] Registered Label.getFontSize (registry now has it?)=" << (getLuaBindingRegistry().has(type, name)?"Y":"N") << " registry_lua_state=" << (void*)getLuaBindingRegistry().get(type, name).lua_state() << std::endl; } catch(...) {}
+            (void)type; (void)name;
         }
         if (DEBUG_REGISTER_LUA) {
             try {
-                std::cout << "[DEBUG] register_per_type: registered C++ registry entry for " << type << "." << name << std::endl;
+                (void)type; (void)name;
             } catch(...) {}
         }
     }
@@ -80,16 +80,16 @@ inline void register_per_type(sol::state_view lua, const std::string& type, cons
             if (per.valid()) {
                 // raw_set to avoid triggering metamethods
                 per.raw_set(name, pf);
-                try { std::cout << "[TRACE_REG] register_per_type: wrote '" << name << "' into SDOM_Bindings[" << type << "] lua_state=" << (void*)lua.lua_state() << std::endl; } catch(...) {}
+                (void)name; (void)type; (void)lua;
                 if (DEBUG_REGISTER_LUA) {
                     try {
-                        std::cout << "[DEBUG] register_per_type: wrote '" << name << "' into SDOM_Bindings[" << type << "]" << std::endl;
+                        (void)name; (void)type;
                     } catch(...) {}
                 }
             }
         } else {
             if (DEBUG_REGISTER_LUA) {
-                try { std::cout << "[DEBUG] register_per_type: skipping per-type Lua table write for non-canonical lua state for " << type << "." << std::endl; } catch(...) {}
+                (void)type;
             }
         }
     } catch(...) {}

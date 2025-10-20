@@ -204,11 +204,7 @@ namespace SDOM
                 std::string rtype;
                 try { rtype = h.getType(); } catch(...) { rtype = std::string(); }
 
-                // Unconditional probe for the specific failing lookup so we always
-                // emit a concise trace line (helps when logs are very noisy).
-                if (rtype == "Label" && key == "getFontSize") {
-                    try { std::cout << "[LABEL_PROBE] entering __index lookup L=" << (void*)L.lua_state() << " rtype=" << rtype << " key=" << key << std::endl; } catch(...) {}
-                }
+                // Silent probe: no debug output here.
 
                 // Special-case: create core-side wrappers for Label get/set so userdata conversions work
                 if (rtype == "Label" && (key == "getFontSize" || key == "setFontSize")) {
@@ -241,35 +237,30 @@ namespace SDOM
                     if (!rtype.empty() && getLuaBindingRegistry().has(rtype, key)) {
                         sol::state_view sv = SDOM::getLua();
                         auto fn = getLuaBindingRegistry().get(rtype, key);
-                        if (rtype == "Group" && key == "getFontSize") {
-                            std::cout << "[DBG] Registry has Group.getFontSize (lookup lua_state=" << (void*)L.lua_state() << " registry fn_lua_state=" << (void*)fn.lua_state() << ")" << std::endl;
-                        }
-                        if (rtype == "Label" && key == "getFontSize") {
-                            std::cout << "[DBG] Registry has Label.getFontSize (lookup lua_state=" << (void*)L.lua_state() << " registry fn_lua_state=" << (void*)fn.lua_state() << ")" << std::endl;
-                        }
+                        (void)L; (void)fn; (void)rtype; (void)key; // removed debug prints
 
                         // For Label:getFontSize, create a forwarding wrapper on the registry's state
                         if (rtype == "Label" && key == "getFontSize") {
                             try {
                                 sol::protected_function pf = fn;
                                 auto wrapper = [pf](DisplayHandle h)->int {
-                                    try { std::cout << "[REG_WRAPPER_INVOKE] forwarding Label.getFontSize to registry fn; registry_fn_L=" << (void*)pf.lua_state() << " handle_ptr=" << (void*)h.get() << std::endl; } catch(...) {}
+                                    (void)pf; (void)h; // forwarding wrapper - debug prints removed
                                     try {
                                         sol::protected_function_result r = pf(h);
                                         if (r.valid()) {
                                             int v = r.get<int>();
-                                            try { std::cout << "[REG_WRAPPER_INVOKE] registry call value=" << v << std::endl; } catch(...) {}
+                                            (void)v; // registry call value - debug prints removed
                                             return v;
                                         }
                                     } catch(const std::exception &e) {
-                                        try { std::cout << "[REG_WRAPPER_INVOKE] calling registry fn threw: " << e.what() << std::endl; } catch(...) {}
+                                        (void)e; // removed debug print
                                     } catch(...) {
-                                        try { std::cout << "[REG_WRAPPER_INVOKE] calling registry fn threw unknown" << std::endl; } catch(...) {}
+                                        ; // removed debug print
                                     }
                                     return 0;
                                 };
                                 sol::object retobj = sol::make_object(sv, wrapper);
-                                try { std::cout << "[LABEL_LOOKUP] path=registry lookup_L=" << (void*)L.lua_state() << " registry_fn_L=" << (void*)fn.lua_state() << " returned(wrapper)=" << (void*)retobj.pointer() << std::endl; } catch(...) {}
+                                (void)retobj; // removed debug print
                                 return retobj;
                             } catch(...) {
                                 return sol::make_object(sv, fn);
@@ -280,11 +271,11 @@ namespace SDOM
                             try {
                                 sol::protected_function pf = fn;
                                 auto wrapper = [pf](DisplayHandle h, int v)->void {
-                                    try { std::cout << "[REG_WRAPPER_INVOKE] forwarding Label.setFontSize to registry fn; registry_fn_L=" << (void*)pf.lua_state() << " handle_ptr=" << (void*)h.get() << " val=" << v << std::endl; } catch(...) {}
+                                    (void)pf; (void)h; (void)v; // removed debug print
                                     try { pf(h, v); } catch(...) {}
                                 };
                                 sol::object retobj = sol::make_object(sv, wrapper);
-                                try { std::cout << "[LABEL_RETURN] path=registry-set lookup_L=" << (void*)L.lua_state() << " registry_fn_L=" << (void*)fn.lua_state() << " returned_obj(wrapper)=" << (void*)retobj.pointer() << std::endl; } catch(...) {}
+                                (void)retobj; // removed debug print
                                 return retobj;
                             } catch(...) {
                                 return sol::make_object(sv, fn);
@@ -326,23 +317,23 @@ namespace SDOM
                 std::string t;
                 try { t = h.getType(); } catch(...) { t = std::string(); }
                 try {
-                    std::cout << "[FW2_GET] invoked on lua_state=" << (void*)lua.lua_state() << " handle_ptr=" << (void*)h.get() << " type=" << t << std::endl;
+                    (void)lua; (void)h; (void)t;
                 } catch(...) {}
                 try {
                     if (!t.empty() && getLuaBindingRegistry().has(t, "getFontSize")) {
                         sol::protected_function pf = getLuaBindingRegistry().get(t, "getFontSize");
-                        try { std::cout << "[FW2_GET] forwarding via registry_fn_L=" << (void*)pf.lua_state() << std::endl; } catch(...) {}
+                        (void)pf;
                         try {
                             sol::protected_function_result r = pf(h);
                             if (r.valid()) {
                                 int v = r.get<int>();
-                                try { std::cout << "[FW2_GET] registry returned=" << v << std::endl; } catch(...) {}
+                                (void)v;
                                 return v;
                             }
                         } catch(const std::exception &e) {
-                            try { std::cout << "[FW2_GET] registry call threw: " << e.what() << std::endl; } catch(...) {}
+                            (void)e;
                         } catch(...) {
-                            try { std::cout << "[FW2_GET] registry call threw unknown" << std::endl; } catch(...) {}
+                            (void)0;
                         }
                     }
                 } catch(...) {}
@@ -351,7 +342,7 @@ namespace SDOM
                     Label* l = h.as<Label>();
                     if (l) {
                         int v = l->getFontSize();
-                        try { std::cout << "[FW2_GET] direct C++ returned=" << v << " label_ptr=" << (void*)l << std::endl; } catch(...) {}
+                        (void)v; (void)l;
                         return v;
                     }
                 } catch(...) {}
@@ -362,47 +353,47 @@ namespace SDOM
                 std::string t;
                 try { t = h.getType(); } catch(...) { t = std::string(); }
                 try {
-                    std::cout << "[FW2_SET] invoked on lua_state=" << (void*)lua.lua_state() << " handle_ptr=" << (void*)h.get() << " type=" << t << " val=" << v << std::endl;
+                    (void)lua; (void)h; (void)t; (void)v;
                 } catch(...) {}
                 try {
                     if (!t.empty() && getLuaBindingRegistry().has(t, "setFontSize")) {
                         sol::protected_function pf = getLuaBindingRegistry().get(t, "setFontSize");
-                        try { std::cout << "[FW2_SET] forwarding via registry_fn_L=" << (void*)pf.lua_state() << std::endl; } catch(...) {}
+                        (void)pf;
                         try { pf(h, v); return; } catch(const std::exception &e) {
-                            try { std::cout << "[FW2_SET] registry call threw: " << e.what() << std::endl; } catch(...) {}
+                            (void)e;
                         } catch(...) {
-                            try { std::cout << "[FW2_SET] registry call threw unknown" << std::endl; } catch(...) {}
+                            (void)0;
                         }
                     }
                 } catch(...) {}
-                try { Label* l = h.as<Label>(); if (l) { l->setFontSize(v); try { std::cout << "[FW2_SET] direct C++ set label_ptr=" << (void*)l << std::endl; } catch(...) {} } } catch(...) {}
+                try { Label* l = h.as<Label>(); if (l) { l->setFontSize(v); (void)l; } } catch(...) {}
             });
             // Also install strong forwarding wrappers for setFontWidth/setFontHeight
             handle.set_function("setFontWidth", [lua](DisplayHandle h, int v) -> void {
                 std::string t;
                 try { t = h.getType(); } catch(...) { t = std::string(); }
-                try { std::cout << "[FW2_SETFW] invoked on lua_state=" << (void*)lua.lua_state() << " handle_ptr=" << (void*)h.get() << " type=" << t << " val=" << v << std::endl; } catch(...) {}
+                (void)lua; (void)h; (void)t; (void)v;
                 try {
                     if (!t.empty() && getLuaBindingRegistry().has(t, "setFontWidth")) {
                         sol::protected_function pf = getLuaBindingRegistry().get(t, "setFontWidth");
-                        try { std::cout << "[FW2_SETFW] forwarding via registry_fn_L=" << (void*)pf.lua_state() << std::endl; } catch(...) {}
-                        try { pf(h, v); return; } catch(const std::exception &e) { try { std::cout << "[FW2_SETFW] registry call threw: " << e.what() << std::endl; } catch(...) {} } catch(...) { try { std::cout << "[FW2_SETFW] registry call threw unknown" << std::endl; } catch(...) {} }
+                        (void)pf;
+                        try { pf(h, v); return; } catch(const std::exception &e) { (void)e; } catch(...) { (void)0; }
                     }
                 } catch(...) {}
-                try { Label* l = h.as<Label>(); if (l) { l->setFontWidth(v); try { std::cout << "[FW2_SETFW] direct C++ set label_ptr=" << (void*)l << std::endl; } catch(...) {} } } catch(...) {}
+                try { Label* l = h.as<Label>(); if (l) { l->setFontWidth(v); (void)l; } } catch(...) {}
             });
             handle.set_function("setFontHeight", [lua](DisplayHandle h, int v) -> void {
                 std::string t;
                 try { t = h.getType(); } catch(...) { t = std::string(); }
-                try { std::cout << "[FW2_SETFH] invoked on lua_state=" << (void*)lua.lua_state() << " handle_ptr=" << (void*)h.get() << " type=" << t << " val=" << v << std::endl; } catch(...) {}
+                (void)lua; (void)h; (void)t; (void)v;
                 try {
                     if (!t.empty() && getLuaBindingRegistry().has(t, "setFontHeight")) {
                         sol::protected_function pf = getLuaBindingRegistry().get(t, "setFontHeight");
-                        try { std::cout << "[FW2_SETFH] forwarding via registry_fn_L=" << (void*)pf.lua_state() << std::endl; } catch(...) {}
-                        try { pf(h, v); return; } catch(const std::exception &e) { try { std::cout << "[FW2_SETFH] registry call threw: " << e.what() << std::endl; } catch(...) {} } catch(...) { try { std::cout << "[FW2_SETFH] registry call threw unknown" << std::endl; } catch(...) {} }
+                        (void)pf;
+                        try { pf(h, v); return; } catch(const std::exception &e) { (void)e; } catch(...) { (void)0; }
                     }
                 } catch(...) {}
-                try { Label* l = h.as<Label>(); if (l) { l->setFontHeight(v); try { std::cout << "[FW2_SETFH] direct C++ set label_ptr=" << (void*)l << std::endl; } catch(...) {} } } catch(...) {}
+                try { Label* l = h.as<Label>(); if (l) { l->setFontHeight(v); (void)l; } } catch(...) {}
             });
         } catch(...) {}
 
@@ -412,28 +403,28 @@ namespace SDOM
                 std::string t;
                 try { t = h.getType(); } catch(...) { t = std::string(); }
                 try {
-                    std::cout << "[FW2_GETFW] invoked on lua_state=" << (void*)lua.lua_state() << " handle_ptr=" << (void*)h.get() << " type=" << t << std::endl;
+                    (void)lua; (void)h; (void)t;
                 } catch(...) {}
                 try {
                     if (!t.empty() && getLuaBindingRegistry().has(t, "getFontWidth")) {
                         sol::protected_function pf = getLuaBindingRegistry().get(t, "getFontWidth");
-                        try { std::cout << "[FW2_GETFW] forwarding via registry_fn_L=" << (void*)pf.lua_state() << std::endl; } catch(...) {}
+                        (void)pf;
                         try {
                             sol::protected_function_result r = pf(h);
                             if (r.valid()) {
                                 int v = r.get<int>();
-                                try { std::cout << "[FW2_GETFW] registry returned=" << v << std::endl; } catch(...) {}
+                                (void)v;
                                 return v;
                             }
                         } catch(const std::exception &e) {
-                            try { std::cout << "[FW2_GETFW] registry call threw: " << e.what() << std::endl; } catch(...) {}
+                            (void)e;
                         } catch(...) {
-                            try { std::cout << "[FW2_GETFW] registry call threw unknown" << std::endl; } catch(...) {}
+                            (void)0;
                         }
                     }
                 } catch(...) {}
                 try { IPanelObject* p = nullptr; try { p = dynamic_cast<IPanelObject*>(h.get()); } catch(...) {} if (p) return p->getFontWidth(); } catch(...) {}
-                try { Label* l = h.as<Label>(); if (l) { int v = l->getFontWidth(); try { std::cout << "[FW2_GETFW] direct C++ returned=" << v << " label_ptr=" << (void*)l << std::endl; } catch(...) {} return v; } } catch(...) {}
+                try { Label* l = h.as<Label>(); if (l) { int v = l->getFontWidth(); (void)v; return v; } } catch(...) {}
                 return 0;
             });
 
@@ -441,28 +432,28 @@ namespace SDOM
                 std::string t;
                 try { t = h.getType(); } catch(...) { t = std::string(); }
                 try {
-                    std::cout << "[FW2_GETFH] invoked on lua_state=" << (void*)lua.lua_state() << " handle_ptr=" << (void*)h.get() << " type=" << t << std::endl;
+                    (void)lua; (void)h; (void)t;
                 } catch(...) {}
                 try {
                     if (!t.empty() && getLuaBindingRegistry().has(t, "getFontHeight")) {
                         sol::protected_function pf = getLuaBindingRegistry().get(t, "getFontHeight");
-                        try { std::cout << "[FW2_GETFH] forwarding via registry_fn_L=" << (void*)pf.lua_state() << std::endl; } catch(...) {}
+                        (void)pf;
                         try {
                             sol::protected_function_result r = pf(h);
                             if (r.valid()) {
                                 int v = r.get<int>();
-                                try { std::cout << "[FW2_GETFH] registry returned=" << v << std::endl; } catch(...) {}
+                                (void)v;
                                 return v;
                             }
                         } catch(const std::exception &e) {
-                            try { std::cout << "[FW2_GETFH] registry call threw: " << e.what() << std::endl; } catch(...) {}
+                            (void)e;
                         } catch(...) {
-                            try { std::cout << "[FW2_GETFH] registry call threw unknown" << std::endl; } catch(...) {}
+                            (void)0;
                         }
                     }
                 } catch(...) {}
                 try { IPanelObject* p = nullptr; try { p = dynamic_cast<IPanelObject*>(h.get()); } catch(...) {} if (p) return p->getFontHeight(); } catch(...) {}
-                try { Label* l = h.as<Label>(); if (l) { int v = l->getFontHeight(); try { std::cout << "[FW2_GETFH] direct C++ returned=" << v << " label_ptr=" << (void*)l << std::endl; } catch(...) {} return v; } } catch(...) {}
+                try { Label* l = h.as<Label>(); if (l) { int v = l->getFontHeight(); (void)v; return v; } } catch(...) {}
                 return 0;
             });
         } catch(...) {}
