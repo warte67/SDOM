@@ -486,10 +486,12 @@ namespace SDOM
                     Group* g = static_cast<Group*>(h.get());
                     DisplayHandle out = g ? g->getLabel() : DisplayHandle();
                     try {
-                        sol::state_view L = SDOM::getLua();
-                        sol::function tostring_fn = L["tostring"];
-                        std::string s = out.isValid() ? std::string("valid") : std::string("invalid");
-                        std::cout << "[Group::getLabel.fallback] returning label handle: " << s << " type=" << (out.isValid() ? out.getType() : std::string("<nil>")) << " luaobj=" << (out.isValid() ? tostring_fn(out) : std::string("<nil>")) << std::endl;
+                        if (DEBUG_REGISTER_LUA) {
+                            sol::state_view L = SDOM::getLua();
+                            sol::function tostring_fn = L["tostring"];
+                            std::string s = out.isValid() ? std::string("valid") : std::string("invalid");
+                            std::cout << "[Group::getLabel.fallback] returning label handle: " << s << " type=" << (out.isValid() ? out.getType() : std::string("<nil>")) << " luaobj=" << (out.isValid() ? tostring_fn(out) : std::string("<nil>")) << std::endl;
+                        }
                     } catch(...) {}
                     return out;
                 });
