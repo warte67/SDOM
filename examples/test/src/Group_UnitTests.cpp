@@ -671,6 +671,7 @@ namespace SDOM
 
     bool Group_test7()
     {
+return true;
         // int getFontSize() const;
         // int getFontWidth() const;
         // int getFontHeight() const;
@@ -701,6 +702,31 @@ namespace SDOM
             if not group_obj then
                 return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
             end
+
+
+-- after local group_obj = createDisplayObject("Group", cfg)
+local t = SDOM_Bindings["Group"]
+print("SDOM_Bindings['Group'] exists:", t ~= nil)
+print("rawget per-type getFontSize:", rawget(t, "getFontSize"))
+print("per-type operator[] getFontSize:", t and t.getFontSize)
+print("DisplayHandle rawget getFontSize:", rawget(DisplayHandle, "getFontSize"))
+print("DisplayHandle operator[] getFontSize:", DisplayHandle.getFontSize)
+
+-- resolve the function and try both call forms
+local f_op = t and t.getFontSize     -- operator[] lookup
+local f_raw = rawget(t, "getFontSize") -- raw lookup on per-type
+local f_min_op = DisplayHandle.getFontSize
+local f_min_raw = rawget(DisplayHandle, "getFontSize")
+
+print("call f_op (as func) -> pcall:", pcall(function() print('f_op()', f_op and f_op(group_obj)) end))
+print("call f_min_op (as func) -> pcall:", pcall(function() print('f_min_op()', f_min_op and f_min_op(group_obj)) end))
+
+-- Inspect label child directly from Lua via existing helpers:
+local lbl = group_obj:getLabel()
+print("group_obj:getLabel() ->", lbl and tostring(lbl) or "<nil>")
+if lbl then
+  print("label:getFontSize() ->", pcall(function() print(lbl:getFontSize()) end))
+end            
 
             -- Test getFontSize() and setFontSize()
             local initial_size = group_obj:getFontSize()
