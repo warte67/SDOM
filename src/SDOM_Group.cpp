@@ -376,28 +376,6 @@ namespace SDOM
             });
         }
 
-        // Do not register label_color as a sol::property on the per-type
-        // table for the same reason as above. Legacy get/set functions
-        // (getLabelColor/setLabelColor) are registered below.
-        if (absent_raw("getLabelColor")) {
-            handle.raw_set("getLabelColor", [](SDOM::DisplayHandle h) -> SDL_Color {
-                if (!h.isValid()) return SDL_Color{255,255,255,255};
-                if (h->getType() != Group::TypeName) return SDL_Color{255,255,255,255};
-                Group* g = static_cast<Group*>(h.get());
-                Label* l = g->getLabelPtr();
-                return l ? l->getColor() : SDL_Color{255,255,255,255};
-            });
-        }
-        if (absent_raw("setLabelColor")) {
-            handle.raw_set("setLabelColor", [](SDOM::DisplayHandle h, SDL_Color c) {
-                if (!h.isValid()) return;
-                if (h->getType() != Group::TypeName) return;
-                Group* g = static_cast<Group*>(h.get());
-                Label* l = g->getLabelPtr();
-                if (l) l->setColor(c);
-            });
-        }
-
         // getLabel alias
         if (absent_raw("getLabel")) {
             handle.raw_set("getLabel", [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle {
@@ -512,6 +490,31 @@ namespace SDOM
                     Group* g = static_cast<Group*>(h.get());
                     Label* l = g ? g->getLabelPtr() : nullptr;
                     if (l) l->setText(v);
+                });
+            }
+            if (absent_min("getLabelColor")) {
+                minimal.set_function("getLabelColor", [](DisplayHandle h) -> sol::object {
+                    sol::state_view sv = getLua();
+                    if (!h.isValid()) return sol::lua_nil;
+                    if (h->getType() != Group::TypeName) return sol::lua_nil;
+                    Group* g = static_cast<Group*>(h.get());
+                    Label* l = g ? g->getLabelPtr() : nullptr;
+                    SDL_Color c = l ? l->getColor() : SDL_Color{255,255,255,255};
+                    sol::table t = sv.create_table(); t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a; return sol::make_object(sv, t);
+                });
+            }
+            if (absent_min("setLabelColor")) {
+                minimal.set_function("setLabelColor", [](DisplayHandle h, sol::table t) {
+                    if (!h.isValid()) return;
+                    if (h->getType() != Group::TypeName) return;
+                    SDL_Color c = {255,255,255,255};
+                    if (t["r"].valid()) c.r = static_cast<Uint8>(t["r"].get<int>());
+                    if (t["g"].valid()) c.g = static_cast<Uint8>(t["g"].get<int>());
+                    if (t["b"].valid()) c.b = static_cast<Uint8>(t["b"].get<int>());
+                    if (t["a"].valid()) c.a = static_cast<Uint8>(t["a"].get<int>());
+                    Group* g = static_cast<Group*>(h.get());
+                    Label* l = g ? g->getLabelPtr() : nullptr;
+                    if (l) l->setColor(c);
                 });
             }
             // Intentionally omit registering `label_text` as a property on the

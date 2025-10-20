@@ -14,21 +14,20 @@
  *  since the LUA functions are bound to the C++ versions.
  *  
  *
- *       // --- Label Helpers (C++ / LUA)--- //
+ *       // --- Label Helpers (C++ / Lua) --- //
  *
- *       DisplayHandle getLabel() const;                     // TESTED (C++)
- *       std::string getLabelText() const;                   // TESTED (C++)
- *       void setLabelText(const std::string& txt);          // TESTED (C++)
- *       SDL_Color getLabelColor() const;                    // TESTED (C++)
- *
+ *       DisplayHandle getLabel() const;                     // TESTED: Lua (#4), C++ (#1,#2,#3)
+ *       std::string getLabelText() const;                   // TESTED: Lua (#5), C++ (#1,#2,#3)
+ *       void setLabelText(const std::string& txt);          // TESTED: Lua (#5), C++ (#3)
+ *       SDL_Color getLabelColor() const;                    // TESTED: Lua (#5), C++ (#1,#2,#3)
+ *       void setLabelColor(SDL_Color c);                    // TESTED: Lua (#5), C++ (#1,#2,#3)
+ * 
  *       int getFontSize() const;                            // NOT YET TESTED
  *       int getFontWidth() const;                           // NOT YET TESTED
  *       int getFontHeight() const;                          // NOT YET TESTED
  *       void setFontSize(int s);                            // NOT YET TESTED
  *       void setFontWidth(int w);                           // NOT YET TESTED
  *       void setFontHeight(int h);                          // NOT YET TESTED
- *       void setLabelColor(SDL_Color c);                    // TESTED (C++)
- *
  *
  *       // --- SpriteSheet Helpers (C++ / LUA)--- //        // NOT YET TESTED
  *
@@ -573,6 +572,105 @@ namespace SDOM
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
     } // END: Group_test5()    
 
+    bool Group_test6()
+    {
+        // int getFontSize() const;                            // NOT YET TESTED
+        // int getFontWidth() const;                           // NOT YET TESTED
+        // int getFontHeight() const;                          // NOT YET TESTED
+        // void setFontSize(int s);                            // NOT YET TESTED
+        // void setFontWidth(int w);                           // NOT YET TESTED
+        // void setFontHeight(int h);                          // NOT YET TESTED
+
+        std::string testName = "Group #6";
+        std::string testDesc = "Font metrics getters/setters (Lua symmetry)";
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Lua test script
+        auto res = lua.script(R"lua(
+            -- Create Group
+            local group_name = "ut_group_1"
+            local txt = "Some Random Text"
+            local cfg = { 
+                name = group_name, 
+                type = "Group", 
+                font_resource = "internal_font_8x8", 
+                font_size = 8,
+                font_width = 8,
+                font_height = 8,
+                text = txt 
+            }
+            local ok = true
+            local err = ""
+            local group_obj = createDisplayObject("Group", cfg)            
+            if not group_obj then
+                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
+            end
+
+            -- Test getFontSize() and setFontSize()
+            local initial_size = group_obj:getFontSize()
+            if (initial_size ~= 8) then
+                destroyDisplayObject(group_name)
+                collectGarbage()            
+                return { ok = false, err = "Initial font size mismatch: got=" .. tostring(initial_size) .. " expected=8" }
+            end
+            local new_size = initial_size + 4
+            group_obj:setFontSize(new_size)
+            local fetched_size = group_obj:getFontSize()
+            if fetched_size ~= new_size then
+                destroyDisplayObject(group_name)
+                collectGarbage()            
+                return { ok = false, err = "Font size mismatch after setFontSize: got=" .. tostring(fetched_size) .. " expected=" .. tostring(new_size) }
+            end 
+
+            -- Test getFontWidth() and setFontWidth()
+            local initial_width = group_obj:getFontWidth()
+            if (initial_width ~= 8) then
+                destroyDisplayObject(group_name)
+                collectGarbage()            
+                return { ok = false, err = "Initial font width mismatch: got=" .. tostring(initial_width) .. " expected=8" }
+            end
+            local new_width = initial_width + 2
+            group_obj:setFontWidth(new_width)
+            local fetched_width = group_obj:getFontWidth()
+            if fetched_width ~= new_width then
+                destroyDisplayObject(group_name)
+                collectGarbage()            
+                return { ok = false, err = "Font width mismatch after setFontWidth: got=" .. tostring(fetched_width) .. " expected=" .. tostring(new_width) }
+            end
+
+            -- Test getFontHeight() and setFontHeight()
+            local initial_height = group_obj:getFontHeight()
+            if (initial_height ~= 8) then
+                destroyDisplayObject(group_name)
+                collectGarbage()            
+                return { ok = false, err = "Initial font height mismatch: got=" .. tostring(initial_height) .. " expected=8" }
+            end
+            local new_height = initial_height + 3
+            group_obj:setFontHeight(new_height)
+            local fetched_height = group_obj:getFontHeight()
+            if fetched_height ~= new_height then
+                destroyDisplayObject(group_name)
+                collectGarbage()            
+                return { ok = false, err = "Font height mismatch after setFontHeight: got=" .. tostring(fetched_height) .. " expected=" .. tostring(new_height) }
+            end
+
+            -- cleanup and return
+            destroyDisplayObject(group_name)
+            collectGarbage()
+            -- verify destruction
+            local orphans = getOrphanedDisplayObjects()
+            if #orphans > 0 then
+                ok = false
+                err = "Orphaned objects remain after destroying Group: count=" .. tostring(#orphans)
+            end             
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Group_test6()
+
 
     // --- Run the Group UnitTests --- //
 
@@ -588,6 +686,7 @@ namespace SDOM
             ,[&]() { return Group_test3(); }    // Creating Group via lua config string with Label pointer effects
             ,[&]() { return Group_test4(); }    // Create and Bindings
             ,[&]() { return Group_test5(); }    // Label property and function symmetry
+            ,[&]() { return Group_test6(); }    // Font metrics getters/setters (Lua symmetry)
         };
         for (auto& test : tests) 
         {
