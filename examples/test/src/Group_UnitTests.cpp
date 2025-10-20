@@ -8,36 +8,33 @@
 #include <SDOM/SDOM_Group.hpp>
 #include <SDOM/SDOM_Label.hpp>
 
-/**** Group UnitTests: **********************
- *  We need to ensure that all of these helpers are properly bound to LUA.  If the
- *  Lua functions work correctly, we then can assume the C++ versions work as well
- *  since the LUA functions are bound to the C++ versions.
- *  
+/*** Group UnitTests: **********************
+ *  Current coverage/status (after running ./compile && ./prog):
  *
- *       // --- Label Helpers (C++ / Lua) --- //
+ *  --- Label Helpers (C++ / Lua) ---
  *
- *       DisplayHandle getLabel() const;                     // TESTED: Lua (#4), C++ (#1,#2,#3)
- *       std::string getLabelText() const;                   // TESTED: Lua (#5), C++ (#1,#2,#3)
- *       void setLabelText(const std::string& txt);          // TESTED: Lua (#5), C++ (#3)
- *       SDL_Color getLabelColor() const;                    // TESTED: Lua (#5), C++ (#1,#2,#3)
- *       void setLabelColor(SDL_Color c);                    // TESTED: Lua (#5), C++ (#1,#2,#3)
- * 
- *       int getFontSize() const;                            // NOT YET TESTED
- *       int getFontWidth() const;                           // NOT YET TESTED
- *       int getFontHeight() const;                          // NOT YET TESTED
- *       void setFontSize(int s);                            // NOT YET TESTED
- *       void setFontWidth(int w);                           // NOT YET TESTED
- *       void setFontHeight(int h);                          // NOT YET TESTED
+ *  DisplayHandle getLabel() const;            // Lua (#4), C++ (#1,#2,#3)
+ *  std::string getLabelText() const;          // Lua (#5), C++ (#1,#2,#3)
+ *  void setLabelText(const std::string& txt); // Lua (#5), C++ (#3)
+ *  SDL_Color getLabelColor() const;           // Lua (#5), C++ (#1,#2,#3)
+ *  void setLabelColor(SDL_Color c);           // Lua (#5), C++ (#1,#2,#3)
  *
- *       // --- SpriteSheet Helpers (C++ / LUA)--- //        // NOT YET TESTED
+ *  int getFontSize() const;                   // C++ (#6) [PASSED], Lua (#7) [FAILED]
+ *  int getFontWidth() const;                  // C++ (#6) [PASSED], Lua (#7) [FAILED]
+ *  int getFontHeight() const;                 // C++ (#6) [PASSED], Lua (#7) [FAILED]
+ *  void setFontSize(int s);                   // C++ (#6) [PASSED], Lua (#7) [FAILED]
+ *  void setFontWidth(int w);                  // C++ (#6) [PASSED], Lua (#7) [FAILED]
+ *  void setFontHeight(int h);                 // C++ (#6) [PASSED], Lua (#7) [FAILED]
  *
- *       AssetHandle getSpriteSheet() const;                 // NOT YET TESTED
- *       int getSpriteWidth() const;                         // NOT YET TESTED
- *       int getSpriteHeight() const;                        // NOT YET TESTED
- *       SDL_Color getGroupColor() const;                    // NOT YET TESTED
- *       void setGroupColor(const SDL_Color& c);             // NOT YET TESTED
+ *  --- SpriteSheet Helpers (C++ / Lua) ---
  *
- * *********************************************/
+ *  AssetHandle getSpriteSheet() const;        // (not yet tested)
+ *  int getSpriteWidth() const;                // (not yet tested)
+ *  int getSpriteHeight() const;               // (not yet tested)
+ *  SDL_Color getGroupColor() const;           // (not yet tested)
+ *  void setGroupColor(const SDL_Color& c);    // (not yet tested)
+ *
+ * *******************************************/
 
 namespace SDOM
 {
@@ -572,6 +569,7 @@ namespace SDOM
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
     } // END: Group_test5()    
 
+
     bool Group_test6()
     {
         // int getFontSize() const;
@@ -582,6 +580,105 @@ namespace SDOM
         // void setFontHeight(int h);
 
         std::string testName = "Group #6";
+        std::string testDesc = "Font metrics getters/setters (C++ symmetry)";        
+        std::string err = "";        
+        bool ok = true;        
+        Factory& factory = getFactory();
+
+        // Create Group via InitStruct
+        std::string name = "ut_group_3";
+        std::string type = "Group";
+        int x = 10;
+        int y = 10;
+        int width = 200;
+        int height = 100;
+        std::string text = "Main Frame Group";
+        std::string font_resource = "internal_font_8x8";
+        // Setup InitStruct
+        Group::InitStruct grp_init;
+        grp_init.name = name;
+        grp_init.type = type;
+        grp_init.x = static_cast<float>(x);
+        grp_init.y = static_cast<float>(y);
+        grp_init.width = static_cast<float>(width);
+        grp_init.height = static_cast<float>(height);
+        grp_init.text = text;
+        grp_init.font_resource = font_resource;
+        // Create the Group
+        auto group_handle = getFactory().create(grp_init.type, grp_init);                
+
+        // Check creation result
+        auto grp_handle = factory.getDisplayObject("ut_group_3");
+        if (!grp_handle.isValid()) {
+            err += "failed to get 'ut_group_3' handle\n";
+            ok = false;
+        }
+        auto grp_ptr = grp_handle.as<Group>();
+        if (!grp_ptr) {
+            err += "failed to get 'ut_group_3' as Group*\n";
+            ok = false;
+        }
+
+        // Test getFontSize() and setFontSize()
+        int initial_size = grp_ptr->getFontSize();
+        if (initial_size != 8) {
+            err += "Initial font size mismatch: got=" + std::to_string(initial_size) + " expected=8\n";
+            ok = false;
+        }
+        int new_size = initial_size + 4;
+        grp_ptr->setFontSize(new_size);
+        int fetched_size = grp_ptr->getFontSize();
+        if (fetched_size != new_size) {
+            err += "Font size mismatch after setFontSize: got=" + std::to_string(fetched_size) + " expected=" + std::to_string(new_size) + "\n";
+            ok = false;
+        }
+
+        // Test getFontWidth() and setFontWidth()
+        int initial_width = grp_ptr->getFontWidth();
+        if (initial_width != 8) {
+            err += "Initial font width mismatch: got=" + std::to_string(initial_width) + " expected=8\n";
+            ok = false;
+        }
+        int new_width = initial_width + 2;
+        grp_ptr->setFontWidth(new_width);
+        int fetched_width = grp_ptr->getFontWidth();
+        if (fetched_width != new_width) {
+            err += "Font width mismatch after setFontWidth: got=" + std::to_string(fetched_width) + " expected=" + std::to_string(new_width) + "\n";
+            ok = false;
+        }
+        // Test getFontHeight() and setFontHeight()
+        int initial_height = grp_ptr->getFontHeight();
+        if (initial_height != 8) {
+            err += "Initial font height mismatch: got=" + std::to_string(initial_height) + " expected=8\n";
+            ok = false;
+        }
+        int new_height = initial_height + 3;
+        grp_ptr->setFontHeight(new_height);
+        int fetched_height = grp_ptr->getFontHeight();
+        if (fetched_height != new_height) {
+            err += "Font height mismatch after setFontHeight: got=" + std::to_string(fetched_height) + " expected=" + std::to_string(new_height) + "\n";
+            ok = false;
+        }
+        // Testing Cleanup
+        factory.destroyDisplayObject(name);  
+        factory.collectGarbage();
+
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Group_test0()
+
+
+
+    bool Group_test7()
+    {
+        // int getFontSize() const;
+        // int getFontWidth() const;
+        // int getFontHeight() const;
+        // void setFontSize(int s);
+        // void setFontWidth(int w);
+        // void setFontHeight(int h);
+
+        std::string testName = "Group #7";
         std::string testDesc = "Font metrics getters/setters (Lua symmetry)";
         sol::state& lua = SDOM::Core::getInstance().getLua();
         // Lua test script
@@ -669,7 +766,7 @@ namespace SDOM
         std::string err = res["err"].get_or(std::string());
         if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
         return UnitTests::run(testName, testDesc, [=]() { return ok; });
-    } // END: Group_test6()
+    } // END: Group_test7()
 
 
     // --- Run the Group UnitTests --- //
@@ -686,7 +783,8 @@ namespace SDOM
             ,[&]() { return Group_test3(); }    // Creating Group via lua config string with Label pointer effects
             ,[&]() { return Group_test4(); }    // Create and Bindings
             ,[&]() { return Group_test5(); }    // Label property and function symmetry
-            ,[&]() { return Group_test6(); }    // Font metrics getters/setters (Lua symmetry)
+            ,[&]() { return Group_test6(); }    // Font metrics getters/setters (C++ symmetry)
+            ,[&]() { return Group_test7(); }    // Font metrics getters/setters (Lua symmetry)
         };
         for (auto& test : tests) 
         {
