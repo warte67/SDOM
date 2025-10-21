@@ -845,12 +845,22 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Status**: `Group` and `Label` migrations complete; per-type binding dispatcher and fallback compatibility shims in place.
 - **Next**: sweep remaining types (`Button`, `Frame`, `IconButton`, etc) to per-type tables, run full CI, and remove temporary backward-compatibility aliases where safe. All of the DisplayObjects will need to be swept to per-type tables and then fully tested with their own respective UnitTests.
 
+---
+### [October 20, 2025]
+- Implemented a C++ per-type Lua binding registry (`LuaBindingRegistry`) and a small helper (`register_per_type`) to register protected functions reliably.
+- Updated `DisplayHandle` dispatcher to consult the C++ registry first, then fall back to the existing SDOM_Bindings per-type table and the minimal handle. This preserves backward compatibility while enabling deterministic, per-type dispatch.
+- Migrated `Label` and `Group` per-type bindings into the registry (also kept legacy table entries during transition) and adapted `IDisplayObject` bind helpers to use `register_per_type` where a per-type table exists.
+- Diagnosed and fixed the `Label`/`Group` font getter/setter issues (forwarding wrappers + registry adapters); rebuilt and ran the full test suite — unit tests pass.
+- Removed temporary debug prints added during investigation and replaced them with the plan to use gated debug macros if needed.
+- Added diagnostic helpers and registry dump facilities for incremental verification.
+- `Next steps:` sweep remaining display object types (`Button`, `Frame`, `IconButton`, etc.) to `register_per_type`, enable strict registry-only lookup behind a runtime toggle, and add a small set of targeted migration tests to catch ordering/regression issues.
+
 
 ---
 ## Next Steps:
 - Add LUA payload as events are dispatched from the EventManager, not directly as a result of DisplayObject::onEvent().
 - **Standardize the DisplayObject interface for C++ and LUA:**
-  - `Label` should now be the model for standardization for C++ and LUA
+  - `Label` and `Group` should now be the model for standardization for C++ and LUA
   - Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:
     - Add `Group` unit tests to validate Lua all property setting and resource resolution.
     - Add `Button` unit tests to validate Lua all property setting, label access, and event listener behavior.
