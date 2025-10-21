@@ -6,95 +6,64 @@
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
 
-/**** Label UnitTests: **********************
- *  We need to ensure that all of these helpers are properly bound to LUA.  If the
- *  Lua functions work correctly, we then can assume the C++ versions work as well
- *  since the LUA functions are bound to the C++ versions.
- *  
- *      // --- Accessors for the FontStyle settings --- //
- * 
- *      // Boolean Based Flags Getters
- *      // These boolean getters/setters are exercised by Label_test7 (Lua boolean getter/setter test)
- *      bool getBold() const                -- CONFIRMED BY UNIT TEST #7
- *      bool getItalic() const              -- CONFIRMED BY UNIT TEST #7
- *      bool getUnderline() const           -- CONFIRMED BY UNIT TEST #7
- *      bool getStrikethrough() const       -- CONFIRMED BY UNIT TEST #7
- *      bool getBorder() const              -- CONFIRMED BY UNIT TEST #7
- *      bool getBackground() const          -- CONFIRMED BY UNIT TEST #7
- *      bool getOutline() const             -- CONFIRMED BY UNIT TEST #7
- *      bool getDropshadow() const          -- CONFIRMED BY UNIT TEST #7
- *      bool getWordwrap() const            -- CONFIRMED BY UNIT TEST #7
- *      bool getAutoResize() const          -- CONFIRMED BY UNIT TEST #7
+/*** Label UnitTests: verification matrix ****************************************
+ * Purpose: ensure Label APIs are present in Lua and that bindings exercise
+ *          the underlying C++ implementations. The table below lists the
+ *          primary Label methods and the unit test(s) that verify them.
  *
- *      // Integer Based Value Getters
- *      // These integer getters/setters are exercised by Label_test8 (Lua integer getter/setter test)
- *      int getFontSize() const             -- CONFIRMED BY UNIT TEST #8
- *      int getFontWidth() const            -- CONFIRMED BY UNIT TEST #8
- *      int getFontHeight() const           -- CONFIRMED BY UNIT TEST #8
- *      int getMaxWidth() const             -- CONFIRMED BY UNIT TEST #8
- *      int getMaxHeight() const            -- CONFIRMED BY UNIT TEST #8
- *      int getBorderThickness() const      -- CONFIRMED BY UNIT TEST #8
- *      int getOutlineThickness() const     -- CONFIRMED BY UNIT TEST #8
- *      int getPaddingHoriz() const         -- CONFIRMED BY UNIT TEST #8
- *      int getPaddingVert() const          -- CONFIRMED BY UNIT TEST #8
- *      int getDropshadowOffsetX() const    -- CONFIRMED BY UNIT TEST #8
- *      int getDropshadowOffsetY() const    -- CONFIRMED BY UNIT TEST #8
+ * Notes:
+ *  - "(Lua)" means the test exercises the API via Lua bindings.
+ *  - "(C++)" means the test performs direct C++ checks (typically assets/metrics).
+ *  - Passing the Lua tests implies the C++ methods are reachable via the bindings.
  *
- *      // LabelAlign Table
- *      // Alignment getters/setters are exercised by Label_test9 (Lua enum/string access)
- *      LabelAlign getAlignment() const          -- CONFIRMED BY UNIT TEST #9
- *      std::string getAlignmentString() const;  -- CONFIRMED BY UNIT TEST #9
+ * Boolean flag getters/setters (verified by Label_test7 (Lua)):
+ *   - getBold() / setBold(bool)                                (Label_test7) (Lua)
+ *   - getItalic() / setItalic(bool)                            (Label_test7) (Lua)
+ *   - getUnderline() / setUnderline(bool)                      (Label_test7) (Lua)
+ *   - getStrikethrough() / setStrikethrough()                  (Label_test7) (Lua)
+ *   - getBorder() / setBorder(bool)                            (Label_test7) (Lua)
+ *   - getBackground() / setBackground(bool)                    (Label_test7) (Lua)
+ *   - getOutline() / setOutline(bool)                          (Label_test7) (Lua)
+ *   - getDropshadow() / setDropshadow(bool)                    (Label_test7) (Lua)
+ *   - getWordwrap() / setWordwrap(bool)                        (Label_test7) (Lua)
+ *   - getAutoResize() / setAutoResize(bool)                    (Label_test7) (Lua)
  *
- *      // SDL_Color getters
- *      // Color functionality is confirmed by Label_test10 (explicit Lua get/set tests); previously exercised indirectly by Label_test6
- *      SDL_Color getTextForegroundColor() const    -- CONFIRMED BY UNIT TEST #10
- *      SDL_Color getTextBackgroundColor() const    -- CONFIRMED BY UNIT TEST #10
- *      SDL_Color getTextBorderColor() const        -- CONFIRMED BY UNIT TEST #10
- *      SDL_Color getTextOutlineColor() const       -- CONFIRMED BY UNIT TEST #10
- *      SDL_Color getTextDropshadowColor() const    -- CONFIRMED BY UNIT TEST #10
+ * Integer value getters/setters (verified by Label_test8 (Lua)):
+ *   - getFontSize() / setFontSize(int)                         (Label_test8) (Lua)
+ *   - getFontWidth() / setFontWidth(int)                       (Label_test8) (Lua)
+ *   - getFontHeight() / setFontHeight(int)                     (Label_test8) (Lua)
+ *   - getMaxWidth() / setMaxWidth(int)                         (Label_test8) (Lua)
+ *   - getMaxHeight() / setMaxHeight(int)                       (Label_test8) (Lua)
+ *   - getBorderThickness() / setBorderThickness                (Label_test8) (Lua)
+ *   - getOutlineThickness() / setOutlineThickness              (Label_test8) (Lua)
+ *   - getPaddingHoriz() / setPaddingHoriz(int)                 (Label_test8) (Lua)
+ *   - getPaddingVert() / setPaddingVert(int)                   (Label_test8) (Lua)
+ *   - getDropshadowOffsetX() / setDropshadowOffsetX            (Label_test8) (Lua)
+ *   - getDropshadowOffsetY() / setDropshadowOffsetY            (Label_test8) (Lua)
  *
- *      // --- Mutators for the FontStyle settings --- //
+ * Alignment API (verified by Label_test9 (Lua)):
+ *   - getAlignment(), getAlignmentString(), setAlignment(...)  (Label_test9) (Lua)
  *
- *      // Boolean Based Flags Setters
- *      // These setters are exercised by Label_test7
- *      void setBold(bool v)                    -- CONFIRMED BY UNIT TEST #7
- *      void setItalic(bool v)                  -- CONFIRMED BY UNIT TEST #7
- *      void setUnderline(bool v)               -- CONFIRMED BY UNIT TEST #7
- *      void setStrikethrough(bool v)           -- CONFIRMED BY UNIT TEST #7
- *      void setBorder(bool v)                  -- CONFIRMED BY UNIT TEST #7
- *      void setBackground(bool v)              -- CONFIRMED BY UNIT TEST #7
- *      void setOutline(bool v)                 -- CONFIRMED BY UNIT TEST #7
- *      void setDropshadow(bool v)              -- CONFIRMED BY UNIT TEST #7
- *      void setWordwrap(bool v)                -- CONFIRMED BY UNIT TEST #7
- *      void setAutoResize(bool v)              -- CONFIRMED BY UNIT TEST #7
+ * Color getters/setters (verified by Label_test10 (Lua)):
+ *   - getTextForegroundColor() / setTextForegroundColor(...)   (Label_test10) (Lua)
+ *   - getTextBackgroundColor() / setTextBackgroundColor(...)   (Label_test10) (Lua)
+ *   - getTextBorderColor() / setTextBorderColor(...)           (Label_test10) (Lua)
+ *   - getTextOutlineColor() / setTextOutlineColor(...)         (Label_test10) (Lua)
+ *   - getTextDropshadowColor() / setTextDropshadowColor(...)   (Label_test10) (Lua)
  *
- *      // Integer Based Value Setters
- *      // These setters are exercised by Label_test8
- *      void setFontSize(int v)                 -- CONFIRMED BY UNIT TEST #8
- *      void setFontWidth(int v)                -- CONFIRMED BY UNIT TEST #8
- *      void setFontHeight(int v)               -- CONFIRMED BY UNIT TEST #8
- *      void setMaxWidth(int v)                 -- CONFIRMED BY UNIT TEST #8
- *      void setMaxHeight(int v)                -- CONFIRMED BY UNIT TEST #8
- *      void setBorderThickness(int v)          -- CONFIRMED BY UNIT TEST #8
- *      void setOutlineThickness(int v)         -- CONFIRMED BY UNIT TEST #8
- *      void setPaddingHoriz(int v)             -- CONFIRMED BY UNIT TEST #8
- *      void setPaddingVert(int v)              -- CONFIRMED BY UNIT TEST #8
- *      void setDropshadowOffsetX(int v)        -- CONFIRMED BY UNIT TEST #8
- *      void setDropshadowOffsetY(int v)        -- CONFIRMED BY UNIT TEST #8
+ * Tokenizer and style parsing (verified by Label_test4/5/6 (Lua)):
+ *   - tokenizeText(), getTokenList(), inline escapes, style tokenization
+ *     (Label_test4, Label_test5, Label_test6) (Lua)
  *
- *      // LabelAlign Table
- *      void setAlignment(LabelAlign v)             -- CONFIRMED BY UNIT TEST #9
- *      void setAlignment(const std::string& v);    -- CONFIRMED BY UNIT TEST #9
+ * Asset & metric checks (C++ / Lua):
+ *   - Internal font and spritesheet existence and metrics: Label_test1 (Lua) and
+ *     Label_test2 (C++) perform resource existence and filename/metric checks.
  *
- *      // SDL_Color setters
- *      // Color setters/getters are confirmed by Label_test10 (explicit Lua get/set tests); previously exercised indirectly by Label_test6
- *      void setTextForegroundColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
- *      void setTextBackgroundColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
- *      void setTextBorderColor(SDL_Color v)        -- CONFIRMED BY UNIT TEST #10
- *      void setTextOutlineColor(SDL_Color v)       -- CONFIRMED BY UNIT TEST #10
- *      void setTextDropshadowColor(SDL_Color v)    -- CONFIRMED BY UNIT TEST #10
+ * Registration-order / per-item binding checks:
+ *   - Label_test11 verifies per-item bindings are callable immediately after
+ *     creation (Label_test11) (Lua)
  *
- ********************************************/
+ **********************************************************************************/
 
 
 namespace SDOM

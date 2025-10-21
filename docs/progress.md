@@ -855,6 +855,12 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Added diagnostic helpers and registry dump facilities for incremental verification.
 - `Next steps:` sweep remaining display object types (`Button`, `Frame`, `IconButton`, etc.) to `register_per_type`, enable strict registry-only lookup behind a runtime toggle, and add a small set of targeted migration tests to catch ordering/regression issues.
 
+---
+### [October 21, 2025]
+- `Label` per-type binding migration complete; registry dispatcher and fallback compatibility shims in place.
+- `Group` per-type binding migration complete; registry dispatcher and fallback compatibility shims in place.
+
+
 
 ---
 ## Next Steps:
@@ -862,7 +868,6 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Standardize the DisplayObject interface for C++ and LUA:**
   - `Label` and `Group` should now be the model for standardization for C++ and LUA
   - Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:
-    - Add `Group` unit tests to validate Lua all property setting and resource resolution.
     - Add `Button` unit tests to validate Lua all property setting, label access, and event listener behavior.
     - Add `Checkbox` unit tests to validate Lua all property setting, label access, and event listener behavior.
     - Add `Frame` unit tests to validate Lua all property setting and icon rendering.

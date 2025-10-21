@@ -9,33 +9,44 @@
 #include <SDOM/SDOM_Label.hpp>
 #include <SDOM/SDOM_LuaRegistry.hpp>
 
-/*** Group UnitTests: **********************
- *  Current coverage/status (after running ./compile && ./prog):
+/*** Group UnitTests: verification matrix ****************************************
+ * Purpose: ensure Group APIs are present in Lua and that bindings exercise
+ *          the underlying C++ implementations. The table below lists the
+ *          primary Group methods and the unit test(s) that verify them.
  *
- *  --- Label Helpers (C++ / Lua) ---
+ * Notes:
+ *  - "(Lua)" means the test exercises the API via Lua bindings.
+ *  - "(C++)" means the test performs direct C++ checks (InitStruct / pointer API).
  *
- *  DisplayHandle getLabel() const;            // Lua (#4), C++ (#1,#2,#3)
- *  std::string getLabelText() const;          // Lua (#5), C++ (#1,#2,#3)
- *  void setLabelText(const std::string& txt); // Lua (#5), C++ (#3)
- *  SDL_Color getLabelColor() const;           // Lua (#5), C++ (#1,#2,#3)
- *  void setLabelColor(SDL_Color c);           // Lua (#5), C++ (#1,#2,#3)
+ * Creation & basic DisplayHandle methods (Group_test4 - Lua):
+ *   - getName(), getType(), setX()/getX(), setY()/getY(),
+ *     setWidth()/getWidth(), setHeight()/getHeight()
+ *     (Verified by Group_test4) (Lua)
  *
- *  int getFontSize() const;                   // C++ (#6) [PASSED], Lua (#7) [FAILED]
- *  int getFontWidth() const;                  // C++ (#6) [PASSED], Lua (#7) [FAILED]
- *  int getFontHeight() const;                 // C++ (#6) [PASSED], Lua (#7) [FAILED]
- *  void setFontSize(int s);                   // C++ (#6) [PASSED], Lua (#7) [FAILED]
- *  void setFontWidth(int w);                  // C++ (#6) [PASSED], Lua (#7) [FAILED]
- *  void setFontHeight(int h);                 // C++ (#6) [PASSED], Lua (#7) [FAILED]
+ * Label helpers (Group_test1/2/3/4/5 - Lua/C++):
+ *   - getLabel(), getLabelText(), setLabelText(),
+ *     getLabelColor(), setLabelColor()
+ *     (Verified by Group_test1, Group_test2, Group_test3, Group_test4, Group_test5)
+ *     (Lua + C++)
  *
- *  --- SpriteSheet Helpers (C++ / Lua) ---
+ * Font metric getters/setters (Group_test6, Group_test7):
+ *   - getFontSize()/setFontSize(), getFontWidth()/setFontWidth(),
+ *     getFontHeight()/setFontHeight()
+ *     (Verified by Group_test6) (C++) and (Group_test7) (Lua)
  *
- *  AssetHandle getSpriteSheet() const;        // (not yet tested)
- *  int getSpriteWidth() const;                // (not yet tested)
- *  int getSpriteHeight() const;               // (not yet tested)
- *  SDL_Color getGroupColor() const;           // (not yet tested)
- *  void setGroupColor(const SDL_Color& c);    // (not yet tested)
+ * SpriteSheet & icon helpers (planned coverage):
+ *   - getSpriteSheet(), getSpriteWidth(), getSpriteHeight()
+ *     (Planned: Group_test5; not covered by current tests)
  *
- * *******************************************/
+ * Resource lifecycle and cleanup (Group_test1..Group_test5):
+ *   - destroyDisplayObject(), orphan detection and collectGarbage()
+ *     (Verified across Group_test1..Group_test5) (Lua/C++)
+ *
+ * Registration-order / per-item bindings:
+ *   - Group-specific per-item bindings are exercised during creation and
+ *     immediate use in tests 1..5 (Lua).
+ *
+ **********************************************************************************/
 
 namespace SDOM
 {
@@ -782,6 +793,122 @@ namespace SDOM
     } // END: Group_test7()
 
 
+//  * SpriteSheet & icon helpers (planned coverage):
+//  *   - getSpriteSheet(), getSpriteWidth(), getSpriteHeight()
+//  *     (Planned: Group_test5; not covered by current tests)    
+
+    bool Group_test8()
+    {
+        std::string testName = "Group #8";
+        std::string testDesc = "SpriteSeet and Icon Helpers";
+        sol::state& lua = SDOM::Core::getInstance().getLua();
+        // Lua test script: create a Group with a known icon sprite and verify
+        // getSpriteSheet/getSpriteWidth/getSpriteHeight and group color getters/setters.
+
+        auto res = lua.script(R"lua(
+            -- Create A Test Group Object:
+            local group_name = "ut_group_sprite"
+            local txt = "Some Random Text"
+            local cfg = { 
+                name = group_name, 
+                type = "Group", 
+                font_resource = "internal_font_8x8", 
+                icon_resource = "internal_icon_12x12",
+                text = txt 
+            }
+            local ok = true
+            local err = ""
+            local group_obj = createDisplayObject("Group", cfg)                             
+            if not group_obj then
+                return { ok = false, err = "createDisplayObject failed: " .. tostring(h_or_err) }
+            end
+
+            -- Test getSpriteSheet()
+            local ss = group_obj:getSpriteSheet()
+            if not ss then
+                destroyDisplayObject(group_name)
+                collectGarbage()
+                return { ok = false, err = "getSpriteSheet() returned nil" }
+            end
+            local ss_name = tostring(ss:getName())
+            print("SpriteSheet: " .. ss_name)
+            if ss_name ~= "internal_icon_12x12_SpriteSheet" then
+                destroyDisplayObject(group_name)
+                collectGarbage()
+                return { ok = false, err = "getSpriteSheet() wrong name: " .. ss_name }
+            end
+
+            -- Test group:getSpriteWidth() and group:getSpriteHeight()
+            local ex_width = 12 -- 13 to test fails
+            local ex_height = 12 -- 13 to test fails
+            local width = group_obj:getSpriteWidth()
+            local height = group_obj:getSpriteHeight()
+            if width ~= ex_width then
+                destroyDisplayObject(group_name)
+                collectGarbage()
+                return { ok = false, err = "Group:getSpriteWidth() got: " .. tostring(width) .. " expected: " .. tostring(ex_width) }
+            end
+            if height ~= ex_height then
+                destroyDisplayObject(group_name)
+                collectGarbage()
+                return { ok = false, err = "Group:getSpriteHeight() got: " .. tostring(height) .. " expected: " .. tostring(ex_height) }
+            end
+
+            -- Test SpriteSheet:getSpriteWidth() and SpriteSheet:getSpriteHeight()
+            if true then -- This may be redundant since this check should be made in SpriteSheet_UnitTests.
+                -- ex_width = 13 -- test failure mode
+                -- ex_height = 13 -- test failure mode
+                local ss_width = ss:getSpriteWidth()
+                local ss_height = ss:getSpriteHeight()
+                if ss_width ~= ex_width then
+                    destroyDisplayObject(group_name)
+                    collectGarbage()
+                    return { ok = false, err = "SpriteSheet:getSpriteWidth() got: " .. tostring(ss_width) .. " expected: " .. tostring(ex_width) }
+                end
+                if ss_height ~= ex_height then
+                    destroyDisplayObject(group_name)
+                    collectGarbage()
+                    return { ok = false, err = "SpriteSheet:getSpriteHeight() got: " .. tostring(ss_height) .. " expected: " .. tostring(ex_height) }
+                end
+            end
+
+            -- Test Group:getGroupColor() and Group:setGroupColor()
+            local c = group_obj:getGroupColor()
+            if not c then return { ok = false, err = 'Group:getGroupColor returned nil' } end
+
+            -- increase r/g/b by 25, clamp to 255
+            local newR = math.min(255, (c.r or c:getR() or 0) + 25)
+            local newG = math.min(255, (c.g or c:getG() or 0) + 25)
+            local newB = math.min(255, (c.b or c:getB() or 0) + 25)
+            local newA = (c.a or c:getA() or 0) - 1
+            if newA < 0 then newA = 0 end            
+
+            group_obj:setGroupColor({ r = newR, g = newG, b = newB, a = newA })
+
+            local c2 = group_obj:getGroupColor()
+            if not c2 then return { ok = false, err = 'getGroupColor after setGroupColor returned nil' } end
+
+            if c2.r ~= newR or c2.g ~= newG or c2.b ~= newB or c2.a ~= newA then
+                return { ok = false, err = string.format('color mismatch after setGroupColor (got r=%s,g=%s,b=%s,a=%s expected r=%s,g=%s,b=%s,a=%s)', c2.r, c2.g, c2.b, c2.a, newR, newG, newB, newA) }
+            end
+
+            -- cleanup
+            destroyDisplayObject(group_name)
+            collectGarbage()
+            local orphans = getOrphanedDisplayObjects()
+            if #orphans > 0 then return { ok = false, err = "Orphaned objects remain after destroying Group" } end
+
+            return { ok = true, err = "" }
+        )lua").get<sol::table>();
+
+        // report and return test condition state
+        bool ok = res["ok"].get_or(false);
+        std::string err = res["err"].get_or(std::string());
+        if (!err.empty()) std::cout << CLR::ORANGE << "  [" << testName << "] " << err << CLR::RESET << std::endl;
+        return UnitTests::run(testName, testDesc, [=]() { return ok; });
+    } // END: Group_test8()    
+
+
     // --- Run the Group UnitTests --- //
 
     bool Group_UnitTests() 
@@ -798,6 +925,7 @@ namespace SDOM
             ,[&]() { return Group_test5(); }    // Label property and function symmetry
             ,[&]() { return Group_test6(); }    // Font metrics getters/setters (C++ symmetry)
             ,[&]() { return Group_test7(); }    // Font metrics getters/setters (Lua symmetry)
+            ,[&]() { return Group_test8(); }    // SpriteSeet and Icon Helpers
         };
         for (auto& test : tests) 
         {
@@ -811,40 +939,3 @@ namespace SDOM
 
 } // END: namespace SDOM
 
-
-
-/*
-
-- Group_test1() --  "Create and Bindings"
-    - Purpose: create a Group from Lua (or factory), ensure handle exists and DisplayHandle methods call through.
-    - Checks: group handle not nil, getName/getType work.
-
-- Group_test2() -- Label property and function symmetry
-    - Purpose: exercise label text & color via property-style and legacy function-style access.
-    - Checks: set/read via both styles, round-trip equality (h.label_text / h:getLabelText()).
-
-- Group_test3() -- Label pointer effects (C++-only verification)
-    - Purpose: ensure C++ getLabelPtr() returns non-null for created group and that pointer changes are observed by handle accessors.
-    - Checks: label pointer not null, set via pointer then read via Lua handle.
-
-- Group_test4() -- Font metrics getters/setters (Lua symmetry)
-    - Purpose: test getFontSize/getFontWidth/getFontHeight and setFont* via both property and function forms exposed on DisplayHandle.
-    - Checks: setFontSize(…) then getFontSize() and h.font_size match.
-
-- Group_test5() -- Spritesheet getters
-    - Purpose: verify getSpriteSheet(), getSpriteWidth(), getSpriteHeight() return correct objects/sizes for internal_icon_* cases (8/12/16).
-    - Checks: h:getSpriteSheet() is a handle, width/height match SpriteSheet tile size, and icon width in IPanelObject updated.
-
-- Group_test6() -- Group color getters/setters
-    - Purpose: test getGroupColor/setGroupColor round-trip via Lua property and function forms.
-    - Checks: set to known RGBA, read back equal.
-
-- Group_test7() -- Icon resource fallback behavior
-    - Purpose: verify when config uses the texture name (internal_icon_12x12) the engine resolves and prefers the corresponding SpriteSheet wrapper.
-    - Checks: getSpriteSheet().getFilename() or asset type indicates SpriteSheet and getSpriteWidth()==12.
-
-- Group_test8() -- Edge cases and invalids
-    - Purpose: ensure missing label/sprite gracefully returns defaults (empty text, color default, width/height 0) and no crash.
-    - Checks: create Group with no icon_resource and assert getters return safe defaults.
-
-*/
