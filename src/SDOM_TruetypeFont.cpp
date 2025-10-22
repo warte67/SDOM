@@ -511,35 +511,6 @@ namespace SDOM
         // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
         // sol::table handle = AssetHandle::ensure_handle_table(lua);
 
-        // // Helper to check if a property/command is already registered
-        // auto absent = [&](const char* name) -> bool {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     return !cur.valid() || cur == sol::lua_nil;
-        // };
-
-        // // Helper to register a property/command if not already present
-        // auto reg = [&](const char* name, auto&& fn) {
-        //     if (absent(name)) {
-        //         handle.set_function(name, std::forward<decltype(fn)>(fn));
-        //     }
-        // };
-
-        // // small helper to validate and cast the AssetHandle -> TruetypeFont*
-        // auto cast_ss_from_asset = [](const AssetHandle& asset) -> TruetypeFont* {
-        //     if (!asset.isValid()) { ERROR("invalid AssetHandle provided to TruetypeFont method"); }
-        //     IAssetObject* base = asset.get();
-        //     TruetypeFont* truetype = dynamic_cast<TruetypeFont*>(base);
-        //     if (!truetype) { ERROR("invalid TruetypeFont object"); }
-        //     return truetype;
-        // };
-
-        // // // Register TruetypeFont-specific properties and commands here (bridge from AssetHandle handle)
-        // reg("setTruetypeFontWidth", [cast_ss_from_asset](AssetHandle asset, int w) { cast_ss_from_asset(asset)->setTruetypeFontWidth(w); });
-        // reg("setTruetypeFontHeight", [cast_ss_from_asset](AssetHandle asset, int h) { cast_ss_from_asset(asset)->setTruetypeFontHeight(h); });
-        // reg("getTruetypeFontWidth", [cast_ss_from_asset](AssetHandle asset) { return cast_ss_from_asset(asset)->getTruetypeFontWidth(); });
-        // reg("getTruetypeFontHeight", [cast_ss_from_asset](AssetHandle asset) { return cast_ss_from_asset(asset)->getTruetypeFontHeight(); });
-
-
 
     } // END _registerLuaBindings()
 

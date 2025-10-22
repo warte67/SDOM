@@ -812,37 +812,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
-        sol::table handle = AssetHandle::ensure_handle_table(lua);
-
-        // Helper to check if a property/command is already registered
-        auto absent = [&](const char* name) -> bool {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-            return !cur.valid() || cur == sol::lua_nil;
-        };
-
-        // Helper to register a property/command if not already present
-        auto reg = [&](const char* name, auto&& fn) {
-            if (absent(name)) {
-                handle.set_function(name, std::forward<decltype(fn)>(fn));
-            }
-        };
-
-        // small helper to validate and cast the AssetHandle -> BitmapFont*
-        auto cast_ss_from_asset = [](const AssetHandle& asset) -> BitmapFont* {
-            if (!asset.isValid()) { ERROR("invalid AssetHandle provided to BitmapFont method"); }
-            IAssetObject* base = asset.get();
-            BitmapFont* bmp = dynamic_cast<BitmapFont*>(base);
-            if (!bmp) { ERROR("invalid BitmapFont object"); }
-            return bmp;
-        };
-
-        // // Register BitmapFont-specific properties and commands here (bridge from AssetHandle handle)
-        reg("setBitmapFontWidth", [cast_ss_from_asset](AssetHandle asset, int w) { cast_ss_from_asset(asset)->setBitmapFontWidth(w); });
-        reg("setBitmapFontHeight", [cast_ss_from_asset](AssetHandle asset, int h) { cast_ss_from_asset(asset)->setBitmapFontHeight(h); });
-        reg("getBitmapFontWidth", [cast_ss_from_asset](AssetHandle asset) { return cast_ss_from_asset(asset)->getBitmapFontWidth(); });
-        reg("getBitmapFontHeight", [cast_ss_from_asset](AssetHandle asset) { return cast_ss_from_asset(asset)->getBitmapFontHeight(); });
-
+        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
+        // sol::table handle = AssetHandle::ensure_handle_table(lua);
 
 
     } // END _registerLuaBindings()

@@ -356,43 +356,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared DisplayHandle handle usertype
-        sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
-
-        // Helper to check if a property/command is already registered
-        auto absent = [&](const char* name) -> bool 
-        {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-            return !cur.valid() || cur == sol::lua_nil;
-        };
-
-        // expose 'name' property for IconButton (maps to getName / setName on the display object)
-        if (absent("name"))
-        {
-            handle.set("name", sol::property(
-                // getter
-                [](SDOM::DisplayHandle h) -> std::string 
-                {
-                    if (h.isValid()) return h->getName();
-                    return std::string();
-                },
-                // setter
-                [](SDOM::DisplayHandle h, const std::string& v) 
-                {
-                    if (h.isValid()) h->setName(v);
-                }
-            ));
-        }
-
-        // --- additional IconButton-specific bindings can go here --- //
-
-        // NOTE:
-        // IconIndex and IconButton numeric constants are registered centrally
-        // by `Core::_registerLuaBindings` so configuration scripts can
-        // reference them before type-specific registration runs. Avoid
-        // duplicating that global registration here to keep Lua state setup
-        // deterministic. If per-type extension is required later, merge
-        // into the global `IconIndex` table instead of overwriting it.
+        // // Augment the single shared DisplayHandle handle usertype
+        // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
 
     } // END: void IconButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

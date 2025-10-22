@@ -407,46 +407,8 @@ void Box::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
                   << typeName << CLR::RESET << std::endl;
     }
 
-    // Augment the single shared DisplayHandle handle usertype
-    sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
-
-    auto absent = [&](const char* name) -> bool {
-        sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        return !cur.valid() || cur == sol::lua_nil;
-    };
-
-    auto require_box = [&](SDOM::DisplayHandle& self, const char* method) -> Box* {
-        Box* b = dynamic_cast<Box*>(self.get());
-        if (!b) {
-            std::string msg = std::string(method)
-                + " requires Box; got '" + self.getType() + "' (name='" + self.getName() + "')";
-            throw sol::error(msg);
-        }
-        return b;
-    };
-
-    // Box-specific methods on the DisplayHandle handle, guarded by type
-    if (absent("doSomething")) {
-        handle.set_function("doSomething",
-            [require_box](SDOM::DisplayHandle& self, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                Box* b = require_box(self, "doSomething");
-                std::cout << "Box::doSomething called on " << b->getName() << std::endl;
-                return sol::make_object(lua, true);
-            }
-        );
-    }
-
-    if (absent("resetColor")) {
-        handle.set_function("resetColor",
-            [require_box](SDOM::DisplayHandle& self, sol::object /*args*/, sol::state_view lua) -> sol::object {
-                Box* b = require_box(self, "resetColor");
-                SDL_Color defaultColor = {255, 0, 255, 255};
-                b->setColor(defaultColor);
-                std::cout << "Box::resetColor called on " << b->getName() << std::endl;
-                return sol::make_object(lua, true);
-            }
-        );
-    }
+    // // Augment the single shared DisplayHandle handle usertype
+    // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
 
     // Note: no usertype creation and no this->objHandleType_ assignment.
 

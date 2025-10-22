@@ -144,53 +144,16 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared DisplayHandle handle usertype
-        sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
+        // // Augment the single shared DisplayHandle handle usertype
+        // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
 
-        // Helper to check if a property/command is already registered
-        auto absent = [&](const char* name) -> bool 
-        {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-            return !cur.valid() || cur == sol::lua_nil;
-        };
+        // // Helper to check if a property/command is already registered
+        // auto absent = [&](const char* name) -> bool 
+        // {
+        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+        //     return !cur.valid() || cur == sol::lua_nil;
+        // };
 
-        // expose 'name' property for IconButton (maps to getName / setName on the display object)
-        if (absent("direction"))
-        {
-            handle.set("direction", sol::property(
-                [](SDOM::DisplayHandle h) { return static_cast<int>(h.as<ArrowButton>()->getDirection()); },
-                [](SDOM::DisplayHandle h, int v) { h.as<ArrowButton>()->direction_ = static_cast<ArrowButton::ArrowDirection>(v); }
-            ));
-        }
-
-        // Expose getDirection and setDirection as Lua methods
-        if (absent("getDirection")) 
-        {
-            handle.set_function("getDirection", [](SDOM::DisplayHandle h) 
-            {
-                auto* ab = h.as<ArrowButton>();
-                return ab ? static_cast<int>(ab->getDirection()) : 0;
-            });
-        }
-        if (absent("setDirection")) 
-        {
-            handle.set_function("setDirection", [](SDOM::DisplayHandle h, int v) 
-            {
-                auto* ab = h.as<ArrowButton>();
-                if (ab && v >= 0 && v < 4) ab->setDirection(static_cast<ArrowButton::ArrowDirection>(v));
-            });
-        }
-
-        
-        // --- additional IconButton-specific bindings can go here --- //
-
-        // NOTE:
-        // IconIndex and IconButton numeric constants are registered centrally
-        // by `Core::_registerLuaBindings` so configuration scripts can
-        // reference them before type-specific registration runs. Avoid
-        // duplicating that global registration here to keep Lua state setup
-        // deterministic. If per-type extension is required later, merge
-        // into the global `IconIndex` table instead of overwriting it.
 
     } // END: void IconButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

@@ -13,8 +13,6 @@
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
-#include <SDOM/lua_Core.hpp>
-#include <SDOM/lua_BindHelpers.hpp>
 #include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_ArrowButton.hpp>
 
@@ -1451,6 +1449,154 @@ namespace SDOM
     }
 
 
+    // --- LUA Wrappers --- //
+
+	// Configuration from Lua table
+	void Core::configure_lua(const sol::table& config) 
+    {
+		// Preprocess a 'resources' array in the config so resources are registered
+		// before display objects are constructed. This allows Labels and other
+		// display objects to reference resources by name during onInit().
+		try {
+		// Ensure SDL (window/renderer/texture) is initialized before
+		// creating assets that depend on an SDL_Renderer (e.g., BitmapFont
+		// -> SpriteSheet -> Texture). Build a minimal CoreConfig from the
+		// provided table and call configure() — this does not create any
+		// display objects.
+		try {
+			Core::CoreConfig preCfg = getCore().getConfig();
+			if (config.valid()) {
+				try { if (config["windowWidth"].valid())  preCfg.windowWidth  = config["windowWidth"].get<double>(); } catch(...) {}
+				try { if (config["windowHeight"].valid()) preCfg.windowHeight = config["windowHeight"].get<double>(); } catch(...) {}
+				try { if (config["pixelWidth"].valid())   preCfg.pixelWidth   = config["pixelWidth"].get<double>(); } catch(...) {}
+				try { if (config["pixelHeight"].valid())  preCfg.pixelHeight  = config["pixelHeight"].get<double>(); } catch(...) {}
+				try { if (config["preserveAspectRatio"].valid()) preCfg.preserveAspectRatio = config["preserveAspectRatio"].get<bool>(); } catch(...) {}
+				try { if (config["allowTextureResize"].valid())  preCfg.allowTextureResize  = config["allowTextureResize"].get<bool>(); } catch(...) {}
+			}
+			getCore().configure(preCfg);
+		} catch(...) {
+			DEBUG_LOG("configure_lua: pre-initialization configure() failed");
+		}
+			bool logRes = false;
+			try { if (config.valid() && config["debug"].valid()) { sol::table dbg = config["debug"]; if (dbg.valid() && dbg["logResourceCreation"].valid()) logRes = dbg["logResourceCreation"].get<bool>(); } } catch(...) {}
+			if (config.valid() && config["resources"].valid()) {
+				sol::table resTbl = config["resources"];
+				for (std::size_t i = 1; i <= resTbl.size(); ++i) {
+					try {
+						sol::object obj = resTbl[i];
+						if (!obj.valid() || !obj.is<sol::table>()) continue;
+						sol::table r = obj.as<sol::table>();
+
+						// Validate name and filename
+						if (!r["name"].valid() || !r["filename"].valid()) {
+							DEBUG_LOG("Skipping resource entry: missing name or filename");
+							continue;
+						}
+						std::string name = r["name"].get<std::string>();
+						std::string filename = r["filename"].get<std::string>();
+
+						// Resolve type: accept explicit or infer from alias/filename
+						std::string typeName;
+						if (r["type"].valid()) {
+							typeName = r["type"].get<std::string>();
+						} else {
+							// Basic inference by extension
+							std::string lower = filename;
+							std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+							if (lower.find(".ttf") != std::string::npos) typeName = "truetype";
+							else if (lower.find(".png") != std::string::npos) typeName = "Texture";
+							else {
+								DEBUG_LOG("Cannot infer resource type for '" << name << "' (" << filename << ")");
+								continue;
+							}
+						}
+
+						// Normalize common aliases
+						if (typeName == "TruetypeFont" || typeName == "truetypefont" || typeName == "Truetype") typeName = "truetype";
+						if (typeName == "TTFAsset") typeName = "TTFAsset"; // keep as-is
+
+						// Ensure the table has required keys for Factory::createAsset
+						r["name"] = name;
+						r["type"] = typeName;
+						r["filename"] = filename;
+
+						// Special-case TrueType: create an underlying TTFAsset first and
+						// then create a TruetypeFont that references the TTFAsset by name.
+						if (typeName == "truetype") {
+							// Normalize font size from any supported key
+							int sizeVal = -1;
+							try {
+								if (r["font_size"].valid()) sizeVal = r["font_size"].get<int>();
+								else if (r["fontSize"].valid()) sizeVal = r["fontSize"].get<int>();
+								else if (r["size"].valid()) sizeVal = r["size"].get<int>();
+							} catch(...) { sizeVal = -1; }
+							std::string ttfAssetName;
+							if (r["ttfAssetName"].valid()) ttfAssetName = r["ttfAssetName"].get<std::string>();
+							else ttfAssetName = name + std::string("_TTFAsset");
+
+							// If the TTFAsset doesn't already exist, create it
+							if (!getCore().hasAssetObject(ttfAssetName)) {
+								sol::state_view lua = SDOM::getLua();
+								sol::table ttfCfg = lua.create_table();
+								ttfCfg["name"] = ttfAssetName;
+								ttfCfg["type"] = std::string("TTFAsset");
+								ttfCfg["filename"] = filename;
+								// propagate font size if provided
+								if (sizeVal > 0) ttfCfg["internalFontSize"] = sizeVal;
+
+								if (logRes) std::cout << "[CONFIG] creating underlying TTFAsset name='" << ttfAssetName << "' filename='" << filename << "'\n";
+								AssetHandle ttfh = getCore().createAssetObject(std::string("TTFAsset"), ttfCfg);
+								if (logRes) std::cout << "[CONFIG] createAsset(TTFAsset) returned isValid=" << (ttfh.isValid() ? "true" : "false") << " for name='" << ttfAssetName << "'\n";
+								if (!ttfh.isValid()) {
+									if (logRes) std::cout << "[CONFIG] FAILED to create underlying TTFAsset: " << ttfAssetName << "\n";
+								}
+							} else {
+								if (logRes) std::cout << "[CONFIG] underlying TTFAsset already exists: " << ttfAssetName << "\n";
+							}
+
+							// Now create the public TruetypeFont that references the TTFAsset
+							r["filename"] = ttfAssetName; // TruetypeFont expects filename to be a TTFAsset name
+							r["type"] = std::string("truetype");
+							if (sizeVal > 0) r["fontSize"] = sizeVal; // TruetypeFont expects fontSize/size
+
+							if (logRes) std::cout << "[CONFIG] creating resource name='" << name << "' type='" << std::string("truetype") << "' filename='" << r["filename"].get<std::string>() << "'\n";
+							AssetHandle h = getCore().createAssetObject(std::string("truetype"), r);
+							if (logRes) std::cout << "[CONFIG] createAsset(truetype) returned isValid=" << (h.isValid() ? "true" : "false") << " for name='" << name << "'\n";
+							if (!h.isValid()) {
+								if (logRes) std::cout << "[CONFIG] FAILED to create resource: " << name << " (type=truetype)\n";
+							} else {
+								if (logRes) std::cout << "[CONFIG] Registered resource: " << name << " (type=truetype)\n";
+							}
+						} else {
+							if (logRes) std::cout << "[CONFIG] creating resource name='" << name << "' type='" << typeName << "' filename='" << filename << "'\n";
+							AssetHandle h = getCore().createAssetObject(typeName, r);
+							if (logRes) std::cout << "[CONFIG] createAsset returned isValid=" << (h.isValid() ? "true" : "false") << " for name='" << name << "'\n";
+							if (!h.isValid()) {
+								if (logRes) std::cout << "[CONFIG] FAILED to create resource: " << name << " (type=" << typeName << ")\n";
+							} else {
+								if (logRes) std::cout << "[CONFIG] Registered resource: " << name << " (type=" << typeName << ")\n";
+							}
+						}
+
+					} catch (const std::exception& e) {
+						DEBUG_LOG("Exception while processing resource entry: " << e.what());
+					}
+				}
+			}
+		} catch(...) {
+			DEBUG_LOG("Exception while preprocessing resources table (ignored)");
+		}
+
+		Core::getInstance().configureFromLua(config);
+	}
+
+
+    void Core::configureFromFile_lua(const std::string& filename) {
+		Core::getInstance().configureFromLuaFile(filename);
+	} // END: configureFromFile_lua()
+
+
+
     // --- Lua UserType Registration --- //
 
 
@@ -1578,17 +1724,106 @@ namespace SDOM
             // Non-fatal: registration is best-effort
         }
 
-
         // ---------------------------------------- //
         // --- Register Core Functions with Lua --- //
         // ---------------------------------------- //
 
+                // Local lambda-based bindings (replaces free functions in SDOM namespace).
+        // Keep the same identifier names so existing call sites can be updated to call
+        // the local lambdas (no SDOM:: qualifier).
+        auto bind_noarg = [](const std::string& name, std::function<void()> func,
+                              sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+        {
+            auto fcopy = func;
+            objHandleType[name] = [fcopy](Core& /*core*/) {
+                fcopy();
+                return true;
+            };
+            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/){
+                sol::state_view sv = ts;
+                fcopy();
+                return sol::make_object(sv, true);
+            });
+            try {
+                lua[name] = [fcopy](sol::this_state ts) {
+                    sol::state_view sv = ts;
+                    fcopy();
+                    return sol::make_object(sv, true);
+                };
+            } catch(...) {}
+        };
+
+        auto bind_table = [](const std::string& name, std::function<void(const sol::table&)> func,
+                             sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+        {
+            auto fcopy = func;
+            objHandleType[name] = [fcopy](Core& /*core*/, const sol::table& cfg) {
+                fcopy(cfg);
+                return true;
+            };
+            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const sol::table& cfg){
+                sol::state_view sv = ts;
+                fcopy(cfg);
+                return sol::make_object(sv, sol::nil);
+            });
+            try {
+                lua[name] = [fcopy](sol::this_state ts, const sol::table& cfg) {
+                    sol::state_view sv = ts;
+                    fcopy(cfg);
+                    return sol::make_object(sv, sol::nil);
+                };
+            } catch(...) {}
+        };
+
+        auto bind_string = [](const std::string& name, std::function<void(const std::string&)> func,
+                              sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+        {
+            auto fcopy = func;
+            objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) {
+                fcopy(s);
+                return true;
+            };
+            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& s){
+                sol::state_view sv = ts;
+                fcopy(s);
+                return sol::make_object(sv, sol::nil);
+            });
+            try {
+                lua[name] = [fcopy](sol::this_state ts, const std::string& s) {
+                    sol::state_view sv = ts;
+                    fcopy(s);
+                    return sol::make_object(sv, sol::nil);
+                };
+            } catch(...) {}
+        };
+
+        [[maybe_unused]] auto bind_bool_arg = [](const std::string& name, std::function<void(bool)> func,
+                                sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+        {
+            auto fcopy = func;
+            objHandleType[name] = [fcopy](Core& /*core*/, bool v) {
+                fcopy(v);
+                return true;
+            };
+            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, bool v){
+                sol::state_view sv = ts;
+                fcopy(v);
+                return sol::make_object(sv, sol::nil);
+            });
+            try {
+                lua[name] = [fcopy](sol::this_state ts, bool v) {
+                    sol::state_view sv = ts;
+                    fcopy(v);
+                    return sol::make_object(sv, sol::nil);
+                };
+            } catch(...) {}
+        };
 
         // --- Main Loop & Event Dispatch --- //        
-        SDOM::bind_noarg("quit", quit_lua, objHandleType, coreTable, lua);
-        SDOM::bind_noarg("shutdown", shutdown_lua, objHandleType, coreTable, lua);
-        // SDOM::bind_noarg("run", run_lua, objHandleType, coreTable, lua);
-        SDOM::bind_table("configure", configure_lua, objHandleType, coreTable, lua);
+        bind_noarg("quit", SDOM::quit, objHandleType, coreTable, lua);
+        bind_noarg("shutdown", SDOM::shutdown, objHandleType, coreTable, lua);
+        // bind_noarg("run", run_lua, objHandleType, coreTable, lua);
+        bind_table("configure", configure_lua, objHandleType, coreTable, lua);
         // Also expose a top-level global `configure(table)` convenience
         // function that forwards to the Core singleton.  The Core method
         // bound into `Core` expects a userdata first-argument (the Core
@@ -1598,90 +1833,14 @@ namespace SDOM
             // Expose a top-level `configure(table)` that forwards to our
             // configure_lua wrapper so the 'resources' preprocessing runs.
             lua.set_function("configure", [](const sol::table& t) {
-                SDOM::configure_lua(t);
+                Core::configure_lua(t);
             });
         } catch(...) {}
-        SDOM::bind_string("configureFromFile", configureFromFile_lua, objHandleType, coreTable, lua);
+        bind_string("configureFromFile", configureFromFile_lua, objHandleType, coreTable, lua);        
+   
 
-	    // --- Callback/Hook Registration --- //
-        SDOM::bind_callback_bool("registerOnInit", registerOnInit_lua, objHandleType, coreTable, lua);
-        SDOM::bind_callback_void("registerOnQuit", registerOnQuit_lua, objHandleType, coreTable, lua);
-        SDOM::bind_callback_update("registerOnUpdate", registerOnUpdate_lua, objHandleType, coreTable, lua);
-        SDOM::bind_callback_event("registerOnEvent", registerOnEvent_lua, objHandleType, coreTable, lua);
-        SDOM::bind_callback_void("registerOnRender", registerOnRender_lua, objHandleType, coreTable, lua);
-        SDOM::bind_callback_bool("registerOnUnitTest", registerOnUnitTest_lua, objHandleType, coreTable, lua);
-        SDOM::bind_callback_resize("registerOnWindowResize", registerOnWindowResize_lua, objHandleType, coreTable, lua);
-        SDOM::bind_string_function_forwarder("registerOn", registerOn_lua, objHandleType, coreTable, lua); // custom handling above
-
-	    // --- Stage/Root Node Management --- //
-        SDOM::bind_name_or_handle("setRootNode", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua);
-        SDOM::bind_name_or_handle("setRoot", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua);  // alias of setRootNode()
-        SDOM::bind_name_or_handle("setStage", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua); // alias of setRoot()
-        SDOM::bind_return_displayobject("getRoot", getRoot_lua, objHandleType, coreTable, lua);
-        SDOM::bind_return_displayobject("getRootHandle", getRoot_lua, objHandleType, coreTable, lua);   // alias of getRoot()
-        SDOM::bind_return_displayobject("getStage", getStage_lua, objHandleType, coreTable, lua);
-        SDOM::bind_return_displayobject("getStageHandle", getStage_lua, objHandleType, coreTable, lua); // alias of getStage()
-
-        // --- Factory & EventManager Access --- //
-        SDOM::bind_return_bool("getIsTraversing", getIsTraversing_lua, objHandleType, coreTable, lua);
-        SDOM::bind_bool_arg("setIsTraversing", setIsTraversing_lua, objHandleType, coreTable, lua);
-
-        // --- Object Creation --- //
-        SDOM::bind_string_table_return_do("createDisplayObject", createDisplayObject_lua, objHandleType, coreTable, lua);
-        SDOM::bind_string_return_do("getDisplayObject", getDisplayObject_lua, objHandleType, coreTable, lua);
-        SDOM::bind_string_return_bool("hasDisplayObject", hasDisplayObject_lua, objHandleType, coreTable, lua);
-
-        SDOM::bind_string_table_return_asset("createAssetObject", createAssetObject_lua, objHandleType, coreTable, lua);
-        // Alias for historical/shortcut usage: expose Core:createAsset -> createAssetObject
-        SDOM::bind_string_table_return_asset("createAsset", createAssetObject_lua, objHandleType, coreTable, lua);
-        SDOM::bind_string_return_asset("getAssetObject", getAssetObject_lua, objHandleType, coreTable, lua);
-        SDOM::bind_string_return_bool("hasAssetObject", hasAssetObject_lua, objHandleType, coreTable, lua);
-        
-	    // --- Focus & Hover Management --- //
-        SDOM::bind_noarg("doTabKeyPressForward", doTabKeyPressForward_lua, objHandleType, coreTable, lua);
-        SDOM::bind_noarg("doTabKeyPressReverse", doTabKeyPressReverse_lua, objHandleType, coreTable, lua);
-        SDOM::bind_noarg("handleTabKeyPress", doTabKeyPressForward_lua, objHandleType, coreTable, lua); // alias of doTabKeyPressForward()
-        SDOM::bind_noarg("handleTabKeyPressReverse", doTabKeyPressReverse_lua, objHandleType, coreTable, lua); // alias of doTabKeyPressReverse()
-        SDOM::bind_do_arg("setKeyboardFocusedObject", setKeyboardFocusedObject_lua, objHandleType, coreTable, lua);
-        SDOM::bind_return_displayobject("getKeyboardFocusedObject", getKeyboardFocusedObject_lua, objHandleType, coreTable, lua);
-        SDOM::bind_do_arg("setMouseHoveredObject", setMouseHoveredObject_lua, objHandleType, coreTable, lua);
-        SDOM::bind_return_displayobject("getMouseHoveredObject", getMouseHoveredObject_lua, objHandleType, coreTable, lua);
-
-	    // --- Window Title & Timing --- //
-        SDOM::bind_return_string("getWindowTitle", getWindowTitle_lua, objHandleType, coreTable, lua);
-        SDOM::bind_string("setWindowTitle", setWindowTitle_lua, objHandleType, coreTable, lua);
-        SDOM::bind_return_float("getElapsedTime", getElapsedTime_lua, objHandleType, coreTable, lua);
-        SDOM::bind_return_float("getDeltaTime", getElapsedTime_lua, objHandleType, coreTable, lua); // alias of getElapsedTime()
-
-	    // --- Event helpers (exposed to Lua) --- //
-        SDOM::bind_noarg("pumpEventsOnce", pumpEventsOnce_lua, objHandleType, coreTable, lua);
-        SDOM::bind_object_arg("pushMouseEvent", pushMouseEvent_lua, objHandleType, coreTable, lua);
-        SDOM::bind_object_arg("pushKeyboardEvent", pushKeyboardEvent_lua, objHandleType, coreTable, lua);
-
-	    // --- Orphan / Future Child Management --- //
-        SDOM::bind_string("destroyDisplayObject", destroyDisplayObject_lua, objHandleType, coreTable, lua);
-        SDOM::bind_return_int("countOrphanedDisplayObjects", countOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
-        SDOM::bind_return_vector_do("getOrphanedDisplayObjects", getOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
-        SDOM::bind_noarg("destroyOrphanedDisplayObjects", destroyOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
-        SDOM::bind_noarg("destroyOrphanedObjects", destroyOrphanedDisplayObjects_lua, objHandleType, coreTable, lua); // alias of destroyOrphanedDisplayObjects()
-        SDOM::bind_noarg("destroyOrphans", destroyOrphanedDisplayObjects_lua, objHandleType, coreTable, lua); // alias of destroyOrphanedDisplayObjects()
-        SDOM::bind_noarg("collectGarbage", collectGarbage_lua, objHandleType, coreTable, lua);
-
-        // --- Utility Methods --- //
-        SDOM::bind_return_vector_string("listDisplayObjectNames", listDisplayObjectNames_lua, objHandleType, coreTable, lua);
-        SDOM::bind_noarg("printObjectRegistry", printObjectRegistry_lua, objHandleType, coreTable, lua);
-
-
-        // Expose CoreForward (explicit) and make the global `Core` point to
-        // the forwarding table so scripts can use the table-based API
-        // consistently. The forwarding table dispatches to the Core
-        // singleton internally so both dot- and colon-call styles are
-        // supported.
-        lua["CoreForward"] = coreTable;
-        lua["Core"] = coreTable;
 
     } // End Core::_registerDisplayObject()
 
 
 } // namespace SDOM
-
