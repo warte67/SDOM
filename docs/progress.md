@@ -864,6 +864,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Next Steps:
+- NOTE: Label is still using the old `text_` prefix color properties. These should be removed in favor of the IDisplayObject color properties. (Should be around lines 1937-1942 in SDOM_IDisplayObject.cpp)
 - Add LUA payload as events are dispatched from the EventManager, not directly as a result of DisplayObject::onEvent().
 - **Standardize the DisplayObject interface for C++ and LUA:**
   - `Label` and `Group` should now be the model for standardization for C++ and LUA

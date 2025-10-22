@@ -105,6 +105,7 @@ namespace SDOM
 
     class IDataObject : public SDOM::IUnitTest
     {
+        
     public:
 
         virtual bool onInit() = 0;
