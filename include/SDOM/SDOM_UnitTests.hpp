@@ -3,7 +3,6 @@
 #pragma once
 
 #include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_CLR.hpp>
 #include <string>
 #include <vector>
 
@@ -11,6 +10,10 @@
 
 namespace SDOM
 {
+    class Core;
+    class Factory;
+    class EventManager;
+
     class UnitTests
     {
     public:
@@ -38,12 +41,17 @@ namespace SDOM
         }
 
         // --- Core UnitTest Accessors / Mutators --- //
-
         SDL_Window* getWindow();
         SDL_Renderer* getRenderer();
         SDL_Texture* getTexture();
         SDL_Color getColor();
-   
+
+        // --- Factory & EventManager Access --- //
+        const Factory& getFactory() const;
+        EventManager& getEventManager() const;
+        bool getIsTraversing() const;
+        void setIsTraversing(bool traversing);      
+
 
     private:
         UnitTests() = default;

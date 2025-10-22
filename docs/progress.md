@@ -869,6 +869,12 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Began refactoring `Core` unit tests to use the new binding system. C++ tests are halfway completed.
 
 ---
+### [October 22, 2025]
+- **`Core_UnitTests` Refactor Progress:**
+  - Continued refactoring `Core_UnitTests` to utilize the new Lua Binding System.
+    - Completed `Factory & EventManager Access` test.
+
+---
 ## Next Steps:
   - Complete refactoring of `Core_UnitTests` to systematically test all C++ functions.
   - Build a new Lua Binding System from the ground up using the `IDataObject` interface to house the binding registry tables.

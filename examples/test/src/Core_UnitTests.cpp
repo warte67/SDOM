@@ -98,10 +98,10 @@
     setPixelFormat(SDL_PixelFormat format);                      // Validated by: Core_test13
 
     // --- Factory & EventManager Access --- //
-    getFactory();                                                // Validated by: Core_test9
-    getEventManager();                                           // TODO: Needs test
-    getIsTraversing();                                           // TODO: Needs test
-    setIsTraversing(bool traversing);                            // TODO: Needs test
+    getFactory();                                                // Validated by: Core_test9, Core_test14
+    getEventManager();                                           // Validated by: Core_test14
+    getIsTraversing();                                           // Validated by: Core_test14
+    setIsTraversing(bool traversing);                            // Validated by: Core_test14
 
     // --- Focus & Hover Management --- //
     handleTabKeyPress();                                         // TODO: Needs test
@@ -115,7 +115,6 @@
     // --- Lua State Access --- //
     getLua();                                                    // TODO: Needs test
 
-    
     //////////////////////////////
     // --- Factory Wrappers --- //
     //////////////////////////////
@@ -180,7 +179,6 @@
 ****************/
 
 
-
 namespace SDOM
 {
     // scaffolding for the Core UnitTests
@@ -189,7 +187,7 @@ namespace SDOM
         bool ok = true;
         // Example test logic
         // if (some_condition_fails) {
-        //     error += "Description of the failure.";
+        //     errors.push_back("Description of the failure.");
         //     ok = false;
         // }
         return ok;
@@ -682,6 +680,47 @@ namespace SDOM
     } // END: Core_test13()
 
 
+    // getFactory();                                                // Validated by: Core_test9
+    // getEventManager();                                           // TODO: Needs test
+    // getIsTraversing();                                           // TODO: Needs test
+    // setIsTraversing(bool traversing);                            // TODO: Needs test
+
+    // Factory and Event Manager Access
+    bool Core_test14(std::vector<std::string>& errors)   
+    {
+        bool ok = true;
+        Core& core = getCore();
+        UnitTests& ut = UnitTests::getInstance();
+
+        if (&core.getFactory() != &ut.getFactory()) 
+        {
+            errors.push_back("Factory instance is not valid (nullptr).");
+            ok = false;
+        }
+        if (&core.getEventManager() != &ut.getEventManager()) 
+        {
+            errors.push_back("EventManager instance is not valid (nullptr).");
+            ok = false;
+        }
+        bool old_traversing = core.getIsTraversing();
+        core.setIsTraversing(!old_traversing);
+        if (core.getIsTraversing() == old_traversing) 
+        {
+            errors.push_back("setIsTraversing did not change the traversing state.");
+            ok = false;
+        }
+        // Restore original state
+        core.setIsTraversing(old_traversing);
+        if (core.getIsTraversing() != old_traversing) 
+        {
+            errors.push_back("setIsTraversing did not restore the original traversing state.");
+            ok = false;
+        }
+
+        return ok;
+    } // END: Core_test14()
+
+
     // --- Main Core UnitTests Runner --- //
 
     bool Core_UnitTests()
@@ -703,6 +742,7 @@ namespace SDOM
         ut.add_test("Stage/Root Node Management", Core_test11);
         ut.add_test("SDL Resource Accessors", Core_test12);
         ut.add_test("Configuration Getters/Setters", Core_test13);
+        ut.add_test("Factory and Event Manager Access", Core_test14);
 
         return ut.run_all("Core");
     }

@@ -2,6 +2,7 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_EventManager.hpp>
 
 #include <SDOM/SDOM_UnitTests.hpp>  
 
@@ -75,8 +76,11 @@ namespace SDOM
     SDL_Texture* UnitTests::getTexture() { return getCore().texture_; }
     SDL_Color UnitTests::getColor() { return getCore().getColor(); }
 
-
-    
+    // --- Factory & EventManager Access --- //
+    const Factory& UnitTests::getFactory() const { return *getCore().factory_; }
+    EventManager& UnitTests::getEventManager() const { return *getCore().eventManager_; }
+    bool UnitTests::getIsTraversing() const { return getCore().isTraversing_; }
+    void UnitTests::setIsTraversing(bool traversing) { getCore().isTraversing_ = traversing; }   
     // --- Lua Registration --- //
 
     void UnitTests::registerLua()
