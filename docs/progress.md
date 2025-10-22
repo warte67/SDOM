@@ -855,6 +855,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Added diagnostic helpers and registry dump facilities for incremental verification.
 - `Next steps:` sweep remaining display object types (`Button`, `Frame`, `IconButton`, etc.) to `register_per_type`, enable strict registry-only lookup behind a runtime toggle, and add a small set of targeted migration tests to catch ordering/regression issues.
 
+- Now using SDOM_Core_LuaHelpers for registering Lua bindings in C++. 
+  - We will be using this pattern going forward for all Lua binding registrations in C++.
+  - _registerLuaBindings() will ultimately call into SDOM_Core_LuaHelpers to register the bindings to reduce excessive source file length.
+
 ---
 ### [October 21, 2025]
 - **Major issues encountered with the dual Lua binding methodology**
