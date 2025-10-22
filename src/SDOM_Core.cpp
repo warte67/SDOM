@@ -13,6 +13,7 @@
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
+#include <SDOM/SDOM_Core_LuaHelpers.hpp>
 #include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_ArrowButton.hpp>
 
@@ -391,17 +392,20 @@ namespace SDOM
         bool recreate_window = (windowWidth_changed || windowHeight_changed || windowFlags_changed);
         bool recreate_renderer = recreate_window || rendererLogicalPresentation_changed;
         bool recreate_texture = recreate_window || rendererLogicalPresentation_changed || pixelWidth_changed || pixelHeight_changed || pixelFormat_changed;
-
+    
         // update config_
-        config_.windowWidth = config.windowWidth;
-        config_.windowHeight = config.windowHeight;
-        config_.windowFlags = config.windowFlags;
-        config_.rendererLogicalPresentation = config.rendererLogicalPresentation;
-        config_.pixelWidth = config.pixelWidth;
-        config_.pixelHeight = config.pixelHeight;
-        config_.pixelFormat = config.pixelFormat;
-        config_.preserveAspectRatio = config.preserveAspectRatio;
-        config_.allowTextureResize = config.allowTextureResize;
+        if (!sdlStarted_)
+        {
+            config_.windowWidth = config.windowWidth;
+            config_.windowHeight = config.windowHeight;
+            config_.windowFlags = config.windowFlags;
+            config_.rendererLogicalPresentation = config.rendererLogicalPresentation;
+            config_.pixelWidth = config.pixelWidth;
+            config_.pixelHeight = config.pixelHeight;
+            config_.pixelFormat = config.pixelFormat;
+            config_.preserveAspectRatio = config.preserveAspectRatio;
+            config_.allowTextureResize = config.allowTextureResize;
+        }
 
         // -- initialize or reconfigure SDL resources as needed -- //
         if (!SDL_WasInit(SDL_INIT_VIDEO)) 
@@ -422,21 +426,25 @@ namespace SDOM
 
         // destroy in reverse order
         if (recreate_texture && texture_) {
+            getFactory().unloadAllAssetObjects(); // unload all assets to ensure compatibility with new SDL resources
             SDL_DestroyTexture(texture_);
             texture_ = nullptr;
         }
         if (recreate_renderer && renderer_) {
+            getFactory().unloadAllAssetObjects(); // unload all assets to ensure compatibility with new SDL resources
             SDL_DestroyRenderer(renderer_);
             renderer_ = nullptr;
         }
         if (recreate_window && window_) {
+            getFactory().unloadAllAssetObjects(); // unload all assets to ensure compatibility with new SDL resources
             SDL_DestroyWindow(window_);
             window_ = nullptr;
         }
 
         // recreate in normal order
         if (recreate_window && !window_) {
-            window_ = SDL_CreateWindow(getWindowTitle().c_str(), config.windowWidth, config.windowHeight, config.windowFlags);
+            window_ = SDL_CreateWindow(getWindowTitle().c_str(), config_.windowWidth, config_.windowHeight, config_.windowFlags);
+// DEBUG_LOG("Core::reconfigure: Created window " + getWindowTitle() + " (" + std::to_string(config_.windowWidth) + "x" + std::to_string(config_.windowHeight) + ")");
             if (!window_) 
             {
                 std::string errorMsg = "SDL_CreateWindow() Error: " + std::string(SDL_GetError());
@@ -446,10 +454,6 @@ namespace SDOM
         }
         if (recreate_renderer && !renderer_) 
         {
-            // SDL_Log("Available renderer drivers:");
-            // for (int i = 0; i < SDL_GetNumRenderDrivers(); i++) {
-            //     SDL_Log("%d. %s", i + 1, SDL_GetRenderDriver(i));
-            // }            
             renderer_ = SDL_CreateRenderer(window_, nullptr);
             if (!renderer_) {
                 std::string errorMsg = "SDL_CreateRenderer() Error: " + std::string (SDL_GetError());
@@ -460,11 +464,10 @@ namespace SDOM
             // compute texture size safely (avoid divide-by-zero and ensure >=1)
             int tWidth = 1;
             int tHeight = 1;
-            if (config.pixelWidth != 0.0f) tWidth = std::max(1, static_cast<int>(config.windowWidth / config.pixelWidth));
-            if (config.pixelHeight != 0.0f) tHeight = std::max(1, static_cast<int>(config.windowHeight / config.pixelHeight));
-
+            if (config_.pixelWidth != 0.0f) tWidth = std::max(1, static_cast<int>(config_.windowWidth / config_.pixelWidth));
+            if (config_.pixelHeight != 0.0f) tHeight = std::max(1, static_cast<int>(config_.windowHeight / config_.pixelHeight));
             texture_ = SDL_CreateTexture(renderer_,
-                config.pixelFormat,
+                config_.pixelFormat,
                 SDL_TEXTUREACCESS_TARGET,
                 tWidth,
                 tHeight);
@@ -475,6 +478,13 @@ namespace SDOM
             SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);   
             SDL_SetRenderLogicalPresentation(renderer_, tWidth, tHeight, config.rendererLogicalPresentation);
         }
+
+        if (recreate_window || recreate_renderer || recreate_texture) 
+        {
+// DEBUG_LOG("Core::reconfigure: SDL resources reconfigured.");
+            getFactory().reloadAllAssetObjects(); // reload all assets to ensure compatibility with new SDL resources
+        }
+
         sdlStarted_ = true;
     }
 
@@ -1134,7 +1144,11 @@ namespace SDOM
     SDL_PixelFormat Core::getPixelFormat() const        { return config_.pixelFormat; }
 
     void Core::setConfig(CoreConfig& config)            { config_ = config; refreshSDLResources(); }
-    void Core::setWindowWidth(float width)              { config_.windowWidth = width; refreshSDLResources(); }
+
+    void Core::setWindowWidth(float width)              { 
+        config_.windowWidth = width; 
+        refreshSDLResources(); 
+    }
     void Core::setWindowHeight(float height)            { config_.windowHeight = height; refreshSDLResources(); }
     void Core::setPixelWidth(float width)               { config_.pixelWidth = width; refreshSDLResources(); }
     void Core::setPixelHeight(float height)             { config_.pixelHeight = height; refreshSDLResources(); }
@@ -1150,41 +1164,62 @@ namespace SDOM
     {
         // Store previous config for comparison
         static CoreConfig prevConfig = config_;
+
         // initialize or reconfigure SDL resources as needed
         reconfigure(prevConfig);
+
         // Update previous config
         prevConfig = config_;
     } // END void Core::refreshSDLResources()
 
     bool Core::coreTests_()
     {
-        // std::cout << CLR::indent() << "Core::coreTests_()" << std::endl;
-        bool allTestsPassed = true;
-        bool testResult;
+        UnitTests& ut = UnitTests::getInstance();
+        // Clear previous tests for this module
+        ut.clear_tests();
 
-        // SDL_Test: SDL Initialization
-        testResult = UnitTests::run("Core System #1", "SDL_WasInit(SDL_INIT_VIDEO)", []() { return (SDL_WasInit(SDL_INIT_VIDEO) != 0); });
-        if (!testResult) { std::cout << CLR::indent() << "SDL was NOT initialized!" << CLR::RESET << std::endl; }
-        allTestsPassed &= testResult;
+        // Add all core system tests using the new pattern
+        ut.add_test("SDL_WasInit(SDL_INIT_VIDEO)", [](std::vector<std::string>& errors) 
+        {
+            if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
+                errors.push_back("SDL was NOT initialized!");
+                return false;
+            }
+            return true;
+        });
 
-        // SDL_Test: SDL Texture
-        testResult = UnitTests::run("Core System #2", "SDL Texture Validity", [this]() { return (texture_ != nullptr); });
-        if (!testResult) { std::cout << CLR::indent() << "SDL Texture is null!" << CLR::RESET << std::endl; }
-        allTestsPassed &= testResult;
+        ut.add_test("SDL Texture Validity", [this](std::vector<std::string>& errors) 
+        {
+            if (texture_ == nullptr) {
+                errors.push_back("SDL Texture is null!");
+                return false;
+            }
+            return true;
+        });
 
-        // SDL_Test: SDL Renderer
-        testResult = UnitTests::run("Core System #3", "SDL Renderer Validity", [this]() { return (renderer_ != nullptr); });
-        if (!testResult) { std::cout << CLR::indent() << "SDL Renderer is null!" << CLR::RESET << std::endl; }
-        allTestsPassed &= testResult;
+        ut.add_test("SDL Renderer Validity", [this](std::vector<std::string>& errors) 
+        {
+            if (renderer_ == nullptr) {
+                errors.push_back("SDL Renderer is null!");
+                return false;
+            }
+            return true;
+        });
 
-        // SDL_Test: SDL Window
-        testResult = UnitTests::run("Core System #4", "SDL Window Validity", [this]() { return (window_ != nullptr); });
-        if (!testResult) { std::cout << CLR::indent() << "SDL Window is null!" << CLR::RESET << std::endl; }
-        allTestsPassed &= testResult;
+        ut.add_test("SDL Window Validity", [this](std::vector<std::string>& errors) 
+        {
+            if (window_ == nullptr) {
+                errors.push_back("SDL Window is null!");
+                return false;
+            }
+            return true;
+        });
 
-        // RETURN success or failure
-        return allTestsPassed;
+        // Run all tests and return the result
+        return ut.run_all("Core System");
     } // END bool Core::coreTests_()
+
+
 
     void Core::handleTabKeyPress()
     {
@@ -1448,153 +1483,8 @@ namespace SDOM
         getFactory().printObjectRegistry();
     }
 
-
-    // --- LUA Wrappers --- //
-
-	// Configuration from Lua table
-	void Core::configure_lua(const sol::table& config) 
-    {
-		// Preprocess a 'resources' array in the config so resources are registered
-		// before display objects are constructed. This allows Labels and other
-		// display objects to reference resources by name during onInit().
-		try {
-		// Ensure SDL (window/renderer/texture) is initialized before
-		// creating assets that depend on an SDL_Renderer (e.g., BitmapFont
-		// -> SpriteSheet -> Texture). Build a minimal CoreConfig from the
-		// provided table and call configure() — this does not create any
-		// display objects.
-		try {
-			Core::CoreConfig preCfg = getCore().getConfig();
-			if (config.valid()) {
-				try { if (config["windowWidth"].valid())  preCfg.windowWidth  = config["windowWidth"].get<double>(); } catch(...) {}
-				try { if (config["windowHeight"].valid()) preCfg.windowHeight = config["windowHeight"].get<double>(); } catch(...) {}
-				try { if (config["pixelWidth"].valid())   preCfg.pixelWidth   = config["pixelWidth"].get<double>(); } catch(...) {}
-				try { if (config["pixelHeight"].valid())  preCfg.pixelHeight  = config["pixelHeight"].get<double>(); } catch(...) {}
-				try { if (config["preserveAspectRatio"].valid()) preCfg.preserveAspectRatio = config["preserveAspectRatio"].get<bool>(); } catch(...) {}
-				try { if (config["allowTextureResize"].valid())  preCfg.allowTextureResize  = config["allowTextureResize"].get<bool>(); } catch(...) {}
-			}
-			getCore().configure(preCfg);
-		} catch(...) {
-			DEBUG_LOG("configure_lua: pre-initialization configure() failed");
-		}
-			bool logRes = false;
-			try { if (config.valid() && config["debug"].valid()) { sol::table dbg = config["debug"]; if (dbg.valid() && dbg["logResourceCreation"].valid()) logRes = dbg["logResourceCreation"].get<bool>(); } } catch(...) {}
-			if (config.valid() && config["resources"].valid()) {
-				sol::table resTbl = config["resources"];
-				for (std::size_t i = 1; i <= resTbl.size(); ++i) {
-					try {
-						sol::object obj = resTbl[i];
-						if (!obj.valid() || !obj.is<sol::table>()) continue;
-						sol::table r = obj.as<sol::table>();
-
-						// Validate name and filename
-						if (!r["name"].valid() || !r["filename"].valid()) {
-							DEBUG_LOG("Skipping resource entry: missing name or filename");
-							continue;
-						}
-						std::string name = r["name"].get<std::string>();
-						std::string filename = r["filename"].get<std::string>();
-
-						// Resolve type: accept explicit or infer from alias/filename
-						std::string typeName;
-						if (r["type"].valid()) {
-							typeName = r["type"].get<std::string>();
-						} else {
-							// Basic inference by extension
-							std::string lower = filename;
-							std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
-							if (lower.find(".ttf") != std::string::npos) typeName = "truetype";
-							else if (lower.find(".png") != std::string::npos) typeName = "Texture";
-							else {
-								DEBUG_LOG("Cannot infer resource type for '" << name << "' (" << filename << ")");
-								continue;
-							}
-						}
-
-						// Normalize common aliases
-						if (typeName == "TruetypeFont" || typeName == "truetypefont" || typeName == "Truetype") typeName = "truetype";
-						if (typeName == "TTFAsset") typeName = "TTFAsset"; // keep as-is
-
-						// Ensure the table has required keys for Factory::createAsset
-						r["name"] = name;
-						r["type"] = typeName;
-						r["filename"] = filename;
-
-						// Special-case TrueType: create an underlying TTFAsset first and
-						// then create a TruetypeFont that references the TTFAsset by name.
-						if (typeName == "truetype") {
-							// Normalize font size from any supported key
-							int sizeVal = -1;
-							try {
-								if (r["font_size"].valid()) sizeVal = r["font_size"].get<int>();
-								else if (r["fontSize"].valid()) sizeVal = r["fontSize"].get<int>();
-								else if (r["size"].valid()) sizeVal = r["size"].get<int>();
-							} catch(...) { sizeVal = -1; }
-							std::string ttfAssetName;
-							if (r["ttfAssetName"].valid()) ttfAssetName = r["ttfAssetName"].get<std::string>();
-							else ttfAssetName = name + std::string("_TTFAsset");
-
-							// If the TTFAsset doesn't already exist, create it
-							if (!getCore().hasAssetObject(ttfAssetName)) {
-								sol::state_view lua = SDOM::getLua();
-								sol::table ttfCfg = lua.create_table();
-								ttfCfg["name"] = ttfAssetName;
-								ttfCfg["type"] = std::string("TTFAsset");
-								ttfCfg["filename"] = filename;
-								// propagate font size if provided
-								if (sizeVal > 0) ttfCfg["internalFontSize"] = sizeVal;
-
-								if (logRes) std::cout << "[CONFIG] creating underlying TTFAsset name='" << ttfAssetName << "' filename='" << filename << "'\n";
-								AssetHandle ttfh = getCore().createAssetObject(std::string("TTFAsset"), ttfCfg);
-								if (logRes) std::cout << "[CONFIG] createAsset(TTFAsset) returned isValid=" << (ttfh.isValid() ? "true" : "false") << " for name='" << ttfAssetName << "'\n";
-								if (!ttfh.isValid()) {
-									if (logRes) std::cout << "[CONFIG] FAILED to create underlying TTFAsset: " << ttfAssetName << "\n";
-								}
-							} else {
-								if (logRes) std::cout << "[CONFIG] underlying TTFAsset already exists: " << ttfAssetName << "\n";
-							}
-
-							// Now create the public TruetypeFont that references the TTFAsset
-							r["filename"] = ttfAssetName; // TruetypeFont expects filename to be a TTFAsset name
-							r["type"] = std::string("truetype");
-							if (sizeVal > 0) r["fontSize"] = sizeVal; // TruetypeFont expects fontSize/size
-
-							if (logRes) std::cout << "[CONFIG] creating resource name='" << name << "' type='" << std::string("truetype") << "' filename='" << r["filename"].get<std::string>() << "'\n";
-							AssetHandle h = getCore().createAssetObject(std::string("truetype"), r);
-							if (logRes) std::cout << "[CONFIG] createAsset(truetype) returned isValid=" << (h.isValid() ? "true" : "false") << " for name='" << name << "'\n";
-							if (!h.isValid()) {
-								if (logRes) std::cout << "[CONFIG] FAILED to create resource: " << name << " (type=truetype)\n";
-							} else {
-								if (logRes) std::cout << "[CONFIG] Registered resource: " << name << " (type=truetype)\n";
-							}
-						} else {
-							if (logRes) std::cout << "[CONFIG] creating resource name='" << name << "' type='" << typeName << "' filename='" << filename << "'\n";
-							AssetHandle h = getCore().createAssetObject(typeName, r);
-							if (logRes) std::cout << "[CONFIG] createAsset returned isValid=" << (h.isValid() ? "true" : "false") << " for name='" << name << "'\n";
-							if (!h.isValid()) {
-								if (logRes) std::cout << "[CONFIG] FAILED to create resource: " << name << " (type=" << typeName << ")\n";
-							} else {
-								if (logRes) std::cout << "[CONFIG] Registered resource: " << name << " (type=" << typeName << ")\n";
-							}
-						}
-
-					} catch (const std::exception& e) {
-						DEBUG_LOG("Exception while processing resource entry: " << e.what());
-					}
-				}
-			}
-		} catch(...) {
-			DEBUG_LOG("Exception while preprocessing resources table (ignored)");
-		}
-
-		Core::getInstance().configureFromLua(config);
-	}
-
-
-    void Core::configureFromFile_lua(const std::string& filename) {
-		Core::getInstance().configureFromLuaFile(filename);
-	} // END: configureFromFile_lua()
-
+    
+    
 
 
     // --- Lua UserType Registration --- //
@@ -1728,102 +1618,12 @@ namespace SDOM
         // --- Register Core Functions with Lua --- //
         // ---------------------------------------- //
 
-                // Local lambda-based bindings (replaces free functions in SDOM namespace).
-        // Keep the same identifier names so existing call sites can be updated to call
-        // the local lambdas (no SDOM:: qualifier).
-        auto bind_noarg = [](const std::string& name, std::function<void()> func,
-                              sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
-        {
-            auto fcopy = func;
-            objHandleType[name] = [fcopy](Core& /*core*/) {
-                fcopy();
-                return true;
-            };
-            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/){
-                sol::state_view sv = ts;
-                fcopy();
-                return sol::make_object(sv, true);
-            });
-            try {
-                lua[name] = [fcopy](sol::this_state ts) {
-                    sol::state_view sv = ts;
-                    fcopy();
-                    return sol::make_object(sv, true);
-                };
-            } catch(...) {}
-        };
-
-        auto bind_table = [](const std::string& name, std::function<void(const sol::table&)> func,
-                             sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
-        {
-            auto fcopy = func;
-            objHandleType[name] = [fcopy](Core& /*core*/, const sol::table& cfg) {
-                fcopy(cfg);
-                return true;
-            };
-            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const sol::table& cfg){
-                sol::state_view sv = ts;
-                fcopy(cfg);
-                return sol::make_object(sv, sol::nil);
-            });
-            try {
-                lua[name] = [fcopy](sol::this_state ts, const sol::table& cfg) {
-                    sol::state_view sv = ts;
-                    fcopy(cfg);
-                    return sol::make_object(sv, sol::nil);
-                };
-            } catch(...) {}
-        };
-
-        auto bind_string = [](const std::string& name, std::function<void(const std::string&)> func,
-                              sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
-        {
-            auto fcopy = func;
-            objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) {
-                fcopy(s);
-                return true;
-            };
-            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& s){
-                sol::state_view sv = ts;
-                fcopy(s);
-                return sol::make_object(sv, sol::nil);
-            });
-            try {
-                lua[name] = [fcopy](sol::this_state ts, const std::string& s) {
-                    sol::state_view sv = ts;
-                    fcopy(s);
-                    return sol::make_object(sv, sol::nil);
-                };
-            } catch(...) {}
-        };
-
-        [[maybe_unused]] auto bind_bool_arg = [](const std::string& name, std::function<void(bool)> func,
-                                sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
-        {
-            auto fcopy = func;
-            objHandleType[name] = [fcopy](Core& /*core*/, bool v) {
-                fcopy(v);
-                return true;
-            };
-            coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, bool v){
-                sol::state_view sv = ts;
-                fcopy(v);
-                return sol::make_object(sv, sol::nil);
-            });
-            try {
-                lua[name] = [fcopy](sol::this_state ts, bool v) {
-                    sol::state_view sv = ts;
-                    fcopy(v);
-                    return sol::make_object(sv, sol::nil);
-                };
-            } catch(...) {}
-        };
 
         // --- Main Loop & Event Dispatch --- //        
-        bind_noarg("quit", SDOM::quit, objHandleType, coreTable, lua);
-        bind_noarg("shutdown", SDOM::shutdown, objHandleType, coreTable, lua);
+        core_bind_noarg("quit", SDOM::quit, objHandleType, coreTable, lua);
+        core_bind_noarg("shutdown", SDOM::shutdown, objHandleType, coreTable, lua);
         // bind_noarg("run", run_lua, objHandleType, coreTable, lua);
-        bind_table("configure", configure_lua, objHandleType, coreTable, lua);
+        core_bind_table("configure", core_configure_lua, objHandleType, coreTable, lua);
         // Also expose a top-level global `configure(table)` convenience
         // function that forwards to the Core singleton.  The Core method
         // bound into `Core` expects a userdata first-argument (the Core
@@ -1833,13 +1633,20 @@ namespace SDOM
             // Expose a top-level `configure(table)` that forwards to our
             // configure_lua wrapper so the 'resources' preprocessing runs.
             lua.set_function("configure", [](const sol::table& t) {
-                Core::configure_lua(t);
+                SDOM::core_configure_lua(t);
             });
         } catch(...) {}
-        bind_string("configureFromFile", configureFromFile_lua, objHandleType, coreTable, lua);        
-   
+        core_bind_string("configureFromFile", core_configureFromFile_lua, objHandleType, coreTable, lua);        
 
-
+	    // --- Callback/Hook Registration --- //
+        core_bind_callback_bool("registerOnInit", core_registerOnInit_lua, objHandleType, coreTable, lua);
+        core_bind_callback_void("registerOnQuit", core_registerOnQuit_lua, objHandleType, coreTable, lua);
+        core_bind_callback_update("registerOnUpdate", core_registerOnUpdate_lua, objHandleType, coreTable, lua);
+        core_bind_callback_event("registerOnEvent", core_registerOnEvent_lua, objHandleType, coreTable, lua);
+        core_bind_callback_void("registerOnRender", core_registerOnRender_lua, objHandleType, coreTable, lua);
+        core_bind_callback_bool("registerOnUnitTest", core_registerOnUnitTest_lua, objHandleType, coreTable, lua);
+        core_bind_callback_resize("registerOnWindowResize", core_registerOnWindowResize_lua, objHandleType, coreTable, lua);
+        core_bind_string_function_forwarder("registerOn", core_registerOn_lua, objHandleType, coreTable, lua); // custom handling above
     } // End Core::_registerDisplayObject()
 
 

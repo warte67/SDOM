@@ -117,6 +117,31 @@ namespace SDOM
         // Helper: find a SpriteSheet asset matching filename and sprite dimensions
         AssetHandle findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH) const;
 
+        // Helper: Unload Asset Objects
+        void unloadAllAssetObjects() 
+        {
+            for (auto& [name, assetPtr] : assetObjects_) 
+            {
+                if (assetPtr && assetPtr->isLoaded()) 
+                {
+                    // INFO("Factory::unloadAllAssetObjects: Unloading asset: " << name << " (" << assetPtr->getType() << ")");
+                    assetPtr->onUnload();
+                }
+            }
+        }
+        // Helper: Reload Asset Objects
+        void reloadAllAssetObjects() 
+        {
+            for (auto& [name, assetPtr] : assetObjects_) 
+            {
+                if (assetPtr && !assetPtr->isLoaded()) 
+                {
+                    // INFO("Factory::loadAllAssetObjects: Loading asset: " << name << " (" << assetPtr->getType() << ")");
+                    assetPtr->onLoad();
+                }
+            }
+        }
+
     private:
         // initialization guard to make onInit idempotent
         bool initialized_ = false;

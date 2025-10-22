@@ -18,6 +18,7 @@ namespace SDOM
     class DisplayHandle;
     class IAssetObject;
     class AssetHandle;
+    class UnitTests;
 
     /**
      * @class Core
@@ -120,7 +121,17 @@ namespace SDOM
         SDL_Color getColor() const          { return config_.color; }
         void setColor(const SDL_Color& color) { config_.color = color; }
 
-        // --- Configuration Accessors --- //
+        // --- Window Title & Timing --- //
+        std::string getWindowTitle() const { return windowTitle_; }
+        void setWindowTitle(const std::string& title) 
+        {
+            windowTitle_ = title;
+            if (window_)
+                SDL_SetWindowTitle(window_, windowTitle_.c_str());
+        }  
+        float getElapsedTime() const { return fElapsedTime_; }  
+
+        // --- Configuration Getters --- //
         CoreConfig& getConfig();
         float getWindowWidth() const;
         float getWindowHeight() const;
@@ -132,6 +143,7 @@ namespace SDOM
         SDL_WindowFlags getWindowFlags() const;
         SDL_PixelFormat getPixelFormat() const;
 
+        // --- Configuration Setters --- //
         void setConfig(CoreConfig& config);
         void setWindowWidth(float width);
         void setWindowHeight(float height);
@@ -157,16 +169,6 @@ namespace SDOM
         void clearKeyboardFocusedObject();
         void setMouseHoveredObject(DisplayHandle obj);
         DisplayHandle getMouseHoveredObject() const;
-
-        // --- Window Title & Timing --- //
-        std::string getWindowTitle() const { return windowTitle_; }
-        void setWindowTitle(const std::string& title) 
-        {
-            windowTitle_ = title;
-            if (window_)
-                SDL_SetWindowTitle(window_, windowTitle_.c_str());
-        }  
-        float getElapsedTime() const { return fElapsedTime_; }  
 
         // --- Lua State Access --- //
         sol::state& getLua() { return lua_; }
@@ -235,13 +237,9 @@ namespace SDOM
         void setKeyfocusGray(float gray) { keyfocus_gray_ = gray; }
 
 
-        // --- LUA Wrappers --- //
-        
-        static void configure_lua(const sol::table& config);
-        static void configureFromFile_lua(const std::string& filename);         
-
-
     private:
+        friend UnitTests; // give the UnitTests class access to private members for testing
+
         // --- Singleton Enforcement --- //
         Core();
         ~Core();

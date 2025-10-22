@@ -132,8 +132,8 @@ namespace SDOM
 
         AssetHandle textureAsset;      // Underlying texture asset for the sprite sheet
 
-    // Accessor for the underlying texture asset
-    AssetHandle getTextureAsset() const { return textureAsset; }
+        // Accessor for the underlying texture asset
+        AssetHandle getTextureAsset() const { return textureAsset; }
 
         int spriteWidth_ = 8;   // Default sprite width
         int spriteHeight_ = 8;  // Default sprite height

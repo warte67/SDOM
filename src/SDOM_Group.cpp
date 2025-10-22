@@ -333,9 +333,6 @@ namespace SDOM
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
                     << typeName << CLR::RESET << std::endl;
         }
-        if (DEBUG_REGISTER_LUA) {
-            printf("[TRACE] Group::_registerLuaBindings called for type='%s' lua_state=%p\n", typeName.c_str(), (void*)lua.lua_state());
-        }
 
         // // Register bindings into a per-type binding table instead of the
         // // global DisplayHandle table. The DisplayHandle dispatcher will

@@ -7,7 +7,6 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Group.hpp>
 #include <SDOM/SDOM_Label.hpp>
-#include <SDOM/SDOM_LuaRegistry.hpp>
 
 /*** Group UnitTests: verification matrix ****************************************
  * Purpose: ensure Group APIs are present in Lua and that bindings exercise

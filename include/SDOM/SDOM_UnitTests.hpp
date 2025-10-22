@@ -3,52 +3,62 @@
 #pragma once
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_CLR.hpp>
+#include <string>
+#include <vector>
+
+// NOTE: This should be a singleton class with only static members
 
 namespace SDOM
 {
     class UnitTests
     {
     public:
-        static void printTest(const std::string& objName, const std::string& testName) 
-        {
-            std::cout << CLR::indent() << CLR::LT_BLUE << "[" << objName << "] " << CLR::LT_BLUE << testName << " ..." << CLR::RESET;
-            fflush(stdout); // Ensure immediate output
-        }
+        inline static bool show_all_tests = true;
 
-        // static void printTest(const std::string& objName, const std::string& testName) 
-        // {
-        //     std::cout << CLR::indent() << CLR::LT_BLUE << "[" << objName << "] " << CLR::LT_BLUE << testName << " ";
-        //     CLR::get_cursor_pos(UnitTests::_saved_row, UnitTests::_saved_col);
-        //     std::cout << "..." << CLR::RESET;
-        //     fflush(stdout); // Ensure immediate output
-        // }
+        static UnitTests& getInstance();
 
-        static void printResult(const std::string& testName, bool passed) 
-        {
-            std::cout << "\b\b\b\b"; // Erase the " ..." part
-            std::cout << (passed ? CLR::GREEN + " [PASSED]" : CLR::fg_rgb(255, 0, 0) + " [FAILED]") << CLR::RESET << std::endl;
-        }
+        // Disable copy/move
+        UnitTests(const UnitTests&) = delete;
+        UnitTests& operator=(const UnitTests&) = delete;
 
-        // static void printResult(const std::string& testName, bool passed) 
-        // {
-        //     CLR::save_cursor();
-        //     CLR::set_cursor_pos(UnitTests::_saved_row, UnitTests::_saved_col);
-        //     std::cout << (passed ? CLR::GREEN + " [PASSED]" : CLR::fg_rgb(255, 0, 0) + " [FAILED]") << CLR::RESET << std::endl;
-        //     CLR::restore_cursor();
-        // }
+        // Instance methods
+        void clear_tests();
+        void add_test(const std::string& name, std::function<bool(std::vector<std::string>&)> func);
+        bool run_all(const std::string& objName);
+        void push_error(const std::string& error);
 
-        // A helper to run and print a test
-        template<typename Func>
+        // Deprecated static methods (to be removed)
+        template<typename Func>        
         static bool run(const std::string& objName, const std::string& testName, Func&& testFunc) 
         {
-            if (UNIT_TESTS_ENABLED)   printTest(objName, testName);
-            bool result = testFunc();
-            if (UNIT_TESTS_ENABLED)   printResult(testName, result);
-            return result;
+            std::cerr << "[UnitTests::run] DEPRECATED: Refactor to use add_test and run_all. Test '" 
+                      << testName << "' (" << objName << ") was not executed." << std::endl;
+            return false;
         }
 
+        // --- Core UnitTest Accessors / Mutators --- //
+
+        SDL_Window* getWindow();
+        SDL_Renderer* getRenderer();
+        SDL_Texture* getTexture();
+        SDL_Color getColor();
+   
+
     private:
-        static int _saved_row;
-        static int _saved_col;
+        UnitTests() = default;
+
+        struct TestCase {
+            std::string name;
+            std::function<bool(std::vector<std::string>&)> func;
+        };
+        std::vector<std::string> _log;
+        std::vector<std::string> _errors;
+        std::vector<TestCase> _tests;
+
+
+        // --- Lua Registration --- //
+        void registerLua();
     };
+
 } // namespace SDOM

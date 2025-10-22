@@ -706,22 +706,22 @@ local config = {
 -- Configure the test application
 configure(config)
 
--- -- The example binary runs with working directory `examples/test`, so use
--- -- project-relative paths from there (./lua/...). This avoids duplicating
--- -- the examples/test prefix when running from the example folder.
--- package.path = (package.path or "") .. ";./lua/?.lua;./lua/?/init.lua"
+-- The example binary runs with working directory `examples/test`, so use
+-- project-relative paths from there (./lua/...). This avoids duplicating
+-- the examples/test prefix when running from the example folder.
+package.path = (package.path or "") .. ";./lua/?.lua;./lua/?/init.lua"
 
--- local callbacks = {}
--- local function require_callback(module_name)
---     local ok, res = pcall(require, module_name)
---     if not ok then
---         error(string.format("Failed to require callback module '%s': %s", module_name, tostring(res)))
---     end
---     if type(res) ~= "table" then
---         error(string.format("Callback module '%s' must return a table, got %s", module_name, type(res)))
---     end
---     return res
--- end
+local callbacks = {}
+local function require_callback(module_name)
+    local ok, res = pcall(require, module_name)
+    if not ok then
+        error(string.format("Failed to require callback module '%s': %s", module_name, tostring(res)))
+    end
+    if type(res) ~= "table" then
+        error(string.format("Callback module '%s' must return a table, got %s", module_name, type(res)))
+    end
+    return res
+end
 
 -- -- Load all callback modules. Each must return a table with the expected function(s).
 -- callbacks.init = require_callback("callbacks.init")
@@ -729,7 +729,7 @@ configure(config)
 -- callbacks.event = require_callback("callbacks.event")
 -- callbacks.update = require_callback("callbacks.update")
 -- callbacks.render = require_callback("callbacks.render")
--- callbacks.unittest = require_callback("callbacks.unittest")
+callbacks.unittest = require_callback("callbacks.unittest")
 -- callbacks.window_resize = require_callback("callbacks.window_resize")
 
 -- -- Use the generic registerOn helper exposed by the C++ bindings.
@@ -739,7 +739,7 @@ configure(config)
 -- registerOn("Event", callbacks.event.on_event)
 -- registerOn("Update", callbacks.update.on_update)
 -- registerOn("Render", callbacks.render.on_render)
--- registerOn("UnitTest", callbacks.unittest.on_unit_test)
+registerOn("UnitTest", callbacks.unittest.on_unit_test)
 -- registerOn("WindowResize", callbacks.window_resize.on_window_resize)
 
 
