@@ -1,5 +1,4 @@
 // SDOM_DisplayHandle.hpp
-
 #pragma once
 
 // #include <sol/sol.hpp>
@@ -131,15 +130,6 @@ namespace SDOM
         // Shared Lua handle usertype helpers (augmentable by base/descendants)
         inline static constexpr const char* LuaHandleName = "DisplayHandle";
 
-        // Ensure the handle usertype exists in this Lua state and return its table.
-        static sol::table ensure_handle_table(sol::state_view lua);
-    // Ensure per-type binding table exists and return it. Parent optional.
-    static sol::table ensure_type_bind_table(sol::state_view lua, const std::string& typeName, const std::string& parentTypeName = "");
-        
-        // Bind only the minimal, safe helpers if absent (idempotent).
-        static void bind_minimal(sol::state_view lua);
-
-
     public:
         inline static Factory* factory_ = nullptr;
     private:
@@ -158,10 +148,10 @@ namespace SDOM
         // virtual void _registerLua(const std::string& typeName, sol::state_view lua);
         sol::usertype<DisplayHandle> objHandleType_;
 
-    protected:
         // Resolve a Lua child spec (string, DisplayHandle, or table{ child=... | name=... })
         static DisplayHandle resolveChildSpec(const sol::object& spec);
 
+        
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
     }; // end class DisplayHandle

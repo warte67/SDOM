@@ -706,140 +706,140 @@ local config = {
 -- Configure the test application
 configure(config)
 
--- The example binary runs with working directory `examples/test`, so use
--- project-relative paths from there (./lua/...). This avoids duplicating
--- the examples/test prefix when running from the example folder.
-package.path = (package.path or "") .. ";./lua/?.lua;./lua/?/init.lua"
+-- -- The example binary runs with working directory `examples/test`, so use
+-- -- project-relative paths from there (./lua/...). This avoids duplicating
+-- -- the examples/test prefix when running from the example folder.
+-- package.path = (package.path or "") .. ";./lua/?.lua;./lua/?/init.lua"
 
-local callbacks = {}
-local function require_callback(module_name)
-    local ok, res = pcall(require, module_name)
-    if not ok then
-        error(string.format("Failed to require callback module '%s': %s", module_name, tostring(res)))
-    end
-    if type(res) ~= "table" then
-        error(string.format("Callback module '%s' must return a table, got %s", module_name, type(res)))
-    end
-    return res
-end
+-- local callbacks = {}
+-- local function require_callback(module_name)
+--     local ok, res = pcall(require, module_name)
+--     if not ok then
+--         error(string.format("Failed to require callback module '%s': %s", module_name, tostring(res)))
+--     end
+--     if type(res) ~= "table" then
+--         error(string.format("Callback module '%s' must return a table, got %s", module_name, type(res)))
+--     end
+--     return res
+-- end
 
--- Load all callback modules. Each must return a table with the expected function(s).
-callbacks.init = require_callback("callbacks.init")
-callbacks.quit = require_callback("callbacks.quit")
-callbacks.event = require_callback("callbacks.event")
-callbacks.update = require_callback("callbacks.update")
-callbacks.render = require_callback("callbacks.render")
-callbacks.unittest = require_callback("callbacks.unittest")
-callbacks.window_resize = require_callback("callbacks.window_resize")
+-- -- Load all callback modules. Each must return a table with the expected function(s).
+-- callbacks.init = require_callback("callbacks.init")
+-- callbacks.quit = require_callback("callbacks.quit")
+-- callbacks.event = require_callback("callbacks.event")
+-- callbacks.update = require_callback("callbacks.update")
+-- callbacks.render = require_callback("callbacks.render")
+-- callbacks.unittest = require_callback("callbacks.unittest")
+-- callbacks.window_resize = require_callback("callbacks.window_resize")
 
--- Use the generic registerOn helper exposed by the C++ bindings.
--- This accepts the short name (Init, Update, Event, etc.) and a Lua function.
-registerOn("Init", callbacks.init.on_init)
-registerOn("Quit", callbacks.quit.on_quit)
-registerOn("Event", callbacks.event.on_event)
-registerOn("Update", callbacks.update.on_update)
-registerOn("Render", callbacks.render.on_render)
-registerOn("UnitTest", callbacks.unittest.on_unit_test)
-registerOn("WindowResize", callbacks.window_resize.on_window_resize)
-
-
--- Add an event listener that switches the root stage when the main button is activated.
-local function on_main_stage_button_click(evnt)
-    -- print("Button clicked! Changing root stage to 'stageTwo'")
-    setRoot("stageTwo") -- switch to stageTwo when button is clicked
-end
-local function on_stage2_button_click(evnt)
-    -- print("Button clicked! Changing 'stageTwo' stage to 'stageThree'")
-    setRoot("stageThree") -- switch to stageThree when button is clicked
-end
-local function on_stage3_button_click(evnt)
-    -- print("Button clicked! Changing 'stageThree' stage to 'mainStage'")
-    setRoot("mainStage") -- switch to mainStage when button is clicked
-end
-
--- Get the button display objects by name
-local btnObj_1 = getDisplayObject("main_stage_button")
-local btnObj_2 = getDisplayObject("stage2_button")
-local btnObj_3 = getDisplayObject("stage3_button")
-
--- use named fields (type, listener)
-btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
-btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
-btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
+-- -- Use the generic registerOn helper exposed by the C++ bindings.
+-- -- This accepts the short name (Init, Update, Event, etc.) and a Lua function.
+-- registerOn("Init", callbacks.init.on_init)
+-- registerOn("Quit", callbacks.quit.on_quit)
+-- registerOn("Event", callbacks.event.on_event)
+-- registerOn("Update", callbacks.update.on_update)
+-- registerOn("Render", callbacks.render.on_render)
+-- registerOn("UnitTest", callbacks.unittest.on_unit_test)
+-- registerOn("WindowResize", callbacks.window_resize.on_window_resize)
 
 
+-- -- Add an event listener that switches the root stage when the main button is activated.
+-- local function on_main_stage_button_click(evnt)
+--     -- print("Button clicked! Changing root stage to 'stageTwo'")
+--     setRoot("stageTwo") -- switch to stageTwo when button is clicked
+-- end
+-- local function on_stage2_button_click(evnt)
+--     -- print("Button clicked! Changing 'stageTwo' stage to 'stageThree'")
+--     setRoot("stageThree") -- switch to stageThree when button is clicked
+-- end
+-- local function on_stage3_button_click(evnt)
+--     -- print("Button clicked! Changing 'stageThree' stage to 'mainStage'")
+--     setRoot("mainStage") -- switch to mainStage when button is clicked
+-- end
 
--- Link sliders to progress bars: when a slider's value changes, update its paired progress bar
+-- -- Get the button display objects by name
+-- local btnObj_1 = getDisplayObject("main_stage_button")
+-- local btnObj_2 = getDisplayObject("stage2_button")
+-- local btnObj_3 = getDisplayObject("stage3_button")
 
-local function on_hslider_value_changed(ev)
-    -- Use the Event API to obtain the payload table (ev.payload is not exposed to Lua)
-    local payload = nil
-    if ev.getPayload then
-        payload = ev:getPayload()
-    end
-    local newv = payload and payload.new_value or nil
-    if newv ~= nil then
-        local progress = getDisplayObject("mainFrame_hprogress_1")
-            if progress then
-                if progress.setValue then
-                    progress:setValue(tonumber(newv) or newv)
-                else
-                    progress.value = tonumber(newv) or newv
-                end
-        end
-    end
-end
+-- -- use named fields (type, listener)
+-- btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
+-- btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
+-- btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
 
-local hslider = getDisplayObject("mainFrame_hslider_1")
-local hprogress = getDisplayObject("mainFrame_hprogress_1")
-if hslider and hprogress then
-    hslider:addEventListener({ type = EventType.ValueChanged, listener = on_hslider_value_changed })
-    -- Use setValue/getValue helpers where possible to ensure C++ setter semantics are used.
-    -- Sync initial progress to the slider's current value immediately by calling
-    -- the handler directly. If you need to programmatically change the slider
-    -- later, prefer using hslider:setValue(v) which will queue a ValueChanged
-    -- event (handled asynchronously by the engine).
-    -- Immediately sync the progress to the slider's current value (avoid relying on queued events)
-    local cur = (hslider.getValue and hslider:getValue() or hslider.value)
-    if hprogress.setValue then
-        hprogress:setValue(cur)
-    else
-        hprogress.value = cur
-    end
-end
 
--- Vertical slider -> vertical progress wiring
-local function on_vslider_value_changed(ev)
-    -- Use the Event API to obtain the payload table (ev.payload is not exposed to Lua)
-    local payload = nil
-    if ev.getPayload then
-        payload = ev:getPayload()
-    end
-    local newv = payload and payload.new_value or nil
-    if newv ~= nil then
-        local progress = getDisplayObject("mainFrame_vprogress_1")
-        if progress then
-            if progress.setValue then
-                progress:setValue(tonumber(newv) or newv)
-            else
-                progress.value = tonumber(newv) or newv
-            end
-        end
-    end
-end
 
-local vslider = getDisplayObject("mainFrame_vslider_1")
-local vprogress = getDisplayObject("mainFrame_vprogress_1")
-if vslider and vprogress then
-    vslider:addEventListener({ type = EventType.ValueChanged, listener = on_vslider_value_changed })
-    -- Sync initial value immediately
-    local curv = (vslider.getValue and vslider:getValue() or vslider.value)
-    if vprogress.setValue then
-        vprogress:setValue(curv)
-    else
-        vprogress.value = curv
-    end
-    -- initial sync done
-end
+-- -- Link sliders to progress bars: when a slider's value changes, update its paired progress bar
+
+-- local function on_hslider_value_changed(ev)
+--     -- Use the Event API to obtain the payload table (ev.payload is not exposed to Lua)
+--     local payload = nil
+--     if ev.getPayload then
+--         payload = ev:getPayload()
+--     end
+--     local newv = payload and payload.new_value or nil
+--     if newv ~= nil then
+--         local progress = getDisplayObject("mainFrame_hprogress_1")
+--             if progress then
+--                 if progress.setValue then
+--                     progress:setValue(tonumber(newv) or newv)
+--                 else
+--                     progress.value = tonumber(newv) or newv
+--                 end
+--         end
+--     end
+-- end
+
+-- local hslider = getDisplayObject("mainFrame_hslider_1")
+-- local hprogress = getDisplayObject("mainFrame_hprogress_1")
+-- if hslider and hprogress then
+--     hslider:addEventListener({ type = EventType.ValueChanged, listener = on_hslider_value_changed })
+--     -- Use setValue/getValue helpers where possible to ensure C++ setter semantics are used.
+--     -- Sync initial progress to the slider's current value immediately by calling
+--     -- the handler directly. If you need to programmatically change the slider
+--     -- later, prefer using hslider:setValue(v) which will queue a ValueChanged
+--     -- event (handled asynchronously by the engine).
+--     -- Immediately sync the progress to the slider's current value (avoid relying on queued events)
+--     local cur = (hslider.getValue and hslider:getValue() or hslider.value)
+--     if hprogress.setValue then
+--         hprogress:setValue(cur)
+--     else
+--         hprogress.value = cur
+--     end
+-- end
+
+-- -- Vertical slider -> vertical progress wiring
+-- local function on_vslider_value_changed(ev)
+--     -- Use the Event API to obtain the payload table (ev.payload is not exposed to Lua)
+--     local payload = nil
+--     if ev.getPayload then
+--         payload = ev:getPayload()
+--     end
+--     local newv = payload and payload.new_value or nil
+--     if newv ~= nil then
+--         local progress = getDisplayObject("mainFrame_vprogress_1")
+--         if progress then
+--             if progress.setValue then
+--                 progress:setValue(tonumber(newv) or newv)
+--             else
+--                 progress.value = tonumber(newv) or newv
+--             end
+--         end
+--     end
+-- end
+
+-- local vslider = getDisplayObject("mainFrame_vslider_1")
+-- local vprogress = getDisplayObject("mainFrame_vprogress_1")
+-- if vslider and vprogress then
+--     vslider:addEventListener({ type = EventType.ValueChanged, listener = on_vslider_value_changed })
+--     -- Sync initial value immediately
+--     local curv = (vslider.getValue and vslider:getValue() or vslider.value)
+--     if vprogress.setValue then
+--         vprogress:setValue(curv)
+--     else
+--         vprogress.value = curv
+--     end
+--     -- initial sync done
+-- end
 
 return config

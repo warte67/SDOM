@@ -642,43 +642,9 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared DisplayHandle handle usertype
-        sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
+        // // Augment the single shared DisplayHandle handle usertype
+        // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
 
-        // Helper to check if a property/command is already registered
-        auto absent = [&](const char* name) -> bool 
-        {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-            return !cur.valid() || cur == sol::lua_nil;
-        };
-
-        // Expose step as a property (get/set)
-        if (absent("step")) {
-            handle.set("step", sol::property(
-                [](SDOM::DisplayHandle h) -> float {
-                    auto* s = h.as<ScrollBar>();
-                    return s ? s->getStep() : 0.0f;
-                },
-                [](SDOM::DisplayHandle h, double v) {
-                    auto* s = h.as<ScrollBar>();
-                    if (s) s->setStep(static_cast<float>(v));
-                }
-            ));
-        }
-
-        // Optionally, expose getStep/setStep as methods
-        if (absent("getStep")) {
-            handle.set("getStep", [](SDOM::DisplayHandle h) -> float {
-                auto* s = h.as<ScrollBar>();
-                return s ? s->getStep() : 0.0f;
-            });
-        }
-        if (absent("setStep")) {
-            handle.set("setStep", [](SDOM::DisplayHandle h, double v) {
-                auto* s = h.as<ScrollBar>();
-                if (s) s->setStep(static_cast<float>(v));
-            });
-        }
 
     } // END: void ScrollBar::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

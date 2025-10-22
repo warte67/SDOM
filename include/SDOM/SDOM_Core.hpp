@@ -234,6 +234,13 @@ namespace SDOM
         float getKeyfocusGray() const { return keyfocus_gray_; }
         void setKeyfocusGray(float gray) { keyfocus_gray_ = gray; }
 
+
+        // --- LUA Wrappers --- //
+        
+        static void configure_lua(const sol::table& config);
+        static void configureFromFile_lua(const std::string& filename);         
+
+
     private:
         // --- Singleton Enforcement --- //
         Core();

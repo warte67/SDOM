@@ -860,6 +860,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - `Label` per-type binding migration complete; registry dispatcher and fallback compatibility shims in place.
 - `Group` per-type binding migration complete; registry dispatcher and fallback compatibility shims in place.
 
+- MANY Many issues with the dual lua binding methodology.  We are going to refactor the LUA Binding System from teh ground up.  Creating a Branch called `lua_binding` for this task.
+
 
 
 ---

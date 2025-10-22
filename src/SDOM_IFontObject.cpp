@@ -93,52 +93,6 @@ namespace SDOM
         return std::max(0, getGlyphHeight(static_cast<Uint32>(word[0])));
     }
 
-
-    // --- Lua Regisstration --- //
-
-    void IFontObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "IFontObject:" + getName();
-            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << typeNameLocal 
-                    << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA 
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
-        sol::table handle = AssetHandle::ensure_handle_table(lua);
-
-        // Helper to check if a property/command is already registered
-        auto absent = [&](const char* name) -> bool {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-            return !cur.valid() || cur == sol::lua_nil;
-        };
-
-        // Helper to register a property/command if not already present
-        auto reg = [&](const char* name, auto&& fn) {
-            if (absent(name)) {
-                handle.set_function(name, std::forward<decltype(fn)>(fn));
-            }
-        };
-
-        // small helper to validate and cast the AssetHandle -> IFontObject*
-        auto cast_ifont_from_asset = [](const AssetHandle& asset) -> IFontObject* {
-            if (!asset.isValid()) { ERROR("invalid AssetHandle provided to IFontObject method"); }
-            IAssetObject* base = asset.get();
-            IFontObject* ss = dynamic_cast<IFontObject*>(base);
-            if (!ss) { ERROR("invalid IFontObject object"); }
-            return ss;
-        };
-
-        // Register IFontObject-specific properties and commands here (bridge from AssetHandle handle)
-        reg("setFontSize", [cast_ifont_from_asset](AssetHandle asset, int size) { cast_ifont_from_asset(asset)->setFontSize(size); });
-    } // END _registerLuaBindings()
-
-
     // --- Helper implementation ---
     void IFontObject::applyBitmapFontDefaults(Factory& factory,
                                               const std::string& fontResourceName,
@@ -180,5 +134,25 @@ namespace SDOM
             else if (bmpH > 0) outFontSize = bmpH;
         }
     }
+
+
+    // --- Lua Regisstration --- //
+
+    void IFontObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    {
+        // Call base class registration to include inherited properties/commands
+        SUPER::_registerLuaBindings(typeName, lua);
+
+        if (DEBUG_REGISTER_LUA)
+        {
+            std::string typeNameLocal = "IFontObject:" + getName();
+            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << typeNameLocal 
+                    << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA 
+                    << typeName << CLR::RESET << std::endl;
+        }
+
+        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
+        // sol::table handle = AssetHandle::ensure_handle_table(lua);
+    } // END _registerLuaBindings()
 
 } // namespace SDOM

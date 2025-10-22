@@ -62,8 +62,7 @@ int main(int argc, char** argv)
 
     // Fetch the Core singleton
     Core& core = getCore();
-    // Use Core's Lua state
-    sol::state& lua = core.getLua(); 
+
 
     // For testing: optionally stop main loop after unit tests if caller
     // requested it via command-line flag `--stop_after_tests`.
@@ -84,21 +83,24 @@ int main(int argc, char** argv)
         Box::CreateFromInitStruct
     });    
 
-    // Expose C++ unit test functions to Lua so scripts can call them to run tests
-    // (these are defined in UnitTests.hpp)
-    lua["Core_UnitTests"] = &SDOM::Core_UnitTests;
-    lua["Factory_UnitTests"] = &SDOM::Factory_UnitTests;
-    lua["IDisplayObject_UnitTests"] = &SDOM::IDisplayObject_UnitTests;
-    lua["Stage_UnitTests"] = &SDOM::Stage_UnitTests;
-    lua["Box_UnitTests"] = &SDOM::Box_UnitTests;
-    lua["LUA_UnitTests"] = &SDOM::LUA_UnitTests;
-    lua["DisplayHandle_UnitTests"] = &SDOM::DisplayHandle_UnitTests;
-    lua["EventType_UnitTests"] = &SDOM::EventType_UnitTests;
-    lua["Event_UnitTests"] = &SDOM::Event_UnitTests;
-    lua["GarbageCollection_UnitTests"] = &SDOM::GarbageCollection_UnitTests;
-    lua["SpriteSheet_UnitTests"] = &SDOM::SpriteSheet_UnitTests;
-    lua["Label_UnitTests"] = &SDOM::Label_UnitTests;
-    lua["Group_UnitTests"] = &SDOM::Group_UnitTests;
+    // // Use Core's Lua state
+    // sol::state& lua = core.getLua();     
+
+    // // Expose C++ unit test functions to Lua so scripts can call them to run tests
+    // // (these are defined in UnitTests.hpp)
+    // lua["Core_UnitTests"] = &SDOM::Core_UnitTests;
+    // lua["Factory_UnitTests"] = &SDOM::Factory_UnitTests;
+    // lua["IDisplayObject_UnitTests"] = &SDOM::IDisplayObject_UnitTests;
+    // lua["Stage_UnitTests"] = &SDOM::Stage_UnitTests;
+    // lua["Box_UnitTests"] = &SDOM::Box_UnitTests;
+    // lua["LUA_UnitTests"] = &SDOM::LUA_UnitTests;
+    // lua["DisplayHandle_UnitTests"] = &SDOM::DisplayHandle_UnitTests;
+    // lua["EventType_UnitTests"] = &SDOM::EventType_UnitTests;
+    // lua["Event_UnitTests"] = &SDOM::Event_UnitTests;
+    // lua["GarbageCollection_UnitTests"] = &SDOM::GarbageCollection_UnitTests;
+    // lua["SpriteSheet_UnitTests"] = &SDOM::SpriteSheet_UnitTests;
+    // lua["Label_UnitTests"] = &SDOM::Label_UnitTests;
+    // lua["Group_UnitTests"] = &SDOM::Group_UnitTests;
     
     // Allow overriding which Lua config to run via command-line.
     // Priority:

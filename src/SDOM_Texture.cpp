@@ -191,34 +191,9 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
-        sol::table handle = AssetHandle::ensure_handle_table(lua);
+        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
+        // sol::table handle = AssetHandle::ensure_handle_table(lua);
 
-        // Helper to check if a property/command is already registered
-        auto absent = [&](const char* name) -> bool {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-            return !cur.valid() || cur == sol::lua_nil;
-        };
-
-        // Helper to register a property/command if not already present
-        auto reg = [&](const char* name, auto&& fn) {
-            if (absent(name)) {
-                handle.set_function(name, std::forward<decltype(fn)>(fn));
-            }
-        };
-
-        // small helper to validate and cast the AssetHandle -> Texture*
-        auto cast_tex_from_asset = [](const AssetHandle& asset) -> Texture* {
-            if (!asset.isValid()) { ERROR("invalid AssetHandle provided to Texture method"); }
-            IAssetObject* base = asset.get();
-            Texture* tex = dynamic_cast<Texture*>(base);
-            if (!tex) { ERROR("invalid Texture object"); }
-            return tex;
-        };
-
-        // Register Texture-specific properties and commands here (bridge from AssetHandle handle)
-        reg("getTextureWidth", [cast_tex_from_asset](AssetHandle asset) -> float { return cast_tex_from_asset(asset)->getTextureWidth(); });
-        reg("getTextureHeight", [cast_tex_from_asset](AssetHandle asset) -> float { return cast_tex_from_asset(asset)->getTextureHeight(); });
 
     }
 

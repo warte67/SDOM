@@ -595,71 +595,9 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared DisplayHandle handle usertype
-        sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
+        // // Augment the single shared DisplayHandle handle usertype
+        // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
 
-        // Helper to check if a property/command is already registered
-        auto absent = [&](const char* name) -> bool 
-        {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-            return !cur.valid() || cur == sol::lua_nil;
-        };
-
-        // expose 'name' property for TriStateCheckbox (maps to getName / setName on the display object)
-        if (absent("name"))
-        {
-            handle.set("name", sol::property(
-                // getter
-                [](SDOM::DisplayHandle h) -> std::string 
-                {
-                    if (h.isValid()) return h->getName();
-                    return std::string();
-                },
-                // setter
-                [](SDOM::DisplayHandle h, const std::string& v) 
-                {
-                    if (h.isValid()) h->setName(v);
-                }
-            ));
-        }
-
-        // expose 'label' property that returns the attached label DisplayHandle (read-only)
-        if (absent("label"))
-        {
-            handle.set("label", sol::property(
-                // getter
-                [](SDOM::DisplayHandle h) -> SDOM::DisplayHandle 
-                {
-                    if (!h.isValid()) return SDOM::DisplayHandle();
-                    // ensure this is a TriStateCheckbox before casting
-                    if (h->getType() != TristateButton::TypeName) return SDOM::DisplayHandle();
-                    TristateButton* btn = static_cast<TristateButton*>(h.get());
-                    return btn->getLabelObject();
-                }
-            ));
-        }
-
-        // expose 'text' property for Button -> maps to getText/setText
-        if (absent("text"))
-        {
-            handle.set("text", sol::property(
-                // getter
-                [](SDOM::DisplayHandle h) -> std::string {
-                    if (h.isValid()) {
-                        TristateButton* b = dynamic_cast<TristateButton*>(h.get());
-                        if (b) return b->getText();
-                    }
-                    return std::string();
-                },
-                // setter
-                [](SDOM::DisplayHandle h, const std::string& v) {
-                    if (h.isValid()) {
-                        TristateButton* b = dynamic_cast<TristateButton*>(h.get());
-                        if (b) b->setText(v);
-                    }
-                }
-            ));
-        }
     }
 
 } // END: namespace SDOM
