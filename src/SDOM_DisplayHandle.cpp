@@ -5,7 +5,6 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <functional>
 #include <SDOM/SDOM_IDataObject.hpp>
-#include <SDOM/lua_IDisplayObject.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
 #include <SDOM/SDOM_Label.hpp>
 #include <SDOM/SDOM_IPanelObject.hpp>

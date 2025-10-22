@@ -43,7 +43,6 @@
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Utils.hpp>
-#include <SDOM/lua_IDisplayObject.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
 
 #include <chrono>
