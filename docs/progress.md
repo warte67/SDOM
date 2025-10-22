@@ -857,61 +857,25 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ### [October 21, 2025]
-- `Label` per-type binding migration complete; registry dispatcher and fallback compatibility shims in place.
-- `Group` per-type binding migration complete; registry dispatcher and fallback compatibility shims in place.
-
-- MANY Many issues with the dual lua binding methodology.  We are going to refactor the LUA Binding System from teh ground up.  Creating a Branch called `lua_binding` for this task.
-
-
+- **Major issues encountered with the dual Lua binding methodology**
+  - Significant time spent attempting to maintain both per-item binding and fallback methods.
+  - Decision made to refactor the Lua Binding System from the ground up:
+    - Removed the old per-type table binding system.
+    - Removed the old fallback system—no compatibility shims remain.
+  - Began refactoring `Core` unit tests to use the new binding system. C++ tests are halfway completed.
 
 ---
 ## Next Steps:
-- NOTE: Label is still using the old `text_` prefix color properties. These should be removed in favor of the IDisplayObject color properties. (Should be around lines 1937-1942 in SDOM_IDisplayObject.cpp)
-- Add LUA payload as events are dispatched from the EventManager, not directly as a result of DisplayObject::onEvent().
-- **Standardize the DisplayObject interface for C++ and LUA:**
-  - `Label` and `Group` should now be the model for standardization for C++ and LUA
-  - Add more comprehensive UnitTests to verify that all C++ and LUA bindings are presnet and functional:
-    - Add `Button` unit tests to validate Lua all property setting, label access, and event listener behavior.
-    - Add `Checkbox` unit tests to validate Lua all property setting, label access, and event listener behavior.
-    - Add `Frame` unit tests to validate Lua all property setting and icon rendering.
-    - Add `IPanelObject` unit tests to validate Lua all property setting and icon rendering.
-    - Add `TTFAsset` unit tests to validate Lua all property setting and icon rendering.
-    - Add `TruetypeFont` unit tests to validate Lua all property setting and icon rendering.
-    - Add `BitmapFont` unit tests to validate Lua all property setting and icon rendering.
-    - Add `IconButton` unit tests to validate Lua all property setting and icon rendering.
-    - Add `ArrowButton` unit tests to validate Lua all property setting and icon rendering.
-    - Add `IButtonObject` unit tests to validate Lua all property setting and icon rendering.
-    - Add `TristateButton` unit tests to validate Lua all property setting and icon rendering.
-    - Add `CheckButton` unit tests to validate Lua all property setting and icon rendering.
-    - Add `RadioButton` unit tests to validate Lua all property setting and icon rendering.
-    - Add `IRangeControl` unit tests to validate Lua all property setting and icon rendering.
-    - Add `Slider` unit tests to validate Lua all property setting and icon rendering.
-    - Add `ProgressBar` unit tests to validate Lua all property setting and icon rendering.
-    - Add `Scrollbar` unit tests to validate Lua all property setting and icon rendering.
-- **Fully Refactor UnitTests for Core and Factory while implementing appropriate global LUA functions:**
-    - Refactor the UnitTest functions to use the newest test function pattern (e.g., `Label_test0()` → `Label_test1()`).
-  - Refactor `Stage_UnitTests` systematically test all Stage properties and methods via Lua.
-  - Refactor `IDisplayObject_UnitTests` systematically test all IDisplayObject properties and methods via Lua.
-  - Refactor `Factory_UnitTests` systematically test all Factory methods via Lua.
-  - Refactor `Core_UnitTests` systematically test all Core methods via Lua.
+  - Complete refactoring of `Core_UnitTests` to systematically test all C++ functions.
+  - Build a new Lua Binding System from the ground up using the `IDataObject` interface to house the binding registry tables.
+    - Begin building a new Lua-based test harness to systematically test all Core methods via Lua.
 
 ---
 ## Long Term To Do:
-- Add default scaffolds for creating new `DisplayObjects`, `AssetObjects`, and `ButtonObjectsm` to streamline future development.
-  - Use `SDOM_IRangeControl_scaffold.hpp` / `.cpp` as a template for future interface implementations.
-- Review and refactor documentation:
-  - Begin organizing markdown docs by topic, add more examples and tutorials.
-  - Plan a thorough documentation revamp (including Doxygen and markdown).
-  - Index docs for easier navigation and update legacy references.
-- Investigate what I presume are z_order based bugs. 
-  - Objects are not rendering in proper order. Not sure when this started. 
-  - This happens when `Boxes` are attached to another box and that box is at a lower level than another one.  
-  - This is a likely a `Box` behavior not a behavior explictly of the `SDOM API`.
-  - Render-To-Texture `DisplayObject` texture caching is a good idea for more complex `DisplayObjects`.
-- Document the new startup pattern and resource creation workflows in the README and docs.
-- Update examples to use the new explicit startup and resource creation methods.
-- Update architecture diagrams and documentation to reflect recent naming and API changes.
-- Verify and document verious start up scenarios (C++ only, Lua only, mixed).
-- Update architecture diagrams and markdown docs to replace old identifiers with the new Handle names.
-- **Comment blocks** in the code are a great way to track progress and ensure completeness.
+- Rebuild the entire Lua Binding System from the ground up.
+- Build a Lua Test Harness to systematically test all Core methods via Lua.
+- Sweep all DisplayObjects to use the new Lua Binding System.
+- Update all Unit Tests to use the new Lua Binding System.
+  - Achieve full C++ test coverage for each DisplayObject type.
+  - As the final C++ test, run a complete Lua file that mirrors the C++ tests to ensure parity.
 

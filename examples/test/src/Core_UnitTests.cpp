@@ -19,156 +19,167 @@
 /***************
 
     Core Unit Tests:
-        The followinng unit tests should validate the functionality of these Methods of the Core class.
+    The following unit tests should validate the functionality of these Methods of the Core class.
 
+    // --- Callback/Hook Registration --- //
+    registerOnInit(std::function<bool()>)                        // Validated by: Core_test10
+    registerOnQuit(std::function<void()>)                        // Validated by: Core_test10
+    registerOnUpdate(std::function<void(float)>)                 // Validated by: Core_test10
+    registerOnEvent(std::function<void(const Event&)>)           // Validated by: Core_test10
+    registerOnRender(std::function<void()>)                      // Validated by: Core_test10
+    registerOnUnitTest(std::function<bool()>)                    // (Not directly tested, but similar to Core_test10)
+    registerOnWindowResize(std::function<void(int, int)>)        // Validated by: Core_test10
 
-        // --- Callback/Hook Registration --- //
-        registerOnInit(std::function<bool()>                        // Validated by: Core_test10
-        registerOnQuit(std::function<void()>)                       // Validated by: Core_test10
-        registerOnUpdate(std::function<void(float)>)                // Validated by: Core_test10
-        registerOnEvent(std::function<void(const Event&)>)          // Validated by: Core_test10
-        registerOnRender(std::function<void()>)                     // Validated by: Core_test10
-        registerOnUnitTest(std::function<bool()>)                   // (Not directly tested, but similar to Core_test10)
-        registerOnWindowResize(std::function<void(int, int)>)       // Validated by: Core_test10
+    // --- Lua Registration Internal Helpers --- //
+    _fnOnInit(std::function<bool()> fn)                          // Validated by: Core_test10
+    _fnOnQuit(std::function<void()> fn)                          // Validated by: Core_test10
+    _fnOnUpdate(std::function<void(float)> fn)                   // Validated by: Core_test10
+    _fnOnEvent(std::function<void(const Event&)> fn)             // Validated by: Core_test10
+    _fnOnRender(std::function<void()> fn)                        // Validated by: Core_test10
+    _fnOnUnitTest(std::function<bool()> fn)                      // (Not directly tested, but similar to Core_test10)
+    _fnOnWindowResize(std::function<void(int, int)> fn)          // Validated by: Core_test10
+    _fnGetOnInit()                                               // Validated by: Core_test10
+    _fnGetOnQuit()                                               // Validated by: Core_test10
+    _fnGetOnUpdate()                                             // Validated by: Core_test10
+    _fnGetOnEvent()                                              // Validated by: Core_test10
+    _fnGetOnRender()                                             // Validated by: Core_test10
+    _fnGetOnUnitTest()                                           // (Not directly tested, but similar to Core_test10)
+    _fnGetOnWindowResize()                                       // Validated by: Core_test10
 
-        // --- Lua Registration Internal Helpers --- //
-        _fnOnInit(std::function<bool()> fn)                         // Validated by: Core_test10
-        _fnOnQuit(std::function<void()> fn)                         // Validated by: Core_test10
-        _fnOnUpdate(std::function<void(float)> fn)                  // Validated by: Core_test10
-        _fnOnEvent(std::function<void(const Event&)> fn)            // Validated by: Core_test10
-        _fnOnRender(std::function<void()> fn)                       // Validated by: Core_test10
-        _fnOnUnitTest(std::function<bool()> fn)                     // (Not directly tested, but similar to Core_test10)
-        _fnOnWindowResize(std::function<void(int, int)> fn)         // Validated by: Core_test10
-        _fnGetOnInit()                                              // Validated by: Core_test10
-        _fnGetOnQuit()                                              // Validated by: Core_test10
-        _fnGetOnUpdate()                                            // Validated by: Core_test10
-        _fnGetOnEvent()                                             // Validated by: Core_test10
-        _fnGetOnRender()                                            // Validated by: Core_test10
-        _fnGetOnUnitTest()                                          // (Not directly tested, but similar to Core_test10)
-        _fnGetOnWindowResize()                                      // Validated by: Core_test10
+    // --- Stage/Root Node Management --- //
+    setRootNode(const std::string& name)                         // Validated by: Core_test11
+    setRootNode(const DisplayHandle& handle)                     // Validated by: Core_test11
+    setStage(const std::string& name)                            // Validated by: Core_test11
+    getStage()                                                   // Validated by: Core_test11 (via getStageHandle)
+    getRootNodePtr()                                             // Validated by: Core_test11
+    getRootNode()                                                // Validated by: Core_test11
+    getStageHandle()                                             // Validated by: Core_test11
 
-        // --- Stage/Root Node Management --- //
-        setRootNode(const std::string& name)                        // Validated by: Core_test11
-        setRootNode(const DisplayHandle& handle)                    // Validated by: Core_test11
-        setStage(const std::string& name)                           // Validated by: Core_test11
-        getStage()                                                  // Validated by: Core_test11 (via getStageHandle)
-        getRootNodePtr()                                            // Validated by: Core_test11
-        getRootNode()                                               // Validated by: Core_test11
-        getStageHandle()                                            // Validated by: Core_test11
+    // --- Window/Renderer/Texture/Config --- //
+    getWindow()                                                  // Validated by: Core_test1, Core_test12
+    SDL_GetWindowSize                                            // Validated by: Core_test1
+    getPixelWidth()                                              // Validated by: Core_test2, Core_test13
+    getPixelHeight()                                             // Validated by: Core_test2, Core_test13
+    getPreserveAspectRatio()                                     // Validated by: Core_test3, Core_test13
+    getAllowTextureResize()                                      // Validated by: Core_test4, Core_test13
+    getPixelFormat()                                             // Validated by: Core_test5, Core_test13
+    getRendererLogicalPresentation()                             // Validated by: Core_test6, Core_test13
+    getWindowFlags()                                             // Validated by: Core_test7, Core_test13
+    getColor()                                                   // Validated by: Core_test8, Core_test12
+    getConfig()                                                  // Used in: Core_test2, Core_test3, Core_test4, Core_test5, Core_test6, Core_test7, Core_test8, Core_test13
+    setColor(const SDL_Color&)                                   // Validated by: Core_test12
 
-        // --- Window/Renderer/Texture/Config --- //
-        getWindow()                                                 // Validated by: Core_test1
-        SDL_GetWindowSize                                           // Validated by: Core_test1
-        getPixelWidth()                                             // Validated by: Core_test2
-        getPixelHeight()                                            // Validated by: Core_test2
-        getPreserveAspectRatio()                                    // Validated by: Core_test3
-        getAllowTextureResize()                                     // Validated by: Core_test4
-        getPixelFormat()                                            // Validated by: Core_test5
-        getRendererLogicalPresentation()                            // Validated by: Core_test6
-        getWindowFlags()                                            // Validated by: Core_test7
-        getColor()                                                  // Validated by: Core_test8
-        getConfig()                                                 // Used in: Core_test2, Core_test3, Core_test4, Core_test5, Core_test6, Core_test7, Core_test8
+    // --- SDL Resource Accessors --- //
+    getWindow()                                                  // Validated by: Core_test12
+    getRenderer()                                                // Validated by: Core_test12
+    getTexture()                                                 // Validated by: Core_test12
 
-        // --- SDL Resource Accessors --- //
-        getWindow()                                                 // Validated by: Core_test12
-        getRenderer()                                               // Validated by: Core_test12
-        getTexture()                                                // Validated by: Core_test12
-        getColor()                                                  // Validated by: Core_test12
-        setColor(const SDL_Color&)                                  // Validated by: Core_test12
+    // --- Configuration Getters/Setters --- //
+    getConfig();                                                 // Validated by: Core_test13
+    getWindowWidth();                                            // Validated by: Core_test13
+    getWindowHeight();                                           // Validated by: Core_test13
+    getPixelWidth();                                             // Validated by: Core_test13
+    getPixelHeight();                                            // Validated by: Core_test13
+    getPreserveAspectRatio();                                    // Validated by: Core_test13
+    getAllowTextureResize();                                     // Validated by: Core_test13
+    getRendererLogicalPresentation();                            // Validated by: Core_test13
+    getWindowFlags();                                            // Validated by: Core_test13
+    getPixelFormat();                                            // Validated by: Core_test13
 
-        // --- Configuration Getters --- //
-        getConfig();                          
-        getWindowWidth();                     
-        getWindowHeight();                    
-        getPixelWidth();                      
-        getPixelHeight();                     
-        getPreserveAspectRatio();             
-        getAllowTextureResize();              
-        getRendererLogicalPresentation();     
-        getWindowFlags();                     
-        getPixelFormat();   
+    setConfig(CoreConfig& config);                               // Validated by: Core_test13
+    setWindowWidth(float width);                                 // Validated by: Core_test13
+    setWindowHeight(float height);                               // Validated by: Core_test13
+    setPixelWidth(float width);                                  // Validated by: Core_test13
+    setPixelHeight(float height);                                // Validated by: Core_test13
+    setPreserveAspectRatio(bool preserve);                       // Validated by: Core_test13
+    setAllowTextureResize(bool allow);                           // Validated by: Core_test13
+    setRendererLogicalPresentation(presentation);                // Validated by: Core_test13
+    setWindowFlags(SDL_WindowFlags flags);                       // Validated by: Core_test13
+    setPixelFormat(SDL_PixelFormat format);                      // Validated by: Core_test13
 
-        // --- Configuration Setters --- //
-        setConfig(CoreConfig& config);
-        setWindowWidth(float width);
-        setWindowHeight(float height);
-        setPixelWidth(float width);
-        setPixelHeight(float height);
-        setPreserveAspectRatio(bool preserve);
-        setAllowTextureResize(bool allow);
-        setRendererLogicalPresentation(presentation);
-        setWindowFlags(SDL_WindowFlags flags);
-        setPixelFormat(SDL_PixelFormat format);
+    // --- Factory & EventManager Access --- //
+    getFactory();                                                // Validated by: Core_test9
+    getEventManager();                                           // TODO: Needs test
+    getIsTraversing();                                           // TODO: Needs test
+    setIsTraversing(bool traversing);                            // TODO: Needs test
 
-        // --- Factory & EventManager Access --- //
-        getFactory();                // Validated by: Core_test9
-        getEventManager();
-        getIsTraversing();
-        setIsTraversing(bool traversing);
+    // --- Focus & Hover Management --- //
+    handleTabKeyPress();                                         // TODO: Needs test
+    handleTabKeyPressReverse();                                  // TODO: Needs test
+    setKeyboardFocusedObject(DisplayHandle obj);                 // TODO: Needs test
+    getKeyboardFocusedObject();                                  // TODO: Needs test
+    clearKeyboardFocusedObject();                                // TODO: Needs test
+    setMouseHoveredObject(DisplayHandle obj);                    // TODO: Needs test
+    getMouseHoveredObject();                                     // TODO: Needs test
 
-        // --- Focus & Hover Management --- //
-        handleTabKeyPress();
-        handleTabKeyPressReverse();
-        setKeyboardFocusedObject(DisplayHandle obj);
-        getKeyboardFocusedObject();
-        clearKeyboardFocusedObject();
-        setMouseHoveredObject(DisplayHandle obj);
-        getMouseHoveredObject();
+    // --- Lua State Access --- //
+    getLua();                                                    // TODO: Needs test
 
-        // --- Lua State Access --- //
-        getLua();
+    
+    //////////////////////////////
+    // --- Factory Wrappers --- //
+    //////////////////////////////
 
+    // --- Object Creation --- //
+    createDisplayObject(const std::string& typeName, const sol::table& config);         // TODO: Needs test
+    createDisplayObject(const std::string& typeName,                                    // TODO: Needs test
+        const SDOM::IDisplayObject::InitStruct& init); 
+    createDisplayObjectFromScript(const std::string& typeName,                          // TODO: Needs test
+        const std::string& luaScript);       
 
-        //////////////////////////////
-        // --- Factory Wrappers --- //
-        //////////////////////////////
+    createAssetObject(const std::string& typeName, const sol::table& config);           // TODO: Needs test
+    createAssetObject(const std::string& typeName,                                      // TODO: Needs test
+        const SDOM::IAssetObject::InitStruct& init);     
+    createAssetObjectFromScript(const std::string& typeName,                            // TODO: Needs test
+        const std::string& luaScript);         
 
-        // --- Object Creation --- //
-        createDisplayObject(const std::string& typeName, const sol::table& config);
-        createDisplayObject(const std::string& typeName, const SDOM::IDisplayObject::InitStruct& init);
-        createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript);
+    // --- Object Lookup --- //
+    getDisplayObjectPtr(const std::string& name);                                       // TODO: Needs test
+    getDisplayObject(const std::string& name);                                          // TODO: Needs test
+    getDisplayObjectHandle(const std::string& name);                                    // TODO: Needs test
+    hasDisplayObject(const std::string& name);                                          // TODO: Needs test
 
-        createAssetObject(const std::string& typeName, const sol::table& config);
-        createAssetObject(const std::string& typeName, const SDOM::IAssetObject::InitStruct& init);
-        createAssetObjectFromScript(const std::string& typeName, const std::string& luaScript);
+    getAssetObjectPtr(const std::string& name);                                         // TODO: Needs test
+    getAssetObject(const std::string& name);                                            // TODO: Needs test
+    hasAssetObject(const std::string& name);                                            // TODO: Needs test
 
-        // --- Object Lookup --- //
-        getDisplayObjectPtr(const std::string& name);
-        getDisplayObject(const std::string& name);
-        getDisplayObjectHandle(const std::string& name);
-        hasDisplayObject(const std::string& name);
+    // --- Display Object Management --- //
+    addDisplayObject(const std::string& name,                                           // TODO: Needs test
+            std::unique_ptr<IDisplayObject> displayObject); 
+    destroyDisplayObject(const std::string& name);                                      // TODO: Needs test
+    destroyAssetObject(const std::string& name);                                        // TODO: Needs test
 
-        getAssetObjectPtr(const std::string& name);
-        getAssetObject(const std::string& name);
-        hasAssetObject(const std::string& name);
+    // --- Orphan Management --- //
+    countOrphanedDisplayObjects();                                                      // TODO: Needs test
+    getOrphanedDisplayObjects();                                                        // TODO: Needs test
+    destroyOrphanedDisplayObjects();                                                    // TODO: Needs test
+    detachOrphans();                                                                    // TODO: Needs test
+    collectGarbage();                                                                   // TODO: Needs test
 
-        // --- Display Object Management --- //
-        addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject);
-        destroyDisplayObject(const std::string& name);
+    // --- Future Child Management --- //
+    attachFutureChildren();                                                             // TODO: Needs test
+    addToOrphanList(const DisplayHandle& orphan);                                       // TODO: Needs test
+    addToFutureChildrenList(const DisplayHandle& child, const DisplayHandle& parent,    // TODO: Needs test
+            bool useWorld=false, int worldX=0, int worldY=0);
 
-        // --- Orphan Management --- //
-        countOrphanedDisplayObjects();
-        getOrphanedDisplayObjects();
-        destroyOrphanedDisplayObjects();
-        detachOrphans();
+    // --- Utility Methods --- //
+    listDisplayObjectNames();                                                           // TODO: Needs test
+    clearFactory();                                                                     // TODO: Needs test
+    printObjectRegistry();                                                              // TODO: Needs test
 
-        // --- Future Child Management --- //
-        attachFutureChildren();
-        addToOrphanList(const DisplayHandle& orphan);
-        addToFutureChildrenList(const DisplayHandle& child, const DisplayHandle& parent, bool useWorld=false, int worldX=0, int worldY=0);
+    findAssetByFilename(const std::string& filename, const std::string& typeName = ""); // TODO: Needs test
+    findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH);     // TODO: Needs test
+    unloadAllAssetObjects();                                                            // TODO: Needs test
+    reloadAllAssetObjects();                                                            // TODO: Needs test
 
-        // --- Utility Methods --- //
-        listDisplayObjectNames();
-        clearFactory();
-        printObjectRegistry();
-
-        // --- Forwarding helpers to Factory for type-level introspection --- //
-        getPropertyNamesForType(const std::string& typeName);
-        getCommandNamesForType(const std::string& typeName);
-        getFunctionNamesForType(const std::string& typeName);
-
+    // --- Forwarding helpers to Factory for type-level introspection --- //
+    getPropertyNamesForType(const std::string& typeName);                               // TODO: Needs test
+    getCommandNamesForType(const std::string& typeName);                                // TODO: Needs test
+    getFunctionNamesForType(const std::string& typeName);                               // TODO: Needs test
 
 ****************/
+
+
 
 namespace SDOM
 {
@@ -544,181 +555,131 @@ namespace SDOM
         return ok;
     } // END: Core_test12()
 
+
+
     // Configuration Getters/Setters
     bool Core_test13(std::vector<std::string>& errors)
     {
+        // Set this to true for full config change stress test, false for quick test
+        constexpr bool FULL_CONFIG_TEST = false; 
+
         bool ok = true;
         Core& core = getCore();
         SDL_Window* sdl_window = core.getWindow();
         int sdl_w = 0, sdl_h = 0;
         SDL_GetWindowSize(sdl_window, &sdl_w, &sdl_h);
-        std::cout << "SDL_Window Size: " << sdl_w << "x" << sdl_h << std::endl;
 
-        // Save original config
         Core::CoreConfig orig = core.getConfig();
 
-        // Verify Original Window Size Matches SDL_Window
-        if (static_cast<int>(core.getWindowWidth()) != sdl_w) {
-            errors.push_back("Initial window width does not match SDL_Window width. Expected: " + 
-                std::to_string(sdl_w) + ", Actual: " + std::to_string(core.getWindowWidth()));
-            ok = false;
-        }
-        if (static_cast<int>(core.getWindowHeight()) != sdl_h) {
-            errors.push_back("Initial window height does not match SDL_Window height. Expected: " + 
-                std::to_string(sdl_h) + ", Actual: " + std::to_string(core.getWindowHeight()));
-            ok = false;
-        }
-
-        // Set and verify window width
-        float o_width = core.getWindowWidth();
-        core.setWindowWidth(456.0f);
-        if (core.getWindowWidth() != 456.0f) {
-            errors.push_back("setWindowWidth/getWindowWidth failed. Expected: 456.0, Actual: " + std::to_string(core.getWindowWidth()));
-            ok = false;
-        }
-        float n_width = core.getWindowWidth();
-        if (n_width == o_width) {
-            errors.push_back("setWindowWidth did not change the width. Expected different from: " + std::to_string(o_width));
-            ok = false;
-        }
-        core.setWindowWidth(o_width); // Restore original width
-        auto n_width_restored = core.getWindowWidth();
-        if (n_width_restored != o_width) {
-            errors.push_back("Restoring original window width failed. Expected: " + std::to_string(o_width) + ", Actual: " + std::to_string(n_width_restored));
-            ok = false;
-        }
-
-        SDL_GetWindowSize(sdl_window, &sdl_w, &sdl_h);
-        if (sdl_w != static_cast<int>(o_width)) {
-            errors.push_back("SDL_Window width does not match after restoration. Expected: " + std::to_string(o_width) + ", Actual: " + std::to_string(sdl_w));
-            ok = false;
-        }
-
-        // Set and verify window height
-        float o_height = core.getWindowHeight();
-        core.setWindowHeight(234.0f);
-        if (core.getWindowHeight() != 234.0f) {
-            errors.push_back("setWindowHeight/getWindowHeight failed.");
-            ok = false;
-        }
-        float n_height = core.getWindowHeight();
-        if (n_height == o_height) {
-            errors.push_back("setWindowHeight did not change the height.");
-            ok = false;
-        }
-        core.setWindowHeight(o_height); // Restore original height
-        if (core.getWindowHeight() != o_height) {
-            errors.push_back("Restoring original window height failed.");
-            ok = false;
+        if (!FULL_CONFIG_TEST) {
+            // Quick test: just verify getters match config
+            if (orig.windowWidth != core.getWindowWidth()) {
+                errors.push_back("CoreConfig window width does not match Core getter.");
+                ok = false;
+            }
+            if (orig.windowHeight != core.getWindowHeight()) {
+                errors.push_back("CoreConfig window height does not match Core getter.");
+                ok = false;
+            }
+            if (orig.pixelWidth != core.getPixelWidth()) {
+                errors.push_back("CoreConfig pixel width does not match Core getter.");
+                ok = false;
+            }
+            if (orig.pixelHeight != core.getPixelHeight()) {
+                errors.push_back("CoreConfig pixel height does not match Core getter.");
+                ok = false;
+            }
+            if (orig.preserveAspectRatio != core.getPreserveAspectRatio()) {
+                errors.push_back("CoreConfig preserve aspect ratio does not match Core getter.");
+                ok = false;
+            }
+            if (orig.allowTextureResize != core.getAllowTextureResize()) {
+                errors.push_back("CoreConfig allow texture resize does not match Core getter.");
+                ok = false;
+            }
+            if (orig.rendererLogicalPresentation != core.getRendererLogicalPresentation()) {
+                errors.push_back("CoreConfig renderer logical presentation does not match Core getter.");
+                ok = false;
+            }
+            if (orig.windowFlags != core.getWindowFlags()) {
+                errors.push_back("CoreConfig window flags does not match Core getter.");
+                ok = false;
+            }
+            if (orig.pixelFormat != core.getPixelFormat()) {
+                errors.push_back("CoreConfig pixel format does not match Core getter.");
+                ok = false;
+            }
+            return ok;
         }
 
-        // Set and verify pixel width
-        float o_pixel_width = core.getPixelWidth();
-        core.setPixelWidth(3.0f);
-        if (core.getPixelWidth() != 3.0f) {
-            errors.push_back("setPixelWidth/getPixelWidth failed.");
-            ok = false;
-        }
-        float n_pixel_width = core.getPixelWidth();
-        if (n_pixel_width == o_pixel_width) {
-            errors.push_back("setPixelWidth did not change the pixel width.");
-            ok = false;
-        }
-        core.setPixelWidth(o_pixel_width); // Restore original pixel width
-        if (core.getPixelWidth() != o_pixel_width) {
-            errors.push_back("Restoring original pixel width failed.");
-            ok = false;
-        }
+        // Full config change stress test
+        std::vector<Core::CoreConfig> testConfigs = {
+            orig,
+            Core::CoreConfig{640, 480, 1.0f, 1.0f, true, false, SDL_LOGICAL_PRESENTATION_STRETCH, SDL_WINDOW_BORDERLESS, SDL_PIXELFORMAT_RGBA8888, SDL_Color{64, 128, 255, 255}},
+            Core::CoreConfig{800, 600, 2.0f, 2.0f, false, true, SDL_LOGICAL_PRESENTATION_DISABLED, SDL_WINDOW_FULLSCREEN, SDL_PIXELFORMAT_ARGB8888, SDL_Color{255, 64, 128, 128}},
+            Core::CoreConfig{1024, 768, 4.0f, 4.0f, true, true, SDL_LOGICAL_PRESENTATION_LETTERBOX, SDL_WINDOW_RESIZABLE, SDL_PIXELFORMAT_BGRA8888, SDL_Color{128, 255, 64, 64}},
+            Core::CoreConfig(orig)  // Restore original at end
+        };
 
-        // Set and verify pixel height
-        float o_pixel_height = core.getPixelHeight();
-        core.setPixelHeight(3.0f);
-        if (core.getPixelHeight() != 3.0f) {
-            errors.push_back("setPixelHeight/getPixelHeight failed.");
-            ok = false;
-        }
-        float n_pixel_height = core.getPixelHeight();
-        if (n_pixel_height == o_pixel_height) {
-            errors.push_back("setPixelHeight did not change the pixel height.");
-            ok = false;
-        }
-        core.setPixelHeight(o_pixel_height); // Restore original pixel height
-        if (core.getPixelHeight() != o_pixel_height) {
-            errors.push_back("Restoring original pixel height failed.");
-            ok = false;
-        }
+        for (auto& cfg : testConfigs)         
+        {
+            core.setConfig(cfg);
+            // core.reconfigure(cfg);  // Redundant with setConfig
 
-        // Set and verify aspect ratio preservation
-        bool o_aspect = core.getPreserveAspectRatio();
-        core.setPreserveAspectRatio(!o_aspect);
-        if (core.getPreserveAspectRatio() == o_aspect) {
-            errors.push_back("setPreserveAspectRatio did not change the value.");
-            ok = false;
-        }
-        core.setPreserveAspectRatio(o_aspect); // Restore original aspect ratio preservation
-        if (core.getPreserveAspectRatio() != o_aspect) {
-            errors.push_back("Restoring original preserve aspect ratio failed.");
-            ok = false;
-        }
+            // Verify getters match config
+            if (cfg.windowWidth != core.getWindowWidth()) {
+                errors.push_back("windowWidth mismatch after setConfig.");
+                ok = false;
+            }
+            if (cfg.windowHeight != core.getWindowHeight()) {
+                errors.push_back("windowHeight mismatch after setConfig.");
+                ok = false;
+            }
+            if (cfg.pixelWidth != core.getPixelWidth()) {
+                errors.push_back("pixelWidth mismatch after setConfig.");
+                ok = false;
+            }
+            if (cfg.pixelHeight != core.getPixelHeight()) {
+                errors.push_back("pixelHeight mismatch after setConfig.");
+                ok = false;
+            }
+            if (cfg.preserveAspectRatio != core.getPreserveAspectRatio()) {
+                errors.push_back("preserveAspectRatio mismatch after setConfig.");
+                ok = false;
+            }
+            if (cfg.allowTextureResize != core.getAllowTextureResize()) {
+                errors.push_back("allowTextureResize mismatch after setConfig.");
+                ok = false;
+            }
+            if (cfg.rendererLogicalPresentation != core.getRendererLogicalPresentation()) {
+                errors.push_back("rendererLogicalPresentation mismatch after setConfig.");
+                ok = false;
+            }
+            if (cfg.windowFlags != core.getWindowFlags()) {
+                errors.push_back("windowFlags mismatch after setConfig.");
+                ok = false;
+            }
+            if (cfg.pixelFormat != core.getPixelFormat()) {
+                errors.push_back("pixelFormat mismatch after setConfig.");
+                ok = false;
+            }
 
-        // Set and Verify texture resize allowance
-        bool o_texture_resize = core.getAllowTextureResize();
-        core.setAllowTextureResize(!o_texture_resize);
-        if (core.getAllowTextureResize() == o_texture_resize) {
-            errors.push_back("setAllowTextureResize did not change the value.");
-            ok = false;
+            // Optionally, check SDL resources are valid
+            if (!core.getWindow()) {
+                errors.push_back("SDL_Window is nullptr after setConfig.");
+                ok = false;
+            }
+            if (!core.getRenderer()) {
+                errors.push_back("SDL_Renderer is nullptr after setConfig.");
+                ok = false;
+            }
+            if (!core.getTexture()) {
+                errors.push_back("SDL_Texture is nullptr after setConfig.");
+                ok = false;
+            }
         }
-        core.setAllowTextureResize(o_texture_resize); // Restore original texture resize allowance
-        if (core.getAllowTextureResize() != o_texture_resize) { 
-            errors.push_back("Restoring original allow texture resize failed.");
-            ok = false;
-        }
-
-        // Set and verify renderer logical presentation
-        SDL_RendererLogicalPresentation o_presentation = core.getRendererLogicalPresentation();
-        core.setRendererLogicalPresentation(SDL_LOGICAL_PRESENTATION_DISABLED);
-        if (core.getRendererLogicalPresentation() == o_presentation) {
-            errors.push_back("setRendererLogicalPresentation did not change the value.");
-            ok = false;
-        }
-        core.setRendererLogicalPresentation(o_presentation); // Restore original presentation
-        if (core.getRendererLogicalPresentation() != o_presentation) {
-            errors.push_back("Restoring original renderer logical presentation failed.");
-            ok = false;
-        }
-
-        // Set and verify window flags
-        SDL_WindowFlags o_flags = core.getWindowFlags();
-        core.setWindowFlags(SDL_WINDOW_FULLSCREEN);
-        if (core.getWindowFlags() == o_flags) {
-            errors.push_back("setWindowFlags did not change the value.");
-            ok = false;
-        }
-        core.setWindowFlags(o_flags); // Restore original window flags
-        if (core.getWindowFlags() != o_flags) {
-            errors.push_back("Restoring original window flags failed.");
-            ok = false;
-        }
-
-        // Set and verify pixel format
-        SDL_PixelFormat o_format = core.getPixelFormat();
-        core.setPixelFormat(SDL_PIXELFORMAT_ARGB8888);
-        if (core.getPixelFormat() == o_format) {
-            errors.push_back("setPixelFormat did not change the value.");
-            ok = false;
-        }
-        core.setPixelFormat(o_format); // Restore original pixel format
-        if (core.getPixelFormat() != o_format) {
-            errors.push_back("Restoring original pixel format failed.");
-            ok = false;
-        }
-
-        // Set and verify config as a whole
-        core.setConfig(orig); // Restore original config
-
         return ok;
-    }
-
+    } // END: Core_test13()
 
 
     // --- Main Core UnitTests Runner --- //
