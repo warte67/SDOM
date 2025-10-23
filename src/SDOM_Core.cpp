@@ -30,6 +30,8 @@ namespace SDOM
         SDL_Utils::registerLua(lua_);
         factory_ = new Factory();
         eventManager_ = new EventManager();
+
+        this->_registerLuaBindings("Core", lua_);
         
         // register the DisplayHandle handle last so other types can use it
         DisplayHandle prototypeHandle; // Default DisplayHandle for registration
@@ -165,7 +167,7 @@ namespace SDOM
         try {
             // Ensure Core usertype is registered into this lua state
             // this->_registerLua("Core", lua_);
-            this->_registerLuaBindings("Core", lua_);
+            // this->_registerLuaBindings("Core", lua_);
 
             // Prefer scripts that return the config table. If the chunk
             // returns a table, use it. Otherwise fall back to a global
@@ -313,7 +315,7 @@ namespace SDOM
 
                 // Treat as inline Lua code
                 // this->_registerLua("Core", lua_);
-                this->_registerLuaBindings("Core", lua_);
+                // this->_registerLuaBindings("Core", lua_);
                 try {
                     sol::load_result chunk = lua_.load(configFile);
                     if (!chunk.valid()) {
@@ -1610,27 +1612,23 @@ namespace SDOM
 
         // --- Create the Core usertype (no constructor) and bind methods directly --- //
 
-        // Note: Do NOT expose the raw Core userdata as the global `Core` since
-        // configuration scripts and other code may treat `Core` as a plain table.
-        // Instead create a forwarding table (`CoreForward`) that dispatches to the
-        // Core singleton, assign it to both `CoreForward` and the global `Core`,
-        // and keep the underlying userdata registered separately.  Individual
-        // helper bindings may also register best-effort global aliases for some
-        // functions, but those are per-function and do not replace the forwarding table.
 
-        sol::usertype<Core> objHandleType = lua.new_usertype<Core>(typeName,
-            sol::no_constructor, sol::base_classes, sol::bases<IDataObject>());        
+
+        // Register Core userdata and ensure userdata lookups delegate to the
+        // authoritative per-type table. Provide IDataObject as the base so
+        // sol2 registers the proper base class information.
+        
+        // SDOM::IDataObject::ensure_sol_table(lua, typeName);        
+        sol::usertype<Core> objHandleType = SDOM::IDataObject::register_usertype_with_table<Core, SDOM::IDataObject>(lua, typeName);
+
+        // sol::usertype<Core> objHandleType = lua.new_usertype<Core>(typeName,
+        //     sol::no_constructor, sol::base_classes, sol::bases<IDataObject>());        
         this->objHandleType_ = objHandleType;   // Save usertype
         sol::table coreTable = lua.create_table(); //Create convenience CoreForward table (do NOT overwrite Core global)
 
-        // --- Register Event types and EventType table (best-effort) --- //
+        
 
-        // Register EventType bindings into Lua and export a read-only table
-        // `EventType` containing references to the C++ EventType instances.
-        // Note: we reference the existing C++ EventType objects (via
-        // std::ref) so those instances must outlive the Lua state using them.
-        // Failures here are non-fatal for consumers, but we log them so
-        // developers can see registration problems during development.
+        // --- Register Event types and EventType table (best-effort) --- //
         
         try {
             Event::registerLua(lua);
@@ -1651,10 +1649,6 @@ namespace SDOM
         }
 
         // --- Expose IconIndex & IconButton constants early --- //
-        // Some config scripts reference IconIndex.* constants while the
-        // configuration file is being loaded. Register a best-effort global
-        // `IconIndex` table and a convenience `IconButton` class table
-        // containing the same constants so config.lua can use them.
         try {
             auto make_lua_key = [](const std::string &s) -> std::string {
                 std::string out;

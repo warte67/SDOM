@@ -1449,12 +1449,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Keep the existing shared handle for compatibility and also create
-        // // a per-type binding table so derived types can be migrated
-        // // incrementally from the shared table into per-type tables.
-        // sol::table handle = DisplayHandle::ensure_handle_table(lua);
-        // sol::table per_type_handle = DisplayHandle::ensure_type_bind_table(lua, typeName); // parent type can be provided where available
-
+        // // Ensure table exists
+        // sol::table tbl = IDataObject::ensure_sol_table(lua, typeName);        
 
     } // END: IDisplayObject::_registerDisplayObject()
 

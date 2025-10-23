@@ -57,7 +57,7 @@ namespace SDOM
         } catch(...) {}
         // --- Lua UserType Registration --- //
         Core& core = getCore();
-        core._registerLuaBindings("Core", core.getLua());
+        // core._registerLuaBindings("Core", core.getLua());
 
         // // register the DisplayHandle last so other types can use it
         // DisplayHandle prototypeHandle; // Default DisplayHandle for registration

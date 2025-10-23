@@ -130,8 +130,57 @@ namespace SDOM
         std::string getName() const { return name_; }
         void setName(const std::string& newName) { name_ = newName; }
 
+        static sol::table ensure_sol_table(sol::state_view lua, const std::string& typeName)
+        {
+            sol::table global = lua.globals();
+            sol::object maybeTable = global.raw_get_or(typeName, sol::lua_nil);
+            if (maybeTable.is<sol::table>())
+            {
+                return maybeTable.as<sol::table>();
+            }
+            sol::table newTable = lua.create_table();
+            global[typeName] = newTable;
+            if (true)
+            {
+                std::cout << CLR::MAGENTA << "[LUA] Created table for type: "
+                        << CLR::LT_MAGENTA << typeName << CLR::RESET << std::endl;
+            }
+            return newTable;
+        }           
+
+        // Register a usertype and attach it to the given Lua table (idempotent)
+        template <typename T, typename BaseT>
+        static sol::usertype<T> register_usertype_with_table(sol::state_view lua, const std::string& typeName)
+        {
+            // Ensure parent table exists
+            sol::table table = ensure_sol_table(lua, typeName);
+
+            // Check if already registered
+            sol::object maybeType = table.raw_get_or("__usertype_registered", sol::lua_nil);
+            if (maybeType.is<bool>() && maybeType.as<bool>())
+            {
+                return lua.new_usertype<T>(typeName, sol::base_classes, sol::bases<BaseT>()); // dummy return
+            }
+
+            auto userType = lua.new_usertype<T>(
+                typeName,
+                sol::base_classes, sol::bases<BaseT>()
+            );
+
+            table["__usertype_registered"] = true;
+
+            if (true)
+            {
+                std::cout << CLR::YELLOW << "[LUA] Registered usertype: "
+                        << CLR::LT_YELLOW << typeName << CLR::RESET << std::endl;
+            }
+
+            return userType;
+        }        
+
         // --- New Virtual LUA Registration for Sol2 ---
     public:
+
 
         // New preferred Lua binding path
         void registerLuaBindings(const std::string& typeName, sol::state_view lua)
