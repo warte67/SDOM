@@ -68,6 +68,55 @@ namespace SDOM
         _errors.push_back(error);
     }
 
+    bool UnitTests::run_lua_tests(std::vector<std::string>& errors, const std::string& filename)
+    {
+        bool ok = true;
+        Core& core = getCore();
+        sol::state& lua = core.getLua();
+
+        // Run Lua script safely
+        sol::protected_function_result result = lua.safe_script_file(filename, sol::script_pass_on_error);
+        if (!result.valid())
+        {
+            sol::error err = result;
+            errors.push_back(std::string("Lua runtime error: ") + err.what());
+            return false;
+        }
+
+        sol::object return_value = result;
+
+        if (return_value.is<sol::table>())
+        {
+            sol::table tbl = return_value.as<sol::table>();
+
+            // Extract ok flag (default to false if missing)
+            ok = tbl.get_or("ok", false);
+
+            // Extract the errors array (if present)
+            sol::object err_field = tbl["errors"];
+            if (err_field.is<sol::table>())
+            {
+                sol::table err_table = err_field.as<sol::table>();
+                for (auto& kv : err_table)
+                {
+                    sol::object value = kv.second;
+                    if (value.is<std::string>())
+                        errors.push_back(value.as<std::string>());
+                }
+            }
+        }
+        else if (return_value.is<bool>())
+        {
+            ok = return_value.as<bool>();
+        }
+        else
+        {
+            errors.push_back("Lua test did not return a table or boolean.");
+            ok = false;
+        }
+
+        return ok;
+    } // END: bool UnitTests::run_lua_tests(std::vector<std::string>& errors, const std::string& filename)
 
     // --- Core UnitTest Accessors / Mutators --- //
 

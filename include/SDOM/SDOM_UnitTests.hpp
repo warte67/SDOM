@@ -30,6 +30,7 @@ namespace SDOM
         void add_test(const std::string& name, std::function<bool(std::vector<std::string>&)> func);
         bool run_all(const std::string& objName);
         void push_error(const std::string& error);
+        bool run_lua_tests(std::vector<std::string>& errors, const std::string& filename);
 
         // Deprecated static methods (to be removed)
         template<typename Func>        

@@ -996,69 +996,9 @@ namespace SDOM
 
     bool Core_LUA_Tests(std::vector<std::string>& errors)
     {
-        bool ok = true;
-        Core& core = getCore();
-        sol::state& lua = core.getLua();
-
-        std::string lua_file = "/home/jay/Documents/GitHub/SDOM/examples/test/src/Core_UnitTests.lua";
-
-        // Run Lua script safely
-        sol::protected_function_result result = lua.safe_script_file(lua_file, sol::script_pass_on_error);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            errors.push_back(std::string("Lua runtime error: ") + err.what());
-            return false;
-        }
-
-        // The script returns a value (hopefully a table)
-        sol::object return_value = result;
-
-        // If it’s a table, unpack it
-        if (return_value.is<sol::table>())
-        {
-            sol::table tbl = return_value.as<sol::table>();
-
-            // Extract ok flag (default to false if missing)
-            ok = tbl.get_or("ok", false);
-
-            // Extract the errors array (if present)
-            sol::object err_field = tbl["errors"];
-            if (err_field.is<sol::table>())
-            {
-                sol::table err_table = err_field.as<sol::table>();
-                for (auto& kv : err_table)
-                {
-                    sol::object value = kv.second;
-                    if (value.is<std::string>())
-                        errors.push_back(value.as<std::string>());
-                }
-            }
-        }
-        else if (return_value.is<bool>())
-        {
-            // Script might just return a boolean (e.g. `return true`)
-            ok = return_value.as<bool>();
-        }
-        else
-        {
-            // Unexpected return type
-            errors.push_back("Lua test did not return a table or boolean.");
-            ok = false;
-        }
-
-        return ok;
-    }
-
-    
-    // bool Core_LUA_Tests(std::vector<std::string>& errors)
-    // {
-    //     auto ok = getLua().safe_script_file("./src/Core_UnitTests.lua", sol::script_pass_on_error);        
-
-    //     return ok;
-    // } // END: Core_LUA_Tests(std::vector<std::string>& errors)
-
-
+        UnitTests& ut = UnitTests::getInstance();
+        return ut.run_lua_tests(errors, "src/Core_UnitTests.lua");
+    } // END: Core_LUA_Tests()
 
 
     // --- Main Core UnitTests Runner --- //
