@@ -179,6 +179,11 @@ namespace SDOM
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
 			return sol::make_object(sv, DisplayHandle());
 		});
+
+		// // Debug: record that we registered this name on the Core forwarding table
+		// try {
+		// 	std::cout << "[LUA] core_bind_return_displayobject: registered '" << name << "' on CoreForward" << std::endl;
+		// } catch(...) {}
 		try {
 			lua[name] = [fcopy](sol::this_state ts) {
 				sol::state_view sv = ts;

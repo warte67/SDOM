@@ -1612,8 +1612,6 @@ namespace SDOM
 
         // --- Create the Core usertype (no constructor) and bind methods directly --- //
 
-
-
         // Register Core userdata and ensure userdata lookups delegate to the
         // authoritative per-type table. Provide IDataObject as the base so
         // sol2 registers the proper base class information.
@@ -1621,12 +1619,23 @@ namespace SDOM
         // SDOM::IDataObject::ensure_sol_table(lua, typeName);        
         sol::usertype<Core> objHandleType = SDOM::IDataObject::register_usertype_with_table<Core, SDOM::IDataObject>(lua, typeName);
 
-        // sol::usertype<Core> objHandleType = lua.new_usertype<Core>(typeName,
-        //     sol::no_constructor, sol::base_classes, sol::bases<IDataObject>());        
         this->objHandleType_ = objHandleType;   // Save usertype
-        sol::table coreTable = lua.create_table(); //Create convenience CoreForward table (do NOT overwrite Core global)
+        // Use the authoritative per-type table as the Core forwarding table
+        // so userdata and table-based calls resolve to the same functions.
+        sol::table coreTable = SDOM::IDataObject::ensure_sol_table(lua, typeName);
+        // Publish an explicit CoreForward entry so callers that restore the
+        // Core global after running config scripts can find the forwarding
+        // table. Also ensure the global `Core` initially points to this
+        // forwarding table if nothing else has set it.
+        try {
+            lua["CoreForward"] = coreTable;
+            sol::object maybeCore = lua.globals().raw_get_or("Core", sol::lua_nil);
+            if (!maybeCore.valid() || maybeCore == sol::lua_nil) {
+                lua["Core"] = coreTable;
+            }
+        } catch(...) {}
 
-        
+            
 
         // --- Register Event types and EventType table (best-effort) --- //
         
