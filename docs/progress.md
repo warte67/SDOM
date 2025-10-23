@@ -867,12 +867,32 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Removed the old per-type table binding system.
     - Removed the old fallback system—no compatibility shims remain.
   - Began refactoring `Core` unit tests to use the new binding system. C++ tests are halfway completed.
+    - Completed `Scaffolding` tests.
+    - Completed `Window Dimensions` tests.
+    - Completed `Pixel Dimensions` tests.
+    - Completed `Aspect Ratio Preservation` tests.
+    - Completed `Texture Resize Allowance` tests.
+    - Completed `Pixel Format` tests.
+    - Completed `Renderer Logical Presentation` tests.
 
 ---
 ### [October 22, 2025]
 - **`Core_UnitTests` Refactor Progress:**
   - Continued refactoring `Core_UnitTests` to utilize the new Lua Binding System.
-    - Completed `Factory & EventManager Access` test.
+    - Completed `Window Flags` tests.
+    - Completed `Core Background Color` tests.
+    - Completed `Factory Existence` tests.
+    - Completed `Callback/Hook Registration` tests.
+    - Completed `Stage/Root Node Management` tests.
+---
+### [October 22, 2025]
+- **`Core_UnitTests` Refactor Progress:**
+  - Continued refactoring `Core_UnitTests` to utilize the new Lua Binding System.
+    - Completed `SDL Resource Accessors` tests.
+    - Completed `Configuration Getters/Setters` tests.
+    - Completed `Factory and Event Manager Access` tests.
+    - Completed `Focus & Hover Management` tests.
+    - Completed `DisplayObject Creation` tests.
 
 ---
 ## Next Steps:

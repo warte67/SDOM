@@ -157,25 +157,25 @@
     collectGarbage();                                                           // ✅ Validated by: Core_test16
 
     // --- Future Child Management --- //
-    attachFutureChildren();                                                             // ⚠️ Manually Tested: Needs Formal Unit Test
-    addToOrphanList(const DisplayHandle& orphan);                                       // ⚠️ Manually Tested: Needs Formal Unit Test
-    addToFutureChildrenList(const DisplayHandle& child, const DisplayHandle& parent,    // ⚠️ Manually Tested: Needs Formal Unit Test
+    attachFutureChildren();                                                             // ⚠️ Should this be exposed externally?
+    addToOrphanList(const DisplayHandle& orphan);                                       // ⚠️ Should this be exposed externally?
+    addToFutureChildrenList(const DisplayHandle& child, const DisplayHandle& parent,    // ⚠️ Should this be exposed externally?
             bool useWorld=false, int worldX=0, int worldY=0);
 
     // --- Utility Methods --- //
-    listDisplayObjectNames();                                                           // ⚠️ Manually Tested: Needs Formal Unit Test
-    clearFactory();                                                                     // ⚠️ Manually Tested: Needs Formal Unit Test
-    printObjectRegistry();                                                              // ⚠️ Manually Tested: Needs Formal Unit Test
+    listDisplayObjectNames();                                                           // ⚠️ Should this be exposed externally?
+    clearFactory();                                                                     // ⚠️ Should this be exposed externally?
+    printObjectRegistry();                                                              // ⚠️ Should this be exposed externally?
 
-    findAssetByFilename(const std::string& filename, const std::string& typeName = ""); // ⚠️ Manually Tested: Needs Formal Unit Test
-    findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH);     // ⚠️ Manually Tested: Needs Formal Unit Test
-    unloadAllAssetObjects();                                                            // ⚠️ Manually Tested: Needs Formal Unit Test
-    reloadAllAssetObjects();                                                            // ⚠️ Manually Tested: Needs Formal Unit Test
+    findAssetByFilename(const std::string& filename, const std::string& typeName = ""); // ⚠️ Should this be exposed externally?
+    findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH);     // ⚠️ Should this be exposed externally?
+    unloadAllAssetObjects();                                                            // ⚠️ Should this be exposed externally?
+    reloadAllAssetObjects();                                                            // ⚠️ Should this be exposed externally?
 
     // --- Forwarding helpers to Factory for type-level introspection --- //
-    getPropertyNamesForType(const std::string& typeName);                               // ⚠️ Manually Tested: Needs Formal Unit Test
-    getCommandNamesForType(const std::string& typeName);                                // ⚠️ Manually Tested: Needs Formal Unit Test
-    getFunctionNamesForType(const std::string& typeName);                               // ⚠️ Manually Tested: Needs Formal Unit Test
+    getPropertyNamesForType(const std::string& typeName);                               // ⚠️ Should this be exposed externally?
+    getCommandNamesForType(const std::string& typeName);                                // ⚠️ Should this be exposed externally?
+    getFunctionNamesForType(const std::string& typeName);                               // ⚠️ Should this be exposed externally?
 
 ****************/
 namespace SDOM
@@ -927,7 +927,6 @@ namespace SDOM
             ok = false;
         }
 
-
         // --- AssetObject Creation via sol::table ---
         sol::table assetConfig = core.getLua().create_table();
         assetConfig["name"] = "bmp_font_8x8";
@@ -954,8 +953,6 @@ namespace SDOM
             errors.push_back("AssetObject bmp_font_8x8 was not destroyed properly.");
             ok = false;
         }
-
-
 
         // --- AssetObject Creation via InitStruct ---
         SDOM::BitmapFont::InitStruct bmpAssetInit;
@@ -995,6 +992,73 @@ namespace SDOM
     } // END: bool Core_test16(std::vector<std::string>& errors)    
 
 
+    // --- Lua Integration Tests --- //
+
+    bool Core_LUA_Tests(std::vector<std::string>& errors)
+    {
+        bool ok = true;
+        Core& core = getCore();
+        sol::state& lua = core.getLua();
+
+        std::string lua_file = "/home/jay/Documents/GitHub/SDOM/examples/test/src/Core_UnitTests.lua";
+
+        // Run Lua script safely
+        sol::protected_function_result result = lua.safe_script_file(lua_file, sol::script_pass_on_error);
+        if (!result.valid())
+        {
+            sol::error err = result;
+            errors.push_back(std::string("Lua runtime error: ") + err.what());
+            return false;
+        }
+
+        // The script returns a value (hopefully a table)
+        sol::object return_value = result;
+
+        // If it’s a table, unpack it
+        if (return_value.is<sol::table>())
+        {
+            sol::table tbl = return_value.as<sol::table>();
+
+            // Extract ok flag (default to false if missing)
+            ok = tbl.get_or("ok", false);
+
+            // Extract the errors array (if present)
+            sol::object err_field = tbl["errors"];
+            if (err_field.is<sol::table>())
+            {
+                sol::table err_table = err_field.as<sol::table>();
+                for (auto& kv : err_table)
+                {
+                    sol::object value = kv.second;
+                    if (value.is<std::string>())
+                        errors.push_back(value.as<std::string>());
+                }
+            }
+        }
+        else if (return_value.is<bool>())
+        {
+            // Script might just return a boolean (e.g. `return true`)
+            ok = return_value.as<bool>();
+        }
+        else
+        {
+            // Unexpected return type
+            errors.push_back("Lua test did not return a table or boolean.");
+            ok = false;
+        }
+
+        return ok;
+    }
+
+    
+    // bool Core_LUA_Tests(std::vector<std::string>& errors)
+    // {
+    //     auto ok = getLua().safe_script_file("./src/Core_UnitTests.lua", sol::script_pass_on_error);        
+
+    //     return ok;
+    // } // END: Core_LUA_Tests(std::vector<std::string>& errors)
+
+
 
 
     // --- Main Core UnitTests Runner --- //
@@ -1021,7 +1085,7 @@ namespace SDOM
         ut.add_test("Focus & Hover Management", Core_test15);
         ut.add_test("DisplayObject Creation", Core_test16);
 
-
+        ut.add_test("Lua Integration", Core_LUA_Tests);
 
         return ut.run_all("Core");
     }
