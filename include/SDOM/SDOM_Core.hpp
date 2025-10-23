@@ -59,8 +59,6 @@ namespace SDOM
         bool run(const sol::table& config);      // Convenience overload to configure and run
         bool run(const std::string& configFile); // Convenience overload to load config from Lua file
 
-        // Poll and dispatch pending SDL events once (test helper)
-        void pumpEventsOnce();
         // Signal the main loop to stop. Provide a clear, non-generic message
         // so test output indicates this was a deliberate shutdown requested
         // from scripting (e.g. Lua's Core:quit()). Use the INFO logging macro
@@ -235,6 +233,11 @@ namespace SDOM
         // --- Keyfocus gray level for testing/focus indication --- //
         float getKeyfocusGray() const { return keyfocus_gray_; }
         void setKeyfocusGray(float gray) { keyfocus_gray_ = gray; }
+
+        // --- Event helpers --- //
+        void pumpEventsOnce();
+        void pushMouseEvent(const sol::object& args);
+        void pushKeyboardEvent(const sol::object& args);        
 
 
     private:

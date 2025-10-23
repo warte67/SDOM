@@ -725,46 +725,6 @@ namespace SDOM
     } // END: run()
 
     
-    // Test helper: poll and dispatch any pending SDL events once. This mirrors
-    // the event handling inside Core::run but returns immediately after one
-    // pass. Useful for unit tests that push synthetic SDL events.
-    void Core::pumpEventsOnce()
-    {
-        SDL_Event event;
-        // // Apply any pending configuration requested from other threads
-        // applyPendingConfig();
-        if (!eventManager_)
-            return;
-
-        // std::cout << "Core::pumpEventsOnce(): Dispatching queued event. Remaining queue size: " << eventManager_->getEventQueueSize() << std::endl;
-        while (SDL_PollEvent(&event))
-        {
-            if (this->getIgnoreRealInput()) {
-                if (event.type == SDL_EVENT_MOUSE_MOTION || event.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.type == SDL_EVENT_MOUSE_BUTTON_UP || event.type == SDL_EVENT_MOUSE_WHEEL
-                    || event.type == SDL_EVENT_KEY_DOWN || event.type == SDL_EVENT_KEY_UP || event.type == SDL_EVENT_TEXT_INPUT || event.type == SDL_EVENT_TEXT_EDITING
-                    || event.type == SDL_EVENT_WINDOW_FOCUS_GAINED || event.type == SDL_EVENT_WINDOW_FOCUS_LOST) {
-                    continue;
-                }
-            }
-            if (event.type == SDL_EVENT_QUIT)
-                bIsRunning_ = false;
-
-            if (event.type == SDL_EVENT_WINDOW_RESIZED)
-            {
-                int newWidth, newHeight;
-                if (!SDL_GetWindowSize(window_, &newWidth, &newHeight))
-                    ERROR("Unable to get the new window size: " + std::string(SDL_GetError()));
-                onWindowResize(newWidth, newHeight);
-            }
-            eventManager_->Queue_SDL_Event(event);
-        }
-            // std::cout << "POST -- Core::pumpEventsOnce(): Dispatching queued event. Remaining queue size: " << eventManager_->getEventQueueSize() << std::endl;
-        while (eventManager_->getEventQueueSize() > 0)
-        {
-            eventManager_->DispatchQueuedEvents();  // should pop all queued events
-        }
-    }
-
     bool Core::onInit()
     {
         // Note: We do not need to run onInit() for each object here because
@@ -1483,8 +1443,149 @@ namespace SDOM
         getFactory().printObjectRegistry();
     }
 
+
+    // --- Event helpers --- //
     
-    
+    // Test helper: poll and dispatch any pending SDL events once. This mirrors
+    // the event handling inside Core::run but returns immediately after one
+    // pass. Useful for unit tests that push synthetic SDL events.
+    void Core::pumpEventsOnce()
+    {
+        SDL_Event event;
+        // // Apply any pending configuration requested from other threads
+        // applyPendingConfig();
+        if (!eventManager_)
+            return;
+
+        // std::cout << "Core::pumpEventsOnce(): Dispatching queued event. Remaining queue size: " << eventManager_->getEventQueueSize() << std::endl;
+        while (SDL_PollEvent(&event))
+        {
+            if (this->getIgnoreRealInput()) {
+                if (event.type == SDL_EVENT_MOUSE_MOTION || event.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.type == SDL_EVENT_MOUSE_BUTTON_UP || event.type == SDL_EVENT_MOUSE_WHEEL
+                    || event.type == SDL_EVENT_KEY_DOWN || event.type == SDL_EVENT_KEY_UP || event.type == SDL_EVENT_TEXT_INPUT || event.type == SDL_EVENT_TEXT_EDITING
+                    || event.type == SDL_EVENT_WINDOW_FOCUS_GAINED || event.type == SDL_EVENT_WINDOW_FOCUS_LOST) {
+                    continue;
+                }
+            }
+            if (event.type == SDL_EVENT_QUIT)
+                bIsRunning_ = false;
+
+            if (event.type == SDL_EVENT_WINDOW_RESIZED)
+            {
+                int newWidth, newHeight;
+                if (!SDL_GetWindowSize(window_, &newWidth, &newHeight))
+                    ERROR("Unable to get the new window size: " + std::string(SDL_GetError()));
+                onWindowResize(newWidth, newHeight);
+            }
+            eventManager_->Queue_SDL_Event(event);
+        }
+            // std::cout << "POST -- Core::pumpEventsOnce(): Dispatching queued event. Remaining queue size: " << eventManager_->getEventQueueSize() << std::endl;
+        while (eventManager_->getEventQueueSize() > 0)
+        {
+            eventManager_->DispatchQueuedEvents();  // should pop all queued events
+        }
+    }
+
+    void Core::pushMouseEvent(const sol::object& args)
+    {
+		Core* c = &Core::getInstance();
+		// Expect a table with { x=<stage-x>, y=<stage-y>, type="down"|"up", button=<int> }
+		if (!args.is<sol::table>()) return;
+		sol::table t = args.as<sol::table>();
+		if (!t["x"].valid() || !t["y"].valid()) return;
+		float sx = t["x"].get<float>();
+		float sy = t["y"].get<float>();
+		std::string type = "down";
+		if (t["type"].valid()) type = t["type"].get<std::string>();
+		int button = 1;
+		if (t["button"].valid()) button = t["button"].get<int>();
+
+		// Convert stage/render coords to window coords using SDL_RenderCoordinatesToWindow
+		float winX = 0.0f, winY = 0.0f;
+		SDL_Renderer* renderer = c->getRenderer();
+		if (renderer) 
+		{
+			SDL_RenderCoordinatesToWindow(renderer, sx, sy, &winX, &winY);
+			LUA_INFO("pushMouseEvent_lua: SDL_RenderCoordinatesToWindow stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
+		} 
+		else 
+		{
+			// Fallback: simple scaling (may fail in tiled/letterboxed)
+			const Core::CoreConfig& cfg = c->getConfig();
+			winX = sx * cfg.pixelWidth;
+			winY = sy * cfg.pixelHeight;
+			LUA_INFO("pushMouseEvent_lua: Fallback scaling stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
+		}
+
+		// Debug logging for synthetic mouse events
+		LUA_INFO("[pushMouseEvent_lua] stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
+
+        Uint32 winID = 0;
+        if (c->getWindow()) winID = SDL_GetWindowID(c->getWindow());
+
+		SDL_Event ev;
+		std::memset(&ev, 0, sizeof(ev));
+		if (type == "up") {
+			ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
+			ev.button.windowID = winID;
+			ev.button.which = 0;
+			ev.button.button = button;
+			ev.button.clicks = 1;
+			ev.button.x = winX;
+			ev.button.y = winY;
+			ev.motion.windowID = winID;
+			ev.motion.which = 0;
+			ev.motion.x = winX;
+			ev.motion.y = winY;
+		} else if (type == "motion") {
+			ev.type = SDL_EVENT_MOUSE_MOTION;
+			ev.motion.windowID = winID;
+			ev.motion.which = 0;
+			ev.motion.x = winX;
+			ev.motion.y = winY;
+		} else {
+			ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+			ev.button.windowID = winID;
+			ev.button.which = 0;
+			ev.button.button = button;
+			ev.button.clicks = 1;
+			ev.button.x = winX;
+			ev.button.y = winY;
+			ev.motion.windowID = winID;
+			ev.motion.which = 0;
+			ev.motion.x = winX;
+			ev.motion.y = winY;
+		}
+		// SDL_PushEvent(&ev);
+		c->getEventManager().Queue_SDL_Event(ev);        
+    } // END void Core::pushMouseEvent()
+
+    void Core::pushKeyboardEvent(const sol::object& args)
+    {
+		Core* c = &Core::getInstance();
+		if (!args.is<sol::table>()) return;
+		sol::table t = args.as<sol::table>();
+		if (!t["key"].valid()) return;
+		int key = t["key"].get<int>();
+		std::string type = "down";
+		if (t["type"].valid()) type = t["type"].get<std::string>();
+		int mod = 0;
+		if (t["mod"].valid()) mod = t["mod"].get<int>();
+
+		SDL_Event ev;
+		std::memset(&ev, 0, sizeof(ev));
+		if (type == "up") ev.type = SDL_EVENT_KEY_UP;
+		else ev.type = SDL_EVENT_KEY_DOWN;
+
+		ev.key.windowID = c->getWindow() ? SDL_GetWindowID(c->getWindow()) : 0;
+		ev.key.timestamp = SDL_GetTicks();
+		ev.key.repeat = 0;
+		ev.key.mod = mod;
+		ev.key.key = key;
+
+		// SDL_PushEvent(&ev);
+		c->getEventManager().Queue_SDL_Event(ev);
+    } // END void Core::pushKeyboardEvent()
 
 
     // --- Lua UserType Registration --- //

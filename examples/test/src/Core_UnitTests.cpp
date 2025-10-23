@@ -5,6 +5,7 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp> 
+#include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
@@ -104,16 +105,16 @@
     setIsTraversing(bool traversing);                            // Validated by: Core_test14
 
     // --- Focus & Hover Management --- //
-    handleTabKeyPress();                                         // TODO: Needs test
-    handleTabKeyPressReverse();                                  // TODO: Needs test
-    setKeyboardFocusedObject(DisplayHandle obj);                 // TODO: Needs test
-    getKeyboardFocusedObject();                                  // TODO: Needs test
-    clearKeyboardFocusedObject();                                // TODO: Needs test
-    setMouseHoveredObject(DisplayHandle obj);                    // TODO: Needs test
-    getMouseHoveredObject();                                     // TODO: Needs test
+    handleTabKeyPress();                                         // Validated by: Core_test15
+    handleTabKeyPressReverse();                                  // Validated by: Core_test15
+    setKeyboardFocusedObject(DisplayHandle obj);                 // Validated by: Core_test15
+    getKeyboardFocusedObject();                                  // Validated by: Core_test15
+    clearKeyboardFocusedObject();                                // Validated by: Core_test15
+    setMouseHoveredObject(DisplayHandle obj);                    // Validated by: Core_test15
+    getMouseHoveredObject();                                     // Validated by: Core_test15
 
     // --- Lua State Access --- //
-    getLua();                                                    // TODO: Needs test
+    getLua();                                                    // Verified by: Core::onInit()
 
     //////////////////////////////
     // --- Factory Wrappers --- //
@@ -721,8 +722,212 @@ namespace SDOM
     } // END: Core_test14()
 
 
-    // --- Main Core UnitTests Runner --- //
+    // Focus & Hover Management
+    bool Core_test15(std::vector<std::string>& errors)   
+    {
+        bool ok = true;
+        Core& core = getCore();
 
+        // Save the current mouse cursor position
+        float mx, my;
+        SDL_GetMouseState(&mx, &my);
+
+        // Handle Tab Key Press
+        core.handleTabKeyPress();
+        DisplayHandle original_focused = core.getKeyboardFocusedObject();
+        if (!original_focused.isValid()) 
+        {
+            errors.push_back("No original focused object.");
+            ok = false;
+        }
+        if (ok)
+        {
+            core.handleTabKeyPress();
+            if (core.getKeyboardFocusedObject() == original_focused) 
+            {
+                errors.push_back("Tab key press did not change focused object.");
+                ok = false;
+            }
+            core.handleTabKeyPressReverse();
+            if (core.getKeyboardFocusedObject() != original_focused) 
+            {
+                errors.push_back("Reverse Tab key press did not restore original focused object.");
+                ok = false;
+            }
+            core.handleTabKeyPress();
+            if (core.getKeyboardFocusedObject() == original_focused) 
+            {
+                errors.push_back("Tab key press did not change focused object the second time.");
+                ok = false;
+            }   
+            core.setKeyboardFocusedObject(original_focused);
+            if (core.getKeyboardFocusedObject() != original_focused) 
+            {
+                errors.push_back("setKeyboardFocusedObject did not restore original focused object.");
+                ok = false;
+            }
+        }
+        // Handle Mouse Hovered Object
+        DisplayHandle original_hovered = core.getMouseHoveredObject();
+        if (original_hovered.isValid()) 
+        {
+            errors.push_back("Should not have an original hovered object.");
+            ok = false;
+        }
+
+        DisplayHandle blueishBox = core.getDisplayObject("blueishBox");
+        if (!blueishBox.isValid()) 
+        {
+            errors.push_back("blueishBox object not found for hover test.");
+            ok = false;
+        }
+        if (ok) 
+        {
+            core.setMouseHoveredObject(blueishBox);
+            if (core.getMouseHoveredObject() != blueishBox) {
+                errors.push_back("setMouseHoveredObject did not set to blueishBox.");
+                ok = false;
+            }
+            // send a fake mouse move event to be over the blueishBox
+            SDL_WarpMouseInWindow(core.getWindow(),
+                static_cast<int>(blueishBox->getX() + (blueishBox->getWidth() / 2.0f)),
+                static_cast<int>(blueishBox->getY() + (blueishBox->getHeight() / 2.0f))
+            );
+        }
+        DisplayHandle new_hovered = core.getMouseHoveredObject();
+        if (new_hovered != blueishBox) 
+        {
+            errors.push_back("Mouse hovered object is not blueishBox after event.");
+            ok = false;
+        }        
+        // move the mouse back 
+        SDL_WarpMouseInWindow(core.getWindow(), mx, my);
+        return ok;
+    } // END: Core_test15(std::vector<std::string>& errors)   
+
+
+
+    // // --- Object Creation --- //
+    // createDisplayObject(const std::string& typeName, const sol::table& config);         // TODO: Needs test
+    // createDisplayObject(const std::string& typeName,                                    // TODO: Needs test
+    //     const SDOM::IDisplayObject::InitStruct& init); 
+    // createDisplayObjectFromScript(const std::string& typeName,                          // TODO: Needs test
+    //     const std::string& luaScript);       
+
+    // createAssetObject(const std::string& typeName, const sol::table& config);           // TODO: Needs test
+    // createAssetObject(const std::string& typeName,                                      // TODO: Needs test
+    //     const SDOM::IAssetObject::InitStruct& init);     
+    // createAssetObjectFromScript(const std::string& typeName,                            // TODO: Needs test
+    //     const std::string& luaScript);        
+
+
+    // scaffolding for the Core UnitTests
+    bool Core_test16(std::vector<std::string>& errors)   
+    {
+        bool ok = true;
+        Core& core = getCore();
+        Factory& factory = core.getFactory();
+
+        // --- DisplayObject Creation via sol::table ---
+        sol::table boxConfig = core.getLua().create_table();
+        boxConfig["name"] = "testBox";
+        boxConfig["type"] = "Box";
+        boxConfig["color"] = {255, 0, 0, 255};
+        boxConfig["x"] = 42;
+        boxConfig["y"] = 24;
+        boxConfig["width"] = 100;
+        boxConfig["height"] = 50;
+        DisplayHandle boxHandle = core.createDisplayObject("Box", boxConfig);
+        if (!boxHandle.isValid()) {
+            errors.push_back("createDisplayObject (sol::table) failed for Box.");
+            ok = false;
+        }
+        core.destroyDisplayObject(boxHandle.getName());
+
+        // --- DisplayObject Creation via InitStruct ---
+        SDOM::IDisplayObject::InitStruct boxInit;
+        boxInit.name = "testBox2";
+        boxInit.type = "Box";
+        boxInit.x = 100;
+        boxInit.y = 200;
+        boxInit.width = 80;
+        boxInit.height = 40;
+        DisplayHandle boxHandle2 = core.createDisplayObject("Box", boxInit);
+        if (!boxHandle2.isValid()) {
+            errors.push_back("createDisplayObject (InitStruct) failed for Box.");
+            ok = false;
+        }
+        core.destroyDisplayObject(boxHandle2.getName());
+
+        // --- DisplayObject Creation via Lua Script ---
+        std::string boxScript = R"(
+            name = "testBox3",
+            type = "Box",
+            color = {0, 255, 0, 255},
+            x = 300,
+            y = 400,
+            width = 60,
+            height = 30
+        )";
+        DisplayHandle boxHandle3 = core.createDisplayObjectFromScript("Box", boxScript);
+        if (!boxHandle3.isValid()) {
+            errors.push_back("createDisplayObjectFromScript failed for Box.");
+            ok = false;
+        }        
+        core.destroyDisplayObject(boxHandle3.getName());
+
+        // Cleanup orphaned objects if any
+        if (factory.countOrphanedDisplayObjects() != 0) {
+            errors.push_back("Orphaned DisplayObjects not cleaned up after destruction.");
+            ok = false;
+        }
+        factory.collectGarbage();
+
+
+        // // --- AssetObject Creation via sol::table ---
+        // sol::table assetConfig = core.getLua().create_table();
+        // assetConfig["name"] = "testAsset";
+        // assetConfig["typeName"] = "Image";
+        // assetConfig["filename"] = "test.png";
+        // AssetHandle assetHandle = core.createAssetObject("Image", assetConfig);
+        // if (!assetHandle.isValid()) {
+        //     errors.push_back("createAssetObject (sol::table) failed for Image.");
+        //     ok = false;
+        // }
+
+        // // --- AssetObject Creation via InitStruct ---
+        // SDOM::IAssetObject::InitStruct assetInit;
+        // assetInit.name = "testAsset2";
+        // assetInit.type = "Image";
+        // assetInit.filename = "test2.png";
+        // AssetHandle assetHandle2 = core.createAssetObject("Image", assetInit);
+        // if (!assetHandle2.isValid()) {
+        //     errors.push_back("createAssetObject (InitStruct) failed for Image.");
+        //     ok = false;
+        // }
+
+        // // --- AssetObject Creation via Lua Script ---
+        // std::string assetScript = R"(
+        //     return {
+        //         name = "testAsset3",
+        //         typeName = "Image",
+        //         filename = "test3.png"
+        //     }
+        // )";
+        // AssetHandle assetHandle3 = core.createAssetObjectFromScript("Image", assetScript);
+        // if (!assetHandle3.isValid()) {
+        //     errors.push_back("createAssetObjectFromScript failed for Image.");
+        //     ok = false;
+        // }
+
+        return ok;
+
+    } // END: bool Core_test16(std::vector<std::string>& errors)    
+
+
+
+
+    // --- Main Core UnitTests Runner --- //
     bool Core_UnitTests()
     {
         UnitTests& ut = UnitTests::getInstance();
@@ -743,6 +948,10 @@ namespace SDOM
         ut.add_test("SDL Resource Accessors", Core_test12);
         ut.add_test("Configuration Getters/Setters", Core_test13);
         ut.add_test("Factory and Event Manager Access", Core_test14);
+        ut.add_test("Focus & Hover Management", Core_test15);
+        ut.add_test("DisplayObject Creation", Core_test16);
+
+
 
         return ut.run_all("Core");
     }
