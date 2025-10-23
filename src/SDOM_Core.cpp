@@ -1610,16 +1610,28 @@ namespace SDOM
 
         // --- Create the Core usertype (no constructor) and bind methods directly --- //
 
+        // Note: Do NOT expose the raw Core userdata as the global `Core` since
+        // configuration scripts and other code may treat `Core` as a plain table.
+        // Instead create a forwarding table (`CoreForward`) that dispatches to the
+        // Core singleton, assign it to both `CoreForward` and the global `Core`,
+        // and keep the underlying userdata registered separately.  Individual
+        // helper bindings may also register best-effort global aliases for some
+        // functions, but those are per-function and do not replace the forwarding table.
 
-        // Ensure the per-type table exists and register the Core usertype so
-        // userdata method lookups delegate to that table. This order ensures
-        // scripts that inspect `Core` see the table and methods consistently.
-        sol::table coreTable = SDOM::IDataObject::ensure_sol_table(lua, typeName);
-        sol::usertype<Core> objHandleType = SDOM::IDataObject::register_usertype_with_table<Core, IDataObject>(lua, typeName);
+        sol::usertype<Core> objHandleType = lua.new_usertype<Core>(typeName,
+            sol::no_constructor, sol::base_classes, sol::bases<IDataObject>());        
         this->objHandleType_ = objHandleType;   // Save usertype
+        sol::table coreTable = lua.create_table(); //Create convenience CoreForward table (do NOT overwrite Core global)
 
         // --- Register Event types and EventType table (best-effort) --- //
 
+        // Register EventType bindings into Lua and export a read-only table
+        // `EventType` containing references to the C++ EventType instances.
+        // Note: we reference the existing C++ EventType objects (via
+        // std::ref) so those instances must outlive the Lua state using them.
+        // Failures here are non-fatal for consumers, but we log them so
+        // developers can see registration problems during development.
+        
         try {
             Event::registerLua(lua);
             sol::table etbl = lua.create_table();
@@ -1790,16 +1802,6 @@ namespace SDOM
         // --- Utility Methods --- //
         SDOM::core_bind_return_vector_string("listDisplayObjectNames", listDisplayObjectNames_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_noarg("printObjectRegistry", printObjectRegistry_lua, objHandleType, coreTable, lua);
-        // Expose a forwarding table as the global Core so scripts can treat
-        // `Core` as a table (common for configuration scripts) while the
-        // actual userdata remains registered with the usertype. We keep a
-        // separate `CoreForward` global so code can restore the forwarding
-        // table if a script temporarily overwrites `Core` with its own
-        // table (common pattern in config files).
-        try {
-            lua["CoreForward"] = coreTable;
-            lua["Core"] = coreTable;
-        } catch(...) {}
 
     } // End Core::_registerDisplayObject()
 

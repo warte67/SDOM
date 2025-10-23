@@ -63,47 +63,8 @@ namespace SDOM
     // minimal handle table and per-type table exist in the target Lua state.
     void DisplayHandle::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
-        // Ensure minimal shared handle exists.
-        // This keeps the DisplayHandle lightweight while exposing a few
-        // convenience accessors to Lua so scripts can inspect handle state.
         
-        // auto ensure_handle_table = [&](sol::state_view L) -> sol::table {
-        //     if (!L[DisplayHandle::LuaHandleName].valid()) {
-        //         L.new_usertype<DisplayHandle>(DisplayHandle::LuaHandleName, sol::no_constructor);
-        //     }
-        //     return L[DisplayHandle::LuaHandleName];
-        // };
-
-        // static auto set_if_absent = [](sol::table& handle, const char* name, auto&& fn) {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     if (!cur.valid() || cur == sol::lua_nil) {
-        //         handle.set_function(name, std::forward<decltype(fn)>(fn));
-        //     }
-        // };
-
-        // sol::table handle = ensure_handle_table(lua);
-
-        // Ensure the per-type table exists and add functions to it
-        sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, typeName);
-
-
-        // Minimal surface similar to AssetHandle; expose basic getters and
-        // geometry accessors that forward to the underlying IDisplayObject.
-        set_if_absent(handle, "isValid", &DisplayHandle::isValid_lua);
-        set_if_absent(handle, "getName", &DisplayHandle::getName_lua);
-        set_if_absent(handle, "getType", &DisplayHandle::getType_lua);
-        set_if_absent(handle, "getX", [](DisplayHandle& self) -> int { IDisplayObject* o = self.get(); return o ? o->getX() : 0; });
-        set_if_absent(handle, "getY", [](DisplayHandle& self) -> int { IDisplayObject* o = self.get(); return o ? o->getY() : 0; });
-        set_if_absent(handle, "getWidth", [](DisplayHandle& self) -> int { IDisplayObject* o = self.get(); return o ? o->getWidth() : 0; });
-        set_if_absent(handle, "getHeight", [](DisplayHandle& self) -> int { IDisplayObject* o = self.get(); return o ? o->getHeight() : 0; });
-
-        // Register the concrete usertype once (supply base classes if needed).
-        // If DisplayHandle derives from IDataObject:
-        auto ut = SDOM::IDataObject::register_usertype_with_table<DisplayHandle, IDataObject>(lua, typeName);
-
-        // Optionally store `ut` in a derived-class member if you need it later.
-        this->objHandleType_ = ut; // only possible if objHandleType_ has the correct type in the derived class
-
+        
     }
 
 } // namespace SDOM

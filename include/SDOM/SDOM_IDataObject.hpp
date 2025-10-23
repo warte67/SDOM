@@ -133,49 +133,6 @@ namespace SDOM
         // --- New Virtual LUA Registration for Sol2 ---
     public:
 
-        static inline void set_if_absent(sol::table t, const char* name, auto&& fn) {
-            sol::object cur = t.raw_get_or(name, sol::lua_nil);
-            if (!cur.valid() || cur == sol::lua_nil) {
-                t.set_function(name, std::forward<decltype(fn)>(fn));
-            }
-        }
-
-        // Ensure a per-type table exists in the given Lua state. This is
-        // idempotent and will return an existing table if present, or create
-        // a new one otherwise.
-        static inline sol::table ensure_sol_table(sol::state_view lua, const std::string& typeName)
-        {
-            sol::object maybe = lua[typeName];
-            if (maybe.valid() && maybe != sol::lua_nil && maybe.is<sol::table>()) {
-                return maybe.as<sol::table>();
-            }
-            sol::table tbl = lua.create_table();
-            lua[typeName] = tbl;
-            return tbl;
-        }
-
-        // Register a C++ usertype<T> with Lua and arrange for userdata method
-        // lookups to delegate to the per-type table created via
-        // ensure_sol_table(). This function must be called only once per Lua
-        // state for a given type name; attempting to re-register the same
-        // `typeName` with sol2 may be an error depending on sol2/lua state.
-        template<typename T, typename... Bases>
-        static inline sol::usertype<T> register_usertype_with_table(sol::state_view lua, const std::string& typeName)
-        {
-            sol::table tbl = ensure_sol_table(lua, typeName);
-
-            // Create the usertype for the concrete type. Callers must supply
-            // the appropriate base classes as template parameters when
-            // necessary, e.g. register_usertype_with_table<DisplayHandle, IDataObject>(...)
-            sol::usertype<T> ut = lua.new_usertype<T>(typeName, sol::no_constructor, sol::base_classes, sol::bases<Bases...>());
-
-            // Delegate userdata lookup to the table so methods live in the
-            // single authoritative per-type table (tbl).
-            ut[sol::meta_function::index] = tbl;
-
-            return ut;
-        }
-
         // New preferred Lua binding path
         void registerLuaBindings(const std::string& typeName, sol::state_view lua)
         {
@@ -186,25 +143,12 @@ namespace SDOM
 
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua)
         {
-            // Ensure a per-type table exists for this IDataObject-derived type
-            sol::table tbl = ensure_sol_table(lua, typeName);
-
-            // Register a base usertype for IDataObject so derived classes can
-            // safely call into the userdata metatable. We use the helper
-            // so userdata __index delegates to the per-type table.
-            try {
-                sol::usertype<IDataObject> ut = register_usertype_with_table<IDataObject>(lua, typeName);
-                this->objHandleType_ = ut;
-            } catch(...) {
-                // Non-fatal: if the usertype is already registered this will
-                // throw; we ignore here to keep registration idempotent.
-            }
-
-            // Debug output for registration (disabled by default)
-            if (DEBUG_REGISTER_LUA) {
+            // if (DEBUG_REGISTER_LUA)
+            if (false) // TEMP DISABLE
+            {
                 std::string typeNameLocal = "IDataObject";
-                std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                          << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
+                std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
+                        << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
             }
         }   
         

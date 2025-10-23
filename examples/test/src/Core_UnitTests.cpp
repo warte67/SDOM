@@ -27,40 +27,40 @@
     All Core_test1 through Core_test16 have PASSED as of 2025-10-23.
 
     // --- Callback/Hook Registration --- //
-    registerOnInit(std::function<bool()>)                        // ✅ Validated by: Core_test10 {C++ Only}
-    registerOnQuit(std::function<void()>)                        // ✅ Validated by: Core_test10 {C++ Only}
-    registerOnUpdate(std::function<void(float)>)                 // ✅ Validated by: Core_test10 {C++ Only}
-    registerOnEvent(std::function<void(const Event&)>)           // ✅ Validated by: Core_test10 {C++ Only}
-    registerOnRender(std::function<void()>)                      // ✅ Validated by: Core_test10 {C++ Only}
-    registerOnUnitTest(std::function<bool()>)                    // ✅ Validated by: Core_test10 {C++ Only}
-    registerOnWindowResize(std::function<void(int, int)>)        // ✅ Validated by: Core_test10 {C++ Only}
+    registerOnInit(std::function<bool()>)                        // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnQuit(std::function<void()>)                        // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnUpdate(std::function<void(float)>)                 // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnEvent(std::function<void(const Event&)>)           // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnRender(std::function<void()>)                      // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnUnitTest(std::function<bool()>)                    // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnWindowResize(std::function<void(int, int)>)        // ✅ Validated by: Core_test10 (C++ Only)
     registerOn(std::string name, sol::function f)                // ⚠️ Verify in config.lua
 
     // --- Lua Registration Internal Helpers --- //
-    _fnOnInit(std::function<bool()> fn)                          // ✅ Validated by: Core_test10 {C++ Only}
-    _fnOnQuit(std::function<void()> fn)                          // ✅ Validated by: Core_test10 {C++ Only}
-    _fnOnUpdate(std::function<void(float)> fn)                   // ✅ Validated by: Core_test10 {C++ Only}
-    _fnOnEvent(std::function<void(const Event&)> fn)             // ✅ Validated by: Core_test10 {C++ Only}
-    _fnOnRender(std::function<void()> fn)                        // ✅ Validated by: Core_test10 {C++ Only}
-    _fnOnUnitTest(std::function<bool()> fn)                      // ✅ Validated by: Core_test10 {C++ Only}
-    _fnOnWindowResize(std::function<void(int, int)> fn)          // ✅ Validated by: Core_test10 {C++ Only}
-    _fnGetOnInit()                                               // ✅ Validated by: Core_test10 {C++ Only}
-    _fnGetOnQuit()                                               // ✅ Validated by: Core_test10 {C++ Only}
-    _fnGetOnUpdate()                                             // ✅ Validated by: Core_test10 {C++ Only}
-    _fnGetOnEvent()                                              // ✅ Validated by: Core_test10 {C++ Only}
-    _fnGetOnRender()                                             // ✅ Validated by: Core_test10 {C++ Only}
-    _fnGetOnUnitTest()                                           // ✅ Validated by: Core_test10 {C++ Only}
-    _fnGetOnWindowResize()                                       // ✅ Validated by: Core_test10 {C++ Only}
+    _fnOnInit(std::function<bool()> fn)                          // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnQuit(std::function<void()> fn)                          // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnUpdate(std::function<void(float)> fn)                   // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnEvent(std::function<void(const Event&)> fn)             // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnRender(std::function<void()> fn)                        // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnUnitTest(std::function<bool()> fn)                      // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnWindowResize(std::function<void(int, int)> fn)          // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnInit()                                               // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnQuit()                                               // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnUpdate()                                             // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnEvent()                                              // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnRender()                                             // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnUnitTest()                                           // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnWindowResize()                                       // ✅ Validated by: Core_test10 (C++ Only)
 
 
     // --- Stage/Root Node Management --- //
     setRootNode(const std::string& name)                         // ✅ Validated by: Core_test11
     setRootNode(const DisplayHandle& handle)                     // ✅ Validated by: Core_test11
     setStage(const std::string& name)                            // ✅ Validated by: Core_test11
-    getStage()                                                   // ✅ Validated by: Core_test11 {LUA Confirmed}
-    getRootNodePtr()                                             // ✅ Validated by: Core_test11 {C++ Only}
-    getRootNode()                                                // ✅ Validated by: Core_test11 {C++ Only}
-    getStageHandle()                                             // ✅ Validated by: Core_test11 {alias getStage}
+    getStage()                                                   // ✅ Validated by: Core_test11
+    getRootNodePtr()                                             // ✅ Validated by: Core_test11
+    getRootNode()                                                // ✅ Validated by: Core_test11
+    getStageHandle()                                             // ✅ Validated by: Core_test11
 
     // --- Window/Renderer/Texture/Config --- //
     getWindow()                                                  // ✅ Validated by: Core_test1, Core_test12

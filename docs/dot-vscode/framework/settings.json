@@ -78,15 +78,5 @@
         "variant": "cpp",
         "print": "cpp",
         "csignal": "cpp"
-    },
-    "Lua": {
-        "workspace": {
-            "library": [
-                "${workspaceFolder}/lua/api_stubs.lua"
-            ]
-        },
-        "diagnostics": {
-            "globals": ["Core", "DisplayHandle", "AssetHandle", "Factory", "UnitTests"]
-        }
     }
 }
