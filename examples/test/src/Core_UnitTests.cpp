@@ -27,29 +27,31 @@
     All Core_test1 through Core_test16 have PASSED as of 2025-10-23.
 
     // --- Callback/Hook Registration --- //
-    registerOnInit(std::function<bool()>)                        // ✅ Validated by: Core_test10
-    registerOnQuit(std::function<void()>)                        // ✅ Validated by: Core_test10
-    registerOnUpdate(std::function<void(float)>)                 // ✅ Validated by: Core_test10
-    registerOnEvent(std::function<void(const Event&)>)           // ✅ Validated by: Core_test10
-    registerOnRender(std::function<void()>)                      // ✅ Validated by: Core_test10
-    registerOnUnitTest(std::function<bool()>)                    // ✅ Validated by: Core_test10
-    registerOnWindowResize(std::function<void(int, int)>)        // ✅ Validated by: Core_test10
+    registerOnInit(std::function<bool()>)                        // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnQuit(std::function<void()>)                        // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnUpdate(std::function<void(float)>)                 // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnEvent(std::function<void(const Event&)>)           // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnRender(std::function<void()>)                      // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnUnitTest(std::function<bool()>)                    // ✅ Validated by: Core_test10 (C++ Only)
+    registerOnWindowResize(std::function<void(int, int)>)        // ✅ Validated by: Core_test10 (C++ Only)
+    registerOn(std::string name, sol::function f)                // ⚠️ Verify in config.lua
 
     // --- Lua Registration Internal Helpers --- //
-    _fnOnInit(std::function<bool()> fn)                          // ✅ Validated by: Core_test10
-    _fnOnQuit(std::function<void()> fn)                          // ✅ Validated by: Core_test10
-    _fnOnUpdate(std::function<void(float)> fn)                   // ✅ Validated by: Core_test10
-    _fnOnEvent(std::function<void(const Event&)> fn)             // ✅ Validated by: Core_test10
-    _fnOnRender(std::function<void()> fn)                        // ✅ Validated by: Core_test10
-    _fnOnUnitTest(std::function<bool()> fn)                      // ✅ Validated by: Core_test10
-    _fnOnWindowResize(std::function<void(int, int)> fn)          // ✅ Validated by: Core_test10
-    _fnGetOnInit()                                               // ✅ Validated by: Core_test10
-    _fnGetOnQuit()                                               // ✅ Validated by: Core_test10
-    _fnGetOnUpdate()                                             // ✅ Validated by: Core_test10
-    _fnGetOnEvent()                                              // ✅ Validated by: Core_test10
-    _fnGetOnRender()                                             // ✅ Validated by: Core_test10
-    _fnGetOnUnitTest()                                           // ✅ Validated by: Core_test10
-    _fnGetOnWindowResize()                                       // ✅ Validated by: Core_test10
+    _fnOnInit(std::function<bool()> fn)                          // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnQuit(std::function<void()> fn)                          // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnUpdate(std::function<void(float)> fn)                   // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnEvent(std::function<void(const Event&)> fn)             // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnRender(std::function<void()> fn)                        // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnUnitTest(std::function<bool()> fn)                      // ✅ Validated by: Core_test10 (C++ Only)
+    _fnOnWindowResize(std::function<void(int, int)> fn)          // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnInit()                                               // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnQuit()                                               // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnUpdate()                                             // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnEvent()                                              // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnRender()                                             // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnUnitTest()                                           // ✅ Validated by: Core_test10 (C++ Only)
+    _fnGetOnWindowResize()                                       // ✅ Validated by: Core_test10 (C++ Only)
+
 
     // --- Stage/Root Node Management --- //
     setRootNode(const std::string& name)                         // ✅ Validated by: Core_test11
@@ -388,13 +390,20 @@ namespace SDOM
         auto orig_fnOnRender      = core._fnGetOnRender();
         auto orig_fnOnWindowResize= core._fnGetOnWindowResize();
 
+        core.registerOnInit(testInitFn);
+        core.registerOnQuit(testQuitFn);
+        core.registerOnUpdate(testUpdateFn);
+        core.registerOnEvent(testEventFn);
+        core.registerOnRender(testRenderFn);
+        core.registerOnWindowResize(testWindowResizeFn);
+
         // Set new hooks for testing
-        core._fnOnInit(testInitFn);
-        core._fnOnQuit(testQuitFn);
-        core._fnOnUpdate(testUpdateFn);
-        core._fnOnEvent(testEventFn);
-        core._fnOnRender(testRenderFn);
-        core._fnOnWindowResize(testWindowResizeFn);
+        // core._fnOnInit(testInitFn);
+        // core._fnOnQuit(testQuitFn);
+        // core._fnOnUpdate(testUpdateFn);
+        // core._fnOnEvent(testEventFn);
+        // core._fnOnRender(testRenderFn);
+        // core._fnOnWindowResize(testWindowResizeFn);
 
         // Perform checks to verify the hooks were set correctly
         if (core._fnGetOnInit().target_type() != typeid(testInitFn)) {

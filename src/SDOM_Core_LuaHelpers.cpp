@@ -3,6 +3,8 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Core_LuaHelpers.hpp>
+#include <SDOM/SDOM_EventManager.hpp>
+#include <SDOM/SDOM_Factory.hpp>
 
 namespace SDOM
 {
@@ -164,28 +166,28 @@ namespace SDOM
 		} catch(...) {}
 	}
 
-	// void core_bind_return_displayobject(const std::string& name, std::function<DisplayHandle()> func,
-	// 							sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
-	// {
-	// 	auto fcopy = func;
-	// 	objHandleType[name] = [fcopy](Core& /*core*/) -> DisplayHandle { return fcopy(); };
-	// 	coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/) {
-	// 		sol::state_view sv = ts;
-	// 		DisplayHandle h = fcopy();
-	// 		// Ensure DisplayHandle usertype exists before constructing userdata
-	// 		try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
-	// 		if (h.isValid() && h.get()) return sol::make_object(sv, h);
-	// 		return sol::make_object(sv, DisplayHandle());
-	// 	});
-	// 	try {
-	// 		lua[name] = [fcopy](sol::this_state ts) {
-	// 			sol::state_view sv = ts;
-	// 			DisplayHandle h = fcopy();
-	// 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
-	// 			return sol::make_object(sv, DisplayHandle());
-	// 		};
-	// 	} catch(...) {}
-	// }
+	void core_bind_return_displayobject(const std::string& name, std::function<DisplayHandle()> func,
+								sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+	{
+		auto fcopy = func;
+		objHandleType[name] = [fcopy](Core& /*core*/) -> DisplayHandle { return fcopy(); };
+		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/) {
+			sol::state_view sv = ts;
+			DisplayHandle h = fcopy();
+			// Ensure DisplayHandle usertype exists before constructing userdata
+			// try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
+			if (h.isValid() && h.get()) return sol::make_object(sv, h);
+			return sol::make_object(sv, DisplayHandle());
+		});
+		try {
+			lua[name] = [fcopy](sol::this_state ts) {
+				sol::state_view sv = ts;
+				DisplayHandle h = fcopy();
+				if (h.isValid() && h.get()) return sol::make_object(sv, h);
+				return sol::make_object(sv, DisplayHandle());
+			};
+		} catch(...) {}
+	}
 
 	void core_bind_return_bool(const std::string& name, std::function<bool()> func,
 						sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
@@ -301,30 +303,30 @@ namespace SDOM
 		} catch(...) {}
 	}
 
-	// void core_bind_string_table_return_do(const std::string& name, std::function<DisplayHandle(const std::string&, const sol::table&)> func,
-	// 								sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
-	// {
-	// 	auto fcopy = func;
-	// 	objHandleType[name] = [fcopy](Core& /*core*/, const std::string& typeName, const sol::table& cfg) -> DisplayHandle {
-	// 		return fcopy(typeName, cfg);
-	// 	};
-	// 	coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
-	// 		sol::state_view sv = ts;
-	// 		DisplayHandle h = fcopy(typeName, cfg);
-	// 		// Ensure DisplayHandle usertype exists before constructing userdata
-	// 		try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
-	// 		if (h.isValid() && h.get()) return sol::make_object(sv, h);
-	// 		return sol::make_object(sv, DisplayHandle());
-	// 	});
-	// 	try {
-	// 		lua[name] = [fcopy](sol::this_state ts, const std::string& typeName, const sol::table& cfg) {
-	// 			sol::state_view sv = ts;
-	// 			DisplayHandle h = fcopy(typeName, cfg);
-	// 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
-	// 			return sol::make_object(sv, DisplayHandle());
-	// 		};
-	// 	} catch(...) {}
-	// }
+	void core_bind_string_table_return_do(const std::string& name, std::function<DisplayHandle(const std::string&, const sol::table&)> func,
+									sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+	{
+		auto fcopy = func;
+		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& typeName, const sol::table& cfg) -> DisplayHandle {
+			return fcopy(typeName, cfg);
+		};
+		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
+			sol::state_view sv = ts;
+			DisplayHandle h = fcopy(typeName, cfg);
+			// Ensure DisplayHandle usertype exists before constructing userdata
+			// try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
+			if (h.isValid() && h.get()) return sol::make_object(sv, h);
+			return sol::make_object(sv, DisplayHandle());
+		});
+		try {
+			lua[name] = [fcopy](sol::this_state ts, const std::string& typeName, const sol::table& cfg) {
+				sol::state_view sv = ts;
+				DisplayHandle h = fcopy(typeName, cfg);
+				if (h.isValid() && h.get()) return sol::make_object(sv, h);
+				return sol::make_object(sv, DisplayHandle());
+			};
+		} catch(...) {}
+	}
 
 	void core_bind_string_table_return_asset(const std::string& name, std::function<AssetHandle(const std::string&, const sol::table&)> func,
 									sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
@@ -349,28 +351,28 @@ namespace SDOM
 		} catch(...) {}
 	}
 
-	// void core_bind_string_return_do(const std::string& name, std::function<DisplayHandle(const std::string&)> func,
-	// 						sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
-	// {
-	// 	auto fcopy = func;
-	// 	objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) -> DisplayHandle { return fcopy(s); };
-	// 	coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& s) {
-	// 		sol::state_view sv = ts;
-	// 		DisplayHandle h = fcopy(s);
-	// 		// Ensure DisplayHandle usertype exists before constructing userdata
-	// 		try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
-	// 		if (h.isValid() && h.get()) return sol::make_object(sv, h);
-	// 		return sol::make_object(sv, DisplayHandle());
-	// 	});
-	// 	try {
-	// 		lua[name] = [fcopy](sol::this_state ts, const std::string& s) {
-	// 			sol::state_view sv = ts;
-	// 			DisplayHandle h = fcopy(s);
-	// 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
-	// 			return sol::make_object(sv, DisplayHandle());
-	// 		};
-	// 	} catch(...) {}
-	// }
+	void core_bind_string_return_do(const std::string& name, std::function<DisplayHandle(const std::string&)> func,
+							sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+	{
+		auto fcopy = func;
+		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) -> DisplayHandle { return fcopy(s); };
+		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& s) {
+			sol::state_view sv = ts;
+			DisplayHandle h = fcopy(s);
+			// Ensure DisplayHandle usertype exists before constructing userdata
+			// try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
+			if (h.isValid() && h.get()) return sol::make_object(sv, h);
+			return sol::make_object(sv, DisplayHandle());
+		});
+		try {
+			lua[name] = [fcopy](sol::this_state ts, const std::string& s) {
+				sol::state_view sv = ts;
+				DisplayHandle h = fcopy(s);
+				if (h.isValid() && h.get()) return sol::make_object(sv, h);
+				return sol::make_object(sv, DisplayHandle());
+			};
+		} catch(...) {}
+	}
 
 	void core_bind_string_return_asset(const std::string& name, std::function<AssetHandle(const std::string&)> func,
 							sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
@@ -838,7 +840,153 @@ namespace SDOM
 		}
 	} // END: core_registerOn_lua()
 
+	// --- Stage/Root Node Management --- //
+	void setRootNodeByName_lua(const std::string& name) { Core::getInstance().setRootNode(name); }
+	void setRootNode_lua(const DisplayHandle& handle) { Core::getInstance().setRootNode(handle); }
+	void setStageByName_lua(const std::string& name) { Core::getInstance().setStage(name); }
+	DisplayHandle getRoot_lua() { return Core::getInstance().getRootNode(); }
+	DisplayHandle getStage_lua() { return Core::getInstance().getStageHandle(); }
+	void setStage_lua(const DisplayHandle& handle) { Core::getInstance().setRootNode(handle); }
 
+	// --- Factory & EventManager Access --- //
+	bool getIsTraversing_lua() { return Core::getInstance().getIsTraversing(); }
+	void setIsTraversing_lua(bool traversing) { Core::getInstance().setIsTraversing(traversing); }
+	
+	// --- Object Creation and Lookup --- //
+	DisplayHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config) { return Core::getInstance().createDisplayObject(typeName, config); }
+	DisplayHandle getDisplayObject_lua(const std::string& name) { DisplayHandle h = Core::getInstance().getDisplayObject(name); return h; }
+	bool hasDisplayObject_lua(const std::string& name) { return Core::getInstance().hasDisplayObject(name); }
+    AssetHandle createAssetObject_lua(const std::string& typeName, const sol::table& config) { return getCore().createAssetObject(typeName, config); }
+    AssetHandle getAssetObject_lua(const std::string& name) { return getCore().getAssetObject(name); }
+    bool hasAssetObject_lua(const std::string& name) { return getCore().hasAssetObject(name); }
 
+	// --- Focus & Hover Management --- //
+	void doTabKeyPressForward_lua() { Core::getInstance().handleTabKeyPress(); }
+	void doTabKeyPressReverse_lua() { Core::getInstance().handleTabKeyPressReverse(); }
+	void setKeyboardFocusedObject_lua(const DisplayHandle& handle) { Core::getInstance().setKeyboardFocusedObject(handle); }
+	DisplayHandle getKeyboardFocusedObject_lua() { return Core::getInstance().getKeyboardFocusedObject(); }
+	void setMouseHoveredObject_lua(const DisplayHandle& handle) { Core::getInstance().setMouseHoveredObject(handle); }
+	DisplayHandle getMouseHoveredObject_lua() { return Core::getInstance().getMouseHoveredObject(); }
+
+	// --- Window Title & Timing --- //
+	std::string getWindowTitle_lua() { return Core::getInstance().getWindowTitle(); }
+	void setWindowTitle_lua(const std::string& title) { Core::getInstance().setWindowTitle(title); }
+	float getElapsedTime_lua() { return Core::getInstance().getElapsedTime(); }
+
+	// --- Event helpers exposed to Lua --- //
+	void pumpEventsOnce_lua() { Core::getInstance().pumpEventsOnce(); }
+
+	void pushMouseEvent_lua(const sol::object& args) 
+	{
+		Core* c = &Core::getInstance();
+		// Expect a table with { x=<stage-x>, y=<stage-y>, type="down"|"up", button=<int> }
+		if (!args.is<sol::table>()) return;
+		sol::table t = args.as<sol::table>();
+		if (!t["x"].valid() || !t["y"].valid()) return;
+		float sx = t["x"].get<float>();
+		float sy = t["y"].get<float>();
+		std::string type = "down";
+		if (t["type"].valid()) type = t["type"].get<std::string>();
+		int button = 1;
+		if (t["button"].valid()) button = t["button"].get<int>();
+
+		// Convert stage/render coords to window coords using SDL_RenderCoordinatesToWindow
+		float winX = 0.0f, winY = 0.0f;
+		SDL_Renderer* renderer = c->getRenderer();
+		if (renderer) 
+		{
+			SDL_RenderCoordinatesToWindow(renderer, sx, sy, &winX, &winY);
+			LUA_INFO("pushMouseEvent_lua: SDL_RenderCoordinatesToWindow stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
+		} 
+		else 
+		{
+			// Fallback: simple scaling (may fail in tiled/letterboxed)
+			const Core::CoreConfig& cfg = c->getConfig();
+			winX = sx * cfg.pixelWidth;
+			winY = sy * cfg.pixelHeight;
+			LUA_INFO("pushMouseEvent_lua: Fallback scaling stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
+		}
+
+		// Debug logging for synthetic mouse events
+		LUA_INFO("[pushMouseEvent_lua] stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
+
+		Uint32 winID = 0;
+		if (c->getWindow()) winID = SDL_GetWindowID(c->getWindow());
+
+		SDL_Event ev;
+		std::memset(&ev, 0, sizeof(ev));
+		if (type == "up") {
+			ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
+			ev.button.windowID = winID;
+			ev.button.which = 0;
+			ev.button.button = button;
+			ev.button.clicks = 1;
+			ev.button.x = winX;
+			ev.button.y = winY;
+			ev.motion.windowID = winID;
+			ev.motion.which = 0;
+			ev.motion.x = winX;
+			ev.motion.y = winY;
+		} else if (type == "motion") {
+			ev.type = SDL_EVENT_MOUSE_MOTION;
+			ev.motion.windowID = winID;
+			ev.motion.which = 0;
+			ev.motion.x = winX;
+			ev.motion.y = winY;
+		} else {
+			ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+			ev.button.windowID = winID;
+			ev.button.which = 0;
+			ev.button.button = button;
+			ev.button.clicks = 1;
+			ev.button.x = winX;
+			ev.button.y = winY;
+			ev.motion.windowID = winID;
+			ev.motion.which = 0;
+			ev.motion.x = winX;
+			ev.motion.y = winY;
+		}
+
+		// SDL_PushEvent(&ev);
+		c->getEventManager().Queue_SDL_Event(ev);        
+	} // END: pushMouseEvent_lua()
+
+	void pushKeyboardEvent_lua(const sol::object& args) 
+	{
+		Core* c = &Core::getInstance();
+		if (!args.is<sol::table>()) return;
+		sol::table t = args.as<sol::table>();
+		if (!t["key"].valid()) return;
+		int key = t["key"].get<int>();
+		std::string type = "down";
+		if (t["type"].valid()) type = t["type"].get<std::string>();
+		int mod = 0;
+		if (t["mod"].valid()) mod = t["mod"].get<int>();
+
+		SDL_Event ev;
+		std::memset(&ev, 0, sizeof(ev));
+		if (type == "up") ev.type = SDL_EVENT_KEY_UP;
+		else ev.type = SDL_EVENT_KEY_DOWN;
+
+		ev.key.windowID = c->getWindow() ? SDL_GetWindowID(c->getWindow()) : 0;
+		ev.key.timestamp = SDL_GetTicks();
+		ev.key.repeat = 0;
+		ev.key.mod = mod;
+		ev.key.key = key;
+
+		// SDL_PushEvent(&ev);
+		c->getEventManager().Queue_SDL_Event(ev);
+	} // END: pushKeyboardEvent_lua()
+	
+	// --- Orphan / Future Child Management --- //
+	void destroyDisplayObject_lua(const std::string& name) { Core::getInstance().destroyDisplayObject(name); }
+	int countOrphanedDisplayObjects_lua() { return Core::getInstance().countOrphanedDisplayObjects(); }
+	std::vector<DisplayHandle> getOrphanedDisplayObjects_lua() { return Core::getInstance().getOrphanedDisplayObjects(); }
+	void destroyOrphanedDisplayObjects_lua() { getFactory().destroyOrphanedDisplayObjects(); }
+	void collectGarbage_lua() { getFactory().collectGarbage(); }
+
+	// --- Utility Methods --- //
+	std::vector<std::string> listDisplayObjectNames_lua() { return Core::getInstance().listDisplayObjectNames(); }
+	void printObjectRegistry_lua() { Core::getInstance().printObjectRegistry(); }	
 
 } // namespace SDOM

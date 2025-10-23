@@ -10,21 +10,6 @@ local utils = require("src.UnitTests")
     -- utils.push_error("widget X did not initialize")
     -- utils.push_error("asset Y missing")
 
--- Stage/Root Node Management 
-
-local stage = Core:getStage()
-if not stage then
-    utils.push_error("Core.getStage() returned nil")
-else
-    -- Verify stage properties
-    if stage:getWidth() <= 0 then
-        utils.push_error("Stage width is not greater than 0")
-    end
-    if stage:getHeight() <= 0 then
-        utils.push_error("Stage height is not greater than 0")
-    end
-end
-
 
 
 -- return summary

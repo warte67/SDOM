@@ -884,6 +884,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Completed `Factory Existence` tests.
     - Completed `Callback/Hook Registration` tests.
     - Completed `Stage/Root Node Management` tests.
+    
 ---
 ### [October 22, 2025]
 - **`Core_UnitTests` Refactor Progress:**
@@ -893,6 +894,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Completed `Factory and Event Manager Access` tests.
     - Completed `Focus & Hover Management` tests.
     - Completed `DisplayObject Creation` tests.
+  - Constructed a new lua based unit test scaffolding 
+    - Started `Core_UnitTests.lua` based on the new lua test scaffolding.
 
 ---
 ## Next Steps:
