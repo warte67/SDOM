@@ -29,6 +29,9 @@ namespace SDOM
         using SUPER = IDataObject;
 
     public:
+        // --- Type Info --- //
+        static constexpr const char* TypeName = "Core";
+
         // --- Configuration Struct --- //
         struct CoreConfig 
         {
