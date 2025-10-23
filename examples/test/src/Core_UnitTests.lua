@@ -12,7 +12,7 @@ local utils = require("src.UnitTests")
 
 -- Stage/Root Node Management 
 
--- local stage = Core:getStage()
+local stage = Core:getStage()
 -- if not stage then
 --     utils.push_error("Core.getStage() returned nil")
 -- else
