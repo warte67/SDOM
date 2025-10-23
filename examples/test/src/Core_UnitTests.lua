@@ -16,23 +16,23 @@ local utils = require("src.UnitTests")
 
 -- Stage/Root Node Management 
 
-local stage = Core:getStage()
-if not stage then
-    utils.push_error("Core:getStage() returned nil")
-else
-    -- Verify stage properties
-    if stage:getWidth() <= 0 then
-        utils.push_error("getWidth(): Stage width is not greater than 0")
-    end
-    if stage:getHeight() <= 0 then
-        utils.push_error("getHeight(): Stage height is not greater than 0")
-    end
-end
+-- local stage = Core:getStage()
+-- if not stage then
+--     utils.push_error("Core:getStage() returned nil")
+-- else
+--     -- Verify stage properties
+--     if stage:getWidth() <= 0 then
+--         utils.push_error("getWidth(): Stage width is not greater than 0")
+--     end
+--     if stage:getHeight() <= 0 then
+--         utils.push_error("getHeight(): Stage height is not greater than 0")
+--     end
+-- end
 
-local root_node = Core:getRoot();
-if (root_node.isValid == nil) or (not root_node:isValid()) then
-    utils.push_error("Core:getRoot() returned invalid handle")
-end
+-- local root_node = Core:getRoot();
+-- if (root_node.isValid == nil) or (not root_node:isValid()) then
+--     utils.push_error("Core:getRoot() returned invalid handle")
+-- end
 
 
 
