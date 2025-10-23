@@ -1402,12 +1402,14 @@ namespace SDOM
     } 
 
 
-    void Core::addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject) {
-        getFactory().addDisplayObject(name, std::move(displayObject));
-    }
     void Core::destroyDisplayObject(const std::string& name) {
         getFactory().destroyDisplayObject(name);
     }
+
+    void Core::destroyAssetObject(const std::string& name) {
+        getFactory().destroyAssetObject(name);
+    }
+
 
     int Core::countOrphanedDisplayObjects() const {
         return getFactory().countOrphanedDisplayObjects();
@@ -1415,12 +1417,13 @@ namespace SDOM
     std::vector<DisplayHandle> Core::getOrphanedDisplayObjects() {
         return getFactory().getOrphanedDisplayObjects();
     }
-    void Core::destroyOrphanedDisplayObjects() {
-        getFactory().destroyOrphanedDisplayObjects();
-    }
     void Core::detachOrphans() {
         getFactory().detachOrphans();
     }
+    void Core::collectGarbage() { 
+        getFactory().collectGarbage(); 
+    }
+
 
     void Core::attachFutureChildren() {
         getFactory().attachFutureChildren();

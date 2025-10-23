@@ -12,10 +12,10 @@ namespace SDOM
 {
     BitmapFont::BitmapFont(const InitStruct& init) : IFontObject(init)
     {
-        bitmapFontWidth_ = init.fontWidth;
-        bitmapFontHeight_ = init.fontHeight;
-        if (init.fontWidth < 0)  bitmapFontWidth_ = init.fontSize;
-        if (init.fontHeight < 0) bitmapFontHeight_ = init.fontSize;
+        bitmapFontWidth_ = init.font_width;
+        bitmapFontHeight_ = init.font_height;
+        if (init.font_width < 0)  bitmapFontWidth_ = init.fontSize;
+        if (init.font_height < 0) bitmapFontHeight_ = init.fontSize;
     }
 
     BitmapFont::BitmapFont(const sol::table& config) : IFontObject(config)
@@ -24,8 +24,8 @@ namespace SDOM
         // Prefer Lua keys: "size", "width", "height".
         // Also accept legacy keys: "fontSize", "fontWidth", "fontHeight".
         if (config["size"].valid())        fontSize_ = config["size"].get<int>(); else fontSize_ = init.fontSize;
-        if (config["width"].valid())       bitmapFontWidth_ = config["width"].get<int>(); else bitmapFontWidth_ = init.fontWidth;
-        if (config["height"].valid())      bitmapFontHeight_ = config["height"].get<int>(); else bitmapFontHeight_ = init.fontHeight;
+        if (config["width"].valid())       bitmapFontWidth_ = config["width"].get<int>(); else bitmapFontWidth_ = init.font_width;
+        if (config["height"].valid())      bitmapFontHeight_ = config["height"].get<int>(); else bitmapFontHeight_ = init.font_height;
 
     // legacy overrides (only apply when present; do not clobber previously
     // parsed values by assigning defaults here)

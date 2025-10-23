@@ -27,8 +27,8 @@ namespace SDOM
                     filename = TypeName; // Default filename, can be overridden
                 }
                 int fontSize = 8;     // Font size property for TrueType fonts (and BitmapFont scaling)
-                int fontWidth = -1;     // Optional: non-uniform width (bitmap only)          
-                int fontHeight = -1;    // Optional: non-uniform height (bitmap only
+                int font_width = -1;     // Optional: non-uniform width (bitmap only)          
+                int font_height = -1;    // Optional: non-uniform height (bitmap only)
             };
 
         protected:

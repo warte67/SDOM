@@ -202,8 +202,8 @@ namespace SDOM
             init.filename = "internal_font_8x8";  // underlying texture filename
             init.isInternal = true;             // is an internal resource
             init.fontSize = 8;                  // member name in InitStruct
-            init.fontWidth = 8;                 // font_width for this resource
-            init.fontHeight = 8;                // font_height for this resource            
+            init.font_width = 8;                 // font_width for this resource
+            init.font_height = 8;                // font_height for this resource            
             AssetHandle bmpFont = createAsset("BitmapFont", init);
             (void)bmpFont;
         }
@@ -217,8 +217,8 @@ namespace SDOM
             // fontSize_ so the inherited constructor sees the correct value.
             init.fontSize = 12;                 // BitmapFont::InitStruct field
             init.fontSize_ = 12;                // IFontObject::InitStruct field used by base ctor
-            init.fontWidth = 8;                 // font_width for this resource
-            init.fontHeight = 12;               // font_height for this resource
+            init.font_width = 8;                 // font_width for this resource
+            init.font_height = 12;               // font_height for this resource
             AssetHandle bmpFont = createAsset("BitmapFont", init);
             (void)bmpFont;
         }
@@ -747,7 +747,10 @@ namespace SDOM
         sol::state& lua = SDOM::getLua();
 
         // Try to parse and execute the string as a Lua table
-        sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
+        // sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
+
+        // sol::table result = lua.safe_script(luaScript, sol::script_pass_on_error).get<sol::table>();        
+        sol::object result = lua.safe_script("return {" + luaScript + "}", sol::script_pass_on_error).get<sol::object>();        
 
         if (!result.valid() || !result.is<sol::table>()) 
         {
@@ -958,7 +961,9 @@ namespace SDOM
     {
         // Use global Lua state so created tables are visible to the rest of the app
         sol::state& lua = SDOM::getLua();
-        sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
+        // sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
+        sol::object result = lua.safe_script("return {" + luaScript + "}", sol::script_pass_on_error).get<sol::object>();     
+
         if (!result.valid() || !result.is<sol::table>()) {
             ERROR("Factory::createAsset: Provided string is not a valid Lua table.");
             return AssetHandle();
@@ -1411,6 +1416,7 @@ namespace SDOM
 
     // ----- Orphan and Future Child Management -----
 
+    // Detach all orphans in the orphan list from their parents.
     void Factory::detachOrphans()
     {
         for (auto& orphanHandle : orphanList_)

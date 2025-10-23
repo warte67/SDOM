@@ -88,7 +88,7 @@ namespace SDOM
         int countOrphanedDisplayObjects() const;
         std::vector<DisplayHandle> getOrphanedDisplayObjects();
         void destroyOrphanedDisplayObjects();
-        void detachOrphans();
+        void detachOrphans();   // Detach all orphans in the orphan list from their parents.
         void collectGarbage();  // Maintenance orphaned objects based on their retention policy
 
 

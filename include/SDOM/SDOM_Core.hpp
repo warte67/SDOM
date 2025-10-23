@@ -184,9 +184,8 @@ namespace SDOM
 
         // --- Object Lookup --- //
         IDisplayObject* getDisplayObjectPtr(const std::string& name);
-        DisplayHandle getDisplayObject(const std::string& name);
-        // Backwards-compatibility: old name retained as a thin wrapper
-        DisplayHandle getDisplayObjectHandle(const std::string& name) { return getDisplayObject(name); }
+        DisplayHandle getDisplayObject(const std::string& name);        
+        // DisplayHandle getDisplayObjectHandle(const std::string& name) { return getDisplayObject(name); }  // Backwards-compatibility: old name retained as a thin wrapper
         bool hasDisplayObject(const std::string& name) const;
 
         IAssetObject* getAssetObjectPtr(const std::string& name);
@@ -194,14 +193,14 @@ namespace SDOM
         bool hasAssetObject(const std::string& name) const;
 
         // --- Display Object Management --- //
-        void addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject);
         void destroyDisplayObject(const std::string& name);
+        void destroyAssetObject(const std::string& name);        
 
         // --- Orphan Management --- //
         int countOrphanedDisplayObjects() const;
         std::vector<DisplayHandle> getOrphanedDisplayObjects();
-        void destroyOrphanedDisplayObjects();
         void detachOrphans();
+        void collectGarbage();
 
         // --- Future Child Management --- //
         void attachFutureChildren();

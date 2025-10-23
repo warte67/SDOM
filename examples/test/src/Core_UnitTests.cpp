@@ -10,6 +10,7 @@
 #include <SDOM/SDOM_UnitTests.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
 #include <SDOM/SDOM_Stage.hpp>
+#include <SDOM/SDOM_BitmapFont.hpp>
 
 #include <string>
 #include <vector>
@@ -17,169 +18,166 @@
 
 #include "UnitTests.hpp"
 
+// Checks: ⚠️ ✅ ✔  
+
 /***************
 
     Core Unit Tests:
-    The following unit tests should validate the functionality of these Methods of the Core class.
+    The following unit tests validate the functionality of these Methods of the Core class.
+    All Core_test1 through Core_test16 have PASSED as of 2025-10-23.
 
     // --- Callback/Hook Registration --- //
-    registerOnInit(std::function<bool()>)                        // Validated by: Core_test10
-    registerOnQuit(std::function<void()>)                        // Validated by: Core_test10
-    registerOnUpdate(std::function<void(float)>)                 // Validated by: Core_test10
-    registerOnEvent(std::function<void(const Event&)>)           // Validated by: Core_test10
-    registerOnRender(std::function<void()>)                      // Validated by: Core_test10
-    registerOnUnitTest(std::function<bool()>)                    // (Not directly tested, but similar to Core_test10)
-    registerOnWindowResize(std::function<void(int, int)>)        // Validated by: Core_test10
+    registerOnInit(std::function<bool()>)                        // ✅ Validated by: Core_test10
+    registerOnQuit(std::function<void()>)                        // ✅ Validated by: Core_test10
+    registerOnUpdate(std::function<void(float)>)                 // ✅ Validated by: Core_test10
+    registerOnEvent(std::function<void(const Event&)>)           // ✅ Validated by: Core_test10
+    registerOnRender(std::function<void()>)                      // ✅ Validated by: Core_test10
+    registerOnUnitTest(std::function<bool()>)                    // ✅ Validated by: Core_test10
+    registerOnWindowResize(std::function<void(int, int)>)        // ✅ Validated by: Core_test10
 
     // --- Lua Registration Internal Helpers --- //
-    _fnOnInit(std::function<bool()> fn)                          // Validated by: Core_test10
-    _fnOnQuit(std::function<void()> fn)                          // Validated by: Core_test10
-    _fnOnUpdate(std::function<void(float)> fn)                   // Validated by: Core_test10
-    _fnOnEvent(std::function<void(const Event&)> fn)             // Validated by: Core_test10
-    _fnOnRender(std::function<void()> fn)                        // Validated by: Core_test10
-    _fnOnUnitTest(std::function<bool()> fn)                      // (Not directly tested, but similar to Core_test10)
-    _fnOnWindowResize(std::function<void(int, int)> fn)          // Validated by: Core_test10
-    _fnGetOnInit()                                               // Validated by: Core_test10
-    _fnGetOnQuit()                                               // Validated by: Core_test10
-    _fnGetOnUpdate()                                             // Validated by: Core_test10
-    _fnGetOnEvent()                                              // Validated by: Core_test10
-    _fnGetOnRender()                                             // Validated by: Core_test10
-    _fnGetOnUnitTest()                                           // (Not directly tested, but similar to Core_test10)
-    _fnGetOnWindowResize()                                       // Validated by: Core_test10
+    _fnOnInit(std::function<bool()> fn)                          // ✅ Validated by: Core_test10
+    _fnOnQuit(std::function<void()> fn)                          // ✅ Validated by: Core_test10
+    _fnOnUpdate(std::function<void(float)> fn)                   // ✅ Validated by: Core_test10
+    _fnOnEvent(std::function<void(const Event&)> fn)             // ✅ Validated by: Core_test10
+    _fnOnRender(std::function<void()> fn)                        // ✅ Validated by: Core_test10
+    _fnOnUnitTest(std::function<bool()> fn)                      // ✅ Validated by: Core_test10
+    _fnOnWindowResize(std::function<void(int, int)> fn)          // ✅ Validated by: Core_test10
+    _fnGetOnInit()                                               // ✅ Validated by: Core_test10
+    _fnGetOnQuit()                                               // ✅ Validated by: Core_test10
+    _fnGetOnUpdate()                                             // ✅ Validated by: Core_test10
+    _fnGetOnEvent()                                              // ✅ Validated by: Core_test10
+    _fnGetOnRender()                                             // ✅ Validated by: Core_test10
+    _fnGetOnUnitTest()                                           // ✅ Validated by: Core_test10
+    _fnGetOnWindowResize()                                       // ✅ Validated by: Core_test10
 
     // --- Stage/Root Node Management --- //
-    setRootNode(const std::string& name)                         // Validated by: Core_test11
-    setRootNode(const DisplayHandle& handle)                     // Validated by: Core_test11
-    setStage(const std::string& name)                            // Validated by: Core_test11
-    getStage()                                                   // Validated by: Core_test11 (via getStageHandle)
-    getRootNodePtr()                                             // Validated by: Core_test11
-    getRootNode()                                                // Validated by: Core_test11
-    getStageHandle()                                             // Validated by: Core_test11
+    setRootNode(const std::string& name)                         // ✅ Validated by: Core_test11
+    setRootNode(const DisplayHandle& handle)                     // ✅ Validated by: Core_test11
+    setStage(const std::string& name)                            // ✅ Validated by: Core_test11
+    getStage()                                                   // ✅ Validated by: Core_test11
+    getRootNodePtr()                                             // ✅ Validated by: Core_test11
+    getRootNode()                                                // ✅ Validated by: Core_test11
+    getStageHandle()                                             // ✅ Validated by: Core_test11
 
     // --- Window/Renderer/Texture/Config --- //
-    getWindow()                                                  // Validated by: Core_test1, Core_test12
-    SDL_GetWindowSize                                            // Validated by: Core_test1
-    getPixelWidth()                                              // Validated by: Core_test2, Core_test13
-    getPixelHeight()                                             // Validated by: Core_test2, Core_test13
-    getPreserveAspectRatio()                                     // Validated by: Core_test3, Core_test13
-    getAllowTextureResize()                                      // Validated by: Core_test4, Core_test13
-    getPixelFormat()                                             // Validated by: Core_test5, Core_test13
-    getRendererLogicalPresentation()                             // Validated by: Core_test6, Core_test13
-    getWindowFlags()                                             // Validated by: Core_test7, Core_test13
-    getColor()                                                   // Validated by: Core_test8, Core_test12
-    getConfig()                                                  // Used in: Core_test2, Core_test3, Core_test4, Core_test5, Core_test6, Core_test7, Core_test8, Core_test13
-    setColor(const SDL_Color&)                                   // Validated by: Core_test12
+    getWindow()                                                  // ✅ Validated by: Core_test1, Core_test12
+    SDL_GetWindowSize                                            // ✅ Validated by: Core_test1
+    getPixelWidth()                                              // ✅ Validated by: Core_test2, Core_test13
+    getPixelHeight()                                             // ✅ Validated by: Core_test2, Core_test13
+    getPreserveAspectRatio()                                     // ✅ Validated by: Core_test3, Core_test13
+    getAllowTextureResize()                                      // ✅ Validated by: Core_test4, Core_test13
+    getPixelFormat()                                             // ✅ Validated by: Core_test5, Core_test13
+    getRendererLogicalPresentation()                             // ✅ Validated by: Core_test6, Core_test13
+    getWindowFlags()                                             // ✅ Validated by: Core_test7, Core_test13
+    getColor()                                                   // ✅ Validated by: Core_test8, Core_test12
+    getConfig()                                                  // ✅ Validated/Used in: Core_test2–Core_test8, Core_test13
+    setColor(const SDL_Color&)                                   // ✅ Validated by: Core_test12
 
     // --- SDL Resource Accessors --- //
-    getWindow()                                                  // Validated by: Core_test12
-    getRenderer()                                                // Validated by: Core_test12
-    getTexture()                                                 // Validated by: Core_test12
+    getWindow()                                                  // ✅ Validated by: Core_test12
+    getRenderer()                                                // ✅ Validated by: Core_test12
+    getTexture()                                                 // ✅ Validated by: Core_test12
 
     // --- Configuration Getters/Setters --- //
-    getConfig();                                                 // Validated by: Core_test13
-    getWindowWidth();                                            // Validated by: Core_test13
-    getWindowHeight();                                           // Validated by: Core_test13
-    getPixelWidth();                                             // Validated by: Core_test13
-    getPixelHeight();                                            // Validated by: Core_test13
-    getPreserveAspectRatio();                                    // Validated by: Core_test13
-    getAllowTextureResize();                                     // Validated by: Core_test13
-    getRendererLogicalPresentation();                            // Validated by: Core_test13
-    getWindowFlags();                                            // Validated by: Core_test13
-    getPixelFormat();                                            // Validated by: Core_test13
+    getConfig();                                                 // ✅ Validated by: Core_test13
+    getWindowWidth();                                            // ✅ Validated by: Core_test13
+    getWindowHeight();                                           // ✅ Validated by: Core_test13
+    getPixelWidth();                                             // ✅ Validated by: Core_test13
+    getPixelHeight();                                            // ✅ Validated by: Core_test13
+    getPreserveAspectRatio();                                    // ✅ Validated by: Core_test13
+    getAllowTextureResize();                                     // ✅ Validated by: Core_test13
+    getRendererLogicalPresentation();                            // ✅ Validated by: Core_test13
+    getWindowFlags();                                            // ✅ Validated by: Core_test13
+    getPixelFormat();                                            // ✅ Validated by: Core_test13
 
-    setConfig(CoreConfig& config);                               // Validated by: Core_test13
-    setWindowWidth(float width);                                 // Validated by: Core_test13
-    setWindowHeight(float height);                               // Validated by: Core_test13
-    setPixelWidth(float width);                                  // Validated by: Core_test13
-    setPixelHeight(float height);                                // Validated by: Core_test13
-    setPreserveAspectRatio(bool preserve);                       // Validated by: Core_test13
-    setAllowTextureResize(bool allow);                           // Validated by: Core_test13
-    setRendererLogicalPresentation(presentation);                // Validated by: Core_test13
-    setWindowFlags(SDL_WindowFlags flags);                       // Validated by: Core_test13
-    setPixelFormat(SDL_PixelFormat format);                      // Validated by: Core_test13
+    setConfig(CoreConfig& config);                               // ✅ Validated by: Core_test13
+    setWindowWidth(float width);                                 // ✅ Validated by: Core_test13
+    setWindowHeight(float height);                               // ✅ Validated by: Core_test13
+    setPixelWidth(float width);                                  // ✅ Validated by: Core_test13
+    setPixelHeight(float height);                                // ✅ Validated by: Core_test13
+    setPreserveAspectRatio(bool preserve);                       // ✅ Validated by: Core_test13
+    setAllowTextureResize(bool allow);                           // ✅ Validated by: Core_test13
+    setRendererLogicalPresentation(presentation);                // ✅ Validated by: Core_test13
+    setWindowFlags(SDL_WindowFlags flags);                       // ✅ Validated by: Core_test13
+    setPixelFormat(SDL_PixelFormat format);                      // ✅ Validated by: Core_test13
 
     // --- Factory & EventManager Access --- //
-    getFactory();                                                // Validated by: Core_test9, Core_test14
-    getEventManager();                                           // Validated by: Core_test14
-    getIsTraversing();                                           // Validated by: Core_test14
-    setIsTraversing(bool traversing);                            // Validated by: Core_test14
+    getFactory();                                                // ✅ Validated by: Core_test9, Core_test14
+    getEventManager();                                           // ✅ Validated by: Core_test14
+    getIsTraversing();                                           // ✅ Validated by: Core_test14
+    setIsTraversing(bool traversing);                            // ✅ Validated by: Core_test14
 
     // --- Focus & Hover Management --- //
-    handleTabKeyPress();                                         // Validated by: Core_test15
-    handleTabKeyPressReverse();                                  // Validated by: Core_test15
-    setKeyboardFocusedObject(DisplayHandle obj);                 // Validated by: Core_test15
-    getKeyboardFocusedObject();                                  // Validated by: Core_test15
-    clearKeyboardFocusedObject();                                // Validated by: Core_test15
-    setMouseHoveredObject(DisplayHandle obj);                    // Validated by: Core_test15
-    getMouseHoveredObject();                                     // Validated by: Core_test15
+    handleTabKeyPress();                                         // ✅ Validated by: Core_test15
+    handleTabKeyPressReverse();                                  // ✅ Validated by: Core_test15
+    setKeyboardFocusedObject(DisplayHandle obj);                 // ✅ Validated by: Core_test15
+    getKeyboardFocusedObject();                                  // ✅ Validated by: Core_test15
+    clearKeyboardFocusedObject();                                // ✅ Validated by: Core_test15
+    setMouseHoveredObject(DisplayHandle obj);                    // ✅ Validated by: Core_test15
+    getMouseHoveredObject();                                     // ✅ Validated by: Core_test15
 
     // --- Lua State Access --- //
-    getLua();                                                    // Verified by: Core::onInit()
+    getLua();                                                    // ✅ Verified by: Core::onInit()
 
     //////////////////////////////
     // --- Factory Wrappers --- //
     //////////////////////////////
 
     // --- Object Creation --- //
-    createDisplayObject(const std::string& typeName, const sol::table& config);         // TODO: Needs test
-    createDisplayObject(const std::string& typeName,                                    // TODO: Needs test
+    createDisplayObject(const std::string& typeName, const sol::table& config); // ✅ Validated by: Core_test16
+    createDisplayObject(const std::string& typeName,                            // ✅ Validated by: Core_test16
         const SDOM::IDisplayObject::InitStruct& init); 
-    createDisplayObjectFromScript(const std::string& typeName,                          // TODO: Needs test
+    createDisplayObjectFromScript(const std::string& typeName,                  // ✅ Validated by: Core_test16
         const std::string& luaScript);       
 
-    createAssetObject(const std::string& typeName, const sol::table& config);           // TODO: Needs test
-    createAssetObject(const std::string& typeName,                                      // TODO: Needs test
+    createAssetObject(const std::string& typeName, const sol::table& config);   // ✅ Validated by: Core_test16
+    createAssetObject(const std::string& typeName,                              // ✅ Validated by: Core_test16
         const SDOM::IAssetObject::InitStruct& init);     
-    createAssetObjectFromScript(const std::string& typeName,                            // TODO: Needs test
+    createAssetObjectFromScript(const std::string& typeName,                    // ✅ Validated by: Core_test16
         const std::string& luaScript);         
 
     // --- Object Lookup --- //
-    getDisplayObjectPtr(const std::string& name);                                       // TODO: Needs test
-    getDisplayObject(const std::string& name);                                          // TODO: Needs test
-    getDisplayObjectHandle(const std::string& name);                                    // TODO: Needs test
-    hasDisplayObject(const std::string& name);                                          // TODO: Needs test
+    getDisplayObjectPtr(const std::string& name);                               // ✅ Validated by: Core_test15
+    getDisplayObject(const std::string& name);                                  // ✅ Validated by: Core_test15, Core_test16
+    hasDisplayObject(const std::string& name);                                  // ✅ Validated by: Core_test15
 
-    getAssetObjectPtr(const std::string& name);                                         // TODO: Needs test
-    getAssetObject(const std::string& name);                                            // TODO: Needs test
-    hasAssetObject(const std::string& name);                                            // TODO: Needs test
+    getAssetObjectPtr(const std::string& name);                                 // ✅ Validated by: Core_test16
+    getAssetObject(const std::string& name);                                    // ✅ Validated by: Core_test16
+    hasAssetObject(const std::string& name);                                    // ✅ Validated by: Core_test16
 
     // --- Display Object Management --- //
-    addDisplayObject(const std::string& name,                                           // TODO: Needs test
-            std::unique_ptr<IDisplayObject> displayObject); 
-    destroyDisplayObject(const std::string& name);                                      // TODO: Needs test
-    destroyAssetObject(const std::string& name);                                        // TODO: Needs test
+    destroyDisplayObject(const std::string& name);                              // ✅ Validated by: Core_test16
+    destroyAssetObject(const std::string& name);                                // ✅ Validated by: Core_test16
 
     // --- Orphan Management --- //
-    countOrphanedDisplayObjects();                                                      // TODO: Needs test
-    getOrphanedDisplayObjects();                                                        // TODO: Needs test
-    destroyOrphanedDisplayObjects();                                                    // TODO: Needs test
-    detachOrphans();                                                                    // TODO: Needs test
-    collectGarbage();                                                                   // TODO: Needs test
+    countOrphanedDisplayObjects();                                              // ✅ Validated by: Core_test16
+    getOrphanedDisplayObjects();                                                // ✅ Validated by: Core_test16
+    detachOrphans();                                                            // ✅ Validated by: Core_test16
+    collectGarbage();                                                           // ✅ Validated by: Core_test16
 
     // --- Future Child Management --- //
-    attachFutureChildren();                                                             // TODO: Needs test
-    addToOrphanList(const DisplayHandle& orphan);                                       // TODO: Needs test
-    addToFutureChildrenList(const DisplayHandle& child, const DisplayHandle& parent,    // TODO: Needs test
+    attachFutureChildren();                                                             // ⚠️ Manually Tested: Needs Formal Unit Test
+    addToOrphanList(const DisplayHandle& orphan);                                       // ⚠️ Manually Tested: Needs Formal Unit Test
+    addToFutureChildrenList(const DisplayHandle& child, const DisplayHandle& parent,    // ⚠️ Manually Tested: Needs Formal Unit Test
             bool useWorld=false, int worldX=0, int worldY=0);
 
     // --- Utility Methods --- //
-    listDisplayObjectNames();                                                           // TODO: Needs test
-    clearFactory();                                                                     // TODO: Needs test
-    printObjectRegistry();                                                              // TODO: Needs test
+    listDisplayObjectNames();                                                           // ⚠️ Manually Tested: Needs Formal Unit Test
+    clearFactory();                                                                     // ⚠️ Manually Tested: Needs Formal Unit Test
+    printObjectRegistry();                                                              // ⚠️ Manually Tested: Needs Formal Unit Test
 
-    findAssetByFilename(const std::string& filename, const std::string& typeName = ""); // TODO: Needs test
-    findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH);     // TODO: Needs test
-    unloadAllAssetObjects();                                                            // TODO: Needs test
-    reloadAllAssetObjects();                                                            // TODO: Needs test
+    findAssetByFilename(const std::string& filename, const std::string& typeName = ""); // ⚠️ Manually Tested: Needs Formal Unit Test
+    findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH);     // ⚠️ Manually Tested: Needs Formal Unit Test
+    unloadAllAssetObjects();                                                            // ⚠️ Manually Tested: Needs Formal Unit Test
+    reloadAllAssetObjects();                                                            // ⚠️ Manually Tested: Needs Formal Unit Test
 
     // --- Forwarding helpers to Factory for type-level introspection --- //
-    getPropertyNamesForType(const std::string& typeName);                               // TODO: Needs test
-    getCommandNamesForType(const std::string& typeName);                                // TODO: Needs test
-    getFunctionNamesForType(const std::string& typeName);                               // TODO: Needs test
+    getPropertyNamesForType(const std::string& typeName);                               // ⚠️ Manually Tested: Needs Formal Unit Test
+    getCommandNamesForType(const std::string& typeName);                                // ⚠️ Manually Tested: Needs Formal Unit Test
+    getFunctionNamesForType(const std::string& typeName);                               // ⚠️ Manually Tested: Needs Formal Unit Test
 
 ****************/
-
-
 namespace SDOM
 {
     // scaffolding for the Core UnitTests
@@ -466,10 +464,28 @@ namespace SDOM
         checkStage(newStage, "stageTwo", "Root Node/Stage after setRootNode by name");
 
         // set the Root Node to a new value using DisplayHandle
-        DisplayHandle stageThree = getFactory().getDisplayObject("stageThree");
+        DisplayHandle stageThree = core.getDisplayObject("stageThree");
         core.setRootNode(stageThree);
         DisplayHandle anotherStage = core.getRootNode();
         checkStage(anotherStage, "stageThree", "Root Node/Stage after setRootNode by DisplayHandle");
+
+        // verify hasDisplayObject and getDisplayObjectPtr works correctly
+        if (core.hasDisplayObject("nonExistentStage")) {
+            errors.push_back("Core incorrectly reports existence of 'nonExistentStage'.");
+            ok = false;
+        }
+        if (!core.hasDisplayObject("stageTwo")) {
+            errors.push_back("Core failed to report existence of 'stageTwo'.");
+            ok = false;
+        }
+        if (core.getDisplayObjectPtr("nonExistentStage") != nullptr) {
+            errors.push_back("getDisplayObjectPtr() returned non-nullptr for 'nonExistentStage'.");
+            ok = false;
+        }
+        if (core.getDisplayObjectPtr("stageTwo") == nullptr) {
+            errors.push_back("getDisplayObjectPtr() returned nullptr for 'stageTwo'.");
+            ok = false;
+        }
 
         // restore the Root Node Stage to original
         core.setStage(rootStage.getName());
@@ -806,27 +822,12 @@ namespace SDOM
     } // END: Core_test15(std::vector<std::string>& errors)   
 
 
-
-    // // --- Object Creation --- //
-    // createDisplayObject(const std::string& typeName, const sol::table& config);         // TODO: Needs test
-    // createDisplayObject(const std::string& typeName,                                    // TODO: Needs test
-    //     const SDOM::IDisplayObject::InitStruct& init); 
-    // createDisplayObjectFromScript(const std::string& typeName,                          // TODO: Needs test
-    //     const std::string& luaScript);       
-
-    // createAssetObject(const std::string& typeName, const sol::table& config);           // TODO: Needs test
-    // createAssetObject(const std::string& typeName,                                      // TODO: Needs test
-    //     const SDOM::IAssetObject::InitStruct& init);     
-    // createAssetObjectFromScript(const std::string& typeName,                            // TODO: Needs test
-    //     const std::string& luaScript);        
-
-
-    // scaffolding for the Core UnitTests
+    // --- Object Creation and Orphan Management --- //
     bool Core_test16(std::vector<std::string>& errors)   
     {
         bool ok = true;
         Core& core = getCore();
-        Factory& factory = core.getFactory();
+        // Factory& factory = core.getFactory();
 
         // --- DisplayObject Creation via sol::table ---
         sol::table boxConfig = core.getLua().create_table();
@@ -873,52 +874,121 @@ namespace SDOM
         if (!boxHandle3.isValid()) {
             errors.push_back("createDisplayObjectFromScript failed for Box.");
             ok = false;
-        }        
-        core.destroyDisplayObject(boxHandle3.getName());
+        }      
 
-        // Cleanup orphaned objects if any
-        if (factory.countOrphanedDisplayObjects() != 0) {
+        // --- Orphan Management Tests --- //
+
+        int orphanCount = core.countOrphanedDisplayObjects();
+        if (orphanCount == 0) {
+            errors.push_back("Expected orphaned DisplayObjects after creation via Lua script, found none.");
+            ok = false;
+        }
+
+        std::vector<DisplayHandle> orphans = core.getOrphanedDisplayObjects();
+        if (orphans.size() != 1) {
+            errors.push_back("Should have one orphan, but found: " + std::to_string(orphans.size()));
+            ok = false;
+        }
+        DisplayHandle orphan = orphans.at(0);
+        if (orphan != boxHandle3) {
+            errors.push_back("Orphaned DisplayObject does not match the created Box object.");
+            ok = false;
+        }
+
+        // Attach the orphan to the stage and verify orphan count decreases
+        DisplayHandle stage = core.getStageHandle();
+        stage->addChild(orphan);    // Attach the orphan to the stage
+        orphanCount = core.countOrphanedDisplayObjects();
+        if (orphanCount != 0) {
+            errors.push_back("Orphaned DisplayObjects not cleared after attaching to stage.");
+            ok = false;
+        }
+
+        // Remove the child again and verify it becomes orphaned
+        stage->removeChild(orphan); // Detach the orphan again
+        orphanCount = core.countOrphanedDisplayObjects();
+        if (orphanCount != 1) {
+            errors.push_back("Orphaned DisplayObjects count incorrect after detaching from stage.");
+            ok = false;
+        }
+
+        // Detach orphans and verify parent is invalidated
+        core.detachOrphans();
+        DisplayHandle parent = orphan->getParent();
+        if (parent.isValid()) {
+            errors.push_back("Orphaned DisplayObject still has a valid parent after detachment.");
+            ok = false;
+        }
+
+        // Finally, destroy orphaned display objects and verify cleanup
+        core.collectGarbage();
+        if (core.countOrphanedDisplayObjects() != 0) {
             errors.push_back("Orphaned DisplayObjects not cleaned up after destruction.");
             ok = false;
         }
-        factory.collectGarbage();
 
 
-        // // --- AssetObject Creation via sol::table ---
-        // sol::table assetConfig = core.getLua().create_table();
-        // assetConfig["name"] = "testAsset";
-        // assetConfig["typeName"] = "Image";
-        // assetConfig["filename"] = "test.png";
-        // AssetHandle assetHandle = core.createAssetObject("Image", assetConfig);
-        // if (!assetHandle.isValid()) {
-        //     errors.push_back("createAssetObject (sol::table) failed for Image.");
-        //     ok = false;
-        // }
+        // --- AssetObject Creation via sol::table ---
+        sol::table assetConfig = core.getLua().create_table();
+        assetConfig["name"] = "bmp_font_8x8";
+        assetConfig["type"] = "BitmapFont";
+        assetConfig["filename"] = "./assets/font_8x8.png";
+        assetConfig["font_width"] = 8;
+        assetConfig["font_height"] = 8;
+        AssetHandle assetHandle = core.createAssetObject("BitmapFont", assetConfig);
+        if (!assetHandle.isValid()) {
+            errors.push_back("createAssetObject (sol::table) failed for BitmapFont.");
+            ok = false;
+        }
+        if (core.hasAssetObject("non_existent_asset")) {
+            errors.push_back("Core incorrectly reports existence of 'non_existent_asset'.");
+            ok = false;
+        }
+        if (!core.hasAssetObject("bmp_font_8x8")) {
+            errors.push_back("Core failed to report existence of 'bmp_font_8x8' after creation.");
+            ok = false;
+        }        
+        core.destroyAssetObject(assetHandle.getName());
+        AssetHandle checkHandle = core.getAssetObject("bmp_font_8x8");
+        if (checkHandle.isValid()) {
+            errors.push_back("AssetObject bmp_font_8x8 was not destroyed properly.");
+            ok = false;
+        }
 
-        // // --- AssetObject Creation via InitStruct ---
-        // SDOM::IAssetObject::InitStruct assetInit;
-        // assetInit.name = "testAsset2";
-        // assetInit.type = "Image";
-        // assetInit.filename = "test2.png";
-        // AssetHandle assetHandle2 = core.createAssetObject("Image", assetInit);
-        // if (!assetHandle2.isValid()) {
-        //     errors.push_back("createAssetObject (InitStruct) failed for Image.");
-        //     ok = false;
-        // }
 
-        // // --- AssetObject Creation via Lua Script ---
-        // std::string assetScript = R"(
-        //     return {
-        //         name = "testAsset3",
-        //         typeName = "Image",
-        //         filename = "test3.png"
-        //     }
-        // )";
-        // AssetHandle assetHandle3 = core.createAssetObjectFromScript("Image", assetScript);
-        // if (!assetHandle3.isValid()) {
-        //     errors.push_back("createAssetObjectFromScript failed for Image.");
-        //     ok = false;
-        // }
+
+        // --- AssetObject Creation via InitStruct ---
+        SDOM::BitmapFont::InitStruct bmpAssetInit;
+        bmpAssetInit.name = "testAsset2";
+        bmpAssetInit.type = "BitmapFont";
+        bmpAssetInit.filename = "./assets/font_8x8.png";
+        bmpAssetInit.font_width = 8;
+        bmpAssetInit.font_height = 8;
+        AssetHandle assetHandle2 = core.createAssetObject("BitmapFont", bmpAssetInit);
+        if (!assetHandle2.isValid()) {
+            errors.push_back("createAssetObject (InitStruct) failed for BitmapFont.");
+            ok = false;
+        }
+        core.destroyAssetObject(assetHandle.getName());
+        checkHandle = core.getAssetObject("bmp_font_8x8");
+        if (checkHandle.isValid()) {
+            errors.push_back("bmpAssetInit bmp_font_8x8 was not destroyed properly.");
+            ok = false;
+        }
+
+        // --- AssetObject Creation via Lua Script ---
+        std::string assetScript = R"(
+            name = "testAsset3",
+            type = "BitmapFont",
+            filename = "./assets/font_8x8.png",
+            font_width = 8,
+            font_height = 8
+        )";
+        AssetHandle assetHandle3 = core.createAssetObjectFromScript("BitmapFont", assetScript);
+        if (!assetHandle3.isValid()) {
+            errors.push_back("createAssetObjectFromScript failed for BitmapFont.");
+            ok = false;
+        }
 
         return ok;
 
