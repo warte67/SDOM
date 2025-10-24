@@ -123,8 +123,56 @@ end
 -- Restore the original stage
 Core:setStage(stage)
 
+-- getIsTraversing / setIsTraversing tests
+local original_traversing = Core:getIsTraversing()
+if (original_traversing == nil) then
+    utils.push_error("Core:getIsTraversing() returned nil; expected boolean.")
+else
+    -- Toggle the traversing state
+    Core:setIsTraversing(not original_traversing)
+    local new_traversing = Core:getIsTraversing()
+    if new_traversing == original_traversing then
+        utils.push_error("Core:setIsTraversing() did not change the traversing state as expected.")
+    end
+    -- Restore original state
+    Core:setIsTraversing(original_traversing)
+    local restored_traversing = Core:getIsTraversing()
+    if restored_traversing ~= original_traversing then
+        utils.push_error("Core:setIsTraversing() did not restore the original traversing state.")
+    end
+end
 
+-- createDisplayObject (Create an Orphan) Tests --
+local boxInit = {
+    name = "unitTestBox",
+    type = "Box",
+    x = 50,
+    y = 50,
+    width = 100,
+    height = 100,
+    color = {255, 0, 0, 255} -- Red box
+}
+local box = Core:createDisplayObject("Box", boxInit)
+if not box or not box.isValid or not box:isValid() then
+    utils.push_error("Core:createDisplayObject('Box', ...) returned an invalid handle.")
+else
+    if box:getName() ~= "unitTestBox" then
+        utils.push_error("Created box name mismatch; expected 'unitTestBox', got '" .. tostring(box:getName()) .. "'.")
+    end
+end
 
+-- Orphan Management Tests --
+
+local orphan_count = Core:countOrphanedDisplayObjects()
+if type(orphan_count) ~= "number" then
+    utils.push_error("Core:countOrphanedDisplayObjects() did not return a number.")
+end
+if (orphan_count ~= 1) then
+    utils.push_error("Core:countOrphanedDisplayObjects() Should be 1 orphan, found: " .. tostring(orphan_count))
+end
+
+-- -- Add the box to the stage to remove orphan status
+-- stage:addChild(box)
 
 
 

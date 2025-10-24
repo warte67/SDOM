@@ -156,7 +156,6 @@ namespace SDOM
     DisplayHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config);
     DisplayHandle getDisplayObject_lua(const std::string& name);
     bool hasDisplayObject_lua(const std::string& name); 
-
     AssetHandle createAssetObject_lua(const std::string& typeName, const sol::table& config);
     AssetHandle getAssetObject_lua(const std::string& name);
     bool hasAssetObject_lua(const std::string& name);

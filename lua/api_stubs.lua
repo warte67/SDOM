@@ -50,9 +50,12 @@
 ---@field configureFromFile fun(self, filename: string): nil
 ---@field registerOn fun(self, name: string, fn: fun(...): any): nil
 ---@field createDisplayObject fun(self, typeName: string, cfg: table): DisplayHandle
+---@field countOrphanedDisplayObjects fun(self): integer
 ---@field getDisplayObject fun(self, name: string): DisplayHandle
 ---@field hasDisplayObject fun(self, name: string): boolean
 ---@field createAssetObject fun(self, typeName: string, cfg: table): AssetHandle
+---@field getIsTraversing fun(self): boolean
+---@field setIsTraversing fun(self, traversing: boolean): nil
 ---@field getAssetObject fun(self, name: string): AssetHandle
 ---@field pumpEventsOnce fun(self): nil
 ---@field pushMouseEvent fun(self, args: table): nil
