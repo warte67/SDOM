@@ -113,12 +113,15 @@ if invalid then
     utils.push_error("Core:getDisplayObject('nonexistentStage') returned a handle; expected nil/invalid.")
 end
 
--- -- Ensure stage and stageTwo are distinct handles (if both valid)
--- if stage and stage2 then
---     if stage == stage2 then
---         utils.push_error("Core:getStage() and Core:getDisplayObject('stageTwo') returned the same handle unexpectedly.")
---     end
--- end
+-- Ensure stage and stageTwo are distinct handles (if both valid)
+if stage and stage2 then
+    if stage == stage2 then
+        utils.push_error("Core:getStage() and Core:getDisplayObject('stageTwo') returned the same handle unexpectedly.")
+    end
+end
+
+-- Restore the original stage
+Core:setStage(stage)
 
 
 
