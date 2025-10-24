@@ -101,15 +101,13 @@ namespace SDOM
         auto get_float = [&](const char* k, float d = 0.0f) -> float {
             if (!config[k].valid()) return d;
             sol::object o = config[k];
-            try {
-                if (o.is<double>()) return static_cast<float>(o.as<double>());
-                if (o.is<int>()) return static_cast<float>(o.as<int>());
-                if (o.is<std::string>()) {
-                    std::string s = o.as<std::string>();
-                    if (s.empty()) return d;
-                    return std::stof(s);
-                }
-            } catch(...) {}
+            if (o.is<double>()) return static_cast<float>(o.as<double>());
+            if (o.is<int>()) return static_cast<float>(o.as<int>());
+            if (o.is<std::string>()) {
+                std::string s = o.as<std::string>();
+                if (s.empty()) return d;
+                return std::stof(s);
+            }
             return d;
         };
         auto read_color = [&](const char* k, SDL_Color d = {255,0,255,255}) -> SDL_Color 
@@ -222,15 +220,13 @@ namespace SDOM
         auto get_float = [&](const char* k, float d = 0.0f) -> float {
             if (!config[k].valid()) return d;
             sol::object o = config[k];
-            try {
-                if (o.is<double>()) return static_cast<float>(o.as<double>());
-                if (o.is<int>()) return static_cast<float>(o.as<int>());
-                if (o.is<std::string>()) {
-                    std::string s = o.as<std::string>();
-                    if (s.empty()) return d;
-                    return std::stof(s);
-                }
-            } catch(...) {}
+            if (o.is<double>()) return static_cast<float>(o.as<double>());
+            if (o.is<int>()) return static_cast<float>(o.as<int>());
+            if (o.is<std::string>()) {
+                std::string s = o.as<std::string>();
+                if (s.empty()) return d;
+                return std::stof(s);
+            }
             return d;
         };
         auto read_color = [&](const char* k, SDL_Color d = {255,0,255,255}) -> SDL_Color 
@@ -341,90 +337,122 @@ namespace SDOM
         (void)event; // Unused --- IGNORE ---
     }
 
-    void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent, bool useWorld, int worldX, int worldY)
+void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent, bool useWorld, int worldX, int worldY)
+{
+    IDisplayObject* child = dynamic_cast<IDisplayObject*>(p_child.get());
+    IDisplayObject* parent = dynamic_cast<IDisplayObject*>(p_parent.get());
+    if (child && parent) 
     {
-        IDisplayObject* child = dynamic_cast<IDisplayObject*>(p_child.get());
-        IDisplayObject* parent = dynamic_cast<IDisplayObject*>(p_parent.get());
-        if (child && parent) 
+        auto& parentChildren = parent->children_;
+        auto it = std::find(parentChildren.begin(), parentChildren.end(), p_child);
+
+        // Also prevent adding a child with the same name as an existing child
+        bool nameExists = false;
+        std::string newName = p_child.getName();
+        for (const auto& existing : parentChildren) {
+            if (existing && existing.getName() == newName) {
+                nameExists = true;
+                break;
+            }
+        }
+
+        // Diagnostic logging to trace duplicate insertions seen by unit tests
         {
-            auto& parentChildren = parent->children_;
-            auto it = std::find(parentChildren.begin(), parentChildren.end(), p_child);
-            // Also prevent adding a child with the same name as an existing child
-            bool nameExists = false;
-            try {
-                std::string newName = p_child.getName();
-                for (const auto& existing : parentChildren) {
-                    if (existing && existing.getName() == newName) { nameExists = true; break; }
-                }
-            } catch(...) { nameExists = false; }
+            std::ostringstream dbg;
+            dbg << "attachChild_: parent='" << parent->getName()
+                << "' child='" << p_child.getName()
+                << "' children_before=" << parentChildren.size()
+                << " nameExists=" << (nameExists ? "1" : "0");
+            LUA_INFO(dbg.str());
+        }
 
-            // Diagnostic logging to trace duplicate insertions seen by unit tests
-            try {
-                std::ostringstream dbg;
-                dbg << "attachChild_: parent='" << parent->getName() << "' child='" << p_child.getName() << "' children_before=" << parentChildren.size() << " nameExists=" << (nameExists?"1":"0");
-                LUA_INFO(dbg.str());
-            } catch(...) {}
+        if (it == parentChildren.end() && !nameExists) 
+        {
+            // {
+            //     std::ostringstream dbg;
+            //     dbg << "attachChild_: pushing child='" << p_child.getName()
+            //         << "' to parent='" << parent->getName() << "'";
+            //     LUA_INFO(dbg.str());
+            // }
 
-            if (it == parentChildren.end() && !nameExists) 
+            // Record world edges BEFORE changing parent
+            float leftWorld = child->getLeft();
+            float rightWorld = child->getRight();
+            float topWorld = child->getTop();
+            float bottomWorld = child->getBottom();
+
+            child->setParent(p_parent);
+
+            // setParent may already add the child to the new parent's children_ vector.
+            // Only push_back if it's not present to avoid duplicate entries.
+            auto it_after = std::find(parentChildren.begin(), parentChildren.end(), p_child);
+            if (it_after == parentChildren.end()) 
             {
-                    try { std::ostringstream dbg; dbg << "attachChild_: pushing child='" << p_child.getName() << "' to parent='" << parent->getName() << "'"; LUA_INFO(dbg.str()); } catch(...) {}
-                // Record world edges BEFORE changing parent
-                float leftWorld = child->getLeft();
-                float rightWorld = child->getRight();
-                float topWorld = child->getTop();
-                float bottomWorld = child->getBottom();
+                parentChildren.push_back(p_child);
+            } else {
+                std::ostringstream dbg;
+                dbg << "attachChild_: setParent already added child='"
+                    << p_child.getName()
+                    << "' to parent='" << parent->getName() << "'";
+                LUA_INFO(dbg.str());
+            }
 
-                child->setParent(p_parent);
-                // setParent may already add the child to the new parent's children_ vector.
-                // Only push_back if it's not present to avoid duplicate entries.
-                auto it_after = std::find(parentChildren.begin(), parentChildren.end(), p_child);
-                if (it_after == parentChildren.end()) {
-                    parentChildren.push_back(p_child);
-                } else {
-                    try { std::ostringstream dbg; dbg << "attachChild_: setParent already added child='" << p_child.getName() << "' to parent='" << parent->getName() << "'"; LUA_INFO(dbg.str()); } catch(...) {}
-                }
-                try { std::ostringstream dbg; dbg << "attachChild_: children_after=" << parentChildren.size() << " parent='" << parent->getName() << "'"; LUA_INFO(dbg.str()); } catch(...) {}
+            // {
+            //     std::ostringstream dbg;
+            //     dbg << "attachChild_: children_after=" << parentChildren.size()
+            //         << " parent='" << parent->getName() << "'";
+            //     LUA_INFO(dbg.str());
+            // }
 
-                if (useWorld)
+            if (useWorld)
+            {
+                child->setLeft(leftWorld);
+                child->setRight(rightWorld);
+                child->setTop(topWorld);
+                child->setBottom(bottomWorld);
+                child->setX(worldX);
+                child->setY(worldY);
+            }
+
+            // Dispatch EventType::Added using dispatchEvent for proper capture/bubble/target
+            if (child) 
+            {
+                auto& eventManager = getCore().getEventManager();
+                std::unique_ptr<Event> addedEvent = std::make_unique<Event>(EventType::Added, p_child);
+                // Set related target to parent handle for listener use
+                addedEvent->setRelatedTarget(p_parent);
+                eventManager.dispatchEvent(std::move(addedEvent), p_child);
+            }
+
+            // Dispatch EventType::AddedToStage if the child is now part of the active stage.
+            DisplayHandle stageHandle = getCore().getRootNode();
+            if (stageHandle) 
+            {
+                DisplayHandle cur = p_child;
+                bool onStage = false;
+                while (cur) 
                 {
-                    child->setLeft(leftWorld);
-                    child->setRight(rightWorld);
-                    child->setTop(topWorld);
-                    child->setBottom(bottomWorld);
-                    child->setX(worldX);
-                    child->setY(worldY);
+                    if (cur == stageHandle) 
+                    {
+                        onStage = true;
+                        break;
+                    }
+                    IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
+                    if (!curObj) break;
+                    cur = curObj->getParent();
                 }
-
-                // Dispatch EventType::Added using dispatchEvent for proper capture/bubble/target
-                if (child) {
+                if (onStage) 
+                {
                     auto& eventManager = getCore().getEventManager();
-                    std::unique_ptr<Event> addedEvent = std::make_unique<Event>(EventType::Added, p_child);
-                    // Set related target to parent handle for listener use
-                    addedEvent->setRelatedTarget(p_parent);
-                    eventManager.dispatchEvent(std::move(addedEvent), p_child);
-                }
-
-                // Dispatch EventType::AddedToStage if the child is now part of the active stage.
-                DisplayHandle stageHandle = getCore().getRootNode();
-                if (stageHandle) {
-                    DisplayHandle cur = p_child;
-                    bool onStage = false;
-                    while (cur) {
-                        if (cur == stageHandle) { onStage = true; break; }
-                        IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
-                        if (!curObj) break;
-                        cur = curObj->getParent();
-                    }
-                    if (onStage) {
-                        auto& eventManager = getCore().getEventManager();
-                        std::unique_ptr<Event> addedToStage = std::make_unique<Event>(EventType::AddedToStage, p_child);
-                        addedToStage->setRelatedTarget(stageHandle);
-                        eventManager.dispatchEvent(std::move(addedToStage), p_child);
-                    }
+                    std::unique_ptr<Event> addedToStage = std::make_unique<Event>(EventType::AddedToStage, p_child);
+                    addedToStage->setRelatedTarget(stageHandle);
+                    eventManager.dispatchEvent(std::move(addedToStage), p_child);
                 }
             }
         }
-    } // IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent, bool useWorld, int worldX, int worldY)
+    }
+}
+
 
     void IDisplayObject::removeOrphan_(const DisplayHandle& orphan) 
     {
@@ -503,18 +531,8 @@ namespace SDOM
         for (const auto& child : children_) 
         {
             if (!child.isValid()) continue;
-            // Prefer pointer-style access to the underlying object, fall back to handle accessor if needed
-            try 
-            {
-                if (child->getName() == name) return child;
-            } 
-            catch (...) 
-            {
-                try 
-                {
-                    if (child.getName() == name) return child;
-                } catch (...) { /* ignore and continue */ }
-            }
+            if (child->getName() == name) return child;
+            if (child.getName() == name) return child;
         }
         return DisplayHandle(); // invalid handle
     }    
@@ -585,18 +603,16 @@ namespace SDOM
         // Assign new parent handle
         parent_ = parent;
 
-        try {
-            if (getName() == "blueishBox" || (parent_.isValid() && parent_.getName() == "redishBox")) {
-                std::ostringstream oss; oss << "[DBG] setParent: child='" << getName() << "' newParent='" << (parent_.isValid() ? parent_.getName() : std::string("<null>")) << "' worldLeft=" << world.left << " worldTop=" << world.top << " worldRight=" << world.right << " worldBottom=" << world.bottom;
-                if (parent_.isValid()) {
-                    IDisplayObject* p = dynamic_cast<IDisplayObject*>(parent_.get());
-                    if (p) {
-                        oss << " parent_left=" << p->left_ << " parent_right=" << p->right_ << " parent_top=" << p->top_ << " parent_bottom=" << p->bottom_;
-                    }
+        if (getName() == "blueishBox" || (parent_.isValid() && parent_.getName() == "redishBox")) {
+            std::ostringstream oss; oss << "[DBG] setParent: child='" << getName() << "' newParent='" << (parent_.isValid() ? parent_.getName() : std::string("<null>")) << "' worldLeft=" << world.left << " worldTop=" << world.top << " worldRight=" << world.right << " worldBottom=" << world.bottom;
+            if (parent_.isValid()) {
+                IDisplayObject* p = dynamic_cast<IDisplayObject*>(parent_.get());
+                if (p) {
+                    oss << " parent_left=" << p->left_ << " parent_right=" << p->right_ << " parent_top=" << p->top_ << " parent_bottom=" << p->bottom_;
                 }
-                LUA_INFO(oss.str());
             }
-        } catch(...) {}
+            // LUA_INFO(oss.str());
+        }
 
         // Add to new parent's children_ vector if not already present
         if (parent_.isValid()) 
@@ -628,11 +644,9 @@ namespace SDOM
         }
         for (const auto& child : children_) {
             if (!child) continue;
-            try {
-                if (child.getName() == name) {
-                    return removeChild(child);
-                }
-            } catch(...) {}
+            if (child.getName() == name) {
+                return removeChild(child);
+            }
         }
         ERROR("removeChild: child with name '" + name + "' not found in " + name_);
         return false;
@@ -741,7 +755,7 @@ namespace SDOM
         auto ev = std::make_unique<Event>(type, self, getCore().getElapsedTime());
         ev->setTarget(self);
         if (init_payload) {
-            try { init_payload(*ev); } catch (...) { /* swallow payload init errors */ }
+            init_payload(*ev);
         }
         em.addEvent(std::move(ev));
     } 
@@ -816,51 +830,33 @@ namespace SDOM
             return !child;
         }), children_.end());
 
-        try {
-            std::ostringstream oss;
-            oss << "sortChildrenByPriority: before dedupe children_count=" << children_.size() << " [";
-            for (const auto& ch : children_) {
-                try { oss << (ch ? ch.getName() : std::string("<null>")) << ":" << (ch ? std::to_string(ch.get()->getPriority()) : std::string("0")) << ","; } catch(...) { oss << "<err>"; }
-            }
-            oss << "]";
-            LUA_INFO(oss.str());
-        } catch(...) {}
-
         // Deduplicate children by name: keep the most-recent occurrence (last in vector)
-        try {
-            std::unordered_set<std::string> seen;
-            std::vector<DisplayHandle> newChildren;
-            // Iterate in reverse and keep first-seen (which corresponds to most-recent in original order)
-            for (auto it = children_.rbegin(); it != children_.rend(); ++it) {
-                const DisplayHandle& ch = *it;
-                if (!ch) continue;
-                std::string cname;
-                try { cname = ch.getName(); } catch(...) { cname.clear(); }
-                if (cname.empty()) {
+        std::unordered_set<std::string> seen;
+        std::vector<DisplayHandle> newChildren;
+        // Iterate in reverse and keep first-seen (which corresponds to most-recent in original order)
+        for (auto it = children_.rbegin(); it != children_.rend(); ++it) 
+        {
+            const DisplayHandle& ch = *it;
+            if (!ch) continue;
+            std::string cname;
+            // try { cname = ch.getName(); } catch(...) { cname.clear(); }
+            cname = ch.getName();
+            if (cname.empty()) 
+            {
+                newChildren.push_back(ch);
+            } 
+            else 
+            {
+                if (seen.find(cname) == seen.end()) 
+                {
+                    seen.insert(cname);
                     newChildren.push_back(ch);
-                } else {
-                    if (seen.find(cname) == seen.end()) {
-                        seen.insert(cname);
-                        newChildren.push_back(ch);
-                    } else {
-                        // duplicate found; skip it
-                    }
                 }
             }
-            // Restore original order
-            std::reverse(newChildren.begin(), newChildren.end());
-            children_.swap(newChildren);
-        } catch(...) {}
-
-        try {
-            std::ostringstream oss;
-            oss << "sortChildrenByPriority: after dedupe children_count=" << children_.size() << " [";
-            for (const auto& ch : children_) {
-                try { oss << (ch ? ch.getName() : std::string("<null>")) << ":" << (ch ? std::to_string(ch.get()->getPriority()) : std::string("0")) << ","; } catch(...) { oss << "<err>"; }
-            }
-            oss << "]";
-            LUA_INFO(oss.str());
-        } catch(...) {}
+        }
+        // Restore original order
+        std::reverse(newChildren.begin(), newChildren.end());
+        children_.swap(newChildren);
 
         // Sort by priority (ascending)
         std::sort(children_.begin(), children_.end(), [](const DisplayHandle& a, const DisplayHandle& b) {
@@ -870,16 +866,6 @@ namespace SDOM
             int bPriority = bObj ? bObj->priority_ : std::numeric_limits<int>::min();
             return aPriority < bPriority;
         });
-
-        try {
-            std::ostringstream oss;
-            oss << "sortChildrenByPriority: after sort children_count=" << children_.size() << " [";
-            for (const auto& ch : children_) {
-                try { oss << (ch ? ch.getName() : std::string("<null>")) << ":" << (ch ? std::to_string(ch.get()->getPriority()) : std::string("0")) << ","; } catch(...) { oss << "<err>"; }
-            }
-            oss << "]";
-            LUA_INFO(oss.str());
-        } catch(...) {}
         return *this;
     }
 
@@ -937,7 +923,8 @@ namespace SDOM
         IDisplayObject* descObj = dynamic_cast<IDisplayObject*>(descendant.get());
         if (!descObj) return false;
         DisplayHandle cur = descObj->getParent();
-        while (cur) {
+        while (cur) 
+        {
             // Compare the underlying pointer to this object
             if (cur.get() == this) return true;
             IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
@@ -950,11 +937,10 @@ namespace SDOM
     bool IDisplayObject::isAncestorOf(const std::string& name) const
     {
         // Find a child by name and see if this is its ancestor
-        for (const auto& child : children_) {
+        for (const auto& child : children_) 
+        {
             if (!child) continue;
-            try {
-                if (child.getName() == name) return true;
-            } catch(...) {}
+            if (child.getName() == name) return true;
             IDisplayObject* childObj = dynamic_cast<IDisplayObject*>(child.get());
             if (childObj && childObj->isAncestorOf(name)) return true;
         }
@@ -965,7 +951,8 @@ namespace SDOM
     {
         if (!ancestor) return false;
         DisplayHandle cur = getParent();
-        while (cur) {
+        while (cur) 
+        {
             if (cur == ancestor) return true;
             IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
             if (!curObj) break;
@@ -977,8 +964,9 @@ namespace SDOM
     bool IDisplayObject::isDescendantOf(const std::string& name) const
     {
         DisplayHandle cur = getParent();
-        while (cur) {
-            try { if (cur.getName() == name) return true; } catch(...) {}
+        while (cur) 
+        {
+            if (cur.getName() == name) return true;
             IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
             if (!curObj) break;
             cur = curObj->getParent();
@@ -1007,11 +995,13 @@ namespace SDOM
         if (!descendant) return false;
         // Check direct children first
         auto it = std::find(children_.begin(), children_.end(), descendant);
-        if (it != children_.end()) {
+        if (it != children_.end()) 
+        {
             return removeChild(descendant);
         }
         // Recurse into children
-        for (auto& child : children_) {
+        for (auto& child : children_) 
+        {
             if (!child) continue;
             IDisplayObject* childObj = dynamic_cast<IDisplayObject*>(child.get());
             if (!childObj) continue;
@@ -1023,12 +1013,14 @@ namespace SDOM
     bool IDisplayObject::removeDescendant(const std::string& descendantName)
     {
         // Check direct children first
-        for (const auto& child : children_) {
+        for (const auto& child : children_) 
+        {
             if (!child) continue;
-            try { if (child.getName() == descendantName) return removeChild(child); } catch(...) {}
+            if (child.getName() == descendantName) return removeChild(child);
         }
         // Recurse into children
-        for (auto& child : children_) {
+        for (auto& child : children_) 
+        {
             if (!child) continue;
             IDisplayObject* childObj = dynamic_cast<IDisplayObject*>(child.get());
             if (!childObj) continue;
@@ -1135,12 +1127,11 @@ namespace SDOM
         float delta = p_x - leftWorld;
         setLeft(leftWorld + delta);
         setRight(rightWorld + delta);
-        try {
-            if (getName() == "blueishBox") {
-                std::ostringstream oss; oss << "[DBG] setX: name=blueishBox leftWorld=" << leftWorld << " rightWorld=" << rightWorld << " delta=" << delta << " -> left_=" << left_ << " right_=" << right_;
-                LUA_INFO(oss.str());
-            }
-        } catch(...) {}
+        if (getName() == "blueishBox") 
+        {
+            std::ostringstream oss; oss << "[DBG] setX: name=blueishBox leftWorld=" << leftWorld << " rightWorld=" << rightWorld << " delta=" << delta << " -> left_=" << left_ << " right_=" << right_;
+            LUA_INFO(oss.str());
+        }
         setDirty();
         return *this;
     }
@@ -1152,12 +1143,11 @@ namespace SDOM
         float delta = p_y - topWorld;
         setTop(topWorld + delta);
         setBottom(bottomWorld + delta);
-        try {
-            if (getName() == "blueishBox") {
-                std::ostringstream oss; oss << "[DBG] setY: name=blueishBox topWorld=" << topWorld << " bottomWorld=" << bottomWorld << " delta=" << delta << " -> top_=" << top_ << " bottom_=" << bottom_;
-                LUA_INFO(oss.str());
-            }
-        } catch(...) {}
+        if (getName() == "blueishBox") 
+        {
+            std::ostringstream oss; oss << "[DBG] setY: name=blueishBox topWorld=" << topWorld << " bottomWorld=" << bottomWorld << " delta=" << delta << " -> top_=" << top_ << " bottom_=" << bottom_;
+            LUA_INFO(oss.str());
+        }
         setDirty();
         return *this;
     }
@@ -1309,12 +1299,15 @@ namespace SDOM
     IDisplayObject& IDisplayObject::setLeft(float p_left)
     {
         auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
-        if (parent == this) {
+        if (parent == this) 
+        {
             ERROR("Cycle detected: node is its own parent!");
         }
         float parentAnchor = 0.0f;
-        if (parent) {
-            switch (anchorLeft_) {
+        if (parent)
+         {
+            switch (anchorLeft_) 
+            {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::MIDDLE_LEFT:
                 case AnchorPoint::BOTTOM_LEFT:
@@ -1333,7 +1326,7 @@ namespace SDOM
             }
         }
         left_ = p_left - parentAnchor;
-        try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setLeft: name=blueishBox p_left=" << p_left << " parentAnchor=" << parentAnchor << " -> left_=" << left_; LUA_INFO(oss.str()); } } catch(...) {}
+        // try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setLeft: name=blueishBox p_left=" << p_left << " parentAnchor=" << parentAnchor << " -> left_=" << left_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1365,7 +1358,7 @@ namespace SDOM
             }
         }
         right_ = p_right - parentAnchor;
-        try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setRight: name=blueishBox p_right=" << p_right << " parentAnchor=" << parentAnchor << " -> right_=" << right_; LUA_INFO(oss.str()); } } catch(...) {}
+        // try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setRight: name=blueishBox p_right=" << p_right << " parentAnchor=" << parentAnchor << " -> right_=" << right_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1373,11 +1366,13 @@ namespace SDOM
     IDisplayObject& IDisplayObject::setTop(float p_top)
     {
         auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
-        if (parent == this) {
+        if (parent == this) 
+        {
             ERROR("Cycle detected: node is its own parent!");
         }
         float parentAnchor = 0.0f;
-        if (parent) {
+        if (parent) 
+        {
             switch (anchorTop_) {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::TOP_CENTER:
@@ -1405,12 +1400,15 @@ namespace SDOM
     IDisplayObject& IDisplayObject::setBottom(float p_bottom)
     {
         auto* parent = dynamic_cast<IDisplayObject*>(parent_.get());
-        if (parent == this) {
+        if (parent == this) 
+        {
             ERROR("Cycle detected: node is its own parent!");
         }
         float parentAnchor = 0.0f;
-        if (parent) {
-            switch (anchorBottom_) {
+        if (parent) 
+        {
+            switch (anchorBottom_) 
+            {
                 case AnchorPoint::TOP_LEFT:
                 case AnchorPoint::TOP_CENTER:
                 case AnchorPoint::TOP_RIGHT:
@@ -1429,7 +1427,7 @@ namespace SDOM
             }
         }
         bottom_ = p_bottom - parentAnchor;
-        try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setBottom: name=blueishBox p_bottom=" << p_bottom << " parentAnchor=" << parentAnchor << " -> bottom_=" << bottom_; LUA_INFO(oss.str()); } } catch(...) {}
+        // try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setBottom: name=blueishBox p_bottom=" << p_bottom << " parentAnchor=" << parentAnchor << " -> bottom_=" << bottom_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }

@@ -3,6 +3,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Core_LuaHelpers.hpp>
+#include <SDOM/SDOM_DisplayHandle.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 
@@ -173,9 +174,10 @@ namespace SDOM
 		objHandleType[name] = [fcopy](Core& /*core*/) -> DisplayHandle { return fcopy(); };
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/) {
 			sol::state_view sv = ts;
+			// Ensure DisplayHandle usertype exists in this state before returning one
+			try { SDOM::DisplayHandle proto; proto.registerLuaBindings("DisplayHandle", sv); } catch(...) {}
 			DisplayHandle h = fcopy();
 			// Ensure DisplayHandle usertype exists before constructing userdata
-			// try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
 			return sol::make_object(sv, DisplayHandle());
 		});
@@ -187,6 +189,8 @@ namespace SDOM
 		try {
 			lua[name] = [fcopy](sol::this_state ts) {
 				sol::state_view sv = ts;
+				// Ensure DisplayHandle usertype exists in this state before returning one
+				try { SDOM::DisplayHandle proto; proto.registerLuaBindings("DisplayHandle", sv); } catch(...) {}
 				DisplayHandle h = fcopy();
 				if (h.isValid() && h.get()) return sol::make_object(sv, h);
 				return sol::make_object(sv, DisplayHandle());

@@ -9,11 +9,11 @@ namespace SDOM
 
     class Stage : public IDisplayObject
     {
-        using SUPER = IDisplayObject;
-
         // --- Friend Classes --- //
         friend class Factory; // Allow Factory to create Stage Objects
         friend class Core;    // Allow Core to access Factory internals if needed
+
+        using SUPER = IDisplayObject;
 
     public:
         // --- Type Info --- //

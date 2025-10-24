@@ -59,9 +59,12 @@ namespace SDOM
         Core& core = getCore();
         // core._registerLuaBindings("Core", core.getLua());
 
-        // // register the DisplayHandle last so other types can use it
-        // DisplayHandle prototypeHandle; // Default DisplayHandle for registration
-        // prototypeHandle._registerLuaBindings("DisplayHandle", core.getLua());
+        // Register the DisplayHandle early so any returned handles to Lua
+        // have a valid usertype/metatable for indexing minimal helpers.
+        try {
+            DisplayHandle prototypeHandle; // Default DisplayHandle for registration
+            prototypeHandle._registerLuaBindings("DisplayHandle", core.getLua());
+        } catch(...) {}
 
             TTFAsset::InitStruct ttf_init;
             ttf_init.name = "internal_ttf_asset";     // internal registry key
@@ -1504,4 +1507,3 @@ namespace SDOM
 
 
 } // namespace SDOM
-

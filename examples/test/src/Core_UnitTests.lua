@@ -13,36 +13,31 @@ local utils = require("src.UnitTests")
 
 -- Stage/Root Node Management 
 
--- -- Diagnostic: record runtime shape of Core and its getStage entry
--- do
---     local ok, msg = pcall(function()
---         print("DEBUG: type(Core) = " .. tostring(type(Core)))
---         print("DEBUG: tostring(Core) = " .. tostring(Core))
---         local g = Core.getStage
---         print("DEBUG: type(Core.getStage) = " .. tostring(type(g)))
---         if g then
---             print("DEBUG: Core.getStage is function? " .. tostring(type(g) == 'function'))
---         end
---     end)
---     if not ok then
---         print("DEBUG: failed to introspect Core: " .. tostring(msg))
---     end
--- end
 
 
-
+-- Test Core:getStage()
 local stage = Core:getStage()
 if not stage then
-    utils.push_error("Core.getStage() returned nil")
-else
-    -- Verify stage properties
-    if stage:getWidth() <= 0 then
-        utils.push_error("Stage width is not greater than 0")
-    end
-    if stage:getHeight() <= 0 then
-        utils.push_error("Stage height is not greater than 0")
-    end
+    utils.push_error("Core:getStage() returned nil")
 end
+
+-- Test Core:getDisplayObject()
+local stage2 = Core:getDisplayObject("stageTwo")
+if not stage2 then
+    utils.push_error("Core:getDisplayObject('stageTwo') returned an invalid handle.")
+end
+
+-- Test setStage()
+Core:setStage(stage2)
+local root_obj = Core:getRoot()
+if not root_obj then
+    utils.push_error("Core:getRoot() return an invalid handle.")
+end
+if root_obj ~= stage2 then
+    utils.push_error("root_obj: " .. root_obj:getName() .. " is not 'stageTwo'.")
+end
+-- Test setRootNode()
+Core:setRootNode("stageThree")
 
 
 

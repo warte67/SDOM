@@ -152,22 +152,32 @@ namespace SDOM
         template <typename T, typename BaseT>
         static sol::usertype<T> register_usertype_with_table(sol::state_view lua, const std::string& typeName)
         {
-            // Ensure parent table exists
-            sol::table table = ensure_sol_table(lua, typeName);
-
-            // Check if already registered
-            sol::object maybeType = table.raw_get_or("__usertype_registered", sol::lua_nil);
-            if (maybeType.is<bool>() && maybeType.as<bool>())
+            // If already present and is a usertype<T>, return it directly.
+            sol::object existing = lua.globals().raw_get_or(typeName, sol::lua_nil);
+            if (existing.valid())
             {
-                return lua.new_usertype<T>(typeName, sol::base_classes, sol::bases<BaseT>()); // dummy return
+                // Sol's usertype tables testable via is<sol::usertype<T>>()
+                try {
+                    if (existing.is<sol::usertype<T>>()) {
+                        return existing.as<sol::usertype<T>>();
+                    }
+                } catch(...) {}
+                // If it's at least a table (e.g., created by earlier scaffolding),
+                // fall through to re-register (sol will replace the table with the usertype).
             }
 
+            // Create once (no constructor exposed to Lua by default).
             auto userType = lua.new_usertype<T>(
                 typeName,
+                sol::no_constructor,
                 sol::base_classes, sol::bases<BaseT>()
             );
 
-            table["__usertype_registered"] = true;
+            // Mark on the usertype table itself for non-sol callers (optional).
+            try {
+                sol::table utbl = lua[typeName];
+                utbl["__usertype_registered"] = true;
+            } catch(...) {}
 
             if (true)
             {
@@ -192,13 +202,40 @@ namespace SDOM
 
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua)
         {
+            // 1. Make sure the per-type Lua table exists.
+            sol::table typeTable;
+            try {
+                typeTable = ensure_sol_table(lua, typeName);
+            } catch (...) {
+                return;  // If Lua isn’t ready yet, fail silently.
+            }
+
+            // 2. Make sure we run this block only once per type.
+            sol::object registered = typeTable.raw_get_or("__idataobject_initialized", sol::lua_nil);
+            if (registered.valid() && registered.is<bool>() && registered.as<bool>()) {
+                return; // Already initialized; ancestors can still add keys later.
+            }
+            typeTable["__idataobject_initialized"] = true;
+
+            // 3. Add the base-level helpers that every IDataObject should expose.
+            auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
+                sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
+                if (!cur.valid() || cur == sol::lua_nil) {
+                    tbl.set_function(name, std::forward<decltype(fn)>(fn));
+                }
+            };
+
+            set_if_absent(typeTable, "getName", [](IDataObject& self) { return self.getName(); });
+            set_if_absent(typeTable, "setName", [](IDataObject& self, const std::string& newName) { self.setName(newName); });
+
             // if (DEBUG_REGISTER_LUA)
-            if (false) // TEMP DISABLE
+            if (true)
             {
                 std::string typeNameLocal = "IDataObject";
-                std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                        << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN << typeName << CLR::RESET << std::endl;
-            }
+                std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
+                        << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
+                        << typeName << CLR::RESET << std::endl;
+            }            
         }   
         
         sol::usertype<IDataObject> objHandleType_;

@@ -97,24 +97,43 @@ namespace SDOM
         return ok;
     }
 
-
-
     void Stage::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
-        // Call base class registration to include inherited properties/commands
+        // Let IDataObject / IDisplayObject wire up their pieces first.
         SUPER::_registerLuaBindings(typeName, lua);
 
-        if (DEBUG_REGISTER_LUA)
-        {
+        if (DEBUG_REGISTER_LUA) {
             std::string typeNameLocal = "Stage";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
+            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
+                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared DisplayHandle handle usertype
-        // sol::table handle = DisplayHandle::ensure_handle_table(lua);
+        // Create (or reuse) the Stage usertype. Using sol::no_constructor keeps Lua
+        // from instantiating raw Stage objects; the factory does that.
+        if (!lua[typeName].valid()) {
+            objHandleType_ = lua.new_usertype<Stage>(
+                typeName,
+                sol::no_constructor,
+                sol::base_classes, sol::bases<IDisplayObject>()
+            );
+        } else {
+            objHandleType_ = lua[typeName];
+        }
 
-    } // End Stage::_registerDisplayHandle()
+        sol::table stageTable = lua[typeName];
+
+        auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
+            sol::object current = tbl.raw_get_or(name, sol::lua_nil);
+            if (!current.valid() || current == sol::lua_nil) {
+                tbl.set_function(name, std::forward<decltype(fn)>(fn));
+            }
+        };
+
+        set_if_absent(stageTable, "getMouseX", &Stage::getMouseX_lua);
+        set_if_absent(stageTable, "getMouseY", &Stage::getMouseY_lua);
+        set_if_absent(stageTable, "setMouseX", &Stage::setMouseX_lua);
+        set_if_absent(stageTable, "setMouseY", &Stage::setMouseY_lua);
+    } // END: Stage::_registerLuaBindings()
 
 } // namespace SDOM

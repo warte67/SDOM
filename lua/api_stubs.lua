@@ -1,4 +1,4 @@
-@ -1,73 +0,0 @@
+--@ -1,73 +0,0 @@
 -- lua/api_stubs.lua
 -- Comprehensive editor-only Lua API stubs for SDOM bindings.
 -- Designed for EmmyLua / LuaLS (sumneko) to provide completions and suppress
@@ -41,6 +41,8 @@
 -- Core singleton ------------------------------------------------------------
 ---@class Core
 ---@field getStage fun(self): DisplayHandle
+---@field setStage fun(self, DisplayHandle): nil
+---@field setRootNode fun(self, name: string): nil
 ---@field getStageHandle fun(self): DisplayHandle
 ---@field getRoot fun(self): DisplayHandle
 ---@field getRootNode fun(self): DisplayHandle
