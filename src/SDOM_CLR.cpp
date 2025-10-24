@@ -69,6 +69,51 @@ void CLR::exposeToLua(sol::state& lua)
     clr["BG_LT_CYAN"] = CLR::BG_LT_CYAN;
     clr["BG_WHITE"] = CLR::BG_WHITE;
 
+    // clr["ARROW_UP"]            = ARROW_UP;
+    // clr["ARROW_DOWN"]          = ARROW_DOWN;
+    // clr["ARROW_LEFT"]          = ARROW_LEFT;
+    // clr["ARROW_RIGHT"]         = ARROW_RIGHT;
+    // clr["ARROW_UP_DOUBLE"]     = ARROW_UP_DOUBLE;
+    // clr["ARROW_DOWN_DOUBLE"]   = ARROW_DOWN_DOUBLE;
+    // clr["ARROW_LEFT_DOUBLE"]   = ARROW_LEFT_DOUBLE;
+    // clr["ARROW_RIGHT_DOUBLE"]  = ARROW_RIGHT_DOUBLE;
+    // clr["ARROW_THIN_RIGHT"]    = ARROW_THIN_RIGHT;
+    // clr["ARROW_COLLAPSED"]     = ARROW_COLLAPSED;
+    // clr["ARROW_EXPANDED"]      = ARROW_EXPANDED;
+
+    // clr["CHECKBOX_EMPTY"]      = CHECKBOX_EMPTY;
+    // clr["CHECKBOX_CHECKED"]    = CHECKBOX_CHECKED;
+    // clr["CHECKBOX_CROSSED"]    = CHECKBOX_CROSSED;
+    // clr["CHECKBOX_MIXED"]      = CHECKBOX_MIXED;
+    // clr["CHECKBOX_FLAT"]       = CHECKBOX_FLAT;
+
+    // clr["RADIO_OFF"]           = RADIO_OFF;
+    // clr["RADIO_ON"]            = RADIO_ON;
+    // clr["RADIO_DISABLED"]      = RADIO_DISABLED;
+
+    // clr["TRACK_H"]             = TRACK_H;
+    // clr["TRACK_V"]             = TRACK_V;
+    // clr["KNOB_BLOCK"]          = KNOB_BLOCK;
+    // clr["KNOB_ROUND"]          = KNOB_ROUND;
+
+    // clr["SHADE_LIGHT"]         = SHADE_LIGHT;
+    // clr["SHADE_MEDIUM"]        = SHADE_MEDIUM;
+    // clr["SHADE_DARK"]          = SHADE_DARK;
+    // clr["SHADE_SOLID"]         = SHADE_SOLID;
+
+    // clr["BOX_TL"]              = BOX_TL;
+    // clr["BOX_TR"]              = BOX_TR;
+    // clr["BOX_BL"]              = BOX_BL;
+    // clr["BOX_BR"]              = BOX_BR;
+    // clr["BOX_H"]               = BOX_H;
+    // clr["BOX_V"]               = BOX_V;
+    // clr["BOX_T"]               = BOX_T;
+    // clr["BOX_B"]               = BOX_B;
+    // clr["BOX_L"]               = BOX_L;
+    // clr["BOX_R"]               = BOX_R;
+    // clr["BOX_C"]               = BOX_C;
+
+
     // helper functions (map C++ static methods into Lua)
     clr.set_function("indent", &CLR::indent);
     clr.set_function("indent_push", &CLR::indent_push);

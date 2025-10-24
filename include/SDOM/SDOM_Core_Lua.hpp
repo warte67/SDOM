@@ -1,4 +1,4 @@
-// SDOM_Core_BindHelpers.hpp --- Lua binding helpers
+// SDOM_Core_Lua.hpp --- Lua binding helpers
 #pragma once
 
 #include <SDOM/SDOM.hpp>

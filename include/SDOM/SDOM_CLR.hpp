@@ -312,6 +312,67 @@ public:
     inline static const std::string BG_WHITE	= "\e[0;107m";   ///< ANSI escape sequence for white background
     /** @} */
 
+    /**
+     * @name UI Symbol Constants
+     * @brief Unicode UI characters for text-based UI, logging, and Lua integration.
+     * @{
+     */
+
+    // Arrows
+    inline static const std::string ARROW_UP            = "↑";
+    inline static const std::string ARROW_DOWN          = "↓";
+    inline static const std::string ARROW_LEFT          = "←";
+    inline static const std::string ARROW_RIGHT         = "→";
+    inline static const std::string ARROW_UP_DOUBLE     = "⇑";
+    inline static const std::string ARROW_DOWN_DOUBLE   = "⇓";
+    inline static const std::string ARROW_LEFT_DOUBLE   = "⇐";
+    inline static const std::string ARROW_RIGHT_DOUBLE  = "⇒";
+    inline static const std::string ARROW_THIN_RIGHT    = "▸";
+    inline static const std::string ARROW_COLLAPSED     = "▶";
+    inline static const std::string ARROW_EXPANDED      = "▼";
+
+    // Checkbox / Toggle States
+    inline static const std::string CHECKBOX_EMPTY      = "☐";
+    inline static const std::string CHECKBOX_CHECKED    = "☑";
+    inline static const std::string CHECKBOX_CROSSED    = "☒";
+
+    // Radio Buttons
+    inline static const std::string RADIO_OFF           = "○";
+    inline static const std::string RADIO_ON            = "●";
+
+    // Scroll / Slider
+    inline static const std::string TRACK_H             = "─";
+    inline static const std::string TRACK_V             = "│";
+    inline static const std::string KNOB_BLOCK          = "■";
+    inline static const std::string KNOB_ROUND          = "●";
+    inline static const std::string ARROW_UP_SMALL      = "▲";
+    inline static const std::string ARROW_DOWN_SMALL    = "▼";
+    inline static const std::string ARROW_LEFT_SMALL    = "◄";
+    inline static const std::string ARROW_RIGHT_SMALL   = "►";
+
+    // Progress Shading
+    inline static const std::string SHADE_LIGHT         = "░";
+    inline static const std::string SHADE_MEDIUM        = "▒";
+    inline static const std::string SHADE_DARK          = "▓";
+    inline static const std::string SHADE_SOLID         = "█";
+
+    // Box Drawing
+    inline static const std::string BOX_TL              = "┌";
+    inline static const std::string BOX_TR              = "┐";
+    inline static const std::string BOX_BL              = "└";
+    inline static const std::string BOX_BR              = "┘";
+    inline static const std::string BOX_H               = "─";
+    inline static const std::string BOX_V               = "│";
+    inline static const std::string BOX_T               = "┬";
+    inline static const std::string BOX_B               = "┴";
+    inline static const std::string BOX_L               = "├";
+    inline static const std::string BOX_R               = "┤";
+    inline static const std::string BOX_C               = "┼";
+
+    /** @} */
+
+
+
 
     /**
      * @brief Gets the current terminal size (width and height).

@@ -88,6 +88,14 @@ This document catalogs the icons in the `sprite_8x8` font by their index. The `s
 | 79    | Thumb VProgress           |
 | 80    | Bottom VProgress          |
 
+## Extended Icon Glyphs:
+
+| Index | CLR::Identifier | Icon Description          |
+|-------|-----------------|---------------------------|
+| 81    | ARROW_UP        | Standard arrow up         |
+...etc...
+
+
 ## Icon Sets
 
 The `icon_8x8` font begins with a set of six molded button, frame, and group graphics. These icons are arranged in a 3x3 grid format, representing the following positions:

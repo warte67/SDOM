@@ -1,8 +1,8 @@
-// lua_BindHelpers.cpp --- Lua binding helpers implementation
+// SDOM_Core_Lua.cpp --- Lua binding helpers implementation
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
-#include <SDOM/SDOM_Core_LuaHelpers.hpp>
+#include <SDOM/SDOM_Core_Lua.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Factory.hpp>

@@ -40,6 +40,8 @@ using namespace SDOM;
 
 int main(int argc, char** argv) 
 {
+    std::cout << CLR::ORANGE << CLR::ARROW_UP << CLR::NORMAL << std::endl;
+    
     // Quick command-line help handling: if user asks for help, print usage
     // and exit without initializing the full Core.
     for (int i = 1; i < argc; ++i) {
