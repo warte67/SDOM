@@ -30,16 +30,17 @@ namespace SDOM
         SDL_Utils::registerLua(lua_);
         factory_ = new Factory();
         eventManager_ = new EventManager();
-
-        this->_registerLuaBindings("Core", lua_);
         
         // register the DisplayHandle handle last so other types can use it
         DisplayHandle prototypeHandle; // Default DisplayHandle for registration
-        prototypeHandle._registerLuaBindings("DisplayHandle", lua_);
+        prototypeHandle.registerLuaBindings("DisplayHandle", lua_);
 
         AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
         prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
 
+        // Register Core usertype
+        this->_registerLuaBindings("Core", lua_);        
+        
         // Note: Factory initialization is performed later (e.g. during
         // configuration) to avoid recursive-construction ordering issues.
     }

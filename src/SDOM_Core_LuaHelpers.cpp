@@ -167,11 +167,16 @@ namespace SDOM
 		} catch(...) {}
 	}
 
-	void core_bind_return_displayobject(const std::string& name, std::function<DisplayHandle()> func,
-								sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
-	{
-		auto fcopy = func;
-		objHandleType[name] = [fcopy](Core& /*core*/) -> DisplayHandle { return fcopy(); };
+void core_bind_return_displayobject(const std::string& name, std::function<DisplayHandle()> func,
+                                sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+{
+    auto fcopy = func;
+    objHandleType[name] = [fcopy](Core& /*core*/, sol::this_state ts) -> DisplayHandle {
+        sol::state_view sv = ts;
+        // Ensure DisplayHandle usertype exists before constructing userdata
+        try { SDOM::DisplayHandle proto; proto.registerLuaBindings("DisplayHandle", sv); } catch(...) {}
+        return fcopy();
+    };
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/) {
 			sol::state_view sv = ts;
 			// Ensure DisplayHandle usertype exists in this state before returning one
@@ -313,23 +318,28 @@ namespace SDOM
 	}
 
 	void core_bind_string_table_return_do(const std::string& name, std::function<DisplayHandle(const std::string&, const sol::table&)> func,
-									sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
-	{
-		auto fcopy = func;
-		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& typeName, const sol::table& cfg) -> DisplayHandle {
-			return fcopy(typeName, cfg);
-		};
+										sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+		{
+			auto fcopy = func;
+		objHandleType[name] = [fcopy](Core& /*core*/, sol::this_state ts, const std::string& typeName, const sol::table& cfg) -> DisplayHandle {
+				sol::state_view sv = ts;
+				// Ensure DisplayHandle usertype exists before constructing userdata
+				try { SDOM::DisplayHandle proto; proto.registerLuaBindings("DisplayHandle", sv); } catch(...) {}
+				return fcopy(typeName, cfg);
+			};
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& typeName, const sol::table& cfg) {
 			sol::state_view sv = ts;
-			DisplayHandle h = fcopy(typeName, cfg);
 			// Ensure DisplayHandle usertype exists before constructing userdata
-			// try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
+			try { SDOM::DisplayHandle proto; proto.registerLuaBindings("DisplayHandle", sv); } catch(...) {}
+			DisplayHandle h = fcopy(typeName, cfg);
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
 			return sol::make_object(sv, DisplayHandle());
 		});
 		try {
 			lua[name] = [fcopy](sol::this_state ts, const std::string& typeName, const sol::table& cfg) {
 				sol::state_view sv = ts;
+				// Ensure DisplayHandle usertype exists before constructing userdata
+				try { SDOM::DisplayHandle proto; proto.registerLuaBindings("DisplayHandle", sv); } catch(...) {}
 				DisplayHandle h = fcopy(typeName, cfg);
 				if (h.isValid() && h.get()) return sol::make_object(sv, h);
 				return sol::make_object(sv, DisplayHandle());
@@ -361,21 +371,28 @@ namespace SDOM
 	}
 
 	void core_bind_string_return_do(const std::string& name, std::function<DisplayHandle(const std::string&)> func,
-							sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
-	{
-		auto fcopy = func;
-		objHandleType[name] = [fcopy](Core& /*core*/, const std::string& s) -> DisplayHandle { return fcopy(s); };
+									sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
+		{
+			auto fcopy = func;
+		objHandleType[name] = [fcopy](Core& /*core*/, sol::this_state ts, const std::string& s) -> DisplayHandle {
+			sol::state_view sv = ts;
+			// Ensure DisplayHandle usertype exists before constructing userdata
+			try { SDOM::DisplayHandle proto; proto.registerLuaBindings("DisplayHandle", sv); } catch(...) {}
+			return fcopy(s);
+		};
 		coreTable.set_function(name, [fcopy](sol::this_state ts, sol::object /*self*/, const std::string& s) {
 			sol::state_view sv = ts;
-			DisplayHandle h = fcopy(s);
 			// Ensure DisplayHandle usertype exists before constructing userdata
-			// try { SDOM::DisplayHandle::ensure_handle_table(sv); } catch(...) {}
+			try { SDOM::DisplayHandle proto; proto.registerLuaBindings("DisplayHandle", sv); } catch(...) {}
+			DisplayHandle h = fcopy(s);
 			if (h.isValid() && h.get()) return sol::make_object(sv, h);
 			return sol::make_object(sv, DisplayHandle());
 		});
 		try {
 			lua[name] = [fcopy](sol::this_state ts, const std::string& s) {
 				sol::state_view sv = ts;
+				// Ensure DisplayHandle usertype exists before constructing userdata
+				try { SDOM::DisplayHandle proto; proto.registerLuaBindings("DisplayHandle", sv); } catch(...) {}
 				DisplayHandle h = fcopy(s);
 				if (h.isValid() && h.get()) return sol::make_object(sv, h);
 				return sol::make_object(sv, DisplayHandle());

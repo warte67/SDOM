@@ -90,6 +90,7 @@ Summary:
 #include <sol/sol.hpp>
 #include <SDOM/SDOM_CLR.hpp>
 #include <SDOM/SDOM_IUnitTest.hpp>
+#include <unordered_map>
 
 // Ensure DEBUG_REGISTER_LUA exists (normally provided by SDOM.hpp). If the
 // umbrella header is included by a TU it will override this; this definition
@@ -133,11 +134,21 @@ namespace SDOM
         static sol::table ensure_sol_table(sol::state_view lua, const std::string& typeName)
         {
             sol::table global = lua.globals();
-            sol::object maybeTable = global.raw_get_or(typeName, sol::lua_nil);
-            if (maybeTable.is<sol::table>())
+            sol::object maybe = global.raw_get_or(typeName, sol::lua_nil);
+            if (maybe.valid() && maybe != sol::lua_nil)
             {
-                return maybeTable.as<sol::table>();
+                // Many sol2 builds expose a usertype as a table/metatable; some
+                // report it as a userdata. In either case, fetch the table view
+                // from the global entry without replacing it.
+                try {
+                    if (maybe.is<sol::table>()) {
+                        return maybe.as<sol::table>();
+                    }
+                } catch(...) {}
+                // Fallback: treat the existing global as a table-like and return it
+                try { return lua[typeName]; } catch(...) {}
             }
+            // Not present: create and publish a fresh table
             sol::table newTable = lua.create_table();
             global[typeName] = newTable;
             if (true)
@@ -152,18 +163,32 @@ namespace SDOM
         template <typename T, typename BaseT>
         static sol::usertype<T> register_usertype_with_table(sol::state_view lua, const std::string& typeName)
         {
-            // If already present and is a usertype<T>, return it directly.
+            // Guard against re-registration across multiple call sites and
+            // avoid clobbering existing usertype tables. We only track a
+            // boolean flag per (lua_State*, typeName), not sol objects.
+            using StateMap = std::unordered_map<std::string, bool>;
+            static std::unordered_map<lua_State*, StateMap> s_registered;
+            lua_State* L = lua.lua_state();
+            auto& reg = s_registered[L];
+            auto it = reg.find(typeName);
+            if (it != reg.end() && it->second) {
+                // Already registered in this state; return a handle to the existing usertype table.
+                try { return lua[typeName]; } catch(...) {
+                    // If the table is somehow missing, fall through to create below.
+                }
+            }
+
+            // If a table already exists and was marked as registered, reuse it.
             sol::object existing = lua.globals().raw_get_or(typeName, sol::lua_nil);
-            if (existing.valid())
-            {
-                // Sol's usertype tables testable via is<sol::usertype<T>>()
+            if (existing.valid() && existing != sol::lua_nil) {
                 try {
-                    if (existing.is<sol::usertype<T>>()) {
-                        return existing.as<sol::usertype<T>>();
+                    sol::table t = lua[typeName];
+                    sol::object flag = t.raw_get_or("__usertype_registered", sol::lua_nil);
+                    if (flag.valid() && flag.is<bool>() && flag.as<bool>()) {
+                        reg[typeName] = true;
+                        return lua[typeName];
                     }
                 } catch(...) {}
-                // If it's at least a table (e.g., created by earlier scaffolding),
-                // fall through to re-register (sol will replace the table with the usertype).
             }
 
             // Create once (no constructor exposed to Lua by default).
@@ -173,7 +198,7 @@ namespace SDOM
                 sol::base_classes, sol::bases<BaseT>()
             );
 
-            // Mark on the usertype table itself for non-sol callers (optional).
+            // Mark on the usertype table itself so subsequent calls can detect it.
             try {
                 sol::table utbl = lua[typeName];
                 utbl["__usertype_registered"] = true;
@@ -185,6 +210,7 @@ namespace SDOM
                         << CLR::LT_YELLOW << typeName << CLR::RESET << std::endl;
             }
 
+            reg[typeName] = true;
             return userType;
         }        
 

@@ -66,7 +66,15 @@ namespace SDOM
         // Register the DisplayHandle usertype (no constructor) once, and reuse thereafter.
         sol::usertype<DisplayHandle> ut = SDOM::IDataObject::register_usertype_with_table<DisplayHandle, SDOM::IDataObject>(lua, typeName);
 
-        sol::table handleTable = SDOM::IDataObject::ensure_sol_table(lua, typeName);
+        // Prefer the actual usertype table; avoid creating/replacing globals here.
+        sol::table handleTable;
+        try {
+            handleTable = lua[typeName];
+        } catch(...) {
+            // As a fallback (shouldn't normally happen), create a local table
+            // but do not publish it globally to avoid clobbering the usertype.
+            handleTable = lua.create_table();
+        }
 
         auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
             sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
@@ -95,15 +103,30 @@ namespace SDOM
         // Provide a friendly __index that supports dot-style access by
         // returning a closure which binds the handle as the first argument.
         // This lets scripts use both `h:getName()` and `h.getName()`.
-        ut[sol::meta_function::index] = [handleTable](DisplayHandle self, const sol::object& key, sol::this_state ts) -> sol::object {
+        std::string typeKey = typeName;
+        ut[sol::meta_function::index] = [typeKey](DisplayHandle self, const sol::object& key, sol::this_state ts) -> sol::object {
             sol::state_view L(ts);
             if (!key.valid() || key == sol::lua_nil) return sol::lua_nil;
             if (!key.is<std::string>()) return sol::lua_nil;
             std::string k;
             try { k = key.as<std::string>(); } catch(...) { return sol::lua_nil; }
 
-            if (!handleTable.valid()) return sol::lua_nil;
-            sol::object member = handleTable.raw_get_or(k, sol::lua_nil);
+            // Fetch the current usertype table from globals to avoid capturing
+            // a stale handle. Some sol builds expose usertype as table.
+            sol::table tbl;
+            try {
+                sol::object maybe = L.globals().raw_get_or(typeKey, sol::lua_nil);
+                if (maybe.valid()) {
+                    if (maybe.is<sol::table>()) {
+                        tbl = maybe.as<sol::table>();
+                    } else {
+                        // Fallback: attempt to read as table directly
+                        tbl = L[typeKey];
+                    }
+                }
+            } catch(...) {}
+            if (!tbl.valid()) return sol::lua_nil;
+            sol::object member = tbl.raw_get_or(k, sol::lua_nil);
             if (!member.valid() || member == sol::lua_nil) return sol::lua_nil;
 
             if (member.get_type() == sol::type::function) {

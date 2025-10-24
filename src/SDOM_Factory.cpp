@@ -63,7 +63,7 @@ namespace SDOM
         // have a valid usertype/metatable for indexing minimal helpers.
         try {
             DisplayHandle prototypeHandle; // Default DisplayHandle for registration
-            prototypeHandle._registerLuaBindings("DisplayHandle", core.getLua());
+            prototypeHandle.registerLuaBindings("DisplayHandle", core.getLua());
         } catch(...) {}
 
             TTFAsset::InitStruct ttf_init;

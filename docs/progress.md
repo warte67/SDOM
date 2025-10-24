@@ -912,22 +912,21 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Achieve full C++ test coverage for each DisplayObject type.
   - As the final C++ test, run a complete Lua file that mirrors the C++ tests to ensure parity.
 
-
-
-IDisplayObject
-  - IPanelObject
-    - Button
-    - Frame
-    - Group
-  - IRangeControl
-    - IRangeControl_scaffold
-    - ProgressBar
-    - ScrollBar
-    - Slider
-  - IconButton
-    - ArrowButton
-  - Label
-  - Stage
-  - TristateButton
-    - CheckButton
-    - RadioButton
+## Current DisplayObject Inheritance Hierarchy:
+└── IDisplayObject
+    ├── IPanelObject
+    │   ├── Button
+    │   ├── Frame
+    │   └── Group
+    ├── IRangeControl
+    │   ├── IRangeControl_scaffold
+    │   ├── ProgressBar
+    │   ├── ScrollBar
+    │   └── Slider
+    ├── IconButton
+    │   └── ArrowButton
+    ├── Label
+    ├── Stage
+    └── TristateButton
+        ├── CheckButton
+        └── RadioButton
