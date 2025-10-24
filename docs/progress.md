@@ -913,9 +913,11 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ## Next Steps:
-  - Complete refactoring of `Core_UnitTests` to systematically test all C++ functions.
-  - Build a new Lua Binding System from the ground up using the `IDataObject` interface to house the binding registry tables.
-    - Begin building a new Lua-based test harness to systematically test all Core methods via Lua.
+- Complete refactoring of `Core_UnitTests` to systematically test all C++ functions.
+- Begin building a new Lua-based test harness to systematically test all Core methods via Lua.
+  - Continue building out `Core_UnitTests.lua` to cover all Core methods and properties.
+- Begin a new `IDisplayObject_UnitTests.cpp` Unit Test Module to fully test all C++ and LUA properties and functions.
+  - Fully Implement `IDisplayObject` Lua bindings via `SDOM_IDisplayObject_LuaHelpers.hpp`.
 
 ---
 ## Long Term To Do:
