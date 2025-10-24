@@ -171,10 +171,27 @@ if (orphan_count ~= 1) then
     utils.push_error("Core:countOrphanedDisplayObjects() Should be 1 orphan, found: " .. tostring(orphan_count))
 end
 
--- -- Add the box to the stage to remove orphan status
--- stage:addChild(box)
+-- Add the box to the stage to remove orphan status
+stage:addChild(box)
+orphan_count = Core:countOrphanedDisplayObjects()
+if (orphan_count ~= 0) then
+    utils.push_error("After adding box to stage, expected 0 orphans, found: " .. tostring(orphan_count))
+end
 
+-- Remove the box from the stage to make it an orphan again
+stage:removeChild(box)
+orphan_count = Core:countOrphanedDisplayObjects()
+if (orphan_count ~= 1) then
+    utils.push_error("After removing box from stage, expected 1 orphan, found: " .. tostring(orphan_count))
+end 
 
+-- Clean up: (In actual tests, ensure proper cleanup of created objects)
+
+Core:collectGarbage()
+orphan_count = Core:countOrphanedDisplayObjects()
+if (orphan_count ~= 0) then
+    utils.push_error("After Core:collectGarbage(), expected 0 orphans, found: " .. tostring(orphan_count))
+end
 
 -- return summary
 return utils.get_results()

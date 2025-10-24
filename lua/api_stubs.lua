@@ -12,10 +12,17 @@
 ---@field isValid fun(self): boolean
 ---@field getName fun(self): string
 ---@field getType fun(self): string
+---@field setName fun(self, name: string): nil
+---@field setType fun(self, typeName: string): nil
+---@field get fun(self): any
 ---@field getX fun(self): integer
 ---@field getY fun(self): integer
 ---@field getWidth fun(self): integer
 ---@field getHeight fun(self): integer
+---@field addChild fun(self, child: (DisplayHandle|string|table)): boolean
+---@field removeChild fun(self, child: (DisplayHandle|string|table)): boolean
+---@field hasChild fun(self, child: (DisplayHandle|string|table)): boolean
+---@field getChild fun(self, spec: (string|table)): (DisplayHandle|nil)
 
 -- AssetHandle ----------------------------------------------------------------
 ---@class AssetHandle
@@ -24,7 +31,7 @@
 ---@field getType fun(self): string
 ---@field getFilename fun(self): string
 
--- EventType ------------------------------------------------------------------
+-- EventType (partial) -------------------------------------------------------
 ---@class EventType
 ---@field name string
 
@@ -38,7 +45,7 @@
 ---@field createDisplayObject fun(self, typeName: string, config: table): DisplayHandle
 ---@field createAssetObject fun(self, typeName: string, config: table): AssetHandle
 
--- Core singleton ------------------------------------------------------------
+-- Core singleton (partial) --------------------------------------------------
 ---@class Core
 ---@field getStage fun(self): DisplayHandle
 ---@field setStage fun(self, DisplayHandle): nil
@@ -54,12 +61,29 @@
 ---@field getDisplayObject fun(self, name: string): DisplayHandle
 ---@field hasDisplayObject fun(self, name: string): boolean
 ---@field createAssetObject fun(self, typeName: string, cfg: table): AssetHandle
+---@field collectGarbage fun(self): nil
 ---@field getIsTraversing fun(self): boolean
 ---@field setIsTraversing fun(self, traversing: boolean): nil
 ---@field getAssetObject fun(self, name: string): AssetHandle
 ---@field pumpEventsOnce fun(self): nil
 ---@field pushMouseEvent fun(self, args: table): nil
 ---@field pushKeyboardEvent fun(self, args: table): nil
+
+-- IDisplayObject (partial) -------------------------------------------------
+---@class IDisplayObject
+---@field addChild fun(self, child: (DisplayHandle|string|table)): boolean
+---@field removeChild fun(self, child: (DisplayHandle|string|table)): boolean
+---@field hasChild fun(self, child: (DisplayHandle|string|table)): boolean
+---@field getChild fun(self, spec: (string|table)): (DisplayHandle|nil)
+
+-- Stage (partial) -----------------------------------------------------------
+---@class Stage: IDisplayObject
+---@field getMouseX fun(self): integer
+---@field getMouseY fun(self): integer
+---@field setMouseX fun(self, x: integer): nil
+---@field setMouseY fun(self, y: integer): nil
+
+
 
 -- Global top-level convenience functions (provided by bindings)
 ---@type Core

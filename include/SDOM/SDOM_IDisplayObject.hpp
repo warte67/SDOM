@@ -382,6 +382,10 @@ Notes & test ideas:
         IDisplayObject& setLocalBottom(float value) { bottom_ = value; return *this; }
 
 
+        // --- Temporary Lua Registration --- //
+        void addChild_lua(IDisplayObject* obj, DisplayHandle child) { if (!obj) return; obj->addChild(child); }
+
+
 
     protected: // --- Member Variables --- //
         // std::string name_;  // defined in IDataObject

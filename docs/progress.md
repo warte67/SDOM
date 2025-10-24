@@ -886,7 +886,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Completed `Stage/Root Node Management` tests.
     
 ---
-### [October 22, 2025]
+### [October 23, 2025]
 - **`Core_UnitTests` Refactor Progress:**
   - Continued refactoring `Core_UnitTests` to utilize the new Lua Binding System.
     - Completed `SDL Resource Accessors` tests.
@@ -896,6 +896,20 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Completed `DisplayObject Creation` tests.
   - Constructed a new lua based unit test scaffolding 
     - Started `Core_UnitTests.lua` based on the new lua test scaffolding.
+- Lua Binding System stabilization and test fixes
+  - Idempotent usertype registration: updated `register_usertype_with_table` to register once per Lua state and reuse the existing usertype table (no re‑registration/clobbering).
+  - Safe table creation: `ensure_sol_table` now reuses existing global entries (usertype/table) and avoids replacing them, preventing stale userdatas.
+  - `DisplayHandle` minimal API + robust lookup: added `isValid`, `getName`, `getType`, `setName`, `setType`, and `get` with a resilient `__index` that supports both `:` and `.` calls.
+  - Early/explicit registration: ensured `DisplayHandle` registration in `Core` and `Factory`, and before returning any handles from Core’s Lua helpers.
+  - Handle return semantics: Core Lua wrappers now return `nil` (not an empty handle) when a requested object does not exist.
+- `IDisplayObject` bindings (available via `DisplayHandle`)
+  - Added generic hierarchy helpers: `addChild(childSpec)`, `removeChild(childSpec)`, `hasChild(childSpec)`, and `getChild(spec)` where specs accept a `DisplayHandle`, a name `string`, or `{ name = "..." }`.
+  - Bound on both the `DisplayHandle` usertype and backing table for consistent lookup.
+- Lua tests and scaffolding
+  - `Core_UnitTests.lua` updated to verify `DisplayHandle` method availability, stage/root retrieval, invalid lookups returning `nil`, and basic parent/child operations.
+  - Most Lua Integration checks are now passing after the binding fixes.
+- IDE stubs
+  - Expanded `lua/api_stubs.lua` for better autocompletion: `DisplayHandle` methods above, partial `IDisplayObject` surface (add/remove/has/get child), and partial `Stage` (mouse getters/setters).
 
 ---
 ## Next Steps:
