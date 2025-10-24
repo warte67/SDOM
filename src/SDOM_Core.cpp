@@ -13,7 +13,7 @@
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
-#include <SDOM/SDOM_Core_LuaHelpers.hpp>
+#include <SDOM/SDOM_Core_Lua.hpp>
 #include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_ArrowButton.hpp>
 
@@ -551,17 +551,17 @@ namespace SDOM
             // Now run user tests after initialization
             // SDL_Delay(250); // give some time for tiled window to be configured by the OS Compositor 
 
-            // Temporarily ignore real mouse input while running unit tests
-            this->setIgnoreRealInput(true);
-            bool testsPassed = onUnitTest();
-            this->setIgnoreRealInput(false);
-            if (!testsPassed) 
-            {
-                ERROR("Unit tests failed. Aborting run.");
-                overallSuccess = false;
-                // stop the main loop to allow graceful shutdown
-                bIsRunning_ = false;
-            }
+            // // Temporarily ignore real mouse input while running unit tests
+            // this->setIgnoreRealInput(true);
+            // bool testsPassed = onUnitTest();
+            // this->setIgnoreRealInput(false);
+            // if (!testsPassed) 
+            // {
+            //     ERROR("Unit tests failed. Aborting run.");
+            //     overallSuccess = false;
+            //     // stop the main loop to allow graceful shutdown
+            //     bIsRunning_ = false;
+            // }
 
             SDL_Event event;
 
@@ -688,17 +688,28 @@ namespace SDOM
                 factory_->attachFutureChildren();   // Attach future children
                 factory_->collectGarbage();         // Clean up any orphaned objects
 
-                // static int s_iterations = 0;
-                // if (s_iterations == 0)
-                // {
-                //     // Now run user tests after initialization
-                //     bool testsPassed = onUnitTest();
-                //     if (!testsPassed) 
-                //     {
-                //         ERROR("Unit tests failed. Aborting run.");
-                //     }                    
-                // }
-                // s_iterations++;
+                static int s_iteration_state = 0;
+                if (s_iteration_state == 1)
+                {
+                    // Now run user tests after initialization
+                    // Temporarily ignore real mouse input while running unit tests
+                    this->setIgnoreRealInput(true);
+                    bool testsPassed = onUnitTest();
+                    this->setIgnoreRealInput(false);
+                    if (!testsPassed) 
+                    {
+                        ERROR("Unit tests failed. Aborting run.");
+                        overallSuccess = false;
+                        // stop the main loop to allow graceful shutdown
+                        bIsRunning_ = false;
+                    }                 
+                }
+                // s_iteration_state++;
+                if (s_iteration_state < 1)
+                    s_iteration_state = 1;  // run unit tests on 2nd iteration
+                else
+                    s_iteration_state = 2;  // stay at 2 thereafter
+
 
             }  // END: while (SDL_PollEvent(&event)) 
         }
@@ -815,6 +826,7 @@ namespace SDOM
         {
             // render the node
             node.onRender();
+            node.setDirty(false); // clear dirty flag after rendering
 
             DisplayHandle rootHandle = this->getStageHandle();
             // PreRender EventListeners

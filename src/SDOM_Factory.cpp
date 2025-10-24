@@ -588,17 +588,29 @@ namespace SDOM
             return DisplayHandle(); // This line is not reached if ERROR throws
         }
 
-        // Prevent creating an object with a name that already exists in the factory
+        // // Prevent creating an object with a name that already exists in the factory
+        // std::string requestedName = config["name"];
+        // if (!requestedName.empty()) 
+        // {
+        //     auto existing = displayObjects_.find(requestedName);
+        //     if (existing != displayObjects_.end()) 
+        //     {
+        //         ERROR(std::string("Factory::create: Display object with name '") + requestedName + "' already exists");
+        //         return DisplayHandle();
+        //     }
+        // }
+
+        // If the name already exists, return a DisplayHandle to the existing object
         std::string requestedName = config["name"];
-        if (!requestedName.empty()) 
+        if (!requestedName.empty())
         {
             auto existing = displayObjects_.find(requestedName);
-            if (existing != displayObjects_.end()) 
+            if (existing != displayObjects_.end())
             {
-                ERROR(std::string("Factory::create: Display object with name '") + requestedName + "' already exists");
-                return DisplayHandle();
+                // ✅ Return reference/alias without re-initializing
+                return DisplayHandle(requestedName, typeName);
             }
-        }
+        }        
 
         auto it = creators_.find(typeName);
         if (it != creators_.end() && it->second.fromLua) 
@@ -701,46 +713,95 @@ namespace SDOM
         return DisplayHandle(); // Invalid handle
     }
 
-    // InitStruct based object creator
-    DisplayHandle Factory::create(const std::string& typeName, const IDisplayObject::InitStruct& init)
+    // // InitStruct based object creator
+    // DisplayHandle Factory::create(const std::string& typeName, const IDisplayObject::InitStruct& init)
+    // {
+    //     auto it = creators_.find(typeName);
+    //     if (it != creators_.end() && it->second.fromInitStruct) 
+    //     {
+    //         // If an explicit name was provided, ensure it doesn't already exist
+    //         if (!init.name.empty() && displayObjects_.find(init.name) != displayObjects_.end()) {
+    //             ERROR(std::string("Factory::create(init): Display object with name '") + init.name + "' already exists");
+    //             return DisplayHandle();
+    //             //return DisplayHandle(init.name, typeName);
+    //         }
+
+    //         auto displayObject = it->second.fromInitStruct(init);
+    //         if (displayObject) 
+    //         {
+    //             std::string name = init.name;
+    //             // Insert into the registry and set type BEFORE calling onInit so
+    //             // child objects created during onInit can locate their parent
+    //             // via the Factory (getDomObj/getDisplayObject).
+    //             displayObject->setType(typeName); // Ensure type is set
+    //             displayObjects_[name] = std::move(displayObject);
+
+    //             // Initialize the display object now that it's in the registry
+    //             displayObjects_[name]->onInit();
+
+    //             // Dispatch EventType::OnInit for this newly-initialized object
+    //             {
+    //                 auto& eventManager = getCore().getEventManager();
+    //                 std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DisplayHandle(name, typeName));
+    //                 DisplayHandle stageHandle = getCore().getRootNode();
+    //                 if (stageHandle) 
+    //                     initEvent->setRelatedTarget(stageHandle);
+    //                 eventManager.dispatchEvent(std::move(initEvent), DisplayHandle(name, typeName));
+    //             }
+
+    //             return DisplayHandle(name, typeName);
+    //         }
+    //     }
+    //     return DisplayHandle(); // Invalid handle
+    // }
+
+    DisplayHandle Factory::create(const std::string& typeName,
+                                const IDisplayObject::InitStruct& init)
     {
         auto it = creators_.find(typeName);
-        if (it != creators_.end() && it->second.fromInitStruct) 
+        if (it != creators_.end() && it->second.fromInitStruct)
         {
-            // If an explicit name was provided, ensure it doesn't already exist
-            if (!init.name.empty() && displayObjects_.find(init.name) != displayObjects_.end()) {
-                ERROR(std::string("Factory::create(init): Display object with name '") + init.name + "' already exists");
-                return DisplayHandle();
+            // If name already exists, return an alias (no re-init)
+            if (!init.name.empty())
+            {
+                auto existing = displayObjects_.find(init.name);
+                if (existing != displayObjects_.end())
+                {
+                    return DisplayHandle(init.name, typeName);
+                }
             }
 
+            // Otherwise create a new object
             auto displayObject = it->second.fromInitStruct(init);
-            if (displayObject) 
+            if (displayObject)
             {
                 std::string name = init.name;
-                // Insert into the registry and set type BEFORE calling onInit so
-                // child objects created during onInit can locate their parent
-                // via the Factory (getDomObj/getDisplayObject).
-                displayObject->setType(typeName); // Ensure type is set
+
+                displayObject->setType(typeName);
                 displayObjects_[name] = std::move(displayObject);
 
-                // Initialize the display object now that it's in the registry
+                // Run initialization callback now that registry entry exists
                 displayObjects_[name]->onInit();
 
-                // Dispatch EventType::OnInit for this newly-initialized object
-                {
-                    auto& eventManager = getCore().getEventManager();
-                    std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DisplayHandle(name, typeName));
-                    DisplayHandle stageHandle = getCore().getRootNode();
-                    if (stageHandle) 
-                        initEvent->setRelatedTarget(stageHandle);
-                    eventManager.dispatchEvent(std::move(initEvent), DisplayHandle(name, typeName));
-                }
+                // Dispatch OnInit event
+                auto& eventManager = getCore().getEventManager();
+                std::unique_ptr<Event> initEvent =
+                    std::make_unique<Event>(EventType::OnInit, DisplayHandle{name, typeName});
+
+                DisplayHandle stageHandle = getCore().getRootNode();
+                if (stageHandle)
+                    initEvent->setRelatedTarget(stageHandle);
+
+                eventManager.dispatchEvent(std::move(initEvent), DisplayHandle(name, typeName));
 
                 return DisplayHandle(name, typeName);
             }
         }
-        return DisplayHandle(); // Invalid handle
+
+        return DisplayHandle(); // invalid
     }
+
+
 
     DisplayHandle Factory::create(const std::string& typeName, const std::string& luaScript) 
     {
@@ -773,11 +834,21 @@ namespace SDOM
             ERROR("Factory::createAsset: Missing required property(s) in Lua config: 'name' or 'type' or 'filename'");
             return AssetHandle();
         }
+
+        
+        // std::string requestedName = config["name"];
+        // if (assetObjects_.find(requestedName) != assetObjects_.end()) {
+        //     // ERROR("Factory::createAsset: Asset object with name '" + requestedName + "' already exists");
+        //     return AssetHandle();
+        // }
         std::string requestedName = config["name"];
-        if (assetObjects_.find(requestedName) != assetObjects_.end()) {
-            ERROR("Factory::createAsset: Asset object with name '" + requestedName + "' already exists");
-            return AssetHandle();
-        }
+        if (auto itExisting = assetObjects_.find(requestedName); itExisting != assetObjects_.end())
+        {
+            // Return a new handle pointing to the existing asset
+            return AssetHandle(requestedName, itExisting->second->getType(), itExisting->second->getFilename());
+        }    
+        
+        
         std::string filename = config["filename"];
         if (filename.empty()) {
             ERROR("Factory::createAsset: 'filename' cannot be empty");
@@ -871,94 +942,260 @@ namespace SDOM
         return AssetHandle();
     }
 
+    // AssetHandle Factory::createAsset(const std::string& typeName, const IAssetObject::InitStruct& init)
+    // {
+    //     if (assetObjects_.find(init.name) != assetObjects_.end()) {
+    //         // ERROR("Factory::createAsset(init): Asset object with name '" + init.name + "' already exists");
+    //         return AssetHandle();
+    //         // return AssetHandle(init.name, typeName, init.filename);
+    //     }
+    //     // If an asset already exists for this filename, reuse it instead of creating a duplicate.
+    //     if (!init.filename.empty()) {
+    //         // Special-case TTFAsset: only reuse if the existing asset's font size matches.
+    //         if (typeName == TTFAsset::TypeName) {
+    //             try {
+    //                 const auto& ttfInit = static_cast<const TTFAsset::InitStruct&>(init);
+    //                 int desiredSize = ttfInit.internalFontSize;
+    //                 for (const auto& pair : assetObjects_) {
+    //                     const auto& assetPtr = pair.second;
+    //                     if (!assetPtr) continue;
+    //                     try {
+    //                         if (assetPtr->getFilename() == init.filename && assetPtr->getType() == TTFAsset::TypeName) {
+    //                             TTFAsset* existingTTF = dynamic_cast<TTFAsset*>(assetPtr.get());
+    //                             if (existingTTF && existingTTF->getFontSize() == desiredSize) {
+    //                                 AssetHandle out;
+    //                                 out.name_ = pair.first;
+    //                                 out.type_ = assetPtr->getType();
+    //                                 out.filename_ = assetPtr->getFilename();
+    //                                 if (out.getName() != init.name && !init.name.empty()) {
+    //                                     // std::cout << "Factory::createAsset(init): Reusing existing TTFAsset '" << out.getName() 
+    //                                     //             << "' for filename '" << init.filename << "' (requested name='" << init.name << "')\n";
+    //                                 }
+    //                                 return out;
+    //                             }
+    //                         }
+    //                     } catch(...) {}
+    //                 }
+    //             } catch(...) {
+    //                 // fall back to generic lookup if cast fails
+    //             }
+    //         } else if (typeName == std::string("Texture")) {
+    //             AssetHandle existing = findAssetByFilename(init.filename, typeName);
+    //             if (existing) {
+    //                 if (existing.getName() != init.name && !init.name.empty()) {
+    //                     // std::cout << "Factory::createAsset(init): Reusing existing asset '" << existing.getName() 
+    //                     //           << "' for filename '" << init.filename << "' (requested name='" << init.name << "')\n";
+    //                 }
+    //                 return existing;    // AssetHandle Factory::createAsset(const std::string& typeName, const IAssetObject::InitStruct& init)
+    // {
+    //     if (assetObjects_.find(init.name) != assetObjects_.end()) {
+    //         // ERROR("Factory::createAsset(init): Asset object with name '" + init.name + "' already exists");
+    //         return AssetHandle();
+    //         // return AssetHandle(init.name, typeName, init.filename);
+    //     }
+    //     // If an asset already exists for this filename, reuse it instead of creating a duplicate.
+    //     if (!init.filename.empty()) {
+    //         // Special-case TTFAsset: only reuse if the existing asset's font size matches.
+    //         if (typeName == TTFAsset::TypeName) {
+    //             try {
+    //                 const auto& ttfInit = static_cast<const TTFAsset::InitStruct&>(init);
+    //                 int desiredSize = ttfInit.internalFontSize;
+    //                 for (const auto& pair : assetObjects_) {
+    //                     const auto& assetPtr = pair.second;
+    //                     if (!assetPtr) continue;
+    //                     try {
+    //                         if (assetPtr->getFilename() == init.filename && assetPtr->getType() == TTFAsset::TypeName) {
+    //                             TTFAsset* existingTTF = dynamic_cast<TTFAsset*>(assetPtr.get());
+    //                             if (existingTTF && existingTTF->getFontSize() == desiredSize) {
+    //                                 AssetHandle out;
+    //                                 out.name_ = pair.first;
+    //                                 out.type_ = assetPtr->getType();
+    //                                 out.filename_ = assetPtr->getFilename();
+    //                                 if (out.getName() != init.name && !init.name.empty()) {
+    //                                     // std::cout << "Factory::createAsset(init): Reusing existing TTFAsset '" << out.getName() 
+    //                                     //             << "' for filename '" << init.filename << "' (requested name='" << init.name << "')\n";
+    //                                 }
+    //                                 return out;
+    //                             }
+    //                         }
+    //                     } catch(...) {}
+    //                 }
+    //             } catch(...) {
+    //                 // fall back to generic lookup if cast fails
+    //             }
+    //         } else if (typeName == std::string("Texture")) {
+    //             AssetHandle existing = findAssetByFilename(init.filename, typeName);
+    //             if (existing) {
+    //                 if (existing.getName() != init.name && !init.name.empty()) {
+    //                     // std::cout << "Factory::createAsset(init): Reusing existing asset '" << existing.getName() 
+    //                     //           << "' for filename '" << init.filename << "' (requested name='" << init.name << "')\n";
+    //                 }
+    //                 return existing;
+    //             }
+    //         }
+    //         // SpriteSheet: try to reuse by matching filename and sprite dimensions
+    //         if (typeName == SpriteSheet::TypeName) {
+    //             try {
+    //                 const auto& ssInit = static_cast<const SpriteSheet::InitStruct&>(init);
+    //                 AssetHandle existingSS = findSpriteSheetByParams(init.filename, ssInit.spriteWidth, ssInit.spriteHeight);
+    //                 if (existingSS.isValid()) {
+    //                     // Do not alias or return an existing SpriteSheet; tests expect
+    //                     // the requested name to be associated with a new object.
+    //                     // std::cout << "Factory::createAsset(init): Found existing SpriteSheet '" << existingSS.getName() 
+    //                     //           << "' matching filename '" << init.filename << "' (w=" << ssInit.spriteWidth << ",h=" << ssInit.spriteHeight << ") - creating new instance for '" << init.name << "'\n";
+    //                 }
+    //             } catch(...) {}
+    //         }
+    //     }
+    //     auto it = assetCreators_.find(typeName);
+    //     if (it != assetCreators_.end() && it->second.fromInitStruct) {
+    //             auto uniqueAssetObj = it->second.fromInitStruct(init);
+    //         if (uniqueAssetObj) {
+    //             uniqueAssetObj->setType(typeName);
+    //             std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
+    //             assetObjects_[init.name] = sharedAsset;
+    //             assetObjects_[init.name]->onInit();
+    //             // Register per-instance Lua bindings so Lua-visible methods exist on the handle
+    //             try {
+    //                 assetObjects_[init.name]->registerLuaBindings(typeName, SDOM::getLua());
+    //             } catch(...) {
+    //                 ERROR("Factory::createAsset(init): Failed to register Lua bindings for asset: " + init.name);
+    //             }
+    //             // Eagerly load the asset now that it has been initialized and registered.
+    //             try {
+    //                 if (!assetObjects_[init.name]->isLoaded()) {
+    //                     assetObjects_[init.name]->onLoad();
+    //                 }
+    //             } catch(...) {
+    //                 ERROR("Factory::createAsset(init): onLoad() failed for asset: " + init.name);
+    //             }
+
+    //             return AssetHandle(init.name, typeName, init.filename);
+    //         }
+    //     }
+    //     return AssetHandle();
+    // }
+
+    //             }
+    //         }
+    //         // SpriteSheet: try to reuse by matching filename and sprite dimensions
+    //         if (typeName == SpriteSheet::TypeName) {
+    //             try {
+    //                 const auto& ssInit = static_cast<const SpriteSheet::InitStruct&>(init);
+    //                 AssetHandle existingSS = findSpriteSheetByParams(init.filename, ssInit.spriteWidth, ssInit.spriteHeight);
+    //                 if (existingSS.isValid()) {
+    //                     // Do not alias or return an existing SpriteSheet; tests expect
+    //                     // the requested name to be associated with a new object.
+    //                     // std::cout << "Factory::createAsset(init): Found existing SpriteSheet '" << existingSS.getName() 
+    //                     //           << "' matching filename '" << init.filename << "' (w=" << ssInit.spriteWidth << ",h=" << ssInit.spriteHeight << ") - creating new instance for '" << init.name << "'\n";
+    //                 }
+    //             } catch(...) {}
+    //         }
+    //     }
+    //     auto it = assetCreators_.find(typeName);
+    //     if (it != assetCreators_.end() && it->second.fromInitStruct) {
+    //             auto uniqueAssetObj = it->second.fromInitStruct(init);
+    //         if (uniqueAssetObj) {
+    //             uniqueAssetObj->setType(typeName);
+    //             std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
+    //             assetObjects_[init.name] = sharedAsset;
+    //             assetObjects_[init.name]->onInit();
+    //             // Register per-instance Lua bindings so Lua-visible methods exist on the handle
+    //             try {
+    //                 assetObjects_[init.name]->registerLuaBindings(typeName, SDOM::getLua());
+    //             } catch(...) {
+    //                 ERROR("Factory::createAsset(init): Failed to register Lua bindings for asset: " + init.name);
+    //             }
+    //             // Eagerly load the asset now that it has been initialized and registered.
+    //             try {
+    //                 if (!assetObjects_[init.name]->isLoaded()) {
+    //                     assetObjects_[init.name]->onLoad();
+    //                 }
+    //             } catch(...) {
+    //                 ERROR("Factory::createAsset(init): onLoad() failed for asset: " + init.name);
+    //             }
+
+    //             return AssetHandle(init.name, typeName, init.filename);
+    //         }
+    //     }
+    //     return AssetHandle();
+    // }
+
     AssetHandle Factory::createAsset(const std::string& typeName, const IAssetObject::InitStruct& init)
     {
-        if (assetObjects_.find(init.name) != assetObjects_.end()) {
-            ERROR("Factory::createAsset(init): Asset object with name '" + init.name + "' already exists");
-            return AssetHandle();
+        // If the asset name already exists, return a handle to it.
+        if (auto itExisting = assetObjects_.find(init.name); itExisting != assetObjects_.end())
+        {
+            return AssetHandle(init.name, itExisting->second->getType(), itExisting->second->getFilename());
         }
-        // If an asset already exists for this filename, reuse it instead of creating a duplicate.
-        if (!init.filename.empty()) {
-            // Special-case TTFAsset: only reuse if the existing asset's font size matches.
-            if (typeName == TTFAsset::TypeName) {
+
+        // Reuse by filename for Texture / TTFAsset
+        if (!init.filename.empty())
+        {
+            if (typeName == TTFAsset::TypeName)
+            {
                 try {
                     const auto& ttfInit = static_cast<const TTFAsset::InitStruct&>(init);
                     int desiredSize = ttfInit.internalFontSize;
-                    for (const auto& pair : assetObjects_) {
-                        const auto& assetPtr = pair.second;
+
+                    for (const auto& [key, assetPtr] : assetObjects_)
+                    {
                         if (!assetPtr) continue;
-                        try {
-                            if (assetPtr->getFilename() == init.filename && assetPtr->getType() == TTFAsset::TypeName) {
-                                TTFAsset* existingTTF = dynamic_cast<TTFAsset*>(assetPtr.get());
-                                if (existingTTF && existingTTF->getFontSize() == desiredSize) {
-                                    AssetHandle out;
-                                    out.name_ = pair.first;
-                                    out.type_ = assetPtr->getType();
-                                    out.filename_ = assetPtr->getFilename();
-                                    if (out.getName() != init.name && !init.name.empty()) {
-                                        // std::cout << "Factory::createAsset(init): Reusing existing TTFAsset '" << out.getName() 
-                                        //             << "' for filename '" << init.filename << "' (requested name='" << init.name << "')\n";
-                                    }
-                                    return out;
-                                }
+                        if (assetPtr->getFilename() == init.filename && assetPtr->getType() == TTFAsset::TypeName)
+                        {
+                            if (auto* existingTTF = dynamic_cast<TTFAsset*>(assetPtr.get()))
+                            {
+                                if (existingTTF->getFontSize() == desiredSize)
+                                    return AssetHandle(key, assetPtr->getType(), assetPtr->getFilename());
                             }
-                        } catch(...) {}
-                    }
-                } catch(...) {
-                    // fall back to generic lookup if cast fails
-                }
-            } else if (typeName == std::string("Texture")) {
-                AssetHandle existing = findAssetByFilename(init.filename, typeName);
-                if (existing) {
-                    if (existing.getName() != init.name && !init.name.empty()) {
-                        // std::cout << "Factory::createAsset(init): Reusing existing asset '" << existing.getName() 
-                        //           << "' for filename '" << init.filename << "' (requested name='" << init.name << "')\n";
-                    }
-                    return existing;
-                }
-            }
-            // SpriteSheet: try to reuse by matching filename and sprite dimensions
-            if (typeName == SpriteSheet::TypeName) {
-                try {
-                    const auto& ssInit = static_cast<const SpriteSheet::InitStruct&>(init);
-                    AssetHandle existingSS = findSpriteSheetByParams(init.filename, ssInit.spriteWidth, ssInit.spriteHeight);
-                    if (existingSS.isValid()) {
-                        // Do not alias or return an existing SpriteSheet; tests expect
-                        // the requested name to be associated with a new object.
-                        // std::cout << "Factory::createAsset(init): Found existing SpriteSheet '" << existingSS.getName() 
-                        //           << "' matching filename '" << init.filename << "' (w=" << ssInit.spriteWidth << ",h=" << ssInit.spriteHeight << ") - creating new instance for '" << init.name << "'\n";
+                        }
                     }
                 } catch(...) {}
             }
-        }
-        auto it = assetCreators_.find(typeName);
-        if (it != assetCreators_.end() && it->second.fromInitStruct) {
-                auto uniqueAssetObj = it->second.fromInitStruct(init);
-            if (uniqueAssetObj) {
-                uniqueAssetObj->setType(typeName);
-                std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
-                assetObjects_[init.name] = sharedAsset;
-                assetObjects_[init.name]->onInit();
-                // Register per-instance Lua bindings so Lua-visible methods exist on the handle
-                try {
-                    assetObjects_[init.name]->registerLuaBindings(typeName, SDOM::getLua());
-                } catch(...) {
-                    ERROR("Factory::createAsset(init): Failed to register Lua bindings for asset: " + init.name);
-                }
-                // Eagerly load the asset now that it has been initialized and registered.
-                try {
-                    if (!assetObjects_[init.name]->isLoaded()) {
-                        assetObjects_[init.name]->onLoad();
-                    }
-                } catch(...) {
-                    ERROR("Factory::createAsset(init): onLoad() failed for asset: " + init.name);
-                }
-
-                return AssetHandle(init.name, typeName, init.filename);
+            else if (typeName == "Texture")
+            {
+                if (AssetHandle existing = findAssetByFilename(init.filename, typeName))
+                    return existing;
+            }
+            else if (typeName == SpriteSheet::TypeName)
+            {
+                // Correct behavior: DO NOT reuse SpriteSheets, but allow texture reuse under the hood.
             }
         }
-        return AssetHandle();
+
+        // --- Create New Asset ---
+        auto it = assetCreators_.find(typeName);
+        if (it != assetCreators_.end() && it->second.fromInitStruct)
+        {
+            auto uniqueAssetObj = it->second.fromInitStruct(init);
+            if (!uniqueAssetObj)
+                return AssetHandle();
+
+            uniqueAssetObj->setType(typeName);
+            std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
+
+            assetObjects_[init.name] = sharedAsset;
+            assetObjects_[init.name]->onInit();
+
+            try {
+                assetObjects_[init.name]->registerLuaBindings(typeName, SDOM::getLua());
+            } catch(...) {
+                ERROR("Factory::createAsset(init): Failed to register Lua bindings for asset: " + init.name);
+            }
+
+            try {
+                if (!assetObjects_[init.name]->isLoaded())
+                    assetObjects_[init.name]->onLoad();
+            } catch(...) {
+                ERROR("Factory::createAsset(init): onLoad() failed for asset: " + init.name);
+            }
+
+            return AssetHandle(init.name, typeName, init.filename);
+        }
+
+        return AssetHandle(); // invalid
     }
+
 
     AssetHandle Factory::createAsset(const std::string& typeName, const std::string& luaScript)
     {

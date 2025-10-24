@@ -68,7 +68,7 @@ namespace SDOM
         AssetHandle existing = getFactory().getAssetObject(init.name);
         if (existing.isValid())
         {
-            ERROR("BitmapFont::onInit: Asset with name already exists: " + init.name);
+            // ERROR("BitmapFont::onInit: Asset with name already exists: " + init.name);
             return false;
         }
 

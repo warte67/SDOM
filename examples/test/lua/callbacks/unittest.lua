@@ -8,8 +8,9 @@ function M.on_unit_test()
 
     if true then       
         allTestsPassed = allTestsPassed and Core_UnitTests()
+        allTestsPassed = allTestsPassed and IDisplayObject_UnitTests()
+
         -- allTestsPassed = allTestsPassed and Factory_UnitTests()
-        -- allTestsPassed = allTestsPassed and IDisplayObject_UnitTests()
         -- allTestsPassed = allTestsPassed and Stage_UnitTests()
         -- allTestsPassed = allTestsPassed and Box_UnitTests()
         -- allTestsPassed = allTestsPassed and LUA_UnitTests()

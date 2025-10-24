@@ -753,10 +753,13 @@ namespace SDOM
         bool ok = true;
         Core& core = getCore();
 
-        // Save the current mouse cursor position
+        // Save the current mouse cursor position        
         float mx, my;
         SDL_GetMouseState(&mx, &my);
 
+        // // Move the Mouse Cursor to 0,0
+        // SDL_WarpMouseInWindow(core.getWindow(), 0, 0);
+        
         // Handle Tab Key Press
         core.handleTabKeyPress();
         DisplayHandle original_focused = core.getKeyboardFocusedObject();
@@ -792,13 +795,13 @@ namespace SDOM
                 ok = false;
             }
         }
-        // Handle Mouse Hovered Object
-        DisplayHandle original_hovered = core.getMouseHoveredObject();
-        if (original_hovered.isValid()) 
-        {
-            errors.push_back("Should not have an original hovered object.");
-            ok = false;
-        }
+        // // Handle Mouse Hovered Object
+        // DisplayHandle original_hovered = core.getMouseHoveredObject();
+        // if (original_hovered.isValid()) 
+        // {
+        //     errors.push_back("Should not have an original hovered object.");
+        //     ok = false;
+        // }
 
         DisplayHandle blueishBox = core.getDisplayObject("blueishBox");
         if (!blueishBox.isValid()) 

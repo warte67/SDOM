@@ -1,10 +1,10 @@
--- scaffold_UnitTests.lua
+-- IDisplayObject_UnitTests.lua
 
 -- require the helper
 local utils = require("src.UnitTests")
 
 -- Do not use print statements in unit test scripts, as they may interfere with test output.
-    -- print("scaffold_UnitTests script entered successfully.")
+    -- print("IDisplayObject_UnitTests script entered successfully.")
 
 -- Push Errors (Example errors; replace with actual test results) instead of print statements
     -- utils.push_error("widget X did not initialize")

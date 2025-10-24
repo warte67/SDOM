@@ -41,7 +41,7 @@ using namespace SDOM;
 int main(int argc, char** argv) 
 {
     std::cout << CLR::ORANGE << CLR::ARROW_UP << CLR::NORMAL << std::endl;
-    
+
     // Quick command-line help handling: if user asks for help, print usage
     // and exit without initializing the full Core.
     for (int i = 1; i < argc; ++i) {
@@ -92,9 +92,9 @@ int main(int argc, char** argv)
     // (these are defined in UnitTests.hpp)
 
     lua["Core_UnitTests"] = &SDOM::Core_UnitTests;
-
-    lua["Factory_UnitTests"] = &SDOM::Factory_UnitTests;
     lua["IDisplayObject_UnitTests"] = &SDOM::IDisplayObject_UnitTests;
+    
+    lua["Factory_UnitTests"] = &SDOM::Factory_UnitTests;
     lua["Stage_UnitTests"] = &SDOM::Stage_UnitTests;
     lua["Box_UnitTests"] = &SDOM::Box_UnitTests;
     lua["LUA_UnitTests"] = &SDOM::LUA_UnitTests;
