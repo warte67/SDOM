@@ -110,9 +110,8 @@ This structure scales cleanly:
 ### Lua flows naturally into the core systems:
 Lua config → Factory → Display Tree → Event System → Lua callbacks
 
-%%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
-
 <div class="mermaid">
+%%{init: { "theme": "neutral", "flowchart": { "curve": "linear" } }}%%
 flowchart LR
 
     %% Classes
@@ -154,6 +153,7 @@ flowchart LR
     SDL3 --> EventMgr
     EventMgr --> LuaEventListeners
 </div>
+
 
 
 
