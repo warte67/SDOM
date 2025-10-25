@@ -266,6 +266,7 @@ Notes & test ideas:
         bool removeChild(DisplayHandle child);
         bool removeChild(const std::string& name);
         const std::vector<DisplayHandle>& getChildren() const;
+        std::vector<DisplayHandle>& getChildrenMutable() { return children_; }
         int countChildren() const { return static_cast<int>(children_.size()); }
         DisplayHandle getParent() const;
         IDisplayObject& setParent(const DisplayHandle& parent);
@@ -313,9 +314,34 @@ Notes & test ideas:
         IDisplayObject& moveToBottom(); // NEW
         IDisplayObject& bringToFront(); // NEW
         IDisplayObject& sendToBack();   // NEW
-        IDisplayObject& sendToBackAfter(const IDisplayObject* limitObj);/ / NEW
-        int getZOrder() const { return z_order_; }
-        IDisplayObject& setZOrder(int z_order) { z_order_ = z_order; return *this; }
+        IDisplayObject& sendToBackAfter(const IDisplayObject* limitObj); // NEW
+        int getZOrder() const { return z_order_; }        
+        IDisplayObject& setZOrder(int z) 
+        { 
+            if (z_order_ != z) 
+            {
+                z_order_ = z;             
+                setParentZOrderDirty(true); 
+            }
+            return *this; 
+        }
+        void setParentZOrderDirty(bool dirty_z) 
+        {
+            if (parent_) {
+                parent_->zOrderDirty_ = dirty_z;
+            }
+        }            
+        bool isZOrderDirty() const { return zOrderDirty_; }
+        void sortByZOrder()
+        {
+            if (!zOrderDirty_) return;
+            auto& kids = getChildrenMutable();
+            std::sort(kids.begin(), kids.end(),
+                [](auto& a, auto& b){ return a->getZOrder() < b->getZOrder(); });
+            zOrderDirty_ = false;             
+        }
+
+
         bool hasBorder() const { return border_; }
         bool hasBackground() const { return background_; }
         IDisplayObject& setBorder(bool hasBorder) { border_ = hasBorder; setDirty(); return *this; }
@@ -397,6 +423,7 @@ Notes & test ideas:
         float left_ = 0.0f, top_ = 0.0f, right_ = 0.0f, bottom_ = 0.0f;  // these are in terms of local not world coordinates
         std::string type_;  // Type identifier (e.g., "Button", "Panel", etc.)
         bool bIsDirty_ = false;
+        bool zOrderDirty_ = true;
         SDL_Color color_ = {255, 255, 255, 255};
 
         SDL_Color foregroundColor_ = {255, 255, 255, 255};   // white
@@ -436,6 +463,8 @@ Notes & test ideas:
         void removeOrphan_(const DisplayHandle& orphan);
 
     protected:
+
+
 
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);

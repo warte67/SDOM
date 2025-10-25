@@ -628,23 +628,23 @@ namespace SDOM
         // ⚠️ Failing     
         // ☐ Unchecked/Untested
         
-        // 🔄 std::vector<DisplayHandle>& getChildren(const IDisplayObject* obj);  // test the IDisplayObject method 
-        // 🔄 int countChildren_lua(const IDisplayObject* obj);        
+        // ✅ std::vector<DisplayHandle>& getChildren(const IDisplayObject* obj);  // test the IDisplayObject method 
+        // ✅ int countChildren_lua(const IDisplayObject* obj);        
 
-        // ☐ int getMaxPriority_lua(const IDisplayObject* obj);              
-        // ☐ int getMinPriority_lua(const IDisplayObject* obj);              
-        // ☐ int getPriority_lua(const IDisplayObject* obj);                 
-        // ☐ void setToHighestPriority_lua(IDisplayObject* obj);             
-        // ☐ void setToLowestPriority_lua(IDisplayObject* obj);     
-        // ☐ void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);        // descriptor form
-        // ☐ void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);         // descriptor form
+        // ✅ int getMaxPriority_lua(const IDisplayObject* obj);              
+        // ✅ int getMinPriority_lua(const IDisplayObject* obj);              
+        // ✅ int getPriority_lua(const IDisplayObject* obj);                 
+        // ✅ void setToHighestPriority_lua(IDisplayObject* obj);             
+        // ✅ void setToLowestPriority_lua(IDisplayObject* obj);     
+        // ✅ void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);        // descriptor form
+        // ✅ void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);         // descriptor form
         // ✅ void sortChildrenByPriority_lua(IDisplayObject* obj);           
         // ✅ void setPriority_lua(IDisplayObject* obj, int priority);        
-        // ☐ void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);                 // descriptor form
-        // ☐ void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value);   // descriptor form
+        // ✅ void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);                 // descriptor form
+        // ✅ void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value);   // descriptor form
         // ✅ std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj);      
-        // ⚠️ void moveToTop_lua(IDisplayObject* obj);                                    
-        // ⚠️ void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);                   // descriptor form
+        // ✅ void moveToTop_lua(IDisplayObject* obj);                                    
+        // ✅ void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);                   // descriptor form
 
         // ☐ void moveToBottom_lua(IDisplayObject* obj);                                 
         // ☐ void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form
@@ -656,13 +656,14 @@ namespace SDOM
         // ☐ void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj); // descriptor form
 
         // ✅ int getZOrder_lua(const IDisplayObject* obj);                               
-        // ☐ void setZOrder_lua(IDisplayObject* obj, int z_order);                       
+        // ✅ void setZOrder_lua(IDisplayObject* obj, int z_order);                       
         // ✅ void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor);                   // descriptor form
 
-        // ☐ bool hasBorder_lua(const IDisplayObject* obj);
-        // ☐ bool hasBackground_lua(const IDisplayObject* obj);
-        // ☐ void setBorder_lua(IDisplayObject* obj, bool hasBorder);      
-        // ☐ void setBackground_lua(IDisplayObject* obj, bool hasBackground);
+// --- MOVE TO: Type & Property Access --- //
+// ☐ bool hasBorder_lua(const IDisplayObject* obj);
+// ☐ bool hasBackground_lua(const IDisplayObject* obj);
+// ☐ void setBorder_lua(IDisplayObject* obj, bool hasBorder);      
+// ☐ void setBackground_lua(IDisplayObject* obj, bool hasBackground);
 
         bool ok = true;
         Core& core = getCore();
@@ -687,58 +688,140 @@ namespace SDOM
         DisplayHandle A = make_box("A", 128);    parent_box->addChild(A);
         DisplayHandle B = make_box("B", 192);    parent_box->addChild(B);
         DisplayHandle C = make_box("C", 255);    parent_box->addChild(C);
-
-        stage->printTree();
-
-        // Confirm initial priorities are equal
+        // ✅ std::vector<int> getChildrenPriorities()
         auto priorities_before = parent_box->getChildrenPriorities();
         std::cout << "childrencount: " << priorities_before.size() << std::endl;
         if (priorities_before.size() != 3) {
             errors.push_back("PriorityZOrder_Test: Expected three children attached to the test box.");
             ok = false;
         }        
-
-        // Set explicit priorities
+        // ✅ void setPriority
         C->setPriority(-100); // push C to bottom
         A->setPriority(0);
         B->setPriority(100);  // pull B to top
         parent_box->sortChildrenByPriority();   
-
         // Read back expected order: C (lowest), A (middle), B (highest)
         auto pr_sorted = parent_box->getChildrenPriorities();
         if (!(pr_sorted[0] > pr_sorted[1] && pr_sorted[1] > pr_sorted[2])) {
             errors.push_back("PriorityZOrder_Test: Expected sorted priorities: C > A > B.");
             ok = false;
-        }        
-
-        // Test moveToTop()
+        }       
+        // ✅ int getPriority(const IDisplayObject* obj); 
+        if (A->getPriority() != 0) {
+            errors.push_back("PriorityZOrder_Test: A priority incorrect for A (read: " + std::to_string(A->getPriority()) + ",  expected 0).");
+            ok = false; 
+        }
+        if (B->getPriority() != 100) {
+            errors.push_back("PriorityZOrder_Test: B priority incorrect for B (read: " + std::to_string(B->getPriority()) + ",  expected 100).");
+            ok = false; 
+        }
+        if (C->getPriority() != -100) {
+            errors.push_back("PriorityZOrder_Test: C priority incorrect for C (read: " + std::to_string(C->getPriority()) + ",  expected -100).");
+            ok = false; 
+        }
+        // ✅ int getMaxPriority()
+        if (parent_box->getMaxPriority() != 100) {
+            errors.push_back("PriorityZOrder_Test: max priority incorrect (read: " + std::to_string(parent_box->getMaxPriority()) + ",  expected 100).");
+            ok = false; 
+        }
+        // ✅ int getMinPriority()
+        if (parent_box->getMinPriority() != -100) {
+            errors.push_back("PriorityZOrder_Test: min priority incorrect (read: " + std::to_string(parent_box->getMinPriority()) + ",  expected -100).");
+            ok = false; 
+        }
+        // ✅ void setToHighestPriority()
+        C->setToHighestPriority();
+        if (C->getPriority() != parent_box->getMaxPriority()) {
+            errors.push_back("PriorityZOrder_Test: setToHighestPriority() failed for C.");
+            ok = false;
+        }   
+        // ✅ void setToLowestPriority
+        C->setToLowestPriority();
+        if (C->getPriority() != parent_box->getMinPriority()) {
+            errors.push_back("PriorityZOrder_Test: setToLowestPriority() failed for C.");
+            ok = false;
+        }
+        // Fetch a raw pointer to the parent and setup for descriptor forms
+        IDisplayObject* parentObj = parent_box.as<IDisplayObject>();
+        if (!parentObj) { errors.push_back("PriorityZOrder_test: unable to fetch parent_box."); return false; }        
+        sol::state_view lua = getLua();
+        sol::table desc = lua.create_table();
+        desc["name"] = "C";
+        // ✅ void setToHighestPriority_lua_any()
+        setToHighestPriority_lua_any(parentObj, desc);
+        if (C->getPriority() != parent_box->getMaxPriority()) {
+            errors.push_back("PriorityZOrder_Test: setToHighestPriority_lua_any(C) failed.");
+            ok = false;
+        }   
+        // ✅ void setToLowestPriority_lua_any()
+        setToLowestPriority_lua_any(parentObj, desc);
+        if (C->getPriority() != parent_box->getMinPriority()) {
+            errors.push_back("PriorityZOrder_Test: setToLowestPriority_lua_any(C) failed.");
+            ok = false;
+        }
+        // ✅ void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value);
+        IDisplayObject* c_obj = C.as<IDisplayObject>();
+        if (!c_obj) { errors.push_back("PriorityZOrder_Test: unable to fetch C object ptr"); return false; }
+        setPriority_lua_target(parentObj, desc, 4);
+        if (C->getPriority() != 4)
+        {
+            errors.push_back("PriorityZOrder_test: setPriority_lua_target() failed to set C priorty to 4.");
+            ok = false;
+        }
+        // ✅ void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+        desc["priority"] = 200;
+        setPriority_lua_any(c_obj, desc);
+        if (C->getPriority() != 200)
+        {
+            errors.push_back("PriorityZOrder_test: setPriority_lua_any() failed to set C priority to 200.");
+            ok = false;
+        }
+        // ✅ void moveToTop()
         A->moveToTop();
         if (A->getZOrder() > B->getZOrder()) {
             errors.push_back("PriorityZOrder_Test: moveToTop() failed to place A at the top.");
             ok = false;
-        }      
-
-        parent_box->printTree();                
-        
-        sol::state_view lua = getLua();
-        sol::table desc = lua.create_table();
-        desc["name"] = "C";
-        IDisplayObject* parentObj = parent_box.as<IDisplayObject>();
-        if (!parentObj) { errors.push_back("PriorityZOrder_test: unable to fetch parent_box."); return false; }
-
-        moveToTop_lua_any(parentObj, desc);
-
-        // Print z-orders
-        DEBUG_LOG("A ZOrder: " + std::to_string(A->getZOrder()));
-        DEBUG_LOG("B ZOrder: " + std::to_string(B->getZOrder()));
-        DEBUG_LOG("C ZOrder: " + std::to_string(C->getZOrder()));
-
+        }    
+        // ✅ void moveToTop_lua_any()   
+        sol::table desc_c = lua.create_table();
+        desc_c["name"] = "C";
+        moveToTop_lua_any(parentObj, desc_c);
         // Verify: C should now be on top
         if (C->getZOrder() != parent_box->countChildren() - 1) {
             errors.push_back("PriorityZOrder_Test: moveToTop_lua_any(C) failed to place C at the top.");
             ok = false;
         }
-     
+        // ✅ setZOrder() move A to the top
+        A->setZOrder(3);
+        parent_box->sortByZOrder();
+        auto &kids = parent_box->getChildren();
+        if (kids.back().get() != A.get()) {
+            errors.push_back("PriorityZOrder_Test: setZOrder(3) failed to place A at the top.");
+            ok = false;
+        }
+
+        // Add More Boxes:
+        DisplayHandle D = make_box("D", 128);    A->addChild(D);
+        DisplayHandle E = make_box("E", 192);    A->addChild(E);
+        DisplayHandle F = make_box("F", 255);    A->addChild(F);
+
+
+// DEBUG: Print z-orders
+parent_box->printTree();                
+// DEBUG_LOG("A ZOrder: " + std::to_string(A->getZOrder()));
+// DEBUG_LOG("B ZOrder: " + std::to_string(B->getZOrder()));
+// DEBUG_LOG("C ZOrder: " + std::to_string(C->getZOrder()));
+
+        // ☐ void moveToBottom_lua(IDisplayObject* obj);                                 
+        // ☐ void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form
+        // ☐ void bringToFront_lua(IDisplayObject* obj);                                  
+        // ☐ void bringToFront_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form    
+        // ☐ void sendToBack_lua(IDisplayObject* obj);                                   
+        // ☐ void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor);        // descriptor form
+        // ☐ void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj);
+        // ☐ void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj); // descriptor form
+
+        
 
         // Cleanup
         core.destroyDisplayObject("parent_box");

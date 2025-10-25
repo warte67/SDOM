@@ -817,6 +817,9 @@ namespace SDOM
                 eventManager_->dispatchEvent(std::move(preRenderEv), DisplayHandle(rootHandle.getName(), rootHandle.getType()));
             }
 
+            // sort children by z-order if needed
+            node.sortByZOrder();       
+
             // render children
             for (const auto& child : node.getChildren()) 
             {
