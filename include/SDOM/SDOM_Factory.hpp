@@ -142,6 +142,8 @@ namespace SDOM
             }
         }
 
+
+
     private:
         // initialization guard to make onInit idempotent
         bool initialized_ = false;
@@ -165,9 +167,8 @@ namespace SDOM
         };            
         std::vector<futureChild> futureChildrenList_;
 
-    // Helper: find an existing asset by filename (optionally matching type)
-    // Helper: find a SpriteSheet asset matching filename and sprite dimensions
-
+        // Calls TTF_CloseFont on all loaded TTFAsset objects
+        void closeAllTruetypeAssets_();
 
     };
     

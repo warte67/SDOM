@@ -255,7 +255,10 @@ namespace SDOM
             window_ = nullptr;
         }
         // Shutdown SDL_ttf if initialized
-        if (TTF_WasInit()) {
+        if (TTF_WasInit()) 
+        {
+            Factory& factory = getFactory();
+            factory.closeAllTruetypeAssets_();
             TTF_Quit();
         }
         SDL_Quit();
@@ -527,8 +530,6 @@ namespace SDOM
             }
             runWasStarted = true;
 
-            // // Ensure SDL is initialized
-            // startup_SDL();
 
             // register and initialize the factory object (after creating SDL resources)
             onInit();   // for now just call onInit(). Later Factory will call onInit() 
@@ -542,31 +543,9 @@ namespace SDOM
                 onQuit();
                 return false;
             }
-            // else
-            // {
-            //     std::cout << "Core::run() Root node is a valid Stage: " << rootStage->getName() << std::endl;
-            //     rootStage->printTree();
-            // }
-
-            // Now run user tests after initialization
-            // SDL_Delay(250); // give some time for tiled window to be configured by the OS Compositor 
-
-            // // Temporarily ignore real mouse input while running unit tests
-            // this->setIgnoreRealInput(true);
-            // bool testsPassed = onUnitTest();
-            // this->setIgnoreRealInput(false);
-            // if (!testsPassed) 
-            // {
-            //     ERROR("Unit tests failed. Aborting run.");
-            //     overallSuccess = false;
-            //     // stop the main loop to allow graceful shutdown
-            //     bIsRunning_ = false;
-            // }
 
             SDL_Event event;
 
-            // // Apply any pending configuration requested from other threads
-            // applyPendingConfig();
 
             clearKeyboardFocusedObject(); // ensure no keyboard focus at start of run loop
 
@@ -594,7 +573,6 @@ namespace SDOM
                         int newWidth, newHeight;
                         if (!SDL_GetWindowSize(window_, &newWidth, &newHeight))
                             ERROR("Unable to get the new window size: " + std::string(SDL_GetError()));
-// INFO("Window resized to " << newWidth << "x" << newHeight);                            
                         onWindowResize(newWidth, newHeight);
                     }
 
@@ -811,6 +789,9 @@ namespace SDOM
 
         // Shutdown SDL
         shutdown_SDL();
+        
+        // Shutdown Lua
+        lua_close(getLua());
     }
 
     void Core::onRender()

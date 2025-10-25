@@ -1,325 +1,520 @@
 # Extensible Factory Design
-The Factory is SDOM’s central creation and registry hub. It owns the type registry (type → creator), the object store (name → pointer), and bookkeeping structures used to wire relationships when construction order varies. All engine resources flow through it—Stages, DisplayObjects, and non-visual assets—so Core has a single place to create, look up, enumerate, and destroy objects. By addressing resources by unique name and returning typed handles, the Factory decouples object lifetimes from references, enabling safe reuse, hot-reload patterns, and clear ownership.
 
-Extensibility comes from registration rather than hardcoding. Each type contributes a small creator lambda that knows how to build an instance from either a type-specific initializer struct (for programmatic construction) or a Lua table/script (Lua can drive creation at init time or during runtime). Constructors remain private/protected, with Factory declared as a friend, so all instantiation passes through consistent validation and naming rules. New types are added by registering another creator; no Factory internals need to change.
+The Factory is where SDOM creates things. Whenever the system needs a new display object (like a Button, Slider, or Label) or a new resource (like a texture or font), it asks the Factory to build it. This keeps object creation consistent and centralized, instead of scattering `new` calls throughout the codebase.
 
-At runtime, the Factory tracks every object by type and unique name, supports destruction by name or handle, and ensures lookups are type-safe. Auxiliary stores (e.g., orphans/future-children) allow children to be linked once parents appear, making construction order robust across data-driven scenes. Because handles query the Factory on access, references either resolve to the current object or cleanly read as null after destruction—no dangling pointers. The result is a compact, scalable core for object lifecycle that supports live editing, scripting, and deterministic startup/shutdown across projects of varying size.
-See `docs/scripting_and_configuration.md` for examples of Lua-driven creation and recommended Factory binding patterns (sol2).
+One important detail is that the Factory does **not** return raw pointers. Instead, it returns **DisplayHandles** and **AssetHandles**. These are lightweight, copyable references that stay valid even if the underlying object gets moved in memory or reloaded. Handles also make it possible for Lua, C++, or even other languages in the future to reference the same objects safely.
 
-## Factory Overview (Diagram)
+Objects themselves live in the Factory’s internal registry, and they stay alive as long as something is using them. When an object is removed from the visual tree, it becomes an **orphan**. Depending on the object’s configured retention policy, the Factory can keep it around, destroy it immediately, or allow it to exist for a **grace period** (useful for animated UI transitions).
 
-SVG (static image):
-![Factory Overview](diagrams/extensible_factory/diagram-01.svg)
+This design lets SDOM behave more like a scene graph or UI toolkit rather than a typical “immediate mode” renderer. Each element can have a lifetime, identity, name, and state that persists across frames — which is essential for building responsive, stateful interfaces.
 
-<details>
-<summary>View Mermaid source</summary>
-
-```mermaid-norender
-flowchart TB
-  classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
-  classDef mod  fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px
-  classDef store fill:#fff8e6,stroke:#f0ad4e,color:#5a4500,stroke-width:1px
-  classDef util fill:#f5f5f5,stroke:#999,color:#333,stroke-width:1px
-
-  Core["Core"]:::core
-  Factory["Factory"]:::mod
-  Registry["Registry\n(type -> creator)"]:::store
-  Store["Object Store\n(name -> ptr)"]:::store
-  Orphans["Orphan List"]:::store
-  Future["Future Children"]:::store
-
-  IDisplay["IDisplayObject"]:::mod
-  IResource["IResourceObject"]:::mod
-  DomHandle["DomHandle"]:::util
-  ResHandle["ResHandle"]:::util
-  Stage["Stage (root)"]:::mod
-
-  Core --> Factory
-  Factory --> Registry
-  Factory --> Store
-  Factory --> Orphans
-  Factory --> Future
-
-  Factory -- create --> IDisplay
-  Factory -- create --> IResource
-  IDisplay --> DomHandle
-  IResource --> ResHandle
-  Factory -. manages .- Stage
-```
-
-</details>
-
-## Resource Type Management
-In essence, the Factory serves as a simple database for all resource types in SDOM. By tracking each resource's type and unique name, it enables:
-- Type-safe lookup and retrieval
-- Bulk queries for all resources of a given type (e.g., all Stage objects)
-- Centralized management and enumeration of resources
-This approach makes resource management extensible, efficient, and easy to maintain as the project grows.
-
-The Factory is responsible for creating, registering, and tracking all resource types in SDOM. This includes:
-- **Stage objects** (application windows/root display objects)
-- **DisplayObjects** (Button, Label, Group, Checkbox, etc.)
-- **Other resources** (bitmap images, TrueType fonts, audio files, etc.)
-
-Each resource type is registered with the Factory, allowing type-safe creation, lookup, and management. The Factory maintains internal registries for each type, enabling extensibility and centralized resource management. Stages are treated as a specific resource type, distinct from other DisplayObjects, but managed using the same registration and creation mechanisms.
-
-This approach allows the Factory to:
-- Track and enumerate all resources by type and unique name
-- Provide APIs for resource creation, retrieval, and destruction
-- Support future resource types with minimal changes
-
-The Core composes the Factory and uses it to create and retrieve resources, while managing the application's active Stage(s) and lifecycle.
-
-
-## Requirements
-- All DisplayObjects and ResourceObjects must be created via the Factory; direct construction is forbidden.
-- Constructors for these objects should be private, with Factory declared as a friend.
-- Factory must support both Lua script/config-based and InitStructure argument construction for all object types.
-- The Factory must be extensible: new object types can be registered without hardcoded Factory methods for each type.
- - Each resource must have a unique std::string name for identification and management.
- - Factory must support resource destruction by both unique name and resource_ptr.
-
-## Recommended Approach
-
-### 1. Initializer Structs and Lua Scripts
-- Each object type defines an initializer struct for manual construction, including a unique "name" field for each resource.
-- Lua tables/scripts are used for dynamic/config-based construction, and must include a unique "name" for each resource.
-
--### 2. Factory Registration
-- The Factory registers a creation lambda for each type, accepting either a Lua table (e.g., `sol::table`) or an initializer struct (using `std::any` or `std::variant`). Resources are registered and tracked by their unique names.
-- Example:
-  ```cpp
-  registerType("Box", [](const std::any& args) -> std::shared_ptr<IDataObject> {
-      if (args.type() == typeid(BoxInit)) {
-          return std::shared_ptr<Box>(new Box(std::any_cast<BoxInit>(args)));
-    } else if (args.type() == typeid(sol::table)) {
-      return std::shared_ptr<Box>(new Box(std::any_cast<sol::table>(args)));
-      }
-      ERROR("Box creation failed: Unknown argument type.");
-      return nullptr;
-  });
-  ```
-
-### 3. Factory Create Methods
-- The Factory exposes a generic `create(typeName, args)` method, which dispatches to the correct constructor based on argument type.
-- Convenience overloads can be provided for common patterns.
-
-### 4. Usage
-- Manual construction:
-  ```cpp
-  InitBox boxInit;
-  boxInit.name = "myBox";
-  boxInit.x = 10;
-  boxInit.y = 20;
-  boxInit.width = 200;
-  boxInit.height = 150;
-  boxInit.color = SDL_Color(192,128,32,255);
-  auto boxObj = factory->create("Box", boxInit);
-  ```
-- Lua construction:
-  ```cpp
-  sol::state lua;
-  lua.open_libraries(sol::lib::base);
-  lua.script("box = { name = 'myBox', x = 10, y = 20, width = 200, height = 150 }");
-  auto box = factory->create("Box", lua["box"]);
-  ```
-
-## Benefits
-- Centralized, extensible object creation.
-- Consistent resource management and initialization.
-- Easy to add new object types and construction patterns.
-- No direct instantiation outside Factory.
+For an overview of how the Factory relates to Core, Stage, EventManager, and the display tree, see:  
+`docs/architecture_overview.md`.
 
 ---
-This document will be updated as the Factory design evolves.
 
-## Implementation Strategy
+### **Lua Is Optional (but First-Class)**
 
-### 1. Initializer Structs
-- For each object/resource type, define a C++ struct (e.g., `InitBox`, `InitLabel`) containing all required fields, including a unique std::string name. These structures are based on the `InitDisplayObject` structure.
-- Example:
-  ```cpp
-  struct BoxInit : public InitDisplayObject
-  {
-    int x, y, width, height;
-    // ...other fields...
-  };
-// Ensure these structs can be constructed from Lua tables (e.g., via a helper function taking `sol::table`). Document inheritance and field usage for contributors.
-// Use a map to register creation lambdas for each type. For type safety, consider using std::variant if the set of argument types is known and limited:
-  using CreatorFunc = std::function<std::shared_ptr<IDataObject>(const std::any&)>;
-  // Or:
-  // using CreatorFunc = std::function<std::shared_ptr<IDataObject>(const std::variant<BoxInit, sol::table>&)>;
-  std::unordered_map<std::string, CreatorFunc> registry;
-  // Register each type at startup:
-  registry["Box"] = [](const std::any& args) -> std::shared_ptr<IDataObject> {
-    if (args.type() == typeid(BoxInit))
-      return std::make_shared<Box>(std::any_cast<BoxInit>(args));
-    if (args.type() == typeid(sol::table))
-      return std::make_shared<Box>(std::any_cast<sol::table>(args));
-    // ...error handling...
-    return nullptr;
-  };
-  // For std::variant, use std::get_if<BoxInit>(&args) etc.
-// Factory should report errors for unknown types or invalid arguments. Decide whether to throw exceptions, log errors, or return nullptr for consistency.
-  ```
-- Ensure these structs can be constructed from Lua tables (e.g., via a helper function or constructor).
+SDOM can be used in several ways:
 
-### 1a. Standardized Constructor Signatures
-- All DisplayObjects should have constructors with a consistent signature:
-  - One accepting the type-specific initializer struct.
-  - One accepting a Lua `sol::table` (or similar) config object.
-- Example:
-  ```cpp
-  class Label : public IDisplayObject {
-      friend class Factory;
-  protected:
-      Label(const InitLabel& init);   // Label-specific struct
-    Label(const sol::table& config);      // Lua config
-      // ...
-  };
+- **No Lua at all:** Create everything directly from C++.
+- **Lua for configuration only:** Define UI layout in Lua; keep logic in C++.
+- **Lua + C++ together:** Hybrid scripting and native logic.
+- **Lua only:** Build applications entirely in Lua, with rendering and layout handled in optimized C++.
 
-  class Box : public IDisplayObject {
-      friend class Factory;
-  protected:
-      Box(const InitBox& init);       // Box-specific struct
-    Box(const sol::table& config);        // Lua config
-      // ...
-  };
-  ```
-- This ensures extensibility and consistency for Factory-based creation.
+The same handle-based architecture will also support **bindings for other languages** such as Rust and Python. The goal is to make SDOM useful as both:
 
-### 2. Private Constructors & Friend Factory
-- In each class, make the constructor protected/private.
-- Declare the Factory class as a friend:
-  ```cpp
-  class Box {
-      friend class Factory;
-  private:
-      Box(const BoxInit& init);
-    Box(const sol::table& config);
-      // ...
-  };
-  ```
-
-### 3. Factory Registration System
-- Use a map to register creation lambdas for each type:
-  ```cpp
-  using CreatorFunc = std::function<std::shared_ptr<IDataObject>(const std::any&)>;
-  std::unordered_map<std::string, CreatorFunc> registry;
-  ```
-- Register each type at startup:
-  ```cpp
-  registry["Box"] = [](const std::any& args) -> std::shared_ptr<IDataObject> {
-      if (args.type() == typeid(BoxInit))
-          return std::make_shared<Box>(std::any_cast<BoxInit>(args));
-    if (args.type() == typeid(sol::table))
-      return std::make_shared<Box>(std::any_cast<sol::table>(args));
-      // ...error handling...
-      return nullptr;
-  };
-  ```
-
-### 4. Generic Factory Create Method
-- Implement a method to create objects by type name and argument:
-  ```cpp
-  std::shared_ptr<IDataObject> Factory::create(const std::string& type, const std::any& args) {
-      auto it = registry.find(type);
-      if (it != registry.end())
-          return it->second(args);
-      // ...error handling...
-      return nullptr;
-  }
-  ```
-- Optionally, add type-safe wrappers for common types.
-
-### 5. Extensibility
-- New types can be registered by adding a lambda to the registry.
-- No need to modify Factory internals for new types.
-- Document the registration pattern for contributors.
-
-### 6. Error Handling & Validation
-- Factory should report errors for unknown types, invalid arguments, or duplicate resource names.
-- Factory should also validate destruction requests by name or resource_ptr, and report errors if the resource does not exist.
-- Consider using exceptions or logging for diagnostics.
-
-### 7. Example Usage
-- Manual construction:
-  ```cpp
-  InitBox boxInit;
-  boxInit.name = "myBox";
-  boxInit.x = 10;
-  boxInit.y = 20;
-  boxInit.width = 200;
-  boxInit.height = 150;
-  boxInit.color = SDL_Color(192,128,32,255);
-  auto boxObj = factory->create("Box", boxInit);
-- XML support could be added in the future if needed, but would require additional maintenance and testing. Consider abstracting config parsing so new formats can be added with minimal changes.
-## Further Encapsulation: PIMPL Idiom
-
-While the PIMPL idiom can be useful for hiding implementation details and reducing compile-time dependencies, it adds complexity—especially in polymorphic designs like SDOM. For this open source project, we prioritize maintainability and extensibility over deep encapsulation. Therefore, PIMPL is not recommended unless a compelling reason arises.
-  ```
-- Lua construction:
-  ```cpp
-  sol::state lua;
-  lua.open_libraries(sol::lib::base);
-  lua.script("box = { name = 'myBox', x = 10, y = 20, width = 200, height = 150 }");
-  auto box = factory->create("Box", lua["box"]);
-  ```
+- A **high-performance UI engine**, and
+- A **portable scripting-friendly application framework**.
 
 ---
-This strategy enables centralized, extensible, and type-safe object/resource creation for SDOM.
 
-## Standardized Constructors for IDisplayObjects
-- Every `IDisplayObject`-based device will have two constructors:
-  - One accepting a Lua `sol::table` config object for dynamic/config-based creation.
-  - One accepting a type-specific initialization structure for manual construction.
-- This approach ensures flexibility, extensibility, and consistency across all display objects.
-- Factory will use these constructors to instantiate objects based on user input or configuration.
+So when we talk about the Factory, we are really talking about the heart of SDOM:  
+**the system that defines how objects are created, named, referenced, and eventually released.**
 
-## Scripting and Configuration Choice
- - Lua is the preferred scripting/configuration format for object/resource creation.
- - Lua integrates cleanly with C++ via sol2, supports runtime scripting and live reconfiguration, and maps naturally to SDOM’s data shapes using tables.
- - Other data formats can be supported via small adapters if needed, but Lua is first-class and recommended.
- - Keep the Lua pathway robust and extensible; treat other formats as optional convenience layers.
+The rest of this document explains how the Factory is structured, how lifetime rules work, and how to register new object and asset types.
 
 
-## Resource Pointer (`resource_ptr`) Design
 
-To provide safe, pointer-like access to Factory-managed resources, SDOM introduces a custom smart pointer called `resource_ptr`. This pointer mimics the syntax and usability of a raw pointer, but internally tracks its resource via a unique name (identifier) and queries the Factory for the current pointer on each access.
+## How a Display Object Registers Itself with the Factory
 
-### How It Works
-- Each resource managed by the Factory is assigned a unique std::string name (identifier).
-- A `resource_ptr` stores this name and a Factory reference.
-- When the pointer is dereferenced (via `operator*`, `operator->`, or implicit conversion), it asks the Factory for the current pointer to the resource by name.
-- If the resource has been destroyed, the Factory returns `nullptr`, so the `resource_ptr` automatically becomes null and safe to use.
-- On assignment, a `resource_ptr` must be assigned to a valid Factory-managed resource (by name or pointer); otherwise, it should throw an error or log a warning.
+In SDOM, display objects are not created by calling constructors directly.  
+Instead, each display object **registers itself** with the Factory, and the Factory becomes the only place that creates them.
 
-### Example Usage
+This gives us three major benefits:
+
+1. **Consistent object creation** (one system controls lifetimes and references)
+2. **Lua and C++ can create the same objects using the same rules**
+3. **Objects can be extended or added without modifying engine code**
+
+---
+
+### The Core Idea
+
+Each display object type (such as `Box`, `Label`, or `Button`) provides:
+
+| Requirement | Purpose |
+|------------|---------|
+| An **InitStruct** | Holds initial values such as position, size, name, etc. |
+| A **constructor that accepts the InitStruct** | Allows deterministic creation via Factory. |
+| A **registration call** | Tells the Factory how to build this object when requested. |
+
+Once registered, the type can be created using:
+
 ```cpp
-resource_ptr<Box> box = factory->create<Box>(...);
-if (box) box->doSomething();
-factory->destroy(box.get()); // box is automatically null after destruction
-if (!box) { /* safe: resource was destroyed */ }
+auto box = Core::getFactory().create("Box", initStruct);
+```
+Or fromLua:
+```lua
+Core:createDisplayObject("Box", { name="myBox", x=50, y=50 })
+```
+No duplication. Same system, two languages.
 
-// Destroy by name
-factory->destroy("myBox");
-// Destroy by resource_ptr
-factory->destroy(box);
+---
+## Visual Model: Where Registration Lives
+```mermaid-norender
+flowchart LR
+  BoxClass["Box (C++ Class)"] --> InitStruct
+  BoxClass --> RegisterFn["Registers creation function with Factory"]
+  RegisterFn --> Factory["Factory"]
+  Factory --> Creates["Creates new Box on demand"]
+```
+---
+## A Minimal Example
+Let's say we are adding a new display object called `MyWidget`.
+
+1. Define its `InitStruct`:
+```cpp
+  struct InitStruct : public IDisplayObject::InitStruct {
+      int someValue = 0;
+  };
+```
+2. Implement the Class Constructor:
+```cpp
+MyWidget::MyWidget(const InitStruct& init)
+: IDisplayObject(init)
+{
+    someValue_ = init.someValue;
+}
+```
+3. Register with the Factory:
+```cpp
+bool MyWidget::registerWithFactory(Factory& f) {
+    return f.registerDisplayObjectType<MyWidget, MyWidget::InitStruct>("MyWidget");
+}
+```
+The Factory now knows:
+- The **name**: `MyWidget`
+- The **InitStruct** to expect
+- The **constructor** to call
+
+---
+
+### What Registration Actually Looks Like Inside the Factory
+The Factory keeps a table:
+```bash
+"typeName" → creation function
+```
+So for `"MyWidget"`, it stores something equivalent to:
+```cpp
+factory.creators_["MyWidget"] = [](const InitStruct& init) {
+    return std::make_unique<MyWidget>(init);
+};
+```
+--- 
+## Creating a New Display Object Type
+
+When adding a new display object to SDOM, there are a few moving parts — but each one has a clear purpose.  
+Let’s walk through the pattern using `Stage` as an example, because `Stage` shows the full structure cleanly.
+
+Every display object type must:
+
+1. Inherit from **IDisplayObject** (or another SDOM object that inherits from it)
+2. Define an **InitStruct** that sets default values and custom properties
+3. Provide **protected constructors** (so only the Factory can create it)
+4. Provide **static CreateFromLua / CreateFromInitStruct callbacks**
+5. Implement lifecycle methods (`onInit`, `onRender`, etc.)
+6. Register its **Lua bindings**, calling the parent first
+
+Once this is done, the object can be created from both C++ and Lua **without changing the Factory**.
+
+---
+
+### 1. Class Declaration
+
+```cpp
+class Stage : public IDisplayObject {
+    using SUPER = IDisplayObject;
+
+public:
+    static constexpr const char* TypeName = "Stage";
+
+    struct InitStruct : public IDisplayObject::InitStruct {
+        InitStruct() {
+            name = TypeName;
+            type = TypeName;
+            color = {0, 0, 0, 255};
+            // example custom property:
+            // bool enableSomething = true;
+        }
+    };
+
+protected:
+    Stage(const InitStruct& init);
+    Stage(const sol::table& config);
+    Stage(const sol::table& config, const InitStruct& defaults);
+
+public:
+    static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
+        return std::unique_ptr<IDisplayObject>(new Stage(config));
+    }
+    static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
+        return std::unique_ptr<IDisplayObject>(new Stage(static_cast<const Stage::InitStruct&>(baseInit)));
+    }
+
+    virtual ~Stage() = default;
+
+    // Object lifecycle and rendering
+    virtual bool onInit() override;
+    virtual void onQuit() override;
+    virtual void onUpdate(float dt) override;
+    virtual void onEvent(const Event& event) override;
+    virtual void onRender() override;
+    virtual bool onUnitTest() override;
+
+protected:
+    virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+    sol::usertype<Stage> objHandleType_;
+};
+```
+---
+### 1. Why These Pieces Exist
+| Code Element | Purpose |
+|--------------|---------|
+| `SUPER = IDisplayObject` | Gives easy access to the base class (we’ll use this soon). |
+| `static constexpr const char* TypeName` | The global identity of the object type. Used by C++, Lua, Factory, debugging, etc.|
+| `InitStruct` | Defines default values and new custom properties your object adds. |
+| `Protected Constructors` | Ensures objects can **only be created by the Factory**, never by accident. |
+| `CreateFromInitStruct` | These are the hooks the Factory calls to actually construct your object. |
+| `Lifecycle overrides` | Allow your object to draw, update, handle input, etc. |
+| `_registerLuaBindings()` | Connects your object to Lua, tools, and scripting. |
+
+---
+
+### 2. Lua Binding (Important Detail!)
+Here is the `critical rule` when registering Lua bindings:
+> Always call the base class binding function first.
+> This ensures your object inherits all the Lua features of its parent.
+
+```cpp
+void Stage::_registerLuaBindings(const std::string& typeName, sol::state_view lua) {
+    // Inherit all Lua bindings from IDisplayObject first
+    SUPER::_registerLuaBindings(typeName, lua);
+
+    // Create or reuse usertype
+    if (!lua[typeName].valid()) {
+        objHandleType_ = lua.new_usertype<Stage>(
+            typeName,
+            sol::no_constructor,
+            sol::base_classes, sol::bases<IDisplayObject>()
+        );
+    } else {
+        objHandleType_ = lua[typeName];
+    }
+
+    sol::table stageTable = lua[typeName];
+
+    // Utility to avoid overriding base-class bindings
+    auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
+        if (!tbl.raw_get_or(name, sol::lua_nil).valid()) {
+            tbl.set_function(name, std::forward<decltype(fn)>(fn));
+        }
+    };
+
+    // Add Stage-specific Lua methods here
+    set_if_absent(stageTable, "getMouseX", &Stage::getMouseX_lua);
+    set_if_absent(stageTable, "getMouseY", &Stage::getMouseY_lua);
+    set_if_absent(stageTable, "setMouseX", &Stage::setMouseX_lua);
+    set_if_absent(stageTable, "setMouseY", &Stage::setMouseY_lua);
+}
+```
+So the new type gets:
+- All base IDisplayObject Lua features
+- Plus your custom bindings
+- Without overwriting or duplicating anything
+
+---
+
+### 3. Summary Checklist (Copy This When Creating New Objects)
+| Step | Done? | Notes|
+|------|-------|------|
+| Inherit from `IDisplayObject` | ☐ | Or a subclass |
+| Define `static TypeName` | ☐ | Global identity |
+| Create an `InitStruct` | ☐ | With defaults and custom properties |
+| Make constructors protected | ☐ | Factory-only creation |
+| Add `CreateFromInitStruct` and `  CreateFromLua` | ☐ | Used by Factory |
+| Override lifecycle methods | ☐ | `onInit`, `onRender`, ... UI logic happens here |
+| Implement `_registerLuaBindings()` | ☐ | Call `SUPER::_registerLuaBindings` first |
+
+---
+
+## Object Lifetimes, Parents, and Orphans  
+*(aka: “Why Your UI Elements Don’t Turn Into Zombies”)*
+
+Every display object in SDOM lives somewhere in the **display tree**.  
+If an object has a parent, it's part of the active UI.  
+If it *loses* its parent… well… now we need to talk about **orphans**.
+
+Think of the display tree like a family photo:
+```
+Stage (root)
+│
+├── Box ("blueishBox")
+│ └── Label ("blueishBoxLabel")
+│
+└── Button ("main_stage_button")
+    └── Label ("buttonLabel")
 ```
 
-### Benefits
-- Prevents dangling pointers—users never access deleted resources.
-- Maintains raw pointer usability and syntax for ease of use.
-- Centralizes lifetime management and pointer validity in the Factory.
-- No need for manual notification or observer lists; pointer validity is always up-to-date.
-- Unique resource names ensure reliable lookup, assignment, and destruction.
+As long as everyone has a parent, life is good.  
+But if you remove a child:
+```lua
+stage:removeChild("blueishBox")
+```
+Now **blueishBox** and everything inside it becomes an orphan.
 
-### Implementation Outline
-- `resource_ptr` stores a resource name and a Factory reference.
-- On access, it queries the Factory for the current pointer by name.
-- If the resource is destroyed, the Factory returns `nullptr`.
-- The pointer provides all standard pointer operators for seamless integration.
-- Assignment to a resource_ptr requires validation against the Factory registry.
+---
+## Why Orphans Exist (And Why They’re Actually Useful)
+In many UI frameworks, removing an element means destroying it instantly.
 
-### Summary
-`resource_ptr` combines the safety of smart pointers with the usability of raw pointers, making it ideal for centralized resource management in SDOM. It ensures that all resource references are either valid or null, with no risk of dangling pointers, and requires no extra effort from the user beyond normal pointer usage. Unique resource names and flexible destruction methods further enhance safety and usability.
+But SDOM takes a different approach:
+> Removing something from the UI does not automatically destroy it.
+
+This is great because:
+- ✅ You can bring it back later
+- ✅ You can animate it fading away
+- ✅ You can inspect it for debugging
+- ✅ Lua references won’t suddenly explode
+
+Instead, every display object has an:
+```nginx
+RetentionPolicy retentionPolicy_;
+```
+Which decides **what to do when the object is no longer part of the scene graph.**
+
+Here are the policies:
+| Policy | Meaning | Use Case |
+|--------|---------|----------|
+| `AutoDestroy` | Destroy immediately | Temporary UI elements you don’t reuse |
+| `GracePeriod` | Wait (e.g., 200-400ms), then destroy | Fade-out animations or transition effects |
+| `RetainUntilManual` | Keep forever until manually destroyed | Inventory windows, cached panels, lazily reused elements |
+
+---
+
+### Visualizing the Orphan Lifecycle
+```scss
+Remove From Parent         Time Passes          collectGarbage()
+        │                         │                     │
+        ▼                         ▼                     ▼
+   (object is orphaned) ──→  (policy considered) ──→ (destroy or retain)
+        │                         │                     │
+        └─────────────────────────┴─────────────────────┘
+```
+And yes — SDOM prevents zombie references:
+| Scenario | Result |
+|----------|--------|
+| You still hold a DisplayHandle to the orphan | ✅ It stays valid |
+| The object gets destroyed later | ⚠️ Handle becomes *invalid*, but safe (it just returns `nullptr`) |
+| You accidentally keep handles forever | ✅ SDOM will not leak — you are just hoarding ghosts 👻 |
+
+---
+
+### The Cleanup Loop (Automatically Happens Each Frame)
+Inside the main loop, SDOM does:
+```cpp
+factory->detachOrphans();         // Remove objects from tree but keep alive
+factory->attachFutureChildren();  // Handle queued child additions
+factory->collectGarbage();        // Apply retention policies & destroy if needed
+```
+You don’t call this.
+You don’t need to remember it.
+It just happens.
+Like sunrise. Or taxes. Or reruns of The Munsters.
+
+---
+
+### Example: Fade-Out Animation Using GracePeriod
+```lua
+local panel = Core:getDisplayObject("settingsPanel")
+
+panel:setOrphanRetentionPolicy("GracePeriod")
+panel:setOrphanGrace(300) -- keep alive for 300ms
+
+-- Play exit animation
+panel:animateFadeOut(0.3)
+
+-- Remove from UI
+stage:removeChild(panel)
+
+-- Panel will auto-destroy after animation finishes.
+```
+
+### Example: UI Reuse With RetainUntilManual
+```lua
+-- Create once
+local inventory = Core:createDisplayObject("Frame", { name="inventory", width=300, height=200 })
+inventory:setOrphanRetentionPolicy("RetainUntilManual")
+
+stage:addChild(inventory)  -- show it
+stage:removeChild(inventory) -- hide it (object still exists)
+stage:addChild(inventory) -- show it again, instantly, no re-alloc!
+```
+
+---
+
+### Key Takeaways
+- Removing something from the UI does not necessarily destroy it.
+- Every display object has a retention policy that determines its lifetime.
+- collectGarbage() applies policies automatically each frame.
+- Handles always remain safe — never dangling pointers.
+In short:
+This is one of the core reasons the system feels stable, predictable, and easy to build *real interfaces* with.
+
+---
+
+## Adding Custom Properties to Your Display Object  
+*(or: "Yes, you can absolutely give your Button a hitpoint system")*
+
+When you create a new display object type, the `InitStruct` is where you define its **default values** — including your own custom fields.
+
+Let’s say we’re creating a new UI element:
+It’s like a `Frame`, except it can be expanded or collapsed.
+
+### 1. Add the Property to the InitStruct
+
+```cpp
+struct InitStruct : public IDisplayObject::InitStruct
+{
+    InitStruct() : IDisplayObject::InitStruct()
+    {
+        name = TypeName;
+        type = TypeName;
+    }
+
+    bool isCollapsed = false;   // 👈 Our custom property
+};
+```
+Now our object has state — something meaningful that controls behavior.
+
+---
+
+### 2. Store the Property in the Class
+```cpp
+class TogglePanel : public IDisplayObject
+{
+    using SUPER = IDisplayObject;
+
+protected:
+    bool isCollapsed_ = false;  // internal storage
+```
+---
+
+### 3. Copy it In from Constructors
+```cpp
+TogglePanel(const InitStruct& init) : SUPER(init)
+{
+    isCollapsed_ = init.isCollapsed;
+}
+
+TogglePanel(const sol::table& config) : SUPER(config)
+{
+    if (config["isCollapsed"].valid())
+        isCollapsed_ = config["isCollapsed"].get<bool>();
+}
+```
+Now both C++ creation and Lua creation can initialize this field.
+
+---
+
+### 4. Add Getters / Setters
+```cpp
+public:
+    bool isCollapsed() const { return isCollapsed_; }
+    void setCollapsed(bool c) { 
+        if (isCollapsed_ != c) {
+            isCollapsed_ = c;
+            setDirty();   // mark for redraw / relayout
+        }
+    }
+```
+Notice the call to `setDirty()` —
+this ensures the UI will visually update next frame.
+
+---
+### 5. Expose It to Lua (Inside `_registerLuaBindings()`)
+```cpp
+void TogglePanel::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+{
+    SUPER::_registerLuaBindings(typeName, lua);
+
+    auto panel = lua[typeName];
+
+    panel.set_function("isCollapsed", &TogglePanel::isCollapsed);
+    panel.set_function("setCollapsed", &TogglePanel::setCollapsed);
+}
+```
+And now Lua can happily do:
+```lua
+panel:setCollapsed(true)
+```
+Or read it:
+```lua
+if panel:isCollapsed() then
+    print("Panel is closed.")
+end
+```
+___
+### Visualizing the Flow
+```
+Lua or C++ → InitStruct → Constructors → Internal State → Lua Bindings
+```
+```css
+         setCollapsed()
+                │
+                ▼
+          mark object dirty
+                │
+                ▼
+     next frame → Label redraw, layout update, rendering correct
+```
+This makes UI state reactive — updates propagate naturally through the render pipeline.
+
+---
+
+### Optional: Reflecting Properties Back Into Lua Tables
+If your object supports saving/loading UI layouts, you can override:
+```cpp
+sol::table toLuaConfig(sol::state_view lua) const override;
+```
+Which lets you serialize back into lua:
+```cpp
+auto cfg = panel->toLuaConfig(L);
+-- cfg now contains { name="foo", type="TogglePanel", isCollapsed=true, x=.., y=.. }
+```
+(We’ll go deeper into serialization support later — this is enough to get started.)
+
+---
+
+| Concept | Why It Matters |
+|---------|----------------|
+| Custom fields belong in the `InitStruct` | So defaults are easy and consistent |
+| Constructors must copy config → state | Otherwise properties won’t actually *apply* |
+| Always call `setDirty()` when appearance changes | Ensures rendering refreshes correctly |
+| `_registerLuaBindings()` connects Lua to your new API | Makes the object scriptable AND testable |
+
+---
+
+
+
+
+

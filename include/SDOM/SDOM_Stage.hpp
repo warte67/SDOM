@@ -78,9 +78,7 @@ namespace SDOM
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
         
-        sol::usertype<Stage> objHandleType_; // Deprecated??
-
-
+        sol::usertype<Stage> objHandleType_;
     };
 
 } // namespace SDOM

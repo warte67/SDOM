@@ -1741,6 +1741,23 @@ namespace SDOM
     }
 
 
+    // Calls TTF_CloseFont on all loaded TTFAsset objects
+    void Factory::closeAllTruetypeAssets_()
+    {
+        for (auto& a : assetObjects_) 
+        {
+            if (auto ttf = dynamic_cast<TTFAsset*>(a.second.get()))
+            {
+                TTF_Font* fontPtr = ttf->_getTTFFontPtr();
+                if (fontPtr)
+                {
+                    TTF_CloseFont(fontPtr);
+                    std::string assetName = ttf->getName();
+                    this->destroyAssetObject(assetName);  // <--- Completely  removes all traces of the AssetObject
+                }
+            }
+        }   
+    }
 
 
 } // namespace SDOM

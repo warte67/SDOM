@@ -626,8 +626,124 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
       - Render backgrounds, borders, etc., as needed.
     - Restore the previous SDL clip region if it was changed.
 
+## Label Usage Examples
+```lua
+{
+    name = "blueishBoxLabel",
+    type = "Label",
+
+    anchor_left = "left",
+    x = 185,
+    anchor_top = "top",
+    y = 75,
+    anchor_right = "right",
+    width = 240,
+    anchor_bottom = "bottom",
+    height = 215,
+
+    wordwrap = true,
+    auto_resize = false,
+
+    outline = true,
+    border = true,
+    border_color = { r = 255, g = 255, b = 255, a = 64 },
+
+    text = "The [bold][color=lt_red]quick brown[color=white][/bold] fox jumps over the lazy dog by the river...",
+    resource_name = "internal_ttf",
+    font_size = 16,
+    alignment = "center",
+    foreground_color = { r = 255, g = 255, b = 255, a = 255 },
+    max_width = 500
+}
+```
+### **Explanation**
+
+This label is positioned and sized relative to its parent using **edge anchors**:
+
+| Property | Meaning |
+|---------|---------|
+| `anchor_left = "left"`   | The label’s left edge attaches to the parent’s left edge. |
+| `anchor_top = "top"`     | The label’s top edge attaches to the parent’s top edge.   |
+| `anchor_right = "right"` | The label’s right edge follows the parent’s right edge.   |
+| `anchor_bottom = "bottom"` | The label’s bottom edge follows the parent’s bottom edge. |
+
+Because all four edges are anchored, the label **automatically resizes** when the parent resizes.
+
+The `x`, `y`, `width`, and `height` values serve as the **initial placement** before anchors adjust final geometry.  
+When a parent changes size, the anchors override width/height to maintain the layout relationship.
+
 ---
 
+### **Text and Formatting**
+
+The `text` field supports **inline formatting tokens**:
+
+| Token | Effect |
+|-------|--------|
+| `[bold]` / `[/bold]` | Toggles bold text rendering. |
+| `[color=...]` | Changes the foreground text color (supports named colors and RGBA). |
+| `[dropshadow]`, `[outline]`, etc. | Optional style tags depending on current font renderer capabilities. |
+
+This allows rich typography inside a single string (e.g. multi-color, mixed styles, emphasis).
+
+---
+### **Anchor Reference Diagram**
+
+Each edge of a Label (or any `IDisplayObject`) may anchor to one of the parent’s edges.  
+The anchor determines *how the object moves or resizes when the parent changes size.*
+
+```
+Parent Object Bounds
+┌──────────────────────────────────────────────┐
+│                                              │
+│ (anchor_top = "top")                         │
+│ ▲                                            │
+│ │                                            │
+│ ┌───────────────────────────────┐            │
+│ │ (anchor_left="left") Label    │            │ 
+│ │ ┌────────────┐                │            │
+│ │ │ TEXT       │                │            │
+│ │ └────────────┘                │            │
+│ └───────────────────────────────┘            │
+│ │                  (anchor_right="right") ──▶│
+│ ▼                                            │
+│ (anchor_bottom = "bottom")                   │
+│                                              │
+└──────────────────────────────────────────────┘
+```
+
+---
+
+### **Wrapping & Layout Behavior**
+
+| Property | Purpose |
+|---------|---------|
+| `wordwrap = true` | Text automatically wraps when reaching the right edge. |
+| `alignment = "center"` | Controls line justification (`left`, `center`, `right`). |
+| `max_width = 500` | Hard upper limit on wrapping width. |
+| `auto_resize = false` | Size stays fixed; text wraps to fit within bounds. |
+
+If the label becomes too small, wrapped text may overlap or run vertically beyond bounds.  
+This is expected — the layout assumes the user sizes labels appropriately.
+
+---
+
+### **Rendering Performance**
+
+Labels are **cached** to an off-screen texture.  
+The label only re-renders when it becomes **dirty**, which occurs when:
+
+- Text changes
+- Size changes
+- Font or formatting changes
+
+Once rendered, drawing the label each frame is inexpensive.
+
+---
+
+
+
+---
 ## ASCII Glyphs
 
 | Normal Index | Normal Character | Bold Index | Bold Character |
