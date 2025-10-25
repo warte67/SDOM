@@ -3,6 +3,7 @@
 
 
 #include <SDOM/SDOM_TTFAsset.hpp>
+#include <unordered_set>
 
 namespace SDOM
 {
@@ -94,12 +95,32 @@ namespace SDOM
 
     void TTFAsset::onUnload() 
     {
-        if (ttf_font_)
-        {
-            TTF_CloseFont(ttf_font_);
-            ttf_font_ = nullptr;
+        if (!ttf_font_) {
             isLoaded_ = false;
+            return;
         }
+        // Guard against accidental double-closes across code paths by tracking
+        // which font pointers we've already closed. This protects against
+        // re-entrancy and shared-pointer mistakes.
+        static std::unordered_set<void*> s_closed_fonts;
+        void* raw = static_cast<void*>(ttf_font_);
+
+        if (s_closed_fonts.find(raw) == s_closed_fonts.end())
+        {
+            s_closed_fonts.insert(raw);
+            // If SDL_ttf is already shut down, do not call into it. Just drop the pointer.
+            if (TTF_WasInit()) {
+                TTF_Font* tmp = ttf_font_;
+                ttf_font_ = nullptr; // clear early to prevent re-entrancy
+                TTF_CloseFont(tmp);
+            } else {
+                ttf_font_ = nullptr;
+            }
+        } else {
+            // Already closed elsewhere; just clear our pointer
+            ttf_font_ = nullptr;
+        }
+        isLoaded_ = false;
     } // END: TTFAsset::onUnload()
 
     bool TTFAsset::onUnitTest() 
@@ -135,5 +156,3 @@ namespace SDOM
 
 
 } // END namespace SDOM
-
-

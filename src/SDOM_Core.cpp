@@ -787,11 +787,9 @@ namespace SDOM
             setIsTraversing(false);
         }
 
-        // Shutdown SDL
+        // Shutdown SDL first; Lua state will be torn down by sol::state's
+        // destructor after all sol::reference objects are destroyed.
         shutdown_SDL();
-        
-        // Shutdown Lua
-        lua_close(getLua());
     }
 
     void Core::onRender()

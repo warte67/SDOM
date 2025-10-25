@@ -1340,7 +1340,10 @@ namespace SDOM
         // Ask the object to release runtime resources first
         try {
             if (it->second) {
-                it->second->onUnload();
+                // Only unload if the asset reports itself as loaded
+                if (it->second->isLoaded()) {
+                    it->second->onUnload();
+                }
                 it->second->onQuit();
             }
         } catch(...) {
@@ -1741,22 +1744,22 @@ namespace SDOM
     }
 
 
-    // Calls TTF_CloseFont on all loaded TTFAsset objects
+    // Calls onUnload()/onQuit() through destroyAssetObject() for all Truetype assets.
+    // Avoids iterator invalidation by collecting names first and lets each
+    // asset's onUnload() own its TTF_CloseFont call.
     void Factory::closeAllTruetypeAssets_()
     {
-        for (auto& a : assetObjects_) 
-        {
-            if (auto ttf = dynamic_cast<TTFAsset*>(a.second.get()))
-            {
-                TTF_Font* fontPtr = ttf->_getTTFFontPtr();
-                if (fontPtr)
-                {
-                    TTF_CloseFont(fontPtr);
-                    std::string assetName = ttf->getName();
-                    this->destroyAssetObject(assetName);  // <--- Completely  removes all traces of the AssetObject
-                }
+        std::vector<std::string> truetypeNames;
+        truetypeNames.reserve(assetObjects_.size());
+        for (const auto& kv : assetObjects_) {
+            if (dynamic_cast<TTFAsset*>(kv.second.get()) != nullptr) {
+                truetypeNames.push_back(kv.first);
             }
-        }   
+        }
+
+        for (const auto& name : truetypeNames) {
+            destroyAssetObject(name);
+        }
     }
 
 
