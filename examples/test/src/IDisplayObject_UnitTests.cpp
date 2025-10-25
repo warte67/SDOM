@@ -800,14 +800,24 @@ namespace SDOM
             ok = false;
         }
 
-        // Add More Boxes:
-        DisplayHandle D = make_box("D", 128);    A->addChild(D);
-        DisplayHandle E = make_box("E", 192);    A->addChild(E);
-        DisplayHandle F = make_box("F", 255);    A->addChild(F);
+        // cleanup and start a new hierarchy
+        core.destroyDisplayObject("A");
+        core.destroyDisplayObject("B");        
+        core.destroyDisplayObject("C");        
 
+        DisplayHandle zbox = make_box( "zbox", 32);    stage->addChild(zbox);
+                      A  = make_box( "A", 64);         zbox->addChild(A);
+                      B  = make_box( "B", 96);         zbox->addChild(B);
+                      C  = make_box( "C", 128);        zbox->addChild(C);
+        DisplayHandle D  = make_box( "D", 160);        zbox->addChild(D);
 
+        DisplayHandle D1  = make_box( "D1", 192);        A->addChild(D1);
+        DisplayHandle D2  = make_box( "D2", 224);        A->addChild(D2);
+        DisplayHandle D3  = make_box( "D3", 255);        A->addChild(D3);
+
+        
 // DEBUG: Print z-orders
-parent_box->printTree();                
+zbox->printTree();                
 // DEBUG_LOG("A ZOrder: " + std::to_string(A->getZOrder()));
 // DEBUG_LOG("B ZOrder: " + std::to_string(B->getZOrder()));
 // DEBUG_LOG("C ZOrder: " + std::to_string(C->getZOrder()));
@@ -824,10 +834,16 @@ parent_box->printTree();
         
 
         // Cleanup
+
+// parent_box->printTree();
+// zbox->printTree();        
         core.destroyDisplayObject("parent_box");
         core.destroyDisplayObject("A");
         core.destroyDisplayObject("B");        
         core.destroyDisplayObject("C");
+        core.destroyDisplayObject("D");
+        core.destroyDisplayObject("E");        
+        core.destroyDisplayObject("F");        
         if (getFactory().countOrphanedDisplayObjects() != 0)
         {
             errors.push_back("PriorityZOrder_test: Orpans Left Behind.");
@@ -836,7 +852,7 @@ parent_box->printTree();
 
         // return results
         return ok;
-    } // IDisplayObject_test0(std::vector<std::string>& errors)   
+    } // IDisplayObject_test8(std::vector<std::string>& errors)   
 
 
 
