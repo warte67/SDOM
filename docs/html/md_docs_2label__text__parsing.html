@@ -92,15 +92,15 @@ $(function(){initNavTree('md_docs_2label__text__parsing.html','',''); });
   <div class="headertitle"><div class="title">Label Text Parsing Design Document </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md228"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md229"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md245"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md246"></a>
 Overview</h1>
 <p>The Label system in the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> API is a lightweight, scriptable text rendering component designed for both retro-style bitmap fonts and modern truetype rendering. It tokenizes input into word and escape tokens so inline formatting (color, bold, outline, padding, dropshadow, alignment, numeric style tweaks) can be applied on a per-token basis. Escape sequences use case‑insensitive square‑bracket tags (e.g., [bold], [color=#RRGGBB], [pad=5x7]) and support nested scopes and explicit resets so authors can compose rich inline styles without separate layout passes.</p>
 <p>Rendering is separated into tokenization, layout (wrapping, alignment grouping, autosizing), and phrase rendering phases. Each token carries a LabelStyle/FontStyle snapshot (including numeric fields like borderThickness and dropshadow offsets) so grouping into phrases lets the engine render visually identical runs efficiently. Alignment is encoded compactly (nine alignment modes) and tokens are sorted into the appropriate buckets for deterministic placement and multi-line wrapping behavior.</p>
 <p>The Label supports autosizing, clipping to parent bounds, and both per-token and per-phrase style effects. It exposes token information to Lua (e.g., via DisplayHandle:getTokenList()), enabling unit tests and scripts to inspect tokenized output and verify style propagation. The implementation is forgiving: malformed escape parameters are validated and ignored (logged) rather than throwing, which improves robustness for live content authored in Lua.</p>
 <p>Finally, the system is designed to be extensible: new escapes can be added with minimal tokenizer changes, and the rendering pipeline cleanly separates font-specific handling (bitmap vs TTF) from token management and layout logic. This makes the Label suitable for game UI text, HUD displays, and retro-styled interfaces while remaining script-friendly and testable.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md231"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md248"></a>
 Goals</h1>
 <ul>
 <li>Support word wrapping and autosizing for labels.</li>
@@ -109,20 +109,20 @@ Goals</h1>
 <li>Efficiently tokenize and process text for rendering.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md233"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md250"></a>
 Retro-Inspired Graphic Glyphs</h1>
 <p>The graphic glyphs in the <span class="tt">internal_font_8x8</span> font are designed with a retro aesthetic, reminiscent of the character sets used in vintage computers like the Tandy systems. These glyphs provide a nostalgic yet functional approach to creating visual elements in text-based environments. The four sets of graphic glyphs—line-based, solid-on-clear, dithered-on-clear, and solid-on-dithered—offer a versatile toolkit for rendering simple graphics, icons, and patterns.</p>
 <p>Note: This needs to be updated to use the new font_8x8 and icon_8x8 (or icon_10x10) sets.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md234"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md251"></a>
 Customization Potential</h2>
 <p>While the space used for these retro-styled graphic glyphs could have been allocated for special characters like Greek math symbols, the nostalgic appeal of these glyphs felt more fitting. Additionally, the design allows for end-user customization, enabling users to redefine or expand the glyph set to suit their specific needs.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md235"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md252"></a>
 Escape Sequence Syntax</h1>
 <p>The Label escape sequence syntax uses square-bracket tokens (e.g., <span class="tt">[bold]</span>, <span class="tt">[color=red]</span>, <span class="tt">[size=12]</span>) to change rendering state inline. Escape tags are case‑insensitive and come in two forms: simple toggles (<span class="tt">[bold]</span>, <span class="tt">[reset]</span>) and parameterized tags (<span class="tt">[color=#RRGGBB]</span>, <span class="tt">[pad=5x7]</span>, <span class="tt">[dropshadow=4,6]</span>). Tags are not rendered as text; instead they update the current FontStyle/LabelStyle that will be applied to subsequently emitted word tokens. Numeric and hex parameters are validated before use; malformed parameters are ignored and do not throw. Use double‑bracket escapes (<span class="tt">[[]</span> and <span class="tt">[]]</span>) to emit literal <span class="tt">[</span> and <span class="tt">]</span> characters.</p>
 <p>Escape sequences are tokenized separately from word tokens so the parser can push and pop style state. Opening tags apply a change that remains in effect until a matching closing tag (e.g., <span class="tt">[/pad]</span>) or until a <span class="tt">[reset]</span> is encountered; nested tags are supported and restored in LIFO order. Special parsing rules: escapes inside double-quoted blocks are treated as literal text, bracket escapes are single tokens, and numeric escapes affect specific style fields (borderThickness, outlineThickness, padding_horiz/vert, dropshadowOffsetX/Y). For predictable results prefer explicit parameters and well-formed tags; the tokenizer logs but tolerates malformed or unsupported tags to avoid breaking rendering.// filepath: /home/jay/Documents/GitHub/SDOM/docs/label_text_parsing.md The Label escape sequence syntax uses square-bracket tokens (e.g., <span class="tt">[bold]</span>, <span class="tt">[color=red]</span>, <span class="tt">[size=12]</span>) to change rendering state inline. Escape tags are case‑insensitive and come in two forms: simple toggles (<span class="tt">[bold]</span>, <span class="tt">[reset]</span>) and parameterized tags (<span class="tt">[color=#RRGGBB]</span>, <span class="tt">[pad=5x7]</span>, <span class="tt">[dropshadow=4,6]</span>). Tags are not rendered as text; instead they update the current FontStyle/LabelStyle that will be applied to subsequently emitted word tokens. Numeric and hex parameters are validated before use; malformed parameters are ignored and do not throw. Use double‑bracket escapes (<span class="tt">[[]</span> and <span class="tt">[]]</span>) to emit literal <span class="tt">[</span> and <span class="tt">]</span> characters.</p>
 <p>Escape sequences are tokenized separately from word tokens so the parser can push and pop style state. Opening tags apply a change that remains in effect until a matching closing tag (e.g., <span class="tt">[/pad]</span>) or until a <span class="tt">[reset]</span> is encountered; nested tags are supported and restored in LIFO order. Special parsing rules: escapes inside double-quoted blocks are treated as literal text, bracket escapes are single tokens, and numeric escapes affect specific style fields (borderThickness, outlineThickness, padding_horiz/vert, dropshadowOffsetX/Y). For predictable results prefer explicit parameters and well-formed tags; the tokenizer logs but tolerates malformed or unsupported tags to avoid breaking rendering.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md237"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md254"></a>
 Supported Color Names</h2>
 <p>You can use any of the following color names in label escape tags (e.g., <span class="tt">[color=name]</span>, <span class="tt">[fgnd=name]</span>, <span class="tt">[bgnd=name]</span>, <span class="tt">[border=name]</span>, <span class="tt">[outline=name]</span>, <span class="tt">[shadow=name]</span>):</p>
 <p><b>Grayscale gradient (6 steps):</b></p><ul>
@@ -203,7 +203,7 @@ Supported Color Names</h2>
 <p><b>Note:</b> <br  />
  All color names are case-insensitive. <br  />
  You may use these names in any supported color escape tag.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md238"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md255"></a>
 Color Targets:</h3>
 <div class="fragment"><div class="line">Label::foregroundColor     // &quot;fgnd&quot; (default)</div>
 <div class="line">Label::backgroundColor     // &quot;bgnd&quot;</div>
@@ -217,9 +217,9 @@ Color Targets:</h3>
 <li><span class="tt">[RGB:222222:outline]</span> — sets the outline color to dark gray</li>
 <li><span class="tt">[RGBA:0000007f:shadow]</span> — sets the drop shadow to transparent black</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md239"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md256"></a>
 Style</h2>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md240"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md257"></a>
 Lua bindings: property-style vs legacy get/set functions</h1>
 <p>The Label Lua bindings expose most style fields in two symmetric forms so existing scripts and newer code can both work:</p>
 <ul>
@@ -284,14 +284,14 @@ Lua bindings: property-style vs legacy get/set functions</h1>
 <li>Styles stack: entering a style pushes the previous value and <span class="tt">[/tag]</span> pops it (LIFO). <span class="tt">[reset]</span> clears the stack entirely.</li>
 <li>Escape sequences are not rendered as text; they affect subsequent word tokens only.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md241"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md258"></a>
 Colors:</h3>
 <div class="fragment"><div class="line">SDL_Color Label::foregroundColor = {255, 255, 255, 255}; // &quot;fgnd&quot; (default)</div>
 <div class="line">SDL_Color Label::backgroundColor = {0, 0, 0, 0};         // &quot;bgnd&quot;</div>
 <div class="line">SDL_Color Label::borderColor = {0, 0, 0, 0};             // &quot;border&quot;</div>
 <div class="line">SDL_Color FontStyle::outlineColor = {0, 0, 0, 255};      // &quot;outline&quot;</div>
 <div class="line">SDL_Color FontStyle::dropShadowColor = {0, 0, 0, 128};   // &quot;shadow&quot;</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md242"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md259"></a>
 Alignment</h2>
 <p>Labels support independent horizontal and vertical alignment. Horizontal modes: left, center, right. Vertical modes: top, middle, bottom. Alignment is stored in the LabelStyle (either as two explicit fields or a compact bitfield) and is applied per-token so different parts of the same label can be aligned differently.</p>
 <p>Two ways to set alignment:</p><ul>
@@ -330,7 +330,7 @@ Alignment</h2>
 <p>Performance</p><ul>
 <li>The nine-group approach enables parallel/independent layout passes for each alignment mode and reduces branching during rendering. It also makes it straightforward to only re-layout the alignment groups affected by a style change.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md243"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md260"></a>
 Quick reference</h2>
 <ul>
 <li>Default property: label.align = { horizontal = left|center|right, vertical = top|middle|bottom }</li>
@@ -339,7 +339,7 @@ Quick reference</h2>
 <li>Tokens are grouped into the nine alignment queues and laid out/rendered per-queue.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md245"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md262"></a>
 Alignment</h2>
 <p>Labels support independent horizontal and vertical alignment. Horizontal modes: left, center, right. Vertical modes: top, middle, bottom. Alignment is stored in the LabelStyle (either as two explicit fields or a compact bitfield) and is applied per-token so different parts of the same label can be aligned differently.</p>
 <p>Two ways to set alignment:</p><ul>
@@ -378,7 +378,7 @@ Alignment</h2>
 <p>Performance</p><ul>
 <li>The nine-group approach enables parallel/independent layout passes for each alignment mode and reduces branching during rendering. It also makes it straightforward to only re-layout the alignment groups affected by a style change.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md246"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md263"></a>
 Quick reference</h2>
 <ul>
 <li>Default property: label.align = { horizontal = left|center|right, vertical = top|middle|bottom }</li>
@@ -386,7 +386,7 @@ Quick reference</h2>
 <li>Inline tags override default until closed or reset.</li>
 <li>Tokens are grouped into the nine alignment queues and laid out/rendered per-queue.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md247"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md264"></a>
 Bitfield Encoding for Alignment</h3>
 <p>Alignment values can be encoded as bitfields to represent the nine possible text alignment modes:</p>
 <div class="fragment"><div class="line">left   = 0b0001</div>
@@ -416,7 +416,7 @@ Bitfield Encoding for Alignment</h3>
 <li><span class="tt">[align=middle]</span> — Middle align (vertical)</li>
 <li><span class="tt">[align=bottom]</span> — Bottom align</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md248"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md265"></a>
 Special</h2>
 <ul>
 <li><span class="tt">[[]</span> — Render <span class="tt">[</span> character</li>
@@ -428,7 +428,7 @@ Special</h2>
  - &lt;tt&gt;[align=center]&lt;/tt&gt; — sets alignment to center (horizontal or vertical)
  - &lt;tt&gt;[reset]&lt;/tt&gt; — resets all styles to default
 
-@subsection autotoc_md249 Escaping Square Brackets
+@subsection autotoc_md266 Escaping Square Brackets
 
  To render literal square brackets in label text, use double brackets:
 
@@ -439,7 +439,7 @@ Special</h2>
 
 Escape sequences are not rendered as text, but affect the rendering of subsequent tokens.
 
-@subsection autotoc_md250 Font Size
+@subsection autotoc_md267 Font Size
 - &lt;tt&gt;[size=16]&lt;/tt&gt; — Sets the font size to 16 for all subsequent tokens.
 - &lt;tt&gt;[size=8]&lt;/tt&gt;  — Sets the font size to 8 (e.g., for retro bitmap fonts).
 
@@ -447,12 +447,12 @@ Escape sequences are not rendered as text, but affect the rendering of subsequen
 
 &lt;hr&gt;
 
-@section autotoc_md252 Numeric Style Escapes (border / outline / padding / dropshadow)
+@section autotoc_md269 Numeric Style Escapes (border / outline / padding / dropshadow)
 
-@subsection autotoc_md253 Overview
+@subsection autotoc_md270 Overview
 These escapes allow inline control of numeric rendering parameters that affect phrase rendering (thickness, padding, and drop-shadow offsets). They complement boolean style escapes (bold, italic, outline-enable, dropshadow-enable) by letting authors tune numeric values inline.
 
-@subsection autotoc_md254 Syntax
+@subsection autotoc_md271 Syntax
 - &lt;tt&gt;[border=N] ... [/border]&lt;/tt&gt; — set border thickness to N for the enclosed tokens.
 - &lt;tt&gt;[outline=N] ... [/outline]&lt;/tt&gt; — set outline thickness to N for the enclosed tokens.
 - &lt;tt&gt;[pad=WxH] ... [/pad]&lt;/tt&gt; (alias) or &lt;tt&gt;[padding=WxH] ... [/padding]&lt;/tt&gt; — set horizontal and vertical padding to W and H.
@@ -468,14 +468,14 @@ Notes:
 - Numeric parameters are integer values. Parameters are validated before conversion; malformed params are ignored (no exception thrown) and the default/current value is retained.
 - Short forms and synonyms (&lt;tt&gt;[pad]&lt;/tt&gt; vs &lt;tt&gt;[padding]&lt;/tt&gt;) are supported for convenience.
 
-@subsection autotoc_md255 Semantics
+@subsection autotoc_md272 Semantics
 - Opening tag applies the numeric change to the current style for subsequent tokens until the matching closing tag.
 - Closing tag restores the previous numeric value(s). Nested tags are supported; restoration uses per-field stacks (or a snapshot stack) so nested overrides restore correctly.
 - If an opening tag omits a numeric parameter (e.g., &lt;tt&gt;[border]&lt;/tt&gt;), the tag may act as an enable toggle or use a documented default — prefer explicit numeric parameters in tests/scripts.
 - The numeric fields are stored in &lt;tt&gt;FontStyle&lt;/tt&gt; and exposed to Lua token inspection as:
   - &lt;tt&gt;borderThickness&lt;/tt&gt;, &lt;tt&gt;outlineThickness&lt;/tt&gt;, &lt;tt&gt;padding_horiz&lt;/tt&gt;, &lt;tt&gt;padding_vert&lt;/tt&gt;, &lt;tt&gt;dropshadowOffsetX&lt;/tt&gt;, &lt;tt&gt;dropshadowOffsetY&lt;/tt&gt;
 
-@subsection autotoc_md256 Examples
+@subsection autotoc_md273 Examples
 - Border thickness 3 for the word "BORDER":
   @icode 
   Start [border=3]BORDER[/border] End
@@ -493,7 +493,7 @@ Notes:
   @endicode 
   - Tokens inside will have &lt;tt&gt;style.dropshadowOffsetX == 4&lt;/tt&gt; and &lt;tt&gt;style.dropshadowOffsetY == 6&lt;/tt&gt;.
 
-@subsection autotoc_md257 Implementation Notes
+@subsection autotoc_md274 Implementation Notes
 - Tokenizer responsibilities:
   - Recognize numeric-parameter escapes and split tag name / parameter string.
   - Validate numeric parameters (digits, optional separators) before calling std::stoi to avoid exceptions.
@@ -507,7 +507,7 @@ Notes:
 - Error handling:
   - On malformed numeric params, avoid throwing — log or ignore and continue. Tests should assert presence of values only when syntactically valid parameters are used.
 
-@subsection autotoc_md258 Test seed suggestion (Label_test5)
+@subsection autotoc_md275 Test seed suggestion (Label_test5)
 @icode 
 local txt = "Start [border=3]B1[/border] [outline=2]O1[/outline] [pad=5x7]P1[/pad] [dropshadow=4,6]DS1[/dropshadow] End"
 @endicode 
@@ -520,7 +520,7 @@ local txt = "Start [border=3]B1[/border] [outline=2]O1[/outline] [pad=5x7]P1[/pa
 
 &lt;hr&gt;
 
-@section autotoc_md260 Token Structure
+@section autotoc_md277 Token Structure
 
 Each parsed token represents either a word or an escape sequence:
 
@@ -542,12 +542,12 @@ struct LabelToken {
  - Escape: Style change, color, font, alignment
  - Bracket Escape: Literal '[' or ']'
 
-@subsection autotoc_md261 Word Tokenization Rules
+@subsection autotoc_md278 Word Tokenization Rules
 - Quoted text (enclosed in double quotes) is tokenized as word tokens, but spaces and punctuation within the quoted text are still tokenized as individual word tokens (not grouped).
 - Escape sequences occurring within a double-quote block are treated as word tokens, not escape tokens.
 - To render a literal double quote character, use the escape sequence &lt;tt&gt;[\"].&lt;/tt&gt;
 - Single quotes are always tokenized as punctuation or as part of a word (e.g., apostrophes).
-@subsubsection autotoc_md262 Example tokenization:
+@subsubsection autotoc_md279 Example tokenization:
 Input: 
 @icode 
 "Hello, [b]world!" 'test' ["]
@@ -593,7 +593,7 @@ Output:
 <li><span class="tt"><b>Escape tokens</b>: Instructions to change style, color, alignment, etc.</span></li>
 </ul>
 <p><span class="tt"></span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md263"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md280"></a>
 <span class="tt">Escape Tokenization Rules</span></h2>
 <p><span class="tt"></span></p>
 <p><span class="tt"></p><ul>
@@ -606,7 +606,7 @@ Output:
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md265"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md282"></a>
 <span class="tt">Parsing Algorithm</span></h1>
 <p><span class="tt"></p><ol type="1">
 <li><b>Initialize</b> default <span class="tt">LabelStyle</span>.</li>
@@ -621,7 +621,7 @@ Output:
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md267"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md284"></a>
 <span class="tt">Alignment Handling</span></h1>
 <p><span class="tt"></p><ul>
 <li>Each word token carries its own alignment (horizontal and vertical) from <span class="tt">LabelStyle</span>.</li>
@@ -637,7 +637,7 @@ Output:
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md269"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md286"></a>
 <span class="tt">Word Wrapping &amp; Autosizing</span></h1>
 <p><span class="tt"></p><ul>
 <li>Measure each word using font metrics.</li>
@@ -649,7 +649,7 @@ Output:
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md271"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md288"></a>
 <span class="tt">Rendering</span></h1>
 <p><span class="tt"></p><ul>
 <li>For each line and token:<ul>
@@ -663,7 +663,7 @@ Output:
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md273"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md290"></a>
 <span class="tt">Extensibility</span></h1>
 <p><span class="tt"></p><ul>
 <li>New escape sequences can be added for additional styles (e.g., outline, dropshadow).</li>
@@ -673,7 +673,7 @@ Output:
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md275"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md292"></a>
 <span class="tt">Example</span></h1>
 <p><span class="tt">
 </p><div class="fragment"><div class="line">[bold][color=#00FF00]Score:[reset] 100 [align=right][color=#FF0000]Game Over</div>
@@ -686,11 +686,11 @@ Output:
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md277"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md294"></a>
 <span class="tt">Implementation Notes</span></h1>
 <p><span class="tt"></span></p>
 <p><span class="tt"></span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md278"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md295"></a>
 <span class="tt">Label Sizing and Wrapping Rules</span></h2>
 <p><span class="tt"></span></p>
 <p><span class="tt"></p><table class="markdownTable">
@@ -721,7 +721,7 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
 </ul>
 <p></span></p>
 <p><span class="tt"></span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md279"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md296"></a>
 <span class="tt">Implementation Notes</span></h2>
 <p><span class="tt"></p><ul>
 <li>When <span class="tt">auto_width</span> or <span class="tt">auto_height</span> is true, recalculate the label’s size after tokenizing/layout.</li>
@@ -730,11 +730,11 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
 </ul>
 <p></span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md280"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md297"></a>
 <span class="tt">Rendering Phases (Functions):</span></h1>
 <p><span class="tt">
 </span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md281"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md298"></a>
 <span class="tt">1. Pre-Render Layout &amp; Bounds Adjustment</span></h2>
 <p><span class="tt"></p><ul>
 <li><b>Purpose:</b> Calculate the final size and position of the label before rendering.</li>
@@ -748,7 +748,7 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
 </li>
 </ul>
 <p></span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md282"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md299"></a>
 <span class="tt">2. Phrase Grouping</span></h2>
 <p><span class="tt"></p><ul>
 <li><b>Purpose:</b> Group tokens into “phrases” (runs of tokens with identical rendering attributes and on the same line).- <b>Actions:</b><ul>
@@ -759,7 +759,7 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
 </li>
 </ul>
 <p></span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md283"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md300"></a>
 <span class="tt">3. Phrase Rendering</span></h2>
 <p><span class="tt"></p><ul>
 <li><b>Purpose:</b> Render each phrase efficiently and with correct visual effects.</li>
@@ -777,7 +777,7 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
 </ul>
 <p></span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md284"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md301"></a>
 <span class="tt">Label Usage Examples</span></h1>
 <p><span class="tt">
 </p><div class="fragment"><div class="line">{</div>
@@ -809,7 +809,7 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
 <div class="line">}</div>
 </div><!-- fragment --><p> 
 </span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md285"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md302"></a>
 <span class="tt"><b>Explanation</b></span></h2>
 <p><span class="tt"></span></p>
 <p><span class="tt">This label is positioned and sized relative to its parent using <b>edge anchors</b>:</span></p>
@@ -832,7 +832,7 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md287"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md304"></a>
 <span class="tt"><b>Text and Formatting</b></span></h2>
 <p><span class="tt"></span></p>
 <p><span class="tt">The <span class="tt">text</span> field supports <b>inline formatting tokens</b>:</span></p>
@@ -851,7 +851,7 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
 <p><span class="tt"></p><hr  />
 <p>
 </span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md289"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md306"></a>
 <span class="tt"><b>Anchor Reference Diagram</b></span></h2>
 <p><span class="tt"></span></p>
 <p><span class="tt">Each edge of a Label (or any <span class="tt">IDisplayObject</span>) may anchor to one of the parent’s edges. <br  />
@@ -877,7 +877,7 @@ For both axes, the maximum auto_width/auto_height should be clamped to the minim
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md291"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md308"></a>
 <span class="tt"><b>Wrapping &amp; Layout Behavior</b></span></h2>
 <p><span class="tt"></span></p>
 <p><span class="tt"></p><table class="markdownTable">
@@ -899,7 +899,7 @@ This is expected — the layout assumes the user sizes labels appropriately.</sp
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md293"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md310"></a>
 <span class="tt"><b>Rendering Performance</b></span></h2>
 <p><span class="tt"></span></p>
 <p><span class="tt">Labels are <b>cached</b> to an off-screen texture.  <br  />
@@ -917,7 +917,7 @@ The label only re-renders when it becomes <b>dirty</b>, which occurs when:</span
 <p><span class="tt"></p><hr  />
 <p>
 </span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md296"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md313"></a>
 <span class="tt">ASCII Glyphs</span></h1>
 <p><span class="tt"></span></p>
 <p><span class="tt"></p><table class="markdownTable">
@@ -1119,7 +1119,7 @@ The label only re-renders when it becomes <b>dirty</b>, which occurs when:</span
 <p></span></p>
 <p><span class="tt">This table represents the first 192 glyphs in the <span class="tt">default_8x8</span> font. Additional glyphs, such as icons, can be cataloged in subsequent sections.</span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md297"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md314"></a>
 <span class="tt">Graphic Glyphs</span></h1>
 <p><span class="tt"></span></p>
 <p><span class="tt"></p><table class="markdownTable">
@@ -1258,7 +1258,7 @@ The label only re-renders when it becomes <b>dirty</b>, which occurs when:</span
 <p><span class="tt"></p><hr  />
 <p></span></p>
 <p><span class="tt"></span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md299"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md316"></a>
 <span class="tt">References</span></h1>
 <p><span class="tt"></p><ul>
 <li><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> <span class="tt">Label</span> class</li>

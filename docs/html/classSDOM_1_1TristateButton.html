@@ -170,7 +170,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1068567d65e0780958ce3cfe104ebe4a" id="r_a1068567d65e0780958ce3cfe104ebe4a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a1068567d65e0780958ce3cfe104ebe4a">addEventListener</a> (<a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;type, std::function&lt; void(<a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;)&gt; listener, bool useCapture=false, int priority=0)</td></tr>
 <tr class="memitem:ac857138350fbf670143a8fe5ff0dd9d8" id="r_ac857138350fbf670143a8fe5ff0dd9d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ac857138350fbf670143a8fe5ff0dd9d8">removeEventListener</a> (<a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;type, std::function&lt; void(<a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;)&gt; listener, bool useCapture=false)</td></tr>
 <tr class="memitem:a20ec88bd7b74e55076b20b37b6178079" id="r_a20ec88bd7b74e55076b20b37b6178079"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a20ec88bd7b74e55076b20b37b6178079">triggerEventListeners</a> (<a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;event, bool useCapture)</td></tr>
-<tr class="memitem:ac102134ccecbe1f6eebfce14f4354799" id="r_ac102134ccecbe1f6eebfce14f4354799"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ac102134ccecbe1f6eebfce14f4354799">hasEventListeners</a> (const <a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;type, bool useCapture) const</td></tr>
+<tr class="memitem:a6f89958b62e24b213d56787871d4c53c" id="r_a6f89958b62e24b213d56787871d4c53c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a6f89958b62e24b213d56787871d4c53c">hasEventListener</a> (const <a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;type, bool useCapture) const</td></tr>
 <tr class="memitem:a943459da97ec5ed33c8433d9e7291344" id="r_a943459da97ec5ed33c8433d9e7291344"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a943459da97ec5ed33c8433d9e7291344">queue_event</a> (const <a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;type, std::function&lt; void(<a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;)&gt; init_payload)</td></tr>
 <tr class="memitem:aa11891a86850d2ae1b14906770960033" id="r_aa11891a86850d2ae1b14906770960033"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#aa11891a86850d2ae1b14906770960033">addChild</a> (<a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> child, bool useWorld=false, int worldX=0, int worldY=0)</td></tr>
 <tr class="memitem:acdb615c35241c6c89533ef20e2edd03d" id="r_acdb615c35241c6c89533ef20e2edd03d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#acdb615c35241c6c89533ef20e2edd03d">getChild</a> (std::string name) const</td></tr>
@@ -2306,8 +2306,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac102134ccecbe1f6eebfce14f4354799" name="ac102134ccecbe1f6eebfce14f4354799"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac102134ccecbe1f6eebfce14f4354799">&#9670;&#160;</a></span>hasEventListeners()</h2>
+<a id="a6f89958b62e24b213d56787871d4c53c" name="a6f89958b62e24b213d56787871d4c53c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f89958b62e24b213d56787871d4c53c">&#9670;&#160;</a></span>hasEventListener()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2316,7 +2316,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool SDOM::IDisplayObject::hasEventListeners </td>
+          <td class="memname">bool SDOM::IDisplayObject::hasEventListener </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
         </tr>

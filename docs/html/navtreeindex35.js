@@ -1,5 +1,7 @@
 var NAVTREEINDEX35 =
 {
+"classSDOM_1_1TristateButton.html#a8c8e652fc4566409d6e5e9f4ce049de5":[18,0,0,38,153],
+"classSDOM_1_1TristateButton.html#a8f40f9fb26442891928035394cce33af":[17,0,0,38,7],
 "classSDOM_1_1TristateButton.html#a8f40f9fb26442891928035394cce33af":[18,0,0,38,7],
 "classSDOM_1_1TristateButton.html#a90dd1b86ac56a3fb85044e6f0fd5528e":[17,0,0,38,110],
 "classSDOM_1_1TristateButton.html#a90dd1b86ac56a3fb85044e6f0fd5528e":[18,0,0,38,110],
@@ -91,8 +93,6 @@ var NAVTREEINDEX35 =
 "classSDOM_1_1TristateButton.html#ac01511d598fabf5d02883a960b590155":[18,0,0,38,98],
 "classSDOM_1_1TristateButton.html#ac0956888897b29ec351c579c96dee272":[17,0,0,38,2],
 "classSDOM_1_1TristateButton.html#ac0956888897b29ec351c579c96dee272":[18,0,0,38,2],
-"classSDOM_1_1TristateButton.html#ac102134ccecbe1f6eebfce14f4354799":[17,0,0,38,77],
-"classSDOM_1_1TristateButton.html#ac102134ccecbe1f6eebfce14f4354799":[18,0,0,38,77],
 "classSDOM_1_1TristateButton.html#ac316c78060747eacf8cb4c6ab84d3855":[17,0,0,38,64],
 "classSDOM_1_1TristateButton.html#ac316c78060747eacf8cb4c6ab84d3855":[18,0,0,38,64],
 "classSDOM_1_1TristateButton.html#ac44b2435f91f670e2b6a43f092f83175":[17,0,0,38,87],

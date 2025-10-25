@@ -1010,7 +1010,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - As the final C++ test, run a complete Lua file that mirrors the C++ tests to ensure parity.
 
 ## Current DisplayObject Inheritance Hierarchy:
-└── IDisplayObject
+```
+─── IDisplayObject
     ├── IPanelObject
     │   ├── Button
     │   ├── Frame
@@ -1027,6 +1028,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     └── TristateButton
         ├── CheckButton
         └── RadioButton
+```
 
 ---        
 ## UnitTest Modules

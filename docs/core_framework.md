@@ -203,13 +203,8 @@ int main() {
 
 ## Composition Diagram
 
-SVG (static image):
-![Core Composition](diagrams/core_framework/diagram-01.svg)
 
-<details>
-<summary>View Mermaid source</summary>
-
-```mermaid-norender
+```mermaid
 flowchart TB
     classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
     classDef mod  fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px
@@ -231,13 +226,7 @@ flowchart TB
 
 ## Event Flow
 
-SVG (static image):
-![Core Event Flow](diagrams/core_framework/diagram-02.svg)
-
-<details>
-<summary>View Mermaid source</summary>
-
-```mermaid-norender
+```mermaid
 sequenceDiagram
   autonumber
   participant Core as SDOM::Core

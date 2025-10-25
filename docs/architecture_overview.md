@@ -135,12 +135,7 @@ This approach ensures **performance, predictability, clarity, and extensibility*
 
 ### High-Level Architecture Diagram
 
-![Architecture Diagram](diagrams/architecture_overview/diagram-01.svg)
-
-<details>
-<summary>View Mermaid source</summary>
-
-```mermaid-norender
+```mermaid
 %%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
 flowchart TB
 
@@ -239,12 +234,9 @@ Event propagation across the display tree proceeds in three phases: (1) capture,
 
 Summary: Core orchestrates startup, the main loop, and shutdown; the Factory resolves names to live objects and resources via typed handles; the Stage anchors the visual tree; and the EventManager channels input through capture → target → bubble so UI code can respond at the appropriate layer. SDOM also supports organizing multiple “scenes” or screen layouts by swapping the root of the DOM tree. Each scene is simply a different Stage (or subtree) as the root, so you can transition screens without re‑initializing the engine. The flow below sketches these responsibilities without diving into optional subsystems.
 
-![Runtime Flow](diagrams/architecture_overview/diagram-02.svg)
 
-<details>
-<summary>View Mermaid source</summary>
 
-```mermaid-norender
+```mermaid
 sequenceDiagram
   autonumber
   participant Prog as examples/test/prog

@@ -437,6 +437,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a431612bd4dd34aa8fc547b1574e57005" id="r_a431612bd4dd34aa8fc547b1574e57005"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a431612bd4dd34aa8fc547b1574e57005">removeEventListener_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor, const sol::object &amp;maybe_listener, const sol::object &amp;maybe_useCapture)</td></tr>
 <tr class="memitem:a71d168da4b959c6105bface98d02175a" id="r_a71d168da4b959c6105bface98d02175a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71d168da4b959c6105bface98d02175a">addEventListener_lua_any_short</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
 <tr class="memitem:abcf1c914594c7784f53c098b6e360fef" id="r_abcf1c914594c7784f53c098b6e360fef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abcf1c914594c7784f53c098b6e360fef">removeEventListener_lua_any_short</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
+<tr class="memitem:a9edc728bddd51890412cc3470959a1f8" id="r_a9edc728bddd51890412cc3470959a1f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9edc728bddd51890412cc3470959a1f8">hasEventListener_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const <a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;type, bool useCapture)</td></tr>
+<tr class="memitem:ab79f6a51efcebdf8830730bd7596d2fd" id="r_ab79f6a51efcebdf8830730bd7596d2fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab79f6a51efcebdf8830730bd7596d2fd">queue_event_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const <a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;type, std::function&lt; void(<a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;)&gt; init_payload)</td></tr>
 <tr class="memitem:ad705e9ccdf395990fbda0fb59a94d9bc" id="r_ad705e9ccdf395990fbda0fb59a94d9bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad705e9ccdf395990fbda0fb59a94d9bc">addChild_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> child)</td></tr>
 <tr class="memitem:a9c1900f2723ea8d727467d979faf486d" id="r_a9c1900f2723ea8d727467d979faf486d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c1900f2723ea8d727467d979faf486d">getChild_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, std::string name)</td></tr>
 <tr class="memitem:aa48282e917f71a1436359cd1230dfda0" id="r_aa48282e917f71a1436359cd1230dfda0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa48282e917f71a1436359cd1230dfda0">removeChild_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> child)</td></tr>
@@ -454,7 +456,6 @@ Functions</h2></td></tr>
 <tr class="memitem:ac918ab09453e20a594831a23343af68f" id="r_ac918ab09453e20a594831a23343af68f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac918ab09453e20a594831a23343af68f">getName_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:a0597223417acde60cab9946b7d6c3ae0" id="r_a0597223417acde60cab9946b7d6c3ae0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0597223417acde60cab9946b7d6c3ae0">setName_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const std::string &amp;newName)</td></tr>
 <tr class="memitem:a8a0be936420b973d7b76f5eb00fdb7fc" id="r_a8a0be936420b973d7b76f5eb00fdb7fc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8a0be936420b973d7b76f5eb00fdb7fc">getType_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
-<tr class="memitem:afe435b347418fb65f8cd006bdac8ba12" id="r_afe435b347418fb65f8cd006bdac8ba12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe435b347418fb65f8cd006bdac8ba12">setType_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const std::string &amp;newType)</td></tr>
 <tr class="memitem:adcb1c21323b8a9284d87a3ee13094cfa" id="r_adcb1c21323b8a9284d87a3ee13094cfa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSDOM_1_1Bounds.html">Bounds</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcb1c21323b8a9284d87a3ee13094cfa">getBounds_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:ad8c0c2434ee455c85908251f7c5dec82" id="r_ad8c0c2434ee455c85908251f7c5dec82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8c0c2434ee455c85908251f7c5dec82">setBounds_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;bobj)</td></tr>
 <tr class="memitem:adf4b6ebdbf761f0b9992f818f3de64f8" id="r_adf4b6ebdbf761f0b9992f818f3de64f8"><td class="memItemLeft" align="right" valign="top">SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf4b6ebdbf761f0b9992f818f3de64f8">getColor_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
@@ -3423,6 +3424,32 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a9edc728bddd51890412cc3470959a1f8" name="a9edc728bddd51890412cc3470959a1f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9edc728bddd51890412cc3470959a1f8">&#9670;&#160;</a></span>hasEventListener_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::hasEventListener_lua </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>useCapture</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a84b6e959a50aff842024f75aa1817224" name="a84b6e959a50aff842024f75aa1817224"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a84b6e959a50aff842024f75aa1817224">&#9670;&#160;</a></span>icon_index_from_name()</h2>
 
@@ -4094,6 +4121,32 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const sol::object &amp;</td>          <td class="paramname"><span class="paramname"><em>args</em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab79f6a51efcebdf8830730bd7596d2fd" name="ab79f6a51efcebdf8830730bd7596d2fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab79f6a51efcebdf8830730bd7596d2fd">&#9670;&#160;</a></span>queue_event_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::queue_event_lua </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(<a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;)&gt;</td>          <td class="paramname"><span class="paramname"><em>init_payload</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -5424,27 +5477,6 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>p_top</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afe435b347418fb65f8cd006bdac8ba12" name="afe435b347418fb65f8cd006bdac8ba12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe435b347418fb65f8cd006bdac8ba12">&#9670;&#160;</a></span>setType_lua()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SDOM::setType_lua </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>newType</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -71,7 +71,7 @@ var classSDOM_1_1IRangeControl =
     [ "getY", "classSDOM_1_1IRangeControl.html#a6a0aef63a4997f367efde402c8f57bc0", null ],
     [ "getZOrder", "classSDOM_1_1IRangeControl.html#a5143e0bf1003fae334207a1bbc4b9cc6", null ],
     [ "hasChild", "classSDOM_1_1IRangeControl.html#a32955242db86e6a8ec1277dd895560c5", null ],
-    [ "hasEventListeners", "classSDOM_1_1IRangeControl.html#ac102134ccecbe1f6eebfce14f4354799", null ],
+    [ "hasEventListener", "classSDOM_1_1IRangeControl.html#a6f89958b62e24b213d56787871d4c53c", null ],
     [ "isAncestorOf", "classSDOM_1_1IRangeControl.html#a5323335a18d5af09677f2d5d1fbbd894", null ],
     [ "isAncestorOf", "classSDOM_1_1IRangeControl.html#a32aeb8fee010afd80a0fc0ed0d50faed", null ],
     [ "isClickable", "classSDOM_1_1IRangeControl.html#aade178775d0c9afbd0f3c49f8dfe02c6", null ],

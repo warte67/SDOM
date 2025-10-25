@@ -92,30 +92,30 @@ $(function(){initNavTree('md_docs_2progress.html','',''); });
   <div class="headertitle"><div class="title">Project Description and Development Progress </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md317"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md334"></a></p>
 <p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is a C++23 library built on SDL3 that brings a DOM‑like scene graph and GUI toolkit to 2D applications and games. The aim is a small, predictable core for layout, events, and rendering so SDL developers can compose interfaces and in‑game UI with familiar patterns and a minimal API surface.</p>
 <p>Architecturally, a single Core orchestrates the SDL runtime (window, renderer, main loop). A Stage serves as the root of the display tree, while an EventManager dispatches input through capture → target → bubble phases. The Factory registers, creates, and tracks resources and display objects by type and unique name, returning typed handles for safe references. Layout is driven by an edge‑based anchoring system that supports asymmetric, responsive designs.</p>
 <p>Scripting and configuration are first‑class with Lua via Sol2 to enable data‑driven scenes, rapid iteration, and test automation. You can also build everything directly in C++—Lua is optional—but when enabled it can construct objects, wire scenes, drive dialog, and swap stages at runtime without recompilation.</p>
 <p>The project emphasizes clear, living documentation. The Markdown design docs are working papers that evolve with the code. Expect them to change as features land and APIs are refined. Public APIs are defined in headers and surfaced via Doxygen, with correctness exercised by unit tests; if a doc briefly diverges from current behavior, treat the code as source‑of‑truth until the docs catch up. Diagrams are authored in Mermaid and exported to static SVG/PNG by the repo’s export pipeline, keeping visuals portable while ensuring the sources remain easy to edit. Progress updates will call out notable documentation changes, and contributions to clarify or correct docs are welcome.</p>
 <p>This page is the hub for progress. The “Progress Updates” below record milestones chronologically with context and notes; the “Next Steps” and “ToDo” sections outline near‑term priorities and open tracks. Check back to see what landed and what’s coming next—and feel free to open issues or proposals as the API stabilizes.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md318"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md335"></a>
 Scripting and Configuration</h1>
 <p>Lua (via Sol2) is first‑class but optional—you can script scenes and behavior in Lua, build everything in C++, or mix both. The Factory accepts <span class="tt">sol::table</span> configs alongside initializer structs, and Core’s lifecycle hooks make it easy to integrate scripts for iteration and tests. See the dedicated design doc for details and examples: <a class="el" href="md_docs_2scripting__and__configuration.html">Scripting and Configuration (Lua + C++)</a>.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md319"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md336"></a>
 Progress Updates</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md320"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md337"></a>
 [July 2, 2025]</h2>
 <ul>
 <li>Initial rough draft and proof of concept.</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md322"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md339"></a>
 [August 5, 2025]</h2>
 <ul>
 <li><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> secondary rough draft</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md324"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md341"></a>
 [September 19, 2025]</h2>
 <ul>
 <li>Proof of concept approved. Main development approved. Work begins officially.</li>
@@ -140,7 +140,7 @@ Progress Updates</h1>
 <li>Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md326"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md343"></a>
 [September 20, 2025]</h2>
 <ul>
 <li>Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.</li>
@@ -151,7 +151,7 @@ Progress Updates</h1>
 <li>The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md328"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md345"></a>
 [September 21, 2025]</h2>
 <ul>
 <li>Renamed <span class="tt">resource_ptr</span> to <span class="tt">ResourceHandle</span> throughout the codebase for clarity.<ul>
@@ -196,7 +196,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md330"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md347"></a>
 [September 22, 2025]</h2>
 <ul>
 <li><b>Unit Test Framework Refined:</b> <br  />
@@ -243,7 +243,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md332"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md349"></a>
 [September 23, 2025]</h3>
 <ul>
 <li><b>Event System Preliminary Testing:</b> <br  />
@@ -267,7 +267,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md334"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md351"></a>
 [September 24, 2025]</h2>
 <ul>
 <li><b>Event System Debugging:</b><ul>
@@ -301,7 +301,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md336"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md353"></a>
 [September 25, 2025]</h2>
 <ul>
 <li><b>JSON → Lua Transition Complete:</b> <br  />
@@ -344,7 +344,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md338"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md355"></a>
 [September 26, 2025]</h2>
 <ul>
 <li><b>Box Unit Tests Complete:</b> <br  />
@@ -374,7 +374,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md340"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md357"></a>
 [September 27, 2025]</h2>
 <ul>
 <li><b>Lua Integration Complete:</b> <br  />
@@ -397,7 +397,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md342"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md359"></a>
 [September 28, 2025]</h2>
 <ul>
 <li><b>Lua Binding Improvements:</b><ul>
@@ -445,7 +445,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md344"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md361"></a>
 [September 29, 2025]</h2>
 <ul>
 <li><b>Lua Binding Debugging:</b><ul>
@@ -497,7 +497,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md346"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md363"></a>
 [September 30, 2025]</h2>
 <ul>
 <li><b>Summary:</b><ul>
@@ -560,7 +560,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md348"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md365"></a>
 [October 2, 2025]</h2>
 <ul>
 <li><b>Synthetic Event Handling Robustness:</b><ul>
@@ -602,7 +602,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md350"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md367"></a>
 [October 3, 2025]</h2>
 <ul>
 <li>Cleaned up noisy debug output across the codebase:<ul>
@@ -684,7 +684,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md352"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md369"></a>
 [October 4, 2025]</h2>
 <ul>
 <li>Quick fixes &amp; Lua binding polish (morning)<ul>
@@ -707,7 +707,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md354"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md371"></a>
 [October 5, 2025]</h2>
 <ul>
 <li>Refactored Lua Core bindings:<ul>
@@ -741,7 +741,7 @@ Progress Updates</h1>
 </span><a class="el" href="SDOM__Core_8cpp.html">SDOM_Core.cpp</a><span class="tt">, add a small Lua smoke test exercising name-or-handle binds, and then consider moving the helpers into a dedicated </span>lua_Core_bindings.cpp` once CI is stable.</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md356"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md373"></a>
 [October 6, 2025]</h2>
 <ul>
 <li>Lua binding refactor (IDisplayObject):<ul>
@@ -833,7 +833,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md358"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md375"></a>
 [October 7, 2025]</h2>
 <ul>
 <li>cleaned up the heavy includes from the header files to reduce compile times and improve modularity.</li>
@@ -866,7 +866,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md360"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md377"></a>
 [October 8, 2025]</h2>
 <ul>
 <li>drawSprite Lua API / overload consolidation<ul>
@@ -917,7 +917,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md362"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md379"></a>
 [October 9, 2025]</h2>
 <ul>
 <li>Codebase rename:<ul>
@@ -971,7 +971,7 @@ Progress Updates</h1>
 <li><b>For full details and migration steps, see:</b> <a class="el" href="md_docs_2startup__refactor.html">docs/startup_refactor.md</a></li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md364"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md381"></a>
 [October 11, 2025]</h2>
 <ul>
 <li><b>BitmapFont &amp; TruetypeFont Resource Creation Improvements:</b><ul>
@@ -1015,7 +1015,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md366"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md383"></a>
 [October 12, 2025]</h2>
 <ul>
 <li><b>Internal Resource Renaming:</b><ul>
@@ -1054,7 +1054,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md368"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md385"></a>
 [October 13, 2025]</h2>
 <ul>
 <li><b>Added inline numeric style escapes to Label tokenization:</b><ul>
@@ -1100,7 +1100,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md370"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md387"></a>
 [October 14, 2025]</h2>
 <ul>
 <li>Added <span class="tt">Frame</span> scaffolding and registered the <span class="tt">Frame</span> DOM type with the Factory; <a class="el" href="SDOM__Frame_8cpp.html">SDOM_Frame.cpp</a> implements minimal constructors and defers behavior to <span class="tt">IPanelObject</span>.</li>
@@ -1145,7 +1145,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md372"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md389"></a>
 [October 15, 2025]</h2>
 <ul>
 <li><b>Library Maintenance</b><ul>
@@ -1201,7 +1201,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md374"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md391"></a>
 [October 16, 2025]</h2>
 <ul>
 <li><b>ArrowButton</b><ul>
@@ -1252,7 +1252,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md376"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md393"></a>
 [October 17, 2025]</h2>
 <ul>
 <li><b>ScrollBar:</b><ul>
@@ -1294,7 +1294,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md378"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md395"></a>
 [October 18, 2025]</h2>
 <ul>
 <li><b>Universally support multiple icon set sizes:</b><ul>
@@ -1319,7 +1319,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md380"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md397"></a>
 [October 19, 2025]</h3>
 <p><b>- Implemented per-type Lua binding registry and dispatcher:</b> <br  />
 </p><ul>
@@ -1341,7 +1341,7 @@ Progress Updates</h1>
 <li><b>Next</b>: sweep remaining types (<span class="tt">Button</span>, <span class="tt">Frame</span>, <span class="tt">IconButton</span>, etc) to per-type tables, run full CI, and remove temporary backward-compatibility aliases where safe. All of the DisplayObjects will need to be swept to per-type tables and then fully tested with their own respective UnitTests.</li>
 </ul>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md382"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md399"></a>
 [October 20, 2025]</h3>
 <ul>
 <li>Implemented a C++ per-type Lua binding registry (<span class="tt">LuaBindingRegistry</span>) and a small helper (<span class="tt">register_per_type</span>) to register protected functions reliably.</li>
@@ -1358,7 +1358,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md384"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md401"></a>
 [October 21, 2025]</h3>
 <ul>
 <li><b>Major issues encountered with the dual Lua binding methodology</b><ul>
@@ -1382,7 +1382,7 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md386"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md403"></a>
 [October 22, 2025]</h3>
 <ul>
 <li><b><span class="tt">Core_UnitTests</span> Refactor Progress:</b><ul>
@@ -1398,67 +1398,169 @@ Progress Updates</h1>
 </li>
 </ul>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md388"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md405"></a>
 [October 23, 2025]</h3>
 <ul>
 <li><b><span class="tt">Core_UnitTests</span> Refactor Progress:</b><ul>
-<li>Continued refactoring <span class="tt">Core_UnitTests</span> to utilize the new Lua Binding System.<ul>
-<li>Completed <span class="tt">SDL Resource Accessors</span> tests.</li>
-<li>Completed <span class="tt">Configuration Getters/Setters</span> tests.</li>
-<li>Completed <span class="tt">Factory and Event Manager Access</span> tests.</li>
-<li>Completed <span class="tt">Focus &amp; Hover Management</span> tests.</li>
-<li>Completed <span class="tt">DisplayObject Creation</span> tests.</li>
+<li>Continued refactoring <b>Core_UnitTests</b> to utilize the new Lua Binding System.<ul>
+<li>Completed <b>SDL Resource Accessors</b> tests.</li>
+<li>Completed <b>Configuration Getters/Setters</b> tests.</li>
+<li>Completed <b>Factory and Event Manager Access</b> tests.</li>
+<li>Completed <b>Focus &amp; Hover Management</b> tests.</li>
+<li>Completed <b>DisplayObject Creation</b> tests.</li>
 </ul>
 </li>
 <li>Constructed a new lua based unit test scaffolding<ul>
-<li>Started <span class="tt">Core_UnitTests.lua</span> based on the new lua test scaffolding.</li>
+<li>Started <b>Core_UnitTests.lua</b> based on the new lua test scaffolding.</li>
 </ul>
 </li>
 </ul>
 </li>
 <li>Lua Binding System stabilization and test fixes<ul>
-<li>Idempotent usertype registration: updated <span class="tt">register_usertype_with_table</span> to register once per Lua state and reuse the existing usertype table (no re‑registration/clobbering).</li>
-<li>Safe table creation: <span class="tt">ensure_sol_table</span> now reuses existing global entries (usertype/table) and avoids replacing them, preventing stale userdatas.</li>
-<li><span class="tt">DisplayHandle</span> minimal API + robust lookup: added <span class="tt">isValid</span>, <span class="tt">getName</span>, <span class="tt">getType</span>, <span class="tt">setName</span>, <span class="tt">setType</span>, and <span class="tt">get</span> with a resilient <span class="tt">__index</span> that supports both <span class="tt">:</span> and <span class="tt">.</span> calls.</li>
-<li>Early/explicit registration: ensured <span class="tt">DisplayHandle</span> registration in <span class="tt">Core</span> and <span class="tt">Factory</span>, and before returning any handles from Core’s Lua helpers.</li>
-<li>Handle return semantics: Core Lua wrappers now return <span class="tt">nil</span> (not an empty handle) when a requested object does not exist.</li>
+<li>Idempotent usertype registration: updated <b>register_usertype_with_table</b> to register once per Lua state and reuse the existing usertype table (no re‑registration/clobbering).</li>
+<li>Safe table creation: <b>ensure_sol_table</b> now reuses existing global entries (usertype/table) and avoids replacing them, preventing stale userdatas.</li>
+<li><b>DisplayHandle</b> minimal API + robust lookup: added <b>isValid</b>, <b>getName</b>, <b>getType</b>, <b>setName</b>, <b>setType</b>, and <b>get</b> with a resilient <b>__index</b> that supports both <span class="tt">:</span> and <span class="tt">.</span> calls.</li>
+<li>Early/explicit registration: ensured <b>DisplayHandle</b> registration in <b>Core</b> and <b>Factory</b>, and before returning any handles from Core’s Lua helpers.</li>
+<li>Handle return semantics: Core Lua wrappers now return <b>nil</b> (not an empty handle) when a requested object does not exist.</li>
 </ul>
 </li>
-<li><span class="tt">IDisplayObject</span> bindings (available via <span class="tt">DisplayHandle</span>)<ul>
-<li>Added generic hierarchy helpers: <span class="tt">addChild(childSpec)</span>, <span class="tt">removeChild(childSpec)</span>, <span class="tt">hasChild(childSpec)</span>, and <span class="tt">getChild(spec)</span> where specs accept a <span class="tt">DisplayHandle</span>, a name <span class="tt">string</span>, or <span class="tt">{ name = "..." }</span>.</li>
-<li>Bound on both the <span class="tt">DisplayHandle</span> usertype and backing table for consistent lookup.</li>
+<li><b>IDisplayObject</b> bindings (available via <b>DisplayHandle</b>)<ul>
+<li>Added generic hierarchy helpers: <b>addChild(childSpec)</b>, <b>removeChild(childSpec)</b>, <b>hasChild(childSpec)</b>, and <b>getChild(spec)</b> where specs accept a <b>DisplayHandle</b>, a name <b>string</b>, or **{ name = "..." }**`**.</li>
+<li>Bound on both the <b>DisplayHandle</b> usertype and backing table for consistent lookup.</li>
 </ul>
 </li>
 <li>Lua tests and scaffolding<ul>
-<li><span class="tt">Core_UnitTests.lua</span> updated to verify <span class="tt">DisplayHandle</span> method availability, stage/root retrieval, invalid lookups returning <span class="tt">nil</span>, and basic parent/child operations.</li>
+<li><b>Core_UnitTests.lua</b> updated to verify <b>DisplayHandle</b> method availability, stage/root retrieval, invalid lookups returning <b>nil</b>, and basic parent/child operations.</li>
 <li>Most Lua Integration checks are now passing after the binding fixes.</li>
 </ul>
 </li>
 <li>IDE stubs<ul>
-<li>Expanded <span class="tt">lua/api_stubs.lua</span> for better autocompletion: <span class="tt">DisplayHandle</span> methods above, partial <span class="tt">IDisplayObject</span> surface (add/remove/has/get child), and partial <span class="tt">Stage</span> (mouse getters/setters).</li>
+<li>Expanded <b>lua/api_stubs.lua</b> for better autocompletion: <b>DisplayHandle</b> methods above, partial <b>IDisplayObject</b> surface (add/remove/has/get child), and partial <b>Stage</b> (mouse getters/setters).</li>
 </ul>
 </li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md390"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md407"></a>
+[October 24, 2025]</h3>
+<ul>
+<li><p class="startli"><b>IDisplayObject_UnitTests</b> Refactor Progress:</p><ul>
+<li>Began building a new <b>IDisplayObject_UnitTests.cpp</b> Unit Test Module to fully test all C++ and LUA properties and functions.</li>
+<li>Implemented <b>IDisplayObject</b> Lua wrappers via <b>SDOM_IDisplayObject_LuaHelpers.hpp</b>.</li>
+<li>Added Unit Tests for the following <b>IDisplayObject</b> Lua bindings:<ul>
+<li><b>Dirty/State Management</b>:<ul>
+<li>✅ cleanAll()</li>
+<li>✅ getDirty()</li>
+<li>✅ setDirty()</li>
+<li>✅ isDirty()</li>
+</ul>
+</li>
+<li><b>Debug/Utility</b>:<ul>
+<li>✅ printTree()</li>
+</ul>
+</li>
+<li><b>Events and Event Listener Handling</b>:<ul>
+<li>✅ addEventListener(type, listener, useCapture, priority)</li>
+<li>✅ removeEventListener(type, listener, useCapture)</li>
+<li>✅ addEventListener_any(descriptor, maybe_listener, maybe_useCapture, maybe_priority)</li>
+<li>✅ removeEventListener_any(descriptor, maybe_listener, maybe_useCapture)</li>
+<li>✅ addEventListener_any_short(descriptor)</li>
+<li>✅ removeEventListener_any_short(descriptor)</li>
+<li>✅ hasEventListener(type, useCapture)</li>
+<li>✅ queue_event(type, init_payload)</li>
+</ul>
+</li>
+<li><b>Hierarchy Management</b>:<ul>
+<li>✅ addChild(childSpec)</li>
+<li>✅ getChild(spec)</li>
+<li>✅ removeChild(childSpec)</li>
+<li>✅ hasChild(childSpec)</li>
+<li>✅ getParent()</li>
+<li>✅ setParent(parentHandle)</li>
+<li>✅ isAncestorOf(descendantSpec)</li>
+<li>✅ isDescendantOf(ancestorSpec)</li>
+<li>✅ removeFromParent()</li>
+<li>✅ removeDescendant(descendantSpec)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="startli"><b>1. Event Lifecycle is Now Proven Correct</b></p><ul>
+<li><b>Completed full event listener testing, including:</b><ul>
+<li>Listener registration</li>
+<li>Event queuing</li>
+<li>Deferred dispatch via pumpEventsOnce()</li>
+<li>Payload transfer</li>
+<li>Listener removal</li>
+<li>Re-check of listener presence</li>
+</ul>
+</li>
+<li><b>This verifies:</b><ul>
+<li>EventManager → Event dispatch → IDisplayObject listener flow works</li>
+<li>Payloads survive through dispatch</li>
+<li>Listeners are cleaned up correctly</li>
+<li>No ghost callbacks / No leaks <br  />
+</li>
+</ul>
+</li>
+<li>This was one of the most critical pieces of the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> runtime model — and it is now rock-solid.</li>
+</ul>
+<p class="startli"><b>2. Dirty-State System is Verified</b></p><ul>
+<li>The dirty-propagation model behaved exactly as expected:<ul>
+<li>Children do not dirty parents implicitly</li>
+<li>setDirty() and cleanAll() work recursively</li>
+<li>cleanAll() does not prematurely delete anything</li>
+</ul>
+</li>
+<li>This confirms rendering invalidation strategy is correct and predictable. <br  />
+</li>
+</ul>
+<p class="startli"><b>3. Hierarchy Management is Fully Validated</b></p><ul>
+<li>The tests confirmed that:<ul>
+<li>Child add/remove works in both handle and name forms</li>
+<li>Parent references update properly</li>
+<li>isAncestorOf / isDescendantOf logic is correct</li>
+<li>removeFromParent() works safely</li>
+<li>removeDescendant() works by both handle and name</li>
+<li>Object lifetime remains fully owned by the Factory</li>
+</ul>
+</li>
+<li>This is the backbone of the scene graph, and it's behaving exactly as a retained-mode UI should. <br  />
+</li>
+</ul>
+<p class="startli"><b>4. Font &amp; SDL_TTF Cleanup Bug Resolved</b></p><ul>
+<li>Tracked down a tricky issue:<ul>
+<li>TTF_CloseFont() was being called twice</li>
+<li>The real root cause was actually Lua closing before assets were destroyed</li>
+<li>By removing manual lua_close(getLua()), the asset lifecycle now aligns correctly with shutdown</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><b>Valgrind Check:</b><ul>
+<li>Ran Valgrind on the full test suite to check for memory leaks. <div class="fragment"><div class="line">LEAK SUMMARY:</div>
+<div class="line">    definitely lost: 0 bytes</div>
+<div class="line">    indirectly lost: 0 bytes</div>
+<div class="line">    possibly lost: 0 bytes</div>
+</div><!-- fragment --></li>
+<li>Confirmed by "stress testing" (repeated test runs) that no leaks or crashes occur over the course of 2,000 iterations while running all current tests.</li>
+<li>No memory leaks in neither the operating system nor the GPU memory. No invalid accesses detected.</li>
+<li>The shutdown path is clean and deterministic — and Valgrind confirms it.</li>
+<li>No heap creep. No GPU memory creep. No event buildup. No stale pointers. No race conditions.</li>
+</ul>
+</li>
+</ul>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md409"></a>
 Next Steps:</h2>
 <ul>
-<li>Complete refactoring of <span class="tt">Core_UnitTests</span> to systematically test all C++ functions.</li>
-<li>Begin building a new Lua-based test harness to systematically test all Core methods via Lua.<ul>
-<li>Continue building out <span class="tt">Core_UnitTests.lua</span> to cover all Core methods and properties.</li>
-</ul>
-</li>
-<li>Begin a new <span class="tt">IDisplayObject_UnitTests.cpp</span> Unit Test Module to fully test all C++ and LUA properties and functions.<ul>
-<li>Fully Implement <span class="tt">IDisplayObject</span> Lua bindings via <span class="tt">SDOM_IDisplayObject_LuaHelpers.hpp</span>.</li>
-</ul>
-</li>
+<li>Continue building out <b>Core_UnitTests.lua</b> to cover all Core methods and properties.</li>
+<li>Continue building out <b>IDisplayObject_UnitTests.cpp</b> Unit Test Module to fully test all C++ and LUA properties and functions.</li>
 </ul>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md392"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md411"></a>
 Long Term To Do:</h2>
 <ul>
-<li>Rebuild the entire Lua Binding System from the ground up.</li>
-<li>Build a Lua Test Harness to systematically test all Core methods via Lua.</li>
 <li>Sweep all DisplayObjects to use the new Lua Binding System.</li>
 <li>Update all Unit Tests to use the new Lua Binding System.<ul>
 <li>Achieve full C++ test coverage for each DisplayObject type.</li>
@@ -1466,46 +1568,62 @@ Long Term To Do:</h2>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md393"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md412"></a>
 Current DisplayObject Inheritance Hierarchy:</h2>
-<p>└── IDisplayObject ├── IPanelObject │ ├── Button │ ├── Frame │ └── Group ├── IRangeControl │ ├── IRangeControl_scaffold │ ├── ProgressBar │ ├── ScrollBar │ └── Slider ├── IconButton │ └── ArrowButton ├── Label ├── Stage └── TristateButton ├── CheckButton └── RadioButton</p>
-<hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md395"></a>
+<div class="fragment"><div class="line">─── IDisplayObject</div>
+<div class="line">    ├── IPanelObject</div>
+<div class="line">    │   ├── Button</div>
+<div class="line">    │   ├── Frame</div>
+<div class="line">    │   └── Group</div>
+<div class="line">    ├── IRangeControl</div>
+<div class="line">    │   ├── IRangeControl_scaffold</div>
+<div class="line">    │   ├── ProgressBar</div>
+<div class="line">    │   ├── ScrollBar</div>
+<div class="line">    │   └── Slider</div>
+<div class="line">    ├── IconButton</div>
+<div class="line">    │   └── ArrowButton</div>
+<div class="line">    ├── Label</div>
+<div class="line">    ├── Stage</div>
+<div class="line">    └── TristateButton</div>
+<div class="line">        ├── CheckButton</div>
+<div class="line">        └── RadioButton</div>
+</div><!-- fragment --><hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md414"></a>
 UnitTest Modules</h2>
-<ul>
-<li>ArrowButton</li>
-<li>AssetHandle</li>
-<li>BitmapFont</li>
-<li>Button</li>
-<li>CheckButton</li>
-<li><a class="el" href="classCLR.html" title="Static container for ANSI escape sequences and formatting helpers.">CLR</a></li>
-<li>Core</li>
-<li>DisplayHandle</li>
-<li>Event</li>
-<li>EventManager</li>
-<li>EventType</li>
-<li>Factory</li>
-<li>Frame</li>
-<li>Group</li>
-<li>IAssetObject</li>
-<li>IButtonObject</li>
-<li>IconButton</li>
-<li>IDataObject →</li>
-<li>IDisplayObject</li>
-<li>IFontObject</li>
-<li>IPanelObject</li>
-<li>IRangeControl</li>
-<li>Label</li>
-<li>ProgressBar</li>
-<li>RadioButton</li>
-<li>ScrollBar</li>
-<li>Slider</li>
-<li>SpriteSheet</li>
-<li>Stage</li>
-<li>Texture</li>
-<li>TristateButton</li>
-<li>TruetypeFont</li>
-<li>TTFAsset </li>
+<p>✅ Tests Verified 🔄 In Progress ☐ Pending</p><ul>
+<li>☐ ArrowButton</li>
+<li>☐ AssetHandle</li>
+<li>☐ BitmapFont</li>
+<li>☐ Button</li>
+<li>☐ CheckButton</li>
+<li>☐ <a class="el" href="classCLR.html" title="Static container for ANSI escape sequences and formatting helpers.">CLR</a></li>
+<li>🔄 Core</li>
+<li>☐ DisplayHandle</li>
+<li>☐ Event</li>
+<li>☐ EventManager</li>
+<li>☐ EventType</li>
+<li>☐ Factory</li>
+<li>☐ Frame</li>
+<li>☐ Group</li>
+<li>☐ IAssetObject</li>
+<li>☐ IButtonObject</li>
+<li>☐ IconButton</li>
+<li>☐ IDataObject</li>
+<li>🔄 IDisplayObject</li>
+<li>☐ IFontObject</li>
+<li>☐ IPanelObject</li>
+<li>☐ IRangeControl</li>
+<li>☐ Label</li>
+<li>☐ ProgressBar</li>
+<li>☐ RadioButton</li>
+<li>☐ ScrollBar</li>
+<li>☐ Slider</li>
+<li>☐ SpriteSheet</li>
+<li>☐ Stage</li>
+<li>☐ Texture</li>
+<li>☐ TristateButton</li>
+<li>☐ TruetypeFont</li>
+<li>☐ TTFAsset </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

@@ -1,8 +1,8 @@
 var NAVTREEINDEX31 =
 {
+"classSDOM_1_1Slider.html#abef98ceb11e7781be41a23dec0ac74cc":[18,0,0,34,121],
+"classSDOM_1_1Slider.html#ac0d8e727dbb2c0ddd7485fa245ec78bc":[17,0,0,34,133],
 "classSDOM_1_1Slider.html#ac0d8e727dbb2c0ddd7485fa245ec78bc":[18,0,0,34,133],
-"classSDOM_1_1Slider.html#ac102134ccecbe1f6eebfce14f4354799":[17,0,0,34,67],
-"classSDOM_1_1Slider.html#ac102134ccecbe1f6eebfce14f4354799":[18,0,0,34,67],
 "classSDOM_1_1Slider.html#ac316c78060747eacf8cb4c6ab84d3855":[17,0,0,34,54],
 "classSDOM_1_1Slider.html#ac316c78060747eacf8cb4c6ab84d3855":[18,0,0,34,54],
 "classSDOM_1_1Slider.html#ac44b2435f91f670e2b6a43f092f83175":[17,0,0,34,76],

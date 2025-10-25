@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['key_20features_0',['Key Features',['../md_README.html#autotoc_md433',1,'']]],
-  ['key_20takeaways_1',['Key Takeaways',['../md_docs_2extensible__factory.html#autotoc_md177',1,'']]],
+  ['key_20features_0',['Key Features',['../md_README.html#autotoc_md452',1,'']]],
+  ['key_20takeaways_1',['Key Takeaways',['../md_docs_2extensible__factory.html#autotoc_md187',1,'']]],
   ['key_5ffocused_5f_2',['key_focused_',['../classSDOM_1_1IButtonObject.html#a3fde0164c6d64d391ea5fb9bcd9554bb',1,'SDOM::IButtonObject']]],
   ['keyboard_20events_3',['Keyboard Events',['../md_docs_2event__design.html#autotoc_md120',1,'']]],
   ['keycode_5f_4',['keycode_',['../classSDOM_1_1Event.html#ad5d36d33d6ba8499825eada138bb46b7',1,'SDOM::Event']]],

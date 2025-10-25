@@ -15,14 +15,7 @@
 ---
 
 ## Two Trees in the Garden
-
-
-<img src="diagrams/object_handles/diagram-01.svg" alt="Two Trees with Handles" style="width:100%; height:auto;"/>
-
-<details>
-<summary>View Mermaid source</summary>
-
-```mermaid-norender
+```mermaid
 flowchart TB
 	classDef dom fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
 	classDef res fill:#fff8e6,stroke:#f0ad4e,color:#5a4500,stroke-width:1px
@@ -105,13 +98,7 @@ Key properties at a glance:
 ---
 
 ## Inheritance Warning: Avoid Diamond Inheritance
-
-<img src="diagrams/object_handles/diagram-02.svg" alt="Diamond Inheritance Pitfall" style="width:100%; height:auto;"/>
-
-<details>
-<summary>View Mermaid source</summary>
-
-```mermaid-norender
+```mermaid
 %%{init: {"flowchart": { "rankSpacing": 40, "nodeSpacing": 140 }}}%%
 flowchart TB
 		classDef base fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
@@ -177,13 +164,7 @@ IAssetObject* image = imageHandle.get();
 ---
 
 ## Optional: Handle Resolution Flow (reference)
-
-<img src="diagrams/object_handles/diagram-03.svg" alt="Handle Resolution" style="width:100%; height:auto;"/>
-
-<details>
-<summary>View Mermaid source</summary>
-
-```mermaid-norender
+```mermaid
 flowchart LR
 	classDef core fill:#f5f5f5,stroke:#999,color:#333,stroke-width:1px
 	classDef dom  fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px

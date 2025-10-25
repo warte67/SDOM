@@ -119,6 +119,182 @@ $(function(){initNavTree('md_docs_2extensible__factory.html','',''); });
  <b>the system that defines how objects are created, named, referenced, and eventually released.</b></p>
 <p>The rest of this document explains how the Factory is structured, how lifetime rules work, and how to register new object and asset types.</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md146"></a>
+Lua Application Framework (Test + Runtime Layer)</h1>
+<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> embeds Lua not just for configuration, but also as an optional application logic layer. You may choose how much of your project uses Lua:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Use Case  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>No Lua</b>  </td><td class="markdownTableBodyNone">Create and control the UI entirely from C++.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Lua Configuration</b>  </td><td class="markdownTableBodyNone">Use Lua only to describe UI layout.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Mixed Logic</b>  </td><td class="markdownTableBodyNone">Use Lua for UI logic and C++ for core systems.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Full Lua App</b>  </td><td class="markdownTableBodyNone">Write your entire project in Lua; <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> handles rendering and events.  </td></tr>
+</table>
+<p>The file <span class="tt">lua/config.lua</span> acts as the <em>application entry point</em> when running the example test application:</p>
+<div class="fragment"><div class="line">Core.run(&quot;lua/config.lua&quot;)</div>
+</div><!-- fragment --><p> This file returns a config table describing initial resources, window settings, and the root display tree. <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> reads this table and builds the scene graph via the Factory.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md147"></a>
+Callback Modules</h3>
+<p>Rather than placing logic directly inside config.lua, callbacks are organized into modules under: </p><div class="fragment"><div class="line">lua/callbacks/</div>
+<div class="line">    init.lua</div>
+<div class="line">    quit.lua</div>
+<div class="line">    update.lua</div>
+<div class="line">    event.lua</div>
+<div class="line">    render.lua</div>
+<div class="line">    unittest.lua</div>
+<div class="line">    window_resize.lua</div>
+</div><!-- fragment --><p> Each module returns a table of functions. These functions are registered with the engine using <span class="tt">registerOn(name, fn):</span> </p><div class="fragment"><div class="line">registerOn(&quot;Init&quot;, callbacks.init.on_init)</div>
+<div class="line">registerOn(&quot;Update&quot;, callbacks.update.on_update)</div>
+<div class="line">registerOn(&quot;Render&quot;, callbacks.render.on_render)</div>
+</div><!-- fragment --><p> This keeps application logic clean, testable, and modular.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md148"></a>
+Display Object Event Listeners</h3>
+<p>Display objects can listen for UI events directly: </p><div class="fragment"><div class="line">local button = getDisplayObject(&quot;main_stage_button&quot;)</div>
+<div class="line"> </div>
+<div class="line">button:addEventListener({</div>
+<div class="line">    type = EventType.MouseClick,</div>
+<div class="line">    listener = function(ev)</div>
+<div class="line">        setRoot(&quot;stageTwo&quot;)</div>
+<div class="line">    end</div>
+<div class="line">})</div>
+</div><!-- fragment --><p> Listeners are stored inside the object and participate in full event dispatch: capture → target → bubble.</p>
+<p>These listeners may receive structured <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> event payloads. In the future, a unified payload schema will ensure consistent fields for keyboard, mouse, window, drag, and custom UI events.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md149"></a>
+Larger Applications</h3>
+<p>This structure scales cleanly:</p><ul>
+<li>UI layouts defined as trees</li>
+<li>Behavior defined in small listener and callback modules</li>
+<li>State transitions implemented by changing the active Stage (<span class="tt">setRoot("X")</span>)</li>
+</ul>
+<hr  />
+<h2 class="doxsection"><a class="anchor" id="autotoc_md151"></a>
+Now, One More Step:</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md152"></a>
+Lua flows naturally into the core systems:</h3>
+<p>Lua config → Factory → Display Tree → Event System → Lua callbacks</p>
+<div class="fragment"><div class="line">%%{init: { &#39;theme&#39;: &#39;neutral&#39;, &#39;flowchart&#39;: { &#39;curve&#39;: &#39;linear&#39; } }}%%</div>
+<div class="line">flowchart LR</div>
+<div class="line"> </div>
+<div class="line">    %% Classes</div>
+<div class="line">    classDef lua fill:#fff7e6,stroke:#d28b00,color:#5a4300,stroke-width:1px</div>
+<div class="line">    classDef core fill:#e9f4ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px</div>
+<div class="line">    classDef factory fill:#f0fff4,stroke:#5fa862,color:#1b4220,stroke-width:1px</div>
+<div class="line">    classDef display fill:#f9f9f9,stroke:#888,color:#222,stroke-width:1px</div>
+<div class="line">    classDef event fill:#fff2fa,stroke:#ca6f9e,color:#431a33,stroke-width:1px</div>
+<div class="line">    classDef external fill:#f2f2ff,stroke:#7c6fe6,color:#262262,stroke-width:1px</div>
+<div class="line"> </div>
+<div class="line">    %% Nodes</div>
+<div class="line">    LuaConfig[&quot;Lua Config Table&lt;br/&gt;&lt;code&gt;config = { ... }&lt;/code&gt;&quot;]:::lua</div>
+<div class="line">    Callbacks[&quot;Lua Callback Modules&lt;br/&gt;&lt;code&gt;callbacks/*.lua&lt;/code&gt;&quot;]:::lua</div>
+<div class="line"> </div>
+<div class="line">    Core[&quot;Core SDL Window + Main Loop&quot;]:::core</div>
+<div class="line">    Factory[&quot;Factory Creates &amp; Owns Objects&quot;]:::factory</div>
+<div class="line">    Resources[&quot;Resource Registry (TTF, Images, Sprites, etc.)&quot;]:::factory</div>
+<div class="line">    DisplayTree[&quot;Display Tree (IDisplayObject hierarchy)&quot;]:::display</div>
+<div class="line"> </div>
+<div class="line">    EventMgr[&quot;EventManager (Capture → Target → Bubble)&quot;]:::event</div>
+<div class="line">    LuaEventListeners[&quot;Lua Object Listeners&lt;br/&gt;&lt;code&gt;obj:addEventListener(...)&lt;/code&gt;&quot;]:::lua</div>
+<div class="line"> </div>
+<div class="line">    SDL3[&quot;SDL3 / Platform Input&quot;]:::external</div>
+<div class="line"> </div>
+<div class="line">    %% Relationships</div>
+<div class="line">    LuaConfig --&gt; Core</div>
+<div class="line">    Core --&gt; Factory</div>
+<div class="line">    Factory --&gt; Resources</div>
+<div class="line">    Factory --&gt; DisplayTree</div>
+<div class="line"> </div>
+<div class="line">    Core --&gt; EventMgr</div>
+<div class="line">    EventMgr --&gt; DisplayTree</div>
+<div class="line">    DisplayTree --&gt; LuaEventListeners</div>
+<div class="line"> </div>
+<div class="line">    Callbacks --&gt; Core</div>
+<div class="line">    Callbacks --&gt; DisplayTree</div>
+<div class="line">    Callbacks --&gt; LuaEventListeners</div>
+<div class="line"> </div>
+<div class="line">    SDL3 --&gt; EventMgr</div>
+<div class="line">    EventMgr --&gt; LuaEventListeners</div>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md153"></a>
+✅ What this Diagram Communicates</h3>
+<p>This visual shows:</p><ul>
+<li>Lua starts everything by defining the config table.</li>
+<li>Core reads that configuration and sets up the system.</li>
+<li>The Factory constructs resources and display objects.</li>
+<li>The Display Tree represents UI layout, hierarchy, and transforms.</li>
+<li>EventManager receives raw SDL3 input → dispatches structured events.</li>
+<li>Lua event listeners receive high-level UI events (not raw SDL fields).</li>
+<li>Lua callback modules handle update/render/global behavior.</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md154"></a>
+This directly reinforces:</h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Layer  </th><th class="markdownTableHeadNone">Responsibility  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>C++ Engine</b>  </td><td class="markdownTableBodyNone">Rendering, object lifetime, event dispatch, performance.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Lua</b>  </td><td class="markdownTableBodyNone">Application behavior, UI logic, orchestration.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Handles</b>  </td><td class="markdownTableBodyNone">Safe, language-independent references.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Factory</b>  </td><td class="markdownTableBodyNone">Centralized object creation + ownership.  </td></tr>
+</table>
+<div class="fragment"><div class="line">%%{init: { &#39;theme&#39;: &#39;neutral&#39;, &#39;flowchart&#39;: { &#39;curve&#39;: &#39;linear&#39; } }}%%</div>
+<div class="line">flowchart TB</div>
+<div class="line"> </div>
+<div class="line">    %% Styles</div>
+<div class="line">    classDef sys fill:#e9f4ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px</div>
+<div class="line">    classDef tree fill:#f9f9f9,stroke:#888,color:#222,stroke-width:1px</div>
+<div class="line">    classDef event fill:#fff2fa,stroke:#ca6f9e,color:#4a233a,stroke-width:1px</div>
+<div class="line">    classDef lua fill:#fff7e6,stroke:#d28b00,color:#5a4300,stroke-width:1px</div>
+<div class="line">    classDef ext fill:#f2f2ff,stroke:#7c6fe6,color:#262262,stroke-width:1px</div>
+<div class="line"> </div>
+<div class="line">    %% Nodes</div>
+<div class="line">    SDL3[&quot;SDL3 Input Events&lt;br/&gt;&lt;code&gt;Mouse / Keyboard / Controller&lt;/code&gt;&quot;]:::ext</div>
+<div class="line">    EventMgr[&quot;EventManager&lt;br/&gt;&lt;small&gt;Queues, Normalizes, Dispatches&lt;/small&gt;&quot;]:::event</div>
+<div class="line"> </div>
+<div class="line">    subgraph Tree[&quot;Display Tree (Hierarchy)&quot;]</div>
+<div class="line">        Root[&quot;Stage (Root)&quot;]:::tree</div>
+<div class="line">        Parent[&quot;Parent DisplayObject&quot;]:::tree</div>
+<div class="line">        Target[&quot;Target DisplayObject&quot;]:::tree</div>
+<div class="line">        Child[&quot;Child DisplayObject&quot;]:::tree</div>
+<div class="line">    end</div>
+<div class="line"> </div>
+<div class="line">    LuaListeners[&quot;Lua Event Listeners&lt;br/&gt;&lt;code&gt;obj:addEventListener(...)&lt;/code&gt;&quot;]:::lua</div>
+<div class="line">    CppHandlers[&quot;C++ Handlers&lt;br/&gt;&lt;code&gt;onEvent/onClick/onUpdate&lt;/code&gt;&quot;]:::sys</div>
+<div class="line"> </div>
+<div class="line">    %% Edges</div>
+<div class="line">    SDL3 --&gt;|Raw SDL_Event| EventMgr</div>
+<div class="line">    EventMgr --&gt;|Capture Phase&lt;br/&gt;&lt;small&gt;Root → Parent&lt;/small&gt;| Root</div>
+<div class="line">    Root --&gt; Parent</div>
+<div class="line">    Parent --&gt; Target</div>
+<div class="line"> </div>
+<div class="line">    Target --&gt;|Target Phase&lt;br/&gt;&lt;small&gt;Object-specific event handling&lt;/small&gt;| Target</div>
+<div class="line"> </div>
+<div class="line">    Target --&gt;|Bubble Phase&lt;br/&gt;&lt;small&gt;Target → Parent → Root&lt;/small&gt;| Parent</div>
+<div class="line">    Parent --&gt; Root</div>
+<div class="line"> </div>
+<div class="line">    Root --&gt; LuaListeners</div>
+<div class="line">    Target --&gt; LuaListeners</div>
+<div class="line">    Parent --&gt; LuaListeners</div>
+<div class="line"> </div>
+<div class="line">    Root --&gt; CppHandlers</div>
+<div class="line">    Target --&gt; CppHandlers</div>
+<div class="line">    Parent --&gt; CppHandlers</div>
+</div><!-- fragment --><p> 🧠 What This Shows </p><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Phase  </th><th class="markdownTableHeadNone">Path  </th><th class="markdownTableHeadNone">Purpose  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Capture</b>  </td><td class="markdownTableBodyNone">Root → Target parent  </td><td class="markdownTableBodyNone">"See what's about to happen."  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Target</b>  </td><td class="markdownTableBodyNone">Target only  </td><td class="markdownTableBodyNone">The object receiving the event reacts.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Bubble</b>  </td><td class="markdownTableBodyNone">Target → Root  </td><td class="markdownTableBodyNone">Higher-level systems react after target.  </td></tr>
+</table>
+<hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md156"></a>
 How a Display Object Registers Itself with the Factory</h1>
 <p>In <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>, display objects are not created by calling constructors directly. <br  />
  Instead, each display object <b>registers itself</b> with the Factory, and the Factory becomes the only place that creates them.</p>
@@ -129,8 +305,8 @@ How a Display Object Registers Itself with the Factory</h1>
 <li><b>Objects can be extended or added without modifying engine code</b></li>
 </ol>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md148"></a>
-The Core Idea</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md158"></a>
+The Core Idea</h3>
 <p>Each display object type (such as <span class="tt">Box</span>, <span class="tt">Label</span>, or <span class="tt">Button</span>) provides:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -147,17 +323,16 @@ The Core Idea</h2>
 </div><!-- fragment --><p> Or fromLua: </p><div class="fragment"><div class="line">Core:createDisplayObject(&quot;Box&quot;, { name=&quot;myBox&quot;, x=50, y=50 })</div>
 </div><!-- fragment --><p> No duplication. Same system, two languages.</p>
 <hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md150"></a>
-Visual Model: Where Registration Lives</h1>
-<div class="fragment"><div class="line"> -norender</div>
-<div class="line">flowchart LR</div>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md160"></a>
+Visual Model: Where Registration Lives</h2>
+<div class="fragment"><div class="line">flowchart LR</div>
 <div class="line">  BoxClass[&quot;Box (C++ Class)&quot;] --&gt; InitStruct</div>
 <div class="line">  BoxClass --&gt; RegisterFn[&quot;Registers creation function with Factory&quot;]</div>
 <div class="line">  RegisterFn --&gt; Factory[&quot;Factory&quot;]</div>
 <div class="line">  Factory --&gt; Creates[&quot;Creates new Box on demand&quot;]</div>
 </div><!-- fragment --> <hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md152"></a>
-A Minimal Example</h1>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md162"></a>
+A Minimal Example</h2>
 <p>Let's say we are adding a new display object called <span class="tt">MyWidget</span>.</p>
 <ol type="1">
 <li>Define its <span class="tt">InitStruct</span>: <div class="fragment"><div class="line"><span class="keyword">struct </span>InitStruct : <span class="keyword">public</span> IDisplayObject::InitStruct {</div>
@@ -181,15 +356,15 @@ A Minimal Example</h1>
 <li>The <b>constructor</b> to call</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md154"></a>
-What Registration Actually Looks Like Inside the Factory</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md164"></a>
+What Registration Actually Looks Like Inside the Factory</h3>
 <p>The Factory keeps a table: </p><div class="fragment"><div class="line">&quot;typeName&quot; → creation function</div>
 </div><!-- fragment --><p> So for <span class="tt">"MyWidget"</span>, it stores something equivalent to: </p><div class="fragment"><div class="line">factory.creators_[<span class="stringliteral">&quot;MyWidget&quot;</span>] = [](<span class="keyword">const</span> InitStruct&amp; init) {</div>
 <div class="line">    <span class="keywordflow">return</span> std::make_unique&lt;MyWidget&gt;(init);</div>
 <div class="line">};</div>
 </div><!-- fragment --> <hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md156"></a>
-Creating a New Display Object Type</h1>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md166"></a>
+Creating a New Display Object Type</h2>
 <p>When adding a new display object to <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>, there are a few moving parts — but each one has a clear purpose. <br  />
  Let’s walk through the pattern using <span class="tt">Stage</span> as an example, because <span class="tt">Stage</span> shows the full structure cleanly.</p>
 <p>Every display object type must:</p>
@@ -203,8 +378,8 @@ Creating a New Display Object Type</h1>
 </ol>
 <p>Once this is done, the object can be created from both C++ and Lua <b>without changing the Factory</b>.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md158"></a>
-1. Class Declaration</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md168"></a>
+1. Class Declaration</h3>
 <div class="fragment"><div class="line"><span class="keyword">class </span>Stage : <span class="keyword">public</span> IDisplayObject {</div>
 <div class="line">    <span class="keyword">using </span>SUPER = IDisplayObject;</div>
 <div class="line"> </div>
@@ -249,8 +424,8 @@ Creating a New Display Object Type</h1>
 <div class="line">    sol::usertype&lt;Stage&gt; objHandleType_;</div>
 <div class="line">};</div>
 </div><!-- fragment --> <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md160"></a>
-1. Why These Pieces Exist</h2>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md170"></a>
+1. Why These Pieces Exist</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Code Element  </th><th class="markdownTableHeadNone">Purpose  </th></tr>
@@ -270,8 +445,8 @@ Creating a New Display Object Type</h1>
 <td class="markdownTableBodyNone"><span class="tt">_registerLuaBindings()</span>  </td><td class="markdownTableBodyNone">Connects your object to Lua, tools, and scripting.  </td></tr>
 </table>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md162"></a>
-2. Lua Binding (Important Detail!)</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md172"></a>
+2. Lua Binding (Important Detail!)</h3>
 <p>Here is the <span class="tt">critical rule</span> when registering Lua bindings: </p><blockquote class="doxtable">
 <p>Always call the base class binding function first. This ensures your object inherits all the Lua features of its parent. </p>
 </blockquote>
@@ -311,8 +486,8 @@ Creating a New Display Object Type</h1>
 <li>Without overwriting or duplicating anything</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md164"></a>
-3. Summary Checklist (Copy This When Creating New Objects)</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md174"></a>
+3. Summary Checklist (Copy This When Creating New Objects)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Step  </th><th class="markdownTableHeadNone">Done?  </th><th class="markdownTableHeadNone">Notes  </th></tr>
@@ -332,8 +507,8 @@ Creating a New Display Object Type</h1>
 <td class="markdownTableBodyNone">Implement <span class="tt">_registerLuaBindings()</span>  </td><td class="markdownTableBodyNone">☐  </td><td class="markdownTableBodyNone">Call <span class="tt">SUPER::_registerLuaBindings</span> first  </td></tr>
 </table>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md166"></a>
-Object Lifetimes, Parents, and Orphans</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md176"></a>
+Object Lifetimes, Parents, and Orphans</h2>
 <p><em>(aka: “Why Your UI Elements Don’t Turn Into Zombies”)</em></p>
 <p>Every display object in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> lives somewhere in the <b>display tree</b>. <br  />
  If an object has a parent, it's part of the active UI. <br  />
@@ -349,8 +524,8 @@ Object Lifetimes, Parents, and Orphans</h1>
  But if you remove a child: </p><div class="fragment"><div class="line">stage:removeChild(&quot;blueishBox&quot;)</div>
 </div><!-- fragment --><p> Now <b>blueishBox</b> and everything inside it becomes an orphan.</p>
 <hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md168"></a>
-Why Orphans Exist (And Why They’re Actually Useful)</h1>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md178"></a>
+Why Orphans Exist (And Why They’re Actually Useful)</h2>
 <p>In many UI frameworks, removing an element means destroying it instantly.</p>
 <p>But <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> takes a different approach: </p><blockquote class="doxtable">
 <p>Removing something from the UI does not automatically destroy it. </p>
@@ -374,8 +549,8 @@ Why Orphans Exist (And Why They’re Actually Useful)</h1>
 <td class="markdownTableBodyNone"><span class="tt">RetainUntilManual</span>  </td><td class="markdownTableBodyNone">Keep forever until manually destroyed  </td><td class="markdownTableBodyNone">Inventory windows, cached panels, lazily reused elements  </td></tr>
 </table>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md170"></a>
-Visualizing the Orphan Lifecycle</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md180"></a>
+Visualizing the Orphan Lifecycle</h3>
 <div class="fragment"><div class="line">Remove From Parent         Time Passes          collectGarbage()</div>
 <div class="line">        │                         │                     │</div>
 <div class="line">        ▼                         ▼                     ▼</div>
@@ -393,15 +568,15 @@ Visualizing the Orphan Lifecycle</h2>
 <td class="markdownTableBodyNone">You accidentally keep handles forever  </td><td class="markdownTableBodyNone">✅ <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> will not leak — you are just hoarding ghosts 👻  </td></tr>
 </table>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md172"></a>
-The Cleanup Loop (Automatically Happens Each Frame)</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md182"></a>
+The Cleanup Loop (Automatically Happens Each Frame)</h3>
 <p>Inside the main loop, <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> does: </p><div class="fragment"><div class="line">factory-&gt;detachOrphans();         <span class="comment">// Remove objects from tree but keep alive</span></div>
 <div class="line">factory-&gt;attachFutureChildren();  <span class="comment">// Handle queued child additions</span></div>
 <div class="line">factory-&gt;collectGarbage();        <span class="comment">// Apply retention policies &amp; destroy if needed</span></div>
 </div><!-- fragment --><p> You don’t call this. You don’t need to remember it. It just happens. Like sunrise. Or taxes. Or reruns of The Munsters.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md174"></a>
-Example: Fade-Out Animation Using GracePeriod</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md184"></a>
+Example: Fade-Out Animation Using GracePeriod</h3>
 <div class="fragment"><div class="line">local panel = Core:getDisplayObject(&quot;settingsPanel&quot;)</div>
 <div class="line"> </div>
 <div class="line">panel:setOrphanRetentionPolicy(&quot;GracePeriod&quot;)</div>
@@ -414,8 +589,8 @@ Example: Fade-Out Animation Using GracePeriod</h2>
 <div class="line">stage:removeChild(panel)</div>
 <div class="line"> </div>
 <div class="line">-- Panel will auto-destroy after animation finishes.</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md175"></a>
-Example: UI Reuse With RetainUntilManual</h2>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md185"></a>
+Example: UI Reuse With RetainUntilManual</h3>
 <div class="fragment"><div class="line">-- Create once</div>
 <div class="line">local inventory = Core:createDisplayObject(&quot;Frame&quot;, { name=&quot;inventory&quot;, width=300, height=200 })</div>
 <div class="line">inventory:setOrphanRetentionPolicy(&quot;RetainUntilManual&quot;)</div>
@@ -424,8 +599,8 @@ Example: UI Reuse With RetainUntilManual</h2>
 <div class="line">stage:removeChild(inventory) -- hide it (object still exists)</div>
 <div class="line">stage:addChild(inventory) -- show it again, instantly, no re-alloc!</div>
 </div><!-- fragment --><hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md177"></a>
-Key Takeaways</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md187"></a>
+Key Takeaways</h3>
 <ul>
 <li>Removing something from the UI does not necessarily destroy it.</li>
 <li>Every display object has a retention policy that determines its lifetime.</li>
@@ -433,13 +608,13 @@ Key Takeaways</h2>
 <li>Handles always remain safe — never dangling pointers. In short: This is one of the core reasons the system feels stable, predictable, and easy to build <em>real interfaces</em> with.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md179"></a>
-Adding Custom Properties to Your Display Object</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md189"></a>
+Adding Custom Properties to Your Display Object</h2>
 <p><em>(or: "Yes, you can absolutely give your Button a hitpoint system")</em></p>
 <p>When you create a new display object type, the <span class="tt">InitStruct</span> is where you define its <b>default values</b> — including your own custom fields.</p>
 <p>Let’s say we’re creating a new UI element: It’s like a <span class="tt">Frame</span>, except it can be expanded or collapsed.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md180"></a>
-1. Add the Property to the InitStruct</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md190"></a>
+1. Add the Property to the InitStruct</h3>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>InitStruct : <span class="keyword">public</span> IDisplayObject::InitStruct</div>
 <div class="line">{</div>
 <div class="line">    InitStruct() : IDisplayObject::InitStruct()</div>
@@ -452,8 +627,8 @@ Adding Custom Properties to Your Display Object</h1>
 <div class="line">};</div>
 </div><!-- fragment --><p> Now our object has state — something meaningful that controls behavior.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md182"></a>
-2. Store the Property in the Class</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md192"></a>
+2. Store the Property in the Class</h3>
 <div class="fragment"><div class="line"><span class="keyword">class </span>TogglePanel : <span class="keyword">public</span> IDisplayObject</div>
 <div class="line">{</div>
 <div class="line">    <span class="keyword">using </span>SUPER = IDisplayObject;</div>
@@ -461,8 +636,8 @@ Adding Custom Properties to Your Display Object</h1>
 <div class="line"><span class="keyword">protected</span>:</div>
 <div class="line">    <span class="keywordtype">bool</span> isCollapsed_ = <span class="keyword">false</span>;  <span class="comment">// internal storage</span></div>
 </div><!-- fragment --> <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md184"></a>
-3. Copy it In from Constructors</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md194"></a>
+3. Copy it In from Constructors</h3>
 <div class="fragment"><div class="line">TogglePanel(<span class="keyword">const</span> InitStruct&amp; init) : SUPER(init)</div>
 <div class="line">{</div>
 <div class="line">    isCollapsed_ = init.isCollapsed;</div>
@@ -475,8 +650,8 @@ Adding Custom Properties to Your Display Object</h1>
 <div class="line">}</div>
 </div><!-- fragment --><p> Now both C++ creation and Lua creation can initialize this field.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md186"></a>
-4. Add Getters / Setters</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md196"></a>
+4. Add Getters / Setters</h3>
 <div class="fragment"><div class="line"><span class="keyword">public</span>:</div>
 <div class="line">    <span class="keywordtype">bool</span> isCollapsed()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> isCollapsed_; }</div>
 <div class="line">    <span class="keywordtype">void</span> setCollapsed(<span class="keywordtype">bool</span> c) { </div>
@@ -487,8 +662,8 @@ Adding Custom Properties to Your Display Object</h1>
 <div class="line">    }</div>
 </div><!-- fragment --><p> Notice the call to <span class="tt">setDirty()</span> — this ensures the UI will visually update next frame.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md188"></a>
-5. Expose It to Lua (Inside <span class="tt">_registerLuaBindings()</span>)</h2>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md198"></a>
+5. Expose It to Lua (Inside <span class="tt">_registerLuaBindings()</span>)</h3>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> TogglePanel::_registerLuaBindings(<span class="keyword">const</span> std::string&amp; typeName, sol::state_view lua)</div>
 <div class="line">{</div>
 <div class="line">    SUPER::_registerLuaBindings(typeName, lua);</div>
@@ -503,8 +678,8 @@ Adding Custom Properties to Your Display Object</h1>
 <div class="line">    print(&quot;Panel is closed.&quot;)</div>
 <div class="line">end</div>
 </div><!-- fragment --> <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md189"></a>
-Visualizing the Flow</h2>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md199"></a>
+Visualizing the Flow</h3>
 <div class="fragment"><div class="line">Lua or C++ → InitStruct → Constructors → Internal State → Lua Bindings</div>
 </div><!-- fragment --> <div class="fragment"><div class="line">    setCollapsed()</div>
 <div class="line">           │</div>
@@ -515,8 +690,8 @@ Visualizing the Flow</h2>
 <div class="line">next frame → Label redraw, layout update, rendering correct</div>
 </div><!-- fragment --><p> This makes UI state reactive — updates propagate naturally through the render pipeline.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md191"></a>
-Optional: Reflecting Properties Back Into Lua Tables</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md201"></a>
+Optional: Reflecting Properties Back Into Lua Tables</h3>
 <p>If your object supports saving/loading UI layouts, you can override: </p><div class="fragment"><div class="line">sol::table toLuaConfig(sol::state_view lua) <span class="keyword">const override</span>;</div>
 </div><!-- fragment --><p> Which lets you serialize back into lua: </p><div class="fragment"><div class="line"><span class="keyword">auto</span> cfg = panel-&gt;toLuaConfig(L);</div>
 <div class="line">-- cfg now contains { name=<span class="stringliteral">&quot;foo&quot;</span>, type=<span class="stringliteral">&quot;TogglePanel&quot;</span>, isCollapsed=<span class="keyword">true</span>, x=.., y=.. }</div>
@@ -544,8 +719,8 @@ Optional: Reflecting Properties Back Into Lua Tables</h2>
 <li>Even game HUD elements</li>
 </ul>
 <p>All while keeping the behavior clean, deterministic, and easy to reason about.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md194"></a>
-Where to Put Your Logic: Rendering, Layout, Updates, and Input</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md204"></a>
+Where to Put Your Logic: Rendering, Layout, Updates, and Input</h2>
 <p>Every display object in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> participates in the <b>frame loop</b>. <br  />
  If your custom object is going to <em>move, animate, respond to input, draw things,</em> or change layout, you’ll do that in one of the core virtual methods it inherits from <span class="tt">IDisplayObject</span>.</p>
 <p>Here’s the lifecycle:</p>
@@ -556,8 +731,8 @@ Where to Put Your Logic: Rendering, Layout, Updates, and Input</h1>
 <div class="line">onQuit()   → Runs when the program shuts down or object is destroyed</div>
 </div><!-- fragment --><p>Let’s break down what each is <b>for</b>, and what it is <b>not</b> for.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md196"></a>
-<span class="tt">onInit()</span>: Setup, Don’t Draw Yet</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md206"></a>
+<span class="tt">onInit()</span>: Setup, Don’t Draw Yet</h3>
 <p>This is called <em>right after</em> the object is registered in the Factory.</p>
 <p>Use it for:</p><ul>
 <li>Creating child objects</li>
@@ -575,8 +750,8 @@ Where to Put Your Logic: Rendering, Layout, Updates, and Input</h1>
 <div class="line">}</div>
 </div><!-- fragment --><p>Don’t draw here — nothing is on screen yet.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md198"></a>
-<span class="tt">onUpdate(float dt)</span>: Animation / State Changes</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md208"></a>
+<span class="tt">onUpdate(float dt)</span>: Animation / State Changes</h3>
 <p>Called every frame before rendering. <br  />
  Great for timers, animations, and logic.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> TogglePanel::onUpdate(<span class="keywordtype">float</span> dt)</div>
@@ -590,8 +765,8 @@ Where to Put Your Logic: Rendering, Layout, Updates, and Input</h1>
 </div><!-- fragment --><p><b>Rule of thumb:</b> <br  />
  If it changes <em>state</em>, call <span class="tt">setDirty()</span>.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md200"></a>
-<span class="tt">onEvent(const Event&amp;)</span>: Input &amp; UI Interaction</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md210"></a>
+<span class="tt">onEvent(const Event&amp;)</span>: Input &amp; UI Interaction</h3>
 <p>You don’t need to poll SDL manually — the event system handles that. <br  />
  You just react to semantic events.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> TogglePanel::onEvent(<span class="keyword">const</span> Event&amp; ev)</div>
@@ -602,8 +777,8 @@ Where to Put Your Logic: Rendering, Layout, Updates, and Input</h1>
 <div class="line">}</div>
 </div><!-- fragment --><p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> handles capture → target → bubble automatically.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md202"></a>
-<span class="tt">onRender()</span>: <em>Actually draw something</em></h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md212"></a>
+<span class="tt">onRender()</span>: <em>Actually draw something</em></h3>
 <p>This is where you:</p>
 <ul>
 <li>Draw backgrounds</li>
@@ -629,8 +804,8 @@ Where to Put Your Logic: Rendering, Layout, Updates, and Input</h1>
 </div><!-- fragment --><p><b>Important:</b> <br  />
  Don’t draw children here — <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> handles that automatically.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md204"></a>
-<span class="tt">onQuit()</span>: Clean Up <em>If Needed</em></h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md214"></a>
+<span class="tt">onQuit()</span>: Clean Up <em>If Needed</em></h3>
 <p>Most objects don’t need custom cleanup because:</p><ul>
 <li>Lifetime is managed by the Factory</li>
 <li>Rendered textures are owned by the renderer or Label’s own cache</li>
@@ -642,8 +817,8 @@ Where to Put Your Logic: Rendering, Layout, Updates, and Input</h1>
 <div class="line">    <span class="comment">// Most objects will not need this.</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md206"></a>
-Putting It All Together</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md216"></a>
+Putting It All Together</h2>
 <div class="fragment"><div class="line">              +----------------+</div>
 <div class="line">              |  constructor   |</div>
 <div class="line">              +--------+-------+</div>
@@ -668,8 +843,8 @@ Putting It All Together</h1>
 <div class="line">               |  onRender  |  &lt;-- draw to screen</div>
 <div class="line">               +------------+</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md208"></a>
-Practical Tip — When in Doubt:</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md218"></a>
+Practical Tip — When in Doubt:</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">You want to…  </th><th class="markdownTableHeadNone">Use…  </th></tr>
@@ -685,7 +860,186 @@ Practical Tip — When in Doubt:</h1>
 <td class="markdownTableBodyNone">Release external resources  </td><td class="markdownTableBodyNone"><span class="tt">onQuit()</span>  </td></tr>
 </table>
 <hr  />
- </div></div><!-- contents -->
+<h2 class="doxsection"><a class="anchor" id="autotoc_md220"></a>
+✅ Multiple Ways to Create Display Objects</h2>
+<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> does not force you into Lua-only or C++-only development. <br  />
+ You may use either — or mix them freely. All creation paths ultimately flow through the same Factory, which ensures object consistency and lifetime safety.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md221"></a>
+1. Single LUA initialization file:</h3>
+<p>📄 hello_world.lua </p><div class="fragment"><div class="line">local config = {</div>
+<div class="line">    -- Load resources first (external fonts and sprite sheets)</div>
+<div class="line">    resources = {</div>
+<div class="line">        { name = &quot;VarelaRound16&quot;, type = &quot;TruetypeFont&quot;, filename = &quot;assets/VarelaRound.ttf&quot;, font_size = 16 },</div>
+<div class="line">        { name = &quot;VarelaRound32&quot;, type = &quot;TruetypeFont&quot;, filename = &quot;assets/VarelaRound.ttf&quot;, font_size = 32 },</div>
+<div class="line">        { name = &quot;external_font_8x8&quot;, type = &quot;BitmapFont&quot;, filename = &quot;assets/font_8x8.png&quot;, font_width = 8, font_height = 8 }</div>
+<div class="line">    },</div>
+<div class="line"> </div>
+<div class="line">    -- Basic window + renderer setup</div>
+<div class="line">    windowWidth = 800,</div>
+<div class="line">    windowHeight = 600,</div>
+<div class="line">    pixelWidth = 1,</div>
+<div class="line">    pixelHeight = 1,</div>
+<div class="line">    allowTextureResize = true,</div>
+<div class="line">    preserveAspectRatio = true,</div>
+<div class="line">    rendererLogicalPresentation = &quot;SDL_LOGICAL_PRESENTATION_LETTERBOX&quot;,</div>
+<div class="line">    windowFlags = &quot;SDL_WINDOW_RESIZABLE&quot;,</div>
+<div class="line">    pixelFormat = &quot;SDL_PIXELFORMAT_RGBA8888&quot;,</div>
+<div class="line">    color = { r = 0, g = 0, b = 0, a = 255 },</div>
+<div class="line"> </div>
+<div class="line">    rootStage = &quot;mainStage&quot;,</div>
+<div class="line"> </div>
+<div class="line">    children = {</div>
+<div class="line">        {</div>
+<div class="line">            name = &quot;mainStage&quot;,</div>
+<div class="line">            type = &quot;Stage&quot;,</div>
+<div class="line">            color = { r = 32, g = 8, b = 4, a = 255 },</div>
+<div class="line"> </div>
+<div class="line">            children = {</div>
+<div class="line">                {</div>
+<div class="line">                    name = &quot;hello1_label&quot;,</div>
+<div class="line">                    type = &quot;Label&quot;,</div>
+<div class="line">                    text = &quot;Hello World (internal_ttf)&quot;,</div>
+<div class="line">                    x = 10, y = 10,</div>
+<div class="line">                    width = 250, height = 20,</div>
+<div class="line">                    resource_name = &quot;internal_ttf&quot;,</div>
+<div class="line">                    font_size = 16</div>
+<div class="line">                },</div>
+<div class="line">                {</div>
+<div class="line">                    name = &quot;hello2_label&quot;,</div>
+<div class="line">                    type = &quot;Label&quot;,</div>
+<div class="line">                    text = &quot;Hello World (VarelaRound16)&quot;,</div>
+<div class="line">                    x = 10, y = 34,</div>
+<div class="line">                    width = 250, height = 20,</div>
+<div class="line">                    resource_name = &quot;VarelaRound16&quot;,</div>
+<div class="line">                    font_size = 16</div>
+<div class="line">                },</div>
+<div class="line">                {</div>
+<div class="line">                    name = &quot;hello3_label&quot;,</div>
+<div class="line">                    type = &quot;Label&quot;,</div>
+<div class="line">                    text = &quot;Hello World (VarelaRound32)&quot;,</div>
+<div class="line">                    x = 10, y = 58,</div>
+<div class="line">                    width = 350, height = 34,</div>
+<div class="line">                    resource_name = &quot;VarelaRound32&quot;,</div>
+<div class="line">                    font_size = 32</div>
+<div class="line">                },</div>
+<div class="line">                {</div>
+<div class="line">                    name = &quot;hello4_label&quot;,</div>
+<div class="line">                    type = &quot;Label&quot;,</div>
+<div class="line">                    text = &quot;Hello World (external_font_8x8)&quot;,</div>
+<div class="line">                    x = 10, y = 98,</div>
+<div class="line">                    width = 250, height = 12,</div>
+<div class="line">                    resource_name = &quot;external_font_8x8&quot;</div>
+<div class="line">                },</div>
+<div class="line">                {</div>
+<div class="line">                    name = &quot;hello5_label&quot;,</div>
+<div class="line">                    type = &quot;Label&quot;,</div>
+<div class="line">                    text = &quot;Hello World (internal_font_8x8)&quot;,</div>
+<div class="line">                    x = 10, y = 114,</div>
+<div class="line">                    width = 250, height = 12,</div>
+<div class="line">                    resource_name = &quot;internal_font_8x8&quot;</div>
+<div class="line">                },</div>
+<div class="line">                {</div>
+<div class="line">                    name = &quot;hello6_label&quot;,</div>
+<div class="line">                    type = &quot;Label&quot;,</div>
+<div class="line">                    text = &quot;Hello World (internal_font_12x12)&quot;,</div>
+<div class="line">                    x = 10, y = 132,</div>
+<div class="line">                    width = 250, height = 14,</div>
+<div class="line">                    resource_name = &quot;internal_font_12x12&quot;</div>
+<div class="line">                },</div>
+<div class="line">                {</div>
+<div class="line">                    name = &quot;hello7_label&quot;,</div>
+<div class="line">                    type = &quot;Label&quot;,</div>
+<div class="line">                    text = &quot;Hello World (internal_font_16x16)&quot;,</div>
+<div class="line">                    x = 10, y = 154,</div>
+<div class="line">                    width = 250, height = 18,</div>
+<div class="line">                    resource_name = &quot;internal_font_16x16&quot;</div>
+<div class="line">                }</div>
+<div class="line">            }</div>
+<div class="line">        }</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">-- Apply configuration &amp; return for Core.run()</div>
+<div class="line">configure(config)</div>
+<div class="line">return config</div>
+</div><!-- fragment --><hr  />
+<p> 🚀 Running from C++ </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="SDOM_8hpp.html">SDOM/SDOM.hpp</a>&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv)</div>
+<div class="line">{</div>
+<div class="line">    Core&amp; core = getCore();</div>
+<div class="line">    <span class="keywordflow">return</span> core.run(<span class="stringliteral">&quot;lua/hello_world.lua&quot;</span>);</div>
+<div class="line">}</div>
+<div class="ttc" id="aSDOM_8hpp_html"><div class="ttname"><a href="SDOM_8hpp.html">SDOM.hpp</a></div></div>
+</div><!-- fragment --><p> 🚀 Running from command-line </p><div class="fragment"><div class="line">./prog --lua_file lua/hello_world.lua</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md223"></a>
+2. Static Lua Scene Definition (Declarative)</h3>
+<p>This is the most common way to define UI layouts. </p><div class="fragment"><div class="line">{</div>
+<div class="line">    name = &quot;hello_label&quot;,</div>
+<div class="line">    type = &quot;Label&quot;,</div>
+<div class="line">    text = &quot;Hello World!&quot;,</div>
+<div class="line">    x = 10, y = 20,</div>
+<div class="line">    width = 200, height = 18,</div>
+<div class="line">    resource_name = &quot;internal_font_8x8&quot;</div>
+<div class="line">}</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md224"></a>
+3. Lua Creating UI Dynamically at Runtime</h3>
+<p>Useful for dynamic panels, menus, notifications, etc. </p><div class="fragment"><div class="line">local label = {</div>
+<div class="line">    name = &quot;hello_label_dynamic&quot;,</div>
+<div class="line">    type = &quot;Label&quot;,</div>
+<div class="line">    text = &quot;Hello World (Dynamic)&quot;,</div>
+<div class="line">    x = 10, y = 50,</div>
+<div class="line">    width = 200, height = 18,</div>
+<div class="line">    resource_name = &quot;internal_font_8x8&quot;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">local handle = create(label)</div>
+<div class="line">getStage():addChild(handle)</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md225"></a>
+4. C++ Using InitStruct (Strong-Typed Approach)</h3>
+<p>Good when working in native code only. </p><div class="fragment"><div class="line">Label::InitStruct init;</div>
+<div class="line">init.name = <span class="stringliteral">&quot;hello_label_cpp&quot;</span>;</div>
+<div class="line">init.text = <span class="stringliteral">&quot;Hello World (C++)&quot;</span>;</div>
+<div class="line">init.x = 10;</div>
+<div class="line">init.y = 80;</div>
+<div class="line">init.width = 200;</div>
+<div class="line">init.height = 18;</div>
+<div class="line">init.resource_name = <span class="stringliteral">&quot;internal_font_12x12&quot;</span>;</div>
+<div class="line"> </div>
+<div class="line">DisplayHandle label = getFactory().<a class="code hl_function" href="classSDOM_1_1Factory.html#ada66179588954c3d7921229201070f10">create</a>(<span class="stringliteral">&quot;Label&quot;</span>, init);</div>
+<div class="line">getStageHandle().addChild(label);</div>
+<div class="ttc" id="aclassSDOM_1_1Factory_html_ada66179588954c3d7921229201070f10"><div class="ttname"><a href="classSDOM_1_1Factory.html#ada66179588954c3d7921229201070f10">SDOM::Factory::create</a></div><div class="ttdeci">DisplayHandle create(const std::string &amp;typeName, const sol::table &amp;config)</div><div class="ttdef"><b>Definition</b> SDOM_Factory.cpp:546</div></div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md226"></a>
+5. C++ Creating the Object Using a Lua Table</h3>
+<p>Useful when externalizing UI into config files, JSON/YAML → Lua transforms, etc. </p><div class="fragment"><div class="line">sol::state&amp; lua = getLua();</div>
+<div class="line">sol::table t = lua.create_table();</div>
+<div class="line">t[<span class="stringliteral">&quot;name&quot;</span>] = <span class="stringliteral">&quot;hello_label_cpp_table&quot;</span>;</div>
+<div class="line">t[<span class="stringliteral">&quot;type&quot;</span>] = <span class="stringliteral">&quot;Label&quot;</span>;</div>
+<div class="line">t[<span class="stringliteral">&quot;text&quot;</span>] = <span class="stringliteral">&quot;Hello World (Lua Table in C++)&quot;</span>;</div>
+<div class="line">t[<span class="stringliteral">&quot;x&quot;</span>] = 10;</div>
+<div class="line">t[<span class="stringliteral">&quot;y&quot;</span>] = 110;</div>
+<div class="line">t[<span class="stringliteral">&quot;width&quot;</span>] = 200;</div>
+<div class="line">t[<span class="stringliteral">&quot;height&quot;</span>] = 18;</div>
+<div class="line">t[<span class="stringliteral">&quot;resource_name&quot;</span>] = <span class="stringliteral">&quot;internal_font_16x16&quot;</span>;</div>
+<div class="line"> </div>
+<div class="line">DisplayHandle label = getFactory().<a class="code hl_function" href="classSDOM_1_1Factory.html#ada66179588954c3d7921229201070f10">create</a>(<span class="stringliteral">&quot;Label&quot;</span>, t);</div>
+<div class="line">getStageHandle().addChild(label);</div>
+</div><!-- fragment --><p>🎯 Key Point </p><blockquote class="doxtable">
+<p><b>The Factory doesn't care where your UI definition comes from.</b> Whether you build a widget in C++, Lua, data tables, config files, or procedural code — the result is the same object, created the same way, tracked the same way, and managed by the same lifecycle model. </p>
+</blockquote>
+<p>That’s the advantage of the <span class="tt">Factory + InitStruct + Lua Config</span> triad. </p><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Method  </th><th class="markdownTableHeadNone">When to Use  </th><th class="markdownTableHeadNone">Benefits  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Lua Declarative Scene Tables  </td><td class="markdownTableBodyNone">UI layout, menus, HUDs  </td><td class="markdownTableBodyNone">Easy to edit + reload  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Lua Dynamic Creation  </td><td class="markdownTableBodyNone">Popups, notifications, UI reacting to state  </td><td class="markdownTableBodyNone">Runtime flexibility  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">C++ InitStruct  </td><td class="markdownTableBodyNone">Performance-critical UI or compiled engines  </td><td class="markdownTableBodyNone">Strong types, IDE autocompletion  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">C++ Lua Table  </td><td class="markdownTableBodyNone">When UI is stored externally (data-driven)  </td><td class="markdownTableBodyNone">One codepath for loading scenes  </td></tr>
+</table>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

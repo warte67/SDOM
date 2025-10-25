@@ -273,13 +273,7 @@ Example Usage (with global accessor)</h2>
 <div class="line">}</div>
 </div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 Composition Diagram</h1>
-<p>SVG (static image): <img src="diagrams/core_framework/diagram-01.svg" alt="Core Composition" style="pointer-events: none;" class="inline"/></p>
-<details >
-<summary >
-View Mermaid source</summary>
-<p></p>
-<div class="fragment"><div class="line"> -norender</div>
-<div class="line">flowchart TB</div>
+<div class="fragment"><div class="line">flowchart TB</div>
 <div class="line">    classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px</div>
 <div class="line">    classDef mod  fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px</div>
 <div class="line">    classDef dep  fill:#f5f5f5,stroke:#999,color:#333,stroke-width:1px</div>
@@ -294,17 +288,9 @@ View Mermaid source</summary>
 <div class="line">    Core --&gt; EventMgr</div>
 <div class="line">    Core --&gt; Stage</div>
 <div class="line">    Core --&gt; SDL</div>
-</div><!-- fragment --><p></p>
-</details>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Event Flow</h1>
-<p>SVG (static image): <img src="diagrams/core_framework/diagram-02.svg" alt="Core Event Flow" style="pointer-events: none;" class="inline"/></p>
-<details >
-<summary >
-View Mermaid source</summary>
-<p></p>
-<div class="fragment"><div class="line"> -norender</div>
-<div class="line">sequenceDiagram</div>
+<div class="fragment"><div class="line">sequenceDiagram</div>
 <div class="line">  autonumber</div>
 <div class="line">  participant Core as SDOM::Core</div>
 <div class="line">  participant EM as EventManager</div>
@@ -312,9 +298,7 @@ View Mermaid source</summary>
 <div class="line"> </div>
 <div class="line">  Core-&gt;&gt;EM: poll/dispatch()</div>
 <div class="line">  EM-&gt;&gt;Stage: propagate events\n(capture → target → bubble)</div>
-</div><!-- fragment --><p></p>
-</details>
-<p>For details on propagation semantics, see <span class="tt"><a class="el" href="dom__propagation_8md.html">docs/dom_propagation.md</a></span>.</p>
+</div><!-- fragment --><p>For details on propagation semantics, see <span class="tt"><a class="el" href="dom__propagation_8md.html">docs/dom_propagation.md</a></span>.</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Unit Tests</h1>
 <p>Core exposes <span class="tt">onUnitTest()</span> and can route tests through objects that implement <span class="tt">IUnitTest</span>. Typically, Factory-managed objects (including Stages or specific components) provide focused tests invoked via Core’s test hook.</p>
