@@ -48,5 +48,6 @@ var searchData=
   ['extended_20icon_20glyphs_3a_45',['Extended Icon Glyphs:',['../md_docs_2icon__8x8.html#autotoc_md229',1,'']]],
   ['extensibility_46',['Extensibility',['../md_docs_2icon__8x8.html#autotoc_md233',1,'Extensibility'],['../md_docs_2label__text__parsing.html#autotoc_md290',1,'Extensibility']]],
   ['extensibility_20singleton_20pattern_47',['Extensibility &amp;amp; Singleton Pattern',['../md_docs_2core__framework.html#autotoc_md37',1,'']]],
-  ['extensible_20factory_20design_48',['Extensible Factory Design',['../md_docs_2extensible__factory.html',1,'']]]
+  ['extensible_20factory_20design_48',['Extensible Factory Design',['../md_docs_2extensible__factory.html#autotoc_md142',1,'']]],
+  ['extensible_5ffactory_49',['extensible_factory',['../md_docs_2extensible__factory.html',1,'']]]
 ];

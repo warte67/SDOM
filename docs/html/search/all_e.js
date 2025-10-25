@@ -20,7 +20,7 @@ var searchData=
   ['deprecate_20automatic_20table_20parsing_17',['1. Deprecate Automatic Table Parsing',['../md_docs_2startup__refactor.html#autotoc_md433',1,'']]],
   ['depressed_18',['Depressed',['../classSDOM_1_1ArrowButton.html#ac96038b59a245f98c0e00de562345d40a83cd8cb2be2d9278f796db9daf0e61eb',1,'SDOM::ArrowButton']]],
   ['description_20and_20development_20progress_19',['Project Description and Development Progress',['../md_docs_2progress.html',1,'']]],
-  ['design_20',['Design',['../md_docs_2core__framework.html',1,'Core Framework Design'],['../md_docs_2dom__propagation.html',1,'DOM Propagation Design'],['../md_docs_2extensible__factory.html',1,'Extensible Factory Design'],['../md_docs_2architecture__overview.html#autotoc_md1',1,'Lua Integration (Optional by Design)']]],
+  ['design_20',['Design',['../md_docs_2core__framework.html',1,'Core Framework Design'],['../md_docs_2dom__propagation.html',1,'DOM Propagation Design'],['../md_docs_2extensible__factory.html#autotoc_md142',1,'Extensible Factory Design'],['../md_docs_2architecture__overview.html#autotoc_md1',1,'Lua Integration (Optional by Design)']]],
   ['design_20document_21',['Design Document',['../md_docs_2IPanelObject.html#autotoc_md235',1,'IPanelObject Design Document'],['../md_docs_2label__text__parsing.html',1,'Label Text Parsing Design Document'],['../md_docs_2event__design.html',1,'SDOM::Events Design Document']]],
   ['design_20goals_20for_20ipanelobject_22',['Design Goals for &lt;span class=&quot;tt&quot;&gt;IPanelObject&lt;/span&gt;',['../md_docs_2IPanelObject.html',1,'']]],
   ['design_20intent_23',['Why SDOM Uses C++ (Memory Safety and Design Intent)',['../md_docs_2architecture__overview.html#autotoc_md8',1,'']]],

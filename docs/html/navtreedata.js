@@ -152,14 +152,13 @@ var NAVTREE =
         ] ]
       ] ]
     ] ],
-    [ "Extensible Factory Design", "md_docs_2extensible__factory.html", [
+    [ "extensible_factory", "md_docs_2extensible__factory.html", [
+      [ "Extensible Factory Design", "md_docs_2extensible__factory.html#autotoc_md142", null ],
       [ "Lua Application Framework (Test + Runtime Layer)", "md_docs_2extensible__factory.html#autotoc_md146", [
-        [ "<b>Lua Is Optional (but First-Class)</b>", "md_docs_2extensible__factory.html#autotoc_md144", [
+        [ "Now, One More Step:", "md_docs_2extensible__factory.html#autotoc_md151", [
           [ "Callback Modules", "md_docs_2extensible__factory.html#autotoc_md147", null ],
           [ "Display Object Event Listeners", "md_docs_2extensible__factory.html#autotoc_md148", null ],
-          [ "Larger Applications", "md_docs_2extensible__factory.html#autotoc_md149", null ]
-        ] ],
-        [ "Now, One More Step:", "md_docs_2extensible__factory.html#autotoc_md151", [
+          [ "Larger Applications", "md_docs_2extensible__factory.html#autotoc_md149", null ],
           [ "Lua flows naturally into the core systems:", "md_docs_2extensible__factory.html#autotoc_md152", null ],
           [ "✅ What this Diagram Communicates", "md_docs_2extensible__factory.html#autotoc_md153", null ],
           [ "This directly reinforces:", "md_docs_2extensible__factory.html#autotoc_md154", null ]
