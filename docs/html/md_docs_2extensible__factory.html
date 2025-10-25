@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>SDOM - Simple SDL Document Object Model: extensible_factory</title>
+<title>SDOM - Simple SDL Document Object Model: Extensible Factory Design</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -89,12 +89,10 @@ $(function(){initNavTree('md_docs_2extensible__factory.html','',''); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">extensible_factory </div></div>
+  <div class="headertitle"><div class="title">Extensible Factory Design </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>{% include mermaid.html %}</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md142"></a>
-Extensible Factory Design</h1>
+<div class="textblock"><p><a class="anchor" id="autotoc_md142"></a></p>
 <p>The Factory is where <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> creates things. Whenever the system needs a new display object (like a Button, Slider, or Label) or a new resource (like a texture or font), it asks the Factory to build it. This keeps object creation consistent and centralized, instead of scattering <span class="tt">new</span> calls throughout the codebase.</p>
 <p>One important detail is that the Factory does <b>not</b> return raw pointers. Instead, it returns <b>DisplayHandles</b> and <b>AssetHandles</b>. These are lightweight, copyable references that stay valid even if the underlying object gets moved in memory or reloaded. Handles also make it possible for Lua, C++, or even other languages in the future to reference the same objects safely.</p>
 <p>Objects themselves live in the Factory’s internal registry, and they stay alive as long as something is using them. When an object is removed from the visual tree, it becomes an <b>orphan</b>. Depending on the object’s configured retention policy, the Factory can keep it around, destroy it immediately, or allow it to exist for a <b>grace period</b> (useful for animated UI transitions).</p>
@@ -102,8 +100,8 @@ Extensible Factory Design</h1>
 <p>For an overview of how the Factory relates to Core, Stage, EventManager, and the display tree, see: <br  />
  <span class="tt"><a class="el" href="architecture__overview_8md.html">docs/architecture_overview.md</a></span>.</p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md144"></a>
-<b>Lua Is Optional (but First-Class)</b></h3>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md144"></a>
+<b>Lua Is Optional (but First-Class)</b></h2>
 <p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> can be used in several ways:</p>
 <ul>
 <li><b>No Lua at all:</b> Create everything directly from C++.</li>

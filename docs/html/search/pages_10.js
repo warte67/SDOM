@@ -2,7 +2,7 @@ var searchData=
 [
   ['factory_0',['Factory',['../md_docs_2extensible__factory.html#autotoc_md156',1,'How a Display Object Registers Itself with the Factory'],['../md_docs_2extensible__factory.html#autotoc_md164',1,'What Registration Actually Looks Like Inside the Factory']]],
   ['factory_20based_20global_20traversal_20type_203_1',['3. Factory-based Global Traversal (Type 3)',['../md_docs_2dom__propagation.html#autotoc_md104',1,'']]],
-  ['factory_20design_2',['Extensible Factory Design',['../md_docs_2extensible__factory.html#autotoc_md142',1,'']]],
+  ['factory_20design_2',['Extensible Factory Design',['../md_docs_2extensible__factory.html',1,'']]],
   ['fade_20out_20animation_20using_20graceperiod_3',['Example: Fade-Out Animation Using GracePeriod',['../md_docs_2extensible__factory.html#autotoc_md184',1,'']]],
   ['features_4',['Features',['../md_README.html#autotoc_md450',1,'Features'],['../md_README.html#autotoc_md452',1,'Key Features']]],
   ['file_3a_5',['1. Single LUA initialization file:',['../md_docs_2extensible__factory.html#autotoc_md221',1,'']]],

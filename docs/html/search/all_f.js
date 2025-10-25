@@ -71,7 +71,6 @@ var searchData=
   ['extendedcharacterindex_68',['ExtendedCharacterIndex',['../namespaceSDOM.html#aee303a5ea55cf095657cc513fa582406',1,'SDOM']]],
   ['extensibility_69',['Extensibility',['../md_docs_2icon__8x8.html#autotoc_md233',1,'Extensibility'],['../md_docs_2label__text__parsing.html#autotoc_md290',1,'Extensibility']]],
   ['extensibility_20singleton_20pattern_70',['Extensibility &amp;amp; Singleton Pattern',['../md_docs_2core__framework.html#autotoc_md37',1,'']]],
-  ['extensible_20factory_20design_71',['Extensible Factory Design',['../md_docs_2extensible__factory.html#autotoc_md142',1,'']]],
-  ['extensible_5ffactory_72',['extensible_factory',['../md_docs_2extensible__factory.html',1,'']]],
-  ['extensible_5ffactory_2emd_73',['extensible_factory.md',['../extensible__factory_8md.html',1,'']]]
+  ['extensible_20factory_20design_71',['Extensible Factory Design',['../md_docs_2extensible__factory.html',1,'']]],
+  ['extensible_5ffactory_2emd_72',['extensible_factory.md',['../extensible__factory_8md.html',1,'']]]
 ];
