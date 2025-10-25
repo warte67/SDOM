@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['warning_3a_20avoid_20diamond_20inheritance_0',['Inheritance Warning: Avoid Diamond Inheritance',['../md_docs_2object__handles.html#autotoc_md328',1,'']]],
+  ['warning_3a_20avoid_20diamond_20inheritance_0',['Inheritance Warning: Avoid Diamond Inheritance',['../md_docs_2object__handles.html#autotoc_md329',1,'']]],
   ['ways_20to_20create_20display_20objects_1',['✅ Multiple Ways to Create Display Objects',['../md_docs_2extensible__factory.html#autotoc_md220',1,'']]],
-  ['what_20is_20a_209_20slice_209_20patch_20panel_2',['What is a 9 slice 9 patch panel',['../md_docs_2IPanelObject.html#autotoc_md236',1,'What is a 9-slice (9-patch) panel?'],['../md_docs_2IPanelObject.html#autotoc_md237',1,'What is a 9-slice (9-patch) panel?']]],
+  ['what_20is_20a_209_20slice_209_20patch_20panel_2',['What is a 9 slice 9 patch panel',['../md_docs_2IPanelObject.html#autotoc_md237',1,'What is a 9-slice (9-patch) panel?'],['../md_docs_2IPanelObject.html#autotoc_md238',1,'What is a 9-slice (9-patch) panel?']]],
   ['what_20registration_20actually_20looks_20like_20inside_20the_20factory_3',['What Registration Actually Looks Like Inside the Factory',['../md_docs_2extensible__factory.html#autotoc_md164',1,'']]],
   ['what_20this_20diagram_20communicates_4',['✅ What this Diagram Communicates',['../md_docs_2extensible__factory.html#autotoc_md153',1,'']]],
   ['when_20creating_20new_20objects_5',['3. Summary Checklist (Copy This When Creating New Objects)',['../md_docs_2extensible__factory.html#autotoc_md174',1,'']]],
@@ -16,13 +16,13 @@ var searchData=
   ['window_20rationale_13',['Single Stage, Single Window Rationale',['../md_docs_2core__framework.html#autotoc_md46',1,'']]],
   ['window_20resizing_20texture_20resolution_14',['Window Resizing &amp;amp; Texture Resolution',['../md_docs_2core__framework.html#autotoc_md49',1,'']]],
   ['with_20global_20accessor_15',['Example Usage (with global accessor)',['../md_docs_2core__framework.html#autotoc_md29',1,'']]],
-  ['with_20lua_16',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md419',1,'']]],
+  ['with_20lua_16',['Example: Creating with Lua',['../md_docs_2scripting__and__configuration.html#autotoc_md420',1,'']]],
   ['with_20retainuntilmanual_17',['Example: UI Reuse With RetainUntilManual',['../md_docs_2extensible__factory.html#autotoc_md185',1,'']]],
   ['with_20the_20factory_18',['How a Display Object Registers Itself with the Factory',['../md_docs_2extensible__factory.html#autotoc_md156',1,'']]],
-  ['word_20tokenization_20rules_19',['Word Tokenization Rules',['../md_docs_2label__text__parsing.html#autotoc_md278',1,'']]],
-  ['word_20wrapping_20autosizing_20',['Word Wrapping &amp;amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md286',1,'']]],
+  ['word_20tokenization_20rules_19',['Word Tokenization Rules',['../md_docs_2label__text__parsing.html#autotoc_md279',1,'']]],
+  ['word_20wrapping_20autosizing_20',['Word Wrapping &amp;amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md287',1,'']]],
   ['world_20coordinate_20backpropagation_20traversal_20type_204_21',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_docs_2dom__propagation.html#autotoc_md105',1,'']]],
-  ['wrapping_20autosizing_22',['Word Wrapping &amp;amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md286',1,'']]],
-  ['wrapping_20layout_20behavior_23',['&lt;b&gt;Wrapping &amp;amp; Layout Behavior&lt;/b&gt;',['../md_docs_2label__text__parsing.html#autotoc_md308',1,'']]],
-  ['wrapping_20rules_24',['Label Sizing and Wrapping Rules',['../md_docs_2label__text__parsing.html#autotoc_md295',1,'']]]
+  ['wrapping_20autosizing_22',['Word Wrapping &amp;amp; Autosizing',['../md_docs_2label__text__parsing.html#autotoc_md287',1,'']]],
+  ['wrapping_20layout_20behavior_23',['&lt;b&gt;Wrapping &amp;amp; Layout Behavior&lt;/b&gt;',['../md_docs_2label__text__parsing.html#autotoc_md309',1,'']]],
+  ['wrapping_20rules_24',['Label Sizing and Wrapping Rules',['../md_docs_2label__text__parsing.html#autotoc_md296',1,'']]]
 ];

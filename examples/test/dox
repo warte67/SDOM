@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-cd ../../docs
-doxygen Doxyfile
+cd ../..
+doxygen docs/Doxyfile

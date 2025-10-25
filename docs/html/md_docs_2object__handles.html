@@ -92,13 +92,13 @@ $(function(){initNavTree('md_docs_2object__handles.html','',''); });
   <div class="headertitle"><div class="title">Object Handles in SDOM </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md319"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md320"></a></p>
 <table class="doxtable">
 <tr>
 <td style="width: 200px; vertical-align: top;"><img src="diagrams/artwork/two-trees.png" alt="Two trees representing SDOM's two distinct trees" style="max-width: 200px; border-radius: 4px;" class="inline"/> </td><td style="vertical-align: top; padding-left: 12px;">Like two trees in a garden—one bearing the leaves and branches you can see, and one with roots that quietly nourish—SDOM separates concerns into two living structures. The <b>visual tree</b> is composed of <code>IDisplayObject</code> nodes that form the interactive scene: they receive events, participate in layout and anchoring, and render to the screen. In parallel, the <b>asset tree</b> is composed of <code>IAssetObject</code> nodes that hold images, fonts, audio, and configuration—everything the visuals consume, but which is not itself part of the scene graph. <code>DisplayHandle</code> safely references nodes in the visual tree, while <code>AssetHandle</code> safely references assets in the asset tree, preventing accidental cross-use and eliminating dangling references. Keeping these trees distinct avoids “grafted” diamond-inheritance pathologies, clarifies lifecycles and traversal, and keeps ownership predictable as your application grows. </td></tr>
 </table>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md321"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md322"></a>
 Two Trees in the Garden</h1>
 <div class="fragment"><div class="line">flowchart TB</div>
 <div class="line">    classDef dom fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px</div>
@@ -138,7 +138,7 @@ Two Trees in the Garden</h1>
 <li>Independent lifecycles and traversal patterns.</li>
 <li>Type-safe handles (<span class="tt">DisplayHandle</span>, <span class="tt">AssetHandle</span>) prevent accidental mixing.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md322"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md323"></a>
 Overview</h1>
 <p>In <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>, a handle is a small, typed, value object that identifies something by name and type, then resolves it on demand through the Factory. <span class="tt">DisplayHandle</span> refers to nodes in the visual tree (<span class="tt">IDisplayObject</span>), while <span class="tt">AssetHandle</span> points to assets in the asset tree (<span class="tt">IAssetObject</span>). Each handle carries only two strings (name and type), making it cheap to copy, easy to compare, and safe to pass across boundaries (e.g., Lua scripts, configs, or tooling).</p>
 <p>Resolution is lazy: when you call <span class="tt">get()</span>, dereference (<span class="tt">-&gt;</span>/<span class="tt">*</span>), or convert to <span class="tt">bool</span>, the handle consults the Factory’s registry to fetch the current live object for that name/type. This indirection cleanly decouples the producer of a reference from the owner of the object. As long as the Factory keeps its name→pointer map up to date, existing handles remain valid even if objects are recreated or resources are reloaded behind the scenes. Conversely, a missing or stale entry simply yields a null handle (<span class="tt">!handle</span>), which you can detect via <span class="tt">isValid()</span>.</p>
@@ -150,9 +150,9 @@ Overview</h1>
 <li>Stable by indirection: resolution goes through the Factory so ownership and lifetimes stay centralized.</li>
 <li>Practical null semantics: missing entries resolve to null; check with <span class="tt">isValid()</span> or <span class="tt">if (handle)</span>.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md323"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md324"></a>
 Handle Types</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md324"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md325"></a>
 1. DisplayHandle</h2>
 <ul>
 <li><b>Purpose:</b> References DOM objects (display objects) in the scene graph.</li>
@@ -160,7 +160,7 @@ Handle Types</h1>
 <li><b>Usage:</b> Used for event targets, parent/child relationships, and DOM traversal.</li>
 <li><b>Benefits:</b> Type-safe access to display object members without casting.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md325"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md326"></a>
 2. AssetHandle</h2>
 <ul>
 <li><b>Purpose:</b> References file-based assets (bitmaps, sounds, fonts, etc.).</li>
@@ -168,7 +168,7 @@ Handle Types</h1>
 <li><b>Usage:</b> Used for asset management, loading, and access.</li>
 <li><b>Benefits:</b> Keeps asset logic separate from DOM logic.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md326"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md327"></a>
 Design Rationale</h1>
 <ul>
 <li><b>Separation of Concerns:</b> DOM objects and resources have different lifecycles and usage patterns.</li>
@@ -176,7 +176,7 @@ Design Rationale</h1>
 <li><b>Clarity:</b> Code is easier to read and maintain.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md328"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md329"></a>
 Inheritance Warning: Avoid Diamond Inheritance</h1>
 <div class="fragment"><div class="line">%%{init: {&quot;flowchart&quot;: { &quot;rankSpacing&quot;: 40, &quot;nodeSpacing&quot;: 140 }}}%%</div>
 <div class="line">flowchart TB</div>
@@ -214,17 +214,17 @@ Inheritance Warning: Avoid Diamond Inheritance</h1>
 <li>Do not inherit from both <span class="tt">IDisplayObject</span> and <span class="tt">IAssetObject</span> in the same class.</li>
 <li>Keep types clearly in one tree or the other to avoid ambiguity and subtle bugs.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md329"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md330"></a>
 Example Usage</h1>
 <div class="fragment"><div class="line">DisplayHandle buttonHandle = factory.getDisplayHandle(<span class="stringliteral">&quot;Button1&quot;</span>);</div>
 <div class="line">IDisplayObject* button = buttonHandle.get();</div>
 <div class="line"> </div>
 <div class="line">AssetHandle imageHandle = factory.getAssetHandle(<span class="stringliteral">&quot;LogoImage&quot;</span>);</div>
 <div class="line">IAssetObject* image = imageHandle.get();</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md330"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md331"></a>
 Migration Strategy</h1>
 <p>&ndash; Refactor all existing <span class="tt">ResourceHandle</span> usages for display objects to <span class="tt">DisplayHandle</span>. &ndash; Introduce <span class="tt">AssetHandle</span> for new asset types. &ndash; Update Factory and registry to support both handle types.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md331"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md332"></a>
 Best Practices</h1>
 <ul>
 <li>Always use the appropriate handle type for the object/resource.</li>
@@ -232,7 +232,7 @@ Best Practices</h1>
 <li>Use provided methods for tree and resource manipulation.</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md333"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md334"></a>
 Optional: Handle Resolution Flow (reference)</h1>
 <div class="fragment"><div class="line"> -norender</div>
 <div class="line">flowchart LR</div>
