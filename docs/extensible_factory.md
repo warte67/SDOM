@@ -110,8 +110,9 @@ This structure scales cleanly:
 ### Lua flows naturally into the core systems:
 Lua config → Factory → Display Tree → Event System → Lua callbacks
 
-<div class="mermaid">
 %%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
+
+<div class="mermaid">
 flowchart LR
 
     %% Classes
