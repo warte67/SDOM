@@ -359,11 +359,16 @@ EXTENSION_MAPPING      = md=markdown
 # case of backward compatibilities issues.
 # The default value is: YES.
 
-MARKDOWN_SUPPORT = YES
+INPUT = docs
+RECURSIVE = YES
 
-# Required for Mermaid diagrams:
-USE_MERMAID        = YES
-MERMAID_OUTPUT_FORMAT = png   # or svg
+MARKDOWN_SUPPORT  = YES
+EXTENSION_MAPPING = md=markdown
+
+USE_MERMAID = YES
+MERMAID_URL = https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js
+MERMAID_INIT = 'startOnLoad:true, theme:"neutral"'
+
 
 # When the TOC_INCLUDE_HEADINGS tag is set to a non-zero value, all headings up
 # to that level are automatically included in the table of contents, even if
@@ -1429,7 +1434,7 @@ HTML_HEADER            =
 # that Doxygen normally uses.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_FOOTER            = docs/footer.html
+HTML_FOOTER            = footer.html
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading style
 # sheet that is used by each HTML page. It can be used to fine-tune the look of
