@@ -18,6 +18,9 @@ namespace SDOM
     {
         // ✅ Test Verified
         // 🔄 In Progress
+        // ⚠️ Failing     
+        // 🚫 Remove
+        // ❌ Invalid
         // ☐ Unchecked/Untested
 
         bool ok = true;
@@ -622,6 +625,7 @@ namespace SDOM
     {
         // ✅ Test Verified
         // 🔄 In Progress
+        // ⚠️ Failing     
         // ☐ Unchecked/Untested
 
         // ☐ int getMaxPriority_lua(const IDisplayObject* obj);              
@@ -636,8 +640,8 @@ namespace SDOM
         // ☐ void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);                 // descriptor form
         // ☐ void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value);   // descriptor form
         // ✅ std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj);      
-        // ☐ void moveToTop_lua(IDisplayObject* obj);                                    
-        // ☐ void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);                   // descriptor form
+        // ⚠️ void moveToTop_lua(IDisplayObject* obj);                                    
+        // ⚠️ void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);                   // descriptor form
         // ✅ int getZOrder_lua(const IDisplayObject* obj);                               
         // ☐ void setZOrder_lua(IDisplayObject* obj, int z_order);                       
         // ✅ void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor);                   // descriptor form
