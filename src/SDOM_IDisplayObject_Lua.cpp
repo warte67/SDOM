@@ -152,6 +152,17 @@ namespace SDOM
     void removeEventListener_lua_any_short(IDisplayObject* obj, const sol::object& descriptor) {
         removeEventListener_lua_any(obj, descriptor, sol::lua_nil, sol::lua_nil);
     }
+    bool hasEventListener_lua(const IDisplayObject* obj, const EventType& type, bool useCapture)
+    {
+        if (!obj) return false;
+        return obj->hasEventListener(type, useCapture);
+    }
+    void queue_event_lua(IDisplayObject* obj, const EventType& type, std::function<void(Event&)> init_payload)
+    {
+        if (!obj) return;
+        obj->queue_event(type, init_payload);
+    }
+
 
     // --- Hierarchy Management --- //
     void addChild_lua(IDisplayObject* obj, DisplayHandle child) { if (!obj) return; obj->addChild(child); }
@@ -175,7 +186,6 @@ namespace SDOM
     std::string getName_lua(const IDisplayObject* obj) { if (!obj) return std::string(); return obj->getName(); }
     void setName_lua(IDisplayObject* obj, const std::string& newName) { if (!obj) return; obj->setName(newName); }
     std::string getType_lua(const IDisplayObject* obj) { if (!obj) return std::string(); return obj->getType(); }
-    void setType_lua(IDisplayObject* obj, const std::string& newType) { if (!obj) return; obj->setType(newType); }
     Bounds getBounds_lua(const IDisplayObject* obj) { 
         if (!obj) {
             // Return a zero-initialized Bounds to avoid leaking uninitialized memory

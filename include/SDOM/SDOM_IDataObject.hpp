@@ -151,7 +151,7 @@ namespace SDOM
             // Not present: create and publish a fresh table
             sol::table newTable = lua.create_table();
             global[typeName] = newTable;
-            if (true)
+            if (false)
             {
                 std::cout << CLR::MAGENTA << "[LUA] Created table for type: "
                         << CLR::LT_MAGENTA << typeName << CLR::RESET << std::endl;
@@ -204,7 +204,7 @@ namespace SDOM
                 utbl["__usertype_registered"] = true;
             } catch(...) {}
 
-            if (true)
+            if (false)
             {
                 std::cout << CLR::YELLOW << "[LUA] Registered usertype: "
                         << CLR::LT_YELLOW << typeName << CLR::RESET << std::endl;
@@ -214,7 +214,6 @@ namespace SDOM
             return userType;
         }        
 
-        // --- New Virtual LUA Registration for Sol2 ---
     public:
 
 
@@ -255,7 +254,7 @@ namespace SDOM
             set_if_absent(typeTable, "setName", [](IDataObject& self, const std::string& newName) { self.setName(newName); });
 
             // if (DEBUG_REGISTER_LUA)
-            if (true)
+            if (false)
             {
                 std::string typeNameLocal = "IDataObject";
                 std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal

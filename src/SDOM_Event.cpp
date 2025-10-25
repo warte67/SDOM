@@ -414,7 +414,7 @@ void SDOM::Event::registerLua(sol::state_view lua)
                     } catch (...) {
                         return sol::object(sv, sv.create_table());
                     }
-                },
+                },                
                 "setPayload", [](Event& e, const sol::table& t) { e.setPayload(t); return e; },
 
                 // Mouse event accessors (methods)

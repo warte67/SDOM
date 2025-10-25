@@ -257,7 +257,7 @@ Notes & test ideas:
         void addEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false, int priority = 0);
         void removeEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false);
         void triggerEventListeners(Event& event, bool useCapture);
-        bool hasEventListeners(const EventType& type, bool useCapture) const;
+        bool hasEventListener(const EventType& type, bool useCapture) const;
         void queue_event(const EventType& type, std::function<void(Event&)> init_payload);
         
         // --- Hierarchy Management --- //

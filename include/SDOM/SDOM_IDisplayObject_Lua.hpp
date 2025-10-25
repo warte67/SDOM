@@ -25,7 +25,7 @@ namespace SDOM
     // --- Debug/Utility --- //
     void printTree_lua(const IDisplayObject* obj);
 
-    // --- Event Handling --- //
+     // --- Events and Event Listener Handling --- //
     void addEventListener_lua(IDisplayObject* obj, EventType& type, sol::function listener, bool useCapture, int priority);
     void removeEventListener_lua(IDisplayObject* obj, EventType& type, sol::function listener, bool useCapture);
     // Flexible variants that accept a Lua table descriptor or multiple-arg form
@@ -33,7 +33,11 @@ namespace SDOM
     void removeEventListener_lua_any(IDisplayObject* obj, const sol::object& descriptor, const sol::object& maybe_listener, const sol::object& maybe_useCapture);
     // Short variants accepting only the descriptor table (common colon-call)
     void addEventListener_lua_any_short(IDisplayObject* obj, const sol::object& descriptor);
-    void removeEventListener_lua_any_short(IDisplayObject* obj, const sol::object& descriptor);
+    void removeEventListener_lua_any_short(IDisplayObject* obj, const sol::object& descriptor);    
+    // Check for presence of event listeners
+    bool hasEventListener_lua(const IDisplayObject* obj, const EventType& type, bool useCapture);
+    // Queue an event with optional payload initializer
+    void queue_event_lua(IDisplayObject* obj, const EventType& type, std::function<void(Event&)> init_payload);
 
     // --- Hierarchy Management --- //
     void addChild_lua(IDisplayObject* obj, DisplayHandle child);                
@@ -43,7 +47,6 @@ namespace SDOM
     bool hasChild_lua(const IDisplayObject* obj, DisplayHandle child);          
     DisplayHandle getParent_lua(const IDisplayObject* obj);                     
     void setParent_lua(IDisplayObject* obj, const DisplayHandle& parent);       
-
     // Ancestor/Descendant helpers
     bool isAncestorOf_lua(IDisplayObject* obj, DisplayHandle descendant);       
     bool isAncestorOf_lua(IDisplayObject* obj, const std::string& name);        
@@ -57,10 +60,8 @@ namespace SDOM
 
     // --- Type & Property Access --- //
     std::string getName_lua(const IDisplayObject* obj);                        
-    void setName_lua(IDisplayObject* obj, const std::string& newName);         
-
+    void setName_lua(IDisplayObject* obj, const std::string& newName);    
     std::string getType_lua(const IDisplayObject* obj);                        
-    void setType_lua(IDisplayObject* obj, const std::string& newType);         
     Bounds getBounds_lua(const IDisplayObject* obj);                           
     // Accept either a Bounds userdata or a Lua table describing bounds
     void setBounds_lua(IDisplayObject* obj, const sol::object& bobj);          

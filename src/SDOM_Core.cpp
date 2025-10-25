@@ -809,7 +809,7 @@ namespace SDOM
 
             DisplayHandle rootHandle = this->getStageHandle();
             // PreRender EventListeners
-            if (node.hasEventListeners(EventType::OnPreRender, false))
+            if (node.hasEventListener(EventType::OnPreRender, false))
             {
                 auto preRenderEv = std::make_unique<Event>(EventType::OnPreRender, rootHandle);
                 preRenderEv->setElapsedTime(this->getElapsedTime());
@@ -839,8 +839,8 @@ namespace SDOM
                 }
             }
 
-            // OnRender event listeners
-            if (node.hasEventListeners(EventType::OnRender, false))
+            // OnRender event listener
+            if (node.hasEventListener(EventType::OnRender, false))
             {
                 auto renderEv = std::make_unique<Event>(EventType::OnRender, rootHandle);
                 renderEv->setElapsedTime(this->getElapsedTime());
@@ -910,7 +910,7 @@ namespace SDOM
         handleUpdate = [this, &handleUpdate, fElapsedTime](IDisplayObject& node) 
         {
             // Dispatch to event listeners first so they can stopPropagation if needed
-            if (node.hasEventListeners(EventType::OnUpdate, false))
+            if (node.hasEventListener(EventType::OnUpdate, false))
             {
                 DisplayHandle rootNode = this->getStageHandle();
                 auto updateEv = std::make_unique<Event>(EventType::OnUpdate, rootNode);

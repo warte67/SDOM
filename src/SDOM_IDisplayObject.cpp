@@ -739,7 +739,7 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
         }
     }
 
-    bool IDisplayObject::hasEventListeners(const EventType& type, bool useCapture) const
+    bool IDisplayObject::hasEventListener(const EventType& type, bool useCapture) const
     {
         const auto& targetListeners = useCapture ? captureEventListeners : bubblingEventListeners;
         auto it = targetListeners.find(type);
