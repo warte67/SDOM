@@ -110,7 +110,7 @@ This structure scales cleanly:
 ### Lua flows naturally into the core systems:
 Lua config → Factory → Display Tree → Event System → Lua callbacks
 
-\startmermaid
+```mermaid
 %%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
 flowchart LR
 
@@ -152,8 +152,7 @@ flowchart LR
 
     SDL3 --> EventMgr
     EventMgr --> LuaEventListeners
-\endmermaid
-
+```
 ### ✅ What this Diagram Communicates
 This visual shows:
 - Lua starts everything by defining the config table.
