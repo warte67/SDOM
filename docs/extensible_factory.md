@@ -1088,3 +1088,7 @@ That’s the advantage of the `Factory + InitStruct + Lua Config` triad.
 | Lua Dynamic Creation         | Popups, notifications, UI reacting to state | Runtime flexibility              |
 | C++ InitStruct               | Performance-critical UI or compiled engines | Strong types, IDE autocompletion |
 | C++ Lua Table                | When UI is stored externally (data-driven)  | One codepath for loading scenes  |
+
+
+---
+last modified on 25 October 2025
