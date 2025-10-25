@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Resolve repo root relative to this script
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/../.." && pwd)"
+
+# 1) Regenerate Mermaid diagrams (PNG/SVG)
+if [[ -x "$REPO_ROOT/scripts/export_mermaid.sh" ]]; then
+	echo "[dox] Exporting Mermaid diagrams..."
+	# Default to skipping PNG export to prefer SVGs on CI and systems without
+	# a Puppeteer-managed browser. Allow callers to override by exporting
+	# MERMAID_SKIP_PNG in their environment before running this script.
+	: "${MERMAID_SKIP_PNG:=1}"
+
+	bash "$REPO_ROOT/scripts/export_mermaid.sh"
+else
+	echo "[dox] Warning: scripts/export_mermaid.sh not found or not executable; skipping diagram export" >&2
+fi
+
+# Parse optional flags: --commit to git add & commit docs/html, --push to push
+COMMIT=false
+PUSH=false
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		--commit) COMMIT=true; shift ;;
+		--push) PUSH=true; shift ;;
+		-h|--help) echo "Usage: dox [--commit] [--push]"; exit 0 ;;
+		*) echo "Unknown option: $1"; exit 1 ;;
+	esac
+done
+
+# 2) Run Doxygen from the repository root using the docs/Doxyfile so paths
+# inside the Doxyfile are evaluated relative to the repository.
+echo "[dox] Running Doxygen (using docs/Doxyfile)..."
+cd "$REPO_ROOT"
+doxygen "$REPO_ROOT/docs/Doxyfile"
+echo "[dox] Doxygen finished."
+
+# 3) Ensure SVG/PNG diagrams are available alongside generated HTML
+if [[ -d "$REPO_ROOT/docs/diagrams" ]]; then
+	echo "[dox] Copying diagrams to docs/html/diagrams for site compatibility..."
+	mkdir -p "$REPO_ROOT/docs/html/diagrams"
+	cp -rT "$REPO_ROOT/docs/diagrams" "$REPO_ROOT/docs/html/diagrams"
+fi
+
+# Optional: commit and/or push the generated docs/html. This only runs when
+# the caller explicitly passes --commit and/or --push to avoid accidental
+# checking-in generated artifacts.
+if [[ "$COMMIT" == "true" ]]; then
+	echo "[dox] Staging docs/html..."
+	git add docs/html
+	git commit -m "docs: regenerate Doxygen HTML" || echo "[dox] No changes to commit."
+	if [[ "$PUSH" == "true" ]]; then
+		echo "[dox] Pushing commit to origin"
+		git push
+	fi
+fi
