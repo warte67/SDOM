@@ -225,7 +225,7 @@ var searchData=
   ['gettextureasset_222',['getTextureAsset',['../classSDOM_1_1SpriteSheet.html#a544f8c575b6d6da43c53b4753b44da1e',1,'SDOM::SpriteSheet']]],
   ['gettextureheight_223',['getTextureHeight',['../classSDOM_1_1Texture.html#a497fb4a9cbcb708282658d603f421115',1,'SDOM::Texture']]],
   ['gettexturewidth_224',['getTextureWidth',['../classSDOM_1_1Texture.html#a9a9b8da27fae262532a963c10eab0c82',1,'SDOM::Texture']]],
-  ['getting_20started_225',['Getting Started',['../md_README.html#autotoc_md7',1,'']]],
+  ['getting_20started_225',['Getting Started',['../md_README.html#autotoc_md8',1,'']]],
   ['gettokenalignlists_226',['getTokenAlignLists',['../classSDOM_1_1Label.html#afb76036183e587362820b6abfbe9a797',1,'SDOM::Label']]],
   ['gettokenlist_227',['getTokenList',['../classSDOM_1_1Label.html#a0041bee050643dfa460db9ebeef6e369',1,'SDOM::Label']]],
   ['gettop_228',['getTop',['../classSDOM_1_1IDisplayObject.html#a3ab76421405a1be09be35ae2e215efb2',1,'SDOM::IDisplayObject']]],

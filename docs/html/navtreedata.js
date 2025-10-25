@@ -25,34 +25,35 @@
 var NAVTREE =
 [
   [ "SDOM - Simple SDL Document Object Model", "index.html", [
+    [ "SDOM Documentation", "index.html", null ],
     [ "SDOM: Simple SDL Document Object Model API", "md_README.html", [
-      [ "Overview", "md_README.html#autotoc_md1", null ],
-      [ "Features", "md_README.html#autotoc_md2", null ],
-      [ "IDataObject: Data-Driven Base Type", "md_README.html#autotoc_md3", [
-        [ "Key Features", "md_README.html#autotoc_md4", null ]
+      [ "Overview", "md_README.html#autotoc_md2", null ],
+      [ "Features", "md_README.html#autotoc_md3", null ],
+      [ "IDataObject: Data-Driven Base Type", "md_README.html#autotoc_md4", [
+        [ "Key Features", "md_README.html#autotoc_md5", null ]
       ] ],
-      [ "Identifier Conventions", "md_README.html#autotoc_md5", null ],
-      [ "Getting Started", "md_README.html#autotoc_md7", [
-        [ "Prerequisites", "md_README.html#autotoc_md8", null ],
-        [ "Building the SDOM Library", "md_README.html#autotoc_md9", null ],
-        [ "Running the Example", "md_README.html#autotoc_md10", null ],
-        [ "Notable recent changes", "md_README.html#autotoc_md11", null ],
-        [ "Migration notes", "md_README.html#autotoc_md12", null ]
+      [ "Identifier Conventions", "md_README.html#autotoc_md6", null ],
+      [ "Getting Started", "md_README.html#autotoc_md8", [
+        [ "Prerequisites", "md_README.html#autotoc_md9", null ],
+        [ "Building the SDOM Library", "md_README.html#autotoc_md10", null ],
+        [ "Running the Example", "md_README.html#autotoc_md11", null ],
+        [ "Notable recent changes", "md_README.html#autotoc_md12", null ],
+        [ "Migration notes", "md_README.html#autotoc_md13", null ]
       ] ],
-      [ "Project Structure", "md_README.html#autotoc_md13", null ],
-      [ "SDL3 Build Dependencies", "md_README.html#autotoc_md14", null ],
-      [ "Debian Build Dependencies", "md_README.html#autotoc_md15", null ],
-      [ "Arch Build Dependencies", "md_README.html#autotoc_md16", null ],
-      [ "Freetype on Debian:", "md_README.html#autotoc_md17", null ],
-      [ "Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf", "md_README.html#autotoc_md18", null ],
-      [ "Build per SDL3:", "md_README.html#autotoc_md19", null ],
-      [ "Build and install SDL3 libraries", "md_README.html#autotoc_md20", null ],
-      [ "Lua and Sol2", "md_README.html#autotoc_md21", null ],
-      [ "Documentation", "md_README.html#autotoc_md22", [
-        [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md23", null ]
+      [ "Project Structure", "md_README.html#autotoc_md14", null ],
+      [ "SDL3 Build Dependencies", "md_README.html#autotoc_md15", null ],
+      [ "Debian Build Dependencies", "md_README.html#autotoc_md16", null ],
+      [ "Arch Build Dependencies", "md_README.html#autotoc_md17", null ],
+      [ "Freetype on Debian:", "md_README.html#autotoc_md18", null ],
+      [ "Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf", "md_README.html#autotoc_md19", null ],
+      [ "Build per SDL3:", "md_README.html#autotoc_md20", null ],
+      [ "Build and install SDL3 libraries", "md_README.html#autotoc_md21", null ],
+      [ "Lua and Sol2", "md_README.html#autotoc_md22", null ],
+      [ "Documentation", "md_README.html#autotoc_md23", [
+        [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md24", null ]
       ] ],
-      [ "License", "md_README.html#autotoc_md24", null ],
-      [ "Author", "md_README.html#autotoc_md25", null ]
+      [ "License", "md_README.html#autotoc_md25", null ],
+      [ "Author", "md_README.html#autotoc_md26", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -126,14 +127,14 @@ var NAVTREEINDEX =
 "classSDOM_1_1Texture.html#acf24a17e1284129dbef77cfc229bba05",
 "classSDOM_1_1TristateButton.html#a8c8e652fc4566409d6e5e9f4ce049de5",
 "classSDOM_1_1TruetypeFont.html#a505bc325aa5116514067b9a58b8e0d25",
-"namespaceSDOM.html#a00fb58f53ea2e4e025e0659332969a37",
-"namespaceSDOM.html#ac0307faba83eb043950a12829774e107",
-"structSDOM_1_1ArrowButton_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085",
-"structSDOM_1_1FontStyle.html#a4dfe6a92f4c0f17e3ad3c78c09ba4b35",
-"structSDOM_1_1IFontObject_1_1InitStruct.html",
-"structSDOM_1_1IconButton_1_1InitStruct.html#aae88dd1f65eda4c4746c9d4e1411d2cf",
-"structSDOM_1_1RadioButton_1_1InitStruct.html#a5abd3577a9910875ceae2f02a6b2f894",
-"structSDOM_1_1Stage_1_1InitStruct.html#af96dbfaee52c56998a0c02de9c57f95b"
+"namespaceSDOM.html",
+"namespaceSDOM.html#abebea8c6f88aa02d7f40823a7d9c3f2e",
+"structSDOM_1_1ArrowButton_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7",
+"structSDOM_1_1FontStyle.html#a4c7117e18052b72d2650bb79cb8f2d1f",
+"structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#ae5443a7162a458e6421ba26c3723aacf",
+"structSDOM_1_1IconButton_1_1InitStruct.html#aaa657c32225ce73ad6b81418225cb4ea",
+"structSDOM_1_1RadioButton_1_1InitStruct.html#a52bc80ec6fb49efd2f86ee43f3a04f6a",
+"structSDOM_1_1Stage_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

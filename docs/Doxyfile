@@ -1066,6 +1066,7 @@ FILE_PATTERNS          = *.c \
                          *.inc \
                          *.m \
                          *.mm \
+                         mainpage.md \
                          *.dox \
                          *.py \
                          *.pyw \

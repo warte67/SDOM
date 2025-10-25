@@ -19,9 +19,9 @@ var searchData=
   ['eventtypefromstring_16',['eventTypeFromString',['../classSDOM_1_1SDL__Utils.html#a15e7cc9c1c4259d53bf6b2ceecc9b3b9',1,'SDOM::SDL_Utils']]],
   ['eventtypehash_17',['EventTypeHash',['../structSDOM_1_1EventTypeHash.html',1,'SDOM']]],
   ['eventtypetostring_18',['eventTypeToString',['../classSDOM_1_1SDL__Utils.html#ae268fa06a6b1779780566f36eea2fedb',1,'SDOM::SDL_Utils']]],
-  ['example_19',['Running the Example',['../md_README.html#autotoc_md10',1,'']]],
+  ['example_19',['Running the Example',['../md_README.html#autotoc_md11',1,'']]],
   ['exception_20',['Exception',['../classSDOM_1_1Exception.html',1,'SDOM::Exception'],['../classSDOM_1_1Exception.html#a52c9fa366c36fcb7fe48a1ac827a02a0',1,'SDOM::Exception::Exception()']]],
-  ['exporting_20mermaid_20diagrams_20to_20png_20svg_20for_20doxygen_21',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md23',1,'']]],
+  ['exporting_20mermaid_20diagrams_20to_20png_20svg_20for_20doxygen_21',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md24',1,'']]],
   ['exposetolua_22',['exposeToLua',['../classCLR.html#a8ac061433144df819feb3ce16f0d0dc8',1,'CLR']]],
   ['extendedcharacterindex_23',['ExtendedCharacterIndex',['../namespaceSDOM.html#aee303a5ea55cf095657cc513fa582406',1,'SDOM']]]
 ];

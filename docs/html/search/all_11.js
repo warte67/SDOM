@@ -9,7 +9,7 @@ var searchData=
   ['raised_6',['Raised',['../classSDOM_1_1ArrowButton.html#ac96038b59a245f98c0e00de562345d40ab1f30139cb5d78ab38b46771b0490345',1,'SDOM::ArrowButton']]],
   ['readme_2emd_7',['README.md',['../README_8md.html',1,'']]],
   ['rebuildtexture_5f_8',['rebuildTexture_',['../classSDOM_1_1Label.html#a72c5ec2f40dd4b556fc4ced61010439e',1,'SDOM::Label']]],
-  ['recent_20changes_9',['Notable recent changes',['../md_README.html#autotoc_md11',1,'']]],
+  ['recent_20changes_9',['Notable recent changes',['../md_README.html#autotoc_md12',1,'']]],
   ['reconfigure_10',['reconfigure',['../classSDOM_1_1Core.html#a953887ffaf0b6c6917ae8075b6edaa27',1,'SDOM::Core']]],
   ['red_11',['RED',['../classCLR.html#a2ade273b4929536356e6a5a68242a596',1,'CLR']]],
   ['register_5fusertype_5fwith_5ftable_12',['register_usertype_with_table',['../classSDOM_1_1IDataObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e',1,'SDOM::IDataObject']]],
@@ -70,5 +70,5 @@ var searchData=
   ['run_67',['run',['../classSDOM_1_1Core.html#aa6c9e1100971ea3848dd6b053962e6b5',1,'SDOM::Core::run()'],['../classSDOM_1_1Core.html#a18f8394dd9b86a9d652fce3fa3fc5e6a',1,'SDOM::Core::run(const CoreConfig &amp;config)'],['../classSDOM_1_1Core.html#a533271ea191ba008b2fdc15da5690385',1,'SDOM::Core::run(const sol::table &amp;config)'],['../classSDOM_1_1Core.html#a2462fa57e0aa3ea6f5227b58831e970d',1,'SDOM::Core::run(const std::string &amp;configFile)'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run(const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)']]],
   ['run_5fall_68',['run_all',['../classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe',1,'SDOM::UnitTests']]],
   ['run_5flua_5ftests_69',['run_lua_tests',['../classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d',1,'SDOM::UnitTests']]],
-  ['running_20the_20example_70',['Running the Example',['../md_README.html#autotoc_md10',1,'']]]
+  ['running_20the_20example_70',['Running the Example',['../md_README.html#autotoc_md11',1,'']]]
 ];
