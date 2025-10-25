@@ -362,9 +362,6 @@ EXTENSION_MAPPING      = md=markdown
 INPUT = docs
 RECURSIVE = YES
 
-MARKDOWN_SUPPORT  = YES
-EXTENSION_MAPPING = md=markdown
-
 
 # When the TOC_INCLUDE_HEADINGS tag is set to a non-zero value, all headings up
 # to that level are automatically included in the table of contents, even if

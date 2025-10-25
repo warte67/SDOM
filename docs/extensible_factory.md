@@ -110,7 +110,8 @@ This structure scales cleanly:
 ### Lua flows naturally into the core systems:
 Lua config → Factory → Display Tree → Event System → Lua callbacks
 
-```mermaid
+```html
+<div class="mermaid">
 %%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
 flowchart LR
 
@@ -152,7 +153,10 @@ flowchart LR
 
     SDL3 --> EventMgr
     EventMgr --> LuaEventListeners
+</div>
 ```
+
+
 ### ✅ What this Diagram Communicates
 This visual shows:
 - Lua starts everything by defining the config table.
@@ -1091,4 +1095,4 @@ That’s the advantage of the `Factory + InitStruct + Lua Config` triad.
 
 
 ---
-last modified on 25 October 2025
+last modified on 25 October
