@@ -34,9 +34,199 @@ So when we talk about the Factory, we are really talking about the heart of SDOM
 
 The rest of this document explains how the Factory is structured, how lifetime rules work, and how to register new object and asset types.
 
+# Lua Application Framework (Test + Runtime Layer)
+
+SDOM embeds Lua not just for configuration, but also as an optional application
+logic layer. You may choose how much of your project uses Lua:
+
+| Use Case | Description |
+|---------|-------------|
+| **No Lua** | Create and control the UI entirely from C++. |
+| **Lua Configuration** | Use Lua only to describe UI layout. |
+| **Mixed Logic** | Use Lua for UI logic and C++ for core systems. |
+| **Full Lua App** | Write your entire project in Lua; SDOM handles rendering and events. |
+
+The file `lua/config.lua` acts as the *application entry point* when running
+the example test application:
+
+```lua
+Core.run("lua/config.lua")
+```
+This file returns a config table describing initial resources, window
+settings, and the root display tree. SDOM reads this table and builds the scene
+graph via the Factory.
+
+### Callback Modules
+Rather than placing logic directly inside config.lua, callbacks are organized
+into modules under:
+```csharp
+lua/callbacks/
+    init.lua
+    quit.lua
+    update.lua
+    event.lua
+    render.lua
+    unittest.lua
+    window_resize.lua
+```
+Each module returns a table of functions. These functions are registered with
+the engine using `registerOn(name, fn):`
+```lua
+registerOn("Init", callbacks.init.on_init)
+registerOn("Update", callbacks.update.on_update)
+registerOn("Render", callbacks.render.on_render)
+```
+This keeps application logic clean, testable, and modular.
+
+### Display Object Event Listeners
+Display objects can listen for UI events directly:
+```lua
+local button = getDisplayObject("main_stage_button")
+
+button:addEventListener({
+    type = EventType.MouseClick,
+    listener = function(ev)
+        setRoot("stageTwo")
+    end
+})
+```
+Listeners are stored inside the object and participate in full event dispatch:
+capture → target → bubble.
+
+These listeners may receive structured SDOM event payloads. In the future,
+a unified payload schema will ensure consistent fields for keyboard, mouse,
+window, drag, and custom UI events.
+
+### Larger Applications
+This structure scales cleanly:
+- UI layouts defined as trees
+- Behavior defined in small listener and callback modules
+- State transitions implemented by changing the active Stage (`setRoot("X")`)
+
+---
+
+## Now, One More Step:
+
+### Lua flows naturally into the core systems:
+Lua config → Factory → Display Tree → Event System → Lua callbacks
+
+```mermaid-norender
+%%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
+flowchart LR
+
+    %% Classes
+    classDef lua fill:#fff7e6,stroke:#d28b00,color:#5a4300,stroke-width:1px
+    classDef core fill:#e9f4ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
+    classDef factory fill:#f0fff4,stroke:#5fa862,color:#1b4220,stroke-width:1px
+    classDef display fill:#f9f9f9,stroke:#888,color:#222,stroke-width:1px
+    classDef event fill:#fff2fa,stroke:#ca6f9e,color:#431a33,stroke-width:1px
+    classDef external fill:#f2f2ff,stroke:#7c6fe6,color:#262262,stroke-width:1px
+
+    %% Nodes
+    LuaConfig["Lua Config Table<br/><code>config = { ... }</code>"]:::lua
+    Callbacks["Lua Callback Modules<br/><code>callbacks/*.lua</code>"]:::lua
+
+    Core["Core SDL Window + Main Loop"]:::core
+    Factory["Factory Creates & Owns Objects"]:::factory
+    Resources["Resource Registry (TTF, Images, Sprites, etc.)"]:::factory
+    DisplayTree["Display Tree (IDisplayObject hierarchy)"]:::display
+
+    EventMgr["EventManager (Capture → Target → Bubble)"]:::event
+    LuaEventListeners["Lua Object Listeners<br/><code>obj:addEventListener(...)</code>"]:::lua
+
+    SDL3["SDL3 / Platform Input"]:::external
+
+    %% Relationships
+    LuaConfig --> Core
+    Core --> Factory
+    Factory --> Resources
+    Factory --> DisplayTree
+
+    Core --> EventMgr
+    EventMgr --> DisplayTree
+    DisplayTree --> LuaEventListeners
+
+    Callbacks --> Core
+    Callbacks --> DisplayTree
+    Callbacks --> LuaEventListeners
+
+    SDL3 --> EventMgr
+    EventMgr --> LuaEventListeners
+```
+### ✅ What this Diagram Communicates
+This visual shows:
+- Lua starts everything by defining the config table.
+- Core reads that configuration and sets up the system.
+- The Factory constructs resources and display objects.
+- The Display Tree represents UI layout, hierarchy, and transforms.
+- EventManager receives raw SDL3 input → dispatches structured events.
+- Lua event listeners receive high-level UI events (not raw SDL fields).
+- Lua callback modules handle update/render/global behavior.
+
+### This directly reinforces:
+| Layer          | Responsibility                                           |
+| -------------- | -------------------------------------------------------- |
+| **C++ Engine** | Rendering, object lifetime, event dispatch, performance. |
+| **Lua**        | Application behavior, UI logic, orchestration.           |
+| **Handles**    | Safe, language-independent references.                   |
+| **Factory**    | Centralized object creation + ownership.                 |
+
+```mermaid-norender
+%%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
+flowchart TB
+
+    %% Styles
+    classDef sys fill:#e9f4ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
+    classDef tree fill:#f9f9f9,stroke:#888,color:#222,stroke-width:1px
+    classDef event fill:#fff2fa,stroke:#ca6f9e,color:#4a233a,stroke-width:1px
+    classDef lua fill:#fff7e6,stroke:#d28b00,color:#5a4300,stroke-width:1px
+    classDef ext fill:#f2f2ff,stroke:#7c6fe6,color:#262262,stroke-width:1px
+
+    %% Nodes
+    SDL3["SDL3 Input Events<br/><code>Mouse / Keyboard / Controller</code>"]:::ext
+    EventMgr["EventManager<br/><small>Queues, Normalizes, Dispatches</small>"]:::event
+
+    subgraph Tree["Display Tree (Hierarchy)"]
+        Root["Stage (Root)"]:::tree
+        Parent["Parent DisplayObject"]:::tree
+        Target["Target DisplayObject"]:::tree
+        Child["Child DisplayObject"]:::tree
+    end
+
+    LuaListeners["Lua Event Listeners<br/><code>obj:addEventListener(...)</code>"]:::lua
+    CppHandlers["C++ Handlers<br/><code>onEvent/onClick/onUpdate</code>"]:::sys
+
+    %% Edges
+    SDL3 -->|Raw SDL_Event| EventMgr
+    EventMgr -->|Capture Phase<br/><small>Root → Parent</small>| Root
+    Root --> Parent
+    Parent --> Target
+
+    Target -->|Target Phase<br/><small>Object-specific event handling</small>| Target
+
+    Target -->|Bubble Phase<br/><small>Target → Parent → Root</small>| Parent
+    Parent --> Root
+
+    Root --> LuaListeners
+    Target --> LuaListeners
+    Parent --> LuaListeners
+
+    Root --> CppHandlers
+    Target --> CppHandlers
+    Parent --> CppHandlers
+
+```
+🧠 What This Shows
+| Phase       | Path                 | Purpose                                  |
+| ----------- | -------------------- | ---------------------------------------- |
+| **Capture** | Root → Target parent | "See what's about to happen."            |
+| **Target**  | Target only          | The object receiving the event reacts.   |
+| **Bubble**  | Target → Root        | Higher-level systems react after target. |
 
 
-## How a Display Object Registers Itself with the Factory
+--- 
+
+# How a Display Object Registers Itself with the Factory
 
 In SDOM, display objects are not created by calling constructors directly.  
 Instead, each display object **registers itself** with the Factory, and the Factory becomes the only place that creates them.
@@ -700,4 +890,201 @@ void TogglePanel::onQuit()
 ---
 
 
+## ✅ Multiple Ways to Create Display Objects
 
+SDOM does not force you into Lua-only or C++-only development.  
+You may use either — or mix them freely. All creation paths ultimately flow
+through the same Factory, which ensures object consistency and lifetime safety.
+
+### 1. Single LUA initialization file:
+📄 hello_world.lua
+```lua
+local config = {
+    -- Load resources first (external fonts and sprite sheets)
+    resources = {
+        { name = "VarelaRound16", type = "TruetypeFont", filename = "assets/VarelaRound.ttf", font_size = 16 },
+        { name = "VarelaRound32", type = "TruetypeFont", filename = "assets/VarelaRound.ttf", font_size = 32 },
+        { name = "external_font_8x8", type = "BitmapFont", filename = "assets/font_8x8.png", font_width = 8, font_height = 8 }
+    },
+
+    -- Basic window + renderer setup
+    windowWidth = 800,
+    windowHeight = 600,
+    pixelWidth = 1,
+    pixelHeight = 1,
+    allowTextureResize = true,
+    preserveAspectRatio = true,
+    rendererLogicalPresentation = "SDL_LOGICAL_PRESENTATION_LETTERBOX",
+    windowFlags = "SDL_WINDOW_RESIZABLE",
+    pixelFormat = "SDL_PIXELFORMAT_RGBA8888",
+    color = { r = 0, g = 0, b = 0, a = 255 },
+
+    rootStage = "mainStage",
+
+    children = {
+        {
+            name = "mainStage",
+            type = "Stage",
+            color = { r = 32, g = 8, b = 4, a = 255 },
+
+            children = {
+                {
+                    name = "hello1_label",
+                    type = "Label",
+                    text = "Hello World (internal_ttf)",
+                    x = 10, y = 10,
+                    width = 250, height = 20,
+                    resource_name = "internal_ttf",
+                    font_size = 16
+                },
+                {
+                    name = "hello2_label",
+                    type = "Label",
+                    text = "Hello World (VarelaRound16)",
+                    x = 10, y = 34,
+                    width = 250, height = 20,
+                    resource_name = "VarelaRound16",
+                    font_size = 16
+                },
+                {
+                    name = "hello3_label",
+                    type = "Label",
+                    text = "Hello World (VarelaRound32)",
+                    x = 10, y = 58,
+                    width = 350, height = 34,
+                    resource_name = "VarelaRound32",
+                    font_size = 32
+                },
+                {
+                    name = "hello4_label",
+                    type = "Label",
+                    text = "Hello World (external_font_8x8)",
+                    x = 10, y = 98,
+                    width = 250, height = 12,
+                    resource_name = "external_font_8x8"
+                },
+                {
+                    name = "hello5_label",
+                    type = "Label",
+                    text = "Hello World (internal_font_8x8)",
+                    x = 10, y = 114,
+                    width = 250, height = 12,
+                    resource_name = "internal_font_8x8"
+                },
+                {
+                    name = "hello6_label",
+                    type = "Label",
+                    text = "Hello World (internal_font_12x12)",
+                    x = 10, y = 132,
+                    width = 250, height = 14,
+                    resource_name = "internal_font_12x12"
+                },
+                {
+                    name = "hello7_label",
+                    type = "Label",
+                    text = "Hello World (internal_font_16x16)",
+                    x = 10, y = 154,
+                    width = 250, height = 18,
+                    resource_name = "internal_font_16x16"
+                }
+            }
+        }
+    }
+}
+
+-- Apply configuration & return for Core.run()
+configure(config)
+return config
+
+```
+
+---
+🚀 Running from C++
+```cpp
+#include <SDOM/SDOM.hpp>
+
+int main(int argc, char** argv)
+{
+    Core& core = getCore();
+    return core.run("lua/hello_world.lua");
+}
+```
+🚀 Running from command-line
+```bash
+./prog --lua_file lua/hello_world.lua
+```
+
+### 2. Static Lua Scene Definition (Declarative)
+This is the most common way to define UI layouts.
+```lua
+{
+    name = "hello_label",
+    type = "Label",
+    text = "Hello World!",
+    x = 10, y = 20,
+    width = 200, height = 18,
+    resource_name = "internal_font_8x8"
+}
+```
+
+### 3. Lua Creating UI Dynamically at Runtime
+Useful for dynamic panels, menus, notifications, etc.
+```lua
+local label = {
+    name = "hello_label_dynamic",
+    type = "Label",
+    text = "Hello World (Dynamic)",
+    x = 10, y = 50,
+    width = 200, height = 18,
+    resource_name = "internal_font_8x8"
+}
+
+local handle = create(label)
+getStage():addChild(handle)
+```
+
+### 4. C++ Using InitStruct (Strong-Typed Approach)
+Good when working in native code only.
+```cpp
+Label::InitStruct init;
+init.name = "hello_label_cpp";
+init.text = "Hello World (C++)";
+init.x = 10;
+init.y = 80;
+init.width = 200;
+init.height = 18;
+init.resource_name = "internal_font_12x12";
+
+DisplayHandle label = getFactory().create("Label", init);
+getStageHandle().addChild(label);
+```
+
+### 5. C++ Creating the Object Using a Lua Table
+Useful when externalizing UI into config files, JSON/YAML → Lua transforms, etc.
+```cpp
+sol::state& lua = getLua();
+sol::table t = lua.create_table();
+t["name"] = "hello_label_cpp_table";
+t["type"] = "Label";
+t["text"] = "Hello World (Lua Table in C++)";
+t["x"] = 10;
+t["y"] = 110;
+t["width"] = 200;
+t["height"] = 18;
+t["resource_name"] = "internal_font_16x16";
+
+DisplayHandle label = getFactory().create("Label", t);
+getStageHandle().addChild(label);
+```
+
+🎯 Key Point 
+> **The Factory doesn't care where your UI definition comes from.**
+Whether you build a widget in C++, Lua, data tables, config files, or procedural code — the result is the same object, created the same way, tracked the same way, and managed by the same lifecycle model.
+
+That’s the advantage of the `Factory + InitStruct + Lua Config` triad.
+| Method                       | When to Use                                 | Benefits                         |
+| ---------------------------- | ------------------------------------------- | -------------------------------- |
+| Lua Declarative Scene Tables | UI layout, menus, HUDs                      | Easy to edit + reload            |
+| Lua Dynamic Creation         | Popups, notifications, UI reacting to state | Runtime flexibility              |
+| C++ InitStruct               | Performance-critical UI or compiled engines | Strong types, IDE autocompletion |
+| C++ Lua Table                | When UI is stored externally (data-driven)  | One codepath for loading scenes  |
