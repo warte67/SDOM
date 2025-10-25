@@ -913,7 +913,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ### [October 24, 2025]
-- **IDisplayObject_UnitTests** Refactor Progress:
+- **IDisplayObject_UnitTests** Progress:
   - Began building a new **IDisplayObject_UnitTests.cpp** Unit Test Module to fully test all C++ and LUA properties and functions.
   - Implemented **IDisplayObject** Lua wrappers via **SDOM_IDisplayObject_LuaHelpers.hpp**.
   - Added Unit Tests for the following **IDisplayObject** Lua bindings:
@@ -995,6 +995,30 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - No memory leaks in neither the operating system nor the GPU memory. No invalid accesses detected.
   - The shutdown path is clean and deterministic — and Valgrind confirms it.
   - No heap creep. No GPU memory creep. No event buildup. No stale pointers. No race conditions.
+
+---
+### [October 25, 2025]
+- **IDisplayObject_UnitTests** Progress:
+  - Added Unit Tests for the following **IDisplayObject** Lua bindings:
+    - **Type & Property Access (test #7)**
+      - ✅ std::string getName_lua()
+      - ✅ void setName_lua(const std::string& newName)
+      - ✅ std::string getType_lua()
+      - ✅ Bounds getBounds_lua()
+      - ✅ void setBounds_lua(const sol::object& bobj)
+      - ✅ SDL_Color getColor_lua()
+      - ✅ void setColor_lua(const sol::object& colorObj)
+      - ✅ SDL_Color getForegroundColor_lua()
+      - ✅ void setForegroundColor_lua(const sol::object& colorObj)
+      - ✅ SDL_Color getBackgroundColor_lua()
+      - ✅ void setBackgroundColor_lua(const sol::object& colorObj)
+      - ✅ SDL_Color getBorderColor_lua()
+      - ✅ void setBorderColor_lua(const sol::object& colorObj)
+      - ✅ SDL_Color getOutlineColor_lua()
+      - ✅ void setOutlineColor_lua(const sol::object& colorObj)
+      - ✅ SDL_Color getDropshadowColor_lua()
+      - ✅ void setDropshadowColor_lua(const sol::object& colorObj)
+- Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** helpers for clean, readable test assertions.      
 
 
 ---

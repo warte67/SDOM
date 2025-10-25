@@ -6,6 +6,8 @@
 #include <SDOM/SDOM_IFontObject.hpp>
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
+#include <SDOM/SDOM_Utils.hpp>
+#include <SDOM/SDOM_IDisplayObject_Lua.hpp>
 
 #include "Box.hpp"
 
@@ -16,7 +18,7 @@ namespace SDOM
     {
         // ✅ Test Verified
         // 🔄 In Progress
-        // ⬜ Unchecked/Untested
+        // ☐ Unchecked/Untested
 
         bool ok = true;
 
@@ -442,9 +444,285 @@ namespace SDOM
     } // IDisplayObject_test6(std::vector<std::string>& errors)   
 
 
+    // --- Type & Property Access --- //
+    bool IDisplayObject_test7(std::vector<std::string>& errors)   
+    {
+        // --- Type & Property Access --- //
+            // ✅ std::string getName_lua();                        
+            // ✅ void setName_lua(const std::string& newName);    
+            // ✅ std::string getType_lua();
+            // ✅ Bounds getBounds_lua();
+            // ✅ void setBounds_lua(const sol::object& bobj);
+            // ✅ SDL_Color getColor_lua();
+            // ✅ void setColor_lua(const sol::object& colorObj);
+            // ✅ SDL_Color getForegroundColor_lua();
+            // ✅ void setForegroundColor_lua(const sol::object& colorObj);
+            // ✅ SDL_Color getBackgroundColor_lua();
+            // ✅ void setBackgroundColor_lua(const sol::object& colorObj);
+            // ✅ SDL_Color getBorderColor_lua();
+            // ✅ void setBorderColor_lua(const sol::object& colorObj);
+            // ✅ SDL_Color getOutlineColor_lua();
+            // ✅ void setOutlineColor_lua(const sol::object& colorObj);
+            // ✅ SDL_Color getDropshadowColor_lua();
+            // ✅ void setDropshadowColor_lua(const sol::object& colorObj);
 
+        bool ok = true;
+        Core& core = getCore();
 
+        std::string testObjectName = "blueishBox";
+        DisplayHandle testObject = core.getDisplayObject(testObjectName);
+        if (!testObject.isValid())
+        {
+            errors.push_back("IDisplayObject_test7: Test object '" + testObjectName + "' not found.");
+            return false;
+        }
+        // Verify getName()
+        std::string name = testObject->getName();
+        if (name != testObjectName)
+        {
+            errors.push_back("IDisplayObject_test7: getName() returned '" + name + "', expected '" + testObjectName + "'.");
+            ok = false;
+        }
+        // Verify setName("string")
+        std::string newName = "bluishBoxRenamed";
+        testObject->setName(newName);
+        std::string updatedName = testObject->getName();
+        if (updatedName != newName)
+        {
+            errors.push_back("IDisplayObject_test7: setName() failed, got '" + updatedName + "', expected '" + newName + "'.");
+            ok = false; 
+        }
+        // Revert the name change for other tests
+        testObject->setName(testObjectName);
+        // Verify getType()
+        if (testObject.getType() != "Box")
+        {
+            errors.push_back("IDisplayObject_test7: getType() returned '" + testObject->getType() + "', expected 'Box'.");
+            ok = false; 
+        }
+        // Verify getBounds()
+        Bounds bounds = testObject->getBounds();
+        if ((int)bounds.left != 180 || (int)bounds.top != 70 || (int)bounds.right != 430 || (int)bounds.bottom != 295)
+        {
+            errors.push_back("IDisplayObject_test7: getBounds() got left: " + std::to_string(bounds.left) +
+                             ", top: " + std::to_string(bounds.top) +
+                             ", right: " + std::to_string(bounds.right) +
+                             ", bottom: " + std::to_string(bounds.bottom) +
+                             "; expected left: 180, top: 70, right: 430, bottom: 295.");
+            ok = false; 
+        }
+        // Verify setBounds()
+        Bounds new_bounds = {180, 75, 180+240, 75+215};
+        testObject->setBounds(new_bounds);
+        Bounds updated_bounds = testObject->getBounds();
+        if (updated_bounds != new_bounds)
+        {
+            errors.push_back("IDisplayObject_test7: setBounds() failed, got left: " + std::to_string(updated_bounds.left) +
+                             ", top: " + std::to_string(updated_bounds.top) +
+                             ", right: " + std::to_string(updated_bounds.right) +
+                             ", bottom: " + std::to_string(updated_bounds.bottom) +
+                             "; expected left: " + std::to_string(new_bounds.left) +
+                             ", top: " + std::to_string(new_bounds.top) +
+                             ", right: " + std::to_string(new_bounds.right) +
+                             ", bottom: " + std::to_string(new_bounds.bottom) + ".");
+            ok = false; 
+        }        
+        // Verify Color Getters and Setters
+        SDL_Color orig_color = testObject->getColor();
+        SDL_Color orig_fg_color = testObject->getForegroundColor();
+        SDL_Color orig_bg_color = testObject->getBackgroundColor();
+        SDL_Color orig_border_color = testObject->getBorderColor();
+        SDL_Color orig_outline_color = testObject->getOutlineColor();
+        SDL_Color orig_dropshadow_color = testObject->getDropshadowColor();
+        // New Colors
+        SDL_Color new_color             = {0, 255, 0, 255};     testObject->setColor(new_color);
+        SDL_Color new_fg_color          = { 255, 0, 0, 255};    testObject->setForegroundColor(new_fg_color);
+        SDL_Color new_bg_color          = {0, 0, 255, 255};     testObject->setBackgroundColor(new_bg_color);
+        SDL_Color new_border_color      = {255, 255, 0, 255};   testObject->setBorderColor(new_border_color);
+        SDL_Color new_outline_color     = {0, 255, 255, 255};   testObject->setOutlineColor(new_outline_color);
+        SDL_Color new_dropshadow_color  = {255, 0, 255, 255};   testObject->setDropshadowColor(new_dropshadow_color);
+        // Verify the New Colors
+        SDL_Color read_color = testObject->getColor();
+        if (SDL_Utils::color_not_equal(new_color, read_color))
+        {
+            errors.push_back( "IDisplayObject_test7: color mismatch. " 
+                "Expected " + SDL_Utils::color_to_string(new_color) +
+                " but got " + SDL_Utils::color_to_string(read_color)
+            );
+            ok = false;
+        }
+        // Verify Foreground Color
+        SDL_Color fg = testObject->getForegroundColor();
+        if (SDL_Utils::color_not_equal(new_fg_color, fg))
+        {
+            errors.push_back(
+                "IDisplayObject_test7: foreground_color mismatch. "
+                "Expected " + SDL_Utils::color_to_string(new_fg_color) +
+                " but got " + SDL_Utils::color_to_string(fg)
+            );
+            ok = false;
+        }
+        // Verify Background Color
+        SDL_Color bg = testObject->getBackgroundColor();
+        if (SDL_Utils::color_not_equal(new_bg_color, bg))
+        {
+            errors.push_back(
+                "IDisplayObject_test7: background_color mismatch. "
+                "Expected " + SDL_Utils::color_to_string(new_bg_color) +
+                " but got " + SDL_Utils::color_to_string(bg)
+            );
+            ok = false;
+        }
+        // Verify Border Color
+        SDL_Color border = testObject->getBorderColor();
+        if (SDL_Utils::color_not_equal(new_border_color, border))
+        {
+            errors.push_back(
+                "IDisplayObject_test7: border_color mismatch. "
+                "Expected " + SDL_Utils::color_to_string(new_border_color) +
+                " but got " + SDL_Utils::color_to_string(border)
+            );
+            ok = false;
+        }
+        // Verify Outline Color
+        SDL_Color outline = testObject->getOutlineColor();
+        if (SDL_Utils::color_not_equal(new_outline_color, outline))
+        {
+            errors.push_back(
+                "IDisplayObject_test7: outline_color mismatch. "
+                "Expected " + SDL_Utils::color_to_string(new_outline_color) +
+                " but got " + SDL_Utils::color_to_string(outline)
+            );
+            ok = false;
+        }
+        // Verify Dropshadow Color
+        SDL_Color dropshadow = testObject->getDropshadowColor();
+        if (SDL_Utils::color_not_equal(new_dropshadow_color, dropshadow))
+        {
+            errors.push_back(
+                "IDisplayObject_test7: dropshadow_color mismatch. "
+                "Expected " + SDL_Utils::color_to_string(new_dropshadow_color) +
+                " but got " + SDL_Utils::color_to_string(dropshadow)
+            );
+            ok = false;
+        }
+        // Restore the Original Colors
+        testObject->setColor(orig_color);
+        testObject->setForegroundColor(orig_fg_color);
+        testObject->setBackgroundColor(orig_bg_color);
+        testObject->setBorderColor(orig_border_color);
+        testObject->setOutlineColor(orig_outline_color);
+        testObject->setDropshadowColor(orig_dropshadow_color);
+        // Return Results
+        return ok;
+    } // IDisplayObject_test7(std::vector<std::string>& errors)   
 
+    // --- Priority and Z-Order --- //
+    bool IDisplayObject_test8(std::vector<std::string>& errors)   
+    {
+        // ✅ Test Verified
+        // 🔄 In Progress
+        // ☐ Unchecked/Untested
+
+        // ☐ int getMaxPriority_lua(const IDisplayObject* obj);              
+        // ☐ int getMinPriority_lua(const IDisplayObject* obj);              
+        // ☐ int getPriority_lua(const IDisplayObject* obj);                 
+        // ☐ void setToHighestPriority_lua(IDisplayObject* obj);             
+        // ☐ void setToLowestPriority_lua(IDisplayObject* obj);     
+        // ☐ void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);        // descriptor form
+        // ☐ void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);         // descriptor form
+        // ✅ void sortChildrenByPriority_lua(IDisplayObject* obj);           
+        // ✅ void setPriority_lua(IDisplayObject* obj, int priority);        
+        // ☐ void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);                 // descriptor form
+        // ☐ void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value);   // descriptor form
+        // ✅ std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj);      
+        // ☐ void moveToTop_lua(IDisplayObject* obj);                                    
+        // ☐ void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);                   // descriptor form
+        // ✅ int getZOrder_lua(const IDisplayObject* obj);                               
+        // ☐ void setZOrder_lua(IDisplayObject* obj, int z_order);                       
+        // ✅ void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor);                   // descriptor form
+        // ☐ bool getBorder_lua(const IDisplayObject* obj);                // Rename to hasBorder() for consistency  
+        // ☐ bool getBackground_lua(const IDisplayObject* obj);            // Rename to hasBackground() for  consistency                   
+        // ☐ void setBorder_lua(IDisplayObject* obj, bool hasBorder);      
+        // ☐ void setBackground_lua(IDisplayObject* obj, bool hasBackground);
+
+        bool ok = true;
+        Core& core = getCore();
+        DisplayHandle stage = core.getRootNode();
+        if (!stage.isValid())
+        {
+            errors.push_back("PriorityZOrder_Test: 'mainStage' not found.");
+            return false;            
+        }
+        // Create 3 test boxes
+        auto make_box = [&](const std::string& name, int x) {
+            Box::InitStruct init;
+            init.name = name;
+            init.x = x;
+            init.y = 10;
+            init.width = 20;
+            init.height = 20;
+            init.color = {static_cast<Uint8>(x), static_cast<Uint8>(x), static_cast<Uint8>(x), 255};
+            return core.createDisplayObject("Box", init);
+        };
+        DisplayHandle test_box = make_box("test_box", 64); stage->addChild(test_box);
+        DisplayHandle A = make_box("A", 128);    test_box->addChild(A);
+        DisplayHandle B = make_box("B", 192);    test_box->addChild(B);
+        DisplayHandle C = make_box("C", 255);    test_box->addChild(C);
+
+        // Confirm initial priorities are equal
+        auto priorities_before = test_box->getChildrenPriorities();
+        std::cout << "childrencount: " << priorities_before.size() << std::endl;
+        if (priorities_before.size() != 3) {
+            errors.push_back("PriorityZOrder_Test: Expected three children attached to the test box.");
+            ok = false;
+        }        
+
+        // Set explicit priorities
+        C->setPriority(-100); // push C to bottom
+        A->setPriority(0);
+        B->setPriority(100);  // pull B to top
+        test_box->sortChildrenByPriority();   
+
+        // Read back expected order: C (lowest), A (middle), B (highest)
+        auto pr_sorted = test_box->getChildrenPriorities();
+        if (!(pr_sorted[0] < pr_sorted[1] && pr_sorted[1] < pr_sorted[2])) {
+            errors.push_back("PriorityZOrder_Test: Expected sorted priorities: C < A < B.");
+            ok = false;
+        }        
+
+        // Test moveToTop()
+        A->moveToTop();
+        if (A->getZOrder() <= B->getZOrder()) {
+            errors.push_back("PriorityZOrder_Test: moveToTop() failed to place A at the top.");
+            ok = false;
+        }      
+        
+        // Test moveToTop_lua_any() with descriptor table structure:
+        sol::state_view lua = getLua();
+        sol::table desc = lua.create_table();
+        desc["name"] = "C";
+        IDisplayObject* obj_a = A.as<IDisplayObject>(); if (!obj_a) { errors.push_back("PriorityZOrder_test: unable to fetch obj A."); return false; }
+        moveToTop_lua_any(obj_a, desc);
+        if (C->getZOrder() <= A->getZOrder()) {
+            errors.push_back("PriorityZOrder_Test: moveToTop_lua_any(C) failed to place C at the top.");
+            ok = false;
+        }        
+
+        // Cleanup
+        core.destroyDisplayObject("test_box");
+        core.destroyDisplayObject("A");
+        core.destroyDisplayObject("B");        
+        core.destroyDisplayObject("C");
+        if (getFactory().countOrphanedDisplayObjects() != 0)
+        {
+            errors.push_back("PriorityZOrder_test: Orpans Left Behind.");
+            ok = false;
+        }
+
+        // return results
+        return ok;
+    } // IDisplayObject_test0(std::vector<std::string>& errors)   
 
 
 
@@ -473,6 +751,8 @@ namespace SDOM
         ut.add_test("Dirty/State Management", IDisplayObject_test4);
         ut.add_test("Events and Event Listener Handling", IDisplayObject_test5);
         ut.add_test("Hierarchy Management", IDisplayObject_test6);
+        ut.add_test("Type and Property Access", IDisplayObject_test7);
+        ut.add_test("Priority and Z-Order", IDisplayObject_test8);
 
 
         ut.add_test("Lua Integration", IDisplayObject_LUA_Tests);

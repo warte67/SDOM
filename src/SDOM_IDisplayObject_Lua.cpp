@@ -462,17 +462,6 @@ namespace SDOM
     }
     void setDropshadowColor_lua(IDisplayObject* obj, const SDL_Color& color) { if (!obj) return; obj->setDropshadowColor(color); }
 
-    // Handle-aware name getter for cases where Lua holds only a DisplayHandle handle without a live object
-    std::string getName_handle_lua(DisplayHandle& self)
-    {
-        try {
-            if (auto* obj = self.get()) {
-                return obj->getName();
-            }
-        } catch(...) {}
-        try { return self.getName(); } catch(...) {}
-        return std::string();
-    }
 
     // --- Priority & Z-Order --- //
     int getMaxPriority_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getMaxPriority(); }

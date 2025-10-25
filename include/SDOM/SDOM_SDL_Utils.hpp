@@ -72,6 +72,29 @@ namespace SDOM
         
         static SDL_ScaleMode scaleModeFromSol(const sol::object& o);
 
+        inline static bool color_equal(const SDL_Color& a, const SDL_Color& b) {
+            return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
+        }
+
+        inline static bool color_not_equal(const SDL_Color& a, const SDL_Color& b) {
+            return !color_equal(a, b);
+        }
+
+        // Optional: epsilon compare if you ever switch to float colors
+        inline static bool color_near(const SDL_Color& a, const SDL_Color& b, Uint8 tolerance = 1) {
+            return (std::abs(int(a.r) - int(b.r)) <= tolerance &&
+                    std::abs(int(a.g) - int(b.g)) <= tolerance &&
+                    std::abs(int(a.b) - int(b.b)) <= tolerance &&
+                    std::abs(int(a.a) - int(b.a)) <= tolerance);
+        }    
+
+        inline static std::string color_to_string(const SDL_Color& c) {
+            return "(" + std::to_string(c.r) + ", " +
+                        std::to_string(c.g) + ", " +
+                        std::to_string(c.b) + ", " +
+                        std::to_string(c.a) + ")";
+        }        
+
     };
 
 } // namespace SDOM

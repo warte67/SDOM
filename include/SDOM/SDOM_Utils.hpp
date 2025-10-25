@@ -22,7 +22,6 @@ namespace SDOM
 
     sol::state& getLua();
 
-
     // helper function to extract SDL_Color from Lua table
     SDL_Color parseColor(const sol::object& colorObj);
 
