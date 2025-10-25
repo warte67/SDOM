@@ -175,50 +175,45 @@ Now, One More Step:</h2>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md152"></a>
 Lua flows naturally into the core systems:</h3>
 <p>Lua config → Factory → Display Tree → Event System → Lua callbacks</p>
-<div class="fragment"><div class="line">&lt;div class=&quot;mermaid&quot;&gt;</div>
-<div class="line">%%{init: { &#39;theme&#39;: &#39;neutral&#39;, &#39;flowchart&#39;: { &#39;curve&#39;: &#39;linear&#39; } }}%%</div>
-<div class="line">flowchart LR</div>
-<div class="line"> </div>
-<div class="line">    %% Classes</div>
-<div class="line">    classDef lua fill:#fff7e6,stroke:#d28b00,color:#5a4300,stroke-width:1px</div>
-<div class="line">    classDef core fill:#e9f4ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px</div>
-<div class="line">    classDef factory fill:#f0fff4,stroke:#5fa862,color:#1b4220,stroke-width:1px</div>
-<div class="line">    classDef display fill:#f9f9f9,stroke:#888,color:#222,stroke-width:1px</div>
-<div class="line">    classDef event fill:#fff2fa,stroke:#ca6f9e,color:#431a33,stroke-width:1px</div>
-<div class="line">    classDef external fill:#f2f2ff,stroke:#7c6fe6,color:#262262,stroke-width:1px</div>
-<div class="line"> </div>
-<div class="line">    %% Nodes</div>
-<div class="line">    LuaConfig[&quot;Lua Config Table&lt;br/&gt;&lt;code&gt;config = { ... }&lt;/code&gt;&quot;]:::lua</div>
-<div class="line">    Callbacks[&quot;Lua Callback Modules&lt;br/&gt;&lt;code&gt;callbacks/*.lua&lt;/code&gt;&quot;]:::lua</div>
-<div class="line"> </div>
-<div class="line">    Core[&quot;Core SDL Window + Main Loop&quot;]:::core</div>
-<div class="line">    Factory[&quot;Factory Creates &amp; Owns Objects&quot;]:::factory</div>
-<div class="line">    Resources[&quot;Resource Registry (TTF, Images, Sprites, etc.)&quot;]:::factory</div>
-<div class="line">    DisplayTree[&quot;Display Tree (IDisplayObject hierarchy)&quot;]:::display</div>
-<div class="line"> </div>
-<div class="line">    EventMgr[&quot;EventManager (Capture → Target → Bubble)&quot;]:::event</div>
-<div class="line">    LuaEventListeners[&quot;Lua Object Listeners&lt;br/&gt;&lt;code&gt;obj:addEventListener(...)&lt;/code&gt;&quot;]:::lua</div>
-<div class="line"> </div>
-<div class="line">    SDL3[&quot;SDL3 / Platform Input&quot;]:::external</div>
-<div class="line"> </div>
-<div class="line">    %% Relationships</div>
-<div class="line">    LuaConfig --&gt; Core</div>
-<div class="line">    Core --&gt; Factory</div>
-<div class="line">    Factory --&gt; Resources</div>
-<div class="line">    Factory --&gt; DisplayTree</div>
-<div class="line"> </div>
-<div class="line">    Core --&gt; EventMgr</div>
-<div class="line">    EventMgr --&gt; DisplayTree</div>
-<div class="line">    DisplayTree --&gt; LuaEventListeners</div>
-<div class="line"> </div>
-<div class="line">    Callbacks --&gt; Core</div>
-<div class="line">    Callbacks --&gt; DisplayTree</div>
-<div class="line">    Callbacks --&gt; LuaEventListeners</div>
-<div class="line"> </div>
-<div class="line">    SDL3 --&gt; EventMgr</div>
-<div class="line">    EventMgr --&gt; LuaEventListeners</div>
-<div class="line">&lt;/div&gt;</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md153"></a>
+<div class="mermaid"> %%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%% flowchart LR <pre class="fragment">%% Classes
+classDef lua fill:#fff7e6,stroke:#d28b00,color:#5a4300,stroke-width:1px
+classDef core fill:#e9f4ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
+classDef factory fill:#f0fff4,stroke:#5fa862,color:#1b4220,stroke-width:1px
+classDef display fill:#f9f9f9,stroke:#888,color:#222,stroke-width:1px
+classDef event fill:#fff2fa,stroke:#ca6f9e,color:#431a33,stroke-width:1px
+classDef external fill:#f2f2ff,stroke:#7c6fe6,color:#262262,stroke-width:1px
+
+%% Nodes
+LuaConfig["Lua Config Table&lt;br/&gt;&lt;code&gt;config = { ... }&lt;/code&gt;"]:::lua
+Callbacks["Lua Callback Modules&lt;br/&gt;&lt;code&gt;callbacks/*.lua&lt;/code&gt;"]:::lua
+
+Core["Core SDL Window + Main Loop"]:::core
+Factory["Factory Creates &amp; Owns Objects"]:::factory
+Resources["Resource Registry (TTF, Images, Sprites, etc.)"]:::factory
+DisplayTree["Display Tree (IDisplayObject hierarchy)"]:::display
+
+EventMgr["EventManager (Capture → Target → Bubble)"]:::event
+LuaEventListeners["Lua Object Listeners&lt;br/&gt;&lt;code&gt;obj:addEventListener(...)&lt;/code&gt;"]:::lua
+
+SDL3["SDL3 / Platform Input"]:::external
+
+%% Relationships
+LuaConfig --&gt; Core
+Core --&gt; Factory
+Factory --&gt; Resources
+Factory --&gt; DisplayTree
+
+Core --&gt; EventMgr
+EventMgr --&gt; DisplayTree
+DisplayTree --&gt; LuaEventListeners
+
+Callbacks --&gt; Core
+Callbacks --&gt; DisplayTree
+Callbacks --&gt; LuaEventListeners
+
+SDL3 --&gt; EventMgr
+EventMgr --&gt; LuaEventListeners
+</pre> </div><h3 class="doxsection"><a class="anchor" id="autotoc_md153"></a>
 ✅ What this Diagram Communicates</h3>
 <p>This visual shows:</p><ul>
 <li>Lua starts everything by defining the config table.</li>
