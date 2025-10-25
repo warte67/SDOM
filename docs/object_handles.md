@@ -164,7 +164,7 @@ IAssetObject* image = imageHandle.get();
 ---
 
 ## Optional: Handle Resolution Flow (reference)
-```mermaid
+```mermaid-norender
 flowchart LR
 	classDef core fill:#f5f5f5,stroke:#999,color:#333,stroke-width:1px
 	classDef dom  fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px

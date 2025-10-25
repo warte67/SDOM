@@ -135,7 +135,7 @@ This approach ensures **performance, predictability, clarity, and extensibility*
 
 ### High-Level Architecture Diagram
 
-```mermaid
+```mermaid-norender
 %%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
 flowchart TB
 
@@ -236,7 +236,7 @@ Summary: Core orchestrates startup, the main loop, and shutdown; the Factory res
 
 
 
-```mermaid
+```mermaid-norender
 sequenceDiagram
   autonumber
   participant Prog as examples/test/prog

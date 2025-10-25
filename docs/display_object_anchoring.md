@@ -152,7 +152,7 @@ This anchor system makes SDOM display objects highly flexible and professional, 
 ## Anchoring Diagrams
 
 ### 1) Parent Anchor Grid and Child Edge Anchors
-```mermaid
+```mermaid-norender
 %% Parent has 9 anchors; child edges reference any of them with offsets
 flowchart TB
     classDef parent fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d
@@ -192,7 +192,7 @@ Key idea: each edge uses its own parent anchor reference plus a local offset; wi
 
 ### 2) Anchor Change Recalculation (No Visual Jump)
 
-```mermaid
+```mermaid-norender
 sequenceDiagram
     autonumber
     participant User as API Caller
