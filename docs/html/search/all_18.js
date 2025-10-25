@@ -1,27 +1,5 @@
 var searchData=
 [
-  ['name_0',['name',['../structSDOM_1_1IAssetObject_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2',1,'SDOM::IAssetObject::InitStruct::name'],['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a312bd5827cbb79cb02d722c9ec979d3f',1,'SDOM::IDisplayObject::InitStruct::name']]],
-  ['name_5f_1',['name_',['../classSDOM_1_1AssetHandle.html#a9c9c067f3ab9a046a6bc6c7525735a17',1,'SDOM::AssetHandle::name_'],['../classSDOM_1_1IAssetObject.html#a505bc325aa5116514067b9a58b8e0d25',1,'SDOM::IAssetObject::name_'],['../classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396',1,'SDOM::IDataObject::name_']]],
-  ['names_2',['Supported Color Names',['../md_docs_2label__text__parsing.html#autotoc_md255',1,'']]],
-  ['naming_20conventions_3',['Anchor Naming Conventions',['../md_docs_2display__object__anchoring.html#autotoc_md71',1,'']]],
-  ['naturally_20into_20the_20core_20systems_3a_4',['Lua flows naturally into the core systems:',['../md_docs_2extensible__factory.html#autotoc_md152',1,'']]],
-  ['needed_5',['Needed',['../md_docs_2custom__object__lifecycle.html#autotoc_md64',1,'&lt;span class=&quot;tt&quot;&gt;onQuit()&lt;/span&gt;: Clean Up &lt;em&gt;If Needed&lt;/em&gt;'],['../md_docs_2extensible__factory.html#autotoc_md214',1,'&lt;span class=&quot;tt&quot;&gt;onQuit()&lt;/span&gt;: Clean Up &lt;em&gt;If Needed&lt;/em&gt;']]],
-  ['needstexturerebuild_5f_6',['needsTextureRebuild_',['../classSDOM_1_1Label.html#ac6ab2b5402d976be3a536136629e0562',1,'SDOM::Label']]],
-  ['new_20display_20object_20type_7',['Creating a New Display Object Type',['../md_docs_2extensible__factory.html#autotoc_md166',1,'']]],
-  ['new_20objects_8',['3. Summary Checklist (Copy This When Creating New Objects)',['../md_docs_2extensible__factory.html#autotoc_md174',1,'']]],
-  ['newline_9',['Newline',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429a755fee300780823fcf4df98383331745',1,'SDOM::Label']]],
-  ['next_20steps_10',['Next Steps',['../md_docs_2event__design.html#autotoc_md128',1,'']]],
-  ['next_20steps_20lua_20integration_11',['Next steps (Lua integration)',['../md_docs_2scripting__and__configuration.html#autotoc_md424',1,'']]],
-  ['next_20steps_3a_12',['Next Steps:',['../md_docs_2progress.html#autotoc_md410',1,'']]],
-  ['no_20visual_20jump_13',['2) Anchor Change Recalculation (No Visual Jump)',['../md_docs_2display__object__anchoring.html#autotoc_md92',1,'']]],
-  ['none_14',['None',['../classSDOM_1_1EventType.html#a827940aa9803d3113e7d7a7f5b75a1c5',1,'SDOM::EventType']]],
-  ['normal_15',['NORMAL',['../classCLR.html#ae6ec0e976684b36983d2325ee9bde918',1,'CLR']]],
-  ['normalizeanchorstring_16',['normalizeAnchorString',['../namespaceSDOM.html#ada23a739293dfb38feadc632ee14bb9c',1,'SDOM']]],
-  ['notable_20recent_20changes_17',['Notable recent changes',['../md_README.html#autotoc_md460',1,'']]],
-  ['note_18',['note',['../md_docs_2display__object__anchoring.html#autotoc_md94',1,'Migration note'],['../md_docs_2dom__propagation.html#autotoc_md110',1,'Migration note']]],
-  ['note_20on_20button_20objects_20and_20state_20handling_19',['Note on Button Objects and State Handling',['../md_docs_2IPanelObject.html#autotoc_md245',1,'']]],
-  ['notes_20',['Notes',['../md_docs_2label__text__parsing.html#autotoc_md275',1,'Implementation Notes'],['../md_docs_2label__text__parsing.html#autotoc_md295',1,'Implementation Notes'],['../md_docs_2label__text__parsing.html#autotoc_md297',1,'Implementation Notes'],['../md_docs_2event__design.html#autotoc_md129',1,'Notes']]],
-  ['notes_21',['notes',['../md_README.html#autotoc_md461',1,'Migration notes'],['../md_docs_2dom__propagation.html#autotoc_md108',1,'Thread-safety notes']]],
-  ['now_20one_20more_20step_3a_22',['Now, One More Step:',['../md_docs_2extensible__factory.html#autotoc_md151',1,'']]],
-  ['numeric_20style_20escapes_20border_20outline_20padding_20dropshadow_23',['Numeric Style Escapes (border / outline / padding / dropshadow)',['../md_docs_2label__text__parsing.html#autotoc_md270',1,'']]]
+  ['y_0',['y',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#ac3b4c19819ff87fd7886678ef807edcf',1,'SDOM::IDisplayObject::InitStruct']]],
+  ['yellow_1',['YELLOW',['../classCLR.html#a9c70a18a33cde4874888b21b178000bf',1,'CLR']]]
 ];

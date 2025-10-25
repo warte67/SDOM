@@ -359,7 +359,7 @@ EXTENSION_MAPPING      = md=markdown
 # case of backward compatibilities issues.
 # The default value is: YES.
 
-INPUT = docs
+INPUT = src
 RECURSIVE = YES
 
 
@@ -1065,8 +1065,6 @@ FILE_PATTERNS          = *.c \
                          *.phtml \
                          *.inc \
                          *.m \
-                         *.markdown \
-                         *.md \
                          *.mm \
                          *.dox \
                          *.py \

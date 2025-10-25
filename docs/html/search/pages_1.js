@@ -1,25 +1,9 @@
 var searchData=
 [
-  ['2_0',['2. EventManager-based Event Traversal (Type 2)',['../md_docs_2dom__propagation.html#autotoc_md102',1,'']]],
-  ['2_202025_1',['2 2025',['../md_docs_2progress.html#autotoc_md338',1,'[July 2, 2025]'],['../md_docs_2progress.html#autotoc_md366',1,'[October 2, 2025]']]],
-  ['2_20anchor_20change_20recalculation_20no_20visual_20jump_2',['2) Anchor Change Recalculation (No Visual Jump)',['../md_docs_2display__object__anchoring.html#autotoc_md92',1,'']]],
-  ['2_20assethandle_3',['2. AssetHandle',['../md_docs_2object__handles.html#autotoc_md326',1,'']]],
-  ['2_20eventmanager_20based_20event_20traversal_20type_202_4',['2. EventManager-based Event Traversal (Type 2)',['../md_docs_2dom__propagation.html#autotoc_md102',1,'']]],
-  ['2_20introduce_20explicit_20initialization_20methods_5',['2. Introduce Explicit Initialization Methods',['../md_docs_2startup__refactor.html#autotoc_md435',1,'']]],
-  ['2_20lua_20binding_20important_20detail_6',['2. Lua Binding (Important Detail!)',['../md_docs_2extensible__factory.html#autotoc_md172',1,'']]],
-  ['2_20phrase_20grouping_7',['2. Phrase Grouping',['../md_docs_2label__text__parsing.html#autotoc_md300',1,'']]],
-  ['2_20remove_20automatic_20table_20parsing_8',['2. Remove Automatic Table Parsing',['../md_docs_2startup__refactor.html#autotoc_md428',1,'']]],
-  ['2_20static_20lua_20scene_20definition_20declarative_9',['2. Static Lua Scene Definition (Declarative)',['../md_docs_2extensible__factory.html#autotoc_md223',1,'']]],
-  ['2_20store_20the_20property_20in_20the_20class_10',['2. Store the Property in the Class',['../md_docs_2extensible__factory.html#autotoc_md192',1,'']]],
-  ['20_202025_11',['20 2025',['../md_docs_2progress.html#autotoc_md400',1,'[October 20, 2025]'],['../md_docs_2progress.html#autotoc_md344',1,'[September 20, 2025]']]],
-  ['2025_12',['2025',['../md_docs_2progress.html#autotoc_md340',1,'[August 5, 2025]'],['../md_docs_2progress.html#autotoc_md338',1,'[July 2, 2025]'],['../md_docs_2progress.html#autotoc_md382',1,'[October 11, 2025]'],['../md_docs_2progress.html#autotoc_md384',1,'[October 12, 2025]'],['../md_docs_2progress.html#autotoc_md386',1,'[October 13, 2025]'],['../md_docs_2progress.html#autotoc_md388',1,'[October 14, 2025]'],['../md_docs_2progress.html#autotoc_md390',1,'[October 15, 2025]'],['../md_docs_2progress.html#autotoc_md392',1,'[October 16, 2025]'],['../md_docs_2progress.html#autotoc_md394',1,'[October 17, 2025]'],['../md_docs_2progress.html#autotoc_md396',1,'[October 18, 2025]'],['../md_docs_2progress.html#autotoc_md398',1,'[October 19, 2025]'],['../md_docs_2progress.html#autotoc_md366',1,'[October 2, 2025]'],['../md_docs_2progress.html#autotoc_md400',1,'[October 20, 2025]'],['../md_docs_2progress.html#autotoc_md402',1,'[October 21, 2025]'],['../md_docs_2progress.html#autotoc_md404',1,'[October 22, 2025]'],['../md_docs_2progress.html#autotoc_md406',1,'[October 23, 2025]'],['../md_docs_2progress.html#autotoc_md408',1,'[October 24, 2025]'],['../md_docs_2progress.html#autotoc_md368',1,'[October 3, 2025]'],['../md_docs_2progress.html#autotoc_md370',1,'[October 4, 2025]'],['../md_docs_2progress.html#autotoc_md372',1,'[October 5, 2025]'],['../md_docs_2progress.html#autotoc_md374',1,'[October 6, 2025]'],['../md_docs_2progress.html#autotoc_md376',1,'[October 7, 2025]'],['../md_docs_2progress.html#autotoc_md378',1,'[October 8, 2025]'],['../md_docs_2progress.html#autotoc_md380',1,'[October 9, 2025]'],['../md_docs_2progress.html#autotoc_md342',1,'[September 19, 2025]'],['../md_docs_2progress.html#autotoc_md344',1,'[September 20, 2025]'],['../md_docs_2progress.html#autotoc_md346',1,'[September 21, 2025]'],['../md_docs_2progress.html#autotoc_md348',1,'[September 22, 2025]'],['../md_docs_2progress.html#autotoc_md350',1,'[September 23, 2025]'],['../md_docs_2progress.html#autotoc_md352',1,'[September 24, 2025]'],['../md_docs_2progress.html#autotoc_md354',1,'[September 25, 2025]'],['../md_docs_2progress.html#autotoc_md356',1,'[September 26, 2025]'],['../md_docs_2progress.html#autotoc_md358',1,'[September 27, 2025]'],['../md_docs_2progress.html#autotoc_md360',1,'[September 28, 2025]'],['../md_docs_2progress.html#autotoc_md362',1,'[September 29, 2025]'],['../md_docs_2progress.html#autotoc_md364',1,'[September 30, 2025]']]],
-  ['21_202025_13',['21 2025',['../md_docs_2progress.html#autotoc_md402',1,'[October 21, 2025]'],['../md_docs_2progress.html#autotoc_md346',1,'[September 21, 2025]']]],
-  ['22_202025_14',['22 2025',['../md_docs_2progress.html#autotoc_md404',1,'[October 22, 2025]'],['../md_docs_2progress.html#autotoc_md348',1,'[September 22, 2025]']]],
-  ['23_202025_15',['23 2025',['../md_docs_2progress.html#autotoc_md406',1,'[October 23, 2025]'],['../md_docs_2progress.html#autotoc_md350',1,'[September 23, 2025]']]],
-  ['24_202025_16',['24 2025',['../md_docs_2progress.html#autotoc_md408',1,'[October 24, 2025]'],['../md_docs_2progress.html#autotoc_md352',1,'[September 24, 2025]']]],
-  ['25_202025_17',['[September 25, 2025]',['../md_docs_2progress.html#autotoc_md354',1,'']]],
-  ['26_202025_18',['[September 26, 2025]',['../md_docs_2progress.html#autotoc_md356',1,'']]],
-  ['27_202025_19',['[September 27, 2025]',['../md_docs_2progress.html#autotoc_md358',1,'']]],
-  ['28_202025_20',['[September 28, 2025]',['../md_docs_2progress.html#autotoc_md360',1,'']]],
-  ['29_202025_21',['[September 29, 2025]',['../md_docs_2progress.html#autotoc_md362',1,'']]]
+  ['base_20type_0',['IDataObject: Data-Driven Base Type',['../md_README.html#autotoc_md3',1,'']]],
+  ['build_20and_20install_20sdl3_20libraries_1',['Build and install SDL3 libraries',['../md_README.html#autotoc_md20',1,'']]],
+  ['build_20dependencies_2',['Build Dependencies',['../md_README.html#autotoc_md16',1,'Arch Build Dependencies'],['../md_README.html#autotoc_md15',1,'Debian Build Dependencies'],['../md_README.html#autotoc_md14',1,'SDL3 Build Dependencies']]],
+  ['build_20per_20sdl3_3a_3',['Build per SDL3:',['../md_README.html#autotoc_md19',1,'']]],
+  ['building_20and_20installing_20sdl3_5fmixer_20sdl3_5fimage_20and_20sdl_5fttf_4',['Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf',['../md_README.html#autotoc_md18',1,'']]],
+  ['building_20the_20sdom_20library_5',['Building the SDOM Library',['../md_README.html#autotoc_md9',1,'']]]
 ];

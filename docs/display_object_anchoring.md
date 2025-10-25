@@ -1,5 +1,5 @@
-## Display Object Anchoring System 
-(Updated September 2, 2025)
+# Display Object Anchoring System 
+(Updated October 25, 2025)
 
 The Display Object Anchoring System defines layout in SDOM by anchoring each of a child’s four edges to any of nine reference points on its parent (top/middle/bottom × left/center/right). Each edge has its own anchor and local offset (left_, right_, top_, bottom_), so objects can pin, center, or stretch asymmetrically as parents move or resize. World-space geometry is derived from edges—width = right − left and height = bottom − top—yielding predictable, resolution‑independent layout.
 

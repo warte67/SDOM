@@ -1,4 +1,4 @@
-# SDOM::Events Design Document
+# Events Design Document
 
 ## Overview
 SDOM::Events are designed to provide a robust and extensible mechanism for event handling within the SDOM framework. These events will be derived from SDL_Events and will propagate through the DOM hierarchy, ensuring that all relevant objects receive and process events appropriately.

@@ -1,10 +1,12 @@
 var searchData=
 [
-  ['4_0',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_docs_2dom__propagation.html#autotoc_md105',1,'']]],
-  ['4_202025_1',['[October 4, 2025]',['../md_docs_2progress.html#autotoc_md370',1,'']]],
-  ['4_20add_20getters_20setters_2',['4. Add Getters / Setters',['../md_docs_2extensible__factory.html#autotoc_md196',1,'']]],
-  ['4_20c_20using_20initstruct_20strong_20typed_20approach_3',['4. C++ Using InitStruct (Strong-Typed Approach)',['../md_docs_2extensible__factory.html#autotoc_md225',1,'']]],
-  ['4_20maintain_20legacy_20support_20during_20transition_4',['4. Maintain Legacy Support During Transition',['../md_docs_2startup__refactor.html#autotoc_md437',1,'']]],
-  ['4_20update_20documentation_20and_20examples_5',['4. Update Documentation and Examples',['../md_docs_2startup__refactor.html#autotoc_md430',1,'']]],
-  ['4_20world_20coordinate_20backpropagation_20traversal_20type_204_6',['4. World Coordinate Backpropagation Traversal (Type 4)',['../md_docs_2dom__propagation.html#autotoc_md105',1,'']]]
+  ['data_20driven_20base_20type_0',['IDataObject: Data-Driven Base Type',['../md_README.html#autotoc_md3',1,'']]],
+  ['debian_20build_20dependencies_1',['Debian Build Dependencies',['../md_README.html#autotoc_md15',1,'']]],
+  ['debian_3a_2',['Freetype on Debian:',['../md_README.html#autotoc_md17',1,'']]],
+  ['dependencies_3',['Dependencies',['../md_README.html#autotoc_md16',1,'Arch Build Dependencies'],['../md_README.html#autotoc_md15',1,'Debian Build Dependencies'],['../md_README.html#autotoc_md14',1,'SDL3 Build Dependencies']]],
+  ['diagrams_20to_20png_20svg_20for_20doxygen_4',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md23',1,'']]],
+  ['document_20object_20model_20api_5',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
+  ['documentation_6',['Documentation',['../md_README.html#autotoc_md22',1,'']]],
+  ['doxygen_7',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md23',1,'']]],
+  ['driven_20base_20type_8',['IDataObject: Data-Driven Base Type',['../md_README.html#autotoc_md3',1,'']]]
 ];

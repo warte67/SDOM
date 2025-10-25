@@ -1,3 +1,5 @@
+# Custom Object Lifecycle in SDOM
+
 ## Where to Put Your Logic: Rendering, Layout, Updates, and Input
 
 Every display object in SDOM participates in the **frame loop**.  

@@ -1,3 +1,5 @@
+# IPanelObject Design Document
+
 ## Design Goals for `IPanelObject`
 
 - **Base class** for all scalable UI containers (Panel, Frame, Group, Button, etc.)
@@ -5,7 +7,6 @@
 - **Support for theming/skins:** to change appearance, supply a custom SpriteSheet with the same 9-slice layout
 
 If a user wishes to use a different number of tiles, or render their windows, buttons, group boxes, etc. in a different way, they can create custom DisplayObjects. The 9-slice layout and offsets are fixed for all IPanelObject-based panels.
-# IPanelObject Design Document
 
 ## What is a 9-slice (9-patch) panel?
 

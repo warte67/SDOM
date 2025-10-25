@@ -1,7 +1,27 @@
 var searchData=
 [
-  ['9_202025_0',['[October 9, 2025]',['../md_docs_2progress.html#autotoc_md380',1,'']]],
-  ['9_20patch_20panel_1',['9 patch panel',['../md_docs_2IPanelObject.html#autotoc_md237',1,'What is a 9-slice (9-patch) panel?'],['../md_docs_2IPanelObject.html#autotoc_md238',1,'What is a 9-slice (9-patch) panel?']]],
-  ['9_20slice_209_20patch_20panel_2',['9 slice 9 patch panel',['../md_docs_2IPanelObject.html#autotoc_md237',1,'What is a 9-slice (9-patch) panel?'],['../md_docs_2IPanelObject.html#autotoc_md238',1,'What is a 9-slice (9-patch) panel?']]],
-  ['9_20slice_20sets_20in_20sprite_5f8x8_3',['Predefined 9-Slice Sets in &lt;span class=&quot;tt&quot;&gt;sprite_8x8&lt;/span&gt;',['../md_docs_2IPanelObject.html#autotoc_md240',1,'']]]
+  ['hamburger_0',['Hamburger',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba7aa99f13e44dd25f7de294bc71abe4ff',1,'SDOM']]],
+  ['handletabkeypress_1',['handleTabKeyPress',['../classSDOM_1_1Core.html#a9e424a1d0ce6f6327c6ac6c8102d8406',1,'SDOM::Core']]],
+  ['handletabkeypressreverse_2',['handleTabKeyPressReverse',['../classSDOM_1_1Core.html#ac2fd090610dc01a7480ff3cececde751',1,'SDOM::Core']]],
+  ['hasassetobject_3',['hasAssetObject',['../classSDOM_1_1Core.html#a6eb2feebd746b82d2f722ffb86887ccd',1,'SDOM::Core']]],
+  ['hasassetobject_5flua_4',['hasAssetObject_lua',['../namespaceSDOM.html#afb69b0371ecfe6f8b7686373ddcb2860',1,'SDOM']]],
+  ['hasbackground_5',['hasBackground',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a',1,'SDOM::IDisplayObject::InitStruct']]],
+  ['hasborder_6',['hasBorder',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08',1,'SDOM::IDisplayObject::InitStruct']]],
+  ['haschild_7',['hasChild',['../classSDOM_1_1IDisplayObject.html#a32955242db86e6a8ec1277dd895560c5',1,'SDOM::IDisplayObject']]],
+  ['haschild_5flua_8',['hasChild_lua',['../namespaceSDOM.html#a3a42833a855b321dce4f810bad531abd',1,'SDOM']]],
+  ['hasdisplayobject_9',['hasDisplayObject',['../classSDOM_1_1Core.html#a1bcc1a94d235f83308a6204d4ff56215',1,'SDOM::Core']]],
+  ['hasdisplayobject_5flua_10',['hasDisplayObject_lua',['../namespaceSDOM.html#a0b5997a6b11dff05aef06a2e9630cb9f',1,'SDOM']]],
+  ['haseventlistener_11',['hasEventListener',['../classSDOM_1_1IDisplayObject.html#a6f89958b62e24b213d56787871d4c53c',1,'SDOM::IDisplayObject']]],
+  ['haseventlistener_5flua_12',['hasEventListener_lua',['../namespaceSDOM.html#a9edc728bddd51890412cc3470959a1f8',1,'SDOM']]],
+  ['haslisteners_13',['hasListeners',['../classSDOM_1_1EventManager.html#a91dd5ef12c7fa10dc9405dadc74d4d0b',1,'SDOM::EventManager']]],
+  ['height_14',['height',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a',1,'SDOM::IDisplayObject::InitStruct::height'],['../structSDOM_1_1Label_1_1PhraseToken.html#a35359991cfb3173b323c40c56ef0fafb',1,'SDOM::Label::PhraseToken::height'],['../structSDOM_1_1Bounds.html#ab9e98bf49c90ef9ce80a0827784b8b71',1,'SDOM::Bounds::height()']]],
+  ['hex_15',['hex',['../classCLR.html#a7affcef20a6ac743b04173d8717f03ba',1,'CLR']]],
+  ['hidden_16',['Hidden',['../classSDOM_1_1EventType.html#a8b306f6e94f88e440f688dad65f7b011',1,'SDOM::EventType']]],
+  ['hide_17',['Hide',['../classSDOM_1_1EventType.html#ab0487201266373a8e3b5cffd9fd13994',1,'SDOM::EventType']]],
+  ['horizontal_18',['Horizontal',['../namespaceSDOM.html#a9cb56e905b36976260e5aa56d30ee933ac1b5fa03ecdb95d4a45dd1c40b02527f',1,'SDOM']]],
+  ['hprogress_5fleft_19',['HProgress_Left',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba84314361fe6262fc425e0bba140443ac',1,'SDOM']]],
+  ['hprogress_5frail_20',['HProgress_Rail',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba7fea06bf1742d60afa5d0fe04a95b9c0',1,'SDOM']]],
+  ['hprogress_5fright_21',['HProgress_Right',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba0ae70fce45e6ace65aee3cb153da6a1c',1,'SDOM']]],
+  ['hprogress_5fthumb_22',['HProgress_Thumb',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba3d653d35fd8963888e68f38daec7d6e3',1,'SDOM']]],
+  ['hslider_5frail_23',['HSlider_Rail',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba20c454a966eb2c5eb4c7dac93f2b9121',1,'SDOM']]]
 ];

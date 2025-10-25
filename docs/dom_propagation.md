@@ -1,4 +1,6 @@
 # DOM Propagation Design
+(Updated October 25, 2025)
+
 
 ## Overview
 
