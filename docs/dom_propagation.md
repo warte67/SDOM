@@ -16,7 +16,7 @@ This document outlines the four main types of DOM traversal and propagation stra
 
 ## Event Propagation Diagram
 
-```mermaid-norender
+```mermaid
 flowchart TB
   classDef phase fill:#f5f5f5,stroke:#999,color:#333
   classDef node fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d

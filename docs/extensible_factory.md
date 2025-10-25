@@ -110,7 +110,7 @@ This structure scales cleanly:
 ### Lua flows naturally into the core systems:
 Lua config → Factory → Display Tree → Event System → Lua callbacks
 
-```mermaid-norender
+```mermaid
 %%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
 flowchart LR
 
@@ -171,7 +171,7 @@ This visual shows:
 | **Handles**    | Safe, language-independent references.                   |
 | **Factory**    | Centralized object creation + ownership.                 |
 
-```mermaid-norender
+```mermaid
 %%{init: { 'theme': 'neutral', 'flowchart': { 'curve': 'linear' } }}%%
 flowchart TB
 
@@ -262,7 +262,7 @@ No duplication. Same system, two languages.
 
 ---
 ## Visual Model: Where Registration Lives
-```mermaid-norender
+```mermaid
 flowchart LR
   BoxClass["Box (C++ Class)"] --> InitStruct
   BoxClass --> RegisterFn["Registers creation function with Factory"]

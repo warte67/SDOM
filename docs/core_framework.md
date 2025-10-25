@@ -204,7 +204,7 @@ int main() {
 ## Composition Diagram
 
 
-```mermaid-norender
+```mermaid
 flowchart TB
     classDef core fill:#eef7ff,stroke:#4a90e2,color:#1a3b5d,stroke-width:1px
     classDef mod  fill:#f7fff0,stroke:#7bb661,color:#234d20,stroke-width:1px
@@ -226,7 +226,7 @@ flowchart TB
 
 ## Event Flow
 
-```mermaid-norender
+```mermaid
 sequenceDiagram
   autonumber
   participant Core as SDOM::Core
