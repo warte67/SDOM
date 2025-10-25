@@ -1,0 +1,6 @@
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter_opts:
+    block:
+      mermaid: true
