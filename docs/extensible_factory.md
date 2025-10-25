@@ -1,3 +1,5 @@
+{% include mermaid.html %}
+
 # Extensible Factory Design
 
 The Factory is where SDOM creates things. Whenever the system needs a new display object (like a Button, Slider, or Label) or a new resource (like a texture or font), it asks the Factory to build it. This keeps object creation consistent and centralized, instead of scattering `new` calls throughout the codebase.
