@@ -826,48 +826,48 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
     IDisplayObject& IDisplayObject::sortChildrenByPriority()
     {
         // Remove invalid children
-        children_.erase(std::remove_if(children_.begin(), children_.end(), [](const DisplayHandle& child) {
-            return !child;
-        }), children_.end());
+        children_.erase(std::remove_if(children_.begin(), children_.end(),
+            [](const DisplayHandle& child) {
+                return !child;
+            }), children_.end());
 
-        // Deduplicate children by name: keep the most-recent occurrence (last in vector)
+        // Deduplicate children by name (keep last instance)
         std::unordered_set<std::string> seen;
         std::vector<DisplayHandle> newChildren;
-        // Iterate in reverse and keep first-seen (which corresponds to most-recent in original order)
-        for (auto it = children_.rbegin(); it != children_.rend(); ++it) 
-        {
+        newChildren.reserve(children_.size());
+
+        for (auto it = children_.rbegin(); it != children_.rend(); ++it) {
             const DisplayHandle& ch = *it;
             if (!ch) continue;
-            std::string cname;
-            // try { cname = ch.getName(); } catch(...) { cname.clear(); }
-            cname = ch.getName();
-            if (cname.empty()) 
-            {
+
+            std::string cname = ch.getName();
+            if (cname.empty() || seen.insert(cname).second) {
                 newChildren.push_back(ch);
-            } 
-            else 
-            {
-                if (seen.find(cname) == seen.end()) 
-                {
-                    seen.insert(cname);
-                    newChildren.push_back(ch);
-                }
             }
         }
-        // Restore original order
+
         std::reverse(newChildren.begin(), newChildren.end());
         children_.swap(newChildren);
 
-        // Sort by priority (ascending)
-        std::sort(children_.begin(), children_.end(), [](const DisplayHandle& a, const DisplayHandle& b) {
-            auto* aObj = dynamic_cast<IDisplayObject*>(a.get());
-            auto* bObj = dynamic_cast<IDisplayObject*>(b.get());
-            int aPriority = aObj ? aObj->priority_ : std::numeric_limits<int>::min();
-            int bPriority = bObj ? bObj->priority_ : std::numeric_limits<int>::min();
-            return aPriority < bPriority;
-        });
+        // Sort by DESCENDING priority (highest priority first, drawn last → visually on top)
+        std::sort(children_.begin(), children_.end(),
+            [](const DisplayHandle& a, const DisplayHandle& b) {
+                int pa = (a && a.get()) ? a->priority_ : std::numeric_limits<int>::min();
+                int pb = (b && b.get()) ? b->priority_ : std::numeric_limits<int>::min();
+                return pa > pb; // <<--- CHANGED HERE
+            });
+
+        // Z-order now naturally matches render order:
+        // index 0 = bottom, last = top
+        for (int i = 0; i < static_cast<int>(children_.size()); ++i) {
+            if (auto* obj = dynamic_cast<IDisplayObject*>(children_[i].get())) {
+                obj->z_order_ = i;
+            }
+        }
+
         return *this;
-    }
+    } // IDisplayObject& IDisplayObject::sortChildrenByPriority()
+
 
     IDisplayObject& IDisplayObject::setPriority(int newPriority)
     {
@@ -894,20 +894,88 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
     IDisplayObject& IDisplayObject::moveToTop()
     {
         IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
-        if (parentObj) {
-            // Set this object's priority to highest among siblings
+        if (!parentObj)
+            return *this; // Root elements cannot be raised
+
+        // Highest sibling priority → visually top
+        int maxPriority = parentObj->getMaxPriority();
+        setPriority(maxPriority + 1);
+
+        // Resort siblings so z-order updates
+        parentObj->sortChildrenByPriority();
+        return *this;
+    }    
+
+    IDisplayObject& IDisplayObject::moveToBottom()
+    {
+        IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (!parentObj)
+            return *this; // Root nodes don't move
+
+        // Lowest sibling priority → visually bottom
+        int minPriority = parentObj->getMinPriority();
+        setPriority(minPriority - 1);
+
+        // Reorder siblings and update z-order
+        parentObj->sortChildrenByPriority();
+        return *this;
+    }
+
+    IDisplayObject& IDisplayObject::bringToFront()
+    {
+        // If we have a parent, push this object above its siblings
+        IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parentObj)
+        {
             int maxPriority = parentObj->getMaxPriority();
             setPriority(maxPriority + 1);
             parentObj->sortChildrenByPriority();
-            // Recursively move parent to top
-            parentObj->moveToTop();
-        } else {
-            // If no parent, just set to highest among children (root node)
-            setPriority(getMaxPriority() + 1);
+
+            // Now recursively raise the parent as well
+            parentObj->bringToFront();
+        }
+        else
+        {
+            // If root (Stage), just ensure children ordering is updated
             sortChildrenByPriority();
         }
         return *this;
     }
+
+    IDisplayObject& IDisplayObject::sendToBack()
+    {
+        IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (parentObj)
+        {
+            int minPriority = parentObj->getMinPriority();
+            setPriority(minPriority - 1);
+            parentObj->sortChildrenByPriority();
+        }
+        else
+        {
+            // Root stage — still allow ordering among children, but do NOT go below the root
+            int minPriority = getMinPriority();
+            setPriority(minPriority - 1);
+            sortChildrenByPriority();
+        }
+        return *this;
+    }
+
+    IDisplayObject& IDisplayObject::sendToBackAfter(const IDisplayObject* limitObj)
+    {
+        IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+        if (!parentObj) return *this;
+
+        int lowestAllowed = parentObj->getMinPriority();
+        int limitPriority = limitObj ? limitObj->priority_ : lowestAllowed;
+
+        // Ensure we stay above the limit, but below others
+        setPriority(limitPriority + 1);
+
+        parentObj->sortChildrenByPriority();
+        return *this;
+    }
+    
 
     bool IDisplayObject::hasChild(const DisplayHandle child) const
     {

@@ -266,6 +266,7 @@ Notes & test ideas:
         bool removeChild(DisplayHandle child);
         bool removeChild(const std::string& name);
         const std::vector<DisplayHandle>& getChildren() const;
+        int countChildren() const { return static_cast<int>(children_.size()); }
         DisplayHandle getParent() const;
         IDisplayObject& setParent(const DisplayHandle& parent);
         bool hasChild(DisplayHandle child) const;
@@ -308,11 +309,15 @@ Notes & test ideas:
         IDisplayObject& sortChildrenByPriority();
         IDisplayObject& setPriority(int priority);
         std::vector<int> getChildrenPriorities() const;
-        IDisplayObject& moveToTop();
+        IDisplayObject& moveToTop(); // NEW
+        IDisplayObject& moveToBottom(); // NEW
+        IDisplayObject& bringToFront(); // NEW
+        IDisplayObject& sendToBack();   // NEW
+        IDisplayObject& sendToBackAfter(const IDisplayObject* limitObj);/ / NEW
         int getZOrder() const { return z_order_; }
         IDisplayObject& setZOrder(int z_order) { z_order_ = z_order; return *this; }
-        bool getBorder() const { return border_; }
-        bool getBackground() const { return background_; }
+        bool hasBorder() const { return border_; }
+        bool hasBackground() const { return background_; }
         IDisplayObject& setBorder(bool hasBorder) { border_ = hasBorder; setDirty(); return *this; }
         IDisplayObject& setBackground(bool hasBackground) { background_ = hasBackground; setDirty(); return *this; }
 

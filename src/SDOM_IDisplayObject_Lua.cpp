@@ -169,6 +169,24 @@ namespace SDOM
     DisplayHandle getChild_lua(const IDisplayObject* obj, std::string name) { if (!obj) return DisplayHandle(); return obj->getChild(name); }
     bool removeChild_lua(IDisplayObject* obj, DisplayHandle child) { if (!obj) return false; return obj->removeChild(child); }
     bool removeChild_lua(IDisplayObject* obj, const std::string& name) { if (!obj) return false; return obj->removeChild(name); }
+    sol::table getChildren_lua(const IDisplayObject* obj, sol::this_state ts)
+    {
+        sol::state_view lua(ts);
+        sol::table childrenTbl = lua.create_table();
+
+        if (!obj)
+            return childrenTbl;
+
+        const auto& children = obj->getChildren();
+        int index = 1; // Lua tables are 1-indexed
+
+        for (const auto& handle : children) {
+            childrenTbl[index++] = handle;
+        }
+
+        return childrenTbl;
+    }
+    int countChildren_lua(const IDisplayObject* obj) { if (!obj) return 0; return static_cast<int>(obj->getChildren().size()); }    
     bool hasChild_lua(const IDisplayObject* obj, DisplayHandle child) { if (!obj) return false; return obj->hasChild(child); }
     DisplayHandle getParent_lua(const IDisplayObject* obj) { if (!obj) return DisplayHandle(); return obj->getParent(); }
     void setParent_lua(IDisplayObject* obj, const DisplayHandle& parent) { if (!obj) return; obj->setParent(parent); }
@@ -535,43 +553,150 @@ namespace SDOM
         auto v = obj->getChildrenPriorities();
         return v;
     }
-    void moveToTop_lua(IDisplayObject* obj) 
-    {
-        if (!obj) return;
-        obj->moveToTop();
-        return;
-    }
 
-    // Targeted moveToTop via parent: parent:moveToTop({ child = <name|handle> })
+    void moveToTop_lua(IDisplayObject* obj) { if (obj) obj->moveToTop(); return; }
     void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor)
     {
-        if (!obj) return;
         if (!descriptor.valid() || !descriptor.is<sol::table>()) return;
+
         sol::table t = descriptor.as<sol::table>();
+
+        // Resolve the target child
         IDisplayObject* target = nullptr;
         sol::object cobj = t.get<sol::object>("child");
-        if (cobj.valid()) {
-            try {
-                if (cobj.is<DisplayHandle>()) {
-                    DisplayHandle h = cobj.as<DisplayHandle>();
-                    target = dynamic_cast<IDisplayObject*>(h.get());
-                } else if (cobj.is<std::string>()) {
-                    std::string name = cobj.as<std::string>();
-                    DisplayHandle h = obj->getChild(name);
-                    target = dynamic_cast<IDisplayObject*>(h.get());
-                }
-            } catch(...) { target = nullptr; }
+
+        if (cobj.is<DisplayHandle>()) {
+            DisplayHandle h = cobj.as<DisplayHandle>();
+            target = dynamic_cast<IDisplayObject*>(h.get());
         }
+        else if (cobj.is<std::string>()) {
+            DisplayHandle h = obj->getChild(cobj.as<std::string>());
+            target = dynamic_cast<IDisplayObject*>(h.get());
+        }
+
         if (!target) return;
+
+        // Perform the move-to-top using the native logic
         target->moveToTop();
-        obj->sortChildrenByPriority();
+
+        // Now re-sort the ACTUAL parent, not the caller
+        auto parent = dynamic_cast<IDisplayObject*>(target->getParent().get());
+        if (parent) {
+            parent->sortChildrenByPriority();
+        } else {
+            // target was root stage (rare but legal)
+            target->sortChildrenByPriority();
+        }
     }
+
+    void moveToBottom_lua(IDisplayObject* obj) { if (obj) obj->moveToBottom(); }    
+    void moveToBottom_lua_any(IDisplayObject* parent, const sol::object& descriptor)
+    {
+        if (!parent || !descriptor.is<sol::table>()) return;
+
+        sol::table t = descriptor.as<sol::table>();
+        IDisplayObject* target = nullptr;
+
+        sol::object childObj = t.get<sol::object>("child");
+        if (childObj.is<DisplayHandle>()) {
+            target = dynamic_cast<IDisplayObject*>(childObj.as<DisplayHandle>().get());
+        } else if (childObj.is<std::string>()) {
+            target = dynamic_cast<IDisplayObject*>(parent->getChild(childObj.as<std::string>()).get());
+        }
+
+        if (!target) return;
+
+        target->moveToBottom();
+        parent->sortChildrenByPriority(); // ensure z-order updated
+    }
+
+    void bringToFront_lua(IDisplayObject* obj) { if (obj) obj->bringToFront(); }
+    void bringToFront_lua_any(IDisplayObject* parent, const sol::object& descriptor)
+    {
+        if (!parent || !descriptor.is<sol::table>()) return;
+
+        sol::table t = descriptor.as<sol::table>();
+        sol::object childObj = t.get<sol::object>("child");
+
+        IDisplayObject* target = nullptr;
+
+        if (childObj.is<DisplayHandle>()) {
+            target = dynamic_cast<IDisplayObject*>(childObj.as<DisplayHandle>().get());
+        } else if (childObj.is<std::string>()) {
+            target = dynamic_cast<IDisplayObject*>(parent->getChild(childObj.as<std::string>()).get());
+        }
+
+        if (target) target->bringToFront();
+    }
+
+    void sendToBack_lua(IDisplayObject* obj)
+    {
+        if (obj) obj->sendToBack();
+    }
+
+    void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+    {
+        if (!obj || !descriptor.is<sol::table>()) return;
+
+        sol::table t = descriptor.as<sol::table>();
+        sol::object limitObj = t.get<sol::object>("limit");
+
+        IDisplayObject* limit = nullptr;
+        if (limitObj.is<DisplayHandle>())
+            limit = dynamic_cast<IDisplayObject*>(limitObj.as<DisplayHandle>().get());
+        else if (limitObj.is<std::string>())
+            limit = dynamic_cast<IDisplayObject*>(obj->getChild(limitObj.as<std::string>()).get());
+
+        obj->sendToBackAfter(limit);
+    }
+
+    void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj) { if (!obj)  obj->sendToBackAfter(limitObj); }
+    void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+    {
+        if (!obj || !descriptor.valid() || !descriptor.is<sol::table>())
+            return;
+
+        sol::table t = descriptor.as<sol::table>();
+
+        // Resolve 'child'
+        IDisplayObject* child = nullptr;
+        if (sol::object c = t["child"]; c.valid())
+        {
+            if (c.is<DisplayHandle>()) {
+                child = dynamic_cast<IDisplayObject*>(c.as<DisplayHandle>().get());
+            }
+            else if (c.is<std::string>()) {
+                DisplayHandle h = obj->getChild(c.as<std::string>());
+                child = dynamic_cast<IDisplayObject*>(h.get());
+            }
+        }
+        if (!child) return; // No-op if invalid
+
+        // Resolve 'limit'
+        IDisplayObject* limit = nullptr;
+        if (sol::object l = t["limit"]; l.valid())
+        {
+            if (l.is<DisplayHandle>()) {
+                limit = dynamic_cast<IDisplayObject*>(l.as<DisplayHandle>().get());
+            }
+            else if (l.is<std::string>()) {
+                DisplayHandle h = obj->getChild(l.as<std::string>());
+                limit = dynamic_cast<IDisplayObject*>(h.get());
+            }
+        }
+
+        // Apply operation
+        child->sendToBackAfter(limit);
+        obj->sortChildrenByPriority(); // Update rendered order
+    }  
+
+
 
     int getZOrder_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getZOrder(); }
     void setZOrder_lua(IDisplayObject* obj, int z_order) { if (!obj) return; obj->setZOrder(z_order); }
 
-    bool getBorder_lua(const IDisplayObject* obj) { return obj ? obj->getBorder() : false; }
-    bool getBackground_lua(const IDisplayObject* obj) { return obj ? obj->getBackground() : false; }
+    bool hasBorder_lua(const IDisplayObject* obj) { return obj ? obj->hasBorder() : false; }
+    bool hasBackground_lua(const IDisplayObject* obj) { return obj ? obj->hasBackground() : false; }
     void setBorder_lua(IDisplayObject* obj, bool hasBorder) { if (obj) obj->setBorder(hasBorder); }
     void setBackground_lua(IDisplayObject* obj, bool hasBackground) { if (obj) obj->setBackground(hasBackground); }
 

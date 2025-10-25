@@ -43,7 +43,11 @@ namespace SDOM
     void addChild_lua(IDisplayObject* obj, DisplayHandle child);                
     DisplayHandle getChild_lua(const IDisplayObject* obj, std::string name);    
     bool removeChild_lua(IDisplayObject* obj, DisplayHandle child);             
-    bool removeChild_lua(IDisplayObject* obj, const std::string& name);         
+    bool removeChild_lua(IDisplayObject* obj, const std::string& name);    
+
+    sol::table getChildren_lua(const IDisplayObject* obj, sol::this_state ts);
+    int countChildren_lua(const IDisplayObject* obj);
+
     bool hasChild_lua(const IDisplayObject* obj, DisplayHandle child);          
     DisplayHandle getParent_lua(const IDisplayObject* obj);                     
     void setParent_lua(IDisplayObject* obj, const DisplayHandle& parent);       
@@ -93,13 +97,25 @@ namespace SDOM
     void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);               // descriptor form
     void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value); // descriptor form
     std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj);      
+
     void moveToTop_lua(IDisplayObject* obj);                                        // should be parent->moveToTop(child)?                       
-    void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);     // should be parent->moveToTop(child)?   // descriptor form   
+    void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);     // should be parent->moveToTop(child)?   // descriptor form  
+    
+    // add these:
+    void moveToBottom_lua(IDisplayObject* obj);                                 
+    void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form
+    void bringToFront_lua(IDisplayObject* obj);                                  
+    void bringToFront_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form    
+    void sendToBack_lua(IDisplayObject* obj);                                   
+    void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor);        // descriptor form
+    void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj);
+    void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj); // descriptor form
+
     int getZOrder_lua(const IDisplayObject* obj);                               
     void setZOrder_lua(IDisplayObject* obj, int z_order);                       
     void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor);                 // descriptor form
-    bool getBorder_lua(const IDisplayObject* obj);          // Rename to hasBorder() for consistency
-    bool getBackground_lua(const IDisplayObject* obj);      // Rename to hasBackground() for  consistency
+    bool hasBorder_lua(const IDisplayObject* obj);          // Rename to hasBorder() for consistency
+    bool hasBackground_lua(const IDisplayObject* obj);      // Rename to hasBackground() for  consistency
     void setBorder_lua(IDisplayObject* obj, bool hasBorder);
     void setBackground_lua(IDisplayObject* obj, bool hasBackground);
 

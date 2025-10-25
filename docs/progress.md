@@ -1019,6 +1019,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
       - ✅ SDL_Color getDropshadowColor_lua()
       - ✅ void setDropshadowColor_lua(const sol::object& colorObj)
 - Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** helpers for clean, readable test assertions.      
+- Renamed **getBorder()** to **hasBorder()** and **getBackground()** to **hasBackground()** for clarity and consistency with boolean semantics.
 
 
 ---
