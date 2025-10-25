@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['july_202_202025_0',['[July 2, 2025]',['../md_docs_2progress.html#autotoc_md252',1,'']]],
-  ['jump_1',['2) Anchor Change Recalculation (No Visual Jump)',['../md_docs_2display__object__anchoring.html#autotoc_md66',1,'']]]
+  ['json_0',['Configuration Format (Lua Replaces JSON)',['../md_docs_2architecture__overview.html#autotoc_md5',1,'']]],
+  ['july_202_202025_1',['[July 2, 2025]',['../md_docs_2progress.html#autotoc_md320',1,'']]],
+  ['jump_2',['2) Anchor Change Recalculation (No Visual Jump)',['../md_docs_2display__object__anchoring.html#autotoc_md92',1,'']]]
 ];

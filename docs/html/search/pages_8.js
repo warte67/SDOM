@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['icon_20index_20catalog_20for_20sprite_5f8x8_20font_0',['Icon Index Catalog for sprite_8x8 Font',['../md_docs_2icon__8x8.html',1,'']]],
-  ['in_20sdom_1',['Object Handles in SDOM',['../md_docs_2object__handles.html',1,'']]],
-  ['index_20catalog_20for_20sprite_5f8x8_20font_2',['Icon Index Catalog for sprite_8x8 Font',['../md_docs_2icon__8x8.html',1,'']]],
-  ['inventory_3',['Lua commands and properties exposed by SDOM (C++ → Lua binding inventory)',['../md_docs_2lua__commands__and__properties.html',1,'']]],
-  ['ipanelobject_20tt_4',['Design Goals for &lt;tt&gt;IPanelObject&lt;/tt&gt;',['../md_docs_2IPanelObject.html',1,'']]]
+  ['9_202025_0',['[October 9, 2025]',['../md_docs_2progress.html#autotoc_md362',1,'']]],
+  ['9_20patch_20panel_1',['9 patch panel',['../md_docs_2IPanelObject.html#autotoc_md219',1,'What is a 9-slice (9-patch) panel?'],['../md_docs_2IPanelObject.html#autotoc_md220',1,'What is a 9-slice (9-patch) panel?']]],
+  ['9_20slice_209_20patch_20panel_2',['9 slice 9 patch panel',['../md_docs_2IPanelObject.html#autotoc_md219',1,'What is a 9-slice (9-patch) panel?'],['../md_docs_2IPanelObject.html#autotoc_md220',1,'What is a 9-slice (9-patch) panel?']]],
+  ['9_20slice_20sets_20in_20sprite_5f8x8_3',['Predefined 9-Slice Sets in &lt;span class=&quot;tt&quot;&gt;sprite_8x8&lt;/span&gt;',['../md_docs_2IPanelObject.html#autotoc_md222',1,'']]]
 ];

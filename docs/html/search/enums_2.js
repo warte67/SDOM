@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['fonttype_0',['FontType',['../classSDOM_1_1IFontObject.html#a65dd8d559c0b3cedf12993bffeba6aff',1,'SDOM::IFontObject']]]
+  ['extendedcharacterindex_0',['ExtendedCharacterIndex',['../namespaceSDOM.html#aee303a5ea55cf095657cc513fa582406',1,'SDOM']]]
 ];

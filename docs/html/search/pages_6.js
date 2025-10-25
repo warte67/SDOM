@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['goals_20for_20tt_20ipanelobject_20tt_0',['Design Goals for &lt;tt&gt;IPanelObject&lt;/tt&gt;',['../md_docs_2IPanelObject.html',1,'']]]
+  ['7_202025_0',['[October 7, 2025]',['../md_docs_2progress.html#autotoc_md358',1,'']]],
+  ['7_20test_20and_20validate_1',['7. Test and Validate',['../md_docs_2startup__refactor.html#autotoc_md420',1,'']]]
 ];

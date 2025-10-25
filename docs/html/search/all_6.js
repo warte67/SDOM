@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['7_202025_0',['[October 7, 2025]',['../md_docs_2progress.html#autotoc_md290',1,'']]],
-  ['7_20example_20usage_1',['7. Example Usage',['../md_docs_2extensible__factory.html#autotoc_md134',1,'']]],
-  ['7_20test_20and_20validate_2',['7. Test and Validate',['../md_docs_2startup__refactor.html#autotoc_md341',1,'']]]
+  ['7_202025_0',['[October 7, 2025]',['../md_docs_2progress.html#autotoc_md358',1,'']]],
+  ['7_20test_20and_20validate_1',['7. Test and Validate',['../md_docs_2startup__refactor.html#autotoc_md420',1,'']]]
 ];

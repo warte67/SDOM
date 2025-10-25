@@ -1,8 +1,5 @@
 var dir_05baf848637e4bf91faedd6d79d06786 =
 [
-    [ "lua_BindHelpers.hpp", "lua__BindHelpers_8hpp.html", "lua__BindHelpers_8hpp" ],
-    [ "lua_Core.hpp", "lua__Core_8hpp.html", "lua__Core_8hpp" ],
-    [ "lua_IDisplayObject.hpp", "lua__IDisplayObject_8hpp.html", "lua__IDisplayObject_8hpp" ],
     [ "SDOM.hpp", "SDOM_8hpp.html", "SDOM_8hpp" ],
     [ "SDOM_ArrowButton.hpp", "SDOM__ArrowButton_8hpp.html", "SDOM__ArrowButton_8hpp" ],
     [ "SDOM_AssetHandle.hpp", "SDOM__AssetHandle_8hpp.html", "SDOM__AssetHandle_8hpp" ],
@@ -11,6 +8,7 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_CheckButton.hpp", "SDOM__CheckButton_8hpp.html", "SDOM__CheckButton_8hpp" ],
     [ "SDOM_CLR.hpp", "SDOM__CLR_8hpp.html", "SDOM__CLR_8hpp" ],
     [ "SDOM_Core.hpp", "SDOM__Core_8hpp.html", "SDOM__Core_8hpp" ],
+    [ "SDOM_Core_Lua.hpp", "SDOM__Core__Lua_8hpp.html", "SDOM__Core__Lua_8hpp" ],
     [ "SDOM_DisplayHandle.hpp", "SDOM__DisplayHandle_8hpp.html", "SDOM__DisplayHandle_8hpp" ],
     [ "SDOM_Event.hpp", "SDOM__Event_8hpp.html", "SDOM__Event_8hpp" ],
     [ "SDOM_EventManager.hpp", "SDOM__EventManager_8hpp.html", "SDOM__EventManager_8hpp" ],
@@ -26,6 +24,7 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_IconIndex.hpp", "SDOM__IconIndex_8hpp.html", "SDOM__IconIndex_8hpp" ],
     [ "SDOM_IDataObject.hpp", "SDOM__IDataObject_8hpp.html", "SDOM__IDataObject_8hpp" ],
     [ "SDOM_IDisplayObject.hpp", "SDOM__IDisplayObject_8hpp.html", "SDOM__IDisplayObject_8hpp" ],
+    [ "SDOM_IDisplayObject_Lua.hpp", "SDOM__IDisplayObject__Lua_8hpp.html", "SDOM__IDisplayObject__Lua_8hpp" ],
     [ "SDOM_IFontObject.hpp", "SDOM__IFontObject_8hpp.html", "SDOM__IFontObject_8hpp" ],
     [ "SDOM_IPanelObject.hpp", "SDOM__IPanelObject_8hpp.html", "SDOM__IPanelObject_8hpp" ],
     [ "SDOM_IRangeControl.hpp", "SDOM__IRangeControl_8hpp.html", "SDOM__IRangeControl_8hpp" ],

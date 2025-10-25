@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['validateanchorassignments_0',['validateAnchorAssignments',['../namespaceSDOM.html#aaa33b9318af1f912adda349706e19eba',1,'SDOM']]],
-  ['validateanchorpointstring_1',['validateAnchorPointString',['../namespaceSDOM.html#a1727e4f40877b1a80e5317dc9cd632b2',1,'SDOM']]]
+  ['unittests_0',['UnitTests',['../classSDOM_1_1UnitTests.html#a1e79ed95db86daf166bb72932fed97b5',1,'SDOM::UnitTests']]],
+  ['unloadallassetobjects_1',['unloadAllAssetObjects',['../classSDOM_1_1Factory.html#a92857a9cfdd74f81608f52781a5c2e17',1,'SDOM::Factory']]]
 ];

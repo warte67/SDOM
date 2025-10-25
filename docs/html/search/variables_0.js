@@ -1,8 +1,8 @@
 var searchData=
 [
   ['active_0',['Active',['../classSDOM_1_1EventType.html#a412d10af69d7eeee9af0cefff81d415f',1,'SDOM::EventType']]],
-  ['activefontheight_5f_1',['activefontheight_',['../classSDOM_1_1BitmapFont.html#a18caf32fae71b4a2e08f0854d1a0c819',1,'SDOM::BitmapFont::activeFontHeight_'],['../classSDOM_1_1TruetypeFont.html#abd62e7c88d7029d382009558085f0ee7',1,'SDOM::TruetypeFont::activeFontHeight_']]],
-  ['activefontwidth_5f_2',['activefontwidth_',['../classSDOM_1_1BitmapFont.html#a2a3f96722aeb6fe30c97298d8bdfa315',1,'SDOM::BitmapFont::activeFontWidth_'],['../classSDOM_1_1TruetypeFont.html#a1d795e766a10f18274119b2fd723cd1e',1,'SDOM::TruetypeFont::activeFontWidth_']]],
+  ['activefontheight_5f_1',['activeFontHeight_',['../classSDOM_1_1BitmapFont.html#a18caf32fae71b4a2e08f0854d1a0c819',1,'SDOM::BitmapFont::activeFontHeight_'],['../classSDOM_1_1TruetypeFont.html#abd62e7c88d7029d382009558085f0ee7',1,'SDOM::TruetypeFont::activeFontHeight_']]],
+  ['activefontwidth_5f_2',['activeFontWidth_',['../classSDOM_1_1BitmapFont.html#a2a3f96722aeb6fe30c97298d8bdfa315',1,'SDOM::BitmapFont::activeFontWidth_'],['../classSDOM_1_1TruetypeFont.html#a1d795e766a10f18274119b2fd723cd1e',1,'SDOM::TruetypeFont::activeFontWidth_']]],
   ['added_3',['Added',['../classSDOM_1_1EventType.html#ac11d499ea41fc9355b64c18b8241966b',1,'SDOM::EventType']]],
   ['addedtostage_4',['AddedToStage',['../classSDOM_1_1EventType.html#a4ef2c364108bbdcafb94042ea371272f',1,'SDOM::EventType']]],
   ['alignment_5',['alignment',['../structSDOM_1_1FontStyle.html#abaa1e4c8b02dc4471f0d6b2cedc8b37f',1,'SDOM::FontStyle::alignment'],['../structSDOM_1_1Label_1_1InitStruct.html#a341277f3403b87a233856de90612eda6',1,'SDOM::Label::InitStruct::alignment']]],
@@ -17,8 +17,23 @@ var searchData=
   ['anchorright_5f_14',['anchorRight_',['../classSDOM_1_1IDisplayObject.html#a606ab9bf41b5c61e3469b92fe69eeddc',1,'SDOM::IDisplayObject']]],
   ['anchortop_15',['anchorTop',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a5abd3577a9910875ceae2f02a6b2f894',1,'SDOM::IDisplayObject::InitStruct']]],
   ['anchortop_5f_16',['anchorTop_',['../classSDOM_1_1IDisplayObject.html#aad60efcd3f8a36bf6690ff3877bbe179',1,'SDOM::IDisplayObject']]],
-  ['arrow_5fdirection_5fto_5fstring_17',['arrow_direction_to_string',['../classSDOM_1_1ArrowButton.html#ac888ce60615f353c5649eb1e336f8226',1,'SDOM::ArrowButton']]],
-  ['arrowicontable_18',['ArrowIconTable',['../classSDOM_1_1ArrowButton.html#a7007d8070fbeab8cc2f8240142a84c80',1,'SDOM::ArrowButton']]],
-  ['asciicode_5f_19',['asciiCode_',['../classSDOM_1_1Event.html#acdc58e8939e55256a359fedd78729e4f',1,'SDOM::Event']]],
-  ['auto_5fresize_20',['auto_resize',['../structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e',1,'SDOM::FontStyle::auto_resize'],['../structSDOM_1_1Label_1_1InitStruct.html#a46c743df8645554c8dfd24333ad3c194',1,'SDOM::Label::InitStruct::auto_resize']]]
+  ['arrow_5fcollapsed_17',['ARROW_COLLAPSED',['../classCLR.html#a7c138fc8e4a7005d95188ef73e9f17b3',1,'CLR']]],
+  ['arrow_5fdirection_5fto_5fstring_18',['arrow_direction_to_string',['../classSDOM_1_1ArrowButton.html#ac888ce60615f353c5649eb1e336f8226',1,'SDOM::ArrowButton']]],
+  ['arrow_5fdown_19',['ARROW_DOWN',['../classCLR.html#aa7b0065c26dae3d36b99fcd41497e379',1,'CLR']]],
+  ['arrow_5fdown_5fdouble_20',['ARROW_DOWN_DOUBLE',['../classCLR.html#a10ca3ac7fe01b88db2be361a9fce3b97',1,'CLR']]],
+  ['arrow_5fdown_5fsmall_21',['ARROW_DOWN_SMALL',['../classCLR.html#ac890150dde825617ef0d7783b6907b68',1,'CLR']]],
+  ['arrow_5fexpanded_22',['ARROW_EXPANDED',['../classCLR.html#a4d5d21e690236dc78e5f160b0cb9929f',1,'CLR']]],
+  ['arrow_5fleft_23',['ARROW_LEFT',['../classCLR.html#aa5c04485b86e8c0eb836da8b4ae9d771',1,'CLR']]],
+  ['arrow_5fleft_5fdouble_24',['ARROW_LEFT_DOUBLE',['../classCLR.html#a290be5dc64f72e5657b5a0c92829db78',1,'CLR']]],
+  ['arrow_5fleft_5fsmall_25',['ARROW_LEFT_SMALL',['../classCLR.html#a4d8a339d3d7fe1f1010e722ad3d4f2d7',1,'CLR']]],
+  ['arrow_5fright_26',['ARROW_RIGHT',['../classCLR.html#ae27c19011e92bf7fa28026504e6186be',1,'CLR']]],
+  ['arrow_5fright_5fdouble_27',['ARROW_RIGHT_DOUBLE',['../classCLR.html#a22b0dcc15ebf86f492b9366fa72e2571',1,'CLR']]],
+  ['arrow_5fright_5fsmall_28',['ARROW_RIGHT_SMALL',['../classCLR.html#aec4cd1990317f48dbe4b4ce303c1ac47',1,'CLR']]],
+  ['arrow_5fthin_5fright_29',['ARROW_THIN_RIGHT',['../classCLR.html#a25cfe26d1a85aa212d3fb1b52976808f',1,'CLR']]],
+  ['arrow_5fup_30',['ARROW_UP',['../classCLR.html#a37381120ec3ce001bde6507907cb962d',1,'CLR']]],
+  ['arrow_5fup_5fdouble_31',['ARROW_UP_DOUBLE',['../classCLR.html#a4d899d3b33b6ac50f4de8a15cbf7e659',1,'CLR']]],
+  ['arrow_5fup_5fsmall_32',['ARROW_UP_SMALL',['../classCLR.html#a9df767baa8ebed0cc7a4f48d03040ff7',1,'CLR']]],
+  ['arrowicontable_33',['ArrowIconTable',['../classSDOM_1_1ArrowButton.html#a7007d8070fbeab8cc2f8240142a84c80',1,'SDOM::ArrowButton']]],
+  ['asciicode_5f_34',['asciiCode_',['../classSDOM_1_1Event.html#acdc58e8939e55256a359fedd78729e4f',1,'SDOM::Event']]],
+  ['auto_5fresize_35',['auto_resize',['../structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e',1,'SDOM::FontStyle::auto_resize'],['../structSDOM_1_1Label_1_1InitStruct.html#a46c743df8645554c8dfd24333ad3c194',1,'SDOM::Label::InitStruct::auto_resize']]]
 ];

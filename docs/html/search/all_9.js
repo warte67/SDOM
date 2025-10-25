@@ -1,4 +1,9 @@
 var searchData=
 [
-  ['_3a_0',['Rendering Phases (Functions):',['../md_docs_2label__text__parsing.html#autotoc_md213',1,'']]]
+  ['_3a_0',['Rendering Phases (Functions):',['../md_docs_2label__text__parsing.html#autotoc_md280',1,'']]],
+  ['_3a_20actually_20draw_20something_1',[': Actually draw something',['../md_docs_2custom__object__lifecycle.html#autotoc_md62',1,'&lt;span class=&quot;tt&quot;&gt;onRender()&lt;/span&gt;: &lt;em&gt;Actually draw something&lt;/em&gt;'],['../md_docs_2extensible__factory.html#autotoc_md202',1,'&lt;span class=&quot;tt&quot;&gt;onRender()&lt;/span&gt;: &lt;em&gt;Actually draw something&lt;/em&gt;']]],
+  ['_3a_20animation_20state_20changes_2',[': Animation State Changes',['../md_docs_2custom__object__lifecycle.html#autotoc_md58',1,'&lt;span class=&quot;tt&quot;&gt;onUpdate(float dt)&lt;/span&gt;: Animation / State Changes'],['../md_docs_2extensible__factory.html#autotoc_md198',1,'&lt;span class=&quot;tt&quot;&gt;onUpdate(float dt)&lt;/span&gt;: Animation / State Changes']]],
+  ['_3a_20clean_20up_20if_20needed_3',[': Clean Up If Needed',['../md_docs_2custom__object__lifecycle.html#autotoc_md64',1,'&lt;span class=&quot;tt&quot;&gt;onQuit()&lt;/span&gt;: Clean Up &lt;em&gt;If Needed&lt;/em&gt;'],['../md_docs_2extensible__factory.html#autotoc_md204',1,'&lt;span class=&quot;tt&quot;&gt;onQuit()&lt;/span&gt;: Clean Up &lt;em&gt;If Needed&lt;/em&gt;']]],
+  ['_3a_20input_20ui_20interaction_4',[': Input UI Interaction',['../md_docs_2custom__object__lifecycle.html#autotoc_md60',1,'&lt;span class=&quot;tt&quot;&gt;onEvent(const Event&amp;amp;)&lt;/span&gt;: Input &amp;amp; UI Interaction'],['../md_docs_2extensible__factory.html#autotoc_md200',1,'&lt;span class=&quot;tt&quot;&gt;onEvent(const Event&amp;amp;)&lt;/span&gt;: Input &amp;amp; UI Interaction']]],
+  ['_3a_20setup_20don’t_20draw_20yet_5',[': Setup Don’t Draw Yet',['../md_docs_2custom__object__lifecycle.html#autotoc_md56',1,'&lt;span class=&quot;tt&quot;&gt;onInit()&lt;/span&gt;: Setup, Don’t Draw Yet'],['../md_docs_2extensible__factory.html#autotoc_md196',1,'&lt;span class=&quot;tt&quot;&gt;onInit()&lt;/span&gt;: Setup, Don’t Draw Yet']]]
 ];

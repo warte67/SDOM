@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['orientation_0',['Orientation',['../namespaceSDOM.html#a9cb56e905b36976260e5aa56d30ee933',1,'SDOM']]],
-  ['orphanretentionpolicy_1',['OrphanRetentionPolicy',['../classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab',1,'SDOM::IDisplayObject']]]
+  ['labelalign_0',['LabelAlign',['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42d',1,'SDOM']]]
 ];

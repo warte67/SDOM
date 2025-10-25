@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['panelbaseindex_0',['PanelBaseIndex',['../namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922c',1,'SDOM']]],
-  ['paneltileoffset_1',['PanelTileOffset',['../namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5',1,'SDOM']]],
-  ['phase_2',['Phase',['../classSDOM_1_1Event.html#a3de4310bc356130d63a41992e6d3b1a8',1,'SDOM::Event']]]
+  ['orientation_0',['Orientation',['../namespaceSDOM.html#a9cb56e905b36976260e5aa56d30ee933',1,'SDOM']]],
+  ['orphanretentionpolicy_1',['OrphanRetentionPolicy',['../classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab',1,'SDOM::IDisplayObject']]]
 ];
