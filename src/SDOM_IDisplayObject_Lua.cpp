@@ -1001,6 +1001,8 @@ namespace SDOM
             }
         };
 
+        // TODO: add the rest of the IDisplayObject lua bindings here
+
         // Focus & interactivity
         set_if_absent(handleTbl, "setKeyboardFocus", setKeyboardFocus_lua);
         set_if_absent(handleTbl, "isKeyboardFocused", isKeyboardFocused_lua);

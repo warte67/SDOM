@@ -1155,7 +1155,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
       - ✅ void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace)
     - **Lua Integration / Central Binder**
       - ✅ void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua)
-      
+
+---
+### [October 26, 2025]      
 
 ---
 ### Next Steps:
