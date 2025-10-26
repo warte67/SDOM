@@ -1103,8 +1103,16 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
       [IDisplayObject] Lua Integration [PASSED]
       [IDisplayObject] Tests [PASSED]
     ```
+    - **valgrind --leak-check=full ./prog --stop_after_tests**
+      ```
+        ==136007== LEAK SUMMARY:
+        ==136007==    definitely lost: 0 bytes in 0 blocks
+        ==136007==    indirectly lost: 0 bytes in 0 blocks
+        ==136007==      possibly lost: 0 bytes in 0 blocks
+        ==136007==    still reachable: 287,117 bytes in 3,600 blocks
+        ==136007==         suppressed: 0 bytes in 0 blocks
 
-
+      ```
 
 ---
 ## Next Steps:
