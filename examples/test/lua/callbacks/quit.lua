@@ -4,7 +4,7 @@
 local M = {}
 
 function M.on_quit()
-    -- print(CLR.GREEN .. "Custom OnQuit called!" .. CLR.RESET)
+    print(CLR.GREEN .. "Custom OnQuit called!" .. CLR.RESET)
 end
 
 return M

@@ -51,6 +51,7 @@
 ---@field setStage fun(self, DisplayHandle): nil
 ---@field setRootNode fun(self, name: string): nil
 ---@field getStageHandle fun(self): DisplayHandle
+---@field getElapsedTime fun(self): DisplayHandle
 ---@field getRoot fun(self): DisplayHandle
 ---@field getRootNode fun(self): DisplayHandle
 ---@field configure fun(self, cfg: table): nil
