@@ -3,10 +3,10 @@
 -- Callback module for per-frame updates
 local M = {}
 
--- -- rolling FPS average over the last N frames
--- -- Exponential moving average (EMA) parameters
--- local ema = nil
--- local EMA_ALPHA = 2.0 / (100.0 + 1.0) -- smooth roughly equivalent to 100-frame window
+-- rolling FPS average over the last N frames
+-- Exponential moving average (EMA) parameters
+local ema = nil
+local EMA_ALPHA = 2.0 / (100.0 + 1.0) -- smooth roughly equivalent to 100-frame window
 
 function M.on_update(dt)
     local instant = 0

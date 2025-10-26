@@ -6,9 +6,29 @@
 #include <SDOM/SDOM_IAssetObject.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_Texture.hpp>
+#include <SDOM/SDOM_AssetHandle.hpp>
 
 namespace SDOM
 {
+
+    namespace {
+        template <typename F>
+        inline void ss_set_if_absent(sol::table& t, const char* name, F&& fn)
+        {
+            sol::object cur = t.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                t.set_function(name, std::forward<F>(fn));
+            }
+        }
+
+        // Helper to safely get SpriteSheet* from an AssetHandle without requiring lambda capture
+        inline SpriteSheet* as_ss_handle(AssetHandle& self)
+        {
+            SpriteSheet* ss = self.as<SpriteSheet>();
+            if (!ss) { ERROR("SpriteSheet binding called on non-SpriteSheet AssetHandle"); }
+            return ss;
+        }
+    }
 
     SpriteSheet::SpriteSheet(const InitStruct& init) : IAssetObject(init)
     {
@@ -731,8 +751,120 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
-        // sol::table handle = AssetHandle::ensure_handle_table(lua);
+        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
+        sol::table handle = AssetHandle::ensure_handle_table(lua);
+
+        // --- Size accessors --- //
+        ss_set_if_absent(handle, "setSpriteWidth", [](AssetHandle& self, int w) {
+            if (auto* ss = as_ss_handle(self)) ss->setSpriteWidth(w);
+        });
+        ss_set_if_absent(handle, "setSpriteHeight", [](AssetHandle& self, int h) {
+            if (auto* ss = as_ss_handle(self)) ss->setSpriteHeight(h);
+        });
+        ss_set_if_absent(handle, "setSpriteSize", [](AssetHandle& self, int w, int h) {
+            if (auto* ss = as_ss_handle(self)) ss->setSpriteSize(w, h);
+        });
+        ss_set_if_absent(handle, "getSpriteWidth", [](AssetHandle& self) -> int {
+            if (auto* ss = as_ss_handle(self)) return ss->getSpriteWidth();
+            return 0;
+        });
+        ss_set_if_absent(handle, "getSpriteHeight", [](AssetHandle& self) -> int {
+            if (auto* ss = as_ss_handle(self)) return ss->getSpriteHeight();
+            return 0;
+        });
+        ss_set_if_absent(handle, "getSpriteSize", [lua](AssetHandle& self) -> sol::table {
+            sol::state_view L = lua; // capture state for table creation
+            sol::table t = L.create_table();
+            if (auto* ss = as_ss_handle(self)) {
+                t[1] = ss->getSpriteWidth();
+                t[2] = ss->getSpriteHeight();
+                t["w"] = ss->getSpriteWidth();
+                t["h"] = ss->getSpriteHeight();
+            }
+            return t;
+        });
+        ss_set_if_absent(handle, "getSpriteCount", [](AssetHandle& self) -> int {
+            if (auto* ss = as_ss_handle(self)) return ss->getSpriteCount();
+            return 0;
+        });
+        ss_set_if_absent(handle, "getSpriteX", [](AssetHandle& self, int index) -> int {
+            if (auto* ss = as_ss_handle(self)) return ss->getSpriteX(index);
+            return 0;
+        });
+        ss_set_if_absent(handle, "getSpriteY", [](AssetHandle& self, int index) -> int {
+            if (auto* ss = as_ss_handle(self)) return ss->getSpriteY(index);
+            return 0;
+        });
+
+        // --- Drawing --- //
+        // Overloaded drawSprite supporting: (idx, x, y, [color], [scale])
+        //                                  (idx, dstRectTable, [color], [scale])
+        //                                  (idx, srcRectTable, dstRectTable, [color], [scale])
+        auto draw_xy = [](AssetHandle& self, int idx, int x, int y, sol::object colorOpt, sol::object scaleOpt) {
+            if (auto* ss = as_ss_handle(self)) {
+                SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
+                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleOpt);
+                ss->drawSprite(idx, x, y, c, sm);
+            }
+        };
+        auto draw_dst = [](AssetHandle& self, int idx, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
+            if (auto* ss = as_ss_handle(self)) {
+                SDL_FRect d = SDL_Utils::tableToFRect(dst);
+                SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
+                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleOpt);
+                ss->drawSprite(idx, d, c, sm);
+            }
+        };
+        auto draw_ext = [](AssetHandle& self, int idx, sol::table src, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
+            if (auto* ss = as_ss_handle(self)) {
+                SDL_FRect s = SDL_Utils::tableToFRect(src);
+                SDL_FRect d = SDL_Utils::tableToFRect(dst);
+                SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
+                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleOpt);
+                ss->drawSprite(idx, s, d, c, sm);
+            }
+        };
+
+        ss_set_if_absent(handle, "drawSprite", sol::overload(
+            // idx, x, y
+            [draw_xy](AssetHandle& self, int idx, int x, int y) { draw_xy(self, idx, x, y, sol::lua_nil, sol::lua_nil); },
+            // idx, x, y, color
+            [draw_xy](AssetHandle& self, int idx, int x, int y, sol::object color) { draw_xy(self, idx, x, y, color, sol::lua_nil); },
+            // idx, x, y, color, scale
+            draw_xy,
+            // idx, dst
+            [draw_dst](AssetHandle& self, int idx, sol::table dst) { draw_dst(self, idx, dst, sol::lua_nil, sol::lua_nil); },
+            // idx, dst, color
+            [draw_dst](AssetHandle& self, int idx, sol::table dst, sol::object color) { draw_dst(self, idx, dst, color, sol::lua_nil); },
+            // idx, dst, color, scale
+            draw_dst,
+            // idx, src, dst
+            [draw_ext](AssetHandle& self, int idx, sol::table src, sol::table dst) { draw_ext(self, idx, src, dst, sol::lua_nil, sol::lua_nil); },
+            // idx, src, dst, color
+            [draw_ext](AssetHandle& self, int idx, sol::table src, sol::table dst, sol::object color) { draw_ext(self, idx, src, dst, color, sol::lua_nil); },
+            // idx, src, dst, color, scale
+            draw_ext
+        ));
+
+        // Explicitly-named variants for clarity
+        ss_set_if_absent(handle, "drawSprite_dst", [](AssetHandle& self, int idx, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
+            if (auto* ss = as_ss_handle(self)) {
+                SDL_FRect d = SDL_Utils::tableToFRect(dst);
+                SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
+                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleOpt);
+                ss->drawSprite(idx, d, c, sm);
+            }
+        });
+
+        ss_set_if_absent(handle, "drawSprite_ext", [](AssetHandle& self, int idx, sol::table src, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
+            if (auto* ss = as_ss_handle(self)) {
+                SDL_FRect s = SDL_Utils::tableToFRect(src);
+                SDL_FRect d = SDL_Utils::tableToFRect(dst);
+                SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
+                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleOpt);
+                ss->drawSprite(idx, s, d, c, sm);
+            }
+        });
 
     } // END _registerLuaBindings()
 } // namespace SDOM_

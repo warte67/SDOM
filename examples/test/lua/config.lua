@@ -723,24 +723,24 @@ local function require_callback(module_name)
     return res
 end
 
--- -- Load all callback modules. Each must return a table with the expected function(s).
--- callbacks.init = require_callback("callbacks.init")
--- callbacks.quit = require_callback("callbacks.quit")
--- callbacks.event = require_callback("callbacks.event")
--- callbacks.update = require_callback("callbacks.update")
--- callbacks.render = require_callback("callbacks.render")
+-- Load all callback modules. Each must return a table with the expected function(s).
+callbacks.init = require_callback("callbacks.init")
+callbacks.quit = require_callback("callbacks.quit")
+callbacks.event = require_callback("callbacks.event")
+callbacks.update = require_callback("callbacks.update")
+callbacks.render = require_callback("callbacks.render")
 callbacks.unittest = require_callback("callbacks.unittest")
--- callbacks.window_resize = require_callback("callbacks.window_resize")
+callbacks.window_resize = require_callback("callbacks.window_resize")
 
--- -- Use the generic registerOn helper exposed by the C++ bindings.
--- -- This accepts the short name (Init, Update, Event, etc.) and a Lua function.
--- registerOn("Init", callbacks.init.on_init)
--- registerOn("Quit", callbacks.quit.on_quit)
--- registerOn("Event", callbacks.event.on_event)
--- registerOn("Update", callbacks.update.on_update)
--- registerOn("Render", callbacks.render.on_render)
+-- Use the generic registerOn helper exposed by the C++ bindings.
+-- This accepts the short name (Init, Update, Event, etc.) and a Lua function.
+registerOn("Init", callbacks.init.on_init)
+registerOn("Quit", callbacks.quit.on_quit)
+registerOn("Event", callbacks.event.on_event)
+registerOn("Update", callbacks.update.on_update)
+registerOn("Render", callbacks.render.on_render)
 registerOn("UnitTest", callbacks.unittest.on_unit_test)
--- registerOn("WindowResize", callbacks.window_resize.on_window_resize)
+registerOn("WindowResize", callbacks.window_resize.on_window_resize)
 
 
 -- Add an event listener that switches the root stage when the main button is activated.

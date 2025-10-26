@@ -192,6 +192,21 @@ function configure(cfg) end
 ---@field setName fun(self: AssetHandle, name: string)
 ---@field setType fun(self: AssetHandle, typeName: string)
 ---@field setFilename fun(self: AssetHandle, filename: string)
+-- SpriteSheet-specific helpers (attached to AssetHandle for SpriteSheet assets)
+---@field setSpriteWidth fun(self: AssetHandle, width: integer)
+---@field setSpriteHeight fun(self: AssetHandle, height: integer)
+---@field setSpriteSize fun(self: AssetHandle, width: integer, height: integer)
+---@field getSpriteWidth fun(self: AssetHandle): integer
+---@field getSpriteHeight fun(self: AssetHandle): integer
+---@field getSpriteSize fun(self: AssetHandle): table
+---@field getSpriteCount fun(self: AssetHandle): integer
+---@field getSpriteX fun(self: AssetHandle, spriteIndex: integer): integer
+---@field getSpriteY fun(self: AssetHandle, spriteIndex: integer): integer
+---@field drawSprite fun(self: AssetHandle, spriteIndex: integer, x: integer, y: integer, color?: (SDL_Color|table), scaleMode?: string)
+---@field drawSprite fun(self: AssetHandle, spriteIndex: integer, dstRect: table, color?: (SDL_Color|table), scaleMode?: string)
+---@field drawSprite fun(self: AssetHandle, spriteIndex: integer, srcRect: table, dstRect: table, color?: (SDL_Color|table), scaleMode?: string)
+---@field drawSprite_dst fun(self: AssetHandle, spriteIndex: integer, dstRect: table, color?: (SDL_Color|table), scaleMode?: string)
+---@field drawSprite_ext fun(self: AssetHandle, spriteIndex: integer, srcRect: table, dstRect: table, color?: (SDL_Color|table), scaleMode?: string)
 
 ---@class Core
 ---@field quit fun(self: Core)

@@ -48,25 +48,53 @@ end
 function M.on_prerender(evt)
     -- Called BEFORE children are rendered; but after the stage is rendered
 
-    local ss = getAssetObject("ut_bmp8_lua2")
+    -- Resolve a SpriteSheet asset. Prefer ut_bmp8_lua2 (used in tests),
+    -- but fall back to assets that exist in the default config.
+    local function resolve_sprite_sheet()
+        local candidates = {
+            "ut_bmp8_lua2",                  -- created by SpriteSheet tests
+            "external_icon_8x8",             -- configured in examples/test/lua/config.lua
+            "internal_icon_16x16_SpriteSheet",
+            "internal_icon_12x12_SpriteSheet",
+            "internal_icon_8x8_SpriteSheet",
+        }
+        for _, name in ipairs(candidates) do
+            local h = getAssetObject(name)
+            if h and h.isValid and h:isValid() then
+                return h, name
+            end
+        end
+        return nil, nil
+    end
+
+    local ss, name = resolve_sprite_sheet()
     if not ss then
-        print("Failed to get asset: ut_bmp8_lua2")
+        print("listener_callbacks.on_prerender: no SpriteSheet asset available")
         return false
     end
 
-    -- advance idx sixteen times second using deltaTimeAccumulator
+    -- Determine sprite count for safe indexing
+    local count = ss:getSpriteCount() or 0
+    if count <= 0 then
+        print("listener_callbacks.on_prerender: SpriteSheet '" .. tostring(name) .. "' has no sprites")
+        return false
+    end
+
+    -- advance idx sixteen times per second using deltaTimeAccumulator
     deltaTimeAccumulator = deltaTimeAccumulator + getElapsedTime()
     if deltaTimeAccumulator >= 0.0625 then
         deltaTimeAccumulator = deltaTimeAccumulator - 0.0625
-        idx = (idx + 1) % 256
+        idx = (idx + 1) % count
     end
+    -- ensure current index is valid before drawing
+    idx = idx % count
 
-    -- ** Works Well **  drawSprite(spriteIndex, x, y, [{color}], [filter = "nearest"|"linear"])
+    -- drawSprite(spriteIndex, x, y, [{color}], [filter = "nearest"|"linear"])
         -- ss:drawSprite(idx, 16, 32)
         -- ss:drawSprite(idx, 32, 32, {r=255, g=255, b=128, a=255})
         -- ss:drawSprite(idx, 48, 32, {r=255, g=192, b=128, a=255}, "linear")
 
-    -- ** Works Well **  drawSprite_dst(spriteIndex, {w,h,x,y}, [{color}], [filter = "nearest"|"linear"])
+    -- drawSprite_dst(spriteIndex, {w,h,x,y}, [{color}], [filter = "nearest"|"linear"])
         local color = { r = 192, g = 64, b = 32, a = 255 }
         local dst = {w = 32, h = 32, x = 16, y = 32}
         ss:drawSprite(idx, dst, color, "nearest")
@@ -78,7 +106,7 @@ function M.on_prerender(evt)
             -- ss:drawSprite_dst(idx, dst, color, "nearest")
             -- ss:drawSprite_dst(idx, dst, {r=255, g=192, b=128, a=255}, "linear")        
 
-    -- ** Works Well **   drawSprite_ext(spriteIndex, {source rect}, {destination rect}, [{color}], [filter = "nearest"|"linear"])
+    -- drawSprite_ext(spriteIndex, {source rect}, {destination rect}, [{color}], [filter = "nearest"|"linear"])
     --                    Note: This version of drawSprite is used to render a specific sub-rectangle of a single sprite tile 
     --                    from the sprite sheet into a destination rect on screen, applying color modulation and scale mode.
     --                    This is useful for rendering only portions of a sprite tile. 
