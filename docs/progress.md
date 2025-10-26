@@ -896,7 +896,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Completed **DisplayObject Creation** tests.
   - Constructed a new lua based unit test scaffolding 
     - Started **Core_UnitTests.lua** based on the new lua test scaffolding.
-- Lua Binding System stabilization and test fixes
+- **Lua Binding System stabilization and test fixes**
   - Idempotent usertype registration: updated **register_usertype_with_table** to register once per Lua state and reuse the existing usertype table (no re‑registration/clobbering).
   - Safe table creation: **ensure_sol_table** now reuses existing global entries (usertype/table) and avoids replacing them, preventing stale userdatas.
   - **DisplayHandle** minimal API + robust lookup: added **isValid**, **getName**, **getType**, **setName**, **setType**, and **get** with a resilient **__index** that supports both `:` and `.` calls.
@@ -905,12 +905,40 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **IDisplayObject** bindings (available via **DisplayHandle**)
   - Added generic hierarchy helpers: **addChild(childSpec)**, **removeChild(childSpec)**, **hasChild(childSpec)**, and **getChild(spec)** where specs accept a **DisplayHandle**, a name **string**, or **{ name = "..." }**`**.
   - Bound on both the **DisplayHandle** usertype and backing table for consistent lookup.
-- Lua tests and scaffolding
+- **Lua tests and scaffolding**
   - **Core_UnitTests.lua** updated to verify **DisplayHandle** method availability, stage/root retrieval, invalid lookups returning **nil**, and basic parent/child operations.
   - Most Lua Integration checks are now passing after the binding fixes.
-- IDE stubs
+- **IDE stubs**
   - Expanded **lua/api_stubs.lua** for better autocompletion: **DisplayHandle** methods above, partial **IDisplayObject** surface (add/remove/has/get child), and partial **Stage** (mouse getters/setters).
-
+- **Core Unit Test Results:**
+  ```bash
+    Starting [Core System] Unit Tests...
+    [Core System] SDL_WasInit(SDL_INIT_VIDEO) [PASSED]
+    [Core System] SDL Texture Validity [PASSED]
+    [Core System] SDL Renderer Validity [PASSED]
+    [Core System] SDL Window Validity [PASSED]
+    [Core System] Tests [PASSED]
+    Starting [Core] Unit Tests...
+    [Core] Scaffolding [PASSED]
+    [Core] Window Dimensions [PASSED]
+    [Core] Pixel Dimensions [PASSED]
+    [Core] Aspect Ratio Preservation [PASSED]
+    [Core] Texture Resize Allowance [PASSED]
+    [Core] Pixel Format [PASSED]
+    [Core] Renderer Logical Presentation [PASSED]
+    [Core] Window Flags [PASSED]
+    [Core] Core Background Color [PASSED]
+    [Core] Factory Existence [PASSED]
+    [Core] Callback/Hook Registration [PASSED]
+    [Core] Stage/Root Node Management [PASSED]
+    [Core] SDL Resource Accessors [PASSED]
+    [Core] Configuration Getters/Setters [PASSED]
+    [Core] Factory and Event Manager Access [PASSED]
+    [Core] Focus & Hover Management [PASSED]
+    [Core] DisplayObject Creation [PASSED]
+    [Core] Lua Integration [PASSED]
+    [Core] Tests [PASSED]
+  ```
 ---
 ### [October 24, 2025]
 - **IDisplayObject_UnitTests** Progress:
@@ -1018,13 +1046,68 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
       - ✅ void setOutlineColor_lua(const sol::object& colorObj)
       - ✅ SDL_Color getDropshadowColor_lua()
       - ✅ void setDropshadowColor_lua(const sol::object& colorObj)
-- Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** helpers for clean, readable test assertions.      
-- Renamed **getBorder()** to **hasBorder()** and **getBackground()** to **hasBackground()** for clarity and consistency with boolean semantics.
+      - ✅ bool hasBorder_lua(const IDisplayObject* obj)
+      - ✅ bool hasBackground_lua(const IDisplayObject* obj)
+      - ✅ void setBorder_lua(IDisplayObject* obj, bool hasBorder)
+      - ✅ void setBackground_lua(IDisplayObject* obj, bool hasBackground)
+    - **Priority and Z-Order (test #8)**
+      - ✅ std::vector<DisplayHandle>& getChildren(const IDisplayObject* obj)
+      - ✅ int countChildren_lua(const IDisplayObject* obj)
+      - ✅ int getMaxPriority_lua(const IDisplayObject* obj)
+      - ✅ int getMinPriority_lua(const IDisplayObject* obj)
+      - ✅ int getPriority_lua(const IDisplayObject* obj)
+      - ✅ void setToHighestPriority_lua(IDisplayObject* obj)
+      - ✅ void setToLowestPriority_lua(IDisplayObject* obj)
+      - ✅ void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+      - ✅ void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+      - ✅ void sortChildrenByPriority_lua(IDisplayObject* obj)
+      - ✅ void setPriority_lua(IDisplayObject* obj, int priority)
+      - ✅ void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+      - ✅ void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value)
+      - ✅ std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj)
+      - ✅ void moveToTop_lua(IDisplayObject* obj)
+      - ✅ void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+      - ✅ void moveToBottom_lua(IDisplayObject* obj)
+      - ✅ void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+      - ✅ void bringToFront_lua(IDisplayObject* obj)
+      - ✅ void bringToFront_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+      - ✅ void sendToBack_lua(IDisplayObject* obj)
+      - ✅ void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+      - ✅ void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj)
+      - ✅ void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj)
+      - ✅ int getZOrder_lua(const IDisplayObject* obj)
+      - ✅ void setZOrder_lua(IDisplayObject* obj, int z_order)
+      - ✅ void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+  - **Supporting Improvements**
+    - Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** for readable assertions.
+    - Renamed **getBorder()** → **hasBorder()** and **getBackground()** → **hasBackground()** for clearer boolean intent.
+    - Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** helpers for clean, readable test assertions.      
+    - Renamed **getBorder()** to **hasBorder()** and **getBackground()** to **hasBackground()** for clarity and consistency with boolean semantics.
+    - Implemented and fully tested 
+      - **moveToBottom()**, **moveToTop()**, **bringToFront()**, **sendToBack()**, **sendToBackAfter()** (relative reordering)
+      - All **Lua descriptor forms** (`*_lua_any`) now tested and confirmed working.
+      - Z-order and priority maintain **stable + predictable ordering** across siblings.
+      - No orphaned objects left behind across add/remove/reparent sequences.
+    - **IDisplayObject_UnitTests** Output Summary:
+    ```bash
+      Starting [IDisplayObject] Unit Tests...
+      [IDisplayObject] Scaffold [PASSED]
+      [IDisplayObject] Create Stage Object [PASSED]
+      [IDisplayObject] Get and Set Name [PASSED]
+      [IDisplayObject] Destroy the generic Stage Object [PASSED]
+      [IDisplayObject] Dirty/State Management [PASSED]
+      [IDisplayObject] Events and Event Listener Handling [PASSED]
+      [IDisplayObject] Hierarchy Management [PASSED]
+      [IDisplayObject] Type and Property Access [PASSED]
+      [IDisplayObject] Priority and Z-Order [PASSED]
+      [IDisplayObject] Lua Integration [PASSED]
+      [IDisplayObject] Tests [PASSED]
+    ```
+
 
 
 ---
 ## Next Steps:
-- Continue building out **Core_UnitTests.lua** to cover all Core methods and properties.
 - Continue building out **IDisplayObject_UnitTests.cpp** Unit Test Module to fully test all C++ and LUA properties and functions.
 
 ---
@@ -1066,7 +1149,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - ☐ Button
 - ☐ CheckButton
 - ☐ CLR
-- 🔄 Core
+- ✅ Core
 - ☐ DisplayHandle
 - ☐ Event
 - ☐ EventManager

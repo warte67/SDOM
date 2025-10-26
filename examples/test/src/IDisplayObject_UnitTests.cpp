@@ -468,6 +468,10 @@ namespace SDOM
             // ✅ void setOutlineColor_lua(const sol::object& colorObj);
             // ✅ SDL_Color getDropshadowColor_lua();
             // ✅ void setDropshadowColor_lua(const sol::object& colorObj);
+            // ✅ bool hasBorder_lua(const IDisplayObject* obj);
+            // ✅ bool hasBackground_lua(const IDisplayObject* obj);
+            // ✅ void setBorder_lua(IDisplayObject* obj, bool hasBorder);      
+            // ✅ void setBackground_lua(IDisplayObject* obj, bool hasBackground);            
 
         bool ok = true;
         Core& core = getCore();
@@ -479,14 +483,14 @@ namespace SDOM
             errors.push_back("IDisplayObject_test7: Test object '" + testObjectName + "' not found.");
             return false;
         }
-        // Verify getName()
+        // ✅ std::string getName_lua();
         std::string name = testObject->getName();
         if (name != testObjectName)
         {
             errors.push_back("IDisplayObject_test7: getName() returned '" + name + "', expected '" + testObjectName + "'.");
             ok = false;
         }
-        // Verify setName("string")
+        // ✅ void setName_lua(const std::string& newName);  
         std::string newName = "bluishBoxRenamed";
         testObject->setName(newName);
         std::string updatedName = testObject->getName();
@@ -497,13 +501,13 @@ namespace SDOM
         }
         // Revert the name change for other tests
         testObject->setName(testObjectName);
-        // Verify getType()
+        // ✅ std::string getType_lua();
         if (testObject.getType() != "Box")
         {
             errors.push_back("IDisplayObject_test7: getType() returned '" + testObject->getType() + "', expected 'Box'.");
             ok = false; 
         }
-        // Verify getBounds()
+        // ✅ Bounds getBounds_lua();
         Bounds bounds = testObject->getBounds();
         if ((int)bounds.left != 180 || (int)bounds.top != 70 || (int)bounds.right != 430 || (int)bounds.bottom != 295)
         {
@@ -514,7 +518,7 @@ namespace SDOM
                              "; expected left: 180, top: 70, right: 430, bottom: 295.");
             ok = false; 
         }
-        // Verify setBounds()
+        // ✅ void setBounds_lua(const sol::object& bobj);
         Bounds new_bounds = {180, 75, 180+240, 75+215};
         testObject->setBounds(new_bounds);
         Bounds updated_bounds = testObject->getBounds();
@@ -530,19 +534,29 @@ namespace SDOM
                              ", bottom: " + std::to_string(new_bounds.bottom) + ".");
             ok = false; 
         }        
-        // Verify Color Getters and Setters
+        // ✅ SDL_Color getColor_lua();
         SDL_Color orig_color = testObject->getColor();
+        // ✅ SDL_Color getForegroundColor_lua();
         SDL_Color orig_fg_color = testObject->getForegroundColor();
+        // ✅ SDL_Color getBackgroundColor_lua();
         SDL_Color orig_bg_color = testObject->getBackgroundColor();
+        // ✅ SDL_Color getBorderColor_lua();
         SDL_Color orig_border_color = testObject->getBorderColor();
+        // ✅ SDL_Color getOutlineColor_lua();
         SDL_Color orig_outline_color = testObject->getOutlineColor();
+        // ✅ SDL_Color getDropshadowColor_lua();
         SDL_Color orig_dropshadow_color = testObject->getDropshadowColor();
-        // New Colors
+        // ✅ void setColor_lua(const sol::object& colorObj);
         SDL_Color new_color             = {0, 255, 0, 255};     testObject->setColor(new_color);
+        // ✅ void setForegroundColor_lua(const sol::object& colorObj);
         SDL_Color new_fg_color          = { 255, 0, 0, 255};    testObject->setForegroundColor(new_fg_color);
+        // ✅ SDL_Color getBorderColor_lua();
         SDL_Color new_bg_color          = {0, 0, 255, 255};     testObject->setBackgroundColor(new_bg_color);
+        // ✅ void setBorderColor_lua(const sol::object& colorObj);
         SDL_Color new_border_color      = {255, 255, 0, 255};   testObject->setBorderColor(new_border_color);
+        // ✅ void setOutlineColor_lua(const sol::object& colorObj);
         SDL_Color new_outline_color     = {0, 255, 255, 255};   testObject->setOutlineColor(new_outline_color);
+        // ✅ void setDropshadowColor_lua(const sol::object& colorObj);
         SDL_Color new_dropshadow_color  = {255, 0, 255, 255};   testObject->setDropshadowColor(new_dropshadow_color);
         // Verify the New Colors
         SDL_Color read_color = testObject->getColor();
@@ -609,6 +623,40 @@ namespace SDOM
             );
             ok = false;
         }
+        // --- Border and Background Tests --- //
+        Box* box = testObject.as<Box>();
+        if (!box) {
+            errors.push_back("IDisplayObject_test7: Test object is not of type Box for border/background tests.");
+            ok = false;
+        }
+        // ✅ bool hasBorder_lua(const IDisplayObject* obj);
+        bool orig_has_border = hasBorder_lua(box);
+        // ✅ bool hasBackground_lua(const IDisplayObject* obj);
+        bool orig_has_background = hasBackground_lua(box);
+        setBorder_lua(box, orig_has_border ? false : true);  // toggle border
+        if (hasBorder_lua(box) == orig_has_border) {
+            errors.push_back("IDisplayObject_test7: setBorder_lua() failed to toggle border state.");
+            ok = false;
+        }
+        setBackground_lua(box, orig_has_background ? false : true);  // toggle background
+        if (hasBackground_lua(box) == orig_has_background) {
+            errors.push_back("IDisplayObject_test7: setBackground_lua() failed to toggle background state.");
+            ok = false;
+        }
+        // ✅ void setBorder_lua(IDisplayObject* obj, bool hasBorder);      
+        setBorder_lua(box, orig_has_border);
+        // ✅ void setBackground_lua(IDisplayObject* obj, bool hasBackground);  
+        setBackground_lua(box, orig_has_background);
+        // Verify restoration
+        if (hasBorder_lua(box) != orig_has_border) {
+            errors.push_back("IDisplayObject_test7: Failed to restore original border state.");
+            ok = false;
+        }
+        if (hasBackground_lua(box) != orig_has_background) {
+            errors.push_back("IDisplayObject_test7: Failed to restore original background state.");
+            ok = false;
+        }
+
         // Restore the Original Colors
         testObject->setColor(orig_color);
         testObject->setForegroundColor(orig_fg_color);
@@ -620,6 +668,9 @@ namespace SDOM
         return ok;
     } // IDisplayObject_test7(std::vector<std::string>& errors)   
 
+
+
+
     // --- Priority and Z-Order --- //
     bool IDisplayObject_test8(std::vector<std::string>& errors)   
     {
@@ -628,42 +679,33 @@ namespace SDOM
         // ⚠️ Failing     
         // ☐ Unchecked/Untested
         
-        // ✅ std::vector<DisplayHandle>& getChildren(const IDisplayObject* obj);  // test the IDisplayObject method 
-        // ✅ int countChildren_lua(const IDisplayObject* obj);        
-
+        // ✅ std::vector<DisplayHandle>& getChildren(const IDisplayObject* obj);
+        // ✅ int countChildren_lua(const IDisplayObject* obj);
         // ✅ int getMaxPriority_lua(const IDisplayObject* obj);              
         // ✅ int getMinPriority_lua(const IDisplayObject* obj);              
         // ✅ int getPriority_lua(const IDisplayObject* obj);                 
         // ✅ void setToHighestPriority_lua(IDisplayObject* obj);             
         // ✅ void setToLowestPriority_lua(IDisplayObject* obj);     
-        // ✅ void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);        // descriptor form
-        // ✅ void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);         // descriptor form
+        // ✅ void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+        // ✅ void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);
         // ✅ void sortChildrenByPriority_lua(IDisplayObject* obj);           
         // ✅ void setPriority_lua(IDisplayObject* obj, int priority);        
-        // ✅ void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);                 // descriptor form
-        // ✅ void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value);   // descriptor form
+        // ✅ void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+        // ✅ void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value);
         // ✅ std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj);      
         // ✅ void moveToTop_lua(IDisplayObject* obj);                                    
-        // ✅ void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);                   // descriptor form
-
-        // ☐ void moveToBottom_lua(IDisplayObject* obj);                                 
-        // ☐ void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form
-        // ☐ void bringToFront_lua(IDisplayObject* obj);                                  
-        // ☐ void bringToFront_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form    
-        // ☐ void sendToBack_lua(IDisplayObject* obj);                                   
-        // ☐ void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor);        // descriptor form
-        // ☐ void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj);
-        // ☐ void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj); // descriptor form
-
+        // ✅ void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+        // ✅ void moveToBottom_lua(IDisplayObject* obj);                                 
+        // ✅ void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+        // ✅ void bringToFront_lua(IDisplayObject* obj);                                  
+        // ✅ void bringToFront_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+        // ✅ void sendToBack_lua(IDisplayObject* obj);                                   
+        // ✅ void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+        // ✅ void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj);
+        // ✅ void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj);
         // ✅ int getZOrder_lua(const IDisplayObject* obj);                               
         // ✅ void setZOrder_lua(IDisplayObject* obj, int z_order);                       
-        // ✅ void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor);                   // descriptor form
-
-// --- MOVE TO: Type & Property Access --- //
-// ☐ bool hasBorder_lua(const IDisplayObject* obj);
-// ☐ bool hasBackground_lua(const IDisplayObject* obj);
-// ☐ void setBorder_lua(IDisplayObject* obj, bool hasBorder);      
-// ☐ void setBackground_lua(IDisplayObject* obj, bool hasBackground);
+        // ✅ void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor);
 
         // Helper: get index of child in parent
         auto child_index = [](DisplayHandle parent, DisplayHandle child) {
@@ -807,27 +849,18 @@ namespace SDOM
             errors.push_back("PriorityZOrder_Test: setZOrder(3) failed to place A at the top.");
             ok = false;
         }
-
         // cleanup and start a new hierarchy
         core.destroyDisplayObject("A");
         core.destroyDisplayObject("B");        
         core.destroyDisplayObject("C");        
-
         DisplayHandle zbox = make_box( "zbox", 32);    stage->addChild(zbox);
                       A  = make_box( "A", 64);         zbox->addChild(A);
                       B  = make_box( "B", 96);         zbox->addChild(B);
                       C  = make_box( "C", 128);        zbox->addChild(C);
         DisplayHandle D  = make_box( "D", 160);        zbox->addChild(D);
-
         DisplayHandle D1  = make_box( "D1", 192);        A->addChild(D1);
         DisplayHandle D2  = make_box( "D2", 224);        A->addChild(D2);
         DisplayHandle D3  = make_box( "D3", 255);        A->addChild(D3);
-
-        
-        // DEBUG: Print z-orders
-        // parent_box->printTree();
-        DEBUG_LOG("---- ZOrder Test Start ----");
-
         // ✅ void moveToBottom_lua(IDisplayObject* obj); 
         Box* box_a = A.as<Box>();
         if (!box_a) { errors.push_back("PriorityZOrder_test: unable to fetch A box ptr"); return false; }
@@ -836,7 +869,6 @@ namespace SDOM
             errors.push_back("moveToBottom: A should be first child of zbox. (was: " + std::to_string(child_index(zbox, A)) + ", expected 0)");
             ok = false;
         }
-
         // ✅ void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form
         sol::table descA = lua.create_table(); descA["name"] = "A";
         moveToBottom_lua_any(zbox.as<IDisplayObject>(), descA);
@@ -844,14 +876,12 @@ namespace SDOM
             errors.push_back("moveToBottom_lua_any: A should be first child of zbox.");
             ok = false;
         }
-
         // ✅ void bringToFront_lua(IDisplayObject* obj);                                  
         B->bringToFront();
         if (child_index(zbox, B) != int(zbox->countChildren()) - 1) {
             errors.push_back("bringToFront: B should be last child of zbox.");
             ok = false;
         }
-
         // ✅ void bringToFront_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form    
         sol::table descB = lua.create_table(); descB["name"] = "B";
         bringToFront_lua_any(zbox.as<IDisplayObject>(), descB);
@@ -859,14 +889,12 @@ namespace SDOM
             errors.push_back("bringToFront_lua_any: B should be last child of zbox.");
             ok = false;
         }
-
         // ✅ void sendToBack_lua(IDisplayObject* obj);    
         C->sendToBack();
         if (child_index(zbox, C) != 0) {
             errors.push_back("sendToBack: C should be first child of zbox.");
             ok = false;
         }
-
         // ✅ void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor);
         sol::table descC = lua.create_table(); descC["name"] = "C";
         sendToBack_lua_any(zbox.as<IDisplayObject>(), descC);
@@ -874,63 +902,24 @@ namespace SDOM
             errors.push_back("sendToBack_lua_any: C should be first child of zbox.");
             ok = false;
         }
-
         // ✅ void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj);
         D->sendToBackAfter(B.get());
         if (child_index(zbox, D) != child_index(zbox, B) + 1) {
             errors.push_back("sendToBackAfter: D should be immediately after B in zbox.");
             ok = false;
         }
-
-        DEBUG_LOG("BEFORE:");         
-        zbox->printTree();
-
-        // ⚠️ void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj);
+        // ✅ void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj);
         sol::table descD3 = lua.create_table(); descD3["name"] = "D3";
         sendToBackAfter_lua_any(zbox.as<Box>(), descD3, C.as<Box>());
         if (child_index(zbox, D3) != child_index(zbox, C) + 1) {
             errors.push_back("sendToBackAfter_lua_any: D3 should be immediately after C in zbox.");
             ok = false;
         }
-
-        DEBUG_LOG("AFTER:  sendToBackAfter_lua_any(zbox.as<Box>(), descD3, C.as<Box>());");
-        zbox->printTree();
-/*
-BEFORE:
-zbox
-  ├── C
-  ├── A
-  │   ├── D1
-  │   ├── D2
-  │   └── D3
-  ├── B
-  └── D
-
-AFTER:  sendToBackAfter_lua_any(zbox.as<Box>(), descD3, C.as<Box>());
-
-zbox
-  ├── C
-  ├── D3
-  ├── A
-  │   ├── D1
-  │   └── D2
-  ├── B
-  └── D
-
-*/
-
-
-        for (auto& kid : zbox->getChildren() )
-        {
-            DEBUG_LOG("Kid: " + kid->getName() + " ZOrder: " + std::to_string(kid->getZOrder()));
-        }
-
-
-
         // Cleanup
-
-        // parent_box->printTree();
-        // zbox->printTree();        
+        // for (auto& kid : zbox->getChildren() )
+        // {
+        //     DEBUG_LOG("Kid: " + kid->getName() + " ZOrder: " + std::to_string(kid->getZOrder()));
+        // }
         core.destroyDisplayObject("parent_box");
         core.destroyDisplayObject("zbox");
         core.destroyDisplayObject("A");
@@ -949,7 +938,6 @@ zbox
                 errors.push_back("  Orphan: " + punk->getName() + " (" + punk->getType() + ")");
             }
         }
-
         // return results
         return ok;
     } // IDisplayObject_test8(std::vector<std::string>& errors)   

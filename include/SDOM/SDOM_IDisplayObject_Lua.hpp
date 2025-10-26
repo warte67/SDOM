@@ -83,6 +83,12 @@ namespace SDOM
     void setOutlineColor_lua(IDisplayObject* obj, const sol::object& colorObj);
     SDL_Color getDropshadowColor_lua(const IDisplayObject* obj);
     void setDropshadowColor_lua(IDisplayObject* obj, const sol::object& colorObj);
+    // boolean properties for border/background
+    bool hasBorder_lua(const IDisplayObject* obj); 
+    bool hasBackground_lua(const IDisplayObject* obj);
+    void setBorder_lua(IDisplayObject* obj, bool hasBorder);
+    void setBackground_lua(IDisplayObject* obj, bool hasBackground);
+
 
     // --- Priority & Z-Order --- //
     int getMaxPriority_lua(const IDisplayObject* obj);              
@@ -107,18 +113,13 @@ namespace SDOM
     void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor);
     void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj);
     void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj);
-
     int getZOrder_lua(const IDisplayObject* obj);                               
     void setZOrder_lua(IDisplayObject* obj, int z_order);                       
-    void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor);                 // descriptor form
-    bool hasBorder_lua(const IDisplayObject* obj);          // Rename to hasBorder() for consistency
-    bool hasBackground_lua(const IDisplayObject* obj);      // Rename to hasBackground() for  consistency
-    void setBorder_lua(IDisplayObject* obj, bool hasBorder);
-    void setBackground_lua(IDisplayObject* obj, bool hasBackground);
+    void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor);
 
     // --- Focus & Interactivity --- //
     void setKeyboardFocus_lua(IDisplayObject* obj);                 
-    bool isKeyboardFocused_lua(const IDisplayObject* obj);          // 🔄 ⚠️
+    bool isKeyboardFocused_lua(const IDisplayObject* obj);
     bool isMouseHovered_lua(const IDisplayObject* obj);             
     bool isClickable_lua(const IDisplayObject* obj);                
     void setClickable_lua(IDisplayObject* obj, bool clickable);     
