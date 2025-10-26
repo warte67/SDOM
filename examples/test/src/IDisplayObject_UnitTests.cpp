@@ -12,6 +12,8 @@
 
 
 #include "Box.hpp"
+#include <thread>
+#include <chrono>
 
 namespace SDOM
 {
@@ -1662,25 +1664,146 @@ namespace SDOM
         // ❌ Invalid
         // ☐ Planned
 
-        // --- 🔄 Orphan Retention Policy --- //
-        // ☐ IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* obj, const std::string& s)
-        // ☐ std::string orphanPolicyToString_lua(IDisplayObject* obj, IDisplayObject::OrphanRetentionPolicy p)
-        // ☐ void setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr)
-        // ☐ std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj)
+        // --- Orphan Retention Policy --- //
+        // ✅ IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* obj, const std::string& s)
+        // ✅ std::string orphanPolicyToString_lua(IDisplayObject* obj, IDisplayObject::OrphanRetentionPolicy p)
+        // ✅ void setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr)
+        // ✅ std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj)
 
-        // ☐ IDisplayObject::OrphanRetentionPolicy IDisplayObject::orphanPolicyFromString(const std::string& s)
-        // ☐ std::string IDisplayObject::orphanPolicyToString(IDisplayObject::OrphanRetentionPolicy p)
-        // ☐ void IDisplayObject::setOrphanRetentionPolicy(const std::string& policyStr)
-        // ☐ std::string IDisplayObject::getOrphanRetentionPolicyString()
+        // ✅ IDisplayObject::OrphanRetentionPolicy IDisplayObject::getOrphanRetentionPolicy()
+        // ✅ IDisplayObject& IDisplayObject::setOrphanRetentionPolicy(OrphanRetentionPolicy)
 
-        // 🔄 Lua-accessible accessors for orphan grace (milliseconds)
-        // ☐ int getOrphanGrace_lua(const IDisplayObject* obj)
-        // ☐ void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace)
+        // Lua-accessible accessors for orphan grace (milliseconds)
+        // ✅ int getOrphanGrace_lua(const IDisplayObject* obj)
+        // ✅ void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace)
 
-        // ☐ int IDisplayObject::getOrphanGrace()
-        // ☐ void IDisplayObject::setOrphanGrace(std::chrono::milliseconds grace)
+        // ✅ std::chrono::milliseconds IDisplayObject::getOrphanGrace()
+        // ✅ IDisplayObject& IDisplayObject::setOrphanGrace(std::chrono::milliseconds grace)
 
         bool ok = true;
+        auto fail = [&](const std::string& msg){ errors.push_back(msg); return false; };
+
+        Core& core = getCore();
+        DisplayHandle stage = core.getRootNode();
+        if (!stage.isValid()) return fail("OrphanPolicy: 'stage' invalid.");
+
+        auto make_box = [&](const std::string& name)->DisplayHandle{
+            Box::InitStruct init; init.name = name; init.x = 10; init.y = 10; init.width = 20; init.height = 20;
+            init.color = SDL_Color{32,128,200,255};
+            return core.createDisplayObject("Box", init);
+        };
+
+        using ORP = IDisplayObject::OrphanRetentionPolicy;
+
+        // --- 1) String <-> Enum conversions and basic getters/setters ------------
+        {
+            DisplayHandle h = make_box("orp_conv");
+            if (!h.isValid()) return fail("OrphanPolicy: failed to create 'orp_conv'.");
+            stage->addChild(h);
+
+            IDisplayObject* o = h.as<IDisplayObject>();
+            if (!o) return fail("OrphanPolicy: cast failed for 'orp_conv'.");
+
+            // fromString
+            if (orphanPolicyFromString_lua(o, "auto") != ORP::AutoDestroy) return fail("orphanPolicyFromString_lua('auto') != AutoDestroy");
+            if (orphanPolicyFromString_lua(o, "grace") != ORP::GracePeriod) return fail("orphanPolicyFromString_lua('grace') != GracePeriod");
+            if (orphanPolicyFromString_lua(o, "manual") != ORP::RetainUntilManual) return fail("orphanPolicyFromString_lua('manual') != RetainUntilManual");
+
+            // toString
+            if (orphanPolicyToString_lua(o, ORP::AutoDestroy) != std::string("auto")) return fail("orphanPolicyToString_lua(AutoDestroy) != 'auto'");
+            if (orphanPolicyToString_lua(o, ORP::GracePeriod) != std::string("grace")) return fail("orphanPolicyToString_lua(GracePeriod) != 'grace'");
+            if (orphanPolicyToString_lua(o, ORP::RetainUntilManual) != std::string("manual")) return fail("orphanPolicyToString_lua(Manual) != 'manual'");
+
+            // set/get on object via Lua + C++
+            setOrphanRetentionPolicy_lua(o, "manual");
+            if (o->getOrphanRetentionPolicy() != ORP::RetainUntilManual) return fail("setOrphanRetentionPolicy_lua('manual') did not take.");
+            if (getOrphanRetentionPolicyString_lua(o) != std::string("manual")) return fail("getOrphanRetentionPolicyString_lua() mismatch after manual.");
+
+            o->setOrphanRetentionPolicy(ORP::AutoDestroy);
+            if (o->getOrphanRetentionPolicy() != ORP::AutoDestroy) return fail("C++ setOrphanRetentionPolicy(AutoDestroy) did not take.");
+            if (getOrphanRetentionPolicyString_lua(o) != std::string("auto")) return fail("getOrphanRetentionPolicyString_lua() mismatch after auto.");
+
+            // grace round-trip
+            setOrphanGrace_lua(o, std::chrono::milliseconds(250));
+            if (getOrphanGrace_lua(o) != 250) return fail("getOrphanGrace_lua() != 250 after set.");
+            if (o->getOrphanGrace().count() != 250) return fail("C++ getOrphanGrace() != 250 after Lua set.");
+
+            o->setOrphanGrace(std::chrono::milliseconds(500));
+            if (getOrphanGrace_lua(o) != 500) return fail("getOrphanGrace_lua() != 500 after C++ set.");
+
+            // cleanup
+            stage->removeChild(h);
+            if (h.isValid()) core.destroyDisplayObject(h->getName()); 
+            core.collectGarbage();
+        }
+
+        // --- 2) Manual policy: orphan survives collect until explicitly destroyed --
+        {
+            DisplayHandle h = make_box("orp_manual");
+            if (!h.isValid()) return fail("OrphanPolicy: failed to create 'orp_manual'.");
+            stage->addChild(h);
+            IDisplayObject* o = h.as<IDisplayObject>();
+            setOrphanRetentionPolicy_lua(o, "manual");
+
+            // Orphan it
+            stage->removeChild(h);
+            // Should appear in orphan list
+            bool found = false;
+            for (auto& d : core.getOrphanedDisplayObjects()) if (d == h) { found = true; break; }
+            if (!found) return fail("OrphanPolicy(manual): orphan not listed after removal.");
+
+            // Collect should NOT destroy
+            core.collectGarbage();
+            if (!core.getDisplayObject("orp_manual").isValid()) return fail("OrphanPolicy(manual): object destroyed by collectGarbage().");
+
+            // Now switch to auto and collect; should be destroyed
+            setOrphanRetentionPolicy_lua(o, "auto");
+            core.collectGarbage();
+            if (core.getDisplayObject("orp_manual").isValid()) return fail("OrphanPolicy(manual->auto): object not destroyed after auto policy.");
+        }
+
+        // --- 3) Grace policy: immediate collect retains; post-grace destroys ------
+        {
+            DisplayHandle h = make_box("orp_grace");
+            if (!h.isValid()) return fail("OrphanPolicy: failed to create 'orp_grace'.");
+            stage->addChild(h);
+            IDisplayObject* o = h.as<IDisplayObject>();
+            setOrphanRetentionPolicy_lua(o, "grace");
+            setOrphanGrace_lua(o, std::chrono::milliseconds(200));
+
+            // Orphan it and immediately collect
+            stage->removeChild(h);
+            core.collectGarbage();
+            if (!core.getDisplayObject("orp_grace").isValid()) return fail("OrphanPolicy(grace): object destroyed before grace expired.");
+
+            // Wait beyond grace window
+            std::this_thread::sleep_for(std::chrono::milliseconds(240));
+            core.collectGarbage();
+            if (core.getDisplayObject("orp_grace").isValid()) return fail("OrphanPolicy(grace): object not destroyed after grace expiration.");
+        }
+
+        // --- 4) Grace policy + reparent within grace prevents destruction ---------
+        {
+            DisplayHandle h = make_box("orp_reparent");
+            if (!h.isValid()) return fail("OrphanPolicy: failed to create 'orp_reparent'.");
+            stage->addChild(h);
+            IDisplayObject* o = h.as<IDisplayObject>();
+            setOrphanRetentionPolicy_lua(o, "grace");
+            setOrphanGrace_lua(o, std::chrono::milliseconds(300));
+
+            // Orphan it, but reparent before grace expires
+            stage->removeChild(h);
+            std::this_thread::sleep_for(std::chrono::milliseconds(150));
+            stage->addChild(h); // reparent in grace window
+            core.collectGarbage();
+            if (!core.getDisplayObject("orp_reparent").isValid()) return fail("OrphanPolicy(reparent): object destroyed despite reparent within grace.");
+
+            // Orphan again, let grace elapse, then verify destruction
+            stage->removeChild(h);
+            std::this_thread::sleep_for(std::chrono::milliseconds(320));
+            core.collectGarbage();
+            if (core.getDisplayObject("orp_reparent").isValid()) return fail("OrphanPolicy(reparent): object not destroyed after post-reparent orphan + grace.");
+        }
 
         return ok;
     } // IDisplayObject_test11(std::vector<std::string>& errors)   
