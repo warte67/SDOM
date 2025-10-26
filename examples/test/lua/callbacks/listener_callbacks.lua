@@ -107,7 +107,6 @@ function M.on_render(evt)
         ema = EMA_ALPHA * instant + (1.0 - EMA_ALPHA) * ema
     end
     local display = math.floor(ema + 0.5)
-
     -- Render FPS into SDL window using CLR.draw_debug_text. Draw at top-left inside the window.
     -- Parameters: text, x, y, ptsize, r,g,b,a
     CLR.draw_debug_text(string.format("FPS: %d", display), 8, 8, 14, 255, 255, 255, 255)
