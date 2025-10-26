@@ -1,9 +1,10 @@
--- lua/api_stubs.lua
--- Editor-only Lua API stubs for SDOM bindings (for LuaLS/EmmyLua).
--- Not loaded at runtime. Keep in sync with Core and IDisplayObject binders.
+--- lua/api_stubs.lua
+--- Editor-only Lua API stubs for SDOM bindings (for LuaLS/EmmyLua).
+--- Not loaded at runtime. Keep in sync with Core and IDisplayObject binders.
+---@meta
+---@diagnostic disable: undefined-global, duplicate-set-field, need-check-nil
 
----@diagnostic disable: undefined-global
----@diagnostic disable: duplicate-set-field
+-- (Global disables also applied above via @meta header.)
 
 -- Types ---------------------------------------------------------------------
 ---@class EventType
@@ -76,7 +77,7 @@ function configure(cfg) end
 ---@field addChild fun(self: DisplayHandle, child: (DisplayHandle|string|table)): boolean
 ---@field removeChild fun(self: DisplayHandle, child: (DisplayHandle|string|table)): boolean
 ---@field hasChild fun(self: DisplayHandle, child: (DisplayHandle|string|table)): boolean
----@field getChild fun(self: DisplayHandle, spec: (string|table)): (DisplayHandle|nil)
+---@field getChild fun(self: DisplayHandle, spec: (string|table)): DisplayHandle
 ---@field getChildren fun(self: DisplayHandle): DisplayHandle[]
 ---@field countChildren fun(self: DisplayHandle): integer
 ---@field getParent fun(self: DisplayHandle): (DisplayHandle|nil)
@@ -224,7 +225,7 @@ function configure(cfg) end
 ---@field getIsTraversing fun(self: Core): boolean
 ---@field setIsTraversing fun(self: Core, traversing: boolean)
 ---@field createDisplayObject fun(self: Core, typeName: string, cfg: table): DisplayHandle
----@field getDisplayObject fun(self: Core, name: string): (DisplayHandle|nil)
+---@field getDisplayObject fun(self: Core, name: string): DisplayHandle
 ---@field hasDisplayObject fun(self: Core, name: string): boolean
 ---@field createAssetObject fun(self: Core, typeName: string, cfg: table): AssetHandle
 ---@field createAsset fun(self: Core, typeName: string, cfg: table): AssetHandle

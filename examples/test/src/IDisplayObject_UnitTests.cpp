@@ -1846,7 +1846,7 @@ namespace SDOM
         ut.add_test("Orphan Retention Policy and Grace Period", IDisplayObject_test11);
 
         ut.setLuaFilename("src/IDisplayObject_UnitTests.lua"); // Lua test script path
-        ut.add_test("Lua: '" + ut.getLuaFilename() + "'", IDisplayObject_LUA_Tests, false); // Not yet implemented
+        ut.add_test("Lua: '" + ut.getLuaFilename() + "'", IDisplayObject_LUA_Tests, true); 
 
         return ut.run_all("IDisplayObject");
     } // END: IDisplayObject_UnitTests()

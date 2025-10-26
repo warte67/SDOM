@@ -1408,24 +1408,30 @@ namespace SDOM
                 setToLowestPriority_lua_any
             )
         );
-        bind_both(handleTbl, maybeUT, "moveToTop",
-            sol::overload(
-                moveToTop_lua,
-                moveToTop_lua_any
-            )
-        );
-        bind_both(handleTbl, maybeUT, "moveToBottom",
-            sol::overload(
-                moveToBottom_lua,
-                moveToBottom_lua_any
-            )
-        );
-        bind_both(handleTbl, maybeUT, "bringToFront",
-            sol::overload(
-                bringToFront_lua,
-                bringToFront_lua_any
-            )
-        );
+        // DisplayHandle-aware wrappers for z-order helpers to avoid mismatch with IDO* overloads
+        auto moveToTop_bind0 = [](SDOM::DisplayHandle& self) {
+            if (auto* obj = self.get()) moveToTop_lua(obj);
+        };
+        auto moveToTop_bind1 = [](SDOM::DisplayHandle& self, const sol::object& descriptor) {
+            if (auto* obj = self.get()) moveToTop_lua_any(obj, descriptor);
+        };
+        bind_both(handleTbl, maybeUT, "moveToTop", sol::overload(moveToTop_bind0, moveToTop_bind1));
+
+        auto moveToBottom_bind0 = [](SDOM::DisplayHandle& self) {
+            if (auto* obj = self.get()) moveToBottom_lua(obj);
+        };
+        auto moveToBottom_bind1 = [](SDOM::DisplayHandle& self, const sol::object& descriptor) {
+            if (auto* obj = self.get()) moveToBottom_lua_any(obj, descriptor);
+        };
+        bind_both(handleTbl, maybeUT, "moveToBottom", sol::overload(moveToBottom_bind0, moveToBottom_bind1));
+
+        auto bringToFront_bind0 = [](SDOM::DisplayHandle& self) {
+            if (auto* obj = self.get()) bringToFront_lua(obj);
+        };
+        auto bringToFront_bind1 = [](SDOM::DisplayHandle& self, const sol::object& descriptor) {
+            if (auto* obj = self.get()) bringToFront_lua_any(obj, descriptor);
+        };
+        bind_both(handleTbl, maybeUT, "bringToFront", sol::overload(bringToFront_bind0, bringToFront_bind1));
         bind_both(handleTbl, maybeUT, "sendToBack",
             sol::overload(
                 sendToBack_lua,

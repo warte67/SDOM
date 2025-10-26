@@ -77,6 +77,17 @@
         "valarray": "cpp",
         "variant": "cpp",
         "print": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "filesystem": "cpp"
+    },
+    "Lua": {
+        "workspace": {
+            "library": [
+                "${workspaceFolder}/lua/api_stubs.lua"
+            ]
+        },
+        "diagnostics": {
+            "globals": ["Core", "DisplayHandle", "AssetHandle", "Factory", "UnitTests"]
+        }
     }
 }
