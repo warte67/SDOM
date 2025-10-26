@@ -606,6 +606,7 @@ namespace SDOM
     }
 
     void moveToBottom_lua(IDisplayObject* obj) { if (obj) obj->moveToBottom(); }    
+
     void moveToBottom_lua_any(IDisplayObject* parent, const sol::object& descriptor)
     {
         if (!parent || !descriptor.is<sol::table>()) return;

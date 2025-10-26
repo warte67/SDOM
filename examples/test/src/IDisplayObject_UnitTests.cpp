@@ -817,6 +817,8 @@ namespace SDOM
 
         
 // DEBUG: Print z-orders
+// parent_box->printTree();
+DEBUG_LOG("---- ZOrder Test Start ----");
 zbox->printTree();                
 // DEBUG_LOG("A ZOrder: " + std::to_string(A->getZOrder()));
 // DEBUG_LOG("B ZOrder: " + std::to_string(B->getZOrder()));
@@ -831,7 +833,85 @@ zbox->printTree();
         // ☐ void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj);
         // ☐ void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj); // descriptor form
 
-        
+// Helper: get index of child in parent
+auto child_index = [](DisplayHandle parent, DisplayHandle child) {
+    auto& kids = parent->getChildren();
+    for (size_t i = 0; i < kids.size(); ++i)
+        if (kids[i].get() == child.get()) return int(i);
+    return -1;
+};
+
+// 🔄 void moveToBottom_lua(IDisplayObject* obj); 
+Box* box_a = A.as<Box>();
+if (!box_a) { errors.push_back("PriorityZOrder_test: unable to fetch A box ptr"); return false; }
+moveToBottom_lua(box_a);
+zbox->sortChildrenByPriority();
+if (child_index(zbox, A) != 0) {
+    errors.push_back("moveToBottom: A should be first child of zbox. (is: " + std::to_string(child_index(zbox, A)) + ")");
+    ok = false;
+}
+
+// // --- moveToBottom_lua_any ---
+// sol::table descA = lua.create_table(); descA["name"] = "A";
+// moveToBottom_lua_any(zbox.as<IDisplayObject>(), descA);
+// if (child_index(zbox, A) != 0) {
+//     errors.push_back("moveToBottom_lua_any: A should be first child of zbox.");
+//     ok = false;
+// }
+
+// // --- bringToFront_lua ---
+// B->bringToFront();
+// if (child_index(zbox, B) != int(zbox->countChildren()) - 1) {
+//     errors.push_back("bringToFront: B should be last child of zbox.");
+//     ok = false;
+// }
+
+// // --- bringToFront_lua_any ---
+// sol::table descB = lua.create_table(); descB["name"] = "B";
+// bringToFront_lua_any(zbox.as<IDisplayObject>(), descB);
+// if (child_index(zbox, B) != int(zbox->countChildren()) - 1) {
+//     errors.push_back("bringToFront_lua_any: B should be last child of zbox.");
+//     ok = false;
+// }
+
+// // --- sendToBack_lua ---
+// C->sendToBack();
+// if (child_index(zbox, C) != 0) {
+//     errors.push_back("sendToBack: C should be first child of zbox.");
+//     ok = false;
+// }
+
+// // --- sendToBack_lua_any ---
+// sol::table descC = lua.create_table(); descC["name"] = "C";
+// sendToBack_lua_any(zbox.as<IDisplayObject>(), descC);
+// if (child_index(zbox, C) != 0) {
+//     errors.push_back("sendToBack_lua_any: C should be first child of zbox.");
+//     ok = false;
+// }
+
+// // --- sendToBackAfter_lua ---
+// D->sendToBackAfter(B.as<IDisplayObject>());
+// if (child_index(zbox, D) != child_index(zbox, B) + 1) {
+//     errors.push_back("sendToBackAfter: D should be immediately after B in zbox.");
+//     ok = false;
+// }
+
+// // --- sendToBackAfter_lua_any ---
+// sol::table descD = lua.create_table(); descD["name"] = "D";
+// sendToBackAfter_lua_any(zbox.as<IDisplayObject>(), descD, B.as<IDisplayObject>());
+// if (child_index(zbox, D) != child_index(zbox, B) + 1) {
+//     errors.push_back("sendToBackAfter_lua_any: D should be immediately after B in zbox.");
+//     ok = false;
+// }
+
+
+
+for (auto& kid : zbox->getChildren() )
+{
+    DEBUG_LOG("Kid: " + kid->getName() + " ZOrder: " + std::to_string(kid->getZOrder()));
+}
+
+
 
         // Cleanup
 
@@ -842,12 +922,17 @@ zbox->printTree();
         core.destroyDisplayObject("B");        
         core.destroyDisplayObject("C");
         core.destroyDisplayObject("D");
-        core.destroyDisplayObject("E");        
-        core.destroyDisplayObject("F");        
+        core.destroyDisplayObject("D1");
+        core.destroyDisplayObject("D2");
+        core.destroyDisplayObject("D3");
         if (getFactory().countOrphanedDisplayObjects() != 0)
         {
             errors.push_back("PriorityZOrder_test: Orpans Left Behind.");
             ok = false;
+            for (const auto& punk : getFactory().getOrphanedDisplayObjects())
+            {
+                errors.push_back("  Orphan: " + punk->getName() + " (" + punk->getType() + ")");
+            }
         }
 
         // return results

@@ -857,6 +857,7 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
                 return pa > pb; // <<--- CHANGED HERE
             });
 
+
         // Z-order now naturally matches render order:
         // index 0 = bottom, last = top
         for (int i = 0; i < static_cast<int>(children_.size()); ++i) {
@@ -906,20 +907,35 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
         return *this;
     }    
 
+    // IDisplayObject& IDisplayObject::moveToBottom()
+    // {
+    //     IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
+    //     if (!parentObj)
+    //         return *this; // Root nodes don't move
+    //     // Lowest sibling priority → visually bottom
+    //     int minPriority = parentObj->getMinPriority();
+    //     setPriority(minPriority - 1);
+    //     // Reorder siblings and update z-order
+    //     parentObj->sortChildrenByPriority();
+    //     return *this;
+    // }
+
     IDisplayObject& IDisplayObject::moveToBottom()
     {
         IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
         if (!parentObj)
-            return *this; // Root nodes don't move
+            return *this;
 
-        // Lowest sibling priority → visually bottom
         int minPriority = parentObj->getMinPriority();
         setPriority(minPriority - 1);
 
-        // Reorder siblings and update z-order
+        // Sync Z-Order directly from priority
+        setZOrder(priority_);
+
         parentObj->sortChildrenByPriority();
         return *this;
     }
+
 
     IDisplayObject& IDisplayObject::bringToFront()
     {
