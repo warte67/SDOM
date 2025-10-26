@@ -16,16 +16,16 @@ namespace SDOM
     class DisplayHandle;
     struct Bounds;
 
-    // --- Dirty/State Management --- //
+    // --- ✅ Dirty/State Management --- //
     void cleanAll_lua(IDisplayObject* obj);
     bool getDirty_lua(const IDisplayObject* obj);
     void setDirty_lua(IDisplayObject* obj); 
     bool isDirty_lua(const IDisplayObject* obj); 
 
-    // --- Debug/Utility --- //
+    // --- ✅ Debug/Utility --- //
     void printTree_lua(const IDisplayObject* obj);
 
-     // --- Events and Event Listener Handling --- //
+     // --- ✅ Events and Event Listener Handling --- //
     void addEventListener_lua(IDisplayObject* obj, EventType& type, sol::function listener, bool useCapture, int priority);
     void removeEventListener_lua(IDisplayObject* obj, EventType& type, sol::function listener, bool useCapture);
     // Flexible variants that accept a Lua table descriptor or multiple-arg form
@@ -39,7 +39,7 @@ namespace SDOM
     // Queue an event with optional payload initializer
     void queue_event_lua(IDisplayObject* obj, const EventType& type, std::function<void(Event&)> init_payload);
 
-    // --- Hierarchy Management --- //
+    // --- ✅ Hierarchy Management --- //
     void addChild_lua(IDisplayObject* obj, DisplayHandle child);                
     DisplayHandle getChild_lua(const IDisplayObject* obj, std::string name);    
     bool removeChild_lua(IDisplayObject* obj, DisplayHandle child);             
@@ -62,7 +62,7 @@ namespace SDOM
     bool removeDescendant_lua(IDisplayObject* obj, DisplayHandle descendant);   
     bool removeDescendant_lua(IDisplayObject* obj, const std::string& descendantName);
 
-    // --- Type & Property Access --- //
+    // --- ✅ Type & Property Access --- //
     std::string getName_lua(const IDisplayObject* obj);                        
     void setName_lua(IDisplayObject* obj, const std::string& newName);    
     std::string getType_lua(const IDisplayObject* obj);                        
@@ -90,7 +90,7 @@ namespace SDOM
     void setBackground_lua(IDisplayObject* obj, bool hasBackground);
 
 
-    // --- Priority & Z-Order --- //
+    // --- ✅ Priority & Z-Order --- //
     int getMaxPriority_lua(const IDisplayObject* obj);              
     int getMinPriority_lua(const IDisplayObject* obj);              
     int getPriority_lua(const IDisplayObject* obj);                 
@@ -117,7 +117,7 @@ namespace SDOM
     void setZOrder_lua(IDisplayObject* obj, int z_order);                       
     void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor);
 
-    // --- Focus & Interactivity --- //
+    // --- ✅ Object Focus and Interactivity --- //
     void setKeyboardFocus_lua(IDisplayObject* obj);                 
     bool isKeyboardFocused_lua(const IDisplayObject* obj);
     bool isMouseHovered_lua(const IDisplayObject* obj);             
@@ -130,13 +130,13 @@ namespace SDOM
     bool isVisible_lua(const IDisplayObject* obj);                  
     void setVisible_lua(IDisplayObject* obj, bool visible);         
 
-    // --- Tab Management --- //
+    // --- 🔄 Tab Management --- //
     int getTabPriority_lua(const IDisplayObject* obj);              
     void setTabPriority_lua(IDisplayObject* obj, int index);        
     bool isTabEnabled_lua(const IDisplayObject* obj);               
     void setTabEnabled_lua(IDisplayObject* obj, bool enabled);      
 
-    // --- Geometry & Layout --- //
+    // --- ☐ Geometry & Layout --- //
     int getX_lua(const IDisplayObject* obj);                        
     int getY_lua(const IDisplayObject* obj);                        
     int getWidth_lua(const IDisplayObject* obj);                    
@@ -146,7 +146,7 @@ namespace SDOM
     void setWidth_lua(IDisplayObject* obj, int width);              
     void setHeight_lua(IDisplayObject* obj, int height);            
 
-    // --- Edge Anchors --- //
+    // --- ☐ Edge Anchors --- //
     AnchorPoint getAnchorTop_lua(const IDisplayObject* obj);        
     AnchorPoint getAnchorLeft_lua(const IDisplayObject* obj);       
     AnchorPoint getAnchorBottom_lua(const IDisplayObject* obj);     
@@ -156,7 +156,7 @@ namespace SDOM
     void setAnchorBottom_lua(IDisplayObject* obj, AnchorPoint ap);  
     void setAnchorRight_lua(IDisplayObject* obj, AnchorPoint ap);   
 
-    // --- World Edge Positions --- //
+    // --- ☐ World Edge Positions --- //
     float getLeft_lua(const IDisplayObject* obj);                   
     float getRight_lua(const IDisplayObject* obj);                  
     float getTop_lua(const IDisplayObject* obj);                    
@@ -166,7 +166,7 @@ namespace SDOM
     void setTop_lua(IDisplayObject* obj, float p_top);              
     void setBottom_lua(IDisplayObject* obj, float p_bottom);        
 
-    // --- Local Edge Positions --- //
+    // --- ☐ Local Edge Positions --- //
     float getLocalLeft_lua(const IDisplayObject* obj);              
     float getLocalRight_lua(const IDisplayObject* obj);             
     float getLocalTop_lua(const IDisplayObject* obj);               
@@ -176,13 +176,13 @@ namespace SDOM
     void setLocalTop_lua(IDisplayObject* obj, float p_top);         
     void setLocalBottom_lua(IDisplayObject* obj, float p_bottom);  
 
-    // --- Orphan Retention Policy --- //
+    // --- ☐ Orphan Retention Policy --- //
     IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* obj, const std::string& s);
     std::string orphanPolicyToString_lua(IDisplayObject* obj, IDisplayObject::OrphanRetentionPolicy p);
     void setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr);
     std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj);
 
-    // Lua-accessible accessors for orphan grace (milliseconds)
+    // ☐ Lua-accessible accessors for orphan grace (milliseconds)
     int getOrphanGrace_lua(const IDisplayObject* obj);                              
     void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace);  
 

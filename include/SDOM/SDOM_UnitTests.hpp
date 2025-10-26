@@ -27,7 +27,7 @@ namespace SDOM
 
         // Instance methods
         void clear_tests();
-        void add_test(const std::string& name, std::function<bool(std::vector<std::string>&)> func);
+        void add_test(const std::string& name, std::function<bool(std::vector<std::string>&)> func, bool is_implemented = true);
         bool run_all(const std::string& objName);
         void push_error(const std::string& error);
         bool run_lua_tests(std::vector<std::string>& errors, const std::string& filename);
@@ -54,16 +54,24 @@ namespace SDOM
         void setIsTraversing(bool traversing);      
 
 
+        void setLuaFilename(const std::string& filename) { lua_filename_ = filename; }  
+        std::string getLuaFilename() const { return lua_filename_; }
+
     private:
         UnitTests() = default;
+
+        std::string lua_filename_ = "";
 
         struct TestCase {
             std::string name;
             std::function<bool(std::vector<std::string>&)> func;
+            bool is_implemented = false;
         };
         std::vector<std::string> _log;
         std::vector<std::string> _errors;
         std::vector<TestCase> _tests;
+
+        std::string objName_; // temporary storage for object name during test runs
 
 
         // --- Lua Registration --- //

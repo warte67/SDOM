@@ -7,7 +7,9 @@
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Utils.hpp>
+#include <SDOM/SDOM_Core_Lua.hpp>
 #include <SDOM/SDOM_IDisplayObject_Lua.hpp>
+
 
 #include "Box.hpp"
 
@@ -21,7 +23,7 @@ namespace SDOM
         // ⚠️ Failing     
         // 🚫 Remove
         // ❌ Invalid
-        // ☐ Unchecked/Untested
+        // ☐ Planned
 
         bool ok = true;
 
@@ -943,16 +945,170 @@ namespace SDOM
     } // IDisplayObject_test8(std::vector<std::string>& errors)   
 
 
+    // --- Object Focus and Interactivity --- //
+    bool IDisplayObject_test9(std::vector<std::string>& errors)   
+    {
+        // ✅ Test Verified
+        // 🔄 In Progress
+        // ⚠️ Failing     
+        // ☐ Planned
+
+        // ✅ void setKeyboardFocus_lua(IDisplayObject* obj)
+        // ✅ bool isKeyboardFocused_lua(const IDisplayObject* obj)
+        // ✅ bool isMouseHovered_lua(const IDisplayObject* obj)
+        // ✅ bool isClickable_lua(const IDisplayObject* obj)
+        // ✅ void setClickable_lua(IDisplayObject* obj, bool clickable)
+        // ✅ bool isEnabled_lua(const IDisplayObject* obj)
+        // ✅ void setEnabled_lua(IDisplayObject* obj, bool enabled)
+        // ✅ bool isHidden_lua(const IDisplayObject* obj)
+        // ✅ void setHidden_lua(IDisplayObject* obj, bool hidden)
+        // ✅ bool isVisible_lua(const IDisplayObject* obj)
+        // ✅ void setVisible_lua(IDisplayObject* obj, bool visible)
+
+        bool ok = true;
+        Core& core = getCore();
+        DisplayHandle stage = core.getRootNode();
+        if (!stage.isValid())
+        {
+            errors.push_back("PriorityZOrder_Test: 'mainStage' not found.");
+            return false;            
+        }
+        DisplayHandle blueishBox = core.getDisplayObject("blueishBox");
+        DisplayHandle blueishBoxLabel = core.getDisplayObject("blueishBoxLabel");
+        if (!blueishBox.isValid()) {
+            errors.push_back("ObjectFocusInteractivity_Test: 'blueishBox' not found.");
+            return false;            
+        }
+        if (!blueishBoxLabel.isValid()) {
+            errors.push_back("ObjectFocusInteractivity_Test: 'blueishBoxLabel' not found.");
+            return false;            
+        }
+
+        // ✅ void setKeyboardFocus_lua(IDisplayObject* obj)
+        DisplayHandle orig_key_focus = core.getKeyboardFocusedObject();
+        setKeyboardFocus_lua(blueishBox.as<IDisplayObject>());
+        DisplayHandle new_key_focus = core.getKeyboardFocusedObject();
+        if (new_key_focus.get() != blueishBox.get()) {
+            errors.push_back("ObjectFocusInteractivity_Test: setKeyboardFocus_lua() failed to set focus to 'blueishBox'.");
+            ok = false;
+        }
+
+        // ✅ bool isKeyboardFocused_lua(const IDisplayObject* obj)
+        if (!isKeyboardFocused_lua(blueishBox.as<IDisplayObject>())) {
+            errors.push_back("ObjectFocusInteractivity_Test: isKeyboardFocused_lua() returned false for focused 'blueishBox'.");
+            ok = false;
+        }
+        setKeyboardFocus_lua(orig_key_focus.as<IDisplayObject>()); // restore original focus
+
+        // ✅ void Core::pushMouseEvent_lua(const sol::table& eventTable);
+        // ✅ void Core::pumpEventsOnce_lua();
+        float mx = static_cast<float>(blueishBox->getX() + blueishBox->getWidth() / 2);
+        float my = static_cast<float>(blueishBox->getY() + blueishBox->getHeight() / 2);
+        sol::state_view lua = getLua();
+        sol::table args = lua.create_table();
+        args["type"] = "MouseMove"; // or the integer value if required
+        args["x"] = mx;
+        args["y"] = my;
+        pushMouseEvent_lua(args);
+        pumpEventsOnce_lua();
+        // ✅ bool isMouseHovered_lua(const IDisplayObject* obj)
+        if (!isMouseHovered_lua(blueishBox.as<IDisplayObject>())) {
+            errors.push_back("ObjectFocusInteractivity_Test: isMouseHovered_lua() returned false for hovered 'blueishBox'.");
+            ok = false;
+        }
+        // ✅ bool IDisplayObject::isMouseHovered()
+        args["x"] = 0.0f;
+        args["y"] = 0.0f;
+        core.pushMouseEvent(args);
+        core.pumpEventsOnce();
+        if (blueishBox->isMouseHovered()) {
+            errors.push_back("ObjectFocusInteractivity_Test: isMouseHovered_lua() returned true for non-hovered 'blueishBox'.");
+            ok = false;
+        }
+        // ✅ bool isClickable_lua(const IDisplayObject* obj)
+        if (!blueishBox->isClickable()) {
+            errors.push_back("ObjectFocusInteractivity_Test: isClickable_lua() returned false for 'blueishBox' (expected true).");
+            ok = false; 
+        }
+        if (isClickable_lua(blueishBoxLabel.as<IDisplayObject>())) {
+            errors.push_back("ObjectFocusInteractivity_Test: isClickable_lua() returned true for 'blueishBoxLabel' (expected false).");
+            ok = false; 
+        }
+        // ✅ void IDisplayObject::setClickable(bool clickable)
+        blueishBoxLabel->setClickable(true);
+        if (!blueishBoxLabel->isClickable()) {
+            errors.push_back("ObjectFocusInteractivity_Test: setClickable_lua() returned false for 'blueishBoxLabel' (expected true).");
+            ok = false; 
+        }
+        // ✅ void setClickable_lua(IDisplayObject* obj, bool clickable)
+        setClickable_lua(blueishBoxLabel.as<IDisplayObject>(), false); // restore original state
+        if (blueishBoxLabel->isClickable()) {
+            errors.push_back("ObjectFocusInteractivity_Test: setClickable_lua() returned true for 'blueishBoxLabel' (expected false).");
+            ok = false;
+        }
+        // ✅ bool isEnabled_lua(const IDisplayObject* obj)
+        if (!isEnabled_lua(blueishBox.as<IDisplayObject>())) {
+            errors.push_back("ObjectFocusInteractivity_Test: isEnabled_lua() returned false for enabled 'blueishBox'.");
+            ok = false;
+        }
+        // ✅ void setEnabled_lua(IDisplayObject* obj, bool enabled)
+        setEnabled_lua(blueishBox.as<IDisplayObject>(), false);
+        if (isEnabled_lua(blueishBox.as<IDisplayObject>())) {
+            errors.push_back("ObjectFocusInteractivity_Test: isEnabled_lua() returned true for disabled 'blueishBox'.");
+            ok = false;
+        }
+        // ✅ void setEnabled_lua(IDisplayObject* obj, bool enabled)
+        blueishBox->setEnabled(true); // restore original state
+        if (blueishBox->isEnabled() == false) {
+            errors.push_back("ObjectFocusInteractivity_Test: Failed to restore enabled state for 'blueishBox'.");
+            ok = false;
+        }
+        // ✅ bool isHidden_lua(const IDisplayObject* obj)
+        if (isHidden_lua(blueishBoxLabel.as<IDisplayObject>())) {
+            errors.push_back("ObjectFocusInteractivity_Test: isHidden_lua() returned true for visible 'blueishBoxLabel'.");
+            ok = false;
+        }
+        // ✅ void setHidden_lua(IDisplayObject* obj, bool hidden)
+        setHidden_lua(blueishBoxLabel.as<IDisplayObject>(), true);
+        if (!blueishBoxLabel->isHidden()) {
+            errors.push_back("ObjectFocusInteractivity_Test: isHidden_lua() returned false for hidden 'blueishBoxLabel'.");
+            ok = false;
+        }
+        // ✅ void IDisplayObject::setHidden(bool hidden)        
+        blueishBoxLabel->setHidden(false);
+        // ✅ bool IDisplayObject::isHidden()
+        if (blueishBoxLabel->isHidden()) {
+            errors.push_back("ObjectFocusInteractivity_Test: Failed to restore hidden state for 'blueishBoxLabel'.");
+            ok = false;
+        }
+        // ✅ void setVisible_lua(IDisplayObject* obj, bool visible)
+        setVisible_lua(blueishBox.as<IDisplayObject>(), false);
+        // ✅ bool isVisible_lua(const IDisplayObject* obj)
+        if (isVisible_lua(blueishBox.as<IDisplayObject>())) {
+            errors.push_back("ObjectFocusInteractivity_Test: isVisible_lua() returned true for isVisible 'blueishBox'.");
+            ok = false;
+        }
+        // ✅ void IDisplayObject::setVisible(bool visible)
+        blueishBox->setVisible(true);
+        // ✅ bool IDisplayObject::isVisible()
+        if (!blueishBox->isVisible()) {
+            errors.push_back("ObjectFocusInteractivity_Test: Failed to restore visible state for 'blueishBox'.");
+            ok = false;
+        }
+        // No Cleanup To Do
+
+        // Return Results
+        return ok;
+    } // END: IDisplayObject_test9(std::vector<std::string>& errors)   
 
 
 
     // --- Lua Integration Tests --- //
 
     bool IDisplayObject_LUA_Tests(std::vector<std::string>& errors)
-    {
-  
+    {  
         UnitTests& ut = UnitTests::getInstance();
-        return ut.run_lua_tests(errors, "src/IDisplayObject_UnitTests.lua");
+        return ut.run_lua_tests(errors, ut.getLuaFilename());
     } // END: IDisplayObject_LUA_Tests()
 
 
@@ -971,9 +1127,10 @@ namespace SDOM
         ut.add_test("Hierarchy Management", IDisplayObject_test6);
         ut.add_test("Type and Property Access", IDisplayObject_test7);
         ut.add_test("Priority and Z-Order", IDisplayObject_test8);
+        ut.add_test("Object Focus and Interactivity", IDisplayObject_test9);
 
-
-        ut.add_test("Lua Integration", IDisplayObject_LUA_Tests);
+        ut.setLuaFilename("src/IDisplayObject_UnitTests.lua"); // Lua test script path
+        ut.add_test("Lua: '" + ut.getLuaFilename() + "'", IDisplayObject_LUA_Tests, false); // Not yet implemented
 
         return ut.run_all("IDisplayObject");
     } // END: IDisplayObject_UnitTests()

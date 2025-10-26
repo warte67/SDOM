@@ -1009,7 +1009,7 @@ namespace SDOM
     bool Core_LUA_Tests(std::vector<std::string>& errors)
     {
         UnitTests& ut = UnitTests::getInstance();
-        return ut.run_lua_tests(errors, "src/Core_UnitTests.lua");
+        return ut.run_lua_tests(errors, ut.getLuaFilename());
     } // END: Core_LUA_Tests()
 
 
@@ -1037,7 +1037,8 @@ namespace SDOM
         ut.add_test("Focus & Hover Management", Core_test15);
         ut.add_test("DisplayObject Creation", Core_test16);
 
-        ut.add_test("Lua Integration", Core_LUA_Tests);
+        ut.setLuaFilename("src/Core_UnitTests.lua"); // Lua test script path
+        ut.add_test("Lua: " + ut.getLuaFilename(), Core_LUA_Tests);
 
         return ut.run_all("Core");
     }

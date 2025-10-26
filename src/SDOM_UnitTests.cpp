@@ -27,34 +27,46 @@ namespace SDOM
         _errors.clear();
     }    
 
-    void UnitTests::add_test(const std::string& name, std::function<bool(std::vector<std::string>&)> func) 
+    void UnitTests::add_test(const std::string& name, std::function<bool(std::vector<std::string>&)> func, bool is_implemented) 
     {
-        _tests.push_back({name, func});
+        _tests.push_back({name, func, is_implemented});
     }
 
     bool UnitTests::run_all(const std::string& objName) 
     {
+        objName_ = objName; // store for use in other methods
         std::vector<std::string> output;
         bool allPassed = true;
-        for (const auto& test : _tests) {
-            std::vector<std::string> errors;
-            std::ostringstream oss;
-            bool passed = test.func(errors);
-            oss << CLR::indent() << CLR::NORMAL << "[" << objName << "] " << CLR::LT_BLUE << test.name << CLR::RESET;
-            oss << (passed ? CLR::GREEN + " [PASSED]" : CLR::fg_rgb(255, 0, 0) + " [FAILED]") << CLR::RESET << std::endl;
-            if (!passed && !errors.empty()) {
-                for (const auto& line : errors)
-                    oss << CLR::indent() << CLR::fg_rgb(192, 64, 64) << "    Error: " << line << std::endl;
+        for (const auto& test : _tests) 
+        {
+            if (!test.is_implemented)
+            {
+                std::ostringstream oss;
+                oss << CLR::indent() << CLR::NORMAL << "[" << objName << "] " << CLR::LT_BLUE << test.name << CLR::RESET;
+                oss << CLR::fg_rgb(224, 224, 64) + " [NOT IMPLEMENTED]" << CLR::RESET << std::endl;
+                output.push_back(oss.str());
             }
-            output.push_back(oss.str());
-            allPassed &= passed;
+            else
+            {
+                std::vector<std::string> errors;
+                std::ostringstream oss;
+                bool passed = test.func(errors);
+                oss << CLR::indent() << CLR::NORMAL << "[" << objName << "] " << CLR::LT_BLUE << test.name << CLR::RESET;
+                oss << (passed ? CLR::GREEN + " [PASSED]" : CLR::fg_rgb(255, 0, 0) + " [FAILED]") << CLR::RESET << std::endl;
+                if (!passed && !errors.empty()) {
+                    for (const auto& line : errors)
+                        oss << CLR::indent() << CLR::fg_rgb(192, 64, 64) << "    Error: " << line << std::endl;
+                }
+                output.push_back(oss.str());
+                allPassed &= passed;
+            }
         }
         if (allPassed) {
             if (show_all_tests) {
                 std::cout << CLR::indent() << CLR::LT_BLUE << "Starting " << CLR::NORMAL << "[" << objName << "]" << CLR::LT_BLUE << " Unit Tests..." << CLR::RESET << std::endl;
                 for (const auto& line : output) std::cout << line;
             }
-            std::cout << CLR::indent() << CLR::NORMAL << "[" << objName << "]" << CLR::LT_BLUE << " Tests" << CLR::GREEN + " [PASSED]" << CLR::RESET << std::endl;
+            std::cout << CLR::indent() << CLR::NORMAL << "[" << objName << "]" << CLR::LT_BLUE << " Unit Tests" << CLR::GREEN + " [PASSED]" << CLR::RESET << std::endl;
         } else {
             std::cout << CLR::indent() << CLR::NORMAL << "[" << objName << "]" << CLR::fg_rgb(255, 0, 0) << " UnitTest FAILED. Dumping results:" << CLR::RESET << std::endl;
             for (const auto& line : output) std::cout << line;
