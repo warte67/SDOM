@@ -1078,6 +1078,18 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
       - ✅ int getZOrder_lua(const IDisplayObject* obj)
       - ✅ void setZOrder_lua(IDisplayObject* obj, int z_order)
       - ✅ void setZOrder_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+    - **Object Focus and Interactivity (test #9):**
+      - ✅ void setKeyboardFocus_lua(IDisplayObject* obj)
+      - ✅ bool isKeyboardFocused_lua(const IDisplayObject* obj)
+      - ✅ bool isMouseHovered_lua(const IDisplayObject* obj)
+      - ✅ bool isClickable_lua(const IDisplayObject* obj)
+      - ✅ void setClickable_lua(IDisplayObject* obj, bool clickable)
+      - ✅ bool isEnabled_lua(const IDisplayObject* obj)
+      - ✅ void setEnabled_lua(IDisplayObject* obj, bool enabled)
+      - ✅ bool isHidden_lua(const IDisplayObject* obj)
+      - ✅ void setHidden_lua(IDisplayObject* obj, bool hidden)
+      - ✅ bool isVisible_lua(const IDisplayObject* obj)
+      - ✅ void setVisible_lua(IDisplayObject* obj, bool visible)    
   - **Supporting Improvements**
     - Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** for readable assertions.
     - Renamed **getBorder()** → **hasBorder()** and **getBackground()** → **hasBackground()** for clearer boolean intent.
