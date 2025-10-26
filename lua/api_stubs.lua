@@ -23,16 +23,20 @@
 
 ---@class DisplayHandle
 
+---@class UnitTests
+
+---@class Factory
+
 
 -- Global convenience --------------------------------------------------------
 ---@type Core
 Core = Core or {}
 
----@type UnitTests
-UnitTests = UnitTests or {}
+-- ---@type UnitTests
+-- UnitTests = UnitTests or {}
 
----@type Factory
-Factory = Factory or {}
+-- ---@type Factory
+-- Factory = Factory or {}
 
 IconIndex = IconIndex or {}
 ArrowDirection = ArrowDirection or {}
@@ -48,21 +52,6 @@ function configure(cfg) end
 
 ---@diagnostic disable: undefined-global
 ---@diagnostic disable: duplicate-set-field
-
----@class EventType
----@field name string
-
----@class Bounds
----@field left number
----@field right number
----@field top number
----@field bottom number
-
----@class SDL_Color
----@field r integer
----@field g integer
----@field b integer
----@field a integer
 
 ---@class DisplayHandle
 ---@field isValid fun(self: DisplayHandle): boolean
