@@ -1210,8 +1210,7 @@ namespace SDOM
             if (ch.isValid() && ch.get()) return sol::make_object(lua, ch);
             return sol::make_object(lua, sol::lua_nil);
         };
-        set_if_absent(handleTbl, "getChild", getChild_impl);
-        if (maybeUT) { try { (*maybeUT)["getChild"] = getChild_impl; } catch(...) {} }
+        bind_both(handleTbl, maybeUT, "getChild", getChild_impl);
 
         // Dirty/state (bind to both table and usertype)
         bind_both(handleTbl, maybeUT, "cleanAll", cleanAll_lua);
@@ -1293,36 +1292,32 @@ namespace SDOM
             }
         };
         // Register on table and usertype if present
-        set_if_absent(handleTbl, "addEventListener", sol::overload(addEventListener_bind1, addEventListener_bind4));
-        set_if_absent(handleTbl, "removeEventListener", sol::overload(removeEventListener_bind1, removeEventListener_bind3));
-        if (maybeUT) {
-            try { (*maybeUT)["addEventListener"] = sol::overload(addEventListener_bind1, addEventListener_bind4); } catch(...) {}
-            try { (*maybeUT)["removeEventListener"] = sol::overload(removeEventListener_bind1, removeEventListener_bind3); } catch(...) {}
-        }
-        set_if_absent(handleTbl, "hasEventListener", hasEventListener_lua);
-        set_if_absent(handleTbl, "queue_event", queue_event_lua);
+        bind_both(handleTbl, maybeUT, "addEventListener", sol::overload(addEventListener_bind1, addEventListener_bind4));
+        bind_both(handleTbl, maybeUT, "removeEventListener", sol::overload(removeEventListener_bind1, removeEventListener_bind3));
+        bind_both(handleTbl, maybeUT, "hasEventListener", hasEventListener_lua);
+        bind_both(handleTbl, maybeUT, "queue_event", queue_event_lua);
 
         // Hierarchy helpers continued
-        set_if_absent(handleTbl, "getChildren", getChildren_lua);
-        set_if_absent(handleTbl, "countChildren", countChildren_lua);
+        bind_both(handleTbl, maybeUT, "getChildren", getChildren_lua);
+        bind_both(handleTbl, maybeUT, "countChildren", countChildren_lua);
         // hasChild is already bound in core with DisplayHandle-aware wrapper
         // set_if_absent(handleTbl, "hasChild", hasChild_lua);
-        set_if_absent(handleTbl, "getParent", getParent_lua);
-        set_if_absent(handleTbl, "setParent", setParent_lua);
-        set_if_absent(handleTbl, "isAncestorOf",
+        bind_both(handleTbl, maybeUT, "getParent", getParent_lua);
+        bind_both(handleTbl, maybeUT, "setParent", setParent_lua);
+        bind_both(handleTbl, maybeUT, "isAncestorOf",
             sol::overload(
                 static_cast<bool(*)(IDisplayObject*, DisplayHandle)>(isAncestorOf_lua),
                 static_cast<bool(*)(IDisplayObject*, const std::string&)>(isAncestorOf_lua)
             )
         );
-        set_if_absent(handleTbl, "isDescendantOf",
+        bind_both(handleTbl, maybeUT, "isDescendantOf",
             sol::overload(
                 static_cast<bool(*)(IDisplayObject*, DisplayHandle)>(isDescendantOf_lua),
                 static_cast<bool(*)(IDisplayObject*, const std::string&)>(isDescendantOf_lua)
             )
         );
-        set_if_absent(handleTbl, "removeFromParent", removeFromParent_lua);
-        set_if_absent(handleTbl, "removeDescendant",
+        bind_both(handleTbl, maybeUT, "removeFromParent", removeFromParent_lua);
+        bind_both(handleTbl, maybeUT, "removeDescendant",
             sol::overload(
                 static_cast<bool(*)(IDisplayObject*, DisplayHandle)>(removeDescendant_lua),
                 static_cast<bool(*)(IDisplayObject*, const std::string&)>(removeDescendant_lua)
@@ -1330,13 +1325,13 @@ namespace SDOM
         );
 
         // Names and types
-        set_if_absent(handleTbl, "getName", getName_lua);
-        set_if_absent(handleTbl, "setName", setName_lua);
-        set_if_absent(handleTbl, "getType", getType_lua);
+        bind_both(handleTbl, maybeUT, "getName", getName_lua);
+        bind_both(handleTbl, maybeUT, "setName", setName_lua);
+        bind_both(handleTbl, maybeUT, "getType", getType_lua);
 
         // Bounds and colors
-        set_if_absent(handleTbl, "getBounds", getBounds_lua);
-        set_if_absent(handleTbl, "setBounds",
+        bind_both(handleTbl, maybeUT, "getBounds", getBounds_lua);
+        bind_both(handleTbl, maybeUT, "setBounds",
             sol::overload(
                 static_cast<void(*)(IDisplayObject*, const sol::object&)>(setBounds_lua),
                 static_cast<void(*)(IDisplayObject*, const Bounds&)>(setBounds_lua)
@@ -1349,102 +1344,102 @@ namespace SDOM
                 static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setColor_lua)
             )
         );
-        set_if_absent(handleTbl, "getForegroundColor", getForegroundColor_lua);
-        set_if_absent(handleTbl, "setForegroundColor",
+        bind_both(handleTbl, maybeUT, "getForegroundColor", getForegroundColor_lua);
+        bind_both(handleTbl, maybeUT, "setForegroundColor",
             sol::overload(
                 static_cast<void(*)(IDisplayObject*, const sol::object&)>(setForegroundColor_lua),
                 static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setForegroundColor_lua)
             )
         );
-        set_if_absent(handleTbl, "getBackgroundColor", getBackgroundColor_lua);
-        set_if_absent(handleTbl, "setBackgroundColor",
+        bind_both(handleTbl, maybeUT, "getBackgroundColor", getBackgroundColor_lua);
+        bind_both(handleTbl, maybeUT, "setBackgroundColor",
             sol::overload(
                 static_cast<void(*)(IDisplayObject*, const sol::object&)>(setBackgroundColor_lua),
                 static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setBackgroundColor_lua)
             )
         );
-        set_if_absent(handleTbl, "getBorderColor", getBorderColor_lua);
-        set_if_absent(handleTbl, "setBorderColor",
+        bind_both(handleTbl, maybeUT, "getBorderColor", getBorderColor_lua);
+        bind_both(handleTbl, maybeUT, "setBorderColor",
             sol::overload(
                 static_cast<void(*)(IDisplayObject*, const sol::object&)>(setBorderColor_lua),
                 static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setBorderColor_lua)
             )
         );
-        set_if_absent(handleTbl, "getOutlineColor", getOutlineColor_lua);
-        set_if_absent(handleTbl, "setOutlineColor",
+        bind_both(handleTbl, maybeUT, "getOutlineColor", getOutlineColor_lua);
+        bind_both(handleTbl, maybeUT, "setOutlineColor",
             sol::overload(
                 static_cast<void(*)(IDisplayObject*, const sol::object&)>(setOutlineColor_lua),
                 static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setOutlineColor_lua)
             )
         );
-        set_if_absent(handleTbl, "getDropshadowColor", getDropshadowColor_lua);
-        set_if_absent(handleTbl, "setDropshadowColor",
+        bind_both(handleTbl, maybeUT, "getDropshadowColor", getDropshadowColor_lua);
+        bind_both(handleTbl, maybeUT, "setDropshadowColor",
             sol::overload(
                 static_cast<void(*)(IDisplayObject*, const sol::object&)>(setDropshadowColor_lua),
                 static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setDropshadowColor_lua)
             )
         );
-        set_if_absent(handleTbl, "hasBorder", hasBorder_lua);
-        set_if_absent(handleTbl, "hasBackground", hasBackground_lua);
-        set_if_absent(handleTbl, "setBorder", setBorder_lua);
-        set_if_absent(handleTbl, "setBackground", setBackground_lua);
+        bind_both(handleTbl, maybeUT, "hasBorder", hasBorder_lua);
+        bind_both(handleTbl, maybeUT, "hasBackground", hasBackground_lua);
+        bind_both(handleTbl, maybeUT, "setBorder", setBorder_lua);
+        bind_both(handleTbl, maybeUT, "setBackground", setBackground_lua);
 
         // Priority & Z-Order
-        set_if_absent(handleTbl, "getMaxPriority", getMaxPriority_lua);
-        set_if_absent(handleTbl, "getMinPriority", getMinPriority_lua);
-        set_if_absent(handleTbl, "getPriority", getPriority_lua);
-        set_if_absent(handleTbl, "setPriority",
+        bind_both(handleTbl, maybeUT, "getMaxPriority", getMaxPriority_lua);
+        bind_both(handleTbl, maybeUT, "getMinPriority", getMinPriority_lua);
+        bind_both(handleTbl, maybeUT, "getPriority", getPriority_lua);
+        bind_both(handleTbl, maybeUT, "setPriority",
             sol::overload(
                 setPriority_lua,
                 setPriority_lua_any,
                 setPriority_lua_target
             )
         );
-        set_if_absent(handleTbl, "sortChildrenByPriority", sortChildrenByPriority_lua);
-        set_if_absent(handleTbl, "setToHighestPriority",
+        bind_both(handleTbl, maybeUT, "sortChildrenByPriority", sortChildrenByPriority_lua);
+        bind_both(handleTbl, maybeUT, "setToHighestPriority",
             sol::overload(
                 setToHighestPriority_lua,
                 setToHighestPriority_lua_any
             )
         );
-        set_if_absent(handleTbl, "setToLowestPriority",
+        bind_both(handleTbl, maybeUT, "setToLowestPriority",
             sol::overload(
                 setToLowestPriority_lua,
                 setToLowestPriority_lua_any
             )
         );
-        set_if_absent(handleTbl, "moveToTop",
+        bind_both(handleTbl, maybeUT, "moveToTop",
             sol::overload(
                 moveToTop_lua,
                 moveToTop_lua_any
             )
         );
-        set_if_absent(handleTbl, "moveToBottom",
+        bind_both(handleTbl, maybeUT, "moveToBottom",
             sol::overload(
                 moveToBottom_lua,
                 moveToBottom_lua_any
             )
         );
-        set_if_absent(handleTbl, "bringToFront",
+        bind_both(handleTbl, maybeUT, "bringToFront",
             sol::overload(
                 bringToFront_lua,
                 bringToFront_lua_any
             )
         );
-        set_if_absent(handleTbl, "sendToBack",
+        bind_both(handleTbl, maybeUT, "sendToBack",
             sol::overload(
                 sendToBack_lua,
                 sendToBack_lua_any
             )
         );
-        set_if_absent(handleTbl, "sendToBackAfter",
+        bind_both(handleTbl, maybeUT, "sendToBackAfter",
             sol::overload(
                 sendToBackAfter_lua,
                 sendToBackAfter_lua_any
             )
         );
-        set_if_absent(handleTbl, "getZOrder", getZOrder_lua);
-        set_if_absent(handleTbl, "setZOrder",
+        bind_both(handleTbl, maybeUT, "getZOrder", getZOrder_lua);
+        bind_both(handleTbl, maybeUT, "setZOrder",
             sol::overload(
                 setZOrder_lua,
                 setZOrder_lua_any
@@ -1452,71 +1447,71 @@ namespace SDOM
         );
 
         // Focus & interactivity
-        set_if_absent(handleTbl, "setKeyboardFocus", setKeyboardFocus_lua);
-        set_if_absent(handleTbl, "isKeyboardFocused", isKeyboardFocused_lua);
-        set_if_absent(handleTbl, "isMouseHovered", isMouseHovered_lua);
-        set_if_absent(handleTbl, "isClickable", isClickable_lua);
-        set_if_absent(handleTbl, "setClickable", setClickable_lua);
-        set_if_absent(handleTbl, "isEnabled", isEnabled_lua);
-        set_if_absent(handleTbl, "setEnabled", setEnabled_lua);
-        set_if_absent(handleTbl, "isHidden", isHidden_lua);
-        set_if_absent(handleTbl, "setHidden", setHidden_lua);
-        set_if_absent(handleTbl, "isVisible", isVisible_lua);
-        set_if_absent(handleTbl, "setVisible", setVisible_lua);
+        bind_both(handleTbl, maybeUT, "setKeyboardFocus", setKeyboardFocus_lua);
+        bind_both(handleTbl, maybeUT, "isKeyboardFocused", isKeyboardFocused_lua);
+        bind_both(handleTbl, maybeUT, "isMouseHovered", isMouseHovered_lua);
+        bind_both(handleTbl, maybeUT, "isClickable", isClickable_lua);
+        bind_both(handleTbl, maybeUT, "setClickable", setClickable_lua);
+        bind_both(handleTbl, maybeUT, "isEnabled", isEnabled_lua);
+        bind_both(handleTbl, maybeUT, "setEnabled", setEnabled_lua);
+        bind_both(handleTbl, maybeUT, "isHidden", isHidden_lua);
+        bind_both(handleTbl, maybeUT, "setHidden", setHidden_lua);
+        bind_both(handleTbl, maybeUT, "isVisible", isVisible_lua);
+        bind_both(handleTbl, maybeUT, "setVisible", setVisible_lua);
 
         // Tab management
-        set_if_absent(handleTbl, "getTabPriority", getTabPriority_lua);
-        set_if_absent(handleTbl, "setTabPriority", setTabPriority_lua);
-        set_if_absent(handleTbl, "isTabEnabled", isTabEnabled_lua);
-        set_if_absent(handleTbl, "setTabEnabled", setTabEnabled_lua);
+        bind_both(handleTbl, maybeUT, "getTabPriority", getTabPriority_lua);
+        bind_both(handleTbl, maybeUT, "setTabPriority", setTabPriority_lua);
+        bind_both(handleTbl, maybeUT, "isTabEnabled", isTabEnabled_lua);
+        bind_both(handleTbl, maybeUT, "setTabEnabled", setTabEnabled_lua);
 
         // Geometry & layout
-        set_if_absent(handleTbl, "getX", getX_lua);
-        set_if_absent(handleTbl, "getY", getY_lua);
-        set_if_absent(handleTbl, "getWidth", getWidth_lua);
-        set_if_absent(handleTbl, "getHeight", getHeight_lua);
-        set_if_absent(handleTbl, "setX", setX_lua);
-        set_if_absent(handleTbl, "setY", setY_lua);
-        set_if_absent(handleTbl, "setWidth", setWidth_lua);
-        set_if_absent(handleTbl, "setHeight", setHeight_lua);
+        bind_both(handleTbl, maybeUT, "getX", getX_lua);
+        bind_both(handleTbl, maybeUT, "getY", getY_lua);
+        bind_both(handleTbl, maybeUT, "getWidth", getWidth_lua);
+        bind_both(handleTbl, maybeUT, "getHeight", getHeight_lua);
+        bind_both(handleTbl, maybeUT, "setX", setX_lua);
+        bind_both(handleTbl, maybeUT, "setY", setY_lua);
+        bind_both(handleTbl, maybeUT, "setWidth", setWidth_lua);
+        bind_both(handleTbl, maybeUT, "setHeight", setHeight_lua);
 
         // Anchors
-        set_if_absent(handleTbl, "getAnchorTop", getAnchorTop_lua);
-        set_if_absent(handleTbl, "getAnchorLeft", getAnchorLeft_lua);
-        set_if_absent(handleTbl, "getAnchorBottom", getAnchorBottom_lua);
-        set_if_absent(handleTbl, "getAnchorRight", getAnchorRight_lua);
-        set_if_absent(handleTbl, "setAnchorTop", setAnchorTop_lua);
-        set_if_absent(handleTbl, "setAnchorLeft", setAnchorLeft_lua);
-        set_if_absent(handleTbl, "setAnchorBottom", setAnchorBottom_lua);
-        set_if_absent(handleTbl, "setAnchorRight", setAnchorRight_lua);
+        bind_both(handleTbl, maybeUT, "getAnchorTop", getAnchorTop_lua);
+        bind_both(handleTbl, maybeUT, "getAnchorLeft", getAnchorLeft_lua);
+        bind_both(handleTbl, maybeUT, "getAnchorBottom", getAnchorBottom_lua);
+        bind_both(handleTbl, maybeUT, "getAnchorRight", getAnchorRight_lua);
+        bind_both(handleTbl, maybeUT, "setAnchorTop", setAnchorTop_lua);
+        bind_both(handleTbl, maybeUT, "setAnchorLeft", setAnchorLeft_lua);
+        bind_both(handleTbl, maybeUT, "setAnchorBottom", setAnchorBottom_lua);
+        bind_both(handleTbl, maybeUT, "setAnchorRight", setAnchorRight_lua);
 
         // World edges
-        set_if_absent(handleTbl, "getLeft", getLeft_lua);
-        set_if_absent(handleTbl, "getRight", getRight_lua);
-        set_if_absent(handleTbl, "getTop", getTop_lua);
-        set_if_absent(handleTbl, "getBottom", getBottom_lua);
-        set_if_absent(handleTbl, "setLeft", setLeft_lua);
-        set_if_absent(handleTbl, "setRight", setRight_lua);
-        set_if_absent(handleTbl, "setTop", setTop_lua);
-        set_if_absent(handleTbl, "setBottom", setBottom_lua);
+        bind_both(handleTbl, maybeUT, "getLeft", getLeft_lua);
+        bind_both(handleTbl, maybeUT, "getRight", getRight_lua);
+        bind_both(handleTbl, maybeUT, "getTop", getTop_lua);
+        bind_both(handleTbl, maybeUT, "getBottom", getBottom_lua);
+        bind_both(handleTbl, maybeUT, "setLeft", setLeft_lua);
+        bind_both(handleTbl, maybeUT, "setRight", setRight_lua);
+        bind_both(handleTbl, maybeUT, "setTop", setTop_lua);
+        bind_both(handleTbl, maybeUT, "setBottom", setBottom_lua);
 
         // Local edges
-        set_if_absent(handleTbl, "getLocalLeft", getLocalLeft_lua);
-        set_if_absent(handleTbl, "getLocalRight", getLocalRight_lua);
-        set_if_absent(handleTbl, "getLocalTop", getLocalTop_lua);
-        set_if_absent(handleTbl, "getLocalBottom", getLocalBottom_lua);
-        set_if_absent(handleTbl, "setLocalLeft", setLocalLeft_lua);
-        set_if_absent(handleTbl, "setLocalRight", setLocalRight_lua);
-        set_if_absent(handleTbl, "setLocalTop", setLocalTop_lua);
-        set_if_absent(handleTbl, "setLocalBottom", setLocalBottom_lua);
+        bind_both(handleTbl, maybeUT, "getLocalLeft", getLocalLeft_lua);
+        bind_both(handleTbl, maybeUT, "getLocalRight", getLocalRight_lua);
+        bind_both(handleTbl, maybeUT, "getLocalTop", getLocalTop_lua);
+        bind_both(handleTbl, maybeUT, "getLocalBottom", getLocalBottom_lua);
+        bind_both(handleTbl, maybeUT, "setLocalLeft", setLocalLeft_lua);
+        bind_both(handleTbl, maybeUT, "setLocalRight", setLocalRight_lua);
+        bind_both(handleTbl, maybeUT, "setLocalTop", setLocalTop_lua);
+        bind_both(handleTbl, maybeUT, "setLocalBottom", setLocalBottom_lua);
 
         // Orphan retention & grace
-        set_if_absent(handleTbl, "orphanPolicyFromString", orphanPolicyFromString_lua);
-        set_if_absent(handleTbl, "orphanPolicyToString", orphanPolicyToString_lua);
-        set_if_absent(handleTbl, "setOrphanRetentionPolicy", setOrphanRetentionPolicy_lua);
-        set_if_absent(handleTbl, "getOrphanRetentionPolicyString", getOrphanRetentionPolicyString_lua);
-        set_if_absent(handleTbl, "getOrphanGrace", getOrphanGrace_lua);
-        set_if_absent(handleTbl, "setOrphanGrace", setOrphanGrace_lua);
+        bind_both(handleTbl, maybeUT, "orphanPolicyFromString", orphanPolicyFromString_lua);
+        bind_both(handleTbl, maybeUT, "orphanPolicyToString", orphanPolicyToString_lua);
+        bind_both(handleTbl, maybeUT, "setOrphanRetentionPolicy", setOrphanRetentionPolicy_lua);
+        bind_both(handleTbl, maybeUT, "getOrphanRetentionPolicyString", getOrphanRetentionPolicyString_lua);
+        bind_both(handleTbl, maybeUT, "getOrphanGrace", getOrphanGrace_lua);
+        bind_both(handleTbl, maybeUT, "setOrphanGrace", setOrphanGrace_lua);
     }
 
 } // END: namespace SDOM
