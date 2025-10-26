@@ -950,20 +950,53 @@ namespace SDOM
     {
         // ✅ Test Verified
         // 🔄 In Progress
-        // ⚠️ Failing     
+        // ⚠️ Failing
         // ☐ Planned
 
+        // Focus & keyboard
         // ✅ void setKeyboardFocus_lua(IDisplayObject* obj)
         // ✅ bool isKeyboardFocused_lua(const IDisplayObject* obj)
+
+        // Mouse hover (event injection + queries)
+        // ✅ void Core::pushMouseEvent_lua(const sol::object& args)
+        // ✅ void Core::pumpEventsOnce_lua()
+        // ✅ void Core::pushMouseEvent(const sol::object& args)
+        // ✅ void Core::pumpEventsOnce()
         // ✅ bool isMouseHovered_lua(const IDisplayObject* obj)
+        // ✅ bool IDisplayObject::isMouseHovered()
+
+        // Clickable
         // ✅ bool isClickable_lua(const IDisplayObject* obj)
+        // ✅ bool IDisplayObject::isClickable()        
+        // ✅ void IDisplayObject::setClickable(bool clickable)
         // ✅ void setClickable_lua(IDisplayObject* obj, bool clickable)
+
+        // Enabled/disabled
         // ✅ bool isEnabled_lua(const IDisplayObject* obj)
         // ✅ void setEnabled_lua(IDisplayObject* obj, bool enabled)
+        // ✅ void IDisplayObject::setEnabled(bool enabled)
+        // ✅ bool IDisplayObject::isEnabled()
+
+        // Hidden/visible
         // ✅ bool isHidden_lua(const IDisplayObject* obj)
         // ✅ void setHidden_lua(IDisplayObject* obj, bool hidden)
+        // ✅ void IDisplayObject::setHidden(bool hidden)
+        // ✅ bool IDisplayObject::isHidden()
         // ✅ bool isVisible_lua(const IDisplayObject* obj)
         // ✅ void setVisible_lua(IDisplayObject* obj, bool visible)
+        // ✅ void IDisplayObject::setVisible(bool visible)
+        // ✅ bool IDisplayObject::isVisible()
+
+        // Tab Management
+        // ✅ int IDisplayObject::getTabPriority()
+        // ✅ int getTabPriority_lua(const IDisplayObject* obj)
+        // ✅ void setTabPriority_lua(IDisplayObject* obj, int index)
+        // ✅ IDisplayObject& IDisplayObject::setTabPriority(int index)
+        // ✅ bool isTabEnabled_lua(const IDisplayObject* obj)
+        // ✅ bool IDisplayObject::isTabEnabled()
+        // ✅ void setTabEnabled_lua(IDisplayObject* obj, bool enabled)
+        // ✅ IDisplayObject& IDisplayObject::setTabEnabled(bool enabled)
+
 
         bool ok = true;
         Core& core = getCore();
@@ -1218,7 +1251,280 @@ namespace SDOM
         // ❌ Invalid
         // ☐ Planned
 
+        // --- Geometry & Layout (C++) --- //
+        // ✅ void IDisplayObject::setX(int p_x)
+        // ✅ void IDisplayObject::setY(int p_y)
+        // ✅ float IDisplayObject::getLeft() const
+        // ✅ float IDisplayObject::getRight() const
+        // ✅ float IDisplayObject::getTop() const
+        // ✅ float IDisplayObject::getBottom() const
+        // ✅ float IDisplayObject::getLocalLeft() const
+        // ✅ float IDisplayObject::getLocalTop() const
+        // ✅ IDisplayObject& IDisplayObject::setLocalLeft(float)
+        // ✅ IDisplayObject& IDisplayObject::setLocalTop(float)
+
+        // --- Geometry & Layout (Lua) --- //
+        // ☐ int getX_lua(const IDisplayObject* obj)
+        // ☐ int getY_lua(const IDisplayObject* obj)
+        // ☐ int getWidth_lua(const IDisplayObject* obj)
+        // ☐ int getHeight_lua(const IDisplayObject* obj)
+        // ☐ void setX_lua(IDisplayObject* obj, int p_x)
+        // ☐ void setY_lua(IDisplayObject* obj, int p_y)
+        // ☐ void setWidth_lua(IDisplayObject* obj, int width)
+        // ☐ void setHeight_lua(IDisplayObject* obj, int height)
+
+        // --- Edge Anchors --- //
+        // ✅ void IDisplayObject::setAnchorTop(AnchorPoint ap)
+        // ✅ void IDisplayObject::setAnchorLeft(AnchorPoint ap)
+        // ✅ void IDisplayObject::setAnchorBottom(AnchorPoint ap)
+        // ✅ void IDisplayObject::setAnchorRight(AnchorPoint ap)
+        // ☐ AnchorPoint getAnchorTop_lua(const IDisplayObject* obj)
+        // ☐ AnchorPoint getAnchorLeft_lua(const IDisplayObject* obj)
+        // ☐ AnchorPoint getAnchorBottom_lua(const IDisplayObject* obj)
+        // ☐ AnchorPoint getAnchorRight_lua(const IDisplayObject* obj)
+        // ☐ void setAnchorTop_lua(IDisplayObject* obj, AnchorPoint ap)
+        // ☐ void setAnchorLeft_lua(IDisplayObject* obj, AnchorPoint ap)
+        // ☐ void setAnchorBottom_lua(IDisplayObject* obj, AnchorPoint ap)
+        // ☐ void setAnchorRight_lua(IDisplayObject* obj, AnchorPoint ap)
+
+        // --- World Edge Positions (Lua) --- //
+        // ☐ float getLeft_lua(const IDisplayObject* obj)
+        // ☐ float getRight_lua(const IDisplayObject* obj)
+        // ☐ float getTop_lua(const IDisplayObject* obj)
+        // ☐ float getBottom_lua(const IDisplayObject* obj)
+        // ☐ void setLeft_lua(IDisplayObject* obj, float p_left)
+        // ☐ void setRight_lua(IDisplayObject* obj, float p_right)
+        // ☐ void setTop_lua(IDisplayObject* obj, float p_top)
+        // ☐ void setBottom_lua(IDisplayObject* obj, float p_bottom)
+
+        // --- Local Edge Positions --- //
+        // ✅ float getLocalLeft_lua(const IDisplayObject* obj)
+        // ☐ float getLocalRight_lua(const IDisplayObject* obj)
+        // ✅ float getLocalTop_lua(const IDisplayObject* obj)
+        // ☐ float getLocalBottom_lua(const IDisplayObject* obj)
+        // ✅ void setLocalLeft_lua(IDisplayObject* obj, float p_left)
+        // ☐ void setLocalRight_lua(IDisplayObject* obj, float p_right)
+        // ✅ void setLocalTop_lua(IDisplayObject* obj, float p_top)
+        // ☐ void setLocalBottom_lua(IDisplayObject* obj, float p_bottom)
+
+
+
         bool ok = true;
+        using AP = AnchorPoint; // assume enum with Left, Center, Right, Top, Middle, Bottom
+        auto fail = [&](const std::string& msg){ errors.push_back(msg); return false; };
+
+        auto& core = getCore();
+        DisplayHandle stage = core.getRootNode();
+        if (!stage.isValid()) return fail("GeomAnchors: 'stage' invalid.");
+
+        // --- Helpers -------------------------------------------------------------
+
+        struct RectF { float l,r,t,b; };
+        auto rectf_eq = [](const RectF& a, const RectF& b, float eps=0.001f){
+            return std::fabs(a.l-b.l)<=eps && std::fabs(a.r-b.r)<=eps &&
+                std::fabs(a.t-b.t)<=eps && std::fabs(a.b-b.b)<=eps;
+        };
+        auto rectf_delta_eq = [](const RectF& a, const RectF& b, float dx, float dy, float eps=0.001f){
+            return std::fabs((a.l+dx)-b.l)<=eps && std::fabs((a.r+dx)-b.r)<=eps &&
+                std::fabs((a.t+dy)-b.t)<=eps && std::fabs((a.b+dy)-b.b)<=eps;
+        };
+        auto world_rect = [](DisplayHandle h)->RectF{
+            return RectF{ h->getLeft(), h->getRight(), h->getTop(), h->getBottom() };
+        };
+
+        auto make_box = [&](const std::string& name, int x, int y, int w, int h)->DisplayHandle{
+            Box::InitStruct init;
+            init.name = name; init.x = x; init.y = y; init.width = w; init.height = h;
+            init.color = { 16, 96, 192, 255 };
+            return core.createDisplayObject("Box", init);
+        };
+
+        auto set_anchors = [](IDisplayObject* obj, AP left, AP right, AP top, AP bottom){
+            obj->setAnchorLeft(left);
+            obj->setAnchorRight(right);
+            obj->setAnchorTop(top);
+            obj->setAnchorBottom(bottom);
+        };
+
+        // --- Scene: one parent, 4 stacked children --------------------------------
+        // Coordinates chosen to be simple & symmetric.
+        // stage(0,0) 300x300 assumed; parent at (50,50) size 200x200
+        DisplayHandle parent = make_box("geom_parent", 50, 50, 200, 200);
+        if (!parent.isValid()) return fail("GeomAnchors: failed to create parent.");
+        stage->addChild(parent);
+
+        struct Node { DisplayHandle h; std::string name; };
+        std::vector<Node> kids;
+        kids.push_back({ make_box("ga_A", 10, 10,  60, 30), "ga_A" });  // near top-left
+        kids.push_back({ make_box("ga_B", 10, 60,  80, 40), "ga_B" });  // below A
+        kids.push_back({ make_box("ga_C", 10, 110, 80, 50), "ga_C" });  // below B
+        kids.push_back({ make_box("ga_D", 10, 170, 60, 20), "ga_D" });  // bottom-aligned
+
+        for (auto& n : kids) {
+            if (!n.h.isValid()) return fail("GeomAnchors: child create failed for " + n.name);
+            parent->addChild(n.h);
+        }
+
+        // --- 1) Verify local getters/setters ONCE (C++ & Lua) ----------------------
+
+        // C++ locals
+        auto child = kids[0].h; // A
+        child->setLocalLeft(20.f);
+        child->setLocalTop(15.f);
+        if (child->getLocalLeft() != 20.f || child->getLocalTop() != 15.f) {
+            return fail("GeomAnchors: C++ local setters/getters mismatch.");
+        }
+
+        // Lua forms mirror (callable from C++):
+        setLocalLeft_lua(child.as<IDisplayObject>(), 25.f);
+        setLocalTop_lua(child.as<IDisplayObject>(), 18.f);
+        if (getLocalLeft_lua(child.as<IDisplayObject>()) != 25.f ||
+            getLocalTop_lua(child.as<IDisplayObject>())  != 18.f) {
+            return fail("GeomAnchors: Lua local setters/getters mismatch.");
+        }
+
+        // Local changes should update world edges predictably:
+        auto r0 = world_rect(child);
+        if (std::fabs(r0.l - (parent->getLeft() + 25.f)) > 0.001f ||
+            std::fabs(r0.t - (parent->getTop()  + 18.f)) > 0.001f) {
+            return fail("GeomAnchors: world edges didn’t reflect local offsets.");
+        }
+
+        // --- 2) Baseline: capture world rects for all children ---------------------
+
+        std::vector<RectF> baseline;
+        baseline.reserve(kids.size());
+        for (auto& n : kids) baseline.push_back(world_rect(n.h));
+
+        // --- 3) Anchor sweep (translation invariance) ------------------------------
+        // We will iterate *individually* over each edge’s 3 anchor options while
+        // keeping the other edges on neutral anchors. After changing anchors, we
+        // translate the parent by (dx, dy) and assert each child’s world rect
+        // moves exactly by (dx, dy). No size changes. No drift.
+
+        const std::vector<AP> H = { AP::LEFT, AP::CENTER, AP::RIGHT };
+        const std::vector<AP> V = { AP::TOP,  AP::MIDDLE, AP::BOTTOM };
+
+        auto reset_children = [&](){
+            // reset children positions to initial locals so the sweep is deterministic
+            // A(10,10), B(10,60), C(10,110), D(10,170)
+            kids[0].h->setX(10); kids[0].h->setY(10);
+            kids[1].h->setX(10); kids[1].h->setY(60);
+            kids[2].h->setX(10); kids[2].h->setY(110);
+            kids[3].h->setX(10); kids[3].h->setY(170);
+        };
+
+        auto sweep_and_translate = [&](const std::string& label, auto anchorSetter){
+            // 1) reset geometry
+            reset_children();
+
+            // 2) set neutral anchors: center/middle on everything
+            for (auto& n : kids) {
+                set_anchors(n.h.as<IDisplayObject>(), AP::CENTER, AP::CENTER, AP::MIDDLE, AP::MIDDLE);
+            }
+
+            // 3) apply the variable anchors via provided lambda (per child)
+            anchorSetter();
+
+            // 4) capture pre-translate rects
+            std::vector<RectF> prior;
+            prior.reserve(kids.size());
+            for (auto& n : kids) prior.push_back(world_rect(n.h));
+
+            // 5) translate parent only
+            const float dx = 13.f, dy = 7.f;
+            parent->setX(parent->getX() + int(dx));
+            parent->setY(parent->getY() + int(dy));
+
+            // 6) capture post-translate
+            for (size_t i=0; i<kids.size(); ++i) {
+                auto after = world_rect(kids[i].h);
+                // Expect strict translation by (dx, dy); no resizing
+                if (!rectf_delta_eq(prior[i], after, dx, dy)) {
+                    std::ostringstream oss;
+                    oss << "GeomAnchors[" << label << "]: child " << kids[i].name
+                        << " did not preserve translation invariance.";
+                    return fail(oss.str());
+                }
+                float w0 = prior[i].r - prior[i].l, h0 = prior[i].b - prior[i].t;
+                float w1 = after.r - after.l,     h1 = after.b - after.t;
+                if (std::fabs(w0 - w1) > 0.001f || std::fabs(h0 - h1) > 0.001f) {
+                    std::ostringstream oss;
+                    oss << "GeomAnchors[" << label << "]: child " << kids[i].name
+                        << " size changed on parent translation.";
+                    return fail(oss.str());
+                }
+            }
+
+            // 7) restore parent position for next run
+            parent->setX(parent->getX() - int(dx));
+            parent->setY(parent->getY() - int(dy));
+            return true;
+        };
+
+        // Sweep left edge anchors: {Left, Center, Right}
+        for (auto ap : H) {
+            if (!sweep_and_translate("Left="+std::to_string(int(ap)), [&](){
+                for (auto& n : kids) {
+                    auto* o = n.h.as<IDisplayObject>();
+                    set_anchors(o, ap, AP::CENTER, AP::MIDDLE, AP::MIDDLE);
+                }
+            })) return false;
+        }
+
+        // Sweep right edge anchors
+        for (auto ap : H) {
+            if (!sweep_and_translate("Right="+std::to_string(int(ap)), [&](){
+                for (auto& n : kids) {
+                    auto* o = n.h.as<IDisplayObject>();
+                    set_anchors(o, AP::CENTER, ap, AP::MIDDLE, AP::MIDDLE);
+                }
+            })) return false;
+        }
+
+        // Sweep top edge anchors
+        for (auto ap : V) {
+            if (!sweep_and_translate("Top="+std::to_string(int(ap)), [&](){
+                for (auto& n : kids) {
+                    auto* o = n.h.as<IDisplayObject>();
+                    set_anchors(o, AP::CENTER, AP::CENTER, ap, AP::MIDDLE);
+                }
+            })) return false;
+        }
+
+        // Sweep bottom edge anchors
+        for (auto ap : V) {
+            if (!sweep_and_translate("Bottom="+std::to_string(int(ap)), [&](){
+                for (auto& n : kids) {
+                    auto* o = n.h.as<IDisplayObject>();
+                    set_anchors(o, AP::CENTER, AP::CENTER, AP::MIDDLE, ap);
+                }
+            })) return false;
+        }
+
+        // --- 4) Changing anchors alone must NOT move anything (no parent motion) ----
+        // Capture state, change anchors, confirm rects equal.
+        {
+            std::vector<RectF> before;
+            for (auto& n : kids) before.push_back(world_rect(n.h));
+            for (auto& n : kids) {
+                auto* o = n.h.as<IDisplayObject>();
+                set_anchors(o, AP::LEFT, AP::RIGHT, AP::TOP, AP::BOTTOM);
+            }
+            for (size_t i=0;i<kids.size();++i) {
+                auto after = world_rect(kids[i].h);
+                if (!rectf_eq(before[i], after)) {
+                    return fail("GeomAnchors: changing anchors (no parent move) shifted geometry.");
+                }
+            }
+        }
+
+        // --- Cleanup (optional: keep for visual inspection while developing) -------
+        core.destroyDisplayObject("ga_A");
+        core.destroyDisplayObject("ga_B");
+        core.destroyDisplayObject("ga_C");
+        core.destroyDisplayObject("ga_D");
+        core.destroyDisplayObject("geom_parent");
 
         return ok;
     } // IDisplayObject_test10(std::vector<std::string>& errors)   
@@ -1250,6 +1556,7 @@ namespace SDOM
         ut.add_test("Type and Property Access", IDisplayObject_test7);
         ut.add_test("Priority and Z-Order", IDisplayObject_test8);
         ut.add_test("Object Focus and Interactivity", IDisplayObject_test9);
+        ut.add_test("Geometry Anchors", IDisplayObject_test10);
 
         ut.setLuaFilename("src/IDisplayObject_UnitTests.lua"); // Lua test script path
         ut.add_test("Lua: '" + ut.getLuaFilename() + "'", IDisplayObject_LUA_Tests, false); // Not yet implemented
