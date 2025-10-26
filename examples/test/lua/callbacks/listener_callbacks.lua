@@ -240,7 +240,7 @@ function M.on_click(evt)
                 -- shutdown()
                 -- quit()
 
-                evt.target:printTree();
+                evt.target:printTree() -- print the target's tree
             end
         end
     end

@@ -8,6 +8,7 @@
 #include <SDOM/SDOM_DisplayHandle.hpp>
 
 #include <SDOM/SDOM_IDisplayObject_Lua.hpp>
+#include <type_traits>
 
 namespace SDOM
 {
@@ -982,6 +983,121 @@ namespace SDOM
         obj->setOrphanGrace(grace);
     }
 
+    // Overload-aware binder helper: adapts pointer-based wrappers to DisplayHandle colon-calls.
+    namespace {
+        template <typename Ret, typename... Args>
+        inline void set_if_absent(sol::table& tbl, const char* name, Ret(*fn)(IDisplayObject*, Args...))
+        {
+            sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                tbl.set_function(name, [fn](DisplayHandle& self, Args... args) -> Ret {
+                    IDisplayObject* obj = self.get();
+                    if constexpr (std::is_void_v<Ret>) {
+                        if (!obj) return;
+                        fn(obj, std::forward<Args>(args)...);
+                        return;
+                    } else {
+                        if (!obj) return Ret{};
+                        return fn(obj, std::forward<Args>(args)...);
+                    }
+                });
+            }
+        }
+
+        template <typename Ret, typename... Args>
+        inline void set_if_absent(sol::table& tbl, const char* name, Ret(*fn)(const IDisplayObject*, Args...))
+        {
+            sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                tbl.set_function(name, [fn](DisplayHandle& self, Args... args) -> Ret {
+                    const IDisplayObject* obj = self.get();
+                    if constexpr (std::is_void_v<Ret>) {
+                        if (!obj) return;
+                        fn(obj, std::forward<Args>(args)...);
+                        return;
+                    } else {
+                        if (!obj) return Ret{};
+                        return fn(obj, std::forward<Args>(args)...);
+                    }
+                });
+            }
+        }
+
+        template <typename F>
+        inline void set_if_absent(sol::table& tbl, const char* name, F&& fn)
+        {
+            sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                tbl.set_function(name, std::forward<F>(fn));
+            }
+        }
+
+        // Create a DisplayHandle-aware wrapper for pointer-based wrappers
+        template <typename Ret, typename... Args>
+        auto make_handle_wrapper(Ret(*fn)(IDisplayObject*, Args...)) {
+            return [fn](DisplayHandle& self, Args... args) -> Ret {
+                IDisplayObject* obj = self.get();
+                if constexpr (std::is_void_v<Ret>) {
+                    if (!obj) return;
+                    fn(obj, std::forward<Args>(args)...);
+                    return;
+                } else {
+                    if (!obj) return Ret{};
+                    return fn(obj, std::forward<Args>(args)...);
+                }
+            };
+        }
+        template <typename Ret, typename... Args>
+        auto make_handle_wrapper(Ret(*fn)(const IDisplayObject*, Args...)) {
+            return [fn](DisplayHandle& self, Args... args) -> Ret {
+                const IDisplayObject* obj = self.get();
+                if constexpr (std::is_void_v<Ret>) {
+                    if (!obj) return;
+                    fn(obj, std::forward<Args>(args)...);
+                    return;
+                } else {
+                    if (!obj) return Ret{};
+                    return fn(obj, std::forward<Args>(args)...);
+                }
+            };
+        }
+
+        // Bind the function on both the table and the usertype (if present)
+        template <typename F>
+        void bind_both(sol::table& tbl,
+                       sol::optional<sol::usertype<SDOM::DisplayHandle>>& maybeUT,
+                       const char* name,
+                       F&& fn) {
+            // set on table if absent
+            sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                tbl.set_function(name, std::forward<F>(fn));
+            }
+            // set on usertype if present
+            if (maybeUT) {
+                try { (*maybeUT)[name] = fn; } catch(...) {}
+            }
+        }
+
+        // Overloads that adapt pointer wrappers and then bind both
+        template <typename Ret, typename... Args>
+        void bind_both(sol::table& tbl,
+                       sol::optional<sol::usertype<SDOM::DisplayHandle>>& maybeUT,
+                       const char* name,
+                       Ret(*fn)(IDisplayObject*, Args...)) {
+            auto wrapper = make_handle_wrapper(fn);
+            bind_both(tbl, maybeUT, name, wrapper);
+        }
+        template <typename Ret, typename... Args>
+        void bind_both(sol::table& tbl,
+                       sol::optional<sol::usertype<SDOM::DisplayHandle>>& maybeUT,
+                       const char* name,
+                       Ret(*fn)(const IDisplayObject*, Args...)) {
+            auto wrapper = make_handle_wrapper(fn);
+            bind_both(tbl, maybeUT, name, wrapper);
+        }
+    }
+
     // Central binder: attach IDisplayObject Lua-facing helpers to the shared
     // DisplayHandle surface (idempotent). This mirrors the in-class binding
     // but allows SDOM_IDisplayObject.cpp to delegate to this module.
@@ -994,12 +1110,7 @@ namespace SDOM
             handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
         }
 
-        auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
-            sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
-            if (!cur.valid() || cur == sol::lua_nil) {
-                tbl.set_function(name, std::forward<decltype(fn)>(fn));
-            }
-        };
+        // set_if_absent overloads provided above handle both raw pointer wrappers and custom lambdas
 
         // Also try to acquire the usertype so we can bind on both surfaces.
         sol::optional<sol::usertype<SDOM::DisplayHandle>> maybeUT;
@@ -1102,14 +1213,14 @@ namespace SDOM
         set_if_absent(handleTbl, "getChild", getChild_impl);
         if (maybeUT) { try { (*maybeUT)["getChild"] = getChild_impl; } catch(...) {} }
 
-        // Dirty/state
-        set_if_absent(handleTbl, "cleanAll", cleanAll_lua);
-        set_if_absent(handleTbl, "getDirty", getDirty_lua);
-        set_if_absent(handleTbl, "setDirty", setDirty_lua);
-        set_if_absent(handleTbl, "isDirty", isDirty_lua);
+        // Dirty/state (bind to both table and usertype)
+        bind_both(handleTbl, maybeUT, "cleanAll", cleanAll_lua);
+        bind_both(handleTbl, maybeUT, "getDirty", getDirty_lua);
+        bind_both(handleTbl, maybeUT, "setDirty", setDirty_lua);
+        bind_both(handleTbl, maybeUT, "isDirty", isDirty_lua);
 
         // Debug/utility
-        set_if_absent(handleTbl, "printTree", printTree_lua);
+        bind_both(handleTbl, maybeUT, "printTree", printTree_lua);
 
         // Events: Provide DisplayHandle-aware overloads to avoid self-type issues
         auto addEventListener_bind1 = [](SDOM::DisplayHandle& self, const sol::object& descriptor) {
@@ -1231,8 +1342,8 @@ namespace SDOM
                 static_cast<void(*)(IDisplayObject*, const Bounds&)>(setBounds_lua)
             )
         );
-        set_if_absent(handleTbl, "getColor", getColor_lua);
-        set_if_absent(handleTbl, "setColor",
+        bind_both(handleTbl, maybeUT, "getColor", getColor_lua);
+        bind_both(handleTbl, maybeUT, "setColor",
             sol::overload(
                 static_cast<void(*)(IDisplayObject*, const sol::object&)>(setColor_lua),
                 static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setColor_lua)

@@ -463,9 +463,7 @@ Notes & test ideas:
         void removeOrphan_(const DisplayHandle& orphan);
 
     protected:
-
-
-
+    
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
         sol::usertype<IDisplayObject> objHandleType_;  

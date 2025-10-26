@@ -816,6 +816,7 @@ namespace SDOM
         SDL_Texture* texture = texture_;
         handleRender = [this, &handleRender, renderer, texture](IDisplayObject& node) 
         {
+// if (node.isDirty()) DEBUG_LOG("Core::onRender: node=" << node.getName() << " dirty=" << node.isDirty());
             // render the node
             node.onRender();
             node.setDirty(false); // clear dirty flag after rendering
