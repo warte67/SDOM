@@ -44,6 +44,8 @@ EventType = EventType or {}
 
 --- Global helper mirroring Core:configure(table)
 ---@param cfg table
+-- Intentionally global helper alias for Core.configure
+---@diagnostic disable-next-line: lowercase-global
 function configure(cfg) end
 
 -- lua/api_stubs.lua
@@ -253,9 +255,6 @@ Factory = Factory or {}
 IconIndex = IconIndex or {}
 ArrowDirection = ArrowDirection or {}
 EventType = EventType or {}
-
----@param cfg table
-function configure(cfg) end
 
 -- Optional editor grouping: category-specific pseudo-classes inheriting DisplayHandle.
 -- These duplicate a subset of fields to help IDEs show grouped docs while the
