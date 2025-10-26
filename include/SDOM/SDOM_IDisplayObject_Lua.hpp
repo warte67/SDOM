@@ -130,7 +130,7 @@ namespace SDOM
     bool isVisible_lua(const IDisplayObject* obj);                  
     void setVisible_lua(IDisplayObject* obj, bool visible);         
 
-    // --- 🔄 Tab Management --- //
+    // --- 🔄 Tab Management (This should be included with Object Focus and Interactivity )--- //
     int getTabPriority_lua(const IDisplayObject* obj);              
     void setTabPriority_lua(IDisplayObject* obj, int index);        
     bool isTabEnabled_lua(const IDisplayObject* obj);               
