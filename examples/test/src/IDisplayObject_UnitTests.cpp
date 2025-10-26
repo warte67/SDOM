@@ -1264,48 +1264,48 @@ namespace SDOM
         // ✅ IDisplayObject& IDisplayObject::setLocalTop(float)
 
         // --- Geometry & Layout (Lua) --- //
-        // ☐ int getX_lua(const IDisplayObject* obj)
-        // ☐ int getY_lua(const IDisplayObject* obj)
-        // ☐ int getWidth_lua(const IDisplayObject* obj)
-        // ☐ int getHeight_lua(const IDisplayObject* obj)
-        // ☐ void setX_lua(IDisplayObject* obj, int p_x)
-        // ☐ void setY_lua(IDisplayObject* obj, int p_y)
-        // ☐ void setWidth_lua(IDisplayObject* obj, int width)
-        // ☐ void setHeight_lua(IDisplayObject* obj, int height)
+        // ✅ int getX_lua(const IDisplayObject* obj)
+        // ✅ int getY_lua(const IDisplayObject* obj)
+        // ✅ int getWidth_lua(const IDisplayObject* obj)
+        // ✅ int getHeight_lua(const IDisplayObject* obj)
+        // ✅ void setX_lua(IDisplayObject* obj, int p_x)
+        // ✅ void setY_lua(IDisplayObject* obj, int p_y)
+        // ✅ void setWidth_lua(IDisplayObject* obj, int width)
+        // ✅ void setHeight_lua(IDisplayObject* obj, int height)
 
         // --- Edge Anchors --- //
         // ✅ void IDisplayObject::setAnchorTop(AnchorPoint ap)
         // ✅ void IDisplayObject::setAnchorLeft(AnchorPoint ap)
         // ✅ void IDisplayObject::setAnchorBottom(AnchorPoint ap)
         // ✅ void IDisplayObject::setAnchorRight(AnchorPoint ap)
-        // ☐ AnchorPoint getAnchorTop_lua(const IDisplayObject* obj)
-        // ☐ AnchorPoint getAnchorLeft_lua(const IDisplayObject* obj)
-        // ☐ AnchorPoint getAnchorBottom_lua(const IDisplayObject* obj)
-        // ☐ AnchorPoint getAnchorRight_lua(const IDisplayObject* obj)
-        // ☐ void setAnchorTop_lua(IDisplayObject* obj, AnchorPoint ap)
-        // ☐ void setAnchorLeft_lua(IDisplayObject* obj, AnchorPoint ap)
-        // ☐ void setAnchorBottom_lua(IDisplayObject* obj, AnchorPoint ap)
-        // ☐ void setAnchorRight_lua(IDisplayObject* obj, AnchorPoint ap)
+        // ✅ AnchorPoint getAnchorTop_lua(const IDisplayObject* obj)
+        // ✅ AnchorPoint getAnchorLeft_lua(const IDisplayObject* obj)
+        // ✅ AnchorPoint getAnchorBottom_lua(const IDisplayObject* obj)
+        // ✅ AnchorPoint getAnchorRight_lua(const IDisplayObject* obj)
+        // ✅ void setAnchorTop_lua(IDisplayObject* obj, AnchorPoint ap)
+        // ✅ void setAnchorLeft_lua(IDisplayObject* obj, AnchorPoint ap)
+        // ✅ void setAnchorBottom_lua(IDisplayObject* obj, AnchorPoint ap)
+        // ✅ void setAnchorRight_lua(IDisplayObject* obj, AnchorPoint ap)
 
         // --- World Edge Positions (Lua) --- //
-        // ☐ float getLeft_lua(const IDisplayObject* obj)
-        // ☐ float getRight_lua(const IDisplayObject* obj)
-        // ☐ float getTop_lua(const IDisplayObject* obj)
-        // ☐ float getBottom_lua(const IDisplayObject* obj)
-        // ☐ void setLeft_lua(IDisplayObject* obj, float p_left)
-        // ☐ void setRight_lua(IDisplayObject* obj, float p_right)
-        // ☐ void setTop_lua(IDisplayObject* obj, float p_top)
-        // ☐ void setBottom_lua(IDisplayObject* obj, float p_bottom)
+        // ✅ float getLeft_lua(const IDisplayObject* obj)
+        // ✅ float getRight_lua(const IDisplayObject* obj)
+        // ✅ float getTop_lua(const IDisplayObject* obj)
+        // ✅ float getBottom_lua(const IDisplayObject* obj)
+        // ✅ void setLeft_lua(IDisplayObject* obj, float p_left)
+        // ✅ void setRight_lua(IDisplayObject* obj, float p_right)
+        // ✅ void setTop_lua(IDisplayObject* obj, float p_top)
+        // ✅ void setBottom_lua(IDisplayObject* obj, float p_bottom)
 
         // --- Local Edge Positions --- //
         // ✅ float getLocalLeft_lua(const IDisplayObject* obj)
-        // ☐ float getLocalRight_lua(const IDisplayObject* obj)
+        // ✅ float getLocalRight_lua(const IDisplayObject* obj)
         // ✅ float getLocalTop_lua(const IDisplayObject* obj)
-        // ☐ float getLocalBottom_lua(const IDisplayObject* obj)
+        // ✅ float getLocalBottom_lua(const IDisplayObject* obj)
         // ✅ void setLocalLeft_lua(IDisplayObject* obj, float p_left)
-        // ☐ void setLocalRight_lua(IDisplayObject* obj, float p_right)
+        // ✅ void setLocalRight_lua(IDisplayObject* obj, float p_right)
         // ✅ void setLocalTop_lua(IDisplayObject* obj, float p_top)
-        // ☐ void setLocalBottom_lua(IDisplayObject* obj, float p_bottom)
+        // ✅ void setLocalBottom_lua(IDisplayObject* obj, float p_bottom)
 
 
 
@@ -1519,6 +1519,128 @@ namespace SDOM
             }
         }
 
+        // --- 5) Lua geometry + anchors + edges -----------------------------------------
+        // Use distinct children to avoid interactions; restore state after each sub-test.
+
+        // 5a) Geometry & Layout (Lua) — getters/setters for pos/size
+        {
+            auto t  = kids[1].h; // B
+            auto* to = t.as<IDisplayObject>();
+
+            int x0 = t->getX(), y0 = t->getY();
+            int w0 = t->getWidth(), h0 = t->getHeight();
+
+            // Lua getters mirror C++
+            if (getX_lua(to) != x0 || getY_lua(to) != y0 ||
+                getWidth_lua(to) != w0 || getHeight_lua(to) != h0)
+                return fail("GeomAnchors: Lua getX/Y/Width/Height mismatch.");
+
+            // Set via Lua, verify round-trip
+            int tx = int(parent->getLeft()) + 77;
+            int ty = int(parent->getTop()) + 33;
+            setX_lua(to, tx);
+            setY_lua(to, ty);
+            if (getX_lua(to) != tx || getY_lua(to) != ty)
+                return fail("GeomAnchors: setX/Y_lua did not take.");
+
+            setWidth_lua(to, w0 + 11);
+            setHeight_lua(to, h0 + 9);
+            if (getWidth_lua(to) != w0 + 11 || getHeight_lua(to) != h0 + 9)
+                return fail("GeomAnchors: setWidth/Height_lua did not take.");
+
+            // Restore
+            setX_lua(to, x0);
+            setY_lua(to, y0);
+            setWidth_lua(to, w0);
+            setHeight_lua(to, h0);
+        }
+
+        // 5b) Edge Anchors (Lua) — get/set for each anchor
+        {
+            auto t  = kids[2].h; // C
+            auto* to = t.as<IDisplayObject>();
+
+            setAnchorLeft_lua(to,  AP::RIGHT);
+            setAnchorRight_lua(to, AP::LEFT);
+            setAnchorTop_lua(to,   AP::BOTTOM);
+            setAnchorBottom_lua(to,AP::TOP);
+
+            if (getAnchorLeft_lua(to)   != AP::RIGHT || to->getAnchorLeft()   != AP::RIGHT)
+                return fail("GeomAnchors: set/getAnchorLeft_lua mismatch.");
+            if (getAnchorRight_lua(to)  != AP::LEFT  || to->getAnchorRight()  != AP::LEFT)
+                return fail("GeomAnchors: set/getAnchorRight_lua mismatch.");
+            if (getAnchorTop_lua(to)    != AP::BOTTOM|| to->getAnchorTop()    != AP::BOTTOM)
+                return fail("GeomAnchors: set/getAnchorTop_lua mismatch.");
+            if (getAnchorBottom_lua(to) != AP::TOP   || to->getAnchorBottom() != AP::TOP)
+                return fail("GeomAnchors: set/getAnchorBottom_lua mismatch.");
+
+            // Restore neutral
+            setAnchorLeft_lua(to,  AP::LEFT);
+            setAnchorRight_lua(to, AP::RIGHT);
+            setAnchorTop_lua(to,   AP::TOP);
+            setAnchorBottom_lua(to,AP::BOTTOM);
+        }
+
+        // 5c) World edges (Lua) — get/set each edge, ensure only that edge moves
+        {
+            auto t  = kids[3].h; // D
+            auto* to = t.as<IDisplayObject>();
+            auto eps = 0.001f;
+
+            float l0 = t->getLeft(), r0 = t->getRight();
+            float t0 = t->getTop(),  b0 = t->getBottom();
+
+            // Lua getters mirror C++
+            if (std::fabs(getLeft_lua(to) - l0) > eps ||
+                std::fabs(getRight_lua(to) - r0) > eps ||
+                std::fabs(getTop_lua(to) - t0) > eps ||
+                std::fabs(getBottom_lua(to) - b0) > eps)
+                return fail("GeomAnchors: Lua getLeft/Right/Top/Bottom mismatch.");
+
+            // setLeft: left changes, right stays
+            setLeft_lua(to, l0 + 5);
+            if (std::fabs(t->getLeft() - (l0 + 5)) > eps || std::fabs(t->getRight() - r0) > eps)
+                return fail("GeomAnchors: setLeft_lua moved unexpected edges.");
+            setLeft_lua(to, l0); // restore
+
+            // setRight: right changes, left stays
+            setRight_lua(to, r0 + 7);
+            if (std::fabs(t->getRight() - (r0 + 7)) > eps || std::fabs(t->getLeft() - l0) > eps)
+                return fail("GeomAnchors: setRight_lua moved unexpected edges.");
+            setRight_lua(to, r0); // restore
+
+            // setTop: top changes, bottom stays
+            setTop_lua(to, t0 + 3);
+            if (std::fabs(t->getTop() - (t0 + 3)) > eps || std::fabs(t->getBottom() - b0) > eps)
+                return fail("GeomAnchors: setTop_lua moved unexpected edges.");
+            setTop_lua(to, t0); // restore
+
+            // setBottom: bottom changes, top stays
+            setBottom_lua(to, b0 + 6);
+            if (std::fabs(t->getBottom() - (b0 + 6)) > eps || std::fabs(t->getTop() - t0) > eps)
+                return fail("GeomAnchors: setBottom_lua moved unexpected edges.");
+            setBottom_lua(to, b0); // restore
+        }
+
+        // 5d) Local edges (Lua) — right/bottom local set/get
+        {
+            auto t  = kids[0].h; // A
+            auto* to = t.as<IDisplayObject>();
+
+            float lr0 = getLocalRight_lua(to);
+            float lb0 = getLocalBottom_lua(to);
+
+            setLocalRight_lua(to, lr0 + 10.f);
+            if (std::fabs(getLocalRight_lua(to) - (lr0 + 10.f)) > 0.001f)
+                return fail("GeomAnchors: setLocalRight_lua did not take.");
+            setLocalRight_lua(to, lr0); // restore
+
+            setLocalBottom_lua(to, lb0 + 12.f);
+            if (std::fabs(getLocalBottom_lua(to) - (lb0 + 12.f)) > 0.001f)
+                return fail("GeomAnchors: setLocalBottom_lua did not take.");
+            setLocalBottom_lua(to, lb0); // restore
+        }
+
         // --- Cleanup (optional: keep for visual inspection while developing) -------
         core.destroyDisplayObject("ga_A");
         core.destroyDisplayObject("ga_B");
@@ -1529,6 +1651,39 @@ namespace SDOM
         return ok;
     } // IDisplayObject_test10(std::vector<std::string>& errors)   
 
+
+    // --- Orphan Retention Policy and Grace Period --- //
+    bool IDisplayObject_test11(std::vector<std::string>& errors)   
+    {
+        // ✅ Test Verified
+        // 🔄 In Progress
+        // ⚠️ Failing     
+        // 🚫 Remove
+        // ❌ Invalid
+        // ☐ Planned
+
+        // --- 🔄 Orphan Retention Policy --- //
+        // ☐ IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* obj, const std::string& s)
+        // ☐ std::string orphanPolicyToString_lua(IDisplayObject* obj, IDisplayObject::OrphanRetentionPolicy p)
+        // ☐ void setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr)
+        // ☐ std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj)
+
+        // ☐ IDisplayObject::OrphanRetentionPolicy IDisplayObject::orphanPolicyFromString(const std::string& s)
+        // ☐ std::string IDisplayObject::orphanPolicyToString(IDisplayObject::OrphanRetentionPolicy p)
+        // ☐ void IDisplayObject::setOrphanRetentionPolicy(const std::string& policyStr)
+        // ☐ std::string IDisplayObject::getOrphanRetentionPolicyString()
+
+        // 🔄 Lua-accessible accessors for orphan grace (milliseconds)
+        // ☐ int getOrphanGrace_lua(const IDisplayObject* obj)
+        // ☐ void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace)
+
+        // ☐ int IDisplayObject::getOrphanGrace()
+        // ☐ void IDisplayObject::setOrphanGrace(std::chrono::milliseconds grace)
+
+        bool ok = true;
+
+        return ok;
+    } // IDisplayObject_test11(std::vector<std::string>& errors)   
 
 
     // --- Lua Integration Tests --- //
@@ -1557,6 +1712,7 @@ namespace SDOM
         ut.add_test("Priority and Z-Order", IDisplayObject_test8);
         ut.add_test("Object Focus and Interactivity", IDisplayObject_test9);
         ut.add_test("Geometry Anchors", IDisplayObject_test10);
+        ut.add_test("Orphan Retention Policy and Grace Period", IDisplayObject_test11);
 
         ut.setLuaFilename("src/IDisplayObject_UnitTests.lua"); // Lua test script path
         ut.add_test("Lua: '" + ut.getLuaFilename() + "'", IDisplayObject_LUA_Tests, false); // Not yet implemented

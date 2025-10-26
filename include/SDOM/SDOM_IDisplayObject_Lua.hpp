@@ -136,7 +136,7 @@ namespace SDOM
     bool isTabEnabled_lua(const IDisplayObject* obj);               
     void setTabEnabled_lua(IDisplayObject* obj, bool enabled);      
 
-    // --- 🔄 Geometry & Layout --- //
+    // --- ✅ Geometry & Layout --- //
     int getX_lua(const IDisplayObject* obj);                        
     int getY_lua(const IDisplayObject* obj);                        
     int getWidth_lua(const IDisplayObject* obj);                    
@@ -146,7 +146,7 @@ namespace SDOM
     void setWidth_lua(IDisplayObject* obj, int width);              
     void setHeight_lua(IDisplayObject* obj, int height);            
 
-    // --- 🔄 Edge Anchors --- //
+    // --- ✅ Edge Anchors --- //
     AnchorPoint getAnchorTop_lua(const IDisplayObject* obj);        
     AnchorPoint getAnchorLeft_lua(const IDisplayObject* obj);       
     AnchorPoint getAnchorBottom_lua(const IDisplayObject* obj);     
@@ -156,7 +156,7 @@ namespace SDOM
     void setAnchorBottom_lua(IDisplayObject* obj, AnchorPoint ap);  
     void setAnchorRight_lua(IDisplayObject* obj, AnchorPoint ap);   
 
-    // --- 🔄 World Edge Positions --- //
+    // --- ✅ World Edge Positions --- //
     float getLeft_lua(const IDisplayObject* obj);                   
     float getRight_lua(const IDisplayObject* obj);                  
     float getTop_lua(const IDisplayObject* obj);                    
@@ -166,7 +166,7 @@ namespace SDOM
     void setTop_lua(IDisplayObject* obj, float p_top);              
     void setBottom_lua(IDisplayObject* obj, float p_bottom);        
 
-    // --- 🔄 Local Edge Positions --- //
+    // --- ✅ Local Edge Positions --- //
     float getLocalLeft_lua(const IDisplayObject* obj);              
     float getLocalRight_lua(const IDisplayObject* obj);             
     float getLocalTop_lua(const IDisplayObject* obj);               
@@ -176,13 +176,13 @@ namespace SDOM
     void setLocalTop_lua(IDisplayObject* obj, float p_top);         
     void setLocalBottom_lua(IDisplayObject* obj, float p_bottom);  
 
-    // --- ☐ Orphan Retention Policy --- //
+    // --- 🔄 Orphan Retention Policy --- //
     IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* obj, const std::string& s);
     std::string orphanPolicyToString_lua(IDisplayObject* obj, IDisplayObject::OrphanRetentionPolicy p);
     void setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr);
     std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj);
 
-    // ☐ Lua-accessible accessors for orphan grace (milliseconds)
+    // 🔄 Lua-accessible accessors for orphan grace (milliseconds)
     int getOrphanGrace_lua(const IDisplayObject* obj);                              
     void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace);  
 
