@@ -48,5 +48,6 @@ var searchData=
   ['isvalid_45',['isValid',['../classSDOM_1_1AssetHandle.html#abf912a65a0e055a3e9cf2bb9da51d00a',1,'SDOM::AssetHandle::isValid()'],['../classSDOM_1_1DisplayHandle.html#a8cfd62e992f72ef158b3fcd25e0ba3b7',1,'SDOM::DisplayHandle::isValid() const']]],
   ['isvalid_5flua_46',['isValid_lua',['../classSDOM_1_1DisplayHandle.html#afb79ae99f742dbf4ba6886a61da113a5',1,'SDOM::DisplayHandle']]],
   ['isvisible_47',['isVisible',['../classSDOM_1_1IDisplayObject.html#a59f0351159eb9bac6a1c89b56639d49f',1,'SDOM::IDisplayObject']]],
-  ['isvisible_5flua_48',['isVisible_lua',['../namespaceSDOM.html#a059e2ea37af0f4e9ecd7bf9b10f4425e',1,'SDOM']]]
+  ['isvisible_5flua_48',['isVisible_lua',['../namespaceSDOM.html#a059e2ea37af0f4e9ecd7bf9b10f4425e',1,'SDOM']]],
+  ['iszorderdirty_49',['isZOrderDirty',['../classSDOM_1_1IDisplayObject.html#a178db1bc8bbde20ebaa79044ae9af38e',1,'SDOM::IDisplayObject']]]
 ];

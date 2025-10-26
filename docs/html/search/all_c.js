@@ -34,7 +34,10 @@ var searchData=
   ['mousex_31',['mouseX',['../classSDOM_1_1Stage.html#a5c84356f827dd7cdc5edc42527a21696',1,'SDOM::Stage']]],
   ['mousey_32',['mouseY',['../classSDOM_1_1Stage.html#a94547f9b6ac923ac1dbfdd83db1ddced',1,'SDOM::Stage']]],
   ['move_33',['Move',['../classSDOM_1_1EventType.html#a8f3d3cfcb6ceac2b9283eb37d88f374e',1,'SDOM::EventType']]],
-  ['movetotop_34',['moveToTop',['../classSDOM_1_1IDisplayObject.html#a6c2d2b40744947b37db8974dc783d5c1',1,'SDOM::IDisplayObject']]],
-  ['movetotop_5flua_35',['moveToTop_lua',['../namespaceSDOM.html#a589153c6d6e3f35a36f35a739cbdd91f',1,'SDOM']]],
-  ['movetotop_5flua_5fany_36',['moveToTop_lua_any',['../namespaceSDOM.html#af044f13099da5fa2b1a769394ad2494d',1,'SDOM']]]
+  ['movetobottom_34',['moveToBottom',['../classSDOM_1_1IDisplayObject.html#a9d360407addf13332471fbbe2b05d452',1,'SDOM::IDisplayObject']]],
+  ['movetobottom_5flua_35',['moveToBottom_lua',['../namespaceSDOM.html#a2b41b20cca72af2b8af56577c1be6a41',1,'SDOM']]],
+  ['movetobottom_5flua_5fany_36',['moveToBottom_lua_any',['../namespaceSDOM.html#aebe1a2675a6101b67471c5e5f92bdbb0',1,'SDOM']]],
+  ['movetotop_37',['moveToTop',['../classSDOM_1_1IDisplayObject.html#a6c2d2b40744947b37db8974dc783d5c1',1,'SDOM::IDisplayObject']]],
+  ['movetotop_5flua_38',['moveToTop_lua',['../namespaceSDOM.html#a589153c6d6e3f35a36f35a739cbdd91f',1,'SDOM']]],
+  ['movetotop_5flua_5fany_39',['moveToTop_lua_any',['../namespaceSDOM.html#af044f13099da5fa2b1a769394ad2494d',1,'SDOM']]]
 ];

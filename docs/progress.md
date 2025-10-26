@@ -1026,8 +1026,16 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 ---
 ### [October 25, 2025]
-- **IDisplayObject_UnitTests** Progress:
-  - Added Unit Tests for the following **IDisplayObject** Lua bindings:
+### Supporting Improvements
+1. Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** for readable assertions.
+2. Renamed **getBorder()** → **hasBorder()** and **getBackground()** → **hasBackground()** for clearer boolean intent.
+3. Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** helpers for clean, readable test assertions.      
+4. Renamed **getBorder()** to **hasBorder()** and **getBackground()** to **hasBackground()** for clarity and consistency with boolean semantics.
+5. Implemented and fully tested **moveToBottom()**, **moveToTop()**, **bringToFront()**, **sendToBack()**, **sendToBackAfter()** (relative reordering). 
+  > All **Lua descriptor forms** (`*_lua_any`) now tested and confirmed working.
+  > Z-order and priority maintain **stable + predictable ordering** across siblings.
+  > No orphaned objects left behind across add/remove/reparent sequences.
+- **IDisplayObject_UnitTests** -- Added Unit Tests for the following **IDisplayObject** Lua bindings:
     - **Type & Property Access (test #7)**
       - ✅ std::string getName_lua()
       - ✅ void setName_lua(const std::string& newName)
@@ -1090,52 +1098,104 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
       - ✅ void setHidden_lua(IDisplayObject* obj, bool hidden)
       - ✅ bool isVisible_lua(const IDisplayObject* obj)
       - ✅ void setVisible_lua(IDisplayObject* obj, bool visible)    
-  - **Supporting Improvements**
-    - Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** for readable assertions.
-    - Renamed **getBorder()** → **hasBorder()** and **getBackground()** → **hasBackground()** for clearer boolean intent.
-    - Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** helpers for clean, readable test assertions.      
-    - Renamed **getBorder()** to **hasBorder()** and **getBackground()** to **hasBackground()** for clarity and consistency with boolean semantics.
-    - Implemented and fully tested 
-      - **moveToBottom()**, **moveToTop()**, **bringToFront()**, **sendToBack()**, **sendToBackAfter()** (relative reordering)
-      - All **Lua descriptor forms** (`*_lua_any`) now tested and confirmed working.
-      - Z-order and priority maintain **stable + predictable ordering** across siblings.
-      - No orphaned objects left behind across add/remove/reparent sequences.
-    - **IDisplayObject_UnitTests** Output Summary:
-    ```bash
-      Starting [IDisplayObject] Unit Tests...
-      [IDisplayObject] Scaffold [PASSED]
-      [IDisplayObject] Create Stage Object [PASSED]
-      [IDisplayObject] Get and Set Name [PASSED]
-      [IDisplayObject] Destroy the generic Stage Object [PASSED]
-      [IDisplayObject] Dirty/State Management [PASSED]
-      [IDisplayObject] Events and Event Listener Handling [PASSED]
-      [IDisplayObject] Hierarchy Management [PASSED]
-      [IDisplayObject] Type and Property Access [PASSED]
-      [IDisplayObject] Priority and Z-Order [PASSED]
-      [IDisplayObject] Lua Integration [PASSED]
-      [IDisplayObject] Tests [PASSED]
-    ```
-    - **valgrind --leak-check=full ./prog --stop_after_tests**
-      ```
+      - ✅ int getTabPriority_lua(const IDisplayObject* obj)
+      - ✅ void setTabPriority_lua(IDisplayObject* obj, int index)
+      - ✅ bool isTabEnabled_lua(const IDisplayObject* obj)
+      - ✅ void setTabEnabled_lua(IDisplayObject* obj, bool enabled)
+    - **Geometry & Layout (test #10)**
+      - ✅ int getX_lua(const IDisplayObject* obj)
+      - ✅ int getY_lua(const IDisplayObject* obj)
+      - ✅ int getWidth_lua(const IDisplayObject* obj)
+      - ✅ int getHeight_lua(const IDisplayObject* obj)
+      - ✅ void setX_lua(IDisplayObject* obj, int p_x)
+      - ✅ void setY_lua(IDisplayObject* obj, int p_y)
+      - ✅ void setWidth_lua(IDisplayObject* obj, int width)
+      - ✅ void setHeight_lua(IDisplayObject* obj, int height)
+
+    - **Edge Anchors**
+      - ✅ AnchorPoint getAnchorTop_lua(const IDisplayObject* obj)
+      - ✅ AnchorPoint getAnchorLeft_lua(const IDisplayObject* obj)
+      - ✅ AnchorPoint getAnchorBottom_lua(const IDisplayObject* obj)
+      - ✅ AnchorPoint getAnchorRight_lua(const IDisplayObject* obj)
+      - ✅ void setAnchorTop_lua(IDisplayObject* obj, AnchorPoint ap)
+      - ✅ void setAnchorLeft_lua(IDisplayObject* obj, AnchorPoint ap)
+      - ✅ void setAnchorBottom_lua(IDisplayObject* obj, AnchorPoint ap)
+      - ✅ void setAnchorRight_lua(IDisplayObject* obj, AnchorPoint ap)
+      - ✅ void setAnchorTop_lua(IDisplayObject* obj, AnchorPoint ap)
+      - ✅ void setAnchorLeft_lua(IDisplayObject* obj, AnchorPoint ap)
+      - ✅ void setAnchorBottom_lua(IDisplayObject* obj, AnchorPoint ap)
+      - ✅ void setAnchorRight_lua(IDisplayObject* obj, AnchorPoint ap)
+
+    - **World Edge Positions**
+      - ✅ float getLeft_lua(const IDisplayObject* obj)
+      - ✅ float getRight_lua(const IDisplayObject* obj)
+      - ✅ float getTop_lua(const IDisplayObject* obj)
+      - ✅ float getBottom_lua(const IDisplayObject* obj)
+      - ✅ void setLeft_lua(IDisplayObject* obj, float p_left)
+      - ✅ void setRight_lua(IDisplayObject* obj, float p_right)
+      - ✅ void setTop_lua(IDisplayObject* obj, float p_top)
+      - ✅ void setBottom_lua(IDisplayObject* obj, float p_bottom)
+
+    - **Local Edge Positions**
+      - ✅ float getLocalLeft_lua(const IDisplayObject* obj)
+      - ✅ float getLocalRight_lua(const IDisplayObject* obj)
+      - ✅ float getLocalTop_lua(const IDisplayObject* obj)
+      - ✅ float getLocalBottom_lua(const IDisplayObject* obj)
+      - ✅ void setLocalLeft_lua(IDisplayObject* obj, float p_left)
+      - ✅ void setLocalRight_lua(IDisplayObject* obj, float p_right)
+      - ✅ void setLocalTop_lua(IDisplayObject* obj, float p_top)
+      - ✅ void setLocalBottom_lua(IDisplayObject* obj, float p_bottom)
+
+    - **Orphan Retention Policy (test #11)**
+      - ✅ IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* obj, const std::string& s)
+      - ✅ std::string orphanPolicyToString_lua(IDisplayObject* obj, IDisplayObject::OrphanRetentionPolicy p)
+      - ✅ void setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr)
+      - ✅ std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj)
+      - ✅ int getOrphanGrace_lua(const IDisplayObject* obj)
+      - ✅ void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace)
+    - **Lua Integration / Central Binder**
+      - ✅ void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua)
+      
+
+---
+### Next Steps:
+- Continue building out **IDisplayObject_UnitTests.cpp** Unit Test Module to fully test all C++ and LUA properties and functions.
+
+---
+### Long Term To Do:
+- Sweep all DisplayObjects to use the new Lua Binding System.
+- Update all Unit Tests to use the new Lua Binding System.
+  - Achieve full C++ test coverage for each DisplayObject type.
+  - As the final C++ test, run a complete Lua file that mirrors the C++ tests to ensure parity.
+
+---
+## Central Binder
+Central binder is the entry point for **IDisplayObject** Lua bindings. 
+
+`void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua)`
+
+This allows **SDOM_IDisplayObject.cpp** to delegate registration into this module, keeping the class implementation lean while centralizing Lua glue.  We use a thin-delegate binder pattern that keeps the class clean while centralizing all Lua glue.  **IDisplayObject::_registerLuaBindings()** calls the base binder first, then delegates to a free function binder in **SDOM_IDisplayObject_Lua.cpp**, which attaches all Lua-facing methods in one place.  The binder uses idempotent helpers (set_if_absent) so it’s safe to call alongside any in-class bindings during incremental migration.  This approach lets derived display types reuse 80% of the surface by layering their own small binders after the base, and it reduces compile churn by isolating sol2-heavy code in dedicated TUs.  Net result: a leaner **IDisplayObject** implementation, consistent Lua surfaces, and an easy path to expand or refactor bindings without risking regressions.
+
+
+### Supporting Improvements
+1. Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** for readable assertions.
+2. Renamed **getBorder()** → **hasBorder()** and **getBackground()** → **hasBackground()** for clearer boolean intent.
+3. Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** helpers for clean, readable test assertions.      
+4. Renamed **getBorder()** to **hasBorder()** and **getBackground()** to **hasBackground()** for clarity and consistency with boolean semantics.
+5. Implemented and fully tested **moveToBottom()**, **moveToTop()**, **bringToFront()**, **sendToBack()**, **sendToBackAfter()** (relative reordering). 
+  > All **Lua descriptor forms** (`*_lua_any`) now tested and confirmed working.
+  > Z-order and priority maintain **stable + predictable ordering** across siblings.
+  > No orphaned objects left behind across add/remove/reparent sequences.
+---
+### valgrind --leak-check=full ./prog --stop_after_tests
+      ```bash
         ==136007== LEAK SUMMARY:
         ==136007==    definitely lost: 0 bytes in 0 blocks
         ==136007==    indirectly lost: 0 bytes in 0 blocks
         ==136007==      possibly lost: 0 bytes in 0 blocks
         ==136007==    still reachable: 287,117 bytes in 3,600 blocks
         ==136007==         suppressed: 0 bytes in 0 blocks
-
-      ```
-
----
-## Next Steps:
-- Continue building out **IDisplayObject_UnitTests.cpp** Unit Test Module to fully test all C++ and LUA properties and functions.
-
----
-## Long Term To Do:
-- Sweep all DisplayObjects to use the new Lua Binding System.
-- Update all Unit Tests to use the new Lua Binding System.
-  - Achieve full C++ test coverage for each DisplayObject type.
-  - As the final C++ test, run a complete Lua file that mirrors the C++ tests to ensure parity.
+        ```
 
 ## Current DisplayObject Inheritance Hierarchy:
 ```

@@ -116,6 +116,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a479d5c5b443cc1b058ad3bde4a5930c9" id="r_a479d5c5b443cc1b058ad3bde4a5930c9"><td class="memItemLeft" align="right" valign="top">static SDL_FRect&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a479d5c5b443cc1b058ad3bde4a5930c9">tableToFRect</a> (const sol::table &amp;t)</td></tr>
 <tr class="memitem:a569aa2a81fb0eb6c7897b5e565779599" id="r_a569aa2a81fb0eb6c7897b5e565779599"><td class="memItemLeft" align="right" valign="top">static SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a569aa2a81fb0eb6c7897b5e565779599">colorFromSol</a> (const sol::object &amp;o)</td></tr>
 <tr class="memitem:a3d0511ff63753f1311697d941f6c7fc3" id="r_a3d0511ff63753f1311697d941f6c7fc3"><td class="memItemLeft" align="right" valign="top">static SDL_ScaleMode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d0511ff63753f1311697d941f6c7fc3">scaleModeFromSol</a> (const sol::object &amp;o)</td></tr>
+<tr class="memitem:ac3addb13eb009dc83eda733808041e14" id="r_ac3addb13eb009dc83eda733808041e14"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3addb13eb009dc83eda733808041e14">color_equal</a> (const SDL_Color &amp;a, const SDL_Color &amp;b)</td></tr>
+<tr class="memitem:adc11a85a607cf0afc180dee8b3fd280e" id="r_adc11a85a607cf0afc180dee8b3fd280e"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc11a85a607cf0afc180dee8b3fd280e">color_not_equal</a> (const SDL_Color &amp;a, const SDL_Color &amp;b)</td></tr>
+<tr class="memitem:ae9bfceaf2290e47aebedd62b9283cb14" id="r_ae9bfceaf2290e47aebedd62b9283cb14"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9bfceaf2290e47aebedd62b9283cb14">color_near</a> (const SDL_Color &amp;a, const SDL_Color &amp;b, Uint8 tolerance=1)</td></tr>
+<tr class="memitem:a2ca4474289c1f7bf2caafd17b54e40f7" id="r_a2ca4474289c1f7bf2caafd17b54e40f7"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ca4474289c1f7bf2caafd17b54e40f7">color_to_string</a> (const SDL_Color &amp;c)</td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad58424ffb980e2133bdb261b07846637" name="ad58424ffb980e2133bdb261b07846637"></a>
@@ -169,6 +173,123 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ac3addb13eb009dc83eda733808041e14" name="ac3addb13eb009dc83eda733808041e14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3addb13eb009dc83eda733808041e14">&#9670;&#160;</a></span>color_equal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::SDL_Utils::color_equal </td>
+          <td>(</td>
+          <td class="paramtype">const SDL_Color &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const SDL_Color &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae9bfceaf2290e47aebedd62b9283cb14" name="ae9bfceaf2290e47aebedd62b9283cb14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9bfceaf2290e47aebedd62b9283cb14">&#9670;&#160;</a></span>color_near()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::SDL_Utils::color_near </td>
+          <td>(</td>
+          <td class="paramtype">const SDL_Color &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const SDL_Color &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Uint8</td>          <td class="paramname"><span class="paramname"><em>tolerance</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc11a85a607cf0afc180dee8b3fd280e" name="adc11a85a607cf0afc180dee8b3fd280e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc11a85a607cf0afc180dee8b3fd280e">&#9670;&#160;</a></span>color_not_equal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::SDL_Utils::color_not_equal </td>
+          <td>(</td>
+          <td class="paramtype">const SDL_Color &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const SDL_Color &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2ca4474289c1f7bf2caafd17b54e40f7" name="a2ca4474289c1f7bf2caafd17b54e40f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ca4474289c1f7bf2caafd17b54e40f7">&#9670;&#160;</a></span>color_to_string()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::SDL_Utils::color_to_string </td>
+          <td>(</td>
+          <td class="paramtype">const SDL_Color &amp;</td>          <td class="paramname"><span class="paramname"><em>c</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a569aa2a81fb0eb6c7897b5e565779599" name="a569aa2a81fb0eb6c7897b5e565779599"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a569aa2a81fb0eb6c7897b5e565779599">&#9670;&#160;</a></span>colorFromSol()</h2>
 

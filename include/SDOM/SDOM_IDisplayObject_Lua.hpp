@@ -175,11 +175,6 @@ namespace SDOM
     void setLocalTop_lua(IDisplayObject* obj, float p_top);         
     void setLocalBottom_lua(IDisplayObject* obj, float p_bottom);  
 
-    // Central binder entry point for IDisplayObject Lua bindings. This allows
-    // SDOM_IDisplayObject.cpp to delegate registration into this module,
-    // keeping the class implementation lean while centralizing Lua glue.
-    void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua);
-
     // --- ✅ Orphan Retention Policy --- //
     IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* obj, const std::string& s);
     std::string orphanPolicyToString_lua(IDisplayObject* obj, IDisplayObject::OrphanRetentionPolicy p);
@@ -190,5 +185,9 @@ namespace SDOM
     int getOrphanGrace_lua(const IDisplayObject* obj);                              
     void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace);  
 
+    // Central binder entry point for IDisplayObject Lua bindings. This allows
+    // SDOM_IDisplayObject.cpp to delegate registration into this module,
+    // keeping the class implementation lean while centralizing Lua glue.
+    void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua);
 
 } // END: namespace SDOM

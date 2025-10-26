@@ -2,6 +2,10 @@ var classSDOM_1_1SDL__Utils =
 [
     [ "SDL_Utils", "classSDOM_1_1SDL__Utils.html#ad58424ffb980e2133bdb261b07846637", null ],
     [ "~SDL_Utils", "classSDOM_1_1SDL__Utils.html#abb9e5105a0afac653511588662327389", null ],
+    [ "color_equal", "classSDOM_1_1SDL__Utils.html#ac3addb13eb009dc83eda733808041e14", null ],
+    [ "color_near", "classSDOM_1_1SDL__Utils.html#ae9bfceaf2290e47aebedd62b9283cb14", null ],
+    [ "color_not_equal", "classSDOM_1_1SDL__Utils.html#adc11a85a607cf0afc180dee8b3fd280e", null ],
+    [ "color_to_string", "classSDOM_1_1SDL__Utils.html#a2ca4474289c1f7bf2caafd17b54e40f7", null ],
     [ "colorFromSol", "classSDOM_1_1SDL__Utils.html#a569aa2a81fb0eb6c7897b5e565779599", null ],
     [ "eventToLuaTable", "classSDOM_1_1SDL__Utils.html#aa077a66bd09fa07bd0733b396d81ba23", null ],
     [ "eventTypeFromString", "classSDOM_1_1SDL__Utils.html#a15e7cc9c1c4259d53bf6b2ceecc9b3b9", null ],

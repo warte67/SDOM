@@ -100,7 +100,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1e79ed95db86daf166bb72932fed97b5" id="r_a1e79ed95db86daf166bb72932fed97b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e79ed95db86daf166bb72932fed97b5">UnitTests</a> (const UnitTests &amp;)=delete</td></tr>
 <tr class="memitem:ab77bcbf342559b3309d761898566014d" id="r_ab77bcbf342559b3309d761898566014d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1e79ed95db86daf166bb72932fed97b5">UnitTests</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab77bcbf342559b3309d761898566014d">operator=</a> (const <a class="el" href="#a1e79ed95db86daf166bb72932fed97b5">UnitTests</a> &amp;)=delete</td></tr>
 <tr class="memitem:aa04b15f4ed9bdd43aac8a91708793abe" id="r_aa04b15f4ed9bdd43aac8a91708793abe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa04b15f4ed9bdd43aac8a91708793abe">clear_tests</a> ()</td></tr>
-<tr class="memitem:a34b7575fa8f5f47144ad1750f974d913" id="r_a34b7575fa8f5f47144ad1750f974d913"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34b7575fa8f5f47144ad1750f974d913">add_test</a> (const std::string &amp;name, std::function&lt; bool(std::vector&lt; std::string &gt; &amp;)&gt; func)</td></tr>
+<tr class="memitem:a31d4d291f8b1119b213d1f51e49d4ce1" id="r_a31d4d291f8b1119b213d1f51e49d4ce1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31d4d291f8b1119b213d1f51e49d4ce1">add_test</a> (const std::string &amp;name, std::function&lt; bool(std::vector&lt; std::string &gt; &amp;)&gt; func, bool is_implemented=true)</td></tr>
 <tr class="memitem:a4d840a8d5fdec42718beeb59b90febfe" id="r_a4d840a8d5fdec42718beeb59b90febfe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d840a8d5fdec42718beeb59b90febfe">run_all</a> (const std::string &amp;objName)</td></tr>
 <tr class="memitem:a51215fd3dbc531a9c31494a323818bc7" id="r_a51215fd3dbc531a9c31494a323818bc7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51215fd3dbc531a9c31494a323818bc7">push_error</a> (const std::string &amp;error)</td></tr>
 <tr class="memitem:a3a21dea151d3ed2832db254612c4478d" id="r_a3a21dea151d3ed2832db254612c4478d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a21dea151d3ed2832db254612c4478d">run_lua_tests</a> (std::vector&lt; std::string &gt; &amp;errors, const std::string &amp;filename)</td></tr>
@@ -112,6 +112,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8c0f133c131e5acef12a2ffbd275064e" id="r_a8c0f133c131e5acef12a2ffbd275064e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1EventManager.html">EventManager</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c0f133c131e5acef12a2ffbd275064e">getEventManager</a> () const</td></tr>
 <tr class="memitem:ad0237775decb8b96fddc1545cdf9beb8" id="r_ad0237775decb8b96fddc1545cdf9beb8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0237775decb8b96fddc1545cdf9beb8">getIsTraversing</a> () const</td></tr>
 <tr class="memitem:aa8818c326f3221af590af43e201d5494" id="r_aa8818c326f3221af590af43e201d5494"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8818c326f3221af590af43e201d5494">setIsTraversing</a> (bool traversing)</td></tr>
+<tr class="memitem:a3c1b7047e61073eee5f5fa84e1394bff" id="r_a3c1b7047e61073eee5f5fa84e1394bff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c1b7047e61073eee5f5fa84e1394bff">setLuaFilename</a> (const std::string &amp;filename)</td></tr>
+<tr class="memitem:ab9f7936c51476ca5889aa2cbe7b7dd45" id="r_ab9f7936c51476ca5889aa2cbe7b7dd45"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9f7936c51476ca5889aa2cbe7b7dd45">getLuaFilename</a> () const</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -150,8 +152,8 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a34b7575fa8f5f47144ad1750f974d913" name="a34b7575fa8f5f47144ad1750f974d913"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34b7575fa8f5f47144ad1750f974d913">&#9670;&#160;</a></span>add_test()</h2>
+<a id="a31d4d291f8b1119b213d1f51e49d4ce1" name="a31d4d291f8b1119b213d1f51e49d4ce1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31d4d291f8b1119b213d1f51e49d4ce1">&#9670;&#160;</a></span>add_test()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -164,7 +166,12 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::function&lt; bool(std::vector&lt; std::string &gt; &amp;)&gt;</td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
+          <td class="paramtype">std::function&lt; bool(std::vector&lt; std::string &gt; &amp;)&gt;</td>          <td class="paramname"><span class="paramname"><em>func</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>is_implemented</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -277,6 +284,31 @@ Static Public Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab9f7936c51476ca5889aa2cbe7b7dd45" name="ab9f7936c51476ca5889aa2cbe7b7dd45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9f7936c51476ca5889aa2cbe7b7dd45">&#9670;&#160;</a></span>getLuaFilename()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::UnitTests::getLuaFilename </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -461,6 +493,31 @@ template&lt;typename Func&gt; </div>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3c1b7047e61073eee5f5fa84e1394bff" name="a3c1b7047e61073eee5f5fa84e1394bff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c1b7047e61073eee5f5fa84e1394bff">&#9670;&#160;</a></span>setLuaFilename()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::UnitTests::setLuaFilename </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

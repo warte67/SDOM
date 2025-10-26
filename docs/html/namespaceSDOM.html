@@ -443,6 +443,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a9c1900f2723ea8d727467d979faf486d" id="r_a9c1900f2723ea8d727467d979faf486d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c1900f2723ea8d727467d979faf486d">getChild_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, std::string name)</td></tr>
 <tr class="memitem:aa48282e917f71a1436359cd1230dfda0" id="r_aa48282e917f71a1436359cd1230dfda0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa48282e917f71a1436359cd1230dfda0">removeChild_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> child)</td></tr>
 <tr class="memitem:a08c1dc5dc48ffa81c0181456c4bf47cb" id="r_a08c1dc5dc48ffa81c0181456c4bf47cb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08c1dc5dc48ffa81c0181456c4bf47cb">removeChild_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const std::string &amp;name)</td></tr>
+<tr class="memitem:afd3334e06fecdbb0abf3f48fc81decdc" id="r_afd3334e06fecdbb0abf3f48fc81decdc"><td class="memItemLeft" align="right" valign="top">sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd3334e06fecdbb0abf3f48fc81decdc">getChildren_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, sol::this_state ts)</td></tr>
+<tr class="memitem:a8b94495d66d934e0af7c019aa6ad8dde" id="r_a8b94495d66d934e0af7c019aa6ad8dde"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b94495d66d934e0af7c019aa6ad8dde">countChildren_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:a3a42833a855b321dce4f810bad531abd" id="r_a3a42833a855b321dce4f810bad531abd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a42833a855b321dce4f810bad531abd">hasChild_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> child)</td></tr>
 <tr class="memitem:af8b77a58a5a9102fe1be93e068028d81" id="r_af8b77a58a5a9102fe1be93e068028d81"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8b77a58a5a9102fe1be93e068028d81">getParent_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:acd082f6dccea0571093a58a13afde570" id="r_acd082f6dccea0571093a58a13afde570"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd082f6dccea0571093a58a13afde570">setParent_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &amp;parent)</td></tr>
@@ -470,12 +472,17 @@ Functions</h2></td></tr>
 <tr class="memitem:a9bffcd56b9969bee41211e38f76ef9db" id="r_a9bffcd56b9969bee41211e38f76ef9db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9bffcd56b9969bee41211e38f76ef9db">setOutlineColor_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;colorObj)</td></tr>
 <tr class="memitem:a0e179de8729f62cd637e684eca0a49f1" id="r_a0e179de8729f62cd637e684eca0a49f1"><td class="memItemLeft" align="right" valign="top">SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e179de8729f62cd637e684eca0a49f1">getDropshadowColor_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:aae6c501abf5c075cebc68fed8445b2ee" id="r_aae6c501abf5c075cebc68fed8445b2ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae6c501abf5c075cebc68fed8445b2ee">setDropshadowColor_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;colorObj)</td></tr>
-<tr class="memitem:a07549a56ea17b26c2572e3f1c92f0b4b" id="r_a07549a56ea17b26c2572e3f1c92f0b4b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07549a56ea17b26c2572e3f1c92f0b4b">getName_handle_lua</a> (<a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &amp;self)</td></tr>
+<tr class="memitem:abfb395e49aab4e91bd563a619c99e641" id="r_abfb395e49aab4e91bd563a619c99e641"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfb395e49aab4e91bd563a619c99e641">hasBorder_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
+<tr class="memitem:a9e8ed693ae6e204833b64e64a9fc9ec4" id="r_a9e8ed693ae6e204833b64e64a9fc9ec4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e8ed693ae6e204833b64e64a9fc9ec4">hasBackground_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
+<tr class="memitem:a5c3958b337114ad3802e9fa5a8d8aad1" id="r_a5c3958b337114ad3802e9fa5a8d8aad1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c3958b337114ad3802e9fa5a8d8aad1">setBorder_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, bool hasBorder)</td></tr>
+<tr class="memitem:a4f78a9a77654eef5472f91f03db0aba3" id="r_a4f78a9a77654eef5472f91f03db0aba3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f78a9a77654eef5472f91f03db0aba3">setBackground_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, bool hasBackground)</td></tr>
 <tr class="memitem:a7a9e74e0966b508612cbfc62b6a374f9" id="r_a7a9e74e0966b508612cbfc62b6a374f9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a9e74e0966b508612cbfc62b6a374f9">getMaxPriority_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:a77e3814030765d9a4c830f555057566e" id="r_a77e3814030765d9a4c830f555057566e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77e3814030765d9a4c830f555057566e">getMinPriority_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:a27025f637ed62f1f6960ec32ed6715fd" id="r_a27025f637ed62f1f6960ec32ed6715fd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27025f637ed62f1f6960ec32ed6715fd">getPriority_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:ad8dc63f96e119c83eb1bafb59e7613b0" id="r_ad8dc63f96e119c83eb1bafb59e7613b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8dc63f96e119c83eb1bafb59e7613b0">setToHighestPriority_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:a210feedffcbc00f54b9b745e85419194" id="r_a210feedffcbc00f54b9b745e85419194"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a210feedffcbc00f54b9b745e85419194">setToLowestPriority_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
+<tr class="memitem:aaa361eb1c10c3ac0e7bef18cc8bdb9b3" id="r_aaa361eb1c10c3ac0e7bef18cc8bdb9b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa361eb1c10c3ac0e7bef18cc8bdb9b3">setToHighestPriority_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
+<tr class="memitem:a291062079ac3bd1d2636db918b06e846" id="r_a291062079ac3bd1d2636db918b06e846"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a291062079ac3bd1d2636db918b06e846">setToLowestPriority_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
 <tr class="memitem:ad7a204078ea9405c1457b412b62d097e" id="r_ad7a204078ea9405c1457b412b62d097e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7a204078ea9405c1457b412b62d097e">sortChildrenByPriority_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:a8ab1d476802759644b6ffa8816f169d5" id="r_a8ab1d476802759644b6ffa8816f169d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ab1d476802759644b6ffa8816f169d5">setPriority_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, int priority)</td></tr>
 <tr class="memitem:a759bc91168eb46570f501d01fbd76537" id="r_a759bc91168eb46570f501d01fbd76537"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a759bc91168eb46570f501d01fbd76537">setPriority_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
@@ -483,15 +490,17 @@ Functions</h2></td></tr>
 <tr class="memitem:a4bf252fd97ca02fc569702dea9b59a04" id="r_a4bf252fd97ca02fc569702dea9b59a04"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4bf252fd97ca02fc569702dea9b59a04">getChildrenPriorities_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:a589153c6d6e3f35a36f35a739cbdd91f" id="r_a589153c6d6e3f35a36f35a739cbdd91f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a589153c6d6e3f35a36f35a739cbdd91f">moveToTop_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:af044f13099da5fa2b1a769394ad2494d" id="r_af044f13099da5fa2b1a769394ad2494d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af044f13099da5fa2b1a769394ad2494d">moveToTop_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
+<tr class="memitem:a2b41b20cca72af2b8af56577c1be6a41" id="r_a2b41b20cca72af2b8af56577c1be6a41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b41b20cca72af2b8af56577c1be6a41">moveToBottom_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
+<tr class="memitem:aebe1a2675a6101b67471c5e5f92bdbb0" id="r_aebe1a2675a6101b67471c5e5f92bdbb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aebe1a2675a6101b67471c5e5f92bdbb0">moveToBottom_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
+<tr class="memitem:ae53cdbe29003156c0b81c801251c3019" id="r_ae53cdbe29003156c0b81c801251c3019"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae53cdbe29003156c0b81c801251c3019">bringToFront_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
+<tr class="memitem:a233058ad212345b928e07c7af6057585" id="r_a233058ad212345b928e07c7af6057585"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a233058ad212345b928e07c7af6057585">bringToFront_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
+<tr class="memitem:a270481aaefbf6f39834d954d2eea307a" id="r_a270481aaefbf6f39834d954d2eea307a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a270481aaefbf6f39834d954d2eea307a">sendToBack_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
+<tr class="memitem:a6a71b678830cb627c07d5180319f50ac" id="r_a6a71b678830cb627c07d5180319f50ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a71b678830cb627c07d5180319f50ac">sendToBack_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
+<tr class="memitem:a9f2c249e1ced6049d060d8ec43263ec0" id="r_a9f2c249e1ced6049d060d8ec43263ec0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f2c249e1ced6049d060d8ec43263ec0">sendToBackAfter_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *limitObj)</td></tr>
+<tr class="memitem:a1aba7dd1af5954c4701fd8ec5f0385da" id="r_a1aba7dd1af5954c4701fd8ec5f0385da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1aba7dd1af5954c4701fd8ec5f0385da">sendToBackAfter_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor, const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *limitObj)</td></tr>
 <tr class="memitem:a1a75e82b386407f34d0341470b94068f" id="r_a1a75e82b386407f34d0341470b94068f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a75e82b386407f34d0341470b94068f">getZOrder_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:aea7ba2e7610915f9cbcfbdcfe19ba7f7" id="r_aea7ba2e7610915f9cbcfbdcfe19ba7f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea7ba2e7610915f9cbcfbdcfe19ba7f7">setZOrder_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, int z_order)</td></tr>
 <tr class="memitem:a87a6db21dd201f3b1220cb9c4dd0c4b8" id="r_a87a6db21dd201f3b1220cb9c4dd0c4b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a87a6db21dd201f3b1220cb9c4dd0c4b8">setZOrder_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
-<tr class="memitem:af15211500a27cd723ac5e8dcc83c46ee" id="r_af15211500a27cd723ac5e8dcc83c46ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af15211500a27cd723ac5e8dcc83c46ee">getBorder_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
-<tr class="memitem:a77454681c67bfdbc76c966139427bf35" id="r_a77454681c67bfdbc76c966139427bf35"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77454681c67bfdbc76c966139427bf35">getBackground_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
-<tr class="memitem:a5c3958b337114ad3802e9fa5a8d8aad1" id="r_a5c3958b337114ad3802e9fa5a8d8aad1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c3958b337114ad3802e9fa5a8d8aad1">setBorder_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, bool hasBorder)</td></tr>
-<tr class="memitem:a4f78a9a77654eef5472f91f03db0aba3" id="r_a4f78a9a77654eef5472f91f03db0aba3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f78a9a77654eef5472f91f03db0aba3">setBackground_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, bool hasBackground)</td></tr>
-<tr class="memitem:aaa361eb1c10c3ac0e7bef18cc8bdb9b3" id="r_aaa361eb1c10c3ac0e7bef18cc8bdb9b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa361eb1c10c3ac0e7bef18cc8bdb9b3">setToHighestPriority_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
-<tr class="memitem:a291062079ac3bd1d2636db918b06e846" id="r_a291062079ac3bd1d2636db918b06e846"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a291062079ac3bd1d2636db918b06e846">setToLowestPriority_lua_any</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, const sol::object &amp;descriptor)</td></tr>
 <tr class="memitem:a207dfd4f0339c3fec13bfa15d83a43da" id="r_a207dfd4f0339c3fec13bfa15d83a43da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a207dfd4f0339c3fec13bfa15d83a43da">setKeyboardFocus_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:a3fb566dc93280bd24f5d67d758a26325" id="r_a3fb566dc93280bd24f5d67d758a26325"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fb566dc93280bd24f5d67d758a26325">isKeyboardFocused_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:a0d440ddfc805b7812bddef70f567ad98" id="r_a0d440ddfc805b7812bddef70f567ad98"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d440ddfc805b7812bddef70f567ad98">isMouseHovered_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
@@ -545,6 +554,7 @@ Functions</h2></td></tr>
 <tr class="memitem:af5ad579ee169875f1948ef3a29f47814" id="r_af5ad579ee169875f1948ef3a29f47814"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5ad579ee169875f1948ef3a29f47814">getOrphanRetentionPolicyString_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:ac2edae42e0c29366f5eca1683b817056" id="r_ac2edae42e0c29366f5eca1683b817056"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac2edae42e0c29366f5eca1683b817056">getOrphanGrace_lua</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
 <tr class="memitem:ad6ad76e2aa96ee58b9dab16d090226c4" id="r_ad6ad76e2aa96ee58b9dab16d090226c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6ad76e2aa96ee58b9dab16d090226c4">setOrphanGrace_lua</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj, std::chrono::milliseconds grace)</td></tr>
+<tr class="memitem:a7e45ef5e6441e5c83e73d22476465d6a" id="r_a7e45ef5e6441e5c83e73d22476465d6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e45ef5e6441e5c83e73d22476465d6a">bind_IDisplayObject_lua</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
 <tr class="memitem:a88d40851886412ed590f8b021e5c6693" id="r_a88d40851886412ed590f8b021e5c6693"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88d40851886412ed590f8b021e5c6693">operator!=</a> (const <a class="el" href="structSDOM_1_1FontStyle.html">SDOM::FontStyle</a> &amp;a, const <a class="el" href="structSDOM_1_1FontStyle.html">SDOM::FontStyle</a> &amp;b)</td></tr>
 <tr class="memitem:a9e599b8a2c8749bf74559baa66db5575" id="r_a9e599b8a2c8749bf74559baa66db5575"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e599b8a2c8749bf74559baa66db5575">operator==</a> (const <a class="el" href="structSDOM_1_1FontStyle.html">SDOM::FontStyle</a> &amp;a, const <a class="el" href="structSDOM_1_1FontStyle.html">SDOM::FontStyle</a> &amp;b)</td></tr>
 <tr class="memitem:a9c56125987bd1ed7efbcc59e678a2be2" id="r_a9c56125987bd1ed7efbcc59e678a2be2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c56125987bd1ed7efbcc59e678a2be2">quit</a> ()</td></tr>
@@ -1093,6 +1103,65 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">void SDOM::addEventListener_lua_any_short </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const sol::object &amp;</td>          <td class="paramname"><span class="paramname"><em>descriptor</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7e45ef5e6441e5c83e73d22476465d6a" name="a7e45ef5e6441e5c83e73d22476465d6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e45ef5e6441e5c83e73d22476465d6a">&#9670;&#160;</a></span>bind_IDisplayObject_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::bind_IDisplayObject_lua </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>lua</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae53cdbe29003156c0b81c801251c3019" name="ae53cdbe29003156c0b81c801251c3019"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae53cdbe29003156c0b81c801251c3019">&#9670;&#160;</a></span>bringToFront_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::bringToFront_lua </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a233058ad212345b928e07c7af6057585" name="a233058ad212345b928e07c7af6057585"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a233058ad212345b928e07c7af6057585">&#9670;&#160;</a></span>bringToFront_lua_any()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::bringToFront_lua_any </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span>, </td>
         </tr>
@@ -2269,6 +2338,23 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a8b94495d66d934e0af7c019aa6ad8dde" name="a8b94495d66d934e0af7c019aa6ad8dde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b94495d66d934e0af7c019aa6ad8dde">&#9670;&#160;</a></span>countChildren_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM::countChildren_lua </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aedd46ea1ab9af6b9314aa077a80196dd" name="aedd46ea1ab9af6b9314aa077a80196dd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aedd46ea1ab9af6b9314aa077a80196dd">&#9670;&#160;</a></span>countOrphanedDisplayObjects_lua()</h2>
 
@@ -2481,23 +2567,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a77454681c67bfdbc76c966139427bf35" name="a77454681c67bfdbc76c966139427bf35"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77454681c67bfdbc76c966139427bf35">&#9670;&#160;</a></span>getBackground_lua()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SDOM::getBackground_lua </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a22f5104a501bb4e36530b4cc780687f2" name="a22f5104a501bb4e36530b4cc780687f2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a22f5104a501bb4e36530b4cc780687f2">&#9670;&#160;</a></span>getBackgroundColor_lua()</h2>
 
@@ -2506,23 +2575,6 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">SDL_Color SDOM::getBackgroundColor_lua </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af15211500a27cd723ac5e8dcc83c46ee" name="af15211500a27cd723ac5e8dcc83c46ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af15211500a27cd723ac5e8dcc83c46ee">&#9670;&#160;</a></span>getBorder_lua()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SDOM::getBorder_lua </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
           <td></td>
@@ -2598,6 +2650,27 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afd3334e06fecdbb0abf3f48fc81decdc" name="afd3334e06fecdbb0abf3f48fc81decdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd3334e06fecdbb0abf3f48fc81decdc">&#9670;&#160;</a></span>getChildren_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sol::table SDOM::getChildren_lua </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">sol::this_state</td>          <td class="paramname"><span class="paramname"><em>ts</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2954,23 +3027,6 @@ Variables</h2></td></tr>
           <td class="memname"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> SDOM::getMouseHoveredObject_lua </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a07549a56ea17b26c2572e3f1c92f0b4b" name="a07549a56ea17b26c2572e3f1c92f0b4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a07549a56ea17b26c2572e3f1c92f0b4b">&#9670;&#160;</a></span>getName_handle_lua()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string SDOM::getName_handle_lua </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>self</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -3386,6 +3442,40 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a9e8ed693ae6e204833b64e64a9fc9ec4" name="a9e8ed693ae6e204833b64e64a9fc9ec4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e8ed693ae6e204833b64e64a9fc9ec4">&#9670;&#160;</a></span>hasBackground_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::hasBackground_lua </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abfb395e49aab4e91bd563a619c99e641" name="abfb395e49aab4e91bd563a619c99e641"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfb395e49aab4e91bd563a619c99e641">&#9670;&#160;</a></span>hasBorder_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::hasBorder_lua </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a3a42833a855b321dce4f810bad531abd" name="a3a42833a855b321dce4f810bad531abd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3a42833a855b321dce4f810bad531abd">&#9670;&#160;</a></span>hasChild_lua()</h2>
 
@@ -3731,6 +3821,44 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2b41b20cca72af2b8af56577c1be6a41" name="a2b41b20cca72af2b8af56577c1be6a41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b41b20cca72af2b8af56577c1be6a41">&#9670;&#160;</a></span>moveToBottom_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::moveToBottom_lua </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aebe1a2675a6101b67471c5e5f92bdbb0" name="aebe1a2675a6101b67471c5e5f92bdbb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebe1a2675a6101b67471c5e5f92bdbb0">&#9670;&#160;</a></span>moveToBottom_lua_any()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::moveToBottom_lua_any </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const sol::object &amp;</td>          <td class="paramname"><span class="paramname"><em>descriptor</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4348,6 +4476,91 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a270481aaefbf6f39834d954d2eea307a" name="a270481aaefbf6f39834d954d2eea307a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a270481aaefbf6f39834d954d2eea307a">&#9670;&#160;</a></span>sendToBack_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::sendToBack_lua </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6a71b678830cb627c07d5180319f50ac" name="a6a71b678830cb627c07d5180319f50ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a71b678830cb627c07d5180319f50ac">&#9670;&#160;</a></span>sendToBack_lua_any()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::sendToBack_lua_any </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const sol::object &amp;</td>          <td class="paramname"><span class="paramname"><em>descriptor</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9f2c249e1ced6049d060d8ec43263ec0" name="a9f2c249e1ced6049d060d8ec43263ec0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f2c249e1ced6049d060d8ec43263ec0">&#9670;&#160;</a></span>sendToBackAfter_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::sendToBackAfter_lua </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>limitObj</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1aba7dd1af5954c4701fd8ec5f0385da" name="a1aba7dd1af5954c4701fd8ec5f0385da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1aba7dd1af5954c4701fd8ec5f0385da">&#9670;&#160;</a></span>sendToBackAfter_lua_any()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::sendToBackAfter_lua_any </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>obj</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const sol::object &amp;</td>          <td class="paramname"><span class="paramname"><em>descriptor</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *</td>          <td class="paramname"><span class="paramname"><em>limitObj</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
