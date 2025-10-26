@@ -408,8 +408,51 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared DisplayHandle handle usertype
-        // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
+        // Augment the shared DisplayHandle with range-control helpers
+        sol::table handleTbl;
+        try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
+        if (!handleTbl.valid()) {
+            handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
+        }
+
+        auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
+            sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                tbl.set_function(name, std::forward<decltype(fn)>(fn));
+            }
+        };
+
+        auto getValue_bind = [](SDOM::DisplayHandle& self) -> float {
+            auto* r = self.as<IRangeControl>();
+            return r ? r->getValue() : 0.0f;
+        };
+        auto setValue_bind = [](SDOM::DisplayHandle& self, double v) {
+            auto* r = self.as<IRangeControl>();
+            if (r) r->setValue(static_cast<float>(v));
+        };
+        auto getMin_bind = [](SDOM::DisplayHandle& self) -> float {
+            auto* r = self.as<IRangeControl>();
+            return r ? r->getMin() : 0.0f;
+        };
+        auto setMin_bind = [](SDOM::DisplayHandle& self, double v) {
+            auto* r = self.as<IRangeControl>();
+            if (r) r->setMin(static_cast<float>(v));
+        };
+        auto getMax_bind = [](SDOM::DisplayHandle& self) -> float {
+            auto* r = self.as<IRangeControl>();
+            return r ? r->getMax() : 0.0f;
+        };
+        auto setMax_bind = [](SDOM::DisplayHandle& self, double v) {
+            auto* r = self.as<IRangeControl>();
+            if (r) r->setMax(static_cast<float>(v));
+        };
+
+        set_if_absent(handleTbl, "getValue", getValue_bind);
+        set_if_absent(handleTbl, "setValue", setValue_bind);
+        set_if_absent(handleTbl, "getMin", getMin_bind);
+        set_if_absent(handleTbl, "setMin", setMin_bind);
+        set_if_absent(handleTbl, "getMax", getMax_bind);
+        set_if_absent(handleTbl, "setMax", setMax_bind);
 
 
     } // END: void IRangeControl::_registerLuaBindings(const std::string& typeName, sol::state_view lua)

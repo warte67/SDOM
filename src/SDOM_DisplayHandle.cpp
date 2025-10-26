@@ -8,6 +8,7 @@
 #include <SDOM/SDOM_DisplayHandle.hpp>
 #include <SDOM/SDOM_Label.hpp>
 #include <SDOM/SDOM_IPanelObject.hpp>
+#include <SDOM/SDOM_IRangeControl.hpp>
 
 namespace SDOM
 {        
@@ -111,6 +112,24 @@ namespace SDOM
             std::string k;
             try { k = key.as<std::string>(); } catch(...) { return sol::lua_nil; }
 
+            // Fast-path for common dynamic properties on specific types
+            if (k == "value") {
+                if (auto* r = self.as<IRangeControl>()) {
+                    return sol::make_object(L, r->getValue());
+                }
+                return sol::lua_nil;
+            } else if (k == "min") {
+                if (auto* r = self.as<IRangeControl>()) {
+                    return sol::make_object(L, r->getMin());
+                }
+                return sol::lua_nil;
+            } else if (k == "max") {
+                if (auto* r = self.as<IRangeControl>()) {
+                    return sol::make_object(L, r->getMax());
+                }
+                return sol::lua_nil;
+            }
+
             // Fetch the current usertype table from globals to avoid capturing
             // a stale handle. Some sol builds expose usertype as table.
             sol::table tbl;
@@ -132,10 +151,11 @@ namespace SDOM
             if (member.get_type() == sol::type::function) {
                 sol::protected_function fn = member;
                 // Return a closure that gracefully supports both colon-style
-                // (self auto-inserted) and dot-style (no self) calls.
+                // (self auto-inserted) and dot-style (no self) calls. If a
+                // call with DisplayHandle self fails, retry with raw pointer.
                 auto wrapper = [fn, self](sol::variadic_args va, sol::this_state s) -> sol::object {
                     sol::state_view lua(s);
-                    bool hasSelf = false;
+                    bool selfIsFirstHandle = false;
                     if (va.size() > 0) {
                         auto it = va.begin();
                         sol::object first = *it;
@@ -143,31 +163,88 @@ namespace SDOM
                             if (first.is<DisplayHandle>()) {
                                 DisplayHandle maybeSelf = first.as<DisplayHandle>();
                                 if (maybeSelf == self) {
-                                    hasSelf = true;
+                                    selfIsFirstHandle = true;
                                 }
                             }
                         } catch(...) {}
                     }
 
-                    std::vector<sol::object> args;
-                    if (!hasSelf) {
-                        args.reserve(1 + va.size());
-                        args.push_back(sol::make_object(lua, self));
-                    } else {
-                        args.reserve(va.size());
-                    }
-                    for (auto v : va) args.push_back(sol::make_object(lua, v));
+                    auto build_args_with = [&](const sol::object& selfObj) {
+                        std::vector<sol::object> out;
+                        if (!selfIsFirstHandle) {
+                            out.reserve(1 + va.size());
+                            out.push_back(selfObj);
+                            for (auto v : va) out.push_back(sol::make_object(lua, v));
+                        } else {
+                            // Replace the first argument (self) with the provided selfObj
+                            out.reserve(va.size());
+                            bool first = true;
+                            for (auto v : va) {
+                                if (first) {
+                                    out.push_back(selfObj);
+                                    first = false;
+                                } else {
+                                    out.push_back(sol::make_object(lua, v));
+                                }
+                            }
+                        }
+                        return out;
+                    };
 
-                    sol::protected_function_result r = fn.call(args);
-                    if (!r.valid()) {
+                    // First attempt: pass DisplayHandle as self
+                    std::vector<sol::object> args1 = build_args_with(sol::make_object(lua, self));
+                    sol::protected_function_result r = fn.call(args1);
+                    if (r.valid()) {
+                        return r.get<sol::object>();
+                    }
+
+                    // Fallback: pass underlying IDisplayObject* as self
+                    IDisplayObject* raw = self.get();
+                    std::vector<sol::object> args2 = build_args_with(sol::make_object(lua, raw));
+                    sol::protected_function_result r2 = fn.call(args2);
+                    if (!r2.valid()) {
                         return sol::make_object(lua, sol::lua_nil);
                     }
-                    return r.get<sol::object>();
+                    return r2.get<sol::object>();
                 };
                 return sol::make_object(L, wrapper);
             }
             // Plain value (number/string/table/etc.)
             return member;
+        };
+
+        // Support property-style assignment: h.value = x, h.min = a, h.max = b
+        ut[sol::meta_function::new_index] = [](DisplayHandle self, const sol::object& key, const sol::object& value) {
+            if (!key.valid() || !key.is<std::string>()) return;
+            std::string k;
+            try { k = key.as<std::string>(); } catch(...) { return; }
+
+            auto to_float = [](const sol::object& v, float def) -> float {
+                try { if (v.is<double>()) return static_cast<float>(v.as<double>()); } catch(...) {}
+                try { if (v.is<int>()) return static_cast<float>(v.as<int>()); } catch(...) {}
+                try { if (v.is<long>()) return static_cast<float>(v.as<long>()); } catch(...) {}
+                return def;
+            };
+
+            if (k == "value") {
+                if (auto* r = self.as<IRangeControl>()) {
+                    r->setValue(to_float(value, r->getValue()));
+                }
+                return;
+            }
+            if (k == "min") {
+                if (auto* r = self.as<IRangeControl>()) {
+                    r->setMin(to_float(value, r->getMin()));
+                }
+                return;
+            }
+            if (k == "max") {
+                if (auto* r = self.as<IRangeControl>()) {
+                    r->setMax(to_float(value, r->getMax()));
+                }
+                return;
+            }
+            // Unknown keys: ignore assignment to keep usertype stable
         };
 
         if (DEBUG_REGISTER_LUA)

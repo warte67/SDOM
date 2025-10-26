@@ -743,103 +743,103 @@ registerOn("UnitTest", callbacks.unittest.on_unit_test)
 -- registerOn("WindowResize", callbacks.window_resize.on_window_resize)
 
 
--- -- Add an event listener that switches the root stage when the main button is activated.
--- local function on_main_stage_button_click(evnt)
---     -- print("Button clicked! Changing root stage to 'stageTwo'")
---     setRoot("stageTwo") -- switch to stageTwo when button is clicked
--- end
--- local function on_stage2_button_click(evnt)
---     -- print("Button clicked! Changing 'stageTwo' stage to 'stageThree'")
---     setRoot("stageThree") -- switch to stageThree when button is clicked
--- end
--- local function on_stage3_button_click(evnt)
---     -- print("Button clicked! Changing 'stageThree' stage to 'mainStage'")
---     setRoot("mainStage") -- switch to mainStage when button is clicked
--- end
+-- Add an event listener that switches the root stage when the main button is activated.
+local function on_main_stage_button_click(evnt)
+    -- print("Button clicked! Changing root stage to 'stageTwo'")
+    setRoot("stageTwo") -- switch to stageTwo when button is clicked
+end
+local function on_stage2_button_click(evnt)
+    -- print("Button clicked! Changing 'stageTwo' stage to 'stageThree'")
+    setRoot("stageThree") -- switch to stageThree when button is clicked
+end
+local function on_stage3_button_click(evnt)
+    -- print("Button clicked! Changing 'stageThree' stage to 'mainStage'")
+    setRoot("mainStage") -- switch to mainStage when button is clicked
+end
 
--- -- Get the button display objects by name
--- local btnObj_1 = getDisplayObject("main_stage_button")
--- local btnObj_2 = getDisplayObject("stage2_button")
--- local btnObj_3 = getDisplayObject("stage3_button")
+-- Get the button display objects by name
+local btnObj_1 = getDisplayObject("main_stage_button")
+local btnObj_2 = getDisplayObject("stage2_button")
+local btnObj_3 = getDisplayObject("stage3_button")
 
--- -- use named fields (type, listener)
--- btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
--- btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
--- btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
+-- use named fields (type, listener)
+btnObj_1:addEventListener({ type = EventType.MouseClick, listener = on_main_stage_button_click })
+btnObj_2:addEventListener({ type = EventType.MouseClick, listener = on_stage2_button_click })
+btnObj_3:addEventListener({ type = EventType.MouseClick, listener = on_stage3_button_click })
 
 
 
--- -- Link sliders to progress bars: when a slider's value changes, update its paired progress bar
+-- Link sliders to progress bars: when a slider's value changes, update its paired progress bar
 
--- local function on_hslider_value_changed(ev)
---     -- Use the Event API to obtain the payload table (ev.payload is not exposed to Lua)
---     local payload = nil
---     if ev.getPayload then
---         payload = ev:getPayload()
---     end
---     local newv = payload and payload.new_value or nil
---     if newv ~= nil then
---         local progress = getDisplayObject("mainFrame_hprogress_1")
---             if progress then
---                 if progress.setValue then
---                     progress:setValue(tonumber(newv) or newv)
---                 else
---                     progress.value = tonumber(newv) or newv
---                 end
---         end
---     end
--- end
+local function on_hslider_value_changed(ev)
+    -- Use the Event API to obtain the payload table (ev.payload is not exposed to Lua)
+    local payload = nil
+    if ev.getPayload then
+        payload = ev:getPayload()
+    end
+    local newv = payload and payload.new_value or nil
+    if newv ~= nil then
+        local progress = getDisplayObject("mainFrame_hprogress_1")
+            if progress then
+                if progress.setValue then
+                    progress:setValue(tonumber(newv) or newv)
+                else
+                    progress.value = tonumber(newv) or newv
+                end
+        end
+    end
+end
 
--- local hslider = getDisplayObject("mainFrame_hslider_1")
--- local hprogress = getDisplayObject("mainFrame_hprogress_1")
--- if hslider and hprogress then
---     hslider:addEventListener({ type = EventType.ValueChanged, listener = on_hslider_value_changed })
---     -- Use setValue/getValue helpers where possible to ensure C++ setter semantics are used.
---     -- Sync initial progress to the slider's current value immediately by calling
---     -- the handler directly. If you need to programmatically change the slider
---     -- later, prefer using hslider:setValue(v) which will queue a ValueChanged
---     -- event (handled asynchronously by the engine).
---     -- Immediately sync the progress to the slider's current value (avoid relying on queued events)
---     local cur = (hslider.getValue and hslider:getValue() or hslider.value)
---     if hprogress.setValue then
---         hprogress:setValue(cur)
---     else
---         hprogress.value = cur
---     end
--- end
+local hslider = getDisplayObject("mainFrame_hslider_1")
+local hprogress = getDisplayObject("mainFrame_hprogress_1")
+if hslider and hprogress then
+    hslider:addEventListener({ type = EventType.ValueChanged, listener = on_hslider_value_changed })
+    -- Use setValue/getValue helpers where possible to ensure C++ setter semantics are used.
+    -- Sync initial progress to the slider's current value immediately by calling
+    -- the handler directly. If you need to programmatically change the slider
+    -- later, prefer using hslider:setValue(v) which will queue a ValueChanged
+    -- event (handled asynchronously by the engine).
+    -- Immediately sync the progress to the slider's current value (avoid relying on queued events)
+    local cur = (hslider.getValue and hslider:getValue() or hslider.value)
+    if hprogress.setValue then
+        hprogress:setValue(cur)
+    else
+        hprogress.value = cur
+    end
+end
 
--- -- Vertical slider -> vertical progress wiring
--- local function on_vslider_value_changed(ev)
---     -- Use the Event API to obtain the payload table (ev.payload is not exposed to Lua)
---     local payload = nil
---     if ev.getPayload then
---         payload = ev:getPayload()
---     end
---     local newv = payload and payload.new_value or nil
---     if newv ~= nil then
---         local progress = getDisplayObject("mainFrame_vprogress_1")
---         if progress then
---             if progress.setValue then
---                 progress:setValue(tonumber(newv) or newv)
---             else
---                 progress.value = tonumber(newv) or newv
---             end
---         end
---     end
--- end
+-- Vertical slider -> vertical progress wiring
+local function on_vslider_value_changed(ev)
+    -- Use the Event API to obtain the payload table (ev.payload is not exposed to Lua)
+    local payload = nil
+    if ev.getPayload then
+        payload = ev:getPayload()
+    end
+    local newv = payload and payload.new_value or nil
+    if newv ~= nil then
+        local progress = getDisplayObject("mainFrame_vprogress_1")
+        if progress then
+            if progress.setValue then
+                progress:setValue(tonumber(newv) or newv)
+            else
+                progress.value = tonumber(newv) or newv
+            end
+        end
+    end
+end
 
--- local vslider = getDisplayObject("mainFrame_vslider_1")
--- local vprogress = getDisplayObject("mainFrame_vprogress_1")
--- if vslider and vprogress then
---     vslider:addEventListener({ type = EventType.ValueChanged, listener = on_vslider_value_changed })
---     -- Sync initial value immediately
---     local curv = (vslider.getValue and vslider:getValue() or vslider.value)
---     if vprogress.setValue then
---         vprogress:setValue(curv)
---     else
---         vprogress.value = curv
---     end
---     -- initial sync done
--- end
+local vslider = getDisplayObject("mainFrame_vslider_1")
+local vprogress = getDisplayObject("mainFrame_vprogress_1")
+if vslider and vprogress then
+    vslider:addEventListener({ type = EventType.ValueChanged, listener = on_vslider_value_changed })
+    -- Sync initial value immediately
+    local curv = (vslider.getValue and vslider:getValue() or vslider.value)
+    if vprogress.setValue then
+        vprogress:setValue(curv)
+    else
+        vprogress.value = curv
+    end
+    -- initial sync done
+end
 
 return config

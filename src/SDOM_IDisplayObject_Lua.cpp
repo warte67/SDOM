@@ -49,7 +49,7 @@ namespace SDOM
     // Flexible variant: accepts either a table descriptor or (EventType, function, [useCapture], [priority])
     void addEventListener_lua_any(IDisplayObject* obj, const sol::object& descriptor, const sol::object& maybe_listener, const sol::object& maybe_useCapture, const sol::object& maybe_priority) {
         if (!obj) return;
-        sol::state_view lua = descriptor.lua_state();
+        // state view not needed here; avoid relying on API specifics
 
         EventType* et = nullptr;
         sol::function listener;
@@ -61,8 +61,8 @@ namespace SDOM
             sol::table t = descriptor.as<sol::table>();
             sol::object t_type = t.get<sol::object>("type");
             if (t_type.valid()) {
-                // Try EventType userdata first
-                try { et = t_type.as<EventType*>(); } catch(...) { et = nullptr; }
+                // Try EventType userdata (by reference) first
+                try { EventType& r = t_type.as<EventType&>(); et = &r; } catch(...) { et = nullptr; }
                 if (!et && t_type.is<std::string>()) {
                     try {
                         std::string tn = t_type.as<std::string>();
@@ -80,7 +80,7 @@ namespace SDOM
             if (pobj.valid() && pobj.is<int>()) priority = pobj.as<int>();
         } else {
             // Otherwise treat as (EventType, function, [useCapture], [priority])
-            try { et = descriptor.as<EventType*>(); } catch(...) { et = nullptr; }
+            try { EventType& r = descriptor.as<EventType&>(); et = &r; } catch(...) { et = nullptr; }
             try { if (maybe_listener.is<sol::function>()) listener = maybe_listener.as<sol::function>(); } catch(...) {}
             try { if (maybe_useCapture.is<bool>()) useCapture = maybe_useCapture.as<bool>(); } catch(...) {}
             try { if (maybe_priority.is<int>()) priority = maybe_priority.as<int>(); } catch(...) {}
@@ -102,7 +102,7 @@ namespace SDOM
     void removeEventListener_lua_any(IDisplayObject* obj, const sol::object& descriptor, const sol::object& maybe_listener, const sol::object& maybe_useCapture) 
     {
         if (!obj) return;
-        sol::state_view lua = descriptor.lua_state();
+        // state view not needed here; avoid relying on API specifics
 
         EventType* et = nullptr;
         sol::function listener;
@@ -112,7 +112,7 @@ namespace SDOM
             sol::table t = descriptor.as<sol::table>();
             sol::object t_type = t.get<sol::object>("type");
             if (t_type.valid()) {
-                try { et = t_type.as<EventType*>(); } catch(...) { et = nullptr; }
+                try { EventType& r = t_type.as<EventType&>(); et = &r; } catch(...) { et = nullptr; }
                 if (!et && t_type.is<std::string>()) {
                     try {
                         std::string tn = t_type.as<std::string>();
@@ -127,7 +127,7 @@ namespace SDOM
             sol::object uobj = t.get<sol::object>("useCapture");
             if (uobj.valid() && uobj.is<bool>()) useCapture = uobj.as<bool>();
         } else {
-            try { et = descriptor.as<EventType*>(); } catch(...) { et = nullptr; }
+            try { EventType& r = descriptor.as<EventType&>(); et = &r; } catch(...) { et = nullptr; }
             try { if (maybe_listener.is<sol::function>()) listener = maybe_listener.as<sol::function>(); } catch(...) {}
             try { if (maybe_useCapture.is<bool>()) useCapture = maybe_useCapture.as<bool>(); } catch(...) {}
         }
@@ -1001,7 +1001,344 @@ namespace SDOM
             }
         };
 
-        // TODO: add the rest of the IDisplayObject lua bindings here
+        // Also try to acquire the usertype so we can bind on both surfaces.
+        sol::optional<sol::usertype<SDOM::DisplayHandle>> maybeUT;
+        try { maybeUT = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
+
+        // DisplayHandle-aware hierarchy helpers (mirror SDOM_IDisplayObject.cpp)
+        auto addChild_impl = [](SDOM::DisplayHandle& self, const sol::object& childSpec) -> bool {
+            if (!self.isValid() || !self.get()) return false;
+            SDOM::DisplayHandle child;
+            try {
+                if (childSpec.is<SDOM::DisplayHandle>()) {
+                    child = childSpec.as<SDOM::DisplayHandle>();
+                } else if (childSpec.is<std::string>()) {
+                    std::string nm = childSpec.as<std::string>();
+                    child = SDOM::getCore().getDisplayObject(nm);
+                } else if (childSpec.is<sol::table>()) {
+                    sol::table t = childSpec.as<sol::table>();
+                    sol::object nameObj = t.get<sol::object>("name");
+                    if (nameObj.valid() && nameObj.is<std::string>()) {
+                        std::string nm = nameObj.as<std::string>();
+                        child = SDOM::getCore().getDisplayObject(nm);
+                    }
+                }
+            } catch(...) {}
+            if (!child.isValid()) return false;
+            auto* obj = self.get();
+            obj->addChild(child);
+            return true;
+        };
+        set_if_absent(handleTbl, "addChild", addChild_impl);
+        if (maybeUT) { try { (*maybeUT)["addChild"] = addChild_impl; } catch(...) {} }
+
+        auto removeChild_impl = [](SDOM::DisplayHandle& self, const sol::object& childSpec) -> bool {
+            if (!self.isValid() || !self.get()) return false;
+            auto* obj = self.get();
+            try {
+                if (childSpec.is<SDOM::DisplayHandle>()) {
+                    SDOM::DisplayHandle child = childSpec.as<SDOM::DisplayHandle>();
+                    return obj->removeChild(child);
+                } else if (childSpec.is<std::string>()) {
+                    std::string nm = childSpec.as<std::string>();
+                    return obj->removeChild(nm);
+                } else if (childSpec.is<sol::table>()) {
+                    sol::table t = childSpec.as<sol::table>();
+                    sol::object nameObj = t.get<sol::object>("name");
+                    if (nameObj.valid() && nameObj.is<std::string>()) {
+                        std::string nm = nameObj.as<std::string>();
+                        return obj->removeChild(nm);
+                    }
+                }
+            } catch(...) {}
+            return false;
+        };
+        set_if_absent(handleTbl, "removeChild", removeChild_impl);
+        if (maybeUT) { try { (*maybeUT)["removeChild"] = removeChild_impl; } catch(...) {} }
+
+        auto hasChild_impl = [](SDOM::DisplayHandle& self, const sol::object& childSpec) -> bool {
+            if (!self.isValid() || !self.get()) return false;
+            auto* obj = self.get();
+            try {
+                if (childSpec.is<SDOM::DisplayHandle>()) {
+                    SDOM::DisplayHandle child = childSpec.as<SDOM::DisplayHandle>();
+                    return obj->hasChild(child);
+                } else if (childSpec.is<std::string>()) {
+                    std::string nm = childSpec.as<std::string>();
+                    return obj->isDescendantOf(nm) || (obj->getChild(nm).isValid());
+                } else if (childSpec.is<sol::table>()) {
+                    sol::table t = childSpec.as<sol::table>();
+                    sol::object nameObj = t.get<sol::object>("name");
+                    if (nameObj.valid() && nameObj.is<std::string>()) {
+                        std::string nm = nameObj.as<std::string>();
+                        return obj->isDescendantOf(nm) || (obj->getChild(nm).isValid());
+                    }
+                }
+            } catch(...) {}
+            return false;
+        };
+        set_if_absent(handleTbl, "hasChild", hasChild_impl);
+        if (maybeUT) { try { (*maybeUT)["hasChild"] = hasChild_impl; } catch(...) {} }
+
+        auto getChild_impl = [](SDOM::DisplayHandle& self, const sol::object& childSpec, sol::this_state ts) -> sol::object {
+            sol::state_view lua(ts);
+            if (!self.isValid() || !self.get()) return sol::make_object(lua, sol::lua_nil);
+            auto* obj = self.get();
+            std::string nm;
+            try {
+                if (childSpec.is<std::string>()) {
+                    nm = childSpec.as<std::string>();
+                } else if (childSpec.is<sol::table>()) {
+                    sol::table t = childSpec.as<sol::table>();
+                    sol::object nameObj = t.get<sol::object>("name");
+                    if (nameObj.valid() && nameObj.is<std::string>()) nm = nameObj.as<std::string>();
+                }
+            } catch(...) {}
+            if (nm.empty()) return sol::make_object(lua, sol::lua_nil);
+            SDOM::DisplayHandle ch = obj->getChild(nm);
+            if (ch.isValid() && ch.get()) return sol::make_object(lua, ch);
+            return sol::make_object(lua, sol::lua_nil);
+        };
+        set_if_absent(handleTbl, "getChild", getChild_impl);
+        if (maybeUT) { try { (*maybeUT)["getChild"] = getChild_impl; } catch(...) {} }
+
+        // Dirty/state
+        set_if_absent(handleTbl, "cleanAll", cleanAll_lua);
+        set_if_absent(handleTbl, "getDirty", getDirty_lua);
+        set_if_absent(handleTbl, "setDirty", setDirty_lua);
+        set_if_absent(handleTbl, "isDirty", isDirty_lua);
+
+        // Debug/utility
+        set_if_absent(handleTbl, "printTree", printTree_lua);
+
+        // Events: Provide DisplayHandle-aware overloads to avoid self-type issues
+        auto addEventListener_bind1 = [](SDOM::DisplayHandle& self, const sol::object& descriptor) {
+            IDisplayObject* obj = self.get(); if (!obj) return; addEventListener_lua_any_short(obj, descriptor);
+        };
+        auto addEventListener_bind4 = [](SDOM::DisplayHandle& self, const sol::object& a, const sol::object& b, const sol::object& c, const sol::object& d) {
+            IDisplayObject* obj = self.get(); if (!obj) return;
+            // Table descriptor form
+            if (a.valid() && a.is<sol::table>()) { addEventListener_lua_any(obj, a, b, c, d); return; }
+            // EventType + function + [useCapture] + [priority]
+            try {
+                EventType& et = a.as<EventType&>();
+                sol::function fn; if (b.valid() && b.is<sol::function>()) fn = b.as<sol::function>();
+                bool useCap = false; int pri = 0;
+                if (c.valid()) {
+                    if (c.is<bool>()) useCap = c.as<bool>();
+                    else if (c.is<int>()) pri = c.as<int>();
+                }
+                if (d.valid() && d.is<int>()) pri = d.as<int>();
+                if (fn.valid()) addEventListener_lua(obj, et, fn, useCap, pri);
+                return;
+            } catch (...) {
+                // Fallback: accept string type name
+                try {
+                    if (a.valid() && a.is<std::string>()) {
+                        std::string name = a.as<std::string>();
+                        const auto& reg = EventType::getRegistry();
+                        auto it = reg.find(name);
+                        if (it != reg.end() && it->second) {
+                            EventType& et = *it->second;
+                            sol::function fn; if (b.valid() && b.is<sol::function>()) fn = b.as<sol::function>();
+                            bool useCap = false; int pri = 0;
+                            if (c.valid()) {
+                                if (c.is<bool>()) useCap = c.as<bool>();
+                                else if (c.is<int>()) pri = c.as<int>();
+                            }
+                            if (d.valid() && d.is<int>()) pri = d.as<int>();
+                            if (fn.valid()) addEventListener_lua(obj, et, fn, useCap, pri);
+                        }
+                    }
+                } catch(...) { /* swallow */ }
+            }
+        };
+        auto removeEventListener_bind1 = [](SDOM::DisplayHandle& self, const sol::object& descriptor) {
+            IDisplayObject* obj = self.get(); if (!obj) return; removeEventListener_lua_any_short(obj, descriptor);
+        };
+        auto removeEventListener_bind3 = [](SDOM::DisplayHandle& self, const sol::object& a, const sol::object& b, const sol::object& c) {
+            IDisplayObject* obj = self.get(); if (!obj) return;
+            if (a.valid() && a.is<sol::table>()) { removeEventListener_lua_any(obj, a, b, c); return; }
+            try {
+                EventType& et = a.as<EventType&>();
+                sol::function fn; if (b.valid() && b.is<sol::function>()) fn = b.as<sol::function>();
+                bool useCap = false; if (c.valid() && c.is<bool>()) useCap = c.as<bool>();
+                if (fn.valid()) removeEventListener_lua(obj, et, fn, useCap);
+                return;
+            } catch (...) {
+                try {
+                    if (a.valid() && a.is<std::string>()) {
+                        std::string name = a.as<std::string>();
+                        const auto& reg = EventType::getRegistry();
+                        auto it = reg.find(name);
+                        if (it != reg.end() && it->second) {
+                            EventType& et = *it->second;
+                            sol::function fn; if (b.valid() && b.is<sol::function>()) fn = b.as<sol::function>();
+                            bool useCap = false; if (c.valid() && c.is<bool>()) useCap = c.as<bool>();
+                            if (fn.valid()) removeEventListener_lua(obj, et, fn, useCap);
+                        }
+                    }
+                } catch(...) { /* swallow */ }
+            }
+        };
+        // Register on table and usertype if present
+        set_if_absent(handleTbl, "addEventListener", sol::overload(addEventListener_bind1, addEventListener_bind4));
+        set_if_absent(handleTbl, "removeEventListener", sol::overload(removeEventListener_bind1, removeEventListener_bind3));
+        if (maybeUT) {
+            try { (*maybeUT)["addEventListener"] = sol::overload(addEventListener_bind1, addEventListener_bind4); } catch(...) {}
+            try { (*maybeUT)["removeEventListener"] = sol::overload(removeEventListener_bind1, removeEventListener_bind3); } catch(...) {}
+        }
+        set_if_absent(handleTbl, "hasEventListener", hasEventListener_lua);
+        set_if_absent(handleTbl, "queue_event", queue_event_lua);
+
+        // Hierarchy helpers continued
+        set_if_absent(handleTbl, "getChildren", getChildren_lua);
+        set_if_absent(handleTbl, "countChildren", countChildren_lua);
+        // hasChild is already bound in core with DisplayHandle-aware wrapper
+        // set_if_absent(handleTbl, "hasChild", hasChild_lua);
+        set_if_absent(handleTbl, "getParent", getParent_lua);
+        set_if_absent(handleTbl, "setParent", setParent_lua);
+        set_if_absent(handleTbl, "isAncestorOf",
+            sol::overload(
+                static_cast<bool(*)(IDisplayObject*, DisplayHandle)>(isAncestorOf_lua),
+                static_cast<bool(*)(IDisplayObject*, const std::string&)>(isAncestorOf_lua)
+            )
+        );
+        set_if_absent(handleTbl, "isDescendantOf",
+            sol::overload(
+                static_cast<bool(*)(IDisplayObject*, DisplayHandle)>(isDescendantOf_lua),
+                static_cast<bool(*)(IDisplayObject*, const std::string&)>(isDescendantOf_lua)
+            )
+        );
+        set_if_absent(handleTbl, "removeFromParent", removeFromParent_lua);
+        set_if_absent(handleTbl, "removeDescendant",
+            sol::overload(
+                static_cast<bool(*)(IDisplayObject*, DisplayHandle)>(removeDescendant_lua),
+                static_cast<bool(*)(IDisplayObject*, const std::string&)>(removeDescendant_lua)
+            )
+        );
+
+        // Names and types
+        set_if_absent(handleTbl, "getName", getName_lua);
+        set_if_absent(handleTbl, "setName", setName_lua);
+        set_if_absent(handleTbl, "getType", getType_lua);
+
+        // Bounds and colors
+        set_if_absent(handleTbl, "getBounds", getBounds_lua);
+        set_if_absent(handleTbl, "setBounds",
+            sol::overload(
+                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setBounds_lua),
+                static_cast<void(*)(IDisplayObject*, const Bounds&)>(setBounds_lua)
+            )
+        );
+        set_if_absent(handleTbl, "getColor", getColor_lua);
+        set_if_absent(handleTbl, "setColor",
+            sol::overload(
+                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setColor_lua),
+                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setColor_lua)
+            )
+        );
+        set_if_absent(handleTbl, "getForegroundColor", getForegroundColor_lua);
+        set_if_absent(handleTbl, "setForegroundColor",
+            sol::overload(
+                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setForegroundColor_lua),
+                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setForegroundColor_lua)
+            )
+        );
+        set_if_absent(handleTbl, "getBackgroundColor", getBackgroundColor_lua);
+        set_if_absent(handleTbl, "setBackgroundColor",
+            sol::overload(
+                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setBackgroundColor_lua),
+                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setBackgroundColor_lua)
+            )
+        );
+        set_if_absent(handleTbl, "getBorderColor", getBorderColor_lua);
+        set_if_absent(handleTbl, "setBorderColor",
+            sol::overload(
+                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setBorderColor_lua),
+                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setBorderColor_lua)
+            )
+        );
+        set_if_absent(handleTbl, "getOutlineColor", getOutlineColor_lua);
+        set_if_absent(handleTbl, "setOutlineColor",
+            sol::overload(
+                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setOutlineColor_lua),
+                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setOutlineColor_lua)
+            )
+        );
+        set_if_absent(handleTbl, "getDropshadowColor", getDropshadowColor_lua);
+        set_if_absent(handleTbl, "setDropshadowColor",
+            sol::overload(
+                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setDropshadowColor_lua),
+                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setDropshadowColor_lua)
+            )
+        );
+        set_if_absent(handleTbl, "hasBorder", hasBorder_lua);
+        set_if_absent(handleTbl, "hasBackground", hasBackground_lua);
+        set_if_absent(handleTbl, "setBorder", setBorder_lua);
+        set_if_absent(handleTbl, "setBackground", setBackground_lua);
+
+        // Priority & Z-Order
+        set_if_absent(handleTbl, "getMaxPriority", getMaxPriority_lua);
+        set_if_absent(handleTbl, "getMinPriority", getMinPriority_lua);
+        set_if_absent(handleTbl, "getPriority", getPriority_lua);
+        set_if_absent(handleTbl, "setPriority",
+            sol::overload(
+                setPriority_lua,
+                setPriority_lua_any,
+                setPriority_lua_target
+            )
+        );
+        set_if_absent(handleTbl, "sortChildrenByPriority", sortChildrenByPriority_lua);
+        set_if_absent(handleTbl, "setToHighestPriority",
+            sol::overload(
+                setToHighestPriority_lua,
+                setToHighestPriority_lua_any
+            )
+        );
+        set_if_absent(handleTbl, "setToLowestPriority",
+            sol::overload(
+                setToLowestPriority_lua,
+                setToLowestPriority_lua_any
+            )
+        );
+        set_if_absent(handleTbl, "moveToTop",
+            sol::overload(
+                moveToTop_lua,
+                moveToTop_lua_any
+            )
+        );
+        set_if_absent(handleTbl, "moveToBottom",
+            sol::overload(
+                moveToBottom_lua,
+                moveToBottom_lua_any
+            )
+        );
+        set_if_absent(handleTbl, "bringToFront",
+            sol::overload(
+                bringToFront_lua,
+                bringToFront_lua_any
+            )
+        );
+        set_if_absent(handleTbl, "sendToBack",
+            sol::overload(
+                sendToBack_lua,
+                sendToBack_lua_any
+            )
+        );
+        set_if_absent(handleTbl, "sendToBackAfter",
+            sol::overload(
+                sendToBackAfter_lua,
+                sendToBackAfter_lua_any
+            )
+        );
+        set_if_absent(handleTbl, "getZOrder", getZOrder_lua);
+        set_if_absent(handleTbl, "setZOrder",
+            sol::overload(
+                setZOrder_lua,
+                setZOrder_lua_any
+            )
+        );
 
         // Focus & interactivity
         set_if_absent(handleTbl, "setKeyboardFocus", setKeyboardFocus_lua);

@@ -1573,137 +1573,28 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the shared DisplayHandle usertype with generic display-object
-        // helpers that operate on the underlying object (parent/child ops, etc.).
-        auto set_if_absent = [](sol::table& handle, const char* name, auto&& fn) {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-            if (!cur.valid() || cur == sol::lua_nil) {
-                handle.set_function(name, std::forward<decltype(fn)>(fn));
-            }
-        };
+        // // Augment the shared DisplayHandle usertype with generic display-object
+        // // helpers that operate on the underlying object (parent/child ops, etc.).
+        // auto set_if_absent = [](sol::table& handle, const char* name, auto&& fn) {
+        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+        //     if (!cur.valid() || cur == sol::lua_nil) {
+        //         handle.set_function(name, std::forward<decltype(fn)>(fn));
+        //     }
+        // };
 
-        // Fetch the DisplayHandle usertype table without clobbering; also try
-        // to obtain the usertype handle so we can bind on both surfaces.
-        sol::table handleTbl;
-        try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
-        if (!handleTbl.valid()) {
-            // As a fallback, ensure the table exists (no replace if already a usertype)
-            handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-        }
-        sol::optional<sol::usertype<SDOM::DisplayHandle>> maybeUT;
-        try { maybeUT = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
+        // // Fetch the DisplayHandle usertype table without clobbering; also try
+        // // to obtain the usertype handle so we can bind on both surfaces.
+        // sol::table handleTbl;
+        // try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
+        // if (!handleTbl.valid()) {
+        //     // As a fallback, ensure the table exists (no replace if already a usertype)
+        //     handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
+        // }
+        // sol::optional<sol::usertype<SDOM::DisplayHandle>> maybeUT;
+        // try { maybeUT = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
 
-        // Bind addChild to accept either a DisplayHandle or a string name
-        auto addChild_impl = [](SDOM::DisplayHandle& self, const sol::object& childSpec) -> bool {
-                if (!self.isValid() || !self.get()) return false;
-                SDOM::DisplayHandle child;
-                try {
-                    if (childSpec.is<SDOM::DisplayHandle>()) {
-                        child = childSpec.as<SDOM::DisplayHandle>();
-                    } else if (childSpec.is<std::string>()) {
-                        std::string nm = childSpec.as<std::string>();
-                        child = SDOM::getCore().getDisplayObject(nm);
-                    } else if (childSpec.is<sol::table>()) {
-                        sol::table t = childSpec.as<sol::table>();
-                        sol::object nameObj = t.get<sol::object>("name");
-                        if (nameObj.valid() && nameObj.is<std::string>()) {
-                            std::string nm = nameObj.as<std::string>();
-                            child = SDOM::getCore().getDisplayObject(nm);
-                        }
-                    }
-                } catch(...) {}
-                if (!child.isValid()) return false;
-                auto* obj = self.get();
-                obj->addChild(child);
-                return true;
-            };
-
-        // Bind on table (idempotent)
-        set_if_absent(handleTbl, "addChild", addChild_impl);
-        // Bind on usertype if available (overwrite is okay; same function)
-        if (maybeUT) {
-            try { (*maybeUT)["addChild"] = addChild_impl; } catch(...) {}
-        }
-
-        // Bind removeChild with symmetric semantics to addChild
-        auto removeChild_impl = [](SDOM::DisplayHandle& self, const sol::object& childSpec) -> bool {
-            if (!self.isValid() || !self.get()) return false;
-            auto* obj = self.get();
-            try {
-                if (childSpec.is<SDOM::DisplayHandle>()) {
-                    SDOM::DisplayHandle child = childSpec.as<SDOM::DisplayHandle>();
-                    return obj->removeChild(child);
-                } else if (childSpec.is<std::string>()) {
-                    std::string nm = childSpec.as<std::string>();
-                    return obj->removeChild(nm);
-                } else if (childSpec.is<sol::table>()) {
-                    sol::table t = childSpec.as<sol::table>();
-                    sol::object nameObj = t.get<sol::object>("name");
-                    if (nameObj.valid() && nameObj.is<std::string>()) {
-                        std::string nm = nameObj.as<std::string>();
-                        return obj->removeChild(nm);
-                    }
-                }
-            } catch(...) {}
-            return false;
-        };
-        set_if_absent(handleTbl, "removeChild", removeChild_impl);
-        if (maybeUT) {
-            try { (*maybeUT)["removeChild"] = removeChild_impl; } catch(...) {}
-        }
-
-        // hasChild: accept DisplayHandle or name/table{name="..."}
-        auto hasChild_impl = [](SDOM::DisplayHandle& self, const sol::object& childSpec) -> bool {
-            if (!self.isValid() || !self.get()) return false;
-            auto* obj = self.get();
-            try {
-                if (childSpec.is<SDOM::DisplayHandle>()) {
-                    SDOM::DisplayHandle child = childSpec.as<SDOM::DisplayHandle>();
-                    return obj->hasChild(child);
-                } else if (childSpec.is<std::string>()) {
-                    std::string nm = childSpec.as<std::string>();
-                    return obj->isDescendantOf(nm) || (obj->getChild(nm).isValid());
-                } else if (childSpec.is<sol::table>()) {
-                    sol::table t = childSpec.as<sol::table>();
-                    sol::object nameObj = t.get<sol::object>("name");
-                    if (nameObj.valid() && nameObj.is<std::string>()) {
-                        std::string nm = nameObj.as<std::string>();
-                        return obj->isDescendantOf(nm) || (obj->getChild(nm).isValid());
-                    }
-                }
-            } catch(...) {}
-            return false;
-        };
-        set_if_absent(handleTbl, "hasChild", hasChild_impl);
-        if (maybeUT) {
-            try { (*maybeUT)["hasChild"] = hasChild_impl; } catch(...) {}
-        }
-
-        // getChild: accept name/table{name="..."}, return DisplayHandle or nil
-        auto getChild_impl = [](SDOM::DisplayHandle& self, const sol::object& childSpec, sol::this_state ts) -> sol::object {
-            sol::state_view lua(ts);
-            if (!self.isValid() || !self.get()) return sol::make_object(lua, sol::lua_nil);
-            auto* obj = self.get();
-            std::string nm;
-            try {
-                if (childSpec.is<std::string>()) {
-                    nm = childSpec.as<std::string>();
-                } else if (childSpec.is<sol::table>()) {
-                    sol::table t = childSpec.as<sol::table>();
-                    sol::object nameObj = t.get<sol::object>("name");
-                    if (nameObj.valid() && nameObj.is<std::string>()) nm = nameObj.as<std::string>();
-                }
-            } catch(...) {}
-            if (nm.empty()) return sol::make_object(lua, sol::lua_nil);
-            SDOM::DisplayHandle ch = obj->getChild(nm);
-            if (ch.isValid() && ch.get()) return sol::make_object(lua, ch);
-            return sol::make_object(lua, sol::lua_nil);
-        };
-        // Bind getChild both places; table registration must use set_function to preserve nil returns
-        set_if_absent(handleTbl, "getChild", getChild_impl);
-        if (maybeUT) {
-            try { (*maybeUT)["getChild"] = getChild_impl; } catch(...) {}
-        }
+        // Hierarchy bindings are centralized in SDOM_IDisplayObject_Lua.cpp binder.
+        // Intentionally not binding addChild/removeChild/hasChild/getChild here.
 
         // Also delegate to centralized binder in SDOM_IDisplayObject_Lua.cpp so
         // Lua registration can be maintained centrally. Binding helpers there
