@@ -753,26 +753,38 @@ namespace SDOM
 
         // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
         sol::table handle = AssetHandle::ensure_handle_table(lua);
+        sol::optional<sol::usertype<AssetHandle>> maybeUT;
+        try { maybeUT = lua[AssetHandle::LuaHandleName]; } catch(...) {}
+
+        auto ss_bind_both = [&](const char* name, auto&& fn) {
+            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                handle.set_function(name, std::forward<decltype(fn)>(fn));
+            }
+            if (maybeUT) {
+                try { (*maybeUT)[name] = fn; } catch(...) {}
+            }
+        };
 
         // --- Size accessors --- //
-        ss_set_if_absent(handle, "setSpriteWidth", [](AssetHandle& self, int w) {
+        ss_bind_both("setSpriteWidth", [](AssetHandle& self, int w) {
             if (auto* ss = as_ss_handle(self)) ss->setSpriteWidth(w);
         });
-        ss_set_if_absent(handle, "setSpriteHeight", [](AssetHandle& self, int h) {
+        ss_bind_both("setSpriteHeight", [](AssetHandle& self, int h) {
             if (auto* ss = as_ss_handle(self)) ss->setSpriteHeight(h);
         });
-        ss_set_if_absent(handle, "setSpriteSize", [](AssetHandle& self, int w, int h) {
+        ss_bind_both("setSpriteSize", [](AssetHandle& self, int w, int h) {
             if (auto* ss = as_ss_handle(self)) ss->setSpriteSize(w, h);
         });
-        ss_set_if_absent(handle, "getSpriteWidth", [](AssetHandle& self) -> int {
+        ss_bind_both("getSpriteWidth", [](AssetHandle& self) -> int {
             if (auto* ss = as_ss_handle(self)) return ss->getSpriteWidth();
             return 0;
         });
-        ss_set_if_absent(handle, "getSpriteHeight", [](AssetHandle& self) -> int {
+        ss_bind_both("getSpriteHeight", [](AssetHandle& self) -> int {
             if (auto* ss = as_ss_handle(self)) return ss->getSpriteHeight();
             return 0;
         });
-        ss_set_if_absent(handle, "getSpriteSize", [lua](AssetHandle& self) -> sol::table {
+        ss_bind_both("getSpriteSize", [lua](AssetHandle& self) -> sol::table {
             sol::state_view L = lua; // capture state for table creation
             sol::table t = L.create_table();
             if (auto* ss = as_ss_handle(self)) {
@@ -783,15 +795,15 @@ namespace SDOM
             }
             return t;
         });
-        ss_set_if_absent(handle, "getSpriteCount", [](AssetHandle& self) -> int {
+        ss_bind_both("getSpriteCount", [](AssetHandle& self) -> int {
             if (auto* ss = as_ss_handle(self)) return ss->getSpriteCount();
             return 0;
         });
-        ss_set_if_absent(handle, "getSpriteX", [](AssetHandle& self, int index) -> int {
+        ss_bind_both("getSpriteX", [](AssetHandle& self, int index) -> int {
             if (auto* ss = as_ss_handle(self)) return ss->getSpriteX(index);
             return 0;
         });
-        ss_set_if_absent(handle, "getSpriteY", [](AssetHandle& self, int index) -> int {
+        ss_bind_both("getSpriteY", [](AssetHandle& self, int index) -> int {
             if (auto* ss = as_ss_handle(self)) return ss->getSpriteY(index);
             return 0;
         });
@@ -825,7 +837,7 @@ namespace SDOM
             }
         };
 
-        ss_set_if_absent(handle, "drawSprite", sol::overload(
+        ss_bind_both("drawSprite", sol::overload(
             // idx, x, y
             [draw_xy](AssetHandle& self, int idx, int x, int y) { draw_xy(self, idx, x, y, sol::lua_nil, sol::lua_nil); },
             // idx, x, y, color
@@ -847,7 +859,7 @@ namespace SDOM
         ));
 
         // Explicitly-named variants for clarity
-        ss_set_if_absent(handle, "drawSprite_dst", [](AssetHandle& self, int idx, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
+        ss_bind_both("drawSprite_dst", [](AssetHandle& self, int idx, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
             if (auto* ss = as_ss_handle(self)) {
                 SDL_FRect d = SDL_Utils::tableToFRect(dst);
                 SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
@@ -856,7 +868,7 @@ namespace SDOM
             }
         });
 
-        ss_set_if_absent(handle, "drawSprite_ext", [](AssetHandle& self, int idx, sol::table src, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
+        ss_bind_both("drawSprite_ext", [](AssetHandle& self, int idx, sol::table src, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
             if (auto* ss = as_ss_handle(self)) {
                 SDL_FRect s = SDL_Utils::tableToFRect(src);
                 SDL_FRect d = SDL_Utils::tableToFRect(dst);
