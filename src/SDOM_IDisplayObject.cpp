@@ -44,6 +44,7 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
+#include <SDOM/SDOM_IDisplayObject_Lua.hpp>
 
 #include <chrono>
 
@@ -1616,6 +1617,7 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
                 obj->addChild(child);
                 return true;
             };
+
         // Bind on table (idempotent)
         set_if_absent(handleTbl, "addChild", addChild_impl);
         // Bind on usertype if available (overwrite is okay; same function)
@@ -1702,6 +1704,13 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
         if (maybeUT) {
             try { (*maybeUT)["getChild"] = getChild_impl; } catch(...) {}
         }
+
+        // Also delegate to centralized binder in SDOM_IDisplayObject_Lua.cpp so
+        // Lua registration can be maintained centrally. Binding helpers there
+        // are idempotent (set_if_absent), so duplicate invocation is safe.
+        try {
+            bind_IDisplayObject_lua(typeName, lua);
+        } catch(...) { /* swallow binder errors to avoid breaking registration */ }
 
     } // END: IDisplayObject::_registerDisplayObject()
 

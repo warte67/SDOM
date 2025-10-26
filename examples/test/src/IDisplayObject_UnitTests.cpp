@@ -1769,15 +1769,19 @@ namespace SDOM
             stage->addChild(h);
             IDisplayObject* o = h.as<IDisplayObject>();
             setOrphanRetentionPolicy_lua(o, "grace");
-            setOrphanGrace_lua(o, std::chrono::milliseconds(200));
+            const int grace_ms  = 20;
+            const int margin_ms = 10;
+            setOrphanGrace_lua(o, std::chrono::milliseconds(grace_ms));
 
-            // Orphan it and immediately collect
+            // Orphan it and immediately collect — should be retained during grace
             stage->removeChild(h);
+            core.pumpEventsOnce();
             core.collectGarbage();
             if (!core.getDisplayObject("orp_grace").isValid()) return fail("OrphanPolicy(grace): object destroyed before grace expired.");
 
-            // Wait beyond grace window
-            std::this_thread::sleep_for(std::chrono::milliseconds(240));
+            // Wait beyond grace window and collect — should be destroyed
+            std::this_thread::sleep_for(std::chrono::milliseconds(grace_ms + margin_ms));
+            core.pumpEventsOnce();
             core.collectGarbage();
             if (core.getDisplayObject("orp_grace").isValid()) return fail("OrphanPolicy(grace): object not destroyed after grace expiration.");
         }
@@ -1789,18 +1793,22 @@ namespace SDOM
             stage->addChild(h);
             IDisplayObject* o = h.as<IDisplayObject>();
             setOrphanRetentionPolicy_lua(o, "grace");
-            setOrphanGrace_lua(o, std::chrono::milliseconds(300));
+            const int grace_ms  = 20;
+            const int margin_ms = 10;
+            setOrphanGrace_lua(o, std::chrono::milliseconds(grace_ms));
 
-            // Orphan it, but reparent before grace expires
+            // Orphan it, then reparent within grace — should prevent destruction
             stage->removeChild(h);
-            std::this_thread::sleep_for(std::chrono::milliseconds(150));
-            stage->addChild(h); // reparent in grace window
+            std::this_thread::sleep_for(std::chrono::milliseconds(grace_ms / 2));
+            stage->addChild(h);
+            core.pumpEventsOnce();
             core.collectGarbage();
             if (!core.getDisplayObject("orp_reparent").isValid()) return fail("OrphanPolicy(reparent): object destroyed despite reparent within grace.");
 
             // Orphan again, let grace elapse, then verify destruction
             stage->removeChild(h);
-            std::this_thread::sleep_for(std::chrono::milliseconds(320));
+            std::this_thread::sleep_for(std::chrono::milliseconds(grace_ms + margin_ms));
+            core.pumpEventsOnce();
             core.collectGarbage();
             if (core.getDisplayObject("orp_reparent").isValid()) return fail("OrphanPolicy(reparent): object not destroyed after post-reparent orphan + grace.");
         }

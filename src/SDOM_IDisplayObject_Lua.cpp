@@ -982,4 +982,91 @@ namespace SDOM
         obj->setOrphanGrace(grace);
     }
 
+    // Central binder: attach IDisplayObject Lua-facing helpers to the shared
+    // DisplayHandle surface (idempotent). This mirrors the in-class binding
+    // but allows SDOM_IDisplayObject.cpp to delegate to this module.
+    void bind_IDisplayObject_lua(const std::string& /*typeName*/, sol::state_view lua)
+    {
+        // Acquire or create the DisplayHandle table (do not clobber usertype).
+        sol::table handleTbl;
+        try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
+        if (!handleTbl.valid()) {
+            handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
+        }
+
+        auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
+            sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                tbl.set_function(name, std::forward<decltype(fn)>(fn));
+            }
+        };
+
+        // Focus & interactivity
+        set_if_absent(handleTbl, "setKeyboardFocus", setKeyboardFocus_lua);
+        set_if_absent(handleTbl, "isKeyboardFocused", isKeyboardFocused_lua);
+        set_if_absent(handleTbl, "isMouseHovered", isMouseHovered_lua);
+        set_if_absent(handleTbl, "isClickable", isClickable_lua);
+        set_if_absent(handleTbl, "setClickable", setClickable_lua);
+        set_if_absent(handleTbl, "isEnabled", isEnabled_lua);
+        set_if_absent(handleTbl, "setEnabled", setEnabled_lua);
+        set_if_absent(handleTbl, "isHidden", isHidden_lua);
+        set_if_absent(handleTbl, "setHidden", setHidden_lua);
+        set_if_absent(handleTbl, "isVisible", isVisible_lua);
+        set_if_absent(handleTbl, "setVisible", setVisible_lua);
+
+        // Tab management
+        set_if_absent(handleTbl, "getTabPriority", getTabPriority_lua);
+        set_if_absent(handleTbl, "setTabPriority", setTabPriority_lua);
+        set_if_absent(handleTbl, "isTabEnabled", isTabEnabled_lua);
+        set_if_absent(handleTbl, "setTabEnabled", setTabEnabled_lua);
+
+        // Geometry & layout
+        set_if_absent(handleTbl, "getX", getX_lua);
+        set_if_absent(handleTbl, "getY", getY_lua);
+        set_if_absent(handleTbl, "getWidth", getWidth_lua);
+        set_if_absent(handleTbl, "getHeight", getHeight_lua);
+        set_if_absent(handleTbl, "setX", setX_lua);
+        set_if_absent(handleTbl, "setY", setY_lua);
+        set_if_absent(handleTbl, "setWidth", setWidth_lua);
+        set_if_absent(handleTbl, "setHeight", setHeight_lua);
+
+        // Anchors
+        set_if_absent(handleTbl, "getAnchorTop", getAnchorTop_lua);
+        set_if_absent(handleTbl, "getAnchorLeft", getAnchorLeft_lua);
+        set_if_absent(handleTbl, "getAnchorBottom", getAnchorBottom_lua);
+        set_if_absent(handleTbl, "getAnchorRight", getAnchorRight_lua);
+        set_if_absent(handleTbl, "setAnchorTop", setAnchorTop_lua);
+        set_if_absent(handleTbl, "setAnchorLeft", setAnchorLeft_lua);
+        set_if_absent(handleTbl, "setAnchorBottom", setAnchorBottom_lua);
+        set_if_absent(handleTbl, "setAnchorRight", setAnchorRight_lua);
+
+        // World edges
+        set_if_absent(handleTbl, "getLeft", getLeft_lua);
+        set_if_absent(handleTbl, "getRight", getRight_lua);
+        set_if_absent(handleTbl, "getTop", getTop_lua);
+        set_if_absent(handleTbl, "getBottom", getBottom_lua);
+        set_if_absent(handleTbl, "setLeft", setLeft_lua);
+        set_if_absent(handleTbl, "setRight", setRight_lua);
+        set_if_absent(handleTbl, "setTop", setTop_lua);
+        set_if_absent(handleTbl, "setBottom", setBottom_lua);
+
+        // Local edges
+        set_if_absent(handleTbl, "getLocalLeft", getLocalLeft_lua);
+        set_if_absent(handleTbl, "getLocalRight", getLocalRight_lua);
+        set_if_absent(handleTbl, "getLocalTop", getLocalTop_lua);
+        set_if_absent(handleTbl, "getLocalBottom", getLocalBottom_lua);
+        set_if_absent(handleTbl, "setLocalLeft", setLocalLeft_lua);
+        set_if_absent(handleTbl, "setLocalRight", setLocalRight_lua);
+        set_if_absent(handleTbl, "setLocalTop", setLocalTop_lua);
+        set_if_absent(handleTbl, "setLocalBottom", setLocalBottom_lua);
+
+        // Orphan retention & grace
+        set_if_absent(handleTbl, "orphanPolicyFromString", orphanPolicyFromString_lua);
+        set_if_absent(handleTbl, "orphanPolicyToString", orphanPolicyToString_lua);
+        set_if_absent(handleTbl, "setOrphanRetentionPolicy", setOrphanRetentionPolicy_lua);
+        set_if_absent(handleTbl, "getOrphanRetentionPolicyString", getOrphanRetentionPolicyString_lua);
+        set_if_absent(handleTbl, "getOrphanGrace", getOrphanGrace_lua);
+        set_if_absent(handleTbl, "setOrphanGrace", setOrphanGrace_lua);
+    }
+
 } // END: namespace SDOM

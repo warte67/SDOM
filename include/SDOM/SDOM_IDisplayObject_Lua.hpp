@@ -89,7 +89,6 @@ namespace SDOM
     void setBorder_lua(IDisplayObject* obj, bool hasBorder);
     void setBackground_lua(IDisplayObject* obj, bool hasBackground);
 
-
     // --- ✅ Priority & Z-Order --- //
     int getMaxPriority_lua(const IDisplayObject* obj);              
     int getMinPriority_lua(const IDisplayObject* obj);              
@@ -176,13 +175,18 @@ namespace SDOM
     void setLocalTop_lua(IDisplayObject* obj, float p_top);         
     void setLocalBottom_lua(IDisplayObject* obj, float p_bottom);  
 
-    // --- 🔄 Orphan Retention Policy --- //
+    // Central binder entry point for IDisplayObject Lua bindings. This allows
+    // SDOM_IDisplayObject.cpp to delegate registration into this module,
+    // keeping the class implementation lean while centralizing Lua glue.
+    void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua);
+
+    // --- ✅ Orphan Retention Policy --- //
     IDisplayObject::OrphanRetentionPolicy orphanPolicyFromString_lua(IDisplayObject* obj, const std::string& s);
     std::string orphanPolicyToString_lua(IDisplayObject* obj, IDisplayObject::OrphanRetentionPolicy p);
     void setOrphanRetentionPolicy_lua(IDisplayObject* obj, const std::string& policyStr);
     std::string getOrphanRetentionPolicyString_lua(IDisplayObject* obj);
 
-    // 🔄 Lua-accessible accessors for orphan grace (milliseconds)
+    // ✅ Lua-accessible accessors for orphan grace (milliseconds)
     int getOrphanGrace_lua(const IDisplayObject* obj);                              
     void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace);  
 

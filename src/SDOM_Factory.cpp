@@ -1449,7 +1449,38 @@ namespace SDOM
 
     void Factory::clear()
     {
-        displayObjects_.clear();
+        // Destroy assets first so dependent objects (e.g., fonts, textures)
+        // release their runtime resources via onUnload()/onQuit().
+        try {
+            std::vector<std::string> assetNames;
+            assetNames.reserve(assetObjects_.size());
+            for (const auto& kv : assetObjects_) assetNames.push_back(kv.first);
+            for (const auto& name : assetNames) {
+                // Calls onUnload()/onQuit() and erases from registry safely
+                destroyAssetObject(name);
+            }
+        } catch(...) {
+            // swallow any exceptions during shutdown
+        }
+
+        // Destroy display objects by name so any custom teardown in the
+        // object (via destructor/onQuit) runs before the registry is cleared.
+        try {
+            std::vector<std::string> objNames;
+            objNames.reserve(displayObjects_.size());
+            for (const auto& kv : displayObjects_) objNames.push_back(kv.first);
+            for (const auto& name : objNames) {
+                destroyDisplayObject(name);
+            }
+        } catch(...) {
+            // swallow any exceptions during shutdown
+        }
+
+        // Clear auxiliary registries/lists
+        orphanList_.clear();
+        futureChildrenList_.clear();
+        creators_.clear();
+        assetCreators_.clear();
     }
 
     void Factory::printObjectRegistry() const

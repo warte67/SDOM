@@ -605,7 +605,7 @@ namespace SDOM
                         // handle ESC keypress
                         if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE) 
                         {
-                            keyboardFocusedObject_.reset(); // Clear keyboard focus
+                            keyboardFocusedObject_.reset(); //  keyboard focus
                         }
                     }
 
@@ -787,10 +787,23 @@ namespace SDOM
             setIsTraversing(false);
         }
 
+        // Collect any pending events
+        pumpEventsOnce();
+
+        // Clean up any orphaned display objects
+        getFactory().collectGarbage();
+
+        // Clear the factory registry
+        getFactory().clear();
+
         // Shutdown SDL first; Lua state will be torn down by sol::state's
         // destructor after all sol::reference objects are destroyed.
         shutdown_SDL();
-    }
+
+        // Clean up any orphaned display objects
+        getLua().collect_garbage();
+        getLua().collect_garbage();
+    } // END: Core::onQuit()
 
     void Core::onRender()
     {
