@@ -90,26 +90,23 @@ namespace SDOM
     int getPriority_lua(const IDisplayObject* obj);                 
     void setToHighestPriority_lua(IDisplayObject* obj);             
     void setToLowestPriority_lua(IDisplayObject* obj);    
-    void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form
-    void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);       // descriptor form
+    void setToHighestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+    void setToLowestPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);
     void sortChildrenByPriority_lua(IDisplayObject* obj);           
     void setPriority_lua(IDisplayObject* obj, int priority);        
-    void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);               // descriptor form
-    void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value); // descriptor form
+    void setPriority_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+    void setPriority_lua_target(IDisplayObject* obj, const sol::object& descriptor, int value);
     std::vector<int> getChildrenPriorities_lua(const IDisplayObject* obj);      
-
-    void moveToTop_lua(IDisplayObject* obj);                                        // should be parent->moveToTop(child)?                       
-    void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);     // should be parent->moveToTop(child)?   // descriptor form  
-    
-    // add these:
+    void moveToTop_lua(IDisplayObject* obj);
+    void moveToTop_lua_any(IDisplayObject* obj, const sol::object& descriptor);
     void moveToBottom_lua(IDisplayObject* obj);                                 
-    void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form
+    void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor);
     void bringToFront_lua(IDisplayObject* obj);                                  
-    void bringToFront_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form    
+    void bringToFront_lua_any(IDisplayObject* obj, const sol::object& descriptor);
     void sendToBack_lua(IDisplayObject* obj);                                   
-    void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor);        // descriptor form
+    void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor);
     void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj);
-    void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj); // descriptor form
+    void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj);
 
     int getZOrder_lua(const IDisplayObject* obj);                               
     void setZOrder_lua(IDisplayObject* obj, int z_order);                       
@@ -121,7 +118,7 @@ namespace SDOM
 
     // --- Focus & Interactivity --- //
     void setKeyboardFocus_lua(IDisplayObject* obj);                 
-    bool isKeyboardFocused_lua(const IDisplayObject* obj);          
+    bool isKeyboardFocused_lua(const IDisplayObject* obj);          // 🔄 ⚠️
     bool isMouseHovered_lua(const IDisplayObject* obj);             
     bool isClickable_lua(const IDisplayObject* obj);                
     void setClickable_lua(IDisplayObject* obj, bool clickable);     

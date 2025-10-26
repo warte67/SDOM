@@ -849,17 +849,17 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
         std::reverse(newChildren.begin(), newChildren.end());
         children_.swap(newChildren);
 
-        // Sort by DESCENDING priority (highest priority first, drawn last → visually on top)
+        // Sort by ASCENDING priority (lowest priority first → bottom, highest last → top)
         std::sort(children_.begin(), children_.end(),
             [](const DisplayHandle& a, const DisplayHandle& b) {
                 int pa = (a && a.get()) ? a->priority_ : std::numeric_limits<int>::min();
                 int pb = (b && b.get()) ? b->priority_ : std::numeric_limits<int>::min();
-                return pa > pb; // <<--- CHANGED HERE
+                return pa < pb;
             });
 
 
-        // Z-order now naturally matches render order:
-        // index 0 = bottom, last = top
+        // Z-order now naturally matches render order (and EventManager expectations):
+        // index 0 = bottom, last index = top (max z)
         for (int i = 0; i < static_cast<int>(children_.size()); ++i) {
             if (auto* obj = dynamic_cast<IDisplayObject*>(children_[i].get())) {
                 obj->z_order_ = i;
@@ -982,13 +982,54 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
         IDisplayObject* parentObj = dynamic_cast<IDisplayObject*>(parent_.get());
         if (!parentObj) return *this;
 
-        int lowestAllowed = parentObj->getMinPriority();
-        int limitPriority = limitObj ? limitObj->priority_ : lowestAllowed;
+        // If no limit provided, behave like sendToBack()
+        if (!limitObj) {
+            return sendToBack();
+        }
 
-        // Ensure we stay above the limit, but below others
-        setPriority(limitPriority + 1);
+        // No-op if the limit is this object
+        if (limitObj == this) {
+            return *this;
+        }
 
-        parentObj->sortChildrenByPriority();
+        // Reinsert this object immediately after the limit in the parent's
+        // current z-order, then renormalize priorities/z to match order.
+        auto& kids = parentObj->children_;
+
+        auto ptrEqual = [](const DisplayHandle& h, const IDisplayObject* p) -> bool {
+            return h && h.get() == p;
+        };
+
+        // Find indices
+        int idxSelf = -1, idxLimit = -1;
+        for (int i = 0; i < static_cast<int>(kids.size()); ++i) {
+            if (ptrEqual(kids[i], this)) idxSelf = i;
+            if (ptrEqual(kids[i], limitObj)) idxLimit = i;
+        }
+        if (idxSelf < 0 || idxLimit < 0) {
+            parentObj->sortChildrenByPriority();
+            return *this;
+        }
+
+        // Remove self
+        DisplayHandle me = kids[idxSelf];
+        kids.erase(kids.begin() + idxSelf);
+
+        // After erase, if self was before limit, limit index shifts left by 1.
+        if (idxSelf < idxLimit) idxLimit -= 1;
+
+        // Insert immediately after limit
+        int insertPos = std::min(idxLimit + 1, static_cast<int>(kids.size()));
+        kids.insert(kids.begin() + insertPos, me);
+
+        // Renormalize priorities and z-order to match index order (ascending)
+        for (int i = 0; i < static_cast<int>(kids.size()); ++i) {
+            if (auto* obj = dynamic_cast<IDisplayObject*>(kids[i].get())) {
+                obj->priority_ = i;
+                obj->z_order_ = i;
+            }
+        }
+
         return *this;
     }
     

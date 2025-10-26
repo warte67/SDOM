@@ -1,6 +1,7 @@
 // SDOM_IDisplayObject_Lua.cpp
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_EventType.hpp>
 #include <SDOM/SDOM_Event.hpp>
@@ -667,46 +668,110 @@ namespace SDOM
         obj->sendToBackAfter(limit);
     }
 
-    void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj) { if (!obj)  obj->sendToBackAfter(limitObj); }
-    void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor)
+    void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj) {
+        if (!obj) return;
+        obj->sendToBackAfter(limitObj);
+    }
+    // void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj)
+    // {
+    //     if (!obj || !descriptor.valid() || !descriptor.is<sol::table>())
+    //         return;
+
+    //     sol::table t = descriptor.as<sol::table>();
+
+    //     // Resolve 'child'
+    //     IDisplayObject* child = nullptr;
+    //     if (sol::object c = t["child"]; c.valid())
+    //     {
+    //         if (c.is<DisplayHandle>()) {
+    //             child = dynamic_cast<IDisplayObject*>(c.as<DisplayHandle>().get());
+    //         }
+    //         else if (c.is<std::string>()) {
+    //             DisplayHandle h = obj->getChild(c.as<std::string>());
+    //             child = dynamic_cast<IDisplayObject*>(h.get());
+    //         }
+    //     }
+    //     if (!child) return; // No-op if invalid
+
+    //     // Resolve 'limit'
+    //     IDisplayObject* limit = nullptr;
+    //     if (sol::object l = t["limit"]; l.valid())
+    //     {
+    //         if (l.is<DisplayHandle>()) {
+    //             limit = dynamic_cast<IDisplayObject*>(l.as<DisplayHandle>().get());
+    //         }
+    //         else if (l.is<std::string>()) {
+    //             DisplayHandle h = obj->getChild(l.as<std::string>());
+    //             limit = dynamic_cast<IDisplayObject*>(h.get());
+    //         }
+    //     }
+
+    //     // Apply operation
+    //     child->sendToBackAfter(limit);
+    //     obj->sortChildrenByPriority(); // Update rendered order
+    // }  
+    void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj)
     {
-        if (!obj || !descriptor.valid() || !descriptor.is<sol::table>())
+        if (!obj || !descriptor.valid() || !limitObj)
             return;
 
-        sol::table t = descriptor.as<sol::table>();
+        DisplayHandle child;
 
-        // Resolve 'child'
-        IDisplayObject* child = nullptr;
-        if (sol::object c = t["child"]; c.valid())
-        {
-            if (c.is<DisplayHandle>()) {
-                child = dynamic_cast<IDisplayObject*>(c.as<DisplayHandle>().get());
+        if (descriptor.is<sol::table>()) {
+            sol::table t = descriptor.as<sol::table>();
+
+            // Prefer an explicit 'child' entry if provided
+            if (sol::object c = t["child"]; c.valid()) {
+                // Try general resolver first to support userdata/string/table specs
+                try { child = SDOM::DisplayHandle::resolveChildSpec(c); } catch(...) {}
+
+                // Fallbacks
+                if (!child.isValid() && c.is<std::string>()) {
+                    std::string nm = c.as<std::string>();
+                    // Try direct child then global registry
+                    child = obj->getChild(nm);
+                    if (!child.isValid()) child = SDOM::getCore().getDisplayObject(nm);
+                }
             }
-            else if (c.is<std::string>()) {
-                DisplayHandle h = obj->getChild(c.as<std::string>());
-                child = dynamic_cast<IDisplayObject*>(h.get());
+
+            // Accept { name = "..." } as shorthand
+            if (!child.isValid()) {
+                sol::object n = t["name"];
+                if (n.valid() && n.is<std::string>()) {
+                    std::string nm = n.as<std::string>();
+                    child = obj->getChild(nm);
+                    if (!child.isValid()) child = SDOM::getCore().getDisplayObject(nm);
+                }
+            }
+        } else {
+            // Non-table: accept DisplayHandle or string directly
+            try { if (descriptor.is<DisplayHandle>()) child = descriptor.as<DisplayHandle>(); } catch(...) {}
+            if (!child.isValid()) {
+                try { if (descriptor.is<std::string>()) {
+                    std::string nm = descriptor.as<std::string>();
+                    child = obj->getChild(nm);
+                    if (!child.isValid()) child = SDOM::getCore().getDisplayObject(nm);
+                } } catch(...) {}
             }
         }
-        if (!child) return; // No-op if invalid
 
-        // Resolve 'limit'
-        IDisplayObject* limit = nullptr;
-        if (sol::object l = t["limit"]; l.valid())
-        {
-            if (l.is<DisplayHandle>()) {
-                limit = dynamic_cast<IDisplayObject*>(l.as<DisplayHandle>().get());
-            }
-            else if (l.is<std::string>()) {
-                DisplayHandle h = obj->getChild(l.as<std::string>());
-                limit = dynamic_cast<IDisplayObject*>(h.get());
-            }
+        if (!child.isValid() || !child.get()) return; // No-op if invalid
+
+        // If parents differ, reparent child to limitObj's parent
+        DisplayHandle limitParent = limitObj->getParent();
+        if (!limitParent.isValid() || !limitParent.get()) return;
+
+        if (child->getParent() != limitParent) {
+            child->removeFromParent();
+            limitParent->addChild(child);
         }
 
-        // Apply operation
-        child->sendToBackAfter(limit);
-        obj->sortChildrenByPriority(); // Update rendered order
-    }  
+        // Now move child to immediately after limitObj among siblings
+        child->sendToBackAfter(limitObj);
 
+        // Ensure order is consistent post-move
+        limitParent->sortChildrenByPriority();
+    }
 
 
     int getZOrder_lua(const IDisplayObject* obj) { if (!obj) return 0; return obj->getZOrder(); }

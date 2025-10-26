@@ -665,6 +665,14 @@ namespace SDOM
 // ☐ void setBorder_lua(IDisplayObject* obj, bool hasBorder);      
 // ☐ void setBackground_lua(IDisplayObject* obj, bool hasBackground);
 
+        // Helper: get index of child in parent
+        auto child_index = [](DisplayHandle parent, DisplayHandle child) {
+            auto& kids = parent->getChildren();
+            for (size_t i = 0; i < kids.size(); ++i)
+                if (kids[i].get() == child.get()) return int(i);
+            return -1;
+        };
+
         bool ok = true;
         Core& core = getCore();
         DisplayHandle stage = core.getRootNode();
@@ -690,7 +698,7 @@ namespace SDOM
         DisplayHandle C = make_box("C", 255);    parent_box->addChild(C);
         // ✅ std::vector<int> getChildrenPriorities()
         auto priorities_before = parent_box->getChildrenPriorities();
-        std::cout << "childrencount: " << priorities_before.size() << std::endl;
+        // std::cout << "childrencount: " << priorities_before.size() << std::endl;
         if (priorities_before.size() != 3) {
             errors.push_back("PriorityZOrder_Test: Expected three children attached to the test box.");
             ok = false;
@@ -702,10 +710,10 @@ namespace SDOM
         parent_box->sortChildrenByPriority();   
         // Read back expected order: C (lowest), A (middle), B (highest)
         auto pr_sorted = parent_box->getChildrenPriorities();
-        if (!(pr_sorted[0] > pr_sorted[1] && pr_sorted[1] > pr_sorted[2])) {
+        if (child_index(parent_box, C) != 0 || child_index(parent_box, A) != 1 || child_index(parent_box, B) != 2) {
             errors.push_back("PriorityZOrder_Test: Expected sorted priorities: C > A > B.");
             ok = false;
-        }       
+        }
         // ✅ int getPriority(const IDisplayObject* obj); 
         if (A->getPriority() != 0) {
             errors.push_back("PriorityZOrder_Test: A priority incorrect for A (read: " + std::to_string(A->getPriority()) + ",  expected 0).");
@@ -778,7 +786,7 @@ namespace SDOM
         }
         // ✅ void moveToTop()
         A->moveToTop();
-        if (A->getZOrder() > B->getZOrder()) {
+        if (A->getZOrder() < B->getZOrder()) {
             errors.push_back("PriorityZOrder_Test: moveToTop() failed to place A at the top.");
             ok = false;
         }    
@@ -816,108 +824,115 @@ namespace SDOM
         DisplayHandle D3  = make_box( "D3", 255);        A->addChild(D3);
 
         
-// DEBUG: Print z-orders
-// parent_box->printTree();
-DEBUG_LOG("---- ZOrder Test Start ----");
-zbox->printTree();                
-// DEBUG_LOG("A ZOrder: " + std::to_string(A->getZOrder()));
-// DEBUG_LOG("B ZOrder: " + std::to_string(B->getZOrder()));
-// DEBUG_LOG("C ZOrder: " + std::to_string(C->getZOrder()));
+        // DEBUG: Print z-orders
+        // parent_box->printTree();
+        DEBUG_LOG("---- ZOrder Test Start ----");
 
-        // ☐ void moveToBottom_lua(IDisplayObject* obj);                                 
-        // ☐ void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form
-        // ☐ void bringToFront_lua(IDisplayObject* obj);                                  
-        // ☐ void bringToFront_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form    
-        // ☐ void sendToBack_lua(IDisplayObject* obj);                                   
-        // ☐ void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor);        // descriptor form
-        // ☐ void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj);
-        // ☐ void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj); // descriptor form
+        // ✅ void moveToBottom_lua(IDisplayObject* obj); 
+        Box* box_a = A.as<Box>();
+        if (!box_a) { errors.push_back("PriorityZOrder_test: unable to fetch A box ptr"); return false; }
+        moveToBottom_lua(box_a);
+        if (child_index(zbox, A) != 0) {
+            errors.push_back("moveToBottom: A should be first child of zbox. (was: " + std::to_string(child_index(zbox, A)) + ", expected 0)");
+            ok = false;
+        }
 
-// Helper: get index of child in parent
-auto child_index = [](DisplayHandle parent, DisplayHandle child) {
-    auto& kids = parent->getChildren();
-    for (size_t i = 0; i < kids.size(); ++i)
-        if (kids[i].get() == child.get()) return int(i);
-    return -1;
-};
+        // ✅ void moveToBottom_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form
+        sol::table descA = lua.create_table(); descA["name"] = "A";
+        moveToBottom_lua_any(zbox.as<IDisplayObject>(), descA);
+        if (child_index(zbox, A) != 0) {
+            errors.push_back("moveToBottom_lua_any: A should be first child of zbox.");
+            ok = false;
+        }
 
-// 🔄 void moveToBottom_lua(IDisplayObject* obj); 
-Box* box_a = A.as<Box>();
-if (!box_a) { errors.push_back("PriorityZOrder_test: unable to fetch A box ptr"); return false; }
-moveToBottom_lua(box_a);
-zbox->sortChildrenByPriority();
-if (child_index(zbox, A) != 0) {
-    errors.push_back("moveToBottom: A should be first child of zbox. (is: " + std::to_string(child_index(zbox, A)) + ")");
-    ok = false;
-}
+        // ✅ void bringToFront_lua(IDisplayObject* obj);                                  
+        B->bringToFront();
+        if (child_index(zbox, B) != int(zbox->countChildren()) - 1) {
+            errors.push_back("bringToFront: B should be last child of zbox.");
+            ok = false;
+        }
 
-// // --- moveToBottom_lua_any ---
-// sol::table descA = lua.create_table(); descA["name"] = "A";
-// moveToBottom_lua_any(zbox.as<IDisplayObject>(), descA);
-// if (child_index(zbox, A) != 0) {
-//     errors.push_back("moveToBottom_lua_any: A should be first child of zbox.");
-//     ok = false;
-// }
+        // ✅ void bringToFront_lua_any(IDisplayObject* obj, const sol::object& descriptor);      // descriptor form    
+        sol::table descB = lua.create_table(); descB["name"] = "B";
+        bringToFront_lua_any(zbox.as<IDisplayObject>(), descB);
+        if (child_index(zbox, B) != int(zbox->countChildren()) - 1) {
+            errors.push_back("bringToFront_lua_any: B should be last child of zbox.");
+            ok = false;
+        }
 
-// // --- bringToFront_lua ---
-// B->bringToFront();
-// if (child_index(zbox, B) != int(zbox->countChildren()) - 1) {
-//     errors.push_back("bringToFront: B should be last child of zbox.");
-//     ok = false;
-// }
+        // ✅ void sendToBack_lua(IDisplayObject* obj);    
+        C->sendToBack();
+        if (child_index(zbox, C) != 0) {
+            errors.push_back("sendToBack: C should be first child of zbox.");
+            ok = false;
+        }
 
-// // --- bringToFront_lua_any ---
-// sol::table descB = lua.create_table(); descB["name"] = "B";
-// bringToFront_lua_any(zbox.as<IDisplayObject>(), descB);
-// if (child_index(zbox, B) != int(zbox->countChildren()) - 1) {
-//     errors.push_back("bringToFront_lua_any: B should be last child of zbox.");
-//     ok = false;
-// }
+        // ✅ void sendToBack_lua_any(IDisplayObject* obj, const sol::object& descriptor);
+        sol::table descC = lua.create_table(); descC["name"] = "C";
+        sendToBack_lua_any(zbox.as<IDisplayObject>(), descC);
+        if (child_index(zbox, C) != 0) {
+            errors.push_back("sendToBack_lua_any: C should be first child of zbox.");
+            ok = false;
+        }
 
-// // --- sendToBack_lua ---
-// C->sendToBack();
-// if (child_index(zbox, C) != 0) {
-//     errors.push_back("sendToBack: C should be first child of zbox.");
-//     ok = false;
-// }
+        // ✅ void sendToBackAfter_lua(IDisplayObject* obj, const IDisplayObject* limitObj);
+        D->sendToBackAfter(B.get());
+        if (child_index(zbox, D) != child_index(zbox, B) + 1) {
+            errors.push_back("sendToBackAfter: D should be immediately after B in zbox.");
+            ok = false;
+        }
 
-// // --- sendToBack_lua_any ---
-// sol::table descC = lua.create_table(); descC["name"] = "C";
-// sendToBack_lua_any(zbox.as<IDisplayObject>(), descC);
-// if (child_index(zbox, C) != 0) {
-//     errors.push_back("sendToBack_lua_any: C should be first child of zbox.");
-//     ok = false;
-// }
+        DEBUG_LOG("BEFORE:");         
+        zbox->printTree();
 
-// // --- sendToBackAfter_lua ---
-// D->sendToBackAfter(B.as<IDisplayObject>());
-// if (child_index(zbox, D) != child_index(zbox, B) + 1) {
-//     errors.push_back("sendToBackAfter: D should be immediately after B in zbox.");
-//     ok = false;
-// }
+        // ⚠️ void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj);
+        sol::table descD3 = lua.create_table(); descD3["name"] = "D3";
+        sendToBackAfter_lua_any(zbox.as<Box>(), descD3, C.as<Box>());
+        if (child_index(zbox, D3) != child_index(zbox, C) + 1) {
+            errors.push_back("sendToBackAfter_lua_any: D3 should be immediately after C in zbox.");
+            ok = false;
+        }
 
-// // --- sendToBackAfter_lua_any ---
-// sol::table descD = lua.create_table(); descD["name"] = "D";
-// sendToBackAfter_lua_any(zbox.as<IDisplayObject>(), descD, B.as<IDisplayObject>());
-// if (child_index(zbox, D) != child_index(zbox, B) + 1) {
-//     errors.push_back("sendToBackAfter_lua_any: D should be immediately after B in zbox.");
-//     ok = false;
-// }
+        DEBUG_LOG("AFTER:  sendToBackAfter_lua_any(zbox.as<Box>(), descD3, C.as<Box>());");
+        zbox->printTree();
+/*
+BEFORE:
+zbox
+  ├── C
+  ├── A
+  │   ├── D1
+  │   ├── D2
+  │   └── D3
+  ├── B
+  └── D
+
+AFTER:  sendToBackAfter_lua_any(zbox.as<Box>(), descD3, C.as<Box>());
+
+zbox
+  ├── C
+  ├── D3
+  ├── A
+  │   ├── D1
+  │   └── D2
+  ├── B
+  └── D
+
+*/
 
 
-
-for (auto& kid : zbox->getChildren() )
-{
-    DEBUG_LOG("Kid: " + kid->getName() + " ZOrder: " + std::to_string(kid->getZOrder()));
-}
+        for (auto& kid : zbox->getChildren() )
+        {
+            DEBUG_LOG("Kid: " + kid->getName() + " ZOrder: " + std::to_string(kid->getZOrder()));
+        }
 
 
 
         // Cleanup
 
-// parent_box->printTree();
-// zbox->printTree();        
+        // parent_box->printTree();
+        // zbox->printTree();        
         core.destroyDisplayObject("parent_box");
+        core.destroyDisplayObject("zbox");
         core.destroyDisplayObject("A");
         core.destroyDisplayObject("B");        
         core.destroyDisplayObject("C");

@@ -122,6 +122,9 @@ namespace SDOM
 
         // --- LUA Wrapper Functions --- //
 
+        // Resolve a Lua child spec (string, DisplayHandle, or table{ child=... | name=... })
+        static DisplayHandle resolveChildSpec(const sol::object& spec);
+        
         IDisplayObject* get_lua(DisplayHandle* self) const { return self->get(); }
         bool isValid_lua(DisplayHandle* self) const { return self->isValid(); }
         std::string getName_lua(DisplayHandle* self) const { return self->getName(); }
@@ -148,8 +151,6 @@ namespace SDOM
         // virtual void _registerLua(const std::string& typeName, sol::state_view lua);
         sol::usertype<DisplayHandle> objHandleType_;
 
-        // Resolve a Lua child spec (string, DisplayHandle, or table{ child=... | name=... })
-        static DisplayHandle resolveChildSpec(const sol::object& spec);
 
         
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
