@@ -1095,11 +1095,133 @@ namespace SDOM
             errors.push_back("ObjectFocusInteractivity_Test: Failed to restore visible state for 'blueishBox'.");
             ok = false;
         }
-        // No Cleanup To Do
 
+        // Save originals to restore at the end of this block
+        int  orig_prio_box   = blueishBox->getTabPriority();
+        bool orig_tab_box    = blueishBox->isTabEnabled();
+        int  orig_prio_label = blueishBoxLabel->getTabPriority();
+        bool orig_tab_label  = blueishBoxLabel->isTabEnabled();
+
+        // ✅ bool isTabEnabled_lua(const IDisplayObject* obj)
+        if (!isTabEnabled_lua(blueishBox.as<IDisplayObject>())) {
+            errors.push_back("ObjectFocusInteractivity_Test: isTabEnabled_lua() returned false for enabled 'blueishBox'.");
+            ok = false;
+        }
+        if (isTabEnabled_lua(blueishBoxLabel.as<IDisplayObject>())) {
+            errors.push_back("ObjectFocusInteractivity_Test: isTabEnabled_lua() returned true for disabled 'blueishBoxLabel'.");
+            ok = false;
+        }
+        // ✅ bool IDisplayObject::isTabEnabled()
+        if (!blueishBox->isTabEnabled()) {
+            errors.push_back("ObjectFocusInteractivity_Test: IDisplayObject::isTabEnabled() returned false for enabled 'blueishBox'.");
+            ok = false;
+        }
+        if (blueishBoxLabel->isTabEnabled()) {
+            errors.push_back("ObjectFocusInteractivity_Test: IDisplayObject::isTabEnabled() returned true for disabled 'blueishBoxLabel'.");
+            ok = false;
+        }
+
+        // Round-trip via Lua then verify via both Lua and C++
+        // ✅ void setTabPriority_lua(IDisplayObject* obj, int index)
+        int lua_set_prio = orig_prio_box + 1;
+        setTabPriority_lua(blueishBox.as<IDisplayObject>(), lua_set_prio);
+        if (blueishBox->getTabPriority() != lua_set_prio) {
+            errors.push_back("ObjectFocusInteractivity_Test: setTabPriority_lua() did not take (C++ getter mismatch).");
+            ok = false;
+        }
+        if (getTabPriority_lua(blueishBox.as<IDisplayObject>()) != lua_set_prio) {
+            errors.push_back("ObjectFocusInteractivity_Test: setTabPriority_lua() did not take (Lua getter mismatch).");
+            ok = false;
+        }
+
+        // Set via C++ then verify via both C++ and Lua
+        // ✅ void IDisplayObject::setTabPriority(int index)
+        int cpp_set_prio = orig_prio_box + 2;
+        blueishBox->setTabPriority(cpp_set_prio);
+        if (blueishBox->getTabPriority() != cpp_set_prio) {
+            errors.push_back("ObjectFocusInteractivity_Test: IDisplayObject::setTabPriority() did not take (C++ getter mismatch).");
+            ok = false;
+        }
+        if (getTabPriority_lua(blueishBox.as<IDisplayObject>()) != cpp_set_prio) {
+            errors.push_back("ObjectFocusInteractivity_Test: IDisplayObject::setTabPriority() did not take (Lua getter mismatch).");
+            ok = false;
+        }
+
+        // Toggle off via Lua, verify both sides; then back on
+        // ✅ void setTabEnabled_lua(IDisplayObject* obj, bool enabled)
+        setTabEnabled_lua(blueishBox.as<IDisplayObject>(), false);
+        if (isTabEnabled_lua(blueishBox.as<IDisplayObject>()) || blueishBox->isTabEnabled()) {
+            errors.push_back("ObjectFocusInteractivity_Test: setTabEnabled_lua(false) did not take for 'blueishBox'.");
+            ok = false;
+        }
+        // Re-enable; priority should remain unchanged when re-enabling (non-zero prio)
+        setTabEnabled_lua(blueishBox.as<IDisplayObject>(), true);
+        if (!isTabEnabled_lua(blueishBox.as<IDisplayObject>()) || !blueishBox->isTabEnabled()) {
+            errors.push_back("ObjectFocusInteractivity_Test: setTabEnabled_lua(true) did not take for 'blueishBox'.");
+            ok = false;
+        }
+        if (blueishBox->getTabPriority() != cpp_set_prio) {
+            errors.push_back("ObjectFocusInteractivity_Test: tab priority changed unexpectedly after re-enabling via Lua.");
+            ok = false;
+        }
+
+        // ✅ void IDisplayObject::setTabEnabled(bool enabled)
+        blueishBox->setTabEnabled(false);
+        if (isTabEnabled_lua(blueishBox.as<IDisplayObject>()) || blueishBox->isTabEnabled()) {
+            errors.push_back("ObjectFocusInteractivity_Test: IDisplayObject::setTabEnabled(false) did not take for 'blueishBox'.");
+            ok = false;
+        }
+        blueishBox->setTabEnabled(true);
+        // ✅ void setTabEnabled_lua(IDisplayObject* obj, bool enabled)
+        if (!isTabEnabled_lua(blueishBox.as<IDisplayObject>()) || !blueishBox->isTabEnabled()) {
+            errors.push_back("ObjectFocusInteractivity_Test: IDisplayObject::setTabEnabled(true) did not take for 'blueishBox'.");
+            ok = false;
+        }
+        // ✅ void IDisplayObject::setTabEnabled(bool enabled)
+        if (blueishBox->getTabPriority() != cpp_set_prio) {
+            errors.push_back("ObjectFocusInteractivity_Test: tab priority changed unexpectedly after re-enabling via C++.");
+            ok = false;
+        }
+
+        // Optional: briefly exercise enable/disable on the non-tabbable label, then restore
+        // ✅ void setTabEnabled_lua(IDisplayObject* obj, bool enabled)
+        setTabEnabled_lua(blueishBoxLabel.as<IDisplayObject>(), true);
+        if (!blueishBoxLabel->isTabEnabled()) {
+            errors.push_back("ObjectFocusInteractivity_Test: setTabEnabled_lua(true) did not take for 'blueishBoxLabel'.");
+            ok = false;
+        }
+        // ✅ void IDisplayObject::setTabEnabled(bool enabled)
+        blueishBoxLabel->setTabEnabled(false);
+        if (isTabEnabled_lua(blueishBoxLabel.as<IDisplayObject>())) {
+            errors.push_back("ObjectFocusInteractivity_Test: setTabEnabled(false) did not take for 'blueishBoxLabel'.");
+            ok = false;
+        }
+
+        // Restore original state for both objects to avoid leaking changes
+        blueishBox->setTabPriority(orig_prio_box);
+        blueishBox->setTabEnabled(orig_tab_box);
+        blueishBoxLabel->setTabPriority(orig_prio_label);
+        blueishBoxLabel->setTabEnabled(orig_tab_label);
         // Return Results
         return ok;
     } // END: IDisplayObject_test9(std::vector<std::string>& errors)   
+
+
+
+    // --- IDisplayObject Unit Test Scaffolding --- //
+    bool IDisplayObject_test10(std::vector<std::string>& errors)   
+    {
+        // ✅ Test Verified
+        // 🔄 In Progress
+        // ⚠️ Failing     
+        // 🚫 Remove
+        // ❌ Invalid
+        // ☐ Planned
+
+        bool ok = true;
+
+        return ok;
+    } // IDisplayObject_test10(std::vector<std::string>& errors)   
 
 
 
