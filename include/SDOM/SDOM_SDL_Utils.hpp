@@ -93,7 +93,17 @@ namespace SDOM
                         std::to_string(c.g) + ", " +
                         std::to_string(c.b) + ", " +
                         std::to_string(c.a) + ")";
-        }        
+        }     
+        
+        // Convert a Lua table -> SDL_Color (supports {r=..,g=..,b=..,a=..} or {r,g,b,a})
+        static SDL_Color get__lua_color(const sol::table& lua_color);
+        
+        // Convert SDL_Color -> Lua table. Provide two overloads:
+        //  - caller supplies sol::state_view
+        //  - convenience overload that obtains the global lua state
+        static sol::table get_lua_color(sol::state_view lua, const SDL_Color& sdl_color);
+        static sol::table get_lua_color(const SDL_Color& sdl_color);
+        
 
     };
 

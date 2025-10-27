@@ -140,6 +140,51 @@ namespace SDOM
         }
     } // END SDL_Utils::registerLua()
 
+
+    SDL_Color SDL_Utils::get__lua_color(const sol::table& t)
+    {
+        SDL_Color c{255,255,255,255};
+        if (!t.valid()) return c;
+        // keyed lookup first, then numeric array-style fallback
+        c.r = static_cast<Uint8>(t["r"].get_or(t[1].get_or(static_cast<int>(c.r))));
+        c.g = static_cast<Uint8>(t["g"].get_or(t[2].get_or(static_cast<int>(c.g))));
+        c.b = static_cast<Uint8>(t["b"].get_or(t[3].get_or(static_cast<int>(c.b))));
+        c.a = static_cast<Uint8>(t["a"].get_or(t[4].get_or(static_cast<int>(c.a))));
+        return c;
+    } // END SDL_Utils::get__lua_color()
+
+    sol::table SDL_Utils::get_lua_color(sol::state_view lua, const SDL_Color& s)
+    {
+        sol::table t = lua.create_table();
+        t["r"] = static_cast<int>(s.r);
+        t["g"] = static_cast<int>(s.g);
+        t["b"] = static_cast<int>(s.b);
+        t["a"] = static_cast<int>(s.a);
+        // also populate numeric indices for array-style access
+        t[1] = static_cast<int>(s.r);
+        t[2] = static_cast<int>(s.g);
+        t[3] = static_cast<int>(s.b);
+        t[4] = static_cast<int>(s.a);
+        return t;
+    } // END SDL_Utils::get_lua_color()
+
+    sol::table SDL_Utils::get_lua_color(const SDL_Color& s)
+    {
+        // convenience: use global Lua state helper if available in project
+        try {
+            sol::state_view lua = getLua();
+            return get_lua_color(lua, s);
+        } catch(...) {
+            // fallback: create a minimal invalid table via dummy state if getLua() not available
+            // attempt to return an empty table attached to the global Lua state if possible
+            // (this path should rarely be hit; callers can use the sol::state_view overload)
+            sol::state_view lua = getLua();
+            return get_lua_color(lua, s);
+        }
+    } // END SDL_Utils::get_lua_color()
+
+
+
     std::string SDL_Utils::pixelFormatToString(SDL_PixelFormat format)
     {
         switch (format) {

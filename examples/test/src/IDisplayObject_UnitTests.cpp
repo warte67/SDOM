@@ -1724,7 +1724,8 @@ namespace SDOM
             if (getOrphanRetentionPolicyString_lua(o) != std::string("auto")) return fail("getOrphanRetentionPolicyString_lua() mismatch after auto.");
 
             // grace round-trip
-            setOrphanGrace_lua(o, std::chrono::milliseconds(250));
+            setOrphanGrace_lua(o, 250);
+            // setOrphanGrace_lua(o, std::chrono::milliseconds(250));
             if (getOrphanGrace_lua(o) != 250) return fail("getOrphanGrace_lua() != 250 after set.");
             if (o->getOrphanGrace().count() != 250) return fail("C++ getOrphanGrace() != 250 after Lua set.");
 
@@ -1771,7 +1772,8 @@ namespace SDOM
             setOrphanRetentionPolicy_lua(o, "grace");
             const int grace_ms  = 20;
             const int margin_ms = 10;
-            setOrphanGrace_lua(o, std::chrono::milliseconds(grace_ms));
+            // setOrphanGrace_lua(o, std::chrono::milliseconds(grace_ms));
+            setOrphanGrace_lua(o, grace_ms);
 
             // Orphan it and immediately collect — should be retained during grace
             stage->removeChild(h);
@@ -1795,8 +1797,8 @@ namespace SDOM
             setOrphanRetentionPolicy_lua(o, "grace");
             const int grace_ms  = 20;
             const int margin_ms = 10;
-            setOrphanGrace_lua(o, std::chrono::milliseconds(grace_ms));
-
+            // setOrphanGrace_lua(o, std::chrono::milliseconds(grace_ms));
+            setOrphanGrace_lua(o, grace_ms);
             // Orphan it, then reparent within grace — should prevent destruction
             stage->removeChild(h);
             std::this_thread::sleep_for(std::chrono::milliseconds(grace_ms / 2));

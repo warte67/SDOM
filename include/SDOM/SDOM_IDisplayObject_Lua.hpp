@@ -183,7 +183,8 @@ namespace SDOM
 
     // ✅ Lua-accessible accessors for orphan grace (milliseconds)
     int getOrphanGrace_lua(const IDisplayObject* obj);                              
-    void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace);  
+//    void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace);  
+    void setOrphanGrace_lua(IDisplayObject* obj, int grace_in_ms);  
 
     // Central binder entry point for IDisplayObject Lua bindings. This allows
     // SDOM_IDisplayObject.cpp to delegate registration into this module,

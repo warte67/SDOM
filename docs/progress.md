@@ -1210,7 +1210,46 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Verified **doTabKeyPressForward()** and **doTabKeyPressReverse()** passes both C++ and Lua unit tests.
 - Updated the Lua API stubs to reflect the new methods.
 - Core is stable (not frozen). Current features are fully bound and tested; future expansions will follow the same testing and validation model.
+- Added **getOrphanGrace()** and **setOrphanGrace()** to IDisplayObject C++, Lua bindings and unit tests.
 
+-- Legend:
+-- ✅ Test Verified
+-- 🔄 In Progress
+-- ⚠️ Failing
+-- ☐ Planned
+
+| Property        | Type        | Getter                             | Setter                            | Notes                  |
+| --------------- | ----------- | ---------------------------------- | --------------------------------- | ---------------------- |
+| `name`          | string      | `getName()`                        | `setName(string)`                 | ☐ planned             |
+| `type`          | string      | `getType()`                        | n/a                               | ☐ planned             |
+| `x`             | number      | `getX()`                           | `setX(number)`                    | ☐ planned             |
+| `y`             | number      | `getY()`                           | `setY(number)`                    | ☐ planned             |
+| `width`         | number      | `getWidth()`                       | `setWidth(number)`                | ☐ planned             |
+| `height`        | number      | `getHeight()`                      | `setHeight(number)`               | ☐ planned             |
+| `w` *(alias)*   | number      | → `width`                          | → `width`                         | ☐ planned             |
+| `h` *(alias)*   | number      | → `height`                         | → `height`                        | ☐ planned             |
+| `color`         | `{r,g,b,a}` | `getColor()`                       | `setColor(SDL_Color)`             | ☐ planned             |
+| `anchor_top`    | enum/int    | `getAnchorTop()`                   | `setAnchorTop(int)`               | ☐ planned             |
+| `anchor_left`   | enum/int    | `getAnchorLeft()`                  | `setAnchorLeft(int)`              | ☐ planned             |
+| `anchor_bottom` | enum/int    | `getAnchorBottom()`                | `setAnchorBottom(int)`            | ☐ planned             |
+| `anchor_right`  | enum/int    | `getAnchorRight()`                 | `setAnchorRight(int)`             | ☐ planned             |
+| `z_order`       | number      | `getZOrder()`                      | `setZOrder(number)`               | ☐ planned             |
+| `priority`      | number      | `getPriority()`                    | `setPriority(number)`             | ☐ planned             |
+| `is_clickable`  | boolean     | `isClickable()`                    | `setClickable(bool)`              | ☐ planned             |
+| `is_enabled`    | boolean     | `isEnabled()`                      | `setEnabled(bool)`                | ☐ planned             |
+| `is_hidden`     | boolean     | `isHidden()`                       | `setHidden(bool)`                 | ☐ planned             |
+| `tab_priority`  | number      | `getTabPriority()`                 | `setTabPriority(number)`          | ☐ planned             |
+| `tab_enabled`   | boolean     | `isTabEnabled()`                   | `setTabEnabled(bool)`             | ☐ planned             |
+| `left`          | number      | `getLeft()`                        | `setLeft(number)`                 | ☐ planned             |
+| `right`         | number      | `getRight()`                       | `setRight(number)`                | ☐ planned             |
+| `top`           | number      | `getTop()`                         | `setTop(number)`                  | ☐ planned             |
+| `bottom`        | number      | `getBottom()`                      | `setBottom(number)`               | ☐ planned             |
+| `local_left`    | number      | `getLocalLeft()`                   | `setLocalLeft(number)`            | ☐ planned             |
+| `local_right`   | number      | `getLocalRight()`                  | `setLocalRight(number)`           | ☐ planned             |
+| `local_top`     | number      | `getLocalTop()`                    | `setLocalTop(number)`             | ☐ planned             |
+| `local_bottom`  | number      | `getLocalBottom()`                 | `setLocalBottom(number)`          | ☐ planned             |
+| `orphan_policy` | string      | `getOrphanRetentionPolicyString()` | `setOrphanRetentionPolicy("auto") | ☐ planned             |
+| `orphan_grace`  | number      | `getOrphanGrace()`                 | `setOrphanGrace(number)`          | ☐ planned             |
 
 
 ---
@@ -1272,7 +1311,7 @@ This allows **SDOM_IDisplayObject.cpp** to delegate registration into this modul
 
 ---        
 ## UnitTest Modules
-        ✅ Tests Verified
+        ✅ Tests Verified — All Unit Tests Pass
         🔄 In Progress
         ☐ Pending
 - ☐ ArrowButton
@@ -1293,7 +1332,7 @@ This allows **SDOM_IDisplayObject.cpp** to delegate registration into this modul
 - ☐ IButtonObject
 - ☐ IconButton
 - ☐ IDataObject 
-- 🔄 IDisplayObject
+- ✅ IDisplayObject
 - ☐ IFontObject
 - ☐ IPanelObject
 - ☐ IRangeControl

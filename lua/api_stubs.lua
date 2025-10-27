@@ -515,4 +515,35 @@ EventType = EventType or {}
 ---@field min number
 ---@field max number
 
+---@class DisplayHandle
+--- Synthetic Lua property (via __index/__newindex binding)
+---@field is_hidden boolean     -- mirrors isHidden()/setHidden()
+---@field x number              -- mirrors getX()/setX()
+---@field y number              -- mirrors getY()/setY()
+---@field width number          -- mirrors getWidth()/setWidth()
+---@field height number         -- mirrors getHeight()/setHeight()
+---@field w number              -- alias of width
+---@field h number              -- alias of height
+---@field color SDL_Color       -- mirrors getColor()/setColor()
+---@field anchor_top integer    -- mirrors getAnchorTop()/setAnchorTop()
+---@field anchor_left integer   -- mirrors getAnchorLeft()/setAnchorLeft()
+---@field anchor_bottom integer -- mirrors getAnchorBottom()/setAnchorBottom()
+---@field anchor_right integer  -- mirrors getAnchorRight()/setAnchorRight()
+---@field z_order integer       -- mirrors getZOrder()/setZOrder()
+---@field priority integer      -- mirrors getPriority()/setPriority()
+---@field is_clickable boolean  -- mirrors isClickable()/setClickable()
+---@field is_enabled boolean    -- mirrors isEnabled()/setEnabled()
+---@field tab_priority integer  -- mirrors getTabPriority()/setTabPriority()
+---@field tab_enabled boolean   -- mirrors isTabEnabled()/setTabEnabled()
+---@field left number           -- mirrors getLeft()/setLeft()
+---@field right number          -- mirrors getRight()/setRight()
+---@field top number            -- mirrors getTop()/setTop()
+---@field bottom number         -- mirrors getBottom()/setBottom()
+---@field local_left number     -- mirrors getLocalLeft()/setLocalLeft()
+---@field local_right number    -- mirrors getLocalRight()/setLocalRight()
+---@field local_top number      -- mirrors getLocalTop()/setLocalTop()
+---@field local_bottom number   -- mirrors getLocalBottom()/setLocalBottom()
+---@field orphan_grace number   -- mirrors getOrphanGrace()/setOrphanGrace()
+---@field orphan_policy string  -- mirrors getOrphanRetentionPolicyString()/setOrphanRetentionPolicy()
+
 return true

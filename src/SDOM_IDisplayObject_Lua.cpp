@@ -673,44 +673,9 @@ namespace SDOM
         if (!obj) return;
         obj->sendToBackAfter(limitObj);
     }
-    // void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj)
-    // {
-    //     if (!obj || !descriptor.valid() || !descriptor.is<sol::table>())
-    //         return;
 
-    //     sol::table t = descriptor.as<sol::table>();
+    
 
-    //     // Resolve 'child'
-    //     IDisplayObject* child = nullptr;
-    //     if (sol::object c = t["child"]; c.valid())
-    //     {
-    //         if (c.is<DisplayHandle>()) {
-    //             child = dynamic_cast<IDisplayObject*>(c.as<DisplayHandle>().get());
-    //         }
-    //         else if (c.is<std::string>()) {
-    //             DisplayHandle h = obj->getChild(c.as<std::string>());
-    //             child = dynamic_cast<IDisplayObject*>(h.get());
-    //         }
-    //     }
-    //     if (!child) return; // No-op if invalid
-
-    //     // Resolve 'limit'
-    //     IDisplayObject* limit = nullptr;
-    //     if (sol::object l = t["limit"]; l.valid())
-    //     {
-    //         if (l.is<DisplayHandle>()) {
-    //             limit = dynamic_cast<IDisplayObject*>(l.as<DisplayHandle>().get());
-    //         }
-    //         else if (l.is<std::string>()) {
-    //             DisplayHandle h = obj->getChild(l.as<std::string>());
-    //             limit = dynamic_cast<IDisplayObject*>(h.get());
-    //         }
-    //     }
-
-    //     // Apply operation
-    //     child->sendToBackAfter(limit);
-    //     obj->sortChildrenByPriority(); // Update rendered order
-    // }  
     void sendToBackAfter_lua_any(IDisplayObject* obj, const sol::object& descriptor, const IDisplayObject* limitObj)
     {
         if (!obj || !descriptor.valid() || !limitObj)
@@ -977,10 +942,15 @@ namespace SDOM
         return static_cast<int>(obj->getOrphanGrace().count());
     }
 
-    void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace)
+    // void setOrphanGrace_lua(IDisplayObject* obj, std::chrono::milliseconds grace)
+    // {
+    //     if (!obj) return;
+    //     obj->setOrphanGrace(grace);
+    // }
+    void setOrphanGrace_lua(IDisplayObject* obj, int grace_in_ms)
     {
         if (!obj) return;
-        obj->setOrphanGrace(grace);
+        obj->setOrphanGrace(std::chrono::milliseconds(grace_in_ms));
     }
 
     // Overload-aware binder helper: adapts pointer-based wrappers to DisplayHandle colon-calls.
@@ -1060,6 +1030,25 @@ namespace SDOM
                     return fn(obj, std::forward<Args>(args)...);
                 }
             };
+        }
+
+        // --- new reusable property helper (lambda-like usage) ---
+        template <typename Getter, typename Setter>
+        inline void set_property(sol::table& tbl,
+                                 sol::optional<sol::usertype<SDOM::DisplayHandle>>& maybeUT,
+                                 const char* name,
+                                 Getter getter_fn,
+                                 Setter setter_fn)
+        {
+            sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                tbl.set(name, sol::property(make_handle_wrapper(getter_fn), make_handle_wrapper(setter_fn)));
+            }
+            if (maybeUT) {
+                try {
+                    (*maybeUT)[name] = sol::property(make_handle_wrapper(getter_fn), make_handle_wrapper(setter_fn));
+                } catch(...) {}
+            }
         }
 
         // Bind the function on both the table and the usertype (if present)
@@ -1569,6 +1558,125 @@ namespace SDOM
         bind_both(handleTbl, maybeUT, "getOrphanRetentionPolicyString", getOrphanRetentionPolicyString_lua);
         bind_both(handleTbl, maybeUT, "getOrphanGrace", getOrphanGrace_lua);
         bind_both(handleTbl, maybeUT, "setOrphanGrace", setOrphanGrace_lua);
+
+        // --- IDisplayObject Lua Properties --- //
+
+        /*
+        -- Legend:
+        -- ✅ Test Verified
+        -- 🔄 In Progress
+        -- ⚠️ Failing
+        -- ☐ Planned
+
+        | Property        | Type        | Getter                             | Setter                            | Notes                  |
+        | --------------- | ----------- | ---------------------------------- | --------------------------------- | ---------------------- |
+        | `name`          | string      | `getName()`                        | `setName(string)`                 | ☐ planned             |
+        | `type`          | string      | `getType()`                        | n/a                               | ☐ planned             |
+        | `x`             | number      | `getX()`                           | `setX(number)`                    | ☐ planned             |
+        | `y`             | number      | `getY()`                           | `setY(number)`                    | ☐ planned             |
+        | `width`         | number      | `getWidth()`                       | `setWidth(number)`                | ☐ planned             |
+        | `height`        | number      | `getHeight()`                      | `setHeight(number)`               | ☐ planned             |
+        | `w` *(alias)*   | number      | → `width`                          | → `width`                         | ☐ planned             |
+        | `h` *(alias)*   | number      | → `height`                         | → `height`                        | ☐ planned             |
+        | `color`         | `{r,g,b,a}` | `getColor()`                       | `setColor(SDL_Color)`             | ☐ planned             |
+        | `anchor_top`    | enum/int    | `getAnchorTop()`                   | `setAnchorTop(int)`               | ☐ planned             |
+        | `anchor_left`   | enum/int    | `getAnchorLeft()`                  | `setAnchorLeft(int)`              | ☐ planned             |
+        | `anchor_bottom` | enum/int    | `getAnchorBottom()`                | `setAnchorBottom(int)`            | ☐ planned             |
+        | `anchor_right`  | enum/int    | `getAnchorRight()`                 | `setAnchorRight(int)`             | ☐ planned             |
+        | `z_order`       | number      | `getZOrder()`                      | `setZOrder(number)`               | ☐ planned             |
+        | `priority`      | number      | `getPriority()`                    | `setPriority(number)`             | ☐ planned             |
+        | `is_clickable`  | boolean     | `isClickable()`                    | `setClickable(bool)`              | ☐ planned             |
+        | `is_enabled`    | boolean     | `isEnabled()`                      | `setEnabled(bool)`                | ☐ planned             |
+        | `is_hidden`     | boolean     | `isHidden()`                       | `setHidden(bool)`                 | ☐ planned             |
+        | `tab_priority`  | number      | `getTabPriority()`                 | `setTabPriority(number)`          | ☐ planned             |
+        | `tab_enabled`   | boolean     | `isTabEnabled()`                   | `setTabEnabled(bool)`             | ☐ planned             |
+        | `left`          | number      | `getLeft()`                        | `setLeft(number)`                 | ☐ planned             |
+        | `right`         | number      | `getRight()`                       | `setRight(number)`                | ☐ planned             |
+        | `top`           | number      | `getTop()`                         | `setTop(number)`                  | ☐ planned             |
+        | `bottom`        | number      | `getBottom()`                      | `setBottom(number)`               | ☐ planned             |
+        | `local_left`    | number      | `getLocalLeft()`                   | `setLocalLeft(number)`            | ☐ planned             |
+        | `local_right`   | number      | `getLocalRight()`                  | `setLocalRight(number)`           | ☐ planned             |
+        | `local_top`     | number      | `getLocalTop()`                    | `setLocalTop(number)`             | ☐ planned             |
+        | `local_bottom`  | number      | `getLocalBottom()`                 | `setLocalBottom(number)`          | ☐ planned             |
+        | `orphan_policy` | string      | `getOrphanRetentionPolicyString()` | `setOrphanRetentionPolicy("auto") | ☐ planned             |
+        | `orphan_grace`  | number      | `getOrphanGrace()`                 | `setOrphanGrace(number)`          | ☐ planned             |
+        */
+
+        // Expose properties as both dot-style and snake_case
+        set_property(handleTbl, maybeUT, "x", getX_lua, setX_lua);
+        set_property(handleTbl, maybeUT, "y", getY_lua, setY_lua);
+        set_property(handleTbl, maybeUT, "width", getWidth_lua, setWidth_lua);
+        set_property(handleTbl, maybeUT, "height", getHeight_lua, setHeight_lua);
+        set_property(handleTbl, maybeUT, "w", getWidth_lua, setWidth_lua);
+        set_property(handleTbl, maybeUT, "h", getHeight_lua, setHeight_lua);
+        set_property(handleTbl, maybeUT, "anchor_top", getAnchorTop_lua, setAnchorTop_lua);
+        set_property(handleTbl, maybeUT, "anchor_left", getAnchorLeft_lua, setAnchorLeft_lua);
+        set_property(handleTbl, maybeUT, "anchor_bottom", getAnchorBottom_lua, setAnchorBottom_lua);
+        set_property(handleTbl, maybeUT, "anchor_right", getAnchorRight_lua, setAnchorRight_lua);
+        set_property(handleTbl, maybeUT, "z_order", getZOrder_lua, setZOrder_lua);
+        set_property(handleTbl, maybeUT, "priority", getPriority_lua, setPriority_lua);
+        set_property(handleTbl, maybeUT, "is_clickable", isClickable_lua, setClickable_lua);
+        set_property(handleTbl, maybeUT, "is_enabled", isEnabled_lua, setEnabled_lua);
+        set_property(handleTbl, maybeUT, "is_hidden", isHidden_lua, setHidden_lua);
+        set_property(handleTbl, maybeUT, "tab_priority", getTabPriority_lua, setTabPriority_lua);
+        set_property(handleTbl, maybeUT, "tab_enabled", isTabEnabled_lua, setTabEnabled_lua);
+        set_property(handleTbl, maybeUT, "left", getLeft_lua, setLeft_lua);
+        set_property(handleTbl, maybeUT, "right", getRight_lua, setRight_lua);
+        set_property(handleTbl, maybeUT, "top", getTop_lua, setTop_lua);
+        set_property(handleTbl, maybeUT, "bottom", getBottom_lua, setBottom_lua);
+        set_property(handleTbl, maybeUT, "local_left", getLocalLeft_lua, setLocalLeft_lua);
+        set_property(handleTbl, maybeUT, "local_right", getLocalRight_lua, setLocalRight_lua);
+        set_property(handleTbl, maybeUT, "local_top", getLocalTop_lua, setLocalTop_lua);
+        set_property(handleTbl, maybeUT, "local_bottom", getLocalBottom_lua, setLocalBottom_lua);        
+        set_property(handleTbl, maybeUT, "orphan_grace", getOrphanGrace_lua, setOrphanGrace_lua);
+
+        // ☐ set_property(handleTbl, maybeUT, "orphan_policy", getOrphanRetentionPolicyString_lua, setOrphanRetentionPolicy_lua);
+
+
+        // Color properties Work in progress
+
+
+        
+        auto color_getter = [](DisplayHandle& self) -> sol::table {
+            sol::state_view lua = getLua();
+            sol::table t = lua.create_table();
+            if (!self.isValid() || !self.get()) return t;
+            IDisplayObject* obj = self.get();
+            SDL_Color c = obj->getColor();
+            return SDL_Utils::get_lua_color(lua, c);
+        };
+
+        auto color_setter = [](DisplayHandle& self, const sol::object& val) {
+            if (!self.isValid() || !self.get()) return;
+            IDisplayObject* obj = self.get();
+            // Table -> SDL_Color
+            if (val.is<sol::table>()) {
+                sol::table t = val.as<sol::table>();
+                SDL_Color c = SDL_Utils::get__lua_color(t);
+                obj->setColor(c);
+            }
+            // SDL_Color userdata
+            else if (val.is<SDL_Color>()) {
+                try { SDL_Color c = val.as<SDL_Color>(); obj->setColor(c); } catch(...) {}
+            }
+            // Single number -> grayscale
+            else if (val.is<int>() || val.is<double>()) {
+                int v = val.is<int>() ? val.as<int>() : static_cast<int>(val.as<double>());
+                SDL_Color c{static_cast<Uint8>(v), static_cast<Uint8>(v), static_cast<Uint8>(v), 255};
+                obj->setColor(c);
+            }
+        };     
+        
+        // Ensure 'color' property is not already set
+        sol::object cur = handleTbl.raw_get_or("color", sol::lua_nil);
+        if (!cur.valid() || cur == sol::lua_nil) {
+            handleTbl.set("color", sol::property(color_getter, color_setter));
+        }
+        if (maybeUT) {
+            try { (*maybeUT)["color"] = sol::property(color_getter, color_setter); } catch(...) {}
+        }
+        // set_property(handleTbl, maybeUT, "color", getColor_lua, setColor_lua);
+
     }
 
 } // END: namespace SDOM
