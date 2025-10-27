@@ -214,6 +214,7 @@ namespace SDOM
     // setRootNode(const std::string& name)                         // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
     // setRootNode(const DisplayHandle& handle)                     // ✅ Validated by: Core_test11; Lua: (planned)
     // setStage(const std::string& name)                            // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
+    // setStage(const DisplayHandle& handle)                        // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
     // getStage()                                                   // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_lookup
     // getRootNodePtr()                                             // ✅ Validated by: Core_test11 (C++ only)
     // getRootNode()                                                // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
@@ -230,6 +231,9 @@ namespace SDOM
     // getRendererLogicalPresentation()                             // ✅ Validated by: Core_test6, Core_test13
     // getWindowFlags()                                             // ✅ Validated by: Core_test7, Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
     // getColor()                                                   // ✅ Validated by: Core_test8, Core_test12
+    // getWindowTitle(), setWindowTitle()                           // ✅ Lua: Core_UnitTests.lua:test_window_title
+    // getElapsedTime(), getDeltaTime()                             // ✅ Lua: Core_UnitTests.lua:test_time_and_events
+    // pumpEventsOnce(), pushMouseEvent(), pushKeyboardEvent()      // ✅ Lua: Core_UnitTests.lua:test_time_and_events
     // getConfig()                                                  // ✅ Validated/Used in: Core_test2–Core_test8, Core_test13
     // setColor(const SDL_Color&)                                   // ✅ Validated by: Core_test12
 
@@ -240,10 +244,10 @@ namespace SDOM
 
     // // --- Configuration Getters/Setters --- //
     // getConfig();                                                 // ✅ Validated by: Core_test13
-    // getWindowWidth();                                            // ✅ Validated by: Core_test13
-    // getWindowHeight();                                           // ✅ Validated by: Core_test13
-    // getPixelWidth();                                             // ✅ Validated by: Core_test13
-    // getPixelHeight();                                            // ✅ Validated by: Core_test13
+    // getWindowWidth();                                            // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
+    // getWindowHeight();                                           // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
+    // getPixelWidth();                                             // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
+    // getPixelHeight();                                            // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
     // getPreserveAspectRatio();                                    // ✅ Validated by: Core_test13
     // getAllowTextureResize();                                     // ✅ Validated by: Core_test13
     // getRendererLogicalPresentation();                            // ✅ Validated by: Core_test13
@@ -251,13 +255,13 @@ namespace SDOM
     // getPixelFormat();                                            // ✅ Validated by: Core_test13
 
     // setConfig(CoreConfig& config);                               // ✅ Validated by: Core_test13
-    // setWindowWidth(float width);                                 // ✅ Validated by: Core_test13
-    // setWindowHeight(float height);                               // ✅ Validated by: Core_test13
+    // setWindowWidth(float width);                                 // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
+    // setWindowHeight(float height);                               // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
     // setPixelWidth(float width);                                  // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
     // setPixelHeight(float height);                                // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
-    // setPreserveAspectRatio(bool preserve);                       // ✅ Validated by: Core_test13
-    // setAllowTextureResize(bool allow);                           // ✅ Validated by: Core_test13
-    // setRendererLogicalPresentation(presentation);                // ✅ Validated by: Core_test13
+    // setPreserveAspectRatio(bool preserve);                       // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
+    // setAllowTextureResize(bool allow);                           // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
+    // setRendererLogicalPresentation(presentation);                // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
     // setWindowFlags(SDL_WindowFlags flags);                       // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
     // setPixelFormat(SDL_PixelFormat format);                      // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
 

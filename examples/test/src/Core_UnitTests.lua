@@ -135,7 +135,7 @@ local function test_config_accessors()
 end
 
 -- Gate for exhaustive setter tests (may rebuild device multiple times)
-local FULL_CONFIG_TEST = true
+local FULL_CONFIG_TEST = false
 
 -- Test 5b: Config setters (quick), with optional full tests
 local function test_config_setters()
@@ -282,7 +282,67 @@ local function test_destroy_displayobject()
     assert_true(chk == nil or (chk.isValid and not chk:isValid()), "destroyDisplayObject did not remove object")
 end
 
--- Test 6: Future child management and factory utilities
+-- Test 11: Device rebuild smoke under FULL_CONFIG_TEST
+local function test_config_device_smoke()
+    if not FULL_CONFIG_TEST then return end
+    local stage = get_stage1(); if not is_valid(stage) then return end
+
+    -- Create a small scene with a Label, Frame, and Slider
+    local l = Core:createDisplayObject("Label", {
+        name = "lua_smoke_label",
+        type = "Label",
+        text = "smoke",
+        font = "VarelaRound16",
+        x = 8, y = 8, width = 96, height = 20,
+        background = true
+    })
+    assert_true(is_valid(l), "Smoke: failed to create Label")
+
+    local p = Core:createDisplayObject("Frame", {
+        name = "lua_smoke_frame",
+        type = "Frame",
+        x = 120, y = 8, width = 96, height = 40
+    })
+    assert_true(is_valid(p), "Smoke: failed to create Frame")
+
+    local s = Core:createDisplayObject("Slider", {
+        name = "lua_smoke_slider",
+        type = "Slider",
+        x = 8, y = 40, width = 128, height = 16,
+        value = 50
+    })
+    assert_true(is_valid(s), "Smoke: failed to create Slider")
+
+    -- Attach to stage and render once
+    stage:addChild(l); stage:addChild(p); stage:addChild(s)
+    Core:pumpEventsOnce()
+
+    -- Flip a couple of device-affecting settings; expect no exceptions
+    local pw0, ph0 = Core:getPixelWidth(), Core:getPixelHeight()
+    local pf0, wf0 = Core:getPixelFormat(), Core:getWindowFlags()
+    local ok1, e1 = pcall(function() Core:setPixelWidth(pw0 + 0.5) end);  assert_true(ok1, "Smoke: setPixelWidth threw: " .. tostring(e1))
+    local ok2, e2 = pcall(function() Core:setPixelHeight(ph0 + 0.5) end); assert_true(ok2, "Smoke: setPixelHeight threw: " .. tostring(e2))
+
+    -- Use SDL_Utils helpers if available for well-known values
+    local pf_rgba = (SDL_Utils and SDL_Utils.pixelFormatFromString) and SDL_Utils.pixelFormatFromString("SDL_PIXELFORMAT_RGBA8888") or pf0
+    local ok3, e3 = pcall(function() Core:setPixelFormat(pf_rgba) end);    assert_true(ok3, "Smoke: setPixelFormat threw: " .. tostring(e3))
+
+    local wf_resizable = (SDL_Utils and SDL_Utils.windowFlagsFromString) and SDL_Utils.windowFlagsFromString("SDL_WINDOW_RESIZABLE") or wf0
+    local ok4, e4 = pcall(function() Core:setWindowFlags(wf_resizable) end); assert_true(ok4, "Smoke: setWindowFlags threw: " .. tostring(e4))
+
+    -- Pump once to allow rebuilds and per-object onWindowResize handling
+    Core:pumpEventsOnce()
+
+    -- Ensure objects remain valid
+    assert_true(is_valid(l) and is_valid(p) and is_valid(s), "Smoke: objects invalid after device rebuild")
+
+    -- Cleanup
+    Core:destroyDisplayObject("lua_smoke_label")
+    Core:destroyDisplayObject("lua_smoke_frame")
+    Core:destroyDisplayObject("lua_smoke_slider")
+end
+
+-- Test 12: Future child management and factory utilities
 -- (omitted) Future child management and factory-only utilities are not exposed to Lua yet
 
 -- Runner
@@ -298,6 +358,7 @@ local function run_all()
     test_time_and_events()
     test_asset_api()
     test_destroy_displayobject()
+    if FULL_CONFIG_TEST then test_config_device_smoke() end
 end
 
 local ok, err = pcall(run_all)

@@ -1157,43 +1157,94 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
       - ✅ void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua)
 
 ---
-### **[October 26, 2025]**
 
-#### **IDisplayObject Lua Binding & Test Platform Milestone**
-- Completed the **centralized Lua binding layer** for `IDisplayObject` in `IDisplayObject_lua.cpp`, replacing scattered binding glue with a clean, unified binder function.
-- Introduced *overload-aware helper wrappers* to automatically adapt C++ pointer methods to `DisplayHandle` colon-call semantics on the Lua side.
-- Updated binding infrastructure ensures:
-  - Safe null-handle behavior.
-  - Full parity between const / non-const function signatures.
-  - Both **global table** and **usertype method** binding via `bind_both()` for consistency.
 
-#### **Unit Test Coverage**
-- Developed `IDisplayObject_UnitTests.lua`, covering:
-  - Dirty flag propagation
-  - Event listener attach/detach
-  - Hierarchy manipulation & parent/child validity
-  - Visibility & focus state
-  - Geometry & bounds accessors
-  - Z-order / priority / child ordering
-  - Orphan retention policy behavior
-- Tests now run via the **Lua-driven test harness** (`repeat_tests.sh` & Core-driven suite).
-- All tests **pass**, confirming stable and predictable C++ ↔ Lua interactions.
+#### Core Lua Bindings & Tests
+- Expanded Core_UnitTests.lua coverage:
+  - Stage/root: setRootNode, setStage, getRoot, getStage
+  - Traversal: getIsTraversing, setIsTraversing
+  - Creation/orphans: createDisplayObject, countOrphanedDisplayObjects, collectGarbage
+  - Lookup: getDisplayObject, hasAssetObject/getAssetObject
+  - Window/title/timing/events: get/setWindowTitle, getElapsedTime/getDeltaTime, pushMouseEvent, pushKeyboardEvent, pumpEventsOnce
+  - Focus/hover: set/getKeyboardFocusedObject, set/getMouseHoveredObject
+  - Config getters: getPixelWidth/Height, getWindowWidth/Height, getPixelFormat, getWindowFlags, getPreserveAspectRatio, getAllowTextureResize, getRendererLogicalPresentation
+  - Config setters (gated): setPixelWidth/Height, setWindowWidth/Height, setPixelFormat, setWindowFlags, setPreserveAspectRatio, setAllowTextureResize, setRendererLogicalPresentation
+- Updated SDOM_Core_Lua.hpp annotations to mirror the verified Lua coverage for each API.
+- Added optional **FULL_CONFIG_TEST** smoke test: instantiates a Label, Frame, and Slider; flips device-affecting config (pixel size, pixel format, window flags), pumps events, and asserts no errors/invalid handles.
+  - Note: toggle gate in examples/test/src/Core_UnitTests.lua (**FULL_CONFIG_TEST**) for quick vs. exhaustive runs.
 
-#### **Performance Profiling & Optimization**
-- Added real-time **per-object performance instrumentation** for both `Update` and `Render` passes.
-- Identified high-cost UI components and resolved bottlenecks:
-  - 9-slice UI rendering moved to `SpriteSheet::drawNineQuad()` with **cached texture** backing.  
-    **Result:** ~300–400 µs → **< 5 µs** per component.
-  - Range control widgets (sliders, progress bars) optimized.  
-    **Result:** ~25–50 µs → **< 5 µs** per component.
-- Current worst-case UI widget costs now fall in the **2–6 µs** range.
-- Full frame CPU cost averages **~550 µs** (~1800 FPS equivalent headroom).
+#### Cached Texture Resilience (Device Rebuilds)
+- Introduced and documented an onWindowResize(int,int) contract for renderer-owned cached resources.
+  - Core broadcasts after SDL resizes and after device reconfigure.
+- Implemented overrides with documentation:
+  - Label, IPanelObject, IRangeControl invalidate cached textures, reset tracked size/format, and set dirty.
+  - IRangeControl_scaffold provides a default onWindowResize override with the same safety pattern.
+- Verified via the smoke test that cached-texture widgets survive device rebuilds without render errors.
 
-#### **Leak / Lifetime Verification**
-- Long-duration iteration tests under Valgrind confirm:
-  - **0 bytes definitely lost**
-  - Remaining **~287 KB “still reachable”** attributable to **SDL3 subsystem global caches** (expected behavior).
-- SDOM object lifetime and handle invalidation model confirmed correct.
+#### Lua Stubs and Helpers
+- Extended api_stubs.lua:
+  - Added SDL_Utils helpers (e.g., pixelFormatFromString, windowFlagsFromString) to simplify config tests.
+  - Declared Core config getter/setter stubs to keep IDE diagnostics clean while editing Lua tests.
+
+#### Consistency Improvements
+- DisplayHandle-aware wrappers added for z‑order helpers (sendToBack/sendToBackAfter) to match moveToTop/bringToFront semantics.
+
+#### Status
+- All IDisplayObject and Core Lua tests pass (quick path and FULL_CONFIG_TEST path).
+- Cached-texture objects (Label, Panel, Range controls) remain stable across device rebuilds.
+- No regressions to performance; prior optimizations remain intact.
+
+#### **Next Steps**
+- Add focused tab traversal tests (handleTabKeyPress/handleTabKeyPressReverse).
+- Expand **FULL_CONFIG_TEST** combinations for renderer presentation modes.
+- Defer binding raw SDL window/renderer/texture to Lua until an SDL3 “object” layer is designed.
+- Expand binding + test coverage to remaining DisplayObject subclasses.
+- Begin building developer-facing **debug overlay / inspector** tooling on the Lua side.
+- Keep optimization on hold unless driven by **observable UX demand** (we are now in *microsecond-scale territory*).
+
+---
+### [October 26, 2025] — Additional Updates
+
+#### Core Lua Bindings & Tests
+- Expanded Core_UnitTests.lua coverage:
+  - Stage/root: setRootNode, setStage, getRoot, getStage
+  - Traversal: getIsTraversing, setIsTraversing
+  - Creation/orphans: createDisplayObject, countOrphanedDisplayObjects, collectGarbage
+  - Lookup: getDisplayObject, hasAssetObject/getAssetObject
+  - Window/title/timing/events: get/setWindowTitle, getElapsedTime/getDeltaTime, pushMouseEvent, pushKeyboardEvent, pumpEventsOnce
+  - Focus/hover: set/getKeyboardFocusedObject, set/getMouseHoveredObject
+  - Config getters: getPixelWidth/Height, getWindowWidth/Height, getPixelFormat, getWindowFlags, getPreserveAspectRatio, getAllowTextureResize, getRendererLogicalPresentation
+  - Config setters (gated): setPixelWidth/Height, setWindowWidth/Height, setPixelFormat, setWindowFlags, setPreserveAspectRatio, setAllowTextureResize, setRendererLogicalPresentation
+- Updated SDOM_Core_Lua.hpp annotations to mirror the verified Lua coverage for each API.
+- Added optional FULL_CONFIG_TEST smoke test: instantiates a Label, Frame, and Slider; flips device-affecting config (pixel size, pixel format, window flags), pumps events, and asserts no errors/invalid handles.
+  - Note: toggle gate in examples/test/src/Core_UnitTests.lua (FULL_CONFIG_TEST) for quick vs. exhaustive runs.
+
+#### Cached Texture Resilience (Device Rebuilds)
+- Introduced and documented an onWindowResize(int,int) contract for renderer-owned cached resources.
+  - Core broadcasts after SDL resizes and after device reconfigure.
+- Implemented overrides with documentation:
+  - Label, IPanelObject, IRangeControl invalidate cached textures, reset tracked size/format, and set dirty.
+  - IRangeControl_scaffold provides a default onWindowResize override with the same safety pattern.
+- Verified via the smoke test that cached-texture widgets survive device rebuilds without render errors.
+
+#### Lua Stubs and Helpers
+- Extended api_stubs.lua:
+  - Added SDL_Utils helpers (e.g., pixelFormatFromString, windowFlagsFromString) to simplify config tests.
+  - Declared Core config getter/setter stubs to keep IDE diagnostics clean while editing Lua tests.
+
+#### Consistency Improvements
+- DisplayHandle-aware wrappers added for z‑order helpers (sendToBack/sendToBackAfter) to match moveToTop/bringToFront semantics.
+
+#### Status
+- All IDisplayObject and Core Lua tests pass (quick path and FULL_CONFIG_TEST path).
+- Cached-texture objects (Label, Panel, Range controls) remain stable across device rebuilds.
+- No regressions to performance; prior optimizations remain intact.
+
+Next
+- Add focused tab traversal tests (handleTabKeyPress/handleTabKeyPressReverse).
+- Expand FULL_CONFIG_TEST combinations for renderer presentation modes.
+- Defer binding raw SDL window/renderer/texture to Lua until an SDL3 “object” layer is designed.
+
 
 ---
 
