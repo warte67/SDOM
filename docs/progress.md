@@ -1198,6 +1198,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Add focused tab traversal tests (handleTabKeyPress/handleTabKeyPressReverse).
 - Expand **FULL_CONFIG_TEST** combinations for renderer presentation modes.
 - Defer binding raw SDL window/renderer/texture to Lua until an SDL3 “object” layer is designed.
+
 - Expand binding + test coverage to remaining DisplayObject subclasses.
 - Begin building developer-facing **debug overlay / inspector** tooling on the Lua side.
 - Keep optimization on hold unless driven by **observable UX demand** (we are now in *microsecond-scale territory*).
