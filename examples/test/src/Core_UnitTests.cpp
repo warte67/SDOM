@@ -785,14 +785,15 @@ namespace SDOM
                 errors.push_back("setKeyboardFocusedObject did not restore original focused object.");
                 ok = false;
             }
+        }        
+        // Handle Mouse Hovered Object
+        core.clearMouseHoveredObject();
+        DisplayHandle original_hovered = core.getMouseHoveredObject();
+        if (original_hovered.isValid()) 
+        {
+            errors.push_back("Should not have an original hovered object.");
+            ok = false;
         }
-        // // Handle Mouse Hovered Object
-        // DisplayHandle original_hovered = core.getMouseHoveredObject();
-        // if (original_hovered.isValid()) 
-        // {
-        //     errors.push_back("Should not have an original hovered object.");
-        //     ok = false;
-        // }
 
         DisplayHandle blueishBox = core.getDisplayObject("blueishBox");
         if (!blueishBox.isValid()) 

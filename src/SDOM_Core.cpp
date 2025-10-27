@@ -1405,14 +1405,14 @@ namespace SDOM
         setKeyboardFocusedObject(prev);
     } // END Core::handleTabKeyPressReverse()
 
-
-
     void Core::setKeyboardFocusedObject(DisplayHandle obj)
     { keyboardFocusedObject_ = obj; }
     DisplayHandle Core::getKeyboardFocusedObject() const
     { return keyboardFocusedObject_; }
     void Core::clearKeyboardFocusedObject() 
     { setKeyboardFocusedObject(DisplayHandle(nullptr)); }
+    void Core::clearMouseHoveredObject() 
+    { setMouseHoveredObject(DisplayHandle(nullptr)); }
 
     void Core::setMouseHoveredObject(DisplayHandle obj)
     { hoveredObject_ = obj; }
@@ -1534,8 +1534,8 @@ namespace SDOM
         getFactory().addToFutureChildrenList(child, parent, useWorld, worldX, worldY);
     }
 
-    std::vector<std::string> Core::listDisplayObjectNames() const {
-        return getFactory().listDisplayObjectNames();
+    std::vector<std::string> Core::getDisplayObjectNames() const {
+        return getFactory().getDisplayObjectNames();
     }
     void Core::clearFactory() {
         getFactory().clear();
@@ -1845,8 +1845,10 @@ namespace SDOM
         core_bind_string_function_forwarder("registerOn", core_registerOn_lua, objHandleType, coreTable, lua); // custom handling above
 
 	    // --- Stage/Root Node Management --- //
+        SDOM::core_bind_name_or_handle("setRootNodeByName", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_name_or_handle("setRootNode", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_name_or_handle("setRoot", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua);  // alias of setRootNode()
+        SDOM::core_bind_name_or_handle("setRoot", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_name_or_handle("setStageByName", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua); // alias of setRootNode()
         SDOM::core_bind_name_or_handle("setStage", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua); // alias of setRoot()
         SDOM::core_bind_return_displayobject("getRoot", getRoot_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_return_displayobject("getRootHandle", getRoot_lua, objHandleType, coreTable, lua);   // alias of getRoot()
@@ -1874,9 +1876,11 @@ namespace SDOM
         SDOM::core_bind_noarg("handleTabKeyPress", doTabKeyPressForward_lua, objHandleType, coreTable, lua); // alias of doTabKeyPressForward()
         SDOM::core_bind_noarg("handleTabKeyPressReverse", doTabKeyPressReverse_lua, objHandleType, coreTable, lua); // alias of doTabKeyPressReverse()
         SDOM::core_bind_do_arg("setKeyboardFocusedObject", setKeyboardFocusedObject_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_noarg("clearKeyboardFocusedObject", clearKeyboardFocusedObject_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_return_displayobject("getKeyboardFocusedObject", getKeyboardFocusedObject_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_do_arg("setMouseHoveredObject", setMouseHoveredObject_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_return_displayobject("getMouseHoveredObject", getMouseHoveredObject_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_noarg("clearMouseHoveredObject", clearMouseHoveredObject_lua, objHandleType, coreTable, lua);
 
         // --- Window/Renderer/Texture/Config (read-only accessors) --- //
         SDOM::core_bind_return_float("getPixelWidth", [](){ return Core::getInstance().getPixelWidth(); }, objHandleType, coreTable, lua);
@@ -1982,6 +1986,7 @@ namespace SDOM
 	    // --- Orphan / Future Child Management --- //
         // Accept handle/name/table for destroyDisplayObject for consistency
         SDOM::core_bind_object_arg("destroyDisplayObject", destroyDisplayObject_any_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_object_arg("destroyAssetObject", destroyAssetObject_any_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_return_int("countOrphanedDisplayObjects", countOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_return_vector_do("getOrphanedDisplayObjects", getOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
         // SDOM::core_bind_noarg("destroyOrphanedDisplayObjects", destroyOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
@@ -1989,8 +1994,16 @@ namespace SDOM
         // SDOM::core_bind_noarg("destroyOrphans", destroyOrphanedDisplayObjects_lua, objHandleType, coreTable, lua); // alias of destroyOrphanedDisplayObjects()
         SDOM::core_bind_noarg("collectGarbage", collectGarbage_lua, objHandleType, coreTable, lua);
 
+        // --- Factory Utilities --- //
+        SDOM::core_bind_noarg("clearFactory", clearFactory_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_string_return_asset("findAssetByFilename", findAssetByFilename_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_object_return_asset("findSpriteSheetByParams", findSpriteSheetByParams_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_noarg("unloadAllAssetObjects", unloadAllAssetObjects_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_noarg("reloadAllAssetObjects", reloadAllAssetObjects_lua, objHandleType, coreTable, lua);
+
         // --- Utility Methods --- //
-        // Intentionally not exposing certain factory/future-child utilities to Lua yet
+        SDOM::core_bind_return_vector_string("getDisplayObjectNames", getDisplayObjectNames_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_noarg("printObjectRegistry", printObjectRegistry_lua, objHandleType, coreTable, lua);
 
     } // End Core::_registerDisplayObject()
 

@@ -45,9 +45,16 @@ local function test_stage_root()
     local stageA = get_stage1(); if not is_valid(stageA) then return end
     local stageB = get_stage2(); if not is_valid(stageB) then return end
 
-    -- ✅ Core:setStage() should not throw
+    -- ✅ Core:setStage()
     local ok, err = pcall(function() Core:setStage(stageB) end)
     assert_true(ok, "Core:setStage(stageTwo) threw: " .. tostring(err))
+
+    -- ✅ Core:getStage()
+    local stage = Core:getStage(); assert_true(is_valid(stage), "Core:getStage() invalid after setStage")
+    local sname = stage and stage.getName and stage:getName() or nil
+    local bname = stageB and stageB.getName and stageB:getName() or nil
+    assert_true(sname ~= nil and bname ~= nil and sname == bname,
+        "Stage name '" .. tostring(sname) .. "' != stageTwo '" .. tostring(bname) .. "'")
 
     -- ✅ Core:getRoot() — root should match stageB  
     local root = Core:getRoot(); assert_true(is_valid(root), "Core:getRoot() invalid after setStage")
@@ -56,10 +63,20 @@ local function test_stage_root()
     assert_true(rname ~= nil and bname ~= nil and rname == bname,
         "Root name '" .. tostring(rname) .. "' != stageTwo '" .. tostring(bname) .. "'")
 
-    -- ✅ Core:setRootNode() to stageThree (if present) should not throw
+    -- ✅ Core:setRootNode() to stageThree (if present)
     ok, err = pcall(function() Core:setRootNode("stageThree") end)
     assert_true(ok, "Core:setRootNode('stageThree') threw: " .. tostring(err))
     local new_root = Core:getRoot(); assert_true(is_valid(new_root), "Core:getRoot() invalid after setRootNode")
+
+    -- ✅ Core:setRootNodeByName() to stageThree (if present)
+    ok, err = pcall(function() Core:setRootNodeByName("stageThree") end)
+    assert_true(ok, "Core:setRootNodeByName('stageThree') threw: " .. tostring(err))
+    local new_root = Core:getRoot(); assert_true(is_valid(new_root), "Core:getRoot() invalid after setRootNodeByName")
+
+    -- ✅ Core:setStageByName() to stageTwo (if present)
+    ok, err = pcall(function() Core:setStageByName("stageTwo") end)
+    assert_true(ok, "Core:setStageByName('stageTwo') threw: " .. tostring(err))
+    local new_stage = Core:getStage(); assert_true(is_valid(new_stage), "Core:getStage() invalid after setStageByName")
 
     -- ✅ Core:setStage() — restore original stage
     Core:setStage(stageA)
@@ -83,21 +100,81 @@ end
 local function test_creation_orphans()
     local stage = get_stage1(); if not is_valid(stage) then return end
     local init = { name = "unitTestBox", type = "Box", x = 50, y = 50, width = 100, height = 100, color = {255,0,0,255} }
+    local init2 = { name = "unitTestBox2", type = "Box", x = 50, y = 75, width = 100, height = 100, color = {255,0,255,255} }
+    local sprite_init = { name = "unitTestSprite", type = "SpriteSheet", filename = "./assets/font_8x8.png", font_size = 8, font_width = 8, font_height = 8 }
+    local sprite_init2 = { name = "unitTestSprite2", type = "SpriteSheet", filename = "./assets/font_8x8.png", font_size = 8, font_width = 8, font_height = 8 }
+
     -- ✅ Core:createDisplayObject()
     local h = Core:createDisplayObject("Box", init)
     assert_true(is_valid(h), "Core:createDisplayObject returned invalid handle")
     if is_valid(h) then assert_true(h:getName() == "unitTestBox", "Created name mismatch") end
 
+    -- ✅ getDisplayObject() should return the same handle
+    local h2 = Core:getDisplayObject("unitTestBox")
+    assert_true(is_valid(h2), "Core:getDisplayObject('unitTestBox') returned invalid handle")
+    assert_true(h == h2, "Core:getDisplayObject('unitTestBox') returned different handle")
+
+    -- ✅ hasDisplayObject() should return true
+    local has = Core:hasDisplayObject("unitTestBox")
+    assert_true(has, "Core:hasDisplayObject('unitTestBox') returned false")
+
+    -- ✅ createDisplayObject() same should return same handle
+    local h3 = Core:createDisplayObject("Box", init)
+    assert_true(is_valid(h3), "Core:createDisplayObject('Box', init) returned invalid handle")
+    assert_true(h3 == h2, "Core:createDisplayObject('Box', init) returned different handle")
+
+    -- ✅ createDisplayObject() different should return different handle
+    local h4 = Core:createDisplayObject("Box", init2)
+    assert_true(is_valid(h4), "Core:createDisplayObject('Box', init2) returned invalid handle")
+    assert_true(h4 ~= h2, "Core:createDisplayObject('Box', init2) returned same handle")
+
+    -- ✅ createAssetObject() 
+    local h5 = Core:createAssetObject("SpriteSheet", sprite_init)
+    assert_true(is_valid(h5), "Core:createAssetObject('SpriteSheet', sprite_init) returned invalid handle")
+
+    -- ✅ hasAssetObject() should return true
+    local has = Core:hasAssetObject("unitTestSprite")
+    assert_true(has, "Core:hasAssetObject('unitTestSprite') returned false")
+
+    -- ✅ getAssetObject() should return the same handle
+    local h6 = Core:getAssetObject("unitTestSprite")
+    assert_true(is_valid(h6), "Core:getAssetObject('unitTestSprite') returned invalid handle")
+    assert_true(h5 == h6, "Core:getAssetObject('unitTestSprite') returned different handle")
+
+    -- ✅ createAssetObject() same should return same handle
+    local h6 = Core:createAssetObject("SpriteSheet", sprite_init)
+    assert_true(is_valid(h6), "Core:createAssetObject('SpriteSheet', sprite_init) returned invalid handle")
+    assert_true(h6 == h5, "Core:createAssetObject('SpriteSheet', sprite_init) returned different handle")
+
+    -- ✅ createAssetObject() different should return different handle
+    local h7 = Core:createAssetObject("SpriteSheet", sprite_init2)
+    assert_true(is_valid(h7), "Core:createAssetObject('SpriteSheet', sprite_init2) returned invalid handle")
+    assert_true(h7 ~= h5, "Core:createAssetObject('SpriteSheet', sprite_init2) returned same handle")
+
     -- ✅ Core:countOrphanedDisplayObjects()
     local count = Core:countOrphanedDisplayObjects()
     assert_true(type(count) == "number", "countOrphanedDisplayObjects did not return a number")
-    assert_true(count == 1, "Expected 1 orphan after creation; got " .. tostring(count))
+    assert_true(count == 2, "Expected 1 orphan after creation; got " .. tostring(count))
 
+    -- ✅ Add and remove children to the stage
     stage:addChild(h)
-    count = Core:countOrphanedDisplayObjects(); assert_true(count == 0, "Expected 0 orphans after addChild; got " .. tostring(count))
+    count = Core:countOrphanedDisplayObjects(); assert_true(count == 1, "Expected 1 orphans after addChild; got " .. tostring(count))   
+    local orphans = Core:getOrphanedDisplayObjects() -- ✅ getOrphanedDisplayObjects()
+    assert_true(orphans ~= nil, "getOrphanedDisplayObjects returned nil")
+    local enumerated = 0
+    if orphans then
+        for _, orphan in ipairs(orphans) do
+            if orphan then enumerated = enumerated + 1 end
+        end
+    end
+    assert_true(enumerated == count, "Expected " .. tostring(count) .. " orphans after addChild; iterated " .. tostring(enumerated))
 
     stage:removeChild(h)
-    count = Core:countOrphanedDisplayObjects(); assert_true(count == 1, "Expected 1 orphan after removeChild; got " .. tostring(count))
+    count = Core:countOrphanedDisplayObjects(); assert_true(count == 2, "Expected 2 orphan after removeChild; got " .. tostring(count))
+
+    -- Destroy the new assets and verify orphan cleanup
+    Core:destroyAssetObject("unitTestSprite")
+    Core:destroyAssetObject(h7)
 
     -- ✅ Core:collectGarbage()
     Core:collectGarbage()
@@ -205,38 +282,80 @@ local function test_config_setters()
         assert_true(math.abs(Core:getWindowWidth() - ww0) < 1e-3, "getWindowWidth mismatch after restore")
         assert_true(math.abs(Core:getWindowHeight() - wh0) < 1e-3, "getWindowHeight mismatch after restore")
     end
-end
+end -- test_config_accessors()
 
 -- Test 6: Window title round-trip
 local function test_window_title()
-    -- ✅ Core:getWindowTitle(), Core:setWindowTitle()
+    -- ✅ Core:getWindowTitle()
     local old = Core:getWindowTitle()
     local ok, err = pcall(function() Core:setWindowTitle("CoreUnitTest Title") end)
     assert_true(ok, "setWindowTitle threw: " .. tostring(err))
     local now = Core:getWindowTitle()
     assert_true(type(now) == "string" and #now > 0, "getWindowTitle returned empty")
-    -- Restore
+    -- ✅ Core:setWindowTitle()
     if type(old) == "string" then Core:setWindowTitle(old) end
-end
+end -- test_window_title()
 
 -- Test 7: Focus/hover setters
 local function test_focus_hover()
     local obj = Core:getDisplayObject("blueishBox")
     if not is_valid(obj) then return end
-    -- ✅ Core:setKeyboardFocusedObject()
+
+    -- Remember current focus/hover so the test can restore them.
+    local priorKeyboard = Core:getKeyboardFocusedObject()
+    local priorHover = Core:getMouseHoveredObject()
+    
+    -- ✅ Core:setKeyboardFocusedObject() / Core:getKeyboardFocusedObject()
     Core:setKeyboardFocusedObject(obj)
     local kf = Core:getKeyboardFocusedObject()
     assert_true(is_valid(kf) and kf:getName() == obj:getName(), "Keyboard focus object mismatch")
+
+    -- ✅ Core:setMouseHoveredObject() / Core:getMouseHoveredObject()
     Core:setMouseHoveredObject(obj)
-    -- ✅ Core:getMouseHoveredObject()
     local mh = Core:getMouseHoveredObject()
     assert_true(is_valid(mh) and mh:getName() == obj:getName(), "Mouse hovered object mismatch")
-end
+
+    -- ✅ Core:doTabKeyPressForward() 
+    Core:doTabKeyPressForward()
+    local kf = Core:getKeyboardFocusedObject()
+    local next_name = kf:getName()
+    assert_true(next_name ~= obj:getName(), "Incorrect keyboard focus after doTabKeyPressForward")
+
+    -- ✅ Core:doTabKeyPressReverse()
+    Core:doTabKeyPressReverse()
+    local kf = Core:getKeyboardFocusedObject()
+    local prev_name = kf:getName()
+    assert_true(prev_name == obj:getName(), "Incorrect keyboard focus after doTabKeyPressReverse")
+
+    -- ✅ Core:clearMouseHoveredObject() should remove the hover handle
+    Core:clearMouseHoveredObject()
+    local cleared = Core:getMouseHoveredObject()
+    assert_true(not is_valid(cleared), "Mouse hover did not clear")
+
+    -- ✅ Core:clearKeyboardFocusedObject() should remove the focus handle
+    Core:clearKeyboardFocusedObject()
+    local cleared = Core:getKeyboardFocusedObject()
+    assert_true(not is_valid(cleared), "Keyboard focus did not clear")
+
+    -- Restore prior state (if any) so later tests are unaffected.
+    if is_valid(priorKeyboard) then
+        Core:setKeyboardFocusedObject(priorKeyboard)
+    end
+    if is_valid(priorHover) then
+        Core:setMouseHoveredObject(priorHover)
+    end
+end -- test_focus_hover()
 
 -- Test 8: Time/event helpers
 local function test_time_and_events()
-    -- ✅ Core:getElapsedTime(), Core:getDeltaTime()
-    local t1 = Core:getElapsedTime(); local dt = Core:getDeltaTime(); assert_true(type(dt) == "number", "getDeltaTime not numeric")
+    -- ✅ Core:getElapsedTime()
+    local t1 = Core:getElapsedTime(); 
+    -- ✅ Core:getDeltaTime()
+    local dt = Core:getDeltaTime(); 
+    assert_true(type(dt) == "number", "getDeltaTime not numeric")
+    assert_true(type(t1) == "number", "getElapsedTime not numeric")
+    assert_true(t1 == dt, "getElapsedTime != getDeltaTime")
+
     -- ✅ Core:pushMouseEvent()
     Core:pushMouseEvent({ x = 5, y = 5, type = "down", button = 1 })
     Core:pushMouseEvent({ x = 5, y = 5, type = "up", button = 1 })
@@ -247,7 +366,7 @@ local function test_time_and_events()
     -- ✅ Core:getElapsedTime()
     local t2 = Core:getElapsedTime()
     assert_true(type(t1) == "number" and type(t2) == "number", "Elapsed time not numeric")
-end
+end -- test_time_and_events()
 
 -- Test 9: Asset APIs
 local function test_asset_api()
@@ -260,7 +379,7 @@ local function test_asset_api()
         local ah = Core:getAssetObject("VarelaRound16")
         assert_true(ah and ah.isValid and ah:isValid(), "getAssetObject returned invalid handle for VarelaRound16")
     end
-end
+end -- test_asset_api()
 
 -- Test 10: Destroy display object (handle/name/table forms)
 local function test_destroy_displayobject()
@@ -280,7 +399,7 @@ local function test_destroy_displayobject()
         chk = Core:getDisplayObject(name)
     end
     assert_true(chk == nil or (chk.isValid and not chk:isValid()), "destroyDisplayObject did not remove object")
-end
+end -- test_destroy_displayobject()
 
 -- Test 11: Device rebuild smoke under FULL_CONFIG_TEST
 local function test_config_device_smoke()
@@ -342,8 +461,42 @@ local function test_config_device_smoke()
     Core:destroyDisplayObject("lua_smoke_slider")
 end
 
--- Test 12: Future child management and factory utilities
--- (omitted) Future child management and factory-only utilities are not exposed to Lua yet
+-- Test 12: Factory utilities
+local function factory_utilities()
+    -- ✅ Core:clearFactory() 
+    -- Core:clearFactory() -- removeed because it destroys all display objects but it has been verified
+
+    -- ✅ Core:findAssetByFilename()
+    local asset = Core:findAssetByFilename("internal_font_8x8")
+    assert_true(asset and asset.isValid and asset:isValid(), "findAssetByFilename returned invalid handle for font_8x8")
+
+    -- ✅ Core:findSpriteSheetByParams()
+    local sprite = Core:findSpriteSheetByParams({ filename = "internal_icon_8x8", spriteW = 8, spriteH = 8 })
+    assert_true(sprite and sprite.isValid and sprite:isValid(), "findSpriteSheetByParams returned invalid handle for internal_icon_8x8")
+
+    -- ✅ Core:unloadAllAssetObjects()
+    Core:unloadAllAssetObjects()
+
+    -- ✅ Core:reloadAllAssetObjects()
+    Core:reloadAllAssetObjects()
+
+    -- ✅ Core:getDisplayObjectNames()
+    local names = Core:getDisplayObjectNames()
+    assert_true(#names > 0, "listDisplayObjectNames returned empty list")
+    for _, name in ipairs(names) do
+        assert_true(type(name) == "string", "listDisplayObjectNames returned non-string")
+        local h = Core:getDisplayObject(name)
+        assert_true(h and h.isValid and h:isValid(), "listDisplayObjectNames returned invalid handle for " .. name)
+        -- print("listDisplayObjectNames: " .. name)
+    end
+
+    -- Disable the following tests because they destroy all display objects or they clutter the output
+    -- ✅ Core:clearFactory()
+    -- Core:clearFactory() -- Verified
+    -- ✅ Core:printObjectRegistry()
+    -- Core:printObjectRegistry() -- Verified
+
+end -- factory_utilities()
 
 -- Runner
 local function run_all()
@@ -359,6 +512,7 @@ local function run_all()
     test_asset_api()
     test_destroy_displayobject()
     if FULL_CONFIG_TEST then test_config_device_smoke() end
+    factory_utilities()
 end
 
 local ok, err = pcall(run_all)

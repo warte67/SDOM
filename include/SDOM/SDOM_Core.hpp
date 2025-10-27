@@ -167,6 +167,7 @@ namespace SDOM
         void clearKeyboardFocusedObject();
         void setMouseHoveredObject(DisplayHandle obj);
         DisplayHandle getMouseHoveredObject() const;
+        void clearMouseHoveredObject();
 
         // --- Lua State Access --- //
         sol::state& getLua() { return lua_; }
@@ -209,7 +210,7 @@ namespace SDOM
             bool useWorld=false, int worldX=0, int worldY=0);
 
         // --- Utility Methods --- //
-        std::vector<std::string> listDisplayObjectNames() const;
+        std::vector<std::string> getDisplayObjectNames() const;
         void clearFactory();
         void printObjectRegistry() const;
 

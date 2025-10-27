@@ -82,7 +82,7 @@ namespace SDOM
         void addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject); // Deprecated: Consider refactoring/removal
 
         void destroyDisplayObject(const std::string& name);
-        void destroyAssetObject(const std::string& name);   // NEW, needs LUA bindings
+        void destroyAssetObject(const std::string& name);
 
         // --- Orphan Management --- //
         int countOrphanedDisplayObjects() const;
@@ -99,8 +99,7 @@ namespace SDOM
             bool useWorld=false, int worldX=0, int worldY=0);
 
         // --- Utility Methods --- //
-        std::vector<std::string> listDisplayObjectNames() const;
-        // std::vector<std::string> listResourceNames() const;
+        std::vector<std::string> getDisplayObjectNames() const;
         void clear();
         void printObjectRegistry() const;
         void printAssetRegistry() const;   // NEW, needs LUA bindings

@@ -1391,7 +1391,7 @@ namespace SDOM
     }    
 
 
-    std::vector<std::string> Factory::listDisplayObjectNames() const
+    std::vector<std::string> Factory::getDisplayObjectNames() const
     {
         std::vector<std::string> names;
         for (const auto& pair : displayObjects_) 

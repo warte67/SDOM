@@ -215,8 +215,10 @@ function configure(cfg) end
 ---@field configure fun(self: Core, cfg: table)
 ---@field configureFromFile fun(self: Core, filename: string)
 ---@field registerOn fun(self: Core, name: "Init"|"Quit"|"Update"|"Event"|"Render"|"UnitTest"|"WindowResize", fn: function)
+---@field setRootNodeByName fun(self: Core, name: string)
 ---@field setRootNode fun(self: Core, nameOrHandle: (string|DisplayHandle))
 ---@field setRoot fun(self: Core, nameOrHandle: (string|DisplayHandle))
+---@field setStageByName fun(self: Core, name: string)
 ---@field setStage fun(self: Core, nameOrHandle: (string|DisplayHandle))
 ---@field getRoot fun(self: Core): DisplayHandle
 ---@field getRootHandle fun(self: Core): DisplayHandle
@@ -237,7 +239,9 @@ function configure(cfg) end
 ---@field handleTabKeyPressReverse fun(self: Core)
 ---@field setKeyboardFocusedObject fun(self: Core, handle: DisplayHandle)
 ---@field getKeyboardFocusedObject fun(self: Core): DisplayHandle
+---@field clearKeyboardFocusedObject fun(self: Core)
 ---@field setMouseHoveredObject fun(self: Core, handle: DisplayHandle)
+---@field clearMouseHoveredObject fun(self: Core)
 ---@field getMouseHoveredObject fun(self: Core): DisplayHandle
 ---@field getWindowTitle fun(self: Core): string
 ---@field setWindowTitle fun(self: Core, title: string)
@@ -265,9 +269,17 @@ function configure(cfg) end
 ---@field pushMouseEvent fun(self: Core, args: table)
 ---@field pushKeyboardEvent fun(self: Core, args: table)
 ---@field destroyDisplayObject fun(self: Core, target: (string|DisplayHandle|table))
+---@field destroyAssetObject fun(self: Core, target: (string|DisplayHandle|table))
 ---@field countOrphanedDisplayObjects fun(self: Core): integer
 ---@field getOrphanedDisplayObjects fun(self: Core): DisplayHandle[]
 ---@field collectGarbage fun(self: Core)
+---@field clearFactory fun(self: Core)
+---@field findAssetByFilename fun(self: Core, filename: string): AssetHandle
+---@field findSpriteSheetByParams fun(self: Core, spec: { filename: string, spriteW: integer, spriteH: integer }): AssetHandle
+---@field unloadAllAssetObjects fun(self: Core)
+---@field reloadAllAssetObjects fun(self: Core)
+---@field getDisplayObjectNames fun(self: Core): string[]
+---@field printObjectRegistry fun(self: Core)
 
 ---@class Stage: DisplayHandle
 ---@field getMouseX fun(self: Stage): integer

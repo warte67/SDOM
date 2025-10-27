@@ -37,9 +37,16 @@ namespace SDOM
     void core_bind_object_arg(const std::string& name, std::function<void(const sol::object&)> func,
                         sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
+    // Single-sol::object argument returning AssetHandle
+    void core_bind_object_return_asset(const std::string& name, std::function<AssetHandle(const sol::object&)> func,
+                        sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
+
     // Returners (no-arg) -----------------------------------------------------------
 
     void core_bind_return_displayobject(const std::string& name, std::function<DisplayHandle()> func,
+                                sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
+
+    void core_bind_return_asset(const std::string& name, std::function<AssetHandle()> func,
                                 sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua);
 
     // Return bool: bool ()
@@ -121,200 +128,95 @@ namespace SDOM
     // ***************************** //                         
     // --- LUA Wrapper Functions --- //
     // ***************************** //                         
+        // ✅ Test Verified
+        // 🔄 In Progress
+        // ⚠️ Failing     
+        // 🚫 Remove
+        // ❌ Invalid
+        // ☐ Planned
 
-    // --- Main Loop & Event Dispatch --- //
+    // --- ✅ Main Loop & Event Dispatch --- //
     
     void core_configure_lua(const sol::table& config);
     void core_configureFromFile_lua(const std::string& filename);
 
 
-    // --- Callback/Hook Registration --- //
-    void core_registerOnInit_lua(std::function<bool()> fn);                 // used by core_registerOn()
-    void core_registerOnQuit_lua(std::function<void()> fn);                 // used by core_registerOn()
-    void core_registerOnUpdate_lua(std::function<void(float)> fn);          // used by core_registerOn()
-    void core_registerOnEvent_lua(std::function<void(const Event&)> fn);    // used by core_registerOn()
-    void core_registerOnRender_lua(std::function<void()> fn);               // used by core_registerOn()
-    void core_registerOnUnitTest_lua(std::function<bool()> fn);             // used by core_registerOn()
-    void core_registerOnWindowResize_lua(std::function<void(int, int)> fn); // used by core_registerOn()
+    // --- ✅ Callback/Hook Registration --- //
+    void core_registerOnInit_lua(std::function<bool()> fn);                 // ✅ used by core_registerOn()
+    void core_registerOnQuit_lua(std::function<void()> fn);                 // ✅ used by core_registerOn()
+    void core_registerOnUpdate_lua(std::function<void(float)> fn);          // ✅ used by core_registerOn()
+    void core_registerOnEvent_lua(std::function<void(const Event&)> fn);    // ✅ used by core_registerOn()
+    void core_registerOnRender_lua(std::function<void()> fn);               // ✅ used by core_registerOn()
+    void core_registerOnUnitTest_lua(std::function<bool()> fn);             // ✅ used by core_registerOn()
+    void core_registerOnWindowResize_lua(std::function<void(int, int)> fn); // ✅ used by core_registerOn()
 
-    // Generic registration helper: registerOn("Init"|"Update"|...) from Lua
-    void core_registerOn_lua(const std::string& name, const sol::function& f);
+    // --- ✅ Generic registration helper: registerOn("Init"|"Update"|...) from Lua --- //
+    void core_registerOn_lua(const std::string& name, const sol::function& f);  // ✅ used in config.lua
 
-    // --- Stage/Root Node Management --- //
-    void setRootNodeByName_lua(const std::string& name);
-    void setRootNode_lua(const DisplayHandle& handle);
-    void setStageByName_lua(const std::string& name);
-    void setStage_lua(const DisplayHandle& handle);
-    DisplayHandle getRoot_lua();
-    DisplayHandle getStage_lua(); 
+    // --- ✅ Stage/Root Node Management --- //
+    void setRootNodeByName_lua(const std::string& name);                    // ✅ Lua Test 1
+    void setRootNode_lua(const DisplayHandle& handle);                      // ✅ Lua Test 1
+    void setStageByName_lua(const std::string& name);                       // ✅ Lua Test 1 
+    void setStage_lua(const DisplayHandle& handle);                         // ✅ Lua Test 1
+    DisplayHandle getRoot_lua();                                            // ✅ Lua Test 1
+    DisplayHandle getStage_lua();                                           // ✅ Lua Test 1
 
-    // --- Factory & EventManager Access --- //
-    bool getIsTraversing_lua();
-    void setIsTraversing_lua(bool traversing);
+    // --- ✅ Factory & EventManager Access --- //
+    bool getIsTraversing_lua();                                             // ✅ Lua Test 2      
+    void setIsTraversing_lua(bool traversing);                              // ✅ Lua Test 2
 
-    // --- Object Creation and Lookup--- //
-    DisplayHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config);
-    DisplayHandle getDisplayObject_lua(const std::string& name);
-    bool hasDisplayObject_lua(const std::string& name); 
-    AssetHandle createAssetObject_lua(const std::string& typeName, const sol::table& config);
-    AssetHandle getAssetObject_lua(const std::string& name);
-    bool hasAssetObject_lua(const std::string& name);
+    // --- ✅ Object Creation and Lookup--- //
+    DisplayHandle createDisplayObject_lua(const std::string& typeName, const sol::table& config);  // ✅ Lua Test 3
+    DisplayHandle getDisplayObject_lua(const std::string& name);            // ✅ Lua Test 3
+    bool hasDisplayObject_lua(const std::string& name);                     // ✅ Lua Test 3
+    AssetHandle createAssetObject_lua(const std::string& typeName, const sol::table& config);  // ✅ Lua Test 3
+    AssetHandle getAssetObject_lua(const std::string& name);                // ✅ Lua Test 3
+    bool hasAssetObject_lua(const std::string& name);                       // ✅ Lua Test 3
 
-    // --- Focus & Hover Management --- //
-    void doTabKeyPressForward_lua();
-    void doTabKeyPressReverse_lua();
-    void setKeyboardFocusedObject_lua(const DisplayHandle& handle);
-    DisplayHandle getKeyboardFocusedObject_lua();
-    void setMouseHoveredObject_lua(const DisplayHandle& handle);
-    DisplayHandle getMouseHoveredObject_lua();
+    // --- ✅ Focus & Hover Management --- //
+    void doTabKeyPressForward_lua();                                        // ✅ Lua Test 7
+    void doTabKeyPressReverse_lua();                                        // ✅ Lua Test 7
+    void setKeyboardFocusedObject_lua(const DisplayHandle& handle);         // ✅ Lua Test 7
+    void clearKeyboardFocusedObject_lua();                                  // ✅ Lua Test 7
+    DisplayHandle getKeyboardFocusedObject_lua();                           // ✅ Lua Test 7
+    void setMouseHoveredObject_lua(const DisplayHandle& handle);            // ✅ Lua Test 7
+    DisplayHandle getMouseHoveredObject_lua();                              // ✅ Lua Test 7
+    void clearMouseHoveredObject_lua();                                     // ✅ Lua Test 7
 
-    // --- Window Title & Timing --- //
-    std::string getWindowTitle_lua();
-    void setWindowTitle_lua(const std::string& title);
-    float getElapsedTime_lua();	 // alias getDeltaTime()
+    // --- ✅ Window Title & Timing --- //
+    std::string getWindowTitle_lua();                                       // ✅ Lua Test 6
+    void setWindowTitle_lua(const std::string& title);                      // ✅ Lua Test 6
+    float getElapsedTime_lua();                                             // ✅ Lua Test 8
+    float getDeltaTime_lua();                                               // ✅ Lua Test 8
 
-    // --- Event helpers (exposed to Lua) --- //
-    void pumpEventsOnce_lua();
-    void pushMouseEvent_lua(const sol::object& args);
-    void pushKeyboardEvent_lua(const sol::object& args);
+    // --- ✅ Event helpers (exposed to Lua) --- //
+    void pumpEventsOnce_lua();                                              // ✅ Lua Test 8
+    void pushMouseEvent_lua(const sol::object& args);                       // ✅ Lua Test 8
+    void pushKeyboardEvent_lua(const sol::object& args);                    // ✅ Lua Test 8
 
-    // --- Orphan / Future Child Management --- //
-    void destroyDisplayObject_lua(const std::string& name);
-    void destroyDisplayObject_any_lua(const sol::object& spec);
-    int countOrphanedDisplayObjects_lua();
-    std::vector<DisplayHandle> getOrphanedDisplayObjects_lua();
-    // void destroyOrphanedDisplayObjects_lua();  // aliases:  "destroyOrphanedObjects" and "destroyOrphans"
-    void collectGarbage_lua();
+    // --- ✅ Orphan / Future Child Management --- //
+    void destroyDisplayObject_lua(const std::string& name);                 // ✅ Lua Test 10, 11
+    void destroyDisplayObject_any_lua(const sol::object& spec);             // ✅ Lua Test 10
+    void destroyAssetObject_lua(const std::string& name);                   // ✅ Lua Test 3
+    void destroyAssetObject_any_lua(const sol::object& spec);               // ✅ Lua Test 3
+    int countOrphanedDisplayObjects_lua();                                  // ✅ Lua Test 3
+    std::vector<DisplayHandle> getOrphanedDisplayObjects_lua();             // ✅ Lua Test 3
+    void collectGarbage_lua();                                              // ✅ Lua Test 3 
 
-    // --- Future Child Management (exposed) --- //
-    void attachFutureChildren_lua();
-    void addToOrphanList_lua(const DisplayHandle& orphan);
-    void addToFutureChildrenList_lua(const sol::object& args);
+    // --- 🚫 Future Child Management (remove) --- //
+    void attachFutureChildren_lua();                                        // ❌ invalid
+    void addToOrphanList_lua(const DisplayHandle& orphan);                  // ❌ invalid
+    void addToFutureChildrenList_lua(const sol::object& args);              // ❌ invalid
 
-    // --- Factory utilities exposed on Core --- //
-    void clearFactory_lua();
-    AssetHandle findAssetByFilename_lua(const sol::object& spec);
-    AssetHandle findSpriteSheetByParams_lua(const sol::object& spec);
-    void unloadAllAssetObjects_lua();
-    void reloadAllAssetObjects_lua();
+    // --- 🔄 Factory utilities exposed on Core --- //
+    void clearFactory_lua();                                                // ✅ Lua Test 12 (commented out, but verified)
+    AssetHandle findAssetByFilename_lua(std::string filename);              // ✅ Lua Test 12
+    AssetHandle findSpriteSheetByParams_lua(const sol::object& spec);       // ✅ Lua Test 12
+    void unloadAllAssetObjects_lua();                                       // ✅ Lua Test 12    
+    void reloadAllAssetObjects_lua();                                       // ✅ Lua Test 12
 
-    // --- Utility Methods --- //
-    std::vector<std::string> listDisplayObjectNames_lua();
-    void printObjectRegistry_lua();
+    // --- 🔄 Utility Methods --- //
+    std::vector<std::string> getDisplayObjectNames_lua();                   // ☐ pending
+    void printObjectRegistry_lua();                                         // ☐ pending
 
 } // namespace SDOM
-
-
-    // // --- Callback/Hook Registration --- //
-    // registerOn(std::string name, sol::function f)                // ✅ Verified in config.lua
-
-    // // --- Lua Registration Internal Helpers --- //
-
-    // // --- Stage/Root Node Management --- //
-    // setRootNode(const std::string& name)                         // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
-    // setRootNode(const DisplayHandle& handle)                     // ✅ Validated by: Core_test11; Lua: (planned)
-    // setStage(const std::string& name)                            // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
-    // setStage(const DisplayHandle& handle)                        // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
-    // getStage()                                                   // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_lookup
-    // getRootNodePtr()                                             // ✅ Validated by: Core_test11 (C++ only)
-    // getRootNode()                                                // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
-    // getStageHandle()                                             // ✅ Validated by: Core_test11
-
-    // // --- Window/Renderer/Texture/Config --- //
-    // getWindow()                                                  // ✅ Validated by: Core_test1, Core_test12
-    // SDL_GetWindowSize                                            // ✅ Validated by: Core_test1
-    // getPixelWidth()                                              // ✅ Validated by: Core_test2, Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
-    // getPixelHeight()                                             // ✅ Validated by: Core_test2, Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
-    // getPreserveAspectRatio()                                     // ✅ Validated by: Core_test3, Core_test13
-    // getAllowTextureResize()                                      // ✅ Validated by: Core_test4, Core_test13
-    // getPixelFormat()                                             // ✅ Validated by: Core_test5, Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
-    // getRendererLogicalPresentation()                             // ✅ Validated by: Core_test6, Core_test13
-    // getWindowFlags()                                             // ✅ Validated by: Core_test7, Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
-    // getColor()                                                   // ✅ Validated by: Core_test8, Core_test12
-    // getWindowTitle(), setWindowTitle()                           // ✅ Lua: Core_UnitTests.lua:test_window_title
-    // getElapsedTime(), getDeltaTime()                             // ✅ Lua: Core_UnitTests.lua:test_time_and_events
-    // pumpEventsOnce(), pushMouseEvent(), pushKeyboardEvent()      // ✅ Lua: Core_UnitTests.lua:test_time_and_events
-    // getConfig()                                                  // ✅ Validated/Used in: Core_test2–Core_test8, Core_test13
-    // setColor(const SDL_Color&)                                   // ✅ Validated by: Core_test12
-
-    // // --- SDL Resource Accessors --- //
-    // getWindow()                                                  // ✅ Validated by: Core_test12; Lua: not exposed (planned with SDL3 object)
-    // getRenderer()                                                // ✅ Validated by: Core_test12; Lua: not exposed (planned with SDL3 object)
-    // getTexture()                                                 // ✅ Validated by: Core_test12; Lua: not exposed (planned with SDL3 object)
-
-    // // --- Configuration Getters/Setters --- //
-    // getConfig();                                                 // ✅ Validated by: Core_test13
-    // getWindowWidth();                                            // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
-    // getWindowHeight();                                           // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
-    // getPixelWidth();                                             // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
-    // getPixelHeight();                                            // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
-    // getPreserveAspectRatio();                                    // ✅ Validated by: Core_test13
-    // getAllowTextureResize();                                     // ✅ Validated by: Core_test13
-    // getRendererLogicalPresentation();                            // ✅ Validated by: Core_test13
-    // getWindowFlags();                                            // ✅ Validated by: Core_test13
-    // getPixelFormat();                                            // ✅ Validated by: Core_test13
-
-    // setConfig(CoreConfig& config);                               // ✅ Validated by: Core_test13
-    // setWindowWidth(float width);                                 // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
-    // setWindowHeight(float height);                               // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
-    // setPixelWidth(float width);                                  // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
-    // setPixelHeight(float height);                                // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
-    // setPreserveAspectRatio(bool preserve);                       // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
-    // setAllowTextureResize(bool allow);                           // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
-    // setRendererLogicalPresentation(presentation);                // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
-    // setWindowFlags(SDL_WindowFlags flags);                       // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
-    // setPixelFormat(SDL_PixelFormat format);                      // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
-
-    // // --- Factory & EventManager Access --- //
-    // getFactory();                                                // ✅ Validated by: Core_test9, Core_test14
-    // getEventManager();                                           // ✅ Validated by: Core_test14
-    // getIsTraversing();                                           // ✅ Validated by: Core_test14; Lua: Core_UnitTests.lua:test_traversing_flag
-    // setIsTraversing(bool traversing);                            // ✅ Validated by: Core_test14; Lua: Core_UnitTests.lua:test_traversing_flag
-
-    // // --- Focus & Hover Management --- //
-    // handleTabKeyPress();                                         // ✅ Validated by: Core_test15; Lua: (planned)
-    // handleTabKeyPressReverse();                                  // ✅ Validated by: Core_test15; Lua: (planned)
-    // setKeyboardFocusedObject(DisplayHandle obj);                 // ✅ Validated by: Core_test15; Lua: Core_UnitTests.lua:test_focus_hover
-    // getKeyboardFocusedObject();                                  // ✅ Validated by: Core_test15; Lua: Core_UnitTests.lua:test_focus_hover
-    // clearKeyboardFocusedObject();                                // ✅ Validated by: Core_test15
-    // setMouseHoveredObject(DisplayHandle obj);                    // ✅ Validated by: Core_test15; Lua: Core_UnitTests.lua:test_focus_hover
-    // getMouseHoveredObject();                                     // ✅ Validated by: Core_test15; Lua: Core_UnitTests.lua:test_focus_hover
-
-    // // --- Lua State Access --- //
-    // getLua();                                                    // ✅ Verified by: Core::onInit()
-
-    // //////////////////////////////
-    // // --- Factory Wrappers --- //
-    // //////////////////////////////
-
-    // // --- Object Creation --- //
-    // createDisplayObject(const std::string& typeName, const sol::table& config); // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_creation_orphans
-    // createDisplayObject(const std::string& typeName,                            // ✅ Validated by: Core_test16
-    //     const SDOM::IDisplayObject::InitStruct& init); 
-    // createDisplayObjectFromScript(const std::string& typeName,                  // ✅ Validated by: Core_test16
-    //     const std::string& luaScript);       
-
-    // createAssetObject(const std::string& typeName, const sol::table& config);   // ✅ Validated by: Core_test16
-    // createAssetObject(const std::string& typeName,                              // ✅ Validated by: Core_test16
-    //     const SDOM::IAssetObject::InitStruct& init);     
-    // createAssetObjectFromScript(const std::string& typeName,                    // ✅ Validated by: Core_test16
-    //     const std::string& luaScript);         
-
-    // // --- Object Lookup --- //
-    // getDisplayObjectPtr(const std::string& name);                               // ✅ Validated by: Core_test15
-    // getDisplayObject(const std::string& name);                                  // ✅ Validated by: Core_test15, Core_test16; Lua: Core_UnitTests.lua:test_lookup
-    // hasDisplayObject(const std::string& name);                                  // ✅ Validated by: Core_test15
-
-    // getAssetObjectPtr(const std::string& name);                                 // ✅ Validated by: Core_test16
-    // getAssetObject(const std::string& name);                                    // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_asset_api
-    // hasAssetObject(const std::string& name);                                    // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_asset_api
-
-    // // --- Display Object Management --- //
-    // destroyDisplayObject(const std::string& name);                              // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_destroy_displayobject
-    // destroyAssetObject(const std::string& name);                                // ✅ Validated by: Core_test16
-
-    // // --- Orphan Management --- //
-    // countOrphanedDisplayObjects();                                              // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_creation_orphans
-    // getOrphanedDisplayObjects();                                                // ✅ Validated by: Core_test16
-    // detachOrphans();                                                            // ✅ Validated by: Core_test16
-    // collectGarbage();                                                           // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_creation_orphans
