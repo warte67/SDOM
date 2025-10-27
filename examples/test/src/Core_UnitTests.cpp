@@ -52,7 +52,6 @@
     _fnGetOnUnitTest()                                           // ✅ Validated by: Core_test10 (C++ Only)
     _fnGetOnWindowResize()                                       // ✅ Validated by: Core_test10 (C++ Only)
 
-
     // --- Stage/Root Node Management --- //
     setRootNode(const std::string& name)                         // ✅ Validated by: Core_test11
     setRootNode(const DisplayHandle& handle)                     // ✅ Validated by: Core_test11
@@ -396,14 +395,6 @@ namespace SDOM
         core.registerOnEvent(testEventFn);
         core.registerOnRender(testRenderFn);
         core.registerOnWindowResize(testWindowResizeFn);
-
-        // Set new hooks for testing
-        // core._fnOnInit(testInitFn);
-        // core._fnOnQuit(testQuitFn);
-        // core._fnOnUpdate(testUpdateFn);
-        // core._fnOnEvent(testEventFn);
-        // core._fnOnRender(testRenderFn);
-        // core._fnOnWindowResize(testWindowResizeFn);
 
         // Perform checks to verify the hooks were set correctly
         if (core._fnGetOnInit().target_type() != typeid(testInitFn)) {
@@ -1038,7 +1029,7 @@ namespace SDOM
         ut.add_test("DisplayObject Creation", Core_test16);
 
         ut.setLuaFilename("src/Core_UnitTests.lua"); // Lua test script path
-        ut.add_test("Lua: " + ut.getLuaFilename(), Core_LUA_Tests);
+        ut.add_test("Lua: '" + ut.getLuaFilename() + "'", Core_LUA_Tests);
 
         return ut.run_all("Core");
     }

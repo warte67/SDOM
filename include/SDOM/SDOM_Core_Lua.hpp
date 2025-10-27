@@ -180,10 +180,23 @@ namespace SDOM
 
     // --- Orphan / Future Child Management --- //
     void destroyDisplayObject_lua(const std::string& name);
+    void destroyDisplayObject_any_lua(const sol::object& spec);
     int countOrphanedDisplayObjects_lua();
     std::vector<DisplayHandle> getOrphanedDisplayObjects_lua();
     // void destroyOrphanedDisplayObjects_lua();  // aliases:  "destroyOrphanedObjects" and "destroyOrphans"
     void collectGarbage_lua();
+
+    // --- Future Child Management (exposed) --- //
+    void attachFutureChildren_lua();
+    void addToOrphanList_lua(const DisplayHandle& orphan);
+    void addToFutureChildrenList_lua(const sol::object& args);
+
+    // --- Factory utilities exposed on Core --- //
+    void clearFactory_lua();
+    AssetHandle findAssetByFilename_lua(const sol::object& spec);
+    AssetHandle findSpriteSheetByParams_lua(const sol::object& spec);
+    void unloadAllAssetObjects_lua();
+    void reloadAllAssetObjects_lua();
 
     // --- Utility Methods --- //
     std::vector<std::string> listDisplayObjectNames_lua();
@@ -193,37 +206,37 @@ namespace SDOM
 
 
     // // --- Callback/Hook Registration --- //
-    // registerOn(std::string name, sol::function f)                // ⚠️ Verify in config.lua
+    // registerOn(std::string name, sol::function f)                // ✅ Verified in config.lua
 
     // // --- Lua Registration Internal Helpers --- //
 
     // // --- Stage/Root Node Management --- //
-    // setRootNode(const std::string& name)                         // ✅ Validated by: Core_test11
-    // setRootNode(const DisplayHandle& handle)                     // ✅ Validated by: Core_test11
-    // setStage(const std::string& name)                            // ✅ Validated by: Core_test11
-    // getStage()                                                   // ✅ Validated by: Core_test11
+    // setRootNode(const std::string& name)                         // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
+    // setRootNode(const DisplayHandle& handle)                     // ✅ Validated by: Core_test11; Lua: (planned)
+    // setStage(const std::string& name)                            // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
+    // getStage()                                                   // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_lookup
     // getRootNodePtr()                                             // ✅ Validated by: Core_test11 (C++ only)
-    // getRootNode()                                                // ✅ Validated by: Core_test11
+    // getRootNode()                                                // ✅ Validated by: Core_test11; Lua: Core_UnitTests.lua:test_stage_root
     // getStageHandle()                                             // ✅ Validated by: Core_test11
 
     // // --- Window/Renderer/Texture/Config --- //
     // getWindow()                                                  // ✅ Validated by: Core_test1, Core_test12
     // SDL_GetWindowSize                                            // ✅ Validated by: Core_test1
-    // getPixelWidth()                                              // ✅ Validated by: Core_test2, Core_test13
-    // getPixelHeight()                                             // ✅ Validated by: Core_test2, Core_test13
+    // getPixelWidth()                                              // ✅ Validated by: Core_test2, Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
+    // getPixelHeight()                                             // ✅ Validated by: Core_test2, Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
     // getPreserveAspectRatio()                                     // ✅ Validated by: Core_test3, Core_test13
     // getAllowTextureResize()                                      // ✅ Validated by: Core_test4, Core_test13
-    // getPixelFormat()                                             // ✅ Validated by: Core_test5, Core_test13
+    // getPixelFormat()                                             // ✅ Validated by: Core_test5, Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
     // getRendererLogicalPresentation()                             // ✅ Validated by: Core_test6, Core_test13
-    // getWindowFlags()                                             // ✅ Validated by: Core_test7, Core_test13
+    // getWindowFlags()                                             // ✅ Validated by: Core_test7, Core_test13; Lua: Core_UnitTests.lua:test_config_accessors
     // getColor()                                                   // ✅ Validated by: Core_test8, Core_test12
     // getConfig()                                                  // ✅ Validated/Used in: Core_test2–Core_test8, Core_test13
     // setColor(const SDL_Color&)                                   // ✅ Validated by: Core_test12
 
     // // --- SDL Resource Accessors --- //
-    // getWindow()                                                  // ✅ Validated by: Core_test12
-    // getRenderer()                                                // ✅ Validated by: Core_test12
-    // getTexture()                                                 // ✅ Validated by: Core_test12
+    // getWindow()                                                  // ✅ Validated by: Core_test12; Lua: not exposed (planned with SDL3 object)
+    // getRenderer()                                                // ✅ Validated by: Core_test12; Lua: not exposed (planned with SDL3 object)
+    // getTexture()                                                 // ✅ Validated by: Core_test12; Lua: not exposed (planned with SDL3 object)
 
     // // --- Configuration Getters/Setters --- //
     // getConfig();                                                 // ✅ Validated by: Core_test13
@@ -240,28 +253,28 @@ namespace SDOM
     // setConfig(CoreConfig& config);                               // ✅ Validated by: Core_test13
     // setWindowWidth(float width);                                 // ✅ Validated by: Core_test13
     // setWindowHeight(float height);                               // ✅ Validated by: Core_test13
-    // setPixelWidth(float width);                                  // ✅ Validated by: Core_test13
-    // setPixelHeight(float height);                                // ✅ Validated by: Core_test13
+    // setPixelWidth(float width);                                  // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
+    // setPixelHeight(float height);                                // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
     // setPreserveAspectRatio(bool preserve);                       // ✅ Validated by: Core_test13
     // setAllowTextureResize(bool allow);                           // ✅ Validated by: Core_test13
     // setRendererLogicalPresentation(presentation);                // ✅ Validated by: Core_test13
-    // setWindowFlags(SDL_WindowFlags flags);                       // ✅ Validated by: Core_test13
-    // setPixelFormat(SDL_PixelFormat format);                      // ✅ Validated by: Core_test13
+    // setWindowFlags(SDL_WindowFlags flags);                       // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
+    // setPixelFormat(SDL_PixelFormat format);                      // ✅ Validated by: Core_test13; Lua: Core_UnitTests.lua:test_config_setters
 
     // // --- Factory & EventManager Access --- //
     // getFactory();                                                // ✅ Validated by: Core_test9, Core_test14
     // getEventManager();                                           // ✅ Validated by: Core_test14
-    // getIsTraversing();                                           // ✅ Validated by: Core_test14
-    // setIsTraversing(bool traversing);                            // ✅ Validated by: Core_test14
+    // getIsTraversing();                                           // ✅ Validated by: Core_test14; Lua: Core_UnitTests.lua:test_traversing_flag
+    // setIsTraversing(bool traversing);                            // ✅ Validated by: Core_test14; Lua: Core_UnitTests.lua:test_traversing_flag
 
     // // --- Focus & Hover Management --- //
-    // handleTabKeyPress();                                         // ✅ Validated by: Core_test15
-    // handleTabKeyPressReverse();                                  // ✅ Validated by: Core_test15
-    // setKeyboardFocusedObject(DisplayHandle obj);                 // ✅ Validated by: Core_test15
-    // getKeyboardFocusedObject();                                  // ✅ Validated by: Core_test15
+    // handleTabKeyPress();                                         // ✅ Validated by: Core_test15; Lua: (planned)
+    // handleTabKeyPressReverse();                                  // ✅ Validated by: Core_test15; Lua: (planned)
+    // setKeyboardFocusedObject(DisplayHandle obj);                 // ✅ Validated by: Core_test15; Lua: Core_UnitTests.lua:test_focus_hover
+    // getKeyboardFocusedObject();                                  // ✅ Validated by: Core_test15; Lua: Core_UnitTests.lua:test_focus_hover
     // clearKeyboardFocusedObject();                                // ✅ Validated by: Core_test15
-    // setMouseHoveredObject(DisplayHandle obj);                    // ✅ Validated by: Core_test15
-    // getMouseHoveredObject();                                     // ✅ Validated by: Core_test15
+    // setMouseHoveredObject(DisplayHandle obj);                    // ✅ Validated by: Core_test15; Lua: Core_UnitTests.lua:test_focus_hover
+    // getMouseHoveredObject();                                     // ✅ Validated by: Core_test15; Lua: Core_UnitTests.lua:test_focus_hover
 
     // // --- Lua State Access --- //
     // getLua();                                                    // ✅ Verified by: Core::onInit()
@@ -271,7 +284,7 @@ namespace SDOM
     // //////////////////////////////
 
     // // --- Object Creation --- //
-    // createDisplayObject(const std::string& typeName, const sol::table& config); // ✅ Validated by: Core_test16
+    // createDisplayObject(const std::string& typeName, const sol::table& config); // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_creation_orphans
     // createDisplayObject(const std::string& typeName,                            // ✅ Validated by: Core_test16
     //     const SDOM::IDisplayObject::InitStruct& init); 
     // createDisplayObjectFromScript(const std::string& typeName,                  // ✅ Validated by: Core_test16
@@ -285,19 +298,19 @@ namespace SDOM
 
     // // --- Object Lookup --- //
     // getDisplayObjectPtr(const std::string& name);                               // ✅ Validated by: Core_test15
-    // getDisplayObject(const std::string& name);                                  // ✅ Validated by: Core_test15, Core_test16
+    // getDisplayObject(const std::string& name);                                  // ✅ Validated by: Core_test15, Core_test16; Lua: Core_UnitTests.lua:test_lookup
     // hasDisplayObject(const std::string& name);                                  // ✅ Validated by: Core_test15
 
     // getAssetObjectPtr(const std::string& name);                                 // ✅ Validated by: Core_test16
-    // getAssetObject(const std::string& name);                                    // ✅ Validated by: Core_test16
-    // hasAssetObject(const std::string& name);                                    // ✅ Validated by: Core_test16
+    // getAssetObject(const std::string& name);                                    // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_asset_api
+    // hasAssetObject(const std::string& name);                                    // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_asset_api
 
     // // --- Display Object Management --- //
-    // destroyDisplayObject(const std::string& name);                              // ✅ Validated by: Core_test16
+    // destroyDisplayObject(const std::string& name);                              // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_destroy_displayobject
     // destroyAssetObject(const std::string& name);                                // ✅ Validated by: Core_test16
 
     // // --- Orphan Management --- //
-    // countOrphanedDisplayObjects();                                              // ✅ Validated by: Core_test16
+    // countOrphanedDisplayObjects();                                              // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_creation_orphans
     // getOrphanedDisplayObjects();                                                // ✅ Validated by: Core_test16
     // detachOrphans();                                                            // ✅ Validated by: Core_test16
-    // collectGarbage();                                                           // ✅ Validated by: Core_test16
+    // collectGarbage();                                                           // ✅ Validated by: Core_test16; Lua: Core_UnitTests.lua:test_creation_orphans

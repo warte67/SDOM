@@ -241,17 +241,33 @@ function configure(cfg) end
 ---@field getMouseHoveredObject fun(self: Core): DisplayHandle
 ---@field getWindowTitle fun(self: Core): string
 ---@field setWindowTitle fun(self: Core, title: string)
+---@field getPixelWidth fun(self: Core): number
+---@field getPixelHeight fun(self: Core): number
+---@field getPixelFormat fun(self: Core): integer
+---@field getWindowFlags fun(self: Core): integer
+---@field getWindowWidth fun(self: Core): number
+---@field getWindowHeight fun(self: Core): number
+---@field getPreserveAspectRatio fun(self: Core): boolean
+---@field getAllowTextureResize fun(self: Core): boolean
+---@field getRendererLogicalPresentation fun(self: Core): integer
+---@field setPixelWidth fun(self: Core, width: number)
+---@field setPixelHeight fun(self: Core, height: number)
+---@field setPixelFormat fun(self: Core, format: integer)
+---@field setWindowFlags fun(self: Core, flags: integer)
+---@field setWindowWidth fun(self: Core, width: number)
+---@field setWindowHeight fun(self: Core, height: number)
+---@field setPreserveAspectRatio fun(self: Core, preserve: boolean)
+---@field setAllowTextureResize fun(self: Core, allow: boolean)
+---@field setRendererLogicalPresentation fun(self: Core, presentation: integer)
 ---@field getElapsedTime fun(self: Core): number
 ---@field getDeltaTime fun(self: Core): number
 ---@field pumpEventsOnce fun(self: Core)
 ---@field pushMouseEvent fun(self: Core, args: table)
 ---@field pushKeyboardEvent fun(self: Core, args: table)
----@field destroyDisplayObject fun(self: Core, name: string)
+---@field destroyDisplayObject fun(self: Core, target: (string|DisplayHandle|table))
 ---@field countOrphanedDisplayObjects fun(self: Core): integer
 ---@field getOrphanedDisplayObjects fun(self: Core): DisplayHandle[]
 ---@field collectGarbage fun(self: Core)
----@field listDisplayObjectNames fun(self: Core): string[]
----@field printObjectRegistry fun(self: Core)
 
 ---@class Stage: DisplayHandle
 ---@field getMouseX fun(self: Stage): integer
@@ -261,6 +277,60 @@ function configure(cfg) end
 
 ---@type Core
 Core = Core or {}
+
+-- SDL_Utils ---------------------------------------------------------------
+---@class SDL_FRect
+---@field x number
+---@field y number
+---@field w number
+---@field h number
+
+---@class SDL_Utils
+SDL_Utils = SDL_Utils or {}
+
+---@param format integer
+---@return string
+function SDL_Utils.pixelFormatToString(format) end
+
+---@param name string
+---@return integer
+function SDL_Utils.pixelFormatFromString(name) end
+
+---@param flags integer
+---@return string
+function SDL_Utils.windowFlagsToString(flags) end
+
+---@param name string
+---@return integer
+function SDL_Utils.windowFlagsFromString(name) end
+
+---@param flags integer
+---@return string
+function SDL_Utils.rendererLogicalPresentationToString(flags) end
+
+---@param name string
+---@return integer
+function SDL_Utils.rendererLogicalPresentationFromString(name) end
+
+---@param keycode integer
+---@param keymod integer
+---@return integer
+function SDL_Utils.keyToAscii(keycode, keymod) end
+
+---@param ms integer
+function SDL_Utils.Delay(ms) end
+
+---@param ev any
+---@return table
+function SDL_Utils.eventToLuaTable(ev) end
+
+---@param t table
+---@return SDL_FRect
+function SDL_Utils.tableToFRect(t) end
+
+---@param o any
+---@return SDL_Color
+function SDL_Utils.colorFromSol(o) end
 
 ---@type UnitTests
 UnitTests = UnitTests or {}

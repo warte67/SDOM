@@ -192,6 +192,7 @@ namespace SDOM
         virtual void onEvent(const Event& event) override;
         virtual void onRender() override;
         virtual bool onUnitTest() override;
+        virtual void onWindowResize(int logicalWidth, int logicalHeight) override;
 
         void setText(std::string p_text);
         std::string getText() const { return text_; }
@@ -383,4 +384,3 @@ namespace SDOM
     };
 
 } // namespace SDOM
-

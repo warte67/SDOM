@@ -704,14 +704,12 @@ namespace SDOM
                 // Frame 101 is the measured frame; report and quit
                 else if (s_iteration_state == 101)
                 {
-                    getFactory().report_performance_stats();
                     s_iteration_state = 102;  // clamp state
                     if (stopAfterUnitTests_ == true)
                     {
-                        LUA_INFO("Core: stopping main loop after unit tests.");
+                        getFactory().report_performance_stats();
                         bIsRunning_ = false; // signal to stop the main loop after unit tests
                     }
-                    // quit();
                 }
                 else
                 {
@@ -1137,6 +1135,27 @@ namespace SDOM
 
         if (fnOnWindowResize)
             fnOnWindowResize(newWidth, newHeight);
+
+        // Notify all display objects so cached renderer-owned resources can be
+        // proactively invalidated/rebuilt after device changes.
+        if (rootNode_)
+        {
+            IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
+            if (rootObj)
+            {
+                std::function<void(IDisplayObject&)> visit;
+                visit = [&](IDisplayObject& node)
+                {
+                    try { node.onWindowResize(newWidth, newHeight); } catch(...) {}
+                    for (const auto& ch : node.getChildren())
+                    {
+                        if (auto* c = dynamic_cast<IDisplayObject*>(ch.get()))
+                            visit(*c);
+                    }
+                };
+                visit(*rootObj);
+            }
+        }
     }
 
 
@@ -1178,6 +1197,37 @@ namespace SDOM
 
         // Update previous config
         prevConfig = config_;
+
+        // After reconfigure, proactively notify all display objects that the
+        // logical render size/device may have changed so cached renderer-owned
+        // resources (textures) can be invalidated/rebuilt.
+        int logicalW = 0, logicalH = 0;
+        if (texture_)
+        {
+            float tw = 0.0f, th = 0.0f;
+            if (SDL_GetTextureSize(texture_, &tw, &th))
+            {
+                logicalW = static_cast<int>(tw);
+                logicalH = static_cast<int>(th);
+            }
+        }
+        if (rootNode_)
+        {
+            if (auto* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get()))
+            {
+                std::function<void(IDisplayObject&)> visit;
+                visit = [&](IDisplayObject& node)
+                {
+                    try { node.onWindowResize(logicalW, logicalH); } catch(...) {}
+                    for (const auto& ch : node.getChildren())
+                    {
+                        if (auto* c = dynamic_cast<IDisplayObject*>(ch.get()))
+                            visit(*c);
+                    }
+                };
+                visit(*rootObj);
+            }
+        }
     } // END void Core::refreshSDLResources()
 
     bool Core::coreTests_()
@@ -1833,6 +1883,90 @@ namespace SDOM
         SDOM::core_bind_return_float("getPixelHeight", [](){ return Core::getInstance().getPixelHeight(); }, objHandleType, coreTable, lua);
         SDOM::core_bind_return_int("getWindowFlags", [](){ return static_cast<int>(Core::getInstance().getWindowFlags()); }, objHandleType, coreTable, lua);
         SDOM::core_bind_return_int("getPixelFormat", [](){ return static_cast<int>(Core::getInstance().getPixelFormat()); }, objHandleType, coreTable, lua);
+        // Additional config getters
+        SDOM::core_bind_return_float("getWindowWidth", [](){ return Core::getInstance().getWindowWidth(); }, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_float("getWindowHeight", [](){ return Core::getInstance().getWindowHeight(); }, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_bool("getPreserveAspectRatio", [](){ return Core::getInstance().getPreserveAspectRatio(); }, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_bool("getAllowTextureResize", [](){ return Core::getInstance().getAllowTextureResize(); }, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_int("getRendererLogicalPresentation", [](){ return static_cast<int>(Core::getInstance().getRendererLogicalPresentation()); }, objHandleType, coreTable, lua);
+
+        // Setter bindings for pixel metrics and format/flags (accept numeric args)
+        objHandleType["setPixelWidth"] = [](Core& /*core*/, float w) { Core::getInstance().setPixelWidth(w); return true; };
+        coreTable.set_function("setPixelWidth", [](sol::this_state, sol::object /*self*/, sol::object v){
+            try {
+                if (v.is<float>()) Core::getInstance().setPixelWidth(v.as<float>());
+                else if (v.is<double>()) Core::getInstance().setPixelWidth(static_cast<float>(v.as<double>()));
+                else if (v.is<int>()) Core::getInstance().setPixelWidth(static_cast<float>(v.as<int>()));
+            } catch(...) {}
+        });
+
+        objHandleType["setPixelHeight"] = [](Core& /*core*/, float h) { Core::getInstance().setPixelHeight(h); return true; };
+        coreTable.set_function("setPixelHeight", [](sol::this_state, sol::object /*self*/, sol::object v){
+            try {
+                if (v.is<float>()) Core::getInstance().setPixelHeight(v.as<float>());
+                else if (v.is<double>()) Core::getInstance().setPixelHeight(static_cast<float>(v.as<double>()));
+                else if (v.is<int>()) Core::getInstance().setPixelHeight(static_cast<float>(v.as<int>()));
+            } catch(...) {}
+        });
+
+        objHandleType["setWindowFlags"] = [](Core& /*core*/, int flags) { Core::getInstance().setWindowFlags(static_cast<SDL_WindowFlags>(flags)); return true; };
+        coreTable.set_function("setWindowFlags", [](sol::this_state, sol::object /*self*/, sol::object v){
+            try {
+                if (v.is<int>()) Core::getInstance().setWindowFlags(static_cast<SDL_WindowFlags>(v.as<int>()));
+                else if (v.is<double>()) Core::getInstance().setWindowFlags(static_cast<SDL_WindowFlags>(static_cast<int>(v.as<double>())));
+            } catch(...) {}
+        });
+
+        objHandleType["setPixelFormat"] = [](Core& /*core*/, int fmt) { Core::getInstance().setPixelFormat(static_cast<SDL_PixelFormat>(fmt)); return true; };
+        coreTable.set_function("setPixelFormat", [](sol::this_state, sol::object /*self*/, sol::object v){
+            try {
+                if (v.is<int>()) Core::getInstance().setPixelFormat(static_cast<SDL_PixelFormat>(v.as<int>()));
+                else if (v.is<double>()) Core::getInstance().setPixelFormat(static_cast<SDL_PixelFormat>(static_cast<int>(v.as<double>())));
+            } catch(...) {}
+        });
+
+        // Additional config setters
+        objHandleType["setWindowWidth"] = [](Core& /*core*/, float w) { Core::getInstance().setWindowWidth(w); return true; };
+        coreTable.set_function("setWindowWidth", [](sol::this_state, sol::object /*self*/, sol::object v){
+            try {
+                if (v.is<float>()) Core::getInstance().setWindowWidth(v.as<float>());
+                else if (v.is<double>()) Core::getInstance().setWindowWidth(static_cast<float>(v.as<double>()));
+                else if (v.is<int>()) Core::getInstance().setWindowWidth(static_cast<float>(v.as<int>()));
+            } catch(...) {}
+        });
+
+        objHandleType["setWindowHeight"] = [](Core& /*core*/, float h) { Core::getInstance().setWindowHeight(h); return true; };
+        coreTable.set_function("setWindowHeight", [](sol::this_state, sol::object /*self*/, sol::object v){
+            try {
+                if (v.is<float>()) Core::getInstance().setWindowHeight(v.as<float>());
+                else if (v.is<double>()) Core::getInstance().setWindowHeight(static_cast<float>(v.as<double>()));
+                else if (v.is<int>()) Core::getInstance().setWindowHeight(static_cast<float>(v.as<int>()));
+            } catch(...) {}
+        });
+
+        objHandleType["setPreserveAspectRatio"] = [](Core& /*core*/, bool p) { Core::getInstance().setPreserveAspectRatio(p); return true; };
+        coreTable.set_function("setPreserveAspectRatio", [](sol::this_state, sol::object /*self*/, sol::object v){
+            try {
+                if (v.is<bool>()) Core::getInstance().setPreserveAspectRatio(v.as<bool>());
+                else if (v.is<int>()) Core::getInstance().setPreserveAspectRatio(v.as<int>() != 0);
+            } catch(...) {}
+        });
+
+        objHandleType["setAllowTextureResize"] = [](Core& /*core*/, bool a) { Core::getInstance().setAllowTextureResize(a); return true; };
+        coreTable.set_function("setAllowTextureResize", [](sol::this_state, sol::object /*self*/, sol::object v){
+            try {
+                if (v.is<bool>()) Core::getInstance().setAllowTextureResize(v.as<bool>());
+                else if (v.is<int>()) Core::getInstance().setAllowTextureResize(v.as<int>() != 0);
+            } catch(...) {}
+        });
+
+        objHandleType["setRendererLogicalPresentation"] = [](Core& /*core*/, int p) { Core::getInstance().setRendererLogicalPresentation(static_cast<SDL_RendererLogicalPresentation>(p)); return true; };
+        coreTable.set_function("setRendererLogicalPresentation", [](sol::this_state, sol::object /*self*/, sol::object v){
+            try {
+                if (v.is<int>()) Core::getInstance().setRendererLogicalPresentation(static_cast<SDL_RendererLogicalPresentation>(v.as<int>()));
+                else if (v.is<double>()) Core::getInstance().setRendererLogicalPresentation(static_cast<SDL_RendererLogicalPresentation>(static_cast<int>(v.as<double>())));
+            } catch(...) {}
+        });
 
 	    // --- Window Title & Timing --- //
         SDOM::core_bind_return_string("getWindowTitle", getWindowTitle_lua, objHandleType, coreTable, lua);
@@ -1846,7 +1980,8 @@ namespace SDOM
         SDOM::core_bind_object_arg("pushKeyboardEvent", pushKeyboardEvent_lua, objHandleType, coreTable, lua);
 
 	    // --- Orphan / Future Child Management --- //
-        SDOM::core_bind_string("destroyDisplayObject", destroyDisplayObject_lua, objHandleType, coreTable, lua);
+        // Accept handle/name/table for destroyDisplayObject for consistency
+        SDOM::core_bind_object_arg("destroyDisplayObject", destroyDisplayObject_any_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_return_int("countOrphanedDisplayObjects", countOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_return_vector_do("getOrphanedDisplayObjects", getOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
         // SDOM::core_bind_noarg("destroyOrphanedDisplayObjects", destroyOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
@@ -1855,8 +1990,7 @@ namespace SDOM
         SDOM::core_bind_noarg("collectGarbage", collectGarbage_lua, objHandleType, coreTable, lua);
 
         // --- Utility Methods --- //
-        SDOM::core_bind_return_vector_string("listDisplayObjectNames", listDisplayObjectNames_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_noarg("printObjectRegistry", printObjectRegistry_lua, objHandleType, coreTable, lua);
+        // Intentionally not exposing certain factory/future-child utilities to Lua yet
 
     } // End Core::_registerDisplayObject()
 

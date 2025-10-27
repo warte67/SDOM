@@ -79,6 +79,7 @@ namespace SDOM
         virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
         virtual void onRender() override;   // Called to render the display object
         virtual bool onUnitTest() override; // Unit test method
+        virtual void onWindowResize(int logicalWidth, int logicalHeight) override;
 
 
         // --- Public Accessors --- //

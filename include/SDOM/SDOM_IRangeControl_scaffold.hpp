@@ -101,6 +101,25 @@ namespace SDOM
         virtual void onRender() override;   // Called to render the display object
         virtual bool onUnitTest() override; // Unit test method
 
+        // onWindowResize contract for cached-texture widgets
+        //
+        // Display objects that cache renderer-owned resources (e.g., SDL_Texture*)
+        // must invalidate and rebuild those resources whenever the SDL device
+        // is recreated or when logical size/format changes. Core guarantees to
+        // broadcast onWindowResize(logicalW, logicalH) in two cases:
+        //   1) In response to SDL window resize events
+        //   2) Immediately after Core reconfigures SDL (e.g., when setters like
+        //      setPixelFormat/setWindowFlags trigger a device rebuild)
+        //
+        // To remain robust across device rebuilds, overrides should:
+        //   - Destroy any cached SDL_Texture and clear pointers
+        //   - Reset any tracked width/height/pixel format used for change detection
+        //   - Mark the object dirty so the next onRender() rebuilds the cache
+        //
+        // Derived controls that add additional cached resources should extend this
+        // override and call SUPER::onWindowResize().
+        virtual void onWindowResize(int logicalWidth, int logicalHeight) override;
+
         // --- Public Accessors --- //
         // Add custom getters here
 

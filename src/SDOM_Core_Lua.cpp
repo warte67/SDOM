@@ -1006,10 +1006,100 @@ void core_bind_return_displayobject(const std::string& name, std::function<Displ
 	
 	// --- Orphan / Future Child Management --- //
 	void destroyDisplayObject_lua(const std::string& name) { Core::getInstance().destroyDisplayObject(name); }
+	// Accept DisplayHandle|string|{ name = "..." }
+	void destroyDisplayObject_any_lua(const sol::object& spec)
+	{
+		std::string name;
+		if (!spec.valid()) return;
+		try {
+			if (spec.is<DisplayHandle>()) {
+				DisplayHandle h = spec.as<DisplayHandle>();
+				if (h.isValid()) name = h.getName();
+			} else if (spec.is<std::string>()) {
+				name = spec.as<std::string>();
+			} else if (spec.is<sol::table>()) {
+				sol::table t = spec.as<sol::table>();
+				sol::object n = t.get<sol::object>("name");
+				if (n.valid() && n.is<std::string>()) name = n.as<std::string>();
+			}
+		} catch(...) { name.clear(); }
+		if (!name.empty()) Core::getInstance().destroyDisplayObject(name);
+	}
 	int countOrphanedDisplayObjects_lua() { return Core::getInstance().countOrphanedDisplayObjects(); }
 	std::vector<DisplayHandle> getOrphanedDisplayObjects_lua() { return Core::getInstance().getOrphanedDisplayObjects(); }
 	void destroyOrphanedDisplayObjects_lua() { getFactory().destroyOrphanedDisplayObjects(); }
 	void collectGarbage_lua() { getFactory().collectGarbage(); }
+
+	// --- Future Child Management (exposed) --- //
+	void attachFutureChildren_lua() { Core::getInstance().attachFutureChildren(); }
+	void addToOrphanList_lua(const DisplayHandle& orphan) { Core::getInstance().addToOrphanList(orphan); }
+	void addToFutureChildrenList_lua(const sol::object& args)
+	{
+		if (!args.is<sol::table>()) return;
+		sol::table t = args.as<sol::table>();
+		// Resolve child and parent from DisplayHandle|string|{ name = ... }
+		DisplayHandle child;
+		DisplayHandle parent;
+		try {
+			sol::object c = t.get<sol::object>("child");
+			if (c.valid()) {
+				if (c.is<DisplayHandle>()) child = c.as<DisplayHandle>();
+				else if (c.is<std::string>()) child = Core::getInstance().getDisplayObject(c.as<std::string>());
+				else if (c.is<sol::table>()) {
+					sol::table ct = c.as<sol::table>();
+					sol::object n = ct.get<sol::object>("name");
+					if (n.valid() && n.is<std::string>()) child = Core::getInstance().getDisplayObject(n.as<std::string>());
+				}
+			}
+			sol::object p = t.get<sol::object>("parent");
+			if (p.valid()) {
+				if (p.is<DisplayHandle>()) parent = p.as<DisplayHandle>();
+				else if (p.is<std::string>()) parent = Core::getInstance().getDisplayObject(p.as<std::string>());
+				else if (p.is<sol::table>()) {
+					sol::table pt = p.as<sol::table>();
+					sol::object n = pt.get<sol::object>("name");
+					if (n.valid() && n.is<std::string>()) parent = Core::getInstance().getDisplayObject(n.as<std::string>());
+				}
+			}
+		} catch(...) {}
+		bool useWorld = t.get_or("useWorld", false);
+		int worldX = t.get_or("worldX", 0);
+		int worldY = t.get_or("worldY", 0);
+		if (child.isValid() && parent.isValid())
+			Core::getInstance().addToFutureChildrenList(child, parent, useWorld, worldX, worldY);
+	}
+
+	// --- Factory utilities exposed on Core --- //
+	void clearFactory_lua() { Core::getInstance().clearFactory(); }
+
+	AssetHandle findAssetByFilename_lua(const sol::object& spec)
+	{
+		std::string filename;
+		std::string typeName;
+		if (spec.is<std::string>()) {
+			filename = spec.as<std::string>();
+		} else if (spec.is<sol::table>()) {
+			sol::table t = spec.as<sol::table>();
+			filename = t.get_or("filename", std::string());
+			typeName = t.get_or("type", std::string());
+		}
+		if (filename.empty()) return AssetHandle();
+		return getFactory().findAssetByFilename(filename, typeName);
+	}
+
+	AssetHandle findSpriteSheetByParams_lua(const sol::object& spec)
+	{
+		if (!spec.is<sol::table>()) return AssetHandle();
+		sol::table t = spec.as<sol::table>();
+		std::string filename = t.get_or("filename", std::string());
+		int spriteW = t.get_or("spriteW", 0);
+		int spriteH = t.get_or("spriteH", 0);
+		if (filename.empty() || spriteW <= 0 || spriteH <= 0) return AssetHandle();
+		return getFactory().findSpriteSheetByParams(filename, spriteW, spriteH);
+	}
+
+	void unloadAllAssetObjects_lua() { getFactory().unloadAllAssetObjects(); }
+	void reloadAllAssetObjects_lua() { getFactory().reloadAllAssetObjects(); }
 
 	// --- Utility Methods --- //
 	std::vector<std::string> listDisplayObjectNames_lua() { return Core::getInstance().listDisplayObjectNames(); }

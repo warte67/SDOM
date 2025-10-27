@@ -240,6 +240,12 @@ Notes & test ideas:
         virtual void onRender() = 0;
         virtual bool onUnitTest() { return true; }
 
+        // Called when the Core's logical render size changes or when SDL
+        // render resources are rebuilt. Override in derived classes that
+        // cache renderer-owned resources (e.g., textures) to proactively
+        // invalidate/rebuild. Default: no-op.
+        virtual void onWindowResize(int /*logicalWidth*/, int /*logicalHeight*/) {}
+
         // --- Dirty/State Management --- //
         void cleanAll();
         bool getDirty() const { return bIsDirty_; }

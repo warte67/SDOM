@@ -236,9 +236,37 @@ namespace SDOM
 
     void IPanelObject::onQuit() 
     {
-        // We dont want to reset the assets here.  Let the factory do it
-        // ...
+        // Release any renderer-owned resources so device rebuilds don't leave
+        // stale textures around. Factory manages asset lifetimes separately.
+        if (cachedTexture_)
+        {
+            SDL_DestroyTexture(cachedTexture_);
+            cachedTexture_ = nullptr;
+        }
+        current_width_ = 0;
+        current_height_ = 0;
+        current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        setDirty(true);
     } // END: void IPanelObject::onQuit() 
+
+    // Cached-texture + window-resize contract
+    //
+    // Panel objects render a 9-slice into a cached SDL_Texture. When SDL
+    // resources are recreated due to configuration changes or window resizes,
+    // the cached texture may be invalid. Core broadcasts onWindowResize in
+    // those cases; invalidate and mark dirty so onRender() rebuilds next frame.
+    void IPanelObject::onWindowResize(int /*logicalWidth*/, int /*logicalHeight*/)
+    {
+        if (cachedTexture_)
+        {
+            SDL_DestroyTexture(cachedTexture_);
+            cachedTexture_ = nullptr;
+        }
+        current_width_ = 0;
+        current_height_ = 0;
+        current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        setDirty(true);
+    }
 
     
 
@@ -251,6 +279,26 @@ namespace SDOM
     {
         SDL_Renderer* renderer = getRenderer();
         if (!renderer) { ERROR("IPanelObject::onRender: renderer is null"); return; }
+
+        // After device rebuilds, cached textures can become invalid even if the
+        // pointer is non-null. Validate against the renderer and mark dirty to
+        // force a rebuild before drawing if needed.
+        if (cachedTexture_)
+        {
+            float tw = 0.0f, th = 0.0f;
+            if (!SDL_GetTextureSize(cachedTexture_, &tw, &th))
+            {
+                SDL_DestroyTexture(cachedTexture_);
+                cachedTexture_ = nullptr;
+                setDirty(true);
+            }
+        }
+        // If format/size changed since last build, force a rebuild.
+        if (current_pixel_format_ != getCore().getPixelFormat() ||
+            current_width_ != getWidth() || current_height_ != getHeight())
+        {
+            setDirty(true);
+        }
 
         // If dirty, (re)build the cached panel texture and render the 9-slice into it
         if (isDirty())

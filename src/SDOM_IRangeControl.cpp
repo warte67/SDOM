@@ -510,5 +510,23 @@ namespace SDOM
         return true;
     }
 
+    // Cached-texture + window-resize contract
+    //
+    // Range controls that cache a render texture must drop and rebuild it
+    // after SDL device/renderer changes. Core calls this after reconfigure
+    // and on SDL resize events. Clear the cache, reset trackers, set dirty.
+    void IRangeControl::onWindowResize(int /*logicalWidth*/, int /*logicalHeight*/)
+    {
+        if (cachedTexture_)
+        {
+            SDL_DestroyTexture(cachedTexture_);
+            cachedTexture_ = nullptr;
+        }
+        current_width_ = 0;
+        current_height_ = 0;
+        current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        setDirty(true);
+    }
+
 
 } // END: namespace SDOM

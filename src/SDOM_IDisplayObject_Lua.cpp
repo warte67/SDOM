@@ -1432,18 +1432,69 @@ namespace SDOM
             if (auto* obj = self.get()) bringToFront_lua_any(obj, descriptor);
         };
         bind_both(handleTbl, maybeUT, "bringToFront", sol::overload(bringToFront_bind0, bringToFront_bind1));
-        bind_both(handleTbl, maybeUT, "sendToBack",
-            sol::overload(
-                sendToBack_lua,
-                sendToBack_lua_any
-            )
-        );
-        bind_both(handleTbl, maybeUT, "sendToBackAfter",
-            sol::overload(
-                sendToBackAfter_lua,
-                sendToBackAfter_lua_any
-            )
-        );
+        // sendToBack wrappers
+        auto sendToBack_bind0 = [](SDOM::DisplayHandle& self) {
+            if (auto* obj = self.get()) sendToBack_lua(obj);
+        };
+        auto sendToBack_bind1 = [](SDOM::DisplayHandle& self, const sol::object& descriptor) {
+            if (auto* obj = self.get()) sendToBack_lua_any(obj, descriptor);
+        };
+        bind_both(handleTbl, maybeUT, "sendToBack", sol::overload(sendToBack_bind0, sendToBack_bind1));
+
+        // sendToBackAfter wrappers
+        auto resolve_limit_ptr = [](const sol::object& spec, SDOM::IDisplayObject* contextParent) -> const SDOM::IDisplayObject* {
+            if (!spec.valid()) return nullptr;
+            try {
+                if (spec.is<SDOM::DisplayHandle>()) {
+                    return dynamic_cast<const SDOM::IDisplayObject*>(spec.as<SDOM::DisplayHandle>().get());
+                }
+            } catch(...) {}
+            try {
+                if (spec.is<std::string>()) {
+                    std::string nm = spec.as<std::string>();
+                    SDOM::DisplayHandle h;
+                    if (contextParent) {
+                        h = contextParent->getChild(nm);
+                    }
+                    if (!h.isValid()) h = SDOM::getCore().getDisplayObject(nm);
+                    return dynamic_cast<const SDOM::IDisplayObject*>(h.get());
+                }
+            } catch(...) {}
+            try {
+                if (spec.is<sol::table>()) {
+                    sol::table t = spec.as<sol::table>();
+                    sol::object nameObj = t.get<sol::object>("name");
+                    if (nameObj.valid() && nameObj.is<std::string>()) {
+                        std::string nm = nameObj.as<std::string>();
+                        SDOM::DisplayHandle h;
+                        if (contextParent) h = contextParent->getChild(nm);
+                        if (!h.isValid()) h = SDOM::getCore().getDisplayObject(nm);
+                        return dynamic_cast<const SDOM::IDisplayObject*>(h.get());
+                    }
+                }
+            } catch(...) {}
+            return nullptr;
+        };
+
+        // Child-style: child:sendToBackAfter(limitSpec)
+        auto sendToBackAfter_bind1 = [resolve_limit_ptr](SDOM::DisplayHandle& self, const sol::object& limitSpec) {
+            SDOM::IDisplayObject* child = self.get();
+            if (!child) return;
+            // Prefer child's parent for name resolution
+            SDOM::IDisplayObject* parent = nullptr;
+            try { parent = self.get() ? self.get()->getParent().as<SDOM::IDisplayObject>() : nullptr; } catch(...) { parent = nullptr; }
+            const SDOM::IDisplayObject* limit = resolve_limit_ptr(limitSpec, parent);
+            sendToBackAfter_lua(child, limit);
+        };
+
+        // Parent-style: parent:sendToBackAfter(childDescriptor, limitSpec)
+        auto sendToBackAfter_bind2 = [resolve_limit_ptr](SDOM::DisplayHandle& self, const sol::object& childDesc, const sol::object& limitSpec) {
+            SDOM::IDisplayObject* parent = self.get();
+            if (!parent) return;
+            const SDOM::IDisplayObject* limit = resolve_limit_ptr(limitSpec, parent);
+            sendToBackAfter_lua_any(parent, childDesc, limit);
+        };
+        bind_both(handleTbl, maybeUT, "sendToBackAfter", sol::overload(sendToBackAfter_bind1, sendToBackAfter_bind2));
         bind_both(handleTbl, maybeUT, "getZOrder", getZOrder_lua);
         bind_both(handleTbl, maybeUT, "setZOrder",
             sol::overload(

@@ -50,6 +50,25 @@ namespace SDOM
         return SUPER::onUnitTest();
     } // END: bool IRangeControl_scaffold::onUnitTest()
 
+    // Cached-texture resilience on device changes
+    // See header for the detailed contract. This scaffold provides a safe
+    // default that clears cached renderer-owned resources and marks the
+    // control dirty so derived classes render correctly after SDL rebuilds.
+    void IRangeControl_scaffold::onWindowResize(int /*logicalWidth*/, int /*logicalHeight*/)
+    {
+        // If this scaffold or its derivatives cache textures, invalidate them here.
+        // (The base IRangeControl provides members commonly used by range controls.)
+        if (cachedTexture_)
+        {
+            SDL_DestroyTexture(cachedTexture_);
+            cachedTexture_ = nullptr;
+        }
+        current_width_ = 0;
+        current_height_ = 0;
+        current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        setDirty(true);
+    }
+
 
 
 
@@ -75,7 +94,6 @@ namespace SDOM
         //     ev.setPayloadValue("new_value", newValue);
         // });
     } // END: void IRangeControl_scaffold::_onValueChanged(float oldValue, float newValue)
-
 
 
 

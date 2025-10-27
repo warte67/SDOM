@@ -139,6 +139,7 @@ namespace SDOM
         virtual void onQuit() override;                 // Called when the display object is being destroyed
         virtual void onUpdate(float fElapsedTime)=0;    // Called every frame to update the display object
         virtual void onEvent(const Event& event)=0;     // Called when an event occurs
+        virtual void onWindowResize(int logicalWidth, int logicalHeight) override;
 
         // --- Helper Methods --- // 
         void renderPanel(); // render nine-panel based on the base_index_;

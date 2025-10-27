@@ -483,6 +483,28 @@ namespace SDOM
 
     } // END Label::onEvent(const Event& event)
 
+    // Cached-texture + window-resize contract
+    //
+    // Label caches its rendered output to an SDL_Texture for performance.
+    // Any SDL device rebuild (window resize or renderer reconfigure) can
+    // invalidate that texture. Core calls onWindowResize after such changes,
+    // so we must:
+    //   - Destroy the cached texture
+    //   - Reset tracked size/format used to decide if a rebuild is needed
+    //   - Mark dirty so onRender() will recreate the cache next frame
+    void Label::onWindowResize(int /*logicalWidth*/, int /*logicalHeight*/)
+    {
+        if (cachedTexture_)
+        {
+            SDL_DestroyTexture(cachedTexture_);
+            cachedTexture_ = nullptr;
+        }
+        current_width = 0;
+        current_height = 0;
+        current_pixel_format = SDL_PIXELFORMAT_UNKNOWN;
+        setDirty(true);
+    }
+
     void Label::onRender() 
     {       
         SDL_Renderer* renderer = getRenderer();
