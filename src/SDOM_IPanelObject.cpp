@@ -249,7 +249,49 @@ namespace SDOM
 
     void IPanelObject::onRender() 
     {
-        renderPanel();
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer) { ERROR("IPanelObject::onRender: renderer is null"); return; }
+
+        // If dirty, (re)build the cached panel texture and render the 9-slice into it
+        if (isDirty())
+        {
+            if (!rebuildPanelTexture_(getWidth(), getHeight(), getCore().getPixelFormat()))
+            {
+                ERROR("IPanelObject::onRender: failed to rebuild panel texture");
+                return;
+            }
+
+            if (cachedTexture_)
+            {
+                SpriteSheet* ss = getSpriteSheetPtr();
+                if (!ss) { ERROR("IPanelObject::onRender: invalid SpriteSheet"); return; }
+
+                try { ss->onLoad(); } catch(...) {}
+                SDL_Color color = getColor();
+                ss->drawNineQuad(static_cast<int>(base_index_), cachedTexture_, color, SDL_SCALEMODE_NEAREST);
+            }
+            setDirty(false);
+        }
+
+        // Draw the cached panel texture
+        if (cachedTexture_)
+        {
+            SDL_FRect dst = {
+                static_cast<float>(getX()),
+                static_cast<float>(getY()),
+                static_cast<float>(getWidth()),
+                static_cast<float>(getHeight())
+            };
+            if (!SDL_RenderTexture(renderer, cachedTexture_, nullptr, &dst))
+            {
+                ERROR("IPanelObject::onRender: failed to render cached panel texture: " + std::string(SDL_GetError()));
+            }
+        }
+        else
+        {
+            // Fallback: draw live if caching unavailable
+            renderPanel();
+        }
     } // END: void IPanelObject::onRender() 
 
 
@@ -280,20 +322,8 @@ namespace SDOM
         auto idx = [base](PanelTileOffset pto) { return base + static_cast<int>(pto); };
         SDL_Color color = getColor();
 
-        // SDL_Color color = getColor();
-        // SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
         using PTO = PanelTileOffset;
 
-        // SpriteSheet* sprite_sheet = spriteSheetAsset_->as<SpriteSheet>();
-        // if (!sprite_sheet)
-        // {
-        //     getFactory().printAssetTree();
-        //     std::string atype = spriteSheetAsset_.isValid() ? spriteSheetAsset_->getType() : std::string("<invalid>");
-        //     std::string afile = spriteSheetAsset_.isValid() ? spriteSheetAsset_->getFilename() : std::string("<invalid>");
-        //     ERROR("IPanelObject::renderPanel: sprite asset (" + spriteSheetAsset_->getName() + ") is not a SpriteSheet; resolved type='" + atype + "' file='" + afile + "'");
-        //     return;
-        // }
         // Ensure the sprite sheet's underlying texture is loaded before drawing
         try { ss->onLoad(); } catch(...) {}
 
@@ -344,6 +374,69 @@ namespace SDOM
         // Bottom-right corner (align src to right+bottom)
         ss->drawSprite(idx(PTO::BottomRight), make_src_for_clipped(idx(PTO::BottomRight), frightW, fbottomH, true, true), {fx + fleftW + fcenterW, fy + ftopH + fcenterH, frightW, fbottomH}, color);
     } // END: void IPanelObject::renderPanel()
+
+
+    bool IPanelObject::rebuildPanelTexture_(int width, int height, SDL_PixelFormat fmt)
+    {
+        // Destroy and recreate if format/size changed
+        bool needCreate = false;
+        if (!cachedTexture_)
+        {
+            needCreate = true;
+        }
+        else
+        {
+            float tw = 0.0f, th = 0.0f;
+            if (!SDL_GetTextureSize(cachedTexture_, &tw, &th))
+            {
+                // texture became invalid; recreate
+                needCreate = true;
+            }
+            else if (static_cast<int>(tw) != width || static_cast<int>(th) != height || current_pixel_format_ != fmt)
+            {
+                needCreate = true;
+            }
+        }
+
+        if (!needCreate)
+            return true;
+
+        if (cachedTexture_)
+        {
+            SDL_DestroyTexture(cachedTexture_);
+            cachedTexture_ = nullptr;
+        }
+
+        if (width <= 0 || height <= 0)
+        {
+            current_pixel_format_ = fmt;
+            current_width_ = width;
+            current_height_ = height;
+            return true; // nothing to create at zero size
+        }
+
+        cachedTexture_ = SDL_CreateTexture(getRenderer(), fmt, SDL_TEXTUREACCESS_TARGET, width, height);
+        if (!cachedTexture_)
+        {
+            ERROR("IPanelObject::rebuildPanelTexture_: failed to create texture: " + std::string(SDL_GetError()));
+            return false;
+        }
+        if (!SDL_SetTextureBlendMode(cachedTexture_, SDL_BLENDMODE_BLEND))
+        {
+            ERROR("IPanelObject::rebuildPanelTexture_: failed to set texture blend mode: " + std::string(SDL_GetError()));
+            return false;
+        }
+        if (!SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND))
+        {
+            ERROR("IPanelObject::rebuildPanelTexture_: failed to set render blend mode: " + std::string(SDL_GetError()));
+            return false;
+        }
+
+        current_pixel_format_ = fmt;
+        current_width_ = width;
+        current_height_ = height;
+        return true;
+    }
 
 
     // --- Lua Registration --- //

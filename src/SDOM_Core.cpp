@@ -680,15 +680,44 @@ namespace SDOM
                         overallSuccess = false;
                         // stop the main loop to allow graceful shutdown
                         bIsRunning_ = false;
-                    }                 
+                    }            
+                    s_iteration_state = 2;     
                 }
                 // s_iteration_state++;
                 if (s_iteration_state < 1)
                     s_iteration_state = 1;  // run unit tests on 2nd iteration
+                else if (s_iteration_state == 2)
+                {
+                    s_iteration_state = 3;
+                }
+                // let the API get up to speed (warm-up for 100 frames)
+                else if (s_iteration_state < 100)
+                {
+                    s_iteration_state ++;
+                }
+                // At exactly 100, clear stats so the next frame measures cleanly
+                else if (s_iteration_state == 100)
+                {
+                    getFactory().reset_performance_stats();
+                    s_iteration_state = 101; // next frame will be the measured one
+                }
+                // Frame 101 is the measured frame; report and quit
+                else if (s_iteration_state == 101)
+                {
+                    getFactory().report_performance_stats();
+                    s_iteration_state = 102;  // clamp state
+                    if (stopAfterUnitTests_ == true)
+                    {
+                        LUA_INFO("Core: stopping main loop after unit tests.");
+                        bIsRunning_ = false; // signal to stop the main loop after unit tests
+                    }
+                    // quit();
+                }
                 else
-                    s_iteration_state = 2;  // stay at 2 thereafter
-
-
+                {
+                    s_iteration_state = 102;  // clamp state
+                }
+                
             }  // END: while (SDL_PollEvent(&event)) 
         }
 
@@ -817,8 +846,13 @@ namespace SDOM
         handleRender = [this, &handleRender, renderer, texture](IDisplayObject& node) 
         {
 // if (node.isDirty()) DEBUG_LOG("Core::onRender: node=" << node.getName() << " dirty=" << node.isDirty());
+
+
             // render the node
+            getFactory().start_render_time(node.getName());
             node.onRender();
+            getFactory().stop_render_time(node.getName());
+
             node.setDirty(false); // clear dirty flag after rendering
 
             DisplayHandle rootHandle = this->getStageHandle();
@@ -889,7 +923,7 @@ namespace SDOM
         // so the user can overlay additional graphics if desired.
         if (fnOnRender)
             fnOnRender();        
-    }
+    } // END: Core::onRender()
 
     void Core::onEvent(Event& event)
     {
@@ -926,6 +960,7 @@ namespace SDOM
         std::function<void(IDisplayObject&)> handleUpdate;
         handleUpdate = [this, &handleUpdate, fElapsedTime](IDisplayObject& node) 
         {
+
             // Dispatch to event listeners first so they can stopPropagation if needed
             if (node.hasEventListener(EventType::OnUpdate, false))
             {
@@ -937,7 +972,9 @@ namespace SDOM
             }
             
             // dispatch to the object::onUpdate()
+            getFactory().start_update_timer(node.getName());
             node.onUpdate(fElapsedTime);
+            getFactory().stop_update_timer(node.getName());
 
             // update children
             for (const auto& child : node.getChildren()) 
@@ -1023,11 +1060,11 @@ namespace SDOM
         else 
             std::cout << CLR::LT_BLUE << "...Unit tests " << CLR::RED << "[FAILED]" << CLR::RESET << std::endl;
 
-        if (stopAfterUnitTests_==true)
-        {
-            LUA_INFO("Core: stopping main loop after unit tests.");
-            bIsRunning_ = false; // signal to stop the main loop after unit tests
-        }
+        // if (stopAfterUnitTests_ == true)
+        // {
+        //     LUA_INFO("Core: stopping main loop after unit tests.");
+        //     bIsRunning_ = false; // signal to stop the main loop after unit tests
+        // }
 
         return allTestsPassed;
     }

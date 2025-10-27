@@ -52,6 +52,17 @@ namespace SDOM
 {
     // IDisplayObject implementation
 
+    // Performance Introspection
+    float IDisplayObject::getLastUpdateDelta() const
+    {
+        return getFactory().getLastUpdateDelta(this);
+    }
+
+    float IDisplayObject::getLastRenderDelta() const
+    {
+        return getFactory().getLastRenderDelta(this);
+    }
+
     IDisplayObject::IDisplayObject(const InitStruct& init)
          : IDataObject()
     {

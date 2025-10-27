@@ -94,6 +94,16 @@ namespace SDOM
             SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST
         );
 
+        // Render a 9-slice panel into the specified target texture using the
+        // tile set starting at baseIndex. The target texture size determines
+        // the output size. Color modulates the sprite color.
+        void drawNineQuad(
+            int baseIndex,
+            SDL_Texture* targetTexture,
+            SDL_Color color = {255, 255, 255, 255},
+            SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST
+        );
+
         // --- Lua Wrappers --- //
         void setSpriteWidth_Lua(IAssetObject* obj, int width);
         void setSpriteHeight_Lua(IAssetObject* obj, int height);

@@ -457,7 +457,7 @@ namespace SDOM
         if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
 
         float texW = 0.0f, texH = 0.0f;
-    if (!SDL_GetTextureSize(texture_, &texW, &texH))
+        if (!SDL_GetTextureSize(texture_, &texW, &texH))
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
 
         if (spriteWidth_ <= 0 || spriteHeight_ <= 0) ERROR("Invalid sprite dimensions.");
@@ -635,6 +635,103 @@ namespace SDOM
         SDL_SetTextureScaleMode(texture_, scaleMode);
         SDL_RenderTexture(renderer, texture_, &sRect, &dstRect);
     }   
+
+
+    void SpriteSheet::drawNineQuad(int baseIndex, SDL_Texture* targetTexture, SDL_Color color, SDL_ScaleMode scaleMode)
+    {
+        if (!targetTexture) { ERROR("SpriteSheet::drawNineQuad: targetTexture is null"); return; }
+
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer) { ERROR("SpriteSheet::drawNineQuad: renderer is null"); return; }
+
+        // Switch to the target texture, clear it, draw, then restore
+        SDL_Texture* prevTarget = SDL_GetRenderTarget(renderer);
+        if (!SDL_SetRenderTarget(renderer, targetTexture))
+        {
+            ERROR("SpriteSheet::drawNineQuad: Unable to set render target: " + std::string(SDL_GetError()));
+            return;
+        }
+
+        float w = 0.0f, h = 0.0f;
+        if (!SDL_GetTextureSize(targetTexture, &w, &h))
+        {
+            ERROR("SpriteSheet::drawNineQuad: Failed to query target texture size: " + std::string(SDL_GetError()));
+            SDL_SetRenderTarget(renderer, prevTarget);
+            return;
+        }
+
+        // Clear target to transparent
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+        SDL_RenderClear(renderer);
+
+        // Tile dimensions from this spritesheet
+        const int cw = spriteWidth_;
+        const int ch = spriteHeight_;
+        const float fcw = static_cast<float>(cw);
+        const float fch = static_cast<float>(ch);
+
+        const int iw = static_cast<int>(w);
+        const int ih = static_cast<int>(h);
+
+        // Compute 9-slice layout dimensions
+        const int leftW   = std::min(cw, iw / 2);
+        const int rightW  = std::min(cw, iw - leftW);
+        const int topH    = std::min(ch, ih / 2);
+        const int bottomH = std::min(ch, ih - topH);
+
+        const int centerW = std::max(0, iw - leftW - rightW);
+        const int centerH = std::max(0, ih - topH - bottomH);
+
+        const float fleftW = static_cast<float>(leftW);
+        const float frightW = static_cast<float>(rightW);
+        const float ftopH = static_cast<float>(topH);
+        const float fbottomH = static_cast<float>(bottomH);
+        const float fcenterW = static_cast<float>(centerW);
+        const float fcenterH = static_cast<float>(centerH);
+
+        auto idx = [baseIndex](int offset) { return baseIndex + offset; };
+
+        // Helper to make a source rect clipped within a single tile (offset is tile-local)
+        auto make_src_for_clipped = [&](float clipW, float clipH, bool alignRight, bool alignBottom) -> SDL_FRect {
+            float src_w = (clipW >= fcw) ? fcw : (fcw * (clipW / fcw));
+            float src_h = (clipH >= fch) ? fch : (fch * (clipH / fch));
+            float src_x = alignRight ? (fcw - src_w) : 0.0f;
+            float src_y = alignBottom ? (fch - src_h) : 0.0f;
+            return SDL_FRect{ src_x, src_y, src_w, src_h };
+        };
+
+        // Top-left corner
+        drawSprite(idx(0), make_src_for_clipped(fleftW, ftopH, false, false), SDL_FRect{0.0f, 0.0f, fleftW, ftopH}, color, scaleMode);
+        // Top-center (stretch horizontally; clip vertically if needed)
+        if (centerW > 0)
+            drawSprite(idx(1), make_src_for_clipped(fcw, ftopH, false, false), SDL_FRect{fleftW, 0.0f, fcenterW, ftopH}, color, scaleMode);
+        // Top-right corner (align src to right)
+        drawSprite(idx(2), make_src_for_clipped(frightW, ftopH, true, false), SDL_FRect{fleftW + fcenterW, 0.0f, frightW, ftopH}, color, scaleMode);
+
+        // Left-center (stretch vertically; clip horizontally if needed)
+        if (centerH > 0)
+            drawSprite(idx(3), make_src_for_clipped(fleftW, fch, false, false), SDL_FRect{0.0f, ftopH, fleftW, fcenterH}, color, scaleMode);
+
+        // Center (stretch both axes)
+        if (centerW > 0 && centerH > 0)
+            drawSprite(idx(4), SDL_FRect{0,0,fcw,fch}, SDL_FRect{fleftW, ftopH, fcenterW, fcenterH}, color, scaleMode);
+
+        // Right-center (stretch vertically; align src to right if clipped horizontally)
+        if (centerH > 0)
+            drawSprite(idx(5), make_src_for_clipped(frightW, fch, true, false), SDL_FRect{fleftW + fcenterW, ftopH, frightW, fcenterH}, color, scaleMode);
+
+        // Bottom-left corner (align src to bottom)
+        drawSprite(idx(6), make_src_for_clipped(fleftW, fbottomH, false, true), SDL_FRect{0.0f, ftopH + fcenterH, fleftW, fbottomH}, color, scaleMode);
+
+        // Bottom-center (stretch horizontally; align src to bottom if clipped vertically)
+        if (centerW > 0)
+            drawSprite(idx(7), make_src_for_clipped(fcw, fbottomH, false, true), SDL_FRect{fleftW, ftopH + fcenterH, fcenterW, fbottomH}, color, scaleMode);
+
+        // Bottom-right corner (align src to right+bottom)
+        drawSprite(idx(8), make_src_for_clipped(frightW, fbottomH, true, true), SDL_FRect{fleftW + fcenterW, ftopH + fcenterH, frightW, fbottomH}, color, scaleMode);
+
+        SDL_SetRenderTarget(renderer, prevTarget);
+    }
 
 
     // --- Lua wrapper helpers for SpriteSheet --- //

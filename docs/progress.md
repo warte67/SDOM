@@ -1157,7 +1157,18 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
       - ✅ void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua)
 
 ---
-### [October 26, 2025]      
+### [October 26, 2025]
+- **IDisplayObject Lua Binding & Unit Test Milestone:**
+  - Implemented a centralized Lua binding helper for `IDisplayObject` in `IDisplayObject_lua.cpp`, consolidating all Lua-facing methods and properties for the type.
+  - Completed and validated a comprehensive `IDisplayObject_UnitTests.lua` script:
+    - Exercises all externally available functions and properties from Lua.
+    - Verifies correct behavior for dirty/state management, event handling, hierarchy, type/property access, z-order/priority, focus/visibility, geometry, orphan retention, and more.
+    - Ensures full parity between C++ and Lua APIs for `IDisplayObject`.
+  - Re-enabled the forward Lua testing platform, allowing Lua-driven tests to run as part of the main suite.
+  - All tests pass, confirming robust Lua/C++ integration and a stable, maintainable binding surface.
+- **Next:** Continue sweeping remaining DisplayObject types to the new Lua binding system and expand unit test coverage for each.   
+
+
 
 ---
 ### Next Steps:

@@ -183,6 +183,11 @@ Notes & test ideas:
 
         static constexpr const char* TypeName = "IDisplayObject";
 
+        // --- Performance Introspection --- //
+        // Returns microseconds spent in the last onUpdate/onRender call for this object
+        float getLastUpdateDelta() const;
+        float getLastRenderDelta() const;
+
         // --- Construction & Initialization --- //
         struct InitStruct {
             std::string name = TypeName;

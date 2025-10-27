@@ -16,6 +16,8 @@
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
+#include <iomanip>
+#include <algorithm>
 #include <SDOM/SDOM_Frame.hpp>
 #include <SDOM/SDOM_Button.hpp>
 #include <SDOM/SDOM_Group.hpp>
@@ -1791,6 +1793,154 @@ namespace SDOM
         for (const auto& name : truetypeNames) {
             destroyAssetObject(name);
         }
+    }
+
+
+    // --- Performance Test Helpers --- //
+
+    void Factory::start_update_timer(const std::string& objName) {
+        // Start timing this object's update; avoid console I/O to reduce measurement noise
+        update_start_times[objName] = std::chrono::steady_clock::now();
+    }
+
+    void Factory::stop_update_timer(const std::string& objName) {
+        auto end = std::chrono::steady_clock::now();
+        auto it = update_start_times.find(objName);
+        if (it != update_start_times.end()) {
+            auto delta = end - it->second;
+            perf_map[objName].update_time_ns += delta;
+            perf_map[objName].last_update_ns = delta;
+            perf_map[objName].update_calls++;
+            update_start_times.erase(it);
+        }
+    }
+
+    void Factory::start_render_time(const std::string& objName) {
+        render_start_times[objName] = std::chrono::steady_clock::now();
+    }
+
+    void Factory::stop_render_time(const std::string& objName) {
+        auto end = std::chrono::steady_clock::now();
+        auto it = render_start_times.find(objName);
+        if (it != render_start_times.end()) {
+            auto delta = end - it->second;
+            perf_map[objName].render_time_ns += delta;
+            perf_map[objName].last_render_ns = delta;
+            perf_map[objName].render_calls++;
+            render_start_times.erase(it);
+        }
+    }
+    void Factory::report_performance_stats() const 
+    {
+        // Print compact, separated views sorted by total time
+        std::cout << "---- Performance Statistics ----\n";
+        report_update_stats(10);
+        std::cout << std::endl;
+        report_render_stats(10);
+        std::cout << "total frame time: " << (getCore().getElapsedTime()*1'000'000.0f) << "us" << std::endl;
+    }
+
+    void Factory::report_update_stats(std::size_t topN) const
+    {
+        std::vector<std::pair<std::string, const PerfStats*>> items;
+        items.reserve(perf_map.size());
+        for (const auto& kv : perf_map) items.emplace_back(kv.first, &kv.second);
+
+        // Sort by last frame's update delta (descending)
+        std::sort(items.begin(), items.end(), [](const auto& a, const auto& b){
+            return a.second->last_update_ns > b.second->last_update_ns;
+        });
+
+        const std::size_t total = items.size();
+        const std::size_t limit = (topN == 0 || topN > total) ? total : topN;
+
+        // Determine a reasonable column width for names
+        std::size_t name_w = 4; // min width to fit "Name"
+        for (std::size_t i = 0; i < limit; ++i) name_w = std::max(name_w, items[i].first.size());
+        name_w = std::min<std::size_t>(name_w, 48);
+
+        std::cout << "Update Times (last frame, top " << limit << " of " << total << "):\n";
+        std::cout << std::left << std::setw(static_cast<int>(name_w)) << "Name" << "  "
+                  << std::right << std::setw(12) << "Update (us)" << "\n";
+        std::cout << std::string(name_w, '-') << "  " << std::string(12, '-') << "\n";
+        std::cout << std::fixed << std::setprecision(3);
+        for (std::size_t i = 0; i < limit; ++i)
+        {
+            const auto& name = items[i].first;
+            const auto* stats = items[i].second;
+            const double last_us = std::chrono::duration<double, std::micro>(stats->last_update_ns).count();
+            std::cout << std::left << std::setw(static_cast<int>(name_w)) << name << "  "
+                      << std::right << std::setw(12) << last_us << "\n";
+        }
+    }
+
+    void Factory::report_render_stats(std::size_t topN) const
+    {
+        std::vector<std::pair<std::string, const PerfStats*>> items;
+        items.reserve(perf_map.size());
+        for (const auto& kv : perf_map) items.emplace_back(kv.first, &kv.second);
+
+        // Sort by last frame's render delta (descending)
+        std::sort(items.begin(), items.end(), [](const auto& a, const auto& b){
+            return a.second->last_render_ns > b.second->last_render_ns;
+        });
+
+        const std::size_t total = items.size();
+        const std::size_t limit = (topN == 0 || topN > total) ? total : topN;
+
+        // Determine a reasonable column width for names
+        std::size_t name_w = 4; // min width to fit "Name"
+        for (std::size_t i = 0; i < limit; ++i) name_w = std::max(name_w, items[i].first.size());
+        name_w = std::min<std::size_t>(name_w, 48);
+
+        std::cout << "Render Times (last frame, top " << limit << " of " << total << "):\n";
+        std::cout << std::left << std::setw(static_cast<int>(name_w)) << "Name" << "  "
+                  << std::right << std::setw(12) << "Render (us)" << "\n";
+        std::cout << std::string(name_w, '-') << "  " << std::string(12, '-') << "\n";
+        std::cout << std::fixed << std::setprecision(3);
+        for (std::size_t i = 0; i < limit; ++i)
+        {
+            const auto& name = items[i].first;
+            const auto* stats = items[i].second;
+            const double last_us = std::chrono::duration<double, std::micro>(stats->last_render_ns).count();
+            std::cout << std::left << std::setw(static_cast<int>(name_w)) << name << "  "
+                      << std::right << std::setw(12) << last_us << "\n";
+        }
+    }
+
+    // Reset all performance metrics; used to clear warm-up frames before measuring
+    void Factory::reset_performance_stats()
+    {
+        perf_map.clear();
+        update_start_times.clear();
+        render_start_times.clear();
+    }
+
+    // Return last deltas (microseconds) by object pointer or name
+    float Factory::getLastUpdateDelta(const IDisplayObject* obj) const
+    {
+        if (!obj) return 0.0f;
+        return getLastUpdateDelta(obj->getName());
+    }
+
+    float Factory::getLastRenderDelta(const IDisplayObject* obj) const
+    {
+        if (!obj) return 0.0f;
+        return getLastRenderDelta(obj->getName());
+    }
+
+    float Factory::getLastUpdateDelta(const std::string& obj_name) const
+    {
+        auto it = perf_map.find(obj_name);
+        if (it == perf_map.end()) return 0.0f;
+        return std::chrono::duration<float, std::micro>(it->second.last_update_ns).count();
+    }
+
+    float Factory::getLastRenderDelta(const std::string& obj_name) const
+    {
+        auto it = perf_map.find(obj_name);
+        if (it == perf_map.end()) return 0.0f;
+        return std::chrono::duration<float, std::micro>(it->second.last_render_ns).count();
     }
 
 

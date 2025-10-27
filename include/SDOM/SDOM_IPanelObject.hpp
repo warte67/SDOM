@@ -168,6 +168,13 @@ namespace SDOM
         PanelBaseIndex base_index_ = PanelBaseIndex::ButtonUp;
         PanelBaseIndex last_base_index_ = PanelBaseIndex::ButtonUp;
 
+        SDL_Texture* cachedTexture_ = nullptr;
+        int current_width_ = 0;
+        int current_height_ = 0;
+        SDL_PixelFormat current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+
+        bool rebuildPanelTexture_(int width, int height, SDL_PixelFormat fmt);
+
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
     }; // END: IPanelObject : public IDisplayObject 

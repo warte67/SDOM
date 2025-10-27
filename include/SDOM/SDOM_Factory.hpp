@@ -144,6 +144,38 @@ namespace SDOM
 
 
 
+        // IDEA: continiually track before and after onUpdate() and onRender() 
+
+
+        // --- Performance Test Helpers --- //
+
+        struct PerfStats {
+            uint64_t update_calls = 0;
+            uint64_t render_calls = 0;
+            // Accumulate at nanosecond precision to avoid truncation to 0us
+            std::chrono::nanoseconds update_time_ns{0};
+            std::chrono::nanoseconds render_time_ns{0};
+            // Track most recent deltas per object (nanoseconds)
+            std::chrono::nanoseconds last_update_ns{0};
+            std::chrono::nanoseconds last_render_ns{0};
+        };
+        
+        void start_update_timer(const std::string& objName);
+        void stop_update_timer(const std::string& objName);
+        void start_render_time(const std::string& objName);
+        void stop_render_time(const std::string& objName);
+        void report_performance_stats() const; // summary entrypoint (calls the two below)
+        void report_update_stats(std::size_t topN = 15) const;
+        void report_render_stats(std::size_t topN = 15) const;
+        void reset_performance_stats();
+
+        // Query the last measured deltas (in microseconds) for a given object
+        float getLastUpdateDelta(const IDisplayObject* obj) const;
+        float getLastRenderDelta(const IDisplayObject* obj) const;
+        float getLastUpdateDelta(const std::string& obj_name) const;
+        float getLastRenderDelta(const std::string& obj_name) const;
+        
+
     private:
         // initialization guard to make onInit idempotent
         bool initialized_ = false;
@@ -153,6 +185,11 @@ namespace SDOM
         std::unordered_map<std::string, std::shared_ptr<IAssetObject>> assetObjects_;
         std::unordered_map<std::string, TypeCreators> creators_;
         std::unordered_map<std::string, AssetTypeCreators> assetCreators_;
+
+        // --- Performance Tracking Maps --- //
+        std::unordered_map<std::string, PerfStats> perf_map;
+        std::unordered_map<std::string, std::chrono::steady_clock::time_point> update_start_times;
+        std::unordered_map<std::string, std::chrono::steady_clock::time_point> render_start_times;
 
         // --- Orphan & Future Child Lists --- //
 
@@ -174,5 +211,3 @@ namespace SDOM
     
 
 }
-
-
