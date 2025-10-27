@@ -235,6 +235,11 @@ namespace SDOM
 
     void IRangeControl::onQuit() 
     {
+        // destroy cached render texture if present
+        if (cachedTexture_) {
+            SDL_DestroyTexture(cachedTexture_);
+            cachedTexture_ = nullptr;
+        }
         SUPER::onQuit();
     } // END: void IRangeControl::onQuit()
 
@@ -253,9 +258,7 @@ namespace SDOM
 
     void IRangeControl::onRender()
     {
-        // IDisplayObject does not have onRender to call
-
-        // ... Custom rendering logic for the range object ...
+        // Base IRangeControl does not implement direct rendering; derived classes do.
     } // END: void IRangeControl::onRender()
 
     bool IRangeControl::onUnitTest() 
@@ -456,6 +459,56 @@ namespace SDOM
 
 
     } // END: void IRangeControl::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+
+
+    // --- Cached rendering helper --- //
+    bool IRangeControl::rebuildRangeTexture_(int width, int height, SDL_PixelFormat fmt)
+    {
+        bool needCreate = false;
+        if (!cachedTexture_) {
+            needCreate = true;
+        } else {
+            float tw = 0.0f, th = 0.0f;
+            if (!SDL_GetTextureSize(cachedTexture_, &tw, &th)) {
+                needCreate = true;
+            } else if (static_cast<int>(tw) != width || static_cast<int>(th) != height || current_pixel_format_ != fmt) {
+                needCreate = true;
+            }
+        }
+
+        if (!needCreate) return true;
+
+        if (cachedTexture_) {
+            SDL_DestroyTexture(cachedTexture_);
+            cachedTexture_ = nullptr;
+        }
+
+        if (width <= 0 || height <= 0) {
+            current_pixel_format_ = fmt;
+            current_width_ = width;
+            current_height_ = height;
+            return true;
+        }
+
+        cachedTexture_ = SDL_CreateTexture(getRenderer(), fmt, SDL_TEXTUREACCESS_TARGET, width, height);
+        if (!cachedTexture_) {
+            ERROR("IRangeControl::rebuildRangeTexture_: failed to create texture: " + std::string(SDL_GetError()));
+            return false;
+        }
+        if (!SDL_SetTextureBlendMode(cachedTexture_, SDL_BLENDMODE_BLEND)) {
+            ERROR("IRangeControl::rebuildRangeTexture_: failed to set blend mode: " + std::string(SDL_GetError()));
+            return false;
+        }
+        if (!SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND)) {
+            ERROR("IRangeControl::rebuildRangeTexture_: failed to set renderer blend mode: " + std::string(SDL_GetError()));
+            return false;
+        }
+
+        current_pixel_format_ = fmt;
+        current_width_ = width;
+        current_height_ = height;
+        return true;
+    }
 
 
 } // END: namespace SDOM

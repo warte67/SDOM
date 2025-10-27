@@ -1,5 +1,6 @@
 // SDOM_ProgressBar.cpp
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_IconIndex.hpp>
 #include <SDOM/SDOM_ProgressBar.hpp>
 
@@ -41,143 +42,165 @@ namespace SDOM
 
     void ProgressBar::onRender()
     {
-        // SUPER::onRender();
-
         SpriteSheet* ss = getSpriteSheetPtr();
-        if (!ss) ERROR("Slider::onRender(): No valid SpriteSheet for icon.");
+        if (!ss) { ERROR("ProgressBar::onRender(): No valid SpriteSheet for icon."); return; }
 
-        float ss_width = ss->getSpriteWidth();
-        float ss_height = ss->getSpriteHeight();
-        float scale_width = ss_width / 8.0f;
-        float scale_height = ss_height / 8.0f;
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer) { ERROR("ProgressBar::onRender(): renderer is null"); return; }
 
-        SDL_FRect dstRect = {
-            static_cast<float>(getX()),
-            static_cast<float>(getY()),
-            static_cast<float>(getWidth()),
-            static_cast<float>(getHeight())
-        };
-
-        // Render Background Color
-        SDL_Color bgColor = getBackgroundColor();
-        if (bgColor.a > 0)
+        if (isDirty())
         {
-            SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(getRenderer(), bgColor.r, bgColor.g, bgColor.b, bgColor.a);
-            SDL_RenderFillRect(getRenderer(), &dstRect);
+            if (!rebuildRangeTexture_(getWidth(), getHeight(), getCore().getPixelFormat()))
+            {
+                ERROR("ProgressBar::onRender(): failed to rebuild cache texture");
+                return;
+            }
+
+            if (cachedTexture_)
+            {
+                SDL_Texture* prev = SDL_GetRenderTarget(renderer);
+                if (!SDL_SetRenderTarget(renderer, cachedTexture_))
+                {
+                    ERROR("ProgressBar::onRender(): unable to set target");
+                    return;
+                }
+
+                // Clear to transparent
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+                SDL_RenderClear(renderer);
+
+                float ss_width = ss->getSpriteWidth();
+                float ss_height = ss->getSpriteHeight();
+                float scale_width = ss_width / 8.0f;
+                float scale_height = ss_height / 8.0f;
+
+                SDL_FRect localRect = {
+                    0.0f, 0.0f,
+                    static_cast<float>(getWidth()),
+                    static_cast<float>(getHeight())
+                };
+
+                // Background
+                SDL_Color bgColor = getBackgroundColor();
+                if (bgColor.a > 0)
+                {
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                    SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+                    SDL_RenderFillRect(renderer, &localRect);
+                }
+                // Border
+                SDL_Color borderColor = getBorderColor();
+                if (borderColor.a > 0)
+                {
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                    SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+                    SDL_RenderRect(renderer, &localRect);
+                }
+
+                if (orientation_ == Orientation::Horizontal)
+                {
+                    SDL_Color barColor = getColor();
+                    SDL_Color frameColor = getForegroundColor();
+
+                    const float insetX = 2.0f * scale_width;
+                    const float leftEndX = 6.0f * scale_width;
+                    const float rightEndX = 2.0f * scale_width;
+
+                    ss->drawSprite(static_cast<int>(IconIndex::HProgress_Left),
+                        static_cast<int>(std::lround(0.0f - leftEndX)),
+                        0,
+                        frameColor,
+                        SDL_SCALEMODE_NEAREST
+                    );
+
+                    float range = (max_ - min_);
+                    float ratio = 0.0f;
+                    if (range > 0.0f) ratio = (value_ - min_) / range;
+                    ratio = std::max(0.0f, std::min(1.0f, ratio));
+
+                    SDL_FRect frameRect = {
+                        insetX,
+                        0.0f,
+                        std::max(0.0f, static_cast<float>(getWidth()) - insetX * 2.0f),
+                        static_cast<float>(getHeight())
+                    };
+                    float innerWidth = frameRect.w;
+                    float fillW = innerWidth * ratio;
+                    SDL_FRect barDstRect = { frameRect.x, frameRect.y, fillW, frameRect.h };
+                    ss->drawSprite(static_cast<int>(IconIndex::HProgress_Thumb), barDstRect, barColor, SDL_SCALEMODE_NEAREST);
+                    ss->drawSprite(static_cast<int>(IconIndex::HProgress_Rail), frameRect, frameColor, SDL_SCALEMODE_NEAREST);
+
+                    ss->drawSprite(static_cast<int>(IconIndex::HProgress_Right),
+                        static_cast<int>(std::lround(static_cast<float>(getWidth()) - rightEndX)),
+                        0,
+                        frameColor,
+                        SDL_SCALEMODE_NEAREST
+                    );
+                }
+                else
+                {
+                    SDL_Color barColor = getColor();
+                    SDL_Color frameColor = getForegroundColor();
+
+                    const float insetY = 2.0f * scale_height;
+                    const float topEndY = 6.0f * scale_height;
+                    const float bottomEndY = 2.0f * scale_height;
+
+                    ss->drawSprite(77,
+                        0,
+                        static_cast<int>(std::lround(0.0f - topEndY)),
+                        frameColor,
+                        SDL_SCALEMODE_NEAREST
+                    );
+
+                    float range = (max_ - min_);
+                    float ratio = 0.0f;
+                    if (range > 0.0f) ratio = (value_ - min_) / range;
+                    ratio = std::max(0.0f, std::min(1.0f, ratio));
+
+                    SDL_FRect frameRect = {
+                        0.0f,
+                        insetY,
+                        static_cast<float>(getWidth()),
+                        std::max(0.0f, static_cast<float>(getHeight()) - insetY * 2.0f)
+                    };
+                    float innerHeight = frameRect.h;
+                    float fillH = innerHeight * ratio;
+                    SDL_FRect barDstRect = {
+                        frameRect.x,
+                        frameRect.y + (innerHeight - fillH),
+                        frameRect.w,
+                        fillH
+                    };
+                    ss->drawSprite(static_cast<int>(IconIndex::VProgress_Thumb), barDstRect, barColor, SDL_SCALEMODE_NEAREST);
+                    ss->drawSprite(static_cast<int>(IconIndex::VProgress_Rail), frameRect, frameColor, SDL_SCALEMODE_NEAREST);
+
+                    ss->drawSprite(static_cast<int>(IconIndex::VProgress_Bottom),
+                        0,
+                        static_cast<int>(std::lround(static_cast<float>(getHeight()) - bottomEndY)),
+                        frameColor,
+                        SDL_SCALEMODE_NEAREST
+                    );
+                }
+
+                SDL_SetRenderTarget(renderer, prev);
+            }
+
+            setDirty(false);
         }
 
-        // Render Border Color
-        SDL_Color borderColor = getBorderColor();
-        if (borderColor.a > 0)
+        if (cachedTexture_)
         {
-            SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(getRenderer(), borderColor.r, borderColor.g, borderColor.b, borderColor.a);
-            SDL_RenderRect(getRenderer(), &dstRect);
-        }
-
-        if (orientation_ == Orientation::Horizontal)
-        {
-            SDL_Color barColor = getColor();
-            SDL_Color frameColor = getForegroundColor();
-
-            // scaled insets (use same scale for frame & fill)
-            const float insetX = 2.0f * scale_width;
-            const float leftEndX = 6.0f * scale_width;   // where left cap is drawn relative to getX()
-            const float rightEndX = 2.0f * scale_width;  // where right cap is drawn relative to right edge
-
-            // draw left cap (pixel-snapped)
-            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Left),
-                static_cast<int>(std::lround(getX() - leftEndX)),
-                static_cast<int>(std::lround(getY())),
-                frameColor,
-                SDL_SCALEMODE_NEAREST
-            );
-
-            // safe normalized ratio in [0,1]
-            float range = (max_ - min_);
-            float ratio = 0.0f;
-            if (range > 0.0f) ratio = (value_ - min_) / range;
-            ratio = std::max(0.0f, std::min(1.0f, ratio));
-
-            // rail/frame rect uses the same scaled insets
-            SDL_FRect frameRect = {
-                static_cast<float>(getX() + insetX),
+            SDL_FRect dst = {
+                static_cast<float>(getX()),
                 static_cast<float>(getY()),
-                static_cast<float>(std::max(0.0f, static_cast<float>(getWidth()) - insetX * 2.0f)),
+                static_cast<float>(getWidth()),
                 static_cast<float>(getHeight())
             };
-            // progress "meat" inside the rail/frame
-            float innerWidth = frameRect.w; // already accounts for insetX*2
-            float fillW = innerWidth * ratio;
-            SDL_FRect barDstRect = {
-                static_cast<float>(frameRect.x),
-                static_cast<float>(frameRect.y),
-                fillW,
-                static_cast<float>(frameRect.h)
-            };
-            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Thumb), barDstRect, barColor, SDL_SCALEMODE_NEAREST);
-            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Rail), frameRect, frameColor, SDL_SCALEMODE_NEAREST);
-
-
-            // draw right cap (pixel-snapped)
-            ss->drawSprite(static_cast<int>(IconIndex::HProgress_Right),
-                static_cast<int>(std::lround(getX() + getWidth() - rightEndX)),
-                static_cast<int>(std::lround(getY())),
-                frameColor,
-                SDL_SCALEMODE_NEAREST
-            );
-        }
-        else
-        {
-            SDL_Color barColor = getColor();
-            SDL_Color frameColor = getForegroundColor();
-
-            // scaled insets (vertical)
-            const float insetY = 2.0f * scale_height;
-            const float topEndY = 6.0f * scale_height;
-            const float bottomEndY = 2.0f * scale_height;
-
-            // top cap (uses literal index for top if necessary)
-            ss->drawSprite(77, // Top VProgress
-                static_cast<int>(std::lround(getX())),
-                static_cast<int>(std::lround(getY() - topEndY)),
-                frameColor,
-                SDL_SCALEMODE_NEAREST
-            );
-
-            // safe normalized ratio
-            float range = (max_ - min_);
-            float ratio = 0.0f;
-            if (range > 0.0f) ratio = (value_ - min_) / range;
-            ratio = std::max(0.0f, std::min(1.0f, ratio));
-
-            // rail/frame rect uses scaled insets
-            SDL_FRect frameRect = {
-                static_cast<float>(getX()),
-                static_cast<float>(getY() + insetY),
-                static_cast<float>(getWidth()),
-                static_cast<float>(std::max(0.0f, static_cast<float>(getHeight()) - insetY * 2.0f))
-            };
-            // progress "meat" inside the rail/frame (grows from bottom)
-            float innerHeight = frameRect.h;
-            float fillH = innerHeight * ratio;
-            SDL_FRect barDstRect = {
-                static_cast<float>(frameRect.x),
-                static_cast<float>(frameRect.y + (innerHeight - fillH)),
-                static_cast<float>(frameRect.w),
-                fillH
-            };
-            ss->drawSprite(static_cast<int>(IconIndex::VProgress_Thumb), barDstRect, barColor, SDL_SCALEMODE_NEAREST);
-            ss->drawSprite(static_cast<int>(IconIndex::VProgress_Rail), frameRect, frameColor, SDL_SCALEMODE_NEAREST);
-
-            // bottom cap
-            ss->drawSprite(static_cast<int>(IconIndex::VProgress_Bottom),
-                static_cast<int>(std::lround(getX())),
-                static_cast<int>(std::lround(getY() + getHeight() - bottomEndY)),
-                frameColor,
-                SDL_SCALEMODE_NEAREST
-            );
+            if (!SDL_RenderTexture(renderer, cachedTexture_, nullptr, &dst))
+            {
+                ERROR("ProgressBar::onRender(): failed to render cache: " + std::string(SDL_GetError()));
+            }
         }
     } // END: void ProgressBar::onRender()
 

@@ -116,6 +116,13 @@ namespace SDOM
 
         // --- Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);        
+
+        // --- Cached rendering --- //
+        SDL_Texture* cachedTexture_ = nullptr;
+        int current_width_ = 0;
+        int current_height_ = 0;
+        SDL_PixelFormat current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        bool rebuildRangeTexture_(int width, int height, SDL_PixelFormat fmt);
     }; // END: class IRangeControl
 
 } // END: namespace SDOM

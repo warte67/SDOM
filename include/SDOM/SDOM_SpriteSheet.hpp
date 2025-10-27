@@ -78,20 +78,23 @@ namespace SDOM
             int spriteIndex,
             int x, int y,
             SDL_Color color = {255, 255, 255, 255}, 
-            SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST
+            SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST,
+            SDL_Texture* targetTexture = nullptr
         );
         void drawSprite(
             int spriteIndex,
             SDL_FRect& destRect, 
             SDL_Color color = {255, 255, 255, 255}, 
-            SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST
+            SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST,
+            SDL_Texture* targetTexture = nullptr
         );
         void drawSprite(
             int spriteIndex,
             const SDL_FRect& srcRect,   // Offset within the sprite tile (not the sheet)
             const SDL_FRect& dstRect,   // Destination on screen
             SDL_Color color = {255, 255, 255, 255},
-            SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST
+            SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST,
+            SDL_Texture* targetTexture = nullptr
         );
 
         // Render a 9-slice panel into the specified target texture using the

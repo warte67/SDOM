@@ -1837,7 +1837,7 @@ namespace SDOM
         report_update_stats(10);
         std::cout << std::endl;
         report_render_stats(10);
-        std::cout << "total frame time: " << (getCore().getElapsedTime()*1'000'000.0f) << "us" << std::endl;
+        std::cout << "total frame time: " << (getCore().getElapsedTime()*1'000'000.0f) << "µs" << std::endl;
     }
 
     void Factory::report_update_stats(std::size_t topN) const
@@ -1861,7 +1861,7 @@ namespace SDOM
 
         std::cout << "Update Times (last frame, top " << limit << " of " << total << "):\n";
         std::cout << std::left << std::setw(static_cast<int>(name_w)) << "Name" << "  "
-                  << std::right << std::setw(12) << "Update (us)" << "\n";
+                  << std::right << std::setw(12) << "Update (µs)" << "\n";
         std::cout << std::string(name_w, '-') << "  " << std::string(12, '-') << "\n";
         std::cout << std::fixed << std::setprecision(3);
         for (std::size_t i = 0; i < limit; ++i)
@@ -1895,7 +1895,7 @@ namespace SDOM
 
         std::cout << "Render Times (last frame, top " << limit << " of " << total << "):\n";
         std::cout << std::left << std::setw(static_cast<int>(name_w)) << "Name" << "  "
-                  << std::right << std::setw(12) << "Render (us)" << "\n";
+                  << std::right << std::setw(12) << "Render (µs)" << "\n";
         std::cout << std::string(name_w, '-') << "  " << std::string(12, '-') << "\n";
         std::cout << std::fixed << std::setprecision(3);
         for (std::size_t i = 0; i < limit; ++i)

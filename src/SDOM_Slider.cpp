@@ -1,5 +1,6 @@
 // SDOM_Slider.cpp
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_IconIndex.hpp>
 #include <SDOM/SDOM_Slider.hpp>
 
@@ -220,146 +221,174 @@ namespace SDOM
 
     void Slider::onRender()
     {
-        // SUPER::onRender();  // Nothing for the SUPER to render
-
-        // --- Render the Slider Control --- //
-
         SpriteSheet* ss = getSpriteSheetPtr(); 
-        if (!ss)  ERROR("Slider::onRender(): No valid SpriteSheet for icon.");
+        if (!ss)  { ERROR("Slider::onRender(): No valid SpriteSheet for icon."); return; }
 
-        float ss_width = ss->getSpriteWidth();
-        float ss_height = ss->getSpriteHeight();
-        float scale_width = ss_width / 8.0f;
-        float scale_height = ss_height / 8.0f;
-        
-        SDL_FRect dsstRect = { 
-            static_cast<float>(getX()), 
-            static_cast<float>(getY()),
-            static_cast<float>(getWidth()), 
-            static_cast<float>(getHeight()) 
-        };
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer) { ERROR("Slider::onRender(): renderer is null"); return; }
 
-        // Render Background Color
-        SDL_Color bgColor = getBackgroundColor();
-        if (bgColor.a > 0)
+        // Rebuild cache if dirty, then draw into cached texture using local coordinates
+        if (isDirty())
         {
-            SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(getRenderer(), bgColor.r, bgColor.g, bgColor.b, bgColor.a);
-            SDL_RenderFillRect(getRenderer(), &dsstRect);
-        }
-
-        // Render Border Color
-        SDL_Color borderColor = getBorderColor();
-        if (borderColor.a > 0)
-        {
-            SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(getRenderer(), borderColor.r, borderColor.g, borderColor.b, borderColor.a);
-            SDL_RenderRect(getRenderer(), &dsstRect);
-        }
-
-        // horizontal slider
-        if (orientation_ == Orientation::Horizontal)
-        {
-            // Draw the track
-            SDL_Color trackColor = getColor();
-            if (trackColor.a > 0)
+            if (!rebuildRangeTexture_(getWidth(), getHeight(), getCore().getPixelFormat()))
             {
-                // draw the track as a stretched sprite
-                ss->drawSprite(static_cast<int>(IconIndex::HSlider_Rail), dsstRect, trackColor, SDL_SCALEMODE_NEAREST);
+                ERROR("Slider::onRender(): failed to rebuild cache texture");
+                return;
+            }
 
-                // draw small ticks along the track
-                double x_min = getX() - 3 * scale_width;
-                double x_max = getX() + getWidth() - 4 * scale_height;
-                double step = (x_max - x_min)/10.0;
-                for (double h = x_min; h <= x_max; h += step)
+            if (cachedTexture_)
+            {
+                SDL_Texture* prev = SDL_GetRenderTarget(renderer);
+                if (!SDL_SetRenderTarget(renderer, cachedTexture_))
                 {
-                    ss->drawSprite(static_cast<int>(IconIndex::Slider_Tick), 
-                        static_cast<int>(h), 
-                        static_cast<int>(getY()), 
-                        trackColor, 
-                        SDL_SCALEMODE_NEAREST
-                    );            
-                }        
-            }
-            // Draw the thumb so its LEFT edge moves over the usable rail span
-            SDL_Color thumbColor = getForegroundColor();
-            float tileW = ss->getSpriteWidth();
-            const float insetX = 2.0f * scale_width;
-            float railX = getX() + insetX;
-            float railW = std::max(0.0f, getWidth() - insetX * 2.0f);
+                    ERROR("Slider::onRender(): unable to set target");
+                    return;
+                }
 
-            // Extend travel by per-side padding so the visible inner core can reach the caps
-            float padX = tileW * kKnobPaddingFraction;
-            double leftMin = railX - padX;
-            double leftMax = railX + railW - tileW + padX;
-            double usable = std::max(0.0, leftMax - leftMin);
+                // Clear to transparent
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+                SDL_RenderClear(renderer);
 
-            double range = (max_ - min_);
-            double ratio = (range > 0.0) ? ((value_ - min_) / range) : 0.0;
-            ratio = std::clamp(ratio, 0.0, 1.0);
-            double thumbLeft = leftMin + ratio * usable;
-            if (thumbColor.a > 0)
-            {
-                ss->drawSprite(static_cast<int>(IconIndex::Knob_Horizontal), 
-                    static_cast<int>(std::lround(thumbLeft)), 
-                    static_cast<int>(std::lround(getY())), 
-                    thumbColor, 
-                    SDL_SCALEMODE_NEAREST
-                );                   
-            }
-        }
-        else // vertical
-        {
-            // Draw the track
-            SDL_Color trackColor = getColor();
-            if (trackColor.a > 0)
-            {
-                // draw the track as a stretched sprite
-                ss->drawSprite(static_cast<int>(IconIndex::VSlider_Rail), dsstRect, trackColor, SDL_SCALEMODE_NEAREST);
+                float ss_width = ss->getSpriteWidth();
+                float ss_height = ss->getSpriteHeight();
+                float scale_width = ss_width / 8.0f;
+                float scale_height = ss_height / 8.0f;
 
-                // draw small ticks along the track
-                double y_min = getY() - 2.5f * scale_height;
-                double y_max = getY() + getHeight() - 4 * scale_height;
-                double step = (y_max - y_min)/10.0;
-                for (double v = y_min; v <= y_max; v += step)
+                SDL_FRect localRect = {
+                    0.0f, 0.0f,
+                    static_cast<float>(getWidth()),
+                    static_cast<float>(getHeight())
+                };
+
+                // Background
+                SDL_Color bgColor = getBackgroundColor();
+                if (bgColor.a > 0)
                 {
-                    ss->drawSprite(static_cast<int>(IconIndex::Slider_Tick),
-                        static_cast<int>(getX()), 
-                        static_cast<int>(v), 
-                        trackColor, 
-                        SDL_SCALEMODE_NEAREST
-                    );            
-                }        
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                    SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+                    SDL_RenderFillRect(renderer, &localRect);
+                }
+                // Border
+                SDL_Color borderColor = getBorderColor();
+                if (borderColor.a > 0)
+                {
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                    SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+                    SDL_RenderRect(renderer, &localRect);
+                }
+
+                if (orientation_ == Orientation::Horizontal)
+                {
+                    SDL_Color trackColor = getColor();
+                    if (trackColor.a > 0)
+                    {
+                        // track (stretched)
+                        ss->drawSprite(static_cast<int>(IconIndex::HSlider_Rail), localRect, trackColor, SDL_SCALEMODE_NEAREST);
+
+                        // ticks (local coords)
+                        double x_min = -3 * scale_width;
+                        double x_max = getWidth() - 4 * scale_height;
+                        double step = (x_max - x_min) / 10.0;
+                        for (double h = x_min; h <= x_max; h += step)
+                        {
+                            ss->drawSprite(static_cast<int>(IconIndex::Slider_Tick),
+                                static_cast<int>(std::lround(h)),
+                                0,
+                                trackColor,
+                                SDL_SCALEMODE_NEAREST
+                            );
+                        }
+                    }
+
+                    SDL_Color thumbColor = getForegroundColor();
+                    float tileW = ss->getSpriteWidth();
+                    const float insetX = 2.0f * scale_width;
+                    float railX = insetX;
+                    float railW = std::max(0.0f, static_cast<float>(getWidth()) - insetX * 2.0f);
+                    float padX = tileW * kKnobPaddingFraction;
+                    double leftMin = railX - padX;
+                    double leftMax = railX + railW - tileW + padX;
+                    double usable = std::max(0.0, leftMax - leftMin);
+
+                    double range = (max_ - min_);
+                    double ratio = (range > 0.0) ? ((value_ - min_) / range) : 0.0;
+                    ratio = std::clamp(ratio, 0.0, 1.0);
+                    double thumbLeft = leftMin + ratio * usable;
+                    if (thumbColor.a > 0)
+                    {
+                        ss->drawSprite(static_cast<int>(IconIndex::Knob_Horizontal),
+                            static_cast<int>(std::lround(thumbLeft)),
+                            0,
+                            thumbColor,
+                            SDL_SCALEMODE_NEAREST
+                        );
+                    }
+                }
+                else // vertical
+                {
+                    SDL_Color trackColor = getColor();
+                    if (trackColor.a > 0)
+                    {
+                        ss->drawSprite(static_cast<int>(IconIndex::VSlider_Rail), localRect, trackColor, SDL_SCALEMODE_NEAREST);
+
+                        double y_min = -2.5f * scale_height;
+                        double y_max = getHeight() - 4 * scale_height;
+                        double step = (y_max - y_min)/10.0;
+                        for (double v = y_min; v <= y_max; v += step)
+                        {
+                            ss->drawSprite(static_cast<int>(IconIndex::Slider_Tick),
+                                0,
+                                static_cast<int>(std::lround(v)),
+                                trackColor,
+                                SDL_SCALEMODE_NEAREST
+                            );
+                        }
+                    }
+
+                    SDL_Color thumbColor = getForegroundColor();
+                    float tileH = ss->getSpriteHeight();
+                    const float insetY = 2.0f * scale_height;
+                    float railY = insetY;
+                    float railH = std::max(0.0f, static_cast<float>(getHeight()) - insetY * 2.0f);
+                    float padY = tileH * kKnobPaddingFraction;
+                    double topMin = railY - padY;
+                    double topMax = railY + railH - tileH + padY;
+                    double usable = std::max(0.0, topMax - topMin);
+
+                    double range = (max_ - min_);
+                    double ratio = (range > 0.0) ? ((value_ - min_) / range) : 0.0;
+                    ratio = std::clamp(ratio, 0.0, 1.0);
+                    double thumbTop = topMin + (1.0 - ratio) * usable;
+                    if (thumbColor.a > 0)
+                    {
+                        ss->drawSprite(static_cast<int>(IconIndex::Knob_Vertical),
+                            0,
+                            static_cast<int>(std::lround(thumbTop)),
+                            thumbColor,
+                            SDL_SCALEMODE_NEAREST
+                        );
+                    }
+                }
+
+                SDL_SetRenderTarget(renderer, prev);
             }
-            // Draw the thumb so its TOP edge moves over the usable rail span
-            SDL_Color thumbColor = getForegroundColor();
-            float tileH = ss->getSpriteHeight();
-            const float insetY = 2.0f * scale_height;
-            float railY = getY() + insetY;
-            float railH = std::max(0.0f, getHeight() - insetY * 2.0f);
 
-            // Extend travel by per-side padding so the visible inner core can reach the caps
-            float padY = tileH * kKnobPaddingFraction;
-            double topMin = railY - padY;
-            double topMax = railY + railH - tileH + padY;
-            double usable = std::max(0.0, topMax - topMin);
-
-            double range = (max_ - min_);
-            double ratio = (range > 0.0) ? ((value_ - min_) / range) : 0.0;
-            ratio = std::clamp(ratio, 0.0, 1.0);
-            // For vertical: 0 at bottom, 1 at top → anchor goes from bottom to top
-            double thumbTop = topMin + (1.0 - ratio) * usable;
-            if (thumbColor.a > 0)
-            {
-                ss->drawSprite(static_cast<int>(IconIndex::Knob_Vertical),
-                    static_cast<int>(std::lround(getX())), 
-                    static_cast<int>(std::lround(thumbTop)), 
-                    thumbColor, 
-                    SDL_SCALEMODE_NEAREST
-                );                   
-            }            
+            setDirty(false);
         }
 
+        if (cachedTexture_)
+        {
+            SDL_FRect dst = {
+                static_cast<float>(getX()),
+                static_cast<float>(getY()),
+                static_cast<float>(getWidth()),
+                static_cast<float>(getHeight())
+            };
+            if (!SDL_RenderTexture(renderer, cachedTexture_, nullptr, &dst))
+            {
+                ERROR("Slider::onRender(): failed to render cache: " + std::string(SDL_GetError()));
+            }
+        }
     } // END: void Slider::onRender()
 
     bool Slider::onUnitTest()

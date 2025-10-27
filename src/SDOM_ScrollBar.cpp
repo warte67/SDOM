@@ -1,7 +1,7 @@
 // SDOM_ScrollBar.cpp
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Factory.hpp>
-
 #include <SDOM/SDOM_ScrollBar.hpp>
 
 namespace SDOM
@@ -384,154 +384,167 @@ namespace SDOM
 
     void ScrollBar::onRender()
     {
-        // SUPER::onRender();
         SpriteSheet* ss = getSpriteSheetPtr(); 
+        if (!ss)  { ERROR("ScrollBar::onRender(): No valid SpriteSheet for icon."); return; }
 
-        if (!ss)  ERROR("Slider::onRender(): No valid SpriteSheet for icon.");
+        SDL_Renderer* renderer = getRenderer();
+        if (!renderer) { ERROR("ScrollBar::onRender(): renderer is null"); return; }
 
-        float ss_width = ss->getSpriteWidth();
-        float ss_height = ss->getSpriteHeight();
-        float scale_width = ss_width / 8.0f;
-        float scale_height = ss_height / 8.0f;
-
-        SDL_FRect dstRect = { 
-            static_cast<float>(getX()), 
-            static_cast<float>(getY()),
-            static_cast<float>(getWidth()), 
-            static_cast<float>(getHeight()) 
-        };
-
-        // Render Background Color
-        SDL_Color bgColor = getBackgroundColor();
-        if (bgColor.a > 0)
+        if (isDirty())
         {
-            SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(getRenderer(), bgColor.r, bgColor.g, bgColor.b, bgColor.a);
-            SDL_RenderFillRect(getRenderer(), &dstRect);
-        }
-
-        // Render Border Color
-        SDL_Color borderColor = getBorderColor();
-        if (borderColor.a > 0)
-        {
-            SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(getRenderer(), borderColor.r, borderColor.g, borderColor.b, borderColor.a);
-            SDL_RenderRect(getRenderer(), &dstRect);
-        }
-
-        // Render the ScrollBar Thumb
-        SDL_FRect thumbRect = { 0, 0, 0, 0 };
-        float trackLength = (orientation_ == Orientation::Horizontal)
-            ? static_cast<float>(getWidth() - 22 * scale_width)
-            : static_cast<float>(getHeight() - 22 * scale_height);
-
-        // 1. Thumb length (proportional to page/content), clamp to [min_thumb_length_, trackLength]
-        float denom = std::max(content_size_, 1.0f);
-        float thumbProportion = page_size_ / denom;
-        float thumbLength = trackLength * thumbProportion;
-        if (thumbLength < min_thumb_length_) thumbLength = min_thumb_length_;
-        if (thumbLength > trackLength) thumbLength = trackLength;
-
-        // 2. Usable track for thumb movement (non-negative)
-        float usableTrack = trackLength - thumbLength;
-        if (usableTrack < 0.0f) usableTrack = 0.0f;
-
-        float valueRange = std::max(getMax() - getMin(), 1.0f);
-
-        // 3. Thumb position (relative to value)
-        float valueRel = (getValue() - getMin()) / valueRange;
-        valueRel = std::clamp(valueRel, 0.0f, 1.0f);
-
-        // For vertical orientation we want min at the bottom and max at the top,
-        // so invert the relative position when computing the thumb Y coordinate.
-        float posRel = (orientation_ == Orientation::Horizontal) ? valueRel : (1.0f - valueRel);
-
-        int spriteIndex = 0;
-        if (orientation_ == Orientation::Horizontal) {
-            thumbRect.x = getX() + (11 * scale_width) + usableTrack * posRel;
-            thumbRect.y = static_cast<float>(getY());
-            thumbRect.w = thumbLength;
-            thumbRect.h = static_cast<float>(getHeight());
-            spriteIndex = static_cast<int>(IconIndex::HProgress_Thumb);
-        } else {
-            thumbRect.x = static_cast<float>(getX());
-            thumbRect.y = getY() + (11 * scale_height) + usableTrack * posRel;
-            thumbRect.w = static_cast<float>(getWidth());
-            thumbRect.h = thumbLength;
-            spriteIndex = static_cast<int>(IconIndex::VProgress_Thumb);
-        }
-        // Debug output for scrollbar computation
-#ifdef SCROLLBAR_DEBUG
-        fprintf(stderr, "ScrollBar: track=%.2f page=%.2f content=%.2f prop=%.4f thumb=%.2f usable=%.2f valrel=%.4f posrel=%.4f\n",
-            trackLength, page_size_, content_size_, thumbProportion, thumbLength, usableTrack, valueRel, posRel);
-#endif
-        ss->drawSprite(spriteIndex, thumbRect, getForegroundColor(), SDL_SCALEMODE_NEAREST);
-
-
-        // Render the ScrollBar Track
-        if (orientation_ == Orientation::Horizontal)
-        {
-            // Horizontal Track
-            SDL_Color trackColor = getColor();
-            if (trackColor.a > 0)
+            if (!rebuildRangeTexture_(getWidth(), getHeight(), getCore().getPixelFormat()))
             {
-                // min end
-                ss->drawSprite(static_cast<int>(IconIndex::HProgress_Left),
-                    static_cast<int>(getX() + 3 * scale_width), 
-                    static_cast<int>(getY()), 
-                    trackColor, 
-                    SDL_SCALEMODE_NEAREST
-                );     
-                // middle
-                SDL_FRect midRect = {
-                    static_cast<float>(getX() + 11 * scale_width), 
-                    static_cast<float>(getY()), 
-                    static_cast<float>(getWidth() - 22 * scale_width), 
+                ERROR("ScrollBar::onRender(): failed to rebuild cache texture");
+                return;
+            }
+
+            if (cachedTexture_)
+            {
+                SDL_Texture* prev = SDL_GetRenderTarget(renderer);
+                if (!SDL_SetRenderTarget(renderer, cachedTexture_))
+                {
+                    ERROR("ScrollBar::onRender(): unable to set target");
+                    return;
+                }
+
+                // Clear to transparent
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+                SDL_RenderClear(renderer);
+
+                float ss_width = ss->getSpriteWidth();
+                float ss_height = ss->getSpriteHeight();
+                float scale_width = ss_width / 8.0f;
+                float scale_height = ss_height / 8.0f;
+
+                SDL_FRect localRect = {
+                    0.0f, 0.0f,
+                    static_cast<float>(getWidth()),
                     static_cast<float>(getHeight())
                 };
-                ss->drawSprite(static_cast<int>(IconIndex::HProgress_Rail), midRect, trackColor, SDL_SCALEMODE_NEAREST);
 
-                // max end
-                ss->drawSprite(static_cast<int>(IconIndex::HProgress_Right),
-                    static_cast<int>(getX() + getWidth() - 11 * scale_width), 
-                    static_cast<int>(getY()), 
-                    trackColor, 
-                    SDL_SCALEMODE_NEAREST
-                );     
+                // Background
+                SDL_Color bgColor = getBackgroundColor();
+                if (bgColor.a > 0)
+                {
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                    SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+                    SDL_RenderFillRect(renderer, &localRect);
+                }
+                // Border
+                SDL_Color borderColor = getBorderColor();
+                if (borderColor.a > 0)
+                {
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                    SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+                    SDL_RenderRect(renderer, &localRect);
+                }
+
+                // Compute thumb geometry
+                SDL_FRect thumbRect = { 0, 0, 0, 0 };
+                float trackLength = (orientation_ == Orientation::Horizontal)
+                    ? static_cast<float>(getWidth() - 22 * scale_width)
+                    : static_cast<float>(getHeight() - 22 * scale_height);
+
+                float denom = std::max(content_size_, 1.0f);
+                float thumbProportion = page_size_ / denom;
+                float thumbLength = trackLength * thumbProportion;
+                if (thumbLength < min_thumb_length_) thumbLength = min_thumb_length_;
+                if (thumbLength > trackLength) thumbLength = trackLength;
+
+                float usableTrack = trackLength - thumbLength;
+                if (usableTrack < 0.0f) usableTrack = 0.0f;
+
+                float valueRange = std::max(getMax() - getMin(), 1.0f);
+                float valueRel = (getValue() - getMin()) / valueRange;
+                valueRel = std::clamp(valueRel, 0.0f, 1.0f);
+                float posRel = (orientation_ == Orientation::Horizontal) ? valueRel : (1.0f - valueRel);
+
+                int spriteIndex = 0;
+                if (orientation_ == Orientation::Horizontal) {
+                    thumbRect.x = (11 * scale_width) + usableTrack * posRel;
+                    thumbRect.y = 0.0f;
+                    thumbRect.w = thumbLength;
+                    thumbRect.h = static_cast<float>(getHeight());
+                    spriteIndex = static_cast<int>(IconIndex::HProgress_Thumb);
+                } else {
+                    thumbRect.x = 0.0f;
+                    thumbRect.y = (11 * scale_height) + usableTrack * posRel;
+                    thumbRect.w = static_cast<float>(getWidth());
+                    thumbRect.h = thumbLength;
+                    spriteIndex = static_cast<int>(IconIndex::VProgress_Thumb);
+                }
+                ss->drawSprite(spriteIndex, thumbRect, getForegroundColor(), SDL_SCALEMODE_NEAREST);
+
+                // Track
+                SDL_Color trackColor = getColor();
+                if (trackColor.a > 0)
+                {
+                    if (orientation_ == Orientation::Horizontal)
+                    {
+                        ss->drawSprite(static_cast<int>(IconIndex::HProgress_Left),
+                            static_cast<int>(std::lround(3 * scale_width)),
+                            0,
+                            trackColor,
+                            SDL_SCALEMODE_NEAREST
+                        );
+                        SDL_FRect midRect = {
+                            static_cast<float>(11 * scale_width),
+                            0.0f,
+                            static_cast<float>(getWidth() - 22 * scale_width),
+                            static_cast<float>(getHeight())
+                        };
+                        ss->drawSprite(static_cast<int>(IconIndex::HProgress_Rail), midRect, trackColor, SDL_SCALEMODE_NEAREST);
+                        ss->drawSprite(static_cast<int>(IconIndex::HProgress_Right),
+                            static_cast<int>(std::lround(static_cast<float>(getWidth()) - 11 * scale_width)),
+                            0,
+                            trackColor,
+                            SDL_SCALEMODE_NEAREST
+                        );
+                    }
+                    else
+                    {
+                        ss->drawSprite(static_cast<int>(IconIndex::VProgress_Top),
+                            0,
+                            static_cast<int>(std::lround(3 * scale_height)),
+                            trackColor,
+                            SDL_SCALEMODE_NEAREST
+                        );
+                        SDL_FRect midRect = {
+                            0.0f,
+                            static_cast<float>(11 * scale_height),
+                            static_cast<float>(getWidth()),
+                            static_cast<float>(getHeight() - 22 * scale_height)
+                        };
+                        ss->drawSprite(static_cast<int>(IconIndex::VProgress_Rail), midRect, trackColor, SDL_SCALEMODE_NEAREST);
+                        ss->drawSprite(static_cast<int>(IconIndex::VProgress_Bottom),
+                            0,
+                            static_cast<int>(std::lround(static_cast<float>(getHeight()) - 11 * scale_height)),
+                            trackColor,
+                            SDL_SCALEMODE_NEAREST
+                        );
+                    }
+                }
+
+                SDL_SetRenderTarget(renderer, prev);
             }
+
+            setDirty(false);
         }
-        else
+
+        // Present the cached texture
+        if (cachedTexture_)
         {
-            // Vertical Track
-            SDL_Color trackColor = getColor();
-            if (trackColor.a > 0)
+            SDL_FRect dst = {
+                static_cast<float>(getX()),
+                static_cast<float>(getY()),
+                static_cast<float>(getWidth()),
+                static_cast<float>(getHeight())
+            };
+            if (!SDL_RenderTexture(renderer, cachedTexture_, nullptr, &dst))
             {
-                // min end
-                ss->drawSprite(static_cast<int>(IconIndex::VProgress_Top),
-                    static_cast<int>(getX()),
-                    static_cast<int>(getY() + 3 * scale_height),
-                    trackColor,
-                    SDL_SCALEMODE_NEAREST
-                );     
-                // middle
-                SDL_FRect midRect = {
-                    static_cast<float>(getX()), 
-                    static_cast<float>(getY() + 11 * scale_height), 
-                    static_cast<float>(getWidth()), 
-                    static_cast<float>(getHeight() - 22 * scale_height)
-                };
-                ss->drawSprite(static_cast<int>(IconIndex::VProgress_Rail), midRect, trackColor, SDL_SCALEMODE_NEAREST);
-
-                // max end
-                ss->drawSprite(static_cast<int>(IconIndex::VProgress_Bottom),
-                    static_cast<int>(getX()),
-                    static_cast<int>(getY() + getHeight() - 11 * scale_height),
-                    trackColor, 
-                    SDL_SCALEMODE_NEAREST
-                );     
+                ERROR("ScrollBar::onRender(): failed to render cache: " + std::string(SDL_GetError()));
             }
         }
-
     } // END: void ScrollBar::onRender()
 
     bool ScrollBar::onUnitTest()

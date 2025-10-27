@@ -1157,17 +1157,50 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
       - ✅ void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua)
 
 ---
-### [October 26, 2025]
-- **IDisplayObject Lua Binding & Unit Test Milestone:**
-  - Implemented a centralized Lua binding helper for `IDisplayObject` in `IDisplayObject_lua.cpp`, consolidating all Lua-facing methods and properties for the type.
-  - Completed and validated a comprehensive `IDisplayObject_UnitTests.lua` script:
-    - Exercises all externally available functions and properties from Lua.
-    - Verifies correct behavior for dirty/state management, event handling, hierarchy, type/property access, z-order/priority, focus/visibility, geometry, orphan retention, and more.
-    - Ensures full parity between C++ and Lua APIs for `IDisplayObject`.
-  - Re-enabled the forward Lua testing platform, allowing Lua-driven tests to run as part of the main suite.
-  - All tests pass, confirming robust Lua/C++ integration and a stable, maintainable binding surface.
-- **Next:** Continue sweeping remaining DisplayObject types to the new Lua binding system and expand unit test coverage for each.   
+### **[October 26, 2025]**
 
+#### **IDisplayObject Lua Binding & Test Platform Milestone**
+- Completed the **centralized Lua binding layer** for `IDisplayObject` in `IDisplayObject_lua.cpp`, replacing scattered binding glue with a clean, unified binder function.
+- Introduced *overload-aware helper wrappers* to automatically adapt C++ pointer methods to `DisplayHandle` colon-call semantics on the Lua side.
+- Updated binding infrastructure ensures:
+  - Safe null-handle behavior.
+  - Full parity between const / non-const function signatures.
+  - Both **global table** and **usertype method** binding via `bind_both()` for consistency.
+
+#### **Unit Test Coverage**
+- Developed `IDisplayObject_UnitTests.lua`, covering:
+  - Dirty flag propagation
+  - Event listener attach/detach
+  - Hierarchy manipulation & parent/child validity
+  - Visibility & focus state
+  - Geometry & bounds accessors
+  - Z-order / priority / child ordering
+  - Orphan retention policy behavior
+- Tests now run via the **Lua-driven test harness** (`repeat_tests.sh` & Core-driven suite).
+- All tests **pass**, confirming stable and predictable C++ ↔ Lua interactions.
+
+#### **Performance Profiling & Optimization**
+- Added real-time **per-object performance instrumentation** for both `Update` and `Render` passes.
+- Identified high-cost UI components and resolved bottlenecks:
+  - 9-slice UI rendering moved to `SpriteSheet::drawNineQuad()` with **cached texture** backing.  
+    **Result:** ~300–400 µs → **< 5 µs** per component.
+  - Range control widgets (sliders, progress bars) optimized.  
+    **Result:** ~25–50 µs → **< 5 µs** per component.
+- Current worst-case UI widget costs now fall in the **2–6 µs** range.
+- Full frame CPU cost averages **~550 µs** (~1800 FPS equivalent headroom).
+
+#### **Leak / Lifetime Verification**
+- Long-duration iteration tests under Valgrind confirm:
+  - **0 bytes definitely lost**
+  - Remaining **~287 KB “still reachable”** attributable to **SDL3 subsystem global caches** (expected behavior).
+- SDOM object lifetime and handle invalidation model confirmed correct.
+
+---
+
+#### **Next Steps**
+- Expand binding + test coverage to remaining DisplayObject subclasses.
+- Begin building developer-facing **debug overlay / inspector** tooling on the Lua side.
+- Keep optimization on hold unless driven by **observable UX demand** (we are now in *microsecond-scale territory*).
 
 
 ---

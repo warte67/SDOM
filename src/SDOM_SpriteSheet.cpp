@@ -450,11 +450,23 @@ namespace SDOM
 
 
 
-    void SpriteSheet::drawSprite(int spriteIndex, int x, int y, SDL_Color color, SDL_ScaleMode scaleMode)
+    void SpriteSheet::drawSprite(int spriteIndex, int x, int y, SDL_Color color, SDL_ScaleMode scaleMode, SDL_Texture* targetTexture)
     {
         SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
         if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
+
+        SDL_Renderer* renderer = getRenderer();
+        SDL_Texture* prevTarget = nullptr;
+        bool switched = false;
+        if (targetTexture) {
+            prevTarget = SDL_GetRenderTarget(renderer);
+            if (!SDL_SetRenderTarget(renderer, targetTexture)) {
+                ERROR("SpriteSheet::drawSprite(x,y): Unable to set render target: " + std::string(SDL_GetError()));
+                return;
+            }
+            switched = true;
+        }
 
         float texW = 0.0f, texH = 0.0f;
         if (!SDL_GetTextureSize(texture_, &texW, &texH))
@@ -497,23 +509,37 @@ namespace SDOM
         }
 
         // Render the sprite
-        SDL_Renderer* renderer = getRenderer();
         if (!renderer)
         {
             ERROR("No valid SDL_Renderer available in Core instance.");
+            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
             return;
         }
         SDL_SetTextureColorMod(texture_, color.r, color.g, color.b);
         SDL_SetTextureAlphaMod(texture_, color.a);
         SDL_SetTextureScaleMode(texture_, scaleMode); 
         SDL_RenderTexture(renderer, texture_, &srcRect, &destRect);
+
+        if (switched) SDL_SetRenderTarget(renderer, prevTarget);
     }
 
-    void SpriteSheet::drawSprite(int spriteIndex, SDL_FRect& destRect, SDL_Color color, SDL_ScaleMode scaleMode)
+    void SpriteSheet::drawSprite(int spriteIndex, SDL_FRect& destRect, SDL_Color color, SDL_ScaleMode scaleMode, SDL_Texture* targetTexture)
     {
         SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
         if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
+
+        SDL_Renderer* renderer = getRenderer();
+        SDL_Texture* prevTarget = nullptr;
+        bool switched = false;
+        if (targetTexture) {
+            prevTarget = SDL_GetRenderTarget(renderer);
+            if (!SDL_SetRenderTarget(renderer, targetTexture)) {
+                ERROR("SpriteSheet::drawSprite(dst): Unable to set render target: " + std::string(SDL_GetError()));
+                return;
+            }
+            switched = true;
+        }
 
         float texW = 0.0f, texH = 0.0f;
         if (!SDL_GetTextureSize(texture_, &texW, &texH))
@@ -549,25 +575,39 @@ namespace SDOM
         }
 
         // Render the sprite
-        SDL_Renderer* renderer = getRenderer();
         if (!renderer)
         {
             ERROR("No valid SDL_Renderer available in Core instance.");
+            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
             return;
         }
         SDL_SetTextureColorMod(texture_, color.r, color.g, color.b);
         SDL_SetTextureAlphaMod(texture_, color.a);
         SDL_SetTextureScaleMode(texture_, scaleMode); 
         SDL_RenderTexture(renderer, texture_, &srcRect, &destRect);
+
+        if (switched) SDL_SetRenderTarget(renderer, prevTarget);
     }
 
 
     void SpriteSheet::drawSprite(int spriteIndex, const SDL_FRect& srcRect, const SDL_FRect& dstRect,
-        SDL_Color color, SDL_ScaleMode scaleMode)
+        SDL_Color color, SDL_ScaleMode scaleMode, SDL_Texture* targetTexture)
     {
         SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
         if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
+
+        SDL_Renderer* renderer = getRenderer();
+        SDL_Texture* prevTarget = nullptr;
+        bool switched = false;
+        if (targetTexture) {
+            prevTarget = SDL_GetRenderTarget(renderer);
+            if (!SDL_SetRenderTarget(renderer, targetTexture)) {
+                ERROR("SpriteSheet::drawSprite(src,dst): Unable to set render target: " + std::string(SDL_GetError()));
+                return;
+            }
+            switched = true;
+        }
 
         float texW = 0.0f, texH = 0.0f;
         if (!SDL_GetTextureSize(texture_, &texW, &texH))
@@ -624,16 +664,18 @@ namespace SDOM
         }
 
         // Render the sprite
-        SDL_Renderer* renderer = getRenderer();
         if (!renderer)
         {
             ERROR("No valid SDL_Renderer available in Core instance.");
+            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
             return;
         }
         SDL_SetTextureColorMod(texture_, color.r, color.g, color.b);
         SDL_SetTextureAlphaMod(texture_, color.a);
         SDL_SetTextureScaleMode(texture_, scaleMode);
         SDL_RenderTexture(renderer, texture_, &sRect, &dstRect);
+
+        if (switched) SDL_SetRenderTarget(renderer, prevTarget);
     }   
 
 
