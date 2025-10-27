@@ -1828,6 +1828,12 @@ namespace SDOM
         SDOM::core_bind_do_arg("setMouseHoveredObject", setMouseHoveredObject_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_return_displayobject("getMouseHoveredObject", getMouseHoveredObject_lua, objHandleType, coreTable, lua);
 
+        // --- Window/Renderer/Texture/Config (read-only accessors) --- //
+        SDOM::core_bind_return_float("getPixelWidth", [](){ return Core::getInstance().getPixelWidth(); }, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_float("getPixelHeight", [](){ return Core::getInstance().getPixelHeight(); }, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_int("getWindowFlags", [](){ return static_cast<int>(Core::getInstance().getWindowFlags()); }, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_int("getPixelFormat", [](){ return static_cast<int>(Core::getInstance().getPixelFormat()); }, objHandleType, coreTable, lua);
+
 	    // --- Window Title & Timing --- //
         SDOM::core_bind_return_string("getWindowTitle", getWindowTitle_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_string("setWindowTitle", setWindowTitle_lua, objHandleType, coreTable, lua);

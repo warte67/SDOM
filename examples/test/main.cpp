@@ -51,9 +51,11 @@ int main(int argc, char** argv)
             std::cout << "Usage: " << (argv[0] ? argv[0] : "prog") << " [options]\n"
                       << "Options:\n"
                       << "  --lua_file <file>     Specify a Lua config file to run (overrides default).\n"
-                      << "                       Aliases: --file, --config, --lua\n"
+                      << "                        Aliases: --file, --config, --lua\n"
                       << "  --stop_after_tests    Run unit tests then stop the main loop and exit.\n"
-                      << "                       Aliases: --stop-after-tests\n"
+                      << "                        Aliases: --stop-after-tests\n"
+                      << "  --show_performance    Show per-object performance stats after each frame.\n"
+                      << "                        Aliases: --show-performance\n"
                       << "  --help, -?, /?        Show this help message and exit.\n"
                       << std::endl;
             return 0;
@@ -69,10 +71,12 @@ int main(int argc, char** argv)
     // For testing: optionally stop main loop after unit tests if caller
     // requested it via command-line flag `--stop_after_tests`.
     bool stopAfterTests = false;
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i) 
+    {
         if (!argv[i]) continue;
         std::string s(argv[i]);
-        if (s == "--stop_after_tests" || s == "--stop-after-tests") {
+        if (s == "--stop_after_tests" || s == "--stop-after-tests") 
+        {
             stopAfterTests = true;
             break;
         }

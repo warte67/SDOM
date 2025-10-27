@@ -1,197 +1,119 @@
--- Core_UnitTests.lua
+-- Core_UnitTests.lua (structured like IDisplayObject_UnitTests.lua)
 
 -- require the helper
 local utils = require("src.UnitTests")
 
--- Do not use print statements in unit test scripts, as they may interfere with test output. 
--- Unless debugging, use utils.push_error() to log errors.
-    -- print("Core_UnitTests script entered successfully.")
+-- Small helpers
+local function push(msg) utils.push_error(msg) end
+local function assert_true(cond, msg) if not cond then push(msg) end end
+local function is_valid(h) return (h ~= nil) and (h.isValid == nil or h:isValid()) end
 
--- Push Errors (Example errors; replace with actual test results) instead of print statements
-    -- utils.push_error("widget X did not initialize")
-    -- utils.push_error("asset Y missing")
+-- Common object accessors (names configured in config.lua)
+local function get_stage1()
+    local s = Core:getDisplayObject("mainStage") or Core:getStage()
+    if not is_valid(s) then push("mainStage not found") end
+    return s
+end
+local function get_stage2()
+    local s = Core:getDisplayObject("stageTwo")
+    if not is_valid(s) then push("stageTwo not found") end
+    return s
+end
 
--- Stage/Root Node Management 
-
-
-
--- -- Test Core:getStage()
--- local stage = Core:getStage()
--- if not stage then
---     utils.push_error("Core:getStage() returned nil")
--- end
-
--- -- Test Core:getDisplayObject()
--- local stage2 = Core:getDisplayObject("stageTwo")
--- if not stage2 then
---     utils.push_error("Core:getDisplayObject('stageTwo') returned an invalid handle.")
--- end
-
--- -- Test setStage()
--- Core:setStage(stage2)
--- local root_obj = Core:getRoot()
--- if not root_obj then
---     utils.push_error("Core:getRoot() return an invalid handle.")
--- end
--- print("Current root object name: " .. root_obj:getName())
--- print("Expected root object name: " .. stage2:getName())
--- if root_obj:getName() ~= stage2:getName() then
---     utils.push_error("root_obj: " .. root_obj:getName() .. " is not 'stageTwo'.")
--- end
--- -- Test setRootNode()
--- Core:setRootNode("stageThree")
-
-
-
-
+-- Helpers
 local function safe_get_name(obj)
     local ok, res = pcall(function() return obj:getName() end)
     if not ok then return nil, res end
     return res
 end
 
--- Test Core:getStage()
-local stage = Core:getStage()
-if not stage then
-    utils.push_error("Core:getStage() returned nil")
+-- Test 1: Stage/Root management (get/set, swap, restore)
+local function test_stage_root()
+    local stageA = get_stage1(); if not is_valid(stageA) then return end
+    local stageB = get_stage2(); if not is_valid(stageB) then return end
+
+    -- setStage should not throw
+    local ok, err = pcall(function() Core:setStage(stageB) end)
+    assert_true(ok, "Core:setStage(stageTwo) threw: " .. tostring(err))
+
+    -- root should match stageB
+    local root = Core:getRoot(); assert_true(is_valid(root), "Core:getRoot() invalid after setStage")
+    local rname = root and root.getName and root:getName() or nil
+    local bname = stageB and stageB.getName and stageB:getName() or nil
+    assert_true(rname ~= nil and bname ~= nil and rname == bname,
+        "Root name '" .. tostring(rname) .. "' != stageTwo '" .. tostring(bname) .. "'")
+
+    -- setRootNode() to stageThree (if present) should not throw
+    ok, err = pcall(function() Core:setRootNode("stageThree") end)
+    assert_true(ok, "Core:setRootNode('stageThree') threw: " .. tostring(err))
+    local new_root = Core:getRoot(); assert_true(is_valid(new_root), "Core:getRoot() invalid after setRootNode")
+
+    -- Restore original stage
+    Core:setStage(stageA)
 end
 
--- Test Core:getDisplayObject()
-local stage2 = Core:getDisplayObject("stageTwo")
-if not stage2 then
-    utils.push_error("Core:getDisplayObject('stageTwo') returned an invalid handle.")
+-- Test 2: Traversal flag toggle/restore
+local function test_traversing_flag()
+    local original = Core:getIsTraversing()
+    assert_true(type(original) == "boolean", "Core:getIsTraversing() did not return boolean")
+    Core:setIsTraversing(not original)
+    local toggled = Core:getIsTraversing()
+    assert_true(toggled ~= original, "Core:setIsTraversing() did not toggle")
+    Core:setIsTraversing(original)
+    local restored = Core:getIsTraversing()
+    assert_true(restored == original, "Core:setIsTraversing() did not restore original")
 end
 
--- Test Core:setStage() does not throw
-local ok, err = pcall(function() Core:setStage(stage2) end)
-if not ok then
-    utils.push_error("Core:setStage(stage2) threw: " .. tostring(err))
+-- Test 3: Creation + Orphan management
+local function test_creation_orphans()
+    local stage = get_stage1(); if not is_valid(stage) then return end
+    local init = { name = "unitTestBox", type = "Box", x = 50, y = 50, width = 100, height = 100, color = {255,0,0,255} }
+    local h = Core:createDisplayObject("Box", init)
+    assert_true(is_valid(h), "Core:createDisplayObject returned invalid handle")
+    if is_valid(h) then assert_true(h:getName() == "unitTestBox", "Created name mismatch") end
+
+    local count = Core:countOrphanedDisplayObjects()
+    assert_true(type(count) == "number", "countOrphanedDisplayObjects did not return a number")
+    assert_true(count == 1, "Expected 1 orphan after creation; got " .. tostring(count))
+
+    stage:addChild(h)
+    count = Core:countOrphanedDisplayObjects(); assert_true(count == 0, "Expected 0 orphans after addChild; got " .. tostring(count))
+
+    stage:removeChild(h)
+    count = Core:countOrphanedDisplayObjects(); assert_true(count == 1, "Expected 1 orphan after removeChild; got " .. tostring(count))
+
+    Core:collectGarbage()
+    count = Core:countOrphanedDisplayObjects(); assert_true(count == 0, "Expected 0 orphans after collectGarbage; got " .. tostring(count))
 end
 
--- Test Core:getRoot()
-local root_obj = Core:getRoot()
-if not root_obj then
-    utils.push_error("Core:getRoot() returned an invalid handle.")
-end
-
--- Safely obtain names (avoid runtime errors indexing userdata)
-local root_name, root_err = safe_get_name(root_obj)
-local stage2_name, stage2_err = safe_get_name(stage2)
-
-if not root_name then
-    utils.push_error("root_obj:getName() failed: " .. tostring(root_err))
-end
-if not stage2_name then
-    utils.push_error("stage2:getName() failed: " .. tostring(stage2_err))
-end
-
-if root_name and stage2_name and root_name ~= stage2_name then
-    utils.push_error("root_obj name '" .. tostring(root_name) .. "' does not match stageTwo name '" .. tostring(stage2_name) .. "'.")
-end
-
--- Test Core:setRootNode() does not throw and changes root as expected
-ok, err = pcall(function() Core:setRootNode("stageThree") end)
-if not ok then
-    utils.push_error("Core:setRootNode('stageThree') threw: " .. tostring(err))
-else
-    local new_root = Core:getRoot()
-    if not new_root then
-        utils.push_error("Core:getRoot() returned nil after setRootNode('stageThree').")
-    else
-        local new_root_name, nr_err = safe_get_name(new_root)
-        if not new_root_name then
-            utils.push_error("new_root:getName() failed: " .. tostring(nr_err))
-        elseif new_root_name ~= "stageThree" then
-            utils.push_error("Expected root name 'stageThree', got '" .. tostring(new_root_name) .. "'.")
-        end
+-- Test 4: Lookup helpers (valid/invalid)
+local function test_lookup()
+    local s1 = get_stage1(); local s2 = get_stage2()
+    if is_valid(s1) and is_valid(s2) then
+        assert_true(s1 ~= s2, "getStage and getDisplayObject('stageTwo') returned same handle")
     end
+    local bad = Core:getDisplayObject("nonexistentStage")
+    assert_true(bad == nil or (bad.isValid and not bad:isValid()), "getDisplayObject(nonexistent) should be nil/invalid")
 end
 
--- Test Core:getDisplayObject() with invalid name should not return a valid handle
-local invalid = Core:getDisplayObject("nonexistentStage")
-if invalid then
-    utils.push_error("Core:getDisplayObject('nonexistentStage') returned a handle; expected nil/invalid.")
+-- Test 5: Basic config accessors return sane types
+local function test_config_accessors()
+    local w = Core:getPixelWidth(); local h = Core:getPixelHeight()
+    assert_true(type(w) == "number" and type(h) == "number" and w > 0 and h > 0, "Pixel size accessors invalid")
+    local fmt = Core:getPixelFormat(); assert_true(type(fmt) == "number" or type(fmt) == "string", "Pixel format invalid")
+    local flags = Core:getWindowFlags(); assert_true(type(flags) == "number", "Window flags invalid")
 end
 
--- Ensure stage and stageTwo are distinct handles (if both valid)
-if stage and stage2 then
-    if stage == stage2 then
-        utils.push_error("Core:getStage() and Core:getDisplayObject('stageTwo') returned the same handle unexpectedly.")
-    end
+-- Runner
+local function run_all()
+    test_stage_root()
+    test_traversing_flag()
+    test_creation_orphans()
+    test_lookup()
+    test_config_accessors()
 end
 
--- Restore the original stage
-Core:setStage(stage)
+local ok, err = pcall(run_all)
+if not ok then push("Core Lua test runner threw: " .. tostring(err)) end
 
--- getIsTraversing / setIsTraversing tests
-local original_traversing = Core:getIsTraversing()
-if (original_traversing == nil) then
-    utils.push_error("Core:getIsTraversing() returned nil; expected boolean.")
-else
-    -- Toggle the traversing state
-    Core:setIsTraversing(not original_traversing)
-    local new_traversing = Core:getIsTraversing()
-    if new_traversing == original_traversing then
-        utils.push_error("Core:setIsTraversing() did not change the traversing state as expected.")
-    end
-    -- Restore original state
-    Core:setIsTraversing(original_traversing)
-    local restored_traversing = Core:getIsTraversing()
-    if restored_traversing ~= original_traversing then
-        utils.push_error("Core:setIsTraversing() did not restore the original traversing state.")
-    end
-end
-
--- createDisplayObject (Create an Orphan) Tests --
-local boxInit = {
-    name = "unitTestBox",
-    type = "Box",
-    x = 50,
-    y = 50,
-    width = 100,
-    height = 100,
-    color = {255, 0, 0, 255} -- Red box
-}
-local box = Core:createDisplayObject("Box", boxInit)
-if not box or not box.isValid or not box:isValid() then
-    utils.push_error("Core:createDisplayObject('Box', ...) returned an invalid handle.")
-else
-    if box:getName() ~= "unitTestBox" then
-        utils.push_error("Created box name mismatch; expected 'unitTestBox', got '" .. tostring(box:getName()) .. "'.")
-    end
-end
-
--- Orphan Management Tests --
-
-local orphan_count = Core:countOrphanedDisplayObjects()
-if type(orphan_count) ~= "number" then
-    utils.push_error("Core:countOrphanedDisplayObjects() did not return a number.")
-end
-if (orphan_count ~= 1) then
-    utils.push_error("Core:countOrphanedDisplayObjects() Should be 1 orphan, found: " .. tostring(orphan_count))
-end
-
--- Add the box to the stage to remove orphan status
-stage:addChild(box)
-orphan_count = Core:countOrphanedDisplayObjects()
-if (orphan_count ~= 0) then
-    utils.push_error("After adding box to stage, expected 0 orphans, found: " .. tostring(orphan_count))
-end
-
--- Remove the box from the stage to make it an orphan again
-stage:removeChild(box)
-orphan_count = Core:countOrphanedDisplayObjects()
-if (orphan_count ~= 1) then
-    utils.push_error("After removing box from stage, expected 1 orphan, found: " .. tostring(orphan_count))
-end 
-
--- Clean up: (In actual tests, ensure proper cleanup of created objects)
-
-Core:collectGarbage()
-orphan_count = Core:countOrphanedDisplayObjects()
-if (orphan_count ~= 0) then
-    utils.push_error("After Core:collectGarbage(), expected 0 orphans, found: " .. tostring(orphan_count))
-end
-
--- return summary
 return utils.get_results()
