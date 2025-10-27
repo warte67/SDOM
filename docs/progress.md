@@ -1207,11 +1207,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Added **getDisplayObjectNames()** to Core C++, Lua bindings and unit tests.
 - Added **unloadAllAssetObjects()** and **reloadAllAssetObjects()** to Core C++, Lua bindings and unit tests.
 - Added **printObjectRegistry()** to Core C++, Lua bindings and unit tests.
-
 - Verified **doTabKeyPressForward()** and **doTabKeyPressReverse()** passes both C++ and Lua unit tests.
-
 - Updated the Lua API stubs to reflect the new methods.
-
+- Core is stable (not frozen). Current features are fully bound and tested; future expansions will follow the same testing and validation model.
 
 
 
