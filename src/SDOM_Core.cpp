@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_Version.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_AssetHandle.hpp>
@@ -17,6 +18,7 @@
 #include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_ArrowButton.hpp>
 
+
 namespace SDOM
 {
 
@@ -26,10 +28,14 @@ namespace SDOM
         // `require`/`package` and basic I/O if desired by examples.
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::package, sol::lib::io);
 
-        // Register Core and SDL_Utils usertypes
-        SDL_Utils::registerLua(lua_);
+        // Register Core, Factory, EventManager, Version, and SDL_Utils usertypes
+        SDL_Utils::registerLuaBindings(lua_);
         factory_ = new Factory();
         eventManager_ = new EventManager();
+        version_ = new Version(lua_);
+        
+        // // Register Version usertype
+        // version_->registerLuaBindings(lua_);
         
         // register the DisplayHandle handle last so other types can use it
         DisplayHandle prototypeHandle; // Default DisplayHandle for registration
@@ -37,10 +43,10 @@ namespace SDOM
 
         AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
         prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
-
-        // Register Core usertype
-        this->_registerLuaBindings("Core", lua_);        
         
+        // Register Core usertype
+        this->_registerLuaBindings("Core", lua_);       
+
         // Note: Factory initialization is performed later (e.g. during
         // configuration) to avoid recursive-construction ordering issues.
     }
@@ -56,6 +62,11 @@ namespace SDOM
         {
             delete eventManager_;
             eventManager_ = nullptr;
+        }
+        if (version_)
+        {
+            delete version_;
+            version_ = nullptr;
         }
     }
 

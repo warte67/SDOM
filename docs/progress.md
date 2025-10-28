@@ -1268,6 +1268,9 @@ Below is the current status of all exposed **IDisplayObject** properties:
 -- ☐ Planned
 
 
+---
+### [October 27, 2025]
+
 
 ---
 ### Long Term To Do:

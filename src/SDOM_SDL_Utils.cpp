@@ -41,7 +41,7 @@
 namespace SDOM
 {
 
-    void SDL_Utils::registerLua(sol::state_view lua)
+    void SDL_Utils::registerLuaBindings(sol::state_view lua)
     {
         // Register SDL_Color userdata so Lua can access r/g/b/a and getter helpers
         // if (!lua["SDL_Color"].valid()) {

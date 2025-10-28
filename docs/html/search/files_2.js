@@ -88,5 +88,6 @@ var searchData=
   ['sdom_5funittests_2ecpp_85',['SDOM_UnitTests.cpp',['../SDOM__UnitTests_8cpp.html',1,'']]],
   ['sdom_5funittests_2ehpp_86',['SDOM_UnitTests.hpp',['../SDOM__UnitTests_8hpp.html',1,'']]],
   ['sdom_5futils_2ecpp_87',['SDOM_Utils.cpp',['../SDOM__Utils_8cpp.html',1,'']]],
-  ['sdom_5futils_2ehpp_88',['SDOM_Utils.hpp',['../SDOM__Utils_8hpp.html',1,'']]]
+  ['sdom_5futils_2ehpp_88',['SDOM_Utils.hpp',['../SDOM__Utils_8hpp.html',1,'']]],
+  ['sdom_5fversion_2ehpp_89',['SDOM_Version.hpp',['../SDOM__Version_8hpp.html',1,'']]]
 ];

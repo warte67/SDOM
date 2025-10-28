@@ -19,6 +19,7 @@ namespace SDOM
     class IAssetObject;
     class AssetHandle;
     class UnitTests;
+    class Version;
 
     /**
      * @class Core
@@ -309,6 +310,7 @@ namespace SDOM
         // --- Subsystems --- //
         inline static Factory* factory_ = nullptr; 
         inline static EventManager* eventManager_ = nullptr;
+        inline static Version* version_ = nullptr;
 
         // --- Callback Hooks --- //
         std::function<bool()> fnOnInit = nullptr;

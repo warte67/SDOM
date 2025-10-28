@@ -42,7 +42,8 @@ var annotated_dup =
       [ "TristateButton", "classSDOM_1_1TristateButton.html", "classSDOM_1_1TristateButton" ],
       [ "TruetypeFont", "classSDOM_1_1TruetypeFont.html", "classSDOM_1_1TruetypeFont" ],
       [ "TTFAsset", "classSDOM_1_1TTFAsset.html", "classSDOM_1_1TTFAsset" ],
-      [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ]
+      [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
+      [ "SDOM_Version", "classSDOM_1_1SDOM__Version.html", "classSDOM_1_1SDOM__Version" ]
     ] ],
     [ "CLR", "classCLR.html", "classCLR" ]
 ];

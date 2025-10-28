@@ -42,6 +42,7 @@ var namespaceSDOM =
     [ "TruetypeFont", "classSDOM_1_1TruetypeFont.html", "classSDOM_1_1TruetypeFont" ],
     [ "TTFAsset", "classSDOM_1_1TTFAsset.html", "classSDOM_1_1TTFAsset" ],
     [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
+    [ "SDOM_Version", "classSDOM_1_1SDOM__Version.html", "classSDOM_1_1SDOM__Version" ],
     [ "SUPER", "namespaceSDOM.html#a30b2979959418fcc8421582cd6cb7c08", null ],
     [ "AnchorPoint", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
       [ "DEFAULT", "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5b39c8b553c821e7cddc6da64b5bd2ee", null ],

@@ -421,6 +421,7 @@ namespace SDOM
 #include <SDOM/SDOM_AssetHandle.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>
 #include <SDOM/SDOM_Utils.hpp>
+// #include <SDOM/SDOM_Version.hpp>
 
 #ifndef SDOM_USE_INDIVIDUAL_HEADERS
     // SDOM_Front.hpp is an umbrella header meant for implementation files only.
