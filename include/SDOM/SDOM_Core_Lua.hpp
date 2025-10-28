@@ -216,7 +216,21 @@ namespace SDOM
     void reloadAllAssetObjects_lua();                                       // ✅ Lua Test 12
 
     // --- 🔄 Utility Methods --- //
-    std::vector<std::string> getDisplayObjectNames_lua();                   // ☐ pending
-    void printObjectRegistry_lua();                                         // ☐ pending
+    std::vector<std::string> getDisplayObjectNames_lua();                   // ✅ Verified
+    void printObjectRegistry_lua();                                         // ✅ Verified
+
+    // --- 🔄 Version Methods --- //
+    std::string getVersionString_lua();                                     // ☐ pending
+    std::string getVersionFullString_lua();                                 // ☐ pending
+    int getVersionMajor_lua();                                              // ☐ pending
+    int getVersionMinor_lua();                                              // ☐ pending
+    int getVersionPatch_lua();                                              // ☐ pending
+    std::string getVersionCodename_lua();                                   // ☐ pending
+    std::string getVersionBuild_lua();                                      // ☐ pending
+    std::string getVersionBuildDate_lua();                                  // ☐ pending
+    std::string getVersionCommit_lua();                                     // ☐ pending
+    std::string getVersionBranch_lua();                                     // ☐ pending
+    std::string getVersionCompiler_lua();                                   // ☐ pending        
+    std::string getVersionPlatform_lua();                                   // ☐ pending
 
 } // namespace SDOM

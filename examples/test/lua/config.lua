@@ -706,6 +706,32 @@ local config = {
 -- Configure the test application
 configure(config)
 
+-- Print the version
+print("Simple SDL3 Document Object Model (SDOM)")
+print("  SDOM Version: " .. getVersionString() .. " (" .. getVersionCodename() .. ")")
+print("    Build Date: " .. getVersionBuildDate())
+print("        Commit: " .. getVersionCommit())
+print("        Branch: " .. getVersionBranch())
+print("      Compiler: " .. getVersionCompiler())
+print("      Platform: " .. getVersionPlatform())
+
+-- --- VERIFY VERSION INFO --- --
+-- print("  getVersionString(): "      .. getVersionString())
+-- print("  getVersionFullString(): "  .. getVersionFullString())
+-- print("  getVersionMajor(): "       .. getVersionMajor())
+-- print("  getVersionMinor(): "       .. getVersionMinor())
+-- print("  getVersionPatch(): "       .. getVersionPatch())
+-- print("  getVersionCodename(): "    .. getVersionCodename())
+-- print("  getVersionBuild(): "       .. getVersionBuild())
+-- print("  getVersionBuildDate(): "   .. getVersionBuildDate())
+-- print("  getVersionCommit(): "      .. getVersionCommit())
+-- print("  getVersionBranch(): "      .. getVersionBranch())
+-- print("  getVersionCompiler(): "    .. getVersionCompiler())        
+-- print("  getVersionPlatform(): "    .. getVersionPlatform())
+
+
+
+
 -- The example binary runs with working directory `examples/test`, so use
 -- project-relative paths from there (./lua/...). This avoids duplicating
 -- the examples/test prefix when running from the example folder.

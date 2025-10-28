@@ -2034,6 +2034,20 @@ namespace SDOM
         SDOM::core_bind_return_vector_string("getDisplayObjectNames", getDisplayObjectNames_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_noarg("printObjectRegistry", printObjectRegistry_lua, objHandleType, coreTable, lua);
 
+        // --- Version --- //
+        SDOM::core_bind_return_string("getVersionString", getVersionString_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_string("getVersionFullString", getVersionFullString_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_int("getVersionMajor", getVersionMajor_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_int("getVersionMinor", getVersionMinor_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_int("getVersionPatch", getVersionPatch_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_string("getVersionCodename", getVersionCodename_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_string("getVersionBuild", getVersionBuild_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_string("getVersionBuildDate", getVersionBuildDate_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_string("getVersionCommit", getVersionCommit_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_string("getVersionBranch", getVersionBranch_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_string("getVersionCompiler", getVersionCompiler_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_string("getVersionPlatform", getVersionPlatform_lua, objHandleType, coreTable, lua);
+
     } // End Core::_registerDisplayObject()
 
 

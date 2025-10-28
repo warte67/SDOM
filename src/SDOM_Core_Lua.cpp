@@ -1180,4 +1180,18 @@ namespace SDOM
 	std::vector<std::string> getDisplayObjectNames_lua() { return getFactory().getDisplayObjectNames(); }
 	void printObjectRegistry_lua() { getFactory().printObjectRegistry(); }	
 
+	// --- Version Methods --- //
+	std::string getVersionString_lua() 		{ return getCore().getVersionString(); 		}
+	std::string getVersionFullString_lua() 	{ return getCore().getVersionFullString(); 	}
+	int getVersionMajor_lua() 				{ return getCore().getVersionMajor(); 		}
+	int getVersionMinor_lua() 				{ return getCore().getVersionMinor(); 		}
+	int getVersionPatch_lua() 				{ return getCore().getVersionPatch(); 		}
+	std::string getVersionCodename_lua() 	{ return getCore().getVersionCodename(); 	}
+	std::string getVersionBuild_lua() 		{ return getCore().getVersionBuild(); 		}
+	std::string getVersionBuildDate_lua() 	{ return getCore().getVersionBuildDate(); 	}
+	std::string getVersionCommit_lua() 		{ return getCore().getVersionCommit(); 		}
+	std::string getVersionBranch_lua() 		{ return getCore().getVersionBranch(); 		}
+	std::string getVersionCompiler_lua() 	{ return getCore().getVersionCompiler();	}
+	std::string getVersionPlatform_lua() 	{ return getCore().getVersionPlatform();	}
+
 } // namespace SDOM
