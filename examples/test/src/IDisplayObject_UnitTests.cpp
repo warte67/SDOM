@@ -1817,6 +1817,7 @@ namespace SDOM
 
         return ok;
     } // IDisplayObject_test11(std::vector<std::string>& errors)   
+    
 
 
     // --- Lua Integration Tests --- //

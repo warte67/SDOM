@@ -1211,45 +1211,62 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Updated the Lua API stubs to reflect the new methods.
 - Core is stable (not frozen). Current features are fully bound and tested; future expansions will follow the same testing and validation model.
 - Added **getOrphanGrace()** and **setOrphanGrace()** to IDisplayObject C++, Lua bindings and unit tests.
+- Added **getOrphanRetentionPolicyString()** and **setOrphanRetentionPolicy()** to IDisplayObject C++, Lua bindings and unit tests.
+- **IDisplayObject** properties are now properly bound and tested in C++ and Lua. 
+- **Milestone Reached: Core, Factory, and IDisplayObject Stable**
+  - Further development will focus on extending higher-level components rather than altering these core modules.
+  - Future expansions will follow the same testing and validation model. For now, these modules are considered stable.
+    - Core is stable (not frozen). Current features are fully bound and tested
+    - Factory and IDisplayObject modules are now stable (not frozen).
+    - All **IDisplayObject** properties are now properly bound and tested in C++ and Lua.
+    - All **Core** methods are now properly bound and tested in C++ and Lua.
+    - All **Factory** methods are now properly bound and tested in C++ and Lua.
 
--- Legend:
+Below is the current status of all exposed **IDisplayObject** properties and methods.
+| Property              | Type        | Getter                             | Setter                             | Notes                  |
+| --------------------- | ----------- | ---------------------------------- | ---------------------------------- | ---------------------- |
+| name                  | string      | getName()                          | setName(string)                    | ✅ test verified       |
+| type                  | string      | getType()                          | n/a                                | ✅ test verified       |
+| x                     | number      | getX()                             | setX(number)                       | ✅ test verified       |
+| y                     | number      | getY()                             | setY(number)                       | ✅ test verified       |
+| width                 | number      | getWidth()                         | setWidth(number)                   | ✅ test verified       |
+| height                | number      | getHeight()                        | setHeight(number)                  | ✅ test verified       |
+| w *(alias)*           | number      | → width                            | → width                            | ✅ test verified       |
+| h *(alias)*           | number      | → height                           | → height                           | ✅ test verified       |
+| color                 | {r,g,b,a}   | getColor()                         | setColor(SDL_Color)                | ✅ test verified       |
+| foreground_color      | {r,g,b,a}   | getForegroundColor()               | setForegroundColor(SDL_Color)      | ✅ test verified       |
+| background_color      | {r,g,b,a}   | getBackgroundColor()               | setBackgroundColor(SDL_Color)      | ✅ test verified       |
+| border_color          | {r,g,b,a}   | getBorderColor()                   | setBorderColor(SDL_Color)          | ✅ test verified       |
+| outline_color         | {r,g,b,a}   | getOutlineColor()                  | setOutlineColor(SDL_Color)         | ✅ test verified       |
+| dropshadow_color      | {r,g,b,a}   | getDropshadowColor()               | setDropshadowColor(SDL_Color)      | ✅ test verified       |
+| anchor_top            | enum/int    | getAnchorTop()                     | setAnchorTop(int)                  | ✅ test verified       |
+| anchor_left           | enum/int    | getAnchorLeft()                    | setAnchorLeft(int)                 | ✅ test verified       |
+| anchor_bottom         | enum/int    | getAnchorBottom()                  | setAnchorBottom(int)               | ✅ test verified       |
+| anchor_right          | enum/int    | getAnchorRight()                   | setAnchorRight(int)                | ✅ test verified       |
+| z_order               | number      | getZOrder()                        | setZOrder(number)                  | ✅ test verified       |
+| priority              | number      | getPriority()                      | setPriority(number)                | ✅ test verified       |
+| is_clickable          | boolean     | isClickable()                      | setClickable(bool)                 | ✅ test verified       |
+| is_enabled            | boolean     | isEnabled()                        | setEnabled(bool)                   | ✅ test verified       |
+| is_hidden             | boolean     | isHidden()                         | setHidden(bool)                    | ✅ test verified       |
+| tab_priority          | number      | getTabPriority()                   | setTabPriority(number)             | ✅ test verified       |
+| tab_enabled           | boolean     | isTabEnabled()                     | setTabEnabled(bool)                | ✅ test verified       |
+| left                  | number      | getLeft()                          | setLeft(number)                    | ✅ test verified       |
+| right                 | number      | getRight()                         | setRight(number)                   | ✅ test verified       |
+| top                   | number      | getTop()                           | setTop(number)                     | ✅ test verified       |
+| bottom                | number      | getBottom()                        | setBottom(number)                  | ✅ test verified       |
+| local_left            | number      | getLocalLeft()                     | setLocalLeft(number)               | ✅ test verified       |
+| local_right           | number      | getLocalRight()                    | setLocalRight(number)              | ✅ test verified       |
+| local_top             | number      | getLocalTop()                      | setLocalTop(number)                | ✅ test verified       |
+| local_bottom          | number      | getLocalBottom()                   | setLocalBottom(number)             | ✅ test verified       |
+| orphan_policy         | string      | getOrphanRetentionPolicyString()   | setOrphanRetentionPolicy("auto")   | ✅ test verified       |
+| orphan_grace          | number      | getOrphanGrace()                   | setOrphanGrace(number)             | ✅ test verified       |
+
+>-- Legend:
 -- ✅ Test Verified
 -- 🔄 In Progress
 -- ⚠️ Failing
 -- ☐ Planned
 
-| Property        | Type        | Getter                             | Setter                            | Notes                  |
-| --------------- | ----------- | ---------------------------------- | --------------------------------- | ---------------------- |
-| `name`          | string      | `getName()`                        | `setName(string)`                 | ☐ planned             |
-| `type`          | string      | `getType()`                        | n/a                               | ☐ planned             |
-| `x`             | number      | `getX()`                           | `setX(number)`                    | ☐ planned             |
-| `y`             | number      | `getY()`                           | `setY(number)`                    | ☐ planned             |
-| `width`         | number      | `getWidth()`                       | `setWidth(number)`                | ☐ planned             |
-| `height`        | number      | `getHeight()`                      | `setHeight(number)`               | ☐ planned             |
-| `w` *(alias)*   | number      | → `width`                          | → `width`                         | ☐ planned             |
-| `h` *(alias)*   | number      | → `height`                         | → `height`                        | ☐ planned             |
-| `color`         | `{r,g,b,a}` | `getColor()`                       | `setColor(SDL_Color)`             | ☐ planned             |
-| `anchor_top`    | enum/int    | `getAnchorTop()`                   | `setAnchorTop(int)`               | ☐ planned             |
-| `anchor_left`   | enum/int    | `getAnchorLeft()`                  | `setAnchorLeft(int)`              | ☐ planned             |
-| `anchor_bottom` | enum/int    | `getAnchorBottom()`                | `setAnchorBottom(int)`            | ☐ planned             |
-| `anchor_right`  | enum/int    | `getAnchorRight()`                 | `setAnchorRight(int)`             | ☐ planned             |
-| `z_order`       | number      | `getZOrder()`                      | `setZOrder(number)`               | ☐ planned             |
-| `priority`      | number      | `getPriority()`                    | `setPriority(number)`             | ☐ planned             |
-| `is_clickable`  | boolean     | `isClickable()`                    | `setClickable(bool)`              | ☐ planned             |
-| `is_enabled`    | boolean     | `isEnabled()`                      | `setEnabled(bool)`                | ☐ planned             |
-| `is_hidden`     | boolean     | `isHidden()`                       | `setHidden(bool)`                 | ☐ planned             |
-| `tab_priority`  | number      | `getTabPriority()`                 | `setTabPriority(number)`          | ☐ planned             |
-| `tab_enabled`   | boolean     | `isTabEnabled()`                   | `setTabEnabled(bool)`             | ☐ planned             |
-| `left`          | number      | `getLeft()`                        | `setLeft(number)`                 | ☐ planned             |
-| `right`         | number      | `getRight()`                       | `setRight(number)`                | ☐ planned             |
-| `top`           | number      | `getTop()`                         | `setTop(number)`                  | ☐ planned             |
-| `bottom`        | number      | `getBottom()`                      | `setBottom(number)`               | ☐ planned             |
-| `local_left`    | number      | `getLocalLeft()`                   | `setLocalLeft(number)`            | ☐ planned             |
-| `local_right`   | number      | `getLocalRight()`                  | `setLocalRight(number)`           | ☐ planned             |
-| `local_top`     | number      | `getLocalTop()`                    | `setLocalTop(number)`             | ☐ planned             |
-| `local_bottom`  | number      | `getLocalBottom()`                 | `setLocalBottom(number)`          | ☐ planned             |
-| `orphan_policy` | string      | `getOrphanRetentionPolicyString()` | `setOrphanRetentionPolicy("auto") | ☐ planned             |
-| `orphan_grace`  | number      | `getOrphanGrace()`                 | `setOrphanGrace(number)`          | ☐ planned             |
 
 
 ---

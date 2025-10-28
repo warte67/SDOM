@@ -525,6 +525,11 @@ EventType = EventType or {}
 ---@field w number              -- alias of width
 ---@field h number              -- alias of height
 ---@field color SDL_Color       -- mirrors getColor()/setColor()
+---@field foreground_color SDL_Color    -- mirrors getForegroundColor()/setForegroundColor()
+---@field background_color SDL_Color    -- mirrors getBackgroundColor()/setBackgroundColor()
+---@field border_color SDL_Color        -- mirrors getBorderColor()/setBorderColor()
+---@field outline_color SDL_Color       -- mirrors getOutlineColor()/setOutlineColor()
+---@field dropshadow_color SDL_Color    -- mirrors getDropshadowColor()/setDropshadowColor()
 ---@field anchor_top integer    -- mirrors getAnchorTop()/setAnchorTop()
 ---@field anchor_left integer   -- mirrors getAnchorLeft()/setAnchorLeft()
 ---@field anchor_bottom integer -- mirrors getAnchorBottom()/setAnchorBottom()
@@ -545,5 +550,139 @@ EventType = EventType or {}
 ---@field local_bottom number   -- mirrors getLocalBottom()/setLocalBottom()
 ---@field orphan_grace number   -- mirrors getOrphanGrace()/setOrphanGrace()
 ---@field orphan_policy string  -- mirrors getOrphanRetentionPolicyString()/setOrphanRetentionPolicy()
+
+---@class SDL_Color
+---@field r integer Red component (0–255)
+---@field g integer Green component (0–255)
+---@field b integer Blue component (0–255)
+---@field a integer Alpha component (0–255)
+local SDL_Color = {}
+
+---Creates a new SDL_Color
+---@param r integer|nil
+---@param g integer|nil
+---@param b integer|nil
+---@param a integer|nil
+---@return SDL_Color
+function SDL_Color:new(r, g, b, a) end
+
+---Builds an SDL_Color from a Lua table `{r=,g=,b=,a=}` or `{r,g,b,a}`
+---@param t table
+---@return SDL_Color
+function SDL_Color.fromTable(t) end
+
+function SDL_Color:getR() end
+function SDL_Color:getG() end
+function SDL_Color:getB() end
+function SDL_Color:getA() end
+
+-- Export
+_G.SDL_Color = SDL_Color
+
+---@class SDL_Utils
+local SDL_Utils = {}
+
+---Converts an SDL_PixelFormat to a string.
+---@param fmt integer
+---@return string
+function SDL_Utils.pixelFormatToString(fmt) end
+---@param self SDL_Utils
+---@param fmt integer
+---@return string
+function SDL_Utils:pixelFormatToString(fmt) end
+
+---Parses a string into an SDL_PixelFormat.
+---@param str string
+---@return integer
+function SDL_Utils.pixelFormatFromString(str) end
+---@param self SDL_Utils
+---@param str string
+---@return integer
+function SDL_Utils:pixelFormatFromString(str) end
+
+---Converts window flags to string.
+---@param flags integer
+---@return string
+function SDL_Utils.windowFlagsToString(flags) end
+---@param self SDL_Utils
+---@param flags integer
+---@return string
+function SDL_Utils:windowFlagsToString(flags) end
+
+---Parses a string into window flags.
+---@param str string
+---@return integer
+function SDL_Utils.windowFlagsFromString(str) end
+---@param self SDL_Utils
+---@param str string
+---@return integer
+function SDL_Utils:windowFlagsFromString(str) end
+
+---Converts renderer presentation mode to string.
+---@param val integer
+---@return string
+function SDL_Utils.rendererLogicalPresentationToString(val) end
+---@param self SDL_Utils
+---@param val integer
+---@return string
+function SDL_Utils:rendererLogicalPresentationToString(val) end
+
+---Parses a string into renderer presentation mode.
+---@param str string
+---@return integer
+function SDL_Utils.rendererLogicalPresentationFromString(str) end
+---@param self SDL_Utils
+---@param str string
+---@return integer
+function SDL_Utils:rendererLogicalPresentationFromString(str) end
+
+---Converts an SDL_EventType to a string.
+---@param event_type integer
+---@return string
+function SDL_Utils.eventTypeToString(event_type) end
+---@param self SDL_Utils
+---@param event_type integer
+---@return string
+function SDL_Utils:eventTypeToString(event_type) end
+
+---Parses a string into an SDL_EventType.
+---@param str string
+---@return integer
+function SDL_Utils.eventTypeFromString(str) end
+---@param self SDL_Utils
+---@param str string
+---@return integer
+function SDL_Utils:eventTypeFromString(str) end
+
+---Converts an SDL_Keycode + SDL_Keymod into ASCII.
+---@param keycode integer
+---@param keymod integer
+---@return string|nil
+function SDL_Utils.keyToAscii(keycode, keymod) end
+---@param self SDL_Utils
+---@param keycode integer
+---@param keymod integer
+---@return string|nil
+function SDL_Utils:keyToAscii(keycode, keymod) end
+
+---Sleeps for the given number of milliseconds.
+---@param ms integer
+function SDL_Utils.delay(ms) end
+---@param self integer
+---@param ms integer
+function SDL_Utils:delay(ms) end
+
+---Converts an SDL_Event to a Lua table.
+---@param ev any
+---@return table|nil
+function SDL_Utils.eventToLuaTable(ev) end
+---@param self SDL_Utils
+---@param ev any
+---@return table|nil
+function SDL_Utils:eventToLuaTable(ev) end
+
+-- Export both names: SDL_Utils and SDL
+_G.SDL_Utils = SDL_Utils
+_G.SDL = SDL_Utils
 
 return true

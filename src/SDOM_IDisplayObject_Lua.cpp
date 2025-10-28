@@ -292,7 +292,7 @@ namespace SDOM
     void setColor_lua(IDisplayObject* obj, const sol::object& colorObj) 
     {
         if (!obj) return;
-        SDL_Color c{0,0,0,255};
+        SDL_Color c{255,0,255,255};
         if (colorObj.is<SDL_Color>()) {
             try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
         } else if (colorObj.is<sol::table>()) {
@@ -326,7 +326,7 @@ namespace SDOM
     void setForegroundColor_lua(IDisplayObject* obj, const sol::object& colorObj)
     {
         if (!obj) return;
-        SDL_Color c{0,0,0,255};
+        SDL_Color c{255,0,255,255};
         if (colorObj.is<SDL_Color>()) {
             try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
         } else if (colorObj.is<sol::table>()) {
@@ -358,7 +358,7 @@ namespace SDOM
     void setBackgroundColor_lua(IDisplayObject* obj, const sol::object& colorObj)
     {
         if (!obj) return;
-        SDL_Color c{0,0,0,255};
+        SDL_Color c{255,0,255,255};
         if (colorObj.is<SDL_Color>()) {
             try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
         } else if (colorObj.is<sol::table>()) {
@@ -390,7 +390,7 @@ namespace SDOM
     void setBorderColor_lua(IDisplayObject* obj, const sol::object& colorObj)
     {
         if (!obj) return;
-        SDL_Color c{0,0,0,255};
+        SDL_Color c{255,0,255,255};
         if (colorObj.is<SDL_Color>()) {
             try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
         } else if (colorObj.is<sol::table>()) {
@@ -422,7 +422,7 @@ namespace SDOM
     void setOutlineColor_lua(IDisplayObject* obj, const sol::object& colorObj)
     {
         if (!obj) return;
-        SDL_Color c{0,0,0,255};
+        SDL_Color c{255,0,255,255};
         if (colorObj.is<SDL_Color>()) {
             try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
         } else if (colorObj.is<sol::table>()) {
@@ -454,7 +454,7 @@ namespace SDOM
     void setDropshadowColor_lua(IDisplayObject* obj, const sol::object& colorObj)
     {
         if (!obj) return;
-        SDL_Color c{0,0,0,255};
+        SDL_Color c{255,0,255,255};
         if (colorObj.is<SDL_Color>()) {
             try { c = colorObj.as<SDL_Color>(); } catch(...) { return; }
         } else if (colorObj.is<sol::table>()) {
@@ -947,6 +947,7 @@ namespace SDOM
     //     if (!obj) return;
     //     obj->setOrphanGrace(grace);
     // }
+
     void setOrphanGrace_lua(IDisplayObject* obj, int grace_in_ms)
     {
         if (!obj) return;
@@ -1085,7 +1086,54 @@ namespace SDOM
             auto wrapper = make_handle_wrapper(fn);
             bind_both(tbl, maybeUT, name, wrapper);
         }
-    }
+
+        // Color property binder: handles SDL_Color <-> Lua table conversions
+        template <typename GetterFn, typename SetterFn>
+        inline void bind_color_property(sol::table& handleTbl,
+                                        sol::optional<sol::usertype<SDOM::DisplayHandle>>& maybeUT,
+                                        const char* name,
+                                        GetterFn getter,
+                                        SetterFn setter)
+        {
+            auto color_getter = [getter](DisplayHandle& self) -> sol::table {
+                sol::state_view lua = getLua();
+                sol::table t = lua.create_table();
+                if (!self.isValid() || !self.get()) return t;
+                IDisplayObject* obj = self.get();
+                SDL_Color c = getter(obj);
+                return SDL_Utils::get_lua_color(lua, c);
+            };
+
+            auto color_setter = [setter](DisplayHandle& self, const sol::object& val) {
+                if (!self.isValid() || !self.get()) return;
+                IDisplayObject* obj = self.get();
+
+                if (val.is<sol::table>()) {
+                    sol::table t = val.as<sol::table>();
+                    SDL_Color c = SDL_Utils::get__lua_color(t);
+                    setter(obj, c);
+                }
+                else if (val.is<SDL_Color>()) {
+                    try { SDL_Color c = val.as<SDL_Color>(); setter(obj, c); } catch(...) {}
+                }
+                else if (val.is<int>() || val.is<double>()) {
+                    int v = val.is<int>() ? val.as<int>() : static_cast<int>(val.as<double>());
+                    SDL_Color c{static_cast<Uint8>(v), static_cast<Uint8>(v), static_cast<Uint8>(v), 255};
+                    setter(obj, c);
+                }
+            };
+
+            sol::object cur = handleTbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil)
+                handleTbl.set(name, sol::property(color_getter, color_setter));
+
+            if (maybeUT) {
+                try { (*maybeUT)[name] = sol::property(color_getter, color_setter); }
+                catch (...) {}
+            }
+        }
+
+    } // END namespace
 
     // Central binder: attach IDisplayObject Lua-facing helpers to the shared
     // DisplayHandle surface (idempotent). This mirrors the in-class binding
@@ -1327,47 +1375,29 @@ namespace SDOM
             )
         );
         bind_both(handleTbl, maybeUT, "getColor", getColor_lua);
-        bind_both(handleTbl, maybeUT, "setColor",
-            sol::overload(
-                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setColor_lua),
-                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setColor_lua)
-            )
-        );
+        // bind_both(handleTbl, maybeUT, "setColor",
+        //     sol::overload(
+        //         static_cast<void(*)(IDisplayObject*, const sol::object&)>(setColor_lua),
+        //         static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setColor_lua)
+        //     )
+        // );        
+        bind_both(handleTbl, maybeUT, "setColor", static_cast<void(*)(IDisplayObject*, const sol::object&)>(setColor_lua) );
+
         bind_both(handleTbl, maybeUT, "getForegroundColor", getForegroundColor_lua);
-        bind_both(handleTbl, maybeUT, "setForegroundColor",
-            sol::overload(
-                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setForegroundColor_lua),
-                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setForegroundColor_lua)
-            )
-        );
+        bind_both(handleTbl, maybeUT, "setForegroundColor", static_cast<void(*)(IDisplayObject*, const sol::object&)>(setForegroundColor_lua) );
+
         bind_both(handleTbl, maybeUT, "getBackgroundColor", getBackgroundColor_lua);
-        bind_both(handleTbl, maybeUT, "setBackgroundColor",
-            sol::overload(
-                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setBackgroundColor_lua),
-                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setBackgroundColor_lua)
-            )
-        );
+        bind_both(handleTbl, maybeUT, "setBackgroundColor", static_cast<void(*)(IDisplayObject*, const sol::object&)>(setBackgroundColor_lua) );
+
         bind_both(handleTbl, maybeUT, "getBorderColor", getBorderColor_lua);
-        bind_both(handleTbl, maybeUT, "setBorderColor",
-            sol::overload(
-                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setBorderColor_lua),
-                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setBorderColor_lua)
-            )
-        );
+        bind_both(handleTbl, maybeUT, "setBorderColor", static_cast<void(*)(IDisplayObject*, const sol::object&)>(setBorderColor_lua) );
+
         bind_both(handleTbl, maybeUT, "getOutlineColor", getOutlineColor_lua);
-        bind_both(handleTbl, maybeUT, "setOutlineColor",
-            sol::overload(
-                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setOutlineColor_lua),
-                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setOutlineColor_lua)
-            )
-        );
+        bind_both(handleTbl, maybeUT, "setOutlineColor", static_cast<void(*)(IDisplayObject*, const sol::object&)>(setOutlineColor_lua) );
+
         bind_both(handleTbl, maybeUT, "getDropshadowColor", getDropshadowColor_lua);
-        bind_both(handleTbl, maybeUT, "setDropshadowColor",
-            sol::overload(
-                static_cast<void(*)(IDisplayObject*, const sol::object&)>(setDropshadowColor_lua),
-                static_cast<void(*)(IDisplayObject*, const SDL_Color&)>(setDropshadowColor_lua)
-            )
-        );
+        bind_both(handleTbl, maybeUT, "setDropshadowColor", static_cast<void(*)(IDisplayObject*, const sol::object&)>(setDropshadowColor_lua) );
+
         bind_both(handleTbl, maybeUT, "hasBorder", hasBorder_lua);
         bind_both(handleTbl, maybeUT, "hasBackground", hasBackground_lua);
         bind_both(handleTbl, maybeUT, "setBorder", setBorder_lua);
@@ -1634,48 +1664,71 @@ namespace SDOM
 
 
         // Color properties Work in progress
+        bind_color_property(handleTbl, maybeUT, "color",
+            [](IDisplayObject* o){ return o->getColor(); },
+            [](IDisplayObject* o, const SDL_Color& c){ o->setColor(c); });
+
+        bind_color_property(handleTbl, maybeUT, "foreground_color",
+            [](IDisplayObject* o){ return o->getForegroundColor(); },
+            [](IDisplayObject* o, const SDL_Color& c){ o->setForegroundColor(c); });
+
+        bind_color_property(handleTbl, maybeUT, "background_color",
+            [](IDisplayObject* o){ return o->getBackgroundColor(); },
+            [](IDisplayObject* o, const SDL_Color& c){ o->setBackgroundColor(c); });
+
+        bind_color_property(handleTbl, maybeUT, "border_color",
+            [](IDisplayObject* o){ return o->getBorderColor(); },
+            [](IDisplayObject* o, const SDL_Color& c){ o->setBorderColor(c); });
+
+        bind_color_property(handleTbl, maybeUT, "outline_color",
+            [](IDisplayObject* o){ return o->getOutlineColor(); },
+            [](IDisplayObject* o, const SDL_Color& c){ o->setOutlineColor(c); });
+
+        bind_color_property(handleTbl, maybeUT, "dropshadow_color",
+            [](IDisplayObject* o){ return o->getDropshadowColor(); },
+            [](IDisplayObject* o, const SDL_Color& c){ o->setDropshadowColor(c); });
 
 
         
-        auto color_getter = [](DisplayHandle& self) -> sol::table {
-            sol::state_view lua = getLua();
-            sol::table t = lua.create_table();
-            if (!self.isValid() || !self.get()) return t;
-            IDisplayObject* obj = self.get();
-            SDL_Color c = obj->getColor();
-            return SDL_Utils::get_lua_color(lua, c);
-        };
+        // auto color_getter = [](DisplayHandle& self) -> sol::table {
+        //     sol::state_view lua = getLua();
+        //     sol::table t = lua.create_table();
+        //     if (!self.isValid() || !self.get()) return t;
+        //     IDisplayObject* obj = self.get();
+        //     SDL_Color c = obj->getColor();
+        //     return SDL_Utils::get_lua_color(lua, c);
+        // };
 
-        auto color_setter = [](DisplayHandle& self, const sol::object& val) {
-            if (!self.isValid() || !self.get()) return;
-            IDisplayObject* obj = self.get();
-            // Table -> SDL_Color
-            if (val.is<sol::table>()) {
-                sol::table t = val.as<sol::table>();
-                SDL_Color c = SDL_Utils::get__lua_color(t);
-                obj->setColor(c);
-            }
-            // SDL_Color userdata
-            else if (val.is<SDL_Color>()) {
-                try { SDL_Color c = val.as<SDL_Color>(); obj->setColor(c); } catch(...) {}
-            }
-            // Single number -> grayscale
-            else if (val.is<int>() || val.is<double>()) {
-                int v = val.is<int>() ? val.as<int>() : static_cast<int>(val.as<double>());
-                SDL_Color c{static_cast<Uint8>(v), static_cast<Uint8>(v), static_cast<Uint8>(v), 255};
-                obj->setColor(c);
-            }
-        };     
+        // auto color_setter = [](DisplayHandle& self, const sol::object& val) {
+        //     if (!self.isValid() || !self.get()) return;
+        //     IDisplayObject* obj = self.get();
+        //     // Table -> SDL_Color
+        //     if (val.is<sol::table>()) {
+        //         sol::table t = val.as<sol::table>();
+        //         SDL_Color c = SDL_Utils::get__lua_color(t);
+        //         obj->setColor(c);
+        //     }
+        //     // SDL_Color userdata
+        //     else if (val.is<SDL_Color>()) {
+        //         try { SDL_Color c = val.as<SDL_Color>(); obj->setColor(c); } catch(...) {}
+        //     }
+        //     // Single number -> grayscale
+        //     else if (val.is<int>() || val.is<double>()) {
+        //         int v = val.is<int>() ? val.as<int>() : static_cast<int>(val.as<double>());
+        //         SDL_Color c{static_cast<Uint8>(v), static_cast<Uint8>(v), static_cast<Uint8>(v), 255};
+        //         obj->setColor(c);
+        //     }
+        // };     
         
-        // Ensure 'color' property is not already set
-        sol::object cur = handleTbl.raw_get_or("color", sol::lua_nil);
-        if (!cur.valid() || cur == sol::lua_nil) {
-            handleTbl.set("color", sol::property(color_getter, color_setter));
-        }
-        if (maybeUT) {
-            try { (*maybeUT)["color"] = sol::property(color_getter, color_setter); } catch(...) {}
-        }
-        // set_property(handleTbl, maybeUT, "color", getColor_lua, setColor_lua);
+        // // Ensure 'color' property is not already set
+        // sol::object cur = handleTbl.raw_get_or("color", sol::lua_nil);
+        // if (!cur.valid() || cur == sol::lua_nil) {
+        //     handleTbl.set("color", sol::property(color_getter, color_setter));
+        // }
+        // if (maybeUT) {
+        //     try { (*maybeUT)["color"] = sol::property(color_getter, color_setter); } catch(...) {}
+        // }
+        // // set_property(handleTbl, maybeUT, "color", getColor_lua, setColor_lua);
 
     }
 

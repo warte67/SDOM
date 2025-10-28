@@ -108,10 +108,15 @@ namespace SDOM
             t.set_function("keyToAscii", [](SDL_Keycode kc, SDL_Keymod km) { return SDL_Utils::keyToAscii(kc, km); });
 
             // Allow both SDL.Delay(6000) and SDL:Delay(6000) (method-style which passes the table as first arg)
-            t.set_function("Delay", sol::overload(
-                [](Uint32 ms) { SDL_Delay(ms); },
-                [](const sol::table&, Uint32 ms) { SDL_Delay(ms); }
-            ));
+            t.set_function("delay", [](sol::this_state, sol::variadic_args va) {
+                Uint32 ms = 0;
+                for (auto arg : va) {
+                    if (arg.is<Uint32>()) { ms = arg.as<Uint32>(); break; }
+                    if (arg.is<int>()) { ms = static_cast<Uint32>(arg.as<int>()); break; }
+                    if (arg.is<double>()) { ms = static_cast<Uint32>(arg.as<double>()); break; }
+                }
+                SDL_Delay(ms);
+            });
 
             // Convert an SDL_Event into a Lua table (returns table or nil on failure)
             t.set_function("eventToLuaTable", [lua](const SDL_Event& ev) -> sol::object {
@@ -127,6 +132,11 @@ namespace SDOM
                 }
                 return sol::object(lua, sol::lua_nil);
             });
+
+            // Allow colon-style calls by setting __index to self
+            sol::table meta = lua.create_table();
+            meta["__index"] = t;                 // Make colon calls work automatically
+            t[sol::metatable_key] = meta;            
 
             // Expose under both names for convenience
             lua["SDL_Utils"] = t;

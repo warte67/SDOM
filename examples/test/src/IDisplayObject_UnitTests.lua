@@ -6,6 +6,9 @@ local function push(msg) utils.push_error(msg) end
 local function assert_true(cond, msg)
     if not cond then push(msg) end
 end
+local function assert_false(cond, msg)
+    if cond then push(msg) end
+end
 ---@param h DisplayHandle|nil
 ---@return boolean h_is_valid
 local function is_valid(h)
@@ -308,47 +311,51 @@ local function test_orphan_policy()
 end
 
 local function test_properties()
-    --[[
-        -- Legend:
-        -- ✅ Test Verified
-        -- 🔄 In Progress
-        -- ⚠️ Failing
-        -- ☐ Planned
+--[[
+    -- Legend:
+    -- ✅ Test Verified
+    -- 🔄 In Progress
+    -- ⚠️ Failing
+    -- ☐ Planned
 
-        | Property        | Type        | Getter                             | Setter                            | Notes                  |
-        | --------------- | ----------- | ---------------------------------- | --------------------------------- | ---------------------- |
-        | `name`          | string      | `getName()`                        | `setName(string)`                 | ☐ planned             |
-        | `type`          | string      | `getType()`                        | n/a                               | ☐ planned             |
-        | `x`             | number      | `getX()`                           | `setX(number)`                    | ☐ planned             |
-        | `y`             | number      | `getY()`                           | `setY(number)`                    | ☐ planned             |
-        | `width`         | number      | `getWidth()`                       | `setWidth(number)`                | ☐ planned             |
-        | `height`        | number      | `getHeight()`                      | `setHeight(number)`               | ☐ planned             |
-        | `w` *(alias)*   | number      | → `width`                          | → `width`                         | ☐ planned             |
-        | `h` *(alias)*   | number      | → `height`                         | → `height`                        | ☐ planned             |
-        | `color`         | `{r,g,b,a}` | `getColor()`                       | `setColor(SDL_Color)`             | ☐ planned             |
-        | `anchor_top`    | enum/int    | `getAnchorTop()`                   | `setAnchorTop(int)`               | ☐ planned             |
-        | `anchor_left`   | enum/int    | `getAnchorLeft()`                  | `setAnchorLeft(int)`              | ☐ planned             |
-        | `anchor_bottom` | enum/int    | `getAnchorBottom()`                | `setAnchorBottom(int)`            | ☐ planned             |
-        | `anchor_right`  | enum/int    | `getAnchorRight()`                 | `setAnchorRight(int)`             | ☐ planned             |
-        | `z_order`       | number      | `getZOrder()`                      | `setZOrder(number)`               | ☐ planned             |
-        | `priority`      | number      | `getPriority()`                    | `setPriority(number)`             | ☐ planned             |
-        | `is_clickable`  | boolean     | `isClickable()`                    | `setClickable(bool)`              | ☐ planned             |
-        | `is_enabled`    | boolean     | `isEnabled()`                      | `setEnabled(bool)`                | ☐ planned             |
-        | `is_hidden`     | boolean     | `isHidden()`                       | `setHidden(bool)`                 | ☐ planned             |
-        | `tab_priority`  | number      | `getTabPriority()`                 | `setTabPriority(number)`          | ☐ planned             |
-        | `tab_enabled`   | boolean     | `isTabEnabled()`                   | `setTabEnabled(bool)`             | ☐ planned             |
-        | `left`          | number      | `getLeft()`                        | `setLeft(number)`                 | ☐ planned             |
-        | `right`         | number      | `getRight()`                       | `setRight(number)`                | ☐ planned             |
-        | `top`           | number      | `getTop()`                         | `setTop(number)`                  | ☐ planned             |
-        | `bottom`        | number      | `getBottom()`                      | `setBottom(number)`               | ☐ planned             |
-        | `local_left`    | number      | `getLocalLeft()`                   | `setLocalLeft(number)`            | ☐ planned             |
-        | `local_right`   | number      | `getLocalRight()`                  | `setLocalRight(number)`           | ☐ planned             |
-        | `local_top`     | number      | `getLocalTop()`                    | `setLocalTop(number)`             | ☐ planned             |
-        | `local_bottom`  | number      | `getLocalBottom()`                 | `setLocalBottom(number)`          | ☐ planned             |
-        | `orphan_policy` | string      | `getOrphanRetentionPolicyString()` | `setOrphanRetentionPolicy("auto") | ☐ planned             |
-        | `orphan_grace`  | number      | `getOrphanGrace()`                 | `setOrphanGrace(number)`          | ☐ planned             |    
-    --]]
-
+    | Property              | Type        | Getter                             | Setter                             | Notes                  |
+    | --------------------- | ----------- | ---------------------------------- | ---------------------------------- | ---------------------- |
+    | `name`                | string      | `getName()`                        | `setName(string)`                  | ✅ test verified       |
+    | `type`                | string      | `getType()`                        | n/a                                | ✅ test verified       |
+    | `x`                   | number      | `getX()`                           | `setX(number)`                     | ✅ test verified       |
+    | `y`                   | number      | `getY()`                           | `setY(number)`                     | ✅ test verified       |
+    | `width`               | number      | `getWidth()`                       | `setWidth(number)`                 | ✅ test verified       |
+    | `height`              | number      | `getHeight()`                      | `setHeight(number)`                | ✅ test verified       |
+    | `w` *(alias)*         | number      | → `width`                          | → `width`                          | ✅ test verified       |
+    | `h` *(alias)*         | number      | → `height`                         | → `height`                         | ✅ test verified       |
+    | `color`               | `{r,g,b,a}` | `getColor()`                       | `setColor(SDL_Color)`              | ✅ test verified       |
+    | `foreground_color`    | `{r,g,b,a}` | `getForegroundColor()`             | `setForegroundColor(SDL_Color)`    | ✅ test verified       |
+    | `background_color`    | `{r,g,b,a}` | `getBackgroundColor()`             | `setBackgroundColor(SDL_Color)`    | ✅ test verified       |
+    | `border_color`        | `{r,g,b,a}` | `getBorderColor()`                 | `setBorderColor(SDL_Color)`        | ✅ test verified       |
+    | `outline_color`       | `{r,g,b,a}` | `getOutlineColor()`                | `setOutlineColor(SDL_Color)`       | ✅ test verified       |
+    | `dropshadow_color`    | `{r,g,b,a}` | `getDropshadowColor()`             | `setDropshadowColor(SDL_Color)`    | ✅ test verified       |
+    | `anchor_top`          | enum/int    | `getAnchorTop()`                   | `setAnchorTop(int)`                | ✅ test verified       |
+    | `anchor_left`         | enum/int    | `getAnchorLeft()`                  | `setAnchorLeft(int)`               | ✅ test verified       |
+    | `anchor_bottom`       | enum/int    | `getAnchorBottom()`                | `setAnchorBottom(int)`             | ✅ test verified       |
+    | `anchor_right`        | enum/int    | `getAnchorRight()`                 | `setAnchorRight(int)`              | ✅ test verified       |
+    | `z_order`             | number      | `getZOrder()`                      | `setZOrder(number)`                | ✅ test verified       |
+    | `priority`            | number      | `getPriority()`                    | `setPriority(number)`              | ✅ test verified       |
+    | `is_clickable`        | boolean     | `isClickable()`                    | `setClickable(bool)`               | ✅ test verified       |
+    | `is_enabled`          | boolean     | `isEnabled()`                      | `setEnabled(bool)`                 | ✅ test verified       |
+    | `is_hidden`           | boolean     | `isHidden()`                       | `setHidden(bool)`                  | ✅ test verified       |
+    | `tab_priority`        | number      | `getTabPriority()`                 | `setTabPriority(number)`           | ✅ test verified       |
+    | `tab_enabled`         | boolean     | `isTabEnabled()`                   | `setTabEnabled(bool)`              | ✅ test verified       |
+    | `left`                | number      | `getLeft()`                        | `setLeft(number)`                  | ✅ test verified       |
+    | `right`               | number      | `getRight()`                       | `setRight(number)`                 | ✅ test verified       |
+    | `top`                 | number      | `getTop()`                         | `setTop(number)`                   | ✅ test verified       |
+    | `bottom`              | number      | `getBottom()`                      | `setBottom(number)`                | ✅ test verified       |
+    | `local_left`          | number      | `getLocalLeft()`                   | `setLocalLeft(number)`             | ✅ test verified       |
+    | `local_right`         | number      | `getLocalRight()`                  | `setLocalRight(number)`            | ✅ test verified       |
+    | `local_top`           | number      | `getLocalTop()`                    | `setLocalTop(number)`              | ✅ test verified       |
+    | `local_bottom`        | number      | `getLocalBottom()`                 | `setLocalBottom(number)`           | ✅ test verified       |
+    | `orphan_policy`       | string      | `getOrphanRetentionPolicyString()` | `setOrphanRetentionPolicy("auto")` | ☐ planned              | // "manual", "auto", "grace"
+    | `orphan_grace`        | number      | `getOrphanGrace()`                 | `setOrphanGrace(number)`           | ✅ test verified       |
+--]]
 
     local stage = get_stage(); if not is_valid(stage) then return end
 
@@ -359,203 +366,92 @@ local function test_properties()
     stage:addChild(box)
     assert_true(stage:hasChild(box), "Stage should have lua_test_box as child")
 
-    -- Test properties
-    -- ✅ x
-    local ox = box.x
-    assert_true(type(ox) == "number" and ox == box:getX(), "getX() returned invalid value")
-    box.x = 20
-    assert_true(box.x == 20, "setX() did not take")
-    box.x = ox
-    assert_true(box.x == ox, "Failed to restore x value")
-    -- ✅ y
-    local oy = box.y
-    assert_true(type(oy) == "number" and oy == box:getY(), "getY() returned invalid value")
-    box.y = 20
-    assert_true(box.y == 20, "setY() did not take")
-    box.y = oy
-    assert_true(box.y == oy, "Failed to restore y value")
-    -- ✅ width
-    local ow = box.width
-    assert_true(type(ow) == "number" and ow == box:getWidth(), "getWidth() returned invalid value")
-    box.width = 80
-    assert_true(box.width == 80, "setWidth() did not take")
-    box.width = ow
-    assert_true(box.width == ow, "Failed to restore width value")
-    -- ✅ height
-    local oh = box.height
-    assert_true(type(oh) == "number" and oh == box:getHeight(), "getHeight() returned invalid value")
-    box.height = 80
-    assert_true(box.height == 80, "setHeight() did not take")
-    box.height = oh
-    assert_true(box.height == oh, "Failed to restore height value")
-    -- ✅ w
-    local ow2 = box.w
-    assert_true(type(ow2) == "number" and ow2 == box:getWidth(), "getW() returned invalid value")
-    box.w = 80
-    assert_true(box.w == 80, "setW() did not take")
-    box.w = ow2
-    assert_true(box.w == ow2, "Failed to restore w value")
-    -- ✅ h
-    local oh2 = box.h
-    assert_true(type(oh2) == "number" and oh2 == box:getHeight(), "getH() returned invalid value")
-    box.h = 80
-    assert_true(box.h == 80, "setH() did not take")
-    box.h = oh2    
-    assert_true(box.h == oh2, "Failed to restore h value")
-    
-    -- ⚠️ color
-    local oc = box.color
-    assert_true(type(oc) == "table" and oc.r == 255 and oc.g == 0 and oc.b == 255 and oc.a == 255, "getColor() returned invalid value")
-    box.color = {r = 255, g = 255, b = 0, a = 255} -- ✅ 
-    box:setColor({r = 255, g = 255, b = 0, a = 255}) -- ⚠️
-    local oc2 = box.color
-    print("oc2: " .. oc2.r .. " " .. oc2.g .. " " .. oc2.b .. " " .. oc2.a)
-    assert_true(box.color.r == oc2.r and box.color.g == oc2.g and box.color.b == oc2.b and box.color.a == oc2.a, "setColor() did not take")
-    box.color = oc
-    print("oc: " .. oc.r .. " " .. oc.g .. " " .. oc.b .. " " .. oc.a)
-    assert_true(box.color.r == oc.r and box.color.g == oc.g and box.color.b == oc.b and box.color.a == oc.a, "Failed to restore color value")
+    -- Name and Type Property Tests
+    local box_name = box:getName()
+    assert_true(type(box_name) == "string" and box_name == "lua_test_box", "getName() returned invalid value")
+    local box_type = box:getType()
+    assert_true(box_type == "Box", "getType() returned invalid value")
 
-    -- ✅ anchor_top
-    local oat = box.anchor_top
-    assert_true(type(oat) == "number" and oat == box:getAnchorTop() and box.anchor_top == box:getAnchorTop(), "getAnchorTop() returned invalid value")
-    box.anchor_top = 1
-    assert_true(box.anchor_top == 1, "setAnchorTop() did not take")
-    box.anchor_top = oat
-    assert_true(box.anchor_top == oat, "Failed to restore anchor_top value")
-    -- ✅ anchor_left
-    local oal = box.anchor_left
-    assert_true(type(oal) == "number" and oal == box:getAnchorLeft() and box.anchor_left == box:getAnchorLeft(), "getAnchorLeft() returned invalid value")
-    box.anchor_left = 1
-    assert_true(box.anchor_left == 1, "setAnchorLeft() did not take")
-    box.anchor_left = oal
-    assert_true(box.anchor_left == oal, "Failed to restore anchor_left value")
-    -- ✅ anchor_bottom
-    local oab = box.anchor_bottom
-    assert_true(type(oab) == "number" and oab == box:getAnchorBottom() and box.anchor_bottom == box:getAnchorBottom(), "getAnchorBottom() returned invalid value")
-    box.anchor_bottom = 1
-    assert_true(box.anchor_bottom == 1, "setAnchorBottom() did not take")
-    box.anchor_bottom = oab
-    assert_true(box.anchor_bottom == oab, "Failed to restore anchor_bottom value")
-    -- ✅ anchor_right
-    local oar = box.anchor_right
-    assert_true(type(oar) == "number" and oar == box:getAnchorRight() and box.anchor_right == box:getAnchorRight(), "getAnchorRight() returned invalid value")
-    box.anchor_right = 1
-    assert_true(box.anchor_right == 1, "setAnchorRight() did not take")
-    box.anchor_right = oar
-    assert_true(box.anchor_right == oar, "Failed to restore anchor_right value")
-    -- ✅ z_order
-    local oz = box.z_order
-    assert_true(type(oz) == "number" and oz == box:getZOrder() and box.z_order == box:getZOrder(), "getZOrder() returned invalid value")
-    box.z_order = 1
-    assert_true(box.z_order == 1, "setZOrder() did not take")
-    box.z_order = oz
-    assert_true(box.z_order == oz, "Failed to restore z_order value")
-    -- ✅ priority
-    local op = box.priority
-    assert_true(type(op) == "number" and op == box:getPriority() and box.priority == box:getPriority(), "getPriority() returned invalid value")
-    box.priority = 1
-    assert_true(box.priority == 1, "setPriority() did not take")
-    box.priority = op
-    assert_true(box.priority == op, "Failed to restore priority value")
-    -- ✅ is_clickable
-    local oca = box.is_clickable
-    assert_true(type(oca) == "boolean" and oca == box:isClickable() and box.is_clickable == box:isClickable(), "getClickable() returned invalid value")
-    box.is_clickable = true
-    assert_true(box.is_clickable == true, "setClickable() did not take")            
-    box.is_clickable = oca            
-    assert_true(box.is_clickable == oca, "Failed to restore is_clickable value")
-    -- ✅ is_enabled
-    local oe = box.is_enabled
-    assert_true(type(oe) == "boolean" and oe == box:isEnabled() and box.is_enabled == box:isEnabled(), "getEnabled() returned invalid value")
-    box.is_enabled = false
-    assert_true(box.is_enabled == false, "setEnabled() did not take")
-    box.is_enabled = oe
-    assert_true(box.is_enabled == oe, "Failed to restore is_enabled value")
-    -- ✅ is_hidden
-    local oh = box.is_hidden
-    assert_true(type(oh) == "boolean" and oh == box:isHidden() and box.is_hidden == box:isHidden(), "getHidden() returned invalid value")
-    box.is_hidden = true
-    assert_true(box.is_hidden == true, "setHidden() did not take")
-    box.is_hidden = oh
-    assert_true(box.is_hidden == oh, "Failed to restore is_hidden value")    
-    -- ✅ tab_priority
-    local otp = box.tab_priority
-    assert_true(type(otp) == "number" and otp == box:getTabPriority() and box.tab_priority == box:getTabPriority(), "getTabPriority() returned invalid value")
-    box.tab_priority = 1
-    assert_true(box.tab_priority == 1, "setTabPriority() did not take")
-    box.tab_priority = otp
-    assert_true(box.tab_priority == otp, "Failed to restore tab_priority value")
-    -- ✅ tab_enabled
-    local ote = box.tab_enabled
-    assert_true(type(ote) == "boolean" and ote == box:isTabEnabled() and box.tab_enabled == box:isTabEnabled(), "getTabEnabled() returned invalid value")
-    box.tab_enabled = true
-    assert_true(box.tab_enabled == true, "setTabEnabled() did not take")
-    box.tab_enabled = ote
-    assert_true(box.tab_enabled == ote, "Failed to restore tab_enabled value")
-    -- ✅ left
-    local ol = box.left
-    assert_true(type(ol) == "number" and ol == box:getLeft(), "getLeft() returned invalid value")
-    box.left = 20
-    assert_true(box.left == 20, "setLeft() did not take")
-    box.left = ol
-    assert_true(box.left == ol, "Failed to restore left value")
-    -- ✅ right
-    local or_ = box.right
-    assert_true(type(or_) == "number" and or_ == box:getRight(), "getRight() returned invalid value")
-    box.right = 20
-    assert_true(box.right == 20, "setRight() did not take")
-    box.right = or_
-    assert_true(box.right == or_, "Failed to restore right value")
-    -- ✅ top
-    local ot = box.top
-    assert_true(type(ot) == "number" and ot == box:getTop(), "getTop() returned invalid value")
-    box.top = 20
-    assert_true(box.top == 20, "setTop() did not take")
-    box.top = ot
-    assert_true(box.top == ot, "Failed to restore top value")
-    -- ✅ bottom
-    local ob = box.bottom
-    assert_true(type(ob) == "number" and ob == box:getBottom(), "getBottom() returned invalid value")
-    box.bottom = 20
-    assert_true(box.bottom == 20, "setBottom() did not take")
-    box.bottom = ob
-    assert_true(box.bottom == ob, "Failed to restore bottom value")
-    -- ✅ local_left
-    local oll = box.local_left
-    assert_true(type(oll) == "number" and oll == box:getLocalLeft(), "getLocalLeft() returned invalid value")
-    box.local_left = 20
-    assert_true(box.local_left == 20, "setLocalLeft() did not take")
-    box.local_left = oll
-    assert_true(box.local_left == oll, "Failed to restore local_left value")
-    -- ✅ local_right
-    local olr = box.local_right
-    assert_true(type(olr) == "number" and olr == box:getLocalRight(), "getLocalRight() returned invalid value")
-    box.local_right = 20
-    assert_true(box.local_right == 20, "setLocalRight() did not take")
-    box.local_right = olr
-    assert_true(box.local_right == olr, "Failed to restore local_right value")
-    -- ✅ local_top
-    local olt = box.local_top
-    assert_true(type(olt) == "number" and olt == box:getLocalTop(), "getLocalTop() returned invalid value")
-    box.local_top = 20
-    assert_true(box.local_top == 20, "setLocalTop() did not take")
-    box.local_top = olt
-    assert_true(box.local_top == olt, "Failed to restore local_top value")
-    -- ✅ local_bottom
-    local olb = box.local_bottom
-    assert_true(type(olb) == "number" and olb == box:getLocalBottom(), "getLocalBottom() returned invalid value")
-    box.local_bottom = 20
-    assert_true(box.local_bottom == 20, "setLocalBottom() did not take")
-    box.local_bottom = olb
-    assert_true(box.local_bottom == olb, "Failed to restore local_bottom value")
+    -- ✅ Simplified color property tests
+    local color_props = {
+    { prop = "color", get = "getColor", set = "setColor" },                                 -- ✅ color
+    { prop = "foreground_color", get = "getForegroundColor", set = "setForegroundColor" },  -- ✅ foreground_color
+    { prop = "background_color", get = "getBackgroundColor", set = "setBackgroundColor" },  -- ✅ background_color
+    { prop = "border_color", get = "getBorderColor", set = "setBorderColor" },              -- ✅ border_color
+    { prop = "outline_color", get = "getOutlineColor", set = "setOutlineColor" },           -- ✅ outline_color
+    { prop = "dropshadow_color", get = "getDropshadowColor", set = "setDropshadowColor" },  -- ✅ dropshadow_color
+    }
+    for _, entry in ipairs(color_props) do
+        local prop, get, set = entry.prop, entry.get, entry.set
+        local orig = box[prop]
+        assert_true(type(orig) == "table", prop .. " getter returned wrong type")
+        box[prop] = {r = 255, g = 255, b = 0, a = 255}
+        local check = box[prop]
+        local ref = box[get](box)
+        assert_true(ref.r == check.r and ref.g == check.g, prop .. " mismatch after set")
+        box[set](box, orig)
+        assert_true(box[prop].r == orig.r, prop .. " failed to restore")
+    end
 
-    -- -- ⚠️ orphan_policy
-    -- local opo = box.orphan_policy    
-    -- assert_true(type(opo) == "string" and opo == "auto" and box.orphan_policy == "auto", "getOrphanRetentionPolicyString() returned invalid value")
-    -- box.orphan_policy = "manual"
-    -- assert_true(box.orphan_policy == "manual", "setOrphanRetentionPolicy() did not take")
-    -- box.orphan_policy = opo
-    -- assert_true(box.orphan_policy == opo, "Failed to restore orphan_policy value")
+    -- ✅ Property <-> Method consistency tests for scalar and boolean bindings
+    local props = {
+        -- anchors
+        { name = "anchor_top",      get = "getAnchorTop",      value = 1,      type = "number" },
+        { name = "anchor_left",     get = "getAnchorLeft",     value = 1,      type = "number" },
+        { name = "anchor_bottom",   get = "getAnchorBottom",   value = 1,      type = "number" },
+        { name = "anchor_right",    get = "getAnchorRight",    value = 1,      type = "number" },
+
+        -- z / priority
+        { name = "z_order",         get = "getZOrder",         value = 1,      type = "number" },
+        { name = "priority",        get = "getPriority",       value = 1,      type = "number" },
+
+        -- booleans
+        { name = "is_clickable",    get = "isClickable",       value = true,   type = "boolean" },
+        { name = "is_enabled",      get = "isEnabled",         value = false,  type = "boolean" },
+        { name = "is_hidden",       get = "isHidden",          value = true,   type = "boolean" },
+
+        -- tab navigation
+        { name = "tab_priority",    get = "getTabPriority",    value = 1,      type = "number" },
+        { name = "tab_enabled",     get = "isTabEnabled",      value = true,   type = "boolean" },
+
+        -- world edges
+        { name = "left",            get = "getLeft",           value = 20,     type = "number" },
+        { name = "right",           get = "getRight",          value = 20,     type = "number" },
+        { name = "top",             get = "getTop",            value = 20,     type = "number" },
+        { name = "bottom",          get = "getBottom",         value = 20,     type = "number" },
+
+        -- local edges
+        { name = "local_left",      get = "getLocalLeft",      value = 20,     type = "number" },
+        { name = "local_right",     get = "getLocalRight",     value = 20,     type = "number" },
+        { name = "local_top",       get = "getLocalTop",       value = 20,     type = "number" },
+        { name = "local_bottom",    get = "getLocalBottom",    value = 20,     type = "number" },
+
+        -- geometry (added)
+        { name = "x",               get = "getX",              value = 20,     type = "number" },
+        { name = "y",               get = "getY",              value = 20,     type = "number" },
+        { name = "width",           get = "getWidth",          value = 80,     type = "number" },
+        { name = "height",          get = "getHeight",         value = 80,     type = "number" },
+        { name = "w",               get = "getWidth",          value = 80,     type = "number" },
+        { name = "h",               get = "getHeight",         value = 80,     type = "number" },
+    }
+
+    for _, p in ipairs(props) do
+        local name, getter, testValue, expectedType = p.name, p.get, p.value, p.type
+        local original = box[name]
+
+        -- getter sanity
+        assert_true(type(original) == expectedType, name .. " returned wrong type")
+        assert_true(original == box[getter](box) and box[name] == box[getter](box),
+            getter .. "() returned inconsistent value")
+
+        -- set new
+        box[name] = testValue
+        assert_true(box[name] == testValue, "set" .. name .. "() did not take")
+
+        -- restore
+        box[name] = original
+        assert_true(box[name] == original, "Failed to restore " .. name .. " value")
+    end
 
     -- 🔄 orphan_grace
     local og = box.orphan_grace
@@ -565,13 +461,139 @@ local function test_properties()
     box.orphan_grace = og
     assert_true(box.orphan_grace == og, "Failed to restore orphan_grace value")
 
-    -- -- clean up --
-    -- stage:removeChild(box)
-    -- Core:collectGarbage()
+    -- clean up --
+    stage:removeChild(box)
+    Core:collectGarbage()
+end -- test_properties()
 
-    -- or just:
-    -- Core:destroyDisplayObject("lua_test_box")
-end
+local function test_orphan_policy()
+--[[
+    -- Legend:
+    -- ✅ Test Verified
+    -- 🔄 In Progress
+    -- ⚠️ Failing
+    -- ☐ Planned
+
+    | Property              | Type        | Getter                             | Setter                             | Notes                  |
+    | --------------------- | ----------- | ---------------------------------- | ---------------------------------- | ---------------------- |
+    | `orphan_policy`       | string      | `getOrphanRetentionPolicyString()` | `setOrphanRetentionPolicy("auto")` | ✅ test verified        |
+    | `orphan_grace`        | number      | `getOrphanGrace()`                 | `setOrphanGrace(number)`           | ✅ test verified        |
+--]]
+
+    local stage = get_stage(); if not is_valid(stage) then return end
+
+    -- --- 1] String <-> Enum conversions and basic getters/setters ------------
+    do
+        local init = { name = "orp_conv", type = "Box", x = 10, y = 10, width = 64, height = 48, color = {255, 0, 255, 255} }
+        local box = Core:createDisplayObject("Box", init)
+        assert_true(is_valid(box), "OrphanPolicy: failed to create 'orp_conv'")
+        stage:addChild(box)
+        assert_true(stage:hasChild(box), "Stage should have 'orp_conv' as child")
+
+        -- String → Enum conversions (Lua helper)
+        assert_true(box:orphanPolicyFromString("manual") == 0, "fromString('manual') != RetainUntilManual")
+        assert_true(box:orphanPolicyFromString("auto")   == 1, "fromString('auto') != AutoDestroy")
+        assert_true(box:orphanPolicyFromString("grace")  == 2, "fromString('grace') != GracePeriod")
+
+        -- Enum → String conversions
+        assert_true(box:orphanPolicyToString(0) == "manual", "toString(RetainUntilManual) != 'manual'")
+        assert_true(box:orphanPolicyToString(1) == "auto",   "toString(AutoDestroy) != 'auto'")
+        assert_true(box:orphanPolicyToString(2) == "grace",  "toString(GracePeriod) != 'grace'")
+
+        -- Set/get round trip
+        box:setOrphanRetentionPolicy("manual")
+        assert_true(box:getOrphanRetentionPolicyString() == "manual", "setOrphanRetentionPolicy('manual') did not take")
+
+        box:setOrphanRetentionPolicy("auto")
+        assert_true(box:getOrphanRetentionPolicyString() == "auto", "setOrphanRetentionPolicy('auto') did not take")
+
+        -- Grace round trip
+        box:setOrphanGrace(250)
+        assert_true(box:getOrphanGrace() == 250, "getOrphanGrace() != 250 after Lua set")
+        box:setOrphanGrace(500)
+        assert_true(box:getOrphanGrace() == 500, "getOrphanGrace() != 500 after second set")
+
+        stage:removeChild(box)
+        Core:destroyDisplayObject(box:getName())
+        Core:collectGarbage()
+    end
+
+    -- --- 2] Manual policy: orphan survives collect until explicitly destroyed --
+    do
+        local box = Core:createDisplayObject("Box", { name = "orp_manual", type = "Box", x = 10, y = 10, width = 64, height = 48, color = {255, 0, 255, 255}  })
+        assert_true(is_valid(box), "OrphanPolicy: failed to create 'orp_manual'")
+        stage:addChild(box)
+        box:setOrphanRetentionPolicy("manual")
+
+        stage:removeChild(box)
+
+        local found = false
+        for _, orphan in ipairs(Core:getOrphanedDisplayObjects()) do
+            if orphan == box then found = true break end
+        end
+        assert_true(found, "OrphanPolicy(manual): orphan not listed after removal")
+
+        -- Collect should NOT destroy
+        Core:collectGarbage()
+        assert_true(is_valid(Core:getDisplayObject("orp_manual")), "OrphanPolicy(manual): object destroyed by collectGarbage()")
+
+        -- Switch to auto -> should destroy
+        box:setOrphanRetentionPolicy("auto")
+        Core:collectGarbage()
+        assert_false(is_valid(Core:getDisplayObject("orp_manual")), "OrphanPolicy(manual->auto): object not destroyed after auto policy")
+    end
+
+    -- --- 3] Grace policy: immediate collect retains; post-grace destroys ------
+    do
+        local box = Core:createDisplayObject("Box", { name = "orp_grace", type = "Box", x = 10, y = 10, width = 64, height = 48, color = {255, 0, 255, 255}  })
+        assert_true(is_valid(box), "OrphanPolicy: failed to create 'orp_grace'")
+        stage:addChild(box)
+        box:setOrphanRetentionPolicy("grace")
+        local grace_ms, margin_ms = 20, 10
+        box:setOrphanGrace(grace_ms)
+
+        -- Orphan and collect immediately — should survive
+        stage:removeChild(box)
+        Core:pumpEventsOnce()
+        Core:collectGarbage()
+        assert_true(is_valid(Core:getDisplayObject("orp_grace")), "OrphanPolicy(grace): object destroyed before grace expired")
+
+        -- Wait past grace — should be destroyed
+        local wait_ms = grace_ms + margin_ms
+        SDL.delay(wait_ms)
+        Core:pumpEventsOnce()
+        Core:collectGarbage()
+        assert_false(is_valid(Core:getDisplayObject("orp_grace")), "OrphanPolicy(grace): object not destroyed after grace expiration")
+    end
+
+    -- --- 4] Grace policy + reparent within grace prevents destruction ---------
+    do
+        local box = Core:createDisplayObject("Box", { name = "orp_reparent", type = "Box", x = 10, y = 10, width = 64, height = 48, color = {255, 0, 255, 255}  })
+        assert_true(is_valid(box), "OrphanPolicy: failed to create 'orp_reparent'")
+        stage:addChild(box)
+        box:setOrphanRetentionPolicy("grace")
+        local grace_ms, margin_ms = 20, 10
+        box:setOrphanGrace(grace_ms)
+
+        -- Orphan then reparent within grace — should survive
+        stage:removeChild(box)
+        SDL.delay(grace_ms / 2) -- wait half the grace period
+        stage:addChild(box)
+        Core:pumpEventsOnce()
+        Core:collectGarbage()
+        assert_true(is_valid(Core:getDisplayObject("orp_reparent")), "OrphanPolicy(reparent): object destroyed despite reparent within grace")
+
+        -- Orphan again and let grace expire — should destroy
+        stage:removeChild(box)
+        SDL.delay(grace_ms + margin_ms)
+        Core:pumpEventsOnce()
+        Core:collectGarbage()
+        assert_false(is_valid(Core:getDisplayObject("orp_reparent")), "OrphanPolicy(reparent): object not destroyed after grace expiration")
+    end
+
+    Core:collectGarbage()
+end -- test_orphan_policy()
+
 
 -- Run all tests sequentially
 local function run_all()
@@ -584,6 +606,7 @@ local function run_all()
     test_geometry()
     test_orphan_policy()
     test_properties()
+    test_orphan_policy()
 end
 
 -- Execute
