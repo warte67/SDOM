@@ -551,13 +551,6 @@ EventType = EventType or {}
 ---@field orphan_grace number   -- mirrors getOrphanGrace()/setOrphanGrace()
 ---@field orphan_policy string  -- mirrors getOrphanRetentionPolicyString()/setOrphanRetentionPolicy()
 
----@class SDL_Color
----@field r integer Red component (0–255)
----@field g integer Green component (0–255)
----@field b integer Blue component (0–255)
----@field a integer Alpha component (0–255)
-local SDL_Color = {}
-
 ---Creates a new SDL_Color
 ---@param r integer|nil
 ---@param g integer|nil
