@@ -1222,7 +1222,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - All **Core** methods are now properly bound and tested in C++ and Lua.
     - All **Factory** methods are now properly bound and tested in C++ and Lua.
 
-Below is the current status of all exposed **IDisplayObject** properties and methods.
+Below is the current status of all exposed **IDisplayObject** properties:
 | Property              | Type        | Getter                             | Setter                             | Notes                  |
 | --------------------- | ----------- | ---------------------------------- | ---------------------------------- | ---------------------- |
 | name                  | string      | getName()                          | setName(string)                    | ✅ test verified       |
