@@ -113,7 +113,7 @@ var SDOM__IDisplayObject__Lua_8cpp =
     [ "SDOM::setLocalRight_lua", "namespaceSDOM.html#af508f0daadf88aabff2cac9b06547469", null ],
     [ "SDOM::setLocalTop_lua", "namespaceSDOM.html#a2de9188866b1d2bc1ef8702a225af224", null ],
     [ "SDOM::setName_lua", "namespaceSDOM.html#a0597223417acde60cab9946b7d6c3ae0", null ],
-    [ "SDOM::setOrphanGrace_lua", "namespaceSDOM.html#ad6ad76e2aa96ee58b9dab16d090226c4", null ],
+    [ "SDOM::setOrphanGrace_lua", "namespaceSDOM.html#a49ceaad8575f7938e64a6df14e4fd585", null ],
     [ "SDOM::setOrphanRetentionPolicy_lua", "namespaceSDOM.html#aef6a2e53b274906f1380d1bb5b295605", null ],
     [ "SDOM::setOutlineColor_lua", "namespaceSDOM.html#a90cf56b01cb8fcd72960bb9fd656f0b2", null ],
     [ "SDOM::setOutlineColor_lua", "namespaceSDOM.html#a9bffcd56b9969bee41211e38f76ef9db", null ],

@@ -7,10 +7,13 @@ var searchData=
   ['unit_5ftests_5fenabled_4',['UNIT_TESTS_ENABLED',['../SDOM_8hpp.html#a7c571a0694bc144f311b87cc6ad2a600',1,'SDOM.hpp']]],
   ['unittests_5',['UnitTests',['../classSDOM_1_1UnitTests.html',1,'SDOM::UnitTests'],['../classSDOM_1_1UnitTests.html#a1e79ed95db86daf166bb72932fed97b5',1,'SDOM::UnitTests::UnitTests()']]],
   ['unloadallassetobjects_6',['unloadAllAssetObjects',['../classSDOM_1_1Factory.html#a92857a9cfdd74f81608f52781a5c2e17',1,'SDOM::Factory']]],
-  ['up_7',['Up',['../classSDOM_1_1ArrowButton.html#a6559c1ade1061b6e6a525f599b06a12ca258f49887ef8d14ac268c92b02503aaa',1,'SDOM::ArrowButton::Up'],['../namespaceSDOM.html#af652715c3e637c795824fa0afedda425a258f49887ef8d14ac268c92b02503aaa',1,'SDOM::Up']]],
-  ['use_5fborder_5f_8',['use_border_',['../classSDOM_1_1TristateButton.html#aad22aeae4ac071b8b160ae515b3debca',1,'SDOM::TristateButton']]],
-  ['usecapture_9',['useCapture',['../classSDOM_1_1Event.html#af5e49b7da66ac7d4c092ddd582524db9',1,'SDOM::Event']]],
-  ['user_10',['User',['../classSDOM_1_1EventType.html#aed0c4427ac3ac52e140f425fdab9452d',1,'SDOM::EventType']]],
-  ['userfontheightspecified_5f_11',['userFontHeightSpecified_',['../classSDOM_1_1Label.html#a985d979b48032813395c132af252e5f0',1,'SDOM::Label']]],
-  ['userfontwidthspecified_5f_12',['userFontWidthSpecified_',['../classSDOM_1_1Label.html#a9211e371b24e39b7bfa0dfdc223217dd',1,'SDOM::Label']]]
+  ['unloadallassetobjects_5flua_7',['unloadAllAssetObjects_lua',['../namespaceSDOM.html#a67a7b239ebad915633806c57f4d112c0',1,'SDOM']]],
+  ['up_8',['Up',['../classSDOM_1_1ArrowButton.html#a6559c1ade1061b6e6a525f599b06a12ca258f49887ef8d14ac268c92b02503aaa',1,'SDOM::ArrowButton::Up'],['../namespaceSDOM.html#af652715c3e637c795824fa0afedda425a258f49887ef8d14ac268c92b02503aaa',1,'SDOM::Up']]],
+  ['update_5fcalls_9',['update_calls',['../structSDOM_1_1Factory_1_1PerfStats.html#ac4ac2ac5e764eea40a8a712fd04fbc75',1,'SDOM::Factory::PerfStats']]],
+  ['update_5ftime_5fns_10',['update_time_ns',['../structSDOM_1_1Factory_1_1PerfStats.html#a3a829961b66d7bff63588e5abad4ee7f',1,'SDOM::Factory::PerfStats']]],
+  ['use_5fborder_5f_11',['use_border_',['../classSDOM_1_1TristateButton.html#aad22aeae4ac071b8b160ae515b3debca',1,'SDOM::TristateButton']]],
+  ['usecapture_12',['useCapture',['../classSDOM_1_1Event.html#af5e49b7da66ac7d4c092ddd582524db9',1,'SDOM::Event']]],
+  ['user_13',['User',['../classSDOM_1_1EventType.html#aed0c4427ac3ac52e140f425fdab9452d',1,'SDOM::EventType']]],
+  ['userfontheightspecified_5f_14',['userFontHeightSpecified_',['../classSDOM_1_1Label.html#a985d979b48032813395c132af252e5f0',1,'SDOM::Label']]],
+  ['userfontwidthspecified_5f_15',['userFontWidthSpecified_',['../classSDOM_1_1Label.html#a9211e371b24e39b7bfa0dfdc223217dd',1,'SDOM::Label']]]
 ];

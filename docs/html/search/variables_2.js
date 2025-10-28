@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['cachedtexture_5f_0',['cachedTexture_',['../classSDOM_1_1Label.html#ab632f26d3d9631d937cb1cd2b7933025',1,'SDOM::Label']]],
+  ['cachedtexture_5f_0',['cachedTexture_',['../classSDOM_1_1IPanelObject.html#a122a423e83004b61d76c35fae172e4fe',1,'SDOM::IPanelObject::cachedTexture_'],['../classSDOM_1_1IRangeControl.html#ac1f34d41307fe000db535d9864504aed',1,'SDOM::IRangeControl::cachedTexture_'],['../classSDOM_1_1Label.html#ab632f26d3d9631d937cb1cd2b7933025',1,'SDOM::Label::cachedTexture_']]],
   ['captureeventlisteners_1',['captureEventListeners',['../classSDOM_1_1IDisplayObject.html#a68f4feb1225ef803feb4d7689d7f1d27',1,'SDOM::IDisplayObject']]],
   ['checkbox_5fchecked_2',['CHECKBOX_CHECKED',['../classCLR.html#a7bb32fe1d3c222f646e46794e848b2ca',1,'CLR']]],
   ['checkbox_5fcrossed_3',['CHECKBOX_CROSSED',['../classCLR.html#aa631d66bd3211f8f0e4e0015f0eef2ab',1,'CLR']]],
@@ -16,9 +16,12 @@ var searchData=
   ['content_5fsize_5f_13',['content_size_',['../classSDOM_1_1ScrollBar.html#ac30915c772b6a50ec84f8b490a8cf606',1,'SDOM::ScrollBar']]],
   ['core_14',['Core',['../classSDOM_1_1AssetHandle.html#a3f4058eb772531ffeb00b58ffb8287c2',1,'SDOM::AssetHandle::Core'],['../classSDOM_1_1IFontObject.html#a41dc94c0c6b829f8e43561f2105a19ba',1,'SDOM::IFontObject::Core'],['../classSDOM_1_1Label.html#a9d9595e04e3bd70c9d8b2ce589ccf6de',1,'SDOM::Label::Core'],['../classSDOM_1_1SpriteSheet.html#abc59587f33d400af3e064d992c884a05',1,'SDOM::SpriteSheet::Core'],['../classSDOM_1_1Texture.html#a356c05437c222106e30a6671dccd81c4',1,'SDOM::Texture::Core'],['../classSDOM_1_1TTFAsset.html#a9d682d344065b959e4fa646ed3e3fb92',1,'SDOM::TTFAsset::Core']]],
   ['current_5fheight_15',['current_height',['../classSDOM_1_1Label.html#a4778ce83b69e7385231d7de16ed00e7a',1,'SDOM::Label']]],
-  ['current_5fpixel_5fformat_16',['current_pixel_format',['../classSDOM_1_1Label.html#a987998dd1ddfd5a603a0719b6dfa354f',1,'SDOM::Label']]],
-  ['current_5fwidth_17',['current_width',['../classSDOM_1_1Label.html#a073a7379de79ac49cd5ec103f1958978',1,'SDOM::Label']]],
-  ['currentphase_18',['currentPhase',['../classSDOM_1_1Event.html#acfe274676206ac3354d955cd794488e6',1,'SDOM::Event']]],
-  ['currenttarget_19',['currentTarget',['../classSDOM_1_1Event.html#ad0e1e1487e503fc5ae91d50df4f38955',1,'SDOM::Event']]],
-  ['cyan_20',['CYAN',['../classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0',1,'CLR']]]
+  ['current_5fheight_5f_16',['current_height_',['../classSDOM_1_1IPanelObject.html#a007c71a5edc3897d8bac8197b600f753',1,'SDOM::IPanelObject::current_height_'],['../classSDOM_1_1IRangeControl.html#a0e088ce8795a3ab67ce833a136a37835',1,'SDOM::IRangeControl::current_height_']]],
+  ['current_5fpixel_5fformat_17',['current_pixel_format',['../classSDOM_1_1Label.html#a987998dd1ddfd5a603a0719b6dfa354f',1,'SDOM::Label']]],
+  ['current_5fpixel_5fformat_5f_18',['current_pixel_format_',['../classSDOM_1_1IPanelObject.html#a89a86761fbf9e85939faff4cbac04a9f',1,'SDOM::IPanelObject::current_pixel_format_'],['../classSDOM_1_1IRangeControl.html#a8eebaa90e304dfb4448e55d3119f6fcd',1,'SDOM::IRangeControl::current_pixel_format_']]],
+  ['current_5fwidth_19',['current_width',['../classSDOM_1_1Label.html#a073a7379de79ac49cd5ec103f1958978',1,'SDOM::Label']]],
+  ['current_5fwidth_5f_20',['current_width_',['../classSDOM_1_1IPanelObject.html#ad25d9f481012c2d0d0d5eb062c7d02df',1,'SDOM::IPanelObject::current_width_'],['../classSDOM_1_1IRangeControl.html#a6ccfcf45f9cf4ef43ba6f3fb954b1333',1,'SDOM::IRangeControl::current_width_']]],
+  ['currentphase_21',['currentPhase',['../classSDOM_1_1Event.html#acfe274676206ac3354d955cd794488e6',1,'SDOM::Event']]],
+  ['currenttarget_22',['currentTarget',['../classSDOM_1_1Event.html#ad0e1e1487e503fc5ae91d50df4f38955',1,'SDOM::Event']]],
+  ['cyan_23',['CYAN',['../classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0',1,'CLR']]]
 ];

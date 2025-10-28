@@ -119,7 +119,7 @@ var searchData=
   ['setname_5flua_116',['setName_lua',['../namespaceSDOM.html#a0597223417acde60cab9946b7d6c3ae0',1,'SDOM']]],
   ['setorientation_117',['setOrientation',['../classSDOM_1_1IRangeControl.html#ac0d8e727dbb2c0ddd7485fa245ec78bc',1,'SDOM::IRangeControl']]],
   ['setorphangrace_118',['setOrphanGrace',['../classSDOM_1_1IDisplayObject.html#a9728356c70a650faae51d6bfd6dac213',1,'SDOM::IDisplayObject']]],
-  ['setorphangrace_5flua_119',['setOrphanGrace_lua',['../namespaceSDOM.html#ad6ad76e2aa96ee58b9dab16d090226c4',1,'SDOM']]],
+  ['setorphangrace_5flua_119',['setOrphanGrace_lua',['../namespaceSDOM.html#a49ceaad8575f7938e64a6df14e4fd585',1,'SDOM']]],
   ['setorphanretentionpolicy_120',['setOrphanRetentionPolicy',['../classSDOM_1_1IDisplayObject.html#a8453e36ea5bffdbb6c57da841db2e5ab',1,'SDOM::IDisplayObject']]],
   ['setorphanretentionpolicy_5flua_121',['setOrphanRetentionPolicy_lua',['../namespaceSDOM.html#aef6a2e53b274906f1380d1bb5b295605',1,'SDOM']]],
   ['setoutline_122',['setOutline',['../classSDOM_1_1Label.html#a9a9a80e7a34f90f7895261d36ef5f8cb',1,'SDOM::Label']]],
@@ -210,6 +210,10 @@ var searchData=
   ['sortchildrenbypriority_5flua_207',['sortChildrenByPriority_lua',['../namespaceSDOM.html#ad7a204078ea9405c1457b412b62d097e',1,'SDOM']]],
   ['spritesheet_208',['SpriteSheet',['../classSDOM_1_1SpriteSheet.html#a10bd86c69976fa694e6960589fe64073',1,'SDOM::SpriteSheet::SpriteSheet(const InitStruct &amp;init)'],['../classSDOM_1_1SpriteSheet.html#a118c906c3dca8dae6ddffae86695ef55',1,'SDOM::SpriteSheet::SpriteSheet(const sol::table &amp;config)'],['../classSDOM_1_1SpriteSheet.html#a86cf5cb125d8d120a7343dbc6c176390',1,'SDOM::SpriteSheet::SpriteSheet()=default']]],
   ['stage_209',['Stage',['../classSDOM_1_1Stage.html#a41ff14c277e9f87df2be41bd60cf7ea4',1,'SDOM::Stage::Stage(const InitStruct &amp;init)'],['../classSDOM_1_1Stage.html#ae2e4a2b2a09b359e0e35e7f8f16f41ea',1,'SDOM::Stage::Stage(const sol::table &amp;config)'],['../classSDOM_1_1Stage.html#a8cb50952e0f2e1b725e3ecfe6c31b58d',1,'SDOM::Stage::Stage(const sol::table &amp;config, const InitStruct &amp;defaults)']]],
-  ['stoppropagation_210',['stopPropagation',['../classSDOM_1_1Event.html#a2152b6ceff2c7550fcf41c5f8d181e5b',1,'SDOM::Event']]],
-  ['str_211',['str',['../classSDOM_1_1DisplayHandle.html#ab8fbb280de5de823ca666d8d50fe3395',1,'SDOM::DisplayHandle']]]
+  ['start_5frender_5ftime_210',['start_render_time',['../classSDOM_1_1Factory.html#aebb73a26768033fdcb0dc8aff8386d28',1,'SDOM::Factory']]],
+  ['start_5fupdate_5ftimer_211',['start_update_timer',['../classSDOM_1_1Factory.html#ab4ca125d17433a6af69dae41b39bf06a',1,'SDOM::Factory']]],
+  ['stop_5frender_5ftime_212',['stop_render_time',['../classSDOM_1_1Factory.html#a66b6da0dbcf7b6f17f7484f50e7dcb9e',1,'SDOM::Factory']]],
+  ['stop_5fupdate_5ftimer_213',['stop_update_timer',['../classSDOM_1_1Factory.html#ae8895b8b2e0f28fa299ea0423fc34e2f',1,'SDOM::Factory']]],
+  ['stoppropagation_214',['stopPropagation',['../classSDOM_1_1Event.html#a2152b6ceff2c7550fcf41c5f8d181e5b',1,'SDOM::Event']]],
+  ['str_215',['str',['../classSDOM_1_1DisplayHandle.html#ab8fbb280de5de823ca666d8d50fe3395',1,'SDOM::DisplayHandle']]]
 ];

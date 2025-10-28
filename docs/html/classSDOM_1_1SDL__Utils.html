@@ -120,6 +120,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:adc11a85a607cf0afc180dee8b3fd280e" id="r_adc11a85a607cf0afc180dee8b3fd280e"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc11a85a607cf0afc180dee8b3fd280e">color_not_equal</a> (const SDL_Color &amp;a, const SDL_Color &amp;b)</td></tr>
 <tr class="memitem:ae9bfceaf2290e47aebedd62b9283cb14" id="r_ae9bfceaf2290e47aebedd62b9283cb14"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9bfceaf2290e47aebedd62b9283cb14">color_near</a> (const SDL_Color &amp;a, const SDL_Color &amp;b, Uint8 tolerance=1)</td></tr>
 <tr class="memitem:a2ca4474289c1f7bf2caafd17b54e40f7" id="r_a2ca4474289c1f7bf2caafd17b54e40f7"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ca4474289c1f7bf2caafd17b54e40f7">color_to_string</a> (const SDL_Color &amp;c)</td></tr>
+<tr class="memitem:a6461cbf45eb907e850688f8956191a69" id="r_a6461cbf45eb907e850688f8956191a69"><td class="memItemLeft" align="right" valign="top">static SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6461cbf45eb907e850688f8956191a69">get__lua_color</a> (const sol::table &amp;lua_color)</td></tr>
+<tr class="memitem:afbcd8798e1320e483dc6e8870f319727" id="r_afbcd8798e1320e483dc6e8870f319727"><td class="memItemLeft" align="right" valign="top">static sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afbcd8798e1320e483dc6e8870f319727">get_lua_color</a> (sol::state_view lua, const SDL_Color &amp;sdl_color)</td></tr>
+<tr class="memitem:a0cbee9e278d5984281fd91eaa54904ac" id="r_a0cbee9e278d5984281fd91eaa54904ac"><td class="memItemLeft" align="right" valign="top">static sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0cbee9e278d5984281fd91eaa54904ac">get_lua_color</a> (const SDL_Color &amp;sdl_color)</td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad58424ffb980e2133bdb261b07846637" name="ad58424ffb980e2133bdb261b07846637"></a>
@@ -383,6 +386,85 @@ Static Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">SDL_EventType</td>          <td class="paramname"><span class="paramname"><em>type</em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6461cbf45eb907e850688f8956191a69" name="a6461cbf45eb907e850688f8956191a69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6461cbf45eb907e850688f8956191a69">&#9670;&#160;</a></span>get__lua_color()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_Color SDOM::SDL_Utils::get__lua_color </td>
+          <td>(</td>
+          <td class="paramtype">const sol::table &amp;</td>          <td class="paramname"><span class="paramname"><em>lua_color</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0cbee9e278d5984281fd91eaa54904ac" name="a0cbee9e278d5984281fd91eaa54904ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cbee9e278d5984281fd91eaa54904ac">&#9670;&#160;</a></span>get_lua_color() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">sol::table SDOM::SDL_Utils::get_lua_color </td>
+          <td>(</td>
+          <td class="paramtype">const SDL_Color &amp;</td>          <td class="paramname"><span class="paramname"><em>sdl_color</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afbcd8798e1320e483dc6e8870f319727" name="afbcd8798e1320e483dc6e8870f319727"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbcd8798e1320e483dc6e8870f319727">&#9670;&#160;</a></span>get_lua_color() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">sol::table SDOM::SDL_Utils::get_lua_color </td>
+          <td>(</td>
+          <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>lua</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const SDL_Color &amp;</td>          <td class="paramname"><span class="paramname"><em>sdl_color</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
