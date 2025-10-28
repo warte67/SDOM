@@ -1700,6 +1700,24 @@ namespace SDOM
     } // END void Core::pushKeyboardEvent()
 
 
+
+    // --- Version Helpers --- //
+
+    std::string Core::getVersionString() const { return version_->toString(); }
+    std::string Core::getVersionFullString() const { return version_->fullString(); }
+    int Core::getVersionMajor() const { return version_->getMajor(); }
+    int Core::getVersionMinor() const { return version_->getMinor(); } 
+    int Core::getVersionPatch() const { return version_->getPatch(); }
+    std::string Core::getVersionCodename() const { return version_->getCodename(); }
+    std::string Core::getVersionBuild() const { return version_->getBuild(); }
+    std::string Core::getVersionBuildDate() const { return version_->getBuildDate(); } 
+    std::string Core::getVersionCommit() const { return version_->getCommit(); }
+    std::string Core::getVersionBranch() const { return version_->getBranch(); } 
+    std::string Core::getVersionCompiler() const { return version_->getCompiler(); }
+    std::string Core::getVersionPlatform() const { return version_->getPlatform(); }
+
+
+
     // --- Lua UserType Registration --- //
 
 

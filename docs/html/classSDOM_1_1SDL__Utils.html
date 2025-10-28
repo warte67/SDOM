@@ -112,7 +112,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a15e7cc9c1c4259d53bf6b2ceecc9b3b9" id="r_a15e7cc9c1c4259d53bf6b2ceecc9b3b9"><td class="memItemLeft" align="right" valign="top">static SDL_EventType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a15e7cc9c1c4259d53bf6b2ceecc9b3b9">eventTypeFromString</a> (const std::string &amp;str)</td></tr>
 <tr class="memitem:ae14d8baba865558a55e68468fddc1b62" id="r_ae14d8baba865558a55e68468fddc1b62"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae14d8baba865558a55e68468fddc1b62">keyToAscii</a> (SDL_Keycode keycode, SDL_Keymod keymod)</td></tr>
 <tr class="memitem:aa077a66bd09fa07bd0733b396d81ba23" id="r_aa077a66bd09fa07bd0733b396d81ba23"><td class="memItemLeft" align="right" valign="top">static sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa077a66bd09fa07bd0733b396d81ba23">eventToLuaTable</a> (const SDL_Event &amp;event, sol::state_view lua)</td></tr>
-<tr class="memitem:ab104736fb6a0163bfaf0d88965c8fb52" id="r_ab104736fb6a0163bfaf0d88965c8fb52"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab104736fb6a0163bfaf0d88965c8fb52">registerLua</a> (sol::state_view lua)</td></tr>
+<tr class="memitem:ad27f8e68ee404534866584fdba8db390" id="r_ad27f8e68ee404534866584fdba8db390"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad27f8e68ee404534866584fdba8db390">registerLuaBindings</a> (sol::state_view lua)</td></tr>
 <tr class="memitem:a479d5c5b443cc1b058ad3bde4a5930c9" id="r_a479d5c5b443cc1b058ad3bde4a5930c9"><td class="memItemLeft" align="right" valign="top">static SDL_FRect&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a479d5c5b443cc1b058ad3bde4a5930c9">tableToFRect</a> (const sol::table &amp;t)</td></tr>
 <tr class="memitem:a569aa2a81fb0eb6c7897b5e565779599" id="r_a569aa2a81fb0eb6c7897b5e565779599"><td class="memItemLeft" align="right" valign="top">static SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a569aa2a81fb0eb6c7897b5e565779599">colorFromSol</a> (const sol::object &amp;o)</td></tr>
 <tr class="memitem:a3d0511ff63753f1311697d941f6c7fc3" id="r_a3d0511ff63753f1311697d941f6c7fc3"><td class="memItemLeft" align="right" valign="top">static SDL_ScaleMode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d0511ff63753f1311697d941f6c7fc3">scaleModeFromSol</a> (const sol::object &amp;o)</td></tr>
@@ -555,8 +555,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab104736fb6a0163bfaf0d88965c8fb52" name="ab104736fb6a0163bfaf0d88965c8fb52"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab104736fb6a0163bfaf0d88965c8fb52">&#9670;&#160;</a></span>registerLua()</h2>
+<a id="ad27f8e68ee404534866584fdba8db390" name="ad27f8e68ee404534866584fdba8db390"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad27f8e68ee404534866584fdba8db390">&#9670;&#160;</a></span>registerLuaBindings()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -565,7 +565,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void SDOM::SDL_Utils::registerLua </td>
+          <td class="memname">void SDOM::SDL_Utils::registerLuaBindings </td>
           <td>(</td>
           <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>lua</em></span></td><td>)</td>
           <td></td>

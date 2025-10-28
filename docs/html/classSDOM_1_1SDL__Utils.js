@@ -16,7 +16,7 @@ var classSDOM_1_1SDL__Utils =
     [ "keyToAscii", "classSDOM_1_1SDL__Utils.html#ae14d8baba865558a55e68468fddc1b62", null ],
     [ "pixelFormatFromString", "classSDOM_1_1SDL__Utils.html#afbf04f741d38babee5837dc399abdc86", null ],
     [ "pixelFormatToString", "classSDOM_1_1SDL__Utils.html#ad740d47cee3122fe01e097dd35664741", null ],
-    [ "registerLua", "classSDOM_1_1SDL__Utils.html#ab104736fb6a0163bfaf0d88965c8fb52", null ],
+    [ "registerLuaBindings", "classSDOM_1_1SDL__Utils.html#ad27f8e68ee404534866584fdba8db390", null ],
     [ "rendererLogicalPresentationFromString", "classSDOM_1_1SDL__Utils.html#a027dc0dbe963b494fba4ceee1688bf2d", null ],
     [ "rendererLogicalPresentationToString", "classSDOM_1_1SDL__Utils.html#a9c8feadb377ab2d62795efe2d08b9767", null ],
     [ "scaleModeFromSol", "classSDOM_1_1SDL__Utils.html#a3d0511ff63753f1311697d941f6c7fc3", null ],

@@ -408,18 +408,19 @@ $(function(){initNavTree('SDOM_8hpp_source.html','',''); });
 <div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span><span class="preprocessor">#include &lt;<a class="code" href="SDOM__AssetHandle_8hpp.html">SDOM/SDOM_AssetHandle.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span><span class="preprocessor">#include &lt;<a class="code" href="SDOM__UnitTests_8hpp.html">SDOM/SDOM_UnitTests.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span><span class="preprocessor">#include &lt;<a class="code" href="SDOM__Utils_8hpp.html">SDOM/SDOM_Utils.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span> </div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span><span class="preprocessor">#ifndef SDOM_USE_INDIVIDUAL_HEADERS</span></div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>    <span class="comment">// SDOM_Front.hpp is an umbrella header meant for implementation files only.</span></div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    <span class="comment">// Including it from SDOM.hpp can create circular includes (SDOM.hpp -&gt; SDOM_Front.hpp -&gt; SDOM_Core.hpp -&gt; SDOM.hpp)</span></div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>    <span class="comment">// which may leave class definitions incomplete during header processing. Consumers who want the full</span></div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>    <span class="comment">// API should include SDOM_Front.hpp directly in .cpp files. Keep this block intentionally empty here</span></div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    <span class="comment">// to avoid accidental circular include dependencies.</span></div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span> </div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span><span class="comment">// #include &lt;SDOM/SDOM_Version.hpp&gt;</span></div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span> </div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span><span class="preprocessor">#ifndef SDOM_USE_INDIVIDUAL_HEADERS</span></div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    <span class="comment">// SDOM_Front.hpp is an umbrella header meant for implementation files only.</span></div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>    <span class="comment">// Including it from SDOM.hpp can create circular includes (SDOM.hpp -&gt; SDOM_Front.hpp -&gt; SDOM_Core.hpp -&gt; SDOM.hpp)</span></div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>    <span class="comment">// which may leave class definitions incomplete during header processing. Consumers who want the full</span></div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    <span class="comment">// API should include SDOM_Front.hpp directly in .cpp files. Keep this block intentionally empty here</span></div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>    <span class="comment">// to avoid accidental circular include dependencies.</span></div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span> </div>
 <div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span> </div>
 <div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span> </div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span> </div>
 <div class="ttc" id="aSDOM_8hpp_html_a05b38e54d53b804b5d6da620ec5fc2cc"><div class="ttname"><a href="SDOM_8hpp.html#a05b38e54d53b804b5d6da620ec5fc2cc">ORPHAN_GRACE_PERIOD</a></div><div class="ttdeci">constexpr int ORPHAN_GRACE_PERIOD</div><div class="ttdef"><b>Definition</b> SDOM.hpp:82</div></div>
 <div class="ttc" id="aSDOM_8hpp_html_a7860bad07e6389722d5d09638b46d2f8"><div class="ttname"><a href="SDOM_8hpp.html#a7860bad07e6389722d5d09638b46d2f8">DEBUG_REGISTER_LUA</a></div><div class="ttdeci">constexpr bool DEBUG_REGISTER_LUA</div><div class="ttdef"><b>Definition</b> SDOM.hpp:72</div></div>
 <div class="ttc" id="aSDOM__AssetHandle_8hpp_html"><div class="ttname"><a href="SDOM__AssetHandle_8hpp.html">SDOM_AssetHandle.hpp</a></div></div>

@@ -40,16 +40,21 @@ using namespace SDOM;
 
 int main(int argc, char** argv) 
 {
-    std::cout << CLR::ORANGE << CLR::ARROW_UP << CLR::NORMAL << std::endl;
+    // std::cout << CLR::ORANGE << CLR::ARROW_UP << CLR::NORMAL << std::endl;
 
-    // Quick command-line help handling: if user asks for help, print usage
-    // and exit without initializing the full Core.
+    // Fetch the Core singleton
+    Core& core = getCore();
+
+    // -------------------------------------------------------
+    // Quick command-line help handling
+    // -------------------------------------------------------
     for (int i = 1; i < argc; ++i) {
         if (!argv[i]) continue;
         std::string a(argv[i]);
         if (a == "--help" || a == "-?" || a == "/?") {
             std::cout << "Usage: " << (argv[0] ? argv[0] : "prog") << " [options]\n"
                       << "Options:\n"
+                      << "  --version             Show the SDOM version and build info.\n"
                       << "  --lua_file <file>     Specify a Lua config file to run (overrides default).\n"
                       << "                        Aliases: --file, --config, --lua\n"
                       << "  --stop_after_tests    Run unit tests then stop the main loop and exit.\n"
@@ -60,13 +65,28 @@ int main(int argc, char** argv)
                       << std::endl;
             return 0;
         }
+        // -------------------------------------------------------
+        // Handle version flag before initializing Core
+        // -------------------------------------------------------
+        else if (a == "--version" || a == "-v") {
+            std::cout << "SDOM " 
+                      << core.getVersionMajor() << "."
+                      << core.getVersionMinor() << "."
+                      << core.getVersionPatch()
+                      << " (" << core.getVersionCodename() << ")\n"
+                      << "Build Date: " << core.getVersionBuildDate() << "\n"
+                      << "Commit: " << core.getVersionCommit() << "\n"
+                      << "Branch: " << core.getVersionBranch() << "\n"
+                      << "Compiler: " << core.getVersionCompiler() << "\n"
+                      << "Platform: " << core.getVersionPlatform() << "\n"
+                      << std::endl;
+            return 0;
+        }
     }
 
-    // std::cout << CLR::YELLOW << "Hello, SDOM!" << CLR::RESET << std::endl;
-
-    // Fetch the Core singleton
-    Core& core = getCore();
-
+    // -------------------------------------------------------
+    // Normal initialization continues...
+    // -------------------------------------------------------
 
     // For testing: optionally stop main loop after unit tests if caller
     // requested it via command-line flag `--stop_after_tests`.

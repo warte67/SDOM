@@ -240,7 +240,22 @@ namespace SDOM
         void pushMouseEvent(const sol::object& args);
         void pushKeyboardEvent(const sol::object& args);        
 
+        // --- Version Helpers --- //
 
+        std::string getVersionString() const;
+        std::string getVersionFullString() const;
+        int getVersionMajor() const;
+        int getVersionMinor() const;
+        int getVersionPatch() const;
+        std::string getVersionCodename() const;
+        std::string getVersionBuild() const;
+        std::string getVersionBuildDate() const;
+        std::string getVersionCommit() const;
+        std::string getVersionBranch() const;
+        std::string getVersionCompiler() const;
+        std::string getVersionPlatform() const;
+
+    
     private:
         friend UnitTests; // give the UnitTests class access to private members for testing
 

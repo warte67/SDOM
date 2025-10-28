@@ -47,5 +47,6 @@ var searchData=
   ['frame_44',['Frame',['../classSDOM_1_1Frame.html',1,'SDOM::Frame'],['../classSDOM_1_1Frame.html#a4b6056a257215fb7ed47a827b31b93f6',1,'SDOM::Frame::Frame(const InitStruct &amp;init)'],['../classSDOM_1_1Frame.html#a2666eb1b1fe16c3a31ac0e56fb216d25',1,'SDOM::Frame::Frame(const sol::table &amp;config)'],['../classSDOM_1_1Frame.html#a2754c51f92021b2e1c22f5cbbb24b9fa',1,'SDOM::Frame::Frame()=default'],['../namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922ca3bb3e8c8a24891ba0f7608bcc96f8b0a',1,'SDOM::Frame']]],
   ['freetype_20on_20debian_3a_45',['Freetype on Debian:',['../md_README.html#autotoc_md18',1,'']]],
   ['frominitstruct_46',['fromInitStruct',['../structSDOM_1_1TypeCreators.html#a15807ffd6629c821a869c22bbbd8d180',1,'SDOM::TypeCreators::fromInitStruct'],['../structSDOM_1_1AssetTypeCreators.html#acce95e4ee7a2328e234ea8a9beaf6764',1,'SDOM::AssetTypeCreators::fromInitStruct']]],
-  ['fromlua_47',['fromLua',['../structSDOM_1_1TypeCreators.html#a11367cc263f56aa295753dc763a372ed',1,'SDOM::TypeCreators::fromLua'],['../structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce',1,'SDOM::AssetTypeCreators::fromLua']]]
+  ['fromlua_47',['fromLua',['../structSDOM_1_1TypeCreators.html#a11367cc263f56aa295753dc763a372ed',1,'SDOM::TypeCreators::fromLua'],['../structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce',1,'SDOM::AssetTypeCreators::fromLua']]],
+  ['fullstring_48',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]]
 ];
