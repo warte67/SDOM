@@ -353,7 +353,7 @@ local function test_properties()
     | `local_right`         | number      | `getLocalRight()`                  | `setLocalRight(number)`            | ✅ test verified       |
     | `local_top`           | number      | `getLocalTop()`                    | `setLocalTop(number)`              | ✅ test verified       |
     | `local_bottom`        | number      | `getLocalBottom()`                 | `setLocalBottom(number)`           | ✅ test verified       |
-    | `orphan_policy`       | string      | `getOrphanRetentionPolicyString()` | `setOrphanRetentionPolicy("auto")` | ☐ planned              | // "manual", "auto", "grace"
+    | `orphan_policy`       | string      | `getOrphanRetentionPolicyString()` | `setOrphanRetentionPolicy("auto")` | ✅ test verified       |
     | `orphan_grace`        | number      | `getOrphanGrace()`                 | `setOrphanGrace(number)`           | ✅ test verified       |
 --]]
 
