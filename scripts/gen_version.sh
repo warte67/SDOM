@@ -17,7 +17,7 @@ README="$ROOT_DIR/README.md"
 # ------------------------------------------------------------
 MAJOR=0
 MINOR=5
-CODENAME="PreAlpha"
+CODENAME="early pre-alpha"
 PATCH=0
 
 # --- Version increment logic ---

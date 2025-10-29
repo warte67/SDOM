@@ -4,8 +4,8 @@
 
 
 <!-- BEGIN_VERSION_BLOCK -->
-**SDOM 0.5.106 (PreAlpha)**  
-**Build Date:** 2025-10-29_13:13:26  
+**SDOM 0.5.107 (early pre-alpha)**  
+**Build Date:** 2025-10-29_13:17:03  
 **Platform:** Linux-x86_64  
 **Compiler:** g++ (GCC) 15.2.1 20250813
 <!-- END_VERSION_BLOCK -->
@@ -21,6 +21,8 @@ Doxygen Documentation: https://warte67.github.io/SDOM/
 SDOM (Simple SDL Document Object Model API) is a compact, modern C++23 library that provides a structured approach to building graphical user interfaces and interactive scenes using SDL3. SDOM fully supports SDL3. The Document Object Model is, in short, a robust graphical user-interface system: a tree of display objects and containers with well-defined properties, parent/child relationships, event propagation, and lifecycle semantics—allowing code to traverse, query, and update elements in a declarative, DOM-like way similar to web DOM concepts but tailored to SDL rendering and input.
 
 The design centers on three core ideas: composability, data-driven configuration, and portability. Composability comes from a small collection of display object primitives and handles that can be composed into complex UIs. Data-driven configuration means scenes and object properties can be created and adjusted from Lua (via Sol2) without recompiling — as much or as little Lua as you want can be used to drive an application. We plan to provide dedicated SDL3 bindings for Lua so scripting can directly leverage SDL3 features; that work is in progress. Importantly, SDL3 is already fully available to C and C++ code using SDOM, and first-class bindings for other host languages (for example Rust or Python) are planned for future releases.
+
+**Note:** This is still a very early pre-alpha version.  All APIs are subject to change.  
 
 
 ## Features
