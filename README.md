@@ -10,7 +10,8 @@
 **Compiler:** g++ (GCC) 15.2.1 20250813
 <!-- END_VERSION_BLOCK -->
 
-Doxygen Documentation: https://warte67.github.io/SDOM/
+- Doxygen Documentation: https://warte67.github.io/SDOM/
+- GitHub Wiki: https://github.com/warte67/SDOM/wiki
 
 ---
 
