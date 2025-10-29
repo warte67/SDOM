@@ -244,4 +244,4 @@ ZLIB License. See source files for details.
 ## Author
 Jay Faries ([warte67](https://github.com/warte67))
 
-🦆 "Performing a stable sort on the Anseriformes array by ascending position along the x-axis, ensuring deterministic alignment and zero rotational variance." (translation "Getting my ducks in a row")
+🦆 "Performing a stable sort on the Anseriformes array by ascending position along the x-axis, ensuring deterministic alignment and zero rotational variance." (translation: "Getting my ducks in a row")

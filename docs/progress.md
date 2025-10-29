@@ -1308,6 +1308,11 @@ Compiler: g++ (GCC) 15.2.1 20250813
 Platform: Linux-x86_64
 ```
 
+- **Next Steps:**
+  - Refine the UnitTests class to implement a one-test-per-frame approach to unit tests.
+  - Finalize **Event_UnitTests.cpp** with comprehensive C++ and Lua tests for EventManager functionality.
+  - Integrate version metadata into documentation and developer tooling for easy access.
+
 
 ---
 ### Long Term To Do:
