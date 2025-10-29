@@ -33,9 +33,11 @@ namespace SDOM
         factory_ = new Factory();
         eventManager_ = new EventManager();
         version_ = new Version(lua_);
-        
-        // // Register Version usertype
-        // version_->registerLuaBindings(lua_);
+
+        // Expose CLR constants and helpers to Lua through a single helper
+        // so updates to CLR are reflected in embedded Lua states.
+        CLR::exposeToLua(lua_);
+
         
         // register the DisplayHandle handle last so other types can use it
         DisplayHandle prototypeHandle; // Default DisplayHandle for registration
@@ -762,10 +764,10 @@ namespace SDOM
 
         bool ret = true;
 
-        // Expose CLR constants and helpers to Lua through a single helper
-        // so updates to CLR are reflected in embedded Lua states.
-        sol::state& lua = this->getLua(); // get the Lua state
-        CLR::exposeToLua(lua);
+        // // Expose CLR constants and helpers to Lua through a single helper
+        // // so updates to CLR are reflected in embedded Lua states.
+        // sol::state& lua = this->getLua(); // get the Lua state
+        // CLR::exposeToLua(lua);
 
         // Call the users registered init function if available
         if (fnOnInit)

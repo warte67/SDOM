@@ -118,35 +118,64 @@ void CLR::exposeToLua(sol::state& lua)
     clr.set_function("indent", &CLR::indent);
     clr.set_function("indent_push", &CLR::indent_push);
     clr.set_function("indent_pop", &CLR::indent_pop);
-    clr.set_function("hex", &CLR::hex);
-    clr.set_function("pad", &CLR::pad);
+    clr.set_function("hex", &CLR::hex);             // ✅ Tested in Lua
+    clr.set_function("pad", &CLR::pad);             // ✅ Tested in Lua
 
     // color output helpers
-    clr.set_function("fg", &CLR::fg);
-    clr.set_function("bg", &CLR::bg);
-    clr.set_function("fg_rgb", &CLR::fg_rgb);
-    clr.set_function("fg_color", &CLR::fg_color);
-    clr.set_function("bg_rgb", &CLR::bg_rgb);
-    clr.set_function("bg_color", &CLR::bg_color);
+    clr.set_function("fg", &CLR::fg);               // ✅ Tested in Lua
+    clr.set_function("bg", &CLR::bg);               // ✅ Tested in Lua
+    clr.set_function("rgb", &CLR::fg_rgb);          // ✅ Tested in Lua
+    clr.set_function("fg_rgb", &CLR::fg_rgb);       // ✅ Tested in Lua
+    clr.set_function("fg_color", &CLR::fg_color);   // ✅ Tested in Lua
+    clr.set_function("bg_rgb", &CLR::bg_rgb);       // ✅ Tested in Lua
+    clr.set_function("bg_color", &CLR::bg_color);   // ✅ Tested in Lua
 
     // cursor/erase helpers
     clr.set_function("set_cursor_pos", &CLR::set_cursor_pos);
     clr.set_function("erase_in_display", &CLR::erase_in_display);
     clr.set_function("erase_in_line", &CLR::erase_in_line);
 
-    // get_terminal_size returns two values (width, height)
-    clr.set_function("get_terminal_size", []() -> std::tuple<int,int> {
+    clr.set_function("get_terminal_size", []() -> sol::table {
         int w = 0, h = 0;
         CLR::get_terminal_size(w, h);
-        return std::make_tuple(w, h);
+        sol::state_view lua = SDOM::Core::getInstance().getLua();
+        sol::table t = lua.create_table();
+        t["width"]  = w;
+        t["w"]      = w;
+        t["height"] = h;
+        t["h"]      = h;
+        return t;
     });
 
-    // cursor position: returns (row, col) or (-1, -1) on failure
-    clr.set_function("get_cursor_pos", []() -> std::tuple<int,int> {
-        int r = -1, c = -1;
-        if (CLR::get_cursor_pos(r, c)) return std::make_tuple(r, c);
-        return std::make_tuple(-1, -1);
-    });
+    clr.set_function("get_cursor_pos", []() -> sol::table {
+        sol::state_view lua = SDOM::Core::getInstance().getLua();
+        int row = -1, col = -1;
+        if (!CLR::get_cursor_pos(row, col)) {
+            // Fallback when TTY or cursor detection isn’t available
+            return lua.create_table_with(
+                "row", -1,
+                "col", -1,
+                "x", -1,
+                "y", -1
+            );
+        }
+        // Return as both (row,col) and (x,y) for convenience
+        return lua.create_table_with(
+            "row", row,
+            "col", col,
+            "x", col,
+            "y", row
+        );
+    });    
+
+
+    clr.set_function("is_tty", []() {
+    #if defined(_WIN32)
+        return _isatty(_fileno(stdout));
+    #else
+        return isatty(STDOUT_FILENO);
+    #endif
+    });    
 
     // Fast save/restore helpers and write_at for quick terminal updates
     clr.set_function("save_cursor", [](){ return CLR::save_cursor(); });
@@ -160,94 +189,110 @@ void CLR::exposeToLua(sol::state& lua)
 
     // publish into lua
     lua["CLR"] = clr;
-}
+} // END CLR::exposeToLua()
 
-    bool CLR::get_cursor_pos(int& row, int& col)
-    {
-    #if defined(_WIN32)
-        CONSOLE_SCREEN_BUFFER_INFO csbi;
-        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) return false;
-        row = (int)csbi.dwCursorPosition.Y + 1;
-        col = (int)csbi.dwCursorPosition.X + 1;
-        return true;
-    #elif defined(__linux__) || defined(__APPLE__)
-        // Use /dev/tty so we talk to the actual terminal
-        int fd = open("/dev/tty", O_RDWR | O_NOCTTY);
-        if (fd < 0) return false;
-
-        struct termios oldt, newt;
-        if (tcgetattr(fd, &oldt) != 0) { close(fd); return false; }
-        newt = oldt;
-        // disable canonical mode and echo
-        newt.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(fd, TCSANOW, &newt);
-
-        // request cursor position report
-        const char* req = "\x1b[6n";
-        ssize_t w = write(fd, req, 3);
-        (void)w;
-
-        // read response: ESC [ row ; col R
-        char buf[32];
-        ssize_t len = 0;
-        fd_set rfds;
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 200000; // 200ms timeout
-
-        while (true) {
-            FD_ZERO(&rfds);
-            FD_SET(fd, &rfds);
-            int sel = select(fd+1, &rfds, NULL, NULL, &tv);
-            if (sel <= 0) break;
-            ssize_t r = read(fd, buf + len, sizeof(buf) - 1 - len);
-            if (r <= 0) break;
-            len += r;
-            if (buf[len-1] == 'R' || len >= (ssize_t)sizeof(buf)-1) break;
-        }
-        buf[len] = '\0';
-
-        // restore terminal
-        tcsetattr(fd, TCSANOW, &oldt);
-        close(fd);
-
-        // parse
-        if (len <= 0) return false;
-        int r = 0, c = 0;
-        if (sscanf(buf, "\x1b[%d;%dR", &r, &c) == 2) {
-            row = r;
-            col = c;
-            return true;
-        }
+bool CLR::get_cursor_pos(int& row, int& col)
+{
+#if defined(_WIN32)
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi))
         return false;
-    #else
-        (void)row; (void)col;
+    row = static_cast<int>(csbi.dwCursorPosition.Y) + 1;
+    col = static_cast<int>(csbi.dwCursorPosition.X) + 1;
+    return true;
+
+#elif defined(__linux__) || defined(__APPLE__)
+
+    // Prefer stdin if it’s a TTY, fallback to /dev/tty
+    int fd = isatty(STDIN_FILENO) ? STDIN_FILENO : open("/dev/tty", O_RDWR | O_NOCTTY);
+    if (fd < 0)
         return false;
-    #endif
+
+    struct termios oldt{};
+    if (tcgetattr(fd, &oldt) != 0) {
+        if (fd != STDIN_FILENO) close(fd);
+        return false;
     }
 
-    bool CLR::draw_debug_text(const std::string& text, int x, int y, int ptsize,
-                              Uint8 r, Uint8 g, Uint8 b, Uint8 a)
-    {
-        // Use Core's renderer if available. Prefer SDL3's built-in debug text renderer
-        // when available via SDL_RenderDebugText(). This avoids pulling in SDL_ttf
-        // and matching platform font paths. That comes later with the IResourceObjects.
-        try {
-            SDOM::Core& core = SDOM::Core::getInstance();
-            SDL_Renderer* renderer = core.getRenderer();
-            if (!renderer) return false;
-            if (!SDL_SetRenderDrawColor(renderer, r, g, b, a)) return false;
+    struct termios newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(fd, TCSANOW, &newt);
 
-            // SDL3 provides a small debug text rendering helper on many builds. Call it
-            // directly to draw UTF-8 text at a float position. If the symbol is not
-            // present in the linked SDL library this will fail at link time; the project
-            // is configured to use SDL3 on target systems where this helper exists.
-            if(!SDL_RenderDebugText(renderer, static_cast<float>(x), static_cast<float>(y), text.c_str())) {
-                ERROR("SDL_RenderDebugText failed");
-                return false;
-            }
-            return true;
-        } catch (...) {
+    // Make sure any pending color output is flushed
+    fflush(stdout);
+
+    // Ask terminal for cursor position
+    const char* req = "\x1b[6n";
+    if (write(fd, req, 3) < 0) {
+        tcsetattr(fd, TCSANOW, &oldt);
+        if (fd != STDIN_FILENO) close(fd);
+        return false;
+    }
+
+    // Read response: ESC [ row ; col R
+    char buf[64] = {0};
+    ssize_t len = 0;
+    fd_set rfds;
+    struct timeval tv{0, 200000}; // 200ms timeout
+
+    while (true) {
+        FD_ZERO(&rfds);
+        FD_SET(fd, &rfds);
+        int sel = select(fd + 1, &rfds, nullptr, nullptr, &tv);
+        if (sel <= 0) break;
+        ssize_t r = read(fd, buf + len, sizeof(buf) - 1 - len);
+        if (r < 0 && errno == EINTR) continue;
+        if (r <= 0) break;
+        len += r;
+        if (buf[len - 1] == 'R' || len >= (ssize_t)sizeof(buf) - 1)
+            break;
+    }
+
+    // Restore terminal and clean up
+    tcsetattr(fd, TCSANOW, &oldt);
+    if (fd != STDIN_FILENO) close(fd);
+
+    // Parse the response
+    int r = 0, c = 0;
+    if (len > 0 && sscanf(buf, "\x1b[%d;%dR", &r, &c) == 2) {
+        row = r;
+        col = c;
+        return true;
+    }
+
+    // If we get here, failed to parse or timed out
+    row = col = -1;
+    return false;
+
+#else
+    (void)row; (void)col;
+    return false;
+#endif
+} // END CLR::get_cursor_pos()
+
+
+bool CLR::draw_debug_text(const std::string& text, int x, int y, int ptsize,
+                            Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+    // Use Core's renderer if available. Prefer SDL3's built-in debug text renderer
+    // when available via SDL_RenderDebugText(). This avoids pulling in SDL_ttf
+    // and matching platform font paths. That comes later with the IResourceObjects.
+    try {
+        SDOM::Core& core = SDOM::Core::getInstance();
+        SDL_Renderer* renderer = core.getRenderer();
+        if (!renderer) return false;
+        if (!SDL_SetRenderDrawColor(renderer, r, g, b, a)) return false;
+
+        // SDL3 provides a small debug text rendering helper on many builds. Call it
+        // directly to draw UTF-8 text at a float position. If the symbol is not
+        // present in the linked SDL library this will fail at link time; the project
+        // is configured to use SDL3 on target systems where this helper exists.
+        if(!SDL_RenderDebugText(renderer, static_cast<float>(x), static_cast<float>(y), text.c_str())) {
+            ERROR("SDL_RenderDebugText failed");
             return false;
         }
+        return true;
+    } catch (...) {
+        return false;
     }
+}

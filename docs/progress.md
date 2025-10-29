@@ -1270,28 +1270,29 @@ Below is the current status of all exposed **IDisplayObject** properties:
 
 ---
 ### [October 28, 2025]
-- **SDOM now embeds a fully automated, introspectable version and build metadata system spanning CMake, Bash, and Lua.**
-- **Automated version header generation via gen_version.sh, producing:**
-  - Semantic version numbers (MAJOR.MINOR.PATCH)
-  - Codename and build date
-  - Git commit hash, branch name
-  - Compiler and platform metadata
-- **Dynamic patch bumping on source changes (CMake target with OUTPUT + DEPENDS).**
-- **Extended SDOM_Version.hpp template with rich build metadata:**
-  - SDOM_VERSION_BUILD_DATE
-  - SDOM_VERSION_COMMIT
-  - SDOM_BUILD_BRANCH
-  - SDOM_BUILD_COMPILER
-  - SDOM_BUILD_PLATFORM
-- **Core-level accessors:**
-  - getVersionString(), getVersionFullString(), getVersionMajor(), getVersionMinor(), getVersionPatch(), getVersionCodename(), getVersionBuild(), getVersionBuildDate(), getVersionCommit(), getVersionBranch(), getVersionCompiler(), getVersionPlatform()
-- **Lua Integration:**
-  - Added **getVersionString()** and **getVersionFullString()** to Lua bindings.
-  - Added **getVersionMajor()**, **getVersionMinor()**, **getVersionPatch()**, **getVersionCodename()** to Lua bindings.
-  - Added **getVersionBuild()**, **getVersionBuildDate()**, **getVersionCommit()**, **getVersionBranch()** to Lua bindings.
-  - Added **getVersionCompiler()**, **getVersionPlatform()** to Lua bindings.
-- **CLI support:**
-  - Added --version flag to example app for instant build introspection:
+- **Versioning System Overhaul**
+  - **SDOM now embeds a fully automated, introspectable version and build metadata system spanning CMake, Bash, and Lua.**
+  - **Automated version header generation via gen_version.sh, producing:**
+    - Semantic version numbers (MAJOR.MINOR.PATCH)
+    - Codename and build date
+    - Git commit hash, branch name
+    - Compiler and platform metadata
+  - **Dynamic patch bumping on source changes (CMake target with OUTPUT + DEPENDS).**
+  - **Extended SDOM_Version.hpp template with rich build metadata:**
+    - SDOM_VERSION_BUILD_DATE
+    - SDOM_VERSION_COMMIT
+    - SDOM_BUILD_BRANCH
+    - SDOM_BUILD_COMPILER
+    - SDOM_BUILD_PLATFORM
+  - **Core-level accessors:**
+    - getVersionString(), getVersionFullString(), getVersionMajor(), getVersionMinor(), getVersionPatch(), getVersionCodename(), getVersionBuild(), getVersionBuildDate(), getVersionCommit(), getVersionBranch(), getVersionCompiler(), getVersionPlatform()
+  - **Lua Integration:**
+    - Added **getVersionString()** and **getVersionFullString()** to Lua bindings.
+    - Added **getVersionMajor()**, **getVersionMinor()**, **getVersionPatch()**, **getVersionCodename()** to Lua bindings.
+    - Added **getVersionBuild()**, **getVersionBuildDate()**, **getVersionCommit()**, **getVersionBranch()** to Lua bindings.
+    - Added **getVersionCompiler()**, **getVersionPlatform()** to Lua bindings.
+  - **CLI support:**
+    - Added --version flag to example app for instant build introspection:
 ```bash
 $> ./prog --version
 SDOM 0.1.16 (PreAlpha)
