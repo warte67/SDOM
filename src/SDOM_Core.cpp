@@ -679,13 +679,13 @@ namespace SDOM
                 factory_->attachFutureChildren();   // Attach future children
                 factory_->collectGarbage();         // Clean up any orphaned objects
 
-                static int s_iteration_state = 0;
-                if (s_iteration_state == 1)
+                static int s_iteration_frame = 0;
+                if (s_iteration_frame == 1)
                 {
                     // Now run user tests after initialization
                     // Temporarily ignore real mouse input while running unit tests
                     this->setIgnoreRealInput(true);
-                    bool testsPassed = onUnitTest();
+                    bool testsPassed = onUnitTest(s_iteration_frame);
                     this->setIgnoreRealInput(false);
                     if (!testsPassed) 
                     {
@@ -694,30 +694,30 @@ namespace SDOM
                         // stop the main loop to allow graceful shutdown
                         bIsRunning_ = false;
                     }            
-                    s_iteration_state = 2;     
+                    s_iteration_frame = 2;     
                 }
                 // s_iteration_state++;
-                if (s_iteration_state < 1)
-                    s_iteration_state = 1;  // run unit tests on 2nd iteration
-                else if (s_iteration_state == 2)
+                if (s_iteration_frame < 1)
+                    s_iteration_frame = 1;  // run unit tests on 2nd iteration
+                else if (s_iteration_frame == 2)
                 {
-                    s_iteration_state = 3;
+                    s_iteration_frame = 3;
                 }
                 // let the API get up to speed (warm-up for 100 frames)
-                else if (s_iteration_state < 100)
+                else if (s_iteration_frame < 100)
                 {
-                    s_iteration_state ++;
+                    s_iteration_frame ++;
                 }
                 // At exactly 100, clear stats so the next frame measures cleanly
-                else if (s_iteration_state == 100)
+                else if (s_iteration_frame == 100)
                 {
                     getFactory().reset_performance_stats();
-                    s_iteration_state = 101; // next frame will be the measured one
+                    s_iteration_frame = 101; // next frame will be the measured one
                 }
                 // Frame 101 is the measured frame; report and quit
-                else if (s_iteration_state == 101)
+                else if (s_iteration_frame == 101)
                 {
-                    s_iteration_state = 102;  // clamp state
+                    s_iteration_frame = 102;  // clamp state
                     if (stopAfterUnitTests_ == true)
                     {
                         getFactory().report_performance_stats();
@@ -726,7 +726,7 @@ namespace SDOM
                 }
                 else
                 {
-                    s_iteration_state = 102;  // clamp state
+                    s_iteration_frame = 102;  // clamp state
                 }
                 
             }  // END: while (SDL_PollEvent(&event)) 
@@ -1026,13 +1026,13 @@ namespace SDOM
         }
     }
 
-    bool Core::onUnitTest()
+    bool Core::onUnitTest(int frame)
     {
         // Lambda for recursive unitTest handling using std::function
         std::function<bool(IDisplayObject&)> handleUnitTest;
-        handleUnitTest = [&handleUnitTest](IDisplayObject& node) -> bool 
+        handleUnitTest = [&handleUnitTest, frame](IDisplayObject& node) -> bool 
         {
-            bool result = node.onUnitTest();
+            bool result = node.onUnitTest(frame);
             for (const auto& child : node.getChildren()) 
             {
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
@@ -1050,7 +1050,7 @@ namespace SDOM
 
         // Run Core-specific unit tests here
         allTestsPassed &= coreTests_();
-        allTestsPassed &= factory_->onUnitTest();
+        allTestsPassed &= factory_->onUnitTest(frame);
 
         // Run registered unit test function if available
         if (fnOnUnitTest) {

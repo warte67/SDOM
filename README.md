@@ -2,12 +2,25 @@
 [![License](https://img.shields.io/badge/license-ZLIB-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-Doxygen-blue)](https://warte67.github.io/SDOM/)
 
+
+<!-- BEGIN_VERSION_BLOCK -->
+**SDOM 0.5.106 (PreAlpha)**  
+**Build Date:** 2025-10-29_13:13:26  
+**Platform:** Linux-x86_64  
+**Compiler:** g++ (GCC) 15.2.1 20250813
+<!-- END_VERSION_BLOCK -->
+
 Doxygen Documentation: https://warte67.github.io/SDOM/
 
-High-level project diagram: see docs/architecture_overview.md
+---
+
+### Screenshot of the Test Harness application:
+![Test Harness](https://raw.githubusercontent.com/warte67/SDOM/refs/heads/master/examples/test/docs/diagrams/SDOM_Test_Harness.png)
 
 ## Overview
-The SDOM Framework is a modern C++23 library designed to provide a Document Object Model (DOM) abstraction for SDL3 applications. It enables developers to create and manage graphical user interfaces (GUIs) and interactive elements in a structured, hierarchical manner. The framework is ideal for game development, prototyping, and other cross-platform applications requiring a robust and extensible GUI system. SDOM is designed to be more data-driven, allowing GUI elements to be configured via `.json` files or through the use of initialization structures. This approach enables easier customization, dynamic UI generation, and better separation of logic and presentation.
+SDOM (Simple SDL Document Object Model API) is a compact, modern C++23 library that provides a structured approach to building graphical user interfaces and interactive scenes using SDL3. SDOM fully supports SDL3. The Document Object Model is, in short, a robust graphical user-interface system: a tree of display objects and containers with well-defined properties, parent/child relationships, event propagation, and lifecycle semantics—allowing code to traverse, query, and update elements in a declarative, DOM-like way similar to web DOM concepts but tailored to SDL rendering and input.
+
+The design centers on three core ideas: composability, data-driven configuration, and portability. Composability comes from a small collection of display object primitives and handles that can be composed into complex UIs. Data-driven configuration means scenes and object properties can be created and adjusted from Lua (via Sol2) without recompiling — as much or as little Lua as you want can be used to drive an application. We plan to provide dedicated SDL3 bindings for Lua so scripting can directly leverage SDL3 features; that work is in progress. Importantly, SDL3 is already fully available to C and C++ code using SDOM, and first-class bindings for other host languages (for example Rust or Python) are planned for future releases.
 
 
 ## Features
@@ -98,11 +111,44 @@ cd examples/test
 - `examples/` — Example applications
 - `docs/` — Documentation
 
-## SDL3 Build Dependencies
-see: https://github.com/libsdl-org/SDL/blob/main/docs/README-linux.md#build-dependencies
+---
+# Lua Integration and Requirements
 
-## Debian Build Dependencies
+SDOM is designed to be **data-driven** and includes built-in support for scripting and configuration through **Lua (via Sol2)**.
+
+### Why Lua?
+Lua enables dynamic creation, modification, and serialization of DOM objects at runtime — letting you define UI layouts, animation sequences, and event behavior without recompiling. Lua scripts can access most of SDOM’s API, and future releases will expand this integration even further.
+
+### Installation
+
+**Debian / Ubuntu:**
+```bash
+sudo apt update
+sudo apt install liblua5.4-dev
 ```
+**Arch Linux:**
+```bash
+sudo pacman -S lua54
+```
+**Fedora / RHEL / CentOS Stream / Alma / Rocky:**
+```bash
+sudo dnf install lua-devel
+```
+**macOS:**
+```bash
+brew install lua
+```
+**Windows:**
+Download and install the latest Lua for Windows from [Lua.org](https://www.lua.org/download.html).
+
+---
+# SDL3 Build Dependencies
+See the official SDL documentation:  
+🔗 https://github.com/libsdl-org/SDL/blob/main/docs/README-linux.md#build-dependencies
+
+---
+### 🐧 Debian / Ubuntu
+```bash
 sudo apt-get install build-essential git make \
 pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
 libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev \
@@ -111,18 +157,49 @@ libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
 libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libfreetype-dev
 ```
 
-## Arch Build Dependencies
-```
-sudo pacman -S alsa-lib cmake hidapi ibus jack libdecor libgl libpulse libusb libx11 libxcursor libxext libxinerama libxkbcommon libxrandr libxrender libxss libxtst mesa ninja pipewire sndio vulkan-driver vulkan-headers wayland wayland-protocols
-```
-
-## Freetype on Debian:
-Freetype may not be installed in Debian by default.
-```
-sudo apt install libfreetype-dev
+## 🐧 Arch Linux
+```bash
+sudo pacman -S alsa-lib cmake hidapi ibus jack libdecor libgl libpulse libusb \
+libx11 libxcursor libxext libxinerama libxkbcommon libxrandr libxrender \
+libxss libxtst mesa ninja pipewire sndio vulkan-driver vulkan-headers \
+wayland wayland-protocols freetype2
 ```
 
-## Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf
+## 🐧 Fedora / RHEL / Alma / Rocky
+```bash
+sudo dnf install @development-tools cmake ninja-build git \
+SDL3-devel SDL3_image-devel SDL3_ttf-devel SDL3_mixer-devel \
+alsa-lib-devel pulseaudio-libs-devel libX11-devel libXext-devel \
+libXrandr-devel libXcursor-devel libXi-devel libXss-devel libXtst-devel \
+libxkbcommon-devel mesa-libGL-devel mesa-libEGL-devel dbus-devel \
+freetype-devel
+```
+
+## 🍎 macOS
+```bash
+brew install sdl3 sdl3_image sdl3_ttf sdl3_mixer cmake ninja freetype
+```
+
+## 🪟 Windows
+### Option 1:
+Download and install the latest SDL3 development libraries from [SDL.org](https://www.libsdl.org/download-2.0.php).
+### Option 2: MSYS2 (MinGW / UCRT64)
+```bash
+pacman -S mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja \
+          mingw-w64-ucrt-x86_64-SDL3 mingw-w64-ucrt-x86_64-SDL3_image \
+          mingw-w64-ucrt-x86_64-SDL3_ttf mingw-w64-ucrt-x86_64-SDL3_mixer \
+          mingw-w64-ucrt-x86_64-freetype
+```
+### Option 3: vcpkg (Visual Studio / CMake Integration)
+```bash
+vcpkg install sdl3 sdl3-image sdl3-ttf sdl3-mixer freetype
+```
+Then integrate vcpkg with CMake:
+```bash
+cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake
+```
+---
+# Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf
 Clone the repositories:
 ```
 git clone https://github.com/libsdl-org/SDL.git
@@ -173,28 +250,7 @@ make -j$(nproc)
 sudo make install
 ```
 
-## Lua and Sol2
-Make sure lua is installed. 
-Debian:
-```
-sudo apt update
-sudo apt install liblua5.3-dev
-```
-or
-```
-sudo apt update
-sudo apt install liblua5.4-dev
-```
-
-Arch:
-```
-sudo pacman -S lua53
-```
-or
-```
-sudo pacman -S lua54
-```
-**Recommended:**  
+## Sol2 (recommended)
 Clone Sol2 into a dedicated third-party folder inside your project:
 ```
 git clone https://github.com/ThePhD/sol2.git

@@ -48,7 +48,7 @@ class Box final : public SDOM::IDisplayObject
         virtual void onEvent(const SDOM::Event& event) override;
         virtual void onUpdate(float fElapsedTime) override;
         virtual void onRender() override;
-        virtual bool onUnitTest() override;
+        virtual bool onUnitTest(int frame) override;
 
     private:
         // Test hook: count clicks received by any Box instance (for unit tests)

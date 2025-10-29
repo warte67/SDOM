@@ -125,8 +125,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a49ce233f3b24bcab4eda377b0de573b2" id="r_a49ce233f3b24bcab4eda377b0de573b2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a49ce233f3b24bcab4eda377b0de573b2">onUpdate</a> (float fElapsedTime) override</td></tr>
 <tr class="memitem:ae86bf067533fbb3791daf53cecbd4208" id="r_ae86bf067533fbb3791daf53cecbd4208"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae86bf067533fbb3791daf53cecbd4208">onEvent</a> (const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;event) override</td></tr>
 <tr class="memitem:ad40f993525fba60a8ae87f198ece68c0" id="r_ad40f993525fba60a8ae87f198ece68c0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad40f993525fba60a8ae87f198ece68c0">onRender</a> () override</td></tr>
-<tr class="memitem:a542cdc024058e79a821e16cef570a2bc" id="r_a542cdc024058e79a821e16cef570a2bc"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a542cdc024058e79a821e16cef570a2bc">onUnitTest</a> () override</td></tr>
-<tr class="memdesc:a542cdc024058e79a821e16cef570a2bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
+<tr class="memitem:ad7f11375d86738f4bb82442f0688b903" id="r_ad7f11375d86738f4bb82442f0688b903"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7f11375d86738f4bb82442f0688b903">onUnitTest</a> (int frame) override</td></tr>
+<tr class="memdesc:ad7f11375d86738f4bb82442f0688b903"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
 <tr class="memitem:a98cd0a555e0b5dbc3060d8953ca37571" id="r_a98cd0a555e0b5dbc3060d8953ca37571"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98cd0a555e0b5dbc3060d8953ca37571">getMouseX_lua</a> () const</td></tr>
 <tr class="memitem:a3e022aa14edeb9dcf32f6a3326846b43" id="r_a3e022aa14edeb9dcf32f6a3326846b43"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e022aa14edeb9dcf32f6a3326846b43">getMouseY_lua</a> () const</td></tr>
 <tr class="memitem:a29065dcb018e3af26f0138e5ebf6b1a4" id="r_a29065dcb018e3af26f0138e5ebf6b1a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29065dcb018e3af26f0138e5ebf6b1a4">setMouseX_lua</a> (int x)</td></tr>
@@ -2628,8 +2628,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a542cdc024058e79a821e16cef570a2bc" name="a542cdc024058e79a821e16cef570a2bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a542cdc024058e79a821e16cef570a2bc">&#9670;&#160;</a></span>onUnitTest()</h2>
+<a id="ad7f11375d86738f4bb82442f0688b903" name="ad7f11375d86738f4bb82442f0688b903"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7f11375d86738f4bb82442f0688b903">&#9670;&#160;</a></span>onUnitTest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2640,7 +2640,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="memname">bool SDOM::Stage::onUnitTest </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>frame</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -2654,7 +2654,7 @@ template&lt;typename T&gt; </div>
 <p>Runs unit tests for this object. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a616241be8281b5e07ae67b454b8c5acc">SDOM::IDisplayObject</a>.</p>
 
 </div>
 </div>

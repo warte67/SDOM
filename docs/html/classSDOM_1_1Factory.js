@@ -42,7 +42,7 @@ var classSDOM_1_1Factory =
     [ "lua_value_case_insensitive", "classSDOM_1_1Factory.html#ac79673e571c58f21de1541a81548a959", null ],
     [ "onInit", "classSDOM_1_1Factory.html#aa129c7c9eea477cb39b0afa9f10f3d08", null ],
     [ "onQuit", "classSDOM_1_1Factory.html#a2fecc435aebe23174442316d21ac2017", null ],
-    [ "onUnitTest", "classSDOM_1_1Factory.html#a2b4f5adfbf25ca90cc71060408134dbb", null ],
+    [ "onUnitTest", "classSDOM_1_1Factory.html#a349992168b4f4985767bd944fe338505", null ],
     [ "printAssetRegistry", "classSDOM_1_1Factory.html#a22ef11f7b702e1f2cc767fa8341a77ba", null ],
     [ "printAssetTree", "classSDOM_1_1Factory.html#ae4702dc9bf035be9bda382634968630b", null ],
     [ "printAssetTreeGrouped", "classSDOM_1_1Factory.html#a19ec0e9ac0de1f7ba855a801e1566b53", null ],

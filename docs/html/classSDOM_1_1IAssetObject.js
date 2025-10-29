@@ -17,7 +17,7 @@ var classSDOM_1_1IAssetObject =
     [ "onInit", "classSDOM_1_1IAssetObject.html#a7fc3e92c14057d63c55a90bbb586809e", null ],
     [ "onLoad", "classSDOM_1_1IAssetObject.html#aabc41644951b97d52420e2a2dcb5c089", null ],
     [ "onQuit", "classSDOM_1_1IAssetObject.html#aa53a6417c111c503c24f7c1d52d9b0ff", null ],
-    [ "onUnitTest", "classSDOM_1_1IAssetObject.html#a078b1250ee8da5de7fe72b3fd122c06b", null ],
+    [ "onUnitTest", "classSDOM_1_1IAssetObject.html#a5b7ee77c8e89e44a6aed47326b398211", null ],
     [ "onUnload", "classSDOM_1_1IAssetObject.html#af58f74d7fb7113248e6bb29c825a45e2", null ],
     [ "register_usertype_with_table", "classSDOM_1_1IAssetObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e", null ],
     [ "registerLuaBindings", "classSDOM_1_1IAssetObject.html#a1947ff718446a6a81cd108b87a475d9f", null ],

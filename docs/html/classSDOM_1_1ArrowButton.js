@@ -105,7 +105,7 @@ var classSDOM_1_1ArrowButton =
     [ "onInit", "classSDOM_1_1ArrowButton.html#a298818dd28eb4c88d0366b8a5d8b0f40", null ],
     [ "onQuit", "classSDOM_1_1ArrowButton.html#a2e75a8ea92bdd9c8de2f253997be6657", null ],
     [ "onRender", "classSDOM_1_1ArrowButton.html#af4066dc168fcf4da8d784c5c24ca426b", null ],
-    [ "onUnitTest", "classSDOM_1_1ArrowButton.html#ac9b572b64437998f8b03af1ea17b53aa", null ],
+    [ "onUnitTest", "classSDOM_1_1ArrowButton.html#a320ccf1e180291eb3a433b17bc5fe2cd", null ],
     [ "onUpdate", "classSDOM_1_1ArrowButton.html#a6c70809c3faa0b5a17e36140a07ec9a1", null ],
     [ "onWindowResize", "classSDOM_1_1ArrowButton.html#ad7eb8c648f30d8381ed38d6ad323bfcd", null ],
     [ "operator!=", "classSDOM_1_1ArrowButton.html#a9df7d876aa3bdab412a4284982029f72", null ],

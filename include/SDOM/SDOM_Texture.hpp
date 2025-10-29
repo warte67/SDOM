@@ -72,7 +72,7 @@ namespace SDOM
         virtual void onQuit() override;
         virtual void onLoad() override;
         virtual void onUnload() override;
-        virtual bool onUnitTest() override;
+        virtual bool onUnitTest(int frame) override;
 
         SDL_Texture* getTexture() const { return texture_; }
         float getTextureWidth() const { return textureWidth_; }

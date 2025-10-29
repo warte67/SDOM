@@ -97,7 +97,7 @@ var classSDOM_1_1Slider =
     [ "onInit", "classSDOM_1_1Slider.html#ae0783f4e3e19d269de5c5477d53cf08a", null ],
     [ "onQuit", "classSDOM_1_1Slider.html#a1774f1f9693c656c78f0c291d5c0df52", null ],
     [ "onRender", "classSDOM_1_1Slider.html#a678acf0c767e31af58fcce0737e99f78", null ],
-    [ "onUnitTest", "classSDOM_1_1Slider.html#a5754c55838d3795489f1f7e2c7b62853", null ],
+    [ "onUnitTest", "classSDOM_1_1Slider.html#ac15d54511945e15e7a4bc67f9f2a78a4", null ],
     [ "onUpdate", "classSDOM_1_1Slider.html#aed0babb5542fd6ab127735f97556face", null ],
     [ "onWindowResize", "classSDOM_1_1Slider.html#ae3e09133c5a07df9c25ac3796030a485", null ],
     [ "operator!=", "classSDOM_1_1Slider.html#a9df7d876aa3bdab412a4284982029f72", null ],

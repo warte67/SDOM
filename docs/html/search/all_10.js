@@ -1,8 +1,12 @@
 var searchData=
 [
-  ['queue_5fevent_0',['queue_event',['../classSDOM_1_1IDisplayObject.html#a943459da97ec5ed33c8433d9e7291344',1,'SDOM::IDisplayObject']]],
-  ['queue_5fevent_5flua_1',['queue_event_lua',['../namespaceSDOM.html#ab79f6a51efcebdf8830730bd7596d2fd',1,'SDOM']]],
-  ['queue_5fsdl_5fevent_2',['Queue_SDL_Event',['../classSDOM_1_1EventManager.html#a7ef51b6b24295ea49537303e5cefd7fd',1,'SDOM::EventManager']]],
-  ['quit_3',['Quit',['../classSDOM_1_1EventType.html#aba470e5b61a6cc497a8100a06166f00b',1,'SDOM::EventType']]],
-  ['quit_4',['quit',['../classSDOM_1_1Core.html#a42a5582607f3fe1540ed6c00afc40283',1,'SDOM::Core::quit()'],['../namespaceSDOM.html#a9c56125987bd1ed7efbcc59e678a2be2',1,'SDOM::quit()']]]
+  ['name_0',['name',['../structSDOM_1_1IAssetObject_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2',1,'SDOM::IAssetObject::InitStruct::name'],['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a312bd5827cbb79cb02d722c9ec979d3f',1,'SDOM::IDisplayObject::InitStruct::name']]],
+  ['name_5f_1',['name_',['../classSDOM_1_1AssetHandle.html#a9c9c067f3ab9a046a6bc6c7525735a17',1,'SDOM::AssetHandle::name_'],['../classSDOM_1_1IAssetObject.html#a505bc325aa5116514067b9a58b8e0d25',1,'SDOM::IAssetObject::name_'],['../classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396',1,'SDOM::IDataObject::name_']]],
+  ['needstexturerebuild_5f_2',['needsTextureRebuild_',['../classSDOM_1_1Label.html#ac6ab2b5402d976be3a536136629e0562',1,'SDOM::Label']]],
+  ['newline_3',['Newline',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429a755fee300780823fcf4df98383331745',1,'SDOM::Label']]],
+  ['none_4',['None',['../classSDOM_1_1EventType.html#a827940aa9803d3113e7d7a7f5b75a1c5',1,'SDOM::EventType']]],
+  ['normal_5',['NORMAL',['../classCLR.html#ae6ec0e976684b36983d2325ee9bde918',1,'CLR']]],
+  ['normalizeanchorstring_6',['normalizeAnchorString',['../namespaceSDOM.html#ada23a739293dfb38feadc632ee14bb9c',1,'SDOM']]],
+  ['notable_20recent_20changes_7',['Notable recent changes',['../md_README.html#autotoc_md14',1,'']]],
+  ['notes_8',['Migration notes',['../md_README.html#autotoc_md15',1,'']]]
 ];

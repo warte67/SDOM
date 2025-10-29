@@ -52,7 +52,7 @@ namespace SDOM
         virtual void onQuit() override;
         virtual void onLoad() override;
         virtual void onUnload() override;
-        virtual bool onUnitTest() override;
+        virtual bool onUnitTest(int frame) override;
 
         // --- Additional sprite sheet specific methods will be added here --- //
 

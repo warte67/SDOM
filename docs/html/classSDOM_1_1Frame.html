@@ -127,8 +127,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae5bc39cea90a114d1ee27a5acb9c2082" id="r_ae5bc39cea90a114d1ee27a5acb9c2082"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5bc39cea90a114d1ee27a5acb9c2082">onQuit</a> () override</td></tr>
 <tr class="memitem:a9d087f95d7cc1fc70959f385b28a960f" id="r_a9d087f95d7cc1fc70959f385b28a960f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d087f95d7cc1fc70959f385b28a960f">onUpdate</a> (float fElapsedTime) override</td></tr>
 <tr class="memitem:a8aff29e95aa684032c780e29d750fb19" id="r_a8aff29e95aa684032c780e29d750fb19"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8aff29e95aa684032c780e29d750fb19">onEvent</a> (const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;event) override</td></tr>
-<tr class="memitem:a905fcaab18bb11ebadf3260548623780" id="r_a905fcaab18bb11ebadf3260548623780"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a905fcaab18bb11ebadf3260548623780">onUnitTest</a> () override</td></tr>
-<tr class="memdesc:a905fcaab18bb11ebadf3260548623780"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
+<tr class="memitem:aaeda19d4caa5454b41552b5364e4a3f1" id="r_aaeda19d4caa5454b41552b5364e4a3f1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaeda19d4caa5454b41552b5364e4a3f1">onUnitTest</a> (int frame) override</td></tr>
+<tr class="memdesc:aaeda19d4caa5454b41552b5364e4a3f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
 <tr class="memitem:af5dc4d16a973c58cfc06fe93c9984230" id="r_af5dc4d16a973c58cfc06fe93c9984230"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#af5dc4d16a973c58cfc06fe93c9984230">onWindowResize</a> (int logicalWidth, int logicalHeight) override</td></tr>
 <tr class="memitem:add51818178cdddcab02c51d3b60c7be5" id="r_add51818178cdddcab02c51d3b60c7be5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#add51818178cdddcab02c51d3b60c7be5">renderPanel</a> ()</td></tr>
 <tr class="memitem:aecc87ca379f31d1d6328021bbb6d3cf6" id="r_aecc87ca379f31d1d6328021bbb6d3cf6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#aecc87ca379f31d1d6328021bbb6d3cf6">getSpriteSheet</a> () const</td></tr>
@@ -2786,8 +2786,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a905fcaab18bb11ebadf3260548623780" name="a905fcaab18bb11ebadf3260548623780"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a905fcaab18bb11ebadf3260548623780">&#9670;&#160;</a></span>onUnitTest()</h2>
+<a id="aaeda19d4caa5454b41552b5364e4a3f1" name="aaeda19d4caa5454b41552b5364e4a3f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaeda19d4caa5454b41552b5364e4a3f1">&#9670;&#160;</a></span>onUnitTest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2798,7 +2798,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="memname">bool SDOM::Frame::onUnitTest </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>frame</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -2812,7 +2812,7 @@ template&lt;typename T&gt; </div>
 <p>Runs unit tests for this object. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classSDOM_1_1IPanelObject.html#a97d72b2528305940114b6febb4c83f16">SDOM::IPanelObject</a>.</p>
 
 </div>
 </div>

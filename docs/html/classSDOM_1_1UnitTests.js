@@ -2,6 +2,7 @@ var classSDOM_1_1UnitTests =
 [
     [ "UnitTests", "classSDOM_1_1UnitTests.html#a1e79ed95db86daf166bb72932fed97b5", null ],
     [ "add_test", "classSDOM_1_1UnitTests.html#a31d4d291f8b1119b213d1f51e49d4ce1", null ],
+    [ "all_done", "classSDOM_1_1UnitTests.html#a15b4ca21a39eea01dd2b0dd6c52571b3", null ],
     [ "clear_tests", "classSDOM_1_1UnitTests.html#aa04b15f4ed9bdd43aac8a91708793abe", null ],
     [ "getColor", "classSDOM_1_1UnitTests.html#aa3a690ea1eaf0f8adc68c214c9f77130", null ],
     [ "getEventManager", "classSDOM_1_1UnitTests.html#a8c0f133c131e5acef12a2ffbd275064e", null ],
@@ -19,5 +20,6 @@ var classSDOM_1_1UnitTests =
     [ "run_lua_tests", "classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d", null ],
     [ "setIsTraversing", "classSDOM_1_1UnitTests.html#aa8818c326f3221af590af43e201d5494", null ],
     [ "setLuaFilename", "classSDOM_1_1UnitTests.html#a3c1b7047e61073eee5f5fa84e1394bff", null ],
+    [ "update", "classSDOM_1_1UnitTests.html#aa0cb296cd4fcce056ed4b5e02606e029", null ],
     [ "show_all_tests", "classSDOM_1_1UnitTests.html#ac27ab5383d4e1a230e1f0065b1496c0d", null ]
 ];

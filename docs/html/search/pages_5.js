@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['features_0',['Features',['../md_README.html#autotoc_md3',1,'Features'],['../md_README.html#autotoc_md5',1,'Key Features']]],
-  ['for_20doxygen_1',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md24',1,'']]],
-  ['freetype_20on_20debian_3a_2',['Freetype on Debian:',['../md_README.html#autotoc_md18',1,'']]]
+  ['changes_0',['Notable recent changes',['../md_README.html#autotoc_md14',1,'']]],
+  ['cmake_20integration_1',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md31',1,'']]],
+  ['conventions_2',['Identifier Conventions',['../md_README.html#autotoc_md8',1,'']]]
 ];

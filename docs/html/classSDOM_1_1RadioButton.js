@@ -111,7 +111,7 @@ var classSDOM_1_1RadioButton =
     [ "onQuit", "classSDOM_1_1RadioButton.html#ae761adaf26ac6c1a3fe5a06a54121293", null ],
     [ "onRender", "classSDOM_1_1RadioButton.html#a9ed82e9fa145eadbc898f4aa2b6a511e", null ],
     [ "onStateChanged", "classSDOM_1_1RadioButton.html#a9c4ba646906ff5087352b560e6eafb24", null ],
-    [ "onUnitTest", "classSDOM_1_1RadioButton.html#a8d18cad795b1c1b0ac09a206f947f649", null ],
+    [ "onUnitTest", "classSDOM_1_1RadioButton.html#a753e4a1569def7e2822fe1549f2b12df", null ],
     [ "onUpdate", "classSDOM_1_1RadioButton.html#a81d22764d004475cf095fa53cebe0b8c", null ],
     [ "onWindowResize", "classSDOM_1_1RadioButton.html#ad7eb8c648f30d8381ed38d6ad323bfcd", null ],
     [ "operator!=", "classSDOM_1_1RadioButton.html#a9df7d876aa3bdab412a4284982029f72", null ],

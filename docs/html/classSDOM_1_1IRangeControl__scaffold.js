@@ -96,7 +96,7 @@ var classSDOM_1_1IRangeControl__scaffold =
     [ "onInit", "classSDOM_1_1IRangeControl__scaffold.html#a61d29e8b0d760a623f4e9b19f8ae9065", null ],
     [ "onQuit", "classSDOM_1_1IRangeControl__scaffold.html#a97523c65a8f1e7643d0735194bb512a7", null ],
     [ "onRender", "classSDOM_1_1IRangeControl__scaffold.html#a3096e9a88e000fd0282ecd11c038c88c", null ],
-    [ "onUnitTest", "classSDOM_1_1IRangeControl__scaffold.html#a042780e456229f84422f6e5ceb4016b7", null ],
+    [ "onUnitTest", "classSDOM_1_1IRangeControl__scaffold.html#a37aaf40d88a5713fed56977167de1538", null ],
     [ "onUpdate", "classSDOM_1_1IRangeControl__scaffold.html#a9905940a68c49c905bc01472e7155878", null ],
     [ "onWindowResize", "classSDOM_1_1IRangeControl__scaffold.html#a2adce5f430f1b87c013a63836cffa70f", null ],
     [ "operator!=", "classSDOM_1_1IRangeControl__scaffold.html#a9df7d876aa3bdab412a4284982029f72", null ],

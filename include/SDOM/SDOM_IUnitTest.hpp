@@ -34,7 +34,7 @@ namespace SDOM
          * @brief Runs unit tests for this object.
          * @return true if all tests pass, false otherwise.
          */
-        virtual bool onUnitTest() = 0;
+        virtual bool onUnitTest(int frame) = 0;
 
         // Optionally add logging/display methods here
         // ...

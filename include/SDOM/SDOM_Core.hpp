@@ -51,7 +51,7 @@ namespace SDOM
         // --- Lifecycle (IDataObject overrides) --- //
         virtual bool onInit() override;
         virtual void onQuit() override;
-        virtual bool onUnitTest() override;
+        virtual bool onUnitTest(int frame) override;
 
         // --- Main Loop & Event Dispatch --- //
         // Return true when the run completed successfully (no failing unit tests or runtime errors).

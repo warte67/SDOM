@@ -44,7 +44,7 @@ var classSDOM_1_1TruetypeFont =
     [ "onInit", "classSDOM_1_1TruetypeFont.html#a67c02d0031e8bdc9bd30c19d97f1becc", null ],
     [ "onLoad", "classSDOM_1_1TruetypeFont.html#ac13f4a9d2b1700304ba43be5b1b8137f", null ],
     [ "onQuit", "classSDOM_1_1TruetypeFont.html#a5c3519a3ab06e49be657cb0c33ccfd95", null ],
-    [ "onUnitTest", "classSDOM_1_1TruetypeFont.html#a078b1250ee8da5de7fe72b3fd122c06b", null ],
+    [ "onUnitTest", "classSDOM_1_1TruetypeFont.html#a5b7ee77c8e89e44a6aed47326b398211", null ],
     [ "onUnload", "classSDOM_1_1TruetypeFont.html#ae3063a2261f06d5d6798c30b5179c292", null ],
     [ "register_usertype_with_table", "classSDOM_1_1TruetypeFont.html#a90dd1b86ac56a3fb85044e6f0fd5528e", null ],
     [ "registerLuaBindings", "classSDOM_1_1TruetypeFont.html#a1947ff718446a6a81cd108b87a475d9f", null ],

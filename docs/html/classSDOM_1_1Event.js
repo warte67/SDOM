@@ -40,7 +40,7 @@ var classSDOM_1_1Event =
     [ "lua_value_case_insensitive", "classSDOM_1_1Event.html#ac79673e571c58f21de1541a81548a959", null ],
     [ "onInit", "classSDOM_1_1Event.html#aa6208c66c23e9a104a6acdfe8c0ddc7a", null ],
     [ "onQuit", "classSDOM_1_1Event.html#a350412f6d2ec77b7d301b39b56bf8893", null ],
-    [ "onUnitTest", "classSDOM_1_1Event.html#accf10992aa1dc65addeb56baab70e1e6", null ],
+    [ "onUnitTest", "classSDOM_1_1Event.html#ae4530264b8a284b3c41a306b20b8f648", null ],
     [ "operator=", "classSDOM_1_1Event.html#abbba394f38967aed179a175753b041c7", null ],
     [ "register_usertype_with_table", "classSDOM_1_1Event.html#a90dd1b86ac56a3fb85044e6f0fd5528e", null ],
     [ "registerLua", "classSDOM_1_1Event.html#a4f6b28e5635e88595288a6c66de4a74a", null ],

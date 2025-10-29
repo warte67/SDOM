@@ -79,7 +79,7 @@ namespace SDOM
         virtual void onEvent(const Event& event) override;  // Called when an event occurs
         virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
         virtual void onRender() override;   // Called to render the display object
-        virtual bool onUnitTest() override; // Unit test method
+        virtual bool onUnitTest(int frame) override; // Unit test method
 
         // --- Public Accessors --- //
         // Add custom getters here

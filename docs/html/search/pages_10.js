@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['the_20example_0',['Running the Example',['../md_README.html#autotoc_md11',1,'']]],
-  ['the_20sdom_20library_1',['Building the SDOM Library',['../md_README.html#autotoc_md10',1,'']]],
-  ['to_20png_20svg_20for_20doxygen_2',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md24',1,'']]],
-  ['type_3',['IDataObject: Data-Driven Base Type',['../md_README.html#autotoc_md4',1,'']]]
+  ['object_20model_20api_0',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
+  ['of_20the_20test_20harness_20application_3a_1',['Screenshot of the Test Harness application:',['../md_README.html#autotoc_md3',1,'']]],
+  ['option_201_3a_2',['Option 1:',['../md_README.html#autotoc_md29',1,'']]],
+  ['option_202_3a_20msys2_20mingw_20ucrt64_3',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md30',1,'']]],
+  ['option_203_3a_20vcpkg_20visual_20studio_20cmake_20integration_4',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md31',1,'']]],
+  ['overview_5',['Overview',['../md_README.html#autotoc_md4',1,'']]]
 ];

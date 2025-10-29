@@ -58,7 +58,7 @@ namespace SDOM
         virtual void onUpdate(float fElapsedTime) override; 
         virtual void onEvent(const Event& event) override; 
         virtual void onRender() override; 
-        virtual bool onUnitTest() override; 
+        virtual bool onUnitTest(int frame) override; 
 
         // --- Stage-Specific State --- //
         static int getMouseX() { return mouseX; }

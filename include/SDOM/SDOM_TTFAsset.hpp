@@ -55,7 +55,7 @@ namespace SDOM
         virtual void onQuit() override;
         virtual void onLoad() override;
         virtual void onUnload() override;
-        virtual bool onUnitTest() override;
+        virtual bool onUnitTest(int frame) override;
 
         TTF_Font* _getTTFFontPtr() const { return ttf_font_; }
         int getFontSize() const { return internalFontSize_; }

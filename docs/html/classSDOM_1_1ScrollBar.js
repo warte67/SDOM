@@ -97,7 +97,7 @@ var classSDOM_1_1ScrollBar =
     [ "onInit", "classSDOM_1_1ScrollBar.html#a75e310c4daf2c6d96df7ee02cf18e516", null ],
     [ "onQuit", "classSDOM_1_1ScrollBar.html#a638b43bc39936e35501210885597bfaf", null ],
     [ "onRender", "classSDOM_1_1ScrollBar.html#a94e73ba3b3562e54f71b48328d0de504", null ],
-    [ "onUnitTest", "classSDOM_1_1ScrollBar.html#a857cf3543bf226c0e9fac148455bc527", null ],
+    [ "onUnitTest", "classSDOM_1_1ScrollBar.html#ae07c9347a2403e4b211e699d7a53b76c", null ],
     [ "onUpdate", "classSDOM_1_1ScrollBar.html#a1a726c106156537478b0fe45183692de", null ],
     [ "onWindowResize", "classSDOM_1_1ScrollBar.html#ae3e09133c5a07df9c25ac3796030a485", null ],
     [ "operator!=", "classSDOM_1_1ScrollBar.html#a9df7d876aa3bdab412a4284982029f72", null ],

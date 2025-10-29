@@ -111,7 +111,7 @@ var classSDOM_1_1TristateButton =
     [ "onQuit", "classSDOM_1_1TristateButton.html#a2fceb0edecf21dcf60d75e31ae1a01b6", null ],
     [ "onRender", "classSDOM_1_1TristateButton.html#ac01511d598fabf5d02883a960b590155", null ],
     [ "onStateChanged", "classSDOM_1_1TristateButton.html#ad44a681bc7be6771d6f3e5b3072c3064", null ],
-    [ "onUnitTest", "classSDOM_1_1TristateButton.html#aa49e51bec6c68d650e95e06461b02e99", null ],
+    [ "onUnitTest", "classSDOM_1_1TristateButton.html#ac27c8e41b7a360e7cfe2e94baaa028a0", null ],
     [ "onUpdate", "classSDOM_1_1TristateButton.html#acb7d2f0af7636618128a75bbd227ce0b", null ],
     [ "onWindowResize", "classSDOM_1_1TristateButton.html#ad7eb8c648f30d8381ed38d6ad323bfcd", null ],
     [ "operator!=", "classSDOM_1_1TristateButton.html#a9df7d876aa3bdab412a4284982029f72", null ],

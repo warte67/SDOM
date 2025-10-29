@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['per_20sdl3_3a_0',['Build per SDL3:',['../md_README.html#autotoc_md20',1,'']]],
-  ['png_20svg_20for_20doxygen_1',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md24',1,'']]],
-  ['prerequisites_2',['Prerequisites',['../md_README.html#autotoc_md9',1,'']]],
-  ['project_20structure_3',['Project Structure',['../md_README.html#autotoc_md14',1,'']]]
+  ['libraries_0',['Build and install SDL3 libraries',['../md_README.html#autotoc_md35',1,'']]],
+  ['library_1',['Building the SDOM Library',['../md_README.html#autotoc_md12',1,'']]],
+  ['license_2',['License',['../md_README.html#autotoc_md39',1,'']]],
+  ['linux_3',['🐧 Arch Linux',['../md_README.html#autotoc_md25',1,'']]],
+  ['lua_4',['Why Lua?',['../md_README.html#autotoc_md19',1,'']]],
+  ['lua_20integration_20and_20requirements_5',['Lua Integration and Requirements',['../md_README.html#autotoc_md18',1,'']]]
 ];

@@ -547,10 +547,10 @@ namespace SDOM
         }
     } // END: void ScrollBar::onRender()
 
-    bool ScrollBar::onUnitTest()
+    bool ScrollBar::onUnitTest(int frame)
     {
         // run base checks first
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame)) return false;
 
         bool ok = true;
 

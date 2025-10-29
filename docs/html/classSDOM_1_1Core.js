@@ -99,7 +99,7 @@ var classSDOM_1_1Core =
     [ "onInit", "classSDOM_1_1Core.html#ac71a3d701929ce7d18e3cbc0eb62216c", null ],
     [ "onQuit", "classSDOM_1_1Core.html#ab56b5bf8eaaabca75ae8443ed6d959e3", null ],
     [ "onRender", "classSDOM_1_1Core.html#a3dfb99c2c13828f5556d3ed27f378bc9", null ],
-    [ "onUnitTest", "classSDOM_1_1Core.html#ae81d8590efccffdc1164e30989b36805", null ],
+    [ "onUnitTest", "classSDOM_1_1Core.html#a9c63296378d5bbd64aaf68a76e79bd4b", null ],
     [ "onUpdate", "classSDOM_1_1Core.html#ac957e460daa810202bb6d0abb59a50b4", null ],
     [ "onWindowResize", "classSDOM_1_1Core.html#a84c2960a86f69cadd93f8afffd3e9cdf", null ],
     [ "printObjectRegistry", "classSDOM_1_1Core.html#a12012a49089d5409e2f671d6bb9ba96c", null ],

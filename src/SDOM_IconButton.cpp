@@ -309,10 +309,10 @@ namespace SDOM
 
     } // END: void IconButton::onEvent(const Event& event)
 
-    bool IconButton::onUnitTest()
+    bool IconButton::onUnitTest(int frame)
     {   
         // Basic unit test implementation
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame)) return false;
 
         bool ok = true;
 

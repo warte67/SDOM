@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['key_20features_0',['Key Features',['../md_README.html#autotoc_md453',1,'']]],
-  ['key_20takeaways_1',['Key Takeaways',['../md_docs_2extensible__factory.html#autotoc_md187',1,'']]],
-  ['keyboard_20events_2',['Keyboard Events',['../md_docs_2event__design.html#autotoc_md120',1,'']]]
+  ['ubuntu_0',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md24',1,'']]],
+  ['ucrt64_1',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md30',1,'']]]
 ];

@@ -47,8 +47,9 @@ namespace SDOM
         SUPER::onRender();
     } // END: CheckButton::onRender()
 
-    bool CheckButton::onUnitTest() 
+    bool CheckButton::onUnitTest(int frame)
     {
+        (void)frame; // unused
         return true;
     } // END: CheckButton::onUnitTest()
 

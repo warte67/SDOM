@@ -107,7 +107,7 @@ var classSDOM_1_1Group =
     [ "onInit", "classSDOM_1_1Group.html#af2d3fdf7570263eb26ece32d39e5321d", null ],
     [ "onQuit", "classSDOM_1_1Group.html#a4c562f5dd8a9f6ce2e1b529ce783dcba", null ],
     [ "onRender", "classSDOM_1_1Group.html#a0ba51de5ab275178ddc7c6659132da0f", null ],
-    [ "onUnitTest", "classSDOM_1_1Group.html#a5173780dc24d55f3987fc776a6c233e5", null ],
+    [ "onUnitTest", "classSDOM_1_1Group.html#ac2af5adf33d3a05d75c1fa5d69877814", null ],
     [ "onUpdate", "classSDOM_1_1Group.html#ac7811e017522c94461a241c514ca879c", null ],
     [ "onWindowResize", "classSDOM_1_1Group.html#af5dc4d16a973c58cfc06fe93c9984230", null ],
     [ "operator!=", "classSDOM_1_1Group.html#a9df7d876aa3bdab412a4284982029f72", null ],

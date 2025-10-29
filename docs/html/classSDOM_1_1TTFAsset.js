@@ -21,7 +21,7 @@ var classSDOM_1_1TTFAsset =
     [ "onInit", "classSDOM_1_1TTFAsset.html#a084464a6f797be9f519a134ac8307d4b", null ],
     [ "onLoad", "classSDOM_1_1TTFAsset.html#a3f6ab9e08200ab505cd8730fc5e5b4dc", null ],
     [ "onQuit", "classSDOM_1_1TTFAsset.html#a2644badfe5fad0b7d5d381ef86431796", null ],
-    [ "onUnitTest", "classSDOM_1_1TTFAsset.html#a1ff100abb3175a19ea9c5a7691976d57", null ],
+    [ "onUnitTest", "classSDOM_1_1TTFAsset.html#ab4db9dc668cb88033011debb5b90daad", null ],
     [ "onUnload", "classSDOM_1_1TTFAsset.html#a1f8278d2d9f1832193160f8944fad520", null ],
     [ "register_usertype_with_table", "classSDOM_1_1TTFAsset.html#a90dd1b86ac56a3fb85044e6f0fd5528e", null ],
     [ "registerLuaBindings", "classSDOM_1_1TTFAsset.html#a1947ff718446a6a81cd108b87a475d9f", null ],

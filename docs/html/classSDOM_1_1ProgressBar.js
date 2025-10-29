@@ -96,7 +96,7 @@ var classSDOM_1_1ProgressBar =
     [ "onInit", "classSDOM_1_1ProgressBar.html#a25db7fd62a363cf4a60f3709e51ab7fe", null ],
     [ "onQuit", "classSDOM_1_1ProgressBar.html#afe5e990d2006a4df1d3ef33bdc00fbaf", null ],
     [ "onRender", "classSDOM_1_1ProgressBar.html#a7f103a50eb42bf43d489c9574a76bffb", null ],
-    [ "onUnitTest", "classSDOM_1_1ProgressBar.html#a73633f6a402edd21bf247281386b2a46", null ],
+    [ "onUnitTest", "classSDOM_1_1ProgressBar.html#a740e25878a3329ecda6a668b4dab4494", null ],
     [ "onUpdate", "classSDOM_1_1ProgressBar.html#a95941209c17ba2095e140aac8a49d176", null ],
     [ "onWindowResize", "classSDOM_1_1ProgressBar.html#ae3e09133c5a07df9c25ac3796030a485", null ],
     [ "operator!=", "classSDOM_1_1ProgressBar.html#a9df7d876aa3bdab412a4284982029f72", null ],

@@ -106,7 +106,7 @@ var classSDOM_1_1Button =
     [ "onQuit", "classSDOM_1_1Button.html#ad7f17b9fa0c27960ede146563314f989", null ],
     [ "onRender", "classSDOM_1_1Button.html#abf6ba2926448281fd1181666a0dcb2cd", null ],
     [ "onStateChanged", "classSDOM_1_1Button.html#a811ff1f460ef9da2d5c33389fd00fc05", null ],
-    [ "onUnitTest", "classSDOM_1_1Button.html#a50393eecf031fd9fcb89faa19b861f9f", null ],
+    [ "onUnitTest", "classSDOM_1_1Button.html#ab47ce112e7f6288299c0112426911fb7", null ],
     [ "onUpdate", "classSDOM_1_1Button.html#a14acef729f93d5ab8e683ab83ff1b9c1", null ],
     [ "onWindowResize", "classSDOM_1_1Button.html#af5dc4d16a973c58cfc06fe93c9984230", null ],
     [ "operator!=", "classSDOM_1_1Button.html#a9df7d876aa3bdab412a4284982029f72", null ],

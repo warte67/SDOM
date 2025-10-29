@@ -50,7 +50,7 @@ namespace SDOM
         virtual bool onInit() override;
     bool isInitialized() const { return initialized_; }
         virtual void onQuit() override {}
-        virtual bool onUnitTest() override;
+        virtual bool onUnitTest(int frame) override;
 
         // --- Object Type Registration --- //
         void registerDomType(const std::string& typeName, const TypeCreators& creators);  // change to registerDisplayObjectType()

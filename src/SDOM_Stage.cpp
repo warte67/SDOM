@@ -75,10 +75,10 @@ namespace SDOM
         SDL_RenderClear(renderer);
     }
 
-    bool Stage::onUnitTest()
+    bool Stage::onUnitTest(int frame)
     {
         // run base checks first
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame)) return false;
 
         bool ok = true;
 

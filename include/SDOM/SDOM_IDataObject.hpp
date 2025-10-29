@@ -111,7 +111,7 @@ namespace SDOM
 
         virtual bool onInit() = 0;
         virtual void onQuit() = 0;
-        virtual bool onUnitTest() override { return true; }
+        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
 
         template<typename T>
         static T lua_value_case_insensitive(const sol::table& tbl, const std::string& key, const T& default_value)

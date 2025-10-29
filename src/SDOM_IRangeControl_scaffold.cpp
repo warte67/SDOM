@@ -45,9 +45,9 @@ namespace SDOM
         SUPER::onRender();
     } // END: void IRangeControl_scaffold::onRender()
 
-    bool IRangeControl_scaffold::onUnitTest()
+    bool IRangeControl_scaffold::onUnitTest(int frame)
     {
-        return SUPER::onUnitTest();
+        return SUPER::onUnitTest(frame);
     } // END: bool IRangeControl_scaffold::onUnitTest()
 
     // Cached-texture resilience on device changes

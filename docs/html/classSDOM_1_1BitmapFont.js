@@ -45,7 +45,7 @@ var classSDOM_1_1BitmapFont =
     [ "onInit", "classSDOM_1_1BitmapFont.html#a6b667baa33b7957df5ab4e4c5be427ba", null ],
     [ "onLoad", "classSDOM_1_1BitmapFont.html#a79b4bddd8017644c4570dc321501b319", null ],
     [ "onQuit", "classSDOM_1_1BitmapFont.html#a561d56ec8efd8a0592d88d54f65dcc14", null ],
-    [ "onUnitTest", "classSDOM_1_1BitmapFont.html#a078b1250ee8da5de7fe72b3fd122c06b", null ],
+    [ "onUnitTest", "classSDOM_1_1BitmapFont.html#a5b7ee77c8e89e44a6aed47326b398211", null ],
     [ "onUnload", "classSDOM_1_1BitmapFont.html#af7fb41bc4695e153458177e35a5a8c8d", null ],
     [ "register_usertype_with_table", "classSDOM_1_1BitmapFont.html#a90dd1b86ac56a3fb85044e6f0fd5528e", null ],
     [ "registerLuaBindings", "classSDOM_1_1BitmapFont.html#a1947ff718446a6a81cd108b87a475d9f", null ],

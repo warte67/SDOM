@@ -258,10 +258,10 @@ namespace SDOM
         isLoaded_ = false;
     }
 
-    bool SpriteSheet::onUnitTest()
+    bool SpriteSheet::onUnitTest(int frame)
     {
         // run base checks first
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame)) return false;
 
         bool ok = true;
 
@@ -278,7 +278,7 @@ namespace SDOM
             ok = false;
         } else {
             try {
-                if (!textureAsset->onUnitTest()) {
+                if (!textureAsset->onUnitTest(frame)) {
                     DEBUG_LOG("[UnitTest] SpriteSheet '" << getName() << "' Texture asset onUnitTest() failed");
                     ok = false;
                 }

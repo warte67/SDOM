@@ -90,10 +90,10 @@ namespace SDOM
         SUPER::onRender(); // Call (IconButton) base class render
     } // END: void ArrowButton::onRender() 
 
-    bool ArrowButton::onUnitTest() 
+    bool ArrowButton::onUnitTest(int frame) 
     {
         // run base checks first
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame)) return false;
 
         bool ok = true;
 

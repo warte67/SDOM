@@ -118,8 +118,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6d1e30c73adf981ff4dc3e00deff05fb" id="r_a6d1e30c73adf981ff4dc3e00deff05fb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d1e30c73adf981ff4dc3e00deff05fb">onQuit</a> () override</td></tr>
 <tr class="memitem:a378cb53081a82814ac35523f21f4f9de" id="r_a378cb53081a82814ac35523f21f4f9de"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a378cb53081a82814ac35523f21f4f9de">onLoad</a> () override</td></tr>
 <tr class="memitem:aaa1aabff729ab13581ca7a4539e2e567" id="r_aaa1aabff729ab13581ca7a4539e2e567"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa1aabff729ab13581ca7a4539e2e567">onUnload</a> () override</td></tr>
-<tr class="memitem:ac5de618903b03a169e0ca1d7c10236e3" id="r_ac5de618903b03a169e0ca1d7c10236e3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5de618903b03a169e0ca1d7c10236e3">onUnitTest</a> () override</td></tr>
-<tr class="memdesc:ac5de618903b03a169e0ca1d7c10236e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
+<tr class="memitem:aec950a95d14f3defec149148de8206a9" id="r_aec950a95d14f3defec149148de8206a9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec950a95d14f3defec149148de8206a9">onUnitTest</a> (int frame) override</td></tr>
+<tr class="memdesc:aec950a95d14f3defec149148de8206a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
 <tr class="memitem:abe5aeadd7bee6825c3a70434e6917b1c" id="r_abe5aeadd7bee6825c3a70434e6917b1c"><td class="memItemLeft" align="right" valign="top">SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe5aeadd7bee6825c3a70434e6917b1c">getTexture</a> () const</td></tr>
 <tr class="memitem:a9a9b8da27fae262532a963c10eab0c82" id="r_a9a9b8da27fae262532a963c10eab0c82"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a9b8da27fae262532a963c10eab0c82">getTextureWidth</a> () const</td></tr>
 <tr class="memitem:a497fb4a9cbcb708282658d603f421115" id="r_a497fb4a9cbcb708282658d603f421115"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a497fb4a9cbcb708282658d603f421115">getTextureHeight</a> () const</td></tr>
@@ -725,8 +725,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="ac5de618903b03a169e0ca1d7c10236e3" name="ac5de618903b03a169e0ca1d7c10236e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5de618903b03a169e0ca1d7c10236e3">&#9670;&#160;</a></span>onUnitTest()</h2>
+<a id="aec950a95d14f3defec149148de8206a9" name="aec950a95d14f3defec149148de8206a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec950a95d14f3defec149148de8206a9">&#9670;&#160;</a></span>onUnitTest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -737,7 +737,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="memname">bool SDOM::Texture::onUnitTest </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>frame</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -751,7 +751,7 @@ template&lt;typename T&gt; </div>
 <p>Runs unit tests for this object. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classSDOM_1_1IAssetObject.html#a078b1250ee8da5de7fe72b3fd122c06b">SDOM::IAssetObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classSDOM_1_1IAssetObject.html#a5b7ee77c8e89e44a6aed47326b398211">SDOM::IAssetObject</a>.</p>
 
 </div>
 </div>

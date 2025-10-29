@@ -97,7 +97,7 @@ var classSDOM_1_1IRangeControl =
     [ "onInit", "classSDOM_1_1IRangeControl.html#aff270671ac5e0385cde12f96f149c482", null ],
     [ "onQuit", "classSDOM_1_1IRangeControl.html#a6b2b7a1ae17f2dda326efe751f5aae9b", null ],
     [ "onRender", "classSDOM_1_1IRangeControl.html#a06619c25a319cdd604d43930a70df844", null ],
-    [ "onUnitTest", "classSDOM_1_1IRangeControl.html#a707366ae99e62351ba991f853792ad72", null ],
+    [ "onUnitTest", "classSDOM_1_1IRangeControl.html#a4a5557fe89361bd3d692a327c680a74a", null ],
     [ "onUpdate", "classSDOM_1_1IRangeControl.html#a39682c833400256a68206ea7d7559dd8", null ],
     [ "onWindowResize", "classSDOM_1_1IRangeControl.html#ae3e09133c5a07df9c25ac3796030a485", null ],
     [ "operator!=", "classSDOM_1_1IRangeControl.html#a9df7d876aa3bdab412a4284982029f72", null ],

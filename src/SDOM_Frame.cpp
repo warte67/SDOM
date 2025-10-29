@@ -69,10 +69,10 @@ namespace SDOM
 
     } // END: void Frame::onEvent(const Event& event)
 
-    bool Frame::onUnitTest()
+    bool Frame::onUnitTest(int frame_itr)
     {
         // run base checks first
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame_itr)) return false;
 
         bool ok = true;
 

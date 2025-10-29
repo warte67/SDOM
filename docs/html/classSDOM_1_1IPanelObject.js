@@ -97,7 +97,7 @@ var classSDOM_1_1IPanelObject =
     [ "onInit", "classSDOM_1_1IPanelObject.html#a31008a7eb116357481748bdd2b15102c", null ],
     [ "onQuit", "classSDOM_1_1IPanelObject.html#a7307298d6877a9f52f112c6a6254c27c", null ],
     [ "onRender", "classSDOM_1_1IPanelObject.html#ac2ab8da48bceb2acc59644b1ca33e6b8", null ],
-    [ "onUnitTest", "classSDOM_1_1IPanelObject.html#a91f380e8aff044d17e38786d28781e83", null ],
+    [ "onUnitTest", "classSDOM_1_1IPanelObject.html#a97d72b2528305940114b6febb4c83f16", null ],
     [ "onUpdate", "classSDOM_1_1IPanelObject.html#a489b15ae8faee121c53056b58bdd20d6", null ],
     [ "onWindowResize", "classSDOM_1_1IPanelObject.html#af5dc4d16a973c58cfc06fe93c9984230", null ],
     [ "operator!=", "classSDOM_1_1IPanelObject.html#a9df7d876aa3bdab412a4284982029f72", null ],

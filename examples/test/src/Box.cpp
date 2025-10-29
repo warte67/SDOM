@@ -392,11 +392,11 @@ void Box::onRender()
     // END: SpriteSheet rendering
 }
 
-bool Box::onUnitTest() 
+bool Box::onUnitTest(int frame) 
 {
-    // std::cout << CLR::CYAN << "Box::onUnitTest() called for Box: " << getName() << std::endl;
+    // std::cout << CLR::CYAN << "Box::onUnitTest() called for Box: " << getName() << std::endl;    
 
-    return true;
+    return SUPER::onUnitTest(frame); // Call base class unit test handler
 }
 
 

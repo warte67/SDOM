@@ -6,7 +6,7 @@ var classSDOM_1_1IDataObject =
     [ "lua_value_case_insensitive", "classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959", null ],
     [ "onInit", "classSDOM_1_1IDataObject.html#ae7bbc291ea72a2a99a1cce4c86e681cb", null ],
     [ "onQuit", "classSDOM_1_1IDataObject.html#a8254dbe0378d780dc2665f892430f543", null ],
-    [ "onUnitTest", "classSDOM_1_1IDataObject.html#accf10992aa1dc65addeb56baab70e1e6", null ],
+    [ "onUnitTest", "classSDOM_1_1IDataObject.html#ae4530264b8a284b3c41a306b20b8f648", null ],
     [ "register_usertype_with_table", "classSDOM_1_1IDataObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e", null ],
     [ "registerLuaBindings", "classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f", null ],
     [ "setName", "classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],

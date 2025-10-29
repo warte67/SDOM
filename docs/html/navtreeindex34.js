@@ -1,7 +1,5 @@
 var NAVTREEINDEX34 =
 {
-"classSDOM_1_1SpriteSheet.html#ac79673e571c58f21de1541a81548a959":[3,0,0,35,36],
-"classSDOM_1_1SpriteSheet.html#ac7a5e59ff7a7f4b3a0b56272d687462d":[2,0,0,35,62],
 "classSDOM_1_1SpriteSheet.html#ac7a5e59ff7a7f4b3a0b56272d687462d":[3,0,0,35,62],
 "classSDOM_1_1SpriteSheet.html#ac9d8d159f1741d87f29d618218314594":[2,0,0,35,42],
 "classSDOM_1_1SpriteSheet.html#ac9d8d159f1741d87f29d618218314594":[3,0,0,35,42],
@@ -31,6 +29,8 @@ var NAVTREEINDEX34 =
 "classSDOM_1_1SpriteSheet.html#ae7ad9fa4d5e6bc23d31d45fd9567b25b":[3,0,0,35,14],
 "classSDOM_1_1SpriteSheet.html#ae9100dd7d5dc3c61943bdb892ba6dcec":[2,0,0,35,48],
 "classSDOM_1_1SpriteSheet.html#ae9100dd7d5dc3c61943bdb892ba6dcec":[3,0,0,35,48],
+"classSDOM_1_1SpriteSheet.html#ae999396e0f51c11336c4d482e77e7928":[2,0,0,35,40],
+"classSDOM_1_1SpriteSheet.html#ae999396e0f51c11336c4d482e77e7928":[3,0,0,35,40],
 "classSDOM_1_1SpriteSheet.html#aec22baa7cef752d93fa3e21363a19ff6":[2,0,0,35,11],
 "classSDOM_1_1SpriteSheet.html#aec22baa7cef752d93fa3e21363a19ff6":[3,0,0,35,11],
 "classSDOM_1_1SpriteSheet.html#af975331dcde3f417bc8c0dd87d13e14f":[2,0,0,35,18],
@@ -165,8 +165,6 @@ var NAVTREEINDEX34 =
 "classSDOM_1_1Stage.html#a514bb1586b9cf3bc4f6043669cf049b2":[3,0,0,36,191],
 "classSDOM_1_1Stage.html#a5323335a18d5af09677f2d5d1fbbd894":[2,0,0,36,69],
 "classSDOM_1_1Stage.html#a5323335a18d5af09677f2d5d1fbbd894":[3,0,0,36,69],
-"classSDOM_1_1Stage.html#a542cdc024058e79a821e16cef570a2bc":[2,0,0,36,89],
-"classSDOM_1_1Stage.html#a542cdc024058e79a821e16cef570a2bc":[3,0,0,36,89],
 "classSDOM_1_1Stage.html#a54db12b3a1a2ff7d7cfff112f2de1ab6":[2,0,0,36,5],
 "classSDOM_1_1Stage.html#a54db12b3a1a2ff7d7cfff112f2de1ab6":[3,0,0,36,5],
 "classSDOM_1_1Stage.html#a5516a95838b44ac318b60d07ee71b164":[2,0,0,36,117],
@@ -249,5 +247,7 @@ var NAVTREEINDEX34 =
 "classSDOM_1_1Stage.html#a80a500f4517a686367ab08b1aa2c488d":[3,0,0,36,121],
 "classSDOM_1_1Stage.html#a82ec9aa6b4ce34ec03e01f9cd002a1be":[2,0,0,36,156],
 "classSDOM_1_1Stage.html#a82ec9aa6b4ce34ec03e01f9cd002a1be":[3,0,0,36,156],
-"classSDOM_1_1Stage.html#a83f54c1f027dad7c7cf98cad72ee9955":[2,0,0,36,104]
+"classSDOM_1_1Stage.html#a83f54c1f027dad7c7cf98cad72ee9955":[2,0,0,36,104],
+"classSDOM_1_1Stage.html#a83f54c1f027dad7c7cf98cad72ee9955":[3,0,0,36,104],
+"classSDOM_1_1Stage.html#a8453e36ea5bffdbb6c57da841db2e5ab":[2,0,0,36,142]
 };

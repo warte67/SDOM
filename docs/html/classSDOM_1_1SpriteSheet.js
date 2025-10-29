@@ -40,7 +40,7 @@ var classSDOM_1_1SpriteSheet =
     [ "onInit", "classSDOM_1_1SpriteSheet.html#ae0db65cb8850e61db038ad4b5d8c14b2", null ],
     [ "onLoad", "classSDOM_1_1SpriteSheet.html#ace080e82325c66eaa879d5bad93615e2", null ],
     [ "onQuit", "classSDOM_1_1SpriteSheet.html#aa72009e1bb14203e4395d2e1b8ee818b", null ],
-    [ "onUnitTest", "classSDOM_1_1SpriteSheet.html#a5d453c16f04fc228c024e4d47d9e5fad", null ],
+    [ "onUnitTest", "classSDOM_1_1SpriteSheet.html#ae999396e0f51c11336c4d482e77e7928", null ],
     [ "onUnload", "classSDOM_1_1SpriteSheet.html#a780273791a1990a20462b66defc78ebb", null ],
     [ "operator==", "classSDOM_1_1SpriteSheet.html#ac9d8d159f1741d87f29d618218314594", null ],
     [ "register_usertype_with_table", "classSDOM_1_1SpriteSheet.html#a90dd1b86ac56a3fb85044e6f0fd5528e", null ],

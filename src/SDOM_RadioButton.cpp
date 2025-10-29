@@ -90,10 +90,10 @@ namespace SDOM
 
     } // END: RadioButton::onRender()
 
-    bool RadioButton::onUnitTest() 
+    bool RadioButton::onUnitTest(int frame) 
     {
         // run base checks first
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame)) return false;
 
         bool ok = true;
 

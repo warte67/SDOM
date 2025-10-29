@@ -22,7 +22,7 @@ var classSDOM_1_1Texture =
     [ "onInit", "classSDOM_1_1Texture.html#a734c4805baad8737b3508009713027b6", null ],
     [ "onLoad", "classSDOM_1_1Texture.html#a378cb53081a82814ac35523f21f4f9de", null ],
     [ "onQuit", "classSDOM_1_1Texture.html#a6d1e30c73adf981ff4dc3e00deff05fb", null ],
-    [ "onUnitTest", "classSDOM_1_1Texture.html#ac5de618903b03a169e0ca1d7c10236e3", null ],
+    [ "onUnitTest", "classSDOM_1_1Texture.html#aec950a95d14f3defec149148de8206a9", null ],
     [ "onUnload", "classSDOM_1_1Texture.html#aaa1aabff729ab13581ca7a4539e2e567", null ],
     [ "register_usertype_with_table", "classSDOM_1_1Texture.html#a90dd1b86ac56a3fb85044e6f0fd5528e", null ],
     [ "registerLuaBindings", "classSDOM_1_1Texture.html#a1947ff718446a6a81cd108b87a475d9f", null ],

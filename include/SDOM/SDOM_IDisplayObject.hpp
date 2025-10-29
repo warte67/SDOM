@@ -238,7 +238,7 @@ Notes & test ideas:
         virtual void onUpdate(float fElapsedTime);
         virtual void onEvent(const Event& event);
         virtual void onRender() = 0;
-        virtual bool onUnitTest() { return true; }
+        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
 
         // Called when the Core's logical render size changes or when SDL
         // render resources are rebuilt. Override in derived classes that

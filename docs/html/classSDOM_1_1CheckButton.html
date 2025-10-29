@@ -128,8 +128,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a35175cff6502f8f16cc1e3c638508d9e" id="r_a35175cff6502f8f16cc1e3c638508d9e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a35175cff6502f8f16cc1e3c638508d9e">onUpdate</a> (float fElapsedTime) override</td></tr>
 <tr class="memitem:ae0b5a53260d922bc00ce3761c385457d" id="r_ae0b5a53260d922bc00ce3761c385457d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae0b5a53260d922bc00ce3761c385457d">onEvent</a> (const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;event) override</td></tr>
 <tr class="memitem:a0648c4dae296a0fe8f32363eea723e94" id="r_a0648c4dae296a0fe8f32363eea723e94"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0648c4dae296a0fe8f32363eea723e94">onRender</a> () override</td></tr>
-<tr class="memitem:a089eab94d78ca095f254f2096d93622f" id="r_a089eab94d78ca095f254f2096d93622f"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a089eab94d78ca095f254f2096d93622f">onUnitTest</a> () override</td></tr>
-<tr class="memdesc:a089eab94d78ca095f254f2096d93622f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
+<tr class="memitem:ae366e6671cc3a4db9745cb478e3e0b68" id="r_ae366e6671cc3a4db9745cb478e3e0b68"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae366e6671cc3a4db9745cb478e3e0b68">onUnitTest</a> (int frame) override</td></tr>
+<tr class="memdesc:ae366e6671cc3a4db9745cb478e3e0b68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
 <tr class="memitem:a37ae18386c70a9a288b16a32c756b68c" id="r_a37ae18386c70a9a288b16a32c756b68c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37ae18386c70a9a288b16a32c756b68c">getState</a> () const</td></tr>
 <tr class="memitem:afa7dd894d73befe1ddb948f530cc4223" id="r_afa7dd894d73befe1ddb948f530cc4223"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa7dd894d73befe1ddb948f530cc4223">setState</a> (<a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a> state)</td></tr>
 <tr class="memitem:af59db273b688afffd4a92a2c5c634d5e" id="r_af59db273b688afffd4a92a2c5c634d5e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1TristateButton.html#af59db273b688afffd4a92a2c5c634d5e">getLabelObject</a> () const</td></tr>
@@ -3089,8 +3089,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a089eab94d78ca095f254f2096d93622f" name="a089eab94d78ca095f254f2096d93622f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a089eab94d78ca095f254f2096d93622f">&#9670;&#160;</a></span>onUnitTest()</h2>
+<a id="ae366e6671cc3a4db9745cb478e3e0b68" name="ae366e6671cc3a4db9745cb478e3e0b68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae366e6671cc3a4db9745cb478e3e0b68">&#9670;&#160;</a></span>onUnitTest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3101,7 +3101,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="memname">bool SDOM::CheckButton::onUnitTest </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>frame</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -3115,7 +3115,7 @@ template&lt;typename T&gt; </div>
 <p>Runs unit tests for this object. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classSDOM_1_1TristateButton.html#aa49e51bec6c68d650e95e06461b02e99">SDOM::TristateButton</a>.</p>
+<p>Reimplemented from <a class="el" href="classSDOM_1_1TristateButton.html#ac27c8e41b7a360e7cfe2e94baaa028a0">SDOM::TristateButton</a>.</p>
 
 </div>
 </div>

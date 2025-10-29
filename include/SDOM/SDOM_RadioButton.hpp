@@ -73,7 +73,7 @@ namespace SDOM
         virtual void onUpdate(float fElapsedTime) override;
         virtual void onEvent(const Event& event) override;
         virtual void onRender() override;
-        virtual bool onUnitTest() override;
+        virtual bool onUnitTest(int frame) override;
 
         // --- Virtual State Accessors (From IButtonObject) --- //
         virtual ButtonState getState() const;

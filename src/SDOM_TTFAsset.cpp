@@ -123,8 +123,9 @@ namespace SDOM
         isLoaded_ = false;
     } // END: TTFAsset::onUnload()
 
-    bool TTFAsset::onUnitTest() 
+    bool TTFAsset::onUnitTest(int frame) 
     {
+        (void)frame; // suppress unused parameter warning
         // std::cout << CLR::LT_ORANGE << "TTFAsset::" << CLR::YELLOW << "onUnitTest()" 
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Unit test logic for TTFAsset

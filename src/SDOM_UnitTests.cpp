@@ -29,8 +29,17 @@ namespace SDOM
 
     void UnitTests::add_test(const std::string& name, std::function<bool(std::vector<std::string>&)> func, bool is_implemented) 
     {
-        _tests.push_back({name, func, is_implemented});
-    }
+        TestCase testCase;
+        testCase.name = name;
+        testCase.func = func;
+        testCase.is_implemented = is_implemented;
+        testCase.has_run = false;
+        testCase.passed = false;
+        testCase.running = false;
+        testCase.frame_count = 0;
+        _tests.push_back(testCase);
+        // _tests.push_back({name, func, is_implemented, false, false, false, 0});
+    } // END add_test()
 
     bool UnitTests::run_all(const std::string& objName) 
     {

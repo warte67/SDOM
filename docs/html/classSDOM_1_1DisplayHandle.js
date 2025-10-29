@@ -20,7 +20,7 @@ var classSDOM_1_1DisplayHandle =
     [ "lua_value_case_insensitive", "classSDOM_1_1DisplayHandle.html#ac79673e571c58f21de1541a81548a959", null ],
     [ "onInit", "classSDOM_1_1DisplayHandle.html#a08f089220edb6683e995e324f97ac833", null ],
     [ "onQuit", "classSDOM_1_1DisplayHandle.html#aa149796b9d887ca3ad54ee4e8a393a9e", null ],
-    [ "onUnitTest", "classSDOM_1_1DisplayHandle.html#a343d9ded20b71ba65f27a6e743435882", null ],
+    [ "onUnitTest", "classSDOM_1_1DisplayHandle.html#a11f984deaac0883a8e7dac38483ccdb5", null ],
     [ "operator bool", "classSDOM_1_1DisplayHandle.html#a264719cfb0552dc97faaea4bb9ea16cd", null ],
     [ "operator!=", "classSDOM_1_1DisplayHandle.html#a35348e2a39315b25a196bbb72c216686", null ],
     [ "operator!=", "classSDOM_1_1DisplayHandle.html#a837b41258c566b612b7edf5425dc135f", null ],

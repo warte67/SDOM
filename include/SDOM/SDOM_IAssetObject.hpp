@@ -32,7 +32,7 @@ namespace SDOM
         virtual void onQuit() = 0;
         virtual void onLoad() = 0;
         virtual void onUnload() = 0;
-        virtual bool onUnitTest() override { return true; }
+        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
 
         // accessors
         const std::string& getType() const { return type_; }

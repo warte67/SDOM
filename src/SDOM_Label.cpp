@@ -571,8 +571,9 @@ namespace SDOM
         }
     } // END Label::onRender()
 
-    bool Label::onUnitTest() 
+    bool Label::onUnitTest(int frame) 
     {
+        SUPER::onUnitTest(frame);
         return true;
     } // END Label::onUnitTest()
     

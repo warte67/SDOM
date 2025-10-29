@@ -383,10 +383,10 @@ namespace SDOM
 
     } // END: void TristateButton::onRender()
 
-    bool TristateButton::onUnitTest() 
+    bool TristateButton::onUnitTest(int frame) 
     { 
         // base checks
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame)) return false;
 
         bool ok = true;
 

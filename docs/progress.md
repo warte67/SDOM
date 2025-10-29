@@ -1308,6 +1308,12 @@ Compiler: g++ (GCC) 15.2.1 20250813
 Platform: Linux-x86_64
 ```
 
+---
+### [October 29, 2025]
+- Updated the README.md with more detailed build instructions and a screenshot of the Test Harness application. 
+- Added automatic version header generation via gen_version.sh
+- Added the frame parameter to the onUnitTest() method of all **IDisplayObject** subclasses.
+
 - **Next Steps:**
   - Refine the UnitTests class to implement a one-test-per-frame approach to unit tests.
   - Finalize **Event_UnitTests.cpp** with comprehensive C++ and Lua tests for EventManager functionality.

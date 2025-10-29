@@ -94,7 +94,7 @@ var classSDOM_1_1IconButton =
     [ "onInit", "classSDOM_1_1IconButton.html#a9a6abc4582eca94e38dd431eff70b398", null ],
     [ "onQuit", "classSDOM_1_1IconButton.html#ae7bbaa9d6f352891ab5a2682a505565b", null ],
     [ "onRender", "classSDOM_1_1IconButton.html#a77dc2b0e7e987a48ab4f88b9523425f7", null ],
-    [ "onUnitTest", "classSDOM_1_1IconButton.html#a9b78bd1604f15686a4ed723bb69d3684", null ],
+    [ "onUnitTest", "classSDOM_1_1IconButton.html#a6928be5ea3b50b438ce1a623c4902d9d", null ],
     [ "onUpdate", "classSDOM_1_1IconButton.html#aa88dc82c9ec007bc82bf08ff61f4fff5", null ],
     [ "onWindowResize", "classSDOM_1_1IconButton.html#ad7eb8c648f30d8381ed38d6ad323bfcd", null ],
     [ "operator!=", "classSDOM_1_1IconButton.html#a9df7d876aa3bdab412a4284982029f72", null ],

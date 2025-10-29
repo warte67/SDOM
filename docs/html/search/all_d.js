@@ -1,12 +1,14 @@
 var searchData=
 [
-  ['name_0',['name',['../structSDOM_1_1IAssetObject_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2',1,'SDOM::IAssetObject::InitStruct::name'],['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a312bd5827cbb79cb02d722c9ec979d3f',1,'SDOM::IDisplayObject::InitStruct::name']]],
-  ['name_5f_1',['name_',['../classSDOM_1_1AssetHandle.html#a9c9c067f3ab9a046a6bc6c7525735a17',1,'SDOM::AssetHandle::name_'],['../classSDOM_1_1IAssetObject.html#a505bc325aa5116514067b9a58b8e0d25',1,'SDOM::IAssetObject::name_'],['../classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396',1,'SDOM::IDataObject::name_']]],
-  ['needstexturerebuild_5f_2',['needsTextureRebuild_',['../classSDOM_1_1Label.html#ac6ab2b5402d976be3a536136629e0562',1,'SDOM::Label']]],
-  ['newline_3',['Newline',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429a755fee300780823fcf4df98383331745',1,'SDOM::Label']]],
-  ['none_4',['None',['../classSDOM_1_1EventType.html#a827940aa9803d3113e7d7a7f5b75a1c5',1,'SDOM::EventType']]],
-  ['normal_5',['NORMAL',['../classCLR.html#ae6ec0e976684b36983d2325ee9bde918',1,'CLR']]],
-  ['normalizeanchorstring_6',['normalizeAnchorString',['../namespaceSDOM.html#ada23a739293dfb38feadc632ee14bb9c',1,'SDOM']]],
-  ['notable_20recent_20changes_7',['Notable recent changes',['../md_README.html#autotoc_md12',1,'']]],
-  ['notes_8',['Migration notes',['../md_README.html#autotoc_md13',1,'']]]
+  ['key_20features_0',['Key Features',['../md_README.html#autotoc_md7',1,'']]],
+  ['key_5ffocused_5f_1',['key_focused_',['../classSDOM_1_1IButtonObject.html#a3fde0164c6d64d391ea5fb9bcd9554bb',1,'SDOM::IButtonObject']]],
+  ['keycode_5f_2',['keycode_',['../classSDOM_1_1Event.html#ad5d36d33d6ba8499825eada138bb46b7',1,'SDOM::Event']]],
+  ['keydown_3',['KeyDown',['../classSDOM_1_1EventType.html#ae96a1317171583ed8a634555d756b4a9',1,'SDOM::EventType']]],
+  ['keymod_5f_4',['keymod_',['../classSDOM_1_1Event.html#af3a872dc47ba1ee24660cbf978a3e7e8',1,'SDOM::Event']]],
+  ['keytoascii_5',['keyToAscii',['../classSDOM_1_1SDL__Utils.html#ae14d8baba865558a55e68468fddc1b62',1,'SDOM::SDL_Utils']]],
+  ['keyup_6',['KeyUp',['../classSDOM_1_1EventType.html#a625823311d8c48db0a73bc2e0042f414',1,'SDOM::EventType']]],
+  ['knob_5fblock_7',['KNOB_BLOCK',['../classCLR.html#a6fbe23d2668132d3eed18d89a7f9ff6b',1,'CLR']]],
+  ['knob_5fhorizontal_8',['Knob_Horizontal',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfba98dc375da0eb545a7afacd7d5388268d',1,'SDOM']]],
+  ['knob_5fround_9',['KNOB_ROUND',['../classCLR.html#a90ad417a2dbc980643b3f3c9da5e59dd',1,'CLR']]],
+  ['knob_5fvertical_10',['Knob_Vertical',['../namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfbab04f772b29529b83791c299f4b101df7',1,'SDOM']]]
 ];

@@ -11,34 +11,33 @@ set(VERSION_TRIGGER "${CMAKE_BINARY_DIR}/_version_trigger")
 
 if(EXISTS "${GEN_VERSION_SCRIPT}")
 
+    # --- Ensure Bash is used instead of /bin/sh (dash) ---
+    find_program(BASH_EXECUTABLE bash)
+    if(NOT BASH_EXECUTABLE)
+        message(FATAL_ERROR "Bash not found! Required to run ${GEN_VERSION_SCRIPT}")
+    endif()
+
+    # --- Create trigger to force regeneration when inputs change ---
     add_custom_command(
         OUTPUT "${VERSION_TRIGGER}"
         COMMAND ${CMAKE_COMMAND} -E touch "${VERSION_TRIGGER}"
         COMMENT "⏱ Updating version trigger"
     )
+
+    # --- Generate version header using Bash explicitly ---
+    get_filename_component(SDOM_ROOT "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
+    set(GEN_VERSION_SCRIPT "${SDOM_ROOT}/scripts/gen_version.sh")
+
     add_custom_command(
         OUTPUT "${VERSION_HEADER}"
-        COMMAND "${GEN_VERSION_SCRIPT}"
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        # COMMAND ${BASH_EXECUTABLE} -c "mkdir -p ${CMAKE_BINARY_DIR} && echo Running ${GEN_VERSION_SCRIPT} && ${GEN_VERSION_SCRIPT} > ${CMAKE_BINARY_DIR}/_version_log.txt 2>&1 || echo FAILED: $? "
+        COMMAND ${BASH_EXECUTABLE} "${GEN_VERSION_SCRIPT}" 2>&1 | tee "${CMAKE_BINARY_DIR}/_version_log.txt"
+        COMMAND ${CMAKE_COMMAND} -E touch "${VERSION_HEADER}"
+        WORKING_DIRECTORY "${SDOM_ROOT}"
         DEPENDS "${GEN_VERSION_SCRIPT}" "${VERSION_TEMPLATE}" "${VERSION_TRIGGER}"
         COMMENT "🔄 Regenerating SDOM_Version.hpp (script/template/source changed)"
         VERBATIM
     )
-
-    # # Create a checksum file from all sources
-    # add_custom_command(
-    #     OUTPUT "${CMAKE_BINARY_DIR}/_src_checksum"
-    #     COMMAND ${CMAKE_COMMAND} -E echo "checking source changes"
-    #     COMMAND ${CMAKE_COMMAND} -E md5sum ${CMAKE_SOURCE_DIR}/src/*.cpp > "${CMAKE_BINARY_DIR}/_src_checksum"
-    #     DEPENDS ${SDOM_SOURCE_FILES}
-    # )
-    # add_custom_command(
-    #     OUTPUT "${VERSION_HEADER}"
-    #     COMMAND "${GEN_VERSION_SCRIPT}"
-    #     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-    #     DEPENDS "${GEN_VERSION_SCRIPT}" "${VERSION_TEMPLATE}" "${CMAKE_BINARY_DIR}/_src_checksum"
-    #     COMMENT "🔄 Regenerating SDOM_Version.hpp (source files changed)"
-    # )
 
     add_custom_target(generate_version DEPENDS "${VERSION_HEADER}")
 
@@ -47,8 +46,6 @@ if(EXISTS "${GEN_VERSION_SCRIPT}")
 else()
     message(WARNING "⚠️ Version generator script not found: ${GEN_VERSION_SCRIPT}")
 endif()
-
-
 
 # ======================================================
 #  Build Configuration
@@ -60,8 +57,12 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
 endif()
 
-set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -Wall -Wno-comment -Wextra -Wno-reorder -Wno-unused-parameter")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Wall -Wextra -Wno-comment -Wno-reorder -Wno-unused-parameter -DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG
+    "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -Wall -Wno-comment -Wextra -Wno-reorder -Wno-unused-parameter"
+)
+set(CMAKE_CXX_FLAGS_RELEASE
+    "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Wall -Wextra -Wno-comment -Wno-reorder -Wno-unused-parameter -DNDEBUG"
+)
 
 # ======================================================
 #  Dependencies

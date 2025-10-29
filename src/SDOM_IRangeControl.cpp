@@ -261,10 +261,10 @@ namespace SDOM
         // Base IRangeControl does not implement direct rendering; derived classes do.
     } // END: void IRangeControl::onRender()
 
-    bool IRangeControl::onUnitTest() 
+    bool IRangeControl::onUnitTest(int frame) 
     {
         // Run base class tests
-        bool baseTests = SUPER::onUnitTest();
+        bool baseTests = SUPER::onUnitTest(frame);
         // Run IRangeControl specific tests
         bool allTests = baseTests;
         // Save current state

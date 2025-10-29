@@ -110,7 +110,7 @@ var classSDOM_1_1CheckButton =
     [ "onQuit", "classSDOM_1_1CheckButton.html#ab14cd79e394272fc9aaf919593dc64b8", null ],
     [ "onRender", "classSDOM_1_1CheckButton.html#a0648c4dae296a0fe8f32363eea723e94", null ],
     [ "onStateChanged", "classSDOM_1_1CheckButton.html#a36df15c9202b41f9f94c7cfba33778f6", null ],
-    [ "onUnitTest", "classSDOM_1_1CheckButton.html#a089eab94d78ca095f254f2096d93622f", null ],
+    [ "onUnitTest", "classSDOM_1_1CheckButton.html#ae366e6671cc3a4db9745cb478e3e0b68", null ],
     [ "onUpdate", "classSDOM_1_1CheckButton.html#a35175cff6502f8f16cc1e3c638508d9e", null ],
     [ "onWindowResize", "classSDOM_1_1CheckButton.html#ad7eb8c648f30d8381ed38d6ad323bfcd", null ],
     [ "operator!=", "classSDOM_1_1CheckButton.html#a9df7d876aa3bdab412a4284982029f72", null ],

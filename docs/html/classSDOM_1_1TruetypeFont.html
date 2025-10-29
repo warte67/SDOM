@@ -142,8 +142,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a36971c150c2a2ed446f26e8c23df3b29" id="r_a36971c150c2a2ed446f26e8c23df3b29"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IFontObject.html#a36971c150c2a2ed446f26e8c23df3b29">getWordWidth</a> (const std::string &amp;word) const</td></tr>
 <tr class="memitem:a4446354f39ad55b284bd563b7353362d" id="r_a4446354f39ad55b284bd563b7353362d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IFontObject.html#a4446354f39ad55b284bd563b7353362d">getWordHeight</a> (const std::string &amp;word) const</td></tr>
 <tr class="memitem:ae90e1b5bb9d0e293af3b743568c0426f" id="r_ae90e1b5bb9d0e293af3b743568c0426f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IFontObject.html#a65dd8d559c0b3cedf12993bffeba6aff">FontType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IFontObject.html#ae90e1b5bb9d0e293af3b743568c0426f">getFontType</a> () const</td></tr>
-<tr class="memitem:a078b1250ee8da5de7fe72b3fd122c06b" id="r_a078b1250ee8da5de7fe72b3fd122c06b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IAssetObject.html#a078b1250ee8da5de7fe72b3fd122c06b">onUnitTest</a> () override</td></tr>
-<tr class="memdesc:a078b1250ee8da5de7fe72b3fd122c06b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
+<tr class="memitem:a5b7ee77c8e89e44a6aed47326b398211" id="r_a5b7ee77c8e89e44a6aed47326b398211"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IAssetObject.html#a5b7ee77c8e89e44a6aed47326b398211">onUnitTest</a> (int frame) override</td></tr>
+<tr class="memdesc:a5b7ee77c8e89e44a6aed47326b398211"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
 <tr class="memitem:ad0b85cd8eafe1b2f92a03573e0ea80b9" id="r_ad0b85cd8eafe1b2f92a03573e0ea80b9"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IAssetObject.html#ad0b85cd8eafe1b2f92a03573e0ea80b9">getType</a> () const</td></tr>
 <tr class="memitem:af975331dcde3f417bc8c0dd87d13e14f" id="r_af975331dcde3f417bc8c0dd87d13e14f"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IAssetObject.html#af975331dcde3f417bc8c0dd87d13e14f">getName</a> () const</td></tr>
 <tr class="memitem:a99ae73f910e13a89de5c91e264ba50fb" id="r_a99ae73f910e13a89de5c91e264ba50fb"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IAssetObject.html#a99ae73f910e13a89de5c91e264ba50fb">getFilename</a> () const</td></tr>
@@ -1406,8 +1406,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a078b1250ee8da5de7fe72b3fd122c06b" name="a078b1250ee8da5de7fe72b3fd122c06b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a078b1250ee8da5de7fe72b3fd122c06b">&#9670;&#160;</a></span>onUnitTest()</h2>
+<a id="a5b7ee77c8e89e44a6aed47326b398211" name="a5b7ee77c8e89e44a6aed47326b398211"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b7ee77c8e89e44a6aed47326b398211">&#9670;&#160;</a></span>onUnitTest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1418,7 +1418,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="memname">virtual bool SDOM::IAssetObject::onUnitTest </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>frame</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1432,9 +1432,9 @@ template&lt;typename T&gt; </div>
 <p>Runs unit tests for this object. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classSDOM_1_1IDataObject.html#accf10992aa1dc65addeb56baab70e1e6">SDOM::IDataObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classSDOM_1_1IDataObject.html#ae4530264b8a284b3c41a306b20b8f648">SDOM::IDataObject</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classSDOM_1_1SpriteSheet.html#a5d453c16f04fc228c024e4d47d9e5fad">SDOM::SpriteSheet</a>, <a class="el" href="classSDOM_1_1Texture.html#ac5de618903b03a169e0ca1d7c10236e3">SDOM::Texture</a>, and <a class="el" href="classSDOM_1_1TTFAsset.html#a1ff100abb3175a19ea9c5a7691976d57">SDOM::TTFAsset</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1SpriteSheet.html#ae999396e0f51c11336c4d482e77e7928">SDOM::SpriteSheet</a>, <a class="el" href="classSDOM_1_1Texture.html#aec950a95d14f3defec149148de8206a9">SDOM::Texture</a>, and <a class="el" href="classSDOM_1_1TTFAsset.html#ab4db9dc668cb88033011debb5b90daad">SDOM::TTFAsset</a>.</p>
 
 </div>
 </div>

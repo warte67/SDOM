@@ -221,8 +221,9 @@ namespace SDOM
         }
     } // END: void Button::onEvent(const Event& event)
 
-    bool Button::onUnitTest() 
+    bool Button::onUnitTest(int frame)
     {
+        (void)frame; // unused
         return true;
     } // END: Button::onUnitTest()
 

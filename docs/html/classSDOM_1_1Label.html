@@ -142,8 +142,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4de312d7cface20c8817a5f27b09127c" id="r_a4de312d7cface20c8817a5f27b09127c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4de312d7cface20c8817a5f27b09127c">onUpdate</a> (float fElapsedTime) override</td></tr>
 <tr class="memitem:ab1f8cf79cadb35f05b139c71787932a5" id="r_ab1f8cf79cadb35f05b139c71787932a5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1f8cf79cadb35f05b139c71787932a5">onEvent</a> (const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;event) override</td></tr>
 <tr class="memitem:a08ac8df9dc2bc5a5410338e1c4b9e5f6" id="r_a08ac8df9dc2bc5a5410338e1c4b9e5f6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08ac8df9dc2bc5a5410338e1c4b9e5f6">onRender</a> () override</td></tr>
-<tr class="memitem:a9e37886215b4693664c7d79325f1ed9c" id="r_a9e37886215b4693664c7d79325f1ed9c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e37886215b4693664c7d79325f1ed9c">onUnitTest</a> () override</td></tr>
-<tr class="memdesc:a9e37886215b4693664c7d79325f1ed9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
+<tr class="memitem:a1d5fd5bf81c4ebbbedd6c2164d56ef43" id="r_a1d5fd5bf81c4ebbbedd6c2164d56ef43"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d5fd5bf81c4ebbbedd6c2164d56ef43">onUnitTest</a> (int frame) override</td></tr>
+<tr class="memdesc:a1d5fd5bf81c4ebbbedd6c2164d56ef43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
 <tr class="memitem:a033b7a9c0ea9306ffeb2561d081e2b65" id="r_a033b7a9c0ea9306ffeb2561d081e2b65"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a033b7a9c0ea9306ffeb2561d081e2b65">onWindowResize</a> (int logicalWidth, int logicalHeight) override</td></tr>
 <tr class="memitem:a03fb40bd00a8d39252620887465b7b6a" id="r_a03fb40bd00a8d39252620887465b7b6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03fb40bd00a8d39252620887465b7b6a">setText</a> (std::string p_text)</td></tr>
 <tr class="memitem:a2e05e4b3fd73a369e0ab7c04b4354ec6" id="r_a2e05e4b3fd73a369e0ab7c04b4354ec6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e05e4b3fd73a369e0ab7c04b4354ec6">getText</a> () const</td></tr>
@@ -3632,8 +3632,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a9e37886215b4693664c7d79325f1ed9c" name="a9e37886215b4693664c7d79325f1ed9c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e37886215b4693664c7d79325f1ed9c">&#9670;&#160;</a></span>onUnitTest()</h2>
+<a id="a1d5fd5bf81c4ebbbedd6c2164d56ef43" name="a1d5fd5bf81c4ebbbedd6c2164d56ef43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d5fd5bf81c4ebbbedd6c2164d56ef43">&#9670;&#160;</a></span>onUnitTest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3644,7 +3644,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="memname">bool SDOM::Label::onUnitTest </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>frame</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -3658,7 +3658,7 @@ template&lt;typename T&gt; </div>
 <p>Runs unit tests for this object. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a616241be8281b5e07ae67b454b8c5acc">SDOM::IDisplayObject</a>.</p>
 
 </div>
 </div>

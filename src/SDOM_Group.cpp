@@ -255,10 +255,10 @@ namespace SDOM
         }
     } // END: void Group::onEvent(const Event& event)
 
-    bool Group::onUnitTest()
+    bool Group::onUnitTest(int frame)
     {
         // run base checks first
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame)) return false;
 
         // Basic test: ensure labelObject_ is valid and has correct text
         if (!labelObject_.isValid())

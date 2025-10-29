@@ -204,10 +204,10 @@ namespace SDOM
         }
     } // END: void ProgressBar::onRender()
 
-    bool ProgressBar::onUnitTest()
+    bool ProgressBar::onUnitTest(int frame)
     {
         // run base checks first
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame)) return false;
 
         bool ok = true;
 

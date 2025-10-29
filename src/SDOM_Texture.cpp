@@ -146,10 +146,10 @@ namespace SDOM
         isLoaded_ = false;    
     }
 
-    bool Texture::onUnitTest()
+    bool Texture::onUnitTest(int frame)
     {
         // run base checks first
-        if (!SUPER::onUnitTest()) return false;
+        if (!SUPER::onUnitTest(frame)) return false;
 
         bool ok = true;
 

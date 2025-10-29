@@ -130,8 +130,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a431093b74350f3a312205b0130ed98b3" id="r_a431093b74350f3a312205b0130ed98b3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a431093b74350f3a312205b0130ed98b3">onEvent</a> (const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;event) override</td></tr>
 <tr class="memitem:a39682c833400256a68206ea7d7559dd8" id="r_a39682c833400256a68206ea7d7559dd8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39682c833400256a68206ea7d7559dd8">onUpdate</a> (float fElapsedTime) override</td></tr>
 <tr class="memitem:a06619c25a319cdd604d43930a70df844" id="r_a06619c25a319cdd604d43930a70df844"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06619c25a319cdd604d43930a70df844">onRender</a> () override</td></tr>
-<tr class="memitem:a707366ae99e62351ba991f853792ad72" id="r_a707366ae99e62351ba991f853792ad72"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a707366ae99e62351ba991f853792ad72">onUnitTest</a> () override</td></tr>
-<tr class="memdesc:a707366ae99e62351ba991f853792ad72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
+<tr class="memitem:a4a5557fe89361bd3d692a327c680a74a" id="r_a4a5557fe89361bd3d692a327c680a74a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a5557fe89361bd3d692a327c680a74a">onUnitTest</a> (int frame) override</td></tr>
+<tr class="memdesc:a4a5557fe89361bd3d692a327c680a74a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
 <tr class="memitem:ae3e09133c5a07df9c25ac3796030a485" id="r_ae3e09133c5a07df9c25ac3796030a485"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3e09133c5a07df9c25ac3796030a485">onWindowResize</a> (int logicalWidth, int logicalHeight) override</td></tr>
 <tr class="memitem:a7680756eabacf19a5833f0c1d2b64ef8" id="r_a7680756eabacf19a5833f0c1d2b64ef8"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7680756eabacf19a5833f0c1d2b64ef8">getMin</a> () const</td></tr>
 <tr class="memitem:ae392b0a3b826326f6a475c0ab9be5a55" id="r_ae392b0a3b826326f6a475c0ab9be5a55"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae392b0a3b826326f6a475c0ab9be5a55">getMax</a> () const</td></tr>
@@ -2718,8 +2718,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a707366ae99e62351ba991f853792ad72" name="a707366ae99e62351ba991f853792ad72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a707366ae99e62351ba991f853792ad72">&#9670;&#160;</a></span>onUnitTest()</h2>
+<a id="a4a5557fe89361bd3d692a327c680a74a" name="a4a5557fe89361bd3d692a327c680a74a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a5557fe89361bd3d692a327c680a74a">&#9670;&#160;</a></span>onUnitTest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2730,7 +2730,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="memname">bool SDOM::IRangeControl::onUnitTest </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>frame</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -2744,9 +2744,9 @@ template&lt;typename T&gt; </div>
 <p>Runs unit tests for this object. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a91f380e8aff044d17e38786d28781e83">SDOM::IDisplayObject</a>.</p>
+<p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a616241be8281b5e07ae67b454b8c5acc">SDOM::IDisplayObject</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classSDOM_1_1IRangeControl__scaffold.html#a042780e456229f84422f6e5ceb4016b7">SDOM::IRangeControl_scaffold</a>, <a class="el" href="classSDOM_1_1ProgressBar.html#a73633f6a402edd21bf247281386b2a46">SDOM::ProgressBar</a>, <a class="el" href="classSDOM_1_1ScrollBar.html#a857cf3543bf226c0e9fac148455bc527">SDOM::ScrollBar</a>, and <a class="el" href="classSDOM_1_1Slider.html#a5754c55838d3795489f1f7e2c7b62853">SDOM::Slider</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1IRangeControl__scaffold.html#a37aaf40d88a5713fed56977167de1538">SDOM::IRangeControl_scaffold</a>, <a class="el" href="classSDOM_1_1ProgressBar.html#a740e25878a3329ecda6a668b4dab4494">SDOM::ProgressBar</a>, <a class="el" href="classSDOM_1_1ScrollBar.html#ae07c9347a2403e4b211e699d7a53b76c">SDOM::ScrollBar</a>, and <a class="el" href="classSDOM_1_1Slider.html#ac15d54511945e15e7a4bc67f9f2a78a4">SDOM::Slider</a>.</p>
 
 </div>
 </div>

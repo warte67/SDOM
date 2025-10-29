@@ -36,7 +36,7 @@ var classSDOM_1_1IFontObject =
     [ "onInit", "classSDOM_1_1IFontObject.html#acc5a41e113d1af70782320ac635a24db", null ],
     [ "onLoad", "classSDOM_1_1IFontObject.html#a61707fe9b232edb9c786899c5bb40c43", null ],
     [ "onQuit", "classSDOM_1_1IFontObject.html#a1fe177919c6611b4bd8a7287eaac44d0", null ],
-    [ "onUnitTest", "classSDOM_1_1IFontObject.html#a078b1250ee8da5de7fe72b3fd122c06b", null ],
+    [ "onUnitTest", "classSDOM_1_1IFontObject.html#a5b7ee77c8e89e44a6aed47326b398211", null ],
     [ "onUnload", "classSDOM_1_1IFontObject.html#aca1c0821605a16e5e4664e9716a2a850", null ],
     [ "register_usertype_with_table", "classSDOM_1_1IFontObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e", null ],
     [ "registerLuaBindings", "classSDOM_1_1IFontObject.html#a1947ff718446a6a81cd108b87a475d9f", null ],

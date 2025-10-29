@@ -28,7 +28,7 @@ namespace SDOM
         // virtual methods from IDataObject
         virtual bool onInit() override { return true; }
         virtual void onQuit() override { }
-        virtual bool onUnitTest() override { return true; }
+        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
 
         void reset() {name_.clear(); }
 

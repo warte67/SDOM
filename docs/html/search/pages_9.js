@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['libraries_0',['Build and install SDL3 libraries',['../md_README.html#autotoc_md21',1,'']]],
-  ['library_1',['Building the SDOM Library',['../md_README.html#autotoc_md10',1,'']]],
-  ['license_2',['License',['../md_README.html#autotoc_md25',1,'']]],
-  ['lua_20and_20sol2_3',['Lua and Sol2',['../md_README.html#autotoc_md22',1,'']]]
+  ['getting_20started_0',['Getting Started',['../md_README.html#autotoc_md10',1,'']]]
 ];
