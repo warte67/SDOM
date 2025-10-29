@@ -32,6 +32,11 @@ namespace SDOM
         void push_error(const std::string& error);
         bool run_lua_tests(std::vector<std::string>& errors, const std::string& filename);
 
+        // new member functions
+        void update();          // Called once per frame
+        bool all_done() const;  // All tests have completed
+
+
         // Deprecated static methods (to be removed)
         template<typename Func>        
         static bool run(const std::string& objName, const std::string& testName, Func&& testFunc) 
@@ -53,7 +58,6 @@ namespace SDOM
         bool getIsTraversing() const;
         void setIsTraversing(bool traversing);      
 
-
         void setLuaFilename(const std::string& filename) { lua_filename_ = filename; }  
         std::string getLuaFilename() const { return lua_filename_; }
 
@@ -66,6 +70,11 @@ namespace SDOM
             std::string name;
             std::function<bool(std::vector<std::string>&)> func;
             bool is_implemented = false;
+            bool passed = false;
+            bool has_run = false;
+            bool running = false;
+            int frame_count = 0;
+            std::vector<std::string> errors;            
         };
         std::vector<std::string> _log;
         std::vector<std::string> _errors;

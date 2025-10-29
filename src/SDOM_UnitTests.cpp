@@ -167,4 +167,13 @@ namespace SDOM
 
     } // END: registerLua()
 
+
+    bool UnitTests::all_done() const 
+    {
+        for (auto& t : _tests)
+            if (!t.has_run && t.is_implemented)
+                return false;
+        return true;
+    }
+
 } // END: namespace SDOM
