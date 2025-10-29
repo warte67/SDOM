@@ -4,6 +4,7 @@ var classSDOM_1_1EventManager =
     [ "~EventManager", "classSDOM_1_1EventManager.html#a7b26ffa30985a2befc4cd5960dff95c2", null ],
     [ "addEvent", "classSDOM_1_1EventManager.html#aaf90967382eb6bff122721bfbad6e484", null ],
     [ "dispatchEvent", "classSDOM_1_1EventManager.html#ac62b47a67650837c8222f63dd7e4bf16", null ],
+    [ "dispatchEventToAllEventListenersGlobally", "classSDOM_1_1EventManager.html#a550ba07f0e9bfbdf051f253971df341c", null ],
     [ "dispatchEventToAllEventListenersOnStage", "classSDOM_1_1EventManager.html#a0f14a93fa7778127003b281e0f4b0a18", null ],
     [ "dispatchEventToAllNodesOnStage", "classSDOM_1_1EventManager.html#a9dca48d7b8a1d51bf69e28480565d440", null ],
     [ "DispatchQueuedEvents", "classSDOM_1_1EventManager.html#a4621ec5c01a1281ddedc452d380fedb2", null ],

@@ -104,6 +104,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4621ec5c01a1281ddedc452d380fedb2" id="r_a4621ec5c01a1281ddedc452d380fedb2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4621ec5c01a1281ddedc452d380fedb2">DispatchQueuedEvents</a> ()</td></tr>
 <tr class="memitem:ac62b47a67650837c8222f63dd7e4bf16" id="r_ac62b47a67650837c8222f63dd7e4bf16"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac62b47a67650837c8222f63dd7e4bf16">dispatchEvent</a> (std::unique_ptr&lt; <a class="el" href="classSDOM_1_1Event.html">Event</a> &gt; event, <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> rootNode)</td></tr>
 <tr class="memitem:a9dca48d7b8a1d51bf69e28480565d440" id="r_a9dca48d7b8a1d51bf69e28480565d440"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9dca48d7b8a1d51bf69e28480565d440">dispatchEventToAllNodesOnStage</a> (std::unique_ptr&lt; <a class="el" href="classSDOM_1_1Event.html">Event</a> &gt; event)</td></tr>
+<tr class="memitem:a550ba07f0e9bfbdf051f253971df341c" id="r_a550ba07f0e9bfbdf051f253971df341c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a550ba07f0e9bfbdf051f253971df341c">dispatchEventToAllEventListenersGlobally</a> (std::unique_ptr&lt; <a class="el" href="classSDOM_1_1Event.html">Event</a> &gt; event)</td></tr>
 <tr class="memitem:a0f14a93fa7778127003b281e0f4b0a18" id="r_a0f14a93fa7778127003b281e0f4b0a18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f14a93fa7778127003b281e0f4b0a18">dispatchEventToAllEventListenersOnStage</a> (std::unique_ptr&lt; <a class="el" href="classSDOM_1_1Event.html">Event</a> &gt; event)</td></tr>
 <tr class="memitem:a91dd5ef12c7fa10dc9405dadc74d4d0b" id="r_a91dd5ef12c7fa10dc9405dadc74d4d0b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91dd5ef12c7fa10dc9405dadc74d4d0b">hasListeners</a> (const <a class="el" href="classSDOM_1_1EventType.html">EventType</a> &amp;type) const</td></tr>
 <tr class="memitem:a2ab55342913b8e6ba98e9fedea21ce95" id="r_a2ab55342913b8e6ba98e9fedea21ce95"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ab55342913b8e6ba98e9fedea21ce95">isMouseWithinBounds</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;target) const</td></tr>
@@ -194,6 +195,23 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a></td>          <td class="paramname"><span class="paramname"><em>rootNode</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a550ba07f0e9bfbdf051f253971df341c" name="a550ba07f0e9bfbdf051f253971df341c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a550ba07f0e9bfbdf051f253971df341c">&#9670;&#160;</a></span>dispatchEventToAllEventListenersGlobally()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::EventManager::dispatchEventToAllEventListenersGlobally </td>
+          <td>(</td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classSDOM_1_1Event.html">Event</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -1,5 +1,7 @@
 var NAVTREEINDEX30 =
 {
+"classSDOM_1_1SDL__Utils.html#ab30d7d6f2ee103ad52b35d0e6a1aa175":[3,0,0,33,21],
+"classSDOM_1_1SDL__Utils.html#abb9e5105a0afac653511588662327389":[2,0,0,33,1],
 "classSDOM_1_1SDL__Utils.html#abb9e5105a0afac653511588662327389":[3,0,0,33,1],
 "classSDOM_1_1SDL__Utils.html#ac3addb13eb009dc83eda733808041e14":[2,0,0,33,2],
 "classSDOM_1_1SDL__Utils.html#ac3addb13eb009dc83eda733808041e14":[3,0,0,33,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX30 =
 "classSDOM_1_1ScrollBar.html#a801eb23ae1a8205b5c1c32e07000afe0":[3,0,0,32,140],
 "classSDOM_1_1ScrollBar.html#a80a500f4517a686367ab08b1aa2c488d":[2,0,0,32,126],
 "classSDOM_1_1ScrollBar.html#a80a500f4517a686367ab08b1aa2c488d":[3,0,0,32,126],
-"classSDOM_1_1ScrollBar.html#a81ea3522ce5ee81a738903cd09a12062":[2,0,0,32,141],
-"classSDOM_1_1ScrollBar.html#a81ea3522ce5ee81a738903cd09a12062":[3,0,0,32,141],
-"classSDOM_1_1ScrollBar.html#a82ec9aa6b4ce34ec03e01f9cd002a1be":[2,0,0,32,162]
+"classSDOM_1_1ScrollBar.html#a81ea3522ce5ee81a738903cd09a12062":[2,0,0,32,141]
 };

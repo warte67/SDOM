@@ -63,6 +63,14 @@ bool Box::onInit()
         }
     }, false);
 
+    addEventListener(SDOM::EventType::Quit, [this](SDOM::Event& event)
+    {
+        // Only count clicks where this Box is the target
+        if (event.getTarget() && event.getTarget()->getName() == this->getName()) {
+            // DEBUG_LOG("Box::onQuit() called for Box: " + this->getName());
+        }
+    }, false);
+
     // addEventListener(SDOM::EventType::MouseClick, [](SDOM::Event& event)
     // {
     //     event.stopPropagation(); // Stop further propagation

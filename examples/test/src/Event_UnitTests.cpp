@@ -176,72 +176,73 @@ namespace SDOM
     } // END: Event_test2()
 
 
-    // 🔄 Test 3: Verify Predefined EventTypes round-trip properly
-    bool Event_test3(std::vector<std::string>& errors)
+    // ----------------------------------------------------
+    // Shared helper for EventType round-trip verification
+    // ----------------------------------------------------
+    static bool runEventRoundTripTest(
+        const std::vector<std::pair<std::string, EventType&>>& eventTests,
+        const std::string& boxName,
+        std::vector<std::string>& errors)
     {
         bool ok = true;
         Core& core = getCore();
         DisplayHandle stage = core.getRootNode();
 
-        // Create a Box object
+        // Create the Box object
         Box::InitStruct boxInit;
-        boxInit.name = "testBox";
-        boxInit.x = 10;
-        boxInit.y = 10;
-        boxInit.width = 100;
+        boxInit.name   = boxName;
+        boxInit.x      = 10;
+        boxInit.y      = 10;
+        boxInit.width  = 100;
         boxInit.height = 75;
-        boxInit.color = {255, 0, 255, 255};
+        boxInit.color  = {255, 0, 255, 255};
+
         DisplayHandle box = core.createDisplayObject("Box", boxInit);
         if (!box.isValid()) {
-            errors.push_back("Failed to create 'testBox' object.");
+            errors.push_back("Failed to create test box '" + boxName + "'.");
             return false;
         }
+
         if (stage->hasChild(box)) {
-            errors.push_back("Stage already has a child named 'testBox'.");
+            errors.push_back("Stage already has a child named '" + boxName + "'.");
             return false;
         }
-        stage->addChild(box);  // add to the stage so it can receive events
 
+        stage->addChild(box);
 
-        // Tracks which listeners were hit
-        std::unordered_map<std::string, bool> hits = {
-            {"None", false}, {"SDL_Event", false}, {"Quit", false}, {"EnterFrame", false}
-        };       
+        // Track which listeners fired
+        std::unordered_map<std::string, bool> hits;
+        for (const auto& [name, _] : eventTests)
+            hits[name] = false;
 
-        // Lambda helper to attach
-        auto attachListener = [&](EventType& et) 
-        {            
-            box->addEventListener(et, [&](const Event& ev) 
-            {
-                if (ev.getTarget() != box) return;                
-                if (ev.getPayloadValue<std::string>("info") == "test") {
+        // Attach listeners
+        for (auto& [name, type] : eventTests) {
+            box->addEventListener(type, [&](const Event& ev) {
+                if (ev.getTarget() != box) return;
+                const std::string info = ev.getPayloadValue<std::string>("info");
+                if (info == "test") {
                     hits[ev.getTypeName()] = true;
                 } else {
-                    errors.push_back("payload info mismatch.");
+                    errors.push_back("Payload mismatch for " + ev.getTypeName());
                     ok = false;
                 }
-            }, false); // false = don't capture
-        };
-        // Attach event listeners
-        attachListener(EventType::None);
-        if (!box->hasEventListener(EventType::None, false)) { errors.push_back("Expected None listener to be registered."); ok = false; }
-        attachListener(EventType::SDL_Event);
-        if (!box->hasEventListener(EventType::SDL_Event, false)) { errors.push_back("Expected SDL_Event listener to be registered."); ok = false; }
-        attachListener(EventType::Quit);
-        if (!box->hasEventListener(EventType::Quit, false)) { errors.push_back("Expected Quit listener to be registered."); ok = false; }
-        attachListener(EventType::EnterFrame);        
-        if (!box->hasEventListener(EventType::EnterFrame, false)) { errors.push_back("Expected EnterFrame listener to be registered."); ok = false; }
+            }, false);
 
-        // one of each
-        box->queue_event(EventType::None,       [&](Event& ev) { ev.setPayloadValue("info", "test"); });
-        box->queue_event(EventType::SDL_Event,  [&](Event& ev) { ev.setPayloadValue("info", "test"); });
-        box->queue_event(EventType::Quit,       [&](Event& ev) { ev.setPayloadValue("info", "test"); });
-        box->queue_event(EventType::EnterFrame, [&](Event& ev) { ev.setPayloadValue("info", "test"); });
+            if (!box->hasEventListener(type, false)) {
+                errors.push_back("Expected listener for EventType: " + name);
+                ok = false;
+            }
+        }
 
-        // Dispatch all events
+        // Queue events
+        for (const auto& [name, type] : eventTests) {
+            box->queue_event(type, [&](Event& ev) { ev.setPayloadValue("info", "test"); });
+        }
+
+        // Dispatch events
         core.pumpEventsOnce();
 
-        // Verify all listeners were hit
+        // Verify listener hits
         for (const auto& [name, hit] : hits) {
             if (!hit) {
                 errors.push_back("Listener '" + name + "' was not hit.");
@@ -250,38 +251,188 @@ namespace SDOM
         }
 
         // Cleanup
-        if (box->hasEventListener(EventType::None, false)) box->removeEventListener(EventType::None, nullptr, false);
-        if (box->hasEventListener(EventType::SDL_Event, false)) box->removeEventListener(EventType::SDL_Event, nullptr, false);
-        if (box->hasEventListener(EventType::Quit, false)) box->removeEventListener(EventType::Quit, nullptr, false);
-        if (box->hasEventListener(EventType::EnterFrame, false)) box->removeEventListener(EventType::EnterFrame, nullptr, false);
+        for (const auto& [name, type] : eventTests) {
+            if (box->hasEventListener(type, false))
+                box->removeEventListener(type, nullptr, false);
+        }
 
-        if (stage && stage->hasChild(box)) stage->removeChild(box);
+        if (stage->hasChild(box))
+            stage->removeChild(box);
+
         core.collectGarbage();
 
-        // return the final test result
         return ok;
+    }
+
+
+    // Test 3: Core system event types
+    bool Event_test3(std::vector<std::string>& errors)
+    {
+        const std::vector<std::pair<std::string, EventType&>> events = {
+              {"None",              EventType::None}
+            , {"SDL_Event",         EventType::SDL_Event}
+            , {"Quit",              EventType::Quit}
+            , {"EnterFrame",        EventType::EnterFrame}
+            , {"StageClosed",       EventType::StageClosed}
+            , {"KeyDown",           EventType::KeyDown}
+            , {"KeyUp",             EventType::KeyUp}
+            // not yet implemented
+            , {"Timer",             EventType::Timer}
+            , {"Tick",              EventType::Tick}
+            , {"Timeout",           EventType::Timeout}
+            , {"ClipboardCopy",     EventType::ClipboardCopy}
+            , {"ClipboardPaste",    EventType::ClipboardPaste}
+            , {"User",              EventType::User}    
+        };
+        return runEventRoundTripTest(events, "testBox_Event3", errors);
     } // END: Event_test3()
 
 
-    // Test 4: Verify Mouse EventTypes round-trip properly
-    bool Event_test4(std::vector<std::string>& errors)   
+    // Test 4: Mouse-related event types
+    bool Event_test4(std::vector<std::string>& errors)
     {
-        // ✅ Test Verified
-        // 🔄 In Progress
-        // ⚠️ Failing     
-        // 🚫 Remove
-        // ❌ Invalid
-        // ☐ Planned./prog
+        const std::vector<std::pair<std::string, EventType&>> events = {
+              {"MouseButtonUp",     EventType::MouseButtonUp}
+            , {"MouseButtonDown",   EventType::MouseButtonDown}
+            , {"MouseWheel",        EventType::MouseWheel}
+            , {"MouseMove",         EventType::MouseMove}
+            , {"MouseClick",        EventType::MouseClick}
+            , {"MouseDoubleClick",  EventType::MouseDoubleClick}
+            , {"MouseEnter",        EventType::MouseEnter}
+            , {"Drag",              EventType::Drag}
+            , {"Dragging",          EventType::Dragging}
+            , {"Drop",              EventType::Drop}
+        };
+        return runEventRoundTripTest(events, "testBox_Event4", errors);
+    } // END: Event_test4()
 
-        bool ok = true;  // 33
 
-        // To send an error message to the test harness, use the following:
-        // errors.push_error("Description of the error.");
-        // ok = false;
+    // Test 5: Window event types
+    bool Event_test5(std::vector<std::string>& errors)
+    {
+        const std::vector<std::pair<std::string, EventType&>> events = {
+              {"FocusGained",       EventType::FocusGained}
+            , {"FocusLost",         EventType::FocusLost}
+            , {"Resize",            EventType::Resize}
+            , {"Move",              EventType::Move}
+            , {"Show",              EventType::Show}
+            , {"Hide",              EventType::Hide}
+            , {"EnterFullscreen",   EventType::EnterFullscreen}
+            , {"LeaveFullscreen",   EventType::LeaveFullscreen}
+        };
+        return runEventRoundTripTest(events, "testBox_Event4", errors);
+    } // END: Event_test5()
 
+
+    // Test 6: General UI event types
+    bool Event_test6(std::vector<std::string>& errors)
+    {
+        const std::vector<std::pair<std::string, EventType&>> events = {
+              {"ValueChanged",      EventType::ValueChanged}
+            , {"StateChanged",      EventType::StateChanged}
+            , {"SelectionChanged",  EventType::SelectionChanged}
+            , {"Enabled",           EventType::Enabled}
+            , {"Disabled",          EventType::Disabled}
+            , {"Visible",           EventType::Visible}
+            , {"Hidden",            EventType::Hidden}
+        };
+        return runEventRoundTripTest(events, "testBox_Event6", errors);
+    } // END: Event_test6()
+
+
+    // Test 7: Application Lifecycle event types
+    bool Event_test7(std::vector<std::string>& errors)
+    {
+        const std::vector<std::pair<std::string, EventType&>> events = {
+              {"Added",                  EventType::Added}
+            , {"Removed",                EventType::Removed}
+            , {"AddedToStage",           EventType::AddedToStage}
+            , {"RemovedFromStage",       EventType::RemovedFromStage}
+            , {"OnInit",                 EventType::OnInit}
+            , {"OnQuit",                 EventType::OnQuit}
+            , {"OnEvent",                EventType::OnEvent}
+            , {"OnUpdate",               EventType::OnUpdate}
+            , {"OnRender",               EventType::OnRender}
+            , {"OnPreRender",            EventType::OnPreRender}
+        };
+        return runEventRoundTripTest(events, "testBox_Event7", errors);
+    } // END: Event_test7()
+
+    // ----------------------------------------------
+    // Shared helper for Event behavior verification
+    // ----------------------------------------------
+    static bool runEventBehaviorTest( const std::vector<std::pair<std::string, std::function<void(DisplayHandle)>>> &actions, 
+                                        std::vector<std::string> &errors)
+    {
+        bool ok = true;
+        Core& core = getCore();
+        DisplayHandle stage = core.getRootNode();
+
+        // Create test box
+        Box::InitStruct init;
+        init.name = "behaviorTestBox";
+        init.x = 10; init.y = 10; init.width = 50; init.height = 50;
+        init.color = {255, 0, 0, 255};
+        DisplayHandle box = core.createDisplayObject("Box", init);
+        stage->addChild(box);
+
+        std::unordered_map<std::string, bool> hits;
+        for (const auto& [name, _] : actions) hits[name] = false;
+
+        for (auto& [name, _] : actions) 
+        {
+            EventType* et = nullptr;
+            const auto& reg = EventType::getRegistry();
+            auto it = reg.find(name);
+            if (it != reg.end()) et = it->second;
+            if (!et) { errors.push_back("Unknown EventType: " + name); ok = false; continue; }
+
+            box->addEventListener(*et, [&](const Event& ev) {
+                hits[ev.getTypeName()] = true;
+            });
+        }
+
+        for (auto& [_, action] : actions)
+            action(box);
+
+        core.pumpEventsOnce();
+
+        for (const auto& [name, hit] : hits)
+            if (!hit) { errors.push_back("Behavior event '" + name + "' did not fire."); ok = false; }
+
+        stage->removeChild(box);
+        core.collectGarbage();
         return ok;
-    } // Event_test4(std::vector<std::string>& errors)       
+    }
 
+
+    // Test 8: Behavioral Mouse Event Verification
+    bool Event_test8(std::vector<std::string>& errors)
+    {
+        EventManager& em = getCore().getEventManager();
+
+        std::vector<std::pair<std::string, std::function<void(DisplayHandle)>>> actions = {
+            {"MouseButtonDown", [&](DisplayHandle b){ 
+                SDL_Event e{}; e.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+                e.button.button = SDL_BUTTON_LEFT;
+                e.button.x = b->getX() + 5; e.button.y = b->getY() + 5;
+                em.Queue_SDL_Event(e);
+            }},
+            {"MouseButtonUp", [&](DisplayHandle b){
+                SDL_Event e{}; e.type = SDL_EVENT_MOUSE_BUTTON_UP;
+                e.button.button = SDL_BUTTON_LEFT;
+                e.button.x = b->getX() + 5; e.button.y = b->getY() + 5;
+                em.Queue_SDL_Event(e);
+            }},
+            {"MouseMove", [&](DisplayHandle b){
+                SDL_Event e{}; e.type = SDL_EVENT_MOUSE_MOTION;
+                e.motion.x = b->getX() + 5; e.motion.y = b->getY() + 5;
+                // SDL_PushEvent(&e);
+                em.Queue_SDL_Event(e);
+            }}
+        };
+        return runEventBehaviorTest(actions, errors);
+    } // END: Event_test8()
 
 
 
@@ -303,9 +454,12 @@ namespace SDOM
         ut.add_test("Test scaffolding", Event_test0);
         ut.add_test("Verify Event table is registered and accessible", Event_test1);
         ut.add_test("Verify well-known static event types have expected flag states", Event_test2);
-        ut.add_test("Verify Predefined EventTypes round-trip properly", Event_test3);
-        ut.add_test("Verify Mouse EventTypes round-trip properly", Event_test4);
-
+        ut.add_test("Core system event types round-trip", Event_test3);
+        ut.add_test("Mouse-related event types round-trip", Event_test4);
+        ut.add_test("Mouse-related event types round-trip", Event_test5);
+        ut.add_test("General UI event types round-trip", Event_test6);
+        ut.add_test("Application Lifecycle event types round-trip", Event_test7);
+        ut.add_test("Behavioral Mouse Event Verification", Event_test8);
 
 
 

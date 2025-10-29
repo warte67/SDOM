@@ -1272,6 +1272,8 @@ Below is the current status of all exposed **IDisplayObject** properties:
 ### [October 28, 2025]
 - **Event_UnitTests** Progress:
   - Began building a new **Event_UnitTests.cpp** Unit Test Module to fully test all C++ and LUA EventManager functionality.
+  - Considering a one-test-per-frame approach to unit tests to allow for deterministic frame-by-frame execution.
+    - Started performing a stable sort on the Anseriformes array by ascending x-axis position, ensuring deterministic alignment and zero rotational variance relative to the surface normal of the local sphere. (translation: "Getting my ducks in a row")
 
 - **Versioning System Overhaul**
   - **SDOM now embeds a fully automated, introspectable version and build metadata system spanning CMake, Bash, and Lua.**
