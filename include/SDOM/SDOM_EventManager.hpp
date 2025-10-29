@@ -72,6 +72,8 @@ namespace SDOM
         // Dispatch an event to all nodes on the same stage
         void dispatchEventToAllNodesOnStage(std::unique_ptr<Event> event);
 
+        void dispatchEventToAllEventListenersGlobally(std::unique_ptr<Event> event);
+
         // Dispatch an event to all event listeners on the same stage
         void dispatchEventToAllEventListenersOnStage(std::unique_ptr<Event> event);
 

@@ -1270,6 +1270,9 @@ Below is the current status of all exposed **IDisplayObject** properties:
 
 ---
 ### [October 28, 2025]
+- **Event_UnitTests** Progress:
+  - Began building a new **Event_UnitTests.cpp** Unit Test Module to fully test all C++ and LUA EventManager functionality.
+
 - **Versioning System Overhaul**
   - **SDOM now embeds a fully automated, introspectable version and build metadata system spanning CMake, Bash, and Lua.**
   - **Automated version header generation via gen_version.sh, producing:**

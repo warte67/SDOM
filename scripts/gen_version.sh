@@ -17,21 +17,36 @@ TEMPLATE="$ROOT_DIR/include/SDOM/SDOM_Version.hpp.in"
 OUTPUT="$ROOT_DIR/include/SDOM/SDOM_Version.hpp"
 PATCH_FILE="$ROOT_DIR/.version_patch"
 
-# ---- Configurable defaults ----
 MAJOR=0
-MINOR=1
+MINOR=5
 CODENAME="PreAlpha"
 
-# ---- Load or bump patch ----
 if [[ ! -f "$PATCH_FILE" ]]; then
     PATCH=0
+    LAST_MAJOR=$MAJOR
+    LAST_MINOR=$MINOR
 else
-    PATCH=$(<"$PATCH_FILE")
-    PATCH=$((PATCH + 1))
-fi
-echo "$PATCH" > "$PATCH_FILE"
+    read -r LAST_MAJOR LAST_MINOR PATCH < "$PATCH_FILE" || {
+        PATCH=0
+        LAST_MAJOR=$MAJOR
+        LAST_MINOR=$MINOR
+    }
+    # echo "DEBUG: current=$MAJOR.$MINOR last=$LAST_MAJOR.$LAST_MINOR patch=$PATCH"
 
-# ---- Generate build metadata ----
+    if [[ "$MAJOR" != "$LAST_MAJOR" ]]; then
+        echo "🔄 Major version changed — resetting minor and patch."
+        MINOR=0
+        PATCH=0
+    elif [[ "$MINOR" != "$LAST_MINOR" ]]; then
+        echo "🔄 Minor version changed — resetting patch."
+        PATCH=0
+    else
+        PATCH=$((PATCH + 1))
+    fi
+fi
+
+echo "$MAJOR $MINOR $PATCH" > "$PATCH_FILE"
+
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
 HASH=$(git rev-parse --short HEAD 2>/dev/null || echo "nogit")
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
@@ -39,10 +54,7 @@ COMPILER=$(g++ --version 2>/dev/null | head -n 1 | sed 's/^[[:space:]]*//')
 PLATFORM=$(uname -s)-$(uname -m)
 BUILD="${DATE}_${HASH}"
 
-# ---- Ensure output directory exists ----
 mkdir -p "$(dirname "$OUTPUT")"
-
-# ---- Substitute template variables ----
 sed \
   -e "s|@MAJOR@|$MAJOR|g" \
   -e "s|@MINOR@|$MINOR|g" \

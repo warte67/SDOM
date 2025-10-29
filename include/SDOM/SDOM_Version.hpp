@@ -7,14 +7,14 @@
 // -----------------------------------------------------------------------------
 
 #define SDOM_VERSION_MAJOR 0
-#define SDOM_VERSION_MINOR 1
-#define SDOM_VERSION_PATCH 32
+#define SDOM_VERSION_MINOR 5
+#define SDOM_VERSION_PATCH 38
 #define SDOM_VERSION_CODENAME "PreAlpha"
-#define SDOM_VERSION_BUILD "2025-10-28_17:34:50_7f49dec4"
+#define SDOM_VERSION_BUILD "2025-10-28_21:41:12_a5d9751f"
 
 // Additional build metadata
-#define SDOM_VERSION_BUILD_DATE "2025-10-28_17:34:50"
-#define SDOM_VERSION_COMMIT "7f49dec4"
+#define SDOM_VERSION_BUILD_DATE "2025-10-28_21:41:12"
+#define SDOM_VERSION_COMMIT "a5d9751f"
 #define SDOM_BUILD_BRANCH "master"
 #define SDOM_BUILD_COMPILER "g++ (GCC) 15.2.1 20250813"
 #define SDOM_BUILD_PLATFORM "Linux-x86_64"

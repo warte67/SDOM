@@ -66,7 +66,12 @@ namespace SDOM
         while (!eventQueue.empty()) 
         {
             auto event = std::move(eventQueue.front());
-            dispatchEvent(std::move(event), rootNode);
+            DisplayHandle object = event->getTarget();
+            if (object.isValid() && (rootNode->hasChild(object) || object->getType() == "Stage" || event->getType().getGlobal() ))
+            {
+                dispatchEvent(std::move(event), rootNode);
+            }
+            // dispatchEvent(std::move(event), rootNode);
             eventQueue.pop();
         }
     }
@@ -94,7 +99,8 @@ namespace SDOM
             auto eventCopy = std::make_unique<Event>(*event);
             eventCopy->setPhase(Event::Phase::Target);
             dispatchEventToAllNodesOnStage(std::move(event));
-            dispatchEventToAllEventListenersOnStage(std::move(eventCopy));
+            // dispatchEventToAllEventListenersOnStage(std::move(eventCopy));
+            dispatchEventToAllEventListenersGlobally(std::move(eventCopy));
             return;
         }
 
@@ -252,6 +258,22 @@ namespace SDOM
         dispatchToChildren(stageHandle, event.get());
         getCore().setIsTraversing(false);
     }    
+
+    void EventManager::dispatchEventToAllEventListenersGlobally(std::unique_ptr<Event> event) 
+    {
+        std::vector<std::string> names = getFactory().getDisplayObjectNames();
+        for (const auto& name : names) 
+        {
+            auto obj = getFactory().getDisplayObject(name);
+            if (obj) 
+            {
+                Event evnt = *event;
+                obj->triggerEventListeners(evnt, false);
+            }
+        }
+    }
+
+
 
     bool EventManager::isMouseWithinBounds(IDisplayObject& target) const 
     {

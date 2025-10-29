@@ -2,6 +2,7 @@
 
 WORKSPACE="/home/jay/Documents/GitHub/SDOM"
 
+
 if [ "$1" == "clean" ]; then
     echo "Cleaning $WORKSPACE/build and $WORKSPACE/examples/test/build ..."
     sudo rm -rf "$WORKSPACE/build" "$WORKSPACE/examples/test/build"
@@ -15,6 +16,7 @@ fi
 
 # --- Build and install the API library ---
 cd "$WORKSPACE"
+# scripts/gen_version.sh
 
 if [ ! -d "include/SDOM" ]; then
     echo "ERROR: Headers should be in $WORKSPACE/include/SDOM/"

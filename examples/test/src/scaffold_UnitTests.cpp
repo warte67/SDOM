@@ -8,7 +8,9 @@
 namespace SDOM
 {
     // --- Individual Scaffold Unit Tests --- //
-    bool scaffold_scaffolding(std::vector<std::string>& errors)   
+
+    // Test 0: Test scaffold
+    bool scaffold_test0(std::vector<std::string>& errors)   
     {
         // ✅ Test Verified
         // 🔄 In Progress
@@ -18,6 +20,10 @@ namespace SDOM
         // ☐ Planned
 
         bool ok = true;
+
+        // To send an error message to the test harness, use the following:
+        // errors.push_error("Description of the error.");
+        // ok = false;
 
         return ok;
     } // scaffold_scaffolding(std::vector<std::string>& errors)   
@@ -39,7 +45,7 @@ namespace SDOM
         UnitTests& ut = UnitTests::getInstance();
         ut.clear_tests();
 
-        ut.add_test("Scaffolding", scaffold_scaffolding);
+        ut.add_test("Test scaffold", scaffold_test0);
 
         ut.setLuaFilename("src/scaffold_UnitTests.lua"); // Lua test script path
         ut.add_test("Lua: " + ut.getLuaFilename(), scaffold_LUA_Tests);

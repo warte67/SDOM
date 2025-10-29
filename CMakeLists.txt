@@ -1,72 +1,54 @@
 cmake_minimum_required(VERSION 3.20)
-
-# ======================================================
-#  Project Setup
-# ======================================================
 project(SDOM VERSION 1.0 LANGUAGES CXX)
 
 # ======================================================
 #  Version Auto-Generation (SDOM_Version.hpp)
 # ======================================================
 set(GEN_VERSION_SCRIPT "${CMAKE_SOURCE_DIR}/scripts/gen_version.sh")
+set(VERSION_TEMPLATE "${CMAKE_SOURCE_DIR}/include/SDOM/SDOM_Version.hpp.in")
 set(VERSION_HEADER "${CMAKE_SOURCE_DIR}/include/SDOM/SDOM_Version.hpp")
+set(VERSION_TRIGGER "${CMAKE_BINARY_DIR}/_version_trigger")
 
 if(EXISTS "${GEN_VERSION_SCRIPT}")
 
-    # Gather all SDOM source and header files
-    file(GLOB_RECURSE SDOM_SOURCE_FILES
-        "${CMAKE_SOURCE_DIR}/src/*.cpp"
-        "${CMAKE_SOURCE_DIR}/include/SDOM/*.hpp"
+    add_custom_command(
+        OUTPUT "${VERSION_TRIGGER}"
+        COMMAND ${CMAKE_COMMAND} -E touch "${VERSION_TRIGGER}"
+        COMMENT "⏱ Updating version trigger"
     )
-
-    # ------------------------------------------------------
-    # 🔧 Version Generation Behavior (Choose ONE mode)
-    # ------------------------------------------------------
-    #
-    # 1️⃣  Generate only if missing or script changes:
-    #     (Conservative, minimal rebuilds)
-    #     ```
-    #     add_custom_command(
-    #         OUTPUT "${VERSION_HEADER}"
-    #         COMMAND "${GEN_VERSION_SCRIPT}"
-    #         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-    #         DEPENDS "${GEN_VERSION_SCRIPT}"
-    #         COMMENT "Generating SDOM_Version.hpp (only if needed)"
-    #         VERBATIM
-    #     )
-    #     add_custom_target(generate_version DEPENDS "${VERSION_HEADER}")
-    #     ```
-    #
-    # 2️⃣  Generate when any SDOM source/header changes:
-    #     (Current default — bump version when API changes)
-    #     ✅ Best balance between automation and stability
-    #
     add_custom_command(
         OUTPUT "${VERSION_HEADER}"
         COMMAND "${GEN_VERSION_SCRIPT}"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        DEPENDS "${GEN_VERSION_SCRIPT}" ${SDOM_SOURCE_FILES}
-        COMMENT "Regenerating SDOM_Version.hpp (source files changed)"
+        DEPENDS "${GEN_VERSION_SCRIPT}" "${VERSION_TEMPLATE}" "${VERSION_TRIGGER}"
+        COMMENT "🔄 Regenerating SDOM_Version.hpp (script/template/source changed)"
         VERBATIM
     )
+
+    # # Create a checksum file from all sources
+    # add_custom_command(
+    #     OUTPUT "${CMAKE_BINARY_DIR}/_src_checksum"
+    #     COMMAND ${CMAKE_COMMAND} -E echo "checking source changes"
+    #     COMMAND ${CMAKE_COMMAND} -E md5sum ${CMAKE_SOURCE_DIR}/src/*.cpp > "${CMAKE_BINARY_DIR}/_src_checksum"
+    #     DEPENDS ${SDOM_SOURCE_FILES}
+    # )
+    # add_custom_command(
+    #     OUTPUT "${VERSION_HEADER}"
+    #     COMMAND "${GEN_VERSION_SCRIPT}"
+    #     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    #     DEPENDS "${GEN_VERSION_SCRIPT}" "${VERSION_TEMPLATE}" "${CMAKE_BINARY_DIR}/_src_checksum"
+    #     COMMENT "🔄 Regenerating SDOM_Version.hpp (source files changed)"
+    # )
+
     add_custom_target(generate_version DEPENDS "${VERSION_HEADER}")
-    #
-    # 3️⃣  Generate every build (always bump version):
-    #     ```
-    #     add_custom_target(generate_version ALL
-    #         COMMAND "${GEN_VERSION_SCRIPT}"
-    #         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-    #         COMMENT "Regenerating SDOM_Version.hpp (runs every build)"
-    #         VERBATIM
-    #     )
-    #     ```
-    # ------------------------------------------------------
 
     message(STATUS "✅ SDOM version will regenerate when source files change")
 
 else()
     message(WARNING "⚠️ Version generator script not found: ${GEN_VERSION_SCRIPT}")
 endif()
+
+
 
 # ======================================================
 #  Build Configuration
