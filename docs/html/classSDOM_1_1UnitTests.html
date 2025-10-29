@@ -95,12 +95,17 @@ $(function(){initNavTree('classSDOM_1_1UnitTests.html','','classSDOM_1_1UnitTest
 
 <p><code>#include &lt;<a class="el" href="SDOM__UnitTests_8hpp_source.html">SDOM_UnitTests.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:TestCase" id="r_TestCase"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1UnitTests_1_1TestCase.html">TestCase</a></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1e79ed95db86daf166bb72932fed97b5" id="r_a1e79ed95db86daf166bb72932fed97b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e79ed95db86daf166bb72932fed97b5">UnitTests</a> (const UnitTests &amp;)=delete</td></tr>
 <tr class="memitem:ab77bcbf342559b3309d761898566014d" id="r_ab77bcbf342559b3309d761898566014d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1e79ed95db86daf166bb72932fed97b5">UnitTests</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab77bcbf342559b3309d761898566014d">operator=</a> (const <a class="el" href="#a1e79ed95db86daf166bb72932fed97b5">UnitTests</a> &amp;)=delete</td></tr>
 <tr class="memitem:aa04b15f4ed9bdd43aac8a91708793abe" id="r_aa04b15f4ed9bdd43aac8a91708793abe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa04b15f4ed9bdd43aac8a91708793abe">clear_tests</a> ()</td></tr>
-<tr class="memitem:a31d4d291f8b1119b213d1f51e49d4ce1" id="r_a31d4d291f8b1119b213d1f51e49d4ce1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31d4d291f8b1119b213d1f51e49d4ce1">add_test</a> (const std::string &amp;name, std::function&lt; bool(std::vector&lt; std::string &gt; &amp;)&gt; func, bool is_implemented=true)</td></tr>
+<tr class="memitem:a1348b301ee3814003c6ddeec30e4dde2" id="r_a1348b301ee3814003c6ddeec30e4dde2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1348b301ee3814003c6ddeec30e4dde2">add_test</a> (const std::string &amp;objName, const std::string &amp;name, std::function&lt; bool(std::vector&lt; std::string &gt; &amp;)&gt; func, bool is_implemented=true)</td></tr>
+<tr class="memitem:ac2daaf0a528d0f4b6c3e8e924ead197b" id="r_ac2daaf0a528d0f4b6c3e8e924ead197b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac2daaf0a528d0f4b6c3e8e924ead197b">run_single_test</a> (<a class="el" href="structSDOM_1_1UnitTests_1_1TestCase.html">TestCase</a> &amp;test, const std::string &amp;objName)</td></tr>
 <tr class="memitem:a4d840a8d5fdec42718beeb59b90febfe" id="r_a4d840a8d5fdec42718beeb59b90febfe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d840a8d5fdec42718beeb59b90febfe">run_all</a> (const std::string &amp;objName)</td></tr>
 <tr class="memitem:a51215fd3dbc531a9c31494a323818bc7" id="r_a51215fd3dbc531a9c31494a323818bc7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51215fd3dbc531a9c31494a323818bc7">push_error</a> (const std::string &amp;error)</td></tr>
 <tr class="memitem:a3a21dea151d3ed2832db254612c4478d" id="r_a3a21dea151d3ed2832db254612c4478d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a21dea151d3ed2832db254612c4478d">run_lua_tests</a> (std::vector&lt; std::string &gt; &amp;errors, const std::string &amp;filename)</td></tr>
@@ -116,6 +121,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa8818c326f3221af590af43e201d5494" id="r_aa8818c326f3221af590af43e201d5494"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8818c326f3221af590af43e201d5494">setIsTraversing</a> (bool traversing)</td></tr>
 <tr class="memitem:a3c1b7047e61073eee5f5fa84e1394bff" id="r_a3c1b7047e61073eee5f5fa84e1394bff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c1b7047e61073eee5f5fa84e1394bff">setLuaFilename</a> (const std::string &amp;filename)</td></tr>
 <tr class="memitem:ab9f7936c51476ca5889aa2cbe7b7dd45" id="r_ab9f7936c51476ca5889aa2cbe7b7dd45"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9f7936c51476ca5889aa2cbe7b7dd45">getLuaFilename</a> () const</td></tr>
+<tr class="memitem:a6cf64232d3f310a9d7b30b39f86e76d8" id="r_a6cf64232d3f310a9d7b30b39f86e76d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6cf64232d3f310a9d7b30b39f86e76d8">set_frame_counter</a> (int frame_counter)</td></tr>
+<tr class="memitem:ad6aca34abfc95d8da0e2fcf0e963457e" id="r_ad6aca34abfc95d8da0e2fcf0e963457e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6aca34abfc95d8da0e2fcf0e963457e">get_frame_counter</a> () const</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -154,8 +161,8 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a31d4d291f8b1119b213d1f51e49d4ce1" name="a31d4d291f8b1119b213d1f51e49d4ce1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31d4d291f8b1119b213d1f51e49d4ce1">&#9670;&#160;</a></span>add_test()</h2>
+<a id="a1348b301ee3814003c6ddeec30e4dde2" name="a1348b301ee3814003c6ddeec30e4dde2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1348b301ee3814003c6ddeec30e4dde2">&#9670;&#160;</a></span>add_test()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -163,6 +170,11 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void SDOM::UnitTests::add_test </td>
           <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>objName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
@@ -210,6 +222,31 @@ Static Public Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad6aca34abfc95d8da0e2fcf0e963457e" name="ad6aca34abfc95d8da0e2fcf0e963457e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6aca34abfc95d8da0e2fcf0e963457e">&#9670;&#160;</a></span>get_frame_counter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM::UnitTests::get_frame_counter </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -495,6 +532,52 @@ template&lt;typename Func&gt; </div>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filename</em></span>&#160;)</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac2daaf0a528d0f4b6c3e8e924ead197b" name="ac2daaf0a528d0f4b6c3e8e924ead197b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2daaf0a528d0f4b6c3e8e924ead197b">&#9670;&#160;</a></span>run_single_test()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::UnitTests::run_single_test </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM_1_1UnitTests_1_1TestCase.html">TestCase</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>test</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>objName</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6cf64232d3f310a9d7b30b39f86e76d8" name="a6cf64232d3f310a9d7b30b39f86e76d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cf64232d3f310a9d7b30b39f86e76d8">&#9670;&#160;</a></span>set_frame_counter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::UnitTests::set_frame_counter </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>frame_counter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

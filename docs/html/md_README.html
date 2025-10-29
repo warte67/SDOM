@@ -94,11 +94,14 @@ $(function(){initNavTree('md_README.html','',''); });
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md1"></a></p>
 <p>[<img src="https://img.shields.io/badge/license-ZLIB-blue.svg" alt="License" style="pointer-events: none;" class="inline"/>](LICENSE) <a href="https://warte67.github.io/SDOM/"><img src="https://img.shields.io/badge/docs-Doxygen-blue" alt="Documentation" class="inline"/></a></p>
-<p><b><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> 0.5.106 (PreAlpha)</b> <br  />
- <b>Build Date:</b> 2025-10-29_13:13:26 <br  />
+<p><b><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> 0.5.108 (early pre-alpha)</b> <br  />
+ <b>Build Date:</b> 2025-10-29_16:25:40 <br  />
  <b>Platform:</b> Linux-x86_64 <br  />
  <b>Compiler:</b> g++ (GCC) 15.2.1 20250813</p>
-<p>Doxygen Documentation: <a href="https://warte67.github.io/SDOM/">https://warte67.github.io/SDOM/</a></p>
+<ul>
+<li>Doxygen Documentation: <a href="https://warte67.github.io/SDOM/">https://warte67.github.io/SDOM/</a></li>
+<li>GitHub Wiki: <a href="https://github.com/warte67/SDOM/wiki">https://github.com/warte67/SDOM/wiki</a></li>
+</ul>
 <hr  />
 <h2 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 Screenshot of the Test Harness application:</h2>
@@ -107,6 +110,8 @@ Screenshot of the Test Harness application:</h2>
 Overview</h1>
 <p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> (Simple SDL Document Object Model API) is a compact, modern C++23 library that provides a structured approach to building graphical user interfaces and interactive scenes using SDL3. <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> fully supports SDL3. The Document Object Model is, in short, a robust graphical user-interface system: a tree of display objects and containers with well-defined properties, parent/child relationships, event propagation, and lifecycle semantics—allowing code to traverse, query, and update elements in a declarative, DOM-like way similar to web DOM concepts but tailored to SDL rendering and input.</p>
 <p>The design centers on three core ideas: composability, data-driven configuration, and portability. Composability comes from a small collection of display object primitives and handles that can be composed into complex UIs. Data-driven configuration means scenes and object properties can be created and adjusted from Lua (via Sol2) without recompiling — as much or as little Lua as you want can be used to drive an application. We plan to provide dedicated SDL3 bindings for Lua so scripting can directly leverage SDL3 features; that work is in progress. Importantly, SDL3 is already fully available to C and C++ code using <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>, and first-class bindings for other host languages (for example Rust or Python) are planned for future releases.</p>
+<p><b>Note:</b> This is still a very early pre-alpha version. All APIs are subject to change. <br  />
+</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 Features</h1>
 <ul>

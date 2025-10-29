@@ -83,5 +83,7 @@ var searchData=
   ['run_80',['run',['../classSDOM_1_1Core.html#aa6c9e1100971ea3848dd6b053962e6b5',1,'SDOM::Core::run()'],['../classSDOM_1_1Core.html#a18f8394dd9b86a9d652fce3fa3fc5e6a',1,'SDOM::Core::run(const CoreConfig &amp;config)'],['../classSDOM_1_1Core.html#a533271ea191ba008b2fdc15da5690385',1,'SDOM::Core::run(const sol::table &amp;config)'],['../classSDOM_1_1Core.html#a2462fa57e0aa3ea6f5227b58831e970d',1,'SDOM::Core::run(const std::string &amp;configFile)'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run(const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)']]],
   ['run_5fall_81',['run_all',['../classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe',1,'SDOM::UnitTests']]],
   ['run_5flua_5ftests_82',['run_lua_tests',['../classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d',1,'SDOM::UnitTests']]],
-  ['running_20the_20example_83',['Running the Example',['../md_README.html#autotoc_md13',1,'']]]
+  ['run_5fsingle_5ftest_83',['run_single_test',['../classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b',1,'SDOM::UnitTests']]],
+  ['running_84',['running',['../structSDOM_1_1UnitTests_1_1TestCase.html#aebb32a74371c9ffcff0aa7bbbd1874f6',1,'SDOM::UnitTests::TestCase']]],
+  ['running_20the_20example_85',['Running the Example',['../md_README.html#autotoc_md13',1,'']]]
 ];

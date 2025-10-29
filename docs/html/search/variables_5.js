@@ -29,6 +29,8 @@ var searchData=
   ['fontwidth_5f_26',['fontWidth_',['../classSDOM_1_1Label.html#a9a686f86ca1a72adb38af1b2712309b5',1,'SDOM::Label']]],
   ['foregroundcolor_27',['foregroundColor',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69',1,'SDOM::IDisplayObject::InitStruct::foregroundColor'],['../structSDOM_1_1FontStyle.html#a6309d9e45ad361255d3265a9441be6bb',1,'SDOM::FontStyle::foregroundColor']]],
   ['foregroundcolor_5f_28',['foregroundColor_',['../classSDOM_1_1IDisplayObject.html#a8c850aff223e1318bf572843132052e4',1,'SDOM::IDisplayObject']]],
-  ['frominitstruct_29',['fromInitStruct',['../structSDOM_1_1TypeCreators.html#a15807ffd6629c821a869c22bbbd8d180',1,'SDOM::TypeCreators::fromInitStruct'],['../structSDOM_1_1AssetTypeCreators.html#acce95e4ee7a2328e234ea8a9beaf6764',1,'SDOM::AssetTypeCreators::fromInitStruct']]],
-  ['fromlua_30',['fromLua',['../structSDOM_1_1TypeCreators.html#a11367cc263f56aa295753dc763a372ed',1,'SDOM::TypeCreators::fromLua'],['../structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce',1,'SDOM::AssetTypeCreators::fromLua']]]
+  ['frame_5fcount_29',['frame_count',['../structSDOM_1_1UnitTests_1_1TestCase.html#a391b4ae6a9a7660a3f4ada7d3b85105e',1,'SDOM::UnitTests::TestCase']]],
+  ['frominitstruct_30',['fromInitStruct',['../structSDOM_1_1TypeCreators.html#a15807ffd6629c821a869c22bbbd8d180',1,'SDOM::TypeCreators::fromInitStruct'],['../structSDOM_1_1AssetTypeCreators.html#acce95e4ee7a2328e234ea8a9beaf6764',1,'SDOM::AssetTypeCreators::fromInitStruct']]],
+  ['fromlua_31',['fromLua',['../structSDOM_1_1TypeCreators.html#a11367cc263f56aa295753dc763a372ed',1,'SDOM::TypeCreators::fromLua'],['../structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce',1,'SDOM::AssetTypeCreators::fromLua']]],
+  ['func_32',['func',['../structSDOM_1_1UnitTests_1_1TestCase.html#a1470c77b3486505d7f07a4b09d3f7186',1,'SDOM::UnitTests::TestCase']]]
 ];

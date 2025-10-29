@@ -1832,26 +1832,28 @@ namespace SDOM
     // --- Main UnitTests Runner --- //
     bool IDisplayObject_UnitTests()
     {
+        const std::string objName = "IDisplayObject";
         UnitTests& ut = UnitTests::getInstance();
-        ut.clear_tests();
+        // ut.clear_tests();
 
-        ut.add_test("Scaffold", IDisplayObject_test0);
-        ut.add_test("Create Stage Object", IDisplayObject_test1);
-        ut.add_test("Get and Set Name", IDisplayObject_test2);
-        ut.add_test("Destroy the generic Stage Object", IDisplayObject_test3);
-        ut.add_test("Dirty/State Management", IDisplayObject_test4);
-        ut.add_test("Events and Event Listener Handling", IDisplayObject_test5);
-        ut.add_test("Hierarchy Management", IDisplayObject_test6);
-        ut.add_test("Type and Property Access", IDisplayObject_test7);
-        ut.add_test("Priority and Z-Order", IDisplayObject_test8);
-        ut.add_test("Object Focus and Interactivity", IDisplayObject_test9);
-        ut.add_test("Geometry Anchors", IDisplayObject_test10);
-        ut.add_test("Orphan Retention Policy and Grace Period", IDisplayObject_test11);
+        ut.add_test(objName, "Scaffold", IDisplayObject_test0);
+        ut.add_test(objName, "Create Stage Object", IDisplayObject_test1);
+        ut.add_test(objName, "Get and Set Name", IDisplayObject_test2);
+        ut.add_test(objName, "Destroy the generic Stage Object", IDisplayObject_test3);
+        ut.add_test(objName, "Dirty/State Management", IDisplayObject_test4);
+        ut.add_test(objName, "Events and Event Listener Handling", IDisplayObject_test5);
+        ut.add_test(objName, "Hierarchy Management", IDisplayObject_test6);
+        ut.add_test(objName, "Type and Property Access", IDisplayObject_test7);
+        ut.add_test(objName, "Priority and Z-Order", IDisplayObject_test8);
+        ut.add_test(objName, "Object Focus and Interactivity", IDisplayObject_test9);
+        ut.add_test(objName, "Geometry Anchors", IDisplayObject_test10);
+        ut.add_test(objName, "Orphan Retention Policy and Grace Period", IDisplayObject_test11);
 
         ut.setLuaFilename("src/IDisplayObject_UnitTests.lua"); // Lua test script path
-        ut.add_test("Lua: '" + ut.getLuaFilename() + "'", IDisplayObject_LUA_Tests, true); 
+        ut.add_test(objName, "Lua: '" + ut.getLuaFilename() + "'", IDisplayObject_LUA_Tests, true); 
 
-        return ut.run_all("IDisplayObject");
+        // return ut.run_all(objName);
+        return true;
     } // END: IDisplayObject_UnitTests()
 
 

@@ -448,26 +448,28 @@ namespace SDOM
     // --- Main UnitTests Runner --- //
     bool Event_UnitTests()
     {
+        const std::string objName = "Event";
         UnitTests& ut = UnitTests::getInstance();
-        ut.clear_tests();
+        // ut.clear_tests();
 
-        ut.add_test("Test scaffolding", Event_test0);
-        ut.add_test("Verify Event table is registered and accessible", Event_test1);
-        ut.add_test("Verify well-known static event types have expected flag states", Event_test2);
-        ut.add_test("Core system event types round-trip", Event_test3);
-        ut.add_test("Mouse-related event types round-trip", Event_test4);
-        ut.add_test("Mouse-related event types round-trip", Event_test5);
-        ut.add_test("General UI event types round-trip", Event_test6);
-        ut.add_test("Application Lifecycle event types round-trip", Event_test7);
-        ut.add_test("Behavioral Mouse Event Verification", Event_test8);
+        ut.add_test(objName, "Test scaffolding", Event_test0);
+        ut.add_test(objName, "Verify Event table is registered and accessible", Event_test1);
+        ut.add_test(objName, "Verify well-known static event types have expected flag states", Event_test2);
+        ut.add_test(objName, "Core system event types round-trip", Event_test3);
+        ut.add_test(objName, "Mouse-related event types round-trip", Event_test4);
+        ut.add_test(objName, "Mouse-related event types round-trip", Event_test5);
+        ut.add_test(objName, "General UI event types round-trip", Event_test6);
+        ut.add_test(objName, "Application Lifecycle event types round-trip", Event_test7);
+        ut.add_test(objName, "Behavioral Mouse Event Verification", Event_test8);
 
 
 
         ut.setLuaFilename("src/Event_UnitTests.lua"); // Lua test script path
-        ut.add_test("Lua: " + ut.getLuaFilename(), Event_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)
+        ut.add_test(objName, "Lua: " + ut.getLuaFilename(), Event_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)
 
 
-        return ut.run_all("Event");
+        // return ut.run_all(objName);
+        return true;
     } // END: Event_UnitTests()
 
 

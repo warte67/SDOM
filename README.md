@@ -4,8 +4,8 @@
 
 
 <!-- BEGIN_VERSION_BLOCK -->
-**SDOM 0.5.107 (early pre-alpha)**  
-**Build Date:** 2025-10-29_13:17:03  
+**SDOM 0.5.108 (early pre-alpha)**  
+**Build Date:** 2025-10-29_16:25:40  
 **Platform:** Linux-x86_64  
 **Compiler:** g++ (GCC) 15.2.1 20250813
 <!-- END_VERSION_BLOCK -->

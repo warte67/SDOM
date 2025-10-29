@@ -679,56 +679,6 @@ namespace SDOM
                 factory_->attachFutureChildren();   // Attach future children
                 factory_->collectGarbage();         // Clean up any orphaned objects
 
-                static int s_iteration_frame = 0;
-                if (s_iteration_frame == 1)
-                {
-                    // Now run user tests after initialization
-                    // Temporarily ignore real mouse input while running unit tests
-                    this->setIgnoreRealInput(true);
-                    bool testsPassed = onUnitTest(s_iteration_frame);
-                    this->setIgnoreRealInput(false);
-                    if (!testsPassed) 
-                    {
-                        ERROR("Unit tests failed. Aborting run.");
-                        overallSuccess = false;
-                        // stop the main loop to allow graceful shutdown
-                        bIsRunning_ = false;
-                    }            
-                    s_iteration_frame = 2;     
-                }
-                // s_iteration_state++;
-                if (s_iteration_frame < 1)
-                    s_iteration_frame = 1;  // run unit tests on 2nd iteration
-                else if (s_iteration_frame == 2)
-                {
-                    s_iteration_frame = 3;
-                }
-                // let the API get up to speed (warm-up for 100 frames)
-                else if (s_iteration_frame < 100)
-                {
-                    s_iteration_frame ++;
-                }
-                // At exactly 100, clear stats so the next frame measures cleanly
-                else if (s_iteration_frame == 100)
-                {
-                    getFactory().reset_performance_stats();
-                    s_iteration_frame = 101; // next frame will be the measured one
-                }
-                // Frame 101 is the measured frame; report and quit
-                else if (s_iteration_frame == 101)
-                {
-                    s_iteration_frame = 102;  // clamp state
-                    if (stopAfterUnitTests_ == true)
-                    {
-                        getFactory().report_performance_stats();
-                        bIsRunning_ = false; // signal to stop the main loop after unit tests
-                    }
-                }
-                else
-                {
-                    s_iteration_frame = 102;  // clamp state
-                }
-                
             }  // END: while (SDL_PollEvent(&event)) 
         }
 
@@ -993,10 +943,67 @@ namespace SDOM
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
                 if (childObj) 
                 {
-                    handleUpdate(*childObj);
+                    handleUpdate(*childObj);                    
                 }
             }
         };
+
+        // Update the unit test frame counter and run tests
+        {   
+            static int s_iteration_frame = 0;
+            static bool s_tests_complete = false;
+            static int s_stop_on_frame = -1;
+
+            UnitTests& ut = UnitTests::getInstance();
+
+            // FRAME 0 — setup
+            if (s_iteration_frame == 0)
+            {
+                std::cout << CLR::fg_rgb(160, 160, 255)
+                        << "🔄 Beginning sequential unit test run..."
+                        << CLR::RESET << std::endl;
+            }
+            // FRAME 1 — registration
+            else if (s_iteration_frame == 1)
+            {
+                onUnitTest(s_iteration_frame);
+            }
+            // FRAME 2+ — sequential execution
+            else
+            {
+                ut.update();
+
+                if (!s_tests_complete && ut.all_done())
+                {
+                    s_tests_complete = true;
+                    s_stop_on_frame = s_iteration_frame + 100; // give 100 frames for perf
+                    // INFO("✅ All tests complete — entering performance settling period.");
+                }
+            }
+
+            // Increment frame counter only if we’re still in test or settle period
+            if (!s_tests_complete || s_iteration_frame < s_stop_on_frame)
+            {
+                ++s_iteration_frame;
+                ut.set_frame_counter(s_iteration_frame);
+                // INFO("Core::run: s_iteration_frame=" + std::to_string(s_iteration_frame) +
+                //     ", s_tests_complete=" + std::to_string(s_tests_complete) +
+                //     ", s_stop_on_frame=" + std::to_string(s_stop_on_frame));
+            }
+
+            // Once performance settle period ends, finalize and optionally stop
+            if (s_tests_complete && s_stop_on_frame >= 0 && s_iteration_frame >= s_stop_on_frame)
+            {
+                s_stop_on_frame = -1;
+
+                if (stopAfterUnitTests_)
+                {
+                    getFactory().report_performance_stats();
+                    bIsRunning_ = false;
+                    // INFO("🛑 Stopping after unit tests (stopAfterUnitTests_ = true)");
+                }
+            }
+        } // END: update unit tests
 
         // Update the Keyfocus Gray
         static float delta = 1.0f;
@@ -1045,8 +1052,8 @@ namespace SDOM
         };
 
         bool allTestsPassed = true;
-        std::cout << CLR::LT_BLUE << "Starting unit tests..." << CLR::RESET << std::endl;
-        std::cout << CLR::indent_push();
+        // std::cout << CLR::LT_BLUE << "Starting unit tests..." << CLR::RESET << std::endl;
+        // std::cout << CLR::indent_push();
 
         // Run Core-specific unit tests here
         allTestsPassed &= coreTests_();
@@ -1065,11 +1072,11 @@ namespace SDOM
             setIsTraversing(false);
         }
 
-        std::cout << CLR::indent_pop();
-        if (allTestsPassed) 
-            std::cout << CLR::LT_BLUE << "...Unit tests " << CLR::GREEN << "[PASSED]" << CLR::RESET << std::endl;
-        else 
-            std::cout << CLR::LT_BLUE << "...Unit tests " << CLR::RED << "[FAILED]" << CLR::RESET << std::endl;
+        // std::cout << CLR::indent_pop();
+        // if (allTestsPassed) 
+        //     std::cout << CLR::LT_BLUE << "...Unit tests " << CLR::GREEN << "[PASSED]" << CLR::RESET << std::endl;
+        // else 
+        //     std::cout << CLR::LT_BLUE << "...Unit tests " << CLR::RED << "[FAILED]" << CLR::RESET << std::endl;
 
         // if (stopAfterUnitTests_ == true)
         // {
@@ -1249,8 +1256,10 @@ namespace SDOM
         // Clear previous tests for this module
         ut.clear_tests();
 
+        const std::string objName = "Core System";
+
         // Add all core system tests using the new pattern
-        ut.add_test("SDL_WasInit(SDL_INIT_VIDEO)", [](std::vector<std::string>& errors) 
+        ut.add_test(objName, "SDL_WasInit(SDL_INIT_VIDEO)", [](std::vector<std::string>& errors) 
         {
             if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
                 errors.push_back("SDL was NOT initialized!");
@@ -1259,7 +1268,7 @@ namespace SDOM
             return true;
         });
 
-        ut.add_test("SDL Texture Validity", [this](std::vector<std::string>& errors) 
+        ut.add_test(objName, "SDL Texture Validity", [this](std::vector<std::string>& errors) 
         {
             if (texture_ == nullptr) {
                 errors.push_back("SDL Texture is null!");
@@ -1268,7 +1277,7 @@ namespace SDOM
             return true;
         });
 
-        ut.add_test("SDL Renderer Validity", [this](std::vector<std::string>& errors) 
+        ut.add_test(objName, "SDL Renderer Validity", [this](std::vector<std::string>& errors) 
         {
             if (renderer_ == nullptr) {
                 errors.push_back("SDL Renderer is null!");
@@ -1277,7 +1286,7 @@ namespace SDOM
             return true;
         });
 
-        ut.add_test("SDL Window Validity", [this](std::vector<std::string>& errors) 
+        ut.add_test(objName, "SDL Window Validity", [this](std::vector<std::string>& errors) 
         {
             if (window_ == nullptr) {
                 errors.push_back("SDL Window is null!");
@@ -1286,8 +1295,9 @@ namespace SDOM
             return true;
         });
 
-        // Run all tests and return the result
-        return ut.run_all("Core System");
+        // // Run all tests and return the result
+        // return ut.run_all(objName);
+        return true;
     } // END bool Core::coreTests_()
 
 

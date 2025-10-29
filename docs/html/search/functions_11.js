@@ -46,5 +46,6 @@ var searchData=
   ['restore_5fcursor_43',['restore_cursor',['../classCLR.html#aa49cf5a83ab2494f854fc105d01d82ee',1,'CLR']]],
   ['run_44',['run',['../classSDOM_1_1Core.html#aa6c9e1100971ea3848dd6b053962e6b5',1,'SDOM::Core::run()'],['../classSDOM_1_1Core.html#a18f8394dd9b86a9d652fce3fa3fc5e6a',1,'SDOM::Core::run(const CoreConfig &amp;config)'],['../classSDOM_1_1Core.html#a533271ea191ba008b2fdc15da5690385',1,'SDOM::Core::run(const sol::table &amp;config)'],['../classSDOM_1_1Core.html#a2462fa57e0aa3ea6f5227b58831e970d',1,'SDOM::Core::run(const std::string &amp;configFile)'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run(const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)']]],
   ['run_5fall_45',['run_all',['../classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe',1,'SDOM::UnitTests']]],
-  ['run_5flua_5ftests_46',['run_lua_tests',['../classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d',1,'SDOM::UnitTests']]]
+  ['run_5flua_5ftests_46',['run_lua_tests',['../classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d',1,'SDOM::UnitTests']]],
+  ['run_5fsingle_5ftest_47',['run_single_test',['../classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b',1,'SDOM::UnitTests']]]
 ];

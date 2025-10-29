@@ -1274,7 +1274,6 @@ Below is the current status of all exposed **IDisplayObject** properties:
   - Began building a new **Event_UnitTests.cpp** Unit Test Module to fully test all C++ and LUA EventManager functionality.
   - Considering a one-test-per-frame approach to unit tests to allow for deterministic frame-by-frame execution.
     - Started performing a stable sort on the Anseriformes array by ascending x-axis position, ensuring deterministic alignment and zero rotational variance relative to the surface normal of the local sphere. (translation: "Getting my ducks in a row")
-
 - **Versioning System Overhaul**
   - **SDOM now embeds a fully automated, introspectable version and build metadata system spanning CMake, Bash, and Lua.**
   - **Automated version header generation via gen_version.sh, producing:**
@@ -1310,14 +1309,19 @@ Platform: Linux-x86_64
 
 ---
 ### [October 29, 2025]
-- Updated the README.md with more detailed build instructions and a screenshot of the Test Harness application. 
-- Added automatic version header generation via gen_version.sh
-- Added the frame parameter to the onUnitTest() method of all **IDisplayObject** subclasses.
+- **README.md** expanded with clearer build instructions for Debian, Arch, Fedora, macOS, and Windows, plus a screenshot of the Test Harness.  
+  - Integrated version metadata into README.md.  
+- **Automated versioning:** Implemented `gen_version.sh` to auto-generate `SDOM_Version.hpp` and update the README version block during builds.  
+- **Unit test refactor:** Added a `frame` parameter to all `onUnitTest(int frame)` methods across **IDisplayObject** subclasses to support frame-synchronous testing.  
+- **Per-frame test harness:** The `UnitTests` system now runs tests sequentially per frame, logs formatted pass/fail output, and provides detailed summaries.  
+- **Core update integration:** Integrated per-frame unit test execution into `Core::onUpdate()`, including automated shutdown and performance reporting.
+- **Temporal testing milestone:** Transitioned the UnitTest system from static to frame-synchronous scheduling, enabling validation of timers, multithreaded operations, and asynchronous subsystems.
 
-- **Next Steps:**
-  - Refine the UnitTests class to implement a one-test-per-frame approach to unit tests.
+---
+### [Planned for November 1, 2025]
+- Add **per-test timing metrics** (µs resolution) and include them in the summary output.  
+- Introduce **color-coded summary counts** (green: passed, red: failed, yellow: not implemented).  
   - Finalize **Event_UnitTests.cpp** with comprehensive C++ and Lua tests for EventManager functionality.
-  - Integrate version metadata into documentation and developer tooling for easy access.
 
 
 ---

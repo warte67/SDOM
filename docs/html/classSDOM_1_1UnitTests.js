@@ -1,9 +1,11 @@
 var classSDOM_1_1UnitTests =
 [
+    [ "TestCase", "structSDOM_1_1UnitTests_1_1TestCase.html", "structSDOM_1_1UnitTests_1_1TestCase" ],
     [ "UnitTests", "classSDOM_1_1UnitTests.html#a1e79ed95db86daf166bb72932fed97b5", null ],
-    [ "add_test", "classSDOM_1_1UnitTests.html#a31d4d291f8b1119b213d1f51e49d4ce1", null ],
+    [ "add_test", "classSDOM_1_1UnitTests.html#a1348b301ee3814003c6ddeec30e4dde2", null ],
     [ "all_done", "classSDOM_1_1UnitTests.html#a15b4ca21a39eea01dd2b0dd6c52571b3", null ],
     [ "clear_tests", "classSDOM_1_1UnitTests.html#aa04b15f4ed9bdd43aac8a91708793abe", null ],
+    [ "get_frame_counter", "classSDOM_1_1UnitTests.html#ad6aca34abfc95d8da0e2fcf0e963457e", null ],
     [ "getColor", "classSDOM_1_1UnitTests.html#aa3a690ea1eaf0f8adc68c214c9f77130", null ],
     [ "getEventManager", "classSDOM_1_1UnitTests.html#a8c0f133c131e5acef12a2ffbd275064e", null ],
     [ "getFactory", "classSDOM_1_1UnitTests.html#a1e9dfbdccdd65ae021d4a5d82b95bf61", null ],
@@ -18,6 +20,8 @@ var classSDOM_1_1UnitTests =
     [ "run", "classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712", null ],
     [ "run_all", "classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe", null ],
     [ "run_lua_tests", "classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d", null ],
+    [ "run_single_test", "classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b", null ],
+    [ "set_frame_counter", "classSDOM_1_1UnitTests.html#a6cf64232d3f310a9d7b30b39f86e76d8", null ],
     [ "setIsTraversing", "classSDOM_1_1UnitTests.html#aa8818c326f3221af590af43e201d5494", null ],
     [ "setLuaFilename", "classSDOM_1_1UnitTests.html#a3c1b7047e61073eee5f5fa84e1394bff", null ],
     [ "update", "classSDOM_1_1UnitTests.html#aa0cb296cd4fcce056ed4b5e02606e029", null ],

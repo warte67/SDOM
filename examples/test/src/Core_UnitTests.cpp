@@ -991,6 +991,8 @@ namespace SDOM
             ok = false;
         }
 
+        // errors.push_back("createAssetObjectFromScript failed for BitmapFont.");
+        // return false;
         return ok;
 
     } // END: bool Core_test16(std::vector<std::string>& errors)    
@@ -1008,31 +1010,33 @@ namespace SDOM
     // --- Main Core UnitTests Runner --- //
     bool Core_UnitTests()
     {
+        const std::string objName = "Core";
         UnitTests& ut = UnitTests::getInstance();
-        ut.clear_tests();
+        // ut.clear_tests();
 
-        ut.add_test("Scaffolding", Core_scaffolding);
-        ut.add_test("Window Dimensions", Core_test1);
-        ut.add_test("Pixel Dimensions", Core_test2);
-        ut.add_test("Aspect Ratio Preservation", Core_test3);
-        ut.add_test("Texture Resize Allowance", Core_test4);
-        ut.add_test("Pixel Format", Core_test5);
-        ut.add_test("Renderer Logical Presentation", Core_test6);
-        ut.add_test("Window Flags", Core_test7);
-        ut.add_test("Core Background Color", Core_test8);
-        ut.add_test("Factory Existence", Core_test9);
-        ut.add_test("Callback/Hook Registration", Core_test10);
-        ut.add_test("Stage/Root Node Management", Core_test11);
-        ut.add_test("SDL Resource Accessors", Core_test12);
-        ut.add_test("Configuration Getters/Setters", Core_test13);
-        ut.add_test("Factory and Event Manager Access", Core_test14);
-        ut.add_test("Focus & Hover Management", Core_test15);
-        ut.add_test("DisplayObject Creation", Core_test16);
+        ut.add_test(objName, "Scaffolding", Core_scaffolding);
+        ut.add_test(objName, "Window Dimensions", Core_test1);
+        ut.add_test(objName, "Pixel Dimensions", Core_test2);
+        ut.add_test(objName, "Aspect Ratio Preservation", Core_test3);
+        ut.add_test(objName, "Texture Resize Allowance", Core_test4);
+        ut.add_test(objName, "Pixel Format", Core_test5);
+        ut.add_test(objName, "Renderer Logical Presentation", Core_test6);
+        ut.add_test(objName, "Window Flags", Core_test7);
+        ut.add_test(objName, "Core Background Color", Core_test8);
+        ut.add_test(objName, "Factory Existence", Core_test9);
+        ut.add_test(objName, "Callback/Hook Registration", Core_test10);
+        ut.add_test(objName, "Stage/Root Node Management", Core_test11);
+        ut.add_test(objName, "SDL Resource Accessors", Core_test12);
+        ut.add_test(objName, "Configuration Getters/Setters", Core_test13);
+        ut.add_test(objName, "Factory and Event Manager Access", Core_test14);
+        ut.add_test(objName, "Focus & Hover Management", Core_test15);
+        ut.add_test(objName, "DisplayObject Creation", Core_test16);
 
         ut.setLuaFilename("src/Core_UnitTests.lua"); // Lua test script path
-        ut.add_test("Lua: '" + ut.getLuaFilename() + "'", Core_LUA_Tests);
+        ut.add_test(objName, "Lua: '" + ut.getLuaFilename() + "'", Core_LUA_Tests);
 
-        return ut.run_all("Core");
+        // return ut.run_all(objName);
+        return true;
     }
 
 

@@ -116,13 +116,13 @@ void Box::onEvent(const SDOM::Event& event)
 
     if (event.getType() == SDOM::EventType::KeyDown)
     {
-        int keycode = event.getKeycode();
-        std::cout << "KeyDown event received for Box: " << getName() << std::endl;
-        std::cout << "keycode: " << keycode <<  "'" << SDL_GetKeyName(static_cast<SDL_Keycode>(keycode)) << "'" << std::endl;
-        std::cout << "ascii: " << (char)event.getAsciiCode() << std::endl;
-        std::cout << "scancode: " << event.getScanCode() << std::endl;
-        std::cout << "keymod: " << event.getKeymod() << std::endl;
-        std::cout << "target: " << event.getTarget()->getName() << std::endl;
+        // int keycode = event.getKeycode();
+        // std::cout << "KeyDown event received for Box: " << getName() << std::endl;
+        // std::cout << "keycode: " << keycode <<  "'" << SDL_GetKeyName(static_cast<SDL_Keycode>(keycode)) << "'" << std::endl;
+        // std::cout << "ascii: " << (char)event.getAsciiCode() << std::endl;
+        // std::cout << "scancode: " << event.getScanCode() << std::endl;
+        // std::cout << "keymod: " << event.getKeymod() << std::endl;
+        // std::cout << "target: " << event.getTarget()->getName() << std::endl;
 
         static const std::vector<SDOM::AnchorPoint> baseAnchors = 
         {

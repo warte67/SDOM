@@ -46,7 +46,9 @@ var searchData=
   ['foregroundcolor_43',['foregroundColor',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69',1,'SDOM::IDisplayObject::InitStruct::foregroundColor'],['../structSDOM_1_1FontStyle.html#a6309d9e45ad361255d3265a9441be6bb',1,'SDOM::FontStyle::foregroundColor']]],
   ['foregroundcolor_5f_44',['foregroundColor_',['../classSDOM_1_1IDisplayObject.html#a8c850aff223e1318bf572843132052e4',1,'SDOM::IDisplayObject']]],
   ['frame_45',['Frame',['../classSDOM_1_1Frame.html',1,'SDOM::Frame'],['../classSDOM_1_1Frame.html#a4b6056a257215fb7ed47a827b31b93f6',1,'SDOM::Frame::Frame(const InitStruct &amp;init)'],['../classSDOM_1_1Frame.html#a2666eb1b1fe16c3a31ac0e56fb216d25',1,'SDOM::Frame::Frame(const sol::table &amp;config)'],['../classSDOM_1_1Frame.html#a2754c51f92021b2e1c22f5cbbb24b9fa',1,'SDOM::Frame::Frame()=default'],['../namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922ca3bb3e8c8a24891ba0f7608bcc96f8b0a',1,'SDOM::Frame']]],
-  ['frominitstruct_46',['fromInitStruct',['../structSDOM_1_1TypeCreators.html#a15807ffd6629c821a869c22bbbd8d180',1,'SDOM::TypeCreators::fromInitStruct'],['../structSDOM_1_1AssetTypeCreators.html#acce95e4ee7a2328e234ea8a9beaf6764',1,'SDOM::AssetTypeCreators::fromInitStruct']]],
-  ['fromlua_47',['fromLua',['../structSDOM_1_1TypeCreators.html#a11367cc263f56aa295753dc763a372ed',1,'SDOM::TypeCreators::fromLua'],['../structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce',1,'SDOM::AssetTypeCreators::fromLua']]],
-  ['fullstring_48',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]]
+  ['frame_5fcount_46',['frame_count',['../structSDOM_1_1UnitTests_1_1TestCase.html#a391b4ae6a9a7660a3f4ada7d3b85105e',1,'SDOM::UnitTests::TestCase']]],
+  ['frominitstruct_47',['fromInitStruct',['../structSDOM_1_1TypeCreators.html#a15807ffd6629c821a869c22bbbd8d180',1,'SDOM::TypeCreators::fromInitStruct'],['../structSDOM_1_1AssetTypeCreators.html#acce95e4ee7a2328e234ea8a9beaf6764',1,'SDOM::AssetTypeCreators::fromInitStruct']]],
+  ['fromlua_48',['fromLua',['../structSDOM_1_1TypeCreators.html#a11367cc263f56aa295753dc763a372ed',1,'SDOM::TypeCreators::fromLua'],['../structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce',1,'SDOM::AssetTypeCreators::fromLua']]],
+  ['fullstring_49',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]],
+  ['func_50',['func',['../structSDOM_1_1UnitTests_1_1TestCase.html#a1470c77b3486505d7f07a4b09d3f7186',1,'SDOM::UnitTests::TestCase']]]
 ];

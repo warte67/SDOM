@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['add_5ftest_0',['add_test',['../classSDOM_1_1UnitTests.html#a31d4d291f8b1119b213d1f51e49d4ce1',1,'SDOM::UnitTests']]],
+  ['add_5ftest_0',['add_test',['../classSDOM_1_1UnitTests.html#a1348b301ee3814003c6ddeec30e4dde2',1,'SDOM::UnitTests']]],
   ['addchild_1',['addChild',['../classSDOM_1_1IDisplayObject.html#aa11891a86850d2ae1b14906770960033',1,'SDOM::IDisplayObject']]],
   ['addchild_5flua_2',['addChild_lua',['../classSDOM_1_1IDisplayObject.html#a4b899b3d442dde44db5d164c00c97fe4',1,'SDOM::IDisplayObject::addChild_lua()'],['../namespaceSDOM.html#ad705e9ccdf395990fbda0fb59a94d9bc',1,'SDOM::addChild_lua()']]],
   ['adddisplayobject_3',['addDisplayObject',['../classSDOM_1_1Factory.html#a22614b0928a7cbeddea12e790beaceda',1,'SDOM::Factory']]],

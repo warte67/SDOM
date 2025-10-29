@@ -42,16 +42,18 @@ namespace SDOM
     // --- Main UnitTests Runner --- //
     bool scaffold_UnitTests()
     {
+        const std::string objName = "scaffold";
         UnitTests& ut = UnitTests::getInstance();
-        ut.clear_tests();
+        // ut.clear_tests();
 
-        ut.add_test("Test scaffold", scaffold_test0);
+        ut.add_test(objName, "Test scaffold", scaffold_test0);
 
         ut.setLuaFilename("src/scaffold_UnitTests.lua"); // Lua test script path
-        ut.add_test("Lua: " + ut.getLuaFilename(), scaffold_LUA_Tests);
+        ut.add_test(objName, "Lua: " + ut.getLuaFilename(), scaffold_LUA_Tests);
 
 
-        return ut.run_all("scaffold");
+        // return ut.run_all(objName, "scaffold");
+        return true;
     } // END: scaffold_UnitTests()
 
 

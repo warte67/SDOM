@@ -1,5 +1,11 @@
 var NAVTREEINDEX43 =
 {
+"structSDOM_1_1FontStyle.html#adb4e7175913c0849b78a5b746ede2fec":[3,0,0,23,19],
+"structSDOM_1_1FontStyle.html#adf2e70a9a5cfdf6b1915e094ca0773ad":[2,0,0,23,10],
+"structSDOM_1_1FontStyle.html#adf2e70a9a5cfdf6b1915e094ca0773ad":[3,0,0,23,10],
+"structSDOM_1_1FontStyle.html#af478954245de8c56fea5fc18a317d540":[2,0,0,23,2],
+"structSDOM_1_1FontStyle.html#af478954245de8c56fea5fc18a317d540":[3,0,0,23,2],
+"structSDOM_1_1FontStyle.html#af8fa2542619916891cc977181b031f7f":[2,0,0,23,17],
 "structSDOM_1_1FontStyle.html#af8fa2542619916891cc977181b031f7f":[3,0,0,23,17],
 "structSDOM_1_1FontStyle.html#afb2c7b634f8117e9dd2b102e12c29db8":[2,0,0,23,14],
 "structSDOM_1_1FontStyle.html#afb2c7b634f8117e9dd2b102e12c29db8":[3,0,0,23,14],
@@ -243,11 +249,5 @@ var NAVTREEINDEX43 =
 "structSDOM_1_1IPanelObject_1_1InitStruct.html#a0df9d711df2ac9ede2bf91e826db29cc":[3,0,0,25,0,9],
 "structSDOM_1_1IPanelObject_1_1InitStruct.html#a0faa47d35c52461da9e43a87f5384deb":[2,0,0,25,0,28],
 "structSDOM_1_1IPanelObject_1_1InitStruct.html#a0faa47d35c52461da9e43a87f5384deb":[3,0,0,25,0,28],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a17adc32c048d68ae0d26a9778f7f4827":[2,0,0,25,0,2],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a17adc32c048d68ae0d26a9778f7f4827":[3,0,0,25,0,2],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a":[2,0,0,25,0,16],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a":[3,0,0,25,0,16],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a2d89b34df7efd356fb474dfe984011e3":[2,0,0,25,0,26],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a2d89b34df7efd356fb474dfe984011e3":[3,0,0,25,0,26],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a312bd5827cbb79cb02d722c9ec979d3f":[2,0,0,25,0,23]
+"structSDOM_1_1IPanelObject_1_1InitStruct.html#a17adc32c048d68ae0d26a9778f7f4827":[2,0,0,25,0,2]
 };
