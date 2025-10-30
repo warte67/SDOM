@@ -40,14 +40,15 @@ This project builds on top of SDL3 — it does not modify or replace any SDL int
 
 ## IDataObject: Data-Driven Base Type
 
-`SDOM::IDataObject` is a flexible, data-driven base class designed for use in SDOM. It allows you to register property accessors (getters and setters) and commands that can be accessed and manipulated via JSON, enabling dynamic configuration, serialization, and behavior of objects.
+`SDOM::IDataObject` is a flexible, data-driven base class designed for use in SDOM. It allows you to register property accessors (getters and setters) and commands that can be accessed and manipulated via Lua, enabling dynamic configuration, serialization, and behavior of objects.
 
 ### Key Features
 - Register property accessors for any property using `registerProperty()`
 - Get and set properties by name using `getProperty()` and `setProperty()`
 - Supports chaining of setters for fluent configuration
 - Register and invoke commands (actions) using `registerCommand()` and `command()`
-- Designed for integration with JSON (using [nlohmann/json](https://github.com/nlohmann/json))
+- Designed for dynamic integration with **Lua** (via [Sol2](https://github.com/ThePhD/sol2))
+
 
 ## Identifier Conventions
 
