@@ -261,51 +261,112 @@ namespace SDOM
         // Base IRangeControl does not implement direct rendering; derived classes do.
     } // END: void IRangeControl::onRender()
 
-    bool IRangeControl::onUnitTest(int frame) 
+
+    bool IRangeControl::onUnitTest(int frame)
     {
-        // Run base class tests
-        bool baseTests = SUPER::onUnitTest(frame);
-        // Run IRangeControl specific tests
-        bool allTests = baseTests;
-        // Save current state
-        float originalMin = getMin();
-        float originalMax = getMax();
-        float originalValue = getValue();
-        Orientation originalOrientation = getOrientation();
-        // Test setting and getting min
-        setMin(10.0f);
-        allTests &= (getMin() == 10.0f);
-        // Test setting and getting max
-        setMax(90.0f);
-        allTests &= (getMax() == 90.0f);
-        // Test setting and getting value within range
-        setValue(50.0f);
-        allTests &= (getValue() == 50.0f);
-        // Test setting value below min clamps to min
-        setValue(5.0f);
-        allTests &= (getValue() == 10.0f);
-        // Test setting value above max clamps to max
-        setValue(95.0f);
-        allTests &= (getValue() == 90.0f);
-        // Test setting and getting orientation
-        setOrientation(Orientation::Vertical);
-        allTests &= (getOrientation() == Orientation::Vertical);
-        // Test setting orientation back to horizontal
-        setOrientation(Orientation::Horizontal);
-        allTests &= (getOrientation() == Orientation::Horizontal);
-        // Restore original state
-        setMin(originalMin);
-        setMax(originalMax);
-        setValue(originalValue);
-        setOrientation(originalOrientation);
-        // Return the result of all tests
-        if (!allTests)
+        // --- 1) Run base class tests first ------------------------------------------
+        SUPER::onUnitTest(frame);
+        UnitTests& ut = UnitTests::getInstance();
+        constexpr const char* TypeName = "IRangeControl";
+
+        // --- 2) Register tests once -------------------------------------------------
+        static bool registered = false;
+        if (!registered)
         {
-            UnitTests& ut = UnitTests::getInstance();
-            ut.push_error("IRangeControl '" + getName() + "' failed unit tests.");
+            // --- Save original state to restore after all tests ---------------------
+            const float originalMin = getMin();
+            const float originalMax = getMax();
+            const float originalVal = getValue();
+            const Orientation originalOrient = getOrientation();
+
+            // --- Individual Behavior Tests ------------------------------------------
+
+            ut.add_test(TypeName, "Set and Get Min", [this](std::vector<std::string>& errors)
+            {
+                setMin(10.0f);
+                if (getMin() != 10.0f)
+                    errors.push_back("setMin/getMin failed — expected 10.0f");
+                return true;
+            });
+
+            ut.add_test(TypeName, "Set and Get Max", [this](std::vector<std::string>& errors)
+            {
+                setMax(90.0f);
+                if (getMax() != 90.0f)
+                    errors.push_back("setMax/getMax failed — expected 90.0f");
+                return true;
+            });
+
+            ut.add_test(TypeName, "Set and Get Value", [this](std::vector<std::string>& errors)
+            {
+                setValue(50.0f);
+                if (getValue() != 50.0f)
+                    errors.push_back("setValue/getValue failed — expected 50.0f");
+                return true;
+            });
+
+            ut.add_test(TypeName, "Clamp Value Below Min", [this](std::vector<std::string>& errors)
+            {
+                setMin(10.0f);
+                setMax(90.0f);
+                setValue(5.0f);
+                if (getValue() != 10.0f)
+                    errors.push_back("Value not clamped to min (expected 10.0f)");
+                return true;
+            });
+
+            ut.add_test(TypeName, "Clamp Value Above Max", [this](std::vector<std::string>& errors)
+            {
+                setMin(10.0f);
+                setMax(90.0f);
+                setValue(95.0f);
+                if (getValue() != 90.0f)
+                    errors.push_back("Value not clamped to max (expected 90.0f)");
+                return true;
+            });
+
+            ut.add_test(TypeName, "Orientation Set Vertical", [this](std::vector<std::string>& errors)
+            {
+                setOrientation(Orientation::Vertical);
+                if (getOrientation() != Orientation::Vertical)
+                    errors.push_back("Failed to set vertical orientation");
+                return true;
+            });
+
+            ut.add_test(TypeName, "Orientation Set Horizontal", [this](std::vector<std::string>& errors)
+            {
+                setOrientation(Orientation::Horizontal);
+                if (getOrientation() != Orientation::Horizontal)
+                    errors.push_back("Failed to set horizontal orientation");
+                return true;
+            });
+
+            ut.add_test(TypeName, "Orientation Restore Original", [this, originalOrient](std::vector<std::string>& errors)
+            {
+                setOrientation(originalOrient);
+                if (getOrientation() != originalOrient)
+                    errors.push_back("Failed to restore original orientation");
+                return true;
+            });
+
+            // --- State Restoration --------------------------------------------------
+            ut.add_test(TypeName, "Restore Original State", [this, originalMin, originalMax, originalVal, originalOrient](std::vector<std::string>&)
+            {
+                setMin(originalMin);
+                setMax(originalMax);
+                setValue(originalVal);
+                setOrientation(originalOrient);
+                return true;
+            });
+
+            registered = true;
         }
-        return true;
-    } // END: bool IRangeControl::onUnitTest()
+
+        // ✅ Return false (one-time registration)
+        return false;
+    } // END -- IRangeControl::onUnitTest()
+
+
 
 
 

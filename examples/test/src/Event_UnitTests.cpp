@@ -37,10 +37,11 @@ namespace SDOM
     {
         // Example: To report an error, use this pattern:
         // errors.push_back("Description of the failure.");
-        // ok = false;
 
         // TODO: Add test logic here
         // e.g., if (!condition) { errors.push_back("Reason for failure."); ok = false; }
+
+        // errors.push_back("Test Scaffold Error");
 
         return true; // ✅ finished this frame
         // return false; // 🔄 re-entrant test
@@ -896,7 +897,8 @@ namespace SDOM
         UnitTests& ut = UnitTests::getInstance();
 
         int frame_count = ut.get_frame_counter();
-        ut.push_error("Event_test10: Test the multi-frame event queue. Frame count: " + std::to_string(frame_count));
+        errors.push_back("Event_test10: Test the multi-frame event queue. Frame count: " + std::to_string(frame_count));
+        
         return true;
     } // END: Event_test10()
 

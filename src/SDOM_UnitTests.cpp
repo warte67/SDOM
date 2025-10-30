@@ -98,6 +98,7 @@ namespace SDOM
             for (const auto& line : errors)
                 oss << CLR::indent() << CLR::fg_rgb(192, 64, 64)
                     << "    Error: " << line << std::endl;
+            _tests_failed++;
         }
 
         std::cout << oss.str();
@@ -154,22 +155,22 @@ namespace SDOM
         if (_current_index >= static_cast<int>(_tests.size()))
         {
             int passed_count = 0;
-            int failed_count = 0;
+            // int failed_count = 0;
             int not_implemented_count = 0;
 
             for (const auto& t : _tests)
             {
                 if (!t.is_implemented)
                     ++not_implemented_count;
-                else if (t.passed)
+                if (t.passed)
                     ++passed_count;
-                else
-                    ++failed_count;
+                // else
+                //     ++failed_count;
             }
 
             int total_count = static_cast<int>(_tests.size());
 
-            if (failed_count == 0)
+            if (_tests_failed == 0)
             {
                 std::cout << CLR::fg_rgb(64, 255, 64)
                         << "✅ All unit tests passed."
@@ -184,19 +185,13 @@ namespace SDOM
 
             std::cout << CLR::fg_rgb(255, 64, 64)
                     << "Summary: " << passed_count << "/" << total_count
-                    << " tests passed, " << failed_count << " failed, "
+                    << " tests passed, " << _tests_failed << " failed, "
                     << not_implemented_count << " not implemented."
                     << CLR::RESET << std::endl;
 
-            if (failed_count > 0)
+            if (_tests_failed > 0)
                 shutdown();
         }
-    }
-
-
-    void UnitTests::push_error(const std::string& error) 
-    {
-        _errors.push_back(error);
     }
 
 
@@ -314,7 +309,6 @@ namespace SDOM
             , "clear_tests", &UnitTests::clear_tests
             , "add_test", &UnitTests::add_test
             , "run_all", &UnitTests::run_all
-            , "push_error", &UnitTests::push_error
         );
         lua.set_function("getUnitTests", &UnitTests::getInstance);
 

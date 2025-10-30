@@ -43,7 +43,6 @@ namespace SDOM
         void add_test(const std::string& objName, const std::string& name, std::function<bool(std::vector<std::string>&)> func, bool is_implemented = true);
         bool run_single_test(TestCase& test, const std::string& objName);
         bool run_all(const std::string& objName);
-        void push_error(const std::string& error);
         bool run_lua_tests(std::vector<std::string>& errors, const std::string& filename);
 
         // new member functions
@@ -83,6 +82,7 @@ namespace SDOM
         int _current_index = 0;
         int _frame_counter = 0;
         bool all_passed_ = true;
+        int _tests_failed = 0;
 
         std::string lua_filename_ = "";
 
