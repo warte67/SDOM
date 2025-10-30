@@ -227,7 +227,6 @@ namespace SDOM
         if (!SUPER::onUnitTest(frame))
             return false;
 
-        UnitTests& ut = UnitTests::getInstance();
         const std::string objName = getName();
 
         // Only register once
@@ -235,7 +234,10 @@ namespace SDOM
         if (!registered)
         {
             // 🔹 Scaffold placeholder for future Button-specific tests
-            // Example: ut.add_test(objName, "Button Click State", [this](std::vector<std::string>& errors)
+            // Example: 
+            // 
+            // UnitTests& ut = UnitTests::getInstance();
+            // ut.add_test(objName, "Button Click State", [this](std::vector<std::string>& errors)
             // {
             //     if (!isEnabled())
             //         errors.push_back("Button '" + getName() + "' should be enabled by default!");

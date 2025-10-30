@@ -53,7 +53,6 @@ namespace SDOM
         if (!SUPER::onUnitTest(frame))
             return false;
 
-        UnitTests& ut = UnitTests::getInstance();
         const std::string objName = getName();
 
         // Only register once
@@ -62,6 +61,7 @@ namespace SDOM
         {
             // 🔹 Scaffold placeholder for future CheckButton-specific tests
             // Example:
+            // UnitTests& ut = UnitTests::getInstance();
             // ut.add_test(objName, "CheckButton Default State", [this](std::vector<std::string>& errors)
             // {
             //     if (!isCheckable())

@@ -199,31 +199,55 @@ namespace SDOM
         _errors.push_back(error);
     }
 
+
+    // --- UnitTests::run_lua_tests ---------------------------------------------------
+    //
+    // 🧩 Purpose:
+    //   Executes a Lua-based unit test script and collects any reported errors.
+    //   The Lua file is expected to return either:
+    //     1. A table with optional fields: `ok` (bool) and `errors` (table of strings), or
+    //     2. A single boolean value.
+    //
+    // 🧠 Notes:
+    //   • The `ok` field and `errors` list are advisory; actual pass/fail is inferred
+    //     by whether `errors` contains entries.
+    //   • The function always returns `true` — signaling that Lua tests are one-shot.
+    //   • Any Lua runtime or type errors are safely captured and logged.
+    //
+    // ⚠️ Safety:
+    //   Uses `safe_script_file` with `sol::script_pass_on_error` to prevent Lua
+    //   exceptions from propagating into C++. Ensures robust failure reporting.
+    //
+    // 🧭 TODO:
+    //   • Refactor Lua test scripts to support **re-entrant** (multi-frame) testing,
+    //     matching the updated SDOM unit test architecture.
+    //   • Once refactored, this function should interpret a `false` return value as
+    //     “continue next frame” instead of failure, maintaining consistency with
+    //     the new C++ test pattern.    
+    //
+    // ============================================================================
     bool UnitTests::run_lua_tests(std::vector<std::string>& errors, const std::string& filename)
     {
-        bool ok = true;
         Core& core = getCore();
         sol::state& lua = core.getLua();
 
-        // Run Lua script safely
+        // --- Execute Lua test script safely ---
         sol::protected_function_result result = lua.safe_script_file(filename, sol::script_pass_on_error);
         if (!result.valid())
         {
             sol::error err = result;
             errors.push_back(std::string("Lua runtime error: ") + err.what());
-            return false;
+            return true; // ✅ one-shot test, completed this frame
         }
 
         sol::object return_value = result;
 
+        // --- Case 1: Table return type ---
         if (return_value.is<sol::table>())
         {
             sol::table tbl = return_value.as<sol::table>();
 
-            // Extract ok flag (default to false if missing)
-            ok = tbl.get_or("ok", false);
-
-            // Extract the errors array (if present)
+            // Extract reported errors if present
             sol::object err_field = tbl["errors"];
             if (err_field.is<sol::table>())
             {
@@ -235,19 +259,29 @@ namespace SDOM
                         errors.push_back(value.as<std::string>());
                 }
             }
+
+            // Optional “ok” flag for human-readable summary — not used for logic
+            bool reported_ok = tbl.get_or("ok", errors.empty());
+            if (!reported_ok && errors.empty())
+                errors.push_back("Lua test returned { ok = false } but no specific errors were provided.");
         }
+        // --- Case 2: Boolean return type ---
         else if (return_value.is<bool>())
         {
-            ok = return_value.as<bool>();
+            bool ok_flag = return_value.as<bool>();
+            if (!ok_flag)
+                errors.push_back("Lua test returned false.");
         }
+        // --- Case 3: Invalid or unexpected type ---
         else
         {
-            errors.push_back("Lua test did not return a table or boolean.");
-            ok = false;
+            errors.push_back("Lua test did not return a valid result (expected table or boolean).");
         }
 
-        return ok;
-    } // END: bool UnitTests::run_lua_tests(std::vector<std::string>& errors, const std::string& filename)
+        return true; // ✅ always a one-shot test
+    } // END: UnitTests::run_lua_tests(std::vector<std::string>& errors, const std::string& filename)
+
+
 
     // --- Core UnitTest Accessors / Mutators --- //
 

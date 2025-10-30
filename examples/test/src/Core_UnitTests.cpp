@@ -235,181 +235,195 @@ namespace SDOM
     }
 
 
-    // Pixel Dimensions
+    // --- Core_test2: Pixel Dimensions --------------------------------------------
     bool Core_test2(std::vector<std::string>& errors)
     {
-        bool ok = true;
-
         Core& core = getCore();
-        const auto& expected = core.getConfig();  
+        const auto& expected = core.getConfig();
+
         float pixel_w = core.getPixelWidth();
-        if (pixel_w != expected.pixelWidth) {
-            errors.push_back("Pixel width does not match expected value. Expected: " + 
-                std::to_string(expected.pixelWidth) + ", Actual: " + std::to_string(pixel_w));      
-            ok = false;
+        if (pixel_w != expected.pixelWidth)
+        {
+            errors.push_back("Pixel width mismatch — expected: " +
+                std::to_string(expected.pixelWidth) + ", actual: " +
+                std::to_string(pixel_w));
         }
 
         float pixel_h = core.getPixelHeight();
-        if (pixel_h != expected.pixelHeight) {
-            errors.push_back("Pixel height does not match expected value. Expected: " + 
-                std::to_string(expected.pixelHeight) + ", Actual: " + std::to_string(pixel_h));
-            ok = false;
+        if (pixel_h != expected.pixelHeight)
+        {
+            errors.push_back("Pixel height mismatch — expected: " +
+                std::to_string(expected.pixelHeight) + ", actual: " +
+                std::to_string(pixel_h));
         }
-        return ok;        
-    } // END: Core_test2()
+
+        return true;  // ✅ finished this frame
+    } // END: Core_test2(std::vector<std::string>& errors)
 
 
-    // Aspect Ratio Preservation
+    // --- Core_test3: Aspect Ratio Preservation -----------------------------------
     bool Core_test3(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
-        const auto& expected = core.getConfig();  
+        const auto& expected = core.getConfig();
 
         bool preserve_aspect = core.getPreserveAspectRatio();
-        if (preserve_aspect != expected.preserveAspectRatio) 
+        if (preserve_aspect != expected.preserveAspectRatio)
         {
-            errors.push_back("PreserveAspectRatio does not match expected value. Expected: " + 
-                std::to_string(expected.preserveAspectRatio) + ", Actual: " + std::to_string(preserve_aspect));
-            ok = false;
-        }   
-        return ok;
-    } // END: Core_test3()
+            errors.push_back(
+                "PreserveAspectRatio mismatch — expected: " +
+                std::to_string(expected.preserveAspectRatio) +
+                ", actual: " + std::to_string(preserve_aspect)
+            );
+        }
+
+        return true;  // ✅ finished this frame
+    } // END: Core_test3(std::vector<std::string>& errors)
 
 
-    // Texture Resize Allowance
+    // --- Core_test4: Texture Resize Allowance ------------------------------------
     bool Core_test4(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
-        const auto& expected = core.getConfig();  
+        const auto& expected = core.getConfig();
 
         bool allow_resize = core.getAllowTextureResize();
         if (allow_resize != expected.allowTextureResize)
         {
-            errors.push_back("AllowTextureResize does not match expected value. Expected: " + 
-                std::to_string(expected.allowTextureResize) + ", Actual: " + std::to_string(allow_resize));
-            ok = false;
-        }   
-        return ok;
-    } // END: Core_test4()
+            errors.push_back(
+                "AllowTextureResize mismatch — expected: " +
+                std::to_string(expected.allowTextureResize) +
+                ", actual: " + std::to_string(allow_resize)
+            );
+        }
+
+        return true;  // ✅ finished this frame
+    } // END: Core_test4(std::vector<std::string>& errors)
 
 
-    // Pixel Format
+    // --- Core_test5: Pixel Format -------------------------------------------------
     bool Core_test5(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
-        const auto& expected = core.getConfig();  
+        const auto& expected = core.getConfig();
 
         SDL_PixelFormat pixel_format = core.getPixelFormat();
-        if (pixel_format != expected.pixelFormat) 
+        if (pixel_format != expected.pixelFormat)
         {
-            errors.push_back("PixelFormat does not match expected value. Expected: " + 
-                std::to_string(expected.pixelFormat) + ", Actual: " + std::to_string(pixel_format));
-            ok = false;
-        }   
-        return ok;
-    } // END: Core_test5()
+            errors.push_back(
+                "PixelFormat mismatch — expected: " +
+                std::to_string(expected.pixelFormat) +
+                ", actual: " + std::to_string(pixel_format)
+            );
+        }
+
+        return true;  // ✅ finished this frame
+    } // END: Core_test5(std::vector<std::string>& errors)
 
 
-    // Renderer Logical Presentation
+    // --- Core_test6: Renderer Logical Presentation --------------------------------
     bool Core_test6(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
-        const auto& expected = core.getConfig();  
+        const auto& expected = core.getConfig();
 
         SDL_RendererLogicalPresentation presentation = core.getRendererLogicalPresentation();
-        if (presentation != expected.rendererLogicalPresentation) 
+        if (presentation != expected.rendererLogicalPresentation)
         {
-            errors.push_back("RendererLogicalPresentation does not match expected value. Expected: " + 
-                std::to_string(expected.rendererLogicalPresentation) + ", Actual: " + std::to_string(presentation));
-            ok = false;
-        }   
-        return ok;
-    } // END: Core_test6()
+            errors.push_back(
+                "RendererLogicalPresentation mismatch — expected: " +
+                std::to_string(expected.rendererLogicalPresentation) +
+                ", actual: " + std::to_string(presentation)
+            );
+        }
+
+        return true;  // ✅ finished this frame
+    } // END: Core_test6(std::vector<std::string>& errors)
 
 
-    // Window Flags
+    // --- Core_test7: Window Flags -------------------------------------------------
     bool Core_test7(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
-        const auto& expected = core.getConfig();  
+        const auto& expected = core.getConfig();
 
         SDL_WindowFlags window_flags = core.getWindowFlags();
-        if (window_flags != expected.windowFlags) 
+        if (window_flags != expected.windowFlags)
         {
-            errors.push_back("WindowFlags does not match expected value. Expected: " + 
-                std::to_string(expected.windowFlags) + ", Actual: " + std::to_string(window_flags));
-            ok = false;
-        }   
-        return ok;
-    } // END: Core_test7()
+            errors.push_back(
+                "WindowFlags mismatch — expected: " +
+                std::to_string(expected.windowFlags) +
+                ", actual: " + std::to_string(window_flags)
+            );
+        }
+
+        return true;  // ✅ finished this frame
+    } // END: Core_test7(std::vector<std::string>& errors)
 
 
-    // Core Background Color
+    // --- Core_test8: Core Background Color ----------------------------------------
     bool Core_test8(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
-        const auto& expected = core.getConfig();  
+        const auto& expected = core.getConfig();
 
         SDL_Color color = core.getColor();
         if (color.r != expected.color.r || color.g != expected.color.g ||
             color.b != expected.color.b || color.a != expected.color.a)
         {
-            errors.push_back("Background Color does not match expected value. Expected: (" + 
-                std::to_string(expected.color.r) + ", " + std::to_string(expected.color.g) + ", " +
-                std::to_string(expected.color.b) + ", " + std::to_string(expected.color.a) + 
-                "), Actual: (" + std::to_string(color.r) + ", " + std::to_string(color.g) + ", " +
-                std::to_string(color.b) + ", " + std::to_string(color.a) + ")");
-            ok = false;
-        }   
-        return ok;
-    } // END: Core_test8()
+            errors.push_back(
+                "Background color mismatch — expected RGBA(" +
+                std::to_string(expected.color.r) + ", " +
+                std::to_string(expected.color.g) + ", " +
+                std::to_string(expected.color.b) + ", " +
+                std::to_string(expected.color.a) + "), actual RGBA(" +
+                std::to_string(color.r) + ", " +
+                std::to_string(color.g) + ", " +
+                std::to_string(color.b) + ", " +
+                std::to_string(color.a) + ")"
+            );
+        }
+
+        return true;  // ✅ finished this frame
+    } // END: Core_test8(std::vector<std::string>& errors)
 
 
-    // Factory Existence Test
+    // --- Core_test9: Factory Existence --------------------------------------------
     bool Core_test9(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
 
-        if (&core.getFactory() == nullptr) 
-        {
-            errors.push_back("Factory instance is not valid (nullptr).");
-            ok = false;
-        }   
-        return ok;
-    } // END: Core_test9()
+        // Ensure Factory instance is valid
+        if (&core.getFactory() == nullptr)
+            errors.push_back("Factory instance is null or inaccessible.");
+
+        return true;  // ✅ finished this frame
+    } // END: Core_test9(std::vector<std::string>& errors)
 
 
-    // Callback/Hook Registration
+    // --- Core_test10: Callback / Hook Registration --------------------------------
     bool Core_test10(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
-        // UnitTests& ut = UnitTests::getInstance();
 
-        // External lambdas for testing
-        [[maybe_unused]] auto testInitFn        = []() -> bool { /* test logic */ return true; };
-        [[maybe_unused]] auto testQuitFn        = []() { /* test logic */ };
-        [[maybe_unused]] auto testUpdateFn      = [](float dt) { /* test logic */ };
-        [[maybe_unused]] auto testEventFn       = [](const Event& e) { /* test logic */ };
-        [[maybe_unused]] auto testRenderFn      = []() { /* test logic */ };
-        [[maybe_unused]] auto testUnitTestFn    = []() -> bool { /* test logic */ return true; };
-        [[maybe_unused]] auto testWindowResizeFn= [](int w, int h) { /* test logic */ };                
+        // Define test lambdas for registration validation
+        [[maybe_unused]] auto testInitFn         = []() -> bool { return true; };
+        [[maybe_unused]] auto testQuitFn         = []() {};
+        [[maybe_unused]] auto testUpdateFn       = [](float) {};
+        [[maybe_unused]] auto testEventFn        = [](const Event&) {};
+        [[maybe_unused]] auto testRenderFn       = []() {};
+        [[maybe_unused]] auto testUnitTestFn     = []() -> bool { return true; };
+        [[maybe_unused]] auto testWindowResizeFn = [](int, int) {};
 
-        // Save original registration pointers using Core's internal helpers
-        auto orig_fnOnInit        = core._fnGetOnInit();
-        auto orig_fnOnQuit        = core._fnGetOnQuit();
-        auto orig_fnOnUpdate      = core._fnGetOnUpdate();
-        auto orig_fnOnEvent       = core._fnGetOnEvent();
-        auto orig_fnOnRender      = core._fnGetOnRender();
-        auto orig_fnOnWindowResize= core._fnGetOnWindowResize();
+        // Preserve original callbacks
+        auto orig_fnOnInit         = core._fnGetOnInit();
+        auto orig_fnOnQuit         = core._fnGetOnQuit();
+        auto orig_fnOnUpdate       = core._fnGetOnUpdate();
+        auto orig_fnOnEvent        = core._fnGetOnEvent();
+        auto orig_fnOnRender       = core._fnGetOnRender();
+        auto orig_fnOnWindowResize = core._fnGetOnWindowResize();
 
+        // Register temporary test callbacks
         core.registerOnInit(testInitFn);
         core.registerOnQuit(testQuitFn);
         core.registerOnUpdate(testUpdateFn);
@@ -417,460 +431,464 @@ namespace SDOM
         core.registerOnRender(testRenderFn);
         core.registerOnWindowResize(testWindowResizeFn);
 
-        // Perform checks to verify the hooks were set correctly
-        if (core._fnGetOnInit().target_type() != typeid(testInitFn)) {
-            errors.push_back("OnInit function was not set correctly.");
-            ok = false;
-        }
-        if (core._fnGetOnQuit().target_type() != typeid(testQuitFn)) {
-            errors.push_back("OnQuit function was not set correctly.");
-            ok = false;
-        }
-        if (core._fnGetOnUpdate().target_type() != typeid(testUpdateFn)) {
-            errors.push_back("OnUpdate function was not set correctly.");
-            ok = false;
-        }
-        if (core._fnGetOnEvent().target_type() != typeid(testEventFn)) {
-            errors.push_back("OnEvent function was not set correctly.");
-            ok = false;
-        }
-        if (core._fnGetOnRender().target_type() != typeid(testRenderFn)) {
-            errors.push_back("OnRender function was not set correctly.");
-            ok = false;
-        }
-        if (core._fnGetOnWindowResize().target_type() != typeid(testWindowResizeFn)) {
-            errors.push_back("OnWindowResize function was not set correctly.");
-            ok = false;
-        }
+        // Validate registration via type identity
+        if (core._fnGetOnInit().target_type() != typeid(testInitFn))
+            errors.push_back("OnInit function not set correctly.");
 
-        // Restore original registration pointers after testing
+        if (core._fnGetOnQuit().target_type() != typeid(testQuitFn))
+            errors.push_back("OnQuit function not set correctly.");
+
+        if (core._fnGetOnUpdate().target_type() != typeid(testUpdateFn))
+            errors.push_back("OnUpdate function not set correctly.");
+
+        if (core._fnGetOnEvent().target_type() != typeid(testEventFn))
+            errors.push_back("OnEvent function not set correctly.");
+
+        if (core._fnGetOnRender().target_type() != typeid(testRenderFn))
+            errors.push_back("OnRender function not set correctly.");
+
+        if (core._fnGetOnWindowResize().target_type() != typeid(testWindowResizeFn))
+            errors.push_back("OnWindowResize function not set correctly.");
+
+        // Restore original callbacks
         core._fnOnInit(orig_fnOnInit);
         core._fnOnQuit(orig_fnOnQuit);
         core._fnOnUpdate(orig_fnOnUpdate);
         core._fnOnEvent(orig_fnOnEvent);
         core._fnOnRender(orig_fnOnRender);
         core._fnOnWindowResize(orig_fnOnWindowResize);
-        // return success or failure
-        return ok;
-    } // END: Core_test10()
+
+        return true;  // ✅ finished this frame
+    } // END: Core_test10(std::vector<std::string>& errors)
 
 
-    // Stage/Root Node Management
+    // --- Core_test11: Stage / Root Node Management --------------------------------
     bool Core_test11(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
 
-        // Helper lambda for validating DisplayHandle and name
-        auto checkStage = [&](const DisplayHandle& handle, const std::string& expectedName, const std::string& context) {
-            if (!handle.isValid()) {
+        // Helper lambda: validate DisplayHandle and name consistency
+        auto checkStage = [&](const DisplayHandle& handle, const std::string& expectedName, const std::string& context)
+        {
+            if (!handle.isValid())
                 errors.push_back(context + " is not valid.");
-                ok = false;
-            }
-            if (handle.getName() != expectedName) {
-                errors.push_back(context + " name is not '" + expectedName + "'. Actual: " + handle.getName());
-                ok = false;
-            }
-        };        
-        
-        // Implement test logic for Stage/Root Node Management
 
-        // Save the Current Stage Handle
+            if (handle.getName() != expectedName)
+                errors.push_back(context + " name mismatch — expected '" + expectedName +
+                                "', actual '" + handle.getName() + "'.");
+        };
+
+        // --- Validate initial root node ---
         DisplayHandle rootStage = core.getRootNode();
         checkStage(rootStage, "mainStage", "Initial Root Node/Stage");
 
-        // set the Root Node to a new value using name
+        // --- Test: setRootNode() by name ---
         core.setRootNode("stageTwo");
         DisplayHandle newStage = core.getRootNode();
-        checkStage(newStage, "stageTwo", "Root Node/Stage after setRootNode by name");
+        checkStage(newStage, "stageTwo", "Root Node/Stage after setRootNode(name)");
 
-        // set the Root Node to a new value using DisplayHandle
+        // --- Test: setRootNode() by DisplayHandle ---
         DisplayHandle stageThree = core.getDisplayObject("stageThree");
         core.setRootNode(stageThree);
         DisplayHandle anotherStage = core.getRootNode();
-        checkStage(anotherStage, "stageThree", "Root Node/Stage after setRootNode by DisplayHandle");
+        checkStage(anotherStage, "stageThree", "Root Node/Stage after setRootNode(DisplayHandle)");
 
-        // verify hasDisplayObject and getDisplayObjectPtr works correctly
-        if (core.hasDisplayObject("nonExistentStage")) {
+        // --- Test: object existence and pointer access ---
+        if (core.hasDisplayObject("nonExistentStage"))
             errors.push_back("Core incorrectly reports existence of 'nonExistentStage'.");
-            ok = false;
-        }
-        if (!core.hasDisplayObject("stageTwo")) {
-            errors.push_back("Core failed to report existence of 'stageTwo'.");
-            ok = false;
-        }
-        if (core.getDisplayObjectPtr("nonExistentStage") != nullptr) {
-            errors.push_back("getDisplayObjectPtr() returned non-nullptr for 'nonExistentStage'.");
-            ok = false;
-        }
-        if (core.getDisplayObjectPtr("stageTwo") == nullptr) {
-            errors.push_back("getDisplayObjectPtr() returned nullptr for 'stageTwo'.");
-            ok = false;
-        }
 
-        // restore the Root Node Stage to original
+        if (!core.hasDisplayObject("stageTwo"))
+            errors.push_back("Core failed to report existence of 'stageTwo'.");
+
+        if (core.getDisplayObjectPtr("nonExistentStage") != nullptr)
+            errors.push_back("getDisplayObjectPtr('nonExistentStage') returned non-nullptr.");
+
+        if (core.getDisplayObjectPtr("stageTwo") == nullptr)
+            errors.push_back("getDisplayObjectPtr('stageTwo') returned nullptr.");
+
+        // --- Restore original root stage ---
         core.setStage(rootStage.getName());
         DisplayHandle restoredStage = core.getRootNode();
         checkStage(restoredStage, "mainStage", "Root Node/Stage after restoring original");
 
-        // Additional Tests
+        // --- Validate getRootNodePtr() and type correctness ---
         IDisplayObject* rootPtr = core.getRootNodePtr();
-        if (rootPtr == nullptr) {
+        if (!rootPtr)
             errors.push_back("getRootNodePtr() returned nullptr.");
-            ok = false;
+        else
+        {
+            Stage* stagePtr = dynamic_cast<Stage*>(rootPtr);
+            if (!stagePtr)
+                errors.push_back("getRootNodePtr() did not return a Stage pointer.");
+            else if (stagePtr->getName() != "mainStage")
+                errors.push_back("Stage name mismatch — expected 'mainStage', actual '" + stagePtr->getName() + "'.");
         }
-        Stage* stagePtr = dynamic_cast<Stage*>(rootPtr);
-        if (stagePtr == nullptr) {
-            errors.push_back("getRootNodePtr() did not return a Stage pointer.");
-            ok = false;
-        }
-        if (stagePtr && stagePtr->getName() != "mainStage") {
-            errors.push_back("Stage name from getRootNodePtr() is not 'mainStage'. Actual: " + stagePtr->getName());
-            ok = false;
-        }
+
+        // --- Validate getStageHandle() ---
         DisplayHandle stageHandle = core.getStageHandle();
-        checkStage(stageHandle, "mainStage", "Stage name from getStageHandle()");
+        checkStage(stageHandle, "mainStage", "Stage from getStageHandle()");
 
-        return ok;
-    } // END: Core_test11()
+        return true;  // ✅ finished this frame
+    } // END: Core_test11(std::vector<std::string>& errors)
 
 
-    // SDL Resource Accessors
+    // --- Core_test12: SDL Resource Accessors -------------------------------------
     bool Core_test12(std::vector<std::string>& errors)
     {
-        bool ok = true;
-        // Implement test logic for SDL Resource Accessors
         Core& core = getCore();
         UnitTests& ut = UnitTests::getInstance();
 
+        // --- Validate SDL_Window linkage ---
         SDL_Window* window = ut.getWindow();
-        if (window == nullptr) {
+        if (!window)
             errors.push_back("SDL_Window is nullptr.");
-            ok = false;
-        }
-        if (core.getWindow() != window) {
-            errors.push_back("SDL_Window from accessor does not match Core's window.");
-            ok = false;
-        }
+        else if (core.getWindow() != window)
+            errors.push_back("SDL_Window accessor mismatch — Core window does not match UnitTest window.");
+
+        // --- Validate SDL_Renderer linkage ---
         SDL_Renderer* renderer = ut.getRenderer();
-        if (renderer == nullptr) {
+        if (!renderer)
             errors.push_back("SDL_Renderer is nullptr.");
-            ok = false;
-        }
-        if (core.getRenderer() != renderer) {
-            errors.push_back("SDL_Renderer from accessor does not match Core's renderer.");
-            ok = false;
-        }
+        else if (core.getRenderer() != renderer)
+            errors.push_back("SDL_Renderer accessor mismatch — Core renderer does not match UnitTest renderer.");
+
+        // --- Validate SDL_Texture linkage ---
         SDL_Texture* texture = ut.getTexture();
-        if (texture == nullptr) {
+        if (!texture)
             errors.push_back("SDL_Texture is nullptr.");
-            ok = false;
-        }
-        if (core.getTexture() != texture) {
-            errors.push_back("SDL_Texture from accessor does not match Core's texture.");
-            ok = false;
-        }
-        SDL_Color core_color = ut.getColor();
+        else if (core.getTexture() != texture)
+            errors.push_back("SDL_Texture accessor mismatch — Core texture does not match UnitTest texture.");
+
+        // --- Validate SDL_Color getter/setter roundtrip ---
+        SDL_Color orig_color = ut.getColor();
         core.setColor({64, 128, 192, 255});
         SDL_Color new_color = core.getColor();
-        if (new_color.r != 64 || new_color.g != 128 ||
-            new_color.b != 192 || new_color.a != 255)
-        {
-            errors.push_back("SDL_Color was not set properly.");
-            ok = false;
-        }
-        core.setColor(core_color); // Restore original color
-        SDL_Color color = core.getColor();
-        if (core_color.r != color.r || core_color.g != color.g ||
-            core_color.b != color.b || core_color.a != color.a)
-        {
-            errors.push_back("SDL_Color is not initialized properly.");
-            ok = false;
-        }
 
-        return ok;
-    } // END: Core_test12()
+        if (new_color.r != 64 || new_color.g != 128 || new_color.b != 192 || new_color.a != 255)
+            errors.push_back("SDL_Color setter failed — expected (64,128,192,255).");
+
+        // Restore original color and verify round-trip consistency
+        core.setColor(orig_color);
+        SDL_Color restored_color = core.getColor();
+
+        if (restored_color.r != orig_color.r || restored_color.g != orig_color.g ||
+            restored_color.b != orig_color.b || restored_color.a != orig_color.a)
+            errors.push_back("SDL_Color restoration mismatch — Core color did not return to original.");
+
+        return true;  // ✅ finished this frame
+    } // END: Core_test12(std::vector<std::string>& errors)
 
 
-
-    // Configuration Getters/Setters
+    // --- Core_test13: Configuration Getters / Setters ----------------------------
+    //
+    // 🧩  Purpose:
+    //   Verifies that Core configuration getters and setters are synchronized,
+    //   and optionally performs a full stress test that exercises the entire SDL
+    //   display chain rebuild sequence (Window, Renderer, Texture, etc).
+    //
+    // 🧠  Notes:
+    //   • The full configuration stress test (`FULL_CONFIG_TEST = true`) will 
+    //     repeatedly rebuild SDL resources. Use this to detect GPU, kernel, 
+    //     or API-level memory leaks.
+    //   • When running automated or iterative test suites (e.g. repeat_test.sh),
+    //     keep `FULL_CONFIG_TEST = false` to minimize overhead and runtime.
+    //
+    // ============================================================================
     bool Core_test13(std::vector<std::string>& errors)
     {
-        // Set this to true for full config change stress test, false for quick test
-        constexpr bool FULL_CONFIG_TEST = false; 
+        // Set to `true` for exhaustive SDL reconfiguration test.
+        // Default: `false` for essential validation only.
+        constexpr bool FULL_CONFIG_TEST = false;
 
-        bool ok = true;
         Core& core = getCore();
-        SDL_Window* sdl_window = core.getWindow();
-        int sdl_w = 0, sdl_h = 0;
-        SDL_GetWindowSize(sdl_window, &sdl_w, &sdl_h);
-
         Core::CoreConfig orig = core.getConfig();
 
-        if (!FULL_CONFIG_TEST) {
-            // Quick test: just verify getters match config
-            if (orig.windowWidth != core.getWindowWidth()) {
-                errors.push_back("CoreConfig window width does not match Core getter.");
-                ok = false;
-            }
-            if (orig.windowHeight != core.getWindowHeight()) {
-                errors.push_back("CoreConfig window height does not match Core getter.");
-                ok = false;
-            }
-            if (orig.pixelWidth != core.getPixelWidth()) {
-                errors.push_back("CoreConfig pixel width does not match Core getter.");
-                ok = false;
-            }
-            if (orig.pixelHeight != core.getPixelHeight()) {
-                errors.push_back("CoreConfig pixel height does not match Core getter.");
-                ok = false;
-            }
-            if (orig.preserveAspectRatio != core.getPreserveAspectRatio()) {
-                errors.push_back("CoreConfig preserve aspect ratio does not match Core getter.");
-                ok = false;
-            }
-            if (orig.allowTextureResize != core.getAllowTextureResize()) {
-                errors.push_back("CoreConfig allow texture resize does not match Core getter.");
-                ok = false;
-            }
-            if (orig.rendererLogicalPresentation != core.getRendererLogicalPresentation()) {
-                errors.push_back("CoreConfig renderer logical presentation does not match Core getter.");
-                ok = false;
-            }
-            if (orig.windowFlags != core.getWindowFlags()) {
-                errors.push_back("CoreConfig window flags does not match Core getter.");
-                ok = false;
-            }
-            if (orig.pixelFormat != core.getPixelFormat()) {
-                errors.push_back("CoreConfig pixel format does not match Core getter.");
-                ok = false;
-            }
-            return ok;
+        // --- Quick validation mode ----------------------------------------------
+        if (!FULL_CONFIG_TEST)
+        {
+            if (orig.windowWidth != core.getWindowWidth())
+                errors.push_back("CoreConfig.windowWidth does not match Core getter.");
+
+            if (orig.windowHeight != core.getWindowHeight())
+                errors.push_back("CoreConfig.windowHeight does not match Core getter.");
+
+            if (orig.pixelWidth != core.getPixelWidth())
+                errors.push_back("CoreConfig.pixelWidth does not match Core getter.");
+
+            if (orig.pixelHeight != core.getPixelHeight())
+                errors.push_back("CoreConfig.pixelHeight does not match Core getter.");
+
+            if (orig.preserveAspectRatio != core.getPreserveAspectRatio())
+                errors.push_back("CoreConfig.preserveAspectRatio does not match Core getter.");
+
+            if (orig.allowTextureResize != core.getAllowTextureResize())
+                errors.push_back("CoreConfig.allowTextureResize does not match Core getter.");
+
+            if (orig.rendererLogicalPresentation != core.getRendererLogicalPresentation())
+                errors.push_back("CoreConfig.rendererLogicalPresentation does not match Core getter.");
+
+            if (orig.windowFlags != core.getWindowFlags())
+                errors.push_back("CoreConfig.windowFlags does not match Core getter.");
+
+            if (orig.pixelFormat != core.getPixelFormat())
+                errors.push_back("CoreConfig.pixelFormat does not match Core getter.");
+
+            return errors.empty(); // ✅ finished this frame
         }
 
-        // Full config change stress test
+        // --- Full configuration stress test -------------------------------------
         std::vector<Core::CoreConfig> testConfigs = {
             orig,
-            Core::CoreConfig{640, 480, 1.0f, 1.0f, true, false, SDL_LOGICAL_PRESENTATION_STRETCH, SDL_WINDOW_BORDERLESS, SDL_PIXELFORMAT_RGBA8888, SDL_Color{64, 128, 255, 255}},
-            Core::CoreConfig{800, 600, 2.0f, 2.0f, false, true, SDL_LOGICAL_PRESENTATION_DISABLED, SDL_WINDOW_FULLSCREEN, SDL_PIXELFORMAT_ARGB8888, SDL_Color{255, 64, 128, 128}},
-            Core::CoreConfig{1024, 768, 4.0f, 4.0f, true, true, SDL_LOGICAL_PRESENTATION_LETTERBOX, SDL_WINDOW_RESIZABLE, SDL_PIXELFORMAT_BGRA8888, SDL_Color{128, 255, 64, 64}},
-            Core::CoreConfig(orig)  // Restore original at end
+            Core::CoreConfig{640, 480, 1.0f, 1.0f, true, false,
+                            SDL_LOGICAL_PRESENTATION_STRETCH,
+                            SDL_WINDOW_BORDERLESS,
+                            SDL_PIXELFORMAT_RGBA8888,
+                            SDL_Color{64, 128, 255, 255}},
+
+            Core::CoreConfig{800, 600, 2.0f, 2.0f, false, true,
+                            SDL_LOGICAL_PRESENTATION_DISABLED,
+                            SDL_WINDOW_FULLSCREEN,
+                            SDL_PIXELFORMAT_ARGB8888,
+                            SDL_Color{255, 64, 128, 128}},
+
+            Core::CoreConfig{1024, 768, 4.0f, 4.0f, true, true,
+                            SDL_LOGICAL_PRESENTATION_LETTERBOX,
+                            SDL_WINDOW_RESIZABLE,
+                            SDL_PIXELFORMAT_BGRA8888,
+                            SDL_Color{128, 255, 64, 64}},
+
+            orig // restore original at the end
         };
 
-        for (auto& cfg : testConfigs)         
+        for (auto& cfg : testConfigs)
         {
             core.setConfig(cfg);
-            // core.reconfigure(cfg);  // Redundant with setConfig
 
-            // Verify getters match config
-            if (cfg.windowWidth != core.getWindowWidth()) {
-                errors.push_back("windowWidth mismatch after setConfig.");
-                ok = false;
-            }
-            if (cfg.windowHeight != core.getWindowHeight()) {
-                errors.push_back("windowHeight mismatch after setConfig.");
-                ok = false;
-            }
-            if (cfg.pixelWidth != core.getPixelWidth()) {
-                errors.push_back("pixelWidth mismatch after setConfig.");
-                ok = false;
-            }
-            if (cfg.pixelHeight != core.getPixelHeight()) {
-                errors.push_back("pixelHeight mismatch after setConfig.");
-                ok = false;
-            }
-            if (cfg.preserveAspectRatio != core.getPreserveAspectRatio()) {
-                errors.push_back("preserveAspectRatio mismatch after setConfig.");
-                ok = false;
-            }
-            if (cfg.allowTextureResize != core.getAllowTextureResize()) {
-                errors.push_back("allowTextureResize mismatch after setConfig.");
-                ok = false;
-            }
-            if (cfg.rendererLogicalPresentation != core.getRendererLogicalPresentation()) {
-                errors.push_back("rendererLogicalPresentation mismatch after setConfig.");
-                ok = false;
-            }
-            if (cfg.windowFlags != core.getWindowFlags()) {
-                errors.push_back("windowFlags mismatch after setConfig.");
-                ok = false;
-            }
-            if (cfg.pixelFormat != core.getPixelFormat()) {
-                errors.push_back("pixelFormat mismatch after setConfig.");
-                ok = false;
-            }
+            // Validate core state after each reconfiguration
+            if (cfg.windowWidth != core.getWindowWidth())
+                errors.push_back("windowWidth mismatch after setConfig().");
 
-            // Optionally, check SDL resources are valid
-            if (!core.getWindow()) {
-                errors.push_back("SDL_Window is nullptr after setConfig.");
-                ok = false;
-            }
-            if (!core.getRenderer()) {
-                errors.push_back("SDL_Renderer is nullptr after setConfig.");
-                ok = false;
-            }
-            if (!core.getTexture()) {
-                errors.push_back("SDL_Texture is nullptr after setConfig.");
-                ok = false;
-            }
+            if (cfg.windowHeight != core.getWindowHeight())
+                errors.push_back("windowHeight mismatch after setConfig().");
+
+            if (cfg.pixelWidth != core.getPixelWidth())
+                errors.push_back("pixelWidth mismatch after setConfig().");
+
+            if (cfg.pixelHeight != core.getPixelHeight())
+                errors.push_back("pixelHeight mismatch after setConfig().");
+
+            if (cfg.preserveAspectRatio != core.getPreserveAspectRatio())
+                errors.push_back("preserveAspectRatio mismatch after setConfig().");
+
+            if (cfg.allowTextureResize != core.getAllowTextureResize())
+                errors.push_back("allowTextureResize mismatch after setConfig().");
+
+            if (cfg.rendererLogicalPresentation != core.getRendererLogicalPresentation())
+                errors.push_back("rendererLogicalPresentation mismatch after setConfig().");
+
+            if (cfg.windowFlags != core.getWindowFlags())
+                errors.push_back("windowFlags mismatch after setConfig().");
+
+            if (cfg.pixelFormat != core.getPixelFormat())
+                errors.push_back("pixelFormat mismatch after setConfig().");
+
+            // SDL resource integrity
+            if (!core.getWindow())
+                errors.push_back("SDL_Window is nullptr after setConfig().");
+
+            if (!core.getRenderer())
+                errors.push_back("SDL_Renderer is nullptr after setConfig().");
+
+            if (!core.getTexture())
+                errors.push_back("SDL_Texture is nullptr after setConfig().");
         }
-        return ok;
-    } // END: Core_test13()
+
+        return true; // ✅ finished this frame
+    } // END: Core_test13(std::vector<std::string>& errors)
 
 
-    // getFactory();                                                // Validated by: Core_test9
-    // getEventManager();                                           // TODO: Needs test
-    // getIsTraversing();                                           // TODO: Needs test
-    // setIsTraversing(bool traversing);                            // TODO: Needs test
-
-    // Factory and Event Manager Access
-    bool Core_test14(std::vector<std::string>& errors)   
+    // --- Core_test14: Factory and Event Manager Access ---------------------------
+    //
+    // 🧩 Purpose:
+    //   Ensures Core provides valid access to its shared Factory and EventManager
+    //   instances, and that Core’s traversal state management behaves correctly.
+    //
+    // 🧠 Notes:
+    //   • This test ensures that the Core instance shares the same Factory and
+    //     EventManager as the UnitTests singleton, preventing divergent instances.
+    //   • It also verifies that Core::setIsTraversing() updates and restores the
+    //     traversal state correctly without desynchronization.
+    //
+    // ============================================================================
+    bool Core_test14(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
         UnitTests& ut = UnitTests::getInstance();
 
-        if (&core.getFactory() != &ut.getFactory()) 
-        {
-            errors.push_back("Factory instance is not valid (nullptr).");
-            ok = false;
-        }
-        if (&core.getEventManager() != &ut.getEventManager()) 
-        {
-            errors.push_back("EventManager instance is not valid (nullptr).");
-            ok = false;
-        }
+        // --- Verify Factory linkage ---
+        if (&core.getFactory() != &ut.getFactory())
+            errors.push_back("Factory linkage mismatch — Core factory does not match UnitTest factory.");
+
+        // --- Verify EventManager linkage ---
+        if (&core.getEventManager() != &ut.getEventManager())
+            errors.push_back("EventManager linkage mismatch — Core event manager does not match UnitTest event manager.");
+
+        // --- Verify traversal state toggling ---
         bool old_traversing = core.getIsTraversing();
         core.setIsTraversing(!old_traversing);
-        if (core.getIsTraversing() == old_traversing) 
-        {
-            errors.push_back("setIsTraversing did not change the traversing state.");
-            ok = false;
-        }
+
+        if (core.getIsTraversing() == old_traversing)
+            errors.push_back("setIsTraversing() failed to toggle traversal state.");
+
         // Restore original state
         core.setIsTraversing(old_traversing);
-        if (core.getIsTraversing() != old_traversing) 
-        {
-            errors.push_back("setIsTraversing did not restore the original traversing state.");
-            ok = false;
-        }
+        if (core.getIsTraversing() != old_traversing)
+            errors.push_back("setIsTraversing() failed to restore original traversal state.");
 
-        return ok;
-    } // END: Core_test14()
+        return true;  // ✅ finished this frame
+    } // END: Core_test14(std::vector<std::string>& errors)
 
 
-    // Focus & Hover Management
-    bool Core_test15(std::vector<std::string>& errors)   
+    // --- Core_test15: Focus & Hover Management -----------------------------------
+    //
+    // 🧩 Purpose:
+    //   Validates focus traversal (Tab/Reverse-Tab cycling) and mouse hover tracking
+    //   within the Core UI system.
+    //
+    // 🧠 Notes:
+    //   • This test ensures keyboard focus transitions work predictably across objects.
+    //   • It also validates that mouse hover tracking and restoration behave correctly.
+    //   • The test safely restores cursor position and focus state after completion.
+    //
+    // ⚠️ Safety:
+    //   SDL_WarpMouseInWindow() is called only when necessary; cursor position is
+    //   restored to avoid side effects across test iterations.
+    //
+    // ============================================================================
+    bool Core_test15(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
 
-        // Save the current mouse cursor position        
-        float mx, my;
+        // --- Save current mouse position (for restoration later) ---
+        float mx = 0.0f, my = 0.0f;
         SDL_GetMouseState(&mx, &my);
 
-        // // Move the Mouse Cursor to 0,0
-        // SDL_WarpMouseInWindow(core.getWindow(), 0, 0);
-        
-        // Handle Tab Key Press
+        // --- Focus Management Tests ---
         core.handleTabKeyPress();
         DisplayHandle original_focused = core.getKeyboardFocusedObject();
-        if (!original_focused.isValid()) 
+
+        if (!original_focused.isValid())
         {
-            errors.push_back("No original focused object.");
-            ok = false;
+            errors.push_back("No originally focused object found after handleTabKeyPress().");
         }
-        if (ok)
+        else
         {
             core.handleTabKeyPress();
-            if (core.getKeyboardFocusedObject() == original_focused) 
+            if (core.getKeyboardFocusedObject() == original_focused)
             {
-                errors.push_back("Tab key press did not change focused object.");
-                ok = false;
+                errors.push_back("Tab key press did not advance focus to a new object.");
             }
+
             core.handleTabKeyPressReverse();
-            if (core.getKeyboardFocusedObject() != original_focused) 
+            if (core.getKeyboardFocusedObject() != original_focused)
             {
                 errors.push_back("Reverse Tab key press did not restore original focused object.");
-                ok = false;
             }
+
             core.handleTabKeyPress();
-            if (core.getKeyboardFocusedObject() == original_focused) 
+            if (core.getKeyboardFocusedObject() == original_focused)
             {
-                errors.push_back("Tab key press did not change focused object the second time.");
-                ok = false;
-            }   
-            core.setKeyboardFocusedObject(original_focused);
-            if (core.getKeyboardFocusedObject() != original_focused) 
-            {
-                errors.push_back("setKeyboardFocusedObject did not restore original focused object.");
-                ok = false;
+                errors.push_back("Second Tab key press did not change focus from original object.");
             }
-        }        
-        // Handle Mouse Hovered Object
+
+            // Verify manual restoration works
+            core.setKeyboardFocusedObject(original_focused);
+            if (core.getKeyboardFocusedObject() != original_focused)
+            {
+                errors.push_back("setKeyboardFocusedObject() failed to restore original focus.");
+            }
+        }
+
+        // --- Hover Management Tests ---
         core.clearMouseHoveredObject();
         DisplayHandle original_hovered = core.getMouseHoveredObject();
-        if (original_hovered.isValid()) 
+
+        if (original_hovered.isValid())
         {
-            errors.push_back("Should not have an original hovered object.");
-            ok = false;
+            errors.push_back("clearMouseHoveredObject() failed — hovered object still valid.");
         }
 
         DisplayHandle blueishBox = core.getDisplayObject("blueishBox");
-        if (!blueishBox.isValid()) 
+        if (!blueishBox.isValid())
         {
-            errors.push_back("blueishBox object not found for hover test.");
-            ok = false;
+            errors.push_back("DisplayObject 'blueishBox' not found for hover test.");
         }
-        if (ok) 
+        else
         {
             core.setMouseHoveredObject(blueishBox);
-            if (core.getMouseHoveredObject() != blueishBox) {
-                errors.push_back("setMouseHoveredObject did not set to blueishBox.");
-                ok = false;
+            if (core.getMouseHoveredObject() != blueishBox)
+            {
+                errors.push_back("setMouseHoveredObject() did not assign blueishBox.");
             }
-            // send a fake mouse move event to be over the blueishBox
+
+            // Move mouse over the center of the target object
             SDL_WarpMouseInWindow(core.getWindow(),
-                static_cast<int>(blueishBox->getX() + (blueishBox->getWidth() / 2.0f)),
-                static_cast<int>(blueishBox->getY() + (blueishBox->getHeight() / 2.0f))
-            );
+                static_cast<int>(blueishBox->getX() + (blueishBox->getWidth() * 0.5f)),
+                static_cast<int>(blueishBox->getY() + (blueishBox->getHeight() * 0.5f)));
+
+            DisplayHandle new_hovered = core.getMouseHoveredObject();
+            if (new_hovered != blueishBox)
+            {
+                errors.push_back("Mouse hovered object mismatch — expected blueishBox after move event.");
+            }
         }
-        DisplayHandle new_hovered = core.getMouseHoveredObject();
-        if (new_hovered != blueishBox) 
-        {
-            errors.push_back("Mouse hovered object is not blueishBox after event.");
-            ok = false;
-        }        
-        // move the mouse back 
+
+        // --- Restore mouse position ---
         SDL_WarpMouseInWindow(core.getWindow(), mx, my);
-        return ok;
-    } // END: Core_test15(std::vector<std::string>& errors)   
+
+        return true; // ✅ finished this frame
+    } // END: Core_test15(std::vector<std::string>& errors)
 
 
-    // --- Object Creation and Orphan Management --- //
-    bool Core_test16(std::vector<std::string>& errors)   
+    // --- Core_test16: Object Creation and Orphan Management ------------------------
+    //
+    // 🧩 Purpose:
+    //   Validates Core’s object and asset creation/destruction pipelines,
+    //   ensuring that DisplayObjects and AssetObjects created via sol::table,
+    //   InitStruct, and Lua script behave consistently and that orphaned
+    //   DisplayObjects are properly tracked, attached, detached, and collected.
+    //
+    // 🧠 Notes:
+    //   • Verifies both object and asset creation lifecycles through all interfaces.
+    //   • Confirms orphan tracking, reattachment, and cleanup work as expected.
+    //   • Ensures that asset registry integrity is preserved across destroy calls.
+    //
+    // ⚠️ Safety:
+    //   This test may modify Core’s internal registries. All temporary objects are
+    //   explicitly destroyed, and orphaned objects are detached before return.
+    //
+    // ============================================================================
+    bool Core_test16(std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
-        // Factory& factory = core.getFactory();
 
-        // --- DisplayObject Creation via sol::table ---
+        // --- DisplayObject Creation: sol::table ---
         sol::table boxConfig = core.getLua().create_table();
         boxConfig["name"] = "testBox";
         boxConfig["type"] = "Box";
-        boxConfig["color"] = {255, 0, 0, 255};
+        boxConfig["color"] = sol::as_table(std::vector<int>{255, 0, 0, 255});
         boxConfig["x"] = 42;
         boxConfig["y"] = 24;
         boxConfig["width"] = 100;
         boxConfig["height"] = 50;
+
         DisplayHandle boxHandle = core.createDisplayObject("Box", boxConfig);
         if (!boxHandle.isValid()) {
-            errors.push_back("createDisplayObject (sol::table) failed for Box.");
-            ok = false;
+            errors.push_back("createDisplayObject(sol::table) failed for Box.");
         }
         core.destroyDisplayObject(boxHandle.getName());
 
-        // --- DisplayObject Creation via InitStruct ---
+        // --- DisplayObject Creation: InitStruct ---
         SDOM::IDisplayObject::InitStruct boxInit;
         boxInit.name = "testBox2";
         boxInit.type = "Box";
@@ -878,14 +896,14 @@ namespace SDOM
         boxInit.y = 200;
         boxInit.width = 80;
         boxInit.height = 40;
+
         DisplayHandle boxHandle2 = core.createDisplayObject("Box", boxInit);
         if (!boxHandle2.isValid()) {
-            errors.push_back("createDisplayObject (InitStruct) failed for Box.");
-            ok = false;
+            errors.push_back("createDisplayObject(InitStruct) failed for Box.");
         }
         core.destroyDisplayObject(boxHandle2.getName());
 
-        // --- DisplayObject Creation via Lua Script ---
+        // --- DisplayObject Creation: Lua Script ---
         std::string boxScript = R"(
             name = "testBox3",
             type = "Box",
@@ -897,108 +915,94 @@ namespace SDOM
         )";
         DisplayHandle boxHandle3 = core.createDisplayObjectFromScript("Box", boxScript);
         if (!boxHandle3.isValid()) {
-            errors.push_back("createDisplayObjectFromScript failed for Box.");
-            ok = false;
-        }      
+            errors.push_back("createDisplayObjectFromScript() failed for Box.");
+        }
 
-        // --- Orphan Management Tests --- //
-
+        // --- Orphan Management ---
         int orphanCount = core.countOrphanedDisplayObjects();
         if (orphanCount == 0) {
-            errors.push_back("Expected orphaned DisplayObjects after creation via Lua script, found none.");
-            ok = false;
+            errors.push_back("Expected orphaned DisplayObjects after Lua creation; found none.");
         }
 
         std::vector<DisplayHandle> orphans = core.getOrphanedDisplayObjects();
         if (orphans.size() != 1) {
-            errors.push_back("Should have one orphan, but found: " + std::to_string(orphans.size()));
-            ok = false;
-        }
-        DisplayHandle orphan = orphans.at(0);
-        if (orphan != boxHandle3) {
-            errors.push_back("Orphaned DisplayObject does not match the created Box object.");
-            ok = false;
+            errors.push_back("Expected one orphan; found " + std::to_string(orphans.size()) + ".");
         }
 
-        // Attach the orphan to the stage and verify orphan count decreases
+        DisplayHandle orphan = !orphans.empty() ? orphans[0] : DisplayHandle();
+        if (orphan.isValid() && orphan != boxHandle3) {
+            errors.push_back("Orphaned DisplayObject does not match the created Box instance.");
+        }
+
+        // Attach orphan to stage
         DisplayHandle stage = core.getStageHandle();
-        stage->addChild(orphan);    // Attach the orphan to the stage
-        orphanCount = core.countOrphanedDisplayObjects();
-        if (orphanCount != 0) {
-            errors.push_back("Orphaned DisplayObjects not cleared after attaching to stage.");
-            ok = false;
+        if (stage.isValid() && orphan.isValid()) {
+            stage->addChild(orphan);
+            orphanCount = core.countOrphanedDisplayObjects();
+            if (orphanCount != 0) {
+                errors.push_back("Orphans not cleared after attaching to stage.");
+            }
+
+            // Detach again to reintroduce orphan state
+            stage->removeChild(orphan);
+            orphanCount = core.countOrphanedDisplayObjects();
+            if (orphanCount != 1) {
+                errors.push_back("Incorrect orphan count after detaching from stage.");
+            }
         }
 
-        // Remove the child again and verify it becomes orphaned
-        stage->removeChild(orphan); // Detach the orphan again
-        orphanCount = core.countOrphanedDisplayObjects();
-        if (orphanCount != 1) {
-            errors.push_back("Orphaned DisplayObjects count incorrect after detaching from stage.");
-            ok = false;
-        }
-
-        // Detach orphans and verify parent is invalidated
+        // Validate orphan cleanup
         core.detachOrphans();
-        DisplayHandle parent = orphan->getParent();
-        if (parent.isValid()) {
-            errors.push_back("Orphaned DisplayObject still has a valid parent after detachment.");
-            ok = false;
+        if (orphan.isValid() && orphan->getParent().isValid()) {
+            errors.push_back("Detached orphan still has valid parent.");
         }
 
-        // Finally, destroy orphaned display objects and verify cleanup
         core.collectGarbage();
         if (core.countOrphanedDisplayObjects() != 0) {
-            errors.push_back("Orphaned DisplayObjects not cleaned up after destruction.");
-            ok = false;
+            errors.push_back("Garbage collection failed to clean orphaned DisplayObjects.");
         }
 
-        // --- AssetObject Creation via sol::table ---
+        // --- AssetObject Creation: sol::table ---
         sol::table assetConfig = core.getLua().create_table();
         assetConfig["name"] = "bmp_font_8x8";
         assetConfig["type"] = "BitmapFont";
         assetConfig["filename"] = "./assets/font_8x8.png";
         assetConfig["font_width"] = 8;
         assetConfig["font_height"] = 8;
+
         AssetHandle assetHandle = core.createAssetObject("BitmapFont", assetConfig);
         if (!assetHandle.isValid()) {
-            errors.push_back("createAssetObject (sol::table) failed for BitmapFont.");
-            ok = false;
+            errors.push_back("createAssetObject(sol::table) failed for BitmapFont.");
         }
         if (core.hasAssetObject("non_existent_asset")) {
-            errors.push_back("Core incorrectly reports existence of 'non_existent_asset'.");
-            ok = false;
+            errors.push_back("Core incorrectly reports existence of non_existent_asset.");
         }
         if (!core.hasAssetObject("bmp_font_8x8")) {
-            errors.push_back("Core failed to report existence of 'bmp_font_8x8' after creation.");
-            ok = false;
-        }        
+            errors.push_back("Core failed to report bmp_font_8x8 after creation.");
+        }
         core.destroyAssetObject(assetHandle.getName());
-        AssetHandle checkHandle = core.getAssetObject("bmp_font_8x8");
-        if (checkHandle.isValid()) {
+        if (core.getAssetObject("bmp_font_8x8").isValid()) {
             errors.push_back("AssetObject bmp_font_8x8 was not destroyed properly.");
-            ok = false;
         }
 
-        // --- AssetObject Creation via InitStruct ---
+        // --- AssetObject Creation: InitStruct ---
         SDOM::BitmapFont::InitStruct bmpAssetInit;
         bmpAssetInit.name = "testAsset2";
         bmpAssetInit.type = "BitmapFont";
         bmpAssetInit.filename = "./assets/font_8x8.png";
         bmpAssetInit.font_width = 8;
         bmpAssetInit.font_height = 8;
+
         AssetHandle assetHandle2 = core.createAssetObject("BitmapFont", bmpAssetInit);
         if (!assetHandle2.isValid()) {
-            errors.push_back("createAssetObject (InitStruct) failed for BitmapFont.");
-            ok = false;
+            errors.push_back("createAssetObject(InitStruct) failed for BitmapFont.");
         }
-        core.destroyAssetObject(assetHandle.getName());
-        checkHandle = core.getAssetObject("bmp_font_8x8");
-        if (checkHandle.isValid()) {
-            errors.push_back("bmpAssetInit bmp_font_8x8 was not destroyed properly.");
-            ok = false;
+        core.destroyAssetObject(assetHandle2.getName());
+        if (core.getAssetObject("testAsset2").isValid()) {
+            errors.push_back("AssetObject testAsset2 was not destroyed properly.");
         }
 
-        // --- AssetObject Creation via Lua Script ---
+        // --- AssetObject Creation: Lua Script ---
         std::string assetScript = R"(
             name = "testAsset3",
             type = "BitmapFont",
@@ -1008,15 +1012,11 @@ namespace SDOM
         )";
         AssetHandle assetHandle3 = core.createAssetObjectFromScript("BitmapFont", assetScript);
         if (!assetHandle3.isValid()) {
-            errors.push_back("createAssetObjectFromScript failed for BitmapFont.");
-            ok = false;
+            errors.push_back("createAssetObjectFromScript() failed for BitmapFont.");
         }
 
-        // errors.push_back("createAssetObjectFromScript failed for BitmapFont.");
-        // return false;
-        return ok;
-
-    } // END: bool Core_test16(std::vector<std::string>& errors)    
+        return true; // ✅ finished this frame
+    } // END: Core_test16(std::vector<std::string>& errors)
 
 
     // --- Lua Integration Tests --- //
@@ -1061,8 +1061,7 @@ namespace SDOM
             registered = true;
         }
 
-        // Returning false keeps this test suite active until all tests complete
-        return false;
+        return true;
     }
 
 

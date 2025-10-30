@@ -1610,7 +1610,6 @@ namespace SDOM
     {
         (void)frame; // Suppress unused parameter warning
 
-        UnitTests& ut = UnitTests::getInstance();
         const std::string objName = "Factory";
 
         // Only register once
@@ -1619,6 +1618,7 @@ namespace SDOM
         {
             // 🔹 Placeholder for future Factory-level tests
             // Example:
+            // UnitTests& ut = UnitTests::getInstance();
             // ut.add_test(objName, "Factory Initialization", [this](std::vector<std::string>& errors)
             // {
             //     if (!isInitialized())
