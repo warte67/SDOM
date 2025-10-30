@@ -1334,6 +1334,12 @@ Platform: Linux-x86_64
   - Begin implementation of **Timer Objects** with global and local dispatch capability (in parallel with `Event_UnitTests`).
 
 ---
+### [October 30, 2025]
+- Updated `Event_UnitTests` to validate `EventManager` functionality and performance.
+- Updated the SDOM_UnitTests framework to support multi-frame tests and performance metrics.
+  - Confirmed that UnitTests are now re-entrant and can be run in multiple frames.
+
+---
 
 #### 🧠 Notes / Observations
 - **Event Dispatch Flow:** The current event propagation system is now stable, feature-complete, and mirrors DOM-style event behavior.  
