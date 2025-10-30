@@ -953,6 +953,7 @@ namespace SDOM
             static int s_iteration_frame = 0;
             static bool s_tests_complete = false;
             static int s_stop_on_frame = -1;
+            constexpr int FRAMES_FOR_IDLE = 250;
 
             UnitTests& ut = UnitTests::getInstance();
 
@@ -976,7 +977,7 @@ namespace SDOM
                 if (!s_tests_complete && ut.all_done())
                 {
                     s_tests_complete = true;
-                    s_stop_on_frame = s_iteration_frame + 100; // give 100 frames for perf
+                    s_stop_on_frame = s_iteration_frame + FRAMES_FOR_IDLE; // give some frames for perf
                     // INFO("✅ All tests complete — entering performance settling period.");
                 }
             }

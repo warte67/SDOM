@@ -1,11 +1,11 @@
 # SDOM: Simple SDL Document Object Model API
 [![License](https://img.shields.io/badge/license-ZLIB-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-Doxygen-blue)](https://warte67.github.io/SDOM/)
-
+[![Status](https://img.shields.io/badge/status-pre--alpha-orange.svg)]()
 
 <!-- BEGIN_VERSION_BLOCK -->
-**SDOM 0.5.109 (early pre-alpha)**  
-**Build Date:** 2025-10-29_17:37:34  
+**SDOM 0.5.110 (early pre-alpha)**  
+**Build Date:** 2025-10-29_20:52:09  
 **Platform:** Linux-x86_64  
 **Compiler:** g++ (GCC) 15.2.1 20250813
 <!-- END_VERSION_BLOCK -->
@@ -13,15 +13,21 @@
 - Doxygen Documentation: https://warte67.github.io/SDOM/
 - GitHub Wiki: https://github.com/warte67/SDOM/wiki
 
+> ⚠️ **Development Status:** SDOM is an **early pre-alpha prototype**.  
+> It is not feature-complete, APIs are unstable, and design work is ongoing.  
+> This repository is public for collaboration and early feedback.
+
 ---
 
 ### Screenshot of the Test Harness application:
 ![Test Harness](https://raw.githubusercontent.com/warte67/SDOM/refs/heads/master/examples/test/docs/diagrams/SDOM_Test_Harness.png)
 
 ## Overview
-SDOM (Simple SDL Document Object Model API) is a compact, modern C++23 library that provides a structured approach to building graphical user interfaces and interactive scenes using SDL3. SDOM fully supports SDL3. The Document Object Model is, in short, a robust graphical user-interface system: a tree of display objects and containers with well-defined properties, parent/child relationships, event propagation, and lifecycle semantics—allowing code to traverse, query, and update elements in a declarative, DOM-like way similar to web DOM concepts but tailored to SDL rendering and input.
+SDOM (Simple SDL Document Object Model API) is an experimental, work-in-progress C++23 library that provides a structured approach to building graphical user interfaces and interactive scenes using SDL3. SDOM fully supports SDL3. The Document Object Model is, in short, a robust graphical user-interface system: a tree of display objects and containers with well-defined properties, parent/child relationships, event propagation, and lifecycle semantics—allowing code to traverse, query, and update elements in a declarative, DOM-like way similar to web DOM concepts but tailored to SDL rendering and input.
 
 The design centers on three core ideas: composability, data-driven configuration, and portability. Composability comes from a small collection of display object primitives and handles that can be composed into complex UIs. Data-driven configuration means scenes and object properties can be created and adjusted from Lua (via Sol2) without recompiling — as much or as little Lua as you want can be used to drive an application. We plan to provide dedicated SDL3 bindings for Lua so scripting can directly leverage SDL3 features; that work is in progress. Importantly, SDL3 is already fully available to C and C++ code using SDOM, and first-class bindings for other host languages (for example Rust or Python) are planned for future releases.
+
+This project builds on top of SDL3 — it does not modify or replace any SDL internals.
 
 **Note:** This is still a very early pre-alpha version.  All APIs are subject to change.  
 
@@ -297,9 +303,41 @@ bash scripts/export_mermaid.sh
 
 Outputs are written to `docs/diagrams/<doc-name>/diagram-XX.png|svg`.
 
-## License
-ZLIB License. See source files for details.
 
+---
+## Acknowledgments
+
+SDOM builds upon the excellent foundation provided by the [Simple DirectMedia Layer (SDL)](https://libsdl.org) project.  
+All credit for SDL’s architecture, performance, and portability goes to its maintainers and contributors — especially **Sam Lantinga** and the [SDL team](https://github.com/libsdl-org).
+
+Special thanks to **JeanHeyd “ThePhD” Meneide**, author of [Sol2](https://github.com/ThePhD/sol2) and the upcoming [Sol3](https://github.com/ThePhD/sol3) —  
+whose work has made high-quality Lua integration in C++ both elegant and practical.
+
+SDOM would not be possible without the open-source community’s contributions to  
+**[SDL3](https://github.com/libsdl-org/SDL)**, **[Sol2](https://github.com/ThePhD/sol2)**, and the **[Lua](https://www.lua.org/)** ecosystem.
+
+---
+## License
+ZLIB License. 
+
+    This software is provided 'as-is', without any express or implied
+    warranty.  In no event will the authors be held liable for any damages
+    arising from the use of this software.
+ 
+    Permission is granted to anyone to use this software for any purpose,
+    including commercial applications, and to alter it and redistribute it
+    freely, subject to the following restrictions:
+ 
+    1. The origin of this software must not be misrepresented; you must not
+        claim that you wrote the original software. If you use this software
+        in a product, an acknowledgment in the product documentation would be
+        appreciated but is not required.
+    2. Altered source versions must be plainly marked as such, and must not be
+        misrepresented as being the original software.
+    3. This notice may not be removed or altered from any source distribution.
+
+
+---
 ## Author
 Jay Faries ([warte67](https://github.com/warte67))
 
