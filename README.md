@@ -10,8 +10,8 @@
 **Compiler:** g++ (GCC) 15.2.1 20250813
 <!-- END_VERSION_BLOCK -->
 
-- Doxygen Documentation: https://warte67.github.io/SDOM/
 - GitHub Wiki: https://github.com/warte67/SDOM/wiki
+- Doxygen Documentation: https://warte67.github.io/SDOM/
 
 > ⚠️ **Development Status:** SDOM is an **early pre-alpha prototype**.  
 > It is not feature-complete, APIs are unstable, and design work is ongoing.  
