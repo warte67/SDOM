@@ -167,9 +167,10 @@ var NAVTREEINDEX39 =
 "md_README.html#autotoc_md36":[1,8,2],
 "md_README.html#autotoc_md37":[1,8,3],
 "md_README.html#autotoc_md38":[1,8,3,0],
-"md_README.html#autotoc_md39":[1,8,4],
 "md_README.html#autotoc_md4":[1,0],
-"md_README.html#autotoc_md40":[1,8,5],
+"md_README.html#autotoc_md40":[1,8,4],
+"md_README.html#autotoc_md42":[1,8,5],
+"md_README.html#autotoc_md43":[1,8,6],
 "md_README.html#autotoc_md5":[1,1],
 "md_README.html#autotoc_md6":[1,2],
 "md_README.html#autotoc_md7":[1,2,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX39 =
 "namespaceSDOM.html#a2d9fd9337b8056c8a35d1f5802e56b07":[2,0,0,141],
 "namespaceSDOM.html#a2ddfe0c3e88fd1b6e58620d2b63e769f":[2,0,0,313],
 "namespaceSDOM.html#a2de9188866b1d2bc1ef8702a225af224":[2,0,0,274],
-"namespaceSDOM.html#a2e529ce7e60117c04602a6c84b65e198":[2,0,0,134],
-"namespaceSDOM.html#a2faf5ca0ee67cbc5b14dae4d5a35bd88":[2,0,0,144]
+"namespaceSDOM.html#a2e529ce7e60117c04602a6c84b65e198":[2,0,0,134]
 };

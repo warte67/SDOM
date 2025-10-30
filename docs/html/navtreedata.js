@@ -61,8 +61,9 @@ var NAVTREE =
         [ "Documentation", "md_README.html#autotoc_md37", [
           [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md38", null ]
         ] ],
-        [ "License", "md_README.html#autotoc_md39", null ],
-        [ "Author", "md_README.html#autotoc_md40", null ]
+        [ "Acknowledgments", "md_README.html#autotoc_md40", null ],
+        [ "License", "md_README.html#autotoc_md42", null ],
+        [ "Author", "md_README.html#autotoc_md43", null ]
       ] ]
     ] ],
     [ "Namespaces", "namespaces.html", [
@@ -140,8 +141,8 @@ var NAVTREEINDEX =
 "classSDOM_1_1TristateButton.html#a514bb1586b9cf3bc4f6043669cf049b2",
 "classSDOM_1_1TristateButton.html#ad0bcbae2968bb60c89e29e92de66a060",
 "classSDOM_1_1UnitTests.html#aa860600765065dbc82acd7be916c231c",
-"namespaceSDOM.html#a30b2979959418fcc8421582cd6cb7c08",
-"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a684d325a7303f52e64011467ff5c5758",
+"namespaceSDOM.html#a2faf5ca0ee67cbc5b14dae4d5a35bd88",
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a6705777b712ee811e76fb07162081d63",
 "structSDOM_1_1BitmapFont_1_1InitStruct.html#aff72131e37f0b204c13ba168d9844ef6",
 "structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e",
 "structSDOM_1_1IPanelObject_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08",

@@ -25,7 +25,7 @@ var searchData=
   ['leftcenter_22',['LeftCenter',['../namespaceSDOM.html#a176e331c0f2e44c038e10b25684370b5ac7304bf037c39d7f1dcc0f8b81398247',1,'SDOM']]],
   ['libraries_23',['Build and install SDL3 libraries',['../md_README.html#autotoc_md35',1,'']]],
   ['library_24',['Building the SDOM Library',['../md_README.html#autotoc_md12',1,'']]],
-  ['license_25',['License',['../md_README.html#autotoc_md39',1,'']]],
+  ['license_25',['License',['../md_README.html#autotoc_md42',1,'']]],
   ['lineindex_26',['lineIndex',['../structSDOM_1_1Label_1_1PhraseToken.html#a889d0c315deeb35f97ceaf11688add5e',1,'SDOM::Label::PhraseToken']]],
   ['liney_27',['lineY',['../structSDOM_1_1Label_1_1PhraseToken.html#ab4e7e5ead39e0e8539a5e2f8cffbeb16',1,'SDOM::Label::PhraseToken']]],
   ['linux_28',['🐧 Arch Linux',['../md_README.html#autotoc_md25',1,'']]],
@@ -38,8 +38,9 @@ var searchData=
   ['lt_5forange_35',['LT_ORANGE',['../classCLR.html#a42181ec7c82e659318736fa4eaec68ed',1,'CLR']]],
   ['lt_5fyellow_36',['LT_YELLOW',['../classCLR.html#a8243058df0e40cdb1644ac3bf2636fdd',1,'CLR']]],
   ['lua_37',['Why Lua?',['../md_README.html#autotoc_md19',1,'']]],
-  ['lua_20integration_20and_20requirements_38',['Lua Integration and Requirements',['../md_README.html#autotoc_md18',1,'']]],
-  ['lua_5finfo_39',['LUA_INFO',['../SDOM_8hpp.html#ad37b5952fb01322cea666ba6342b2a43',1,'SDOM.hpp']]],
-  ['lua_5fvalue_5fcase_5finsensitive_40',['lua_value_case_insensitive',['../classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959',1,'SDOM::IDataObject']]],
-  ['luahandlename_41',['LuaHandleName',['../classSDOM_1_1AssetHandle.html#a89ebec1fc7fbc6690cca6719c0572923',1,'SDOM::AssetHandle::LuaHandleName'],['../classSDOM_1_1DisplayHandle.html#a7f26dd776b5791179616f81c95481ec0',1,'SDOM::DisplayHandle::LuaHandleName']]]
+  ['lua_20installation_38',['Lua Installation',['../md_README.html#autotoc_md20',1,'']]],
+  ['lua_20integration_20and_20requirements_39',['Lua Integration and Requirements',['../md_README.html#autotoc_md18',1,'']]],
+  ['lua_5finfo_40',['LUA_INFO',['../SDOM_8hpp.html#ad37b5952fb01322cea666ba6342b2a43',1,'SDOM.hpp']]],
+  ['lua_5fvalue_5fcase_5finsensitive_41',['lua_value_case_insensitive',['../classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959',1,'SDOM::IDataObject']]],
+  ['luahandlename_42',['LuaHandleName',['../classSDOM_1_1AssetHandle.html#a89ebec1fc7fbc6690cca6719c0572923',1,'SDOM::AssetHandle::LuaHandleName'],['../classSDOM_1_1DisplayHandle.html#a7f26dd776b5791179616f81c95481ec0',1,'SDOM::DisplayHandle::LuaHandleName']]]
 ];

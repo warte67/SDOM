@@ -93,23 +93,29 @@ $(function(){initNavTree('md_README.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md1"></a></p>
-<p>[<img src="https://img.shields.io/badge/license-ZLIB-blue.svg" alt="License" style="pointer-events: none;" class="inline"/>](LICENSE) <a href="https://warte67.github.io/SDOM/"><img src="https://img.shields.io/badge/docs-Doxygen-blue" alt="Documentation" class="inline"/></a></p>
-<p><b><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> 0.5.109 (early pre-alpha)</b> <br  />
- <b>Build Date:</b> 2025-10-29_17:37:34 <br  />
+<p>[<img src="https://img.shields.io/badge/license-ZLIB-blue.svg" alt="License" style="pointer-events: none;" class="inline"/>](LICENSE) <a href="https://warte67.github.io/SDOM/"><img src="https://img.shields.io/badge/docs-Doxygen-blue" alt="Documentation" class="inline"/></a> [<img src="https://img.shields.io/badge/status-pre--alpha-orange.svg" alt="Status" style="pointer-events: none;" class="inline"/>]()</p>
+<p><b><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> 0.5.110 (early pre-alpha)</b> <br  />
+ <b>Build Date:</b> 2025-10-29_20:52:09 <br  />
  <b>Platform:</b> Linux-x86_64 <br  />
  <b>Compiler:</b> g++ (GCC) 15.2.1 20250813</p>
 <ul>
 <li>Doxygen Documentation: <a href="https://warte67.github.io/SDOM/">https://warte67.github.io/SDOM/</a></li>
 <li>GitHub Wiki: <a href="https://github.com/warte67/SDOM/wiki">https://github.com/warte67/SDOM/wiki</a></li>
 </ul>
+<blockquote class="doxtable">
+<p>⚠️ <b>Development Status:</b> <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is an <b>early pre-alpha prototype</b>. <br  />
+ It is not feature-complete, APIs are unstable, and design work is ongoing. <br  />
+ This repository is public for collaboration and early feedback. </p>
+</blockquote>
 <hr  />
 <h2 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 Screenshot of the Test Harness application:</h2>
 <p><img src="https://raw.githubusercontent.com/warte67/SDOM/refs/heads/master/examples/test/docs/diagrams/SDOM_Test_Harness.png" alt="Test Harness" class="inline"/></p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Overview</h1>
-<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> (Simple SDL Document Object Model API) is a compact, modern C++23 library that provides a structured approach to building graphical user interfaces and interactive scenes using SDL3. <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> fully supports SDL3. The Document Object Model is, in short, a robust graphical user-interface system: a tree of display objects and containers with well-defined properties, parent/child relationships, event propagation, and lifecycle semantics—allowing code to traverse, query, and update elements in a declarative, DOM-like way similar to web DOM concepts but tailored to SDL rendering and input.</p>
+<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> (Simple SDL Document Object Model API) is an experimental, work-in-progress C++23 library that provides a structured approach to building graphical user interfaces and interactive scenes using SDL3. <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> fully supports SDL3. The Document Object Model is, in short, a robust graphical user-interface system: a tree of display objects and containers with well-defined properties, parent/child relationships, event propagation, and lifecycle semantics—allowing code to traverse, query, and update elements in a declarative, DOM-like way similar to web DOM concepts but tailored to SDL rendering and input.</p>
 <p>The design centers on three core ideas: composability, data-driven configuration, and portability. Composability comes from a small collection of display object primitives and handles that can be composed into complex UIs. Data-driven configuration means scenes and object properties can be created and adjusted from Lua (via Sol2) without recompiling — as much or as little Lua as you want can be used to drive an application. We plan to provide dedicated SDL3 bindings for Lua so scripting can directly leverage SDL3 features; that work is in progress. Importantly, SDL3 is already fully available to C and C++ code using <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>, and first-class bindings for other host languages (for example Rust or Python) are planned for future releases.</p>
+<p>This project builds on top of SDL3 — it does not modify or replace any SDL internals.</p>
 <p><b>Note:</b> This is still a very early pre-alpha version. All APIs are subject to change. <br  />
 </p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
@@ -122,7 +128,7 @@ Features</h1>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 IDataObject: Data-Driven Base Type</h1>
-<p><span class="tt"><a class="el" href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a></span> is a flexible, data-driven base class designed for use in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. It allows you to register property accessors (getters and setters) and commands that can be accessed and manipulated via JSON, enabling dynamic configuration, serialization, and behavior of objects.</p>
+<p><span class="tt"><a class="el" href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a></span> is a flexible, data-driven base class designed for use in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. It allows you to register property accessors (getters and setters) and commands that can be accessed and manipulated via Lua, enabling dynamic configuration, serialization, and behavior of objects.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 Key Features</h2>
 <ul>
@@ -130,7 +136,7 @@ Key Features</h2>
 <li>Get and set properties by name using <span class="tt">getProperty()</span> and <span class="tt">setProperty()</span></li>
 <li>Supports chaining of setters for fluent configuration</li>
 <li>Register and invoke commands (actions) using <span class="tt">registerCommand()</span> and <span class="tt">command()</span></li>
-<li>Designed for integration with JSON (using <a href="https://github.com/nlohmann/json">nlohmann/json</a>)</li>
+<li>Designed for dynamic integration with <b>Lua</b> (via <a href="https://github.com/ThePhD/sol2">Sol2</a>)</li>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 Identifier Conventions</h1>
@@ -211,7 +217,7 @@ Lua Integration and Requirements</h1>
 Why Lua?</h3>
 <p>Lua enables dynamic creation, modification, and serialization of DOM objects at runtime — letting you define UI layouts, animation sequences, and event behavior without recompiling. Lua scripts can access most of SDOM’s API, and future releases will expand this integration even further.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
-Installation</h3>
+Lua Installation</h3>
 <p><b>Debian / Ubuntu:</b> </p><div class="fragment"><div class="line">sudo apt update</div>
 <div class="line">sudo apt install liblua5.4-dev</div>
 </div><!-- fragment --><p> <b>Arch Linux:</b> </p><div class="fragment"><div class="line">sudo pacman -S lua54</div>
@@ -335,10 +341,35 @@ Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)</h3>
 </div><!-- fragment --><p>Install Mermaid CLI globally: </p><div class="fragment"><div class="line">npm install -g @mermaid-js/mermaid-cli</div>
 <div class="line">bash scripts/export_mermaid.sh</div>
 </div><!-- fragment --><p>Outputs are written to <span class="tt">docs/diagrams/&lt;doc-name&gt;/diagram-XX.png|svg</span>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
+Acknowledgments</h2>
+<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> builds upon the excellent foundation provided by the <a href="https://libsdl.org">Simple DirectMedia Layer (SDL)</a> project. <br  />
+ All credit for SDL’s architecture, performance, and portability goes to its maintainers and contributors — especially <b>Sam Lantinga</b> and the <a href="https://github.com/libsdl-org">SDL team</a>.</p>
+<p>Special thanks to <b>JeanHeyd “ThePhD” Meneide</b>, author of <a href="https://github.com/ThePhD/sol2">Sol2</a> and the upcoming <a href="https://github.com/ThePhD/sol3">Sol3</a> — <br  />
+ whose work has made high-quality Lua integration in C++ both elegant and practical.</p>
+<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> would not be possible without the open-source community’s contributions to <br  />
+ <b><a href="https://github.com/libsdl-org/SDL">SDL3</a></b>, <b><a href="https://github.com/ThePhD/sol2">Sol2</a></b>, and the <b><a href="https://www.lua.org/">Lua</a></b> ecosystem.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
 License</h2>
-<p>ZLIB License. See source files for details.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
+<p>ZLIB License. </p><pre class="fragment">This software is provided 'as-is', without any express or implied
+warranty.  In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+    appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
+</pre><hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
 Author</h2>
 <p>Jay Faries (<a href="https://github.com/warte67">warte67</a>)</p>
 <p>🦆 "Performing a stable sort on the Anseriformes array by ascending position along the x-axis, ensuring deterministic alignment and zero rotational variance." (translation: "Getting my ducks in a row") </p>
