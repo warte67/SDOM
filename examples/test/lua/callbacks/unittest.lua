@@ -11,11 +11,6 @@ function M.on_unit_test()
         allTestsPassed = allTestsPassed and IDisplayObject_UnitTests()
         allTestsPassed = allTestsPassed and Event_UnitTests()
 
-        print("Core_UnitTests: " .. tostring(Core_UnitTests()))
-        print("IDisplayObject_UnitTests: " .. tostring(IDisplayObject_UnitTests()))
-        print("Event_UnitTests: " .. tostring(Event_UnitTests()))
-
-
         -- allTestsPassed = allTestsPassed and Factory_UnitTests()
         -- allTestsPassed = allTestsPassed and Stage_UnitTests()
         -- allTestsPassed = allTestsPassed and Box_UnitTests()
