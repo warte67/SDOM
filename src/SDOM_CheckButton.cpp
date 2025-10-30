@@ -49,9 +49,35 @@ namespace SDOM
 
     bool CheckButton::onUnitTest(int frame)
     {
-        (void)frame; // unused
-        return true;
+        // Run base class tests first
+        if (!SUPER::onUnitTest(frame))
+            return false;
+
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
+
+        // Only register once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 Scaffold placeholder for future CheckButton-specific tests
+            // Example:
+            // ut.add_test(objName, "CheckButton Default State", [this](std::vector<std::string>& errors)
+            // {
+            //     if (!isCheckable())
+            //         errors.push_back("CheckButton '" + getName() + "' should be checkable by default!");
+            //     if (isChecked())
+            //         errors.push_back("CheckButton '" + getName() + "' should be unchecked by default!");
+            //     return true;
+            // });
+
+            registered = true;
+        }
+
+        // ✅ Return false so this object stays active for multi-frame test orchestration
+        return false;
     } // END: CheckButton::onUnitTest()
+
 
     // --- Virtual State Accessors (From IButtonObject) --- //
     ButtonState CheckButton::getState() const

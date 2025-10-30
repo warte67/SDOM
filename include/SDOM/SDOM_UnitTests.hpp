@@ -28,7 +28,8 @@ namespace SDOM
             bool has_run = false;
             bool running = false;
             int frame_count = 0;
-            std::vector<std::string> errors;            
+            std::vector<std::string> errors;   
+            size_t last_error_count = 0; // for multi-frame test        
         };        
 
         static UnitTests& getInstance();

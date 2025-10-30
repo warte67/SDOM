@@ -571,11 +571,51 @@ namespace SDOM
         }
     } // END Label::onRender()
 
-    bool Label::onUnitTest(int frame) 
+    bool Label::onUnitTest(int frame)
     {
-        SUPER::onUnitTest(frame);
-        return true;
-    } // END Label::onUnitTest()
+        // Run base class unit tests first
+        if (!SUPER::onUnitTest(frame))
+            return false;
+
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
+
+        // Register label-specific tests once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Validate that label text is not empty
+            ut.add_test(objName, "Label Text Non-Empty", [this](std::vector<std::string>& errors)
+            {
+                if (getText().empty())
+                    errors.push_back("Label '" + getName() + "' has empty text content.");
+                return true; // ✅ single-frame test
+            });
+
+            // // 🔹 2. Validate font resource (if applicable)
+            // ut.add_test(objName, "Label Font Validity", [this](std::vector<std::string>& errors)
+            // {
+            //     if (!font_ || !font_.isValid())
+            //         errors.push_back("Label '" + getName() + "' has an invalid or missing font reference.");
+            //     return true; // ✅ single-frame test
+            // });
+
+            // // 🔹 3. Validate text color (sanity check)
+            // ut.add_test(objName, "Label Text Color Range", [this](std::vector<std::string>& errors)
+            // {
+            //     const SDL_Color c = getTextColor();
+            //     if (c.r > 255 || c.g > 255 || c.b > 255 || c.a > 255)
+            //         errors.push_back("Label '" + getName() + "' has invalid text color components (RGBA out of range).");
+            //     return true; // ✅ single-frame test
+            // });
+
+            registered = true;
+        }
+
+        // ✅ Return false to stay consistent with other single-registration tests
+        return false;
+    } // END: Label::onUnitTest()
+
     
     void Label::setText(std::string p_text)
     {

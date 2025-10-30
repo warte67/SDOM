@@ -148,32 +148,55 @@ namespace SDOM
 
     bool Texture::onUnitTest(int frame)
     {
-        // run base checks first
-        if (!SUPER::onUnitTest(frame)) return false;
+        // Run base checks first
+        if (!SUPER::onUnitTest(frame))
+            return false;
 
-        bool ok = true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
 
-        // filename should be present (internal assets have names too)
-        if (filename_.empty()) {
-            DEBUG_LOG("[UnitTest] Texture '" << getName() << "' has empty filename");
-            ok = false;
+        // Register tests only once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Validate filename
+            ut.add_test(objName, "Texture Filename Validation", [this](std::vector<std::string>& errors)
+            {
+                if (filename_.empty())
+                {
+                    errors.push_back("Texture '" + getName() + "' has empty filename");
+                }
+                return true; // ✅ single-frame
+            });
+
+            // 🔹 2. Validate loaded texture state
+            ut.add_test(objName, "Texture Loaded State", [this](std::vector<std::string>& errors)
+            {
+                if (isLoaded_)
+                {
+                    if (!texture_)
+                    {
+                        errors.push_back("Texture '" + getName() +
+                                        "' is marked loaded but texture_ is null");
+                    }
+                    if (textureWidth_ <= 0 || textureHeight_ <= 0)
+                    {
+                        errors.push_back("Texture '" + getName() +
+                                        "' has invalid size: w=" +
+                                        std::to_string(textureWidth_) +
+                                        " h=" + std::to_string(textureHeight_));
+                    }
+                }
+                return true;
+            });
+
+            registered = true;
         }
 
-        // If the texture is loaded, ensure SDL_Texture and dimensions look valid
-        if (isLoaded_) {
-            if (!texture_) {
-                DEBUG_LOG("[UnitTest] Texture '" << getName() << "' is marked loaded but texture_ is null");
-                ok = false;
-            }
-            if (textureWidth_ <= 0 || textureHeight_ <= 0) {
-                DEBUG_LOG("[UnitTest] Texture '" << getName() << "' has invalid size: w="
-                          << textureWidth_ << " h=" << textureHeight_);
-                ok = false;
-            }
-        }
+        // ✅ Return false so the texture remains active while the unit test system processes
+        return false;
+    } // END: Texture::onUnitTest()
 
-        return ok;
-    } // END Texture::onUnitTest()
 
 
     // --- Lua Regisstration --- //

@@ -382,38 +382,63 @@ namespace SDOM
         }
 
     } // END: void TristateButton::onRender()
+        
 
-    bool TristateButton::onUnitTest(int frame) 
-    { 
-        // base checks
-        if (!SUPER::onUnitTest(frame)) return false;
+    bool TristateButton::onUnitTest(int frame)
+    {
+        // Run base checks first
+        if (!SUPER::onUnitTest(frame))
+            return false;
 
-        bool ok = true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
 
-        // state must be one of the defined enum values
-        switch (getState()) {
-            case ButtonState::Inactive:
-            case ButtonState::Active:
-            case ButtonState::Mixed:
-                break;
-            default:
-                DEBUG_LOG("[UnitTest] TristateButton '" << getName() << "' has invalid state: " << static_cast<int>(getState()));
-                ok = false;
-                break;
+        // Register tests only once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Validate button state
+            ut.add_test(objName, "TristateButton State Validation", [this](std::vector<std::string>& errors)
+            {
+                switch (getState())
+                {
+                    case ButtonState::Inactive:
+                    case ButtonState::Active:
+                    case ButtonState::Mixed:
+                        break;
+                    default:
+                        errors.push_back("TristateButton '" + getName() +
+                                        "' has invalid state: " +
+                                        std::to_string(static_cast<int>(getState())));
+                        break;
+                }
+                return true; // ✅ single-frame
+            });
+
+            // 🔹 2. Validate icon sprite (if present)
+            ut.add_test(objName, "TristateButton Icon Sprite Validation", [this](std::vector<std::string>& errors)
+            {
+                SpriteSheet* ss = getIconSpriteSheet();
+                if (ss)
+                {
+                    if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0)
+                    {
+                        errors.push_back("TristateButton '" + getName() +
+                                        "' has invalid icon sprite size: w=" +
+                                        std::to_string(ss->getSpriteWidth()) +
+                                        " h=" + std::to_string(ss->getSpriteHeight()));
+                    }
+                }
+                return true;
+            });
+
+            registered = true;
         }
 
-        // icon sprite sanity (if an icon resource is configured)
-        SpriteSheet* ss = getIconSpriteSheet();
-        if (ss) {
-            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
-                DEBUG_LOG("[UnitTest] TristateButton '" << getName() << "' has invalid icon sprite size: w="
-                        << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
-                ok = false;
-            }
-        }
+        // ✅ Return false so this test set remains active during test processing
+        return false;
+    } // END: TristateButton::onUnitTest()
 
-        return ok;
-    } // bool TristateButton::onUnitTest()
 
 
 

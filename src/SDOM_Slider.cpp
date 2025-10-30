@@ -390,45 +390,75 @@ namespace SDOM
             }
         }
     } // END: void Slider::onRender()
+    
 
     bool Slider::onUnitTest(int frame)
     {
-        // run base checks first
-        if (!SUPER::onUnitTest(frame)) return false;
+        // Run base class tests first
+        if (!SUPER::onUnitTest(frame))
+            return false;
 
-        bool ok = true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
 
-        // step must be non-negative
-        if (step_ < 0.0f) {
-            DEBUG_LOG("[UnitTest] Slider '" << getName() << "' has negative step: " << step_);
-            ok = false;
+        // Register once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Step value sanity
+            ut.add_test(objName, "Slider Step Sanity", [this](std::vector<std::string>& errors)
+            {
+                if (step_ < 0.0f)
+                    errors.push_back("Slider '" + getName() +
+                                    "' has negative step value: " + std::to_string(step_));
+                return true; // ✅ single-frame test
+            });
+
+            // 🔹 2. Range sanity: min < max
+            ut.add_test(objName, "Slider Range Sanity", [this](std::vector<std::string>& errors)
+            {
+                if (!(min_ < max_))
+                    errors.push_back("Slider '" + getName() +
+                                    "' invalid range: min=" + std::to_string(min_) +
+                                    " max=" + std::to_string(max_));
+                return true;
+            });
+
+            // 🔹 3. Value in range
+            ut.add_test(objName, "Slider Value In Range", [this](std::vector<std::string>& errors)
+            {
+                if (value_ < min_ || value_ > max_)
+                    errors.push_back("Slider '" + getName() +
+                                    "' value out of range: value=" + std::to_string(value_) +
+                                    " (min=" + std::to_string(min_) +
+                                    " max=" + std::to_string(max_) + ")");
+                return true;
+            });
+
+            // 🔹 4. SpriteSheet validity
+            ut.add_test(objName, "Slider SpriteSheet Dimensions", [this](std::vector<std::string>& errors)
+            {
+                SpriteSheet* ss = getSpriteSheetPtr();
+                if (ss)
+                {
+                    if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0)
+                    {
+                        errors.push_back("Slider '" + getName() +
+                                        "' has invalid sprite size: w=" +
+                                        std::to_string(ss->getSpriteWidth()) +
+                                        " h=" + std::to_string(ss->getSpriteHeight()));
+                    }
+                }
+                return true;
+            });
+
+            registered = true;
         }
 
-        // range sanity: min < max
-        if (!(min_ < max_)) {
-            DEBUG_LOG("[UnitTest] Slider '" << getName() << "' invalid range: min=" << min_ << " max=" << max_);
-            ok = false;
-        }
+        // ✅ Return false to indicate that the object remains active while the global unit test system processes
+        return false;
+    } // END: Slider::onUnitTest()
 
-        // value must be within [min, max]
-        if (value_ < min_ || value_ > max_) {
-            DEBUG_LOG("[UnitTest] Slider '" << getName() << "' value out of range: value=" << value_
-                      << " (min=" << min_ << " max=" << max_ << ")");
-            ok = false;
-        }
-
-        // if an icon spritesheet is assigned, its sprite dimensions should be positive
-        SpriteSheet* ss = getSpriteSheetPtr();
-        if (ss) {
-            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
-                DEBUG_LOG("[UnitTest] Slider '" << getName() << "' has invalid sprite size: w=" 
-                          << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight() << ")");
-                ok = false;
-            }
-        }
-
-        return ok;
-    } // END: bool Slider::onUnitTest()
 
 
 

@@ -258,38 +258,67 @@ namespace SDOM
         isLoaded_ = false;
     }
 
+    
     bool SpriteSheet::onUnitTest(int frame)
     {
-        // run base checks first
-        if (!SUPER::onUnitTest(frame)) return false;
+        // Run base checks first
+        if (!SUPER::onUnitTest(frame))
+            return false;
 
-        bool ok = true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
 
-        // sprite tile dimensions must be positive
-        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) {
-            DEBUG_LOG("[UnitTest] SpriteSheet '" << getName() << "' has invalid sprite size: w="
-                      << spriteWidth_ << " h=" << spriteHeight_);
-            ok = false;
-        }
-
-        // texture asset should exist and pass its own unit tests
-        if (!textureAsset.isValid()) {
-            DEBUG_LOG("[UnitTest] SpriteSheet '" << getName() << "' has no associated Texture asset (filename='" << filename_ << "')");
-            ok = false;
-        } else {
-            try {
-                if (!textureAsset->onUnitTest(frame)) {
-                    DEBUG_LOG("[UnitTest] SpriteSheet '" << getName() << "' Texture asset onUnitTest() failed");
-                    ok = false;
+        // Only register once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Validate sprite dimensions
+            ut.add_test(objName, "SpriteSheet Dimensions", [this](std::vector<std::string>& errors)
+            {
+                if (spriteWidth_ <= 0 || spriteHeight_ <= 0)
+                {
+                    errors.push_back("SpriteSheet '" + getName() +
+                                    "' has invalid sprite size: w=" +
+                                    std::to_string(spriteWidth_) +
+                                    " h=" + std::to_string(spriteHeight_));
                 }
-            } catch (...) {
-                DEBUG_LOG("[UnitTest] SpriteSheet '" << getName() << "' Texture asset onUnitTest() threw an exception");
-                ok = false;
-            }
+                return true; // ✅ single-frame test
+            });
+
+            // 🔹 2. Validate texture asset existence and test it recursively
+            ut.add_test(objName, "SpriteSheet Texture Asset Validation", [this, frame](std::vector<std::string>& errors)
+            {
+                if (!textureAsset.isValid())
+                {
+                    errors.push_back("SpriteSheet '" + getName() +
+                                    "' has no associated Texture asset (filename='" + filename_ + "')");
+                    return true;
+                }
+
+                try
+                {
+                    if (!textureAsset->onUnitTest(frame))
+                    {
+                        errors.push_back("SpriteSheet '" + getName() +
+                                        "' Texture asset onUnitTest() failed");
+                    }
+                }
+                catch (...)
+                {
+                    errors.push_back("SpriteSheet '" + getName() +
+                                    "' Texture asset onUnitTest() threw an exception");
+                }
+
+                return true;
+            });
+
+            registered = true;
         }
 
-        return ok;
-    } // END onUnitTest()
+        // ✅ Return false so the object remains active while tests are processed
+        return false;
+    } // END: SpriteSheet::onUnitTest()
+
 
      // public methods
     void SpriteSheet::setSpriteWidth(int width)

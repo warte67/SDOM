@@ -1036,56 +1036,44 @@ namespace SDOM
 
     bool Core::onUnitTest(int frame)
     {
-        // Lambda for recursive unitTest handling using std::function
         std::function<bool(IDisplayObject&)> handleUnitTest;
         handleUnitTest = [&handleUnitTest, frame](IDisplayObject& node) -> bool 
         {
-            bool result = node.onUnitTest(frame);
+            bool finished = node.onUnitTest(frame);
+
+            // Recursively process children — but only if parent’s tests finished
             for (const auto& child : node.getChildren()) 
             {
-                auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
-                if (childObj) 
+                if (auto* childObj = dynamic_cast<IDisplayObject*>(child.get()))
                 {
-                    result = handleUnitTest(*childObj) && result;
+                    // Combine results with logical AND, but do not short-circuit
+                    finished = handleUnitTest(*childObj) && finished;
                 }
             }
-            return result;
+
+            return finished;
         };
 
-        bool allTestsPassed = true;
-        // std::cout << CLR::LT_BLUE << "Starting unit tests..." << CLR::RESET << std::endl;
-        // std::cout << CLR::indent_push();
+        bool allFinished = true;
 
-        // Run Core-specific unit tests here
-        allTestsPassed &= coreTests_();
-        allTestsPassed &= factory_->onUnitTest(frame);
+        // --- Run Core-specific tests ---
+        allFinished &= coreTests_();                // Core unit tests
+        allFinished &= factory_->onUnitTest(frame); // Factory tests
 
-        // Run registered unit test function if available
-        if (fnOnUnitTest) {
-            allTestsPassed &= fnOnUnitTest();
-        }
-        // Call recursive unitTest on the root node (if it exists)
-        IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
-        if (rootObj)
+        // --- Run user-registered onUnitTest callback ---
+        if (fnOnUnitTest)
+            allFinished &= fnOnUnitTest();          // Return false if still waiting
+
+        // --- Walk the display tree recursively ---
+        if (auto* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get()))
         {
             setIsTraversing(true);
-            allTestsPassed &= handleUnitTest(*rootObj);
+            allFinished &= handleUnitTest(*rootObj);
             setIsTraversing(false);
         }
 
-        // std::cout << CLR::indent_pop();
-        // if (allTestsPassed) 
-        //     std::cout << CLR::LT_BLUE << "...Unit tests " << CLR::GREEN << "[PASSED]" << CLR::RESET << std::endl;
-        // else 
-        //     std::cout << CLR::LT_BLUE << "...Unit tests " << CLR::RED << "[FAILED]" << CLR::RESET << std::endl;
-
-        // if (stopAfterUnitTests_ == true)
-        // {
-        //     LUA_INFO("Core: stopping main loop after unit tests.");
-        //     bIsRunning_ = false; // signal to stop the main loop after unit tests
-        // }
-
-        return allTestsPassed;
+        // Return true only when ALL tests (including re-entrant ones) are done
+        return allFinished;
     }
 
     void Core::onWindowResize(int new_window_width, int new_window_height)
@@ -1254,52 +1242,47 @@ namespace SDOM
     bool Core::coreTests_()
     {
         UnitTests& ut = UnitTests::getInstance();
-        // Clear previous tests for this module
-        ut.clear_tests();
-
         const std::string objName = "Core System";
 
-        // Add all core system tests using the new pattern
-        ut.add_test(objName, "SDL_WasInit(SDL_INIT_VIDEO)", [](std::vector<std::string>& errors) 
+        // Only register tests once — e.g., on first frame
+        static bool registered = false;
+        if (!registered)
         {
-            if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
-                errors.push_back("SDL was NOT initialized!");
-                return false;
-            }
-            return true;
-        });
+            ut.add_test(objName, "SDL_WasInit(SDL_INIT_VIDEO)", [](std::vector<std::string>& errors)
+            {
+                if (SDL_WasInit(SDL_INIT_VIDEO) == 0)
+                    errors.push_back("SDL was NOT initialized!");
+                return true; // ✅ finished this frame
+            });
 
-        ut.add_test(objName, "SDL Texture Validity", [this](std::vector<std::string>& errors) 
-        {
-            if (texture_ == nullptr) {
-                errors.push_back("SDL Texture is null!");
-                return false;
-            }
-            return true;
-        });
+            ut.add_test(objName, "SDL Texture Validity", [this](std::vector<std::string>& errors)
+            {
+                if (!texture_)
+                    errors.push_back("SDL Texture is null!");
+                return true; // ✅ finished this frame
+            });
 
-        ut.add_test(objName, "SDL Renderer Validity", [this](std::vector<std::string>& errors) 
-        {
-            if (renderer_ == nullptr) {
-                errors.push_back("SDL Renderer is null!");
-                return false;
-            }
-            return true;
-        });
+            ut.add_test(objName, "SDL Renderer Validity", [this](std::vector<std::string>& errors)
+            {
+                if (!renderer_)
+                    errors.push_back("SDL Renderer is null!");
+                return true; // ✅ finished this frame
+            });
 
-        ut.add_test(objName, "SDL Window Validity", [this](std::vector<std::string>& errors) 
-        {
-            if (window_ == nullptr) {
-                errors.push_back("SDL Window is null!");
-                return false;
-            }
-            return true;
-        });
+            ut.add_test(objName, "SDL Window Validity", [this](std::vector<std::string>& errors)
+            {
+                if (!window_)
+                    errors.push_back("SDL Window is null!");
+                return true; // ✅ finished this frame
+            });
 
-        // // Run all tests and return the result
-        // return ut.run_all(objName);
-        return true;
-    } // END bool Core::coreTests_()
+            registered = true;
+        }
+
+        // ✅ Return false to signal that the overall test set is still active
+        // (so that UnitTests::update() continues running until all complete)
+        return false;
+    }
 
 
 

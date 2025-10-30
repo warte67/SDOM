@@ -223,9 +223,32 @@ namespace SDOM
 
     bool Button::onUnitTest(int frame)
     {
-        (void)frame; // unused
-        return true;
+        // Run base class tests first
+        if (!SUPER::onUnitTest(frame))
+            return false;
+
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
+
+        // Only register once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 Scaffold placeholder for future Button-specific tests
+            // Example: ut.add_test(objName, "Button Click State", [this](std::vector<std::string>& errors)
+            // {
+            //     if (!isEnabled())
+            //         errors.push_back("Button '" + getName() + "' should be enabled by default!");
+            //     return true;
+            // });
+
+            registered = true;
+        }
+
+        // ✅ Return false so this object stays active for now (standard pattern)
+        return false;
     } // END: Button::onUnitTest()
+
 
     void Button::setText(const std::string& newText) 
     {

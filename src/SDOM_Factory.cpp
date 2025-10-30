@@ -1589,16 +1589,50 @@ namespace SDOM
     }
 
 
-    // Provide a simple onUnitTest implementation to satisfy linker and
-    // maintain the IDataObject interface. This was accidentally removed
-    // during cleanup; keep it lightweight for now.
+    // -----------------------------------------------------------------------------
+    // Factory::onUnitTest()
+    // -----------------------------------------------------------------------------
+    // Purpose:
+    //   Provides a minimal onUnitTest() implementation to maintain the IDataObject
+    //   interface and ensure Factory participates correctly in the unit test
+    //   dispatch chain.
+    //
+    // Notes:
+    //   - This was reintroduced after a cleanup pass removed it accidentally.
+    //   - Currently, no specific Factory subsystem tests are required.
+    //   - The structure is left in place as a scaffold for future expansion.
+    //
+    // Usage:
+    //   The Factory may later register subsystem-level tests here, such as
+    //   object creation performance, memory tracking, or resource pool integrity.
+    // -----------------------------------------------------------------------------
     bool Factory::onUnitTest(int frame)
     {
-        (void)frame; // suppress unused parameter warning
-        
-        // No special unit test behavior required for Factory at the moment.
-        return true;
-    }
+        (void)frame; // Suppress unused parameter warning
+
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = "Factory";
+
+        // Only register once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 Placeholder for future Factory-level tests
+            // Example:
+            // ut.add_test(objName, "Factory Initialization", [this](std::vector<std::string>& errors)
+            // {
+            //     if (!isInitialized())
+            //         errors.push_back("Factory failed to initialize properly.");
+            //     return true;
+            // });
+
+            registered = true;
+        }
+
+        // ✅ No active tests yet; return false for consistent frame lifecycle
+        return false;
+    } // END: Factory::onUnitTest()
+
 
 
     // Calls onUnload()/onQuit() through destroyAssetObject() for all Truetype assets.

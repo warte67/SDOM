@@ -89,39 +89,63 @@ namespace SDOM
         SUPER::onRender();
 
     } // END: RadioButton::onRender()
+        
 
-    bool RadioButton::onUnitTest(int frame) 
+    bool RadioButton::onUnitTest(int frame)
     {
-        // run base checks first
-        if (!SUPER::onUnitTest(frame)) return false;
+        // Run base class tests first
+        if (!SUPER::onUnitTest(frame))
+            return false;
 
-        bool ok = true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
 
-        // state must be one of the defined enum values
-        ButtonState s = getState();
-        switch (s) {
-            case ButtonState::Inactive:
-            case ButtonState::Active:
-            case ButtonState::Mixed:
-                break;
-            default:
-                DEBUG_LOG("[UnitTest] RadioButton '" << getName() << "' has invalid state: " << static_cast<int>(s));
-                ok = false;
-                break;
+        // Register tests once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Validate state enum correctness
+            ut.add_test(objName, "RadioButton State Validity", [this](std::vector<std::string>& errors)
+            {
+                ButtonState s = getState();
+                switch (s)
+                {
+                    case ButtonState::Inactive:
+                    case ButtonState::Active:
+                    case ButtonState::Mixed:
+                        break;
+                    default:
+                        errors.push_back("RadioButton '" + getName() +
+                                        "' has invalid state: " + std::to_string(static_cast<int>(s)));
+                        break;
+                }
+                return true; // ✅ single-frame test
+            });
+
+            // 🔹 2. Validate icon sprite sheet (if configured)
+            ut.add_test(objName, "RadioButton Icon SpriteSheet Dimensions", [this](std::vector<std::string>& errors)
+            {
+                SpriteSheet* ss = getIconSpriteSheet();
+                if (ss)
+                {
+                    if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0)
+                    {
+                        errors.push_back("RadioButton '" + getName() +
+                                        "' has invalid icon sprite size: w=" +
+                                        std::to_string(ss->getSpriteWidth()) +
+                                        " h=" + std::to_string(ss->getSpriteHeight()));
+                    }
+                }
+                return true; // ✅ single-frame test
+            });
+
+            registered = true;
         }
 
-        // icon sprite sanity (if an icon resource is configured)
-        SpriteSheet* ss = getIconSpriteSheet();
-        if (ss) {
-            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
-                DEBUG_LOG("[UnitTest] RadioButton '" << getName() << "' has invalid icon sprite size: w="
-                        << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
-                ok = false;
-            }
-        }
-
-        return ok;
+        // ✅ Return false to stay consistent with the global unit test update loop
+        return false;
     } // END: RadioButton::onUnitTest()
+
 
 
     // --- Virtual State Accessors (From IButtonObject) --- //

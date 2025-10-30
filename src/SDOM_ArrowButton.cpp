@@ -90,37 +90,65 @@ namespace SDOM
         SUPER::onRender(); // Call (IconButton) base class render
     } // END: void ArrowButton::onRender() 
 
-    bool ArrowButton::onUnitTest(int frame) 
+
+    bool ArrowButton::onUnitTest(int frame)
     {
-        // run base checks first
-        if (!SUPER::onUnitTest(frame)) return false;
+        // Run base class tests first
+        if (!SUPER::onUnitTest(frame))
+            return false;
 
-        bool ok = true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
 
-        // Validate direction enum
-        switch (direction_) {
-            case ArrowDirection::Up:
-            case ArrowDirection::Down:
-            case ArrowDirection::Left:
-            case ArrowDirection::Right:
-                break;
-            default:
-                DEBUG_LOG("[UnitTest] ArrowButton '" << getName() << "' has invalid direction: " << static_cast<int>(direction_));
-                ok = false;
-                break;
+        // Only register once
+        static bool registered = false;
+        if (!registered)
+        {
+            // Validate direction enum
+            ut.add_test(objName, "ArrowDirection Validity", [this](std::vector<std::string>& errors)
+            {
+                switch (direction_)
+                {
+                    case ArrowDirection::Up:
+                    case ArrowDirection::Down:
+                    case ArrowDirection::Left:
+                    case ArrowDirection::Right:
+                        break;
+                    default:
+                        errors.push_back(
+                            "[ArrowButton] '" + getName() + 
+                            "' has invalid direction: " + 
+                            std::to_string(static_cast<int>(direction_))
+                        );
+                        break;
+                }
+                return true; // ✅ finished this frame
+            });
+
+            // Validate sprite sheet dimensions (if applicable)
+            ut.add_test(objName, "SpriteSheet Dimensions", [this](std::vector<std::string>& errors)
+            {
+                SpriteSheet* ss = getSpriteSheetPtr();
+                if (!ss)
+                    return true; // ✅ nothing to validate if no spritesheet
+
+                if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0)
+                {
+                    errors.push_back(
+                        "[ArrowButton] '" + getName() +
+                        "' has invalid sprite size: w=" +
+                        std::to_string(ss->getSpriteWidth()) +
+                        " h=" + std::to_string(ss->getSpriteHeight())
+                    );
+                }
+                return true; // ✅ finished this frame
+            });
+
+            registered = true;
         }
 
-        // If an icon spritesheet is configured, validate its dimensions
-        SpriteSheet* ss = getSpriteSheetPtr();
-        if (ss) {
-            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
-                DEBUG_LOG("[UnitTest] ArrowButton '" << getName() << "' has invalid sprite size: w="
-                          << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight());
-                ok = false;
-            }
-        }
-
-        return ok;
+        // ✅ Return false to indicate that this test group remains active until complete
+        return false;
     } // END: ArrowButton::onUnitTest()
 
 

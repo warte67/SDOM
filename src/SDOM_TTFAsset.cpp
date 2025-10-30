@@ -123,15 +123,32 @@ namespace SDOM
         isLoaded_ = false;
     } // END: TTFAsset::onUnload()
 
-    bool TTFAsset::onUnitTest(int frame) 
+        
+    bool TTFAsset::onUnitTest(int frame)
     {
         (void)frame; // suppress unused parameter warning
-        // std::cout << CLR::LT_ORANGE << "TTFAsset::" << CLR::YELLOW << "onUnitTest()" 
-        //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
-        // Unit test logic for TTFAsset
 
-        return true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
+
+        // Register once — scaffolding for future TTF tests
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Basic placeholder test
+            ut.add_test(objName, "TTFAsset Scaffold", [this](std::vector<std::string>& /*errors*/)
+            {
+                // No checks yet — placeholder for future font validation
+                return true; // ✅ finished immediately
+            });
+
+            registered = true;
+        }
+
+        // ✅ Always return false so this asset participates in the test cycle
+        return false;
     } // END: TTFAsset::onUnitTest()
+
 
 
 

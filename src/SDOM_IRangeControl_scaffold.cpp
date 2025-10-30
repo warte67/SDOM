@@ -47,8 +47,42 @@ namespace SDOM
 
     bool IRangeControl_scaffold::onUnitTest(int frame)
     {
-        return SUPER::onUnitTest(frame);
-    } // END: bool IRangeControl_scaffold::onUnitTest()
+        // Run base class unit tests first
+        if (!SUPER::onUnitTest(frame))
+            return false;
+
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
+
+        // Register test lambdas only once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Basic scaffold integrity check (placeholder)
+            ut.add_test(objName, "IRangeControl_scaffold Basic Integrity", [this](std::vector<std::string>& errors)
+            {
+                // For now, we don’t have dedicated range validation logic,
+                // but we can assert that the object is initialized correctly.
+                if (getMin() > getMax())
+                    errors.push_back("IRangeControl_scaffold '" + getName() + "' has min > max.");
+                return true; // ✅ single-frame test
+            });
+
+            // 🔹 2. Placeholder for derived control interaction checks
+            ut.add_test(objName, "IRangeControl_scaffold Derived Behavior", [this](std::vector<std::string>& errors)
+            {
+                // Future test placeholder for subclasses (e.g., sliders, scrollbars)
+                (void)errors; // suppress unused warning
+                return true; // ✅ placeholder test passes
+            });
+
+            registered = true;
+        }
+
+        // ✅ Return false so this unit test remains active for consistency
+        return false;
+    } // END: IRangeControl_scaffold::onUnitTest()
+
 
     // Cached-texture resilience on device changes
     // See header for the detailed contract. This scaffold provides a safe

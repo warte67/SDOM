@@ -204,38 +204,63 @@ namespace SDOM
         }
     } // END: void ProgressBar::onRender()
 
+    
     bool ProgressBar::onUnitTest(int frame)
     {
-        // run base checks first
-        if (!SUPER::onUnitTest(frame)) return false;
+        // Run base class tests first
+        if (!SUPER::onUnitTest(frame))
+            return false;
 
-        bool ok = true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
 
-        // range sanity: min < max
-        if (!(min_ < max_)) {
-            DEBUG_LOG("[UnitTest] ProgressBar '" << getName() << "' invalid range: min=" << min_ << " max=" << max_);
-            ok = false;
+        // Register tests only once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Range sanity check: min < max
+            ut.add_test(objName, "ProgressBar Range Sanity", [this](std::vector<std::string>& errors)
+            {
+                if (!(min_ < max_))
+                    errors.push_back("ProgressBar '" + getName() + "' invalid range: min=" +
+                                    std::to_string(min_) + " max=" + std::to_string(max_));
+                return true; // ✅ single-frame test
+            });
+
+            // 🔹 2. Value within range
+            ut.add_test(objName, "ProgressBar Value In Range", [this](std::vector<std::string>& errors)
+            {
+                if (value_ < min_ || value_ > max_)
+                    errors.push_back("ProgressBar '" + getName() + "' value out of range: value=" +
+                                    std::to_string(value_) + " (min=" +
+                                    std::to_string(min_) + " max=" + std::to_string(max_) + ")");
+                return true; // ✅ single-frame test
+            });
+
+            // 🔹 3. SpriteSheet dimensions valid (if assigned)
+            ut.add_test(objName, "ProgressBar SpriteSheet Dimensions", [this](std::vector<std::string>& errors)
+            {
+                SpriteSheet* ss = getSpriteSheetPtr();
+                if (ss)
+                {
+                    if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0)
+                    {
+                        errors.push_back("ProgressBar '" + getName() +
+                                        "' has invalid sprite size: w=" +
+                                        std::to_string(ss->getSpriteWidth()) +
+                                        " h=" + std::to_string(ss->getSpriteHeight()));
+                    }
+                }
+                return true; // ✅ single-frame test
+            });
+
+            registered = true;
         }
 
-        // value must be within [min, max]
-        if (value_ < min_ || value_ > max_) {
-            DEBUG_LOG("[UnitTest] ProgressBar '" << getName() << "' value out of range: value=" << value_
-                      << " (min=" << min_ << " max=" << max_ << ")");
-            ok = false;
-        }
+        // ✅ Return false so the object remains active in multi-frame systems
+        return false;
+    } // END: ProgressBar::onUnitTest()
 
-        // if an icon spritesheet is assigned, its sprite dimensions should be positive
-        SpriteSheet* ss = getSpriteSheetPtr();
-        if (ss) {
-            if (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
-                DEBUG_LOG("[UnitTest] ProgressBar '" << getName() << "' has invalid sprite size: w="
-                          << ss->getSpriteWidth() << " h=" << ss->getSpriteHeight() << ")");
-                ok = false;
-            }
-        }
-
-        return ok;
-    } // END: bool ProgressBar::onUnitTest()
 
 
 

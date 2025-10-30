@@ -1,5 +1,31 @@
 #!/usr/bin/env bash
+# =============================================================================
+# SDOM Documentation and Version Regeneration Script
+# -----------------------------------------------------------------------------
+# Description:
+#   Automates documentation generation and version metadata refresh for SDOM.
+#   This script runs Doxygen to rebuild the HTML documentation, then regenerates
+#   the version header by invoking `scripts/gen_version.sh`.
+#
+# Usage:
+#   ./rebuild_docs.sh
+#
+# Behavior:
+#   - Executes from the repository root (automatically adjusts working directory)
+#   - Generates Doxygen documentation using `docs/Doxyfile`
+#   - Refreshes build/version information via `scripts/gen_version.sh`
+#
+# Notes:
+#   - Intended for developer use when preparing commits or publishing updates
+#   - Ensures documentation and version headers remain in sync
+#
+# Author: Jay Faries (warte67)
+# =============================================================================
 
+# Regenerate the documentation
 cd "$(dirname "$0")/../.."
 echo "Running Doxygen..."
 doxygen docs/Doxyfile
+
+# Regenerate the version header
+scripts/gen_version.sh

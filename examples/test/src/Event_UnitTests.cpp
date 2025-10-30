@@ -565,6 +565,17 @@ namespace SDOM
     } // END: Event_test9()
 
 
+    // Test 10: Test the multi-frame event queue
+    bool Event_test10(std::vector<std::string>& errors)
+    {
+        UnitTests& ut = UnitTests::getInstance();
+
+        int frame_count = ut.get_frame_counter();
+        ut.push_error("Event_test10: Test the multi-frame event queue. Frame count: " + std::to_string(frame_count));
+        return true;
+    } // END: Event_test10()
+
+
 
     // --- Lua Integration Tests --- //
 
@@ -592,6 +603,7 @@ namespace SDOM
         ut.add_test(objName, "Application Lifecycle event types round-trip", Event_test7);
         ut.add_test(objName, "Behavioral Mouse Event Verification", Event_test8);
         ut.add_test(objName, "Keyboard Event Verification", Event_test9);
+        ut.add_test(objName, "Test the multi-frame event queue", Event_test10);
 
         ut.setLuaFilename("src/Event_UnitTests.lua"); // Lua test script path
         ut.add_test(objName, "Lua: " + ut.getLuaFilename(), Event_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)

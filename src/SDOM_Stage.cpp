@@ -77,25 +77,48 @@ namespace SDOM
 
     bool Stage::onUnitTest(int frame)
     {
-        // run base checks first
-        if (!SUPER::onUnitTest(frame)) return false;
+        // Run base checks first
+        if (!SUPER::onUnitTest(frame))
+            return false;
 
-        bool ok = true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
 
-        // Stage should have a positive size
-        if (getWidth() <= 0 || getHeight() <= 0) {
-            DEBUG_LOG("[UnitTest] Stage '" << getName() << "' has invalid size: w=" << getWidth() << " h=" << getHeight());
-            ok = false;
+        // Register tests only once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Validate stage dimensions
+            ut.add_test(objName, "Stage Size Validation", [this](std::vector<std::string>& errors)
+            {
+                if (getWidth() <= 0 || getHeight() <= 0)
+                {
+                    errors.push_back("Stage '" + getName() +
+                                    "' has invalid size: w=" +
+                                    std::to_string(getWidth()) +
+                                    " h=" + std::to_string(getHeight()));
+                }
+                return true; // ✅ single-frame
+            });
+
+            // 🔹 2. Validate clickability
+            ut.add_test(objName, "Stage Clickability", [this](std::vector<std::string>& errors)
+            {
+                if (!isClickable())
+                {
+                    errors.push_back("Stage '" + getName() +
+                                    "' should be clickable by default");
+                }
+                return true;
+            });
+
+            registered = true;
         }
 
-        // Stage should be clickable by default (constructor sets this)
-        if (!isClickable()) {
-            DEBUG_LOG("[UnitTest] Stage '" << getName() << "' should be clickable by default");
-            ok = false;
-        }
+        // ✅ Return false so Stage remains active for the global test cycle
+        return false;
+    } // END: Stage::onUnitTest()
 
-        return ok;
-    }
 
     void Stage::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {

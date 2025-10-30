@@ -68,22 +68,40 @@ namespace SDOM
         (void)event;    // suppress unused parameter warning
 
     } // END: void Frame::onEvent(const Event& event)
+    
 
-    bool Frame::onUnitTest(int frame_itr)
+    bool Frame::onUnitTest(int frame)
     {
-        // run base checks first
-        if (!SUPER::onUnitTest(frame_itr)) return false;
+        // Run base class tests first
+        if (!SUPER::onUnitTest(frame))
+            return false;
 
-        bool ok = true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
 
-        // Frame should have a positive size
-        if (getWidth() <= 0 || getHeight() <= 0) {
-            DEBUG_LOG("[UnitTest] Frame '" << getName() << "' has invalid size: w=" << getWidth() << " h=" << getHeight());
-            ok = false;
+        // Only register once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 Frame should have a positive width and height
+            ut.add_test(objName, "Frame Dimensions Validity", [this](std::vector<std::string>& errors)
+            {
+                if (getWidth() <= 0 || getHeight() <= 0)
+                {
+                    errors.push_back(
+                        "Frame '" + getName() + "' has invalid size: w=" +
+                        std::to_string(getWidth()) + " h=" + std::to_string(getHeight()));
+                }
+                return true; // ✅ test completes in a single frame
+            });
+
+            registered = true;
         }
 
-        return ok;
-    } // END Frame::onUnitTest()
+        // ✅ Return false to remain active for multi-frame consistency
+        return false;
+    } // END: Frame::onUnitTest()
+
 
 
     // --- Lua Registration --- //

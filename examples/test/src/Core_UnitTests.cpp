@@ -181,37 +181,58 @@
 ****************/
 namespace SDOM
 {
-    // scaffolding for the Core UnitTests
-    bool Core_scaffolding(std::vector<std::string>& errors)   
+    // ============================================================================
+    //  Test 0: Scaffolding Template
+    // ----------------------------------------------------------------------------
+    //  This template serves as a reference pattern for writing SDOM unit tests.
+    //
+    //  Status Legend:
+    //   ✅ Test Verified     - Stable, validated, and passing
+    //   🔄 In Progress       - Currently being implemented or debugged
+    //   ⚠️  Failing          - Currently failing; requires investigation
+    //   🚫 Remove            - Deprecated or replaced
+    //   ❌ Invalid           - No longer applicable or test case obsolete
+    //   ☐ Planned            - Placeholder for future implementation
+    //
+    //  Usage Notes:
+    //   • To signal a test failure, push a descriptive message to `errors`.
+    //   • Each test should return `true` once it has finished running.
+    //   • Multi-frame tests may return `false` until all assertions pass.
+    //   • Keep tests self-contained and deterministic.
+    //
+    // ============================================================================
+    bool Core_test0(std::vector<std::string>& errors)
     {
-        bool ok = true;
-        // Example test logic
-        // if (some_condition_fails) {
-        //     errors.push_back("Description of the failure.");
-        //     ok = false;
-        // }
-        return ok;
-    } // END: bool Core_test0(std::vector<std::string>& errors)
+        // Example: To report an error, use this pattern:
+        // errors.push_back("Description of the failure.");
+        // ok = false;
+
+        // TODO: Add test logic here
+        // e.g., if (!condition) { errors.push_back("Reason for failure."); ok = false; }
+
+        return true; // ✅ finished this frame
+        // return false; // 🔄 re-entrant test
+
+    } // END: Core_scaffolding(std::vector<std::string>& errors)
 
 
-    // Window Dimensions
-    bool Core_test1(std::vector<std::string>& errors)   // scaffolding for the Core UnitTests
+
+    // --- Core_test1: Window Dimensions ---
+    bool Core_test1(std::vector<std::string>& errors)
     {
-        bool ok = true;
+        auto& core = getCore();
 
-        Core& core = getCore();
-        int actualW = 0, actualH = 0;
-        SDL_GetWindowSize(core.getWindow(), &actualW, &actualH);
-        if (actualW <= 0) {
-            errors.push_back("Window width is not positive.");
-            ok = false;
-        }   
-        if (actualH <= 0) {
-            errors.push_back("Window height is not positive.");
-            ok = false;
+        if (!core.getWindow()) {
+            errors.push_back("Core window handle is null!");
+        } else {
+            int w = core.getWindowWidth();
+            int h = core.getWindowHeight();
+            if (w <= 0 || h <= 0)
+                errors.push_back("Invalid window dimensions: " + std::to_string(w) + "x" + std::to_string(h));
         }
-        return ok;
-    } // END: bool Core_test1(std::vector<std::string>& errors)
+
+        return true; // ✅ finished this frame
+    }
 
 
     // Pixel Dimensions
@@ -1012,33 +1033,37 @@ namespace SDOM
     {
         const std::string objName = "Core";
         UnitTests& ut = UnitTests::getInstance();
-        // ut.clear_tests();
 
-        ut.add_test(objName, "Scaffolding", Core_scaffolding);
-        ut.add_test(objName, "Window Dimensions", Core_test1);
-        ut.add_test(objName, "Pixel Dimensions", Core_test2);
-        ut.add_test(objName, "Aspect Ratio Preservation", Core_test3);
-        ut.add_test(objName, "Texture Resize Allowance", Core_test4);
-        ut.add_test(objName, "Pixel Format", Core_test5);
-        ut.add_test(objName, "Renderer Logical Presentation", Core_test6);
-        ut.add_test(objName, "Window Flags", Core_test7);
-        ut.add_test(objName, "Core Background Color", Core_test8);
-        ut.add_test(objName, "Factory Existence", Core_test9);
-        ut.add_test(objName, "Callback/Hook Registration", Core_test10);
-        ut.add_test(objName, "Stage/Root Node Management", Core_test11);
-        ut.add_test(objName, "SDL Resource Accessors", Core_test12);
-        ut.add_test(objName, "Configuration Getters/Setters", Core_test13);
-        ut.add_test(objName, "Factory and Event Manager Access", Core_test14);
-        ut.add_test(objName, "Focus & Hover Management", Core_test15);
-        ut.add_test(objName, "DisplayObject Creation", Core_test16);
+        static bool registered = false;
+        if (!registered)
+        {
+            ut.add_test(objName, "Scaffolding", Core_test0);
+            ut.add_test(objName, "Window Dimensions", Core_test1);
+            ut.add_test(objName, "Pixel Dimensions", Core_test2);
+            ut.add_test(objName, "Aspect Ratio Preservation", Core_test3);
+            ut.add_test(objName, "Texture Resize Allowance", Core_test4);
+            ut.add_test(objName, "Pixel Format", Core_test5);
+            ut.add_test(objName, "Renderer Logical Presentation", Core_test6);
+            ut.add_test(objName, "Window Flags", Core_test7);
+            ut.add_test(objName, "Core Background Color", Core_test8);
+            ut.add_test(objName, "Factory Existence", Core_test9);
+            ut.add_test(objName, "Callback/Hook Registration", Core_test10);
+            ut.add_test(objName, "Stage/Root Node Management", Core_test11);
+            ut.add_test(objName, "SDL Resource Accessors", Core_test12);
+            ut.add_test(objName, "Configuration Getters/Setters", Core_test13);
+            ut.add_test(objName, "Factory and Event Manager Access", Core_test14);
+            ut.add_test(objName, "Focus & Hover Management", Core_test15);
+            ut.add_test(objName, "DisplayObject Creation", Core_test16);
 
-        ut.setLuaFilename("src/Core_UnitTests.lua"); // Lua test script path
-        ut.add_test(objName, "Lua: '" + ut.getLuaFilename() + "'", Core_LUA_Tests);
+            ut.setLuaFilename("src/Core_UnitTests.lua");
+            ut.add_test(objName, "Lua: '" + ut.getLuaFilename() + "'", Core_LUA_Tests);
 
-        // return ut.run_all(objName);
-        return true;
+            registered = true;
+        }
+
+        // Returning false keeps this test suite active until all tests complete
+        return false;
     }
-
 
 
 } // namespace SDOM

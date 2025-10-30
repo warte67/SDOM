@@ -23,25 +23,21 @@ if(EXISTS "${GEN_VERSION_SCRIPT}")
         COMMAND ${CMAKE_COMMAND} -E touch "${VERSION_TRIGGER}"
         COMMENT "⏱ Updating version trigger"
     )
-
-    # --- Generate version header using Bash explicitly ---
-    get_filename_component(SDOM_ROOT "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
-    set(GEN_VERSION_SCRIPT "${SDOM_ROOT}/scripts/gen_version.sh")
-
-    add_custom_command(
-        OUTPUT "${VERSION_HEADER}"
-        # COMMAND ${BASH_EXECUTABLE} -c "mkdir -p ${CMAKE_BINARY_DIR} && echo Running ${GEN_VERSION_SCRIPT} && ${GEN_VERSION_SCRIPT} > ${CMAKE_BINARY_DIR}/_version_log.txt 2>&1 || echo FAILED: $? "
-        COMMAND ${BASH_EXECUTABLE} "${GEN_VERSION_SCRIPT}" 2>&1 | tee "${CMAKE_BINARY_DIR}/_version_log.txt"
-        COMMAND ${CMAKE_COMMAND} -E touch "${VERSION_HEADER}"
-        WORKING_DIRECTORY "${SDOM_ROOT}"
-        DEPENDS "${GEN_VERSION_SCRIPT}" "${VERSION_TEMPLATE}" "${VERSION_TRIGGER}"
-        COMMENT "🔄 Regenerating SDOM_Version.hpp (script/template/source changed)"
-        VERBATIM
-    )
-
-    add_custom_target(generate_version DEPENDS "${VERSION_HEADER}")
-
-    message(STATUS "✅ SDOM version will regenerate when source files change")
+    # # --- Generate version header using Bash explicitly ---
+    # get_filename_component(SDOM_ROOT "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
+    # set(GEN_VERSION_SCRIPT "${SDOM_ROOT}/scripts/gen_version.sh")
+    # add_custom_command(
+    #     OUTPUT "${VERSION_HEADER}"
+    #     # COMMAND ${BASH_EXECUTABLE} -c "mkdir -p ${CMAKE_BINARY_DIR} && echo Running ${GEN_VERSION_SCRIPT} && ${GEN_VERSION_SCRIPT} > ${CMAKE_BINARY_DIR}/_version_log.txt 2>&1 || echo FAILED: $? "
+    #     COMMAND ${BASH_EXECUTABLE} "${GEN_VERSION_SCRIPT}" 2>&1 | tee "${CMAKE_BINARY_DIR}/_version_log.txt"
+    #     COMMAND ${CMAKE_COMMAND} -E touch "${VERSION_HEADER}"
+    #     WORKING_DIRECTORY "${SDOM_ROOT}"
+    #     DEPENDS "${GEN_VERSION_SCRIPT}" "${VERSION_TEMPLATE}" "${VERSION_TRIGGER}"
+    #     COMMENT "🔄 Regenerating SDOM_Version.hpp (script/template/source changed)"
+    #     VERBATIM
+    # )
+    # add_custom_target(generate_version DEPENDS "${VERSION_HEADER}")
+    # message(STATUS "✅ SDOM version will regenerate when source files change")
 
 else()
     message(WARNING "⚠️ Version generator script not found: ${GEN_VERSION_SCRIPT}")

@@ -299,7 +299,12 @@ namespace SDOM
         setValue(originalValue);
         setOrientation(originalOrientation);
         // Return the result of all tests
-        return allTests;
+        if (!allTests)
+        {
+            UnitTests& ut = UnitTests::getInstance();
+            ut.push_error("IRangeControl '" + getName() + "' failed unit tests.");
+        }
+        return true;
     } // END: bool IRangeControl::onUnitTest()
 
 

@@ -255,36 +255,64 @@ namespace SDOM
         }
     } // END: void Group::onEvent(const Event& event)
 
+        
     bool Group::onUnitTest(int frame)
     {
-        // run base checks first
-        if (!SUPER::onUnitTest(frame)) return false;
-
-        // Basic test: ensure labelObject_ is valid and has correct text
-        if (!labelObject_.isValid())
-        {
-            DEBUG_LOG("[UnitTest] Group '" << getName() << "' labelObject_ is not valid.");
+        // Run base class tests first
+        if (!SUPER::onUnitTest(frame))
             return false;
+
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
+
+        // Only register once
+        static bool registered = false;
+        if (!registered)
+        {
+            // 🔹 1. Validate that labelObject_ exists
+            ut.add_test(objName, "LabelObject Validity", [this](std::vector<std::string>& errors)
+            {
+                if (!labelObject_.isValid())
+                    errors.push_back("Group '" + getName() + "' labelObject_ is not valid.");
+                return true; // ✅ single-frame test
+            });
+
+            // 🔹 2. Validate that labelObject_ is actually a Label
+            ut.add_test(objName, "LabelObject Type Check", [this](std::vector<std::string>& errors)
+            {
+                if (labelObject_.isValid())
+                {
+                    auto lbl = labelObject_.as<Label>();
+                    if (!lbl)
+                        errors.push_back("Group '" + getName() + "' labelObject_ is not a Label.");
+                }
+                return true; // ✅ single-frame test
+            });
+
+            // 🔹 3. Validate that label text matches Group’s text_
+            ut.add_test(objName, "Label Text Consistency", [this](std::vector<std::string>& errors)
+            {
+                if (labelObject_.isValid())
+                {
+                    auto lbl = labelObject_.as<Label>();
+                    if (lbl && lbl->getText() != text_)
+                    {
+                        errors.push_back(
+                            "Group '" + getName() + "' label text mismatch. Expected: '" + text_ +
+                            "' Got: '" + lbl->getText() + "'");
+                    }
+                }
+                return true; // ✅ single-frame test
+            });
+
+            registered = true;
         }
 
-        auto lbl = labelObject_.as<Label>();
-        if (!lbl)
-        {
-            DEBUG_LOG("[UnitTest] Group '" << getName() << "' labelObject_ is not a Label.");
-            return false;
-        }
+        // ✅ Return false so it remains active for frame synchronization
+        return false;
+    } // END: Group::onUnitTest()
 
-        if (lbl->getText() != text_)
-        {
-            DEBUG_LOG("[UnitTest] Group '" << getName() << "' label text mismatch. Expected: '"
-                    << text_ << "' Got: '" << lbl->getText() << "'");
-            return false;
-        }
 
-        // Additional cheap deterministic checks could be added here
-
-        return true; // all tests passed
-    } // END: bool Group::onUnitTest()
 
 
 

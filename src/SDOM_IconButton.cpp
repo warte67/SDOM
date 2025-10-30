@@ -308,33 +308,65 @@ namespace SDOM
         }
 
     } // END: void IconButton::onEvent(const Event& event)
+        
 
     bool IconButton::onUnitTest(int frame)
-    {   
-        // Basic unit test implementation
-        if (!SUPER::onUnitTest(frame)) return false;
+    {
+        // Run base class tests first
+        if (!SUPER::onUnitTest(frame))
+            return false;
 
-        bool ok = true;
+        UnitTests& ut = UnitTests::getInstance();
+        const std::string objName = getName();
 
-        // Check if iconSpriteSheet_ is valid
-        if (!iconSpriteSheet_ || !iconSpriteSheet_.isValid())
+        // Register only once
+        static bool registered = false;
+        if (!registered)
         {
-            DEBUG_LOG("[UnitTest] IconButton '" << getName() << "' has invalid icon sprite sheet.");
-            ok = false;
-        }
-        else
-        {
-            // Validate sprite dimensions
-            SpriteSheet* ss = iconSpriteSheet_.as<SpriteSheet>();
-            if (!ss || ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0) {
-                DEBUG_LOG("[UnitTest] IconButton '" << getName() << "' has invalid sprite size: w="
-                        << (ss ? ss->getSpriteWidth() : 0) << " h=" << (ss ? ss->getSpriteHeight() : 0));
-                ok = false;
-            }
+            // 🔹 1. Validate that iconSpriteSheet_ exists and is valid
+            ut.add_test(objName, "Icon SpriteSheet Validity", [this](std::vector<std::string>& errors)
+            {
+                if (!iconSpriteSheet_ || !iconSpriteSheet_.isValid())
+                    errors.push_back("IconButton '" + getName() + "' has invalid icon sprite sheet.");
+                return true; // ✅ single-frame test
+            });
+
+            // 🔹 2. Validate that iconSpriteSheet_ is actually a SpriteSheet
+            ut.add_test(objName, "Icon SpriteSheet Type Check", [this](std::vector<std::string>& errors)
+            {
+                if (iconSpriteSheet_ && iconSpriteSheet_.isValid())
+                {
+                    auto ss = iconSpriteSheet_.as<SpriteSheet>();
+                    if (!ss)
+                        errors.push_back("IconButton '" + getName() + "' iconSpriteSheet_ is not a SpriteSheet.");
+                }
+                return true; // ✅ single-frame test
+            });
+
+            // 🔹 3. Validate that the sprite sheet dimensions are positive
+            ut.add_test(objName, "Icon Sprite Dimensions", [this](std::vector<std::string>& errors)
+            {
+                if (iconSpriteSheet_ && iconSpriteSheet_.isValid())
+                {
+                    auto ss = iconSpriteSheet_.as<SpriteSheet>();
+                    if (ss && (ss->getSpriteWidth() <= 0 || ss->getSpriteHeight() <= 0))
+                    {
+                        errors.push_back(
+                            "IconButton '" + getName() + "' has invalid sprite size: w=" +
+                            std::to_string(ss->getSpriteWidth()) + " h=" +
+                            std::to_string(ss->getSpriteHeight()));
+                    }
+                }
+                return true; // ✅ single-frame test
+            });
+
+            registered = true;
         }
 
-        return ok;
-    } // END IconButton::onUnitTest()
+        // ✅ Return false to remain active for consistency with other multi-frame capable objects
+        return false;
+    } // END: IconButton::onUnitTest()
+
 
 
 

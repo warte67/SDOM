@@ -63,32 +63,47 @@ namespace SDOM
                 << CLR::LT_BLUE << test.name << CLR::RESET
                 << CLR::fg_rgb(224, 224, 64) + " [NOT IMPLEMENTED]" << CLR::RESET << std::endl;
             std::cout << oss.str();
-            return true; // skip as "passed" so it doesn't block progress
+            return true; // Skip so it doesn't block progress
         }
 
         std::vector<std::string> errors;
-        bool passed = false;
-        try {
-            passed = test.func(errors);
+        bool finished = false; // means “this test is done (pass or fail)”
+        bool passed   = false; // final outcome when finished == true
+
+        try
+        {
+            // 🔹 Test function now returns “done?” instead of “passed?”
+            finished = test.func(errors);
         }
-        catch (const std::exception& e) {
+        catch (const std::exception& e)
+        {
             errors.push_back(e.what());
+            finished = true;
         }
+
+        // 🔹 If not finished yet, don’t print or finalize
+        if (!finished)
+            return false; // re-enter next frame
+
+        // 🔹 Determine pass/fail based on error list
+        passed = errors.empty();
 
         oss << CLR::indent() << CLR::NORMAL << "[" << objName << "] "
             << CLR::LT_BLUE << test.name << CLR::RESET
             << (passed ? CLR::GREEN + " [PASSED]" : CLR::fg_rgb(255, 0, 0) + " [FAILED]")
             << CLR::RESET << std::endl;
 
-        if (!passed && !errors.empty()) {
+        if (!passed && !errors.empty())
+        {
             for (const auto& line : errors)
                 oss << CLR::indent() << CLR::fg_rgb(192, 64, 64)
                     << "    Error: " << line << std::endl;
         }
 
         std::cout << oss.str();
-        return passed;
+        return true; // means “this test is complete” (regardless of pass/fail)
     }
+
 
 
     void UnitTests::update()
@@ -105,21 +120,37 @@ namespace SDOM
                 << frame_str
                 << CLR::RESET;
 
-        // 🔹 mark it as running
+        // 🔹 Mark as running
         test.running = true;
 
-        // 🔹 execute and record results
-        test.passed = run_single_test(test, test.obj_name);
+        // 🔹 Execute one frame of this test
+        bool finished = run_single_test(test, test.obj_name);
+
+        // 🔹 If not finished, let it continue next frame
+        if (!finished)
+            return;
+
+        // 🔹 Test finished — record its state
         test.has_run = true;
         test.running = false;
         test.frame_count = _frame_counter;
 
-        // 🔹 accumulate overall pass state
+        // // 🔹 Determine pass/fail (from previous run_single_test pass/fail detection)
+        // static int error_count = 0;
+        // test.passed = (error_count == static_cast<int>(test.errors.size()));
+        // all_passed_ &= test.passed;
+        // error_count = static_cast<int>(test.errors.size());
+
+        // 🔹 Determine pass/fail (compare with last frame’s errors)
+        test.passed = (test.last_error_count == test.errors.size());
         all_passed_ &= test.passed;
+
+        // 🔹 Update snapshot for next frame
+        test.last_error_count = test.errors.size();        
 
         ++_current_index;
 
-        // 🔹 if this was the last test, summarize results
+        // 🔹 If this was the last test, print summary
         if (_current_index >= static_cast<int>(_tests.size()))
         {
             int passed_count = 0;
@@ -152,8 +183,8 @@ namespace SDOM
             }
 
             std::cout << CLR::fg_rgb(255, 64, 64)
-                    << "Summary: " << passed_count << "/" << total_count 
-                    << " tests passed, " << failed_count << " failed, " 
+                    << "Summary: " << passed_count << "/" << total_count
+                    << " tests passed, " << failed_count << " failed, "
                     << not_implemented_count << " not implemented."
                     << CLR::RESET << std::endl;
 
