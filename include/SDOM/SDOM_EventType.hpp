@@ -49,28 +49,34 @@ namespace SDOM
     {
     public:
         // Predefined event types (* denotes completed)
-        static EventType None;              // * for no event
-        static EventType SDL_Event;         // * for raw SDL events
-        static EventType Quit;              // * for application quit events
-        static EventType EnterFrame;        // * called every frame (consider dispatching for EventListeners only)
+        static EventType None;              // for no event
+        static EventType SDL_Event;         // for raw SDL events
+        static EventType Quit;              // for application quit events
+        static EventType EnterFrame;        // called every frame (consider dispatching for EventListeners only)
+
         // Mouse event types    
-        static EventType MouseButtonUp;     // * for mouse button up events
-        static EventType MouseButtonDown;   // * for mouse button down events
-        static EventType MouseWheel;        // * for mouse wheel
-        static EventType MouseMove;         // * for mouse movement
-        static EventType MouseClick;        // * for single mouse clicks
-        static EventType MouseDoubleClick;  // * for double mouse clicks
-        static EventType MouseEnter;        // * for mouse entering an object
-        static EventType MouseLeave;        // * for mouse leaving an object
-        // Stage event types    
-        static EventType StageClosed;       // * for when a stage is closed
+        static EventType MouseButtonUp;     // for mouse button up events
+        static EventType MouseButtonDown;   // for mouse button down events
+        static EventType MouseWheel;        // for mouse wheel
+        static EventType MouseMove;         // for mouse movement
+        static EventType MouseClick;        // for single mouse clicks
+        static EventType MouseDoubleClick;  // for double mouse clicks
+        static EventType MouseEnter;        // for mouse entering an object
+        static EventType MouseLeave;        // for mouse leaving an object
+
         // Keyboard event types 
         static EventType KeyDown;           // for when a key is pressed down (includes IME or Shift Modified ascii)
         static EventType KeyUp;             // for when a key is released
-        // Timer event types    
-        static EventType Timer;             // generic timer event
-        static EventType Tick;              // periodic update
-        static EventType Timeout;           // one-shot timer expiration event
+        static EventType TextInput;         // * EditBox: Not Yet Implementedfor when text is input
+
+        // Timer event types (Timer Not Yet Implemented)
+        static EventType TimerStart;         // * Fired when timer starts or resumes
+        static EventType TimerStop;          // * Fired when timer is manually stopped
+        static EventType TimerPause;         // * Fired when timer is paused
+        static EventType TimerTick;          // * Fired each interval
+        static EventType TimerCycleComplete; // * Fired when a repeat cycle finishes
+        static EventType TimerComplete;      // * Fired when all repeats are done
+
         // Window event types   
         static EventType FocusGained;       // * for widgets, windows, or controls
         static EventType FocusLost;         // * for widgets, windows, or controls
@@ -80,6 +86,7 @@ namespace SDOM
         static EventType Hide;              // * for visibility changes
         static EventType EnterFullscreen;   // * for entering fullscreen mode
         static EventType LeaveFullscreen;   // * for leaving fullscreen mode
+
         // General UI event types
         static EventType ValueChanged;      // for sliders, text fields, etc.
         static EventType StateChanged;      // for checkboxes, radio buttons, etc.
@@ -90,21 +97,23 @@ namespace SDOM
         static EventType Inactive;          // REMOVE INACTIVE
         static EventType Visible;           // when a IDisplayObject becomes visible
         static EventType Hidden;            // when a IDisplayObject becomes hidden        
+
         // Drag & Drop event types  
         static EventType Drag;              // * when a drag operation starts
         static EventType Dragging;          // * when a drag operation is ongoing
         static EventType Drop;              // * when an item is dropped
+
         // Clipboard event types    
         static EventType ClipboardCopy;     // when content is copied to the clipboard
         static EventType ClipboardPaste;    // when content is pasted from the clipboard
-
-        // Main DisplayHandle event types (NEW EventTypes to be added)
         
         // Application lifecycle event types
         static EventType Added;             // when a DisplayHandle is added to the display list
         static EventType Removed;           // when a DisplayHandle is removed from the display list
         static EventType AddedToStage;      // when a DisplayHandle is added to the stage
         static EventType RemovedFromStage;  // when a DisplayHandle is removed from the stage
+        static EventType StageClosed;       // * for when a stage is closed
+
         // Event Listener Only Events
         static EventType OnInit;            // OnInit is Dispatched to EventListeners
         static EventType OnQuit;            // OnQuit is Dispatched to EventListeners

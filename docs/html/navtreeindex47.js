@@ -1,5 +1,13 @@
 var NAVTREEINDEX47 =
 {
+"structSDOM_1_1Texture_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2":[3,0,0,37,0,3],
+"structSDOM_1_1Texture_1_1InitStruct.html#a8c427dfbbfee0c61be93bd450bfa089f":[2,0,0,37,0,2],
+"structSDOM_1_1Texture_1_1InitStruct.html#a8c427dfbbfee0c61be93bd450bfa089f":[3,0,0,37,0,2],
+"structSDOM_1_1Texture_1_1InitStruct.html#a943787c07c8eae0928dcc2cfacbde746":[2,0,0,37,0,4],
+"structSDOM_1_1Texture_1_1InitStruct.html#a943787c07c8eae0928dcc2cfacbde746":[3,0,0,37,0,4],
+"structSDOM_1_1Texture_1_1InitStruct.html#acb48179c035bc7ae27d4e445fd793873":[2,0,0,37,0,1],
+"structSDOM_1_1Texture_1_1InitStruct.html#acb48179c035bc7ae27d4e445fd793873":[3,0,0,37,0,1],
+"structSDOM_1_1TristateButton_1_1InitStruct.html":[2,0,0,38,0],
 "structSDOM_1_1TristateButton_1_1InitStruct.html":[3,0,0,38,0],
 "structSDOM_1_1TristateButton_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69":[2,0,0,38,0,15],
 "structSDOM_1_1TristateButton_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69":[3,0,0,38,0,15],

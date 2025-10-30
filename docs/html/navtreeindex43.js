@@ -1,5 +1,13 @@
 var NAVTREEINDEX43 =
 {
+"structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e":[3,0,0,23,1],
+"structSDOM_1_1FontStyle.html#a9d0ce99f4878f9fd2cc61a13cfbcfdae":[2,0,0,23,25],
+"structSDOM_1_1FontStyle.html#a9d0ce99f4878f9fd2cc61a13cfbcfdae":[3,0,0,23,25],
+"structSDOM_1_1FontStyle.html#aa65af16390c86efbe3e4f1c154fd6cab":[2,0,0,23,16],
+"structSDOM_1_1FontStyle.html#aa65af16390c86efbe3e4f1c154fd6cab":[3,0,0,23,16],
+"structSDOM_1_1FontStyle.html#abaa1e4c8b02dc4471f0d6b2cedc8b37f":[2,0,0,23,0],
+"structSDOM_1_1FontStyle.html#abaa1e4c8b02dc4471f0d6b2cedc8b37f":[3,0,0,23,0],
+"structSDOM_1_1FontStyle.html#adb4e7175913c0849b78a5b746ede2fec":[2,0,0,23,19],
 "structSDOM_1_1FontStyle.html#adb4e7175913c0849b78a5b746ede2fec":[3,0,0,23,19],
 "structSDOM_1_1FontStyle.html#adf2e70a9a5cfdf6b1915e094ca0773ad":[2,0,0,23,10],
 "structSDOM_1_1FontStyle.html#adf2e70a9a5cfdf6b1915e094ca0773ad":[3,0,0,23,10],
@@ -241,13 +249,5 @@ var NAVTREEINDEX43 =
 "structSDOM_1_1IPanelObject_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69":[3,0,0,25,0,13],
 "structSDOM_1_1IPanelObject_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a":[2,0,0,25,0,14],
 "structSDOM_1_1IPanelObject_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a":[3,0,0,25,0,14],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08":[2,0,0,25,0,15],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08":[3,0,0,25,0,15],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a0c2780810724da93d510c0650dca446b":[2,0,0,25,0,11],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a0c2780810724da93d510c0650dca446b":[3,0,0,25,0,11],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a0df9d711df2ac9ede2bf91e826db29cc":[2,0,0,25,0,9],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a0df9d711df2ac9ede2bf91e826db29cc":[3,0,0,25,0,9],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a0faa47d35c52461da9e43a87f5384deb":[2,0,0,25,0,28],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a0faa47d35c52461da9e43a87f5384deb":[3,0,0,25,0,28],
-"structSDOM_1_1IPanelObject_1_1InitStruct.html#a17adc32c048d68ae0d26a9778f7f4827":[2,0,0,25,0,2]
+"structSDOM_1_1IPanelObject_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08":[2,0,0,25,0,15]
 };

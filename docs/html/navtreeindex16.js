@@ -1,5 +1,13 @@
 var NAVTREEINDEX16 =
 {
+"classSDOM_1_1IDisplayObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e":[3,0,0,22,97],
+"classSDOM_1_1IDisplayObject.html#a90e2d7c4dd39c97d030aa80aabf7e048":[2,0,0,22,120],
+"classSDOM_1_1IDisplayObject.html#a90e2d7c4dd39c97d030aa80aabf7e048":[3,0,0,22,120],
+"classSDOM_1_1IDisplayObject.html#a9110787e36dd32665bd498991bc78705":[2,0,0,22,41],
+"classSDOM_1_1IDisplayObject.html#a9110787e36dd32665bd498991bc78705":[3,0,0,22,41],
+"classSDOM_1_1IDisplayObject.html#a943459da97ec5ed33c8433d9e7291344":[2,0,0,22,96],
+"classSDOM_1_1IDisplayObject.html#a943459da97ec5ed33c8433d9e7291344":[3,0,0,22,96],
+"classSDOM_1_1IDisplayObject.html#a96287ccfc89145858a48ee2e4176b046":[2,0,0,22,115],
 "classSDOM_1_1IDisplayObject.html#a96287ccfc89145858a48ee2e4176b046":[3,0,0,22,115],
 "classSDOM_1_1IDisplayObject.html#a9728356c70a650faae51d6bfd6dac213":[2,0,0,22,134],
 "classSDOM_1_1IDisplayObject.html#a9728356c70a650faae51d6bfd6dac213":[3,0,0,22,134],
@@ -241,13 +249,5 @@ var NAVTREEINDEX16 =
 "classSDOM_1_1IFontObject.html#ac0b9c42b031b1b187d57487081274194":[3,0,0,24,6],
 "classSDOM_1_1IFontObject.html#ac5406c8677201c41ad401b65acf8324d":[2,0,0,24,18],
 "classSDOM_1_1IFontObject.html#ac5406c8677201c41ad401b65acf8324d":[3,0,0,24,18],
-"classSDOM_1_1IFontObject.html#ac79673e571c58f21de1541a81548a959":[2,0,0,24,29],
-"classSDOM_1_1IFontObject.html#ac79673e571c58f21de1541a81548a959":[3,0,0,24,29],
-"classSDOM_1_1IFontObject.html#ac8ff65d667dad6fa0af7af89c0487011":[2,0,0,24,16],
-"classSDOM_1_1IFontObject.html#ac8ff65d667dad6fa0af7af89c0487011":[3,0,0,24,16],
-"classSDOM_1_1IFontObject.html#aca1c0821605a16e5e4664e9716a2a850":[2,0,0,24,34],
-"classSDOM_1_1IFontObject.html#aca1c0821605a16e5e4664e9716a2a850":[3,0,0,24,34],
-"classSDOM_1_1IFontObject.html#acc5a41e113d1af70782320ac635a24db":[2,0,0,24,30],
-"classSDOM_1_1IFontObject.html#acc5a41e113d1af70782320ac635a24db":[3,0,0,24,30],
-"classSDOM_1_1IFontObject.html#acf24a17e1284129dbef77cfc229bba05":[2,0,0,24,53]
+"classSDOM_1_1IFontObject.html#ac79673e571c58f21de1541a81548a959":[2,0,0,24,29]
 };

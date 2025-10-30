@@ -46,6 +46,7 @@ namespace SDOM
     EventType EventType::SDL_Event("SDL_Event", true, true, false, false);
     EventType EventType::Quit("Quit", false, false, false, true);
     EventType EventType::EnterFrame("EnterFrame", false, false, false, false); // should only fire event listeners at target
+
     // Mouse event types (Name, Captures, Bubbles, TargetOnly, Global)
     EventType EventType::MouseButtonUp("MouseButtonUp", true, true, false, false);
     EventType EventType::MouseButtonDown("MouseButtonDown", true, true, false, false);
@@ -55,15 +56,20 @@ namespace SDOM
     EventType EventType::MouseDoubleClick("MouseDoubleClick", true, true, false, false);    
     EventType EventType::MouseEnter("MouseEnter", false, false, true, false);
     EventType EventType::MouseLeave("MouseLeave", false, false, true, false);
-    // Stage event types (Name, Captures, Bubbles, TargetOnly, Global)
-    EventType EventType::StageClosed("StageClosed", false, false, false, true);
+
     // Keyboard event types (Name, Captures, Bubbles, TargetOnly, Global)
     EventType EventType::KeyDown("KeyDown", true, true, false, false);
     EventType EventType::KeyUp("KeyUp", true, true, false, false);
-    // Timer event types (Name, Captures, Bubbles, TargetOnly, Global)
-    EventType EventType::Timer("Timer", false, false, false, false);
-    EventType EventType::Tick("Tick", false, false, false, false);
-    EventType EventType::Timeout("Timeout", false, false, false, false);
+    EventType EventType::TextInput("TextInput", true, true, false, false);
+
+    // Timer event types (Timer Not Yet Implemented)
+    EventType EventType::TimerStart("TimerStart", false, false, false, false);
+    EventType EventType::TimerStop("TimerStop", false, false, false, false);
+    EventType EventType::TimerPause("TimerPause", false, false, false, false);
+    EventType EventType::TimerTick("TimerTick", false, false, false, false);
+    EventType EventType::TimerCycleComplete("TimerCycleComplete", false, false, false, false);
+    EventType EventType::TimerComplete("TimerComplete", false, false, false, false);
+
     // Window event types (Name, Captures, Bubbles, TargetOnly, Global)
     EventType EventType::FocusGained("FocusGained", false, false, true, false);
     EventType EventType::FocusLost("FocusLost", false, false, true, false);
@@ -73,6 +79,7 @@ namespace SDOM
     EventType EventType::Hide("Hide", false, false, true, false);
     EventType EventType::EnterFullscreen("EnterFullscreen", true, true, false, false);
     EventType EventType::LeaveFullscreen("LeaveFullscreen", true, true, false, false);
+
     // General UI event types (Name, Captures, Bubbles, TargetOnly, Global)
     EventType EventType::ValueChanged("ValueChanged", true, true, false, false);
     EventType EventType::StateChanged("StateChanged", true, true, false, false);
@@ -81,10 +88,12 @@ namespace SDOM
     EventType EventType::Disabled("Disabled", false, false, true, false);
     EventType EventType::Visible("Visible", true, true, false, false);
     EventType EventType::Hidden("Hidden", true, true, false, false);
+
     // Drag & Drop event types (Name, Captures, Bubbles, TargetOnly, Global)
     EventType EventType::Drag("Drag", true, true, false, false);
     EventType EventType::Dragging("Dragging", true, true, false, false);
     EventType EventType::Drop("Drop", true, true, false, false);
+
     // Clipboard event types (Name, Captures, Bubbles, TargetOnly, Global)
     EventType EventType::ClipboardCopy("ClipboardCopy", true, true, false, false);
     EventType EventType::ClipboardPaste("ClipboardPaste", true, true, false, false);
@@ -94,6 +103,8 @@ namespace SDOM
     EventType EventType::Removed("Removed", true, true, false, false);
     EventType EventType::AddedToStage("AddedToStage", true, true, false, false);
     EventType EventType::RemovedFromStage("RemovedFromStage", true, true, false, false);
+    EventType EventType::StageClosed("StageClosed", false, false, false, true);
+
     // Event Listener Only Events
     EventType EventType::OnInit("OnInit", true, true, false, false);
     EventType EventType::OnQuit("OnQuit", false, false, false, true); // global only

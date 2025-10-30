@@ -1,5 +1,13 @@
 var NAVTREEINDEX41 =
 {
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a684d325a7303f52e64011467ff5c5758":[2,0,0,44,11],
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1":[2,0,0,44,1],
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a86f1955e79bb2163d3c32a6024f420e6":[2,0,0,44,5],
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a8d81ac82421d1b03da58fccb9174892e":[2,0,0,44,7],
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a901d87dedda8db733f5e6d34c4eb5fe0":[2,0,0,44,3],
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a9d4989e254422a15442ed8c59c600f1a":[2,0,0,44,4],
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a9ea1de1b3354868edfdaef29392ef615":[2,0,0,44,10],
+"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980aacb6824fc28ff15285d89734b2943367":[2,0,0,44,21],
 "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ab952f3308272193e9daddec1708f9bec":[2,0,0,44,18],
 "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac397289ee45877be0cd49811fe245b4e":[2,0,0,44,12],
 "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980ac40e9cf1d233eb1b6dc84b9f97e83b4e":[2,0,0,44,24],
@@ -241,13 +249,5 @@ var NAVTREEINDEX41 =
 "structSDOM_1_1BitmapFont_1_1InitStruct.html#ab7670dc8e80dc5e5d9fdb1a44f5bc275":[3,0,0,4,0,3],
 "structSDOM_1_1BitmapFont_1_1InitStruct.html#acb48179c035bc7ae27d4e445fd793873":[2,0,0,4,0,1],
 "structSDOM_1_1BitmapFont_1_1InitStruct.html#acb48179c035bc7ae27d4e445fd793873":[3,0,0,4,0,1],
-"structSDOM_1_1BitmapFont_1_1InitStruct.html#aff72131e37f0b204c13ba168d9844ef6":[2,0,0,4,0,0],
-"structSDOM_1_1BitmapFont_1_1InitStruct.html#aff72131e37f0b204c13ba168d9844ef6":[3,0,0,4,0,0],
-"structSDOM_1_1Bounds.html":[2,0,0,1],
-"structSDOM_1_1Bounds.html":[3,0,0,1],
-"structSDOM_1_1Bounds.html#a1ffe30fdc9d75e2c608af7ae6f606249":[2,0,0,1,2],
-"structSDOM_1_1Bounds.html#a1ffe30fdc9d75e2c608af7ae6f606249":[3,0,0,1,2],
-"structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99":[2,0,0,1,4],
-"structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99":[3,0,0,1,4],
-"structSDOM_1_1Bounds.html#a449f1728a2b4af1c8153b685518cdcb9":[2,0,0,1,7]
+"structSDOM_1_1BitmapFont_1_1InitStruct.html#aff72131e37f0b204c13ba168d9844ef6":[2,0,0,4,0,0]
 };

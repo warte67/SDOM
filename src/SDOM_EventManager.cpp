@@ -726,14 +726,14 @@ namespace SDOM
             lastHoveredObject = currentHoveredObject;
         }
 
-    // Special Case: Track window leave and enter events
-    SDL_CaptureMouse(true);
-    static SDL_Window* focusedWindow = SDL_GetMouseFocus();
-    SDL_Window* currentWindow = SDL_GetMouseFocus();
-    // Convert to stage coordinates (renderer/logical coords)
-    float mX = static_cast<float>(sdlEvent.motion.x);
-    float mY = static_cast<float>(sdlEvent.motion.y);
-    DisplayHandle currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);
+        // Special Case: Track window leave and enter events
+        SDL_CaptureMouse(true);
+        static SDL_Window* focusedWindow = SDL_GetMouseFocus();
+        SDL_Window* currentWindow = SDL_GetMouseFocus();
+        // Convert to stage coordinates (renderer/logical coords)
+        float mX = static_cast<float>(sdlEvent.motion.x);
+        float mY = static_cast<float>(sdlEvent.motion.y);
+        DisplayHandle currentHoveredObject = findTopObjectUnderMouse(node, draggedObject);
 
         // Check if the focused window has changed
         if (focusedWindow != currentWindow || isDragging) 

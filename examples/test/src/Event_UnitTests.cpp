@@ -276,13 +276,10 @@ namespace SDOM
             , {"StageClosed",       EventType::StageClosed}
             , {"KeyDown",           EventType::KeyDown}
             , {"KeyUp",             EventType::KeyUp}
-            // not yet implemented
-            , {"Timer",             EventType::Timer}
-            , {"Tick",              EventType::Tick}
-            , {"Timeout",           EventType::Timeout}
-            , {"ClipboardCopy",     EventType::ClipboardCopy}
-            , {"ClipboardPaste",    EventType::ClipboardPaste}
-            , {"User",              EventType::User}    
+            // // not yet implemented
+            // , {"ClipboardCopy",     EventType::ClipboardCopy}
+            // , {"ClipboardPaste",    EventType::ClipboardPaste}
+            // , {"User",              EventType::User}    
         };
         return runEventRoundTripTest(events, "testBox_Event3", errors);
     } // END: Event_test3()
@@ -429,10 +426,143 @@ namespace SDOM
                 e.motion.x = b->getX() + 5; e.motion.y = b->getY() + 5;
                 // SDL_PushEvent(&e);
                 em.Queue_SDL_Event(e);
+            }},
+            {"MouseWheel", [&](DisplayHandle b){
+                SDL_Event e{};
+                e.type = SDL_EVENT_MOUSE_WHEEL;
+                e.wheel.x = 0;
+                e.wheel.y = 1; // scroll up
+                e.wheel.mouse_x = b->getX() + 5;
+                e.wheel.mouse_y = b->getY() + 5;
+                e.wheel.direction = SDL_MOUSEWHEEL_NORMAL;
+                em.Queue_SDL_Event(e);
+            }},
+            {"MouseClick", [&](DisplayHandle b){
+                // First push down
+                SDL_Event down{}; 
+                down.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+                down.button.button = SDL_BUTTON_LEFT;
+                down.button.clicks = 1;
+                down.button.x = b->getX() + 5;
+                down.button.y = b->getY() + 5;
+                em.Queue_SDL_Event(down);
+
+                // Push the up event with a simulated later timestamp
+                SDL_Event up{};
+                up.type = SDL_EVENT_MOUSE_BUTTON_UP;
+                up.button.button = SDL_BUTTON_LEFT;
+                up.button.clicks = 1;
+                up.button.x = b->getX() + 5;
+                up.button.y = b->getY() + 5;
+                up.common.timestamp = down.common.timestamp + 50; // simulate ~50ms later
+                em.Queue_SDL_Event(up);
+            }},
+            {"MouseDoubleClick", [&](DisplayHandle b){
+                const int clickCount = 2;        // double click = 2
+                uint32_t timestamp = SDL_GetTicks();  // start time base
+
+                for (int i = 0; i < clickCount; ++i)
+                {
+                    // --- Mouse down ---
+                    SDL_Event down{};
+                    down.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+                    down.button.button = SDL_BUTTON_LEFT;
+                    down.button.clicks = i + 1;  // increment click count
+                    down.button.x = b->getX() + 5;
+                    down.button.y = b->getY() + 5;
+                    down.common.timestamp = timestamp;
+                    em.Queue_SDL_Event(down);
+
+                    // --- Mouse up ---
+                    SDL_Event up{};
+                    up.type = SDL_EVENT_MOUSE_BUTTON_UP;
+                    up.button.button = SDL_BUTTON_LEFT;
+                    up.button.clicks = i + 1;
+                    up.button.x = b->getX() + 5;
+                    up.button.y = b->getY() + 5;
+                    up.common.timestamp = timestamp + 50;  // short delay after press
+                    em.Queue_SDL_Event(up);
+
+                    // simulate short delay between clicks (e.g., <200ms)
+                    timestamp += 100;
+                }
+            }},
+            {"MouseEnter", [&](DisplayHandle b){
+                // Move mouse just *outside* first, to ensure it’s not “inside” yet
+                SDL_Event e1{};
+                e1.type = SDL_EVENT_MOUSE_MOTION;
+                e1.motion.x = b->getX() - 10;
+                e1.motion.y = b->getY() - 10;
+                em.Queue_SDL_Event(e1);
+
+                // Then move inside the box’s bounds to trigger MouseEnter
+                SDL_Event e2{};
+                e2.type = SDL_EVENT_MOUSE_MOTION;
+                e2.motion.x = b->getX() + b->getWidth() / 2;
+                e2.motion.y = b->getY() + b->getHeight() / 2;
+                e2.common.timestamp = e1.common.timestamp + 50;
+                em.Queue_SDL_Event(e2);
+            }},
+            {"MouseLeave", [&](DisplayHandle b){
+                // Start inside the box to ensure we’re “hovered”
+                SDL_Event e1{};
+                e1.type = SDL_EVENT_MOUSE_MOTION;
+                e1.motion.x = b->getX() + b->getWidth() / 2;
+                e1.motion.y = b->getY() + b->getHeight() / 2;
+                em.Queue_SDL_Event(e1);
+
+                // Then move far outside to simulate leaving
+                SDL_Event e2{};
+                e2.type = SDL_EVENT_MOUSE_MOTION;
+                e2.motion.x = b->getX() + b->getWidth() + 50;
+                e2.motion.y = b->getY() + b->getHeight() + 50;
+                e2.common.timestamp = e1.common.timestamp + 50;
+                em.Queue_SDL_Event(e2);
             }}
         };
         return runEventBehaviorTest(actions, errors);
     } // END: Event_test8()
+
+    // Test 9: Keyboard Events
+    bool Event_test9(std::vector<std::string>& errors)
+    {
+        Core& core = getCore();
+        DisplayHandle stage = core.getRootNode();
+        if (!stage.isValid()) return false;
+        EventManager& em = getCore().getEventManager();
+        std::vector<std::pair<std::string, std::function<void(DisplayHandle)>>> actions = {
+            {"KeyDown", [&](DisplayHandle b){
+                SDL_Event e{};
+                e.type = SDL_EVENT_KEY_DOWN;
+                e.key.windowID = SDL_GetWindowID(core.getWindow());
+                e.key.timestamp = SDL_GetTicks();
+                e.key.repeat = 0;
+                e.key.mod = 0;
+                e.key.key = SDLK_A; // We are using SDL3
+                em.Queue_SDL_Event(e);
+            }},
+            {"KeyUp", [&](DisplayHandle b){
+                SDL_Event e{};
+                e.type = SDL_EVENT_KEY_UP;
+                e.key.windowID = SDL_GetWindowID(core.getWindow());
+                e.key.timestamp = SDL_GetTicks();
+                e.key.repeat = 0;
+                e.key.mod = 0;
+                e.key.key = SDLK_A;
+                em.Queue_SDL_Event(e);
+            }}
+            // // EditBox: Not Yet Implemented
+            // ,{"TextInput", [&](DisplayHandle b){
+            //     SDL_Event e{};
+            //     e.type = SDL_EVENT_TEXT_INPUT;
+            //     e.text.windowID = SDL_GetWindowID(core.getWindow());
+            //     e.text.timestamp = SDL_GetTicks();
+            //     e.text.text = "a";
+            //     em.Queue_SDL_Event(e);
+            // }}
+        };
+        return runEventBehaviorTest(actions, errors);
+    } // END: Event_test9()
 
 
 
@@ -461,8 +591,7 @@ namespace SDOM
         ut.add_test(objName, "General UI event types round-trip", Event_test6);
         ut.add_test(objName, "Application Lifecycle event types round-trip", Event_test7);
         ut.add_test(objName, "Behavioral Mouse Event Verification", Event_test8);
-
-
+        ut.add_test(objName, "Keyboard Event Verification", Event_test9);
 
         ut.setLuaFilename("src/Event_UnitTests.lua"); // Lua test script path
         ut.add_test(objName, "Lua: " + ut.getLuaFilename(), Event_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)

@@ -1,5 +1,13 @@
 var NAVTREEINDEX18 =
 {
+"classSDOM_1_1IPanelObject.html#a83f54c1f027dad7c7cf98cad72ee9955":[3,0,0,25,109],
+"classSDOM_1_1IPanelObject.html#a8453e36ea5bffdbb6c57da841db2e5ab":[2,0,0,25,144],
+"classSDOM_1_1IPanelObject.html#a8453e36ea5bffdbb6c57da841db2e5ab":[3,0,0,25,144],
+"classSDOM_1_1IPanelObject.html#a8461dfd00c65f3d57478ea97d386f26d":[2,0,0,25,70],
+"classSDOM_1_1IPanelObject.html#a8461dfd00c65f3d57478ea97d386f26d":[3,0,0,25,70],
+"classSDOM_1_1IPanelObject.html#a8468537ed2a4e40c33821f5ea66771ed":[2,0,0,25,119],
+"classSDOM_1_1IPanelObject.html#a8468537ed2a4e40c33821f5ea66771ed":[3,0,0,25,119],
+"classSDOM_1_1IPanelObject.html#a84e0a343079ebae98c60174d65d49af9":[2,0,0,25,2],
 "classSDOM_1_1IPanelObject.html#a84e0a343079ebae98c60174d65d49af9":[3,0,0,25,2],
 "classSDOM_1_1IPanelObject.html#a84e85b7cf28a2cbceb286efd82a0aa92":[2,0,0,25,147],
 "classSDOM_1_1IPanelObject.html#a84e85b7cf28a2cbceb286efd82a0aa92":[3,0,0,25,147],
@@ -241,13 +249,5 @@ var NAVTREEINDEX18 =
 "classSDOM_1_1IRangeControl.html#a1a85f74b8e5067b9f75ebf9da856b414":[3,0,0,26,158],
 "classSDOM_1_1IRangeControl.html#a1ab73450fbdc7b278a871ca14454c92f":[2,0,0,26,156],
 "classSDOM_1_1IRangeControl.html#a1ab73450fbdc7b278a871ca14454c92f":[3,0,0,26,156],
-"classSDOM_1_1IRangeControl.html#a1b7ada7a0cfdaa30125217ebe22d8ca4":[2,0,0,26,172],
-"classSDOM_1_1IRangeControl.html#a1b7ada7a0cfdaa30125217ebe22d8ca4":[3,0,0,26,172],
-"classSDOM_1_1IRangeControl.html#a1b9eb3b5383014c133329f42ea50ed7b":[2,0,0,26,53],
-"classSDOM_1_1IRangeControl.html#a1b9eb3b5383014c133329f42ea50ed7b":[3,0,0,26,53],
-"classSDOM_1_1IRangeControl.html#a1de666cd76bf2ef5c77d3b0380db55fa":[2,0,0,26,143],
-"classSDOM_1_1IRangeControl.html#a1de666cd76bf2ef5c77d3b0380db55fa":[3,0,0,26,143],
-"classSDOM_1_1IRangeControl.html#a1eae3efeba332531e97d56d9cf638cb5":[2,0,0,26,127],
-"classSDOM_1_1IRangeControl.html#a1eae3efeba332531e97d56d9cf638cb5":[3,0,0,26,127],
-"classSDOM_1_1IRangeControl.html#a20ec88bd7b74e55076b20b37b6178079":[2,0,0,26,166]
+"classSDOM_1_1IRangeControl.html#a1b7ada7a0cfdaa30125217ebe22d8ca4":[2,0,0,26,172]
 };

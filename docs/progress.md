@@ -1317,12 +1317,48 @@ Platform: Linux-x86_64
 - **Core update integration:** Integrated per-frame unit test execution into `Core::onUpdate()`, including automated shutdown and performance reporting.
 - **Temporal testing milestone:** Transitioned the UnitTest system from static to frame-synchronous scheduling, enabling validation of timers, multithreaded operations, and asynchronous subsystems.
 
+- Completed implementation and verification of all **Mouse** and **Keyboard** event tests.  
+- Added behavioral tests for `MouseEnter`, `MouseLeave`, `MouseClick`, and `MouseDoubleClick` — all verified working.  
+- Implemented new keyboard tests for `KeyDown` and `KeyUp` (with placeholder for future `TextInput` event once EditBox is introduced).  
+- Reviewed and validated full **event propagation model** (capture → target → bubble) in `EventManager::dispatchEvent()`.  
+- Examined and documented global event dispatch logic:
+  - `dispatchEventToAllNodesOnStage()`
+  - `dispatchEventToAllEventListenersOnStage()`
+  - `dispatchEventToAllEventListenersGlobally()`
+- Confirmed readiness for `EventManager` refactor:
+  - Split `Queue_SDL_Event()` into modular per-category handlers (`handleWindowEvents()`, `handleMouseEvents()`, `handleKeyboardEvents()`, etc.)
+  - Optimize event dispatch paths to reduce redundant copies and allocations.
+- Next Steps:
+  - Refactor and clean up `EventManager`.
+  - Introduce `Queue_Internal_Event()` for non-SDL sources (timers, async systems, etc.).
+  - Begin implementation of **Timer Objects** with global and local dispatch capability (in parallel with `Event_UnitTests`).
+
 ---
-### [Planned for November 1, 2025]
+
+#### 🧠 Notes / Observations
+- **Event Dispatch Flow:** The current event propagation system is now stable, feature-complete, and mirrors DOM-style event behavior.  
+- **Global Dispatch:** The three global dispatch functions provide a clean path for future systems like timers, asynchronous tasks, or Lua callbacks.  
+- **Performance:** Event copying during global dispatch could become a hotspot; consider introducing an `EventPool` or lightweight recycling for frequent event types.  
+- **Timers (Upcoming):**
+  - Will rely on internal event dispatch rather than SDL.
+  - Local timers will use `dispatchEventToAllEventListenersOnStage()`.
+  - Global timers will use `dispatchEventToAllEventListenersGlobally()`.
+  - Global flag will determine whether inactive or hidden objects receive timer events.
+- **Refactor Goal:** Separate event translation (SDL → SDOM event) from propagation. `dispatchEvent()` should remain untouched and stable as the final delivery path.
+
+
+---
+### Next Steps:
 - Add **per-test timing metrics** (µs resolution) and include them in the summary output.  
 - Introduce **color-coded summary counts** (green: passed, red: failed, yellow: not implemented).  
   - Finalize **Event_UnitTests.cpp** with comprehensive C++ and Lua tests for EventManager functionality.
-
+- Confirmed readiness for refactor:
+  - Split `Queue_SDL_Event()` into modular per-category handlers (`handleWindowEvents()`, `handleMouseEvents()`, `handleKeyboardEvents()`, etc.)
+  - Optimize event dispatch paths to reduce unnecessary copies and allocations.
+- Next Steps:
+  - Refactor and clean up `EventManager`.
+  - Introduce `Queue_Internal_Event()` for non-SDL sources (timers, async systems, etc.).
+  - Begin implementation of **Timer Objects** with global and local dispatch capability.
 
 ---
 ### Long Term To Do:

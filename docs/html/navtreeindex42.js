@@ -1,5 +1,13 @@
 var NAVTREEINDEX42 =
 {
+"structSDOM_1_1BitmapFont_1_1InitStruct.html#aff72131e37f0b204c13ba168d9844ef6":[3,0,0,4,0,0],
+"structSDOM_1_1Bounds.html":[2,0,0,1],
+"structSDOM_1_1Bounds.html":[3,0,0,1],
+"structSDOM_1_1Bounds.html#a1ffe30fdc9d75e2c608af7ae6f606249":[2,0,0,1,2],
+"structSDOM_1_1Bounds.html#a1ffe30fdc9d75e2c608af7ae6f606249":[3,0,0,1,2],
+"structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99":[2,0,0,1,4],
+"structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99":[3,0,0,1,4],
+"structSDOM_1_1Bounds.html#a449f1728a2b4af1c8153b685518cdcb9":[2,0,0,1,7],
 "structSDOM_1_1Bounds.html#a449f1728a2b4af1c8153b685518cdcb9":[3,0,0,1,7],
 "structSDOM_1_1Bounds.html#a5268f1526e83122173b7de40f83ac7c4":[2,0,0,1,5],
 "structSDOM_1_1Bounds.html#a5268f1526e83122173b7de40f83ac7c4":[3,0,0,1,5],
@@ -241,13 +249,5 @@ var NAVTREEINDEX42 =
 "structSDOM_1_1FontStyle.html#a7eee628d2496c7359f1a19ea00072ac9":[3,0,0,23,11],
 "structSDOM_1_1FontStyle.html#a82c6a0b4d8d53624d6953f9355850f24":[2,0,0,23,21],
 "structSDOM_1_1FontStyle.html#a82c6a0b4d8d53624d6953f9355850f24":[3,0,0,23,21],
-"structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e":[2,0,0,23,1],
-"structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e":[3,0,0,23,1],
-"structSDOM_1_1FontStyle.html#a9d0ce99f4878f9fd2cc61a13cfbcfdae":[2,0,0,23,25],
-"structSDOM_1_1FontStyle.html#a9d0ce99f4878f9fd2cc61a13cfbcfdae":[3,0,0,23,25],
-"structSDOM_1_1FontStyle.html#aa65af16390c86efbe3e4f1c154fd6cab":[2,0,0,23,16],
-"structSDOM_1_1FontStyle.html#aa65af16390c86efbe3e4f1c154fd6cab":[3,0,0,23,16],
-"structSDOM_1_1FontStyle.html#abaa1e4c8b02dc4471f0d6b2cedc8b37f":[2,0,0,23,0],
-"structSDOM_1_1FontStyle.html#abaa1e4c8b02dc4471f0d6b2cedc8b37f":[3,0,0,23,0],
-"structSDOM_1_1FontStyle.html#adb4e7175913c0849b78a5b746ede2fec":[2,0,0,23,19]
+"structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e":[2,0,0,23,1]
 };

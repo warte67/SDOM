@@ -1,5 +1,13 @@
 var NAVTREEINDEX33 =
 {
+"classSDOM_1_1Slider.html#a9d22b5fd9345bc320ad573f7841517a3":[3,0,0,34,113],
+"classSDOM_1_1Slider.html#a9d360407addf13332471fbbe2b05d452":[2,0,0,34,87],
+"classSDOM_1_1Slider.html#a9d360407addf13332471fbbe2b05d452":[3,0,0,34,87],
+"classSDOM_1_1Slider.html#a9df7d876aa3bdab412a4284982029f72":[2,0,0,34,96],
+"classSDOM_1_1Slider.html#a9df7d876aa3bdab412a4284982029f72":[3,0,0,34,96],
+"classSDOM_1_1Slider.html#a9ed2761595e2f29ab0c0d42c85438dab":[2,0,0,34,1],
+"classSDOM_1_1Slider.html#a9ed2761595e2f29ab0c0d42c85438dab":[3,0,0,34,1],
+"classSDOM_1_1Slider.html#a9ed2761595e2f29ab0c0d42c85438daba9d04f11fc27ec988820b001b1661cf72":[2,0,0,34,1,1],
 "classSDOM_1_1Slider.html#a9ed2761595e2f29ab0c0d42c85438daba9d04f11fc27ec988820b001b1661cf72":[3,0,0,34,1,1],
 "classSDOM_1_1Slider.html#a9ed2761595e2f29ab0c0d42c85438dabae217fe6799c2b0bfe0740530b5c78200":[2,0,0,34,1,2],
 "classSDOM_1_1Slider.html#a9ed2761595e2f29ab0c0d42c85438dabae217fe6799c2b0bfe0740530b5c78200":[3,0,0,34,1,2],
@@ -241,13 +249,5 @@ var NAVTREEINDEX33 =
 "classSDOM_1_1SpriteSheet.html#ab7584b544b2cbe9875685f5475563586":[3,0,0,35,65],
 "classSDOM_1_1SpriteSheet.html#ab996c8629d01a716654e3125b4b0a589":[2,0,0,35,45],
 "classSDOM_1_1SpriteSheet.html#ab996c8629d01a716654e3125b4b0a589":[3,0,0,35,45],
-"classSDOM_1_1SpriteSheet.html#abaecf15cf1c0a7998547f105838378e2":[2,0,0,35,24],
-"classSDOM_1_1SpriteSheet.html#abaecf15cf1c0a7998547f105838378e2":[3,0,0,35,24],
-"classSDOM_1_1SpriteSheet.html#abc59587f33d400af3e064d992c884a05":[2,0,0,35,54],
-"classSDOM_1_1SpriteSheet.html#abc59587f33d400af3e064d992c884a05":[3,0,0,35,54],
-"classSDOM_1_1SpriteSheet.html#abe6e8fe4ea26ee1d481c521dd0dc1fb8":[2,0,0,35,52],
-"classSDOM_1_1SpriteSheet.html#abe6e8fe4ea26ee1d481c521dd0dc1fb8":[3,0,0,35,52],
-"classSDOM_1_1SpriteSheet.html#ac79673e571c58f21de1541a81548a959":[2,0,0,35,36],
-"classSDOM_1_1SpriteSheet.html#ac79673e571c58f21de1541a81548a959":[3,0,0,35,36],
-"classSDOM_1_1SpriteSheet.html#ac7a5e59ff7a7f4b3a0b56272d687462d":[2,0,0,35,62]
+"classSDOM_1_1SpriteSheet.html#abaecf15cf1c0a7998547f105838378e2":[2,0,0,35,24]
 };
