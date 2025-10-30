@@ -1436,9 +1436,9 @@ This allows **SDOM_IDisplayObject.cpp** to delegate registration into this modul
 - ☐ CLR
 - ✅ Core
 - ☐ DisplayHandle
-- ☐ Event
-- ☐ EventManager
-- ☐ EventType
+- 🔄 Event
+- 🔄 EventManager
+- 🔄 EventType
 - ☐ Factory
 - ☐ Frame
 - ☐ Group
