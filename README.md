@@ -129,7 +129,7 @@ SDOM is designed to be **data-driven** and includes built-in support for scripti
 ### Why Lua?
 Lua enables dynamic creation, modification, and serialization of DOM objects at runtime — letting you define UI layouts, animation sequences, and event behavior without recompiling. Lua scripts can access most of SDOM’s API, and future releases will expand this integration even further.
 
-### Installation
+### Lua Installation
 
 **Debian / Ubuntu:**
 ```bash
