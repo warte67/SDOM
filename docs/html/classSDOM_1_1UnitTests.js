@@ -16,7 +16,6 @@ var classSDOM_1_1UnitTests =
     [ "getTexture", "classSDOM_1_1UnitTests.html#a5576d5e300bd579cb590b281d577f1da", null ],
     [ "getWindow", "classSDOM_1_1UnitTests.html#aa860600765065dbc82acd7be916c231c", null ],
     [ "operator=", "classSDOM_1_1UnitTests.html#ab77bcbf342559b3309d761898566014d", null ],
-    [ "push_error", "classSDOM_1_1UnitTests.html#a51215fd3dbc531a9c31494a323818bc7", null ],
     [ "run", "classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712", null ],
     [ "run_all", "classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe", null ],
     [ "run_lua_tests", "classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d", null ],

@@ -56,13 +56,13 @@ namespace SDOM
     //   global EventType registry. Confirms correct naming, uniqueness, and flag
     //   configurations for key event types.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Validates static registration of EventType instances.  
     //   • Checks for missing, null, or mismatched event names.  
     //   • Ensures registry size meets expected minimum threshold.  
     //   • Verifies a few representative flag configurations for correctness.  
     //
-    // 🧪 Functions Tested:
+    // ⚙️ Functions Tested:
     //
     //   | Category            | Functions Tested / Behavior Verified                          |
     //   |----------------------|---------------------------------------------------------------|
@@ -167,12 +167,12 @@ namespace SDOM
     //   the expected default flag values and that each flag setter properly modifies and restores
     //   its state.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Confirms default flag configuration for `EventType::None`.  
     //   • Verifies setter chaining correctness and reversible state mutation.  
     //   • Ensures static event objects are stable after temporary modification.  
     //
-    // 🧪 Functions Tested:
+    // ⚙️ Functions Tested:
     //
     //   | Category           | Functions Tested / Behavior Verified         |
     //   |---------------------|---------------------------------------------|
@@ -240,12 +240,12 @@ namespace SDOM
     //   EventType definitions. It ensures that events can be queued, dispatched,
     //   and received correctly with payload integrity verification.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Each event type is registered as a listener on a temporary Box object.  
     //   • Each listener sets a “hit” flag when the event fires with matching payload.  
     //   • Events are queued, dispatched, verified, and then cleaned up safely.  
     //
-    // 🧪 Verifies:
+    // ⚙️ Functions Tested:
     //
     //   | Category             | Behavior / API Verified                             |
     //   |-----------------------|-----------------------------------------------------|
@@ -352,13 +352,13 @@ namespace SDOM
     //   behave consistently through the event registration, serialization, and
     //   round-trip validation helper.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Uses `runEventRoundTripTest()` to ensure core event types can be created,
     //     cloned, and serialized/deserialized correctly.  
     //   • Focuses on non-UI, non-input system-level events (e.g., Quit, EnterFrame).  
     //   • Additional clipboard and user event tests are pending implementation.  
     //
-    // 🧪 Functions Tested:
+    // ⚙️ Functions Tested:
     //
     //   | Category            | Functions Tested / Behavior Verified                  |
     //   |----------------------|-------------------------------------------------------|
@@ -402,12 +402,12 @@ namespace SDOM
     //   Verifies all mouse-related event types can be registered, serialized,
     //   and round-tripped correctly using `runEventRoundTripTest()`.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Confirms correct handling of click, wheel, move, and drag/drop events.  
     //   • Ensures `EventType` instances for mouse events are stable and accessible.  
     //   • Validates event round-trip identity and integrity within the registry.  
     //
-    // 🧪 Functions Tested:
+    // ⚙️ Functions Tested:
     //
     //   | Category              | Functions Tested / Behavior Verified              |
     //   |------------------------|--------------------------------------------------|
@@ -451,11 +451,11 @@ namespace SDOM
     //   movement, and fullscreen transitions) perform correct event registration,
     //   serialization, and round-trip validation.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Ensures window lifecycle events propagate through the registry correctly.  
     //   • Covers typical SDL window state changes and transitions.  
     //
-    // 🧪 Functions Tested:
+    // ⚙️ Functions Tested:
     //
     //   | Category              | Functions Tested / Behavior Verified                |
     //   |------------------------|----------------------------------------------------|
@@ -496,11 +496,11 @@ namespace SDOM
     //   Verifies UI-oriented event types related to state, value, visibility,
     //   and selection transitions round-trip correctly via the registry.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Focuses on logical UI changes rather than system-level input.  
     //   • Confirms proper `EventType` identity and flag consistency.  
     //
-    // 🧪 Functions Tested:
+    // ⚙️ Functions Tested:
     //
     //   | Category              | Functions Tested / Behavior Verified               |
     //   |------------------------|---------------------------------------------------|
@@ -540,12 +540,12 @@ namespace SDOM
     //   Validates the registration and round-trip integrity of application and
     //   display object lifecycle event types.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Includes "added/removed" events and engine-level lifecycle hooks.  
     //   • Ensures static EventType instances for initialization and rendering are
     //     accessible and consistent.  
     //
-    // 🧪 Functions Tested:
+    // ⚙️ Functions Tested:
     //
     //   | Category               | Functions Tested / Behavior Verified                |
     //   |-------------------------|----------------------------------------------------|
@@ -589,13 +589,13 @@ namespace SDOM
     //   other interactive event types. It ensures SDL-style injected events result
     //   in the correct SDOM event dispatches through the EventManager.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Each simulated SDL action triggers a matching EventType lookup.  
     //   • Listeners are dynamically attached to a temporary Box node.  
     //   • Each listener records a "hit" if its corresponding event fires.  
     //   • Used by Event_test8 (mouse) and Event_test9 (keyboard) unit tests.  
     //
-    // 🧪 Verifies:
+    // ⚙️ Functions Tested:
     //
     //   | Category             | Behavior / API Verified                             |
     //   |-----------------------|-----------------------------------------------------|
@@ -686,13 +686,13 @@ namespace SDOM
     //   Simulates real-world mouse interactions and ensures that the EventManager
     //   correctly interprets SDL input events into corresponding SDOM event types.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Exercises EventManager’s SDL event queue handling end-to-end.  
     //   • Simulates both simple and compound behaviors: clicks, double-clicks,
     //     hover entry/exit, drag/drop, and scrolling.  
     //   • Each behavior is injected as an SDL event sequence via `Queue_SDL_Event()`.
     //
-    // 🧪 Functions Tested:
+    // ⚙️ Functions Tested:
     //
     //   | Category                  | Functions Tested / Behavior Verified              |
     //   |----------------------------|--------------------------------------------------|
@@ -829,12 +829,12 @@ namespace SDOM
     //   the SDOM EventManager, ensuring both key press and release are properly
     //   queued and recognized.
     //
-    // 🧠 Notes:
+    // 📝 Notes:
     //   • Confirms bidirectional keyboard event handling via `Queue_SDL_Event()`.  
     //   • Tests both `KeyDown` and `KeyUp` for a representative key (`SDLK_A`).  
     //   • Text input events remain unimplemented but reserved for future expansion.  
     //
-    // 🧪 Functions Tested:
+    // ⚙️ Functions Tested:
     //
     //   | Category                  | Functions Tested / Behavior Verified              |
     //   |----------------------------|--------------------------------------------------|
@@ -890,16 +890,34 @@ namespace SDOM
     } // END -- Keyboard Event Verification
 
 
-
-    // Test 10: Test the multi-frame event queue
+    // --- Event_test10: Multi-frame Event Queue Verification --------------------------
+    //
+    // 🧩 Purpose:
+    //    Verifies that the UnitTest system correctly supports multi-frame (re-entrant)
+    //    tests where a test persists across multiple frames before completion.
+    //
+    // 🧠 Behavior:
+    //    - Captures the starting frame index at the first invocation.
+    //    - Each subsequent frame increments a logical frame counter.
+    //    - After 10 frames have elapsed, the test reports completion (✅ finished).
+    //
+    // 📝 Notes:
+    //    This serves as a system-level validation of the re-entrant test mechanism
+    //    used by SDOM’s UnitTest framework for multi-frame simulations.
+    //
+    // ============================================================================
     bool Event_test10(std::vector<std::string>& errors)
     {
         UnitTests& ut = UnitTests::getInstance();
+        static int s_start_frame = ut.get_frame_counter();
 
-        int frame_count = ut.get_frame_counter();
-        errors.push_back("Event_test10: Test the multi-frame event queue. Frame count: " + std::to_string(frame_count));
-        
-        return true;
+        int logic_frame = ut.get_frame_counter() - s_start_frame;
+        if (logic_frame < 10)
+            return false; // 🔄 re-entrant test
+        else if (logic_frame == 10)        
+            return true; // ✅ Test complete
+        errors.push_back("Event_test10: Test the multi-frame event queue. Frame: " + std::to_string(logic_frame));
+        return true; // ✅ Test complete
     } // END: Event_test10()
 
 

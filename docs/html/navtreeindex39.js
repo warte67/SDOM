@@ -1,16 +1,14 @@
 var NAVTREEINDEX39 =
 {
-"classSDOM_1_1UnitTests.html#aa860600765065dbc82acd7be916c231c":[3,0,0,41,14],
-"classSDOM_1_1UnitTests.html#aa8818c326f3221af590af43e201d5494":[2,0,0,41,22],
-"classSDOM_1_1UnitTests.html#aa8818c326f3221af590af43e201d5494":[3,0,0,41,22],
+"classSDOM_1_1UnitTests.html#aa8818c326f3221af590af43e201d5494":[3,0,0,41,21],
 "classSDOM_1_1UnitTests.html#ab77bcbf342559b3309d761898566014d":[2,0,0,41,15],
 "classSDOM_1_1UnitTests.html#ab77bcbf342559b3309d761898566014d":[3,0,0,41,15],
 "classSDOM_1_1UnitTests.html#ab9f7936c51476ca5889aa2cbe7b7dd45":[2,0,0,41,11],
 "classSDOM_1_1UnitTests.html#ab9f7936c51476ca5889aa2cbe7b7dd45":[3,0,0,41,11],
-"classSDOM_1_1UnitTests.html#ac27ab5383d4e1a230e1f0065b1496c0d":[2,0,0,41,25],
-"classSDOM_1_1UnitTests.html#ac27ab5383d4e1a230e1f0065b1496c0d":[3,0,0,41,25],
-"classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b":[2,0,0,41,20],
-"classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b":[3,0,0,41,20],
+"classSDOM_1_1UnitTests.html#ac27ab5383d4e1a230e1f0065b1496c0d":[2,0,0,41,24],
+"classSDOM_1_1UnitTests.html#ac27ab5383d4e1a230e1f0065b1496c0d":[3,0,0,41,24],
+"classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b":[2,0,0,41,19],
+"classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b":[3,0,0,41,19],
 "classSDOM_1_1UnitTests.html#ad0237775decb8b96fddc1545cdf9beb8":[2,0,0,41,10],
 "classSDOM_1_1UnitTests.html#ad0237775decb8b96fddc1545cdf9beb8":[3,0,0,41,10],
 "classSDOM_1_1UnitTests.html#ad343c69f22744e888ac9778ce79e64ee":[2,0,0,41,12],
@@ -249,5 +247,7 @@ var NAVTREEINDEX39 =
 "namespaceSDOM.html#a2d9fd9337b8056c8a35d1f5802e56b07":[2,0,0,141],
 "namespaceSDOM.html#a2ddfe0c3e88fd1b6e58620d2b63e769f":[2,0,0,313],
 "namespaceSDOM.html#a2de9188866b1d2bc1ef8702a225af224":[2,0,0,274],
-"namespaceSDOM.html#a2e529ce7e60117c04602a6c84b65e198":[2,0,0,134]
+"namespaceSDOM.html#a2e529ce7e60117c04602a6c84b65e198":[2,0,0,134],
+"namespaceSDOM.html#a2faf5ca0ee67cbc5b14dae4d5a35bd88":[2,0,0,144],
+"namespaceSDOM.html#a30b2979959418fcc8421582cd6cb7c08":[2,0,0,43]
 };

@@ -1,7 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a6705777b712ee811e76fb07162081d63":[2,0,0,44,14],
-"namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a684d325a7303f52e64011467ff5c5758":[2,0,0,44,11],
 "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1":[2,0,0,44,1],
 "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a86f1955e79bb2163d3c32a6024f420e6":[2,0,0,44,5],
 "namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a8d81ac82421d1b03da58fccb9174892e":[2,0,0,44,7],
@@ -249,5 +247,7 @@ var NAVTREEINDEX41 =
 "structSDOM_1_1BitmapFont_1_1InitStruct.html#ab7670dc8e80dc5e5d9fdb1a44f5bc275":[2,0,0,4,0,3],
 "structSDOM_1_1BitmapFont_1_1InitStruct.html#ab7670dc8e80dc5e5d9fdb1a44f5bc275":[3,0,0,4,0,3],
 "structSDOM_1_1BitmapFont_1_1InitStruct.html#acb48179c035bc7ae27d4e445fd793873":[2,0,0,4,0,1],
-"structSDOM_1_1BitmapFont_1_1InitStruct.html#acb48179c035bc7ae27d4e445fd793873":[3,0,0,4,0,1]
+"structSDOM_1_1BitmapFont_1_1InitStruct.html#acb48179c035bc7ae27d4e445fd793873":[3,0,0,4,0,1],
+"structSDOM_1_1BitmapFont_1_1InitStruct.html#aff72131e37f0b204c13ba168d9844ef6":[2,0,0,4,0,0],
+"structSDOM_1_1BitmapFont_1_1InitStruct.html#aff72131e37f0b204c13ba168d9844ef6":[3,0,0,4,0,0]
 };

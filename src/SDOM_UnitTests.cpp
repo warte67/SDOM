@@ -114,12 +114,11 @@ namespace SDOM
 
         TestCase& test = _tests[_current_index];
 
-        std::string frame_str = "Frame " + std::to_string(_frame_counter);
-        frame_str.resize(10, ' ');
-
-        std::cout << CLR::fg_rgb(128, 128, 255)
-                << frame_str
-                << CLR::RESET;
+        // std::string frame_str = "Frame " + std::to_string(_frame_counter);
+        // frame_str.resize(10, ' ');
+        // std::cout << CLR::fg_rgb(128, 128, 255)
+        //         << frame_str
+        //         << CLR::RESET;
 
         // 🔹 Mark as running
         test.running = true;
