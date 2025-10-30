@@ -11,7 +11,6 @@
 <!-- END_VERSION_BLOCK -->
 
 - GitHub Wiki: https://github.com/warte67/SDOM/wiki
-- Doxygen Documentation: https://warte67.github.io/SDOM/
 
 > ⚠️ **Development Status:** SDOM is an **early pre-alpha prototype**.  
 > It is not feature-complete, APIs are unstable, and design work is ongoing.  
