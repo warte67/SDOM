@@ -49,8 +49,8 @@
 namespace SDOM 
 {
     // Static variables to track dragging state and the dragged object
-    static bool isDragging = false;
-    static DisplayHandle draggedObject = nullptr;
+    // static bool isDragging = false;
+    // static DisplayHandle draggedObject = nullptr;
 
 
     void EventManager::addEvent(std::unique_ptr<Event> event) 
@@ -351,8 +351,8 @@ namespace SDOM
     }  // END: findTopObjectUnderMouse()
 
 
-    
-    void EventManager::Queue_SDL_Event(SDL_Event& sdlEvent) 
+/* 
+    void EventManager::Queue_SDL_Event_helper(SDL_Event& sdlEvent) 
     {
         // Convert SDL_Event to SDOM::Event and add to the queue
 
@@ -883,5 +883,488 @@ namespace SDOM
             drag_start_y = -1.0f;
         }
     }
+*/
+
+
+
+    // --- preprocessSDLEvent: Normalize coordinates and sync stage mouse position ------------
+    // ⚙️ System Behavior:
+    // Converts window coordinates into renderer logical coordinates, sets the stage’s
+    // mouseX/mouseY values consistently for hit-testing and event dispatch.
+    void EventManager::preprocessSDLEvent(SDL_Event& e, Stage* stage)
+    {
+        if (auto* renderer = getRenderer())
+            SDL_ConvertEventToRenderCoordinates(renderer, &e);
+        else
+            ERROR("Unable to retrieve proper SDL Renderer.");
+
+        stage->mouseX = static_cast<float>(e.motion.x);
+        stage->mouseY = static_cast<float>(e.motion.y);
+
+        if (e.type == SDL_EVENT_MOUSE_WHEEL)
+        {
+            stage->mouseX = static_cast<float>(e.wheel.mouse_x);
+            stage->mouseY = static_cast<float>(e.wheel.mouse_y);
+        }
+    } // END -- preprocessSDLEvent()
+
+    // --- isWindowEvent: Filter SDL window-related events -------------------------------------
+    bool EventManager::isWindowEvent(SDL_EventType type)
+    {
+        switch (type)
+        {
+            case SDL_EVENT_WINDOW_FOCUS_LOST:
+            case SDL_EVENT_WINDOW_FOCUS_GAINED:
+            case SDL_EVENT_WINDOW_RESIZED:
+            case SDL_EVENT_WINDOW_EXPOSED:
+            case SDL_EVENT_WINDOW_OCCLUDED:
+            case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:
+            case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    // --- isKeyboardEvent: Filter SDL keyboard-related events ---------------------------------
+    bool EventManager::isKeyboardEvent(SDL_EventType type)
+    {
+        return (type == SDL_EVENT_KEY_DOWN || type == SDL_EVENT_KEY_UP);
+    }
+
+    // --- isMouseEvent: Filter SDL mouse-related events ---------------------------------------
+    bool EventManager::isMouseEvent(SDL_EventType type)
+    {
+        return (type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
+                type == SDL_EVENT_MOUSE_BUTTON_UP   ||
+                type == SDL_EVENT_MOUSE_MOTION      ||
+                type == SDL_EVENT_MOUSE_WHEEL);
+    }
+
+
+    // --- dispatchWindowEvents: Handle SDL window-level events -------------------------------
+    // 💡 Notes:
+    // Converts SDL window notifications (focus, resize, show/hide, fullscreen) into
+    // SDOM::EventType equivalents and queues them to the event system.
+    void EventManager::dispatchWindowEvents(const SDL_Event& e)
+    {
+        SDL_Window* activeWindow = SDL_GetWindowFromEvent(&e);
+        if (!activeWindow)
+            return;
+
+        DisplayHandle stageHandle = getFactory().getStageHandle();
+        if (!stageHandle)
+            return;
+
+        const auto sdlType = static_cast<SDL_EventType>(e.type);
+
+        auto makeAndQueue = [&](EventType& type)
+        {
+            auto evt = std::make_unique<Event>(type, stageHandle);
+            evt->setSDL_Event(e);
+            addEvent(std::move(evt));
+        };
+
+        switch (sdlType)
+        {
+            case SDL_EVENT_WINDOW_FOCUS_LOST:         makeAndQueue(EventType::FocusLost); break;
+            case SDL_EVENT_WINDOW_FOCUS_GAINED:       makeAndQueue(EventType::FocusGained); break;
+            case SDL_EVENT_WINDOW_RESIZED:            makeAndQueue(EventType::Resize); break;
+            case SDL_EVENT_WINDOW_EXPOSED:            makeAndQueue(EventType::Show); break;
+            case SDL_EVENT_WINDOW_OCCLUDED:           makeAndQueue(EventType::Hide); break;
+            case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:   makeAndQueue(EventType::EnterFullscreen); break;
+            case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:   makeAndQueue(EventType::LeaveFullscreen); break;
+            default: break;
+        }
+    } // END -- dispatchWindowEvents()
+
+
+    // --- dispatchKeyboardEvents: Handle SDL keyboard input -----------------------------
+    // 🧠 Behavior:
+    // - Uses the currently focused DisplayHandle for KeyDown / KeyUp.
+    // - If no focused object exists, the Stage acts as the default target.
+    // - Converts SDL key info into Event payload fields for higher-level logic.
+    void EventManager::dispatchKeyboardEvents(const SDL_Event& e)
+    {
+        if (e.type != SDL_EVENT_KEY_DOWN && e.type != SDL_EVENT_KEY_UP)
+            return;
+
+        Core& core = getCore();
+        DisplayHandle focused = core.getKeyboardFocusedObject();
+
+        // 🧩 Stage fallback if no focused object
+        if (!focused || !focused.isValid())
+            focused = getFactory().getStageHandle();
+
+        if (!focused)
+            return; // If still invalid (extremely rare), bail out safely.
+
+        const float elapsed = core.getElapsedTime();
+
+        // --- KeyDown -------------------------------------------------------------
+        if (e.type == SDL_EVENT_KEY_DOWN)
+        {
+            auto keyDown = std::make_unique<Event>(EventType::KeyDown, focused, elapsed);
+            keyDown->setSDL_Event(e);
+            keyDown->setScanCode(e.key.scancode);
+            keyDown->setKeycode(e.key.key);
+            keyDown->setKeymod(e.key.mod);
+            keyDown->setAsciiCode(SDL_Utils::keyToAscii(e.key.key, e.key.mod));
+            addEvent(std::move(keyDown));
+        }
+
+        // --- KeyUp ---------------------------------------------------------------
+        if (e.type == SDL_EVENT_KEY_UP)
+        {
+            auto keyUp = std::make_unique<Event>(EventType::KeyUp, focused, elapsed);
+            keyUp->setSDL_Event(e);
+            keyUp->setScanCode(e.key.scancode);
+            keyUp->setKeycode(e.key.key);
+            keyUp->setKeymod(e.key.mod);
+            keyUp->setAsciiCode(SDL_Utils::keyToAscii(e.key.key, e.key.mod));
+            addEvent(std::move(keyUp));
+        }
+    } // END -- dispatchKeyboardEvents()
+
+
+    // --- dispatchMouseEvents: Handle SDL mouse button/move/wheel events ---------------------
+    // ⚙️ System Behavior:
+    // Translates SDL mouse events into SDOM equivalents, sets coordinates,
+    // click count, and button data, then queues for dispatch.
+    void EventManager::dispatchMouseEvents(const SDL_Event& e, DisplayHandle node, DisplayHandle topObject)
+    {
+        static DisplayHandle s_lastMouseDownObject = nullptr;
+        const auto elapsed = getCore().getElapsedTime();
+
+        float mX = 0.0f, mY = 0.0f;
+        if (e.type == SDL_EVENT_MOUSE_WHEEL) {
+            mX = static_cast<float>(e.wheel.mouse_x);
+            mY = static_cast<float>(e.wheel.mouse_y);
+        } else {
+            mX = static_cast<float>(e.motion.x);
+            mY = static_cast<float>(e.motion.y);
+        }
+
+        switch (e.type)
+        {
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            {
+                auto evt = std::make_unique<Event>(EventType::MouseButtonDown, node, elapsed);
+                evt->setSDL_Event(e);
+                evt->mouse_x = mX;
+                evt->mouse_y = mY;
+                evt->button = e.button.button;
+                evt->clickCount = e.button.clicks;
+                evt->setTarget(topObject);
+                addEvent(std::move(evt));
+                s_lastMouseDownObject = topObject;
+                break;
+            }
+
+            case SDL_EVENT_MOUSE_BUTTON_UP:
+            {
+                auto evt = std::make_unique<Event>(EventType::MouseButtonUp, node, elapsed);
+                evt->setSDL_Event(e);
+                evt->mouse_x = mX;
+                evt->mouse_y = mY;
+                evt->button = e.button.button;
+                evt->clickCount = e.button.clicks;
+                evt->setTarget(topObject);
+                addEvent(std::move(evt));
+
+                // Fire click/doubleclick if same object
+                if (s_lastMouseDownObject == topObject)
+                {
+                    EventType& clickType = (e.button.clicks > 1)
+                        ? EventType::MouseDoubleClick
+                        : EventType::MouseClick;
+
+                    auto clickEvent = std::make_unique<Event>(clickType, node, elapsed);
+                    clickEvent->setSDL_Event(e);
+                    clickEvent->mouse_x = mX;
+                    clickEvent->mouse_y = mY;
+                    clickEvent->button = e.button.button;
+                    clickEvent->clickCount = e.button.clicks;
+                    clickEvent->setTarget(topObject);
+                    addEvent(std::move(clickEvent));
+                }
+                break;
+            }
+
+            case SDL_EVENT_MOUSE_WHEEL:
+            {
+                auto evt = std::make_unique<Event>(EventType::MouseWheel, topObject, elapsed);
+                evt->setSDL_Event(e);
+                evt->wheelX = e.wheel.x;
+                evt->wheelY = e.wheel.y;
+                evt->mouse_x = mX;
+                evt->mouse_y = mY;
+                evt->button = e.wheel.direction;
+                evt->clickCount = 0;
+                evt->setTarget(topObject);
+                addEvent(std::move(evt));
+                break;
+            }
+
+            case SDL_EVENT_MOUSE_MOTION:
+            {
+                auto evt = std::make_unique<Event>(EventType::MouseMove, topObject, elapsed);
+                evt->setSDL_Event(e);
+                evt->mouse_x = mX;
+                evt->mouse_y = mY;
+                evt->setTarget(topObject);
+                addEvent(std::move(evt));
+                break;
+            }
+
+            default: break;
+        }
+    } // END -- dispatchMouseEvents()
+
+
+    // --- updateHoverState: Track MouseEnter / MouseLeave / MouseMove transitions ------------
+    // 💡 Notes:
+    // Detects object-level hover transitions within the scene graph. Called every frame for
+    // motion events, this function queues MouseMove, MouseEnter, and MouseLeave as needed.
+    void EventManager::updateHoverState(const SDL_Event& e, DisplayHandle node)
+    {
+        static DisplayHandle lastHoveredObject = nullptr;
+        if (e.type != SDL_EVENT_MOUSE_MOTION)
+            return;
+
+        const float mX = static_cast<float>(e.motion.x);
+        const float mY = static_cast<float>(e.motion.y);
+        const float elapsed = getCore().getElapsedTime();
+
+        DisplayHandle currentHovered = findTopObjectUnderMouse(node, draggedObject);
+
+        // --- Dispatch MouseMove ------------------------------------------------------------
+        auto moveEvt = std::make_unique<Event>(EventType::MouseMove, currentHovered, elapsed);
+        moveEvt->setSDL_Event(e);
+        moveEvt->mouse_x = mX;
+        moveEvt->mouse_y = mY;
+        moveEvt->setTarget(currentHovered);
+        moveEvt->setCurrentTarget(currentHovered);
+        addEvent(std::move(moveEvt));
+
+        // --- Handle MouseLeave -------------------------------------------------------------
+        if (lastHoveredObject && lastHoveredObject != currentHovered)
+        {
+            auto leaveEvt = std::make_unique<Event>(EventType::MouseLeave, lastHoveredObject, elapsed);
+            leaveEvt->setSDL_Event(e);
+            leaveEvt->mouse_x = mX;
+            leaveEvt->mouse_y = mY;
+            leaveEvt->setTarget(lastHoveredObject);
+            leaveEvt->setCurrentTarget(lastHoveredObject);
+            leaveEvt->setRelatedTarget(currentHovered);
+            addEvent(std::move(leaveEvt));
+        }
+
+        // --- Handle MouseEnter -------------------------------------------------------------
+        if (currentHovered != lastHoveredObject)
+        {
+            auto enterEvt = std::make_unique<Event>(EventType::MouseEnter, currentHovered, elapsed);
+            enterEvt->setSDL_Event(e);
+            enterEvt->mouse_x = mX;
+            enterEvt->mouse_y = mY;
+            enterEvt->setTarget(currentHovered);
+            enterEvt->setCurrentTarget(currentHovered);
+            enterEvt->setRelatedTarget(lastHoveredObject);
+            addEvent(std::move(enterEvt));
+        }
+
+        lastHoveredObject = currentHovered;
+    } // END -- updateHoverState()
+
+
+    // --- dispatchWindowEnterLeave: Detect when the mouse enters or leaves the window --------
+    // ⚙️ System Behavior:
+    // Uses SDL’s window focus API to trigger stage-level MouseEnter/MouseLeave events when
+    // the mouse crosses window boundaries.
+    void EventManager::dispatchWindowEnterLeave(const SDL_Event& e, DisplayHandle node)
+    {
+        SDL_CaptureMouse(true); // Ensure consistent focus tracking
+
+        static SDL_Window* focusedWindow = SDL_GetMouseFocus();
+        SDL_Window* currentWindow = SDL_GetMouseFocus();
+
+        const float mX = static_cast<float>(e.motion.x);
+        const float mY = static_cast<float>(e.motion.y);
+        const float elapsed = getCore().getElapsedTime();
+
+        if (focusedWindow == currentWindow)
+            return; // No change in focus state
+
+        DisplayHandle stageObject = getFactory().getStageHandle();
+        if (!stageObject)
+            return;
+
+        // --- Mouse Enter -------------------------------------------------------------------
+        if (currentWindow)
+        {
+            auto enterEvt = std::make_unique<Event>(EventType::MouseEnter, stageObject, elapsed);
+            enterEvt->setSDL_Event(e);
+            enterEvt->mouse_x = mX;
+            enterEvt->mouse_y = mY;
+            enterEvt->setTarget(stageObject);
+            enterEvt->setCurrentTarget(stageObject);
+            addEvent(std::move(enterEvt));
+        }
+        // --- Mouse Leave -------------------------------------------------------------------
+        else
+        {
+            auto leaveEvt = std::make_unique<Event>(EventType::MouseLeave, stageObject, elapsed);
+            leaveEvt->setSDL_Event(e);
+            leaveEvt->mouse_x = mX;
+            leaveEvt->mouse_y = mY;
+            leaveEvt->setTarget(stageObject);
+            leaveEvt->setCurrentTarget(stageObject);
+            addEvent(std::move(leaveEvt));
+        }
+
+        focusedWindow = currentWindow;
+    } // END -- dispatchWindowEnterLeave()
+
+
+    // --- dispatchDragEvents: Manage dragging lifecycle (start, dragging, drop) --------------
+    // 🧠 Internal Mechanism:
+    // Implements a threshold-based drag detection system. Once the mouse moves beyond
+    // DRAG_THRESHOLD pixels while pressed, a drag begins. Subsequent motion triggers
+    // Dragging events until button release, which generates a Drop event.
+    void EventManager::dispatchDragEvents(const SDL_Event& e, DisplayHandle node, DisplayHandle topObject)
+    {
+        static bool isDragging = false;
+        static DisplayHandle draggedObject = nullptr;
+        static float drag_offset_x = 0.0f;
+        static float drag_offset_y = 0.0f;
+        static float drag_start_x = -1.0f;
+        static float drag_start_y = -1.0f;
+
+        const float mX = static_cast<float>(e.motion.x);
+        const float mY = static_cast<float>(e.motion.y);
+        const float elapsed = getCore().getElapsedTime();
+        constexpr float DRAG_THRESHOLD = 5.0f;
+
+        // --- Reset on Mouse Up --------------------------------------------------------------
+        if (e.type == SDL_EVENT_MOUSE_BUTTON_UP)
+        {
+            drag_start_x = -1.0f;
+            drag_start_y = -1.0f;
+        }
+
+        // --- Seed drag start ---------------------------------------------------------------
+        if (drag_start_x < 0.0f && drag_start_y < 0.0f && e.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+        {
+            drag_start_x = mX;
+            drag_start_y = mY;
+        }
+
+        // --- Detect drag start --------------------------------------------------------------
+        if (!isDragging && e.type == SDL_EVENT_MOUSE_MOTION)
+        {
+            if (fabs(mX - drag_start_x) > DRAG_THRESHOLD || fabs(mY - drag_start_y) > DRAG_THRESHOLD)
+            {
+                isDragging = true;
+                draggedObject = topObject;
+                drag_offset_x = mX - draggedObject->getX();
+                drag_offset_y = mY - draggedObject->getY();
+
+                auto dragEvt = std::make_unique<Event>(EventType::Drag, node, elapsed);
+                dragEvt->setSDL_Event(e);
+                dragEvt->mouse_x = mX;
+                dragEvt->mouse_y = mY;
+                dragEvt->dragOffsetX = drag_offset_x;
+                dragEvt->dragOffsetY = drag_offset_y;
+                dragEvt->setTarget(draggedObject);
+                dragEvt->setCurrentTarget(draggedObject);
+                dragEvt->setRelatedTarget(draggedObject->getParent());
+                addEvent(std::move(dragEvt));
+            }
+        }
+
+        // --- Active dragging ---------------------------------------------------------------
+        if (isDragging && e.type == SDL_EVENT_MOUSE_MOTION)
+        {
+            if (!draggedObject)
+                return;
+
+            auto draggingEvt = std::make_unique<Event>(EventType::Dragging, node, elapsed);
+            draggingEvt->setSDL_Event(e);
+            draggingEvt->mouse_x = mX;
+            draggingEvt->mouse_y = mY;
+            draggingEvt->dragOffsetX = drag_offset_x;
+            draggingEvt->dragOffsetY = drag_offset_y;
+            draggingEvt->setTarget(draggedObject);
+            draggingEvt->setCurrentTarget(draggedObject);
+            draggingEvt->setRelatedTarget(draggedObject->getParent());
+            addEvent(std::move(draggingEvt));
+        }
+
+        // --- Drop event on release ----------------------------------------------------------
+        if (isDragging && e.type == SDL_EVENT_MOUSE_BUTTON_UP)
+        {
+            DisplayHandle dropTarget = findTopObjectUnderMouse(getFactory().getStageHandle(), draggedObject);
+
+            auto dropEvt = std::make_unique<Event>(EventType::Drop, dropTarget, elapsed);
+            dropEvt->setSDL_Event(e);
+            dropEvt->mouse_x = mX;
+            dropEvt->mouse_y = mY;
+            dropEvt->dragOffsetX = drag_offset_x;
+            dropEvt->dragOffsetY = drag_offset_y;
+            dropEvt->setTarget(draggedObject);
+            dropEvt->setCurrentTarget(draggedObject);
+            dropEvt->setRelatedTarget(dropTarget);
+            addEvent(std::move(dropEvt));
+
+            // Reset drag state
+            isDragging = false;
+            draggedObject = nullptr;
+            drag_offset_x = drag_offset_y = 0.0f;
+            drag_start_x = drag_start_y = -1.0f;
+        }
+    } // END -- dispatchDragEvents()
+
+
+
+    // --- Queue_SDL_Event: Dispatch SDL events into SDOM Event system -------------------------
+    // 💡 Notes:
+    // This function now serves only as the high-level dispatcher. It delegates all 
+    // SDL event processing to specialized private helpers (window, keyboard, mouse, etc.)
+    // ensuring readability and modularity.
+    //
+    // 🧠 Internal Flow:
+    // 1. Validate stage and renderer availability
+    // 2. Normalize coordinates (preprocessSDLEvent)
+    // 3. Identify top object under cursor
+    // 4. Route event by category
+    // 5. Run system-level updates (hover, window enter/leave, dragging)
+    void EventManager::Queue_SDL_Event(SDL_Event& sdlEvent)
+    {
+        DisplayHandle node = getStageHandle();
+        if (!node || !node->isEnabled() || node->isHidden())
+            return;
+
+        Stage* stage = getStage();
+        if (!stage)
+            return;
+
+        preprocessSDLEvent(sdlEvent, stage);
+
+        DisplayHandle topObject = findTopObjectUnderMouse(node, draggedObject);
+        getCore().setMouseHoveredObject(topObject);
+
+        SDL_EventType sdlType = static_cast<SDL_EventType>(sdlEvent.type);
+
+        // 🧭 Dispatch by category
+        if (isWindowEvent(sdlType))          dispatchWindowEvents(sdlEvent);
+        else if (isKeyboardEvent(sdlType))   dispatchKeyboardEvents(sdlEvent);
+        else if (isMouseEvent(sdlType))      dispatchMouseEvents(sdlEvent, node, topObject);
+
+        // Specialized systems
+        updateHoverState(sdlEvent, node);
+        dispatchWindowEnterLeave(sdlEvent, node);
+        dispatchDragEvents(sdlEvent, node, topObject);
+    } // END -- Queue_SDL_Event()
+
 
 } // namespace SDOM

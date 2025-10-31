@@ -58,6 +58,10 @@ namespace SDOM
         EventManager() = default;
         ~EventManager() = default;
 
+        // ========================================================================
+        // 🧱 Core API
+        // ========================================================================
+
         // Add an event to the queue
         void addEvent(std::unique_ptr<Event> event);
 
@@ -90,7 +94,31 @@ namespace SDOM
         // Event popEvent() { if (!eventQueue.empty()) return std::move(*eventQueue.front()); return Event(); }
 
     private:
+
+        // ========================================================================
+        // ⚙️ Internal State
+        // ========================================================================
         std::queue<std::unique_ptr<Event>> eventQueue; // Queue for storing events
+        bool isDragging = false;
+        DisplayHandle draggedObject = nullptr;
+
+
+        // ========================================================================
+        // 🧩 Internal SDL Event Handling Helpers
+        // ========================================================================
+        void preprocessSDLEvent(SDL_Event& e, Stage* stage);
+        bool isWindowEvent(SDL_EventType type);
+        bool isKeyboardEvent(SDL_EventType type);
+        bool isMouseEvent(SDL_EventType type);
+
+        void dispatchWindowEvents(const SDL_Event& e);
+        void dispatchKeyboardEvents(const SDL_Event& e);
+        void dispatchMouseEvents(const SDL_Event& e, DisplayHandle node, DisplayHandle topObject);
+
+        void updateHoverState(const SDL_Event& e, DisplayHandle node);
+        void dispatchWindowEnterLeave(const SDL_Event& e, DisplayHandle node);
+        void dispatchDragEvents(const SDL_Event& e, DisplayHandle node, DisplayHandle topObject);
+
     };
 
 } // namespace SDOM

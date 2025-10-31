@@ -613,7 +613,6 @@ namespace SDOM
         const std::vector<std::pair<std::string, std::function<void(DisplayHandle)>>>& actions,
         std::vector<std::string>& errors)
     {
-        bool ok = true;
         Core& core = getCore();
         DisplayHandle stage = core.getRootNode();
 
@@ -647,7 +646,6 @@ namespace SDOM
 
             if (!et) {
                 errors.push_back("Unknown EventType: " + name);
-                ok = false;
                 continue;
             }
 
@@ -666,7 +664,6 @@ namespace SDOM
         for (const auto& [name, hit] : hits)
             if (!hit) {
                 errors.push_back("Behavior event '" + name + "' did not fire.");
-                ok = false;
             }
 
         // --- 5) Cleanup -------------------------------------------------------------
@@ -675,7 +672,7 @@ namespace SDOM
         core.collectGarbage();
 
         // ✅ Return informational result (unused in caller)
-        return ok;
+        return true; // ✅ finished this frame
     } // END -- runEventBehaviorTest
 
 
@@ -855,6 +852,12 @@ namespace SDOM
             return false;  // safety: abort early if core stage invalid
 
         EventManager& em = core.getEventManager();
+
+        // DisplayHandle box = core.getDisplayObject("blueishBox");
+        // if (!box.isValid())
+        //     errors.push_back("Event_test9: Failed to find blueishBox.");
+
+        // core.setKeyboardFocusedObject(box);
 
         // --- 2) Define simulated keyboard actions ----------------------------------
         std::vector<std::pair<std::string, std::function<void(DisplayHandle)>>> actions = {
