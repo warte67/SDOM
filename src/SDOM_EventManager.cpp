@@ -991,15 +991,35 @@ namespace SDOM
 
         Core& core = getCore();
         DisplayHandle focused = core.getKeyboardFocusedObject();
-
-        // 🧩 Stage fallback if no focused object
-        if (!focused || !focused.isValid())
-            focused = getFactory().getStageHandle();
-
-        if (!focused)
-            return; // If still invalid (extremely rare), bail out safely.
-
         const float elapsed = core.getElapsedTime();
+
+        // If no focused object, broadcast to all event listeners.
+        // This preserves the unit test expectation that keyboard events are
+        // observable by listeners even when no explicit focus is set.
+        if (!focused || !focused.isValid())
+        {
+            if (e.type == SDL_EVENT_KEY_DOWN)
+            {
+                auto keyDown = std::make_unique<Event>(EventType::KeyDown, getFactory().getStageHandle(), elapsed);
+                keyDown->setSDL_Event(e);
+                keyDown->setScanCode(e.key.scancode);
+                keyDown->setKeycode(e.key.key);
+                keyDown->setKeymod(e.key.mod);
+                keyDown->setAsciiCode(SDL_Utils::keyToAscii(e.key.key, e.key.mod));
+                dispatchEventToAllEventListenersGlobally(std::move(keyDown));
+            }
+            else if (e.type == SDL_EVENT_KEY_UP)
+            {
+                auto keyUp = std::make_unique<Event>(EventType::KeyUp, getFactory().getStageHandle(), elapsed);
+                keyUp->setSDL_Event(e);
+                keyUp->setScanCode(e.key.scancode);
+                keyUp->setKeycode(e.key.key);
+                keyUp->setKeymod(e.key.mod);
+                keyUp->setAsciiCode(SDL_Utils::keyToAscii(e.key.key, e.key.mod));
+                dispatchEventToAllEventListenersGlobally(std::move(keyUp));
+            }
+            return;
+        }
 
         // --- KeyDown -------------------------------------------------------------
         if (e.type == SDL_EVENT_KEY_DOWN)
@@ -1078,6 +1098,14 @@ namespace SDOM
                     EventType& clickType = (e.button.clicks > 1)
                         ? EventType::MouseDoubleClick
                         : EventType::MouseClick;
+
+                    // Restore legacy behavior: on single click, give keyboard focus
+                    // to the clicked object if it is tab-enabled.
+                    if (e.button.clicks == 1) {
+                        if (auto* topNode = dynamic_cast<IDisplayObject*>(topObject.get()))
+                            if (topNode->isTabEnabled())
+                                topNode->setKeyboardFocus();
+                    }
 
                     auto clickEvent = std::make_unique<Event>(clickType, node, elapsed);
                     clickEvent->setSDL_Event(e);
