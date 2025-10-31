@@ -888,11 +888,16 @@ namespace SDOM
         sol::state_view lua = getLua();
         sol::table args = lua.create_table();
         args["type"] = "MouseMove";
-        args["x"] = float(blueishBox->getX() + blueishBox->getWidth() / 2);
-        args["y"] = float(blueishBox->getY() + blueishBox->getHeight() / 2);
+        float x = blueishBox->getX() + blueishBox->getWidth() / 2;
+        float y = blueishBox->getY() + blueishBox->getHeight() / 2;
+        args["x"] = x;
+        args["y"] = y;
         pushMouseEvent_lua(args); // ✅ Verified
-        pumpEventsOnce_lua();     // ✅ Verified
-        if (!isMouseHovered_lua(blueishBox.as<IDisplayObject>()))
+        pumpEventsOnce_lua();     // ⚠️ Failing?
+        auto box_ptr = blueishBox.as<IDisplayObject>();
+        if (!box_ptr) errors.push_back("Failed to get 'blueishBox' pointer.");
+
+        if (!isMouseHovered_lua(box_ptr))  // ✅ Verified
             errors.push_back("Mouse hover detection failed for 'blueishBox'.");
 
         // --- Clickability ---

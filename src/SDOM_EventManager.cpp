@@ -350,6 +350,160 @@ namespace SDOM
         return targetHandle;
     }  // END: findTopObjectUnderMouse()
 
+    // A hover-specific resolver which ignores clickability when determining
+    // the top-most object under the mouse. Useful for hover/scroll targeting.
+    DisplayHandle EventManager::findTopObjectUnderMouseForHover(DisplayHandle rootNode, DisplayHandle excludeNode) const 
+    {
+        DisplayHandle targetHandle; // Reset target handle
+        int maxDepth = -1;      // Track the maximum depth of the target node
+        int maxZ = std::numeric_limits<int>::min();
+        int maxSeq = -1;
+        int seqCounter = 0;
+
+        auto traverse = [&](DisplayHandle nodeHandle, int depth, auto& self) -> void 
+        {
+            if (!nodeHandle || nodeHandle == excludeNode) return;
+            auto& node = *nodeHandle; // Dereference DisplayHandle to get IDisplayObject&
+            ++seqCounter; // visitation sequence (monotonic)
+            int seqNow = seqCounter;
+
+            if (node.isHidden())
+                return;
+
+            // For hover, consider any visible object that is under the mouse
+            if (isMouseWithinBounds(node)) 
+            {
+                int z = node.getZOrder();
+                bool take = false;
+                if (!targetHandle) {
+                    take = true;
+                } else if (z > maxZ) {
+                    take = true;
+                } else if (z == maxZ) {
+                    if (depth > maxDepth) take = true;
+                    else if (depth == maxDepth && seqNow > maxSeq) take = true;
+                }
+
+                if (take) {
+                    targetHandle = nodeHandle;
+                    maxDepth = depth;
+                    maxZ = z;
+                    maxSeq = seqNow;
+                }
+            }
+
+            // Traverse children (depth-first)
+            for (const auto& child : nodeHandle->getChildren()) 
+                self(child, depth + 1, self);
+        };
+
+        getCore().setIsTraversing(true);
+        traverse(rootNode, 0, traverse);
+        getCore().setIsTraversing(false);
+
+        if (!targetHandle)
+            targetHandle = rootNode; 
+        return targetHandle;
+    } // END: findTopObjectUnderMouseForHover()
+
+    // Point-based resolver that uses the provided (px, py) in stage/render coordinates.
+    // When clickableOnly is true, only consider clickable nodes; otherwise, any visible node.
+    DisplayHandle EventManager::findTopObjectAt(DisplayHandle rootNode, float px, float py, DisplayHandle excludeNode, bool clickableOnly) const
+    {
+        DisplayHandle targetHandle;
+        int maxDepth = -1;
+        int maxZ = std::numeric_limits<int>::min();
+        int maxSeq = -1;
+        int seqCounter = 0;
+
+        auto pointInNode = [&](IDisplayObject& node) -> bool
+        {
+            if (node.isHidden()) return false;
+            SDL_Point p { static_cast<int>(px), static_cast<int>(py) };
+            SDL_Rect r {
+                static_cast<int>(node.getX()),
+                static_cast<int>(node.getY()),
+                static_cast<int>(node.getWidth()),
+                static_cast<int>(node.getHeight())
+            };
+            return SDL_PointInRect(&p, &r);
+        };
+
+        auto traverse = [&](DisplayHandle nodeHandle, int depth, auto& self) -> void 
+        {
+            if (!nodeHandle || nodeHandle == excludeNode) return;
+            IDisplayObject* obj = nodeHandle.get();
+            if (!obj) return;
+            ++seqCounter;
+            int seqNow = seqCounter;
+
+            if (!obj->isHidden())
+            {
+                bool okClickable = !clickableOnly || obj->isClickable();
+                if (okClickable && pointInNode(*obj))
+                {
+                    int z = obj->getZOrder();
+                    bool take = false;
+                    if (!targetHandle) take = true;
+                    else if (z > maxZ) take = true;
+                    else if (z == maxZ) {
+                        if (depth > maxDepth) take = true;
+                        else if (depth == maxDepth && seqNow > maxSeq) take = true;
+                    }
+                    if (take) {
+                        targetHandle = nodeHandle;
+                        maxDepth = depth;
+                        maxZ = z;
+                        maxSeq = seqNow;
+                    }
+                }
+            }
+
+            for (const auto& child : nodeHandle->getChildren())
+                self(child, depth + 1, self);
+        };
+
+        getCore().setIsTraversing(true);
+        traverse(rootNode, 0, traverse);
+        getCore().setIsTraversing(false);
+
+        if (!targetHandle)
+        {
+            // Global fallback: scan all registered display objects in the factory.
+            // This defends against cases where the object tree link is not present
+            // in the current stage's children_ but the object is active and visible.
+            const auto names = getFactory().getDisplayObjectNames();
+            for (const auto& name : names)
+            {
+                DisplayHandle h = getFactory().getDisplayObject(name);
+                if (!h || h == excludeNode) continue;
+                IDisplayObject* obj = h.get();
+                if (!obj || obj->isHidden()) continue;
+                if (clickableOnly && !obj->isClickable()) continue;
+                SDL_Point p { static_cast<int>(px), static_cast<int>(py) };
+                SDL_Rect r {
+                    static_cast<int>(obj->getX()),
+                    static_cast<int>(obj->getY()),
+                    static_cast<int>(obj->getWidth()),
+                    static_cast<int>(obj->getHeight())
+                };
+                if (SDL_PointInRect(&p, &r))
+                {
+                    int z = obj->getZOrder();
+                    if (!targetHandle || z > maxZ)
+                    {
+                        targetHandle = h;
+                        maxZ = z;
+                    }
+                }
+            }
+        }
+
+        if (!targetHandle)
+            targetHandle = rootNode;
+        return targetHandle;
+    }
+
 
 /* 
     void EventManager::Queue_SDL_Event_helper(SDL_Event& sdlEvent) 
@@ -893,18 +1047,60 @@ namespace SDOM
     // mouseX/mouseY values consistently for hit-testing and event dispatch.
     void EventManager::preprocessSDLEvent(SDL_Event& e, Stage* stage)
     {
-        if (auto* renderer = getRenderer())
-            SDL_ConvertEventToRenderCoordinates(renderer, &e);
-        else
-            ERROR("Unable to retrieve proper SDL Renderer.");
+        const SDL_EventType et = static_cast<SDL_EventType>(e.type);
 
-        stage->mouseX = static_cast<float>(e.motion.x);
-        stage->mouseY = static_cast<float>(e.motion.y);
+        // Only convert window->render coordinates when the event is associated
+        // with a real window (synthetic tests may omit windowID and already
+        // provide logical/render coordinates).
+        if (isMouseEvent(et))
+        {
+            if (auto* renderer = getRenderer())
+            {
+                SDL_Window* win = SDL_GetWindowFromEvent(&e);
+                if (win)
+                    SDL_ConvertEventToRenderCoordinates(renderer, &e);
+            }
+            else
+            {
+                ERROR("Unable to retrieve proper SDL Renderer.");
+            }
+        }
 
-        if (e.type == SDL_EVENT_MOUSE_WHEEL)
+        // Sync stage mouse position using the best-available fields, even if the
+        // type enum was not recognized (heuristic for synthetic events).
+        if (et == SDL_EVENT_MOUSE_WHEEL)
         {
             stage->mouseX = static_cast<float>(e.wheel.mouse_x);
             stage->mouseY = static_cast<float>(e.wheel.mouse_y);
+        }
+        else if (et == SDL_EVENT_MOUSE_MOTION)
+        {
+            stage->mouseX = static_cast<float>(e.motion.x);
+            stage->mouseY = static_cast<float>(e.motion.y);
+        }
+        else if (et == SDL_EVENT_MOUSE_BUTTON_DOWN || et == SDL_EVENT_MOUSE_BUTTON_UP)
+        {
+            stage->mouseX = static_cast<float>(e.button.x);
+            stage->mouseY = static_cast<float>(e.button.y);
+        }
+        else
+        {
+            // Heuristic fallback: pick first non-zero coordinate among mouse unions
+            if (e.wheel.mouse_x != 0 || e.wheel.mouse_y != 0)
+            {
+                stage->mouseX = static_cast<float>(e.wheel.mouse_x);
+                stage->mouseY = static_cast<float>(e.wheel.mouse_y);
+            }
+            else if (e.motion.x != 0 || e.motion.y != 0)
+            {
+                stage->mouseX = static_cast<float>(e.motion.x);
+                stage->mouseY = static_cast<float>(e.motion.y);
+            }
+            else if (e.button.x != 0 || e.button.y != 0)
+            {
+                stage->mouseX = static_cast<float>(e.button.x);
+                stage->mouseY = static_cast<float>(e.button.y);
+            }
         }
     } // END -- preprocessSDLEvent()
 
@@ -935,10 +1131,12 @@ namespace SDOM
     // --- isMouseEvent: Filter SDL mouse-related events ---------------------------------------
     bool EventManager::isMouseEvent(SDL_EventType type)
     {
-        return (type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
-                type == SDL_EVENT_MOUSE_BUTTON_UP   ||
-                type == SDL_EVENT_MOUSE_MOTION      ||
-                type == SDL_EVENT_MOUSE_WHEEL);
+        return (type == SDL_EVENT_MOUSE_BUTTON_DOWN  ||
+                type == SDL_EVENT_MOUSE_BUTTON_UP    ||
+                type == SDL_EVENT_MOUSE_MOTION       ||
+                type == SDL_EVENT_MOUSE_WHEEL        ||
+                type == SDL_EVENT_WINDOW_MOUSE_ENTER ||
+                type == SDL_EVENT_WINDOW_MOUSE_LEAVE);
     }
 
 
@@ -993,9 +1191,8 @@ namespace SDOM
         DisplayHandle focused = core.getKeyboardFocusedObject();
         const float elapsed = core.getElapsedTime();
 
-        // If no focused object, broadcast to all event listeners.
-        // This preserves the unit test expectation that keyboard events are
-        // observable by listeners even when no explicit focus is set.
+        // If no focused object, broadcast to all event listeners on the stage
+        // to avoid per-object copies (stage traversal reuses a single Event).
         if (!focused || !focused.isValid())
         {
             if (e.type == SDL_EVENT_KEY_DOWN)
@@ -1006,7 +1203,7 @@ namespace SDOM
                 keyDown->setKeycode(e.key.key);
                 keyDown->setKeymod(e.key.mod);
                 keyDown->setAsciiCode(SDL_Utils::keyToAscii(e.key.key, e.key.mod));
-                dispatchEventToAllEventListenersGlobally(std::move(keyDown));
+                dispatchEventToAllEventListenersOnStage(std::move(keyDown));
             }
             else if (e.type == SDL_EVENT_KEY_UP)
             {
@@ -1016,7 +1213,7 @@ namespace SDOM
                 keyUp->setKeycode(e.key.key);
                 keyUp->setKeymod(e.key.mod);
                 keyUp->setAsciiCode(SDL_Utils::keyToAscii(e.key.key, e.key.mod));
-                dispatchEventToAllEventListenersGlobally(std::move(keyUp));
+                dispatchEventToAllEventListenersOnStage(std::move(keyUp));
             }
             return;
         }
@@ -1121,7 +1318,15 @@ namespace SDOM
 
             case SDL_EVENT_MOUSE_WHEEL:
             {
-                auto evt = std::make_unique<Event>(EventType::MouseWheel, topObject, elapsed);
+                // Prefer hovered object as target; if none set yet, resolve
+                // using hover-specific resolver (ignores clickability).
+                DisplayHandle hovered = getCore().getMouseHoveredObject();
+                DisplayHandle wheelTarget = (hovered && hovered.isValid())
+                    ? hovered
+                    : findTopObjectUnderMouseForHover(node, draggedObject);
+                // Keep Core hovered in sync on wheel
+                getCore().setMouseHoveredObject(wheelTarget);
+                auto evt = std::make_unique<Event>(EventType::MouseWheel, wheelTarget, elapsed);
                 evt->setSDL_Event(e);
                 evt->wheelX = e.wheel.x;
                 evt->wheelY = e.wheel.y;
@@ -1129,21 +1334,12 @@ namespace SDOM
                 evt->mouse_y = mY;
                 evt->button = e.wheel.direction;
                 evt->clickCount = 0;
-                evt->setTarget(topObject);
+                evt->setTarget(wheelTarget);
                 addEvent(std::move(evt));
                 break;
             }
 
-            case SDL_EVENT_MOUSE_MOTION:
-            {
-                auto evt = std::make_unique<Event>(EventType::MouseMove, topObject, elapsed);
-                evt->setSDL_Event(e);
-                evt->mouse_x = mX;
-                evt->mouse_y = mY;
-                evt->setTarget(topObject);
-                addEvent(std::move(evt));
-                break;
-            }
+            // MouseMove events are enqueued by updateHoverState() to avoid duplicates
 
             default: break;
         }
@@ -1157,14 +1353,24 @@ namespace SDOM
     void EventManager::updateHoverState(const SDL_Event& e, DisplayHandle node)
     {
         static DisplayHandle lastHoveredObject = nullptr;
-        if (e.type != SDL_EVENT_MOUSE_MOTION)
+        const SDL_EventType et = static_cast<SDL_EventType>(e.type);
+
+        // Prefer clickable object under mouse; if none, fall back to any visible under mouse
+        DisplayHandle clickable = findTopObjectUnderMouse(node, draggedObject);
+        DisplayHandle currentHovered = (clickable && clickable != node) ? clickable
+            : findTopObjectUnderMouseForHover(node, draggedObject);
+        getCore().setMouseHoveredObject(currentHovered);
+
+        // Only synthesize move/enter/leave during motion
+        if (et != SDL_EVENT_MOUSE_MOTION)
+        {
+            lastHoveredObject = currentHovered;
             return;
+        }
 
         const float mX = static_cast<float>(e.motion.x);
         const float mY = static_cast<float>(e.motion.y);
         const float elapsed = getCore().getElapsedTime();
-
-        DisplayHandle currentHovered = findTopObjectUnderMouse(node, draggedObject);
 
         // --- Dispatch MouseMove ------------------------------------------------------------
         auto moveEvt = std::make_unique<Event>(EventType::MouseMove, currentHovered, elapsed);
@@ -1261,15 +1467,31 @@ namespace SDOM
     // Dragging events until button release, which generates a Drop event.
     void EventManager::dispatchDragEvents(const SDL_Event& e, DisplayHandle node, DisplayHandle topObject)
     {
-        static bool isDragging = false;
-        static DisplayHandle draggedObject = nullptr;
+        // Use EventManager member state so other helpers see consistent drag state
         static float drag_offset_x = 0.0f;
         static float drag_offset_y = 0.0f;
         static float drag_start_x = -1.0f;
         static float drag_start_y = -1.0f;
 
-        const float mX = static_cast<float>(e.motion.x);
-        const float mY = static_cast<float>(e.motion.y);
+        float mX = 0.0f, mY = 0.0f;
+        switch (static_cast<SDL_EventType>(e.type))
+        {
+            case SDL_EVENT_MOUSE_MOTION:
+                mX = static_cast<float>(e.motion.x);
+                mY = static_cast<float>(e.motion.y);
+                break;
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            case SDL_EVENT_MOUSE_BUTTON_UP:
+                mX = static_cast<float>(e.button.x);
+                mY = static_cast<float>(e.button.y);
+                break;
+            case SDL_EVENT_MOUSE_WHEEL:
+                mX = static_cast<float>(e.wheel.mouse_x);
+                mY = static_cast<float>(e.wheel.mouse_y);
+                break;
+            default:
+                break;
+        }
         const float elapsed = getCore().getElapsedTime();
         constexpr float DRAG_THRESHOLD = 5.0f;
 
@@ -1288,7 +1510,8 @@ namespace SDOM
         }
 
         // --- Detect drag start --------------------------------------------------------------
-        if (!isDragging && e.type == SDL_EVENT_MOUSE_MOTION)
+        // Only consider starting a drag if a prior button-down seeded the start coords
+        if (!isDragging && e.type == SDL_EVENT_MOUSE_MOTION && drag_start_x >= 0.0f && drag_start_y >= 0.0f)
         {
             if (fabs(mX - drag_start_x) > DRAG_THRESHOLD || fabs(mY - drag_start_y) > DRAG_THRESHOLD)
             {
@@ -1378,20 +1601,87 @@ namespace SDOM
 
         preprocessSDLEvent(sdlEvent, stage);
 
-        DisplayHandle topObject = findTopObjectUnderMouse(node, draggedObject);
-        getCore().setMouseHoveredObject(topObject);
-
         SDL_EventType sdlType = static_cast<SDL_EventType>(sdlEvent.type);
 
-        // 🧭 Dispatch by category
-        if (isWindowEvent(sdlType))          dispatchWindowEvents(sdlEvent);
-        else if (isKeyboardEvent(sdlType))   dispatchKeyboardEvents(sdlEvent);
-        else if (isMouseEvent(sdlType))      dispatchMouseEvents(sdlEvent, node, topObject);
+        // Compute point under cursor for mouse events and resolve targets by point
+        if (isMouseEvent(sdlType))
+        {
+            float mX = 0.0f, mY = 0.0f;
+            switch (sdlType)
+            {
+                case SDL_EVENT_MOUSE_MOTION:
+                    mX = static_cast<float>(sdlEvent.motion.x);
+                    mY = static_cast<float>(sdlEvent.motion.y);
+                    break;
+                case SDL_EVENT_MOUSE_BUTTON_DOWN:
+                case SDL_EVENT_MOUSE_BUTTON_UP:
+                    mX = static_cast<float>(sdlEvent.button.x);
+                    mY = static_cast<float>(sdlEvent.button.y);
+                    break;
+                case SDL_EVENT_MOUSE_WHEEL:
+                    mX = static_cast<float>(sdlEvent.wheel.mouse_x);
+                    mY = static_cast<float>(sdlEvent.wheel.mouse_y);
+                    break;
+                default: break;
+            }
+
+            DisplayHandle ptClickable = findTopObjectAt(node, mX, mY, draggedObject, /*clickableOnly*/true);
+            DisplayHandle ptHover     = findTopObjectAt(node, mX, mY, draggedObject, /*clickableOnly*/false);
+            getCore().setMouseHoveredObject(ptHover);
+
+            // Dispatch by mouse category with point-resolved clickable target
+            dispatchMouseEvents(sdlEvent, node, ptClickable);
+        }
+        else if (isWindowEvent(sdlType))          dispatchWindowEvents(sdlEvent);
+        else if (isKeyboardEvent(sdlType))         dispatchKeyboardEvents(sdlEvent);
+        else
+        {
+            // Heuristic: treat events with mouse-like coordinates as mouse events
+            float mX = 0.0f, mY = 0.0f; bool looksMouse = false;
+            if (sdlEvent.wheel.mouse_x != 0 || sdlEvent.wheel.mouse_y != 0) {
+                mX = static_cast<float>(sdlEvent.wheel.mouse_x);
+                mY = static_cast<float>(sdlEvent.wheel.mouse_y);
+                looksMouse = true;
+            } else if (sdlEvent.motion.x != 0 || sdlEvent.motion.y != 0) {
+                mX = static_cast<float>(sdlEvent.motion.x);
+                mY = static_cast<float>(sdlEvent.motion.y);
+                looksMouse = true;
+            } else if (sdlEvent.button.x != 0 || sdlEvent.button.y != 0) {
+                mX = static_cast<float>(sdlEvent.button.x);
+                mY = static_cast<float>(sdlEvent.button.y);
+                looksMouse = true;
+            }
+
+            if (looksMouse)
+            {
+                DisplayHandle ptClickable = findTopObjectAt(node, mX, mY, draggedObject, /*clickableOnly*/true);
+                DisplayHandle ptHover     = findTopObjectAt(node, mX, mY, draggedObject, /*clickableOnly*/false);
+                getCore().setMouseHoveredObject(ptHover);
+                dispatchMouseEvents(sdlEvent, node, ptClickable);
+            }
+        }
 
         // Specialized systems
-        updateHoverState(sdlEvent, node);
+        // Only synthesize hover move/enter/leave on actual motion; avoid window
+        // notifications (e.g., WINDOW_MOUSE_LEAVE) from clobbering hovered state.
+        if (sdlType == SDL_EVENT_MOUSE_MOTION)
+            updateHoverState(sdlEvent, node);
         dispatchWindowEnterLeave(sdlEvent, node);
-        dispatchDragEvents(sdlEvent, node, topObject);
+        if (isMouseEvent(sdlType))
+        {
+            // Recompute clickable target for drag in case events mutated state
+            float mX = 0.0f, mY = 0.0f;
+            switch (sdlType)
+            {
+                case SDL_EVENT_MOUSE_MOTION:       mX = static_cast<float>(sdlEvent.motion.x); mY = static_cast<float>(sdlEvent.motion.y); break;
+                case SDL_EVENT_MOUSE_BUTTON_DOWN:
+                case SDL_EVENT_MOUSE_BUTTON_UP:    mX = static_cast<float>(sdlEvent.button.x); mY = static_cast<float>(sdlEvent.button.y); break;
+                case SDL_EVENT_MOUSE_WHEEL:        mX = static_cast<float>(sdlEvent.wheel.mouse_x); mY = static_cast<float>(sdlEvent.wheel.mouse_y); break;
+                default: break;
+            }
+            DisplayHandle ptClickable = findTopObjectAt(node, mX, mY, draggedObject, /*clickableOnly*/true);
+            dispatchDragEvents(sdlEvent, node, ptClickable); // ToDo: This should not happen unless there is a button down event and not already dragging
+        }
     } // END -- Queue_SDL_Event()
 
 

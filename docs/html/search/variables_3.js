@@ -9,14 +9,13 @@ var searchData=
   ['disabled_6',['Disabled',['../classSDOM_1_1EventType.html#aa276368587363a849ed1a57a9a1e230a',1,'SDOM::EventType']]],
   ['disabledefaultbehavior_7',['disableDefaultBehavior',['../classSDOM_1_1Event.html#a080aac422b33308070477a6c1fc2c6d6',1,'SDOM::Event']]],
   ['drag_8',['Drag',['../classSDOM_1_1EventType.html#a6311cdc9538efcbb20839869ec1b283c',1,'SDOM::EventType']]],
-  ['draggedobject_9',['draggedObject',['../namespaceSDOM.html#a2d526a9b6973674ecacbc396a86aa4bd',1,'SDOM']]],
-  ['dragging_10',['Dragging',['../classSDOM_1_1EventType.html#a04fb66fb13257ea2b74de3ee379587b2',1,'SDOM::EventType']]],
-  ['dragoffsetx_11',['dragOffsetX',['../classSDOM_1_1Event.html#adcf60a899112b260d6b4515aa2eddb30',1,'SDOM::Event']]],
-  ['dragoffsety_12',['dragOffsetY',['../classSDOM_1_1Event.html#a1ef4b8a04e0d7a9cd0cc9fbee6e98a62',1,'SDOM::Event']]],
-  ['drop_13',['Drop',['../classSDOM_1_1EventType.html#acd869ea36dffbfa5980aa41b890fc4ca',1,'SDOM::EventType']]],
-  ['dropshadow_14',['dropshadow',['../structSDOM_1_1FontStyle.html#a4dfe6a92f4c0f17e3ad3c78c09ba4b35',1,'SDOM::FontStyle::dropshadow'],['../structSDOM_1_1Label_1_1InitStruct.html#a3a55bdb0f51ea81601a05804e8953537',1,'SDOM::Label::InitStruct::dropshadow']]],
-  ['dropshadowcolor_15',['dropshadowColor',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a0df9d711df2ac9ede2bf91e826db29cc',1,'SDOM::IDisplayObject::InitStruct::dropshadowColor'],['../structSDOM_1_1FontStyle.html#a7ca248337e9f423fc3a6448005d8acee',1,'SDOM::FontStyle::dropshadowColor']]],
-  ['dropshadowcolor_5f_16',['dropshadowColor_',['../classSDOM_1_1IDisplayObject.html#acb55b6182cfa065a56e544c68c627f98',1,'SDOM::IDisplayObject']]],
-  ['dropshadowoffsetx_17',['dropshadowOffsetX',['../structSDOM_1_1FontStyle.html#adf2e70a9a5cfdf6b1915e094ca0773ad',1,'SDOM::FontStyle::dropshadowOffsetX'],['../structSDOM_1_1Label_1_1InitStruct.html#a36b67da475692f524a2331e0063b7a03',1,'SDOM::Label::InitStruct::dropshadowOffsetX']]],
-  ['dropshadowoffsety_18',['dropshadowOffsetY',['../structSDOM_1_1FontStyle.html#a7eee628d2496c7359f1a19ea00072ac9',1,'SDOM::FontStyle::dropshadowOffsetY'],['../structSDOM_1_1Label_1_1InitStruct.html#a01bd8f3f00cbad1477a2b025f878e794',1,'SDOM::Label::InitStruct::dropshadowOffsetY']]]
+  ['dragging_9',['Dragging',['../classSDOM_1_1EventType.html#a04fb66fb13257ea2b74de3ee379587b2',1,'SDOM::EventType']]],
+  ['dragoffsetx_10',['dragOffsetX',['../classSDOM_1_1Event.html#adcf60a899112b260d6b4515aa2eddb30',1,'SDOM::Event']]],
+  ['dragoffsety_11',['dragOffsetY',['../classSDOM_1_1Event.html#a1ef4b8a04e0d7a9cd0cc9fbee6e98a62',1,'SDOM::Event']]],
+  ['drop_12',['Drop',['../classSDOM_1_1EventType.html#acd869ea36dffbfa5980aa41b890fc4ca',1,'SDOM::EventType']]],
+  ['dropshadow_13',['dropshadow',['../structSDOM_1_1FontStyle.html#a4dfe6a92f4c0f17e3ad3c78c09ba4b35',1,'SDOM::FontStyle::dropshadow'],['../structSDOM_1_1Label_1_1InitStruct.html#a3a55bdb0f51ea81601a05804e8953537',1,'SDOM::Label::InitStruct::dropshadow']]],
+  ['dropshadowcolor_14',['dropshadowColor',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a0df9d711df2ac9ede2bf91e826db29cc',1,'SDOM::IDisplayObject::InitStruct::dropshadowColor'],['../structSDOM_1_1FontStyle.html#a7ca248337e9f423fc3a6448005d8acee',1,'SDOM::FontStyle::dropshadowColor']]],
+  ['dropshadowcolor_5f_15',['dropshadowColor_',['../classSDOM_1_1IDisplayObject.html#acb55b6182cfa065a56e544c68c627f98',1,'SDOM::IDisplayObject']]],
+  ['dropshadowoffsetx_16',['dropshadowOffsetX',['../structSDOM_1_1FontStyle.html#adf2e70a9a5cfdf6b1915e094ca0773ad',1,'SDOM::FontStyle::dropshadowOffsetX'],['../structSDOM_1_1Label_1_1InitStruct.html#a36b67da475692f524a2331e0063b7a03',1,'SDOM::Label::InitStruct::dropshadowOffsetX']]],
+  ['dropshadowoffsety_17',['dropshadowOffsetY',['../structSDOM_1_1FontStyle.html#a7eee628d2496c7359f1a19ea00072ac9',1,'SDOM::FontStyle::dropshadowOffsetY'],['../structSDOM_1_1Label_1_1InitStruct.html#a01bd8f3f00cbad1477a2b025f878e794',1,'SDOM::Label::InitStruct::dropshadowOffsetY']]]
 ];

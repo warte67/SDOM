@@ -11,7 +11,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_Core_Lua.cpp", "SDOM__Core__Lua_8cpp.html", "SDOM__Core__Lua_8cpp" ],
     [ "SDOM_DisplayHandle.cpp", "SDOM__DisplayHandle_8cpp.html", null ],
     [ "SDOM_Event.cpp", "SDOM__Event_8cpp.html", null ],
-    [ "SDOM_EventManager.cpp", "SDOM__EventManager_8cpp.html", "SDOM__EventManager_8cpp" ],
+    [ "SDOM_EventManager.cpp", "SDOM__EventManager_8cpp.html", null ],
     [ "SDOM_EventType.cpp", "SDOM__EventType_8cpp.html", null ],
     [ "SDOM_Factory.cpp", "SDOM__Factory_8cpp.html", null ],
     [ "SDOM_Frame.cpp", "SDOM__Frame_8cpp.html", null ],

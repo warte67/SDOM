@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+script="$repo_root/scripts/update_latest_anchor.sh"
+
+if [[ -x "$script" ]]; then
+  "$script"
+  # If the script changed the file, stage it so the commit includes the update
+  if ! git diff --quiet -- docs/progress.md; then
+    git add docs/progress.md
+    echo "[pre-commit] Staged docs/progress.md after anchor update"
+  fi
+else
+  echo "[pre-commit] Skipping latest-update anchor sync (script not executable)" >&2
+fi
+
+exit 0
+

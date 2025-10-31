@@ -88,6 +88,10 @@ namespace SDOM
         // Utility methods
         bool isMouseWithinBounds(IDisplayObject& target) const;
         DisplayHandle findTopObjectUnderMouse(DisplayHandle rootNode, DisplayHandle excludeNode = DisplayHandle()) const;
+        // Hover resolver: ignores clickability and picks the topmost visible node under mouse
+        DisplayHandle findTopObjectUnderMouseForHover(DisplayHandle rootNode, DisplayHandle excludeNode = DisplayHandle()) const;
+        // Point-based resolver: choose top-most object at (px,py)
+        DisplayHandle findTopObjectAt(DisplayHandle rootNode, float px, float py, DisplayHandle excludeNode, bool clickableOnly) const;
 
         int getEventQueueSize() const { return static_cast<int>(eventQueue.size()); }
 

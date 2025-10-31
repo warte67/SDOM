@@ -1,5 +1,7 @@
 var NAVTREEINDEX45 =
 {
+"structSDOM_1_1IconButton_1_1InitStruct.html#af96dbfaee52c56998a0c02de9c57f95b":[2,0,0,20,0,19],
+"structSDOM_1_1IconButton_1_1InitStruct.html#af96dbfaee52c56998a0c02de9c57f95b":[3,0,0,20,0,19],
 "structSDOM_1_1Label_1_1InitStruct.html":[2,0,0,29,0],
 "structSDOM_1_1Label_1_1InitStruct.html":[3,0,0,29,0],
 "structSDOM_1_1Label_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69":[2,0,0,29,0,22],
@@ -247,7 +249,5 @@ var NAVTREEINDEX45 =
 "structSDOM_1_1RadioButton_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939":[2,0,0,31,0,28],
 "structSDOM_1_1RadioButton_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939":[3,0,0,31,0,28],
 "structSDOM_1_1RadioButton_1_1InitStruct.html#ab41dcfc6259800a732c4eccd40452ae6":[2,0,0,31,0,27],
-"structSDOM_1_1RadioButton_1_1InitStruct.html#ab41dcfc6259800a732c4eccd40452ae6":[3,0,0,31,0,27],
-"structSDOM_1_1RadioButton_1_1InitStruct.html#ac3b4c19819ff87fd7886678ef807edcf":[2,0,0,31,0,37],
-"structSDOM_1_1RadioButton_1_1InitStruct.html#ac3b4c19819ff87fd7886678ef807edcf":[3,0,0,31,0,37]
+"structSDOM_1_1RadioButton_1_1InitStruct.html#ab41dcfc6259800a732c4eccd40452ae6":[3,0,0,31,0,27]
 };

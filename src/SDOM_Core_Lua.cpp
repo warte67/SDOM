@@ -979,35 +979,29 @@ namespace SDOM
 		float sy = t["y"].get<float>();
 		std::string type = "down";
 		if (t["type"].valid()) type = t["type"].get<std::string>();
+		// Normalize type aliases for convenience (case-insensitive)
+		std::string tnorm;
+		tnorm.reserve(type.size());
+		for (char ch : type) tnorm.push_back(static_cast<char>(::tolower(static_cast<unsigned char>(ch))));
+		// Common aliases
+		bool isUp     = (tnorm == "up" || tnorm == "mouseup" || tnorm == "mousebuttonup");
+		bool isMotion = (tnorm == "motion" || tnorm == "move" || tnorm == "mousemove" || tnorm == "mouse_move");
+		bool isDown   = (tnorm == "down" || tnorm == "mousedown" || tnorm == "mousebuttondown");
+		bool isWheel  = (tnorm == "wheel" || tnorm == "mousewheel");
 		int button = 1;
 		if (t["button"].valid()) button = t["button"].get<int>();
 
-		// Convert stage/render coords to window coords using SDL_RenderCoordinatesToWindow
-		float winX = 0.0f, winY = 0.0f;
-		SDL_Renderer* renderer = c->getRenderer();
-		if (renderer) 
-		{
-			SDL_RenderCoordinatesToWindow(renderer, sx, sy, &winX, &winY);
-			LUA_INFO("pushMouseEvent_lua: SDL_RenderCoordinatesToWindow stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
-		} 
-		else 
-		{
-			// Fallback: simple scaling (may fail in tiled/letterboxed)
-			const Core::CoreConfig& cfg = c->getConfig();
-			winX = sx * cfg.pixelWidth;
-			winY = sy * cfg.pixelHeight;
-			LUA_INFO("pushMouseEvent_lua: Fallback scaling stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
-		}
+		// For synthetic test events, directly use stage/render coordinates and
+		// avoid adding a windowID so preprocess doesn't convert again.
+		float winX = sx, winY = sy;
+		Uint32 winID = 0; // leave unset to skip SDL_ConvertEventToRenderCoordinates
 
 		// Debug logging for synthetic mouse events
-		LUA_INFO("[pushMouseEvent_lua] stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
-
-		Uint32 winID = 0;
-		if (c->getWindow()) winID = SDL_GetWindowID(c->getWindow());
+		LUA_INFO("[pushMouseEvent_lua] stage:(" << sx << "," << sy << ") type:" << type << " button:" << button);
 
 		SDL_Event ev;
 		std::memset(&ev, 0, sizeof(ev));
-		if (type == "up") {
+		if (isUp) {
 			ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
 			ev.button.windowID = winID;
 			ev.button.which = 0;
@@ -1019,13 +1013,22 @@ namespace SDOM
 			ev.motion.which = 0;
 			ev.motion.x = winX;
 			ev.motion.y = winY;
-		} else if (type == "motion") {
+		} else if (isMotion) {
 			ev.type = SDL_EVENT_MOUSE_MOTION;
 			ev.motion.windowID = winID;
 			ev.motion.which = 0;
 			ev.motion.x = winX;
 			ev.motion.y = winY;
-		} else {
+		} else if (isWheel) {
+			// Optional convenience for wheel; default scroll up 1 notch at (sx, sy)
+			ev.type = SDL_EVENT_MOUSE_WHEEL;
+			// SDL3 wheel doesn't have x/y window coords directly; store in mouse_x/y
+			ev.wheel.x = 0;
+			ev.wheel.y = 1;
+			ev.wheel.mouse_x = static_cast<int>(sx);
+			ev.wheel.mouse_y = static_cast<int>(sy);
+			ev.wheel.direction = SDL_MOUSEWHEEL_NORMAL;
+		} else if (isDown) {
 			ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
 			ev.button.windowID = winID;
 			ev.button.which = 0;
@@ -1033,6 +1036,13 @@ namespace SDOM
 			ev.button.clicks = 1;
 			ev.button.x = winX;
 			ev.button.y = winY;
+			ev.motion.windowID = winID;
+			ev.motion.which = 0;
+			ev.motion.x = winX;
+			ev.motion.y = winY;
+		} else {
+			// Default fallback: treat as move
+			ev.type = SDL_EVENT_MOUSE_MOTION;
 			ev.motion.windowID = winID;
 			ev.motion.which = 0;
 			ev.motion.x = winX;

@@ -8,7 +8,9 @@ var searchData=
   ['findassetbyfilename_5flua_5',['findAssetByFilename_lua',['../namespaceSDOM.html#ae11150acccb4b28fc0e23b7b09170180',1,'SDOM']]],
   ['findspritesheetbyparams_6',['findSpriteSheetByParams',['../classSDOM_1_1Factory.html#aac735a001aaf43f7d410d20d8e69810b',1,'SDOM::Factory']]],
   ['findspritesheetbyparams_5flua_7',['findSpriteSheetByParams_lua',['../namespaceSDOM.html#a295dd44061f26059b0c9ab9d3966bf8b',1,'SDOM']]],
-  ['findtopobjectundermouse_8',['findTopObjectUnderMouse',['../classSDOM_1_1EventManager.html#ae895de2552d6f3bc840b3ba4396692ae',1,'SDOM::EventManager']]],
-  ['frame_9',['Frame',['../classSDOM_1_1Frame.html#a4b6056a257215fb7ed47a827b31b93f6',1,'SDOM::Frame::Frame(const InitStruct &amp;init)'],['../classSDOM_1_1Frame.html#a2666eb1b1fe16c3a31ac0e56fb216d25',1,'SDOM::Frame::Frame(const sol::table &amp;config)'],['../classSDOM_1_1Frame.html#a2754c51f92021b2e1c22f5cbbb24b9fa',1,'SDOM::Frame::Frame()=default']]],
-  ['fullstring_10',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]]
+  ['findtopobjectat_8',['findTopObjectAt',['../classSDOM_1_1EventManager.html#a5b826a7539b784966762701e726d29f8',1,'SDOM::EventManager']]],
+  ['findtopobjectundermouse_9',['findTopObjectUnderMouse',['../classSDOM_1_1EventManager.html#ae895de2552d6f3bc840b3ba4396692ae',1,'SDOM::EventManager']]],
+  ['findtopobjectundermouseforhover_10',['findTopObjectUnderMouseForHover',['../classSDOM_1_1EventManager.html#a662b8ad33c93b9aa160c7b34515b870d',1,'SDOM::EventManager']]],
+  ['frame_11',['Frame',['../classSDOM_1_1Frame.html#a4b6056a257215fb7ed47a827b31b93f6',1,'SDOM::Frame::Frame(const InitStruct &amp;init)'],['../classSDOM_1_1Frame.html#a2666eb1b1fe16c3a31ac0e56fb216d25',1,'SDOM::Frame::Frame(const sol::table &amp;config)'],['../classSDOM_1_1Frame.html#a2754c51f92021b2e1c22f5cbbb24b9fa',1,'SDOM::Frame::Frame()=default']]],
+  ['fullstring_12',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]]
 ];

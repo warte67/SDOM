@@ -1,5 +1,7 @@
 var NAVTREEINDEX47 =
 {
+"structSDOM_1_1Texture_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2":[2,0,0,37,0,3],
+"structSDOM_1_1Texture_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2":[3,0,0,37,0,3],
 "structSDOM_1_1Texture_1_1InitStruct.html#a8c427dfbbfee0c61be93bd450bfa089f":[2,0,0,37,0,2],
 "structSDOM_1_1Texture_1_1InitStruct.html#a8c427dfbbfee0c61be93bd450bfa089f":[3,0,0,37,0,2],
 "structSDOM_1_1Texture_1_1InitStruct.html#a943787c07c8eae0928dcc2cfacbde746":[2,0,0,37,0,4],
