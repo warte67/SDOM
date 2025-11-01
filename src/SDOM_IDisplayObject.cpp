@@ -349,121 +349,107 @@ namespace SDOM
         (void)event; // Unused --- IGNORE ---
     }
 
-void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent, bool useWorld, int worldX, int worldY)
-{
-    IDisplayObject* child = dynamic_cast<IDisplayObject*>(p_child.get());
-    IDisplayObject* parent = dynamic_cast<IDisplayObject*>(p_parent.get());
-    if (child && parent) 
+    void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent, bool useWorld, int worldX, int worldY)
     {
-        auto& parentChildren = parent->children_;
-        auto it = std::find(parentChildren.begin(), parentChildren.end(), p_child);
+        IDisplayObject* child = dynamic_cast<IDisplayObject*>(p_child.get());
+        IDisplayObject* parent = dynamic_cast<IDisplayObject*>(p_parent.get());
+        if (child && parent) 
+        {
+            auto& parentChildren = parent->children_;
+            auto it = std::find(parentChildren.begin(), parentChildren.end(), p_child);
 
-        // Also prevent adding a child with the same name as an existing child
-        bool nameExists = false;
-        std::string newName = p_child.getName();
-        for (const auto& existing : parentChildren) {
-            if (existing && existing.getName() == newName) {
-                nameExists = true;
-                break;
+            // Also prevent adding a child with the same name as an existing child
+            bool nameExists = false;
+            std::string newName = p_child.getName();
+            for (const auto& existing : parentChildren) {
+                if (existing && existing.getName() == newName) {
+                    nameExists = true;
+                    break;
+                }
             }
-        }
 
-        // Diagnostic logging to trace duplicate insertions seen by unit tests
-        {
-            std::ostringstream dbg;
-            dbg << "attachChild_: parent='" << parent->getName()
-                << "' child='" << p_child.getName()
-                << "' children_before=" << parentChildren.size()
-                << " nameExists=" << (nameExists ? "1" : "0");
-            LUA_INFO(dbg.str());
-        }
-
-        if (it == parentChildren.end() && !nameExists) 
-        {
-            // {
-            //     std::ostringstream dbg;
-            //     dbg << "attachChild_: pushing child='" << p_child.getName()
-            //         << "' to parent='" << parent->getName() << "'";
-            //     LUA_INFO(dbg.str());
-            // }
-
-            // Record world edges BEFORE changing parent
-            float leftWorld = child->getLeft();
-            float rightWorld = child->getRight();
-            float topWorld = child->getTop();
-            float bottomWorld = child->getBottom();
-
-            child->setParent(p_parent);
-
-            // setParent may already add the child to the new parent's children_ vector.
-            // Only push_back if it's not present to avoid duplicate entries.
-            auto it_after = std::find(parentChildren.begin(), parentChildren.end(), p_child);
-            if (it_after == parentChildren.end()) 
+            // Diagnostic logging to trace duplicate insertions seen by unit tests
             {
-                parentChildren.push_back(p_child);
-            } else {
                 std::ostringstream dbg;
-                dbg << "attachChild_: setParent already added child='"
-                    << p_child.getName()
-                    << "' to parent='" << parent->getName() << "'";
+                dbg << "attachChild_: parent='" << parent->getName()
+                    << "' child='" << p_child.getName()
+                    << "' children_before=" << parentChildren.size()
+                    << " nameExists=" << (nameExists ? "1" : "0");
                 LUA_INFO(dbg.str());
             }
 
-            // {
-            //     std::ostringstream dbg;
-            //     dbg << "attachChild_: children_after=" << parentChildren.size()
-            //         << " parent='" << parent->getName() << "'";
-            //     LUA_INFO(dbg.str());
-            // }
-
-            if (useWorld)
+            if (it == parentChildren.end() && !nameExists) 
             {
-                child->setLeft(leftWorld);
-                child->setRight(rightWorld);
-                child->setTop(topWorld);
-                child->setBottom(bottomWorld);
-                child->setX(worldX);
-                child->setY(worldY);
-            }
+                // Record world edges BEFORE changing parent
+                float leftWorld = child->getLeft();
+                float rightWorld = child->getRight();
+                float topWorld = child->getTop();
+                float bottomWorld = child->getBottom();
 
-            // Dispatch EventType::Added using dispatchEvent for proper capture/bubble/target
-            if (child) 
-            {
-                auto& eventManager = getCore().getEventManager();
-                std::unique_ptr<Event> addedEvent = std::make_unique<Event>(EventType::Added, p_child);
-                // Set related target to parent handle for listener use
-                addedEvent->setRelatedTarget(p_parent);
-                eventManager.dispatchEvent(std::move(addedEvent), p_child);
-            }
+                child->setParent(p_parent);
 
-            // Dispatch EventType::AddedToStage if the child is now part of the active stage.
-            DisplayHandle stageHandle = getCore().getRootNode();
-            if (stageHandle) 
-            {
-                DisplayHandle cur = p_child;
-                bool onStage = false;
-                while (cur) 
+                // setParent may already add the child to the new parent's children_ vector.
+                // Only push_back if it's not present to avoid duplicate entries.
+                auto it_after = std::find(parentChildren.begin(), parentChildren.end(), p_child);
+                if (it_after == parentChildren.end()) 
                 {
-                    if (cur == stageHandle) 
-                    {
-                        onStage = true;
-                        break;
-                    }
-                    IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
-                    if (!curObj) break;
-                    cur = curObj->getParent();
+                    parentChildren.push_back(p_child);
+                } else {
+                    std::ostringstream dbg;
+                    dbg << "attachChild_: setParent already added child='"
+                        << p_child.getName()
+                        << "' to parent='" << parent->getName() << "'";
+                    LUA_INFO(dbg.str());
                 }
-                if (onStage) 
+
+                if (useWorld)
+                {
+                    child->setLeft(leftWorld);
+                    child->setRight(rightWorld);
+                    child->setTop(topWorld);
+                    child->setBottom(bottomWorld);
+                    child->setX(worldX);
+                    child->setY(worldY);
+                }
+
+                // Dispatch EventType::Added using dispatchEvent for proper capture/bubble/target
+                if (child) 
                 {
                     auto& eventManager = getCore().getEventManager();
-                    std::unique_ptr<Event> addedToStage = std::make_unique<Event>(EventType::AddedToStage, p_child);
-                    addedToStage->setRelatedTarget(stageHandle);
-                    eventManager.dispatchEvent(std::move(addedToStage), p_child);
+                    std::unique_ptr<Event> addedEvent = std::make_unique<Event>(EventType::Added, p_child);
+                    // Set related target to parent handle for listener use
+                    addedEvent->setRelatedTarget(p_parent);
+                    eventManager.dispatchEvent(std::move(addedEvent), p_child);
+                }
+
+                // Dispatch EventType::AddedToStage if the child is now part of the active stage.
+                DisplayHandle stageHandle = getCore().getRootNode();
+                if (stageHandle) 
+                {
+                    DisplayHandle cur = p_child;
+                    bool onStage = false;
+                    while (cur) 
+                    {
+                        if (cur == stageHandle) 
+                        {
+                            onStage = true;
+                            break;
+                        }
+                        IDisplayObject* curObj = dynamic_cast<IDisplayObject*>(cur.get());
+                        if (!curObj) break;
+                        cur = curObj->getParent();
+                    }
+                    if (onStage) 
+                    {
+                        auto& eventManager = getCore().getEventManager();
+                        std::unique_ptr<Event> addedToStage = std::make_unique<Event>(EventType::AddedToStage, p_child);
+                        addedToStage->setRelatedTarget(stageHandle);
+                        eventManager.dispatchEvent(std::move(addedToStage), p_child);
+                    }
                 }
             }
         }
     }
-}
 
 
     void IDisplayObject::removeOrphan_(const DisplayHandle& orphan) 
@@ -480,9 +466,9 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
                 {
                     // Capture parent handle before resetting
                     DisplayHandle parentHandle = orphanObj->getParent();
-                    // Reset orphan's parent using DisplayHandle (nullptr)
+                    // Reset orphan's parent using DisplayHandle (nullptr).
+                    // setParent(nullptr) will remove the child from the old parent's children_ vector.
                     orphanObj->setParent(DisplayHandle());
-                    parentChildren.erase(it); // Remove orphan from parent's children
 
                     // Dispatch EventType::Removed using dispatchEvent for proper capture/bubble/target
                     if (orphan) {
@@ -551,7 +537,7 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
 
     bool IDisplayObject::removeChild(DisplayHandle child)
     {
-        if (!child) 
+        if (!child)
         {
             ERROR("removeChild: child handle is null in " + name_);
             return false;
@@ -562,34 +548,32 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
             return false;
         }
 
+        // Verify that this object is indeed the parent of the provided child.
         auto it = std::find(children_.begin(), children_.end(), child);
-        if (it != children_.end()) 
-        {
-            children_.erase(it);
-            // Reset child's parent pointer if possible
-            if (auto* childObj = dynamic_cast<IDisplayObject*>(child.get())) 
-            {
-                childObj->setParent(DisplayHandle());
-            }
-            Core* core = &Core::getInstance();
-            Factory* factory = &core->getFactory();
-            if (!core->getIsTraversing() && 
-                child->getOrphanRetentionPolicy() == OrphanRetentionPolicy::AutoDestroy)
-            {
-                removeOrphan_(child); // Remove orphan immediately
-            }
-            else if (child->getOrphanRetentionPolicy() != OrphanRetentionPolicy::RetainUntilManual)
-            {
-                child->orphanedAt_ = std::chrono::steady_clock::now();
-                factory->addToOrphanList(child); // Defer orphan removal
-            }
-            return true;
-        } 
-        else 
+        if (it == children_.end())
         {
             ERROR("removeChild: child not found in children_ vector of " + name_);
             return false;
         }
+
+        Core* core = &Core::getInstance();
+        Factory* factory = &core->getFactory();
+
+        // Detach and dispatch lifecycle events consistently for all policies.
+        // removeOrphan_ performs the actual detach (erase + clear parent) and
+        // dispatches Removed/RemovedFromStage based on the pre-detach state.
+        removeOrphan_(child);
+
+        // For policies that defer destruction (e.g., GracePeriod), track orphans
+        // for later garbage collection. AutoDestroy and RetainUntilManual skip scheduling.
+        auto policy = child->getOrphanRetentionPolicy();
+        if (policy != OrphanRetentionPolicy::AutoDestroy &&
+            policy != OrphanRetentionPolicy::RetainUntilManual)
+        {
+            child->orphanedAt_ = std::chrono::steady_clock::now();
+            factory->addToOrphanList(child);
+        }
+        return true;
     }    
 
     const std::vector<DisplayHandle>& IDisplayObject::getChildren() const { return children_; }
@@ -711,6 +695,11 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
         auto it = targetListeners.find(type);
         if (it != targetListeners.end()) {
             auto& listeners = it->second;
+            // If a null/empty function is provided, remove all listeners for this type
+            if (!listener) {
+                listeners.clear();
+                return;
+            }
             listeners.erase(std::remove_if(listeners.begin(), listeners.end(), [&](const ListenerEntry& entry) {
                 // Compare the target function pointers to identify the listener
                 return entry.listener.target_type() == listener.target_type() &&
@@ -1165,6 +1154,22 @@ void IDisplayObject::attachChild_(DisplayHandle p_child, DisplayHandle p_parent,
         }
         return false;
     }
+
+    bool IDisplayObject::isOnStage() const
+    {
+        DisplayHandle stageHandle = getCore().getRootNode();
+        DisplayHandle cur = getFactory().getDisplayObject(getName());
+        while (cur)
+        {
+            if (cur == stageHandle)
+                return true;
+            IDisplayObject* obj = dynamic_cast<IDisplayObject*>(cur.get());
+            if (!obj) break;
+            cur = obj->getParent();
+        }
+        return false;
+    }
+
 
     int IDisplayObject::getTabPriority() const 
     { 

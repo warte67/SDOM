@@ -105,15 +105,6 @@ Summary:
 #include <SDOM/SDOM.hpp>
 
 
-
-namespace SDOM
-{
-
-    class Event;
-    class EventType;
-    class EventTypeHash;
-    class Stage;
-
 /*
 ## Garbage Collection / Orphan Retention
 
@@ -148,6 +139,14 @@ Notes & test ideas:
     collection).
 
 */
+
+namespace SDOM
+{
+
+    class Event;
+    class EventType;
+    class EventTypeHash;
+    class Stage;
 
     class IDisplayObject : public IDataObject
     {
@@ -293,6 +292,7 @@ Notes & test ideas:
         // Recursive descendant removal: search depth-first and remove first match. Returns true if removed.
         bool removeDescendant(DisplayHandle descendant);
         bool removeDescendant(const std::string& descendantName);
+        bool isOnStage() const;
 
         // --- Type & Property Access --- //
         std::string getType() const { return type_; }

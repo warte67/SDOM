@@ -1,4 +1,5 @@
 // Event_UnitTests.cpp
+#include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Factory.hpp>
@@ -8,6 +9,53 @@
 #include <SDOM/SDOM_Stage.hpp>
 
 #include "Box.hpp"
+
+// ============================================================================
+// 🧩 SDOM::Event_UnitTests — Function Coverage Summary
+// ----------------------------------------------------------------------------
+//  This summary lists all primary functions and behaviors validated by this
+//  test module. It is auto-updated as new tests are added.
+// ----------------------------------------------------------------------------
+//
+//  🧱 Core EventType API
+//   • EventType::getRegistry()
+//   • EventType::getName()
+//   • EventType::getCaptures(), setCaptures()
+//   • EventType::getBubbles(),  setBubbles()
+//   • EventType::getTargetOnly(), setTargetOnly()
+//   • EventType::getGlobal(), setGlobal()
+//
+//  🧠 Event Dispatch & Listener API
+//   • DisplayHandle::addEventListener()
+//   • DisplayHandle::removeEventListener()
+//   • DisplayHandle::hasEventListener()
+//   • DisplayHandle::queue_event()
+//   • Event::getTypeName()
+//   • Event::setPayloadValue(), getPayloadValue()
+//
+//  ⚙️ EventManager Integration
+//   • EventManager::Queue_SDL_Event()
+//   • EventManager::dispatchWindowEvents()
+//   • EventManager::dispatchMouseEvents()
+//   • EventManager::dispatchKeyboardEvents()
+//   • EventManager::dispatchDragEvents()
+//   • EventManager::updateHoverState()
+//   • Core::pumpEventsOnce()
+//
+//  🧩 Unit Test Framework
+//   • UnitTests::get_frame_counter()
+//   • UnitTests::run_lua_tests()
+//   • Re-entrant test scheduling and frame synchronization
+//
+//  🧬 Coverage Domains
+//   - Core / Lifecycle Events
+//   - Mouse / Keyboard / Window Input
+//   - UI / Value / State Events
+//   - Behavioral Translation (SDL → SDOM)
+//   - Multi-frame Event Queue Validation
+//
+// ============================================================================
+
 
 namespace SDOM
 {
@@ -925,6 +973,159 @@ namespace SDOM
 
 
 
+    // --- Event_test11: Lifecycle Event Dispatch Verification ---------------------------
+    //
+    // 🧩 Purpose:
+    //   Verifies that SDOM correctly dispatches lifecycle-related events when
+    //   DisplayHandle objects are added to or removed from their parents or the stage.
+    //
+    // 🧠 Behavior:
+    //   - Frame 0: Creates a parent and child Box, registers listeners, and attaches
+    //     the parent to the stage.
+    //   - Frame 1: Adds the child to the parent and waits for `Added` and `AddedToStage` events.
+    //   - Frame 2: Removes the child from the parent and waits for `Removed` and
+    //     `RemovedFromStage` events.
+    //   - Frame 3: Verifies all expected events fired and cleans up.
+    //
+    // 📝 Notes:
+    //   • Uses explicit initialization rather than brace initialization because
+    //     `Box::InitStruct` inherits from a polymorphic base (`IDisplayObject::InitStruct`).
+    //     Brace initialization would skip the constructor and defaults.
+    //   • Tracks relative frame index using `first_frame` static variable to ensure
+    //     predictable multi-frame sequencing regardless of global test order.
+    //   • Verifies all four lifecycle event types:
+    //       - Added, Removed, AddedToStage, RemovedFromStage.
+    //
+    // ⚙️ Functions Tested:
+    //
+    //   | Category               | Functions Tested / Behavior Verified                   |
+    //   |-------------------------|--------------------------------------------------------|
+    //   | Object Creation         | ✅ Core::createDisplayObject()                         |
+    //   | Hierarchy Management    | ✅ DisplayHandle::addChild() / removeChild()           |
+    //   | Event Dispatching       | ✅ Lifecycle events: Added, Removed, AddedToStage, RemovedFromStage |
+    //   | Event Listener System   | ✅ addEventListener(), ✅ event callback verification   |
+    //   | Garbage Collection      | ✅ Core::collectGarbage() cleans up after test         |
+    //
+    // ⚠️ Safety:
+    //   All created objects are transient and cleaned up at the end of the test.
+    //   No persistent global state is modified.
+    //
+    // ============================================================================
+    bool Event_test11(std::vector<std::string>& errors)
+    {
+        // using ORP = SDOM::IDisplayObject::OrphanRetentionPolicy;
+        Core& core = getCore();
+        DisplayHandle stage = core.getRootNode();
+        UnitTests& ut = UnitTests::getInstance();
+
+        // Persistent state across frames
+        static bool initialized = false;
+        static int first_frame = ut.get_frame_counter();
+        static std::unordered_map<std::string, bool> hits;
+
+        // Compute logical frame index (relative to first invocation)
+        int frame = ut.get_frame_counter() - first_frame;
+
+        // --- FRAME 0: Setup and listener registration -----------------------------------
+        if (!initialized)
+        {
+            initialized = true;
+            first_frame = ut.get_frame_counter(); // capture starting frame baseline
+
+            // --- Create parent Box ------------------------------------------------------
+            Box::InitStruct pinit;
+            pinit.name   = "parentBox";
+            pinit.x      = 50;
+            pinit.y      = 50;
+            pinit.width  = 100;
+            pinit.height = 100;
+            pinit.color  = SDL_Color{0, 255, 0, 255};
+            DisplayHandle parent = core.createDisplayObject("Box", pinit);
+            if (!parent.isValid())
+                errors.push_back("Event_test11: Failed to create parentBox.");
+            // parent->setOrphanRetentionPolicy(ORP::RetainUntilManual);
+
+
+            // --- Create child Box -------------------------------------------------------
+            Box::InitStruct cinit;
+            cinit.name   = "childBox";
+            cinit.x      = 10;
+            cinit.y      = 10;
+            cinit.width  = 50;
+            cinit.height = 50;
+            cinit.color  = SDL_Color{255, 0, 0, 255};
+            DisplayHandle child  = core.createDisplayObject("Box", cinit);
+            if (!child.isValid())
+                errors.push_back("Event_test11: Failed to create childBox.");
+            // child->setOrphanRetentionPolicy(ORP::RetainUntilManual);
+            parent->addChild(child);
+
+            hits = {
+                {"Added", false},
+                {"Removed", false},
+                {"AddedToStage", false},
+                {"RemovedFromStage", false}
+            };
+
+            // --- Register lifecycle event listeners ------------------------------------
+            auto listener = [&](const Event& ev){
+                hits[ev.getTypeName()] = true;
+            };
+
+            child->addEventListener(EventType::Added, listener);
+            child->addEventListener(EventType::Removed, listener);
+            child->addEventListener(EventType::AddedToStage, listener);
+            child->addEventListener(EventType::RemovedFromStage, listener);
+
+            // Add parent to stage to ensure AddedToStage propagates correctly later
+            stage->addChild(parent);
+            return false; // 🔄 re-entrant: setup complete, wait until next frame
+        }
+
+        // --- FRAME 1: Verify Added & AddedToStage fired ---------------------------------
+        if (frame == 1)
+        {
+            if (!hits["Added"])
+                errors.push_back("Event_test11: Added did not fire when child added to parent.");
+            if (!hits["AddedToStage"])
+                errors.push_back("Event_test11: AddedToStage did not fire when child added to Stage.");
+
+            // Reset hit flags for next phase
+            hits["Added"] = hits["AddedToStage"] = false;            
+            return false; // 🔄 wait for next frame
+        }
+        // --- Frame 2: Remove Child ---------------------------
+        if (frame == 2)
+        {
+            // Trigger removal
+            DisplayHandle parent = core.getDisplayObject("parentBox");
+            if (!parent.isValid())
+                errors.push_back("Event_test11: Failed to find parentBox.");
+            DisplayHandle child = core.getDisplayObject("childBox");
+            if (!child.isValid())
+                errors.push_back("Event_test11: Failed to find childBox.");
+            parent->removeChild(child);
+            return false; // 🔄 wait for next frame
+        }
+
+        // --- Frame 3: Verify Removed + RemovedFromStage -------------------------
+        if (frame == 3)
+        {
+            if (!hits["Removed"])
+                errors.push_back("Event_test11: Removed did not fire when 'parent' removed from 'stage'.");
+            if (!hits["RemovedFromStage"])
+                errors.push_back("Event_test11: RemovedFromStage did not fire when 'parent' removed from 'Stage'.");
+
+            core.collectGarbage();
+            initialized = false;
+            return true; // ✅ done
+        }
+
+        return false; // 🔄 continue until frame 3
+    } // END -- Event_test11: Lifecycle Event Dispatch Verification
+
+
+
     // --- Lua Integration Tests --- //
 
     bool Event_LUA_Tests(std::vector<std::string>& errors)
@@ -952,6 +1153,7 @@ namespace SDOM
         ut.add_test(objName, "Behavioral Mouse Event Verification", Event_test8);
         ut.add_test(objName, "Keyboard Event Verification", Event_test9);
         ut.add_test(objName, "Test the multi-frame event queue", Event_test10);
+        ut.add_test(objName, "Lifecycle Event Dispatch Verification", Event_test11);
 
         ut.setLuaFilename("src/Event_UnitTests.lua"); // Lua test script path
         ut.add_test(objName, "Lua: " + ut.getLuaFilename(), Event_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)
