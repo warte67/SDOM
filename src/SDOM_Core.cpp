@@ -1435,11 +1435,44 @@ namespace SDOM
             setWindowTitle("Stage: " + rootNode_.get()->getName());
         }
     }
-    void Core::setRootNode(const DisplayHandle& handle) 
-    { 
-        rootNode_ = handle;     
-        if (rootNode_.isValid() && rootNode_.get()) setWindowTitle("Stage: " + rootNode_.get()->getName());
+    // void Core::setRootNode(const DisplayHandle& handle) 
+    // { 
+    //     rootNode_ = handle;     
+    //     if (rootNode_.isValid() && rootNode_.get()) setWindowTitle("Stage: " + rootNode_.get()->getName());
+    // }
+    void Core::setRootNode(const DisplayHandle& newRoot)
+    {
+        EventManager& em = getEventManager();
+
+        // --- Dispatch StageClosed on the current root ----------------------------
+        if (rootNode_.isValid() && rootNode_ != newRoot)
+        {
+            std::unique_ptr<Event> closedEvent =
+                std::make_unique<Event>(EventType::StageClosed, rootNode_);
+            closedEvent->setRelatedTarget(rootNode_); // optional, for clarity
+            em.dispatchEvent(std::move(closedEvent), rootNode_);
+        }
+
+        // --- Swap root node ------------------------------------------------------
+        rootNode_ = newRoot;
+
+        // --- Dispatch StageOpened on the new root -------------------------------
+        if (rootNode_.isValid())
+        {
+            std::unique_ptr<Event> openedEvent =
+                std::make_unique<Event>(EventType::StageOpened, rootNode_);
+            openedEvent->setRelatedTarget(rootNode_);
+            em.dispatchEvent(std::move(openedEvent), rootNode_);
+
+            if (rootNode_.get())
+                setWindowTitle("Stage: " + rootNode_.get()->getName());
+        }
+        else
+        {
+            setWindowTitle("No Active Stage");
+        }
     }
+
     void Core::setStage(const std::string& name) 
     { 
         setRootNode(name); 

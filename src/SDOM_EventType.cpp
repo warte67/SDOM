@@ -104,6 +104,7 @@ namespace SDOM
     EventType EventType::AddedToStage("AddedToStage", true, true, false, false);
     EventType EventType::RemovedFromStage("RemovedFromStage", true, true, false, false);
     EventType EventType::StageClosed("StageClosed", false, false, false, true);
+    EventType EventType::StageOpened("StageOpened", false, false, false, true);
 
     // Event Listener Only Events
     EventType EventType::OnInit("OnInit", true, true, false, false);

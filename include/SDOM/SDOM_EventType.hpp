@@ -69,7 +69,7 @@ namespace SDOM
         static EventType KeyUp;             // for when a key is released
         static EventType TextInput;         // * EditBox: Not Yet Implementedfor when text is input
 
-        // Timer event types (Timer Not Yet Implemented)
+        // 💡 Timer event types (Timer Not Yet Implemented)
         static EventType TimerStart;         // * Fired when timer starts or resumes
         static EventType TimerStop;          // * Fired when timer is manually stopped
         static EventType TimerPause;         // * Fired when timer is paused
@@ -103,16 +103,17 @@ namespace SDOM
         static EventType Dragging;          // * when a drag operation is ongoing
         static EventType Drop;              // * when an item is dropped
 
-        // Clipboard event types    
+        // 💡 Clipboard event types    
         static EventType ClipboardCopy;     // when content is copied to the clipboard
         static EventType ClipboardPaste;    // when content is pasted from the clipboard
         
-        // Application lifecycle event types
-        static EventType Added;             // when a DisplayHandle is added to the display list
-        static EventType Removed;           // when a DisplayHandle is removed from the display list
-        static EventType AddedToStage;      // when a DisplayHandle is added to the stage
-        static EventType RemovedFromStage;  // when a DisplayHandle is removed from the stage
-        static EventType StageClosed;       // * for when a stage is closed
+        // ✅ Application lifecycle event types
+        static EventType Added;             // ✅ when a DisplayHandle is added to the display list
+        static EventType Removed;           // ✅ when a DisplayHandle is removed from the display list
+        static EventType AddedToStage;      // ✅ when a DisplayHandle is added to the stage
+        static EventType RemovedFromStage;  // ✅ when a DisplayHandle is removed from the stage
+        static EventType StageClosed;       // ✅ for when a stage is closed
+        static EventType StageOpened;       // ✅ for when a stage is opened
 
         // Event Listener Only Events
         static EventType OnInit;            // OnInit is Dispatched to EventListeners

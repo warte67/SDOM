@@ -6,7 +6,7 @@ var searchData=
   ['value_5f_3',['value_',['../classSDOM_1_1IRangeControl.html#ac457530e83b61d67e9a97e2cb8fcb4fb',1,'SDOM::IRangeControl']]],
   ['valuechanged_4',['ValueChanged',['../classSDOM_1_1EventType.html#ae64d17162abeb250fb04f81912cda241',1,'SDOM::EventType']]],
   ['vcpkg_20visual_20studio_20cmake_20integration_5',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md31',1,'']]],
-  ['version_6',['Version',['../classSDOM_1_1Version.html',1,'SDOM::Version'],['../classSDOM_1_1Version.html#a6e669c887def9d4a246e2a72ffd830f9',1,'SDOM::Version::Version()']]],
+  ['version_6',['version',['../classSDOM_1_1Version.html',1,'SDOM::Version'],['../classSDOM_1_1Version.html#a6e669c887def9d4a246e2a72ffd830f9',1,'SDOM::Version::Version()']]],
   ['vertical_7',['Vertical',['../namespaceSDOM.html#a9cb56e905b36976260e5aa56d30ee933a06ce2a25e5d12c166a36f654dbea6012',1,'SDOM']]],
   ['visible_8',['Visible',['../classSDOM_1_1EventType.html#a5298b4fe92c491f0c6c7661d902ac35e',1,'SDOM::EventType']]],
   ['visual_20studio_20cmake_20integration_9',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md31',1,'']]],

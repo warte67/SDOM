@@ -95,6 +95,7 @@ var classSDOM_1_1ArrowButton =
     [ "isHidden", "classSDOM_1_1ArrowButton.html#afa37c4995ca399ecb45fa588c0df0b2e", null ],
     [ "isKeyboardFocused", "classSDOM_1_1ArrowButton.html#ac44b2435f91f670e2b6a43f092f83175", null ],
     [ "isMouseHovered", "classSDOM_1_1ArrowButton.html#aff4057454b6d7cb9a282c9d3b00a4777", null ],
+    [ "isOnStage", "classSDOM_1_1ArrowButton.html#a8f30cb66c51345673ec91769d7eb5e9a", null ],
     [ "isTabEnabled", "classSDOM_1_1ArrowButton.html#ac833508be5695b4b45a4ffbfd970c3bb", null ],
     [ "isVisible", "classSDOM_1_1ArrowButton.html#a59f0351159eb9bac6a1c89b56639d49f", null ],
     [ "isZOrderDirty", "classSDOM_1_1ArrowButton.html#a178db1bc8bbde20ebaa79044ae9af38e", null ],

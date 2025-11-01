@@ -146,6 +146,7 @@ var classSDOM_1_1Label =
     [ "isHidden", "classSDOM_1_1Label.html#afa37c4995ca399ecb45fa588c0df0b2e", null ],
     [ "isKeyboardFocused", "classSDOM_1_1Label.html#ac44b2435f91f670e2b6a43f092f83175", null ],
     [ "isMouseHovered", "classSDOM_1_1Label.html#aff4057454b6d7cb9a282c9d3b00a4777", null ],
+    [ "isOnStage", "classSDOM_1_1Label.html#a8f30cb66c51345673ec91769d7eb5e9a", null ],
     [ "isPunctuation", "classSDOM_1_1Label.html#ade5b4671245f81360248a6c3ed30f128", null ],
     [ "isTabEnabled", "classSDOM_1_1Label.html#ac833508be5695b4b45a4ffbfd970c3bb", null ],
     [ "isVisible", "classSDOM_1_1Label.html#a59f0351159eb9bac6a1c89b56639d49f", null ],

@@ -62,6 +62,7 @@ var classSDOM_1_1EventType =
     [ "SelectionChanged", "classSDOM_1_1EventType.html#a57c2910b0d2dc5779181c67647020f6c", null ],
     [ "Show", "classSDOM_1_1EventType.html#ae0269ad4b326b0bbe837072c0f8cd1a6", null ],
     [ "StageClosed", "classSDOM_1_1EventType.html#a577e0d48ef384607e181b462c47a5509", null ],
+    [ "StageOpened", "classSDOM_1_1EventType.html#a06fe848fd3e450eb7742f25ed95d57eb", null ],
     [ "StateChanged", "classSDOM_1_1EventType.html#a507abf67445aa60c41314885dd3febb6", null ],
     [ "TextInput", "classSDOM_1_1EventType.html#aa3d3698b1e63aec35970f6ee69efd7ce", null ],
     [ "TimerComplete", "classSDOM_1_1EventType.html#a8984a332549014d9fc8fe157cd7e9691", null ],

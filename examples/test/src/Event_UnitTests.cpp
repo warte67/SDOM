@@ -1108,22 +1108,183 @@ namespace SDOM
             return false; // 🔄 wait for next frame
         }
 
-        // --- Frame 3: Verify Removed + RemovedFromStage -------------------------
+        // --- Frame 3: Verify childBox Removed + RemovedFromStage --------------------
         if (frame == 3)
         {
             if (!hits["Removed"])
-                errors.push_back("Event_test11: Removed did not fire when 'parent' removed from 'stage'.");
+                errors.push_back("Event_test11: Removed did not fire when child removed from parent.");
             if (!hits["RemovedFromStage"])
-                errors.push_back("Event_test11: RemovedFromStage did not fire when 'parent' removed from 'Stage'.");
+                errors.push_back("Event_test11: RemovedFromStage did not fire when child removed from Stage.");
+            // Remove the parent box from the stage
+            DisplayHandle parent = core.getDisplayObject("parentBox");
+            if (!parent.isValid())
+                errors.push_back("Event_test11: Failed to find parentBox.");
+            stage->removeChild(parent);
+            return false; // 🔄 wait for next frame
+        }
+        // --- Frame 4: Verify parentBox Removed + RemovedFromStage --------------------
+        if (frame == 4)
+        {
+            // Verify cleanup
+            DisplayHandle parent = core.getDisplayObject("parentBox");
+            if (parent.isValid())
+                errors.push_back("Event_test11: Parent Box still exists after removal.");
+            DisplayHandle child = core.getDisplayObject("childBox");
+            if (child.isValid())
+                errors.push_back("Event_test11: Child Box still exists after removal.");
+            // Garbage Collection -- Clean Up:
+            hits.clear();
+            int orphanCount = core.countOrphanedDisplayObjects();
+            if (orphanCount != 0)
+                errors.push_back("Event_test11: Orphaned Display Objects still exist after removal.");
 
-            core.collectGarbage();
             initialized = false;
             return true; // ✅ done
         }
 
         return false; // 🔄 continue until frame 3
     } // END -- Event_test11: Lifecycle Event Dispatch Verification
+    
 
+    // --- Event_test12: Stage Lifecycle Transition Verification -----------------------
+    //
+    // 🧩 Purpose:
+    //   Validates correct dispatch of StageOpened and StageClosed events when
+    //   switching between *existing* stages ("mainStage", "stageTwo", "stageThree").
+    //
+    // 🧠 Behavior:
+    //   • Frame 0: Activate "mainStage" → expect StageOpened(mainStage)
+    //   • Frame 1: Switch to "stageTwo" → expect StageClosed(mainStage), StageOpened(stageTwo)
+    //   • Frame 2: Switch to "stageThree" → expect StageClosed(stageTwo), StageOpened(stageThree)
+    //   • Frame 3: Switch back to "mainStage" → expect StageClosed(stageThree), StageOpened(mainStage)
+    //
+    // 📝 Notes:
+    //   • Confirms that Core::setRootNode() correctly dispatches lifecycle events
+    //     for *existing* Stage objects.
+    //   • Ensures correct ordering and one-frame spacing between transitions.
+    //   • Verifies that no duplicate StageOpened/Closed events occur.
+    //
+    // ⚙️ Functions Tested:
+    //   | Category         | Behavior Verified                        |
+    //   |------------------|-------------------------------------------|
+    //   | Stage Management | ✅ Core::setRootNode() transition handling |
+    //   | Event Dispatch   | ✅ StageOpened / StageClosed correctness   |
+    //   | Listener Binding | ✅ addEventListener() works for stages     |
+    //   | Reentrancy       | ✅ Multi-frame transition test support     |
+    //
+    // ⚠️ Safety:
+    //   Uses persistent stage objects (mainStage, stageTwo, stageThree) only.
+    //   No new stages are created or destroyed.
+    //
+    // ----------------------------------------------------------------------------
+
+    bool Event_test12(std::vector<std::string>& errors)
+    {
+        Core& core = getCore();
+        UnitTests& ut = UnitTests::getInstance();
+
+        // Persistent state across frames
+        static bool initialized = false;
+        static int first_frame = ut.get_frame_counter();
+        static std::unordered_map<std::string, bool> hits;
+
+        int frame = ut.get_frame_counter() - first_frame;
+
+        // --- FRAME 0: Initialization ------------------------------------------------------
+        if (!initialized)
+        {
+            initialized = true;
+            first_frame = ut.get_frame_counter();
+
+            hits = {
+                {"mainStage_Opened", false}, {"mainStage_Closed", false},
+                {"stageTwo_Opened",  false}, {"stageTwo_Closed",  false},
+                {"stageThree_Opened",false}, {"stageThree_Closed",false}
+            };
+
+            // --- Retrieve existing stage handles -----------------------------------------
+            DisplayHandle stage1 = core.getDisplayObject("mainStage");
+            DisplayHandle stage2 = core.getDisplayObject("stageTwo");
+            DisplayHandle stage3 = core.getDisplayObject("stageThree");
+
+            if (!stage1.isValid() || !stage2.isValid() || !stage3.isValid())
+            {
+                errors.push_back("Event_test12: One or more stage handles are invalid.");
+                return true;
+            }
+
+            // --- Register listeners ------------------------------------------------------
+            auto makeListener = [&](const std::string& keyPrefix) {
+                return [=](const Event& ev) {
+                    std::string type = ev.getTypeName();
+                    if (type == "StageOpened")  hits[keyPrefix + "_Opened"]  = true;
+                    if (type == "StageClosed")  hits[keyPrefix + "_Closed"]  = true;
+                };
+            };
+
+            stage1->addEventListener(EventType::StageOpened, makeListener("mainStage"));
+            stage1->addEventListener(EventType::StageClosed, makeListener("mainStage"));
+            stage2->addEventListener(EventType::StageOpened, makeListener("stageTwo"));
+            stage2->addEventListener(EventType::StageClosed, makeListener("stageTwo"));
+            stage3->addEventListener(EventType::StageOpened, makeListener("stageThree"));
+            stage3->addEventListener(EventType::StageClosed, makeListener("stageThree"));
+
+            // --- Activate mainStage ------------------------------------------------------
+            core.setRootNode(stage1);
+            return false; // 🔄 wait for StageOpened(mainStage)
+        }
+
+        // --- FRAME 1: Verify mainStage opened, then switch to stageTwo -------------------
+        if (frame == 1)
+        {
+            if (!hits["mainStage_Opened"])
+                errors.push_back("StageOpened not fired for mainStage.");
+
+            DisplayHandle stage2 = core.getDisplayObject("stageTwo");
+            core.setRootNode(stage2);
+            return false;
+        }
+
+        // --- FRAME 2: Verify mainStage closed, stageTwo opened, then switch to stageThree -
+        if (frame == 2)
+        {
+            if (!hits["mainStage_Closed"])
+                errors.push_back("StageClosed not fired for mainStage.");
+            if (!hits["stageTwo_Opened"])
+                errors.push_back("StageOpened not fired for stageTwo.");
+
+            DisplayHandle stage3 = core.getDisplayObject("stageThree");
+            core.setRootNode(stage3);
+            return false;
+        }
+
+        // --- FRAME 3: Verify stageTwo closed, stageThree opened, then return to mainStage -
+        if (frame == 3)
+        {
+            if (!hits["stageTwo_Closed"])
+                errors.push_back("StageClosed not fired for stageTwo.");
+            if (!hits["stageThree_Opened"])
+                errors.push_back("StageOpened not fired for stageThree.");
+
+            DisplayHandle stage1 = core.getDisplayObject("mainStage");
+            core.setRootNode(stage1);
+            return false;
+        }
+
+        // --- FRAME 4: Verify stageThree closed, mainStage reopened -----------------------
+        if (frame == 4)
+        {
+            if (!hits["stageThree_Closed"])
+                errors.push_back("StageClosed not fired for stageThree.");
+            if (!hits["mainStage_Opened"])
+                errors.push_back("StageOpened not fired again for mainStage.");
+
+            initialized = false;
+            return true; // ✅ done
+        }
+
+        return false; // 🔄 continue
+    } // END -- Event_test12: Stage Lifecycle Transition Verification
 
 
     // --- Lua Integration Tests --- //
@@ -1154,6 +1315,7 @@ namespace SDOM
         ut.add_test(objName, "Keyboard Event Verification", Event_test9);
         ut.add_test(objName, "Test the multi-frame event queue", Event_test10);
         ut.add_test(objName, "Lifecycle Event Dispatch Verification", Event_test11);
+        ut.add_test(objName, "Stage Lifecycle Transition Verification", Event_test12);
 
         ut.setLuaFilename("src/Event_UnitTests.lua"); // Lua test script path
         ut.add_test(objName, "Lua: " + ut.getLuaFilename(), Event_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)

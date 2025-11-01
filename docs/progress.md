@@ -24,7 +24,6 @@ Diagrams are authored in Mermaid and exported to static SVG/PNG by the repo’s 
 - [📅 Latest Update](#latest-update)
 - [⚙️ Scripting and Configuration](#⚙️-scripting-and-configuration)
 - [📈 Progress Updates](#📈-progress-updates)
-- [🧩 Central Lua Binder](#🧩-central-lua-binder)
 - [✅ UnitTest Modules](#✅-unittest-modules)
 ---
 
@@ -122,79 +121,70 @@ Note: Older entries are archived in [archive_progress.md](archive_progress.md).
 
 ---
 <a id="latest-update"></a>
-## 🗓️ October 31, 2025 — 🎃 Core Refactor (EventManager & Dispatch Chain)
+## 🗓️ October 31, 2025 — 🎃 Core Refactor & Stage Lifecycle Integration
 
 (Yes, I worked on Halloween — scary, isn’t it?)
-#### **1️⃣ Major Refactor — `EventManager::Queue_SDL_Event()`**
-- Decomposed monolithic `Queue_SDL_Event()` into modular sub-dispatchers:
-  - `dispatchWindowEvents(const SDL_Event&)`
-  - `dispatchKeyboardEvents(const SDL_Event&)`
-  - `dispatchMouseEvents(const SDL_Event&, DisplayHandle, DisplayHandle)`
-  - `dispatchDragEvents(const SDL_Event&, DisplayHandle, DisplayHandle)`
-  - `updateHoverState(const SDL_Event&, DisplayHandle)`
-  - `dispatchWindowEnterLeave(const SDL_Event&, DisplayHandle)`
-- Each helper now manages one input domain (window, keyboard, mouse, drag, etc.)  
-- Reduced redundant object creation and unnecessary event copies.  
-- Greatly improved readability, maintainability, and test isolation.
 
-#### **2️⃣ Event Dispatch Optimization**
-- Unified coordinate normalization logic (by SDL event type).  
-- Ensured hit-testing and hover detection operate consistently in logical stage space.  
-- Reduced allocations by using in-place event forwarding when possible.  
-- Simplified stage-update sequencing for `mouseX` / `mouseY`.
+#### 1️⃣ EventManager Refactor
+- Split `Queue_SDL_Event()` into modular sub-dispatchers:
+  - `dispatchWindowEvents`, `dispatchKeyboardEvents`, `dispatchMouseEvents`, `dispatchDragEvents`
+  - `updateHoverState`, `dispatchWindowEnterLeave`
+- Each handles one input domain (window, keyboard, mouse, drag, etc.)
+- Reduced event copies, improved readability, and simplified debug flow
 
-#### **3️⃣ Drag Lifecycle Fix**
-- Fixed phantom drag activation caused by uninitialized seeds.  
-- Drag now starts **only** after a real `MouseButtonDown` + threshold motion.  
-- Added robust handling for `Drag`, `Dragging`, and `Drop` events.  
-- Cleanly resets drag state on release.  
-- Hover logic restored — no more hover getting “stuck” on the Stage.
+#### 2️⃣ Event Dispatch Optimization
+- Unified coordinate normalization by event type
+- Consistent hit-testing in logical stage space
+- Reduced allocations with in-place forwarding
+- Simplified `mouseX` / `mouseY` update logic
 
-#### **4️⃣ Keyboard Event Dispatch**
-- Updated `dispatchKeyboardEvents()` to:
-  - Target focused object  
-  - Or broadcast globally when no focus exists (test compatibility + hotkey prep)  
-- Preserves forward compatibility for global hotkey routing via the future **Window** object.  
-- Eliminated redundant conversions and duplicate event queues.
+#### 3️⃣ Drag & Keyboard Improvements
+- Fixed phantom drags from uninitialized seeds
+- Drag now starts only after valid press + motion
+- Added `Drag`, `Dragging`, and `Drop` event handling
+- Restored hover stability
+- Keyboard events now target focused objects or broadcast globally
 
-### 🧠 Behavioral Tests
+#### 4️⃣ Stage Lifecycle Events
+- Added `StageOpened` and `StageClosed` support
+- Fired automatically in `Core::setRootNode()` on stage switch
+- Verified event order and propagation between stages
+- Garbage collection confirmed stable during transitions
+
+### 🧠 Unit Tests
 
 | Test | Description | Status |
 |:----:|:-------------|:------:|
-| `Event_test8` | Behavioral mouse event verification | ✅ Passed |
-| `Event_test9` | Keyboard event verification | ✅ Passed |
-| `Event_test10` | Multi-frame queue verification | ✅ Passed |
+| `Event_test8` | Mouse behavior verification | ✅ |
+| `Event_test9` | Keyboard behavior verification | ✅ |
+| `Event_test10` | Multi-frame queue verification | ✅ |
+| `Event_test11` | Lifecycle event dispatch verification | ✅ |
+| `Event_test12` | Stage lifecycle transition verification | ✅ |
 
-🧾 **Summary:** EventManager modularized; drag & hover fixed; keyboard routing future-proofed.
-
+🧾 **Summary:**  
+EventManager modularized, drag & keyboard routing fixed, stage lifecycle events integrated, and all core tests passing.  
+Next step → migrate tests 9–12 into a new `EventType_UnitTests` module for full event-type coverage.
 
 #### end-of-day
 
-
 ---
 
-# 🧩 Central Lua Binder
-Acts as the single entry point for all **IDisplayObject** Lua bindings.
+### ✅ Next Steps / To-Do
+- [ ] Create new **`EventType_UnitTests`** module  
+  - Migrate `Event_test9–12` to this module  
+  - Add coverage for all registered `EventType`s (`Added`, `Removed`, `EnterFrame`, etc.)
+- [ ] Add tests for input dispatch edge cases  
+  - Mouse enter/leave on overlapping objects  
+  - Keyboard focus transitions  
+- [ ] Implement clipboard and text input events (future `EditBox` support)
+- [ ] Review deferred `addChild()` / `removeChild()` event timing  
+  - Ensure consistent dispatch after traversal completes  
+- [ ] Begin performance profiling for event propagation and queue depth
+- [ ] 🔧 **Add output suppression flag**  
+  - Introduce a `quiet` or `minimal` mode for UnitTest reports  
+  - Only display detailed logs or system-level test output when failures occur  
+  - Helps reduce report noise and keep summary results concise
 
-`void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua)`
-
-This allows **SDOM_IDisplayObject.cpp** to delegate registration into a central binder module, keeping implementations lean and centralizing all Lua glue.
-
-Advantages:
-- Centralized Lua binding registry  
-- Idempotent helpers (`set_if_absent`) prevent double-registration  
-- Derived display types reuse ~80% of base bindings  
-- Reduced compile churn by isolating Sol2-heavy code  
-
-Net result: leaner **IDisplayObject** code, consistent Lua surfaces, and safer incremental binding expansion.
-
-
-## 🧩 Supporting Improvements
-1. Added `SDL_Utils::color_equal()`, `color_not_equal()`, and `color_to_string()` for readable assertions.  
-2. Renamed `getBorder()` → `hasBorder()` and `getBackground()` → `hasBackground()` for boolean clarity.  
-3. Implemented and tested Z-order utilities:
-   - `moveToBottom()`, `moveToTop()`, `bringToFront()`, `sendToBack()`, `sendToBackAfter()`.  
-4. Verified all **Lua descriptor forms** (`*_lua_any`) and sibling ordering stability.
 
 
 ### 🧪 Memory Validation
