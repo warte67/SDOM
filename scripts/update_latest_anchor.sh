@@ -1,24 +1,18 @@
 #!/usr/bin/env bash
 # update_latest_anchor.sh
 # -------------------------------------------------------------
-# Automatically moves the <a id="latest-update"></a> anchor in
-# docs/progress.md so it appears immediately above the most
-# recent daily heading (e.g., "## October 31, 2025").
+# Automatically moves or creates the <a id="latest-update"></a>
+# anchor in docs/progress.md so it appears immediately above the
+# most recent daily heading (e.g., "## 🗓️ November 2, 2025").
+#
+# If no entry exists for today, this script will automatically
+# insert a new daily heading along with a starter progress
+# template below it, ready for editing.
 #
 # Run this at the start of each new day before logging progress.
 # -------------------------------------------------------------
-set -euo pipefail
 
-# Syncs the <a id="latest-update"></a> anchor in docs/progress.md.
-# Behavior:
-# 1) If a heading for today (e.g., "## … October 31, 2025") already exists,
-#    remove any existing anchors and insert the anchor immediately above that heading.
-# 2) Otherwise, if a line "#### end-of-day" exists, insert two lines just
-#    before it:
-#        <a id="latest-update"></a>
-#        ## 🗓️ {Month} {D}, {YYYY}
-#    (Then you can start typing under the freshly created heading.)
-# 3) Otherwise, fall back to placing the anchor above the most recent daily heading.
+set -euo pipefail
 
 PROG_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 REPO_ROOT=$(cd -- "${PROG_DIR}/.." && pwd)
@@ -47,27 +41,28 @@ awk -v TODAY="$TODAY" '
     today_idx = 0
     eod_idx = 0
   }
+
   {
-    # Drop any existing latest-update anchor lines
+    # Remove any existing <a id="latest-update"></a> anchors
     if ($0 ~ /^<a id="latest-update"><\/a>$/) {
       next
     }
     out_n++
     lines[out_n] = $0
+
     if ($0 ~ heading_re) {
       last_idx = out_n
     }
-    # Track explicit end-of-day marker location (keep the last one we see)
     if ($0 ~ /^####[[:space:]]+end-of-day(.*)$/) {
       eod_idx = out_n
     }
-    # Detect a heading that contains TODAY
     if ($0 ~ /^##[[:space:]]+/ && index($0, TODAY) > 0) {
       today_idx = out_n
     }
   }
+
   END {
-    # Fallback: if no level-2 headings matched, try older style daily headings
+    # Fallback: catch older date heading formats
     if (last_idx == 0) {
       for (i = 1; i <= out_n; i++) {
         if (lines[i] ~ /^###[[:space:]]*\[[A-Za-z]+ [0-9]{1,2}, [0-9]{4}\]/) {
@@ -76,7 +71,6 @@ awk -v TODAY="$TODAY" '
       }
     }
 
-    # Decide insertion strategy
     insert_anchor_at = 0
     insert_new_heading = 0
     new_heading_line = ""
@@ -86,21 +80,35 @@ awk -v TODAY="$TODAY" '
     } else if (eod_idx > 0) {
       insert_anchor_at = eod_idx
       insert_new_heading = 1
-      new_heading_line = "## 🗓️ " TODAY
+      new_heading_line = "## 🗓️ " TODAY " — [Title Placeholder]"
     } else if (last_idx > 0) {
       insert_anchor_at = last_idx
     } else {
-      # No obvious place; just print as-is
+      # No daily headings found — just print file unchanged
       for (i = 1; i <= out_n; i++) print lines[i]
       exit 0
     }
 
+    # Markdown template for new daily section
+    template_block = "_[Brief summary of today’s focus or achievements.]_\n\n" \
+    "### 🧩 [Subsystem or Feature Group]\n" \
+    "- [Key change or feature accomplished.]\n" \
+    "- [Supporting details, design notes, or rationale.]\n\n" \
+    "### 🌟 **Summary:**\n" \
+    "_[Short summary of results and next direction.]_\n\n" \
+    "**🚧 ToDo Today**\n" \
+    "- ☐ [Task 1]\n" \
+    "- ☐ [Task 2]\n\n" \
+    "#### end-of-day\n"
+
+    # Write the new output with anchor repositioned
     for (i = 1; i <= out_n; i++) {
       if (i == insert_anchor_at) {
         print "<a id=\"latest-update\"></a>"
         if (insert_new_heading) {
           print new_heading_line
-          print ""  # extra blank line before end-of-day marker
+          print ""
+          print template_block
         }
       }
       print lines[i]
@@ -108,6 +116,7 @@ awk -v TODAY="$TODAY" '
   }
 ' "${FILE}" >"${tmp_out}"
 
+# Only update file if there are changes
 if ! cmp -s "${FILE}" "${tmp_out}"; then
   mv "${tmp_out}" "${FILE}"
   echo "[update_latest_anchor] Updated: ${FILE}"

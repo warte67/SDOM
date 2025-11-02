@@ -22,9 +22,32 @@ Diagrams are authored in Mermaid and exported to static SVG/PNG by the repo’s 
 
 ## 📑 Table of Contents
 - [📅 Latest Update](#latest-update)
+- [🧭 Progress Log Legend](#🧭-progress-log-legend)
 - [⚙️ Scripting and Configuration](#⚙️-scripting-and-configuration)
 - [📈 Progress Updates](#📈-progress-updates)
+- [🗓️ Next Steps / To-Do](#🗓️-next-steps--to-do)
 - [✅ UnitTest Modules](#✅-unittest-modules)
+---
+
+## 🧭 Progress Log Legend
+
+SDOM uses emoji-based status markers to maintain visual and conceptual continuity between its internal test harness and its development logs.  
+Each emoji serves as a compact visual cue — highlighting the intent, state, or verification level of a change at a glance.  
+This legend ensures that progress entries, test annotations, and lifecycle documentation remain stylistically aligned across all SDOM source files.
+
+| Emoji | Label | Description |
+|:------|:------|:-------------|
+| 🧩 | **Synthetic Work Accomplished** | Implementation of new systems, features, or internal structures — “new puzzle pieces” added to the SDOM framework. |
+| 🧠 | **Lifecycle Changes** | Modifications to paired or mirrored operations — e.g., *startup/shutdown*, *create/destroy*, *add/remove*, *init/quit* — or other system lifecycle refinements. |
+| 📜 | **Lua Related Changes** | Additions or adjustments to Lua bindings, scripting integration, or Lua-side functionality exposed through the SDOM API. |
+| 🏆 | **Milestone / Achievement** | Major accomplishment or “glorious moment” marking significant project progress — often following successful test completion, refactor completion, or major subsystem stabilization. |
+| 🚧 | **To Do / Next Steps** | Planned features, deferred refactors, or upcoming development priorities. |
+| 🌟 | **Summary / Highlights** | A concise reflective summary of the day’s progress, key outcomes, or notable discoveries — placed *at the end* of each daily section. |
+
+
+
+[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+
 ---
 
 ## ⚙️ Scripting and Configuration
@@ -33,6 +56,8 @@ Lua (via Sol2) is first-class but optional — you can script scenes and behavio
 The **Factory** accepts `sol::table` configs alongside initializer structs, and **Core**’s lifecycle hooks make it easy to integrate scripts for iteration and tests.
 
 📘 See the dedicated doc: [Scripting and Configuration (Lua + C++)](scripting_and_configuration.md)
+
+[🔝 **Back to Table of Contents**](#📑-table-of-contents)
 
 ---
 
@@ -86,126 +111,169 @@ Note: Older entries are archived in [archive_progress.md](archive_progress.md).
 - [August 5, 2025](archive_progress.md#august-5-2025) — SDOM secondary rough draft
 - [July 2, 2025](archive_progress.md#july-2-2025) — Initial rough draft and proof of concept.
 
-
-## 🗓️ October 29, 2025 — Temporal Testing Framework
-- **README.md** expanded with clearer build instructions for Debian, Arch, Fedora, macOS, and Windows, plus a screenshot of the Test Harness.  
-- Integrated version metadata into README.md.  
-- **Automated versioning:** Implemented `gen_version.sh` to auto-generate `SDOM_Version.hpp` and update the README version block during builds.  
-- **Unit test refactor:** Added a `frame` parameter to all `onUnitTest(int frame)` methods across **IDisplayObject** subclasses to support frame-synchronous testing.  
-- **Per-frame test harness:** The `UnitTests` system now runs tests sequentially per frame, logs formatted pass/fail output, and provides detailed summaries.  
-- **Core update integration:** Integrated per-frame unit test execution into `Core::onUpdate()`, including automated shutdown and performance reporting.  
-- Transitioned UnitTests from static to frame-synchronous scheduling, enabling validation of timers, multithreaded ops, and async subsystems.
-
-- Completed implementation and verification of all **Mouse** and **Keyboard** event tests.  
-- Added behavioral tests for `MouseEnter`, `MouseLeave`, `MouseClick`, and `MouseDoubleClick`.  
-- Implemented new keyboard tests for `KeyDown` and `KeyUp` (placeholder for `TextInput`).  
-- Reviewed and validated the **event propagation model** (capture → target → bubble).  
-- Confirmed readiness for `EventManager` refactor:
-  - Split `Queue_SDL_Event()` into modular per-category handlers  
-  - Optimize event dispatch paths to reduce redundant copies  
-- **Next Steps:**
-  - Refactor and clean up `EventManager`
-  - Introduce `Queue_Internal_Event()` for non-SDL sources
-  - Implement **Timer Objects** with global/local dispatch
-
-🧾 **Summary:** Temporal testing system complete; event verification and EventManager refactor prep finalized.
+[🔝 **Back to Table of Contents**](#📑-table-of-contents)
 
 
----
-## 🗓️ October 30, 2025 — Multi-Frame Unit Tests
-- Updated `Event_UnitTests` to validate `EventManager` functionality and performance.
-- Updated the SDOM_UnitTests framework to support **multi-frame tests** and performance metrics.
-- Confirmed that UnitTests are now **re-entrant** and can span multiple frames.
+## 🗓️ October 29, 2025 — Temporal Testing Framework  
+_Introduction of frame-synchronous test execution and temporal validation systems._
 
-🧾 **Summary:** Multi-frame test harness verified; event timing logic validated.
+### 🧩 Temporal Test System  
+- Expanded **README.md** with cross-platform build instructions (Debian, Arch, Fedora, macOS, Windows) and harness screenshots.  
+- Integrated **automated versioning** via `gen_version.sh` to auto-update `SDOM_Version.hpp` and the README version block.  
+- Refactored all `onUnitTest(int frame)` methods to support frame-synchronous validation across **IDisplayObject** subclasses.  
+- Integrated `UnitTests` per-frame execution into `Core::onUpdate()` for synchronized testing, automated shutdown, and performance reporting.  
+- Transitioned UnitTests from static to dynamic per-frame scheduling, enabling validation of async and timed behaviors.
 
----
-## 🗓️ October 31, 2025 — 🎃 Core Refactor & Stage Lifecycle Integration
+### 🧩 Event Verification  
+- Completed and verified all **Mouse** and **Keyboard** event tests.  
+- Added behavioral coverage for `MouseEnter`, `MouseLeave`, `MouseClick`, and `MouseDoubleClick`.  
+- Implemented `KeyDown` and `KeyUp` tests; defined placeholder for `TextInput`.  
+- Validated **event propagation model** (capture → target → bubble).  
+- Prepared groundwork for **EventManager** modular refactor:  
+  - Split `Queue_SDL_Event()` into category-specific handlers.  
+  - Optimized dispatch for reduced event duplication.
 
-(Yes, I worked on Halloween — scary, isn’t it?)
+### 🏆 Milestone  
+- First fully functional **frame-synchronous unit test system** completed and verified.  
+- Established the temporal testing foundation for all future lifecycle-based validation.
 
-#### 1️⃣ EventManager Refactor
-- Split `Queue_SDL_Event()` into modular sub-dispatchers:
-  - `dispatchWindowEvents`, `dispatchKeyboardEvents`, `dispatchMouseEvents`, `dispatchDragEvents`
-  - `updateHoverState`, `dispatchWindowEnterLeave`
-- Each handles one input domain (window, keyboard, mouse, drag, etc.)
-- Reduced event copies, improved readability, and simplified debug flow
-
-#### 2️⃣ Event Dispatch Optimization
-- Unified coordinate normalization by event type
-- Consistent hit-testing in logical stage space
-- Reduced allocations with in-place forwarding
-- Simplified `mouseX` / `mouseY` update logic
-
-#### 3️⃣ Drag & Keyboard Improvements
-- Fixed phantom drags from uninitialized seeds
-- Drag now starts only after valid press + motion
-- Added `Drag`, `Dragging`, and `Drop` event handling
-- Restored hover stability
-- Keyboard events now target focused objects or broadcast globally
-
-#### 4️⃣ Stage Lifecycle Events
-- Added `StageOpened` and `StageClosed` support
-- Fired automatically in `Core::setRootNode()` on stage switch
-- Verified event order and propagation between stages
-- Garbage collection confirmed stable during transitions
-
-### 🧠 Unit Tests
-
-| Test | Description | Status |
-|:----:|:-------------|:------:|
-| `Event_test8` | Mouse behavior verification | ✅ |
-| `Event_test9` | Keyboard behavior verification | ✅ |
-| `Event_test10` | Multi-frame queue verification | ✅ |
-| `Event_test11` | Lifecycle event dispatch verification | ✅ |
-| `Event_test12` | Stage lifecycle transition verification | ✅ |
-
-🧾 **Summary:**  
-EventManager modularized, drag & keyboard routing fixed, stage lifecycle events integrated, and all core tests passing.  
-Next step → migrate tests 9–12 into a new `EventType_UnitTests` module for full event-type coverage.
-
----
-## 🗓️ November 1, 2025 — EventType UnitTests
-- Began work on **EventType_UnitTests** module
-- Migrated **Event_test9–12**`** to this module
-- Added coverage for all registered **EventType**s (**Added**, **Removed**, **EnterFrame**, etc.)
-- Introduced status emoticons for each test type within the EventType class interface
-- Added thread safe / DOM safe CoreConfig change requests
-  - Temporarily added a **F** key shortcut to toggle fullscreen in the core main loop
-- Fixed double configuration bug — Core::configure() now runs only once with Lua settings.
-- Ensured config consistency — config_ = config; synchronizes runtime state post-reconfigure().
-- Corrected color parsing & propagation from Lua configs.
-- Set Core border color to { r = 8, g = 0, b = 16, a = 255 } — a deep, intentional background for letterboxing.
+### 🌟 **Summary:**  
+- Frame-based testing is now stable and synchronized with the main loop.  
+- Event dispatch verified across mouse and keyboard systems — ready for **EventManager** modularization and timer integration.  
 
 ---
 
+## 🗓️ October 30, 2025 — EventManager Modularization Prep  
+_Preparatory work for breaking down EventManager and verifying input event flow._
+
+### 🧩 EventManager Refactor Design  
+- Analyzed event queuing flow within **Queue_SDL_Event()** and identified clear modular boundaries for `dispatchMouseEvents()`, `dispatchKeyboardEvents()`, and `dispatchWindowEvents()`.  
+- Documented proposed hierarchy for internal vs. external event queuing (future `Queue_Internal_Event()`).  
+- Refined function naming and encapsulation to align with **Core** lifecycle.
+
+### 🧩 Unit Testing Improvements  
+- Enhanced test harness formatting for per-event validation logs.  
+- Added detailed error reporting to UnitTests for failed behavioral dispatches.  
+- Improved visibility into missing **EventType** registrations during startup.
+
+### 🌟 **Summary:**  
+- Refactor groundwork complete — event dispatch paths mapped and modularization ready.  
+- Improved logging and validation make failures more diagnosable across input systems.  
+
+---
+
+## 🗓️ October 31, 2025 — EventType Registry and Core Integration  
+_Expanded event coverage and verified registry consistency across Core systems._  
+*(Yes, I worked on Halloween — scary, isn’t it?)*
+
+### 🧩 EventType UnitTests  
+- Began implementation of **EventType_UnitTests**.  
+- Migrated **Event_test9–12** into this module.  
+- Added verification for all registered **EventType**s (`Added`, `Removed`, `EnterFrame`, etc.).  
+- Introduced visual test status indicators (emoji legend) to **EventType** interface headers.
+
+### 🧩 Core Configuration and Fullscreen Handling  
+- Added **thread-safe / DOM-safe CoreConfig** deferred update system.  
+- Integrated `requestConfigApply()` and `applyPendingConfig()` for main-thread-safe configuration changes.  
+- Added **temporary F-key** toggle for fullscreen switching in main loop.  
+- Improved configuration consistency — `config_ = config;` now ensures runtime sync after reconfigure.  
+- Corrected Lua-driven color parsing and propagation.  
+- Updated Core border color to `{r=8, g=0, b=16, a=255}` for letterboxing consistency.
+
+### 🐞 Bug Fixes  
+- Fixed double-configuration bug — **Core::configure()** now executes once per session initialization.
+
+### 🏆 Milestone  
+- Verified **EventType registry stability** and established **safe, deferred Core reconfiguration**.  
+- Marked the first day SDOM could toggle fullscreen dynamically without destabilizing the DOM.
+
+### 🌟 **Summary:**  
+- EventType registry now validated; Core reconfiguration is thread-safe and predictable.  
+- Foundation laid for future window mutators and fullscreen event handling.  
+
+---
+
+## 🗓️ November 1, 2025 — EventType UnitTests  
+_Extended EventType testing, configuration stability, and fullscreen handling refinements._
+
+### 🧩 EventType UnitTests  
+- Continued expansion of **EventType_UnitTests** coverage.  
+- Migrated **Event_test9–12** into this module.  
+- Verified initialization and registry correctness for all defined `EventType` entries.  
+- Added groundwork for classification by **Test Mode** (🧩 Synthetic / 🧠 Lifetime / 📜 Lua).  
+- Began establishing coverage markers across lifecycle, input, and drag-drop events.  
+
+### 🧩 Core Configuration and Fullscreen Handling  
+- Extended support for **thread-safe CoreConfig** changes.  
+- Verified fullscreen toggle stability through deferred reconfiguration.  
+- Improved Lua config parsing and synchronization with Core runtime state.  
+- Updated internal border color and scaling logic for consistent rendering during resize or fullscreen transitions.
+
+### 🐞 Bug Fixes  
+- Fixed redundant Core configuration sequence during startup.  
+- Ensured proper resource recreation chain (Window → Renderer → Texture).  
+
+### 🌟 **Summary:**  
+- EventType framework scaffolding complete; individual event categories now systematically tracked by test mode.  
+- Core configuration and fullscreen logic stabilized in preparation for advanced event mutator integration.  
+
+---
 <a id="latest-update"></a>
-## 🗓️ November 2, 2025
 
+## 🗓️ November 2, 2025 — Event System and Core Configuration Refinements  
+_Refactoring event dispatch verification and introducing deferred, thread-safe CoreConfig updates._
 
+### 🧩 SDOM Window Event Mutators  
+- Added design notes for future mutators controlling fullscreen / windowed state.  
+- Confirmed all window and renderer reconfiguration routes through **Core::setConfig() → Core::reconfigure()**.  
+- Identified **requestConfigApply()** / **applyPendingConfig()** as proper deferred-update mechanisms for DOM-safe, thread-safe resource rebuilds.  
+- Ensures SDL resources are cleanly recreated without disrupting frame traversal.
+
+### 🧩 Event Testing and Fixes  
+- Refactored `runEventBehaviorTest()` → `UnitTests::run_event_behavior_test()` for naming consistency and stronger encapsulation.  
+  - Replaced temporary **Box** test object with native **Frame** for SDOM compatibility.  
+  - Added focus setup for keyboard and mouse via **core.setKeyboardFocusedObject()** and **core.setMouseHoveredObject()**.  
+  - Fixed regression where mouse button events failed due to stricter click-target logic — resolved by setting test object as clickable (`setClickable(true)`).  
+- Verified behavioral tests now correctly dispatch **MouseDown**, **MouseUp**, **Click**, and **DoubleClick** without side effects.
+
+### 🏆 Milestone  
+- Achieved full **Core–EventManager integration stability** — input events and configuration changes now coexist safely under the same deferred system.  
+- SDOM’s event system officially enters **post-stabilization phase** for UI interaction.
+
+### 🌟 **Summary:**  
+- Core and EventManager internals are now safer and cleaner — configuration changes are deferred properly, event behavior tests pass consistently, and the framework is ready for more advanced input testing across windows and devices.  
 
 
 #### end-of-day
 
+[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+
 ---
 
-### ✅ Next Steps / To-Do
-- [ ] Create new **`EventType_UnitTests`** module  
-  - Migrate `Event_test9–12` to this module  
-  - Move earlier keyboard reentrant tests to the EventType_UnitTests module
-  - Add coverage for all registered `EventType`s (`Added`, `Removed`, `EnterFrame`, etc.)
-- [ ] Add tests for input dispatch edge cases  
-  - Mouse enter/leave on overlapping objects  
-  - Keyboard focus transitions  
-- [ ] Implement clipboard and text input events (future `EditBox` support)
-- [ ] Review deferred `addChild()` / `removeChild()` event timing  
-  - Ensure consistent dispatch after traversal completes  
-- [ ] Begin performance profiling for event propagation and queue depth
-- [ ] 🔧 **Add output suppression flag**  
-  - Introduce a `quiet` or `minimal` mode for UnitTest reports  
-  - Only display detailed logs or system-level test output when failures occur  
-  - Helps reduce report noise and keep summary results concise
+## 🚧 Next Steps / To-Do
 
+- 🔄 **Create new `EventType_UnitTests` module**  
+  - ✅ Migrate `Event_test9–12` into this module  
+  - ✅ Move earlier keyboard reentrant tests under `EventType_UnitTests`  
+  - 🔄 Expand coverage for all registered `EventType`s (`Added`, `Removed`, `EnterFrame`, etc.)
+
+- ✅ **Add tests for input dispatch edge cases**  
+  - ✅ Mouse enter/leave behavior on overlapping objects  
+  - ✅ Keyboard focus transition events
+
+- ☐ **Implement new EditBox / IME input system**  
+  - ☐ Implement clipboard and text input events *(future `EditBox` support)*
+
+- ✅ **Review deferred `addChild()` / `removeChild()` event timing**  
+  - ✅ Ensure consistent dispatch occurs after traversal completes
+
+- 🔄 **Begin performance profiling** for event propagation and queue depth  
+  - ⚠️ Current profiling results appear incorrect; investigate methodology and sampling
+
+- ☐ 🔧 **Add output suppression flag**  
+  - ☐ Introduce `quiet` or `minimal` mode for UnitTest reports  
+  - ☐ Display detailed logs only when failures occur  
+  - ☐ Reduce report noise and keep summary results concise
 
 
 ### 🧪 Memory Validation
@@ -243,7 +311,16 @@ valgrind --leak-check=full ./prog --stop_after_tests
         └── RadioButton
 ```
 
+[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+
+---
+
 ## ✅ UnitTest Modules
+Each **UnitTest module** in SDOM represents a focused validation target for a specific subsystem, interface, or control type.  To maintain consistency with SDOM’s internal test harness and development reports, each module is tracked with a concise emoji marker reflecting its current implementation and verification state.  Because SDOM remains in a **pre-alpha** stage, these modules are still evolving — new tests are frequently added, refactored, or reorganized as the underlying architecture stabilizes.  This matrix provides an at-a-glance overview of test coverage, helping developers quickly identify which systems are stable, under review, or awaiting implementation.  
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; max-width: 950px; margin: auto; gap: 6px;">
+
+<div style="flex: 1; min-width: 280px; margin: 2px;">
 
 | Module | Status |
 |:----------------|:-------:|
@@ -259,6 +336,13 @@ valgrind --leak-check=full ./prog --stop_after_tests
 | EventManager | 🔄 |
 | EventType | 🔄 |
 | Factory | ☐ |
+
+</div>
+
+<div style="flex: 1; min-width: 280px; margin: 2px;">
+
+| Module | Status |
+|:----------------|:-------:|
 | Frame | ☐ |
 | Group | ☐ |
 | IAssetObject | ☐ |
@@ -271,6 +355,13 @@ valgrind --leak-check=full ./prog --stop_after_tests
 | IRangeControl | ☐ |
 | Label | ☐ |
 | ProgressBar | ☐ |
+
+</div>
+
+<div style="flex: 1; min-width: 280px; margin: 2px;">
+
+| Module | Status |
+|:----------------|:-------:|
 | RadioButton | ☐ |
 | ScrollBar | ☐ |
 | Slider | ☐ |
@@ -280,3 +371,14 @@ valgrind --leak-check=full ./prog --stop_after_tests
 | TristateButton | ☐ |
 | TruetypeFont | ☐ |
 | TTFAsset | ☐ |
+
+</div>
+</div>
+
+- ☐ **Not Yet Implemented** — Placeholder for future tests; structure defined but functionality not yet added.  
+- 🔄 **In Progress** — Test is under development or currently being debugged; results are not yet stable.  
+- ⚠️ **Failing / Regression** — Test implemented but failing or producing inconsistent results; pending fix or system dependency.  
+- ✅ **Verified** — Test has passed all validation modes (synthetic, lifecycle, Lua); stable and reliable.  
+
+[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+
