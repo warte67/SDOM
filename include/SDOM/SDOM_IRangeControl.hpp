@@ -74,6 +74,8 @@ namespace SDOM
 
         // --- Virtual Methods --- //
         virtual bool onInit() override;     // Called when the display object is initialized
+        virtual bool onLoad() override;     // Allocate/refresh GPU resources after device rebuild
+        virtual void onUnload() override;   // Release GPU resources before device teardown
         virtual void onQuit() override;     // Called when the display object is being destroyed
         virtual void onEvent(const Event& event) override;  // Called when an event occurs
         virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object

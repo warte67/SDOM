@@ -25,6 +25,19 @@ namespace SDOM
         // ...
     } // END: bool IRangeControl_scaffold::onInit()
 
+    // Example device lifecycle usage in scaffold: defer to base behavior so
+    // composed assets (SpriteSheet) are loaded and cached textures are dropped
+    // safely around device rebuilds. Derived controls can extend if needed.
+    bool IRangeControl_scaffold::onLoad()
+    {
+        return SUPER::onLoad();
+    }
+
+    void IRangeControl_scaffold::onUnload()
+    {
+        SUPER::onUnload();
+    }
+
     void IRangeControl_scaffold::onQuit()
     {
         SUPER::onQuit();

@@ -94,12 +94,20 @@ namespace SDOM
         virtual ~IRangeControl_scaffold() = default;
 
         // --- Virtual Methods --- //
-        virtual bool onInit() override;     // Called when the display object is initialized
-        virtual void onQuit() override;     // Called when the display object is being destroyed
-        virtual void onEvent(const Event& event) override;  // Called when an event occurs
-        virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
-        virtual void onRender() override;   // Called to render the display object
-        virtual bool onUnitTest(int frame) override; // Unit test method
+        // Initialization: parse config and resolve handles (no GPU work here)
+        virtual bool onInit() override;
+        // Device lifecycle: base IRangeControl handles assets and cache drop safely.
+        // Override if you need to extend the behavior; always call SUPER first.
+        virtual bool onLoad() override;
+        virtual void onUnload() override;
+        // Shutdown
+        virtual void onQuit() override;
+        // Per-frame hooks
+        virtual void onEvent(const Event& event) override;
+        virtual void onUpdate(float fElapsedTime) override;
+        virtual void onRender() override;
+        // Unit test hook
+        virtual bool onUnitTest(int frame) override;
 
         // onWindowResize contract for cached-texture widgets
         //
@@ -112,7 +120,10 @@ namespace SDOM
         //      setPixelFormat/setWindowFlags trigger a device rebuild)
         //
         // To remain robust across device rebuilds, overrides should:
-        //   - Destroy any cached SDL_Texture and clear pointers
+        //   - Prefer releasing GPU resources in onUnload() and (optionally)
+        //     pre-warm in onLoad().
+        //   - For onWindowResize, drop-only any cached SDL_Texture pointer
+        //     (do NOT call SDL_DestroyTexture here) and let onRender() lazily rebuild.
         //   - Reset any tracked width/height/pixel format used for change detection
         //   - Clear any cached renderer pointer used to track the texture owner
         //   - Mark the object dirty so the next onRender() rebuilds the cache

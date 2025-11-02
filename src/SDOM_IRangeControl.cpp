@@ -233,6 +233,26 @@ namespace SDOM
         return ret;
     } // END: bool IRangeControl::onInit()
 
+    bool IRangeControl::onLoad()
+    {
+        if (icon_sprite_sheet_ && !icon_sprite_sheet_->isLoaded())
+        {
+            try { icon_sprite_sheet_->onLoad(); } catch(...) {}
+        }
+        setDirty(true);
+        return true;
+    }
+
+    void IRangeControl::onUnload()
+    {
+        if (cachedTexture_) { cachedTexture_ = nullptr; }
+        current_width_ = 0;
+        current_height_ = 0;
+        current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        cached_renderer_ = nullptr;
+        setDirty(true);
+    }
+
     void IRangeControl::onQuit() 
     {
         // destroy cached render texture if present

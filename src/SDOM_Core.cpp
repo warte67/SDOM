@@ -452,17 +452,6 @@ namespace SDOM
         // cached renderer pointer to decide whether to drop the cache.
         if ((recreate_window || recreate_renderer || recreate_texture) && rootNode_)
         {
-            int logicalW = 0, logicalH = 0;
-            if (texture_)
-            {
-                float tw = 0.0f, th = 0.0f;
-                if (SDL_GetTextureSize(texture_, &tw, &th))
-                {
-                    logicalW = static_cast<int>(tw);
-                    logicalH = static_cast<int>(th);
-                }
-            }
-
             if (auto* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get()))
             {
                 std::function<void(IDisplayObject&)> visitUnload;

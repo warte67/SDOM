@@ -234,6 +234,33 @@ namespace SDOM
     } // END: bool IPanelObject::onInit() 
 
 
+    bool IPanelObject::onLoad()
+    {
+        // Ensure composed assets are ready; idempotent if already loaded
+        if (spriteSheetAsset_.isValid())
+        {
+            try { spriteSheetAsset_.get()->onLoad(); } catch(...) {}
+        }
+        if (fontAsset_.isValid())
+        {
+            try { fontAsset_.get()->onLoad(); } catch(...) {}
+        }
+        setDirty(true);
+        return true;
+    }
+
+    void IPanelObject::onUnload()
+    {
+        // Drop cached renderer-owned resources; avoid SDL_Destroy during teardown
+        if (cachedTexture_) { cachedTexture_ = nullptr; }
+        current_width_ = 0;
+        current_height_ = 0;
+        current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        cached_renderer_ = nullptr;
+        setDirty(true);
+    }
+
+
     void IPanelObject::onQuit() 
     {
         // Release any renderer-owned resources so device rebuilds don't leave

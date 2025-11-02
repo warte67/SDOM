@@ -220,6 +220,10 @@ namespace SDOM
         void renderLabelPass(RenderPass pass);
 
 
+        // --- Lifecycle --- //
+        virtual bool onLoad() override;
+        virtual void onUnload() override;
+
         // --- Accessors for the FontStyle settings --- //
 
         // Boolean Based Flags Getters

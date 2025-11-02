@@ -391,6 +391,28 @@ namespace SDOM
     } // END Label::onInit()
 
 
+    bool Label::onLoad()
+    {
+        // Ensure underlying font asset is ready (idempotent)
+        if (fontAsset)
+        {
+            try { fontAsset.get()->onLoad(); } catch(...) {}
+        }
+        setDirty(true);
+        return true;
+    }
+
+    void Label::onUnload()
+    {
+        if (cachedTexture_) { cachedTexture_ = nullptr; }
+        current_width = 0;
+        current_height = 0;
+        current_pixel_format = SDL_PIXELFORMAT_UNKNOWN;
+        cached_renderer_ = nullptr;
+        setDirty(true);
+    }
+
+
     void Label::onQuit() 
     {
         // Clear transient layout/token state. Do not force-unload shared font assets
