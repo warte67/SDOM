@@ -67,11 +67,24 @@ namespace SDOM
         {
             auto event = std::move(eventQueue.front());
             DisplayHandle object = event->getTarget();
-            if (object.isValid() && (rootNode->hasChild(object) || object->getType() == "Stage" || event->getType().getGlobal() ))
+            bool deliver = false;
+            if (object.isValid())
+            {
+                // Deliver if target is the stage itself, a descendant of the stage,
+                // or if the event type is marked global.
+                if (object->getType() == "Stage" || event->getType().getGlobal())
+                {
+                    deliver = true;
+                }
+                else if (auto* rootObj = dynamic_cast<IDisplayObject*>(rootNode.get()))
+                {
+                    deliver = rootObj->isAncestorOf(object);
+                }
+            }
+            if (deliver)
             {
                 dispatchEvent(std::move(event), rootNode);
             }
-            // dispatchEvent(std::move(event), rootNode);
             eventQueue.pop();
         }
     }
@@ -1254,12 +1267,22 @@ namespace SDOM
         const auto elapsed = getCore().getElapsedTime();
 
         float mX = 0.0f, mY = 0.0f;
-        if (e.type == SDL_EVENT_MOUSE_WHEEL) {
-            mX = static_cast<float>(e.wheel.mouse_x);
-            mY = static_cast<float>(e.wheel.mouse_y);
-        } else {
-            mX = static_cast<float>(e.motion.x);
-            mY = static_cast<float>(e.motion.y);
+        switch (static_cast<SDL_EventType>(e.type))
+        {
+            case SDL_EVENT_MOUSE_WHEEL:
+                mX = static_cast<float>(e.wheel.mouse_x);
+                mY = static_cast<float>(e.wheel.mouse_y);
+                break;
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            case SDL_EVENT_MOUSE_BUTTON_UP:
+                mX = static_cast<float>(e.button.x);
+                mY = static_cast<float>(e.button.y);
+                break;
+            case SDL_EVENT_MOUSE_MOTION:
+            default:
+                mX = static_cast<float>(e.motion.x);
+                mY = static_cast<float>(e.motion.y);
+                break;
         }
 
         switch (e.type)
@@ -1472,6 +1495,7 @@ namespace SDOM
         static float drag_offset_y = 0.0f;
         static float drag_start_x = -1.0f;
         static float drag_start_y = -1.0f;
+        static Uint8 drag_button = 0; // active button for current drag (SDL button id)
 
         float mX = 0.0f, mY = 0.0f;
         switch (static_cast<SDL_EventType>(e.type))
@@ -1500,6 +1524,7 @@ namespace SDOM
         {
             drag_start_x = -1.0f;
             drag_start_y = -1.0f;
+            drag_button = 0;
         }
 
         // --- Seed drag start ---------------------------------------------------------------
@@ -1507,6 +1532,7 @@ namespace SDOM
         {
             drag_start_x = mX;
             drag_start_y = mY;
+            drag_button = e.button.button;
         }
 
         // --- Detect drag start --------------------------------------------------------------
@@ -1524,6 +1550,7 @@ namespace SDOM
                 dragEvt->setSDL_Event(e);
                 dragEvt->mouse_x = mX;
                 dragEvt->mouse_y = mY;
+                dragEvt->button  = drag_button;
                 dragEvt->dragOffsetX = drag_offset_x;
                 dragEvt->dragOffsetY = drag_offset_y;
                 dragEvt->setTarget(draggedObject);
@@ -1543,6 +1570,7 @@ namespace SDOM
             draggingEvt->setSDL_Event(e);
             draggingEvt->mouse_x = mX;
             draggingEvt->mouse_y = mY;
+            draggingEvt->button  = drag_button;
             draggingEvt->dragOffsetX = drag_offset_x;
             draggingEvt->dragOffsetY = drag_offset_y;
             draggingEvt->setTarget(draggedObject);
@@ -1562,6 +1590,7 @@ namespace SDOM
             dropEvt->mouse_y = mY;
             dropEvt->dragOffsetX = drag_offset_x;
             dropEvt->dragOffsetY = drag_offset_y;
+            dropEvt->button  = drag_button ? drag_button : e.button.button;
             dropEvt->setTarget(draggedObject);
             dropEvt->setCurrentTarget(draggedObject);
             dropEvt->setRelatedTarget(dropTarget);
@@ -1572,6 +1601,7 @@ namespace SDOM
             draggedObject = nullptr;
             drag_offset_x = drag_offset_y = 0.0f;
             drag_start_x = drag_start_y = -1.0f;
+            drag_button = 0;
         }
     } // END -- dispatchDragEvents()
 
