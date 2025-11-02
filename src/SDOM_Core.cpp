@@ -525,7 +525,12 @@ namespace SDOM
             pendingConfigRequested_.store(false, std::memory_order_release);
         }
         // Apply on main thread
-        reconfigure(cfg);
+        // reconfigure(cfg);
+
+
+        config_ = cfg;
+        refreshSDLResources();
+        
     }
 
     bool Core::run()
@@ -593,6 +598,22 @@ namespace SDOM
                         if (event.type == SDL_EVENT_KEY_DOWN) 
                             if (event.key.key == SDLK_Q) 
                                 bIsRunning_ = false;
+
+                        if (event.type == SDL_EVENT_KEY_DOWN) 
+                        {
+                            if (event.key.key == SDLK_F) 
+                            {
+                                // DEBUG_LOG("Core::run: F pressed");
+                                static bool s_fullscreen = true;                                
+                                CoreConfig cfg = config_;
+                                if (s_fullscreen)
+                                    cfg.windowFlags &= ~SDL_WINDOW_FULLSCREEN;
+                                else
+                                    cfg.windowFlags |= SDL_WINDOW_FULLSCREEN;
+                                s_fullscreen = !s_fullscreen;
+                                requestConfigApply(cfg);
+                            }
+                        }
                     // END TEMPORARY              
 
                     // Handle and dispatch events based on the SDL_Event                
@@ -671,6 +692,9 @@ namespace SDOM
                     SDL_RenderTexture(renderer_, texture_, NULL, NULL);
                     SDL_RenderPresent(renderer_);
                 }
+
+                // Apply any pending configuration requested from other threads
+                applyPendingConfig();                
 
                 // update timing
                 lastTime = currentTime;
@@ -1593,10 +1617,10 @@ namespace SDOM
     void Core::pumpEventsOnce()
     {
         SDL_Event event;
-        // // Apply any pending configuration requested from other threads
-        // applyPendingConfig();
-        if (!eventManager_)
-            return;
+        // Apply any pending configuration requested from other threads
+        applyPendingConfig();
+        // verify that eventManager_ is valid
+        if (!eventManager_) return;
 
         // std::cout << "Core::pumpEventsOnce(): Dispatching queued event. Remaining queue size: " << eventManager_->getEventQueueSize() << std::endl;
         while (SDL_PollEvent(&event))

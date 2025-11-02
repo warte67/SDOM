@@ -193,3 +193,41 @@ During event dispatch, the system checks these flags and directly notifies regis
 
 ---
 This document will evolve as the design and implementation progress.
+
+
+---
+
+# Proposed Event Types:
+## 🧩 1. Base Event Categories
+
+| **Category** | Example EventType | Source | Notes / SDOM Role |
+|---------------|------------------|---------|--------------------|
+| **Core Lifecycle** | OnInit, OnQuit, OnEvent, OnUpdate, OnRender, OnPreRender | SDOM | Fully verified via Lua callbacks. Defines the main loop hooks. |
+| **System / App** | AppQuit, LowMemory, WillEnterBackground, DidEnterForeground, SystemThemeChanged | SDL | These come from the SDL app events group; map directly to system-level notifications. |
+| **Display** | DisplayAdded, DisplayRemoved, DisplayMoved, DisplayScaleChanged | SDL | Hardware-level display reconfiguration. Useful for multi-monitor UI. |
+| **Window** | WindowShown, WindowHidden, WindowResized, WindowFocusGained, WindowFocusLost, WindowCloseRequested, WindowDestroyed | SDL | Already partially supported; WindowResize callback confirms your binding path. |
+| **Keyboard** | KeyDown, KeyUp, TextInput, TextEditing, KeymapChanged | SDL | Straightforward; payloads should expose `.keysym` and `.scancode` in Lua. |
+| **Mouse** | MouseMove, MouseButtonDown, MouseButtonUp, MouseWheel | SDL | Partially implemented (MouseClick test). Expand with per-button events. |
+| **Joystick** | JoyAxisMotion, JoyButtonDown, JoyButtonUp, JoyDeviceAdded, JoyDeviceRemoved | SDL | For analog controls; unify under InputDeviceEvent base class. |
+| **Gamepad** | GamepadAxisMotion, GamepadButtonDown, GamepadButtonUp, GamepadAdded, GamepadRemoved, GamepadTouchpad*, GamepadSensorUpdate | SDL | Distinct from joystick but semantically similar. |
+| **Touch / Gesture** | FingerDown, FingerMotion, FingerUp, PinchBegin, PinchUpdate, PinchEnd | SDL | Supports multitouch UI. |
+| **Clipboard / DragDrop** | ClipboardUpdate, DropFile, DropText, DropBegin, DropComplete, DropPosition | SDL | You already have comments for “❓ Missing System” placeholders — these fit that gap. |
+| **Audio** | AudioDeviceAdded, AudioDeviceRemoved, AudioDeviceFormatChanged | SDL | Good candidate for “Planned” tests (🗓). |
+| **Sensor / Pen / Camera** | SensorUpdate, PenDown, PenMotion, CameraDeviceAdded, CameraDeviceRemoved | SDL | Niche, but can be covered generically via payload introspection. |
+| **Render / GPU** | RenderTargetsReset, RenderDeviceReset, RenderDeviceLost | SDL | Important for verifying your internal texture / asset re-creation logic. |
+| **User / Custom** | User, ScriptEvent, TimerTick, PropertyChanged | SDOM | Reserved range (0x8000+) for Lua-generated or SDOM-specific signals. |
+
+
+## 🧠 2. SDOM-Specific / DOM Lifecycle Events
+
+These are your *semantic DOM layer events*, which operate one level above SDL:
+
+| **Category** | Example EventType | Description |
+|---------------|------------------|--------------|
+| **DOM Lifecycle** | ObjectCreated, ObjectDestroyed, ObjectAttached, ObjectDetached | Raised by the SDOM factory when objects are instantiated or removed. |
+| **Tree Hierarchy** | ChildAdded, ChildRemoved, ParentChanged, Orphaned, Reattached | Used internally for re-parenting or orphan retention policy (see your right-click removal logic). |
+| **DisplayObject State** | VisibilityChanged, EnabledChanged, FocusChanged, BoundsChanged, ZIndexChanged | Non-SDL, but crucial for internal re-layout verification. |
+| **Animation / Timers** | EnterFrame, TimerTick, TweenCompleted, AnimationStep | Used for scheduled updates or animation lifecycle tests. |
+| **Resource / Asset** | AssetLoaded, AssetFailed, FontChanged, SpriteSheetUpdated | Tied to your Factory and Asset system. |
+| **Interaction / UI** | Click, DoubleClick, Hover, FocusIn, FocusOut, ValueChanged, SelectionChanged | Synthetic DOM events built atop SDL mouse/keyboard. |
+| **Scripted / Synthetic** | CustomEvent, UserEvent, LuaSignal | For cross-language test integration. |

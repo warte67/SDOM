@@ -41,36 +41,35 @@
 
 namespace SDOM
 {
-    // Predefined event types (Name, Captures, Bubbles, TargetOnly, Global)
+    // 🚫 Untestable ---------------------------------------------------------------
     EventType EventType::None("None", false, false, false, false);
-    EventType EventType::SDL_Event("SDL_Event", true, true, false, false);
     EventType EventType::Quit("Quit", false, false, false, true);
-    EventType EventType::EnterFrame("EnterFrame", false, false, false, false); // should only fire event listeners at target
 
-    // Mouse event types (Name, Captures, Bubbles, TargetOnly, Global)
-    EventType EventType::MouseButtonUp("MouseButtonUp", true, true, false, false);
-    EventType EventType::MouseButtonDown("MouseButtonDown", true, true, false, false);
-    EventType EventType::MouseWheel("MouseWheel", true, true, false, false);
-    EventType EventType::MouseMove("MouseMove", false, false, true, false);
-    EventType EventType::MouseClick("MouseClick", true, true, false, false);
-    EventType EventType::MouseDoubleClick("MouseDoubleClick", true, true, false, false);    
-    EventType EventType::MouseEnter("MouseEnter", false, false, true, false);
-    EventType EventType::MouseLeave("MouseLeave", false, false, true, false);
+    // 💻 Application Lifecycle ----------------------------------------------------
+    EventType EventType::Added("Added", true, true, false, false);
+    EventType EventType::Removed("Removed", true, true, false, false);
+    EventType EventType::AddedToStage("AddedToStage", true, true, false, false);
+    EventType EventType::RemovedFromStage("RemovedFromStage", true, true, false, false);
+    EventType EventType::StageOpened("StageOpened", false, false, false, true);
+    EventType EventType::StageClosed("StageClosed", false, false, false, true);
 
-    // Keyboard event types (Name, Captures, Bubbles, TargetOnly, Global)
+    // 💻 Input --------------------------------------------------------------------
+    // Keyboard
     EventType EventType::KeyDown("KeyDown", true, true, false, false);
     EventType EventType::KeyUp("KeyUp", true, true, false, false);
     EventType EventType::TextInput("TextInput", true, true, false, false);
 
-    // Timer event types (Timer Not Yet Implemented)
-    EventType EventType::TimerStart("TimerStart", false, false, false, false);
-    EventType EventType::TimerStop("TimerStop", false, false, false, false);
-    EventType EventType::TimerPause("TimerPause", false, false, false, false);
-    EventType EventType::TimerTick("TimerTick", false, false, false, false);
-    EventType EventType::TimerCycleComplete("TimerCycleComplete", false, false, false, false);
-    EventType EventType::TimerComplete("TimerComplete", false, false, false, false);
+    // Mouse
+    EventType EventType::MouseButtonDown("MouseButtonDown", true, true, false, false);
+    EventType EventType::MouseButtonUp("MouseButtonUp", true, true, false, false);
+    EventType EventType::MouseWheel("MouseWheel", true, true, false, false);
+    EventType EventType::MouseMove("MouseMove", false, false, true, false);
+    EventType EventType::MouseClick("MouseClick", true, true, false, false);
+    EventType EventType::MouseDoubleClick("MouseDoubleClick", true, true, false, false);
+    EventType EventType::MouseEnter("MouseEnter", false, false, true, false);
+    EventType EventType::MouseLeave("MouseLeave", false, false, true, false);
 
-    // Window event types (Name, Captures, Bubbles, TargetOnly, Global)
+    // 💻 Window / Focus -----------------------------------------------------------
     EventType EventType::FocusGained("FocusGained", false, false, true, false);
     EventType EventType::FocusLost("FocusLost", false, false, true, false);
     EventType EventType::Resize("Resize", true, true, false, false);
@@ -80,7 +79,7 @@ namespace SDOM
     EventType EventType::EnterFullscreen("EnterFullscreen", true, true, false, false);
     EventType EventType::LeaveFullscreen("LeaveFullscreen", true, true, false, false);
 
-    // General UI event types (Name, Captures, Bubbles, TargetOnly, Global)
+    // 💻 UI / State ---------------------------------------------------------------
     EventType EventType::ValueChanged("ValueChanged", true, true, false, false);
     EventType EventType::StateChanged("StateChanged", true, true, false, false);
     EventType EventType::SelectionChanged("SelectionChanged", true, true, false, false);
@@ -89,37 +88,35 @@ namespace SDOM
     EventType EventType::Visible("Visible", true, true, false, false);
     EventType EventType::Hidden("Hidden", true, true, false, false);
 
-    // Drag & Drop event types (Name, Captures, Bubbles, TargetOnly, Global)
+    // 💻 Drag & Drop --------------------------------------------------------------
     EventType EventType::Drag("Drag", true, true, false, false);
     EventType EventType::Dragging("Dragging", true, true, false, false);
     EventType EventType::Drop("Drop", true, true, false, false);
 
-    // Clipboard event types (Name, Captures, Bubbles, TargetOnly, Global)
+    // ❓ Timer (no Timer system yet) ----------------------------------------------
+    EventType EventType::TimerStart("TimerStart", false, false, false, false);
+    EventType EventType::TimerStop("TimerStop", false, false, false, false);
+    EventType EventType::TimerPause("TimerPause", false, false, false, false);
+    EventType EventType::TimerTick("TimerTick", false, false, false, false);
+    EventType EventType::TimerCycleComplete("TimerCycleComplete", false, false, false, false);
+    EventType EventType::TimerComplete("TimerComplete", false, false, false, false);
+
+    // ❓ Clipboard (clipboard sub-system not yet implemented) ---------------------
     EventType EventType::ClipboardCopy("ClipboardCopy", true, true, false, false);
     EventType EventType::ClipboardPaste("ClipboardPaste", true, true, false, false);
 
-    // Application lifecycle event types
-    EventType EventType::Added("Added", true, true, false, false);
-    EventType EventType::Removed("Removed", true, true, false, false);
-    EventType EventType::AddedToStage("AddedToStage", true, true, false, false);
-    EventType EventType::RemovedFromStage("RemovedFromStage", true, true, false, false);
-    EventType EventType::StageClosed("StageClosed", false, false, false, true);
-    EventType EventType::StageOpened("StageOpened", false, false, false, true);
-
-    // Event Listener Only Events
+    // 💻 Listener-Only ------------------------------------------------------------
     EventType EventType::OnInit("OnInit", true, true, false, false);
     EventType EventType::OnQuit("OnQuit", false, false, false, true); // global only
     EventType EventType::OnEvent("OnEvent", true, true, false, false);
     EventType EventType::OnUpdate("OnUpdate", true, true, false, false);
     EventType EventType::OnRender("OnRender", true, true, false, false);
-    
-    // Pre-render hook: listeners-only, non-capturing/non-bubbling
-    EventType EventType::OnPreRender("OnPreRender", false, false, false, false);
+    EventType EventType::OnPreRender("OnPreRender", false, false, false, false); // listeners-only, non-capturing/non-bubbling
 
-    // Custom User event types (Name, Captures, Bubbles, TargetOnly, Global)
+    // 💻 Frame / Misc -------------------------------------------------------------
+    EventType EventType::EnterFrame("EnterFrame", false, false, false, false);
+    EventType EventType::SDL_Event("SDL_Event", true, true, false, false);
     EventType EventType::User("User", true, true, false, false);
-
-
 
 
     void EventType::registerLua(sol::state_view lua)

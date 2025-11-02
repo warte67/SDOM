@@ -849,6 +849,8 @@ This table represents the first 192 glyphs in the `default_8x8` font. Additional
 
 ## Graphic Glyphs
 
+NOTE: change the dot order of quadrant glyphs to 0:top-left, 1:top-right, 2:bottom-left, 3:bottom-right
+
 | Index | Icon Description          |
 |-------|---------------------------|
 | 192   | Line None                 |

@@ -120,7 +120,6 @@ Note: Older entries are archived in [archive_progress.md](archive_progress.md).
 🧾 **Summary:** Multi-frame test harness verified; event timing logic validated.
 
 ---
-<a id="latest-update"></a>
 ## 🗓️ October 31, 2025 — 🎃 Core Refactor & Stage Lifecycle Integration
 
 (Yes, I worked on Halloween — scary, isn’t it?)
@@ -164,6 +163,27 @@ Note: Older entries are archived in [archive_progress.md](archive_progress.md).
 🧾 **Summary:**  
 EventManager modularized, drag & keyboard routing fixed, stage lifecycle events integrated, and all core tests passing.  
 Next step → migrate tests 9–12 into a new `EventType_UnitTests` module for full event-type coverage.
+
+---
+<a id="latest-update"></a>
+
+## 🗓️ November 1, 2025 — EventType UnitTests
+- Began work on **EventType_UnitTests** module
+- Migrated **Event_test9–12**`** to this module
+- Added coverage for all registered **EventType**s (**Added**, **Removed**, **EnterFrame**, etc.)
+- Introduced status emoticons for each test type within the EventType class interface
+
+
+- Added thread safe / DOM safe CoreConfig change requests
+  - Temporarily added a **F** key shortcut to toggle fullscreen in the core main loop
+
+#### 🔴 Known Issues / 🐛🐞🐜🐝🪲 Bugs
+- We have an issue with the GPU teardown/rebuild process. 
+  - FULL_CONFIG_TEST is set to `true` to test the GPU rebuild process -- Works normally
+  - FULL_CONFIG_TEST is set to `false` yields odd window size issues coming out of fullscreen mode.
+    - Switching to windowed mode to fullscreen moves the application window to the middle monitor.
+    - Switching back to fullscreen resizes the window to fill the entire center screen.
+  - The issue is not yet reproducible in the test harness.
 
 #### end-of-day
 

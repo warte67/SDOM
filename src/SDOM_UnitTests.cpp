@@ -61,7 +61,7 @@ namespace SDOM
         {
             oss << CLR::indent() << CLR::NORMAL << "[" << objName << "] "
                 << CLR::LT_BLUE << test.name << CLR::RESET
-                << CLR::fg_rgb(224, 224, 64) + " [NOT IMPLEMENTED]" << CLR::RESET << std::endl;
+                << CLR::fg_rgb(224, 224, 64) + " [NOT YET IMPLEMENTED]" << CLR::RESET << std::endl;
             std::cout << oss.str();
             return true; // Skip so it doesn't block progress
         }

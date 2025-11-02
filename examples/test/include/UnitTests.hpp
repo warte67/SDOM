@@ -24,6 +24,7 @@ namespace SDOM
     bool Core_UnitTests();
     bool IDisplayObject_UnitTests();
     bool Event_UnitTests();
+    bool EventType_UnitTests();
     
     // bool Factory_UnitTests();
     // bool Stage_UnitTests();

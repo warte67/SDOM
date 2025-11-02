@@ -68,7 +68,7 @@ namespace SDOM
             ut.add_test(objName, "Test scaffold", scaffold_test0);
 
             ut.setLuaFilename("src/scaffold_UnitTests.lua"); // Lua test script path
-            ut.add_test(objName, "Lua: " + ut.getLuaFilename(), scaffold_LUA_Tests);
+            ut.add_test(objName, "Lua: " + ut.getLuaFilename(), scaffold_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)
 
             registered = true;
         }

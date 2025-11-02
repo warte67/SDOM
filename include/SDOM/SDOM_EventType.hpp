@@ -47,85 +47,109 @@ namespace SDOM
 {
     class EventType
     {
+        // ---- 🧪 Test Legend --------------------------------------------------------------------
+        //
+        //   🔄 In Progress     -- Test or feature is under active development or debugging.
+        //   🗓️ Planned         -- Concept defined but not yet implemented in code.
+        //   ❓ Missing System  -- Dependent subsystem not yet implemented 
+        //   🚫 Untestable      -- Cannot be directly tested by this harness (e.g. Quit, None).
+        //   ⚠️ Failing         -- Test implemented but currently failing or unstable.
+        //   ✅ Fully Verified  -- Passed all test modes; stable behavior.
+        //
+        // ---- 🧪 Test Modes ---------------------------------------------------------------------
+        //
+        //   🧩 Synthetic Test Mode -- Verified via synthetic (queued or manual) events.
+        //   🧠 Lifetime Test Mode  -- Verifies DOM object and event lifetime in SDOM’s main loop.
+        //   📜 Lua Test Mode       -- Verified Lua bindings via Lua test harness script.
+        //
+        // ----------------------------------------------------------------------------------------
+
     public:
-        // Predefined event types (* denotes completed)
-        static EventType None;              // for no event
-        static EventType SDL_Event;         // for raw SDL events
-        static EventType Quit;              // for application quit events
-        static EventType EnterFrame;        // called every frame (consider dispatching for EventListeners only)
 
-        // Mouse event types    
-        static EventType MouseButtonUp;     // for mouse button up events
-        static EventType MouseButtonDown;   // for mouse button down events
-        static EventType MouseWheel;        // for mouse wheel
-        static EventType MouseMove;         // for mouse movement
-        static EventType MouseClick;        // for single mouse clicks
-        static EventType MouseDoubleClick;  // for double mouse clicks
-        static EventType MouseEnter;        // for mouse entering an object
-        static EventType MouseLeave;        // for mouse leaving an object
+        // 🚫 Untestable ---------------------------------------------------------------
+        static EventType None;              // 🚫
+        static EventType Quit;              // 🚫
 
-        // Keyboard event types 
-        static EventType KeyDown;           // for when a key is pressed down (includes IME or Shift Modified ascii)
-        static EventType KeyUp;             // for when a key is released
-        static EventType TextInput;         // * EditBox: Not Yet Implementedfor when text is input
+        // 🔄 Application Lifecycle ----------------------------------------------------
+        static EventType Added;             // 🧠 EventType_test{3}, Event_test{7}
+        static EventType Removed;           // 🧠 EventType_test{3}, Event_test{7}
+        static EventType AddedToStage;      // 🧠 EventType_test{3}, Event_test{7}
+        static EventType RemovedFromStage;  // 🧠 EventType_test{3}, Event_test{7}
+        static EventType StageOpened;       // 🧠 EventType_test{4}
+        static EventType StageClosed;       // 🧠 EventType_test{4}
 
-        // 💡 Timer event types (Timer Not Yet Implemented)
-        static EventType TimerStart;         // * Fired when timer starts or resumes
-        static EventType TimerStop;          // * Fired when timer is manually stopped
-        static EventType TimerPause;         // * Fired when timer is paused
-        static EventType TimerTick;          // * Fired each interval
-        static EventType TimerCycleComplete; // * Fired when a repeat cycle finishes
-        static EventType TimerComplete;      // * Fired when all repeats are done
+        // 🔄 Input --------------------------------------------------------------------
+        // Keyboard
+        static EventType KeyDown;           // 🧩 EventType_test{1}, Event_test{3}
+        static EventType KeyUp;             // 🧩 EventType_test{1}, Event_test{3}
+        static EventType TextInput;         // ❓ IME/TextInput system not yet implemented
+        // Mouse
+        static EventType MouseButtonDown;   // 🧩 Event_test{4, 8}
+        static EventType MouseButtonUp;     // 🧩 Event_test{4, 8}
+        static EventType MouseWheel;        // 🧩 Event_test{4, 8}
+        static EventType MouseMove;         // 🧩 Event_test{4, 8}
+        static EventType MouseClick;        // 🧩 Event_test{4, 8}
+        static EventType MouseDoubleClick;  // 🧩 Event_test{4, 8}
+        static EventType MouseEnter;        // 🧠 EventType_test{5} (planned)
+        static EventType MouseLeave;        // 🧠 EventType_test{5} (planned)
 
-        // Window event types   
-        static EventType FocusGained;       // * for widgets, windows, or controls
-        static EventType FocusLost;         // * for widgets, windows, or controls
-        static EventType Resize;            // * for window or control size changes
-        static EventType Move;              // * for IDisplayObject position changes
-        static EventType Show;              // * for visibility changes
-        static EventType Hide;              // * for visibility changes
-        static EventType EnterFullscreen;   // * for entering fullscreen mode
-        static EventType LeaveFullscreen;   // * for leaving fullscreen mode
+        // 🔄 Window / Focus -----------------------------------------------------------
+        static EventType FocusGained;       // 🧩 Event_test{5}
+        static EventType FocusLost;         // 🧩 Event_test{5}
+        static EventType Resize;            // 🧩 Event_test{5}
+        static EventType Move;              // 🧩 Event_test{5}
+        static EventType Show;              // 🧩 Event_test{5}
+        static EventType Hide;              // 🧩 Event_test{5}
+        static EventType EnterFullscreen;   // 🧩 Event_test{5}
+        static EventType LeaveFullscreen;   // 🧩 Event_test{5}
 
-        // General UI event types
-        static EventType ValueChanged;      // for sliders, text fields, etc.
-        static EventType StateChanged;      // for checkboxes, radio buttons, etc.
-        static EventType SelectionChanged;  // for list boxes, combo boxes, etc.
-        static EventType Enabled;           // when IDisplayObjects become enabled
-        static EventType Disabled;          // when IDisplayObjects become disabled
-        static EventType Active;            // REMOVE ACTIVE
-        static EventType Inactive;          // REMOVE INACTIVE
-        static EventType Visible;           // when a IDisplayObject becomes visible
-        static EventType Hidden;            // when a IDisplayObject becomes hidden        
+        // 🔄 UI / State ---------------------------------------------------------------
+        static EventType ValueChanged;      // 🧩 Event_test{6}
+        static EventType StateChanged;      // 🧩 Event_test{6}
+        static EventType SelectionChanged;  // 🧩 Event_test{6}
+        static EventType Enabled;           // 🧩 Event_test{6}
+        static EventType Disabled;          // 🧩 Event_test{6}
+        static EventType Visible;           // 🧩 Event_test{6}
+        static EventType Hidden;            // 🧩 Event_test{6}
 
-        // Drag & Drop event types  
-        static EventType Drag;              // * when a drag operation starts
-        static EventType Dragging;          // * when a drag operation is ongoing
-        static EventType Drop;              // * when an item is dropped
+        // 🔄 Drag & Drop --------------------------------------------------------------
+        static EventType Drag;              // 🧩 Event_test{4, 8}
+        static EventType Dragging;          // 🧩 Event_test{4, 8}
+        static EventType Drop;              // 🧩 Event_test{4, 8}
 
-        // 💡 Clipboard event types    
-        static EventType ClipboardCopy;     // when content is copied to the clipboard
-        static EventType ClipboardPaste;    // when content is pasted from the clipboard
-        
-        // ✅ Application lifecycle event types
-        static EventType Added;             // ✅ when a DisplayHandle is added to the display list
-        static EventType Removed;           // ✅ when a DisplayHandle is removed from the display list
-        static EventType AddedToStage;      // ✅ when a DisplayHandle is added to the stage
-        static EventType RemovedFromStage;  // ✅ when a DisplayHandle is removed from the stage
-        static EventType StageClosed;       // ✅ for when a stage is closed
-        static EventType StageOpened;       // ✅ for when a stage is opened
+        // ❓ Timer (no Timer system yet) ----------------------------------------------
+        static EventType TimerStart;        
+        static EventType TimerStop;         
+        static EventType TimerPause;        
+        static EventType TimerTick;         
+        static EventType TimerCycleComplete;
+        static EventType TimerComplete;     
 
-        // Event Listener Only Events
-        static EventType OnInit;            // OnInit is Dispatched to EventListeners
-        static EventType OnQuit;            // OnQuit is Dispatched to EventListeners
-        static EventType OnEvent;           // OnEvent is Dispatched to EventListeners
-        static EventType OnUpdate;          // OnUpdate is Dispatched to EventListeners
-        static EventType OnRender;          // OnRender is Dispatched to EventListeners
-        static EventType OnPreRender;       // OnPreRender is Dispatched to EventListeners 
-                                            // (before stage children render)
+        // ❓ Clipboard (clipboard sub-system not yet implemented) ---------------------
+        static EventType ClipboardCopy;     
+        static EventType ClipboardPaste;    
 
-        // Custom User event types
-        static EventType User;              // custom user event type
+        // ✅ Listener-Only ------------------------------------------------------------
+        //   Fully verified through Lua callback system (listener_callbacks.lua).
+        //   Each event is registered via stage:addEventListener using EventType constants
+        //   and confirmed to dispatch correctly within SDOM’s runtime loop.
+        //
+        //   • OnInit / OnQuit – lifecycle setup and teardown confirmed.
+        //   • OnEvent – SDL and user input routed correctly to Lua.
+        //   • OnUpdate / OnRender / OnPreRender – verified per-frame ordering and stability.
+        //
+        static EventType OnInit;            // 📜 Verified in listener_callbacks.lua:on_init
+        static EventType OnQuit;            // 📜 Verified in listener_callbacks.lua:on_quit
+        static EventType OnEvent;           // 📜 Verified in listener_callbacks.lua:on_event
+        static EventType OnUpdate;          // 📜 Verified in listener_callbacks.lua:on_update
+        static EventType OnRender;          // 📜 Verified in listener_callbacks.lua:on_render
+        static EventType OnPreRender;       // 📜 Verified in listener_callbacks.lua:on_prerender
+
+
+        // 🔄 Frame / Misc -------------------------------------------------------------
+        static EventType EnterFrame;        // 🧩 Event_test{3}
+        static EventType SDL_Event;         // 🧩 Event_test{3}
+        static EventType User;              // 🗓️ Planned
                
         explicit EventType(const std::string& name) 
             : name(name), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
