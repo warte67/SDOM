@@ -165,7 +165,6 @@ EventManager modularized, drag & keyboard routing fixed, stage lifecycle events 
 Next step → migrate tests 9–12 into a new `EventType_UnitTests` module for full event-type coverage.
 
 ---
-<a id="latest-update"></a>
 
 ## 🗓️ November 1, 2025 — EventType UnitTests
 - Began work on **EventType_UnitTests** module
@@ -179,6 +178,9 @@ Next step → migrate tests 9–12 into a new `EventType_UnitTests` module for f
 - Corrected color parsing & propagation from Lua configs.
 - Set Core border color to { r = 8, g = 0, b = 16, a = 255 } — a deep, intentional background for letterboxing.
 
+
+<a id="latest-update"></a>
+## 🗓️ November 2, 2025
 
 #### end-of-day
 
