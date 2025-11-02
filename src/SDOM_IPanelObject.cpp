@@ -291,20 +291,8 @@ namespace SDOM
         // force a rebuild before drawing if needed.
         if (cachedTexture_)
         {
-            float tw = 0.0f, th = 0.0f;
-            if (!SDL_GetTextureSize(cachedTexture_, &tw, &th))
-            {
-                SDL_DestroyTexture(cachedTexture_);
-                cachedTexture_ = nullptr;
+            if (SDOM::drop_invalid_cached_texture(cachedTexture_, renderer, cached_renderer_))
                 setDirty(true);
-            }
-            // Renderer changed since cache creation; drop and rebuild safely.
-            else if (cached_renderer_ && cached_renderer_ != renderer)
-            {
-                SDL_DestroyTexture(cachedTexture_);
-                cachedTexture_ = nullptr;
-                setDirty(true);
-            }
         }
         // If format/size changed since last build, force a rebuild.
         if (current_pixel_format_ != getCore().getPixelFormat() ||

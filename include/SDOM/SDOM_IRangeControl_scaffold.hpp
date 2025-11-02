@@ -114,7 +114,12 @@ namespace SDOM
         // To remain robust across device rebuilds, overrides should:
         //   - Destroy any cached SDL_Texture and clear pointers
         //   - Reset any tracked width/height/pixel format used for change detection
+        //   - Clear any cached renderer pointer used to track the texture owner
         //   - Mark the object dirty so the next onRender() rebuilds the cache
+        //
+        // Tip: use SDOM::drop_invalid_cached_texture(tex, currentRenderer, ownerRenderer)
+        // in your onRender() to proactively drop stale caches when the renderer
+        // changes (e.g., fullscreen toggle) or when SDL reports the texture invalid.
         //
         // Derived controls that add additional cached resources should extend this
         // override and call SUPER::onWindowResize().

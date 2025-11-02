@@ -94,12 +94,14 @@ namespace SDOM
         // (The base IRangeControl provides members commonly used by range controls.)
         if (cachedTexture_)
         {
-            SDL_DestroyTexture(cachedTexture_);
+            if (getRenderer())
+                SDL_DestroyTexture(cachedTexture_);
             cachedTexture_ = nullptr;
         }
         current_width_ = 0;
         current_height_ = 0;
         current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        cached_renderer_ = nullptr;
         setDirty(true);
     }
 

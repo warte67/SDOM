@@ -515,13 +515,11 @@ namespace SDOM
         SDL_Renderer* renderer = getRenderer();
         SDL_Texture* target = SDL_GetRenderTarget(renderer);
 
-        // If the renderer changed since the cached texture was built, drop it
-        // and force a rebuild with the current renderer.
-        if (cachedTexture_ && cached_renderer_ && cached_renderer_ != renderer)
+        // Drop cache if texture became invalid or belongs to a previous renderer
+        if (cachedTexture_)
         {
-            SDL_DestroyTexture(cachedTexture_);
-            cachedTexture_ = nullptr;
-            setDirty(true);
+            if (SDOM::drop_invalid_cached_texture(cachedTexture_, renderer, cached_renderer_))
+                setDirty(true);
         }
 
         if (isDirty()) 

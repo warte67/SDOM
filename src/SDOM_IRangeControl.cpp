@@ -573,6 +573,7 @@ namespace SDOM
         current_pixel_format_ = fmt;
         current_width_ = width;
         current_height_ = height;
+        cached_renderer_ = getRenderer();
         return true;
     }
 
@@ -585,12 +586,14 @@ namespace SDOM
     {
         if (cachedTexture_)
         {
-            SDL_DestroyTexture(cachedTexture_);
+            if (getRenderer())
+                SDL_DestroyTexture(cachedTexture_);
             cachedTexture_ = nullptr;
         }
         current_width_ = 0;
         current_height_ = 0;
         current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        cached_renderer_ = nullptr;
         setDirty(true);
     }
 

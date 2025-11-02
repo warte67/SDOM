@@ -447,6 +447,9 @@ namespace SDOM
         // so they can release cached renderer-owned resources (textures) while
         // the old renderer is still valid. This avoids double-destroy crashes
         // when objects try to free textures after the renderer has been torn down.
+        // NOTE: Objects should NOT attempt to validate textures by binding them
+        // as render targets during teardown. Use SDL_GetTextureSize and/or a
+        // cached renderer pointer to decide whether to drop the cache.
         if ((recreate_window || recreate_renderer || recreate_texture) && rootNode_)
         {
             int logicalW = 0, logicalH = 0;

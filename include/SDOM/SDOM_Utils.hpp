@@ -42,4 +42,12 @@ namespace SDOM
                           const std::string& colorBorder /* = CLR::BROWN */);
 
     void showWarning(const std::string& message, const std::string& file, int line);
+
+    // Cached-texture guard: if the cached SDL_Texture is invalid for the
+    // current renderer (owner != current) or its size query fails, destroy it,
+    // clear both the texture and owner pointers, and return true. Callers
+    // typically follow this with setDirty(true) to trigger a rebuild.
+    bool drop_invalid_cached_texture(SDL_Texture*& tex,
+                                     SDL_Renderer* currentRenderer,
+                                     SDL_Renderer*& textureOwnerRenderer);
 } // namespace SDOM

@@ -48,6 +48,13 @@ namespace SDOM
         SDL_Renderer* renderer = getRenderer();
         if (!renderer) { ERROR("ProgressBar::onRender(): renderer is null"); return; }
 
+        // Invalidate cached texture when renderer changes or texture becomes invalid.
+        if (cachedTexture_)
+        {
+            if (SDOM::drop_invalid_cached_texture(cachedTexture_, renderer, cached_renderer_))
+                setDirty(true);
+        }
+
         if (isDirty())
         {
             if (!rebuildRangeTexture_(getWidth(), getHeight(), getCore().getPixelFormat()))
@@ -184,6 +191,8 @@ namespace SDOM
                 }
 
                 SDL_SetRenderTarget(renderer, prev);
+                // Track which renderer created this cache
+                cached_renderer_ = renderer;
             }
 
             setDirty(false);

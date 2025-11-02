@@ -217,4 +217,33 @@ namespace SDOM
         printMessageBox("Warning", message, file, line, CLR::GREY, CLR::WHITE, CLR::DARK);
     }
 
+    bool drop_invalid_cached_texture(SDL_Texture*& tex,
+                                     SDL_Renderer* currentRenderer,
+                                     SDL_Renderer*& textureOwnerRenderer)
+    {
+        if (!tex) return false;
+        // If the texture belongs to a different renderer, do NOT attempt to
+        // destroy it here — the old renderer teardown will have freed it (or
+        // destroying via the wrong device can crash). Just drop the pointer.
+        if (textureOwnerRenderer && textureOwnerRenderer != currentRenderer)
+        {
+            tex = nullptr;
+            textureOwnerRenderer = nullptr;
+            return true;
+        }
+        // Validate that the texture is still alive by querying its size. Avoid
+        // binding it as a target here to prevent segfaults during teardown.
+        float tw = 0.0f, th = 0.0f;
+        if (!SDL_GetTextureSize(tex, &tw, &th))
+        {
+            // Texture is invalid; it is safe to call SDL_DestroyTexture in this
+            // branch, but be conservative and simply drop the pointer to avoid
+            // double-destroys in edge lifecycles.
+            tex = nullptr;
+            textureOwnerRenderer = nullptr;
+            return true;
+        }
+        return false;
+    }
+
 } // namespace SDOM

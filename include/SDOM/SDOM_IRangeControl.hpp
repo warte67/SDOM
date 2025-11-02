@@ -120,6 +120,7 @@ namespace SDOM
 
         // --- Cached rendering --- //
         SDL_Texture* cachedTexture_ = nullptr;
+        SDL_Renderer* cached_renderer_ = nullptr; // renderer that created cachedTexture_
         int current_width_ = 0;
         int current_height_ = 0;
         SDL_PixelFormat current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
