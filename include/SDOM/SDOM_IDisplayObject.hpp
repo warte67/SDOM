@@ -233,6 +233,12 @@ namespace SDOM
 
         // --- Lifecycle & Core Virtuals --- //
         virtual bool onInit() override;
+        // onLoad/onUnload mirror AssetObject semantics for renderer/device-backed
+        // resources. onLoad may be called multiple times across device rebuilds
+        // or stage transitions; implementations must be idempotent.
+        // Default: no-op returning true.
+        virtual bool onLoad() { return true; }
+        virtual void onUnload() {}
         virtual void onQuit() override;
         virtual void onUpdate(float fElapsedTime);
         virtual void onEvent(const Event& event);

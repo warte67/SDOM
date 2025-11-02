@@ -332,6 +332,7 @@ namespace SDOM
         return true; // Indicate successful initialization
     }
 
+
     void IDisplayObject::onQuit()
     {
         // Default implementation, can be overridden by derived classes

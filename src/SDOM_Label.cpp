@@ -494,15 +494,9 @@ namespace SDOM
     //   - Mark dirty so onRender() will recreate the cache next frame
     void Label::onWindowResize(int /*logicalWidth*/, int /*logicalHeight*/)
     {
-        if (cachedTexture_)
-        {
-            // If the renderer is unavailable (being reconfigured), avoid
-            // calling SDL_DestroyTexture on a potentially stale pointer.
-            // The renderer teardown will free its textures; just drop ours.
-            if (getRenderer())
-                SDL_DestroyTexture(cachedTexture_);
-            cachedTexture_ = nullptr;
-        }
+        // Drop the cached texture reference without destroying; renderer may
+        // be in transition and the pointer could belong to a previous device.
+        if (cachedTexture_) { cachedTexture_ = nullptr; }
         current_width = 0;
         current_height = 0;
         current_pixel_format = SDL_PIXELFORMAT_UNKNOWN;

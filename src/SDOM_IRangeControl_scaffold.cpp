@@ -92,12 +92,8 @@ namespace SDOM
     {
         // If this scaffold or its derivatives cache textures, invalidate them here.
         // (The base IRangeControl provides members commonly used by range controls.)
-        if (cachedTexture_)
-        {
-            if (getRenderer())
-                SDL_DestroyTexture(cachedTexture_);
-            cachedTexture_ = nullptr;
-        }
+        // Do not call SDL_DestroyTexture during renderer transitions; drop pointer.
+        if (cachedTexture_) { cachedTexture_ = nullptr; }
         current_width_ = 0;
         current_height_ = 0;
         current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;

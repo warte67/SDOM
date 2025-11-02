@@ -584,12 +584,8 @@ namespace SDOM
     // and on SDL resize events. Clear the cache, reset trackers, set dirty.
     void IRangeControl::onWindowResize(int /*logicalWidth*/, int /*logicalHeight*/)
     {
-        if (cachedTexture_)
-        {
-            if (getRenderer())
-                SDL_DestroyTexture(cachedTexture_);
-            cachedTexture_ = nullptr;
-        }
+        // Drop reference only; avoid destroying during renderer transitions
+        if (cachedTexture_) { cachedTexture_ = nullptr; }
         current_width_ = 0;
         current_height_ = 0;
         current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;

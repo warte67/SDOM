@@ -465,17 +465,17 @@ namespace SDOM
 
             if (auto* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get()))
             {
-                std::function<void(IDisplayObject&)> visit;
-                visit = [&](IDisplayObject& node)
+                std::function<void(IDisplayObject&)> visitUnload;
+                visitUnload = [&](IDisplayObject& node)
                 {
-                    try { node.onWindowResize(logicalW, logicalH); } catch(...) {}
+                    try { node.onUnload(); } catch(...) {}
                     for (const auto& ch : node.getChildren())
                     {
                         if (auto* c = dynamic_cast<IDisplayObject*>(ch.get()))
-                            visit(*c);
+                            visitUnload(*c);
                     }
                 };
-                visit(*rootObj);
+                visitUnload(*rootObj);
             }
         }
 
@@ -1295,8 +1295,8 @@ namespace SDOM
         prevConfig = config_;
 
         // After reconfigure, proactively notify all display objects that the
-        // logical render size/device may have changed so cached renderer-owned
-        // resources (textures) can be invalidated/rebuilt.
+        // device/resources have been recreated. Give objects a chance to
+        // (re)load renderer-backed caches, then broadcast logical size change.
         int logicalW = 0, logicalH = 0;
         if (texture_)
         {
@@ -1311,6 +1311,20 @@ namespace SDOM
         {
             if (auto* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get()))
             {
+                // First pass: onLoad on the rebuilt device
+                std::function<void(IDisplayObject&)> visitLoad;
+                visitLoad = [&](IDisplayObject& node)
+                {
+                    try { node.onLoad(); } catch(...) {}
+                    for (const auto& ch : node.getChildren())
+                    {
+                        if (auto* c = dynamic_cast<IDisplayObject*>(ch.get()))
+                            visitLoad(*c);
+                    }
+                };
+                visitLoad(*rootObj);
+
+                // Second pass: broadcast logical size to trigger layout/cache rebuilds
                 std::function<void(IDisplayObject&)> visit;
                 visit = [&](IDisplayObject& node)
                 {

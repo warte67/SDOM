@@ -261,12 +261,10 @@ namespace SDOM
     // those cases; invalidate and mark dirty so onRender() rebuilds next frame.
     void IPanelObject::onWindowResize(int /*logicalWidth*/, int /*logicalHeight*/)
     {
-        if (cachedTexture_)
-        {
-            if (getRenderer())
-                SDL_DestroyTexture(cachedTexture_);
-            cachedTexture_ = nullptr;
-        }
+        // Do not destroy here — during device transitions the texture pointer
+        // may belong to a previous renderer. Simply drop the reference and
+        // let the renderer lifecycle clean up safely.
+        if (cachedTexture_) { cachedTexture_ = nullptr; }
         current_width_ = 0;
         current_height_ = 0;
         current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
