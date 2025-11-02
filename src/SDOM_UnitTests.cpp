@@ -3,7 +3,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
-
+#include <SDOM/SDOM_Frame.hpp>
 #include <SDOM/SDOM_UnitTests.hpp>  
 
 namespace SDOM
@@ -327,7 +327,108 @@ namespace SDOM
             }
         }
         return anyRun; // true only if all implemented tests have has_run = true
-    }
+    } // END: UnitTests::run_all()
+
+
+    // --- run_event_behavior_test-----------------------------------------------------
+    //
+    // 🧩 Purpose:
+    //   Shared helper that simulates real input behavior for mouse, keyboard, and
+    //   other interactive event types. It ensures SDL-style injected events result
+    //   in the correct SDOM event dispatches through the EventManager.
+    //
+    // 📝 Notes:
+    //   • Each simulated SDL action triggers a matching EventType lookup.  
+    //   • Listeners are dynamically attached to a temporary Box node.  
+    //   • Each listener records a "hit" if its corresponding event fires.  
+    //   • Used by Event_test8 (mouse) and Event_test9 (keyboard) unit tests.  
+    //
+    // ⚙️ Functions Tested:
+    //
+    //   | Category             | Behavior / API Verified                           |
+    //   |-----------------------|--------------------------------------------------|
+    //   | Event Dispatch        | ✅ Core::pumpEventsOnce() correctly dispatches   |
+    //   | Event Translation     | ✅ SDL events mapped to correct EventType        |
+    //   | Listener Invocation   | ✅ addEventListener() / event callback execution |
+    //   | Behavior Simulation   | ✅ Mouse & keyboard action triggers              |
+    //   | Resource Cleanup      | ✅ Proper child removal and GC collection        |
+    //
+    // ⚠️ Safety:
+    //   Temporary Box is destroyed and garbage collected after test completion.
+    //
+    // ============================================================================
+    bool UnitTests::run_event_behavior_test(
+        const std::vector<std::pair<std::string, std::function<void(DisplayHandle)>>>& actions, 
+        std::vector<std::string>& errors)
+    {
+        Core& core = getCore();
+        DisplayHandle stage = core.getRootNode();
+
+        // --- 1) Create temporary Box for event testing -----------------------------
+        Frame::InitStruct init;
+        init.name   = "behaviorTestObject";
+        init.x      = 10;
+        init.y      = 10;
+        init.width  = 50;
+        init.height = 50;
+        init.color  = {255, 0, 0, 255};
+
+        DisplayHandle obj = core.createDisplayObject("Frame", init);
+        if (!obj.isValid()) {
+            errors.push_back("BehaviorTest: failed to create test Object.");
+            return false;
+        }
+        stage->addChild(obj);
+
+        // ensure keyboard events are dispatched
+        core.setKeyboardFocusedObject(obj); 
+        // ensure mouse events are dispatched
+        core.setMouseHoveredObject(obj);    
+
+        // --- 2) Register event listeners -------------------------------------------
+        std::unordered_map<std::string, bool> hits;
+        for (const auto& [name, _] : actions)
+            hits[name] = false;
+
+        for (auto& [name, _] : actions)
+        {
+            EventType* et = nullptr;
+            const auto& reg = EventType::getRegistry();
+            auto it = reg.find(name);
+            if (it != reg.end()) et = it->second;
+
+            if (!et) {
+                errors.push_back("Unknown EventType: " + name);
+                continue;
+            }
+
+            obj->addEventListener(*et, [&](const Event& ev) {
+                hits[ev.getTypeName()] = true;
+            });
+        }
+
+        // --- 3) Simulate SDL / behavior actions ------------------------------------
+        for (auto& [_, action] : actions)
+            action(obj);
+
+        // --- 4) Process and verify event dispatch -----------------------------------
+        core.pumpEventsOnce();
+
+        for (const auto& [name, hit] : hits)
+            if (!hit) {
+                errors.push_back("Behavior event '" + name + "' did not fire.");
+            }
+
+        // --- 5) Cleanup -------------------------------------------------------------
+        if (stage->hasChild(obj))
+            stage->removeChild(obj);
+        core.collectGarbage();
+
+        // ✅ Return informational result (unused in caller)
+        return true; // ✅ finished this frame
+
+    } // END: UnitTests::run_event_behavior_test()
+
 
 
 } // END: namespace SDOM

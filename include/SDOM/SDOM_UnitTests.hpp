@@ -49,6 +49,8 @@ namespace SDOM
         void update();          // Called once per frame
         bool all_done() const;  // All tests have completed
 
+
+
         // Deprecated static methods (to be removed)
         template<typename Func>        
         static bool run(const std::string& objName, const std::string& testName, Func&& testFunc) 
@@ -57,6 +59,12 @@ namespace SDOM
                       << testName << "' (" << objName << ") was not executed." << std::endl;
             return false;
         }
+
+        // --- static test helpers --- //
+
+        static bool run_event_behavior_test(
+            const std::vector<std::pair<std::string, std::function<void(DisplayHandle)>>>& actions, 
+            std::vector<std::string>& errors);
 
         // --- Core UnitTest Accessors / Mutators --- //
         SDL_Window* getWindow();

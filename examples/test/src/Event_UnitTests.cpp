@@ -630,101 +630,6 @@ namespace SDOM
     } // END -- Application Lifecycle event types
 
 
-    // --- runEventBehaviorTest ------------------------------------------------------
-    //
-    // 🧩 Purpose:
-    //   Shared helper that simulates real input behavior for mouse, keyboard, and
-    //   other interactive event types. It ensures SDL-style injected events result
-    //   in the correct SDOM event dispatches through the EventManager.
-    //
-    // 📝 Notes:
-    //   • Each simulated SDL action triggers a matching EventType lookup.  
-    //   • Listeners are dynamically attached to a temporary Box node.  
-    //   • Each listener records a "hit" if its corresponding event fires.  
-    //   • Used by Event_test8 (mouse) and Event_test9 (keyboard) unit tests.  
-    //
-    // ⚙️ Functions Tested:
-    //
-    //   | Category             | Behavior / API Verified                             |
-    //   |-----------------------|-----------------------------------------------------|
-    //   | Event Dispatch        | ✅ Core::pumpEventsOnce() correctly dispatches      |
-    //   | Event Translation     | ✅ SDL events mapped to correct EventType           |
-    //   | Listener Invocation   | ✅ addEventListener() / event callback execution    |
-    //   | Behavior Simulation   | ✅ Mouse & keyboard action triggers                 |
-    //   | Resource Cleanup      | ✅ Proper child removal and GC collection           |
-    //
-    // ⚠️ Safety:
-    //   Temporary Box is destroyed and garbage collected after test completion.
-    //
-    // ============================================================================
-    static bool runEventBehaviorTest(
-        const std::vector<std::pair<std::string, std::function<void(DisplayHandle)>>>& actions,
-        std::vector<std::string>& errors)
-    {
-        Core& core = getCore();
-        DisplayHandle stage = core.getRootNode();
-
-        // --- 1) Create temporary Box for event testing -----------------------------
-        Box::InitStruct init;
-        init.name   = "behaviorTestBox";
-        init.x      = 10;
-        init.y      = 10;
-        init.width  = 50;
-        init.height = 50;
-        init.color  = {255, 0, 0, 255};
-
-        DisplayHandle box = core.createDisplayObject("Box", init);
-        if (!box.isValid()) {
-            errors.push_back("BehaviorTest: failed to create test Box.");
-            return false;
-        }
-        stage->addChild(box);
-
-        // --- 2) Register event listeners -------------------------------------------
-        std::unordered_map<std::string, bool> hits;
-        for (const auto& [name, _] : actions)
-            hits[name] = false;
-
-        for (auto& [name, _] : actions)
-        {
-            EventType* et = nullptr;
-            const auto& reg = EventType::getRegistry();
-            auto it = reg.find(name);
-            if (it != reg.end()) et = it->second;
-
-            if (!et) {
-                errors.push_back("Unknown EventType: " + name);
-                continue;
-            }
-
-            box->addEventListener(*et, [&](const Event& ev) {
-                hits[ev.getTypeName()] = true;
-            });
-        }
-
-        // --- 3) Simulate SDL / behavior actions ------------------------------------
-        for (auto& [_, action] : actions)
-            action(box);
-
-        // --- 4) Process and verify event dispatch -----------------------------------
-        core.pumpEventsOnce();
-
-        for (const auto& [name, hit] : hits)
-            if (!hit) {
-                errors.push_back("Behavior event '" + name + "' did not fire.");
-            }
-
-        // --- 5) Cleanup -------------------------------------------------------------
-        if (stage->hasChild(box))
-            stage->removeChild(box);
-        core.collectGarbage();
-
-        // ✅ Return informational result (unused in caller)
-        return true; // ✅ finished this frame
-    } // END -- runEventBehaviorTest
-
-
-
     // --- Event_test8: Behavioral Mouse Event Verification --------------------------
     //
     // 🧩 Purpose:
@@ -860,7 +765,7 @@ namespace SDOM
         };
 
         // --- 3) Execute behavioral test sequence -----------------------------------
-        runEventBehaviorTest(actions, errors);
+        UnitTests::run_event_behavior_test(actions, errors);
 
         // ✅ Test complete — return success
         return true;
@@ -882,7 +787,6 @@ namespace SDOM
     {
         const std::string objName = "Event";
         UnitTests& ut = UnitTests::getInstance();
-        // ut.clear_tests();
 
         ut.add_test(objName, "Test scaffolding", Event_test0);
         ut.add_test(objName, "Verify Event table is registered and accessible", Event_test1);
