@@ -172,10 +172,12 @@ Next step → migrate tests 9–12 into a new `EventType_UnitTests` module for f
 - Migrated **Event_test9–12**`** to this module
 - Added coverage for all registered **EventType**s (**Added**, **Removed**, **EnterFrame**, etc.)
 - Introduced status emoticons for each test type within the EventType class interface
-
-
 - Added thread safe / DOM safe CoreConfig change requests
   - Temporarily added a **F** key shortcut to toggle fullscreen in the core main loop
+- Fixed double configuration bug — Core::configure() now runs only once with Lua settings.
+- Ensured config consistency — config_ = config; synchronizes runtime state post-reconfigure().
+- Corrected color parsing & propagation from Lua configs.
+- Set Core border color to { r = 8, g = 0, b = 16, a = 255 } — a deep, intentional background for letterboxing.
 
 
 #### end-of-day
@@ -185,6 +187,7 @@ Next step → migrate tests 9–12 into a new `EventType_UnitTests` module for f
 ### ✅ Next Steps / To-Do
 - [ ] Create new **`EventType_UnitTests`** module  
   - Migrate `Event_test9–12` to this module  
+  - Move earlier keyboard reentrant tests to the EventType_UnitTests module
   - Add coverage for all registered `EventType`s (`Added`, `Removed`, `EnterFrame`, etc.)
 - [ ] Add tests for input dispatch edge cases  
   - Mouse enter/leave on overlapping objects  

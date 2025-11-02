@@ -65,7 +65,7 @@ local config = {
     rendererLogicalPresentation = "SDL_LOGICAL_PRESENTATION_LETTERBOX",
     windowFlags = "SDL_WINDOW_RESIZABLE",
     pixelFormat = "SDL_PIXELFORMAT_RGBA8888",
-    color = { r = 255, g = 0, b = 255, a = 255 },  -- Garish Ugly Magenta for testing
+    color = { r = 8, g = 0, b = 16, a = 255 },
     rootStage = "mainStage",
     children = {
         {

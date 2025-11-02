@@ -76,10 +76,9 @@ namespace SDOM
     {
         // initialize or reconfigure SDL as needed
         reconfigure(config);
-DEBUG_LOG("Core::configure: color=" << std::to_string(config.color.r) 
-    << "," << std::to_string(config.color.g) 
-    << "," << std::to_string(config.color.b) 
-    << "," << std::to_string(config.color.a));
+        // Adopt the new configuration as current so getters reflect latest values
+        // even when SDL was already started.
+        config_ = config;
         // Initialize the Factory if it hasn't been initialized yet.
         if (factory_ && !factory_->isInitialized()) {
             factory_->onInit();
