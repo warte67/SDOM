@@ -4,7 +4,7 @@
 local M = {}
 
 function M.on_window_resize(w, h)
-    print("Window Resized--Width: " .. w .. "  Height: " .. h)
+    -- print("Window Resized--Width: " .. w .. "  Height: " .. h)
 end
 
 return M

@@ -76,6 +76,10 @@ namespace SDOM
     {
         // initialize or reconfigure SDL as needed
         reconfigure(config);
+DEBUG_LOG("Core::configure: color=" << std::to_string(config.color.r) 
+    << "," << std::to_string(config.color.g) 
+    << "," << std::to_string(config.color.b) 
+    << "," << std::to_string(config.color.a));
         // Initialize the Factory if it hasn't been initialized yet.
         if (factory_ && !factory_->isInitialized()) {
             factory_->onInit();
@@ -425,6 +429,10 @@ namespace SDOM
             config_.preserveAspectRatio = config.preserveAspectRatio;
             config_.allowTextureResize = config.allowTextureResize;
         }
+        // Color does not require SDL resource recreation; always adopt latest.
+        // This allows Lua configs or runtime updates to immediately affect the
+        // window clear (letterbox) color without a full reconfigure cycle.
+        config_.color = config.color;
 
         // -- initialize or reconfigure SDL resources as needed -- //
         if (!SDL_WasInit(SDL_INIT_VIDEO)) 
@@ -848,9 +856,6 @@ namespace SDOM
         SDL_Texture* texture = texture_;
         handleRender = [this, &handleRender, renderer, texture](IDisplayObject& node) 
         {
-// if (node.isDirty()) DEBUG_LOG("Core::onRender: node=" << node.getName() << " dirty=" << node.isDirty());
-
-
             // render the node
             getFactory().start_render_time(node.getName());
             node.onRender();
@@ -903,14 +908,18 @@ namespace SDOM
             }
         };
 
-        // set the render target to the proper background texture
-        if (texture_)
-            SDL_SetRenderTarget(renderer, texture_); 
+        SDL_SetRenderTarget(renderer, nullptr);
 
         // Clear the entire window to the border color
         SDL_Color color = getColor();
+// color.r = 255; color.g = 0; color.b = 255; color.a = 255;
+// INFO("Core::onRender: color=" << std::to_string(color.r) << "," << std::to_string(color.g) << "," << std::to_string(color.b) << "," << std::to_string(color.a));
         SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
         SDL_RenderClear(renderer);
+
+        // set the render target to the proper background texture
+        if (texture_)
+            SDL_SetRenderTarget(renderer, texture_); 
 
         // Call recursive render on the root node (if it exists)
         IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());

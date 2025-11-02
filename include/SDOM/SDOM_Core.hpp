@@ -38,11 +38,11 @@ namespace SDOM
             float pixelWidth = 2.0f;
             float pixelHeight = 2.0f;
             bool preserveAspectRatio = true;
-            bool allowTextureResize = true;
+            bool allowTextureResize = false;
             SDL_RendererLogicalPresentation rendererLogicalPresentation = SDL_LOGICAL_PRESENTATION_LETTERBOX;
             SDL_WindowFlags windowFlags = SDL_WINDOW_RESIZABLE;
             SDL_PixelFormat pixelFormat = SDL_PIXELFORMAT_RGBA8888;
-            SDL_Color color; // background color
+            SDL_Color color = { 32, 32, 32, 255 }; // background color
         };
 
         // --- Singleton Access --- //

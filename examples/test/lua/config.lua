@@ -60,12 +60,12 @@ local config = {
     windowHeight = 800,
     pixelWidth = 2,
     pixelHeight = 2,
-    allowTextureResize = true,
+    allowTextureResize = false,
     preserveAspectRatio = true,
     rendererLogicalPresentation = "SDL_LOGICAL_PRESENTATION_LETTERBOX",
     windowFlags = "SDL_WINDOW_RESIZABLE",
     pixelFormat = "SDL_PIXELFORMAT_RGBA8888",
-    color = { r = 0, g = 0, b = 0, a = 255 },
+    color = { r = 255, g = 0, b = 255, a = 255 },  -- Garish Ugly Magenta for testing
     rootStage = "mainStage",
     children = {
         {

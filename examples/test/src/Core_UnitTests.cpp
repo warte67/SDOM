@@ -98,7 +98,7 @@
     setPixelWidth(float width);                                  // ✅ Validated by: Core_test13
     setPixelHeight(float height);                                // ✅ Validated by: Core_test13
     setPreserveAspectRatio(bool preserve);                       // ✅ Validated by: Core_test13
-    setAllowTextureResize(bool allow);                           // ✅ Validated by: Core_test13
+    setAllowTextureResize(bool allow);                           // not yet tested
     setRendererLogicalPresentation(presentation);                // ✅ Validated by: Core_test13
     setWindowFlags(SDL_WindowFlags flags);                       // ✅ Validated by: Core_test13
     setPixelFormat(SDL_PixelFormat format);                      // ✅ Validated by: Core_test13
@@ -603,6 +603,9 @@ namespace SDOM
         Core& core = getCore();
         Core::CoreConfig orig = core.getConfig();
 
+        // Save original config
+        bool final_allow = core.getAllowTextureResize();
+
         // --- Quick validation mode ----------------------------------------------
         if (!FULL_CONFIG_TEST)
         {
@@ -702,6 +705,9 @@ namespace SDOM
             if (!core.getTexture())
                 errors.push_back("SDL_Texture is nullptr after setConfig().");
         }
+        // Restore original config and verify
+        if (final_allow != orig.allowTextureResize)
+            errors.push_back("AllowTextureResize not restored after full config test.");
 
         return true; // ✅ finished this frame
     } // END: Core_test13(std::vector<std::string>& errors)
