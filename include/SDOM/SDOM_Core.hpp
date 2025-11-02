@@ -141,7 +141,9 @@ namespace SDOM
         SDL_RendererLogicalPresentation getRendererLogicalPresentation() const;
         SDL_WindowFlags getWindowFlags() const;
         SDL_PixelFormat getPixelFormat() const;
-
+        bool isFullscreen() const;
+        bool isWindowed() const;
+    
         // --- Configuration Setters --- //
         void setConfig(CoreConfig& config);
         void setWindowWidth(float width);
@@ -153,6 +155,8 @@ namespace SDOM
         void setRendererLogicalPresentation(SDL_RendererLogicalPresentation presentation);
         void setWindowFlags(SDL_WindowFlags flags);
         void setPixelFormat(SDL_PixelFormat format);
+        void setFullscreen(bool fullscreen = true);
+        void setWindowed(bool windowed = true);
 
         // --- Factory & EventManager Access --- //
         Factory& getFactory() const { return *factory_; }
@@ -280,6 +284,8 @@ namespace SDOM
         float fElapsedTime_;             // Elapsed time since the last update
         bool ignoreRealInput_ = false; // when true, drop real SDL mouse events during tests
         float keyfocus_gray_ = 0.0f;  // used for keyfocus indication
+        float saved_window_width_ = 0.0f;
+        float saved_window_height_ = 0.0f;       
 
         // Track whether SDL has been started for this Core instance. Using a
         // member instead of a function-static variable keeps state tied to
@@ -358,4 +364,3 @@ namespace SDOM
     };
 
 } // namespace SDOM
-

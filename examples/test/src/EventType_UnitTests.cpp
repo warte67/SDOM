@@ -568,6 +568,48 @@ namespace SDOM
         return false; // 🔄 continue
     } // END -- EventType_test4: Stage Lifecycle Transition Verification
 
+    // --- EventType_test5: Window/Fullscreen Toggle Verification -----------------------
+    bool EventType_test5(std::vector<std::string>& errors)
+    {
+        Core& core = getCore();
+        UnitTests& ut = UnitTests::getInstance();
+
+        // Persistent state across frames
+        static bool initialized = false;
+        static bool start_fullscreen = core.isFullscreen();
+        static int first_frame = ut.get_frame_counter();
+        int frame = ut.get_frame_counter() - first_frame;
+
+        // --- FRAME 0: Initialization ------------------------------------------------------
+        if (!initialized)
+        {
+            initialized = true;
+
+            core.setWindowed(true);  // start with a known state (windowed)
+            return false; // 🔄 continue
+        }
+
+        // --- FRAME 1: Set Fullscreen ------------------------------------------------------
+        if (frame == 1)
+        {
+            core.setFullscreen(true);
+            return false; // 🔄 continue
+        }
+
+        // --- FRAME 1: 
+        if (frame == 1)
+        {
+            return false; // 🔄 continue
+        }
+
+        // --- FRAME 2: 
+        if (frame == 2)
+        {
+            core.setFullscreen(start_fullscreen);
+            return false; // 🔄 continue
+        }
+        return true; // ✅ done
+    } // END -- EventType_test5: Window/Fullscreen Toggle Verification
 
 
     // --- Lua Integration Tests --- //
@@ -592,7 +634,8 @@ namespace SDOM
             ut.add_test(objName, "Keyboard Event Verification", EventType_test1);
             ut.add_test(objName, "Test the multi-frame event queue", EventType_test2);
             ut.add_test(objName, "Lifecycle Event Dispatch Verification", EventType_test3);
-            ut.add_test(objName, "Stage Lifecycle Transition Verification", EventType_test4);            
+            ut.add_test(objName, "Stage Lifecycle Transition Verification", EventType_test4);     
+            ut.add_test(objName, "Window/Fullscreen Toggle Verification", EventType_test5);
 
             ut.setLuaFilename("src/EventType_UnitTests.lua"); // Lua test script path
             ut.add_test(objName, "Lua: " + ut.getLuaFilename(), EventType_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)

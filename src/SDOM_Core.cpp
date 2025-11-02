@@ -443,6 +443,39 @@ namespace SDOM
             }
         }
 
+        // Before destroying SDL resources, proactively notify all display objects
+        // so they can release cached renderer-owned resources (textures) while
+        // the old renderer is still valid. This avoids double-destroy crashes
+        // when objects try to free textures after the renderer has been torn down.
+        if ((recreate_window || recreate_renderer || recreate_texture) && rootNode_)
+        {
+            int logicalW = 0, logicalH = 0;
+            if (texture_)
+            {
+                float tw = 0.0f, th = 0.0f;
+                if (SDL_GetTextureSize(texture_, &tw, &th))
+                {
+                    logicalW = static_cast<int>(tw);
+                    logicalH = static_cast<int>(th);
+                }
+            }
+
+            if (auto* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get()))
+            {
+                std::function<void(IDisplayObject&)> visit;
+                visit = [&](IDisplayObject& node)
+                {
+                    try { node.onWindowResize(logicalW, logicalH); } catch(...) {}
+                    for (const auto& ch : node.getChildren())
+                    {
+                        if (auto* c = dynamic_cast<IDisplayObject*>(ch.get()))
+                            visit(*c);
+                    }
+                };
+                visit(*rootObj);
+            }
+        }
+
         // destroy in reverse order
         if (recreate_texture && texture_) {
             getFactory().unloadAllAssetObjects(); // unload all assets to ensure compatibility with new SDL resources
@@ -604,14 +637,7 @@ namespace SDOM
                             if (event.key.key == SDLK_F) 
                             {
                                 // DEBUG_LOG("Core::run: F pressed");
-                                static bool s_fullscreen = true;                                
-                                CoreConfig cfg = config_;
-                                if (s_fullscreen)
-                                    cfg.windowFlags &= ~SDL_WINDOW_FULLSCREEN;
-                                else
-                                    cfg.windowFlags |= SDL_WINDOW_FULLSCREEN;
-                                s_fullscreen = !s_fullscreen;
-                                requestConfigApply(cfg);
+                                setFullscreen(isWindowed());
                             }
                         }
                     // END TEMPORARY              
@@ -1202,7 +1228,8 @@ namespace SDOM
     SDL_RendererLogicalPresentation Core::getRendererLogicalPresentation() const { return config_.rendererLogicalPresentation; }
     SDL_WindowFlags Core::getWindowFlags() const        { return config_.windowFlags; }
     SDL_PixelFormat Core::getPixelFormat() const        { return config_.pixelFormat; }
-
+    bool Core::isFullscreen() const { if (SDL_GetWindowFlags(getWindow()) & SDL_WINDOW_FULLSCREEN) return true; return false; }
+    bool Core::isWindowed() const { return !isFullscreen(); }
     void Core::setConfig(CoreConfig& config)            { config_ = config; refreshSDLResources(); }
 
     void Core::setWindowWidth(float width)              { 
@@ -1216,6 +1243,39 @@ namespace SDOM
     void Core::setAllowTextureResize(bool allow)        { config_.allowTextureResize = allow; refreshSDLResources(); }
     void Core::setWindowFlags(SDL_WindowFlags flags)    { config_.windowFlags = flags; refreshSDLResources(); }
     void Core::setPixelFormat(SDL_PixelFormat format)   { config_.pixelFormat = format; refreshSDLResources(); }
+
+    void Core::setFullscreen(bool fullscreen) {
+        CoreConfig cfg = getConfig();
+        if (fullscreen) 
+        {
+            // Transitioning to fullscreen: remember current windowed size so we
+            // can restore it on exit from fullscreen.
+            if (!(cfg.windowFlags & SDL_WINDOW_FULLSCREEN))
+            {
+                saved_window_width_ = cfg.windowWidth;
+                saved_window_height_ = cfg.windowHeight;
+                cfg.windowFlags |= SDL_WINDOW_FULLSCREEN;
+            }
+        } 
+        else 
+        {
+            // Transitioning back to windowed: restore the remembered size if valid.
+            if (cfg.windowFlags & SDL_WINDOW_FULLSCREEN)
+            {
+                cfg.windowFlags &= ~SDL_WINDOW_FULLSCREEN;
+                if (saved_window_width_ > 0.0f && saved_window_height_ > 0.0f)
+                {
+                    cfg.windowWidth = saved_window_width_;
+                    cfg.windowHeight = saved_window_height_;
+                }
+            }
+        }
+        requestConfigApply(cfg);
+    }
+    void Core::setWindowed(bool windowed) { setFullscreen(!windowed); }
+
+
+
     void Core::setRendererLogicalPresentation(SDL_RendererLogicalPresentation presentation) { 
         config_.rendererLogicalPresentation = presentation; refreshSDLResources(); 
     }

@@ -240,12 +240,16 @@ namespace SDOM
         // stale textures around. Factory manages asset lifetimes separately.
         if (cachedTexture_)
         {
-            SDL_DestroyTexture(cachedTexture_);
+            // If renderer is unavailable (e.g., being torn down), avoid
+            // destroying a texture tied to a dead device. Just drop pointer.
+            if (getRenderer())
+                SDL_DestroyTexture(cachedTexture_);
             cachedTexture_ = nullptr;
         }
         current_width_ = 0;
         current_height_ = 0;
         current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        cached_renderer_ = nullptr;
         setDirty(true);
     } // END: void IPanelObject::onQuit() 
 
@@ -259,12 +263,14 @@ namespace SDOM
     {
         if (cachedTexture_)
         {
-            SDL_DestroyTexture(cachedTexture_);
+            if (getRenderer())
+                SDL_DestroyTexture(cachedTexture_);
             cachedTexture_ = nullptr;
         }
         current_width_ = 0;
         current_height_ = 0;
         current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
+        cached_renderer_ = nullptr;
         setDirty(true);
     }
 
@@ -287,6 +293,13 @@ namespace SDOM
         {
             float tw = 0.0f, th = 0.0f;
             if (!SDL_GetTextureSize(cachedTexture_, &tw, &th))
+            {
+                SDL_DestroyTexture(cachedTexture_);
+                cachedTexture_ = nullptr;
+                setDirty(true);
+            }
+            // Renderer changed since cache creation; drop and rebuild safely.
+            else if (cached_renderer_ && cached_renderer_ != renderer)
             {
                 SDL_DestroyTexture(cachedTexture_);
                 cachedTexture_ = nullptr;
@@ -324,6 +337,14 @@ namespace SDOM
         // Draw the cached panel texture
         if (cachedTexture_)
         {
+            // Renderer changed since cache creation; drop and rebuild next frame.
+            if (cached_renderer_ && cached_renderer_ != renderer)
+            {
+                SDL_DestroyTexture(cachedTexture_);
+                cachedTexture_ = nullptr;
+                setDirty(true);
+                return;
+            }
             SDL_FRect dst = {
                 static_cast<float>(getX()),
                 static_cast<float>(getY()),
@@ -332,7 +353,14 @@ namespace SDOM
             };
             if (!SDL_RenderTexture(renderer, cachedTexture_, nullptr, &dst))
             {
-                ERROR("IPanelObject::onRender: failed to render cached panel texture: " + std::string(SDL_GetError()));
+                std::string err = SDL_GetError();
+                ERROR("IPanelObject::onRender: failed to render cached panel texture: " + err);
+                // If the texture was tied to a previous renderer, drop and rebuild
+                // next frame rather than crashing or spamming errors.
+                SDL_DestroyTexture(cachedTexture_);
+                cachedTexture_ = nullptr;
+                setDirty(true);
+                return;
             }
         }
         else
@@ -483,6 +511,7 @@ namespace SDOM
         current_pixel_format_ = fmt;
         current_width_ = width;
         current_height_ = height;
+        cached_renderer_ = getRenderer();
         return true;
     }
 

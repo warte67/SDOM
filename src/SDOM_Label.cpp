@@ -496,12 +496,17 @@ namespace SDOM
     {
         if (cachedTexture_)
         {
-            SDL_DestroyTexture(cachedTexture_);
+            // If the renderer is unavailable (being reconfigured), avoid
+            // calling SDL_DestroyTexture on a potentially stale pointer.
+            // The renderer teardown will free its textures; just drop ours.
+            if (getRenderer())
+                SDL_DestroyTexture(cachedTexture_);
             cachedTexture_ = nullptr;
         }
         current_width = 0;
         current_height = 0;
         current_pixel_format = SDL_PIXELFORMAT_UNKNOWN;
+        cached_renderer_ = nullptr;
         setDirty(true);
     }
 
@@ -509,6 +514,15 @@ namespace SDOM
     {       
         SDL_Renderer* renderer = getRenderer();
         SDL_Texture* target = SDL_GetRenderTarget(renderer);
+
+        // If the renderer changed since the cached texture was built, drop it
+        // and force a rebuild with the current renderer.
+        if (cachedTexture_ && cached_renderer_ && cached_renderer_ != renderer)
+        {
+            SDL_DestroyTexture(cachedTexture_);
+            cachedTexture_ = nullptr;
+            setDirty(true);
+        }
 
         if (isDirty()) 
         {
@@ -556,6 +570,15 @@ namespace SDOM
         // Draw the cached texture to the screen
         if (cachedTexture_) 
         {
+            // If renderer changed since cache creation, drop and rebuild
+            if (cached_renderer_ && cached_renderer_ != renderer)
+            {
+                SDL_DestroyTexture(cachedTexture_);
+                cachedTexture_ = nullptr;
+                setDirty(true);
+                return;
+            }
+
             SDL_FRect dst = 
             {
                 static_cast<float>(getX()),
@@ -566,6 +589,10 @@ namespace SDOM
             if (!SDL_RenderTexture(renderer, cachedTexture_, nullptr, &dst)) 
             {
                 ERROR("Label::onRender() -- Unable to render to texture: " + std::string(SDL_GetError()));
+                // If texture and renderer mismatch, drop and rebuild next frame
+                SDL_DestroyTexture(cachedTexture_);
+                cachedTexture_ = nullptr;
+                setDirty(true);
                 return;
             }
         }
@@ -1816,6 +1843,7 @@ if (LABEL_DEBUG)
         current_pixel_format = fmt;
         current_width = width;
         current_height = height;
+        cached_renderer_ = getRenderer();
         setDirty(true);
         return true;
 

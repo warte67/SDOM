@@ -177,13 +177,6 @@ Next step → migrate tests 9–12 into a new `EventType_UnitTests` module for f
 - Added thread safe / DOM safe CoreConfig change requests
   - Temporarily added a **F** key shortcut to toggle fullscreen in the core main loop
 
-#### 🔴 Known Issues / 🐛🐞🐜🐝🪲 Bugs
-- We have an issue with the GPU teardown/rebuild process. 
-  - FULL_CONFIG_TEST is set to `true` to test the GPU rebuild process -- Works normally
-  - FULL_CONFIG_TEST is set to `false` yields odd window size issues coming out of fullscreen mode.
-    - Switching to windowed mode to fullscreen moves the application window to the middle monitor.
-    - Switching back to fullscreen resizes the window to fill the entire center screen.
-  - The issue is not yet reproducible in the test harness.
 
 #### end-of-day
 

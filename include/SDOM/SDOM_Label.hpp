@@ -308,6 +308,9 @@ namespace SDOM
         bool userFontHeightSpecified_ = false;
 
         SDL_Texture* cachedTexture_ = nullptr;
+        // Track which SDL_Renderer created cachedTexture_ so we can detect
+        // renderer changes and invalidate safely.
+        SDL_Renderer* cached_renderer_ = nullptr;
 
         // --- first pass token list --- //
         std::vector<LabelToken> tokenList;
