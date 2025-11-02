@@ -178,8 +178,8 @@ Next step → migrate tests 9–12 into a new `EventType_UnitTests` module for f
 - Set Core border color to { r = 8, g = 0, b = 16, a = 255 } — a deep, intentional background for letterboxing.
 
 ---
-<a id="latest-update"></a>
 
+<a id="latest-update"></a>
 ## 🗓️ November 2, 2025
 
 

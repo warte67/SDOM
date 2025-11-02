@@ -1135,8 +1135,12 @@ namespace SDOM
             DisplayHandle ptHover     = findTopObjectAt(node, mX, mY, draggedObject, /*clickableOnly*/false);
             getCore().setMouseHoveredObject(ptHover);
 
-            // Dispatch by mouse category with point-resolved clickable target
+            // DisplayHandle buttonTarget = (ptClickable && ptClickable.isValid() && ptClickable != node)
+            //     ? ptClickable
+            //     : ptHover;
+            // dispatchMouseEvents(sdlEvent, node, buttonTarget);
             dispatchMouseEvents(sdlEvent, node, ptClickable);
+
         }
         else if (isWindowEvent(sdlType))          dispatchWindowEvents(sdlEvent);
         else if (isKeyboardEvent(sdlType))         dispatchKeyboardEvents(sdlEvent);
@@ -1163,7 +1167,12 @@ namespace SDOM
                 DisplayHandle ptClickable = findTopObjectAt(node, mX, mY, draggedObject, /*clickableOnly*/true);
                 DisplayHandle ptHover     = findTopObjectAt(node, mX, mY, draggedObject, /*clickableOnly*/false);
                 getCore().setMouseHoveredObject(ptHover);
+                // DisplayHandle buttonTarget = (ptClickable && ptClickable.isValid() && ptClickable != node)
+                //     ? ptClickable
+                //     : ptHover;
+                // dispatchMouseEvents(sdlEvent, node, buttonTarget);
                 dispatchMouseEvents(sdlEvent, node, ptClickable);
+
             }
         }
 

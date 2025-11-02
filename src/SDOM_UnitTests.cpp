@@ -378,6 +378,7 @@ namespace SDOM
             errors.push_back("BehaviorTest: failed to create test Object.");
             return false;
         }
+        obj->setClickable(true);  // <-- ensure clickable
         stage->addChild(obj);
 
         // ensure keyboard events are dispatched
