@@ -476,26 +476,29 @@ namespace SDOM
         }
 
         // destroy in reverse order
-        if (recreate_texture && texture_) {
+        if (recreate_texture && texture_) 
+        {
             getFactory().unloadAllAssetObjects(); // unload all assets to ensure compatibility with new SDL resources
             SDL_DestroyTexture(texture_);
             texture_ = nullptr;
         }
-        if (recreate_renderer && renderer_) {
+        if (recreate_renderer && renderer_) 
+        {
             getFactory().unloadAllAssetObjects(); // unload all assets to ensure compatibility with new SDL resources
             SDL_DestroyRenderer(renderer_);
             renderer_ = nullptr;
         }
-        if (recreate_window && window_) {
+        if (recreate_window && window_) 
+        {
             getFactory().unloadAllAssetObjects(); // unload all assets to ensure compatibility with new SDL resources
             SDL_DestroyWindow(window_);
             window_ = nullptr;
         }
 
         // recreate in normal order
-        if (recreate_window && !window_) {
+        if (recreate_window && !window_) 
+        {
             window_ = SDL_CreateWindow(getWindowTitle().c_str(), config_.windowWidth, config_.windowHeight, config_.windowFlags);
-// DEBUG_LOG("Core::reconfigure: Created window " + getWindowTitle() + " (" + std::to_string(config_.windowWidth) + "x" + std::to_string(config_.windowHeight) + ")");
             if (!window_) 
             {
                 std::string errorMsg = "SDL_CreateWindow() Error: " + std::string(SDL_GetError());
@@ -511,7 +514,8 @@ namespace SDOM
                 ERROR(errorMsg);
             }
         }
-        if (recreate_texture && !texture_) {
+        if (recreate_texture && !texture_) 
+        {
             // compute texture size safely (avoid divide-by-zero and ensure >=1)
             int tWidth = 1;
             int tHeight = 1;
@@ -522,7 +526,8 @@ namespace SDOM
                 SDL_TEXTUREACCESS_TARGET,
                 tWidth,
                 tHeight);
-            if (!texture_) {
+            if (!texture_) 
+            {
                 std::string errorMsg = "SDL_CreateTexture() Error: " + std::string(SDL_GetError());
                 ERROR(errorMsg);
             }
@@ -532,9 +537,11 @@ namespace SDOM
 
         if (recreate_window || recreate_renderer || recreate_texture) 
         {
-// DEBUG_LOG("Core::reconfigure: SDL resources reconfigured.");
             getFactory().reloadAllAssetObjects(); // reload all assets to ensure compatibility with new SDL resources
         }
+
+        // // TEST: Attempt to set the window position
+        // SDL_SetWindowPosition(window_, 0, 0);
 
         sdlStarted_ = true;
     }

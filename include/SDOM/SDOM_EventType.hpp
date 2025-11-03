@@ -71,12 +71,12 @@ namespace SDOM
         static EventType Quit;              // 🚫
 
         // 🔄 Application Lifecycle ----------------------------------------------------
-        static EventType Added;             // 🧠 EventType_test{3}, Event_test{7}
-        static EventType Removed;           // 🧠 EventType_test{3}, Event_test{7}
-        static EventType AddedToStage;      // 🧠 EventType_test{3}, Event_test{7}
-        static EventType RemovedFromStage;  // 🧠 EventType_test{3}, Event_test{7}
-        static EventType StageOpened;       // 🧠 EventType_test{4}
-        static EventType StageClosed;       // 🧠 EventType_test{4}
+        static EventType Added;             // 🧩🧠 EventType_test{3}, Event_test{7}
+        static EventType Removed;           // 🧩🧠 EventType_test{3}, Event_test{7}
+        static EventType AddedToStage;      // 🧩🧠 EventType_test{3}, Event_test{7}
+        static EventType RemovedFromStage;  // 🧩🧠 EventType_test{3}, Event_test{7}
+        static EventType StageOpened;       // 🧩🧠 EventType_test{4}
+        static EventType StageClosed;       // 🧩🧠 EventType_test{4}
 
         // 🔄 Input --------------------------------------------------------------------
         // Keyboard
@@ -90,18 +90,18 @@ namespace SDOM
         static EventType MouseMove;         // 🧩 Event_test{4, 8}
         static EventType MouseClick;        // 🧩 Event_test{4, 8}
         static EventType MouseDoubleClick;  // 🧩 Event_test{4, 8}
-        static EventType MouseEnter;        // 🧠 EventType_test{5} (planned)
-        static EventType MouseLeave;        // 🧠 EventType_test{5} (planned)
+        static EventType MouseEnter;        // 🧩🧠 EventType_test{5} (planned)
+        static EventType MouseLeave;        // 🧩🧠 EventType_test{5} (planned)
 
         // 🔄 Window / Focus -----------------------------------------------------------
         static EventType FocusGained;       // 🧩 Event_test{5}
         static EventType FocusLost;         // 🧩 Event_test{5}
-        static EventType Resize;            // 🧩 Event_test{5}
+        static EventType Resize;            // 🧩🧠 Event_test{5}, EventType_test{5a, 5b}
         static EventType Move;              // 🧩 Event_test{5}
-        static EventType Show;              // 🧩 Event_test{5}
-        static EventType Hide;              // 🧩 Event_test{5}
-        static EventType EnterFullscreen;   // 🧩 Event_test{5}
-        static EventType LeaveFullscreen;   // 🧩 Event_test{5}
+        static EventType Show;              // 🧩🧠 Event_test{5}, EventType_test{5a}
+        static EventType Hide;              // 🧩🧠 Event_test{5}, EventType_test{5b}
+        static EventType EnterFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5a}
+        static EventType LeaveFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5b}
 
         // 🔄 UI / State ---------------------------------------------------------------
         static EventType ValueChanged;      // 🧩 Event_test{6}
@@ -138,12 +138,12 @@ namespace SDOM
         //   • OnEvent – SDL and user input routed correctly to Lua.
         //   • OnUpdate / OnRender / OnPreRender – verified per-frame ordering and stability.
         //
-        static EventType OnInit;            // 📜 Verified in listener_callbacks.lua:on_init
-        static EventType OnQuit;            // 📜 Verified in listener_callbacks.lua:on_quit
-        static EventType OnEvent;           // 📜 Verified in listener_callbacks.lua:on_event
-        static EventType OnUpdate;          // 📜 Verified in listener_callbacks.lua:on_update
-        static EventType OnRender;          // 📜 Verified in listener_callbacks.lua:on_render
-        static EventType OnPreRender;       // 📜 Verified in listener_callbacks.lua:on_prerender
+        static EventType OnInit;            // 🧩📜 Verified in listener_callbacks.lua:on_init
+        static EventType OnQuit;            // 🧩📜 Verified in listener_callbacks.lua:on_quit
+        static EventType OnEvent;           // 🧩📜 Verified in listener_callbacks.lua:on_event
+        static EventType OnUpdate;          // 🧩📜 Verified in listener_callbacks.lua:on_update
+        static EventType OnRender;          // 🧩📜 Verified in listener_callbacks.lua:on_render
+        static EventType OnPreRender;       // 🧩📜 Verified in listener_callbacks.lua:on_prerender
 
 
         // 🔄 Frame / Misc -------------------------------------------------------------

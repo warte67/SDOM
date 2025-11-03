@@ -593,6 +593,7 @@ namespace SDOM
             case SDL_EVENT_WINDOW_OCCLUDED:
             case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:
             case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:
+            case SDL_EVENT_WINDOW_MOVED:
                 return true;
             default:
                 return false;
@@ -649,6 +650,11 @@ namespace SDOM
             case SDL_EVENT_WINDOW_OCCLUDED:           makeAndQueue(EventType::Hide); break;
             case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:   makeAndQueue(EventType::EnterFullscreen); break;
             case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:   makeAndQueue(EventType::LeaveFullscreen); break;
+            case SDL_EVENT_WINDOW_MOVED:              
+            {
+                DEBUG_LOG("🧾 Window moved: " << e.window.data1 << "," << e.window.data2);
+                makeAndQueue(EventType::Move); break;
+            }
             default: break;
         }
     } // END -- dispatchWindowEvents()

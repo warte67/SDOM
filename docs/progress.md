@@ -247,8 +247,10 @@ _Refactoring event dispatch verification and introducing deferred, thread-safe C
 - Core and EventManager internals are now safer and cleaner — configuration changes are deferred properly, event behavior tests pass consistently, and the framework is ready for more advanced input testing across windows and devices.  
 
 ---
+<a id="latest-update"></a>
 
-## 🗓️ To-Do For Tomorrow — Event Lifecycle Verification & Lua Bridge Validation  
+## 🗓️ November 3, 2025 — Event Lifecycle Verification & Lua Bridge Validation 
+
 _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++) and Lua integration coverage._
 
 ### 🧩 EventType Lifetime Verification (Phase II)
@@ -274,8 +276,8 @@ _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++
 - ☐ **Add configurable display flags to `SDOM.hpp`**
   - ☐ `DISPLAY_ALL_UNIT_TESTS` — show full results for every test and module (verbose mode).  
   - ☐ `DISPLAY_SYSTEM_UNIT_TESTS` — toggle visibility of internal/system-level tests in reports.  
-  - ✅ Failing tests always show full module details and all error messages.  
-  - 🧠 Combined with `quiet` mode, allows fine-tuned control of test output for CI, profiling, and focused debugging.
+  - ☐ Failing tests always show full module details and all error messages.  
+  - ☐ Combined with `quiet` mode, allows fine-tuned control of test output for CI, profiling, and focused debugging.
 
 - ☐ **Integrate Phase labels** in UnitTest results  
   - `🧩 Phase I` Synthetic  
@@ -285,24 +287,9 @@ _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++
 ### 🌟 Summary
 Tomorrow moves SDOM from static event checks to true **frame-synchronous lifecycle testing**.  With Lua parity coming online, SDOM’s event system will be validated end-to-end across C++, SDL, and Lua — cementing the foundation for UI widgets, IME, timers, and advanced input systems.
 
-
-<a id="latest-update"></a>
-## 🗓️ November 3, 2025 — [Title Placeholder]
-
-_[Brief summary of today’s focus or achievements.]_
-
-### 🧩 [Subsystem or Feature Group]
-- [Key change or feature accomplished.]
-- [Supporting details, design notes, or rationale.]
-
-### 🌟 **Summary:**
-_[Short summary of results and next direction.]_
-
 **🚧 ToDo Today**
 - ☐ [Task 1]
 - ☐ [Task 2]
-
-#### end-of-day
 
 #### end-of-day
 
@@ -392,8 +379,8 @@ Each **UnitTest module** in SDOM represents a focused validation target for a sp
 | CLR | ☐ |
 | Core | ✅ |
 | DisplayHandle | ☐ |
-| Event | 🔄 |
-| EventManager | 🔄 |
+| Event | ✅ |
+| EventManager | ☐ |
 | EventType | 🔄 |
 | Factory | ☐ |
 

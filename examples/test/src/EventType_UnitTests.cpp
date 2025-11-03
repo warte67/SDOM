@@ -468,34 +468,45 @@ namespace SDOM
 
 
     /***********************************************************************************************
-     * ✅ EventType_test5a
+     * 🔄 EventType_test5 -- Window Environment Behavior
      * ---------------------------------------------------------------------------------------------
      * 🧪 Purpose:
-     *     Verifies that toggling the Core into fullscreen mode produces the expected
-     *     event sequence — particularly `EventType::EnterFullscreen` — and optional
-     *     companion window events such as `Show` or `Resize`.
+     *     Verifies the full lifecycle of compositor-dependent window events, including transitions
+     *     between fullscreen and windowed states, movement, and focus changes. Ensures expected SDL
+     *     and SDOM event types are generated and properly dispatched via EventManager.
+     *
+     * 🎯 EventTypes Exercised (Phase II – Lifetime Verification):
+     *     • EventType::EnterFullscreen
+     *     • EventType::LeaveFullscreen
+     *     • EventType::Show
+     *     • EventType::Hide
+     *     • EventType::Resize
+     *     • EventType::Move
+     *     • EventType::FocusLost
+     *     • EventType::FocusGained
      *
      * 🧭 Notes:
-     *     • This test ensures `EnterFullscreen` is generated when calling
-     *       `core.setFullscreen(true)`.
-     *     • It clears the EventManager queue before each stage to maintain deterministic
-     *       verification across frames.
-     *     • Optional events like `Show` and `Resize` are platform-dependent and will be
-     *       logged but not cause failure unless *none* are observed.
-     *     • The test restores the original fullscreen/windowed state upon completion.
+     *     • Combines previous `EventType_test5a`, `EventType_test5b`, and `EventType_test6`.
+     *     • Each frame performs one deterministic step; event queue cleared between steps.
+     *     • Some events (Move, FocusLost/Gained, Show/Hide) may not fire on certain compositors
+     *       such as Hyprland, Sway, or GNOME under Wayland — these yield warnings instead of errors.
+     *     • The test restores original fullscreen/windowed state and window position.
+     *     • Uses dummy SDL window to simulate focus transitions for reproducibility.
      *
      * 🔄 Frame Sequence:
-     *     0️⃣ Initialize – Ensure windowed, clear event queue.
-     *     1️⃣ Toggle → fullscreen.
-     *     2️⃣ Inspect queued events for `EnterFullscreen`.
-     *     3️⃣ Restore original mode.
-     *     4️⃣ Verify cleanup (no unexpected leave events).
+     *     0️⃣ Initialize – Capture mode/position, clear queue.
+     *     1️⃣ Toggle → fullscreen → expect `EnterFullscreen` (+ optional Show/Resize).
+     *     2️⃣ Toggle → windowed → expect `LeaveFullscreen` (+ optional Hide/Resize).
+     *     3️⃣ Move window (+32,+32) → expect `Move`.
+     *     4️⃣ Create dummy window → expect `FocusLost`.
+     *     5️⃣ Restore focus → expect `FocusGained`.
+     *     6️⃣ Cleanup dummy window and restore position.
      *
      * 🧾 Returns:
      *     • false → Continue next frame
      *     • true  → ✅ Test complete
-     ***********************************************************************************************/   
-    bool EventType_test5a(std::vector<std::string>& errors)
+     ***********************************************************************************************/
+    bool EventType_test5(std::vector<std::string>& errors)
     {
         Core& core = getCore();
         EventManager& em = core.getEventManager();
@@ -503,186 +514,172 @@ namespace SDOM
 
         static bool initialized = false;
         static bool was_fullscreen = false;
+        static SDL_Window* dummy = nullptr;
         static int start_frame = 0;
+        static int orig_x = 0, orig_y = 0;
         int frame = ut.get_frame_counter() - start_frame;
 
-        // --- FRAME 0: Initialize ---------------------------------------------------------
+        // --- FRAME 0: Initialize -----------------------------------------------------
         if (!initialized)
         {
             initialized = true;
             start_frame = ut.get_frame_counter();
-            was_fullscreen = core.isFullscreen();
-
-            // 🧹 Clean event queue before testing
             em.clearEventQueue();
 
-            // Ensure known state: start windowed
-            if (was_fullscreen)
-                core.setWindowed(true);
+            SDL_Window* win = core.getWindow();
+            SDL_GetWindowPosition(win, &orig_x, &orig_y);
+            was_fullscreen = core.isFullscreen();
 
-            return false; // 🔄 Continue next frame
+            std::cout << "🧭 Starting position: (" << orig_x << ", " << orig_y << ")\n";
+            if (was_fullscreen)
+                core.setWindowed(true); // ensure known starting mode
+
+            return false;
         }
 
-        // --- FRAME 1: Trigger EnterFullscreen -------------------------------------------
+        // --- FRAME 1: Enter Fullscreen ----------------------------------------------
         if (frame == 1)
         {
             em.clearEventQueue();
             core.setFullscreen(true);
-            return false; // 🔄 Continue next frame
+            return false;
         }
 
-        // --- FRAME 2: Inspect Event Queue ------------------------------------------------
+        // --- FRAME 2: Inspect EnterFullscreen ---------------------------------------
         if (frame == 2)
         {
             auto queued = em.getQueuedEvents();
-            bool found_enter = false;
-            bool found_show  = false;
-            bool found_resize = false;
+            bool enter = false, show = false, resize = false;
 
-            for (auto& t : queued)
+            for (auto* e : queued)
             {
-                if (t->getType() == EventType::EnterFullscreen) found_enter = true;
-                if (t->getType() == EventType::Show)            found_show = true;
-                if (t->getType() == EventType::Resize)          found_resize = true;
+                if (!e) continue;
+                if (e->getType() == EventType::EnterFullscreen) enter = true;
+                if (e->getType() == EventType::Show)            show = true;
+                if (e->getType() == EventType::Resize)          resize = true;
             }
 
-            if (!found_enter)
+            if (!enter)
                 errors.push_back("Missing EnterFullscreen event after setFullscreen(true).");
+            if (!show && !resize)
+                errors.push_back("Expected Show or Resize event after entering fullscreen.");
 
-            if (!found_show && !found_resize)
-                errors.push_back("Expected either Show or Resize event after entering fullscreen.");
-
-            return false; // 🔄 Continue next frame to restore state
-        }
-
-        // --- FRAME 3: Restore Original State ---------------------------------------------
-        if (frame == 3)
-        {
-            em.clearEventQueue();
-            if (was_fullscreen)
-                core.setFullscreen(true);
-            else
-                core.setWindowed(true);
-            return false; // 🔄 Continue next frame
-        }
-
-        // --- FRAME 4: Verify Cleanup -----------------------------------------------------
-        if (frame == 4)
-        {
-            auto queued = em.getQueuedEvents();
-            bool found_leave = false;
-            for (auto& t : queued)
-            {
-                if (t->getType() == EventType::LeaveFullscreen)
-                    found_leave = true;
-            }
-
-            if (found_leave && !was_fullscreen)
-                errors.push_back("Unexpected LeaveFullscreen event after restoration.");
-
-            // ✅ Completed
-            return true;
-        }
-
-        return true;
-    } // END -- EventType_test5a: EnterFullscreen Event Verification
-
-
-    /***********************************************************************************************
-     * ✅ EventType_test5b
-     * ---------------------------------------------------------------------------------------------
-     * 🧪 Purpose:
-     *     Confirms that returning from fullscreen mode back to windowed mode correctly
-     *     queues a `LeaveFullscreen` event and optional window events such as `Hide` or
-     *     `Resize`. Complements EventType_test5a by validating the reverse transition.
-     *
-     * 🧭 Notes:
-     *     • The test ensures `LeaveFullscreen` occurs when calling `core.setWindowed(true)`.
-     *     • The EventManager queue is cleared at every step to isolate each frame’s results.
-     *     • Optional events like `Hide` and `Resize` are expected but not mandatory on all
-     *       platforms (e.g., Wayland or X11 variations).
-     *     • The original display mode is restored when the test completes.
-     *
-     * 🔄 Frame Sequence:
-     *     0️⃣ Initialize – Ensure fullscreen, clear event queue.
-     *     1️⃣ Toggle → windowed.
-     *     2️⃣ Inspect queued events for `LeaveFullscreen`.
-     *     3️⃣ Restore prior mode.
-     *
-     * 🧾 Returns:
-     *     • false → Continue next frame
-     *     • true  → ✅ Test complete
-     ***********************************************************************************************/
-    bool EventType_test5b(std::vector<std::string>& errors)
-    {
-        Core& core = getCore();
-        EventManager& em = core.getEventManager();
-        UnitTests& ut = UnitTests::getInstance();
-
-        static bool initialized = false;
-        static bool was_windowed = false;
-        static int start_frame = 0;
-        int frame = ut.get_frame_counter() - start_frame;
-
-        // --- FRAME 0: Initialize ---------------------------------------------------------
-        if (!initialized)
-        {
-            initialized = true;
-            start_frame = ut.get_frame_counter();
-            was_windowed = core.isWindowed();
-
-            em.clearEventQueue();
-
-            // Ensure we start in fullscreen for this test
-            if (was_windowed)
-                core.setFullscreen(true);
-
-            return false; // 🔄 Continue
-        }
-
-        // --- FRAME 1: Trigger LeaveFullscreen -------------------------------------------
-        if (frame == 1)
-        {
             em.clearEventQueue();
             core.setWindowed(true);
             return false;
         }
 
-        // --- FRAME 2: Inspect Event Queue ------------------------------------------------
-        if (frame == 2)
+        // --- FRAME 3: Inspect LeaveFullscreen ---------------------------------------
+        if (frame == 3)
         {
             auto queued = em.getQueuedEvents();
-            bool found_leave = false;
-            bool found_hide  = false;
-            bool found_resize = false;
+            bool leave = false, hide = false, resize = false;
 
-            for (auto& t : queued)
+            for (auto* e : queued)
             {
-                if (t->getType() == EventType::LeaveFullscreen) found_leave = true;
-                if (t->getType() == EventType::Hide)            found_hide = true;
-                if (t->getType() == EventType::Resize)          found_resize = true;
+                if (!e) continue;
+                if (e->getType() == EventType::LeaveFullscreen) leave = true;
+                if (e->getType() == EventType::Hide)            hide = true;
+                if (e->getType() == EventType::Resize)          resize = true;
             }
 
-            if (!found_leave)
+            if (!leave)
                 errors.push_back("Missing LeaveFullscreen event after setWindowed(true).");
+            if (!hide && !resize)
+                errors.push_back("Expected Hide or Resize event after leaving fullscreen.");
 
-            if (!found_hide && !found_resize)
-                errors.push_back("Expected either Hide or Resize event after leaving fullscreen.");
+            em.clearEventQueue();
+            SDL_SetWindowPosition(core.getWindow(), orig_x + 32, orig_y + 32);
+            return false;
+        }
+
+        // --- FRAME 4: Inspect Move ---------------------------------------------------
+        if (frame == 4)
+        {
+            auto queued = em.getQueuedEvents();
+            bool found_move = false;
+
+            for (auto* e : queued)
+                if (e && e->getType() == EventType::Move)
+                    found_move = true;
+
+            if (found_move)
+                std::cout << "✅ Move event detected.\n";
+            else
+                std::cout << "⚠️  Move event not detected (compositor-controlled).\n";
+
+            em.clearEventQueue();
+            dummy = SDL_CreateWindow("focus_dummy", 64, 64, SDL_WINDOW_RESIZABLE);
+            if (!dummy)
+                errors.push_back("Unable to create dummy SDL window for focus test.");
 
             return false;
         }
 
-        // --- FRAME 3: Restore Original State ---------------------------------------------
-        if (frame == 3)
+        // --- FRAME 5: Trigger FocusLost ---------------------------------------------
+        if (frame == 5 && dummy)
         {
             em.clearEventQueue();
-            if (!was_windowed)
-                core.setFullscreen(true);
-            return true; // ✅ done
+            SDL_ShowWindow(dummy);
+            SDL_RaiseWindow(dummy);
+            SDL_PumpEvents();
+            return false;
         }
 
+        // --- FRAME 6: Inspect FocusLost ---------------------------------------------
+        if (frame == 6)
+        {
+            auto queued = em.getQueuedEvents();
+            bool lost = false;
+            for (auto* e : queued)
+                if (e && e->getType() == EventType::FocusLost)
+                    lost = true;
+
+            if (lost)
+                std::cout << "✅ FocusLost event detected.\n";
+            else
+                std::cout << "⚠️  FocusLost not observed — compositor may block focus switching.\n";
+
+            em.clearEventQueue();
+            SDL_RaiseWindow(core.getWindow());
+            SDL_PumpEvents();
+            return false;
+        }
+
+        // --- FRAME 7: Inspect FocusGained -------------------------------------------
+        if (frame == 7)
+        {
+            auto queued = em.getQueuedEvents();
+            bool gained = false;
+            for (auto* e : queued)
+                if (e && e->getType() == EventType::FocusGained)
+                    gained = true;
+
+            if (gained)
+                std::cout << "✅ FocusGained event detected.\n";
+            else
+                std::cout << "⚠️  FocusGained not detected — compositor may restrict input focus.\n";
+
+            if (dummy)
+            {
+                SDL_HideWindow(dummy);
+                SDL_DestroyWindow(dummy);
+                dummy = nullptr;
+            }
+
+            SDL_SetWindowPosition(core.getWindow(), orig_x, orig_y);
+            if (was_fullscreen)
+                core.setFullscreen(true);
+
+            return false;
+        }
+
+        // --- FRAME 8: Done -----------------------------------------------------------
+        if (frame == 8)
+            return true;
+
         return true;
-    } // END -- EventType_test5b: LeaveFullscreen Event Verification
+    } // END -- EventType_test5: Window Environment Behavior
 
 
 
@@ -711,8 +708,8 @@ namespace SDOM
             ut.add_test(objName, "Test the multi-frame event queue", EventType_test2);
             ut.add_test(objName, "Lifecycle Event Dispatch Verification", EventType_test3);
             ut.add_test(objName, "Stage Lifecycle Transition Verification", EventType_test4);     
-            ut.add_test(objName, "EnterFullscreen Event Verification", EventType_test5a);
-            ut.add_test(objName, "LeaveFullscreen Event Verification", EventType_test5b);
+            ut.add_test(objName, "Window Environment Behavior", EventType_test5);
+
 
             ut.setLuaFilename("src/EventType_UnitTests.lua"); // Lua test script path
             ut.add_test(objName, "Lua: " + ut.getLuaFilename(), EventType_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)
