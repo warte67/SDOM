@@ -466,48 +466,226 @@ namespace SDOM
         return false; // 🔄 continue
     } // END -- EventType_test4: Stage Lifecycle Transition Verification
 
-    // --- EventType_test5: Window/Fullscreen Toggle Verification -----------------------
-    bool EventType_test5(std::vector<std::string>& errors)
+
+    /***********************************************************************************************
+     * ✅ EventType_test5a
+     * ---------------------------------------------------------------------------------------------
+     * 🧪 Purpose:
+     *     Verifies that toggling the Core into fullscreen mode produces the expected
+     *     event sequence — particularly `EventType::EnterFullscreen` — and optional
+     *     companion window events such as `Show` or `Resize`.
+     *
+     * 🧭 Notes:
+     *     • This test ensures `EnterFullscreen` is generated when calling
+     *       `core.setFullscreen(true)`.
+     *     • It clears the EventManager queue before each stage to maintain deterministic
+     *       verification across frames.
+     *     • Optional events like `Show` and `Resize` are platform-dependent and will be
+     *       logged but not cause failure unless *none* are observed.
+     *     • The test restores the original fullscreen/windowed state upon completion.
+     *
+     * 🔄 Frame Sequence:
+     *     0️⃣ Initialize – Ensure windowed, clear event queue.
+     *     1️⃣ Toggle → fullscreen.
+     *     2️⃣ Inspect queued events for `EnterFullscreen`.
+     *     3️⃣ Restore original mode.
+     *     4️⃣ Verify cleanup (no unexpected leave events).
+     *
+     * 🧾 Returns:
+     *     • false → Continue next frame
+     *     • true  → ✅ Test complete
+     ***********************************************************************************************/   
+    bool EventType_test5a(std::vector<std::string>& errors)
     {
         Core& core = getCore();
+        EventManager& em = core.getEventManager();
         UnitTests& ut = UnitTests::getInstance();
 
-        // Persistent state across frames
         static bool initialized = false;
-        static bool start_fullscreen = core.isFullscreen();
-        static int first_frame = ut.get_frame_counter();
-        int frame = ut.get_frame_counter() - first_frame;
+        static bool was_fullscreen = false;
+        static int start_frame = 0;
+        int frame = ut.get_frame_counter() - start_frame;
 
-        // --- FRAME 0: Initialization ------------------------------------------------------
+        // --- FRAME 0: Initialize ---------------------------------------------------------
         if (!initialized)
         {
             initialized = true;
+            start_frame = ut.get_frame_counter();
+            was_fullscreen = core.isFullscreen();
 
-            core.setWindowed(true);  // start with a known state (windowed)
-            return false; // 🔄 continue
+            // 🧹 Clean event queue before testing
+            em.clearEventQueue();
+
+            // Ensure known state: start windowed
+            if (was_fullscreen)
+                core.setWindowed(true);
+
+            return false; // 🔄 Continue next frame
         }
 
-        // --- FRAME 1: Set Fullscreen ------------------------------------------------------
+        // --- FRAME 1: Trigger EnterFullscreen -------------------------------------------
         if (frame == 1)
         {
+            em.clearEventQueue();
             core.setFullscreen(true);
-            return false; // 🔄 continue
+            return false; // 🔄 Continue next frame
         }
 
-        // --- FRAME 1: 
-        if (frame == 1)
-        {
-            return false; // 🔄 continue
-        }
-
-        // --- FRAME 2: 
+        // --- FRAME 2: Inspect Event Queue ------------------------------------------------
         if (frame == 2)
         {
-            core.setFullscreen(start_fullscreen);
-            return false; // 🔄 continue
+            auto queued = em.getQueuedEvents();
+            bool found_enter = false;
+            bool found_show  = false;
+            bool found_resize = false;
+
+            for (auto& t : queued)
+            {
+                if (t->getType() == EventType::EnterFullscreen) found_enter = true;
+                if (t->getType() == EventType::Show)            found_show = true;
+                if (t->getType() == EventType::Resize)          found_resize = true;
+            }
+
+            if (!found_enter)
+                errors.push_back("Missing EnterFullscreen event after setFullscreen(true).");
+
+            if (!found_show && !found_resize)
+                errors.push_back("Expected either Show or Resize event after entering fullscreen.");
+
+            return false; // 🔄 Continue next frame to restore state
         }
-        return true; // ✅ done
-    } // END -- EventType_test5: Window/Fullscreen Toggle Verification
+
+        // --- FRAME 3: Restore Original State ---------------------------------------------
+        if (frame == 3)
+        {
+            em.clearEventQueue();
+            if (was_fullscreen)
+                core.setFullscreen(true);
+            else
+                core.setWindowed(true);
+            return false; // 🔄 Continue next frame
+        }
+
+        // --- FRAME 4: Verify Cleanup -----------------------------------------------------
+        if (frame == 4)
+        {
+            auto queued = em.getQueuedEvents();
+            bool found_leave = false;
+            for (auto& t : queued)
+            {
+                if (t->getType() == EventType::LeaveFullscreen)
+                    found_leave = true;
+            }
+
+            if (found_leave && !was_fullscreen)
+                errors.push_back("Unexpected LeaveFullscreen event after restoration.");
+
+            // ✅ Completed
+            return true;
+        }
+
+        return true;
+    } // END -- EventType_test5a: EnterFullscreen Event Verification
+
+
+    /***********************************************************************************************
+     * ✅ EventType_test5b
+     * ---------------------------------------------------------------------------------------------
+     * 🧪 Purpose:
+     *     Confirms that returning from fullscreen mode back to windowed mode correctly
+     *     queues a `LeaveFullscreen` event and optional window events such as `Hide` or
+     *     `Resize`. Complements EventType_test5a by validating the reverse transition.
+     *
+     * 🧭 Notes:
+     *     • The test ensures `LeaveFullscreen` occurs when calling `core.setWindowed(true)`.
+     *     • The EventManager queue is cleared at every step to isolate each frame’s results.
+     *     • Optional events like `Hide` and `Resize` are expected but not mandatory on all
+     *       platforms (e.g., Wayland or X11 variations).
+     *     • The original display mode is restored when the test completes.
+     *
+     * 🔄 Frame Sequence:
+     *     0️⃣ Initialize – Ensure fullscreen, clear event queue.
+     *     1️⃣ Toggle → windowed.
+     *     2️⃣ Inspect queued events for `LeaveFullscreen`.
+     *     3️⃣ Restore prior mode.
+     *
+     * 🧾 Returns:
+     *     • false → Continue next frame
+     *     • true  → ✅ Test complete
+     ***********************************************************************************************/
+    bool EventType_test5b(std::vector<std::string>& errors)
+    {
+        Core& core = getCore();
+        EventManager& em = core.getEventManager();
+        UnitTests& ut = UnitTests::getInstance();
+
+        static bool initialized = false;
+        static bool was_windowed = false;
+        static int start_frame = 0;
+        int frame = ut.get_frame_counter() - start_frame;
+
+        // --- FRAME 0: Initialize ---------------------------------------------------------
+        if (!initialized)
+        {
+            initialized = true;
+            start_frame = ut.get_frame_counter();
+            was_windowed = core.isWindowed();
+
+            em.clearEventQueue();
+
+            // Ensure we start in fullscreen for this test
+            if (was_windowed)
+                core.setFullscreen(true);
+
+            return false; // 🔄 Continue
+        }
+
+        // --- FRAME 1: Trigger LeaveFullscreen -------------------------------------------
+        if (frame == 1)
+        {
+            em.clearEventQueue();
+            core.setWindowed(true);
+            return false;
+        }
+
+        // --- FRAME 2: Inspect Event Queue ------------------------------------------------
+        if (frame == 2)
+        {
+            auto queued = em.getQueuedEvents();
+            bool found_leave = false;
+            bool found_hide  = false;
+            bool found_resize = false;
+
+            for (auto& t : queued)
+            {
+                if (t->getType() == EventType::LeaveFullscreen) found_leave = true;
+                if (t->getType() == EventType::Hide)            found_hide = true;
+                if (t->getType() == EventType::Resize)          found_resize = true;
+            }
+
+            if (!found_leave)
+                errors.push_back("Missing LeaveFullscreen event after setWindowed(true).");
+
+            if (!found_hide && !found_resize)
+                errors.push_back("Expected either Hide or Resize event after leaving fullscreen.");
+
+            return false;
+        }
+
+        // --- FRAME 3: Restore Original State ---------------------------------------------
+        if (frame == 3)
+        {
+            em.clearEventQueue();
+            if (!was_windowed)
+                core.setFullscreen(true);
+            return true; // ✅ done
+        }
+
+        return true;
+    } // END -- EventType_test5b: LeaveFullscreen Event Verification
+
+
+
 
 
     // --- Lua Integration Tests --- //
@@ -533,7 +711,8 @@ namespace SDOM
             ut.add_test(objName, "Test the multi-frame event queue", EventType_test2);
             ut.add_test(objName, "Lifecycle Event Dispatch Verification", EventType_test3);
             ut.add_test(objName, "Stage Lifecycle Transition Verification", EventType_test4);     
-            ut.add_test(objName, "Window/Fullscreen Toggle Verification", EventType_test5);
+            ut.add_test(objName, "EnterFullscreen Event Verification", EventType_test5a);
+            ut.add_test(objName, "LeaveFullscreen Event Verification", EventType_test5b);
 
             ut.setLuaFilename("src/EventType_UnitTests.lua"); // Lua test script path
             ut.add_test(objName, "Lua: " + ut.getLuaFilename(), EventType_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)

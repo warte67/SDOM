@@ -1200,4 +1200,26 @@ namespace SDOM
     } // END -- Queue_SDL_Event()
 
 
+    void SDOM::EventManager::clearEventQueue()
+    {
+        while (!eventQueue.empty())
+            eventQueue.pop();
+    } // END -- clearEventQueue()
+
+    std::vector<const SDOM::Event*> SDOM::EventManager::getQueuedEvents() const
+    {
+        std::vector<const Event*> snapshot;
+        snapshot.reserve(eventQueue.size());
+
+        // std::queue doesn't support iteration directly, so we copy via temp
+        std::queue<std::unique_ptr<Event>> temp = eventQueue;
+        while (!temp.empty())
+        {
+            snapshot.push_back(temp.front().get());
+            temp.pop();
+        }
+        return snapshot;
+    } // END -- getQueuedEvents()
+
+
 } // namespace SDOM

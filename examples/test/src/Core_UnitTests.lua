@@ -495,8 +495,43 @@ local function factory_utilities()
     -- Core:clearFactory() -- Verified
     -- ✅ Core:printObjectRegistry()
     -- Core:printObjectRegistry() -- Verified
-
 end -- factory_utilities()
+
+-- Test 13: Fullscreen / Windowed roundtrip
+local function test_fullscreen_windowed()
+    -- ✅ Core:isFullscreen(), Core:isWindowed()
+    local was_fullscreen = Core:isFullscreen()
+    local was_windowed = Core:isWindowed()
+
+    assert_true(type(was_fullscreen) == "boolean", "Core:isFullscreen() did not return boolean")
+    assert_true(type(was_windowed) == "boolean", "Core:isWindowed() did not return boolean")
+
+    -- ✅ Core:setWindowed(true)
+    local okW, errW = pcall(function() Core:setWindowed(true) end)
+    assert_true(okW, "Core:setWindowed(true) threw: " .. tostring(errW))
+    local now_windowed = Core:isWindowed()
+    assert_true(now_windowed == true, "Core:setWindowed(true) failed to enter windowed mode")
+
+    -- ✅ Core:setFullscreen(true)
+    local okF, errF = pcall(function() Core:setFullscreen(true) end)
+    assert_true(okF, "Core:setFullscreen(true) threw: " .. tostring(errF))
+    local now_fullscreen = Core:isFullscreen()
+    assert_true(now_fullscreen == true, "Core:setFullscreen(true) failed to enter fullscreen mode")
+
+    -- ✅ Core:setFullscreen(false)
+    local okF2, errF2 = pcall(function() Core:setFullscreen(false) end)
+    assert_true(okF2, "Core:setFullscreen(false) threw: " .. tostring(errF2))
+    local back_windowed = Core:isWindowed()
+    assert_true(back_windowed == true, "Core:setFullscreen(false) did not return to windowed mode")
+
+    -- ✅ Restore original state
+    if was_fullscreen then
+        Core:setFullscreen(true)
+    else
+        Core:setWindowed(true)
+    end
+end
+
 
 -- Runner
 local function run_all()
@@ -513,6 +548,7 @@ local function run_all()
     test_destroy_displayobject()
     if FULL_CONFIG_TEST then test_config_device_smoke() end
     factory_utilities()
+    test_fullscreen_windowed()  -- ✅ NEW
 end
 
 local ok, err = pcall(run_all)

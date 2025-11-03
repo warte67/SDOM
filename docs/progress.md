@@ -243,6 +243,17 @@ _Refactoring event dispatch verification and introducing deferred, thread-safe C
 ### 🌟 **Summary:**  
 - Core and EventManager internals are now safer and cleaner — configuration changes are deferred properly, event behavior tests pass consistently, and the framework is ready for more advanced input testing across windows and devices.  
 
+### 🗓️ To-Do For Today
+- 🔄 **Complete Core Property Accessors and Mutators**
+  - 🔄 Fullscreen *(behavior tested in EventType_UnitTests)*  
+    - 🔄 **Core::isFullscreen()**
+    - 🔄 **Core::setFullscreen()**
+  - 🔄 Windowed *(behavior tested in EventType_UnitTests)*  
+    - 🔄 **Core::isWindowed()**
+    - 🔄 **Core::setWindowed()**
+
+
+
 
 #### end-of-day
 
