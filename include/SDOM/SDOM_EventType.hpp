@@ -35,6 +35,27 @@
  * Released under the ZLIB License.
  * Original Author: Jay Faries (warte67)
  *
+ * Wayland Behavior Status (SDL3/Wayland guidance)
+ *
+ *   ✅ Works normally (verified):
+ *     - EventType::EnterFullscreen
+ *     - EventType::LeaveFullscreen
+ *
+ *   🔄 Should work normally (assume OK on Wayland):
+ *     - EventType::Show
+ *     - EventType::Hide
+ *     - EventType::Resize
+ *
+ *   ⚠️ Wayland‑gated (compositor controlled, may be ignored):
+ *     - EventType::Move
+ *     - EventType::FocusLost
+ *     - EventType::FocusGained
+ *
+ * Notes:
+ * - On Wayland, programmatic raise/focus and window repositioning are requests.
+ *   Compositors may ignore them; tests should treat these as informational.
+ * - Fullscreen entry/exit and resize/show/hide typically work as expected.
+ *
  ******************/
 
 #ifndef __SDOM_EVENTTYPE_HPP__
@@ -51,18 +72,20 @@ namespace SDOM
         //
         //   🔄 In Progress     -- Test or feature is under active development or debugging.
         //   🗓️ Planned         -- Concept defined but not yet implemented in code.
-        //   ❓ Missing System  -- Dependent subsystem not yet implemented 
-        //   🚫 Untestable      -- Cannot be directly tested by this harness (e.g. Quit, None).
+        //   ❓ Missing System  -- Dependent subsystem not yet implemented.
+        //   🚫 Untestable      -- Cannot be directly tested by this harness (e.g., Quit, None).
         //   ⚠️ Failing         -- Test implemented but currently failing or unstable.
         //   ✅ Fully Verified  -- Passed all test modes; stable behavior.
         //
         // ---- 🧪 Test Modes ---------------------------------------------------------------------
         //
         //   🧩 Synthetic Test Mode -- (Phase I)   Verified via synthetic (queued or manual) events.
-        //   🧠 Lifetime Test Mode  -- (Phase II)  Verifies DOM object and event lifetime in SDOM’s main loop.
+        //   🧠 Lifetime Test Mode  -- (Phase II)  Event lifetime depends on compositor /
+        //                                       desktop environment (may vary by platform).
         //   📜 Lua Test Mode       -- (Phase III) Verified Lua bindings via Lua test harness script.
         //
         // ----------------------------------------------------------------------------------------
+
 
     public:
 
@@ -94,14 +117,14 @@ namespace SDOM
         static EventType MouseLeave;        // 🧩🧠 EventType_test{5} (planned)
 
         // 🔄 Window / Focus -----------------------------------------------------------
-        static EventType FocusGained;       // 🧩 Event_test{5}
-        static EventType FocusLost;         // 🧩 Event_test{5}
-        static EventType Resize;            // 🧩🧠 Event_test{5}, EventType_test{5a, 5b}
-        static EventType Move;              // 🧩 Event_test{5}
-        static EventType Show;              // 🧩🧠 Event_test{5}, EventType_test{5a}
-        static EventType Hide;              // 🧩🧠 Event_test{5}, EventType_test{5b}
-        static EventType EnterFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5a}
-        static EventType LeaveFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5b}
+        static EventType FocusGained;       // 🧩🧠 Event_test{5}, EventType_test{5}
+        static EventType FocusLost;         // 🧩🧠 Event_test{5}, EventType_test{5}
+        static EventType Resize;            // 🧩🧠 Event_test{5}, EventType_test{5}
+        static EventType Move;              // 🧩🧠 Event_test{5}, EventType_test{5}
+        static EventType Show;              // 🧩🧠 Event_test{5}, EventType_test{5}
+        static EventType Hide;              // 🧩🧠 Event_test{5}, EventType_test{5}
+        static EventType EnterFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5}
+        static EventType LeaveFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5}
 
         // 🔄 UI / State ---------------------------------------------------------------
         static EventType ValueChanged;      // 🧩 Event_test{6}

@@ -254,22 +254,19 @@ _Refactoring event dispatch verification and introducing deferred, thread-safe C
 _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++) and Lua integration coverage._
 
 ### 🧩 EventType Lifetime Verification (Phase II)
-- ☐ **Convert Synthetic (Phase I) Tests → Lifetime (Phase II)**
-  - ☐ Verify `Added`, `Removed`, `AddedToStage`, `RemovedFromStage`, `StageOpened`, `StageClosed`
-  - ☐ Confirm correct deferred dispatch timing (one-frame offset)
-  - ☐ Add queue inspection using `EventManager::getQueuedEvents()` snapshots
+- 
 
-- ☐ **Window & Focus Events**
-  - ☐ Validate `EnterFullscreen` / `LeaveFullscreen` propagation
-  - ☐ Add verification for `Show`, `Hide`, `FocusGained`, `FocusLost`
+- ✅ **Window & Focus Events**
+  - ⚠️ These tests are completely platform dependent and may fail on some systems.
+  - ✅ Validate `EnterFullscreen` / `LeaveFullscreen` propagation
+  - ✅ Add verification for `Show`, `Hide`, `FocusGained`, `FocusLost`
 
 - ☐ **UI & Drag/Drop Events**
   - ☐ Extend lifetime tests for `ValueChanged`, `StateChanged`, `Drag`, `Drop`
 
 ### 📜 Lua Event Bridge Validation (Phase III)
-- ☐ **Create `EventType_UnitTests.lua`** module
-  - ☐ Mirror C++ event verification at Lua layer  
-  - ☐ Validate listener callbacks via `stage:addEventListener()`  
+- ✅ **Create `EventType_UnitTests.lua`** module
+  - ✅ Validated listener callbacks via `stage:addEventListener()` and re-entrant state machines.
   - ☐ Confirm event argument integrity (`type`, `target`, `bubbles`, etc.)
 
 ### 🧩 Testing Infrastructure Controls

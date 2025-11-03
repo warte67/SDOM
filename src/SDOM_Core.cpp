@@ -505,6 +505,7 @@ namespace SDOM
                 ERROR(errorMsg);
             }
             SDL_ShowWindow(window_);     // not needed in SDL3, but included for clarity
+            SDL_SyncWindow(window_);
         }
         if (recreate_renderer && !renderer_) 
         {
@@ -540,9 +541,9 @@ namespace SDOM
             getFactory().reloadAllAssetObjects(); // reload all assets to ensure compatibility with new SDL resources
         }
 
-        // // TEST: Attempt to set the window position
-        // SDL_SetWindowPosition(window_, 0, 0);
-
+        // NOTE: Do not force window position here; unit tests and compositors manage
+        // positioning, and forcing coordinates can interfere with event generation.
+        
         sdlStarted_ = true;
     }
 
@@ -1275,12 +1276,8 @@ namespace SDOM
                 saved_window_height_ = static_cast<float>(h);
             }
             // Toggle fullscreen without recreating resources
-            if (!SDL_SetWindowFullscreen(win, true))
-            {
-                // SDL3 returns 0 on success; non-zero on failure, but project uses
-                // SDL semantics where 0 is failure in some calls. Guard with SDL_GetError check.
-                // If it failed, fall back to deferred reconfigure as a last resort.
-            }
+            SDL_SetWindowFullscreen(win, true);
+            SDL_SyncWindow(win);
             // Update config flags to reflect new state
             config_.windowFlags |= SDL_WINDOW_FULLSCREEN;
         }
@@ -1288,6 +1285,7 @@ namespace SDOM
         {
             // Leave fullscreen
             SDL_SetWindowFullscreen(win, false);
+            SDL_SyncWindow(win);
             config_.windowFlags &= ~SDL_WINDOW_FULLSCREEN;
 
             // Restore prior windowed size if we have one
@@ -1296,6 +1294,7 @@ namespace SDOM
                 int iw = static_cast<int>(saved_window_width_);
                 int ih = static_cast<int>(saved_window_height_);
                 SDL_SetWindowSize(win, iw, ih);
+                SDL_SyncWindow(win);
                 config_.windowWidth = saved_window_width_;
                 config_.windowHeight = saved_window_height_;
             }

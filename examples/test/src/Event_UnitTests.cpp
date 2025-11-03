@@ -800,7 +800,7 @@ namespace SDOM
 
 
         ut.setLuaFilename("src/Event_UnitTests.lua"); // Lua test script path
-        ut.add_test(objName, "Lua: " + ut.getLuaFilename(), Event_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)
+        ut.add_test(objName, "Lua: " + ut.getLuaFilename(), Event_LUA_Tests, true);  // false = not implemented yet (dont run the lua file tests)
 
 
         // return ut.run_all(objName);

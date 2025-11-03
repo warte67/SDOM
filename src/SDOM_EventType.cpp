@@ -70,14 +70,18 @@ namespace SDOM
     EventType EventType::MouseLeave("MouseLeave", false, false, true, false);
 
     // 💻 Window / Focus -----------------------------------------------------------
-    EventType EventType::FocusGained("FocusGained", false, false, true, false);
-    EventType EventType::FocusLost("FocusLost", false, false, true, false);
-    EventType EventType::Resize("Resize", true, true, false, false);
-    EventType EventType::Move("Move", true, true, false, false);
-    EventType EventType::Show("Show", false, false, true, false);
-    EventType EventType::Hide("Hide", false, false, true, false);
-    EventType EventType::EnterFullscreen("EnterFullscreen", true, true, false, false);
-    EventType EventType::LeaveFullscreen("LeaveFullscreen", true, true, false, false);
+    // ⚠️ Focus events are compositor-controlled on Wayland and may not be delivered
+    EventType EventType::FocusGained("FocusGained", false, false, true, false);  // ⚠️ Wayland‑gated
+    EventType EventType::FocusLost("FocusLost",   false, false, true, false);    // ⚠️ Wayland‑gated
+    // 🔄 Resize/Show/Hide usually work normally across backends
+    EventType EventType::Resize("Resize",         true,  true,  false, false);   // 🔄 Wayland‑normal
+    // ⚠️ Move events are often suppressed on Wayland for programmatic reposition
+    EventType EventType::Move("Move",             true,  true,  false, false);   // ⚠️ Wayland‑gated
+    EventType EventType::Show("Show",             false, false, true,  false);   // 🔄 Wayland‑normal
+    EventType EventType::Hide("Hide",             false, false, true,  false);   // 🔄 Wayland‑normal
+    // ✅ Fullscreen enter/leave verified to work without gating
+    EventType EventType::EnterFullscreen("EnterFullscreen", true, true,  false, false); // ✅
+    EventType EventType::LeaveFullscreen("LeaveFullscreen", true, true,  false, false); // ✅
 
     // 💻 UI / State ---------------------------------------------------------------
     EventType EventType::ValueChanged("ValueChanged", true, true, false, false);

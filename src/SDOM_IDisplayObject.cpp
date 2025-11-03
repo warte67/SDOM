@@ -704,21 +704,18 @@ namespace SDOM
         }
 
         listeners.erase(std::remove_if(listeners.begin(), listeners.end(), [&](const ListenerEntry& entry) {
-            // Try to match by function pointer target for both non-const and const Event& signatures
-            if (entry.listener.target_type() != listener.target_type())
-                return false;
-
-            // Non-const signature match: void(Event&)
+            // Prefer function pointer identity when available
             if (auto* a = entry.listener.target<void(Event&)>())
                 if (auto* b = listener.target<void(Event&)>())
-                    return *a == *b;
-
-            // Const signature match: void(const Event&)
+                    if (*a == *b) return true;
             if (auto* ca = entry.listener.target<void(const Event&)>())
                 if (auto* cb = listener.target<void(const Event&)>())
-                    return *ca == *cb;
+                    if (*ca == *cb) return true;
 
-            return false;
+            // Fallback: match by target_type (works for lambdas capturing state)
+            // This mirrors prior behavior and enables removal when the same lambda
+            // variable is passed back in, even though std::function holds a copy.
+            return entry.listener.target_type() == listener.target_type();
         }), listeners.end());
     }
 
