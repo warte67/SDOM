@@ -215,6 +215,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa2c96c42465ff55163387d98a5a3b4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae97f3858707a0ebbdbe5d048b6874510" id="r_ae97f3858707a0ebbdbe5d048b6874510"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ae97f3858707a0ebbdbe5d048b6874510">getLastRenderDelta</a> () const</td></tr>
 <tr class="separator:ae97f3858707a0ebbdbe5d048b6874510"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a719be8d39c244a4f7dd9b9fb2380aef9" id="r_a719be8d39c244a4f7dd9b9fb2380aef9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a719be8d39c244a4f7dd9b9fb2380aef9">onLoad</a> ()</td></tr>
+<tr class="separator:a719be8d39c244a4f7dd9b9fb2380aef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8368ab4c8c749456c687543dc69f5245" id="r_a8368ab4c8c749456c687543dc69f5245"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a8368ab4c8c749456c687543dc69f5245">onUnload</a> ()</td></tr>
+<tr class="separator:a8368ab4c8c749456c687543dc69f5245"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7eb8c648f30d8381ed38d6ad323bfcd" id="r_ad7eb8c648f30d8381ed38d6ad323bfcd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ad7eb8c648f30d8381ed38d6ad323bfcd">onWindowResize</a> (int, int)</td></tr>
 <tr class="separator:ad7eb8c648f30d8381ed38d6ad323bfcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5526639873d0e9dd7fab413ed8af90f7" id="r_a5526639873d0e9dd7fab413ed8af90f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a5526639873d0e9dd7fab413ed8af90f7">cleanAll</a> ()</td></tr>
@@ -3372,6 +3376,33 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a719be8d39c244a4f7dd9b9fb2380aef9" name="a719be8d39c244a4f7dd9b9fb2380aef9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a719be8d39c244a4f7dd9b9fb2380aef9">&#9670;&#160;</a></span>onLoad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool SDOM::IDisplayObject::onLoad </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classSDOM_1_1IPanelObject.html#aa2fcd973a2ab93d39876e35962459afe">SDOM::IPanelObject</a>, <a class="el" href="classSDOM_1_1IRangeControl.html#a43f9452e5e4e231ffb61bee163052712">SDOM::IRangeControl</a>, <a class="el" href="classSDOM_1_1IRangeControl__scaffold.html#ace48e664ba140b214ad4b7c4c93294d7">SDOM::IRangeControl_scaffold</a>, and <a class="el" href="classSDOM_1_1Label.html#a1dccad9f3084608d5ee3aee74b4fb9b8">SDOM::Label</a>.</p>
+
+</div>
+</div>
 <a id="a2fceb0edecf21dcf60d75e31ae1a01b6" name="a2fceb0edecf21dcf60d75e31ae1a01b6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2fceb0edecf21dcf60d75e31ae1a01b6">&#9670;&#160;</a></span>onQuit()</h2>
 
@@ -3500,6 +3531,33 @@ template&lt;typename T &gt; </div>
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a616241be8281b5e07ae67b454b8c5acc">SDOM::IDisplayObject</a>.</p>
 
 <p>Reimplemented in <a class="el" href="classSDOM_1_1CheckButton.html#ae366e6671cc3a4db9745cb478e3e0b68">SDOM::CheckButton</a>, and <a class="el" href="classSDOM_1_1RadioButton.html#a753e4a1569def7e2822fe1549f2b12df">SDOM::RadioButton</a>.</p>
+
+</div>
+</div>
+<a id="a8368ab4c8c749456c687543dc69f5245" name="a8368ab4c8c749456c687543dc69f5245"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8368ab4c8c749456c687543dc69f5245">&#9670;&#160;</a></span>onUnload()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void SDOM::IDisplayObject::onUnload </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classSDOM_1_1IPanelObject.html#a67e124b96e90dc1c94eb52138ddc28b8">SDOM::IPanelObject</a>, <a class="el" href="classSDOM_1_1IRangeControl.html#a691d746d2cf67754473acc2e4b2d8818">SDOM::IRangeControl</a>, <a class="el" href="classSDOM_1_1IRangeControl__scaffold.html#a9ea01f997eda9037dc1ff8fd6c3a66af">SDOM::IRangeControl_scaffold</a>, and <a class="el" href="classSDOM_1_1Label.html#aff00527c55230a24c043bc3018ac74aa">SDOM::Label</a>.</p>
 
 </div>
 </div>

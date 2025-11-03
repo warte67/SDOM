@@ -138,6 +138,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af0a0e7cca0790ca8a05ab9638fb5e1c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31008a7eb116357481748bdd2b15102c" id="r_a31008a7eb116357481748bdd2b15102c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a31008a7eb116357481748bdd2b15102c">onInit</a> () override</td></tr>
 <tr class="separator:a31008a7eb116357481748bdd2b15102c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2fcd973a2ab93d39876e35962459afe" id="r_aa2fcd973a2ab93d39876e35962459afe"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#aa2fcd973a2ab93d39876e35962459afe">onLoad</a> () override</td></tr>
+<tr class="separator:aa2fcd973a2ab93d39876e35962459afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67e124b96e90dc1c94eb52138ddc28b8" id="r_a67e124b96e90dc1c94eb52138ddc28b8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a67e124b96e90dc1c94eb52138ddc28b8">onUnload</a> () override</td></tr>
+<tr class="separator:a67e124b96e90dc1c94eb52138ddc28b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2ab8da48bceb2acc59644b1ca33e6b8" id="r_ac2ab8da48bceb2acc59644b1ca33e6b8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#ac2ab8da48bceb2acc59644b1ca33e6b8">onRender</a> () override</td></tr>
 <tr class="separator:ac2ab8da48bceb2acc59644b1ca33e6b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7307298d6877a9f52f112c6a6254c27c" id="r_a7307298d6877a9f52f112c6a6254c27c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a7307298d6877a9f52f112c6a6254c27c">onQuit</a> () override</td></tr>
@@ -499,6 +503,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:af3fe7bdbe6270bc0d19291677c448e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a122a423e83004b61d76c35fae172e4fe" id="r_a122a423e83004b61d76c35fae172e4fe"><td class="memItemLeft" align="right" valign="top">SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a122a423e83004b61d76c35fae172e4fe">cachedTexture_</a> = nullptr</td></tr>
 <tr class="separator:a122a423e83004b61d76c35fae172e4fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a23cb828e6c0716b9d443ae6165b098" id="r_a3a23cb828e6c0716b9d443ae6165b098"><td class="memItemLeft" align="right" valign="top">SDL_Renderer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a3a23cb828e6c0716b9d443ae6165b098">cached_renderer_</a> = nullptr</td></tr>
+<tr class="separator:a3a23cb828e6c0716b9d443ae6165b098"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad25d9f481012c2d0d0d5eb062c7d02df" id="r_ad25d9f481012c2d0d0d5eb062c7d02df"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#ad25d9f481012c2d0d0d5eb062c7d02df">current_width_</a> = 0</td></tr>
 <tr class="separator:ad25d9f481012c2d0d0d5eb062c7d02df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a007c71a5edc3897d8bac8197b600f753" id="r_a007c71a5edc3897d8bac8197b600f753"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a007c71a5edc3897d8bac8197b600f753">current_height_</a> = 0</td></tr>
@@ -3020,6 +3026,33 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="aa2fcd973a2ab93d39876e35962459afe" name="aa2fcd973a2ab93d39876e35962459afe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2fcd973a2ab93d39876e35962459afe">&#9670;&#160;</a></span>onLoad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::IPanelObject::onLoad </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a719be8d39c244a4f7dd9b9fb2380aef9">SDOM::IDisplayObject</a>.</p>
+
+</div>
+</div>
 <a id="a7307298d6877a9f52f112c6a6254c27c" name="a7307298d6877a9f52f112c6a6254c27c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7307298d6877a9f52f112c6a6254c27c">&#9670;&#160;</a></span>onQuit()</h2>
 
@@ -3108,6 +3141,33 @@ template&lt;typename T &gt; </div>
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a616241be8281b5e07ae67b454b8c5acc">SDOM::IDisplayObject</a>.</p>
 
 <p>Reimplemented in <a class="el" href="classSDOM_1_1Button.html#ab47ce112e7f6288299c0112426911fb7">SDOM::Button</a>, <a class="el" href="classSDOM_1_1Frame.html#aaeda19d4caa5454b41552b5364e4a3f1">SDOM::Frame</a>, and <a class="el" href="classSDOM_1_1Group.html#ac2af5adf33d3a05d75c1fa5d69877814">SDOM::Group</a>.</p>
+
+</div>
+</div>
+<a id="a67e124b96e90dc1c94eb52138ddc28b8" name="a67e124b96e90dc1c94eb52138ddc28b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67e124b96e90dc1c94eb52138ddc28b8">&#9670;&#160;</a></span>onUnload()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::IPanelObject::onUnload </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a8368ab4c8c749456c687543dc69f5245">SDOM::IDisplayObject</a>.</p>
 
 </div>
 </div>
@@ -5279,6 +5339,28 @@ template&lt;typename T , typename BaseT &gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3a23cb828e6c0716b9d443ae6165b098" name="a3a23cb828e6c0716b9d443ae6165b098"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a23cb828e6c0716b9d443ae6165b098">&#9670;&#160;</a></span>cached_renderer_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_Renderer* SDOM::IPanelObject::cached_renderer_ = nullptr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

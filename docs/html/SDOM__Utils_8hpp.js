@@ -1,5 +1,6 @@
 var SDOM__Utils_8hpp =
 [
+    [ "drop_invalid_cached_texture", "SDOM__Utils_8hpp.html#acdde1840f8a6785a011ec94cd4b1b423", null ],
     [ "getCore", "SDOM__Utils_8hpp.html#a6b597fe37c57017a7139d0a4cdc84af6", null ],
     [ "getFactory", "SDOM__Utils_8hpp.html#aabaa2df161427871e74767e384bcd058", null ],
     [ "getLua", "SDOM__Utils_8hpp.html#a1201135eb3c271921ed846aff8f922f2", null ],

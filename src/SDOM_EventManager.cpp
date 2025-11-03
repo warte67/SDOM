@@ -1206,20 +1206,36 @@ namespace SDOM
             eventQueue.pop();
     } // END -- clearEventQueue()
 
-    std::vector<const SDOM::Event*> SDOM::EventManager::getQueuedEvents() const
+    std::vector<const SDOM::Event*> SDOM::EventManager::getQueuedEvents()
     {
         std::vector<const Event*> snapshot;
         snapshot.reserve(eventQueue.size());
 
-        // std::queue doesn't support iteration directly, so we copy via temp
-        std::queue<std::unique_ptr<Event>> temp = eventQueue;
-        while (!temp.empty())
+        // std::queue doesn't support const iteration and cannot be copied when it
+        // holds unique_ptr. Rotate the queue in-place to take a snapshot of raw
+        // pointers, preserving order and restoring the queue state.
+        const size_t n = eventQueue.size();
+        for (size_t i = 0; i < n; ++i)
         {
-            snapshot.push_back(temp.front().get());
-            temp.pop();
+            std::unique_ptr<Event> evt = std::move(eventQueue.front());
+            snapshot.push_back(evt.get());
+            eventQueue.pop();
+            eventQueue.push(std::move(evt));
         }
         return snapshot;
     } // END -- getQueuedEvents()
+
+    // Debug: print the contents of the event queue
+    void EventManager::debugPrintEventQueue()
+    {
+        const auto snapshot = getQueuedEvents();
+        std::cout << "🧾 [Event Queue Dump] (" << snapshot.size() << " events)\n";
+        for (const Event* evt : snapshot)
+        {
+            if (evt)
+                std::cout << "   • " << evt->getType().getName() << "\n";
+        }
+    }
 
 
 } // namespace SDOM

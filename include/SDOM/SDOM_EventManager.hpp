@@ -101,10 +101,15 @@ namespace SDOM
         int getEventQueueSize() const { return static_cast<int>(eventQueue.size()); }
 
         // Retrieves (non-destructively) a snapshot of all currently queued events.
-        std::vector<const Event*> getQueuedEvents() const;
+        // Note: This method temporarily rotates the internal queue to gather
+        // pointers, preserving order and restoring the queue to its original state.
+        std::vector<const Event*> getQueuedEvents();
 
         // Clears the event queue entirely (useful for deterministic test setups).
         void clearEventQueue();
+
+        // Debug: print the contents of the event queue
+        void debugPrintEventQueue();
 
     private:
 

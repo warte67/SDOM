@@ -58,9 +58,9 @@ namespace SDOM
         //
         // ---- 🧪 Test Modes ---------------------------------------------------------------------
         //
-        //   🧩 Synthetic Test Mode -- Verified via synthetic (queued or manual) events.
-        //   🧠 Lifetime Test Mode  -- Verifies DOM object and event lifetime in SDOM’s main loop.
-        //   📜 Lua Test Mode       -- Verified Lua bindings via Lua test harness script.
+        //   🧩 Synthetic Test Mode -- (Phase I)   Verified via synthetic (queued or manual) events.
+        //   🧠 Lifetime Test Mode  -- (Phase II)  Verifies DOM object and event lifetime in SDOM’s main loop.
+        //   📜 Lua Test Mode       -- (Phase III) Verified Lua bindings via Lua test harness script.
         //
         // ----------------------------------------------------------------------------------------
 

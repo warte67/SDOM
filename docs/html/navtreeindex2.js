@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"SDOM__IDisplayObject__Lua_8hpp.html#a2d19b89e9cf9949d8394d78385e8b356":[4,0,1,0,24,90],
 "SDOM__IDisplayObject__Lua_8hpp.html#a2d9fd9337b8056c8a35d1f5802e56b07":[4,0,1,0,24,24],
 "SDOM__IDisplayObject__Lua_8hpp.html#a2de9188866b1d2bc1ef8702a225af224":[4,0,1,0,24,105],
 "SDOM__IDisplayObject__Lua_8hpp.html#a2e529ce7e60117c04602a6c84b65e198":[4,0,1,0,24,21],
@@ -249,5 +248,6 @@ var NAVTREEINDEX2 =
 "SDOM__RadioButton_8hpp.html":[4,0,1,0,32],
 "SDOM__RadioButton_8hpp_source.html":[4,0,1,0,32],
 "SDOM__SDL__Utils_8cpp.html":[4,0,2,35],
-"SDOM__SDL__Utils_8cpp.html#a0b2e6cb3f4096b1c8ae989c26ef9e32f":[4,0,2,35,0]
+"SDOM__SDL__Utils_8cpp.html#a0b2e6cb3f4096b1c8ae989c26ef9e32f":[4,0,2,35,0],
+"SDOM__SDL__Utils_8hpp.html":[4,0,1,0,34]
 };
