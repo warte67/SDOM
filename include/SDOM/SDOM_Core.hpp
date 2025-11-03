@@ -143,7 +143,7 @@ namespace SDOM
         SDL_PixelFormat getPixelFormat() const;
         bool isFullscreen() const;
         bool isWindowed() const;
-    
+
         // --- Configuration Setters --- //
         void setConfig(CoreConfig& config);
         void setWindowWidth(float width);

@@ -1025,6 +1025,45 @@ namespace SDOM
     } // END: Core_test16(std::vector<std::string>& errors)
 
 
+    // --- Core_test17: Window Title Roundtrip ---------------------------------------
+    //
+    // 🧩 Purpose:
+    //   Validates Core’s window title accessor and mutator functions, ensuring that
+    //   title changes propagate correctly to the underlying SDL_Window and can be
+    //   queried consistently via Core::getWindowTitle().
+    //
+    // 🧠 Notes:
+    //   • This test performs a simple getter/setter roundtrip using a known string.
+    //   • The original window title is preserved and restored after verification.
+    //   • Behavior relies on SDL_GetWindowTitle() / SDL_SetWindowTitle() semantics.
+    //
+    // ⚠️ Safety:
+    //   Title changes are non-destructive and transient; no SDL resources are rebuilt.
+    //   This test is safe for iterative and automated execution.
+    //
+    // ============================================================================
+    bool Core_test17(std::vector<std::string>& errors)
+    {
+        Core& core = getCore();
+
+        // --- Preserve original title ---
+        std::string original = core.getWindowTitle();
+        std::string testTitle = "SDOM UnitTest Window";
+
+        // --- Apply new title and verify roundtrip ---
+        core.setWindowTitle(testTitle);
+        std::string result = core.getWindowTitle();
+
+        if (result != testTitle)
+            errors.push_back("Window title mismatch — expected '" + testTitle + "', got '" + result + "'.");
+
+        // --- Restore original title ---
+        core.setWindowTitle(original);
+
+        return true; // ✅ finished this frame
+    } // END: Core_test17(std::vector<std::string>& errors)
+
+
     // --- Lua Integration Tests --- //
 
     bool Core_LUA_Tests(std::vector<std::string>& errors)
@@ -1060,6 +1099,7 @@ namespace SDOM
             ut.add_test(objName, "Factory and Event Manager Access", Core_test14);
             ut.add_test(objName, "Focus & Hover Management", Core_test15);
             ut.add_test(objName, "DisplayObject Creation", Core_test16);
+            ut.add_test(objName, "Window Title Roundtrip", Core_test17);
 
             ut.setLuaFilename("src/Core_UnitTests.lua");
             ut.add_test(objName, "Lua: '" + ut.getLuaFilename() + "'", Core_LUA_Tests);

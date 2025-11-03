@@ -18,6 +18,7 @@ var classSDOM_1_1UnitTests =
     [ "operator=", "classSDOM_1_1UnitTests.html#ab77bcbf342559b3309d761898566014d", null ],
     [ "run", "classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712", null ],
     [ "run_all", "classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe", null ],
+    [ "run_event_behavior_test", "classSDOM_1_1UnitTests.html#a5a59c4514887f6d2fd41c057fb1f50f8", null ],
     [ "run_lua_tests", "classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d", null ],
     [ "run_single_test", "classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b", null ],
     [ "set_frame_counter", "classSDOM_1_1UnitTests.html#a6cf64232d3f310a9d7b30b39f86e76d8", null ],

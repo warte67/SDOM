@@ -269,6 +269,7 @@ var namespaceSDOM =
     [ "destroyOrphanedDisplayObjects_lua", "namespaceSDOM.html#a70f60ebe809c9f97b70f56ac3ae4aa66", null ],
     [ "doTabKeyPressForward_lua", "namespaceSDOM.html#a33b161b57b0a078ebe7272607b9b1363", null ],
     [ "doTabKeyPressReverse_lua", "namespaceSDOM.html#a8e49511b7f1beffda53b2464de7dc5af", null ],
+    [ "drop_invalid_cached_texture", "namespaceSDOM.html#acdde1840f8a6785a011ec94cd4b1b423", null ],
     [ "findAssetByFilename_lua", "namespaceSDOM.html#ae11150acccb4b28fc0e23b7b09170180", null ],
     [ "findSpriteSheetByParams_lua", "namespaceSDOM.html#a295dd44061f26059b0c9ab9d3966bf8b", null ],
     [ "getAnchorBottom_lua", "namespaceSDOM.html#ad54c547716db63522c1d3d506059a151", null ],

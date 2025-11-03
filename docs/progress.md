@@ -234,6 +234,10 @@ _Refactoring event dispatch verification and introducing deferred, thread-safe C
   - Added focus setup for keyboard and mouse via **core.setKeyboardFocusedObject()** and **core.setMouseHoveredObject()**.  
   - Fixed regression where mouse button events failed due to stricter click-target logic — resolved by setting test object as clickable (`setClickable(true)`).  
 - Verified behavioral tests now correctly dispatch **MouseDown**, **MouseUp**, **Click**, and **DoubleClick** without side effects.
+- **Enhanced UnitTest Reporting**
+  - 🟢 All implemented tests pass → Green
+  - 🟡 Only unimplemented tests exist → Yellow
+  - 🔴 Any failure → Red
 
 ### 🏆 Milestone  
 - Achieved full **Core–EventManager integration stability** — input events and configuration changes now coexist safely under the same deferred system.  
@@ -241,6 +245,45 @@ _Refactoring event dispatch verification and introducing deferred, thread-safe C
 
 ### 🌟 **Summary:**  
 - Core and EventManager internals are now safer and cleaner — configuration changes are deferred properly, event behavior tests pass consistently, and the framework is ready for more advanced input testing across windows and devices.  
+
+---
+
+## 🗓️ To-Do For Tomorrow — Event Lifecycle Verification & Lua Bridge Validation  
+_Advancing SDOM’s event verification pipeline into full lifecycle testing (C++) and Lua integration coverage._
+
+### 🧩 EventType Lifetime Verification (Phase II)
+- ☐ **Convert Synthetic (Phase I) Tests → Lifetime (Phase II)**
+  - ☐ Verify `Added`, `Removed`, `AddedToStage`, `RemovedFromStage`, `StageOpened`, `StageClosed`
+  - ☐ Confirm correct deferred dispatch timing (one-frame offset)
+  - ☐ Add queue inspection using `EventManager::getQueuedEvents()` snapshots
+
+- ☐ **Window & Focus Events**
+  - ☐ Validate `EnterFullscreen` / `LeaveFullscreen` propagation
+  - ☐ Add verification for `Show`, `Hide`, `FocusGained`, `FocusLost`
+
+- ☐ **UI & Drag/Drop Events**
+  - ☐ Extend lifetime tests for `ValueChanged`, `StateChanged`, `Drag`, `Drop`
+
+### 📜 Lua Event Bridge Validation (Phase III)
+- ☐ **Create `EventType_UnitTests.lua`** module
+  - ☐ Mirror C++ event verification at Lua layer  
+  - ☐ Validate listener callbacks via `stage:addEventListener()`  
+  - ☐ Confirm event argument integrity (`type`, `target`, `bubbles`, etc.)
+
+### 🧩 Testing Infrastructure Controls
+- ☐ **Add configurable display flags to `SDOM.hpp`**
+  - ☐ `DISPLAY_ALL_UNIT_TESTS` — show full results for every test and module (verbose mode).  
+  - ☐ `DISPLAY_SYSTEM_UNIT_TESTS` — toggle visibility of internal/system-level tests in reports.  
+  - ✅ Failing tests always show full module details and all error messages.  
+  - 🧠 Combined with `quiet` mode, allows fine-tuned control of test output for CI, profiling, and focused debugging.
+
+- ☐ **Integrate Phase labels** in UnitTest results  
+  - `🧩 Phase I` Synthetic  
+  - `🧠 Phase II` Lifetime  
+  - `📜 Phase III` Lua
+
+### 🌟 Summary
+Tomorrow moves SDOM from static event checks to true **frame-synchronous lifecycle testing**.  With Lua parity coming online, SDOM’s event system will be validated end-to-end across C++, SDL, and Lua — cementing the foundation for UI widgets, IME, timers, and advanced input systems.
 
 
 <a id="latest-update"></a>

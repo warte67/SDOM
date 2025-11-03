@@ -93,9 +93,23 @@ namespace SDOM
         // Point-based resolver: choose top-most object at (px,py)
         DisplayHandle findTopObjectAt(DisplayHandle rootNode, float px, float py, DisplayHandle excludeNode, bool clickableOnly) const;
 
+        // ------------------------------------------------------------------------
+        // 🧰 Event Queue Inspection Utilities (Testing / Debugging)
+        // ------------------------------------------------------------------------
+
+        // Returns the number of events currently queued.
         int getEventQueueSize() const { return static_cast<int>(eventQueue.size()); }
 
-        // Event popEvent() { if (!eventQueue.empty()) return std::move(*eventQueue.front()); return Event(); }
+        // Retrieves (non-destructively) a snapshot of all currently queued events.
+        // Note: This method temporarily rotates the internal queue to gather
+        // pointers, preserving order and restoring the queue to its original state.
+        std::vector<const Event*> getQueuedEvents();
+
+        // Clears the event queue entirely (useful for deterministic test setups).
+        void clearEventQueue();
+
+        // Debug: print the contents of the event queue
+        void debugPrintEventQueue();
 
     private:
 

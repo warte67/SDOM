@@ -113,85 +113,80 @@ namespace SDOM
             return;
 
         TestCase& test = _tests[_current_index];
-
-        // std::string frame_str = "Frame " + std::to_string(_frame_counter);
-        // frame_str.resize(10, ' ');
-        // std::cout << CLR::fg_rgb(128, 128, 255)
-        //         << frame_str
-        //         << CLR::RESET;
-
-        // 🔹 Mark as running
         test.running = true;
 
         // 🔹 Execute one frame of this test
         bool finished = run_single_test(test, test.obj_name);
 
-        // 🔹 If not finished, let it continue next frame
+        // 🔹 If not finished, continue next frame
         if (!finished)
             return;
 
-        // 🔹 Test finished — record its state
+        // 🔹 Mark completion and store results
         test.has_run = true;
         test.running = false;
         test.frame_count = _frame_counter;
 
-        // // 🔹 Determine pass/fail (from previous run_single_test pass/fail detection)
-        // static int error_count = 0;
-        // test.passed = (error_count == static_cast<int>(test.errors.size()));
-        // all_passed_ &= test.passed;
-        // error_count = static_cast<int>(test.errors.size());
-
-        // 🔹 Determine pass/fail (compare with last frame’s errors)
+        // 🔹 Determine pass/fail based on error deltas
         test.passed = (test.last_error_count == test.errors.size());
         all_passed_ &= test.passed;
-
-        // 🔹 Update snapshot for next frame
         test.last_error_count = test.errors.size();        
 
         ++_current_index;
 
-        // 🔹 If this was the last test, print summary
+        // 🔹 If all tests complete, produce final summary
         if (_current_index >= static_cast<int>(_tests.size()))
         {
             int passed_count = 0;
-            // int failed_count = 0;
             int not_implemented_count = 0;
+            int failed_count = 0;
 
             for (const auto& t : _tests)
             {
                 if (!t.is_implemented)
                     ++not_implemented_count;
-                if (t.passed)
+                else if (t.passed)
                     ++passed_count;
-                // else
-                //     ++failed_count;
+                else
+                    ++failed_count;
             }
 
-            int total_count = static_cast<int>(_tests.size());
+            const int total_count = static_cast<int>(_tests.size());
+            const bool any_failed = (failed_count > 0);
+            const bool any_unimplemented = (not_implemented_count > 0);
 
-            if (_tests_failed == 0)
+            // ---- 🧩 Summary Color Logic ---------------------------------------------
+            if (any_failed)
             {
-                std::cout << CLR::fg_rgb(64, 255, 64)
-                        << "✅ All unit tests passed."
+                std::cout << CLR::fg_rgb(255, 64, 64)
+                        << "❌ Some unit tests failed!"
+                        << CLR::RESET << std::endl;
+            }
+            else if (any_unimplemented)
+            {
+                std::cout << CLR::fg_rgb(255, 200, 64)
+                        << "⚠️  All implemented tests passed, but some tests are not yet implemented."
                         << CLR::RESET << std::endl;
             }
             else
             {
-                std::cout << CLR::fg_rgb(255, 0, 0)
-                        << "❌ Some unit tests failed."
+                std::cout << CLR::fg_rgb(64, 255, 64)
+                        << "✅ All unit tests passed!"
                         << CLR::RESET << std::endl;
             }
 
-            std::cout << CLR::fg_rgb(255, 64, 64)
+            // ---- 📊 Detailed Summary ------------------------------------------------
+            std::cout << CLR::fg_rgb(200, 200, 255)
                     << "Summary: " << passed_count << "/" << total_count
-                    << " tests passed, " << _tests_failed << " failed, "
+                    << " passed, " << failed_count << " failed, "
                     << not_implemented_count << " not implemented."
                     << CLR::RESET << std::endl;
 
-            if (_tests_failed > 0)
+            // 🔻 Auto-shutdown if any failures
+            if (failed_count > 0)
                 shutdown();
         }
-    }
+    } // END: UnitTests::update()
 
 
     // --- UnitTests::run_lua_tests ---------------------------------------------------

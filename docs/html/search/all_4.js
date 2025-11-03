@@ -1,7 +1,7 @@
 var searchData=
 [
   ['acknowledgments_0',['Acknowledgments',['../md_README.html#autotoc_md40',1,'']]],
-  ['active_1',['active',['../namespaceSDOM.html#af652715c3e637c795824fa0afedda425a4d3d769b812b6faa6b76e1a8abaece2d',1,'SDOM::Active'],['../classSDOM_1_1EventType.html#a412d10af69d7eeee9af0cefff81d415f',1,'SDOM::EventType::Active']]],
+  ['active_1',['Active',['../namespaceSDOM.html#af652715c3e637c795824fa0afedda425a4d3d769b812b6faa6b76e1a8abaece2d',1,'SDOM']]],
   ['activefontheight_5f_2',['activefontheight_',['../classSDOM_1_1BitmapFont.html#a18caf32fae71b4a2e08f0854d1a0c819',1,'SDOM::BitmapFont::activeFontHeight_'],['../classSDOM_1_1TruetypeFont.html#abd62e7c88d7029d382009558085f0ee7',1,'SDOM::TruetypeFont::activeFontHeight_']]],
   ['activefontwidth_5f_3',['activefontwidth_',['../classSDOM_1_1BitmapFont.html#a2a3f96722aeb6fe30c97298d8bdfa315',1,'SDOM::BitmapFont::activeFontWidth_'],['../classSDOM_1_1TruetypeFont.html#a1d795e766a10f18274119b2fd723cd1e',1,'SDOM::TruetypeFont::activeFontWidth_']]],
   ['add_5ftest_4',['add_test',['../classSDOM_1_1UnitTests.html#a1348b301ee3814003c6ddeec30e4dde2',1,'SDOM::UnitTests']]],
@@ -15,7 +15,7 @@ var searchData=
   ['addeventlistener_5flua_12',['addEventListener_lua',['../namespaceSDOM.html#af14e20308dd12843a90b65dd6cd2a1de',1,'SDOM']]],
   ['addeventlistener_5flua_5fany_13',['addEventListener_lua_any',['../namespaceSDOM.html#ad35bde9990b2cbb0c07f3937a6bcefa1',1,'SDOM']]],
   ['addeventlistener_5flua_5fany_5fshort_14',['addEventListener_lua_any_short',['../namespaceSDOM.html#a71d168da4b959c6105bface98d02175a',1,'SDOM']]],
-  ['addtofuturechildrenlist_15',['addtofuturechildrenlist',['../classSDOM_1_1Core.html#ace74d8939b5ecb08abdb6f78853f73bc',1,'SDOM::Core::addToFutureChildrenList()'],['../classSDOM_1_1Factory.html#a4c5c561df01d0837dced7391866ee94a',1,'SDOM::Factory::addToFutureChildrenList()']]],
+  ['addtofuturechildrenlist_15',['addtofuturechildrenlist',['../classSDOM_1_1Factory.html#a4c5c561df01d0837dced7391866ee94a',1,'SDOM::Factory::addToFutureChildrenList()'],['../classSDOM_1_1Core.html#ace74d8939b5ecb08abdb6f78853f73bc',1,'SDOM::Core::addToFutureChildrenList()']]],
   ['addtofuturechildrenlist_5flua_16',['addToFutureChildrenList_lua',['../namespaceSDOM.html#acdd89f5a19ef6f1416aefb99852cb3f4',1,'SDOM']]],
   ['addtoorphanlist_17',['addtoorphanlist',['../classSDOM_1_1Factory.html#aa05605809be613967645ad3f21cd2af3',1,'SDOM::Factory::addToOrphanList()'],['../classSDOM_1_1Core.html#ab8eaa5d031768902fc6ca5827cf02090',1,'SDOM::Core::addToOrphanList()']]],
   ['addtoorphanlist_5flua_18',['addToOrphanList_lua',['../namespaceSDOM.html#a9f79a4619431abcb864cfe0ca305ac56',1,'SDOM']]],

@@ -131,6 +131,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5b826a7539b784966762701e726d29f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dcc92c6c15199a38cba8cfac4c1361c" id="r_a9dcc92c6c15199a38cba8cfac4c1361c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1EventManager.html#a9dcc92c6c15199a38cba8cfac4c1361c">getEventQueueSize</a> () const</td></tr>
 <tr class="separator:a9dcc92c6c15199a38cba8cfac4c1361c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f833f625d403eca01824bfe4621aeac" id="r_a8f833f625d403eca01824bfe4621aeac"><td class="memItemLeft" align="right" valign="top">std::vector&lt; const <a class="el" href="classSDOM_1_1Event.html">Event</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1EventManager.html#a8f833f625d403eca01824bfe4621aeac">getQueuedEvents</a> ()</td></tr>
+<tr class="separator:a8f833f625d403eca01824bfe4621aeac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a80b75d9812b87b3c0bd0a3e901359b" id="r_a8a80b75d9812b87b3c0bd0a3e901359b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1EventManager.html#a8a80b75d9812b87b3c0bd0a3e901359b">clearEventQueue</a> ()</td></tr>
+<tr class="separator:a8a80b75d9812b87b3c0bd0a3e901359b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af176bd60dad46fd8c90fbeefc707bbcd" id="r_af176bd60dad46fd8c90fbeefc707bbcd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1EventManager.html#af176bd60dad46fd8c90fbeefc707bbcd">debugPrintEventQueue</a> ()</td></tr>
+<tr class="separator:af176bd60dad46fd8c90fbeefc707bbcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a272428740daa050cbcc017a7b36a8fee" name="a272428740daa050cbcc017a7b36a8fee"></a>
@@ -195,6 +201,40 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classSDOM_1_1Event.html">Event</a> &gt;&#160;</td>
           <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8a80b75d9812b87b3c0bd0a3e901359b" name="a8a80b75d9812b87b3c0bd0a3e901359b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a80b75d9812b87b3c0bd0a3e901359b">&#9670;&#160;</a></span>clearEventQueue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::EventManager::clearEventQueue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af176bd60dad46fd8c90fbeefc707bbcd" name="af176bd60dad46fd8c90fbeefc707bbcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af176bd60dad46fd8c90fbeefc707bbcd">&#9670;&#160;</a></span>debugPrintEventQueue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::EventManager::debugPrintEventQueue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -424,6 +464,23 @@ Public Member Functions</h2></td></tr>
 <span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8f833f625d403eca01824bfe4621aeac" name="a8f833f625d403eca01824bfe4621aeac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f833f625d403eca01824bfe4621aeac">&#9670;&#160;</a></span>getQueuedEvents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; const <a class="el" href="classSDOM_1_1Event.html">SDOM::Event</a> * &gt; SDOM::EventManager::getQueuedEvents </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

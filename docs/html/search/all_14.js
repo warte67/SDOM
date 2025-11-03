@@ -58,7 +58,7 @@ var searchData=
   ['report_5frender_5fstats_55',['report_render_stats',['../classSDOM_1_1Factory.html#a0c83b642f00401a026f9f0359226d010',1,'SDOM::Factory']]],
   ['report_5fupdate_5fstats_56',['report_update_stats',['../classSDOM_1_1Factory.html#af1437019547d7f65b0044b9a41b83537',1,'SDOM::Factory']]],
   ['requirements_57',['Lua Integration and Requirements',['../md_README.html#autotoc_md18',1,'']]],
-  ['reset_58',['reset',['../classCLR.html#a3870d8fb9704714a9b5d35631a67be74',1,'CLR::RESET'],['../classSDOM_1_1AssetHandle.html#afbb31544072ef034b836e3ab016e1394',1,'SDOM::AssetHandle::reset()'],['../classSDOM_1_1DisplayHandle.html#a63394b0a525ce4c587a5fb64b4b447f6',1,'SDOM::DisplayHandle::reset()']]],
+  ['reset_58',['reset',['../classSDOM_1_1AssetHandle.html#afbb31544072ef034b836e3ab016e1394',1,'SDOM::AssetHandle::reset()'],['../classSDOM_1_1DisplayHandle.html#a63394b0a525ce4c587a5fb64b4b447f6',1,'SDOM::DisplayHandle::reset()'],['../classCLR.html#a3870d8fb9704714a9b5d35631a67be74',1,'CLR::RESET']]],
   ['reset_5fperformance_5fstats_59',['reset_performance_stats',['../classSDOM_1_1Factory.html#ab979a1c520bb6b6026d88f809bb9a030',1,'SDOM::Factory']]],
   ['resize_60',['Resize',['../classSDOM_1_1EventType.html#a88eef9fc64657294fa605d44f991802b',1,'SDOM::EventType']]],
   ['resolvechildspec_61',['resolveChildSpec',['../classSDOM_1_1DisplayHandle.html#a8d99b28c1a26e410bef058ebff0b7aa9',1,'SDOM::DisplayHandle']]],
@@ -70,7 +70,7 @@ var searchData=
   ['return_67',['RETURN',['../classCLR.html#a7a9eedeac52778653bca2160deea4e4d',1,'CLR']]],
   ['reversed_68',['REVERSED',['../classCLR.html#a361b3fc2802281a419a6fa9205c0c548',1,'CLR']]],
   ['rhel_20alma_20rocky_69',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md26',1,'']]],
-  ['right_70',['right',['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea21507b40c80068eda19865706fdc2403',1,'SDOM::Label::RIGHT'],['../classSDOM_1_1ArrowButton.html#a6559c1ade1061b6e6a525f599b06a12ca92b09c7c48c520c3c55e497875da437c',1,'SDOM::ArrowButton::Right'],['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da21507b40c80068eda19865706fdc2403',1,'SDOM::RIGHT'],['../structSDOM_1_1Bounds.html#a94c040502f6cc3d683a928756708db4d',1,'SDOM::Bounds::right'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a21507b40c80068eda19865706fdc2403',1,'SDOM::RIGHT']]],
+  ['right_70',['right',['../classSDOM_1_1ArrowButton.html#a6559c1ade1061b6e6a525f599b06a12ca92b09c7c48c520c3c55e497875da437c',1,'SDOM::ArrowButton::Right'],['../namespaceSDOM.html#a367b5aa079151adc59bb144d2c9fa42da21507b40c80068eda19865706fdc2403',1,'SDOM::RIGHT'],['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a21507b40c80068eda19865706fdc2403',1,'SDOM::RIGHT'],['../structSDOM_1_1Bounds.html#a94c040502f6cc3d683a928756708db4d',1,'SDOM::Bounds::right'],['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea21507b40c80068eda19865706fdc2403',1,'SDOM::Label::RIGHT']]],
   ['right_5f_71',['right_',['../classSDOM_1_1IDisplayObject.html#a514bb1586b9cf3bc4f6043669cf049b2',1,'SDOM::IDisplayObject']]],
   ['right_5fbottom_72',['RIGHT_BOTTOM',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a24903df1224cff140947b85f907072f8',1,'SDOM']]],
   ['right_5fmiddle_73',['RIGHT_MIDDLE',['../namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980af911fa8120055f4b9fbf5d53f3ef719a',1,'SDOM']]],
@@ -79,8 +79,9 @@ var searchData=
   ['rocky_76',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md26',1,'']]],
   ['run_77',['run',['../classSDOM_1_1Core.html#a533271ea191ba008b2fdc15da5690385',1,'SDOM::Core::run(const sol::table &amp;config)'],['../classSDOM_1_1Core.html#aa6c9e1100971ea3848dd6b053962e6b5',1,'SDOM::Core::run()'],['../classSDOM_1_1Core.html#a18f8394dd9b86a9d652fce3fa3fc5e6a',1,'SDOM::Core::run(const CoreConfig &amp;config)'],['../classSDOM_1_1Core.html#a2462fa57e0aa3ea6f5227b58831e970d',1,'SDOM::Core::run(const std::string &amp;configFile)'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run(const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)']]],
   ['run_5fall_78',['run_all',['../classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe',1,'SDOM::UnitTests']]],
-  ['run_5flua_5ftests_79',['run_lua_tests',['../classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d',1,'SDOM::UnitTests']]],
-  ['run_5fsingle_5ftest_80',['run_single_test',['../classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b',1,'SDOM::UnitTests']]],
-  ['running_81',['running',['../structSDOM_1_1UnitTests_1_1TestCase.html#aebb32a74371c9ffcff0aa7bbbd1874f6',1,'SDOM::UnitTests::TestCase']]],
-  ['running_20the_20example_82',['Running the Example',['../md_README.html#autotoc_md13',1,'']]]
+  ['run_5fevent_5fbehavior_5ftest_79',['run_event_behavior_test',['../classSDOM_1_1UnitTests.html#a5a59c4514887f6d2fd41c057fb1f50f8',1,'SDOM::UnitTests']]],
+  ['run_5flua_5ftests_80',['run_lua_tests',['../classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d',1,'SDOM::UnitTests']]],
+  ['run_5fsingle_5ftest_81',['run_single_test',['../classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b',1,'SDOM::UnitTests']]],
+  ['running_82',['running',['../structSDOM_1_1UnitTests_1_1TestCase.html#aebb32a74371c9ffcff0aa7bbbd1874f6',1,'SDOM::UnitTests::TestCase']]],
+  ['running_20the_20example_83',['Running the Example',['../md_README.html#autotoc_md13',1,'']]]
 ];
