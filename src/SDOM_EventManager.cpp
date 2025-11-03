@@ -586,6 +586,8 @@ namespace SDOM
     {
         switch (type)
         {
+            case SDL_EVENT_WINDOW_SHOWN:
+            case SDL_EVENT_WINDOW_HIDDEN:
             case SDL_EVENT_WINDOW_FOCUS_LOST:
             case SDL_EVENT_WINDOW_FOCUS_GAINED:
             case SDL_EVENT_WINDOW_RESIZED:
@@ -643,17 +645,34 @@ namespace SDOM
 
         switch (sdlType)
         {
-            case SDL_EVENT_WINDOW_FOCUS_LOST:         makeAndQueue(EventType::FocusLost); break;
-            case SDL_EVENT_WINDOW_FOCUS_GAINED:       makeAndQueue(EventType::FocusGained); break;
-            case SDL_EVENT_WINDOW_RESIZED:            makeAndQueue(EventType::Resize); break;
-            case SDL_EVENT_WINDOW_EXPOSED:            makeAndQueue(EventType::Show); break;
-            case SDL_EVENT_WINDOW_OCCLUDED:           makeAndQueue(EventType::Hide); break;
-            case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:   makeAndQueue(EventType::EnterFullscreen); break;
-            case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:   makeAndQueue(EventType::LeaveFullscreen); break;
-            case SDL_EVENT_WINDOW_MOVED:              
+            case SDL_EVENT_WINDOW_SHOWN:             makeAndQueue(EventType::Show); break;
+            case SDL_EVENT_WINDOW_HIDDEN:            makeAndQueue(EventType::Hide); break;
+            case SDL_EVENT_WINDOW_FOCUS_LOST:        makeAndQueue(EventType::FocusLost); break;
+            case SDL_EVENT_WINDOW_FOCUS_GAINED:      makeAndQueue(EventType::FocusGained); break;
+            case SDL_EVENT_WINDOW_RESIZED:
             {
-                DEBUG_LOG("🧾 Window moved: " << e.window.data1 << "," << e.window.data2);
-                makeAndQueue(EventType::Move); break;
+                // Include new size in payload for listeners that care
+                auto evt = std::make_unique<Event>(EventType::Resize, stageHandle);
+                evt->setSDL_Event(e);
+                evt->setPayloadValue("width",  e.window.data1);
+                evt->setPayloadValue("height", e.window.data2);
+                addEvent(std::move(evt));
+                break;
+            }
+            case SDL_EVENT_WINDOW_EXPOSED:           makeAndQueue(EventType::Show); break;
+            case SDL_EVENT_WINDOW_OCCLUDED:          makeAndQueue(EventType::Hide); break;
+            case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:  makeAndQueue(EventType::EnterFullscreen); break;
+            case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:  makeAndQueue(EventType::LeaveFullscreen); break;
+            case SDL_EVENT_WINDOW_MOVED:
+            {
+                // DEBUG_LOG("🧾 Window moved: " << e.window.data1 << "," << e.window.data2);
+                auto evt = std::make_unique<Event>(EventType::Move, stageHandle);
+                evt->setSDL_Event(e);
+                // Provide compositor-reported position in payload
+                evt->setPayloadValue("x", e.window.data1);
+                evt->setPayloadValue("y", e.window.data2);
+                addEvent(std::move(evt));
+                break;
             }
             default: break;
         }

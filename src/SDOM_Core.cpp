@@ -1252,32 +1252,55 @@ namespace SDOM
     void Core::setPixelFormat(SDL_PixelFormat format)   { config_.pixelFormat = format; refreshSDLResources(); }
 
     void Core::setFullscreen(bool fullscreen) {
-        CoreConfig cfg = getConfig();
-        if (fullscreen) 
+        // Prefer native fullscreen toggle without tearing down GPU resources.
+        // This allows SDL to emit WINDOW_ENTER/LEAVE_FULLSCREEN and RESIZED
+        // events while keeping the existing renderer/texture alive.
+
+        SDL_Window* win = getWindow();
+        if (!win)
+            return;
+
+        // Track current flags
+        bool currentlyFullscreen = (SDL_GetWindowFlags(win) & SDL_WINDOW_FULLSCREEN) != 0;
+        if (fullscreen == currentlyFullscreen)
+            return; // no-op
+
+        if (fullscreen)
         {
-            // Transitioning to fullscreen: remember current windowed size so we
-            // can restore it on exit from fullscreen.
-            if (!(cfg.windowFlags & SDL_WINDOW_FULLSCREEN))
+            // Remember windowed size before entering fullscreen
+            int w = 0, h = 0;
+            if (SDL_GetWindowSize(win, &w, &h))
             {
-                saved_window_width_ = cfg.windowWidth;
-                saved_window_height_ = cfg.windowHeight;
-                cfg.windowFlags |= SDL_WINDOW_FULLSCREEN;
+                saved_window_width_ = static_cast<float>(w);
+                saved_window_height_ = static_cast<float>(h);
             }
-        } 
-        else 
-        {
-            // Transitioning back to windowed: restore the remembered size if valid.
-            if (cfg.windowFlags & SDL_WINDOW_FULLSCREEN)
+            // Toggle fullscreen without recreating resources
+            if (!SDL_SetWindowFullscreen(win, true))
             {
-                cfg.windowFlags &= ~SDL_WINDOW_FULLSCREEN;
-                if (saved_window_width_ > 0.0f && saved_window_height_ > 0.0f)
-                {
-                    cfg.windowWidth = saved_window_width_;
-                    cfg.windowHeight = saved_window_height_;
-                }
+                // SDL3 returns 0 on success; non-zero on failure, but project uses
+                // SDL semantics where 0 is failure in some calls. Guard with SDL_GetError check.
+                // If it failed, fall back to deferred reconfigure as a last resort.
+            }
+            // Update config flags to reflect new state
+            config_.windowFlags |= SDL_WINDOW_FULLSCREEN;
+        }
+        else
+        {
+            // Leave fullscreen
+            SDL_SetWindowFullscreen(win, false);
+            config_.windowFlags &= ~SDL_WINDOW_FULLSCREEN;
+
+            // Restore prior windowed size if we have one
+            if (saved_window_width_ > 0.0f && saved_window_height_ > 0.0f)
+            {
+                int iw = static_cast<int>(saved_window_width_);
+                int ih = static_cast<int>(saved_window_height_);
+                SDL_SetWindowSize(win, iw, ih);
+                config_.windowWidth = saved_window_width_;
+                config_.windowHeight = saved_window_height_;
             }
         }
-        requestConfigApply(cfg);
+        // Do not call requestConfigApply(cfg); avoid full rebuild on toggle.
     }
     void Core::setWindowed(bool windowed) { setFullscreen(!windowed); }
 

@@ -517,7 +517,40 @@ namespace SDOM
         static SDL_Window* dummy = nullptr;
         static int start_frame = 0;
         static int orig_x = 0, orig_y = 0;
+        static struct { bool enter, leave, show, hide, resize, move, lost, gained; } hits;
+        // Move-detection state machine (post-focus)
+        enum class MovePhase { None, WaitSettle, CreateDummy, ShowRaiseDummy, StartMove, WaitMove, Cleanup, Done };
+        static MovePhase move_phase = MovePhase::None;
+        static int   move_wait_frames = -1;           // <0 = not started; >=0 = counting
+        static const int k_move_wait_cutoff = 250;     // patience window
+        static bool  move_reported = false;
+        static bool  move_final_logged = false;
+        static int   move_settle_frames = 0;
+        static const int k_move_settle_needed = 12;    // frames to settle after focus
+        static std::function<void(Event&)> on_enter, on_leave, on_show, on_hide, on_resize, on_move, on_lost, on_gained;
+
+        // Focus Lost/Gained patience and state machine
+        enum class FocusPhase {
+            None,
+            StartLoseWithDummy,
+            WaitLoseWithDummy,
+            StartLoseWithFocusToggle,
+            WaitLoseWithFocusToggle,
+            StartLoseWithMinimize,
+            WaitLoseWithMinimize,
+            StartGain,
+            WaitGain,
+            Cleanup,
+            Done
+        };
+        static FocusPhase focus_phase = FocusPhase::None;
+        static int  focus_wait_frames = -1;
+        static const int k_focus_wait_cutoff = 250; // align with Move patience window
+        static bool focus_done = false;
+        static bool saved_ignore_real_input = false;
         int frame = ut.get_frame_counter() - start_frame;
+
+        auto reset_all = [&](){ hits = {false,false,false,false,false,false,false,false}; };
 
         // --- FRAME 0: Initialize -----------------------------------------------------
         if (!initialized)
@@ -526,159 +559,415 @@ namespace SDOM
             start_frame = ut.get_frame_counter();
             em.clearEventQueue();
 
+            // Install listeners on the Stage to observe the lifecycle/window events
+            DisplayHandle stage = core.getRootNode();
+            if (stage.isValid())
+            {
+                // Define stateless listener functions so removeEventListener can match them later.
+                on_enter = [](Event&){ hits.enter = true; };
+                on_leave = [](Event&){ hits.leave = true; };
+                on_show  = [](Event&){ hits.show  = true; };
+                on_hide  = [](Event&){ hits.hide  = true; };
+                on_resize= [](Event&){ hits.resize= true; };
+                on_move  = [](Event&){ hits.move  = true; };
+                on_lost  = [](Event&){ hits.lost  = true; };
+                on_gained= [](Event&){ hits.gained= true; };
+
+                stage->addEventListener(EventType::EnterFullscreen, on_enter);
+                stage->addEventListener(EventType::LeaveFullscreen, on_leave);
+                stage->addEventListener(EventType::Show,            on_show);
+                stage->addEventListener(EventType::Hide,            on_hide);
+                stage->addEventListener(EventType::Resize,          on_resize);
+                stage->addEventListener(EventType::Move,            on_move);
+                stage->addEventListener(EventType::FocusLost,       on_lost);
+                stage->addEventListener(EventType::FocusGained,     on_gained);
+            }
+
             SDL_Window* win = core.getWindow();
             SDL_GetWindowPosition(win, &orig_x, &orig_y);
             was_fullscreen = core.isFullscreen();
+            reset_all();
+            move_reported = false;
 
             std::cout << "🧭 Starting position: (" << orig_x << ", " << orig_y << ")\n";
             if (was_fullscreen)
                 core.setWindowed(true); // ensure known starting mode
 
-            return false;
+            return false;   // 🔄 continue
         }
 
         // --- FRAME 1: Enter Fullscreen ----------------------------------------------
         if (frame == 1)
         {
-            em.clearEventQueue();
+            reset_all();
             core.setFullscreen(true);
-            return false;
+            return false;   // 🔄 continue
         }
 
         // --- FRAME 2: Inspect EnterFullscreen ---------------------------------------
         if (frame == 2)
         {
-            auto queued = em.getQueuedEvents();
-            bool enter = false, show = false, resize = false;
-
-            for (auto* e : queued)
-            {
-                if (!e) continue;
-                if (e->getType() == EventType::EnterFullscreen) enter = true;
-                if (e->getType() == EventType::Show)            show = true;
-                if (e->getType() == EventType::Resize)          resize = true;
-            }
-
-            if (!enter)
+            if (!hits.enter)
                 errors.push_back("Missing EnterFullscreen event after setFullscreen(true).");
-            if (!show && !resize)
+            if (!hits.show && !hits.resize)
                 errors.push_back("Expected Show or Resize event after entering fullscreen.");
 
-            em.clearEventQueue();
+            reset_all();
             core.setWindowed(true);
-            return false;
+            return false;   // 🔄 continue
         }
 
         // --- FRAME 3: Inspect LeaveFullscreen ---------------------------------------
         if (frame == 3)
         {
-            auto queued = em.getQueuedEvents();
-            bool leave = false, hide = false, resize = false;
-
-            for (auto* e : queued)
-            {
-                if (!e) continue;
-                if (e->getType() == EventType::LeaveFullscreen) leave = true;
-                if (e->getType() == EventType::Hide)            hide = true;
-                if (e->getType() == EventType::Resize)          resize = true;
-            }
-
-            if (!leave)
+            if (!hits.leave)
                 errors.push_back("Missing LeaveFullscreen event after setWindowed(true).");
-            if (!hide && !resize)
+            if (!hits.hide && !hits.resize)
                 errors.push_back("Expected Hide or Resize event after leaving fullscreen.");
 
-            em.clearEventQueue();
-            SDL_SetWindowPosition(core.getWindow(), orig_x + 32, orig_y + 32);
-            return false;
+            reset_all();
+            // Start with FocusLost/Gained verification first
+            move_reported = false;
+            move_wait_frames = -1; // Move test not started yet
+            move_final_logged = false;
+            focus_phase = FocusPhase::StartLoseWithDummy;
+            focus_wait_frames = -1;
+            focus_done = false;
+            return false;   // 🔄 continue
         }
 
         // --- FRAME 4: Inspect Move ---------------------------------------------------
         if (frame == 4)
+        { return false; }
+
+        // --- FRAME 5: Kick off FocusLost attempts (after giving Move time) ---------
+        if (frame == 5 && focus_phase == FocusPhase::None)
         {
-            auto queued = em.getQueuedEvents();
-            bool found_move = false;
-
-            for (auto* e : queued)
-                if (e && e->getType() == EventType::Move)
-                    found_move = true;
-
-            if (found_move)
-                std::cout << "✅ Move event detected.\n";
-            else
-                std::cout << "⚠️  Move event not detected (compositor-controlled).\n";
-
-            em.clearEventQueue();
-            dummy = SDL_CreateWindow("focus_dummy", 64, 64, SDL_WINDOW_RESIZABLE);
-            if (!dummy)
-                errors.push_back("Unable to create dummy SDL window for focus test.");
-
-            return false;
+            focus_phase = FocusPhase::StartLoseWithDummy;
+            return false;   // 🔄 continue
         }
 
-        // --- FRAME 5: Trigger FocusLost ---------------------------------------------
-        if (frame == 5 && dummy)
+        // --- Focus Lost/Gained State Machine (runs after frame 3) -------------------
+        if (focus_phase != FocusPhase::None)
         {
-            em.clearEventQueue();
-            SDL_ShowWindow(dummy);
-            SDL_RaiseWindow(dummy);
-            SDL_PumpEvents();
-            return false;
-        }
-
-        // --- FRAME 6: Inspect FocusLost ---------------------------------------------
-        if (frame == 6)
-        {
-            auto queued = em.getQueuedEvents();
-            bool lost = false;
-            for (auto* e : queued)
-                if (e && e->getType() == EventType::FocusLost)
-                    lost = true;
-
-            if (lost)
-                std::cout << "✅ FocusLost event detected.\n";
-            else
-                std::cout << "⚠️  FocusLost not observed — compositor may block focus switching.\n";
-
-            em.clearEventQueue();
-            SDL_RaiseWindow(core.getWindow());
-            SDL_PumpEvents();
-            return false;
-        }
-
-        // --- FRAME 7: Inspect FocusGained -------------------------------------------
-        if (frame == 7)
-        {
-            auto queued = em.getQueuedEvents();
-            bool gained = false;
-            for (auto* e : queued)
-                if (e && e->getType() == EventType::FocusGained)
-                    gained = true;
-
-            if (gained)
-                std::cout << "✅ FocusGained event detected.\n";
-            else
-                std::cout << "⚠️  FocusGained not detected — compositor may restrict input focus.\n";
-
-            if (dummy)
+            switch (focus_phase)
             {
-                SDL_HideWindow(dummy);
-                SDL_DestroyWindow(dummy);
-                dummy = nullptr;
+                case FocusPhase::StartLoseWithDummy:
+                {
+                    // Ensure we do not filter focus events during this test segment
+                    saved_ignore_real_input = core.getIgnoreRealInput();
+                    if (saved_ignore_real_input)
+                        core.setIgnoreRealInput(false);
+
+                    // Reset only focus flags
+                    hits.lost = false;
+                    hits.gained = false;
+
+                    if (!dummy)
+                    {
+                        SDL_WindowFlags dflags = static_cast<SDL_WindowFlags>(
+                            SDL_WINDOW_RESIZABLE |
+                            SDL_WINDOW_MOUSE_GRABBED |
+                            SDL_WINDOW_INPUT_FOCUS |
+                            SDL_WINDOW_MOUSE_FOCUS |
+                            SDL_WINDOW_MOUSE_CAPTURE |
+                            SDL_WINDOW_MODAL
+                        );
+                        dummy = SDL_CreateWindow("focus_dummy", 64, 64, dflags);
+                        if (!dummy)
+                            errors.push_back("Unable to create dummy SDL window for focus test.");
+                    }
+                    if (dummy)
+                    {
+                        SDL_ShowWindow(dummy);
+                        SDL_RaiseWindow(dummy);
+                        // Ensure dummy is allowed to receive focus and is assertive
+                        SDL_SetWindowFocusable(dummy, true);
+                        SDL_SetWindowKeyboardGrab(dummy, true);
+                        SDL_SetWindowMouseGrab(dummy, true);
+                        SDL_SetWindowAlwaysOnTop(dummy, true);
+                        SDL_PumpEvents();
+                    }
+                    focus_wait_frames = 0;
+                    focus_phase = FocusPhase::WaitLoseWithDummy;
+                    return false;
+                }
+
+                case FocusPhase::WaitLoseWithDummy:
+                {
+                    if (hits.lost)
+                    {
+                        std::cout << "✅ FocusLost event detected.\n";
+                        focus_phase = FocusPhase::StartGain;
+                        return false;
+                    }
+                    if (focus_wait_frames < k_focus_wait_cutoff)
+                    {
+                        ++focus_wait_frames;
+                        return false;
+                    }
+                    // Fallback to toggling focusable state on the main window
+                    std::cout << "⏳ FocusLost not observed via dummy — trying focusable toggle fallback.\n";
+                    focus_phase = FocusPhase::StartLoseWithFocusToggle;
+                    return false;
+                }
+
+                case FocusPhase::StartLoseWithFocusToggle:
+                {
+                    hits.lost = false;
+                    SDL_SetWindowFocusable(core.getWindow(), true); // ensure enabled first
+                    SDL_SetWindowFocusable(core.getWindow(), false); // then disable to drop focus
+                    SDL_PumpEvents();
+                    focus_wait_frames = 0;
+                    focus_phase = FocusPhase::WaitLoseWithFocusToggle;
+                    return false;
+                }
+
+                case FocusPhase::WaitLoseWithFocusToggle:
+                {
+                    if (hits.lost)
+                    {
+                        std::cout << "✅ FocusLost event detected (focusable toggle).\n";
+                        focus_phase = FocusPhase::StartGain;
+                        return false;
+                    }
+                    if (focus_wait_frames < k_focus_wait_cutoff)
+                    {
+                        ++focus_wait_frames;
+                        return false;
+                    }
+                    std::cout << "⏳ FocusLost not observed via focusable toggle — trying minimize fallback.\n";
+                    focus_phase = FocusPhase::StartLoseWithMinimize;
+                    return false;
+                }
+
+                case FocusPhase::StartLoseWithMinimize:
+                {
+                    hits.lost = false;
+                    SDL_MinimizeWindow(core.getWindow());
+                    SDL_PumpEvents();
+                    focus_wait_frames = 0;
+                    focus_phase = FocusPhase::WaitLoseWithMinimize;
+                    return false;
+                }
+
+                case FocusPhase::WaitLoseWithMinimize:
+                {
+                    if (hits.lost)
+                    {
+                        std::cout << "✅ FocusLost event detected (minimize).\n";
+                        focus_phase = FocusPhase::StartGain;
+                        return false;
+                    }
+                    if (focus_wait_frames < k_focus_wait_cutoff)
+                    {
+                        ++focus_wait_frames;
+                        return false;
+                    }
+                    std::cout << "⚠️  FocusLost not observed — compositor may block focus switching.\n";
+                    focus_phase = FocusPhase::StartGain;
+                    return false;
+                }
+
+                case FocusPhase::StartGain:
+                {
+                    hits.gained = false;
+                    SDL_SetWindowFocusable(core.getWindow(), true);
+                    SDL_RestoreWindow(core.getWindow());
+                    SDL_RaiseWindow(core.getWindow());
+                    if (dummy)
+                    {
+                        // Release grabs on dummy now that we're restoring focus
+                        SDL_SetWindowKeyboardGrab(dummy, false);
+                        SDL_SetWindowMouseGrab(dummy, false);
+                        // Drop always-on-top if API available in this SDL build
+                        SDL_SetWindowAlwaysOnTop(dummy, false);
+                    }
+                    SDL_PumpEvents();
+                    focus_wait_frames = 0;
+                    focus_phase = FocusPhase::WaitGain;
+                    return false;
+                }
+
+                case FocusPhase::WaitGain:
+                {
+                    if (hits.gained)
+                    {
+                        std::cout << "✅ FocusGained event detected.\n";
+                        focus_phase = FocusPhase::Cleanup;
+                        return false;
+                    }
+                    if (focus_wait_frames < k_focus_wait_cutoff)
+                    {
+                        ++focus_wait_frames;
+                        return false;
+                    }
+                    std::cout << "⚠️  FocusGained not detected — compositor may restrict input focus.\n";
+                    focus_phase = FocusPhase::Cleanup;
+                    return false;
+                }
+
+                case FocusPhase::Cleanup:
+                {
+                    if (dummy)
+                    {
+                        SDL_HideWindow(dummy);
+                        SDL_DestroyWindow(dummy);
+                        dummy = nullptr;
+                    }
+                    // Do not restore position/fullscreen yet; move test runs next
+                    // Restore ignore real input flag
+                    core.setIgnoreRealInput(saved_ignore_real_input);
+                    focus_phase = FocusPhase::Done;
+                    focus_done = true;
+                    return false;
+                }
+
+                case FocusPhase::Done:
+                default:
+                    break;
             }
+        }
 
-            SDL_SetWindowPosition(core.getWindow(), orig_x, orig_y);
-            if (was_fullscreen)
-                core.setFullscreen(true);
-
+        // --- MovePhase: perform Move test on a fresh dummy after focus completes ----
+        if (focus_done && move_phase == MovePhase::None)
+        {
+            // Clear prior hit flags so stale Move won't immediately trigger
+            reset_all();
+            move_phase = MovePhase::WaitSettle;
+            move_settle_frames = 0;
+            move_wait_frames = -1;
+            move_reported = false;
+            move_final_logged = false;
             return false;
         }
 
-        // --- FRAME 8: Done -----------------------------------------------------------
-        if (frame == 8)
-            return true;
+        switch (move_phase)
+        {
+            case MovePhase::WaitSettle:
+            {
+                if (move_settle_frames++ >= k_move_settle_needed)
+                {
+                    move_phase = MovePhase::CreateDummy;
+                }
+                return false;
+            }
+            case MovePhase::CreateDummy:
+            {
+                if (!dummy)
+                {
+                    SDL_WindowFlags dflags = static_cast<SDL_WindowFlags>(
+                        SDL_WINDOW_RESIZABLE |
+                        SDL_WINDOW_MOUSE_GRABBED |
+                        SDL_WINDOW_INPUT_FOCUS |
+                        SDL_WINDOW_MOUSE_FOCUS |
+                        SDL_WINDOW_MOUSE_CAPTURE |
+                        SDL_WINDOW_MODAL
+                    );
+                    dummy = SDL_CreateWindow("focus_dummy_move", 64, 64, dflags);
+                    if (!dummy)
+                        errors.push_back("Unable to create dummy SDL window for move test.");
+                }
+                move_phase = MovePhase::ShowRaiseDummy;
+                return false;
+            }
+            case MovePhase::ShowRaiseDummy:
+            {
+                if (dummy)
+                {
+                    SDL_ShowWindow(dummy);
+                    SDL_RaiseWindow(dummy);
+                    SDL_SetWindowFocusable(dummy, true);
+                    SDL_SetWindowAlwaysOnTop(dummy, true);
+                }
+                move_phase = MovePhase::StartMove;
+                return false;
+            }
+            case MovePhase::StartMove:
+            {
+                if (dummy)
+                {
+                    int dx = 24, dy = 24;
+                    int x = 0, y = 0;
+                    SDL_GetWindowPosition(dummy, &x, &y);
+                    SDL_SetWindowPosition(dummy, x + dx, y + dy);
+                }
+                // Start patience window
+                hits.move = false; // ensure fresh detection
+                move_wait_frames = 0;
+                move_reported = false;
+                move_final_logged = false;
+                move_phase = MovePhase::WaitMove;
+                return false;
+            }
+            case MovePhase::WaitMove:
+            {
+                if (move_wait_frames == 0)
+                    std::cout << "⏳ Waiting for Move (up to " << k_move_wait_cutoff << ")...\n";
+                if (hits.move)
+                {
+                    std::cout << "✅ Move event detected after " << move_wait_frames << " frame(s).\n";
+                    move_reported = true;
+                    move_phase = MovePhase::Cleanup;
+                    return false;
+                }
+                if (++move_wait_frames >= k_move_wait_cutoff)
+                {
+                    if (!move_final_logged)
+                    {
+                        std::cout << "⚠️  Move event not detected (compositor-controlled).\n";
+                        move_final_logged = true;
+                    }
+                    move_phase = MovePhase::Cleanup;
+                    return false;
+                }
+                return false;
+            }
+            case MovePhase::Cleanup:
+            {
+                if (dummy)
+                {
+                    SDL_SetWindowAlwaysOnTop(dummy, false);
+                    SDL_HideWindow(dummy);
+                    SDL_DestroyWindow(dummy);
+                    dummy = nullptr;
+                }
+                move_phase = MovePhase::Done;
+                return false;
+            }
+            case MovePhase::Done:
+            case MovePhase::None:
+            default: break;
+        }
 
-        return true;
+        // --- FRAME 8+: Done (with Move patience window) ------------------------------
+        if (frame >= 8)
+        {
+            // Keep the test alive until focus and move phases complete
+            if (!focus_done || move_phase != MovePhase::Done)
+            {
+                return false; // keep waiting until both are done
+            }
+            // Clean up: remove the listeners we added
+            DisplayHandle stage = core.getRootNode();
+            if (stage.isValid())
+            {
+                stage->removeEventListener(EventType::EnterFullscreen, on_enter);
+                stage->removeEventListener(EventType::LeaveFullscreen, on_leave);
+                stage->removeEventListener(EventType::Show,            on_show);
+                stage->removeEventListener(EventType::Hide,            on_hide);
+                stage->removeEventListener(EventType::Resize,          on_resize);
+                stage->removeEventListener(EventType::Move,            on_move);
+                stage->removeEventListener(EventType::FocusLost,       on_lost);
+                stage->removeEventListener(EventType::FocusGained,     on_gained);
+            }
+            // Restore position and fullscreen state at the end
+            SDL_SetWindowPosition(core.getWindow(), orig_x, orig_y);
+            core.setFullscreen(was_fullscreen);
+            return true;  // ✅ done
+        }
+
+        return true;    // ✅ done
     } // END -- EventType_test5: Window Environment Behavior
 
 

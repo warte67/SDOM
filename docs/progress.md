@@ -247,8 +247,8 @@ _Refactoring event dispatch verification and introducing deferred, thread-safe C
 - Core and EventManager internals are now safer and cleaner — configuration changes are deferred properly, event behavior tests pass consistently, and the framework is ready for more advanced input testing across windows and devices.  
 
 ---
-<a id="latest-update"></a>
 
+<a id="latest-update"></a>
 ## 🗓️ November 3, 2025 — Event Lifecycle Verification & Lua Bridge Validation 
 
 _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++) and Lua integration coverage._

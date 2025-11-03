@@ -688,25 +688,38 @@ namespace SDOM
     }
 
     void IDisplayObject::removeEventListener(
-        EventType& type, 
-        std::function<void(Event&)> listener, 
+        EventType& type,
+        std::function<void(Event&)> listener,
         bool useCapture)
     {
         auto& targetListeners = useCapture ? captureEventListeners : bubblingEventListeners;
         auto it = targetListeners.find(type);
-        if (it != targetListeners.end()) {
-            auto& listeners = it->second;
-            // If a null/empty function is provided, remove all listeners for this type
-            if (!listener) {
-                listeners.clear();
-                return;
-            }
-            listeners.erase(std::remove_if(listeners.begin(), listeners.end(), [&](const ListenerEntry& entry) {
-                // Compare the target function pointers to identify the listener
-                return entry.listener.target_type() == listener.target_type() &&
-                       entry.listener.target<void(const Event&)>() == listener.target<void(const Event&)>();
-            }), listeners.end());
+        if (it == targetListeners.end()) return;
+
+        auto& listeners = it->second;
+        // If a null/empty function is provided, remove all listeners for this type
+        if (!listener) {
+            listeners.clear();
+            return;
         }
+
+        listeners.erase(std::remove_if(listeners.begin(), listeners.end(), [&](const ListenerEntry& entry) {
+            // Try to match by function pointer target for both non-const and const Event& signatures
+            if (entry.listener.target_type() != listener.target_type())
+                return false;
+
+            // Non-const signature match: void(Event&)
+            if (auto* a = entry.listener.target<void(Event&)>())
+                if (auto* b = listener.target<void(Event&)>())
+                    return *a == *b;
+
+            // Const signature match: void(const Event&)
+            if (auto* ca = entry.listener.target<void(const Event&)>())
+                if (auto* cb = listener.target<void(const Event&)>())
+                    return *ca == *cb;
+
+            return false;
+        }), listeners.end());
     }
 
 
