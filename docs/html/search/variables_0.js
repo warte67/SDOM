@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['activefontheight_5f_0',['activeFontHeight_',['../classSDOM_1_1BitmapFont.html#a18caf32fae71b4a2e08f0854d1a0c819',1,'SDOM::BitmapFont::activeFontHeight_'],['../classSDOM_1_1TruetypeFont.html#abd62e7c88d7029d382009558085f0ee7',1,'SDOM::TruetypeFont::activeFontHeight_']]],
-  ['activefontwidth_5f_1',['activeFontWidth_',['../classSDOM_1_1BitmapFont.html#a2a3f96722aeb6fe30c97298d8bdfa315',1,'SDOM::BitmapFont::activeFontWidth_'],['../classSDOM_1_1TruetypeFont.html#a1d795e766a10f18274119b2fd723cd1e',1,'SDOM::TruetypeFont::activeFontWidth_']]],
+  ['activefontheight_5f_0',['activefontheight_',['../classSDOM_1_1TruetypeFont.html#abd62e7c88d7029d382009558085f0ee7',1,'SDOM::TruetypeFont::activeFontHeight_'],['../classSDOM_1_1BitmapFont.html#a18caf32fae71b4a2e08f0854d1a0c819',1,'SDOM::BitmapFont::activeFontHeight_']]],
+  ['activefontwidth_5f_1',['activefontwidth_',['../classSDOM_1_1BitmapFont.html#a2a3f96722aeb6fe30c97298d8bdfa315',1,'SDOM::BitmapFont::activeFontWidth_'],['../classSDOM_1_1TruetypeFont.html#a1d795e766a10f18274119b2fd723cd1e',1,'SDOM::TruetypeFont::activeFontWidth_']]],
   ['added_2',['Added',['../classSDOM_1_1EventType.html#ac11d499ea41fc9355b64c18b8241966b',1,'SDOM::EventType']]],
   ['addedtostage_3',['AddedToStage',['../classSDOM_1_1EventType.html#a4ef2c364108bbdcafb94042ea371272f',1,'SDOM::EventType']]],
   ['alignment_4',['alignment',['../structSDOM_1_1FontStyle.html#abaa1e4c8b02dc4471f0d6b2cedc8b37f',1,'SDOM::FontStyle::alignment'],['../structSDOM_1_1Label_1_1InitStruct.html#a341277f3403b87a233856de90612eda6',1,'SDOM::Label::InitStruct::alignment']]],

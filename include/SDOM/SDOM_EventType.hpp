@@ -214,9 +214,9 @@ namespace SDOM
         // // empty registry. It is kept for backward-compatibility and safety.
         // static void registerAll();
 
-    // Register EventType usertype/table in a Lua state so scripts can
-    // access EventType constants and query properties.
-    static void registerLua(sol::state_view lua);
+        // Register EventType usertype/table in a Lua state so scripts can
+        // access EventType constants and query properties.
+        static void registerLua(sol::state_view lua);
 
         // -- Getters -- //
         bool getCaptures() const;
@@ -246,7 +246,13 @@ namespace SDOM
         EventType& setCoalesceStrategy(CoalesceStrategy s);
         EventType& setCoalesceKey(CoalesceKey k);
 
-    // -- Public Lua support -- //        
+        // -- Public Lua support -- //   
+                
+        // -- Static Utilities for Lua and C++ introspection -- //
+        static std::vector<EventType*> getAll();
+        static EventType* fromName(const std::string& name);
+        static std::string toString(const EventType& et);
+        static size_t count();
 
     private:
         std::string name;

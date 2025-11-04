@@ -53,26 +53,66 @@ namespace SDOM
         return allPassed;
     }
 
+        
+    // --- UnitTests::run_single_test ----------------------------------------------------
+    //
+    // 🧩 Purpose:
+    //   Executes a single registered C++ unit test (one frame at a time).
+    //   Responsible for invoking the test function, capturing exceptions,
+    //   recording results, and printing output according to verbosity mode.
+    //
+    // 🧠 Notes:
+    //   • `VERBOSE_TEST_OUTPUT = true`
+    //       → Print *every* individual test line, pass/fail, inline.
+    //   • `VERBOSE_TEST_OUTPUT = false`
+    //       → Suppress all *passing* sub-tests.  Only failing or unimplemented
+    //         tests are shown, and only per-module summaries appear later.
+    //   • `QUIET_TEST_MODE = true`
+    //       → Suppress *all* per-test and per-module output until the final summary.
+    //
+    // ⚙️ Behavior Summary:
+    //   | Flag Configuration                  | Output Behavior                          |
+    //   |------------------------------------|-------------------------------------------|
+    //   | VERBOSE_TEST_OUTPUT = true         | Show all test lines + inline results.     |
+    //   | VERBOSE_TEST_OUTPUT = false        | Only show failed / unimplemented tests.   |
+    //   | QUIET_TEST_MODE = true             | Show nothing until final summary.         |
+    //
+    // ⚠️ Safety:
+    //   • Exceptions are caught and reported without terminating the runner.
+    //   • The return value indicates whether the test is "finished" (not pass/fail).
+    //
+    // -----------------------------------------------------------------------------------
     bool UnitTests::run_single_test(TestCase& test, const std::string& objName)
     {
         std::ostringstream oss;
 
+        // -------------------------------------------------------------------------
+        // 🧩 Handle unimplemented test
+        // -------------------------------------------------------------------------
         if (!test.is_implemented)
         {
-            oss << CLR::indent() << CLR::NORMAL << "[" << objName << "] "
-                << CLR::LT_BLUE << test.name << CLR::RESET
-                << CLR::fg_rgb(224, 224, 64) + " [NOT YET IMPLEMENTED]" << CLR::RESET << std::endl;
-            std::cout << oss.str();
+            if (!SDOM::QUIET_TEST_MODE)
+            {
+                oss << CLR::indent()
+                    << CLR::NORMAL << "[" << objName << "] "
+                    << CLR::LT_BLUE << test.name << CLR::RESET
+                    << CLR::fg_rgb(224, 224, 64) + " [NOT YET IMPLEMENTED]"
+                    << CLR::RESET << std::endl;
+                std::cout << oss.str();
+            }
             return true; // Skip so it doesn't block progress
         }
 
+        // -------------------------------------------------------------------------
+        // 🧩 Run test function safely
+        // -------------------------------------------------------------------------
         std::vector<std::string> errors;
-        bool finished = false; // means “this test is done (pass or fail)”
-        bool passed   = false; // final outcome when finished == true
+        bool finished = false;
+        bool passed   = false;
 
         try
         {
-            // 🔹 Test function now returns “done?” instead of “passed?”
+            // Test functions return “finished?” (not “passed?”)
             finished = test.func(errors);
         }
         catch (const std::exception& e)
@@ -81,36 +121,77 @@ namespace SDOM
             finished = true;
         }
 
-        // 🔹 If not finished yet, don’t print or finalize
+        // 🔹 If not finished yet, allow re-entrant continuation next frame
         if (!finished)
-            return false; // re-enter next frame
+            return false;
 
-        // 🔹 Determine pass/fail based on error list
+        // -------------------------------------------------------------------------
+        // 🧩 Determine pass/fail and record results
+        // -------------------------------------------------------------------------
         passed = errors.empty();
-
-        oss << CLR::indent() << CLR::NORMAL << "[" << objName << "] "
-            << CLR::LT_BLUE << test.name << CLR::RESET
-            << (passed ? CLR::GREEN + " [PASSED]" : CLR::fg_rgb(255, 0, 0) + " [FAILED]")
-            << CLR::RESET << std::endl;
-
-        if (!passed && !errors.empty())
-        {
-            for (const auto& line : errors)
-                oss << CLR::indent() << CLR::fg_rgb(192, 64, 64)
-                    << "    Error: " << line << std::endl;
-            _tests_failed++;
-        }
-
-        // 🔹 Persist outcome on the test case for final summary accounting
         test.passed = passed;
         test.errors = std::move(errors);
 
+        // -------------------------------------------------------------------------
+        // 🧩 Output Control Based on Verbosity
+        // -------------------------------------------------------------------------
+        if (SDOM::QUIET_TEST_MODE)
+            return true; // Suppress everything in quiet mode
+
+        // In compact mode (not verbose), skip all passed tests
+        if (!SDOM::VERBOSE_TEST_OUTPUT && passed)
+            return true;
+
+        // Otherwise, show this test’s result line
+        oss << CLR::indent()
+            << CLR::NORMAL << "[" << objName << "] "
+            << CLR::LT_BLUE << test.name << CLR::RESET
+            << (passed
+                ? CLR::GREEN + " [PASSED]"
+                : CLR::fg_rgb(255, 0, 0) + " [FAILED]")
+            << CLR::RESET << std::endl;
+
+        if (!passed && !test.errors.empty())
+        {
+            for (const auto& line : test.errors)
+            {
+                oss << CLR::indent()
+                    << CLR::fg_rgb(192, 64, 64)
+                    << "    Error: " << line << std::endl;
+            }
+            _tests_failed++;
+        }
+
         std::cout << oss.str();
-        return true; // means “this test is complete” (regardless of pass/fail)
-    }
+        return true; // Means “this test is complete” (pass or fail)
+    } // END: UnitTests::run_single_test()
 
 
 
+    // --- UnitTests::update -------------------------------------------------------
+    //
+    // 🧩 Purpose:
+    //   Advances execution of registered unit tests, frame by frame. Each test
+    //   runs until completion (either pass, fail, or not implemented). Once all
+    //   tests complete, this function prints an appropriate summary depending
+    //   on the configured verbosity flags.
+    //
+    // 🧠 Notes:
+    //   • Behavior adapts dynamically based on compile-time flags:
+    //       - VERBOSE_TEST_OUTPUT = true  → show all test details.
+    //       - VERBOSE_TEST_OUTPUT = false → show module summaries only.
+    //       - QUIET_TEST_MODE = true      → show nothing unless a failure occurs.
+    //   • The summary always prints, regardless of verbosity.
+    //   • Failed modules are expanded in quiet mode for error visibility.
+    //
+    // ⚙️ Behavior Matrix (Summary)
+    //   | Mode         | Output Details                                            |
+    //   |---------------|----------------------------------------------------------|
+    //   | Verbose       | All tests + colored detail lines + final summary         |
+    //   | Compact       | Only per-module summaries + final summary                |
+    //   | Quiet         | Only failing modules (expanded) + final summary          |
+    //
+    // ============================================================================
     void UnitTests::update()
     {
         if (_current_index >= static_cast<int>(_tests.size()))
@@ -159,38 +240,126 @@ namespace SDOM
             const bool any_failed = (failed_count > 0);
             const bool any_unimplemented = (not_implemented_count > 0);
 
-            // ---- 🧩 Summary Color Logic ---------------------------------------------
-            if (any_failed)
+            // =====================================================================
+            // QUIET MODE: only show failing modules + errors + summary
+            // =====================================================================
+            if (QUIET_TEST_MODE)
             {
-                std::cout << CLR::fg_rgb(255, 64, 64)
-                        << "❌ Some unit tests failed!"
-                        << CLR::RESET << std::endl;
-            }
-            else if (any_unimplemented)
-            {
-                std::cout << CLR::fg_rgb(255, 200, 64)
-                        << "⚠️  All implemented tests passed, but some tests are not yet implemented."
-                        << CLR::RESET << std::endl;
-            }
-            else
-            {
-                std::cout << CLR::fg_rgb(64, 255, 64)
-                        << "✅ All unit tests passed!"
-                        << CLR::RESET << std::endl;
+                if (any_failed)
+                {
+                    std::cout << std::endl
+                            << CLR::fg_rgb(255, 128, 128)
+                            << "❌ Failing Modules:" << CLR::RESET << std::endl;
+
+                    for (const auto& t : _tests)
+                    {
+                        if (t.is_implemented && !t.passed)
+                        {
+                            std::cout << CLR::fg_rgb(255, 96, 96)
+                                    << "  [" << t.obj_name << "] "
+                                    << t.name << CLR::RESET << std::endl;
+
+                            for (const auto& err : t.errors)
+                                std::cout << CLR::fg_rgb(192, 64, 64)
+                                        << "    Error: " << err
+                                        << CLR::RESET << std::endl;
+                        }
+                    }
+                    std::cout << std::endl;
+                }
             }
 
-            // ---- 📊 Detailed Summary ------------------------------------------------
-            std::cout << CLR::fg_rgb(200, 200, 255)
-                    << "Summary: " << passed_count << "/" << total_count
-                    << " passed, " << failed_count << " failed, "
-                    << not_implemented_count << " not implemented."
-                    << CLR::RESET << std::endl;
+            // =====================================================================
+            // VERBOSE + COMPACT: print status summary if not in quiet mode
+            // =====================================================================
+            if (!QUIET_TEST_MODE)
+            {
+                if (any_failed)
+                {
+                    std::cout << CLR::fg_rgb(255, 64, 64)
+                            << "❌ Some unit tests failed!"
+                            << CLR::RESET << std::endl;
+                }
+                else if (any_unimplemented)
+                {
+                    std::cout << CLR::fg_rgb(255, 200, 64)
+                            << "⚠️  All implemented tests passed, but some tests are not yet implemented."
+                            << CLR::RESET << std::endl;
+                }
+                else
+                {
+                    std::cout << CLR::fg_rgb(64, 255, 64)
+                            << "✅ All unit tests passed!"
+                            << CLR::RESET << std::endl;
+                }
+
+                // 🧭 Always show compact summary in both verbose and compact modes
+                print_summary(passed_count, failed_count, not_implemented_count, total_count);
+            }
+            else if (QUIET_TEST_MODE)
+            {
+                // Quiet mode still gets minimal summary lines
+                if (any_unimplemented)
+                {
+                    std::cout << "⚠️  All implemented tests passed, but some tests are not yet implemented.\n";
+                }
+                print_summary(passed_count, failed_count, not_implemented_count, total_count);
+            }
 
             // 🔻 Auto-shutdown if any failures
             if (failed_count > 0)
                 shutdown();
         }
     } // END: UnitTests::update()
+
+
+    // --- print_summary ----------------------------------------------------------
+    //
+    // 🧩 Purpose:
+    //   Prints the compact summary line at the end of all unit tests, with color
+    //   and symbol feedback based on the aggregate results.
+    //
+    // ⚙️ Color Rules:
+    //   - 🟢 Green   → All implemented tests passed, none unimplemented.
+    //   - 🟡 Yellow  → All implemented tests passed, but some unimplemented.
+    //   - 🔴 Red     → One or more tests failed.
+    //
+    void UnitTests::print_summary(int passed_count,
+                            int failed_count,
+                            int not_implemented_count,
+                            int total_count)
+    {
+        bool all_passed = (failed_count == 0);
+        bool all_implemented = (not_implemented_count == 0);
+
+        // Keep ANSI codes in std::string (safe, non-dangling)
+        std::string color;
+        std::string prefix;
+
+        if (all_passed && all_implemented)
+        {
+            color  = CLR::fg_rgb(64, 255, 64);   // green
+            prefix = "✅ ";
+        }
+        else if (all_passed && !all_implemented)
+        {
+            color  = CLR::fg_rgb(255, 200, 64);  // yellow
+            prefix = "⚠️  ";
+        }
+        else
+        {
+            color  = CLR::fg_rgb(255, 128, 96);   // red
+            prefix = "❌ ";
+        }
+
+        std::cout << color
+                << prefix
+                << "Summary: " << passed_count << "/" << total_count
+                << " passed, " << failed_count << " failed, "
+                << not_implemented_count << " not implemented."
+                << CLR::RESET << std::endl;
+        std::cout.flush();
+    } // END: UnitTests::print_summary()
 
 
     // --- UnitTests::run_lua_tests ---------------------------------------------------

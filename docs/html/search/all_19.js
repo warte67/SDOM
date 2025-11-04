@@ -13,7 +13,7 @@ var searchData=
   ['windowheight_10',['windowHeight',['../structSDOM_1_1Core_1_1CoreConfig.html#a8c437dc7c49ff80c7904ce46fbca14d9',1,'SDOM::Core::CoreConfig']]],
   ['windows_11',['🪟 Windows',['../md_README.html#autotoc_md28',1,'']]],
   ['windowwidth_12',['windowWidth',['../structSDOM_1_1Core_1_1CoreConfig.html#acd80478dc5e6f4dc3b4f3c591eafd783',1,'SDOM::Core::CoreConfig']]],
-  ['word_13',['Word',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429a07a094a210794e74a0e5e1a1457a92ee',1,'SDOM::Label::Word'],['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'Word:&#160;SDOM_CLR.hpp']]],
+  ['word_13',['word',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429a07a094a210794e74a0e5e1a1457a92ee',1,'SDOM::Label::Word'],['../SDOM__CLR_8hpp.html#abf4ef44c4c8719bd6d059ca8cdbe0fde',1,'Word:&#160;SDOM_CLR.hpp']]],
   ['wordwrap_14',['wordwrap',['../structSDOM_1_1FontStyle.html#a2a5e4e046feb5c938369ce89c835cfcd',1,'SDOM::FontStyle::wordwrap'],['../structSDOM_1_1Label_1_1InitStruct.html#a86ad9dc28c72f17beb5f88c98c8bad16',1,'SDOM::Label::InitStruct::wordwrap']]],
   ['write_5fat_15',['write_at',['../classCLR.html#a9a5487e769cddf9b64e80394f8f74bea',1,'CLR']]]
 ];

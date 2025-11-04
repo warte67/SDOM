@@ -25,7 +25,7 @@ var searchData=
   ['startx_22',['startX',['../structSDOM_1_1Label_1_1PhraseToken.html#a575ceb73c6c029ed1677ff86183cb79b',1,'SDOM::Label::PhraseToken']]],
   ['state_23',['state',['../structSDOM_1_1TristateButton_1_1InitStruct.html#a32bd9bc4ff19f2b1c3d23d392ee3ea61',1,'SDOM::TristateButton::InitStruct']]],
   ['statechanged_24',['StateChanged',['../classSDOM_1_1EventType.html#a507abf67445aa60c41314885dd3febb6',1,'SDOM::EventType']]],
-  ['step_25',['step',['../structSDOM_1_1ScrollBar_1_1InitStruct.html#a5576f85a20254fcf977d7a38a72c21bd',1,'SDOM::ScrollBar::InitStruct::step'],['../structSDOM_1_1Slider_1_1InitStruct.html#a675f603f2dbbb2b4bb7132a0e813997d',1,'SDOM::Slider::InitStruct::step']]],
+  ['step_25',['step',['../structSDOM_1_1Slider_1_1InitStruct.html#a675f603f2dbbb2b4bb7132a0e813997d',1,'SDOM::Slider::InitStruct::step'],['../structSDOM_1_1ScrollBar_1_1InitStruct.html#a5576f85a20254fcf977d7a38a72c21bd',1,'SDOM::ScrollBar::InitStruct::step']]],
   ['step_5f_26',['step_',['../classSDOM_1_1ScrollBar.html#a7a8af6d2b44e8338928215cb88a14d94',1,'SDOM::ScrollBar::step_'],['../classSDOM_1_1Slider.html#a3eb8e02cd068e5b94179929e46e03c5d',1,'SDOM::Slider::step_']]],
   ['strike_27',['STRIKE',['../classCLR.html#a61c1a006f5888c15c2ad5c24d213ab1a',1,'CLR']]],
   ['strikethrough_28',['strikethrough',['../structSDOM_1_1FontStyle.html#a20d523f3f1672a40053581b8fc8e9e6a',1,'SDOM::FontStyle::strikethrough'],['../structSDOM_1_1Label_1_1InitStruct.html#a7d3a638476255e101e9b2337f7644ee8',1,'SDOM::Label::InitStruct::strikethrough']]],
@@ -37,5 +37,5 @@ var searchData=
   ['stringtolabelalign_5f_34',['stringToLabelAlign_',['../classSDOM_1_1Label.html#a97204e7dbb3d5fd7e8ad0ca12ab9265e',1,'SDOM::Label']]],
   ['stringtopanelbaseindex_5f_35',['stringToPanelBaseIndex_',['../namespaceSDOM.html#a8c2b307c7eb25af276a81bd930409deb',1,'SDOM']]],
   ['stringtopaneltileoffset_5f_36',['stringToPanelTileOffset_',['../namespaceSDOM.html#adeb30b52dfdaf61815eb609cc8e208d8',1,'SDOM']]],
-  ['style_37',['style',['../structSDOM_1_1Label_1_1LabelToken.html#a0782c88e2178985e8a9417c06c3188f1',1,'SDOM::Label::LabelToken::style'],['../structSDOM_1_1Label_1_1PhraseToken.html#aeb95a25a60bb24a223b08b45439352e6',1,'SDOM::Label::PhraseToken::style']]]
+  ['style_37',['style',['../structSDOM_1_1Label_1_1PhraseToken.html#aeb95a25a60bb24a223b08b45439352e6',1,'SDOM::Label::PhraseToken::style'],['../structSDOM_1_1Label_1_1LabelToken.html#a0782c88e2178985e8a9417c06c3188f1',1,'SDOM::Label::LabelToken::style']]]
 ];

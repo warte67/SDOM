@@ -3,7 +3,7 @@
 # -------------------------------------------------------------
 # Automatically moves or creates the <a id="latest-update"></a>
 # anchor in docs/progress.md so it appears immediately above the
-# most recent daily heading (e.g., "## 🗓️ November 2, 2025").
+# most recent daily heading (e.g., "## 🗓️ November 4, 2025").
 #
 # If no entry exists for today, this script will automatically
 # insert a new daily heading along with a starter progress
@@ -32,6 +32,9 @@ else
   TODAY=$(date '+%B %-d, %Y' 2>/dev/null || date '+%B %e, %Y')
 fi
 
+# Normalize spacing (handles double-space in some locales)
+TODAY=$(echo "$TODAY" | sed 's/  / /g')
+
 awk -v TODAY="$TODAY" '
   BEGIN {
     months = "January|February|March|April|May|June|July|August|September|October|November|December"
@@ -44,30 +47,22 @@ awk -v TODAY="$TODAY" '
 
   {
     # Remove any existing <a id="latest-update"></a> anchors
-    if ($0 ~ /^<a id="latest-update"><\/a>$/) {
-      next
-    }
+    if ($0 ~ /^<a id="latest-update"><\/a>$/) next
+
     out_n++
     lines[out_n] = $0
 
-    if ($0 ~ heading_re) {
-      last_idx = out_n
-    }
-    if ($0 ~ /^####[[:space:]]+end-of-day(.*)$/) {
-      eod_idx = out_n
-    }
-    if ($0 ~ /^##[[:space:]]+/ && index($0, TODAY) > 0) {
-      today_idx = out_n
-    }
+    if ($0 ~ heading_re) last_idx = out_n
+    if ($0 ~ /^####[[:space:]]+end-of-day(.*)$/) eod_idx = out_n
+    if ($0 ~ /^##[[:space:]]+/ && index($0, TODAY) > 0) today_idx = out_n
   }
 
   END {
     # Fallback: catch older date heading formats
     if (last_idx == 0) {
       for (i = 1; i <= out_n; i++) {
-        if (lines[i] ~ /^###[[:space:]]*\[[A-Za-z]+ [0-9]{1,2}, [0-9]{4}\]/) {
+        if (lines[i] ~ /^###[[:space:]]*\[[A-Za-z]+ [0-9]{1,2}, [0-9]{4}\]/)
           last_idx = i
-        }
       }
     }
 
@@ -78,13 +73,12 @@ awk -v TODAY="$TODAY" '
     if (today_idx > 0) {
       insert_anchor_at = today_idx
     } else if (eod_idx > 0) {
-      insert_anchor_at = eod_idx
+      insert_anchor_at = eod_idx + 1  # ensure new block appears AFTER last day’s terminator
       insert_new_heading = 1
       new_heading_line = "## 🗓️ " TODAY " — [Title Placeholder]"
     } else if (last_idx > 0) {
       insert_anchor_at = last_idx
     } else {
-      # No daily headings found — just print file unchanged
       for (i = 1; i <= out_n; i++) print lines[i]
       exit 0
     }
@@ -101,16 +95,28 @@ awk -v TODAY="$TODAY" '
     "- ☐ [Task 2]\n\n" \
     "#### end-of-day\n"
 
-    # Write the new output with anchor repositioned
     for (i = 1; i <= out_n; i++) {
       if (i == insert_anchor_at) {
         print "<a id=\"latest-update\"></a>"
+
         if (insert_new_heading) {
+          # Add blank line separation if not already present
+          if (out_n > 0 && lines[out_n] !~ /^$/) print ""
+          
           print new_heading_line
           print ""
-          print template_block
+
+          # Only insert the full template if file does NOT already end with "end-of-day"
+          if (lines[out_n] !~ /^####[[:space:]]+end-of-day(.*)$/) {
+            print template_block
+          } else {
+            # Avoid duplicate terminators
+            print "_[Brief summary of today’s focus or achievements.]_"
+            print ""
+          }
         }
       }
+
       print lines[i]
     }
   }
@@ -122,5 +128,5 @@ if ! cmp -s "${FILE}" "${tmp_out}"; then
   echo "[update_latest_anchor] Updated: ${FILE}"
 else
   rm -f "${tmp_out}"
-  echo "[update_latest_anchor] No change needed"
+  echo "[✓] Progress log up-to-date (no changes)"
 fi

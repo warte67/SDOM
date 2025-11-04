@@ -1,61 +1,50 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-WORKSPACE="/home/jay/Documents/GitHub/SDOM"
+# Resolve the repo root (two levels up from this script)
+WORKSPACE="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+INSTALL_PREFIX="${INSTALL_PREFIX:-$HOME/.local}"
 
-
-if [ "$1" == "clean" ]; then
-    echo "Cleaning $WORKSPACE/build and $WORKSPACE/examples/test/build ..."
-    sudo rm -rf "$WORKSPACE/build" "$WORKSPACE/examples/test/build"
-
-    # # --- Generate documentation with Doxygen ---
-    # if [ -f "$WORKSPACE/docs/Doxyfile" ]; then
-    #     echo "Running Doxygen from docs folder..."
-    #     (cd "$WORKSPACE/docs" && doxygen Doxyfile)
-    # fi
+# Determine available CPU count
+if command -v nproc >/dev/null 2>&1; then
+  CORES="$(nproc)"
+elif command -v getconf >/dev/null 2>&1; then
+  CORES="$(getconf _NPROCESSORS_ONLN)"
+else
+  CORES=4
 fi
 
-# --- Build and install the API library ---
-cd "$WORKSPACE"
-# scripts/gen_version.sh
-
-if [ ! -d "include/SDOM" ]; then
-    echo "ERROR: Headers should be in $WORKSPACE/include/SDOM/"
-    exit 1
+# --- Handle clean flag ---
+if [[ "${1:-}" == "clean" ]]; then
+  echo "Cleaning $WORKSPACE/build and $WORKSPACE/examples/test/build ..."
+  rm -rf "$WORKSPACE/build" "$WORKSPACE/examples/test/build"
+  # Don’t exit — we’ll continue to perform a full rebuild
 fi
 
-if [ ! -d "build" ]; then
-    mkdir build
-fi
-cd build
+echo "Workspace: $WORKSPACE"
+echo "Install prefix: $INSTALL_PREFIX"
 
-if [ ! -f "Makefile" ] || [ ../CMakeLists.txt -nt Makefile ]; then
-    if [ -f "../CMakeLists.txt" ]; then
-        echo "Running cmake..."
-        cmake -DCMAKE_INSTALL_PREFIX="$HOME/.local" ..
-    else
-        echo "Error: CMakeLists.txt not found in $WORKSPACE."
-        exit 1
-    fi
-fi
+# --- Configure and build the core library ---
+cmake -S "$WORKSPACE" -B "$WORKSPACE/build" -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX" >/dev/null
 
-make -j$(nproc)
-make install
+# Track timestamps to detect rebuild
+LIB_TARGET=$(find "$WORKSPACE/build" -maxdepth 1 -type f -name "libSDOM.*" | head -n1)
+[[ -f "$LIB_TARGET" ]] && BEFORE_TIME=$(stat -c %Y "$LIB_TARGET") || BEFORE_TIME=0
+
+# Build
+cmake --build "$WORKSPACE/build" -j"$CORES"
+
+# Detect whether target changed
+LIB_TARGET=$(find "$WORKSPACE/build" -maxdepth 1 -type f -name "libSDOM.*" | head -n1)
+AFTER_TIME=$( [[ -f "$LIB_TARGET" ]] && stat -c %Y "$LIB_TARGET" || echo 0 )
+
+if [[ "$AFTER_TIME" -gt "$BEFORE_TIME" ]]; then
+  echo "Changes detected — installing library..."
+  cmake --install "$WORKSPACE/build"
+else
+  echo "No changes detected — skipping install."
+fi
 
 # --- Build the test application ---
-cd "$WORKSPACE/examples/test"
-
-if [ ! -d "build" ]; then
-    mkdir build
-fi
-cd build
-
-if [ ! -f "Makefile" ] || [ ../CMakeLists.txt -nt Makefile ]; then
-    if [ -f "../CMakeLists.txt" ]; then
-        cmake ..
-    else
-        echo "Error: CMakeLists.txt not found in $WORKSPACE/examples/test."
-        exit 1
-    fi
-fi
-
-make -j$(nproc)
+cmake -S "$WORKSPACE/examples/test" -B "$WORKSPACE/examples/test/build" >/dev/null
+cmake --build "$WORKSPACE/examples/test/build" -j"$CORES"

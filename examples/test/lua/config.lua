@@ -47,14 +47,29 @@
 -- print("has asset varela_ttf_asset:", hasAssetObject("varela_ttf_asset"))
 -- print("has asset VarelaRound:", hasAssetObject("VarelaRound"))
 
+-- Try to detect current directory safely, even without debug library
+local current_dir = "./"  -- sensible default (relative to working directory)
+
+-- If debug is available, use it
+if type(debug) == "table" and debug.getinfo then
+    local src = debug.getinfo(1, "S").source
+    current_dir = src:match("@(.*/)")
+elseif type(arg) == "table" and arg[0] then
+    -- For standalone Lua execution
+    current_dir = arg[0]:match("(.*/)")
+end
+
+-- Construct assets directory path
+local assets_dir = current_dir .. "assets/"
+
 local config = {
     resources = 
     {
-        { name = "VarelaRound16", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 16 },
-        { name = "VarelaRound32", type = "TruetypeFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/VarelaRound.ttf", font_size = 32 },
-        { name = "external_font_8x8", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x8.png", font_width = 8, font_height = 8 },
-        { name = "external_font_8x12", type = "BitmapFont", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/font_8x12.png", font_width = 8, font_height = 12 },
-        { name = "external_icon_8x8", type = "SpriteSheet", filename = "/home/jay/Documents/GitHub/SDOM/examples/test/assets/icon_8x8.png", sprite_width = 8, sprite_height = 8 }
+        { name = "VarelaRound16", type = "TruetypeFont", filename = assets_dir .. "VarelaRound.ttf", font_size = 16 },
+        { name = "VarelaRound32", type = "TruetypeFont", filename = assets_dir .. "VarelaRound.ttf", font_size = 32 },
+        { name = "external_font_8x8",  type = "BitmapFont",  filename = assets_dir .. "font_8x8.png",  font_width = 8,  font_height = 8 },
+        { name = "external_font_8x12", type = "BitmapFont",  filename = assets_dir .. "font_8x12.png", font_width = 8,  font_height = 12 },
+        { name = "external_icon_8x8",  type = "SpriteSheet", filename = assets_dir .. "icon_8x8.png",  sprite_width = 8, sprite_height = 8 }
     },
     windowWidth = 1200,
     windowHeight = 800,

@@ -1,31 +1,70 @@
 #!/usr/bin/env bash
 # =============================================================================
-# SDOM Documentation and Version Regeneration Script
+# SDOM Documentation and Conditional Version Regeneration Script
 # -----------------------------------------------------------------------------
 # Description:
-#   Automates documentation generation and version metadata refresh for SDOM.
-#   This script runs Doxygen to rebuild the HTML documentation, then regenerates
-#   the version header by invoking `scripts/gen_version.sh`.
+#   - Rebuilds documentation via Doxygen
+#   - Regenerates version header only if source files have changed
+#   - Keeps version numbers stable across doc-only edits
 #
 # Usage:
-#   ./rebuild_docs.sh
-#
-# Behavior:
-#   - Executes from the repository root (automatically adjusts working directory)
-#   - Generates Doxygen documentation using `docs/Doxyfile`
-#   - Refreshes build/version information via `scripts/gen_version.sh`
-#
-# Notes:
-#   - Intended for developer use when preparing commits or publishing updates
-#   - Ensures documentation and version headers remain in sync
+#   ./scripts/dox
 #
 # Author: Jay Faries (warte67)
 # =============================================================================
 
-# Regenerate the documentation
-cd "$(dirname "$0")/../.."
-echo "Running Doxygen..."
-doxygen docs/Doxyfile
+set -euo pipefail
 
-# Regenerate the version header
-scripts/gen_version.sh
+# Resolve repo root
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT_DIR"
+
+GEN_SCRIPT="scripts/gen_version.sh"
+DOXYFILE="docs/Doxyfile"
+VERSION_TRACK_FILE=".version_last_hash"
+
+# -----------------------------------------------------------------------------
+# Detect source changes
+# -----------------------------------------------------------------------------
+echo "🔍 Checking for source changes..."
+
+# Hash all relevant source directories (headers, src, Lua scripts)
+CURRENT_HASH=$(find src include examples/test/lua -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' -o -name '*.lua' \) \
+  -exec sha1sum {} + | sha1sum | awk '{print $1}')
+
+PREV_HASH=""
+[[ -f "$VERSION_TRACK_FILE" ]] && PREV_HASH=$(<"$VERSION_TRACK_FILE")
+
+# -----------------------------------------------------------------------------
+# Always rebuild documentation
+# -----------------------------------------------------------------------------
+if [[ -f "$DOXYFILE" ]]; then
+  echo "📘 Running Doxygen..."
+  doxygen "$DOXYFILE" >/dev/null 2>&1 || { echo "❌ Doxygen failed"; exit 1; }
+  echo "✅ Documentation updated."
+else
+  echo "⚠️ Doxygen config not found: $DOXYFILE"
+fi
+
+# -----------------------------------------------------------------------------
+# Conditionally regenerate version header
+# -----------------------------------------------------------------------------
+if [[ "$CURRENT_HASH" != "$PREV_HASH" ]]; then
+  echo "🆕 Source changes detected — regenerating version header..."
+  if [[ -x "$GEN_SCRIPT" ]]; then
+    "$GEN_SCRIPT"
+    echo "$CURRENT_HASH" > "$VERSION_TRACK_FILE"
+  else
+    echo "⚠️ Version generator not executable or missing: $GEN_SCRIPT"
+  fi
+else
+  echo "⏩ No source changes — skipping version bump."
+fi
+
+# -----------------------------------------------------------------------------
+# Optionally open docs
+# -----------------------------------------------------------------------------
+if [[ -d docs/html ]]; then
+  echo "🌐 Opening generated documentation..."
+  xdg-open docs/html/index.html >/dev/null 2>&1 &
+fi

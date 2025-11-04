@@ -312,29 +312,53 @@ _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++
 
 ---
 <a id="latest-update"></a>
-## 🗓️ November 4, 2025 — [Title Placeholder]
+## 🗓️ November 4, 2025 — Build & Toolchain Refinement
 
-_[Brief summary of today’s focus or achievements.]_
+_Resolved absolute path dependencies, refined build automation for portability, and finalized the documentation/version control workflow._
 
-### 🧩 [Subsystem or Feature Group]
-- [Key change or feature accomplished.]
-- [Supporting details, design notes, or rationale.]
+### 🧩 **Build System & Script Improvements**
+- Replaced hardcoded `/home/jay/...` paths with dynamic workspace resolution using portable `$(dirname "${BASH_SOURCE[0]}")` logic.  
+- Updated `examples/test/compile` to:
+  - Dynamically locate the project root and install prefix.  
+  - Support clean builds via `./compile clean` (now performs a full rebuild).  
+  - Skip `make install` unless the core library was actually rebuilt.  
+- Confirmed incremental builds behave correctly — no redundant re-installs when no source changes are detected.  
+- Verified all paths remain valid under both `bash` and `zsh` on Linux systems.
 
-### 🌟 **Summary:**
-_[Short summary of results and next direction.]_
+### 🧠 **Configuration (Lua) Updates**
+- Reworked `examples/test/lua/config.lua` to use **relative asset paths** dynamically derived from the script location.  
+- Added fallback logic for environments where the Lua `debug` library is not available.  
+- Confirmed configuration portability across Linux, Windows, and macOS test environments.  
+- Strengthened asset registration consistency and callback bindings to ensure all resources resolve under relative paths.
 
-**🚧 ToDo Today**
-- ☐ [Task 1]
-- ☐ [Task 2]
+### 📘 **Documentation & Version Workflow**
+- Removed automatic version generation from the compile process for deterministic builds.  
+- Integrated `scripts/gen_version.sh` into a new **`dox` pipeline**, which:
+  - Rebuilds Doxygen documentation from `docs/Doxyfile`.  
+  - Conditionally regenerates the version header only when source files change.  
+  - Optionally opens the generated HTML documentation for live preview.  
+- This establishes a clean separation between **build** and **publish** stages — providing consistent version control and effortless preview before commit or push.
 
+### 📜 **Lua Integration**
+- Verified callback linkage between Lua `config.lua` and test listener modules.  
+- Ensured the event-driven Lua callbacks (`on_update`, `on_render`, etc.) initialize cleanly under the current `Core` bridge.  
+- Confirmed that global and per-core call semantics (e.g., `Core:getStageHandle()` vs `core:getStageHandle()`) remain valid after the latest bindings refactor.
 
-#### end-of-day
+### 🌟 **Summary**
+SDOM’s foundational infrastructure is now **portable, deterministic, and self-consistent** across scripts and build systems.  
+The refined `dox` pipeline provides a stable publish-preview path, aligning documentation, versioning, and code without build-side interference.  
 
-[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+**Focus remains on completing core infrastructure before introducing new GPU-chain abstractions.**
 
 ---
 
-## 🚧 Next Steps / To-Do
+-**🚧 ToDo Today**
+  - ✅ Review unit test structure for residual path dependencies.  
+  - ✅ Verify that `config.lua` loads and registers callbacks correctly on all platforms.  
+  - ☐ Add comments and Doxygen tags for recently modified scripts (`compile`, `dox`, `gen_version.sh`).  
+- ✅ **Absolute Path Problems**
+  - ✅ config.lua
+  - ✅ examples/test/compile
 - ☐ 🔧 **Add output suppression flag**  
   - ☐ Introduce `quiet` or `minimal` mode for UnitTest reports  
   - ☐ Display detailed logs only when failures occur  
@@ -342,8 +366,16 @@ _[Short summary of results and next direction.]_
 - ☐ **Finalize `EventType_UnitTests.lua` to complete Lua-level coverage.**
   - ☐ Add test framework to ensure Lua-level event dispatch is correct.
 - ☐ **Implement new EditBox / IME input system**  
-  - ☐ Implement clipboard and text input events *(future `EditBox` support)*
 
+#### end-of-day
+
+
+[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+
+---
+
+## 🚧 Next Steps / To-Do
+- ☐ 
 
 
 ### 🧪 Memory Validation

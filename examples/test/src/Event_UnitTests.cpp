@@ -667,8 +667,8 @@ namespace SDOM
                 e.button.button = SDL_BUTTON_LEFT;
                 e.button.x = b->getX() + 5; e.button.y = b->getY() + 5;
                 em.Queue_SDL_Event(e);
-                // Ensure the engine dispatches the queued synthetic event now
-                /* main loop will dispatch */
+                // fake error to test the error reporting system
+                // errors.push_back("MouseButtonDown: event dispatched.");
             }},
             {"MouseButtonUp", [&](DisplayHandle b){
                 SDL_Event e{}; e.type = SDL_EVENT_MOUSE_BUTTON_UP;

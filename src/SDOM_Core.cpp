@@ -1974,11 +1974,7 @@ namespace SDOM
                 lua["Core"] = coreTable;
             }
         } catch(...) {}
-
-            
-
         // --- Register Event types and EventType table (best-effort) --- //
-        
         try {
             Event::registerLua(lua);
             sol::table etbl = lua.create_table();
@@ -2137,6 +2133,8 @@ namespace SDOM
         SDOM::core_bind_return_bool("getPreserveAspectRatio", [](){ return Core::getInstance().getPreserveAspectRatio(); }, objHandleType, coreTable, lua);
         SDOM::core_bind_return_bool("getAllowTextureResize", [](){ return Core::getInstance().getAllowTextureResize(); }, objHandleType, coreTable, lua);
         SDOM::core_bind_return_int("getRendererLogicalPresentation", [](){ return static_cast<int>(Core::getInstance().getRendererLogicalPresentation()); }, objHandleType, coreTable, lua);
+
+        // (window mode helpers were not previously bound here)
 
         // Setter bindings for pixel metrics and format/flags (accept numeric args)
         objHandleType["setPixelWidth"] = [](Core& /*core*/, float w) { Core::getInstance().setPixelWidth(w); return true; };

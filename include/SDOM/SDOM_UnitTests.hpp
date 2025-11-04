@@ -17,7 +17,8 @@ namespace SDOM
     class UnitTests
     {
     public:
-        inline static bool show_all_tests = true;
+        inline static bool show_all_tests = SDOM::VERBOSE_TEST_OUTPUT;
+        inline static bool quiet_mode     = SDOM::QUIET_TEST_MODE;
 
         struct TestCase {
             std::string obj_name;
@@ -48,8 +49,7 @@ namespace SDOM
         // new member functions
         void update();          // Called once per frame
         bool all_done() const;  // All tests have completed
-
-
+        static void print_summary(int passed_count, int failed_count, int not_implemented_count, int total_count);
 
         // Deprecated static methods (to be removed)
         template<typename Func>        
@@ -99,7 +99,6 @@ namespace SDOM
         std::vector<TestCase> _tests;
 
         std::string objName_; // temporary storage for object name during test runs
-
 
         // --- Lua Registration --- //
         void registerLua();

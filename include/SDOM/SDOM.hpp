@@ -87,6 +87,84 @@ constexpr int ORPHAN_GRACE_PERIOD = 5000; // default grace period for orphaned o
  */
 namespace SDOM 
 {
+
+    // ======================================================================
+    // 🧩 Global SDOM Configuration Flags
+    // ======================================================================
+
+    /**
+     * @section SDOM_TestOutputConfig
+     * @brief Global compile-time configuration flags controlling test verbosity.
+     *
+     * These constants define the verbosity level for both internal diagnostic output
+     * and the UnitTest reporting system. They can be overridden at compile time
+     * using either **CMake options** or direct **compiler definitions**.
+     *
+     * **Example (CMake):**
+     * ```
+     * cmake -DSDOM_VERBOSE_TEST_OUTPUT=ON -DSDOM_QUIET_TEST_MODE=OFF ..
+     * ```
+     *
+     * **Example (g++):**
+     * ```
+     * g++ -DSDOM_VERBOSE_TEST_OUTPUT=true -DSDOM_QUIET_TEST_MODE=false ...
+     * ```
+     *
+     * ---
+     * ⚙️ **Behavior Matrix**
+     *
+     * | Mode        | VERBOSE_TEST_OUTPUT | QUIET_TEST_MODE | Description |
+     * |--------------|--------------------|-----------------|--------------|
+     * | **Verbose** *(default)* | `true`  | `false` | Displays all modules and individual test results, including passes, with full color and detail. |
+     * | **Compact**              | `false` | `false` | Displays only per-module summaries and failing results — minimal console noise. |
+     * | **Quiet**                | any     | `true`  | Suppresses all output unless a test fails; in that case, the entire failing module’s test tree and its errors are printed. |
+     *
+     * ---
+     * 🔧 **Notes**
+     * - `QUIET_TEST_MODE` always takes precedence — if enabled, it overrides
+     *   `VERBOSE_TEST_OUTPUT`.
+     * - Designed for build servers, CI systems, or silent regression runs where
+     *   concise output is preferred.
+     * - These flags do **not** affect SDL, Lua, or other runtime logging systems.
+     */
+
+    // ----------------------------------------------------------------------
+    // Verbose Output Control
+    // ----------------------------------------------------------------------
+    #ifndef SDOM_VERBOSE_TEST_OUTPUT
+        /**
+         * @brief Enables detailed console output for all tests.
+         * @details
+         * When `true`, every test — including passing ones — is displayed
+         * with its object name, test title, and result indicator.
+         */
+        inline constexpr bool VERBOSE_TEST_OUTPUT = true;
+    #else
+        inline constexpr bool VERBOSE_TEST_OUTPUT = SDOM_VERBOSE_TEST_OUTPUT;
+    #endif
+
+    // ----------------------------------------------------------------------
+    // Quiet Mode Control (overrides Verbose)
+    // ----------------------------------------------------------------------
+    #ifndef SDOM_QUIET_TEST_MODE
+        /**
+         * @brief Suppresses console output for passing tests and modules.
+         * @details
+         * When `true`, no test output is shown unless one or more sub-tests fail.
+         * In that case, the entire failing module’s test tree and associated
+         * error messages are printed.
+         *
+         * This flag takes precedence over `VERBOSE_TEST_OUTPUT`.
+         */
+        inline constexpr bool QUIET_TEST_MODE = false;
+    #else
+        inline constexpr bool QUIET_TEST_MODE = SDOM_QUIET_TEST_MODE;
+    #endif
+
+
+    // ======================================================================
+    // 🧩 Core Runtime Timing Defaults
+    // ======================================================================
     // --- Compile-time metering and throttling defaults --- //
     // Global default meter interval (milliseconds) for mergeable events.
     // Used unless an EventType overrides via its per-type policy.
