@@ -1,13 +1,28 @@
 var classSDOM_1_1EventType =
 [
+    [ "CoalesceKey", "classSDOM_1_1EventType.html#ac0e2fef622c15317b0221f64e6e82078", [
+      [ "Global", "classSDOM_1_1EventType.html#ac0e2fef622c15317b0221f64e6e82078a4cc6684df7b4a92b1dec6fce3264fac8", null ],
+      [ "ByTarget", "classSDOM_1_1EventType.html#ac0e2fef622c15317b0221f64e6e82078a2ab03340218d06dc2b2c23485ae92b7c", null ]
+    ] ],
+    [ "CoalesceStrategy", "classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30", [
+      [ "None", "classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30a6adf97f83acf6453d4a6a4b1070f3754", null ],
+      [ "Last", "classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30ad55b30607c2a9a2616347d6edb789f6b", null ],
+      [ "Sum", "classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30aa0ec87054b5e5b7847d0d8780a01a3d5", null ],
+      [ "Count", "classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30ae93f994f01c537c4e2f7d8528c3eb5e9", null ]
+    ] ],
     [ "EventType", "classSDOM_1_1EventType.html#ace3a9596f6806b55dcfb477f8da686ec", null ],
     [ "EventType", "classSDOM_1_1EventType.html#a647ab7d38f981dca7b5b00d818e2412c", null ],
     [ "getBubbles", "classSDOM_1_1EventType.html#a6f8fce538c053237a27794fc17397962", null ],
     [ "getCaptures", "classSDOM_1_1EventType.html#a0033c7a652b3b52c13288ab4726ee001", null ],
+    [ "getCoalesceKey", "classSDOM_1_1EventType.html#abfa82ca44d79ed876356f57babbc43ae", null ],
+    [ "getCoalesceStrategy", "classSDOM_1_1EventType.html#a1f179517b1f2a43e4d4fa744f71319c6", null ],
     [ "getGlobal", "classSDOM_1_1EventType.html#af86b05a98a7c5e0afbe21ebe9a3028b3", null ],
+    [ "getMeterIntervalMs", "classSDOM_1_1EventType.html#a07edd9b09e2cc6a3e65fc7f1a241e005", null ],
     [ "getName", "classSDOM_1_1EventType.html#ac0940004432968a73b68ace3f9f1adbd", null ],
     [ "getRegistry", "classSDOM_1_1EventType.html#a3fb5ef0e30ed0259a5c37e0f457ab5e1", null ],
     [ "getTargetOnly", "classSDOM_1_1EventType.html#ac6c0d13819270fe8e6e8246a3b6bc82f", null ],
+    [ "isCritical", "classSDOM_1_1EventType.html#a2a4e69cc676abbb4761b921f4f90afe7", null ],
+    [ "isMeterEnabled", "classSDOM_1_1EventType.html#aef172d9651c8badba07293f608fc964d", null ],
     [ "isRegistered", "classSDOM_1_1EventType.html#a3e88fac9969ef7789937f262f4184041", null ],
     [ "operator!=", "classSDOM_1_1EventType.html#a8791ec9809822baecfdf0605c8e8c0cd", null ],
     [ "operator<", "classSDOM_1_1EventType.html#a0f2b0a9ef81f49a1c0bac0b9c8a443a8", null ],
@@ -16,7 +31,12 @@ var classSDOM_1_1EventType =
     [ "registerLua", "classSDOM_1_1EventType.html#af935779818a609d71a1a9508ffdaa36a", null ],
     [ "setBubbles", "classSDOM_1_1EventType.html#a49d1a8bc7ae29dded840e30b679b0cf2", null ],
     [ "setCaptures", "classSDOM_1_1EventType.html#a5f5123139834450372826094c09718c3", null ],
+    [ "setCoalesceKey", "classSDOM_1_1EventType.html#a5e4fab25a33b3e63d8660aa2224c89cb", null ],
+    [ "setCoalesceStrategy", "classSDOM_1_1EventType.html#ae6c3a511566f0736b4c118cb9d2dbfc2", null ],
+    [ "setCritical", "classSDOM_1_1EventType.html#a19e286574103b2366dfc72efb2eba267", null ],
     [ "setGlobal", "classSDOM_1_1EventType.html#a39c62a721bc796a7c25b6a5614f9f862", null ],
+    [ "setMeterEnabled", "classSDOM_1_1EventType.html#af099eb88214c5d48f3bfc673c0b39d3c", null ],
+    [ "setMeterIntervalMs", "classSDOM_1_1EventType.html#a957bc152cd64968d6bbcd541251bdb95", null ],
     [ "setTargetOnly", "classSDOM_1_1EventType.html#ad82e17de66b8914e694f6fc3e28677dd", null ],
     [ "Added", "classSDOM_1_1EventType.html#ac11d499ea41fc9355b64c18b8241966b", null ],
     [ "AddedToStage", "classSDOM_1_1EventType.html#a4ef2c364108bbdcafb94042ea371272f", null ],

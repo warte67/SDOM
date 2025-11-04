@@ -9,6 +9,7 @@ var classSDOM_1_1Factory =
     [ "addToOrphanList", "classSDOM_1_1Factory.html#aa05605809be613967645ad3f21cd2af3", null ],
     [ "attachCreatedObjectToParentFromConfig", "classSDOM_1_1Factory.html#ad389edbdbb5e250c729afd7ae02f941b", null ],
     [ "attachFutureChildren", "classSDOM_1_1Factory.html#aaa0091f03334a615d7006ec8f2f884a4", null ],
+    [ "begin_frame_metrics", "classSDOM_1_1Factory.html#a827d1a22113697741453ca14393c39fb", null ],
     [ "clear", "classSDOM_1_1Factory.html#a138ad45a4d42cfa8491a694e0fdd6ee0", null ],
     [ "collectGarbage", "classSDOM_1_1Factory.html#abf7305e40b195bca458dee684ab42866", null ],
     [ "countOrphanedDisplayObjects", "classSDOM_1_1Factory.html#a7da58689c94d5bddd7b318eb77ff7a5b", null ],

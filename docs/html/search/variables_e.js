@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['padding_5fhoriz_0',['padding_horiz',['../structSDOM_1_1Label_1_1InitStruct.html#aba8f06bfbe1f57abff690cd1d33ad243',1,'SDOM::Label::InitStruct::padding_horiz'],['../structSDOM_1_1FontStyle.html#a2d52282949580fde9701a2c300423ed6',1,'SDOM::FontStyle::padding_horiz']]],
+  ['padding_5fhoriz_0',['padding_horiz',['../structSDOM_1_1FontStyle.html#a2d52282949580fde9701a2c300423ed6',1,'SDOM::FontStyle::padding_horiz'],['../structSDOM_1_1Label_1_1InitStruct.html#aba8f06bfbe1f57abff690cd1d33ad243',1,'SDOM::Label::InitStruct::padding_horiz']]],
   ['padding_5fvert_1',['padding_vert',['../structSDOM_1_1FontStyle.html#a4c7117e18052b72d2650bb79cb8f2d1f',1,'SDOM::FontStyle::padding_vert'],['../structSDOM_1_1Label_1_1InitStruct.html#a0b5b2ef039957bc3d8e38187add77af9',1,'SDOM::Label::InitStruct::padding_vert']]],
   ['page_5fsize_2',['page_size',['../structSDOM_1_1ScrollBar_1_1InitStruct.html#aeb15851ce78d0eccfab25834efedddff',1,'SDOM::ScrollBar::InitStruct']]],
   ['page_5fsize_5f_3',['page_size_',['../classSDOM_1_1ScrollBar.html#a08b017c1f2ba528142764eaa7dceb164',1,'SDOM::ScrollBar']]],
