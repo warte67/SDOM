@@ -119,12 +119,12 @@ namespace SDOM
         // 🔄 Window / Focus -----------------------------------------------------------
         static EventType FocusGained;       // Do not use yet. Only applies to the not yet implemented Window objects.
         static EventType FocusLost;         // Do not use yet. Only applies to the not yet implemented Window objects.
-        static EventType Resize;            // 🧩🧠 Event_test{5}, EventType_test{5}
-        static EventType Move;              // 🧩🧠 Event_test{5}, EventType_test{5}
-        static EventType Show;              // 🧩🧠 Event_test{5}, EventType_test{5}
-        static EventType Hide;              // 🧩🧠 Event_test{5}, EventType_test{5}
-        static EventType EnterFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5}
-        static EventType LeaveFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5}
+        static EventType Resize;            // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
+        static EventType Move;              // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
+        static EventType Show;              // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
+        static EventType Hide;              // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
+        static EventType EnterFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
+        static EventType LeaveFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
 
         // 🔄 UI / State ---------------------------------------------------------------
         static EventType ValueChanged;      // 🧩 Event_test{6}

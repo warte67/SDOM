@@ -1083,6 +1083,42 @@ namespace SDOM
 		// SDL_PushEvent(&ev);
 		c->getEventManager().Queue_SDL_Event(ev);
 	} // END: pushKeyboardEvent_lua()
+
+	// --- Window position helpers for Lua tests --- //
+	void setWindowPosition_any_lua(const sol::object& args)
+	{
+		Core* c = &Core::getInstance();
+		SDL_Window* win = c->getWindow();
+		if (!win) return;
+		int x = 0, y = 0;
+		if (args.valid()) {
+			try {
+				if (args.is<sol::table>()) {
+					sol::table t = args.as<sol::table>();
+					x = t.get_or("x", 0);
+					y = t.get_or("y", 0);
+				} else if (args.is<int>()) {
+					x = args.as<int>();
+				}
+			} catch(...) {}
+		}
+		// If not a table or single int, do nothing
+		SDL_SetWindowPosition(win, x, y);
+		SDL_SyncWindow(win);
+	}
+
+	sol::table getWindowPosition_lua(sol::this_state ts)
+	{
+		Core* c = &Core::getInstance();
+		sol::state_view lua(ts);
+		sol::table t = lua.create_table();
+		SDL_Window* win = c->getWindow();
+		if (!win) { t["x"] = 0; t["y"] = 0; return t; }
+		int x = 0, y = 0;
+		SDL_GetWindowPosition(win, &x, &y);
+		t["x"] = x; t["y"] = y;
+		return t;
+	}
 	
 	
 	// --- Orphan / Future Child Management --- //

@@ -43,11 +43,124 @@ local S = {
     t3 = { init=false, phase="init", frames=0, stage=nil, down=false, up=false, move=false, wheel=false, start_frame=0 },
     t4 = { init=false, phase="init", frames=0, stage=nil, click=false, dclick=false, start_frame=0 },
     t5 = { init=false, phase="init", frames=0, stage=nil, enter=false, leave=false, start_frame=0 },
+    t6 = { init=false, phase="init", frames=0, stage=nil, hits=nil, start_frame=0, orig=nil, was_fullscreen=false, move_phase="none", move_wait=0 },
 }
 
 -- EventType_test0: Placeholder template (immediate success)
 function M.EventType_test0()
     return true -- completed
+end
+
+-- EventType_test6: Window environment roundtrip (Enter/LeaveFullscreen, Show/Hide, Resize, Move)
+function M.EventType_test6()
+    local st = S.t6
+    if not st.init then
+        st.init = true
+        st.phase = "setup"
+        st.frames = 0
+        st.move_phase = "none"
+    end
+
+    if st.phase == "setup" then
+        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test6: mainStage missing"); return true end
+        st.hits = { enter=false, leave=false, show=false, hide=false, resize=false, move=false }
+        st.le = function(_) st.hits.enter = true end
+        st.lv = function(_) st.hits.leave = true end
+        st.ls = function(_) st.hits.show  = true end
+        st.lh = function(_) st.hits.hide  = true end
+        st.lr = function(_) st.hits.resize= true end
+        st.lm = function(_) st.hits.move  = true end
+        st.stage:addEventListener({ type = EventType.EnterFullscreen, listener = st.le })
+        st.stage:addEventListener({ type = EventType.LeaveFullscreen, listener = st.lv })
+        st.stage:addEventListener({ type = EventType.Show,            listener = st.ls })
+        st.stage:addEventListener({ type = EventType.Hide,            listener = st.lh })
+        st.stage:addEventListener({ type = EventType.Resize,          listener = st.lr })
+        st.stage:addEventListener({ type = EventType.Move,            listener = st.lm })
+        if Core and Core.getFrameCount then local fc = Core:getFrameCount(); if type(fc)=="number" then st.start_frame = fc end end
+        -- capture original state
+        st.was_fullscreen = Core.isFullscreen and Core:isFullscreen() or false
+        local pos = Core.getWindowPosition and Core:getWindowPosition() or {x=0,y=0}
+        st.orig = { x = pos.x or 0, y = pos.y or 0, w = Core:getWindowWidth(), h = Core:getWindowHeight() }
+        -- ensure windowed baseline
+        if Core.setWindowed then Core:setWindowed(true) end
+        st.phase = "enter_full"
+        return false
+    end
+
+    if st.phase == "enter_full" then
+        -- request fullscreen
+        if Core.setFullscreen then Core:setFullscreen(true) end
+        st.phase = "check_enter"
+        return false
+    end
+
+    if st.phase == "check_enter" then
+        if not st.hits.enter then push("EventType_test6: Missing EnterFullscreen after setFullscreen(true)") end
+        if not (st.hits.show or st.hits.resize) then push("EventType_test6: Expected Show or Resize after entering fullscreen") end
+        st.hits = { enter=false, leave=false, show=false, hide=false, resize=false, move=false }
+        if Core.setWindowed then Core:setWindowed(true) end
+        st.phase = "check_leave"
+        return false
+    end
+
+    if st.phase == "check_leave" then
+        if not st.hits.leave then push("EventType_test6: Missing LeaveFullscreen after setWindowed(true)") end
+        if not (st.hits.hide or st.hits.resize) then push("EventType_test6: Expected Hide or Resize after leaving fullscreen") end
+        st.hits = { enter=false, leave=false, show=false, hide=false, resize=false, move=false }
+        st.move_phase = "settle"
+        st.move_wait = 0
+        st.phase = "move"
+        return false
+    end
+
+    if st.phase == "move" then
+        if st.move_phase == "settle" then
+            st.move_wait = st.move_wait + 1
+            if st.move_wait >= 12 then st.move_phase = "start" end
+            return false
+        elseif st.move_phase == "start" then
+            local pos = Core.getWindowPosition and Core:getWindowPosition() or {x=0,y=0}
+            Core.setWindowPosition(Core, { x = (pos.x or 0) + 24, y = (pos.y or 0) + 24 })
+            st.move_phase = "wait"
+            st.move_wait = 0
+            return false
+        elseif st.move_phase == "wait" then
+            st.move_wait = st.move_wait + 1
+            if st.hits.move then
+                st.move_phase = "done"
+                st.phase = "cleanup"
+                return false
+            end
+            if st.move_wait > 250 then
+                push("EventType_test6: Move event not detected (compositor-controlled)")
+                st.move_phase = "done"
+                st.phase = "cleanup"
+                return false
+            end
+            return false
+        end
+    end
+
+    if st.phase == "cleanup" then
+        if is_valid(st.stage) then
+            st.stage:removeEventListener({ type = EventType.EnterFullscreen, listener = st.le })
+            st.stage:removeEventListener({ type = EventType.LeaveFullscreen, listener = st.lv })
+            st.stage:removeEventListener({ type = EventType.Show,            listener = st.ls })
+            st.stage:removeEventListener({ type = EventType.Hide,            listener = st.lh })
+            st.stage:removeEventListener({ type = EventType.Resize,          listener = st.lr })
+            st.stage:removeEventListener({ type = EventType.Move,            listener = st.lm })
+        end
+        if Core and st.orig then
+            if Core.setWindowPosition then Core:setWindowPosition({ x = st.orig.x, y = st.orig.y }) end
+            if Core.setWindowWidth then Core:setWindowWidth(st.orig.w) end
+            if Core.setWindowHeight then Core:setWindowHeight(st.orig.h) end
+            if st.was_fullscreen and Core.setFullscreen then Core:setFullscreen(true) end
+        end
+        st.phase = "done"
+        return true
+    end
+
+    return true
 end
 
 -- EventType_test4: MouseClick and MouseDoubleClick (uses optional 'clicks' in push)
@@ -358,7 +471,8 @@ function M.step()
     local ok3 = M.EventType_test3()
     local ok4 = M.EventType_test4()
     local ok5 = M.EventType_test5()
-    return ok0 and ok1 and ok2 and ok3 and ok4 and ok5
+    local ok6 = M.EventType_test6()
+    return ok0 and ok1 and ok2 and ok3 and ok4 and ok5 and ok6
 end
 
 -- One-shot (non re-entrant) sanity checks used by the C++ Lua test harness

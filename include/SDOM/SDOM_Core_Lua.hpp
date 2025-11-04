@@ -193,6 +193,9 @@ namespace SDOM
     void pumpEventsOnce_lua();                                              // ✅ Lua Test 8
     void pushMouseEvent_lua(const sol::object& args);                       // ✅ Lua Test 8
     void pushKeyboardEvent_lua(const sol::object& args);                    // ✅ Lua Test 8
+    // Window helpers for tests
+    void setWindowPosition_any_lua(const sol::object& args);
+    sol::table getWindowPosition_lua(sol::this_state ts);
 
     // --- ✅ Orphan / Future Child Management --- //
     void destroyDisplayObject_lua(const std::string& name);                 // ✅ Lua Test 10, 11

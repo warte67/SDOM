@@ -2147,6 +2147,12 @@ namespace SDOM
         SDOM::core_bind_return_bool("getAllowTextureResize", [](){ return Core::getInstance().getAllowTextureResize(); }, objHandleType, coreTable, lua);
         SDOM::core_bind_return_int("getRendererLogicalPresentation", [](){ return static_cast<int>(Core::getInstance().getRendererLogicalPresentation()); }, objHandleType, coreTable, lua);
 
+        // Window mode helpers (reintroduced for Lua-driven window tests)
+        SDOM::core_bind_return_bool("isFullscreen", [](){ return Core::getInstance().isFullscreen(); }, objHandleType, coreTable, lua);
+        SDOM::core_bind_return_bool("isWindowed", [](){ return Core::getInstance().isWindowed(); }, objHandleType, coreTable, lua);
+        SDOM::core_bind_bool_arg("setFullscreen", [](bool v){ Core::getInstance().setFullscreen(v); }, objHandleType, coreTable, lua);
+        SDOM::core_bind_bool_arg("setWindowed", [](bool v){ Core::getInstance().setWindowed(v); }, objHandleType, coreTable, lua);
+
         // (window mode helpers were not previously bound here)
 
         // Setter bindings for pixel metrics and format/flags (accept numeric args)
@@ -2239,6 +2245,10 @@ namespace SDOM
         SDOM::core_bind_noarg("pumpEventsOnce", pumpEventsOnce_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_object_arg("pushMouseEvent", pushMouseEvent_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_object_arg("pushKeyboardEvent", pushKeyboardEvent_lua, objHandleType, coreTable, lua);
+        SDOM::core_bind_object_arg("setWindowPosition", setWindowPosition_any_lua, objHandleType, coreTable, lua);
+        coreTable.set_function("getWindowPosition", [](sol::this_state ts, sol::object /*self*/) {
+            return getWindowPosition_lua(ts);
+        });
 
 	    // --- Orphan / Future Child Management --- //
         // Accept handle/name/table for destroyDisplayObject for consistency
