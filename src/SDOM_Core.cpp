@@ -861,8 +861,12 @@ namespace SDOM
         // Lambda for recursive render handling using std::function
         std::function<void(IDisplayObject&)> handleRender;
         SDL_Texture* texture = texture_;
-        handleRender = [this, &handleRender, renderer, texture](IDisplayObject& node) 
+        IDisplayObject* activeRoot = dynamic_cast<IDisplayObject*>(rootNode_.get());
+        handleRender = [this, &handleRender, renderer, texture, activeRoot](IDisplayObject& node) 
         {
+            // Skip nested Stage subtrees when a different Stage is active.
+            if (dynamic_cast<Stage*>(&node) && (&node != activeRoot))
+                return;
             // render the node
             getFactory().start_render_time(node.getName());
             node.onRender();
@@ -889,6 +893,9 @@ namespace SDOM
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
                 if (childObj) 
                 {
+                    // Do not traverse into other Stage subtrees
+                    if (dynamic_cast<Stage*>(childObj) && (childObj != activeRoot))
+                        continue;
                     // ensure the render target is set correctly before rendering
                     if (texture)
                         SDL_SetRenderTarget(renderer, texture);
@@ -977,8 +984,12 @@ namespace SDOM
     {
         // Lambda for recursive update handling using std::function
         std::function<void(IDisplayObject&)> handleUpdate;
-        handleUpdate = [this, &handleUpdate, fElapsedTime](IDisplayObject& node) 
+        IDisplayObject* activeRootU = dynamic_cast<IDisplayObject*>(rootNode_.get());
+        handleUpdate = [this, &handleUpdate, fElapsedTime, activeRootU](IDisplayObject& node) 
         {
+            // Skip nested Stage subtrees when a different Stage is active.
+            if (dynamic_cast<Stage*>(&node) && (&node != activeRootU))
+                return;
 
             // Dispatch to event listeners first so they can stopPropagation if needed
             if (node.hasEventListener(EventType::OnUpdate, false))
@@ -1001,6 +1012,9 @@ namespace SDOM
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
                 if (childObj) 
                 {
+                    // Do not traverse into other Stage subtrees
+                    if (dynamic_cast<Stage*>(childObj) && (childObj != activeRootU))
+                        continue;
                     handleUpdate(*childObj);                    
                 }
             }
@@ -1010,11 +1024,31 @@ namespace SDOM
         {   
             static int s_iteration_frame = 0;
             static bool s_tests_complete = false;
-            static int s_stop_on_frame = -1;
             static int s_idle_frames = 0;
             constexpr int FRAMES_FOR_IDLE = 250;
 
             UnitTests& ut = UnitTests::getInstance();
+
+
+            std::function<bool(IDisplayObject*)> is_any_dirty;
+            is_any_dirty = [&](IDisplayObject* node) -> bool
+            {
+                if (!node)
+                    return false;
+
+                if (node->isDirty())
+                    return true;
+
+                for (const auto& childHandle : node->getChildren())
+                {
+                    auto* child = dynamic_cast<IDisplayObject*>(childHandle.get());
+                    if (child && is_any_dirty(child))
+                        return true;
+                }
+
+                return false;
+            };
+
 
             // FRAME 0 — setup
             if (s_iteration_frame == 0)
@@ -1036,42 +1070,24 @@ namespace SDOM
                 if (!s_tests_complete && ut.all_done())
                 {
                     s_tests_complete = true;
-                    // s_stop_on_frame = s_iteration_frame + FRAMES_FOR_IDLE; // give some frames for perf
                     s_idle_frames = 0; // start counting idle frames
                     // INFO("✅ All tests complete — entering performance settling period.");
                 }
             }
 
-            // // Increment frame counter only if we’re still in test or settle period
-            // if (!s_tests_complete || s_iteration_frame < s_stop_on_frame)
-            // {
-            //     ++s_iteration_frame;
-            //     ut.set_frame_counter(s_iteration_frame);
-            //     // INFO("Core::run: s_iteration_frame=" + std::to_string(s_iteration_frame) +
-            //     //     ", s_tests_complete=" + std::to_string(s_tests_complete) +
-            //     //     ", s_stop_on_frame=" + std::to_string(s_stop_on_frame));
-            // }
-
-            // // Once performance settle period ends, finalize and optionally stop
-            // if (s_tests_complete && s_stop_on_frame >= 0 && s_iteration_frame >= s_stop_on_frame)
-            // {
-            //     s_stop_on_frame = -1;
-
-            //     if (stopAfterUnitTests_)
-            //     {
-            //         getFactory().report_performance_stats();
-            //         bIsRunning_ = false;
-            //         // INFO("🛑 Stopping after unit tests (stopAfterUnitTests_ = true)");
-            //     }
-            // }
-
-            // If tests are complete, count frames of quiescence
+            // If tests are complete, wait for FRAMES_FOR_IDLE clean frames
             if (s_tests_complete)
             {
-                ++s_idle_frames;
+                IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
+                bool dirtyFound = is_any_dirty(rootObj);
+
+                if (!dirtyFound)
+                    ++s_idle_frames;
+                else
+                    s_idle_frames = 0;  // reset idle counter if anyone got messy again
+
                 if (s_idle_frames >= FRAMES_FOR_IDLE)
                 {
-                    // all quiet — safe to report
                     if (stopAfterUnitTests_)
                     {
                         getFactory().report_performance_stats();
@@ -1085,11 +1101,6 @@ namespace SDOM
                 ++s_iteration_frame;
                 ut.set_frame_counter(s_iteration_frame);
             }
-
-
-
-
-
         } // END: update unit tests
 
         // Update the Keyfocus Gray
@@ -1106,6 +1117,12 @@ namespace SDOM
             keyfocus_gray_ = 64.0f;
             delta = 1.0f;
         }        
+
+        // Clear last-frame metrics at the start of a new frame's object update
+        // so that perf tables reflect work done during this frame. This is
+        // placed after the unit-test reporting block so the "stop-after-tests"
+        // perf dump still shows the previous frame's values.
+        factory_->begin_frame_metrics();
 
         // Call the users registered update function if available
         if (fnOnUpdate)

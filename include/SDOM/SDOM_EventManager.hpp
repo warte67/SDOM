@@ -111,6 +111,12 @@ namespace SDOM
         // Debug: print the contents of the event queue
         void debugPrintEventQueue();
 
+        // Returns true if hover events (MouseEnter/MouseLeave) should be
+        // synthesized this frame. True when any listener exists for those
+        // events, or when common default-handling types are present that rely
+        // on hover semantics (e.g., Button, IconButton, Sliders, ScrollBars).
+        bool should_emit_hover_events() const;
+
     private:
 
         // ========================================================================

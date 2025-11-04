@@ -1852,13 +1852,15 @@ if (LABEL_DEBUG)
             ERROR("Label::rebuildTexture_() -- Failed to set render draw blend mode: " + std::string(SDL_GetError()));
             return false;
         }
+        // Label cached textures blit 1:1; ensure nearest sampling.
+        SDL_SetTextureScaleMode(cachedTexture_, SDL_SCALEMODE_NEAREST);
 
         // Update current texture info
         current_pixel_format = fmt;
         current_width = width;
         current_height = height;
         cached_renderer_ = getRenderer();
-        setDirty(true);
+        // setDirty(true);
         return true;
 
     } // END Label::rebuildTexture_() const 

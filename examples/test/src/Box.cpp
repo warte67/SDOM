@@ -183,11 +183,11 @@ void Box::onEvent(const SDOM::Event& event)
     static SDOM::DisplayHandle draggedObject = SDOM::DisplayHandle();
     static SDOM::DisplayHandle original_parent = getParent();
 
-    // Check which mouse button is used
+    // Check which mouse button is used (SDL3 returns button index: SDL_BUTTON_LEFT/RIGHT)
     Uint8 button = event.getButton();
 
-    // Handle Drag/Dragging/Drop for left mouse button   
-    if (button & SDL_BUTTON_LMASK)  
+    // Handle Drag/Dragging/Drop for left mouse button
+    if (button == SDL_BUTTON_LEFT)
     {
         if (event.getType() == SDOM::EventType::Drag) 
         {
@@ -293,7 +293,7 @@ void Box::onEvent(const SDOM::Event& event)
     } // end if SDL_BUTTON_LEFT
 
     // Handle resizing for right mouse button
-    else if (button & SDL_BUTTON_RMASK)
+    else if (button == SDL_BUTTON_RIGHT)
     {
         if (event.getType() == SDOM::EventType::Drag) 
         {

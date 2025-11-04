@@ -167,6 +167,8 @@ namespace SDOM
         void report_update_stats(std::size_t topN = 15) const;
         void report_render_stats(std::size_t topN = 15) const;
         void reset_performance_stats();
+        // Clear last-frame deltas before measuring a new frame
+        void begin_frame_metrics();
 
         // Query the last measured deltas (in microseconds) for a given object
         float getLastUpdateDelta(const IDisplayObject* obj) const;

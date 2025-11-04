@@ -142,6 +142,19 @@ namespace SDOM
             labelObject_ = getFactory().create("Label", init);
             addChild(labelObject_);
 
+            // Labels embedded in buttons have a fixed layout defined by the
+            // button's box and anchors; disable auto-resize so the label does
+            // not continuously recompute layout and rebuild its cache when the
+            // parent toggles visual state (hover/press). This keeps the label
+            // texture stable and avoids per-frame rebuilds.
+            if (IDisplayObject* obj = labelObject_.get())
+            {
+                if (auto* lbl = dynamic_cast<Label*>(obj))
+                {
+                    lbl->setAutoResize(false);
+                }
+            }
+
             // INFO("Button::onInit() - Label init metrics for '" + init.name + "': resource='" + init.resourceName + "' fontSize=" + std::to_string(init.fontSize) + " fontWidth=" + std::to_string(init.fontWidth) + " fontHeight=" + std::to_string(init.fontHeight));
         }
 

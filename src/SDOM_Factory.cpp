@@ -1766,6 +1766,17 @@ namespace SDOM
         }
     }
 
+    void Factory::begin_frame_metrics()
+    {
+        // Reset per-object last-frame deltas so that the report reflects only
+        // objects that were actually updated/rendered during this frame.
+        for (auto& kv : perf_map)
+        {
+            kv.second.last_update_ns = std::chrono::nanoseconds{0};
+            kv.second.last_render_ns = std::chrono::nanoseconds{0};
+        }
+    }
+
     // Reset all performance metrics; used to clear warm-up frames before measuring
     void Factory::reset_performance_stats()
     {

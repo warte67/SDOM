@@ -589,6 +589,8 @@ namespace SDOM
             ERROR("IRangeControl::rebuildRangeTexture_: failed to set renderer blend mode: " + std::string(SDL_GetError()));
             return false;
         }
+        // Range controls render cached textures 1:1; keep scaling nearest.
+        SDL_SetTextureScaleMode(cachedTexture_, SDL_SCALEMODE_NEAREST);
 
         current_pixel_format_ = fmt;
         current_width_ = width;

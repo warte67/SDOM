@@ -227,12 +227,9 @@ namespace SDOM
         SDL_Renderer* renderer = getRenderer();
         if (!renderer) { ERROR("Slider::onRender(): renderer is null"); return; }
 
-        // Invalidate cache when renderer changes or texture becomes invalid
-        if (cachedTexture_)
-        {
-            if (SDOM::drop_invalid_cached_texture(cachedTexture_, renderer, cached_renderer_))
-                setDirty(true);
-        }
+        // Do not query texture validity every frame; onWindowResize() clears
+        // cachedTexture_, and we guard against renderer changes below when
+        // drawing the cached texture.
 
         // Rebuild cache if dirty, then draw into cached texture using local coordinates
         if (isDirty())

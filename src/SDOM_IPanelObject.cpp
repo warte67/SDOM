@@ -311,14 +311,8 @@ namespace SDOM
         SDL_Renderer* renderer = getRenderer();
         if (!renderer) { ERROR("IPanelObject::onRender: renderer is null"); return; }
 
-        // After device rebuilds, cached textures can become invalid even if the
-        // pointer is non-null. Validate against the renderer and mark dirty to
-        // force a rebuild before drawing if needed.
-        if (cachedTexture_)
-        {
-            if (SDOM::drop_invalid_cached_texture(cachedTexture_, renderer, cached_renderer_))
-                setDirty(true);
-        }
+        // Avoid per-frame texture validity queries; onWindowResize() already
+        // clears our cache, and we also guard below if the renderer changed.
         // If format/size changed since last build, force a rebuild.
         if (current_pixel_format_ != getCore().getPixelFormat() ||
             current_width_ != getWidth() || current_height_ != getHeight())
@@ -515,6 +509,8 @@ namespace SDOM
             ERROR("IPanelObject::rebuildPanelTexture_: failed to set texture blend mode: " + std::string(SDL_GetError()));
             return false;
         }
+        // Cached panel textures render 1:1; prefer nearest for predictable pixels.
+        SDL_SetTextureScaleMode(cachedTexture_, SDL_SCALEMODE_NEAREST);
         if (!SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND))
         {
             ERROR("IPanelObject::rebuildPanelTexture_: failed to set render blend mode: " + std::string(SDL_GetError()));

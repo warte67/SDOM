@@ -391,11 +391,8 @@ namespace SDOM
         if (!renderer) { ERROR("ScrollBar::onRender(): renderer is null"); return; }
 
         // Invalidate cache when renderer changes or texture becomes invalid
-        if (cachedTexture_)
-        {
-            if (SDOM::drop_invalid_cached_texture(cachedTexture_, renderer, cached_renderer_))
-                setDirty(true);
-        }
+        // Skip per-frame validity query; rely on onWindowResize() and the
+        // renderer-change guard when drawing to handle invalidation.
 
         if (isDirty())
         {
