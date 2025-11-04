@@ -1011,6 +1011,7 @@ namespace SDOM
             static int s_iteration_frame = 0;
             static bool s_tests_complete = false;
             static int s_stop_on_frame = -1;
+            static int s_idle_frames = 0;
             constexpr int FRAMES_FOR_IDLE = 250;
 
             UnitTests& ut = UnitTests::getInstance();
@@ -1035,33 +1036,60 @@ namespace SDOM
                 if (!s_tests_complete && ut.all_done())
                 {
                     s_tests_complete = true;
-                    s_stop_on_frame = s_iteration_frame + FRAMES_FOR_IDLE; // give some frames for perf
+                    // s_stop_on_frame = s_iteration_frame + FRAMES_FOR_IDLE; // give some frames for perf
+                    s_idle_frames = 0; // start counting idle frames
                     // INFO("✅ All tests complete — entering performance settling period.");
                 }
             }
 
-            // Increment frame counter only if we’re still in test or settle period
-            if (!s_tests_complete || s_iteration_frame < s_stop_on_frame)
-            {
-                ++s_iteration_frame;
-                ut.set_frame_counter(s_iteration_frame);
-                // INFO("Core::run: s_iteration_frame=" + std::to_string(s_iteration_frame) +
-                //     ", s_tests_complete=" + std::to_string(s_tests_complete) +
-                //     ", s_stop_on_frame=" + std::to_string(s_stop_on_frame));
-            }
+            // // Increment frame counter only if we’re still in test or settle period
+            // if (!s_tests_complete || s_iteration_frame < s_stop_on_frame)
+            // {
+            //     ++s_iteration_frame;
+            //     ut.set_frame_counter(s_iteration_frame);
+            //     // INFO("Core::run: s_iteration_frame=" + std::to_string(s_iteration_frame) +
+            //     //     ", s_tests_complete=" + std::to_string(s_tests_complete) +
+            //     //     ", s_stop_on_frame=" + std::to_string(s_stop_on_frame));
+            // }
 
-            // Once performance settle period ends, finalize and optionally stop
-            if (s_tests_complete && s_stop_on_frame >= 0 && s_iteration_frame >= s_stop_on_frame)
-            {
-                s_stop_on_frame = -1;
+            // // Once performance settle period ends, finalize and optionally stop
+            // if (s_tests_complete && s_stop_on_frame >= 0 && s_iteration_frame >= s_stop_on_frame)
+            // {
+            //     s_stop_on_frame = -1;
 
-                if (stopAfterUnitTests_)
+            //     if (stopAfterUnitTests_)
+            //     {
+            //         getFactory().report_performance_stats();
+            //         bIsRunning_ = false;
+            //         // INFO("🛑 Stopping after unit tests (stopAfterUnitTests_ = true)");
+            //     }
+            // }
+
+            // If tests are complete, count frames of quiescence
+            if (s_tests_complete)
+            {
+                ++s_idle_frames;
+                if (s_idle_frames >= FRAMES_FOR_IDLE)
                 {
-                    getFactory().report_performance_stats();
-                    bIsRunning_ = false;
-                    // INFO("🛑 Stopping after unit tests (stopAfterUnitTests_ = true)");
+                    // all quiet — safe to report
+                    if (stopAfterUnitTests_)
+                    {
+                        getFactory().report_performance_stats();
+                        bIsRunning_ = false;
+                    }
                 }
             }
+            else
+            {
+                // still running tests, increment global frame counter
+                ++s_iteration_frame;
+                ut.set_frame_counter(s_iteration_frame);
+            }
+
+
+
+
+
         } // END: update unit tests
 
         // Update the Keyfocus Gray
