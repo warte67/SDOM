@@ -1852,14 +1852,17 @@ namespace SDOM
 
 		SDL_Event ev;
 		std::memset(&ev, 0, sizeof(ev));
-		if (type == "up") {
-			ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
-			ev.button.windowID = winID;
-			ev.button.which = 0;
-			ev.button.button = button;
-			ev.button.clicks = 1;
-			ev.button.x = winX;
-			ev.button.y = winY;
+        if (type == "up") {
+            ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
+            ev.button.windowID = winID;
+            ev.button.which = 0;
+            ev.button.button = button;
+            // optional 'clicks' in args
+            int clicks = 1;
+            try { if (t["clicks"].valid()) clicks = t["clicks"].get<int>(); } catch(...) {}
+            ev.button.clicks = clicks;
+            ev.button.x = winX;
+            ev.button.y = winY;
 			ev.motion.windowID = winID;
 			ev.motion.which = 0;
 			ev.motion.x = winX;
@@ -1870,14 +1873,16 @@ namespace SDOM
 			ev.motion.which = 0;
 			ev.motion.x = winX;
 			ev.motion.y = winY;
-		} else {
-			ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
-			ev.button.windowID = winID;
-			ev.button.which = 0;
-			ev.button.button = button;
-			ev.button.clicks = 1;
-			ev.button.x = winX;
-			ev.button.y = winY;
+        } else {
+            ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+            ev.button.windowID = winID;
+            ev.button.which = 0;
+            ev.button.button = button;
+            int clicks = 1;
+            try { if (t["clicks"].valid()) clicks = t["clicks"].get<int>(); } catch(...) {}
+            ev.button.clicks = clicks;
+            ev.button.x = winX;
+            ev.button.y = winY;
 			ev.motion.windowID = winID;
 			ev.motion.which = 0;
 			ev.motion.x = winX;
@@ -1930,6 +1935,14 @@ namespace SDOM
     std::string Core::getVersionBranch() const { return version_->getBranch(); } 
     std::string Core::getVersionCompiler() const { return version_->getCompiler(); }
     std::string Core::getVersionPlatform() const { return version_->getPlatform(); }
+
+
+    int Core::getFrameCount() const 
+    { 
+        UnitTests& ut = UnitTests::getInstance();
+        return ut.get_frame_counter(); 
+    }
+
 
 
 
@@ -2219,6 +2232,8 @@ namespace SDOM
         SDOM::core_bind_string("setWindowTitle", setWindowTitle_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_return_float("getElapsedTime", getElapsedTime_lua, objHandleType, coreTable, lua);
         SDOM::core_bind_return_float("getDeltaTime", getElapsedTime_lua, objHandleType, coreTable, lua); // alias of getElapsedTime()
+        // Expose the current frame counter from UnitTests via Core wrapper
+        SDOM::core_bind_return_int("getFrameCount", [](){ return Core::getInstance().getFrameCount(); }, objHandleType, coreTable, lua);
 
 	    // --- Event helpers (exposed to Lua) --- //
         SDOM::core_bind_noarg("pumpEventsOnce", pumpEventsOnce_lua, objHandleType, coreTable, lua);

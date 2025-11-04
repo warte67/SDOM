@@ -968,18 +968,22 @@ namespace SDOM
 	// --- Event helpers exposed to Lua --- //
 	void pumpEventsOnce_lua() { Core::getInstance().pumpEventsOnce(); }
 
-	void pushMouseEvent_lua(const sol::object& args) 
-	{
-		Core* c = &Core::getInstance();
-		// Expect a table with { x=<stage-x>, y=<stage-y>, type="down"|"up", button=<int> }
-		if (!args.is<sol::table>()) return;
-		sol::table t = args.as<sol::table>();
-		if (!t["x"].valid() || !t["y"].valid()) return;
-		float sx = t["x"].get<float>();
-		float sy = t["y"].get<float>();
-		std::string type = "down";
-		if (t["type"].valid()) type = t["type"].get<std::string>();
-		// Normalize type aliases for convenience (case-insensitive)
+    void pushMouseEvent_lua(const sol::object& args) 
+    {
+        Core* c = &Core::getInstance();
+        // Expect a table with { x=<stage-x>, y=<stage-y>, type="down"|"up", button=<int> }
+        if (!args.is<sol::table>()) return;
+        sol::table t = args.as<sol::table>();
+        if (!t["x"].valid() || !t["y"].valid()) return;
+        float sx = t["x"].get<float>();
+        float sy = t["y"].get<float>();
+        std::string type = "down";
+        if (t["type"].valid()) type = t["type"].get<std::string>();
+        int clicks = 1; // optional for button events
+        if (t["clicks"].valid()) {
+            try { clicks = t["clicks"].get<int>(); } catch(...) {}
+        }
+        // Normalize type aliases for convenience (case-insensitive)
 		std::string tnorm;
 		tnorm.reserve(type.size());
 		for (char ch : type) tnorm.push_back(static_cast<char>(::tolower(static_cast<unsigned char>(ch))));
@@ -1001,19 +1005,19 @@ namespace SDOM
 
 		SDL_Event ev;
 		std::memset(&ev, 0, sizeof(ev));
-		if (isUp) {
-			ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
-			ev.button.windowID = winID;
-			ev.button.which = 0;
-			ev.button.button = button;
-			ev.button.clicks = 1;
-			ev.button.x = winX;
-			ev.button.y = winY;
-			ev.motion.windowID = winID;
-			ev.motion.which = 0;
-			ev.motion.x = winX;
-			ev.motion.y = winY;
-		} else if (isMotion) {
+        if (isUp) {
+            ev.type = SDL_EVENT_MOUSE_BUTTON_UP;
+            ev.button.windowID = winID;
+            ev.button.which = 0;
+            ev.button.button = button;
+            ev.button.clicks = clicks;
+            ev.button.x = winX;
+            ev.button.y = winY;
+            ev.motion.windowID = winID;
+            ev.motion.which = 0;
+            ev.motion.x = winX;
+            ev.motion.y = winY;
+        } else if (isMotion) {
 			ev.type = SDL_EVENT_MOUSE_MOTION;
 			ev.motion.windowID = winID;
 			ev.motion.which = 0;
@@ -1028,19 +1032,19 @@ namespace SDOM
 			ev.wheel.mouse_x = static_cast<int>(sx);
 			ev.wheel.mouse_y = static_cast<int>(sy);
 			ev.wheel.direction = SDL_MOUSEWHEEL_NORMAL;
-		} else if (isDown) {
-			ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
-			ev.button.windowID = winID;
-			ev.button.which = 0;
-			ev.button.button = button;
-			ev.button.clicks = 1;
-			ev.button.x = winX;
-			ev.button.y = winY;
-			ev.motion.windowID = winID;
-			ev.motion.which = 0;
-			ev.motion.x = winX;
-			ev.motion.y = winY;
-		} else {
+        } else if (isDown) {
+            ev.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+            ev.button.windowID = winID;
+            ev.button.which = 0;
+            ev.button.button = button;
+            ev.button.clicks = clicks;
+            ev.button.x = winX;
+            ev.button.y = winY;
+            ev.motion.windowID = winID;
+            ev.motion.which = 0;
+            ev.motion.x = winX;
+            ev.motion.y = winY;
+        } else {
 			// Default fallback: treat as move
 			ev.type = SDL_EVENT_MOUSE_MOTION;
 			ev.motion.windowID = winID;

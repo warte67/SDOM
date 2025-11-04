@@ -103,22 +103,22 @@ namespace SDOM
 
         // 🔄 Input --------------------------------------------------------------------
         // Keyboard
-        static EventType KeyDown;           // 🧩 EventType_test{1}, Event_test{3}
-        static EventType KeyUp;             // 🧩 EventType_test{1}, Event_test{3}
+        static EventType KeyDown;           // 🧩 EventType_test{1}, Event_test{3}  📜 Lua: EventType_UnitTests.lua test{2}
+        static EventType KeyUp;             // 🧩 EventType_test{1}, Event_test{3}  📜 Lua: EventType_UnitTests.lua test{2}
         static EventType TextInput;         // ❓ IME/TextInput system not yet implemented
         // Mouse
-        static EventType MouseButtonDown;   // 🧩 Event_test{4, 8}
-        static EventType MouseButtonUp;     // 🧩 Event_test{4, 8}
-        static EventType MouseWheel;        // 🧩 Event_test{4, 8}
-        static EventType MouseMove;         // 🧩 Event_test{4, 8}
-        static EventType MouseClick;        // 🧩 Event_test{4, 8}
-        static EventType MouseDoubleClick;  // 🧩 Event_test{4, 8}
-        static EventType MouseEnter;        // 🧩🧠 EventType_test{5} (planned)
-        static EventType MouseLeave;        // 🧩🧠 EventType_test{5} (planned)
+        static EventType MouseButtonDown;   // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{3}
+        static EventType MouseButtonUp;     // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{3}
+        static EventType MouseWheel;        // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{3}
+        static EventType MouseMove;         // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{1,3}
+        static EventType MouseClick;        // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{4}
+        static EventType MouseDoubleClick;  // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{4}
+        static EventType MouseEnter;        // 🧩🧠 EventType_test{5}               📜 Lua: EventType_UnitTests.lua test{5}
+        static EventType MouseLeave;        // 🧩🧠 EventType_test{5}               📜 Lua: EventType_UnitTests.lua test{5}
 
         // 🔄 Window / Focus -----------------------------------------------------------
-        static EventType FocusGained;       // 🧩🧠 Event_test{5}, EventType_test{5}
-        static EventType FocusLost;         // 🧩🧠 Event_test{5}, EventType_test{5}
+        static EventType FocusGained;       // Do not use yet. Only applies to the not yet implemented Window objects.
+        static EventType FocusLost;         // Do not use yet. Only applies to the not yet implemented Window objects.
         static EventType Resize;            // 🧩🧠 Event_test{5}, EventType_test{5}
         static EventType Move;              // 🧩🧠 Event_test{5}, EventType_test{5}
         static EventType Show;              // 🧩🧠 Event_test{5}, EventType_test{5}

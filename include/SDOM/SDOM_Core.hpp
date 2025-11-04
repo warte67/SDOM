@@ -177,6 +177,11 @@ namespace SDOM
         // --- Lua State Access --- //
         sol::state& getLua() { return lua_; }
 
+        // --- UnitTest Wrappers --- //
+        int getFrameCount() const;
+
+        
+
         // --- Factory Wrappers --- //
 
         // --- Object Creation --- //
