@@ -725,12 +725,12 @@ namespace SDOM
                     {
                         // std::cout << "✅ FocusLost via hide. hidden=" << hidden << " no_focus=" << no_focus << "\n";
                         focus_phase = FocusPhase::StartGain;
-                        return false;
+                        return false;// 🔄 continue
                     }
                     if (focus_wait_frames < k_focus_wait_cutoff)
                     {
                         ++focus_wait_frames;
-                        return false;
+                        return false;// 🔄 continue
                     }
                     if (is_wayland)
                         std::cout << "⚠️ Wayland: FocusLost not observed after hide — proceeding." << std::endl;
@@ -746,7 +746,7 @@ namespace SDOM
                 case FocusPhase::WaitLoseWithMinimize:
                     // No longer used: proceed to gain focus path
                     focus_phase = FocusPhase::StartGain;
-                    return false;
+                    return false;// 🔄 continue
 
                 case FocusPhase::StartGain:
                 {
@@ -769,7 +769,7 @@ namespace SDOM
                     SDL_PumpEvents();
                     focus_wait_frames = 0;
                     focus_phase = FocusPhase::WaitGain;
-                    return false;
+                    return false;// 🔄 continue
                 }
 
                 case FocusPhase::WaitGain:
@@ -781,12 +781,12 @@ namespace SDOM
                     {
                         // std::cout << "✅ FocusGained via show/raise. visible=" << visible << " has_focus=" << has_focus << "\n";
                         focus_phase = FocusPhase::Cleanup;
-                        return false;
+                        return false;// 🔄 continue
                     }
                     if (focus_wait_frames < k_focus_wait_cutoff)
                     {
                         ++focus_wait_frames;
-                        return false;
+                        return false;// 🔄 continue
                     }
                     if (is_wayland)
                         std::cout << "⚠️ Wayland: FocusGained not detected after show/raise (compositor policy)." << std::endl;
@@ -795,28 +795,28 @@ namespace SDOM
                     // if (!is_wayland)
                     //     std::cout << "⚠️ FocusGained not detected — compositor may restrict input focus.\n";
                     focus_phase = FocusPhase::Cleanup;
-                    return false;
+                    return false;// 🔄 continue
                 }
 
-            case FocusPhase::Cleanup:
-            {
-                core.setIgnoreRealInput(saved_ignore_real_input);
-                SDL_ShowWindow(core.getWindow());
-                if (aot_pulsed)
+                case FocusPhase::Cleanup:
                 {
-                    SDL_SetWindowAlwaysOnTop(core.getWindow(), orig_always_on_top);
-                    aot_pulsed = false;
+                    core.setIgnoreRealInput(saved_ignore_real_input);
+                    SDL_ShowWindow(core.getWindow());
+                    if (aot_pulsed)
+                    {
+                        SDL_SetWindowAlwaysOnTop(core.getWindow(), orig_always_on_top);
+                        aot_pulsed = false;
+                    }
+                    SDL_RaiseWindow(core.getWindow());
+                    SDL_SyncWindow(core.getWindow());
+                    // Ensure we exit focus test in a windowed, visible state
+                    core.setWindowed(true);
+                    // Hand off to Move state machine on next frame
+                    focus_phase = FocusPhase::Done;
+                    focus_done = true;
+                    move_phase = MovePhase::None;
+                    return false;// 🔄 continue
                 }
-                SDL_RaiseWindow(core.getWindow());
-                SDL_SyncWindow(core.getWindow());
-                // Ensure we exit focus test in a windowed, visible state
-                core.setWindowed(true);
-                // Hand off to Move state machine on next frame
-                focus_phase = FocusPhase::Done;
-                focus_done = true;
-                move_phase = MovePhase::None;
-                return false;
-            }
 
                 case FocusPhase::Done:
                 default:
@@ -839,7 +839,7 @@ namespace SDOM
             move_settle_frames = 0;
             move_wait_frames = -1;
             move_final_logged = false;
-            return false;
+            return false;// 🔄 continue
         }
 
         switch (move_phase)
@@ -850,7 +850,7 @@ namespace SDOM
                 {
                     move_phase = MovePhase::StartMove;
                 }
-                return false;
+                return false;// 🔄 continue
             }
             case MovePhase::StartMove:
             {
@@ -873,7 +873,7 @@ namespace SDOM
                 move_detect_frame = -1;
                 move_event_x = move_event_y = -1; move_event_window_id = 0;
                 move_phase = MovePhase::WaitMove;
-                return false;
+                return false;// 🔄 continue
             }
             case MovePhase::WaitMove:
             {
@@ -884,7 +884,7 @@ namespace SDOM
                               << " pos=(" << move_event_x << "," << move_event_y << ")";
                     std::cout << "; target=(" << move_target_x << "," << move_target_y << ")\n";
                     move_phase = MovePhase::Done;
-                    return false;
+                    return false;// 🔄 continue
                 }
                 if (++move_wait_frames >= k_move_wait_cutoff)
                 {
@@ -900,9 +900,9 @@ namespace SDOM
                         move_final_logged = true;
                     }
                     move_phase = MovePhase::Done;
-                    return false;
+                    return false;// 🔄 continue
                 }
-                return false;
+                return false;// 🔄 continue
             }
             case MovePhase::Done:
             case MovePhase::None:

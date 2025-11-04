@@ -55,8 +55,83 @@ namespace SDOM
 
     void EventManager::addEvent(std::unique_ptr<Event> event) 
     {
-        // std::cout << "Event added: " << event->getTypeName() << std::endl;
-        eventQueue.push(std::move(event));
+        // Apply metering/coalescing policy per EventType
+        const EventType type = event->getType();
+        const bool isCritical = type.isCritical();
+        const bool canMeter = type.isMeterEnabled();
+
+        if (isCritical)
+        {
+            // Flush metered events to preserve ordering, then enqueue immediately
+            flushCoalesced_();
+            eventQueue.push(std::move(event));
+            return;
+        }
+
+        if (!canMeter)
+        {
+            eventQueue.push(std::move(event));
+            return;
+        }
+
+        // Build coalesce key
+        auto build_key = [&](const Event& ev) -> std::string {
+            if (type.getCoalesceKey() == EventType::CoalesceKey::ByTarget)
+            {
+                std::string tgt = ev.getTarget().isValid() ? ev.getTarget().getName() : std::string("<null>");
+                return ev.getTypeName() + std::string("|") + tgt;
+            }
+            return ev.getTypeName();
+        };
+
+        const std::string key = build_key(*event);
+        Uint32 now_ms = SDL_GetTicks();
+        auto& entry = coalesce_map_[key];
+        if (!entry.ev)
+        {
+            entry.ev = std::move(event);
+            entry.first_ms = entry.last_ms = now_ms;
+        }
+        else
+        {
+            // Merge according to strategy
+            switch (type.getCoalesceStrategy())
+            {
+                case EventType::CoalesceStrategy::Last:
+                    entry.ev = std::move(event);
+                    entry.last_ms = now_ms;
+                    break;
+                case EventType::CoalesceStrategy::Sum:
+                {
+                    // Sum deltas for wheel; keep last position
+                    float wx = entry.ev->getWheelX() + event->getWheelX();
+                    float wy = entry.ev->getWheelY() + event->getWheelY();
+                    entry.ev->setWheelX(wx);
+                    entry.ev->setWheelY(wy);
+                    entry.ev->setMouseX(event->getMouseX());
+                    entry.ev->setMouseY(event->getMouseY());
+                    entry.last_ms = now_ms;
+                    break;
+                }
+                case EventType::CoalesceStrategy::Count:
+                {
+                    int cnt = entry.ev->getClickCount();
+                    entry.ev->setClickCount(cnt + 1);
+                    entry.last_ms = now_ms;
+                    break;
+                }
+                case EventType::CoalesceStrategy::None:
+                default:
+                    // Should not be metered if strategy None; fall back to enqueue
+                    eventQueue.push(std::move(event));
+                    return;
+            }
+        }
+
+        // Throttle flush by configured interval (uses global default if unset)
+        Uint32 interval = type.getMeterIntervalMs() ? type.getMeterIntervalMs() : SDOM_EVENT_METER_MS_DEFAULT;
+        if (coalesce_last_flush_ms_ == 0 || (now_ms - coalesce_last_flush_ms_) >= interval)
+            flushCoalesced_();
     }
 
     bool EventManager::hasListeners(const EventType& type) const
@@ -83,9 +158,12 @@ namespace SDOM
         // Heuristic: if common hover-sensitive UI types are present, keep
         // emitting hover so default onEvent handlers can update state.
         static const std::unordered_set<std::string> hover_types = {
+            // Common interactive widgets that rely on hover state
             "Button", "IconButton", "ArrowButton",
             "CheckButton", "RadioButton", "TristateButton",
-            "Slider", "ScrollBar"
+            "Slider", "ScrollBar",
+            // Test scaffolds / simple containers used in examples
+            "Box", "Frame"
         };
         const auto names = getFactory().getDisplayObjectNames();
         for (const auto& name : names)
@@ -103,6 +181,8 @@ namespace SDOM
 
     void EventManager::DispatchQueuedEvents() 
     {
+        // Ensure any coalesced events are emitted before dispatching
+        flushCoalesced_();
         DisplayHandle rootNode = getFactory().getStageHandle();
         if (!rootNode) return;
         while (!eventQueue.empty()) 
@@ -129,6 +209,20 @@ namespace SDOM
             }
             eventQueue.pop();
         }
+    }
+
+    // Emit all coalesced events into the real queue (FIFO order not guaranteed
+    // across different types; map order is acceptable for metered events).
+    void EventManager::flushCoalesced_()
+    {
+        if (coalesce_map_.empty()) return;
+        for (auto& kv : coalesce_map_)
+        {
+            if (kv.second.ev)
+                eventQueue.push(std::move(kv.second.ev));
+        }
+        coalesce_map_.clear();
+        coalesce_last_flush_ms_ = SDL_GetTicks();
     }
 
     void EventManager::dispatchEvent(std::unique_ptr<Event> event, DisplayHandle rootHandle)    
@@ -707,13 +801,16 @@ namespace SDOM
             case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:  makeAndQueue(EventType::LeaveFullscreen); break;
             case SDL_EVENT_WINDOW_MOVED:
             {
-                // DEBUG_LOG("🧾 Window moved: " << e.window.data1 << "," << e.window.data2);
-                auto evt = std::make_unique<Event>(EventType::Move, stageHandle);
-                evt->setSDL_Event(e);
-                // Provide compositor-reported position in payload
-                evt->setPayloadValue("x", e.window.data1);
-                evt->setPayloadValue("y", e.window.data2);
-                addEvent(std::move(evt));
+                // Only emit Move if anyone listens or metering will coalesce it
+                if (hasListeners(EventType::Move) || EventType::Move.isMeterEnabled())
+                {
+                    auto evt = std::make_unique<Event>(EventType::Move, stageHandle);
+                    evt->setSDL_Event(e);
+                    // Provide compositor-reported position in payload
+                    evt->setPayloadValue("x", e.window.data1);
+                    evt->setPayloadValue("y", e.window.data2);
+                    addEvent(std::move(evt));
+                }
                 break;
             }
             default: break;
@@ -932,6 +1029,9 @@ namespace SDOM
         // Reuse the hovered object computed earlier in Queue_SDL_Event to avoid
         // redundant hit-tests on every motion event.
         DisplayHandle currentHovered = getCore().getMouseHoveredObject();
+        // Update watchdog: any motion resets the idle counter and tracks target
+        hover_watch_target_ = currentHovered;
+        hover_idle_frames_ = 0;
 
         const float mX = static_cast<float>(e.motion.x);
         const float mY = static_cast<float>(e.motion.y);
@@ -950,9 +1050,11 @@ namespace SDOM
             addEvent(std::move(moveEvt));
         }
 
-        // --- Handle MouseLeave / MouseEnter (gated) ---------------------------------------
-        if (currentHovered != lastHoveredObject && should_emit_hover_events())
+        // --- Handle MouseLeave / MouseEnter (leave always, enter gated) --------------------
+        if (currentHovered != lastHoveredObject)
         {
+            // Always emit MouseLeave for the previous hovered object so behavior tests
+            // and default hover logic remain reliable, even when MouseEnter is gated off.
             if (lastHoveredObject)
             {
                 auto leaveEvt = std::make_unique<Event>(EventType::MouseLeave, lastHoveredObject, elapsed);
@@ -965,7 +1067,8 @@ namespace SDOM
                 addEvent(std::move(leaveEvt));
             }
 
-            if (currentHovered)
+            // Emit MouseEnter only when hover events are desired to avoid event spam.
+            if (currentHovered && should_emit_hover_events())
             {
                 auto enterEvt = std::make_unique<Event>(EventType::MouseEnter, currentHovered, elapsed);
                 enterEvt->setSDL_Event(e);
@@ -980,6 +1083,29 @@ namespace SDOM
 
         lastHoveredObject = currentHovered;
     } // END -- updateHoverState()
+
+    // --- onFrameTick: per-frame hover watchdog ---------------------------------------------
+    // Forces a MouseLeave if no motion events have been processed for a number of frames
+    // while an object remains hovered. This addresses cases where input pauses or
+    // window focus changes without motion, preventing "stuck hover" states.
+    void EventManager::onFrameTick()
+    {
+        if (hover_watch_target_) {
+            ++hover_idle_frames_;
+            constexpr int kHoverLeaveFrameLimit = 250;
+            if (hover_idle_frames_ >= kHoverLeaveFrameLimit) {
+                float elapsed = getCore().getElapsedTime();
+                auto leaveEvt = std::make_unique<Event>(EventType::MouseLeave, hover_watch_target_, elapsed);
+                // Use last known stage mouse coords if available (optional)
+                leaveEvt->setTarget(hover_watch_target_);
+                addEvent(std::move(leaveEvt));
+                // Clear hovered state
+                getCore().setMouseHoveredObject(DisplayHandle(nullptr));
+                hover_watch_target_ = nullptr;
+                hover_idle_frames_ = 0;
+            }
+        }
+    }
 
 
     // --- dispatchWindowEnterLeave: Detect when the mouse enters or leaves the window --------
@@ -1216,7 +1342,7 @@ namespace SDOM
             static Uint32 s_last_hover_ht_ms = 0;
             static DisplayHandle s_cachedPtClickable = nullptr;
             static DisplayHandle s_cachedPtHover = nullptr;
-            constexpr Uint32 kHoverThrottleMs = 5; // meter hover hit-test to ~200 Hz
+            constexpr Uint32 kHoverThrottleMs = SDOM_HOVER_HITTEST_MS; // meter hover hit-test
             Uint32 now_ms = SDL_GetTicks();
 
             bool forceHT = (sdlType == SDL_EVENT_MOUSE_BUTTON_DOWN ||
@@ -1262,7 +1388,7 @@ namespace SDOM
                 static Uint32 s_last_hover_ht_ms2 = 0;
                 static DisplayHandle s_cachedPtClickable2 = nullptr;
                 static DisplayHandle s_cachedPtHover2 = nullptr;
-                constexpr Uint32 kHoverThrottleMs = 5;
+                constexpr Uint32 kHoverThrottleMs = SDOM_HOVER_HITTEST_MS;
                 Uint32 now_ms = SDL_GetTicks();
 
                 bool forceHT = isDragging; // wheel/unknown mouse-like: only force if dragging

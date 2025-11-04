@@ -41,6 +41,23 @@
 
 namespace SDOM
 {
+    // Metering Policy Notes
+    // ---------------------
+    // Each EventType may define optional metering behavior used by the
+    // EventManager to coalesce high-frequency events prior to enqueue:
+    //   - critical:        never metered; flush coalesced queue before enqueue
+    //   - meter_enabled:   enable coalescing for this type
+    //   - meter_interval_ms: min interval between enqueues (0 = use default)
+    //   - coalesce_strategy:
+    //       * None: do not coalesce
+    //       * Last: keep only the last event (e.g., MouseMove, Resize)
+    //       * Sum:  accumulate deltas (e.g., MouseWheel)
+    //       * Count:increment only (unused currently)
+    //   - coalesce_key:
+    //       * Global: single slot for the type (last-wins/sum across all targets)
+    //       * ByTarget: one slot per target (for target-sensitive metering)
+    //
+    //              // captures, bubbles, target, global
     // 🚫 Untestable ---------------------------------------------------------------
     EventType EventType::None("None", false, false, false, false);
     EventType EventType::Quit("Quit", false, false, false, true);
@@ -66,8 +83,10 @@ namespace SDOM
     EventType EventType::MouseMove("MouseMove", false, false, true, false);
     EventType EventType::MouseClick("MouseClick", true, true, false, false);
     EventType EventType::MouseDoubleClick("MouseDoubleClick", true, true, false, false);
-    EventType EventType::MouseEnter("MouseEnter", false, false, true, false);
-    EventType EventType::MouseLeave("MouseLeave", false, false, true, false);
+    // Make MouseEnter/MouseLeave observable by ancestors (capture/bubble enabled,
+    // not target-only) so parent containers can react to hover transitions.
+    EventType EventType::MouseEnter("MouseEnter", true, true, false, false);
+    EventType EventType::MouseLeave("MouseLeave", true, true, false, false);
 
     // 💻 Window / Focus -----------------------------------------------------------
     // ⚠️ Focus events are compositor-controlled on Wayland and may not be delivered
@@ -118,8 +137,52 @@ namespace SDOM
     EventType EventType::OnPreRender("OnPreRender", false, false, false, false); // listeners-only, non-capturing/non-bubbling
 
     // 💻 Frame / Misc -------------------------------------------------------------
+    // EnterFrame exists for legacy compatibility but is not emitted by Core.
+    // Prefer OnUpdate for per-frame logic. Keeping the type allows tests and
+    // Lua to reference it without generating event spam.
     EventType EventType::EnterFrame("EnterFrame", false, false, false, false);
     EventType EventType::SDL_Event("SDL_Event", true, true, false, false);
+
+    // --- Default metering policy assignments --- //
+    namespace {
+    bool init_eventtype_policies() {
+        // Critical (never coalesced; flush coalesced queue before enqueue):
+        EventType::MouseButtonDown.setCritical(true);
+        EventType::MouseButtonUp.setCritical(true);
+        EventType::Drag.setCritical(true);
+        EventType::Dragging.setCritical(true);
+        EventType::Drop.setCritical(true);
+        EventType::KeyDown.setCritical(true);
+        EventType::KeyUp.setCritical(true);
+        EventType::TextInput.setCritical(true);
+        EventType::StageOpened.setCritical(true);
+        EventType::StageClosed.setCritical(true);
+
+        // Metered (10 ms default via SDOM_EVENT_METER_MS_DEFAULT):
+        EventType::MouseMove
+            .setMeterEnabled(true)
+            .setCoalesceStrategy(EventType::CoalesceStrategy::Last)
+            .setCoalesceKey(EventType::CoalesceKey::Global);
+
+        EventType::MouseWheel
+            .setMeterEnabled(true)
+            .setCoalesceStrategy(EventType::CoalesceStrategy::Sum)
+            .setCoalesceKey(EventType::CoalesceKey::Global);
+
+        EventType::Resize
+            .setMeterEnabled(true)
+            .setCoalesceStrategy(EventType::CoalesceStrategy::Last)
+            .setCoalesceKey(EventType::CoalesceKey::Global);
+
+        EventType::Move
+            .setMeterEnabled(true)
+            .setCoalesceStrategy(EventType::CoalesceStrategy::Last)
+            .setCoalesceKey(EventType::CoalesceKey::Global);
+
+        return true;
+    }
+    const bool s_eventtype_policies_initialized = init_eventtype_policies();
+    } // anonymous namespace
     EventType EventType::User("User", true, true, false, false);
 
 
@@ -239,5 +302,18 @@ namespace SDOM
         global_ = global; 
         return *this; 
     }
+
+    // --- Metering policy getters/setters --- //
+    bool EventType::isCritical() const { return critical_; }
+    bool EventType::isMeterEnabled() const { return meter_enabled_; }
+    uint16_t EventType::getMeterIntervalMs() const { return meter_interval_ms_; }
+    EventType::CoalesceStrategy EventType::getCoalesceStrategy() const { return coalesce_strategy_; }
+    EventType::CoalesceKey EventType::getCoalesceKey() const { return coalesce_key_; }
+
+    EventType& EventType::setCritical(bool critical) { critical_ = critical; return *this; }
+    EventType& EventType::setMeterEnabled(bool enabled) { meter_enabled_ = enabled; return *this; }
+    EventType& EventType::setMeterIntervalMs(uint16_t ms) { meter_interval_ms_ = ms; return *this; }
+    EventType& EventType::setCoalesceStrategy(CoalesceStrategy s) { coalesce_strategy_ = s; return *this; }
+    EventType& EventType::setCoalesceKey(CoalesceKey k) { coalesce_key_ = k; return *this; }
 
 } // namespace SDOM

@@ -101,6 +101,10 @@ namespace SDOM
             _tests_failed++;
         }
 
+        // 🔹 Persist outcome on the test case for final summary accounting
+        test.passed = passed;
+        test.errors = std::move(errors);
+
         std::cout << oss.str();
         return true; // means “this test is complete” (regardless of pass/fail)
     }

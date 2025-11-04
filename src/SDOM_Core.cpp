@@ -695,6 +695,15 @@ namespace SDOM
                     }
 
                 }
+
+                // Flush any events queued programmatically (e.g., unit tests) even
+                // when no real SDL events were polled this frame. This prevents
+                // synthetic motion/click events from stalling until the next real
+                // input arrives (e.g., when the mouse cursor is outside the window).
+                if (eventManager_)
+                {
+                    eventManager_->DispatchQueuedEvents();
+                }
                 
                 // frame timing
                 static Uint64 lastTime = SDL_GetPerformanceCounter();
@@ -1123,6 +1132,10 @@ namespace SDOM
         // placed after the unit-test reporting block so the "stop-after-tests"
         // perf dump still shows the previous frame's values.
         factory_->begin_frame_metrics();
+
+        // Per-frame event manager tick: run hover watchdogs, etc.
+        if (eventManager_)
+            eventManager_->onFrameTick();
 
         // Call the users registered update function if available
         if (fnOnUpdate)

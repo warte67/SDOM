@@ -43,12 +43,15 @@
 
 // #include <queue>
 // #include <memory>
+#include <unordered_map>
+#include <string>
 // #include "SDOM/SDOM_Event.hpp"
 // #include "SDOM/SDOM_IDisplayObject.hpp"
 
 namespace SDOM 
 {
     class IDisplayObject;
+    class DisplayHandle;
     class Event;
     class EventType;
 
@@ -116,6 +119,8 @@ namespace SDOM
         // events, or when common default-handling types are present that rely
         // on hover semantics (e.g., Button, IconButton, Sliders, ScrollBars).
         bool should_emit_hover_events() const;
+        // Per-frame tick: maintains hover watchdog for reliable MouseLeave
+        void onFrameTick();
 
     private:
 
@@ -125,6 +130,21 @@ namespace SDOM
         std::queue<std::unique_ptr<Event>> eventQueue; // Queue for storing events
         bool isDragging = false;
         DisplayHandle draggedObject = nullptr;
+
+        // --- Coalesced event buffer (metering) --- //
+        struct CoalesceEntry {
+            std::unique_ptr<Event> ev;
+            Uint32 first_ms = 0;
+            Uint32 last_ms = 0;
+        };
+        std::unordered_map<std::string, CoalesceEntry> coalesce_map_;
+        Uint32 coalesce_last_flush_ms_ = 0;
+        void flushCoalesced_();
+
+        // Hover watchdog: force a MouseLeave if no motion processed
+        // for a number of frames while an object is hovered.
+        int hover_idle_frames_ = 0;
+        DisplayHandle hover_watch_target_ = nullptr;
 
 
         // ========================================================================

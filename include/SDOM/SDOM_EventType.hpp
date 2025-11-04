@@ -218,17 +218,33 @@ namespace SDOM
     // access EventType constants and query properties.
     static void registerLua(sol::state_view lua);
 
-    // -- Getters -- //
-    bool getCaptures() const;
-    bool getBubbles() const;
-    bool getTargetOnly() const;
-    bool getGlobal() const;
+        // -- Getters -- //
+        bool getCaptures() const;
+        bool getBubbles() const;
+        bool getTargetOnly() const;
+        bool getGlobal() const;
 
-    // -- Setters -- //
-    EventType& setCaptures(bool captures);
-    EventType& setBubbles(bool bubbles);
-    EventType& setTargetOnly(bool targetOnly);
-    EventType& setGlobal(bool global);
+        // Metering policy getters
+        bool isCritical() const;                 // flush-before-enqueue, never metered
+        bool isMeterEnabled() const;             // true to coalesce events of this type
+        uint16_t getMeterIntervalMs() const;     // per-type meter interval override
+        enum class CoalesceStrategy { None, Last, Sum, Count };
+        enum class CoalesceKey { Global, ByTarget };
+        CoalesceStrategy getCoalesceStrategy() const;
+        CoalesceKey getCoalesceKey() const;
+
+        // -- Setters -- //
+        EventType& setCaptures(bool captures);
+        EventType& setBubbles(bool bubbles);
+        EventType& setTargetOnly(bool targetOnly);
+        EventType& setGlobal(bool global);
+
+        // Metering policy setters (builder-style for static defaults)
+        EventType& setCritical(bool critical);
+        EventType& setMeterEnabled(bool enabled);
+        EventType& setMeterIntervalMs(uint16_t ms);
+        EventType& setCoalesceStrategy(CoalesceStrategy s);
+        EventType& setCoalesceKey(CoalesceKey k);
 
     // -- Public Lua support -- //        
 
@@ -240,6 +256,13 @@ namespace SDOM
         bool bubbles_ = true;
         bool targetOnly_ = false;
         bool global_ = false;
+
+        // Metering policy (defaults: not critical, not metered)
+        bool critical_ = false;
+        bool meter_enabled_ = false;
+        uint16_t meter_interval_ms_ = 0; // 0 => use SDOM_EVENT_METER_MS_DEFAULT
+        CoalesceStrategy coalesce_strategy_ = CoalesceStrategy::None;
+        CoalesceKey coalesce_key_ = CoalesceKey::Global;
 
     };
 

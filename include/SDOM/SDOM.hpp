@@ -87,6 +87,13 @@ constexpr int ORPHAN_GRACE_PERIOD = 5000; // default grace period for orphaned o
  */
 namespace SDOM 
 {
+    // --- Compile-time metering and throttling defaults --- //
+    // Global default meter interval (milliseconds) for mergeable events.
+    // Used unless an EventType overrides via its per-type policy.
+    inline constexpr Uint32 SDOM_EVENT_METER_MS_DEFAULT = 10; // ~100 Hz
+    // Hover hit-test throttle (milliseconds). Pointer hit-tests during motion
+    // are limited to at most this rate to reduce subtree walks.
+    inline constexpr Uint32 SDOM_HOVER_HITTEST_MS = 5; // ~200 Hz
     /**
      * @brief Custom exception class for SDOM errors.
      * @details Stores an error message, file name, and line number for debugging.
@@ -430,7 +437,6 @@ namespace SDOM
     // API should include SDOM_Front.hpp directly in .cpp files. Keep this block intentionally empty here
     // to avoid accidental circular include dependencies.
 #endif
-
 
 
 

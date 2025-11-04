@@ -667,17 +667,21 @@ namespace SDOM
                 e.button.button = SDL_BUTTON_LEFT;
                 e.button.x = b->getX() + 5; e.button.y = b->getY() + 5;
                 em.Queue_SDL_Event(e);
+                // Ensure the engine dispatches the queued synthetic event now
+                /* main loop will dispatch */
             }},
             {"MouseButtonUp", [&](DisplayHandle b){
                 SDL_Event e{}; e.type = SDL_EVENT_MOUSE_BUTTON_UP;
                 e.button.button = SDL_BUTTON_LEFT;
                 e.button.x = b->getX() + 5; e.button.y = b->getY() + 5;
                 em.Queue_SDL_Event(e);
+                /* main loop will dispatch */
             }},
             {"MouseMove", [&](DisplayHandle b){
                 SDL_Event e{}; e.type = SDL_EVENT_MOUSE_MOTION;
                 e.motion.x = b->getX() + 5; e.motion.y = b->getY() + 5;
                 em.Queue_SDL_Event(e);
+                /* main loop will dispatch */
             }},
             {"MouseWheel", [&](DisplayHandle b){
                 SDL_Event e{};
@@ -733,43 +737,127 @@ namespace SDOM
 
                     timestamp += 100; // short delay between clicks
                 }
-            }},
-            {"MouseEnter", [&](DisplayHandle b){
-                SDL_Event e1{};
-                e1.type = SDL_EVENT_MOUSE_MOTION;
-                e1.motion.x = b->getX() - 10;
-                e1.motion.y = b->getY() - 10;
-                em.Queue_SDL_Event(e1);
-
-                SDL_Event e2{};
-                e2.type = SDL_EVENT_MOUSE_MOTION;
-                e2.motion.x = b->getX() + b->getWidth() / 2;
-                e2.motion.y = b->getY() + b->getHeight() / 2;
-                e2.common.timestamp = e1.common.timestamp + 50;
-                em.Queue_SDL_Event(e2);
-            }},
-            {"MouseLeave", [&](DisplayHandle b){
-                SDL_Event e1{};
-                e1.type = SDL_EVENT_MOUSE_MOTION;
-                e1.motion.x = b->getX() + b->getWidth() / 2;
-                e1.motion.y = b->getY() + b->getHeight() / 2;
-                em.Queue_SDL_Event(e1);
-
-                SDL_Event e2{};
-                e2.type = SDL_EVENT_MOUSE_MOTION;
-                e2.motion.x = b->getX() + b->getWidth() + 50;
-                e2.motion.y = b->getY() + b->getHeight() + 50;
-                e2.common.timestamp = e1.common.timestamp + 50;
-                em.Queue_SDL_Event(e2);
             }}
         };
 
         // --- 3) Execute behavioral test sequence -----------------------------------
+        // Keep this one-shot for click/wheel/move sanity only; do not assert hover here.
         UnitTests::run_event_behavior_test(actions, errors);
 
-        // ✅ Test complete — return success
         return true;
     } // END -- Behavioral Mouse Event Verification
+
+    // ============================================================================
+    //  Event_test9: Re-entrant Hover Enter/Leave Verification (Condensed)
+    // ----------------------------------------------------------------------------
+    //  Simplified 4-state FSM that verifies MouseEnter/MouseLeave end-to-end,
+    //  allowing throttled motion, enter/leave gating, and hover watchdogs.
+    // ============================================================================
+    bool Event_test9(std::vector<std::string>& errors)
+    {
+        enum class StateType : int { StartOutside, MoveIn, MoveOut, Done };
+        static StateType state = StateType::StartOutside;
+        static bool sawEnter = false;
+        static bool sawLeave = false;
+        static bool listeners_added = false;
+        static int state_start_frame = UnitTests::getInstance().get_frame_counter();
+        constexpr int kFrameAllowance = 250;
+
+        Core& core = getCore();
+        EventManager& em = core.getEventManager();
+        DisplayHandle stage = core.getRootNode();
+        if (!stage.isValid()) return true; // ✅ No stage; treat as finished (nothing to test)
+
+        DisplayHandle target = getFactory().getDisplayObject("blueishBox");
+        if (!target.isValid()) {
+            errors.push_back("Event_test9: Failed to find target 'blueishBox'.");
+            return true; // ✅ Can't run test without a target; finish with error noted
+        }
+
+        auto inside = [&]() {
+            return SDL_Point{
+                target->getX() + target->getWidth() / 2,
+                target->getY() + target->getHeight() / 2
+            };
+        };
+        auto outside = [&]() {
+            return SDL_Point{ target->getX() - 10, target->getY() - 10 };
+        };
+
+        if (!listeners_added)
+        {
+            target->addEventListener(EventType::MouseEnter, [&](Event&) { sawEnter = true; }, false);
+            target->addEventListener(EventType::MouseLeave, [&](Event&) { sawLeave = true; }, false);
+            listeners_added = true;
+        }
+
+        const int frame = UnitTests::getInstance().get_frame_counter();
+
+        switch (state)
+        {
+            case StateType::StartOutside:
+            {
+                SDL_Event e{}; e.type = SDL_EVENT_MOUSE_MOTION;
+                auto p = outside(); e.motion.x = p.x; e.motion.y = p.y;
+                em.Queue_SDL_Event(e);
+
+                state = StateType::MoveIn;
+                state_start_frame = frame;
+                return false; // 🔄 Not done: we queued a move; give engine a frame to process
+            }
+
+            case StateType::MoveIn:
+            {
+                SDL_Event e{}; e.type = SDL_EVENT_MOUSE_MOTION;
+                auto p = inside(); e.motion.x = p.x; e.motion.y = p.y;
+                em.Queue_SDL_Event(e);
+
+                if (sawEnter) {
+                    state = StateType::MoveOut;
+                    state_start_frame = frame;
+                } 
+                else if (frame - state_start_frame > kFrameAllowance) {
+                    // errors.push_back("Behavior event 'MouseEnter' did not fire within 250 frames.");
+                    state = StateType::MoveOut;
+                    state_start_frame = frame;
+                }
+                return false; // 🔄 Not done: waiting for MouseEnter or timeout to transition
+            }
+
+            case StateType::MoveOut:
+            {
+                SDL_Event e{}; e.type = SDL_EVENT_MOUSE_MOTION;
+                auto p = outside(); e.motion.x = p.x; e.motion.y = p.y;
+                em.Queue_SDL_Event(e);
+
+                if (sawLeave) {
+                    state = StateType::Done;
+                }
+                else if (frame - state_start_frame > kFrameAllowance) {
+                    // errors.push_back("Behavior event 'MouseLeave' did not fire within 250 frames.");
+                    state = StateType::Done;
+                }
+                return false; // 🔄 Not done: waiting for MouseLeave or timeout to finish
+            }
+
+            case StateType::Done:
+            default:
+            {
+                if (!sawEnter) errors.push_back("Behavior event 'MouseEnter' did not fire.");
+                if (!sawLeave) errors.push_back("Behavior event 'MouseLeave' did not fire.");
+
+                // Reset for next run
+                state = StateType::StartOutside;
+                sawEnter = sawLeave = false;
+                listeners_added = false;
+                state_start_frame = frame;
+                // Return pass/fail based on whether any errors were recorded
+                return errors.empty();
+            }
+        }
+
+        return true; // ✅ Defensive: unreachable; treat as finished
+    }
 
 
 
@@ -797,6 +885,7 @@ namespace SDOM
         ut.add_test(objName, "General UI event types round-trip", Event_test6);
         ut.add_test(objName, "Application Lifecycle event types round-trip", Event_test7);
         ut.add_test(objName, "Behavioral Mouse Event Verification", Event_test8);
+        ut.add_test(objName, "Behavioral Hover Enter/Leave Verification", Event_test9);
 
 
         ut.setLuaFilename("src/Event_UnitTests.lua"); // Lua test script path
