@@ -310,6 +310,7 @@ _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++
 - **Wayland warnings correctly detected and logged** without affecting event behavior or unit-test reliability.  
 - **No leaks, no lost references** — verified with Valgrind: 0 bytes definitely or indirectly lost.
 
+---
 <a id="latest-update"></a>
 ## 🗓️ November 4, 2025 — [Title Placeholder]
 
@@ -326,7 +327,6 @@ _[Short summary of results and next direction.]_
 - ☐ [Task 1]
 - ☐ [Task 2]
 
-#### end-of-day
 
 #### end-of-day
 
