@@ -4,10 +4,10 @@
 [![Status](https://img.shields.io/badge/status-pre--alpha-orange.svg)]()
 
 <!-- BEGIN_VERSION_BLOCK -->
-**SDOM 0.5.129 (early pre-alpha)**  
-**Build Date:** 2025-11-04_20:28:04  
+**SDOM 0.5.130 (early pre-alpha)**  
+**Build Date:** 2025-11-05_13:33:44  
 **Platform:** Linux-x86_64  
-**Compiler:** g++ (Debian 14.2.0-19) 14.2.0
+**Compiler:** g++ (GCC) 15.2.1 20250813
 <!-- END_VERSION_BLOCK -->
 
 - GitHub Wiki: https://github.com/warte67/SDOM/wiki

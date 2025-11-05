@@ -53,6 +53,306 @@ function M.EventType_test0()
     return true -- completed
 end
 
+-- EventType_test1: Verify re-entrant machinery with a MouseMove event
+function M.EventType_test1()
+    local st = S.t1
+    if not st.init then
+        st.init = true
+        st.phase = "setup"
+        st.frames = 0
+    end
+
+    if st.phase == "setup" then
+        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test1: mainStage missing"); return true end
+        st.move_hit = false
+        st.listener = function(_) st.move_hit = true end
+        st.stage:addEventListener({ type = EventType.MouseMove, listener = st.listener })
+        -- capture frame baseline from Core
+        if Core and Core.getFrameCount then
+            local fc = Core:getFrameCount()
+            if type(fc) == "number" then st.start_frame = fc end
+        end
+        if Core and Core.pushMouseEvent then
+            Core:pushMouseEvent({ x = 8, y = 8, type = "move" })
+        end
+        st.phase = "wait"
+        return false -- re-entrant: wait for dispatch
+    end
+
+    if st.phase == "wait" then
+        st.frames = st.frames + 1
+        local delta = st.frames
+        if Core and Core.getFrameCount and type(st.start_frame) == "number" then
+            local now = Core:getFrameCount()
+            if type(now) == "number" then delta = now - (st.start_frame or 0) end
+        end
+        if st.move_hit then
+            if is_valid(st.stage) then
+                st.stage:removeEventListener({ type = EventType.MouseMove, listener = st.listener })
+            end
+            st.phase = "done"
+            return true
+        end
+        if delta > 60 then
+            push("EventType_test1: MouseMove did not dispatch within 60 frames")
+            if is_valid(st.stage) then
+                st.stage:removeEventListener({ type = EventType.MouseMove, listener = st.listener })
+            end
+            st.phase = "done"
+            return true
+        end
+        return false
+    end
+
+    return true
+end
+
+-- EventType_test2: Keyboard KeyDown/KeyUp roundtrip via Core:pushKeyboardEvent
+function M.EventType_test2()
+    local st = S.t2
+    if not st.init then
+        st.init = true
+        st.phase = "setup"
+        st.frames = 0
+    end
+
+    if st.phase == "setup" then
+        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test2: mainStage missing"); return true end
+        st.kd, st.ku = false, false
+        -- listeners
+        st.lkd = function(_) st.kd = true end
+        st.lku = function(_) st.ku = true end
+        st.stage:addEventListener({ type = EventType.KeyDown, listener = st.lkd })
+        st.stage:addEventListener({ type = EventType.KeyUp,   listener = st.lku })
+        -- baseline
+        if Core and Core.getFrameCount then
+            local fc = Core:getFrameCount(); if type(fc) == "number" then st.start_frame = fc end
+        end
+        -- push synthetic key down/up for an arbitrary key (65='A')
+        if Core and Core.pushKeyboardEvent then
+            Core:pushKeyboardEvent({ key = 65, type = "down" })
+            Core:pushKeyboardEvent({ key = 65, type = "up" })
+        end
+        st.phase = "wait"
+        return false
+    end
+
+    if st.phase == "wait" then
+        st.frames = st.frames + 1
+        local delta = st.frames
+        if Core and Core.getFrameCount and type(st.start_frame) == "number" then
+            local now = Core:getFrameCount(); if type(now) == "number" then delta = now - (st.start_frame or 0) end
+        end
+        if st.kd and st.ku then
+            if is_valid(st.stage) then
+                st.stage:removeEventListener({ type = EventType.KeyDown, listener = st.lkd })
+                st.stage:removeEventListener({ type = EventType.KeyUp,   listener = st.lku })
+            end
+            st.phase = "done"
+            return true
+        end
+        if delta > 60 then
+            if not st.kd then push("EventType_test2: KeyDown not observed within 60 frames") end
+            if not st.ku then push("EventType_test2: KeyUp not observed within 60 frames") end
+            if is_valid(st.stage) then
+                st.stage:removeEventListener({ type = EventType.KeyDown, listener = st.lkd })
+                st.stage:removeEventListener({ type = EventType.KeyUp,   listener = st.lku })
+            end
+            st.phase = "done"
+            return true
+        end
+        return false
+    end
+
+    return true
+end
+
+-- EventType_test3: Mouse event roundtrip (down, move, wheel, up)
+function M.EventType_test3()
+    local st = S.t3
+    if not st.init then
+        st.init = true
+        st.phase = "setup"
+        st.frames = 0
+    end
+
+    if st.phase == "setup" then
+        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test3: mainStage missing"); return true end
+        st.down, st.up, st.move, st.wheel = false, false, false, false
+        -- listeners
+        st.ldown = function(_) st.down = true end
+        st.lup   = function(_) st.up   = true end
+        st.lmove = function(_) st.move = true end
+        st.lwheel= function(_) st.wheel= true end
+        st.stage:addEventListener({ type = EventType.MouseButtonDown, listener = st.ldown })
+        st.stage:addEventListener({ type = EventType.MouseButtonUp,   listener = st.lup })
+        st.stage:addEventListener({ type = EventType.MouseMove,       listener = st.lmove })
+        st.stage:addEventListener({ type = EventType.MouseWheel,      listener = st.lwheel })
+        -- baseline
+        if Core and Core.getFrameCount then
+            local fc = Core:getFrameCount(); if type(fc) == "number" then st.start_frame = fc end
+        end
+        -- push synthetic mouse events
+        if Core and Core.pushMouseEvent then
+            Core:pushMouseEvent({ x = 10, y = 10, type = "down", button = 1 })
+            Core:pushMouseEvent({ x = 12, y = 11, type = "move" })
+            Core:pushMouseEvent({ x = 12, y = 11, type = "wheel" })
+            Core:pushMouseEvent({ x = 10, y = 10, type = "up",   button = 1 })
+        end
+        st.phase = "wait"
+        return false
+    end
+
+    if st.phase == "wait" then
+        st.frames = st.frames + 1
+        local delta = st.frames
+        if Core and Core.getFrameCount and type(st.start_frame) == "number" then
+            local now = Core:getFrameCount(); if type(now) == "number" then delta = now - (st.start_frame or 0) end
+        end
+        if st.down and st.up and st.move and st.wheel then
+            if is_valid(st.stage) then
+                st.stage:removeEventListener({ type = EventType.MouseButtonDown, listener = st.ldown })
+                st.stage:removeEventListener({ type = EventType.MouseButtonUp,   listener = st.lup })
+                st.stage:removeEventListener({ type = EventType.MouseMove,       listener = st.lmove })
+                st.stage:removeEventListener({ type = EventType.MouseWheel,      listener = st.lwheel })
+            end
+            st.phase = "done"
+            return true
+        end
+        if delta > 60 then
+            if not st.down  then push("EventType_test3: MouseButtonDown not observed within 60 frames") end
+            if not st.move  then push("EventType_test3: MouseMove not observed within 60 frames") end
+            if not st.wheel then push("EventType_test3: MouseWheel not observed within 60 frames") end
+            if not st.up    then push("EventType_test3: MouseButtonUp not observed within 60 frames") end
+            if is_valid(st.stage) then
+                st.stage:removeEventListener({ type = EventType.MouseButtonDown, listener = st.ldown })
+                st.stage:removeEventListener({ type = EventType.MouseButtonUp,   listener = st.lup })
+                st.stage:removeEventListener({ type = EventType.MouseMove,       listener = st.lmove })
+                st.stage:removeEventListener({ type = EventType.MouseWheel,      listener = st.lwheel })
+            end
+            st.phase = "done"
+            return true
+        end
+        return false
+    end
+
+    return true
+end
+
+-- EventType_test4: MouseClick and MouseDoubleClick (uses optional 'clicks' in push)
+function M.EventType_test4()
+    local st = S.t4
+    if not st.init then
+        st.init = true
+        st.phase = "setup"
+        st.frames = 0
+    end
+
+    if st.phase == "setup" then
+        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test4: mainStage missing"); return true end
+        st.click, st.dclick = false, false
+        st.lc = function(_) st.click = true end
+        st.ld = function(_) st.dclick = true end
+        st.stage:addEventListener({ type = EventType.MouseClick,       listener = st.lc })
+        st.stage:addEventListener({ type = EventType.MouseDoubleClick, listener = st.ld })
+        -- baseline
+        if Core and Core.getFrameCount then local fc = Core:getFrameCount(); if type(fc)=="number" then st.start_frame = fc end end
+        -- Move cursor over blueishBox then click and double-click
+        if Core and Core.pushMouseEvent then
+            Core:pushMouseEvent({ x = 200, y = 100, type = "move" })
+            Core:pushMouseEvent({ x = 200, y = 100, type = "down", button = 1, clicks = 1 })
+            Core:pushMouseEvent({ x = 200, y = 100, type = "up",   button = 1, clicks = 1 })
+            -- double click: set clicks=2 on the up event
+            Core:pushMouseEvent({ x = 200, y = 100, type = "down", button = 1, clicks = 2 })
+            Core:pushMouseEvent({ x = 200, y = 100, type = "up",   button = 1, clicks = 2 })
+        end
+        st.phase = "wait"
+        return false
+    end
+
+    if st.phase == "wait" then
+        st.frames = st.frames + 1
+        local delta = st.frames
+        if Core and Core.getFrameCount and type(st.start_frame) == "number" then local now = Core:getFrameCount(); if type(now)=="number" then delta = now - (st.start_frame or 0) end end
+        if st.click and st.dclick then
+            if is_valid(st.stage) then
+                st.stage:removeEventListener({ type = EventType.MouseClick,       listener = st.lc })
+                st.stage:removeEventListener({ type = EventType.MouseDoubleClick, listener = st.ld })
+            end
+            st.phase = "done"
+            return true
+        end
+        if delta > 60 then
+            if not st.click then push("EventType_test4: MouseClick not observed within 60 frames") end
+            if not st.dclick then push("EventType_test4: MouseDoubleClick not observed within 60 frames") end
+            if is_valid(st.stage) then
+                st.stage:removeEventListener({ type = EventType.MouseClick,       listener = st.lc })
+                st.stage:removeEventListener({ type = EventType.MouseDoubleClick, listener = st.ld })
+            end
+            st.phase = "done"
+            return true
+        end
+        return false
+    end
+
+    return true
+end
+
+-- EventType_test5: MouseEnter/MouseLeave on blueishBox
+function M.EventType_test5()
+    local st = S.t5
+    if not st.init then
+        st.init = true
+        st.phase = "setup"
+        st.frames = 0
+    end
+
+    if st.phase == "setup" then
+        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test5: mainStage missing"); return true end
+        st.enter, st.leave = false, false
+        st.le = function(_) st.enter = true end
+        st.ll = function(_) st.leave = true end
+        st.stage:addEventListener({ type = EventType.MouseEnter, listener = st.le })
+        st.stage:addEventListener({ type = EventType.MouseLeave, listener = st.ll })
+        if Core and Core.getFrameCount then local fc = Core:getFrameCount(); if type(fc)=="number" then st.start_frame = fc end end
+        if Core and Core.pushMouseEvent then
+            -- move outside, then inside blueishBox, then outside again
+            Core:pushMouseEvent({ x = 10,  y = 10,  type = "move" })
+            Core:pushMouseEvent({ x = 200, y = 100, type = "move" }) -- inside blueishBox
+            Core:pushMouseEvent({ x = 10,  y = 10,  type = "move" }) -- leave
+        end
+        st.phase = "wait"
+        return false
+    end
+
+    if st.phase == "wait" then
+        st.frames = st.frames + 1
+        local delta = st.frames
+        if Core and Core.getFrameCount and type(st.start_frame) == "number" then local now = Core:getFrameCount(); if type(now)=="number" then delta = now - (st.start_frame or 0) end end
+        if st.enter and st.leave then
+            if is_valid(st.stage) then
+                st.stage:removeEventListener({ type = EventType.MouseEnter, listener = st.le })
+                st.stage:removeEventListener({ type = EventType.MouseLeave, listener = st.ll })
+            end
+            st.phase = "done"
+            return true
+        end
+        if delta > 60 then
+            if not st.enter then push("EventType_test5: MouseEnter not observed within 60 frames") end
+            if not st.leave then push("EventType_test5: MouseLeave not observed within 60 frames") end
+            if is_valid(st.stage) then
+                st.stage:removeEventListener({ type = EventType.MouseEnter, listener = st.le })
+                st.stage:removeEventListener({ type = EventType.MouseLeave, listener = st.ll })
+            end
+            st.phase = "done"
+            return true
+        end
+        return false
+    end
+
+    return true
+end
+
 -- EventType_test6: Window environment roundtrip (Enter/LeaveFullscreen, Show/Hide, Resize, Move)
 function M.EventType_test6()
     local st = S.t6
@@ -278,306 +578,6 @@ function M.EventType_test8()
         Core:destroyDisplayObject("lua_parent")
         st.phase = "done"
         return true
-    end
-
-    return true
-end
-
--- EventType_test4: MouseClick and MouseDoubleClick (uses optional 'clicks' in push)
-function M.EventType_test4()
-    local st = S.t4
-    if not st.init then
-        st.init = true
-        st.phase = "setup"
-        st.frames = 0
-    end
-
-    if st.phase == "setup" then
-        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test4: mainStage missing"); return true end
-        st.click, st.dclick = false, false
-        st.lc = function(_) st.click = true end
-        st.ld = function(_) st.dclick = true end
-        st.stage:addEventListener({ type = EventType.MouseClick,       listener = st.lc })
-        st.stage:addEventListener({ type = EventType.MouseDoubleClick, listener = st.ld })
-        -- baseline
-        if Core and Core.getFrameCount then local fc = Core:getFrameCount(); if type(fc)=="number" then st.start_frame = fc end end
-        -- Move cursor over blueishBox then click and double-click
-        if Core and Core.pushMouseEvent then
-            Core:pushMouseEvent({ x = 200, y = 100, type = "move" })
-            Core:pushMouseEvent({ x = 200, y = 100, type = "down", button = 1, clicks = 1 })
-            Core:pushMouseEvent({ x = 200, y = 100, type = "up",   button = 1, clicks = 1 })
-            -- double click: set clicks=2 on the up event
-            Core:pushMouseEvent({ x = 200, y = 100, type = "down", button = 1, clicks = 2 })
-            Core:pushMouseEvent({ x = 200, y = 100, type = "up",   button = 1, clicks = 2 })
-        end
-        st.phase = "wait"
-        return false
-    end
-
-    if st.phase == "wait" then
-        st.frames = st.frames + 1
-        local delta = st.frames
-        if Core and Core.getFrameCount and type(st.start_frame) == "number" then local now = Core:getFrameCount(); if type(now)=="number" then delta = now - (st.start_frame or 0) end end
-        if st.click and st.dclick then
-            if is_valid(st.stage) then
-                st.stage:removeEventListener({ type = EventType.MouseClick,       listener = st.lc })
-                st.stage:removeEventListener({ type = EventType.MouseDoubleClick, listener = st.ld })
-            end
-            st.phase = "done"
-            return true
-        end
-        if delta > 60 then
-            if not st.click then push("EventType_test4: MouseClick not observed within 60 frames") end
-            if not st.dclick then push("EventType_test4: MouseDoubleClick not observed within 60 frames") end
-            if is_valid(st.stage) then
-                st.stage:removeEventListener({ type = EventType.MouseClick,       listener = st.lc })
-                st.stage:removeEventListener({ type = EventType.MouseDoubleClick, listener = st.ld })
-            end
-            st.phase = "done"
-            return true
-        end
-        return false
-    end
-
-    return true
-end
-
--- EventType_test5: MouseEnter/MouseLeave on blueishBox
-function M.EventType_test5()
-    local st = S.t5
-    if not st.init then
-        st.init = true
-        st.phase = "setup"
-        st.frames = 0
-    end
-
-    if st.phase == "setup" then
-        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test5: mainStage missing"); return true end
-        st.enter, st.leave = false, false
-        st.le = function(_) st.enter = true end
-        st.ll = function(_) st.leave = true end
-        st.stage:addEventListener({ type = EventType.MouseEnter, listener = st.le })
-        st.stage:addEventListener({ type = EventType.MouseLeave, listener = st.ll })
-        if Core and Core.getFrameCount then local fc = Core:getFrameCount(); if type(fc)=="number" then st.start_frame = fc end end
-        if Core and Core.pushMouseEvent then
-            -- move outside, then inside blueishBox, then outside again
-            Core:pushMouseEvent({ x = 10,  y = 10,  type = "move" })
-            Core:pushMouseEvent({ x = 200, y = 100, type = "move" }) -- inside blueishBox
-            Core:pushMouseEvent({ x = 10,  y = 10,  type = "move" }) -- leave
-        end
-        st.phase = "wait"
-        return false
-    end
-
-    if st.phase == "wait" then
-        st.frames = st.frames + 1
-        local delta = st.frames
-        if Core and Core.getFrameCount and type(st.start_frame) == "number" then local now = Core:getFrameCount(); if type(now)=="number" then delta = now - (st.start_frame or 0) end end
-        if st.enter and st.leave then
-            if is_valid(st.stage) then
-                st.stage:removeEventListener({ type = EventType.MouseEnter, listener = st.le })
-                st.stage:removeEventListener({ type = EventType.MouseLeave, listener = st.ll })
-            end
-            st.phase = "done"
-            return true
-        end
-        if delta > 60 then
-            if not st.enter then push("EventType_test5: MouseEnter not observed within 60 frames") end
-            if not st.leave then push("EventType_test5: MouseLeave not observed within 60 frames") end
-            if is_valid(st.stage) then
-                st.stage:removeEventListener({ type = EventType.MouseEnter, listener = st.le })
-                st.stage:removeEventListener({ type = EventType.MouseLeave, listener = st.ll })
-            end
-            st.phase = "done"
-            return true
-        end
-        return false
-    end
-
-    return true
-end
-
--- EventType_test1: Verify re-entrant machinery with a MouseMove event
-function M.EventType_test1()
-    local st = S.t1
-    if not st.init then
-        st.init = true
-        st.phase = "setup"
-        st.frames = 0
-    end
-
-    if st.phase == "setup" then
-        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test1: mainStage missing"); return true end
-        st.move_hit = false
-        st.listener = function(_) st.move_hit = true end
-        st.stage:addEventListener({ type = EventType.MouseMove, listener = st.listener })
-        -- capture frame baseline from Core
-        if Core and Core.getFrameCount then
-            local fc = Core:getFrameCount()
-            if type(fc) == "number" then st.start_frame = fc end
-        end
-        if Core and Core.pushMouseEvent then
-            Core:pushMouseEvent({ x = 8, y = 8, type = "move" })
-        end
-        st.phase = "wait"
-        return false -- re-entrant: wait for dispatch
-    end
-
-    if st.phase == "wait" then
-        st.frames = st.frames + 1
-        local delta = st.frames
-        if Core and Core.getFrameCount and type(st.start_frame) == "number" then
-            local now = Core:getFrameCount()
-            if type(now) == "number" then delta = now - (st.start_frame or 0) end
-        end
-        if st.move_hit then
-            if is_valid(st.stage) then
-                st.stage:removeEventListener({ type = EventType.MouseMove, listener = st.listener })
-            end
-            st.phase = "done"
-            return true
-        end
-        if delta > 60 then
-            push("EventType_test1: MouseMove did not dispatch within 60 frames")
-            if is_valid(st.stage) then
-                st.stage:removeEventListener({ type = EventType.MouseMove, listener = st.listener })
-            end
-            st.phase = "done"
-            return true
-        end
-        return false
-    end
-
-    return true
-end
-
--- EventType_test2: Keyboard KeyDown/KeyUp roundtrip via Core:pushKeyboardEvent
-function M.EventType_test2()
-    local st = S.t2
-    if not st.init then
-        st.init = true
-        st.phase = "setup"
-        st.frames = 0
-    end
-
-    if st.phase == "setup" then
-        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test2: mainStage missing"); return true end
-        st.kd, st.ku = false, false
-        -- listeners
-        st.lkd = function(_) st.kd = true end
-        st.lku = function(_) st.ku = true end
-        st.stage:addEventListener({ type = EventType.KeyDown, listener = st.lkd })
-        st.stage:addEventListener({ type = EventType.KeyUp,   listener = st.lku })
-        -- baseline
-        if Core and Core.getFrameCount then
-            local fc = Core:getFrameCount(); if type(fc) == "number" then st.start_frame = fc end
-        end
-        -- push synthetic key down/up for an arbitrary key (65='A')
-        if Core and Core.pushKeyboardEvent then
-            Core:pushKeyboardEvent({ key = 65, type = "down" })
-            Core:pushKeyboardEvent({ key = 65, type = "up" })
-        end
-        st.phase = "wait"
-        return false
-    end
-
-    if st.phase == "wait" then
-        st.frames = st.frames + 1
-        local delta = st.frames
-        if Core and Core.getFrameCount and type(st.start_frame) == "number" then
-            local now = Core:getFrameCount(); if type(now) == "number" then delta = now - (st.start_frame or 0) end
-        end
-        if st.kd and st.ku then
-            if is_valid(st.stage) then
-                st.stage:removeEventListener({ type = EventType.KeyDown, listener = st.lkd })
-                st.stage:removeEventListener({ type = EventType.KeyUp,   listener = st.lku })
-            end
-            st.phase = "done"
-            return true
-        end
-        if delta > 60 then
-            if not st.kd then push("EventType_test2: KeyDown not observed within 60 frames") end
-            if not st.ku then push("EventType_test2: KeyUp not observed within 60 frames") end
-            if is_valid(st.stage) then
-                st.stage:removeEventListener({ type = EventType.KeyDown, listener = st.lkd })
-                st.stage:removeEventListener({ type = EventType.KeyUp,   listener = st.lku })
-            end
-            st.phase = "done"
-            return true
-        end
-        return false
-    end
-
-    return true
-end
-
--- EventType_test3: Mouse event roundtrip (down, move, wheel, up)
-function M.EventType_test3()
-    local st = S.t3
-    if not st.init then
-        st.init = true
-        st.phase = "setup"
-        st.frames = 0
-    end
-
-    if st.phase == "setup" then
-        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test3: mainStage missing"); return true end
-        st.down, st.up, st.move, st.wheel = false, false, false, false
-        -- listeners
-        st.ldown = function(_) st.down = true end
-        st.lup   = function(_) st.up   = true end
-        st.lmove = function(_) st.move = true end
-        st.lwheel= function(_) st.wheel= true end
-        st.stage:addEventListener({ type = EventType.MouseButtonDown, listener = st.ldown })
-        st.stage:addEventListener({ type = EventType.MouseButtonUp,   listener = st.lup })
-        st.stage:addEventListener({ type = EventType.MouseMove,       listener = st.lmove })
-        st.stage:addEventListener({ type = EventType.MouseWheel,      listener = st.lwheel })
-        -- baseline
-        if Core and Core.getFrameCount then
-            local fc = Core:getFrameCount(); if type(fc) == "number" then st.start_frame = fc end
-        end
-        -- push synthetic mouse events
-        if Core and Core.pushMouseEvent then
-            Core:pushMouseEvent({ x = 10, y = 10, type = "down", button = 1 })
-            Core:pushMouseEvent({ x = 12, y = 11, type = "move" })
-            Core:pushMouseEvent({ x = 12, y = 11, type = "wheel" })
-            Core:pushMouseEvent({ x = 10, y = 10, type = "up",   button = 1 })
-        end
-        st.phase = "wait"
-        return false
-    end
-
-    if st.phase == "wait" then
-        st.frames = st.frames + 1
-        local delta = st.frames
-        if Core and Core.getFrameCount and type(st.start_frame) == "number" then
-            local now = Core:getFrameCount(); if type(now) == "number" then delta = now - (st.start_frame or 0) end
-        end
-        if st.down and st.up and st.move and st.wheel then
-            if is_valid(st.stage) then
-                st.stage:removeEventListener({ type = EventType.MouseButtonDown, listener = st.ldown })
-                st.stage:removeEventListener({ type = EventType.MouseButtonUp,   listener = st.lup })
-                st.stage:removeEventListener({ type = EventType.MouseMove,       listener = st.lmove })
-                st.stage:removeEventListener({ type = EventType.MouseWheel,      listener = st.lwheel })
-            end
-            st.phase = "done"
-            return true
-        end
-        if delta > 60 then
-            if not st.down  then push("EventType_test3: MouseButtonDown not observed within 60 frames") end
-            if not st.move  then push("EventType_test3: MouseMove not observed within 60 frames") end
-            if not st.wheel then push("EventType_test3: MouseWheel not observed within 60 frames") end
-            if not st.up    then push("EventType_test3: MouseButtonUp not observed within 60 frames") end
-            if is_valid(st.stage) then
-                st.stage:removeEventListener({ type = EventType.MouseButtonDown, listener = st.ldown })
-                st.stage:removeEventListener({ type = EventType.MouseButtonUp,   listener = st.lup })
-                st.stage:removeEventListener({ type = EventType.MouseMove,       listener = st.lmove })
-                st.stage:removeEventListener({ type = EventType.MouseWheel,      listener = st.lwheel })
-            end
-            st.phase = "done"
-            return true
-        end
-        return false
     end
 
     return true

@@ -5,5 +5,6 @@ var searchData=
   ['queue_5fsdl_5fevent_2',['Queue_SDL_Event',['../classSDOM_1_1EventManager.html#a7ef51b6b24295ea49537303e5cefd7fd',1,'SDOM::EventManager']]],
   ['quiet_5fmode_3',['quiet_mode',['../classSDOM_1_1UnitTests.html#acb2ac96849418508dc4f2dbc58947d60',1,'SDOM::UnitTests']]],
   ['quiet_5ftest_5fmode_4',['QUIET_TEST_MODE',['../namespaceSDOM.html#a5f4035d1ee55946322bc55a123ba92b8',1,'SDOM']]],
-  ['quit_5',['quit',['../classSDOM_1_1EventType.html#aba470e5b61a6cc497a8100a06166f00b',1,'SDOM::EventType::Quit'],['../classSDOM_1_1Core.html#a42a5582607f3fe1540ed6c00afc40283',1,'SDOM::Core::quit()'],['../namespaceSDOM.html#a9c56125987bd1ed7efbcc59e678a2be2',1,'SDOM::quit()']]]
+  ['quit_5',['Quit',['../classSDOM_1_1EventType.html#aba470e5b61a6cc497a8100a06166f00b',1,'SDOM::EventType']]],
+  ['quit_6',['quit',['../classSDOM_1_1Core.html#a42a5582607f3fe1540ed6c00afc40283',1,'SDOM::Core::quit()'],['../namespaceSDOM.html#a9c56125987bd1ed7efbcc59e678a2be2',1,'SDOM::quit()']]]
 ];

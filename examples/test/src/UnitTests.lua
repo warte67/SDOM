@@ -10,7 +10,7 @@ local ok = true  -- true initially
 -- helper function to push an error
 local function push_error(msg)
     table.insert(problems, tostring(msg))
-    ok = false  -- mark overall result as failed
+    -- ok = false  -- mark overall result as failed
 end
 
 -- helper function to get the results

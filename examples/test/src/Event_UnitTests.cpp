@@ -866,8 +866,7 @@ namespace SDOM
 
     bool Event_LUA_Tests(std::vector<std::string>& errors)
     {
-        UnitTests& ut = UnitTests::getInstance();
-        return ut.run_lua_tests(errors, ut.getLuaFilename());
+        return UnitTests::getInstance().run_lua_tests(errors, "src/Event_UnitTests.lua");
     } // END: Event_LUA_Tests()
 
 
@@ -889,8 +888,7 @@ namespace SDOM
         ut.add_test(objName, "Behavioral Hover Enter/Leave Verification", Event_test9);
 
 
-        ut.setLuaFilename("src/Event_UnitTests.lua"); // Lua test script path
-        ut.add_test(objName, "Lua: " + ut.getLuaFilename(), Event_LUA_Tests, true);  // false = not implemented yet (dont run the lua file tests)
+        ut.add_test(objName, "Lua: src/Event_UnitTests.lua", Event_LUA_Tests, true);
 
 
         // return ut.run_all(objName);

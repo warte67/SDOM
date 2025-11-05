@@ -1336,8 +1336,7 @@ namespace SDOM
 
     bool IDisplayObject_LUA_Tests(std::vector<std::string>& errors)
     {  
-        UnitTests& ut = UnitTests::getInstance();
-        return ut.run_lua_tests(errors, ut.getLuaFilename());
+        return UnitTests::getInstance().run_lua_tests(errors, "src/IDisplayObject_UnitTests.lua");
     } // END: IDisplayObject_LUA_Tests()
 
 
@@ -1364,8 +1363,7 @@ DEBUG_LOG("IDisplayObject_UnitTests: Starting.");
             ut.add_test(objName, "Geometry, Layout, and Edge Anchors", IDisplayObject_test10);
             ut.add_test(objName, "Orphan Retention Policy and Grace Period", IDisplayObject_test11);
 
-            ut.setLuaFilename("src/IDisplayObject_UnitTests.lua"); // Lua test script path
-            ut.add_test(objName, "Lua: '" + ut.getLuaFilename() + "'", IDisplayObject_LUA_Tests, true); 
+            ut.add_test(objName, "Lua: 'src/IDisplayObject_UnitTests.lua'", IDisplayObject_LUA_Tests, true); 
 
             registered = true;
         }

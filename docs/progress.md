@@ -311,7 +311,6 @@ _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++
 - **No leaks, no lost references** — verified with Valgrind: 0 bytes definitely or indirectly lost.
 
 ---
-<a id="latest-update"></a>
 ## 🗓️ November 4, 2025 — Build & Toolchain Refinement
 
 _Resolved absolute-path dependencies, improved build automation for portability, and finalized the documentation/version-control workflow._
@@ -359,7 +358,7 @@ _Resolved absolute-path dependencies, improved build automation for portability,
   - ⌨️ Keyboard — KeyDown/Up round-trip via `Core:pushKeyboardEvent`  
   - 🪟 Window/Stage — Show/Hide, Resize, Move, Enter/Leave Fullscreen  
   - 🧱 UI State — `ValueChanged` and `StateChanged` propagation via Slider / CheckButton  
-  - 🔄 Lifecycle — Added/Removed and AddedToStage/RemovedFromStage validation  
+  - 🌱 Lifecycle — Added/Removed and AddedToStage/RemovedFromStage validation  
 - Added frame-based re-entrancy and timeout handling using `Core:getFrameCount()`.  
 - All 75 tests verified successfully, confirming engine–Lua event parity across all interactive and lifecycle systems.
 
@@ -370,20 +369,90 @@ SDOM’s `EventType` subsystem is now **fully verified** from engine to Lua, ens
 - Consistent cross-language behavior across all platforms  
 
 ---
+<a id="latest-update"></a>
+## 🗓️ November 5, 2025 — Re-entrant Lua Tests + Lifecycle Fixes + ArrowButton Integration
+
+_Reworked the Lua unit-test harness for true re-entrancy, fixed lifecycle event propagation, and completed full Lua integration and testing for **ArrowButton**._
+
+---
+
+### 🧩 **Unit Tests & Lua Integration**
+- **Re-entrant runner:**  
+  `UnitTests::run_lua_tests` now infers the module name from its filename, calls `step()` if present (`true` = finished, `false` = continue), and interprets a bare boolean return as “finished?” only — pass/fail now derives from collected errors.  
+  _Path: `src/SDOM_UnitTests.cpp` (line 391)_
+- **Safer execution:**  
+  Uses `sol::script_pass_on_error`, catches runtime/type exceptions, and treats missing Lua files as completed one-shots with logged warnings.
+- **No double-stepping:**  
+  Removed redundant per-frame `step()` calls from `examples/test/lua/callbacks/unittest.lua`; C++ exclusively advances Lua tests.
+- **No global filename leak:**  
+  Tests now pass explicit Lua paths when registering, removing reliance on `UnitTests::setLuaFilename()`.
+- **Updated files:**  
+  `Core_UnitTests.cpp`, `IDisplayObject_UnitTests.cpp`, `Event_UnitTests.cpp`,  
+  `EventType_UnitTests.cpp`, `ArrowButton_UnitTests.cpp`, `scaffold_UnitTests.cpp`.
+- **Tidied ordering:**  
+  Reordered functions in `EventType_UnitTests.lua` so `EventType_test0 – EventType_test8` appear in numeric order.
+
+---
+
+### 🧩 **Event System**
+- **Lifecycle propagation:**  
+  When attaching or detaching from the active stage, `AddedToStage` / `RemovedFromStage` events now dispatch recursively through all descendants.  
+  Fixes **“EventType_test8: AddedToStage did not fire for child.”**  
+  _Path: `src/SDOM_IDisplayObject.cpp` (recursive helpers + attach/detach logic)_
+
+---
+
+### 🧩 **ArrowButton Lua Bindings**
+- Implemented `_registerLuaBindings()` for `ArrowButton`, extending inherited bindings from `IconButton`.  
+- Verified **bi-directional Lua exposure** of ArrowButton-specific API:
+  - `getDirection()` / `setDirection()`
+  - `getArrowState()`
+  - `getIconIndex()`  
+- Confirmed `ArrowDirection` and `ArrowState` enums registered correctly in both C++ and Lua environments.  
+- Ensured bindings coexist gracefully with shared `DisplayHandle` usertype without clobbering inherited functions.
+
+---
+
+### 🧪 **ArrowButton Unit Tests**
+- Added `ArrowButton_UnitTests.lua` (re-entrant) to validate:
+  - ✅ Creation and property roundtrip (`direction`)
+  - ✅ Correct depressed/raised state transitions via mouse events  
+  - ✅ Icon index updates across direction/state combinations  
+- Tests follow new re-entrant harness pattern (`step()` based) — no reliance on frame callbacks.  
+- All Lua diagnostics resolved via updated `lua/api_stubs.lua` (added `getDirection`, `getArrowState`, enums, and `Core:getFrameCount()`).
+
+---
+
+### 🌟 **Summary**
+Lua tests are now **truly re-entrant and stable** — no more cross-module filename contamination.  
+Lifecycle events propagate correctly to all descendants, resolving prior failures in `EventType_test8`.  
+The `ArrowButton` component is now **fully verified** and **Lua-accessible**.  
+Basic interaction, visual state, and event feedback behave as expected.  
+This module is marked **✅ Complete** and serves as a reference pattern for future widget bindings and Lua tests.
+
+---
+
+### 🚧 **To-Do (Ongoing)**
+- ☐ Remove deprecated `UnitTests::setLuaFilename` / `getLuaFilename` and clean up headers/usages.  
+- ☐ Add regression test (Lua) verifying `AddedToStage` / `RemovedFromStage` propagation for grandchildren and ensure no duplicate dispatches.  
+- ☐ Add higher-level **IconButton** coverage following ArrowButton’s binder/test pattern.  
+- ☐ Begin unifying documentation headers between C++ and Lua test sources.  
+- ☐ Expand Lua stubs to include upcoming control types (`ToggleButton`, `Slider`, `CheckButton`, etc.).
+---
+#### end-of-day
+
+
+
+[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+
+
+---
 
 ### 🚧 **To-Do (Ongoing)**
 - ☐ Add comments and Doxygen tags for modified scripts (`compile`, `dox`, `gen_version.sh`).  
 - ☐ Begin implementation of the new **EditBox / IME input system**.
 
 ---
-
-#### end-of-day
-
-
-[🔝 **Back to Table of Contents**](#📑-table-of-contents)
-
----
-
 
 ### 🧪 Memory Validation
 ---

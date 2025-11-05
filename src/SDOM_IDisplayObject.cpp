@@ -50,6 +50,48 @@
 
 namespace SDOM
 {
+    namespace {
+        // Recursively dispatch AddedToStage for an object's subtree
+        void dispatchAddedToStageRecursive(const DisplayHandle& node, const DisplayHandle& stageHandle)
+        {
+            if (!node.isValid()) return;
+            IDisplayObject* obj = dynamic_cast<IDisplayObject*>(node.get());
+            if (!obj) return;
+
+            auto& eventManager = getCore().getEventManager();
+            const auto& children = obj->getChildren();
+            for (const auto& ch : children)
+            {
+                if (!ch.isValid()) continue;
+                std::unique_ptr<Event> ev = std::make_unique<Event>(EventType::AddedToStage, ch);
+                ev->setRelatedTarget(stageHandle);
+                eventManager.dispatchEvent(std::move(ev), ch);
+                // Recurse into subtree
+                dispatchAddedToStageRecursive(ch, stageHandle);
+            }
+        }
+
+        // Recursively dispatch RemovedFromStage for an object's subtree
+        void dispatchRemovedFromStageRecursive(const DisplayHandle& node, const DisplayHandle& stageHandle)
+        {
+            if (!node.isValid()) return;
+            IDisplayObject* obj = dynamic_cast<IDisplayObject*>(node.get());
+            if (!obj) return;
+
+            auto& eventManager = getCore().getEventManager();
+            const auto& children = obj->getChildren();
+            for (const auto& ch : children)
+            {
+                if (!ch.isValid()) continue;
+                std::unique_ptr<Event> ev = std::make_unique<Event>(EventType::RemovedFromStage, ch);
+                ev->setRelatedTarget(stageHandle);
+                eventManager.dispatchEvent(std::move(ev), ch);
+                // Recurse into subtree
+                dispatchRemovedFromStageRecursive(ch, stageHandle);
+            }
+        }
+    } // unnamed namespace
+
     // IDisplayObject implementation
 
     // Performance Introspection
@@ -446,6 +488,9 @@ namespace SDOM
                         std::unique_ptr<Event> addedToStage = std::make_unique<Event>(EventType::AddedToStage, p_child);
                         addedToStage->setRelatedTarget(stageHandle);
                         eventManager.dispatchEvent(std::move(addedToStage), p_child);
+
+                        // Propagate AddedToStage to entire subtree now connected to stage
+                        dispatchAddedToStageRecursive(p_child, stageHandle);
                     }
                 }
             }
@@ -499,6 +544,9 @@ namespace SDOM
                             std::unique_ptr<Event> removedFromStage = std::make_unique<Event>(EventType::RemovedFromStage, orphan);
                             removedFromStage->setRelatedTarget(stageHandle);
                             eventManager.dispatchEvent(std::move(removedFromStage), orphan);
+
+                            // Propagate RemovedFromStage to entire subtree detached from stage
+                            dispatchRemovedFromStageRecursive(orphan, stageHandle);
                         }
                     }
                 }

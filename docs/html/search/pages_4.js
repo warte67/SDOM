@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['sdl_20document_20object_20model_20api_0',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
-  ['sdom_20documentation_1',['SDOM Documentation',['../index.html',1,'']]],
-  ['sdom_3a_20simple_20sdl_20document_20object_20model_20api_2',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
-  ['simple_20sdl_20document_20object_20model_20api_3',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]]
+  ['base_20type_0',['IDataObject: Data-Driven Base Type',['../md_README.html#autotoc_md19',1,'']]],
+  ['before_20you_20build_1',['⚠️ Before You Build',['../md_README.html#autotoc_md25',1,'']]],
+  ['build_2',['⚠️ Before You Build',['../md_README.html#autotoc_md25',1,'']]],
+  ['build_20and_20install_20sdl3_20libraries_3',['Build and install SDL3 libraries',['../md_README.html#autotoc_md49',1,'']]],
+  ['build_20dependencies_4',['SDL3 Build Dependencies',['../md_README.html#autotoc_md36',1,'']]],
+  ['build_20per_20sdl3_3a_5',['Build per SDL3:',['../md_README.html#autotoc_md48',1,'']]],
+  ['building_20and_20installing_20sdl3_5fmixer_20sdl3_5fimage_20and_20sdl_5fttf_6',['Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf',['../md_README.html#autotoc_md47',1,'']]],
+  ['building_20the_20sdom_20library_7',['Building the SDOM Library',['../md_README.html#autotoc_md26',1,'']]]
 ];

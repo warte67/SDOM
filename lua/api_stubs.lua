@@ -42,6 +42,30 @@ Core = Core or {}
 IconIndex = IconIndex or {}
 ArrowDirection = ArrowDirection or {}
 EventType = EventType or {}
+---@enum ArrowDirection
+ArrowDirection = {
+    Left = 0,
+    Right = 1,
+    Up = 2,
+    Down = 3
+}
+
+---@enum ArrowState
+ArrowState = {
+    Raised = 0,
+    Depressed = 1
+}
+
+---@alias ArrowDirectionString
+---| 'left'
+---| 'right'
+---| 'up'
+---| 'down'
+
+---@alias ArrowStateString
+---| 'raised'
+---| 'depressed'
+
 
 --- Global helper mirroring Core:configure(table)
 ---@param cfg table
@@ -263,6 +287,7 @@ function configure(cfg) end
 ---@field setPreserveAspectRatio fun(self: Core, preserve: boolean)
 ---@field setAllowTextureResize fun(self: Core, allow: boolean)
 ---@field setRendererLogicalPresentation fun(self: Core, presentation: integer)
+---@field getFrameCount fun(self: Core): integer
 ---@field getElapsedTime fun(self: Core): number
 ---@field getDeltaTime fun(self: Core): number
 ---@field pumpEventsOnce fun(self: Core)
@@ -551,6 +576,20 @@ EventType = EventType or {}
 ---@field orphan_grace number   -- mirrors getOrphanGrace()/setOrphanGrace()
 ---@field orphan_policy string  -- mirrors getOrphanRetentionPolicyString()/setOrphanRetentionPolicy()
 
+---@class ArrowButton : DisplayHandle
+---Represents a directional button derived from IconButton.
+---Provides direction and arrow-state controls.
+---@field direction ArrowDirectionString|integer  -- 'up'|'down'|'left'|'right'
+---@field getDirection fun(self: ArrowButton): ArrowDirectionString|integer
+---@field setDirection fun(self: ArrowButton, dir: (ArrowDirectionString|integer))
+---@field getArrowState fun(self: ArrowButton): ArrowStateString|integer
+---@field getIconIndex fun(self: ArrowButton): integer
+
+---@param typeName "ArrowButton"
+---@param cfg table
+---@return ArrowButton
+function Core:createDisplayObject(typeName, cfg) end
+
 ---Creates a new SDL_Color
 ---@param r integer|nil
 ---@param g integer|nil
@@ -673,6 +712,8 @@ function SDL_Utils.eventToLuaTable(ev) end
 ---@param ev any
 ---@return table|nil
 function SDL_Utils:eventToLuaTable(ev) end
+
+
 
 -- Export both names: SDL_Utils and SDL
 _G.SDL_Utils = SDL_Utils

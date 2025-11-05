@@ -1,11 +1,11 @@
 var annotated_dup =
 [
     [ "SDOM", "namespaceSDOM.html", [
+      [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
+      [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
       [ "ArrowButton", "classSDOM_1_1ArrowButton.html", "classSDOM_1_1ArrowButton" ],
       [ "AssetHandle", "classSDOM_1_1AssetHandle.html", "classSDOM_1_1AssetHandle" ],
-      [ "AssetTypeCreators", "structSDOM_1_1AssetTypeCreators.html", "structSDOM_1_1AssetTypeCreators" ],
       [ "BitmapFont", "classSDOM_1_1BitmapFont.html", "classSDOM_1_1BitmapFont" ],
-      [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
       [ "Button", "classSDOM_1_1Button.html", "classSDOM_1_1Button" ],
       [ "CheckButton", "classSDOM_1_1CheckButton.html", "classSDOM_1_1CheckButton" ],
       [ "Core", "classSDOM_1_1Core.html", "classSDOM_1_1Core" ],
@@ -14,9 +14,9 @@ var annotated_dup =
       [ "EventManager", "classSDOM_1_1EventManager.html", "classSDOM_1_1EventManager" ],
       [ "EventType", "classSDOM_1_1EventType.html", "classSDOM_1_1EventType" ],
       [ "EventTypeHash", "structSDOM_1_1EventTypeHash.html", "structSDOM_1_1EventTypeHash" ],
-      [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
+      [ "TypeCreators", "structSDOM_1_1TypeCreators.html", "structSDOM_1_1TypeCreators" ],
+      [ "AssetTypeCreators", "structSDOM_1_1AssetTypeCreators.html", "structSDOM_1_1AssetTypeCreators" ],
       [ "Factory", "classSDOM_1_1Factory.html", "classSDOM_1_1Factory" ],
-      [ "FontStyle", "structSDOM_1_1FontStyle.html", "structSDOM_1_1FontStyle" ],
       [ "Frame", "classSDOM_1_1Frame.html", "classSDOM_1_1Frame" ],
       [ "Group", "classSDOM_1_1Group.html", "classSDOM_1_1Group" ],
       [ "IAssetObject", "classSDOM_1_1IAssetObject.html", "classSDOM_1_1IAssetObject" ],
@@ -24,6 +24,7 @@ var annotated_dup =
       [ "IconButton", "classSDOM_1_1IconButton.html", "classSDOM_1_1IconButton" ],
       [ "IDataObject", "classSDOM_1_1IDataObject.html", "classSDOM_1_1IDataObject" ],
       [ "IDisplayObject", "classSDOM_1_1IDisplayObject.html", "classSDOM_1_1IDisplayObject" ],
+      [ "FontStyle", "structSDOM_1_1FontStyle.html", "structSDOM_1_1FontStyle" ],
       [ "IFontObject", "classSDOM_1_1IFontObject.html", "classSDOM_1_1IFontObject" ],
       [ "IPanelObject", "classSDOM_1_1IPanelObject.html", "classSDOM_1_1IPanelObject" ],
       [ "IRangeControl", "classSDOM_1_1IRangeControl.html", "classSDOM_1_1IRangeControl" ],
@@ -41,7 +42,6 @@ var annotated_dup =
       [ "TristateButton", "classSDOM_1_1TristateButton.html", "classSDOM_1_1TristateButton" ],
       [ "TruetypeFont", "classSDOM_1_1TruetypeFont.html", "classSDOM_1_1TruetypeFont" ],
       [ "TTFAsset", "classSDOM_1_1TTFAsset.html", "classSDOM_1_1TTFAsset" ],
-      [ "TypeCreators", "structSDOM_1_1TypeCreators.html", "structSDOM_1_1TypeCreators" ],
       [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
       [ "Version", "classSDOM_1_1Version.html", "classSDOM_1_1Version" ]
     ] ],

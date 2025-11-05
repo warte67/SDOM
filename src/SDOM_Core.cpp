@@ -2070,6 +2070,12 @@ namespace SDOM
             }
             lua["ArrowDirection"] = arrowDirTable;
 
+            // Add ArrowState for ArrowButton
+            sol::table arrowStateTable = lua.create_table();
+            arrowStateTable.set("raised", static_cast<int>(SDOM::ArrowButton::ArrowState::Raised));
+            arrowStateTable.set("depressed", static_cast<int>(SDOM::ArrowButton::ArrowState::Depressed));
+            lua["ArrowState"] = arrowStateTable;
+
         } catch(...) {
             // Non-fatal: registration is best-effort
         }

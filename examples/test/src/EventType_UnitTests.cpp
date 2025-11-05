@@ -750,8 +750,7 @@ namespace SDOM
 
     bool EventType_LUA_Tests(std::vector<std::string>& errors)
     {
-        UnitTests& ut = UnitTests::getInstance();
-        return ut.run_lua_tests(errors, ut.getLuaFilename());
+        return UnitTests::getInstance().run_lua_tests(errors, "src/EventType_UnitTests.lua");
     } // END: EventType_LUA_Tests()
 
 
@@ -772,8 +771,7 @@ namespace SDOM
             ut.add_test(objName, "Window Environment Behavior", EventType_test5);
 
 
-            ut.setLuaFilename("src/EventType_UnitTests.lua"); // Lua test script path
-            ut.add_test(objName, "Lua: " + ut.getLuaFilename(), EventType_LUA_Tests, true);  // false = not implemented yet (dont run the lua file tests)
+            ut.add_test(objName, "Lua: src/EventType_UnitTests.lua", EventType_LUA_Tests, true);
 
             registered = true;
         }

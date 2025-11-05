@@ -1,4 +1,42 @@
+// ============================================================================
 // SDOM_ArrowButton.cpp
+// ----------------------------------------------------------------------------
+// Implementation file for SDOM::ArrowButton
+//
+// Purpose:
+//     Implements the core logic, rendering, and event handling for the
+//     ArrowButton class. This file defines how arrow buttons respond to
+//     directional input, visual states, and Lua configuration.
+//
+// Notes:
+//     - Keep helper functions in anonymous namespaces or mark them `static`.
+//     - Avoid Doxygen comments here; documentation belongs in headers.
+//     - Maintain include order: standard library, SDL, SDOM core, then local.
+//     - All logging and test hooks should use SDOM-provided utilities.
+//
+// ----------------------------------------------------------------------------
+// License: ZLIB
+// ----------------------------------------------------------------------------
+// This software is provided 'as-is', without any express or implied warranty.
+// In no event will the authors be held liable for any damages arising from
+// the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+// ----------------------------------------------------------------------------
+// Author: Jay Faries (https://github.com/warte67)
+// ============================================================================
+
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Factory.hpp>
@@ -158,33 +196,96 @@ namespace SDOM
 
     void ArrowButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
-        // // Include IButtonObject bindings first
-        // IButtonObject::registerLuaBindings(lua);  // IconButton calls this
-
-        // Include inherited bindings first
+        // ----------------------------------------------------------
+        // 1️⃣ Base Class Registration
+        // ----------------------------------------------------------
         SUPER::_registerLuaBindings(typeName, lua);
 
         if (DEBUG_REGISTER_LUA)
         {
-            std::string typeNameLocal = typeName;
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
+            std::cout << CLR::CYAN << "[Lua] Registering type: "
+                    << CLR::LT_CYAN << typeName
+                    << CLR::CYAN << " (ArrowButton)" << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared DisplayHandle handle usertype
-        // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
+        // ----------------------------------------------------------
+        // 2️⃣ Acquire/Ensure Tables and Usertype
+        // ----------------------------------------------------------
+        sol::table handleTbl;
+        try { handleTbl = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
+        if (!handleTbl.valid())
+            handleTbl = IDataObject::ensure_sol_table(lua, DisplayHandle::LuaHandleName);
 
-        // // Helper to check if a property/command is already registered
-        // auto absent = [&](const char* name) -> bool 
-        // {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     return !cur.valid() || cur == sol::lua_nil;
-        // };
+        sol::optional<sol::usertype<DisplayHandle>> maybeUT;
+        try { maybeUT = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
 
+        // ----------------------------------------------------------
+        // 3️⃣ Unified set_if_absent Helper
+        // ----------------------------------------------------------
+        auto set_if_absent = [&](const char* name, auto&& func)
+        {
+            sol::object cur = handleTbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil)
+                handleTbl.set_function(name, func);
 
+            if (maybeUT)
+            {
+                auto& ut = *maybeUT;
+                sol::object cur2 = lua[name];
+                // no need to check global — assume independent namespace
+                ut.set_function(name, func);
+            }
+        };
+
+        // ----------------------------------------------------------
+        // 4️⃣ Register ArrowButton-specific Bindings
+        // ----------------------------------------------------------
+
+        set_if_absent("getDirection",
+            [](DisplayHandle& self)
+            {
+                ArrowButton* btn = dynamic_cast<ArrowButton*>(self.get());
+                if (!btn) return std::string("up");
+                auto dir = btn->getDirection();
+                auto it = ArrowButton::arrow_direction_to_string.find(dir);
+                return (it != ArrowButton::arrow_direction_to_string.end()) ? it->second : "up";
+            });
+
+        set_if_absent("setDirection",
+            [](DisplayHandle& self, const std::string& dir)
+            {
+                ArrowButton* btn = dynamic_cast<ArrowButton*>(self.get());
+                if (!btn) return;
+                auto it = ArrowButton::string_to_arrow_direction.find(dir);
+                if (it != ArrowButton::string_to_arrow_direction.end())
+                    btn->setDirection(it->second);
+            });
+
+        set_if_absent("getArrowState",
+            [](DisplayHandle& self)
+            {
+                ArrowButton* btn = dynamic_cast<ArrowButton*>(self.get());
+                if (!btn) return std::string("raised");
+                auto st = btn->getArrowState();
+                return (st == ArrowButton::ArrowState::Depressed) ? std::string("depressed") : std::string("raised");
+            });
+
+        set_if_absent("getIconIndex",
+            [](DisplayHandle& self)
+            {
+                ArrowButton* btn = dynamic_cast<ArrowButton*>(self.get());
+                return btn ? static_cast<int>(btn->getIconIndex()) : -1;
+            });
+
+        // ----------------------------------------------------------
+        // 5️⃣ Done
+        // ----------------------------------------------------------
+        if (DEBUG_REGISTER_LUA)
+        {
+            std::cout << CLR::GREEN << "↳ ArrowButton Lua bindings complete."
+                    << CLR::RESET << std::endl;
+        }
     } // END: void IconButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 
 } // END: namespace SDOM
-

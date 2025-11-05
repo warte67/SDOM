@@ -50,8 +50,7 @@ namespace SDOM
 
     bool scaffold_LUA_Tests(std::vector<std::string>& errors)
     {
-        UnitTests& ut = UnitTests::getInstance();
-        return ut.run_lua_tests(errors, ut.getLuaFilename());
+        return UnitTests::getInstance().run_lua_tests(errors, "src/scaffold_UnitTests.lua");
     } // END: scaffold_LUA_Tests()
 
 
@@ -67,8 +66,7 @@ namespace SDOM
         {
             ut.add_test(objName, "Test scaffold", scaffold_test0);
 
-            ut.setLuaFilename("src/scaffold_UnitTests.lua"); // Lua test script path
-            ut.add_test(objName, "Lua: " + ut.getLuaFilename(), scaffold_LUA_Tests, false);  // false = not implemented yet (dont run the lua file tests)
+            ut.add_test(objName, "Lua: src/scaffold_UnitTests.lua", scaffold_LUA_Tests, false);
 
             registered = true;
         }

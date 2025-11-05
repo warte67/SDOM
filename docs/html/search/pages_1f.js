@@ -1,26 +1,4 @@
 var searchData=
 [
-  ['ui_20dynamically_20at_20runtime_0',['3. Lua Creating UI Dynamically at Runtime',['../md_docs_2extensible__factory.html#autotoc_md224',1,'']]],
-  ['ui_20events_1',['UI Events',['../md_docs_2event__design.html#autotoc_md122',1,'']]],
-  ['ui_20interaction_2',['UI Interaction',['../md_docs_2custom__object__lifecycle.html#autotoc_md60',1,'&lt;span class=&quot;tt&quot;&gt;onEvent(const Event&amp;amp;)&lt;/span&gt;: Input &amp;amp; UI Interaction'],['../md_docs_2extensible__factory.html#autotoc_md210',1,'&lt;span class=&quot;tt&quot;&gt;onEvent(const Event&amp;amp;)&lt;/span&gt;: Input &amp;amp; UI Interaction']]],
-  ['ui_20layout_20frames_3',['Box Drawing (UI Layout Frames)',['../md_docs_2ui__symbols.html#autotoc_md448',1,'']]],
-  ['ui_20reuse_20with_20retainuntilmanual_4',['Example: UI Reuse With RetainUntilManual',['../md_docs_2extensible__factory.html#autotoc_md185',1,'']]],
-  ['unit_20tests_5',['Unit Tests',['../md_docs_2core__framework.html#autotoc_md32',1,'']]],
-  ['unittest_20modules_6',['UnitTest Modules',['../md_docs_2progress.html#autotoc_md415',1,'']]],
-  ['up_20if_20needed_7',['Up If Needed',['../md_docs_2custom__object__lifecycle.html#autotoc_md64',1,'&lt;span class=&quot;tt&quot;&gt;onQuit()&lt;/span&gt;: Clean Up &lt;em&gt;If Needed&lt;/em&gt;'],['../md_docs_2extensible__factory.html#autotoc_md214',1,'&lt;span class=&quot;tt&quot;&gt;onQuit()&lt;/span&gt;: Clean Up &lt;em&gt;If Needed&lt;/em&gt;']]],
-  ['update_20documentation_20and_20examples_8',['Update Documentation and Examples',['../md_docs_2startup__refactor.html#autotoc_md430',1,'4. Update Documentation and Examples'],['../md_docs_2startup__refactor.html#autotoc_md439',1,'6. Update Documentation and Examples']]],
-  ['updates_9',['Progress Updates',['../md_docs_2progress.html#autotoc_md337',1,'']]],
-  ['updates_20and_20input_10',['Updates and Input',['../md_docs_2custom__object__lifecycle.html',1,'Where to Put Your Logic: Rendering, Layout, Updates, and Input'],['../md_docs_2extensible__factory.html#autotoc_md204',1,'Where to Put Your Logic: Rendering, Layout, Updates, and Input']]],
-  ['usage_11',['Example Usage',['../md_docs_2object__handles.html#autotoc_md330',1,'']]],
-  ['usage_20examples_12',['Label Usage Examples',['../md_docs_2label__text__parsing.html#autotoc_md302',1,'']]],
-  ['usage_20with_20global_20accessor_13',['Example Usage (with global accessor)',['../md_docs_2core__framework.html#autotoc_md29',1,'']]],
-  ['use_14',['Modes of Use',['../md_docs_2scripting__and__configuration.html#autotoc_md418',1,'']]],
-  ['use_20cases_15',['Use Cases',['../md_docs_2display__object__anchoring.html#autotoc_md87',1,'Example Use Cases'],['../md_docs_2core__framework.html#autotoc_md44',1,'Flexibility &amp;amp; Use Cases']]],
-  ['useful_16',['Why Orphans Exist (And Why They’re Actually Useful)',['../md_docs_2extensible__factory.html#autotoc_md178',1,'']]],
-  ['user_20convenience_17',['Reversed versions for user convenience',['../md_docs_2display__object__anchoring.html#autotoc_md80',1,'']]],
-  ['uses_20c_20memory_20safety_20and_20design_20intent_18',['Why SDOM Uses C++ (Memory Safety and Design Intent)',['../md_docs_2architecture__overview.html#autotoc_md8',1,'']]],
-  ['using_20a_20lua_20table_19',['5. C++ Creating the Object Using a Lua Table',['../md_docs_2extensible__factory.html#autotoc_md226',1,'']]],
-  ['using_20graceperiod_20',['Example: Fade-Out Animation Using GracePeriod',['../md_docs_2extensible__factory.html#autotoc_md184',1,'']]],
-  ['using_20initstruct_20strong_20typed_20approach_21',['4. C++ Using InitStruct (Strong-Typed Approach)',['../md_docs_2extensible__factory.html#autotoc_md225',1,'']]],
-  ['utilities_22',['Additional Interfaces and Utilities',['../md_docs_2core__framework.html#autotoc_md36',1,'']]]
+  ['🪄_20example_0',['🪄 Example',['../classSDOM_1_1DisplayHandle.html#autotoc_md11',1,'']]]
 ];

@@ -1068,8 +1068,7 @@ namespace SDOM
 
     bool Core_LUA_Tests(std::vector<std::string>& errors)
     {
-        UnitTests& ut = UnitTests::getInstance();
-        return ut.run_lua_tests(errors, ut.getLuaFilename());
+        return UnitTests::getInstance().run_lua_tests(errors, "src/Core_UnitTests.lua");
     } // END: Core_LUA_Tests()
 
 
@@ -1101,8 +1100,7 @@ namespace SDOM
             ut.add_test(objName, "DisplayObject Creation", Core_test16);
             ut.add_test(objName, "Window Title Roundtrip", Core_test17);
 
-            ut.setLuaFilename("src/Core_UnitTests.lua");
-            ut.add_test(objName, "Lua: '" + ut.getLuaFilename() + "'", Core_LUA_Tests);
+            ut.add_test(objName, "Lua: 'src/Core_UnitTests.lua'", Core_LUA_Tests);
 
             registered = true;
         }
