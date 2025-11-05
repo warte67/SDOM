@@ -1,4 +1,43 @@
-// SDOM_DisplayHandle.hpp
+/**
+ * @class SDOM::DisplayHandle
+ * @brief A safe, name-based reference proxy to display objects managed by the SDOM Core.
+ *
+ * DisplayHandle replaces traditional pointers in SDOM’s API with a lightweight, 
+ * copyable reference type that resolves objects by name and type through the global
+ * Factory registry. It ensures **no direct ownership**, **no double-frees**, and 
+ * **graceful fallback** when a target object is missing.
+ *
+ * ---
+ * ### 🧩 Key Features
+ * - **Pointer-Safe:** Never owns or deletes the target object; resolution is deferred to Core.
+ * - **Self-Validating:** `get()` returns `nullptr` if the target is destroyed or unresolved.
+ * - **Copy/Move Friendly:** Handles can be freely copied, passed, or stored; all copies remain valid references.
+ * - **Recoverable by Name:** Even if all handles are dropped, the object can be fetched again via `Core::getDisplayObject(name)`.
+ * - **Lua Compatible:** Provides matching bindings (`getName`, `getType`, `isValid`) via sol2 for scripting integration.
+ * - **Debug Friendly:** `str()` and `c_str()` produce clear, introspectable summaries for diagnostics.
+ *
+ * ---
+ * ### 🧠 Lifetime Model
+ * - DisplayHandles are **non-owning**.
+ * - Actual object deletion occurs only through Core or Factory teardown routines.
+ * - When an object is removed, any existing DisplayHandles resolve to `nullptr`.
+ * - Lost handles can always be recovered by name until the object is explicitly destroyed or garbage-collected.
+ *
+ * ---
+ * ### 🪄 Example
+ * ```cpp
+ * DisplayHandle box("blueishBox", "Box");
+ * if (box.isValid()) {
+ *     box->setVisible(true);
+ *     std::cout << box.str() << std::endl;
+ * }
+ * ```
+ *
+ * ---
+ * @see SDOM::AssetHandle
+ * @see SDOM::Core
+ * @see SDOM::Factory
+ */
 #pragma once
 
 // #include <sol/sol.hpp>
@@ -8,10 +47,6 @@
 #include <SDOM/SDOM_IDataObject.hpp>
 
 // NOTE: this ~= "DisplayHandle(getName(), getType())"
-
-
-
-
 
 namespace SDOM
 {

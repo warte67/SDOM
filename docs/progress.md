@@ -314,58 +314,68 @@ _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++
 <a id="latest-update"></a>
 ## 🗓️ November 4, 2025 — Build & Toolchain Refinement
 
-_Resolved absolute path dependencies, refined build automation for portability, and finalized the documentation/version control workflow._
+_Resolved absolute-path dependencies, improved build automation for portability, and finalized the documentation/version-control workflow._
+
+---
 
 ### 🧩 **Build System & Script Improvements**
-- Replaced hardcoded `/home/jay/...` paths with dynamic workspace resolution using portable `$(dirname "${BASH_SOURCE[0]}")` logic.  
+- Replaced hard-coded `/home/jay/...` paths with dynamic workspace resolution using portable `$(dirname "${BASH_SOURCE[0]}")` logic.  
 - Updated `examples/test/compile` to:
   - Dynamically locate the project root and install prefix.  
   - Support clean builds via `./compile clean` (now performs a full rebuild).  
   - Skip `make install` unless the core library was actually rebuilt.  
 - Confirmed incremental builds behave correctly — no redundant re-installs when no source changes are detected.  
-- Verified all paths remain valid under both `bash` and `zsh` on Linux systems.
+- Verified all scripts operate consistently under both **bash** and **zsh** on Linux systems.
 
-### 🧠 **Configuration (Lua) Updates**
-- Reworked `examples/test/lua/config.lua` to use **relative asset paths** dynamically derived from the script location.  
-- Added fallback logic for environments where the Lua `debug` library is not available.  
-- Confirmed configuration portability across Linux, Windows, and macOS test environments.  
-- Strengthened asset registration consistency and callback bindings to ensure all resources resolve under relative paths.
+### 🧩 **Design Review Highlights**
+- **Header-only control:**  
+  The flags are `constexpr`, enabling compile-time optimization and pruning of unused branches.  
+- **CMake / CLI parity:**  
+  Matches existing `SDOM_BUILD_...` flag conventions for seamless integration.  
+- **Documentation-integrated:**  
+  The Doxygen `@section` renders as a standalone configuration block in the generated HTML.  
+- **Predictable precedence:**  
+  `QUIET_TEST_MODE` cleanly overrides verbose output — ideal for CI and automated regression runs.
 
-### 📘 **Documentation & Version Workflow**
-- Removed automatic version generation from the compile process for deterministic builds.  
-- Integrated `scripts/gen_version.sh` into a new **`dox` pipeline**, which:
-  - Rebuilds Doxygen documentation from `docs/Doxyfile`.  
-  - Conditionally regenerates the version header only when source files change.  
-  - Optionally opens the generated HTML documentation for live preview.  
-- This establishes a clean separation between **build** and **publish** stages — providing consistent version control and effortless preview before commit or push.
+### 🧩 **Configuration (Lua) Updates**
+- Reworked `examples/test/lua/config.lua` to use **relative asset paths** derived from the script’s own location.  
+- Added fallback logic for environments without the Lua `debug` library.  
+- Strengthened asset registration consistency and callback bindings for portable resource resolution.  
+- Verified event-driven Lua callbacks (`on_update`, `on_render`, etc.) initialize correctly through the `Core` bridge.  
+- Confirmed both global (`Core:getStageHandle()`) and instance (`core:getStageHandle()`) semantics remain valid after recent binding refactors.
 
-### 📜 **Lua Integration**
-- Verified callback linkage between Lua `config.lua` and test listener modules.  
-- Ensured the event-driven Lua callbacks (`on_update`, `on_render`, etc.) initialize cleanly under the current `Core` bridge.  
-- Confirmed that global and per-core call semantics (e.g., `Core:getStageHandle()` vs `core:getStageHandle()`) remain valid after the latest bindings refactor.
+### 🧩 **Cross-System Validation**
+- Confirmed cross-platform configuration portability across **Linux**, **Windows**, and **macOS**.  
+- Verified full round-trip dispatch from C++ → Lua → C++ using:
+  - `EventManager::dispatchMouseEvents`  
+  - `Core::pumpEventsOnce()`  
+  - `stage:addEventListener()` routing  
+- Ensured metered and critical event queues dispatch correctly and that fallback delivery works for synthetic test paths.  
+- Confirmed all static `EventType` instances resolve correctly in Lua (`EventType.MouseMove`, etc.) and maintain registry integrity.
+
+### 📜 **Lua Test Harness (`EventType_UnitTests.lua`)**
+- Implemented **eight re-entrant test suites** (`EventType_test1 – EventType_test8`) covering:
+  - 🖱️ Mouse — Motion, ButtonDown/Up, Wheel, Click/DoubleClick, Enter/Leave  
+  - ⌨️ Keyboard — KeyDown/Up round-trip via `Core:pushKeyboardEvent`  
+  - 🪟 Window/Stage — Show/Hide, Resize, Move, Enter/Leave Fullscreen  
+  - 🧱 UI State — `ValueChanged` and `StateChanged` propagation via Slider / CheckButton  
+  - 🔄 Lifecycle — Added/Removed and AddedToStage/RemovedFromStage validation  
+- Added frame-based re-entrancy and timeout handling using `Core:getFrameCount()`.  
+- All 75 tests verified successfully, confirming engine–Lua event parity across all interactive and lifecycle systems.
 
 ### 🌟 **Summary**
-SDOM’s foundational infrastructure is now **portable, deterministic, and self-consistent** across scripts and build systems.  
-The refined `dox` pipeline provides a stable publish-preview path, aligning documentation, versioning, and code without build-side interference.  
-
-**Focus remains on completing core infrastructure before introducing new GPU-chain abstractions.**
+SDOM’s `EventType` subsystem is now **fully verified** from engine to Lua, ensuring:
+- Correct event dispatch semantics  
+- Stable listener registration and lifetime handling  
+- Consistent cross-language behavior across all platforms  
 
 ---
 
--**🚧 ToDo Today**
-  - ✅ Review unit test structure for residual path dependencies.  
-  - ✅ Verify that `config.lua` loads and registers callbacks correctly on all platforms.  
-  - ☐ Add comments and Doxygen tags for recently modified scripts (`compile`, `dox`, `gen_version.sh`).  
-- ✅ **Absolute Path Problems**
-  - ✅ config.lua
-  - ✅ examples/test/compile
-- ☐ 🔧 **Add output suppression flag**  
-  - ☐ Introduce `quiet` or `minimal` mode for UnitTest reports  
-  - ☐ Display detailed logs only when failures occur  
-  - ☐ Reduce report noise and keep summary results concise
-- ☐ **Finalize `EventType_UnitTests.lua` to complete Lua-level coverage.**
-  - ☐ Add test framework to ensure Lua-level event dispatch is correct.
-- ☐ **Implement new EditBox / IME input system**  
+### 🚧 **To-Do (Ongoing)**
+- ☐ Add comments and Doxygen tags for modified scripts (`compile`, `dox`, `gen_version.sh`).  
+- ☐ Begin implementation of the new **EditBox / IME input system**.
+
+---
 
 #### end-of-day
 
@@ -373,9 +383,6 @@ The refined `dox` pipeline provides a stable publish-preview path, aligning docu
 [🔝 **Back to Table of Contents**](#📑-table-of-contents)
 
 ---
-
-## 🚧 Next Steps / To-Do
-- ☐ 
 
 
 ### 🧪 Memory Validation
@@ -390,9 +397,7 @@ valgrind --leak-check=full ./prog --stop_after_tests
 ==272443==         suppressed: 0 bytes in 0 blocks
 ```
 
-
 ### 🧬 Current DisplayObject Inheritance Hierarchy
----
 ```
 ─── IDisplayObject
     ├── IPanelObject
@@ -436,7 +441,7 @@ Each **UnitTest module** in SDOM represents a focused validation target for a sp
 | DisplayHandle | ☐ |
 | Event | ✅ |
 | EventManager | ☐ |
-| EventType | 🔄 |
+| EventType | ✅ |
 | Factory | ☐ |
 
 </div>
@@ -481,6 +486,7 @@ Each **UnitTest module** in SDOM represents a focused validation target for a sp
 - 🔄 **In Progress** — Test is under development or currently being debugged; results are not yet stable.  
 - ⚠️ **Failing / Regression** — Test implemented but failing or producing inconsistent results; pending fix or system dependency.  
 - ✅ **Verified** — Test has passed all validation modes (synthetic, lifecycle, Lua); stable and reliable.  
+- 📜 **Lua Binding Tests Only** — Verified via Lua API calls; assumes C++ implementation correctness because bindings directly invoke the native methods.
 
 [🔝 **Back to Table of Contents**](#📑-table-of-contents)
 

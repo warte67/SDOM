@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['ubuntu_0',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md24',1,'']]],
-  ['ucrt64_1',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md30',1,'']]],
+  ['ubuntu_0',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md34',1,'']]],
+  ['ucrt64_1',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md40',1,'']]],
   ['unchecked_2',['Unchecked',['../namespaceSDOM.html#af652715c3e637c795824fa0afedda425a881b3634f18ee4f2c2315bd19b75e0ae',1,'SDOM']]],
-  ['underline_3',['underline',['../structSDOM_1_1FontStyle.html#a9d0ce99f4878f9fd2cc61a13cfbcfdae',1,'SDOM::FontStyle::underline'],['../structSDOM_1_1Label_1_1InitStruct.html#a2dc3ce5e9f253cb26e70eb0d84aa5166',1,'SDOM::Label::InitStruct::underline'],['../classCLR.html#acc3a4f736db8118cef09f0f6000e6702',1,'CLR::UNDERLINE']]],
+  ['underline_3',['underline',['../classCLR.html#acc3a4f736db8118cef09f0f6000e6702',1,'CLR::UNDERLINE'],['../structSDOM_1_1FontStyle.html#a9d0ce99f4878f9fd2cc61a13cfbcfdae',1,'SDOM::FontStyle::underline'],['../structSDOM_1_1Label_1_1InitStruct.html#a2dc3ce5e9f253cb26e70eb0d84aa5166',1,'SDOM::Label::InitStruct::underline']]],
   ['unicodetoiconindex_4',['UnicodeToIconIndex',['../namespaceSDOM.html#ab9be71c9c3156fe7d5d4c719ad8ba9bb',1,'SDOM']]],
   ['unittests_5',['unittests',['../classSDOM_1_1UnitTests.html#a1e79ed95db86daf166bb72932fed97b5',1,'SDOM::UnitTests::UnitTests()'],['../classSDOM_1_1UnitTests.html',1,'SDOM::UnitTests']]],
   ['unloadallassetobjects_6',['unloadAllAssetObjects',['../classSDOM_1_1Factory.html#a92857a9cfdd74f81608f52781a5c2e17',1,'SDOM::Factory']]],

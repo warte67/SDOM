@@ -156,6 +156,8 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a1f44d85d071f8c93673554d0ba233c49" id="r_a1f44d85d071f8c93673554d0ba233c49"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSDOM_1_1UnitTests.html">UnitTests</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1UnitTests.html#a1f44d85d071f8c93673554d0ba233c49">getInstance</a> ()</td></tr>
 <tr class="separator:a1f44d85d071f8c93673554d0ba233c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fefb102fb84bb9b9a2fdd7531d2771b" id="r_a5fefb102fb84bb9b9a2fdd7531d2771b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1UnitTests.html#a5fefb102fb84bb9b9a2fdd7531d2771b">print_summary</a> (int passed_count, int failed_count, int not_implemented_count, int total_count)</td></tr>
+<tr class="separator:a5fefb102fb84bb9b9a2fdd7531d2771b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70d3dcdfb8d5d04548612a13e822c712" id="r_a70d3dcdfb8d5d04548612a13e822c712"><td class="memTemplParams" colspan="2">template&lt;typename Func &gt; </td></tr>
 <tr class="memitem:a70d3dcdfb8d5d04548612a13e822c712"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712">run</a> (const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)</td></tr>
 <tr class="separator:a70d3dcdfb8d5d04548612a13e822c712"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,8 +166,10 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:ac27ab5383d4e1a230e1f0065b1496c0d" id="r_ac27ab5383d4e1a230e1f0065b1496c0d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1UnitTests.html#ac27ab5383d4e1a230e1f0065b1496c0d">show_all_tests</a> = true</td></tr>
+<tr class="memitem:ac27ab5383d4e1a230e1f0065b1496c0d" id="r_ac27ab5383d4e1a230e1f0065b1496c0d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1UnitTests.html#ac27ab5383d4e1a230e1f0065b1496c0d">show_all_tests</a> = <a class="el" href="namespaceSDOM.html#aae2a66a6c54d731022cfdc409fff8b12">SDOM::VERBOSE_TEST_OUTPUT</a></td></tr>
 <tr class="separator:ac27ab5383d4e1a230e1f0065b1496c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb2ac96849418508dc4f2dbc58947d60" id="r_acb2ac96849418508dc4f2dbc58947d60"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1UnitTests.html#acb2ac96849418508dc4f2dbc58947d60">quiet_mode</a> = <a class="el" href="namespaceSDOM.html#a5f4035d1ee55946322bc55a123ba92b8">SDOM::QUIET_TEST_MODE</a></td></tr>
+<tr class="separator:acb2ac96849418508dc4f2dbc58947d60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1e79ed95db86daf166bb72932fed97b5" name="a1e79ed95db86daf166bb72932fed97b5"></a>
@@ -489,6 +493,54 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a5fefb102fb84bb9b9a2fdd7531d2771b" name="a5fefb102fb84bb9b9a2fdd7531d2771b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fefb102fb84bb9b9a2fdd7531d2771b">&#9670;&#160;</a></span>print_summary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::UnitTests::print_summary </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>passed_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>failed_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>not_implemented_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>total_count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a70d3dcdfb8d5d04548612a13e822c712" name="a70d3dcdfb8d5d04548612a13e822c712"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a70d3dcdfb8d5d04548612a13e822c712">&#9670;&#160;</a></span>run()</h2>
 
@@ -731,6 +783,28 @@ template&lt;typename Func &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="acb2ac96849418508dc4f2dbc58947d60" name="acb2ac96849418508dc4f2dbc58947d60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb2ac96849418508dc4f2dbc58947d60">&#9670;&#160;</a></span>quiet_mode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::UnitTests::quiet_mode = <a class="el" href="namespaceSDOM.html#a5f4035d1ee55946322bc55a123ba92b8">SDOM::QUIET_TEST_MODE</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac27ab5383d4e1a230e1f0065b1496c0d" name="ac27ab5383d4e1a230e1f0065b1496c0d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac27ab5383d4e1a230e1f0065b1496c0d">&#9670;&#160;</a></span>show_all_tests</h2>
 
@@ -741,7 +815,7 @@ template&lt;typename Func &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool SDOM::UnitTests::show_all_tests = true</td>
+          <td class="memname">bool SDOM::UnitTests::show_all_tests = <a class="el" href="namespaceSDOM.html#aae2a66a6c54d731022cfdc409fff8b12">SDOM::VERBOSE_TEST_OUTPUT</a></td>
         </tr>
       </table>
   </td>

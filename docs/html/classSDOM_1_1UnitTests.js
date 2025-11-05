@@ -16,6 +16,7 @@ var classSDOM_1_1UnitTests =
     [ "getTexture", "classSDOM_1_1UnitTests.html#a5576d5e300bd579cb590b281d577f1da", null ],
     [ "getWindow", "classSDOM_1_1UnitTests.html#aa860600765065dbc82acd7be916c231c", null ],
     [ "operator=", "classSDOM_1_1UnitTests.html#ab77bcbf342559b3309d761898566014d", null ],
+    [ "print_summary", "classSDOM_1_1UnitTests.html#a5fefb102fb84bb9b9a2fdd7531d2771b", null ],
     [ "run", "classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712", null ],
     [ "run_all", "classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe", null ],
     [ "run_event_behavior_test", "classSDOM_1_1UnitTests.html#a5a59c4514887f6d2fd41c057fb1f50f8", null ],
@@ -25,5 +26,6 @@ var classSDOM_1_1UnitTests =
     [ "setIsTraversing", "classSDOM_1_1UnitTests.html#aa8818c326f3221af590af43e201d5494", null ],
     [ "setLuaFilename", "classSDOM_1_1UnitTests.html#a3c1b7047e61073eee5f5fa84e1394bff", null ],
     [ "update", "classSDOM_1_1UnitTests.html#aa0cb296cd4fcce056ed4b5e02606e029", null ],
+    [ "quiet_mode", "classSDOM_1_1UnitTests.html#acb2ac96849418508dc4f2dbc58947d60", null ],
     [ "show_all_tests", "classSDOM_1_1UnitTests.html#ac27ab5383d4e1a230e1f0065b1496c0d", null ]
 ];

@@ -124,6 +124,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The central singleton framework object for <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>.  <a href="classSDOM_1_1Core.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A safe, name-based reference proxy to display objects managed by the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a>.  <a href="classSDOM_1_1DisplayHandle.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Event.html">Event</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -544,6 +545,10 @@ Functions</h2></td></tr>
 <tr class="separator:ae57b08be48d241160feeefa8ff7c7d6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac078f1de5a48564d4b8597742bf6aa73" id="r_ac078f1de5a48564d4b8597742bf6aa73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ac078f1de5a48564d4b8597742bf6aa73">pushKeyboardEvent_lua</a> (const sol::object &amp;args)</td></tr>
 <tr class="separator:ac078f1de5a48564d4b8597742bf6aa73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8b743338880ef67bcfcd4ed2cea3946" id="r_ac8b743338880ef67bcfcd4ed2cea3946"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ac8b743338880ef67bcfcd4ed2cea3946">setWindowPosition_any_lua</a> (const sol::object &amp;args)</td></tr>
+<tr class="separator:ac8b743338880ef67bcfcd4ed2cea3946"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85a08bd5ee3953b763b6c68831d93c7d" id="r_a85a08bd5ee3953b763b6c68831d93c7d"><td class="memItemLeft" align="right" valign="top">sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a85a08bd5ee3953b763b6c68831d93c7d">getWindowPosition_lua</a> (sol::this_state ts)</td></tr>
+<tr class="separator:a85a08bd5ee3953b763b6c68831d93c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f5e202495dfd950ee681ef26ecd8179" id="r_a0f5e202495dfd950ee681ef26ecd8179"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a0f5e202495dfd950ee681ef26ecd8179">destroyDisplayObject_lua</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:a0f5e202495dfd950ee681ef26ecd8179"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c8e7e45adacc7a84323c2306d9d487d" id="r_a6c8e7e45adacc7a84323c2306d9d487d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a6c8e7e45adacc7a84323c2306d9d487d">destroyDisplayObject_any_lua</a> (const sol::object &amp;spec)</td></tr>
@@ -935,6 +940,12 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:aae2a66a6c54d731022cfdc409fff8b12" id="r_aae2a66a6c54d731022cfdc409fff8b12"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#aae2a66a6c54d731022cfdc409fff8b12">VERBOSE_TEST_OUTPUT</a> = true</td></tr>
+<tr class="memdesc:aae2a66a6c54d731022cfdc409fff8b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global compile-time configuration flags controlling test verbosity.  <br /></td></tr>
+<tr class="separator:aae2a66a6c54d731022cfdc409fff8b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f4035d1ee55946322bc55a123ba92b8" id="r_a5f4035d1ee55946322bc55a123ba92b8"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a5f4035d1ee55946322bc55a123ba92b8">QUIET_TEST_MODE</a> = false</td></tr>
+<tr class="memdesc:a5f4035d1ee55946322bc55a123ba92b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Suppresses console output for passing tests and modules.  <br /></td></tr>
+<tr class="separator:a5f4035d1ee55946322bc55a123ba92b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac719971447e1602dffe0feef14ac1140" id="r_ac719971447e1602dffe0feef14ac1140"><td class="memItemLeft" align="right" valign="top">constexpr Uint32&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ac719971447e1602dffe0feef14ac1140">SDOM_EVENT_METER_MS_DEFAULT</a> = 10</td></tr>
 <tr class="separator:ac719971447e1602dffe0feef14ac1140"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf62e29512566ac789c745d405a31dc0" id="r_aaf62e29512566ac789c745d405a31dc0"><td class="memItemLeft" align="right" valign="top">constexpr Uint32&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#aaf62e29512566ac789c745d405a31dc0">SDOM_HOVER_HITTEST_MS</a> = 5</td></tr>
@@ -4676,6 +4687,24 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a85a08bd5ee3953b763b6c68831d93c7d" name="a85a08bd5ee3953b763b6c68831d93c7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85a08bd5ee3953b763b6c68831d93c7d">&#9670;&#160;</a></span>getWindowPosition_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sol::table SDOM::getWindowPosition_lua </td>
+          <td>(</td>
+          <td class="paramtype">sol::this_state&#160;</td>
+          <td class="paramname"><em>ts</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a406754799eca5111fc519866998089fe" name="a406754799eca5111fc519866998089fe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a406754799eca5111fc519866998089fe">&#9670;&#160;</a></span>getWindowTitle_lua()</h2>
 
@@ -7619,6 +7648,24 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="ac8b743338880ef67bcfcd4ed2cea3946" name="ac8b743338880ef67bcfcd4ed2cea3946"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8b743338880ef67bcfcd4ed2cea3946">&#9670;&#160;</a></span>setWindowPosition_any_lua()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::setWindowPosition_any_lua </td>
+          <td>(</td>
+          <td class="paramtype">const sol::object &amp;&#160;</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4f57cb35054293ba7acbe2c9a483e318" name="a4f57cb35054293ba7acbe2c9a483e318"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4f57cb35054293ba7acbe2c9a483e318">&#9670;&#160;</a></span>setWindowTitle_lua()</h2>
 
@@ -8383,6 +8430,32 @@ Variables</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a5f4035d1ee55946322bc55a123ba92b8" name="a5f4035d1ee55946322bc55a123ba92b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f4035d1ee55946322bc55a123ba92b8">&#9670;&#160;</a></span>QUIET_TEST_MODE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool SDOM::QUIET_TEST_MODE = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Suppresses console output for passing tests and modules. </p>
+<p>When <code>true</code>, no test output is shown unless one or more sub-tests fail. In that case, the entire failing module’s test tree and associated error messages are printed.</p>
+<p>This flag takes precedence over <code>VERBOSE_TEST_OUTPUT</code>. </p>
+
+</div>
+</div>
 <a id="ac719971447e1602dffe0feef14ac1140" name="ac719971447e1602dffe0feef14ac1140"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac719971447e1602dffe0feef14ac1140">&#9670;&#160;</a></span>SDOM_EVENT_METER_MS_DEFAULT</h2>
 
@@ -8655,6 +8728,55 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="aae2a66a6c54d731022cfdc409fff8b12" name="aae2a66a6c54d731022cfdc409fff8b12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae2a66a6c54d731022cfdc409fff8b12">&#9670;&#160;</a></span>VERBOSE_TEST_OUTPUT</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool SDOM::VERBOSE_TEST_OUTPUT = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Global compile-time configuration flags controlling test verbosity. </p>
+<h1><a class="anchor" id="SDOM_TestOutputConfig"></a>
+SDOM_TestOutputConfig</h1>
+<p>These constants define the verbosity level for both internal diagnostic output and the UnitTest reporting system. They can be overridden at compile time using either <b>CMake options</b> or direct <b>compiler definitions</b>.</p>
+<p><b>Example (CMake):</b> </p><div class="fragment"><div class="line">cmake -DSDOM_VERBOSE_TEST_OUTPUT=ON -DSDOM_QUIET_TEST_MODE=OFF ..</div>
+</div><!-- fragment --><p><b>Example (g++):</b> </p><div class="fragment"><div class="line">g++ -DSDOM_VERBOSE_TEST_OUTPUT=<span class="keyword">true</span> -DSDOM_QUIET_TEST_MODE=<span class="keyword">false</span> ...</div>
+</div><!-- fragment --><hr  />
+<p> ⚙️ <b>Behavior Matrix</b></p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Mode   </th><th class="markdownTableHeadNone">VERBOSE_TEST_OUTPUT   </th><th class="markdownTableHeadNone">QUIET_TEST_MODE   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Verbose</b> *(default)*   </td><td class="markdownTableBodyNone"><code>true</code>   </td><td class="markdownTableBodyNone"><code>false</code>   </td><td class="markdownTableBodyNone">Displays all modules and individual test results, including passes, with full color and detail.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Compact</b>   </td><td class="markdownTableBodyNone"><code>false</code>   </td><td class="markdownTableBodyNone"><code>false</code>   </td><td class="markdownTableBodyNone">Displays only per-module summaries and failing results — minimal console noise.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Quiet</b>   </td><td class="markdownTableBodyNone">any   </td><td class="markdownTableBodyNone"><code>true</code>   </td><td class="markdownTableBodyNone">Suppresses all output unless a test fails; in that case, the entire failing module’s test tree and its errors are printed.   </td></tr>
+</table>
+<hr  />
+<p> 🔧 <b>Notes</b></p><ul>
+<li><code>QUIET_TEST_MODE</code> always takes precedence — if enabled, it overrides <code>VERBOSE_TEST_OUTPUT</code>.</li>
+<li>Designed for build servers, CI systems, or silent regression runs where concise output is preferred.</li>
+<li>These flags do <b>not</b> affect SDL, Lua, or other runtime logging systems.</li>
+</ul>
+<p>Enables detailed console output for all tests.</p>
+<p>When <code>true</code>, every test — including passing ones — is displayed with its object name, test title, and result indicator. </p>
 
 </div>
 </div>

@@ -78,6 +78,7 @@ var SDOM__Core__Lua_8hpp =
     [ "getVersionPatch_lua", "SDOM__Core__Lua_8hpp.html#a8f760b31507739a282644bfd4308a978", null ],
     [ "getVersionPlatform_lua", "SDOM__Core__Lua_8hpp.html#a8873230071454356ab7d385066c62b89", null ],
     [ "getVersionString_lua", "SDOM__Core__Lua_8hpp.html#a631611942659696b3a3b2cf5b82dec23", null ],
+    [ "getWindowPosition_lua", "SDOM__Core__Lua_8hpp.html#a85a08bd5ee3953b763b6c68831d93c7d", null ],
     [ "getWindowTitle_lua", "SDOM__Core__Lua_8hpp.html#a406754799eca5111fc519866998089fe", null ],
     [ "hasAssetObject_lua", "SDOM__Core__Lua_8hpp.html#afb69b0371ecfe6f8b7686373ddcb2860", null ],
     [ "hasDisplayObject_lua", "SDOM__Core__Lua_8hpp.html#a0b5997a6b11dff05aef06a2e9630cb9f", null ],
@@ -93,6 +94,7 @@ var SDOM__Core__Lua_8hpp =
     [ "setRootNodeByName_lua", "SDOM__Core__Lua_8hpp.html#a870f9dd8d00c2fdf89bb7f47cd519fb1", null ],
     [ "setStage_lua", "SDOM__Core__Lua_8hpp.html#afa894285dab992a51ce036205a717900", null ],
     [ "setStageByName_lua", "SDOM__Core__Lua_8hpp.html#a480455949a5b7964dfe14df03ce0eba3", null ],
+    [ "setWindowPosition_any_lua", "SDOM__Core__Lua_8hpp.html#ac8b743338880ef67bcfcd4ed2cea3946", null ],
     [ "setWindowTitle_lua", "SDOM__Core__Lua_8hpp.html#a4f57cb35054293ba7acbe2c9a483e318", null ],
     [ "unloadAllAssetObjects_lua", "SDOM__Core__Lua_8hpp.html#a67a7b239ebad915633806c57f4d112c0", null ]
 ];

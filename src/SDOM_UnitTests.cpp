@@ -572,10 +572,10 @@ namespace SDOM
                 continue;
             }
 
-            // 🔍 Diagnostic output
-            std::cout << "Registering listener for " << name
-                    << " EventType@" << static_cast<const void*>(et)
-                    << std::endl;
+            // // 🔍 Diagnostic output
+            // std::cout << "Registering listener for " << name
+            //         << " EventType@" << static_cast<const void*>(et)
+            //         << std::endl;
                     
             obj->addEventListener(*et, [&](const Event& ev) {
                 hits[ev.getTypeName()] = true;
@@ -597,6 +597,7 @@ namespace SDOM
         // --- 4) Process and verify event dispatch -----------------------------------
         core.pumpEventsOnce();
 
+#if defined(SDOM_DEBUG_BEHAVIOR_TEST)
         bool any_missed = false;
         for (const auto& [name, hit] : hits) {
             if (!hit) {
@@ -604,8 +605,6 @@ namespace SDOM
                 any_missed = true;
             }
         }
-
-#if defined(SDOM_DEBUG_BEHAVIOR_TEST)
         if (any_missed)
         {
             std::cout << "[BehaviorTest] Miss detected; dumping diagnostics...\n";

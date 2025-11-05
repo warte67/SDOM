@@ -109,6 +109,8 @@ var classSDOM_1_1ScrollBar =
     [ "operator==", "classSDOM_1_1ScrollBar.html#a64489b0d439824790ced90f114d2955b", null ],
     [ "operator>", "classSDOM_1_1ScrollBar.html#a765c1a5a98db78263e66fa63a95711c0", null ],
     [ "operator>=", "classSDOM_1_1ScrollBar.html#a0663374567b9882b112e879ec72318ea", null ],
+    [ "printBubblingEventListeners", "classSDOM_1_1ScrollBar.html#a578dda47630664d0875063fde133291b", null ],
+    [ "printCaptureEventListeners", "classSDOM_1_1ScrollBar.html#a523b18e70cc99fdb48154bb2c4720db0", null ],
     [ "printTree", "classSDOM_1_1ScrollBar.html#a853fddbff86054aae8abc808cf55d1b6", null ],
     [ "queue_event", "classSDOM_1_1ScrollBar.html#a943459da97ec5ed33c8433d9e7291344", null ],
     [ "rebuildRangeTexture_", "classSDOM_1_1ScrollBar.html#ae630063935f9eecef4b747373decf1bd", null ],

@@ -4,8 +4,8 @@
 [![Status](https://img.shields.io/badge/status-pre--alpha-orange.svg)]()
 
 <!-- BEGIN_VERSION_BLOCK -->
-**SDOM 0.5.128 (early pre-alpha)**  
-**Build Date:** 2025-11-04_11:23:58  
+**SDOM 0.5.129 (early pre-alpha)**  
+**Build Date:** 2025-11-04_20:28:04  
 **Platform:** Linux-x86_64  
 **Compiler:** g++ (Debian 14.2.0-19) 14.2.0
 <!-- END_VERSION_BLOCK -->
@@ -88,6 +88,14 @@ Older code and examples may use `camelCase` or other styles. These will be updat
 - C++23 compatible compiler
 - SDL3, SDL3_image, SDL3_ttf development libraries
 - CMake 3.20 or newer
+
+### ⚠️ Before You Build
+
+> **Important:** The SDOM API depends on external libraries that **must be installed before building**.  
+> Ensure you have built and installed **SDL3**, **SDL3_image**, **SDL3_ttf**, and (eventually) **SDL3_mixer**,  
+> as well as **Lua** and **Sol2**, *before running* `./rebuild`.
+
+If you haven’t installed these yet, see the **“SDL3 Build Dependencies”** and **“Lua Installation”** sections below.
 
 ### Building the SDOM Library
 ```

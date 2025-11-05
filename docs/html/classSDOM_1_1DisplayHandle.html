@@ -101,6 +101,9 @@ $(document).ready(function(){initNavTree('classSDOM_1_1DisplayHandle.html',''); 
 </div><!--header-->
 <div class="contents">
 
+<p>A safe, name-based reference proxy to display objects managed by the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a>.  
+ <a href="classSDOM_1_1DisplayHandle.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="SDOM__DisplayHandle_8hpp_source.html">SDOM_DisplayHandle.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for SDOM::DisplayHandle:</div>
@@ -212,7 +215,45 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:aab85ff5a30c6a53ea88248392db63380" id="r_aab85ff5a30c6a53ea88248392db63380"><td class="memItemLeft" align="right" valign="top">sol::usertype&lt; <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1DisplayHandle.html#aab85ff5a30c6a53ea88248392db63380">objHandleType_</a></td></tr>
 <tr class="separator:aab85ff5a30c6a53ea88248392db63380"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A safe, name-based reference proxy to display objects managed by the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a>. </p>
+<p><a class="el" href="classSDOM_1_1DisplayHandle.html" title="A safe, name-based reference proxy to display objects managed by the SDOM Core.">DisplayHandle</a> replaces traditional pointers in SDOM’s API with a lightweight, copyable reference type that resolves objects by name and type through the global <a class="el" href="classSDOM_1_1Factory.html">Factory</a> registry. It ensures <b>no direct ownership</b>, <b>no double-frees</b>, and <b>graceful fallback</b> when a target object is missing.</p>
+<hr  />
+ <h3><a class="anchor" id="autotoc_md3"></a>
+🧩 Key Features</h3>
+<ul>
+<li><b>Pointer-Safe:</b> Never owns or deletes the target object; resolution is deferred to <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a>.</li>
+<li><b>Self-Validating:</b> <code><a class="el" href="classSDOM_1_1DisplayHandle.html#a34b67c1cbabe355296209b79e5e5b949">get()</a></code> returns <code>nullptr</code> if the target is destroyed or unresolved.</li>
+<li><b>Copy/Move Friendly:</b> Handles can be freely copied, passed, or stored; all copies remain valid references.</li>
+<li><b>Recoverable by Name:</b> Even if all handles are dropped, the object can be fetched again via <code>Core::getDisplayObject(name)</code>.</li>
+<li><b>Lua Compatible:</b> Provides matching bindings (<code>getName</code>, <code>getType</code>, <code>isValid</code>) via sol2 for scripting integration.</li>
+<li><b>Debug Friendly:</b> <code><a class="el" href="classSDOM_1_1DisplayHandle.html#ab8fbb280de5de823ca666d8d50fe3395">str()</a></code> and <code><a class="el" href="classSDOM_1_1DisplayHandle.html#a2dc4f0f7f6af8b9e6ed74edb234bb511">c_str()</a></code> produce clear, introspectable summaries for diagnostics.</li>
+</ul>
+<hr  />
+ <h3><a class="anchor" id="autotoc_md5"></a>
+🧠 Lifetime Model</h3>
+<ul>
+<li>DisplayHandles are <b>non-owning</b>.</li>
+<li>Actual object deletion occurs only through <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a> or <a class="el" href="classSDOM_1_1Factory.html">Factory</a> teardown routines.</li>
+<li>When an object is removed, any existing DisplayHandles resolve to <code>nullptr</code>.</li>
+<li>Lost handles can always be recovered by name until the object is explicitly destroyed or garbage-collected.</li>
+</ul>
+<hr  />
+ <h3><a class="anchor" id="autotoc_md7"></a>
+🪄 Example</h3>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> box(<span class="stringliteral">&quot;blueishBox&quot;</span>, <span class="stringliteral">&quot;Box&quot;</span>);</div>
+<div class="line"><span class="keywordflow">if</span> (box.isValid()) {</div>
+<div class="line">    box-&gt;setVisible(<span class="keyword">true</span>);</div>
+<div class="line">    std::cout &lt;&lt; box.str() &lt;&lt; std::endl;</div>
+<div class="line">}</div>
+<div class="ttc" id="aclassSDOM_1_1DisplayHandle_html"><div class="ttname"><a href="classSDOM_1_1DisplayHandle.html">SDOM::DisplayHandle</a></div><div class="ttdoc">A safe, name-based reference proxy to display objects managed by the SDOM Core.</div><div class="ttdef"><b>Definition</b> SDOM_DisplayHandle.hpp:58</div></div>
+</div><!-- fragment --><hr  />
+ <dl class="section see"><dt>See also</dt><dd><a class="el" href="classSDOM_1_1AssetHandle.html">SDOM::AssetHandle</a> </dd>
+<dd>
+<a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">SDOM::Core</a> </dd>
+<dd>
+<a class="el" href="classSDOM_1_1Factory.html">SDOM::Factory</a> </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9f9ea31866be03d2204362d812dbdf79" name="a9f9ea31866be03d2204362d812dbdf79"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9f9ea31866be03d2204362d812dbdf79">&#9670;&#160;</a></span>DisplayHandle() <span class="overload">[1/4]</span></h2>
 

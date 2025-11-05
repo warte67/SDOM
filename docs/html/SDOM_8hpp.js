@@ -42,7 +42,9 @@ var SDOM_8hpp =
     [ "anchorPointToString_", "SDOM_8hpp.html#ac004759fa5d6cd324931439829e17123", null ],
     [ "DEBUG_REGISTER_LUA", "SDOM_8hpp.html#a7860bad07e6389722d5d09638b46d2f8", null ],
     [ "ORPHAN_GRACE_PERIOD", "SDOM_8hpp.html#a05b38e54d53b804b5d6da620ec5fc2cc", null ],
+    [ "QUIET_TEST_MODE", "SDOM_8hpp.html#a5f4035d1ee55946322bc55a123ba92b8", null ],
     [ "SDOM_EVENT_METER_MS_DEFAULT", "SDOM_8hpp.html#ac719971447e1602dffe0feef14ac1140", null ],
     [ "SDOM_HOVER_HITTEST_MS", "SDOM_8hpp.html#aaf62e29512566ac789c745d405a31dc0", null ],
-    [ "stringToAnchorPoint_", "SDOM_8hpp.html#a33cd42f20297f893e13db841931abda0", null ]
+    [ "stringToAnchorPoint_", "SDOM_8hpp.html#a33cd42f20297f893e13db841931abda0", null ],
+    [ "VERBOSE_TEST_OUTPUT", "SDOM_8hpp.html#aae2a66a6c54d731022cfdc409fff8b12", null ]
 ];

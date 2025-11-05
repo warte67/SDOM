@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['x_0',['x',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa',1,'SDOM::IDisplayObject::InitStruct']]]
+  ['🧩_20key_20features_0',['🧩 Key Features',['../classSDOM_1_1DisplayHandle.html#autotoc_md3',1,'']]]
 ];

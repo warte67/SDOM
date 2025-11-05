@@ -337,6 +337,7 @@ var namespaceSDOM =
     [ "getVersionString_lua", "namespaceSDOM.html#a631611942659696b3a3b2cf5b82dec23", null ],
     [ "getWidth_lua", "namespaceSDOM.html#a5a1616f334207eba11a06e37b2994de1", null ],
     [ "getWindow", "namespaceSDOM.html#a8268b397b308040307a0d25fc715124f", null ],
+    [ "getWindowPosition_lua", "namespaceSDOM.html#a85a08bd5ee3953b763b6c68831d93c7d", null ],
     [ "getWindowTitle_lua", "namespaceSDOM.html#a406754799eca5111fc519866998089fe", null ],
     [ "getX_lua", "namespaceSDOM.html#a7c3bd03aa45c37c6c1af16e1c8940019", null ],
     [ "getY_lua", "namespaceSDOM.html#add5de644e681cb704d6d34376f724d4e", null ],
@@ -452,6 +453,7 @@ var namespaceSDOM =
     [ "setTop_lua", "namespaceSDOM.html#ad8e3f02df16b2bcbc383be9b657f15f5", null ],
     [ "setVisible_lua", "namespaceSDOM.html#a5ff2e1060f6ead4af97ecbcb151f479b", null ],
     [ "setWidth_lua", "namespaceSDOM.html#acc1fbbc2b9630a5db12499c477764c89", null ],
+    [ "setWindowPosition_any_lua", "namespaceSDOM.html#ac8b743338880ef67bcfcd4ed2cea3946", null ],
     [ "setWindowTitle_lua", "namespaceSDOM.html#a4f57cb35054293ba7acbe2c9a483e318", null ],
     [ "setX_lua", "namespaceSDOM.html#a00fb58f53ea2e4e025e0659332969a37", null ],
     [ "setY_lua", "namespaceSDOM.html#a80a666995b3a2a3f4cac512e42d2c243", null ],
@@ -485,6 +487,7 @@ var namespaceSDOM =
     [ "orientation_to_string", "namespaceSDOM.html#a5121ece23da73f686e3ab61c3fc63339", null ],
     [ "panelBaseIndexToString_", "namespaceSDOM.html#af0cc30e6979fd8ef2453166a934da51c", null ],
     [ "panelTileOffsetToString_", "namespaceSDOM.html#a1ba3fe71c30a46b568259105d73972be", null ],
+    [ "QUIET_TEST_MODE", "namespaceSDOM.html#a5f4035d1ee55946322bc55a123ba92b8", null ],
     [ "SDOM_EVENT_METER_MS_DEFAULT", "namespaceSDOM.html#ac719971447e1602dffe0feef14ac1140", null ],
     [ "SDOM_HOVER_HITTEST_MS", "namespaceSDOM.html#aaf62e29512566ac789c745d405a31dc0", null ],
     [ "string_to_button_state", "namespaceSDOM.html#ada9a03704ec6fd6f257e6f7f84a25a02", null ],
@@ -492,5 +495,6 @@ var namespaceSDOM =
     [ "stringToAnchorPoint_", "namespaceSDOM.html#a33cd42f20297f893e13db841931abda0", null ],
     [ "stringToPanelBaseIndex_", "namespaceSDOM.html#a8c2b307c7eb25af276a81bd930409deb", null ],
     [ "stringToPanelTileOffset_", "namespaceSDOM.html#adeb30b52dfdaf61815eb609cc8e208d8", null ],
-    [ "UnicodeToIconIndex", "namespaceSDOM.html#ab9be71c9c3156fe7d5d4c719ad8ba9bb", null ]
+    [ "UnicodeToIconIndex", "namespaceSDOM.html#ab9be71c9c3156fe7d5d4c719ad8ba9bb", null ],
+    [ "VERBOSE_TEST_OUTPUT", "namespaceSDOM.html#aae2a66a6c54d731022cfdc409fff8b12", null ]
 ];

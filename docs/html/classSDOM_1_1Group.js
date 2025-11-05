@@ -119,6 +119,8 @@ var classSDOM_1_1Group =
     [ "operator==", "classSDOM_1_1Group.html#a64489b0d439824790ced90f114d2955b", null ],
     [ "operator>", "classSDOM_1_1Group.html#a765c1a5a98db78263e66fa63a95711c0", null ],
     [ "operator>=", "classSDOM_1_1Group.html#a0663374567b9882b112e879ec72318ea", null ],
+    [ "printBubblingEventListeners", "classSDOM_1_1Group.html#a578dda47630664d0875063fde133291b", null ],
+    [ "printCaptureEventListeners", "classSDOM_1_1Group.html#a523b18e70cc99fdb48154bb2c4720db0", null ],
     [ "printTree", "classSDOM_1_1Group.html#a853fddbff86054aae8abc808cf55d1b6", null ],
     [ "queue_event", "classSDOM_1_1Group.html#a943459da97ec5ed33c8433d9e7291344", null ],
     [ "rebuildPanelTexture_", "classSDOM_1_1Group.html#a2cb670b98c92cc7713247fbfc7bc7572", null ],

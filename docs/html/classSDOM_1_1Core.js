@@ -49,6 +49,7 @@ var classSDOM_1_1Core =
     [ "getElapsedTime", "classSDOM_1_1Core.html#a6b7b2d7eccd897cf2e4a8cfdbcf78659", null ],
     [ "getEventManager", "classSDOM_1_1Core.html#a318167ada37c279681c50133a0771373", null ],
     [ "getFactory", "classSDOM_1_1Core.html#ae5f430331e317f1626ad9b5b6a120a44", null ],
+    [ "getFrameCount", "classSDOM_1_1Core.html#ae9ec06a8edc154e6d190648160cff5cb", null ],
     [ "getFunctionNamesForType", "classSDOM_1_1Core.html#a34854eeaa52416c8c25fc143e6e679f2", null ],
     [ "getIgnoreRealInput", "classSDOM_1_1Core.html#a7ed0c55558aa689004a6236957544827", null ],
     [ "getInstance", "classSDOM_1_1Core.html#af8766d12b776f7754fcc6f67b4867b58", null ],

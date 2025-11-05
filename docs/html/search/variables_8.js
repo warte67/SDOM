@@ -37,5 +37,5 @@ var searchData=
   ['isinternal_34',['isInternal',['../structSDOM_1_1IAssetObject_1_1InitStruct.html#a8c427dfbbfee0c61be93bd450bfa089f',1,'SDOM::IAssetObject::InitStruct']]],
   ['isinternal_5f_35',['isInternal_',['../classSDOM_1_1IAssetObject.html#a95668971d07c16b956e07b34ac8439a6',1,'SDOM::IAssetObject']]],
   ['isloaded_5f_36',['isLoaded_',['../classSDOM_1_1IAssetObject.html#adfca3b5c4ff76d9ff2f0c4a36f254998',1,'SDOM::IAssetObject']]],
-  ['italic_37',['italic',['../classCLR.html#ae71613c60736bf456f5353d5e0b7f31b',1,'CLR::ITALIC'],['../structSDOM_1_1Label_1_1InitStruct.html#ac87d14a79bc1f8c929f476e394f9e6b5',1,'SDOM::Label::InitStruct::italic'],['../structSDOM_1_1FontStyle.html#aa65af16390c86efbe3e4f1c154fd6cab',1,'SDOM::FontStyle::italic']]]
+  ['italic_37',['italic',['../structSDOM_1_1Label_1_1InitStruct.html#ac87d14a79bc1f8c929f476e394f9e6b5',1,'SDOM::Label::InitStruct::italic'],['../structSDOM_1_1FontStyle.html#aa65af16390c86efbe3e4f1c154fd6cab',1,'SDOM::FontStyle::italic'],['../classCLR.html#ae71613c60736bf456f5353d5e0b7f31b',1,'CLR::ITALIC']]]
 ];
