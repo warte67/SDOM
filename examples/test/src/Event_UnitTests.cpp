@@ -661,7 +661,13 @@ namespace SDOM
         EventManager& em = getCore().getEventManager();
 
         // --- 2) Define simulated mouse actions -------------------------------------
+        // Start with a motion to seed hover/mouse position before button logic
         std::vector<std::pair<std::string, std::function<void(DisplayHandle)>>> actions = {
+            {"MouseMove", [&](DisplayHandle b){
+                SDL_Event e{}; e.type = SDL_EVENT_MOUSE_MOTION;
+                e.motion.x = b->getX() + 5; e.motion.y = b->getY() + 5;
+                em.Queue_SDL_Event(e);
+            }},
             {"MouseButtonDown", [&](DisplayHandle b){ 
                 SDL_Event e{}; e.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
                 e.button.button = SDL_BUTTON_LEFT;
@@ -674,12 +680,6 @@ namespace SDOM
                 SDL_Event e{}; e.type = SDL_EVENT_MOUSE_BUTTON_UP;
                 e.button.button = SDL_BUTTON_LEFT;
                 e.button.x = b->getX() + 5; e.button.y = b->getY() + 5;
-                em.Queue_SDL_Event(e);
-                /* main loop will dispatch */
-            }},
-            {"MouseMove", [&](DisplayHandle b){
-                SDL_Event e{}; e.type = SDL_EVENT_MOUSE_MOTION;
-                e.motion.x = b->getX() + 5; e.motion.y = b->getY() + 5;
                 em.Queue_SDL_Event(e);
                 /* main loop will dispatch */
             }},

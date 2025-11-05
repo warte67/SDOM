@@ -287,6 +287,13 @@ namespace SDOM
 
         int counter = 0;
 
+        // --- Ensure a clean baseline for EventType::None bucket (Lua may have registered one) ---
+        if (stage->hasEventListener(SDOM::EventType::None, false))
+        {
+            std::function<void(SDOM::Event&)> none;
+            stage->removeEventListener(SDOM::EventType::None, none, false);
+        }
+
         // --- Event Listener Lambda ---
         auto the_none_function = [&counter, stage](SDOM::Event& event)
         {
@@ -319,8 +326,8 @@ namespace SDOM
             errors.push_back("Expected listener to be invoked once, but counter is " + std::to_string(counter) + ".");
 
         // --- Remove Listener ---
-        stage->removeEventListener(SDOM::EventType::None, the_none_function, false); // ✅ Verified
-        if (stage->hasEventListener(SDOM::EventType::None, false)) // ✅ Verified
+        stage->removeEventListener(SDOM::EventType::None, the_none_function, false);
+        if (stage->hasEventListener(SDOM::EventType::None, false)) 
             errors.push_back("Expected `None` listener to be removed.");
 
         return true; // ✅ finished this frame

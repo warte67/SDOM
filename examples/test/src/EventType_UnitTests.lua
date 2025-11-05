@@ -44,6 +44,8 @@ local S = {
     t4 = { init=false, phase="init", frames=0, stage=nil, click=false, dclick=false, start_frame=0 },
     t5 = { init=false, phase="init", frames=0, stage=nil, enter=false, leave=false, start_frame=0 },
     t6 = { init=false, phase="init", frames=0, stage=nil, hits=nil, start_frame=0, orig=nil, was_fullscreen=false, move_phase="none", move_wait=0 },
+    t7 = { init=false, phase="init", frames=0, stage=nil, slider=nil, vhit=false, shit=false, start_frame=0 },
+    t8 = { init=false, phase="init", frames=0, stage=nil, hits=nil, parent=nil, child=nil, start_frame=0 },
 }
 
 -- EventType_test0: Placeholder template (immediate success)
@@ -156,6 +158,124 @@ function M.EventType_test6()
             if Core.setWindowHeight then Core:setWindowHeight(st.orig.h) end
             if st.was_fullscreen and Core.setFullscreen then Core:setFullscreen(true) end
         end
+        st.phase = "done"
+        return true
+    end
+
+    return true
+end
+
+-- EventType_test7: UI/State — ValueChanged (Slider) and StateChanged (CheckButton)
+function M.EventType_test7()
+    local st = S.t7
+    if not st.init then
+        st.init = true
+        st.phase = "setup"
+        st.frames = 0
+    end
+
+    if st.phase == "setup" then
+        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test7: mainStage missing"); return true end
+        st.vhit, st.shit = false, false
+        -- Create a temporary Slider and attach ValueChanged
+        st.slider = Core:createDisplayObject("Slider", { name = "lua_slider_evt", type = "Slider", x = 40, y = 420, width = 120, height = 16 })
+        if not is_valid(st.slider) then push("EventType_test7: failed to create Slider"); return true end
+        st.stage:addChild(st.slider)
+        st.lv = function(_) st.vhit = true end
+        st.slider:addEventListener({ type = EventType.ValueChanged, listener = st.lv })
+        -- Attach StateChanged on the existing CheckButton in config
+        st.chk = Core:getDisplayObject("mainFrame_CheckButton_1")
+        if not is_valid(st.chk) then push("EventType_test7: mainFrame_CheckButton_1 missing"); return true end
+        st.ls = function(_) st.shit = true end
+        st.chk:addEventListener({ type = EventType.StateChanged, listener = st.ls })
+        if Core and Core.getFrameCount then local fc = Core:getFrameCount(); if type(fc)=="number" then st.start_frame = fc end end
+        -- Trigger ValueChanged via property assignment (IRangeControl)
+        st.slider.value = 50
+        -- Trigger StateChanged by clicking the CheckButton center
+        if Core and Core.pushMouseEvent then
+            local left = st.chk:getLeft(); local top = st.chk:getTop();
+            local w = st.chk:getWidth(); local h = st.chk:getHeight();
+            local cx = left + math.floor(w/2); local cy = top + math.floor(h/2);
+            Core:pushMouseEvent({ x = cx, y = cy, type = "move" })
+            Core:pushMouseEvent({ x = cx, y = cy, type = "down", button = 1 })
+            Core:pushMouseEvent({ x = cx, y = cy, type = "up",   button = 1 })
+        end
+        st.phase = "wait"
+        return false
+    end
+
+    if st.phase == "wait" then
+        st.frames = st.frames + 1
+        local delta = st.frames; if Core and Core.getFrameCount and type(st.start_frame)=="number" then local now = Core:getFrameCount(); if type(now)=="number" then delta = now - st.start_frame end end
+        if st.vhit and st.shit then
+            -- Cleanup
+            if is_valid(st.slider) then st.slider:removeEventListener({ type = EventType.ValueChanged, listener = st.lv }) end
+            if is_valid(st.chk) then st.chk:removeEventListener({ type = EventType.StateChanged, listener = st.ls }) end
+            -- Remove the temporary slider
+            Core:destroyDisplayObject("lua_slider_evt")
+            st.phase = "done"
+            return true
+        end
+        if delta > 120 then
+            if not st.vhit then push("EventType_test7: ValueChanged not observed within timeout") end
+            if not st.shit then push("EventType_test7: StateChanged not observed within timeout") end
+            if is_valid(st.slider) then st.slider:removeEventListener({ type = EventType.ValueChanged, listener = st.lv }) end
+            if is_valid(st.chk) then st.chk:removeEventListener({ type = EventType.StateChanged, listener = st.ls }) end
+            Core:destroyDisplayObject("lua_slider_evt")
+            st.phase = "done"
+            return true
+        end
+        return false
+    end
+
+    return true
+end
+
+-- EventType_test8: Application Lifecycle — Added/Removed (+ AddedToStage/RemovedFromStage)
+function M.EventType_test8()
+    local st = S.t8
+    if not st.init then
+        st.init = true
+        st.phase = "setup"
+        st.frames = 0
+    end
+
+    if st.phase == "setup" then
+        st.stage = get_stage(); if not is_valid(st.stage) then push("EventType_test8: mainStage missing"); return true end
+        st.parent = Core:createDisplayObject("Box", { name = "lua_parent", type = "Box", x = 20, y = 460, width = 40, height = 40, color = {255,0,255,255} })
+        st.child  = Core:createDisplayObject("Box", { name = "lua_child",  type = "Box", x = 4,  y = 4,   width = 16, height = 16, color = {255,0,0,255} })
+        if not (is_valid(st.parent) and is_valid(st.child)) then push("EventType_test8: failed to create parent/child Box"); return true end
+        st.hits = { added=false, removed=false, addedToStage=false, removedFromStage=false }
+        st.ladd  = function(_) st.hits.added = true end
+        st.lrem  = function(_) st.hits.removed = true end
+        st.lats  = function(_) st.hits.addedToStage = true end
+        st.lrfs  = function(_) st.hits.removedFromStage = true end
+        st.child:addEventListener({ type = EventType.Added,            listener = st.ladd })
+        st.child:addEventListener({ type = EventType.Removed,          listener = st.lrem })
+        st.child:addEventListener({ type = EventType.AddedToStage,     listener = st.lats })
+        st.child:addEventListener({ type = EventType.RemovedFromStage, listener = st.lrfs })
+        st.parent:addChild(st.child)
+        st.stage:addChild(st.parent)
+        st.phase = "verify_added"
+        return false
+    end
+
+    if st.phase == "verify_added" then
+        if not st.hits.added then push("EventType_test8: Added did not fire for child") end
+        if not st.hits.addedToStage then push("EventType_test8: AddedToStage did not fire for child") end
+        st.hits.added = false; st.hits.addedToStage = false
+        st.parent:removeChild(st.child)
+        st.phase = "verify_removed"
+        return false
+    end
+
+    if st.phase == "verify_removed" then
+        if not st.hits.removed then push("EventType_test8: Removed did not fire for child") end
+        if not st.hits.removedFromStage then push("EventType_test8: RemovedFromStage did not fire for child") end
+        st.stage:removeChild(st.parent)
+        -- Cleanup
+        Core:destroyDisplayObject("lua_child")
+        Core:destroyDisplayObject("lua_parent")
         st.phase = "done"
         return true
     end
@@ -472,7 +592,9 @@ function M.step()
     local ok4 = M.EventType_test4()
     local ok5 = M.EventType_test5()
     local ok6 = M.EventType_test6()
-    return ok0 and ok1 and ok2 and ok3 and ok4 and ok5 and ok6
+    local ok7 = M.EventType_test7()
+    local ok8 = M.EventType_test8()
+    return ok0 and ok1 and ok2 and ok3 and ok4 and ok5 and ok6 and ok7 and ok8
 end
 
 -- One-shot (non re-entrant) sanity checks used by the C++ Lua test harness

@@ -274,6 +274,12 @@ namespace SDOM
         void removeEventListener(EventType& type, std::function<void(Event&)> listener, bool useCapture = false);
         void triggerEventListeners(Event& event, bool useCapture);
         bool hasEventListener(const EventType& type, bool useCapture) const;
+
+        // --- Debug helpers: print registered listeners --- //
+        // Prints a summary of the capture-phase listeners grouped by EventType.
+        void printCaptureEventListeners() const;
+        // Prints a summary of the bubbling-phase listeners grouped by EventType.
+        void printBubblingEventListeners() const;
         void queue_event(const EventType& type, std::function<void(Event&)> init_payload);
         
         // --- Hierarchy Management --- //
@@ -464,13 +470,14 @@ namespace SDOM
         bool background_ = false;
         DisplayHandle parent_;
         std::vector<DisplayHandle> children_;
-
+    public:
         // --- Event Listener Containers --- //
         struct ListenerEntry {
             std::function<void(Event&)> listener;
             int priority;
             EventType eventType;
         };
+    protected:
         std::unordered_map<EventType, std::vector<ListenerEntry>, EventTypeHash> captureEventListeners;
         std::unordered_map<EventType, std::vector<ListenerEntry>, EventTypeHash> bubblingEventListeners;
 

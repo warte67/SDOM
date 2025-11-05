@@ -551,7 +551,16 @@ local function run_all()
     test_fullscreen_windowed()  -- ✅ NEW
 end
 
-local ok, err = pcall(run_all)
-if not ok then push("Core Lua test runner threw: " .. tostring(err)) end
+-- Re-entrant wrapper: expose step() that runs once and then returns true
+local M = { _done = false }
+function M.step()
+    if M._done then return true end
+    local ok, err = pcall(run_all)
+    if not ok then push("Core Lua test runner threw: " .. tostring(err)) end
+    M._done = true
+    return true
+end
 
-return utils.get_results()
+local results = utils.get_results()
+results.step = M.step
+return results

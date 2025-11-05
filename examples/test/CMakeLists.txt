@@ -58,10 +58,19 @@ if(EXISTS "${VERSION_HEADER}")
     add_dependencies(${PROJECT_NAME} version_check)
 endif()
 
-# Link to local (user) SDOM static library
+# Link to SDOM static library: prefer in-tree build output, fallback to user install
+set(SDOM_BUILD_LIB "${SDOM_ROOT}/build/libSDOM.a")
+if(EXISTS "${SDOM_BUILD_LIB}")
+    message(STATUS "Linking against in-tree SDOM: ${SDOM_BUILD_LIB}")
+    set(SDOM_LIB_PATH "${SDOM_BUILD_LIB}")
+else()
+    message(STATUS "Linking against user SDOM install: $ENV{HOME}/.local/lib/libSDOM.a")
+    set(SDOM_LIB_PATH "$ENV{HOME}/.local/lib/libSDOM.a")
+endif()
+
 target_link_libraries(prog
     PRIVATE
-        $ENV{HOME}/.local/lib/libSDOM.a
+        ${SDOM_LIB_PATH}
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf

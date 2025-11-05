@@ -703,6 +703,7 @@ namespace SDOM
             return;
         }
 
+        const std::size_t before = listeners.size();
         listeners.erase(std::remove_if(listeners.begin(), listeners.end(), [&](const ListenerEntry& entry) {
             // Prefer function pointer identity when available
             if (auto* a = entry.listener.target<void(Event&)>())
@@ -717,6 +718,17 @@ namespace SDOM
             // variable is passed back in, even though std::function holds a copy.
             return entry.listener.target_type() == listener.target_type();
         }), listeners.end());
+
+        // Safety fallback: if nothing matched but all remaining entries are the same
+        // target_type as the provided listener for this EventType bucket, clear them.
+        if (listeners.size() == before && !listeners.empty()) {
+            bool allSameType = true;
+            const auto& want = listener.target_type();
+            for (const auto& entry : listeners) {
+                if (entry.listener.target_type() != want) { allSameType = false; break; }
+            }
+            if (allSameType) listeners.clear();
+        }
     }
 
 
@@ -757,6 +769,44 @@ namespace SDOM
         auto it = targetListeners.find(type);
         if (it == targetListeners.end()) return false;
         return !it->second.empty();
+    }
+
+
+    // --- Debug utilities: dump registered listeners to stdout -------------------- //
+    namespace {
+        static void print_listener_bucket(const char* bucketName,
+                                           const std::unordered_map<EventType,
+                                                                     std::vector<IDisplayObject::ListenerEntry>,
+                                                                     EventTypeHash>& bucket)
+        {
+            std::cout << bucketName << ": size=" << bucket.size() << std::endl;
+            for (const auto& kv : bucket)
+            {
+                const EventType& et = kv.first;
+                const auto& vec = kv.second;
+                std::cout << "  - [" << et.getName() << "] listeners=" << vec.size() << std::endl;
+                for (std::size_t i = 0; i < vec.size(); ++i)
+                {
+                    const auto& e = vec[i];
+                    const char* typeName = e.listener.target_type().name();
+                    std::cout << "      [" << i << "] priority=" << e.priority
+                              << " type=" << (typeName ? typeName : "<unknown>")
+                              << std::endl;
+                }
+            }
+        }
+    } // anonymous namespace
+
+    void IDisplayObject::printCaptureEventListeners() const
+    {
+        std::cout << "[EventListeners] Object='" << getName() << "' (capture-phase)" << std::endl;
+        print_listener_bucket("Capture", captureEventListeners);
+    }
+
+    void IDisplayObject::printBubblingEventListeners() const
+    {
+        std::cout << "[EventListeners] Object='" << getName() << "' (bubbling-phase)" << std::endl;
+        print_listener_bucket("Bubbling", bubblingEventListeners);
     }
 
     
