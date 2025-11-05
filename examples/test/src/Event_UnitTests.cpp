@@ -472,7 +472,7 @@ namespace SDOM
     {
         // --- 1) Define mouse-related event types -----------------------------------
         const std::vector<std::pair<std::string, EventType&>> events = {
-            {"MouseButtonUp",     EventType::MouseButtonUp}
+              {"MouseButtonUp",     EventType::MouseButtonUp}
             , {"MouseButtonDown",   EventType::MouseButtonDown}
             , {"MouseWheel",        EventType::MouseWheel}
             , {"MouseMove",         EventType::MouseMove}
@@ -661,7 +661,9 @@ namespace SDOM
         EventManager& em = getCore().getEventManager();
 
         // --- 2) Define simulated mouse actions -------------------------------------
-        // Start with a motion to seed hover/mouse position before button logic
+        // Start with a motion to seed hover/mouse position before button logic,
+        // and always supply windowID + window coordinates so preprocess converts
+        // consistently to renderer logical space.
         std::vector<std::pair<std::string, std::function<void(DisplayHandle)>>> actions = {
             {"MouseMove", [&](DisplayHandle b){
                 SDL_Event e{}; e.type = SDL_EVENT_MOUSE_MOTION;
@@ -671,17 +673,16 @@ namespace SDOM
             {"MouseButtonDown", [&](DisplayHandle b){ 
                 SDL_Event e{}; e.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
                 e.button.button = SDL_BUTTON_LEFT;
+                e.button.clicks = 1;
                 e.button.x = b->getX() + 5; e.button.y = b->getY() + 5;
                 em.Queue_SDL_Event(e);
-                // fake error to test the error reporting system
-                // errors.push_back("MouseButtonDown: event dispatched.");
             }},
             {"MouseButtonUp", [&](DisplayHandle b){
                 SDL_Event e{}; e.type = SDL_EVENT_MOUSE_BUTTON_UP;
                 e.button.button = SDL_BUTTON_LEFT;
+                e.button.clicks = 1;
                 e.button.x = b->getX() + 5; e.button.y = b->getY() + 5;
                 em.Queue_SDL_Event(e);
-                /* main loop will dispatch */
             }},
             {"MouseWheel", [&](DisplayHandle b){
                 SDL_Event e{};

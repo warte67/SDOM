@@ -547,6 +547,7 @@ namespace SDOM
             return false;
         }
         obj->setClickable(true);  // <-- ensure clickable
+        obj->setZOrder(10000);    // bring to front for targeting
         stage->addChild(obj);
 
         // ensure keyboard events are dispatched
@@ -571,6 +572,11 @@ namespace SDOM
                 continue;
             }
 
+            // 🔍 Diagnostic output
+            std::cout << "Registering listener for " << name
+                    << " EventType@" << static_cast<const void*>(et)
+                    << std::endl;
+                    
             obj->addEventListener(*et, [&](const Event& ev) {
                 hits[ev.getTypeName()] = true;
             });
@@ -580,13 +586,44 @@ namespace SDOM
         for (auto& [_, action] : actions)
             action(obj);
 
+        // Optional: capture queue size before dispatch for debugging
+#if defined(SDOM_DEBUG_BEHAVIOR_TEST)
+        {
+            int qsz_before = core.getEventManager().getEventQueueSize();
+            std::cout << "[BehaviorTest] Event queue size before pump: " << qsz_before << std::endl;
+        }
+#endif
+
         // --- 4) Process and verify event dispatch -----------------------------------
         core.pumpEventsOnce();
 
-        for (const auto& [name, hit] : hits)
+        bool any_missed = false;
+        for (const auto& [name, hit] : hits) {
             if (!hit) {
                 errors.push_back("Behavior event '" + name + "' did not fire.");
+                any_missed = true;
             }
+        }
+
+#if defined(SDOM_DEBUG_BEHAVIOR_TEST)
+        if (any_missed)
+        {
+            std::cout << "[BehaviorTest] Miss detected; dumping diagnostics...\n";
+            // Dump queued events (should normally be empty after pump)
+            core.getEventManager().debugPrintEventQueue();
+            // Show listener buckets on the test object
+            if (obj.isValid()) {
+                obj->printCaptureEventListeners();
+                obj->printBubblingEventListeners();
+            }
+            // Show current hovered and focused objects (names)
+            auto hov = core.getMouseHoveredObject();
+            auto fok = core.getKeyboardFocusedObject();
+            std::cout << "[BehaviorTest] hovered=" << (hov ? hov.getName() : std::string("<null>"))
+                      << " focused=" << (fok ? fok.getName() : std::string("<null>"))
+                      << std::endl;
+        }
+#endif
 
         // --- 5) Cleanup -------------------------------------------------------------
         if (stage->hasChild(obj))

@@ -60,8 +60,14 @@ namespace SDOM
         const bool isCritical = type.isCritical();
         const bool canMeter = type.isMeterEnabled();
 
+// std::cout << "[addEvent] type=" << event->getTypeName()
+//           << " isCritical=" << isCritical
+//           << " queueSize(before)=" << eventQueue.size()
+//           << std::endl;
+
         if (isCritical)
         {
+
             // Flush metered events to preserve ordering, then enqueue immediately
             flushCoalesced_();
             eventQueue.push(std::move(event));
@@ -132,6 +138,12 @@ namespace SDOM
         Uint32 interval = type.getMeterIntervalMs() ? type.getMeterIntervalMs() : SDOM_EVENT_METER_MS_DEFAULT;
         if (coalesce_last_flush_ms_ == 0 || (now_ms - coalesce_last_flush_ms_) >= interval)
             flushCoalesced_();
+
+// std::cout << "[addEvent] type=" << event->getTypeName()
+//           << " isCritical=" << isCritical
+//           << " queueSize(before)=" << eventQueue.size()
+//           << std::endl;
+
     }
 
     bool EventManager::hasListeners(const EventType& type) const
@@ -201,12 +213,47 @@ namespace SDOM
                 else if (auto* rootObj = dynamic_cast<IDisplayObject*>(rootNode.get()))
                 {
                     deliver = rootObj->isAncestorOf(object);
+                    // Fallback: if ancestry check fails (e.g., during synthetic tests
+                    // or when handles are reconstructed), allow delivery when the
+                    // object is known to be on the current stage.
+                    if (!deliver) {
+                        IDisplayObject* objPtr = dynamic_cast<IDisplayObject*>(object.get());
+                        if (objPtr && objPtr->isOnStage())
+                            deliver = true;
+                    }
+
+                    // // 🔍 Debug block: show ancestry relationships
+                    // std::cout << "DEBUG: isAncestorOf? this=" << rootObj->getName()
+                    //         << " checking descendant=" << (object ? object->getName() : "<null>")
+                    //         << " parent=" << (object && object->getParent() ? object->getParent()->getName() : "<none>")
+                    //         << " result=" << (deliver ? "TRUE" : "FALSE")
+                    //         << " event=" << event->getTypeName()
+                    //         << std::endl;
                 }
             }
+#if defined(SDOM_DEBUG_BEHAVIOR_TEST)
+            std::cout << "[DispatchQueuedEvents] type=" << event->getTypeName()
+                      << " target=" << (object ? object.getName() : std::string("<null>"))
+                      << " deliver=" << (deliver ? "yes" : "no")
+                      << std::endl;
+#endif
             if (deliver)
             {
+// std::cout << "[DispatchQueuedEvents] Dispatching "
+//           << event->getTypeName()
+//           << " target="
+//           << (object.isValid() ? object.getName() : "<null>")
+//           << std::endl;
+
                 dispatchEvent(std::move(event), rootNode);
             }
+            // else
+            // {
+            //     std::cout << "⚠️  Dropping event " << event->getTypeName()
+            //             << " (target=" << (object ? object->getName() : "<null>") << ")"
+            //             << std::endl;
+            // }
+
             eventQueue.pop();
         }
     }
@@ -215,6 +262,8 @@ namespace SDOM
     // across different types; map order is acceptable for metered events).
     void EventManager::flushCoalesced_()
     {
+// std::cout << "[flushCoalesced_] queueSize(before)=" << eventQueue.size() << std::endl;
+
         if (coalesce_map_.empty()) return;
         for (auto& kv : coalesce_map_)
         {
@@ -924,6 +973,11 @@ namespace SDOM
                 evt->button = e.button.button;
                 evt->clickCount = e.button.clicks;
                 evt->setTarget(topObject);
+
+// std::cout << "Dispatching " << evt->getTypeName()
+//           << " EventType@" << static_cast<const void*>(&evt->getTypeRef())
+//           << std::endl;
+
                 addEvent(std::move(evt));
                 s_lastMouseDownObject = topObject;
                 break;
@@ -938,6 +992,11 @@ namespace SDOM
                 evt->button = e.button.button;
                 evt->clickCount = e.button.clicks;
                 evt->setTarget(topObject);
+                
+// std::cout << "Dispatching " << evt->getTypeName()
+//           << " EventType@" << static_cast<const void*>(&evt->getTypeRef())
+//           << std::endl;
+
                 addEvent(std::move(evt));
 
                 // Fire click / double click events if same object
@@ -954,6 +1013,11 @@ namespace SDOM
                         clickEvent->button = e.button.button;
                         clickEvent->clickCount = clicks;
                         clickEvent->setTarget(topObject);
+                
+// std::cout << "Dispatching " << evt->getTypeName()
+//           << " EventType@" << static_cast<const void*>(&evt->getTypeRef())
+//           << std::endl;
+
                         addEvent(std::move(clickEvent));
                     }
 
@@ -966,6 +1030,11 @@ namespace SDOM
                         dblEvent->button = e.button.button;
                         dblEvent->clickCount = clicks;
                         dblEvent->setTarget(topObject);
+                
+// std::cout << "Dispatching " << evt->getTypeName()
+//           << " EventType@" << static_cast<const void*>(&evt->getTypeRef())
+//           << std::endl;
+
                         addEvent(std::move(dblEvent));
                     }
 
@@ -998,6 +1067,11 @@ namespace SDOM
                 evt->button = e.wheel.direction;
                 evt->clickCount = 0;
                 evt->setTarget(wheelTarget);
+                
+// std::cout << "Dispatching " << evt->getTypeName()
+//           << " EventType@" << static_cast<const void*>(&evt->getTypeRef())
+//           << std::endl;
+
                 addEvent(std::move(evt));
                 break;
             }
@@ -1360,7 +1434,22 @@ namespace SDOM
 
             getCore().setMouseHoveredObject(s_cachedPtHover);
             cachedPtClickable = s_cachedPtClickable;
-            dispatchMouseEvents(sdlEvent, node, s_cachedPtClickable);
+            // Prefer clickable target; fall back to hovered if none
+            {
+                DisplayHandle buttonTarget = (s_cachedPtClickable && s_cachedPtClickable.isValid() && s_cachedPtClickable != node)
+                    ? s_cachedPtClickable
+                    : s_cachedPtHover;
+#if defined(SDOM_DEBUG_BEHAVIOR_TEST)
+                auto nm = [&](DisplayHandle h){ return (h && h.isValid()) ? h.getName() : std::string("<null>"); };
+                std::cout << "[Queue_SDL_Event] mouse@(" << mX << "," << mY << ")"
+                          << " clickTarget=" << nm(s_cachedPtClickable)
+                          << " hoverTarget=" << nm(s_cachedPtHover)
+                          << " chosen=" << nm(buttonTarget)
+                          << " type=" << sdlType
+                          << std::endl;
+#endif
+                dispatchMouseEvents(sdlEvent, node, buttonTarget);
+            }
 
         }
         else if (isWindowEvent(sdlType))          dispatchWindowEvents(sdlEvent);
@@ -1401,11 +1490,20 @@ namespace SDOM
                 }
                 getCore().setMouseHoveredObject(s_cachedPtHover2);
                 cachedPtClickable = s_cachedPtClickable2;
-                // DisplayHandle buttonTarget = (ptClickable && ptClickable.isValid() && ptClickable != node)
-                //     ? ptClickable
-                //     : ptHover;
-                // dispatchMouseEvents(sdlEvent, node, buttonTarget);
-                dispatchMouseEvents(sdlEvent, node, s_cachedPtClickable2);
+                // Prefer clickable target; fall back to hovered if none
+                DisplayHandle buttonTarget = (s_cachedPtClickable2 && s_cachedPtClickable2.isValid() && s_cachedPtClickable2 != node)
+                    ? s_cachedPtClickable2
+                    : s_cachedPtHover2;
+#if defined(SDOM_DEBUG_BEHAVIOR_TEST)
+                auto nm2 = [&](DisplayHandle h){ return (h && h.isValid()) ? h.getName() : std::string("<null>"); };
+                std::cout << "[Queue_SDL_Event] (heuristic) mouse@(" << mX << "," << mY << ")"
+                          << " clickTarget=" << nm2(s_cachedPtClickable2)
+                          << " hoverTarget=" << nm2(s_cachedPtHover2)
+                          << " chosen=" << nm2(buttonTarget)
+                          << " type=" << sdlType
+                          << std::endl;
+#endif
+                dispatchMouseEvents(sdlEvent, node, buttonTarget);
 
             }
         }

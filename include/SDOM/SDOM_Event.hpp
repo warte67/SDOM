@@ -168,6 +168,9 @@ namespace SDOM
         int getAsciiCode() const;
         Event& setAsciiCode(int asciiCode);        
 
+// const EventType& getTypeRef() const { return type; }
+
+
 
     protected:
         EventType type;                                 // Type of the event, e.g., KeyDown, MouseClick, etc.

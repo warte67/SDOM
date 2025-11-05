@@ -1807,9 +1807,13 @@ namespace SDOM
             eventManager_->Queue_SDL_Event(event);
         }
             // std::cout << "POST -- Core::pumpEventsOnce(): Dispatching queued event. Remaining queue size: " << eventManager_->getEventQueueSize() << std::endl;
+        // Always dispatch once to flush any coalesced (metered) events that may
+        // not yet be in the real queue. Then drain any additional events that
+        // were enqueued during dispatch.
+        eventManager_->DispatchQueuedEvents();
         while (eventManager_->getEventQueueSize() > 0)
         {
-            eventManager_->DispatchQueuedEvents();  // should pop all queued events
+            eventManager_->DispatchQueuedEvents();
         }
     }
 
