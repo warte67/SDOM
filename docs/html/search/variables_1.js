@@ -58,7 +58,7 @@ var searchData=
   ['button_5fdecrease_5fptr_5f_55',['button_decrease_ptr_',['../classSDOM_1_1ScrollBar.html#aacdb2577c54d69433e93555ea5ab5e96',1,'SDOM::ScrollBar']]],
   ['button_5fincrease_5f_56',['button_increase_',['../classSDOM_1_1ScrollBar.html#a01a39cf57fde941f865c59047cc5e17c',1,'SDOM::ScrollBar']]],
   ['button_5fincrease_5fptr_5f_57',['button_increase_ptr_',['../classSDOM_1_1ScrollBar.html#aca8f763c64085914f41d49b0804a002f',1,'SDOM::ScrollBar']]],
-  ['button_5fstate_5fpairs_58',['button_state_pairs',['../namespaceSDOM.html#a479fe3b6d6b7a81bb9d305429c19dd71',1,'SDOM']]],
-  ['button_5fstate_5fto_5fstring_59',['button_state_to_string',['../namespaceSDOM.html#a2ddfe0c3e88fd1b6e58620d2b63e769f',1,'SDOM']]],
+  ['button_5fstate_5fpairs_58',['button_state_pairs',['../classSDOM.html#a479fe3b6d6b7a81bb9d305429c19dd71',1,'SDOM']]],
+  ['button_5fstate_5fto_5fstring_59',['button_state_to_string',['../classSDOM.html#a2ddfe0c3e88fd1b6e58620d2b63e769f',1,'SDOM']]],
   ['buttonstate_5f_60',['buttonState_',['../classSDOM_1_1IButtonObject.html#a13bc73dac82d7465513fe4135cf5eec7',1,'SDOM::IButtonObject']]]
 ];

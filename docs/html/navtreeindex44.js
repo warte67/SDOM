@@ -1,5 +1,12 @@
 var NAVTREEINDEX44 =
 {
+"structSDOM_1_1FontStyle.html#a44504240f34149787846a33420941df2":[2,0,0,23,20],
+"structSDOM_1_1FontStyle.html#a44504240f34149787846a33420941df2":[3,0,0,23,20],
+"structSDOM_1_1FontStyle.html#a4c7117e18052b72d2650bb79cb8f2d1f":[2,0,0,23,23],
+"structSDOM_1_1FontStyle.html#a4c7117e18052b72d2650bb79cb8f2d1f":[3,0,0,23,23],
+"structSDOM_1_1FontStyle.html#a4dfe6a92f4c0f17e3ad3c78c09ba4b35":[2,0,0,23,8],
+"structSDOM_1_1FontStyle.html#a4dfe6a92f4c0f17e3ad3c78c09ba4b35":[3,0,0,23,8],
+"structSDOM_1_1FontStyle.html#a62133c9f0eaf4c334915a98d2e95b1a2":[2,0,0,23,7],
 "structSDOM_1_1FontStyle.html#a62133c9f0eaf4c334915a98d2e95b1a2":[3,0,0,23,7],
 "structSDOM_1_1FontStyle.html#a62b81b6edf01fa2467e338d25a8a4a35":[2,0,0,23,6],
 "structSDOM_1_1FontStyle.html#a62b81b6edf01fa2467e338d25a8a4a35":[3,0,0,23,6],
@@ -242,12 +249,5 @@ var NAVTREEINDEX44 =
 "structSDOM_1_1IDisplayObject_1_1ListenerEntry.html":[2,0,0,22,1],
 "structSDOM_1_1IDisplayObject_1_1ListenerEntry.html":[3,0,0,22,1],
 "structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#aad298a4bb1afa3392c303c7c84ce8740":[2,0,0,22,1,0],
-"structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#aad298a4bb1afa3392c303c7c84ce8740":[3,0,0,22,1,0],
-"structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#ac8ae09acf20d24ab4fd9e327e43e23e4":[2,0,0,22,1,1],
-"structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#ac8ae09acf20d24ab4fd9e327e43e23e4":[3,0,0,22,1,1],
-"structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#ae5443a7162a458e6421ba26c3723aacf":[2,0,0,22,1,2],
-"structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#ae5443a7162a458e6421ba26c3723aacf":[3,0,0,22,1,2],
-"structSDOM_1_1IFontObject_1_1InitStruct.html":[2,0,0,24,0],
-"structSDOM_1_1IFontObject_1_1InitStruct.html":[3,0,0,24,0],
-"structSDOM_1_1IFontObject_1_1InitStruct.html#a062d95c88f6be157121639eb9e9e7627":[2,0,0,24,0,0]
+"structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#aad298a4bb1afa3392c303c7c84ce8740":[3,0,0,22,1,0]
 };

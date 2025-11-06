@@ -1,104 +1,168 @@
-// SDOM_BitmapFont.hpp
-#pragma once
+/**
+ * @class SDOM::<ClassName>
+ * @brief [Short one-line summary of class purpose]
+ * @author Jay Faries (https://github.com/warte67)
+ * @inherits SDOM::<BaseClass>
+ * @luaType <LuaTypeName>
+ *
+ * [Expanded description of the class, its purpose, and typical use cases.]
+ *
+ * ---
+ * @section <ClassName>_Properties Properties
+ * | Property | Type | Description |
+ * |-----------|------|-------------|
+ * | `property_name` | `<type>` | [Brief description] |
+ *
+ * ---
+ * @section <ClassName>_Functions Functions
+ * | Function | Returns | Description |
+ * |-----------|----------|-------------|
+ * | `functionName()` | `<type>` | [What it does] |
+ *
+ * ---
+ * @section <ClassName>_Events Events
+ * | Event | Description |
+ * |--------|-------------|
+ * | `EventName` | [When it’s fired / purpose] |
+ *
+ * ---
+ * @section <ClassName>_Notes Notes
+ * - [Any caveats, performance notes, or Lua binding details]
+ */
 
+/**
+ * @section License ZLIB License
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from
+ * the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+
+#pragma once
 #include <SDL3/SDL.h>
 #include <SDOM/SDOM_IFontObject.hpp>
 #include <SDOM/SDOM_AssetHandle.hpp>
- 
+
 namespace SDOM
 {
     class SpriteSheet;
 
+    /**
+     * @class SDOM::BitmapFont
+     * @brief Fixed-size bitmap-based font using sprite sheets for glyph rendering.
+     *
+     * The BitmapFont class loads and manages a pre-rendered sheet of glyphs
+     * and provides efficient text drawing operations without the overhead
+     * of dynamic font rasterization. Ideal for UI text, retro fonts, and
+     * embedded systems.
+     */
     class BitmapFont : public IFontObject
     {
-            using SUPER = IFontObject;
+        using SUPER = IFontObject;
 
-        public:
-            // --- Type Info --- //
-            static constexpr const char* TypeName = "bitmap";
+    public:
+        static constexpr const char* TypeName = "BitmapFont";
 
-            // --- Construction & Initialization --- //
-            struct InitStruct : public IFontObject::InitStruct
+        // ---------------------------------------------------------------------
+        // 🧱 Construction & Initialization
+        // ---------------------------------------------------------------------
+        struct InitStruct : public IFontObject::InitStruct
+        {
+            InitStruct()
+                : IFontObject::InitStruct()
             {
-                InitStruct() : IFontObject::InitStruct() 
-                { 
-                    name = TypeName; 
-                    type = TypeName;
-                    filename = TypeName; // Default filename, can be overridden
-                }
-                int fontSize = 8;     // Font size property for TrueType fonts (and BitmapFont scaling)
-                int font_width = -1;     // Optional: non-uniform width (bitmap only)          
-                int font_height = -1;    // Optional: non-uniform height (bitmap only)
-            };
-
-        protected:
-            BitmapFont(const InitStruct& init);
-            BitmapFont(const sol::table& config);
-
-        public:
-            // --- Static Factory Methods --- //
-            static std::unique_ptr<IAssetObject> CreateFromLua(const sol::table& config) {
-                return std::unique_ptr<IAssetObject>(new BitmapFont(config));
-            }
-            static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit) {
-                const auto& fontInit = static_cast<const BitmapFont::InitStruct&>(baseInit);
-                return std::unique_ptr<IAssetObject>(new BitmapFont(fontInit));
+                name = TypeName;
+                type = TypeName;
+                filename = TypeName; // Default filename, may be overridden
             }
 
-            virtual ~BitmapFont() override;
+            int fontSize = 8;       ///< Font scaling hint (for TTF compatibility)
+            int font_width = -1;    ///< Optional fixed glyph width override
+            int font_height = -1;   ///< Optional fixed glyph height override
+        };
 
-            // Override methods from IGlyphObject
-            virtual bool onInit() override;
-            virtual void onQuit() override;
+    protected:
+        BitmapFont(const InitStruct& init);
+        BitmapFont(const sol::table& config);
 
-            virtual void onLoad() override;
-            virtual void onUnload() override;
-            virtual void create(const sol::table& config) override;
+    public:
+        // ---------------------------------------------------------------------
+        // 🏗️ Static Factory Methods
+        // ---------------------------------------------------------------------
+        static std::unique_ptr<IAssetObject> CreateFromLua(const sol::table& config) {
+            return std::unique_ptr<IAssetObject>(new BitmapFont(config));
+        }
+        static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit) {
+            const auto& fontInit = static_cast<const BitmapFont::InitStruct&>(baseInit);
+            return std::unique_ptr<IAssetObject>(new BitmapFont(fontInit));
+        }  
+        virtual ~BitmapFont() override;
 
-            virtual void drawGlyph(Uint32 ch, int x, int y, const FontStyle& style) override;
-            virtual void drawPhrase(const std::string& str, int x, int y, const FontStyle& style) override;
-            virtual void drawPhraseOutline(const std::string& str, int x, int y, const FontStyle& style) override;
-            virtual void drawPhraseDropshadow(const std::string& str, int x, int y, const FontStyle& style) override;
+        // ---------------------------------------------------------------------
+        // 🔤 Font Rendering Lifecycle (overrides in IFontObject)
+        // ---------------------------------------------------------------------
+        virtual bool onInit() override;
+        virtual void onQuit() override;
+        virtual void onLoad() override;
+        virtual void onUnload() override;
+        virtual void create(const sol::table& config) override;
 
-            virtual bool getGlyphMetrics(Uint32 ch, int *minx, int *maxx, int *miny, int *maxy, int *advance) const override;
-            virtual int getFontSize() override;
-            virtual int getGlyphHeight(Uint32 ch) const override;
-            virtual int getGlyphWidth(Uint32 ch) const override;
+        // Rendering and metrics (bound in IFontObject)
+        virtual void drawGlyph(Uint32 ch, int x, int y, const FontStyle& style) override;
+        virtual void drawPhrase(const std::string& str, int x, int y, const FontStyle& style) override;
+        virtual void drawPhraseOutline(const std::string& str, int x, int y, const FontStyle& style) override;
+        virtual void drawPhraseDropshadow(const std::string& str, int x, int y, const FontStyle& style) override;
+        virtual bool getGlyphMetrics(Uint32 ch, int* minx, int* maxx, int* miny, int* maxy, int* advance) const override;
+        virtual int getFontSize() override;
+        virtual int getGlyphHeight(Uint32 ch) const override;
+        virtual int getGlyphWidth(Uint32 ch) const override;
+        virtual int getFontAscent() override;
+        virtual void setFontSize(int p_size) override;
+        virtual void setFontStyle(const FontStyle& style) override;
+        virtual FontStyle getFontStyle() override;
 
-            virtual int getFontAscent() override;
-            virtual void setFontSize(int p_size) override;
-            virtual void setFontStyle(const FontStyle& style) override;
-            virtual FontStyle getFontStyle() override;
+        // ---------------------------------------------------------------------
+        // 💡 BitmapFont-Specific Accessors (Lua-Visible)
+        // ---------------------------------------------------------------------
+        /** @return The underlying SpriteSheet resource used by this font. */
+        AssetHandle getResourceHandle() const { return spriteSheet_; }
 
-            // --- Public BitmapFont-specific methods --- //
-            AssetHandle getResourceHandle() const { return spriteSheet_; }
+        /** @return The configured glyph width in pixels. */
+        int getBitmapFontWidth() const { return bitmapFontWidth_; }
 
-            int getBitmapFontWidth() const { return bitmapFontWidth_; }
-            int getBitmapFontHeight() const { return bitmapFontHeight_; }
-            void setBitmapFontWidth(int width) { bitmapFontWidth_ = width; }
-            void setBitmapFontHeight(int height) { bitmapFontHeight_ = height; }
+        /** @return The configured glyph height in pixels. */
+        int getBitmapFontHeight() const { return bitmapFontHeight_; }
 
-        protected:
 
-            // Bitmap-specific data members
-            AssetHandle spriteSheet_;
-            int bitmapFontWidth_ = -1;
-            int bitmapFontHeight_ = -1;
+    protected:
+        AssetHandle spriteSheet_;  ///< Linked SpriteSheet asset
+        int bitmapFontWidth_ = -1;
+        int bitmapFontHeight_ = -1;
 
-            std::vector<std::vector<SDL_Texture*>> outlineTextures;
+        std::vector<std::vector<SDL_Texture*>> outlineTextures;
+        int activeFontWidth_ = -1;
+        int activeFontHeight_ = -1;
 
-            // Active per-style overrides (set via setFontStyle) - do NOT replace
-            // the canonical sprite metrics (bitmapFontWidth_/bitmapFontHeight_).
-            // These are temporary overrides used during measurement/render passes.
-            int activeFontWidth_ = -1;   
-            int activeFontHeight_ = -1;  
+        void initializeOutlineGlyph(Uint32 ch, int x, int y);
+        void drawForegroundGlyph(Uint32 ch, int x, int y, const FontStyle& style);
+        void drawOutlineGlyph(Uint32 ch, int x, int y, const FontStyle& style);
+        void drawDropShadowGlyph(Uint32 ch, int x, int y, const FontStyle& style);
 
-            void initializeOutlineGlyph(Uint32 ch, int x, int y);
-            void drawForegroundGlyph(Uint32 ch, int x, int y, const FontStyle& style);
-            void drawOutlineGlyph(Uint32 ch, int x, int y, const FontStyle& style);
-            void drawDropShadowGlyph(Uint32 ch, int x, int y, const FontStyle& style);
-
-            // --- Lua Registration --- //
-            virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        // ---------------------------------------------------------------------
+        // 🔗 Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
     };
-}
+} // namespace SDOM

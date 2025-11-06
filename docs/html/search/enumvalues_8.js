@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['inactive_0',['Inactive',['../namespaceSDOM.html#af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0',1,'SDOM']]],
-  ['indeterminate_1',['Indeterminate',['../namespaceSDOM.html#af652715c3e637c795824fa0afedda425aa2d00c353d1f9a5f07852650030dbd53',1,'SDOM']]]
+  ['inactive_0',['Inactive',['../classSDOM.html#af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0',1,'SDOM']]],
+  ['indeterminate_1',['Indeterminate',['../classSDOM.html#af652715c3e637c795824fa0afedda425aa2d00c353d1f9a5f07852650030dbd53',1,'SDOM']]]
 ];

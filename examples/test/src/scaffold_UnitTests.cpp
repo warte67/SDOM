@@ -10,7 +10,7 @@ namespace SDOM
     // --- Individual Scaffold Unit Tests --- //
 
     // ============================================================================
-    //  Test 0: Scaffolding Template
+    //  Test 0: Scaffold Template
     // ----------------------------------------------------------------------------
     //  This template serves as a reference pattern for writing SDOM unit tests.
     //

@@ -27,6 +27,8 @@ namespace SDOM
     bool EventType_UnitTests();
     bool ArrowButton_UnitTests();
     bool AssetHandle_UnitTests();
+    bool BitmapFont_UnitTests();
+    bool Button_UnitTests();
     
     // bool Factory_UnitTests();
     // bool Stage_UnitTests();

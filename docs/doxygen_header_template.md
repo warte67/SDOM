@@ -1,6 +1,7 @@
 /**
  * @class SDOM::<ClassName>
  * @brief [Short one-line summary of the object’s role in the DOM]
+ * @author Jay Faries (https://github.com/warte67)
  * @inherits SDOM::<BaseType>
  * @luaType <LuaUsertypeName>
  *

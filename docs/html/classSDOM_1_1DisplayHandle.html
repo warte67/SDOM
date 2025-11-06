@@ -93,7 +93,7 @@ $(function(){initNavTree('classSDOM_1_1DisplayHandle.html','','classSDOM_1_1Disp
 </div><!--header-->
 <div class="contents">
 
-<p>A safe, name-based reference proxy to display objects managed by the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a>.  
+<p>A safe, name-based reference proxy to display objects managed by the <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a>.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="SDOM__DisplayHandle_8hpp_source.html">SDOM_DisplayHandle.hpp</a>&gt;</code></p>
@@ -168,10 +168,10 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:aab85ff5a30c6a53ea88248392db63380" id="r_aab85ff5a30c6a53ea88248392db63380"><td class="memItemLeft" align="right" valign="top">sol::usertype&lt; <a class="el" href="#a9f9ea31866be03d2204362d812dbdf79">DisplayHandle</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab85ff5a30c6a53ea88248392db63380">objHandleType_</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A safe, name-based reference proxy to display objects managed by the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a>. </p>
+<div class="textblock"><p>A safe, name-based reference proxy to display objects managed by the <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a>. </p>
 <p><a class="el" href="classSDOM_1_1DisplayHandle.html" title="A safe, name-based reference proxy to display objects managed by the SDOM Core.">DisplayHandle</a> replaces traditional pointers in SDOM’s API with a lightweight, copyable reference type that resolves objects by name and type through the global <a class="el" href="classSDOM_1_1Factory.html">Factory</a> registry. It ensures <b>no direct ownership</b>, <b>no double-frees</b>, and <b>graceful fallback</b> when a target object is missing.</p>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
 🧩 Key Features</h3>
 <ul>
 <li><b>Pointer-Safe:</b> Never owns or deletes the target object; resolution is deferred to <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a>.</li>
@@ -182,7 +182,7 @@ Protected Attributes</h2></td></tr>
 <li><b>Debug Friendly:</b> <span class="tt"><a class="el" href="#ab8fbb280de5de823ca666d8d50fe3395">str()</a></span> and <span class="tt"><a class="el" href="#a2dc4f0f7f6af8b9e6ed74edb234bb511">c_str()</a></span> produce clear, introspectable summaries for diagnostics.</li>
 </ul>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 🧠 Lifetime Model</h3>
 <ul>
 <li>DisplayHandles are <b>non-owning</b>.</li>
@@ -191,7 +191,7 @@ Protected Attributes</h2></td></tr>
 <li>Lost handles can always be recovered by name until the object is explicitly destroyed or garbage-collected.</li>
 </ul>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 🪄 Example</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="#a9f9ea31866be03d2204362d812dbdf79">DisplayHandle</a> box(<span class="stringliteral">&quot;blueishBox&quot;</span>, <span class="stringliteral">&quot;Box&quot;</span>);</div>
 <div class="line"><span class="keywordflow">if</span> (box.isValid()) {</div>
@@ -200,7 +200,7 @@ Protected Attributes</h2></td></tr>
 <div class="line">}</div>
 <div class="ttc" id="aclassSDOM_1_1DisplayHandle_html_a9f9ea31866be03d2204362d812dbdf79"><div class="ttname"><a href="#a9f9ea31866be03d2204362d812dbdf79">SDOM::DisplayHandle::DisplayHandle</a></div><div class="ttdeci">DisplayHandle()</div><div class="ttdef"><b>Definition</b> SDOM_DisplayHandle.cpp:16</div></div>
 </div><!-- fragment --><hr  />
- <dl class="section see"><dt>See also</dt><dd><a class="el" href="classSDOM_1_1AssetHandle.html">SDOM::AssetHandle</a> </dd>
+ <dl class="section see"><dt>See also</dt><dd><a class="el" href="classSDOM_1_1AssetHandle.html" title="Non-owning reference to a registered SDOM asset.">SDOM::AssetHandle</a> </dd>
 <dd>
 <a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">SDOM::Core</a> </dd>
 <dd>

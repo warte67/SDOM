@@ -1,4 +1,32 @@
-// SDOM_BitmapFont.cpp
+// ============================================================================
+//  SDOM_BitmapFont.cpp
+// ----------------------------------------------------------------------------
+//  Purpose: Implements the BitmapFont class — a glyph-based font that renders
+//           characters from pre-composed sprite sheets.
+//  Author:  Simple DOM Framework (SDOM)
+//  License: ZLIB (see below)
+// ----------------------------------------------------------------------------
+// ⚖️ License: ZLIB
+// ----------------------------------------------------------------------------
+// This software is provided 'as-is', without any express or implied warranty.
+// In no event will the authors be held liable for any damages arising from
+// the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+// ----------------------------------------------------------------------------
+// Author: Jay Faries (https://github.com/warte67)
+// ============================================================================
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
@@ -10,6 +38,30 @@
 
 namespace SDOM
 {
+    namespace {
+        // Helper to safely get BitmapFont* from an AssetHandle
+        inline BitmapFont* as_bf_handle(AssetHandle& self)
+        {
+            BitmapFont* bf = self.as<BitmapFont>();
+            if (!bf) { ERROR("BitmapFont binding called on non-BitmapFont AssetHandle"); }
+            return bf;
+        }
+
+        template <typename F>
+        inline void bf_bind_both_impl(sol::table& handle,
+                                      sol::optional<sol::usertype<AssetHandle>>& maybeUT,
+                                      const char* name,
+                                      F&& fn)
+        {
+            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                handle.set_function(name, std::forward<F>(fn));
+            }
+            if (maybeUT) {
+                try { (*maybeUT)[name] = fn; } catch(...) {}
+            }
+        }
+    }
     BitmapFont::BitmapFont(const InitStruct& init) : IFontObject(init)
     {
         bitmapFontWidth_ = init.font_width;
@@ -812,8 +864,25 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
-        // sol::table handle = AssetHandle::ensure_handle_table(lua);
+        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
+        sol::table handle = AssetHandle::ensure_handle_table(lua);
+        sol::optional<sol::usertype<AssetHandle>> maybeUT;
+        try { maybeUT = lua[AssetHandle::LuaHandleName]; } catch(...) {}
+
+        // Expose resource accessor and bitmap metrics
+        bf_bind_both_impl(handle, maybeUT, "getResourceHandle", [](AssetHandle& self) -> AssetHandle {
+            if (auto* bf = as_bf_handle(self)) return bf->getResourceHandle();
+            return AssetHandle();
+        });
+        bf_bind_both_impl(handle, maybeUT, "getBitmapFontWidth", [](AssetHandle& self) -> int {
+            if (auto* bf = as_bf_handle(self)) return bf->getBitmapFontWidth();
+            return 0;
+        });
+        bf_bind_both_impl(handle, maybeUT, "getBitmapFontHeight", [](AssetHandle& self) -> int {
+            if (auto* bf = as_bf_handle(self)) return bf->getBitmapFontHeight();
+            return 0;
+        });
+        // Intentionally omit setters: bitmap glyph metrics are immutable for public API.
 
 
     } // END _registerLuaBindings()

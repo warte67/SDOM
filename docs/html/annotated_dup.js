@@ -45,5 +45,6 @@ var annotated_dup =
       [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
       [ "Version", "classSDOM_1_1Version.html", "classSDOM_1_1Version" ]
     ] ],
-    [ "CLR", "classCLR.html", "classCLR" ]
+    [ "CLR", "classCLR.html", "classCLR" ],
+    [ "SDOM", "classSDOM.html", "classSDOM" ]
 ];

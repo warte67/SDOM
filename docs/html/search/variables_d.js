@@ -11,7 +11,7 @@ var searchData=
   ['orange_8',['ORANGE',['../classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d',1,'CLR']]],
   ['orientation_9',['orientation',['../structSDOM_1_1IRangeControl_1_1InitStruct.html#aa7f22f4d11ee48d30d70273fa16806bb',1,'SDOM::IRangeControl::InitStruct']]],
   ['orientation_5f_10',['orientation_',['../classSDOM_1_1IRangeControl.html#a331c632901b4ccec465aa3d45d005af4',1,'SDOM::IRangeControl']]],
-  ['orientation_5fto_5fstring_11',['orientation_to_string',['../namespaceSDOM.html#a5121ece23da73f686e3ab61c3fc63339',1,'SDOM']]],
+  ['orientation_5fto_5fstring_11',['orientation_to_string',['../classSDOM.html#a5121ece23da73f686e3ab61c3fc63339',1,'SDOM']]],
   ['orphan_5fgrace_5fperiod_12',['ORPHAN_GRACE_PERIOD',['../SDOM_8hpp.html#a05b38e54d53b804b5d6da620ec5fc2cc',1,'SDOM.hpp']]],
   ['outline_13',['outline',['../structSDOM_1_1FontStyle.html#adb4e7175913c0849b78a5b746ede2fec',1,'SDOM::FontStyle::outline'],['../structSDOM_1_1Label_1_1InitStruct.html#a8a132e409b7c88eba6d3a7b465ca8941',1,'SDOM::Label::InitStruct::outline']]],
   ['outlinecolor_14',['outlineColor',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#ab41dcfc6259800a732c4eccd40452ae6',1,'SDOM::IDisplayObject::InitStruct::outlineColor'],['../structSDOM_1_1FontStyle.html#a44504240f34149787846a33420941df2',1,'SDOM::FontStyle::outlineColor']]],

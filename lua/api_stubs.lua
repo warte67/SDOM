@@ -125,6 +125,13 @@ function configure(cfg) end
 ---@field getDropshadowColor fun(self: DisplayHandle): SDL_Color
 ---@field setDropshadowColor fun(self: DisplayHandle, c: SDL_Color|table)
 ---@field hasBorder fun(self: DisplayHandle): boolean
+-- Button-specific helpers (available when handle resolves to a Button)
+---@field getText fun(self: DisplayHandle): string
+---@field setText fun(self: DisplayHandle, newText: string)
+---@field getLabelColor fun(self: DisplayHandle): SDL_Color|table
+---@field setLabelColor fun(self: DisplayHandle, c: SDL_Color|table)
+---@field getFontResource fun(self: DisplayHandle): string
+---@field getLabelObject fun(self: DisplayHandle): DisplayHandle
 ---@field hasBackground fun(self: DisplayHandle): boolean
 ---@field setBorder fun(self: DisplayHandle, enabled: boolean)
 ---@field setBackground fun(self: DisplayHandle, enabled: boolean)
@@ -217,6 +224,10 @@ function configure(cfg) end
 ---@field setName fun(self: AssetHandle, name: string)
 ---@field setType fun(self: AssetHandle, typeName: string)
 ---@field setFilename fun(self: AssetHandle, filename: string)
+-- BitmapFont-specific helpers (attached to AssetHandle for BitmapFont assets)
+---@field getResourceHandle fun(self: AssetHandle): AssetHandle
+---@field getBitmapFontWidth fun(self: AssetHandle): integer
+---@field getBitmapFontHeight fun(self: AssetHandle): integer
 -- SpriteSheet-specific helpers (attached to AssetHandle for SpriteSheet assets)
 ---@field setSpriteWidth fun(self: AssetHandle, width: integer)
 ---@field setSpriteHeight fun(self: AssetHandle, height: integer)

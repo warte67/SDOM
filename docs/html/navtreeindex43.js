@@ -1,5 +1,12 @@
 var NAVTREEINDEX43 =
 {
+"structSDOM_1_1AssetTypeCreators.html":[2,0,0,14],
+"structSDOM_1_1AssetTypeCreators.html":[3,0,0,14],
+"structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce":[2,0,0,14,1],
+"structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce":[3,0,0,14,1],
+"structSDOM_1_1AssetTypeCreators.html#acce95e4ee7a2328e234ea8a9beaf6764":[2,0,0,14,0],
+"structSDOM_1_1AssetTypeCreators.html#acce95e4ee7a2328e234ea8a9beaf6764":[3,0,0,14,0],
+"structSDOM_1_1BitmapFont_1_1InitStruct.html":[2,0,0,4,0],
 "structSDOM_1_1BitmapFont_1_1InitStruct.html":[3,0,0,4,0],
 "structSDOM_1_1BitmapFont_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2":[2,0,0,4,0,7],
 "structSDOM_1_1BitmapFont_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2":[3,0,0,4,0,7],
@@ -242,12 +249,5 @@ var NAVTREEINDEX43 =
 "structSDOM_1_1FontStyle.html#a2b774157381b4e079751ebf162fa0345":[2,0,0,23,5],
 "structSDOM_1_1FontStyle.html#a2b774157381b4e079751ebf162fa0345":[3,0,0,23,5],
 "structSDOM_1_1FontStyle.html#a2d52282949580fde9701a2c300423ed6":[2,0,0,23,22],
-"structSDOM_1_1FontStyle.html#a2d52282949580fde9701a2c300423ed6":[3,0,0,23,22],
-"structSDOM_1_1FontStyle.html#a44504240f34149787846a33420941df2":[2,0,0,23,20],
-"structSDOM_1_1FontStyle.html#a44504240f34149787846a33420941df2":[3,0,0,23,20],
-"structSDOM_1_1FontStyle.html#a4c7117e18052b72d2650bb79cb8f2d1f":[2,0,0,23,23],
-"structSDOM_1_1FontStyle.html#a4c7117e18052b72d2650bb79cb8f2d1f":[3,0,0,23,23],
-"structSDOM_1_1FontStyle.html#a4dfe6a92f4c0f17e3ad3c78c09ba4b35":[2,0,0,23,8],
-"structSDOM_1_1FontStyle.html#a4dfe6a92f4c0f17e3ad3c78c09ba4b35":[3,0,0,23,8],
-"structSDOM_1_1FontStyle.html#a62133c9f0eaf4c334915a98d2e95b1a2":[2,0,0,23,7]
+"structSDOM_1_1FontStyle.html#a2d52282949580fde9701a2c300423ed6":[3,0,0,23,22]
 };

@@ -1,5 +1,12 @@
 var NAVTREEINDEX48 =
 {
+"structSDOM_1_1Stage_1_1InitStruct.html#ad247c22c826eb4b80ff9081dc27dd745":[2,0,0,36,0,6],
+"structSDOM_1_1Stage_1_1InitStruct.html#ad247c22c826eb4b80ff9081dc27dd745":[3,0,0,36,0,6],
+"structSDOM_1_1Stage_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2":[2,0,0,36,0,3],
+"structSDOM_1_1Stage_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2":[3,0,0,36,0,3],
+"structSDOM_1_1Stage_1_1InitStruct.html#af96dbfaee52c56998a0c02de9c57f95b":[2,0,0,36,0,15],
+"structSDOM_1_1Stage_1_1InitStruct.html#af96dbfaee52c56998a0c02de9c57f95b":[3,0,0,36,0,15],
+"structSDOM_1_1TTFAsset_1_1InitStruct.html":[2,0,0,40,0],
 "structSDOM_1_1TTFAsset_1_1InitStruct.html":[3,0,0,40,0],
 "structSDOM_1_1TTFAsset_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2":[2,0,0,40,0,4],
 "structSDOM_1_1TTFAsset_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2":[3,0,0,40,0,4],

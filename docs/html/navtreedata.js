@@ -27,54 +27,51 @@ var NAVTREE =
   [ "SDOM - Simple SDL Document Object Model", "index.html", [
     [ "SDOM Documentation", "index.html", null ],
     [ "SDOM: Simple SDL Document Object Model API", "md_README.html", [
-      [ "Overview", "md_README.html#autotoc_md17", null ],
-      [ "Features", "md_README.html#autotoc_md18", null ],
-      [ "IDataObject: Data-Driven Base Type", "md_README.html#autotoc_md19", [
-        [ "Screenshot of the Test Harness application:", "md_README.html#autotoc_md16", null ],
-        [ "Key Features", "md_README.html#autotoc_md20", null ]
+      [ "Overview", "md_README.html#autotoc_md31", null ],
+      [ "Features", "md_README.html#autotoc_md32", null ],
+      [ "IDataObject: Data-Driven Base Type", "md_README.html#autotoc_md33", [
+        [ "Screenshot of the Test Harness application:", "md_README.html#autotoc_md30", null ],
+        [ "Key Features", "md_README.html#autotoc_md34", null ]
       ] ],
-      [ "Identifier Conventions", "md_README.html#autotoc_md21", null ],
-      [ "Getting Started", "md_README.html#autotoc_md23", [
-        [ "Prerequisites", "md_README.html#autotoc_md24", null ],
-        [ "⚠️ Before You Build", "md_README.html#autotoc_md25", null ],
-        [ "Building the SDOM Library", "md_README.html#autotoc_md26", null ],
-        [ "Running the Example", "md_README.html#autotoc_md27", null ],
-        [ "Notable recent changes", "md_README.html#autotoc_md28", null ],
-        [ "Migration notes", "md_README.html#autotoc_md29", null ]
+      [ "Identifier Conventions", "md_README.html#autotoc_md35", null ],
+      [ "Getting Started", "md_README.html#autotoc_md37", [
+        [ "Prerequisites", "md_README.html#autotoc_md38", null ],
+        [ "⚠️ Before You Build", "md_README.html#autotoc_md39", null ],
+        [ "Building the SDOM Library", "md_README.html#autotoc_md40", null ],
+        [ "Running the Example", "md_README.html#autotoc_md41", null ],
+        [ "Notable recent changes", "md_README.html#autotoc_md42", null ],
+        [ "Migration notes", "md_README.html#autotoc_md43", null ]
       ] ],
-      [ "Project Structure", "md_README.html#autotoc_md30", null ],
-      [ "Lua Integration and Requirements", "md_README.html#autotoc_md32", null ],
-      [ "SDL3 Build Dependencies", "md_README.html#autotoc_md36", [
-        [ "🐧 Arch Linux", "md_README.html#autotoc_md39", null ],
-        [ "🐧 Fedora / RHEL / Alma / Rocky", "md_README.html#autotoc_md40", null ],
-        [ "🍎 macOS", "md_README.html#autotoc_md41", null ],
-        [ "🪟 Windows", "md_README.html#autotoc_md42", [
-          [ "🐧 Debian / Ubuntu", "md_README.html#autotoc_md38", null ],
-          [ "Option 1:", "md_README.html#autotoc_md43", null ],
-          [ "Option 2: MSYS2 (MinGW / UCRT64)", "md_README.html#autotoc_md44", null ],
-          [ "Option 3: vcpkg (Visual Studio / CMake Integration)", "md_README.html#autotoc_md45", null ]
+      [ "Project Structure", "md_README.html#autotoc_md44", null ],
+      [ "Lua Integration and Requirements", "md_README.html#autotoc_md46", null ],
+      [ "SDL3 Build Dependencies", "md_README.html#autotoc_md50", [
+        [ "🐧 Arch Linux", "md_README.html#autotoc_md53", null ],
+        [ "🐧 Fedora / RHEL / Alma / Rocky", "md_README.html#autotoc_md54", null ],
+        [ "🍎 macOS", "md_README.html#autotoc_md55", null ],
+        [ "🪟 Windows", "md_README.html#autotoc_md56", [
+          [ "🐧 Debian / Ubuntu", "md_README.html#autotoc_md52", null ],
+          [ "Option 1:", "md_README.html#autotoc_md57", null ],
+          [ "Option 2: MSYS2 (MinGW / UCRT64)", "md_README.html#autotoc_md58", null ],
+          [ "Option 3: vcpkg (Visual Studio / CMake Integration)", "md_README.html#autotoc_md59", null ]
         ] ]
       ] ],
-      [ "Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf", "md_README.html#autotoc_md47", [
-        [ "Build per SDL3:", "md_README.html#autotoc_md48", null ],
-        [ "Build and install SDL3 libraries", "md_README.html#autotoc_md49", null ],
-        [ "Sol2 (recommended)", "md_README.html#autotoc_md50", null ],
-        [ "Documentation", "md_README.html#autotoc_md51", [
-          [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md52", null ]
+      [ "Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf", "md_README.html#autotoc_md61", [
+        [ "Build per SDL3:", "md_README.html#autotoc_md62", null ],
+        [ "Build and install SDL3 libraries", "md_README.html#autotoc_md63", null ],
+        [ "Sol2 (recommended)", "md_README.html#autotoc_md64", null ],
+        [ "Documentation", "md_README.html#autotoc_md65", [
+          [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md66", null ]
         ] ],
-        [ "Acknowledgments", "md_README.html#autotoc_md54", null ],
-        [ "License", "md_README.html#autotoc_md56", null ],
-        [ "Author", "md_README.html#autotoc_md57", null ]
+        [ "Acknowledgments", "md_README.html#autotoc_md68", null ],
+        [ "License", "md_README.html#autotoc_md70", null ],
+        [ "Author", "md_README.html#autotoc_md71", null ]
       ] ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", "namespacemembers_dup" ],
-        [ "Functions", "namespacemembers_func.html", "namespacemembers_func" ],
-        [ "Variables", "namespacemembers_vars.html", null ],
-        [ "Typedefs", "namespacemembers_type.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ]
+        [ "Functions", "namespacemembers_func.html", "namespacemembers_func" ]
       ] ]
     ] ],
     [ "Classes", "annotated.html", [
@@ -85,6 +82,7 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", "functions_vars" ],
+        [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Related Symbols", "functions_rela.html", null ]
       ] ]
@@ -104,53 +102,53 @@ var NAVTREEINDEX =
 [
 "SDOM_8cpp.html",
 "classCLR.html#ac38f58278763ecc6914fbbb61410dbc4",
-"classSDOM_1_1ArrowButton.html#a80d95a7891e3778e8aab504da86b2e9f",
-"classSDOM_1_1AssetHandle.html#a557ea5acd9acba85724584453bf4d2a4",
-"classSDOM_1_1Button.html#a1de666cd76bf2ef5c77d3b0380db55fa",
-"classSDOM_1_1Button.html#a9d22b5fd9345bc320ad573f7841517a3",
-"classSDOM_1_1CheckButton.html#a25ad8dccf0a5b148e9ec31e10bea337e",
-"classSDOM_1_1CheckButton.html#aa91811b2838e9f85245f356ba00d3c98",
-"classSDOM_1_1Core.html#a533271ea191ba008b2fdc15da5690385",
-"classSDOM_1_1DisplayHandle.html#a7d4f3c380cd2644e37c493ed963035b8",
-"classSDOM_1_1EventManager.html#a311349ab0f787b5e1983413de94371e8",
-"classSDOM_1_1Factory.html#a19ec0e9ac0de1f7ba855a801e1566b53",
-"classSDOM_1_1Frame.html#a50e20433396994800a79876cb28068d6",
-"classSDOM_1_1Frame.html#ae4372c86e504257b8c59214ae2cdfc0d",
-"classSDOM_1_1Group.html#a67a841d829d00c79ebb1e10eacb02974",
-"classSDOM_1_1Group.html#aeff0a0985efe5dae1e6aa10e5b206396",
-"classSDOM_1_1IDisplayObject.html#a4660cb467876a41c2d31fd82009b2c97",
-"classSDOM_1_1IDisplayObject.html#ae461d5785004f1574b74155c25842aaa",
-"classSDOM_1_1IPanelObject.html#a33fd8c4899f820c1eb7f8641ddd928bd",
-"classSDOM_1_1IPanelObject.html#ac2b413d2672149447edf67d78998bcb5",
-"classSDOM_1_1IRangeControl.html#a55aaaeb29be7a86966df19702aaef7e0",
-"classSDOM_1_1IRangeControl.html#ae630063935f9eecef4b747373decf1bd",
-"classSDOM_1_1IRangeControl__scaffold.html#a793a800b29637f9f1fab46d939762a90",
-"classSDOM_1_1IconButton.html#a0acfe38923fa152340b9733da753545f",
-"classSDOM_1_1IconButton.html#a9d22b5fd9345bc320ad573f7841517a3",
-"classSDOM_1_1Label.html#a2dc14035a64bf5cebec2d9c576d5f7bb",
-"classSDOM_1_1Label.html#a8c850aff223e1318bf572843132052e4",
-"classSDOM_1_1Label.html#afb76036183e587362820b6abfbe9a797",
-"classSDOM_1_1ProgressBar.html#a82ec9aa6b4ce34ec03e01f9cd002a1be",
-"classSDOM_1_1RadioButton.html#a1b503f1cee88b140b007a5cb1452c658",
-"classSDOM_1_1RadioButton.html#a97989a603bc4065e283ae7b32fe57c61",
-"classSDOM_1_1ScrollBar.html#a02fb8c2adc34588df0db386e4c843c10",
-"classSDOM_1_1ScrollBar.html#a8c850aff223e1318bf572843132052e4",
-"classSDOM_1_1Slider.html#a1de666cd76bf2ef5c77d3b0380db55fa",
-"classSDOM_1_1Slider.html#a9fb41408c27d953a8ddae6a025fedaa0",
-"classSDOM_1_1SpriteSheet.html#acf24a17e1284129dbef77cfc229bba05",
-"classSDOM_1_1Stage.html#a83f54c1f027dad7c7cf98cad72ee9955",
-"classSDOM_1_1TTFAsset.html#ac79673e571c58f21de1541a81548a959",
-"classSDOM_1_1TristateButton.html#a5323335a18d5af09677f2d5d1fbbd894",
-"classSDOM_1_1TristateButton.html#acf1819de3013c87212efa5c370cde38a",
-"classSDOM_1_1UnitTests.html#a8c0f133c131e5acef12a2ffbd275064e",
-"namespaceSDOM.html#a27e64da08f4fd08484e52527d95fb398",
-"namespaceSDOM.html#ad8c0c2434ee455c85908251f7c5dec82",
-"structSDOM_1_1BitmapFont_1_1InitStruct.html",
-"structSDOM_1_1FontStyle.html#a62133c9f0eaf4c334915a98d2e95b1a2",
-"structSDOM_1_1IFontObject_1_1InitStruct.html#a062d95c88f6be157121639eb9e9e7627",
-"structSDOM_1_1IconButton_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939",
-"structSDOM_1_1RadioButton_1_1InitStruct.html#a5e12d174ee70eec6c3fe907a7cececc3",
-"structSDOM_1_1TTFAsset_1_1InitStruct.html"
+"classSDOM_1_1ArrowButton.html#a1b7ada7a0cfdaa30125217ebe22d8ca4",
+"classSDOM_1_1ArrowButton.html#a9d360407addf13332471fbbe2b05d452",
+"classSDOM_1_1BitmapFont.html",
+"classSDOM_1_1Button.html#a38e4838139dc7a4faf0639df880812dd",
+"classSDOM_1_1Button.html#ab80fc31126bd29cecfa5b430877d3dcf",
+"classSDOM_1_1CheckButton.html#a451932c42a292a8c19f84a10e2db94f4",
+"classSDOM_1_1CheckButton.html#ac833508be5695b4b45a4ffbfd970c3bb",
+"classSDOM_1_1Core.html#a7e41223dfde99d19607b1108df9bdef8",
+"classSDOM_1_1Event.html#a080aac422b33308070477a6c1fc2c6d6",
+"classSDOM_1_1EventType.html#a0a4f07dc114c4e7ec80f15878864a3e5",
+"classSDOM_1_1Factory.html#a90dd1b86ac56a3fb85044e6f0fd5528e",
+"classSDOM_1_1Frame.html#a6c4854090319dbc681a275dada027e40",
+"classSDOM_1_1Frame.html#aff25b187c79d6b229d57fba2ae34a3d3",
+"classSDOM_1_1Group.html#a80a500f4517a686367ab08b1aa2c488d",
+"classSDOM_1_1IAssetObject.html#a3e68fa1ef3cc5bff3d4e57c813c65a49",
+"classSDOM_1_1IDisplayObject.html#a648e2c4562a5c3ee569edf8b17b03199",
+"classSDOM_1_1IFontObject.html#a09ce78b7d833fa8060defd2681777ddb",
+"classSDOM_1_1IPanelObject.html#a5516a95838b44ac318b60d07ee71b164",
+"classSDOM_1_1IPanelObject.html#ae9b0ffcdace56e0b0edad6c00d38f5b3",
+"classSDOM_1_1IRangeControl.html#a745d5a367dc1c067ecbd65b181ae4fe6",
+"classSDOM_1_1IRangeControl__scaffold.html#a06b31bef3a5e23e20039341de1aa8a1a",
+"classSDOM_1_1IRangeControl__scaffold.html#a92c5cd14f1a660147df8b9317d7459a5",
+"classSDOM_1_1IconButton.html#a2c8c81c84fba13c6f2f038e997711883",
+"classSDOM_1_1IconButton.html#abda87b944bd12092c524a44fc2f534c2",
+"classSDOM_1_1Label.html#a461039b60986090b83a0a98aca3d163a",
+"classSDOM_1_1Label.html#a9df7d876aa3bdab412a4284982029f72",
+"classSDOM_1_1ProgressBar.html#a17d740892cc4499713a8fc38632f5e92",
+"classSDOM_1_1ProgressBar.html#a9d22b5fd9345bc320ad573f7841517a3",
+"classSDOM_1_1RadioButton.html#a33307adbbefaacfc7a7b6834815d4e4f",
+"classSDOM_1_1RadioButton.html#ab3b87f6350ce8b2272d54888fb26bcc9",
+"classSDOM_1_1ScrollBar.html#a22e6f5bc3b8347db7d4c76aef2d79d70",
+"classSDOM_1_1ScrollBar.html#aa0e4ffaea253601310211fdce9b713dd",
+"classSDOM_1_1Slider.html#a3f0b3ddac629950c96eea41c5c1b6ea5",
+"classSDOM_1_1Slider.html#ac452d690d98c233a22b72ab565ca83c3",
+"classSDOM_1_1Stage.html#a16ba4ae0d20d77dd70942a66c6f5a964",
+"classSDOM_1_1Stage.html#a9df7d876aa3bdab412a4284982029f72",
+"classSDOM_1_1Texture.html#a5f5348d075450939b08f7dc5bd509d4d",
+"classSDOM_1_1TristateButton.html#a6f89958b62e24b213d56787871d4c53c",
+"classSDOM_1_1TristateButton.html#af3e586d19972f0e6fd828ca046020a9d",
+"classSDOM_1_1Version.html#af054c0cbea9184da8798d50d2515476c",
+"namespaceSDOM.html#a7a9e74e0966b508612cbfc62b6a374f9",
+"structSDOM_1_1AssetTypeCreators.html",
+"structSDOM_1_1FontStyle.html#a44504240f34149787846a33420941df2",
+"structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#ac8ae09acf20d24ab4fd9e327e43e23e4",
+"structSDOM_1_1IconButton_1_1InitStruct.html#aa917a65f5f40de21fd831196a3392430",
+"structSDOM_1_1RadioButton_1_1InitStruct.html#a4126b185a664bffa882dbbf063bece70",
+"structSDOM_1_1Stage_1_1InitStruct.html#ad247c22c826eb4b80ff9081dc27dd745"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

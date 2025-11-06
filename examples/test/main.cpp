@@ -121,6 +121,8 @@ int main(int argc, char** argv)
     lua["EventType_UnitTests"] = &SDOM::EventType_UnitTests;
     lua["ArrowButton_UnitTests"] = &SDOM::ArrowButton_UnitTests;
     lua["AssetHandle_UnitTests"] = &SDOM::AssetHandle_UnitTests;
+    lua["BitmapFont_UnitTests"] = &SDOM::BitmapFont_UnitTests;
+    lua["Button_UnitTests"] = &SDOM::Button_UnitTests;
     
     // Allow overriding which Lua config to run via command-line.
     // Priority:

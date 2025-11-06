@@ -440,42 +440,52 @@ This module is marked **✅ Complete** and serves as a reference pattern for fut
 
 ---
 <a id="latest-update"></a>
+## 🗓️ November 6, 2025 — Documentation, Lua Bindings, and Unit Testing Standardization
+
+_Completed full documentation, Lua integration, and unit test coverage for four SDOM core objects:_  
+**`ArrowButton`**, **`AssetHandle`**, **`BitmapFont`**, and **`Button`**.
 
 ---
-<a id="latest-update"></a>
-## 🗓️ November 6, 2025 — AssetHandle Documentation & Unit Testing
 
-_Introduced formal documentation for `AssetHandle`, standardized Lua binding conventions, and implemented new C++/Lua unit test modules validating asset registration and factory integrity._
+### 🧩 **Highlights**
 
----
+- **Documentation & Licensing**
+  - Added comprehensive Doxygen headers to all interface headers:
+    - `SDOM_ArrowButton.hpp`, `SDOM_AssetHandle.hpp`, `SDOM_BitmapFont.hpp`, and `SDOM_Button.hpp`.
+  - Standardized Markdown-style documentation tables (`Properties`, `Functions`, `Events`, `Notes`).
+  - Embedded ZLIB license text and unified header formatting, emoji legends, and comment style.
+  - All files now include explicit author attribution (`Jay Faries — https://github.com/warte67`).
 
-### 🧩 **AssetHandle**
-- **Documentation Update:**  
-  - Added detailed Doxygen interface documentation to `SDOM_AssetHandle.hpp`, including purpose, usage, and Lua binding summary.  
-  - Confirmed `AssetHandle` immutability — removed unintended mutator bindings (`setName`, `setType`, `setFilename`) to ensure consistent asset identity throughout runtime.
-  - Unified comment and formatting conventions with other SDOM object headers.
-- **Implementation Update:**  
-  - `bind_minimal()` now registers only safe accessors (`isValid`, `getName`, `getType`, `getFilename`) with Lua.  
-  - Added structured comment header to `SDOM_AssetHandle.cpp` consistent with SDOM style guide.
-- **Unit Test Coverage:**  
-  - Implemented new test suite `AssetHandle_UnitTests.cpp` verifying:  
-    - Factory initialization of internal textures, sprite sheets, bitmap fonts, and truetype assets.  
-    - Asset presence, type accuracy, sprite dimensions, and load state validation.  
-  - Created `AssetHandle_UnitTests.lua` for Lua-level validation of handle bindings and asset access.
-  - Integrated Lua test runner into C++ harness via `AssetHandle_LUA_Tests()`.
+- **Lua Binding Updates**
+  - Verified all exposed Lua bindings for naming and functional consistency.
+  - Removed unintended mutators in `AssetHandle` and `BitmapFont` to preserve immutability guarantees.
+  - Ensured consistent color table handling (`{r,g,b,a,1,2,3,4}`) and safe DisplayHandle dereferencing.
+  - Added new `Button` Lua helpers:
+    - `getText()` / `setText(newText)`
+    - `getLabelColor()` / `setLabelColor(colorTable)`
+    - `getFontResource()` (read-only)
+    - `getLabelObject()` (returns a DisplayHandle to internal label)
+
+- **Unit Test Coverage**
+  - Implemented synchronized **C++ and Lua test suites** for all four objects under the unified SDOM harness.
+  - Validated lifecycle creation, property access, and runtime consistency:
+    - **ArrowButton** → Direction changes, icon index transitions, and event propagation.
+    - **AssetHandle** → Factory initialization, asset registration, and sprite sheet linkage.
+    - **BitmapFont** → Resource handle integrity and immutable metric synchronization.
+    - **Button** → Text/label property behavior, color updates, font resource validation, and label handle access.
 
 ---
 
 ### 🌟 **Summary**
-`AssetHandle` is now fully documented, tested, and Lua-integrated.  
-Both C++ and Lua modules confirm that asset registration, type consistency, and factory initialization are stable and deterministic.
+All four components are now **fully documented, Lua-integrated, and regression-tested**.  
+They represent the new baseline for SDOM’s interface design, documentation, and Lua binding standards.
 
 ---
 
-### 🚧 **ToDo Today**
-- ☐ Add regression coverage for `AssetHandle::resolveSpec()` (Lua and C++).  
-- ☐ Extend Lua `api_stubs.lua` to include documentation for `AssetHandle` read-only properties.  
-- ☐ Begin review of next object interface — `Button` or `CheckBox` (TBD).
+### 🚧 **To-Do**
+- ☐ Add regression coverage for `AssetHandle::resolveSpec()` (C++ and Lua).  
+- ☐ Extend `api_stubs.lua` documentation for all four bindings.  
+- ☐ Begin review of next target interface: **`CheckBox`** (alphabetically next in sequence).
 
 ---
 

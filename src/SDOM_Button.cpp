@@ -1,17 +1,68 @@
+// ============================================================================
 // SDOM_Button.cpp
-
-// SDOM_Button.cpp
+// ----------------------------------------------------------------------------
+// Implementation file for SDOM::Button
+//
+// Purpose:
+//     Implements the logic, rendering, and event handling for the Button class.
+//     This file defines how Button objects initialize, render, and respond to
+//     user interaction via mouse and keyboard input.
+//
+// Notes:
+//     - Helper functions should remain in anonymous namespaces or be marked `static`.
+//     - Doxygen comments should exist only in the header, not the implementation.
+//     - Maintain strict include order: standard library, SDL, SDOM core, then local.
+//     - All debug, logging, and test hooks should use SDOM-provided utilities.
+//
+// ----------------------------------------------------------------------------
+// License: ZLIB
+// ----------------------------------------------------------------------------
+// This software is provided 'as-is', without any express or implied warranty.
+// In no event will the authors be held liable for any damages arising from
+// the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+// ----------------------------------------------------------------------------
+// Author: Jay Faries (https://github.com/warte67)
+// ============================================================================
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Label.hpp>
+#include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/SDOM_Button.hpp>
 
 
 
 namespace SDOM
 {
-
+    namespace {
+        template <typename F>
+        inline void dh_bind_both_impl(sol::table& handle,
+                                      sol::optional<sol::usertype<DisplayHandle>>& maybeUT,
+                                      const char* name,
+                                      F&& fn)
+        {
+            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                handle.set_function(name, std::forward<F>(fn));
+            }
+            if (maybeUT) {
+                try { (*maybeUT)[name] = fn; } catch(...) {}
+            }
+        }
+    }
     Button::Button(const InitStruct& init) : IPanelObject(init)
     {
         // std::cout << "Box constructed with InitStruct: " << getName() 
@@ -260,8 +311,8 @@ namespace SDOM
             registered = true;
         }
 
-        // ✅ Return false so this object stays active for now (standard pattern)
-        return false;
+        // ✅ Return true to indicate that this test group has completed
+        return true;
     } // END: Button::onUnitTest()
 
 
@@ -304,9 +355,58 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared DisplayHandle handle usertype
-        // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
+        // Augment the single shared DisplayHandle usertype/table with
+        // Button-specific helpers. DisplayHandle's __index will route calls
+        // here and pass the handle as the first argument.
+        sol::table handle;
+        try { handle = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
+        if (!handle.valid()) return; // no table available; nothing to augment
 
+        sol::optional<sol::usertype<DisplayHandle>> maybeUT;
+        try { maybeUT = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
+
+        // getText(): string
+        dh_bind_both_impl(handle, maybeUT, "getText", [](DisplayHandle& self) -> std::string {
+            Button* b = self.as<Button>();
+            return b ? b->getText() : std::string();
+        });
+
+        // setText(newText): void
+        dh_bind_both_impl(handle, maybeUT, "setText", [](DisplayHandle& self, const std::string& newText) {
+            if (auto* b = self.as<Button>()) b->setText(newText);
+        });
+
+        // getLabelColor(): Color table { r,g,b,a }
+        dh_bind_both_impl(handle, maybeUT, "getLabelColor", [lua](DisplayHandle& self) -> sol::table {
+            sol::state_view L = lua;
+            sol::table t = L.create_table();
+            if (auto* b = self.as<Button>()) {
+                SDL_Color c = b->getLabelColor();
+                t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a;
+                t[1] = (int)c.r; t[2] = (int)c.g; t[3] = (int)c.b; t[4] = (int)c.a;
+            }
+            return t;
+        });
+
+        // setLabelColor(color): accepts table or string "r,g,b,a"
+        dh_bind_both_impl(handle, maybeUT, "setLabelColor", [](DisplayHandle& self, const sol::object& color) {
+            if (auto* b = self.as<Button>()) {
+                SDL_Color c = SDOM::parseColor(color);
+                b->setLabelColor(c);
+            }
+        });
+
+        // getFontResource(): string (read-only)
+        dh_bind_both_impl(handle, maybeUT, "getFontResource", [](DisplayHandle& self) -> std::string {
+            Button* b = self.as<Button>();
+            return b ? b->getFontResource() : std::string();
+        });
+
+        // getLabelObject(): DisplayHandle
+        dh_bind_both_impl(handle, maybeUT, "getLabelObject", [](DisplayHandle& self) -> DisplayHandle {
+            Button* b = self.as<Button>();
+            return b ? b->getLabelObject() : DisplayHandle();
+        });
 
     } // END: void Button::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

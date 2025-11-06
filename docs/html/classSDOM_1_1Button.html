@@ -93,6 +93,9 @@ $(function(){initNavTree('classSDOM_1_1Button.html','','classSDOM_1_1Button-memb
 </div><!--header-->
 <div class="contents">
 
+<p>A standard clickable text button class.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="SDOM__Button_8hpp_source.html">SDOM_Button.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for SDOM::Button:</div>
@@ -111,6 +114,7 @@ Inheritance diagram for SDOM::Button:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:InitStruct" id="r_InitStruct"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1Button_1_1InitStruct.html">InitStruct</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization parameters for constructing a <a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a>.  <a href="structSDOM_1_1Button_1_1InitStruct.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -124,15 +128,29 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8934695a5c881a5988ec0941e17308e6" id="r_a8934695a5c881a5988ec0941e17308e6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8934695a5c881a5988ec0941e17308e6">Button</a> ()=default</td></tr>
 <tr class="memitem:a690d39c9cff2de4d16ca43513c3a4749" id="r_a690d39c9cff2de4d16ca43513c3a4749"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a690d39c9cff2de4d16ca43513c3a4749">~Button</a> ()=default</td></tr>
 <tr class="memitem:a76f56683b7fb011df8826ab2137265d0" id="r_a76f56683b7fb011df8826ab2137265d0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a76f56683b7fb011df8826ab2137265d0">onInit</a> () override</td></tr>
-<tr class="memitem:abf6ba2926448281fd1181666a0dcb2cd" id="r_abf6ba2926448281fd1181666a0dcb2cd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf6ba2926448281fd1181666a0dcb2cd">onRender</a> () override</td></tr>
+<tr class="memdesc:a76f56683b7fb011df8826ab2137265d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the button is initialized.  <br /></td></tr>
 <tr class="memitem:ad7f17b9fa0c27960ede146563314f989" id="r_ad7f17b9fa0c27960ede146563314f989"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7f17b9fa0c27960ede146563314f989">onQuit</a> () override</td></tr>
+<tr class="memdesc:ad7f17b9fa0c27960ede146563314f989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called before the button is destroyed.  <br /></td></tr>
 <tr class="memitem:a14acef729f93d5ab8e683ab83ff1b9c1" id="r_a14acef729f93d5ab8e683ab83ff1b9c1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14acef729f93d5ab8e683ab83ff1b9c1">onUpdate</a> (float fElapsedTime) override</td></tr>
+<tr class="memdesc:a14acef729f93d5ab8e683ab83ff1b9c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every frame to update the button state.  <br /></td></tr>
+<tr class="memitem:abf6ba2926448281fd1181666a0dcb2cd" id="r_abf6ba2926448281fd1181666a0dcb2cd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf6ba2926448281fd1181666a0dcb2cd">onRender</a> () override</td></tr>
+<tr class="memdesc:abf6ba2926448281fd1181666a0dcb2cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the button and its label.  <br /></td></tr>
 <tr class="memitem:afde8c5e58678cd0e73b0aac86bb9f3f8" id="r_afde8c5e58678cd0e73b0aac86bb9f3f8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afde8c5e58678cd0e73b0aac86bb9f3f8">onEvent</a> (const <a class="el" href="classSDOM_1_1Event.html">Event</a> &amp;event) override</td></tr>
+<tr class="memdesc:afde8c5e58678cd0e73b0aac86bb9f3f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles mouse and keyboard input events.  <br /></td></tr>
 <tr class="memitem:ab47ce112e7f6288299c0112426911fb7" id="r_ab47ce112e7f6288299c0112426911fb7"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab47ce112e7f6288299c0112426911fb7">onUnitTest</a> (int frame) override</td></tr>
-<tr class="memdesc:ab47ce112e7f6288299c0112426911fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
+<tr class="memdesc:ab47ce112e7f6288299c0112426911fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional unit test hook for automated validation.  <br /></td></tr>
 <tr class="memitem:aa99bc314989178ee3bc5eeacc305b2ac" id="r_aa99bc314989178ee3bc5eeacc305b2ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa99bc314989178ee3bc5eeacc305b2ac">getLabelObject</a> () const</td></tr>
+<tr class="memdesc:aa99bc314989178ee3bc5eeacc305b2ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the label <a class="el" href="classSDOM_1_1DisplayHandle.html" title="A safe, name-based reference proxy to display objects managed by the SDOM Core.">DisplayHandle</a> (for advanced Lua access).  <br /></td></tr>
 <tr class="memitem:ab80fc31126bd29cecfa5b430877d3dcf" id="r_ab80fc31126bd29cecfa5b430877d3dcf"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab80fc31126bd29cecfa5b430877d3dcf">getText</a> () const</td></tr>
+<tr class="memdesc:ab80fc31126bd29cecfa5b430877d3dcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the button’s current text label.  <br /></td></tr>
 <tr class="memitem:a4a1434333b27f4dfde5491bf1110b1f2" id="r_a4a1434333b27f4dfde5491bf1110b1f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a1434333b27f4dfde5491bf1110b1f2">setText</a> (const std::string &amp;newText)</td></tr>
+<tr class="memdesc:a4a1434333b27f4dfde5491bf1110b1f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the button’s text label.  <br /></td></tr>
+<tr class="memitem:a16f03e8303d5d1795411c99670c5b51c" id="r_a16f03e8303d5d1795411c99670c5b51c"><td class="memItemLeft" align="right" valign="top">SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16f03e8303d5d1795411c99670c5b51c">getLabelColor</a> () const</td></tr>
+<tr class="memdesc:a16f03e8303d5d1795411c99670c5b51c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current text label color.  <br /></td></tr>
+<tr class="memitem:a44788d73624aea1ae80ec9e577476b3e" id="r_a44788d73624aea1ae80ec9e577476b3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44788d73624aea1ae80ec9e577476b3e">setLabelColor</a> (const SDL_Color &amp;color)</td></tr>
+<tr class="memdesc:a44788d73624aea1ae80ec9e577476b3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the text label color.  <br /></td></tr>
+<tr class="memitem:a452de9e35ed242f24e93d50a3ef3e36a" id="r_a452de9e35ed242f24e93d50a3ef3e36a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a452de9e35ed242f24e93d50a3ef3e36a">getFontResource</a> () const</td></tr>
+<tr class="memdesc:a452de9e35ed242f24e93d50a3ef3e36a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the font resource name used by this button (read-only).  <br /></td></tr>
 <tr class="memitem:aa2fcd973a2ab93d39876e35962459afe" id="r_aa2fcd973a2ab93d39876e35962459afe"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#aa2fcd973a2ab93d39876e35962459afe">onLoad</a> () override</td></tr>
 <tr class="memitem:a67e124b96e90dc1c94eb52138ddc28b8" id="r_a67e124b96e90dc1c94eb52138ddc28b8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a67e124b96e90dc1c94eb52138ddc28b8">onUnload</a> () override</td></tr>
 <tr class="memitem:af5dc4d16a973c58cfc06fe93c9984230" id="r_af5dc4d16a973c58cfc06fe93c9984230"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#af5dc4d16a973c58cfc06fe93c9984230">onWindowResize</a> (int logicalWidth, int logicalHeight) override</td></tr>
@@ -146,7 +164,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2cc9c318445bcbd1b5e2dec20b4b9d9c" id="r_a2cc9c318445bcbd1b5e2dec20b4b9d9c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a2cc9c318445bcbd1b5e2dec20b4b9d9c">getIconHeight</a> () const</td></tr>
 <tr class="memitem:a8640caa502d5209d30159c593b59a475" id="r_a8640caa502d5209d30159c593b59a475"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a8640caa502d5209d30159c593b59a475">getFontWidth</a> () const</td></tr>
 <tr class="memitem:a0068ae51da9aea8ac43d3b4c11b865e0" id="r_a0068ae51da9aea8ac43d3b4c11b865e0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a0068ae51da9aea8ac43d3b4c11b865e0">getFontHeight</a> () const</td></tr>
-<tr class="memitem:a0ce12c713492d419844893973a87067c" id="r_a0ce12c713492d419844893973a87067c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922c">PanelBaseIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a0ce12c713492d419844893973a87067c">getBaseIndex</a> () const</td></tr>
+<tr class="memitem:a0ce12c713492d419844893973a87067c" id="r_a0ce12c713492d419844893973a87067c"><td class="memItemLeft" align="right" valign="top">PanelBaseIndex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a0ce12c713492d419844893973a87067c">getBaseIndex</a> () const</td></tr>
 <tr class="memitem:a9fb41408c27d953a8ddae6a025fedaa0" id="r_a9fb41408c27d953a8ddae6a025fedaa0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab">OrphanRetentionPolicy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9fb41408c27d953a8ddae6a025fedaa0">getOrphanRetentionPolicy</a> () const</td></tr>
 <tr class="memitem:a8453e36ea5bffdbb6c57da841db2e5ab" id="r_a8453e36ea5bffdbb6c57da841db2e5ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a8453e36ea5bffdbb6c57da841db2e5ab">setOrphanRetentionPolicy</a> (<a class="el" href="classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438dab">OrphanRetentionPolicy</a> policy)</td></tr>
 <tr class="memitem:a4c8906ae32169a62be6fbe41d52704da" id="r_a4c8906ae32169a62be6fbe41d52704da"><td class="memItemLeft" align="right" valign="top">std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a4c8906ae32169a62be6fbe41d52704da">getOrphanGrace</a> () const</td></tr>
@@ -251,14 +269,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3eee98020b7f0ce46d9fafe34908992c" id="r_a3eee98020b7f0ce46d9fafe34908992c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a3eee98020b7f0ce46d9fafe34908992c">setY</a> (int p_y)</td></tr>
 <tr class="memitem:af67ff008cc4eca835ac4e7e81fb7c9eb" id="r_af67ff008cc4eca835ac4e7e81fb7c9eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#af67ff008cc4eca835ac4e7e81fb7c9eb">setWidth</a> (int width)</td></tr>
 <tr class="memitem:affc34595a0f3e17e51801c130caa30ab" id="r_affc34595a0f3e17e51801c130caa30ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#affc34595a0f3e17e51801c130caa30ab">setHeight</a> (int height)</td></tr>
-<tr class="memitem:afce493dd8732870c672aef5a09277c3a" id="r_afce493dd8732870c672aef5a09277c3a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#afce493dd8732870c672aef5a09277c3a">getAnchorTop</a> () const</td></tr>
-<tr class="memitem:addaf39525119d04958b868e104170fb6" id="r_addaf39525119d04958b868e104170fb6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#addaf39525119d04958b868e104170fb6">getAnchorLeft</a> () const</td></tr>
-<tr class="memitem:a0e028817607353e0439c0d7b2b315266" id="r_a0e028817607353e0439c0d7b2b315266"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a0e028817607353e0439c0d7b2b315266">getAnchorBottom</a> () const</td></tr>
-<tr class="memitem:a6afd00e9f5372ececdb22bf929726fd6" id="r_a6afd00e9f5372ececdb22bf929726fd6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a6afd00e9f5372ececdb22bf929726fd6">getAnchorRight</a> () const</td></tr>
-<tr class="memitem:ae7525c9e7db2bda1a850805dceee2504" id="r_ae7525c9e7db2bda1a850805dceee2504"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ae7525c9e7db2bda1a850805dceee2504">setAnchorTop</a> (<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> ap)</td></tr>
-<tr class="memitem:a5e292e0a64127c265cda051908f8fcb1" id="r_a5e292e0a64127c265cda051908f8fcb1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a5e292e0a64127c265cda051908f8fcb1">setAnchorLeft</a> (<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> ap)</td></tr>
-<tr class="memitem:a76159ff78bb54bea050d2f15a1c63e96" id="r_a76159ff78bb54bea050d2f15a1c63e96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a76159ff78bb54bea050d2f15a1c63e96">setAnchorBottom</a> (<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> ap)</td></tr>
-<tr class="memitem:a8468537ed2a4e40c33821f5ea66771ed" id="r_a8468537ed2a4e40c33821f5ea66771ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a8468537ed2a4e40c33821f5ea66771ed">setAnchorRight</a> (<a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> ap)</td></tr>
+<tr class="memitem:afce493dd8732870c672aef5a09277c3a" id="r_afce493dd8732870c672aef5a09277c3a"><td class="memItemLeft" align="right" valign="top">AnchorPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#afce493dd8732870c672aef5a09277c3a">getAnchorTop</a> () const</td></tr>
+<tr class="memitem:addaf39525119d04958b868e104170fb6" id="r_addaf39525119d04958b868e104170fb6"><td class="memItemLeft" align="right" valign="top">AnchorPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#addaf39525119d04958b868e104170fb6">getAnchorLeft</a> () const</td></tr>
+<tr class="memitem:a0e028817607353e0439c0d7b2b315266" id="r_a0e028817607353e0439c0d7b2b315266"><td class="memItemLeft" align="right" valign="top">AnchorPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a0e028817607353e0439c0d7b2b315266">getAnchorBottom</a> () const</td></tr>
+<tr class="memitem:a6afd00e9f5372ececdb22bf929726fd6" id="r_a6afd00e9f5372ececdb22bf929726fd6"><td class="memItemLeft" align="right" valign="top">AnchorPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a6afd00e9f5372ececdb22bf929726fd6">getAnchorRight</a> () const</td></tr>
+<tr class="memitem:ae7525c9e7db2bda1a850805dceee2504" id="r_ae7525c9e7db2bda1a850805dceee2504"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ae7525c9e7db2bda1a850805dceee2504">setAnchorTop</a> (AnchorPoint ap)</td></tr>
+<tr class="memitem:a5e292e0a64127c265cda051908f8fcb1" id="r_a5e292e0a64127c265cda051908f8fcb1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a5e292e0a64127c265cda051908f8fcb1">setAnchorLeft</a> (AnchorPoint ap)</td></tr>
+<tr class="memitem:a76159ff78bb54bea050d2f15a1c63e96" id="r_a76159ff78bb54bea050d2f15a1c63e96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a76159ff78bb54bea050d2f15a1c63e96">setAnchorBottom</a> (AnchorPoint ap)</td></tr>
+<tr class="memitem:a8468537ed2a4e40c33821f5ea66771ed" id="r_a8468537ed2a4e40c33821f5ea66771ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a8468537ed2a4e40c33821f5ea66771ed">setAnchorRight</a> (AnchorPoint ap)</td></tr>
 <tr class="memitem:a7e479652966d8c971d871da8a32d4a2f" id="r_a7e479652966d8c971d871da8a32d4a2f"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a7e479652966d8c971d871da8a32d4a2f">getLeft</a> () const</td></tr>
 <tr class="memitem:afac989bc4cf8a448605ea0b5defabedd" id="r_afac989bc4cf8a448605ea0b5defabedd"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#afac989bc4cf8a448605ea0b5defabedd">getRight</a> () const</td></tr>
 <tr class="memitem:a3ab76421405a1be09be35ae2e215efb2" id="r_a3ab76421405a1be09be35ae2e215efb2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a3ab76421405a1be09be35ae2e215efb2">getTop</a> () const</td></tr>
@@ -283,8 +301,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6c4854090319dbc681a275dada027e40" id="r_a6c4854090319dbc681a275dada027e40"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40">getName</a> () const</td></tr>
 <tr class="memitem:a1de666cd76bf2ef5c77d3b0380db55fa" id="r_a1de666cd76bf2ef5c77d3b0380db55fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">setName</a> (const std::string &amp;newName)</td></tr>
 <tr class="memitem:a1947ff718446a6a81cd108b87a475d9f" id="r_a1947ff718446a6a81cd108b87a475d9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
-<tr class="memitem:a2726706100aa444c0486e6b0baf6a164" id="r_a2726706100aa444c0486e6b0baf6a164"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a2726706100aa444c0486e6b0baf6a164">getState</a> () const</td></tr>
-<tr class="memitem:a368eebac048f0c17616df5a6c0546d08" id="r_a368eebac048f0c17616df5a6c0546d08"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a368eebac048f0c17616df5a6c0546d08">setState</a> (<a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a> state)</td></tr>
+<tr class="memitem:a2726706100aa444c0486e6b0baf6a164" id="r_a2726706100aa444c0486e6b0baf6a164"><td class="memItemLeft" align="right" valign="top">virtual ButtonState&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a2726706100aa444c0486e6b0baf6a164">getState</a> () const</td></tr>
+<tr class="memitem:a368eebac048f0c17616df5a6c0546d08" id="r_a368eebac048f0c17616df5a6c0546d08"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a368eebac048f0c17616df5a6c0546d08">setState</a> (ButtonState state)</td></tr>
 <tr class="memitem:ad13ace0c3e030331f8212552d70618cf" id="r_ad13ace0c3e030331f8212552d70618cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#ad13ace0c3e030331f8212552d70618cf">isMouseHovered</a> () const</td></tr>
 <tr class="memitem:a30189ef3aa0649f54e00cd4b572d7f2b" id="r_a30189ef3aa0649f54e00cd4b572d7f2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a30189ef3aa0649f54e00cd4b572d7f2b">setMouseHovered</a> (bool v)</td></tr>
 <tr class="memitem:add4ca308315c9d9c4aaba32afdf58302" id="r_add4ca308315c9d9c4aaba32afdf58302"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#add4ca308315c9d9c4aaba32afdf58302">isKeyFocused</a> () const</td></tr>
@@ -293,7 +311,9 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a32b82ce8d644db2218a5e54d479bf329" id="r_a32b82ce8d644db2218a5e54d479bf329"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32b82ce8d644db2218a5e54d479bf329">CreateFromLua</a> (const sol::table &amp;config)</td></tr>
+<tr class="memdesc:a32b82ce8d644db2218a5e54d479bf329"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a> instance from a Lua configuration table.  <br /></td></tr>
 <tr class="memitem:ae629e2aa41786d948b8ada4de8df9f5a" id="r_ae629e2aa41786d948b8ada4de8df9f5a"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae629e2aa41786d948b8ada4de8df9f5a">CreateFromInitStruct</a> (const <a class="el" href="structSDOM_1_1IDisplayObject_1_1InitStruct.html">IDisplayObject::InitStruct</a> &amp;baseInit)</td></tr>
+<tr class="memdesc:ae629e2aa41786d948b8ada4de8df9f5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a> instance from an <a class="el" href="structSDOM_1_1Button_1_1InitStruct.html" title="Initialization parameters for constructing a Button.">InitStruct</a>.  <br /></td></tr>
 <tr class="memitem:ac79673e571c58f21de1541a81548a959" id="r_ac79673e571c58f21de1541a81548a959"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ac79673e571c58f21de1541a81548a959 template"><td class="memItemLeft" align="right" valign="top">static T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959">lua_value_case_insensitive</a> (const sol::table &amp;tbl, const std::string &amp;key, const T &amp;default_value)</td></tr>
 <tr class="memitem:a7d4f3c380cd2644e37c493ed963035b8" id="r_a7d4f3c380cd2644e37c493ed963035b8"><td class="memItemLeft" align="right" valign="top">static sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">ensure_sol_table</a> (sol::state_view lua, const std::string &amp;typeName)</td></tr>
@@ -310,16 +330,19 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a3f5a2b3218690f7fad57cad0874a3be1" id="r_a3f5a2b3218690f7fad57cad0874a3be1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f5a2b3218690f7fad57cad0874a3be1">Button</a> (const <a class="el" href="structSDOM_1_1Button_1_1InitStruct.html">InitStruct</a> &amp;init)</td></tr>
 <tr class="memitem:ad0b93e6902abcae4f6f284882f2b9743" id="r_ad0b93e6902abcae4f6f284882f2b9743"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0b93e6902abcae4f6f284882f2b9743">Button</a> (const sol::table &amp;config)</td></tr>
 <tr class="memitem:a3ffe6ba98ba6e7d1c818dcfe8b7e1159" id="r_a3ffe6ba98ba6e7d1c818dcfe8b7e1159"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ffe6ba98ba6e7d1c818dcfe8b7e1159">_registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
+<tr class="memdesc:a3ffe6ba98ba6e7d1c818dcfe8b7e1159"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers <a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a> bindings with the Lua runtime.  <br /></td></tr>
 <tr class="memitem:a2cb670b98c92cc7713247fbfc7bc7572" id="r_a2cb670b98c92cc7713247fbfc7bc7572"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a2cb670b98c92cc7713247fbfc7bc7572">rebuildPanelTexture_</a> (int width, int height, SDL_PixelFormat fmt)</td></tr>
 <tr class="memitem:af8c4663c22d0b3d8a8c2a1e5983295b5" id="r_af8c4663c22d0b3d8a8c2a1e5983295b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#af8c4663c22d0b3d8a8c2a1e5983295b5">attachChild_</a> (<a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> child, <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> parent, bool useWorld=false, int worldX=0, int worldY=0)</td></tr>
 <tr class="memitem:a9d22b5fd9345bc320ad573f7841517a3" id="r_a9d22b5fd9345bc320ad573f7841517a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9d22b5fd9345bc320ad573f7841517a3">removeOrphan_</a> (const <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &amp;orphan)</td></tr>
-<tr class="memitem:a811ff1f460ef9da2d5c33389fd00fc05" id="r_a811ff1f460ef9da2d5c33389fd00fc05"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a811ff1f460ef9da2d5c33389fd00fc05">onStateChanged</a> (<a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a> oldState, <a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a> newState)</td></tr>
-<tr class="memitem:a4400de6a3fa90b8c1a655a19f743b3ea" id="r_a4400de6a3fa90b8c1a655a19f743b3ea"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfb">IconIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a4400de6a3fa90b8c1a655a19f743b3ea">iconIndexForState</a> (<a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a> state) const</td></tr>
+<tr class="memitem:a811ff1f460ef9da2d5c33389fd00fc05" id="r_a811ff1f460ef9da2d5c33389fd00fc05"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a811ff1f460ef9da2d5c33389fd00fc05">onStateChanged</a> (ButtonState oldState, ButtonState newState)</td></tr>
+<tr class="memitem:a4400de6a3fa90b8c1a655a19f743b3ea" id="r_a4400de6a3fa90b8c1a655a19f743b3ea"><td class="memItemLeft" align="right" valign="top">virtual IconIndex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a4400de6a3fa90b8c1a655a19f743b3ea">iconIndexForState</a> (ButtonState state) const</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a6370652b75a3dbdb0a24cb2290cd237e" id="r_a6370652b75a3dbdb0a24cb2290cd237e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6370652b75a3dbdb0a24cb2290cd237e">labelObject_</a></td></tr>
+<tr class="memdesc:a6370652b75a3dbdb0a24cb2290cd237e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal label object for text rendering.  <br /></td></tr>
 <tr class="memitem:ae3e99836932461ea798888f0db3c2d40" id="r_ae3e99836932461ea798888f0db3c2d40"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3e99836932461ea798888f0db3c2d40">text_</a></td></tr>
+<tr class="memdesc:ae3e99836932461ea798888f0db3c2d40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current label text.  <br /></td></tr>
 <tr class="memitem:a25fc3cd1965de31c8e9392710c7525ab" id="r_a25fc3cd1965de31c8e9392710c7525ab"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25fc3cd1965de31c8e9392710c7525ab">font_resource_name_</a> = &quot;internal_font_8x8&quot;</td></tr>
 <tr class="memitem:afaf779f94cc6fd583b118679ccf2bf08" id="r_afaf779f94cc6fd583b118679ccf2bf08"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afaf779f94cc6fd583b118679ccf2bf08">font_size_</a> = 8</td></tr>
 <tr class="memitem:a71e7bc6c5431134baa4f50ac8d3f1c11" id="r_a71e7bc6c5431134baa4f50ac8d3f1c11"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71e7bc6c5431134baa4f50ac8d3f1c11">font_width_</a> = 8</td></tr>
@@ -331,8 +354,8 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:aeaeb561be0967f6655c18eb3493a80ee" id="r_aeaeb561be0967f6655c18eb3493a80ee"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#aeaeb561be0967f6655c18eb3493a80ee">font_resource_</a> = &quot;internal_font_8x8&quot;</td></tr>
 <tr class="memitem:a37fa9705ad5ce2bf5d6c1edb6ae8a0b5" id="r_a37fa9705ad5ce2bf5d6c1edb6ae8a0b5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a37fa9705ad5ce2bf5d6c1edb6ae8a0b5">icon_width_</a> = 8</td></tr>
 <tr class="memitem:aaf98571996bc9b61188b3c69acc6a974" id="r_aaf98571996bc9b61188b3c69acc6a974"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#aaf98571996bc9b61188b3c69acc6a974">icon_height_</a> = 8</td></tr>
-<tr class="memitem:ad7df3eaceabcbc97a3b3e42e4e6de52d" id="r_ad7df3eaceabcbc97a3b3e42e4e6de52d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922c">PanelBaseIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#ad7df3eaceabcbc97a3b3e42e4e6de52d">base_index_</a> = <a class="el" href="namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922caf64c6bd570a1159149526b21a7c41936">PanelBaseIndex::ButtonUp</a></td></tr>
-<tr class="memitem:af3fe7bdbe6270bc0d19291677c448e88" id="r_af3fe7bdbe6270bc0d19291677c448e88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922c">PanelBaseIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#af3fe7bdbe6270bc0d19291677c448e88">last_base_index_</a> = <a class="el" href="namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922caf64c6bd570a1159149526b21a7c41936">PanelBaseIndex::ButtonUp</a></td></tr>
+<tr class="memitem:ad7df3eaceabcbc97a3b3e42e4e6de52d" id="r_ad7df3eaceabcbc97a3b3e42e4e6de52d"><td class="memItemLeft" align="right" valign="top">PanelBaseIndex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#ad7df3eaceabcbc97a3b3e42e4e6de52d">base_index_</a> = PanelBaseIndex::ButtonUp</td></tr>
+<tr class="memitem:af3fe7bdbe6270bc0d19291677c448e88" id="r_af3fe7bdbe6270bc0d19291677c448e88"><td class="memItemLeft" align="right" valign="top">PanelBaseIndex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#af3fe7bdbe6270bc0d19291677c448e88">last_base_index_</a> = PanelBaseIndex::ButtonUp</td></tr>
 <tr class="memitem:a122a423e83004b61d76c35fae172e4fe" id="r_a122a423e83004b61d76c35fae172e4fe"><td class="memItemLeft" align="right" valign="top">SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a122a423e83004b61d76c35fae172e4fe">cachedTexture_</a> = nullptr</td></tr>
 <tr class="memitem:a3a23cb828e6c0716b9d443ae6165b098" id="r_a3a23cb828e6c0716b9d443ae6165b098"><td class="memItemLeft" align="right" valign="top">SDL_Renderer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#a3a23cb828e6c0716b9d443ae6165b098">cached_renderer_</a> = nullptr</td></tr>
 <tr class="memitem:ad25d9f481012c2d0d0d5eb062c7d02df" id="r_ad25d9f481012c2d0d0d5eb062c7d02df"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IPanelObject.html#ad25d9f481012c2d0d0d5eb062c7d02df">current_width_</a> = 0</td></tr>
@@ -351,10 +374,10 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a4d4f5976d3d6b3d6a90bc4e5496ce306" id="r_a4d4f5976d3d6b3d6a90bc4e5496ce306"><td class="memItemLeft" align="right" valign="top">SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a4d4f5976d3d6b3d6a90bc4e5496ce306">borderColor_</a> = {0, 0, 0, 128}</td></tr>
 <tr class="memitem:ad5253b0e2b8136bb9efcd3cecc00274a" id="r_ad5253b0e2b8136bb9efcd3cecc00274a"><td class="memItemLeft" align="right" valign="top">SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ad5253b0e2b8136bb9efcd3cecc00274a">outlineColor_</a> = {0, 0, 0, 255}</td></tr>
 <tr class="memitem:acb55b6182cfa065a56e544c68c627f98" id="r_acb55b6182cfa065a56e544c68c627f98"><td class="memItemLeft" align="right" valign="top">SDL_Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#acb55b6182cfa065a56e544c68c627f98">dropshadowColor_</a> = {0, 0, 0, 128}</td></tr>
-<tr class="memitem:aad60efcd3f8a36bf6690ff3877bbe179" id="r_aad60efcd3f8a36bf6690ff3877bbe179"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#aad60efcd3f8a36bf6690ff3877bbe179">anchorTop_</a> = <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">AnchorPoint::TOP_LEFT</a></td></tr>
-<tr class="memitem:a60d1c916d6cadc5c8edd47cb12af7f06" id="r_a60d1c916d6cadc5c8edd47cb12af7f06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a60d1c916d6cadc5c8edd47cb12af7f06">anchorLeft_</a> = <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">AnchorPoint::TOP_LEFT</a></td></tr>
-<tr class="memitem:ab3b87f6350ce8b2272d54888fb26bcc9" id="r_ab3b87f6350ce8b2272d54888fb26bcc9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ab3b87f6350ce8b2272d54888fb26bcc9">anchorBottom_</a> = <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">AnchorPoint::TOP_LEFT</a></td></tr>
-<tr class="memitem:a606ab9bf41b5c61e3469b92fe69eeddc" id="r_a606ab9bf41b5c61e3469b92fe69eeddc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a606ab9bf41b5c61e3469b92fe69eeddc">anchorRight_</a> = <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">AnchorPoint::TOP_LEFT</a></td></tr>
+<tr class="memitem:aad60efcd3f8a36bf6690ff3877bbe179" id="r_aad60efcd3f8a36bf6690ff3877bbe179"><td class="memItemLeft" align="right" valign="top">AnchorPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#aad60efcd3f8a36bf6690ff3877bbe179">anchorTop_</a> = AnchorPoint::TOP_LEFT</td></tr>
+<tr class="memitem:a60d1c916d6cadc5c8edd47cb12af7f06" id="r_a60d1c916d6cadc5c8edd47cb12af7f06"><td class="memItemLeft" align="right" valign="top">AnchorPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a60d1c916d6cadc5c8edd47cb12af7f06">anchorLeft_</a> = AnchorPoint::TOP_LEFT</td></tr>
+<tr class="memitem:ab3b87f6350ce8b2272d54888fb26bcc9" id="r_ab3b87f6350ce8b2272d54888fb26bcc9"><td class="memItemLeft" align="right" valign="top">AnchorPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ab3b87f6350ce8b2272d54888fb26bcc9">anchorBottom_</a> = AnchorPoint::TOP_LEFT</td></tr>
+<tr class="memitem:a606ab9bf41b5c61e3469b92fe69eeddc" id="r_a606ab9bf41b5c61e3469b92fe69eeddc"><td class="memItemLeft" align="right" valign="top">AnchorPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a606ab9bf41b5c61e3469b92fe69eeddc">anchorRight_</a> = AnchorPoint::TOP_LEFT</td></tr>
 <tr class="memitem:ae0fdddcd7cbe751c5f018a7f28a50eb1" id="r_ae0fdddcd7cbe751c5f018a7f28a50eb1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#ae0fdddcd7cbe751c5f018a7f28a50eb1">z_order_</a> = 0</td></tr>
 <tr class="memitem:aa018f216f79dcdfebf0b0b3487cec40f" id="r_aa018f216f79dcdfebf0b0b3487cec40f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#aa018f216f79dcdfebf0b0b3487cec40f">priority_</a> = 0</td></tr>
 <tr class="memitem:a499d17cd825ba6425e3c0edabff0f22e" id="r_a499d17cd825ba6425e3c0edabff0f22e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a499d17cd825ba6425e3c0edabff0f22e">isClickable_</a> = false</td></tr>
@@ -370,11 +393,84 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a6989f335541697be518ad972b5239b47" id="r_a6989f335541697be518ad972b5239b47"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; <a class="el" href="classSDOM_1_1EventType.html">EventType</a>, std::vector&lt; <a class="el" href="structSDOM_1_1IDisplayObject_1_1ListenerEntry.html">ListenerEntry</a> &gt;, <a class="el" href="structSDOM_1_1EventTypeHash.html">EventTypeHash</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a6989f335541697be518ad972b5239b47">bubblingEventListeners</a></td></tr>
 <tr class="memitem:a2b199e755c1279f72d128ede557b6fa5" id="r_a2b199e755c1279f72d128ede557b6fa5"><td class="memItemLeft" align="right" valign="top">sol::usertype&lt; <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a2b199e755c1279f72d128ede557b6fa5">objHandleType_</a></td></tr>
 <tr class="memitem:aeff0a0985efe5dae1e6aa10e5b206396" id="r_aeff0a0985efe5dae1e6aa10e5b206396"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">name_</a> = &quot;IDataObject&quot;</td></tr>
-<tr class="memitem:a13bc73dac82d7465513fe4135cf5eec7" id="r_a13bc73dac82d7465513fe4135cf5eec7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a13bc73dac82d7465513fe4135cf5eec7">buttonState_</a> = <a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0">ButtonState::Inactive</a></td></tr>
+<tr class="memitem:a13bc73dac82d7465513fe4135cf5eec7" id="r_a13bc73dac82d7465513fe4135cf5eec7"><td class="memItemLeft" align="right" valign="top">ButtonState&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a13bc73dac82d7465513fe4135cf5eec7">buttonState_</a> = ButtonState::Inactive</td></tr>
 <tr class="memitem:a9f5ee23fc478fec71c188de27b705d82" id="r_a9f5ee23fc478fec71c188de27b705d82"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a9f5ee23fc478fec71c188de27b705d82">mouse_hovered_</a> = false</td></tr>
 <tr class="memitem:a3fde0164c6d64d391ea5fb9bcd9554bb" id="r_a3fde0164c6d64d391ea5fb9bcd9554bb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html#a3fde0164c6d64d391ea5fb9bcd9554bb">key_focused_</a> = false</td></tr>
 </table>
-<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A standard clickable text button class. </p>
+<p>A standard clickable text button for UI interaction.</p>
+<dl class="section author"><dt>Author</dt><dd>Jay Faries (<a href="https://github.com/warte67">https://github.com/warte67</a>) @inherits <a class="el" href="classSDOM_1_1IPanelObject.html">SDOM::IPanelObject</a>, <a class="el" href="classSDOM_1_1IButtonObject.html">SDOM::IButtonObject</a> @luaType <a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a></dd></dl>
+<p>The <b><a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a></b> class represents a basic interactive UI element displaying a text label. It inherits layout and rendering capabilities from <span class="tt"><a class="el" href="classSDOM_1_1IPanelObject.html">IPanelObject</a></span> and click, hover, and focus behavior from <span class="tt"><a class="el" href="classSDOM_1_1IButtonObject.html">IButtonObject</a></span>. The text label is represented internally as a child display object that can be accessed and customized via Lua.</p>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="Button_Properties"></a>
+Properties</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Property  </th><th class="markdownTableHeadNone">Type  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">text</span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">The visible text displayed on the button face.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">label_color</span>  </td><td class="markdownTableBodyNone"><span class="tt">ColorRGBA</span>  </td><td class="markdownTableBodyNone">The text color used for rendering the label.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">font_resource</span>  </td><td class="markdownTableBodyNone">string (read-only)  </td><td class="markdownTableBodyNone">The font resource name used for text rendering.  </td></tr>
+</table>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="Button_Functions"></a>
+Functions</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Function  </th><th class="markdownTableHeadNone">Returns  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#ab80fc31126bd29cecfa5b430877d3dcf" title="Returns the button’s current text label.">getText()</a></span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">Returns the button’s current label text.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">setText(newText)</span>  </td><td class="markdownTableBodyNone">void  </td><td class="markdownTableBodyNone">Updates the button’s visible label text.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#a16f03e8303d5d1795411c99670c5b51c" title="Returns the current text label color.">getLabelColor()</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">ColorRGBA</span>  </td><td class="markdownTableBodyNone">Returns the current text color.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">setLabelColor(color)</span>  </td><td class="markdownTableBodyNone">void  </td><td class="markdownTableBodyNone">Updates the text color used for rendering.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#a452de9e35ed242f24e93d50a3ef3e36a" title="Returns the font resource name used by this button (read-only).">getFontResource()</a></span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">Returns the name of the font resource (read-only).  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#aa99bc314989178ee3bc5eeacc305b2ac" title="Returns the label DisplayHandle (for advanced Lua access).">getLabelObject()</a></span>  </td><td class="markdownTableBodyNone"><span class="tt"><a class="el" href="classSDOM_1_1DisplayHandle.html" title="A safe, name-based reference proxy to display objects managed by the SDOM Core.">DisplayHandle</a></span>  </td><td class="markdownTableBodyNone">Returns a handle to the label display object for customization.  </td></tr>
+</table>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="Button_Events"></a>
+Events</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"><a class="el" href="classSDOM_1_1Event.html">Event</a>  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">MouseClick</span>  </td><td class="markdownTableBodyNone">Fired when the button is clicked.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">MouseEnter</span>  </td><td class="markdownTableBodyNone">Fired when the cursor enters the button area.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">MouseLeave</span>  </td><td class="markdownTableBodyNone">Fired when the cursor leaves the button area.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">FocusGained</span>  </td><td class="markdownTableBodyNone">Fired when the button gains keyboard focus.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">FocusLost</span>  </td><td class="markdownTableBodyNone">Fired when the button loses keyboard focus.  </td></tr>
+</table>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="Button_Notes"></a>
+Notes</h1>
+<ul>
+<li>The button automatically creates a label display object for text rendering.</li>
+<li>Defaults use the <span class="tt">internal_font_8x8</span> sprite-based font from the factory.</li>
+<li>Colors, dimensions, and focus behavior are inherited from <span class="tt"><a class="el" href="classSDOM_1_1IPanelObject.html">IPanelObject</a></span>.</li>
+<li>All interaction events from <span class="tt"><a class="el" href="classSDOM_1_1IButtonObject.html">IButtonObject</a></span> are available to Lua scripts.</li>
+</ul>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="License"></a>
+ZLIB License</h1>
+<p>This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.</p>
+<p>Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:</p>
+<ol type="1">
+<li>The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.</li>
+<li>Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.</li>
+<li>This notice may not be removed or altered from any source distribution. </li>
+</ol>
+</div><a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
 <a id="a9ed2761595e2f29ab0c0d42c85438dab" name="a9ed2761595e2f29ab0c0d42c85438dab"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9ed2761595e2f29ab0c0d42c85438dab">&#9670;&#160;</a></span>OrphanRetentionPolicy</h2>
 
@@ -530,6 +626,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Registers <a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a> bindings with the Lua runtime. </p>
 
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IPanelObject.html#a6af5f7f160808638779e8c477c6a0327">SDOM::IPanelObject</a>.</p>
 
@@ -784,6 +882,15 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Creates a <a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a> instance from an <a class="el" href="structSDOM_1_1Button_1_1InitStruct.html" title="Initialization parameters for constructing a Button.">InitStruct</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">baseInit</td><td>Base initialization data. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A unique pointer to a new <a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a>. </dd></dl>
+
 </div>
 </div>
 <a id="a32b82ce8d644db2218a5e54d479bf329" name="a32b82ce8d644db2218a5e54d479bf329"></a>
@@ -808,6 +915,15 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Creates a <a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a> instance from a Lua configuration table. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">config</td><td>Lua configuration table. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A unique pointer to a new <a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a>. </dd></dl>
 
 </div>
 </div>
@@ -850,7 +966,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> SDOM::IDisplayObject::getAnchorBottom </td>
+          <td class="memname">AnchorPoint SDOM::IDisplayObject::getAnchorBottom </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -875,7 +991,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> SDOM::IDisplayObject::getAnchorLeft </td>
+          <td class="memname">AnchorPoint SDOM::IDisplayObject::getAnchorLeft </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -900,7 +1016,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> SDOM::IDisplayObject::getAnchorRight </td>
+          <td class="memname">AnchorPoint SDOM::IDisplayObject::getAnchorRight </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -925,7 +1041,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> SDOM::IDisplayObject::getAnchorTop </td>
+          <td class="memname">AnchorPoint SDOM::IDisplayObject::getAnchorTop </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -975,7 +1091,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922c">PanelBaseIndex</a> SDOM::IPanelObject::getBaseIndex </td>
+          <td class="memname">PanelBaseIndex SDOM::IPanelObject::getBaseIndex </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -1290,6 +1406,33 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a452de9e35ed242f24e93d50a3ef3e36a" name="a452de9e35ed242f24e93d50a3ef3e36a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a452de9e35ed242f24e93d50a3ef3e36a">&#9670;&#160;</a></span>getFontResource()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::Button::getFontResource </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the font resource name used by this button (read-only). </p>
+
+</div>
+</div>
 <a id="ac2b413d2672149447edf67d78998bcb5" name="ac2b413d2672149447edf67d78998bcb5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac2b413d2672149447edf67d78998bcb5">&#9670;&#160;</a></span>getFontResourceName()</h2>
 
@@ -1465,6 +1608,33 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a16f03e8303d5d1795411c99670c5b51c" name="a16f03e8303d5d1795411c99670c5b51c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16f03e8303d5d1795411c99670c5b51c">&#9670;&#160;</a></span>getLabelColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_Color SDOM::Button::getLabelColor </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current text label color. </p>
+
+</div>
+</div>
 <a id="aa99bc314989178ee3bc5eeacc305b2ac" name="aa99bc314989178ee3bc5eeacc305b2ac"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa99bc314989178ee3bc5eeacc305b2ac">&#9670;&#160;</a></span>getLabelObject()</h2>
 
@@ -1487,6 +1657,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the label <a class="el" href="classSDOM_1_1DisplayHandle.html" title="A safe, name-based reference proxy to display objects managed by the SDOM Core.">DisplayHandle</a> (for advanced Lua access). </p>
 
 </div>
 </div>
@@ -2050,7 +2222,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a> SDOM::IButtonObject::getState </td>
+          <td class="memname">virtual ButtonState SDOM::IButtonObject::getState </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -2114,6 +2286,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the button’s current text label. </p>
 
 </div>
 </div>
@@ -2381,9 +2555,9 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="namespaceSDOM.html#a331c4869c78a7b937303fadb0de2cdfb">IconIndex</a> SDOM::IButtonObject::iconIndexForState </td>
+          <td class="memname">virtual IconIndex SDOM::IButtonObject::iconIndexForState </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a></td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
+          <td class="paramtype">ButtonState</td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -2907,6 +3081,8 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Handles mouse and keyboard input events. </p>
+
 <p>Implements <a class="el" href="classSDOM_1_1IPanelObject.html#a3bd473881874346569d1eddef2610dc7">SDOM::IPanelObject</a>.</p>
 
 </div>
@@ -2933,6 +3109,8 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Called when the button is initialized. </p>
 
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IPanelObject.html#a31008a7eb116357481748bdd2b15102c">SDOM::IPanelObject</a>.</p>
 
@@ -2988,6 +3166,8 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Called before the button is destroyed. </p>
+
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IPanelObject.html#a7307298d6877a9f52f112c6a6254c27c">SDOM::IPanelObject</a>.</p>
 
 </div>
@@ -3015,6 +3195,8 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Renders the button and its label. </p>
+
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IPanelObject.html#ac2ab8da48bceb2acc59644b1ca33e6b8">SDOM::IPanelObject</a>.</p>
 
 </div>
@@ -3031,12 +3213,12 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="memname">virtual void SDOM::IButtonObject::onStateChanged </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a></td>          <td class="paramname"><span class="paramname"><em>oldState</em></span>, </td>
+          <td class="paramtype">ButtonState</td>          <td class="paramname"><span class="paramname"><em>oldState</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a></td>          <td class="paramname"><span class="paramname"><em>newState</em></span>&#160;)</td>
+          <td class="paramtype">ButtonState</td>          <td class="paramname"><span class="paramname"><em>newState</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -3073,8 +3255,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Runs unit tests for this object. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. </dd></dl>
+<p>Optional unit test hook for automated validation. </p>
 
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IPanelObject.html#a97d72b2528305940114b6febb4c83f16">SDOM::IPanelObject</a>.</p>
 
@@ -3129,6 +3310,8 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Called every frame to update the button state. </p>
 
 <p>Implements <a class="el" href="classSDOM_1_1IPanelObject.html#a489b15ae8faee121c53056b58bdd20d6">SDOM::IPanelObject</a>.</p>
 
@@ -3818,7 +4001,7 @@ template&lt;typename T, typename BaseT&gt; </div>
         <tr>
           <td class="memname">void SDOM::IDisplayObject::setAnchorBottom </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a></td>          <td class="paramname"><span class="paramname"><em>ap</em></span></td><td>)</td>
+          <td class="paramtype">AnchorPoint</td>          <td class="paramname"><span class="paramname"><em>ap</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -3843,7 +4026,7 @@ template&lt;typename T, typename BaseT&gt; </div>
         <tr>
           <td class="memname">void SDOM::IDisplayObject::setAnchorLeft </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a></td>          <td class="paramname"><span class="paramname"><em>ap</em></span></td><td>)</td>
+          <td class="paramtype">AnchorPoint</td>          <td class="paramname"><span class="paramname"><em>ap</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -3868,7 +4051,7 @@ template&lt;typename T, typename BaseT&gt; </div>
         <tr>
           <td class="memname">void SDOM::IDisplayObject::setAnchorRight </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a></td>          <td class="paramname"><span class="paramname"><em>ap</em></span></td><td>)</td>
+          <td class="paramtype">AnchorPoint</td>          <td class="paramname"><span class="paramname"><em>ap</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -3893,7 +4076,7 @@ template&lt;typename T, typename BaseT&gt; </div>
         <tr>
           <td class="memname">void SDOM::IDisplayObject::setAnchorTop </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a></td>          <td class="paramname"><span class="paramname"><em>ap</em></span></td><td>)</td>
+          <td class="paramtype">AnchorPoint</td>          <td class="paramname"><span class="paramname"><em>ap</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -4331,6 +4514,33 @@ template&lt;typename T, typename BaseT&gt; </div>
 
 </div>
 </div>
+<a id="a44788d73624aea1ae80ec9e577476b3e" name="a44788d73624aea1ae80ec9e577476b3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44788d73624aea1ae80ec9e577476b3e">&#9670;&#160;</a></span>setLabelColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Button::setLabelColor </td>
+          <td>(</td>
+          <td class="paramtype">const SDL_Color &amp;</td>          <td class="paramname"><span class="paramname"><em>color</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Updates the text label color. </p>
+
+</div>
+</div>
 <a id="a4b5b1506255242ae26f9f39ec4e13610" name="a4b5b1506255242ae26f9f39ec4e13610"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4b5b1506255242ae26f9f39ec4e13610">&#9670;&#160;</a></span>setLeft()</h2>
 
@@ -4693,7 +4903,7 @@ template&lt;typename T, typename BaseT&gt; </div>
         <tr>
           <td class="memname">virtual void SDOM::IButtonObject::setState </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a></td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
+          <td class="paramtype">ButtonState</td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -4772,6 +4982,8 @@ template&lt;typename T, typename BaseT&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Updates the button’s text label. </p>
 
 </div>
 </div>
@@ -5090,7 +5302,7 @@ template&lt;typename T, typename BaseT&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> SDOM::IDisplayObject::anchorBottom_ = <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">AnchorPoint::TOP_LEFT</a></td>
+          <td class="memname">AnchorPoint SDOM::IDisplayObject::anchorBottom_ = AnchorPoint::TOP_LEFT</td>
         </tr>
       </table>
   </td>
@@ -5112,7 +5324,7 @@ template&lt;typename T, typename BaseT&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> SDOM::IDisplayObject::anchorLeft_ = <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">AnchorPoint::TOP_LEFT</a></td>
+          <td class="memname">AnchorPoint SDOM::IDisplayObject::anchorLeft_ = AnchorPoint::TOP_LEFT</td>
         </tr>
       </table>
   </td>
@@ -5134,7 +5346,7 @@ template&lt;typename T, typename BaseT&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> SDOM::IDisplayObject::anchorRight_ = <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">AnchorPoint::TOP_LEFT</a></td>
+          <td class="memname">AnchorPoint SDOM::IDisplayObject::anchorRight_ = AnchorPoint::TOP_LEFT</td>
         </tr>
       </table>
   </td>
@@ -5156,7 +5368,7 @@ template&lt;typename T, typename BaseT&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> SDOM::IDisplayObject::anchorTop_ = <a class="el" href="namespaceSDOM.html#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">AnchorPoint::TOP_LEFT</a></td>
+          <td class="memname">AnchorPoint SDOM::IDisplayObject::anchorTop_ = AnchorPoint::TOP_LEFT</td>
         </tr>
       </table>
   </td>
@@ -5222,7 +5434,7 @@ template&lt;typename T, typename BaseT&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922c">PanelBaseIndex</a> SDOM::IPanelObject::base_index_ = <a class="el" href="namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922caf64c6bd570a1159149526b21a7c41936">PanelBaseIndex::ButtonUp</a></td>
+          <td class="memname">PanelBaseIndex SDOM::IPanelObject::base_index_ = PanelBaseIndex::ButtonUp</td>
         </tr>
       </table>
   </td>
@@ -5354,7 +5566,7 @@ template&lt;typename T, typename BaseT&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425">ButtonState</a> SDOM::IButtonObject::buttonState_ = <a class="el" href="namespaceSDOM.html#af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0">ButtonState::Inactive</a></td>
+          <td class="memname">ButtonState SDOM::IButtonObject::buttonState_ = ButtonState::Inactive</td>
         </tr>
       </table>
   </td>
@@ -5914,6 +6126,8 @@ template&lt;typename T, typename BaseT&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Internal label object for text rendering. </p>
+
 </div>
 </div>
 <a id="af3fe7bdbe6270bc0d19291677c448e88" name="af3fe7bdbe6270bc0d19291677c448e88"></a>
@@ -5926,7 +6140,7 @@ template&lt;typename T, typename BaseT&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922c">PanelBaseIndex</a> SDOM::IPanelObject::last_base_index_ = <a class="el" href="namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922caf64c6bd570a1159149526b21a7c41936">PanelBaseIndex::ButtonUp</a></td>
+          <td class="memname">PanelBaseIndex SDOM::IPanelObject::last_base_index_ = PanelBaseIndex::ButtonUp</td>
         </tr>
       </table>
   </td>
@@ -6199,6 +6413,8 @@ template&lt;typename T, typename BaseT&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Current label text. </p>
 
 </div>
 </div>

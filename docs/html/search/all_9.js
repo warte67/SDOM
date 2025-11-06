@@ -2,10 +2,10 @@ var searchData=
 [
   ['factory_0',['Factory',['../classSDOM_1_1Factory.html',1,'SDOM::Factory'],['../classSDOM_1_1AssetHandle.html#a115ac50fbff504ea8c015974c5446c29',1,'SDOM::AssetHandle::Factory'],['../classSDOM_1_1Core.html#a5f0e8b7506a8fd7f8143cbfb80531e9b',1,'SDOM::Core::Factory'],['../classSDOM_1_1IDisplayObject.html#a328c093d609680cca505905c6d49901a',1,'SDOM::IDisplayObject::Factory()'],['../classSDOM_1_1IFontObject.html#aaf17c387098a03b9dbcd7e17a6d1600c',1,'SDOM::IFontObject::Factory'],['../classSDOM_1_1Label.html#a6a4f5c15142447aa73b84aea836b7163',1,'SDOM::Label::Factory'],['../classSDOM_1_1SpriteSheet.html#a5bc2950f603e4d5eb8704b792b59d652',1,'SDOM::SpriteSheet::Factory'],['../classSDOM_1_1Stage.html#a328c093d609680cca505905c6d49901a',1,'SDOM::Stage::Factory()'],['../classSDOM_1_1Texture.html#ad477e00210c25a2c488ef9eb632d4ce9',1,'SDOM::Texture::Factory'],['../classSDOM_1_1TTFAsset.html#ae05e9414bbd4705626e99efc79509b9d',1,'SDOM::TTFAsset::Factory'],['../classSDOM_1_1Factory.html#affd4d70b6b361b04bdc4fa7d194059e6',1,'SDOM::Factory::Factory()']]],
   ['factory_5f_1',['factory_',['../classSDOM_1_1AssetHandle.html#a050f62c9db3508c9f2125d8020e24b6f',1,'SDOM::AssetHandle::factory_'],['../classSDOM_1_1DisplayHandle.html#ad77f46aaaf711677a42e6006fdf12470',1,'SDOM::DisplayHandle::factory_']]],
-  ['faded_2',['Faded',['../namespaceSDOM.html#af652715c3e637c795824fa0afedda425a2716c1e477a70de6b2508c5ccd8c2588',1,'SDOM']]],
+  ['faded_2',['Faded',['../classSDOM.html#af652715c3e637c795824fa0afedda425a2716c1e477a70de6b2508c5ccd8c2588',1,'SDOM']]],
   ['fail_3',['FAIL',['../SDOM_8hpp.html#ac8d1eaf65528f86b445cf6e45b2d72c9',1,'SDOM.hpp']]],
-  ['features_4',['Features',['../classSDOM_1_1DisplayHandle.html#autotoc_md7',1,'🧩 Key Features'],['../md_README.html#autotoc_md18',1,'Features'],['../md_README.html#autotoc_md20',1,'Key Features']]],
-  ['fedora_20rhel_20alma_20rocky_5',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md40',1,'']]],
+  ['features_4',['Features',['../classSDOM_1_1DisplayHandle.html#autotoc_md21',1,'🧩 Key Features'],['../md_README.html#autotoc_md32',1,'Features'],['../md_README.html#autotoc_md34',1,'Key Features']]],
+  ['fedora_20rhel_20alma_20rocky_5',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md54',1,'']]],
   ['felapsedtime_6',['fElapsedTime',['../classSDOM_1_1Event.html#ab14d7ed6c4435d42b3aaf592ebb54fda',1,'SDOM::Event']]],
   ['fg_7',['fg',['../classCLR.html#accb58e6431fd7167e1899cfec937f49f',1,'CLR']]],
   ['fg_5fcolor_8',['fg_color',['../classCLR.html#a72d2cbc0c4e73a594bb189831b781851',1,'CLR']]],
@@ -43,16 +43,16 @@ var searchData=
   ['fonttypetostring_40',['FontTypeToString',['../classSDOM_1_1IFontObject.html#a663595de18e38e0d8e2e452289448d7e',1,'SDOM::IFontObject']]],
   ['fontwidth_41',['fontWidth',['../structSDOM_1_1FontStyle.html#afb2c7b634f8117e9dd2b102e12c29db8',1,'SDOM::FontStyle::fontWidth'],['../structSDOM_1_1Label_1_1InitStruct.html#a8a984e5cd9e6e7a64565c518d0e48524',1,'SDOM::Label::InitStruct::fontWidth']]],
   ['fontwidth_5f_42',['fontWidth_',['../classSDOM_1_1Label.html#a9a686f86ca1a72adb38af1b2712309b5',1,'SDOM::Label']]],
-  ['for_20doxygen_43',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md52',1,'']]],
+  ['for_20doxygen_43',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md66',1,'']]],
   ['foreground_44',['Foreground',['../classSDOM_1_1Label.html#a3c2910aa54834bd1fd44e456861832b2a45bd1d5b32931106efbf1a82fe6a732f',1,'SDOM::Label']]],
   ['foregroundcolor_45',['foregroundColor',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69',1,'SDOM::IDisplayObject::InitStruct::foregroundColor'],['../structSDOM_1_1FontStyle.html#a6309d9e45ad361255d3265a9441be6bb',1,'SDOM::FontStyle::foregroundColor']]],
   ['foregroundcolor_5f_46',['foregroundColor_',['../classSDOM_1_1IDisplayObject.html#a8c850aff223e1318bf572843132052e4',1,'SDOM::IDisplayObject']]],
-  ['frame_47',['Frame',['../classSDOM_1_1Frame.html',1,'SDOM::Frame'],['../classSDOM_1_1Frame.html#a4b6056a257215fb7ed47a827b31b93f6',1,'SDOM::Frame::Frame(const InitStruct &amp;init)'],['../classSDOM_1_1Frame.html#a2666eb1b1fe16c3a31ac0e56fb216d25',1,'SDOM::Frame::Frame(const sol::table &amp;config)'],['../classSDOM_1_1Frame.html#a2754c51f92021b2e1c22f5cbbb24b9fa',1,'SDOM::Frame::Frame()=default'],['../namespaceSDOM.html#a8a19959922ffbe863f03e13556e8922ca3bb3e8c8a24891ba0f7608bcc96f8b0a',1,'SDOM::Frame']]],
+  ['frame_47',['Frame',['../classSDOM_1_1Frame.html',1,'SDOM::Frame'],['../classSDOM_1_1Frame.html#a4b6056a257215fb7ed47a827b31b93f6',1,'SDOM::Frame::Frame(const InitStruct &amp;init)'],['../classSDOM_1_1Frame.html#a2666eb1b1fe16c3a31ac0e56fb216d25',1,'SDOM::Frame::Frame(const sol::table &amp;config)'],['../classSDOM_1_1Frame.html#a2754c51f92021b2e1c22f5cbbb24b9fa',1,'SDOM::Frame::Frame()=default'],['../classSDOM.html#a8a19959922ffbe863f03e13556e8922ca3bb3e8c8a24891ba0f7608bcc96f8b0a',1,'SDOM::Frame']]],
   ['frame_5fcount_48',['frame_count',['../structSDOM_1_1UnitTests_1_1TestCase.html#a391b4ae6a9a7660a3f4ada7d3b85105e',1,'SDOM::UnitTests::TestCase']]],
   ['frominitstruct_49',['fromInitStruct',['../structSDOM_1_1TypeCreators.html#a15807ffd6629c821a869c22bbbd8d180',1,'SDOM::TypeCreators::fromInitStruct'],['../structSDOM_1_1AssetTypeCreators.html#acce95e4ee7a2328e234ea8a9beaf6764',1,'SDOM::AssetTypeCreators::fromInitStruct']]],
   ['fromlua_50',['fromLua',['../structSDOM_1_1TypeCreators.html#a11367cc263f56aa295753dc763a372ed',1,'SDOM::TypeCreators::fromLua'],['../structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce',1,'SDOM::AssetTypeCreators::fromLua']]],
   ['fromname_51',['fromName',['../classSDOM_1_1EventType.html#a0a4f07dc114c4e7ec80f15878864a3e5',1,'SDOM::EventType']]],
   ['fullstring_52',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]],
   ['func_53',['func',['../structSDOM_1_1UnitTests_1_1TestCase.html#a1470c77b3486505d7f07a4b09d3f7186',1,'SDOM::UnitTests::TestCase']]],
-  ['functions_54',['Functions',['../classSDOM_1_1ArrowButton.html#ArrowButton_Functions',1,'']]]
+  ['functions_54',['Functions',['../classSDOM_1_1ArrowButton.html#ArrowButton_Functions',1,'Functions'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Functions',1,'Functions'],['../classSDOM_1_1Button.html#Button_Functions',1,'Functions']]]
 ];

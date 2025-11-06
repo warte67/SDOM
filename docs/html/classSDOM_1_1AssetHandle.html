@@ -93,6 +93,9 @@ $(function(){initNavTree('classSDOM_1_1AssetHandle.html','','classSDOM_1_1AssetH
 </div><!--header-->
 <div class="contents">
 
+<p>Non-owning reference to a registered <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> asset.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="SDOM__AssetHandle_8hpp_source.html">SDOM_AssetHandle.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for SDOM::AssetHandle:</div>
@@ -108,30 +111,20 @@ Inheritance diagram for SDOM::AssetHandle:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a17041383c6b01b4870f4a498e8cdaf8f" id="r_a17041383c6b01b4870f4a498e8cdaf8f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17041383c6b01b4870f4a498e8cdaf8f">AssetHandle</a> ()</td></tr>
-<tr class="memdesc:a17041383c6b01b4870f4a498e8cdaf8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor initializes an empty handle.  <br /></td></tr>
 <tr class="memitem:ad457def750751b5c9a3aa6521378c290" id="r_ad457def750751b5c9a3aa6521378c290"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad457def750751b5c9a3aa6521378c290">AssetHandle</a> (const std::string &amp;name, const std::string &amp;type, const std::string &amp;filename)</td></tr>
-<tr class="memdesc:ad457def750751b5c9a3aa6521378c290"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a handle with the given identifiers.  <br /></td></tr>
 <tr class="memitem:a4d9e359856ddae1d1ca33415378794e5" id="r_a4d9e359856ddae1d1ca33415378794e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d9e359856ddae1d1ca33415378794e5">AssetHandle</a> (const AssetHandle &amp;other)</td></tr>
-<tr class="memdesc:a4d9e359856ddae1d1ca33415378794e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor.  <br /></td></tr>
 <tr class="memitem:a5787c0a2b6ee9d85fae35e182949c8d3" id="r_a5787c0a2b6ee9d85fae35e182949c8d3"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5787c0a2b6ee9d85fae35e182949c8d3">~AssetHandle</a> ()</td></tr>
-<tr class="memdesc:a5787c0a2b6ee9d85fae35e182949c8d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor (virtual to allow subclassing).  <br /></td></tr>
 <tr class="memitem:afb75184219f7081f20c61ae9405004c1" id="r_afb75184219f7081f20c61ae9405004c1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb75184219f7081f20c61ae9405004c1">onInit</a> () override</td></tr>
 <tr class="memitem:abfaf0cdee95eb6d16ce85a6f1a286722" id="r_abfaf0cdee95eb6d16ce85a6f1a286722"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfaf0cdee95eb6d16ce85a6f1a286722">onQuit</a> () override</td></tr>
 <tr class="memitem:a1fc8f7484310e2e3752c942e36316a6e" id="r_a1fc8f7484310e2e3752c942e36316a6e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1fc8f7484310e2e3752c942e36316a6e">onUnitTest</a> (int frame) override</td></tr>
 <tr class="memdesc:a1fc8f7484310e2e3752c942e36316a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
 <tr class="memitem:afbb31544072ef034b836e3ab016e1394" id="r_afbb31544072ef034b836e3ab016e1394"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afbb31544072ef034b836e3ab016e1394">reset</a> ()</td></tr>
-<tr class="memdesc:afbb31544072ef034b836e3ab016e1394"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears this handle’s identifying information.  <br /></td></tr>
 <tr class="memitem:a04257920fce9afdbcf5b9db9be24f738" id="r_a04257920fce9afdbcf5b9db9be24f738"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04257920fce9afdbcf5b9db9be24f738">get</a> () const</td></tr>
-<tr class="memdesc:a04257920fce9afdbcf5b9db9be24f738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the associated <a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a> pointer (may be nullptr).  <br /></td></tr>
 <tr class="memitem:a3bbabb1ae13cd776b9c035af3a71fc3d" id="r_a3bbabb1ae13cd776b9c035af3a71fc3d"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a3bbabb1ae13cd776b9c035af3a71fc3d template"><td class="memItemLeft" align="right" valign="top">T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3bbabb1ae13cd776b9c035af3a71fc3d">as</a> () const</td></tr>
-<tr class="memdesc:a3bbabb1ae13cd776b9c035af3a71fc3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to cast the asset to a concrete subclass.  <br /></td></tr>
 <tr class="memitem:a0419eeead0c43abf7112046e9fe01eaf" id="r_a0419eeead0c43abf7112046e9fe01eaf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0419eeead0c43abf7112046e9fe01eaf">operator*</a> () const</td></tr>
-<tr class="memdesc:a0419eeead0c43abf7112046e9fe01eaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dereferences the handle, returning the referenced object.  <br /></td></tr>
 <tr class="memitem:a73df960d96036aa64e3c6e19b4e7ab55" id="r_a73df960d96036aa64e3c6e19b4e7ab55"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73df960d96036aa64e3c6e19b4e7ab55">operator-&gt;</a> () const</td></tr>
-<tr class="memdesc:a73df960d96036aa64e3c6e19b4e7ab55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides pointer-style access to the underlying asset.  <br /></td></tr>
 <tr class="memitem:af74fad3e356e82bc7a02aa761d0d6473" id="r_af74fad3e356e82bc7a02aa761d0d6473"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af74fad3e356e82bc7a02aa761d0d6473">operator bool</a> () const</td></tr>
-<tr class="memdesc:af74fad3e356e82bc7a02aa761d0d6473"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the handle currently references a valid asset.  <br /></td></tr>
 <tr class="memitem:ab431249569b2094cfddda094da0a4d7d" id="r_ab431249569b2094cfddda094da0a4d7d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab431249569b2094cfddda094da0a4d7d">operator==</a> (std::nullptr_t) const</td></tr>
 <tr class="memitem:ab4b99d7460704401a2a49147c596ed20" id="r_ab4b99d7460704401a2a49147c596ed20"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4b99d7460704401a2a49147c596ed20">operator!=</a> (std::nullptr_t) const</td></tr>
 <tr class="memitem:ae010ffb8068741fcc7224fac49acc6c4" id="r_ae010ffb8068741fcc7224fac49acc6c4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae010ffb8068741fcc7224fac49acc6c4">operator==</a> (const <a class="el" href="#a17041383c6b01b4870f4a498e8cdaf8f">AssetHandle</a> &amp;other) const</td></tr>
@@ -140,30 +133,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aab308782f06ffe0fd04236ee8fbe00eb" id="r_aab308782f06ffe0fd04236ee8fbe00eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab308782f06ffe0fd04236ee8fbe00eb">AssetHandle</a> (AssetHandle &amp;&amp;)=default</td></tr>
 <tr class="memitem:adb1952e574ddb85178f6976293df4d9f" id="r_adb1952e574ddb85178f6976293df4d9f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a17041383c6b01b4870f4a498e8cdaf8f">AssetHandle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb1952e574ddb85178f6976293df4d9f">operator=</a> (<a class="el" href="#a17041383c6b01b4870f4a498e8cdaf8f">AssetHandle</a> &amp;&amp;)=default</td></tr>
 <tr class="memitem:abf912a65a0e055a3e9cf2bb9da51d00a" id="r_abf912a65a0e055a3e9cf2bb9da51d00a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf912a65a0e055a3e9cf2bb9da51d00a">isValid</a> () const</td></tr>
-<tr class="memdesc:abf912a65a0e055a3e9cf2bb9da51d00a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this handle resolves to a valid asset.  <br /></td></tr>
 <tr class="memitem:a557ea5acd9acba85724584453bf4d2a4" id="r_a557ea5acd9acba85724584453bf4d2a4"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a557ea5acd9acba85724584453bf4d2a4">getName</a> () const</td></tr>
-<tr class="memdesc:a557ea5acd9acba85724584453bf4d2a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of the asset (as registered in <a class="el" href="classSDOM_1_1Factory.html">Factory</a>).  <br /></td></tr>
 <tr class="memitem:a4befa6c4e36835e2fa6913d026432e25" id="r_a4befa6c4e36835e2fa6913d026432e25"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4befa6c4e36835e2fa6913d026432e25">getType</a> () const</td></tr>
-<tr class="memdesc:a4befa6c4e36835e2fa6913d026432e25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the asset’s type string.  <br /></td></tr>
 <tr class="memitem:a4aae9acbea6ad50dc366f437ecf6091f" id="r_a4aae9acbea6ad50dc366f437ecf6091f"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4aae9acbea6ad50dc366f437ecf6091f">getFilename</a> () const</td></tr>
-<tr class="memdesc:a4aae9acbea6ad50dc366f437ecf6091f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the filename associated with this asset.  <br /></td></tr>
 <tr class="memitem:ac48f12ff7e328b5796e9a849a9c6f0a6" id="r_ac48f12ff7e328b5796e9a849a9c6f0a6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac48f12ff7e328b5796e9a849a9c6f0a6">getName_lua</a> () const</td></tr>
-<tr class="memdesc:ac48f12ff7e328b5796e9a849a9c6f0a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lua accessor alias for <a class="el" href="#a557ea5acd9acba85724584453bf4d2a4" title="Returns the name of the asset (as registered in Factory).">getName()</a>.  <br /></td></tr>
 <tr class="memitem:a81aa70184b90cb9ad2240b62dd2936de" id="r_a81aa70184b90cb9ad2240b62dd2936de"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81aa70184b90cb9ad2240b62dd2936de">getType_lua</a> () const</td></tr>
-<tr class="memdesc:a81aa70184b90cb9ad2240b62dd2936de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lua accessor alias for <a class="el" href="#a4befa6c4e36835e2fa6913d026432e25" title="Returns the asset’s type string.">getType()</a>.  <br /></td></tr>
 <tr class="memitem:a7bd147266106dcf3db5881d85ac7de59" id="r_a7bd147266106dcf3db5881d85ac7de59"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7bd147266106dcf3db5881d85ac7de59">getFilename_lua</a> () const</td></tr>
-<tr class="memdesc:a7bd147266106dcf3db5881d85ac7de59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lua accessor alias for <a class="el" href="#a4aae9acbea6ad50dc366f437ecf6091f" title="Returns the filename associated with this asset.">getFilename()</a>.  <br /></td></tr>
 <tr class="memitem:a1de666cd76bf2ef5c77d3b0380db55fa" id="r_a1de666cd76bf2ef5c77d3b0380db55fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">setName</a> (const std::string &amp;newName)</td></tr>
 <tr class="memitem:a1947ff718446a6a81cd108b87a475d9f" id="r_a1947ff718446a6a81cd108b87a475d9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ab5c77313c1b036ba0148410a33d2985a" id="r_ab5c77313c1b036ba0148410a33d2985a"><td class="memItemLeft" align="right" valign="top">static sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5c77313c1b036ba0148410a33d2985a">ensure_handle_table</a> (sol::state_view lua)</td></tr>
-<tr class="memdesc:ab5c77313c1b036ba0148410a33d2985a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensures the shared Lua table for <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> exists.  <br /></td></tr>
 <tr class="memitem:abc71e559fcc7b3b68d92f806f4cfc028" id="r_abc71e559fcc7b3b68d92f806f4cfc028"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc71e559fcc7b3b68d92f806f4cfc028">bind_minimal</a> (sol::state_view lua)</td></tr>
-<tr class="memdesc:abc71e559fcc7b3b68d92f806f4cfc028"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers the minimal <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> surface for Lua exposure.  <br /></td></tr>
 <tr class="memitem:a4ead1e53c10c6bc59d3fab65caccb45f" id="r_a4ead1e53c10c6bc59d3fab65caccb45f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a17041383c6b01b4870f4a498e8cdaf8f">AssetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ead1e53c10c6bc59d3fab65caccb45f">resolveSpec</a> (const sol::object &amp;spec)</td></tr>
-<tr class="memdesc:a4ead1e53c10c6bc59d3fab65caccb45f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Lua table, string, or handle into an <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a>.  <br /></td></tr>
 <tr class="memitem:ac79673e571c58f21de1541a81548a959" id="r_ac79673e571c58f21de1541a81548a959"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ac79673e571c58f21de1541a81548a959 template"><td class="memItemLeft" align="right" valign="top">static T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959">lua_value_case_insensitive</a> (const sol::table &amp;tbl, const std::string &amp;key, const T &amp;default_value)</td></tr>
 <tr class="memitem:a7d4f3c380cd2644e37c493ed963035b8" id="r_a7d4f3c380cd2644e37c493ed963035b8"><td class="memItemLeft" align="right" valign="top">static sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">ensure_sol_table</a> (sol::state_view lua, const std::string &amp;typeName)</td></tr>
@@ -178,21 +161,84 @@ Static Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a43d4d952da4701cda3008247796c4126" id="r_a43d4d952da4701cda3008247796c4126"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a43d4d952da4701cda3008247796c4126">_registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua) override</td></tr>
-<tr class="memdesc:a43d4d952da4701cda3008247796c4126"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows concrete asset classes to register Lua extensions.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a3f4058eb772531ffeb00b58ffb8287c2" id="r_a3f4058eb772531ffeb00b58ffb8287c2"><td class="memItemLeft" align="right" valign="top">friend&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f4058eb772531ffeb00b58ffb8287c2">Core</a></td></tr>
 <tr class="memitem:a115ac50fbff504ea8c015974c5446c29" id="r_a115ac50fbff504ea8c015974c5446c29"><td class="memItemLeft" align="right" valign="top">friend&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a115ac50fbff504ea8c015974c5446c29">Factory</a></td></tr>
 <tr class="memitem:a9c9c067f3ab9a046a6bc6c7525735a17" id="r_a9c9c067f3ab9a046a6bc6c7525735a17"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c9c067f3ab9a046a6bc6c7525735a17">name_</a></td></tr>
-<tr class="memdesc:a9c9c067f3ab9a046a6bc6c7525735a17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registered asset name (immutable).  <br /></td></tr>
 <tr class="memitem:aa3650543b6d546e11118c71f1c4dc1a3" id="r_aa3650543b6d546e11118c71f1c4dc1a3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3650543b6d546e11118c71f1c4dc1a3">type_</a></td></tr>
-<tr class="memdesc:aa3650543b6d546e11118c71f1c4dc1a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asset type string (immutable).  <br /></td></tr>
 <tr class="memitem:a75387364182cd6804ae611b72ea04758" id="r_a75387364182cd6804ae611b72ea04758"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a75387364182cd6804ae611b72ea04758">filename_</a></td></tr>
-<tr class="memdesc:a75387364182cd6804ae611b72ea04758"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source filename for the asset (immutable).  <br /></td></tr>
 <tr class="memitem:a9a0e8c7c95a1a60291038e9da23b272b" id="r_a9a0e8c7c95a1a60291038e9da23b272b"><td class="memItemLeft" align="right" valign="top">sol::usertype&lt; <a class="el" href="classSDOM_1_1IDataObject.html">IDataObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a9a0e8c7c95a1a60291038e9da23b272b">objHandleType_</a></td></tr>
 </table>
-<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Non-owning reference to a registered <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> asset. </p>
+<p>Lightweight, non-owning handle for accessing assets within <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a>.</p>
+<dl class="section author"><dt>Author</dt><dd>Jay Faries (<a href="https://github.com/warte67">https://github.com/warte67</a>) @inherits <a class="el" href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a> @luaType <a class="el" href="classSDOM_1_1AssetHandle.html" title="Non-owning reference to a registered SDOM asset.">AssetHandle</a></dd></dl>
+<p>The <b><a class="el" href="classSDOM_1_1AssetHandle.html" title="Non-owning reference to a registered SDOM asset.">AssetHandle</a></b> class provides safe, lightweight access to assets managed by <span class="tt"><a class="el" href="classSDOM_1_1Factory.html">SDOM::Factory</a></span> and <span class="tt"><a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">SDOM::Core</a></span>. It is a non-owning reference type, designed for Lua exposure as <span class="tt"><a class="el" href="classSDOM_1_1AssetHandle.html" title="Non-owning reference to a registered SDOM asset.">AssetHandle</a></span> to support safe lookup and inspection of registered assets such as textures, sprite sheets, and fonts.</p>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="AssetHandle_Purpose"></a>
+Purpose</h1>
+<ul>
+<li>Offers idempotent, immutable references to loaded assets.</li>
+<li>Acts as a stable interface between the C++ factory and Lua runtime.</li>
+<li>Eliminates accidental ownership or duplication of asset objects.</li>
+<li>Allows subclasses (e.g., <span class="tt"><a class="el" href="classSDOM_1_1Texture.html">Texture</a></span>, <span class="tt"><a class="el" href="classSDOM_1_1SpriteSheet.html">SpriteSheet</a></span>, <span class="tt"><a class="el" href="classSDOM_1_1BitmapFont.html" title="Fixed-size bitmap-based font using sprite sheets for glyph rendering.">BitmapFont</a></span>) to extend Lua bindings safely.</li>
+</ul>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="AssetHandle_Properties"></a>
+Properties</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Property  </th><th class="markdownTableHeadNone">Type  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">name</span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">The registered asset name (immutable).  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">type</span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">The asset type identifier (immutable).  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">filename</span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">The source filename for the asset (immutable).  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#abf912a65a0e055a3e9cf2bb9da51d00a">isValid</a></span>  </td><td class="markdownTableBodyNone">bool  </td><td class="markdownTableBodyNone">Returns <span class="tt">true</span> if the handle currently references a valid asset.  </td></tr>
+</table>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="AssetHandle_Functions"></a>
+Functions</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Function  </th><th class="markdownTableHeadNone">Returns  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#a557ea5acd9acba85724584453bf4d2a4">getName()</a></span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">Returns the registered asset name.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#a4befa6c4e36835e2fa6913d026432e25">getType()</a></span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">Returns the asset’s type identifier.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#a4aae9acbea6ad50dc366f437ecf6091f">getFilename()</a></span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">Returns the asset’s source filename.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#abf912a65a0e055a3e9cf2bb9da51d00a">isValid()</a></span>  </td><td class="markdownTableBodyNone">bool  </td><td class="markdownTableBodyNone">Returns <span class="tt">true</span> if the asset is currently valid.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#a3bbabb1ae13cd776b9c035af3a71fc3d">as</a>&lt;T&gt;()</span>  </td><td class="markdownTableBodyNone"><span class="tt">T*</span>  </td><td class="markdownTableBodyNone">Returns a typed pointer to the concrete asset, or <span class="tt">nullptr</span>.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#a04257920fce9afdbcf5b9db9be24f738">get()</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">IAssetObject*</span>  </td><td class="markdownTableBodyNone">Returns the raw asset pointer, or <span class="tt">nullptr</span> if not loaded.  </td></tr>
+</table>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="AssetHandle_Notes"></a>
+Notes</h1>
+<ul>
+<li><span class="tt"><a class="el" href="classSDOM_1_1AssetHandle.html" title="Non-owning reference to a registered SDOM asset.">AssetHandle</a></span> instances are <b>immutable</b>; name, type, and filename cannot change.</li>
+<li>The handle does not own the underlying asset — destruction of the asset invalidates the handle.</li>
+<li>Typically retrieved via <span class="tt">Factory::getAssetObject(name)</span> or from Lua using <span class="tt"><a class="el" href="classSDOM_1_1Core.html" title="The central singleton framework object for SDOM.">Core</a>:getAssetObject()</span>.</li>
+<li>All bindings are idempotent and safe to re-register.</li>
+</ul>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="License"></a>
+ZLIB License</h1>
+<p>This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.</p>
+<p>Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:</p>
+<ol type="1">
+<li>The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.</li>
+<li>Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.</li>
+<li>This notice may not be removed or altered from any source distribution. </li>
+</ol>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a17041383c6b01b4870f4a498e8cdaf8f" name="a17041383c6b01b4870f4a498e8cdaf8f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a17041383c6b01b4870f4a498e8cdaf8f">&#9670;&#160;</a></span>AssetHandle() <span class="overload">[1/4]</span></h2>
 
@@ -215,8 +261,6 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Default constructor initializes an empty handle. </p>
 
 </div>
 </div>
@@ -252,8 +296,6 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructs a handle with the given identifiers. </p>
-
 </div>
 </div>
 <a id="a4d9e359856ddae1d1ca33415378794e5" name="a4d9e359856ddae1d1ca33415378794e5"></a>
@@ -279,8 +321,6 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Copy constructor. </p>
-
 </div>
 </div>
 <a id="a5787c0a2b6ee9d85fae35e182949c8d3" name="a5787c0a2b6ee9d85fae35e182949c8d3"></a>
@@ -305,8 +345,6 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Destructor (virtual to allow subclassing). </p>
 
 </div>
 </div>
@@ -363,16 +401,6 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Allows concrete asset classes to register Lua extensions. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">typeName</td><td>The Lua-visible asset type name. </td></tr>
-    <tr><td class="paramname">lua</td><td>The active sol::state_view. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>Overridden by subclasses to expose extra methods. </dd></dl>
-
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">SDOM::IDataObject</a>.</p>
 
 </div>
@@ -402,8 +430,6 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Attempts to cast the asset to a concrete subclass. </p>
-
 </div>
 </div>
 <a id="abc71e559fcc7b3b68d92f806f4cfc028" name="abc71e559fcc7b3b68d92f806f4cfc028"></a>
@@ -429,15 +455,6 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Registers the minimal <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> surface for Lua exposure. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">lua</td><td>The active Lua state. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>Exposes only immutable identity accessors and validity checks. </dd></dl>
-
 </div>
 </div>
 <a id="ab5c77313c1b036ba0148410a33d2985a" name="ab5c77313c1b036ba0148410a33d2985a"></a>
@@ -462,15 +479,6 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Ensures the shared Lua table for <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> exists. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">lua</td><td>The active sol::state_view instance. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The created or existing handle table. </dd></dl>
 
 </div>
 </div>
@@ -518,8 +526,6 @@ template&lt;typename T&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Returns the associated <a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a> pointer (may be nullptr). </p>
-
 </div>
 </div>
 <a id="a4aae9acbea6ad50dc366f437ecf6091f" name="a4aae9acbea6ad50dc366f437ecf6091f"></a>
@@ -544,8 +550,6 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Returns the filename associated with this asset. </p>
 
 </div>
 </div>
@@ -572,8 +576,6 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Lua accessor alias for <a class="el" href="#a4aae9acbea6ad50dc366f437ecf6091f" title="Returns the filename associated with this asset.">getFilename()</a>. </p>
-
 </div>
 </div>
 <a id="a557ea5acd9acba85724584453bf4d2a4" name="a557ea5acd9acba85724584453bf4d2a4"></a>
@@ -598,8 +600,6 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Returns the name of the asset (as registered in <a class="el" href="classSDOM_1_1Factory.html">Factory</a>). </p>
 
 </div>
 </div>
@@ -626,8 +626,6 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Lua accessor alias for <a class="el" href="#a557ea5acd9acba85724584453bf4d2a4" title="Returns the name of the asset (as registered in Factory).">getName()</a>. </p>
-
 </div>
 </div>
 <a id="a4befa6c4e36835e2fa6913d026432e25" name="a4befa6c4e36835e2fa6913d026432e25"></a>
@@ -652,8 +650,6 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Returns the asset’s type string. </p>
 
 </div>
 </div>
@@ -680,8 +676,6 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Lua accessor alias for <a class="el" href="#a4befa6c4e36835e2fa6913d026432e25" title="Returns the asset’s type string.">getType()</a>. </p>
-
 </div>
 </div>
 <a id="abf912a65a0e055a3e9cf2bb9da51d00a" name="abf912a65a0e055a3e9cf2bb9da51d00a"></a>
@@ -706,8 +700,6 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Returns true if this handle resolves to a valid asset. </p>
 
 </div>
 </div>
@@ -854,8 +846,6 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns true if the handle currently references a valid asset. </p>
-
 </div>
 </div>
 <a id="a21db98f7c2183c91d514bbe32e7d40d1" name="a21db98f7c2183c91d514bbe32e7d40d1"></a>
@@ -931,8 +921,6 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Dereferences the handle, returning the referenced object. </p>
-
 </div>
 </div>
 <a id="a73df960d96036aa64e3c6e19b4e7ab55" name="a73df960d96036aa64e3c6e19b4e7ab55"></a>
@@ -957,8 +945,6 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Provides pointer-style access to the underlying asset. </p>
 
 </div>
 </div>
@@ -1145,8 +1131,6 @@ template&lt;typename T, typename BaseT&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Clears this handle’s identifying information. </p>
-
 </div>
 </div>
 <a id="a4ead1e53c10c6bc59d3fab65caccb45f" name="a4ead1e53c10c6bc59d3fab65caccb45f"></a>
@@ -1171,15 +1155,6 @@ template&lt;typename T, typename BaseT&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Converts a Lua table, string, or handle into an <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">spec</td><td>A Lua object referencing an asset by name or handle. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The resolved <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> (may be empty if not found). </dd></dl>
 
 </div>
 </div>
@@ -1295,8 +1270,6 @@ template&lt;typename T, typename BaseT&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Source filename for the asset (immutable). </p>
-
 </div>
 </div>
 <a id="a89ebec1fc7fbc6690cca6719c0572923" name="a89ebec1fc7fbc6690cca6719c0572923"></a>
@@ -1341,8 +1314,6 @@ template&lt;typename T, typename BaseT&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Registered asset name (immutable). </p>
-
 </div>
 </div>
 <a id="a9a0e8c7c95a1a60291038e9da23b272b" name="a9a0e8c7c95a1a60291038e9da23b272b"></a>
@@ -1386,8 +1357,6 @@ template&lt;typename T, typename BaseT&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Asset type string (immutable). </p>
 
 </div>
 </div>

@@ -92,32 +92,32 @@ $(function(){initNavTree('md_README.html','',''); });
   <div class="headertitle"><div class="title">SDOM: Simple SDL Document Object Model API </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md14"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md28"></a></p>
 <p>[<img src="https://img.shields.io/badge/license-ZLIB-blue.svg" alt="License" style="pointer-events: none;" class="inline"/>](LICENSE) <a href="https://warte67.github.io/SDOM/"><img src="https://img.shields.io/badge/docs-Doxygen-blue" alt="Documentation" class="inline"/></a> [<img src="https://img.shields.io/badge/status-pre--alpha-orange.svg" alt="Status" style="pointer-events: none;" class="inline"/>]()</p>
-<p><b><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> 0.5.130 (early pre-alpha)</b> <br  />
- <b>Build Date:</b> 2025-11-05_13:33:44 <br  />
+<p><b><a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> 0.5.131 (early pre-alpha)</b> <br  />
+ <b>Build Date:</b> 2025-11-06_09:04:57 <br  />
  <b>Platform:</b> Linux-x86_64 <br  />
  <b>Compiler:</b> g++ (GCC) 15.2.1 20250813</p>
 <ul>
 <li>GitHub Wiki: <a href="https://github.com/warte67/SDOM/wiki">https://github.com/warte67/SDOM/wiki</a></li>
 </ul>
 <blockquote class="doxtable">
-<p>⚠️ <b>Development Status:</b> <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is an <b>early pre-alpha prototype</b>. <br  />
+<p>⚠️ <b>Development Status:</b> <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> is an <b>early pre-alpha prototype</b>. <br  />
  It is not feature-complete, APIs are unstable, and design work is ongoing. <br  />
  This repository is public for collaboration and early feedback. </p>
 </blockquote>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 Screenshot of the Test Harness application:</h2>
 <p><img src="https://raw.githubusercontent.com/warte67/SDOM/refs/heads/master/examples/test/docs/diagrams/SDOM_Test_Harness.png" alt="Test Harness" class="inline"/></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Overview</h1>
-<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> (Simple SDL Document Object Model API) is an experimental, work-in-progress C++23 library that provides a structured approach to building graphical user interfaces and interactive scenes using SDL3. <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> fully supports SDL3. The Document Object Model is, in short, a robust graphical user-interface system: a tree of display objects and containers with well-defined properties, parent/child relationships, event propagation, and lifecycle semantics—allowing code to traverse, query, and update elements in a declarative, DOM-like way similar to web DOM concepts but tailored to SDL rendering and input.</p>
-<p>The design centers on three core ideas: composability, data-driven configuration, and portability. Composability comes from a small collection of display object primitives and handles that can be composed into complex UIs. Data-driven configuration means scenes and object properties can be created and adjusted from Lua (via Sol2) without recompiling — as much or as little Lua as you want can be used to drive an application. We plan to provide dedicated SDL3 bindings for Lua so scripting can directly leverage SDL3 features; that work is in progress. Importantly, SDL3 is already fully available to C and C++ code using <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>, and first-class bindings for other host languages (for example Rust or Python) are planned for future releases.</p>
+<p><a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> (Simple SDL Document Object Model API) is an experimental, work-in-progress C++23 library that provides a structured approach to building graphical user interfaces and interactive scenes using SDL3. <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> fully supports SDL3. The Document Object Model is, in short, a robust graphical user-interface system: a tree of display objects and containers with well-defined properties, parent/child relationships, event propagation, and lifecycle semantics—allowing code to traverse, query, and update elements in a declarative, DOM-like way similar to web DOM concepts but tailored to SDL rendering and input.</p>
+<p>The design centers on three core ideas: composability, data-driven configuration, and portability. Composability comes from a small collection of display object primitives and handles that can be composed into complex UIs. Data-driven configuration means scenes and object properties can be created and adjusted from Lua (via Sol2) without recompiling — as much or as little Lua as you want can be used to drive an application. We plan to provide dedicated SDL3 bindings for Lua so scripting can directly leverage SDL3 features; that work is in progress. Importantly, SDL3 is already fully available to C and C++ code using <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a>, and first-class bindings for other host languages (for example Rust or Python) are planned for future releases.</p>
 <p>This project builds on top of SDL3 — it does not modify or replace any SDL internals.</p>
 <p><b>Note:</b> This is still a very early pre-alpha version. All APIs are subject to change. <br  />
 </p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Features</h1>
 <ul>
 <li>Simple, composable API for UI and document structures</li>
@@ -125,10 +125,10 @@ Features</h1>
 <li>Minimal dependencies (SDL3, SDL3_image, SDL3_ttf)</li>
 <li>Designed for clarity, maintainability, and extensibility</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 IDataObject: Data-Driven Base Type</h1>
-<p><span class="tt"><a class="el" href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a></span> is a flexible, data-driven base class designed for use in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>. It allows you to register property accessors (getters and setters) and commands that can be accessed and manipulated via Lua, enabling dynamic configuration, serialization, and behavior of objects.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+<p><span class="tt"><a class="el" href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a></span> is a flexible, data-driven base class designed for use in <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a>. It allows you to register property accessors (getters and setters) and commands that can be accessed and manipulated via Lua, enabling dynamic configuration, serialization, and behavior of objects.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Key Features</h2>
 <ul>
 <li>Register property accessors for any property using <span class="tt">registerProperty()</span></li>
@@ -137,9 +137,9 @@ Key Features</h2>
 <li>Register and invoke commands (actions) using <span class="tt">registerCommand()</span> and <span class="tt">command()</span></li>
 <li>Designed for dynamic integration with <b>Lua</b> (via <a href="https://github.com/ThePhD/sol2">Sol2</a>)</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
 Identifier Conventions</h1>
-<p>To ensure clarity and consistency across both C++ and Lua, <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> uses the following naming conventions:</p>
+<p>To ensure clarity and consistency across both C++ and Lua, <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> uses the following naming conventions:</p>
 <ul>
 <li><b>Properties and Data Members:</b> <br  />
  Use <span class="tt">snake_case</span> (all lowercase, words separated by underscores). <br  />
@@ -164,36 +164,36 @@ Identifier Conventions</h1>
 <p><b>Migration Note:</b> <br  />
  Older code and examples may use <span class="tt">camelCase</span> or other styles. These will be updated over time. During transition, both forms may be accepted for compatibility. Please be patient and forgive my laziness and bad habbits. This falls into one of those "get it working first, then make it pretty" categories.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
 Getting Started</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
 Prerequisites</h2>
 <ul>
 <li>C++23 compatible compiler</li>
 <li>SDL3, SDL3_image, SDL3_ttf development libraries</li>
 <li>CMake 3.20 or newer</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
 ⚠️ Before You Build</h2>
 <blockquote class="doxtable">
-<p><b>Important:</b> The <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> API depends on external libraries that <b>must be installed before building</b>. <br  />
+<p><b>Important:</b> The <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> API depends on external libraries that <b>must be installed before building</b>. <br  />
  Ensure you have built and installed <b>SDL3</b>, <b>SDL3_image</b>, <b>SDL3_ttf</b>, and (eventually) <b>SDL3_mixer</b>, <br  />
  as well as <b>Lua</b> and <b>Sol2</b>, <em>before running</em> <span class="tt">./rebuild</span>. </p>
 </blockquote>
 <p>If you haven’t installed these yet, see the <b>“SDL3 Build Dependencies”</b> and <b>“Lua Installation”</b> sections below.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
 Building the SDOM Library</h2>
 <div class="fragment"><div class="line">git clone https://github.com/warte67/SDOM.git</div>
 <div class="line">cd SDOM</div>
 <div class="line">./rebuild # to build and install the SDOM library from this folder</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
 Running the Example</h2>
 <div class="fragment"><div class="line">cd examples/test</div>
 <div class="line">./compile # to only build files which have changed</div>
 <div class="line"># or</div>
 <div class="line">./compile clean # to completely rebuild the library and the test example</div>
 <div class="line">./prog # to run the test example</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
 Notable recent changes</h2>
 <ul>
 <li>Symbol rename: DisplayObject -&gt; DisplayHandle and AssetObject -&gt; AssetHandle across the codebase and Lua scripts (Oct 2025).<ul>
@@ -202,28 +202,28 @@ Notable recent changes</h2>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
 Migration notes</h2>
 <ul>
 <li>If you maintain scripts that referenced the old names, search &amp; replace DisplayObject / AssetObject -&gt; DisplayHandle / AssetHandle.</li>
 <li>The repository includes transitional aliases during migration for staged rollouts (if present); prefer the new names in new code.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
 Project Structure</h1>
 <ul>
-<li><span class="tt">src/</span> — Core <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> source code</li>
+<li><span class="tt">src/</span> — Core <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> source code</li>
 <li><span class="tt">include/SDOM/</span> — Public headers</li>
 <li><span class="tt">examples/</span> — Example applications</li>
 <li><span class="tt">docs/</span> — Documentation</li>
 </ul>
 <hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md46"></a>
 Lua Integration and Requirements</h1>
-<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> is designed to be <b>data-driven</b> and includes built-in support for scripting and configuration through <b>Lua (via Sol2)</b>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+<p><a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> is designed to be <b>data-driven</b> and includes built-in support for scripting and configuration through <b>Lua (via Sol2)</b>.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
 Why Lua?</h3>
 <p>Lua enables dynamic creation, modification, and serialization of DOM objects at runtime — letting you define UI layouts, animation sequences, and event behavior without recompiling. Lua scripts can access most of SDOM’s API, and future releases will expand this integration even further.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
 Lua Installation</h3>
 <p><b>Debian / Ubuntu:</b> </p><div class="fragment"><div class="line">sudo apt update</div>
 <div class="line">sudo apt install liblua5.4-dev</div>
@@ -232,12 +232,12 @@ Lua Installation</h3>
 </div><!-- fragment --><p> <b>macOS:</b> </p><div class="fragment"><div class="line">brew install lua</div>
 </div><!-- fragment --><p> <b>Windows:</b> Download and install the latest Lua for Windows from <a href="https://www.lua.org/download.html">Lua.org</a>.</p>
 <hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
 SDL3 Build Dependencies</h1>
 <p>See the official SDL documentation: <br  />
  🔗 <a href="https://github.com/libsdl-org/SDL/blob/main/docs/README-linux.md#build-dependencies">https://github.com/libsdl-org/SDL/blob/main/docs/README-linux.md#build-dependencies</a></p>
 <hr  />
- <h3 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
+ <h3 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
 🐧 Debian / Ubuntu</h3>
 <div class="fragment"><div class="line">sudo apt-get install build-essential git make \</div>
 <div class="line">pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \</div>
@@ -245,13 +245,13 @@ SDL3 Build Dependencies</h1>
 <div class="line">libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \</div>
 <div class="line">libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \</div>
 <div class="line">libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libfreetype-dev</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
 🐧 Arch Linux</h2>
 <div class="fragment"><div class="line">sudo pacman -S alsa-lib cmake hidapi ibus jack libdecor libgl libpulse libusb \</div>
 <div class="line">libx11 libxcursor libxext libxinerama libxkbcommon libxrandr libxrender \</div>
 <div class="line">libxss libxtst mesa ninja pipewire sndio vulkan-driver vulkan-headers \</div>
 <div class="line">wayland wayland-protocols freetype2</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
 🐧 Fedora / RHEL / Alma / Rocky</h2>
 <div class="fragment"><div class="line">sudo dnf install @development-tools cmake ninja-build git \</div>
 <div class="line">SDL3-devel SDL3_image-devel SDL3_ttf-devel SDL3_mixer-devel \</div>
@@ -259,32 +259,32 @@ SDL3 Build Dependencies</h1>
 <div class="line">libXrandr-devel libXcursor-devel libXi-devel libXss-devel libXtst-devel \</div>
 <div class="line">libxkbcommon-devel mesa-libGL-devel mesa-libEGL-devel dbus-devel \</div>
 <div class="line">freetype-devel</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
 🍎 macOS</h2>
 <div class="fragment"><div class="line">brew install sdl3 sdl3_image sdl3_ttf sdl3_mixer cmake ninja freetype</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
 🪟 Windows</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
 Option 1:</h3>
 <p>Download and install the latest SDL3 development libraries from <a href="https://www.libsdl.org/download-2.0.php">SDL.org</a>. </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md58"></a>
 Option 2: MSYS2 (MinGW / UCRT64)</h3>
 <div class="fragment"><div class="line">pacman -S mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja \</div>
 <div class="line">          mingw-w64-ucrt-x86_64-SDL3 mingw-w64-ucrt-x86_64-SDL3_image \</div>
 <div class="line">          mingw-w64-ucrt-x86_64-SDL3_ttf mingw-w64-ucrt-x86_64-SDL3_mixer \</div>
 <div class="line">          mingw-w64-ucrt-x86_64-freetype</div>
-</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
 Option 3: vcpkg (Visual Studio / CMake Integration)</h3>
 <div class="fragment"><div class="line">vcpkg install sdl3 sdl3-image sdl3-ttf sdl3-mixer freetype</div>
 </div><!-- fragment --><p> Then integrate vcpkg with CMake: </p><div class="fragment"><div class="line">cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake</div>
 </div><!-- fragment --> <hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md61"></a>
 Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf</h1>
 <p>Clone the repositories: </p><div class="fragment"><div class="line">git clone https://github.com/libsdl-org/SDL.git</div>
 <div class="line">git clone https://github.com/libsdl-org/SDL_mixer.git</div>
 <div class="line">git clone https://github.com/libsdl-org/SDL_image.git</div>
 <div class="line">git clone https://github.com/libsdl-org/SDL_ttf.git</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md62"></a>
 Build per SDL3:</h2>
 <div class="fragment"><div class="line">git clone https://github.com/libsdl-org/SDL.git</div>
 <div class="line">cd SDL</div>
@@ -292,7 +292,7 @@ Build per SDL3:</h2>
 <div class="line">cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/.local</div>
 <div class="line">make -j$(nproc)</div>
 <div class="line">make install</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md63"></a>
 Build and install SDL3 libraries</h2>
 <div class="fragment"><div class="line"># build SDL</div>
 <div class="line">cd SDL</div>
@@ -322,7 +322,7 @@ Build and install SDL3 libraries</h2>
 <div class="line">cmake ..</div>
 <div class="line">make -j$(nproc)</div>
 <div class="line">sudo make install</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md64"></a>
 Sol2 (recommended)</h2>
 <p>Clone Sol2 into a dedicated third-party folder inside your project: </p><div class="fragment"><div class="line">git clone https://github.com/ThePhD/sol2.git</div>
 </div><!-- fragment --><p> <b>Note:</b> When integrating Sol2 and Lua, make sure to:</p><ul>
@@ -334,14 +334,14 @@ Sol2 (recommended)</h2>
 <div class="line">target_link_libraries(your_target PRIVATE ${LUA_LIB})</div>
 </div><!-- fragment --></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md65"></a>
 Documentation</h2>
 <p>Documentation is generated using <a href="https://www.doxygen.nl/">Doxygen</a>: </p><div class="fragment"><div class="line">doxygen docs/Doxyfile</div>
 </div><!-- fragment --><p> Output will be in the <span class="tt">docs/html/</span> directory.</p>
 <p>Additional docs:</p><ul>
 <li>Overall architecture diagram: docs/architecture_overview.md</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
 Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)</h3>
 <p>We embed Mermaid diagrams in Markdown. To export them as images for inclusion in generated HTML (or for environments without Mermaid support), install mermaid-cli and run the helper script:</p>
 <p>Debian: </p><div class="fragment"><div class="line">sudo apt install nodejs npm</div>
@@ -349,16 +349,16 @@ Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)</h3>
 <div class="line">bash scripts/export_mermaid.sh</div>
 </div><!-- fragment --><p>Outputs are written to <span class="tt">docs/diagrams/&lt;doc-name&gt;/diagram-XX.png|svg</span>.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md68"></a>
 Acknowledgments</h2>
-<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> builds upon the excellent foundation provided by the <a href="https://libsdl.org">Simple DirectMedia Layer (SDL)</a> project. <br  />
+<p><a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> builds upon the excellent foundation provided by the <a href="https://libsdl.org">Simple DirectMedia Layer (SDL)</a> project. <br  />
  All credit for SDL’s architecture, performance, and portability goes to its maintainers and contributors — especially <b>Sam Lantinga</b> and the <a href="https://github.com/libsdl-org">SDL team</a>.</p>
 <p>Special thanks to <b>JeanHeyd “ThePhD” Meneide</b>, author of <a href="https://github.com/ThePhD/sol2">Sol2</a> and the upcoming <a href="https://github.com/ThePhD/sol3">Sol3</a> — <br  />
  whose work has made high-quality Lua integration in C++ both elegant and practical.</p>
-<p><a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> would not be possible without the open-source community’s contributions to <br  />
+<p><a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> would not be possible without the open-source community’s contributions to <br  />
  <b><a href="https://github.com/libsdl-org/SDL">SDL3</a></b>, <b><a href="https://github.com/ThePhD/sol2">Sol2</a></b>, and the <b><a href="https://www.lua.org/">Lua</a></b> ecosystem.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md70"></a>
 License</h2>
 <p>ZLIB License. </p><pre class="fragment">This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
@@ -376,7 +376,7 @@ freely, subject to the following restrictions:
     misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 </pre><hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md71"></a>
 Author</h2>
 <p>Jay Faries (<a href="https://github.com/warte67">warte67</a>)</p>
 <p>🦆 "Performing a stable sort on the Anseriformes array by ascending position along the x-axis, ensuring deterministic alignment and zero rotational variance." (translation: "Getting my ducks in a row") </p>

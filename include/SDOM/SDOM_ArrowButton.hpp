@@ -1,6 +1,7 @@
 /**
  * @class SDOM::ArrowButton
  * @brief A directional button displaying an arrow icon that can point up, down, left, or right.
+ * @author Jay Faries (https://github.com/warte67)
  * @inherits SDOM::IconButton
  * @luaType ArrowButton
  *

@@ -93,6 +93,9 @@ $(function(){initNavTree('classSDOM_1_1BitmapFont.html','','classSDOM_1_1BitmapF
 </div><!--header-->
 <div class="contents">
 
+<p>Fixed-size bitmap-based font using sprite sheets for glyph rendering.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="SDOM__BitmapFont_8hpp_source.html">SDOM_BitmapFont.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for SDOM::BitmapFont:</div>
@@ -140,8 +143,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a571712c96086ec05dd12f79887cff856" id="r_a571712c96086ec05dd12f79887cff856"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a571712c96086ec05dd12f79887cff856">getResourceHandle</a> () const</td></tr>
 <tr class="memitem:ab0328ea663e179188bcca103f295b01b" id="r_ab0328ea663e179188bcca103f295b01b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0328ea663e179188bcca103f295b01b">getBitmapFontWidth</a> () const</td></tr>
 <tr class="memitem:a074ee345c8b29661d22a5e3d440d9104" id="r_a074ee345c8b29661d22a5e3d440d9104"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a074ee345c8b29661d22a5e3d440d9104">getBitmapFontHeight</a> () const</td></tr>
-<tr class="memitem:a636eb8d75018fd5a1b16737988a192b9" id="r_a636eb8d75018fd5a1b16737988a192b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a636eb8d75018fd5a1b16737988a192b9">setBitmapFontWidth</a> (int width)</td></tr>
-<tr class="memitem:a5d0728e1e6a9e6b043a63de388a098ab" id="r_a5d0728e1e6a9e6b043a63de388a098ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d0728e1e6a9e6b043a63de388a098ab">setBitmapFontHeight</a> (int height)</td></tr>
 <tr class="memitem:ac8ff65d667dad6fa0af7af89c0487011" id="r_ac8ff65d667dad6fa0af7af89c0487011"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IFontObject.html#ac8ff65d667dad6fa0af7af89c0487011">getFontSize</a> () const</td></tr>
 <tr class="memitem:a36971c150c2a2ed446f26e8c23df3b29" id="r_a36971c150c2a2ed446f26e8c23df3b29"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IFontObject.html#a36971c150c2a2ed446f26e8c23df3b29">getWordWidth</a> (const std::string &amp;word) const</td></tr>
 <tr class="memitem:a4446354f39ad55b284bd563b7353362d" id="r_a4446354f39ad55b284bd563b7353362d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IFontObject.html#a4446354f39ad55b284bd563b7353362d">getWordHeight</a> (const std::string &amp;word) const</td></tr>
@@ -173,7 +174,7 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a5613be008b9cb72a51314aa5b8a755dc" id="r_a5613be008b9cb72a51314aa5b8a755dc"><td class="memItemLeft" align="right" valign="top">static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5613be008b9cb72a51314aa5b8a755dc">TypeName</a> = &quot;bitmap&quot;</td></tr>
+<tr class="memitem:a5613be008b9cb72a51314aa5b8a755dc" id="r_a5613be008b9cb72a51314aa5b8a755dc"><td class="memItemLeft" align="right" valign="top">static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5613be008b9cb72a51314aa5b8a755dc">TypeName</a> = &quot;BitmapFont&quot;</td></tr>
 <tr class="memitem:a663595de18e38e0d8e2e452289448d7e" id="r_a663595de18e38e0d8e2e452289448d7e"><td class="memItemLeft" align="right" valign="top">static std::unordered_map&lt; <a class="el" href="classSDOM_1_1IFontObject.html#a65dd8d559c0b3cedf12993bffeba6aff">FontType</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IFontObject.html#a663595de18e38e0d8e2e452289448d7e">FontTypeToString</a></td></tr>
 <tr class="memitem:a7eb677b8529df586787017f203264bd8" id="r_a7eb677b8529df586787017f203264bd8"><td class="memItemLeft" align="right" valign="top">static std::unordered_map&lt; std::string, <a class="el" href="classSDOM_1_1IFontObject.html#a65dd8d559c0b3cedf12993bffeba6aff">FontType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IFontObject.html#a7eb677b8529df586787017f203264bd8">StringToFontType</a></td></tr>
 </table><table class="memberdecls">
@@ -185,11 +186,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a730fb4edfa724d7eebaa6ca7c1d3a28d" id="r_a730fb4edfa724d7eebaa6ca7c1d3a28d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a730fb4edfa724d7eebaa6ca7c1d3a28d">drawForegroundGlyph</a> (Uint32 ch, int x, int y, const <a class="el" href="structSDOM_1_1FontStyle.html">FontStyle</a> &amp;style)</td></tr>
 <tr class="memitem:a3298cbb97cd0e9e10a18aa2ee4a201ad" id="r_a3298cbb97cd0e9e10a18aa2ee4a201ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3298cbb97cd0e9e10a18aa2ee4a201ad">drawOutlineGlyph</a> (Uint32 ch, int x, int y, const <a class="el" href="structSDOM_1_1FontStyle.html">FontStyle</a> &amp;style)</td></tr>
 <tr class="memitem:ac36f83b691b715fa70bfe75250dcc4ec" id="r_ac36f83b691b715fa70bfe75250dcc4ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac36f83b691b715fa70bfe75250dcc4ec">drawDropShadowGlyph</a> (Uint32 ch, int x, int y, const <a class="el" href="structSDOM_1_1FontStyle.html">FontStyle</a> &amp;style)</td></tr>
-<tr class="memitem:aba388256775f9428f12c62dd87d982c1" id="r_aba388256775f9428f12c62dd87d982c1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba388256775f9428f12c62dd87d982c1">_registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
+<tr class="memitem:ac6867049c9203a00a7c025fdb0ea7c05" id="r_ac6867049c9203a00a7c025fdb0ea7c05"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6867049c9203a00a7c025fdb0ea7c05">_registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua) override</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a9a5c05f90e457649c29784fc923ab50e" id="r_a9a5c05f90e457649c29784fc923ab50e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a5c05f90e457649c29784fc923ab50e">spriteSheet_</a></td></tr>
+<tr class="memdesc:a9a5c05f90e457649c29784fc923ab50e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linked <a class="el" href="classSDOM_1_1SpriteSheet.html">SpriteSheet</a> asset.  <br /></td></tr>
 <tr class="memitem:a74d44df42fa2224f2b04c5dfa974daed" id="r_a74d44df42fa2224f2b04c5dfa974daed"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74d44df42fa2224f2b04c5dfa974daed">bitmapFontWidth_</a> = -1</td></tr>
 <tr class="memitem:a1a338cd4909070d8cac1e12dddffe79c" id="r_a1a338cd4909070d8cac1e12dddffe79c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a338cd4909070d8cac1e12dddffe79c">bitmapFontHeight_</a> = -1</td></tr>
 <tr class="memitem:ac5daec82ca3c63925431282b24b5d428" id="r_ac5daec82ca3c63925431282b24b5d428"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; SDL_Texture * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5daec82ca3c63925431282b24b5d428">outlineTextures</a></td></tr>
@@ -206,7 +208,10 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:adfca3b5c4ff76d9ff2f0c4a36f254998" id="r_adfca3b5c4ff76d9ff2f0c4a36f254998"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IAssetObject.html#adfca3b5c4ff76d9ff2f0c4a36f254998">isLoaded_</a> = false</td></tr>
 <tr class="memitem:a0dcbb706c499ad4446c6f6eec63b567c" id="r_a0dcbb706c499ad4446c6f6eec63b567c"><td class="memItemLeft" align="right" valign="top">sol::usertype&lt; <a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IAssetObject.html#a0dcbb706c499ad4446c6f6eec63b567c">objHandleType_</a></td></tr>
 </table>
-<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Fixed-size bitmap-based font using sprite sheets for glyph rendering. </p>
+<p>The <a class="el" href="classSDOM_1_1BitmapFont.html" title="Fixed-size bitmap-based font using sprite sheets for glyph rendering.">BitmapFont</a> class loads and manages a pre-rendered sheet of glyphs and provides efficient text drawing operations without the overhead of dynamic font rasterization. Ideal for UI text, retro fonts, and embedded systems. </p>
+</div><a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
 <a id="a65dd8d559c0b3cedf12993bffeba6aff" name="a65dd8d559c0b3cedf12993bffeba6aff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a65dd8d559c0b3cedf12993bffeba6aff">&#9670;&#160;</a></span>FontType</h2>
 
@@ -310,8 +315,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="aba388256775f9428f12c62dd87d982c1" name="aba388256775f9428f12c62dd87d982c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba388256775f9428f12c62dd87d982c1">&#9670;&#160;</a></span>_registerLuaBindings()</h2>
+<a id="ac6867049c9203a00a7c025fdb0ea7c05" name="ac6867049c9203a00a7c025fdb0ea7c05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6867049c9203a00a7c025fdb0ea7c05">&#9670;&#160;</a></span>_registerLuaBindings()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -332,7 +337,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -821,6 +826,7 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>The configured glyph height in pixels. </dd></dl>
 
 </div>
 </div>
@@ -846,6 +852,7 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>The configured glyph width in pixels. </dd></dl>
 
 </div>
 </div>
@@ -1157,6 +1164,7 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>The underlying <a class="el" href="classSDOM_1_1SpriteSheet.html">SpriteSheet</a> resource used by this font. </dd></dl>
 
 </div>
 </div>
@@ -1549,56 +1557,6 @@ template&lt;typename T, typename BaseT&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel inherited">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5d0728e1e6a9e6b043a63de388a098ab" name="a5d0728e1e6a9e6b043a63de388a098ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d0728e1e6a9e6b043a63de388a098ab">&#9670;&#160;</a></span>setBitmapFontHeight()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SDOM::BitmapFont::setBitmapFontHeight </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>height</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a636eb8d75018fd5a1b16737988a192b9" name="a636eb8d75018fd5a1b16737988a192b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a636eb8d75018fd5a1b16737988a192b9">&#9670;&#160;</a></span>setBitmapFontWidth()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SDOM::BitmapFont::setBitmapFontWidth </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>width</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2091,6 +2049,8 @@ template&lt;typename T, typename BaseT&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Linked <a class="el" href="classSDOM_1_1SpriteSheet.html">SpriteSheet</a> asset. </p>
+
 </div>
 </div>
 <a id="a7eb677b8529df586787017f203264bd8" name="a7eb677b8529df586787017f203264bd8"></a>
@@ -2154,7 +2114,7 @@ template&lt;typename T, typename BaseT&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char* SDOM::BitmapFont::TypeName = &quot;bitmap&quot;</td>
+          <td class="memname">const char* SDOM::BitmapFont::TypeName = &quot;BitmapFont&quot;</td>
         </tr>
       </table>
   </td>

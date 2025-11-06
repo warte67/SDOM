@@ -14,16 +14,16 @@ var searchData=
   ['event_11',['Event',['../classSDOM_1_1Event.html',1,'SDOM::Event'],['../classSDOM_1_1Event.html#aca6359d847a47928e544aac6503834c4',1,'SDOM::Event::Event(EventType type=EventType(&quot;None&quot;), DisplayHandle target=nullptr, float fElapsedTime=0.0f)'],['../classSDOM_1_1Event.html#af898e66319b61dcecb405d7811144cf3',1,'SDOM::Event::Event(const Event &amp;other)']]],
   ['eventmanager_12',['EventManager',['../classSDOM_1_1EventManager.html',1,'SDOM::EventManager'],['../classSDOM_1_1Event.html#aba45a46c615e2683daffdae82e2d3b8f',1,'SDOM::Event::EventManager()'],['../classSDOM_1_1EventManager.html#a272428740daa050cbcc017a7b36a8fee',1,'SDOM::EventManager::EventManager()']]],
   ['eventmutex_5f_13',['eventMutex_',['../classSDOM_1_1Event.html#a297707969285468a9244118aec1e630f',1,'SDOM::Event']]],
-  ['events_14',['Events',['../classSDOM_1_1ArrowButton.html#ArrowButton_Events',1,'']]],
+  ['events_14',['Events',['../classSDOM_1_1ArrowButton.html#ArrowButton_Events',1,'Events'],['../classSDOM_1_1Button.html#Button_Events',1,'Events']]],
   ['eventtoluatable_15',['eventToLuaTable',['../classSDOM_1_1SDL__Utils.html#aa077a66bd09fa07bd0733b396d81ba23',1,'SDOM::SDL_Utils']]],
   ['eventtype_16',['EventType',['../classSDOM_1_1EventType.html',1,'SDOM::EventType'],['../classSDOM_1_1EventType.html#ace3a9596f6806b55dcfb477f8da686ec',1,'SDOM::EventType::EventType(const std::string &amp;name)'],['../classSDOM_1_1EventType.html#a647ab7d38f981dca7b5b00d818e2412c',1,'SDOM::EventType::EventType(const std::string &amp;name, bool captures, bool bubbles, bool targetOnly, bool global)']]],
   ['eventtype_17',['eventType',['../structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#aad298a4bb1afa3392c303c7c84ce8740',1,'SDOM::IDisplayObject::ListenerEntry']]],
   ['eventtypefromstring_18',['eventTypeFromString',['../classSDOM_1_1SDL__Utils.html#a15e7cc9c1c4259d53bf6b2ceecc9b3b9',1,'SDOM::SDL_Utils']]],
   ['eventtypehash_19',['EventTypeHash',['../structSDOM_1_1EventTypeHash.html',1,'SDOM']]],
   ['eventtypetostring_20',['eventTypeToString',['../classSDOM_1_1SDL__Utils.html#ae268fa06a6b1779780566f36eea2fedb',1,'SDOM::SDL_Utils']]],
-  ['example_21',['Example',['../classSDOM_1_1DisplayHandle.html#autotoc_md11',1,'🪄 Example'],['../md_README.html#autotoc_md27',1,'Running the Example']]],
+  ['example_21',['Example',['../classSDOM_1_1DisplayHandle.html#autotoc_md25',1,'🪄 Example'],['../md_README.html#autotoc_md41',1,'Running the Example']]],
   ['exception_22',['Exception',['../classSDOM_1_1Exception.html',1,'SDOM::Exception'],['../classSDOM_1_1Exception.html#a52c9fa366c36fcb7fe48a1ac827a02a0',1,'SDOM::Exception::Exception()']]],
-  ['exporting_20mermaid_20diagrams_20to_20png_20svg_20for_20doxygen_23',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md52',1,'']]],
+  ['exporting_20mermaid_20diagrams_20to_20png_20svg_20for_20doxygen_23',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md66',1,'']]],
   ['exposetolua_24',['exposeToLua',['../classCLR.html#a8ac061433144df819feb3ce16f0d0dc8',1,'CLR']]],
-  ['extendedcharacterindex_25',['ExtendedCharacterIndex',['../namespaceSDOM.html#aee303a5ea55cf095657cc513fa582406',1,'SDOM']]]
+  ['extendedcharacterindex_25',['ExtendedCharacterIndex',['../classSDOM.html#aee303a5ea55cf095657cc513fa582406',1,'SDOM']]]
 ];
