@@ -40,6 +40,23 @@ Core = Core or {}
 -- Factory = Factory or {}
 
 IconIndex = IconIndex or {}
+-- ButtonState (editor-only stub; runtime provides full mapping and helpers)
+---@class ButtonState
+---@field unchecked integer
+---@field checked integer
+---@field mixed integer
+---@field disabled integer
+ButtonState = ButtonState or {}
+ButtonState.unchecked = 0
+ButtonState.checked = 1
+ButtonState.mixed = 2
+ButtonState.disabled = 3
+---@param v integer
+---@return string
+function ButtonState.toString(v) return "" end
+---@param s string
+---@return integer|nil
+function ButtonState.fromString(s) return nil end
 ArrowDirection = ArrowDirection or {}
 EventType = EventType or {}
 ---@enum ArrowDirection
@@ -125,6 +142,8 @@ function configure(cfg) end
 ---@field getDropshadowColor fun(self: DisplayHandle): SDL_Color
 ---@field setDropshadowColor fun(self: DisplayHandle, c: SDL_Color|table)
 ---@field hasBorder fun(self: DisplayHandle): boolean
+---@field getState fun(self: DisplayHandle): string
+---@field setState fun(self: DisplayHandle, state: (string|integer))
 -- Button-specific helpers (available when handle resolves to a Button)
 ---@field getText fun(self: DisplayHandle): string
 ---@field setText fun(self: DisplayHandle, newText: string)

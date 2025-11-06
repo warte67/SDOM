@@ -355,58 +355,79 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared DisplayHandle usertype/table with
-        // Button-specific helpers. DisplayHandle's __index will route calls
-        // here and pass the handle as the first argument.
-        sol::table handle;
-        try { handle = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
-        if (!handle.valid()) return; // no table available; nothing to augment
+        // Bind into per-type table under SDOM_Bindings["Button"].
+        sol::table t = SDOM::IDataObject::ensure_type_bind_table(lua, Button::TypeName, IPanelObject::TypeName);
 
-        sol::optional<sol::usertype<DisplayHandle>> maybeUT;
-        try { maybeUT = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
+        auto set_if_absent = [&](const char* name, auto&& fn) {
+            sol::object cur = t.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) t.set_function(name, std::forward<decltype(fn)>(fn));
+        };
 
         // getText(): string
-        dh_bind_both_impl(handle, maybeUT, "getText", [](DisplayHandle& self) -> std::string {
+        auto fn_getText = [](DisplayHandle& self) -> std::string {
             Button* b = self.as<Button>();
             return b ? b->getText() : std::string();
-        });
+        };
+        set_if_absent("getText", fn_getText);
 
         // setText(newText): void
-        dh_bind_both_impl(handle, maybeUT, "setText", [](DisplayHandle& self, const std::string& newText) {
+        auto fn_setText = [](DisplayHandle& self, const std::string& newText) {
             if (auto* b = self.as<Button>()) b->setText(newText);
-        });
+        };
+        set_if_absent("setText", fn_setText);
 
         // getLabelColor(): Color table { r,g,b,a }
-        dh_bind_both_impl(handle, maybeUT, "getLabelColor", [lua](DisplayHandle& self) -> sol::table {
+        auto fn_getLabelColor = [lua](DisplayHandle& self) -> sol::table {
             sol::state_view L = lua;
-            sol::table t = L.create_table();
+            sol::table tcol = L.create_table();
             if (auto* b = self.as<Button>()) {
                 SDL_Color c = b->getLabelColor();
-                t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a;
-                t[1] = (int)c.r; t[2] = (int)c.g; t[3] = (int)c.b; t[4] = (int)c.a;
+                tcol["r"] = c.r; tcol["g"] = c.g; tcol["b"] = c.b; tcol["a"] = c.a;
+                tcol[1] = (int)c.r; tcol[2] = (int)c.g; tcol[3] = (int)c.b; tcol[4] = (int)c.a;
             }
-            return t;
-        });
+            return tcol;
+        };
+        set_if_absent("getLabelColor", fn_getLabelColor);
 
         // setLabelColor(color): accepts table or string "r,g,b,a"
-        dh_bind_both_impl(handle, maybeUT, "setLabelColor", [](DisplayHandle& self, const sol::object& color) {
+        auto fn_setLabelColor = [](DisplayHandle& self, const sol::object& color) {
             if (auto* b = self.as<Button>()) {
                 SDL_Color c = SDOM::parseColor(color);
                 b->setLabelColor(c);
             }
-        });
+        };
+        set_if_absent("setLabelColor", fn_setLabelColor);
 
         // getFontResource(): string (read-only)
-        dh_bind_both_impl(handle, maybeUT, "getFontResource", [](DisplayHandle& self) -> std::string {
+        auto fn_getFontResource = [](DisplayHandle& self) -> std::string {
             Button* b = self.as<Button>();
             return b ? b->getFontResource() : std::string();
-        });
+        };
+        set_if_absent("getFontResource", fn_getFontResource);
 
         // getLabelObject(): DisplayHandle
-        dh_bind_both_impl(handle, maybeUT, "getLabelObject", [](DisplayHandle& self) -> DisplayHandle {
+        auto fn_getLabelObject = [](DisplayHandle& self) -> DisplayHandle {
             Button* b = self.as<Button>();
             return b ? b->getLabelObject() : DisplayHandle();
-        });
+        };
+        set_if_absent("getLabelObject", fn_getLabelObject);
+
+        // Backward-compat: also publish to DisplayHandle table if present
+        try {
+            sol::table handleTbl = lua[DisplayHandle::LuaHandleName];
+            if (handleTbl.valid()) {
+                auto bind_if_absent = [&](const char* name, auto&& fn){
+                    sol::object cur = handleTbl.raw_get_or(name, sol::lua_nil);
+                    if (!cur.valid() || cur == sol::lua_nil) handleTbl.set_function(name, std::forward<decltype(fn)>(fn));
+                };
+                bind_if_absent("getText", fn_getText);
+                bind_if_absent("setText", fn_setText);
+                bind_if_absent("getLabelColor", fn_getLabelColor);
+                bind_if_absent("setLabelColor", fn_setLabelColor);
+                bind_if_absent("getFontResource", fn_getFontResource);
+                bind_if_absent("getLabelObject", fn_getLabelObject);
+            }
+        } catch(...) {}
 
     } // END: void Button::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

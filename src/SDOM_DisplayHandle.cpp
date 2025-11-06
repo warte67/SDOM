@@ -130,6 +130,71 @@ namespace SDOM
                 return sol::lua_nil;
             }
 
+            // Attempt per-type binding lookup under SDOM_Bindings[ObjectType]
+            try {
+                sol::object bindingsObj = L.globals().raw_get_or("SDOM_Bindings", sol::lua_nil);
+                if (bindingsObj.valid() && bindingsObj.is<sol::table>()) {
+                    sol::table bindings = bindingsObj.as<sol::table>();
+                    std::string objType;
+                    try { objType = self.getType(); } catch(...) { objType.clear(); }
+                    if (!objType.empty()) {
+                        sol::object typeTblObj = bindings.raw_get_or(objType, sol::lua_nil);
+                        if (typeTblObj.valid() && typeTblObj.is<sol::table>()) {
+                            sol::table typeTbl = typeTblObj.as<sol::table>();
+                            sol::object member2 = typeTbl.raw_get_or(k, sol::lua_nil);
+                            if (member2.valid() && member2 != sol::lua_nil) {
+                                if (member2.get_type() == sol::type::function) {
+                                    sol::protected_function fn = member2;
+                                    auto wrapper = [fn, self](sol::variadic_args va, sol::this_state s) -> sol::object {
+                                        sol::state_view lua(s);
+                                        bool selfIsFirstHandle = false;
+                                        if (va.size() > 0) {
+                                            auto it = va.begin();
+                                            sol::object first = *it;
+                                            try {
+                                                if (first.is<DisplayHandle>()) {
+                                                    DisplayHandle maybeSelf = first.as<DisplayHandle>();
+                                                    if (maybeSelf == self) selfIsFirstHandle = true;
+                                                }
+                                            } catch(...) {}
+                                        }
+                                        auto build_args_with = [&](const sol::object& selfObj) {
+                                            std::vector<sol::object> out;
+                                            if (!selfIsFirstHandle) {
+                                                out.reserve(1 + va.size());
+                                                out.push_back(selfObj);
+                                                for (auto v : va) out.push_back(sol::make_object(lua, v));
+                                            } else {
+                                                out.reserve(va.size());
+                                                bool first = true;
+                                                for (auto v : va) {
+                                                    if (first) { out.push_back(selfObj); first = false; }
+                                                    else out.push_back(sol::make_object(lua, v));
+                                                }
+                                            }
+                                            return out;
+                                        };
+                                        // First attempt: pass DisplayHandle as self
+                                        std::vector<sol::object> args1 = build_args_with(sol::make_object(lua, self));
+                                        sol::protected_function_result r = fn.call(args1);
+                                        if (r.valid()) return r.get<sol::object>();
+                                        // Fallback: pass raw pointer
+                                        IDisplayObject* raw = self.get();
+                                        std::vector<sol::object> args2 = build_args_with(sol::make_object(lua, raw));
+                                        sol::protected_function_result r2 = fn.call(args2);
+                                        if (!r2.valid()) return sol::make_object(lua, sol::lua_nil);
+                                        return r2.get<sol::object>();
+                                    };
+                                    return sol::make_object(L, wrapper);
+                                }
+                                // Plain value
+                                return member2;
+                            }
+                        }
+                    }
+                }
+            } catch(...) {}
+
             // Fetch the current usertype table from globals to avoid capturing
             // a stale handle. Some sol builds expose usertype as table.
             sol::table tbl;

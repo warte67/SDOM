@@ -214,6 +214,50 @@ namespace SDOM
             return userType;
         }        
 
+        // Ensure the SDOM_Bindings root exists and return it
+        static sol::table ensure_bindings_root(sol::state_view lua)
+        {
+            sol::table global = lua.globals();
+            sol::object maybe = global.raw_get_or("SDOM_Bindings", sol::lua_nil);
+            if (maybe.valid() && maybe != sol::lua_nil) {
+                try { if (maybe.is<sol::table>()) return maybe.as<sol::table>(); } catch(...) {}
+                try { return lua["SDOM_Bindings"]; } catch(...) {}
+            }
+            sol::table root = lua.create_table();
+            global["SDOM_Bindings"] = root;
+            return root;
+        }
+
+        // Ensure a per-type binding table exists under SDOM_Bindings[typeName].
+        // Optionally inherit from a base type table via metatable __index.
+        static sol::table ensure_type_bind_table(sol::state_view lua,
+                                                const std::string& typeName,
+                                                const std::string& baseTypeName = std::string())
+        {
+            sol::table root = ensure_bindings_root(lua);
+            sol::object t = root.raw_get_or(typeName, sol::lua_nil);
+            sol::table tbl;
+            if (t.valid() && t != sol::lua_nil) {
+                try { if (t.is<sol::table>()) tbl = t.as<sol::table>(); } catch(...) {}
+            }
+            if (!tbl.valid()) {
+                tbl = lua.create_table();
+                root[typeName] = tbl;
+            }
+            if (!baseTypeName.empty()) {
+                try {
+                    sol::object baseObj = root.raw_get_or(baseTypeName, sol::lua_nil);
+                    if (baseObj.valid() && baseObj.is<sol::table>()) {
+                        sol::table baseTbl = baseObj.as<sol::table>();
+                        sol::table mt = lua.create_table();
+                        mt["__index"] = baseTbl;
+                        tbl[sol::metatable_key] = mt;
+                    }
+                } catch(...) {}
+            }
+            return tbl;
+        }
+
     public:
 
 

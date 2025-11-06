@@ -6,6 +6,9 @@
 #include <optional>
 #include <SDOM/SDOM_IconIndex.hpp>
 
+// Forward declare sol::state_view to avoid requiring sol2 in headers
+namespace sol { class state_view; }
+
 namespace SDOM
 {
     // Logical toggle state (canonical single source for checkbox/radio/tristate)
@@ -119,8 +122,6 @@ namespace SDOM
         return static_cast<ButtonState>(it->second);
     }
 
-
-
     class IButtonObject 
     {
     public:
@@ -150,18 +151,7 @@ namespace SDOM
 
     public:
         // --- Lua Registration --- //
-        static void registerLuaBindings(sol::state_view lua) 
-        {
-            // Idempotent / reentrant registration per Lua state.
-            // Use a private sentinel in the Lua globals to avoid duplicate setup.
-            if (lua["_SDOM_IButtonObject_registered"].valid() && lua["_SDOM_IButtonObject_registered"].get_or(false))
-                return;
-
-            // // Augment the single shared DisplayHandle handle usertype
-            // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
-
-
-        } // END: registerLuaBindings
+        static void registerLuaBindings(sol::state_view lua);
 
     }; // END: class IButtonObject
 

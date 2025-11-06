@@ -606,9 +606,9 @@ namespace SDOM
 
     void TristateButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua) 
     {
-        // Include IButtonObject bindings first
-        IButtonObject::registerLuaBindings(lua);
-
+        // Include IButtonObject bindings
+        IButtonObject::registerLuaBindings(lua);        
+        
         // Include inherited bindings first
         SUPER::_registerLuaBindings(typeName, lua);
 
