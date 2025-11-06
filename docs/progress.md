@@ -440,10 +440,11 @@ This module is marked **✅ Complete** and serves as a reference pattern for fut
 
 ---
 <a id="latest-update"></a>
-## 🗓️ November 6, 2025 — Documentation, Lua Bindings, and Unit Testing Standardization
+## 🗓️ November 6–7, 2025 — Documentation, Lua Bindings, and Unit Testing Standardization
 
 _Completed full documentation, Lua integration, and unit test coverage for four SDOM core objects:_  
-**`ArrowButton`**, **`AssetHandle`**, **`BitmapFont`**, and **`Button`**.
+**`ArrowButton`**, **`AssetHandle`**, **`BitmapFont`**, and **`Button`**.  
+_Began TristateButton Lua integration as the foundation for testing derived types (`CheckButton`, `RadioButton`, and `TristateButton`)._
 
 ---
 
@@ -465,6 +466,9 @@ _Completed full documentation, Lua integration, and unit test coverage for four 
     - `getLabelColor()` / `setLabelColor(colorTable)`
     - `getFontResource()` (read-only)
     - `getLabelObject()` (returns a DisplayHandle to internal label)
+  - Began implementing **TristateButton** Lua bindings:
+    - Ensures inherited bindings from `IButtonObject` register correctly.
+    - Establishes a clean inheritance chain for derived `CheckButton` and `RadioButton` classes.
 
 - **Unit Test Coverage**
   - Implemented synchronized **C++ and Lua test suites** for all four objects under the unified SDOM harness.
@@ -473,30 +477,44 @@ _Completed full documentation, Lua integration, and unit test coverage for four 
     - **AssetHandle** → Factory initialization, asset registration, and sprite sheet linkage.
     - **BitmapFont** → Resource handle integrity and immutable metric synchronization.
     - **Button** → Text/label property behavior, color updates, font resource validation, and label handle access.
+  - Added initial C++ test harness for **TristateButton**, verifying:
+    - Default, active, and mixed state behavior.
+    - Correct mapping of button state to internal icon indices.
+    - Inheritance of input/event handling from `IButtonObject`.
 
+---
+
+### ⚙️ **Infrastructure Refinement**
+
+- Adopted the unified **`IDataObject::ensure_sol_table()`** mechanism for all `_registerLuaBindings()` methods.  
+  - Guarantees Lua tables for usertypes (e.g., `DisplayHandle`) are always valid and idempotent.  
+  - Prevents missing-table errors caused by registration order across translation units.  
+  - Simplifies cross-object Lua augmentation, enabling consistent late binding.
+
+- Updated `Button::_registerLuaBindings()` and `TristateButton::_registerLuaBindings()` to use:
+  ```cpp
+  sol::table handleTbl = IDataObject::ensure_sol_table(lua, DisplayHandle::LuaHandleName);
+  ```
 ---
 
 ### 🌟 **Summary**
 All four components are now **fully documented, Lua-integrated, and regression-tested**.  
-They represent the new baseline for SDOM’s interface design, documentation, and Lua binding standards.
+Additionally, **TristateButton** now provides a unified base for all multi-state buttons, marking the start of systematic Lua integration for its derived classes.
 
 ---
 
 ### 🚧 **To-Do**
-- ☐ Add regression coverage for `AssetHandle::resolveSpec()` (C++ and Lua).  
+- ☐ Add regression coverage for `AssetHandle::resolveSpec()` (C++ and Lua).
 - ☐ Extend `api_stubs.lua` documentation for all four bindings.  
-- ☐ Begin review of next target interface: **`CheckBox`** (alphabetically next in sequence).
+- ☐ Finalize `TristateButton` Lua bindings (`getState`, `setState`, `toggleState`).
+- ☐ Implement and validate `CheckButton` and `RadioButton` Lua unit tests.
+- ☐ Continue documenting `_registerLuaBindings` conventions emphasizing `IDataObject::ensure_sol_table()` and inheritance order.
 
 ---
 
-
 #### end-of-day
 
-
-
-
 [🔝 **Back to Table of Contents**](#📑-table-of-contents)
-
 
 ---
 

@@ -349,47 +349,50 @@ namespace SDOM
 
         if (DEBUG_REGISTER_LUA)
         {
-            std::string typeNameLocal = "Button";
+            const std::string typeNameLocal = "Button";
             std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
                     << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the single shared DisplayHandle usertype/table with
-        // Button-specific helpers. DisplayHandle's __index will route calls
-        // here and pass the handle as the first argument.
-        sol::table handle;
-        try { handle = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
-        if (!handle.valid()) return; // no table available; nothing to augment
+        // ---------------------------------------------------------------------
+        // 📜 Acquire or create DisplayHandle table
+        // ---------------------------------------------------------------------
+        sol::table handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
 
+        // Attempt to retrieve the associated usertype, if present
         sol::optional<sol::usertype<DisplayHandle>> maybeUT;
         try { maybeUT = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
 
+        // ---------------------------------------------------------------------
+        // 🧩 Button-specific Lua bindings
+        // ---------------------------------------------------------------------
+
         // getText(): string
-        dh_bind_both_impl(handle, maybeUT, "getText", [](DisplayHandle& self) -> std::string {
-            Button* b = self.as<Button>();
-            return b ? b->getText() : std::string();
+        dh_bind_both_impl(handleTbl, maybeUT, "getText", [](DisplayHandle& self) -> std::string {
+            if (auto* b = self.as<Button>()) return b->getText();
+            return {};
         });
 
         // setText(newText): void
-        dh_bind_both_impl(handle, maybeUT, "setText", [](DisplayHandle& self, const std::string& newText) {
+        dh_bind_both_impl(handleTbl, maybeUT, "setText", [](DisplayHandle& self, const std::string& newText) {
             if (auto* b = self.as<Button>()) b->setText(newText);
         });
 
-        // getLabelColor(): Color table { r,g,b,a }
-        dh_bind_both_impl(handle, maybeUT, "getLabelColor", [lua](DisplayHandle& self) -> sol::table {
-            sol::state_view L = lua;
-            sol::table t = L.create_table();
-            if (auto* b = self.as<Button>()) {
-                SDL_Color c = b->getLabelColor();
-                t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a;
-                t[1] = (int)c.r; t[2] = (int)c.g; t[3] = (int)c.b; t[4] = (int)c.a;
-            }
-            return t;
-        });
+        // getLabelColor(): table { r,g,b,a }
+        dh_bind_both_impl(handleTbl, maybeUT, "getLabelColor",
+            [lua](DisplayHandle& self) mutable -> sol::table {
+                sol::table t = lua.create_table();
+                if (auto* b = self.as<Button>()) {
+                    SDL_Color c = b->getLabelColor();
+                    t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a;
+                    t[1] = (int)c.r; t[2] = (int)c.g; t[3] = (int)c.b; t[4] = (int)c.a;
+                }
+                return t;
+            });
 
         // setLabelColor(color): accepts table or string "r,g,b,a"
-        dh_bind_both_impl(handle, maybeUT, "setLabelColor", [](DisplayHandle& self, const sol::object& color) {
+        dh_bind_both_impl(handleTbl, maybeUT, "setLabelColor", [](DisplayHandle& self, const sol::object& color) {
             if (auto* b = self.as<Button>()) {
                 SDL_Color c = SDOM::parseColor(color);
                 b->setLabelColor(c);
@@ -397,19 +400,18 @@ namespace SDOM
         });
 
         // getFontResource(): string (read-only)
-        dh_bind_both_impl(handle, maybeUT, "getFontResource", [](DisplayHandle& self) -> std::string {
-            Button* b = self.as<Button>();
-            return b ? b->getFontResource() : std::string();
+        dh_bind_both_impl(handleTbl, maybeUT, "getFontResource", [](DisplayHandle& self) -> std::string {
+            if (auto* b = self.as<Button>()) return b->getFontResource();
+            return {};
         });
 
         // getLabelObject(): DisplayHandle
-        dh_bind_both_impl(handle, maybeUT, "getLabelObject", [](DisplayHandle& self) -> DisplayHandle {
-            Button* b = self.as<Button>();
-            return b ? b->getLabelObject() : DisplayHandle();
+        dh_bind_both_impl(handleTbl, maybeUT, "getLabelObject", [](DisplayHandle& self) -> DisplayHandle {
+            if (auto* b = self.as<Button>()) return b->getLabelObject();
+            return {};
         });
 
     } // END: void Button::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-
 
 
 } // END: namespace SDOM

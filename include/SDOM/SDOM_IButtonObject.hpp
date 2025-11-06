@@ -157,9 +157,12 @@ namespace SDOM
             if (lua["_SDOM_IButtonObject_registered"].valid() && lua["_SDOM_IButtonObject_registered"].get_or(false))
                 return;
 
-            // // Augment the single shared DisplayHandle handle usertype
-            // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
-
+            // // Acquire or create the DisplayHandle table (do not clobber usertype).
+            // sol::table handleTbl;
+            // try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
+            // if (!handleTbl.valid()) {
+            //     handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
+            // }
 
         } // END: registerLuaBindings
 
