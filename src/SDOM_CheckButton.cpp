@@ -1,45 +1,4 @@
-// ============================================================================
 // SDOM_CheckButton.cpp
-// ----------------------------------------------------------------------------
-// Implementation file for SDOM::CheckButton
-//
-// Purpose:
-//     Defines the construction, state management, rendering, and event
-//     handling behavior for the `CheckButton` class — a tri-state checkbox-style
-//     control derived from `TristateButton`. Implements Lua integration,
-//     event propagation, and icon synchronization across checked, unchecked,
-//     and indeterminate states.
-//
-// Notes:
-//     - Helper logic for state-to-icon mapping is localized in
-//       `iconIndexForState()`.
-//     - State change notifications are dispatched via `EventType::StateChanged`.
-//     - Lua bindings augment the shared `DisplayHandle` table with
-//       CheckButton-specific helpers when available.
-//     - All debug logs use the SDOM diagnostic macros (DEBUG_LOG, INFO, etc.).
-//
-// ----------------------------------------------------------------------------
-// License: ZLIB
-// ----------------------------------------------------------------------------
-// This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from
-// the use of this software.
-//
-// Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it
-// freely, subject to the following restrictions:
-//
-// 1. The origin of this software must not be misrepresented; you must not
-//    claim that you wrote the original software. If you use this software
-//    in a product, an acknowledgment in the product documentation would be
-//    appreciated but is not required.
-// 2. Altered source versions must be plainly marked as such, and must not be
-//    misrepresented as being the original software.
-// 3. This notice may not be removed or altered from any source distribution.
-//
-// ----------------------------------------------------------------------------
-// Author: Jay Faries (https://github.com/warte67)
-// ============================================================================
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Factory.hpp>

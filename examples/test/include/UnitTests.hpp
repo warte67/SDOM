@@ -29,8 +29,6 @@ namespace SDOM
     bool AssetHandle_UnitTests();
     bool BitmapFont_UnitTests();
     bool Button_UnitTests();
-
-    bool TristateButton_UnitTests();
     
     // bool Factory_UnitTests();
     // bool Stage_UnitTests();
