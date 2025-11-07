@@ -165,6 +165,7 @@ Public Types</h2></td></tr>
 , <a class="el" href="#af652715c3e637c795824fa0afedda425aa832b4e1d28490d5c44973c8c2214f39">ButtonState_MAX</a>
 <br />
  }</td></tr>
+<tr class="memdesc:af652715c3e637c795824fa0afedda425"><td class="mdescLeft">&#160;</td><td class="mdescRight">Canonical logical state of any button-like object.  <a href="#af652715c3e637c795824fa0afedda425">More...</a><br /></td></tr>
 <tr class="memitem:a331c4869c78a7b937303fadb0de2cdfb" id="r_a331c4869c78a7b937303fadb0de2cdfb"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a331c4869c78a7b937303fadb0de2cdfb">IconIndex</a> : int { <br />
 &#160;&#160;<a class="el" href="#a331c4869c78a7b937303fadb0de2cdfba7aa99f13e44dd25f7de294bc71abe4ff">Hamburger</a> = 54
 , <a class="el" href="#a331c4869c78a7b937303fadb0de2cdfbac07095c6ea62e02057553a679f469680">Arrow_Left_Raised</a>
@@ -334,8 +335,11 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a33cd42f20297f893e13db841931abda0" id="r_a33cd42f20297f893e13db841931abda0"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; std::string, <a class="el" href="#adca0aa068ac9fc59e78b78c430a92980">AnchorPoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33cd42f20297f893e13db841931abda0">stringToAnchorPoint_</a></td></tr>
 <tr class="memdesc:a33cd42f20297f893e13db841931abda0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps string names to <a class="el" href="#adca0aa068ac9fc59e78b78c430a92980" title="Reference points for anchoring child edges to a parent.">AnchorPoint</a> enum values.  <br /></td></tr>
 <tr class="memitem:a479fe3b6d6b7a81bb9d305429c19dd71" id="r_a479fe3b6d6b7a81bb9d305429c19dd71"><td class="memItemLeft" align="right" valign="top">static const std::vector&lt; std::pair&lt; int, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a479fe3b6d6b7a81bb9d305429c19dd71">button_state_pairs</a></td></tr>
+<tr class="memdesc:a479fe3b6d6b7a81bb9d305429c19dd71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ordered vector of integer-state ↔ name pairs (includes aliases).  <br /></td></tr>
 <tr class="memitem:a2ddfe0c3e88fd1b6e58620d2b63e769f" id="r_a2ddfe0c3e88fd1b6e58620d2b63e769f"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; int, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ddfe0c3e88fd1b6e58620d2b63e769f">button_state_to_string</a></td></tr>
+<tr class="memdesc:a2ddfe0c3e88fd1b6e58620d2b63e769f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps canonical <span class="tt">ButtonState</span> integer values to lowercase string names.  <br /></td></tr>
 <tr class="memitem:ada9a03704ec6fd6f257e6f7f84a25a02" id="r_ada9a03704ec6fd6f257e6f7f84a25a02"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; std::string, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada9a03704ec6fd6f257e6f7f84a25a02">string_to_button_state</a></td></tr>
+<tr class="memdesc:ada9a03704ec6fd6f257e6f7f84a25a02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps lowercase string names (including aliases) to canonical integer values.  <br /></td></tr>
 <tr class="memitem:a98ee20e886efe6004f38e0c4b6fdfab1" id="r_a98ee20e886efe6004f38e0c4b6fdfab1"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; int, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98ee20e886efe6004f38e0c4b6fdfab1">icon_index_to_string</a></td></tr>
 <tr class="memitem:a618334d8d29e89d504144433fd0b6af3" id="r_a618334d8d29e89d504144433fd0b6af3"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; std::string, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a618334d8d29e89d504144433fd0b6af3">icon_string_to_index</a></td></tr>
 <tr class="memitem:ab9be71c9c3156fe7d5d4c719ad8ba9bb" id="r_ab9be71c9c3156fe7d5d4c719ad8ba9bb"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; char32_t, <a class="el" href="#aee303a5ea55cf095657cc513fa582406">ExtendedCharacterIndex</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9be71c9c3156fe7d5d4c719ad8ba9bb">UnicodeToIconIndex</a></td></tr>
@@ -480,11 +484,30 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Canonical logical state of any button-like object. </p>
+<p>Provides a consistent abstraction over various button and toggle states. Multiple aliases are defined to unify naming across different UI paradigms (e.g., checkbox, radio, or momentary button).</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Primary State  </th><th class="markdownTableHeadNone">Common Aliases  </th><th class="markdownTableHeadNone">Semantic Meaning  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Inactive  </td><td class="markdownTableBodyNone">Released, Unchecked, Up, Off  </td><td class="markdownTableBodyNone"><a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a> is released or deselected  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Active  </td><td class="markdownTableBodyNone">Pressed, Checked, Down, On  </td><td class="markdownTableBodyNone"><a class="el" href="classSDOM_1_1Button.html" title="A standard clickable text button class.">Button</a> is pressed or selected  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Mixed  </td><td class="markdownTableBodyNone">Indeterminate, Maybe  </td><td class="markdownTableBodyNone">Tri-state or ambiguous condition  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Disabled  </td><td class="markdownTableBodyNone">Faded, Gray, Grayed  </td><td class="markdownTableBodyNone">Non-interactive or visually muted  </td></tr>
+</table>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0" name="af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0"></a>Inactive&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425a4d3d769b812b6faa6b76e1a8abaece2d" name="af652715c3e637c795824fa0afedda425a4d3d769b812b6faa6b76e1a8abaece2d"></a>Active&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425a699b4f79215d191584653efebf156e52" name="af652715c3e637c795824fa0afedda425a699b4f79215d191584653efebf156e52"></a>Mixed&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425ab9f5c797ebbf55adccdd8539a65a0241" name="af652715c3e637c795824fa0afedda425ab9f5c797ebbf55adccdd8539a65a0241"></a>Disabled&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0" name="af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0"></a>Inactive&#160;</td><td class="fielddoc"><p>Default inactive (released/unchecked). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425a4d3d769b812b6faa6b76e1a8abaece2d" name="af652715c3e637c795824fa0afedda425a4d3d769b812b6faa6b76e1a8abaece2d"></a>Active&#160;</td><td class="fielddoc"><p>Active (pressed/checked). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425a699b4f79215d191584653efebf156e52" name="af652715c3e637c795824fa0afedda425a699b4f79215d191584653efebf156e52"></a>Mixed&#160;</td><td class="fielddoc"><p>Indeterminate/tri-state. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425ab9f5c797ebbf55adccdd8539a65a0241" name="af652715c3e637c795824fa0afedda425ab9f5c797ebbf55adccdd8539a65a0241"></a>Disabled&#160;</td><td class="fielddoc"><p>Disabled/non-interactive. </p>
+</td></tr>
 <tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425aea1e34304a5d8ffa7c9b0ed8ede4ef1a" name="af652715c3e637c795824fa0afedda425aea1e34304a5d8ffa7c9b0ed8ede4ef1a"></a>Released&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425a881b3634f18ee4f2c2315bd19b75e0ae" name="af652715c3e637c795824fa0afedda425a881b3634f18ee4f2c2315bd19b75e0ae"></a>Unchecked&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425adc30bc0c7914db5918da4263fce93ad2" name="af652715c3e637c795824fa0afedda425adc30bc0c7914db5918da4263fce93ad2"></a>Clear&#160;</td><td class="fielddoc"></td></tr>
@@ -503,7 +526,8 @@ Static Public Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425aa64f9335355b36f6b526e22f7e3fc783" name="af652715c3e637c795824fa0afedda425aa64f9335355b36f6b526e22f7e3fc783"></a>Grayed&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425acaf3a042a037c064b7513ed640c22f77" name="af652715c3e637c795824fa0afedda425acaf3a042a037c064b7513ed640c22f77"></a>Grey&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425a4f97e88e22bc8dfe3a6b3962da9a7fca" name="af652715c3e637c795824fa0afedda425a4f97e88e22bc8dfe3a6b3962da9a7fca"></a>Greyed&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425aa832b4e1d28490d5c44973c8c2214f39" name="af652715c3e637c795824fa0afedda425aa832b4e1d28490d5c44973c8c2214f39"></a>ButtonState_MAX&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425aa832b4e1d28490d5c44973c8c2214f39" name="af652715c3e637c795824fa0afedda425aa832b4e1d28490d5c44973c8c2214f39"></a>ButtonState_MAX&#160;</td><td class="fielddoc"><p>Sentinel value for iteration/debug. </p>
+</td></tr>
 </table>
 
 </div>
@@ -806,39 +830,9 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="#af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0">ButtonState::Inactive</a>),      <span class="stringliteral">&quot;inactive&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="#af652715c3e637c795824fa0afedda425a4d3d769b812b6faa6b76e1a8abaece2d">ButtonState::Active</a>),        <span class="stringliteral">&quot;active&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Mixed),         <span class="stringliteral">&quot;mixed&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Disabled),      <span class="stringliteral">&quot;disabled&quot;</span> },</div>
-<div class="line">        </div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Released),      <span class="stringliteral">&quot;released&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Unchecked),     <span class="stringliteral">&quot;unchecked&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Clear),         <span class="stringliteral">&quot;clear&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Up),            <span class="stringliteral">&quot;up&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Off),           <span class="stringliteral">&quot;off&quot;</span> },</div>
-<div class="line">        </div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Pressed),       <span class="stringliteral">&quot;pressed&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Checked),       <span class="stringliteral">&quot;checked&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Set),           <span class="stringliteral">&quot;set&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Down),          <span class="stringliteral">&quot;down&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::On),            <span class="stringliteral">&quot;on&quot;</span> },</div>
-<div class="line">        </div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Indeterminate), <span class="stringliteral">&quot;indeterminate&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Maybe),         <span class="stringliteral">&quot;maybe&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Option),        <span class="stringliteral">&quot;option&quot;</span> },</div>
-<div class="line">        </div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Faded),         <span class="stringliteral">&quot;faded&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Gray),          <span class="stringliteral">&quot;gray&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Grayed),        <span class="stringliteral">&quot;grayed&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Grey),          <span class="stringliteral">&quot;grey&quot;</span> },</div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::Greyed),        <span class="stringliteral">&quot;greyed&quot;</span> },</div>
-<div class="line">        </div>
-<div class="line">        { <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ButtonState::ButtonState_MAX), <span class="stringliteral">&quot;button_state_max&quot;</span> }</div>
-<div class="line">    }</div>
-<div class="ttc" id="aclassSDOM_html_af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0"><div class="ttname"><a href="#af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0">SDOM::ButtonState::Inactive</a></div><div class="ttdeci">@ Inactive</div><div class="ttdef"><b>Definition</b> SDOM_IButtonObject.hpp:14</div></div>
-<div class="ttc" id="aclassSDOM_html_af652715c3e637c795824fa0afedda425a4d3d769b812b6faa6b76e1a8abaece2d"><div class="ttname"><a href="#af652715c3e637c795824fa0afedda425a4d3d769b812b6faa6b76e1a8abaece2d">SDOM::ButtonState::Active</a></div><div class="ttdeci">@ Active</div><div class="ttdef"><b>Definition</b> SDOM_IButtonObject.hpp:15</div></div>
-</div><!-- fragment -->
+
+<p>Ordered vector of integer-state ↔ name pairs (includes aliases). </p>
+
 </div>
 </div>
 <a id="a2ddfe0c3e88fd1b6e58620d2b63e769f" name="a2ddfe0c3e88fd1b6e58620d2b63e769f"></a>
@@ -862,13 +856,15 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= []{</div>
 <div class="line">        std::unordered_map&lt;int,std::string&gt; m;</div>
-<div class="line">        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : <a class="code hl_variable" href="#a479fe3b6d6b7a81bb9d305429c19dd71">button_state_pairs</a>) {</div>
+<div class="line">        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : <a class="code hl_variable" href="#a479fe3b6d6b7a81bb9d305429c19dd71">button_state_pairs</a>)</div>
 <div class="line">            <span class="keywordflow">if</span> (m.find(p.first) == m.end()) m.emplace(p.first, p.second);</div>
-<div class="line">        }</div>
 <div class="line">        <span class="keywordflow">return</span> m;</div>
 <div class="line">    }()</div>
-<div class="ttc" id="aclassSDOM_html_a479fe3b6d6b7a81bb9d305429c19dd71"><div class="ttname"><a href="#a479fe3b6d6b7a81bb9d305429c19dd71">SDOM::button_state_pairs</a></div><div class="ttdeci">static const std::vector&lt; std::pair&lt; int, std::string &gt; &gt; button_state_pairs</div><div class="ttdef"><b>Definition</b> SDOM_IButtonObject.hpp:44</div></div>
+<div class="ttc" id="aclassSDOM_html_a479fe3b6d6b7a81bb9d305429c19dd71"><div class="ttname"><a href="#a479fe3b6d6b7a81bb9d305429c19dd71">SDOM::button_state_pairs</a></div><div class="ttdeci">static const std::vector&lt; std::pair&lt; int, std::string &gt; &gt; button_state_pairs</div><div class="ttdoc">Ordered vector of integer-state ↔ name pairs (includes aliases).</div><div class="ttdef"><b>Definition</b> SDOM_IButtonObject.hpp:139</div></div>
 </div><!-- fragment -->
+<p>Maps canonical <span class="tt">ButtonState</span> integer values to lowercase string names. </p>
+<p>The first occurrence of a numeric key wins (aliases are ignored). </p>
+
 </div>
 </div>
 <a id="a98ee20e886efe6004f38e0c4b6fdfab1" name="a98ee20e886efe6004f38e0c4b6fdfab1"></a>
@@ -1444,14 +1440,15 @@ Static Public Attributes</h2></td></tr>
 <div class="line">        std::unordered_map&lt;std::string,int&gt; m;</div>
 <div class="line">        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : <a class="code hl_variable" href="#a479fe3b6d6b7a81bb9d305429c19dd71">button_state_pairs</a>) {</div>
 <div class="line">            std::string key = p.second;</div>
-<div class="line">            std::transform(key.begin(), key.end(), key.begin(), [](<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> c){</div>
-<div class="line">                return static_cast&lt;char&gt;(std::tolower(c));</div>
-<div class="line">            });</div>
+<div class="line">            std::transform(key.begin(), key.end(), key.begin(),</div>
+<div class="line">                [](<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> c){ return static_cast&lt;char&gt;(std::tolower(c)); });</div>
 <div class="line">            m.emplace(std::move(key), p.first);</div>
 <div class="line">        }</div>
 <div class="line">        <span class="keywordflow">return</span> m;</div>
 <div class="line">    }()</div>
 </div><!-- fragment -->
+<p>Maps lowercase string names (including aliases) to canonical integer values. </p>
+
 </div>
 </div>
 <a id="a7569a3c4255eb2a2cddfdf0cdab60c15" name="a7569a3c4255eb2a2cddfdf0cdab60c15"></a>

@@ -185,203 +185,247 @@ $(function(){initNavTree('SDOM__IDataObject_8hpp_source.html','',''); });
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="preprocessor">#include &lt;<a class="code" href="SDOM__CLR_8hpp.html">SDOM/SDOM_CLR.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="preprocessor">#include &lt;<a class="code" href="SDOM__IUnitTest_8hpp.html">SDOM/SDOM_IUnitTest.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment">// Ensure DEBUG_REGISTER_LUA exists (normally provided by SDOM.hpp). If the</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment">// umbrella header is included by a TU it will override this; this definition</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment">// acts as a safe default when headers are included individually.</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment">// #ifndef DEBUG_REGISTER_LUA</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment">// // #define DEBUG_REGISTER_LUA 0</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment">// constexpr bool DEBUG_REGISTER_LUA = true;</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">// #endif</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment">// Ensure DEBUG_REGISTER_LUA exists (normally provided by SDOM.hpp). If the</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment">// umbrella header is included by a TU it will override this; this definition</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment">// acts as a safe default when headers are included individually.</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment">// #ifndef DEBUG_REGISTER_LUA</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment">// // #define DEBUG_REGISTER_LUA 0</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">// constexpr bool DEBUG_REGISTER_LUA = true;</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment">// #endif</span></div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceSDOM.html">SDOM</a></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>{</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="foldopen" id="foldopen00107" data-start="{" data-end="};">
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html">  107</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classSDOM_1_1IDataObject.html">IDataObject</a> : <span class="keyword">public</span> <a class="code hl_interface" href="classSDOM_1_1IUnitTest.html">SDOM::IUnitTest</a></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    {</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#ae7bbc291ea72a2a99a1cce4c86e681cb">  112</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#ae7bbc291ea72a2a99a1cce4c86e681cb">onInit</a>() = 0;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a8254dbe0378d780dc2665f892430f543">  113</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a8254dbe0378d780dc2665f892430f543">onQuit</a>() = 0;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#ae4530264b8a284b3c41a306b20b8f648">  114</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#ae4530264b8a284b3c41a306b20b8f648">onUnitTest</a>(<span class="keywordtype">int</span> frame)<span class="keyword"> override </span>{ (void)frame; <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00117" data-start="{" data-end="}">
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959">  117</a></span>        <span class="keyword">static</span> T <a class="code hl_function" href="classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959">lua_value_case_insensitive</a>(<span class="keyword">const</span> sol::table&amp; tbl, <span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> T&amp; default_value)</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        {</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; kv : tbl)</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            {</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                std::string k = kv.first.as&lt;std::string&gt;();</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                <span class="keywordflow">if</span> (std::equal(k.begin(), k.end(), key.begin(), key.end(),</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                    [](<span class="keywordtype">char</span> a, <span class="keywordtype">char</span> b) { return std::tolower(a) == std::tolower(b); }))</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                {</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                    <span class="keywordflow">return</span> kv.second.as&lt;T&gt;();</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                }</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            }</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            <span class="keywordflow">return</span> default_value;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        }</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceSDOM.html">SDOM</a></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>{</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="foldopen" id="foldopen00108" data-start="{" data-end="};">
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html">  108</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classSDOM_1_1IDataObject.html">IDataObject</a> : <span class="keyword">public</span> <a class="code hl_interface" href="classSDOM_1_1IUnitTest.html">SDOM::IUnitTest</a></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    {</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#ae7bbc291ea72a2a99a1cce4c86e681cb">  113</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#ae7bbc291ea72a2a99a1cce4c86e681cb">onInit</a>() = 0;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a8254dbe0378d780dc2665f892430f543">  114</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a8254dbe0378d780dc2665f892430f543">onQuit</a>() = 0;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#ae4530264b8a284b3c41a306b20b8f648">  115</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#ae4530264b8a284b3c41a306b20b8f648">onUnitTest</a>(<span class="keywordtype">int</span> frame)<span class="keyword"> override </span>{ (void)frame; <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00118" data-start="{" data-end="}">
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959">  118</a></span>        <span class="keyword">static</span> T <a class="code hl_function" href="classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959">lua_value_case_insensitive</a>(<span class="keyword">const</span> sol::table&amp; tbl, <span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> T&amp; default_value)</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; kv : tbl)</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>            {</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                std::string k = kv.first.as&lt;std::string&gt;();</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                <span class="keywordflow">if</span> (std::equal(k.begin(), k.end(), key.begin(), key.end(),</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                    [](<span class="keywordtype">char</span> a, <span class="keywordtype">char</span> b) { return std::tolower(a) == std::tolower(b); }))</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                {</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                    <span class="keywordflow">return</span> kv.second.as&lt;T&gt;();</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                }</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            }</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="keywordflow">return</span> default_value;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        }</div>
 </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40">  131</a></span>        std::string <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40">getName</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">name_</a>; }</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">  132</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">setName</a>(<span class="keyword">const</span> std::string&amp; newName) { <a class="code hl_variable" href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">name_</a> = newName; }</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="foldopen" id="foldopen00134" data-start="{" data-end="}">
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">  134</a></span>        <span class="keyword">static</span> sol::table <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">ensure_sol_table</a>(sol::state_view lua, <span class="keyword">const</span> std::string&amp; typeName)</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        {</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            sol::table global = lua.globals();</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            sol::object maybe = global.raw_get_or(typeName, sol::lua_nil);</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            <span class="keywordflow">if</span> (maybe.valid() &amp;&amp; maybe != sol::lua_nil)</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            {</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                <span class="comment">// Many sol2 builds expose a usertype as a table/metatable; some</span></div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                <span class="comment">// report it as a userdata. In either case, fetch the table view</span></div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                <span class="comment">// from the global entry without replacing it.</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                    <span class="keywordflow">if</span> (maybe.is&lt;sol::table&gt;()) {</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                        <span class="keywordflow">return</span> maybe.as&lt;sol::table&gt;();</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                    }</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                } <span class="keywordflow">catch</span>(...) {}</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                <span class="comment">// Fallback: treat the existing global as a table-like and return it</span></div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                <span class="keywordflow">try</span> { <span class="keywordflow">return</span> lua[typeName]; } <span class="keywordflow">catch</span>(...) {}</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            }</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            <span class="comment">// Not present: create and publish a fresh table</span></div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            sol::table newTable = lua.create_table();</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            global[typeName] = newTable;</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            <span class="keywordflow">if</span> (<span class="keyword">false</span>)</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            {</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                std::cout &lt;&lt; <a class="code hl_variable" href="classCLR.html#aeea092b02f7a2434ace40805f7be2e06">CLR::MAGENTA</a> &lt;&lt; <span class="stringliteral">&quot;[LUA] Created table for type: &quot;</span></div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                        &lt;&lt; <a class="code hl_variable" href="classCLR.html#a135aac68c02461081e49ee6a818cfc52">CLR::LT_MAGENTA</a> &lt;&lt; typeName &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            }</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="keywordflow">return</span> newTable;</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        }           </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40">  132</a></span>        std::string <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40">getName</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">name_</a>; }</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">  133</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">setName</a>(<span class="keyword">const</span> std::string&amp; newName) { <a class="code hl_variable" href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">name_</a> = newName; }</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="foldopen" id="foldopen00135" data-start="{" data-end="}">
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">  135</a></span>        <span class="keyword">static</span> sol::table <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">ensure_sol_table</a>(sol::state_view lua, <span class="keyword">const</span> std::string&amp; typeName)</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        {</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            sol::table global = lua.globals();</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            sol::object maybe = global.raw_get_or(typeName, sol::lua_nil);</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            <span class="keywordflow">if</span> (maybe.valid() &amp;&amp; maybe != sol::lua_nil)</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            {</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                <span class="comment">// Many sol2 builds expose a usertype as a table/metatable; some</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                <span class="comment">// report it as a userdata. In either case, fetch the table view</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                <span class="comment">// from the global entry without replacing it.</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                    <span class="keywordflow">if</span> (maybe.is&lt;sol::table&gt;()) {</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                        <span class="keywordflow">return</span> maybe.as&lt;sol::table&gt;();</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                    }</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                } <span class="keywordflow">catch</span>(...) {}</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                <span class="comment">// Fallback: treat the existing global as a table-like and return it</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                <span class="keywordflow">try</span> { <span class="keywordflow">return</span> lua[typeName]; } <span class="keywordflow">catch</span>(...) {}</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            }</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="comment">// Not present: create and publish a fresh table</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            sol::table newTable = lua.create_table();</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            global[typeName] = newTable;</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            <span class="keywordflow">if</span> (<span class="keyword">false</span>)</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            {</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                std::cout &lt;&lt; <a class="code hl_variable" href="classCLR.html#aeea092b02f7a2434ace40805f7be2e06">CLR::MAGENTA</a> &lt;&lt; <span class="stringliteral">&quot;[LUA] Created table for type: &quot;</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                        &lt;&lt; <a class="code hl_variable" href="classCLR.html#a135aac68c02461081e49ee6a818cfc52">CLR::LT_MAGENTA</a> &lt;&lt; typeName &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            }</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            <span class="keywordflow">return</span> newTable;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        }           </div>
 </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        <span class="comment">// Register a usertype and attach it to the given Lua table (idempotent)</span></div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> BaseT&gt;</div>
-<div class="foldopen" id="foldopen00164" data-start="{" data-end="}">
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e">  164</a></span>        <span class="keyword">static</span> sol::usertype&lt;T&gt; <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e">register_usertype_with_table</a>(sol::state_view lua, <span class="keyword">const</span> std::string&amp; typeName)</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        {</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="comment">// Guard against re-registration across multiple call sites and</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            <span class="comment">// avoid clobbering existing usertype tables. We only track a</span></div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            <span class="comment">// boolean flag per (lua_State*, typeName), not sol objects.</span></div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            <span class="keyword">using </span>StateMap = std::unordered_map&lt;std::string, bool&gt;;</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            <span class="keyword">static</span> std::unordered_map&lt;lua_State*, StateMap&gt; s_registered;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            lua_State* L = lua.lua_state();</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            <span class="keyword">auto</span>&amp; reg = s_registered[L];</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            <span class="keyword">auto</span> it = reg.find(typeName);</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <span class="keywordflow">if</span> (it != reg.end() &amp;&amp; it-&gt;second) {</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                <span class="comment">// Already registered in this state; return a handle to the existing usertype table.</span></div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                <span class="keywordflow">try</span> { <span class="keywordflow">return</span> lua[typeName]; } <span class="keywordflow">catch</span>(...) {</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                    <span class="comment">// If the table is somehow missing, fall through to create below.</span></div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                }</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>            }</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>            <span class="comment">// If a table already exists and was marked as registered, reuse it.</span></div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            sol::object existing = lua.globals().raw_get_or(typeName, sol::lua_nil);</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>            <span class="keywordflow">if</span> (existing.valid() &amp;&amp; existing != sol::lua_nil) {</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                    sol::table t = lua[typeName];</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                    sol::object flag = t.raw_get_or(<span class="stringliteral">&quot;__usertype_registered&quot;</span>, sol::lua_nil);</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                    <span class="keywordflow">if</span> (flag.valid() &amp;&amp; flag.is&lt;<span class="keywordtype">bool</span>&gt;() &amp;&amp; flag.as&lt;<span class="keywordtype">bool</span>&gt;()) {</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                        reg[typeName] = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                        <span class="keywordflow">return</span> lua[typeName];</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                    }</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                } <span class="keywordflow">catch</span>(...) {}</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            }</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            <span class="comment">// Create once (no constructor exposed to Lua by default).</span></div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            <span class="keyword">auto</span> userType = lua.new_usertype&lt;T&gt;(</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                typeName,</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                sol::no_constructor,</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                sol::base_classes, sol::bases&lt;BaseT&gt;()</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            );</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            <span class="comment">// Mark on the usertype table itself so subsequent calls can detect it.</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                sol::table utbl = lua[typeName];</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                utbl[<span class="stringliteral">&quot;__usertype_registered&quot;</span>] = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            } <span class="keywordflow">catch</span>(...) {}</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            <span class="keywordflow">if</span> (<span class="keyword">false</span>)</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            {</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                std::cout &lt;&lt; <a class="code hl_variable" href="classCLR.html#a9c70a18a33cde4874888b21b178000bf">CLR::YELLOW</a> &lt;&lt; <span class="stringliteral">&quot;[LUA] Registered usertype: &quot;</span></div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                        &lt;&lt; <a class="code hl_variable" href="classCLR.html#a8243058df0e40cdb1644ac3bf2636fdd">CLR::LT_YELLOW</a> &lt;&lt; typeName &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            }</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            reg[typeName] = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            <span class="keywordflow">return</span> userType;</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        }        </div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="comment">// Register a usertype and attach it to the given Lua table (idempotent)</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> BaseT&gt;</div>
+<div class="foldopen" id="foldopen00165" data-start="{" data-end="}">
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e">  165</a></span>        <span class="keyword">static</span> sol::usertype&lt;T&gt; <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e">register_usertype_with_table</a>(sol::state_view lua, <span class="keyword">const</span> std::string&amp; typeName)</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        {</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            <span class="comment">// Guard against re-registration across multiple call sites and</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            <span class="comment">// avoid clobbering existing usertype tables. We only track a</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            <span class="comment">// boolean flag per (lua_State*, typeName), not sol objects.</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            <span class="keyword">using </span>StateMap = std::unordered_map&lt;std::string, bool&gt;;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            <span class="keyword">static</span> std::unordered_map&lt;lua_State*, StateMap&gt; s_registered;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            lua_State* L = lua.lua_state();</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            <span class="keyword">auto</span>&amp; reg = s_registered[L];</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <span class="keyword">auto</span> it = reg.find(typeName);</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            <span class="keywordflow">if</span> (it != reg.end() &amp;&amp; it-&gt;second) {</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                <span class="comment">// Already registered in this state; return a handle to the existing usertype table.</span></div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                <span class="keywordflow">try</span> { <span class="keywordflow">return</span> lua[typeName]; } <span class="keywordflow">catch</span>(...) {</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                    <span class="comment">// If the table is somehow missing, fall through to create below.</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                }</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            }</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            <span class="comment">// If a table already exists and was marked as registered, reuse it.</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>            sol::object existing = lua.globals().raw_get_or(typeName, sol::lua_nil);</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            <span class="keywordflow">if</span> (existing.valid() &amp;&amp; existing != sol::lua_nil) {</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                    sol::table t = lua[typeName];</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                    sol::object flag = t.raw_get_or(<span class="stringliteral">&quot;__usertype_registered&quot;</span>, sol::lua_nil);</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                    <span class="keywordflow">if</span> (flag.valid() &amp;&amp; flag.is&lt;<span class="keywordtype">bool</span>&gt;() &amp;&amp; flag.as&lt;<span class="keywordtype">bool</span>&gt;()) {</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                        reg[typeName] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                        <span class="keywordflow">return</span> lua[typeName];</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                    }</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                } <span class="keywordflow">catch</span>(...) {}</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            }</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            <span class="comment">// Create once (no constructor exposed to Lua by default).</span></div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            <span class="keyword">auto</span> userType = lua.new_usertype&lt;T&gt;(</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                typeName,</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                sol::no_constructor,</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                sol::base_classes, sol::bases&lt;BaseT&gt;()</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            );</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            <span class="comment">// Mark on the usertype table itself so subsequent calls can detect it.</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                sol::table utbl = lua[typeName];</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                utbl[<span class="stringliteral">&quot;__usertype_registered&quot;</span>] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            } <span class="keywordflow">catch</span>(...) {}</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            <span class="keywordflow">if</span> (<span class="keyword">false</span>)</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>            {</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                std::cout &lt;&lt; <a class="code hl_variable" href="classCLR.html#a9c70a18a33cde4874888b21b178000bf">CLR::YELLOW</a> &lt;&lt; <span class="stringliteral">&quot;[LUA] Registered usertype: &quot;</span></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                        &lt;&lt; <a class="code hl_variable" href="classCLR.html#a8243058df0e40cdb1644ac3bf2636fdd">CLR::LT_YELLOW</a> &lt;&lt; typeName &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            }</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            reg[typeName] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            <span class="keywordflow">return</span> userType;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        }        </div>
 </div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        <span class="comment">// New preferred Lua binding path</span></div>
-<div class="foldopen" id="foldopen00221" data-start="{" data-end="}">
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">  221</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">registerLuaBindings</a>(<span class="keyword">const</span> std::string&amp; typeName, sol::state_view lua)</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        {</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>            this-&gt;<a class="code hl_function" href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">_registerLuaBindings</a>(typeName, lua);</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        }</div>
-</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
-<div class="foldopen" id="foldopen00228" data-start="{" data-end="}">
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">  228</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">_registerLuaBindings</a>(<span class="keyword">const</span> std::string&amp; typeName, sol::state_view lua)</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        {</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            <span class="comment">// 1. Make sure the per-type Lua table exists.</span></div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            sol::table typeTable;</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                typeTable = <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">ensure_sol_table</a>(lua, typeName);</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>            } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                <span class="keywordflow">return</span>;  <span class="comment">// If Lua isn’t ready yet, fail silently.</span></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        <span class="comment">// Return both legacy per-type table (globals[typeName]) and canonical</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <span class="comment">// registry table (SDOM_Bindings[typeName]). Also ensures a proper</span></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        <span class="comment">// usertype is registered with the provided BaseT.</span></div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> BaseT&gt;</div>
+<div class="foldopen" id="foldopen00222" data-start="{" data-end="}">
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a7cf717a8d6314660846762fa5200012d">  222</a></span>        <span class="keyword">static</span> std::pair&lt;sol::table, sol::table&gt; <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a7cf717a8d6314660846762fa5200012d">ensure_type_tables</a>(sol::state_view lua, <span class="keyword">const</span> std::string&amp; typeName)</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        {</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>            <span class="comment">// Ensure usertype with base relationship (idempotent)</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            (void)<a class="code hl_function" href="classSDOM_1_1IDataObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e">register_usertype_with_table&lt;T, BaseT&gt;</a>(lua, typeName);</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            <span class="comment">// Legacy/compatibility per-type table in globals</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            sol::table legacy = <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">ensure_sol_table</a>(lua, typeName);</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            <span class="comment">// Canonical registry root: SDOM_Bindings</span></div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            sol::table root;</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            <span class="keywordflow">try</span> { root = lua[<span class="stringliteral">&quot;SDOM_Bindings&quot;</span>]; } <span class="keywordflow">catch</span>(...) {}</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            <span class="keywordflow">if</span> (!root.valid()) {</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                root = lua.create_table();</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                lua[<span class="stringliteral">&quot;SDOM_Bindings&quot;</span>] = root;</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            }</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            <span class="comment">// 2. Make sure we run this block only once per type.</span></div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>            sol::object registered = typeTable.raw_get_or(<span class="stringliteral">&quot;__idataobject_initialized&quot;</span>, sol::lua_nil);</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            <span class="keywordflow">if</span> (registered.valid() &amp;&amp; registered.is&lt;<span class="keywordtype">bool</span>&gt;() &amp;&amp; registered.as&lt;<span class="keywordtype">bool</span>&gt;()) {</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                <span class="keywordflow">return</span>; <span class="comment">// Already initialized; ancestors can still add keys later.</span></div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            }</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            typeTable[<span class="stringliteral">&quot;__idataobject_initialized&quot;</span>] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            <span class="comment">// Canonical per-type registry: SDOM_Bindings[typeName]</span></div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>            sol::table reg = root.raw_get_or(typeName, sol::lua_nil);</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            <span class="keywordflow">if</span> (!reg.valid()) {</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                reg = lua.create_table();</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                root[typeName] = reg;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            }</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            <span class="comment">// 3. Add the base-level helpers that every IDataObject should expose.</span></div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>            <span class="keyword">auto</span> <a class="code hl_function" href="namespaceSDOM.html#a4438b3703a628f3a65ae65fed81315e4">set_if_absent</a> = [](sol::table&amp; tbl, <span class="keyword">const</span> <span class="keywordtype">char</span>* name, <span class="keyword">auto</span>&amp;&amp; fn) {</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                sol::object cur = tbl.raw_get_or(name, sol::lua_nil);</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                <span class="keywordflow">if</span> (!cur.valid() || cur == sol::lua_nil) {</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                    tbl.set_function(name, std::forward&lt;<span class="keyword">decltype</span>(fn)&gt;(fn));</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                }</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            };</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            <a class="code hl_function" href="namespaceSDOM.html#a4438b3703a628f3a65ae65fed81315e4">set_if_absent</a>(typeTable, <span class="stringliteral">&quot;getName&quot;</span>, [](<a class="code hl_class" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp; self) { <span class="keywordflow">return</span> self.<a class="code hl_function" href="classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40">getName</a>(); });</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            <a class="code hl_function" href="namespaceSDOM.html#a4438b3703a628f3a65ae65fed81315e4">set_if_absent</a>(typeTable, <span class="stringliteral">&quot;setName&quot;</span>, [](<a class="code hl_class" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp; self, <span class="keyword">const</span> std::string&amp; newName) { self.<a class="code hl_function" href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">setName</a>(newName); });</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            <span class="comment">// if (DEBUG_REGISTER_LUA)</span></div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            <span class="keywordflow">if</span> (<span class="keyword">false</span>)</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            {</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>                std::string typeNameLocal = <span class="stringliteral">&quot;IDataObject&quot;</span>;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                std::cout &lt;&lt; <a class="code hl_variable" href="classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0">CLR::CYAN</a> &lt;&lt; <span class="stringliteral">&quot;Registered &quot;</span> &lt;&lt; <a class="code hl_variable" href="classCLR.html#a659340034a5aa7b2149ccc1888ceb694">CLR::LT_CYAN</a> &lt;&lt; typeNameLocal</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>                        &lt;&lt; <a class="code hl_variable" href="classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0">CLR::CYAN</a> &lt;&lt; <span class="stringliteral">&quot; Lua bindings for type: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classCLR.html#a659340034a5aa7b2149ccc1888ceb694">CLR::LT_CYAN</a></div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>                        &lt;&lt; typeName &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            }            </div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        }   </div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            <span class="keywordflow">return</span> { legacy, reg };</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        }</div>
 </div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        </div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a9a0e8c7c95a1a60291038e9da23b272b">  266</a></span>        sol::usertype&lt;IDataObject&gt; <a class="code hl_variable" href="classSDOM_1_1IDataObject.html#a9a0e8c7c95a1a60291038e9da23b272b">objHandleType_</a>;</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="comment">// Convenience: ensure usertype + tables, and return the canonical</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="comment">// registry table (SDOM_Bindings[typeName]).</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> BaseT&gt;</div>
+<div class="foldopen" id="foldopen00251" data-start="{" data-end="}">
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a886b4c40c6f1dbb2dea2837e2d0e32ec">  251</a></span>        <span class="keyword">static</span> sol::table <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a886b4c40c6f1dbb2dea2837e2d0e32ec">getTypeTable</a>(sol::state_view lua, <span class="keyword">const</span> std::string&amp; typeName)</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        {</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            <span class="keyword">auto</span> both = <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a7cf717a8d6314660846762fa5200012d">ensure_type_tables&lt;T, BaseT&gt;</a>(lua, typeName);</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            <span class="keywordflow">return</span> both.second; <span class="comment">// canonical registry table</span></div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        }</div>
+</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="comment">// New preferred Lua binding path</span></div>
+<div class="foldopen" id="foldopen00261" data-start="{" data-end="}">
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">  261</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">registerLuaBindings</a>(<span class="keyword">const</span> std::string&amp; typeName, sol::state_view lua)</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        {</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            this-&gt;<a class="code hl_function" href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">_registerLuaBindings</a>(typeName, lua);</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        }</div>
+</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="comment">// --- End New Virtual LUA Registration for Sol2 ---</span></div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">  272</a></span>        std::string <a class="code hl_variable" href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">name_</a> = <span class="stringliteral">&quot;IDataObject&quot;</span>;  <span class="comment">// Default name, should be overridden by derived classes</span></div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    };</div>
-</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>} <span class="comment">// namespace SDOM</span></div>
+<div class="foldopen" id="foldopen00268" data-start="{" data-end="}">
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">  268</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">_registerLuaBindings</a>(<span class="keyword">const</span> std::string&amp; typeName, sol::state_view lua)</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        {</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>            <span class="comment">// 1. Make sure the per-type Lua table exists.</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>            sol::table typeTable;</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                typeTable = <a class="code hl_function" href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">ensure_sol_table</a>(lua, typeName);</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>            } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                <span class="keywordflow">return</span>;  <span class="comment">// If Lua isn’t ready yet, fail silently.</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>            }</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="preprocessor">#endif </span><span class="comment">// __SDOM_IDataObject_HPP__</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>            <span class="comment">// 2. Make sure we run this block only once per type.</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>            sol::object registered = typeTable.raw_get_or(<span class="stringliteral">&quot;__idataobject_initialized&quot;</span>, sol::lua_nil);</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>            <span class="keywordflow">if</span> (registered.valid() &amp;&amp; registered.is&lt;<span class="keywordtype">bool</span>&gt;() &amp;&amp; registered.as&lt;<span class="keywordtype">bool</span>&gt;()) {</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                <span class="keywordflow">return</span>; <span class="comment">// Already initialized; ancestors can still add keys later.</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>            }</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>            typeTable[<span class="stringliteral">&quot;__idataobject_initialized&quot;</span>] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span> </div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>            <span class="comment">// 3. Add the base-level helpers that every IDataObject should expose.</span></div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>            <span class="keyword">auto</span> <a class="code hl_function" href="namespaceSDOM.html#a4438b3703a628f3a65ae65fed81315e4">set_if_absent</a> = [](sol::table&amp; tbl, <span class="keyword">const</span> <span class="keywordtype">char</span>* name, <span class="keyword">auto</span>&amp;&amp; fn) {</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>                sol::object cur = tbl.raw_get_or(name, sol::lua_nil);</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>                <span class="keywordflow">if</span> (!cur.valid() || cur == sol::lua_nil) {</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                    tbl.set_function(name, std::forward&lt;<span class="keyword">decltype</span>(fn)&gt;(fn));</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>                }</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            };</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            <a class="code hl_function" href="namespaceSDOM.html#a4438b3703a628f3a65ae65fed81315e4">set_if_absent</a>(typeTable, <span class="stringliteral">&quot;getName&quot;</span>, [](<a class="code hl_class" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp; self) { <span class="keywordflow">return</span> self.<a class="code hl_function" href="classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40">getName</a>(); });</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>            <a class="code hl_function" href="namespaceSDOM.html#a4438b3703a628f3a65ae65fed81315e4">set_if_absent</a>(typeTable, <span class="stringliteral">&quot;setName&quot;</span>, [](<a class="code hl_class" href="classSDOM_1_1IDataObject.html">IDataObject</a>&amp; self, <span class="keyword">const</span> std::string&amp; newName) { self.<a class="code hl_function" href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">setName</a>(newName); });</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            <span class="comment">// if (DEBUG_REGISTER_LUA)</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>            <span class="keywordflow">if</span> (<span class="keyword">false</span>)</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>            {</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>                std::string typeNameLocal = <span class="stringliteral">&quot;IDataObject&quot;</span>;</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>                std::cout &lt;&lt; <a class="code hl_variable" href="classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0">CLR::CYAN</a> &lt;&lt; <span class="stringliteral">&quot;Registered &quot;</span> &lt;&lt; <a class="code hl_variable" href="classCLR.html#a659340034a5aa7b2149ccc1888ceb694">CLR::LT_CYAN</a> &lt;&lt; typeNameLocal</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>                        &lt;&lt; <a class="code hl_variable" href="classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0">CLR::CYAN</a> &lt;&lt; <span class="stringliteral">&quot; Lua bindings for type: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classCLR.html#a659340034a5aa7b2149ccc1888ceb694">CLR::LT_CYAN</a></div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>                        &lt;&lt; typeName &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>            }            </div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        }   </div>
+</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        </div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#a9a0e8c7c95a1a60291038e9da23b272b">  306</a></span>        sol::usertype&lt;IDataObject&gt; <a class="code hl_variable" href="classSDOM_1_1IDataObject.html#a9a0e8c7c95a1a60291038e9da23b272b">objHandleType_</a>;</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        <span class="comment">// --- End New Virtual LUA Registration for Sol2 ---</span></div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span> </div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno"><a class="line" href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">  312</a></span>        std::string <a class="code hl_variable" href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">name_</a> = <span class="stringliteral">&quot;IDataObject&quot;</span>;  <span class="comment">// Default name, should be overridden by derived classes</span></div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    };</div>
+</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span> </div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>} <span class="comment">// namespace SDOM</span></div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span><span class="preprocessor">#endif </span><span class="comment">// __SDOM_IDataObject_HPP__</span></div>
 <div class="ttc" id="aSDOM__CLR_8hpp_html"><div class="ttname"><a href="SDOM__CLR_8hpp.html">SDOM_CLR.hpp</a></div><div class="ttdoc">Static container for ANSI escape sequences for terminal text formatting and colorization.</div></div>
 <div class="ttc" id="aSDOM__IUnitTest_8hpp_html"><div class="ttname"><a href="SDOM__IUnitTest_8hpp.html">SDOM_IUnitTest.hpp</a></div></div>
 <div class="ttc" id="aclassCLR_html_a135aac68c02461081e49ee6a818cfc52"><div class="ttname"><a href="classCLR.html#a135aac68c02461081e49ee6a818cfc52">CLR::LT_MAGENTA</a></div><div class="ttdeci">static const std::string LT_MAGENTA</div><div class="ttdoc">ANSI escape sequence for light magenta (hot pink) foreground.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:283</div></div>
@@ -391,22 +435,24 @@ $(function(){initNavTree('SDOM__IDataObject_8hpp_source.html','',''); });
 <div class="ttc" id="aclassCLR_html_a9c70a18a33cde4874888b21b178000bf"><div class="ttname"><a href="classCLR.html#a9c70a18a33cde4874888b21b178000bf">CLR::YELLOW</a></div><div class="ttdeci">static const std::string YELLOW</div><div class="ttdoc">ANSI escape sequence for yellow foreground.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:278</div></div>
 <div class="ttc" id="aclassCLR_html_ad6cd8cf71f3764c85a3a5a1650e2f5a0"><div class="ttname"><a href="classCLR.html#ad6cd8cf71f3764c85a3a5a1650e2f5a0">CLR::CYAN</a></div><div class="ttdeci">static const std::string CYAN</div><div class="ttdoc">ANSI escape sequence for cyan foreground.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:273</div></div>
 <div class="ttc" id="aclassCLR_html_aeea092b02f7a2434ace40805f7be2e06"><div class="ttname"><a href="classCLR.html#aeea092b02f7a2434ace40805f7be2e06">CLR::MAGENTA</a></div><div class="ttdeci">static const std::string MAGENTA</div><div class="ttdoc">ANSI escape sequence for magenta foreground.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:272</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html"><div class="ttname"><a href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a></div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:108</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a1947ff718446a6a81cd108b87a475d9f"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">SDOM::IDataObject::registerLuaBindings</a></div><div class="ttdeci">void registerLuaBindings(const std::string &amp;typeName, sol::state_view lua)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:221</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a1de666cd76bf2ef5c77d3b0380db55fa"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">SDOM::IDataObject::setName</a></div><div class="ttdeci">void setName(const std::string &amp;newName)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:132</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a23bc81cd1e5150f3d0d28be46dc63a58"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">SDOM::IDataObject::_registerLuaBindings</a></div><div class="ttdeci">virtual void _registerLuaBindings(const std::string &amp;typeName, sol::state_view lua)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:228</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a6c4854090319dbc681a275dada027e40"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40">SDOM::IDataObject::getName</a></div><div class="ttdeci">std::string getName() const</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:131</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a7d4f3c380cd2644e37c493ed963035b8"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">SDOM::IDataObject::ensure_sol_table</a></div><div class="ttdeci">static sol::table ensure_sol_table(sol::state_view lua, const std::string &amp;typeName)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:134</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html"><div class="ttname"><a href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a></div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:109</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a1947ff718446a6a81cd108b87a475d9f"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">SDOM::IDataObject::registerLuaBindings</a></div><div class="ttdeci">void registerLuaBindings(const std::string &amp;typeName, sol::state_view lua)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:261</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a1de666cd76bf2ef5c77d3b0380db55fa"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">SDOM::IDataObject::setName</a></div><div class="ttdeci">void setName(const std::string &amp;newName)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:133</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a23bc81cd1e5150f3d0d28be46dc63a58"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">SDOM::IDataObject::_registerLuaBindings</a></div><div class="ttdeci">virtual void _registerLuaBindings(const std::string &amp;typeName, sol::state_view lua)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:268</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a6c4854090319dbc681a275dada027e40"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40">SDOM::IDataObject::getName</a></div><div class="ttdeci">std::string getName() const</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:132</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a7cf717a8d6314660846762fa5200012d"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a7cf717a8d6314660846762fa5200012d">SDOM::IDataObject::ensure_type_tables</a></div><div class="ttdeci">static std::pair&lt; sol::table, sol::table &gt; ensure_type_tables(sol::state_view lua, const std::string &amp;typeName)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:222</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a7d4f3c380cd2644e37c493ed963035b8"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">SDOM::IDataObject::ensure_sol_table</a></div><div class="ttdeci">static sol::table ensure_sol_table(sol::state_view lua, const std::string &amp;typeName)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:135</div></div>
 <div class="ttc" id="aclassSDOM_1_1IDataObject_html_a8254dbe0378d780dc2665f892430f543"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a8254dbe0378d780dc2665f892430f543">SDOM::IDataObject::onQuit</a></div><div class="ttdeci">virtual void onQuit()=0</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a90dd1b86ac56a3fb85044e6f0fd5528e"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e">SDOM::IDataObject::register_usertype_with_table</a></div><div class="ttdeci">static sol::usertype&lt; T &gt; register_usertype_with_table(sol::state_view lua, const std::string &amp;typeName)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:164</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a9a0e8c7c95a1a60291038e9da23b272b"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a9a0e8c7c95a1a60291038e9da23b272b">SDOM::IDataObject::objHandleType_</a></div><div class="ttdeci">sol::usertype&lt; IDataObject &gt; objHandleType_</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:266</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html_ac79673e571c58f21de1541a81548a959"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959">SDOM::IDataObject::lua_value_case_insensitive</a></div><div class="ttdeci">static T lua_value_case_insensitive(const sol::table &amp;tbl, const std::string &amp;key, const T &amp;default_value)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:117</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html_ae4530264b8a284b3c41a306b20b8f648"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#ae4530264b8a284b3c41a306b20b8f648">SDOM::IDataObject::onUnitTest</a></div><div class="ttdeci">virtual bool onUnitTest(int frame) override</div><div class="ttdoc">Runs unit tests for this object.</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:114</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a886b4c40c6f1dbb2dea2837e2d0e32ec"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a886b4c40c6f1dbb2dea2837e2d0e32ec">SDOM::IDataObject::getTypeTable</a></div><div class="ttdeci">static sol::table getTypeTable(sol::state_view lua, const std::string &amp;typeName)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:251</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a90dd1b86ac56a3fb85044e6f0fd5528e"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e">SDOM::IDataObject::register_usertype_with_table</a></div><div class="ttdeci">static sol::usertype&lt; T &gt; register_usertype_with_table(sol::state_view lua, const std::string &amp;typeName)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:165</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_a9a0e8c7c95a1a60291038e9da23b272b"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#a9a0e8c7c95a1a60291038e9da23b272b">SDOM::IDataObject::objHandleType_</a></div><div class="ttdeci">sol::usertype&lt; IDataObject &gt; objHandleType_</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:306</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_ac79673e571c58f21de1541a81548a959"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959">SDOM::IDataObject::lua_value_case_insensitive</a></div><div class="ttdeci">static T lua_value_case_insensitive(const sol::table &amp;tbl, const std::string &amp;key, const T &amp;default_value)</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:118</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_ae4530264b8a284b3c41a306b20b8f648"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#ae4530264b8a284b3c41a306b20b8f648">SDOM::IDataObject::onUnitTest</a></div><div class="ttdeci">virtual bool onUnitTest(int frame) override</div><div class="ttdoc">Runs unit tests for this object.</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:115</div></div>
 <div class="ttc" id="aclassSDOM_1_1IDataObject_html_ae7bbc291ea72a2a99a1cce4c86e681cb"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#ae7bbc291ea72a2a99a1cce4c86e681cb">SDOM::IDataObject::onInit</a></div><div class="ttdeci">virtual bool onInit()=0</div></div>
-<div class="ttc" id="aclassSDOM_1_1IDataObject_html_aeff0a0985efe5dae1e6aa10e5b206396"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">SDOM::IDataObject::name_</a></div><div class="ttdeci">std::string name_</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:272</div></div>
+<div class="ttc" id="aclassSDOM_1_1IDataObject_html_aeff0a0985efe5dae1e6aa10e5b206396"><div class="ttname"><a href="classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396">SDOM::IDataObject::name_</a></div><div class="ttdeci">std::string name_</div><div class="ttdef"><b>Definition</b> SDOM_IDataObject.hpp:312</div></div>
 <div class="ttc" id="aclassSDOM_1_1IUnitTest_html"><div class="ttname"><a href="classSDOM_1_1IUnitTest.html">SDOM::IUnitTest</a></div><div class="ttdoc">Interface for unit testing objects in SDOM.</div><div class="ttdef"><b>Definition</b> SDOM_IUnitTest.hpp:31</div></div>
 <div class="ttc" id="anamespaceSDOM_html"><div class="ttname"><a href="namespaceSDOM.html">SDOM</a></div><div class="ttdoc">Contains all core classes and utilities for the SDOM library.</div></div>
-<div class="ttc" id="anamespaceSDOM_html_a4438b3703a628f3a65ae65fed81315e4"><div class="ttname"><a href="namespaceSDOM.html#a4438b3703a628f3a65ae65fed81315e4">SDOM::set_if_absent</a></div><div class="ttdeci">static void set_if_absent(sol::table &amp;handle, const char *name, auto &amp;&amp;fn)</div><div class="ttdef"><b>Definition</b> SDOM_AssetHandle.cpp:128</div></div>
+<div class="ttc" id="anamespaceSDOM_html_a4438b3703a628f3a65ae65fed81315e4"><div class="ttname"><a href="namespaceSDOM.html#a4438b3703a628f3a65ae65fed81315e4">SDOM::set_if_absent</a></div><div class="ttdeci">static void set_if_absent(sol::table &amp;handle, const char *name, auto &amp;&amp;fn)</div><div class="ttdef"><b>Definition</b> SDOM_AssetHandle.cpp:127</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

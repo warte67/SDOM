@@ -28,7 +28,7 @@ var searchData=
   ['_7espritesheet_25',['~SpriteSheet',['../classSDOM_1_1SpriteSheet.html#ae1e22d15504a076982ab3ab84cf02ee1',1,'SDOM::SpriteSheet']]],
   ['_7estage_26',['~Stage',['../classSDOM_1_1Stage.html#a54db12b3a1a2ff7d7cfff112f2de1ab6',1,'SDOM::Stage']]],
   ['_7etexture_27',['~Texture',['../classSDOM_1_1Texture.html#a39cff82635f7235c76f2156b409ac181',1,'SDOM::Texture']]],
-  ['_7etristatebutton_28',['~TristateButton',['../classSDOM_1_1TristateButton.html#a54dfcd3dce15c37f1db4d416b54ff8b6',1,'SDOM::TristateButton']]],
+  ['_7etristatebutton_28',['~TristateButton',['../classSDOM_1_1TristateButton.html#aab0f31c78a6f32fd0d1917abf6514a89',1,'SDOM::TristateButton']]],
   ['_7etruetypefont_29',['~TruetypeFont',['../classSDOM_1_1TruetypeFont.html#ab3a8016e382dd5468376e05a46c5a3ae',1,'SDOM::TruetypeFont']]],
   ['_7ettfasset_30',['~TTFAsset',['../classSDOM_1_1TTFAsset.html#aca74ac946791073bbf82bcd8ee642d29',1,'SDOM::TTFAsset']]],
   ['_7eversion_31',['~Version',['../classSDOM_1_1Version.html#a845c4ffa4dbc7c6f73cdf378ed9a3e34',1,'SDOM::Version']]]
