@@ -335,7 +335,7 @@ namespace SDOM
             ut.add_test(objName, "Direct getIconIndex() mapping", TristateButton_test7_icon_index_direct);
             ut.add_test(objName, "getLabel() raw pointer", TristateButton_test8_getLabel_ptr);
 
-            ut.add_test(objName, "Lua: src/TristateButton_UnitTests.lua", TristateButton_LUA_Tests, false);
+            ut.add_test(objName, "Lua: src/TristateButton_UnitTests.lua", TristateButton_LUA_Tests, true);
 
             registered = true;
         }

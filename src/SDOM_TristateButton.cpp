@@ -43,6 +43,8 @@
 #include <SDOM/SDOM_Label.hpp>
 #include <SDOM/SDOM_IconIndex.hpp>
 #include <SDOM/SDOM_IconButton.hpp>
+#include <SDOM/SDOM_Button.hpp>
+#include <SDOM/SDOM_ArrowButton.hpp>
 
 #include <SDOM/SDOM_TristateButton.hpp>
 
@@ -695,14 +697,113 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Acquire or create the DisplayHandle table (do not clobber usertype).
-        sol::table handleTbl;
-        try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
-        if (!handleTbl.valid()) {
-            handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-        }
+        // Acquire or create the DisplayHandle table and (optionally) its usertype.
+        sol::table handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
+        sol::optional<sol::usertype<DisplayHandle>> maybeUT;
+        try { maybeUT = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
 
-        // add lua bindings ...
+        // Helper to bind on both table and usertype if present
+        auto bind_both = [&](const char* name, auto&& fn)
+        {
+            sol::object cur = handleTbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil) {
+                handleTbl.set_function(name, std::forward<decltype(fn)>(fn));
+            }
+            if (maybeUT) {
+                try { (*maybeUT)[name] = fn; } catch(...) {}
+            }
+        };
+
+        // -----------------------------------------------------------------
+        // Accessors (multi-type aware to avoid overriding other classes)
+        // -----------------------------------------------------------------
+        bind_both("getLabelObject", [](DisplayHandle& self) -> DisplayHandle {
+            if (auto* b = self.as<Button>()) return b->getLabelObject();
+            if (auto* tb = self.as<TristateButton>()) return tb->getLabelObject();
+            return {};
+        });
+
+        bind_both("getText", [](DisplayHandle& self) -> std::string {
+            if (auto* b = self.as<Button>()) return b->getText();
+            if (auto* tb = self.as<TristateButton>()) return tb->getText();
+            return {};
+        });
+
+        bind_both("getIconButtonObject", [](DisplayHandle& self) -> DisplayHandle {
+            if (auto* tb = self.as<TristateButton>()) return tb->getIconButtonObject();
+            return {};
+        });
+
+        bind_both("getFontResource", [](DisplayHandle& self) -> std::string {
+            if (auto* b = self.as<Button>()) return b->getFontResource();
+            if (auto* tb = self.as<TristateButton>()) return tb->getFontResource();
+            return {};
+        });
+        bind_both("getIconResource", [](DisplayHandle& self) -> std::string {
+            if (auto* tb = self.as<TristateButton>()) return tb->getIconResource();
+            return {};
+        });
+        bind_both("getFontSize", [](DisplayHandle& self) -> int {
+            if (auto* tb = self.as<TristateButton>()) return tb->getFontSize();
+            return 0;
+        });
+        bind_both("getFontWidth", [](DisplayHandle& self) -> int {
+            if (auto* tb = self.as<TristateButton>()) return tb->getFontWidth();
+            return 0;
+        });
+        bind_both("getFontHeight", [](DisplayHandle& self) -> int {
+            if (auto* tb = self.as<TristateButton>()) return tb->getFontHeight();
+            return 0;
+        });
+        bind_both("getUseBorder", [](DisplayHandle& self) -> bool {
+            if (auto* tb = self.as<TristateButton>()) return tb->getUseBorder();
+            return false;
+        });
+
+        bind_both("getLabelColor", [lua](DisplayHandle& self) mutable -> sol::table {
+            sol::table t = lua.create_table();
+            SDL_Color c{0,0,0,0};
+            bool ok = false;
+            if (auto* b = self.as<Button>()) { c = b->getLabelColor(); ok = true; }
+            else if (auto* tb = self.as<TristateButton>()) { c = tb->getLabelColor(); ok = true; }
+            if (ok) {
+                t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a;
+                t[1] = (int)c.r; t[2] = (int)c.g; t[3] = (int)c.b; t[4] = (int)c.a;
+            }
+            return t;
+        });
+        bind_both("getBorderColor", [lua](DisplayHandle& self) mutable -> sol::table {
+            sol::table t = lua.create_table();
+            if (auto* tb = self.as<TristateButton>()) {
+                SDL_Color c = tb->getBorderColor();
+                t["r"] = c.r; t["g"] = c.g; t["b"] = c.b; t["a"] = c.a;
+                t[1] = (int)c.r; t[2] = (int)c.g; t[3] = (int)c.b; t[4] = (int)c.a;
+            }
+            return t;
+        });
+
+        bind_both("getIconWidth", [](DisplayHandle& self) -> int {
+            if (auto* tb = self.as<TristateButton>()) return tb->getIconWidth();
+            return 0;
+        });
+        bind_both("getIconHeight", [](DisplayHandle& self) -> int {
+            if (auto* tb = self.as<TristateButton>()) return tb->getIconHeight();
+            return 0;
+        });
+        bind_both("getIconIndex", [](DisplayHandle& self) -> int {
+            if (auto* ab = self.as<ArrowButton>()) return static_cast<int>(ab->getIconIndex());
+            if (auto* tb = self.as<TristateButton>()) return static_cast<int>(tb->getIconIndex());
+            if (auto* ib = self.as<IconButton>()) return static_cast<int>(ib->getIconIndex());
+            return -1;
+        });
+
+        // -----------------------------------------------------------------
+        // Mutators (multi-type)
+        // -----------------------------------------------------------------
+        bind_both("setText", [](DisplayHandle& self, const std::string& newText) {
+            if (auto* b = self.as<Button>()) b->setText(newText);
+            else if (auto* tb = self.as<TristateButton>()) tb->setText(newText);
+        });
 
     } // END: void TristateButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
