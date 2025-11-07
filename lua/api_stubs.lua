@@ -118,7 +118,7 @@ function configure(cfg) end
 ---@field setForegroundColor fun(self: DisplayHandle, c: SDL_Color|table)
 ---@field getBackgroundColor fun(self: DisplayHandle): SDL_Color
 ---@field setBackgroundColor fun(self: DisplayHandle, c: SDL_Color|table)
----@field getBorderColor fun(self: DisplayHandle): SDL_Color
+---@field getBorderColor fun(self: DisplayHandle): SDL_Color|table
 ---@field setBorderColor fun(self: DisplayHandle, c: SDL_Color|table)
 ---@field getOutlineColor fun(self: DisplayHandle): SDL_Color
 ---@field setOutlineColor fun(self: DisplayHandle, c: SDL_Color|table)
@@ -132,6 +132,15 @@ function configure(cfg) end
 ---@field setLabelColor fun(self: DisplayHandle, c: SDL_Color|table)
 ---@field getFontResource fun(self: DisplayHandle): string
 ---@field getLabelObject fun(self: DisplayHandle): DisplayHandle
+---@field getIconButtonObject fun(self: DisplayHandle): DisplayHandle
+---@field getIconResource fun(self: DisplayHandle): string
+---@field getFontSize fun(self: DisplayHandle): integer
+---@field getFontWidth fun(self: DisplayHandle): integer
+---@field getFontHeight fun(self: DisplayHandle): integer
+---@field getUseBorder fun(self: DisplayHandle): boolean
+---@field getIconWidth fun(self: DisplayHandle): integer
+---@field getIconHeight fun(self: DisplayHandle): integer
+---@field getIconIndex fun(self: DisplayHandle): integer
 ---@field hasBackground fun(self: DisplayHandle): boolean
 ---@field setBorder fun(self: DisplayHandle, enabled: boolean)
 ---@field setBackground fun(self: DisplayHandle, enabled: boolean)
@@ -595,6 +604,25 @@ EventType = EventType or {}
 ---@field setDirection fun(self: ArrowButton, dir: (ArrowDirectionString|integer))
 ---@field getArrowState fun(self: ArrowButton): ArrowStateString|integer
 ---@field getIconIndex fun(self: ArrowButton): integer
+
+---@class TristateButton : DisplayHandle
+---Composite icon+label three-state button (Inactive/Active/Mixed).
+---Inherits common Button helpers and adds icon and font accessors.
+---@field getLabelObject fun(self: TristateButton): DisplayHandle
+---@field getIconButtonObject fun(self: TristateButton): DisplayHandle
+---@field getText fun(self: TristateButton): string
+---@field setText fun(self: TristateButton, text: string)
+---@field getFontResource fun(self: TristateButton): string
+---@field getIconResource fun(self: TristateButton): string
+---@field getFontSize fun(self: TristateButton): integer
+---@field getFontWidth fun(self: TristateButton): integer
+---@field getFontHeight fun(self: TristateButton): integer
+---@field getUseBorder fun(self: TristateButton): boolean
+---@field getLabelColor fun(self: TristateButton): SDL_Color|table
+---@field getBorderColor fun(self: TristateButton): SDL_Color|table
+---@field getIconWidth fun(self: TristateButton): integer
+---@field getIconHeight fun(self: TristateButton): integer
+---@field getIconIndex fun(self: TristateButton): integer
 
 ---@param typeName "ArrowButton"
 ---@param cfg table

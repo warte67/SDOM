@@ -1142,7 +1142,7 @@ namespace SDOM
     {
         // Acquire or create the DisplayHandle table (do not clobber usertype).
         sol::table handleTbl;
-        try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
+        // try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
         if (!handleTbl.valid()) {
             handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
         }

@@ -104,8 +104,7 @@ namespace SDOM
         // Provide a friendly __index that supports dot-style access by
         // returning a closure which binds the handle as the first argument.
         // This lets scripts use both `h:getName()` and `h.getName()`.
-        std::string typeKey = typeName;
-        ut[sol::meta_function::index] = [typeKey](DisplayHandle self, const sol::object& key, sol::this_state ts) -> sol::object {
+        ut[sol::meta_function::index] = [](DisplayHandle self, const sol::object& key, sol::this_state ts) -> sol::object {
             sol::state_view L(ts);
             if (!key.valid() || key == sol::lua_nil) return sol::lua_nil;
             if (!key.is<std::string>()) return sol::lua_nil;
@@ -130,23 +129,68 @@ namespace SDOM
                 return sol::lua_nil;
             }
 
-            // Fetch the current usertype table from globals to avoid capturing
-            // a stale handle. Some sol builds expose usertype as table.
-            sol::table tbl;
-            try {
-                sol::object maybe = L.globals().raw_get_or(typeKey, sol::lua_nil);
-                if (maybe.valid()) {
-                    if (maybe.is<sol::table>()) {
-                        tbl = maybe.as<sol::table>();
-                    } else {
-                        // Fallback: attempt to read as table directly
-                        tbl = L[typeKey];
+            // Resolve from canonical SDOM_Bindings[type][k] first,
+            // then fall back to legacy globals[type][k], then DisplayHandle table.
+            sol::object member = sol::make_object(L, sol::lua_nil);
+            std::string typeKeyDyn;
+            try { typeKeyDyn = self.getType(); } catch(...) { typeKeyDyn.clear(); }
+
+            // 1) SDOM_Bindings[type][k]
+            if (!typeKeyDyn.empty()) {
+                try {
+                    sol::table bindingsRoot;
+                    try { bindingsRoot = L["SDOM_Bindings"]; } catch(...) {}
+                    if (bindingsRoot.valid()) {
+                        sol::object typeTblObj = bindingsRoot.raw_get_or(typeKeyDyn, sol::lua_nil);
+                        if (typeTblObj.valid() && typeTblObj != sol::lua_nil) {
+                            sol::table typeTbl = typeTblObj.as<sol::table>();
+                            sol::object mm = typeTbl.raw_get_or(k, sol::lua_nil);
+                            if (mm.valid() && mm != sol::lua_nil) {
+                                member = mm;
+                            }
+                        }
                     }
-                }
-            } catch(...) {}
-            if (!tbl.valid()) return sol::lua_nil;
-            sol::object member = tbl.raw_get_or(k, sol::lua_nil);
-            if (!member.valid() || member == sol::lua_nil) return sol::lua_nil;
+                } catch(...) {}
+            }
+
+            // 2) Legacy: globals[type][k]
+            if (!member.valid() || member == sol::lua_nil) {
+                try {
+                    sol::table tbl;
+                    if (!typeKeyDyn.empty()) {
+                        sol::object maybe = L.globals().raw_get_or(typeKeyDyn, sol::lua_nil);
+                        if (maybe.valid()) {
+                            if (maybe.is<sol::table>()) {
+                                tbl = maybe.as<sol::table>();
+                            } else {
+                                // Fallback: attempt to read as table directly
+                                tbl = L[typeKeyDyn];
+                            }
+                        }
+                    }
+                    if (tbl.valid()) {
+                        sol::object mm = tbl.raw_get_or(k, sol::lua_nil);
+                        if (mm.valid() && mm != sol::lua_nil)
+                            member = mm;
+                    }
+                } catch(...) {}
+            }
+
+            // 3) Minimal DisplayHandle surface
+            if (!member.valid() || member == sol::lua_nil) {
+                try {
+                    sol::object maybeDH = L.globals().raw_get_or(SDOM::DisplayHandle::LuaHandleName, sol::lua_nil);
+                    if (maybeDH.valid()) {
+                        sol::table dhTbl = maybeDH.is<sol::table>() ? maybeDH.as<sol::table>() : L[SDOM::DisplayHandle::LuaHandleName];
+                        if (dhTbl.valid()) {
+                            sol::object mm2 = dhTbl.raw_get_or(k, sol::lua_nil);
+                            if (mm2.valid() && mm2 != sol::lua_nil)
+                                member = mm2;
+                        }
+                    }
+                } catch(...) {}
+                if (!member.valid() || member == sol::lua_nil) return sol::lua_nil;
+            }
 
             if (member.get_type() == sol::type::function) {
                 sol::protected_function fn = member;

@@ -91,6 +91,7 @@ Summary:
 #include <SDOM/SDOM_CLR.hpp>
 #include <SDOM/SDOM_IUnitTest.hpp>
 #include <unordered_map>
+#include <utility>
 
 // Ensure DEBUG_REGISTER_LUA exists (normally provided by SDOM.hpp). If the
 // umbrella header is included by a TU it will override this; this definition
@@ -213,6 +214,45 @@ namespace SDOM
             reg[typeName] = true;
             return userType;
         }        
+
+        // Return both legacy per-type table (globals[typeName]) and canonical
+        // registry table (SDOM_Bindings[typeName]). Also ensures a proper
+        // usertype is registered with the provided BaseT.
+        template <typename T, typename BaseT>
+        static std::pair<sol::table, sol::table> ensure_type_tables(sol::state_view lua, const std::string& typeName)
+        {
+            // Ensure usertype with base relationship (idempotent)
+            (void)register_usertype_with_table<T, BaseT>(lua, typeName);
+
+            // Legacy/compatibility per-type table in globals
+            sol::table legacy = ensure_sol_table(lua, typeName);
+
+            // Canonical registry root: SDOM_Bindings
+            sol::table root;
+            try { root = lua["SDOM_Bindings"]; } catch(...) {}
+            if (!root.valid()) {
+                root = lua.create_table();
+                lua["SDOM_Bindings"] = root;
+            }
+
+            // Canonical per-type registry: SDOM_Bindings[typeName]
+            sol::table reg = root.raw_get_or(typeName, sol::lua_nil);
+            if (!reg.valid()) {
+                reg = lua.create_table();
+                root[typeName] = reg;
+            }
+
+            return { legacy, reg };
+        }
+
+        // Convenience: ensure usertype + tables, and return the canonical
+        // registry table (SDOM_Bindings[typeName]).
+        template <typename T, typename BaseT>
+        static sol::table getTypeTable(sol::state_view lua, const std::string& typeName)
+        {
+            auto both = ensure_type_tables<T, BaseT>(lua, typeName);
+            return both.second; // canonical registry table
+        }
 
     public:
 
