@@ -362,10 +362,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Register bindings into a per-type binding table instead of the
-        // // global DisplayHandle table. The DisplayHandle dispatcher will
-        // // route lookups to this table at runtime.
-        // sol::table handle = DisplayHandle::ensure_type_bind_table(lua, typeName, SUPER::TypeName);
+        // Go-by for future bindings on DisplayHandle:
+        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
 
 
     } // END: void Group::_registerLuaBindings(const std::string& typeName, sol::state_view lua)

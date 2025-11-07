@@ -214,8 +214,11 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
-        // sol::table handle = AssetHandle::ensure_handle_table(lua);
+        // Go-by for future bindings:
+        // To expose Texture helpers on AssetHandle in Lua, follow the unified pattern:
+        //   auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, AssetHandle::LuaHandleName);
+        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
+        //   // then bind on both 'ut' (method syntax) and 'handle' (function syntax).
 
 
     }

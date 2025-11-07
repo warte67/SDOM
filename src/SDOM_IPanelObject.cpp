@@ -539,8 +539,8 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared DisplayHandle handle usertype
-        // sol::table handle = DisplayHandle::ensure_handle_table(lua);
+        // Go-by for future bindings on DisplayHandle:
+        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
 
     } // END: void IPanelObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

@@ -865,9 +865,9 @@ namespace SDOM
         }
 
         // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
-        sol::table handle = AssetHandle::ensure_handle_table(lua);
-        sol::optional<sol::usertype<AssetHandle>> maybeUT;
-        try { maybeUT = lua[AssetHandle::LuaHandleName]; } catch(...) {}
+        auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, AssetHandle::LuaHandleName);
+        sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
+        sol::optional<sol::usertype<AssetHandle>> maybeUT = ut;
 
         // Expose resource accessor and bitmap metrics
         bf_bind_both_impl(handle, maybeUT, "getResourceHandle", [](AssetHandle& self) -> AssetHandle {

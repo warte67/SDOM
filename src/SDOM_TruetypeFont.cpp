@@ -508,8 +508,11 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
-        // sol::table handle = AssetHandle::ensure_handle_table(lua);
+        // Go-by for future bindings:
+        // To expose TruetypeFont helpers on AssetHandle in Lua, use the unified pattern:
+        //   auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, AssetHandle::LuaHandleName);
+        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
+        //   // then bind functions on both 'ut' and 'handle'.
 
 
     } // END _registerLuaBindings()
