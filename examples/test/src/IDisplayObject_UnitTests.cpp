@@ -1343,7 +1343,6 @@ namespace SDOM
     // --- Main UnitTests Runner --- //
     bool IDisplayObject_UnitTests()
     {
-DEBUG_LOG("IDisplayObject_UnitTests: Starting.");
         const std::string objName = "IDisplayObject";
         UnitTests& ut = UnitTests::getInstance();
 

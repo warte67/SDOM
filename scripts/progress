@@ -92,8 +92,7 @@ awk -v TODAY="$TODAY" '
     "_[Short summary of results and next direction.]_\n\n" \
     "**🚧 ToDo Today**\n" \
     "- ☐ [Task 1]\n" \
-    "- ☐ [Task 2]\n\n" \
-    "#### end-of-day\n"
+    "- ☐ [Task 2]\n\n"
 
     for (i = 1; i <= out_n; i++) {
       if (i == insert_anchor_at) {

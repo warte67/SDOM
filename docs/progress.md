@@ -439,8 +439,7 @@ This module is marked **✅ Complete** and serves as a reference pattern for fut
 - ☐ Expand Lua stubs to include upcoming control types (`ToggleButton`, `Slider`, `CheckButton`, etc.).
 
 ---
-<a id="latest-update"></a>
-## 🗓️ November 6–7, 2025 — Documentation, Lua Bindings, and Unit Testing Standardization
+## 🗓️ November 6, 2025 — Documentation, Lua Bindings, and Unit Testing Standardization
 
 _Completed full documentation, Lua integration, and unit test coverage for four SDOM core objects:_  
 **`ArrowButton`**, **`AssetHandle`**, **`BitmapFont`**, and **`Button`**.  
@@ -511,8 +510,36 @@ Additionally, **TristateButton** now provides a unified base for all multi-state
 - ☐ Continue documenting `_registerLuaBindings` conventions emphasizing `IDataObject::ensure_sol_table()` and inheritance order.
 
 ---
+<a id="latest-update"></a>
+## 🗓️ November 7, 2025 — Doxygen Comment Standardization
+
+_Added consistent Doxygen headers and emoji conventions across SDOM interface classes._
+
+### 🧩 Documentation & Codebase Consistency
+- Established a **unified Doxygen header template** to be applied to all SDOM headers.
+- Added detailed metadata blocks with `@class`, `@brief`, `@inherits`, and `@luaType` tags.
+- Introduced a **standardized emoji convention** to visually identify code sections  
+  (`📜 Lua`, `🌱 Lifecycle`, `🏭 Factory`, `🎨 Render`, `🎯 Events`, etc.).
+- Fully documented **`SDOM_IButtonObject.hpp`**, including `ButtonState` enum, helper functions,  
+  and Lua binding stubs with full parameter and return annotations.
+- Added complete Doxygen documentation and standard section formatting for  
+  **`SDOM_TristateButton.hpp`**, maintaining alignment with its `.cpp` implementation.
+- Confirmed format consistency for future headers such as  
+  `SDOM_IconButton.hpp`, `SDOM_ArrowButton.hpp`, and `SDOM_CheckButton.hpp`.
+
+### 🌟 **Summary:**
+SDOM now has a consistent Doxygen documentation framework and visual comment system.  
+This standard will be applied progressively to all headers and Lua-facing classes for  
+complete inline API documentation and auto-generated reference output.
+
+**🚧 ToDo Today**
+- ☐ Apply standardized Doxygen block to `SDOM_IconButton.hpp`.
+- ☐ Update `SDOM_ArrowButton.hpp` and `SDOM_CheckButton.hpp` with consistent emoji markers.
+- ☐ Verify auto-generated Doxygen output for formatting consistency.
 
 #### end-of-day
+
+
 
 [🔝 **Back to Table of Contents**](#📑-table-of-contents)
 

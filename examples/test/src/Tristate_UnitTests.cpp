@@ -10,6 +10,40 @@
 #include <SDOM/SDOM_IButtonObject.hpp>
 #include <SDOM/SDOM_IconIndex.hpp>
 
+
+// // --------------------------------------------------------------------
+// // 🧩 Virtual State Accessors (From IButtonObject)
+// // --------------------------------------------------------------------
+// virtual ButtonState getState() const override;           // ✅ Verified by tests 1–3
+// virtual void setState(ButtonState state) override;       // ✅ Verified by tests 1–3
+
+// // --------------------------------------------------------------------
+// // 🧩 Public Accessors
+// // --------------------------------------------------------------------
+// DisplayHandle getLabelObject() const;                    // ☐ Not covered yet
+// std::string getText() const;                             // ☐ Not covered yet
+// DisplayHandle getIconButtonObject() const;               // ☐ Not covered yet
+// IconButton* getIconButton() const;                       // ✅ Used in tests 1–3 (non-null)
+// SpriteSheet* getIconSpriteSheet() const;                 // ☐ Not covered yet
+// Label* getLabel() const;                                 // ☐ Not covered yet
+// std::string getFontResource() const;                     // ☐ Not covered yet
+// std::string getIconResource() const;                     // ☐ Not covered yet
+// int getFontSize() const;                                 // ☐ Not covered yet
+// int getFontWidth() const;                                // ☐ Not covered yet
+// int getFontHeight() const;                               // ☐ Not covered yet
+// bool getUseBorder() const;                               // ☐ Not covered yet
+// SDL_Color getLabelColor() const;                         // ☐ Not covered yet
+// SDL_Color getBorderColor() const;                        // ☐ Not covered yet
+// int getIconWidth() const;                                // ☐ Not covered yet
+// int getIconHeight() const;                               // ☐ Not covered yet
+// IconIndex getIconIndex() const;                          // ☐ Not tested directly (icon mapping validated via IconButton)
+
+// // --------------------------------------------------------------------
+// // 🧩 Public Mutators
+// // --------------------------------------------------------------------
+// void setText(const std::string& newText);                // ☐ Not covered yet
+
+
 namespace SDOM
 {
     // --- Individual TristateButton Unit Tests --- //

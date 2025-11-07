@@ -1,4 +1,39 @@
+// ============================================================================
 // SDOM_TristateButton.cpp
+// ----------------------------------------------------------------------------
+// Implementation for SDOM::TristateButton.
+//  Purpose:
+//    Composite three-state button with an icon and label. Handles creation of
+//    its child IconButton/Label, tri-state cycling on click, icon selection by
+//    state, and Lua registration glue.
+//  Notes:
+//    • Keep helpers in an anonymous namespace or mark them `static`.
+//    • Prefer documenting in headers (Doxygen lives in .hpp).
+//    • Include order: C++ stdlib → SDL → SDOM core → SDOM_TristateButton.hpp.
+//
+// ----------------------------------------------------------------------------
+// License: ZLIB
+// ----------------------------------------------------------------------------
+// This software is provided 'as-is', without any express or implied warranty.
+// In no event will the authors be held liable for any damages arising from
+// the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+// ----------------------------------------------------------------------------
+// Author: Jay Faries (https://github.com/warte67)
+// ============================================================================
+
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
@@ -13,6 +48,9 @@
 
 namespace SDOM
 {
+    // --------------------------------------------------------------------
+    // 🏭 Constructors
+    // --------------------------------------------------------------------
 
     TristateButton::TristateButton(const InitStruct& init) : IDisplayObject(init)
     {
@@ -59,7 +97,7 @@ namespace SDOM
         // std::cout << "Box constructed with Lua config: " << getName() 
         //         << " at address: " << this << std::endl;            
 
-    InitStruct init;
+        InitStruct init;
 
         // std::string type = config["type"].valid() ? config["type"].get<std::string>() : init.type;
         // if (type != "TypeName") {
@@ -206,8 +244,9 @@ namespace SDOM
     } // END: TristateButton::TristateButton(const sol::table& config)
 
 
-
-    // --- Lifecycle & Core Virtuals --- //
+    // --------------------------------------------------------------------
+    // 🌱 Lifecycle
+    // --------------------------------------------------------------------
 
     bool TristateButton::onInit() 
     { 
@@ -440,11 +479,9 @@ namespace SDOM
     } // END: TristateButton::onUnitTest()
 
 
-
-
-
-
-    // --- Virtual State Accessors (From IButtonObject) --- //
+    // --------------------------------------------------------------------
+    // 🧩 Virtual State Accessors (From IButtonObject)
+    // --------------------------------------------------------------------
 
     ButtonState TristateButton::getState() const 
     { 
@@ -495,7 +532,14 @@ namespace SDOM
     } // END: virtual void setState(ButtonState state)
 
 
-    // --- Public Accessors --- //
+    // --------------------------------------------------------------------
+    // 🧩 Public Accessors
+    // --------------------------------------------------------------------
+
+    DisplayHandle TristateButton::getLabelObject() const { return labelObject_; }
+    std::string TristateButton::getText() const { return text_; }
+    DisplayHandle TristateButton::getIconButtonObject() const { return iconButtonObject_; }
+
 
     IconButton* TristateButton::getIconButton() const
     {
@@ -557,30 +601,22 @@ namespace SDOM
         return lbl;
     } // END: Label* TristateButton::getLabel() const;
 
-
-    
-    // --- Protected Virtual Methods (From IButtonObject) --- //
-
-    void TristateButton::onStateChanged(ButtonState, ButtonState) 
-    {
-        // ...
-    } // END: void TristateButton::onStateChanged(ButtonState oldState, ButtonState newState)
-
-    IconIndex TristateButton::iconIndexForState(ButtonState state) const
-    {
-        switch (state) {
-            case ButtonState::Inactive:   return IconIndex::Checkbox_Empty;
-            case ButtonState::Active:     return IconIndex::Checkbox_Checked;
-            case ButtonState::Mixed:      return IconIndex::Checkbox_X;
-            default:                      return IconIndex::Checkbox_Empty;
-        }
-    } // END: IconIndex TristateButton::iconIndexForState(ButtonState state) const
+    std::string TristateButton::getFontResource() const { return font_resource_; }
+    std::string TristateButton::getIconResource() const { return icon_resource_; }
+    int TristateButton::getFontSize() const { return font_size_; }
+    int TristateButton::getFontWidth() const { return font_width_; }
+    int TristateButton::getFontHeight() const { return font_height_; }
+    bool TristateButton::getUseBorder() const { return use_border_; }
+    SDL_Color TristateButton::getLabelColor() const { return label_color_; }
+    SDL_Color TristateButton::getBorderColor() const { return border_color_; }
+    int TristateButton::getIconWidth() const { return icon_width_; }
+    int TristateButton::getIconHeight() const { return icon_height_; }
+    IconIndex TristateButton::getIconIndex() const { return icon_index_; }    
 
 
-
-
-
-    // --- Public Mutators --- //
+    // --------------------------------------------------------------------
+    // 🧩 Public Mutators
+    // --------------------------------------------------------------------
 
     void TristateButton::setText(const std::string& newText) 
     {
@@ -601,8 +637,29 @@ namespace SDOM
     } // END: void TristateButton::setText(const std::string& newText)
 
 
+    // --------------------------------------------------------------------
+    // ⚙️ Internal Virtuals
+    // --------------------------------------------------------------------
 
-    // --- Lua Registration --- //
+    void TristateButton::onStateChanged(ButtonState, ButtonState) 
+    {
+        // ...
+    } // END: void TristateButton::onStateChanged(ButtonState oldState, ButtonState newState)
+
+    IconIndex TristateButton::iconIndexForState(ButtonState state) const
+    {
+        switch (state) {
+            case ButtonState::Inactive:   return IconIndex::Checkbox_Empty;
+            case ButtonState::Active:     return IconIndex::Checkbox_Checked;
+            case ButtonState::Mixed:      return IconIndex::Checkbox_X;
+            default:                      return IconIndex::Checkbox_Empty;
+        }
+    } // END: IconIndex TristateButton::iconIndexForState(ButtonState state) const
+
+
+    // --------------------------------------------------------------------
+    // 📜 Lua Registration
+    // --------------------------------------------------------------------
 
     void TristateButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua) 
     {
