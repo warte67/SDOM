@@ -920,7 +920,16 @@ namespace SDOM
         }
 
         // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
-        sol::table handle = AssetHandle::ensure_handle_table(lua);
+
+        // Acquire or create the DisplayHandle table (do not clobber usertype).
+        sol::table handle;
+        // try { handle = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
+        if (!handle.valid()) {
+            handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
+        }
+
+        // add lua bindings ...        
+        // sol::table handle = AssetHandle::ensure_handle_table(lua);
         sol::optional<sol::usertype<AssetHandle>> maybeUT;
         try { maybeUT = lua[AssetHandle::LuaHandleName]; } catch(...) {}
 

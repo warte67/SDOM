@@ -1904,8 +1904,14 @@ if (LABEL_DEBUG)
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
-        // sol::table handle = DisplayHandle::ensure_handle_table(lua);
+        // Acquire or create the DisplayHandle table (do not clobber usertype).
+        sol::table handleTbl;
+        try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
+        if (!handleTbl.valid()) {
+            handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
+        }
+
+        // add lua bindings ...
         
     } // END Label::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
