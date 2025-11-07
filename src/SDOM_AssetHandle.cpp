@@ -115,14 +115,13 @@ namespace SDOM
         return AssetHandle();
     }
 
-
+    // Deprecated: use SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, LuaHandleName);
     sol::table AssetHandle::ensure_handle_table(sol::state_view lua)
     {
-        if (!lua[LuaHandleName].valid())
-        {
-            lua.new_usertype<AssetHandle>(LuaHandleName, sol::no_constructor);
-        }
-        return lua[LuaHandleName];
+        // Ensure usertype and its table exist (idempotent across calls/states)
+        (void)SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, LuaHandleName);
+        // Ensure and return the associated global table
+        return SDOM::IDataObject::ensure_sol_table(lua, LuaHandleName);
     }
 
     static inline void set_if_absent(sol::table& handle, const char* name, auto&& fn)
@@ -136,20 +135,33 @@ namespace SDOM
 
     void AssetHandle::bind_minimal(sol::state_view lua)
     {
-        sol::table handle = ensure_handle_table(lua);
+        // Ensure usertype and table are present
+        auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, LuaHandleName);
+        sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, LuaHandleName);
 
-        // Minimal surface similar to DisplayHandle; keep lightweight and safe.
-        set_if_absent(handle, "isValid",      &AssetHandle::isValid);
-        set_if_absent(handle, "getName",      &AssetHandle::getName_lua);
-        set_if_absent(handle, "getType",      &AssetHandle::getType_lua);
-        set_if_absent(handle, "getFilename",  &AssetHandle::getFilename_lua);
+        // Bind helpers: add to both usertype and table if missing
+        auto set_if_absent_local = [&](const char* name, auto&& fn)
+        {
+            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil)
+            {
+                handle.set_function(name, std::forward<decltype(fn)>(fn));
+            }
+        };
+        auto bind_both = [&](const char* name, auto&& fn)
+        {
+            ut[name] = fn;                          // bind on usertype for instance: h:fn()
+            set_if_absent_local(name, std::forward<decltype(fn)>(fn)); // bind on table for h.fn(h)
+        };
 
-        // 🔒 These properties are immutable and should not have mutators.
-        // Name, type, and filename remain constant for the asset’s lifetime.
+        // Minimal, read-only surface
+        bind_both("isValid",     [](AssetHandle& self){ return self.isValid(); });
+        bind_both("getName",     [](AssetHandle& self){ return self.getName(); });
+        bind_both("getType",     [](AssetHandle& self){ return self.getType(); });
+        bind_both("getFilename", [](AssetHandle& self){ return self.getFilename(); });
 
-        // Concrete IAssetObject implementations may safely extend this surface:
-        //   auto t = AssetHandle::ensure_handle_table(lua);
-        //   if (t["methodName"] == nil) t.set_function("methodName", ...);
+        // No mutators — identity is immutable for assets
+        // Concrete assets can extend this surface using ensure_handle_table(lua)
     }
 
     void AssetHandle::_registerLuaBindings(const std::string& typeName, sol::state_view lua)

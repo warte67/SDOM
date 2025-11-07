@@ -920,27 +920,17 @@ namespace SDOM
         }
 
         // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
-
-        // Acquire or create the DisplayHandle table (do not clobber usertype).
-        sol::table handle;
-        // try { handle = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
-        if (!handle.valid()) {
-            handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-        }
-
-        // add lua bindings ...        
-        // sol::table handle = AssetHandle::ensure_handle_table(lua);
-        sol::optional<sol::usertype<AssetHandle>> maybeUT;
-        try { maybeUT = lua[AssetHandle::LuaHandleName]; } catch(...) {}
+        // Acquire or create the AssetHandle table/usertype (do not clobber; idempotent).
+        auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, AssetHandle::LuaHandleName);
+        sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
 
         auto ss_bind_both = [&](const char* name, auto&& fn) {
             sol::object cur = handle.raw_get_or(name, sol::lua_nil);
             if (!cur.valid() || cur == sol::lua_nil) {
                 handle.set_function(name, std::forward<decltype(fn)>(fn));
             }
-            if (maybeUT) {
-                try { (*maybeUT)[name] = fn; } catch(...) {}
-            }
+            // Bind on usertype as well for method-call syntax
+            try { ut[name] = fn; } catch(...) {}
         };
 
         // --- Size accessors --- //
