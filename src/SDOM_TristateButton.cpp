@@ -265,7 +265,6 @@ namespace SDOM
             init.tabEnabled = false;
             init.color = getColor(); // use the color of the TriStateCheckbox to color the icon
             init.icon_index = icon_index_;
-// DEBUG_LOG("TristateButton::onInit() - creating IconButton with icon_index: " + std::to_string(static_cast<int>(init.icon_index)) + " for state: " + std::to_string(static_cast<int>(state_)));
             iconButtonObject_ = getFactory().create("IconButton", init);
             addChild(iconButtonObject_);
         }
@@ -502,6 +501,8 @@ namespace SDOM
             ev.setPayloadValue("buttonName", getName());
         });
         buttonState_ = state;
+        // Keep cached icon index in sync with new state
+        icon_index_ = iconIndexForState(state);
         // Update internal icon button if present. Prefer the internal child handle
         // created during onInit(); otherwise, try to resolve the conventional
         // child name '<thisname>_iconbutton' as a fallback.
@@ -559,46 +560,63 @@ namespace SDOM
 
     SpriteSheet* TristateButton::getIconSpriteSheet() const
     {
-        // Defensive: check if icon_resource_ is set
-        if (icon_resource_.empty()) 
+        // If the internal IconButton exists, prefer its loaded SpriteSheet
+        if (iconButtonObject_.isValid())
+        {
+            if (auto ib = iconButtonObject_.as<IconButton>())
+            {
+                if (auto ss = ib->getSpriteSheetPtr())
+                    return ss;
+            }
+        }
+
+        // Fallbacks based on resource name/filename
+        if (icon_resource_.empty())
         {
             DEBUG_LOG("TristateButton::getIconSpriteSheet() - icon_resource_ is empty.");
             return nullptr;
         }
-        // Use Factory or Core to fetch the SpriteSheet asset by name
-        AssetHandle ss_handle = getFactory().getAssetObject(icon_resource_);
-        if (!ss_handle.isValid()) 
+
+        Factory& factory = getFactory();
+        // Try direct asset name
+        AssetHandle ss_handle = factory.getAssetObject(icon_resource_);
+        if (!ss_handle.isValid())
         {
-            DEBUG_LOG("TristateButton::getIconSpriteSheet() - Failed to get asset object.");
+            // Try common suffix naming
+            ss_handle = factory.getAssetObject(icon_resource_ + std::string("_SpriteSheet"));
+        }
+        if (!ss_handle.isValid())
+        {
+            // Try locating a SpriteSheet that references the same filename
+            ss_handle = factory.findAssetByFilename(icon_resource_, SpriteSheet::TypeName);
+        }
+
+        if (!ss_handle.isValid())
+        {
+            DEBUG_LOG("TristateButton::getIconSpriteSheet() - Could not resolve SpriteSheet for resource: " + icon_resource_);
             return nullptr;
         }
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(ss_handle.get());
-        return ss;       
+
+        return ss_handle.as<SpriteSheet>();
     } // END: SpriteSheet* TristateButton::getIconSpriteSheet() const;
 
 
     Label* TristateButton::getLabel() const
     {
-        // Defensive: check if labelObject_ is valid
-        if (font_resource_.empty()) 
+        // Prefer the internal label child created during onInit()
+        if (labelObject_.isValid())
         {
-            DEBUG_LOG("TristateButton::getLabel() - font_resource_ is empty.");
-            return nullptr;
+            if (auto lbl = labelObject_.as<Label>())
+                return lbl;
         }
-        // Use Factory or Core to fetch the Font asset by name
-        AssetHandle font_handle = getFactory().getAssetObject(font_resource_);
-        if (!font_handle.isValid()) 
+        // Fallback: conventional child name '<thisname>_label'
+        std::string childName = getName() + "_label";
+        DisplayHandle h = getFactory().getDisplayObject(childName);
+        if (h.isValid())
         {
-            DEBUG_LOG("TristateButton::getLabel() - Failed to get font asset object.");
-            return nullptr;
+            return h.as<Label>();
         }
-        Label* lbl = dynamic_cast<Label*>(font_handle.get());
-        if (!lbl) 
-        {
-            DEBUG_LOG("TristateButton::getLabel() - Label asset is not a valid Label object.");
-            return nullptr;
-        }
-        return lbl;
+        return nullptr;
     } // END: Label* TristateButton::getLabel() const;
 
     std::string TristateButton::getFontResource() const { return font_resource_; }
@@ -611,7 +629,7 @@ namespace SDOM
     SDL_Color TristateButton::getBorderColor() const { return border_color_; }
     int TristateButton::getIconWidth() const { return icon_width_; }
     int TristateButton::getIconHeight() const { return icon_height_; }
-    IconIndex TristateButton::getIconIndex() const { return icon_index_; }    
+    IconIndex TristateButton::getIconIndex() const { return iconIndexForState(buttonState_); }
 
 
     // --------------------------------------------------------------------

@@ -98,6 +98,8 @@ namespace SDOM
             ev.setPayloadValue("buttonName", getName());
         });
         buttonState_ = state;
+        // Keep cached icon index in sync with new state
+        icon_index_ = iconIndexForState(state);
         // Update internal icon button if present. Prefer the internal child handle
         // created during onInit(); otherwise, try to resolve the conventional
         // child name '<thisname>_iconbutton' as a fallback.
