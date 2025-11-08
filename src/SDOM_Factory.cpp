@@ -310,7 +310,73 @@ namespace SDOM
         // return initialized state
         initialized_ = true;
 
-        // Diagnostic: list everything in SDOM_Bindings["Group"]
+        // Protect SDOM_Bindings from replacement/deletion of per-type tables by
+        // wrapping it in a proxy with strict __index/__newindex behavior.
+        try {
+            sol::state& lua = SDOM::getLua();
+            sol::object rootObj = lua["SDOM_Bindings"];
+            sol::table storage;
+            if (rootObj.valid() && rootObj.is<sol::table>()) {
+                storage = rootObj.as<sol::table>();
+            } else {
+                storage = lua.create_table();
+            }
+
+            // Proxy table that exposes storage but intercepts writes
+            sol::table proxy = lua.create_table();
+            sol::table mt = lua.create_table();
+
+            // __index forwards to storage
+            mt[sol::meta_function::index] = [storage](sol::table /*t*/, const sol::object& key, sol::this_state s) mutable -> sol::object {
+                sol::state_view L(s);
+                if (!key.valid() || !key.is<std::string>()) return sol::make_object(L, sol::lua_nil);
+                std::string ks;
+                try { ks = key.as<std::string>(); } catch(...) { return sol::make_object(L, sol::lua_nil); }
+                sol::object v = storage.raw_get_or(ks, sol::lua_nil);
+                if (v.valid() && v != sol::lua_nil) return v;
+                return sol::make_object(L, sol::lua_nil);
+            };
+
+            // __newindex only allows first-time assignment of a table; denies replacement/deletion
+            mt[sol::meta_function::new_index] = [storage](sol::table /*t*/, const sol::object& key, const sol::object& value) mutable {
+                try {
+                    if (!key.valid() || !key.is<std::string>()) {
+                        // Non-string key: forward raw
+                        return; // ignore silently
+                    }
+                    std::string ks = key.as<std::string>();
+                    sol::object existed = storage.raw_get_or(ks, sol::lua_nil);
+                    if (value == sol::lua_nil) {
+                        std::cout << "[SDOM_Bindings] Deny delete key='" << ks << "'" << std::endl;
+                        ERROR(std::string("Attempted to delete per-type table '") + ks + "' in SDOM_Bindings");
+                        return;
+                    }
+                    if (existed.valid() && existed != sol::lua_nil) {
+                        std::cout << "[SDOM_Bindings] Deny replace key='" << ks << "'" << std::endl;
+                        ERROR(std::string("Attempted to replace per-type table '") + ks + "' in SDOM_Bindings");
+                        return;
+                    }
+                    if (!value.is<sol::table>()) {
+                        int kind = static_cast<int>(value.get_type());
+                        std::cout << "[SDOM_Bindings] Deny non-table assign key='" << ks << "' kind=" << kind << std::endl;
+                        ERROR(std::string("Non-table assigned to SDOM_Bindings['") + ks + "']");
+                        return;
+                    }
+                    sol::table vtbl = value.as<sol::table>();
+                    // Stamp guard if absent
+                    try {
+                        sol::object guard = vtbl.raw_get_or("__sdom_guard", sol::lua_nil);
+                        if (!guard.valid() || guard == sol::lua_nil) vtbl["__sdom_guard"] = true;
+                    } catch(...) {}
+                    storage.raw_set(ks, vtbl);
+                } catch(...) {}
+            };
+
+            proxy[sol::metatable_key] = mt;
+            lua["SDOM_Bindings"] = proxy;
+        } catch(...) {}
+
+        // Diagnostic: list everything in SDOM_Bindings["Group"] (disabled by default)
         if (false)
         {
             try {
@@ -459,20 +525,19 @@ namespace SDOM
                 if (prototype) {
                     // Register Lua bindings for the concrete instance so methods
                     // are available on the shared userdata/handle.
-                    try {
-                        if (DEBUG_REGISTER_LUA) {
-                            printf("[TRACE] Factory::registerDomType prototype->_registerLuaBindings for type='%s' lua_state=%p\n",
-                                   typeName.c_str(), (void*)SDOM::getLua().lua_state());
-                        }
-                        prototype->_registerLuaBindings(typeName, SDOM::getLua());
-                    } catch(...) {
-                        // swallow registration errors for prototypes
+                    if (DEBUG_REGISTER_LUA) {
+                        printf("[TRACE] Factory::registerDomType prototype->_registerLuaBindings for type='%s' lua_state=%p\n",
+                               typeName.c_str(), (void*)SDOM::getLua().lua_state());
                     }
+                    // Fail-fast: do not swallow errors
+                    prototype->_registerLuaBindings(typeName, SDOM::getLua());
                     // prototype unique_ptr will be destroyed here; no need to
                     // insert into the factory registry.
                 }
+            } catch(const std::exception& e) {
+                ERROR(std::string("Factory::registerDomType binding failed for type '") + typeName + "': " + e.what());
             } catch(...) {
-                // ignore prototype creation failures; registration can proceed
+                ERROR(std::string("Factory::registerDomType binding failed for type '") + typeName + "' (unknown error)");
             }
         }
     }

@@ -132,19 +132,19 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Create (or reuse) the Stage usertype. Using sol::no_constructor keeps Lua
-        // from instantiating raw Stage objects; the factory does that.
-        if (!lua[typeName].valid()) {
-            objHandleType_ = lua.new_usertype<Stage>(
-                typeName,
-                sol::no_constructor,
-                sol::base_classes, sol::bases<IDisplayObject>()
-            );
-        } else {
-            objHandleType_ = lua[typeName];
+        // Strict per-type registry: bind Stage-specific functions only under
+        // SDOM_Bindings[typeName], never on a usertype or global table.
+        sol::table bindingsRoot;
+        try { bindingsRoot = lua["SDOM_Bindings"]; } catch(...) {}
+        if (!bindingsRoot.valid()) {
+            bindingsRoot = lua.create_table();
+            lua["SDOM_Bindings"] = bindingsRoot;
         }
-
-        sol::table stageTable = lua[typeName];
+        sol::table typeTbl = bindingsRoot[typeName];
+        if (!typeTbl.valid()) {
+            typeTbl = lua.create_table();
+            bindingsRoot[typeName] = typeTbl;
+        }
 
         auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
             sol::object current = tbl.raw_get_or(name, sol::lua_nil);
@@ -153,10 +153,10 @@ namespace SDOM
             }
         };
 
-        set_if_absent(stageTable, "getMouseX", &Stage::getMouseX_lua);
-        set_if_absent(stageTable, "getMouseY", &Stage::getMouseY_lua);
-        set_if_absent(stageTable, "setMouseX", &Stage::setMouseX_lua);
-        set_if_absent(stageTable, "setMouseY", &Stage::setMouseY_lua);
+        set_if_absent(typeTbl, "getMouseX", &Stage::getMouseX_lua);
+        set_if_absent(typeTbl, "getMouseY", &Stage::getMouseY_lua);
+        set_if_absent(typeTbl, "setMouseX", &Stage::setMouseX_lua);
+        set_if_absent(typeTbl, "setMouseY", &Stage::setMouseY_lua);
     } // END: Stage::_registerLuaBindings()
 
 } // namespace SDOM

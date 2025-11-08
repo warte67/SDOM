@@ -92,6 +92,10 @@ Summary:
 #include <SDOM/SDOM_IUnitTest.hpp>
 #include <unordered_map>
 #include <utility>
+#include <vector>
+#include <string>
+#include <cstdio>
+#include <cstdlib>
 
 // Ensure DEBUG_REGISTER_LUA exists (normally provided by SDOM.hpp). If the
 // umbrella header is included by a TU it will override this; this definition
@@ -104,6 +108,57 @@ Summary:
 
 namespace SDOM
 {
+
+    // --- Minimal binding helpers (strict, per-type only) --- //
+    inline void fatal_lua(const char* file, int line, const char* msg) {
+        std::fprintf(stderr, "[LuaBinder Fatal] %s at %s:%d\n", msg ? msg : "(null)", file, line);
+        std::fflush(stderr);
+        std::abort();
+    }
+
+    inline sol::table ensure_bindings_root(sol::state_view L) {
+        // Do not swallow exceptions; inspect type safely via sol::object
+        sol::object rootObj = L["SDOM_Bindings"];
+        if (rootObj.valid() && rootObj != sol::lua_nil) {
+            if (!rootObj.is<sol::table>()) {
+                fatal_lua(__FILE__, __LINE__, "Invalid SDOM_Bindings root (not table)");
+            }
+            return rootObj.as<sol::table>();
+        }
+        sol::table root = L.create_table();
+        L["SDOM_Bindings"] = root;
+        return root;
+    }
+
+    inline sol::table ensure_type_table(sol::state_view L, const std::string& type) {
+        sol::table root = ensure_bindings_root(L);
+        sol::object tObj = root[type];
+        if (tObj.valid() && tObj != sol::lua_nil) {
+            if (!tObj.is<sol::table>()) {
+                fatal_lua(__FILE__, __LINE__, "Invalid SDOM_Bindings[type] (not table)");
+            }
+            return tObj.as<sol::table>();
+        }
+        sol::table T = L.create_table();
+        root[type] = T;
+        return T;
+    }
+
+    template<class Fn>
+    inline void bind(sol::table& T, const char* name, Fn&& fn) {
+        T.set_function(name, std::forward<Fn>(fn));
+    }
+
+    inline void mixin(sol::table& dst, const std::vector<sol::table>& bases) {
+        for (const auto& base : bases) {
+            if (!base.valid()) continue;
+            for (auto kv : base) {
+                if (!kv.first.is<std::string>()) continue;
+                const std::string k = kv.first.as<std::string>();
+                dst[k] = kv.second;
+            }
+        }
+    }
 
     class IDataObject : public SDOM::IUnitTest
     {
@@ -228,16 +283,27 @@ namespace SDOM
             sol::table legacy = ensure_sol_table(lua, typeName);
 
             // Canonical registry root: SDOM_Bindings
+            sol::object rootObj = lua["SDOM_Bindings"];
             sol::table root;
-            try { root = lua["SDOM_Bindings"]; } catch(...) {}
-            if (!root.valid()) {
+            if (rootObj.valid() && rootObj != sol::lua_nil) {
+                if (!rootObj.is<sol::table>()) {
+                    fatal_lua(__FILE__, __LINE__, "Invalid SDOM_Bindings root (not table)");
+                }
+                root = rootObj.as<sol::table>();
+            } else {
                 root = lua.create_table();
                 lua["SDOM_Bindings"] = root;
             }
 
             // Canonical per-type registry: SDOM_Bindings[typeName]
-            sol::table reg = root.raw_get_or(typeName, sol::lua_nil);
-            if (!reg.valid()) {
+            sol::object regObj = root[typeName];
+            sol::table reg;
+            if (regObj.valid() && regObj != sol::lua_nil) {
+                if (!regObj.is<sol::table>()) {
+                    fatal_lua(__FILE__, __LINE__, "Invalid SDOM_Bindings[typeName] (not table)");
+                }
+                reg = regObj.as<sol::table>();
+            } else {
                 reg = lua.create_table();
                 root[typeName] = reg;
             }
@@ -267,41 +333,21 @@ namespace SDOM
 
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua)
         {
-            // 1. Make sure the per-type Lua table exists.
-            sol::table typeTable;
-            try {
-                typeTable = ensure_sol_table(lua, typeName);
-            } catch (...) {
-                return;  // If Lua isn’t ready yet, fail silently.
-            }
+            // Strict per-type registry only; no globals[typeName] table.
+            sol::table typeTable = ensure_type_table(lua, typeName);
 
-            // 2. Make sure we run this block only once per type.
-            sol::object registered = typeTable.raw_get_or("__idataobject_initialized", sol::lua_nil);
-            if (registered.valid() && registered.is<bool>() && registered.as<bool>()) {
-                return; // Already initialized; ancestors can still add keys later.
-            }
-            typeTable["__idataobject_initialized"] = true;
+            // Always overwrite to avoid stale shadows from earlier runs.
+            bind(typeTable, "getName", [](IDataObject& self) { return self.getName(); });
+            bind(typeTable, "setName", [](IDataObject& self, const std::string& newName) { self.setName(newName); });
 
-            // 3. Add the base-level helpers that every IDataObject should expose.
-            auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
-                sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
-                if (!cur.valid() || cur == sol::lua_nil) {
-                    tbl.set_function(name, std::forward<decltype(fn)>(fn));
-                }
-            };
-
-            set_if_absent(typeTable, "getName", [](IDataObject& self) { return self.getName(); });
-            set_if_absent(typeTable, "setName", [](IDataObject& self, const std::string& newName) { self.setName(newName); });
-
-            // if (DEBUG_REGISTER_LUA)
             if (false)
             {
                 std::string typeNameLocal = "IDataObject";
                 std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
                         << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
                         << typeName << CLR::RESET << std::endl;
-            }            
-        }   
+            }
+        }
         
         sol::usertype<IDataObject> objHandleType_;
 
@@ -312,6 +358,8 @@ namespace SDOM
         std::string name_ = "IDataObject";  // Default name, should be overridden by derived classes
 
     };
+
+    
 
 } // namespace SDOM
 

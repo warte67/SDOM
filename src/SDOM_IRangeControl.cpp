@@ -497,12 +497,12 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Augment the shared DisplayHandle with range-control helpers
-        sol::table handleTbl;
-        try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
-        if (!handleTbl.valid()) {
-            handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-        }
+        // Per-type registry: add range-control helpers shared by derived types
+        sol::table bindingsRoot;
+        try { bindingsRoot = lua["SDOM_Bindings"]; } catch(...) {}
+        if (!bindingsRoot.valid()) { bindingsRoot = lua.create_table(); lua["SDOM_Bindings"] = bindingsRoot; }
+        sol::table typeTbl = bindingsRoot[typeName];
+        if (!typeTbl.valid()) { typeTbl = lua.create_table(); bindingsRoot[typeName] = typeTbl; }
 
         auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
             sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
@@ -536,12 +536,12 @@ namespace SDOM
             if (r) r->setMax(static_cast<float>(v));
         };
 
-        set_if_absent(handleTbl, "getValue", getValue_bind);
-        set_if_absent(handleTbl, "setValue", setValue_bind);
-        set_if_absent(handleTbl, "getMin", getMin_bind);
-        set_if_absent(handleTbl, "setMin", setMin_bind);
-        set_if_absent(handleTbl, "getMax", getMax_bind);
-        set_if_absent(handleTbl, "setMax", setMax_bind);
+        set_if_absent(typeTbl, "getValue", getValue_bind);
+        set_if_absent(typeTbl, "setValue", setValue_bind);
+        set_if_absent(typeTbl, "getMin", getMin_bind);
+        set_if_absent(typeTbl, "setMin", setMin_bind);
+        set_if_absent(typeTbl, "getMax", getMax_bind);
+        set_if_absent(typeTbl, "setMax", setMax_bind);
 
 
     } // END: void IRangeControl::_registerLuaBindings(const std::string& typeName, sol::state_view lua)

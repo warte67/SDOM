@@ -248,15 +248,9 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Go-by for future bindings on DisplayHandle:
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-
-        // // Helper to check if a property/command is already registered
-        // auto absent = [&](const char* name) -> bool 
-        // {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     return !cur.valid() || cur == sol::lua_nil;
-        // };
+        // Strict per-type registry only
+        sol::table typeTbl = SDOM::ensure_type_table(lua, typeName);
+        (void)typeTbl; // no additional members yet
         
     } // END: RadioButton::_registerLuaBindings()
 

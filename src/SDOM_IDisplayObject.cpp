@@ -1721,12 +1721,8 @@ namespace SDOM
         // Hierarchy bindings are centralized in SDOM_IDisplayObject_Lua.cpp binder.
         // Intentionally not binding addChild/removeChild/hasChild/getChild here.
 
-        // Also delegate to centralized binder in SDOM_IDisplayObject_Lua.cpp so
-        // Lua registration can be maintained centrally. Binding helpers there
-        // are idempotent (set_if_absent), so duplicate invocation is safe.
-        try {
-            bind_IDisplayObject_lua(typeName, lua);
-        } catch(...) { /* swallow binder errors to avoid breaking registration */ }
+        // Delegate to centralized binder. Fail fast if binder encounters issues.
+        bind_IDisplayObject_lua(typeName, lua);
 
     } // END: IDisplayObject::_registerDisplayObject()
 
