@@ -511,39 +511,94 @@ Additionally, **TristateButton** now provides a unified base for all multi-state
 
 ---
 <a id="latest-update"></a>
-## 🗓️ November 7, 2025 — Doxygen Comment Standardization & Unit Test Expansion
+## 🗓️ November 7, 2025 — Doxygen Standardization, Unit Tests, and Lua Binding Status
 
-_Added consistent Doxygen headers and emoji conventions across SDOM interface classes,  
-and completed the C++ side of TristateButton unit testing._
+_Added consistent Doxygen headers and emoji conventions across SDOM interfaces, completed C++-side TristateButton tests, and documented the current Lua binding instability with a concrete plan forward._
 
-### 🧩 Documentation & Codebase Consistency
-- Established a **unified Doxygen header template** to be applied to all SDOM headers.
-- Added detailed metadata blocks with `@class`, `@brief`, `@inherits`, and `@luaType` tags.
-- Introduced a **standardized emoji convention** to visually identify code sections  
+---
+
+### ✅ What Went Well (Good)
+
+#### 🧩 Documentation & Codebase Consistency
+- Established a **unified Doxygen header template** for all SDOM headers.
+- Added metadata blocks with `@class`, `@brief`, `@inherits`, and `@luaType`.
+- Introduced a **standard emoji convention** for sections  
   (`📜 Lua`, `🌱 Lifecycle`, `🏭 Factory`, `🎨 Render`, `🎯 Events`, etc.).
-- Fully documented **`SDOM_IButtonObject.hpp`**, including the `ButtonState` enum, helper functions,  
-  and Lua binding stubs with full parameter and return annotations.
-- Added complete Doxygen documentation and standard section formatting for  
-  **`SDOM_TristateButton.hpp`**, ensuring alignment with its `.cpp` implementation.
+- Fully documented **`SDOM_IButtonObject.hpp`** (incl. `ButtonState` enum, helpers, and Lua stubs).
+- Completed Doxygen + section formatting for **`SDOM_TristateButton.hpp`** to match its `.cpp`.
 
-### 🧪 Unit Testing
-- Implemented **C++ UnitTests for `TristateButton`**, including:
-  - Baseline state verification (`Inactive → Active → Mixed`).
-  - Icon index validation for all states.
-  - Event-driven state cycling and internal icon synchronization.
-  - Render-cycle and initialization safety.
-- Added **Lua test stub registration** (`TristateButton_LUA_Tests`)  
-  to prepare for cross-language validation once Lua bindings are finalized.
+#### 🧪 Unit Testing
+- Implemented **C++ UnitTests for `TristateButton`**, covering:
+  - Baseline state transitions (`Inactive → Active → Mixed`).
+  - Icon index validation for each state.
+  - Event-driven state cycling & icon sync.
+  - Render/init safety checks.
+- Added Lua test stub registration (`TristateButton_LUA_Tests`) to enable cross-language validation once bindings settle.
 
-### 🌟 **Summary:**
-The SDOM core is now fully documented and partially validated through new TristateButton  
-unit tests. This sets the foundation for unified C++/Lua verification coverage.
+#### 🌟 Summary
+The SDOM core is now well-documented and partially validated. This provides a solid base for unified C++/Lua verification once the binding path is stabilized.
 
-**🚧 ToDo Today**
+---
+
+### ⚠️ What’s Blocked (Bad)
+
+#### 🧩 Current Situation
+- The Lua binding layer is **functionally unstable** due to early design choices that mixed:
+  - Per-type registration (`SDOM_Bindings["TypeName"]`)
+  - With legacy/shared fallbacks (e.g., `_G.TypeName`, catch-all handle tables).
+- `DisplayHandle::__index` **fails to locate** per-type methods (e.g., `type='Button' key='addEventListener'`) even though registration logs suggest those keys exist elsewhere.
+
+#### 🔍 Observed Behavior
+- `SDOM_Bindings` root exists and is valid, **but** per-type tables (e.g., `SDOM_Bindings["Button"]`) are **missing at lookup time**.
+- No `__sdom_guard` found on the expected type table; fail-fast path triggers (`[Lua Binding Missing]`).
+- Likely root causes:
+  - **Lua state mismatch** (binders and lookup running on different `lua_State*`).
+  - **Binding order** (lookups occur before per-type tables are populated).
+  - **Namespace drift** (bound to globals or a storage table instead of `SDOM_Bindings`).
+
+---
+
+### 🛠️ Plan of Record (Next Steps)
+
+1. **State Alignment**
+   - Add a sentinel (`__SDOM_STATE_PTR`) and log both during binding and lookup to confirm a single `lua_State*`.
+
+2. **Canonical Writes Only**
+   - Bind **exclusively** to `SDOM_Bindings[type]`.  
+   - Remove writes to `_G[type]`, any handle tables, or “storage/mirror” structures.
+
+3. **Strict Verification**
+   - During each binder: assert the per-type table exists and each key is bound (fail immediately on omission).
+   - Before running any Lua scripts: dump and verify `SDOM_Bindings` keys contain all expected types.
+
+4. **Registration Order**
+   - Ensure **all** binders complete before executing config/scripts or Lua tests.
+
+5. **Legacy Removal**
+   - Eliminate `ensure_handle_table`, `_G` fallbacks, and global per-type aliases.
+
+6. **Debug Tooling**
+   - Centralized pre-script dump of `SDOM_Bindings` with a short key list per type.
+   - On `__index` failure: print root keys + requested type keys for immediate triage.
+
+---
+
+### 🎯 Goal for Tomorrow
+Stabilize the per-type lookup path with:
+- **One Lua state**,  
+- **One canonical registry** (`SDOM_Bindings`), and  
+- **Strict, fail-fast lookups with no fallbacks**.
+
+This should make the **existing binding code salvageable**, avoiding a full rewrite while preserving the new tests and Doxygen work.
+
+---
+
+### 🚧 ToDo Today
 - ☐ Apply standardized Doxygen block to `SDOM_IconButton.hpp`.
-- ☐ Update `SDOM_ArrowButton.hpp` and `SDOM_CheckButton.hpp` with consistent emoji markers.
-- ☐ Write Lua-side `TristateButton_UnitTests.lua` to mirror C++ tests.
-- ☐ Verify auto-generated Doxygen output for formatting consistency.
+- ☐ Update `SDOM_ArrowButton.hpp` and `SDOM_CheckButton.hpp` with emoji markers.
+- ☐ Write Lua-side `TristateButton_UnitTests.lua` mirroring C++ tests.
+- ☐ Verify Doxygen output formatting after template rollout.
+
 
 #### end-of-day
   
