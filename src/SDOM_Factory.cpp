@@ -310,6 +310,25 @@ namespace SDOM
         // return initialized state
         initialized_ = true;
 
+        // Forbid global reassignment of SDOM_Bindings (root swap). Deny any
+        // attempt to set _G["SDOM_Bindings"] after initialization.
+        try {
+            sol::state& lua = SDOM::getLua();
+            sol::table globals = lua.globals();
+            sol::table gmt = lua.create_table();
+            gmt[sol::meta_function::new_index] = [](sol::table g, const sol::object& key, const sol::object& value) mutable {
+                try {
+                    if (key.valid() && key.is<std::string>() && key.as<std::string>() == std::string("SDOM_Bindings")) {
+                        std::cout << "[_G Guard] Deny reassignment of SDOM_Bindings" << std::endl;
+                        ERROR("Attempted reassignment of global SDOM_Bindings");
+                        return;
+                    }
+                } catch(...) {}
+                g.raw_set(key, value);
+            };
+            globals[sol::metatable_key] = gmt;
+        } catch(...) {}
+
         // Protect SDOM_Bindings from replacement/deletion of per-type tables by
         // wrapping it in a proxy with strict __index/__newindex behavior.
         try {
@@ -373,6 +392,8 @@ namespace SDOM
             };
 
             proxy[sol::metatable_key] = mt;
+            // Expose storage for diagnostics only (read-only by convention)
+            lua["_SDOM_Bindings_Storage"] = storage;
             lua["SDOM_Bindings"] = proxy;
         } catch(...) {}
 
