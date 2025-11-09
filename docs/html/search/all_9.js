@@ -4,8 +4,8 @@ var searchData=
   ['factory_5f_1',['factory_',['../classSDOM_1_1AssetHandle.html#a050f62c9db3508c9f2125d8020e24b6f',1,'SDOM::AssetHandle::factory_'],['../classSDOM_1_1DisplayHandle.html#ad77f46aaaf711677a42e6006fdf12470',1,'SDOM::DisplayHandle::factory_']]],
   ['faded_2',['Faded',['../classSDOM.html#af652715c3e637c795824fa0afedda425a2716c1e477a70de6b2508c5ccd8c2588',1,'SDOM']]],
   ['fail_3',['FAIL',['../SDOM_8hpp.html#ac8d1eaf65528f86b445cf6e45b2d72c9',1,'SDOM.hpp']]],
-  ['features_4',['Features',['../classSDOM_1_1DisplayHandle.html#autotoc_md21',1,'🧩 Key Features'],['../md_README.html#autotoc_md42',1,'Features'],['../md_README.html#autotoc_md44',1,'Key Features']]],
-  ['fedora_20rhel_20alma_20rocky_5',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md64',1,'']]],
+  ['features_4',['Features',['../classSDOM_1_1DisplayHandle.html#autotoc_md21',1,'🧩 Key Features'],['../md_README.html#autotoc_md32',1,'Features'],['../md_README.html#autotoc_md34',1,'Key Features']]],
+  ['fedora_20rhel_20alma_20rocky_5',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md54',1,'']]],
   ['felapsedtime_6',['fElapsedTime',['../classSDOM_1_1Event.html#ab14d7ed6c4435d42b3aaf592ebb54fda',1,'SDOM::Event']]],
   ['fg_7',['fg',['../classCLR.html#accb58e6431fd7167e1899cfec937f49f',1,'CLR']]],
   ['fg_5fcolor_8',['fg_color',['../classCLR.html#a72d2cbc0c4e73a594bb189831b781851',1,'CLR']]],
@@ -43,7 +43,7 @@ var searchData=
   ['fonttypetostring_40',['FontTypeToString',['../classSDOM_1_1IFontObject.html#a663595de18e38e0d8e2e452289448d7e',1,'SDOM::IFontObject']]],
   ['fontwidth_41',['fontWidth',['../structSDOM_1_1FontStyle.html#afb2c7b634f8117e9dd2b102e12c29db8',1,'SDOM::FontStyle::fontWidth'],['../structSDOM_1_1Label_1_1InitStruct.html#a8a984e5cd9e6e7a64565c518d0e48524',1,'SDOM::Label::InitStruct::fontWidth']]],
   ['fontwidth_5f_42',['fontWidth_',['../classSDOM_1_1Label.html#a9a686f86ca1a72adb38af1b2712309b5',1,'SDOM::Label']]],
-  ['for_20doxygen_43',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md76',1,'']]],
+  ['for_20doxygen_43',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md66',1,'']]],
   ['foreground_44',['Foreground',['../classSDOM_1_1Label.html#a3c2910aa54834bd1fd44e456861832b2a45bd1d5b32931106efbf1a82fe6a732f',1,'SDOM::Label']]],
   ['foregroundcolor_45',['foregroundColor',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69',1,'SDOM::IDisplayObject::InitStruct::foregroundColor'],['../structSDOM_1_1FontStyle.html#a6309d9e45ad361255d3265a9441be6bb',1,'SDOM::FontStyle::foregroundColor']]],
   ['foregroundcolor_5f_46',['foregroundColor_',['../classSDOM_1_1IDisplayObject.html#a8c850aff223e1318bf572843132052e4',1,'SDOM::IDisplayObject']]],
@@ -54,5 +54,5 @@ var searchData=
   ['fromname_51',['fromName',['../classSDOM_1_1EventType.html#a0a4f07dc114c4e7ec80f15878864a3e5',1,'SDOM::EventType']]],
   ['fullstring_52',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]],
   ['func_53',['func',['../structSDOM_1_1UnitTests_1_1TestCase.html#a1470c77b3486505d7f07a4b09d3f7186',1,'SDOM::UnitTests::TestCase']]],
-  ['functions_54',['Functions',['../classSDOM_1_1ArrowButton.html#ArrowButton_Functions',1,'Functions'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Functions',1,'Functions'],['../classSDOM_1_1Button.html#Button_Functions',1,'Functions'],['../classSDOM_1_1IButtonObject.html#IButtonObject_Functions',1,'Functions'],['../classSDOM_1_1TristateButton.html#TristateButton_Functions',1,'Functions']]]
+  ['functions_54',['Functions',['../classSDOM_1_1ArrowButton.html#ArrowButton_Functions',1,'Functions'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Functions',1,'Functions'],['../classSDOM_1_1Button.html#Button_Functions',1,'Functions']]]
 ];

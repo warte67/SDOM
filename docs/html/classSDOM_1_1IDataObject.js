@@ -2,9 +2,7 @@ var classSDOM_1_1IDataObject =
 [
     [ "_registerLuaBindings", "classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58", null ],
     [ "ensure_sol_table", "classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8", null ],
-    [ "ensure_type_tables", "classSDOM_1_1IDataObject.html#a7cf717a8d6314660846762fa5200012d", null ],
     [ "getName", "classSDOM_1_1IDataObject.html#a6c4854090319dbc681a275dada027e40", null ],
-    [ "getTypeTable", "classSDOM_1_1IDataObject.html#a886b4c40c6f1dbb2dea2837e2d0e32ec", null ],
     [ "lua_value_case_insensitive", "classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959", null ],
     [ "onInit", "classSDOM_1_1IDataObject.html#ae7bbc291ea72a2a99a1cce4c86e681cb", null ],
     [ "onQuit", "classSDOM_1_1IDataObject.html#a8254dbe0378d780dc2665f892430f543", null ],

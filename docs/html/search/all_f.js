@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['macos_0',['🍎 macOS',['../md_README.html#autotoc_md65',1,'']]],
+  ['macos_0',['🍎 macOS',['../md_README.html#autotoc_md55',1,'']]],
   ['magenta_1',['MAGENTA',['../classCLR.html#aeea092b02f7a2434ace40805f7be2e06',1,'CLR']]],
   ['mainpage_2emd_2',['mainpage.md',['../mainpage_8md.html',1,'']]],
   ['max_3',['max',['../structSDOM_1_1IRangeControl_1_1InitStruct.html#a12dd3be187a917e14ccd65d014ac09f3',1,'SDOM::IRangeControl::InitStruct']]],
@@ -9,17 +9,17 @@ var searchData=
   ['maxoutlinethickness_6',['maxOutlineThickness',['../classSDOM.html#aae891c3cb463a8719fa20816f7ef0ea4',1,'SDOM']]],
   ['maxwidth_7',['maxWidth',['../structSDOM_1_1FontStyle.html#a1c291089a8bbd41f694a3d89a64d9834',1,'SDOM::FontStyle::maxWidth'],['../structSDOM_1_1Label_1_1InitStruct.html#aeb8b0693b7f14d2716badd06fb683e1c',1,'SDOM::Label::InitStruct::maxWidth']]],
   ['maybe_8',['Maybe',['../classSDOM.html#af652715c3e637c795824fa0afedda425a80ba31cc9d111c8ef880737a23ab0c54',1,'SDOM']]],
-  ['mermaid_20diagrams_20to_20png_20svg_20for_20doxygen_9',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md76',1,'']]],
+  ['mermaid_20diagrams_20to_20png_20svg_20for_20doxygen_9',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md66',1,'']]],
   ['middle_10',['MIDDLE',['../classSDOM.html#adca0aa068ac9fc59e78b78c430a92980a43eedd8685eb86592022f8da962e3474',1,'SDOM::MIDDLE'],['../classSDOM.html#a367b5aa079151adc59bb144d2c9fa42da43eedd8685eb86592022f8da962e3474',1,'SDOM::MIDDLE'],['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea43eedd8685eb86592022f8da962e3474',1,'SDOM::Label::MIDDLE']]],
   ['middle_5fcenter_11',['MIDDLE_CENTER',['../classSDOM.html#adca0aa068ac9fc59e78b78c430a92980a86f1955e79bb2163d3c32a6024f420e6',1,'SDOM::MIDDLE_CENTER'],['../classSDOM.html#a367b5aa079151adc59bb144d2c9fa42da86f1955e79bb2163d3c32a6024f420e6',1,'SDOM::MIDDLE_CENTER'],['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea86f1955e79bb2163d3c32a6024f420e6',1,'SDOM::Label::MIDDLE_CENTER']]],
   ['middle_5fleft_12',['MIDDLE_LEFT',['../classSDOM.html#adca0aa068ac9fc59e78b78c430a92980a9d4989e254422a15442ed8c59c600f1a',1,'SDOM::MIDDLE_LEFT'],['../classSDOM.html#a367b5aa079151adc59bb144d2c9fa42da9d4989e254422a15442ed8c59c600f1a',1,'SDOM::MIDDLE_LEFT'],['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea9d4989e254422a15442ed8c59c600f1a',1,'SDOM::Label::MIDDLE_LEFT']]],
   ['middle_5fright_13',['MIDDLE_RIGHT',['../classSDOM.html#adca0aa068ac9fc59e78b78c430a92980a0a22e84ed1c4062d7ac11d80bbed3876',1,'SDOM::MIDDLE_RIGHT'],['../classSDOM.html#a367b5aa079151adc59bb144d2c9fa42da0a22e84ed1c4062d7ac11d80bbed3876',1,'SDOM::MIDDLE_RIGHT'],['../classSDOM_1_1Label.html#aa4a5d7801d4403e662e13c66cb5b9ceea0a22e84ed1c4062d7ac11d80bbed3876',1,'SDOM::Label::MIDDLE_RIGHT']]],
-  ['migration_20notes_14',['Migration notes',['../md_README.html#autotoc_md53',1,'']]],
+  ['migration_20notes_14',['Migration notes',['../md_README.html#autotoc_md43',1,'']]],
   ['min_15',['min',['../structSDOM_1_1IRangeControl_1_1InitStruct.html#a039e0a3eb555ed472f6e7464454ac1bb',1,'SDOM::IRangeControl::InitStruct']]],
   ['min_5f_16',['min_',['../classSDOM_1_1IRangeControl.html#a793a800b29637f9f1fab46d939762a90',1,'SDOM::IRangeControl']]],
   ['min_5fthumb_5flength_17',['min_thumb_length',['../structSDOM_1_1ScrollBar_1_1InitStruct.html#a5e1903040c177ba66706eb35d1881487',1,'SDOM::ScrollBar::InitStruct']]],
   ['min_5fthumb_5flength_5f_18',['min_thumb_length_',['../classSDOM_1_1ScrollBar.html#a74b015c7ddb0183869ead2ecfba5d34d',1,'SDOM::ScrollBar']]],
-  ['mingw_20ucrt64_19',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md68',1,'']]],
+  ['mingw_20ucrt64_19',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md58',1,'']]],
   ['mixed_20',['Mixed',['../classSDOM.html#af652715c3e637c795824fa0afedda425a699b4f79215d191584653efebf156e52',1,'SDOM']]],
   ['model_21',['🧠 Lifetime Model',['../classSDOM_1_1DisplayHandle.html#autotoc_md23',1,'']]],
   ['model_20api_22',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
@@ -43,5 +43,5 @@ var searchData=
   ['movetotop_40',['moveToTop',['../classSDOM_1_1IDisplayObject.html#a6c2d2b40744947b37db8974dc783d5c1',1,'SDOM::IDisplayObject']]],
   ['movetotop_5flua_41',['moveToTop_lua',['../namespaceSDOM.html#a589153c6d6e3f35a36f35a739cbdd91f',1,'SDOM']]],
   ['movetotop_5flua_5fany_42',['moveToTop_lua_any',['../namespaceSDOM.html#af044f13099da5fa2b1a769394ad2494d',1,'SDOM']]],
-  ['msys2_20mingw_20ucrt64_43',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md68',1,'']]]
+  ['msys2_20mingw_20ucrt64_43',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md58',1,'']]]
 ];

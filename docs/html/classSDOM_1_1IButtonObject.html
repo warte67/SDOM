@@ -93,9 +93,6 @@ $(function(){initNavTree('classSDOM_1_1IButtonObject.html','','classSDOM_1_1IBut
 </div><!--header-->
 <div class="contents">
 
-<p>Base interface for all button-like objects within the <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> hierarchy.  
- <a href="#details">More...</a></p>
-
 <p><code>#include &lt;<a class="el" href="SDOM__IButtonObject_8hpp_source.html">SDOM_IButtonObject.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for SDOM::IButtonObject:</div>
@@ -105,7 +102,7 @@ Inheritance diagram for SDOM::IButtonObject:</div>
   <map id="SDOM_3A_3AIButtonObject_map" name="SDOM_3A_3AIButtonObject_map">
 <area href="classSDOM_1_1Button.html" title="A standard clickable text button class." alt="SDOM::Button" shape="rect" coords="0,56,132,80"/>
 <area href="classSDOM_1_1IconButton.html" alt="SDOM::IconButton" shape="rect" coords="142,56,274,80"/>
-<area href="classSDOM_1_1TristateButton.html" title="Three-state UI button combining an icon and label within the SDOM hierarchy." alt="SDOM::TristateButton" shape="rect" coords="355,56,487,80"/>
+<area href="classSDOM_1_1TristateButton.html" alt="SDOM::TristateButton" shape="rect" coords="355,56,487,80"/>
 <area href="classSDOM_1_1ArrowButton.html" title="A directional button with up/down/left/right arrow icons." alt="SDOM::ArrowButton" shape="rect" coords="142,112,274,136"/>
 <area href="classSDOM_1_1CheckButton.html" alt="SDOM::CheckButton" shape="rect" coords="284,112,416,136"/>
 <area href="classSDOM_1_1RadioButton.html" alt="SDOM::RadioButton" shape="rect" coords="426,112,558,136"/>
@@ -115,118 +112,30 @@ Inheritance diagram for SDOM::IButtonObject:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6df940dd81eeab2f0ab6332de7b620ea" id="r_a6df940dd81eeab2f0ab6332de7b620ea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6df940dd81eeab2f0ab6332de7b620ea">IButtonObject</a> ()</td></tr>
-<tr class="memdesc:a6df940dd81eeab2f0ab6332de7b620ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor (initializes state as Inactive).  <br /></td></tr>
 <tr class="memitem:a9a08fd4fc25b8316f7fd3ee3ac57f16e" id="r_a9a08fd4fc25b8316f7fd3ee3ac57f16e"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a08fd4fc25b8316f7fd3ee3ac57f16e">~IButtonObject</a> ()=default</td></tr>
-<tr class="memdesc:a9a08fd4fc25b8316f7fd3ee3ac57f16e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor (defaulted).  <br /></td></tr>
 <tr class="memitem:a2726706100aa444c0486e6b0baf6a164" id="r_a2726706100aa444c0486e6b0baf6a164"><td class="memItemLeft" align="right" valign="top">virtual ButtonState&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2726706100aa444c0486e6b0baf6a164">getState</a> () const</td></tr>
-<tr class="memdesc:a2726706100aa444c0486e6b0baf6a164"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current logical button state.  <br /></td></tr>
 <tr class="memitem:a368eebac048f0c17616df5a6c0546d08" id="r_a368eebac048f0c17616df5a6c0546d08"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a368eebac048f0c17616df5a6c0546d08">setState</a> (ButtonState state)</td></tr>
-<tr class="memdesc:a368eebac048f0c17616df5a6c0546d08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a new logical state for the button.  <br /></td></tr>
 <tr class="memitem:ad13ace0c3e030331f8212552d70618cf" id="r_ad13ace0c3e030331f8212552d70618cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad13ace0c3e030331f8212552d70618cf">isMouseHovered</a> () const</td></tr>
-<tr class="memdesc:ad13ace0c3e030331f8212552d70618cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the mouse is currently hovering over this button.  <br /></td></tr>
 <tr class="memitem:a30189ef3aa0649f54e00cd4b572d7f2b" id="r_a30189ef3aa0649f54e00cd4b572d7f2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30189ef3aa0649f54e00cd4b572d7f2b">setMouseHovered</a> (bool v)</td></tr>
-<tr class="memdesc:a30189ef3aa0649f54e00cd4b572d7f2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether the mouse is currently hovering over this button.  <br /></td></tr>
 <tr class="memitem:add4ca308315c9d9c4aaba32afdf58302" id="r_add4ca308315c9d9c4aaba32afdf58302"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add4ca308315c9d9c4aaba32afdf58302">isKeyFocused</a> () const</td></tr>
-<tr class="memdesc:add4ca308315c9d9c4aaba32afdf58302"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this button currently has keyboard focus.  <br /></td></tr>
 <tr class="memitem:a22d7414b73b17b15180cfe00118c1877" id="r_a22d7414b73b17b15180cfe00118c1877"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a22d7414b73b17b15180cfe00118c1877">setKeyFocused</a> (bool v)</td></tr>
-<tr class="memdesc:a22d7414b73b17b15180cfe00118c1877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether this button currently has keyboard focus.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aca423322092643fae25733e06699808c" id="r_aca423322092643fae25733e06699808c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca423322092643fae25733e06699808c">registerLuaBindings</a> (sol::state_view lua)</td></tr>
-<tr class="memdesc:aca423322092643fae25733e06699808c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers the <a class="el" href="classSDOM_1_1IButtonObject.html" title="Base interface for all button-like objects within the SDOM hierarchy.">IButtonObject</a> bindings with a Lua state.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a811ff1f460ef9da2d5c33389fd00fc05" id="r_a811ff1f460ef9da2d5c33389fd00fc05"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a811ff1f460ef9da2d5c33389fd00fc05">onStateChanged</a> (ButtonState oldState, ButtonState newState)</td></tr>
-<tr class="memdesc:a811ff1f460ef9da2d5c33389fd00fc05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called whenever the button state changes.  <br /></td></tr>
 <tr class="memitem:a4400de6a3fa90b8c1a655a19f743b3ea" id="r_a4400de6a3fa90b8c1a655a19f743b3ea"><td class="memItemLeft" align="right" valign="top">virtual IconIndex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4400de6a3fa90b8c1a655a19f743b3ea">iconIndexForState</a> (ButtonState state) const</td></tr>
-<tr class="memdesc:a4400de6a3fa90b8c1a655a19f743b3ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the icon index associated with a specific state.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a13bc73dac82d7465513fe4135cf5eec7" id="r_a13bc73dac82d7465513fe4135cf5eec7"><td class="memItemLeft" align="right" valign="top">ButtonState&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13bc73dac82d7465513fe4135cf5eec7">buttonState_</a> = ButtonState::Inactive</td></tr>
-<tr class="memdesc:a13bc73dac82d7465513fe4135cf5eec7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current button state.  <br /></td></tr>
 <tr class="memitem:a9f5ee23fc478fec71c188de27b705d82" id="r_a9f5ee23fc478fec71c188de27b705d82"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f5ee23fc478fec71c188de27b705d82">mouse_hovered_</a> = false</td></tr>
-<tr class="memdesc:a9f5ee23fc478fec71c188de27b705d82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the button is under mouse hover.  <br /></td></tr>
 <tr class="memitem:a3fde0164c6d64d391ea5fb9bcd9554bb" id="r_a3fde0164c6d64d391ea5fb9bcd9554bb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fde0164c6d64d391ea5fb9bcd9554bb">key_focused_</a> = false</td></tr>
-<tr class="memdesc:a3fde0164c6d64d391ea5fb9bcd9554bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the button is keyboard focused.  <br /></td></tr>
 </table>
-<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Base interface for all button-like objects within the <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> hierarchy. </p>
-<p>Base interface for all <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> button-like objects.</p>
-<dl class="section author"><dt>Author</dt><dd>Jay Faries (<a href="https://github.com/warte67">https://github.com/warte67</a>) @inherits <a class="el" href="classSDOM_1_1IDataObject.html">SDOM::IDataObject</a> @luaType <a class="el" href="classSDOM_1_1IButtonObject.html" title="Base interface for all button-like objects within the SDOM hierarchy.">IButtonObject</a></dd></dl>
-<p>The <span class="tt"><a class="el" href="classSDOM_1_1IButtonObject.html" title="Base interface for all button-like objects within the SDOM hierarchy.">IButtonObject</a></span> class defines the canonical state model and behavior for all button-derived objects such as <span class="tt"><a class="el" href="classSDOM_1_1IconButton.html">IconButton</a></span>, <span class="tt"><a class="el" href="classSDOM_1_1ArrowButton.html" title="A directional button with up/down/left/right arrow icons.">ArrowButton</a></span>, and <span class="tt"><a class="el" href="classSDOM_1_1CheckButton.html">CheckButton</a></span>. It provides a unified way to query and mutate a button’s logical state (Active, Inactive, Mixed, Disabled), track focus and hover conditions, and react to transitions via virtual hooks.</p>
-<p>Derived classes use these state hooks to trigger visual changes, animations, or sound effects when the logical button state changes.</p>
-<hr  />
- <h1 class="doxsection"><a class="anchor" id="IButtonObject_Properties"></a>
-Properties</h1>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Property  </th><th class="markdownTableHeadNone">Type  </th><th class="markdownTableHeadNone">Description  </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">state</span>  </td><td class="markdownTableBodyNone"><span class="tt">ButtonState</span>  </td><td class="markdownTableBodyNone">Logical state of the button (<span class="tt">Inactive</span>, <span class="tt">Active</span>, <span class="tt">Mixed</span>, <span class="tt">Disabled</span>).  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#ad13ace0c3e030331f8212552d70618cf" title="Returns true if the mouse is currently hovering over this button.">isMouseHovered</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">bool</span>  </td><td class="markdownTableBodyNone">Whether the cursor is currently over the button.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#add4ca308315c9d9c4aaba32afdf58302" title="Returns true if this button currently has keyboard focus.">isKeyFocused</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">bool</span>  </td><td class="markdownTableBodyNone">Whether the button currently has keyboard focus.  </td></tr>
-</table>
-<hr  />
- <h1 class="doxsection"><a class="anchor" id="IButtonObject_Functions"></a>
-Functions</h1>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Function  </th><th class="markdownTableHeadNone">Returns  </th><th class="markdownTableHeadNone">Description  </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#a2726706100aa444c0486e6b0baf6a164" title="Retrieves the current logical button state.">getState()</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">ButtonState</span>  </td><td class="markdownTableBodyNone">Returns the current button state.  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">setState(state)</span>  </td><td class="markdownTableBodyNone"><span class="tt">void</span>  </td><td class="markdownTableBodyNone">Sets the logical button state and triggers <span class="tt"><a class="el" href="#a811ff1f460ef9da2d5c33389fd00fc05" title="Called whenever the button state changes.">onStateChanged()</a></span>.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#ad13ace0c3e030331f8212552d70618cf" title="Returns true if the mouse is currently hovering over this button.">isMouseHovered()</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">bool</span>  </td><td class="markdownTableBodyNone">Returns whether the mouse is hovering over this button.  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">setMouseHovered(value)</span>  </td><td class="markdownTableBodyNone"><span class="tt">void</span>  </td><td class="markdownTableBodyNone">Manually sets the hover state flag.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="#add4ca308315c9d9c4aaba32afdf58302" title="Returns true if this button currently has keyboard focus.">isKeyFocused()</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">bool</span>  </td><td class="markdownTableBodyNone">Returns whether the button has keyboard focus.  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">setKeyFocused(value)</span>  </td><td class="markdownTableBodyNone"><span class="tt">void</span>  </td><td class="markdownTableBodyNone">Sets the keyboard focus flag.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">registerLuaBindings(lua)</span>  </td><td class="markdownTableBodyNone"><span class="tt">static void</span>  </td><td class="markdownTableBodyNone">Registers this class with a Lua state.  </td></tr>
-</table>
-<hr  />
- <h1 class="doxsection"><a class="anchor" id="IButtonObject_Events"></a>
-Events</h1>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone"><a class="el" href="classSDOM_1_1Event.html">Event</a>  </th><th class="markdownTableHeadNone">Description  </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">StateChanged</span>  </td><td class="markdownTableBodyNone">Fired whenever the logical button state changes.  </td></tr>
-</table>
-<hr  />
- <h1 class="doxsection"><a class="anchor" id="IButtonObject_Notes"></a>
-Notes</h1>
-<ul>
-<li>Derived classes (e.g., <span class="tt"><a class="el" href="classSDOM_1_1ArrowButton.html" title="A directional button with up/down/left/right arrow icons.">ArrowButton</a></span>, <span class="tt"><a class="el" href="classSDOM_1_1IconButton.html">IconButton</a></span>) typically override <span class="tt"><a class="el" href="#a811ff1f460ef9da2d5c33389fd00fc05" title="Called whenever the button state changes.">onStateChanged()</a></span> and <span class="tt"><a class="el" href="#a4400de6a3fa90b8c1a655a19f743b3ea" title="Retrieves the icon index associated with a specific state.">iconIndexForState()</a></span> to update visuals or icons.</li>
-<li>The <span class="tt">ButtonState</span> enum includes semantic aliases such as “Pressed” → “Active” and “Released” → “Inactive”.</li>
-<li>Lua bindings provide both integer and string-based access for state values.</li>
-</ul>
-<hr  />
- <h1 class="doxsection"><a class="anchor" id="License"></a>
-ZLIB License</h1>
-<p>This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.</p>
-<p>Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:</p>
-<ol type="1">
-<li>The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.</li>
-<li>Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.</li>
-<li>This notice may not be removed or altered from any source distribution.</li>
-</ol>
-<p>Provides foundational button state management and event hooks for derived classes. Handles logical state transitions (active/inactive/mixed), focus flags (mouse/key), and defines a standard Lua binding pattern.</p>
-<p>Derived classes include:</p><ul>
-<li><span class="tt"><a class="el" href="classSDOM_1_1IconButton.html">IconButton</a></span></li>
-<li><span class="tt"><a class="el" href="classSDOM_1_1ArrowButton.html" title="A directional button with up/down/left/right arrow icons.">ArrowButton</a></span></li>
-<li><span class="tt"><a class="el" href="classSDOM_1_1CheckButton.html">CheckButton</a></span></li>
-<li><span class="tt">ToggleButton</span> </li>
-</ul>
-</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6df940dd81eeab2f0ab6332de7b620ea" name="a6df940dd81eeab2f0ab6332de7b620ea"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6df940dd81eeab2f0ab6332de7b620ea">&#9670;&#160;</a></span>IButtonObject()</h2>
 
@@ -249,8 +158,6 @@ ZLIB License</h1>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Default constructor (initializes state as Inactive). </p>
 
 </div>
 </div>
@@ -276,8 +183,6 @@ ZLIB License</h1>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Virtual destructor (defaulted). </p>
 
 </div>
 </div>
@@ -305,10 +210,7 @@ ZLIB License</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves the current logical button state. </p>
-<dl class="section return"><dt>Returns</dt><dd>Current <span class="tt">ButtonState</span> of the button. </dd></dl>
-
-<p>Reimplemented in <a class="el" href="classSDOM_1_1CheckButton.html#a37ae18386c70a9a288b16a32c756b68c">SDOM::CheckButton</a>, <a class="el" href="classSDOM_1_1RadioButton.html#af67a964ef7c45b0a562553fd09245921">SDOM::RadioButton</a>, and <a class="el" href="classSDOM_1_1TristateButton.html#a3c742cc158586816a1c09ec48fc081a7">SDOM::TristateButton</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1CheckButton.html#a37ae18386c70a9a288b16a32c756b68c">SDOM::CheckButton</a>, <a class="el" href="classSDOM_1_1RadioButton.html#af67a964ef7c45b0a562553fd09245921">SDOM::RadioButton</a>, and <a class="el" href="classSDOM_1_1TristateButton.html#ab8956a413f5b4a82247803613decbe27">SDOM::TristateButton</a>.</p>
 
 </div>
 </div>
@@ -334,15 +236,6 @@ ZLIB License</h1>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Retrieves the icon index associated with a specific state. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">state</td><td>The <span class="tt">ButtonState</span> for which to fetch the icon index. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An <span class="tt">IconIndex</span> value representing the visual asset. </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classSDOM_1_1CheckButton.html#af1ec9d47265c4e18634a69048c73af54">SDOM::CheckButton</a>, <a class="el" href="classSDOM_1_1RadioButton.html#a6ce8ddfbf93a2dfc287800dbfc4cbfbb">SDOM::RadioButton</a>, and <a class="el" href="classSDOM_1_1TristateButton.html#a0945460f3d0950970e89cda9b84dc2a1">SDOM::TristateButton</a>.</p>
 
@@ -371,8 +264,6 @@ ZLIB License</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Returns true if this button currently has keyboard focus. </p>
-
 </div>
 </div>
 <a id="ad13ace0c3e030331f8212552d70618cf" name="ad13ace0c3e030331f8212552d70618cf"></a>
@@ -397,8 +288,6 @@ ZLIB License</h1>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Returns true if the mouse is currently hovering over this button. </p>
 
 </div>
 </div>
@@ -429,16 +318,6 @@ ZLIB License</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Called whenever the button state changes. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">oldState</td><td>Previous state. </td></tr>
-    <tr><td class="paramname">newState</td><td>New state. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>Derived classes should override this to trigger animations, sound effects, or visual updates on state transitions. </dd></dl>
-
 <p>Reimplemented in <a class="el" href="classSDOM_1_1CheckButton.html#a36df15c9202b41f9f94c7cfba33778f6">SDOM::CheckButton</a>, <a class="el" href="classSDOM_1_1RadioButton.html#a9c4ba646906ff5087352b560e6eafb24">SDOM::RadioButton</a>, and <a class="el" href="classSDOM_1_1TristateButton.html#ad44a681bc7be6771d6f3e5b3072c3064">SDOM::TristateButton</a>.</p>
 
 </div>
@@ -466,15 +345,6 @@ ZLIB License</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Registers the <a class="el" href="classSDOM_1_1IButtonObject.html" title="Base interface for all button-like objects within the SDOM hierarchy.">IButtonObject</a> bindings with a Lua state. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">lua</td><td>Reference to a <span class="tt">sol::state_view</span> instance.</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>Ensures idempotent setup (safe to call multiple times per Lua state). </p>
-
 </div>
 </div>
 <a id="a22d7414b73b17b15180cfe00118c1877" name="a22d7414b73b17b15180cfe00118c1877"></a>
@@ -499,8 +369,6 @@ ZLIB License</h1>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Sets whether this button currently has keyboard focus. </p>
 
 </div>
 </div>
@@ -527,8 +395,6 @@ ZLIB License</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Sets whether the mouse is currently hovering over this button. </p>
-
 </div>
 </div>
 <a id="a368eebac048f0c17616df5a6c0546d08" name="a368eebac048f0c17616df5a6c0546d08"></a>
@@ -554,16 +420,7 @@ ZLIB License</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Sets a new logical state for the button. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">state</td><td>New <span class="tt">ButtonState</span> value.</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>Invokes <span class="tt"><a class="el" href="#a811ff1f460ef9da2d5c33389fd00fc05" title="Called whenever the button state changes.">onStateChanged()</a></span> prior to updating <span class="tt"><a class="el" href="#a13bc73dac82d7465513fe4135cf5eec7" title="Current button state.">buttonState_</a></span>. </p>
-
-<p>Reimplemented in <a class="el" href="classSDOM_1_1CheckButton.html#afa7dd894d73befe1ddb948f530cc4223">SDOM::CheckButton</a>, <a class="el" href="classSDOM_1_1RadioButton.html#a75006f7eed519767159503eeb7ecb2e4">SDOM::RadioButton</a>, and <a class="el" href="classSDOM_1_1TristateButton.html#a47b9ce7dcf191936d173bc4bcd0adc64">SDOM::TristateButton</a>.</p>
+<p>Reimplemented in <a class="el" href="classSDOM_1_1CheckButton.html#afa7dd894d73befe1ddb948f530cc4223">SDOM::CheckButton</a>, <a class="el" href="classSDOM_1_1RadioButton.html#a75006f7eed519767159503eeb7ecb2e4">SDOM::RadioButton</a>, and <a class="el" href="classSDOM_1_1TristateButton.html#abe2930e8782dd51a818ce19ff571c887">SDOM::TristateButton</a>.</p>
 
 </div>
 </div>
@@ -588,8 +445,6 @@ ZLIB License</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Current button state. </p>
-
 </div>
 </div>
 <a id="a3fde0164c6d64d391ea5fb9bcd9554bb" name="a3fde0164c6d64d391ea5fb9bcd9554bb"></a>
@@ -612,8 +467,6 @@ ZLIB License</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Whether the button is keyboard focused. </p>
-
 </div>
 </div>
 <a id="a9f5ee23fc478fec71c188de27b705d82" name="a9f5ee23fc478fec71c188de27b705d82"></a>
@@ -635,8 +488,6 @@ ZLIB License</h1>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Whether the button is under mouse hover. </p>
 
 </div>
 </div>

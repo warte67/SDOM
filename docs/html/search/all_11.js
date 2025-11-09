@@ -3,7 +3,7 @@ var searchData=
   ['obj_5fname_0',['obj_name',['../structSDOM_1_1UnitTests_1_1TestCase.html#a4edb4740f93ecc1e7354f1a2e892a4a7',1,'SDOM::UnitTests::TestCase']]],
   ['object_20model_20api_1',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
   ['objhandletype_5f_2',['objHandleType_',['../classSDOM_1_1Core.html#a24aab5c4b184e80abfd9131a9f66c5dc',1,'SDOM::Core::objHandleType_'],['../classSDOM_1_1DisplayHandle.html#aab85ff5a30c6a53ea88248392db63380',1,'SDOM::DisplayHandle::objHandleType_'],['../classSDOM_1_1IAssetObject.html#a0dcbb706c499ad4446c6f6eec63b567c',1,'SDOM::IAssetObject::objHandleType_'],['../classSDOM_1_1IDataObject.html#a9a0e8c7c95a1a60291038e9da23b272b',1,'SDOM::IDataObject::objHandleType_'],['../classSDOM_1_1IDisplayObject.html#a2b199e755c1279f72d128ede557b6fa5',1,'SDOM::IDisplayObject::objHandleType_'],['../classSDOM_1_1Stage.html#a1d032f2c710415f50ecc9f42c8fcf513',1,'SDOM::Stage::objHandleType_']]],
-  ['of_20the_20test_20harness_20application_3a_3',['Screenshot of the Test Harness application:',['../md_README.html#autotoc_md40',1,'']]],
+  ['of_20the_20test_20harness_20application_3a_3',['Screenshot of the Test Harness application:',['../md_README.html#autotoc_md30',1,'']]],
   ['off_4',['Off',['../classSDOM.html#af652715c3e637c795824fa0afedda425ad15305d7a4e34e02489c74a5ef542f36',1,'SDOM']]],
   ['on_5',['On',['../classSDOM.html#af652715c3e637c795824fa0afedda425a521c36a31c2762741cf0f8890cbe05e3',1,'SDOM']]],
   ['onevent_6',['OnEvent',['../classSDOM_1_1EventType.html#a343194ca51968ed70d40768ab36b28d3',1,'SDOM::EventType']]],
@@ -35,9 +35,9 @@ var searchData=
   ['operator_3e_32',['operator&gt;',['../classSDOM_1_1IDisplayObject.html#a765c1a5a98db78263e66fa63a95711c0',1,'SDOM::IDisplayObject']]],
   ['operator_3e_3d_33',['operator&gt;=',['../classSDOM_1_1IDisplayObject.html#a0663374567b9882b112e879ec72318ea',1,'SDOM::IDisplayObject']]],
   ['option_34',['Option',['../classSDOM.html#af652715c3e637c795824fa0afedda425a054b4f3ea543c990f6b125f41af6ebf7',1,'SDOM']]],
-  ['option_201_3a_35',['Option 1:',['../md_README.html#autotoc_md67',1,'']]],
-  ['option_202_3a_20msys2_20mingw_20ucrt64_36',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md68',1,'']]],
-  ['option_203_3a_20vcpkg_20visual_20studio_20cmake_20integration_37',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md69',1,'']]],
+  ['option_201_3a_35',['Option 1:',['../md_README.html#autotoc_md57',1,'']]],
+  ['option_202_3a_20msys2_20mingw_20ucrt64_36',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md58',1,'']]],
+  ['option_203_3a_20vcpkg_20visual_20studio_20cmake_20integration_37',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md59',1,'']]],
   ['orange_38',['ORANGE',['../classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d',1,'CLR']]],
   ['orientation_39',['Orientation',['../classSDOM.html#a9cb56e905b36976260e5aa56d30ee933',1,'SDOM']]],
   ['orientation_40',['orientation',['../structSDOM_1_1IRangeControl_1_1InitStruct.html#aa7f22f4d11ee48d30d70273fa16806bb',1,'SDOM::IRangeControl::InitStruct']]],
@@ -53,5 +53,5 @@ var searchData=
   ['outlinecolor_5f_50',['outlineColor_',['../classSDOM_1_1IDisplayObject.html#ad5253b0e2b8136bb9efcd3cecc00274a',1,'SDOM::IDisplayObject']]],
   ['outlinetextures_51',['outlineTextures',['../classSDOM_1_1BitmapFont.html#ac5daec82ca3c63925431282b24b5d428',1,'SDOM::BitmapFont']]],
   ['outlinethickness_52',['outlineThickness',['../structSDOM_1_1FontStyle.html#a82c6a0b4d8d53624d6953f9355850f24',1,'SDOM::FontStyle::outlineThickness'],['../structSDOM_1_1Label_1_1InitStruct.html#ac6c8dcf69bb4389557dd56bd81e039b8',1,'SDOM::Label::InitStruct::outlineThickness']]],
-  ['overview_53',['Overview',['../md_README.html#autotoc_md41',1,'']]]
+  ['overview_53',['Overview',['../md_README.html#autotoc_md31',1,'']]]
 ];
