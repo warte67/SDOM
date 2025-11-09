@@ -93,31 +93,14 @@ namespace SDOM
             std::string typeKeyDyn;
             try { typeKeyDyn = self.getType(); } catch(...) { typeKeyDyn.clear(); }
 
-            // 1) Prefer storage: _SDOM_Bindings_Storage[type][k]
+            // 1) SDOM_Bindings[type][k]
             if (!typeKeyDyn.empty()) {
                 try {
-                    sol::object storObj = L["_SDOM_Bindings_Storage"];
-                    if (storObj.valid() && storObj.is<sol::table>()) {
-                        sol::table stor = storObj.as<sol::table>();
-                        sol::object typeTblObj = stor.raw_get_or(typeKeyDyn, sol::lua_nil);
-                        if (typeTblObj.valid() && typeTblObj.is<sol::table>()) {
-                            sol::table typeTbl = typeTblObj.as<sol::table>();
-                            sol::object mm = typeTbl.raw_get_or(k, sol::lua_nil);
-                            if (mm.valid() && mm != sol::lua_nil) {
-                                member = mm;
-                            }
-                        }
-                    }
-                } catch(...) {}
-            }
-
-            // 2) Fallback to SDOM_Bindings proxy in case storage unavailable
-            if ((!member.valid() || member == sol::lua_nil) && !typeKeyDyn.empty()) {
-                try {
-                    sol::table bindingsRoot = L["SDOM_Bindings"];
+                    sol::table bindingsRoot;
+                    try { bindingsRoot = L["SDOM_Bindings"]; } catch(...) {}
                     if (bindingsRoot.valid()) {
                         sol::object typeTblObj = bindingsRoot[typeKeyDyn];
-                        if (typeTblObj.valid() && typeTblObj.is<sol::table>()) {
+                        if (typeTblObj.valid() && typeTblObj != sol::lua_nil) {
                             sol::table typeTbl = typeTblObj.as<sol::table>();
                             sol::object mm = typeTbl.raw_get_or(k, sol::lua_nil);
                             if (mm.valid() && mm != sol::lua_nil) {
@@ -136,8 +119,6 @@ namespace SDOM
                 bool rootValid = false;
                 bool rootIsTable = false;
                 bool guardPresent = false;
-                int typeKind = -1;
-                int storageKind = -1;
                 try {
                     sol::object rootObj = L["SDOM_Bindings"];
                     if (rootObj.valid() && rootObj != sol::lua_nil) {
@@ -147,17 +128,6 @@ namespace SDOM
                     sol::table bindingsRoot;
                     if (rootIsTable) bindingsRoot = rootObj.as<sol::table>();
                     sol::object typeObj = bindingsRoot[typeKeyDyn];
-                    if (typeObj.valid()) typeKind = static_cast<int>(typeObj.get_type());
-                    // Also inspect storage directly if available (diagnostic)
-                    try {
-                        sol::object storObj = L["_SDOM_Bindings_Storage"];
-                        if (storObj.valid() && storObj.is<sol::table>()) {
-                            sol::table stor = storObj.as<sol::table>();
-                            sol::object st = stor.raw_get_or(typeKeyDyn, sol::lua_nil);
-                            if (st.valid()) storageKind = static_cast<int>(st.get_type());
-                        }
-                    } catch(...) {}
-
                     if (typeObj.valid() && typeObj.is<sol::table>()) {
                         typeTableWasTable = true;
                         sol::table t = typeObj.as<sol::table>();
@@ -181,8 +151,6 @@ namespace SDOM
                               << " rootIsTable=" << (rootIsTable ? "true" : "false")
                               << " tableWasTable=" << (typeTableWasTable ? "true" : "false")
                               << " guard=" << (guardPresent ? "present" : "absent")
-                              << " kind=" << typeKind
-                              << " storageKind=" << storageKind
                               << std::endl;
                 } catch(...) {}
                 std::string msg = std::string("[Lua Binding Missing] type='") + typeKeyDyn + "' key='" + k + "'";
