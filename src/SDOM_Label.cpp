@@ -1904,13 +1904,14 @@ if (LABEL_DEBUG)
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Strict per-type registry only
-        sol::table bindingsRoot;
-        try { bindingsRoot = lua["SDOM_Bindings"]; } catch(...) {}
-        if (!bindingsRoot.valid()) { bindingsRoot = lua.create_table(); lua["SDOM_Bindings"] = bindingsRoot; }
-        sol::table typeTbl = bindingsRoot[typeName];
-        if (!typeTbl.valid()) { typeTbl = lua.create_table(); bindingsRoot[typeName] = typeTbl; }
-        // Label currently adds no extra Lua API beyond inherited ones.
+        // Acquire or create the DisplayHandle table (do not clobber usertype).
+        sol::table handleTbl;
+        try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
+        if (!handleTbl.valid()) {
+            handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
+        }
+
+        // add lua bindings ...
         
     } // END Label::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

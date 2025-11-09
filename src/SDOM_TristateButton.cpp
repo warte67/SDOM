@@ -540,9 +540,7 @@ namespace SDOM
     // --------------------------------------------------------------------
 
     DisplayHandle TristateButton::getLabelObject() const { return labelObject_; }
-    std::string TristateButton::getText() const { 
-        return text_; 
-    }
+    std::string TristateButton::getText() const { return text_; }
     DisplayHandle TristateButton::getIconButtonObject() const { return iconButtonObject_; }
 
 
@@ -699,36 +697,33 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Strict per-type registry (no globals, no usertypes)
-        sol::table bindingsRoot;
-        try { bindingsRoot = lua["SDOM_Bindings"]; } catch(...) {}
-        if (!bindingsRoot.valid()) { bindingsRoot = lua.create_table(); lua["SDOM_Bindings"] = bindingsRoot; }
-        sol::table typeTbl = bindingsRoot[typeName];
-        if (!typeTbl.valid()) { typeTbl = lua.create_table(); bindingsRoot[typeName] = typeTbl; }
+        // Ensure usertype + both legacy and canonical per-type tables.
+        auto [typeTbl, regTbl] = SDOM::IDataObject::ensure_type_tables<TristateButton, SDOM::IDisplayObject>(lua, typeName);
+
+        // Helper to bind onto both the legacy globals[typeName] table and the
+        // canonical SDOM_Bindings[typeName] registry (idempotent on both).
         auto bind_type = [&](const char* name, auto&& fn) {
-            sol::object cur = typeTbl.raw_get_or(name, sol::lua_nil);
-            if (!cur.valid() || cur == sol::lua_nil) {
+            sol::object cur1 = typeTbl.raw_get_or(name, sol::lua_nil);
+            if (!cur1.valid() || cur1 == sol::lua_nil) {
                 typeTbl.set_function(name, std::forward<decltype(fn)>(fn));
+            }
+            sol::object cur2 = regTbl.raw_get_or(name, sol::lua_nil);
+            if (!cur2.valid() || cur2 == sol::lua_nil) {
+                regTbl.set_function(name, std::forward<decltype(fn)>(fn));
             }
         };
 
         // -----------------------------------------------------------------
         // Accessors (multi-type aware to avoid overriding other classes)
         // -----------------------------------------------------------------
-        // bind_type("getLabelObject", [](DisplayHandle& self) -> DisplayHandle {
-        //     if (auto* b = self.as<Button>()) return b->getLabelObject();
-        //     if (auto* tb = self.as<TristateButton>()) return tb->getLabelObject();
-        //     return {};
-        // });
-
-        // Prefer most-derived first to avoid base swallowing the match.
         bind_type("getLabelObject", [](DisplayHandle& self) -> DisplayHandle {
+            if (auto* b = self.as<Button>()) return b->getLabelObject();
             if (auto* tb = self.as<TristateButton>()) return tb->getLabelObject();
-            if (auto* b  = self.as<Button>())        return b->getLabelObject();
             return {};
         });
 
         bind_type("getText", [](DisplayHandle& self) -> std::string {
+            if (auto* b = self.as<Button>()) return b->getText();
             if (auto* tb = self.as<TristateButton>()) return tb->getText();
             return {};
         });
@@ -838,13 +833,9 @@ namespace SDOM
         // -----------------------------------------------------------------
         // Mutators (multi-type)
         // -----------------------------------------------------------------
-        // bind_type("setText", [](DisplayHandle& self, const std::string& newText) {
-        //     if (auto* b = self.as<Button>()) b->setText(newText);
-        //     else if (auto* tb = self.as<TristateButton>()) tb->setText(newText);
-        // });
         bind_type("setText", [](DisplayHandle& self, const std::string& newText) {
-            if (auto* tb = self.as<TristateButton>()) tb->setText(newText);
-            else if (auto* b  = self.as<Button>())    b->setText(newText);
+            if (auto* b = self.as<Button>()) b->setText(newText);
+            else if (auto* tb = self.as<TristateButton>()) tb->setText(newText);
         });
 
     } // END: void TristateButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)

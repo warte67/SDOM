@@ -685,9 +685,10 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Strict per-type registry only
-        sol::table typeTbl = SDOM::ensure_type_table(lua, typeName);
-        (void)typeTbl; // no additional members yet
+        // Go-by for future bindings on DisplayHandle:
+        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
+
+
     } // END: void ScrollBar::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 

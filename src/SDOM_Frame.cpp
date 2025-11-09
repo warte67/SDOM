@@ -118,9 +118,16 @@ namespace SDOM
                     << typeName << CLR::RESET << std::endl;
         }
 
-        // Strict per-type registry only (ensure table exists; no shared/userType mounts)
-        sol::table typeTbl = SDOM::ensure_type_table(lua, typeName);
-        (void)typeTbl; // no additional members yet
+        // Go-by for future bindings on DisplayHandle:
+        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
+
+        // // Helper to check if a property/command is already registered
+        // auto absent = [&](const char* name) -> bool {
+        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
+        //     return !cur.valid() || cur == sol::lua_nil;
+        // };
+
+        // --- no additional members from Frame (so far) --- //
 
     } // END: void Frame::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 

@@ -209,20 +209,31 @@ namespace SDOM
         }
 
         // ----------------------------------------------------------
-        // 2️⃣ Ensure per-type registry only (no globals, no usertypes)
+        // 2️⃣ Acquire/Ensure Tables and Usertype
         // ----------------------------------------------------------
-        sol::table bindingsRoot;
-        try { bindingsRoot = lua["SDOM_Bindings"]; } catch(...) {}
-        if (!bindingsRoot.valid()) { bindingsRoot = lua.create_table(); lua["SDOM_Bindings"] = bindingsRoot; }
-        sol::table typeTbl = bindingsRoot[typeName];
-        if (!typeTbl.valid()) { typeTbl = lua.create_table(); bindingsRoot[typeName] = typeTbl; }
+        sol::table handleTbl;
+        try { handleTbl = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
+        if (!handleTbl.valid())
+            handleTbl = IDataObject::ensure_sol_table(lua, DisplayHandle::LuaHandleName);
 
-        // Helper: bind into SDOM_Bindings[typeName] only
-        auto bind_type = [&](const char* name, auto&& func)
+        sol::optional<sol::usertype<DisplayHandle>> maybeUT;
+        try { maybeUT = lua[DisplayHandle::LuaHandleName]; } catch(...) {}
+
+        // ----------------------------------------------------------
+        // 3️⃣ Unified set_if_absent Helper
+        // ----------------------------------------------------------
+        auto set_if_absent = [&](const char* name, auto&& func)
         {
-            sol::object cur = typeTbl.raw_get_or(name, sol::lua_nil);
-            if (!cur.valid() || cur == sol::lua_nil) {
-                typeTbl.set_function(name, func);
+            sol::object cur = handleTbl.raw_get_or(name, sol::lua_nil);
+            if (!cur.valid() || cur == sol::lua_nil)
+                handleTbl.set_function(name, func);
+
+            if (maybeUT)
+            {
+                auto& ut = *maybeUT;
+                sol::object cur2 = lua[name];
+                // no need to check global — assume independent namespace
+                ut.set_function(name, func);
             }
         };
 
@@ -230,7 +241,7 @@ namespace SDOM
         // 4️⃣ Register ArrowButton-specific Bindings
         // ----------------------------------------------------------
 
-        bind_type("getDirection",
+        set_if_absent("getDirection",
             [](DisplayHandle& self)
             {
                 ArrowButton* btn = dynamic_cast<ArrowButton*>(self.get());
@@ -240,7 +251,7 @@ namespace SDOM
                 return (it != ArrowButton::arrow_direction_to_string.end()) ? it->second : "up";
             });
 
-        bind_type("setDirection",
+        set_if_absent("setDirection",
             [](DisplayHandle& self, const std::string& dir)
             {
                 ArrowButton* btn = dynamic_cast<ArrowButton*>(self.get());
@@ -250,7 +261,7 @@ namespace SDOM
                     btn->setDirection(it->second);
             });
 
-        bind_type("getArrowState",
+        set_if_absent("getArrowState",
             [](DisplayHandle& self)
             {
                 ArrowButton* btn = dynamic_cast<ArrowButton*>(self.get());
@@ -259,7 +270,7 @@ namespace SDOM
                 return (st == ArrowButton::ArrowState::Depressed) ? std::string("depressed") : std::string("raised");
             });
 
-        bind_type("getIconIndex",
+        set_if_absent("getIconIndex",
             [](DisplayHandle& self)
             {
                 ArrowButton* btn = dynamic_cast<ArrowButton*>(self.get());
