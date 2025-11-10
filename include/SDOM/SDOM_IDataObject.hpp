@@ -435,7 +435,7 @@ namespace SDOM
             if (s_registered_types_.count(typeName)) return;  // already registered
 
             // Future: integrate Data Registry properties and functions.
-            BIND_LOG("[" << typeName << "] Registering base IDataObject bindings");
+            BIND_LOG("[" << typeName << "] Registering `IDataObject` bindings");
             addFunction(typeName, "getName", [this]() { return this->getName(); });
             addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
         }

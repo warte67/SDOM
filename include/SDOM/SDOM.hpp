@@ -92,6 +92,48 @@ namespace SDOM
     // 🧩 Global SDOM Configuration Flags
     // ======================================================================
 
+    // ----------------------------------------------------------------------
+    // Unit Test Enable Control
+    // ----------------------------------------------------------------------
+    #ifndef SDOM_ENABLE_ALL_UNIT_TESTS
+        /**
+         * @brief Globally enables or disables all registered UnitTests in SDOM.
+         *
+         * @details
+         * When `true`, every test module and sub-test declared via the SDOM
+         * UnitTest framework will be discovered and executed during startup.
+         * When `false`, test registration is still compiled, but none of them
+         * will automatically run unless explicitly invoked by the developer
+         * (e.g., through a Lua call or manual trigger in C++).
+         *
+         * ---
+         * ⚙️ **Typical Usage**
+         *
+         * **Enable All Tests (default):**
+         * ```bash
+         * cmake -DSDOM_ENABLE_ALL_UNIT_TESTS=ON ..
+         * ```
+         *
+         * **Disable All Tests (for release builds):**
+         * ```bash
+         * cmake -DSDOM_ENABLE_ALL_UNIT_TESTS=OFF ..
+         * ```
+         *
+         * ---
+         * 🧪 **Notes**
+         * - Intended for toggling between *development/debug* and *release*
+         *   configurations.
+         * - Disabling tests does *not* remove them from compilation; it only
+         *   prevents automatic execution.
+         * - Useful for CI pipelines or embedded environments where runtime
+         *   test harnesses are not needed.
+         */
+        inline constexpr bool ENABLE_ALL_UNIT_TESTS = false;
+    #else
+        inline constexpr bool ENABLE_ALL_UNIT_TESTS = SDOM_ENABLE_ALL_UNIT_TESTS;
+    #endif    
+
+
     /**
      * @section SDOM_TestOutputConfig
      * @brief Global compile-time configuration flags controlling test verbosity.

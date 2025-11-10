@@ -1032,6 +1032,7 @@ namespace SDOM
         };
 
         // Update the unit test frame counter and run tests
+        if (ENABLE_ALL_UNIT_TESTS)
         {   
             static int s_iteration_frame = 0;
             static bool s_tests_complete = false;
@@ -2303,7 +2304,7 @@ namespace SDOM
     void Core::registerBindingsImpl(const std::string& typeName)
     {
         // Future: integrate Data Registry properties and functions.
-        BIND_LOG("[" << typeName << "] Registering base `Core` bindings");
+        BIND_LOG("[" << typeName << "] Registering `Core` bindings");
         // addFunction(typeName, "getName", [this]() { return this->getName(); });
         // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
     }

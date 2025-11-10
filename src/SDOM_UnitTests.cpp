@@ -114,6 +114,7 @@ namespace SDOM
         {
             // Test functions return “finished?” (not “passed?”)
             finished = test.func(errors);
+            SDL_Delay(16);
         }
         catch (const std::exception& e)
         {
