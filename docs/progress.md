@@ -615,6 +615,7 @@ The SDOM project now has:
 
 #### end-of-day
 
+(tomorrows tag line:  _⚖️ “Reflection should exist at compile-time, laziness at runtime, and allocation only when absolutely necessary —measure twice, allocate once ”_)
   
 
 [🔝 **Back to Table of Contents**](#📑-table-of-contents)
