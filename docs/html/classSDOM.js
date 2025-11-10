@@ -165,6 +165,7 @@ var classSDOM =
     [ "anchorPointToString_", "classSDOM.html#ac004759fa5d6cd324931439829e17123", null ],
     [ "button_state_pairs", "classSDOM.html#a479fe3b6d6b7a81bb9d305429c19dd71", null ],
     [ "button_state_to_string", "classSDOM.html#a2ddfe0c3e88fd1b6e58620d2b63e769f", null ],
+    [ "ENABLE_ALL_UNIT_TESTS", "classSDOM.html#a901a1efbd00683f1cc1d6620ef153659", null ],
     [ "icon_index_to_string", "classSDOM.html#a98ee20e886efe6004f38e0c4b6fdfab1", null ],
     [ "icon_string_to_index", "classSDOM.html#a618334d8d29e89d504144433fd0b6af3", null ],
     [ "internal_font_8x12", "classSDOM.html#a741648c577a9dfe5d8443f05fbca85b3", null ],

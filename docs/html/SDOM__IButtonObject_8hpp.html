@@ -95,15 +95,17 @@ $(function(){initNavTree('SDOM__IButtonObject_8hpp.html','',''); });
 <div class="textblock"><code>#include &lt;string&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &lt;optional&gt;</code><br />
-<code>#include &lt;<a class="el" href="SDOM__IconIndex_8hpp_source.html">SDOM/SDOM_IconIndex.hpp</a>&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cctype&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;<a class="el" href="SDOM__IconIndex_8hpp_source.html">SDOM/SDOM_IconIndex.hpp</a>&gt;</code><br />
 </div>
 <p><a href="SDOM__IButtonObject_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:SDOM_3A_3AIButtonObject" id="r_SDOM_3A_3AIButtonObject"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IButtonObject.html">SDOM::IButtonObject</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base interface for all button-like objects within the <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> hierarchy.  <a href="classSDOM_1_1IButtonObject.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -113,7 +115,9 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a4052112dcedd171e968bb3d5d55d16f5" id="r_a4052112dcedd171e968bb3d5d55d16f5"><td class="memItemLeft" align="right" valign="top">static std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a4052112dcedd171e968bb3d5d55d16f5">SDOM::button_state_name_from_index</a> (ButtonState idx)</td></tr>
+<tr class="memdesc:a4052112dcedd171e968bb3d5d55d16f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the lowercase string name for a given ButtonState.  <br /></td></tr>
 <tr class="memitem:a3a45e0003ad804fd5fefc445f76fe414" id="r_a3a45e0003ad804fd5fefc445f76fe414"><td class="memItemLeft" align="right" valign="top">static std::optional&lt; ButtonState &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#a3a45e0003ad804fd5fefc445f76fe414">SDOM::button_state_from_name</a> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:a3a45e0003ad804fd5fefc445f76fe414"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a string (case-insensitive) into a ButtonState enum.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

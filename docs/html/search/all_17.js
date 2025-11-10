@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['ubuntu_0',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md52',1,'']]],
-  ['ucrt64_1',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md58',1,'']]],
+  ['ubuntu_0',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md64',1,'']]],
+  ['ucrt64_1',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md70',1,'']]],
   ['unchecked_2',['Unchecked',['../classSDOM.html#af652715c3e637c795824fa0afedda425a881b3634f18ee4f2c2315bd19b75e0ae',1,'SDOM']]],
   ['underline_3',['UNDERLINE',['../classCLR.html#acc3a4f736db8118cef09f0f6000e6702',1,'CLR']]],
   ['underline_4',['underline',['../structSDOM_1_1FontStyle.html#a9d0ce99f4878f9fd2cc61a13cfbcfdae',1,'SDOM::FontStyle::underline'],['../structSDOM_1_1Label_1_1InitStruct.html#a2dc3ce5e9f253cb26e70eb0d84aa5166',1,'SDOM::Label::InitStruct::underline']]],

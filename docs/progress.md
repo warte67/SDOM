@@ -569,6 +569,7 @@ A day of confusion, misfires, and runaway llamas — where even `configure()` qu
 ## 🗓️ November 9, 2025 — Stabilization & Dual-System Planning
 _“From chaos, code — from code, clarity; each stable build a quiet act of defiance against yesterday’s disorder.”_
 
+
 ### 🧩 **Core / Lua Integration**
 - Restored and verified the **legacy Lua-integrated SDOM baseline** (`v0.5.132-stable`) with all **96 / 96 unit tests passing**.  
 - Confirmed full functionality across Core, Factory, and all display-object creation paths.  
@@ -598,19 +599,18 @@ The SDOM project now has:
 ### 🚧 **Next Steps**
 - ☐ Remove `Factory` inheritance from `IDataObject`  
 - ☐ Implement **C ABI unit-test harness** as registry proof-of-concept  
-  - ☐ Prepare stragglers for **C ABI refactor**
-    - ☐ Convert **SDOM_CLR** to a static singleton class that inherits from `IDataObject`
-    - ☐ **SDOM_Event** should inherit from `IDataObject`
-    - ☐ **SDOM_EventType** should inherit from `IDataObject`
-    - ☐ **SDOM_IButtonObject** should inherit from `IDataObject`
-    - ☐ Convert **SDOM_IconIndex** to a static singleton class that inherits from `IDataObject`
-    - ☐ **SDOM_SDL_Utils** should inherit from `IDataObject`
-    - ☐ **SDOM_UnitTests** should inherit from `IDataObject`
-    - ☐ Convert **SDOM_Utils** to a static singleton class that inherits from `IDataObject`
-    - ☐ **SDOM_Version.hpp.in** should inherit from `IDataObject`
-  - ☐ Feed the Llama
-  - ☐ Design `DataRegistry` for centralized `IDataObject` reflection management  
-  - ☐ Design an extensible `Variant` type for dynamic property storage and retrieval
+  - ☐ Convert **SDOM_CLR** to a static singleton class that inherits from `IDataObject`
+  - ☐ **SDOM_Event** should inherit from `IDataObject`
+  - ☐ **SDOM_EventType** should inherit from `IDataObject`
+  - ☐ **SDOM_IButtonObject** should inherit from `IDataObject`
+  - ☐ Convert **SDOM_IconIndex** to a static singleton class that inherits from `IDataObject`
+  - ☐ **SDOM_SDL_Utils** should inherit from `IDataObject`
+  - ☐ **SDOM_UnitTests** should inherit from `IDataObject`
+  - ☐ Convert **SDOM_Utils** to a static singleton class that inherits from `IDataObject`
+  - ☐ **SDOM_Version.hpp.in** should inherit from `IDataObject`
+- ☐ Feed the Llama
+- ☐ Design `DataRegistry` for centralized `IDataObject` reflection management  
+- ☐ Design an extensible `Variant` type for dynamic property storage and retrieval (see: [Extensible Variant](docs/extensible_variant.md))
 - ☐ Feed the Llama
 
 #### end-of-day
@@ -622,6 +622,7 @@ The SDOM project now has:
 ---
 
 ### 🚧 **To-Do (Ongoing)**
+- ☐ Move earlier daily logs to the archives and update cross-linkages.
 - ☐ Add comments and Doxygen tags for modified scripts (`compile`, `dox`, `gen_version.sh`).  
 - ☐ Begin implementation of the new **EditBox / IME input system**.
 

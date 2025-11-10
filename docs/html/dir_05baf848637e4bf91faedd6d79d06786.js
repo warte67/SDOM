@@ -9,6 +9,7 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_CLR.hpp", "SDOM__CLR_8hpp.html", "SDOM__CLR_8hpp" ],
     [ "SDOM_Core.hpp", "SDOM__Core_8hpp.html", "SDOM__Core_8hpp" ],
     [ "SDOM_Core_Lua.hpp", "SDOM__Core__Lua_8hpp.html", "SDOM__Core__Lua_8hpp" ],
+    [ "SDOM_DataRegistry.hpp", "SDOM__DataRegistry_8hpp.html", null ],
     [ "SDOM_DisplayHandle.hpp", "SDOM__DisplayHandle_8hpp.html", "SDOM__DisplayHandle_8hpp" ],
     [ "SDOM_Event.hpp", "SDOM__Event_8hpp.html", "SDOM__Event_8hpp" ],
     [ "SDOM_EventManager.hpp", "SDOM__EventManager_8hpp.html", "SDOM__EventManager_8hpp" ],
@@ -44,5 +45,6 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_TTFAsset.hpp", "SDOM__TTFAsset_8hpp.html", "SDOM__TTFAsset_8hpp" ],
     [ "SDOM_UnitTests.hpp", "SDOM__UnitTests_8hpp.html", "SDOM__UnitTests_8hpp" ],
     [ "SDOM_Utils.hpp", "SDOM__Utils_8hpp.html", "SDOM__Utils_8hpp" ],
+    [ "SDOM_Variant.hpp", "SDOM__Variant_8hpp.html", null ],
     [ "SDOM_Version.hpp", "SDOM__Version_8hpp.html", "SDOM__Version_8hpp" ]
 ];
