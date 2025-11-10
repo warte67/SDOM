@@ -771,7 +771,7 @@ namespace SDOM
             ut.add_test(objName, "Window Environment Behavior", EventType_test5);
 
 
-            ut.add_test(objName, "Lua: src/EventType_UnitTests.lua", EventType_LUA_Tests, true);
+            ut.add_test(objName, "Lua: src/EventType_UnitTests.lua", EventType_LUA_Tests, false);
 
             registered = true;
         }

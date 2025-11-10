@@ -128,7 +128,7 @@ namespace SDOM
          * - Useful for CI pipelines or embedded environments where runtime
          *   test harnesses are not needed.
          */
-        inline constexpr bool ENABLE_ALL_UNIT_TESTS = false;
+        inline constexpr bool ENABLE_ALL_UNIT_TESTS = true;
     #else
         inline constexpr bool ENABLE_ALL_UNIT_TESTS = SDOM_ENABLE_ALL_UNIT_TESTS;
     #endif    
