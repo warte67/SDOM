@@ -151,11 +151,21 @@ namespace SDOM
         int spriteWidth_ = 8;   // Default sprite width
         int spriteHeight_ = 8;  // Default sprite height
 
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        // Equality comparison for parameter-based reuse checks
+        bool operator==(const SpriteSheet& other) const;        
+        
 
-    // Equality comparison for parameter-based reuse checks
-    bool operator==(const SpriteSheet& other) const;
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;         
+
 
     }; // END class SpriteSheet
 

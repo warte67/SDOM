@@ -67,9 +67,18 @@ namespace SDOM
         int internalFontSize_ = 10;           // Uniform scaling for both font types
 
         TTF_Font* ttf_font_ = nullptr;
+        
 
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;         
 
     }; // END class TTFAsset
 

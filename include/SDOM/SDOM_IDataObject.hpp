@@ -173,35 +173,13 @@ namespace SDOM
 
 
     // ============================================================================
-    // IDataBindingBase<TDerived, TBase>
-    // -----------------------------------------------------------------------------
-    // Enforces super-chain calling for registerBindings() across class hierarchies.
-    // Derived classes implement registerBindingsImpl(), and the base chain is
-    // automatically called by this wrapper.
-    // ============================================================================
-    template<typename TDerived, typename TBase = void>
-    class IDataBindingBase {
-    public:
-        virtual ~IDataBindingBase() = default;
-
-        // Walk the inheritance chain: Base → ... → Derived
-        void registerHierarchy(const std::string& typeName) {
-            if constexpr (!std::is_same_v<TBase, void>) {
-                // Recurse to the immediate base in the CRTP chain
-                static_cast<TBase*>(this)->registerHierarchy(typeName);
-            }
-            static_cast<TDerived*>(this)->registerBindingsImpl(typeName);
-        }
-    };
-
-    // ============================================================================
     // IDataObject
     // -----------------------------------------------------------------------------
     // The root interface for all data-driven objects in SDOM. It inherits from
     // both IUnitTest and IDataBindingBase to provide runtime binding, reflection,
     // and serialization behavior.
     // ============================================================================
-    class IDataObject : public SDOM::IUnitTest, public IDataBindingBase<IDataObject>
+    class IDataObject : public SDOM::IUnitTest
     {
         
     public:
@@ -264,10 +242,6 @@ namespace SDOM
                 // BIND_WARN("Type already registered: " << typeName);
                 return;
             }
-
-            // Always register base bindings first, then allow derived classes
-            // to extend via registerBindingsImpl().
-            registerBaseBindings(typeName);
             registerBindingsImpl(typeName);
             s_registered_types_.insert(typeName);
         }
@@ -443,16 +417,7 @@ namespace SDOM
         // ---- Bindings ----
         virtual void registerBindingsImpl(const std::string& typeName)
         {
-            (void)typeName;
-        }
-
-        void registerBaseBindings(const std::string& typeName)
-        {
-            // Future: integrate Data Registry properties and functions.
-            // BIND_LOG("[" << typeName << "] Registering `IDataObject` bindings");
             BIND_INFO(typeName, "IDataObject");
-            // addFunction(typeName, "getName", [this]() { return this->getName(); });
-            // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
         }
 
 

@@ -161,8 +161,14 @@ namespace SDOM
         void drawDropShadowGlyph(Uint32 ch, int x, int y, const FontStyle& style);
 
         // ---------------------------------------------------------------------
-        // 🔗 Lua Registration
+        // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;                
     };
 } // namespace SDOM

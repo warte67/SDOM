@@ -177,4 +177,14 @@ namespace SDOM
     } // END: CheckButton::_registerLuaBindings()
 
 
+
+
+    
+    void CheckButton::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "CheckButton");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
 } // END: namespace SDOM

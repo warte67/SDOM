@@ -222,5 +222,12 @@ namespace SDOM
 
 
     }
+    
+    void Texture::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "Texture");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
 
 } // END namespace SDOM

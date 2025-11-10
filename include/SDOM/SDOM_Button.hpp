@@ -204,12 +204,18 @@ namespace SDOM
         int font_width_ = 8;
         int font_height_ = 8;
         SDL_Color label_color_ = {255, 255, 255, 255};
+        
+
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
 
         // -----------------------------------------------------------------
-        // 📜 Lua Integration
+        // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        /** @brief Registers Button bindings with the Lua runtime. */
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        virtual void registerBindingsImpl(const std::string& typeName) override;     
     };
 
 } // namespace SDOM

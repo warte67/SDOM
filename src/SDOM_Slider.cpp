@@ -515,4 +515,12 @@ namespace SDOM
 
     } // END: void Slider::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
+    
+    void Slider::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "Slider");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
 } // END: namespace SDOM

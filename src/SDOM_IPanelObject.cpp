@@ -545,4 +545,15 @@ namespace SDOM
     } // END: void IPanelObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 
+
+
+    
+    void IPanelObject::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "IPanelObject");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
+
 } // END namespace SDOM

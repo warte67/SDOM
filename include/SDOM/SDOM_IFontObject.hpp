@@ -228,9 +228,18 @@ namespace SDOM
 
             int fontSize_ = 8; // Font size property for TrueType fonts (and BitmapFont scaling)
             FontType fontType_ = FontType::Bitmap;
+        
 
-            // --- Lua Registration --- //
-            virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+            // ---------------------------------------------------------------------
+            // 🔗 Legacy Lua Registration
+            // ---------------------------------------------------------------------
+            virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+            // -----------------------------------------------------------------
+            // 📜 Data Registry Integration
+            // -----------------------------------------------------------------
+            virtual void registerBindingsImpl(const std::string& typeName) override;         
 
     }; // END class IFontObject
 

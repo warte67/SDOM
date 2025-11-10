@@ -132,4 +132,15 @@ namespace SDOM
     } // END: void Frame::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 
+
+
+    
+    void Frame::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "Frame");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
+
 } // END: namespace SDOM

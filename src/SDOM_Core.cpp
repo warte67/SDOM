@@ -2297,14 +2297,14 @@ namespace SDOM
 
     } // End Core::_registerDisplayObject()
 
+
+    
     void Core::registerBindingsImpl(const std::string& typeName)
     {
-        // Future: integrate Data Registry properties and functions.
-        // BIND_LOG("[" << typeName << "] Registering `Core` bindings");
+        SUPER::registerBindingsImpl(typeName);
         BIND_INFO(typeName, "Core");
-        // addFunction(typeName, "getName", [this]() { return this->getName(); });
-        // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
-    }
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
 
 
 } // namespace SDOM

@@ -690,6 +690,14 @@ namespace SDOM
 
 
     } // END: void ScrollBar::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    
 
+    
+    void ScrollBar::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "ScrollBar");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
 
 } // END: namespace SDOM

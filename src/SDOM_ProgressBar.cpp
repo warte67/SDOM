@@ -343,4 +343,15 @@ namespace SDOM
     } // END: void ProgressBar::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 
+
+
+    
+    void ProgressBar::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "ProgressBar");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
+
 } // END: namespace SDOM

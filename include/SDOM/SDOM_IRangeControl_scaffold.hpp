@@ -148,9 +148,20 @@ namespace SDOM
         
         // --- Protected Virtual Methods --- //
         virtual void _onValueChanged(float oldValue, float newValue);
+        
 
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);   
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;         
+
+        
     }; // END: class IRangeControl_scaffold
 
 } // END: namespace SDOM

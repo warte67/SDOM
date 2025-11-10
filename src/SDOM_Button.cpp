@@ -414,4 +414,14 @@ namespace SDOM
     } // END: void Button::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 
+
+    
+    void Button::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "Button");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
+
 } // END: namespace SDOM

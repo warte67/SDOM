@@ -103,9 +103,20 @@ namespace SDOM
         virtual void _onValueChanged(float oldValue, float newValue);
         ArrowButton* button_decrease_ptr_ = nullptr;
         ArrowButton* button_increase_ptr_ = nullptr;
+        
 
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);   
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;         
+
+
     }; // END: class ScrollBar
 
 } // END: namespace SDOM

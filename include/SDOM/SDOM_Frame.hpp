@@ -64,9 +64,18 @@ namespace SDOM
         virtual bool onUnitTest(int frame) override;        // Called to run unit tests
 
     protected:
+        
 
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;      
 
     }; // END: class Frame : public IPanelObject
 

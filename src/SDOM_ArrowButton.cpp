@@ -285,7 +285,15 @@ namespace SDOM
             std::cout << CLR::GREEN << "↳ ArrowButton Lua bindings complete."
                     << CLR::RESET << std::endl;
         }
-    } // END: void IconButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    } // END: void ArrowButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
+
+
+    void ArrowButton::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "ArrowButton");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
 
 } // END: namespace SDOM

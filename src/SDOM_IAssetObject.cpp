@@ -85,4 +85,15 @@ namespace SDOM
         // Expose only the stable 'load'/'unload' aliases that map to these operations.
     }
 
+
+
+
+    
+    void IAssetObject::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "IAssetObject");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
 } // namespace SDOM

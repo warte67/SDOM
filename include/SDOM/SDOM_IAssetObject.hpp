@@ -54,10 +54,19 @@ namespace SDOM
         std::string filename_;
         bool isInternal_;
         bool isLoaded_ = false;
-
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        
         sol::usertype<IAssetObject> objHandleType_;
+
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;      
 
     }; // class IAssetObject
 

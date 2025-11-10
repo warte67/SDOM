@@ -370,4 +370,15 @@ namespace SDOM
 
 
 
+
+
+    
+    void Group::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "Group");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
+
 } // END: namespace SDOM

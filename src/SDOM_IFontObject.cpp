@@ -157,4 +157,15 @@ namespace SDOM
         //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
     } // END _registerLuaBindings()
 
+
+
+
+    
+    void IFontObject::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "IFontObject");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
 } // namespace SDOM

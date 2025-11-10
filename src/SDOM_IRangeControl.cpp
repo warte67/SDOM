@@ -616,4 +616,15 @@ namespace SDOM
     }
 
 
+
+
+    
+    void IRangeControl::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "IRangeControl");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
+
 } // END: namespace SDOM

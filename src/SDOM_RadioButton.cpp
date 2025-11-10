@@ -259,6 +259,15 @@ namespace SDOM
         // };
         
     } // END: RadioButton::_registerLuaBindings()
+    
 
+
+    
+    void RadioButton::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "RadioButton");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
 
 } // END: namespace SDOM

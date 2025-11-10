@@ -839,5 +839,14 @@ namespace SDOM
         });
 
     } // END: void TristateButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    
+
+
+    void TristateButton::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "TristateButton");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
 
 } // END: namespace SDOM

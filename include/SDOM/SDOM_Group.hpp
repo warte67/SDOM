@@ -107,9 +107,18 @@ namespace SDOM
         int font_width_ = 8;                                // intended for use during initialization only
         int font_height_ = 8;                               // intended for use during initialization only
         SDL_Color label_color_ = {255, 255, 255, 255};      // default label color is white
+        
 
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;      
 
     }; // END: class Button : public IPanelObject
 

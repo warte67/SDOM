@@ -1732,10 +1732,9 @@ namespace SDOM
 
     void IDisplayObject::registerBindingsImpl(const std::string& typeName)
     {
-        // Future: integrate Data Registry properties and functions.
+        SUPER::registerBindingsImpl(typeName);
         BIND_INFO(typeName, "IDisplayObject");
-        // addFunction(typeName, "getName", [this]() { return this->getName(); });
-        // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
     }
 
 } // namespace SDOM

@@ -75,14 +75,20 @@ namespace SDOM
         void setMouseY_lua(int y) { setMouseY(y); }
 
     protected:
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        // --- Lua Registration --- //        
+        sol::usertype<Stage> objHandleType_;  
         
-        sol::usertype<Stage> objHandleType_;
+
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
-        // Lua Registration
-        virtual void registerBindingsImpl(const std::string& typeName) override;        
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;         
     };
 
 } // namespace SDOM

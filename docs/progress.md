@@ -575,32 +575,43 @@ _“From chaos, code — from code, clarity; each stable build a quiet act of de
 - Re-tagged and force-pushed repository to ensure this baseline is permanently preserved.  
 
 ### ⚙️ **Development Environment**
-- Verified repo integrity after forced master reset.  
-- Cleaned local branches; aligned working branch (`master`) with the functional baseline.  
-- Confirmed build reproducibility on GCC 15.2.1 (Linux-x86_64).
+- Verified repository integrity following the master branch reset.  
+- Cleaned obsolete branches; synchronized working branch (`master`) with the stable baseline.  
+- Confirmed **reproducible builds** under **GCC 15.2.1 (Linux-x86_64)**.  
 
 ### 🧱 **Refactor Planning**
-- Defined **parallel integration strategy** for the new reflection and binding system.  
-- Established that the new subsystem will be **built independently** beside the legacy Lua system.  
-- Outlined phased migration:
-  - Phase 1 → C ABI Reflection Registry  
-  - Phase 2 → ScriptManager + Lua Rebinding  
-  - Phase 3 → Layered Unit Testing (ABI then Lua)  
-- Decision: all legacy C++/Lua tests will be archived and replaced with ABI-centric tests in the new model.
+- Defined a **parallel integration strategy** for the new reflection / binding architecture.  
+- The new subsystem will be **developed independently** beside the legacy Lua system.  
+- **Phased migration plan** established:  
+  - **Phase 1 → C ABI Reflection Registry**  
+  - **Phase 2 → ScriptManager + Lua Rebinding**  
+  - **Phase 3 → Layered Unit Testing (ABI then Lua)**  
+- Decision: all legacy C++/Lua unit tests will be archived and replaced with **ABI-centric test modules**.
 
 ### 🌟 **Summary**
 Today marked the **return to stability** after several disrupted iterations.  
 The SDOM project now has:
-- A clean, verified baseline (`v0.5.132-stable`)  
-- A clear path forward for the **dual-system refactor**  
-- Defined testing and migration strategy for the new reflection architecture  
+- ✅ A clean, verified baseline (`v0.5.134-stable`)  
+- ✅ A clear path forward for the **dual-system refactor**  
+- ✅ Defined testing and migration strategy for the new reflection architecture  
 
-### 🚧 **To-Do Next**
-- ☐ Create `docs/Dual_System_Refactor_Plan.md` with finalized phase breakdown  
-- ☐ Remove `Factory` should no longer inherit from `IDataObject`
-- ☐ Design `DataRegistry` to manage `IDataObject` registration
-- ☐ Begin C ABI unit-test harness for registry proof-of-concept  
-
+### 🚧 **Next Steps**
+- ☐ Remove `Factory` inheritance from `IDataObject`  
+- ☐ Implement **C ABI unit-test harness** as registry proof-of-concept  
+  - ☐ Prepare stragglers for **C ABI refactor**
+    - ☐ Convert **SDOM_CLR** to a static singleton class that inherits from `IDataObject`
+    - ☐ **SDOM_Event** should inherit from `IDataObject`
+    - ☐ **SDOM_EventType** should inherit from `IDataObject`
+    - ☐ **SDOM_IButtonObject** should inherit from `IDataObject`
+    - ☐ Convert **SDOM_IconIndex** to a static singleton class that inherits from `IDataObject`
+    - ☐ **SDOM_SDL_Utils** should inherit from `IDataObject`
+    - ☐ **SDOM_UnitTests** should inherit from `IDataObject`
+    - ☐ Convert **SDOM_Utils** to a static singleton class that inherits from `IDataObject`
+    - ☐ **SDOM_Version.hpp.in** should inherit from `IDataObject`
+  - ☐ Feed the Llama
+  - ☐ Design `DataRegistry` for centralized `IDataObject` reflection management  
+  - ☐ Design an extensible `Variant` type for dynamic property storage and retrieval
+- ☐ Feed the Llama
 
 #### end-of-day
 

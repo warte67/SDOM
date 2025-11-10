@@ -243,10 +243,15 @@ namespace SDOM
         ArrowDirection direction_ = ArrowDirection::Up; ///< Current arrow direction.
 
         // -----------------------------------------------------------------
-        // 📜 Lua Integration
+        // 📜 Legacy Lua Integration
         // -----------------------------------------------------------------
         /** @brief Registers ArrowButton with Lua runtime. */
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;        
     };
 
 } // namespace SDOM

@@ -179,9 +179,19 @@ namespace SDOM
         SDL_PixelFormat current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
 
         bool rebuildPanelTexture_(int width, int height, SDL_PixelFormat fmt);
+        
 
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        
     }; // END: IPanelObject : public IDisplayObject 
 
 } // namespace SDOM

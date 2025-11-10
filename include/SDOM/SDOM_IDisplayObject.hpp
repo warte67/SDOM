@@ -489,10 +489,19 @@ namespace SDOM
     protected:
     
         // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
         sol::usertype<IDisplayObject> objHandleType_;  
+        
 
-        virtual void registerBindingsImpl(const std::string& typeName) override;
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;         
 
     };  // END: class IDisplayObject
 

@@ -116,9 +116,7 @@ namespace SDOM
 
         // --- Protected Virtual Methods --- //
         virtual void _onValueChanged(float oldValue, float newValue);
-
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);        
+   
 
         // --- Cached rendering --- //
         SDL_Texture* cachedTexture_ = nullptr;
@@ -127,6 +125,20 @@ namespace SDOM
         int current_height_ = 0;
         SDL_PixelFormat current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
         bool rebuildRangeTexture_(int width, int height, SDL_PixelFormat fmt);
+
+        
+
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;         
+
     }; // END: class IRangeControl
 
 } // END: namespace SDOM

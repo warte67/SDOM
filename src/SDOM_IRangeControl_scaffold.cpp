@@ -184,4 +184,14 @@ namespace SDOM
     } // END: void IRangeControl_scaffold::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 
+
+
+    
+    void IRangeControl_scaffold::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "IRangeControl_scaffold");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
 } // END: namespace SDOM

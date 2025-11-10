@@ -1046,4 +1046,14 @@ namespace SDOM
         });
 
     } // END _registerLuaBindings()
+
+    
+    void SpriteSheet::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "SpriteSheet");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
+
 } // namespace SDOM_

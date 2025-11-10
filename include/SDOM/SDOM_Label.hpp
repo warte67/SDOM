@@ -385,9 +385,19 @@ namespace SDOM
         int parent_height_ = 0;
         bool needsTextureRebuild_(int width, int height, SDL_PixelFormat fmt) const;
         bool rebuildTexture_(int width, int height, SDL_PixelFormat fmt = SDL_PIXELFORMAT_RGBA8888 ); 
+        
 
-        // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        // ---------------------------------------------------------------------
+        // 🔗 Legacy Lua Registration
+        // ---------------------------------------------------------------------
+        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // -----------------------------------------------------------------
+        // 📜 Data Registry Integration
+        // -----------------------------------------------------------------
+        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        
     };
 
 } // namespace SDOM

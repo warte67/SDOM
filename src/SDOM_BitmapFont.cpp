@@ -888,4 +888,15 @@ namespace SDOM
     } // END _registerLuaBindings()
 
 
+
+
+    
+    void BitmapFont::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "BitmapFont");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
+
 } // END namespace SDOM

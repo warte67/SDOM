@@ -426,8 +426,7 @@ void Box::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 void Box::registerBindingsImpl(const std::string& typeName)
 {
-    // Future: integrate Data Registry properties and functions.
+    SUPER::registerBindingsImpl(typeName);
     BIND_INFO(typeName, "Box");
-    // addFunction(typeName, "getName", [this]() { return this->getName(); });
-    // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
-}
+    // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+}    

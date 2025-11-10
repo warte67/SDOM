@@ -175,5 +175,13 @@ namespace SDOM
 
     } // END: TTFAsset::_registerLuaBindings()
 
+    
+    void TTFAsset::registerBindingsImpl(const std::string& typeName)
+    {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "TTFAsset");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
+
 
 } // END namespace SDOM
