@@ -91,6 +91,7 @@ Summary:
 #include <SDOM/SDOM_CLR.hpp>
 #include <SDOM/SDOM_IUnitTest.hpp>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <type_traits>
 
@@ -135,30 +136,30 @@ namespace SDOM
         #include <SDOM/SDOM_CLR.hpp>
 
         // 💬 Normal Binding Trace
-        #define BIND_LOG(...) do {                                                   \
-            std::ostringstream _sdom_bind_oss;                                       \
-            _sdom_bind_oss << __VA_ARGS__;                                           \
-            std::cout << CLR::LT_MAGENTA                                    \
-                    << "[BIND]" << CLR::MAGENTA << " "                               \
-                    << _sdom_bind_oss.str() << CLR::RESET << std::endl;            \
+        #define BIND_LOG(...) do {                                       \
+            std::ostringstream _sdom_bind_oss;                           \
+            _sdom_bind_oss << __VA_ARGS__;                               \
+            std::cout << CLR::LT_MAGENTA                                 \
+                    << "[BIND]" << CLR::MAGENTA << " "                   \
+                    << _sdom_bind_oss.str() << CLR::RESET << std::endl;  \
         } while(0)
 
         // ⚠️ Warning (e.g. missing field, duplicate entry)
-        #define BIND_WARN(...) do {                                                  \
-            std::ostringstream _sdom_bind_warn;                                      \
-            _sdom_bind_warn << __VA_ARGS__;                                          \
-            std::cout << CLR::LT_YELLOW                                    \
-                    << "[BIND WARN]" << CLR::YELLOW << " "                          \
-                    << _sdom_bind_warn.str() << CLR::RESET << std::endl;                         \
+        #define BIND_WARN(...) do {                                      \
+            std::ostringstream _sdom_bind_warn;                          \
+            _sdom_bind_warn << __VA_ARGS__;                              \
+            std::cout << CLR::LT_YELLOW                                  \
+                    << "[BIND WARN]" << CLR::YELLOW << " "               \
+                    << _sdom_bind_warn.str() << CLR::RESET << std::endl; \
         } while(0)
 
         // ❌ Error (binding failure, exception, abort)
-        #define BIND_ERR(...) do {                                                   \
-            std::ostringstream _sdom_bind_err;                                       \
-            _sdom_bind_err << __VA_ARGS__;                                           \
-            std::cerr << CLR::LT_RED                                    \
-                    << "[BIND ERROR]" << CLR::RESET << " "                         \
-                    << _sdom_bind_err.str() << CLR::RESET << std::endl;                          \
+        #define BIND_ERR(...) do {                                       \
+            std::ostringstream _sdom_bind_err;                           \
+            _sdom_bind_err << __VA_ARGS__;                               \
+            std::cerr << CLR::LT_RED                                     \
+                    << "[BIND ERROR]" << CLR::RESET << " "               \
+                    << _sdom_bind_err.str() << CLR::RESET << std::endl;  \
         } while(0)
 
     #else
@@ -168,39 +169,51 @@ namespace SDOM
     #endif
 
 
-    // ============================================================
-    // 🧩 IDataBindingBase Template
-    // Provides hierarchical registration for all SDOM types.
-    // ============================================================
+    // ============================================================================
+    // IDataBindingBase<TDerived, TBase>
+    // -----------------------------------------------------------------------------
+    // Enforces super-chain calling for registerBindings() across class hierarchies.
+    // Derived classes implement registerBindingsImpl(), and the base chain is
+    // automatically called by this wrapper.
+    // ============================================================================
     template<typename TDerived, typename TBase = void>
     class IDataBindingBase
     {
     public:
         virtual ~IDataBindingBase() = default;
 
-        /**
-         * @brief Register all functions and properties for this object type.
-         *        Automatically calls base::registerBindings() if a base exists.
-         */
         void registerBindings(const std::string& typeName)
         {
             if constexpr (!std::is_same_v<TBase, void>)
             {
-                static_assert(std::is_base_of_v<TBase, TDerived>,
-                              "TDerived must inherit from TBase when using IDataBindingBase.");
-                auto* derived = static_cast<TDerived*>(this);
-                static_cast<TBase*>(derived)->registerBindings(typeName);
-            }   
-
-            static_assert(std::is_base_of_v<IDataBindingBase<TDerived, TBase>, TDerived>,
-                        "Derived class must inherit IDataBindingBase<Derived, Base>.");
+                BIND_LOG("Chaining base bindings for " << typeName);
+                static_cast<TBase*>(this)->registerBindings(typeName);
+            }
 
             static_cast<TDerived*>(this)->registerBindingsImpl(typeName);
         }
 
-    protected:
-        // Derived class must implement its own registerBindingsImpl()
-        void registerBindingsImpl(const std::string& typeName);
+    };
+
+    // ============================================================================
+    // IDataObject
+    // -----------------------------------------------------------------------------
+    // The root interface for all data-driven objects in SDOM. It inherits from
+    // both IUnitTest and IDataBindingBase to provide runtime binding, reflection,
+    // and serialization behavior.
+    // ============================================================================
+    class IDataObject : public SDOM::IUnitTest, public IDataBindingBase<IDataObject>
+    {
+        
+    public:
+        // ---- Lifecycle ----
+        virtual bool onInit() = 0;
+        virtual void onQuit() = 0;
+        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
+
+        // ---- Identity ----
+        std::string getName() const { return name_; }
+        void setName(const std::string& newName) { name_ = newName; }
 
         // ============================================================
         // 🧱 Placeholders for upcoming Data Registry integration
@@ -233,45 +246,29 @@ namespace SDOM
             BIND_LOG("[" << typeName << "] addProperty: " << name);
             // Placeholder: will connect to DataRegistry later.
         }
-    };
 
-    // ============================================================================
-    // IDataObject
-    // -----------------------------------------------------------------------------
-    // The root interface for all data-driven objects in SDOM. It inherits from
-    // both IUnitTest and IDataBindingBase to provide runtime binding, reflection,
-    // and serialization behavior.
-    // ============================================================================
-    class IDataObject : public SDOM::IUnitTest, public IDataBindingBase<IDataObject>
-    {
-        
-    public:
-
-        virtual bool onInit() = 0;
-        virtual void onQuit() = 0;
-        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
-    
-        // Example:
-        //
-        //      class DisplayObject : public IDataObject {
-        //      public:
-        //          void registerBindingsImpl() {
-        //              // Super automatically called.
-        //              // Add DisplayObject-specific bindings here
-        //          }
-        //      };        
-        // ---- Bindings ----
-        // Derived must implement this; enforced by static_cast above.
-        virtual void registerBindingsImpl(const std::string& typeName) 
+        // =============================================================
+        // 🧩 Public Binding Entry Point
+        // =============================================================
+        /**
+         * @brief Public entrypoint to trigger this object's binding registration.
+         * @details This is the polymorphic root. Derived classes may safely call
+         *          `registerBindings()` without knowing the concrete type.
+         */
+        void registerBindings(const std::string& typeName)
         {
-            BIND_LOG("[IDataObject] Registering base " << typeName << " bindings...");
-            // Base binding implementation.
-            // e.g., register getName/setName here.
-            addFunction(typeName, "getName", [this]() { return this->getName(); });
-            addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
+            BIND_LOG("IDataObject::registerBindings for " << typeName);
+
+            // Guard to ensure we don’t double-register the same type
+            if (s_registered_types_.count(typeName)) {
+                BIND_WARN("Type already registered: " << typeName);
+                return;
+            }
+
+            // Delegate to the cooperative implementation chain
+            registerBindingsImpl(typeName);
+            s_registered_types_.insert(typeName);
         }
-
-
 
 
 
@@ -296,9 +293,6 @@ namespace SDOM
             }
             return default_value;
         }
-
-        std::string getName() const { return name_; }
-        void setName(const std::string& newName) { name_ = newName; }
 
         static sol::table ensure_sol_table(sol::state_view lua, const std::string& typeName)
         {
@@ -422,18 +416,42 @@ namespace SDOM
             return both.second; // canonical registry table
         }
 
-    public:
-
-
         // New preferred Lua binding path
         void registerLuaBindings(const std::string& typeName, sol::state_view lua)
         {
             this->_registerLuaBindings(typeName, lua);
-        }
+        }        
+
 
     protected:
         std::string name_ = "IDataObject";
 
+        inline static std::unordered_set<std::string> s_registered_types_;
+
+        // ---- Bindings ----
+        virtual void registerBindingsImpl(const std::string& typeName)
+        {
+            // Base binding implementation.
+            if (s_registered_types_.count(typeName)) return;  // already registered
+
+            // Future: integrate Data Registry properties and functions.
+            BIND_LOG("[" << typeName << "] Registering base IDataObject bindings");
+            addFunction(typeName, "getName", [this]() { return this->getName(); });
+            addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
+        }
+
+
+
+
+
+
+
+
+
+
+        //  ============================================================
+        // 🧱 Legacy Lua Binding Helpers
+        //  ============================================================
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua)
         {
             // 1. Make sure the per-type Lua table exists.

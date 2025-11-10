@@ -17,6 +17,7 @@
 #include <SDOM/SDOM_Core_Lua.hpp>
 #include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_ArrowButton.hpp>
+#include <SDOM/SDOM_IDataObject.hpp>
 
 
 namespace SDOM
@@ -41,13 +42,14 @@ namespace SDOM
         
         // register the DisplayHandle handle last so other types can use it
         DisplayHandle prototypeHandle; // Default DisplayHandle for registration
-        prototypeHandle.registerLuaBindings("DisplayHandle", lua_);
+        prototypeHandle._registerLuaBindings("DisplayHandle", lua_);
 
         AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
         prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
         
         // Register Core usertype
-        this->_registerLuaBindings("Core", lua_);       
+        this->_registerLuaBindings("Core", lua_);      
+        this->registerBindings("Core"); 
 
         // Note: Factory initialization is performed later (e.g. during
         // configuration) to avoid recursive-construction ordering issues.
@@ -2297,6 +2299,14 @@ namespace SDOM
         SDOM::core_bind_return_string("getVersionPlatform", getVersionPlatform_lua, objHandleType, coreTable, lua);
 
     } // End Core::_registerDisplayObject()
+
+    void Core::registerBindingsImpl(const std::string& typeName)
+    {
+        // Future: integrate Data Registry properties and functions.
+        BIND_LOG("[" << typeName << "] Registering base `Core` bindings");
+        // addFunction(typeName, "getName", [this]() { return this->getName(); });
+        // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
+    }
 
 
 } // namespace SDOM

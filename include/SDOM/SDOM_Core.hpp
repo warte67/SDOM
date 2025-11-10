@@ -361,11 +361,12 @@ namespace SDOM
     protected:
         friend Factory;
 
-        // --- Lua Registration --- //
+        // --- Legacy Lua Registration --- //
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
         sol::usertype<Core> objHandleType_;
 
-
+        // --- Lua Registration --- //
+        virtual void registerBindingsImpl(const std::string& typeName) override;
     };
 
 } // namespace SDOM
