@@ -90,6 +90,9 @@ Summary:
 #include <sol/sol.hpp>
 #include <SDOM/SDOM_CLR.hpp>
 #include <SDOM/SDOM_IUnitTest.hpp>
+#include <algorithm>
+#include <cctype>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -177,22 +180,18 @@ namespace SDOM
     // automatically called by this wrapper.
     // ============================================================================
     template<typename TDerived, typename TBase = void>
-    class IDataBindingBase
-    {
+    class IDataBindingBase {
     public:
         virtual ~IDataBindingBase() = default;
 
-        void registerBindings(const std::string& typeName)
-        {
-            if constexpr (!std::is_same_v<TBase, void>)
-            {
-                BIND_LOG("Chaining base bindings for " << typeName);
-                static_cast<TBase*>(this)->registerBindings(typeName);
+        // Walk the inheritance chain: Base → ... → Derived
+        void registerHierarchy(const std::string& typeName) {
+            if constexpr (!std::is_same_v<TBase, void>) {
+                // Recurse to the immediate base in the CRTP chain
+                static_cast<TBase*>(this)->registerHierarchy(typeName);
             }
-
             static_cast<TDerived*>(this)->registerBindingsImpl(typeName);
         }
-
     };
 
     // ============================================================================
@@ -257,19 +256,32 @@ namespace SDOM
          */
         void registerBindings(const std::string& typeName)
         {
-            BIND_LOG("IDataObject::registerBindings for " << typeName);
+            // BIND_LOG("IDataObject::registerBindings for " << typeName);
+            // BIND_INFO(typeName, "IDataObject");
 
             // Guard to ensure we don’t double-register the same type
             if (s_registered_types_.count(typeName)) {
-                BIND_WARN("Type already registered: " << typeName);
+                // BIND_WARN("Type already registered: " << typeName);
                 return;
             }
 
-            // Delegate to the cooperative implementation chain
+            // Always register base bindings first, then allow derived classes
+            // to extend via registerBindingsImpl().
+            registerBaseBindings(typeName);
             registerBindingsImpl(typeName);
             s_registered_types_.insert(typeName);
         }
 
+        void BIND_INFO(const std::string& typeName, const std::string& typeNameLocal)
+        {
+            if (SDOM_VERBOSE_BINDING_LOG)
+            {
+                std::cout << CLR::fg_rgb(128, 255, 255) << "[" << typeName << "]"
+                        << CLR::fg_rgb(64, 192, 192) << " Registering bindings for type: "
+                         << CLR::fg_rgb(128, 255, 255) << typeNameLocal 
+                         << CLR::RESET << std::endl;
+            }
+        }
 
 
 
@@ -431,13 +443,16 @@ namespace SDOM
         // ---- Bindings ----
         virtual void registerBindingsImpl(const std::string& typeName)
         {
-            // Base binding implementation.
-            if (s_registered_types_.count(typeName)) return;  // already registered
+            (void)typeName;
+        }
 
+        void registerBaseBindings(const std::string& typeName)
+        {
             // Future: integrate Data Registry properties and functions.
-            BIND_LOG("[" << typeName << "] Registering `IDataObject` bindings");
-            addFunction(typeName, "getName", [this]() { return this->getName(); });
-            addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
+            // BIND_LOG("[" << typeName << "] Registering `IDataObject` bindings");
+            BIND_INFO(typeName, "IDataObject");
+            // addFunction(typeName, "getName", [this]() { return this->getName(); });
+            // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
         }
 
 

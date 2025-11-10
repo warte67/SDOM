@@ -492,6 +492,8 @@ namespace SDOM
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
         sol::usertype<IDisplayObject> objHandleType_;  
 
+        virtual void registerBindingsImpl(const std::string& typeName) override;
+
     };  // END: class IDisplayObject
 
 } // namespace SDOM

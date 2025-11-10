@@ -30,22 +30,24 @@ namespace SDOM
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::package, sol::lib::io);
 
         // Register Core, Factory, EventManager, Version, and SDL_Utils usertypes
-        SDL_Utils::registerLuaBindings(lua_);
+        SDL_Utils::registerLuaBindings(lua_);  // This should inherit from IDataObject?
         factory_ = new Factory();
         eventManager_ = new EventManager();
         version_ = new Version(lua_);
 
         // Expose CLR constants and helpers to Lua through a single helper
         // so updates to CLR are reflected in embedded Lua states.
-        CLR::exposeToLua(lua_);
+        CLR::exposeToLua(lua_);   // This should inherit from IDataObject?
 
         
         // register the DisplayHandle handle last so other types can use it
         DisplayHandle prototypeHandle; // Default DisplayHandle for registration
         prototypeHandle._registerLuaBindings("DisplayHandle", lua_);
+        prototypeHandle.registerBindings("DisplayHandle");
 
         AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
         prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
+        prototypeAssetHandle.registerBindings("AssetHandle");
         
         // Register Core usertype
         this->_registerLuaBindings("Core", lua_);      
@@ -184,10 +186,6 @@ namespace SDOM
         // globals registered by the host (Core, CLR, unit-test functions)
         // are available to the script.
         try {
-            // Ensure Core usertype is registered into this lua state
-            // this->_registerLua("Core", lua_);
-            // this->_registerLuaBindings("Core", lua_);
-
             // Prefer scripts that return the config table. If the chunk
             // returns a table, use it. Otherwise fall back to a global
             // `config` table for backward compatibility.
@@ -336,8 +334,6 @@ namespace SDOM
                 }
 
                 // Treat as inline Lua code
-                // this->_registerLua("Core", lua_);
-                // this->_registerLuaBindings("Core", lua_);
                 try {
                     sol::load_result chunk = lua_.load(configFile);
                     if (!chunk.valid()) {
@@ -2304,7 +2300,8 @@ namespace SDOM
     void Core::registerBindingsImpl(const std::string& typeName)
     {
         // Future: integrate Data Registry properties and functions.
-        BIND_LOG("[" << typeName << "] Registering `Core` bindings");
+        // BIND_LOG("[" << typeName << "] Registering `Core` bindings");
+        BIND_INFO(typeName, "Core");
         // addFunction(typeName, "getName", [this]() { return this->getName(); });
         // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
     }

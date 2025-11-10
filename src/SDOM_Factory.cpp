@@ -59,7 +59,6 @@ namespace SDOM
         } catch(...) {}
         // --- Lua UserType Registration --- //
         Core& core = getCore();
-        // core._registerLuaBindings("Core", core.getLua());
 
         // Register the DisplayHandle early so any returned handles to Lua
         // have a valid usertype/metatable for indexing minimal helpers.
@@ -97,13 +96,15 @@ namespace SDOM
                     init.filename = defaultIconName;
                     AssetHandle spriteSheet = createAsset("Texture", init);
                     if (auto* spriteSheetPtr = spriteSheet.as<Texture>()) {
-                        try { spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); } catch(...) {}
+                        spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); 
+                        spriteSheetPtr->registerBindings("Texture");
                     }
                 } else {
                     // Ensure Lua bindings are registered for existing instance
                     IAssetObject* existing = getResObj(defaultIconName);
                     if (auto* spriteSheetPtr = dynamic_cast<Texture*>(existing)) {
-                        try { spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); } catch(...) {}
+                        spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); 
+                        spriteSheetPtr->registerBindings("Texture");
                     }
                 }
             };
@@ -465,6 +466,9 @@ namespace SDOM
                                    typeName.c_str(), (void*)SDOM::getLua().lua_state());
                         }
                         prototype->_registerLuaBindings(typeName, SDOM::getLua());
+                        // prototype->registerBindings(typeName);
+                        prototype->IDataObject::registerBindings(typeName);
+
                     } catch(...) {
                         // swallow registration errors for prototypes
                     }
@@ -495,6 +499,7 @@ namespace SDOM
         // Create a prototype AssetHandle for Lua registration
         AssetHandle prototypeHandle(typeName, typeName, typeName);
         prototypeHandle._registerLuaBindings(typeName, SDOM::getLua());
+        prototypeHandle.registerBindings(typeName);
     }
 
     IAssetObject* Factory::getResObj(const std::string& name)

@@ -178,4 +178,13 @@ namespace SDOM
         // Do not add type-specific bindings here.
     }
 
+    void AssetHandle::registerBindingsImpl(const std::string& typeName)
+    {
+        // Future: integrate Data Registry properties and functions.
+        // BIND_LOG("[" << typeName << "] Registering `AssetHandle` bindings");
+        BIND_INFO(typeName, "AssetHandle");
+        // addFunction(typeName, "getName", [this]() { return this->getName(); });
+        // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
+    }    
+
 } // namespace SDOM

@@ -159,4 +159,13 @@ namespace SDOM
         set_if_absent(stageTable, "setMouseY", &Stage::setMouseY_lua);
     } // END: Stage::_registerLuaBindings()
 
+    void Stage::registerBindingsImpl(const std::string& typeName)
+    {
+        // Future: integrate Data Registry properties and functions.
+        // BIND_LOG("[" << typeName << "] Registering `Stage` bindings");
+        BIND_INFO(typeName, "Stage");
+        // addFunction(typeName, "getName", [this]() { return this->getName(); });
+        // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
+    }
+
 } // namespace SDOM

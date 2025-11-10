@@ -167,8 +167,12 @@ namespace SDOM
         std::string filename_;
 
         // ---------------------------------------------------------------------
-        // 📜 Lua Extension Hook
+        // 📜 Legacy Lua Extension Hook
         // ---------------------------------------------------------------------
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+
+        // Lua Registration
+        virtual void registerBindingsImpl(const std::string& typeName) override;        
     };
 } // namespace SDOM

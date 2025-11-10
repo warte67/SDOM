@@ -300,4 +300,13 @@ namespace SDOM
         }
     }
 
+    void DisplayHandle::registerBindingsImpl(const std::string& typeName)
+    {
+        // Future: integrate Data Registry properties and functions.
+        // BIND_LOG("[" << typeName << "] Registering `DisplayHandle` bindings");
+        BIND_INFO(typeName, "DisplayHandle");
+        // addFunction(typeName, "getName", [this]() { return this->getName(); });
+        // addFunction(typeName, "setName", [this](const std::string& n){ this->setName(n); });
+    }
+
 } // namespace SDOM

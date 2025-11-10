@@ -79,6 +79,10 @@ namespace SDOM
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
         
         sol::usertype<Stage> objHandleType_;
+
+
+        // Lua Registration
+        virtual void registerBindingsImpl(const std::string& typeName) override;        
     };
 
 } // namespace SDOM

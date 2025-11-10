@@ -185,10 +185,12 @@ namespace SDOM
         // --- LUA Registration --- //
         // virtual void _registerLua(const std::string& typeName, sol::state_view lua);
         sol::usertype<DisplayHandle> objHandleType_;
-
-
         
+        // Legacy Lua Binding Helpers
         virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+
+        // Lua Registration
+        virtual void registerBindingsImpl(const std::string& typeName) override;
 
     }; // end class DisplayHandle
 
