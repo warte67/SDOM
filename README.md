@@ -145,7 +145,7 @@ sudo apt install liblua5.4-dev
 ```
 **Arch Linux:**
 ```bash
-sudo pacman -S lua54
+sudo pacman -S lua
 ```
 **Fedora / RHEL / CentOS Stream / Alma / Rocky:**
 ```bash
