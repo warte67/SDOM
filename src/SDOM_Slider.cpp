@@ -293,8 +293,10 @@ namespace SDOM
                         double x_min = -3 * scale_width;
                         double x_max = getWidth() - 4 * scale_height;
                         double step = (x_max - x_min) / 10.0;
-                        for (double h = x_min; h <= x_max; h += step)
+                        const int steps = 10;
+                        for (int i = 0; i <= steps; ++i)
                         {
+                            double h = x_min + static_cast<double>(i) * step;
                             ss->drawSprite(static_cast<int>(IconIndex::Slider_Tick),
                                 static_cast<int>(std::lround(h)),
                                 0,
@@ -338,8 +340,10 @@ namespace SDOM
                         double y_min = -2.5f * scale_height;
                         double y_max = getHeight() - 4 * scale_height;
                         double step = (y_max - y_min)/10.0;
-                        for (double v = y_min; v <= y_max; v += step)
+                        const int steps_v = 10;
+                        for (int i = 0; i <= steps_v; ++i)
                         {
+                            double v = y_min + static_cast<double>(i) * step;
                             ss->drawSprite(static_cast<int>(IconIndex::Slider_Tick),
                                 0,
                                 static_cast<int>(std::lround(v)),

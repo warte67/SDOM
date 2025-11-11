@@ -438,7 +438,7 @@ namespace SDOM
         if (clamped != value_) {
                 float old = value_;
                 value_ = clamped;
-            _onValueChanged(old, value_);
+            _onValueChanged(old, value_); // NOLINT(clang-analyzer-optin.cplusplus.VirtualCall) - intentional
             setDirty(true);
         }
     } // END: void IRangeControl::setValue(float v)

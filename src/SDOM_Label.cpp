@@ -1190,7 +1190,7 @@ namespace SDOM
                 totalTextHeight += maxHeight;
             }
 
-            float baseY = static_cast<float>(innerY);
+            float baseY;
             switch (align) {
                 case AlignQueue::TOP_LEFT:
                 case AlignQueue::TOP_CENTER:

@@ -11,7 +11,7 @@ namespace SDOM
     RadioButton::RadioButton(const InitStruct& init): TristateButton(init)
     {
         setType(TypeName);
-        icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state
+    icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state // NOLINT(clang-analyzer-optin.cplusplus.VirtualCall) - intentional
 
         // add custom properties here
     } // END: RadioButton::RadioButton(const InitStruct& init)
@@ -19,7 +19,7 @@ namespace SDOM
     RadioButton::RadioButton(const sol::table& config) : TristateButton(config, RadioButton::InitStruct())
     {
         setType(TypeName);
-        icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state
+    icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state // NOLINT(clang-analyzer-optin.cplusplus.VirtualCall) - intentional
 
         InitStruct init; // default init struct to fall back on
         

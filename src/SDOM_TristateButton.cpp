@@ -74,7 +74,7 @@ namespace SDOM
         text_ = init.text;
         // icon_index_ = init.icon_index;
         buttonState_ = init.state;
-        icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state
+    icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state // NOLINT(clang-analyzer-optin.cplusplus.VirtualCall) - intentional
 
         font_size_ = init.font_size;
         label_color_ = init.label_color;
