@@ -170,6 +170,31 @@ public:
         return std::static_pointer_cast<T>(dv.ptr);
     }
 
+    // Create a DynamicValue from a typed shared_ptr. This centralizes type_name
+    // lookup and ensures the DynamicValue is consistently populated.
+    template<typename T>
+    static VariantStorage::DynamicValue makeDynamicValue(std::shared_ptr<T> p) {
+        VariantStorage::DynamicValue dv;
+        dv.ptr = std::static_pointer_cast<void>(p);
+        dv.type = std::type_index(typeid(T));
+        auto tn = VariantRegistry::getTypeName(dv.type);
+        dv.typeName = tn ? *tn : std::string();
+        return dv;
+    }
+
+    // Accessors for dynamic metadata
+    std::optional<std::string> dynamicTypeName() const noexcept {
+        if (!isDynamic()) return std::nullopt;
+        const auto& dv = std::get<VariantStorage::DynamicValue>(storage_->data);
+        return dv.typeName.empty() ? std::nullopt : std::optional<std::string>(dv.typeName);
+    }
+
+    std::type_index dynamicTypeIndex() const noexcept {
+        if (!isDynamic()) return typeid(void);
+        const auto& dv = std::get<VariantStorage::DynamicValue>(storage_->data);
+        return dv.type;
+    }
+
     // Converter API (minimal): allow registering per-type converters for
     // converting DynamicValue -> Lua and Variant -> DynamicValue
     using DynamicToLuaFn = std::function<sol::object(const VariantStorage::DynamicValue&, sol::state_view)>;
@@ -185,7 +210,10 @@ public:
     static void registerConverter(const std::string& typeName, ConverterEntry entry) {
         VariantRegistry::registerType<T>(typeName);
         std::lock_guard<std::mutex> lk(VariantRegistry::getMutex());
-        VariantRegistry::getConverterMap()[std::type_index(typeid(T))] = std::move(entry);
+        // Populate both type_index->converter and name->converter maps. ConverterEntry
+        // uses std::function which is copyable, so copy-insert into both maps.
+        VariantRegistry::getConverterMap()[std::type_index(typeid(T))] = entry;
+        VariantRegistry::getConverterMapByName()[typeName] = entry;
     }
 
     // Lookup converter by type_index (returns nullptr if absent)
@@ -226,8 +254,25 @@ public:
             static std::unordered_map<std::type_index, ConverterEntry> conv;
             return conv;
         }
+        // Name-based converter map (allows lookup by registered type name)
+        static std::unordered_map<std::string, ConverterEntry>& getConverterMapByName() {
+            static std::unordered_map<std::string, ConverterEntry> convByName;
+            return convByName;
+        }
+        static ConverterEntry* getConverterByName(const std::string& name) {
+            std::lock_guard<std::mutex> lk(getMutex());
+            auto &m = getConverterMapByName();
+            auto it = m.find(name);
+            if (it == m.end()) return nullptr;
+            return &it->second;
+        }
     private:
     };
+
+    // Lookup converter by registered type name (returns nullptr if absent)
+    static ConverterEntry* getConverterByName(const std::string& name) {
+        return VariantRegistry::getConverterByName(name);
+    }
 
     // Table storage mode controls how incoming Lua tables are handled:
     // - Copy (default): tables are converted into Variant::Array/Object (a snapshot)

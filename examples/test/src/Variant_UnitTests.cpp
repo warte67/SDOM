@@ -24,7 +24,23 @@ namespace SDOM
                 return t;
             };
             ce.fromVariant = [](const Variant& v) -> std::shared_ptr<void> {
-                // Minimal: not required for this test
+                // Convert a Variant (object or array) back into a TestPoint instance.
+                auto out = std::make_shared<TestPoint>();
+                if (v.isObject()) {
+                    const Variant* vx = v.get("x");
+                    const Variant* vy = v.get("y");
+                    if (vx) out->x = static_cast<int>(vx->toInt64());
+                    if (vy) out->y = static_cast<int>(vy->toInt64());
+                    return std::static_pointer_cast<void>(out);
+                }
+                if (v.isArray()) {
+                    const Variant* vx = v.at(0);
+                    const Variant* vy = v.at(1);
+                    if (vx) out->x = static_cast<int>(vx->toInt64());
+                    if (vy) out->y = static_cast<int>(vy->toInt64());
+                    return std::static_pointer_cast<void>(out);
+                }
+                // Unsupported shape
                 return nullptr;
             };
 
@@ -48,6 +64,44 @@ namespace SDOM
         if (x != 7 || y != 11) {
             errors.push_back("TestPoint field values mismatch from Variant::toLua");
         }
+
+        return true;
+    }
+
+    bool Variant_test_converter_roundtrip(std::vector<std::string>& errors)
+    {
+        Core& core = getCore();
+
+        // create a TestPoint, convert to Variant (dynamic), to Lua, back to Variant, then back to C++
+        auto p = std::make_shared<TestPoint>();
+        p->x = 13; p->y = 17;
+        Variant v(p);
+
+        sol::object o = v.toLua(core.getLua());
+        if (!o.is<sol::table>()) {
+            errors.push_back("Roundtrip: toLua did not produce a table");
+            return true;
+        }
+
+        // Convert Lua table back to Variant
+        Variant v2 = Variant::fromLuaObject(o);
+
+        // Lookup converter and attempt fromVariant
+        auto ce = Variant::getConverter(std::type_index(typeid(TestPoint)));
+        if (!ce) {
+            errors.push_back("Roundtrip: converter missing for TestPoint");
+            return true;
+        }
+
+        std::shared_ptr<void> pv = ce->fromVariant(v2);
+        if (!pv) {
+            errors.push_back("Roundtrip: fromVariant returned null");
+            return true;
+        }
+
+        auto p2 = std::static_pointer_cast<TestPoint>(pv);
+        if (!p2) { errors.push_back("Roundtrip: cast failed"); return true; }
+        if (p2->x != 13 || p2->y != 17) errors.push_back("Roundtrip: value mismatch after conversion");
 
         return true;
     }
@@ -96,6 +150,35 @@ namespace SDOM
         static bool registered = false;
         if (!registered) {
             ut.add_test(objName, "Converter: TestPoint -> Lua table", Variant_test_converter_to_lua);
+            ut.add_test(objName, "Converter: TestPoint roundtrip", Variant_test_converter_roundtrip);
+            ut.add_test(objName, "Converter: lookup by name", [](std::vector<std::string>& errors)->bool{
+                Core& core = getCore();
+                sol::state& L = core.getLua();
+
+                // Ensure converter was registered by previous test registration
+                auto ce = Variant::getConverterByName("TestPoint");
+                if (!ce) { errors.push_back("Converter lookup by name failed"); return true; }
+
+                // Build a DynamicValue representing a TestPoint
+                auto p = std::make_shared<TestPoint>(); p->x = 3; p->y = 4;
+                auto dv = Variant::makeDynamicValue<TestPoint>(p);
+
+                sol::object o = ce->toLua(dv, L);
+                if (!o.is<sol::table>()) { errors.push_back("Converter toLua by name did not produce table"); return true; }
+                sol::table t = o;
+                int xx = t["x"]; int yy = t["y"];
+                if (xx != 3 || yy != 4) errors.push_back("Converter toLua by name produced wrong values");
+
+                // Now convert back via fromVariant
+                Variant v = Variant::fromLuaObject(o);
+                auto pv = ce->fromVariant(v);
+                if (!pv) { errors.push_back("Converter fromVariant by name returned null"); return true; }
+                auto p2 = std::static_pointer_cast<TestPoint>(pv);
+                if (!p2) { errors.push_back("Converter fromVariant by name cast failed"); return true; }
+                if (p2->x != 3 || p2->y != 4) errors.push_back("Converter fromVariant by name value mismatch");
+
+                return true;
+            });
             ut.add_test(objName, "Null/Error semantics", Variant_test_null_and_error);
             ut.add_test(objName, "VariantView basic access", [](std::vector<std::string>& errors)->bool{
                 // Array view
