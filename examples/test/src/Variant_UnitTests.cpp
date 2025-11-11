@@ -6,6 +6,8 @@
 #include <random>
 #include <sstream>
 #include <algorithm>
+#include <atomic>
+#include <chrono>
 
 namespace SDOM
 {
@@ -605,6 +607,127 @@ namespace SDOM
         return true;
     }
 
+    // Deep recursion stress: build large nested Variant structures (C++ and Lua) and
+    // verify snapshot() and toDebugString() handle depth limits and do not crash.
+    bool Variant_test_deep_recursion_stress(std::vector<std::string>& errors)
+    {
+        Core& core = getCore();
+        sol::state& L = core.getLua();
+
+    const int depth = 120; // deep but chosen to avoid practical stack overflow
+
+        // 1) Build a deep C++ Variant object chain: { inner: { inner: ... } }
+        Variant root = Variant::makeObject();
+        Variant* cur = &root;
+        for (int i = 0; i < depth; ++i) {
+            Variant child = Variant::makeObject();
+            child.set("__mark", Variant(i));
+            cur->set("inner", child);
+            // advance to the inner child we just created
+            Variant* next = cur->get("inner");
+            if (!next) { errors.push_back("Deep recursion C++: failed to create nested node"); return true; }
+            cur = next;
+        }
+
+    // Ensure toDebugString with very small depth does not include deep marker
+    std::string shallow = root.toDebugString(1);
+        if (shallow.find("__mark") != std::string::npos) errors.push_back("Deep recursion: shallow toDebugString unexpectedly contains deep markers");
+
+        // Deep toDebugString should include deepest marker
+        std::string deep = root.toDebugString(depth + 5);
+        if (deep.find(std::to_string(depth-1)) == std::string::npos) errors.push_back("Deep recursion: deep toDebugString missing deepest marker");
+
+        // 2) Build a deep Lua table and snapshot it
+        auto prev = Variant::getTableStorageMode();
+        Variant::setTableStorageMode(Variant::TableStorageMode::KeepLuaRef);
+
+        sol::table t = L.create_table();
+        sol::table curt = t;
+        for (int i = 0; i < depth; ++i) {
+            sol::table child = L.create_table();
+            child["__mark"] = i;
+            curt["inner"] = child;
+            curt = child;
+        }
+
+        Variant v = Variant::fromLuaObject(t);
+        if (!v.isLuaRef()) { errors.push_back("Deep recursion Lua: expected LuaRef"); Variant::setTableStorageMode(prev); return true; }
+
+        // Copy the table into a Variant object via snapshot (switch to Copy first)
+        Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
+        Variant snap = v.snapshot();
+        if (!snap.isObject()) { errors.push_back("Deep recursion Lua: snapshot did not return object"); Variant::setTableStorageMode(prev); return true; }
+
+        // traverse the snapshot object chain
+        const Variant* node = &snap;
+        for (int i = 0; i < depth; ++i) {
+            if (!node || !node->isObject()) { errors.push_back("Deep recursion Lua: traversal failed"); break; }
+            node = node->get("inner");
+        }
+
+        Variant::setTableStorageMode(prev);
+        return true;
+    }
+
+    // Threaded registry & converter safety stress test: many threads register/get converters
+    // and call converter functions concurrently to exercise locking and converter safety.
+    bool Variant_test_threaded_converter_safety(std::vector<std::string>& errors)
+    {
+        // Define a simple stress type and converter
+        struct Stress { int v; };
+
+    std::atomic<int> toLua_calls{0};
+    std::atomic<int> from_calls{0};
+
+        Variant::ConverterEntry ce;
+        ce.toLua = [&toLua_calls](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {
+            toLua_calls.fetch_add(1, std::memory_order_relaxed);
+            return sol::make_object(L, sol::lua_nil);
+        };
+        ce.fromVariant = [&from_calls](const Variant& v)->std::shared_ptr<void> {
+            from_calls.fetch_add(1, std::memory_order_relaxed);
+            return nullptr;
+        };
+
+        // Register initial converter
+        Variant::registerConverterByName("StressType", ce);
+
+        const int threads = 16;
+        const int iters = 2000;
+        std::vector<std::thread> ths;
+
+        for (int t = 0; t < threads; ++t) {
+            ths.emplace_back([t, iters, &from_calls]() {
+                std::mt19937_64 rng(1234 + t);
+                for (int i = 0; i < iters; ++i) {
+                    // occasionally re-register a converter under a per-thread name
+                    if ((i & 63) == 0) {
+                        Variant::ConverterEntry local_ce;
+                        local_ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object { return sol::make_object(L, sol::lua_nil); };
+                        local_ce.fromVariant = [](const Variant& v)->std::shared_ptr<void> { return nullptr; };
+                        Variant::registerConverterByName(std::string("Reg_") + std::to_string(t) + "_" + std::to_string(i), local_ce);
+                    }
+
+                    // read back converter and call toLua/fromVariant if present
+                    auto conv = Variant::getConverterByName("StressType");
+                    if (conv && conv->fromVariant) {
+                        // call fromVariant (safe without Lua) to exercise converter code concurrently
+                        try { conv->fromVariant(Variant(123)); } catch(...) { /* swallow */ }
+                        from_calls.fetch_add(1, std::memory_order_relaxed);
+                    }
+                    if (i % 100 == 0) std::this_thread::yield();
+                }
+            });
+        }
+
+        for (auto &th : ths) th.join();
+
+    // Basic sanity: at least some converter invocations occurred
+    if (from_calls.load() == 0) errors.push_back("Threaded safety: no fromVariant calls recorded");
+
+        return true;
+    }
+
     // Randomized numeric coercion tests
     bool Variant_test_numeric_coercion_randomized(std::vector<std::string>& errors)
     {
@@ -835,11 +958,13 @@ namespace SDOM
 
         // Small test: dynamicTypeName accessor
         ut.add_test(objName, "Dynamic metadata accessors", Variant_test_dynamic_metadata_accessors);
-    // New tests: copy/move + containers, toDebugString, varianthash/map, and snapshot validity
-    ut.add_test(objName, "Copy/Move semantics and containers", Variant_test_copy_move_and_containers);
-    ut.add_test(objName, "toDebugString shallow vs deep", Variant_test_toDebugString);
-    ut.add_test(objName, "VariantHash & unordered_map usage", Variant_test_varianthash_and_map);
-    ut.add_test(objName, "Snapshot(sol::state_view) validity and TableStorageMode", Variant_test_snapshot_state_validity);
+        // New tests: copy/move + containers, toDebugString, varianthash/map, and snapshot validity
+        ut.add_test(objName, "Copy/Move semantics and containers", Variant_test_copy_move_and_containers);
+        ut.add_test(objName, "toDebugString shallow vs deep", Variant_test_toDebugString);
+        ut.add_test(objName, "VariantHash & unordered_map usage", Variant_test_varianthash_and_map);
+        ut.add_test(objName, "Snapshot(sol::state_view) validity and TableStorageMode", Variant_test_snapshot_state_validity);
+        ut.add_test(objName, "Deep recursion stress", Variant_test_deep_recursion_stress);
+        ut.add_test(objName, "Threaded converter safety stress", Variant_test_threaded_converter_safety);
 
         return true;
     }
