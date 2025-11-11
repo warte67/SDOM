@@ -67,12 +67,12 @@ namespace SDOM
         }
 
         Texture() = default;
-        virtual ~Texture() = default;
-        virtual bool onInit() override;
-        virtual void onQuit() override;
-        virtual void onLoad() override;
-        virtual void onUnload() override;
-        virtual bool onUnitTest(int frame) override;
+        ~Texture() override = default;
+        bool onInit() override;
+        void onQuit() override;
+        void onLoad() override;
+        void onUnload() override;
+        bool onUnitTest(int frame) override;
 
         SDL_Texture* getTexture() const { return texture_; }
         float getTextureWidth() const { return textureWidth_; }
@@ -91,13 +91,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        void registerBindingsImpl(const std::string& typeName) override;         
 
 
     }; // END class Texture

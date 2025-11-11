@@ -200,25 +200,25 @@ namespace SDOM
         // -----------------------------------------------------------------
 
         ArrowButton() = default;
-        virtual ~ArrowButton() = default;
+        ~ArrowButton() override = default;
 
         /** @brief Called when the display object is initialized. */
-        virtual bool onInit() override;
+        bool onInit() override;
 
         /** @brief Called before the object is destroyed. */
-        virtual void onQuit() override;
+        void onQuit() override;
 
         /** @brief Handles an incoming event such as click or hover. */
-        virtual void onEvent(const Event& event) override;
+        void onEvent(const Event& event) override;
 
         /** @brief Updates the object each frame. */
-        virtual void onUpdate(float fElapsedTime) override;
+        void onUpdate(float fElapsedTime) override;
 
         /** @brief Renders the arrow button to the target surface. */
-        virtual void onRender() override;
+        void onRender() override;
 
         /** @brief Optional unit test hook for automated testing. */
-        virtual bool onUnitTest(int frame) override;
+        bool onUnitTest(int frame) override;
 
         // -----------------------------------------------------------------
         // 🧩 Accessors
@@ -246,12 +246,12 @@ namespace SDOM
         // 📜 Legacy Lua Integration
         // -----------------------------------------------------------------
         /** @brief Registers ArrowButton with Lua runtime. */
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;        
+        void registerBindingsImpl(const std::string& typeName) override;        
     };
 
 } // namespace SDOM

@@ -712,7 +712,7 @@ namespace SDOM
                     auto conv = Variant::getConverterByName("StressType");
                     if (conv && conv->fromVariant) {
                         // call fromVariant (safe without Lua) to exercise converter code concurrently
-                        try { conv->fromVariant(Variant(123)); } catch(...) { /* swallow */ }
+                        try { conv->fromVariant(Variant(123)); } catch(...) { /* intentionally swallow - converter may throw */ (void)0; }
                         from_calls.fetch_add(1, std::memory_order_relaxed);
                     }
                     if (i % 100 == 0) std::this_thread::yield();
@@ -736,7 +736,7 @@ namespace SDOM
         std::uniform_real_distribution<double> dr(-1e6, 1e6);
 
         for (int i = 0; i < 2000; ++i) {
-            int t = rng() % 4;
+            int t = static_cast<int>(rng() % 4);
             Variant v;
             int64_t expectInt = 0; double expectDouble = 0.0; bool expectBool = false;
             switch (t) {
@@ -897,7 +897,7 @@ namespace SDOM
                     // iterate entries (object() returns a pointer to the underlying map)
                     if (auto obj = vmap->object()) {
                         for (const auto &kv : *obj) {
-                            out->map[kv.first] = static_cast<int>(kv.second.toInt64());
+                            out->map[kv.first] = static_cast<int>(kv.second->toInt64());
                         }
                     }
                 }

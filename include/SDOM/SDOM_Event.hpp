@@ -70,8 +70,8 @@ namespace SDOM
         virtual ~Event() = default;    
 
         // virtual methods
-        virtual bool onInit() override;
-        virtual void onQuit() override;        
+        bool onInit() override;
+        void onQuit() override;        
         
         // Default accessors 
         EventType getType() const;

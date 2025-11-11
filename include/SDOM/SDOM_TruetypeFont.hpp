@@ -41,30 +41,30 @@ namespace SDOM
             return std::unique_ptr<IAssetObject>(new TruetypeFont(fontInit));
         }
 
-        virtual ~TruetypeFont() override;
+        ~TruetypeFont() override;
 
         // --- Override methods from IFontObject --- //
-        virtual bool onInit() override;
-        virtual void onQuit() override;
+        bool onInit() override;
+        void onQuit() override;
 
-        virtual void onLoad() override;
-        virtual void onUnload() override;
-        virtual void create(const sol::table& config) override;
+        void onLoad() override;
+        void onUnload() override;
+        void create(const sol::table& config) override;
 
-        virtual void drawGlyph(Uint32 ch, int x, int y, const FontStyle& style) override;
-        virtual void drawPhrase(const std::string& str, int x, int y, const FontStyle& style) override;
-        virtual void drawPhraseOutline(const std::string& str, int x, int y, const FontStyle& style) override;
-        virtual void drawPhraseDropshadow(const std::string& str, int x, int y, const FontStyle& style) override;
+        void drawGlyph(Uint32 ch, int x, int y, const FontStyle& style) override;
+        void drawPhrase(const std::string& str, int x, int y, const FontStyle& style) override;
+        void drawPhraseOutline(const std::string& str, int x, int y, const FontStyle& style) override;
+        void drawPhraseDropshadow(const std::string& str, int x, int y, const FontStyle& style) override;
 
-        virtual bool getGlyphMetrics(Uint32 ch, int *minx, int *maxx, int *miny, int *maxy, int *advance) const override;
-        virtual int getGlyphHeight(Uint32 ch) const override;
-        virtual int getGlyphWidth(Uint32 ch) const override;
+        bool getGlyphMetrics(Uint32 ch, int *minx, int *maxx, int *miny, int *maxy, int *advance) const override;
+        int getGlyphHeight(Uint32 ch) const override;
+        int getGlyphWidth(Uint32 ch) const override;
 
-        virtual int getFontAscent() override;         
-        virtual int getFontSize() override;    // TTF_GetFontSize(TTF_Font *font);   
-        virtual void setFontSize(int p_size) override;
-        virtual void setFontStyle(const FontStyle& style) override;
-        virtual FontStyle getFontStyle() override;
+        int getFontAscent() override;         
+        int getFontSize() override;    // TTF_GetFontSize(TTF_Font *font);   
+        void setFontSize(int p_size) override;
+        void setFontStyle(const FontStyle& style) override;
+        FontStyle getFontStyle() override;
 
         // // --- Public TruetypeFont-specific methods --- //
         AssetHandle getResourceHandle() const { return ttf_font_handle_; }
@@ -98,13 +98,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;     
+        void registerBindingsImpl(const std::string& typeName) override;     
         
         
     }; // END: class TruetypeFont

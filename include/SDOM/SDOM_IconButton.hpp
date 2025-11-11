@@ -63,15 +63,15 @@ namespace SDOM
         }
 
         IconButton() = default;
-        virtual ~IconButton() = default;     
+        ~IconButton() override = default;     
 
         // --- Virtual Methods --- //
-        virtual bool onInit() override;     // Called when the display object is initialized
-        virtual void onRender() override;   // Called to render the display object
-        virtual void onQuit() override;     // Called when the display object is being destroyed
-        virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
-        virtual void onEvent(const Event& event) override;  // Called when an event occurs
-        virtual bool onUnitTest(int frame) override;        // Called to perform unit tests on the object
+        bool onInit() override;     // Called when the display object is initialized
+        void onRender() override;   // Called to render the display object
+        void onQuit() override;     // Called when the display object is being destroyed
+        void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
+        void onEvent(const Event& event) override;  // Called when an event occurs
+        bool onUnitTest(int frame) override;        // Called to perform unit tests on the object
 
         AssetHandle getIconObject() const { return iconSpriteSheet_; }
 
@@ -93,7 +93,7 @@ namespace SDOM
         int icon_height_ = 8;        // default icon height is 8
 
         // --- Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua);
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
     }; // END: class IconButton : public IDisplayObject
 

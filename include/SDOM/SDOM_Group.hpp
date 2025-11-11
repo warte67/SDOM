@@ -57,16 +57,16 @@ namespace SDOM
         }
 
         Group() = default;
-        virtual ~Group() = default;     
+        ~Group() override = default;     
 
         // --- Virtual Methods --- //
 
-        virtual bool onInit() override;                     // Called when the display object is initialized
-        virtual void onRender() override;                   // Called to render the display object
-        virtual void onQuit() override;                     // Called when the display object is being destroyed
-        virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
-        virtual void onEvent(const Event& event) override;  // Called when an event occurs
-        virtual bool onUnitTest(int frame) override;        // Called to perform unit tests on the object
+        bool onInit() override;                     // Called when the display object is initialized
+        void onRender() override;                   // Called to render the display object
+        void onQuit() override;                     // Called when the display object is being destroyed
+        void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
+        void onEvent(const Event& event) override;  // Called when an event occurs
+        bool onUnitTest(int frame) override;        // Called to perform unit tests on the object
 
 
         // --- Label Helpers (C++ / LUA)--- //
@@ -112,13 +112,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;      
+        void registerBindingsImpl(const std::string& typeName) override;      
 
     }; // END: class Button : public IPanelObject
 

@@ -183,16 +183,16 @@ namespace SDOM
         }
 
         Label() = default;
-        virtual ~Label() override;
+        ~Label() override;
 
         // virtual methods
-        virtual bool onInit() override; 
-        virtual void onQuit() override;
-        virtual void onUpdate(float fElapsedTime) override;
-        virtual void onEvent(const Event& event) override;
-        virtual void onRender() override;
-        virtual bool onUnitTest(int frame) override;
-        virtual void onWindowResize(int logicalWidth, int logicalHeight) override;
+        bool onInit() override; 
+        void onQuit() override;
+        void onUpdate(float fElapsedTime) override;
+        void onEvent(const Event& event) override;
+        void onRender() override;
+        bool onUnitTest(int frame) override;
+        void onWindowResize(int logicalWidth, int logicalHeight) override;
 
         void setText(std::string p_text);
         std::string getText() const { return text_; }
@@ -221,8 +221,8 @@ namespace SDOM
 
 
         // --- Lifecycle --- //
-        virtual bool onLoad() override;
-        virtual void onUnload() override;
+        bool onLoad() override;
+        void onUnload() override;
 
         // --- Accessors for the FontStyle settings --- //
 
@@ -390,13 +390,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        void registerBindingsImpl(const std::string& typeName) override;         
         
     };
 

@@ -232,18 +232,18 @@ namespace SDOM
         virtual ~IDisplayObject();
 
         // --- Lifecycle & Core Virtuals --- //
-        virtual bool onInit() override;
+        bool onInit() override;
         // onLoad/onUnload mirror AssetObject semantics for renderer/device-backed
         // resources. onLoad may be called multiple times across device rebuilds
         // or stage transitions; implementations must be idempotent.
         // Default: no-op returning true.
         virtual bool onLoad() { return true; }
         virtual void onUnload() {}
-        virtual void onQuit() override;
+        void onQuit() override;
         virtual void onUpdate(float fElapsedTime);
         virtual void onEvent(const Event& event);
         virtual void onRender() = 0;
-        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
+        bool onUnitTest(int frame) override { (void)frame; return true; }
 
         // Called when the Core's logical render size changes or when SDL
         // render resources are rebuilt. Override in derived classes that
@@ -495,13 +495,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        void registerBindingsImpl(const std::string& typeName) override;         
 
     };  // END: class IDisplayObject
 

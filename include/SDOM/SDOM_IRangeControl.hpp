@@ -70,18 +70,18 @@ namespace SDOM
 
         // --- Default Constructor and Destructor --- //
         IRangeControl() = default;
-        virtual ~IRangeControl() = default;
+        ~IRangeControl() override = default;
 
         // --- Virtual Methods --- //
-        virtual bool onInit() override;     // Called when the display object is initialized
-        virtual bool onLoad() override;     // Allocate/refresh GPU resources after device rebuild
-        virtual void onUnload() override;   // Release GPU resources before device teardown
-        virtual void onQuit() override;     // Called when the display object is being destroyed
-        virtual void onEvent(const Event& event) override;  // Called when an event occurs
-        virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
-        virtual void onRender() override;   // Called to render the display object
-        virtual bool onUnitTest(int frame) override; // Unit test method
-        virtual void onWindowResize(int logicalWidth, int logicalHeight) override;
+        bool onInit() override;     // Called when the display object is initialized
+        bool onLoad() override;     // Allocate/refresh GPU resources after device rebuild
+        void onUnload() override;   // Release GPU resources before device teardown
+        void onQuit() override;     // Called when the display object is being destroyed
+        void onEvent(const Event& event) override;  // Called when an event occurs
+        void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
+        void onRender() override;   // Called to render the display object
+        bool onUnitTest(int frame) override; // Unit test method
+        void onWindowResize(int logicalWidth, int logicalHeight) override;
 
 
         // --- Public Accessors --- //
@@ -131,13 +131,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        void registerBindingsImpl(const std::string& typeName) override;         
 
     }; // END: class IRangeControl
 

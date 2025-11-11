@@ -73,15 +73,15 @@ namespace SDOM
 
         // --- Default Constructor and Destructor --- //
         ScrollBar() = default;
-        virtual ~ScrollBar() = default;
+        ~ScrollBar() override = default;
 
         // --- Virtual Methods --- //
-        virtual bool onInit() override;     // Called when the display object is initialized
-        virtual void onQuit() override;     // Called when the display object is being destroyed
-        virtual void onEvent(const Event& event) override;  // Called when an event occurs
-        virtual void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
-        virtual void onRender() override;   // Called to render the display object
-        virtual bool onUnitTest(int frame) override; // Unit test method
+        bool onInit() override;     // Called when the display object is initialized
+        void onQuit() override;     // Called when the display object is being destroyed
+        void onEvent(const Event& event) override;  // Called when an event occurs
+        void onUpdate(float fElapsedTime) override; // Called every frame to update the display object
+        void onRender() override;   // Called to render the display object
+        bool onUnitTest(int frame) override; // Unit test method
 
         // --- Public Accessors --- //
         float getStep() const { return step_; }
@@ -100,7 +100,7 @@ namespace SDOM
         float min_thumb_length_ = 8.0f; // minimum thumb length in pixels
 
         // --- Protected Virtual Methods --- //
-        virtual void _onValueChanged(float oldValue, float newValue);
+        void _onValueChanged(float oldValue, float newValue) override;
         ArrowButton* button_decrease_ptr_ = nullptr;
         ArrowButton* button_increase_ptr_ = nullptr;
         
@@ -108,13 +108,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        void registerBindingsImpl(const std::string& typeName) override;         
 
 
     }; // END: class ScrollBar

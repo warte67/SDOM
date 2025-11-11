@@ -99,9 +99,9 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // ⚙️ IDataObject Virtual Methods
         // ---------------------------------------------------------------------
-        virtual bool onInit() override { return true; }
-        virtual void onQuit() override {}
-        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
+        bool onInit() override { return true; }
+        void onQuit() override {}
+        bool onUnitTest(int frame) override { (void)frame; return true; }
 
         // ---------------------------------------------------------------------
         // 🧩 Core Handle Management
@@ -169,12 +169,12 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 📜 Legacy Lua Extension Hook
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;        
+        void registerBindingsImpl(const std::string& typeName) override;        
     };
 } // namespace SDOM

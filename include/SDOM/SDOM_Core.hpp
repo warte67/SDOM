@@ -49,9 +49,9 @@ namespace SDOM
         static Core& getInstance() { static Core instance; return instance; }
 
         // --- Lifecycle (IDataObject overrides) --- //
-        virtual bool onInit() override;
-        virtual void onQuit() override;
-        virtual bool onUnitTest(int frame) override;
+        bool onInit() override;
+        void onQuit() override;
+        bool onUnitTest(int frame) override;
 
         // --- Main Loop & Event Dispatch --- //
         // Return true when the run completed successfully (no failing unit tests or runtime errors).
@@ -362,11 +362,11 @@ namespace SDOM
         friend Factory;
 
         // --- Legacy Lua Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
         sol::usertype<Core> objHandleType_;
 
         // --- Lua Registration --- //
-        virtual void registerBindingsImpl(const std::string& typeName) override;
+        void registerBindingsImpl(const std::string& typeName) override;
     };
 
 } // namespace SDOM

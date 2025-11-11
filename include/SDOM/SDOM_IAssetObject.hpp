@@ -28,11 +28,11 @@ namespace SDOM
 
         virtual ~IAssetObject();
 
-        virtual bool onInit() = 0;
-        virtual void onQuit() = 0;
+        bool onInit() override = 0;
+        void onQuit() override = 0;
         virtual void onLoad() = 0;
         virtual void onUnload() = 0;
-        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
+        bool onUnitTest(int frame) override { (void)frame; return true; }
 
         // accessors
         const std::string& getType() const { return type_; }
@@ -60,13 +60,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;      
+        void registerBindingsImpl(const std::string& typeName) override;      
 
     }; // class IAssetObject
 

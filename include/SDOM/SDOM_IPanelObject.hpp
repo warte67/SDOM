@@ -131,18 +131,18 @@ namespace SDOM
         //     return std::unique_ptr<IDisplayObject>(new IPanelObject(panelInit));
         // }
 
-        virtual ~IPanelObject() = default;     
+        ~IPanelObject() override = default;     
 
         // --- Virtual Methods --- //
-        virtual bool onInit() override;                 // Called when the display object is initialized
-        virtual bool onLoad() override;                 // Allocate/refresh GPU resources after device rebuild
-        virtual void onUnload() override;               // Release GPU resources before device teardown
-        virtual void onRender() override;               // Called to render the display object
-        virtual void onQuit() override;                 // Called when the display object is being destroyed
-        virtual void onUpdate(float fElapsedTime)=0;    // Called every frame to update the display object
-        virtual void onEvent(const Event& event)=0;     // Called when an event occurs
-        virtual void onWindowResize(int logicalWidth, int logicalHeight) override;
-        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
+        bool onInit() override;                 // Called when the display object is initialized
+        bool onLoad() override;                 // Allocate/refresh GPU resources after device rebuild
+        void onUnload() override;               // Release GPU resources before device teardown
+        void onRender() override;               // Called to render the display object
+        void onQuit() override;                 // Called when the display object is being destroyed
+        void onUpdate(float fElapsedTime) override =0;    // Called every frame to update the display object
+        void onEvent(const Event& event) override =0;     // Called when an event occurs
+        void onWindowResize(int logicalWidth, int logicalHeight) override;
+        bool onUnitTest(int frame) override { (void)frame; return true; }
 
         // --- Helper Methods --- // 
         void renderPanel(); // render nine-panel based on the base_index_;
@@ -184,13 +184,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        void registerBindingsImpl(const std::string& typeName) override;         
         
     }; // END: IPanelObject : public IDisplayObject 
 

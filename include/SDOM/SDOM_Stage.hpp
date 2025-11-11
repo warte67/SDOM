@@ -48,17 +48,17 @@ namespace SDOM
         }
 
         // --- Destructor --- // 
-        virtual ~Stage() = default;
+        ~Stage() override = default;
 
         // --- Lifecycle Methods (IDataObject) --- //
-        virtual bool onInit() override;             
-        virtual void onQuit() override;      
+        bool onInit() override;             
+        void onQuit() override;      
 
         // --- Core Display Methods (IDisplayObject) --- //       
-        virtual void onUpdate(float fElapsedTime) override; 
-        virtual void onEvent(const Event& event) override; 
-        virtual void onRender() override; 
-        virtual bool onUnitTest(int frame) override; 
+        void onUpdate(float fElapsedTime) override; 
+        void onEvent(const Event& event) override; 
+        void onRender() override; 
+        bool onUnitTest(int frame) override; 
 
         // --- Stage-Specific State --- //
         static int getMouseX() { return mouseX; }
@@ -82,13 +82,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        void registerBindingsImpl(const std::string& typeName) override;         
     };
 
 } // namespace SDOM

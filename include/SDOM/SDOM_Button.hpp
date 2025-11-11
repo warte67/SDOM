@@ -155,25 +155,25 @@ namespace SDOM
         // 🌱 Lifecycle Methods
         // -----------------------------------------------------------------
         Button() = default;
-        virtual ~Button() = default;
+        ~Button() override = default;
 
         /** @brief Called when the button is initialized. */
-        virtual bool onInit() override;
+        bool onInit() override;
 
         /** @brief Called before the button is destroyed. */
-        virtual void onQuit() override;
+        void onQuit() override;
 
         /** @brief Called every frame to update the button state. */
-        virtual void onUpdate(float fElapsedTime) override;
+        void onUpdate(float fElapsedTime) override;
 
         /** @brief Renders the button and its label. */
-        virtual void onRender() override;
+        void onRender() override;
 
         /** @brief Handles mouse and keyboard input events. */
-        virtual void onEvent(const Event& event) override;
+        void onEvent(const Event& event) override;
 
         /** @brief Optional unit test hook for automated validation. */
-        virtual bool onUnitTest(int frame) override;
+        bool onUnitTest(int frame) override;
 
         // -----------------------------------------------------------------
         // 🧩 Accessors
@@ -209,13 +209,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;     
+        void registerBindingsImpl(const std::string& typeName) override;     
     };
 
 } // namespace SDOM

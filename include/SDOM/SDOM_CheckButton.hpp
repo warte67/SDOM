@@ -64,24 +64,24 @@ namespace SDOM
 
         // --- Default Constructor and Virtual Destructor --- //
         CheckButton() = default;
-        virtual ~CheckButton() {};
+        ~CheckButton() override {};
 
         // --- Lifecycle & Core Virtuals --- //
-        virtual bool onInit() override;
-        virtual void onQuit() override;
-        virtual void onUpdate(float fElapsedTime) override;
-        virtual void onEvent(const Event& event) override;
-        virtual void onRender() override;
-        virtual bool onUnitTest(int frame) override;
+        bool onInit() override;
+        void onQuit() override;
+        void onUpdate(float fElapsedTime) override;
+        void onEvent(const Event& event) override;
+        void onRender() override;
+        bool onUnitTest(int frame) override;
 
         // --- Virtual State Accessors (From IButtonObject) --- //
-        virtual ButtonState getState() const;
-        virtual void setState(ButtonState state);
+        ButtonState getState() const override;
+        void setState(ButtonState state) override;
 
     protected:
         // --- Protected Virtual Methods (From IButtonObject) --- //
-        virtual void onStateChanged(ButtonState oldState, ButtonState newState) override;
-        virtual IconIndex iconIndexForState(ButtonState state) const override;
+        void onStateChanged(ButtonState oldState, ButtonState newState) override;
+        IconIndex iconIndexForState(ButtonState state) const override;
 
         // --- Data Members --- //
         // ...
@@ -90,13 +90,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;     
+        void registerBindingsImpl(const std::string& typeName) override;     
 
     }; // END: class RadioButton
 

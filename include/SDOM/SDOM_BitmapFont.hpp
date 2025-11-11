@@ -108,30 +108,30 @@ namespace SDOM
             const auto& fontInit = static_cast<const BitmapFont::InitStruct&>(baseInit);
             return std::unique_ptr<IAssetObject>(new BitmapFont(fontInit));
         }  
-        virtual ~BitmapFont() override;
+        ~BitmapFont() override;
 
         // ---------------------------------------------------------------------
         // 🔤 Font Rendering Lifecycle (overrides in IFontObject)
         // ---------------------------------------------------------------------
-        virtual bool onInit() override;
-        virtual void onQuit() override;
-        virtual void onLoad() override;
-        virtual void onUnload() override;
-        virtual void create(const sol::table& config) override;
+        bool onInit() override;
+        void onQuit() override;
+        void onLoad() override;
+        void onUnload() override;
+        void create(const sol::table& config) override;
 
         // Rendering and metrics (bound in IFontObject)
-        virtual void drawGlyph(Uint32 ch, int x, int y, const FontStyle& style) override;
-        virtual void drawPhrase(const std::string& str, int x, int y, const FontStyle& style) override;
-        virtual void drawPhraseOutline(const std::string& str, int x, int y, const FontStyle& style) override;
-        virtual void drawPhraseDropshadow(const std::string& str, int x, int y, const FontStyle& style) override;
-        virtual bool getGlyphMetrics(Uint32 ch, int* minx, int* maxx, int* miny, int* maxy, int* advance) const override;
-        virtual int getFontSize() override;
-        virtual int getGlyphHeight(Uint32 ch) const override;
-        virtual int getGlyphWidth(Uint32 ch) const override;
-        virtual int getFontAscent() override;
-        virtual void setFontSize(int p_size) override;
-        virtual void setFontStyle(const FontStyle& style) override;
-        virtual FontStyle getFontStyle() override;
+        void drawGlyph(Uint32 ch, int x, int y, const FontStyle& style) override;
+        void drawPhrase(const std::string& str, int x, int y, const FontStyle& style) override;
+        void drawPhraseOutline(const std::string& str, int x, int y, const FontStyle& style) override;
+        void drawPhraseDropshadow(const std::string& str, int x, int y, const FontStyle& style) override;
+        bool getGlyphMetrics(Uint32 ch, int* minx, int* maxx, int* miny, int* maxy, int* advance) const override;
+        int getFontSize() override;
+        int getGlyphHeight(Uint32 ch) const override;
+        int getGlyphWidth(Uint32 ch) const override;
+        int getFontAscent() override;
+        void setFontSize(int p_size) override;
+        void setFontStyle(const FontStyle& style) override;
+        FontStyle getFontStyle() override;
 
         // ---------------------------------------------------------------------
         // 💡 BitmapFont-Specific Accessors (Lua-Visible)
@@ -163,12 +163,12 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;                
+        void registerBindingsImpl(const std::string& typeName) override;                
     };
 } // namespace SDOM

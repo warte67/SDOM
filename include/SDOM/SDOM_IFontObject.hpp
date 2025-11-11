@@ -179,15 +179,15 @@ namespace SDOM
             //     return std::unique_ptr<IFontObject>(new IFontObject(fontInit));
             // }
         
-            virtual ~IFontObject() override;
+            ~IFontObject() override;
 
             // methods to be overridden from IDataObject
-            virtual bool onInit() = 0;
-            virtual void onQuit() = 0;
+            bool onInit() override = 0;
+            void onQuit() override = 0;
 
             // ResourceObject virtual methods
-            virtual void onLoad() = 0; 
-            virtual void onUnload() = 0;
+            void onLoad() override = 0; 
+            void onUnload() override = 0;
             virtual void create(const sol::table& config) = 0;     
             
             virtual void drawGlyph(Uint32 ch, int x, int y, const FontStyle& style) = 0;
@@ -233,13 +233,13 @@ namespace SDOM
             // ---------------------------------------------------------------------
             // 🔗 Legacy Lua Registration
             // ---------------------------------------------------------------------
-            virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+            void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
             // -----------------------------------------------------------------
             // 📜 Data Registry Integration
             // -----------------------------------------------------------------
-            virtual void registerBindingsImpl(const std::string& typeName) override;         
+            void registerBindingsImpl(const std::string& typeName) override;         
 
     }; // END class IFontObject
 

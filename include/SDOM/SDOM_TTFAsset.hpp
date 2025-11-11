@@ -50,12 +50,12 @@ namespace SDOM
         }
 
         TTFAsset() = default;
-        virtual ~TTFAsset();
-        virtual bool onInit() override;
-        virtual void onQuit() override;
-        virtual void onLoad() override;
-        virtual void onUnload() override;
-        virtual bool onUnitTest(int frame) override;
+        ~TTFAsset() override;
+        bool onInit() override;
+        void onQuit() override;
+        void onLoad() override;
+        void onUnload() override;
+        bool onUnitTest(int frame) override;
 
         TTF_Font* _getTTFFontPtr() const { return ttf_font_; }
         int getFontSize() const { return internalFontSize_; }
@@ -72,13 +72,13 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        void registerBindingsImpl(const std::string& typeName) override;         
 
     }; // END class TTFAsset
 

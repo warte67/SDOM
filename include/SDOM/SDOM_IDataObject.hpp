@@ -186,7 +186,7 @@ namespace SDOM
         // ---- Lifecycle ----
         virtual bool onInit() = 0;
         virtual void onQuit() = 0;
-        virtual bool onUnitTest(int frame) override { (void)frame; return true; }
+        bool onUnitTest(int frame) override { (void)frame; return true; }
 
         // ---- Identity ----
         std::string getName() const { return name_; }

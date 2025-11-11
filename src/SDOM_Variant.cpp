@@ -49,22 +49,35 @@ Variant::Variant(std::string s)
 
 Variant::Variant(const std::vector<Variant>& arr)
 : storage_(std::make_shared<VariantStorage>()) {
-    storage_->data = arr;
+    // convert by-value vector<Variant> to vector<shared_ptr<Variant>>
+    VariantStorage::Array a;
+    a.reserve(arr.size());
+    for (const auto &e : arr) a.push_back(std::make_shared<Variant>(e));
+    storage_->data = std::move(a);
 }
 
 Variant::Variant(std::vector<Variant>&& arr)
 : storage_(std::make_shared<VariantStorage>()) {
-    storage_->data = std::move(arr);
+    VariantStorage::Array a;
+    a.reserve(arr.size());
+    for (auto &e : arr) a.push_back(std::make_shared<Variant>(std::move(e)));
+    storage_->data = std::move(a);
 }
 
 Variant::Variant(const std::unordered_map<std::string, Variant>& obj)
 : storage_(std::make_shared<VariantStorage>()) {
-    storage_->data = obj;
+    VariantStorage::Object o;
+    o.reserve(obj.size());
+    for (const auto &kv : obj) o.insert_or_assign(kv.first, std::make_shared<Variant>(kv.second));
+    storage_->data = std::move(o);
 }
 
 Variant::Variant(std::unordered_map<std::string, Variant>&& obj)
 : storage_(std::make_shared<VariantStorage>()) {
-    storage_->data = std::move(obj);
+    VariantStorage::Object o;
+    o.reserve(obj.size());
+    for (auto &kv : obj) o.insert_or_assign(std::move(kv.first), std::make_shared<Variant>(std::move(kv.second)));
+    storage_->data = std::move(o);
 }
 
 Variant::Variant(const sol::object& o)
@@ -88,11 +101,11 @@ Variant Variant::makeObject() {
 }
 
 // Error helpers
-Variant Variant::makeError(std::string msg) {
+Variant Variant::makeError(const std::string& msg) {
     Variant v;
     v.storage_->data = std::monostate{};
     v.errorFlag_ = true;
-    v.errorMsg_  = std::move(msg);
+    v.errorMsg_  = msg;
     return v;
 }
 
@@ -177,39 +190,40 @@ size_t Variant::size() const noexcept {
 
 void Variant::push(Variant v) {
     if (!isArray()) storage_->data = VariantStorage::Array{};
-    std::get<VariantStorage::Array>(storage_->data).push_back(std::move(v));
+    auto &a = std::get<VariantStorage::Array>(storage_->data);
+    a.push_back(std::make_shared<Variant>(std::move(v)));
 }
 
 const Variant* Variant::at(size_t i) const noexcept {
     if (auto a = array()) {
-        if (i < a->size()) return &(*a)[i];
+        if (i < a->size() && (*a)[i]) return (*a)[i].get();
     }
     return nullptr;
 }
 Variant* Variant::at(size_t i) noexcept {
     if (auto a = array()) {
-        if (i < a->size()) return &(*a)[i];
+        if (i < a->size() && (*a)[i]) return (*a)[i].get();
     }
     return nullptr;
 }
 
-void Variant::set(std::string key, Variant v) {
+void Variant::set(const std::string& key, Variant v) {
     if (!isObject()) storage_->data = VariantStorage::Object{};
     auto& obj = std::get<VariantStorage::Object>(storage_->data);
-    obj.insert_or_assign(std::move(key), std::move(v));
+    obj.insert_or_assign(key, std::make_shared<Variant>(std::move(v)));
 }
 
 const Variant* Variant::get(const std::string& key) const noexcept {
     if (auto o = object()) {
         auto it = o->find(key);
-        if (it != o->end()) return &it->second;
+        if (it != o->end() && it->second) return it->second.get();
     }
     return nullptr;
 }
 Variant* Variant::get(const std::string& key) noexcept {
     if (auto o = object()) {
         auto it = o->find(key);
-        if (it != o->end()) return &it->second;
+        if (it != o->end() && it->second) return it->second.get();
     }
     return nullptr;
 }
@@ -254,7 +268,7 @@ Variant Variant::fromLuaTable_(const sol::table& t) {
         arr->reserve(maxIndex);
         for (size_t i = 1; i <= maxIndex; ++i) {
             sol::object elem = t[i];
-            arr->push_back(Variant::fromLuaObject(elem));
+            arr->push_back(std::make_shared<Variant>(Variant::fromLuaObject(elem)));
         }
         return v;
     } else {
@@ -276,7 +290,7 @@ Variant Variant::fromLuaTable_(const sol::table& t) {
                     default: key = "<key>"; break;
                 }
             }
-            (*obj)[key] = Variant::fromLuaObject(kv.second);
+            (*obj)[key] = std::make_shared<Variant>(Variant::fromLuaObject(kv.second));
         }
         return v;
     }
@@ -357,8 +371,9 @@ std::string Variant::toDebugString(int depth) const {
             std::string s = "[";
             bool first = true;
             for (const auto &e : *a) {
+                if (!e) continue;
                 if (!first) s += ", ";
-                s += e.toDebugString(depth - 1);
+                s += e->toDebugString(depth - 1);
                 first = false;
             }
             s += "]";
@@ -370,8 +385,9 @@ std::string Variant::toDebugString(int depth) const {
             std::string s = "{";
             bool first = true;
             for (const auto &kv : *o) {
+                if (!kv.second) continue;
                 if (!first) s += ", ";
-                s += kv.first + ": " + kv.second.toDebugString(depth - 1);
+                s += kv.first + ": " + kv.second->toDebugString(depth - 1);
                 first = false;
             }
             s += "}";
@@ -394,14 +410,16 @@ sol::object Variant::toLua(sol::state_view L) const {
         sol::table t = L.create_table(static_cast<int>(p->size()), 0);
         int i = 1;
         for (const auto& elem : *p) {
-            t[i++] = elem.toLua(L);
+            if (!elem) { t[i++] = sol::make_object(L, sol::lua_nil); continue; }
+            t[i++] = elem->toLua(L);
         }
         return t;
     }
     if (auto p = std::get_if<VariantStorage::Object>(&d)) {
         sol::table t = L.create_table(0, static_cast<int>(p->size()));
         for (const auto& [k, v] : *p) {
-            t[k] = v.toLua(L);
+            if (!v) { t[k] = sol::make_object(L, sol::lua_nil); continue; }
+            t[k] = v->toLua(L);
         }
         return t;
     }
@@ -446,8 +464,42 @@ bool Variant::operator==(const Variant& rhs) const {
         return numericEqual_(*this, rhs);
     }
 
-    // same-alternative direct compare (all types used here have operator==)
+    // same-alternative direct compare. For Array/Object we need deep
+    // comparison since the container now holds shared_ptr<Variant>.
     if (a.index() == b.index()) {
+        if (std::holds_alternative<VariantStorage::Array>(a)) {
+            const auto &la = std::get<VariantStorage::Array>(a);
+            const auto &lb = std::get<VariantStorage::Array>(b);
+            if (la.size() != lb.size()) return false;
+            for (size_t i = 0; i < la.size(); ++i) {
+                const auto &le = la[i];
+                const auto &re = lb[i];
+                if (le && re) {
+                    if (!(*le == *re)) return false;
+                } else if (le || re) {
+                    return false; // one is null
+                }
+            }
+            return true;
+        }
+        if (std::holds_alternative<VariantStorage::Object>(a)) {
+            const auto &la = std::get<VariantStorage::Object>(a);
+            const auto &lb = std::get<VariantStorage::Object>(b);
+            if (la.size() != lb.size()) return false;
+            for (const auto &kv : la) {
+                auto it = lb.find(kv.first);
+                if (it == lb.end()) return false;
+                const auto &lv = kv.second;
+                const auto &rv = it->second;
+                if (lv && rv) {
+                    if (!(*lv == *rv)) return false;
+                } else if (lv || rv) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        // fallback to std::visit for remaining types
         return std::visit([](const auto& lhs, const auto& rhs)->bool {
             using L = std::decay_t<decltype(lhs)>;
             using R = std::decay_t<decltype(rhs)>;

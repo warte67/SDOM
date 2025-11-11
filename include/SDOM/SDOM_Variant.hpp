@@ -15,6 +15,7 @@
 
 // SDOM ships with Lua/sol; Variant integrates directly
 #include <sol/sol.hpp>
+#include <mutex>
 #include <functional>
 
 namespace SDOM {
@@ -41,8 +42,14 @@ class Variant;
 // Internal storage node (shared so copies are cheap)
 // ─────────────────────────────────────────────────────────────────────────────
 struct VariantStorage {
-    using Array     = std::vector<Variant>;
-    using Object    = std::unordered_map<std::string, Variant>;
+    // Use indirection for containers so Variant can be forward-declared
+    // without requiring a complete type at the point these aliases are
+    // instantiated. Using shared_ptr keeps ownership semantics simple and
+    // avoids changing external APIs dramatically at the call site; callers
+    // that iterate elements will now receive shared_ptr<Variant> elements
+    // and should dereference them.
+    using Array     = std::vector<std::shared_ptr<Variant>>;
+    using Object    = std::unordered_map<std::string, std::shared_ptr<Variant>>;
     struct DynamicValue {
         std::shared_ptr<void> ptr;
         std::type_index type{typeid(void)};
@@ -104,17 +111,17 @@ public:
     // Constructors
     Variant();                                      // Null
     // (removed Variant(std::nullptr_t) overload — use default ctor for null)
-    Variant(bool b);
-    Variant(int32_t i);
-    Variant(int64_t i);
-    Variant(double d);
-    Variant(const char* s);
-    Variant(std::string s);
-    Variant(const std::vector<Variant>& arr);
-    Variant(std::vector<Variant>&& arr);
-    Variant(const std::unordered_map<std::string, Variant>& obj);
-    Variant(std::unordered_map<std::string, Variant>&& obj);
-    Variant(const sol::object& o);
+    explicit Variant(bool b);
+    explicit Variant(int32_t i);
+    explicit Variant(int64_t i);
+    explicit Variant(double d);
+    explicit Variant(const char* s);
+    explicit Variant(std::string s);
+    explicit Variant(const std::vector<Variant>& arr);
+    explicit Variant(std::vector<Variant>&& arr);
+    explicit Variant(const std::unordered_map<std::string, Variant>& obj);
+    explicit Variant(std::unordered_map<std::string, Variant>&& obj);
+    explicit Variant(const sol::object& o);
 
     // Explicitly opt into move semantics to document intent and allow
     // noexcept move operations for container optimizations.
@@ -133,7 +140,7 @@ public:
     static Variant makeObject();
 
     // Error helpers
-    static Variant makeError(std::string msg);
+    static Variant makeError(const std::string& msg);
     bool hasError() const noexcept { return errorFlag_; }
     const std::string& errorMessage() const noexcept { return errorMsg_; }
 
@@ -175,7 +182,7 @@ public:
     }
 
     template<typename T>
-    std::shared_ptr<T> asDynamic() const noexcept {
+    std::shared_ptr<T> asDynamic() const {
         if (!std::holds_alternative<VariantStorage::DynamicValue>(storage_->data)) return nullptr;
         const auto& dv = std::get<VariantStorage::DynamicValue>(storage_->data);
         if (dv.type != typeid(T)) return nullptr;
@@ -208,13 +215,13 @@ public:
     }
 
     // Accessors for dynamic metadata
-    std::optional<std::string> dynamicTypeName() const noexcept {
+    std::optional<std::string> dynamicTypeName() const {
         if (!isDynamic()) return std::nullopt;
         const auto& dv = std::get<VariantStorage::DynamicValue>(storage_->data);
         return dv.typeName.empty() ? std::nullopt : std::optional<std::string>(dv.typeName);
     }
 
-    std::type_index dynamicTypeIndex() const noexcept {
+    std::type_index dynamicTypeIndex() const {
         if (!isDynamic()) return typeid(void);
         const auto& dv = std::get<VariantStorage::DynamicValue>(storage_->data);
         return dv.type;
@@ -363,7 +370,7 @@ public:
     Variant*       at(size_t i) noexcept;
 
     // Object
-    void set(std::string key, Variant v);  // ensures Object
+    void set(const std::string& key, Variant v);  // ensures Object
     const Variant* get(const std::string& key) const noexcept;
     Variant*       get(const std::string& key) noexcept;
 
@@ -413,15 +420,15 @@ public:
 
         size_t size() const noexcept {
             if (!storage) return 0;
-            if (auto a = std::get_if<VariantStorage::Array>(&storage->data)) return a->size();
-            if (auto o = std::get_if<VariantStorage::Object>(&storage->data)) return o->size();
+                if (auto a = std::get_if<VariantStorage::Array>(&storage->data)) return a->size();
+                if (auto o = std::get_if<VariantStorage::Object>(&storage->data)) return o->size();
             return 0;
         }
 
         const Variant* at(size_t i) const noexcept {
             if (!storage) return nullptr;
             if (auto a = std::get_if<VariantStorage::Array>(&storage->data)) {
-                if (i < a->size()) return &(*a)[i];
+                if (i < a->size() && (*a)[i]) return (*a)[i].get();
             }
             return nullptr;
         }
@@ -430,7 +437,7 @@ public:
             if (!storage) return nullptr;
             if (auto o = std::get_if<VariantStorage::Object>(&storage->data)) {
                 auto it = o->find(key);
-                if (it != o->end()) return &it->second;
+                if (it != o->end() && it->second) return it->second.get();
             }
             return nullptr;
         }
@@ -474,7 +481,8 @@ struct VariantHash {
                 size_t h = 1469598103934665603ULL;
                 if (auto a = v.array()) {
                     for (const auto &e : *a) {
-                        size_t eh = operator()(e);
+                        if (!e) continue;
+                        size_t eh = operator()(*e);
                         h ^= eh + 0x9e3779b97f4a7c15ULL + (h<<6) + (h>>2);
                     }
                 }
@@ -484,8 +492,9 @@ struct VariantHash {
                 size_t h = 0x9e3779b9;
                 if (auto o = v.object()) {
                     for (const auto &kv : *o) {
+                        if (!kv.second) continue;
                         size_t hk = hash<std::string>()(kv.first);
-                        size_t hv = operator()(kv.second);
+                        size_t hv = operator()(*kv.second);
                         // order-independent combine
                         h ^= hk + 0x9e3779b97f4a7c15ULL + (hv<<6) + (hv>>2);
                         h ^= hv + 0x9e3779b97f4a7c15ULL + (hk<<6) + (hk>>2);

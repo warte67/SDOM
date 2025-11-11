@@ -91,23 +91,23 @@ namespace SDOM
 
         // --- Default Constructor and Destructor --- //
         IRangeControl_scaffold() = default;
-        virtual ~IRangeControl_scaffold() = default;
+        ~IRangeControl_scaffold() override = default;
 
         // --- Virtual Methods --- //
         // Initialization: parse config and resolve handles (no GPU work here)
-        virtual bool onInit() override;
+        bool onInit() override;
         // Device lifecycle: base IRangeControl handles assets and cache drop safely.
         // Override if you need to extend the behavior; always call SUPER first.
-        virtual bool onLoad() override;
-        virtual void onUnload() override;
+        bool onLoad() override;
+        void onUnload() override;
         // Shutdown
-        virtual void onQuit() override;
+        void onQuit() override;
         // Per-frame hooks
-        virtual void onEvent(const Event& event) override;
-        virtual void onUpdate(float fElapsedTime) override;
-        virtual void onRender() override;
+        void onEvent(const Event& event) override;
+        void onUpdate(float fElapsedTime) override;
+        void onRender() override;
         // Unit test hook
-        virtual bool onUnitTest(int frame) override;
+        bool onUnitTest(int frame) override;
 
         // onWindowResize contract for cached-texture widgets
         //
@@ -134,7 +134,7 @@ namespace SDOM
         //
         // Derived controls that add additional cached resources should extend this
         // override and call SUPER::onWindowResize().
-        virtual void onWindowResize(int logicalWidth, int logicalHeight) override;
+        void onWindowResize(int logicalWidth, int logicalHeight) override;
 
         // --- Public Accessors --- //
         // Add custom getters here
@@ -147,19 +147,19 @@ namespace SDOM
         // Add custom data members here
         
         // --- Protected Virtual Methods --- //
-        virtual void _onValueChanged(float oldValue, float newValue);
+        void _onValueChanged(float oldValue, float newValue) override;
         
 
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration
         // ---------------------------------------------------------------------
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
+        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------
-        virtual void registerBindingsImpl(const std::string& typeName) override;         
+        void registerBindingsImpl(const std::string& typeName) override;         
 
         
     }; // END: class IRangeControl_scaffold
