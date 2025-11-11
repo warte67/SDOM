@@ -2,6 +2,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Variant.hpp>
+#include <thread>
 
 namespace SDOM
 {
@@ -295,6 +296,144 @@ namespace SDOM
         return true;
     }
 
+    // Additional tests requested: numeric coercion stress, deep snapshot recursion,
+    // threaded converter registration, and composite equality cases.
+
+    bool Variant_test_numeric_coercion_stress(std::vector<std::string>& errors)
+    {
+        // Basic deterministic cases covering ints, reals, bools and numeric strings
+        struct Case { Variant v; int64_t expectInt; double expectDouble; bool expectBool; };
+        std::vector<Case> cases{
+            { Variant(int64_t(0)), 0, 0.0, false },
+            { Variant(int64_t(1)), 1, 1.0, true },
+            { Variant(int64_t(-5)), -5, -5.0, true },
+            { Variant(3.14), 3, 3.14, true },
+            // string values: toBool only recognizes "true" or "1" as true
+            { Variant("42"), 42, 42.0, false },
+            { Variant("-7"), -7, -7.0, false },
+            { Variant("3.5"), 3, 3.5, false },
+            { Variant("not_a_number"), 0, 0.0, false }
+        };
+
+        for (size_t i = 0; i < cases.size(); ++i) {
+            const auto &c = cases[i];
+            int64_t vi = c.v.toInt64(0);
+            double vd = c.v.toDouble(0.0);
+            bool vb = c.v.toBool(false);
+            // For the string non-number case we expect defaults (we use 0 here)
+            if (i == cases.size()-1) {
+                if (vi != 0) errors.push_back("Numeric coercion: unexpected toInt64 for non-number case");
+            } else {
+                if (vi != c.expectInt) errors.push_back("Numeric coercion: toInt64 mismatch");
+            }
+            // allow small rounding differences for double
+            if (std::fabs(vd - c.expectDouble) > 1e-9) errors.push_back("Numeric coercion: toDouble mismatch");
+            if (vb != c.expectBool) errors.push_back("Numeric coercion: toBool mismatch");
+        }
+
+        // Edge cases: large int near limits
+        Variant big = Variant(int64_t(std::numeric_limits<int64_t>::max()));
+        if (big.toInt64(0) != std::numeric_limits<int64_t>::max()) errors.push_back("Numeric coercion: big int mismatch");
+
+        return true;
+    }
+
+    bool Variant_test_deep_recursion_snapshot(std::vector<std::string>& errors)
+    {
+        Core& core = getCore();
+        sol::state& L = core.getLua();
+
+        // Temporarily keep LuaRef mode to create a LuaRef Variant
+        auto prev = Variant::getTableStorageMode();
+        Variant::setTableStorageMode(Variant::TableStorageMode::KeepLuaRef);
+
+        sol::table t = L.create_table();
+        sol::table cur = t;
+    const int depth = 30; // deep but safe for stack across environments
+        for (int i = 0; i < depth; ++i) {
+            sol::table child = L.create_table();
+            // ensure child is treated as an object (non-empty) by fromLuaTable_
+            child["__mark"] = 1;
+            cur["inner"] = child;
+            cur = child;
+        }
+
+    Variant v = Variant::fromLuaObject(t);
+    if (!v.isLuaRef()) { errors.push_back("Deep snapshot: expected LuaRef"); Variant::setTableStorageMode(prev); return true; }
+
+    // Ensure nested tables are deep-copied by snapshot(): temporarily switch to Copy
+    Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
+    Variant snap = v.snapshot();
+        if (!snap.isObject()) { errors.push_back("Deep snapshot: snapshot did not produce object"); Variant::setTableStorageMode(prev); return true; }
+
+        const Variant* node = &snap;
+        for (int i = 0; i < depth; ++i) {
+            if (!node || !node->isObject()) { errors.push_back("Deep snapshot: traversal failed at depth " + std::to_string(i)); break; }
+            node = node->get("inner");
+        }
+
+    Variant::setTableStorageMode(prev);
+        return true;
+    }
+
+    bool Variant_test_threaded_converter_registration(std::vector<std::string>& errors)
+    {
+        // Spawn several threads which register converters by name to exercise the registry mutex
+        const int threads = 6;
+        std::vector<std::thread> ths;
+        for (int i = 0; i < threads; ++i) {
+            ths.emplace_back([i]() {
+                Variant::ConverterEntry ce;
+                ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {
+                    return sol::make_object(L, sol::lua_nil);
+                };
+                ce.fromVariant = [](const Variant& v)->std::shared_ptr<void> { return nullptr; };
+                Variant::registerConverterByName(std::string("ThreadConv_") + std::to_string(i), std::move(ce));
+            });
+        }
+        for (auto &t : ths) t.join();
+
+        // Verify registration
+        for (int i = 0; i < threads; ++i) {
+            auto name = std::string("ThreadConv_") + std::to_string(i);
+            if (!Variant::getConverterByName(name)) errors.push_back("Threaded registration: missing converter " + name);
+        }
+
+        return true;
+    }
+
+    bool Variant_test_equality_composite_types(std::vector<std::string>& errors)
+    {
+        // Arrays equality (order-sensitive)
+        Variant a1 = Variant::makeArray(); a1.push(Variant(1)); a1.push(Variant(2));
+        Variant a2 = Variant::makeArray(); a2.push(Variant(1)); a2.push(Variant(2));
+        Variant a3 = Variant::makeArray(); a3.push(Variant(2)); a3.push(Variant(1));
+        if (!(a1 == a2)) errors.push_back("Equality: identical arrays not equal");
+        if (a1 == a3) errors.push_back("Equality: different-order arrays considered equal");
+
+        // Objects equality (order-insensitive)
+        Variant o1 = Variant::makeObject(); o1.set("a", Variant(1)); o1.set("b", Variant(2));
+        Variant o2 = Variant::makeObject(); o2.set("b", Variant(2)); o2.set("a", Variant(1));
+        if (!(o1 == o2)) errors.push_back("Equality: equivalent objects not equal");
+
+        // Numeric cross-type equality
+        Variant vi = Variant(int64_t(42));
+        Variant vf = Variant(42.0);
+        if (!(vi == vf)) errors.push_back("Equality: int and double with same value not equal");
+
+        // Dynamic equality (pointer identity + type)
+        auto sp = std::make_shared<int>(7);
+        Variant d1 = Variant::makeDynamic<int>(sp);
+        Variant d2 = Variant::makeDynamic<int>(sp);
+        if (!(d1 == d2)) errors.push_back("Equality: dynamic variants with same pointer not equal");
+
+        auto sp2 = std::make_shared<int>(7);
+        Variant d3 = Variant::makeDynamic<int>(sp2);
+        if (d1 == d3) errors.push_back("Equality: dynamic variants with different pointers considered equal");
+
+        return true;
+    }
+
     // Complex converter examples (previously a separate file). Keep with Variant tests.
     struct Inner { int a = 0; std::string name; };
     struct Outer {
@@ -423,6 +562,10 @@ namespace SDOM
             ut.add_test(objName, "Converter: TestPoint roundtrip", Variant_test_converter_roundtrip);
             ut.add_test(objName, "Converter: lookup by name", Variant_test_converter_lookup_by_name);
             ut.add_test(objName, "Converter chain: Outer nested/arrays/maps", ComplexVariant_test_outer_converter);
+            ut.add_test(objName, "Numeric coercion stress", Variant_test_numeric_coercion_stress);
+            ut.add_test(objName, "Deep recursion snapshot", Variant_test_deep_recursion_snapshot);
+            ut.add_test(objName, "Threaded converter registration", Variant_test_threaded_converter_registration);
+            ut.add_test(objName, "Equality: composite types", Variant_test_equality_composite_types);
             ut.add_test(objName, "Null/Error semantics", Variant_test_null_and_error);
             ut.add_test(objName, "VariantView basic access", Variant_test_variantview_basic_access);
             ut.add_test(objName, "LuaRef lifetime validation", Variant_test_luaref_lifetime_validation);
