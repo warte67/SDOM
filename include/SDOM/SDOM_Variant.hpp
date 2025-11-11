@@ -182,6 +182,19 @@ public:
         return dv;
     }
 
+    // Create a Variant that holds a DynamicValue pointing to a typed shared_ptr.
+    template<typename T>
+    static Variant makeDynamic(std::shared_ptr<T> p) {
+        // Use the templated dynamic constructor defined above.
+        return Variant(std::move(p));
+    }
+
+    // In-place construction helper: construct T with forwarded args and wrap in Variant
+    template<typename T, typename... Args>
+    static Variant makeDynamic(Args&&... args) {
+        return Variant(std::make_shared<T>(std::forward<Args>(args)...));
+    }
+
     // Accessors for dynamic metadata
     std::optional<std::string> dynamicTypeName() const noexcept {
         if (!isDynamic()) return std::nullopt;
@@ -272,6 +285,13 @@ public:
     // Lookup converter by registered type name (returns nullptr if absent)
     static ConverterEntry* getConverterByName(const std::string& name) {
         return VariantRegistry::getConverterByName(name);
+    }
+
+    // Register a converter by name only. This is useful for runtime-only types
+    // where a concrete C++ type_index may not be available at registration time.
+    static void registerConverterByName(const std::string& name, ConverterEntry entry) {
+        std::lock_guard<std::mutex> lk(VariantRegistry::getMutex());
+        VariantRegistry::getConverterMapByName()[name] = std::move(entry);
     }
 
     // Table storage mode controls how incoming Lua tables are handled:

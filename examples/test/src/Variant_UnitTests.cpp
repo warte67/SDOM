@@ -159,11 +159,10 @@ namespace SDOM
                 auto ce = Variant::getConverterByName("TestPoint");
                 if (!ce) { errors.push_back("Converter lookup by name failed"); return true; }
 
-                // Build a DynamicValue representing a TestPoint
+                // Build a DynamicValue representing a TestPoint and convert via converter
                 auto p = std::make_shared<TestPoint>(); p->x = 3; p->y = 4;
-                auto dv = Variant::makeDynamicValue<TestPoint>(p);
-
-                sol::object o = ce->toLua(dv, L);
+                auto dyn = Variant::makeDynamicValue<TestPoint>(p);
+                sol::object o = ce->toLua(dyn, L);
                 if (!o.is<sol::table>()) { errors.push_back("Converter toLua by name did not produce table"); return true; }
                 sol::table t = o;
                 int xx = t["x"]; int yy = t["y"];
@@ -287,6 +286,20 @@ namespace SDOM
             });
             registered = true;
         }
+
+        // Small test: dynamicTypeName accessor
+        ut.add_test(objName, "Dynamic metadata accessors", [](std::vector<std::string>& errors)->bool{
+            // Ensure TestPoint converter was registered
+            auto ce = Variant::getConverterByName("TestPoint");
+            if (!ce) { errors.push_back("Dynamic metadata: converter missing"); return true; }
+            auto p = std::make_shared<TestPoint>();
+            Variant v = Variant::makeDynamic<TestPoint>(p);
+            auto tn = v.dynamicTypeName();
+            if (!tn || *tn != std::string("TestPoint")) errors.push_back("dynamicTypeName() returned unexpected value");
+            auto ti = v.dynamicTypeIndex();
+            if (ti != std::type_index(typeid(TestPoint))) errors.push_back("dynamicTypeIndex() mismatch");
+            return true;
+        });
 
         return true;
     }
