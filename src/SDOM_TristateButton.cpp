@@ -74,7 +74,16 @@ namespace SDOM
         text_ = init.text;
         // icon_index_ = init.icon_index;
         buttonState_ = init.state;
-    icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state // NOLINT(clang-analyzer-optin.cplusplus.VirtualCall) - intentional
+        // The following call intentionally invokes a virtual-like dispatch
+        // (via this->iconIndexForState()). Static analyzers flag this as a
+        // "virtual call during construction" because virtual dispatch is not
+        // guaranteed inside constructors. This is an intentional pattern:
+        // the called method is non-problematic for construction and is used
+        // to compute an internal index from a simple enum. Suppress the
+        // analyzer warning at this site and plan a follow-up refactor if
+        // needed (see docs/progress.md).
+        // NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.VirtualCall)
+        icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state
 
         font_size_ = init.font_size;
         label_color_ = init.label_color;
@@ -199,7 +208,11 @@ namespace SDOM
                 }
             } catch(...) { /* ignore malformed values */ }
         }
-        icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state
+    // Suppress analyzer warning here as above: the call computes a simple
+    // index from the enum and does not rely on derived-class overrides
+    // that would be unsafe during construction.
+    // NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.VirtualCall)
+    icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state
 
         // label color - accept snake_case/table { r=.., g=.., b=.., a=.. } or camelCase 'labelColor'
         try {

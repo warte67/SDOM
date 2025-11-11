@@ -630,7 +630,12 @@ _“Today we offered clang our humility, GCC our patience, and the Llama our din
 - Finalized cross-compiler compliance: builds clean under **Clang**, **GCC**, and **MSVC**, with `-Wall -Wextra` and zero warnings.  
 - Verified `examples/test/prog` links successfully and executes the full Variant regression suite.  
 
-### 🧠 Compiler & Static Analysis
+### � Targeted Analyzer Suppressions (Nov 11, 2025)
+
+- Added focused `NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.VirtualCall)` suppressions at a small number of intentional call sites (e.g., `TristateButton` constructors) where a lightweight, deterministic helper is invoked during construction. Each suppression includes an inline rationale and a reference to this progress log. These are low-risk, reversible changes intended to quiet static analyzer false-positives while preserving behavior.
+- Planned follow-up: open a small refactor PR that replaces these patterns with explicit non-virtual helpers or deferred initialization calls (preferred long-term). See "Next Steps / To-Do" for the refactor plan.
+
+### �🧠 Compiler & Static Analysis
 - Integrated `clang-tidy` diagnostics and resolved implicit conversion, shadowing, and narrowing warnings.  
 - Added explicit constructors and noexcept move semantics for STL compliance.  
 - Eliminated remaining empty `catch` blocks — all exceptions now routed through `SDOM_LOG_ERROR` or `ERROR()` macros with file/line reporting.  
