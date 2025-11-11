@@ -116,6 +116,18 @@ public:
     Variant(std::unordered_map<std::string, Variant>&& obj);
     Variant(const sol::object& o);
 
+    // Explicitly opt into move semantics to document intent and allow
+    // noexcept move operations for container optimizations.
+    Variant(Variant&&) noexcept = default;
+    Variant& operator=(Variant&&) noexcept = default;
+
+    // Ensure Variant remains copyable: explicitly default copy ctor/assign.
+    // If we only declare move operations, the copy operations would be
+    // implicitly declared as deleted which breaks STL containers that
+    // require copy-constructible/assignable elements (e.g. vector/unordered_map).
+    Variant(const Variant&) = default;
+    Variant& operator=(const Variant&) = default;
+
     // Factories for composite
     static Variant makeArray();
     static Variant makeObject();
@@ -362,6 +374,15 @@ public:
     // Variant (Array/Object) snapshot of that table's contents. If this
     // Variant is not a LuaRef to a table, returns a copy of *this.
     Variant snapshot() const;
+    // Snapshot into a deep-copied Variant using the provided Lua state.
+    // If this Variant holds a LuaRefValue, the snapshot will only be
+    // produced when the LuaRef is valid for the provided state; otherwise
+    // a copy of *this is returned.
+    Variant snapshot(sol::state_view L) const;
+
+    // Non-noexcept structured stringifier for debugging that limits
+    // recursion by depth. Depth=0 yields "..." for nested structures.
+    std::string toDebugString(int depth = 1) const;
 
     // Non-owning view for read-only traversal
     class VariantView {
@@ -422,6 +443,9 @@ public:
     bool operator==(const Variant& rhs) const;
     bool operator!=(const Variant& rhs) const { return !(*this == rhs); }
 
+    // Allow VariantHash to access private storage for efficient hashing.
+    friend struct VariantHash;
+
 private:
     std::shared_ptr<VariantStorage> storage_;
     bool        errorFlag_ = false;
@@ -433,6 +457,63 @@ private:
     static bool    numericEqual_(const Variant& a, const Variant& b);
 };
 
-} // namespace SDOM
+// Hash support for Variant: best-effort, consistent with operator== for
+// the implemented cases. VariantHash is declared outside the class but
+// is a friend so it can access internal storage for pointer-based types.
+struct VariantHash {
+    size_t operator()(const Variant& v) const noexcept {
+        using std::size_t;
+        using std::hash;
+        switch (v.type()) {
+            case VariantType::Null: return 0x9e3779b97f4a7c15ULL;
+            case VariantType::Bool: return hash<bool>()(v.toBool());
+            case VariantType::Int: return hash<int64_t>()(v.toInt64());
+            case VariantType::Real: return hash<long double>()(v.toDouble());
+            case VariantType::String: return hash<std::string>()(v.toString());
+            case VariantType::Array: {
+                size_t h = 1469598103934665603ULL;
+                if (auto a = v.array()) {
+                    for (const auto &e : *a) {
+                        size_t eh = operator()(e);
+                        h ^= eh + 0x9e3779b97f4a7c15ULL + (h<<6) + (h>>2);
+                    }
+                }
+                return h;
+            }
+            case VariantType::Object: {
+                size_t h = 0x9e3779b9;
+                if (auto o = v.object()) {
+                    for (const auto &kv : *o) {
+                        size_t hk = hash<std::string>()(kv.first);
+                        size_t hv = operator()(kv.second);
+                        // order-independent combine
+                        h ^= hk + 0x9e3779b97f4a7c15ULL + (hv<<6) + (hv>>2);
+                        h ^= hv + 0x9e3779b97f4a7c15ULL + (hk<<6) + (hk>>2);
+                    }
+                    h ^= o->size() + 0x9e3779b97f4a7c15ULL;
+                }
+                return h;
+            }
+            case VariantType::Dynamic: {
+                if (auto dv = std::get_if<VariantStorage::DynamicValue>(&v.storage_->data)) {
+                    size_t p = std::hash<const void*>()(dv->ptr.get());
+                    size_t t = dv->type.hash_code();
+                    return p ^ (t + 0x9e3779b97f4a7c15ULL + (p<<6) + (p>>2));
+                }
+                return 0;
+            }
+            case VariantType::LuaRef: {
+                if (auto lr = std::get_if<VariantStorage::LuaRefValue>(&v.storage_->data)) {
+                    size_t Lp = std::hash<const void*>()(lr->L);
+                    size_t tp = std::hash<int>()(static_cast<int>(lr->obj.get_type()));
+                    return Lp ^ (tp + 0x9e3779b97f4a7c15ULL + (Lp<<6) + (Lp>>2));
+                }
+                return 0;
+            }
+            default: return 0;
+        }
+    }
+};
 
+} // namespace SDOM
 #endif // SDOM_VARIANT_HPP

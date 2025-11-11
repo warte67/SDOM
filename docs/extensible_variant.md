@@ -331,3 +331,128 @@ if (view.isObject()) {
 ```
 
 These examples should be directly usable in unit tests or modules inside the `examples/test` harness. For more advanced usage (registering converters for complex nested types, round-trip tests, or per-Core registries) consult the header comments in `include/SDOM/SDOM_Variant.hpp` which contain short usage notes and caveats.
+
+
+## Lua Conversion Flow Diagram
+
+```mermaid
+flowchart TD
+    subgraph Lua
+        A1["sol::object / table"]
+    end
+    subgraph SDOM_Core
+        B1["Variant::fromLuaObject()"]
+        B2["Variant::LuaRefValue or Array/Object"]
+        B3["Variant::toLua()"]
+    end
+    subgraph Registry
+        C1["VariantRegistry"]
+        C2["ConverterEntry.toLua() / fromVariant()"]
+    end
+    subgraph CppApp
+        D1["std::shared_ptr<T>"]
+        D2["VariantStorage::DynamicValue"]
+    end
+
+    A1 --> B1 --> B2 --> D2
+    D2 --> C2 --> B3 --> A1
+    C1 --> C2
+    D1 --> D2
+```
+The **Lua Conversion Flow Diagram** illustrates the full round-trip between the Lua runtime and SDOM’s internal C++ types.
+A `sol::object` or Lua table is first passed through `Variant::fromLuaObject()`, where it becomes either a L`uaRefValue` (if stored by reference) or a deep-copied **Array**/**Object**.
+From there, any dynamic data is represented as a VariantStorage::DynamicValue, linking the Lua layer to a C++ std::shared_ptr<T>.
+When converting back, Variant::toLua() consults the VariantRegistry and its associated ConverterEntry objects to translate native C++ types into Lua tables or values.
+This bi-directional pathway ensures that all conversions between C++ and Lua remain type-safe, extensible, and reflection-aware.
+
+## Mermaid Diagram for Test Coverage Mapping
+
+```mermaid
+graph TD
+    subgraph Variant_UnitTests
+        A["Converter Roundtrip"]
+        B["LuaRef Lifetime"]
+        C["VariantView"]
+        D["Table Storage Mode"]
+        E["Dynamic Metadata"]
+        F["Null/Error Semantics"]
+        G["Nested Converters (Outer/Inner)"]
+    end
+
+    subgraph Variant_StressTests
+        H["Numeric Coercion"]
+        I["Deep Snapshot"]
+        J["Threaded Registry"]
+        K["Composite Equality"]
+        L["Memory Consistency"]
+    end
+
+    X1["VariantRegistry"]
+    X2["ConverterEntry"]
+    X3["LuaRefValue"]
+    X4["VariantView"]
+    X5["TableStorageMode"]
+    X6["DynamicValue"]
+    X7["Converter Hierarchy"]
+    X8["Conversion Logic"]
+    X9["fromLuaTable_"]
+    X10["Registry Mutex"]
+    X11["operator=="]
+    X12["Registry Maps"]
+
+    A -->|tests| X1
+    A -->|tests| X2
+    B -->|tests| X3
+    C -->|tests| X4
+    D -->|tests| X5
+    E -->|tests| X6
+    G -->|tests| X7
+    H -->|stresses| X8
+    I -->|stresses| X9
+    J -->|stresses| X10
+    K -->|stresses| X11
+    L -->|monitors| X12
+
+```
+
+
+## State Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> Null : Default constructed
+
+    Null --> Assigned : set() / push() / constructor
+    Assigned --> Array : makeArray()
+    Assigned --> Object : makeObject()
+    Assigned --> Dynamic : makeDynamic<T>()
+    Assigned --> LuaRef : fromLuaObject
+    Assigned --> Error : makeError("msg")
+
+    Array --> toLua : toLua()
+    Object --> toLua : toLua()
+    Dynamic --> toLua : ConverterEntry.toLua()
+    LuaRef --> toLua : validated reference
+
+    toLua --> LuaTable : Lua receives Variant data
+    LuaTable --> fromLua : Variant.fromLuaObject
+    fromLua --> Assigned
+
+    LuaRef --> Snapshot : snapshot()
+    Snapshot --> Object : deep copy of table
+    Snapshot --> Array : deep copy of list
+
+    Assigned --> Error : invalid conversion
+    Error --> [*] : hasError() / log
+
+    Dynamic --> Registered : registerType<T>()
+    Registered --> ConverterLookup : getConverter / getByName
+    ConverterLookup --> toLua : Dynamic → Lua
+    ConverterLookup --> fromVariant : Lua → Dynamic
+    fromVariant --> Assigned
+
+    Object --> VariantView : read-only traversal
+    Array --> VariantView : read-only traversal
+    VariantView --> [*] : non-owning access complete
+
+```

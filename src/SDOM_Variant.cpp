@@ -308,20 +308,79 @@ Variant Variant::fromLuaObject(const sol::object& o) {
 }
 
 Variant Variant::snapshot() const {
+    // Default snapshot: if we have a stored LuaRefValue with an associated
+    // lua_State pointer, attempt to snapshot using that state. If no
+    // LuaRefValue is present, return *this.
+    const auto& d = storage_->data;
+    if (auto p = std::get_if<VariantStorage::LuaRefValue>(&d)) {
+        if (!p->obj.valid() || p->L == nullptr) return *this;
+        try {
+            sol::state_view sv(p->L);
+            return snapshot(sv);
+        } catch(...) {
+            return *this;
+        }
+    }
+    return *this;
+}
+
+Variant Variant::snapshot(sol::state_view L) const {
     const auto& d = storage_->data;
     if (auto p = std::get_if<VariantStorage::LuaRefValue>(&d)) {
         if (!p->obj.valid()) return *this;
+        if (!p->validFor(L)) return *this;
         try {
             if (p->obj.get_type() == sol::type::table) {
                 sol::table t = p->obj.as<sol::table>();
                 return fromLuaTable_(t);
             }
         } catch(...) {
-            // fallthrough: return original Variant on any failure
             return *this;
         }
     }
     return *this;
+}
+
+// toDebugString implementation — depth-limited pretty printer for debugging.
+std::string Variant::toDebugString(int depth) const {
+    if (depth < 0) depth = 0;
+    if (depth == 0) return "...";
+    switch (type()) {
+        case VariantType::Null: return "null";
+        case VariantType::Bool: return toBool() ? "true" : "false";
+        case VariantType::Int: return std::to_string(toInt64());
+        case VariantType::Real: return std::to_string(toDouble());
+        case VariantType::String: return std::string("\"") + toString() + "\"";
+        case VariantType::Array: {
+            const auto* a = array();
+            if (!a) return "[]";
+            std::string s = "[";
+            bool first = true;
+            for (const auto &e : *a) {
+                if (!first) s += ", ";
+                s += e.toDebugString(depth - 1);
+                first = false;
+            }
+            s += "]";
+            return s;
+        }
+        case VariantType::Object: {
+            const auto* o = object();
+            if (!o) return "{}";
+            std::string s = "{";
+            bool first = true;
+            for (const auto &kv : *o) {
+                if (!first) s += ", ";
+                s += kv.first + ": " + kv.second.toDebugString(depth - 1);
+                first = false;
+            }
+            s += "}";
+            return s;
+        }
+        case VariantType::Dynamic: return "<dynamic>";
+        case VariantType::LuaRef: return "<luaref>";
+        default: return "<error>";
+    }
 }
 
 sol::object Variant::toLua(sol::state_view L) const {

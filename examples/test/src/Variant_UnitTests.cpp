@@ -3,6 +3,7 @@
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Variant.hpp>
 #include <thread>
+#include <random>
 
 namespace SDOM
 {
@@ -434,6 +435,92 @@ namespace SDOM
         return true;
     }
 
+    // Randomized numeric coercion tests
+    bool Variant_test_numeric_coercion_randomized(std::vector<std::string>& errors)
+    {
+        std::mt19937_64 rng(12345);
+        std::uniform_int_distribution<int64_t> di(-1000000, 1000000);
+        std::uniform_real_distribution<double> dr(-1e6, 1e6);
+
+        for (int i = 0; i < 2000; ++i) {
+            int t = rng() % 4;
+            Variant v;
+            int64_t expectInt = 0; double expectDouble = 0.0; bool expectBool = false;
+            switch (t) {
+                case 0: { // int
+                    int64_t x = di(rng); v = Variant(x); expectInt = x; expectDouble = static_cast<double>(x); expectBool = (x != 0); break;
+                }
+                case 1: { // double
+                    double x = dr(rng); v = Variant(x); expectInt = static_cast<int64_t>(x); expectDouble = x; expectBool = (x != 0.0); break;
+                }
+                case 2: { // numeric string
+                    int64_t x = di(rng); v = Variant(std::to_string(x)); expectInt = x; expectDouble = static_cast<double>(x); expectBool = false; break;
+                }
+                default: { // non-numeric string
+                    v = Variant(std::string("str_") + std::to_string(rng()%1000)); expectInt = 0; expectDouble = 0.0; expectBool = false; break;
+                }
+            }
+            if (v.toInt64(0) != expectInt) errors.push_back("Randomized coercion: toInt64 mismatch");
+            if (std::fabs(v.toDouble(0.0) - expectDouble) > 1e-6) errors.push_back("Randomized coercion: toDouble mismatch");
+            if (v.toBool(false) != expectBool) errors.push_back("Randomized coercion: toBool mismatch");
+        }
+        return true;
+    }
+
+    // Hash-consistency tests: equal Variants should hash equal; object insertion order should not affect hash
+    bool Variant_test_hash_consistency(std::vector<std::string>& errors)
+    {
+        Variant a = Variant::makeArray(); a.push(Variant(1)); a.push(Variant(2));
+        Variant b = Variant::makeArray(); b.push(Variant(1)); b.push(Variant(2));
+        VariantHash h;
+        if (h(a) != h(b)) errors.push_back("Hash consistency: equal arrays produced different hashes");
+
+        Variant o1 = Variant::makeObject(); o1.set("a", Variant(1)); o1.set("b", Variant(2));
+        Variant o2 = Variant::makeObject(); o2.set("b", Variant(2)); o2.set("a", Variant(1));
+        if (o1 == o2) {
+            if (h(o1) != h(o2)) errors.push_back("Hash consistency: equal objects produced different hashes");
+        } else {
+            errors.push_back("Hash consistency: objects expected to be equal but are not");
+        }
+
+        // Check dynamic pointer hashing stability
+        auto sp = std::make_shared<int>(42);
+        Variant d1 = Variant::makeDynamic<int>(sp);
+        Variant d2 = Variant::makeDynamic<int>(sp);
+        if (h(d1) != h(d2)) errors.push_back("Hash consistency: dynamic variants same pointer hashed differently");
+
+        return true;
+    }
+
+    // Larger threaded stress: many threads register/read converters
+    bool Variant_test_threaded_registration_stress(std::vector<std::string>& errors)
+    {
+        const int threads = 32;
+        const int per_thread = 200;
+        std::vector<std::thread> ths;
+        for (int t = 0; t < threads; ++t) {
+            ths.emplace_back([t, per_thread]() {
+                for (int i = 0; i < per_thread; ++i) {
+                    Variant::ConverterEntry ce;
+                    ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object { return sol::make_object(L, sol::lua_nil); };
+                    ce.fromVariant = [](const Variant& v)->std::shared_ptr<void> { return nullptr; };
+                    Variant::registerConverterByName(std::string("StressConv_") + std::to_string(t) + "_" + std::to_string(i), ce);
+                    // read back occasionally
+                    if ((i & 7) == 0) Variant::getConverterByName(std::string("StressConv_") + std::to_string(t) + "_" + std::to_string(i));
+                }
+            });
+        }
+        for (auto &th : ths) th.join();
+
+        // quick verification that some entries exist
+        for (int t = 0; t < 4; ++t) {
+            if (!Variant::getConverterByName(std::string("StressConv_") + std::to_string(t) + "_" + std::to_string(0)))
+                errors.push_back("Threaded stress: missing expected converter");
+        }
+
+        return true;
+    }
+
     // Complex converter examples (previously a separate file). Keep with Variant tests.
     struct Inner { int a = 0; std::string name; };
     struct Outer {
@@ -563,6 +650,9 @@ namespace SDOM
             ut.add_test(objName, "Converter: lookup by name", Variant_test_converter_lookup_by_name);
             ut.add_test(objName, "Converter chain: Outer nested/arrays/maps", ComplexVariant_test_outer_converter);
             ut.add_test(objName, "Numeric coercion stress", Variant_test_numeric_coercion_stress);
+            ut.add_test(objName, "Numeric coercion randomized", Variant_test_numeric_coercion_randomized);
+            ut.add_test(objName, "Hash consistency", Variant_test_hash_consistency);
+            ut.add_test(objName, "Threaded registration stress", Variant_test_threaded_registration_stress);
             ut.add_test(objName, "Deep recursion snapshot", Variant_test_deep_recursion_snapshot);
             ut.add_test(objName, "Threaded converter registration", Variant_test_threaded_converter_registration);
             ut.add_test(objName, "Equality: composite types", Variant_test_equality_composite_types);
