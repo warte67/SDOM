@@ -1,4 +1,4 @@
-# SDOM Variant System — Complete Design Specification (v5)
+# SDOM Variant System — Complete Design Specification (v6)
 
 ## 📘 Table of Contents
 1. [Introduction](#1-introduction)  
@@ -17,23 +17,25 @@
 
 ## 1. Introduction
 ### Design Motivation
-The SDOM `Variant` class provides a unified, extensible, and type-safe container capable of representing all major data types exchanged between **C++**, **Lua**, and the SDOM runtime. It replaces fragmented per-type conversion logic (e.g., multiple `SDL_Color` conversions) with a centralized system for data storage, reflection, and inter-language interoperability.
+The SDOM `Variant` class provides a unified, extensible, and type-safe container capable of representing all major data types exchanged between **C++**, **Lua**, and the SDOM runtime. It replaces fragmented per-type conversion logic with a centralized system for data storage, reflection, and inter-language interoperability.
 
 ### Role within SDOM’s Reflection and Lua Integration
 `Variant` acts as the foundation for the **DataRegistry**, enabling the reflection and serialization of `IDataObject` instances. It ensures that any data in SDOM—whether primitive, structured, or composite—can be exposed to or derived from Lua scripts seamlessly.
 
 ### Guiding Principles
-- **Simplicity:** One consistent, predictable data model for all systems.
-- **Safety:** Always return valid data or a clear error indicator.
-- **Interoperability:** Serve as the bridge for C++, Lua, and other future languages.
+- **Simplicity:** One consistent, predictable data model for all systems.  
+- **Safety:** Always return valid data or a clear error indicator.  
+- **Interoperability:** Serve as the bridge for C++, Lua, and other future languages.  
+- **Performance:** Measure twice, allocate once — minimize heap churn and runtime overhead.
 
 ---
 
 ## 2. Goals & Use Cases
-- **Dynamic Reflection:** Enable runtime introspection and property querying.
-- **Type Conversion:** Unify and simplify type conversions between Lua, C++, and SDL.
-- **ABI Bridging:** Provide a common memory-safe interface for external language bindings.
-- **Lua & External Compatibility:** Represent data in a Lua-friendly structure (tables, primitives).
+- **Dynamic Reflection:** Enable runtime introspection and property querying.  
+- **Type Conversion:** Unify and simplify type conversions between Lua, C++, and external systems.  
+- **ABI Bridging:** Provide a common memory-safe interface for external language bindings.  
+- **Lua & External Compatibility:** Represent data in a Lua-friendly structure (tables, primitives).  
+- **Inspection:** Allow read-only access to existing Variants through lightweight `VariantView`.
 
 ---
 
@@ -42,9 +44,9 @@ The SDOM `Variant` class provides a unified, extensible, and type-safe container
 
 ```cpp
 std::variant<std::nullptr_t, bool, int64_t, double, std::string,
-             SDL_Color, SDL_Rect, SDL_Point,
              std::vector<Variant>,
              std::unordered_map<std::string, Variant>,
+             std::shared_ptr<void>,
              sol::object> data_;
 ```
 
@@ -52,18 +54,45 @@ std::variant<std::nullptr_t, bool, int64_t, double, std::string,
 | Category | Types |
 |-----------|--------|
 | **Primitives** | bool, int64_t, double, std::string |
-| **Structured** | SDL_Color, SDL_Rect, SDL_Point |
 | **Composite** | std::vector<Variant>, std::unordered_map<std::string, Variant> |
-| **Scripted** | sol::object, sol::table, sol::userdata |
-| **Special** | nullptr, error types |
+| **Dynamic** | std::shared_ptr<void> (user-defined extensible payload) |
+| **Scripted** | sol::object (Lua reference or userdata) |
+| **Special** | nullptr, error state |
 
 ### VariantType Enum
 Each stored type corresponds to a unique `VariantType` enum value for quick runtime checks.
+
+```cpp
+enum class VariantType : uint8_t {
+    Null = 0,
+    Bool,
+    Int,
+    Real,
+    String,
+    Array,
+    Object,
+    Dynamic,
+    LuaRef,
+    Error
+};
+```
+
+### VariantView
+A lightweight, read-only view into a `Variant`, used to avoid copies when inspecting registry data.
+
+```cpp
+class VariantView {
+    const Variant* ref_;
+public:
+    template<typename T> const T* try_get() const;
+};
+```
 
 ---
 
 ## 4. Type Extensibility
 Users can extend the Variant system to support custom C++ types:
+
 ```cpp
 Variant::registerType<MyStruct>([](const MyStruct& s) {
     sol::table t = lua.create_table();
@@ -72,17 +101,29 @@ Variant::registerType<MyStruct>([](const MyStruct& s) {
     return t;
 });
 ```
+
+### Conversion Trait System
+For consistency across types, all conversions use `VariantConverter<T>` specialization:
+
+```cpp
+template<typename T>
+struct VariantConverter {
+    static Variant fromLua(const sol::object&);
+    static sol::object toLua(sol::state_view, const T&);
+};
+```
+
 All registered types become available for reflection and serialization in the **DataRegistry**.
 
 ---
 
 ## 5. Conversion System
 ### C++ → Lua (Serialization)
-- Converts C++ primitives and SDL structures into Lua tables or objects.
+- Converts C++ primitives and composite types into Lua tables or objects.  
 - Handles nested data automatically (recursive flattening).
 
 ### Lua → C++ (Deserialization)
-- Constructs Variants from Lua types (`sol::object`, `sol::table`, etc.).
+- Constructs Variants from Lua types (`sol::object`, `sol::table`, etc.).  
 - Detects and wraps nested Lua structures recursively.
 
 ### Nested Tables
@@ -93,29 +134,37 @@ Variant fromLuaObject(sol::object o);
 sol::table toLuaTable(sol::state_view L) const;
 ```
 
+### Ownership Semantics
+Variants holding `sol::object` maintain **weak references** to avoid dangling handles when Lua states are destroyed.
+
 ---
 
 ## 6. Operator Model
 `Variant` provides native operator overloads for comparison and arithmetic operations:
+
 ```cpp
 bool operator==(const Variant& rhs) const;
 Variant operator+(const Variant& rhs) const;
 ```
 
-### Comparison Rules
-- Numeric comparisons automatically coerce int ↔ double.
-- String comparisons are case-sensitive.
-- Type mismatches result in an error-marked `Variant`.
+### Comparison Matrix
+| Operator | Allowed Types | Notes |
+|-----------|----------------|-------|
+| `==` | all comparable | cross-numeric coercion |
+| `<, >` | numeric, string | error if mixed |
+| `+` | numeric, string concatenation | error otherwise |
 
 ### Type-Safety Policies
-No implicit type promotion beyond numeric coercion. Conversions between unrelated types (e.g. `string` → `SDL_Rect`) trigger error states.
+No implicit type promotion beyond numeric coercion.  
+Conversions between unrelated types trigger error states.
 
 ---
 
 ## 7. Performance & Memory Layout
-- **Inline storage** for small types (primitives, small strings).
-- **Shared_ptr** management for larger containers (maps, vectors).
-- **Lazy Lua realization:** complex types convert to tables only when required.
+- **Inline storage** for small types (primitives, small strings).  
+- **Shared_ptr** management for larger containers (maps, vectors).  
+- **Lazy Lua realization:** complex types convert to tables only when required.  
+- **Target performance envelope:** < 50 ns for primitive get/set, minimal heap allocation during shallow copies.
 
 ---
 
@@ -136,11 +185,11 @@ private:
 };
 ```
 
-### Example
-```cpp
-Variant v = Variant::fromLuaObject(o);
-if (v.hasError())
-    std::cerr << v.errorMessage();
+### Nested Error Contexts
+Errors within nested structures accumulate context for easier debugging:
+
+```
+VariantError: key 'color' → expected table {r,g,b,a}, got number
 ```
 
 ### Compile-Time Error Modes
@@ -150,44 +199,41 @@ if (v.hasError())
 | **Strict** | Throws `VariantTypeError` | Debug & testing |
 | **Silent ABI** | No logs, only error flags | External bindings |
 
-### Example Conversions
-```cpp
-SDL_Color toColor(const Variant& v);
-SDL_Rect  toRect(const Variant& v);
-sol::table toLuaTable(const Variant& v);
-```
-Each returns safe defaults or error-marked Variants.
-
 ---
 
 ## 9. Logging & Debugging
 All Variant operations integrate with SDOM’s binding macros:
+
 ```cpp
-BIND_LOG("Variant::toRect() conversion successful");
-BIND_WARN("Variant::toColor() missing fields, defaulting");
+BIND_LOG("Variant::toObject() conversion successful");
+BIND_WARN("Variant::toNumber() missing fields, defaulting");
 BIND_ERR("Variant::fromLuaObject() invalid Lua type");
 ```
-These are colorized via `SDOM_CLR` for consistency.
+
+### toString() / Debug Dump
+`Variant::toString(int depth = 1)` returns a human-readable representation of nested Variant content.
 
 ---
 
 ## 10. Future Expansion
-- **DataRegistry Synchronization:** Variants form the atomic unit for reflection.
-- **C ABI Harness:** Variant serialization can directly power C-side testing.
-- **ScriptManager Integration:** Unified handling of cross-language bindings (Lua, Python, etc.).
+- **DataRegistry Synchronization:** Variants form the atomic unit for reflection.  
+- **C ABI Harness:** Variant serialization can directly power C-side testing.  
+- **ScriptManager Integration:** Unified handling of cross-language bindings (Lua, Python, etc.).  
+- **VariantView Optimization:** Allow non-owning traversal of reflected objects.  
+- **Type Traits:** Support pluggable reflection via compile-time adapters.
 
 ---
 
 ## 11. Summary
-- Unified dynamic type system for SDOM.
-- Robust Lua ↔ C++ conversion pipeline.
-- Operator-safe, reflection-ready, and error-aware.
-- Extensible for future languages and DataRegistry.
-- Configurable runtime modes for stability or debugging.
+- Unified dynamic type system for SDOM.  
+- Robust Lua ↔ C++ conversion pipeline.  
+- Operator-safe, reflection-ready, and error-aware.  
+- Extensible for future languages and DataRegistry.  
+- Configurable runtime modes for stability or debugging.  
+- Includes conversion traits, VariantView, and nested error propagation.
 
 ---
 
-**Version:** 5.0 (Complete)  
+**Version:** 6.0 (Enhanced)  
 **Author:** Jay Faries (warte67)  
 **Project:** SDOM
-

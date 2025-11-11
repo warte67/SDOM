@@ -352,6 +352,15 @@ namespace SDOM
                 setDirty(true);
                 return;
             }
+            // Check if texture is still valid (e.g., after renderer recreation)
+            float tw = 0.0f, th = 0.0f;
+            if (!SDL_GetTextureSize(cachedTexture_, &tw, &th))
+            {
+                SDL_DestroyTexture(cachedTexture_);
+                cachedTexture_ = nullptr;
+                setDirty(true);
+                return;
+            }
             SDL_FRect dst = {
                 static_cast<float>(getX()),
                 static_cast<float>(getY()),
