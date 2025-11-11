@@ -53,18 +53,45 @@ struct VariantStorage {
         }
     };
 
+    struct LuaRefValue {
+        sol::object obj;
+        lua_State* L = nullptr;
+
+        LuaRefValue() = default;
+        LuaRefValue(const sol::object& o)
+            : obj(o)
+            , L(o.lua_state())
+        {}
+        bool operator==(const LuaRefValue& o) const noexcept {
+            return L == o.L && obj == o.obj;
+        }
+        bool validFor(sol::state_view sv) const noexcept {
+            return L == sv.lua_state() && obj.valid();
+        }
+    };
+
+    // Note: Variant stores Lua references in a small wrapper (LuaRefValue)
+    // which keeps the `sol::object` and the originating `lua_State*` so
+    // accesses can validate the reference against the target state. This
+    // prevents returning a `sol::object` bound to a different `lua_State`.
+    //
+    // Tables are treated specially: by default they are converted (deep
+    // copied) into Variant `Array`/`Object` structures (this acts as a
+    // snapshot of the table contents). A global table storage mode allows
+    // callers to request that tables be stored as Lua references instead
+    // (i.e. kept as `LuaRefValue`) when desired.
+
         using Data = std::variant<
-        std::nullptr_t,
-        bool,
-        int64_t,
-        double,
-        std::string,
-        Array,
-        Object,
-        DynamicValue,
-        sol::object,
-        std::monostate // used for Error sentinel
-    >;
+            std::monostate, // Null
+            bool,
+            int64_t,
+            double,
+            std::string,
+            Array,
+            Object,
+            DynamicValue,
+            LuaRefValue
+        >;
 
     Data data{};
 };
@@ -76,7 +103,7 @@ class Variant {
 public:
     // Constructors
     Variant();                                      // Null
-    Variant(std::nullptr_t);
+    // (removed Variant(std::nullptr_t) overload — use default ctor for null)
     Variant(bool b);
     Variant(int32_t i);
     Variant(int64_t i);
@@ -100,14 +127,14 @@ public:
 
     // Type info
     VariantType type() const noexcept;
-    bool isNull()   const noexcept { return std::holds_alternative<std::nullptr_t>(storage_->data); }
+    bool isNull()   const noexcept { return std::holds_alternative<std::monostate>(storage_->data); }
     bool isBool()   const noexcept { return std::holds_alternative<bool>(storage_->data); }
     bool isInt()    const noexcept { return std::holds_alternative<int64_t>(storage_->data); }
     bool isReal()   const noexcept { return std::holds_alternative<double>(storage_->data); }
     bool isString() const noexcept { return std::holds_alternative<std::string>(storage_->data); }
     bool isArray()  const noexcept { return std::holds_alternative<VariantStorage::Array>(storage_->data); }
     bool isObject() const noexcept { return std::holds_alternative<VariantStorage::Object>(storage_->data); }
-    bool isLuaRef() const noexcept { return std::holds_alternative<sol::object>(storage_->data); }
+    bool isLuaRef() const noexcept { return std::holds_alternative<VariantStorage::LuaRefValue>(storage_->data); }
     bool isDynamic()const noexcept { return std::holds_alternative<VariantStorage::DynamicValue>(storage_->data); }
 
     // Conversions (safe, no-throw; return default on mismatch)
@@ -202,6 +229,21 @@ public:
     private:
     };
 
+    // Table storage mode controls how incoming Lua tables are handled:
+    // - Copy (default): tables are converted into Variant::Array/Object (a snapshot)
+    // - KeepLuaRef: tables are stored as a LuaRefValue (opaque reference tied to the lua_State)
+    enum class TableStorageMode : uint8_t {
+        Copy = 0,
+        KeepLuaRef
+    };
+
+    // Global table storage mode. Inline static ensures internal linkage and
+    // avoids needing an out-of-line definition.
+    inline static TableStorageMode tableStorageMode = TableStorageMode::Copy;
+
+    static void setTableStorageMode(TableStorageMode m) { tableStorageMode = m; }
+    static TableStorageMode getTableStorageMode() { return tableStorageMode; }
+
     // Structured helpers
     // Array
     size_t size() const noexcept;
@@ -217,6 +259,65 @@ public:
     // Lua integration
     sol::object toLua(sol::state_view L) const;
     static Variant fromLuaObject(const sol::object& o);
+    // If this Variant holds a LuaRef to a table, produce a deep-copied
+    // Variant (Array/Object) snapshot of that table's contents. If this
+    // Variant is not a LuaRef to a table, returns a copy of *this.
+    Variant snapshot() const;
+
+    // Non-owning view for read-only traversal
+    class VariantView {
+    public:
+        VariantView() = default;
+        VariantView(const Variant& v) : storage(v.storage_.get()) {}
+
+        VariantType type() const noexcept {
+            if (!storage) return VariantType::Error;
+            // reuse Variant::type semantics without errorFlag
+            const auto& d = storage->data;
+            if (std::holds_alternative<std::monostate>(d)) return VariantType::Null;
+            if (std::holds_alternative<bool>(d)) return VariantType::Bool;
+            if (std::holds_alternative<int64_t>(d)) return VariantType::Int;
+            if (std::holds_alternative<double>(d)) return VariantType::Real;
+            if (std::holds_alternative<std::string>(d)) return VariantType::String;
+            if (std::holds_alternative<VariantStorage::Array>(d)) return VariantType::Array;
+            if (std::holds_alternative<VariantStorage::Object>(d)) return VariantType::Object;
+            if (std::holds_alternative<VariantStorage::DynamicValue>(d)) return VariantType::Dynamic;
+            if (std::holds_alternative<VariantStorage::LuaRefValue>(d)) return VariantType::LuaRef;
+            return VariantType::Error;
+        }
+
+        bool isNull() const noexcept { return storage && std::holds_alternative<std::monostate>(storage->data); }
+        bool isArray() const noexcept { return storage && std::holds_alternative<VariantStorage::Array>(storage->data); }
+        bool isObject() const noexcept { return storage && std::holds_alternative<VariantStorage::Object>(storage->data); }
+        bool isLuaRef() const noexcept { return storage && std::holds_alternative<VariantStorage::LuaRefValue>(storage->data); }
+
+        size_t size() const noexcept {
+            if (!storage) return 0;
+            if (auto a = std::get_if<VariantStorage::Array>(&storage->data)) return a->size();
+            if (auto o = std::get_if<VariantStorage::Object>(&storage->data)) return o->size();
+            return 0;
+        }
+
+        const Variant* at(size_t i) const noexcept {
+            if (!storage) return nullptr;
+            if (auto a = std::get_if<VariantStorage::Array>(&storage->data)) {
+                if (i < a->size()) return &(*a)[i];
+            }
+            return nullptr;
+        }
+
+        const Variant* get(const std::string& key) const noexcept {
+            if (!storage) return nullptr;
+            if (auto o = std::get_if<VariantStorage::Object>(&storage->data)) {
+                auto it = o->find(key);
+                if (it != o->end()) return &it->second;
+            }
+            return nullptr;
+        }
+
+    private:
+        const VariantStorage* storage = nullptr;
+    };
 
     // Operators
     bool operator==(const Variant& rhs) const;

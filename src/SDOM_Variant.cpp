@@ -14,11 +14,10 @@ namespace SDOM {
 // ─────────────────────────────────────────────────────────────────────────────
 Variant::Variant()
 : storage_(std::make_shared<VariantStorage>()) {
-    storage_->data = nullptr;
+    storage_->data = std::monostate{};
 }
 
-Variant::Variant(std::nullptr_t)
-: Variant() { }
+// Variant(nullptr) overload removed — default constructor represents null
 
 Variant::Variant(bool b)
 : storage_(std::make_shared<VariantStorage>()) {
@@ -70,7 +69,7 @@ Variant::Variant(std::unordered_map<std::string, Variant>&& obj)
 
 Variant::Variant(const sol::object& o)
 : storage_(std::make_shared<VariantStorage>()) {
-    storage_->data = o;
+    storage_->data = VariantStorage::LuaRefValue{o};
 }
 
 // (templated dynamic constructor is defined in the header)
@@ -102,7 +101,7 @@ VariantType Variant::type() const noexcept {
     if (errorFlag_) return VariantType::Error;
 
     const auto& d = storage_->data;
-    if (std::holds_alternative<std::nullptr_t>(d))                 return VariantType::Null;
+    if (std::holds_alternative<std::monostate>(d))                 return VariantType::Null;
     if (std::holds_alternative<bool>(d))                           return VariantType::Bool;
     if (std::holds_alternative<int64_t>(d))                        return VariantType::Int;
     if (std::holds_alternative<double>(d))                         return VariantType::Real;
@@ -110,7 +109,7 @@ VariantType Variant::type() const noexcept {
     if (std::holds_alternative<VariantStorage::Array>(d))          return VariantType::Array;
     if (std::holds_alternative<VariantStorage::Object>(d))         return VariantType::Object;
     if (std::holds_alternative<VariantStorage::DynamicValue>(d))     return VariantType::Dynamic;
-    if (std::holds_alternative<sol::object>(d))                    return VariantType::LuaRef;
+    if (std::holds_alternative<VariantStorage::LuaRefValue>(d))    return VariantType::LuaRef;
     return VariantType::Error;
 }
 
@@ -152,7 +151,7 @@ std::string Variant::toString(std::string def) const noexcept {
     if (auto pi = std::get_if<int64_t>(&d))    return std::to_string(*pi);
     if (auto pr = std::get_if<double>(&d))     return std::to_string(*pr);
     if (auto pb = std::get_if<bool>(&d))       return *pb ? "true" : "false";
-    if (std::holds_alternative<std::nullptr_t>(d)) return "null";
+    if (std::holds_alternative<std::monostate>(d)) return "null";
     return def;
 }
 
@@ -290,7 +289,12 @@ Variant Variant::fromLuaObject(const sol::object& o) {
         case sol::type::boolean:   return Variant(o.as<bool>());
         case sol::type::number:    return fromLuaNumber_(o.as<double>());
         case sol::type::string:    return Variant(std::string(o.as<std::string_view>()));
-        case sol::type::table:     return fromLuaTable_(o.as<sol::table>());
+        case sol::type::table:
+            // Respect global table storage mode: copy (default) or keep as LuaRef
+            if (Variant::getTableStorageMode() == Variant::TableStorageMode::KeepLuaRef) {
+                return Variant(o); // store as LuaRefValue
+            }
+            return fromLuaTable_(o.as<sol::table>());
         case sol::type::userdata:
         case sol::type::lightuserdata:
         case sol::type::thread:
@@ -303,9 +307,26 @@ Variant Variant::fromLuaObject(const sol::object& o) {
     }
 }
 
+Variant Variant::snapshot() const {
+    const auto& d = storage_->data;
+    if (auto p = std::get_if<VariantStorage::LuaRefValue>(&d)) {
+        if (!p->obj.valid()) return *this;
+        try {
+            if (p->obj.get_type() == sol::type::table) {
+                sol::table t = p->obj.as<sol::table>();
+                return fromLuaTable_(t);
+            }
+        } catch(...) {
+            // fallthrough: return original Variant on any failure
+            return *this;
+        }
+    }
+    return *this;
+}
+
 sol::object Variant::toLua(sol::state_view L) const {
     const auto& d = storage_->data;
-    if (std::holds_alternative<std::nullptr_t>(d)) return sol::make_object(L, sol::lua_nil);
+    if (std::holds_alternative<std::monostate>(d)) return sol::make_object(L, sol::lua_nil);
     if (auto p = std::get_if<bool>(&d))            return sol::make_object(L, *p);
     if (auto p = std::get_if<int64_t>(&d))         return sol::make_object(L, *p);
     if (auto p = std::get_if<double>(&d))          return sol::make_object(L, *p);
@@ -325,8 +346,9 @@ sol::object Variant::toLua(sol::state_view L) const {
         }
         return t;
     }
-    if (auto p = std::get_if<sol::object>(&d)) {
-        return *p; // pass-through
+    if (auto p = std::get_if<VariantStorage::LuaRefValue>(&d)) {
+        if (p->validFor(L)) return p->obj;
+        return sol::make_object(L, sol::lua_nil);
     }
     if (auto p = std::get_if<VariantStorage::DynamicValue>(&d)) {
         // If a converter exists for this dynamic type, call it
