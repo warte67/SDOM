@@ -294,6 +294,40 @@ public:
         VariantRegistry::getConverterMapByName()[name] = std::move(entry);
     }
 
+    // -------------------- Inline API usage notes --------------------
+    // The following short examples are intended to live close to the API so
+    // future readers can quickly understand common usage patterns.
+    //
+    // Registering a converter (type-based)
+    // ----------------------------------
+    // Variant::ConverterEntry ce;
+    // ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object { ... };
+    // ce.fromVariant = [](const Variant& v)->std::shared_ptr<void> { ... };
+    // Variant::registerConverter<MyType>("MyTypeName", std::move(ce));
+    //
+    // Registering a converter by name only
+    // ------------------------------------
+    // Variant::registerConverterByName("RuntimeOnlyType", std::move(ce));
+    //
+    // Constructing dynamic Variants
+    // -----------------------------
+    // auto v = Variant::makeDynamic<MyType>(std::make_shared<MyType>(...));
+    // auto v2 = Variant::makeDynamic<MyType>(/* constructor args for MyType */);
+    // auto dv = Variant::makeDynamicValue<MyType>(shared_ptr<MyType>);
+    //
+    // Snapshotting & Lua table ownership
+    // ----------------------------------
+    // Variant::setTableStorageMode(Variant::TableStorageMode::KeepLuaRef);
+    // Variant luaRef = Variant::fromLuaObject(some_table);
+    // Variant copy = luaRef.snapshot(); // deep-copied Variant::Object/Array
+    // Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
+    //
+    // VariantView read-only traversal
+    // -------------------------------
+    // Variant::VariantView view(variant_instance);
+    // if (view.isObject()) { if (const Variant* v = view.get("key")) { /* inspect v */ } }
+    // ------------------------------------------------------------------------------
+
     // Table storage mode controls how incoming Lua tables are handled:
     // - Copy (default): tables are converted into Variant::Array/Object (a snapshot)
     // - KeepLuaRef: tables are stored as a LuaRefValue (opaque reference tied to the lua_State)

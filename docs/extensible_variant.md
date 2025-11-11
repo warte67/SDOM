@@ -237,3 +237,97 @@ BIND_ERR("Variant::fromLuaObject() invalid Lua type");
 **Version:** 6.0 (Enhanced)  
 **Author:** Jay Faries (warte67)  
 **Project:** SDOM
+
+---
+
+## 12. Quick Reference & Examples
+
+This section provides working examples for the concrete `Variant` API additions implemented in the codebase (converter registry, dynamic helpers, Lua ownership modes, and `VariantView`). These snippets are C++ examples intended to be used inside SDOM modules or tests.
+
+### Registering a converter for a C++ type (by type)
+
+```cpp
+// A sample C++ type
+struct TestPoint { int x; int y; };
+
+// Create converter entry
+Variant::ConverterEntry ce;
+ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L) -> sol::object {
+    auto p = std::static_pointer_cast<TestPoint>(dv.ptr);
+    sol::table t = L.create_table();
+    t["x"] = p ? p->x : 0;
+    t["y"] = p ? p->y : 0;
+    return t;
+};
+ce.fromVariant = [](const Variant& v) -> std::shared_ptr<void> {
+    auto out = std::make_shared<TestPoint>();
+    if (v.isObject()) {
+        const Variant* vx = v.get("x"); if (vx) out->x = static_cast<int>(vx->toInt64());
+        const Variant* vy = v.get("y"); if (vy) out->y = static_cast<int>(vy->toInt64());
+    }
+    return std::static_pointer_cast<void>(out);
+};
+
+// Register converter for TestPoint (registers both by type_index and name)
+Variant::registerConverter<TestPoint>("TestPoint", std::move(ce));
+```
+
+### Registering a converter by name only
+
+```cpp
+Variant::ConverterEntry ce_name = /* fill as above */;
+Variant::registerConverterByName("RuntimeOnlyType", std::move(ce_name));
+```
+
+This is useful for runtime or opaque types where a concrete C++ type is not available at registration time.
+
+### Creating Variants for dynamic types
+
+Create a Variant from a shared_ptr<T>:
+
+```cpp
+auto p = std::make_shared<TestPoint>(); p->x = 1; p->y = 2;
+Variant v = Variant::makeDynamic<TestPoint>(p); // holds DynamicValue
+// convenience: construct in-place
+Variant v2 = Variant::makeDynamic<TestPoint>(/* ctor args for TestPoint */);
+```
+
+Use `Variant::makeDynamicValue<T>(shared_ptr<T>)` to obtain a `VariantStorage::DynamicValue` when calling converters directly.
+
+### Inspecting dynamic type metadata
+
+```cpp
+auto tn = v.dynamicTypeName(); // optional<string> => "TestPoint"
+auto ti = v.dynamicTypeIndex(); // std::type_index(typeid(TestPoint))
+```
+
+### Snapshotting Lua tables vs keeping Lua references
+
+By default, Lua tables are copied into Variant `Object`/`Array` structures (a deep snapshot). To store the Lua table as an opaque reference instead, toggle:
+
+```cpp
+Variant::setTableStorageMode(Variant::TableStorageMode::KeepLuaRef);
+Variant v = Variant::fromLuaObject(sol_table);
+// v.isLuaRef() will be true when KeepLuaRef is set
+
+// To get a deep copy of a stored LuaRef table:
+Variant snapshot = v.snapshot(); // returns a Variant::Object/Array copy
+
+// Restore default
+Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
+```
+
+### Lightweight read-only traversal with VariantView
+
+```cpp
+Variant v = Variant::fromLuaObject(some_table);
+Variant::VariantView view(v);
+if (view.isObject()) {
+    if (const Variant* val = view.get("key")) {
+        // read-only inspection without copies
+        int n = val->toInt64();
+    }
+}
+```
+
+These examples should be directly usable in unit tests or modules inside the `examples/test` harness. For more advanced usage (registering converters for complex nested types, round-trip tests, or per-Core registries) consult the header comments in `include/SDOM/SDOM_Variant.hpp` which contain short usage notes and caveats.

@@ -66,7 +66,7 @@ namespace SDOM
         }
 
         return true;
-    }
+    } // END: Variant_test_converter_to_lua()
 
     bool Variant_test_converter_roundtrip(std::vector<std::string>& errors)
     {
@@ -104,7 +104,7 @@ namespace SDOM
         if (p2->x != 13 || p2->y != 17) errors.push_back("Roundtrip: value mismatch after conversion");
 
         return true;
-    }
+    } // END: Variant_test_converter_roundtrip()
 
     bool Variant_test_null_and_error(std::vector<std::string>& errors)
     {
@@ -140,7 +140,7 @@ namespace SDOM
         }
 
         return true;
-    }
+    } // END: Variant_test_null_and_error()
 
     bool Variant_UnitTests()
     {
