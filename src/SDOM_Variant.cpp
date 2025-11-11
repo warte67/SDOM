@@ -3,6 +3,9 @@
 
 #include <cmath>
 #include <limits>
+#include <mutex>
+
+// Nothing to implement out-of-line here; registry helpers are inline in header.
 
 namespace SDOM {
 
@@ -70,6 +73,8 @@ Variant::Variant(const sol::object& o)
     storage_->data = o;
 }
 
+// (templated dynamic constructor is defined in the header)
+
 // Factories
 Variant Variant::makeArray() {
     Variant v;
@@ -104,7 +109,7 @@ VariantType Variant::type() const noexcept {
     if (std::holds_alternative<std::string>(d))                    return VariantType::String;
     if (std::holds_alternative<VariantStorage::Array>(d))          return VariantType::Array;
     if (std::holds_alternative<VariantStorage::Object>(d))         return VariantType::Object;
-    if (std::holds_alternative<VariantStorage::DynamicPtr>(d))     return VariantType::Dynamic;
+    if (std::holds_alternative<VariantStorage::DynamicValue>(d))     return VariantType::Dynamic;
     if (std::holds_alternative<sol::object>(d))                    return VariantType::LuaRef;
     return VariantType::Error;
 }
@@ -191,7 +196,8 @@ Variant* Variant::at(size_t i) noexcept {
 
 void Variant::set(std::string key, Variant v) {
     if (!isObject()) storage_->data = VariantStorage::Object{};
-    std::get<VariantStorage::Object>(storage_->data).emplace(std::move(key), std::move(v));
+    auto& obj = std::get<VariantStorage::Object>(storage_->data);
+    obj.insert_or_assign(std::move(key), std::move(v));
 }
 
 const Variant* Variant::get(const std::string& key) const noexcept {
@@ -322,7 +328,16 @@ sol::object Variant::toLua(sol::state_view L) const {
     if (auto p = std::get_if<sol::object>(&d)) {
         return *p; // pass-through
     }
-    // DynamicPtr has no default conversion — return nil
+    if (auto p = std::get_if<VariantStorage::DynamicValue>(&d)) {
+        // If a converter exists for this dynamic type, call it
+        auto conv = Variant::getConverter(p->type);
+        if (conv && conv->toLua) {
+            try {
+                return conv->toLua(*p, L);
+            } catch(...) { /* fallthrough to nil */ }
+        }
+    }
+    // No conversion available: return nil
     return sol::make_object(L, sol::lua_nil);
 }
 
