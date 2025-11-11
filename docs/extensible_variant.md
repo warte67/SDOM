@@ -359,14 +359,53 @@ flowchart TD
     C1 --> C2
     D1 --> D2
 ```
-The **Lua Conversion Flow Diagram** illustrates the full round-trip between the Lua runtime and SDOM’s internal C++ types.
-A `sol::object` or Lua table is first passed through `Variant::fromLuaObject()`, where it becomes either a L`uaRefValue` (if stored by reference) or a deep-copied **Array**/**Object**.
-From there, any dynamic data is represented as a VariantStorage::DynamicValue, linking the Lua layer to a C++ std::shared_ptr<T>.
-When converting back, Variant::toLua() consults the VariantRegistry and its associated ConverterEntry objects to translate native C++ types into Lua tables or values.
-This bi-directional pathway ensures that all conversions between C++ and Lua remain type-safe, extensible, and reflection-aware.
+The **Lua Conversion Flow Diagram** illustrates the full round-trip between the Lua runtime and SDOM’s internal C++ types.  A `sol::object` or Lua table is first passed through `Variant::fromLuaObject()`, where it becomes either a L`uaRefValue` (if stored by reference) or a deep-copied **Array**/**Object**.  From there, any dynamic data is represented as a `VariantStorage::DynamicValue`, linking the Lua layer to a C++ `std::shared_ptr<T>`.
+When converting back, `Variant::toLua()` consults the `VariantRegistry` and its associated `ConverterEntry` objects to translate native C++ types into Lua tables or values.  This bi-directional pathway ensures that all conversions between C++ and Lua remain type-safe, extensible, and reflection-aware.
 
-## Mermaid Diagram for Test Coverage Mapping
 
+
+## Variant Lifecycle State Diagram
+```mermaid
+stateDiagram-v2
+    [*] --> Null : Default constructed
+
+    Null --> Assigned : set() / push() / constructor
+    Assigned --> Array : makeArray()
+    Assigned --> Object : makeObject()
+    Assigned --> Dynamic : makeDynamic<T>()
+    Assigned --> LuaRef : fromLuaObject
+    Assigned --> Error : makeError("msg")
+
+    Array --> toLua : toLua()
+    Object --> toLua : toLua()
+    Dynamic --> toLua : ConverterEntry.toLua()
+    LuaRef --> toLua : validated reference
+
+    toLua --> LuaTable : Lua receives Variant data
+    LuaTable --> fromLua : Variant.fromLuaObject
+    fromLua --> Assigned
+
+    LuaRef --> Snapshot : snapshot()
+    Snapshot --> Object : deep copy of table
+    Snapshot --> Array : deep copy of list
+
+    Assigned --> Error : invalid conversion
+    Error --> [*] : hasError() / log
+
+    Dynamic --> Registered : registerType<T>()
+    Registered --> ConverterLookup : getConverter / getByName
+    ConverterLookup --> toLua : Dynamic → Lua
+    ConverterLookup --> fromVariant : Lua → Dynamic
+    fromVariant --> Assigned
+
+    Object --> VariantView : read-only traversal
+    Array --> VariantView : read-only traversal
+    VariantView --> [*] : non-owning access complete
+```
+
+The **Variant Lifecycle State Diagram** captures every major state transition a `Variant` can undergo inside SDOM.  It begins as a `Null` placeholder and transitions to an assigned type (array, object, dynamic, LuaRef, or error) depending on construction.  From there, each branch leads toward Lua serialization (`toLua()`), deserialization (`fromLua()`), or internal transformations such as `snapshot()` or reflection lookups in the `VariantRegistry`.  This diagram also visualizes the “safe fail” semantics — whenever conversions fail, the `Variant` enters the `Error` state but remains valid for inspection and logging.  In practice, this state model guarantees predictable and debuggable behavior across SDOM’s runtime reflection and Lua integration layers.
+
+## Variant Unit & Stress Test Relationships
 ```mermaid
 graph TD
     subgraph Variant_UnitTests
@@ -412,47 +451,11 @@ graph TD
     J -->|stresses| X10
     K -->|stresses| X11
     L -->|monitors| X12
-
 ```
 
+The **Variant Unit & Stress Test Diagram** summarizes how SDOM’s test suite validates every layer of the `Variant` system.  Each unit test (top cluster) targets specific structures like `LuaRefValue`, `VariantView`, and `TableStorageMode`, verifying correctness in normal scenarios.  The stress tests (bottom cluster) extend this by simulating concurrency (`Registry Mutex`), numeric coercion, deep snapshot performance, and structural equality comparisons.  Together, they ensure that both the conversion logic and the registry internals behave consistently under edge cases — validating thread safety, allocation stability, and converter correctness across all supported Variant types.
 
-## State Diagram
 
-```mermaid
-stateDiagram-v2
-    [*] --> Null : Default constructed
 
-    Null --> Assigned : set() / push() / constructor
-    Assigned --> Array : makeArray()
-    Assigned --> Object : makeObject()
-    Assigned --> Dynamic : makeDynamic<T>()
-    Assigned --> LuaRef : fromLuaObject
-    Assigned --> Error : makeError("msg")
 
-    Array --> toLua : toLua()
-    Object --> toLua : toLua()
-    Dynamic --> toLua : ConverterEntry.toLua()
-    LuaRef --> toLua : validated reference
 
-    toLua --> LuaTable : Lua receives Variant data
-    LuaTable --> fromLua : Variant.fromLuaObject
-    fromLua --> Assigned
-
-    LuaRef --> Snapshot : snapshot()
-    Snapshot --> Object : deep copy of table
-    Snapshot --> Array : deep copy of list
-
-    Assigned --> Error : invalid conversion
-    Error --> [*] : hasError() / log
-
-    Dynamic --> Registered : registerType<T>()
-    Registered --> ConverterLookup : getConverter / getByName
-    ConverterLookup --> toLua : Dynamic → Lua
-    ConverterLookup --> fromVariant : Lua → Dynamic
-    fromVariant --> Assigned
-
-    Object --> VariantView : read-only traversal
-    Array --> VariantView : read-only traversal
-    VariantView --> [*] : non-owning access complete
-
-```

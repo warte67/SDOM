@@ -4,6 +4,8 @@
 #include <SDOM/SDOM_Variant.hpp>
 #include <thread>
 #include <random>
+#include <sstream>
+#include <algorithm>
 
 namespace SDOM
 {
@@ -435,6 +437,174 @@ namespace SDOM
         return true;
     }
 
+    // Verify copy/move semantics when placing Variants into STL containers
+    bool Variant_test_copy_move_and_containers(std::vector<std::string>& errors)
+    {
+        // simple scalar variants
+        Variant vi = Variant(int64_t(123));
+        Variant vs = Variant(std::string("hello"));
+
+        // copy into vector
+        std::vector<Variant> vec;
+        vec.push_back(vi);
+        vec.push_back(vs);
+        if (vec.size() != 2) { errors.push_back("Container: vector size mismatch after push_back"); return true; }
+        if (!(vec[0] == vi)) errors.push_back("Container: vector element 0 not equal to original int");
+        if (!(vec[1] == vs)) errors.push_back("Container: vector element 1 not equal to original string");
+
+        // move into vector
+        Variant vm = Variant::makeObject();
+        vm.set("x", Variant(9));
+        std::vector<Variant> vec2;
+        vec2.emplace_back(std::move(vm));
+        if (vec2.empty() || !vec2[0].isObject()) errors.push_back("Container: emplace_back(move) did not create object");
+
+    // unordered_map using Variant as a key (requires VariantHash)
+    std::unordered_map<Variant,int, VariantHash> map;
+        Variant k1 = Variant::makeObject(); k1.set("id", Variant(1));
+        Variant k2 = Variant::makeObject(); k2.set("id", Variant(1));
+        map.emplace(k1, 10);
+        auto it = map.find(k2);
+        if (it == map.end()) errors.push_back("Container: unordered_map lookup by equivalent Variant key failed");
+
+        // copying maps and vectors should preserve contents
+        auto map_copy = map;
+        if (map_copy.size() != map.size()) errors.push_back("Container: unordered_map copy size mismatch");
+
+        return true;
+    }
+
+    // toDebugString tests: shallow vs deep output
+    bool Variant_test_toDebugString(std::vector<std::string>& errors)
+    {
+        Variant root = Variant::makeObject();
+        root.set("a", Variant(1));
+        Variant nested = Variant::makeObject();
+        nested.set("c", Variant(2));
+        root.set("b", nested);
+
+        std::string shallow = root.toDebugString(1);
+        std::string deep = root.toDebugString(10);
+
+        if (shallow.empty()) errors.push_back("toDebugString: shallow output empty");
+        if (deep.empty()) errors.push_back("toDebugString: deep output empty");
+
+        // deep output must contain nested key/value
+        if (deep.find("c") == std::string::npos && deep.find("2") == std::string::npos)
+            errors.push_back("toDebugString: deep output missing nested content");
+
+        // shallow output should not contain the nested value '2' when depth==1
+        if (shallow.find("2") != std::string::npos)
+            errors.push_back("toDebugString: shallow output unexpectedly contains deep value");
+
+        return true;
+    }
+
+    // More thorough VariantHash and unordered_map usage tests
+    bool Variant_test_varianthash_and_map(std::vector<std::string>& errors)
+    {
+        VariantHash h;
+
+        // scalar keys
+        Variant ka = Variant(int64_t(7));
+        Variant kb = Variant(int64_t(7));
+        if (h(ka) != h(kb)) errors.push_back("VariantHash: scalar equal values hashed differently");
+
+        // array keys
+        Variant arr1 = Variant::makeArray(); arr1.push(Variant(1)); arr1.push(Variant(2));
+        Variant arr2 = Variant::makeArray(); arr2.push(Variant(1)); arr2.push(Variant(2));
+        if (h(arr1) != h(arr2)) errors.push_back("VariantHash: equal arrays hashed differently");
+
+        // object keys with different insertion order
+        Variant o1 = Variant::makeObject(); o1.set("a", Variant(1)); o1.set("b", Variant(2));
+        Variant o2 = Variant::makeObject(); o2.set("b", Variant(2)); o2.set("a", Variant(1));
+        if (!(o1 == o2)) errors.push_back("VariantHash/map: objects expected equal but are not");
+        else if (h(o1) != h(o2)) errors.push_back("VariantHash: equal objects hashed differently");
+
+        // dynamic pointer keys
+        auto sp = std::make_shared<int>(42);
+        Variant d1 = Variant::makeDynamic<int>(sp);
+        Variant d2 = Variant::makeDynamic<int>(sp);
+        if (h(d1) != h(d2)) errors.push_back("VariantHash: dynamic same-pointer hashed differently");
+
+        // insertion and lookup in unordered_map
+        std::unordered_map<Variant,int, VariantHash> map;
+        Variant key1 = Variant::makeObject(); key1.set("id", Variant(99));
+        Variant key2 = Variant::makeObject(); key2.set("id", Variant(99));
+        map.emplace(key1, 1);
+        // modify via equivalent key
+        map[key2] = 2;
+        if (map.size() != 1) errors.push_back("Variant map: expected single bucket for equivalent keys");
+        auto it = map.find(key1);
+        if (it == map.end()) errors.push_back("Variant map: lookup of existing key failed");
+        else if (it->second != 2) errors.push_back("Variant map: value after overwrite via equivalent key unexpected");
+
+        // ensure lookups using dynamic-constructed equivalent key succeed
+        std::unordered_map<Variant,int, VariantHash> map2;
+        map2.emplace(d1, 10);
+        auto it2 = map2.find(d2);
+        if (it2 == map2.end()) errors.push_back("Variant map: lookup for dynamic key failed");
+
+        return true;
+    }
+
+    // Snapshot(sol::state_view) validity tests and TableStorageMode behavior
+    bool Variant_test_snapshot_state_validity(std::vector<std::string>& errors)
+    {
+        Core& core = getCore();
+        sol::state& L = core.getLua();
+
+        // create a table and ensure we can snapshot it when using KeepLuaRef
+        auto prev = Variant::getTableStorageMode();
+        Variant::setTableStorageMode(Variant::TableStorageMode::KeepLuaRef);
+
+        sol::table t = L.create_table();
+        t["x"] = 1234;
+        Variant v = Variant::fromLuaObject(t);
+        if (!v.isLuaRef()) { errors.push_back("Snapshot test: expected LuaRef when mode=KeepLuaRef"); Variant::setTableStorageMode(prev); return true; }
+
+        Variant snap_same = v.snapshot(L);
+        if (!snap_same.isObject()) errors.push_back("Snapshot test: snapshot(L) did not produce object for same state");
+        else {
+            const Variant* vx = snap_same.get("x");
+            if (!vx || vx->toInt64() != 1234) errors.push_back("Snapshot test: snapshot value mismatch for same state");
+        }
+
+        // snapshot to a different lua_State should fail/return null
+        sol::state tmp; tmp.open_libraries(sol::lib::base);
+        Variant snap_other = v.snapshot(tmp);
+        // snapshot returns the LuaRef itself when the target state doesn't match;
+        // toLua against the mismatched state should yield nil.
+        if (!snap_other.isLuaRef()) errors.push_back("Snapshot test: expected LuaRef returned for mismatched lua_State");
+        else {
+            sol::object maybe = snap_other.toLua(tmp);
+            if (!maybe.is<sol::nil_t>()) errors.push_back("Snapshot test: expected toLua(tmp) to return nil for mismatched LuaRef");
+        }
+
+        // Non-table Lua object (function) should not snapshot into object
+        L.script("function __vtest_fn() return 1 end");
+        sol::object fn = L["__vtest_fn"];
+        Variant vfn = Variant::fromLuaObject(fn);
+        if (!vfn.isLuaRef()) errors.push_back("Snapshot test: expected LuaRef for function object");
+        Variant snap_fn = vfn.snapshot(L);
+        // snapshot of a non-table LuaRef returns the LuaRef itself
+        if (!snap_fn.isLuaRef()) errors.push_back("Snapshot test: expected LuaRef returned for function snapshot");
+        else {
+            sol::object got = snap_fn.toLua(L);
+            if (got.get_type() != sol::type::function) errors.push_back("Snapshot test: toLua(L) for function LuaRef did not return function");
+        }
+
+        // With TableStorageMode::Copy, fromLuaObject should produce a copied object and snapshot should be object
+        Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
+        Variant vcopy = Variant::fromLuaObject(t);
+        if (!vcopy.isObject()) errors.push_back("Snapshot test: expected object when TableStorageMode::Copy");
+        Variant snap_copy = vcopy.snapshot(L);
+        if (!snap_copy.isObject()) errors.push_back("Snapshot test: snapshot on copied table did not produce object");
+
+        Variant::setTableStorageMode(prev);
+        return true;
+    }
+
     // Randomized numeric coercion tests
     bool Variant_test_numeric_coercion_randomized(std::vector<std::string>& errors)
     {
@@ -665,6 +835,11 @@ namespace SDOM
 
         // Small test: dynamicTypeName accessor
         ut.add_test(objName, "Dynamic metadata accessors", Variant_test_dynamic_metadata_accessors);
+    // New tests: copy/move + containers, toDebugString, varianthash/map, and snapshot validity
+    ut.add_test(objName, "Copy/Move semantics and containers", Variant_test_copy_move_and_containers);
+    ut.add_test(objName, "toDebugString shallow vs deep", Variant_test_toDebugString);
+    ut.add_test(objName, "VariantHash & unordered_map usage", Variant_test_varianthash_and_map);
+    ut.add_test(objName, "Snapshot(sol::state_view) validity and TableStorageMode", Variant_test_snapshot_state_validity);
 
         return true;
     }
