@@ -41,6 +41,7 @@ find_library(LUA_LIB lua5.4)
 # Include directories
 include_directories($ENV{HOME}/.local/include)      # SDL3 Includes (local)
 include_directories(${PROJECT_SOURCE_DIR}/include)  # SDOM Includes
+include_directories(${PROJECT_SOURCE_DIR}/test_include)  # test-only C API includes
 include_directories(${PROJECT_SOURCE_DIR}/../../sol2/include)
 include_directories(${PROJECT_SOURCE_DIR}/../../sol2/include/sol)
 include_directories(/usr/include/lua5.4)
@@ -80,3 +81,87 @@ target_link_libraries(prog
 # Output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+# ======================================================
+#  Optional: dataregistry_generator to emit C API header
+# ======================================================
+set(GENERATED_DIR "${PROJECT_SOURCE_DIR}/api_gen")
+file(MAKE_DIRECTORY "${GENERATED_DIR}")
+
+# Build a small generator executable from local sources (keeps it separate
+# from the main library and avoids circular linking).
+set(GENERATOR_SOURCES
+    "${SDOM_ROOT}/tools/run_dataregistry_test.cpp"
+    "${SDOM_ROOT}/src/SDOM_DataRegistry.cpp"
+    "${SDOM_ROOT}/src/SDOM_CBindingGenerator.cpp"
+)
+add_executable(dataregistry_generator ${GENERATOR_SOURCES})
+target_include_directories(dataregistry_generator PRIVATE
+    "${SDOM_ROOT}/include"
+    "${SDOM_ROOT}/sol2/include"
+    "${SDOM_ROOT}/sol2/include/sol"
+)
+set_target_properties(dataregistry_generator PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tools"
+)
+
+# Custom command: run the generator to produce the version marker
+set(GENERATED_VERSION_FILE "${GENERATED_DIR}/sdom_capi_objects_generated.version")
+add_custom_command(
+    OUTPUT "${GENERATED_VERSION_FILE}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${GENERATED_DIR}"
+    COMMAND $<TARGET_FILE:dataregistry_generator> "${GENERATED_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E touch "${GENERATED_VERSION_FILE}"
+    DEPENDS dataregistry_generator
+    WORKING_DIRECTORY "${SDOM_ROOT}"
+    COMMENT "Running dataregistry_generator to produce C API header and version marker"
+)
+add_custom_target(run_dataregistry_generator DEPENDS "${GENERATED_VERSION_FILE}")
+
+# Parse project SDOM version from the version header (if available)
+set(SDOM_VERSION_STRING "")
+if(EXISTS "${VERSION_HEADER}")
+    file(READ "${VERSION_HEADER}" _ver_contents)
+    # Extract the first three numeric tokens from the version header; this
+    # is a pragmatic way to get MAJOR.MINOR.PATCH without complex regexes.
+    string(REGEX MATCHALL "([0-9]+)" _nums "${_ver_contents}")
+    if(_nums)
+        list(GET _nums 0 SDOM_VERSION_MAJOR)
+        list(GET _nums 1 SDOM_VERSION_MINOR)
+        list(GET _nums 2 SDOM_VERSION_PATCH)
+        set(SDOM_VERSION_STRING "${SDOM_VERSION_MAJOR}.${SDOM_VERSION_MINOR}.${SDOM_VERSION_PATCH}")
+    endif()
+endif()
+
+# If a generated version file already exists, read it and compare; if it
+# matches the project SDOM version we can skip running the generator.
+set(GENERATED_UP_TO_DATE OFF)
+if(EXISTS "${GENERATED_VERSION_FILE}")
+    file(READ "${GENERATED_VERSION_FILE}" _gver)
+    string(STRIP "${_gver}" _gver)
+    if(_gver STREQUAL SDOM_VERSION_STRING)
+        message(STATUS "Generated C API header is up-to-date: ${_gver}")
+        set(GENERATED_UP_TO_DATE ON)
+    else()
+        message(STATUS "Generated C API header version (${_gver}) differs from project version (${SDOM_VERSION_STRING}); generator will run")
+    endif()
+else()
+    message(STATUS "No generated C API header found; generator will run")
+endif()
+
+# Ensure the generator runs before building the test binary when needed.
+if(NOT GENERATED_UP_TO_DATE)
+    add_dependencies(${PROJECT_NAME} run_dataregistry_generator)
+endif()
+
+# Always add the generated dir to include directories so the compiler can
+# find the generated header after the generator runs.
+target_include_directories(${PROJECT_NAME} PRIVATE "${GENERATED_DIR}")
+
+# Report status so users can quickly see version and generated header state
+message(STATUS "-----------------------------------------")
+message(STATUS "SDOM Version        : ${SDOM_VERSION_STRING}")
+message(STATUS "Generated C API Path: ${GENERATED_DIR}")
+message(STATUS "Version Marker File : ${GENERATED_VERSION_FILE}")
+message(STATUS "Regeneration Needed : ${GENERATED_UP_TO_DATE}")
+message(STATUS "-----------------------------------------")

@@ -3,8 +3,10 @@
 // #include <SDOM/SDOM.hpp>
 #include <atomic>
 #include <SDOM/SDOM_IDataObject.hpp>
+#include <SDOM/SDOM_DataRegistry.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_IAssetObject.hpp>
+#include <SDOM/SDOM_Factory.hpp>
 // #include <SDOM/SDOM_DisplayHandle.hpp>
 
 namespace SDOM
@@ -161,6 +163,9 @@ namespace SDOM
         // --- Factory & EventManager Access --- //
         Factory& getFactory() const { return *factory_; }
         EventManager& getEventManager() const { return *eventManager_; }
+    // Expose DataRegistry through Core (for convenience)
+    SDOM::DataRegistry& getRegistry() { return getFactory().getRegistry(); }
+    bool exportBindings(const std::string& out) { return getFactory().exportBindings(out); }
         bool getIsTraversing() const { return isTraversing_; }
         void setIsTraversing(bool traversing) { isTraversing_ = traversing; }
 

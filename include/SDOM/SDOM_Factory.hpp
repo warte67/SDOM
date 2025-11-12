@@ -16,6 +16,7 @@
 // #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>   // required for std::unique_ptr<IDisplayObject>
 #include <SDOM/SDOM_IAssetObject.hpp>     // required for std::unique_ptr<IAssetObject>
+#include <SDOM/SDOM_DataRegistry.hpp>
  
 
 namespace SDOM 
@@ -53,6 +54,11 @@ namespace SDOM
     void shutdown();
     bool isInitialized() const { return initialized_; }
     bool onUnitTest(int frame);
+
+    // --- DataRegistry access --- //
+    SDOM::DataRegistry& getRegistry() { return registry_; }
+    const SDOM::DataRegistry& getRegistry() const { return registry_; }
+    bool exportBindings(const std::string& outputDir) { return registry_.generateBindings(outputDir); }
 
         // --- Object Type Registration --- //
         void registerDomType(const std::string& typeName, const TypeCreators& creators);  // change to registerDisplayObjectType()
@@ -208,6 +214,9 @@ namespace SDOM
             int dragStartWorldY;
         };            
         std::vector<futureChild> futureChildrenList_;
+
+    // --- DataRegistry owned by Factory --- //
+    SDOM::DataRegistry registry_;
 
         // Calls TTF_CloseFont on all loaded TTFAsset objects
         void closeAllTruetypeAssets_();

@@ -127,6 +127,7 @@ int main(int argc, char** argv)
     lua["TristateButton_UnitTests"] = &SDOM::TristateButton_UnitTests;
 
     lua["Variant_UnitTests"] = &SDOM::Variant_UnitTests;
+    lua["DataRegistry_UnitTests"] = &SDOM::DataRegistry_UnitTests;
     
     // Allow overriding which Lua config to run via command-line.
     // Priority:

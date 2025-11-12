@@ -95,16 +95,16 @@ namespace SDOM
                     init.type = "Texture";
                     init.filename = defaultIconName;
                     AssetHandle spriteSheet = createAsset("Texture", init);
-                    if (auto* spriteSheetPtr = spriteSheet.as<Texture>()) {
+                        if (auto* spriteSheetPtr = spriteSheet.as<Texture>()) {
                         spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); 
-                        spriteSheetPtr->registerBindings("Texture");
+                        spriteSheetPtr->registerBindings("Texture", registry_);
                     }
                 } else {
                     // Ensure Lua bindings are registered for existing instance
                     IAssetObject* existing = getResObj(defaultIconName);
                     if (auto* spriteSheetPtr = dynamic_cast<Texture*>(existing)) {
                         spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); 
-                        spriteSheetPtr->registerBindings("Texture");
+                        spriteSheetPtr->registerBindings("Texture", registry_);
                     }
                 }
             };
@@ -467,7 +467,7 @@ namespace SDOM
                         }
                         prototype->_registerLuaBindings(typeName, SDOM::getLua());
                         // prototype->registerBindings(typeName);
-                        prototype->IDataObject::registerBindings(typeName);
+                        prototype->IDataObject::registerBindings(typeName, registry_);
 
                     } catch(...) {
                         // swallow registration errors for prototypes
@@ -498,8 +498,8 @@ namespace SDOM
 
         // Create a prototype AssetHandle for Lua registration
         AssetHandle prototypeHandle(typeName, typeName, typeName);
-        prototypeHandle._registerLuaBindings(typeName, SDOM::getLua());
-        prototypeHandle.registerBindings(typeName);
+            prototypeHandle._registerLuaBindings(typeName, SDOM::getLua());
+            prototypeHandle.registerBindings(typeName, registry_);
     }
 
     IAssetObject* Factory::getResObj(const std::string& name)

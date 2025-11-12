@@ -42,16 +42,16 @@ namespace SDOM
         
         // register the DisplayHandle handle last so other types can use it
         DisplayHandle prototypeHandle; // Default DisplayHandle for registration
-        prototypeHandle._registerLuaBindings("DisplayHandle", lua_);
-        prototypeHandle.registerBindings("DisplayHandle");
+    prototypeHandle._registerLuaBindings("DisplayHandle", lua_);
+    prototypeHandle.registerBindings("DisplayHandle", getRegistry());
 
         AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
-        prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
-        prototypeAssetHandle.registerBindings("AssetHandle");
+    prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
+    prototypeAssetHandle.registerBindings("AssetHandle", getRegistry());
         
         // Register Core usertype
-        this->_registerLuaBindings("Core", lua_);      
-        this->registerBindings("Core"); 
+    this->_registerLuaBindings("Core", lua_);      
+    this->registerBindings("Core", getRegistry()); 
 
         // Note: Factory initialization is performed later (e.g. during
         // configuration) to avoid recursive-construction ordering issues.

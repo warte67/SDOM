@@ -90,6 +90,7 @@ Summary:
 #include <sol/sol.hpp>
 #include <SDOM/SDOM_CLR.hpp>
 #include <SDOM/SDOM_IUnitTest.hpp>
+#include <SDOM/SDOM_DataRegistry.hpp>
 #include <algorithm>
 #include <cctype>
 #include <string>
@@ -206,8 +207,17 @@ namespace SDOM
         void addFunction(const std::string& typeName, const std::string& name, Fn&& fn)
         {
             BIND_LOG("[" << typeName << "] addFunction: " << name);
-            // Placeholder: store or register function later with DataRegistry.
-            // e.g. DataRegistry::getInstance().registerFunction(typeName, name, fn);
+            // Prefer active registry (set when Factory/Core call registerBindings)
+            SDOM::DataRegistry* r = IDataObject::activeRegistry();
+            SDOM::FunctionInfo meta;
+            meta.name = name;
+            meta.cpp_signature = name + "(...)";
+            if (r) {
+                r->registerFunction(typeName, meta, std::forward<Fn>(fn));
+            } else {
+                // fallback to global singleton
+                DataRegistry::instance().registerFunction(typeName, meta, std::forward<Fn>(fn));
+            }
         }
 
         /**
@@ -221,7 +231,15 @@ namespace SDOM
         void addProperty(const std::string& typeName, const std::string& name, Getter&& getter, Setter&& setter = nullptr)
         {
             BIND_LOG("[" << typeName << "] addProperty: " << name);
-            // Placeholder: will connect to DataRegistry later.
+            SDOM::DataRegistry* r = IDataObject::activeRegistry();
+            SDOM::PropertyInfo meta;
+            meta.name = name;
+            meta.cpp_type = "unknown";
+            if (r) {
+                r->registerProperty(typeName, meta, std::forward<Getter>(getter), std::forward<Setter>(setter));
+            } else {
+                DataRegistry::instance().registerProperty(typeName, meta, std::forward<Getter>(getter), std::forward<Setter>(setter));
+            }
         }
 
         // =============================================================
@@ -242,8 +260,26 @@ namespace SDOM
                 // BIND_WARN("Type already registered: " << typeName);
                 return;
             }
+            // If there is an active registry set by the caller, use it
+            if (s_active_registry_) {
+                // preserve existing behavior while using the provided registry
+                registerBindingsImpl(typeName);
+                s_registered_types_.insert(typeName);
+                return;
+            }
             registerBindingsImpl(typeName);
             s_registered_types_.insert(typeName);
+        }
+
+        // New overload: caller supplies an explicit registry (Factory will use this)
+        void registerBindings(const std::string& typeName, DataRegistry& registry)
+        {
+            if (s_registered_types_.count(typeName)) return;
+            // set thread-local active registry for duration
+            s_active_registry_ = &registry;
+            registerBindingsImpl(typeName);
+            s_registered_types_.insert(typeName);
+            s_active_registry_ = nullptr;
         }
 
         void BIND_INFO(const std::string& typeName, const std::string& typeNameLocal)
@@ -413,6 +449,11 @@ namespace SDOM
         std::string name_ = "IDataObject";
 
         inline static std::unordered_set<std::string> s_registered_types_;
+
+        // thread-local pointer to the registry used during registerBindings()
+        inline static thread_local DataRegistry* s_active_registry_ = nullptr;
+
+        static DataRegistry* activeRegistry() { return s_active_registry_; }
 
         // ---- Bindings ----
         virtual void registerBindingsImpl(const std::string& typeName)
