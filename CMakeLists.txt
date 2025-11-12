@@ -9,6 +9,23 @@ set(VERSION_TEMPLATE "${CMAKE_SOURCE_DIR}/include/SDOM/SDOM_Version.hpp.in")
 set(VERSION_HEADER "${CMAKE_SOURCE_DIR}/include/SDOM/SDOM_Version.hpp")
 set(VERSION_TRIGGER "${CMAKE_BINARY_DIR}/_version_trigger")
 
+option(ENABLE_ASAN "Enable AddressSanitizer for builds" OFF)
+
+if(ENABLE_ASAN)
+    message(STATUS "AddressSanitizer: enabled")
+    # Add sanitizer flags for compile and link
+    add_compile_options(-fsanitize=address -fno-omit-frame-pointer -g -O1)
+    # Some toolchains need the link flags explicitly
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=address")
+    # Do NOT set CMAKE_STATIC_LINKER_FLAGS: passing linker flags to the
+    # static-archive tool (ar) causes those flags to be interpreted as
+    # ar options and can break archive creation (see ar: invalid option).
+    # Static libraries only need object files compiled with ASAN; the
+    # executable link step is where the sanitizer runtime must be linked.
+endif()
+
+
 if(EXISTS "${GEN_VERSION_SCRIPT}")
 
     # --- Ensure Bash is used instead of /bin/sh (dash) ---
