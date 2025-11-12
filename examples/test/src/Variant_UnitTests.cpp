@@ -953,18 +953,19 @@ namespace SDOM
             ut.add_test(objName, "VariantView basic access", Variant_test_variantview_basic_access);
             ut.add_test(objName, "LuaRef lifetime validation", Variant_test_luaref_lifetime_validation);
             ut.add_test(objName, "Table storage mode toggle and snapshot", Variant_test_table_storage_and_snapshot);
+            // Small test: dynamicTypeName accessor
+            ut.add_test(objName, "Dynamic metadata accessors", Variant_test_dynamic_metadata_accessors);
+            // New tests: copy/move + containers, toDebugString, varianthash/map, and snapshot validity
+            ut.add_test(objName, "Copy/Move semantics and containers", Variant_test_copy_move_and_containers);
+            ut.add_test(objName, "toDebugString shallow vs deep", Variant_test_toDebugString);
+            ut.add_test(objName, "VariantHash & unordered_map usage", Variant_test_varianthash_and_map);
+            ut.add_test(objName, "Snapshot(sol::state_view) validity and TableStorageMode", Variant_test_snapshot_state_validity);
+            ut.add_test(objName, "Deep recursion stress", Variant_test_deep_recursion_stress);
+            ut.add_test(objName, "Threaded converter safety stress", Variant_test_threaded_converter_safety);
+
             registered = true;
         }
 
-        // Small test: dynamicTypeName accessor
-        ut.add_test(objName, "Dynamic metadata accessors", Variant_test_dynamic_metadata_accessors);
-        // New tests: copy/move + containers, toDebugString, varianthash/map, and snapshot validity
-        ut.add_test(objName, "Copy/Move semantics and containers", Variant_test_copy_move_and_containers);
-        ut.add_test(objName, "toDebugString shallow vs deep", Variant_test_toDebugString);
-        ut.add_test(objName, "VariantHash & unordered_map usage", Variant_test_varianthash_and_map);
-        ut.add_test(objName, "Snapshot(sol::state_view) validity and TableStorageMode", Variant_test_snapshot_state_validity);
-        ut.add_test(objName, "Deep recursion stress", Variant_test_deep_recursion_stress);
-        ut.add_test(objName, "Threaded converter safety stress", Variant_test_threaded_converter_safety);
 
         return true;
     }

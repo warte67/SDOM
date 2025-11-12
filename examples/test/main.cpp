@@ -21,22 +21,32 @@
 // the SDOM headers you need. This speeds up incremental builds and makes 
 // dependencies explicit.
 
-#define SDOM_USE_INDIVIDUAL_HEADERS
 #include <SDOM/SDOM.hpp>
+#include <SDOM/SDOM_CAPI.h>
 
-#ifdef SDOM_USE_INDIVIDUAL_HEADERS
-    #include <SDOM/SDOM_Core.hpp>
-    #include <SDOM/SDOM_Factory.hpp>
-    #include <SDOM/SDOM_Event.hpp>
-    #include <SDOM/SDOM_IUnitTest.hpp>
-    #include <SDOM/SDOM_IDataObject.hpp>
-#endif
+#include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_Event.hpp>
+#include <SDOM/SDOM_IUnitTest.hpp>
+#include <SDOM/SDOM_IDataObject.hpp>
+#include <SDOM/SDOM_Stage.hpp>
+
+#include <iostream>
+
+
 
 #include "Box.hpp"
 #include "UnitTests.hpp"
 
+
+#ifndef MAIN_VARIANT
+#define MAIN_VARIANT 3
+#endif
+
+
 using namespace SDOM;
 
+#if MAIN_VARIANT == 1
 
 int main(int argc, char** argv) 
 {
@@ -112,6 +122,11 @@ int main(int argc, char** argv)
     // Use Core's Lua state
     sol::state& lua = core.getLua();     
 
+    // Ensure Lua-driven unit tests run in the default (variant 1) startup.
+    // This flag is read by `examples/test/lua/callbacks/unittest.lua` and
+    // allows C++ variants to disable Lua test execution when needed.
+    lua["SDOM_RUN_LUA_UNIT_TESTS"] = true;
+
     // Expose C++ unit test functions to Lua so scripts can call them to run tests
     // (these are defined in UnitTests.hpp)
 
@@ -167,3 +182,63 @@ int main(int argc, char** argv)
     bool ok = core.run(configFile);
     return ok ? 0 : 1;
 } // END main()
+
+#elif MAIN_VARIANT == 2
+
+int main(int argc, char** argv) 
+{
+    // headless / no-lua startup for fast unit testing
+    Core& core = getCore();
+
+    // Apply an explicit Core configuration first so SDL resources and
+    // the Factory are initialized before we create the Stage object.
+    SDOM::Core::CoreConfig cfg; // defaults are reasonable (window + renderer will be created)
+    core.configure(cfg);
+
+    // Disable Lua-driven unit tests for this headless variant
+    core.getLua()["SDOM_RUN_LUA_UNIT_TESTS"] = false;
+
+    // Register minimal types needed by tests
+    core.getFactory().registerDomType("Box", TypeCreators{
+        Box::CreateFromLua,
+        Box::CreateFromInitStruct
+    });
+
+    // Now that the Factory is initialized, create the Stage and set it as root
+    SDOM::Stage::InitStruct stage_init;
+
+    DisplayHandle rootStage = core.createDisplayObject("Stage", stage_init);
+    core.setRootNode(rootStage);
+
+    // Start the main loop (no additional config needed)
+    core.setStopAfterUnitTests(true);
+    bool ok = core.run();
+    
+    return ok ? 0 : 1;
+}
+
+#elif MAIN_VARIANT == 3
+
+int main(int argc, char** argv) 
+{
+    SDOM_Init();
+
+    SDOM_CoreConfig cfg;
+    SDOM_GetCoreConfig(&cfg);
+    cfg.windowWidth = 1280.0f;
+    cfg.windowHeight = 960.0f;
+    SDOM_Configure(&cfg);
+
+
+    SDOM_Quit();
+    
+    return 0;
+}
+
+#else
+int main(int argc, char** argv) 
+{
+    std::cerr << "Unknown MAIN_VARIANT: " << MAIN_VARIANT << std::endl;
+    return 1;
+}
+#endif

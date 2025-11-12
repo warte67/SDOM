@@ -36,6 +36,33 @@ namespace SDOM
     {
         // Stage initialization logic
         // std::cout << "Stage::onInit() called for Stage: " << getName() << std::endl;
+        // Ensure Stage has sensible default logical size if none provided.
+        try {
+            if (getWidth() <= 0 || getHeight() <= 0) {
+                Core& core = Core::getInstance();
+                int logicalW = 0, logicalH = 0;
+                SDL_Texture* tex = core.getTexture();
+                if (tex) {
+                    float tw = 0.0f, th = 0.0f;
+                    if (SDL_GetTextureSize(tex, &tw, &th)) {
+                        logicalW = static_cast<int>(tw);
+                        logicalH = static_cast<int>(th);
+                    }
+                }
+                // Fallback to Core config (window / pixel) if texture size unavailable
+                if (logicalW <= 0 || logicalH <= 0) {
+                    const Core::CoreConfig& cfg = core.getConfig();
+                    if (cfg.pixelWidth != 0.0f) logicalW = static_cast<int>(cfg.windowWidth / cfg.pixelWidth);
+                    if (cfg.pixelHeight != 0.0f) logicalH = static_cast<int>(cfg.windowHeight / cfg.pixelHeight);
+                }
+                // Final fallback
+                if (logicalW <= 0) logicalW = 640;
+                if (logicalH <= 0) logicalH = 480;
+                setWidth(logicalW);
+                setHeight(logicalH);
+            }
+        } catch(...) {}
+
         return true;
     }
 

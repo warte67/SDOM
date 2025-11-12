@@ -80,9 +80,11 @@ namespace SDOM
     {
         // initialize or reconfigure SDL as needed
         reconfigure(config);
+
         // Adopt the new configuration as current so getters reflect latest values
         // even when SDL was already started.
         config_ = config;
+
         // Initialize the Factory if it hasn't been initialized yet.
         if (factory_ && !factory_->isInitialized()) {
             factory_->startup();
@@ -446,6 +448,7 @@ namespace SDOM
             if (!TTF_Init()) {
                 DEBUG_LOG(std::string("TTF_Init() failed: ") + SDL_GetError());
             }
+            recreate_window = recreate_renderer = recreate_texture = true;
         }
 
         // Before destroying SDL resources, proactively notify all display objects
@@ -562,7 +565,7 @@ namespace SDOM
             cfg = pendingConfig_;
             pendingConfigRequested_.store(false, std::memory_order_release);
         }
-        // Apply on main thread
+        // Apply on main thread::run(
         // reconfigure(cfg);
 
 

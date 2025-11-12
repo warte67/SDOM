@@ -45,20 +45,20 @@ namespace SDOM
         friend class Core;  // Core should have direct access to the Factory internals
 
     public:
-    // --- Lifecycle --- //
-    Factory();
-    ~Factory() = default;
-    bool onInit();
-    // Owner-controlled lifecycle helpers
-    bool startup();
-    void shutdown();
-    bool isInitialized() const { return initialized_; }
-    bool onUnitTest(int frame);
+        // --- Lifecycle --- //
+        Factory();
+        ~Factory() = default;
+        bool onInit();
+        // Owner-controlled lifecycle helpers
+        bool startup();
+        void shutdown();
+        bool isInitialized() const { return initialized_; }
+        bool onUnitTest(int frame);
 
-    // --- DataRegistry access --- //
-    SDOM::DataRegistry& getRegistry() { return registry_; }
-    const SDOM::DataRegistry& getRegistry() const { return registry_; }
-    bool exportBindings(const std::string& outputDir) { return registry_.generateBindings(outputDir); }
+        // --- DataRegistry access --- //
+        SDOM::DataRegistry& getRegistry() { return registry_; }
+        const SDOM::DataRegistry& getRegistry() const { return registry_; }
+        bool exportBindings(const std::string& outputDir) { return registry_.generateBindings(outputDir); }
 
         // --- Object Type Registration --- //
         void registerDomType(const std::string& typeName, const TypeCreators& creators);  // change to registerDisplayObjectType()

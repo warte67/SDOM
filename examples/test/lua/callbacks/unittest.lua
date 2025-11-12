@@ -3,6 +3,14 @@
 -- Callback module for running unit tests
 local M = {}
 
+-- Allow the embedding runtime to disable running Lua-driven unit tests by
+-- setting the global `SDOM_RUN_LUA_UNIT_TESTS = false` before this module
+-- is loaded. This makes it possible for the C++ harness to take control of
+-- test execution without modifying the Lua test files themselves.
+if _G.SDOM_RUN_LUA_UNIT_TESTS == false then
+    return { on_unit_test = function() return true end }
+end
+
 function M.on_unit_test()
     local allTestsPassed = true
 

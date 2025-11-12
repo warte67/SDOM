@@ -89,6 +89,14 @@ namespace SDOM
         // register a few internal icon Textures (skip if already created)
         {
             auto ensureTexture = [&](const std::string& defaultIconName) {
+                // If Core's renderer isn't available yet, skip creating internal
+                // textures now. They will be created/reloaded later when SDL
+                // resources are ready (e.g., during refreshSDLResources()).
+                if (!getCore().getRenderer()) {
+                    INFO("Factory::onInit: Renderer not available yet; deferring creation of internal texture '" << defaultIconName << "'");
+                    return;
+                }
+
                 if (!getResObj(defaultIconName)) {
                     Texture::InitStruct init;
                     init.name = defaultIconName;
