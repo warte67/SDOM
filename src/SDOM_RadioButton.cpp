@@ -7,11 +7,21 @@
 
 namespace SDOM
 {
+    namespace {
+        inline IconIndex radioIconIndexFromState(ButtonState state) {
+            switch (state) {
+                case ButtonState::Inactive:   return IconIndex::Radiobox_Unselected;
+                case ButtonState::Active:     return IconIndex::Radiobox_Selected;
+                default:                      return IconIndex::Hamburger;
+            }
+        }
+    }
     // --- Constructors --- //
     RadioButton::RadioButton(const InitStruct& init): TristateButton(init)
     {
         setType(TypeName);
-    icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state // NOLINT(clang-analyzer-optin.cplusplus.VirtualCall) - intentional
+        // compute icon index with local helper to avoid virtual dispatch during construction
+        icon_index_ = radioIconIndexFromState(buttonState_);
 
         // add custom properties here
     } // END: RadioButton::RadioButton(const InitStruct& init)
@@ -19,7 +29,7 @@ namespace SDOM
     RadioButton::RadioButton(const sol::table& config) : TristateButton(config, RadioButton::InitStruct())
     {
         setType(TypeName);
-    icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state // NOLINT(clang-analyzer-optin.cplusplus.VirtualCall) - intentional
+        icon_index_ = radioIconIndexFromState(buttonState_); // set icon index based on initial state
 
         InitStruct init; // default init struct to fall back on
         

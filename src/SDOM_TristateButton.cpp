@@ -50,6 +50,16 @@
 
 namespace SDOM
 {
+    namespace {
+        inline IconIndex iconIndexFromState(ButtonState state) {
+            switch (state) {
+                case ButtonState::Inactive:   return IconIndex::Checkbox_Empty;
+                case ButtonState::Active:     return IconIndex::Checkbox_Checked;
+                case ButtonState::Mixed:      return IconIndex::Checkbox_X;
+                default:                      return IconIndex::Checkbox_Empty;
+            }
+        }
+    }
     // --------------------------------------------------------------------
     // 🏭 Constructors
     // --------------------------------------------------------------------
@@ -74,16 +84,9 @@ namespace SDOM
         text_ = init.text;
         // icon_index_ = init.icon_index;
         buttonState_ = init.state;
-        // The following call intentionally invokes a virtual-like dispatch
-        // (via this->iconIndexForState()). Static analyzers flag this as a
-        // "virtual call during construction" because virtual dispatch is not
-        // guaranteed inside constructors. This is an intentional pattern:
-        // the called method is non-problematic for construction and is used
-        // to compute an internal index from a simple enum. Suppress the
-        // analyzer warning at this site and plan a follow-up refactor if
-        // needed (see docs/progress.md).
-        // NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.VirtualCall)
-        icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state
+    // Use a local helper to compute icon index from state. Avoid calling
+    // the virtual accessor during construction to satisfy static analyzers.
+    icon_index_ = iconIndexFromState(buttonState_);
 
         font_size_ = init.font_size;
         label_color_ = init.label_color;
@@ -208,11 +211,8 @@ namespace SDOM
                 }
             } catch(...) { /* ignore malformed values */ }
         }
-    // Suppress analyzer warning here as above: the call computes a simple
-    // index from the enum and does not rely on derived-class overrides
-    // that would be unsafe during construction.
-    // NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.VirtualCall)
-    icon_index_ = iconIndexForState(buttonState_); // set icon index based on initial state
+    // Use helper instead of virtual call
+    icon_index_ = iconIndexFromState(buttonState_); // set icon index based on initial state
 
         // label color - accept snake_case/table { r=.., g=.., b=.., a=.. } or camelCase 'labelColor'
         try {
