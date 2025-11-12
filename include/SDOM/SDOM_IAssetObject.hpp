@@ -32,6 +32,9 @@ namespace SDOM
         void onQuit() override = 0;
         virtual void onLoad() = 0;
         virtual void onUnload() = 0;
+        // Owner-controlled lifecycle helpers (idempotent)
+        bool startup();
+        void shutdown();
         bool onUnitTest(int frame) override { (void)frame; return true; }
 
         // accessors
@@ -56,6 +59,9 @@ namespace SDOM
         bool isLoaded_ = false;
         
         sol::usertype<IAssetObject> objHandleType_;
+
+        // Lifecycle state: true if startup() completed and onInit() ran.
+        bool started_ = false;
 
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration

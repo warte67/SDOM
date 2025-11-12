@@ -364,9 +364,11 @@ namespace SDOM
     IDisplayObject::~IDisplayObject()
     {
         // nameRegistry_.erase(getName());
-        // Intentional: call the virtual cleanup hook during destruction. Derived classes
-        // must ensure this is safe (don't rely on further virtual dispatch).
-        onQuit(); // Call the pure virtual method to ensure derived classes clean up // NOLINT(clang-analyzer-optin.cplusplus.VirtualCall)
+        // Important: Do NOT call virtual cleanup hooks from the destructor.
+        // Owners (Factory/Core) should call shutdown() before destroying objects
+        // so that derived virtual onQuit() implementations run while the object
+        // is still fully-formed. Previously this destructor invoked onQuit()
+        // which triggered analyzer noise and can be unsafe in derived types.
     }
 
     bool IDisplayObject::onInit()
@@ -380,6 +382,27 @@ namespace SDOM
     void IDisplayObject::onQuit()
     {
         // Default implementation, can be overridden by derived classes
+    }
+
+    // Public non-virtual lifecycle helpers ----------------------------------
+    bool IDisplayObject::startup()
+    {
+        if (started_) return true;
+        bool ok = false;
+        try {
+            ok = onInit();
+        } catch(...) { ok = false; }
+        if (ok) started_ = true;
+        return ok;
+    }
+
+    void IDisplayObject::shutdown()
+    {
+        if (!started_) return; // nothing to do
+        try {
+            onQuit();
+        } catch(...) {}
+        started_ = false;
     }
 
     void IDisplayObject::onUpdate(float fElapsedTime)

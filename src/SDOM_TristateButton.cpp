@@ -84,9 +84,9 @@ namespace SDOM
         text_ = init.text;
         // icon_index_ = init.icon_index;
         buttonState_ = init.state;
-    // Use a local helper to compute icon index from state. Avoid calling
-    // the virtual accessor during construction to satisfy static analyzers.
-    icon_index_ = iconIndexFromState(buttonState_);
+        // Use a local helper to compute icon index from state. Avoid calling
+        // the virtual accessor during construction to satisfy static analyzers.
+        icon_index_ = iconIndexFromState(buttonState_);
 
         font_size_ = init.font_size;
         label_color_ = init.label_color;
@@ -211,8 +211,8 @@ namespace SDOM
                 }
             } catch(...) { /* ignore malformed values */ }
         }
-    // Use helper instead of virtual call
-    icon_index_ = iconIndexFromState(buttonState_); // set icon index based on initial state
+        // Use helper instead of virtual call
+        icon_index_ = iconIndexFromState(buttonState_); // set icon index based on initial state
 
         // label color - accept snake_case/table { r=.., g=.., b=.., a=.. } or camelCase 'labelColor'
         try {

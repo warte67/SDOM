@@ -231,6 +231,13 @@ namespace SDOM
     
         virtual ~IDisplayObject();
 
+        // Public non-virtual lifecycle methods. Call these from owners (Factory, Core)
+        // to ensure derived classes receive their virtual hooks while object
+        // lifetime is still under owner control. These methods are safe to call
+        // repeatedly (idempotent).
+        bool startup();   // calls virtual onInit() once
+        void shutdown();  // calls virtual onQuit() once
+
         // --- Lifecycle & Core Virtuals --- //
         bool onInit() override;
         // onLoad/onUnload mirror AssetObject semantics for renderer/device-backed
@@ -470,6 +477,10 @@ namespace SDOM
         bool background_ = false;
         DisplayHandle parent_;
         std::vector<DisplayHandle> children_;
+        // Lifecycle state: true if startup() completed successfully and onInit()
+        // has been run. Owners must call shutdown() before destroying objects
+        // to ensure virtual cleanup hooks run outside destructors.
+        bool started_ = false;
     public:
         // --- Event Listener Containers --- //
         struct ListenerEntry {
@@ -507,7 +518,5 @@ namespace SDOM
 
 } // namespace SDOM
 
-// // include the LUA wrappers for IDisplayObject
-// #include "lua_IDisplayObject.hpp"    
 
 #endif // __SDOM_IDISPLAY_OBJECT_HPP__

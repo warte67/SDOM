@@ -85,7 +85,7 @@ namespace SDOM
         config_ = config;
         // Initialize the Factory if it hasn't been initialized yet.
         if (factory_ && !factory_->isInitialized()) {
-            factory_->onInit();
+            factory_->startup();
         }
     }
 
@@ -797,7 +797,9 @@ namespace SDOM
         std::function<void(IDisplayObject&)> handleQuit;
         handleQuit = [&handleQuit](IDisplayObject& node) 
         {
-            node.onQuit();
+            // Use owner-controlled shutdown() so derived virtual onQuit()
+            // implementations run while the object is still fully-formed.
+            node.shutdown();
             for (const auto& child : node.getChildren()) 
             {
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());

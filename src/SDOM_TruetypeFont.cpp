@@ -69,7 +69,7 @@ namespace SDOM
     void TruetypeFont::onQuit() 
     {
         if (ttf_font_handle_.isValid()) {
-            ttf_font_handle_.get()->onQuit();
+            ttf_font_handle_.get()->shutdown();
         }
     } // END: TruetypeFont::onQuit() // END: TruetypeFont::onQuit() 
 

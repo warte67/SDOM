@@ -47,7 +47,10 @@ namespace SDOM
         // --- Lifecycle (IDataObject overrides) --- //
         Factory();
         virtual ~Factory() = default;
-        bool onInit() override;
+    bool onInit() override;
+    // Owner-controlled lifecycle helpers
+    bool startup();
+    void shutdown();
     bool isInitialized() const { return initialized_; }
         void onQuit() override {}
         bool onUnitTest(int frame) override;

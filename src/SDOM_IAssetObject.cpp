@@ -41,6 +41,27 @@ namespace SDOM
         // default dtor; ensure emission for vtable
     }
 
+    // Public non-virtual lifecycle helpers ----------------------------------
+    bool IAssetObject::startup()
+    {
+        if (started_) return true;
+        bool ok = false;
+        try {
+            ok = onInit();
+        } catch(...) { ok = false; }
+        if (ok) started_ = true;
+        return ok;
+    }
+
+    void IAssetObject::shutdown()
+    {
+        if (!started_) return;
+        try {
+            onQuit();
+        } catch(...) {}
+        started_ = false;
+    }
+
     void IAssetObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
     {
         if (DEBUG_REGISTER_LUA)

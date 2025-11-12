@@ -697,7 +697,7 @@ namespace SDOM
             displayObjects_[name]->setHeight(height);
 
             // --- Finally initialize the display object ---
-            displayObjects_[name]->onInit();
+            displayObjects_[name]->startup();
 
             // Dispatch EventType::OnInit so global or pre-registered listeners can observe creation
             // Included for completeness.  There may still be room to add an event listener.
@@ -788,7 +788,7 @@ namespace SDOM
                 displayObjects_[name] = std::move(displayObject);
 
                 // Run initialization callback now that registry entry exists
-                displayObjects_[name]->onInit();
+                displayObjects_[name]->startup();
 
                 // Dispatch OnInit event
                 auto& eventManager = getCore().getEventManager();
@@ -926,7 +926,7 @@ namespace SDOM
                 // convert to shared_ptr for aliasing support
                 std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
                 assetObjects_[requestedName] = sharedAsset;
-                assetObjects_[requestedName]->onInit();
+                assetObjects_[requestedName]->startup();
 
                 // Register Lua bindings for this concrete asset instance so its methods are available
                 try {
@@ -1004,7 +1004,7 @@ namespace SDOM
             std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
 
             assetObjects_[init.name] = sharedAsset;
-            assetObjects_[init.name]->onInit();
+            assetObjects_[init.name]->startup();
 
             try {
                 assetObjects_[init.name]->registerLuaBindings(typeName, SDOM::getLua());
@@ -1167,13 +1167,15 @@ namespace SDOM
         if (it == assetObjects_.end()) return;
 
         // Ask the object to release runtime resources first
-        try {
+            try {
             if (it->second) {
                 // Only unload if the asset reports itself as loaded
                 if (it->second->isLoaded()) {
                     it->second->onUnload();
                 }
-                it->second->onQuit();
+                // Use owner-controlled shutdown so virtual cleanup runs while
+                // object is still fully-formed.
+                it->second->shutdown();
             }
         } catch(...) {
             ERROR("Factory::destroyAssetObject: exception while shutting down asset: " + name);
@@ -1815,6 +1817,21 @@ namespace SDOM
         auto it = perf_map.find(obj_name);
         if (it == perf_map.end()) return 0.0f;
         return std::chrono::duration<float, std::micro>(it->second.last_render_ns).count();
+    }
+
+    // Owner-controlled lifecycle helpers
+    bool Factory::startup()
+    {
+        return onInit();
+    }
+
+    void Factory::shutdown()
+    {
+        if (!initialized_) return;
+        try {
+            clear();
+        } catch(...) {}
+        initialized_ = false;
     }
 
 
