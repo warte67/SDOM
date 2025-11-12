@@ -334,8 +334,10 @@ namespace SDOM
         // Ensure the font is loaded (guarded by the font implementation)
         if (!font->isLoaded()) 
         {
-            font->onLoad();
-            if (!font->isLoaded()) 
+            // Use the owner-controlled load() helper instead of calling the
+            // virtual onLoad() directly. This keeps lifecycle ownership
+            // consistent and avoids unsafe virtual calls from owners.
+            if (!font->load())
             {
                 ERROR("Label::onInit() --> Failed to load font resource: " + resourceName_);
                 in_oninit = false;
@@ -396,7 +398,7 @@ namespace SDOM
         // Ensure underlying font asset is ready (idempotent)
         if (fontAsset)
         {
-            try { fontAsset.get()->onLoad(); } catch(...) {}
+            try { fontAsset.get()->load(); } catch(...) {}
         }
         setDirty(true);
         return true;

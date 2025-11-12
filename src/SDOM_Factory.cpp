@@ -938,10 +938,12 @@ namespace SDOM
                 // Eagerly load the asset now that it has been initialized and registered.
                 try {
                     if (!assetObjects_[requestedName]->isLoaded()) {
-                        assetObjects_[requestedName]->onLoad();
+                        if (!assetObjects_[requestedName]->load()) {
+                            ERROR("Factory::createAsset: load() failed for asset: " + requestedName);
+                        }
                     }
                 } catch(...) {
-                    ERROR("Factory::createAsset: onLoad() failed for asset: " + requestedName);
+                    ERROR("Factory::createAsset: load() threw for asset: " + requestedName);
                 }
 
                 return AssetHandle(requestedName, typeName, filename);
@@ -1013,10 +1015,13 @@ namespace SDOM
             }
 
             try {
-                if (!assetObjects_[init.name]->isLoaded())
-                    assetObjects_[init.name]->onLoad();
+                if (!assetObjects_[init.name]->isLoaded()) {
+                    if (!assetObjects_[init.name]->load()) {
+                        ERROR("Factory::createAsset(init): load() failed for asset: " + init.name);
+                    }
+                }
             } catch(...) {
-                ERROR("Factory::createAsset(init): onLoad() failed for asset: " + init.name);
+                ERROR("Factory::createAsset(init): load() threw for asset: " + init.name);
             }
 
             return AssetHandle(init.name, typeName, init.filename);
@@ -1171,7 +1176,7 @@ namespace SDOM
             if (it->second) {
                 // Only unload if the asset reports itself as loaded
                 if (it->second->isLoaded()) {
-                    it->second->onUnload();
+                    it->second->unload();
                 }
                 // Use owner-controlled shutdown so virtual cleanup runs while
                 // object is still fully-formed.

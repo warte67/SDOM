@@ -109,7 +109,7 @@ namespace SDOM
                 // If it's a SpriteSheet, reuse the AssetHandle directly
                 iconSpriteSheet_ = ssHandle;
                 SpriteSheet* ssPtr = iconSpriteSheet_.as<SpriteSheet>();
-                if (ssPtr && !ssPtr->isLoaded()) ssPtr->onLoad();
+                if (ssPtr && !ssPtr->isLoaded()) ssPtr->load();
                 else
                 {
                     // If it's a Texture, create a SpriteSheet wrapper using a reasonable tile size
@@ -157,7 +157,7 @@ namespace SDOM
                         if (created.isValid()) {
                             iconSpriteSheet_ = created;
                             SpriteSheet* createdPtr = iconSpriteSheet_.as<SpriteSheet>();
-                            if (createdPtr && !createdPtr->isLoaded()) createdPtr->onLoad();
+                            if (createdPtr && !createdPtr->isLoaded()) createdPtr->load();
                         } else {
                             ERROR("IconButton::onInit() - Failed to create SpriteSheet wrapper for Texture resource: " + icon_resource_);
                             return false;
@@ -168,10 +168,10 @@ namespace SDOM
                         // Found an asset with that name but it's not a SpriteSheet/Texture.
                         // Try to locate any SpriteSheet registered for the same filename.
                         AssetHandle candidate = factory.findAssetByFilename(icon_resource_, SpriteSheet::TypeName);
-                        if (candidate.isValid()) {
+                            if (candidate.isValid()) {
                             iconSpriteSheet_ = candidate;
                             SpriteSheet* ssPtr2 = iconSpriteSheet_.as<SpriteSheet>();
-                            if (ssPtr2 && !ssPtr2->isLoaded()) ssPtr2->onLoad();
+                            if (ssPtr2 && !ssPtr2->isLoaded()) ssPtr2->load();
                         } else {
                             // As a last resort, create a SpriteSheet wrapper using the resource name as filename
                             SpriteSheet::InitStruct init_struct2;
@@ -185,7 +185,7 @@ namespace SDOM
                             if (created2.isValid()) {
                                 iconSpriteSheet_ = created2;
                                 SpriteSheet* createdPtr2 = iconSpriteSheet_.as<SpriteSheet>();
-                                if (createdPtr2 && !createdPtr2->isLoaded()) createdPtr2->onLoad();
+                                if (createdPtr2 && !createdPtr2->isLoaded()) createdPtr2->load();
                             } else {
                                 ERROR("IconButton::onInit() - Found asset '" + icon_resource_ + "' but it is not a SpriteSheet or Texture, and failed to create a wrapper.");
                                 return false;

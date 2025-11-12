@@ -195,7 +195,7 @@ namespace SDOM
                     if (fo)
                     {
                         // Ensure font is loaded so metrics are available
-                        if (!fo->isLoaded()) fo->onLoad();
+                        if (!fo->isLoaded()) fo->load();
 
                         if (fontType == IFontObject::FontType::Bitmap)
                         {

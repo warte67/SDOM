@@ -94,7 +94,7 @@ namespace SDOM
         // std::cout << CLR::LT_ORANGE << "SpriteSheet::" << CLR::YELLOW << "onQuit()" 
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Cleanup logic for SpriteSheet
-        if (textureAsset) textureAsset->onUnload();
+        if (textureAsset) textureAsset->unload();
         onUnload();
     }
 
@@ -123,8 +123,8 @@ namespace SDOM
                 }
                 // Ensure the referenced Texture asset is loaded so getTexture() will be valid.
                 try {
-                    // INFO(std::string("SpriteSheet::onLoad: calling onLoad() on Texture asset: ") + textureAsset.getName());
-                    textureAsset->onLoad();
+                    // INFO(std::string("SpriteSheet::onLoad: calling load() on Texture asset: ") + textureAsset.getName());
+                    textureAsset->load();
                 } catch(...) {
                     ERROR("SpriteSheet::onLoad: Failed to load existing Texture asset for filename: " + filename_);
                     return;
@@ -139,14 +139,14 @@ namespace SDOM
                 SpriteSheet* existingSS = dynamic_cast<SpriteSheet*>(existing);
                 if (existingSS) {
                     // If the existing SpriteSheet already has a textureAsset, reuse it
-                    if (existingSS->textureAsset.isValid()) {
+                        if (existingSS->textureAsset.isValid()) {
                         textureAsset = existingSS->textureAsset;
                         if (!textureAsset) {
                             ERROR("SpriteSheet::onLoad: Failed to retrieve texture asset from existing SpriteSheet for filename: " + filename_);
                             return;
                         }
                         try {
-                            textureAsset->onLoad();
+                            textureAsset->load();
                         } catch(...) {
                             ERROR("SpriteSheet::onLoad: Failed to load texture asset from existing SpriteSheet for filename: " + filename_);
                             return;
@@ -243,7 +243,7 @@ namespace SDOM
             }
         }
 
-        if (textureAsset) textureAsset->onLoad();
+        if (textureAsset) textureAsset->load();
         isLoaded_ = true;
         return;
     } // END onLoad()
@@ -254,7 +254,7 @@ namespace SDOM
         //           << CLR::LT_ORANGE << " called for: " << CLR::YELLOW << getName() << CLR::RESET << std::endl;
         // Unloading logic for SpriteSheet
 
-        if (textureAsset) textureAsset->onUnload();
+        if (textureAsset) textureAsset->unload();
         isLoaded_ = false;
     }
 

@@ -239,11 +239,11 @@ namespace SDOM
         // Ensure composed assets are ready; idempotent if already loaded
         if (spriteSheetAsset_.isValid())
         {
-            try { spriteSheetAsset_.get()->onLoad(); } catch(...) {}
+            try { spriteSheetAsset_.get()->load(); } catch(...) {}
         }
         if (fontAsset_.isValid())
         {
-            try { fontAsset_.get()->onLoad(); } catch(...) {}
+            try { fontAsset_.get()->load(); } catch(...) {}
         }
         setDirty(true);
         return true;
@@ -334,7 +334,7 @@ namespace SDOM
                 SpriteSheet* ss = getSpriteSheetPtr();
                 if (!ss) { ERROR("IPanelObject::onRender: invalid SpriteSheet"); return; }
 
-                try { ss->onLoad(); } catch(...) {}
+                try { ss->load(); } catch(...) {}
                 SDL_Color color = getColor();
                 ss->drawNineQuad(static_cast<int>(base_index_), cachedTexture_, color, SDL_SCALEMODE_NEAREST);
             }
@@ -416,8 +416,8 @@ namespace SDOM
 
         using PTO = PanelTileOffset;
 
-        // Ensure the sprite sheet's underlying texture is loaded before drawing
-        try { ss->onLoad(); } catch(...) {}
+    // Ensure the sprite sheet's underlying texture is loaded before drawing
+    try { ss->load(); } catch(...) {}
 
         // Top row (src rects use texture pixel sizes)
         // For 9-slice rendering we treat the sprite tile as the native size (tileW x tileH).
