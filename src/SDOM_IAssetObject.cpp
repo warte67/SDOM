@@ -57,9 +57,26 @@ namespace SDOM
     {
         if (!started_) return;
         try {
+            // Ensure resource is unloaded before quitting
+            if (isLoaded_) unload();
             onQuit();
         } catch(...) {}
         started_ = false;
+    }
+
+    bool IAssetObject::load()
+    {
+        if (isLoaded_) return false;
+        onLoad();
+        isLoaded_ = true;
+        return true;
+    }
+
+    void IAssetObject::unload()
+    {
+        if (!isLoaded_) return;
+        onUnload();
+        isLoaded_ = false;
     }
 
     void IAssetObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
@@ -98,9 +115,9 @@ namespace SDOM
         set_if_absent(handle, "setName", &IAssetObject::setName);
         set_if_absent(handle, "setFilename", &IAssetObject::setFilename);
 
-        // Lifecycle aliases
-        set_if_absent(handle, "load", [](IAssetObject& self) { self.onLoad(); });
-        set_if_absent(handle, "unload", [](IAssetObject& self) { self.onUnload(); });
+    // Lifecycle aliases
+    set_if_absent(handle, "load", [](IAssetObject& self) { self.load(); });
+    set_if_absent(handle, "unload", [](IAssetObject& self) { self.unload(); });
 
         // NOTE: do NOT expose virtual lifecycle method names (onLoad/onUnload) to Lua.
         // Expose only the stable 'load'/'unload' aliases that map to these operations.

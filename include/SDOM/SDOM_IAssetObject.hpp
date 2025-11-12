@@ -30,8 +30,11 @@ namespace SDOM
 
         bool onInit() override = 0;
         void onQuit() override = 0;
-        virtual void onLoad() = 0;
-        virtual void onUnload() = 0;
+    virtual void onLoad() = 0;
+    virtual void onUnload() = 0;
+    // Owner-controlled load/unload helpers (idempotent)
+    bool load();
+    void unload();
         // Owner-controlled lifecycle helpers (idempotent)
         bool startup();
         void shutdown();
@@ -56,12 +59,13 @@ namespace SDOM
         std::string type_;
         std::string filename_;
         bool isInternal_;
-        bool isLoaded_ = false;
         
         sol::usertype<IAssetObject> objHandleType_;
 
-        // Lifecycle state: true if startup() completed and onInit() ran.
-        bool started_ = false;
+    // Lifecycle state: true if startup() completed and onInit() ran.
+    bool started_ = false;
+    // Resource loaded state for onLoad()/onUnload() ownership
+    bool isLoaded_ = false;
 
         // ---------------------------------------------------------------------
         // 🔗 Legacy Lua Registration

@@ -39,21 +39,20 @@ namespace SDOM
         std::function<std::unique_ptr<IAssetObject>(const IAssetObject::InitStruct&)> fromInitStruct;
     };
 
-    class Factory final : public IDataObject
+    class Factory final
     {
         friend class Core;  // Core should have direct access to the Factory internals
 
     public:
-        // --- Lifecycle (IDataObject overrides) --- //
-        Factory();
-        virtual ~Factory() = default;
-        bool onInit() override;
-        // Owner-controlled lifecycle helpers
-        bool startup();
-        void shutdown();
-        bool isInitialized() const { return initialized_; }
-        void onQuit() override {}
-        bool onUnitTest(int frame) override;
+    // --- Lifecycle --- //
+    Factory();
+    ~Factory() = default;
+    bool onInit();
+    // Owner-controlled lifecycle helpers
+    bool startup();
+    void shutdown();
+    bool isInitialized() const { return initialized_; }
+    bool onUnitTest(int frame);
 
         // --- Object Type Registration --- //
         void registerDomType(const std::string& typeName, const TypeCreators& creators);  // change to registerDisplayObjectType()

@@ -33,7 +33,7 @@
 namespace SDOM
 {
 
-    Factory::Factory() : IDataObject(), initialized_(false)
+    Factory::Factory() : initialized_(false)
     {
         // Seed the static factory in the DisplayHandle and AssetHandle handles
         DisplayHandle::factory_ = this;
