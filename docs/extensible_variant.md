@@ -91,16 +91,9 @@ public:
 ---
 
 ## 4. Type Extensibility
-Users can extend the Variant system to support custom C++ types:
-
-```cpp
-Variant::registerType<MyStruct>([](const MyStruct& s) {
-    sol::table t = lua.create_table();
-    t["x"] = s.x;
-    t["y"] = s.y;
-    return t;
-});
-```
+Users can extend the Variant system to support custom C++ types. The repository examples and the
+Converter/Registry APIs use the name `registerConverter` for converter registration; use that form
+to register a type and provide both serialization and deserialization paths (see examples below).
 
 ### Conversion Trait System
 For consistency across types, all conversions use `VariantConverter<T>` specialization:
@@ -359,8 +352,7 @@ flowchart TD
     C1 --> C2
     D1 --> D2
 ```
-The **Lua Conversion Flow Diagram** illustrates the full round-trip between the Lua runtime and SDOM’s internal C++ types.  A `sol::object` or Lua table is first passed through `Variant::fromLuaObject()`, where it becomes either a L`uaRefValue` (if stored by reference) or a deep-copied **Array**/**Object**.  From there, any dynamic data is represented as a `VariantStorage::DynamicValue`, linking the Lua layer to a C++ `std::shared_ptr<T>`.
-When converting back, `Variant::toLua()` consults the `VariantRegistry` and its associated `ConverterEntry` objects to translate native C++ types into Lua tables or values.  This bi-directional pathway ensures that all conversions between C++ and Lua remain type-safe, extensible, and reflection-aware.
+The **Lua Conversion Flow Diagram** illustrates the full round-trip between the Lua runtime and SDOM’s internal C++ types. A `sol::object` or Lua table is first passed through `Variant::fromLuaObject()`, where it becomes either a `LuaRefValue` (if stored by reference) or a deep-copied **Array**/**Object**. From there, any dynamic data is represented as a `VariantStorage::DynamicValue`, linking the Lua layer to a C++ `std::shared_ptr<T>`. When converting back, `Variant::toLua()` consults the `VariantRegistry` and its associated `ConverterEntry` objects to translate native C++ types into Lua tables or values. This bi-directional pathway ensures that all conversions between C++ and Lua remain type-safe, extensible, and reflection-aware.
 
 
 ---
@@ -513,7 +505,7 @@ Each ConverterEntry defines a pair of conversion functions:
 - `DynamicToLuaFn` — serializes a C++ dynamic object (`DynamicValue`) into a Lua object or table.
 - `VariantToDynamicFn` — reconstructs a C++ `std::shared_ptr<void>` from a `Variant` structure.
 
-Meanwhile, the Vari`antStorage layer provides `DynamicValue` and `LuaRefValue`, which act as the runtime containers for these conversions.  When a `Variant` invokes `makeDynamic<T>()` or `toLua()`, it queries the registry to locate the appropriate converter functions, bridging the C++ and Lua domains seamlessly.  This registry model ensures that SDOM’s reflection system remains extensible — any new type can be integrated dynamically at runtime without modifying core engine code.
+Meanwhile, the `VariantStorage` layer provides `DynamicValue` and `LuaRefValue`, which act as the runtime containers for these conversions. When a `Variant` invokes `makeDynamic<T>()` or `toLua()`, it queries the registry to locate the appropriate converter functions, bridging the C++ and Lua domains seamlessly. This registry model ensures that SDOM’s reflection system remains extensible — any new type can be integrated dynamically at runtime without modifying core engine code.
 
 ---
 ## 🧩 Variant → Lua Conversion Sequence Diagram
@@ -540,7 +532,7 @@ sequenceDiagram
 ```
 ### Variant → Lua Conversion Sequence Diagram
 
-The **Variant → Lua Conversion Sequence Diagram** traces the exact runtime order of operations when a C++ `Variant` object is converted into a Lua object.  It begins when the application constructs a `Variant` from a `std::shared_ptr<T>`, which the system wraps into a `VariantStorage::DynamicValue`.  The application (or module) then registers a custom converter for that type using `registerConverter<T>()`, populating the `VariantRegistry` with matching serialization and deserialization functions.  When `Variant::toLua()` is invoked, it looks up the registered converter using the `std::type_index` of the contained type and calls the corresponding `ConverterEntry::toLua()` function.  The converter then produces a Lua table or userdata representation (`sol::object`) returned to the caller.  This sequence clearly shows that all conversions flow through the registry, keeping SDOM’s bridge between C++ and* Lua type-safe, modular, and extensible* — without ever requiring the `Variant` class itself to know about specific user-defined types.
+The **Variant → Lua Conversion Sequence Diagram** traces the exact runtime order of operations when a C++ `Variant` object is converted into a Lua object.  It begins when the application constructs a `Variant` from a `std::shared_ptr<T>`, which the system wraps into a `VariantStorage::DynamicValue`.  The application (or module) then registers a custom converter for that type using `registerConverter<T>()`, populating the `VariantRegistry` with matching serialization and deserialization functions.  When `Variant::toLua()` is invoked, it looks up the registered converter using the `std::type_index` of the contained type and calls the corresponding `ConverterEntry::toLua()` function.  The converter then produces a Lua table or userdata representation (`sol::object`) returned to the caller.  This sequence clearly shows that all conversions flow through the registry, keeping SDOM’s bridge between C++ and Lua type-safe, modular, and extensible — without ever requiring the `Variant` class itself to know about specific user-defined types.
 
 ---
 ## 🧩 Lua → Variant Deserialization Sequence Diagram

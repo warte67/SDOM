@@ -129,9 +129,12 @@ L.script("pt.x = pt.x + 10; pt.y = pt.y * 2");
 
 // Deserialize back into C++
 Variant updated = Variant::fromLuaObject(L["pt"]);
-auto p2 = std::static_pointer_cast<TestPoint>(
-    updated.asDynamic<TestPoint>()
-);
+// obtain the dynamic pointer from the Variant and cast to the concrete type
+// (many codebases provide either `asDynamic()` -> std::shared_ptr<void>
+// or a templated `asDynamic<T>()` helper; here we use the non-templated
+// form and cast explicitly for clarity)
+auto dyn_ptr = updated.asDynamic(); // std::shared_ptr<void>
+auto p2 = std::static_pointer_cast<TestPoint>(dyn_ptr);
 
 std::cout << "x=" << p2->x << ", y=" << p2->y << std::endl;
 // Expected output: x=15, y=18
@@ -270,4 +273,4 @@ Converters registered via `Variant::registerConverter<T>()` are invoked automati
 ## Summary
 
 This page provides an end-to-end guide to Variant usage: from registering custom converters to snapshotting Lua data and inspecting objects read-only.  
-Together with the [SDOM Variant Design Specification](../docs/extensible_variant_v6.md), it forms the complete developer reference for SDOM’s type system and cross-language reflection model.
+Together with the [SDOM Variant Design Specification](../extensible_variant.md), it forms the complete developer reference for SDOM’s type system and cross-language reflection model.
