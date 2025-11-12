@@ -362,10 +362,10 @@ void Box::onRender()
             SDOM::SpriteSheet* ss = asset.as<SDOM::SpriteSheet>();
             if (ss) 
             {
-                try
-                {
-                    // Ensure loaded (AssetHandle::as/get will lazily load, but explicit call is safe)
-                    ss->onLoad();
+                    try
+                    {
+                        // Ensure loaded (AssetHandle::as/get will lazily load, but explicit call is safe)
+                        ss->load();
                     static SDL_Color color = {255,255,255,255};
                     ss->drawSprite(spriteIndex, dstRect, color);
 

@@ -126,7 +126,8 @@ namespace SDOM
                 if (assetPtr && assetPtr->isLoaded()) 
                 {
                     // INFO("Factory::unloadAllAssetObjects: Unloading asset: " << name << " (" << assetPtr->getType() << ")");
-                    assetPtr->onUnload();
+                    // Use owner-safe helper to avoid virtual calls from destructors
+                    assetPtr->unload();
                 }
             }
         }
@@ -138,7 +139,8 @@ namespace SDOM
                 if (assetPtr && !assetPtr->isLoaded()) 
                 {
                     // INFO("Factory::loadAllAssetObjects: Loading asset: " << name << " (" << assetPtr->getType() << ")");
-                    assetPtr->onLoad();
+                    // Use owner-safe helper so ownership semantics are respected
+                    assetPtr->load();
                 }
             }
         }

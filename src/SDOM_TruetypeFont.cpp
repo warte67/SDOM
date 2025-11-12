@@ -77,7 +77,7 @@ namespace SDOM
     {
         if (ttf_font_handle_.isValid()) {
             // Forward load to underlying TTFAsset
-            ttf_font_handle_.get()->onLoad();
+            ttf_font_handle_.get()->load();
 
             // If the underlying asset reports loaded, mark this font as loaded too
             TTFAsset* ttfAsset = ttf_font_handle_->as<TTFAsset>();
@@ -94,7 +94,7 @@ namespace SDOM
     void TruetypeFont::onUnload() 
     {
         if (ttf_font_handle_.isValid()) {
-            ttf_font_handle_.get()->onUnload();
+            ttf_font_handle_.get()->unload();
         }
     } // END: TruetypeFont::onUnload() 
 
@@ -118,7 +118,7 @@ namespace SDOM
         if (ttf_font_handle_.isValid())
         {
             IAssetObject* asset = ttf_font_handle_.get();
-            if (asset && asset->isLoaded()) asset->onUnload();
+            if (asset && asset->isLoaded()) asset->unload();
             ttf_font_handle_.reset();
         }
 
@@ -156,7 +156,7 @@ namespace SDOM
             ttf_font_handle_.reset();
             return;
         }
-        if (!ttfAsset->isLoaded()) ttfAsset->onLoad();
+    if (!ttfAsset->isLoaded()) ttfAsset->load();
 
         // Sync font size if available
         int loadedSize = ttfAsset->getFontSize();

@@ -145,7 +145,7 @@ namespace SDOM
         SpriteSheet* ss_init = spriteSheet_.as<SpriteSheet>();
         if (ss_init) {
             if (!ss_init->isLoaded()) {
-                ss_init->onLoad();
+                ss_init->load();
             }
             // Sync metrics immediately if available
             int sw = ss_init->getSpriteWidth();
@@ -167,7 +167,7 @@ namespace SDOM
             auto* ss = spriteSheet_.as<SpriteSheet>();
             if (ss && ss->isLoaded()) 
             {
-                ss->onUnload();   // unload texture/resources
+                ss->unload();   // unload texture/resources
             }
             spriteSheet_.reset(); // drop our handle so the Factory/cache can reclaim if unused
         }    
@@ -240,7 +240,7 @@ namespace SDOM
 
         // Only request load if not already loaded (this can still recurse; guard prevents us looping)
         if (!ss->isLoaded()) {
-            ss->onLoad();
+            ss->load();
         }
 
         // Sync metrics
@@ -344,7 +344,7 @@ namespace SDOM
         if (spriteSheet_.isValid()) 
         {
             SpriteSheet* ss = spriteSheet_.as<SpriteSheet>();
-            if (ss && ss->isLoaded()) ss->onUnload();
+            if (ss && ss->isLoaded()) ss->unload();
             spriteSheet_.reset();
         }
         // Destroy any outline textures
@@ -387,7 +387,7 @@ namespace SDOM
         if (spriteSheet_.isValid())
         {
             SpriteSheet* ss = spriteSheet_.as<SpriteSheet>();
-            if (ss && ss->isLoaded()) ss->onUnload();
+            if (ss && ss->isLoaded()) ss->unload();
             spriteSheet_.reset();
         }
 
@@ -422,7 +422,7 @@ namespace SDOM
             spriteSheet_.reset();
             return;
         }
-        if (!ss->isLoaded()) ss->onLoad();
+    if (!ss->isLoaded()) ss->load();
 
         int sw = ss->getSpriteWidth();
         int sh = ss->getSpriteHeight();

@@ -102,7 +102,7 @@ namespace SDOM
                 if (icon_sprite_sheet_)
                 {
                     if (!icon_sprite_sheet_->isLoaded())
-                        icon_sprite_sheet_->onLoad();
+                        icon_sprite_sheet_->load();
                 }
                 else
                 {
@@ -158,7 +158,7 @@ namespace SDOM
                         AssetHandle created = factory.createAsset("SpriteSheet", init);
                         if (created.isValid()) {
                             icon_sprite_sheet_ = created.as<SpriteSheet>();
-                            if (icon_sprite_sheet_ && !icon_sprite_sheet_->isLoaded()) icon_sprite_sheet_->onLoad();
+                            if (icon_sprite_sheet_ && !icon_sprite_sheet_->isLoaded()) icon_sprite_sheet_->load();
                         } else {
                             ERROR("Error: IRangeControl '" + getName() + "' failed to create SpriteSheet wrapper for Texture resource '" + icon_resource_ + "'");
                             ret = false;
@@ -215,7 +215,7 @@ namespace SDOM
                     if (icon_sprite_sheet_)
                     {
                         if (!icon_sprite_sheet_->isLoaded())
-                            icon_sprite_sheet_->onLoad();
+                            icon_sprite_sheet_->load();
                     }
                     else
                     {
@@ -237,7 +237,7 @@ namespace SDOM
     {
         if (icon_sprite_sheet_ && !icon_sprite_sheet_->isLoaded())
         {
-            try { icon_sprite_sheet_->onLoad(); } catch(...) {}
+            try { icon_sprite_sheet_->load(); } catch(...) {}
         }
         setDirty(true);
         return true;
