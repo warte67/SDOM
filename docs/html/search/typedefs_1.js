@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['function_0',['Function',['../classSDOM_1_1IDataObject.html#a1258d34382d02dd5613d770a869b86bc',1,'SDOM::IDataObject']]]
+  ['data_0',['Data',['../structSDOM_1_1VariantStorage.html#a7f4766873b59905912536ee4f5d520f2',1,'SDOM::VariantStorage']]],
+  ['dynamictoluafn_1',['DynamicToLuaFn',['../classSDOM_1_1Variant.html#a630de3d7769b74587aa2c3d834359734',1,'SDOM::Variant']]]
 ];

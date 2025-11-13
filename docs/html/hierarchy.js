@@ -1,16 +1,27 @@
 var hierarchy =
 [
+    [ "SDOM::AssetRecord", "structSDOM_1_1AssetRecord.html", null ],
     [ "SDOM::AssetTypeCreators", "structSDOM_1_1AssetTypeCreators.html", null ],
     [ "SDOM::Bounds", "structSDOM_1_1Bounds.html", null ],
     [ "CLR", "classCLR.html", null ],
+    [ "SDOM::Variant::ConverterEntry", "structSDOM_1_1Variant_1_1ConverterEntry.html", null ],
     [ "SDOM::Core::CoreConfig", "structSDOM_1_1Core_1_1CoreConfig.html", null ],
+    [ "SDOM::DataRegistry", "classSDOM_1_1DataRegistry.html", null ],
+    [ "SDOM::DataRegistrySnapshot", "structSDOM_1_1DataRegistrySnapshot.html", null ],
+    [ "SDOM::DisplayRecord", "structSDOM_1_1DisplayRecord.html", null ],
+    [ "SDOM::VariantStorage::DynamicValue", "structSDOM_1_1VariantStorage_1_1DynamicValue.html", null ],
     [ "SDOM::EventManager", "classSDOM_1_1EventManager.html", null ],
     [ "SDOM::EventType", "classSDOM_1_1EventType.html", null ],
     [ "SDOM::EventTypeHash", "structSDOM_1_1EventTypeHash.html", null ],
     [ "std::exception", null, [
       [ "SDOM::Exception", "classSDOM_1_1Exception.html", null ]
     ] ],
+    [ "SDOM::Factory", "classSDOM_1_1Factory.html", null ],
     [ "SDOM::FontStyle", "structSDOM_1_1FontStyle.html", null ],
+    [ "SDOM::FunctionInfo", "structSDOM_1_1FunctionInfo.html", null ],
+    [ "SDOM::IBindingGenerator", "classSDOM_1_1IBindingGenerator.html", [
+      [ "SDOM::CBindingGenerator", "classSDOM_1_1CBindingGenerator.html", null ]
+    ] ],
     [ "SDOM::IButtonObject", "classSDOM_1_1IButtonObject.html", [
       [ "SDOM::Button", "classSDOM_1_1Button.html", null ],
       [ "SDOM::IconButton", "classSDOM_1_1IconButton.html", [
@@ -21,6 +32,7 @@ var hierarchy =
         [ "SDOM::RadioButton", "classSDOM_1_1RadioButton.html", null ]
       ] ]
     ] ],
+    [ "SDOM::DataRegistry::Impl", "structSDOM_1_1DataRegistry_1_1Impl.html", null ],
     [ "SDOM::IAssetObject::InitStruct", "structSDOM_1_1IAssetObject_1_1InitStruct.html", [
       [ "SDOM::IFontObject::InitStruct", "structSDOM_1_1IFontObject_1_1InitStruct.html", [
         [ "SDOM::BitmapFont::InitStruct", "structSDOM_1_1BitmapFont_1_1InitStruct.html", null ],
@@ -58,7 +70,6 @@ var hierarchy =
         [ "SDOM::Core", "classSDOM_1_1Core.html", null ],
         [ "SDOM::DisplayHandle", "classSDOM_1_1DisplayHandle.html", null ],
         [ "SDOM::Event", "classSDOM_1_1Event.html", null ],
-        [ "SDOM::Factory", "classSDOM_1_1Factory.html", null ],
         [ "SDOM::IAssetObject", "classSDOM_1_1IAssetObject.html", [
           [ "SDOM::IFontObject", "classSDOM_1_1IFontObject.html", [
             [ "SDOM::BitmapFont", "classSDOM_1_1BitmapFont.html", null ],
@@ -89,12 +100,21 @@ var hierarchy =
     ] ],
     [ "SDOM::Label::LabelToken", "structSDOM_1_1Label_1_1LabelToken.html", null ],
     [ "SDOM::IDisplayObject::ListenerEntry", "structSDOM_1_1IDisplayObject_1_1ListenerEntry.html", null ],
+    [ "SDOM::VariantStorage::LuaRefValue", "structSDOM_1_1VariantStorage_1_1LuaRefValue.html", null ],
     [ "SDOM::Factory::PerfStats", "structSDOM_1_1Factory_1_1PerfStats.html", null ],
     [ "SDOM::Label::PhraseToken", "structSDOM_1_1Label_1_1PhraseToken.html", null ],
+    [ "SDOM::PropertyInfo", "structSDOM_1_1PropertyInfo.html", null ],
     [ "SDOM::SDL_Utils", "classSDOM_1_1SDL__Utils.html", null ],
     [ "SDOM", "classSDOM.html", null ],
+    [ "SDOM_CoreConfig", "structSDOM__CoreConfig.html", null ],
     [ "SDOM::UnitTests::TestCase", "structSDOM_1_1UnitTests_1_1TestCase.html", null ],
     [ "SDOM::TypeCreators", "structSDOM_1_1TypeCreators.html", null ],
+    [ "SDOM::TypeInfo", "structSDOM_1_1TypeInfo.html", null ],
     [ "SDOM::UnitTests", "classSDOM_1_1UnitTests.html", null ],
+    [ "SDOM::Variant", "classSDOM_1_1Variant.html", null ],
+    [ "SDOM::VariantHash", "structSDOM_1_1VariantHash.html", null ],
+    [ "SDOM::Variant::VariantRegistry", "structSDOM_1_1Variant_1_1VariantRegistry.html", null ],
+    [ "SDOM::VariantStorage", "structSDOM_1_1VariantStorage.html", null ],
+    [ "SDOM::Variant::VariantView", "classSDOM_1_1Variant_1_1VariantView.html", null ],
     [ "SDOM::Version", "classSDOM_1_1Version.html", null ]
 ];

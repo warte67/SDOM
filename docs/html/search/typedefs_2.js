@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getter_0',['Getter',['../classSDOM_1_1IDataObject.html#a4a0c20d3b094cfb86ca99b62edbcf602',1,'SDOM::IDataObject']]]
+  ['object_0',['Object',['../structSDOM_1_1VariantStorage.html#aa1900b30e13c7f1b22d1eeb7d7380b51',1,'SDOM::VariantStorage']]]
 ];

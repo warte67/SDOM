@@ -17,5 +17,6 @@ var searchData=
   ['checkbox_5fx_14',['Checkbox_X',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfbacd043099600735cec890d5d66521534b',1,'SDOM']]],
   ['checked_15',['Checked',['../classSDOM.html#af652715c3e637c795824fa0afedda425a2627637e263ef687fa978b576580b8b1',1,'SDOM']]],
   ['clear_16',['Clear',['../classSDOM.html#af652715c3e637c795824fa0afedda425adc30bc0c7914db5918da4263fce93ad2',1,'SDOM']]],
-  ['count_17',['Count',['../classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30ae93f994f01c537c4e2f7d8528c3eb5e9',1,'SDOM::EventType']]]
+  ['copy_17',['Copy',['../classSDOM_1_1Variant.html#a6b332f7c56f99f71979b74792f0fcbdaa5fb63579fc981698f97d55bfecb213ea',1,'SDOM::Variant']]],
+  ['count_18',['Count',['../classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30ae93f994f01c537c4e2f7d8528c3eb5e9',1,'SDOM::EventType']]]
 ];

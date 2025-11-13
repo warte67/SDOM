@@ -32,5 +32,7 @@ var searchData=
   ['frame_5fcount_29',['frame_count',['../structSDOM_1_1UnitTests_1_1TestCase.html#a391b4ae6a9a7660a3f4ada7d3b85105e',1,'SDOM::UnitTests::TestCase']]],
   ['frominitstruct_30',['fromInitStruct',['../structSDOM_1_1TypeCreators.html#a15807ffd6629c821a869c22bbbd8d180',1,'SDOM::TypeCreators::fromInitStruct'],['../structSDOM_1_1AssetTypeCreators.html#acce95e4ee7a2328e234ea8a9beaf6764',1,'SDOM::AssetTypeCreators::fromInitStruct']]],
   ['fromlua_31',['fromLua',['../structSDOM_1_1TypeCreators.html#a11367cc263f56aa295753dc763a372ed',1,'SDOM::TypeCreators::fromLua'],['../structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce',1,'SDOM::AssetTypeCreators::fromLua']]],
-  ['func_32',['func',['../structSDOM_1_1UnitTests_1_1TestCase.html#a1470c77b3486505d7f07a4b09d3f7186',1,'SDOM::UnitTests::TestCase']]]
+  ['fromvariant_32',['fromVariant',['../structSDOM_1_1Variant_1_1ConverterEntry.html#a3eef0d03e0d4d74cfa088595eb838404',1,'SDOM::Variant::ConverterEntry']]],
+  ['func_33',['func',['../structSDOM_1_1UnitTests_1_1TestCase.html#a1470c77b3486505d7f07a4b09d3f7186',1,'SDOM::UnitTests::TestCase']]],
+  ['functions_34',['functions',['../structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1',1,'SDOM::TypeInfo']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['setter_0',['Setter',['../classSDOM_1_1IDataObject.html#ab6354bf6f9d60a272e0bbbadd834fcbf',1,'SDOM::IDataObject']]]
+  ['sdom_5fcoreconfig_0',['SDOM_CoreConfig',['../SDOM__CAPI_8h.html#a493c9fe0c56546730b7eb4031b15d8c2',1,'SDOM_CAPI.h']]],
+  ['super_1',['SUPER',['../classSDOM.html#a30b2979959418fcc8421582cd6cb7c08',1,'SDOM::SUPER'],['../classSDOM.html#a30b2979959418fcc8421582cd6cb7c08',1,'SDOM::SUPER']]]
 ];

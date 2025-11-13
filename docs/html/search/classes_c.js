@@ -5,5 +5,6 @@ var searchData=
   ['tristatebutton_2',['TristateButton',['../classSDOM_1_1TristateButton.html',1,'SDOM']]],
   ['truetypefont_3',['TruetypeFont',['../classSDOM_1_1TruetypeFont.html',1,'SDOM']]],
   ['ttfasset_4',['TTFAsset',['../classSDOM_1_1TTFAsset.html',1,'SDOM']]],
-  ['typecreators_5',['TypeCreators',['../structSDOM_1_1TypeCreators.html',1,'SDOM']]]
+  ['typecreators_5',['TypeCreators',['../structSDOM_1_1TypeCreators.html',1,'SDOM']]],
+  ['typeinfo_6',['TypeInfo',['../structSDOM_1_1TypeInfo.html',1,'SDOM']]]
 ];

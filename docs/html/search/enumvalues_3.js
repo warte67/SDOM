@@ -4,5 +4,6 @@ var searchData=
   ['depressed_1',['Depressed',['../classSDOM_1_1ArrowButton.html#ac96038b59a245f98c0e00de562345d40a83cd8cb2be2d9278f796db9daf0e61eb',1,'SDOM::ArrowButton']]],
   ['disabled_2',['Disabled',['../classSDOM.html#af652715c3e637c795824fa0afedda425ab9f5c797ebbf55adccdd8539a65a0241',1,'SDOM']]],
   ['down_3',['Down',['../classSDOM_1_1ArrowButton.html#a6559c1ade1061b6e6a525f599b06a12ca08a38277b0309070706f6652eeae9a53',1,'SDOM::ArrowButton::Down'],['../classSDOM.html#af652715c3e637c795824fa0afedda425a08a38277b0309070706f6652eeae9a53',1,'SDOM::Down']]],
-  ['dropshadow_4',['Dropshadow',['../classSDOM_1_1Label.html#a3c2910aa54834bd1fd44e456861832b2a89ff5213de49a7774a0d7069b4bcc833',1,'SDOM::Label']]]
+  ['dropshadow_4',['Dropshadow',['../classSDOM_1_1Label.html#a3c2910aa54834bd1fd44e456861832b2a89ff5213de49a7774a0d7069b4bcc833',1,'SDOM::Label']]],
+  ['dynamic_5',['Dynamic',['../classSDOM.html#adb3cee76d315de64056545773bf0d30ca971fd8cc345d8bd9f92e9f7d88fdf20c',1,'SDOM']]]
 ];

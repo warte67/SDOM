@@ -297,12 +297,27 @@ Public Types</h2></td></tr>
 <tr class="memitem:a9cb56e905b36976260e5aa56d30ee933" id="r_a9cb56e905b36976260e5aa56d30ee933"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cb56e905b36976260e5aa56d30ee933">Orientation</a> { <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933ac1b5fa03ecdb95d4a45dd1c40b02527f">Horizontal</a>
 , <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933a06ce2a25e5d12c166a36f654dbea6012">Vertical</a>
  }</td></tr>
+<tr class="memitem:adb3cee76d315de64056545773bf0d30c" id="r_adb3cee76d315de64056545773bf0d30c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb3cee76d315de64056545773bf0d30c">VariantType</a> : uint8_t { <br />
+&#160;&#160;<a class="el" href="#adb3cee76d315de64056545773bf0d30cabbb93ef26e3c101ff11cdd21cab08a94">Null</a> = 0
+, <a class="el" href="#adb3cee76d315de64056545773bf0d30cac26f15e86e3de4c398a8273272aba034">Bool</a>
+, <a class="el" href="#adb3cee76d315de64056545773bf0d30ca1686a6c336b71b36d77354cea19a8b52">Int</a>
+, <a class="el" href="#adb3cee76d315de64056545773bf0d30ca7f80fcc452c2f1ed2bb51b39d0864df1">Real</a>
+, <br />
+&#160;&#160;<a class="el" href="#adb3cee76d315de64056545773bf0d30ca27118326006d3829667a400ad23d5d98">String</a>
+, <a class="el" href="#adb3cee76d315de64056545773bf0d30ca4410ec34d9e6c1a68100ca0ce033fb17">Array</a>
+, <a class="el" href="#adb3cee76d315de64056545773bf0d30ca497031794414a552435f90151ac3b54b">Object</a>
+, <a class="el" href="#adb3cee76d315de64056545773bf0d30ca971fd8cc345d8bd9f92e9f7d88fdf20c">Dynamic</a>
+, <br />
+&#160;&#160;<a class="el" href="#adb3cee76d315de64056545773bf0d30ca536b11af87c649dc45cd120041d3d958">LuaRef</a>
+, <a class="el" href="#adb3cee76d315de64056545773bf0d30ca902b0d55fddef6f8d651fe1035b7d4bd">Error</a>
+<br />
+ }</td></tr>
 <tr class="memitem:a30b2979959418fcc8421582cd6cb7c08" id="r_a30b2979959418fcc8421582cd6cb7c08"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30b2979959418fcc8421582cd6cb7c08">SUPER</a> = <a class="el" href="classSDOM_1_1IDisplayObject.html">SDOM::IDisplayObject</a></td></tr>
 <tr class="memitem:a30b2979959418fcc8421582cd6cb7c08" id="r_a30b2979959418fcc8421582cd6cb7c08"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30b2979959418fcc8421582cd6cb7c08">SUPER</a> = <a class="el" href="classSDOM_1_1IDisplayObject.html">SDOM::IDisplayObject</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a901a1efbd00683f1cc1d6620ef153659" id="r_a901a1efbd00683f1cc1d6620ef153659"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a901a1efbd00683f1cc1d6620ef153659">ENABLE_ALL_UNIT_TESTS</a> = false</td></tr>
+<tr class="memitem:a901a1efbd00683f1cc1d6620ef153659" id="r_a901a1efbd00683f1cc1d6620ef153659"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a901a1efbd00683f1cc1d6620ef153659">ENABLE_ALL_UNIT_TESTS</a> = true</td></tr>
 <tr class="memdesc:a901a1efbd00683f1cc1d6620ef153659"><td class="mdescLeft">&#160;</td><td class="mdescRight">Globally enables or disables all registered <a class="el" href="classSDOM_1_1UnitTests.html">UnitTests</a> in <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a>.  <br /></td></tr>
 <tr class="memitem:aae2a66a6c54d731022cfdc409fff8b12" id="r_aae2a66a6c54d731022cfdc409fff8b12"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae2a66a6c54d731022cfdc409fff8b12">VERBOSE_TEST_OUTPUT</a> = true</td></tr>
 <tr class="memdesc:aae2a66a6c54d731022cfdc409fff8b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global compile-time configuration flags controlling test verbosity.  <br /></td></tr>
@@ -773,6 +788,40 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="adb3cee76d315de64056545773bf0d30c" name="adb3cee76d315de64056545773bf0d30c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb3cee76d315de64056545773bf0d30c">&#9670;&#160;</a></span>VariantType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class SDOM::VariantType : uint8_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30cabbb93ef26e3c101ff11cdd21cab08a94" name="adb3cee76d315de64056545773bf0d30cabbb93ef26e3c101ff11cdd21cab08a94"></a>Null&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30cac26f15e86e3de4c398a8273272aba034" name="adb3cee76d315de64056545773bf0d30cac26f15e86e3de4c398a8273272aba034"></a>Bool&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca1686a6c336b71b36d77354cea19a8b52" name="adb3cee76d315de64056545773bf0d30ca1686a6c336b71b36d77354cea19a8b52"></a>Int&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca7f80fcc452c2f1ed2bb51b39d0864df1" name="adb3cee76d315de64056545773bf0d30ca7f80fcc452c2f1ed2bb51b39d0864df1"></a>Real&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca27118326006d3829667a400ad23d5d98" name="adb3cee76d315de64056545773bf0d30ca27118326006d3829667a400ad23d5d98"></a>String&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca4410ec34d9e6c1a68100ca0ce033fb17" name="adb3cee76d315de64056545773bf0d30ca4410ec34d9e6c1a68100ca0ce033fb17"></a>Array&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca497031794414a552435f90151ac3b54b" name="adb3cee76d315de64056545773bf0d30ca497031794414a552435f90151ac3b54b"></a>Object&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca971fd8cc345d8bd9f92e9f7d88fdf20c" name="adb3cee76d315de64056545773bf0d30ca971fd8cc345d8bd9f92e9f7d88fdf20c"></a>Dynamic&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca536b11af87c649dc45cd120041d3d958" name="adb3cee76d315de64056545773bf0d30ca536b11af87c649dc45cd120041d3d958"></a>LuaRef&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca902b0d55fddef6f8d651fe1035b7d4bd" name="adb3cee76d315de64056545773bf0d30ca902b0d55fddef6f8d651fe1035b7d4bd"></a>Error&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
 <a id="ac004759fa5d6cd324931439829e17123" name="ac004759fa5d6cd324931439829e17123"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac004759fa5d6cd324931439829e17123">&#9670;&#160;</a></span>anchorPointToString_</h2>
@@ -879,7 +928,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool SDOM::ENABLE_ALL_UNIT_TESTS = false</td>
+          <td class="memname">bool SDOM::ENABLE_ALL_UNIT_TESTS = true</td>
         </tr>
       </table>
   </td>

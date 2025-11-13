@@ -6,7 +6,7 @@ var searchData=
   ['addedtostage_3',['AddedToStage',['../classSDOM_1_1EventType.html#a4ef2c364108bbdcafb94042ea371272f',1,'SDOM::EventType']]],
   ['alignment_4',['alignment',['../structSDOM_1_1FontStyle.html#abaa1e4c8b02dc4471f0d6b2cedc8b37f',1,'SDOM::FontStyle::alignment'],['../structSDOM_1_1Label_1_1InitStruct.html#a341277f3403b87a233856de90612eda6',1,'SDOM::Label::InitStruct::alignment']]],
   ['alignxref_5f_5',['alignXRef_',['../classSDOM_1_1Label.html#a1b03aafe47364efe194b562aef74845e',1,'SDOM::Label']]],
-  ['allowtextureresize_6',['allowTextureResize',['../structSDOM_1_1Core_1_1CoreConfig.html#aab009c9bda5ff2a7c8443e40632f542e',1,'SDOM::Core::CoreConfig']]],
+  ['allowtextureresize_6',['allowTextureResize',['../structSDOM__CoreConfig.html#ae314a1e8c0117277df8ba526b14a843b',1,'SDOM_CoreConfig::allowTextureResize'],['../structSDOM_1_1Core_1_1CoreConfig.html#aab009c9bda5ff2a7c8443e40632f542e',1,'SDOM::Core::CoreConfig::allowTextureResize']]],
   ['anchorbottom_7',['anchorBottom',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a32a70e8c0dfd503b306761e3ff59897c',1,'SDOM::IDisplayObject::InitStruct']]],
   ['anchorbottom_5f_8',['anchorBottom_',['../classSDOM_1_1IDisplayObject.html#ab3b87f6350ce8b2272d54888fb26bcc9',1,'SDOM::IDisplayObject']]],
   ['anchorleft_9',['anchorLeft',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#a17adc32c048d68ae0d26a9778f7f4827',1,'SDOM::IDisplayObject::InitStruct']]],

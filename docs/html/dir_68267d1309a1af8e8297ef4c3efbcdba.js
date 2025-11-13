@@ -5,10 +5,13 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_AssetHandle.cpp", "SDOM__AssetHandle_8cpp.html", "SDOM__AssetHandle_8cpp" ],
     [ "SDOM_BitmapFont.cpp", "SDOM__BitmapFont_8cpp.html", null ],
     [ "SDOM_Button.cpp", "SDOM__Button_8cpp.html", null ],
+    [ "SDOM_CAPI.cpp", "SDOM__CAPI_8cpp.html", "SDOM__CAPI_8cpp" ],
+    [ "SDOM_CBindingGenerator.cpp", "SDOM__CBindingGenerator_8cpp.html", "SDOM__CBindingGenerator_8cpp" ],
     [ "SDOM_CheckButton.cpp", "SDOM__CheckButton_8cpp.html", null ],
     [ "SDOM_CLR.cpp", "SDOM__CLR_8cpp.html", null ],
     [ "SDOM_Core.cpp", "SDOM__Core_8cpp.html", null ],
     [ "SDOM_Core_Lua.cpp", "SDOM__Core__Lua_8cpp.html", "SDOM__Core__Lua_8cpp" ],
+    [ "SDOM_DataRegistry.cpp", "SDOM__DataRegistry_8cpp.html", "SDOM__DataRegistry_8cpp" ],
     [ "SDOM_DisplayHandle.cpp", "SDOM__DisplayHandle_8cpp.html", null ],
     [ "SDOM_Event.cpp", "SDOM__Event_8cpp.html", null ],
     [ "SDOM_EventManager.cpp", "SDOM__EventManager_8cpp.html", null ],
@@ -44,5 +47,6 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_TruetypeFont.cpp", "SDOM__TruetypeFont_8cpp.html", null ],
     [ "SDOM_TTFAsset.cpp", "SDOM__TTFAsset_8cpp.html", null ],
     [ "SDOM_UnitTests.cpp", "SDOM__UnitTests_8cpp.html", null ],
-    [ "SDOM_Utils.cpp", "SDOM__Utils_8cpp.html", "SDOM__Utils_8cpp" ]
+    [ "SDOM_Utils.cpp", "SDOM__Utils_8cpp.html", "SDOM__Utils_8cpp" ],
+    [ "SDOM_Variant.cpp", "SDOM__Variant_8cpp.html", null ]
 ];

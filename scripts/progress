@@ -10,6 +10,10 @@
 # template below it, ready for editing.
 #
 # Run this at the start of each new day before logging progress.
+#
+# Example anchors inserted:
+#   <a id="november-9-2025"></a>
+#   <a id="latest-update"></a>
 # -------------------------------------------------------------
 
 set -euo pipefail
@@ -32,10 +36,15 @@ else
   TODAY=$(date '+%B %-d, %Y' 2>/dev/null || date '+%B %e, %Y')
 fi
 
+# Anchor ID (lowercase, hyphenated date) for linkability
+DATE_ID=$(LC_ALL=C echo "$TODAY" \
+  | tr '[:upper:]' '[:lower:]' \
+  | sed 's/,//g; s/[[:space:]]\+/-/g')
+
 # Normalize spacing (handles double-space in some locales)
 TODAY=$(echo "$TODAY" | sed 's/  / /g')
 
-awk -v TODAY="$TODAY" '
+awk -v TODAY="$TODAY" -v DATE_ID="$DATE_ID" '
   BEGIN {
     months = "January|February|March|April|May|June|July|August|September|October|November|December"
     heading_re = "^##[[:space:]]+.*(" months ") [0-9]{1,2}, [0-9]{4}"
@@ -43,11 +52,27 @@ awk -v TODAY="$TODAY" '
     out_n = 0
     today_idx = 0
     eod_idx = 0
+    date_anchor_re = "^<a id=\"[a-z]+-[0-9]{1,2}-[0-9]{4}\"></a>$"
+    pending_date_anchor = ""
   }
 
   {
-    # Remove any existing <a id="latest-update"></a> anchors
-    if ($0 ~ /^<a id="latest-update"><\/a>$/) next
+    # Capture the last date anchor encountered so we can drop it alongside the latest-update anchor
+    if ($0 ~ date_anchor_re) {
+      pending_date_anchor = $0
+      next
+    }
+
+    if ($0 ~ /^<a id="latest-update"><\/a>$/) {
+      pending_date_anchor = ""
+      next
+    }
+
+    if (pending_date_anchor != "") {
+      out_n++
+      lines[out_n] = pending_date_anchor
+      if (pending_date_anchor ~ date_anchor_re) pending_date_anchor = ""
+    }
 
     out_n++
     lines[out_n] = $0
@@ -64,6 +89,12 @@ awk -v TODAY="$TODAY" '
         if (lines[i] ~ /^###[[:space:]]*\[[A-Za-z]+ [0-9]{1,2}, [0-9]{4}\]/)
           last_idx = i
       }
+    }
+
+    if (pending_date_anchor != "") {
+      out_n++
+      lines[out_n] = pending_date_anchor
+      pending_date_anchor = ""
     }
 
     insert_anchor_at = 0
@@ -94,8 +125,11 @@ awk -v TODAY="$TODAY" '
     "- ☐ [Task 1]\n" \
     "- ☐ [Task 2]\n\n"
 
+    backlink_line = "> [⬆️ Back to Progress Updates](../progress.md#progress-updates)"
+
     for (i = 1; i <= out_n; i++) {
       if (i == insert_anchor_at) {
+        print "<a id=\"" DATE_ID "\"></a>"
         print "<a id=\"latest-update\"></a>"
 
         if (insert_new_heading) {
@@ -108,10 +142,12 @@ awk -v TODAY="$TODAY" '
           # Only insert the full template if file does NOT already end with "end-of-day"
           if (lines[out_n] !~ /^####[[:space:]]+end-of-day(.*)$/) {
             print template_block
+            print backlink_line
           } else {
             # Avoid duplicate terminators
             print "_[Brief summary of today’s focus or achievements.]_"
             print ""
+            print backlink_line
           }
         }
       }
@@ -123,8 +159,11 @@ awk -v TODAY="$TODAY" '
 
 # Only update file if there are changes
 if ! cmp -s "${FILE}" "${tmp_out}"; then
-  mv "${tmp_out}" "${FILE}"
+  mode=$(stat -c '%a' "${FILE}")
+  install -m "${mode}" "${tmp_out}" "${FILE}"
+  rm -f "${tmp_out}"
   echo "[update_latest_anchor] Updated: ${FILE}"
+  echo "[update_latest_anchor] Anchors inserted: <${DATE_ID}> and <latest-update>"
 else
   rm -f "${tmp_out}"
   echo "[✓] Progress log up-to-date (no changes)"

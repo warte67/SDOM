@@ -114,10 +114,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad457def750751b5c9a3aa6521378c290" id="r_ad457def750751b5c9a3aa6521378c290"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad457def750751b5c9a3aa6521378c290">AssetHandle</a> (const std::string &amp;name, const std::string &amp;type, const std::string &amp;filename)</td></tr>
 <tr class="memitem:a4d9e359856ddae1d1ca33415378794e5" id="r_a4d9e359856ddae1d1ca33415378794e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d9e359856ddae1d1ca33415378794e5">AssetHandle</a> (const AssetHandle &amp;other)</td></tr>
 <tr class="memitem:a5787c0a2b6ee9d85fae35e182949c8d3" id="r_a5787c0a2b6ee9d85fae35e182949c8d3"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5787c0a2b6ee9d85fae35e182949c8d3">~AssetHandle</a> ()</td></tr>
-<tr class="memitem:afb75184219f7081f20c61ae9405004c1" id="r_afb75184219f7081f20c61ae9405004c1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb75184219f7081f20c61ae9405004c1">onInit</a> () override</td></tr>
-<tr class="memitem:abfaf0cdee95eb6d16ce85a6f1a286722" id="r_abfaf0cdee95eb6d16ce85a6f1a286722"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfaf0cdee95eb6d16ce85a6f1a286722">onQuit</a> () override</td></tr>
-<tr class="memitem:a1fc8f7484310e2e3752c942e36316a6e" id="r_a1fc8f7484310e2e3752c942e36316a6e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1fc8f7484310e2e3752c942e36316a6e">onUnitTest</a> (int frame) override</td></tr>
-<tr class="memdesc:a1fc8f7484310e2e3752c942e36316a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
+<tr class="memitem:ad462ecf818b7112fb9ac815ede1d1ca5" id="r_ad462ecf818b7112fb9ac815ede1d1ca5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad462ecf818b7112fb9ac815ede1d1ca5">onInit</a> () override</td></tr>
+<tr class="memitem:a04af6e3e38f8a8cbed5893f285d728b5" id="r_a04af6e3e38f8a8cbed5893f285d728b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04af6e3e38f8a8cbed5893f285d728b5">onQuit</a> () override</td></tr>
+<tr class="memitem:adcf37c2ccbbfc626afb42f346af922c9" id="r_adcf37c2ccbbfc626afb42f346af922c9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcf37c2ccbbfc626afb42f346af922c9">onUnitTest</a> (int frame) override</td></tr>
+<tr class="memdesc:adcf37c2ccbbfc626afb42f346af922c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs unit tests for this object.  <br /></td></tr>
 <tr class="memitem:afbb31544072ef034b836e3ab016e1394" id="r_afbb31544072ef034b836e3ab016e1394"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afbb31544072ef034b836e3ab016e1394">reset</a> ()</td></tr>
 <tr class="memitem:a04257920fce9afdbcf5b9db9be24f738" id="r_a04257920fce9afdbcf5b9db9be24f738"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04257920fce9afdbcf5b9db9be24f738">get</a> () const</td></tr>
 <tr class="memitem:a3bbabb1ae13cd776b9c035af3a71fc3d" id="r_a3bbabb1ae13cd776b9c035af3a71fc3d"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
@@ -148,6 +148,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a88b1ede2f143d7df9375f8b1ef938126"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for adding a property to the registry.  <br /></td></tr>
 <tr class="memitem:a817578463d1fa2c2e9e060c09eaa5a5a" id="r_a817578463d1fa2c2e9e060c09eaa5a5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a817578463d1fa2c2e9e060c09eaa5a5a">registerBindings</a> (const std::string &amp;typeName)</td></tr>
 <tr class="memdesc:a817578463d1fa2c2e9e060c09eaa5a5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Public entrypoint to trigger this object's binding registration.  <br /></td></tr>
+<tr class="memitem:aa08b53a4af124ffa6a4bb547f1f8423d" id="r_aa08b53a4af124ffa6a4bb547f1f8423d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#aa08b53a4af124ffa6a4bb547f1f8423d">registerBindings</a> (const std::string &amp;typeName, <a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> &amp;registry)</td></tr>
 <tr class="memitem:acbee734b61e90b834672ce530f1415aa" id="r_acbee734b61e90b834672ce530f1415aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#acbee734b61e90b834672ce530f1415aa">BIND_INFO</a> (const std::string &amp;typeName, const std::string &amp;typeNameLocal)</td></tr>
 <tr class="memitem:a1947ff718446a6a81cd108b87a475d9f" id="r_a1947ff718446a6a81cd108b87a475d9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
 </table><table class="memberdecls">
@@ -173,8 +174,12 @@ Static Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a43d4d952da4701cda3008247796c4126" id="r_a43d4d952da4701cda3008247796c4126"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a43d4d952da4701cda3008247796c4126">_registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua) override</td></tr>
-<tr class="memitem:aa2feadf4349896fd22845f5506c30a8b" id="r_aa2feadf4349896fd22845f5506c30a8b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2feadf4349896fd22845f5506c30a8b">registerBindingsImpl</a> (const std::string &amp;typeName) override</td></tr>
+<tr class="memitem:a43d4d952da4701cda3008247796c4126" id="r_a43d4d952da4701cda3008247796c4126"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a43d4d952da4701cda3008247796c4126">_registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua) override</td></tr>
+<tr class="memitem:aa2feadf4349896fd22845f5506c30a8b" id="r_aa2feadf4349896fd22845f5506c30a8b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2feadf4349896fd22845f5506c30a8b">registerBindingsImpl</a> (const std::string &amp;typeName) override</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-static-methods" class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:a290db93bef651c53f48ec32156a8753c" id="r_a290db93bef651c53f48ec32156a8753c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a290db93bef651c53f48ec32156a8753c">activeRegistry</a> ()</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -188,6 +193,7 @@ Protected Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pro-static-attribs" class="groupheader"><a id="pro-static-attribs" name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
 <tr class="memitem:af05003dfae81bf63b89c8bd1f57fd0d3" id="r_af05003dfae81bf63b89c8bd1f57fd0d3"><td class="memItemLeft" align="right" valign="top">static std::unordered_set&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#af05003dfae81bf63b89c8bd1f57fd0d3">s_registered_types_</a></td></tr>
+<tr class="memitem:a8ae6a7a1fb166dfbc74a36d9bc87b9df" id="r_a8ae6a7a1fb166dfbc74a36d9bc87b9df"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a8ae6a7a1fb166dfbc74a36d9bc87b9df">s_active_registry_</a> = nullptr</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Non-owning reference to a registered <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> asset. </p>
@@ -420,6 +426,31 @@ ZLIB License</h1>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">SDOM::IDataObject</a>.</p>
+
+</div>
+</div>
+<a id="a290db93bef651c53f48ec32156a8753c" name="a290db93bef651c53f48ec32156a8753c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a290db93bef651c53f48ec32156a8753c">&#9670;&#160;</a></span>activeRegistry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> * SDOM::IDataObject::activeRegistry </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -946,8 +977,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="afb75184219f7081f20c61ae9405004c1" name="afb75184219f7081f20c61ae9405004c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb75184219f7081f20c61ae9405004c1">&#9670;&#160;</a></span>onInit()</h2>
+<a id="ad462ecf818b7112fb9ac815ede1d1ca5" name="ad462ecf818b7112fb9ac815ede1d1ca5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad462ecf818b7112fb9ac815ede1d1ca5">&#9670;&#160;</a></span>onInit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -956,7 +987,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool SDOM::AssetHandle::onInit </td>
+          <td class="memname">bool SDOM::AssetHandle::onInit </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -973,8 +1004,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="abfaf0cdee95eb6d16ce85a6f1a286722" name="abfaf0cdee95eb6d16ce85a6f1a286722"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfaf0cdee95eb6d16ce85a6f1a286722">&#9670;&#160;</a></span>onQuit()</h2>
+<a id="a04af6e3e38f8a8cbed5893f285d728b5" name="a04af6e3e38f8a8cbed5893f285d728b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04af6e3e38f8a8cbed5893f285d728b5">&#9670;&#160;</a></span>onQuit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -983,7 +1014,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SDOM::AssetHandle::onQuit </td>
+          <td class="memname">void SDOM::AssetHandle::onQuit </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -1000,8 +1031,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a1fc8f7484310e2e3752c942e36316a6e" name="a1fc8f7484310e2e3752c942e36316a6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fc8f7484310e2e3752c942e36316a6e">&#9670;&#160;</a></span>onUnitTest()</h2>
+<a id="adcf37c2ccbbfc626afb42f346af922c9" name="adcf37c2ccbbfc626afb42f346af922c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcf37c2ccbbfc626afb42f346af922c9">&#9670;&#160;</a></span>onUnitTest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1010,7 +1041,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool SDOM::AssetHandle::onUnitTest </td>
+          <td class="memname">bool SDOM::AssetHandle::onUnitTest </td>
           <td>(</td>
           <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>frame</em></span></td><td>)</td>
           <td></td>
@@ -1026,7 +1057,7 @@ template&lt;typename T&gt; </div>
 <p>Runs unit tests for this object. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if all tests pass, false otherwise. </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classSDOM_1_1IDataObject.html#ae4530264b8a284b3c41a306b20b8f648">SDOM::IDataObject</a>.</p>
+<p>Implements <a class="el" href="classSDOM_1_1IUnitTest.html#a810a8dd15c2fdf0d8f36858b73a8a9e2">SDOM::IUnitTest</a>.</p>
 
 </div>
 </div>
@@ -1287,7 +1318,7 @@ template&lt;typename T, typename BaseT&gt; </div>
 </div>
 </div>
 <a id="a817578463d1fa2c2e9e060c09eaa5a5a" name="a817578463d1fa2c2e9e060c09eaa5a5a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a817578463d1fa2c2e9e060c09eaa5a5a">&#9670;&#160;</a></span>registerBindings()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a817578463d1fa2c2e9e060c09eaa5a5a">&#9670;&#160;</a></span>registerBindings() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1311,6 +1342,35 @@ template&lt;typename T, typename BaseT&gt; </div>
 
 <p>Public entrypoint to trigger this object's binding registration. </p>
 <p>This is the polymorphic root. Derived classes may safely call <span class="tt"><a class="el" href="classSDOM_1_1IDataObject.html#a817578463d1fa2c2e9e060c09eaa5a5a" title="Public entrypoint to trigger this object&#39;s binding registration.">registerBindings()</a></span> without knowing the concrete type. </p>
+
+</div>
+</div>
+<a id="aa08b53a4af124ffa6a4bb547f1f8423d" name="aa08b53a4af124ffa6a4bb547f1f8423d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa08b53a4af124ffa6a4bb547f1f8423d">&#9670;&#160;</a></span>registerBindings() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::IDataObject::registerBindings </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>registry</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1594,6 +1654,28 @@ template&lt;typename T, typename BaseT&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8ae6a7a1fb166dfbc74a36d9bc87b9df" name="a8ae6a7a1fb166dfbc74a36d9bc87b9df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ae6a7a1fb166dfbc74a36d9bc87b9df">&#9670;&#160;</a></span>s_active_registry_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a>* SDOM::IDataObject::s_active_registry_ = nullptr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel thread_local">thread_local</span><span class="mlabel static">static</span><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

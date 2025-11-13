@@ -51,8 +51,12 @@ var searchData=
   ['frame_5fcount_48',['frame_count',['../structSDOM_1_1UnitTests_1_1TestCase.html#a391b4ae6a9a7660a3f4ada7d3b85105e',1,'SDOM::UnitTests::TestCase']]],
   ['frominitstruct_49',['fromInitStruct',['../structSDOM_1_1TypeCreators.html#a15807ffd6629c821a869c22bbbd8d180',1,'SDOM::TypeCreators::fromInitStruct'],['../structSDOM_1_1AssetTypeCreators.html#acce95e4ee7a2328e234ea8a9beaf6764',1,'SDOM::AssetTypeCreators::fromInitStruct']]],
   ['fromlua_50',['fromLua',['../structSDOM_1_1TypeCreators.html#a11367cc263f56aa295753dc763a372ed',1,'SDOM::TypeCreators::fromLua'],['../structSDOM_1_1AssetTypeCreators.html#ac033aa5570c7f5d83cc9b3d3757307ce',1,'SDOM::AssetTypeCreators::fromLua']]],
-  ['fromname_51',['fromName',['../classSDOM_1_1EventType.html#a0a4f07dc114c4e7ec80f15878864a3e5',1,'SDOM::EventType']]],
-  ['fullstring_52',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]],
-  ['func_53',['func',['../structSDOM_1_1UnitTests_1_1TestCase.html#a1470c77b3486505d7f07a4b09d3f7186',1,'SDOM::UnitTests::TestCase']]],
-  ['functions_54',['Functions',['../classSDOM_1_1ArrowButton.html#ArrowButton_Functions',1,'Functions'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Functions',1,'Functions'],['../classSDOM_1_1Button.html#Button_Functions',1,'Functions'],['../classSDOM_1_1IButtonObject.html#IButtonObject_Functions',1,'Functions'],['../classSDOM_1_1TristateButton.html#TristateButton_Functions',1,'Functions']]]
+  ['fromluaobject_51',['fromLuaObject',['../classSDOM_1_1Variant.html#aed37a1b861ecaf5633a625941a87254f',1,'SDOM::Variant']]],
+  ['fromname_52',['fromName',['../classSDOM_1_1EventType.html#a0a4f07dc114c4e7ec80f15878864a3e5',1,'SDOM::EventType']]],
+  ['fromvariant_53',['fromVariant',['../structSDOM_1_1Variant_1_1ConverterEntry.html#a3eef0d03e0d4d74cfa088595eb838404',1,'SDOM::Variant::ConverterEntry']]],
+  ['fullstring_54',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]],
+  ['func_55',['func',['../structSDOM_1_1UnitTests_1_1TestCase.html#a1470c77b3486505d7f07a4b09d3f7186',1,'SDOM::UnitTests::TestCase']]],
+  ['functioninfo_56',['FunctionInfo',['../structSDOM_1_1FunctionInfo.html',1,'SDOM']]],
+  ['functions_57',['Functions',['../classSDOM_1_1ArrowButton.html#ArrowButton_Functions',1,'Functions'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Functions',1,'Functions'],['../classSDOM_1_1Button.html#Button_Functions',1,'Functions'],['../classSDOM_1_1IButtonObject.html#IButtonObject_Functions',1,'Functions'],['../classSDOM_1_1TristateButton.html#TristateButton_Functions',1,'Functions']]],
+  ['functions_58',['functions',['../structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1',1,'SDOM::TypeInfo']]]
 ];

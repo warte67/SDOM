@@ -162,6 +162,18 @@ var classSDOM =
       [ "BottomCenter", "classSDOM.html#a176e331c0f2e44c038e10b25684370b5abf7d9c8ad2f89a37cf5378b5fec0b420", null ],
       [ "BottomRight", "classSDOM.html#a176e331c0f2e44c038e10b25684370b5a9146bfc669fddc88db2c4d89297d0e9a", null ]
     ] ],
+    [ "VariantType", "classSDOM.html#adb3cee76d315de64056545773bf0d30c", [
+      [ "Null", "classSDOM.html#adb3cee76d315de64056545773bf0d30cabbb93ef26e3c101ff11cdd21cab08a94", null ],
+      [ "Bool", "classSDOM.html#adb3cee76d315de64056545773bf0d30cac26f15e86e3de4c398a8273272aba034", null ],
+      [ "Int", "classSDOM.html#adb3cee76d315de64056545773bf0d30ca1686a6c336b71b36d77354cea19a8b52", null ],
+      [ "Real", "classSDOM.html#adb3cee76d315de64056545773bf0d30ca7f80fcc452c2f1ed2bb51b39d0864df1", null ],
+      [ "String", "classSDOM.html#adb3cee76d315de64056545773bf0d30ca27118326006d3829667a400ad23d5d98", null ],
+      [ "Array", "classSDOM.html#adb3cee76d315de64056545773bf0d30ca4410ec34d9e6c1a68100ca0ce033fb17", null ],
+      [ "Object", "classSDOM.html#adb3cee76d315de64056545773bf0d30ca497031794414a552435f90151ac3b54b", null ],
+      [ "Dynamic", "classSDOM.html#adb3cee76d315de64056545773bf0d30ca971fd8cc345d8bd9f92e9f7d88fdf20c", null ],
+      [ "LuaRef", "classSDOM.html#adb3cee76d315de64056545773bf0d30ca536b11af87c649dc45cd120041d3d958", null ],
+      [ "Error", "classSDOM.html#adb3cee76d315de64056545773bf0d30ca902b0d55fddef6f8d651fe1035b7d4bd", null ]
+    ] ],
     [ "anchorPointToString_", "classSDOM.html#ac004759fa5d6cd324931439829e17123", null ],
     [ "button_state_pairs", "classSDOM.html#a479fe3b6d6b7a81bb9d305429c19dd71", null ],
     [ "button_state_to_string", "classSDOM.html#a2ddfe0c3e88fd1b6e58620d2b63e769f", null ],

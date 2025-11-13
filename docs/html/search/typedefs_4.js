@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['reshandle_0',['ResHandle',['../namespaceSDOM.html#a061df69233ffb2da2feba4566fd72e96',1,'SDOM']]]
+  ['varianttodynamicfn_0',['VariantToDynamicFn',['../classSDOM_1_1Variant.html#a0a5a723ed4ac2b16489588e7a565fb5e',1,'SDOM::Variant']]]
 ];

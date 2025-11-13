@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🪄_20example_0',['🪄 Example',['../classSDOM_1_1DisplayHandle.html#autotoc_md27',1,'']]]
+  ['🧩_20key_20features_0',['🧩 Key Features',['../classSDOM_1_1DisplayHandle.html#autotoc_md23',1,'']]]
 ];

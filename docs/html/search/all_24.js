@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🪟_20windows_0',['🪟 Windows',['../md_README.html#autotoc_md68',1,'']]]
+  ['🪄_20example_0',['🪄 Example',['../classSDOM_1_1DisplayHandle.html#autotoc_md27',1,'']]]
 ];
