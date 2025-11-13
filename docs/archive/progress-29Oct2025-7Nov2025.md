@@ -2,7 +2,8 @@
 
 > These entries were moved from [progress.md](../progress.md) to keep the main log focused on current work.
 
-## 🗓️ October 29, 2025 — Temporal Testing Framework   {#october-29-2025}
+<a id="october-29-2025"></a>
+## 🗓️ October 29, 2025 — Temporal Testing Framework
 _Introduction of frame-synchronous test execution and temporal validation systems._
 
 ### 🧩 Temporal Test System  
@@ -29,10 +30,12 @@ _Introduction of frame-synchronous test execution and temporal validation system
 - Frame-based testing is now stable and synchronized with the main loop.  
 - Event dispatch verified across mouse and keyboard systems — ready for **EventManager** modularization and timer integration.  
 
-> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+[🔝 Back to Progress Log](../progress.md#progress-updates)
+
 ---
 
-## 🗓️ October 30, 2025 — EventManager Modularization Prep   {#october-30-2025}
+<a id="october-30-2025"></a>
+## 🗓️ October 30, 2025 — EventManager Modularization Prep
 _Preparatory work for breaking down EventManager and verifying input event flow._
 
 ### 🧩 EventManager Refactor Design  
@@ -49,10 +52,12 @@ _Preparatory work for breaking down EventManager and verifying input event flow.
 - Refactor groundwork complete — event dispatch paths mapped and modularization ready.  
 - Improved logging and validation make failures more diagnosable across input systems.  
 
-> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+[🔝 Back to Progress Log](../progress.md#progress-updates)
+
 ---
 
-## 🗓️ October 31, 2025 — EventType Registry and Core Integration   {#october-31-2025}
+<a id="october-31-2025"></a>
+## 🗓️ October 31, 2025 — EventType Registry and Core Integration
 _Expanded event coverage and verified registry consistency across Core systems._  
 *(Yes, I worked on Halloween — scary, isn’t it?)*
 
@@ -81,10 +86,12 @@ _Expanded event coverage and verified registry consistency across Core systems._
 - EventType registry now validated; Core reconfiguration is thread-safe and predictable.  
 - Foundation laid for future window mutators and fullscreen event handling.  
 
-> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+[🔝 Back to Progress Log](../progress.md#progress-updates)
+
 ---
 
-## 🗓️ November 1, 2025 — EventType UnitTests   {#november-1-2025}
+<a id="november-1-2025"></a>
+## 🗓️ November 1, 2025 — EventType UnitTests
 _Extended EventType testing, configuration stability, and fullscreen handling refinements._
 
 ### 🧩 EventType UnitTests  
@@ -108,10 +115,12 @@ _Extended EventType testing, configuration stability, and fullscreen handling re
 - EventType framework scaffolding complete; individual event categories now systematically tracked by test mode.  
 - Core configuration and fullscreen logic stabilized in preparation for advanced event mutator integration.  
 
-> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+[🔝 Back to Progress Log](../progress.md#progress-updates)
+
 ---
 
-## 🗓️ November 2, 2025 — Event System and Core Configuration Refinements   {#november-2-2025}
+<a id="november-2-2025"></a>
+## 🗓️ November 2, 2025 — Event System and Core Configuration Refinements
 _Refactoring event dispatch verification and introducing deferred, thread-safe CoreConfig updates._
 
 ### 🧩 SDOM Window Event Mutators  
@@ -138,11 +147,13 @@ _Refactoring event dispatch verification and introducing deferred, thread-safe C
 ### 🌟 **Summary:**  
 - Core and EventManager internals are now safer and cleaner — configuration changes are deferred properly, event behavior tests pass consistently, and the framework is ready for more advanced input testing across windows and devices.  
 
-> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+[🔝 Back to Progress Log](../progress.md#progress-updates)
+
 ---
 
 
-## 🗓️ November 3, 2025 — Event Lifecycle Verification & Lua Bridge Validation  {#november-3-2025}
+<a id="november-3-2025"></a>
+## 🗓️ November 3, 2025 — Event Lifecycle Verification & Lua Bridge Validation
 
 _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++) and Lua integration coverage._
 
@@ -204,12 +215,13 @@ _Advancing SDOM’s event verification pipeline into full lifecycle testing (C++
 - **No leaks, no lost references** — verified with Valgrind: 0 bytes definitely or indirectly lost.
 
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
-## 🗓️ November 4, 2025 — Build & Toolchain Refinement {#november-4-2025}
+<a id="november-4-2025"></a>
+## 🗓️ November 4, 2025 — Build & Toolchain Refinement
 
 _Resolved absolute-path dependencies, improved build automation for portability, and finalized the documentation/version-control workflow._
 
-> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 ---
 
 ### 🧩 **Build System & Script Improvements**
@@ -263,12 +275,14 @@ SDOM’s `EventType` subsystem is now **fully verified** from engine to Lua, ens
 - Stable listener registration and lifetime handling  
 - Consistent cross-language behavior across all platforms  
 
+[🔝 Back to Progress Log](../progress.md#progress-updates)
+
 ---
-## 🗓️ November 5, 2025 — Re-entrant Lua Tests + Lifecycle Fixes + ArrowButton Integration {#november-5-2025}
+<a id="november-5-2025"></a>
+## 🗓️ November 5, 2025 — Re-entrant Lua Tests + Lifecycle Fixes + ArrowButton Integration
 
 _Reworked the Lua unit-test harness for true re-entrancy, fixed lifecycle event propagation, and completed full Lua integration and testing for **ArrowButton**._
 
-> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 ---
 
 ### 🧩 **Unit Tests & Lua Integration**
@@ -334,8 +348,11 @@ This module is marked **✅ Complete** and serves as a reference pattern for fut
 - ☐ Begin unifying documentation headers between C++ and Lua test sources.  
 - ☐ Expand Lua stubs to include upcoming control types (`ToggleButton`, `Slider`, `CheckButton`, etc.).
 
+[🔝 Back to Progress Log](../progress.md#progress-updates)
+
 ---
-## 🗓️ November 6, 2025 — Documentation, Lua Bindings, and Unit Testing Standardization {#november-6-2025}
+<a id="november-6-2025"></a>
+## 🗓️ November 6, 2025 — Documentation, Lua Bindings, and Unit Testing Standardization
 
 _Completed full documentation, Lua integration, and unit test coverage for four SDOM core objects:_  
 **`ArrowButton`**, **`AssetHandle`**, **`BitmapFont`**, and **`Button`**.  
@@ -392,9 +409,12 @@ All four components are now **fully documented, Lua-integrated, and regression-t
 Additionally, **TristateButton** now provides a unified base for all multi-state buttons, marking the start of systematic Lua integration for its derived classes.
 
 
-> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+[🔝 Back to Progress Log](../progress.md#progress-updates)
+
 ---
-## November 7, 2025 — Doxygen Comment Standardization & Unit Test Expansion {#november-7-2025}
+<a id="november-7-2025"></a>
+
+## November 7, 2025 — Doxygen Comment Standardization & Unit Test Expansion
 
 > 💬 *“Documentation may not compile, but it prevents future crimes.”*
 
@@ -423,5 +443,8 @@ unit tests. This sets the foundation for unified C++/Lua verification coverage.
 
 #### 🤔 *End of Day Reflection*  
 > *“It’s not glamorous, but neither is debugging undocumented code.”*
+
+[🔝 Back to Progress Log](../progress.md#progress-updates)
+
 
 ---

@@ -16,18 +16,21 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 
 # Progress Updates
 
+<a id="july-2-2025"></a>
 ## [July 2, 2025]
 - Initial rough draft and proof of concept.
 
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="august-5-2025"></a>
 ## [August 5, 2025] 
 - SDOM secondary rough draft
 
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-19-2025"></a>
 ## [September 19, 2025]
 - Proof of concept approved. Main development approved. Work begins officially.
 - Improved Doxygen documentation for all major headers and macros.
@@ -53,6 +56,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-20-2025"></a>
 ## [September 20, 2025]
 - Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.
 - Event system foundation implemented and documented.
@@ -64,6 +68,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-21-2025"></a>
 ## [September 21, 2025]
 - Renamed `resource_ptr` to `ResourceHandle` throughout the codebase for clarity.
     - The new name better reflects its role as an opaque handle or key for resource lookup, rather than a smart pointer with ownership semantics.
@@ -95,6 +100,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-22-2025"></a>
 ## [September 22, 2025]
 - **Unit Test Framework Refined:**  
     - Simplified the unit test system: now every resource implements `onUnitTests()` for built-in tests.
@@ -122,7 +128,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
-### [September 23, 2025]
+<a id="september-23-2025"></a>
+## [September 23, 2025]
 - **Event System Preliminary Testing:**  
     - Successfully integrated and tested the event system with live SDL3 events.
     - Verified that mouse, keyboard, window, and focus events are received and dispatched correctly.
@@ -143,6 +150,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-24-2025"></a>
 ## [September 24, 2025]
 - **Event System Debugging:**
     - Resolved compile-time issues with `ListenerEntry` constructor and `push_back` calls in `addEventListener`.
@@ -169,6 +177,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-25-2025"></a>
 ## [September 25, 2025]
 - **JSON → Lua Transition Complete:**  
     - All configuration, scripting, and resource creation now use Lua tables via Sol2.
@@ -194,6 +203,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-26-2025"></a>
 ## [September 26, 2025]
 - **Box Unit Tests Complete:**  
     - Finalized comprehensive unit tests for the Box object, covering creation, hierarchy, anchor logic, and world coordinate propagation.
@@ -215,6 +225,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-27-2025"></a>
 ## [September 27, 2025]
 - **Lua Integration Complete:**  
     - All major Core and Factory methods are now exposed to Lua via Sol2 usertype registration.
@@ -232,6 +243,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-28-2025"></a>
 ## [September 28, 2025]
 - **Lua Binding Improvements:**
     - Refined Lua usertype registration to ensure idempotent and consistent bindings.
@@ -267,6 +279,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-29-2025"></a>
 ## [September 29, 2025]
 - **Lua Binding Debugging:**
     - Added controlled debug prints to Lua usertype registration to trace binding operations.
@@ -304,6 +317,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="september-30-2025"></a>
 ## [September 30, 2025]
 - **Summary:**
     - Consolidated work focused on lifecycle event dispatch, Lua bindings robustness, and logging/debug cleanup.  These changes make lifecycle events available to Lua listeners, surface Lua errors, and stabilize the debug/logging surface for continued iteration.
@@ -349,6 +363,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
+<a id="october-2-2025"></a>
 ## [October 2, 2025]
 - **Synthetic Event Handling Robustness:**
     - Refined synthetic mouse event generation and dispatch to work reliably in both floating and tiled window manager modes.
@@ -381,6 +396,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="october-3-2025"></a>
 ## [October 3, 2025]
 - Cleaned up noisy debug output across the codebase:
     - Replaced ad-hoc std::cout dbg prints with DEBUG_LOG and gated test‑only logs behind a new DEBUG_LUA_TESTS / LUA_INFO wrapper.
@@ -435,6 +451,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="october-4-2025"></a>
 ## [October 4, 2025]
 - Quick fixes & Lua binding polish (morning)
     - Fixed a typo in examples/test Lua callback (evt.taget → evt.target) that caused nil-index errors in right‑click handlers.
@@ -453,6 +470,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="october-5-2025"></a>
 ## [October 5, 2025]
 - Refactored Lua Core bindings:
     - Centralized and simplified Core::_registerDisplayObject() by introducing small per-signature binder lambdas (`bind_noarg`, `bind_table`, `bind_string`, `bind_bool_arg`, `bind_do_arg`, `bind_return_*` and `bind_callback_*`).
@@ -473,6 +491,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="october-6-2025"></a>
 ## [October 6, 2025]
 - Lua binding refactor (IDisplayObject):
     - Replaced repetitive sol2 wrappers with small, signature-based helper lambdas using a consistent naming scheme: `bind_{return}_{args}` (e.g., `bind_R_0`, `bind_void_i`, `bind_R_do`, `bind_void_str`, `_nc` variants for non-const).
@@ -530,6 +549,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="october-7-2025"></a>
 ## [October 7, 2025]
 - cleaned up the heavy includes from the header files to reduce compile times and improve modularity.
 - Moved several implementation details from headers to source files, including private methods and member variables.
@@ -555,6 +575,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="october-8-2025"></a>
 ## [October 8, 2025] 
 - drawSprite Lua API / overload consolidation
     - Consolidated Lua drawSprite wrappers to a single exposed name with deterministic dispatch:
@@ -590,6 +611,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="october-9-2025"></a>
 ## [October 9, 2025] 
 - Codebase rename: 
     - DisplayObject -> DisplayHandle and AssetObject -> AssetHandle — completed across the C++ sources and Lua scripts.
@@ -630,6 +652,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
+<a id="october-11-2025"></a>
 ## [October 11, 2025]
 - **BitmapFont & TruetypeFont Resource Creation Improvements:**
     - Refactored resource creation so both BitmapFont and TruetypeFont assets can be registered via the config table or manual `createAsset()` calls.
@@ -664,6 +687,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
+<a id="october-12-2025"></a>
 ## [October 12, 2025]
 - **Internal Resource Renaming:**
     - Renamed all default internal resources for clarity and consistency:
@@ -691,6 +715,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
+<a id="october-13-2025"></a>
 ## [October 13, 2025]
 - **Added inline numeric style escapes to Label tokenization:**
   - `[border=N]`, `[outline=N]`, `[pad=WxH]` / `[padding=WxH]`, `[dropshadow=X,Y]`
@@ -724,6 +749,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
+<a id="october-14-2025"></a>
 ## [October 14, 2025]
 - Added `Frame` scaffolding and registered the `Frame` DOM type with the Factory; SDOM_Frame.cpp implements minimal constructors and defers behavior to `IPanelObject`.
 - `IPanelObject`:
@@ -755,6 +781,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
+<a id="october-15-2025"></a>
 ## [October 15, 2025]
 - **Library Maintenance**
   - Cleaned up both system and local installs of the SDOM API library.
@@ -795,6 +822,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
+<a id="october-16-2025"></a>
 ## [October 16, 2025]
 - **ArrowButton**
   - Added `ArrowButton` as a descendant of `IconButton`.
@@ -837,6 +865,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
+<a id="october-17-2025"></a>
 ## [October 17, 2025]
 - **ScrollBar:**
   - Added `ScrollBar` scaffolding as a descendant of `IRangeControl`.
@@ -869,6 +898,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
+<a id="october-18-2025"></a>
 ## [October 18, 2025]
 - **Universally support multiple icon set sizes:**
   - Refactored `IPanelObject` to properly render different sized icon SpriteSheet assets.
@@ -888,7 +918,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
-### [October 19, 2025]
+<a id="october-19-2025"></a>
+## [October 19, 2025]
 
 **- Implemented per-type Lua binding registry and dispatcher:**  
 - Added `DisplayHandle::ensure_type_bind_table(...)` and a `SDOM_Bindings` registry.
@@ -907,7 +938,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
-### [October 20, 2025]
+<a id="october-20-2025"></a>
+## [October 20, 2025]
 - Implemented a C++ per-type Lua binding registry (`LuaBindingRegistry`) and a small helper (`register_per_type`) to register protected functions reliably.
 - Updated `DisplayHandle` dispatcher to consult the C++ registry first, then fall back to the existing SDOM_Bindings per-type table and the minimal handle. This preserves backward compatibility while enabling deterministic, per-type dispatch.
 - Migrated `Label` and `Group` per-type bindings into the registry (also kept legacy table entries during transition) and adapted `IDisplayObject` bind helpers to use `register_per_type` where a per-type table exists.
@@ -923,7 +955,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
-### [October 21, 2025]
+<a id="october-21-2025"></a>
+## [October 21, 2025]
 - **Major issues encountered with the dual Lua binding methodology**
   - Significant time spent attempting to maintain both per-item binding and fallback methods.
   - Decision made to refactor the Lua Binding System from the ground up:
@@ -941,7 +974,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
-### [October 22, 2025]
+<a id="october-22-2025"></a>
+## [October 22, 2025]
 - **`Core_UnitTests` Refactor Progress:**
   - Continued refactoring `Core_UnitTests` to utilize the new Lua Binding System.
     - Completed `Window Flags` tests.
@@ -953,7 +987,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
-### [October 23, 2025]
+<a id="october-23-2025"></a>
+## [October 23, 2025]
 - **`Core_UnitTests` Refactor Progress:**
   - Continued refactoring **Core_UnitTests** to utilize the new Lua Binding System.
     - Completed **SDL Resource Accessors** tests.
@@ -1010,7 +1045,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
-### [October 24, 2025]
+<a id="october-24-2025"></a>
+## [October 24, 2025]
 - **IDisplayObject_UnitTests** Progress:
   - Began building a new **IDisplayObject_UnitTests.cpp** Unit Test Module to fully test all C++ and LUA properties and functions.
   - Implemented **IDisplayObject** Lua wrappers via **SDOM_IDisplayObject_LuaHelpers.hpp**.
@@ -1097,7 +1133,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
-### [October 25, 2025]
+<a id="october-25-2025"></a>
+## [October 25, 2025]
 ### Supporting Improvements
 1. Added **SDL_Utils::color_equal()**, **color_not_equal()**, and **color_to_string()** for readable assertions.
 2. Renamed **getBorder()** → **hasBorder()** and **getBackground()** → **hasBackground()** for clearer boolean intent.
@@ -1274,7 +1311,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
-### [October 27, 2025]
+<a id="october-27-2025"></a>
+## [October 27, 2025]
 - Added **clearKeyboardFocusedObject()** and **clearMouseHoveredObject()** to Core C++, Lua bindings and unit tests.
 - Added **destroyAssetObject()** to Core C++, Lua bindings and unit tests.
 - Added **clearFactory()** to Core C++, Lua bindings but not in unit tests because it destroys all display objects.
@@ -1346,7 +1384,8 @@ Below is the current status of all exposed **IDisplayObject** properties:
 > [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
-### [October 28, 2025]
+<a id="october-28-2025"></a>
+## [October 28, 2025]
 - **Event_UnitTests** Progress:
   - Began building a new **Event_UnitTests.cpp** Unit Test Module to fully test all C++ and LUA EventManager functionality.
   - Considering a one-test-per-frame approach to unit tests to allow for deterministic frame-by-frame execution.

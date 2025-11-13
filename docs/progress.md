@@ -20,14 +20,16 @@ If a doc briefly diverges from current behavior, treat the **code as source-of-t
 
 Diagrams are authored in Mermaid and exported to static SVG/PNG by the repo’s export pipeline, keeping visuals portable while ensuring sources remain editable. Progress updates call out notable documentation changes, and contributions to clarify or correct docs are welcome.
 
+<a id="table-of-contents"></a>
 ## 📑 Table of Contents
 - [📅 Latest Update](#latest-update)
-- [🧭 Progress Log Legend](#🧭-progress-log-legend)
-- [⚙️ Scripting and Configuration](#⚙️-scripting-and-configuration)
-- [📈 Progress Updates](#📈-progress-updates)
-- [✅ UnitTest Modules](#✅-unittest-modules)
+- [🧭 Progress Log Legend](#progress-log-legend)
+- [⚙️ Scripting and Configuration](#scripting-and-configuration)
+- [📈 Progress Updates](#progress-updates)
+- [✅ UnitTest Modules](#unittest-modules)
 ---
 
+<a id="progress-log-legend"></a>
 ## 🧭 Progress Log Legend
 
 SDOM uses emoji-based status markers to maintain visual and conceptual continuity between its internal test harness and its development logs.  
@@ -45,10 +47,11 @@ This legend ensures that progress entries, test annotations, and lifecycle docum
 
 
 
-[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+[🔝 **Back to Table of Contents**](#table-of-contents)
 
 ---
 
+<a id="scripting-and-configuration"></a>
 ## ⚙️ Scripting and Configuration
 Lua (via Sol2) is first-class but optional — you can script scenes and behavior in Lua, build everything in C++, or mix both.
 
@@ -56,10 +59,12 @@ The **Factory** accepts `sol::table` configs alongside initializer structs, and 
 
 📘 See the dedicated doc: [Scripting and Configuration (Lua + C++)](scripting_and_configuration.md)
 
-[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+[🔝 **Back to Table of Contents**](#table-of-contents)
+
 
 ---
 
+<a id="progress-updates"></a>
 # 📈 Progress Updates
 
 > 🗂️ Entries through November 7, 2025 are archived in [archive/progress-29Oct2025-7Nov2025.md](archive/progress-29Oct2025-7Nov2025.md)
@@ -79,6 +84,8 @@ The **Factory** accepts `sol::table` configs alongside initializer structs, and 
 - [October 31, 2025](archive/progress-29Oct2025-7Nov2025.md#october-31-2025) — EventType Registry and Core Integration
 - [October 30, 2025](archive/progress-29Oct2025-7Nov2025.md#october-30-2025) — EventManager Modularization Prep
 - [October 29, 2025](archive/progress-29Oct2025-7Nov2025.md#october-29-2025) — Temporal Testing Framework
+
+[🔝 **Back to Table of Contents**](#table-of-contents)
 
 ## Archive: `archive/progress-6Jul2025-28Oct2025.md`
 > Earlier entries remain inside the July–October log.
@@ -122,6 +129,11 @@ The **Factory** accepts `sol::table` configs alongside initializer structs, and 
 - [September 19, 2025](archive/progress-6Jul2025-28Oct2025.md#september-19-2025) — Proof of concept approved. Main development approved. Work begins officially.
 - [August 5, 2025](archive/progress-6Jul2025-28Oct2025.md#august-5-2025) — SDOM secondary rough draft
 - [July 2, 2025](archive/progress-6Jul2025-28Oct2025.md#july-2-2025) — Initial rough draft and proof of concept.
+
+[🔝 **Back to Table of Contents**](#table-of-contents)
+
+---
+
 ## 🗓️ November 8, 2025 — Between עֶרֶב (*Erev*) and בֹּקֶר (*Boqer*)
 > 💬 *“And there was evening, and there was morning — the next day.”* — Genesis 1:5
 
@@ -320,7 +332,8 @@ With the core reflection layer stabilized and thread-safe, SDOM is ready to adva
 
 
 
-[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+[🔝 **Back to Table of Contents**](#table-of-contents)
+
 
 ---
 
@@ -379,10 +392,12 @@ valgrind --leak-check=full ./prog --stop_after_tests
         └── RadioButton
 ```
 
-[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+[🔝 **Back to Table of Contents**](#table-of-contents)
+
 
 ---
 
+<a id="unittest-modules"></a>
 ## ✅ UnitTest Modules
 Each **UnitTest module** in SDOM represents a focused validation target for a specific subsystem, interface, or control type.  To maintain consistency with SDOM’s internal test harness and development reports, each module is tracked with a concise emoji marker reflecting its current implementation and verification state.  Because SDOM remains in a **pre-alpha** stage, these modules are still evolving — new tests are frequently added, refactored, or reorganized as the underlying architecture stabilizes.  This matrix provides an at-a-glance overview of test coverage, helping developers quickly identify which systems are stable, under review, or awaiting implementation.  
 
@@ -449,12 +464,9 @@ Each **UnitTest module** in SDOM represents a focused validation target for a sp
 - ✅ **Verified** — Test has passed all validation modes (synthetic, lifecycle, Lua); stable and reliable.  
 - 📜 **Lua Binding Tests Only** — Verified via Lua API calls; assumes C++ implementation correctness because bindings directly invoke the native methods.
 
-[🔝 **Back to Table of Contents**](#📑-table-of-contents)
+[🔝 **Back to Table of Contents**](#table-of-contents)
 
 
-
-
-#### Finally got around to it.
 ```
           ..:::::::::::::..                                
      .::::'##::::'##:'####::::.
