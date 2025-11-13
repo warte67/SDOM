@@ -133,6 +133,7 @@ The **Factory** accepts `sol::table` configs alongside initializer structs, and 
 [🔝 **Back to Table of Contents**](#table-of-contents)
 
 ---
+<a id="november-8-2025"></a>
 
 ## 🗓️ November 8, 2025 — Between עֶרֶב (*Erev*) and בֹּקֶר (*Boqer*)
 > 💬 *“And there was evening, and there was morning — the next day.”* — Genesis 1:5
@@ -152,6 +153,7 @@ A day of confusion, misfires, and runaway llamas — where even `configure()` qu
 - The documentation of this day remains deliberately fragmentary... for safety reasons.
 
 ---
+<a id="november-9-2025"></a>
 
 ## 🗓️ November 9, 2025 — Stabilization & Dual-System Planning
 > 💬 *“From chaos, code — from code, clarity; each stable build a quiet act of defiance against yesterday’s disorder.”*
@@ -184,6 +186,7 @@ The SDOM project now has:
 - ✅ Defined testing and migration strategy for the new reflection architecture  
 
 ---
+<a id="november-10-2025"></a>
 
 ## 🗓️ November 10, 2025 — Between Foundation and Function
 
@@ -204,6 +207,7 @@ Today centered on **design refinement** — clarifying SDOM’s reflection model
 and restoring stability to texture rendering. The groundwork for **DataRegistry** and **C ABI reflection** is now clear and mostly ready for implementation.  
 
 ---
+<a id="november-11-2025"></a>
 
 ## 🗓️ November 11, 2025 — ⚙️ Variant System Refactor & Compiler Harmony
 
@@ -242,6 +246,7 @@ Today’s work transformed the Variant subsystem from an experimental prototype 
 The system is now **production-ready**, **thread-safe**, and **consistent across compilers**. Focus now shifts back to the **IDataObject** hierarchy and the design of the upcoming reflection and registry framework.
 
 ---
+<a id="november-12-2025"></a>
 
 ## 🗓️ November 12 2025 — Reflection Foundations & Registry Integration
 
@@ -275,14 +280,10 @@ The system is now **production-ready**, **thread-safe**, and **consistent across
   - Automatically triggers `dataregistry_generator` before building the test harness when regeneration is required.  
   - Tracks generation via versioned `.generated.version` markers for reproducible, deterministic builds.  
 
----
-
 ### 🌟 **Summary**
 Today marked the **unification of SDOM’s reflection architecture** across C++, Lua, and C.  
 The runtime registry now drives automatic header generation, introspection, and binding consistency, validated by comprehensive end-to-end testing.  
 With the core reflection layer stabilized and thread-safe, SDOM is ready to advance into **Phase 2** — introducing cached lookups, incremental regeneration, and deeper scripting integration.
-
----
 
 ### 🧩 **Factory / Registry Identifier Renaming Plan**
 
@@ -300,7 +301,9 @@ With the core reflection layer stabilized and thread-safe, SDOM is ready to adva
 | ✅ | **Factory::attachCreatedObjectToParentFromConfig** | **Factory::attachCreatedObjectToParent** / **attachCreatedDisplayObjectToParent** | Shortened for clarity; “FromConfig” implied |
 ---
 
+<a id="november-9-2025"></a>
 <a id="latest-update"></a>  
+
 ## 🗓️ November 13, 2025 — The Day SDOM Found Its Voice (in C-Minor)  
 > 💬 *“C you on the outside — SDOM learns to speak in structs.”*  
 

@@ -53,7 +53,7 @@ awk -v TODAY="$TODAY" '
     lines[out_n] = $0
 
     if ($0 ~ heading_re) last_idx = out_n
-    if ($0 ~ /^####[[:space:]]+end-of-day(.*)$/) eod_idx = out_n
+    if ($0 ~ /^<a id="end-of-day"><\/a>$/ || $0 ~ /^####[[:space:]]+end-of-day(.*)$/) eod_idx = out_n
     if ($0 ~ /^##[[:space:]]+/ && index($0, TODAY) > 0) today_idx = out_n
   }
 
