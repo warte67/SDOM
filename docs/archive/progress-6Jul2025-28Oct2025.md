@@ -19,9 +19,13 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 ## [July 2, 2025]
 - Initial rough draft and proof of concept.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [August 5, 2025] 
 - SDOM secondary rough draft
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
 ## [September 19, 2025]
@@ -46,6 +50,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - JSON configuration supports both new flags for runtime flexibility.
 - Refined aspect ratio logic to use a static float for original aspect ratio, ensuring accuracy during repeated resizing.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [September 20, 2025]
 - Factory and resource_ptr scaffolding completed; code compiles and runs cleanly.
@@ -54,6 +60,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Example usage of Core and Factory included in documentation.
 - Circular include and pointer management issues resolved (raw pointer for Factory ownership).
 - The SDOM framework now has a working Core singleton, Factory resource management, and resource_ptr smart handle. The codebase is stable, maintainable, and ready for expanded testing and feature development.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
 ## [September 21, 2025]
@@ -84,6 +92,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Added debug prints to trace resource creation and lifecycle events.
     - Validated that the system is ready for expanded DOM tree parsing and more complex resource hierarchies.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [September 22, 2025]
 - **Unit Test Framework Refined:**  
@@ -109,6 +119,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Planned to add live event tests (drag/drop, deferred add/remove) and prioritize tests for new features as they are developed.
     - Recognized that coverage for older features will be expanded over time, focusing first on the most critical areas.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ### [September 23, 2025]
 - **Event System Preliminary Testing:**  
@@ -127,6 +139,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Improved code readability and maintainability by removing legacy patterns and redundant checks.
     - All major event and display object interactions now use the new handle API.
     - Codebase is stable, with most reference and legacy issues resolved.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
 ## [September 24, 2025]
@@ -152,6 +166,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Both instant and deferred `addChild()` and `removeChild()` operations work reliably, ensuring robust event propagation and hierarchy management.
     - With the event system confirmed stable, we’ve decided this is the ideal time to begin transitioning from `JSON-based` initialization to `Sol2-powered Lua` scripting.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [September 25, 2025]
 - **JSON → Lua Transition Complete:**  
@@ -175,6 +191,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Milestone:**  
     - SDOM is now fully Lua-configurable and ready for advanced scripting, rapid prototyping, and integration with external tools. Json features have been removed completely.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [September 26, 2025]
 - **Box Unit Tests Complete:**  
@@ -194,6 +212,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Event system and Lua-driven configuration are stable and fully integrated.
     - Documentation and codebase are up-to-date with recent changes.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [September 27, 2025]
 - **Lua Integration Complete:**  
@@ -208,6 +228,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Added Lua-side debugging utilities: Factory registry and stage tree can be printed directly from Lua scripts for live inspection.
     - Demonstrated robust C++/Lua test integration: Lua scripts return boolean results to C++ test framework, enabling seamless cross-language validation.
     - Codebase and Lua API stability increased, with reliable resource management and hierarchy checks.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
 ## [September 28, 2025]
@@ -242,6 +264,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Removed temporary debug instrumentation and test-only Factory helpers.
     - Ensured the codebase is clean and maintainable.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [September 29, 2025]
 - **Lua Binding Debugging:**
@@ -275,7 +299,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - The tests vector updated to call the new functions and includes matching descriptive comments.
     - Debug output updated to reference DisplayObject_test10 where applicable.
     - A clean build and test run were executed successfully.    
-    - Reworked the DisplayObject unit tests for readability and maintainability: added a numeric mapping header, expanded inline descriptions to match `UnitTests::run` strings, and renamed test functions to `DisplayObject_test1`..`DisplayObject_test10`.         
+    - Reworked the DisplayObject unit tests for readability and maintainability: added a numeric mapping header, expanded inline descriptions to match `UnitTests::run` strings, and renamed test functions to `DisplayObject_test1`..`DisplayObject_test10`.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
 ## [September 30, 2025]
@@ -319,7 +345,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Build & verification:**
     - Fixed compile regressions introduced during iteration; rebuilt examples/test successfully.
     - Ran examples/test/prog: unit tests pass; observed expected runtime output for OnInit/OnUpdate/OnRender/OnEvent/OnQuit Lua handlers.
-    
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
 ## [October 2, 2025]
 - **Synthetic Event Handling Robustness:**
@@ -349,7 +377,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - `SDL_Utils` still exposes `eventToLuaTable` as a Lua helper table (`SDL`/`SDL_Utils`) for direct use; `Event::registerLua()` uses the C++ helper internally for the `sdl` property.
         - Example update: `examples/test/lua/callbacks/listener_callbacks.lua` was adjusted to colorize the "target:" label using the DisplayObject `getColor()` Lua binding and `CLR.fg_rgb(r,g,b)`; the code uses `pcall` fallbacks so it degrades gracefully when color or handle info is unavailable.
         - Verified: rebuilt the examples and test binary after these changes (`./compile` in `examples/test`) — build completed and `prog` produced successfully.
-        
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [October 3, 2025]
 - Cleaned up noisy debug output across the codebase:
@@ -402,6 +432,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - RetainUntilManual → never auto-destroyed.
     - Lua bindings and string helpers to set/get orphan policies from scripts.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [October 4, 2025]
 - Quick fixes & Lua binding polish (morning)
@@ -416,7 +448,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Next actions
     - Add unit tests that specifically exercise `removeFromParent()`, `removeDescendant()` (handle/name), and `removeChild(name)` semantics (edge cases, nested removals, event-time removals).
     - Consider removing temporary compatibility shims (getStage global, any legacy forwards) once examples are migrated to canonical Core/Factory bindings.
-    - Improve docs/comments in headers to clarify difference between strict `removeChild` (direct child) vs. recursive removal and the convenience `removeFromParent()` behavior.   
+    - Improve docs/comments in headers to clarify difference between strict `removeChild` (direct child) vs. recursive removal and the convenience `removeFromParent()` behavior.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
 ## [October 5, 2025]
@@ -435,7 +469,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Replaced a previously-silent catch around `EventType` registration with visible debug logging (`DEBUG_LOG(...)`) and added a short explanatory comment about lifetime/static-init-order assumptions.
     - Verified the change locally: ran the project's compile/test flow (`./compile` in `examples/test`), the library and test binary built and installed headers under `~/.local/include/SDOM` and `~/.local/lib/libSDOM.a` updated.
     - Next short steps: complete a full sweep of remaining inline binding lambdas in `SDOM_Core.cpp`, add a small Lua smoke test exercising name-or-handle binds, and then consider moving the helpers into a dedicated `lua_Core_bindings.cpp` once CI is stable.
-        
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [October 6, 2025]
 - Lua binding refactor (IDisplayObject):
@@ -489,8 +525,10 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - The SDOM API introduces only ~100 microseconds of overhead per frame, which is negligible for real-time 2D applications and 2D/3D games. This performance is without extensive post development optimization.
     - This validates the architectural choices and confirms that the system is ready for further feature development and integration.
 - **Milestone - DisplayObject Complete:**  
-    - With the DisplayObject (IDisplayObject) system now robust, unit-tested, and stable, the next major development track is the AssetObject system for resource management.   
-            
+    - With the DisplayObject (IDisplayObject) system now robust, unit-tested, and stable, the next major development track is the AssetObject system for resource management.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [October 7, 2025]
 - cleaned up the heavy includes from the header files to reduce compile times and improve modularity.
@@ -513,6 +551,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
         - ./compile        (incremental)
         - ./prog           (run test binary)
     - Avoid requiring repository-root ./rebuild under other user permissions.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
 ## [October 8, 2025] 
@@ -546,6 +586,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Relaxed Label constructor validation: accept SpriteSheet as deferred font source and perform strict IFontObject validation/loading in onInit(), avoiding premature hard-fails during config parsing.
     - Added guarded diagnostics for Label render/tokenization to aid debugging; diagnostics are temporary and gated for cleanup.
     - Verified fixes with the examples/test suite; Label rendering and wrapping now behave correctly in the blueishBox example.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---   
 ## [October 9, 2025] 
@@ -585,6 +627,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Update all documentation and examples to reflect the new pattern.
 - **For full details and migration steps, see:**  [docs/startup_refactor.md](../docs/startup_refactor.md)
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---   
 ## [October 11, 2025]
 - **BitmapFont & TruetypeFont Resource Creation Improvements:**
@@ -616,7 +660,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - This change enables smooth rendering of large text blocks and many Labels without CPU/GPU bottlenecks.
     - Debug logic for texture rebuilds and alignment is now gated and can be toggled for future troubleshooting.
     - All unit tests and example scenes validated after the optimization.
-    
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
 ## [October 12, 2025]
 - **Internal Resource Renaming:**
@@ -641,6 +687,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Event Hit-Testing Fix:**
     - Fixed bug in EventManager::findTopObjectUnderMouse: the hidden-state check now uses the current node (`node.isHidden()`) instead of `rootNode`, and selection tie-breaks are deterministic.
     - Selection now uses a stable lexicographic rule (z-order primary, depth secondary, traversal sequence tertiary) so the topmost clickable object under the mouse is chosen reliably.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
 ## [October 13, 2025]
@@ -673,6 +721,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Updated docs/label_text_parsing.md with numeric escape syntax, semantics, examples, and the full color list.
   - Removed debug prints and cleaned up temporary diagnostics used during development.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
 ## [October 14, 2025]
 - Added `Frame` scaffolding and registered the `Frame` DOM type with the Factory; SDOM_Frame.cpp implements minimal constructors and defers behavior to `IPanelObject`.
@@ -701,6 +751,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - IconIndex mapping centralized (enum ↔ name) and registered early in `Core` so Lua configs can reference `IconIndex.{index}` during startup.
     - `IconButton` provides safe accessors (getIconIndex/setIconIndex, getSpriteSheetHandle/getSpriteSheet) to avoid leaking internals.
     - `Checkbox` now composes an `IconButton` for the glyph; `setChecked()` updates the child icon index and queues a `StateChanged` event (payload includes previous/new state). Asset loading is handled by the Factory at creation so icons are ready before first render.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
 ## [October 15, 2025]
@@ -739,6 +791,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Test harness & stability:**
   - Made `examples/test/repeat_tests.sh` robust: captures program output when logs are not saved, safely handles missing log files, and reliably prints failing run output.
   - Verified stability with long runs: repeated harness exercised (200 runs) with 0 failures locally.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
 ## [October 16, 2025]
@@ -780,6 +834,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - Removed local post-constructor color/Init fixes where forwarding made them redundant.
   - Added example/comment to SDOM_IRangeControl_scaffold showing the forwarding pattern and CreateFromLua example.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
 ## [October 17, 2025]
 - **ScrollBar:**
@@ -810,6 +866,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - The `border` flag doesnt seem to have any effect on `IconButton` based objects.
     - Check with `border_color` and `background_color` these should work with `IconButton` objects
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
 ## [October 18, 2025]
 - **Universally support multiple icon set sizes:**
@@ -827,6 +885,7 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - moved to `IDisplayObject` with accessors `getBorder()` and `getBackground()` as getters and `setBorder()` and s`etBackground()` as mutators,
   - Properties are likewise `border` and `background` in Lua.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
 ### [October 19, 2025]
@@ -845,6 +904,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - **Status**: `Group` and `Label` migrations complete; per-type binding dispatcher and fallback compatibility shims in place.
 - **Next**: sweep remaining types (`Button`, `Frame`, `IconButton`, etc) to per-type tables, run full CI, and remove temporary backward-compatibility aliases where safe. All of the DisplayObjects will need to be swept to per-type tables and then fully tested with their own respective UnitTests.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
 ### [October 20, 2025]
 - Implemented a C++ per-type Lua binding registry (`LuaBindingRegistry`) and a small helper (`register_per_type`) to register protected functions reliably.
@@ -858,6 +919,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Now using SDOM_Core_LuaHelpers for registering Lua bindings in C++. 
   - We will be using this pattern going forward for all Lua binding registrations in C++.
   - _registerLuaBindings() will ultimately call into SDOM_Core_LuaHelpers to register the bindings to reduce excessive source file length.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
 ### [October 21, 2025]
@@ -875,6 +938,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Completed `Pixel Format` tests.
     - Completed `Renderer Logical Presentation` tests.
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
 ### [October 22, 2025]
 - **`Core_UnitTests` Refactor Progress:**
@@ -884,7 +949,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - Completed `Factory Existence` tests.
     - Completed `Callback/Hook Registration` tests.
     - Completed `Stage/Root Node Management` tests.
-    
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
 ### [October 23, 2025]
 - **`Core_UnitTests` Refactor Progress:**
@@ -939,6 +1006,9 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     [Core] Lua Integration [PASSED]
     [Core] Tests [PASSED]
   ```
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
 ### [October 24, 2025]
 - **IDisplayObject_UnitTests** Progress:
@@ -1023,6 +1093,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
   - No memory leaks in neither the operating system nor the GPU memory. No invalid accesses detected.
   - The shutdown path is clean and deterministic — and Valgrind confirms it.
   - No heap creep. No GPU memory creep. No event buildup. No stale pointers. No race conditions.
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
 ### [October 25, 2025]
@@ -1156,6 +1228,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
     - **Lua Integration / Central Binder**
       - ✅ void bind_IDisplayObject_lua(const std::string& typeName, sol::state_view lua)
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
+
 ---
 
 #### Core Lua Bindings & Tests
@@ -1196,6 +1270,8 @@ Lua (via Sol2) is first‑class but optional—you can script scenes and behavio
 - Expand binding + test coverage to remaining DisplayObject subclasses.
 - Begin building developer-facing **debug overlay / inspector** tooling on the Lua side.
 - Keep optimization on hold unless driven by **observable UX demand** (we are now in *microsecond-scale territory*).
+
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
 ### [October 27, 2025]
@@ -1267,6 +1343,7 @@ Below is the current status of all exposed **IDisplayObject** properties:
 -- ⚠️ Failing
 -- ☐ Planned
 
+> [🔝 Back to Progress Log Legend](../progress.md#🧭-progress-log-legend)
 
 ---
 ### [October 28, 2025]
