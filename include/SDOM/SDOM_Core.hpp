@@ -164,9 +164,15 @@ namespace SDOM
         Factory& getFactory() const { return *factory_; }
         EventManager& getEventManager() const { return *eventManager_; }
 
-        // Expose DataRegistry through Core (for convenience)  -- TODO: This should be renamed to getDataRegistry()
-        SDOM::DataRegistry& getRegistry() { return getFactory().getRegistry(); }
-        bool exportBindings(const std::string& out) { return getFactory().exportBindings(out); }
+    // Expose DataRegistry through Core (for convenience). Prefer the clearer name getDataRegistry().
+    SDOM::DataRegistry& getDataRegistry() { return getFactory().getDataRegistry(); }
+    const SDOM::DataRegistry& getDataRegistry() const { return getFactory().getDataRegistry(); }
+    // Backwards-compatible wrappers (deprecated)
+    [[deprecated("getRegistry() is deprecated; use getDataRegistry()")]]
+    SDOM::DataRegistry& getRegistry() { return getDataRegistry(); }
+    [[deprecated("getRegistry() is deprecated; use getDataRegistry()")]]
+    const SDOM::DataRegistry& getRegistry() const { return getDataRegistry(); }
+    bool exportBindings(const std::string& out) { return getFactory().exportBindings(out); }
 
         bool getIsTraversing() const { return isTraversing_; }
         void setIsTraversing(bool traversing) { isTraversing_ = traversing; }

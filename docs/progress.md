@@ -654,9 +654,68 @@ Today’s work transformed the Variant subsystem from an experimental prototype 
 The system is now **production-ready**, **thread-safe**, and **consistent across compilers**. Focus now shifts back to the **IDataObject** hierarchy and the design of the upcoming reflection and registry framework.
 
 ---
+<a id="latest-update"></a>
+
+## 🗓️ November 12 2025 — Reflection Foundations & Registry Integration
+
+> ⚖️ *“Today the mirror was forged — reflection now spans C++, Lua, and C alike, linking runtime behavior to generated code in perfect symmetry.”*
+
+### 🧩 **Core & DataRegistry Integration**
+- Completed the **non-virtual lifecycle model** for `IDisplayObject` and `IAssetObject` (`startup()` / `shutdown()`), ensuring constructors and destructors remain lightweight and side-effect-free.  
+- Extended **`Core::onQuit()`** to perform a fully recursive shutdown through the owner-controlled lifecycle chain.  
+- Transitioned `Factory` from `IDataObject` inheritance to **composition via `DataRegistry`**, clarifying ownership and responsibilities.  
+- Implemented the new **`IBindingGenerator`** interface along with a functioning **`CBindingGenerator`**, enabling automatic generation of C-compatible API headers from the runtime reflection data.
+
+### 🧱 **`IDataObject` Overhaul**
+- Re-engineered `IDataObject` as the canonical **reflection root** of SDOM:  
+  - Added templated **`addFunction()`** and **`addProperty()`** for direct registration into the active `DataRegistry`.  
+  - Introduced **thread-local registry scoping** (`s_active_registry_`) to support safe, multi-threaded binding registration.  
+  - Integrated rich, colorized **diagnostic logging** via `BIND_LOG`, `BIND_WARN`, and `BIND_ERR`.  
+- Consolidated Lua binding utilities (`ensure_sol_table`, `register_usertype_with_table`, etc.) to ensure stable, idempotent usertype registration and reliable runtime introspection.
+
+### 🧪 **Testing & Validation**
+- Added a dedicated **`DataRegistry_UnitTests.cpp`** module containing:  
+  - 🧩 **Deadlock regression test** — verifies that generator callbacks no longer block registry mutexes.  
+  - 🔗 **C API end-to-end test** — validates creation, name mutation, and teardown of `Label` objects through generated C bindings.  
+- All reflection, converter, and variant suites executed successfully:  
+  - ✅ Variant test coverage > 95 %  
+  - ✅ DataRegistry generation and binding tests passed  
+  - ✅ C API integration confirmed fully operational  
+
+### ⚙️ **Build System Enhancements**
+- Expanded **`examples/test/CMakeLists.txt`** with an **automatic bootloader** that:  
+  - Detects version mismatches between `SDOM_Version.hpp` and the generated C API header.  
+  - Automatically triggers `dataregistry_generator` before building the test harness when regeneration is required.  
+  - Tracks generation via versioned `.generated.version` markers for reproducible, deterministic builds.  
+
+---
+
+### 🌟 **Summary**
+Today marked the **unification of SDOM’s reflection architecture** across C++, Lua, and C.  
+The runtime registry now drives automatic header generation, introspection, and binding consistency, validated by comprehensive end-to-end testing.  
+With the core reflection layer stabilized and thread-safe, SDOM is ready to advance into **Phase 2** — introducing cached lookups, incremental regeneration, and deeper scripting integration.
+
+---
+
+### 🧩 **Factory / Registry Identifier Renaming Plan**
+
+|   | **Legacy identifier** | **New identifier** | **Notes** |
+|---|---|---:|---|
+| ✅ | **Factory::create** | **Factory::createDisplayObject** | Display creation (Lua / InitStruct overloads) |
+| ✅ | **Factory::createAsset** | **Factory::createAssetObject** | Asset creation (Lua / InitStruct overloads) |
+| ✅ | **getFactory().create(...)** | **getFactory().createDisplayObject(...)** | Call-site replacement in examples / tests |
+| ✅ | **Factory::getIDisplayObject** | **Factory::getDisplayObjectPtr** | Clarifies pointer return type |
+| ✅ | **Factory::getIAssetObject** | **Factory::getAssetObjectPtr** | Clarifies pointer return type |
+| ✅ | **Factory::getDomObj** | **Factory::getDisplayObjectPtr** | Legacy shorthand unified under new API |
+| ✅ | **Factory::getResObj** | **Factory::getAssetObjectPtr** | Legacy shorthand unified under new API |
+| ✅ | **Factory::registerDomType** | **Factory::registerDisplayObject** | Explicitly registers display object types |
+| ✅ | **Factory::registerResType** | **Factory::registerAssetObject** | Consistent naming for asset types |
+| ✅ | **Factory::attachCreatedObjectToParentFromConfig** | **Factory::attachCreatedObjectToParent** / **attachCreatedDisplayObjectToParent** | Shortened for clarity; “FromConfig” implied |
+
+---
 
 **🚧 Next Steps**
-- ☐ Design `DataRegistry` for centralized reflection management  
+- ✅ Design `DataRegistry` for centralized reflection management  
 - ☐ Remove `Factory` inheritance from `IDataObject`  
 - ☐ Implement C ABI unit-test harness as registry proof-of-concept  
   - ☐ Convert `SDOM_CLR` to a static singleton inheriting from `IDataObject`  
@@ -669,66 +728,14 @@ The system is now **production-ready**, **thread-safe**, and **consistent across
   - ☐ `SDOM_Utils` → static singleton inherits from `IDataObject`  
   - ☐ `SDOM_Version.hpp.in` → inherits from `IDataObject`  
 - ☐ Finalize `SDOM_SDL_Utils` conversion adapters (`SDL_Color`, `SDL_Rect`, `SDL_Point`)  
-- ☐ Feed the developer  
-
----
-<a id="latest-update"></a>
-
-## 🗓️ November 12 2025 — Reflection Foundations and Registry Integration
-
-> ⚖️ *“Today the mirror was forged — reflection now spans C++, Lua, and C alike, linking runtime behavior to generated code in perfect symmetry.”*
-
-### 🧩 **Core & DataRegistry Integration**
-- Completed the **non-virtual lifecycle model** for `IDisplayObject` and `IAssetObject` (`startup()` / `shutdown()`), ensuring constructors and destructors remain pure and lightweight.  
-- Enhanced **`Core::onQuit()`** to perform recursive shutdown using the owner-controlled lifecycle chain.  
-- Began migration away from `IDataObject` inheritance in `Factory`, replacing it with **composition via `DataRegistry`**.  
-- Implemented the new **`IBindingGenerator`** interface and a working **`CBindingGenerator`**, enabling generation of C-compatible API headers from the runtime type registry.
-
-### 🧱 **`IDataObject` Overhaul**
-- Re-architected `IDataObject` to act as the canonical **reflection root**:  
-  - Added templated `addFunction()` and `addProperty()` that register callable metadata directly into the active `DataRegistry`.  
-  - Introduced thread-local registry scoping (`s_active_registry_`) for safe multi-threaded binding registration.  
-  - Integrated rich, colorized **binding diagnostics** via `BIND_LOG`, `BIND_WARN`, and `BIND_ERR`.  
-- Consolidated Lua utilities (`ensure_sol_table`, `register_usertype_with_table`, etc.) to provide stable usertype registration and introspection under Sol2.  
-
-### 🧪 **Testing and Validation**
-- Added a comprehensive `DataRegistry_UnitTests.cpp` containing:
-  - **Deadlock regression** test verifying that generator callbacks no longer block on mutexes.
-  - **End-to-end C API test** validating creation, name mutation, and teardown of `Label` objects through the generated C bindings.  
-- All reflection, converter, and variant tests executed successfully:  
-  - ✅ Variant coverage > 95 %  
-  - ✅ DataRegistry generator and binding tests passed  
-  - ✅ C API integration confirmed functional  
-
-### ⚙️ **Build System Enhancements**
-- Expanded `examples/test/CMakeLists.txt` to include an **automatic bootloader**:
-  - Detects version mismatch between `SDOM_Version.hpp` and the generated C API header.  
-  - Triggers `dataregistry_generator` before building the test harness if regeneration is required.  
-  - Supports versioned `.generated.version` markers for reproducible builds.
-
----
-
-### 🌟 **Summary**
-Today established the structural groundwork for **SDOM’s unified reflection layer** — bridging C++, Lua, and C API generation.  
-All foundational registry systems are now operational and thread-safe, with test harness automation verifying consistency between runtime and generated metadata.  
-
-The project is officially ready to transition into **phase 2**: function/property caching and live C header regeneration.
-
----
-
-### 🚧 **To-Do for Tomorrow**
-- ☐ Implement RAII guard for thread-local registry scope (`RegistryScopeGuard`).  
-- ☐ Begin **function/property caching layer** for DataRegistry → Lua/C API lookup acceleration.  
-- ☐ Start **SVG renderer prototype** integration.  
-- ☐ Add Lua phase-2 tests to confirm registry-to-Lua sync.  
-- ☐ Document `DataRegistry` flow in the developer wiki.
+- ☐ Drink a Beer 
+- ☐ Implement **`RegistryScopeGuard`** — RAII guard for thread-local registry context.  
+- ☐ Begin **function / property caching layer** for accelerated DataRegistry → Lua / C API lookups.  
+- ☐ Prototype **SVG renderer integration** for next-gen asset pipeline.  
+- ☐ Add **Lua phase-2 tests** to validate runtime ↔ registry synchronization.  
+- ☐ Expand **developer wiki** with `DataRegistry` flow diagrams and generator documentation.
 
 #### end-of-day
-
-
-
-
-
 
 
 [🔝 **Back to Table of Contents**](#📑-table-of-contents)

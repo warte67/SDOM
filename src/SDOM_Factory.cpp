@@ -70,13 +70,13 @@ namespace SDOM
             TTFAsset::InitStruct ttf_init;
             ttf_init.name = "internal_ttf_asset";     // internal registry key
         // register the Stage
-        registerDomType("Stage", TypeCreators{
+        registerDisplayObjectType("Stage", TypeCreators{
             Stage::CreateFromLua, 
             Stage::CreateFromInitStruct
         });
 
         // register the Texture asset
-        registerResType("Texture", AssetTypeCreators{
+        registerAssetObjectType("Texture", AssetTypeCreators{
             Texture::CreateFromLua,
             Texture::CreateFromInitStruct
         });
@@ -97,19 +97,19 @@ namespace SDOM
                     return;
                 }
 
-                if (!getResObj(defaultIconName)) {
+                if (!getAssetObjectPtr(defaultIconName)) {
                     Texture::InitStruct init;
                     init.name = defaultIconName;
                     init.type = "Texture";
                     init.filename = defaultIconName;
-                    AssetHandle spriteSheet = createAsset("Texture", init);
+                    AssetHandle spriteSheet = createAssetObject("Texture", init);
                         if (auto* spriteSheetPtr = spriteSheet.as<Texture>()) {
                         spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); 
                         spriteSheetPtr->registerBindings("Texture", registry_);
                     }
                 } else {
                     // Ensure Lua bindings are registered for existing instance
-                    IAssetObject* existing = getResObj(defaultIconName);
+                    IAssetObject* existing = getAssetObjectPtr(defaultIconName);
                     if (auto* spriteSheetPtr = dynamic_cast<Texture*>(existing)) {
                         spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); 
                         spriteSheetPtr->registerBindings("Texture", registry_);
@@ -124,36 +124,36 @@ namespace SDOM
 
 
         // register a TTFAsset
-        registerResType("TTFAsset", AssetTypeCreators{
+        registerAssetObjectType("TTFAsset", AssetTypeCreators{
             TTFAsset::CreateFromLua,
             TTFAsset::CreateFromInitStruct
         });    
 
         // register the TruetypeFont resource type so factory can create truetype font assets
-        registerResType(TruetypeFont::TypeName, AssetTypeCreators{
+        registerAssetObjectType(TruetypeFont::TypeName, AssetTypeCreators{
             TruetypeFont::CreateFromLua,
             TruetypeFont::CreateFromInitStruct
         });
         // Also register a friendly alias matching config usage
-        registerResType("TruetypeFont", AssetTypeCreators{
+        registerAssetObjectType("TruetypeFont", AssetTypeCreators{
             TruetypeFont::CreateFromLua,
             TruetypeFont::CreateFromInitStruct
         });
 
         // Create an internal TTFAsset for the default TrueType font (do not register under the same public name)
-        if (!getResObj("internal_ttf_asset")) {
+    if (!getAssetObjectPtr("internal_ttf_asset")) {
             TTFAsset::InitStruct ttf_init;
             ttf_init.name = "internal_ttf_asset";     // internal registry key
             ttf_init.type = TTFAsset::TypeName;     // concrete type name
             ttf_init.filename = "internal_ttf";      // internal ttf filename
             ttf_init.isInternal = true;             // is internal
             ttf_init.internalFontSize = 10;         // member name in InitStruct
-            AssetHandle ttfFontAsset = createAsset("TTFAsset", ttf_init);
+            AssetHandle ttfFontAsset = createAssetObject("TTFAsset", ttf_init);
             (void)ttfFontAsset;
         }
 
         // Create a public truetype font asset named "default_ttf" which references the internal TTFAsset
-        if (!getResObj("internal_ttf")) {
+    if (!getAssetObjectPtr("internal_ttf")) {
             TruetypeFont::InitStruct ttInit;
             ttInit.name = "internal_ttf";           // public registry key expected by Label
             ttInit.type = TruetypeFont::TypeName;
@@ -162,7 +162,7 @@ namespace SDOM
             // Attempt to create the truetype font; if TTF isn't available or creation fails, fall back to bitmap font
             AssetHandle defaultTTFont;
             try {
-                defaultTTFont = createAsset(TruetypeFont::TypeName, ttInit);
+                defaultTTFont = createAssetObject(TruetypeFont::TypeName, ttInit);
             } catch (...) {
                 // If creation failed, leave defaultTTFont invalid and fall back below
                 defaultTTFont = AssetHandle();
@@ -171,7 +171,7 @@ namespace SDOM
             
 
         // register the SpriteSheet asset
-        registerResType("SpriteSheet", AssetTypeCreators{
+        registerAssetObjectType("SpriteSheet", AssetTypeCreators{
             SpriteSheet::CreateFromLua,
             SpriteSheet::CreateFromInitStruct
         });
@@ -179,7 +179,7 @@ namespace SDOM
         // Also ensure there is a SpriteSheet wrapper for the internal icon texture
         {
             auto ensureSpriteSheet = [&](const std::string& spriteSheetName, const std::string& textureFilename, int spriteW, int spriteH) {
-                if (!getResObj(spriteSheetName)) {
+                if (!getAssetObjectPtr(spriteSheetName)) {
                     SpriteSheet::InitStruct ssInit;
                     ssInit.name = spriteSheetName;
                     ssInit.type = SpriteSheet::TypeName;
@@ -187,7 +187,7 @@ namespace SDOM
                     ssInit.spriteWidth = spriteW;
                     ssInit.spriteHeight = spriteH;
                     ssInit.isInternal = true;
-                    AssetHandle ss = createAsset("SpriteSheet", ssInit);
+                    AssetHandle ss = createAssetObject("SpriteSheet", ssInit);
                     (void)ss;
                 }
             };
@@ -200,7 +200,7 @@ namespace SDOM
 
 
         // register the BitmapFont asset
-        registerResType("BitmapFont", AssetTypeCreators{
+        registerAssetObjectType("BitmapFont", AssetTypeCreators{
             BitmapFont::CreateFromLua,
             BitmapFont::CreateFromInitStruct
         });
@@ -209,7 +209,7 @@ namespace SDOM
         // Use the filename as the canonical resource name so Lua can refer to
         // the font simply as "internal_font_8x8". The BitmapFont will create
         // (or reuse) an internal SpriteSheet named '<filename>_SpriteSheet'.
-        if (!getResObj("internal_font_8x8")) {
+    if (!getAssetObjectPtr("internal_font_8x8")) {
             BitmapFont::InitStruct init;
             init.name = "internal_font_8x8";      // registry key == filename
             init.type = BitmapFont::TypeName;   // concrete type name
@@ -218,10 +218,10 @@ namespace SDOM
             init.fontSize = 8;                  // member name in InitStruct
             init.font_width = 8;                 // font_width for this resource
             init.font_height = 8;                // font_height for this resource            
-            AssetHandle bmpFont = createAsset("BitmapFont", init);
+            AssetHandle bmpFont = createAssetObject("BitmapFont", init);
             (void)bmpFont;
         }
-        if (!getResObj("internal_font_8x12")) {
+    if (!getAssetObjectPtr("internal_font_8x12")) {
             BitmapFont::InitStruct init;
             init.name = "internal_font_8x12";     // registry key == filename
             init.type = BitmapFont::TypeName;   // concrete type name
@@ -233,12 +233,12 @@ namespace SDOM
             init.fontSize_ = 12;                // IFontObject::InitStruct field used by base ctor
             init.font_width = 8;                 // font_width for this resource
             init.font_height = 12;               // font_height for this resource
-            AssetHandle bmpFont = createAsset("BitmapFont", init);
+            AssetHandle bmpFont = createAssetObject("BitmapFont", init);
             (void)bmpFont;
         }
 
         // register the Label display object
-        registerDomType("Label", TypeCreators{
+        registerDisplayObjectType("Label", TypeCreators{
             Label::CreateFromLua,
             // Wrap the init-struct creator to accept the base InitStruct
             [](const IDisplayObject::InitStruct& baseInit) -> std::unique_ptr<IDisplayObject> {
@@ -250,67 +250,67 @@ namespace SDOM
         // --- Register the IPanelObject Decendants --- //
 
         // register Frame
-        registerDomType("Frame", TypeCreators{
+        registerDisplayObjectType("Frame", TypeCreators{
             Frame::CreateFromLua,
             Frame::CreateFromInitStruct
         });
 
         // register Button
-        registerDomType("Button", TypeCreators{
+        registerDisplayObjectType("Button", TypeCreators{
             Button::CreateFromLua,
             Button::CreateFromInitStruct
         }); 
 
         // register Group
-        registerDomType("Group", TypeCreators{
+        registerDisplayObjectType("Group", TypeCreators{
             Group::CreateFromLua,
             Group::CreateFromInitStruct
         });
 
         // register the IconButton
-        registerDomType("IconButton", TypeCreators{
+        registerDisplayObjectType("IconButton", TypeCreators{
             IconButton::CreateFromLua,
             IconButton::CreateFromInitStruct
         });
 
         // register the ArrowButton
-        registerDomType("ArrowButton", TypeCreators{
+        registerDisplayObjectType("ArrowButton", TypeCreators{
             ArrowButton::CreateFromLua,
             ArrowButton::CreateFromInitStruct
         });
 
         // register CheckButton
-        registerDomType("CheckButton", TypeCreators{
+        registerDisplayObjectType("CheckButton", TypeCreators{
             CheckButton::CreateFromLua,
             CheckButton::CreateFromInitStruct
         });
 
         // register RadioButton
-        registerDomType("RadioButton", TypeCreators{
+        registerDisplayObjectType("RadioButton", TypeCreators{
             RadioButton::CreateFromLua,
             RadioButton::CreateFromInitStruct
         });
 
         // register the TristateButton
-        registerDomType("TristateButton", TypeCreators{
+        registerDisplayObjectType("TristateButton", TypeCreators{
             TristateButton::CreateFromLua,
             TristateButton::CreateFromInitStruct
         });
 
         // register the Slider
-        registerDomType("Slider", TypeCreators{
+        registerDisplayObjectType("Slider", TypeCreators{
             Slider::CreateFromLua,
             Slider::CreateFromInitStruct
         });
 
         // register the ProgressBar
-        registerDomType("ProgressBar", TypeCreators{
+        registerDisplayObjectType("ProgressBar", TypeCreators{
             ProgressBar::CreateFromLua,
             ProgressBar::CreateFromInitStruct
         });
 
         // register the ScrollBar
-        registerDomType("ScrollBar", TypeCreators{
+        registerDisplayObjectType("ScrollBar", TypeCreators{
             ScrollBar::CreateFromLua,
             ScrollBar::CreateFromInitStruct
         });
@@ -445,7 +445,7 @@ namespace SDOM
 
 
     
-    void Factory::registerDomType(const std::string& typeName, const TypeCreators& creators)
+    void Factory::registerDisplayObjectType(const std::string& typeName, const TypeCreators& creators)
     {
         creators_[typeName] = creators;
 
@@ -470,7 +470,7 @@ namespace SDOM
                     // are available on the shared userdata/handle.
                     try {
                         if (DEBUG_REGISTER_LUA) {
-                            printf("[TRACE] Factory::registerDomType prototype->_registerLuaBindings for type='%s' lua_state=%p\n",
+                            printf("[TRACE] Factory::registerDisplayObjectType prototype->_registerLuaBindings for type='%s' lua_state=%p\n",
                                    typeName.c_str(), (void*)SDOM::getLua().lua_state());
                         }
                         prototype->_registerLuaBindings(typeName, SDOM::getLua());
@@ -489,17 +489,17 @@ namespace SDOM
         }
     }
 
-    IDisplayObject* Factory::getDomObj(const std::string& name)
+    IDisplayObject* Factory::getDisplayObjectPtr(const std::string& name)
     {
         auto it = displayObjects_.find(name);
         if (it != displayObjects_.end()) 
         {
-            return dynamic_cast<IDisplayObject*>(it->second.get());
+            return dynamic_cast<IDisplayObject*>(it->second->obj.get());
         }
         return nullptr;
     }
 
-    void Factory::registerResType(const std::string& typeName, const AssetTypeCreators& creators)
+    void Factory::registerAssetObjectType(const std::string& typeName, const AssetTypeCreators& creators)
     {
         // Register resource type with creators
         assetCreators_[typeName] = creators;
@@ -510,12 +510,12 @@ namespace SDOM
             prototypeHandle.registerBindings(typeName, registry_);
     }
 
-    IAssetObject* Factory::getResObj(const std::string& name)
+    IAssetObject* Factory::getAssetObjectPtr(const std::string& name)
     {
         auto it = assetObjects_.find(name);
         if (it != assetObjects_.end()) 
         {
-            return dynamic_cast<IAssetObject*>(it->second.get());
+            return dynamic_cast<IAssetObject*>(it->second->obj.get());
         }
         return nullptr;
     }
@@ -526,7 +526,7 @@ namespace SDOM
         if (it != displayObjects_.end()) 
         {
             // Use the resource's type for the DisplayHandle
-            return DisplayHandle(name, it->second->getType());
+            return DisplayHandle(name, it->second->type);
         }
         // Return an empty DisplayHandle if not found
         return DisplayHandle();
@@ -539,11 +539,80 @@ namespace SDOM
         {
             AssetHandle out;
             out.name_ = name;
-            out.type_ = it->second->getType();
+            out.type_ = it->second->type;
             return out;
         }
         // Return an empty AssetHandle if not found
         return AssetHandle();
+    }
+
+    // ID registry helpers
+    uint64_t Factory::registerDisplayObject(const std::string& name, const DisplayHandle& handle)
+    {
+        auto it = displayObjects_.find(name);
+        if (it != displayObjects_.end()) {
+            uint64_t existing = it->second->id;
+            if (existing != 0) {
+                // Already has an id; ensure mapping exists
+                std::shared_lock<std::shared_mutex> rlock(id_map_mutex_);
+                if (display_id_map_.find(existing) != display_id_map_.end()) return existing;
+                // fall through to register new mapping
+            }
+        }
+        uint64_t id = next_object_id_.fetch_add(1);
+        {
+            std::unique_lock<std::shared_mutex> lock(id_map_mutex_);
+            display_id_map_[id] = handle;
+        }
+        if (it != displayObjects_.end()) it->second->id = id;
+        return id;
+    }
+
+    DisplayHandle Factory::resolveDisplayObject(uint64_t id) const
+    {
+        std::shared_lock<std::shared_mutex> lock(id_map_mutex_);
+        auto it = display_id_map_.find(id);
+        if (it != display_id_map_.end()) return it->second;
+        return DisplayHandle();
+    }
+
+    void Factory::unregisterDisplayObject(uint64_t id)
+    {
+        std::unique_lock<std::shared_mutex> lock(id_map_mutex_);
+        display_id_map_.erase(id);
+    }
+
+    uint64_t Factory::registerAssetObject(const std::string& name, const AssetHandle& handle)
+    {
+        auto it = assetObjects_.find(name);
+        if (it != assetObjects_.end()) {
+            uint64_t existing = it->second->id;
+            if (existing != 0) {
+                std::shared_lock<std::shared_mutex> rlock(id_map_mutex_);
+                if (asset_id_map_.find(existing) != asset_id_map_.end()) return existing;
+            }
+        }
+        uint64_t id = next_object_id_.fetch_add(1);
+        {
+            std::unique_lock<std::shared_mutex> lock(id_map_mutex_);
+            asset_id_map_[id] = handle;
+        }
+        if (it != assetObjects_.end()) it->second->id = id;
+        return id;
+    }
+
+    AssetHandle Factory::resolveAssetObject(uint64_t id) const
+    {
+        std::shared_lock<std::shared_mutex> lock(id_map_mutex_);
+        auto it = asset_id_map_.find(id);
+        if (it != asset_id_map_.end()) return it->second;
+        return AssetHandle();
+    }
+
+    void Factory::unregisterAssetObject(uint64_t id)
+    {
+        std::unique_lock<std::shared_mutex> lock(id_map_mutex_);
+        asset_id_map_.erase(id);
     }
     
     DisplayHandle Factory::getStageHandle() 
@@ -558,7 +627,7 @@ namespace SDOM
     }
 
     // String (LUA text) based object creator
-    DisplayHandle Factory::create(const std::string& typeName, const sol::table& config)
+    DisplayHandle Factory::createDisplayObject(const std::string& typeName, const sol::table& config)
     {
         // Get main texture size for defaults
         // int maxStageWidth = 0;
@@ -657,14 +726,17 @@ namespace SDOM
                 ERROR(std::string("Factory::create: Display object with name '") + name + "' already exists (insertion aborted)");
                 return DisplayHandle();
             }
-            displayObjects_[name] = std::move(displayObject);
-            displayObjects_[name]->setType(typeName); // Ensure type is set
+            // Wrap the concrete object into a DisplayRecord and insert
+            displayObjects_[name] = std::make_unique<DisplayRecord>(std::move(displayObject), typeName, 0);
+            auto& entry = displayObjects_[name];
+            // Ensure internal object knows its concrete type
+            if (entry->obj) entry->obj->setType(typeName);
 
             // --- Set common properties from config ---
             if (config["color"].valid())
             {
                 SDL_Color color = parseColor(config["color"]);
-                displayObjects_[name]->color_ = color;
+                entry->obj->color_ = color;
             }
             // set anchorPoints if present
             auto setAnchorFromConfig = [](const sol::object& obj, auto setter) 
@@ -684,28 +756,28 @@ namespace SDOM
                     }
                 }
             };
-            setAnchorFromConfig(config["anchorLeft"],   [&](SDOM::AnchorPoint ap){ displayObjects_[name]->setAnchorLeft(ap); });
-            setAnchorFromConfig(config["anchorTop"],    [&](SDOM::AnchorPoint ap){ displayObjects_[name]->setAnchorTop(ap); });
-            setAnchorFromConfig(config["anchorRight"],  [&](SDOM::AnchorPoint ap){ displayObjects_[name]->setAnchorRight(ap); });
-            setAnchorFromConfig(config["anchorBottom"], [&](SDOM::AnchorPoint ap){ displayObjects_[name]->setAnchorBottom(ap); });
+            setAnchorFromConfig(config["anchorLeft"],   [&](SDOM::AnchorPoint ap){ entry->obj->setAnchorLeft(ap); });
+            setAnchorFromConfig(config["anchorTop"],    [&](SDOM::AnchorPoint ap){ entry->obj->setAnchorTop(ap); });
+            setAnchorFromConfig(config["anchorRight"],  [&](SDOM::AnchorPoint ap){ entry->obj->setAnchorRight(ap); });
+            setAnchorFromConfig(config["anchorBottom"], [&](SDOM::AnchorPoint ap){ entry->obj->setAnchorBottom(ap); });
             
             // set additional properties if present
-            if (config["z_order"].valid())      displayObjects_[name]->setZOrder(static_cast<int>(config["z_order"].get<double>()));
-            if (config["priority"].valid())     displayObjects_[name]->setPriority(static_cast<int>(config["priority"].get<double>()));
-            if (config["isClickable"].valid())  displayObjects_[name]->setClickable(config["isClickable"].get<bool>());
-            if (config["isEnabled"].valid())    displayObjects_[name]->setEnabled(config["isEnabled"].get<bool>());
-            if (config["isHidden"].valid())     displayObjects_[name]->setHidden(config["isHidden"].get<bool>());
-            if (config["tabPriority"].valid())  displayObjects_[name]->setTabPriority(static_cast<int>(config["tabPriority"].get<double>()));
-            if (config["tabEnabled"].valid())   displayObjects_[name]->setTabEnabled(config["tabEnabled"].get<bool>());
+            if (config["z_order"].valid())      entry->obj->setZOrder(static_cast<int>(config["z_order"].get<double>()));
+            if (config["priority"].valid())     entry->obj->setPriority(static_cast<int>(config["priority"].get<double>()));
+            if (config["isClickable"].valid())  entry->obj->setClickable(config["isClickable"].get<bool>());
+            if (config["isEnabled"].valid())    entry->obj->setEnabled(config["isEnabled"].get<bool>());
+            if (config["isHidden"].valid())     entry->obj->setHidden(config["isHidden"].get<bool>());
+            if (config["tabPriority"].valid())  entry->obj->setTabPriority(static_cast<int>(config["tabPriority"].get<double>()));
+            if (config["tabEnabled"].valid())   entry->obj->setTabEnabled(config["tabEnabled"].get<bool>());
 
             // Set x, y, width, height
-            displayObjects_[name]->setX(x);
-            displayObjects_[name]->setY(y);
-            displayObjects_[name]->setWidth(width);
-            displayObjects_[name]->setHeight(height);
+            entry->obj->setX(x);
+            entry->obj->setY(y);
+            entry->obj->setWidth(width);
+            entry->obj->setHeight(height);
 
             // --- Finally initialize the display object ---
-            displayObjects_[name]->startup();
+            entry->obj->startup();
 
             // Dispatch EventType::OnInit so global or pre-registered listeners can observe creation
             // Included for completeness.  There may still be room to add an event listener.
@@ -722,6 +794,11 @@ namespace SDOM
             if (config["parent"].valid()) {
                 attachCreatedObjectToParentFromConfig(name, typeName, config["parent"]);
             }
+
+            // Register stable ID for external consumers
+            try {
+                registerDisplayObject(name, DisplayHandle(name, typeName));
+            } catch(...) {}
 
             return DisplayHandle(name, typeName);
         }
@@ -770,7 +847,7 @@ namespace SDOM
     //     return DisplayHandle(); // Invalid handle
     // }
 
-    DisplayHandle Factory::create(const std::string& typeName,
+    DisplayHandle Factory::createDisplayObject(const std::string& typeName,
                                 const IDisplayObject::InitStruct& init)
     {
         auto it = creators_.find(typeName);
@@ -793,10 +870,11 @@ namespace SDOM
                 std::string name = init.name;
 
                 displayObject->setType(typeName);
-                displayObjects_[name] = std::move(displayObject);
-
+                // Wrap and insert
+                displayObjects_[name] = std::make_unique<DisplayRecord>(std::move(displayObject), typeName, 0);
+                auto& entry = displayObjects_[name];
                 // Run initialization callback now that registry entry exists
-                displayObjects_[name]->startup();
+                if (entry->obj) entry->obj->startup();
 
                 // Dispatch OnInit event
                 auto& eventManager = getCore().getEventManager();
@@ -809,6 +887,10 @@ namespace SDOM
 
                 eventManager.dispatchEvent(std::move(initEvent), DisplayHandle(name, typeName));
 
+                try {
+                    registerDisplayObject(name, DisplayHandle(name, typeName));
+                } catch(...) {}
+
                 return DisplayHandle(name, typeName);
             }
         }
@@ -818,7 +900,7 @@ namespace SDOM
 
 
 
-    DisplayHandle Factory::create(const std::string& typeName, const std::string& luaScript) 
+    DisplayHandle Factory::createDisplayObject(const std::string& typeName, const std::string& luaScript) 
     {
         // Use the global SDOM Lua state instead of creating a fresh state. This
         // ensures created tables/functions are visible to the rest of the
@@ -837,11 +919,11 @@ namespace SDOM
             return DisplayHandle();
         }
 
-        sol::table config = result.as<sol::table>();
-        return create(typeName, config);
+    sol::table config = result.as<sol::table>();
+    return createDisplayObject(typeName, config);
     }
 
-    AssetHandle Factory::createAsset(const std::string& typeName, const sol::table& config)
+    AssetHandle Factory::createAssetObject(const std::string& typeName, const sol::table& config)
     {
         // Check required fields
         if (!config["name"].valid() || !config["type"].valid() || !config["filename"].valid()) 
@@ -860,7 +942,7 @@ namespace SDOM
         if (auto itExisting = assetObjects_.find(requestedName); itExisting != assetObjects_.end())
         {
             // Return a new handle pointing to the existing asset
-            return AssetHandle(requestedName, itExisting->second->getType(), itExisting->second->getFilename());
+            return AssetHandle(requestedName, itExisting->second->type, itExisting->second->obj->getFilename());
         }    
         
         
@@ -889,16 +971,16 @@ namespace SDOM
 
             if (desiredSize > 0) {
                 for (const auto& pair : assetObjects_) {
-                    const auto& assetPtr = pair.second;
-                    if (!assetPtr) continue;
+                    const auto& assetEntry = pair.second;
+                    if (!assetEntry || !assetEntry->obj) continue;
                     try {
-                        if (assetPtr->getFilename() == filename && assetPtr->getType() == TTFAsset::TypeName) {
-                            TTFAsset* existingTTF = dynamic_cast<TTFAsset*>(assetPtr.get());
+                        if (assetEntry->obj->getFilename() == filename && assetEntry->obj->getType() == TTFAsset::TypeName) {
+                            TTFAsset* existingTTF = dynamic_cast<TTFAsset*>(assetEntry->obj.get());
                             if (existingTTF && existingTTF->getFontSize() == desiredSize) {
                                 AssetHandle out;
                                 out.name_ = pair.first;
-                                out.type_ = assetPtr->getType();
-                                out.filename_ = assetPtr->getFilename();
+                                out.type_ = assetEntry->obj->getType();
+                                out.filename_ = assetEntry->obj->getFilename();
                                 // std::cout << "Factory::createAsset: Reusing existing TTFAsset '" << out.getName() << "' for filename '" << filename << "' (size=" << desiredSize << ")\n";
                                 return out;
                             }
@@ -933,20 +1015,22 @@ namespace SDOM
                 uniqueAssetObj->setType(typeName);
                 // convert to shared_ptr for aliasing support
                 std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
-                assetObjects_[requestedName] = sharedAsset;
-                assetObjects_[requestedName]->startup();
+                // Wrap into AssetRecord and insert
+                assetObjects_[requestedName] = std::make_unique<AssetRecord>(sharedAsset, typeName, 0);
+                auto& entry = assetObjects_[requestedName];
+                if (entry && entry->obj) entry->obj->startup();
 
                 // Register Lua bindings for this concrete asset instance so its methods are available
                 try {
-                    assetObjects_[requestedName]->registerLuaBindings(typeName, SDOM::getLua());
+                    entry->obj->registerLuaBindings(typeName, SDOM::getLua());
                 } catch(...) {
                     ERROR("Factory::createAsset: Failed to register Lua bindings for asset: " + requestedName);
                 }
 
                 // Eagerly load the asset now that it has been initialized and registered.
                 try {
-                    if (!assetObjects_[requestedName]->isLoaded()) {
-                        if (!assetObjects_[requestedName]->load()) {
+                    if (!entry->obj->isLoaded()) {
+                        if (!entry->obj->load()) {
                             ERROR("Factory::createAsset: load() failed for asset: " + requestedName);
                         }
                     }
@@ -954,18 +1038,21 @@ namespace SDOM
                     ERROR("Factory::createAsset: load() threw for asset: " + requestedName);
                 }
 
+                try {
+                    registerAssetObject(requestedName, AssetHandle(requestedName, typeName, filename));
+                } catch(...) {}
                 return AssetHandle(requestedName, typeName, filename);
         }
         return AssetHandle();
     }
 
 
-    AssetHandle Factory::createAsset(const std::string& typeName, const IAssetObject::InitStruct& init)
+    AssetHandle Factory::createAssetObject(const std::string& typeName, const IAssetObject::InitStruct& init)
     {
         // If the asset name already exists, return a handle to it.
         if (auto itExisting = assetObjects_.find(init.name); itExisting != assetObjects_.end())
         {
-            return AssetHandle(init.name, itExisting->second->getType(), itExisting->second->getFilename());
+            return AssetHandle(init.name, itExisting->second->type, itExisting->second->obj->getFilename());
         }
 
         // Reuse by filename for Texture / TTFAsset
@@ -977,15 +1064,15 @@ namespace SDOM
                     const auto& ttfInit = static_cast<const TTFAsset::InitStruct&>(init);
                     int desiredSize = ttfInit.internalFontSize;
 
-                    for (const auto& [key, assetPtr] : assetObjects_)
+                    for (const auto& [key, assetEntry] : assetObjects_)
                     {
-                        if (!assetPtr) continue;
-                        if (assetPtr->getFilename() == init.filename && assetPtr->getType() == TTFAsset::TypeName)
+                        if (!assetEntry || !assetEntry->obj) continue;
+                        if (assetEntry->obj->getFilename() == init.filename && assetEntry->obj->getType() == TTFAsset::TypeName)
                         {
-                            if (auto* existingTTF = dynamic_cast<TTFAsset*>(assetPtr.get()))
+                            if (auto* existingTTF = dynamic_cast<TTFAsset*>(assetEntry->obj.get()))
                             {
                                 if (existingTTF->getFontSize() == desiredSize)
-                                    return AssetHandle(key, assetPtr->getType(), assetPtr->getFilename());
+                                    return AssetHandle(key, assetEntry->obj->getType(), assetEntry->obj->getFilename());
                             }
                         }
                     }
@@ -1013,18 +1100,19 @@ namespace SDOM
             uniqueAssetObj->setType(typeName);
             std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
 
-            assetObjects_[init.name] = sharedAsset;
-            assetObjects_[init.name]->startup();
+            assetObjects_[init.name] = std::make_unique<AssetRecord>(sharedAsset, typeName, 0);
+            auto& entry = assetObjects_[init.name];
+            if (entry && entry->obj) entry->obj->startup();
 
             try {
-                assetObjects_[init.name]->registerLuaBindings(typeName, SDOM::getLua());
+                entry->obj->registerLuaBindings(typeName, SDOM::getLua());
             } catch(...) {
                 ERROR("Factory::createAsset(init): Failed to register Lua bindings for asset: " + init.name);
             }
 
             try {
-                if (!assetObjects_[init.name]->isLoaded()) {
-                    if (!assetObjects_[init.name]->load()) {
+                if (!entry->obj->isLoaded()) {
+                    if (!entry->obj->load()) {
                         ERROR("Factory::createAsset(init): load() failed for asset: " + init.name);
                     }
                 }
@@ -1032,6 +1120,9 @@ namespace SDOM
                 ERROR("Factory::createAsset(init): load() threw for asset: " + init.name);
             }
 
+            try {
+                registerAssetObject(init.name, AssetHandle(init.name, typeName, init.filename));
+            } catch(...) {}
             return AssetHandle(init.name, typeName, init.filename);
         }
 
@@ -1039,7 +1130,7 @@ namespace SDOM
     }
 
 
-    AssetHandle Factory::createAsset(const std::string& typeName, const std::string& luaScript)
+    AssetHandle Factory::createAssetObject(const std::string& typeName, const std::string& luaScript)
     {
         // Use global Lua state so created tables are visible to the rest of the app
         sol::state& lua = SDOM::getLua();
@@ -1050,9 +1141,12 @@ namespace SDOM
             ERROR("Factory::createAsset: Provided string is not a valid Lua table.");
             return AssetHandle();
         }
-        sol::table config = result.as<sol::table>();
-        return createAsset(typeName, config);
+    sol::table config = result.as<sol::table>();
+    return createAssetObject(typeName, config);
     }
+
+    // Note: createDisplayObject/createAssetObject now contain the canonical
+    // implementations (migrated from the legacy create()/createAsset()).
 
 
     bool Factory::attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig)
@@ -1166,11 +1260,23 @@ namespace SDOM
             ERROR(std::string("Factory::addDisplayObject: Display object with name '") + name + "' already exists (add aborted)");
             return;
         }
-        displayObjects_[name] = std::move(displayObject);
+    std::string type = "";
+    if (displayObject) type = displayObject->getType();
+    displayObjects_[name] = std::make_unique<DisplayRecord>(std::move(displayObject), type, 0);
+        try {
+            registerDisplayObject(name, DisplayHandle(name, type));
+        } catch(...) {}
     }
     
     void Factory::destroyDisplayObject(const std::string& name) 
     {
+        auto it = displayObjects_.find(name);
+        if (it != displayObjects_.end()) {
+            uint64_t id = it->second ? it->second->id : 0;
+            if (id != 0) {
+                try { unregisterDisplayObject(id); } catch(...) {}
+            }
+        }
         displayObjects_.erase(name);
     }
 
@@ -1181,28 +1287,32 @@ namespace SDOM
 
         // Ask the object to release runtime resources first
             try {
-            if (it->second) {
+            if (it->second && it->second->obj) {
                 // Only unload if the asset reports itself as loaded
-                if (it->second->isLoaded()) {
-                    it->second->unload();
+                if (it->second->obj->isLoaded()) {
+                    it->second->obj->unload();
                 }
                 // Use owner-controlled shutdown so virtual cleanup runs while
                 // object is still fully-formed.
-                it->second->shutdown();
+                it->second->obj->shutdown();
             }
         } catch(...) {
             ERROR("Factory::destroyAssetObject: exception while shutting down asset: " + name);
         }
 
         // Finally remove from registry (unique_ptr destructor will run)
+        uint64_t id = it->second ? it->second->id : 0;
         assetObjects_.erase(it);
+        if (id != 0) {
+            try { unregisterAssetObject(id); } catch(...) {}
+        }
     }
  
 
     int Factory::countOrphanedDisplayObjects() const {
         int count = 0;
         for (const auto& [name, objPtr] : displayObjects_) {
-            auto obj = dynamic_cast<IDisplayObject*>(objPtr.get());
+            auto obj = dynamic_cast<IDisplayObject*>(objPtr->obj.get());
             if (obj && !obj->getParent() && obj->getType() != "Stage") {
                 ++count;
             }
@@ -1213,7 +1323,7 @@ namespace SDOM
     std::vector<DisplayHandle> Factory::getOrphanedDisplayObjects() {
         std::vector<DisplayHandle> orphans;
         for (const auto& [name, objPtr] : displayObjects_) {
-            auto obj = dynamic_cast<IDisplayObject*>(objPtr.get());
+            auto obj = dynamic_cast<IDisplayObject*>(objPtr->obj.get());
             if (obj && !obj->getParent() && obj->getType() != "Stage") {
                 orphans.push_back(getDisplayObject(name));
             }
@@ -1248,15 +1358,15 @@ namespace SDOM
         // Search assetObjects_ for an object whose getFilename() matches the provided filename.
         for (const auto& pair : assetObjects_) {
             const std::string& name = pair.first;
-            const auto& assetPtr = pair.second;
-            if (!assetPtr) continue;
+            const auto& entry = pair.second;
+            if (!entry || !entry->obj) continue;
             try {
-                std::string fn = assetPtr->getFilename();
+                std::string fn = entry->obj->getFilename();
                 if (fn == filename) {
-                    if (typeName.empty() || assetPtr->getType() == typeName) {
+                    if (typeName.empty() || entry->obj->getType() == typeName) {
                         AssetHandle out;
                         out.name_ = name;
-                        out.type_ = assetPtr->getType();
+                        out.type_ = entry->obj->getType();
                         out.filename_ = fn;
                         return out;
                     }
@@ -1272,11 +1382,11 @@ namespace SDOM
     {
         for (const auto& pair : assetObjects_) {
             const std::string& name = pair.first;
-            const auto& assetPtr = pair.second;
-            if (!assetPtr) continue;
+            const auto& entry = pair.second;
+            if (!entry || !entry->obj) continue;
             try {
-                if (assetPtr->getType() == SpriteSheet::TypeName && assetPtr->getFilename() == filename) {
-                    const SpriteSheet* ss = dynamic_cast<const SpriteSheet*>(assetPtr.get());
+                if (entry->obj->getType() == SpriteSheet::TypeName && entry->obj->getFilename() == filename) {
+                    const SpriteSheet* ss = dynamic_cast<const SpriteSheet*>(entry->obj.get());
                     if (!ss) continue;
                     if (ss->getSpriteWidth() == spriteW && ss->getSpriteHeight() == spriteH) {
                         AssetHandle out;
@@ -1330,36 +1440,37 @@ namespace SDOM
     void Factory::printObjectRegistry() const
     {
         std::cout << "Factory Display Object Registry:\n";
-        for (const auto& pair : displayObjects_) 
-        {
-            const auto& name = pair.first;
-            const auto& displayObject = pair.second;
-            std::cout << "  Name: " << name
-                    << ", Type: " << (displayObject ? displayObject->getType() : "Unknown")
-                    << "\n";
-        }
+    for (const auto& pair : displayObjects_) 
+    {
+        const auto& name = pair.first;
+        const auto& displayObject = pair.second;
+        std::cout << "  Name: " << name
+            << ", Type: " << (displayObject && displayObject->obj ? displayObject->obj->getType() : "Unknown")
+            << "\n";
+    }
         std::cout << "Total display objects: " << displayObjects_.size() << std::endl;
     }
 
     void Factory::printAssetRegistry() const
     {
         std::cout << "Factory Asset Object Registry:\n";
-        for (const auto& kv : assetObjects_) {
-            const auto& name = kv.first;
-            const IAssetObject* obj = kv.second.get();
-            std::cout << "  Name: " << name << ", Type: " << obj->getType()
-                    << ", Filename: " << obj->getFilename();
-            if (auto ss = dynamic_cast<const SpriteSheet*>(obj)) {
-                std::cout << ", spriteW=" << ss->getSpriteWidth()
-                        << ", spriteH=" << ss->getSpriteHeight()
-                        << ", count=" << ss->getSpriteCount();
-            }
-            if (auto bf = dynamic_cast<const BitmapFont*>(obj)) {
-                std::cout << ", glyphW=" << bf->getGlyphWidth('W')
-                        << ", glyphH=" << bf->getGlyphHeight('W');
-            }
-            std::cout << '\n';
+    for (const auto& kv : assetObjects_) {
+        const auto& name = kv.first;
+        const IAssetObject* obj = kv.second->obj.get();
+        if (!obj) continue;
+        std::cout << "  Name: " << name << ", Type: " << obj->getType()
+            << ", Filename: " << obj->getFilename();
+        if (auto ss = dynamic_cast<const SpriteSheet*>(obj)) {
+        std::cout << ", spriteW=" << ss->getSpriteWidth()
+            << ", spriteH=" << ss->getSpriteHeight()
+            << ", count=" << ss->getSpriteCount();
         }
+        if (auto bf = dynamic_cast<const BitmapFont*>(obj)) {
+        std::cout << ", glyphW=" << bf->getGlyphWidth('W')
+            << ", glyphH=" << bf->getGlyphHeight('W');
+        }
+        std::cout << '\n';
+    }
         std::cout << "Total asset objects: " << assetObjects_.size() << "\n";
     }
 
@@ -1374,7 +1485,7 @@ namespace SDOM
         auto printNode = [&](const std::string& name, int indent) {
             auto it = assetObjects_.find(name);
             if (it == assetObjects_.end()) return;
-            const IAssetObject* obj = it->second.get();
+            const IAssetObject* obj = it->second->obj.get();
             if (!obj) return;
             for (int i = 0; i < indent; ++i) std::cout << "  ";
             std::cout << "- " << name << " (type=" << obj->getType() << ", file=" << obj->getFilename() << ")\n";
@@ -1436,7 +1547,7 @@ namespace SDOM
         std::vector<std::string> ttfRoots;
         for (const auto& kv : assetObjects_) {
             const std::string& name = kv.first;
-            const IAssetObject* obj = kv.second.get();
+            const IAssetObject* obj = kv.second->obj.get();
             if (!obj) continue;
             if (obj->getType() == Texture::TypeName) textureRoots.push_back(name);
             if (obj->getType() == TTFAsset::TypeName) ttfRoots.push_back(name);
@@ -1446,7 +1557,7 @@ namespace SDOM
         auto findSpriteSheetsForTexture = [&](const std::string& texName) {
             std::vector<std::string> out;
             for (const auto& kv : assetObjects_) {
-                const IAssetObject* obj = kv.second.get();
+                const IAssetObject* obj = kv.second->obj.get();
                 if (!obj) continue;
                 if (obj->getType() == SpriteSheet::TypeName) {
                     const SpriteSheet* ss = dynamic_cast<const SpriteSheet*>(obj);
@@ -1459,7 +1570,7 @@ namespace SDOM
         auto findBitmapFontsForSpriteSheet = [&](const std::string& sheetName) {
             std::vector<std::string> out;
             for (const auto& kv : assetObjects_) {
-                const IAssetObject* obj = kv.second.get();
+                const IAssetObject* obj = kv.second->obj.get();
                 if (!obj) continue;
                 if (obj->getType() == BitmapFont::TypeName) {
                     const BitmapFont* bf = dynamic_cast<const BitmapFont*>(obj);
@@ -1475,7 +1586,7 @@ namespace SDOM
         auto findTruetypesForTTF = [&](const std::string& ttfName) {
             std::vector<std::string> out;
             for (const auto& kv : assetObjects_) {
-                const IAssetObject* obj = kv.second.get();
+                const IAssetObject* obj = kv.second->obj.get();
                 if (!obj) continue;
                 if (obj->getType() == TruetypeFont::TypeName) {
                     const TruetypeFont* tf = dynamic_cast<const TruetypeFont*>(obj);
@@ -1663,7 +1774,7 @@ namespace SDOM
         std::vector<std::string> truetypeNames;
         truetypeNames.reserve(assetObjects_.size());
         for (const auto& kv : assetObjects_) {
-            if (dynamic_cast<TTFAsset*>(kv.second.get()) != nullptr) {
+            if (kv.second && kv.second->obj && kv.second->obj->getType() == TTFAsset::TypeName) {
                 truetypeNames.push_back(kv.first);
             }
         }

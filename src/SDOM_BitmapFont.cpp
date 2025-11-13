@@ -125,7 +125,7 @@ namespace SDOM
         }
 
         // create by type, not by name
-        spriteSheet_ = getFactory().createAsset(SpriteSheet::TypeName, init);
+    spriteSheet_ = getFactory().createAssetObject(SpriteSheet::TypeName, init);
         if (!spriteSheet_)
         {
             ERROR("BitmapFont::onInit: Factory failed to create SpriteSheet asset for filename: " + filename_);
@@ -211,7 +211,7 @@ namespace SDOM
             init.spriteWidth = bitmapFontWidth_;
             init.spriteHeight = bitmapFontHeight_;
 
-            spriteSheet_ = getFactory().createAsset(SpriteSheet::TypeName, init);
+            spriteSheet_ = getFactory().createAssetObject(SpriteSheet::TypeName, init);
             if (!spriteSheet_) {
                 ERROR("BitmapFont::onLoad: Factory failed to create SpriteSheet asset: " + sheetName);
                 in_onload = false;
@@ -406,7 +406,7 @@ namespace SDOM
             init.spriteWidth = bitmapFontWidth_;
             init.spriteHeight = bitmapFontHeight_;
 
-            spriteSheet_ = getFactory().createAsset(SpriteSheet::TypeName, init);
+            spriteSheet_ = getFactory().createAssetObject(SpriteSheet::TypeName, init);
             if (!spriteSheet_)
             {
                 ERROR("BitmapFont::create - failed to create SpriteSheet asset: " + sheetName);

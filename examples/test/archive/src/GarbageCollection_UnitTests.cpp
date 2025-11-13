@@ -82,7 +82,7 @@ namespace SDOM
             // create a stage
             Stage::InitStruct stageInit; // stageInit.type was preinitialized to "Stage" by Stage::InitStruct
             stageInit.name = "gcStage";
-            DisplayHandle stage = factory.create("Stage", stageInit);
+            DisplayHandle stage = factory.createDisplayObject("Stage", stageInit);
             if (!stage) 
             {
                 // cleanup and fail
@@ -94,7 +94,7 @@ namespace SDOM
             // create a box         
             Box::InitStruct boxInit;  // boxInit.type was preinitialized to "Box" by Box::InitStruct
             boxInit.name = "gcOrphan";
-            DisplayHandle child = factory.create("Box", boxInit);
+            DisplayHandle child = factory.createDisplayObject("Box", boxInit);
             if (!child) 
             {
                 // cleanup and fail

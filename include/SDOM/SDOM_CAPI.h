@@ -56,37 +56,8 @@ bool SDOM_PollEvent(SDL_Event* event);
 
 void SDOM_Quit(void);
 
+/* Stable ID registry for FFI: removed — use existing Factory registration semantics */
+
 #ifdef __cplusplus
 }
 #endif
-// ...existing code...
-
-
-// struct SDOM_Event {
-//     EventType type;                                 // Type of the event, e.g., KeyDown, MouseClick, etc.
-//     DisplayHandle target = nullptr;                 // Target of the event, usually the object that triggered it    
-//     DisplayHandle currentTarget = nullptr;          // Current target during event propagation
-//     DisplayHandle relatedTarget = nullptr;          // For events that involve a related target (e.g., drag and drop)
-//     SDL_Event sdlEvent;                             // underlying SDL event
-//     Phase currentPhase;                     // Current phase of the event propagation
-//     bool propagationStopped = false;        // Indicates if event propagation is stopped
-//     bool disableDefaultBehavior = false;    // Indicates if default behavior is disabled
-//     bool useCapture = false;                // Indicates if the event is in the capture phase
-//     float fElapsedTime = 0.0f;                      // Time elapsed since the last frame
-
-//     // Mouse Event Properties: (Not yet defined as proper JSON properties)
-//     float mouse_x;              // mouse x-coordinate
-//     float mouse_y;              // mouse y-coordinate
-//     float wheelX = 0.0f;        // Horizontal wheel movement
-//     float wheelY = 0.0f;        // Vertical wheel movement
-//     float dragOffsetX = 0.0f;   // horizontal drag offset
-//     float dragOffsetY = 0.0f;   // vertical drag offset
-//     int clickCount = 0;         // Number of clicks for double-click detection
-//     uint8_t button = 0;         // Mouse button that triggered the event (SDL_BUTTON_LEFT, SDL_BUTTON_RIGHT, etc.)
-
-//     // Keyboard Event Properties: (Not yet defined as proper JSON properties)
-//     SDL_Scancode scancode_;     // The physical key pressed
-//     SDL_Keycode keycode_;       // The virtual key pressed
-//     Uint16 keymod_;             // Modifier keys (e.g., Shift, Ctrl, Alt)
-//     int asciiCode_;             // ASCII code of the key pressed    
-// };

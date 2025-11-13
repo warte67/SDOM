@@ -26,7 +26,7 @@ namespace SDOM
     IDisplayObject* DisplayHandle::get() const
     {
         if (!factory_) return nullptr;
-        return factory_->getDomObj(name_);
+    return factory_->getDisplayObjectPtr(name_);
     }
 
     // Resolve child spec from Lua: accepts a DisplayHandle userdata, a string name,

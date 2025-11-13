@@ -60,7 +60,7 @@ namespace SDOM
     IAssetObject* AssetHandle::get() const
     {
         if (!factory_) return nullptr;
-        IAssetObject* res = factory_->getResObj(name_);
+    IAssetObject* res = factory_->getAssetObjectPtr(name_);
         if (!res) return nullptr;
         return res;    
     }

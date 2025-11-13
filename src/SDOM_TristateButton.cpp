@@ -280,7 +280,7 @@ namespace SDOM
             init.tabEnabled = false;
             init.color = getColor(); // use the color of the TriStateCheckbox to color the icon
             init.icon_index = icon_index_;
-            iconButtonObject_ = getFactory().create("IconButton", init);
+            iconButtonObject_ = getFactory().createDisplayObject("IconButton", init);
             addChild(iconButtonObject_);
         }
 
@@ -326,7 +326,7 @@ namespace SDOM
             // Debug: report what we will pass into the Label so we can trace
             // whether defaults were applied correctly.
             // INFO("TriStateCheckbox::onInit() - Label init metrics for '" + init.name + "': resource='" + init.resourceName + "' fontSize=" + std::to_string(init.fontSize) + " fontWidth=" + std::to_string(init.fontWidth) + " fontHeight=" + std::to_string(init.fontHeight));
-            labelObject_ = getFactory().create("Label", init);
+            labelObject_ = getFactory().createDisplayObject("Label", init);
             addChild(labelObject_);
         }
         // center the icon vertically within the TriStateCheckbox height

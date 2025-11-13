@@ -153,7 +153,7 @@ namespace SDOM
                         init_struct.spriteWidth = chosenW;
                         init_struct.spriteHeight = chosenH;
                         init_struct.isInternal = true;
-                        AssetHandle created = factory.createAsset("SpriteSheet", init_struct);
+                        AssetHandle created = factory.createAssetObject("SpriteSheet", init_struct);
                         if (created.isValid()) {
                             iconSpriteSheet_ = created;
                             SpriteSheet* createdPtr = iconSpriteSheet_.as<SpriteSheet>();
@@ -181,7 +181,7 @@ namespace SDOM
                             init_struct2.spriteWidth = (icon_width_ > 0) ? icon_width_ : 8;
                             init_struct2.spriteHeight = (icon_height_ > 0) ? icon_height_ : 8;
                             init_struct2.isInternal = true;
-                            AssetHandle created2 = factory.createAsset("SpriteSheet", init_struct2);
+                            AssetHandle created2 = factory.createAssetObject("SpriteSheet", init_struct2);
                             if (created2.isValid()) {
                                 iconSpriteSheet_ = created2;
                                 SpriteSheet* createdPtr2 = iconSpriteSheet_.as<SpriteSheet>();
@@ -203,7 +203,7 @@ namespace SDOM
                 init_struct.filename = icon_resource_;
                 init_struct.spriteWidth = (icon_width_ > 0) ? icon_width_ : 8;
                 init_struct.spriteHeight = (icon_height_ > 0) ? icon_height_ : 8;
-                iconSpriteSheet_ = factory.createAsset("SpriteSheet", init_struct);
+                iconSpriteSheet_ = factory.createAssetObject("SpriteSheet", init_struct);
                 if (!iconSpriteSheet_ || !iconSpriteSheet_.isValid())
                 {
                     ERROR("IconButton::onInit() - Failed to create or load icon SpriteSheet asset: " + icon_resource_);

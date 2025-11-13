@@ -197,3 +197,4 @@ extern "C" void SDOM_Quit(void)
     } catch (...) { /* best-effort cleanup */ }
 }
 
+

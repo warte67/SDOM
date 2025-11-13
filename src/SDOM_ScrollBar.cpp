@@ -75,7 +75,7 @@ namespace SDOM
                 init.direction = ArrowButton::ArrowDirection::Left;
             else
                 init.direction = ArrowButton::ArrowDirection::Up;
-            button_decrease_ = getFactory().create("ArrowButton", init);
+            button_decrease_ = getFactory().createDisplayObject("ArrowButton", init);
             addChild(button_decrease_);
         }
 
@@ -111,7 +111,7 @@ namespace SDOM
             init.isClickable = true;
             init.tabEnabled = false;
             init.color = getColor(); 
-            button_increase_ = getFactory().create("ArrowButton", init);
+            button_increase_ = getFactory().createDisplayObject("ArrowButton", init);
             addChild(button_increase_);
         }
 

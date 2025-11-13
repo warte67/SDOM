@@ -103,8 +103,8 @@ namespace SDOM
         // INFO("SpriteSheet::onLoad() called for: " + getName() + " filename=" + filename_ + " (sprite " + std::to_string(spriteWidth_) + "x" + std::to_string(spriteHeight_) + ")");
         onUnload();
 
-        // does this filename already exist in the factory?
-        IAssetObject* existing = getFactory().getResObj(filename_);
+    // does this filename already exist in the factory?
+    IAssetObject* existing = getFactory().getAssetObjectPtr(filename_);
         if (existing)
         {
             // try {
@@ -168,7 +168,7 @@ namespace SDOM
                     init.type = Texture::TypeName;
                     init.filename = srcFilename;
 
-                    textureAsset = getFactory().createAsset(Texture::TypeName, init);
+                    textureAsset = getFactory().createAssetObject(Texture::TypeName, init);
                     if (!textureAsset)
                     {
                         ERROR("SpriteSheet::onLoad: Factory failed to create Texture asset for filename: " + srcFilename + " (tried name: " + newName + ")");
@@ -200,7 +200,7 @@ namespace SDOM
             init.type = Texture::TypeName;
             init.filename = filename_;
 
-            textureAsset = getFactory().createAsset(Texture::TypeName, init);
+            textureAsset = getFactory().createAssetObject(Texture::TypeName, init);
             if (!textureAsset)
             {
                 ERROR("SpriteSheet::onLoad: Factory failed to create Texture asset for filename: " + filename_ + " (tried name: " + newName + ")");
@@ -225,7 +225,7 @@ namespace SDOM
             init.type = Texture::TypeName;
             init.filename = filename_;
 
-            textureAsset = getFactory().createAsset(Texture::TypeName, init);
+            textureAsset = getFactory().createAssetObject(Texture::TypeName, init);
             if (!textureAsset)
             {
                 ERROR("SpriteSheet::onLoad: Factory failed to create Texture asset for filename: " + filename_);

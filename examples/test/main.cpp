@@ -40,7 +40,7 @@
 
 
 #ifndef MAIN_VARIANT
-#define MAIN_VARIANT 3
+#define MAIN_VARIANT 1
 #endif
 
 
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
     core.setStopAfterUnitTests(stopAfterTests);
 
     // register any custom DisplayHandle types before configuring the Core
-    core.getFactory().registerDomType("Box", TypeCreators{
+    core.getFactory().registerDisplayObjectType("Box", TypeCreators{
         Box::CreateFromLua,
         Box::CreateFromInitStruct
     });    

@@ -36,7 +36,7 @@ namespace SDOM
             init.isHidden = false;
             init.tabPriority = 1;
             init.tabEnabled = true;
-            testBox1 = SDOM::getCore().getFactory().create("Box1", init);
+            testBox1 = SDOM::getCore().getFactory().createDisplayObject("Box1", init);
             return (testBox1 == nullptr);
         });
     }
@@ -61,7 +61,7 @@ namespace SDOM
             init.isHidden = false;
             init.tabPriority = 2;
             init.tabEnabled = true;
-            testBox2 = SDOM::getCore().getFactory().create("Box", init);
+            testBox2 = SDOM::getCore().getFactory().createDisplayObject("Box", init);
             return (testBox2 != nullptr && testBox2->getType() == Box::TypeName);
         });
     }
@@ -123,7 +123,7 @@ namespace SDOM
             if (!SDOM::validateAnchorAssignments(config)) {
                 return false;
             }
-            DisplayHandle testBoxLua = SDOM::getCore().getFactory().create("Box", config);
+            DisplayHandle testBoxLua = SDOM::getCore().getFactory().createDisplayObject("Box", config);
             DisplayHandle stage = SDOM::getCore().getStageHandle();
             if (!testBoxLua || testBoxLua->getType() != Box::TypeName || !stage) return false;
             stage->addChild(testBoxLua);
@@ -152,7 +152,7 @@ namespace SDOM
             if (!SDOM::validateAnchorAssignments(config)) {
                 return false;
             }
-            DisplayHandle testBoxLua = SDOM::getCore().getFactory().create("Box", config);
+            DisplayHandle testBoxLua = SDOM::getCore().getFactory().createDisplayObject("Box", config);
             DisplayHandle stage = SDOM::getCore().getStageHandle();
             if (!testBoxLua || testBoxLua->getType() != Box::TypeName || !stage) return false;
             stage->addChild(testBoxLua);
@@ -181,7 +181,7 @@ namespace SDOM
                 return false;
             }
             try {
-                DisplayHandle testBoxLua = SDOM::getCore().getFactory().create("Box", config);
+                DisplayHandle testBoxLua = SDOM::getCore().getFactory().createDisplayObject("Box", config);
                 // If no exception, test fails
                 return false;
             } catch (const SDOM::Exception& e) {
@@ -207,7 +207,7 @@ namespace SDOM
                 init.width = w;
                 init.height = h;
                 init.color = color;
-                auto box = SDOM::getCore().getFactory().create("Box", init);
+                auto box = SDOM::getCore().getFactory().createDisplayObject("Box", init);
                 return box;
             };
 

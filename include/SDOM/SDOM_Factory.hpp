@@ -10,6 +10,9 @@
 #include <functional>
 #include <unordered_map>
 #include <vector>
+#include <atomic>
+#include <shared_mutex>
+#include <cstdint>
 #include <sol/sol.hpp>
 
 // include the concrete interface headers so unique_ptr<T> is instantiated with a complete type
@@ -40,6 +43,29 @@ namespace SDOM
         std::function<std::unique_ptr<IAssetObject>(const IAssetObject::InitStruct&)> fromInitStruct;
     };
 
+    // --- Registry Record Types --- //
+    // Wrap an owned display object plus metadata (type + stable id)
+    struct DisplayRecord
+    {
+        std::unique_ptr<IDisplayObject> obj;
+        std::string type;
+        uint64_t id = 0;
+
+        DisplayRecord(std::unique_ptr<IDisplayObject> o = nullptr, const std::string& t = "", uint64_t i = 0)
+            : obj(std::move(o)), type(t), id(i) {}
+    };
+
+    // Wrap an asset object (shared ownership allowed) plus metadata
+    struct AssetRecord
+    {
+        std::shared_ptr<IAssetObject> obj;
+        std::string type;
+        uint64_t id = 0;
+
+        AssetRecord(std::shared_ptr<IAssetObject> o = nullptr, const std::string& t = "", uint64_t i = 0)
+            : obj(std::move(o)), type(t), id(i) {}
+    };
+
     class Factory final
     {
         friend class Core;  // Core should have direct access to the Factory internals
@@ -56,22 +82,24 @@ namespace SDOM
         bool onUnitTest(int frame);
 
         // --- DataRegistry access --- //
-        SDOM::DataRegistry& getRegistry() { return registry_; }
-        const SDOM::DataRegistry& getRegistry() const { return registry_; }
+        // Preferred name for clarity
+        SDOM::DataRegistry& getDataRegistry() { return registry_; }
+        const SDOM::DataRegistry& getDataRegistry() const { return registry_; }
         bool exportBindings(const std::string& outputDir) { return registry_.generateBindings(outputDir); }
 
         // --- Object Type Registration --- //
-        void registerDomType(const std::string& typeName, const TypeCreators& creators);  // change to registerDisplayObjectType()
-        void registerResType(const std::string& typeName, const AssetTypeCreators& creators);  // change to registerAssetObjectType()
+        void registerDisplayObjectType(const std::string& typeName, const TypeCreators& creators);
+        void registerAssetObjectType(const std::string& typeName, const AssetTypeCreators& creators);
 
         // --- Object Creation --- //
-        DisplayHandle create(const std::string& typeName, const sol::table& config);
-        DisplayHandle create(const std::string& typeName, const IDisplayObject::InitStruct& init);        
-        DisplayHandle create(const std::string& typeName, const std::string& luaScript);
+        // Preferred explicit names
+        DisplayHandle createDisplayObject(const std::string& typeName, const sol::table& config);
+        DisplayHandle createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init);
+        DisplayHandle createDisplayObject(const std::string& typeName, const std::string& luaScript);
 
-        AssetHandle createAsset(const std::string& typeName, const sol::table& config);
-        AssetHandle createAsset(const std::string& typeName, const IAssetObject::InitStruct& init);        
-        AssetHandle createAsset(const std::string& typeName, const std::string& luaScript);
+        AssetHandle createAssetObject(const std::string& typeName, const sol::table& config);
+        AssetHandle createAssetObject(const std::string& typeName, const IAssetObject::InitStruct& init);
+        AssetHandle createAssetObject(const std::string& typeName, const std::string& luaScript);
 
         // Helper: attach a newly-created display object (by name/type) to a
         // parent specified in a Lua config value. Accepts string name, DomHandle,
@@ -79,8 +107,9 @@ namespace SDOM
         bool attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig);
 
         // --- Object Lookup --- //
-        IDisplayObject* getDomObj(const std::string& name);  // change to getIDisplayObject()
-        IAssetObject* getResObj(const std::string& name);   //change to getIAssetObject()        
+        // Preferred modern names: return raw interface pointers for callers
+        IDisplayObject* getDisplayObjectPtr(const std::string& name);
+        IAssetObject* getAssetObjectPtr(const std::string& name);
         DisplayHandle getDisplayObject(const std::string& name);
         AssetHandle getAssetObject(const std::string& name);
         DisplayHandle getStageHandle();
@@ -127,34 +156,29 @@ namespace SDOM
         // Helper: Unload Asset Objects
         void unloadAllAssetObjects() 
         {
-            for (auto& [name, assetPtr] : assetObjects_) 
+            for (auto& [name, assetEntryPtr] : assetObjects_) 
             {
-                if (assetPtr && assetPtr->isLoaded()) 
+                if (assetEntryPtr && assetEntryPtr->obj && assetEntryPtr->obj->isLoaded()) 
                 {
-                    // INFO("Factory::unloadAllAssetObjects: Unloading asset: " << name << " (" << assetPtr->getType() << ")");
+                    // INFO("Factory::unloadAllAssetObjects: Unloading asset: " << name << " (" << assetEntryPtr->obj->getType() << ")");
                     // Use owner-safe helper to avoid virtual calls from destructors
-                    assetPtr->unload();
+                    assetEntryPtr->obj->unload();
                 }
             }
         }
         // Helper: Reload Asset Objects
         void reloadAllAssetObjects() 
         {
-            for (auto& [name, assetPtr] : assetObjects_) 
+            for (auto& [name, assetEntryPtr] : assetObjects_) 
             {
-                if (assetPtr && !assetPtr->isLoaded()) 
+                if (assetEntryPtr && assetEntryPtr->obj && !assetEntryPtr->obj->isLoaded()) 
                 {
-                    // INFO("Factory::loadAllAssetObjects: Loading asset: " << name << " (" << assetPtr->getType() << ")");
+                    // INFO("Factory::loadAllAssetObjects: Loading asset: " << name << " (" << assetEntryPtr->obj->getType() << ")");
                     // Use owner-safe helper so ownership semantics are respected
-                    assetPtr->load();
+                    assetEntryPtr->obj->load();
                 }
             }
         }
-
-
-
-        // IDEA: continiually track before and after onUpdate() and onRender() 
-
 
         // --- Performance Test Helpers --- //
 
@@ -191,11 +215,13 @@ namespace SDOM
         // initialization guard to make onInit idempotent
         bool initialized_ = false;
         // --- Internal Storage --- //
-        std::unordered_map<std::string, std::unique_ptr<IDisplayObject>> displayObjects_;
-        // Use shared_ptr so multiple registry names can alias the same underlying asset
-        std::unordered_map<std::string, std::shared_ptr<IAssetObject>> assetObjects_;
-        std::unordered_map<std::string, TypeCreators> creators_;
-        std::unordered_map<std::string, AssetTypeCreators> assetCreators_;
+        // Now store registry entries which own/manage objects and contain a stable id
+        std::unordered_map<std::string, std::unique_ptr<DisplayRecord>> displayObjects_;
+        // Use shared_ptr inside AssetRecord so multiple registry names can alias the same underlying asset
+        std::unordered_map<std::string, std::unique_ptr<AssetRecord>> assetObjects_;
+
+        std::unordered_map<std::string, TypeCreators> creators_;            // are these now needed?
+        std::unordered_map<std::string, AssetTypeCreators> assetCreators_;  // are these now needed?
 
         // --- Performance Tracking Maps --- //
         std::unordered_map<std::string, PerfStats> perf_map;
@@ -214,6 +240,23 @@ namespace SDOM
             int dragStartWorldY;
         };            
         std::vector<futureChild> futureChildrenList_;
+
+    // --- ID Registry --- //
+    // Atomic counter for issuing stable 64-bit ids (0 reserved)
+    std::atomic<uint64_t> next_object_id_{1};
+    // Map stable id -> handle (separate maps for display and asset handles). Protected by a shared_mutex for concurrent reads.
+    std::unordered_map<uint64_t, DisplayHandle> display_id_map_;
+    std::unordered_map<uint64_t, AssetHandle> asset_id_map_;
+    mutable std::shared_mutex id_map_mutex_;
+
+    // ID registry helpers (private)
+    uint64_t registerDisplayObject(const std::string& name, const DisplayHandle& handle);
+    DisplayHandle resolveDisplayObject(uint64_t id) const;
+    void unregisterDisplayObject(uint64_t id);
+
+    uint64_t registerAssetObject(const std::string& name, const AssetHandle& handle);
+    AssetHandle resolveAssetObject(uint64_t id) const;
+    void unregisterAssetObject(uint64_t id);
 
     // --- DataRegistry owned by Factory --- //
     SDOM::DataRegistry registry_;

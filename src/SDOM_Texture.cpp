@@ -55,7 +55,7 @@ namespace SDOM
         if (!renderer) { ERROR("No valid SDL_Renderer available in Core instance."); return; }
 
         // If Factory already has an object for this filename -> reuse it
-        IAssetObject* existing = getFactory().getResObj(filename_);
+    IAssetObject* existing = getFactory().getAssetObjectPtr(filename_);
         if (existing)
         {
             // Try to reuse an already-loaded Texture asset to avoid redundant loads / null texture

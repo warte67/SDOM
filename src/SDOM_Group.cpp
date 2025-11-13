@@ -165,7 +165,7 @@ namespace SDOM
             // Debug: report what we will pass into the Label so we can trace
             // whether defaults were applied correctly.
             // INFO("Group::onInit() - Label init metrics for '" + init.name + "': resource='" + init.resourceName + "' fontSize=" + std::to_string(init.fontSize) + " fontWidth=" + std::to_string(init.fontWidth) + " fontHeight=" + std::to_string(init.fontHeight));
-            labelObject_ = getFactory().create("Label", init);
+            labelObject_ = getFactory().createDisplayObject("Label", init);
             addChild(labelObject_);
 
             // Is this a BitmapFont or TruetypeFont? Use the label's resolved

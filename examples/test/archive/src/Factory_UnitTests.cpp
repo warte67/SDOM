@@ -38,7 +38,7 @@ namespace SDOM
                 }
             )");
             sol::table config = lua["config"];
-            handle = factory.create("Stage", config);
+            handle = factory.createDisplayObject("Stage", config);
             return handle != nullptr;
         });
         if (!result) { std::cout << CLR::indent() << "Resource creation test failed!" << CLR::RESET << std::endl; }
@@ -151,8 +151,8 @@ namespace SDOM
             sol::table config = lua["config"];
             DisplayHandle first;
             DisplayHandle second;
-            try { first = factory.create("Stage", config); } catch (...) { }
-            try { second = factory.create("Stage", config); } catch (...) { }
+            try { first = factory.createDisplayObject("Stage", config); } catch (...) { }
+            try { second = factory.createDisplayObject("Stage", config); } catch (...) { }
             // Expectation: first creation succeeds, second creation should fail (null)
             bool ret = first != nullptr && second == nullptr;
             // clean up
@@ -182,7 +182,7 @@ namespace SDOM
             DisplayHandle second;
             bool threw = false;
             try {
-                first = factory.create("Stage", config1);
+                first = factory.createDisplayObject("Stage", config1);
             } catch (...) {
                 // creation failed unexpectedly
             }
@@ -197,7 +197,7 @@ namespace SDOM
             )");
             sol::table config2 = lua["config2"];
             try {
-                second = factory.create("Stage", config2);
+                second = factory.createDisplayObject("Stage", config2);
             } catch (...) {
                 threw = true;
             }

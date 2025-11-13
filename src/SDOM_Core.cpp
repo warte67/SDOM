@@ -43,15 +43,15 @@ namespace SDOM
         // register the DisplayHandle handle last so other types can use it
         DisplayHandle prototypeHandle; // Default DisplayHandle for registration
     prototypeHandle._registerLuaBindings("DisplayHandle", lua_);
-    prototypeHandle.registerBindings("DisplayHandle", getRegistry());
+    prototypeHandle.registerBindings("DisplayHandle", getDataRegistry());
 
         AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
     prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
-    prototypeAssetHandle.registerBindings("AssetHandle", getRegistry());
+    prototypeAssetHandle.registerBindings("AssetHandle", getDataRegistry());
         
         // Register Core usertype
     this->_registerLuaBindings("Core", lua_);      
-    this->registerBindings("Core", getRegistry()); 
+    this->registerBindings("Core", getDataRegistry()); 
 
         // Note: Factory initialization is performed later (e.g. during
         // configuration) to avoid recursive-construction ordering issues.
@@ -124,7 +124,7 @@ namespace SDOM
             if (!type.empty()) 
             {
                 // DEBUG_LOG("Core::configureFromLua: creating type='" + type + "' name='" + name + "'");
-                handle = factory_->create(type, obj);
+                handle = factory_->createDisplayObject(type, obj);
                 if (!handle.isValid()) {
                     ERROR("Core::configureFromLua: factory->create returned invalid handle for type '" + type + "' name='" + name + "'");
                 } 
@@ -1686,28 +1686,28 @@ namespace SDOM
     // --- Factory Wrapper Implementations --- //
 
     DisplayHandle Core::createDisplayObject(const std::string& typeName, const sol::table& config) {
-        return getFactory().create(typeName, config);
+    return getFactory().createDisplayObject(typeName, config);
     }
     DisplayHandle Core::createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init) {
-        return getFactory().create(typeName, init);
+    return getFactory().createDisplayObject(typeName, init);
     }
     DisplayHandle Core::createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript) {
-        return getFactory().create(typeName, luaScript);
+    return getFactory().createDisplayObject(typeName, luaScript);
     }
 
     AssetHandle Core::createAssetObject(const std::string& typeName, const sol::table& config) {
-        return getFactory().createAsset(typeName, config);
+    return getFactory().createAssetObject(typeName, config);
     }
     AssetHandle Core::createAssetObject(const std::string& typeName, const SDOM::IAssetObject::InitStruct& init) {
-        return getFactory().createAsset(typeName, init);
+    return getFactory().createAssetObject(typeName, init);
     }
     AssetHandle Core::createAssetObjectFromScript(const std::string& typeName, const std::string& luaScript) {
-        return getFactory().createAsset(typeName, luaScript);
+    return getFactory().createAssetObject(typeName, luaScript);
     }
 
 
     IDisplayObject* Core::getDisplayObjectPtr(const std::string& name) {
-        return getFactory().getDomObj(name);
+    return getFactory().getDisplayObjectPtr(name);
     }
     DisplayHandle Core::getDisplayObject(const std::string& name) {
         return getFactory().getDisplayObject(name);
@@ -1718,7 +1718,7 @@ namespace SDOM
     }
 
     IAssetObject* Core::getAssetObjectPtr(const std::string& name) {
-        return getFactory().getResObj(name);
+    return getFactory().getAssetObjectPtr(name);
     }
     AssetHandle Core::getAssetObject(const std::string& name) {
         return getFactory().getAssetObject(name);

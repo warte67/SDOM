@@ -155,7 +155,7 @@ namespace SDOM
                         init.spriteWidth = chosenW;
                         init.spriteHeight = chosenH;
 
-                        AssetHandle created = factory.createAsset("SpriteSheet", init);
+                        AssetHandle created = factory.createAssetObject("SpriteSheet", init);
                         if (created.isValid()) {
                             icon_sprite_sheet_ = created.as<SpriteSheet>();
                             if (icon_sprite_sheet_ && !icon_sprite_sheet_->isLoaded()) icon_sprite_sheet_->load();
@@ -208,7 +208,7 @@ namespace SDOM
                 init.isInternal = true;
                 init.spriteWidth = inferredW;
                 init.spriteHeight = inferredH;
-                ss = factory.createAsset("SpriteSheet", init);
+                ss = factory.createAssetObject("SpriteSheet", init);
                 if (ss.isValid())
                 {
                     icon_sprite_sheet_ = ss.as<SpriteSheet>();

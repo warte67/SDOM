@@ -190,7 +190,7 @@ namespace SDOM
             // provided by the user while filling in sensible defaults.
             IFontObject::applyBitmapFontDefaults(getFactory(), init.resourceName,
                                                 init.fontSize, init.fontWidth, init.fontHeight);
-            labelObject_ = getFactory().create("Label", init);
+            labelObject_ = getFactory().createDisplayObject("Label", init);
             addChild(labelObject_);
 
             // Labels embedded in buttons have a fixed layout defined by the

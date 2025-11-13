@@ -94,7 +94,7 @@ namespace SDOM
         lua_cfg["height"] = height;
         lua_cfg["text"] = text;
         lua_cfg["font_resource"] = font_resource;
-        DisplayHandle group_handle = factory.create("Group", lua_cfg);                          
+    DisplayHandle group_handle = factory.createDisplayObject("Group", lua_cfg);                          
 
         // Check creation result
         auto grp_handle = factory.getDisplayObject("ut_group_3");
@@ -199,7 +199,7 @@ namespace SDOM
         grp_init.text = text;
         grp_init.font_resource = font_resource;
         // Create the Group
-        auto group_handle = getFactory().create(grp_init.type, grp_init);                
+    auto group_handle = getFactory().createDisplayObject(grp_init.type, grp_init);                
 
         // Check creation result
         auto grp_handle = factory.getDisplayObject("ut_group_3");
@@ -298,7 +298,7 @@ namespace SDOM
             text = "Main Frame Group",
             font_resource = "internal_font_8x8"
         })lua";
-        auto group_handle = getFactory().create("Group", str_cfg);                
+    auto group_handle = getFactory().createDisplayObject("Group", str_cfg);                
 
         // Check creation result
         auto grp_handle = factory.getDisplayObject("ut_group_3");
@@ -616,7 +616,7 @@ namespace SDOM
         grp_init.text = text;
         grp_init.font_resource = font_resource;
         // Create the Group
-        auto group_handle = getFactory().create(grp_init.type, grp_init);                
+    auto group_handle = getFactory().createDisplayObject(grp_init.type, grp_init);                
 
         // Check creation result
         auto grp_handle = factory.getDisplayObject("ut_group_3");
