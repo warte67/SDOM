@@ -178,11 +178,23 @@ namespace SDOM
         static EventType User;              // 🗓️ Planned
                
         explicit EventType(const std::string& name, const std::string& doc = std::string())
-            : name(name), doc_(doc), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
+            : name(name), doc_(doc), category_("Uncategorized"), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
+        { registerEventType(name, this); }
+
+        // New overload that accepts an explicit category string
+        explicit EventType(const std::string& name, const std::string& category, const std::string& doc = std::string())
+            : name(name), doc_(doc), category_(category), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
         { registerEventType(name, this); }
 
         explicit EventType(const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global, const std::string& doc = std::string()) 
-            : name(name), doc_(doc), captures_(captures), bubbles_(bubbles), targetOnly_(targetOnly), global_(global) 
+            : name(name), doc_(doc), category_("Uncategorized"), captures_(captures), bubbles_(bubbles), targetOnly_(targetOnly), global_(global) 
+        { 
+            registerEventType(name, this); 
+        }
+
+        // New overload that accepts category + propagation flags
+        explicit EventType(const std::string& name, const std::string& category, bool captures, bool bubbles, bool targetOnly, bool global, const std::string& doc = std::string()) 
+            : name(name), doc_(doc), category_(category), captures_(captures), bubbles_(bubbles), targetOnly_(targetOnly), global_(global) 
         { 
             registerEventType(name, this); 
         }
@@ -265,10 +277,14 @@ namespace SDOM
         // Optional documentation string for this EventType (used by generators)
         std::string getDoc() const;
         void setDoc(const std::string& s);
+        // Optional category string used by generators to group related EventTypes
+        std::string getCategory() const { return category_; }
+        void setCategory(const std::string& c) { category_ = c; }
 
     private:
         std::string name;
         std::string doc_;
+        std::string category_ = "Uncategorized";
         static inline std::unordered_map<std::string, EventType*> registry;
 
         // id registry + allocator for stable numeric ids

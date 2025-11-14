@@ -22,6 +22,8 @@ typedef uint32_t SDOM_EventTypeId;
 
 typedef enum SDOM_EventType {
     SDOM_EVENT_NONE = 0,                    /* A general-purpose EventType for testing or to represent a non-event. */
+
+    /* Uncategorized -------------------------------------------------------------- */
     SDOM_EVENT_LEAVE_FULLSCREEN = 1,        /* Application exited fullscreen mode. */
     SDOM_EVENT_MOUSE_MOVE = 2,              /* Mouse moved within or over a target object (target-only). */
     SDOM_EVENT_ON_UPDATE = 3,               /* Called once per frame before rendering; main update loop hook. */

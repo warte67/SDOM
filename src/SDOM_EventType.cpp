@@ -105,136 +105,136 @@ namespace SDOM
     // 🚫 Untestable ---------------------------------------------------------------
 
     // 🧩 Core / General --------------------------------------------------------------
-    EventType EventType::None("None", false, false, false, false,
+    EventType EventType::None("None", "Core", false, false, false, false,
         "A general-purpose EventType for testing or to represent a non-event.");
 
-    EventType EventType::Quit("Quit", false, false, false, true,
+    EventType EventType::Quit("Quit", "Core", false, false, false, true,
         "Signals that the application or main stage is closing. Global only.");
 
     // 💻 Application Lifecycle ------------------------------------------------------
-    EventType EventType::Added("Added", true, true, false, false,
+    EventType EventType::Added("Added", "Application", true, true, false, false,
         "Dispatched when an object is added as a child to another display object.");
-    EventType EventType::Removed("Removed", true, true, false, false,
+    EventType EventType::Removed("Removed", "Application", true, true, false, false,
         "Dispatched when an object is removed from its parent container.");
-    EventType EventType::AddedToStage("AddedToStage", true, true, false, false,
+    EventType EventType::AddedToStage("AddedToStage", "Application", true, true, false, false,
         "Emitted when an object becomes part of the active stage hierarchy.");
-    EventType EventType::RemovedFromStage("RemovedFromStage", true, true, false, false,
+    EventType EventType::RemovedFromStage("RemovedFromStage", "Application", true, true, false, false,
         "Emitted when an object is detached from the stage hierarchy.");
-    EventType EventType::StageOpened("StageOpened", false, false, false, true,
+    EventType EventType::StageOpened("StageOpened", "Application", false, false, false, true,
         "Indicates that a new stage or window has been opened and initialized.");
-    EventType EventType::StageClosed("StageClosed", false, false, false, true,
+    EventType EventType::StageClosed("StageClosed", "Application", false, false, false, true,
         "Indicates that a stage or window has been closed and destroyed.");
 
     // 💻 Input ----------------------------------------------------------------------
     // Keyboard
-    EventType EventType::KeyDown("KeyDown", true, true, false, false,
+    EventType EventType::KeyDown("KeyDown", "Input", true, true, false, false,
         "Keyboard key pressed down; bubbles through active hierarchy.");
-    EventType EventType::KeyUp("KeyUp", true, true, false, false,
+    EventType EventType::KeyUp("KeyUp", "Input", true, true, false, false,
         "Keyboard key released; bubbles through active hierarchy.");
-    EventType EventType::TextInput("TextInput", true, true, false, false,
+    EventType EventType::TextInput("TextInput", "Input", true, true, false, false,
         "Text input event carrying UTF-8 text from the input system.");
 
     // Mouse
-    EventType EventType::MouseButtonDown("MouseButtonDown", true, true, false, false,
+    EventType EventType::MouseButtonDown("MouseButtonDown", "Input", true, true, false, false,
         "Mouse button pressed on a target object.");
-    EventType EventType::MouseButtonUp("MouseButtonUp", true, true, false, false,
+    EventType EventType::MouseButtonUp("MouseButtonUp", "Input", true, true, false, false,
         "Mouse button released over a target object.");
-    EventType EventType::MouseWheel("MouseWheel", true, true, false, false,
+    EventType EventType::MouseWheel("MouseWheel", "Input", true, true, false, false,
         "Mouse wheel scrolled; carries wheel delta values.");
-    EventType EventType::MouseMove("MouseMove", false, false, true, false,
+    EventType EventType::MouseMove("MouseMove", "Input", false, false, true, false,
         "Mouse moved within or over a target object (target-only).");
-    EventType EventType::MouseClick("MouseClick", true, true, false, false,
+    EventType EventType::MouseClick("MouseClick", "Input", true, true, false, false,
         "Mouse button clicked (press + release) on a target object.");
-    EventType EventType::MouseDoubleClick("MouseDoubleClick", true, true, false, false,
+    EventType EventType::MouseDoubleClick("MouseDoubleClick", "Input", true, true, false, false,
         "Mouse double-clicked on a target object.");
-    EventType EventType::MouseEnter("MouseEnter", true, true, false, false,
+    EventType EventType::MouseEnter("MouseEnter", "Input", true, true, false, false,
         "Pointer entered the bounds of an object; bubbles for hover tracking.");
-    EventType EventType::MouseLeave("MouseLeave", true, true, false, false,
+    EventType EventType::MouseLeave("MouseLeave", "Input", true, true, false, false,
         "Pointer left the bounds of an object; bubbles for hover tracking.");
 
     // 💻 Window / Focus -------------------------------------------------------------
     // ⚠️ Focus events are compositor-controlled on Wayland and may not always fire
-    EventType EventType::FocusGained("FocusGained", false, false, true, false,
+    EventType EventType::FocusGained("FocusGained", "Window", false, false, true, false,
         "The window or stage gained input focus.");
-    EventType EventType::FocusLost("FocusLost", false, false, true, false,
+    EventType EventType::FocusLost("FocusLost", "Window", false, false, true, false,
         "The window or stage lost input focus.");
-    EventType EventType::Resize("Resize", true, true, false, false,
+    EventType EventType::Resize("Resize", "Window", true, true, false, false,
         "Window or stage resized; width and height values updated.");
-    EventType EventType::Move("Move", true, true, false, false,
+    EventType EventType::Move("Move", "Window", true, true, false, false,
         "Window or stage moved; position values updated.");
-    EventType EventType::Show("Show", false, false, true, false,
+    EventType EventType::Show("Show", "Window", false, false, true, false,
         "Window or object became visible on screen.");
-    EventType EventType::Hide("Hide", false, false, true, false,
+    EventType EventType::Hide("Hide", "Window", false, false, true, false,
         "Window or object hidden from view.");
-    EventType EventType::EnterFullscreen("EnterFullscreen", true, true, false, false,
+    EventType EventType::EnterFullscreen("EnterFullscreen", "Window", true, true, false, false,
         "Application entered fullscreen mode.");
-    EventType EventType::LeaveFullscreen("LeaveFullscreen", true, true, false, false,
+    EventType EventType::LeaveFullscreen("LeaveFullscreen", "Window", true, true, false, false,
         "Application exited fullscreen mode.");
 
     // 💻 UI / State -----------------------------------------------------------------
-    EventType EventType::ValueChanged("ValueChanged", true, true, false, false,
+    EventType EventType::ValueChanged("ValueChanged", "UI", true, true, false, false,
         "Value of a control or property has changed.");
-    EventType EventType::StateChanged("StateChanged", true, true, false, false,
+    EventType EventType::StateChanged("StateChanged", "UI", true, true, false, false,
         "UI element or component state changed (e.g., active, toggled).");
-    EventType EventType::SelectionChanged("SelectionChanged", true, true, false, false,
+    EventType EventType::SelectionChanged("SelectionChanged", "UI", true, true, false, false,
         "User selection or highlight changed within a list or group.");
-    EventType EventType::Enabled("Enabled", false, false, true, false,
+    EventType EventType::Enabled("Enabled", "UI", false, false, true, false,
         "Object or control has been enabled and can now receive input.");
-    EventType EventType::Disabled("Disabled", false, false, true, false,
+    EventType EventType::Disabled("Disabled", "UI", false, false, true, false,
         "Object or control has been disabled and can no longer receive input.");
-    EventType EventType::Visible("Visible", true, true, false, false,
+    EventType EventType::Visible("Visible", "UI", true, true, false, false,
         "Object became visible within its parent hierarchy.");
-    EventType EventType::Hidden("Hidden", true, true, false, false,
+    EventType EventType::Hidden("Hidden", "UI", true, true, false, false,
         "Object became hidden within its parent hierarchy.");
 
     // 💻 Drag & Drop ---------------------------------------------------------------
-    EventType EventType::Drag("Drag", true, true, false, false,
+    EventType EventType::Drag("Drag", "DragAndDrop", true, true, false, false,
         "Dragging in progress; position updated while dragging.");
-    EventType EventType::Dragging("Dragging", true, true, false, false,
+    EventType EventType::Dragging("Dragging", "DragAndDrop", true, true, false, false,
         "Continuous drag event emitted while dragging is active.");
-    EventType EventType::Drop("Drop", true, true, false, false,
+    EventType EventType::Drop("Drop", "DragAndDrop", true, true, false, false,
         "An item or data payload was dropped onto a valid target.");
 
     // ⏱️ Timer ----------------------------------------------------------------------
-    EventType EventType::TimerStart("TimerStart", false, false, false, false,
+    EventType EventType::TimerStart("TimerStart", "Timer", false, false, false, false,
         "Timer started or resumed counting.");
-    EventType EventType::TimerStop("TimerStop", false, false, false, false,
+    EventType EventType::TimerStop("TimerStop", "Timer", false, false, false, false,
         "Timer stopped and reset to initial state.");
-    EventType EventType::TimerPause("TimerPause", false, false, false, false,
+    EventType EventType::TimerPause("TimerPause", "Timer", false, false, false, false,
         "Timer paused but not reset.");
-    EventType EventType::TimerTick("TimerTick", false, false, false, false,
+    EventType EventType::TimerTick("TimerTick", "Timer", false, false, false, false,
         "Timer tick event; emitted on each interval step.");
-    EventType EventType::TimerCycleComplete("TimerCycleComplete", false, false, false, false,
+    EventType EventType::TimerCycleComplete("TimerCycleComplete", "Timer", false, false, false, false,
         "Timer completed one full interval cycle.");
-    EventType EventType::TimerComplete("TimerComplete", false, false, false, false,
+    EventType EventType::TimerComplete("TimerComplete", "Timer", false, false, false, false,
         "Timer finished all cycles and has reached completion.");
 
     // 📋 Clipboard ------------------------------------------------------------------
-    EventType EventType::ClipboardCopy("ClipboardCopy", true, true, false, false,
+    EventType EventType::ClipboardCopy("ClipboardCopy", "Clipboard", true, true, false, false,
         "Data copied to the system clipboard.");
-    EventType EventType::ClipboardPaste("ClipboardPaste", true, true, false, false,
+    EventType EventType::ClipboardPaste("ClipboardPaste", "Clipboard", true, true, false, false,
         "Data pasted from the system clipboard.");
 
     // 💻 Listener / Callback --------------------------------------------------------
-    EventType EventType::OnInit("OnInit", true, true, false, false,
+    EventType EventType::OnInit("OnInit", "Listener", true, true, false, false,
         "Initialization callback for objects; called after creation.");
-    EventType EventType::OnQuit("OnQuit", false, false, false, true,
+    EventType EventType::OnQuit("OnQuit", "Listener", false, false, false, true,
         "Global callback fired during shutdown sequence.");
-    EventType EventType::OnEvent("OnEvent", true, true, false, false,
+    EventType EventType::OnEvent("OnEvent", "Listener", true, true, false, false,
         "Generic hook for catching all events before normal dispatch.");
-    EventType EventType::OnUpdate("OnUpdate", true, true, false, false,
+    EventType EventType::OnUpdate("OnUpdate", "Listener", true, true, false, false,
         "Called once per frame before rendering; main update loop hook.");
-    EventType EventType::OnRender("OnRender", true, true, false, false,
+    EventType EventType::OnRender("OnRender", "Listener", true, true, false, false,
         "Called each frame when object should perform its rendering.");
-    EventType EventType::OnPreRender("OnPreRender", false, false, false, false,
+    EventType EventType::OnPreRender("OnPreRender", "Listener", false, false, false, false,
         "Called before OnRender for pre-draw logic such as layout or transforms.");
 
     // 💻 Frame / Misc ---------------------------------------------------------------
-    EventType EventType::EnterFrame("EnterFrame", false, false, false, false,
+    EventType EventType::EnterFrame("EnterFrame", "Frame", false, false, false, false,
         "Legacy per-frame tick event (use OnUpdate instead).");
-    EventType EventType::SDL_Event("SDL_Event", true, true, false, false,
+    EventType EventType::SDL_Event("SDL_Event", "Frame", true, true, false, false,
         "Raw SDL event wrapper; dispatched when unhandled by internal systems.");
-    EventType EventType::User("User", true, true, false, false,
+    EventType EventType::User("User", "Frame", true, true, false, false,
         "Reserved for custom or user-defined events created at runtime.");
 
     // --- Default metering policy assignments --- //

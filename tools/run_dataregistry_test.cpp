@@ -64,6 +64,8 @@ int main(int argc, char** argv) {
             ti.name = std::string("EventType::") + et->getName();
             ti.cpp_type_id = et->getName();
             try { ti.doc = et->getDoc(); } catch(...) { ti.doc.clear(); }
+            // forward per-event category so generators can group entries
+            try { ti.category = et->getCategory(); } catch(...) { ti.category.clear(); }
 
             SDOM::PropertyInfo p;
             p.name = "captures";

@@ -45,6 +45,7 @@ struct TypeInfo {
     std::vector<FunctionInfo> functions;
     std::vector<std::string> bases;
     std::string doc;
+    std::string category; // optional grouping/category used by generators
 };
 
 // Snapshot of registry metadata passed to generators. This is intentionally

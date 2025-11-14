@@ -753,6 +753,8 @@ namespace SDOM
                 ti.cpp_type_id = et->getName();
                 // forward per-event documentation from the runtime EventType
                 try { ti.doc = et->getDoc(); } catch(...) { ti.doc.clear(); }
+                // forward per-event category (used by generators for grouping)
+                try { ti.category = et->getCategory(); } catch(...) { ti.category.clear(); }
 
                 SDOM::PropertyInfo p;
                 p.name = "captures";

@@ -189,6 +189,34 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         return a.id < b.id;
     });
 
+    // Build name -> category map from the snapshot (fallback to "Uncategorized")
+    std::unordered_map<std::string, std::string> name_to_category;
+    for (const auto &ti : snapshot.types) {
+        if (ti.name.rfind("EventType::", 0) == 0) {
+            std::string shortname = ti.name.substr(strlen("EventType::"));
+            if (!ti.category.empty()) name_to_category[shortname] = ti.category;
+        }
+    }
+
+    // Group ordered entries by category while preserving first-seen category order
+    std::vector<std::string> category_order;
+    std::unordered_map<std::string, std::vector<EventEntry>> by_cat;
+    for (const auto &e : ordered) {
+        std::string cat = "Uncategorized";
+        auto it = name_to_category.find(e.name);
+        if (it != name_to_category.end() && !it->second.empty()) cat = it->second;
+        if (by_cat.find(cat) == by_cat.end()) category_order.push_back(cat);
+        by_cat[cat].push_back(e);
+    }
+
+    // Sort entries within each category by numeric id
+    for (auto &kv : by_cat) {
+        auto &vec = kv.second;
+        std::stable_sort(vec.begin(), vec.end(), [](const EventEntry &a, const EventEntry &b){
+            return a.id < b.id;
+        });
+    }
+
     // Helper to write a single file path
     auto write_header = [&](const std::filesystem::path &outpath) -> bool {
         std::error_code ec;
@@ -285,28 +313,34 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
             return dst;
         };
 
-        for (const auto &kv : ordered) {
-            // sanitize identifier
-            std::string idname = to_screaming_snake(kv.name);
+        // Emit entries grouped by category
+        for (const auto &cat : category_order) {
+            // Emit a category banner comment
+            ofs << "\n    /* " << cat << " -------------------------------------------------------------- */\n";
+            const auto &vec = by_cat[cat];
+            for (const auto &kv : vec) {
+                // sanitize identifier
+                std::string idname = to_screaming_snake(kv.name);
 
-            // Skip duplicate NONE entry: we emit SDOM_EVENT_NONE = 0 above.
-            if (idname == "NONE") continue;
+                // Skip duplicate NONE entry: we emit SDOM_EVENT_NONE = 0 above.
+                if (idname == "NONE") continue;
 
-            // Build base entry (with trailing comma) and then append comment
-            std::ostringstream base;
-            base << "    SDOM_EVENT_" << idname << " = " << kv.id << ",";
-            std::string baseStr = base.str();
+                // Build base entry (with trailing comma) and then append comment
+                std::ostringstream base;
+                base << "    SDOM_EVENT_" << idname << " = " << kv.id << ",";
+                std::string baseStr = base.str();
 
-            if (!kv.doc.empty()) {
-                std::string doc = kv.doc;
-                for (char &c : doc) if (c == '\n' || c == '\r') c = ' ';
+                if (!kv.doc.empty()) {
+                    std::string doc = kv.doc;
+                    for (char &c : doc) if (c == '\n' || c == '\r') c = ' ';
 
-                const size_t target_col = 44;
-                size_t baseLen = baseStr.size();
-                size_t pad = (baseLen >= target_col) ? 1 : (target_col - baseLen);
-                ofs << baseStr << std::string(pad, ' ') << "/* " << doc << " */\n";
-            } else {
-                ofs << baseStr << "\n";
+                    const size_t target_col = 44;
+                    size_t baseLen = baseStr.size();
+                    size_t pad = (baseLen >= target_col) ? 1 : (target_col - baseLen);
+                    ofs << baseStr << std::string(pad, ' ') << "/* " << doc << " */\n";
+                } else {
+                    ofs << baseStr << "\n";
+                }
             }
         }
 

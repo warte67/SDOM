@@ -22,59 +22,79 @@ typedef uint32_t SDOM_EventTypeId;
 
 typedef enum SDOM_EventType {
     SDOM_EVENT_NONE = 0,                    /* A general-purpose EventType for testing or to represent a non-event. */
+
+    /* Window -------------------------------------------------------------- */
     SDOM_EVENT_LEAVE_FULLSCREEN = 1,        /* Application exited fullscreen mode. */
+    SDOM_EVENT_HIDE = 18,                   /* Window or object hidden from view. */
+    SDOM_EVENT_FOCUS_GAINED = 28,           /* The window or stage gained input focus. */
+    SDOM_EVENT_MOVE = 44,                   /* Window or stage moved; position values updated. */
+    SDOM_EVENT_RESIZE = 46,                 /* Window or stage resized; width and height values updated. */
+    SDOM_EVENT_FOCUS_LOST = 49,             /* The window or stage lost input focus. */
+    SDOM_EVENT_SHOW = 51,                   /* Window or object became visible on screen. */
+    SDOM_EVENT_ENTER_FULLSCREEN = 54,       /* Application entered fullscreen mode. */
+
+    /* Input -------------------------------------------------------------- */
     SDOM_EVENT_MOUSE_MOVE = 2,              /* Mouse moved within or over a target object (target-only). */
-    SDOM_EVENT_ON_UPDATE = 3,               /* Called once per frame before rendering; main update loop hook. */
     SDOM_EVENT_KEY_UP = 4,                  /* Keyboard key released; bubbles through active hierarchy. */
-    SDOM_EVENT_ON_RENDER = 5,               /* Called each frame when object should perform its rendering. */
-    SDOM_EVENT_VALUE_CHANGED = 6,           /* Value of a control or property has changed. */
     SDOM_EVENT_MOUSE_ENTER = 7,             /* Pointer entered the bounds of an object; bubbles for hover tracking. */
-    SDOM_EVENT_CLIPBOARD_PASTE = 8,         /* Data pasted from the system clipboard. */
-    SDOM_EVENT_STAGE_OPENED = 9,            /* Indicates that a new stage or window has been opened and initialized. */
     SDOM_EVENT_MOUSE_CLICK = 10,            /* Mouse button clicked (press + release) on a target object. */
-    SDOM_EVENT_SDL_EVENT = 11,              /* Raw SDL event wrapper; dispatched when unhandled by internal systems. */
     SDOM_EVENT_MOUSE_BUTTON_UP = 13,        /* Mouse button released over a target object. */
+    SDOM_EVENT_MOUSE_BUTTON_DOWN = 27,      /* Mouse button pressed on a target object. */
+    SDOM_EVENT_KEY_DOWN = 31,               /* Keyboard key pressed down; bubbles through active hierarchy. */
+    SDOM_EVENT_MOUSE_DOUBLE_CLICK = 37,     /* Mouse double-clicked on a target object. */
+    SDOM_EVENT_MOUSE_LEAVE = 45,            /* Pointer left the bounds of an object; bubbles for hover tracking. */
+    SDOM_EVENT_TEXT_INPUT = 47,             /* Text input event carrying UTF-8 text from the input system. */
+    SDOM_EVENT_MOUSE_WHEEL = 53,            /* Mouse wheel scrolled; carries wheel delta values. */
+
+    /* Listener -------------------------------------------------------------- */
+    SDOM_EVENT_ON_UPDATE = 3,               /* Called once per frame before rendering; main update loop hook. */
+    SDOM_EVENT_ON_RENDER = 5,               /* Called each frame when object should perform its rendering. */
+    SDOM_EVENT_ON_QUIT = 24,                /* Global callback fired during shutdown sequence. */
+    SDOM_EVENT_ON_PRE_RENDER = 29,          /* Called before OnRender for pre-draw logic such as layout or transforms. */
+    SDOM_EVENT_ON_EVENT = 32,               /* Generic hook for catching all events before normal dispatch. */
+    SDOM_EVENT_ON_INIT = 40,                /* Initialization callback for objects; called after creation. */
+
+    /* UI -------------------------------------------------------------- */
+    SDOM_EVENT_VALUE_CHANGED = 6,           /* Value of a control or property has changed. */
     SDOM_EVENT_HIDDEN = 14,                 /* Object became hidden within its parent hierarchy. */
+    SDOM_EVENT_DISABLED = 34,               /* Object or control has been disabled and can no longer receive input. */
+    SDOM_EVENT_STATE_CHANGED = 38,          /* UI element or component state changed (e.g., active, toggled). */
+    SDOM_EVENT_SELECTION_CHANGED = 42,      /* User selection or highlight changed within a list or group. */
+    SDOM_EVENT_VISIBLE = 48,                /* Object became visible within its parent hierarchy. */
+    SDOM_EVENT_ENABLED = 52,                /* Object or control has been enabled and can now receive input. */
+
+    /* Clipboard -------------------------------------------------------------- */
+    SDOM_EVENT_CLIPBOARD_PASTE = 8,         /* Data pasted from the system clipboard. */
+    SDOM_EVENT_CLIPBOARD_COPY = 25,         /* Data copied to the system clipboard. */
+
+    /* Application -------------------------------------------------------------- */
+    SDOM_EVENT_STAGE_OPENED = 9,            /* Indicates that a new stage or window has been opened and initialized. */
+    SDOM_EVENT_REMOVED_FROM_STAGE = 22,     /* Emitted when an object is detached from the stage hierarchy. */
+    SDOM_EVENT_ADDED = 26,                  /* Dispatched when an object is added as a child to another display object. */
+    SDOM_EVENT_STAGE_CLOSED = 33,           /* Indicates that a stage or window has been closed and destroyed. */
+    SDOM_EVENT_ADDED_TO_STAGE = 36,         /* Emitted when an object becomes part of the active stage hierarchy. */
+    SDOM_EVENT_REMOVED = 39,                /* Dispatched when an object is removed from its parent container. */
+
+    /* Frame -------------------------------------------------------------- */
+    SDOM_EVENT_SDL_EVENT = 11,              /* Raw SDL event wrapper; dispatched when unhandled by internal systems. */
+    SDOM_EVENT_ENTER_FRAME = 35,            /* Legacy per-frame tick event (use OnUpdate instead). */
+    SDOM_EVENT_USER = 41,                   /* Reserved for custom or user-defined events created at runtime. */
+
+    /* Core -------------------------------------------------------------- */
+    SDOM_EVENT_QUIT = 50,                   /* Signals that the application or main stage is closing. Global only. */
+
+    /* DragAndDrop -------------------------------------------------------------- */
     SDOM_EVENT_DRAGGING = 15,               /* Continuous drag event emitted while dragging is active. */
+    SDOM_EVENT_DROP = 23,                   /* An item or data payload was dropped onto a valid target. */
+    SDOM_EVENT_DRAG = 43,                   /* Dragging in progress; position updated while dragging. */
+
+    /* Timer -------------------------------------------------------------- */
     SDOM_EVENT_TIMER_COMPLETE = 16,         /* Timer finished all cycles and has reached completion. */
     SDOM_EVENT_TIMER_STOP = 17,             /* Timer stopped and reset to initial state. */
-    SDOM_EVENT_HIDE = 18,                   /* Window or object hidden from view. */
     SDOM_EVENT_TIMER_START = 19,            /* Timer started or resumed counting. */
     SDOM_EVENT_TIMER_PAUSE = 20,            /* Timer paused but not reset. */
     SDOM_EVENT_TIMER_CYCLE_COMPLETE = 21,   /* Timer completed one full interval cycle. */
-    SDOM_EVENT_REMOVED_FROM_STAGE = 22,     /* Emitted when an object is detached from the stage hierarchy. */
-    SDOM_EVENT_DROP = 23,                   /* An item or data payload was dropped onto a valid target. */
-    SDOM_EVENT_ON_QUIT = 24,                /* Global callback fired during shutdown sequence. */
-    SDOM_EVENT_CLIPBOARD_COPY = 25,         /* Data copied to the system clipboard. */
-    SDOM_EVENT_ADDED = 26,                  /* Dispatched when an object is added as a child to another display object. */
-    SDOM_EVENT_MOUSE_BUTTON_DOWN = 27,      /* Mouse button pressed on a target object. */
-    SDOM_EVENT_FOCUS_GAINED = 28,           /* The window or stage gained input focus. */
-    SDOM_EVENT_ON_PRE_RENDER = 29,          /* Called before OnRender for pre-draw logic such as layout or transforms. */
     SDOM_EVENT_TIMER_TICK = 30,             /* Timer tick event; emitted on each interval step. */
-    SDOM_EVENT_KEY_DOWN = 31,               /* Keyboard key pressed down; bubbles through active hierarchy. */
-    SDOM_EVENT_ON_EVENT = 32,               /* Generic hook for catching all events before normal dispatch. */
-    SDOM_EVENT_STAGE_CLOSED = 33,           /* Indicates that a stage or window has been closed and destroyed. */
-    SDOM_EVENT_DISABLED = 34,               /* Object or control has been disabled and can no longer receive input. */
-    SDOM_EVENT_ENTER_FRAME = 35,            /* Legacy per-frame tick event (use OnUpdate instead). */
-    SDOM_EVENT_ADDED_TO_STAGE = 36,         /* Emitted when an object becomes part of the active stage hierarchy. */
-    SDOM_EVENT_MOUSE_DOUBLE_CLICK = 37,     /* Mouse double-clicked on a target object. */
-    SDOM_EVENT_STATE_CHANGED = 38,          /* UI element or component state changed (e.g., active, toggled). */
-    SDOM_EVENT_REMOVED = 39,                /* Dispatched when an object is removed from its parent container. */
-    SDOM_EVENT_ON_INIT = 40,                /* Initialization callback for objects; called after creation. */
-    SDOM_EVENT_USER = 41,                   /* Reserved for custom or user-defined events created at runtime. */
-    SDOM_EVENT_SELECTION_CHANGED = 42,      /* User selection or highlight changed within a list or group. */
-    SDOM_EVENT_DRAG = 43,                   /* Dragging in progress; position updated while dragging. */
-    SDOM_EVENT_MOVE = 44,                   /* Window or stage moved; position values updated. */
-    SDOM_EVENT_MOUSE_LEAVE = 45,            /* Pointer left the bounds of an object; bubbles for hover tracking. */
-    SDOM_EVENT_RESIZE = 46,                 /* Window or stage resized; width and height values updated. */
-    SDOM_EVENT_TEXT_INPUT = 47,             /* Text input event carrying UTF-8 text from the input system. */
-    SDOM_EVENT_VISIBLE = 48,                /* Object became visible within its parent hierarchy. */
-    SDOM_EVENT_FOCUS_LOST = 49,             /* The window or stage lost input focus. */
-    SDOM_EVENT_QUIT = 50,                   /* Signals that the application or main stage is closing. Global only. */
-    SDOM_EVENT_SHOW = 51,                   /* Window or object became visible on screen. */
-    SDOM_EVENT_ENABLED = 52,                /* Object or control has been enabled and can now receive input. */
-    SDOM_EVENT_MOUSE_WHEEL = 53,            /* Mouse wheel scrolled; carries wheel delta values. */
-    SDOM_EVENT_ENTER_FULLSCREEN = 54,       /* Application entered fullscreen mode. */
     /**
      *  This last event is only for bounding internal arrays
      */
