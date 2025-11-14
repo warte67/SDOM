@@ -179,17 +179,18 @@ namespace SDOM
                
         explicit EventType(const std::string& name, const std::string& doc = std::string())
             : name(name), doc_(doc), category_("Uncategorized"), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
-        { registerEventType(name, this); }
+        { registerEventType(name, this); getOrAssignId(); }
 
         // New overload that accepts an explicit category string
         explicit EventType(const std::string& name, const std::string& category, const std::string& doc = std::string())
             : name(name), doc_(doc), category_(category), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
-        { registerEventType(name, this); }
+        { registerEventType(name, this); getOrAssignId(); }
 
         explicit EventType(const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global, const std::string& doc = std::string()) 
             : name(name), doc_(doc), category_("Uncategorized"), captures_(captures), bubbles_(bubbles), targetOnly_(targetOnly), global_(global) 
         { 
             registerEventType(name, this); 
+            getOrAssignId();
         }
 
         // New overload that accepts category + propagation flags
@@ -197,6 +198,7 @@ namespace SDOM
             : name(name), doc_(doc), category_(category), captures_(captures), bubbles_(bubbles), targetOnly_(targetOnly), global_(global) 
         { 
             registerEventType(name, this); 
+            getOrAssignId();
         }
 
         const std::string& getName() const { return name; }
@@ -208,6 +210,7 @@ namespace SDOM
         static void registerEventType(const std::string& name, EventType* ptr) {
             if (registry.find(name) == registry.end()) {
                 registry.insert({name, ptr});
+                registry_order.push_back(ptr);
             }
         }
 
@@ -286,6 +289,7 @@ namespace SDOM
         std::string doc_;
         std::string category_ = "Uncategorized";
         static inline std::unordered_map<std::string, EventType*> registry;
+        static inline std::vector<EventType*> registry_order; // preserves insertion/definition order
 
         // id registry + allocator for stable numeric ids
         inline static std::unordered_map<IdType, EventType*> idRegistry;

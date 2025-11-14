@@ -244,36 +244,17 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         ofs << "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n";
         ofs << "typedef uint32_t SDOM_EventTypeId;\n\n";
         ofs << "typedef enum SDOM_EventType {\n";
-        // Emit NONE with optional inline doc comment. Prefer runtime EventType
-        // doc when available, falling back to the snapshot-provided doc.
+        // Emit a reserved sentinel at 0. Keep 0 unused so real EventType ids
+        // start at 1; this avoids confusion with "no event" semantics on
+        // consumers that treat 0 as invalid/unused.
         {
             std::ostringstream base;
-            base << "    SDOM_EVENT_NONE = 0,";
+            base << "    SDOM_EVENT_FIRST = 0,";
             std::string baseStr = base.str();
-
-            std::string none_doc;
-            try {
-                SDOM::EventType* et = SDOM::EventType::fromName("None");
-                if (et) none_doc = et->getDoc();
-            } catch(...) { none_doc.clear(); }
-            if (none_doc.empty()) {
-                auto _none_it = event_docs.find("None");
-                if (_none_it != event_docs.end()) none_doc = _none_it->second;
-            }
-
-            // Normalize newlines to spaces
-            for (char &c : none_doc) if (c == '\n' || c == '\r') c = ' ';
-
             const size_t target_col = 44; // desired column where comment should start
-            if (!none_doc.empty()) {
-                size_t baseLen = baseStr.size();
-                size_t pad = (baseLen >= target_col) ? 1 : (target_col - baseLen);
-                ofs << baseStr;
-                ofs << std::string(pad, ' ');
-                ofs << "/* " << none_doc << " */\n";
-            } else {
-                ofs << baseStr << "\n";
-            }
+            size_t baseLen = baseStr.size();
+            size_t pad = (baseLen >= target_col) ? 1 : (target_col - baseLen);
+            ofs << baseStr << std::string(pad, ' ') << "/* Reserved (do not use) */\n";
         }
         // helper: convert a PascalCase/CamelCase name into SCREAMING_SNAKE_CASE
         auto to_screaming_snake = [](const std::string &s) -> std::string {
@@ -322,8 +303,8 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
                 // sanitize identifier
                 std::string idname = to_screaming_snake(kv.name);
 
-                // Skip duplicate NONE entry: we emit SDOM_EVENT_NONE = 0 above.
-                if (idname == "NONE") continue;
+                // No special-case skipping: emit all entries (including "None")
+                // so that numeric ids reflect runtime assignment.
 
                 // Build base entry (with trailing comma) and then append comment
                 std::ostringstream base;

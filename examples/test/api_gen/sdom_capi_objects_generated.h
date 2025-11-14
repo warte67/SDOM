@@ -4,8 +4,8 @@
 
 #define SDOM_CAPI_GENERATED_MAJOR 0
 #define SDOM_CAPI_GENERATED_MINOR 5
-#define SDOM_CAPI_GENERATED_PATCH 195
-#define SDOM_CAPI_GENERATED_VERSION_STRING "0.5.195"
+#define SDOM_CAPI_GENERATED_PATCH 196
+#define SDOM_CAPI_GENERATED_VERSION_STRING "0.5.196"
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,240 +13,90 @@ extern "C" {
 
 typedef void* sdom_handle_t;
 
-/* Type: EventType::LeaveFullscreen */
-typedef struct EventType__LeaveFullscreen_t* EventType__LeaveFullscreen_handle;
-sdom_handle_t sdom_create_EventType__LeaveFullscreen(void);
-void sdom_destroy_EventType__LeaveFullscreen(sdom_handle_t);
-
-/* Type: EventType::MouseMove */
-typedef struct EventType__MouseMove_t* EventType__MouseMove_handle;
-sdom_handle_t sdom_create_EventType__MouseMove(void);
-void sdom_destroy_EventType__MouseMove(sdom_handle_t);
-
-/* Type: EventType::OnUpdate */
-typedef struct EventType__OnUpdate_t* EventType__OnUpdate_handle;
-sdom_handle_t sdom_create_EventType__OnUpdate(void);
-void sdom_destroy_EventType__OnUpdate(sdom_handle_t);
-
-/* Type: EventType::KeyUp */
-typedef struct EventType__KeyUp_t* EventType__KeyUp_handle;
-sdom_handle_t sdom_create_EventType__KeyUp(void);
-void sdom_destroy_EventType__KeyUp(sdom_handle_t);
+/* Type: EventType::SDL_Event */
+typedef struct EventType__SDL_Event_t* EventType__SDL_Event_handle;
+sdom_handle_t sdom_create_EventType__SDL_Event(void);
+void sdom_destroy_EventType__SDL_Event(sdom_handle_t);
 
 /* Type: EventType::OnRender */
 typedef struct EventType__OnRender_t* EventType__OnRender_handle;
 sdom_handle_t sdom_create_EventType__OnRender(void);
 void sdom_destroy_EventType__OnRender(sdom_handle_t);
 
-/* Type: EventType::ValueChanged */
-typedef struct EventType__ValueChanged_t* EventType__ValueChanged_handle;
-sdom_handle_t sdom_create_EventType__ValueChanged(void);
-void sdom_destroy_EventType__ValueChanged(sdom_handle_t);
-
-/* Type: EventType::MouseEnter */
-typedef struct EventType__MouseEnter_t* EventType__MouseEnter_handle;
-sdom_handle_t sdom_create_EventType__MouseEnter(void);
-void sdom_destroy_EventType__MouseEnter(sdom_handle_t);
-
-/* Type: EventType::ClipboardPaste */
-typedef struct EventType__ClipboardPaste_t* EventType__ClipboardPaste_handle;
-sdom_handle_t sdom_create_EventType__ClipboardPaste(void);
-void sdom_destroy_EventType__ClipboardPaste(sdom_handle_t);
-
-/* Type: EventType::StageOpened */
-typedef struct EventType__StageOpened_t* EventType__StageOpened_handle;
-sdom_handle_t sdom_create_EventType__StageOpened(void);
-void sdom_destroy_EventType__StageOpened(sdom_handle_t);
-
-/* Type: EventType::MouseClick */
-typedef struct EventType__MouseClick_t* EventType__MouseClick_handle;
-sdom_handle_t sdom_create_EventType__MouseClick(void);
-void sdom_destroy_EventType__MouseClick(sdom_handle_t);
-
-/* Type: EventType::SDL_Event */
-typedef struct EventType__SDL_Event_t* EventType__SDL_Event_handle;
-sdom_handle_t sdom_create_EventType__SDL_Event(void);
-void sdom_destroy_EventType__SDL_Event(sdom_handle_t);
-
-/* Type: EventType::None */
-typedef struct EventType__None_t* EventType__None_handle;
-sdom_handle_t sdom_create_EventType__None(void);
-void sdom_destroy_EventType__None(sdom_handle_t);
-
-/* Type: EventType::MouseButtonUp */
-typedef struct EventType__MouseButtonUp_t* EventType__MouseButtonUp_handle;
-sdom_handle_t sdom_create_EventType__MouseButtonUp(void);
-void sdom_destroy_EventType__MouseButtonUp(sdom_handle_t);
-
-/* Type: EventType::Hidden */
-typedef struct EventType__Hidden_t* EventType__Hidden_handle;
-sdom_handle_t sdom_create_EventType__Hidden(void);
-void sdom_destroy_EventType__Hidden(sdom_handle_t);
-
-/* Type: EventType::Dragging */
-typedef struct EventType__Dragging_t* EventType__Dragging_handle;
-sdom_handle_t sdom_create_EventType__Dragging(void);
-void sdom_destroy_EventType__Dragging(sdom_handle_t);
-
-/* Type: EventType::TimerComplete */
-typedef struct EventType__TimerComplete_t* EventType__TimerComplete_handle;
-sdom_handle_t sdom_create_EventType__TimerComplete(void);
-void sdom_destroy_EventType__TimerComplete(sdom_handle_t);
-
-/* Type: EventType::TimerStop */
-typedef struct EventType__TimerStop_t* EventType__TimerStop_handle;
-sdom_handle_t sdom_create_EventType__TimerStop(void);
-void sdom_destroy_EventType__TimerStop(sdom_handle_t);
-
-/* Type: EventType::Hide */
-typedef struct EventType__Hide_t* EventType__Hide_handle;
-sdom_handle_t sdom_create_EventType__Hide(void);
-void sdom_destroy_EventType__Hide(sdom_handle_t);
-
-/* Type: EventType::TimerStart */
-typedef struct EventType__TimerStart_t* EventType__TimerStart_handle;
-sdom_handle_t sdom_create_EventType__TimerStart(void);
-void sdom_destroy_EventType__TimerStart(sdom_handle_t);
-
-/* Type: EventType::TimerPause */
-typedef struct EventType__TimerPause_t* EventType__TimerPause_handle;
-sdom_handle_t sdom_create_EventType__TimerPause(void);
-void sdom_destroy_EventType__TimerPause(sdom_handle_t);
-
-/* Type: EventType::TimerCycleComplete */
-typedef struct EventType__TimerCycleComplete_t* EventType__TimerCycleComplete_handle;
-sdom_handle_t sdom_create_EventType__TimerCycleComplete(void);
-void sdom_destroy_EventType__TimerCycleComplete(sdom_handle_t);
-
-/* Type: EventType::RemovedFromStage */
-typedef struct EventType__RemovedFromStage_t* EventType__RemovedFromStage_handle;
-sdom_handle_t sdom_create_EventType__RemovedFromStage(void);
-void sdom_destroy_EventType__RemovedFromStage(sdom_handle_t);
-
-/* Type: EventType::Drop */
-typedef struct EventType__Drop_t* EventType__Drop_handle;
-sdom_handle_t sdom_create_EventType__Drop(void);
-void sdom_destroy_EventType__Drop(sdom_handle_t);
+/* Type: EventType::OnUpdate */
+typedef struct EventType__OnUpdate_t* EventType__OnUpdate_handle;
+sdom_handle_t sdom_create_EventType__OnUpdate(void);
+void sdom_destroy_EventType__OnUpdate(sdom_handle_t);
 
 /* Type: EventType::OnQuit */
 typedef struct EventType__OnQuit_t* EventType__OnQuit_handle;
 sdom_handle_t sdom_create_EventType__OnQuit(void);
 void sdom_destroy_EventType__OnQuit(sdom_handle_t);
 
-/* Type: EventType::ClipboardCopy */
-typedef struct EventType__ClipboardCopy_t* EventType__ClipboardCopy_handle;
-sdom_handle_t sdom_create_EventType__ClipboardCopy(void);
-void sdom_destroy_EventType__ClipboardCopy(sdom_handle_t);
+/* Type: EventType::ClipboardPaste */
+typedef struct EventType__ClipboardPaste_t* EventType__ClipboardPaste_handle;
+sdom_handle_t sdom_create_EventType__ClipboardPaste(void);
+void sdom_destroy_EventType__ClipboardPaste(sdom_handle_t);
 
-/* Type: EventType::Added */
-typedef struct EventType__Added_t* EventType__Added_handle;
-sdom_handle_t sdom_create_EventType__Added(void);
-void sdom_destroy_EventType__Added(sdom_handle_t);
+/* Type: EventType::TimerComplete */
+typedef struct EventType__TimerComplete_t* EventType__TimerComplete_handle;
+sdom_handle_t sdom_create_EventType__TimerComplete(void);
+void sdom_destroy_EventType__TimerComplete(sdom_handle_t);
 
-/* Type: EventType::MouseButtonDown */
-typedef struct EventType__MouseButtonDown_t* EventType__MouseButtonDown_handle;
-sdom_handle_t sdom_create_EventType__MouseButtonDown(void);
-void sdom_destroy_EventType__MouseButtonDown(sdom_handle_t);
+/* Type: EventType::TimerCycleComplete */
+typedef struct EventType__TimerCycleComplete_t* EventType__TimerCycleComplete_handle;
+sdom_handle_t sdom_create_EventType__TimerCycleComplete(void);
+void sdom_destroy_EventType__TimerCycleComplete(sdom_handle_t);
 
-/* Type: EventType::FocusGained */
-typedef struct EventType__FocusGained_t* EventType__FocusGained_handle;
-sdom_handle_t sdom_create_EventType__FocusGained(void);
-void sdom_destroy_EventType__FocusGained(sdom_handle_t);
+/* Type: EventType::TimerStop */
+typedef struct EventType__TimerStop_t* EventType__TimerStop_handle;
+sdom_handle_t sdom_create_EventType__TimerStop(void);
+void sdom_destroy_EventType__TimerStop(sdom_handle_t);
 
-/* Type: EventType::OnPreRender */
-typedef struct EventType__OnPreRender_t* EventType__OnPreRender_handle;
-sdom_handle_t sdom_create_EventType__OnPreRender(void);
-void sdom_destroy_EventType__OnPreRender(sdom_handle_t);
+/* Type: EventType::Drop */
+typedef struct EventType__Drop_t* EventType__Drop_handle;
+sdom_handle_t sdom_create_EventType__Drop(void);
+void sdom_destroy_EventType__Drop(sdom_handle_t);
 
-/* Type: EventType::TimerTick */
-typedef struct EventType__TimerTick_t* EventType__TimerTick_handle;
-sdom_handle_t sdom_create_EventType__TimerTick(void);
-void sdom_destroy_EventType__TimerTick(sdom_handle_t);
+/* Type: EventType::Dragging */
+typedef struct EventType__Dragging_t* EventType__Dragging_handle;
+sdom_handle_t sdom_create_EventType__Dragging(void);
+void sdom_destroy_EventType__Dragging(sdom_handle_t);
 
-/* Type: EventType::KeyDown */
-typedef struct EventType__KeyDown_t* EventType__KeyDown_handle;
-sdom_handle_t sdom_create_EventType__KeyDown(void);
-void sdom_destroy_EventType__KeyDown(sdom_handle_t);
-
-/* Type: EventType::OnEvent */
-typedef struct EventType__OnEvent_t* EventType__OnEvent_handle;
-sdom_handle_t sdom_create_EventType__OnEvent(void);
-void sdom_destroy_EventType__OnEvent(sdom_handle_t);
-
-/* Type: EventType::StageClosed */
-typedef struct EventType__StageClosed_t* EventType__StageClosed_handle;
-sdom_handle_t sdom_create_EventType__StageClosed(void);
-void sdom_destroy_EventType__StageClosed(sdom_handle_t);
-
-/* Type: EventType::Disabled */
-typedef struct EventType__Disabled_t* EventType__Disabled_handle;
-sdom_handle_t sdom_create_EventType__Disabled(void);
-void sdom_destroy_EventType__Disabled(sdom_handle_t);
+/* Type: EventType::Hidden */
+typedef struct EventType__Hidden_t* EventType__Hidden_handle;
+sdom_handle_t sdom_create_EventType__Hidden(void);
+void sdom_destroy_EventType__Hidden(sdom_handle_t);
 
 /* Type: EventType::EnterFrame */
 typedef struct EventType__EnterFrame_t* EventType__EnterFrame_handle;
 sdom_handle_t sdom_create_EventType__EnterFrame(void);
 void sdom_destroy_EventType__EnterFrame(sdom_handle_t);
 
-/* Type: EventType::AddedToStage */
-typedef struct EventType__AddedToStage_t* EventType__AddedToStage_handle;
-sdom_handle_t sdom_create_EventType__AddedToStage(void);
-void sdom_destroy_EventType__AddedToStage(sdom_handle_t);
-
-/* Type: EventType::MouseDoubleClick */
-typedef struct EventType__MouseDoubleClick_t* EventType__MouseDoubleClick_handle;
-sdom_handle_t sdom_create_EventType__MouseDoubleClick(void);
-void sdom_destroy_EventType__MouseDoubleClick(sdom_handle_t);
-
-/* Type: EventType::StateChanged */
-typedef struct EventType__StateChanged_t* EventType__StateChanged_handle;
-sdom_handle_t sdom_create_EventType__StateChanged(void);
-void sdom_destroy_EventType__StateChanged(sdom_handle_t);
-
-/* Type: EventType::Removed */
-typedef struct EventType__Removed_t* EventType__Removed_handle;
-sdom_handle_t sdom_create_EventType__Removed(void);
-void sdom_destroy_EventType__Removed(sdom_handle_t);
-
-/* Type: EventType::OnInit */
-typedef struct EventType__OnInit_t* EventType__OnInit_handle;
-sdom_handle_t sdom_create_EventType__OnInit(void);
-void sdom_destroy_EventType__OnInit(sdom_handle_t);
-
-/* Type: EventType::User */
-typedef struct EventType__User_t* EventType__User_handle;
-sdom_handle_t sdom_create_EventType__User(void);
-void sdom_destroy_EventType__User(sdom_handle_t);
-
-/* Type: EventType::SelectionChanged */
-typedef struct EventType__SelectionChanged_t* EventType__SelectionChanged_handle;
-sdom_handle_t sdom_create_EventType__SelectionChanged(void);
-void sdom_destroy_EventType__SelectionChanged(sdom_handle_t);
+/* Type: EventType::Disabled */
+typedef struct EventType__Disabled_t* EventType__Disabled_handle;
+sdom_handle_t sdom_create_EventType__Disabled(void);
+void sdom_destroy_EventType__Disabled(sdom_handle_t);
 
 /* Type: EventType::Drag */
 typedef struct EventType__Drag_t* EventType__Drag_handle;
 sdom_handle_t sdom_create_EventType__Drag(void);
 void sdom_destroy_EventType__Drag(sdom_handle_t);
 
-/* Type: EventType::Move */
-typedef struct EventType__Move_t* EventType__Move_handle;
-sdom_handle_t sdom_create_EventType__Move(void);
-void sdom_destroy_EventType__Move(sdom_handle_t);
+/* Type: EventType::SelectionChanged */
+typedef struct EventType__SelectionChanged_t* EventType__SelectionChanged_handle;
+sdom_handle_t sdom_create_EventType__SelectionChanged(void);
+void sdom_destroy_EventType__SelectionChanged(sdom_handle_t);
 
-/* Type: EventType::MouseLeave */
-typedef struct EventType__MouseLeave_t* EventType__MouseLeave_handle;
-sdom_handle_t sdom_create_EventType__MouseLeave(void);
-void sdom_destroy_EventType__MouseLeave(sdom_handle_t);
+/* Type: EventType::MouseButtonUp */
+typedef struct EventType__MouseButtonUp_t* EventType__MouseButtonUp_handle;
+sdom_handle_t sdom_create_EventType__MouseButtonUp(void);
+void sdom_destroy_EventType__MouseButtonUp(sdom_handle_t);
 
-/* Type: EventType::Resize */
-typedef struct EventType__Resize_t* EventType__Resize_handle;
-sdom_handle_t sdom_create_EventType__Resize(void);
-void sdom_destroy_EventType__Resize(sdom_handle_t);
-
-/* Type: EventType::TextInput */
-typedef struct EventType__TextInput_t* EventType__TextInput_handle;
-sdom_handle_t sdom_create_EventType__TextInput(void);
-void sdom_destroy_EventType__TextInput(sdom_handle_t);
+/* Type: EventType::MouseButtonDown */
+typedef struct EventType__MouseButtonDown_t* EventType__MouseButtonDown_handle;
+sdom_handle_t sdom_create_EventType__MouseButtonDown(void);
+void sdom_destroy_EventType__MouseButtonDown(sdom_handle_t);
 
 /* Type: EventType::Visible */
 typedef struct EventType__Visible_t* EventType__Visible_handle;
@@ -258,15 +108,160 @@ typedef struct EventType__FocusLost_t* EventType__FocusLost_handle;
 sdom_handle_t sdom_create_EventType__FocusLost(void);
 void sdom_destroy_EventType__FocusLost(sdom_handle_t);
 
+/* Type: EventType::KeyUp */
+typedef struct EventType__KeyUp_t* EventType__KeyUp_handle;
+sdom_handle_t sdom_create_EventType__KeyUp(void);
+void sdom_destroy_EventType__KeyUp(sdom_handle_t);
+
+/* Type: EventType::AddedToStage */
+typedef struct EventType__AddedToStage_t* EventType__AddedToStage_handle;
+sdom_handle_t sdom_create_EventType__AddedToStage(void);
+void sdom_destroy_EventType__AddedToStage(sdom_handle_t);
+
+/* Type: EventType::RemovedFromStage */
+typedef struct EventType__RemovedFromStage_t* EventType__RemovedFromStage_handle;
+sdom_handle_t sdom_create_EventType__RemovedFromStage(void);
+void sdom_destroy_EventType__RemovedFromStage(sdom_handle_t);
+
+/* Type: EventType::OnEvent */
+typedef struct EventType__OnEvent_t* EventType__OnEvent_handle;
+sdom_handle_t sdom_create_EventType__OnEvent(void);
+void sdom_destroy_EventType__OnEvent(sdom_handle_t);
+
+/* Type: EventType::TimerTick */
+typedef struct EventType__TimerTick_t* EventType__TimerTick_handle;
+sdom_handle_t sdom_create_EventType__TimerTick(void);
+void sdom_destroy_EventType__TimerTick(sdom_handle_t);
+
+/* Type: EventType::KeyDown */
+typedef struct EventType__KeyDown_t* EventType__KeyDown_handle;
+sdom_handle_t sdom_create_EventType__KeyDown(void);
+void sdom_destroy_EventType__KeyDown(sdom_handle_t);
+
+/* Type: EventType::StageClosed */
+typedef struct EventType__StageClosed_t* EventType__StageClosed_handle;
+sdom_handle_t sdom_create_EventType__StageClosed(void);
+void sdom_destroy_EventType__StageClosed(sdom_handle_t);
+
+/* Type: EventType::ClipboardCopy */
+typedef struct EventType__ClipboardCopy_t* EventType__ClipboardCopy_handle;
+sdom_handle_t sdom_create_EventType__ClipboardCopy(void);
+void sdom_destroy_EventType__ClipboardCopy(sdom_handle_t);
+
+/* Type: EventType::Added */
+typedef struct EventType__Added_t* EventType__Added_handle;
+sdom_handle_t sdom_create_EventType__Added(void);
+void sdom_destroy_EventType__Added(sdom_handle_t);
+
+/* Type: EventType::MouseMove */
+typedef struct EventType__MouseMove_t* EventType__MouseMove_handle;
+sdom_handle_t sdom_create_EventType__MouseMove(void);
+void sdom_destroy_EventType__MouseMove(sdom_handle_t);
+
+/* Type: EventType::LeaveFullscreen */
+typedef struct EventType__LeaveFullscreen_t* EventType__LeaveFullscreen_handle;
+sdom_handle_t sdom_create_EventType__LeaveFullscreen(void);
+void sdom_destroy_EventType__LeaveFullscreen(sdom_handle_t);
+
 /* Type: EventType::Quit */
 typedef struct EventType__Quit_t* EventType__Quit_handle;
 sdom_handle_t sdom_create_EventType__Quit(void);
 void sdom_destroy_EventType__Quit(sdom_handle_t);
 
-/* Type: EventType::Show */
-typedef struct EventType__Show_t* EventType__Show_handle;
-sdom_handle_t sdom_create_EventType__Show(void);
-void sdom_destroy_EventType__Show(sdom_handle_t);
+/* Type: EventType::None */
+typedef struct EventType__None_t* EventType__None_handle;
+sdom_handle_t sdom_create_EventType__None(void);
+void sdom_destroy_EventType__None(sdom_handle_t);
+
+/* Type: EventType::StageOpened */
+typedef struct EventType__StageOpened_t* EventType__StageOpened_handle;
+sdom_handle_t sdom_create_EventType__StageOpened(void);
+void sdom_destroy_EventType__StageOpened(sdom_handle_t);
+
+/* Type: EventType::MouseClick */
+typedef struct EventType__MouseClick_t* EventType__MouseClick_handle;
+sdom_handle_t sdom_create_EventType__MouseClick(void);
+void sdom_destroy_EventType__MouseClick(sdom_handle_t);
+
+/* Type: EventType::User */
+typedef struct EventType__User_t* EventType__User_handle;
+sdom_handle_t sdom_create_EventType__User(void);
+void sdom_destroy_EventType__User(sdom_handle_t);
+
+/* Type: EventType::OnInit */
+typedef struct EventType__OnInit_t* EventType__OnInit_handle;
+sdom_handle_t sdom_create_EventType__OnInit(void);
+void sdom_destroy_EventType__OnInit(sdom_handle_t);
+
+/* Type: EventType::Removed */
+typedef struct EventType__Removed_t* EventType__Removed_handle;
+sdom_handle_t sdom_create_EventType__Removed(void);
+void sdom_destroy_EventType__Removed(sdom_handle_t);
+
+/* Type: EventType::StateChanged */
+typedef struct EventType__StateChanged_t* EventType__StateChanged_handle;
+sdom_handle_t sdom_create_EventType__StateChanged(void);
+void sdom_destroy_EventType__StateChanged(sdom_handle_t);
+
+/* Type: EventType::MouseDoubleClick */
+typedef struct EventType__MouseDoubleClick_t* EventType__MouseDoubleClick_handle;
+sdom_handle_t sdom_create_EventType__MouseDoubleClick(void);
+void sdom_destroy_EventType__MouseDoubleClick(sdom_handle_t);
+
+/* Type: EventType::MouseEnter */
+typedef struct EventType__MouseEnter_t* EventType__MouseEnter_handle;
+sdom_handle_t sdom_create_EventType__MouseEnter(void);
+void sdom_destroy_EventType__MouseEnter(sdom_handle_t);
+
+/* Type: EventType::OnPreRender */
+typedef struct EventType__OnPreRender_t* EventType__OnPreRender_handle;
+sdom_handle_t sdom_create_EventType__OnPreRender(void);
+void sdom_destroy_EventType__OnPreRender(sdom_handle_t);
+
+/* Type: EventType::FocusGained */
+typedef struct EventType__FocusGained_t* EventType__FocusGained_handle;
+sdom_handle_t sdom_create_EventType__FocusGained(void);
+void sdom_destroy_EventType__FocusGained(sdom_handle_t);
+
+/* Type: EventType::TimerPause */
+typedef struct EventType__TimerPause_t* EventType__TimerPause_handle;
+sdom_handle_t sdom_create_EventType__TimerPause(void);
+void sdom_destroy_EventType__TimerPause(sdom_handle_t);
+
+/* Type: EventType::TimerStart */
+typedef struct EventType__TimerStart_t* EventType__TimerStart_handle;
+sdom_handle_t sdom_create_EventType__TimerStart(void);
+void sdom_destroy_EventType__TimerStart(sdom_handle_t);
+
+/* Type: EventType::Hide */
+typedef struct EventType__Hide_t* EventType__Hide_handle;
+sdom_handle_t sdom_create_EventType__Hide(void);
+void sdom_destroy_EventType__Hide(sdom_handle_t);
+
+/* Type: EventType::TextInput */
+typedef struct EventType__TextInput_t* EventType__TextInput_handle;
+sdom_handle_t sdom_create_EventType__TextInput(void);
+void sdom_destroy_EventType__TextInput(sdom_handle_t);
+
+/* Type: EventType::Resize */
+typedef struct EventType__Resize_t* EventType__Resize_handle;
+sdom_handle_t sdom_create_EventType__Resize(void);
+void sdom_destroy_EventType__Resize(sdom_handle_t);
+
+/* Type: EventType::ValueChanged */
+typedef struct EventType__ValueChanged_t* EventType__ValueChanged_handle;
+sdom_handle_t sdom_create_EventType__ValueChanged(void);
+void sdom_destroy_EventType__ValueChanged(sdom_handle_t);
+
+/* Type: EventType::MouseLeave */
+typedef struct EventType__MouseLeave_t* EventType__MouseLeave_handle;
+sdom_handle_t sdom_create_EventType__MouseLeave(void);
+void sdom_destroy_EventType__MouseLeave(sdom_handle_t);
+
+/* Type: EventType::Move */
+typedef struct EventType__Move_t* EventType__Move_handle;
+sdom_handle_t sdom_create_EventType__Move(void);
+void sdom_destroy_EventType__Move(sdom_handle_t);
 
 /* Type: EventType::Enabled */
 typedef struct EventType__Enabled_t* EventType__Enabled_handle;
@@ -282,6 +277,11 @@ void sdom_destroy_EventType__MouseWheel(sdom_handle_t);
 typedef struct EventType__EnterFullscreen_t* EventType__EnterFullscreen_handle;
 sdom_handle_t sdom_create_EventType__EnterFullscreen(void);
 void sdom_destroy_EventType__EnterFullscreen(sdom_handle_t);
+
+/* Type: EventType::Show */
+typedef struct EventType__Show_t* EventType__Show_handle;
+sdom_handle_t sdom_create_EventType__Show(void);
+void sdom_destroy_EventType__Show(sdom_handle_t);
 
 /* Exported C API function prototypes (generated) */
 #ifdef __cplusplus

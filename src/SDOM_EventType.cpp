@@ -420,7 +420,8 @@ namespace SDOM
     {
         std::vector<EventType*> out;
         out.reserve(registry.size());
-        for (const auto &kv : registry) out.push_back(kv.second);
+        // Use the insertion-ordered registry vector to preserve definition order
+        for (EventType* et : registry_order) out.push_back(et);
         return out;
     }
 
