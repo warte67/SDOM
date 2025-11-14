@@ -104,6 +104,8 @@ namespace SDOM
                 errors.push_back("SDOM_GetEventDesc failed");
             } else {
                 if (outEv.type_id != out.id) errors.push_back("Event type_id mismatch");
+                // Strings returned by SDOM_GetEventDesc are owned by the event handle
+                // and will be freed when the handle is destroyed. Do not free them here.
             }
             if (SDOM_SendEvent(evh) != 0) errors.push_back("SDOM_SendEvent failed");
             SDOM_DestroyEvent(evh);
@@ -117,9 +119,8 @@ namespace SDOM
             SDOM_EventTypeDesc e{};
             if (enumH && SDOM_GetEventTypeDesc(enumH, &e) == 0) {
                 if (e.name && std::string(e.name) == testName) found = true;
-                if (e.name) SDOM_FreeString(const_cast<char*>(e.name));
-                if (e.category) SDOM_FreeString(const_cast<char*>(e.category));
-                if (e.doc) SDOM_FreeString(const_cast<char*>(e.doc));
+                // The strings returned for enumerated handles are owned by the handle
+                // and will be freed by SDOM_DestroyEventType(enumH). Do not free here.
             }
             if (enumH) SDOM_DestroyEventType(enumH);
             enumH = nullptr;
@@ -139,9 +140,7 @@ namespace SDOM
             } else {
                 if (!out2.doc || std::string(out2.doc) != std::string(updatedDesc.doc))
                     errors.push_back("UpdateEventType did not modify doc");
-                if (out2.name) SDOM_FreeString(const_cast<char*>(out2.name));
-                if (out2.category) SDOM_FreeString(const_cast<char*>(out2.category));
-                if (out2.doc) SDOM_FreeString(const_cast<char*>(out2.doc));
+                // out2 pointers refer to memory owned by the handle `h`; do not free here.
             }
 
             // Validate underlying C++ EventType was updated
@@ -160,20 +159,52 @@ namespace SDOM
             int after = SDOM::Core::getInstance().getEventManager().getEventQueueSize();
             if (after != before + 1) errors.push_back("SDOM_SendEvent did not increase event queue size");
             SDOM_DestroyEvent(evh2);
+            evh2 = nullptr; // avoid use-after-free: tests must not dereference freed handles
         }
 
-        // Clean up handles (free strings returned by earlier Get)
-        if (fh) SDOM_DestroyEventType(fh);
-        // Free strings from original Get before destroying main handle
-        if (out.name) SDOM_FreeString(const_cast<char*>(out.name));
-        if (out.category) SDOM_FreeString(const_cast<char*>(out.category));
-        if (out.doc) SDOM_FreeString(const_cast<char*>(out.doc));
+        // Negative tests for UpdateEventType with null args
+        if (SDOM_UpdateEventType(nullptr, &updatedDesc) != SDOM_CAPI_ERR_INVALID_ARG)
+            errors.push_back("SDOM_UpdateEventType should fail on null handle");
+        if (SDOM_UpdateEventType(h, nullptr) != SDOM_CAPI_ERR_INVALID_ARG)
+            errors.push_back("SDOM_UpdateEventType should fail on null desc");
+
+        // Negative test for GetEventTypeDesc with null handle
+        SDOM_EventTypeDesc bad{};
+        if (SDOM_GetEventTypeDesc(nullptr, &bad) != SDOM_CAPI_ERR_INVALID_ARG)
+            errors.push_back("SDOM_GetEventTypeDesc(NULL,…) should return INVALID_ARG");
+
+        // Test UpdateEvent (no-op stub) on a live handle
+        SDOM_EventDesc updEv{}; updEv.type_id = created_id;
+        SDOM_EventHandle evh3 = SDOM_CreateEvent(&ed2);
+        if (!evh3) {
+            errors.push_back("SDOM_CreateEvent for UpdateEvent test returned null");
+        } else {
+            if (SDOM_UpdateEvent(evh3, &updEv) != SDOM_CAPI_OK)
+                errors.push_back("SDOM_UpdateEvent should succeed (no-op stub)");
+            SDOM_DestroyEvent(evh3);
+        }
+
+        // UpdateEvent on previously destroyed handle (evh2) should fail when passed a null/invalid handle
+        if (SDOM_UpdateEvent(evh2, &updEv) != SDOM_CAPI_ERR_INVALID_ARG)
+            errors.push_back("UpdateEvent should fail on destroyed (null) handle");
+
+        // Enum with null out pointer should still advance
+        size_t n2 = SDOM_EnumEventTypes(0, nullptr);
+        if (n2 == 0) errors.push_back("Enum with null out should still return next index");
+
+        // Clean up handles. Strings returned by SDOM_GetEventTypeDesc are
+        // owned by the handle and will be freed by `SDOM_DestroyEventType`.
+        if (fh) {
+            SDOM_DestroyEventType(fh);
+            fh = nullptr; // avoid use-after-free
+        }
         SDOM_DestroyEventType(h);
+        h = nullptr; // avoid use-after-free
 
         // Confirm behavior after destruction: operations should fail gracefully
         SDOM_EventTypeDesc invalidCheck{};
         int rc_after = SDOM_GetEventTypeDesc(h, &invalidCheck);
-        if (rc_after == SDOM_CAPI_OK) errors.push_back("Destroyed handle should not succeed on GetEventTypeDesc");
+        if (rc_after == SDOM_CAPI_OK) errors.push_back("Destroyed handle should not succeed on GetEventTypeDesc (null handle)");
 
         //     errors.push_back("SDOM_CAPI_register_event_type returned 0");
         //     ok = false;
