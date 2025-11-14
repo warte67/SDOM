@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(SDOM VERSION 1.0 LANGUAGES CXX)
 
+# Option to enable generation of Lua dispatch wrappers in generated C API
+option(SDOM_ENABLE_LUA_BINDINGS "Enable generation of Lua dispatch prototypes/wrappers in generated C API" ON)
+
 # ======================================================
 #  Version Auto-Generation (SDOM_Version.hpp)
 # ======================================================
@@ -99,6 +102,13 @@ file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 #  Build Library
 # ======================================================
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
+
+# Propagate Lua bindings option as a compile-time definition for consumers
+if(SDOM_ENABLE_LUA_BINDINGS)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE SDOM_ENABLE_LUA_BINDINGS=1)
+else()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE SDOM_ENABLE_LUA_BINDINGS=0)
+endif()
 
 # Ensure the version generator runs before compilation
 if(TARGET generate_version)

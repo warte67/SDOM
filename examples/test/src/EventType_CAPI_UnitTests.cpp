@@ -5,6 +5,7 @@
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
 #include <SDOM/SDOM_EventType.hpp>
+#include <SDOM/CAPI/SDOM_CAPI_Events.h>
 // // include runtime C API header (installed into include/SDOM by the build)
 // #include <SDOM/SDOM_CAPI_Events_runtime.h>
 
@@ -50,7 +51,56 @@ namespace SDOM
         // const char* testName = "UnitTest_EventType_CAPI_TestEvent";
 
         // SDOM_EventTypeId id = SDOM_CAPI_register_event_type(testName);
-        // if (id == 0) {
+        const char* testName = "UnitTest_EventType_CAPI_TestEvent";
+
+        SDOM_EventTypeDesc desc{};
+        desc.name = testName;
+        desc.id = 0;
+        desc.category = "UnitTest";
+        desc.doc = "C API test event";
+
+        SDOM_EventTypeHandle h = SDOM_CreateEventType(&desc);
+        if (!h) {
+            errors.push_back("SDOM_CreateEventType returned null handle");
+            return true;
+        }
+
+        SDOM_EventTypeDesc out{};
+        int rc = SDOM_GetEventTypeDesc(h, &out);
+        if (rc != 0) {
+            errors.push_back("SDOM_GetEventTypeDesc failed");
+        } else {
+            if (!out.name) errors.push_back("Returned name is null");
+            else if (std::string(out.name) != testName) errors.push_back("Name mismatch from C API");
+            if (out.id == 0) errors.push_back("Returned id is zero");
+            if (!out.category) errors.push_back("Returned category is null");
+        }
+
+        // Find by name
+        SDOM_EventTypeHandle fh = SDOM_FindEventTypeByName(testName);
+        if (!fh) errors.push_back("SDOM_FindEventTypeByName returned null");
+
+        // Create an event for this type
+        SDOM_EventDesc ed{};
+        ed.type_id = out.id;
+        SDOM_EventHandle evh = SDOM_CreateEvent(&ed);
+        if (!evh) {
+            errors.push_back("SDOM_CreateEvent returned null");
+        } else {
+            SDOM_EventDesc outEv{};
+            if (SDOM_GetEventDesc(evh, &outEv) != 0) {
+                errors.push_back("SDOM_GetEventDesc failed");
+            } else {
+                if (outEv.type_id != out.id) errors.push_back("Event type_id mismatch");
+            }
+            if (SDOM_SendEvent(evh) != 0) errors.push_back("SDOM_SendEvent failed");
+            SDOM_DestroyEvent(evh);
+        }
+
+        // Clean up handles
+        if (fh) SDOM_DestroyEventType(fh);
+        SDOM_DestroyEventType(h);
+
         //     errors.push_back("SDOM_CAPI_register_event_type returned 0");
         //     ok = false;
         // }

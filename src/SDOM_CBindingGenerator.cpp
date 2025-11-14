@@ -44,20 +44,35 @@ bool CBindingGenerator::generate(const DataRegistrySnapshot& snapshot, const std
 
     ofs << "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n";
 
-    // Emit a typedef for a handle type and forward declarations for each type
+    // Emit a typedef for a generic handle type
     ofs << "typedef void* sdom_handle_t;\n\n";
 
-    for (const auto &ti : snapshot.types) {
-        const std::string &tname = ti.name;
-        // sanitize name for C identifier: replace ':' and ' ' with '_'
-        std::string id = tname;
-        for (char &c : id) if (c == ':' || c == ' ') c = '_';
+    auto sanitize_id = [](std::string s) {
+        // collapse C++ scope separators and common separators into single '_'
+        // replace "::" with "_"
+        for (;;) {
+            size_t pos = s.find("::");
+            if (pos == std::string::npos) break;
+            s.replace(pos, 2, "_");
+        }
+        for (char &c : s) if (c == ' ' || c == '-' || c == ':') c = '_';
+        // collapse repeated underscores
+        std::string out;
+        out.reserve(s.size());
+        for (char ch : s) {
+            if (ch == '_' && !out.empty() && out.back() == '_') continue;
+            out.push_back(ch);
+        }
+        // trim leading/trailing underscores
+        if (!out.empty() && out.front() == '_') out.erase(out.begin());
+        if (!out.empty() && out.back() == '_') out.pop_back();
+        return out;
+    };
 
-        ofs << "/* Type: " << tname << " */\n";
-        ofs << "typedef struct " << id << "_t* " << id << "_handle;\n";
-        ofs << "sdom_handle_t sdom_create_" << id << "(void);\n";
-        ofs << "void sdom_destroy_" << id << "(sdom_handle_t);\n\n";
-    }
+    // No per-type creation/destruction functions are emitted here.
+    // The events header will declare compact descriptor structs and a
+    // small set of generic handle-based APIs instead of many per-property
+    // accessor functions. This keeps the C API stable and language-friendly.
 
     // Emit any explicit C function prototypes registered in the DataRegistry
     // If a FunctionInfo includes a `c_signature`, prefer that. Otherwise
@@ -66,12 +81,58 @@ bool CBindingGenerator::generate(const DataRegistrySnapshot& snapshot, const std
     for (const auto &ti : snapshot.types) {
         for (const auto &fi : ti.functions) {
             if (!fi.exported) continue;
+            // Prefer an explicit C signature when provided
             if (!fi.c_signature.empty()) {
                 ofs << fi.c_signature << "\n";
-            } else if (!fi.c_name.empty()) {
+                continue;
+            }
+
+            // If this function was registered with a C function pointer,
+            // emit an appropriate extern "C" prototype. Prefer an
+            // explicit c_name when present; otherwise synthesize one.
+            if (fi.callable_kind == SDOM::FunctionInfo::CallableKind::CFunctionPtr) {
+                std::string ret = fi.return_type.empty() ? "void" : fi.return_type;
+                std::string params;
+                if (fi.param_types.empty()) {
+                    params = "void";
+                } else {
+                    for (size_t i = 0; i < fi.param_types.size(); ++i) {
+                        if (i) params += ", ";
+                        params += fi.param_types[i];
+                    }
+                }
+                // Default C name: SDOM_<Type>_<FunctionName>
+                std::string tclean = sanitize_id(ti.name);
+                std::string cname = fi.c_name.empty() ? (std::string("SDOM_") + tclean + "_" + fi.name) : fi.c_name;
+                ofs << "extern \"C\" " << ret << " " << cname << "(" << params << ");\n";
+                continue;
+            }
+
+            // If function was registered as a Lua-ref, emit a prototype
+            // guarded by SDOM_ENABLE_LUA_BINDINGS so users can opt-in to
+            // generated Lua dispatch wrappers. We don't generate marshalling
+            // code here — runtime must supply a dispatcher to call the ref.
+            if (fi.callable_kind == SDOM::FunctionInfo::CallableKind::LuaRef) {
+                std::string ret = fi.return_type.empty() ? "void" : fi.return_type;
+                std::string params = fi.param_types.empty() ? std::string("void") : std::string();
+                for (size_t i = 0; i < fi.param_types.size(); ++i) {
+                    if (i) params += ", ";
+                    params += fi.param_types[i];
+                }
+                std::string tclean = sanitize_id(ti.name);
+                std::string cname = fi.c_name.empty() ? (std::string("SDOM_Lua_") + tclean + "_" + fi.name) : fi.c_name;
+                ofs << "#ifdef SDOM_ENABLE_LUA_BINDINGS\n";
+                ofs << "extern \"C\" " << ret << " " << cname << "(" << params << ");\n";
+                ofs << "#endif // SDOM_ENABLE_LUA_BINDINGS\n";
+                continue;
+            }
+
+            // Fallback: emit a generic extern declaration using the c_name or function name
+            if (!fi.c_name.empty()) {
                 ofs << "/* fallback */ extern \"C\" void " << fi.c_name << "(void);\n";
             } else {
-                ofs << "/* fallback */ extern \"C\" void " << fi.name << "(void);\n";
+                std::string tclean = sanitize_id(ti.name);
+                ofs << "/* fallback */ extern \"C\" void SDOM_" << tclean << "_" << fi.name << "(void);\n";
             }
         }
     }
@@ -80,6 +141,37 @@ bool CBindingGenerator::generate(const DataRegistrySnapshot& snapshot, const std
     ofs << "#endif // SDOM_CAPI_OBJECTS_GENERATED_H\n";
 
     ofs.close();
+
+    // Also write a repository copy of `sdom_capi_objects_generated.h` so that
+    // consumers who include headers from the repo (rather than the build
+    // output) can find the required objects header. Place it under
+    // `include/SDOM/CAPI/` to keep C API headers together.
+    try {
+        // Find repository root (a parent directory containing CMakeLists.txt)
+        std::filesystem::path cwd = std::filesystem::current_path();
+        std::filesystem::path repo_root;
+        for (auto p = cwd; ; p = p.parent_path()) {
+            if (p == p.parent_path()) break; // reached filesystem root
+            if (std::filesystem::exists(p / "CMakeLists.txt")) { repo_root = p; break; }
+        }
+        if (!repo_root.empty()) {
+            std::filesystem::path repo_out_dir = repo_root / "include" / "SDOM" / "CAPI";
+            std::error_code ec;
+            std::filesystem::create_directories(repo_out_dir, ec);
+            if (!ec) {
+                std::filesystem::path repo_out = repo_out_dir / "sdom_capi_objects_generated.h";
+                std::ifstream inf(filename);
+                if (inf) {
+                    std::ofstream ofs_repo(repo_out.string(), std::ios::trunc);
+                    if (ofs_repo) {
+                        ofs_repo << inf.rdbuf();
+                        ofs_repo.close();
+                        std::cout << "[CBindingGenerator] copied objects header to " << repo_out.string() << std::endl;
+                    }
+                }
+            }
+        }
+    } catch(...) {}
 
     // Also write a marker file and a simple .version file for quick parsing
     std::ofstream marker(join_path(outputDir, ".c_binding_generator_marker"));
@@ -240,7 +332,61 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         // ofs << "/* AUTOGENERATED - DO NOT EDIT */\n";
         // ofs << "/* Generated by SDOM CBindingGenerator from SDOM version " << SDOM_VERSION_MAJOR << "." << SDOM_VERSION_MINOR << "." << SDOM_VERSION_PATCH << " */\n\n";
         ofs << "#pragma once\n\n";
-        ofs << "#include <stdint.h>\n\n";
+        // Try to inline the generated objects header (if present in the
+        // generator output directory). This lets consumers include a single
+        // `SDOM_CAPI_Events.h` that contains both the event IDs and the
+        // generated object prototypes without needing the build include
+        // path. If the file is not present, fall back to emitting only the
+        // event enums.
+        // Include the generated objects header rather than inlining it.
+        // Consumers should add the generator output directory (e.g.
+        // `build/capi_generated`) to their include path when compiling.
+        ofs << "/* Include generated objects header (must be on include path) */\n";
+        ofs << "#include \"sdom_capi_objects_generated.h\"\n\n";
+        // Emit a small, stable C descriptor-based API for EventTypes and Events.
+        // This avoids generating per-property functions and instead provides
+        // a few generic handle-based functions that operate on descriptor
+        // structs. The struct definitions are paired with their accessor
+        // prototypes for ease-of-use and language bindings.
+        ofs << "#include <stdint.h>\n";
+        ofs << "#include <stddef.h>\n\n";
+
+        ofs << "/* Opaque handle types */\n";
+        ofs << "typedef struct SDOM_EventTypeHandle_ *SDOM_EventTypeHandle;\n";
+        ofs << "typedef struct SDOM_EventHandle_ *SDOM_EventHandle;\n\n";
+
+        ofs << "/* EventType descriptor: common stable fields plus extensible JSON */\n";
+        ofs << "struct SDOM_EventTypeDesc {\n";
+        ofs << "    const char *name; /* display / canonical name */\n";
+        ofs << "    uint32_t id; /* SDOM_EventTypeId (numeric id) */\n";
+        ofs << "    const char *category; /* category/grouping */\n";
+        ofs << "    const char *doc; /* short documentation string */\n";
+        ofs << "    const char *metadata_json; /* optional JSON for extensible fields (nullable) */\n";
+        ofs << "    void *user_data; /* reserved for callers */\n";
+        ofs << "};\n\n";
+
+        ofs << "/* Paired generic APIs for EventType */\n";
+        ofs << "SDOM_EventTypeHandle SDOM_CreateEventType(const struct SDOM_EventTypeDesc *desc);\n";
+        ofs << "int SDOM_GetEventTypeDesc(SDOM_EventTypeHandle h, struct SDOM_EventTypeDesc *out);\n";
+        ofs << "int SDOM_UpdateEventType(SDOM_EventTypeHandle h, const struct SDOM_EventTypeDesc *desc);\n";
+        ofs << "void SDOM_DestroyEventType(SDOM_EventTypeHandle h);\n";
+        ofs << "SDOM_EventTypeHandle SDOM_FindEventTypeByName(const char *name);\n";
+        ofs << "size_t SDOM_EnumEventTypes(size_t index, SDOM_EventTypeHandle *out); /* iterate by index */\n\n";
+
+        ofs << "/* Event descriptor: payload is represented as JSON for extensibility */\n";
+        ofs << "struct SDOM_EventDesc {\n";
+        ofs << "    uint32_t type_id; /* EventType numeric id */\n";
+        ofs << "    const char *name; /* optional event name */\n";
+        ofs << "    const char *payload_json; /* optional JSON payload (nullable) */\n";
+        ofs << "    void *user_data; /* reserved for callers */\n";
+        ofs << "};\n\n";
+
+        ofs << "/* Paired generic APIs for Events */\n";
+        ofs << "SDOM_EventHandle SDOM_CreateEvent(const struct SDOM_EventDesc *desc);\n";
+        ofs << "int SDOM_GetEventDesc(SDOM_EventHandle h, struct SDOM_EventDesc *out);\n";
+        ofs << "int SDOM_UpdateEvent(SDOM_EventHandle h, const struct SDOM_EventDesc *desc);\n";
+        ofs << "void SDOM_DestroyEvent(SDOM_EventHandle h);\n";
+        ofs << "int SDOM_SendEvent(SDOM_EventHandle h);\n\n";
         ofs << "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n";
         ofs << "typedef uint32_t SDOM_EventTypeId;\n\n";
         // Doxygen group for helper macros
@@ -397,6 +543,45 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         std::filesystem::path repo_out = repo_root / "include" / "SDOM" / "CAPI" / "SDOM_CAPI_Events.h";
         // best-effort write; ignore failures
         try { write_header(repo_out); } catch(...) {}
+    }
+
+    // Also emit a thin generated implementation into the repository so that
+    // the repo-level copy of the C API is self-contained and compiled into
+    // the SDOM library. This mirrors the hand-edited implementation that
+    // provides handle-owned stable C strings and descriptor-based wrappers.
+    if (!repo_root.empty()) {
+        try {
+            std::filesystem::path impl_dir = repo_root / "src" / "CAPI";
+            std::error_code ec;
+            std::filesystem::create_directories(impl_dir, ec);
+            if (!ec) {
+                std::filesystem::path impl_out = impl_dir / "SDOM_CAPI_Events_gen.cpp";
+                std::ofstream ifs(impl_out.string(), std::ios::trunc);
+                if (ifs) {
+                    ifs << "// Autogenerated implementation: do not edit\n";
+                    ifs << "#include <SDOM/CAPI/SDOM_CAPI_Events.h>\n";
+                    ifs << "#include <string>\n#include <vector>\n#include <memory>\n#include <cstring>\n#include <cstdlib>\n#include <sol/sol.hpp>\n";
+                    ifs << "#include <SDOM/SDOM_EventType.hpp>\n#include <SDOM/SDOM_Event.hpp>\n#include <SDOM/SDOM_EventManager.hpp>\n#include <SDOM/SDOM_Core.hpp>\n\n";
+                    ifs << "static inline char* sdom_dupstr(const char* s) { if (!s) return nullptr; size_t n = strlen(s) + 1; char* p = (char*)malloc(n); if (!p) return nullptr; memcpy(p, s, n); return p; }\n\n";
+                    ifs << "struct SDOM_EventTypeHandle_ { SDOM::EventType* ptr = nullptr; char* name = nullptr; char* category = nullptr; char* doc = nullptr; bool owns = false; SDOM_EventTypeHandle_() = default; ~SDOM_EventTypeHandle_(){ if (name) free(name); if (category) free(category); if (doc) free(doc); } };\n\n";
+                    ifs << "struct SDOM_EventHandle_ { SDOM::Event* ptr = nullptr; char* name = nullptr; char* payload_json = nullptr; SDOM_EventHandle_() = default; ~SDOM_EventHandle_(){ if (name) free(name); if (payload_json) free(payload_json); } };\n\n";
+                    ifs << "#define SDOM_CAPI_OK 0\n#define SDOM_CAPI_ERR_INVALID -1\n#define SDOM_CAPI_ERR_NOT_FOUND -2\n#define SDOM_CAPI_ERR_INTERNAL -3\n\n";
+                    ifs << "SDOM_EventTypeHandle SDOM_CreateEventType(const struct SDOM_EventTypeDesc *desc) { if (!desc || !desc->name) return nullptr; try { SDOM::EventType* et = nullptr; const std::string name = desc->name ? std::string(desc->name) : std::string(); const char* cat = desc->category; const char* doc = desc->doc; if (cat) { const std::string category = std::string(cat); const std::string docstr = doc ? std::string(doc) : std::string(); et = new SDOM::EventType(name, category, docstr); } else if (doc) { et = new SDOM::EventType(name); et->setDoc(std::string(doc)); } else { et = new SDOM::EventType(name); } auto h = new SDOM_EventTypeHandle_(); h->ptr = et; h->owns = true; h->name = sdom_dupstr(et->getName().c_str()); h->category = sdom_dupstr(et->getCategory().c_str()); h->doc = sdom_dupstr(et->getDoc().c_str()); return reinterpret_cast<SDOM_EventTypeHandle>(h); } catch(...) { return nullptr; } }\n\n";
+                    ifs << "int SDOM_GetEventTypeDesc(SDOM_EventTypeHandle h, struct SDOM_EventTypeDesc *out) { if (!h || !out) return SDOM_CAPI_ERR_INVALID; SDOM_EventTypeHandle_* hh = reinterpret_cast<SDOM_EventTypeHandle_*>(h); if (!hh->ptr) return SDOM_CAPI_ERR_INVALID; SDOM::EventType* et = hh->ptr; out->name = hh->name ? hh->name : et->getName().c_str(); out->id = static_cast<uint32_t>(et->getOrAssignId()); out->category = hh->category ? hh->category : et->getCategory().c_str(); out->doc = hh->doc ? hh->doc : et->getDoc().c_str(); out->metadata_json = nullptr; out->user_data = nullptr; return SDOM_CAPI_OK; }\n\n";
+                    ifs << "int SDOM_UpdateEventType(SDOM_EventTypeHandle h, const struct SDOM_EventTypeDesc *desc) { if (!h || !desc) return SDOM_CAPI_ERR_INVALID; SDOM_EventTypeHandle_* hh = reinterpret_cast<SDOM_EventTypeHandle_*>(h); if (!hh->ptr) return SDOM_CAPI_ERR_INVALID; SDOM::EventType* et = hh->ptr; if (desc->doc) et->setDoc(std::string(desc->doc)); if (desc->category) et->setCategory(std::string(desc->category)); if (desc->id != 0) et->setId(static_cast<SDOM::EventType::IdType>(desc->id)); if (desc->doc) { if (hh->doc) free(hh->doc); hh->doc = sdom_dupstr(desc->doc); } if (desc->category) { if (hh->category) free(hh->category); hh->category = sdom_dupstr(desc->category); } return SDOM_CAPI_OK; }\n\n";
+                    ifs << "void SDOM_DestroyEventType(SDOM_EventTypeHandle h) { if (!h) return; SDOM_EventTypeHandle_* hh = reinterpret_cast<SDOM_EventTypeHandle_*>(h); delete hh; }\n\n";
+                    ifs << "SDOM_EventTypeHandle SDOM_FindEventTypeByName(const char *name) { if (!name) return nullptr; SDOM::EventType* et = SDOM::EventType::fromName(std::string(name)); if (!et) return nullptr; auto h = new SDOM_EventTypeHandle_(); h->ptr = et; h->name = sdom_dupstr(et->getName().c_str()); h->category = sdom_dupstr(et->getCategory().c_str()); h->doc = sdom_dupstr(et->getDoc().c_str()); return reinterpret_cast<SDOM_EventTypeHandle>(h); }\n\n";
+                    ifs << "size_t SDOM_EnumEventTypes(size_t index, SDOM_EventTypeHandle *out) { auto all = SDOM::EventType::getAll(); if (index >= all.size()) return 0; if (out) { SDOM::EventType* et = all[index]; auto h = new SDOM_EventTypeHandle_(); h->ptr = et; h->name = sdom_dupstr(et->getName().c_str()); h->category = sdom_dupstr(et->getCategory().c_str()); h->doc = sdom_dupstr(et->getDoc().c_str()); *out = reinterpret_cast<SDOM_EventTypeHandle>(h); } return index + 1; }\n\n";
+                    ifs << "SDOM_EventHandle SDOM_CreateEvent(const struct SDOM_EventDesc *desc) { if (!desc) return nullptr; SDOM::EventType* et = nullptr; if (desc->type_id != 0) { et = SDOM::EventType::fromId(static_cast<SDOM::EventType::IdType>(desc->type_id)); } if (!et) { if (desc->name) et = SDOM::EventType::fromName(std::string(desc->name)); } SDOM::Event* ev = nullptr; if (et) { ev = new SDOM::Event(*et); } else { ev = new SDOM::Event(SDOM::EventType(\"None\")); } auto h = new SDOM_EventHandle_(); h->ptr = ev; try { h->name = sdom_dupstr(ev->getType().getName().c_str()); } catch(...) { h->name = nullptr; } return reinterpret_cast<SDOM_EventHandle>(h); }\n\n";
+                    ifs << "int SDOM_GetEventDesc(SDOM_EventHandle h, struct SDOM_EventDesc *out) { if (!h || !out) return SDOM_CAPI_ERR_INVALID; SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h); if (!hh->ptr) return SDOM_CAPI_ERR_INVALID; SDOM::Event* ev = hh->ptr; out->type_id = static_cast<uint32_t>(ev->getType().getOrAssignId()); out->name = hh->name ? hh->name : ev->getTypeName().c_str(); out->payload_json = nullptr; out->user_data = nullptr; return SDOM_CAPI_OK; }\n\n";
+                    ifs << "int SDOM_UpdateEvent(SDOM_EventHandle h, const SDOM_EventDesc *desc) { if (!h || !desc) return SDOM_CAPI_ERR_INVALID; SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h); if (!hh->ptr) return SDOM_CAPI_ERR_INVALID; (void)hh; (void)desc; return SDOM_CAPI_OK; }\n\n";
+                    ifs << "void SDOM_DestroyEvent(SDOM_EventHandle h) { if (!h) return; SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h); if (hh->ptr) delete hh->ptr; delete hh; }\n\n";
+                    ifs << "int SDOM_SendEvent(SDOM_EventHandle h) { if (!h) return SDOM_CAPI_ERR_INVALID; SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h); if (!hh->ptr) return SDOM_CAPI_ERR_INVALID; try { auto evCopy = std::make_unique<SDOM::Event>(*hh->ptr); SDOM::Core::getInstance().getEventManager().addEvent(std::move(evCopy)); return SDOM_CAPI_OK; } catch(...) { return SDOM_CAPI_ERR_INTERNAL; } }\n";
+                    ifs.close();
+                    std::cout << "[CBindingGenerator] wrote " << impl_out.string() << std::endl;
+                }
+            }
+        } catch(...) {}
     }
 
     return ok;

@@ -12,7 +12,48 @@
  */        
 #pragma once
 
+/* Include generated objects header (must be on include path) */
+#include "sdom_capi_objects_generated.h"
+
 #include <stdint.h>
+#include <stddef.h>
+
+/* Opaque handle types */
+typedef struct SDOM_EventTypeHandle_ *SDOM_EventTypeHandle;
+typedef struct SDOM_EventHandle_ *SDOM_EventHandle;
+
+/* EventType descriptor: common stable fields plus extensible JSON */
+struct SDOM_EventTypeDesc {
+    const char *name; /* display / canonical name */
+    uint32_t id; /* SDOM_EventTypeId (numeric id) */
+    const char *category; /* category/grouping */
+    const char *doc; /* short documentation string */
+    const char *metadata_json; /* optional JSON for extensible fields (nullable) */
+    void *user_data; /* reserved for callers */
+};
+
+/* Paired generic APIs for EventType */
+SDOM_EventTypeHandle SDOM_CreateEventType(const struct SDOM_EventTypeDesc *desc);
+int SDOM_GetEventTypeDesc(SDOM_EventTypeHandle h, struct SDOM_EventTypeDesc *out);
+int SDOM_UpdateEventType(SDOM_EventTypeHandle h, const struct SDOM_EventTypeDesc *desc);
+void SDOM_DestroyEventType(SDOM_EventTypeHandle h);
+SDOM_EventTypeHandle SDOM_FindEventTypeByName(const char *name);
+size_t SDOM_EnumEventTypes(size_t index, SDOM_EventTypeHandle *out); /* iterate by index */
+
+/* Event descriptor: payload is represented as JSON for extensibility */
+struct SDOM_EventDesc {
+    uint32_t type_id; /* EventType numeric id */
+    const char *name; /* optional event name */
+    const char *payload_json; /* optional JSON payload (nullable) */
+    void *user_data; /* reserved for callers */
+};
+
+/* Paired generic APIs for Events */
+SDOM_EventHandle SDOM_CreateEvent(const struct SDOM_EventDesc *desc);
+int SDOM_GetEventDesc(SDOM_EventHandle h, struct SDOM_EventDesc *out);
+int SDOM_UpdateEvent(SDOM_EventHandle h, const struct SDOM_EventDesc *desc);
+void SDOM_DestroyEvent(SDOM_EventHandle h);
+int SDOM_SendEvent(SDOM_EventHandle h);
 
 #ifdef __cplusplus
 extern "C" {

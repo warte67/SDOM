@@ -8,6 +8,7 @@
 #include <mutex>
 #include <any>
 #include <functional>
+#include <cstdint>
 #include <optional>
 #include <memory>
 #include <type_traits>
@@ -26,6 +27,38 @@ struct FunctionInfo {
     bool is_static = false;
     bool exported = true;
     std::any callable; // optional type-erased callable
+    
+    /**
+     * Explicit callable kind to help binding generators decide how to
+     * emit bindings. Generators should prefer an explicit `c_signature`
+     * / `c_name` when present, otherwise fall back to the recorded
+     * callable kind and typed slots below.
+     */
+    enum class CallableKind : uint8_t { None = 0, CFunctionPtr, CppCallable, LuaRef, PythonRef, GenericRuntime };
+    CallableKind callable_kind = CallableKind::None;
+
+    /**
+     * If `callable_kind == CFunctionPtr` this stores the raw function
+     * pointer value reinterpreted as an integer. It is expected to hold
+     * an `extern "C"` function pointer (ABI-stable) when used by
+     * generators or runtime dispatchers.
+     */
+    std::uintptr_t c_function_ptr = 0;
+
+    /**
+     * If `callable_kind == LuaRef` this stores the `luaL_ref` integer
+     * value created by the runtime and (optionally) an opaque pointer to
+     * the `lua_State` held in `lua_state_ptr`.
+     */
+    int lua_ref = 0;
+    std::uintptr_t lua_state_ptr = 0; // opaque pointer to lua_State if needed
+
+    /**
+     * Optional runtime tag (e.g. "lua", "python") and an opaque
+     * runtime_handle for generator/runtime-specific uses.
+     */
+    std::string runtime_tag;
+    std::any runtime_handle;
 };
 
 struct PropertyInfo {
@@ -85,6 +118,58 @@ public:
         FunctionInfo m = meta;
         m.callable = std::make_any<std::decay_t<Fn>>(std::forward<Fn>(fn));
         types_[typeName].functions.push_back(std::move(m));
+    }
+
+    /**
+     * Register an extern "C" function pointer for the named type.
+     *
+     * This stores the pointer in `FunctionInfo::c_function_ptr` and marks
+     * the callable kind as `CFunctionPtr`. Generators may emit an `extern`
+     * prototype that maps to this function pointer or generate a thin
+     * wrapper that calls it.
+     *
+     * Example:
+     * ```cpp
+     * void my_c_func(int);
+     * FunctionInfo fi{ .name = "DoThing", .param_types = {"int"}, .return_type = "void" };
+     * DataRegistry::instance().registerCFunctionPtr("SomeType", fi, &my_c_func);
+     * ```
+     */
+    template<typename R, typename... Args>
+    void registerCFunctionPtr(const std::string& typeName, const FunctionInfo& meta, R(*fp)(Args...))
+    {
+        std::scoped_lock lk(mutex_);
+        FunctionInfo m = meta;
+        m.callable_kind = FunctionInfo::CallableKind::CFunctionPtr;
+        m.c_function_ptr = reinterpret_cast<std::uintptr_t>(fp);
+        if (m.c_name.empty()) {
+            // best-effort generated name; generators can sanitize further
+            m.c_name = std::string("SDOM_CFN_") + typeName + "_" + m.name;
+        }
+        types_[typeName].functions.push_back(std::move(m));
+    }
+
+    /**
+     * Register a Lua function reference (luaL_ref) for the named type.
+     * The registry will store the integer ref and optional lua_State
+     * pointer. Generators can emit C wrappers that dispatch to the Lua
+     * runtime using these refs.
+     *
+     * Note: ownership semantics: the caller is responsible for creating
+     * the luaL_ref and ensuring the `lua_State` remains valid while the
+     * registry holds the ref. Unregistering (and luaL_unref) should be
+     * handled by runtime code when needed.
+     */
+    void registerLuaFunction(const std::string& typeName, FunctionInfo meta, int luaRef, void* luaStatePtr = nullptr)
+    {
+        std::scoped_lock lk(mutex_);
+        meta.callable_kind = FunctionInfo::CallableKind::LuaRef;
+        meta.lua_ref = luaRef;
+        meta.lua_state_ptr = reinterpret_cast<std::uintptr_t>(luaStatePtr);
+        if (meta.c_name.empty()) {
+            meta.c_name = std::string("SDOM_LUA_") + typeName + "_" + meta.name;
+        }
+        types_[typeName].functions.push_back(std::move(meta));
     }
 
     // Non-template overload: register a FunctionInfo without an associated callable
