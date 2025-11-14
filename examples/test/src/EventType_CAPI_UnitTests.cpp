@@ -6,6 +6,8 @@
 #include <SDOM/SDOM_IFontObject.hpp>
 #include <SDOM/SDOM_EventType.hpp>
 #include <SDOM/CAPI/SDOM_CAPI_Events.h>
+// Need full EventManager definition for testing queue size
+#include <SDOM/SDOM_EventManager.hpp>
 // // include runtime C API header (installed into include/SDOM by the build)
 // #include <SDOM/SDOM_CAPI_Events_runtime.h>
 
@@ -74,6 +76,13 @@ namespace SDOM
             else if (std::string(out.name) != testName) errors.push_back("Name mismatch from C API");
             if (out.id == 0) errors.push_back("Returned id is zero");
             if (!out.category) errors.push_back("Returned category is null");
+            else if (std::string(out.category) != "UnitTest") errors.push_back("Category mismatch");
+
+            // Basic sanity for numeric id: ensure category bits are non-zero and index fits in 8 bits
+            uint32_t cat = SDOM_EVENT_CATEGORY(out.id);
+            uint32_t idx = SDOM_EVENT_INDEX(out.id);
+            if (cat == 0) errors.push_back("EventType id category bits are zero");
+            if (idx >= 0x100) errors.push_back("EventType index out of range");
         }
 
         // Find by name
@@ -81,8 +90,11 @@ namespace SDOM
         if (!fh) errors.push_back("SDOM_FindEventTypeByName returned null");
 
         // Create an event for this type
+        // Cache id before freeing strings below
+        SDOM_EventTypeId created_id = out.id;
+
         SDOM_EventDesc ed{};
-        ed.type_id = out.id;
+        ed.type_id = created_id;
         SDOM_EventHandle evh = SDOM_CreateEvent(&ed);
         if (!evh) {
             errors.push_back("SDOM_CreateEvent returned null");
@@ -97,9 +109,71 @@ namespace SDOM
             SDOM_DestroyEvent(evh);
         }
 
-        // Clean up handles
+        // Verify enumeration yields the created type and matches FindByName
+        SDOM_EventTypeHandle enumH = nullptr;
+        size_t next = SDOM_EnumEventTypes(0, &enumH);
+        bool found = false;
+        while (next != 0) {
+            SDOM_EventTypeDesc e{};
+            if (enumH && SDOM_GetEventTypeDesc(enumH, &e) == 0) {
+                if (e.name && std::string(e.name) == testName) found = true;
+                if (e.name) SDOM_FreeString(const_cast<char*>(e.name));
+                if (e.category) SDOM_FreeString(const_cast<char*>(e.category));
+                if (e.doc) SDOM_FreeString(const_cast<char*>(e.doc));
+            }
+            if (enumH) SDOM_DestroyEventType(enumH);
+            enumH = nullptr;
+            next = SDOM_EnumEventTypes(next, &enumH);
+        }
+        if (!found) errors.push_back("SDOM_EnumEventTypes failed to enumerate the created type");
+
+        // Test UpdateEventType modifies both the wrapper-visible fields and the underlying C++ object
+        SDOM_EventTypeDesc updatedDesc{};
+        updatedDesc.doc = "Updated doc";
+        if (SDOM_UpdateEventType(h, &updatedDesc) != SDOM_CAPI_OK) {
+            errors.push_back("SDOM_UpdateEventType failed");
+        } else {
+            SDOM_EventTypeDesc out2{};
+            if (SDOM_GetEventTypeDesc(h, &out2) != SDOM_CAPI_OK) {
+                errors.push_back("SDOM_GetEventTypeDesc failed after update");
+            } else {
+                if (!out2.doc || std::string(out2.doc) != std::string(updatedDesc.doc))
+                    errors.push_back("UpdateEventType did not modify doc");
+                if (out2.name) SDOM_FreeString(const_cast<char*>(out2.name));
+                if (out2.category) SDOM_FreeString(const_cast<char*>(out2.category));
+                if (out2.doc) SDOM_FreeString(const_cast<char*>(out2.doc));
+            }
+
+            // Validate underlying C++ EventType was updated
+            SDOM::EventType* impl = SDOM::EventType::fromName(std::string(testName));
+            if (!impl) errors.push_back("Underlying EventType not found via C++ API");
+            else if (impl->getDoc() != std::string(updatedDesc.doc)) errors.push_back("Underlying EventType object was not updated");
+        }
+
+        // Verify event queue increased when sending an event
+        int before = SDOM::Core::getInstance().getEventManager().getEventQueueSize();
+        // create/send a fresh event and observe queue size
+        SDOM_EventDesc ed2{}; ed2.type_id = created_id;
+        SDOM_EventHandle evh2 = SDOM_CreateEvent(&ed2);
+        if (evh2) {
+            SDOM_SendEvent(evh2);
+            int after = SDOM::Core::getInstance().getEventManager().getEventQueueSize();
+            if (after != before + 1) errors.push_back("SDOM_SendEvent did not increase event queue size");
+            SDOM_DestroyEvent(evh2);
+        }
+
+        // Clean up handles (free strings returned by earlier Get)
         if (fh) SDOM_DestroyEventType(fh);
+        // Free strings from original Get before destroying main handle
+        if (out.name) SDOM_FreeString(const_cast<char*>(out.name));
+        if (out.category) SDOM_FreeString(const_cast<char*>(out.category));
+        if (out.doc) SDOM_FreeString(const_cast<char*>(out.doc));
         SDOM_DestroyEventType(h);
+
+        // Confirm behavior after destruction: operations should fail gracefully
+        SDOM_EventTypeDesc invalidCheck{};
+        int rc_after = SDOM_GetEventTypeDesc(h, &invalidCheck);
+        if (rc_after == SDOM_CAPI_OK) errors.push_back("Destroyed handle should not succeed on GetEventTypeDesc");
 
         //     errors.push_back("SDOM_CAPI_register_event_type returned 0");
         //     ok = false;
