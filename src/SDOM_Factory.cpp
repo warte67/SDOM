@@ -57,6 +57,17 @@ namespace SDOM
                 // std::cout << "[Factory::onInit] SDOM_Bindings root already present" << std::endl;
             }
         } catch(...) {}
+
+        // Ensure Event and EventType bindings are registered into Lua and the DataRegistry
+        try {
+            // Register EventType Lua constants using the global Lua state
+            EventType::registerLua(SDOM::getLua());
+        } catch(...) {}
+        try {
+            // Register IDataObject bindings for Event into the Factory's registry
+            Event evt; // temporary to call registerBindings
+            evt.registerBindings("Event", registry_);
+        } catch(...) {}
         // --- Lua UserType Registration --- //
         Core& core = getCore();
 

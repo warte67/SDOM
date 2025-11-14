@@ -74,6 +74,8 @@ public:
 
     // Type-level registration
     bool registerType(const TypeInfo& info);
+    // Alias that matches IDataObject naming: register a complete TypeInfo
+    bool registerDataType(const TypeInfo& info);
 
     template<typename Fn>
     void registerFunction(const std::string& typeName, const FunctionInfo& meta, Fn&& fn)
@@ -83,6 +85,9 @@ public:
         m.callable = std::make_any<std::decay_t<Fn>>(std::forward<Fn>(fn));
         types_[typeName].functions.push_back(std::move(m));
     }
+
+    // Non-template overload: register a FunctionInfo without an associated callable
+    void registerFunction(const std::string& typeName, const FunctionInfo& meta);
 
     template<typename Getter, typename Setter = std::nullptr_t>
     void registerProperty(const std::string& typeName, const PropertyInfo& meta, Getter&& getter, Setter&& setter = nullptr)
@@ -95,6 +100,9 @@ public:
         }
         types_[typeName].properties.push_back(std::move(p));
     }
+
+    // Non-template overload: register a PropertyInfo without associated getter/setter callables
+    void registerProperty(const std::string& typeName, const PropertyInfo& meta);
 
     // Query
     const TypeInfo* lookupType(const std::string& name) const;

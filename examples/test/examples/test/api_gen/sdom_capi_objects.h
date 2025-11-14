@@ -6,8 +6,8 @@
 extern "C" {
 #endif
 
-/* Type: DD_TestType */
-typedef struct SDOM_DD_TestType SDOM_DD_TestType;
+/* Type: UT_TestType */
+typedef struct SDOM_UT_TestType SDOM_UT_TestType;
 
 
 #ifdef __cplusplus

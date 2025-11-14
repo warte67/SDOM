@@ -38,9 +38,52 @@
  ******************/
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_EventType.hpp>
+#include <mutex>
 
 namespace SDOM
 {
+    static std::mutex s_eventtype_id_mutex;
+
+
+
+
+    // Numeric ID helpers
+    EventType::IdType EventType::getOrAssignId()
+    {
+        // Fast path
+        if (id_ != 0) return id_;
+
+        // assign a new id atomically
+        EventType::IdType newId = next_event_type_id.fetch_add(1, std::memory_order_relaxed);
+        if (newId == 0) { // wrap-around safety: skip 0
+            newId = next_event_type_id.fetch_add(1, std::memory_order_relaxed);
+        }
+
+        // store mapping under mutex to protect idRegistry
+        {
+            std::lock_guard<std::mutex> lk(s_eventtype_id_mutex);
+            id_ = newId;
+            idRegistry[id_] = this;
+        }
+        return id_;
+    }
+
+    void EventType::setId(IdType id)
+    {
+        if (id == 0) return;
+        std::lock_guard<std::mutex> lk(s_eventtype_id_mutex);
+        id_ = id;
+        idRegistry[id_] = this;
+    }
+
+    EventType* EventType::fromId(IdType id)
+    {
+        if (id == 0) return nullptr;
+        std::lock_guard<std::mutex> lk(s_eventtype_id_mutex);
+        auto it = idRegistry.find(id);
+        if (it != idRegistry.end()) return it->second;
+        return nullptr;
+    }
     // Metering Policy Notes
     // ---------------------
     // Each EventType may define optional metering behavior used by the
@@ -315,5 +358,31 @@ namespace SDOM
     EventType& EventType::setMeterIntervalMs(uint16_t ms) { meter_interval_ms_ = ms; return *this; }
     EventType& EventType::setCoalesceStrategy(CoalesceStrategy s) { coalesce_strategy_ = s; return *this; }
     EventType& EventType::setCoalesceKey(CoalesceKey k) { coalesce_key_ = k; return *this; }
+
+    // -- lookup helpers --
+    std::vector<EventType*> EventType::getAll()
+    {
+        std::vector<EventType*> out;
+        out.reserve(registry.size());
+        for (const auto &kv : registry) out.push_back(kv.second);
+        return out;
+    }
+
+    EventType* EventType::fromName(const std::string& name)
+    {
+        auto it = registry.find(name);
+        if (it != registry.end()) return it->second;
+        return nullptr;
+    }
+
+    std::string EventType::toString(const EventType& et)
+    {
+        return et.getName();
+    }
+
+    size_t EventType::count()
+    {
+        return registry.size();
+    }
 
 } // namespace SDOM

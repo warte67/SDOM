@@ -351,8 +351,9 @@ The Llama, meanwhile, contemplates the philosophical implications of type safety
   - ☐ `SDOM_IconIndex` → static singleton inherits from `IDataObject`  
   - ☐ `SDOM_SDL_Utils` → inherits from `IDataObject`  
   - ☐ `SDOM_UnitTests` → inherits from `IDataObject`  
-  - ☐ `SDOM_Utils` → static singleton inherits from `IDataObject`  
-  - ☐ `SDOM_Version.hpp.in` → inherits from `IDataObject`  
+- ☐ `SDOM_Utils` → static singleton inherits from `IDataObject`  
+- ☐ `SDOM_Version.hpp.in` → inherits from `IDataObject`  
+- ☐ Surface the `EventType` registry through `Event::registerBindingsImpl()` (IDataObject → Variant descriptors) for the C API  
 - ☐ Prototype **SVG renderer integration** for next-gen asset pipeline.  
 - ☐ Add **Lua phase-2 tests** to validate runtime ↔ registry synchronization.  
 - ☐ Expand **developer wiki** with `DataRegistry` flow diagrams and generator documentation.

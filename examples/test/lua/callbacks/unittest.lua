@@ -16,6 +16,7 @@ function M.on_unit_test()
 
     if true then       
         allTestsPassed = allTestsPassed and Core_UnitTests()
+
         allTestsPassed = allTestsPassed and IDisplayObject_UnitTests()
         allTestsPassed = allTestsPassed and Event_UnitTests()
         allTestsPassed = allTestsPassed and EventType_UnitTests()
@@ -23,10 +24,12 @@ function M.on_unit_test()
         allTestsPassed = allTestsPassed and AssetHandle_UnitTests()
         allTestsPassed = allTestsPassed and BitmapFont_UnitTests()
         allTestsPassed = allTestsPassed and Button_UnitTests()
-
         allTestsPassed = allTestsPassed and TristateButton_UnitTests()
+
         allTestsPassed = allTestsPassed and Variant_UnitTests()
         allTestsPassed = allTestsPassed and DataRegistry_UnitTests()
+        allTestsPassed = allTestsPassed and Event_CAPI_UnitTests()
+        allTestsPassed = allTestsPassed and EventType_CAPI_UnitTests()        
     end
     -- Re-entrant Lua tests are stepped by the C++ UnitTests runner now.
     -- No direct stepping here to avoid double-advancing state per frame.
