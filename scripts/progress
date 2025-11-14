@@ -29,6 +29,39 @@ fi
 
 tmp_out=$(mktemp)
 
+# Support a dry-run mode so users can preview changes without touching files
+DRYRUN=0
+if [[ "${1:-}" == "--dry-run" || "${SDOM_DRY_RUN:-}" == "1" ]]; then
+  DRYRUN=1
+fi
+# First, remove any existing <a id="latest-update"></a> occurrences and
+#strip a preceding date anchor if it's immediately before the latest-update
+#anchor. This avoids leaving stale anchors in the file when the AWK
+#insertion logic runs.
+clean_file=$(mktemp)
+awk '
+  BEGIN { date_anchor_re = "^<a id=\"[a-z]+-[0-9]{1,2}-[0-9]{4}\"></a>$"; latest_re = "^<a id=\"latest-update\"></a>$" }
+  {
+    lines[NR] = $0
+  }
+  END {
+    for (i = 1; i <= NR; ++i) {
+      if (lines[i] ~ latest_re) {
+        # If previous line is a date anchor, remove that anchor but preserve a blank line
+        if (i > 1 && lines[i-1] ~ date_anchor_re) {
+          lines[i-1] = "";
+        }
+        # Remove the latest-update line (leave a blank line in its place)
+        lines[i] = "";
+      }
+    }
+    for (i = 1; i <= NR; ++i) print lines[i]
+  }
+' "${FILE}" >"${clean_file}"
+
+# Use the cleaned file as the input for the AWK transformation below
+FILE_CLEANED="${clean_file}"
+
 # Allow override for testing (e.g., SDOM_TODAY="November 1, 2025")
 if [[ -n "${SDOM_TODAY:-}" ]]; then
   TODAY="$SDOM_TODAY"
@@ -115,17 +148,19 @@ awk -v TODAY="$TODAY" -v DATE_ID="$DATE_ID" '
     }
 
     # Markdown template for new daily section
-    template_block = "_[Brief summary of today’s focus or achievements.]_\n\n" \
-    "### 🧩 [Subsystem or Feature Group]\n" \
-    "- [Key change or feature accomplished.]\n" \
-    "- [Supporting details, design notes, or rationale.]\n\n" \
-    "### 🌟 **Summary:**\n" \
-    "_[Short summary of results and next direction.]_\n\n" \
-    "**🚧 ToDo Today**\n" \
-    "- ☐ [Task 1]\n" \
-    "- ☐ [Task 2]\n\n"
+    template_block = "> 💬 *[Brief summary of today’s focus or achievements.]*\n\n" \
+         "### 🧩 [Subsystem or Feature Group]\n" \
+         "- [Key change or feature accomplished.]\n" \
+         "- [Supporting details, design notes, or rationale.]\n\n" \
+         "### 🌟 **Summary:**\n" \
+         "_[Short summary of results and next direction.]_\n\n" \
+         "**🚧 ToDo Today**\n" \
+         "- ☐ [Task 1]\n" \
+         "- ☐ [Task 2]\n\n" \
+         "#### 🤔 *End of Day Reflection*\n" \
+         "> *\"_reflechion quote\"*\n\n" \
 
-    backlink_line = "> [⬆️ Back to Progress Updates](../progress.md#progress-updates)"
+    backlink_line = "[⬆️ Back to Progress Updates](../progress.md#progress-updates)"
 
     for (i = 1; i <= out_n; i++) {
       if (i == insert_anchor_at) {
@@ -149,22 +184,42 @@ awk -v TODAY="$TODAY" -v DATE_ID="$DATE_ID" '
             print ""
             print backlink_line
           }
+
+          # Ensure the end-of-day marker appears immediately after the backlink
+          print "#### end-of-day"
         }
+      }
+
+      # Skip any existing end-of-day markers to avoid duplicates; we append a single marker above
+      if (lines[i] ~ /^####[[:space:]]+end-of-day(.*)$/) {
+        continue
       }
 
       print lines[i]
     }
   }
-' "${FILE}" >"${tmp_out}"
+ ' "${FILE_CLEANED}" >"${tmp_out}"
+
+# remove temporary cleaned input
+rm -f "${clean_file}"
 
 # Only update file if there are changes
-if ! cmp -s "${FILE}" "${tmp_out}"; then
+if cmp -s "${FILE}" "${tmp_out}"; then
+  rm -f "${tmp_out}"
+  echo "[✓] Progress log up-to-date (no changes)"
+else
+  if [[ ${DRYRUN} -eq 1 ]]; then
+    echo "[--dry-run] Preview of changes (diff):"
+    diff -u "${FILE}" "${tmp_out}" || true
+    rm -f "${tmp_out}"
+    rm -f "${clean_file}"
+    exit 0
+  fi
+
   mode=$(stat -c '%a' "${FILE}")
   install -m "${mode}" "${tmp_out}" "${FILE}"
   rm -f "${tmp_out}"
+  rm -f "${clean_file}"
   echo "[update_latest_anchor] Updated: ${FILE}"
   echo "[update_latest_anchor] Anchors inserted: <${DATE_ID}> and <latest-update>"
-else
-  rm -f "${tmp_out}"
-  echo "[✓] Progress log up-to-date (no changes)"
 fi
