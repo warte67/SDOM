@@ -12,6 +12,9 @@
  */        
 #pragma once
 
+/* Common C API (error codes, free helper) */
+#include <SDOM/CAPI/SDOM_CAPI_Common.h>
+
 /* Include generated objects header (must be on include path) */
 #include "sdom_capi_objects_generated.h"
 
@@ -31,6 +34,10 @@ struct SDOM_EventTypeDesc {
     const char *metadata_json; /* optional JSON for extensible fields (nullable) */
     void *user_data; /* reserved for callers */
 };
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Paired generic APIs for EventType */
 SDOM_EventTypeHandle SDOM_CreateEventType(const struct SDOM_EventTypeDesc *desc);
@@ -55,10 +62,6 @@ int SDOM_UpdateEvent(SDOM_EventHandle h, const struct SDOM_EventDesc *desc);
 void SDOM_DestroyEvent(SDOM_EventHandle h);
 int SDOM_SendEvent(SDOM_EventHandle h);
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef uint32_t SDOM_EventTypeId;
 
 /** @defgroup SDOM_EventMacros Event Macros
@@ -78,11 +81,11 @@ typedef enum SDOM_EventType {
 
     /* Core -------------------------------------------------------------- */
     SDOM_EVENT_FIRST = 0x0000,               /**< Reserved (do not use) */
-    SDOM_EVENT_QUIT = 0x0001,                /**< Signals that the application or main stage is closing. Global only. */
+    SDOM_EVENT_QUIT = 0x00000001,            /**< Signals that the application or main stage is closing. Global only. */
     SDOM_EVENT_NONE,                         /**< A general-purpose EventType for testing or to represent a non-event. */
 
     /* Application -------------------------------------------------------------- */
-    SDOM_EVENT_ADDED = 0x0100,               /**< Dispatched when an object is added as a child to another display object. */
+    SDOM_EVENT_ADDED = 0x00000100,           /**< Dispatched when an object is added as a child to another display object. */
     SDOM_EVENT_REMOVED,                      /**< Dispatched when an object is removed from its parent container. */
     SDOM_EVENT_ADDED_TO_STAGE,               /**< Emitted when an object becomes part of the active stage hierarchy. */
     SDOM_EVENT_REMOVED_FROM_STAGE,           /**< Emitted when an object is detached from the stage hierarchy. */
@@ -90,7 +93,7 @@ typedef enum SDOM_EventType {
     SDOM_EVENT_STAGE_CLOSED,                 /**< Indicates that a stage or window has been closed and destroyed. */
 
     /* Input -------------------------------------------------------------- */
-    SDOM_EVENT_KEY_DOWN = 0x0200,            /**< Keyboard key pressed down; bubbles through active hierarchy. */
+    SDOM_EVENT_KEY_DOWN = 0x00000200,        /**< Keyboard key pressed down; bubbles through active hierarchy. */
     SDOM_EVENT_KEY_UP,                       /**< Keyboard key released; bubbles through active hierarchy. */
     SDOM_EVENT_TEXT_INPUT,                   /**< Text input event carrying UTF-8 text from the input system. */
     SDOM_EVENT_MOUSE_BUTTON_DOWN,            /**< Mouse button pressed on a target object. */
@@ -103,7 +106,7 @@ typedef enum SDOM_EventType {
     SDOM_EVENT_MOUSE_LEAVE,                  /**< Pointer left the bounds of an object; bubbles for hover tracking. */
 
     /* Window -------------------------------------------------------------- */
-    SDOM_EVENT_FOCUS_GAINED = 0x0300,        /**< The window or stage gained input focus. */
+    SDOM_EVENT_FOCUS_GAINED = 0x00000300,    /**< The window or stage gained input focus. */
     SDOM_EVENT_FOCUS_LOST,                   /**< The window or stage lost input focus. */
     SDOM_EVENT_RESIZE,                       /**< Window or stage resized; width and height values updated. */
     SDOM_EVENT_MOVE,                         /**< Window or stage moved; position values updated. */
@@ -113,7 +116,7 @@ typedef enum SDOM_EventType {
     SDOM_EVENT_LEAVE_FULLSCREEN,             /**< Application exited fullscreen mode. */
 
     /* UI -------------------------------------------------------------- */
-    SDOM_EVENT_VALUE_CHANGED = 0x0400,       /**< Value of a control or property has changed. */
+    SDOM_EVENT_VALUE_CHANGED = 0x00000400,   /**< Value of a control or property has changed. */
     SDOM_EVENT_STATE_CHANGED,                /**< UI element or component state changed (e.g., active, toggled). */
     SDOM_EVENT_SELECTION_CHANGED,            /**< User selection or highlight changed within a list or group. */
     SDOM_EVENT_ENABLED,                      /**< Object or control has been enabled and can now receive input. */
@@ -122,12 +125,12 @@ typedef enum SDOM_EventType {
     SDOM_EVENT_HIDDEN,                       /**< Object became hidden within its parent hierarchy. */
 
     /* DragAndDrop -------------------------------------------------------------- */
-    SDOM_EVENT_DRAG = 0x0500,                /**< Dragging in progress; position updated while dragging. */
+    SDOM_EVENT_DRAG = 0x00000500,            /**< Dragging in progress; position updated while dragging. */
     SDOM_EVENT_DRAGGING,                     /**< Continuous drag event emitted while dragging is active. */
     SDOM_EVENT_DROP,                         /**< An item or data payload was dropped onto a valid target. */
 
     /* Timer -------------------------------------------------------------- */
-    SDOM_EVENT_TIMER_START = 0x0600,         /**< Timer started or resumed counting. */
+    SDOM_EVENT_TIMER_START = 0x00000600,     /**< Timer started or resumed counting. */
     SDOM_EVENT_TIMER_STOP,                   /**< Timer stopped and reset to initial state. */
     SDOM_EVENT_TIMER_PAUSE,                  /**< Timer paused but not reset. */
     SDOM_EVENT_TIMER_TICK,                   /**< Timer tick event; emitted on each interval step. */
@@ -135,11 +138,11 @@ typedef enum SDOM_EventType {
     SDOM_EVENT_TIMER_COMPLETE,               /**< Timer finished all cycles and has reached completion. */
 
     /* Clipboard -------------------------------------------------------------- */
-    SDOM_EVENT_CLIPBOARD_COPY = 0x0700,      /**< Data copied to the system clipboard. */
+    SDOM_EVENT_CLIPBOARD_COPY = 0x00000700,  /**< Data copied to the system clipboard. */
     SDOM_EVENT_CLIPBOARD_PASTE,              /**< Data pasted from the system clipboard. */
 
     /* Listener -------------------------------------------------------------- */
-    SDOM_EVENT_ON_INIT = 0x0800,             /**< Initialization callback for objects; called after creation. */
+    SDOM_EVENT_ON_INIT = 0x00000800,         /**< Initialization callback for objects; called after creation. */
     SDOM_EVENT_ON_QUIT,                      /**< Global callback fired during shutdown sequence. */
     SDOM_EVENT_ON_EVENT,                     /**< Generic hook for catching all events before normal dispatch. */
     SDOM_EVENT_ON_UPDATE,                    /**< Called once per frame before rendering; main update loop hook. */
@@ -147,7 +150,7 @@ typedef enum SDOM_EventType {
     SDOM_EVENT_ON_PRE_RENDER,                /**< Called before OnRender for pre-draw logic such as layout or transforms. */
 
     /* Frame -------------------------------------------------------------- */
-    SDOM_EVENT_ENTER_FRAME = 0x0900,         /**< Legacy per-frame tick event (use OnUpdate instead). */
+    SDOM_EVENT_ENTER_FRAME = 0x00000900,     /**< Legacy per-frame tick event (use OnUpdate instead). */
     SDOM_EVENT_SDL_EVENT,                    /**< Raw SDL event wrapper; dispatched when unhandled by internal systems. */
     SDOM_EVENT_USER,                         /**< Reserved for custom or user-defined events created at runtime. */
     /**

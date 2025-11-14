@@ -67,6 +67,12 @@
 #include <cstdint>
 
 
+// Allow optional Lua bindings: forward-declare `sol::state_view` so callers
+// that include this header don't need to pull in the Sol2 headers unless
+// they require Lua functionality.
+namespace sol { class state_view; }
+
+
 namespace SDOM
 {
     class EventType
