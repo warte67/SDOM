@@ -40,29 +40,72 @@
 // Force use of repository header to avoid picking up an installed copy.
 #include "../include/SDOM/SDOM_EventType.hpp"
 #include <mutex>
+#include <memory>
 
 namespace SDOM
 {
     static std::mutex s_eventtype_id_mutex;
 
+    // Per-category block allocator configuration
+    static constexpr unsigned SDOM_EVENT_ID_SHIFT = 8; // 256 ids per category
+    static constexpr uint32_t SDOM_EVENT_BLOCK_SIZE = (1u << SDOM_EVENT_ID_SHIFT);
+    static constexpr uint32_t SDOM_EVENT_LOCAL_MAX = SDOM_EVENT_BLOCK_SIZE - 1;
+
+    // category -> index and per-category local id counters
+    static std::unordered_map<std::string, unsigned> s_category_index;
+    static std::vector<std::unique_ptr<std::atomic<uint32_t>>> s_next_local_id;
 
 
 
-    // Numeric ID helpers
+
+    // Numeric ID helpers using per-category blocks
+    static unsigned getOrAssignCategoryIndex(const std::string &cat)
+    {
+        std::lock_guard<std::mutex> lk(s_eventtype_id_mutex);
+        auto it = s_category_index.find(cat);
+        if (it != s_category_index.end()) return it->second;
+        unsigned idx = static_cast<unsigned>(s_category_index.size());
+        s_category_index.emplace(cat, idx);
+        s_next_local_id.emplace_back(std::make_unique<std::atomic<uint32_t>>(0)); // start local ids at 0 (allow 0 as sentinel in Core)
+        return idx;
+    }
+
     EventType::IdType EventType::getOrAssignId()
     {
         // Fast path
         if (id_ != 0) return id_;
 
-        // assign a new id atomically
-        EventType::IdType newId = next_event_type_id.fetch_add(1, std::memory_order_relaxed);
-        if (newId == 0) { // wrap-around safety: skip 0
-            newId = next_event_type_id.fetch_add(1, std::memory_order_relaxed);
+        // Determine category index (stable per-run based on first-seen order)
+        std::string cat = category_.empty() ? std::string("Uncategorized") : category_;
+        unsigned cidx = getOrAssignCategoryIndex(cat);
+
+        // allocate local id atomically for this category
+        uint32_t local = s_next_local_id[cidx]->fetch_add(1, std::memory_order_relaxed);
+
+        // handle overflow: if local exceeds local max, fall back to linear allocation
+        uint32_t newId = 0;
+        if (local > SDOM_EVENT_LOCAL_MAX) {
+            std::lock_guard<std::mutex> lk(s_eventtype_id_mutex);
+            // fallback: find next unused id after this category's block
+            uint32_t base = (static_cast<uint32_t>(cidx + 1) << SDOM_EVENT_ID_SHIFT);
+            uint32_t probe = base;
+            while (idRegistry.find(probe) != idRegistry.end()) ++probe;
+            newId = probe;
+            id_ = newId;
+            idRegistry[id_] = this;
+            return id_;
         }
 
-        // store mapping under mutex to protect idRegistry
+        newId = (static_cast<uint32_t>(cidx) << SDOM_EVENT_ID_SHIFT) | (local & SDOM_EVENT_LOCAL_MAX);
+
         {
             std::lock_guard<std::mutex> lk(s_eventtype_id_mutex);
+            // collision check (should be rare)
+            if (idRegistry.find(newId) != idRegistry.end()) {
+                uint32_t probe = newId;
+                while (idRegistry.find(++probe) != idRegistry.end()) {}
+                newId = probe;
+            }
             id_ = newId;
             idRegistry[id_] = this;
         }

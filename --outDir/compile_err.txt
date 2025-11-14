@@ -1,0 +1,3 @@
+gcc: error: unrecognized command-line option ‘--outDir/test_compile.c’
+gcc: fatal error: no input files
+compilation terminated.

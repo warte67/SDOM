@@ -243,19 +243,16 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         ofs << "#include <stdint.h>\n\n";
         ofs << "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n";
         ofs << "typedef uint32_t SDOM_EventTypeId;\n\n";
+        ofs << "// Helpers to extract category and index from an event id:\n";
+        ofs << "#define SDOM_EVENT_CATEGORY(id) (((uint32_t)(id)) >> 8)\n";
+        ofs << "#define SDOM_EVENT_INDEX(id) (((uint32_t)(id)) & 0xFFU)\n\n";
         ofs << "typedef enum SDOM_EventType {\n";
         // Emit a reserved sentinel at 0. Keep 0 unused so real EventType ids
         // start at 1; this avoids confusion with "no event" semantics on
         // consumers that treat 0 as invalid/unused.
-        {
-            std::ostringstream base;
-            base << "    SDOM_EVENT_FIRST = 0,";
-            std::string baseStr = base.str();
-            const size_t target_col = 44; // desired column where comment should start
-            size_t baseLen = baseStr.size();
-            size_t pad = (baseLen >= target_col) ? 1 : (target_col - baseLen);
-            ofs << baseStr << std::string(pad, ' ') << "/* Reserved (do not use) */\n";
-        }
+        // (Sentinel will be emitted within the Core category block so it appears
+        // alongside other core/misc entries. This keeps 0x0000 usable as the
+        // first value in that category while remaining a documented sentinel.)
         // helper: convert a PascalCase/CamelCase name into SCREAMING_SNAKE_CASE
         auto to_screaming_snake = [](const std::string &s) -> std::string {
             std::string out;
@@ -298,6 +295,17 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         for (const auto &cat : category_order) {
             // Emit a category banner comment
             ofs << "\n    /* " << cat << " -------------------------------------------------------------- */\n";
+            // If this is the Core category, emit the reserved sentinel as the
+            // first entry (0x0000) so it lives alongside other core events.
+            if (cat == "Core") {
+                std::ostringstream base;
+                base << "    SDOM_EVENT_FIRST = 0x" << std::hex << std::uppercase << std::setfill('0') << std::setw(4) << 0 << std::dec << ",";
+                std::string baseStr = base.str();
+                const size_t target_col = 44;
+                size_t baseLen = baseStr.size();
+                size_t pad = (baseLen >= target_col) ? 1 : (target_col - baseLen);
+                ofs << baseStr << std::string(pad, ' ') << " /**< Reserved (do not use) */\n";
+            }
             const auto &vec = by_cat[cat];
             for (const auto &kv : vec) {
                 // sanitize identifier
@@ -308,20 +316,22 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
 
                 // Build base entry (with trailing comma) and then append comment
                 std::ostringstream base;
-                base << "    SDOM_EVENT_" << idname << " = " << kv.id << ",";
+                // format id as 16-bit hex constant (0xNNNN)
+                uint32_t id16 = kv.id & 0xFFFFu;
+                base << "    SDOM_EVENT_" << idname << " = 0x" << std::hex << std::uppercase << std::setfill('0') << std::setw(4) << id16 << std::dec << ",";
                 std::string baseStr = base.str();
 
-                if (!kv.doc.empty()) {
-                    std::string doc = kv.doc;
-                    for (char &c : doc) if (c == '\n' || c == '\r') c = ' ';
+                    if (!kv.doc.empty()) {
+                        std::string doc = kv.doc;
+                        for (char &c : doc) if (c == '\n' || c == '\r') c = ' ';
 
-                    const size_t target_col = 44;
-                    size_t baseLen = baseStr.size();
-                    size_t pad = (baseLen >= target_col) ? 1 : (target_col - baseLen);
-                    ofs << baseStr << std::string(pad, ' ') << "/* " << doc << " */\n";
-                } else {
-                    ofs << baseStr << "\n";
-                }
+                        const size_t target_col = 44;
+                        size_t baseLen = baseStr.size();
+                        size_t pad = (baseLen >= target_col) ? 1 : (target_col - baseLen);
+                        ofs << baseStr << std::string(pad, ' ') << " /**< " << doc << " */\n";
+                    } else {
+                        ofs << baseStr << "\n";
+                    }
             }
         }
 
