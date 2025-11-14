@@ -792,7 +792,7 @@ namespace SDOM
                 fi.is_static = false;
                 ti.functions.push_back(fi);
 
-                        addDataType(ti.name, ti);
+                addDataType(ti.name, ti);
             }
         } catch(...) {
             BIND_WARN("Event::registerBindingsImpl: failed to register existing EventType instances");

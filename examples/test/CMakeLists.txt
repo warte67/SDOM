@@ -37,6 +37,7 @@ find_package(SDL3 REQUIRED CONFIG)
 find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
 find_library(LUA_LIB lua5.4)
+find_package(Threads REQUIRED)
 
 # Include directories
 include_directories($ENV{HOME}/.local/include)      # SDL3 Includes (local)
@@ -94,6 +95,8 @@ set(GENERATOR_SOURCES
     "${SDOM_ROOT}/tools/run_dataregistry_test.cpp"
     "${SDOM_ROOT}/src/SDOM_DataRegistry.cpp"
     "${SDOM_ROOT}/src/SDOM_CBindingGenerator.cpp"
+    "${SDOM_ROOT}/src/SDOM_EventType.cpp"
+    "${SDOM_ROOT}/tools/dataregistry_generator_stubs.cpp"
 )
 add_executable(dataregistry_generator ${GENERATOR_SOURCES})
 target_include_directories(dataregistry_generator PRIVATE
@@ -103,6 +106,16 @@ target_include_directories(dataregistry_generator PRIVATE
 )
 set_target_properties(dataregistry_generator PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tools"
+)
+
+# Link the generator against Lua and system libs so symbols from sol2
+# and the Lua C API are resolved when the generator is built as part
+# of the examples/test build flow.
+target_link_libraries(dataregistry_generator
+    PRIVATE
+        ${LUA_LIB}
+        ${CMAKE_DL_LIBS}
+        Threads::Threads
 )
 
 # Custom command: run the generator to produce the version marker

@@ -134,6 +134,8 @@ set(GENERATOR_SOURCES
     "${CMAKE_SOURCE_DIR}/tools/run_dataregistry_test.cpp"
     "${CMAKE_SOURCE_DIR}/src/SDOM_DataRegistry.cpp"
     "${CMAKE_SOURCE_DIR}/src/SDOM_CBindingGenerator.cpp"
+    "${CMAKE_SOURCE_DIR}/src/SDOM_EventType.cpp"
+    "${CMAKE_SOURCE_DIR}/tools/dataregistry_generator_stubs.cpp"
 )
 add_executable(dataregistry_generator ${GENERATOR_SOURCES})
 target_include_directories(dataregistry_generator PRIVATE
@@ -144,6 +146,20 @@ target_include_directories(dataregistry_generator PRIVATE
 set_target_properties(dataregistry_generator PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tools"
 )
+
+# The generator may compile parts of the code that reference the Lua C API
+# (via sol2). Link the discovered Lua library so the generator can link.
+if(LUA_LIB)
+    # Link the Lua library and common runtime helpers that Lua may depend on
+    # (dl, math, threads). This ensures the generator links cleanly in all
+    # build configurations where Lua symbols are referenced.
+    find_package(Threads REQUIRED)
+    target_link_libraries(dataregistry_generator PRIVATE
+        ${LUA_LIB}
+        ${CMAKE_DL_LIBS}
+        Threads::Threads
+    )
+endif()
 
 # Generated version marker file
 set(GENERATED_VERSION_FILE "${GENERATED_DIR}/sdom_capi_objects_generated.version")

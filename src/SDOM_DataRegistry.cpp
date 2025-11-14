@@ -101,20 +101,23 @@ bool DataRegistry::generateBindings(const std::string& outputDir)
         out << "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n";
 
         for (const auto& ti : types_copy) {
+            // Keep the original type name in the comment, but sanitize for C identifiers
             out << "/* Type: " << ti.name << " */\n";
-            out << "typedef struct SDOM_" << ti.name << " SDOM_" << ti.name << ";\n\n";
+            std::string id = ti.name;
+            for (char &c : id) if (c == ':' || c == ' ' || c == '-') c = '_';
+            out << "typedef struct SDOM_" << id << " SDOM_" << id << ";\n\n";
             // properties
             for (const auto& p : ti.properties) {
                 // getter
                 out << "// property: " << p.name << "\n";
-                out << "const char* SDOM_" << ti.name << "_get" << p.name << "(const SDOM_" << ti.name << "*);\n";
+                out << "const char* SDOM_" << id << "_get" << p.name << "(const SDOM_" << id << "*);\n";
                 if (!p.read_only) {
-                    out << "void SDOM_" << ti.name << "_set" << p.name << "(SDOM_" << ti.name << "*, const char*);\n";
+                    out << "void SDOM_" << id << "_set" << p.name << "(SDOM_" << id << "*, const char*);\n";
                 }
             }
             // functions
             for (const auto& f : ti.functions) {
-                out << "void SDOM_" << ti.name << "_" << f.name << "(SDOM_" << ti.name << "*);\n";
+                out << "void SDOM_" << id << "_" << f.name << "(SDOM_" << id << "*);\n";
             }
             out << "\n";
         }

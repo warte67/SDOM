@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <sol/sol.hpp>
+#include <SDOM/SDOM_EventType.hpp>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -51,9 +53,45 @@ int run_with_timeout(const std::vector<std::string>& argv, int timeout_seconds, 
 
 int main(int argc, char** argv) {
     DataRegistry reg;
-    TypeInfo ti;
-    ti.name = "UT_TestType";
-    reg.registerType(ti);
+    // Populate registry with any known EventType instances so the generator
+    // can emit a full SDOM_CAPI_Events.h. EventType static instances are
+    // available via EventType::getAll().
+    try {
+        auto all = SDOM::EventType::getAll();
+        for (SDOM::EventType* et : all) {
+            if (!et) continue;
+            SDOM::TypeInfo ti;
+            ti.name = std::string("EventType::") + et->getName();
+            ti.cpp_type_id = et->getName();
+
+            SDOM::PropertyInfo p;
+            p.name = "captures";
+            p.cpp_type = "bool";
+            p.read_only = false;
+            p.doc = "Whether this event type participates in the capture phase.";
+            ti.properties.push_back(p);
+
+            p.name = "bubbles";
+            p.cpp_type = "bool";
+            p.read_only = false;
+            p.doc = "Whether this event type bubbles.";
+            ti.properties.push_back(p);
+
+            p.name = "target_only";
+            p.cpp_type = "bool";
+            p.read_only = false;
+            p.doc = "If true the event is target-only (no capture/bubble).";
+            ti.properties.push_back(p);
+
+            p.name = "global";
+            p.cpp_type = "bool";
+            p.read_only = false;
+            p.doc = "Whether this event type is considered global.";
+            ti.properties.push_back(p);
+
+            reg.registerDataType(ti);
+        }
+    } catch(...) {}
 
     // TestGenerator
     struct TestGenerator : public IBindingGenerator {
