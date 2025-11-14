@@ -281,6 +281,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a88b1ede2f143d7df9375f8b1ef938126" id="r_a88b1ede2f143d7df9375f8b1ef938126"><td class="memTemplParams" colspan="2">template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </td></tr>
 <tr class="memitem:a88b1ede2f143d7df9375f8b1ef938126 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a88b1ede2f143d7df9375f8b1ef938126">addProperty</a> (const std::string &amp;typeName, const std::string &amp;name, Getter &amp;&amp;getter, Setter &amp;&amp;setter=nullptr)</td></tr>
 <tr class="memdesc:a88b1ede2f143d7df9375f8b1ef938126"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for adding a property to the registry.  <br /></td></tr>
+<tr class="memitem:a5ada6dbc0bac9f59ea2988498008f049" id="r_a5ada6dbc0bac9f59ea2988498008f049"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a5ada6dbc0bac9f59ea2988498008f049">addDataType</a> (const std::string &amp;typeName, const <a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp;info)</td></tr>
+<tr class="memdesc:a5ada6dbc0bac9f59ea2988498008f049"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a full <a class="el" href="structSDOM_1_1TypeInfo.html">TypeInfo</a> with the active registry (or global singleton).  <br /></td></tr>
+<tr class="memitem:a8454e19980fce29cadc94be241ee66f9" id="r_a8454e19980fce29cadc94be241ee66f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a8454e19980fce29cadc94be241ee66f9">addEventType</a> (const <a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp;info)</td></tr>
+<tr class="memdesc:a8454e19980fce29cadc94be241ee66f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience for registering EventType-related <a class="el" href="structSDOM_1_1TypeInfo.html">TypeInfo</a> entries.  <br /></td></tr>
 <tr class="memitem:a817578463d1fa2c2e9e060c09eaa5a5a" id="r_a817578463d1fa2c2e9e060c09eaa5a5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a817578463d1fa2c2e9e060c09eaa5a5a">registerBindings</a> (const std::string &amp;typeName)</td></tr>
 <tr class="memdesc:a817578463d1fa2c2e9e060c09eaa5a5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Public entrypoint to trigger this object's binding registration.  <br /></td></tr>
 <tr class="memitem:aa08b53a4af124ffa6a4bb547f1f8423d" id="r_aa08b53a4af124ffa6a4bb547f1f8423d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#aa08b53a4af124ffa6a4bb547f1f8423d">registerBindings</a> (const std::string &amp;typeName, <a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> &amp;registry)</td></tr>
@@ -658,6 +662,44 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a5ada6dbc0bac9f59ea2988498008f049" name="a5ada6dbc0bac9f59ea2988498008f049"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ada6dbc0bac9f59ea2988498008f049">&#9670;&#160;</a></span>addDataType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::IDataObject::addDataType </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>info</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Register a full <a class="el" href="structSDOM_1_1TypeInfo.html">TypeInfo</a> with the active registry (or global singleton). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">typeName</td><td>The logical type name to register under (also stored in <a class="el" href="structSDOM_1_1TypeInfo.html#ab1b333f09ea685bb2c608b2a9225e6ef">TypeInfo.name</a> if empty). </td></tr>
+    <tr><td class="paramname">info</td><td>The <a class="el" href="structSDOM_1_1TypeInfo.html">TypeInfo</a> metadata to register. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a1068567d65e0780958ce3cfe104ebe4a" name="a1068567d65e0780958ce3cfe104ebe4a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1068567d65e0780958ce3cfe104ebe4a">&#9670;&#160;</a></span>addEventListener()</h2>
 
@@ -694,6 +736,34 @@ Static Private Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8454e19980fce29cadc94be241ee66f9" name="a8454e19980fce29cadc94be241ee66f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8454e19980fce29cadc94be241ee66f9">&#9670;&#160;</a></span>addEventType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::IDataObject::addEventType </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>info</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convenience for registering EventType-related <a class="el" href="structSDOM_1_1TypeInfo.html">TypeInfo</a> entries. </p>
+<p>Historically called "addEventType" in older branches; kept for convenience and backwards compatibility. </p>
 
 </div>
 </div>

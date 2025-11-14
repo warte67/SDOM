@@ -1,5 +1,6 @@
 var dir_05baf848637e4bf91faedd6d79d06786 =
 [
+    [ "CAPI", "dir_f6d468b0a292691c8e04baa75dfb6fb5.html", "dir_f6d468b0a292691c8e04baa75dfb6fb5" ],
     [ "SDOM.hpp", "SDOM_8hpp.html", "SDOM_8hpp" ],
     [ "SDOM_ArrowButton.hpp", "SDOM__ArrowButton_8hpp.html", "SDOM__ArrowButton_8hpp" ],
     [ "SDOM_AssetHandle.hpp", "SDOM__AssetHandle_8hpp.html", "SDOM__AssetHandle_8hpp" ],

@@ -11,6 +11,8 @@ var classSDOM_1_1TruetypeFont =
     [ "_getValidTTFFontPtr", "classSDOM_1_1TruetypeFont.html#a112bc3914f03d33b191d3f7d2370f54f", null ],
     [ "_registerLuaBindings", "classSDOM_1_1TruetypeFont.html#a3d21d98dcc115bd2c8ccc2d7af0d6192", null ],
     [ "activeRegistry", "classSDOM_1_1TruetypeFont.html#a290db93bef651c53f48ec32156a8753c", null ],
+    [ "addDataType", "classSDOM_1_1TruetypeFont.html#a5ada6dbc0bac9f59ea2988498008f049", null ],
+    [ "addEventType", "classSDOM_1_1TruetypeFont.html#a8454e19980fce29cadc94be241ee66f9", null ],
     [ "addFunction", "classSDOM_1_1TruetypeFont.html#aff602d0cbfeead1a6ddd49c8d4df9360", null ],
     [ "addProperty", "classSDOM_1_1TruetypeFont.html#a88b1ede2f143d7df9375f8b1ef938126", null ],
     [ "applyBitmapFontDefaults", "classSDOM_1_1TruetypeFont.html#ac0b9c42b031b1b187d57487081274194", null ],

@@ -366,6 +366,7 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a1ba3fe71c30a46b568259105d73972be" id="r_a1ba3fe71c30a46b568259105d73972be"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; <a class="el" href="#a176e331c0f2e44c038e10b25684370b5">PanelTileOffset</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ba3fe71c30a46b568259105d73972be">panelTileOffsetToString_</a></td></tr>
 <tr class="memitem:a5121ece23da73f686e3ab61c3fc63339" id="r_a5121ece23da73f686e3ab61c3fc63339"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933">Orientation</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5121ece23da73f686e3ab61c3fc63339">orientation_to_string</a></td></tr>
 <tr class="memitem:a7569a3c4255eb2a2cddfdf0cdab60c15" id="r_a7569a3c4255eb2a2cddfdf0cdab60c15"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; std::string, <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933">Orientation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7569a3c4255eb2a2cddfdf0cdab60c15">string_to_orientation</a></td></tr>
+<tr class="memitem:af584a39d2e3cf67afac515bca37e91ba" id="r_af584a39d2e3cf67afac515bca37e91ba"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af584a39d2e3cf67afac515bca37e91ba">s_eventtype_id_mutex</a></td></tr>
 <tr class="memitem:a4d02abee5b090d2eaa9e365016465d7b" id="r_a4d02abee5b090d2eaa9e365016465d7b"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d02abee5b090d2eaa9e365016465d7b">s_eventtype_policies_initialized</a> = init_eventtype_policies()</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
@@ -1434,6 +1435,28 @@ Static Public Attributes</h2></td></tr>
 <p>Suppresses console output for passing tests and modules. </p>
 <p>When <span class="tt">true</span>, no test output is shown unless one or more sub-tests fail. In that case, the entire failing module’s test tree and associated error messages are printed.</p>
 <p>This flag takes precedence over <span class="tt"><a class="el" href="#aae2a66a6c54d731022cfdc409fff8b12" title="Global compile-time configuration flags controlling test verbosity.">VERBOSE_TEST_OUTPUT</a></span>. </p>
+
+</div>
+</div>
+<a id="af584a39d2e3cf67afac515bca37e91ba" name="af584a39d2e3cf67afac515bca37e91ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af584a39d2e3cf67afac515bca37e91ba">&#9670;&#160;</a></span>s_eventtype_id_mutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex SDOM::s_eventtype_id_mutex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

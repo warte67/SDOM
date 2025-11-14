@@ -17,6 +17,8 @@ var classSDOM_1_1Core =
     [ "_fnOnWindowResize", "classSDOM_1_1Core.html#ae4a5f101c6d5f00dd4466ffeb55a0d25", null ],
     [ "_registerLuaBindings", "classSDOM_1_1Core.html#a0204e2a7445975bd0ff2125f83100247", null ],
     [ "activeRegistry", "classSDOM_1_1Core.html#a290db93bef651c53f48ec32156a8753c", null ],
+    [ "addDataType", "classSDOM_1_1Core.html#a5ada6dbc0bac9f59ea2988498008f049", null ],
+    [ "addEventType", "classSDOM_1_1Core.html#a8454e19980fce29cadc94be241ee66f9", null ],
     [ "addFunction", "classSDOM_1_1Core.html#aff602d0cbfeead1a6ddd49c8d4df9360", null ],
     [ "addProperty", "classSDOM_1_1Core.html#a88b1ede2f143d7df9375f8b1ef938126", null ],
     [ "addToFutureChildrenList", "classSDOM_1_1Core.html#ace74d8939b5ecb08abdb6f78853f73bc", null ],

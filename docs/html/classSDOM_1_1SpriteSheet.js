@@ -7,6 +7,8 @@ var classSDOM_1_1SpriteSheet =
     [ "~SpriteSheet", "classSDOM_1_1SpriteSheet.html#a7f8adf4c85b7b78192e86d11cd3e10cd", null ],
     [ "_registerLuaBindings", "classSDOM_1_1SpriteSheet.html#aa9b1bd187e24a56acdff2edeeb19fda3", null ],
     [ "activeRegistry", "classSDOM_1_1SpriteSheet.html#a290db93bef651c53f48ec32156a8753c", null ],
+    [ "addDataType", "classSDOM_1_1SpriteSheet.html#a5ada6dbc0bac9f59ea2988498008f049", null ],
+    [ "addEventType", "classSDOM_1_1SpriteSheet.html#a8454e19980fce29cadc94be241ee66f9", null ],
     [ "addFunction", "classSDOM_1_1SpriteSheet.html#aff602d0cbfeead1a6ddd49c8d4df9360", null ],
     [ "addProperty", "classSDOM_1_1SpriteSheet.html#a88b1ede2f143d7df9375f8b1ef938126", null ],
     [ "as", "classSDOM_1_1SpriteSheet.html#a3e68fa1ef3cc5bff3d4e57c813c65a49", null ],

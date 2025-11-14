@@ -7,6 +7,8 @@ var classSDOM_1_1Texture =
     [ "~Texture", "classSDOM_1_1Texture.html#ab1a5a3d53b94fe8c45cb6c709ff2f4ca", null ],
     [ "_registerLuaBindings", "classSDOM_1_1Texture.html#a111e80203414a069c8be53d9b585293d", null ],
     [ "activeRegistry", "classSDOM_1_1Texture.html#a290db93bef651c53f48ec32156a8753c", null ],
+    [ "addDataType", "classSDOM_1_1Texture.html#a5ada6dbc0bac9f59ea2988498008f049", null ],
+    [ "addEventType", "classSDOM_1_1Texture.html#a8454e19980fce29cadc94be241ee66f9", null ],
     [ "addFunction", "classSDOM_1_1Texture.html#aff602d0cbfeead1a6ddd49c8d4df9360", null ],
     [ "addProperty", "classSDOM_1_1Texture.html#a88b1ede2f143d7df9375f8b1ef938126", null ],
     [ "as", "classSDOM_1_1Texture.html#a3e68fa1ef3cc5bff3d4e57c813c65a49", null ],

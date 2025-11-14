@@ -98,10 +98,17 @@ $(function(){initNavTree('SDOM__CBindingGenerator_8cpp.html','',''); });
 <code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__Version_8hpp_source.html">SDOM/SDOM_Version.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="SDOM__EventType_8hpp_source.html">SDOM/SDOM_EventType.hpp</a>&gt;</code><br />
+<code>#include &lt;unordered_map&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ac9b8df27351b4914f4ea4c786fe3bbee" id="r_ac9b8df27351b4914f4ea4c786fe3bbee"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9b8df27351b4914f4ea4c786fe3bbee">join_path</a> (const std::string &amp;a, const std::string &amp;b)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a4419769143439b8f8126ac4f703000c8" id="r_a4419769143439b8f8126ac4f703000c8"><td class="memItemLeft" align="right" valign="top">static std::unordered_map&lt; std::string, uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4419769143439b8f8126ac4f703000c8">s_local_event_id_map</a></td></tr>
+<tr class="memitem:a1c0ecaf10bec9b70222cf339d6fafb49" id="r_a1c0ecaf10bec9b70222cf339d6fafb49"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c0ecaf10bec9b70222cf339d6fafb49">s_local_next_event_id</a> = 1</td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="ac9b8df27351b4914f4ea4c786fe3bbee" name="ac9b8df27351b4914f4ea4c786fe3bbee"></a>
@@ -122,6 +129,51 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="a4419769143439b8f8126ac4f703000c8" name="a4419769143439b8f8126ac4f703000c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4419769143439b8f8126ac4f703000c8">&#9670;&#160;</a></span>s_local_event_id_map</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unordered_map&lt;std::string, uint32_t&gt; s_local_event_id_map</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1c0ecaf10bec9b70222cf339d6fafb49" name="a1c0ecaf10bec9b70222cf339d6fafb49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c0ecaf10bec9b70222cf339d6fafb49">&#9670;&#160;</a></span>s_local_next_event_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t s_local_next_event_id = 1</td>
         </tr>
       </table>
   </td>

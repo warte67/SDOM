@@ -7,6 +7,8 @@ var classSDOM_1_1DisplayHandle =
     [ "~DisplayHandle", "classSDOM_1_1DisplayHandle.html#a89ad82cc86ec382ae034d8ba4c5f3f4b", null ],
     [ "_registerLuaBindings", "classSDOM_1_1DisplayHandle.html#aa12c99205c2701e6f6927c60eae2b134", null ],
     [ "activeRegistry", "classSDOM_1_1DisplayHandle.html#a290db93bef651c53f48ec32156a8753c", null ],
+    [ "addDataType", "classSDOM_1_1DisplayHandle.html#a5ada6dbc0bac9f59ea2988498008f049", null ],
+    [ "addEventType", "classSDOM_1_1DisplayHandle.html#a8454e19980fce29cadc94be241ee66f9", null ],
     [ "addFunction", "classSDOM_1_1DisplayHandle.html#aff602d0cbfeead1a6ddd49c8d4df9360", null ],
     [ "addProperty", "classSDOM_1_1DisplayHandle.html#a88b1ede2f143d7df9375f8b1ef938126", null ],
     [ "as", "classSDOM_1_1DisplayHandle.html#a60c28939ebcde99afae4db4a3b0918a6", null ],

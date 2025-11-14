@@ -103,7 +103,7 @@ namespace SDOM
     //
     //              // captures, bubbles, target, global
     // 🚫 Untestable ---------------------------------------------------------------
-    
+
     // 🧩 Core / General --------------------------------------------------------------
     EventType EventType::None("None", false, false, false, false,
         "A general-purpose EventType for testing or to represent a non-event.");
@@ -234,6 +234,8 @@ namespace SDOM
         "Legacy per-frame tick event (use OnUpdate instead).");
     EventType EventType::SDL_Event("SDL_Event", true, true, false, false,
         "Raw SDL event wrapper; dispatched when unhandled by internal systems.");
+    EventType EventType::User("User", true, true, false, false,
+        "Reserved for custom or user-defined events created at runtime.");
 
     // --- Default metering policy assignments --- //
     namespace {
@@ -275,7 +277,6 @@ namespace SDOM
     }
     const bool s_eventtype_policies_initialized = init_eventtype_policies();
     } // anonymous namespace
-    EventType EventType::User("User", true, true, false, false);
 
     // Runtime docs may be set by callers; historically we populated a
     // small `init_eventtype_docs()` helper here, but we no longer perform

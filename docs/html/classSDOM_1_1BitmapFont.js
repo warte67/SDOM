@@ -10,6 +10,8 @@ var classSDOM_1_1BitmapFont =
     [ "~BitmapFont", "classSDOM_1_1BitmapFont.html#af285f1df73d101aafc64df5875869a79", null ],
     [ "_registerLuaBindings", "classSDOM_1_1BitmapFont.html#ac6867049c9203a00a7c025fdb0ea7c05", null ],
     [ "activeRegistry", "classSDOM_1_1BitmapFont.html#a290db93bef651c53f48ec32156a8753c", null ],
+    [ "addDataType", "classSDOM_1_1BitmapFont.html#a5ada6dbc0bac9f59ea2988498008f049", null ],
+    [ "addEventType", "classSDOM_1_1BitmapFont.html#a8454e19980fce29cadc94be241ee66f9", null ],
     [ "addFunction", "classSDOM_1_1BitmapFont.html#aff602d0cbfeead1a6ddd49c8d4df9360", null ],
     [ "addProperty", "classSDOM_1_1BitmapFont.html#a88b1ede2f143d7df9375f8b1ef938126", null ],
     [ "applyBitmapFontDefaults", "classSDOM_1_1BitmapFont.html#ac0b9c42b031b1b187d57487081274194", null ],

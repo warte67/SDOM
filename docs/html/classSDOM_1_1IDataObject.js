@@ -2,6 +2,8 @@ var classSDOM_1_1IDataObject =
 [
     [ "_registerLuaBindings", "classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58", null ],
     [ "activeRegistry", "classSDOM_1_1IDataObject.html#a290db93bef651c53f48ec32156a8753c", null ],
+    [ "addDataType", "classSDOM_1_1IDataObject.html#a5ada6dbc0bac9f59ea2988498008f049", null ],
+    [ "addEventType", "classSDOM_1_1IDataObject.html#a8454e19980fce29cadc94be241ee66f9", null ],
     [ "addFunction", "classSDOM_1_1IDataObject.html#aff602d0cbfeead1a6ddd49c8d4df9360", null ],
     [ "addProperty", "classSDOM_1_1IDataObject.html#a88b1ede2f143d7df9375f8b1ef938126", null ],
     [ "BIND_INFO", "classSDOM_1_1IDataObject.html#acbee734b61e90b834672ce530f1415aa", null ],

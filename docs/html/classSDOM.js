@@ -203,6 +203,7 @@ var classSDOM =
     [ "panelBaseIndexToString_", "classSDOM.html#af0cc30e6979fd8ef2453166a934da51c", null ],
     [ "panelTileOffsetToString_", "classSDOM.html#a1ba3fe71c30a46b568259105d73972be", null ],
     [ "QUIET_TEST_MODE", "classSDOM.html#a5f4035d1ee55946322bc55a123ba92b8", null ],
+    [ "s_eventtype_id_mutex", "classSDOM.html#af584a39d2e3cf67afac515bca37e91ba", null ],
     [ "s_eventtype_policies_initialized", "classSDOM.html#a4d02abee5b090d2eaa9e365016465d7b", null ],
     [ "SDOM_EVENT_METER_MS_DEFAULT", "classSDOM.html#ac719971447e1602dffe0feef14ac1140", null ],
     [ "SDOM_HOVER_HITTEST_MS", "classSDOM.html#aaf62e29512566ac789c745d405a31dc0", null ],

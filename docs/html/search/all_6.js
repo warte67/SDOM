@@ -106,7 +106,7 @@ var searchData=
   ['core_5fregisteronwindowresize_5flua_103',['core_registerOnWindowResize_lua',['../namespaceSDOM.html#a975bdabd6cb3c8ca473234613b40d792',1,'SDOM']]],
   ['coreconfig_104',['CoreConfig',['../structSDOM_1_1Core_1_1CoreConfig.html',1,'SDOM::Core']]],
   ['count_105',['Count',['../classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30ae93f994f01c537c4e2f7d8528c3eb5e9',1,'SDOM::EventType']]],
-  ['count_106',['count',['../classSDOM_1_1EventType.html#a7aab549fac413b0b061f48a9d1159e02',1,'SDOM::EventType']]],
+  ['count_106',['count',['../classSDOM_1_1EventType.html#a63a65951035b7be00f1d400c761d5806',1,'SDOM::EventType']]],
   ['countchildren_107',['countChildren',['../classSDOM_1_1IDisplayObject.html#a5dd2c63f9f329409414cfbf35323139c',1,'SDOM::IDisplayObject']]],
   ['countchildren_5flua_108',['countChildren_lua',['../namespaceSDOM.html#a8b94495d66d934e0af7c019aa6ad8dde',1,'SDOM']]],
   ['countorphaneddisplayobjects_109',['countOrphanedDisplayObjects',['../classSDOM_1_1Core.html#afc357a2cbea10ca61ae361078b00dd6c',1,'SDOM::Core::countOrphanedDisplayObjects()'],['../classSDOM_1_1Factory.html#a7da58689c94d5bddd7b318eb77ff7a5b',1,'SDOM::Factory::countOrphanedDisplayObjects()']]],

@@ -105,15 +105,16 @@ Public Types</h2></td></tr>
 <tr class="memitem:ac0e2fef622c15317b0221f64e6e82078" id="r_ac0e2fef622c15317b0221f64e6e82078"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0e2fef622c15317b0221f64e6e82078">CoalesceKey</a> { <a class="el" href="#ac0e2fef622c15317b0221f64e6e82078a4cc6684df7b4a92b1dec6fce3264fac8">Global</a>
 , <a class="el" href="#ac0e2fef622c15317b0221f64e6e82078a2ab03340218d06dc2b2c23485ae92b7c">ByTarget</a>
  }</td></tr>
+<tr class="memitem:a51bb099e3d1ab6c7fdd25bbc346dc5e1" id="r_a51bb099e3d1ab6c7fdd25bbc346dc5e1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51bb099e3d1ab6c7fdd25bbc346dc5e1">IdType</a> = uint32_t</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ace3a9596f6806b55dcfb477f8da686ec" id="r_ace3a9596f6806b55dcfb477f8da686ec"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> (const std::string &amp;name)</td></tr>
-<tr class="memitem:a647ab7d38f981dca7b5b00d818e2412c" id="r_a647ab7d38f981dca7b5b00d818e2412c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a647ab7d38f981dca7b5b00d818e2412c">EventType</a> (const std::string &amp;name, bool captures, bool bubbles, bool targetOnly, bool global)</td></tr>
+<tr class="memitem:aa9ffa282dc97a24eeb0ba404350c589b" id="r_aa9ffa282dc97a24eeb0ba404350c589b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> (const std::string &amp;name, const std::string &amp;doc=std::string())</td></tr>
+<tr class="memitem:a19da2e75ea041e4c2d5f3f48507de499" id="r_a19da2e75ea041e4c2d5f3f48507de499"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19da2e75ea041e4c2d5f3f48507de499">EventType</a> (const std::string &amp;name, bool captures, bool bubbles, bool targetOnly, bool global, const std::string &amp;doc=std::string())</td></tr>
 <tr class="memitem:ac0940004432968a73b68ace3f9f1adbd" id="r_ac0940004432968a73b68ace3f9f1adbd"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0940004432968a73b68ace3f9f1adbd">getName</a> () const</td></tr>
-<tr class="memitem:a123a20da9d1b9a0d8323d6a99a9b40f3" id="r_a123a20da9d1b9a0d8323d6a99a9b40f3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a123a20da9d1b9a0d8323d6a99a9b40f3">operator==</a> (const <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;other) const</td></tr>
-<tr class="memitem:a8791ec9809822baecfdf0605c8e8c0cd" id="r_a8791ec9809822baecfdf0605c8e8c0cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8791ec9809822baecfdf0605c8e8c0cd">operator!=</a> (const <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;other) const</td></tr>
-<tr class="memitem:a0f2b0a9ef81f49a1c0bac0b9c8a443a8" id="r_a0f2b0a9ef81f49a1c0bac0b9c8a443a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f2b0a9ef81f49a1c0bac0b9c8a443a8">operator&lt;</a> (const <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;other) const</td></tr>
+<tr class="memitem:a123a20da9d1b9a0d8323d6a99a9b40f3" id="r_a123a20da9d1b9a0d8323d6a99a9b40f3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a123a20da9d1b9a0d8323d6a99a9b40f3">operator==</a> (const <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;other) const</td></tr>
+<tr class="memitem:a8791ec9809822baecfdf0605c8e8c0cd" id="r_a8791ec9809822baecfdf0605c8e8c0cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8791ec9809822baecfdf0605c8e8c0cd">operator!=</a> (const <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;other) const</td></tr>
+<tr class="memitem:a0f2b0a9ef81f49a1c0bac0b9c8a443a8" id="r_a0f2b0a9ef81f49a1c0bac0b9c8a443a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f2b0a9ef81f49a1c0bac0b9c8a443a8">operator&lt;</a> (const <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;other) const</td></tr>
 <tr class="memitem:a0033c7a652b3b52c13288ab4726ee001" id="r_a0033c7a652b3b52c13288ab4726ee001"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0033c7a652b3b52c13288ab4726ee001">getCaptures</a> () const</td></tr>
 <tr class="memitem:a6f8fce538c053237a27794fc17397962" id="r_a6f8fce538c053237a27794fc17397962"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f8fce538c053237a27794fc17397962">getBubbles</a> () const</td></tr>
 <tr class="memitem:ac6c0d13819270fe8e6e8246a3b6bc82f" id="r_ac6c0d13819270fe8e6e8246a3b6bc82f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6c0d13819270fe8e6e8246a3b6bc82f">getTargetOnly</a> () const</td></tr>
@@ -123,84 +124,104 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a07edd9b09e2cc6a3e65fc7f1a241e005" id="r_a07edd9b09e2cc6a3e65fc7f1a241e005"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07edd9b09e2cc6a3e65fc7f1a241e005">getMeterIntervalMs</a> () const</td></tr>
 <tr class="memitem:a1f179517b1f2a43e4d4fa744f71319c6" id="r_a1f179517b1f2a43e4d4fa744f71319c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a040bd14a3e4d1bd72274da493b475c30">CoalesceStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f179517b1f2a43e4d4fa744f71319c6">getCoalesceStrategy</a> () const</td></tr>
 <tr class="memitem:abfa82ca44d79ed876356f57babbc43ae" id="r_abfa82ca44d79ed876356f57babbc43ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ac0e2fef622c15317b0221f64e6e82078">CoalesceKey</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfa82ca44d79ed876356f57babbc43ae">getCoalesceKey</a> () const</td></tr>
-<tr class="memitem:a5f5123139834450372826094c09718c3" id="r_a5f5123139834450372826094c09718c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f5123139834450372826094c09718c3">setCaptures</a> (bool captures)</td></tr>
-<tr class="memitem:a49d1a8bc7ae29dded840e30b679b0cf2" id="r_a49d1a8bc7ae29dded840e30b679b0cf2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a49d1a8bc7ae29dded840e30b679b0cf2">setBubbles</a> (bool bubbles)</td></tr>
-<tr class="memitem:ad82e17de66b8914e694f6fc3e28677dd" id="r_ad82e17de66b8914e694f6fc3e28677dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad82e17de66b8914e694f6fc3e28677dd">setTargetOnly</a> (bool targetOnly)</td></tr>
-<tr class="memitem:a39c62a721bc796a7c25b6a5614f9f862" id="r_a39c62a721bc796a7c25b6a5614f9f862"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39c62a721bc796a7c25b6a5614f9f862">setGlobal</a> (bool global)</td></tr>
-<tr class="memitem:a19e286574103b2366dfc72efb2eba267" id="r_a19e286574103b2366dfc72efb2eba267"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19e286574103b2366dfc72efb2eba267">setCritical</a> (bool critical)</td></tr>
-<tr class="memitem:af099eb88214c5d48f3bfc673c0b39d3c" id="r_af099eb88214c5d48f3bfc673c0b39d3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af099eb88214c5d48f3bfc673c0b39d3c">setMeterEnabled</a> (bool enabled)</td></tr>
-<tr class="memitem:a957bc152cd64968d6bbcd541251bdb95" id="r_a957bc152cd64968d6bbcd541251bdb95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a957bc152cd64968d6bbcd541251bdb95">setMeterIntervalMs</a> (uint16_t ms)</td></tr>
-<tr class="memitem:ae6c3a511566f0736b4c118cb9d2dbfc2" id="r_ae6c3a511566f0736b4c118cb9d2dbfc2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6c3a511566f0736b4c118cb9d2dbfc2">setCoalesceStrategy</a> (<a class="el" href="#a040bd14a3e4d1bd72274da493b475c30">CoalesceStrategy</a> s)</td></tr>
-<tr class="memitem:a5e4fab25a33b3e63d8660aa2224c89cb" id="r_a5e4fab25a33b3e63d8660aa2224c89cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e4fab25a33b3e63d8660aa2224c89cb">setCoalesceKey</a> (<a class="el" href="#ac0e2fef622c15317b0221f64e6e82078">CoalesceKey</a> k)</td></tr>
+<tr class="memitem:a5f5123139834450372826094c09718c3" id="r_a5f5123139834450372826094c09718c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f5123139834450372826094c09718c3">setCaptures</a> (bool captures)</td></tr>
+<tr class="memitem:a49d1a8bc7ae29dded840e30b679b0cf2" id="r_a49d1a8bc7ae29dded840e30b679b0cf2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a49d1a8bc7ae29dded840e30b679b0cf2">setBubbles</a> (bool bubbles)</td></tr>
+<tr class="memitem:ad82e17de66b8914e694f6fc3e28677dd" id="r_ad82e17de66b8914e694f6fc3e28677dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad82e17de66b8914e694f6fc3e28677dd">setTargetOnly</a> (bool targetOnly)</td></tr>
+<tr class="memitem:a39c62a721bc796a7c25b6a5614f9f862" id="r_a39c62a721bc796a7c25b6a5614f9f862"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39c62a721bc796a7c25b6a5614f9f862">setGlobal</a> (bool global)</td></tr>
+<tr class="memitem:a19e286574103b2366dfc72efb2eba267" id="r_a19e286574103b2366dfc72efb2eba267"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19e286574103b2366dfc72efb2eba267">setCritical</a> (bool critical)</td></tr>
+<tr class="memitem:af099eb88214c5d48f3bfc673c0b39d3c" id="r_af099eb88214c5d48f3bfc673c0b39d3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af099eb88214c5d48f3bfc673c0b39d3c">setMeterEnabled</a> (bool enabled)</td></tr>
+<tr class="memitem:a957bc152cd64968d6bbcd541251bdb95" id="r_a957bc152cd64968d6bbcd541251bdb95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a957bc152cd64968d6bbcd541251bdb95">setMeterIntervalMs</a> (uint16_t ms)</td></tr>
+<tr class="memitem:ae6c3a511566f0736b4c118cb9d2dbfc2" id="r_ae6c3a511566f0736b4c118cb9d2dbfc2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6c3a511566f0736b4c118cb9d2dbfc2">setCoalesceStrategy</a> (<a class="el" href="#a040bd14a3e4d1bd72274da493b475c30">CoalesceStrategy</a> s)</td></tr>
+<tr class="memitem:a5e4fab25a33b3e63d8660aa2224c89cb" id="r_a5e4fab25a33b3e63d8660aa2224c89cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e4fab25a33b3e63d8660aa2224c89cb">setCoalesceKey</a> (<a class="el" href="#ac0e2fef622c15317b0221f64e6e82078">CoalesceKey</a> k)</td></tr>
+<tr class="memitem:ae6cb01091f33755e0bf6a52afa31d5eb" id="r_ae6cb01091f33755e0bf6a52afa31d5eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a51bb099e3d1ab6c7fdd25bbc346dc5e1">IdType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6cb01091f33755e0bf6a52afa31d5eb">getOrAssignId</a> ()</td></tr>
+<tr class="memitem:abe8f96d1e03b45256bf8f9a81cf91c58" id="r_abe8f96d1e03b45256bf8f9a81cf91c58"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe8f96d1e03b45256bf8f9a81cf91c58">setId</a> (<a class="el" href="#a51bb099e3d1ab6c7fdd25bbc346dc5e1">IdType</a> id)</td></tr>
+<tr class="memitem:acc3eb4bbc42cbc9e8afaa44539864ea0" id="r_acc3eb4bbc42cbc9e8afaa44539864ea0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc3eb4bbc42cbc9e8afaa44539864ea0">getDoc</a> () const</td></tr>
+<tr class="memitem:af749afab3e3a9bb6e232353b6fb0301a" id="r_af749afab3e3a9bb6e232353b6fb0301a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af749afab3e3a9bb6e232353b6fb0301a">setDoc</a> (const std::string &amp;s)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a9aa6ac9ec3cbfbac5b3340dd075c827d" id="r_a9aa6ac9ec3cbfbac5b3340dd075c827d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9aa6ac9ec3cbfbac5b3340dd075c827d">registerEventType</a> (const std::string &amp;name, <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> *ptr)</td></tr>
+<tr class="memitem:a9aa6ac9ec3cbfbac5b3340dd075c827d" id="r_a9aa6ac9ec3cbfbac5b3340dd075c827d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9aa6ac9ec3cbfbac5b3340dd075c827d">registerEventType</a> (const std::string &amp;name, <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> *ptr)</td></tr>
 <tr class="memitem:a3e88fac9969ef7789937f262f4184041" id="r_a3e88fac9969ef7789937f262f4184041"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e88fac9969ef7789937f262f4184041">isRegistered</a> (const std::string &amp;name)</td></tr>
-<tr class="memitem:a3fb5ef0e30ed0259a5c37e0f457ab5e1" id="r_a3fb5ef0e30ed0259a5c37e0f457ab5e1"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; std::string, <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fb5ef0e30ed0259a5c37e0f457ab5e1">getRegistry</a> ()</td></tr>
+<tr class="memitem:a3fb5ef0e30ed0259a5c37e0f457ab5e1" id="r_a3fb5ef0e30ed0259a5c37e0f457ab5e1"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; std::string, <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fb5ef0e30ed0259a5c37e0f457ab5e1">getRegistry</a> ()</td></tr>
 <tr class="memitem:af935779818a609d71a1a9508ffdaa36a" id="r_af935779818a609d71a1a9508ffdaa36a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af935779818a609d71a1a9508ffdaa36a">registerLua</a> (sol::state_view lua)</td></tr>
-<tr class="memitem:a0ecc161d4644bb991dceed403ba2ee7e" id="r_a0ecc161d4644bb991dceed403ba2ee7e"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ecc161d4644bb991dceed403ba2ee7e">getAll</a> ()</td></tr>
-<tr class="memitem:a0a4f07dc114c4e7ec80f15878864a3e5" id="r_a0a4f07dc114c4e7ec80f15878864a3e5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a4f07dc114c4e7ec80f15878864a3e5">fromName</a> (const std::string &amp;name)</td></tr>
-<tr class="memitem:a460e23e446d9d85021df37445d827bd1" id="r_a460e23e446d9d85021df37445d827bd1"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a460e23e446d9d85021df37445d827bd1">toString</a> (const <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;et)</td></tr>
-<tr class="memitem:a7aab549fac413b0b061f48a9d1159e02" id="r_a7aab549fac413b0b061f48a9d1159e02"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7aab549fac413b0b061f48a9d1159e02">count</a> ()</td></tr>
+<tr class="memitem:a3cc9ace3c4d5024e728b28ceb2729f8d" id="r_a3cc9ace3c4d5024e728b28ceb2729f8d"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3cc9ace3c4d5024e728b28ceb2729f8d">getAll</a> ()</td></tr>
+<tr class="memitem:a423891e428ee6565047e562b3c381845" id="r_a423891e428ee6565047e562b3c381845"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a423891e428ee6565047e562b3c381845">fromName</a> (const std::string &amp;name)</td></tr>
+<tr class="memitem:a9b5d30dde6417f315a8b3012bf4294a2" id="r_a9b5d30dde6417f315a8b3012bf4294a2"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b5d30dde6417f315a8b3012bf4294a2">toString</a> (const <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;et)</td></tr>
+<tr class="memitem:a63a65951035b7be00f1d400c761d5806" id="r_a63a65951035b7be00f1d400c761d5806"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63a65951035b7be00f1d400c761d5806">count</a> ()</td></tr>
+<tr class="memitem:ae9e8eef24eb43f232293486b410c36e3" id="r_ae9e8eef24eb43f232293486b410c36e3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9e8eef24eb43f232293486b410c36e3">fromId</a> (<a class="el" href="#a51bb099e3d1ab6c7fdd25bbc346dc5e1">IdType</a> id)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a827940aa9803d3113e7d7a7f5b75a1c5" id="r_a827940aa9803d3113e7d7a7f5b75a1c5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a827940aa9803d3113e7d7a7f5b75a1c5">None</a></td></tr>
-<tr class="memitem:aba470e5b61a6cc497a8100a06166f00b" id="r_aba470e5b61a6cc497a8100a06166f00b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba470e5b61a6cc497a8100a06166f00b">Quit</a></td></tr>
-<tr class="memitem:ac11d499ea41fc9355b64c18b8241966b" id="r_ac11d499ea41fc9355b64c18b8241966b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac11d499ea41fc9355b64c18b8241966b">Added</a></td></tr>
-<tr class="memitem:a72bb0e58ed752b454d81c3da0d0f83ff" id="r_a72bb0e58ed752b454d81c3da0d0f83ff"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72bb0e58ed752b454d81c3da0d0f83ff">Removed</a></td></tr>
-<tr class="memitem:a4ef2c364108bbdcafb94042ea371272f" id="r_a4ef2c364108bbdcafb94042ea371272f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ef2c364108bbdcafb94042ea371272f">AddedToStage</a></td></tr>
-<tr class="memitem:a186147151e8d1c5c5ba97c78e50f2279" id="r_a186147151e8d1c5c5ba97c78e50f2279"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a186147151e8d1c5c5ba97c78e50f2279">RemovedFromStage</a></td></tr>
-<tr class="memitem:a06fe848fd3e450eb7742f25ed95d57eb" id="r_a06fe848fd3e450eb7742f25ed95d57eb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06fe848fd3e450eb7742f25ed95d57eb">StageOpened</a></td></tr>
-<tr class="memitem:a577e0d48ef384607e181b462c47a5509" id="r_a577e0d48ef384607e181b462c47a5509"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a577e0d48ef384607e181b462c47a5509">StageClosed</a></td></tr>
-<tr class="memitem:ae96a1317171583ed8a634555d756b4a9" id="r_ae96a1317171583ed8a634555d756b4a9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae96a1317171583ed8a634555d756b4a9">KeyDown</a></td></tr>
-<tr class="memitem:a625823311d8c48db0a73bc2e0042f414" id="r_a625823311d8c48db0a73bc2e0042f414"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a625823311d8c48db0a73bc2e0042f414">KeyUp</a></td></tr>
-<tr class="memitem:aa3d3698b1e63aec35970f6ee69efd7ce" id="r_aa3d3698b1e63aec35970f6ee69efd7ce"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3d3698b1e63aec35970f6ee69efd7ce">TextInput</a></td></tr>
-<tr class="memitem:a31f1590ddbd964d5b6e027a66d661a5f" id="r_a31f1590ddbd964d5b6e027a66d661a5f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31f1590ddbd964d5b6e027a66d661a5f">MouseButtonDown</a></td></tr>
-<tr class="memitem:ab29ab54933d79882a748d271b4c97c47" id="r_ab29ab54933d79882a748d271b4c97c47"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab29ab54933d79882a748d271b4c97c47">MouseButtonUp</a></td></tr>
-<tr class="memitem:a759e1ae6da3879e2d0681c348d3b9c15" id="r_a759e1ae6da3879e2d0681c348d3b9c15"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a759e1ae6da3879e2d0681c348d3b9c15">MouseWheel</a></td></tr>
-<tr class="memitem:adb9ebb54f2c5fe5f718aab8b1d38a0be" id="r_adb9ebb54f2c5fe5f718aab8b1d38a0be"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb9ebb54f2c5fe5f718aab8b1d38a0be">MouseMove</a></td></tr>
-<tr class="memitem:a4c25405fad906359c693ff66402bd949" id="r_a4c25405fad906359c693ff66402bd949"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c25405fad906359c693ff66402bd949">MouseClick</a></td></tr>
-<tr class="memitem:a27577bf1e7a968bc18865f4b0f025279" id="r_a27577bf1e7a968bc18865f4b0f025279"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27577bf1e7a968bc18865f4b0f025279">MouseDoubleClick</a></td></tr>
-<tr class="memitem:a43c6ab739c690ac5718f334da7d19d92" id="r_a43c6ab739c690ac5718f334da7d19d92"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a43c6ab739c690ac5718f334da7d19d92">MouseEnter</a></td></tr>
-<tr class="memitem:a848e2743a50b6525d8e002284e26057b" id="r_a848e2743a50b6525d8e002284e26057b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a848e2743a50b6525d8e002284e26057b">MouseLeave</a></td></tr>
-<tr class="memitem:a28d2ce1548ecafe2366c54153a23dd4a" id="r_a28d2ce1548ecafe2366c54153a23dd4a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28d2ce1548ecafe2366c54153a23dd4a">FocusGained</a></td></tr>
-<tr class="memitem:a79e6326ff0de62ac2a643b3dbf86fda4" id="r_a79e6326ff0de62ac2a643b3dbf86fda4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79e6326ff0de62ac2a643b3dbf86fda4">FocusLost</a></td></tr>
-<tr class="memitem:a88eef9fc64657294fa605d44f991802b" id="r_a88eef9fc64657294fa605d44f991802b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88eef9fc64657294fa605d44f991802b">Resize</a></td></tr>
-<tr class="memitem:a8f3d3cfcb6ceac2b9283eb37d88f374e" id="r_a8f3d3cfcb6ceac2b9283eb37d88f374e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f3d3cfcb6ceac2b9283eb37d88f374e">Move</a></td></tr>
-<tr class="memitem:ae0269ad4b326b0bbe837072c0f8cd1a6" id="r_ae0269ad4b326b0bbe837072c0f8cd1a6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae0269ad4b326b0bbe837072c0f8cd1a6">Show</a></td></tr>
-<tr class="memitem:ab0487201266373a8e3b5cffd9fd13994" id="r_ab0487201266373a8e3b5cffd9fd13994"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0487201266373a8e3b5cffd9fd13994">Hide</a></td></tr>
-<tr class="memitem:a3fd1f4d8b557bb12677332be2c554137" id="r_a3fd1f4d8b557bb12677332be2c554137"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fd1f4d8b557bb12677332be2c554137">EnterFullscreen</a></td></tr>
-<tr class="memitem:aed0d07f388f2fc133dfe7fffcd9e2735" id="r_aed0d07f388f2fc133dfe7fffcd9e2735"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed0d07f388f2fc133dfe7fffcd9e2735">LeaveFullscreen</a></td></tr>
-<tr class="memitem:ae64d17162abeb250fb04f81912cda241" id="r_ae64d17162abeb250fb04f81912cda241"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae64d17162abeb250fb04f81912cda241">ValueChanged</a></td></tr>
-<tr class="memitem:a507abf67445aa60c41314885dd3febb6" id="r_a507abf67445aa60c41314885dd3febb6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a507abf67445aa60c41314885dd3febb6">StateChanged</a></td></tr>
-<tr class="memitem:a57c2910b0d2dc5779181c67647020f6c" id="r_a57c2910b0d2dc5779181c67647020f6c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57c2910b0d2dc5779181c67647020f6c">SelectionChanged</a></td></tr>
-<tr class="memitem:a70284e72613ea359a0a765208f78a146" id="r_a70284e72613ea359a0a765208f78a146"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70284e72613ea359a0a765208f78a146">Enabled</a></td></tr>
-<tr class="memitem:aa276368587363a849ed1a57a9a1e230a" id="r_aa276368587363a849ed1a57a9a1e230a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa276368587363a849ed1a57a9a1e230a">Disabled</a></td></tr>
-<tr class="memitem:a5298b4fe92c491f0c6c7661d902ac35e" id="r_a5298b4fe92c491f0c6c7661d902ac35e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5298b4fe92c491f0c6c7661d902ac35e">Visible</a></td></tr>
-<tr class="memitem:a8b306f6e94f88e440f688dad65f7b011" id="r_a8b306f6e94f88e440f688dad65f7b011"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b306f6e94f88e440f688dad65f7b011">Hidden</a></td></tr>
-<tr class="memitem:a6311cdc9538efcbb20839869ec1b283c" id="r_a6311cdc9538efcbb20839869ec1b283c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6311cdc9538efcbb20839869ec1b283c">Drag</a></td></tr>
-<tr class="memitem:a04fb66fb13257ea2b74de3ee379587b2" id="r_a04fb66fb13257ea2b74de3ee379587b2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04fb66fb13257ea2b74de3ee379587b2">Dragging</a></td></tr>
-<tr class="memitem:acd869ea36dffbfa5980aa41b890fc4ca" id="r_acd869ea36dffbfa5980aa41b890fc4ca"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd869ea36dffbfa5980aa41b890fc4ca">Drop</a></td></tr>
-<tr class="memitem:ab1fb1c523f2a54cf4cb74aba22b0acc8" id="r_ab1fb1c523f2a54cf4cb74aba22b0acc8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1fb1c523f2a54cf4cb74aba22b0acc8">TimerStart</a></td></tr>
-<tr class="memitem:a3ba844f9dfbbe3edf5e3868408e0c3f5" id="r_a3ba844f9dfbbe3edf5e3868408e0c3f5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ba844f9dfbbe3edf5e3868408e0c3f5">TimerStop</a></td></tr>
-<tr class="memitem:a17b99f4fe7104a77067f4512b083c615" id="r_a17b99f4fe7104a77067f4512b083c615"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17b99f4fe7104a77067f4512b083c615">TimerPause</a></td></tr>
-<tr class="memitem:a8f54866008b0650cf1c98b9ef2dadd5f" id="r_a8f54866008b0650cf1c98b9ef2dadd5f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f54866008b0650cf1c98b9ef2dadd5f">TimerTick</a></td></tr>
-<tr class="memitem:ae2889212edb5fca93d2e81e94792f5b0" id="r_ae2889212edb5fca93d2e81e94792f5b0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2889212edb5fca93d2e81e94792f5b0">TimerCycleComplete</a></td></tr>
-<tr class="memitem:a8984a332549014d9fc8fe157cd7e9691" id="r_a8984a332549014d9fc8fe157cd7e9691"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8984a332549014d9fc8fe157cd7e9691">TimerComplete</a></td></tr>
-<tr class="memitem:adcd133de1939bc5e2b45f64baab7fa3f" id="r_adcd133de1939bc5e2b45f64baab7fa3f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcd133de1939bc5e2b45f64baab7fa3f">ClipboardCopy</a></td></tr>
-<tr class="memitem:a1de6c66c960e9955f31b373ef0c34c43" id="r_a1de6c66c960e9955f31b373ef0c34c43"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1de6c66c960e9955f31b373ef0c34c43">ClipboardPaste</a></td></tr>
-<tr class="memitem:a8cee5264f898df6983c063ab27d3985b" id="r_a8cee5264f898df6983c063ab27d3985b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cee5264f898df6983c063ab27d3985b">OnInit</a></td></tr>
-<tr class="memitem:a260f4fd31ba8bf046fbc25ec0f719556" id="r_a260f4fd31ba8bf046fbc25ec0f719556"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a260f4fd31ba8bf046fbc25ec0f719556">OnQuit</a></td></tr>
-<tr class="memitem:a343194ca51968ed70d40768ab36b28d3" id="r_a343194ca51968ed70d40768ab36b28d3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a343194ca51968ed70d40768ab36b28d3">OnEvent</a></td></tr>
-<tr class="memitem:abb6ac6d3e152add976d41c703037a485" id="r_abb6ac6d3e152add976d41c703037a485"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb6ac6d3e152add976d41c703037a485">OnUpdate</a></td></tr>
-<tr class="memitem:ad726e9273588749fa020db3209fcd6b7" id="r_ad726e9273588749fa020db3209fcd6b7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad726e9273588749fa020db3209fcd6b7">OnRender</a></td></tr>
-<tr class="memitem:ad0fedae43f417546794e2e4f359c5cf6" id="r_ad0fedae43f417546794e2e4f359c5cf6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0fedae43f417546794e2e4f359c5cf6">OnPreRender</a></td></tr>
-<tr class="memitem:ae12d8ce6a2e34d3b8f2fe61b33658d06" id="r_ae12d8ce6a2e34d3b8f2fe61b33658d06"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae12d8ce6a2e34d3b8f2fe61b33658d06">EnterFrame</a></td></tr>
-<tr class="memitem:ae25a2d73cf5abe3c7e721b9af031b854" id="r_ae25a2d73cf5abe3c7e721b9af031b854"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae25a2d73cf5abe3c7e721b9af031b854">SDL_Event</a></td></tr>
-<tr class="memitem:aed0c4427ac3ac52e140f425fdab9452d" id="r_aed0c4427ac3ac52e140f425fdab9452d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed0c4427ac3ac52e140f425fdab9452d">User</a></td></tr>
+<tr class="memitem:a827940aa9803d3113e7d7a7f5b75a1c5" id="r_a827940aa9803d3113e7d7a7f5b75a1c5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a827940aa9803d3113e7d7a7f5b75a1c5">None</a></td></tr>
+<tr class="memitem:aba470e5b61a6cc497a8100a06166f00b" id="r_aba470e5b61a6cc497a8100a06166f00b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba470e5b61a6cc497a8100a06166f00b">Quit</a></td></tr>
+<tr class="memitem:ac11d499ea41fc9355b64c18b8241966b" id="r_ac11d499ea41fc9355b64c18b8241966b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac11d499ea41fc9355b64c18b8241966b">Added</a></td></tr>
+<tr class="memitem:a72bb0e58ed752b454d81c3da0d0f83ff" id="r_a72bb0e58ed752b454d81c3da0d0f83ff"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72bb0e58ed752b454d81c3da0d0f83ff">Removed</a></td></tr>
+<tr class="memitem:a4ef2c364108bbdcafb94042ea371272f" id="r_a4ef2c364108bbdcafb94042ea371272f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ef2c364108bbdcafb94042ea371272f">AddedToStage</a></td></tr>
+<tr class="memitem:a186147151e8d1c5c5ba97c78e50f2279" id="r_a186147151e8d1c5c5ba97c78e50f2279"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a186147151e8d1c5c5ba97c78e50f2279">RemovedFromStage</a></td></tr>
+<tr class="memitem:a06fe848fd3e450eb7742f25ed95d57eb" id="r_a06fe848fd3e450eb7742f25ed95d57eb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06fe848fd3e450eb7742f25ed95d57eb">StageOpened</a></td></tr>
+<tr class="memitem:a577e0d48ef384607e181b462c47a5509" id="r_a577e0d48ef384607e181b462c47a5509"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a577e0d48ef384607e181b462c47a5509">StageClosed</a></td></tr>
+<tr class="memitem:ae96a1317171583ed8a634555d756b4a9" id="r_ae96a1317171583ed8a634555d756b4a9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae96a1317171583ed8a634555d756b4a9">KeyDown</a></td></tr>
+<tr class="memitem:a625823311d8c48db0a73bc2e0042f414" id="r_a625823311d8c48db0a73bc2e0042f414"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a625823311d8c48db0a73bc2e0042f414">KeyUp</a></td></tr>
+<tr class="memitem:aa3d3698b1e63aec35970f6ee69efd7ce" id="r_aa3d3698b1e63aec35970f6ee69efd7ce"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3d3698b1e63aec35970f6ee69efd7ce">TextInput</a></td></tr>
+<tr class="memitem:a31f1590ddbd964d5b6e027a66d661a5f" id="r_a31f1590ddbd964d5b6e027a66d661a5f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31f1590ddbd964d5b6e027a66d661a5f">MouseButtonDown</a></td></tr>
+<tr class="memitem:ab29ab54933d79882a748d271b4c97c47" id="r_ab29ab54933d79882a748d271b4c97c47"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab29ab54933d79882a748d271b4c97c47">MouseButtonUp</a></td></tr>
+<tr class="memitem:a759e1ae6da3879e2d0681c348d3b9c15" id="r_a759e1ae6da3879e2d0681c348d3b9c15"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a759e1ae6da3879e2d0681c348d3b9c15">MouseWheel</a></td></tr>
+<tr class="memitem:adb9ebb54f2c5fe5f718aab8b1d38a0be" id="r_adb9ebb54f2c5fe5f718aab8b1d38a0be"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb9ebb54f2c5fe5f718aab8b1d38a0be">MouseMove</a></td></tr>
+<tr class="memitem:a4c25405fad906359c693ff66402bd949" id="r_a4c25405fad906359c693ff66402bd949"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c25405fad906359c693ff66402bd949">MouseClick</a></td></tr>
+<tr class="memitem:a27577bf1e7a968bc18865f4b0f025279" id="r_a27577bf1e7a968bc18865f4b0f025279"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27577bf1e7a968bc18865f4b0f025279">MouseDoubleClick</a></td></tr>
+<tr class="memitem:a43c6ab739c690ac5718f334da7d19d92" id="r_a43c6ab739c690ac5718f334da7d19d92"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a43c6ab739c690ac5718f334da7d19d92">MouseEnter</a></td></tr>
+<tr class="memitem:a848e2743a50b6525d8e002284e26057b" id="r_a848e2743a50b6525d8e002284e26057b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a848e2743a50b6525d8e002284e26057b">MouseLeave</a></td></tr>
+<tr class="memitem:a28d2ce1548ecafe2366c54153a23dd4a" id="r_a28d2ce1548ecafe2366c54153a23dd4a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28d2ce1548ecafe2366c54153a23dd4a">FocusGained</a></td></tr>
+<tr class="memitem:a79e6326ff0de62ac2a643b3dbf86fda4" id="r_a79e6326ff0de62ac2a643b3dbf86fda4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79e6326ff0de62ac2a643b3dbf86fda4">FocusLost</a></td></tr>
+<tr class="memitem:a88eef9fc64657294fa605d44f991802b" id="r_a88eef9fc64657294fa605d44f991802b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88eef9fc64657294fa605d44f991802b">Resize</a></td></tr>
+<tr class="memitem:a8f3d3cfcb6ceac2b9283eb37d88f374e" id="r_a8f3d3cfcb6ceac2b9283eb37d88f374e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f3d3cfcb6ceac2b9283eb37d88f374e">Move</a></td></tr>
+<tr class="memitem:ae0269ad4b326b0bbe837072c0f8cd1a6" id="r_ae0269ad4b326b0bbe837072c0f8cd1a6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae0269ad4b326b0bbe837072c0f8cd1a6">Show</a></td></tr>
+<tr class="memitem:ab0487201266373a8e3b5cffd9fd13994" id="r_ab0487201266373a8e3b5cffd9fd13994"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0487201266373a8e3b5cffd9fd13994">Hide</a></td></tr>
+<tr class="memitem:a3fd1f4d8b557bb12677332be2c554137" id="r_a3fd1f4d8b557bb12677332be2c554137"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fd1f4d8b557bb12677332be2c554137">EnterFullscreen</a></td></tr>
+<tr class="memitem:aed0d07f388f2fc133dfe7fffcd9e2735" id="r_aed0d07f388f2fc133dfe7fffcd9e2735"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed0d07f388f2fc133dfe7fffcd9e2735">LeaveFullscreen</a></td></tr>
+<tr class="memitem:ae64d17162abeb250fb04f81912cda241" id="r_ae64d17162abeb250fb04f81912cda241"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae64d17162abeb250fb04f81912cda241">ValueChanged</a></td></tr>
+<tr class="memitem:a507abf67445aa60c41314885dd3febb6" id="r_a507abf67445aa60c41314885dd3febb6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a507abf67445aa60c41314885dd3febb6">StateChanged</a></td></tr>
+<tr class="memitem:a57c2910b0d2dc5779181c67647020f6c" id="r_a57c2910b0d2dc5779181c67647020f6c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57c2910b0d2dc5779181c67647020f6c">SelectionChanged</a></td></tr>
+<tr class="memitem:a70284e72613ea359a0a765208f78a146" id="r_a70284e72613ea359a0a765208f78a146"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70284e72613ea359a0a765208f78a146">Enabled</a></td></tr>
+<tr class="memitem:aa276368587363a849ed1a57a9a1e230a" id="r_aa276368587363a849ed1a57a9a1e230a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa276368587363a849ed1a57a9a1e230a">Disabled</a></td></tr>
+<tr class="memitem:a5298b4fe92c491f0c6c7661d902ac35e" id="r_a5298b4fe92c491f0c6c7661d902ac35e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5298b4fe92c491f0c6c7661d902ac35e">Visible</a></td></tr>
+<tr class="memitem:a8b306f6e94f88e440f688dad65f7b011" id="r_a8b306f6e94f88e440f688dad65f7b011"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b306f6e94f88e440f688dad65f7b011">Hidden</a></td></tr>
+<tr class="memitem:a6311cdc9538efcbb20839869ec1b283c" id="r_a6311cdc9538efcbb20839869ec1b283c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6311cdc9538efcbb20839869ec1b283c">Drag</a></td></tr>
+<tr class="memitem:a04fb66fb13257ea2b74de3ee379587b2" id="r_a04fb66fb13257ea2b74de3ee379587b2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04fb66fb13257ea2b74de3ee379587b2">Dragging</a></td></tr>
+<tr class="memitem:acd869ea36dffbfa5980aa41b890fc4ca" id="r_acd869ea36dffbfa5980aa41b890fc4ca"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd869ea36dffbfa5980aa41b890fc4ca">Drop</a></td></tr>
+<tr class="memitem:ab1fb1c523f2a54cf4cb74aba22b0acc8" id="r_ab1fb1c523f2a54cf4cb74aba22b0acc8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1fb1c523f2a54cf4cb74aba22b0acc8">TimerStart</a></td></tr>
+<tr class="memitem:a3ba844f9dfbbe3edf5e3868408e0c3f5" id="r_a3ba844f9dfbbe3edf5e3868408e0c3f5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ba844f9dfbbe3edf5e3868408e0c3f5">TimerStop</a></td></tr>
+<tr class="memitem:a17b99f4fe7104a77067f4512b083c615" id="r_a17b99f4fe7104a77067f4512b083c615"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17b99f4fe7104a77067f4512b083c615">TimerPause</a></td></tr>
+<tr class="memitem:a8f54866008b0650cf1c98b9ef2dadd5f" id="r_a8f54866008b0650cf1c98b9ef2dadd5f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f54866008b0650cf1c98b9ef2dadd5f">TimerTick</a></td></tr>
+<tr class="memitem:ae2889212edb5fca93d2e81e94792f5b0" id="r_ae2889212edb5fca93d2e81e94792f5b0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2889212edb5fca93d2e81e94792f5b0">TimerCycleComplete</a></td></tr>
+<tr class="memitem:a8984a332549014d9fc8fe157cd7e9691" id="r_a8984a332549014d9fc8fe157cd7e9691"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8984a332549014d9fc8fe157cd7e9691">TimerComplete</a></td></tr>
+<tr class="memitem:adcd133de1939bc5e2b45f64baab7fa3f" id="r_adcd133de1939bc5e2b45f64baab7fa3f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcd133de1939bc5e2b45f64baab7fa3f">ClipboardCopy</a></td></tr>
+<tr class="memitem:a1de6c66c960e9955f31b373ef0c34c43" id="r_a1de6c66c960e9955f31b373ef0c34c43"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1de6c66c960e9955f31b373ef0c34c43">ClipboardPaste</a></td></tr>
+<tr class="memitem:a8cee5264f898df6983c063ab27d3985b" id="r_a8cee5264f898df6983c063ab27d3985b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cee5264f898df6983c063ab27d3985b">OnInit</a></td></tr>
+<tr class="memitem:a260f4fd31ba8bf046fbc25ec0f719556" id="r_a260f4fd31ba8bf046fbc25ec0f719556"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a260f4fd31ba8bf046fbc25ec0f719556">OnQuit</a></td></tr>
+<tr class="memitem:a343194ca51968ed70d40768ab36b28d3" id="r_a343194ca51968ed70d40768ab36b28d3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a343194ca51968ed70d40768ab36b28d3">OnEvent</a></td></tr>
+<tr class="memitem:abb6ac6d3e152add976d41c703037a485" id="r_abb6ac6d3e152add976d41c703037a485"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb6ac6d3e152add976d41c703037a485">OnUpdate</a></td></tr>
+<tr class="memitem:ad726e9273588749fa020db3209fcd6b7" id="r_ad726e9273588749fa020db3209fcd6b7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad726e9273588749fa020db3209fcd6b7">OnRender</a></td></tr>
+<tr class="memitem:ad0fedae43f417546794e2e4f359c5cf6" id="r_ad0fedae43f417546794e2e4f359c5cf6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0fedae43f417546794e2e4f359c5cf6">OnPreRender</a></td></tr>
+<tr class="memitem:ae12d8ce6a2e34d3b8f2fe61b33658d06" id="r_ae12d8ce6a2e34d3b8f2fe61b33658d06"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae12d8ce6a2e34d3b8f2fe61b33658d06">EnterFrame</a></td></tr>
+<tr class="memitem:ae25a2d73cf5abe3c7e721b9af031b854" id="r_ae25a2d73cf5abe3c7e721b9af031b854"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae25a2d73cf5abe3c7e721b9af031b854">SDL_Event</a></td></tr>
+<tr class="memitem:aed0c4427ac3ac52e140f425fdab9452d" id="r_aed0c4427ac3ac52e140f425fdab9452d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed0c4427ac3ac52e140f425fdab9452d">User</a></td></tr>
 </table>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
+<a id="a51bb099e3d1ab6c7fdd25bbc346dc5e1" name="a51bb099e3d1ab6c7fdd25bbc346dc5e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51bb099e3d1ab6c7fdd25bbc346dc5e1">&#9670;&#160;</a></span>IdType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a51bb099e3d1ab6c7fdd25bbc346dc5e1">SDOM::EventType::IdType</a> = uint32_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
 <a id="ac0e2fef622c15317b0221f64e6e82078" name="ac0e2fef622c15317b0221f64e6e82078"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac0e2fef622c15317b0221f64e6e82078">&#9670;&#160;</a></span>CoalesceKey</h2>
@@ -257,8 +278,8 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ace3a9596f6806b55dcfb477f8da686ec" name="ace3a9596f6806b55dcfb477f8da686ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace3a9596f6806b55dcfb477f8da686ec">&#9670;&#160;</a></span>EventType() <span class="overload">[1/2]</span></h2>
+<a id="aa9ffa282dc97a24eeb0ba404350c589b" name="aa9ffa282dc97a24eeb0ba404350c589b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9ffa282dc97a24eeb0ba404350c589b">&#9670;&#160;</a></span>EventType() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -269,8 +290,12 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">SDOM::EventType::EventType </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span><span class="paramdefsep"> = </span><span class="paramdefval">std::string()</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -282,8 +307,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a647ab7d38f981dca7b5b00d818e2412c" name="a647ab7d38f981dca7b5b00d818e2412c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a647ab7d38f981dca7b5b00d818e2412c">&#9670;&#160;</a></span>EventType() <span class="overload">[2/2]</span></h2>
+<a id="a19da2e75ea041e4c2d5f3f48507de499" name="a19da2e75ea041e4c2d5f3f48507de499"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19da2e75ea041e4c2d5f3f48507de499">&#9670;&#160;</a></span>EventType() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -314,7 +339,12 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>global</em></span>&#160;)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>global</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span><span class="paramdefsep"> = </span><span class="paramdefval">std::string()</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -327,8 +357,8 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a7aab549fac413b0b061f48a9d1159e02" name="a7aab549fac413b0b061f48a9d1159e02"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7aab549fac413b0b061f48a9d1159e02">&#9670;&#160;</a></span>count()</h2>
+<a id="a63a65951035b7be00f1d400c761d5806" name="a63a65951035b7be00f1d400c761d5806"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63a65951035b7be00f1d400c761d5806">&#9670;&#160;</a></span>count()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -352,8 +382,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0a4f07dc114c4e7ec80f15878864a3e5" name="a0a4f07dc114c4e7ec80f15878864a3e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a4f07dc114c4e7ec80f15878864a3e5">&#9670;&#160;</a></span>fromName()</h2>
+<a id="ae9e8eef24eb43f232293486b410c36e3" name="ae9e8eef24eb43f232293486b410c36e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9e8eef24eb43f232293486b410c36e3">&#9670;&#160;</a></span>fromId()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -362,7 +392,32 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> * SDOM::EventType::fromName </td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> * SDOM::EventType::fromId </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a51bb099e3d1ab6c7fdd25bbc346dc5e1">IdType</a></td>          <td class="paramname"><span class="paramname"><em>id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a423891e428ee6565047e562b3c381845" name="a423891e428ee6565047e562b3c381845"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a423891e428ee6565047e562b3c381845">&#9670;&#160;</a></span>fromName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> * SDOM::EventType::fromName </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
           <td></td>
@@ -377,8 +432,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0ecc161d4644bb991dceed403ba2ee7e" name="a0ecc161d4644bb991dceed403ba2ee7e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ecc161d4644bb991dceed403ba2ee7e">&#9670;&#160;</a></span>getAll()</h2>
+<a id="a3cc9ace3c4d5024e728b28ceb2729f8d" name="a3cc9ace3c4d5024e728b28ceb2729f8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cc9ace3c4d5024e728b28ceb2729f8d">&#9670;&#160;</a></span>getAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -387,7 +442,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> * &gt; SDOM::EventType::getAll </td>
+          <td class="memname">std::vector&lt; <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> * &gt; SDOM::EventType::getAll </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -470,6 +525,23 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="acc3eb4bbc42cbc9e8afaa44539864ea0" name="acc3eb4bbc42cbc9e8afaa44539864ea0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc3eb4bbc42cbc9e8afaa44539864ea0">&#9670;&#160;</a></span>getDoc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::EventType::getDoc </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af86b05a98a7c5e0afbe21ebe9a3028b3" name="af86b05a98a7c5e0afbe21ebe9a3028b3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af86b05a98a7c5e0afbe21ebe9a3028b3">&#9670;&#160;</a></span>getGlobal()</h2>
 
@@ -529,6 +601,23 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ae6cb01091f33755e0bf6a52afa31d5eb" name="ae6cb01091f33755e0bf6a52afa31d5eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6cb01091f33755e0bf6a52afa31d5eb">&#9670;&#160;</a></span>getOrAssignId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a51bb099e3d1ab6c7fdd25bbc346dc5e1">EventType::IdType</a> SDOM::EventType::getOrAssignId </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a3fb5ef0e30ed0259a5c37e0f457ab5e1" name="a3fb5ef0e30ed0259a5c37e0f457ab5e1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3fb5ef0e30ed0259a5c37e0f457ab5e1">&#9670;&#160;</a></span>getRegistry()</h2>
 
@@ -539,7 +628,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::unordered_map&lt; std::string, <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> * &gt; &amp; SDOM::EventType::getRegistry </td>
+          <td class="memname">const std::unordered_map&lt; std::string, <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> * &gt; &amp; SDOM::EventType::getRegistry </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -642,7 +731,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool SDOM::EventType::operator!= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -667,7 +756,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool SDOM::EventType::operator&lt; </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -692,7 +781,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool SDOM::EventType::operator== </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -722,7 +811,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> *</td>          <td class="paramname"><span class="paramname"><em>ptr</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> *</td>          <td class="paramname"><span class="paramname"><em>ptr</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -766,7 +855,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp; SDOM::EventType::setBubbles </td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp; SDOM::EventType::setBubbles </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>bubbles</em></span></td><td>)</td>
           <td></td>
@@ -783,7 +872,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp; SDOM::EventType::setCaptures </td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp; SDOM::EventType::setCaptures </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>captures</em></span></td><td>)</td>
           <td></td>
@@ -800,7 +889,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp; SDOM::EventType::setCoalesceKey </td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp; SDOM::EventType::setCoalesceKey </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="#ac0e2fef622c15317b0221f64e6e82078">CoalesceKey</a></td>          <td class="paramname"><span class="paramname"><em>k</em></span></td><td>)</td>
           <td></td>
@@ -817,7 +906,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp; SDOM::EventType::setCoalesceStrategy </td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp; SDOM::EventType::setCoalesceStrategy </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="#a040bd14a3e4d1bd72274da493b475c30">CoalesceStrategy</a></td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
           <td></td>
@@ -834,9 +923,26 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp; SDOM::EventType::setCritical </td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp; SDOM::EventType::setCritical </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>critical</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af749afab3e3a9bb6e232353b6fb0301a" name="af749afab3e3a9bb6e232353b6fb0301a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af749afab3e3a9bb6e232353b6fb0301a">&#9670;&#160;</a></span>setDoc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::EventType::setDoc </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -851,9 +957,26 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp; SDOM::EventType::setGlobal </td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp; SDOM::EventType::setGlobal </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>global</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abe8f96d1e03b45256bf8f9a81cf91c58" name="abe8f96d1e03b45256bf8f9a81cf91c58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe8f96d1e03b45256bf8f9a81cf91c58">&#9670;&#160;</a></span>setId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::EventType::setId </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a51bb099e3d1ab6c7fdd25bbc346dc5e1">IdType</a></td>          <td class="paramname"><span class="paramname"><em>id</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -868,7 +991,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp; SDOM::EventType::setMeterEnabled </td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp; SDOM::EventType::setMeterEnabled </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enabled</em></span></td><td>)</td>
           <td></td>
@@ -885,7 +1008,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp; SDOM::EventType::setMeterIntervalMs </td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp; SDOM::EventType::setMeterIntervalMs </td>
           <td>(</td>
           <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>ms</em></span></td><td>)</td>
           <td></td>
@@ -902,7 +1025,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp; SDOM::EventType::setTargetOnly </td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp; SDOM::EventType::setTargetOnly </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>targetOnly</em></span></td><td>)</td>
           <td></td>
@@ -912,8 +1035,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a460e23e446d9d85021df37445d827bd1" name="a460e23e446d9d85021df37445d827bd1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a460e23e446d9d85021df37445d827bd1">&#9670;&#160;</a></span>toString()</h2>
+<a id="a9b5d30dde6417f315a8b3012bf4294a2" name="a9b5d30dde6417f315a8b3012bf4294a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b5d30dde6417f315a8b3012bf4294a2">&#9670;&#160;</a></span>toString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -924,7 +1047,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">std::string SDOM::EventType::toString </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>et</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>et</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -948,7 +1071,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Added</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Added</td>
         </tr>
       </table>
   </td>
@@ -970,7 +1093,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::AddedToStage</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::AddedToStage</td>
         </tr>
       </table>
   </td>
@@ -992,7 +1115,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::ClipboardCopy</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::ClipboardCopy</td>
         </tr>
       </table>
   </td>
@@ -1014,7 +1137,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::ClipboardPaste</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::ClipboardPaste</td>
         </tr>
       </table>
   </td>
@@ -1036,7 +1159,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Disabled</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Disabled</td>
         </tr>
       </table>
   </td>
@@ -1058,7 +1181,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Drag</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Drag</td>
         </tr>
       </table>
   </td>
@@ -1080,7 +1203,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Dragging</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Dragging</td>
         </tr>
       </table>
   </td>
@@ -1102,7 +1225,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Drop</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Drop</td>
         </tr>
       </table>
   </td>
@@ -1124,7 +1247,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Enabled</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Enabled</td>
         </tr>
       </table>
   </td>
@@ -1146,7 +1269,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::EnterFrame</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::EnterFrame</td>
         </tr>
       </table>
   </td>
@@ -1168,7 +1291,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::EnterFullscreen</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::EnterFullscreen</td>
         </tr>
       </table>
   </td>
@@ -1190,7 +1313,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::FocusGained</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::FocusGained</td>
         </tr>
       </table>
   </td>
@@ -1212,7 +1335,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::FocusLost</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::FocusLost</td>
         </tr>
       </table>
   </td>
@@ -1234,7 +1357,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Hidden</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Hidden</td>
         </tr>
       </table>
   </td>
@@ -1256,7 +1379,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Hide</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Hide</td>
         </tr>
       </table>
   </td>
@@ -1278,7 +1401,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::KeyDown</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::KeyDown</td>
         </tr>
       </table>
   </td>
@@ -1300,7 +1423,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::KeyUp</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::KeyUp</td>
         </tr>
       </table>
   </td>
@@ -1322,7 +1445,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::LeaveFullscreen</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::LeaveFullscreen</td>
         </tr>
       </table>
   </td>
@@ -1344,7 +1467,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::MouseButtonDown</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::MouseButtonDown</td>
         </tr>
       </table>
   </td>
@@ -1366,7 +1489,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::MouseButtonUp</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::MouseButtonUp</td>
         </tr>
       </table>
   </td>
@@ -1388,7 +1511,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::MouseClick</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::MouseClick</td>
         </tr>
       </table>
   </td>
@@ -1410,7 +1533,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::MouseDoubleClick</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::MouseDoubleClick</td>
         </tr>
       </table>
   </td>
@@ -1432,7 +1555,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::MouseEnter</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::MouseEnter</td>
         </tr>
       </table>
   </td>
@@ -1454,7 +1577,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::MouseLeave</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::MouseLeave</td>
         </tr>
       </table>
   </td>
@@ -1476,7 +1599,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::MouseMove</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::MouseMove</td>
         </tr>
       </table>
   </td>
@@ -1498,7 +1621,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::MouseWheel</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::MouseWheel</td>
         </tr>
       </table>
   </td>
@@ -1520,7 +1643,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Move</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Move</td>
         </tr>
       </table>
   </td>
@@ -1542,7 +1665,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::None</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::None</td>
         </tr>
       </table>
   </td>
@@ -1564,7 +1687,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::OnEvent</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::OnEvent</td>
         </tr>
       </table>
   </td>
@@ -1586,7 +1709,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::OnInit</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::OnInit</td>
         </tr>
       </table>
   </td>
@@ -1608,7 +1731,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::OnPreRender</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::OnPreRender</td>
         </tr>
       </table>
   </td>
@@ -1630,7 +1753,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::OnQuit</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::OnQuit</td>
         </tr>
       </table>
   </td>
@@ -1652,7 +1775,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::OnRender</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::OnRender</td>
         </tr>
       </table>
   </td>
@@ -1674,7 +1797,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::OnUpdate</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::OnUpdate</td>
         </tr>
       </table>
   </td>
@@ -1696,7 +1819,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Quit</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Quit</td>
         </tr>
       </table>
   </td>
@@ -1718,7 +1841,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Removed</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Removed</td>
         </tr>
       </table>
   </td>
@@ -1740,7 +1863,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::RemovedFromStage</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::RemovedFromStage</td>
         </tr>
       </table>
   </td>
@@ -1762,7 +1885,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Resize</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Resize</td>
         </tr>
       </table>
   </td>
@@ -1784,7 +1907,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::SDL_Event</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::SDL_Event</td>
         </tr>
       </table>
   </td>
@@ -1806,7 +1929,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::SelectionChanged</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::SelectionChanged</td>
         </tr>
       </table>
   </td>
@@ -1828,7 +1951,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Show</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Show</td>
         </tr>
       </table>
   </td>
@@ -1850,7 +1973,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::StageClosed</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::StageClosed</td>
         </tr>
       </table>
   </td>
@@ -1872,7 +1995,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::StageOpened</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::StageOpened</td>
         </tr>
       </table>
   </td>
@@ -1894,7 +2017,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::StateChanged</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::StateChanged</td>
         </tr>
       </table>
   </td>
@@ -1916,7 +2039,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::TextInput</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::TextInput</td>
         </tr>
       </table>
   </td>
@@ -1938,7 +2061,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::TimerComplete</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::TimerComplete</td>
         </tr>
       </table>
   </td>
@@ -1960,7 +2083,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::TimerCycleComplete</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::TimerCycleComplete</td>
         </tr>
       </table>
   </td>
@@ -1982,7 +2105,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::TimerPause</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::TimerPause</td>
         </tr>
       </table>
   </td>
@@ -2004,7 +2127,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::TimerStart</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::TimerStart</td>
         </tr>
       </table>
   </td>
@@ -2026,7 +2149,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::TimerStop</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::TimerStop</td>
         </tr>
       </table>
   </td>
@@ -2048,7 +2171,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::TimerTick</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::TimerTick</td>
         </tr>
       </table>
   </td>
@@ -2070,7 +2193,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::User</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::User</td>
         </tr>
       </table>
   </td>
@@ -2092,7 +2215,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::ValueChanged</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::ValueChanged</td>
         </tr>
       </table>
   </td>
@@ -2114,7 +2237,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ace3a9596f6806b55dcfb477f8da686ec">EventType</a> SDOM::EventType::Visible</td>
+          <td class="memname"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> SDOM::EventType::Visible</td>
         </tr>
       </table>
   </td>
