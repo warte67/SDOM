@@ -367,6 +367,11 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a5121ece23da73f686e3ab61c3fc63339" id="r_a5121ece23da73f686e3ab61c3fc63339"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933">Orientation</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5121ece23da73f686e3ab61c3fc63339">orientation_to_string</a></td></tr>
 <tr class="memitem:a7569a3c4255eb2a2cddfdf0cdab60c15" id="r_a7569a3c4255eb2a2cddfdf0cdab60c15"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; std::string, <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933">Orientation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7569a3c4255eb2a2cddfdf0cdab60c15">string_to_orientation</a></td></tr>
 <tr class="memitem:af584a39d2e3cf67afac515bca37e91ba" id="r_af584a39d2e3cf67afac515bca37e91ba"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af584a39d2e3cf67afac515bca37e91ba">s_eventtype_id_mutex</a></td></tr>
+<tr class="memitem:aa8b138842446cb2d2cf817552647fe50" id="r_aa8b138842446cb2d2cf817552647fe50"><td class="memItemLeft" align="right" valign="top">static constexpr unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8b138842446cb2d2cf817552647fe50">SDOM_EVENT_ID_SHIFT</a> = 8</td></tr>
+<tr class="memitem:a46aa961c7fe1079dba58a18e485073df" id="r_a46aa961c7fe1079dba58a18e485073df"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46aa961c7fe1079dba58a18e485073df">SDOM_EVENT_BLOCK_SIZE</a> = (1u &lt;&lt; <a class="el" href="#aa8b138842446cb2d2cf817552647fe50">SDOM_EVENT_ID_SHIFT</a>)</td></tr>
+<tr class="memitem:a51b389f803a85ca21ad679ba691b39c7" id="r_a51b389f803a85ca21ad679ba691b39c7"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51b389f803a85ca21ad679ba691b39c7">SDOM_EVENT_LOCAL_MAX</a> = <a class="el" href="#a46aa961c7fe1079dba58a18e485073df">SDOM_EVENT_BLOCK_SIZE</a> - 1</td></tr>
+<tr class="memitem:a7bc17722e6237e4d6aee1c9a75ea9e4b" id="r_a7bc17722e6237e4d6aee1c9a75ea9e4b"><td class="memItemLeft" align="right" valign="top">static std::unordered_map&lt; std::string, unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7bc17722e6237e4d6aee1c9a75ea9e4b">s_category_index</a></td></tr>
+<tr class="memitem:af3e84acc3785e2c0cb1d92b63593330e" id="r_af3e84acc3785e2c0cb1d92b63593330e"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; std::unique_ptr&lt; std::atomic&lt; uint32_t &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3e84acc3785e2c0cb1d92b63593330e">s_next_local_id</a></td></tr>
 <tr class="memitem:a4d02abee5b090d2eaa9e365016465d7b" id="r_a4d02abee5b090d2eaa9e365016465d7b"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d02abee5b090d2eaa9e365016465d7b">s_eventtype_policies_initialized</a> = init_eventtype_policies()</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
@@ -1438,6 +1443,28 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a7bc17722e6237e4d6aee1c9a75ea9e4b" name="a7bc17722e6237e4d6aee1c9a75ea9e4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bc17722e6237e4d6aee1c9a75ea9e4b">&#9670;&#160;</a></span>s_category_index</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unordered_map&lt;std::string, unsigned&gt; SDOM::s_category_index</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af584a39d2e3cf67afac515bca37e91ba" name="af584a39d2e3cf67afac515bca37e91ba"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af584a39d2e3cf67afac515bca37e91ba">&#9670;&#160;</a></span>s_eventtype_id_mutex</h2>
 
@@ -1476,6 +1503,94 @@ Static Public Attributes</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af3e84acc3785e2c0cb1d92b63593330e" name="af3e84acc3785e2c0cb1d92b63593330e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3e84acc3785e2c0cb1d92b63593330e">&#9670;&#160;</a></span>s_next_local_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::unique_ptr&lt;std::atomic&lt;uint32_t&gt; &gt; &gt; SDOM::s_next_local_id</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a46aa961c7fe1079dba58a18e485073df" name="a46aa961c7fe1079dba58a18e485073df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46aa961c7fe1079dba58a18e485073df">&#9670;&#160;</a></span>SDOM_EVENT_BLOCK_SIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t SDOM::SDOM_EVENT_BLOCK_SIZE = (1u &lt;&lt; <a class="el" href="#aa8b138842446cb2d2cf817552647fe50">SDOM_EVENT_ID_SHIFT</a>)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa8b138842446cb2d2cf817552647fe50" name="aa8b138842446cb2d2cf817552647fe50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8b138842446cb2d2cf817552647fe50">&#9670;&#160;</a></span>SDOM_EVENT_ID_SHIFT</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned SDOM::SDOM_EVENT_ID_SHIFT = 8</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a51b389f803a85ca21ad679ba691b39c7" name="a51b389f803a85ca21ad679ba691b39c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51b389f803a85ca21ad679ba691b39c7">&#9670;&#160;</a></span>SDOM_EVENT_LOCAL_MAX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t SDOM::SDOM_EVENT_LOCAL_MAX = <a class="el" href="#a46aa961c7fe1079dba58a18e485073df">SDOM_EVENT_BLOCK_SIZE</a> - 1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

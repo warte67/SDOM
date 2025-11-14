@@ -110,7 +110,9 @@ Public Types</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa9ffa282dc97a24eeb0ba404350c589b" id="r_aa9ffa282dc97a24eeb0ba404350c589b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> (const std::string &amp;name, const std::string &amp;doc=std::string())</td></tr>
+<tr class="memitem:a2181f7caada50d77c4a92a3096fc27a9" id="r_a2181f7caada50d77c4a92a3096fc27a9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2181f7caada50d77c4a92a3096fc27a9">EventType</a> (const std::string &amp;name, const std::string &amp;category, const std::string &amp;doc=std::string())</td></tr>
 <tr class="memitem:a19da2e75ea041e4c2d5f3f48507de499" id="r_a19da2e75ea041e4c2d5f3f48507de499"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19da2e75ea041e4c2d5f3f48507de499">EventType</a> (const std::string &amp;name, bool captures, bool bubbles, bool targetOnly, bool global, const std::string &amp;doc=std::string())</td></tr>
+<tr class="memitem:a2c862e03bcc3ce3920c35156e9e73e55" id="r_a2c862e03bcc3ce3920c35156e9e73e55"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c862e03bcc3ce3920c35156e9e73e55">EventType</a> (const std::string &amp;name, const std::string &amp;category, bool captures, bool bubbles, bool targetOnly, bool global, const std::string &amp;doc=std::string())</td></tr>
 <tr class="memitem:ac0940004432968a73b68ace3f9f1adbd" id="r_ac0940004432968a73b68ace3f9f1adbd"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0940004432968a73b68ace3f9f1adbd">getName</a> () const</td></tr>
 <tr class="memitem:a123a20da9d1b9a0d8323d6a99a9b40f3" id="r_a123a20da9d1b9a0d8323d6a99a9b40f3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a123a20da9d1b9a0d8323d6a99a9b40f3">operator==</a> (const <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;other) const</td></tr>
 <tr class="memitem:a8791ec9809822baecfdf0605c8e8c0cd" id="r_a8791ec9809822baecfdf0605c8e8c0cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8791ec9809822baecfdf0605c8e8c0cd">operator!=</a> (const <a class="el" href="#aa9ffa282dc97a24eeb0ba404350c589b">EventType</a> &amp;other) const</td></tr>
@@ -137,6 +139,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abe8f96d1e03b45256bf8f9a81cf91c58" id="r_abe8f96d1e03b45256bf8f9a81cf91c58"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe8f96d1e03b45256bf8f9a81cf91c58">setId</a> (<a class="el" href="#a51bb099e3d1ab6c7fdd25bbc346dc5e1">IdType</a> id)</td></tr>
 <tr class="memitem:acc3eb4bbc42cbc9e8afaa44539864ea0" id="r_acc3eb4bbc42cbc9e8afaa44539864ea0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc3eb4bbc42cbc9e8afaa44539864ea0">getDoc</a> () const</td></tr>
 <tr class="memitem:af749afab3e3a9bb6e232353b6fb0301a" id="r_af749afab3e3a9bb6e232353b6fb0301a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af749afab3e3a9bb6e232353b6fb0301a">setDoc</a> (const std::string &amp;s)</td></tr>
+<tr class="memitem:ad2db35f6eddf8b3137de2ffb7e62ce95" id="r_ad2db35f6eddf8b3137de2ffb7e62ce95"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2db35f6eddf8b3137de2ffb7e62ce95">getCategory</a> () const</td></tr>
+<tr class="memitem:a61d7ce13807c44f7efcaec6e15a52c4b" id="r_a61d7ce13807c44f7efcaec6e15a52c4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61d7ce13807c44f7efcaec6e15a52c4b">setCategory</a> (const std::string &amp;c)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -279,7 +283,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa9ffa282dc97a24eeb0ba404350c589b" name="aa9ffa282dc97a24eeb0ba404350c589b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9ffa282dc97a24eeb0ba404350c589b">&#9670;&#160;</a></span>EventType() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9ffa282dc97a24eeb0ba404350c589b">&#9670;&#160;</a></span>EventType() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -307,8 +311,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a19da2e75ea041e4c2d5f3f48507de499" name="a19da2e75ea041e4c2d5f3f48507de499"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19da2e75ea041e4c2d5f3f48507de499">&#9670;&#160;</a></span>EventType() <span class="overload">[2/2]</span></h2>
+<a id="a2181f7caada50d77c4a92a3096fc27a9" name="a2181f7caada50d77c4a92a3096fc27a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2181f7caada50d77c4a92a3096fc27a9">&#9670;&#160;</a></span>EventType() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -320,6 +324,94 @@ Static Public Attributes</h2></td></tr>
           <td class="memname">SDOM::EventType::EventType </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>category</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span><span class="paramdefsep"> = </span><span class="paramdefval">std::string()</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a19da2e75ea041e4c2d5f3f48507de499" name="a19da2e75ea041e4c2d5f3f48507de499"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19da2e75ea041e4c2d5f3f48507de499">&#9670;&#160;</a></span>EventType() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::EventType::EventType </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>captures</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>bubbles</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>targetOnly</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>global</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span><span class="paramdefsep"> = </span><span class="paramdefval">std::string()</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2c862e03bcc3ce3920c35156e9e73e55" name="a2c862e03bcc3ce3920c35156e9e73e55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c862e03bcc3ce3920c35156e9e73e55">&#9670;&#160;</a></span>EventType() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::EventType::EventType </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>category</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -487,6 +579,31 @@ Static Public Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad2db35f6eddf8b3137de2ffb7e62ce95" name="ad2db35f6eddf8b3137de2ffb7e62ce95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2db35f6eddf8b3137de2ffb7e62ce95">&#9670;&#160;</a></span>getCategory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::EventType::getCategory </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -878,6 +995,31 @@ Static Public Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a61d7ce13807c44f7efcaec6e15a52c4b" name="a61d7ce13807c44f7efcaec6e15a52c4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61d7ce13807c44f7efcaec6e15a52c4b">&#9670;&#160;</a></span>setCategory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::EventType::setCategory </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>c</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

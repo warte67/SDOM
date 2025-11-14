@@ -158,6 +158,7 @@ var namespaceSDOM =
     [ "getMinPriority_lua", "namespaceSDOM.html#a77e3814030765d9a4c830f555057566e", null ],
     [ "getMouseHoveredObject_lua", "namespaceSDOM.html#a262dfe94a8129d736c84779f5d00fcac", null ],
     [ "getName_lua", "namespaceSDOM.html#ac918ab09453e20a594831a23343af68f", null ],
+    [ "getOrAssignCategoryIndex", "namespaceSDOM.html#acf6ec0cef6b297ad7de54340939c8702", null ],
     [ "getOrphanedDisplayObjects_lua", "namespaceSDOM.html#a7b4f6a70eddaf66edcf502357b511b0d", null ],
     [ "getOrphanGrace_lua", "namespaceSDOM.html#ac2edae42e0c29366f5eca1683b817056", null ],
     [ "getOrphanRetentionPolicyString_lua", "namespaceSDOM.html#af5ad579ee169875f1948ef3a29f47814", null ],
