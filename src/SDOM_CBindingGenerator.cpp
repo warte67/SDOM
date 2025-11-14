@@ -203,13 +203,21 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         ofs << "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n";
         ofs << "typedef uint32_t SDOM_EventTypeId;\n\n";
         ofs << "typedef enum SDOM_EventType {\n";
-        // Emit NONE with optional inline doc comment
+        // Emit NONE with optional inline doc comment. Prefer runtime EventType
+        // doc when available, falling back to the snapshot-provided doc.
         ofs << "    SDOM_EVENT_NONE = 0";
-        auto _none_it = event_docs.find("None");
-        if (_none_it != event_docs.end() && !_none_it->second.empty()) {
-            std::string doc = _none_it->second;
-            for (char &c : doc) if (c == '\n' || c == '\r') c = ' ';
-            ofs << ", /* " << doc << " */\n";
+        std::string none_doc;
+        try {
+            SDOM::EventType* et = SDOM::EventType::fromName("None");
+            if (et) none_doc = et->getDoc();
+        } catch(...) { none_doc.clear(); }
+        if (none_doc.empty()) {
+            auto _none_it = event_docs.find("None");
+            if (_none_it != event_docs.end()) none_doc = _none_it->second;
+        }
+        if (!none_doc.empty()) {
+            for (char &c : none_doc) if (c == '\n' || c == '\r') c = ' ';
+            ofs << ", /* " << none_doc << " */\n";
         } else {
             ofs << ",\n";
         }
