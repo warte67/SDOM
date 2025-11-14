@@ -307,6 +307,8 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
                 ofs << baseStr << std::string(pad, ' ') << " /**< Reserved (do not use) */\n";
             }
             const auto &vec = by_cat[cat];
+            bool firstInCat = true;
+            uint32_t last_id = 0;
             for (const auto &kv : vec) {
                 // sanitize identifier
                 std::string idname = to_screaming_snake(kv.name);
@@ -316,22 +318,38 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
 
                 // Build base entry (with trailing comma) and then append comment
                 std::ostringstream base;
-                // format id as 16-bit hex constant (0xNNNN)
-                uint32_t id16 = kv.id & 0xFFFFu;
-                base << "    SDOM_EVENT_" << idname << " = 0x" << std::hex << std::uppercase << std::setfill('0') << std::setw(4) << id16 << std::dec << ",";
-                std::string baseStr = base.str();
-
-                    if (!kv.doc.empty()) {
-                        std::string doc = kv.doc;
-                        for (char &c : doc) if (c == '\n' || c == '\r') c = ' ';
-
-                        const size_t target_col = 44;
-                        size_t baseLen = baseStr.size();
-                        size_t pad = (baseLen >= target_col) ? 1 : (target_col - baseLen);
-                        ofs << baseStr << std::string(pad, ' ') << " /**< " << doc << " */\n";
+                std::string baseStr;
+                // Decide whether to emit explicit value:
+                // - always emit explicit for the first entry in a category
+                // - for subsequent entries omit the value if id == last_id + 1
+                // - otherwise emit explicit value
+                if (firstInCat) {
+                    uint32_t id16 = kv.id & 0xFFFFu;
+                    base << "    SDOM_EVENT_" << idname << " = 0x" << std::hex << std::uppercase << std::setfill('0') << std::setw(4) << id16 << std::dec << ",";
+                } else {
+                    if (kv.id == last_id + 1) {
+                        base << "    SDOM_EVENT_" << idname << ",";
                     } else {
-                        ofs << baseStr << "\n";
+                        uint32_t id16 = kv.id & 0xFFFFu;
+                        base << "    SDOM_EVENT_" << idname << " = 0x" << std::hex << std::uppercase << std::setfill('0') << std::setw(4) << id16 << std::dec << ",";
                     }
+                }
+                baseStr = base.str();
+
+                if (!kv.doc.empty()) {
+                    std::string doc = kv.doc;
+                    for (char &c : doc) if (c == '\n' || c == '\r') c = ' ';
+
+                    const size_t target_col = 44;
+                    size_t baseLen = baseStr.size();
+                    size_t pad = (baseLen >= target_col) ? 1 : (target_col - baseLen);
+                    ofs << baseStr << std::string(pad, ' ') << " /**< " << doc << " */\n";
+                } else {
+                    ofs << baseStr << "\n";
+                }
+
+                last_id = kv.id;
+                firstInCat = false;
             }
         }
 
