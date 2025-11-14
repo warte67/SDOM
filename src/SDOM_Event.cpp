@@ -751,6 +751,8 @@ namespace SDOM
                 SDOM::TypeInfo ti;
                 ti.name = std::string("EventType::") + et->getName();
                 ti.cpp_type_id = et->getName();
+                // forward per-event documentation from the runtime EventType
+                try { ti.doc = et->getDoc(); } catch(...) { ti.doc.clear(); }
 
                 SDOM::PropertyInfo p;
                 p.name = "captures";

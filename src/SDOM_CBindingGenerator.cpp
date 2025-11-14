@@ -135,30 +135,59 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         }
     }
 
-    // Sort for deterministic output
-    std::sort(events.begin(), events.end());
-    // Build ordered list of events, preferring runtime-assigned EventType ids
+    (void)event_docs; // silence unused when debug removed
+
+    // Build ordered list of events, preferring runtime-assigned EventType ids.
+    // To avoid fallback ids colliding or interleaving with runtime ids we
+    // first collect any runtime ids, pick a fallback start value after the
+    // maximum runtime id, then assign fallback ids sequentially.
     struct EventEntry { std::string name; uint32_t id; std::string doc; };
     std::vector<EventEntry> ordered;
-    uint32_t fallback_next_id = 1;
+
+    // First pass: collect runtime ids where available and remember which
+    // names need fallback ids.
+    std::vector<std::string> need_fallback;
+    uint32_t max_runtime_id = 0;
     for (const auto &n : events) {
-        EventEntry e;
-        e.name = n;
-        // Prefer runtime EventType id if available via EventType::fromName()
         try {
             SDOM::EventType* et = SDOM::EventType::fromName(n);
             if (et) {
-                e.id = static_cast<uint32_t>(et->getOrAssignId());
-            } else {
-                e.id = fallback_next_id++;
+                uint32_t rid = static_cast<uint32_t>(et->getOrAssignId());
+                EventEntry e{n, rid, ""};
+                // Prefer runtime-provided docstring when available; fall back
+                // to snapshot-provided docs if runtime doc is empty.
+                try {
+                    std::string rd = et->getDoc();
+                    if (!rd.empty()) e.doc = rd;
+                } catch(...) {}
+                if (e.doc.empty()) {
+                    auto it = event_docs.find(n);
+                    if (it != event_docs.end()) e.doc = it->second;
+                }
+                ordered.push_back(std::move(e));
+                if (rid > max_runtime_id) max_runtime_id = rid;
+                continue;
             }
         } catch(...) {
-            e.id = fallback_next_id++;
+            // ignore and mark for fallback
         }
+        need_fallback.push_back(n);
+    }
+
+    // Start fallback ids after the max runtime id to keep runtime-assigned
+    // ids ordered before any generated fallbacks.
+    uint32_t fallback_next_id = (max_runtime_id >= 1) ? (max_runtime_id + 1) : 1u;
+    for (const auto &n : need_fallback) {
+        EventEntry e{n, fallback_next_id++, ""};
         auto it = event_docs.find(n);
         if (it != event_docs.end()) e.doc = it->second;
         ordered.push_back(std::move(e));
     }
+
+    // Sort by numeric id (stable to preserve the earlier order for ties).
+    std::stable_sort(ordered.begin(), ordered.end(), [](const EventEntry &a, const EventEntry &b){
+        return a.id < b.id;
+    });
 
     // Helper to write a single file path
     auto write_header = [&](const std::filesystem::path &outpath) -> bool {
@@ -174,7 +203,16 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         ofs << "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n";
         ofs << "typedef uint32_t SDOM_EventTypeId;\n\n";
         ofs << "typedef enum SDOM_EventType {\n";
-        ofs << "    SDOM_EVENT_NONE = 0,\n";
+        // Emit NONE with optional inline doc comment
+        ofs << "    SDOM_EVENT_NONE = 0";
+        auto _none_it = event_docs.find("None");
+        if (_none_it != event_docs.end() && !_none_it->second.empty()) {
+            std::string doc = _none_it->second;
+            for (char &c : doc) if (c == '\n' || c == '\r') c = ' ';
+            ofs << ", /* " << doc << " */\n";
+        } else {
+            ofs << ",\n";
+        }
         for (const auto &kv : ordered) {
             // sanitize identifier
             std::string idname = kv.name;
@@ -182,15 +220,18 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
             // Uppercase
             for (char &c : idname) c = toupper((unsigned char)c);
 
-            // Emit doc comment if available (single-line)
+            // Skip duplicate NONE entry: we emit SDOM_EVENT_NONE = 0 above.
+            if (idname == "NONE") continue;
+
+            // Emit the enum entry with optional inline doc comment
+            ofs << "    SDOM_EVENT_" << idname << " = " << kv.id;
             if (!kv.doc.empty()) {
                 std::string doc = kv.doc;
-                // collapse newlines to spaces
                 for (char &c : doc) if (c == '\n' || c == '\r') c = ' ';
-                ofs << "    /* " << doc << " */\n";
+                ofs << ", /* " << doc << " */\n";
+            } else {
+                ofs << ",\n";
             }
-
-            ofs << "    SDOM_EVENT_" << idname << " = " << kv.id << ",\n";
         }
 
         ofs << "    /**\n";

@@ -177,12 +177,12 @@ namespace SDOM
         static EventType SDL_Event;         // 🧩 Event_test{3}
         static EventType User;              // 🗓️ Planned
                
-        explicit EventType(const std::string& name) 
-            : name(name), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
+        explicit EventType(const std::string& name, const std::string& doc = std::string())
+            : name(name), doc_(doc), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
         { registerEventType(name, this); }
 
-        explicit EventType(const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global) 
-            : name(name), captures_(captures), bubbles_(bubbles), targetOnly_(targetOnly), global_(global) 
+        explicit EventType(const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global, const std::string& doc = std::string()) 
+            : name(name), doc_(doc), captures_(captures), bubbles_(bubbles), targetOnly_(targetOnly), global_(global) 
         { 
             registerEventType(name, this); 
         }
@@ -262,9 +262,13 @@ namespace SDOM
         IdType getOrAssignId();
         void setId(IdType id);
         static EventType* fromId(IdType id);
+        // Optional documentation string for this EventType (used by generators)
+        std::string getDoc() const;
+        void setDoc(const std::string& s);
 
     private:
         std::string name;
+        std::string doc_;
         static inline std::unordered_map<std::string, EventType*> registry;
 
         // id registry + allocator for stable numeric ids

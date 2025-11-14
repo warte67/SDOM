@@ -37,7 +37,8 @@
  *
  ******************/
 #include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_EventType.hpp>
+// Force use of repository header to avoid picking up an installed copy.
+#include "../include/SDOM/SDOM_EventType.hpp"
 #include <mutex>
 
 namespace SDOM
@@ -133,17 +134,17 @@ namespace SDOM
 
     // 💻 Window / Focus -----------------------------------------------------------
     // ⚠️ Focus events are compositor-controlled on Wayland and may not be delivered
-    EventType EventType::FocusGained("FocusGained", false, false, true, false);  // ⚠️ Wayland‑gated
-    EventType EventType::FocusLost("FocusLost",   false, false, true, false);    // ⚠️ Wayland‑gated
+    EventType EventType::FocusGained("FocusGained", false, false, true, false); 
+    EventType EventType::FocusLost("FocusLost",   false, false, true, false);
     // 🔄 Resize/Show/Hide usually work normally across backends
-    EventType EventType::Resize("Resize",         true,  true,  false, false);   // 🔄 Wayland‑normal
+    EventType EventType::Resize("Resize",         true,  true,  false, false);
     // ⚠️ Move events are often suppressed on Wayland for programmatic reposition
-    EventType EventType::Move("Move",             true,  true,  false, false);   // ⚠️ Wayland‑gated
-    EventType EventType::Show("Show",             false, false, true,  false);   // 🔄 Wayland‑normal
-    EventType EventType::Hide("Hide",             false, false, true,  false);   // 🔄 Wayland‑normal
+    EventType EventType::Move("Move",             true,  true,  false, false);
+    EventType EventType::Show("Show",             false, false, true,  false);
+    EventType EventType::Hide("Hide",             false, false, true,  false);
     // ✅ Fullscreen enter/leave verified to work without gating
-    EventType EventType::EnterFullscreen("EnterFullscreen", true, true,  false, false); // ✅
-    EventType EventType::LeaveFullscreen("LeaveFullscreen", true, true,  false, false); // ✅
+    EventType EventType::EnterFullscreen("EnterFullscreen", true, true,  false, false);
+    EventType EventType::LeaveFullscreen("LeaveFullscreen", true, true,  false, false);
 
     // 💻 UI / State ---------------------------------------------------------------
     EventType EventType::ValueChanged("ValueChanged", true, true, false, false);
@@ -227,6 +228,19 @@ namespace SDOM
     const bool s_eventtype_policies_initialized = init_eventtype_policies();
     } // anonymous namespace
     EventType EventType::User("User", true, true, false, false);
+
+    // Allow runtime population of per-event docs without altering static
+    // initialization order. Set docs for specific EventType instances here.
+    // Use try/catch to avoid affecting static init if something goes wrong.
+    namespace {
+    bool init_eventtype_docs() {
+        try {
+            EventType::None.setDoc("The `None` EventType is mainly for testing or to represent a non-event");
+        } catch(...) {}
+        return true;
+    }
+    const bool s_eventtype_docs_initialized = init_eventtype_docs();
+    }
 
 
     void EventType::registerLua(sol::state_view lua)
@@ -383,6 +397,16 @@ namespace SDOM
     size_t EventType::count()
     {
         return registry.size();
+    }
+
+    std::string EventType::getDoc() const
+    {
+        return doc_;
+    }
+
+    void EventType::setDoc(const std::string& s)
+    {
+        doc_ = s;
     }
 
 } // namespace SDOM
