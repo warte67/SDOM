@@ -22,6 +22,8 @@
 namespace SDOM 
 {
     bool Core_UnitTests();
+
+
     bool IDisplayObject_UnitTests();
     bool Event_UnitTests();
     bool EventType_UnitTests();
@@ -33,6 +35,8 @@ namespace SDOM
 
     bool Variant_UnitTests();
     bool DataRegistry_UnitTests();
+    bool Event_CAPI_UnitTests();
+    bool EventType_CAPI_UnitTests();    
     
     // bool Factory_UnitTests();
     // bool Stage_UnitTests();

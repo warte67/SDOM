@@ -120,3 +120,81 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/SDOM DESTINATION include)
+
+# ======================================================
+#  Optional: dataregistry_generator to emit C API headers
+#  Run when generated version differs from project version
+# ======================================================
+set(GENERATED_DIR "${CMAKE_BINARY_DIR}/capi_generated")
+file(MAKE_DIRECTORY "${GENERATED_DIR}")
+
+# Build a small generator executable from local sources (keeps it separate
+# from the main library and avoids circular linking).
+set(GENERATOR_SOURCES
+    "${CMAKE_SOURCE_DIR}/tools/run_dataregistry_test.cpp"
+    "${CMAKE_SOURCE_DIR}/src/SDOM_DataRegistry.cpp"
+    "${CMAKE_SOURCE_DIR}/src/SDOM_CBindingGenerator.cpp"
+)
+add_executable(dataregistry_generator ${GENERATOR_SOURCES})
+target_include_directories(dataregistry_generator PRIVATE
+    "${CMAKE_SOURCE_DIR}/include"
+    "${CMAKE_SOURCE_DIR}/sol2/include"
+    "${CMAKE_SOURCE_DIR}/sol2/include/sol"
+)
+set_target_properties(dataregistry_generator PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tools"
+)
+
+# Generated version marker file
+set(GENERATED_VERSION_FILE "${GENERATED_DIR}/sdom_capi_objects_generated.version")
+
+add_custom_command(
+    OUTPUT "${GENERATED_VERSION_FILE}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${GENERATED_DIR}"
+    COMMAND $<TARGET_FILE:dataregistry_generator> "${GENERATED_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E touch "${GENERATED_VERSION_FILE}"
+    DEPENDS dataregistry_generator
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    COMMENT "Running dataregistry_generator to produce C API headers and version marker"
+)
+add_custom_target(run_dataregistry_generator DEPENDS "${GENERATED_VERSION_FILE}")
+
+# Parse project SDOM version from the version header (if available)
+set(SDOM_VERSION_STRING "")
+if(EXISTS "${VERSION_HEADER}")
+    file(READ "${VERSION_HEADER}" _ver_contents)
+    string(REGEX MATCHALL "([0-9]+)" _nums "${_ver_contents}")
+    if(_nums)
+        list(GET _nums 0 SDOM_VERSION_MAJOR)
+        list(GET _nums 1 SDOM_VERSION_MINOR)
+        list(GET _nums 2 SDOM_VERSION_PATCH)
+        set(SDOM_VERSION_STRING "${SDOM_VERSION_MAJOR}.${SDOM_VERSION_MINOR}.${SDOM_VERSION_PATCH}")
+    endif()
+endif()
+
+# If a generated version file already exists, read it and compare; if it
+# matches the project SDOM version we can skip running the generator.
+set(GENERATED_UP_TO_DATE OFF)
+if(EXISTS "${GENERATED_VERSION_FILE}")
+    file(READ "${GENERATED_VERSION_FILE}" _gver)
+    string(STRIP "${_gver}" _gver)
+    if(_gver STREQUAL SDOM_VERSION_STRING)
+        message(STATUS "Generated C API header is up-to-date: ${_gver}")
+        set(GENERATED_UP_TO_DATE ON)
+    else()
+        message(STATUS "Generated C API header version (${_gver}) differs from project version (${SDOM_VERSION_STRING}); generator will run")
+    endif()
+else()
+    message(STATUS "No generated C API header found; generator will run")
+endif()
+
+# Ensure the generator runs before building the library when needed.
+if(NOT GENERATED_UP_TO_DATE)
+    add_dependencies(${PROJECT_NAME} run_dataregistry_generator)
+endif()
+
+# Always add the generated dir to include directories so the compiler can
+# find the generated header after the generator runs.
+target_include_directories(${PROJECT_NAME} PRIVATE "${GENERATED_DIR}")
+
+message(STATUS "SDOM C API generated dir: ${GENERATED_DIR}")

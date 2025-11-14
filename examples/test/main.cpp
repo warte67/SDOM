@@ -130,7 +130,14 @@ int main(int argc, char** argv)
     // Expose C++ unit test functions to Lua so scripts can call them to run tests
     // (these are defined in UnitTests.hpp)
 
+    // fresh tests
     lua["Core_UnitTests"] = &SDOM::Core_UnitTests;
+    lua["Variant_UnitTests"] = &SDOM::Variant_UnitTests;
+    lua["DataRegistry_UnitTests"] = &SDOM::DataRegistry_UnitTests;
+    lua["Event_CAPI_UnitTests"] = &SDOM::Event_CAPI_UnitTests;
+    lua["EventType_CAPI_UnitTests"] = &SDOM::EventType_CAPI_UnitTests;
+
+    // stale legacy tests
     lua["IDisplayObject_UnitTests"] = &SDOM::IDisplayObject_UnitTests;
     lua["Event_UnitTests"] = &SDOM::Event_UnitTests;
     lua["EventType_UnitTests"] = &SDOM::EventType_UnitTests;
@@ -138,11 +145,9 @@ int main(int argc, char** argv)
     lua["AssetHandle_UnitTests"] = &SDOM::AssetHandle_UnitTests;
     lua["BitmapFont_UnitTests"] = &SDOM::BitmapFont_UnitTests;
     lua["Button_UnitTests"] = &SDOM::Button_UnitTests;
-
     lua["TristateButton_UnitTests"] = &SDOM::TristateButton_UnitTests;
 
-    lua["Variant_UnitTests"] = &SDOM::Variant_UnitTests;
-    lua["DataRegistry_UnitTests"] = &SDOM::DataRegistry_UnitTests;
+
     
     // Allow overriding which Lua config to run via command-line.
     // Priority:
@@ -199,7 +204,7 @@ int main(int argc, char** argv)
     core.getLua()["SDOM_RUN_LUA_UNIT_TESTS"] = false;
 
     // Register minimal types needed by tests
-    core.getFactory().registerDomType("Box", TypeCreators{
+    core.getFactory().registerDisplayObjectType("Box", TypeCreators{
         Box::CreateFromLua,
         Box::CreateFromInitStruct
     });

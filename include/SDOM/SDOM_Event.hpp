@@ -271,6 +271,10 @@ namespace SDOM
         // so Lua scripts can use evt.dt, evt.type, evt.target, evt.name, and evt:getName().
         static void registerLua(sol::state_view lua);
 
+    protected:
+        // IDataObject binding registration implementation (overrides IDataObject)
+        void registerBindingsImpl(const std::string& typeName) override;
+
     };
 
 } // namespace SDOM

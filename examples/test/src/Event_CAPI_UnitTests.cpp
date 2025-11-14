@@ -1,4 +1,4 @@
-// scaffold_UnitTests.cpp
+// Event_CAPI_UnitTests.cpp
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Factory.hpp>
@@ -7,10 +7,10 @@
 
 namespace SDOM
 {
-    // --- Individual Scaffold Unit Tests --- //
+    // --- Individual Event_CAPI Unit Tests --- //
 
     // ============================================================================
-    //  Test 0: Scaffold Template
+    //  Test 0: Event_CAPI Template
     // ----------------------------------------------------------------------------
     //  This template serves as a reference pattern for writing SDOM unit tests.
     //
@@ -29,7 +29,7 @@ namespace SDOM
     //   • Keep tests self-contained and deterministic.
     //
     // ============================================================================
-    bool scaffold_test0(std::vector<std::string>& errors)
+    bool Event_CAPI_test0(std::vector<std::string>& errors)
     {
         // Example: To report an error, use this pattern:
         // errors.push_back("Description of the failure.");
@@ -46,39 +46,39 @@ namespace SDOM
         return true; // ✅ finished this frame
         // return false; // 🔄 re-entrant test
 
-    } // END: scaffold_test0(std::vector<std::string>& errors)
+    } // END: Event_CAPI_test0(std::vector<std::string>& errors)
 
 
 
 
     // --- Lua Integration Tests --- //
 
-    bool scaffold_LUA_Tests(std::vector<std::string>& errors)
+    bool Event_CAPI_LUA_Tests(std::vector<std::string>& errors)
     {
-        return UnitTests::getInstance().run_lua_tests(errors, "src/scaffold_UnitTests.lua");
-    } // END: scaffold_LUA_Tests()
+        return UnitTests::getInstance().run_lua_tests(errors, "src/Event_CAPI_UnitTests.lua");
+    } // END: Event_CAPI_LUA_Tests()
 
 
     // --- Main UnitTests Runner --- //
-    bool scaffold_UnitTests()
+    bool Event_CAPI_UnitTests()
     {
-        const std::string objName = "scaffold";
+        const std::string objName = "Event_CAPI";
         UnitTests& ut = UnitTests::getInstance();
         // ut.clear_tests();
 
         static bool registered = false;
         if (!registered)
         {
-            ut.add_test(objName, "Test scaffold", scaffold_test0);
+            ut.add_test(objName, "Test Scaffold", Event_CAPI_test0);
 
-            ut.add_test(objName, "Lua: src/scaffold_UnitTests.lua", scaffold_LUA_Tests, false);
+            // ut.add_test(objName, "Lua: src/Event_CAPI_UnitTests.lua", Event_CAPI_LUA_Tests, false);
 
             registered = true;
         }
 
-        // return ut.run_all(objName, "scaffold");
+        // return ut.run_all(objName, "Event_CAPI");
         return true;
-    } // END: scaffold_UnitTests()
+    } // END: Event_CAPI_UnitTests()
 
 
 

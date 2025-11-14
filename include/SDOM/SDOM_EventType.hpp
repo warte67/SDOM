@@ -62,6 +62,9 @@
 #define __SDOM_EVENTTYPE_HPP__
 
 #include <unordered_set>
+#include <unordered_map>
+#include <atomic>
+#include <cstdint>
 
 
 namespace SDOM
@@ -254,9 +257,20 @@ namespace SDOM
         static std::string toString(const EventType& et);
         static size_t count();
 
+        // Numeric id support for C API interop
+        using IdType = uint32_t;
+        IdType getOrAssignId();
+        void setId(IdType id);
+        static EventType* fromId(IdType id);
+
     private:
         std::string name;
         static inline std::unordered_map<std::string, EventType*> registry;
+
+        // id registry + allocator for stable numeric ids
+        inline static std::unordered_map<IdType, EventType*> idRegistry;
+        inline static std::atomic<IdType> next_event_type_id{1};
+        IdType id_ = 0;
 
         bool captures_ = true;
         bool bubbles_ = true;

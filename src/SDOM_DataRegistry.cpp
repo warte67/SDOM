@@ -35,6 +35,25 @@ bool DataRegistry::registerType(const TypeInfo& info)
     return true;
 }
 
+bool DataRegistry::registerDataType(const TypeInfo& info)
+{
+    // Same behavior as registerType; preserve existing semantics.
+    return registerType(info);
+}
+
+// Non-template overloads ----------------------------------------------------
+void DataRegistry::registerFunction(const std::string& typeName, const FunctionInfo& meta)
+{
+    std::scoped_lock lk(mutex_);
+    types_[typeName].functions.push_back(meta);
+}
+
+void DataRegistry::registerProperty(const std::string& typeName, const PropertyInfo& meta)
+{
+    std::scoped_lock lk(mutex_);
+    types_[typeName].properties.push_back(meta);
+}
+
 const TypeInfo* DataRegistry::lookupType(const std::string& name) const
 {
     std::scoped_lock lk(mutex_);

@@ -10,59 +10,13 @@
 
 #include "Box.hpp"
 
-// ============================================================================
-// 🧩 SDOM::Event_UnitTests — Function Coverage Summary
-// ----------------------------------------------------------------------------
-//  This summary lists all primary functions and behaviors validated by this
-//  test module. It is auto-updated as new tests are added.
-// ----------------------------------------------------------------------------
-//
-//  🧱 Core EventType API
-//   • EventType::getRegistry()
-//   • EventType::getName()
-//   • EventType::getCaptures(), setCaptures()
-//   • EventType::getBubbles(),  setBubbles()
-//   • EventType::getTargetOnly(), setTargetOnly()
-//   • EventType::getGlobal(), setGlobal()
-//
-//  🧠 Event Dispatch & Listener API
-//   • DisplayHandle::addEventListener()
-//   • DisplayHandle::removeEventListener()
-//   • DisplayHandle::hasEventListener()
-//   • DisplayHandle::queue_event()
-//   • Event::getTypeName()
-//   • Event::setPayloadValue(), getPayloadValue()
-//
-//  ⚙️ EventManager Integration
-//   • EventManager::Queue_SDL_Event()
-//   • EventManager::dispatchWindowEvents()
-//   • EventManager::dispatchMouseEvents()
-//   • EventManager::dispatchKeyboardEvents()
-//   • EventManager::dispatchDragEvents()
-//   • EventManager::updateHoverState()
-//   • Core::pumpEventsOnce()
-//
-//  🧩 Unit Test Framework
-//   • UnitTests::get_frame_counter()
-//   • UnitTests::run_lua_tests()
-//   • Re-entrant test scheduling and frame synchronization
-//
-//  🧬 Coverage Domains
-//   - Core / Lifecycle Events
-//   - Mouse / Keyboard / Window Input
-//   - UI / Value / State Events
-//   - Behavioral Translation (SDL → SDOM)
-//   - Multi-frame Event Queue Validation
-//
-// ============================================================================
-
 
 namespace SDOM
 {
     // --- Individual Event Unit Tests --- //
 
     // ============================================================================
-    //  Test 0: Scaffolding Template
+    //  Test 0: Scaffold Template
     // ----------------------------------------------------------------------------
     //  This template serves as a reference pattern for writing SDOM unit tests.
     //
@@ -85,11 +39,15 @@ namespace SDOM
     {
         // Example: To report an error, use this pattern:
         // errors.push_back("Description of the failure.");
+        // ok = false;
 
         // TODO: Add test logic here
         // e.g., if (!condition) { errors.push_back("Reason for failure."); ok = false; }
 
-        // errors.push_back("Test Scaffold Error");
+        // To fetch the current frame:
+        // int current_frame = UnitTests::getInstance().get_frame_counter();
+
+        // Use State Machines when re-entrant tests are required to test SDOM main loop
 
         return true; // ✅ finished this frame
         // return false; // 🔄 re-entrant test

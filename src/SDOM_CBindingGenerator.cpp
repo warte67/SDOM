@@ -5,6 +5,12 @@
 #include <iomanip>
 
 #include <SDOM/SDOM_Version.hpp>
+#include <SDOM/SDOM_EventType.hpp>
+#include <unordered_map>
+
+// Local generator-only event id registry to avoid linking the full runtime
+[[maybe_unused]] static std::unordered_map<std::string, uint32_t> s_local_event_id_map;
+[[maybe_unused]] static uint32_t s_local_next_event_id = 1;
 
 using namespace SDOM;
 namespace fs = std::filesystem;
@@ -53,6 +59,23 @@ bool CBindingGenerator::generate(const DataRegistrySnapshot& snapshot, const std
         ofs << "void sdom_destroy_" << id << "(sdom_handle_t);\n\n";
     }
 
+    // Emit any explicit C function prototypes registered in the DataRegistry
+    // If a FunctionInfo includes a `c_signature`, prefer that. Otherwise
+    // emit a simple fallback prototype using the function name.
+    ofs << "/* Exported C API function prototypes (generated) */\n";
+    for (const auto &ti : snapshot.types) {
+        for (const auto &fi : ti.functions) {
+            if (!fi.exported) continue;
+            if (!fi.c_signature.empty()) {
+                ofs << fi.c_signature << "\n";
+            } else if (!fi.c_name.empty()) {
+                ofs << "/* fallback */ extern \"C\" void " << fi.c_name << "(void);\n";
+            } else {
+                ofs << "/* fallback */ extern \"C\" void " << fi.name << "(void);\n";
+            }
+        }
+    }
+
     ofs << "#ifdef __cplusplus\n}\n#endif\n\n";
     ofs << "#endif // SDOM_CAPI_OBJECTS_GENERATED_H\n";
 
@@ -68,5 +91,103 @@ bool CBindingGenerator::generate(const DataRegistrySnapshot& snapshot, const std
     std::ofstream vfh(join_path(outputDir, "sdom_capi_objects_generated.version"));
     if (vfh) vfh << ver.str() << std::endl;
 
+    // Emit event-specific bindings/header
+    try {
+        generateEventBindings(snapshot, outputDir);
+    } catch(...) {}
+    try {
+        emitCAPIEventsHeader(snapshot, outputDir);
+    } catch(...) {}
+
     return true;
+}
+
+bool CBindingGenerator::generateEventBindings(const DataRegistrySnapshot& snapshot, const std::string& outputDir) {
+    // Emit a small file that lists types that look like Event or EventType
+    const std::string filename = join_path(outputDir, "sdom_event_bindings_generated.h");
+    std::ofstream ofs(filename, std::ios::trunc);
+    if (!ofs) return false;
+
+    ofs << "/* Generated Event bindings (stub) */\n";
+    ofs << "#pragma once\n\n";
+    ofs << "// Types discovered in registry snapshot:\n";
+    for (const auto &ti : snapshot.types) {
+        if (ti.name.find("Event") != std::string::npos) {
+            ofs << "// " << ti.name << "\n";
+        }
+    }
+    ofs.close();
+    std::cout << "[CBindingGenerator] wrote " << filename << std::endl;
+    return true;
+}
+
+bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapshot, const std::string& outputDir) {
+    // Build a deterministic list of EventType entries from the registry
+    std::vector<std::string> events;
+    for (const auto &ti : snapshot.types) {
+        // We registered per-instance EventType entries as "EventType::<name>"
+        if (ti.name.rfind("EventType::", 0) == 0) {
+            events.push_back(ti.name.substr(strlen("EventType::")));
+        }
+    }
+
+    // Sort for deterministic output
+    std::sort(events.begin(), events.end());
+
+    // Assign stable IDs starting at 1
+    uint32_t nextId = 1;
+    std::vector<std::pair<std::string,uint32_t>> ordered;
+    for (const auto &n : events) {
+        ordered.emplace_back(n, nextId++);
+    }
+
+    // Helper to write a single file path
+    auto write_header = [&](const std::filesystem::path &outpath) -> bool {
+        std::error_code ec;
+        std::filesystem::create_directories(outpath.parent_path(), ec);
+        std::ofstream ofs(outpath.string(), std::ios::trunc);
+        if (!ofs) return false;
+
+        ofs << "/* Generated SDOM_CAPI_Events.h */\n";
+        ofs << "#pragma once\n\n";
+        ofs << "#include <stdint.h>\n\n";
+        ofs << "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n";
+        ofs << "typedef uint32_t SDOM_EventTypeId;\n\n";
+        ofs << "typedef enum SDOM_EventType {\n";
+        ofs << "    SDOM_EVENT_NONE = 0,\n";
+        for (const auto &kv : ordered) {
+            std::string idname = kv.first;
+            for (char &c : idname) if (c == ':' || c == ' ' || c == '-') c = '_';
+            // Uppercase
+            for (char &c : idname) c = toupper((unsigned char)c);
+            ofs << "    SDOM_EVENT_" << idname << " = " << kv.second << ",\n";
+        }
+        ofs << "} SDOM_EventType;\n\n";
+
+        ofs << "#ifdef __cplusplus\n}\n#endif\n";
+        ofs.close();
+        std::cout << "[CBindingGenerator] wrote " << outpath.string() << std::endl;
+        return true;
+    };
+
+    // Primary output (generator-specified directory)
+    std::filesystem::path primary = join_path(outputDir, "SDOM_CAPI_Events.h");
+    bool ok = write_header(primary);
+
+    // Also write into the repository include path: search upward for a
+    // directory containing a top-level CMakeLists.txt and write to
+    // REPO_ROOT/include/SDOM/CAPI/SDOM_CAPI_Events.h if found.
+    std::filesystem::path cwd = std::filesystem::current_path();
+    std::filesystem::path repo_root;
+    for (auto p = cwd; ; p = p.parent_path()) {
+        if (p == p.parent_path()) break; // reached filesystem root
+        if (std::filesystem::exists(p / "CMakeLists.txt")) { repo_root = p; break; }
+    }
+    if (!repo_root.empty()) {
+        std::filesystem::path repo_out = repo_root / "include" / "SDOM" / "CAPI" / "SDOM_CAPI_Events.h";
+        // best-effort write; ignore failures
+        try { write_header(repo_out); } catch(...) {}
+    }
+
+    return ok;
 }

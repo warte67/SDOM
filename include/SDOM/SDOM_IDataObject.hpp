@@ -242,6 +242,35 @@ namespace SDOM
             }
         }
 
+        /**
+         * @brief Register a full TypeInfo with the active registry (or global singleton).
+         * @param typeName The logical type name to register under (also stored in TypeInfo.name if empty).
+         * @param info The TypeInfo metadata to register.
+         */
+        void addDataType(const std::string& typeName, const SDOM::TypeInfo& info)
+        {
+            BIND_LOG("[" << typeName << "] addDataType: " << info.name);
+            SDOM::DataRegistry* r = IDataObject::activeRegistry();
+            SDOM::TypeInfo copy = info;
+            if (copy.name.empty()) copy.name = typeName;
+            if (r) {
+                r->registerDataType(copy);
+            } else {
+                DataRegistry::instance().registerDataType(copy);
+            }
+        }
+
+        /**
+         * @brief Convenience for registering EventType-related TypeInfo entries.
+         * @details Historically called "addEventType" in older branches; kept
+         *          for convenience and backwards compatibility.
+         */
+        void addEventType(const SDOM::TypeInfo& info)
+        {
+            const std::string tn = info.name.empty() ? std::string("EventType") : info.name;
+            addDataType(tn, info);
+        }
+
         // =============================================================
         // 🧩 Public Binding Entry Point
         // =============================================================

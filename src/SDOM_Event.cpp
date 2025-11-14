@@ -44,7 +44,10 @@
 #include <SDOM/SDOM_DisplayHandle.hpp>
 
 #include <SDOM/SDOM_Event.hpp>
+#include <SDOM/SDOM_EventType.hpp>
+#include <SDOM/SDOM_DataRegistry.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
+// #include <SDOM/SDOM_CAPI_Events_runtime.h>
 
 
 namespace SDOM
@@ -355,205 +358,468 @@ namespace SDOM
         return *this;
     }
 
-} // namespace SDOM
 
-// Lua registration implementation
-void SDOM::Event::registerLua(sol::state_view lua)
-{
-    try {
-        // Ensure EventType usertype is fully registered. Delegate to
-        // EventType::registerLua so the canonical usertype (with properties)
-        // is created exactly once and avoids partial registrations when
-        // Event::registerLua is called earlier than EventType::registerLua.
-        EventType::registerLua(lua);
+    // Lua registration implementation
+    void Event::registerLua(sol::state_view lua)
+    {
+        try {
+            // Ensure EventType usertype is fully registered. Delegate to
+            // EventType::registerLua so the canonical usertype (with properties)
+            // is created exactly once and avoids partial registrations when
+            // Event::registerLua is called earlier than EventType::registerLua.
+            EventType::registerLua(lua);
 
-        if (!lua["Event"].valid()) {
-            lua.new_usertype<Event>("Event", sol::no_constructor,
-                // existing convenience properties
-                "dt", sol::property([](const Event& e) { return e.getElapsedTime(); }),
-                "type", sol::property([](const Event& e) { return e.getTypeName(); }),
-                "target", sol::property([](const Event& e) { return e.getTarget(); }),
-                // sdl: returns a Lua table representation of the underlying SDL_Event (if any)
-                "sdl", sol::property([](const Event& e, sol::this_state s) -> sol::object {
-                    sol::state_view lua(s);
-                    try {
-                        // Convert the stored SDL_Event into a Lua table using SDL_Utils
-                        sol::table tbl = SDL_Utils::eventToLuaTable(e.getSDL_Event(), lua);
-                        return sol::object(lua, tbl);
-                    } catch (...) {
-                        // Return nil on any failure
-                        return sol::object(lua, sol::lua_nil);
-                    }
-                }),
-                // name helpers
-                "name", sol::property([](const Event& e) {
-                    try {
+            if (!lua["Event"].valid()) {
+                lua.new_usertype<Event>("Event", sol::no_constructor,
+                    // existing convenience properties
+                    "dt", sol::property([](const Event& e) { return e.getElapsedTime(); }),
+                    "type", sol::property([](const Event& e) { return e.getTypeName(); }),
+                    "target", sol::property([](const Event& e) { return e.getTarget(); }),
+                    // sdl: returns a Lua table representation of the underlying SDL_Event (if any)
+                    "sdl", sol::property([](const Event& e, sol::this_state s) -> sol::object {
+                        sol::state_view lua(s);
+                        try {
+                            // Convert the stored SDL_Event into a Lua table using SDL_Utils
+                            sol::table tbl = SDL_Utils::eventToLuaTable(e.getSDL_Event(), lua);
+                            return sol::object(lua, tbl);
+                        } catch (...) {
+                            // Return nil on any failure
+                            return sol::object(lua, sol::lua_nil);
+                        }
+                    }),
+                    // name helpers
+                    "name", sol::property([](const Event& e) {
+                        try {
+                            DisplayHandle dh = e.getTarget();
+                            // If there is an underlying object prefer its live name
+                            if (auto* obj = dh.get()) return obj->getName();
+                            // If no underlying object, fall back to the handle's cached name
+                            std::string hn = dh.getName();
+                            if (!hn.empty()) return hn;
+                        } catch (...) {}
+                        return e.getTypeName();
+                    }),
+                    "getName", [](const Event& e) -> std::string {
                         DisplayHandle dh = e.getTarget();
-                        // If there is an underlying object prefer its live name
                         if (auto* obj = dh.get()) return obj->getName();
-                        // If no underlying object, fall back to the handle's cached name
                         std::string hn = dh.getName();
                         if (!hn.empty()) return hn;
-                    } catch (...) {}
-                    return e.getTypeName();
-                }),
-                "getName", [](const Event& e) -> std::string {
-                    DisplayHandle dh = e.getTarget();
-                    if (auto* obj = dh.get()) return obj->getName();
-                    std::string hn = dh.getName();
-                    if (!hn.empty()) return hn;
-                    return e.getTypeName();
-                },
+                        return e.getTypeName();
+                    },
 
-                // Payload accessors
-                // getPayload requires access to the Lua state to return a sol::table safely
-                "getPayload", [](const Event& e, sol::this_state ts) -> sol::object {
-                    sol::state_view sv(ts);
-                    try {
-                        return sol::object(sv, e.getPayload());
-                    } catch (...) {
-                        return sol::object(sv, sv.create_table());
-                    }
-                },                
-                "setPayload", [](Event& e, const sol::table& t) { e.setPayload(t); return e; },
-
-                // Mouse event accessors (methods)
-                "getMouseX", &Event::getMouseX,
-                "setMouseX", &Event::setMouseX,
-                "getMouseY", &Event::getMouseY,
-                "setMouseY", &Event::setMouseY,
-                "getWheelX", &Event::getWheelX,
-                "setWheelX", &Event::setWheelX,
-                "getWheelY", &Event::getWheelY,
-                "setWheelY", &Event::setWheelY,
-                "getDragOffsetX", &Event::getDragOffsetX,
-                "setDragOffsetX", &Event::setDragOffsetX,
-                "getDragOffsetY", &Event::getDragOffsetY,
-                "setDragOffsetY", &Event::setDragOffsetY,
-                "getClickCount", &Event::getClickCount,
-                "setClickCount", &Event::setClickCount,
-                "getButton", &Event::getButton,
-                "setButton", &Event::setButton,
-
-                // Keyboard accessors (methods)
-                "getScanCode", &Event::getScanCode,
-                "setScanCode", &Event::setScanCode,
-                "getKeycode", &Event::getKeycode,
-                "setKeycode", &Event::setKeycode,
-                "getKeymod", &Event::getKeymod,
-                "setKeymod", &Event::setKeymod,
-                "getAsciiCode", &Event::getAsciiCode,
-                "setAsciiCode", &Event::setAsciiCode,
-
-                // Core/default accessors (methods)
-                "getType", &Event::getType,
-                "getTypeName", &Event::getTypeName,
-                "getPhaseString", &Event::getPhaseString,
-                "getPhase", &Event::getPhase,
-                "setPhase", &Event::setPhase,
-                "getTarget", &Event::getTarget,
-                "setTarget", &Event::setTarget,
-                "getCurrentTarget", &Event::getCurrentTarget,
-                "setCurrentTarget", &Event::setCurrentTarget,
-                "getRelatedTarget", &Event::getRelatedTarget,
-                "setRelatedTarget", &Event::setRelatedTarget,
-                "isPropagationStopped", &Event::isPropagationStopped,
-                "stopPropagation", &Event::stopPropagation,
-                "isDefaultBehaviorDisabled", &Event::isDefaultBehaviorDisabled,
-                "setDisableDefaultBehavior", &Event::setDisableDefaultBehavior,
-                "getUseCapture", &Event::getUseCapture,
-                "setUseCapture", &Event::setUseCapture,
-                "getElapsedTime", &Event::getElapsedTime,
-                "setElapsedTime", &Event::setElapsedTime,
-                "getSDLEvent", &Event::getSDL_Event,
-                "setSDLEvent", &Event::setSDL_Event,
-
-                // Lower-camelcase properties (convenience) - readable and writable where applicable
-                "mouse_x", sol::property(&Event::getMouseX, &Event::setMouseX),
-                "mouse_y", sol::property(&Event::getMouseY, &Event::setMouseY),
-                "wheel_x", sol::property(&Event::getWheelX, &Event::setWheelX),
-                "wheel_y", sol::property(&Event::getWheelY, &Event::setWheelY),
-                "drag_offset_x", sol::property(&Event::getDragOffsetX, &Event::setDragOffsetX),
-                "drag_offset_y", sol::property(&Event::getDragOffsetY, &Event::setDragOffsetY),
-                "click_count", sol::property(&Event::getClickCount, &Event::setClickCount),
-                "button", sol::property(&Event::getButton, &Event::setButton),
-                "scan_code", sol::property(&Event::getScanCode, &Event::setScanCode),
-                "keycode", sol::property(&Event::getKeycode, &Event::setKeycode),
-                "keymod", sol::property(&Event::getKeymod, &Event::setKeymod),
-                "ascii_code", sol::property(&Event::getAsciiCode, &Event::setAsciiCode),
-                // Targets as lower-camelcase properties for Lua convenience
-                "currentTarget", sol::property(&Event::getCurrentTarget, &Event::setCurrentTarget),
-                "relatedTarget", sol::property(&Event::getRelatedTarget, &Event::setRelatedTarget),
-
-                // maintain previous pairs meta-function
-                sol::meta_function::pairs, [](const Event& e, sol::this_state ts) {
-                    sol::state_view lua(ts);
-
-                    // iterator state stored in Lua as a user value
-                    struct event_iter_state {
-                        struct item {
-                            std::string key;
-                            // kind: 1 = string, 2 = number, 3 = object pointer
-                            int kind = 0;
-                            std::string sval;
-                            double dval = 0.0;
-                            SDOM::IDataObject* obj = nullptr;
-                        };
-                        std::size_t idx = 0;
-                        std::vector<item> items;
-                    };
-
-                    // populate iterator state with snapshot of keys/values we want to expose
-                    auto st = event_iter_state();
-                    try {
-                        st.items.push_back({"type", 1, e.getTypeName(), 0.0, nullptr});
-                    } catch (...) {}
-                    try {
-                        st.items.push_back({"dt", 2, std::string(), static_cast<double>(e.getElapsedTime()), nullptr});
-                    } catch (...) {}
-                    try {
-                        DisplayHandle dh = e.getTarget();
-                        if (dh) {
-                            // Prefer live object's name when available, otherwise the handle's cached name
-                            std::string targName;
-                            if (auto* obj = dh.get()) {
-                                try { targName = obj->getName(); } catch(...) { targName.clear(); }
-                            } else {
-                                try { targName = dh.getName(); } catch(...) { targName.clear(); }
-                            }
-                            if (!targName.empty()) {
-                                st.items.push_back({"target", 1, targName, 0.0, nullptr});
-                            }
+                    // Payload accessors
+                    // getPayload requires access to the Lua state to return a sol::table safely
+                    "getPayload", [](const Event& e, sol::this_state ts) -> sol::object {
+                        sol::state_view sv(ts);
+                        try {
+                            return sol::object(sv, e.getPayload());
+                        } catch (...) {
+                            return sol::object(sv, sv.create_table());
                         }
-                    } catch (...) {}
+                    },                
+                    "setPayload", [](Event& e, const sol::table& t) { e.setPayload(t); return e; },
 
-                    // the 'next' function for our iterator: it advances the index and returns key,value
-                    auto event_next = +[] (sol::user<event_iter_state&> user_st, sol::this_state ts) -> std::tuple<sol::object, sol::object> {
+                    // Mouse event accessors (methods)
+                    "getMouseX", &Event::getMouseX,
+                    "setMouseX", &Event::setMouseX,
+                    "getMouseY", &Event::getMouseY,
+                    "setMouseY", &Event::setMouseY,
+                    "getWheelX", &Event::getWheelX,
+                    "setWheelX", &Event::setWheelX,
+                    "getWheelY", &Event::getWheelY,
+                    "setWheelY", &Event::setWheelY,
+                    "getDragOffsetX", &Event::getDragOffsetX,
+                    "setDragOffsetX", &Event::setDragOffsetX,
+                    "getDragOffsetY", &Event::getDragOffsetY,
+                    "setDragOffsetY", &Event::setDragOffsetY,
+                    "getClickCount", &Event::getClickCount,
+                    "setClickCount", &Event::setClickCount,
+                    "getButton", &Event::getButton,
+                    "setButton", &Event::setButton,
+
+                    // Keyboard accessors (methods)
+                    "getScanCode", &Event::getScanCode,
+                    "setScanCode", &Event::setScanCode,
+                    "getKeycode", &Event::getKeycode,
+                    "setKeycode", &Event::setKeycode,
+                    "getKeymod", &Event::getKeymod,
+                    "setKeymod", &Event::setKeymod,
+                    "getAsciiCode", &Event::getAsciiCode,
+                    "setAsciiCode", &Event::setAsciiCode,
+
+                    // Core/default accessors (methods)
+                    "getType", &Event::getType,
+                    "getTypeName", &Event::getTypeName,
+                    "getPhaseString", &Event::getPhaseString,
+                    "getPhase", &Event::getPhase,
+                    "setPhase", &Event::setPhase,
+                    "getTarget", &Event::getTarget,
+                    "setTarget", &Event::setTarget,
+                    "getCurrentTarget", &Event::getCurrentTarget,
+                    "setCurrentTarget", &Event::setCurrentTarget,
+                    "getRelatedTarget", &Event::getRelatedTarget,
+                    "setRelatedTarget", &Event::setRelatedTarget,
+                    "isPropagationStopped", &Event::isPropagationStopped,
+                    "stopPropagation", &Event::stopPropagation,
+                    "isDefaultBehaviorDisabled", &Event::isDefaultBehaviorDisabled,
+                    "setDisableDefaultBehavior", &Event::setDisableDefaultBehavior,
+                    "getUseCapture", &Event::getUseCapture,
+                    "setUseCapture", &Event::setUseCapture,
+                    "getElapsedTime", &Event::getElapsedTime,
+                    "setElapsedTime", &Event::setElapsedTime,
+                    "getSDLEvent", &Event::getSDL_Event,
+                    "setSDLEvent", &Event::setSDL_Event,
+
+                    // Lower-camelcase properties (convenience) - readable and writable where applicable
+                    "mouse_x", sol::property(&Event::getMouseX, &Event::setMouseX),
+                    "mouse_y", sol::property(&Event::getMouseY, &Event::setMouseY),
+                    "wheel_x", sol::property(&Event::getWheelX, &Event::setWheelX),
+                    "wheel_y", sol::property(&Event::getWheelY, &Event::setWheelY),
+                    "drag_offset_x", sol::property(&Event::getDragOffsetX, &Event::setDragOffsetX),
+                    "drag_offset_y", sol::property(&Event::getDragOffsetY, &Event::setDragOffsetY),
+                    "click_count", sol::property(&Event::getClickCount, &Event::setClickCount),
+                    "button", sol::property(&Event::getButton, &Event::setButton),
+                    "scan_code", sol::property(&Event::getScanCode, &Event::setScanCode),
+                    "keycode", sol::property(&Event::getKeycode, &Event::setKeycode),
+                    "keymod", sol::property(&Event::getKeymod, &Event::setKeymod),
+                    "ascii_code", sol::property(&Event::getAsciiCode, &Event::setAsciiCode),
+                    // Targets as lower-camelcase properties for Lua convenience
+                    "currentTarget", sol::property(&Event::getCurrentTarget, &Event::setCurrentTarget),
+                    "relatedTarget", sol::property(&Event::getRelatedTarget, &Event::setRelatedTarget),
+
+                    // maintain previous pairs meta-function
+                    sol::meta_function::pairs, [](const Event& e, sol::this_state ts) {
                         sol::state_view lua(ts);
-                        event_iter_state& s = user_st;
-                        if (s.idx >= s.items.size()) {
-                            return std::make_tuple(sol::object(lua, sol::lua_nil), sol::object(lua, sol::lua_nil));
-                        }
-                        auto &it = s.items[s.idx++];
-                        sol::object k(lua, sol::in_place, it.key);
-                        sol::object v;
-                        if (it.kind == 1) {
-                            v = sol::object(lua, sol::in_place, it.sval);
-                        } else if (it.kind == 2) {
-                            v = sol::object(lua, sol::in_place, it.dval);
-                        } else {
-                            v = sol::object(lua, sol::lua_nil);
-                        }
-                        return std::make_tuple(k, v);
-                    };
 
-                    // return (iterator function, user state, nil)
-                    return std::make_tuple(event_next, sol::user<event_iter_state>(std::move(st)), sol::lua_nil);
-                }
-            );
+                        // iterator state stored in Lua as a user value
+                        struct event_iter_state {
+                            struct item {
+                                std::string key;
+                                // kind: 1 = string, 2 = number, 3 = object pointer
+                                int kind = 0;
+                                std::string sval;
+                                double dval = 0.0;
+                                SDOM::IDataObject* obj = nullptr;
+                            };
+                            std::size_t idx = 0;
+                            std::vector<item> items;
+                        };
+
+                        // populate iterator state with snapshot of keys/values we want to expose
+                        auto st = event_iter_state();
+                        try {
+                            st.items.push_back({"type", 1, e.getTypeName(), 0.0, nullptr});
+                        } catch (...) {}
+                        try {
+                            st.items.push_back({"dt", 2, std::string(), static_cast<double>(e.getElapsedTime()), nullptr});
+                        } catch (...) {}
+                        try {
+                            DisplayHandle dh = e.getTarget();
+                            if (dh) {
+                                // Prefer live object's name when available, otherwise the handle's cached name
+                                std::string targName;
+                                if (auto* obj = dh.get()) {
+                                    try { targName = obj->getName(); } catch(...) { targName.clear(); }
+                                } else {
+                                    try { targName = dh.getName(); } catch(...) { targName.clear(); }
+                                }
+                                if (!targName.empty()) {
+                                    st.items.push_back({"target", 1, targName, 0.0, nullptr});
+                                }
+                            }
+                        } catch (...) {}
+
+                        // the 'next' function for our iterator: it advances the index and returns key,value
+                        auto event_next = +[] (sol::user<event_iter_state&> user_st, sol::this_state ts) -> std::tuple<sol::object, sol::object> {
+                            sol::state_view lua(ts);
+                            event_iter_state& s = user_st;
+                            if (s.idx >= s.items.size()) {
+                                return std::make_tuple(sol::object(lua, sol::lua_nil), sol::object(lua, sol::lua_nil));
+                            }
+                            auto &it = s.items[s.idx++];
+                            sol::object k(lua, sol::in_place, it.key);
+                            sol::object v;
+                            if (it.kind == 1) {
+                                v = sol::object(lua, sol::in_place, it.sval);
+                            } else if (it.kind == 2) {
+                                v = sol::object(lua, sol::in_place, it.dval);
+                            } else {
+                                v = sol::object(lua, sol::lua_nil);
+                            }
+                            return std::make_tuple(k, v);
+                        };
+
+                        // return (iterator function, user state, nil)
+                        return std::make_tuple(event_next, sol::user<event_iter_state>(std::move(st)), sol::lua_nil);
+                    }
+                );
+            }
+        } catch (...) {
+            // non-fatal
+            WARNING("Failed to register Event with Lua");
         }
-    } catch (...) {
-        // non-fatal
-        WARNING("Failed to register Event with Lua");
-    }
-}
+    } // END Event::registerLua(sol::state_view lua)
+
+    // IDataObject binding registration for Event (DataRegistry + Lua helpers)
+    void Event::registerBindingsImpl(const std::string& typeName)
+    {
+        // Base info
+        BIND_INFO(typeName, "Event");
+
+        // Ensure EventType usertype/table is registered in Lua so scripts can refer to constants
+        try {
+            EventType::registerLua(SDOM::getLua());
+        } catch(...) {}
+
+        // Properties
+        addProperty(typeName, "name",
+            [](const Event& e) { return e.getTypeName(); },
+            [](Event& e, const std::string& v) { e.setPayload(e.getPayload()); /* noop for name on Event */ });
+
+        addProperty(typeName, "captures",
+            [](const Event& e) { return e.getUseCapture(); },
+            [](Event& e, bool v) { e.setUseCapture(v); });
+
+        addProperty(typeName, "dt",
+            [](const Event& e) { return e.getElapsedTime(); },
+            [](Event& e, float v) { e.setElapsedTime(v); });
+
+        // coerce enum properties to integers for binding
+        addProperty(typeName, "phase",
+            [](const Event& e) { return static_cast<int>(e.getPhase()); },
+            [](Event& e, int v) { e.setPhase(static_cast<Event::Phase>(v)); });
+
+        // Register a function to declare/register EventTypes from Lua/registry table
+        addFunction(typeName, "registerEventType", [](const sol::table& desc) {
+            try {
+                if (!desc["name"].valid()) return;
+                std::string name = desc["name"].get<std::string>();
+                EventType et(name);
+                if (desc["captures"].valid()) et.setCaptures(desc["captures"].get<bool>());
+                if (desc["bubbles"].valid()) et.setBubbles(desc["bubbles"].get<bool>());
+                if (desc["targetOnly"].valid()) et.setTargetOnly(desc["targetOnly"].get<bool>());
+                if (desc["global"].valid()) et.setGlobal(desc["global"].get<bool>());
+                if (desc["critical"].valid()) et.setCritical(desc["critical"].get<bool>());
+                if (desc["meter_enabled"].valid()) et.setMeterEnabled(desc["meter_enabled"].get<bool>());
+                if (desc["meter_interval_ms"].valid()) et.setMeterIntervalMs(static_cast<uint16_t>(desc["meter_interval_ms"].get<int>()));
+                // coalesce enums may be passed as integer
+                if (desc["coalesce_strategy"].valid()) et.setCoalesceStrategy(static_cast<EventType::CoalesceStrategy>(desc["coalesce_strategy"].get<int>()));
+                if (desc["coalesce_key"].valid()) et.setCoalesceKey(static_cast<EventType::CoalesceKey>(desc["coalesce_key"].get<int>()));
+            } catch(...) {}
+        });
+
+        addFunction(typeName, "getEventTypeByName", [](const std::string& name) -> std::string {
+            EventType* et = EventType::fromName(name);
+            if (!et) return std::string();
+            return et->getName();
+        });
+
+        // --- Populate DataRegistry with EventType metadata ---
+        // --- Register canonical DataTypes for EventType and enums ---
+        try {
+            // 1) EventType DataType: properties + functions that operate on an EventType id
+            SDOM::TypeInfo etype;
+            etype.name = "EventType";
+            etype.cpp_type_id = "SDOM::EventType";
+    
+            SDOM::PropertyInfo pp;
+            pp.name = "captures";
+            pp.cpp_type = "bool";
+            pp.read_only = false;
+            pp.doc = "Whether this event type participates in the capture phase.";
+            etype.properties.push_back(pp);
+    
+            pp.name = "bubbles";
+            pp.cpp_type = "bool";
+            pp.read_only = false;
+            pp.doc = "Whether this event type bubbles.";
+            etype.properties.push_back(pp);
+    
+            pp.name = "targetOnly";
+            pp.cpp_type = "bool";
+            pp.read_only = false;
+            pp.doc = "If true the event is target-only (no capture/bubble).";
+            etype.properties.push_back(pp);
+    
+            pp.name = "global";
+            pp.cpp_type = "bool";
+            pp.read_only = false;
+            pp.doc = "Whether this event type is considered global.";
+            etype.properties.push_back(pp);
+    
+            // instance-style functions that accept EventType id as first arg
+            SDOM::FunctionInfo fi;
+            fi.name = "get_name";
+            fi.cpp_signature = "std::string(SDOM::EventType::IdType)";
+            fi.return_type = "const char*";
+            fi.c_signature = "const char* SDOM_EventType_name_for_id(SDOM_EventTypeId id);";
+            fi.doc = "Return the EventType name for the given id.";
+            etype.functions.push_back(fi);
+    
+            fi.name = "get_id_for_name";
+            fi.cpp_signature = "SDOM::EventType::IdType(const std::string&)";
+            fi.return_type = "uint32_t";
+            fi.c_signature = "SDOM_EventTypeId SDOM_EventType_id_for_name(const char* name);";
+            fi.doc = "Return numeric id for the given EventType name (assigns if missing).";
+            etype.functions.push_back(fi);
+    
+            // getters/setters for boolean properties (take id as first param)
+            SDOM::FunctionInfo g;
+            g.name = "get_captures";
+            g.cpp_signature = "bool(SDOM::EventType::IdType)";
+            g.return_type = "bool";
+            g.c_signature = "bool SDOM_EventType_get_captures(SDOM_EventTypeId id);";
+            g.doc = "Get captures flag for EventType id.";
+            etype.functions.push_back(g);
+    
+            g.name = "set_captures";
+            g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
+            g.return_type = "void";
+            g.c_signature = "void SDOM_EventType_set_captures(SDOM_EventTypeId id, bool v);";
+            g.doc = "Set captures flag for EventType id.";
+            etype.functions.push_back(g);
+    
+            g.name = "get_bubbles";
+            g.cpp_signature = "bool(SDOM::EventType::IdType)";
+            g.return_type = "bool";
+            g.c_signature = "bool SDOM_EventType_get_bubbles(SDOM_EventTypeId id);";
+            g.doc = "Get bubbles flag for EventType id.";
+            etype.functions.push_back(g);
+    
+            g.name = "set_bubbles";
+            g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
+            g.return_type = "void";
+            g.c_signature = "void SDOM_EventType_set_bubbles(SDOM_EventTypeId id, bool v);";
+            g.doc = "Set bubbles flag for EventType id.";
+            etype.functions.push_back(g);
+    
+            g.name = "get_target_only";
+            g.cpp_signature = "bool(SDOM::EventType::IdType)";
+            g.return_type = "bool";
+            g.c_signature = "bool SDOM_EventType_get_target_only(SDOM_EventTypeId id);";
+            g.doc = "Get targetOnly flag for EventType id.";
+            etype.functions.push_back(g);
+    
+            g.name = "set_target_only";
+            g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
+            g.return_type = "void";
+            g.c_signature = "void SDOM_EventType_set_target_only(SDOM_EventTypeId id, bool v);";
+            g.doc = "Set targetOnly flag for EventType id.";
+            etype.functions.push_back(g);
+    
+            g.name = "get_global";
+            g.cpp_signature = "bool(SDOM::EventType::IdType)";
+            g.return_type = "bool";
+            g.c_signature = "bool SDOM_EventType_get_global(SDOM_EventTypeId id);";
+            g.doc = "Get global flag for EventType id.";
+            etype.functions.push_back(g);
+    
+            g.name = "set_global";
+            g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
+            g.return_type = "void";
+            g.c_signature = "void SDOM_EventType_set_global(SDOM_EventTypeId id, bool v);";
+            g.doc = "Set global flag for EventType id.";
+            etype.functions.push_back(g);
+    
+            // Register the canonical EventType data type in the global registry
+            addDataType("EventType", etype);
+    
+            // 2) CoalesceStrategy enum description
+            SDOM::TypeInfo csinfo;
+            csinfo.name = "EventType::CoalesceStrategy";
+            csinfo.cpp_type_id = "SDOM::EventType::CoalesceStrategy";
+            csinfo.doc = "Enum: None=0, Last=1, Sum=2, Count=3";
+            addDataType(csinfo.name, csinfo);
+    
+            // 3) CoalesceKey enum description
+            SDOM::TypeInfo ckinfo;
+            ckinfo.name = "EventType::CoalesceKey";
+            ckinfo.cpp_type_id = "SDOM::EventType::CoalesceKey";
+            ckinfo.doc = "Enum: Global=0, ByTarget=1";
+            addDataType(ckinfo.name, ckinfo);
+    
+        } catch(...) {
+            BIND_WARN("Event::registerBindingsImpl: failed to register EventType DataTypes");
+        }
+        // Re-register any already-constructed EventType instances so the
+        // generator sees per-instance metadata (EventType::<name>) for
+        // each built-in event. Use addDataType to forward metadata.
+        try {
+            auto all = EventType::getAll();
+            for (EventType* et : all) {
+                if (!et) continue;
+                SDOM::TypeInfo ti;
+                ti.name = std::string("EventType::") + et->getName();
+                ti.cpp_type_id = et->getName();
+
+                SDOM::PropertyInfo p;
+                p.name = "captures";
+                p.cpp_type = "bool";
+                p.read_only = false;
+                p.doc = "Whether this event type participates in the capture phase.";
+                ti.properties.push_back(p);
+
+                p.name = "bubbles";
+                p.cpp_type = "bool";
+                p.read_only = false;
+                p.doc = "Whether this event type bubbles.";
+                ti.properties.push_back(p);
+
+                p.name = "target_only";
+                p.cpp_type = "bool";
+                p.read_only = false;
+                p.doc = "If true the event is target-only (no capture/bubble).";
+                ti.properties.push_back(p);
+
+                p.name = "global";
+                p.cpp_type = "bool";
+                p.read_only = false;
+                p.doc = "Whether this event type is considered global.";
+                ti.properties.push_back(p);
+
+                SDOM::FunctionInfo fi;
+                fi.name = "getName";
+                fi.cpp_signature = "std::string()";
+                fi.return_type = "std::string";
+                fi.doc = "Return the canonical name of the EventType.";
+                fi.is_static = false;
+                ti.functions.push_back(fi);
+
+                fi.name = "getId";
+                fi.cpp_signature = "uint32_t()";
+                fi.return_type = "uint32_t";
+                fi.doc = "Return the numeric id for this EventType (assigning one if necessary).";
+                fi.is_static = false;
+                ti.functions.push_back(fi);
+
+                        addDataType(ti.name, ti);
+            }
+        } catch(...) {
+            BIND_WARN("Event::registerBindingsImpl: failed to register existing EventType instances");
+        }
+        // Register class-level helpers under the "EventType" type so generators
+        // can emit runtime helpers. Use IDataObject registration helpers so
+        // the DataRegistry gets metadata + callables when available.
+        addFunction("EventType", "registerEventType", [](const std::string& name, bool captures, bool bubbles, bool targetOnly, bool global) {
+            new EventType(name, captures, bubbles, targetOnly, global);
+        });
+
+        addFunction("EventType", "isRegistered", [](const std::string& name) -> bool {
+            return EventType::isRegistered(name);
+        });
+
+        addFunction("EventType", "idForName", [](const std::string& name) -> uint32_t {
+            if (auto *et = EventType::fromName(name)) return static_cast<uint32_t>(et->getOrAssignId());
+            auto *et = new EventType(name);
+            return static_cast<uint32_t>(et->getOrAssignId());
+        });
+
+        addFunction("EventType", "nameForId", [](uint32_t id) -> std::string {
+            if (auto *et = EventType::fromId(static_cast<EventType::IdType>(id))) return et->getName();
+            return std::string();
+        });
+        
+    } // END Event::registerBindingsImpl(const std::string& typeName)
+
+
+} // namespace SDOM
