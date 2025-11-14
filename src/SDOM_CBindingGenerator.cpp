@@ -213,12 +213,47 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         } else {
             ofs << ",\n";
         }
+        // helper: convert a PascalCase/CamelCase name into SCREAMING_SNAKE_CASE
+        auto to_screaming_snake = [](const std::string &s) -> std::string {
+            std::string out;
+            out.reserve(s.size()*2);
+            for (size_t i = 0; i < s.size(); ++i) {
+                char c = s[i];
+                if (c == ':' || c == ' ' || c == '-') {
+                    if (out.empty() || out.back() == '_') continue;
+                    out.push_back('_');
+                    continue;
+                }
+                if (std::isupper(static_cast<unsigned char>(c))) {
+                    if (!out.empty() && out.back() != '_') {
+                        char prev = s[i>0?i-1:0];
+                        bool prev_lower = std::islower(static_cast<unsigned char>(prev));
+                        bool prev_upper = std::isupper(static_cast<unsigned char>(prev));
+                        bool next_lower = (i+1 < s.size() && std::islower(static_cast<unsigned char>(s[i+1])));
+                        if (prev_lower || (prev_upper && next_lower)) out.push_back('_');
+                    }
+                    out.push_back(static_cast<char>(std::toupper(static_cast<unsigned char>(c))));
+                    continue;
+                }
+                // lowercase or other chars: convert to upper and append
+                out.push_back(static_cast<char>(std::toupper(static_cast<unsigned char>(c))));
+            }
+            // collapse repeated underscores
+            std::string dst;
+            dst.reserve(out.size());
+            for (char ch : out) {
+                if (ch == '_' && !dst.empty() && dst.back() == '_') continue;
+                dst.push_back(ch);
+            }
+            // trim leading/trailing underscores
+            if (!dst.empty() && dst.front() == '_') dst.erase(dst.begin());
+            if (!dst.empty() && dst.back() == '_') dst.pop_back();
+            return dst;
+        };
+
         for (const auto &kv : ordered) {
             // sanitize identifier
-            std::string idname = kv.name;
-            for (char &c : idname) if (c == ':' || c == ' ' || c == '-') c = '_';
-            // Uppercase
-            for (char &c : idname) c = toupper((unsigned char)c);
+            std::string idname = to_screaming_snake(kv.name);
 
             // Skip duplicate NONE entry: we emit SDOM_EVENT_NONE = 0 above.
             if (idname == "NONE") continue;

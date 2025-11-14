@@ -64,9 +64,6 @@ int main(int argc, char** argv) {
             ti.name = std::string("EventType::") + et->getName();
             ti.cpp_type_id = et->getName();
             try { ti.doc = et->getDoc(); } catch(...) { ti.doc.clear(); }
-            if (ti.doc.empty() && et->getName() == "None") {
-                ti.doc = "The `None` EventType is mainly for testing or to represent a non-event";
-            }
 
             SDOM::PropertyInfo p;
             p.name = "captures";
