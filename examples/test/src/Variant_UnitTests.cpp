@@ -614,7 +614,7 @@ namespace SDOM
         Core& core = getCore();
         sol::state& L = core.getLua();
 
-    const int depth = 120; // deep but chosen to avoid practical stack overflow
+        const int depth = 120; // deep but chosen to avoid practical stack overflow
 
         // 1) Build a deep C++ Variant object chain: { inner: { inner: ... } }
         Variant root = Variant::makeObject();
@@ -629,13 +629,13 @@ namespace SDOM
             cur = next;
         }
 
-    // Ensure toDebugString with very small depth does not include deep marker
-    std::string shallow = root.toDebugString(1);
-        if (shallow.find("__mark") != std::string::npos) errors.push_back("Deep recursion: shallow toDebugString unexpectedly contains deep markers");
+        // Ensure toDebugString with very small depth does not include deep marker
+        std::string shallow = root.toDebugString(1);
+        if (shallow.find("__mark") != std::string::npos) { errors.push_back("Deep recursion: shallow toDebugString unexpectedly contains deep markers"); }
 
         // Deep toDebugString should include deepest marker
         std::string deep = root.toDebugString(depth + 5);
-        if (deep.find(std::to_string(depth-1)) == std::string::npos) errors.push_back("Deep recursion: deep toDebugString missing deepest marker");
+        if (deep.find(std::to_string(depth-1)) == std::string::npos) { errors.push_back("Deep recursion: deep toDebugString missing deepest marker"); }
 
         // 2) Build a deep Lua table and snapshot it
         auto prev = Variant::getTableStorageMode();
@@ -676,8 +676,8 @@ namespace SDOM
         // Define a simple stress type and converter
         struct Stress { int v; };
 
-    std::atomic<int> toLua_calls{0};
-    std::atomic<int> from_calls{0};
+        std::atomic<int> toLua_calls{0};
+        std::atomic<int> from_calls{0};
 
         Variant::ConverterEntry ce;
         ce.toLua = [&toLua_calls]([[maybe_unused]] const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {

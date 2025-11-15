@@ -1,29 +1,55 @@
 #!/bin/bash
 
-# Usage: ./rebuild [local]
-# If "local" is passed, install to $HOME/.local, else install system-wide to /usr/local
+# Usage: ./rebuild [local] [asan]
+#  - local  : Debug build, install to $HOME/.local
+#  - (none) : Release build, install to /usr/local
+#  - asan   : Enable AddressSanitizer on core library build (works with either mode)
+#
+# Examples:
+#   ./rebuild local            # Debug + local install
+#   ./rebuild                  # Release + system install
+#   ./rebuild local asan       # Debug + ASAN + local install
+#   ./rebuild asan             # Release + ASAN + system install
+#
 # Make sure your headers are in include/SDOM/ and your CMakeLists.txt uses:
 #   install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/SDOM DESTINATION include)
 
 BUILD_DIR="build"
 
-if [ "$1" == "local" ]; then
-    echo "Cleaning build artifacts..."
-    rm -rf "$BUILD_DIR"
-    mkdir "$BUILD_DIR"
-    cd "$BUILD_DIR"
-    echo "Running cmake for local install (Debug)..."
-    cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="$HOME/.local" ..
-    make -j$(nproc)
-    make install
-    exit 0
-fi
+# Parse args
+LOCAL=false
+ENABLE_ASAN=false
+for arg in "$@"; do
+  case "$arg" in
+    local) LOCAL=true ;;
+    asan)  ENABLE_ASAN=true ;;
+    *) ;;
+  esac
+done
 
-# System-wide install (requires sudo for make install)
+echo "Cleaning build artifacts..."
 rm -rf "$BUILD_DIR"
-mkdir "$BUILD_DIR"
+mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
-echo "Running cmake for system install (Release)..."
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
-make -j$(nproc)
-sudo make install
+
+if $LOCAL; then
+  echo "Running cmake for local install (Debug)..."
+  if $ENABLE_ASAN; then
+    echo "ASAN: enabled for core library"
+    cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="$HOME/.local" -DENABLE_ASAN=ON ..
+  else
+    cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="$HOME/.local" ..
+  fi
+  make -j$(nproc)
+  make install
+else
+  echo "Running cmake for system install (Release)..."
+  if $ENABLE_ASAN; then
+    echo "ASAN: enabled for core library"
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DENABLE_ASAN=ON ..
+  else
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+  fi
+  make -j$(nproc)
+  sudo make install
+fi

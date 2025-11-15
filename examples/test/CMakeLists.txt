@@ -32,6 +32,10 @@ endif()
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -Wall -Wno-comment -Wextra -Wno-reorder -Wno-unused-parameter")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Wall -Wextra -Wno-comment -Wno-reorder -Wno-unused-parameter -DNDEBUG")
 
+# Optional sanitizers for the test app (useful for Release-only crashes)
+option(ENABLE_ASAN "Enable AddressSanitizer for test app" OFF)
+option(ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer for test app" OFF)
+
 # Dependencies
 find_package(SDL3 REQUIRED CONFIG)
 find_package(SDL3_image REQUIRED CONFIG)
@@ -40,16 +44,7 @@ find_library(LUA_LIB lua5.4)
 find_package(Threads REQUIRED)
 
 # Include directories
-# Prefer user-local includes for Debug/development; Release may use
-# system-wide install locations (/usr/local) so add them when present.
 include_directories($ENV{HOME}/.local/include)      # SDL3 Includes (local)
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    if(EXISTS "/usr/local/include/SDOM")
-        message(STATUS "Release build: adding /usr/local/include to include dirs")
-        include_directories(/usr/local/include)
-    endif()
-endif()
-
 include_directories(${PROJECT_SOURCE_DIR}/include)  # SDOM Includes
 include_directories(${PROJECT_SOURCE_DIR}/test_include)  # test-only C API includes
 include_directories(${PROJECT_SOURCE_DIR}/../../sol2/include)
@@ -75,17 +70,8 @@ if(EXISTS "${SDOM_BUILD_LIB}")
     message(STATUS "Linking against in-tree SDOM: ${SDOM_BUILD_LIB}")
     set(SDOM_LIB_PATH "${SDOM_BUILD_LIB}")
 else()
-    # Prefer user-local install, but for Release try system-wide /usr/local
-    if(CMAKE_BUILD_TYPE STREQUAL "Release" AND EXISTS "/usr/local/lib/libSDOM.a")
-        message(STATUS "Release build: linking against system SDOM: /usr/local/lib/libSDOM.a")
-        set(SDOM_LIB_PATH "/usr/local/lib/libSDOM.a")
-    elseif(EXISTS "$ENV{HOME}/.local/lib/libSDOM.a")
-        message(STATUS "Linking against user SDOM install: $ENV{HOME}/.local/lib/libSDOM.a")
-        set(SDOM_LIB_PATH "$ENV{HOME}/.local/lib/libSDOM.a")
-    else()
-        message(WARNING "SDOM library not found in-tree nor in ~/.local or /usr/local; build may fail")
-        set(SDOM_LIB_PATH "$ENV{HOME}/.local/lib/libSDOM.a")
-    endif()
+    message(STATUS "Linking against user SDOM install: $ENV{HOME}/.local/lib/libSDOM.a")
+    set(SDOM_LIB_PATH "$ENV{HOME}/.local/lib/libSDOM.a")
 endif()
 
 target_link_libraries(prog
@@ -100,6 +86,18 @@ target_link_libraries(prog
 # Output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+# Apply sanitizers to the test executable if requested
+if(ENABLE_ASAN)
+    message(STATUS "Test app: AddressSanitizer enabled")
+    target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=address -fno-omit-frame-pointer -g -O1)
+    target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address)
+endif()
+if(ENABLE_UBSAN)
+    message(STATUS "Test app: UndefinedBehaviorSanitizer enabled")
+    target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=undefined -fno-sanitize-recover=undefined -g -O1)
+    target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=undefined)
+endif()
 
 # ======================================================
 #  Optional: dataregistry_generator to emit C API header
