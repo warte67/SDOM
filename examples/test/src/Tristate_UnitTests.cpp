@@ -89,10 +89,12 @@ namespace SDOM
     {
         Factory& f = getCore().getFactory();
         DisplayHandle h = f.getDisplayObject(preferredName);
-        if (!h) {
+        if (h == nullptr) {
             // fallback to a couple of other names from config
             h = f.getDisplayObject("mainFrame_CheckButton_2");
-            if (!h) h = f.getDisplayObject("mainFrame_CheckButton_3");
+            if (h == nullptr) {
+                h = f.getDisplayObject("mainFrame_CheckButton_3");
+            }
         }
         return h ? dynamic_cast<TristateButton*>(h.get()) : nullptr;
     }
@@ -163,7 +165,7 @@ namespace SDOM
         auto& factory = getCore().getFactory();
         factory.onInit();
 
-        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) errors.push_back(msg); };
+        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) { errors.push_back(msg); } };
 
         TristateButton* tb = get_any_tristate_button();
         if (!tb) { errors.push_back("No TristateButton-derived object found (expected CheckButton)"); return true; }
@@ -196,7 +198,7 @@ namespace SDOM
         auto& factory = getCore().getFactory();
         factory.onInit();
 
-        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) errors.push_back(msg); };
+        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) { errors.push_back(msg); } };
 
         TristateButton* tb = get_any_tristate_button();
         if (!tb) { errors.push_back("No TristateButton-derived object found (expected CheckButton)"); return true; }
@@ -234,7 +236,7 @@ namespace SDOM
         auto& factory = getCore().getFactory();
         factory.onInit();
 
-        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) errors.push_back(msg); };
+        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) { errors.push_back(msg); } };
 
         TristateButton* tb = get_any_tristate_button();
         if (!tb) { errors.push_back("No TristateButton-derived object found (expected CheckButton)"); return true; }
@@ -260,7 +262,7 @@ namespace SDOM
         auto& factory = getCore().getFactory();
         factory.onInit();
 
-        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) errors.push_back(msg); };
+        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) { errors.push_back(msg); } };
 
         TristateButton* tb = get_any_tristate_button();
         if (!tb) { errors.push_back("No TristateButton-derived object found (expected CheckButton)"); return true; }
@@ -284,7 +286,7 @@ namespace SDOM
         auto& factory = getCore().getFactory();
         factory.onInit();
 
-        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) errors.push_back(msg); };
+        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) { errors.push_back(msg); } };
 
         TristateButton* tb = get_any_tristate_button();
         if (!tb) { errors.push_back("No TristateButton-derived object found (expected CheckButton)"); return true; }

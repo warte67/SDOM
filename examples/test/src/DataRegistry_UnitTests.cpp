@@ -25,7 +25,9 @@ extern "C" {
 
 sdom_handle_t sdom_test_create_label(const char* name)
 {
-    if (!name) name = "capi_label";
+    if (name == nullptr) {
+        name = "capi_label";
+    }
     // Create a Label with minimal InitStruct and return a heap-allocated
     // TestHandle that contains the DisplayHandle.
     // Use the Label-specific InitStruct so we can provide a font resource
@@ -45,9 +47,13 @@ sdom_handle_t sdom_test_create_label(const char* name)
 
 const char* sdom_test_get_name(sdom_handle_t handle)
 {
-    if (!handle) return nullptr;
+    if (handle == nullptr) {
+        return nullptr;
+    }
     TestHandle* th = reinterpret_cast<TestHandle*>(handle);
-    if (!th->h.isValid() || !th->h.get()) return nullptr;
+    if (!th->h.isValid() || !th->h.get()) {
+        return nullptr;
+    }
     // getName() returns a std::string by value; returning c_str() from that
     // temporary yields a dangling pointer. Use a thread_local string to hold
     // a stable copy for the caller (tests in this repo do not free the
@@ -59,15 +65,21 @@ const char* sdom_test_get_name(sdom_handle_t handle)
 
 void sdom_test_set_name(sdom_handle_t handle, const char* newName)
 {
-    if (!handle || !newName) return;
+    if (handle == nullptr || newName == nullptr) {
+        return;
+    }
     TestHandle* th = reinterpret_cast<TestHandle*>(handle);
-    if (!th->h.isValid() || !th->h.get()) return;
+    if (!th->h.isValid() || !th->h.get()) {
+        return;
+    }
     th->h.get()->setName(std::string(newName));
 }
 
 void sdom_test_destroy(sdom_handle_t handle)
 {
-    if (!handle) return;
+    if (handle == nullptr) {
+        return;
+    }
     TestHandle* th = reinterpret_cast<TestHandle*>(handle);
     // destroy underlying object by name via Core so lifecycle is correct
     if (th->h.isValid() && th->h.get()) {

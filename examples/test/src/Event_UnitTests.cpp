@@ -145,16 +145,22 @@ namespace SDOM
                             bool captures, bool bubbles, bool targetOnly, bool global)
         {
             auto it = reg.find(name);
-            if (it == reg.end()) return;
+            if (it == reg.end()) {
+                return;
+            }
             EventType* et = it->second;
-            if (et->getCaptures() != captures)
+            if (et->getCaptures() != captures) {
                 errors.push_back(name + ": captures mismatch");
-            if (et->getBubbles() != bubbles)
+            }
+            if (et->getBubbles() != bubbles) {
                 errors.push_back(name + ": bubbles mismatch");
-            if (et->getTargetOnly() != targetOnly)
+            }
+            if (et->getTargetOnly() != targetOnly) {
                 errors.push_back(name + ": targetOnly mismatch");
-            if (et->getGlobal() != global)
+            }
+            if (et->getGlobal() != global) {
                 errors.push_back(name + ": global mismatch");
+            }
         };
 
         checkFlags("Quit",      false, false, false, true);
@@ -217,10 +223,18 @@ namespace SDOM
         .setGlobal(true);
 
         // --- 5) Verify updates took effect ----------------------------------------
-        if (!et.getCaptures())   errors.push_back("EventType::setCaptures() failed to update flag");
-        if (!et.getBubbles())    errors.push_back("EventType::setBubbles() failed to update flag");
-        if (!et.getTargetOnly()) errors.push_back("EventType::setTargetOnly() failed to update flag");
-        if (!et.getGlobal())     errors.push_back("EventType::setGlobal() failed to update flag");
+        if (!et.getCaptures()) {
+            errors.push_back("EventType::setCaptures() failed to update flag");
+        }
+        if (!et.getBubbles()) {
+            errors.push_back("EventType::setBubbles() failed to update flag");
+        }
+        if (!et.getTargetOnly()) {
+            errors.push_back("EventType::setTargetOnly() failed to update flag");
+        }
+        if (!et.getGlobal()) {
+            errors.push_back("EventType::setGlobal() failed to update flag");
+        }
 
         // --- 6) Restore original flag states --------------------------------------
         et.setCaptures(origCaptures)
@@ -229,10 +243,18 @@ namespace SDOM
         .setGlobal(origGlobal);
 
         // --- 7) Verify restoration -------------------------------------------------
-        if (et.getCaptures()   != origCaptures)   errors.push_back("EventType::setCaptures() restore failed");
-        if (et.getBubbles()    != origBubbles)    errors.push_back("EventType::setBubbles() restore failed");
-        if (et.getTargetOnly() != origTargetOnly) errors.push_back("EventType::setTargetOnly() restore failed");
-        if (et.getGlobal()     != origGlobal)     errors.push_back("EventType::setGlobal() restore failed");
+        if (et.getCaptures()   != origCaptures) {
+            errors.push_back("EventType::setCaptures() restore failed");
+        }
+        if (et.getBubbles()    != origBubbles) {
+            errors.push_back("EventType::setBubbles() restore failed");
+        }
+        if (et.getTargetOnly() != origTargetOnly) {
+            errors.push_back("EventType::setTargetOnly() restore failed");
+        }
+        if (et.getGlobal()     != origGlobal) {
+            errors.push_back("EventType::setGlobal() restore failed");
+        }
 
         return true; // ✅ finished this frame
     } // END -- Verify that well-known static event types have expected flag states
@@ -298,13 +320,16 @@ namespace SDOM
 
         // --- 2) Prepare tracking and listener registration --------------------------
         std::unordered_map<std::string, bool> hits;
-        for (const auto& [name, _] : eventTests)
+        for (const auto& [name, _] : eventTests) {
             hits[name] = false;
+        }
 
         for (auto& [name, type] : eventTests)
         {
             box->addEventListener(type, [&](const Event& ev) {
-                if (ev.getTarget() != box) return;
+                if (ev.getTarget() != box) {
+                    return;
+                }
                 const std::string info = ev.getPayloadValue<std::string>("info");
                 if (info == "test") {
                     hits[ev.getTypeName()] = true;
@@ -341,8 +366,9 @@ namespace SDOM
                 box->removeEventListener(type, nullptr, false);
         }
 
-        if (stage->hasChild(box))
+        if (stage->hasChild(box)) {
             stage->removeChild(box);
+        }
 
         core.collectGarbage();
 
@@ -725,7 +751,7 @@ namespace SDOM
         Core& core = getCore();
         EventManager& em = core.getEventManager();
         DisplayHandle stage = core.getRootNode();
-        if (!stage.isValid()) return true; // ✅ No stage; treat as finished (nothing to test)
+        if (!stage.isValid()) { return true; } // ✅ No stage; treat as finished (nothing to test)
 
         DisplayHandle target = getFactory().getDisplayObject("blueishBox");
         if (!target.isValid()) {
@@ -802,8 +828,12 @@ namespace SDOM
             case StateType::Done:
             default:
             {
-                if (!sawEnter) errors.push_back("Behavior event 'MouseEnter' did not fire.");
-                if (!sawLeave) errors.push_back("Behavior event 'MouseLeave' did not fire.");
+                if (!sawEnter) {
+                    errors.push_back("Behavior event 'MouseEnter' did not fire.");
+                }
+                if (!sawLeave) {
+                    errors.push_back("Behavior event 'MouseLeave' did not fire.");
+                }
 
                 // Reset for next run
                 state = StateType::StartOutside;

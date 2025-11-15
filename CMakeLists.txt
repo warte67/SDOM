@@ -13,19 +13,35 @@ set(VERSION_HEADER "${CMAKE_SOURCE_DIR}/include/SDOM/SDOM_Version.hpp")
 set(VERSION_TRIGGER "${CMAKE_BINARY_DIR}/_version_trigger")
 
 option(ENABLE_ASAN "Enable AddressSanitizer for builds" OFF)
+option(ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer for builds" OFF)
+option(ENABLE_TSAN "Enable ThreadSanitizer for builds (incompatible with ASAN)" OFF)
 
 if(ENABLE_ASAN)
+    if(ENABLE_TSAN)
+        message(FATAL_ERROR "ENABLE_TSAN cannot be enabled together with ENABLE_ASAN")
+    endif()
     message(STATUS "AddressSanitizer: enabled")
-    # Add sanitizer flags for compile and link
     add_compile_options(-fsanitize=address -fno-omit-frame-pointer -g -O1)
-    # Some toolchains need the link flags explicitly
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=address")
-    # Do NOT set CMAKE_STATIC_LINKER_FLAGS: passing linker flags to the
-    # static-archive tool (ar) causes those flags to be interpreted as
-    # ar options and can break archive creation (see ar: invalid option).
-    # Static libraries only need object files compiled with ASAN; the
-    # executable link step is where the sanitizer runtime must be linked.
+endif()
+
+if(ENABLE_UBSAN)
+    message(STATUS "UndefinedBehaviorSanitizer: enabled")
+    # We enable the common UBSAN checks; allow abort on error to make CI fail fast.
+    add_compile_options(-fsanitize=undefined -fno-sanitize-recover=undefined -g -O1)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=undefined")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=undefined")
+endif()
+
+if(ENABLE_TSAN)
+    if(ENABLE_ASAN)
+        message(FATAL_ERROR "ENABLE_TSAN cannot be enabled together with ENABLE_ASAN")
+    endif()
+    message(STATUS "ThreadSanitizer: enabled")
+    add_compile_options(-fsanitize=thread -g -O1)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=thread")
 endif()
 
 
@@ -224,3 +240,23 @@ endif()
 target_include_directories(${PROJECT_NAME} PRIVATE "${GENERATED_DIR}")
 
 message(STATUS "SDOM C API generated dir: ${GENERATED_DIR}")
+
+# ------------------------------------------------------------------
+# Small regression test: verify generated header is producible and
+# compilable (prevents regressions where a repo-level shim hides the
+# build-generated header on clean builds).
+# ------------------------------------------------------------------
+
+# tests/generated_header_check.cpp is a tiny TU that includes the
+# `SDOM/CAPI/sdom_capi_objects_generated.h` shim and compiles a noop main.
+set(GENERATED_HEADER_TEST_SRC "${CMAKE_SOURCE_DIR}/tests/generated_header_check.cpp")
+if(EXISTS "${GENERATED_HEADER_TEST_SRC}")
+    add_executable(generated_header_check ${GENERATED_HEADER_TEST_SRC})
+    target_include_directories(generated_header_check PRIVATE
+        "${CMAKE_SOURCE_DIR}/include"
+        "${GENERATED_DIR}"
+    )
+    # Ensure the generator runs before building the test
+    add_dependencies(generated_header_check run_dataregistry_generator)
+    add_test(NAME generated_header_check COMMAND generated_header_check)
+endif()

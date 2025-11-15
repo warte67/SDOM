@@ -63,7 +63,7 @@ namespace SDOM
     {
         std::lock_guard<std::mutex> lk(s_eventtype_id_mutex);
         auto it = s_category_index.find(cat);
-        if (it != s_category_index.end()) return it->second;
+        if (it != s_category_index.end()) { return it->second; }
         unsigned idx = static_cast<unsigned>(s_category_index.size());
         s_category_index.emplace(cat, idx);
         s_next_local_id.emplace_back(std::make_unique<std::atomic<uint32_t>>(0)); // start local ids at 0 (allow 0 as sentinel in Core)
@@ -73,7 +73,7 @@ namespace SDOM
     EventType::IdType EventType::getOrAssignId()
     {
         // Fast path
-        if (id_ != 0) return id_;
+        if (id_ != 0) { return id_; }
 
         // Determine category index (stable per-run based on first-seen order)
         std::string cat = category_.empty() ? std::string("Uncategorized") : category_;
@@ -89,7 +89,7 @@ namespace SDOM
             // fallback: find next unused id after this category's block
             uint32_t base = (static_cast<uint32_t>(cidx + 1) << SDOM_EVENT_ID_SHIFT);
             uint32_t probe = base;
-            while (idRegistry.find(probe) != idRegistry.end()) ++probe;
+            while (idRegistry.find(probe) != idRegistry.end()) { ++probe; }
             newId = probe;
             id_ = newId;
             idRegistry[id_] = this;
@@ -103,7 +103,7 @@ namespace SDOM
             // collision check (should be rare)
             if (idRegistry.find(newId) != idRegistry.end()) {
                 uint32_t probe = newId;
-                while (idRegistry.find(++probe) != idRegistry.end()) {}
+                while (idRegistry.find(++probe) != idRegistry.end()) { }
                 newId = probe;
             }
             id_ = newId;
@@ -114,7 +114,7 @@ namespace SDOM
 
     void EventType::setId(IdType id)
     {
-        if (id == 0) return;
+        if (id == 0) { return; }
         std::lock_guard<std::mutex> lk(s_eventtype_id_mutex);
         id_ = id;
         idRegistry[id_] = this;
@@ -122,10 +122,10 @@ namespace SDOM
 
     EventType* EventType::fromId(IdType id)
     {
-        if (id == 0) return nullptr;
+        if (id == 0) { return nullptr; }
         std::lock_guard<std::mutex> lk(s_eventtype_id_mutex);
         auto it = idRegistry.find(id);
-        if (it != idRegistry.end()) return it->second;
+        if (it != idRegistry.end()) { return it->second; }
         return nullptr;
     }
     // Metering Policy Notes
@@ -464,14 +464,14 @@ namespace SDOM
         std::vector<EventType*> out;
         out.reserve(registry.size());
         // Use the insertion-ordered registry vector to preserve definition order
-        for (EventType* et : registry_order) out.push_back(et);
+            for (EventType* et : registry_order) { out.push_back(et); }
         return out;
     }
 
     EventType* EventType::fromName(const std::string& name)
     {
         auto it = registry.find(name);
-        if (it != registry.end()) return it->second;
+        if (it != registry.end()) { return it->second; }
         return nullptr;
     }
 

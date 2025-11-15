@@ -347,34 +347,67 @@ With `CBindingGenerator` producing valid ABIs, SDOM can now **express itself flu
 
 ---
 
-
-
-
 <a id="november-14-2025"></a>
 <a id="latest-update"></a>
-## 🗓️ November 14, 2025 — [Title Placeholder]
 
-> 💬 *The Day SDOM Learned to Speak Its Own Name*
+## 🗓️ **November 14, 2025 — The Day SDOM Found Its Voice**
 
-### 🧩 [Subsystem or Feature Group]
-- [Key change or feature accomplished.]
-- [Supporting details, design notes, or rationale.]
+> 💬 *“Today, SDOM didn’t just grow — it learned how to **speak itself**, in its own language.”*
 
-### 🌟 **Summary:**
-_[Short summary of results and next direction.]_
+### 🧩 **Runtime C API Overhaul**
+- Implemented the **GenericCallable runtime contract** (`CallArg`, `CallResult`)  
+- Added a **centralized dispatcher** for all C API calls (`registerCallable`, `lookupCallable`, `invokeCallable`)  
+- Refactored binding registration: `DataRegistry` now stores canonical metadata + callable references  
+- Introduced **runtime-dispatched C wrappers**, generated automatically  
+- Prevented the generator from falling into recursive *cow-related incidents.* 🐄🦙  
 
-**🚧 ToDo Today**
-- ☐ Enumerate `EventType` definitions **alphabetically by category** for consistent ordering.  
-- ☐ Generate **Doxygen-formatted documentation** for each event, including a professional banner above the `typedef enum SDOM_EventType`.  
-- ☐ Implement the **Function Generator** and **Property Generator** systems to emit callable and field definitions directly from `DataRegistry`.  
-- ☐ Begin **Lua Binding Phase 2**: generate Lua enumeration tables (“Lua headers”) and automatically update VS Code `api_stubs` for editor awareness.  
-- ☐ 🦙 Give the llama a bath.  
+### 🧩 **Generator Work**
+- CBindingGenerator updated to emit thin wrappers that  
+  - Marshal arguments into `CallArg` vectors  
+  - Invoke runtime callables  
+  - Convert results back into C values  
+- Improved error handling & fallback paths  
+- Snapshot system updated to register all GenericCallables before generator invocation  
 
-#### 🤔 *End of Day Reflection*
-> *"_reflechion quote"*
+### 🧩 **Architectural Note**
+We now have a three-part contract:
 
+1. **Metadata Source of Truth** — DataRegistry  
+2. **Code Generation Layer** — CBindingGenerator  
+3. **Runtime Dispatch Layer** — GenericCallable dispatcher  
+
+*This is the moment SDOM officially transitions from "a collection of parts" to "**a language about itself**.”*
+
+### 🌟 **Summary**
+Today marks the foundational shift to a **self-describing, language-agnostic interface model**.
+
+- SDOM can now **generate its C API from itself**, powered by runtime metadata.  
+- All function calls now route through a **single unified dispatcher**.  
+- Lua, C++, and future languages (Rust, Zig, Python, C#, etc.) can register their callable shapes identically.  
+- The generator is finally *detached* from runtime code, allowing true reflection-driven API emission.
+
+Next up: consistent ordering, documentation quality, full property/function generation, and Lua Phase 2.
+
+### 🚧 **ToDo Today**
+- ✅ Enumerate `EventType` definitions **alphabetically within each category**  
+  _(ensures stable diff-friendly ordering across runs)_  
+- ✅ Generate **Doxygen-formatted event documentation**, with a banner above `typedef enum SDOM_EventType`  
+- ✅ Implement **Function Generator** + **Property Generator**:
+  - Emit definitions directly from DataRegistry metadata  
+  - Generate runtime-dispatched thin C wrappers  
+- ☐ Begin **Lua Binding Phase 2**:
+  - Auto-generate Lua enum tables  
+  - Emit VS Code `api_stubs` for completion  
+  - Prepare cross-language reflection glue  
+- ⚠️ 🦙 Give the llama a bath  
+  _(He rolled in the auto-generated code again.)_
+
+### 🤔 **End of Day Reflection**
+> *“Every language starts as a whisper. Today, SDOM spoke clearly enough that even the Llama paused to listen.”*
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
+
+#### end-of-day
 
 ---
 

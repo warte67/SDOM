@@ -110,17 +110,17 @@ namespace SDOM
     // --- Main UnitTests Runner --- //
     bool BitmapFont_UnitTests()
     {
-        const std::string objName = "BitmapFont";
+        const std::string obj_name = "BitmapFont";
         UnitTests& ut = UnitTests::getInstance();
         // ut.clear_tests();
 
         static bool registered = false;
         if (!registered)
         {
-            ut.add_test(objName, "Test BitmapFont", BitmapFont_test0);
-            ut.add_test(objName, "BitmapFont helpers (C++)", BitmapFont_test1);
+            ut.add_test(obj_name, "Test BitmapFont", BitmapFont_test0);
+            ut.add_test(obj_name, "BitmapFont helpers (C++)", BitmapFont_test1);
 
-            ut.add_test(objName, "Lua: src/BitmapFont_UnitTests.lua", BitmapFont_LUA_Tests, true);
+            ut.add_test(obj_name, "Lua: src/BitmapFont_UnitTests.lua", BitmapFont_LUA_Tests, true);
 
             registered = true;
         }

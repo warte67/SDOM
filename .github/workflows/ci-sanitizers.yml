@@ -1,0 +1,68 @@
+name: CI - Sanitizers and Warnings
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+        sanitizer: [asan, ubsan]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake pkg-config libSDL3-dev libSDL3-image-dev libSDL3-ttf-dev liblua5.4-dev clang-tidy clang
+          if [ "${{ matrix.compiler }}" = "clang" ]; then sudo apt-get install -y clang; fi
+
+      - name: Configure and build
+        env:
+          CC: gcc
+          CXX: g++
+        run: |
+          mkdir -p build && cd build
+          if [ "${{ matrix.compiler }}" = "clang" ]; then export CC=clang; export CXX=clang++; fi
+          # Enable -Wall -Wextra during CI builds; disable a few noisy warnings.
+          if [ "${{ matrix.sanitizer }}" = "asan" ]; then cmake -S .. -DENABLE_ASAN=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_FLAGS='-Wall -Wextra -Wno-unused-parameter'; else cmake -S .. -DENABLE_UBSAN=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_FLAGS='-Wall -Wextra -Wno-unused-parameter'; fi
+          cmake --build . -j$(nproc)
+
+  clang-tidy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake clang clang-tidy
+
+      - name: Configure (export compile_commands)
+        run: |
+          mkdir -p build && cd build
+          cmake -S .. -B . -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_ASAN=OFF
+
+      - name: Run clang-tidy
+        run: |
+          cd build
+          # Run clang-tidy over C++ source files; this may take a while.
+          git ls-files 'src/**/*.cpp' 'src/**/*.cxx' 'include/**/*.h' 'include/**/*.hpp' | xargs -r -n1 -P$(nproc) clang-tidy -p . || true
+
+
+      - name: Run quick smoke checks
+        run: |
+          cd build
+          # If the test binary exists, run it with a short timeout; otherwise skip.
+          if [ -x examples/test/prog ]; then timeout 10s examples/test/prog || true; fi
+
+      - name: Emit build info
+        run: |
+          echo "Sanitizer: ${{ matrix.sanitizer }}"; echo "Compiler: ${{ matrix.compiler }}"

@@ -58,8 +58,8 @@
  *
  ******************/
 
-#ifndef __SDOM_EVENTTYPE_HPP__
-#define __SDOM_EVENTTYPE_HPP__
+#ifndef SDOM_EVENTTYPE_HPP_
+#define SDOM_EVENTTYPE_HPP_
 
 #include <unordered_set>
 #include <unordered_map>
@@ -318,4 +318,4 @@ namespace SDOM
 
 } // namespace SDOM
 
-#endif // __SDOM_EVENTTYPE_HPP__
+#endif // SDOM_EVENTTYPE_HPP_

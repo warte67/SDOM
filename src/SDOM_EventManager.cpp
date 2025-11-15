@@ -196,7 +196,7 @@ namespace SDOM
         // Ensure any coalesced events are emitted before dispatching
         flushCoalesced_();
         DisplayHandle rootNode = getFactory().getStageHandle();
-        if (!rootNode) return;
+        if (!rootNode) { return; }
         while (!eventQueue.empty()) 
         {
             auto event = std::move(eventQueue.front());
@@ -218,8 +218,7 @@ namespace SDOM
                     // object is known to be on the current stage.
                     if (!deliver) {
                         IDisplayObject* objPtr = dynamic_cast<IDisplayObject*>(object.get());
-                        if (objPtr && objPtr->isOnStage())
-                            deliver = true;
+                        if (objPtr && objPtr->isOnStage()) { deliver = true; }
                     }
 
                     // // 🔍 Debug block: show ancestry relationships
@@ -277,10 +276,10 @@ namespace SDOM
     void EventManager::dispatchEvent(std::unique_ptr<Event> event, DisplayHandle rootHandle)    
     {
         IDisplayObject* rootNode = rootHandle.get();
-        if (!rootNode) return;
+        if (rootNode == nullptr) { return; }
 
         Stage* stage = getStage(); //Core::getInstance().getStage();
-        if (!stage) return;
+        if (stage == nullptr) { return; }
 
         // // Convert SDL_Event to Lua table and make available to Lua listeners
         // sol::state& lua = getCore().getLua();
@@ -812,12 +811,10 @@ namespace SDOM
     void EventManager::dispatchWindowEvents(const SDL_Event& e)
     {
         SDL_Window* activeWindow = SDL_GetWindowFromEvent(&e);
-        if (!activeWindow)
-            return;
+        if (activeWindow == nullptr) { return; }
 
         DisplayHandle stageHandle = getFactory().getStageHandle();
-        if (!stageHandle)
-            return;
+        if (!stageHandle) { return; }
 
         const auto sdlType = static_cast<SDL_EventType>(e.type);
 
@@ -1040,9 +1037,11 @@ namespace SDOM
 
                     // 🔹 Maintain your existing keyboard focus rule
                     if (clicks == 1) {
-                        if (auto* topNode = dynamic_cast<IDisplayObject*>(topObject.get()))
-                            if (topNode->isTabEnabled())
+                        if (auto* topNode = dynamic_cast<IDisplayObject*>(topObject.get())) {
+                            if (topNode->isTabEnabled()) {
                                 topNode->setKeyboardFocus();
+                            }
+                        }
                     }
                 }
                 break;
@@ -1317,8 +1316,7 @@ namespace SDOM
         // --- Active dragging ---------------------------------------------------------------
         if (isDragging && e.type == SDL_EVENT_MOUSE_MOTION)
         {
-            if (!draggedObject)
-                return;
+            if (!draggedObject) { return; }
 
             auto draggingEvt = std::make_unique<Event>(EventType::Dragging, node, elapsed);
             draggingEvt->setSDL_Event(e);
@@ -1376,12 +1374,10 @@ namespace SDOM
     void EventManager::Queue_SDL_Event(SDL_Event& sdlEvent)
     {
         DisplayHandle node = getStageHandle();
-        if (!node || !node->isEnabled() || node->isHidden())
-            return;
+        if (!node || !node->isEnabled() || node->isHidden()) { return; }
 
         Stage* stage = getStage();
-        if (!stage)
-            return;
+        if (stage == nullptr) { return; }
 
         preprocessSDLEvent(sdlEvent, stage);
 
@@ -1452,8 +1448,8 @@ namespace SDOM
             }
 
         }
-        else if (isWindowEvent(sdlType))          dispatchWindowEvents(sdlEvent);
-        else if (isKeyboardEvent(sdlType))         dispatchKeyboardEvents(sdlEvent);
+        else if (isWindowEvent(sdlType)) { dispatchWindowEvents(sdlEvent); }
+        else if (isKeyboardEvent(sdlType)) { dispatchKeyboardEvents(sdlEvent); }
         else
         {
             // Heuristic: treat events with mouse-like coordinates as mouse events
@@ -1511,12 +1507,10 @@ namespace SDOM
         // Specialized systems
         // Only synthesize hover move/enter/leave on actual motion; avoid window
         // notifications (e.g., WINDOW_MOUSE_LEAVE) from clobbering hovered state.
-        if (sdlType == SDL_EVENT_MOUSE_MOTION)
-            updateHoverState(sdlEvent, node);
+        if (sdlType == SDL_EVENT_MOUSE_MOTION) { updateHoverState(sdlEvent, node); }
         // Window enter/leave only needs to run on motion or explicit window events;
         // avoid calling it for every event to reduce overhead.
-        if (sdlType == SDL_EVENT_MOUSE_MOTION || isWindowEvent(sdlType))
-            dispatchWindowEnterLeave(sdlEvent, node);
+        if (sdlType == SDL_EVENT_MOUSE_MOTION || isWindowEvent(sdlType)) { dispatchWindowEnterLeave(sdlEvent, node); }
         if (isMouseEvent(sdlType))
         {
             // Use the clickable target we already resolved above to avoid another hit-test.

@@ -57,16 +57,16 @@ namespace SDOM
     // --- Main UnitTests Runner --- //
     bool ArrowButton_UnitTests()
     {
-        const std::string objName = "ArrowButton";
+        const std::string obj_name = "ArrowButton";
         UnitTests& ut = UnitTests::getInstance();
         // ut.clear_tests();
 
         static bool registered = false;
         if (!registered)
         {
-            ut.add_test(objName, "Test ArrowButton", ArrowButton_test0);
+            ut.add_test(obj_name, "Test ArrowButton", ArrowButton_test0);
 
-            ut.add_test(objName, "Lua: src/ArrowButton_UnitTests.lua", ArrowButton_LUA_Tests, true);  // not implemented yet (do not run)
+            ut.add_test(obj_name, "Lua: src/ArrowButton_UnitTests.lua", ArrowButton_LUA_Tests, true);  // not implemented yet (do not run)
 
             registered = true;
         }

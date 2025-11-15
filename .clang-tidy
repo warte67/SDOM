@@ -1,0 +1,46 @@
+---
+# Conservative clang-tidy configuration for SDOM
+# Focuses on real bug detection, avoids style noise.
+
+Checks: >
+  -*,
+  bugprone-*,
+  clang-analyzer-*,
+  modernize-*,
+  performance-*,
+  readability-braces-around-statements,
+  readability-identifier-naming,
+  readability-magic-numbers,
+  cppcoreguidelines-pro-type-member-init,
+  cppcoreguidelines-no-malloc,
+  cppcoreguidelines-avoid-goto,
+  # Disabled because they generate huge noise or break engine patterns:
+  -readability-identifier-naming.ParameterCase,
+  -readability-identifier-naming.ParameterPrefix,
+  -readability-braces-around-statements.ShortStatement,
+  -modernize-use-trailing-return-type,
+  -modernize-use-auto,
+  -readability-function-cognitive-complexity,
+  -misc-unused-parameters,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-pro-type-const-cast,
+  -hicpp-*,
+  -google-*,
+  -llvm-*,
+  -fuchsia-*
+
+# Only check SDOM source & include, not sol2, Lua, generated code, or externals.
+HeaderFilterRegex: '^/home/jay/Documents/GitHub/SDOM/(include|src)/'
+
+WarningsAsErrors: ''
+
+CheckOptions:
+  - key: modernize-use-auto.MinTypeNameLength
+    value: '0'
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+
+FormatStyle: none

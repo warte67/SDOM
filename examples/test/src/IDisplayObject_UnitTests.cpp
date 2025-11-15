@@ -78,8 +78,9 @@ namespace SDOM
         stageInit.name = "genericStage";
 
         DisplayHandle stage = getCore().createDisplayObject("Stage", stageInit); // ✅ Verified
-        if (!stage)
+        if (!stage.isValid()) {
             errors.push_back("Failed to create a Stage object using the Init Structure method.");
+        }
 
         // Test complete (pass or fail)
         return true; // ✅ finished this frame
@@ -106,7 +107,7 @@ namespace SDOM
     bool IDisplayObject_test2(std::vector<std::string>& errors)
     {
         DisplayHandle stage = getCore().getDisplayObject("genericStage"); // ✅ Verified
-        if (!stage)
+        if (!stage.isValid())
         {
             errors.push_back("Stage object 'genericStage' not found for name test.");
             return true; // ✅ finished this frame
@@ -148,8 +149,9 @@ namespace SDOM
         getCore().destroyDisplayObject("genericStage"); // ✅ Verified
 
         DisplayHandle stage = getCore().getDisplayObject("genericStage"); // ✅ Verified
-        if (stage)
+        if (stage.isValid()) {
             errors.push_back("'genericStage' still exists after destruction!");
+        }
 
         return true; // ✅ finished this frame
     }
@@ -310,8 +312,9 @@ namespace SDOM
 
         // --- Register Listener ---
         stage->addEventListener(SDOM::EventType::None, the_none_function, false); // ✅ Verified
-        if (!stage->hasEventListener(SDOM::EventType::None, false)) // ✅ Verified
+        if (!stage->hasEventListener(SDOM::EventType::None, false)) {
             errors.push_back("Expected `None` listener to be registered.");
+        }
 
         // --- Queue Event ---
         stage->queue_event(SDOM::EventType::None, [&](Event& ev) { // ✅ Verified
@@ -327,8 +330,9 @@ namespace SDOM
 
         // --- Remove Listener ---
         stage->removeEventListener(SDOM::EventType::None, the_none_function, false);
-        if (stage->hasEventListener(SDOM::EventType::None, false)) 
+        if (stage->hasEventListener(SDOM::EventType::None, false)) {
             errors.push_back("Expected `None` listener to be removed.");
+        }
 
         return true; // ✅ finished this frame
     }

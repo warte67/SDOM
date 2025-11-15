@@ -60,7 +60,7 @@ namespace SDOM
         auto& factory = core.getFactory();
         factory.onInit();
 
-        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) errors.push_back(msg); };
+        auto expect_true = [&](bool cond, const std::string& msg){ if (!cond) { errors.push_back(msg); } };
 
         // Use a Button configured in examples/test/lua/config.lua
         DisplayHandle h = factory.getDisplayObject("main_stage_button");
