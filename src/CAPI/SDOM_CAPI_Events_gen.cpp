@@ -39,3 +39,4 @@ int SDOM_UpdateEvent(SDOM_EventHandle h, const SDOM_EventDesc *desc) { if (!h ||
 void SDOM_DestroyEvent(SDOM_EventHandle h) { if (!h) return; SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h); if (hh->ptr) delete hh->ptr; delete hh; }
 
 int SDOM_SendEvent(SDOM_EventHandle h) { if (!h) return SDOM_CAPI_ERR_INVALID_ARG; SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h); if (!hh->ptr) return SDOM_CAPI_ERR_INVALID_ARG; try { auto evCopy = std::make_unique<SDOM::Event>(*hh->ptr); SDOM::Core::getInstance().getEventManager().addEvent(std::move(evCopy)); return SDOM_CAPI_OK; } catch(...) { return SDOM_CAPI_ERR_INTERNAL; } }
+int SDOM_GetEventQueueSize(void) { try { return SDOM::Core::getInstance().getEventManager().getEventQueueSize(); } catch(...) { return -1; } }

@@ -150,13 +150,13 @@ namespace SDOM
         }
 
         // Verify event queue increased when sending an event
-        int before = SDOM::Core::getInstance().getEventManager().getEventQueueSize();
+        int before = SDOM_GetEventQueueSize();
         // create/send a fresh event and observe queue size
         SDOM_EventDesc ed2{}; ed2.type_id = created_id;
         SDOM_EventHandle evh2 = SDOM_CreateEvent(&ed2);
         if (evh2) {
             SDOM_SendEvent(evh2);
-            int after = SDOM::Core::getInstance().getEventManager().getEventQueueSize();
+            int after = SDOM_GetEventQueueSize();
             if (after != before + 1) errors.push_back("SDOM_SendEvent did not increase event queue size");
             SDOM_DestroyEvent(evh2);
             evh2 = nullptr; // avoid use-after-free: tests must not dereference freed handles
@@ -174,7 +174,11 @@ namespace SDOM
             errors.push_back("SDOM_GetEventTypeDesc(NULL,…) should return INVALID_ARG");
 
         // Test UpdateEvent (no-op stub) on a live handle
+        // Populate a realistic update descriptor so future UpdateEvent
+        // implementations receive concrete data to apply.
         SDOM_EventDesc updEv{}; updEv.type_id = created_id;
+        updEv.name = "UnitTest_UpdatedEvent";
+        updEv.payload_json = "{\"updated\":true}";
         SDOM_EventHandle evh3 = SDOM_CreateEvent(&ed2);
         if (!evh3) {
             errors.push_back("SDOM_CreateEvent for UpdateEvent test returned null");
@@ -205,28 +209,6 @@ namespace SDOM
         SDOM_EventTypeDesc invalidCheck{};
         int rc_after = SDOM_GetEventTypeDesc(h, &invalidCheck);
         if (rc_after == SDOM_CAPI_OK) errors.push_back("Destroyed handle should not succeed on GetEventTypeDesc (null handle)");
-
-        //     errors.push_back("SDOM_CAPI_register_event_type returned 0");
-        //     ok = false;
-        // }
-
-        // SDOM_EventTypeId id2 = SDOM_CAPI_event_type_id_for_name(testName);
-        // if (id2 == 0) {
-        //     errors.push_back("SDOM_CAPI_event_type_id_for_name returned 0");
-        //     ok = false;
-        // } else if (id != id2) {
-        //     errors.push_back("Mismatched ids from register vs lookup");
-        //     ok = false;
-        // }
-
-        // const char* name = SDOM_CAPI_event_type_name_for_id(id);
-        // if (!name) {
-        //     errors.push_back("SDOM_CAPI_event_type_name_for_id returned nullptr");
-        //     ok = false;
-        // } else if (std::string(name) != testName) {
-        //     errors.push_back(std::string("Name mismatch: expected ") + testName + ", got " + name);
-        //     ok = false;
-        // }
 
         return done;
     }
@@ -263,7 +245,5 @@ namespace SDOM
         // return ut.run_all(objName, "EventType_CAPI");
         return true;
     } // END: EventType_CAPI_UnitTests()
-
-
 
 } // END: namespace SDOM

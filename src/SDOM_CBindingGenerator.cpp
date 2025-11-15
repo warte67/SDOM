@@ -391,6 +391,11 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
         ofs << "int SDOM_UpdateEvent(SDOM_EventHandle h, const struct SDOM_EventDesc *desc);\n";
         ofs << "void SDOM_DestroyEvent(SDOM_EventHandle h);\n";
         ofs << "int SDOM_SendEvent(SDOM_EventHandle h);\n\n";
+        // Expose a small C API helper to query the current event queue size
+        // This allows C tests and FFI clients to inspect queue length without
+        // depending on C++ internals.
+        ofs << "/* Query the current event queue size (number of queued events) */\n";
+        ofs << "int SDOM_GetEventQueueSize(void);\n\n";
         ofs << "typedef uint32_t SDOM_EventTypeId;\n\n";
         // Doxygen group for helper macros
         ofs << "/** @defgroup SDOM_EventMacros Event Macros\n";
@@ -580,6 +585,8 @@ bool CBindingGenerator::emitCAPIEventsHeader(const DataRegistrySnapshot& snapsho
                     ifs << "int SDOM_UpdateEvent(SDOM_EventHandle h, const SDOM_EventDesc *desc) { if (!h || !desc) return SDOM_CAPI_ERR_INVALID_ARG; SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h); if (!hh->ptr) return SDOM_CAPI_ERR_INVALID_ARG; (void)hh; (void)desc; return SDOM_CAPI_OK; }\n\n";
                     ifs << "void SDOM_DestroyEvent(SDOM_EventHandle h) { if (!h) return; SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h); if (hh->ptr) delete hh->ptr; delete hh; }\n\n";
                     ifs << "int SDOM_SendEvent(SDOM_EventHandle h) { if (!h) return SDOM_CAPI_ERR_INVALID_ARG; SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h); if (!hh->ptr) return SDOM_CAPI_ERR_INVALID_ARG; try { auto evCopy = std::make_unique<SDOM::Event>(*hh->ptr); SDOM::Core::getInstance().getEventManager().addEvent(std::move(evCopy)); return SDOM_CAPI_OK; } catch(...) { return SDOM_CAPI_ERR_INTERNAL; } }\n";
+                    // Implementation: query event queue size via Core singleton
+                    ifs << "int SDOM_GetEventQueueSize(void) { try { return SDOM::Core::getInstance().getEventManager().getEventQueueSize(); } catch(...) { return -1; } }\n";
                     ifs.close();
                     std::cout << "[CBindingGenerator] wrote " << impl_out.string() << std::endl;
                 }
