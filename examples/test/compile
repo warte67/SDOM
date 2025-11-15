@@ -3,10 +3,11 @@ set -euo pipefail
 
 USAGE() {
   cat <<'EOF'
-Usage: ./compile [clean] [release]
+Usage: ./compile [clean] [release] [asan]
 
   clean   Remove existing build folders before configuring
   release Configure both SDOM and the test harness for Release (implies clean)
+  asan    Enable AddressSanitizer for both SDOM and the test harness
 
 Additional options can be added later; unknown flags are rejected to catch typos.
 EOF
@@ -18,6 +19,7 @@ INSTALL_PREFIX="${INSTALL_PREFIX:-$HOME/.local}"
 
 CLEAN=false
 BUILD_TYPE=${BUILD_TYPE:-Debug}
+ASAN=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -27,6 +29,9 @@ while [[ $# -gt 0 ]]; do
     release)
       BUILD_TYPE="Release"
       CLEAN=true
+      ;;
+    asan)
+      ASAN=true
       ;;
     -h|--help)
       USAGE
@@ -59,12 +64,14 @@ fi
 echo "Workspace: $WORKSPACE"
 echo "Install prefix: $INSTALL_PREFIX"
 echo "Build type: $BUILD_TYPE"
+echo "ASAN: $ASAN"
 
 # --- Configure and build the core library ---
 cmake -S "$WORKSPACE" -B "$WORKSPACE/build" \
       -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX" \
       -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
-      -DCMAKE_PREFIX_PATH="$HOME/.local;/usr/local;${CMAKE_PREFIX_PATH:-}" >/dev/null
+      -DCMAKE_PREFIX_PATH="$HOME/.local;/usr/local;${CMAKE_PREFIX_PATH:-}" \
+      $($ASAN && echo -DENABLE_ASAN=ON) >/dev/null
 
 # Track timestamps to detect rebuild
 LIB_TARGET=$(find "$WORKSPACE/build" -maxdepth 1 -type f -name "libSDOM.*" | head -n1)
@@ -87,5 +94,6 @@ fi
 # --- Build the test application ---
 cmake -S "$WORKSPACE/examples/test" -B "$WORKSPACE/examples/test/build" \
       -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
-      -DCMAKE_PREFIX_PATH="$HOME/.local;/usr/local;${CMAKE_PREFIX_PATH:-}" >/dev/null
+      -DCMAKE_PREFIX_PATH="$HOME/.local;/usr/local;${CMAKE_PREFIX_PATH:-}" \
+      $($ASAN && echo -DENABLE_ASAN=ON) >/dev/null
 cmake --build "$WORKSPACE/examples/test/build" -j"$CORES" --config "$BUILD_TYPE"
