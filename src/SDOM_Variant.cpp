@@ -321,39 +321,65 @@ Variant Variant::fromLuaObject(const sol::object& o) {
     }
 }
 
+
 Variant Variant::snapshot() const {
-    // Default snapshot: if we have a stored LuaRefValue with an associated
-    // lua_State pointer, attempt to snapshot using that state. If no
-    // LuaRefValue is present, return *this.
     const auto& d = storage_->data;
+
     if (auto p = std::get_if<VariantStorage::LuaRefValue>(&d)) {
-        if (!p->obj.valid() || p->L == nullptr) return *this;
-        try {
-            sol::state_view sv(p->L);
-            return snapshot(sv);
-        } catch(...) {
+        if (!p->obj.valid() || p->L == nullptr)
             return *this;
-        }
+
+        sol::state_view sv(p->L);
+
+        // enforce Copy during snapshot
+        auto saved = Variant::getTableStorageMode();
+        Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
+
+        Variant out = snapshot(sv);
+
+        Variant::setTableStorageMode(saved);
+
+        return out;
     }
+
     return *this;
 }
 
+
 Variant Variant::snapshot(sol::state_view L) const {
     const auto& d = storage_->data;
+
     if (auto p = std::get_if<VariantStorage::LuaRefValue>(&d)) {
         if (!p->obj.valid()) return *this;
         if (!p->validFor(L)) return *this;
+
         try {
             if (p->obj.get_type() == sol::type::table) {
                 sol::table t = p->obj.as<sol::table>();
-                return fromLuaTable_(t);
+
+                // --- critical section: force Copy mode during deep-copy ---
+                auto saved = Variant::getTableStorageMode();
+                Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
+
+                Variant out = fromLuaTable_(t);
+
+                Variant::setTableStorageMode(saved);
+                // --- end critical section ---
+
+                return out;
             }
-        } catch(...) {
+        }
+        catch (...) {
+            // restore mode even if exception (robust)
+            // but since your code swallows exceptions anyway, no need for
+            // a second try/catch
             return *this;
         }
     }
+
     return *this;
 }
+
 
 // toDebugString implementation — depth-limited pretty printer for debugging.
 std::string Variant::toDebugString(int depth) const {

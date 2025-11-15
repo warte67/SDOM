@@ -8,8 +8,19 @@
 #include <SDOM/SDOM_Utils.hpp>
 
 
+
 namespace SDOM
 {
+    // Core* g_core = nullptr;  // temporarty global for getCore()
+    // Core& getCore() {
+    //     assert(g_core && "getCore() used before setCore()");
+    //     return *g_core;
+    // }
+
+    // void setCore(Core* c) {
+    //     g_core = c;
+    // }
+
 
     void quit() { Core::getInstance().onQuit(); }
     void shutdown() { Core::getInstance().quit(); } // alias for quit()

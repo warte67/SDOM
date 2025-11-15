@@ -30,9 +30,10 @@
 #include <SDOM/SDOM_IUnitTest.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_Stage.hpp>
+#include <SDOM/SDOM_Utils.hpp>
 
 #include <iostream>
-
+#include <cassert>
 
 
 #include "Box.hpp"
@@ -40,7 +41,7 @@
 
 
 #ifndef MAIN_VARIANT
-#define MAIN_VARIANT 1
+#define MAIN_VARIANT 2
 #endif
 
 
@@ -54,6 +55,9 @@ int main(int argc, char** argv)
 
     // Fetch the Core singleton
     Core& core = getCore();
+
+    // SDOM::Core core;
+    // SDOM::setCore(&core);  // see implementation below        
 
     // -------------------------------------------------------
     // Quick command-line help handling
@@ -190,10 +194,27 @@ int main(int argc, char** argv)
 
 #elif MAIN_VARIANT == 2
 
+
+
+// --- Main UnitTests Runner --- //
+bool Main_UnitTests()
+{
+    bool done = true;
+
+    done &= Variant_UnitTests();         // "insane" (ASAN fails)
+    done &= DataRegistry_UnitTests();    // okay
+    done &= Event_CAPI_UnitTests();      // okay
+    done &= EventType_CAPI_UnitTests();  // okay
+
+    return done;
+} // END: EventType_UnitTests()
+
 int main(int argc, char** argv) 
 {
     // headless / no-lua startup for fast unit testing
-    Core& core = getCore();
+    SDOM::Core& core = getCore();
+    // SDOM::Core core;
+    // SDOM::setCore(&core);  // see implementation below    
 
     // Apply an explicit Core configuration first so SDL resources and
     // the Factory are initialized before we create the Stage object.
@@ -211,12 +232,14 @@ int main(int argc, char** argv)
 
     // Now that the Factory is initialized, create the Stage and set it as root
     SDOM::Stage::InitStruct stage_init;
-
+    stage_init.color = SDL_Color{32, 64, 16, 255};
     DisplayHandle rootStage = core.createDisplayObject("Stage", stage_init);
     core.setRootNode(rootStage);
 
+    core.registerOnUnitTest(Main_UnitTests);
+
     // Start the main loop (no additional config needed)
-    core.setStopAfterUnitTests(true);
+    // core.setStopAfterUnitTests(true);
     bool ok = core.run();
     
     return ok ? 0 : 1;

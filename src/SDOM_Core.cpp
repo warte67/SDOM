@@ -25,6 +25,9 @@ namespace SDOM
 
     Core::Core() : IDataObject()
     {
+        if (core_ptr_) { throw std::runtime_error("Core already initialized"); }
+        core_ptr_ = this;
+
         // Open base libraries plus package and io so embedded scripts can use
         // `require`/`package` and basic I/O if desired by examples.
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::package, sol::lib::io);
@@ -42,16 +45,16 @@ namespace SDOM
         
         // register the DisplayHandle handle last so other types can use it
         DisplayHandle prototypeHandle; // Default DisplayHandle for registration
-    prototypeHandle._registerLuaBindings("DisplayHandle", lua_);
-    prototypeHandle.registerBindings("DisplayHandle", getDataRegistry());
+        prototypeHandle._registerLuaBindings("DisplayHandle", lua_);
+        prototypeHandle.registerBindings("DisplayHandle", getDataRegistry());
 
-        AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
-    prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
-    prototypeAssetHandle.registerBindings("AssetHandle", getDataRegistry());
-        
-        // Register Core usertype
-    this->_registerLuaBindings("Core", lua_);      
-    this->registerBindings("Core", getDataRegistry()); 
+            AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
+        prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
+        prototypeAssetHandle.registerBindings("AssetHandle", getDataRegistry());
+            
+            // Register Core usertype
+        this->_registerLuaBindings("Core", lua_);      
+        this->registerBindings("Core", getDataRegistry()); 
 
         // Note: Factory initialization is performed later (e.g. during
         // configuration) to avoid recursive-construction ordering issues.
@@ -874,6 +877,121 @@ namespace SDOM
         // }
     } // END: Core::onQuit()
 
+    // void Core::onRender()
+    // {
+    //     SDL_Renderer* renderer = getRenderer();
+    //     if (!renderer)
+    //         ERROR("Core::onRender() Error: Renderer is null.");
+
+    //     // Lambda for recursive render handling using std::function
+    //     std::function<void(IDisplayObject&)> handleRender;
+    //     SDL_Texture* texture = texture_;
+    //     IDisplayObject* activeRoot = dynamic_cast<IDisplayObject*>(rootNode_.get());
+    //     handleRender = [this, &handleRender, renderer, texture, activeRoot](IDisplayObject& node) 
+    //     {
+    //         // Skip nested Stage subtrees when a different Stage is active.
+    //         if (dynamic_cast<Stage*>(&node) && (&node != activeRoot))
+    //             return;
+    //         // render the node with pointer-based timers to avoid name races
+    //         const std::string objName = node.getName();
+    //         DisplayHandle selfRender(objName, node.getType());
+    //         getFactory().start_render_time(&node);
+    //         node.onRender();
+    //         if (selfRender.isValid()) {
+    //             getFactory().stop_render_time(&node, &objName);
+    //         } else {
+    //             getFactory().abandon_render_time(&node);
+    //         }
+
+    //         node.setDirty(false); // clear dirty flag after rendering
+
+    //         DisplayHandle rootHandle = this->getStageHandle();
+    //         // PreRender EventListeners
+    //         if (node.hasEventListener(EventType::OnPreRender, false))
+    //         {
+    //             auto preRenderEv = std::make_unique<Event>(EventType::OnPreRender, rootHandle);
+    //             preRenderEv->setElapsedTime(this->getElapsedTime());
+    //             preRenderEv->setRelatedTarget(rootHandle);
+    //             eventManager_->dispatchEvent(std::move(preRenderEv), DisplayHandle(rootHandle.getName(), rootHandle.getType()));
+    //         }
+
+    //         // sort children by z-order if needed
+    //         node.sortByZOrder();       
+
+    //         // render children — build a safe snapshot of child keys
+    //         std::vector<std::pair<std::string,std::string>> child_keys;
+    //         const auto& live_children = node.getChildren();
+    //         child_keys.reserve(live_children.size());
+    //         for (const auto& ch : live_children) {
+    //             if (!ch.isValid()) continue;
+    //             child_keys.emplace_back(ch.getName(), ch.getType());
+    //         }
+    //         for (const auto& key : child_keys) 
+    //         {
+    //             DisplayHandle child(key.first, key.second);
+    //             if (!child.isValid()) continue;
+    //             auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
+    //             if (childObj) 
+    //             {
+    //                 // Do not traverse into other Stage subtrees
+    //                 if (dynamic_cast<Stage*>(childObj) && (childObj != activeRoot))
+    //                     continue;
+    //                 // ensure the render target is set correctly before rendering
+    //                 if (texture)
+    //                     SDL_SetRenderTarget(renderer, texture);
+    //                 // Compute focus info BEFORE recursion (child may self-destruct during render)
+    //                 const bool isFocused = child.isValid() && childObj->isKeyboardFocused();
+    //                 const SDL_FRect focusRect = { float(childObj->getX()), float(childObj->getY()), float(childObj->getWidth()), float(childObj->getHeight()) };
+
+    //                 handleRender(*childObj);
+
+    //                 // Render a border if the Box has keyboard focus (use captured rect)
+    //                 if (isFocused)
+    //                 {
+    //                     SDL_Color focusColor = { (Uint8)keyfocus_gray_, (Uint8)keyfocus_gray_, (Uint8)keyfocus_gray_, 128 }; // Gray color for focus
+    //                     SDL_SetRenderDrawColor(getRenderer(), focusColor.r, focusColor.g, focusColor.b, focusColor.a); // Border color
+    //                     SDL_RenderRect(getRenderer(), &focusRect);
+    //                 }
+    //             }
+    //         }
+
+    //         // OnRender event listener
+    //         if (node.hasEventListener(EventType::OnRender, false))
+    //         {
+    //             auto renderEv = std::make_unique<Event>(EventType::OnRender, rootHandle);
+    //             renderEv->setElapsedTime(this->getElapsedTime());
+    //             renderEv->setRelatedTarget(rootHandle);
+    //             eventManager_->dispatchEvent(std::move(renderEv), DisplayHandle(rootHandle.getName(), rootHandle.getType()));        
+    //         }
+    //     };
+
+    //     SDL_SetRenderTarget(renderer, nullptr);
+
+    //     // Clear the entire window to the border color
+    //     SDL_Color color = getColor();
+    //     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    //     SDL_RenderClear(renderer);
+
+    //     // set the render target to the proper background texture
+    //     if (texture_)
+    //         SDL_SetRenderTarget(renderer, texture_); 
+
+    //     // Call recursive render on the root node (if it exists)
+    //     IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
+    //     if (rootObj)
+    //     {
+    //         setIsTraversing(true);
+    //         handleRender(*rootObj);
+    //         setIsTraversing(false);
+    //     }
+
+    //     // Call the users registered render function if available. 
+    //     // This is called after the entire scene has been rendered
+    //     // so the user can overlay additional graphics if desired.
+    //     if (fnOnRender)
+    //         fnOnRender();        
+    // } // END: Core::onRender()
+
     void Core::onRender()
     {
         SDL_Renderer* renderer = getRenderer();
@@ -884,21 +1002,16 @@ namespace SDOM
         std::function<void(IDisplayObject&)> handleRender;
         SDL_Texture* texture = texture_;
         IDisplayObject* activeRoot = dynamic_cast<IDisplayObject*>(rootNode_.get());
+        if (!activeRoot) { return; }
         handleRender = [this, &handleRender, renderer, texture, activeRoot](IDisplayObject& node) 
         {
             // Skip nested Stage subtrees when a different Stage is active.
             if (dynamic_cast<Stage*>(&node) && (&node != activeRoot))
                 return;
-            // render the node with pointer-based timers to avoid name races
-            const std::string objName = node.getName();
-            DisplayHandle selfRender(objName, node.getType());
+            // render the node
             getFactory().start_render_time(&node);
             node.onRender();
-            if (selfRender.isValid()) {
-                getFactory().stop_render_time(&node, &objName);
-            } else {
-                getFactory().abandon_render_time(&node);
-            }
+            getFactory().stop_render_time(&node);
 
             node.setDirty(false); // clear dirty flag after rendering
 
@@ -915,18 +1028,9 @@ namespace SDOM
             // sort children by z-order if needed
             node.sortByZOrder();       
 
-            // render children — build a safe snapshot of child keys
-            std::vector<std::pair<std::string,std::string>> child_keys;
-            const auto& live_children = node.getChildren();
-            child_keys.reserve(live_children.size());
-            for (const auto& ch : live_children) {
-                if (!ch.isValid()) continue;
-                child_keys.emplace_back(ch.getName(), ch.getType());
-            }
-            for (const auto& key : child_keys) 
+            // render children
+            for (const auto& child : node.getChildren()) 
             {
-                DisplayHandle child(key.first, key.second);
-                if (!child.isValid()) continue;
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
                 if (childObj) 
                 {
@@ -936,18 +1040,15 @@ namespace SDOM
                     // ensure the render target is set correctly before rendering
                     if (texture)
                         SDL_SetRenderTarget(renderer, texture);
-                    // Compute focus info BEFORE recursion (child may self-destruct during render)
-                    const bool isFocused = child.isValid() && childObj->isKeyboardFocused();
-                    const SDL_FRect focusRect = { float(childObj->getX()), float(childObj->getY()), float(childObj->getWidth()), float(childObj->getHeight()) };
-
                     handleRender(*childObj);
-
-                    // Render a border if the Box has keyboard focus (use captured rect)
-                    if (isFocused)
+                    // Render a border if the Box has keyboard focus
+                    if (childObj->isKeyboardFocused())
                     {
+                        // properly flash the key focus indication border rectangle
+                        SDL_FRect rect = { float(childObj->getX()), float(childObj->getY()), float(childObj->getWidth()), float(childObj->getHeight()) };
                         SDL_Color focusColor = { (Uint8)keyfocus_gray_, (Uint8)keyfocus_gray_, (Uint8)keyfocus_gray_, 128 }; // Gray color for focus
                         SDL_SetRenderDrawColor(getRenderer(), focusColor.r, focusColor.g, focusColor.b, focusColor.a); // Border color
-                        SDL_RenderRect(getRenderer(), &focusRect);
+                        SDL_RenderRect(getRenderer(), &rect);
                     }
                 }
             }
@@ -966,8 +1067,6 @@ namespace SDOM
 
         // Clear the entire window to the border color
         SDL_Color color = getColor();
-// color.r = 255; color.g = 0; color.b = 255; color.a = 255;
-// INFO("Core::onRender: color=" << std::to_string(color.r) << "," << std::to_string(color.g) << "," << std::to_string(color.b) << "," << std::to_string(color.a));
         SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
         SDL_RenderClear(renderer);
 
@@ -991,35 +1090,11 @@ namespace SDOM
             fnOnRender();        
     } // END: Core::onRender()
 
+
     void Core::onEvent(Event& event)
     {
         (void )event; // stop compiler warning
         
-        // -- Let the event dispatcher handle event propagation --
-        // NOTE:  This never gets called...
-
-        // // Lambda for recursive event handling using std::function
-        // std::function<void(IDisplayObject&)> handleEvent;
-        // handleEvent = [&handleEvent, event](IDisplayObject& node) {
-        //     node.onEvent(event);
-        //     for (const auto& child : node.getChildren()) {
-        //         auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
-        //         if (childObj) {
-        //             handleEvent(*childObj);
-        //         }
-        //     }
-        // };
-
-        // if (fnOnEvent)
-        //     fnOnEvent(event);
-        // // Call recursive event on the root node (if it exists)
-        // IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
-        // if (rootObj)
-        // {
-        //     setIsTraversing(true);
-        //     handleEvent(*rootObj);
-        //     setIsTraversing(false);
-        // }
     }
 
     void Core::onUpdate(float fElapsedTime)
@@ -1027,6 +1102,7 @@ namespace SDOM
         // Lambda for recursive update handling using std::function
         std::function<void(IDisplayObject&)> handleUpdate;
         IDisplayObject* activeRootU = dynamic_cast<IDisplayObject*>(rootNode_.get());
+
         handleUpdate = [this, &handleUpdate, fElapsedTime, activeRootU](IDisplayObject& node) 
         {
             // Skip nested Stage subtrees when a different Stage is active.
@@ -1043,30 +1119,14 @@ namespace SDOM
                 eventManager_->dispatchEvent(std::move(updateEv), rootNode);
             }
             
-            // Take a snapshot of the name and rebased child keys before update
-            const std::string objName = node.getName();
-            DisplayHandle selfHandle(objName, node.getType());
-            std::vector<std::pair<std::string,std::string>> child_keys;
-            child_keys.reserve(node.getChildren().size());
-            for (const auto& ch : node.getChildren()) {
-                if (!ch.isValid()) continue;
-                child_keys.emplace_back(ch.getName(), ch.getType());
-            }
-
             // dispatch to the object::onUpdate()
             getFactory().start_update_timer(&node);
             node.onUpdate(fElapsedTime);
-            if (selfHandle.isValid()) {
-                getFactory().stop_update_timer(&node, &objName);
-            } else {
-                getFactory().abandon_update_timer(&node);
-            }
+            getFactory().stop_update_timer(&node);
 
-            // update children using the pre-update snapshot (rebased to name/type)
-            for (const auto& key : child_keys) 
+            // update children
+            for (const auto& child : node.getChildren()) 
             {
-                DisplayHandle child(key.first, key.second);
-                if (!child.isValid()) continue;
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
                 if (childObj) 
                 {
@@ -1076,7 +1136,7 @@ namespace SDOM
                     handleUpdate(*childObj);                    
                 }
             }
-        };
+        };        
 
         // Update the unit test frame counter and run tests
         if (ENABLE_ALL_UNIT_TESTS)

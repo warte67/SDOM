@@ -347,8 +347,8 @@ With `CBindingGenerator` producing valid ABIs, SDOM can now **express itself flu
 
 ---
 
-<a id="november-14-2025"></a>
-<a id="latest-update"></a>
+
+
 
 ## 🗓️ **November 14, 2025 — The Day SDOM Found Its Voice**
 
@@ -405,25 +405,65 @@ Next up: consistent ordering, documentation quality, full property/function gene
 ### 🤔 **End of Day Reflection**
 > *“Every language starts as a whisper. Today, SDOM spoke clearly enough that even the Llama paused to listen.”*
 
-### 🚧 **To Do Tomorrow**
-- ☐ Figure out why the application is displaying `SDOM Version: 0.5.218 (early pre-alpha)` instead of `SDOM Version: 0.5.222 (early pre-alpha)`
+[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+
+---
+
+<a id="november-15-2025"></a>
+<a id="latest-update"></a>
+
+## 🗓️ November 15, 2025 — *The Day SDOM Filed for Legal Separation from Lua*
+
+> 💬 *“When your engine’s first words in the morning are ‘I want a clean ASan report,’ you know it’s growing up.”*
+
+### 🧩 **Core Engine / Front-End Boundary Rewrite**
+- Began **formal decoupling of Lua/sol2 from the SDOM core**.  
+  All scripting entry points will now route through the **GenericCallable → CAPI → Dispatcher** pipeline.
+- Identified legacy Lua-bound pathways still buried inside event creation, variant conversions, and asset accessors.
+- Decided on a clean front-end boundary:   
+  **Lua becomes a client. SDOM becomes a platform.**
+- Early ASan runs confirm the majority of UB originates in Lua stack misuse, userdata lifetimes, and sol2 auto-bind behaviors.
+  Removing Lua from the core will eliminate these entire error classes.
+
+### 🌟 **Summary**
+Today marks the start of SDOM’s transition from “a C++ engine with Lua inside” → “a language-agnostic engine with a Lua wrapper.”
+
+Unifying metadata and callable paths through the DataRegistry gives us a stable, sanitizer-friendly, scripting-independent core.  Lua becomes optional, swappable, safer — and SDOM gets room to grow cleanly.
+
+### 🚧 ToDo Today
+- ✅ Figure out why the application is displaying `SDOM Version: 0.5.218 (early pre-alpha)` instead of `SDOM Version: 0.5.222 (early pre-alpha)`
+- ☐ Fully implement MAIN_VARIANT 2, C++ front end.
+- ☐ Remove All legacy Lua Binders.
 - ☐ Convert all variables to *snake_case*.
 - ☐ Implement a full `Release` build into the `compile` script.
 - ☐ Implement a 100% C++ start up sequence that does not rely on Lua for initialization.
-- ☐ Complete the DataRegistry → CAPI Generation Pipeline Audit
-  - ☐ Verify snapshot → generator → output directory path
-  - ☐ Ensure generator does not leak C++ types into C
-  - ☐ Confirm designated initializers produce correct defaults
-  - ☐ Test generation on multiple types (assets, display objects)
-  - ☐ Confirm generator handles optional fields correctly
-  - ☐ Review namespace leakage & symbol export macros
-- ☐ JSON Re-Evaluation
+- ☐ **Refactor `DisplayHandle` to eliminate all embedded Lua-binding state**
+  - ☐ Remove per-instance sol2 usertype tables, closures, and dynamic function binding  
+  - ☐ Convert `DisplayHandle` back into a *pure value type* (`name`, `type`, `formatted_`)  
+  - ☐ Ensure defaulted destructor/copy/move semantics (no heap allocations except `formatted_`)  
+  - ☐ Re-home all Lua binding responsibilities into a **separate static binder layer**  
+  - ☐ Validate under ASan that `DisplayHandle` no longer triggers delayed heap corruption  
+- ☐ Complete the DataRegistry → CAPI Generation Pipeline Audit  
+  - ☐ Verify snapshot → generator → output directory path  
+  - ☐ Ensure generator does not leak C++ types into C  
+  - ☐ Confirm designated initializers produce correct defaults  
+  - ☐ Test generation on multiple types (assets, display objects)  
+  - ☐ Confirm generator handles optional fields correctly  
+  - ☐ Review namespace leakage & symbol export macros  
+- ☐ **JSON Re-Evaluation**  
   - ☐ Consider re-introducing **JSON serialization** into the DataRegistry  
   - ☐ Add ability to **initialize the DataRegistry from JSON**  
   - ☐ Add ability to **serialize/deserialize DOM tree** from JSON  
     *(As an alternative or complement to Lua-based initialization)*
 
+
+#### 🤔 *End of Day Reflection*
+> *"_reflechion quote"*
+
+
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
+
+---
 
 #### end-of-day
 

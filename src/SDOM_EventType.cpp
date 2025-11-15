@@ -42,8 +42,15 @@
 #include <mutex>
 #include <memory>
 
+
+#include <SDOM/SDOM_Utils.hpp>
+
 namespace SDOM
 {
+    extern Core* g_core;  // temporarty global for getCore()
+
+
+
     static std::mutex s_eventtype_id_mutex;
 
     // Per-category block allocator configuration

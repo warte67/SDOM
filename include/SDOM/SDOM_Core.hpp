@@ -14,6 +14,10 @@
 #include <SDOM/SDOM_Factory.hpp>
 // #include <SDOM/SDOM_DisplayHandle.hpp>
 
+#include <SDOM/SDOM_Utils.hpp>
+
+// extern SDOM::Core* g_core ;  // temporarty global for getCore()
+
 namespace SDOM
 {
     class Factory;
@@ -54,6 +58,7 @@ namespace SDOM
 
         // --- Singleton Access --- //
         static Core& getInstance() { static Core instance; return instance; }
+        // static Core& getInstance() { return *g_core; }
 
         // --- Lifecycle (IDataObject overrides) --- //
         bool onInit() override;
@@ -169,15 +174,15 @@ namespace SDOM
         Factory& getFactory() const { return *factory_; }
         EventManager& getEventManager() const { return *eventManager_; }
 
-    // Expose DataRegistry through Core (for convenience). Prefer the clearer name getDataRegistry().
-    SDOM::DataRegistry& getDataRegistry() { return getFactory().getDataRegistry(); }
-    const SDOM::DataRegistry& getDataRegistry() const { return getFactory().getDataRegistry(); }
-    // Backwards-compatible wrappers (deprecated)
-    [[deprecated("getRegistry() is deprecated; use getDataRegistry()")]]
-    SDOM::DataRegistry& getRegistry() { return getDataRegistry(); }
-    [[deprecated("getRegistry() is deprecated; use getDataRegistry()")]]
-    const SDOM::DataRegistry& getRegistry() const { return getDataRegistry(); }
-    bool exportBindings(const std::string& out) { return getFactory().exportBindings(out); }
+        // Expose DataRegistry through Core (for convenience). Prefer the clearer name getDataRegistry().
+        SDOM::DataRegistry& getDataRegistry() { return getFactory().getDataRegistry(); }
+        const SDOM::DataRegistry& getDataRegistry() const { return getFactory().getDataRegistry(); }
+        // Backwards-compatible wrappers (deprecated)
+        [[deprecated("getRegistry() is deprecated; use getDataRegistry()")]]
+        SDOM::DataRegistry& getRegistry() { return getDataRegistry(); }
+        [[deprecated("getRegistry() is deprecated; use getDataRegistry()")]]
+        const SDOM::DataRegistry& getRegistry() const { return getDataRegistry(); }
+        bool exportBindings(const std::string& out) { return getFactory().exportBindings(out); }
 
         bool getIsTraversing() const { return isTraversing_; }
         void setIsTraversing(bool traversing) { isTraversing_ = traversing; }
@@ -283,7 +288,7 @@ namespace SDOM
         std::string getVersionPlatform() const;
 
     
-    private:
+    public:
         friend UnitTests; // give the UnitTests class access to private members for testing
 
         // --- Singleton Enforcement --- //
@@ -378,6 +383,8 @@ namespace SDOM
 
     protected:
         friend Factory;
+
+        Core* core_ptr_ = nullptr;
 
         // --- Legacy Lua Registration --- //
         void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;

@@ -6,7 +6,7 @@ USAGE() {
 Usage: ./compile [clean] [release] [asan]
 
   clean   Remove existing build folders before configuring
-  release Configure both SDOM and the test harness for Release (implies clean)
+  release Configure both SDOM and the test harness for Release (can be combined with other flags)
   asan    Enable AddressSanitizer for both SDOM and the test harness
 
 Additional options can be added later; unknown flags are rejected to catch typos.
@@ -28,7 +28,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     release)
       BUILD_TYPE="Release"
-      CLEAN=true
       ;;
     asan)
       ASAN=true

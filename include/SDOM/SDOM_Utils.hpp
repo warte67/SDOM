@@ -5,9 +5,18 @@
 // #include <SDOM/SDOM_CLR.hpp>
 
 #pragma once
+#include <cassert>
+
+
 
 namespace SDOM
 {
+    // extern Core* g_core;  // temporarty global for getCore()
+    // Core& getCore();
+    // void setCore(Core* c);
+
+
+
     class Stage;
     
     void quit();
