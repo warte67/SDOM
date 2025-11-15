@@ -136,6 +136,7 @@ bool DataRegistry::generateBindings(const std::string& outputDir)
         // SDOM::CAPI::invokeCallable("TypeName.funcName", args).
         std::ostringstream impl;
         impl << "#include <SDOM/CAPI/SDOM_CAPI_Common.h>\n";
+        impl << "#include <SDOM/CAPI/sdom_capi_objects_generated.h>\n";
         impl << "#include <SDOM/SDOM_DataRegistry.hpp>\n";
         impl << "#include <string>\n#include <vector>\n#include <cstdint>\n#include <cstdlib>\n#include <cstring>\n\n";
 

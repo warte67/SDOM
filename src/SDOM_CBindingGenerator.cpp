@@ -160,15 +160,39 @@ bool CBindingGenerator::generate(const DataRegistrySnapshot& snapshot, const std
             std::filesystem::create_directories(repo_out_dir, ec);
             if (!ec) {
                 std::filesystem::path repo_out = repo_out_dir / "sdom_capi_objects_generated.h";
-                std::ifstream inf(filename);
-                if (inf) {
+                // Instead of copying the raw generated header verbatim into the
+                // repository include path (which can hide the build-time
+                // canonical header), write a small shim that prefers the
+                // build-produced canonical header when available. This keeps
+                // include-time ordering robust across clean builds.
+                try {
                     std::ofstream ofs_repo(repo_out.string(), std::ios::trunc);
                     if (ofs_repo) {
-                        ofs_repo << inf.rdbuf();
+                        ofs_repo << "/* Repository-level shim for generated C API */\n";
+                        ofs_repo << "#ifndef SDOM_CAPI_OBJECTS_GENERATED_H\n";
+                        ofs_repo << "#define SDOM_CAPI_OBJECTS_GENERATED_H\n\n";
+                        ofs_repo << "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n";
+                        ofs_repo << "#if defined(__has_include)\n";
+                        ofs_repo << "  #if __has_include(\"../../../build/capi_generated/sdom_capi_objects.h\")\n";
+                        ofs_repo << "    #include \"../../../build/capi_generated/sdom_capi_objects.h\"\n";
+                        ofs_repo << "  #elif __has_include(<SDOM/CAPI/sdom_capi_objects.h>)\n";
+                        ofs_repo << "    #include <SDOM/CAPI/sdom_capi_objects.h>\n";
+                        ofs_repo << "  #else\n";
+                        ofs_repo << "    typedef void* sdom_handle_t; /* minimal fallback */\n";
+                        ofs_repo << "  #endif\n";
+                        ofs_repo << "#else\n";
+                        ofs_repo << "  #if __has_include(<SDOM/CAPI/sdom_capi_objects.h>)\n";
+                        ofs_repo << "    #include <SDOM/CAPI/sdom_capi_objects.h>\n";
+                        ofs_repo << "  #else\n";
+                        ofs_repo << "    typedef void* sdom_handle_t; /* minimal fallback */\n";
+                        ofs_repo << "  #endif\n";
+                        ofs_repo << "#endif\n\n";
+                        ofs_repo << "#ifdef __cplusplus\n}\n#endif\n\n";
+                        ofs_repo << "#endif // SDOM_CAPI_OBJECTS_GENERATED_H\n";
                         ofs_repo.close();
-                        std::cout << "[CBindingGenerator] copied objects header to " << repo_out.string() << std::endl;
+                        std::cout << "[CBindingGenerator] wrote shim objects header to " << repo_out.string() << std::endl;
                     }
-                }
+                } catch(...) {}
             }
         }
     } catch(...) {}
@@ -740,7 +764,8 @@ void SDOM_DestroyEvent(SDOM_EventHandle h) {
     if (!h) return;
     SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h);
     try { std::vector<SDOM::CAPI::CallArg> args; args.push_back(SDOM::CAPI::CallArg::makePtr((void*)hh->ptr)); SDOM::CAPI::invokeCallable("Event.DestroyEvent", args); } catch(...) {}
-    if (hh->ptr) delete hh->ptr; delete hh;
+    if (hh->ptr) delete hh->ptr;
+    delete hh;
 }
 
 int SDOM_SendEvent(SDOM_EventHandle h) {

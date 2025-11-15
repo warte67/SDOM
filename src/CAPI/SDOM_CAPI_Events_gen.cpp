@@ -172,7 +172,8 @@ void SDOM_DestroyEvent(SDOM_EventHandle h) {
     if (!h) return;
     SDOM_EventHandle_* hh = reinterpret_cast<SDOM_EventHandle_*>(h);
     try { std::vector<SDOM::CAPI::CallArg> args; args.push_back(SDOM::CAPI::CallArg::makePtr((void*)hh->ptr)); SDOM::CAPI::invokeCallable("Event.DestroyEvent", args); } catch(...) {}
-    if (hh->ptr) delete hh->ptr; delete hh;
+    if (hh->ptr) delete hh->ptr;
+    delete hh;
 }
 
 int SDOM_SendEvent(SDOM_EventHandle h) {
