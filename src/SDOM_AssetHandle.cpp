@@ -162,6 +162,25 @@ namespace SDOM
 
         // No mutators — identity is immutable for assets
         // Concrete assets can extend this surface using ensure_handle_table(lua)
+
+        // Defensive __index: if the handle is invalid, return nil immediately
+        // to avoid Lua attempting to create closures or resolve members on a
+        // dead userdata during GC-sensitive windows.
+        ut[sol::meta_function::index] = [](AssetHandle self, const sol::object& key, sol::this_state ts) -> sol::object {
+            sol::state_view L(ts);
+            if (!key.valid() || key == sol::lua_nil) return sol::lua_nil;
+            if (!key.is<std::string>()) return sol::lua_nil;
+            if (!self.isValid()) return sol::lua_nil;
+
+            std::string k;
+            try { k = key.as<std::string>(); } catch(...) { return sol::lua_nil; }
+
+            // Prefer functions placed on the shared handle table
+            sol::table ht = SDOM::IDataObject::ensure_sol_table(L, LuaHandleName);
+            sol::object member = ht.raw_get_or(k, sol::lua_nil);
+            if (member.valid() && member != sol::lua_nil) return member;
+            return sol::lua_nil;
+        };
     }
 
     void AssetHandle::_registerLuaBindings(const std::string& typeName, sol::state_view lua)

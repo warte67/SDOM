@@ -859,9 +859,19 @@ namespace SDOM
         // destructor after all sol::reference objects are destroyed.
         shutdown_SDL();
 
-        // Clean up any orphaned display objects
+        // Clean up any orphaned display objects in Lua
         getLua().collect_garbage();
         getLua().collect_garbage();
+
+        // // Proactively destroy the Lua state before global/static teardown.
+        // // This avoids use-after-free in sol2's usertype registry cleanup
+        // // when static strings for usertype names are destroyed after exit
+        // // but before Lua's GC completes during sol::state destruction.
+        // // Moving the state into a local ensures its destructor runs now.
+        // {
+        //     sol::state to_destroy = std::move(lua_);
+        //     (void)to_destroy;
+        // }
     } // END: Core::onQuit()
 
     void Core::onRender()
@@ -879,10 +889,16 @@ namespace SDOM
             // Skip nested Stage subtrees when a different Stage is active.
             if (dynamic_cast<Stage*>(&node) && (&node != activeRoot))
                 return;
-            // render the node
-            getFactory().start_render_time(node.getName());
+            // render the node with pointer-based timers to avoid name races
+            const std::string objName = node.getName();
+            DisplayHandle selfRender(objName, node.getType());
+            getFactory().start_render_time(&node);
             node.onRender();
-            getFactory().stop_render_time(node.getName());
+            if (selfRender.isValid()) {
+                getFactory().stop_render_time(&node, &objName);
+            } else {
+                getFactory().abandon_render_time(&node);
+            }
 
             node.setDirty(false); // clear dirty flag after rendering
 
@@ -899,9 +915,18 @@ namespace SDOM
             // sort children by z-order if needed
             node.sortByZOrder();       
 
-            // render children
-            for (const auto& child : node.getChildren()) 
+            // render children — build a safe snapshot of child keys
+            std::vector<std::pair<std::string,std::string>> child_keys;
+            const auto& live_children = node.getChildren();
+            child_keys.reserve(live_children.size());
+            for (const auto& ch : live_children) {
+                if (!ch.isValid()) continue;
+                child_keys.emplace_back(ch.getName(), ch.getType());
+            }
+            for (const auto& key : child_keys) 
             {
+                DisplayHandle child(key.first, key.second);
+                if (!child.isValid()) continue;
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
                 if (childObj) 
                 {
@@ -911,15 +936,18 @@ namespace SDOM
                     // ensure the render target is set correctly before rendering
                     if (texture)
                         SDL_SetRenderTarget(renderer, texture);
+                    // Compute focus info BEFORE recursion (child may self-destruct during render)
+                    const bool isFocused = child.isValid() && childObj->isKeyboardFocused();
+                    const SDL_FRect focusRect = { float(childObj->getX()), float(childObj->getY()), float(childObj->getWidth()), float(childObj->getHeight()) };
+
                     handleRender(*childObj);
-                    // Render a border if the Box has keyboard focus
-                    if (childObj->isKeyboardFocused())
+
+                    // Render a border if the Box has keyboard focus (use captured rect)
+                    if (isFocused)
                     {
-                        // properly flash the key focus indication border rectangle
-                        SDL_FRect rect = { float(childObj->getX()), float(childObj->getY()), float(childObj->getWidth()), float(childObj->getHeight()) };
                         SDL_Color focusColor = { (Uint8)keyfocus_gray_, (Uint8)keyfocus_gray_, (Uint8)keyfocus_gray_, 128 }; // Gray color for focus
                         SDL_SetRenderDrawColor(getRenderer(), focusColor.r, focusColor.g, focusColor.b, focusColor.a); // Border color
-                        SDL_RenderRect(getRenderer(), &rect);
+                        SDL_RenderRect(getRenderer(), &focusRect);
                     }
                 }
             }
@@ -1015,14 +1043,30 @@ namespace SDOM
                 eventManager_->dispatchEvent(std::move(updateEv), rootNode);
             }
             
-            // dispatch to the object::onUpdate()
-            getFactory().start_update_timer(node.getName());
-            node.onUpdate(fElapsedTime);
-            getFactory().stop_update_timer(node.getName());
+            // Take a snapshot of the name and rebased child keys before update
+            const std::string objName = node.getName();
+            DisplayHandle selfHandle(objName, node.getType());
+            std::vector<std::pair<std::string,std::string>> child_keys;
+            child_keys.reserve(node.getChildren().size());
+            for (const auto& ch : node.getChildren()) {
+                if (!ch.isValid()) continue;
+                child_keys.emplace_back(ch.getName(), ch.getType());
+            }
 
-            // update children
-            for (const auto& child : node.getChildren()) 
+            // dispatch to the object::onUpdate()
+            getFactory().start_update_timer(&node);
+            node.onUpdate(fElapsedTime);
+            if (selfHandle.isValid()) {
+                getFactory().stop_update_timer(&node, &objName);
+            } else {
+                getFactory().abandon_update_timer(&node);
+            }
+
+            // update children using the pre-update snapshot (rebased to name/type)
+            for (const auto& key : child_keys) 
             {
+                DisplayHandle child(key.first, key.second);
+                if (!child.isValid()) continue;
                 auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
                 if (childObj) 
                 {

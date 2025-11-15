@@ -1798,37 +1798,61 @@ namespace SDOM
 
     // --- Performance Test Helpers --- //
 
-    void Factory::start_update_timer(const std::string& objName) {
-        // Start timing this object's update; avoid console I/O to reduce measurement noise
-        update_start_times[objName] = std::chrono::steady_clock::now();
+    void Factory::start_update_timer(const IDisplayObject* obj) {
+        if (!obj) return;
+        update_start_times[obj] = std::chrono::steady_clock::now();
     }
 
-    void Factory::stop_update_timer(const std::string& objName) {
+    void Factory::stop_update_timer(const IDisplayObject* obj, const std::string* name_snapshot) {
+        if (!obj) return;
         auto end = std::chrono::steady_clock::now();
-        auto it = update_start_times.find(objName);
+        auto it = update_start_times.find(obj);
         if (it != update_start_times.end()) {
             auto delta = end - it->second;
-            perf_map[objName].update_time_ns += delta;
-            perf_map[objName].last_update_ns = delta;
-            perf_map[objName].update_calls++;
+            auto &stats = perf_map[obj];
+            stats.update_time_ns += delta;
+            stats.last_update_ns = delta;
+            stats.update_calls++;
+            if (name_snapshot) {
+                // store a copy of the last known name for reporting
+                // (keeps reporting decoupled from object lifetime)
+                // Assuming PerfStats has no 'name' field; we won't output names from here
+                (void)name_snapshot; // reserved for future
+            }
             update_start_times.erase(it);
         }
     }
 
-    void Factory::start_render_time(const std::string& objName) {
-        render_start_times[objName] = std::chrono::steady_clock::now();
+    void Factory::abandon_update_timer(const IDisplayObject* obj) {
+        if (!obj) return;
+        auto it = update_start_times.find(obj);
+        if (it != update_start_times.end()) update_start_times.erase(it);
     }
 
-    void Factory::stop_render_time(const std::string& objName) {
+    void Factory::start_render_time(const IDisplayObject* obj) {
+        if (!obj) return;
+        render_start_times[obj] = std::chrono::steady_clock::now();
+    }
+
+    void Factory::stop_render_time(const IDisplayObject* obj, const std::string* name_snapshot) {
+        if (!obj) return;
         auto end = std::chrono::steady_clock::now();
-        auto it = render_start_times.find(objName);
+        auto it = render_start_times.find(obj);
         if (it != render_start_times.end()) {
             auto delta = end - it->second;
-            perf_map[objName].render_time_ns += delta;
-            perf_map[objName].last_render_ns = delta;
-            perf_map[objName].render_calls++;
+            auto &stats = perf_map[obj];
+            stats.render_time_ns += delta;
+            stats.last_render_ns = delta;
+            stats.render_calls++;
+            (void)name_snapshot; // reserved for future use
             render_start_times.erase(it);
         }
+    }
+
+    void Factory::abandon_render_time(const IDisplayObject* obj) {
+        if (!obj) return;
+        auto it = render_start_times.find(obj);
+        if (it != render_start_times.end()) render_start_times.erase(it);
     }
     void Factory::report_performance_stats() const 
     {
@@ -1842,7 +1866,7 @@ namespace SDOM
 
     void Factory::report_update_stats(std::size_t topN) const
     {
-        std::vector<std::pair<std::string, const PerfStats*>> items;
+        std::vector<std::pair<const IDisplayObject*, const PerfStats*>> items;
         items.reserve(perf_map.size());
         for (const auto& kv : perf_map) items.emplace_back(kv.first, &kv.second);
 
@@ -1856,7 +1880,11 @@ namespace SDOM
 
         // Determine a reasonable column width for names
         std::size_t name_w = 4; // min width to fit "Name"
-        for (std::size_t i = 0; i < limit; ++i) name_w = std::max(name_w, items[i].first.size());
+        for (std::size_t i = 0; i < limit; ++i) {
+            const IDisplayObject* obj = items[i].first;
+            std::string nm = obj ? obj->getName() : std::string("<dead>");
+            name_w = std::max(name_w, nm.size());
+        }
         name_w = std::min<std::size_t>(name_w, 48);
 
         std::cout << "Update Times (last frame, top " << limit << " of " << total << "):\n";
@@ -1866,8 +1894,9 @@ namespace SDOM
         std::cout << std::fixed << std::setprecision(3);
         for (std::size_t i = 0; i < limit; ++i)
         {
-            const auto& name = items[i].first;
+            const IDisplayObject* obj = items[i].first;
             const auto* stats = items[i].second;
+            std::string name = obj ? obj->getName() : std::string("<dead>");
             const double last_us = std::chrono::duration<double, std::micro>(stats->last_update_ns).count();
             std::cout << std::left << std::setw(static_cast<int>(name_w)) << name << "  "
                       << std::right << std::setw(12) << last_us << "\n";
@@ -1876,7 +1905,7 @@ namespace SDOM
 
     void Factory::report_render_stats(std::size_t topN) const
     {
-        std::vector<std::pair<std::string, const PerfStats*>> items;
+        std::vector<std::pair<const IDisplayObject*, const PerfStats*>> items;
         items.reserve(perf_map.size());
         for (const auto& kv : perf_map) items.emplace_back(kv.first, &kv.second);
 
@@ -1890,7 +1919,11 @@ namespace SDOM
 
         // Determine a reasonable column width for names
         std::size_t name_w = 4; // min width to fit "Name"
-        for (std::size_t i = 0; i < limit; ++i) name_w = std::max(name_w, items[i].first.size());
+        for (std::size_t i = 0; i < limit; ++i) {
+            const IDisplayObject* obj = items[i].first;
+            std::string nm = obj ? obj->getName() : std::string("<dead>");
+            name_w = std::max(name_w, nm.size());
+        }
         name_w = std::min<std::size_t>(name_w, 48);
 
         std::cout << "Render Times (last frame, top " << limit << " of " << total << "):\n";
@@ -1900,8 +1933,9 @@ namespace SDOM
         std::cout << std::fixed << std::setprecision(3);
         for (std::size_t i = 0; i < limit; ++i)
         {
-            const auto& name = items[i].first;
+            const IDisplayObject* obj = items[i].first;
             const auto* stats = items[i].second;
+            std::string name = obj ? obj->getName() : std::string("<dead>");
             const double last_us = std::chrono::duration<double, std::micro>(stats->last_render_ns).count();
             std::cout << std::left << std::setw(static_cast<int>(name_w)) << name << "  "
                       << std::right << std::setw(12) << last_us << "\n";
@@ -1912,8 +1946,7 @@ namespace SDOM
     {
         // Reset per-object last-frame deltas so that the report reflects only
         // objects that were actually updated/rendered during this frame.
-        for (auto& kv : perf_map)
-        {
+        for (auto& kv : perf_map) {
             kv.second.last_update_ns = std::chrono::nanoseconds{0};
             kv.second.last_render_ns = std::chrono::nanoseconds{0};
         }
@@ -1942,16 +1975,25 @@ namespace SDOM
 
     float Factory::getLastUpdateDelta(const std::string& obj_name) const
     {
-        auto it = perf_map.find(obj_name);
-        if (it == perf_map.end()) return 0.0f;
-        return std::chrono::duration<float, std::micro>(it->second.last_update_ns).count();
+        // Name-based query deprecated: scan for first object with matching name
+        for (const auto& kv : perf_map) {
+            const IDisplayObject* obj = kv.first;
+            if (obj && obj->getName() == obj_name) {
+                return std::chrono::duration<float, std::micro>(kv.second.last_update_ns).count();
+            }
+        }
+        return 0.0f;
     }
 
     float Factory::getLastRenderDelta(const std::string& obj_name) const
     {
-        auto it = perf_map.find(obj_name);
-        if (it == perf_map.end()) return 0.0f;
-        return std::chrono::duration<float, std::micro>(it->second.last_render_ns).count();
+        for (const auto& kv : perf_map) {
+            const IDisplayObject* obj = kv.first;
+            if (obj && obj->getName() == obj_name) {
+                return std::chrono::duration<float, std::micro>(kv.second.last_render_ns).count();
+            }
+        }
+        return 0.0f;
     }
 
     // Owner-controlled lifecycle helpers

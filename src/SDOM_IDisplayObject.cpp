@@ -633,9 +633,15 @@ namespace SDOM
         Core* core = &Core::getInstance();
         Factory* factory = &core->getFactory();
 
-        // Detach and dispatch lifecycle events consistently for all policies.
-        // removeOrphan_ performs the actual detach (erase + clear parent) and
-        // dispatches Removed/RemovedFromStage based on the pre-detach state.
+        // If currently traversing, defer the removal to avoid mutating
+        // the children_ storage while iterating.
+        if (core->getIsTraversing())
+        {
+            factory->addToOrphanList(child);
+            return true;
+        }
+
+        // Detach and dispatch lifecycle events now (safe when not traversing)
         removeOrphan_(child);
 
         // For policies that defer destruction (e.g., GracePeriod), track orphans
@@ -657,6 +663,18 @@ namespace SDOM
     {
         // Preserve world bounds across the parent change
         Bounds world = this->getBounds();
+
+        // If we are traversing the tree, defer the reparent operation
+        // to avoid mutating parent/child vectors during iteration.
+        if (Core::getInstance().getIsTraversing())
+        {
+            // Schedule via Factory so it applies after traversal
+            int worldX = static_cast<int>(getX());
+            int worldY = static_cast<int>(getY());
+            DisplayHandle me(getName(), getType());
+            Core::getInstance().addToFutureChildrenList(me, parent, /*useWorld*/true, worldX, worldY);
+            return *this;
+        }
 
         // Remove from old parent's children_ vector if present
         if (parent_.isValid()) 

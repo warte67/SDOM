@@ -106,6 +106,9 @@ namespace SDOM
         // This lets scripts use both `h:getName()` and `h.getName()`.
         ut[sol::meta_function::index] = [](DisplayHandle self, const sol::object& key, sol::this_state ts) -> sol::object {
             sol::state_view L(ts);
+            // If this handle is no longer valid, do not attempt to resolve
+            // members; return nil to Lua to prevent UAF in downstream lookups.
+            if (!self.isValid()) return sol::lua_nil;
             if (!key.valid() || key == sol::lua_nil) return sol::lua_nil;
             if (!key.is<std::string>()) return sol::lua_nil;
             std::string k;
@@ -133,7 +136,11 @@ namespace SDOM
             // then fall back to legacy globals[type][k], then DisplayHandle table.
             sol::object member = sol::make_object(L, sol::lua_nil);
             std::string typeKeyDyn;
-            try { typeKeyDyn = self.getType(); } catch(...) { typeKeyDyn.clear(); }
+            try {
+                // Double-check validity before using underlying object state
+                if (!self.isValid()) return sol::lua_nil;
+                typeKeyDyn = self.getType();
+            } catch(...) { typeKeyDyn.clear(); }
 
             // 1) SDOM_Bindings[type][k]
             if (!typeKeyDyn.empty()) {

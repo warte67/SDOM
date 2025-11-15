@@ -903,9 +903,16 @@ namespace SDOM
 			core_registerOnQuit_lua([pf]() { sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnQuit error: ") + err.what()); } });
 		} else if (name == "Update") {
 			core_registerOnUpdate_lua([pf](float dt) { sol::protected_function_result r = pf(dt); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnUpdate error: ") + err.what()); } });
-		} else if (name == "Event") {
-			core_registerOnEvent_lua([pf](const Event& e) { sol::protected_function_result r = pf(e); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); } });
-		} else if (name == "Render") {
+        } else if (name == "Event") {
+            // Temporary safety: avoid pushing C++ Event usertype into Lua to
+            // prevent allocator corruption observed under ASAN in some paths.
+            // Invoke the callback with no arguments. If you need event data in
+            // Lua, we can switch to passing a lightweight table snapshot.
+            core_registerOnEvent_lua([pf](const Event& /*e*/) {
+                sol::protected_function_result r = pf();
+                if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnEvent error: ") + err.what()); }
+            });
+        } else if (name == "Render") {
 			core_registerOnRender_lua([pf]() { sol::protected_function_result r = pf(); if (!r.valid()) { sol::error err = r; ERROR(std::string("Lua registerOnRender error: ") + err.what()); } });
 		} else if (name == "UnitTest") {
 			core_registerOnUnitTest_lua([pf]() -> bool {

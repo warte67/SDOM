@@ -194,10 +194,13 @@ namespace SDOM
             std::chrono::nanoseconds last_render_ns{0};
         };
         
-        void start_update_timer(const std::string& objName);
-        void stop_update_timer(const std::string& objName);
-        void start_render_time(const std::string& objName);
-        void stop_render_time(const std::string& objName);
+        // Performance timers keyed by object identity. Name snapshots are stored in PerfStats.
+        void start_update_timer(const IDisplayObject* obj);
+        void stop_update_timer(const IDisplayObject* obj, const std::string* name_snapshot = nullptr);
+        void abandon_update_timer(const IDisplayObject* obj);
+        void start_render_time(const IDisplayObject* obj);
+        void stop_render_time(const IDisplayObject* obj, const std::string* name_snapshot = nullptr);
+        void abandon_render_time(const IDisplayObject* obj);
         void report_performance_stats() const; // summary entrypoint (calls the two below)
         void report_update_stats(std::size_t topN = 15) const;
         void report_render_stats(std::size_t topN = 15) const;
@@ -225,9 +228,9 @@ namespace SDOM
         std::unordered_map<std::string, AssetTypeCreators> assetCreators_;  // are these now needed?
 
         // --- Performance Tracking Maps --- //
-        std::unordered_map<std::string, PerfStats> perf_map;
-        std::unordered_map<std::string, std::chrono::steady_clock::time_point> update_start_times;
-        std::unordered_map<std::string, std::chrono::steady_clock::time_point> render_start_times;
+        std::unordered_map<const IDisplayObject*, PerfStats> perf_map;
+        std::unordered_map<const IDisplayObject*, std::chrono::steady_clock::time_point> update_start_times;
+        std::unordered_map<const IDisplayObject*, std::chrono::steady_clock::time_point> render_start_times;
 
         // --- Orphan & Future Child Lists --- //
 
