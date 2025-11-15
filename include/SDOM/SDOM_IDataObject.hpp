@@ -99,6 +99,20 @@ Summary:
 #include <utility>
 #include <type_traits>
 
+// ----------------------------------------------------------------------------
+// Binding log configuration and required headers
+// Move these outside of the SDOM namespace to avoid including STL headers
+// while a user-defined namespace is open (which would nest std in SDOM).
+// ----------------------------------------------------------------------------
+#ifndef SDOM_VERBOSE_BINDING_LOG
+#   define SDOM_VERBOSE_BINDING_LOG true
+#endif
+
+#if SDOM_VERBOSE_BINDING_LOG
+#   include <iostream>
+#   include <sstream>
+#endif
+
 // Ensure DEBUG_REGISTER_LUA exists (normally provided by SDOM.hpp). If the
 // umbrella header is included by a TU it will override this; this definition
 // acts as a safe default when headers are included individually.
@@ -113,7 +127,7 @@ namespace SDOM
     // ============================================================================
     // ⚙️  Configuration Flags
     // ----------------------------------------------------------------------------
-    // SDOM_VERBOSE_BINDING_LOG
+    // SDOM_VERBOSE_BINDING_LOG (defined above this namespace)
     //      When true, registerBindingsImpl() and other binding-related operations
     //      will emit debug/trace text to the console.
     //
@@ -121,9 +135,6 @@ namespace SDOM
     //      #define SDOM_VERBOSE_BINDING_LOG true
     //      #include <SDOM/SDOM_IDataObject.hpp>
     // ============================================================================
-    #ifndef SDOM_VERBOSE_BINDING_LOG
-        #define SDOM_VERBOSE_BINDING_LOG true
-    #endif
 
 
     // ============================================================================
@@ -135,9 +146,7 @@ namespace SDOM
     // ============================================================================
 
     #if SDOM_VERBOSE_BINDING_LOG
-        #include <iostream>
-        #include <sstream>
-        #include <SDOM/SDOM_CLR.hpp>
+        // Headers are included above the namespace. Only macros live here.
 
         // 💬 Normal Binding Trace
         #define BIND_LOG(...) do {                                       \

@@ -1,9 +1,45 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+USAGE() {
+  cat <<'EOF'
+Usage: ./compile [clean] [release]
+
+  clean   Remove existing build folders before configuring
+  release Configure both SDOM and the test harness for Release (implies clean)
+
+Additional options can be added later; unknown flags are rejected to catch typos.
+EOF
+}
+
 # Resolve the repo root (two levels up from this script)
 WORKSPACE="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 INSTALL_PREFIX="${INSTALL_PREFIX:-$HOME/.local}"
+
+CLEAN=false
+BUILD_TYPE=${BUILD_TYPE:-Debug}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    clean)
+      CLEAN=true
+      ;;
+    release)
+      BUILD_TYPE="Release"
+      CLEAN=true
+      ;;
+    -h|--help)
+      USAGE
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      USAGE >&2
+      exit 1
+      ;;
+  esac
+  shift
+done
 
 # Determine available CPU count
 if command -v nproc >/dev/null 2>&1; then
@@ -15,24 +51,27 @@ else
 fi
 
 # --- Handle clean flag ---
-if [[ "${1:-}" == "clean" ]]; then
+if [[ "$CLEAN" == true ]]; then
   echo "Cleaning $WORKSPACE/build and $WORKSPACE/examples/test/build ..."
   rm -rf "$WORKSPACE/build" "$WORKSPACE/examples/test/build"
-  # Don’t exit — we’ll continue to perform a full rebuild
 fi
 
 echo "Workspace: $WORKSPACE"
 echo "Install prefix: $INSTALL_PREFIX"
+echo "Build type: $BUILD_TYPE"
 
 # --- Configure and build the core library ---
-cmake -S "$WORKSPACE" -B "$WORKSPACE/build" -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX" >/dev/null
+cmake -S "$WORKSPACE" -B "$WORKSPACE/build" \
+      -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX" \
+      -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
+      -DCMAKE_PREFIX_PATH="$HOME/.local;/usr/local;${CMAKE_PREFIX_PATH:-}" >/dev/null
 
 # Track timestamps to detect rebuild
 LIB_TARGET=$(find "$WORKSPACE/build" -maxdepth 1 -type f -name "libSDOM.*" | head -n1)
 [[ -f "$LIB_TARGET" ]] && BEFORE_TIME=$(stat -c %Y "$LIB_TARGET") || BEFORE_TIME=0
 
 # Build
-cmake --build "$WORKSPACE/build" -j"$CORES"
+cmake --build "$WORKSPACE/build" -j"$CORES" --config "$BUILD_TYPE"
 
 # Detect whether target changed
 LIB_TARGET=$(find "$WORKSPACE/build" -maxdepth 1 -type f -name "libSDOM.*" | head -n1)
@@ -40,11 +79,13 @@ AFTER_TIME=$( [[ -f "$LIB_TARGET" ]] && stat -c %Y "$LIB_TARGET" || echo 0 )
 
 if [[ "$AFTER_TIME" -gt "$BEFORE_TIME" ]]; then
   echo "Changes detected — installing library..."
-  cmake --install "$WORKSPACE/build"
+  cmake --install "$WORKSPACE/build" --config "$BUILD_TYPE"
 else
   echo "No changes detected — skipping install."
 fi
 
 # --- Build the test application ---
-cmake -S "$WORKSPACE/examples/test" -B "$WORKSPACE/examples/test/build" >/dev/null
-cmake --build "$WORKSPACE/examples/test/build" -j"$CORES"
+cmake -S "$WORKSPACE/examples/test" -B "$WORKSPACE/examples/test/build" \
+      -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
+      -DCMAKE_PREFIX_PATH="$HOME/.local;/usr/local;${CMAKE_PREFIX_PATH:-}" >/dev/null
+cmake --build "$WORKSPACE/examples/test/build" -j"$CORES" --config "$BUILD_TYPE"

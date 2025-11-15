@@ -44,7 +44,17 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
-#include <SDL3_mixer/SDL_mixer.h>
+// SDL_mixer is optional; include only if available
+#if defined(__has_include)
+#  if __has_include(<SDL3_mixer/SDL_mixer.h>)
+#    include <SDL3_mixer/SDL_mixer.h>
+#    define SDOM_HAS_SDL_MIXER 1
+#  else
+#    define SDOM_HAS_SDL_MIXER 0
+#  endif
+#else
+#  define SDOM_HAS_SDL_MIXER 0
+#endif
 #include <SDL3_ttf/SDL_ttf.h>
 
 #include <any>
@@ -557,6 +567,5 @@ namespace SDOM
     // API should include SDOM_Front.hpp directly in .cpp files. Keep this block intentionally empty here
     // to avoid accidental circular include dependencies.
 #endif
-
 
 

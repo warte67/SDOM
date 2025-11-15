@@ -99,6 +99,13 @@ Summary:
 // #include <SDOM/SDOM.hpp>   
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <iostream>
+#include <algorithm>
+#include <chrono>
+#include <functional>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 #include <SDOM/SDOM_EventTypeHash.hpp>
 

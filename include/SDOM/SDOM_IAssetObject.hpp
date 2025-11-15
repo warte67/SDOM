@@ -2,6 +2,7 @@
 #pragma once
 // #include <sol/sol.hpp> 
 #include <SDOM/SDOM_IDataObject.hpp>
+#include <string>
 
 namespace SDOM
 {

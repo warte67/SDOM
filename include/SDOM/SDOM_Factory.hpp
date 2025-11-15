@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include <functional>
+#include <chrono>
 #include <unordered_map>
 #include <vector>
 #include <atomic>

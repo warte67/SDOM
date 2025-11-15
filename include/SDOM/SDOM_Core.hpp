@@ -2,6 +2,11 @@
 
 // #include <SDOM/SDOM.hpp>
 #include <atomic>
+#include <functional>
+#include <mutex>
+#include <queue>
+#include <string>
+#include <vector>
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_DataRegistry.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>

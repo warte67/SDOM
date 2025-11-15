@@ -41,10 +41,11 @@
 
 #include <SDOM/SDOM.hpp>
 
-// #include <queue>
-// #include <memory>
-#include <unordered_map>
+#include <memory>
+#include <queue>
 #include <string>
+#include <unordered_map>
+#include <vector>
 // #include "SDOM/SDOM_Event.hpp"
 // #include "SDOM/SDOM_IDisplayObject.hpp"
 

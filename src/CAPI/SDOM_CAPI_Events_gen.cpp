@@ -150,7 +150,12 @@ int SDOM_GetEventDesc(SDOM_EventHandle h, struct SDOM_EventDesc *out) {
         args.push_back(SDOM::CAPI::CallArg::makePtr((void*)out));
         SDOM::CAPI::CallResult r = SDOM::CAPI::invokeCallable("Event.GetEventDesc", args);
         if (r.kind == SDOM::CAPI::CallArg::Kind::Int) return static_cast<int>(r.v.i);
-        SDOM::Event* ev = hh->ptr; out->type_id = static_cast<uint32_t>(ev->getType().getOrAssignId()); out->name = hh->name ? hh->name : ev->getTypeName().c_str(); out->payload_json = nullptr; out->user_data = nullptr; return SDOM_CAPI_OK;
+        SDOM::Event* ev = hh->ptr;
+        out->type_id = static_cast<uint32_t>(ev->getType().getOrAssignId());
+        out->name = hh->name ? hh->name : ev->getType().getName().c_str();
+        out->payload_json = nullptr;
+        out->user_data = nullptr;
+        return SDOM_CAPI_OK;
     } catch(...) { return SDOM_CAPI_ERR_INTERNAL; }
 }
 

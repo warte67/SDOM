@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 project(SDOM VERSION 1.0 LANGUAGES CXX)
 
+# Help CMake find locally installed packages in both user and system prefixes.
+# This ensures consistent package discovery for both Debug (local) and
+# Release (system) workflows triggered by `./rebuild`.
+list(APPEND CMAKE_PREFIX_PATH "$ENV{HOME}/.local" "/usr/local")
+
 # Option to enable generation of Lua dispatch wrappers in generated C API
 option(SDOM_ENABLE_LUA_BINDINGS "Enable generation of Lua dispatch prototypes/wrappers in generated C API" ON)
 
@@ -118,6 +123,8 @@ endif()
 find_package(SDL3 REQUIRED CONFIG)
 find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
+# SDL_mixer is optional for now
+find_package(SDL3_mixer QUIET CONFIG)
 find_library(LUA_LIB lua5.4)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
@@ -152,6 +159,7 @@ target_link_libraries(${PROJECT_NAME}
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
+        $<$<BOOL:${SDL3_mixer_FOUND}>:SDL3_mixer::SDL3_mixer>
         ${LUA_LIB}
         sdom_warnings
         sdom_sanitizers
@@ -192,6 +200,9 @@ set_target_properties(dataregistry_generator PROPERTIES
 
 # Give generator the same warnings/sanitizers (it’s your code, so strict is good)
 target_link_libraries(dataregistry_generator PRIVATE
+    SDL3::SDL3
+    SDL3_image::SDL3_image
+    SDL3_ttf::SDL3_ttf
     sdom_warnings
     sdom_sanitizers
 )
@@ -205,6 +216,10 @@ if(LUA_LIB)
         Threads::Threads
     )
 endif()
+
+target_include_directories(dataregistry_generator PRIVATE
+    /usr/include/lua5.4
+)
 
 # Generated version marker file
 set(GENERATED_VERSION_FILE "${GENERATED_DIR}/sdom_capi_objects_generated.version")

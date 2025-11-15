@@ -37,6 +37,10 @@
 #ifndef SDOM_EVENT_TYPE_HASH_HPP
 #define SDOM_EVENT_TYPE_HASH_HPP
 
+#include <cstddef>
+#include <functional>
+#include <string>
+
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_EventType.hpp>
 
