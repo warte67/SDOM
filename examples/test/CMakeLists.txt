@@ -126,6 +126,9 @@ list(APPEND SOURCES "${PROJECT_SOURCE_DIR}/main.cpp")
 #  Test Program
 # ======================================================
 add_executable(${PROJECT_NAME} ${SOURCES})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}
+)
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROG_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
@@ -138,7 +141,6 @@ target_link_libraries(${PROJECT_NAME}
         sdom_sanitizers
 )
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 # ======================================================
 #  Generator for C API (“api_gen”)
