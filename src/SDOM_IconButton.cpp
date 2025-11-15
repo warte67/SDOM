@@ -272,7 +272,7 @@ namespace SDOM
     } // END: void IconButton::onRender()
 
 
-    void IconButton::onUpdate(float fElapsedTime)
+    void IconButton::onUpdate([[maybe_unused]] float fElapsedTime)
     {
     } // END: void IconButton::onUpdate(float fElapsedTime)
 

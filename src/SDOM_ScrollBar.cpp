@@ -141,7 +141,7 @@ namespace SDOM
             };
 
             // decrease handler (left or top)
-            auto decreaseHandler = [this, doChange](Event& ev) {
+            auto decreaseHandler = [this, doChange]([[maybe_unused]] Event& ev) {
                 if (!isEnabled()) return;
                 float oldValue = getValue();
                 float delta = (step_ > 0.0f) ? step_ : 1.0f;
@@ -156,7 +156,7 @@ namespace SDOM
             };
 
             // increase handler (right or bottom)
-            auto increaseHandler = [this, doChange](Event& ev) {
+            auto increaseHandler = [this, doChange]([[maybe_unused]] Event& ev) {
                 if (!isEnabled()) return;
                 float oldValue = getValue();
                 float delta = (step_ > 0.0f) ? step_ : 1.0f;

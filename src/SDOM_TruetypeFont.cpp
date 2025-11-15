@@ -381,7 +381,7 @@ namespace SDOM
         return false;
     } // END: TruetypeFont::getGlyphMetrics(Uint32 ch, int *minx, int *maxx, int *miny, int *maxy, int *advance) const 
 
-    int  TruetypeFont::getGlyphHeight(Uint32 ch) const 
+    int  TruetypeFont::getGlyphHeight([[maybe_unused]] Uint32 ch) const 
     {
         // Return glyph height
         TTF_Font* ttf_font_ = _getValidTTFFontPtr();
@@ -392,7 +392,7 @@ namespace SDOM
         return 0;
     } // END: TruetypeFont::getGlyphHeight(Uint32 ch) const 
 
-    int  TruetypeFont::getGlyphWidth(Uint32 ch) const 
+    int  TruetypeFont::getGlyphWidth([[maybe_unused]] Uint32 ch) const 
     {
         TTF_Font* ttf_font_ = _getValidTTFFontPtr();
         if (ttf_font_)

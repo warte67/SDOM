@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
     struct TestGenerator : public IBindingGenerator {
         std::string marker;
         TestGenerator(const std::string &m): marker(m) {}
-        bool generate(const DataRegistrySnapshot& snapshot, const std::string& outDir) override {
+        bool generate([[maybe_unused]] const DataRegistrySnapshot& snapshot, const std::string& outDir) override {
             try {
                 std::filesystem::create_directories(outDir);
                 std::filesystem::path p(outDir);

@@ -680,6 +680,7 @@ namespace SDOM
 	void core_bind_name_or_handle(const std::string& name, std::function<void(const std::string&)> nameFunc, std::function<void(const DisplayHandle&)> handleFunc,
 							 sol::usertype<Core>& objHandleType, sol::table& coreTable, sol::state_view lua)
 	{
+		(void)objHandleType; // stop compiler warning
 		auto nfc = nameFunc;
 		auto hfc = handleFunc;
 

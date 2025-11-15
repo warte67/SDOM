@@ -965,6 +965,8 @@ namespace SDOM
 
     void Core::onEvent(Event& event)
     {
+        (void )event; // stop compiler warning
+        
         // -- Let the event dispatcher handle event propagation --
         // NOTE:  This never gets called...
 

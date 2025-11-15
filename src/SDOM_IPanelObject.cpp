@@ -416,8 +416,8 @@ namespace SDOM
 
         using PTO = PanelTileOffset;
 
-    // Ensure the sprite sheet's underlying texture is loaded before drawing
-    try { ss->load(); } catch(...) {}
+        // Ensure the sprite sheet's underlying texture is loaded before drawing
+        try { ss->load(); } catch(...) {}
 
         // Top row (src rects use texture pixel sizes)
         // For 9-slice rendering we treat the sprite tile as the native size (tileW x tileH).
@@ -425,7 +425,8 @@ namespace SDOM
         float tileW = static_cast<float>(ss->getSpriteWidth());
         float tileH = static_cast<float>(ss->getSpriteHeight());
 
-        auto make_src_for_clipped = [&](int spriteIndex, float clipW, float clipH, bool alignRight, bool alignBottom) -> SDL_FRect {
+        // srcRect is tile-local (offset within the tile). If clipped, select the appropriate sub-rect
+        auto make_src_for_clipped = [&]([[maybe_unused]] int spriteIndex, float clipW, float clipH, bool alignRight, bool alignBottom) -> SDL_FRect {
             // srcRect is tile-local (offset within the tile). If clipped, select the appropriate sub-rect
             float src_w = (clipW >= static_cast<float>(cw)) ? tileW : (tileW * (clipW / static_cast<float>(cw)));
             float src_h = (clipH >= static_cast<float>(ch)) ? tileH : (tileH * (clipH / static_cast<float>(ch)));

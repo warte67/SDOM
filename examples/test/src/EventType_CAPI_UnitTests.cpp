@@ -5,11 +5,16 @@
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
 #include <SDOM/SDOM_EventType.hpp>
+
+// 🔥 Required to get SDOM_EventTypeDesc,
+//     SDOM_EventTypeHandle, SDOM_EventDesc,
+//     SDOM_CreateEventType(), SDOM_EnumEventTypes(), etc.
+#include <SDOM/SDOM_CAPI.h>
 #include <SDOM/CAPI/SDOM_CAPI_Events.h>
-// Need full EventManager definition for testing queue size
+
+// Need full EventManager definition for queue size test
 #include <SDOM/SDOM_EventManager.hpp>
-// // include runtime C API header (installed into include/SDOM by the build)
-// #include <SDOM/SDOM_CAPI_Events_runtime.h>
+
 
 namespace SDOM
 {
@@ -35,7 +40,7 @@ namespace SDOM
     //   • Keep tests self-contained and deterministic.
     //
     // ============================================================================
-    bool EventType_CAPI_test0(std::vector<std::string>& errors)
+    bool EventType_CAPI_test0([[maybe_unused]] std::vector<std::string>& errors)
     {
         // Scaffold test: serves as a template and simple smoke test for the
         // test module registration. Keep this intact for reference.

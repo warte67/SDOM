@@ -241,7 +241,7 @@ namespace SDOM
     } // END: void Group::onRender()
 
 
-    void Group::onUpdate(float fElapsedTime)
+    void Group::onUpdate([[maybe_unused]] float fElapsedTime)
     {
     } // END: void Group::onUpdate(float fElapsedTime)
 

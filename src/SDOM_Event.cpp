@@ -576,8 +576,7 @@ namespace SDOM
 
         // Properties
         addProperty(typeName, "name",
-            [](const Event& e) { return e.getTypeName(); },
-            [](Event& e, const std::string& v) { e.setPayload(e.getPayload()); /* noop for name on Event */ });
+            [](const Event& e) { return e.getTypeName(); });
 
         addProperty(typeName, "captures",
             [](const Event& e) { return e.getUseCapture(); },

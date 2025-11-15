@@ -69,7 +69,7 @@ namespace SDOM
     //   • Keep tests self-contained and deterministic.
     //
     // ============================================================================
-    bool TristateButton_test0(std::vector<std::string>& errors)
+    bool TristateButton_test0([[maybe_unused]] std::vector<std::string>& errors)
     {
         // Example: To report an error, use this pattern:
         // errors.push_back("Description of the failure.");

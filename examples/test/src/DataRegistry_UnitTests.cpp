@@ -98,7 +98,7 @@ void sdom_test_destroy(sdom_handle_t handle)
 
 // Example template test from the original file. Keep it here so there's a
 // single canonical DataRegistry_UnitTests() implementation for the module.
-bool DataRegistry_test0(std::vector<std::string>& errors)
+bool DataRegistry_test0([[maybe_unused]] std::vector<std::string>& errors)
 {
     // Placeholder - keep returning finished=true so the harness is stable.
     return true;
@@ -115,7 +115,7 @@ bool DataRegistry_LUA_Tests(std::vector<std::string>& errors)
 // ---------------------------------------------------------------------------
 class DeadlockGenerator : public IBindingGenerator {
 public:
-    bool generate(const DataRegistrySnapshot& snapshot, const std::string& outDir) override {
+    bool generate([[maybe_unused]] const DataRegistrySnapshot& snapshot, const std::string& outDir) override {
         // Intentionally call back into the live registry (misuse) to reproduce
         // the historical deadlock where generateBindings held the mutex.
         auto names = DataRegistry::instance().listTypes();

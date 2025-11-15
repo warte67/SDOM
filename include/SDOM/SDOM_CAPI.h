@@ -22,14 +22,14 @@ typedef struct SDOM_CoreConfig {
 } SDOM_CoreConfig;
 
 /* Designated initializer macro for C users */
-#define SDOM_CORECONFIG_DEFAULT (SDOM_CoreConfig){ \
-    .windowWidth = 800.0f, .windowHeight = 600.0f,  \
-    .pixelWidth = 2.0f, .pixelHeight = 2.0f,        \
-    .preserveAspectRatio = 1, .allowTextureResize = 0, \
-    .rendererLogicalPresentation = SDL_LOGICAL_PRESENTATION_LETTERBOX, \
-    .windowFlags = SDL_WINDOW_RESIZABLE,            \
-    .pixelFormat = SDL_PIXELFORMAT_RGBA8888,        \
-    .color = { 32, 32, 32, 255 }                    \
+#define SDOM_CORECONFIG_DEFAULT  { \
+    800.0f, 600.0f, \
+    2.0f, 2.0f, \
+    1, 0, \
+    SDL_LOGICAL_PRESENTATION_LETTERBOX, \
+    SDL_WINDOW_RESIZABLE, \
+    SDL_PIXELFORMAT_RGBA8888, \
+    { 32, 32, 32, 255 } \
 }
 
 /* Error helpers (SDL-like) */

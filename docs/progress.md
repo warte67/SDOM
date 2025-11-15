@@ -405,6 +405,24 @@ Next up: consistent ordering, documentation quality, full property/function gene
 ### 🤔 **End of Day Reflection**
 > *“Every language starts as a whisper. Today, SDOM spoke clearly enough that even the Llama paused to listen.”*
 
+### 🚧 **To Do Tomorrow**
+- ☐ Figure out why the application is displaying `SDOM Version: 0.5.218 (early pre-alpha)` instead of `SDOM Version: 0.5.222 (early pre-alpha)`
+- ☐ Convert all variables to *snake_case*.
+- ☐ Implement a full `Release` build into the `compile` script.
+- ☐ Implement a 100% C++ start up sequence that does not rely on Lua for initialization.
+- ☐ Complete the DataRegistry → CAPI Generation Pipeline Audit
+  - ☐ Verify snapshot → generator → output directory path
+  - ☐ Ensure generator does not leak C++ types into C
+  - ☐ Confirm designated initializers produce correct defaults
+  - ☐ Test generation on multiple types (assets, display objects)
+  - ☐ Confirm generator handles optional fields correctly
+  - ☐ Review namespace leakage & symbol export macros
+- ☐ JSON Re-Evaluation
+  - ☐ Consider re-introducing **JSON serialization** into the DataRegistry  
+  - ☐ Add ability to **initialize the DataRegistry from JSON**  
+  - ☐ Add ability to **serialize/deserialize DOM tree** from JSON  
+    *(As an alternative or complement to Lua-based initialization)*
+
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
 
 #### end-of-day
@@ -414,7 +432,7 @@ Next up: consistent ordering, documentation quality, full property/function gene
 ### 🚧 **To-Do (Ongoing)** -- “A ten-day: a period of time scientifically defined as ‘when I get around to it.’
 - ☐ Implement C ABI unit-test harness as registry proof-of-concept  
   - ☐ Convert `SDOM_CLR` to a static singleton inheriting from `IDataObject`  
-  - ☐ `SDOM_Event` → inherits from `IDataObject`  
+  - ✅ `SDOM_Event` → inherits from `IDataObject`  
   - ☐ `SDOM_EventType` → inherits from `IDataObject`  
   - ☐ `SDOM_IButtonObject` → inherits from `IDataObject`  
   - ☐ `SDOM_IconIndex` → static singleton inherits from `IDataObject`  

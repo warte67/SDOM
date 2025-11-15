@@ -1086,7 +1086,7 @@ namespace SDOM
     // 💡 Notes:
     // Detects object-level hover transitions within the scene graph. Called every frame for
     // motion events, this function queues MouseMove, MouseEnter, and MouseLeave as needed.
-    void EventManager::updateHoverState(const SDL_Event& e, DisplayHandle node)
+    void EventManager::updateHoverState(const SDL_Event& e, [[maybe_unused]] DisplayHandle node)
     {
         static DisplayHandle lastHoveredObject = nullptr;
         const SDL_EventType et = static_cast<SDL_EventType>(e.type);
@@ -1185,7 +1185,7 @@ namespace SDOM
     // ⚙️ System Behavior:
     // Uses SDL’s window focus API to trigger stage-level MouseEnter/MouseLeave events when
     // the mouse crosses window boundaries.
-    void EventManager::dispatchWindowEnterLeave(const SDL_Event& e, DisplayHandle node)
+    void EventManager::dispatchWindowEnterLeave(const SDL_Event& e, [[maybe_unused]] DisplayHandle node)
     {
         // Enable mouse capture once to ensure consistent focus tracking; avoid
         // calling this per-event to reduce overhead on high-frequency motion.

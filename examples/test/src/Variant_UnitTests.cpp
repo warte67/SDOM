@@ -389,10 +389,10 @@ namespace SDOM
         for (int i = 0; i < threads; ++i) {
             ths.emplace_back([i]() {
                 Variant::ConverterEntry ce;
-                ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {
+                ce.toLua = []([[maybe_unused]] const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {
                     return sol::make_object(L, sol::lua_nil);
                 };
-                ce.fromVariant = [](const Variant& v)->std::shared_ptr<void> { return nullptr; };
+                ce.fromVariant = []([[maybe_unused]] const Variant& v)->std::shared_ptr<void> { return nullptr; };
                 Variant::registerConverterByName(std::string("ThreadConv_") + std::to_string(i), std::move(ce));
             });
         }
@@ -680,11 +680,11 @@ namespace SDOM
     std::atomic<int> from_calls{0};
 
         Variant::ConverterEntry ce;
-        ce.toLua = [&toLua_calls](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {
+        ce.toLua = [&toLua_calls]([[maybe_unused]] const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {
             toLua_calls.fetch_add(1, std::memory_order_relaxed);
             return sol::make_object(L, sol::lua_nil);
         };
-        ce.fromVariant = [&from_calls](const Variant& v)->std::shared_ptr<void> {
+        ce.fromVariant = [&from_calls]([[maybe_unused]] const Variant& v)->std::shared_ptr<void> {
             from_calls.fetch_add(1, std::memory_order_relaxed);
             return nullptr;
         };
@@ -703,8 +703,8 @@ namespace SDOM
                     // occasionally re-register a converter under a per-thread name
                     if ((i & 63) == 0) {
                         Variant::ConverterEntry local_ce;
-                        local_ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object { return sol::make_object(L, sol::lua_nil); };
-                        local_ce.fromVariant = [](const Variant& v)->std::shared_ptr<void> { return nullptr; };
+                        local_ce.toLua = []([[maybe_unused]] const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object { return sol::make_object(L, sol::lua_nil); };
+                        local_ce.fromVariant = []([[maybe_unused]] const Variant& v)->std::shared_ptr<void> { return nullptr; };
                         Variant::registerConverterByName(std::string("Reg_") + std::to_string(t) + "_" + std::to_string(i), local_ce);
                     }
 
@@ -795,8 +795,8 @@ namespace SDOM
             ths.emplace_back([t, per_thread]() {
                 for (int i = 0; i < per_thread; ++i) {
                     Variant::ConverterEntry ce;
-                    ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object { return sol::make_object(L, sol::lua_nil); };
-                    ce.fromVariant = [](const Variant& v)->std::shared_ptr<void> { return nullptr; };
+                    ce.toLua = []([[maybe_unused]] const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object { return sol::make_object(L, sol::lua_nil); };
+                    ce.fromVariant = []([[maybe_unused]] const Variant& v)->std::shared_ptr<void> { return nullptr; };
                     Variant::registerConverterByName(std::string("StressConv_") + std::to_string(t) + "_" + std::to_string(i), ce);
                     // read back occasionally
                     if ((i & 7) == 0) Variant::getConverterByName(std::string("StressConv_") + std::to_string(t) + "_" + std::to_string(i));

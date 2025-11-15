@@ -226,7 +226,7 @@ namespace SDOM
     } // END: void Button::onRender()
 
 
-    void Button::onUpdate(float fElapsedTime)
+    void Button::onUpdate([[maybe_unused]] float fElapsedTime)
     {
     } // END: void Button::onUpdate(float fElapsedTime)
 

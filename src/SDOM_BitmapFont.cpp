@@ -496,13 +496,13 @@ namespace SDOM
         }
     } // END drawPhraseDropshadow()
 
-    bool BitmapFont::getGlyphMetrics(Uint32 ch, int *minx, int *maxx, int *miny, int *maxy, int *advance) const
+    bool BitmapFont::getGlyphMetrics([[maybe_unused]] Uint32 ch, int *minx, int *maxx, int *miny, int *maxy, int *advance) const
     {
         // Scale metrics by fontSize and optional per-style overrides.
         // Default: uniform scaling using fontSize relative to bitmapFontHeight_.
-    float baseRatio = (bitmapFontHeight_ > 0) ? float(fontSize_) / float(bitmapFontHeight_) : 1.0f;
-    int useWidth = (activeFontWidth_ > 0) ? activeFontWidth_ : bitmapFontWidth_;
-    int useHeight = (activeFontHeight_ > 0) ? activeFontHeight_ : bitmapFontHeight_;
+        float baseRatio = (bitmapFontHeight_ > 0) ? float(fontSize_) / float(bitmapFontHeight_) : 1.0f;
+        int useWidth = (activeFontWidth_ > 0) ? activeFontWidth_ : bitmapFontWidth_;
+        int useHeight = (activeFontHeight_ > 0) ? activeFontHeight_ : bitmapFontHeight_;
         // If caller passed a FontStyle via a thread-local or external mechanism
         // we don't have it here, so keep using base metrics. Advance uses width.
         int scaledWidth = int(baseRatio * useWidth + 0.5f);
@@ -515,7 +515,7 @@ namespace SDOM
         return true;
     } // END getGlyphMetrics()
 
-    int BitmapFont::getGlyphHeight(Uint32 ch) const
+    int BitmapFont::getGlyphHeight([[maybe_unused]] Uint32 ch) const
     {
         // Return the scaled height of the specified glyph using fontSize as base.
     float ratio = (bitmapFontHeight_ > 0) ? float(fontSize_) / float(bitmapFontHeight_) : 1.0f;
@@ -523,7 +523,7 @@ namespace SDOM
     return int(ratio * useHeight + 0.5f);
     } // END getGlyphHeight()
 
-    int BitmapFont::getGlyphWidth(Uint32 ch) const
+    int BitmapFont::getGlyphWidth([[maybe_unused]] Uint32 ch) const
     {
         // Return the scaled width of the specified glyph using fontSize as base.
     float ratio = (bitmapFontHeight_ > 0) ? float(fontSize_) / float(bitmapFontHeight_) : 1.0f;

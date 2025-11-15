@@ -271,7 +271,7 @@ bool CLR::get_cursor_pos(int& row, int& col)
 } // END CLR::get_cursor_pos()
 
 
-bool CLR::draw_debug_text(const std::string& text, int x, int y, int ptsize,
+bool CLR::draw_debug_text(const std::string& text, int x, int y, int /*ptsize*/,
                             Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
     // Use Core's renderer if available. Prefer SDL3's built-in debug text renderer

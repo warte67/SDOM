@@ -132,7 +132,8 @@ namespace SDOM
     // --- Protected Virtual Methods (From IButtonObject) --- //
     void CheckButton::onStateChanged(ButtonState oldState, ButtonState newState)
     {
-        // ...
+        (void)oldState; // stop compiler warning
+        (void)newState; // stop compiler warning
     } // END: CheckButton::onStateChanged()
 
     IconIndex CheckButton::iconIndexForState(ButtonState state) const

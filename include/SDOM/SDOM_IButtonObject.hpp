@@ -311,14 +311,14 @@ namespace SDOM
          * @note Derived classes should override this to trigger animations,
          *       sound effects, or visual updates on state transitions.
          */
-        virtual void onStateChanged(ButtonState oldState, ButtonState newState) {}
+        virtual void onStateChanged([[maybe_unused]] ButtonState oldState, [[maybe_unused]] ButtonState newState) {}
 
         /**
          * @brief Retrieves the icon index associated with a specific state.
          * @param state The `ButtonState` for which to fetch the icon index.
          * @return An `IconIndex` value representing the visual asset.
          */
-        virtual IconIndex iconIndexForState(ButtonState state) const { return IconIndex(); }
+        virtual IconIndex iconIndexForState([[maybe_unused]] ButtonState state) const { return IconIndex(); }
 
     public:
         // --------------------------------------------------------------------
