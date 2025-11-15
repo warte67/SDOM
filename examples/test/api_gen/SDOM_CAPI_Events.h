@@ -62,6 +62,9 @@ int SDOM_UpdateEvent(SDOM_EventHandle h, const struct SDOM_EventDesc *desc);
 void SDOM_DestroyEvent(SDOM_EventHandle h);
 int SDOM_SendEvent(SDOM_EventHandle h);
 
+/* Query the current event queue size (number of queued events) */
+int SDOM_GetEventQueueSize(void);
+
 typedef uint32_t SDOM_EventTypeId;
 
 /** @defgroup SDOM_EventMacros Event Macros

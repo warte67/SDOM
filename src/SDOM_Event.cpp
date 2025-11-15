@@ -46,7 +46,10 @@
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_EventType.hpp>
 #include <SDOM/SDOM_DataRegistry.hpp>
+#include <SDOM/CAPI/SDOM_CAPI_Events.h>
+#include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
+#include <SDOM/SDOM_EventManager.hpp>
 // #include <SDOM/SDOM_CAPI_Events_runtime.h>
 
 
@@ -821,6 +824,78 @@ namespace SDOM
         addFunction("EventType", "nameForId", [](uint32_t id) -> std::string {
             if (auto *et = EventType::fromId(static_cast<EventType::IdType>(id))) return et->getName();
             return std::string();
+        });
+        // Register dispatcher callables used by generated C API wrappers.
+        using namespace SDOM::CAPI;
+        registerCallable("Event.CreateEventType", [](const std::vector<CallArg>& args) -> CallResult {
+            try {
+                const SDOM_EventTypeDesc* desc = nullptr;
+                if (!args.empty() && args[0].kind == CallArg::Kind::Ptr) desc = reinterpret_cast<const SDOM_EventTypeDesc*>(args[0].v.p);
+                if (!desc || !desc->name) return CallResult::Void();
+                std::string name = desc->name ? desc->name : std::string();
+                std::string category = desc->category ? desc->category : std::string();
+                std::string doc = desc->doc ? desc->doc : std::string();
+                SDOM::EventType* et = nullptr;
+                if (!category.empty()) et = new SDOM::EventType(name, category, doc);
+                else { et = new SDOM::EventType(name); if (!doc.empty()) et->setDoc(doc); }
+                return CallResult::FromPtr(reinterpret_cast<void*>(et));
+            } catch(...) { return CallResult::Void(); }
+        });
+
+        registerCallable("Event.FindEventTypeByName", [](const std::vector<CallArg>& args) -> CallResult {
+            try {
+                std::string name;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) name = args[0].s;
+                    else if (args[0].kind == CallArg::Kind::Ptr && args[0].v.p) name = reinterpret_cast<const char*>(args[0].v.p);
+                }
+                if (name.empty()) return CallResult::Void();
+                SDOM::EventType* et = SDOM::EventType::fromName(name);
+                if (!et) return CallResult::Void();
+                return CallResult::FromPtr(reinterpret_cast<void*>(et));
+            } catch(...) { return CallResult::Void(); }
+        });
+
+        registerCallable("Event.EnumEventTypes", [](const std::vector<CallArg>& args) -> CallResult {
+            try {
+                size_t index = 0;
+                if (!args.empty() && args[0].kind == CallArg::Kind::UInt) index = static_cast<size_t>(args[0].v.u);
+                auto all = SDOM::EventType::getAll();
+                if (index >= all.size()) return CallResult::Void();
+                SDOM::EventType* et = all[index];
+                return CallResult::FromPtr(reinterpret_cast<void*>(et));
+            } catch(...) { return CallResult::Void(); }
+        });
+
+        registerCallable("Event.CreateEvent", [](const std::vector<CallArg>& args) -> CallResult {
+            try {
+                const SDOM_EventDesc* desc = nullptr;
+                if (!args.empty() && args[0].kind == CallArg::Kind::Ptr) desc = reinterpret_cast<const SDOM_EventDesc*>(args[0].v.p);
+                SDOM::EventType* et = nullptr;
+                if (desc) {
+                    if (desc->type_id != 0) et = SDOM::EventType::fromId(static_cast<SDOM::EventType::IdType>(desc->type_id));
+                    if (!et && desc->name) et = SDOM::EventType::fromName(std::string(desc->name));
+                }
+                SDOM::Event* ev = nullptr;
+                if (et) ev = new SDOM::Event(*et);
+                else ev = new SDOM::Event(SDOM::EventType("None"));
+                return CallResult::FromPtr(reinterpret_cast<void*>(ev));
+            } catch(...) { return CallResult::Void(); }
+        });
+
+        registerCallable("Event.SendEvent", [](const std::vector<CallArg>& args) -> CallResult {
+            try {
+                if (args.empty() || args[0].kind != CallArg::Kind::Ptr) return CallResult::FromInt(SDOM_CAPI_ERR_INVALID_ARG);
+                SDOM::Event* ev = reinterpret_cast<SDOM::Event*>(args[0].v.p);
+                if (!ev) return CallResult::FromInt(SDOM_CAPI_ERR_INVALID_ARG);
+                auto evCopy = std::make_unique<SDOM::Event>(*ev);
+                SDOM::Core::getInstance().getEventManager().addEvent(std::move(evCopy));
+                return CallResult::FromInt(SDOM_CAPI_OK);
+            } catch(...) { return CallResult::FromInt(SDOM_CAPI_ERR_INTERNAL); }
+        });
+
+        registerCallable("Event.GetEventQueueSize", [](const std::vector<CallArg>&) -> CallResult {
+            try { int n = SDOM::Core::getInstance().getEventManager().getEventQueueSize(); return CallResult::FromInt(n); } catch(...) { return CallResult::FromInt(-1); }
         });
         
     } // END Event::registerBindingsImpl(const std::string& typeName)

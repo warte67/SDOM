@@ -129,8 +129,237 @@ bool DataRegistry::generateBindings(const std::string& outputDir)
         std::ofstream fh(p);
         fh << out.str();
         fh.close();
+
+        // Also emit a companion implementation that provides dispatcher-backed
+        // thin wrappers for each registered function. This implementation
+        // forwards arguments as SDOM::CAPI::CallArg and calls
+        // SDOM::CAPI::invokeCallable("TypeName.funcName", args).
+        std::ostringstream impl;
+        impl << "#include <SDOM/CAPI/SDOM_CAPI_Common.h>\n";
+        impl << "#include <SDOM/SDOM_DataRegistry.hpp>\n";
+        impl << "#include <string>\n#include <vector>\n#include <cstdint>\n#include <cstdlib>\n#include <cstring>\n\n";
+
+        impl << "extern \"C\" {\n";
+
+        auto sanitize_c_ident = [](const std::string &s) {
+            std::string id = s;
+            for (char &c : id) if (c == ':' || c == ' ' || c == '-') c = '_';
+            return id;
+        };
+
+        auto trim = [](const std::string &s) {
+            size_t a = 0; while (a < s.size() && isspace((unsigned char)s[a])) ++a;
+            size_t b = s.size(); while (b > a && isspace((unsigned char)s[b-1])) --b;
+            return s.substr(a, b-a);
+        };
+
+        auto is_return_cstring = [&](const std::string &ret_raw) {
+            std::string ret = trim(ret_raw);
+            if (ret == "const char*" || ret == "char*" || ret == "const char *" || ret == "char *") return true;
+            if (ret == "std::string" || ret == "const std::string&" || ret == "std::string_view" || ret == "string") return true;
+            return false;
+        };
+
+        auto map_return_default = [&](const std::string &ret_raw) {
+            std::string ret = trim(ret_raw);
+            if (ret.empty()) return std::string("return;\n");
+            if (is_return_cstring(ret)) return std::string("return nullptr;\n");
+            if (ret == "int" || ret == "long" || ret.find("uint") != std::string::npos || ret == "size_t") return std::string("return 0;\n");
+            if (ret == "bool") return std::string("return false;\n");
+            // pointer/handle fallback
+            return std::string("return (" + ret + ")0;\n");
+        };
+
+        for (const auto &ti : types_copy) {
+            std::string tclean = sanitize_c_ident(ti.name);
+
+            // Emit property getter/setter wrappers
+            for (const auto &p : ti.properties) {
+                // getter prototype previously emitted in header expects
+                // `const char* SDOM_<Type>_get<Property>(const SDOM_<Type>*);`
+                std::string gname = std::string("SDOM_") + tclean + "_get" + p.name;
+                impl << "const char* " << gname << "(const SDOM_" << tclean << "* obj) {\n";
+                impl << "    try {\n";
+                impl << "        std::vector<SDOM::CAPI::CallArg> args;\n";
+                impl << "        args.push_back(SDOM::CAPI::CallArg::makePtr((void*)obj));\n";
+                impl << "        SDOM::CAPI::CallResult r = SDOM::CAPI::invokeCallable(\"" << ti.name << ".get." << p.name << "\", args);\n";
+                impl << "        if (r.kind == SDOM::CAPI::CallArg::Kind::CString) return SDOM_StrDup(r.s.c_str());\n";
+                impl << "        if (r.kind == SDOM::CAPI::CallArg::Kind::Ptr && r.v.p) return (const char*)r.v.p;\n";
+                impl << "        return nullptr;\n";
+                impl << "    } catch(...) { return nullptr; }\n";
+                impl << "}\n\n";
+
+                if (!p.read_only) {
+                    std::string sname = std::string("SDOM_") + tclean + "_set" + p.name;
+                    impl << "void " << sname << "(SDOM_" << tclean << "* obj, const char* v) {\n";
+                    impl << "    try {\n";
+                    impl << "        std::vector<SDOM::CAPI::CallArg> args;\n";
+                    impl << "        args.push_back(SDOM::CAPI::CallArg::makePtr((void*)obj));\n";
+                    impl << "        args.push_back(SDOM::CAPI::CallArg::makeCString(v));\n";
+                    impl << "        (void)SDOM::CAPI::invokeCallable(\"" << ti.name << ".set." << p.name << "\", args);\n";
+                    impl << "    } catch(...) {}\n";
+                    impl << "}\n\n";
+                }
+            }
+
+            for (const auto &fi : ti.functions) {
+                if (!fi.exported) continue;
+                // Determine C function name
+                std::string cname = fi.c_name.empty() ? (std::string("SDOM_") + tclean + "_" + fi.name) : fi.c_name;
+
+                // Build parameter list: prefer explicit param_types if present
+                std::string params_list;
+                std::vector<std::string> param_names;
+                if (!fi.param_types.empty()) {
+                    for (size_t i = 0; i < fi.param_types.size(); ++i) {
+                        if (i) params_list += ", ";
+                        std::string ptype = fi.param_types[i];
+                        std::string pname = "p" + std::to_string(i);
+                        params_list += ptype + " " + pname;
+                        param_names.push_back(pname);
+                    }
+                } else {
+                    // Default to an opaque handle pointer for instance functions
+                    params_list = (fi.is_static ? std::string("void") : std::string("void* obj"));
+                    if (!fi.is_static) param_names.push_back("obj");
+                }
+
+                std::string cret = fi.return_type.empty() ? "void" : fi.return_type;
+
+                impl << cret << " " << cname << "(" << params_list << ") {\n";
+                impl << "    try {\n";
+                impl << "        std::vector<SDOM::CAPI::CallArg> args;\n";
+
+                // marshal parameters
+                for (size_t i = 0; i < param_names.size(); ++i) {
+                    std::string pname = param_names[i];
+                    std::string ptype = (i < fi.param_types.size()) ? fi.param_types[i] : std::string("void*");
+                    auto pt = trim(ptype);
+                    auto is_cstr = (pt == "const char*" || pt == "char*" || pt == "const char *" || pt == "char *" || pt == "std::string" || pt == "string" || pt == "const std::string&");
+                    auto is_bool = (pt == "bool");
+                    auto is_double = (pt == "double" || pt == "float" || pt == "long double");
+                    auto is_uint = (pt.find("uint") != std::string::npos || pt == "size_t" || pt.find("unsigned") != std::string::npos);
+                    auto is_int = (pt == "int" || pt == "long" || pt == "short" || pt.find("int") != std::string::npos);
+                    auto is_pointer = (pt.find('*') != std::string::npos || pt.find("Handle") != std::string::npos || pt.find("Ptr") != std::string::npos || pt == "void*" || pt == "void *");
+
+                    if (is_cstr) {
+                        impl << "        args.push_back(SDOM::CAPI::CallArg::makeCString(" << pname << "));\n";
+                    } else if (is_bool) {
+                        impl << "        args.push_back(SDOM::CAPI::CallArg::makeBool(" << pname << "));\n";
+                    } else if (is_double) {
+                        impl << "        args.push_back(SDOM::CAPI::CallArg::makeDouble((double)" << pname << "));\n";
+                    } else if (is_uint) {
+                        impl << "        args.push_back(SDOM::CAPI::CallArg::makeUInt((uint64_t)" << pname << "));\n";
+                    } else if (is_int) {
+                        impl << "        args.push_back(SDOM::CAPI::CallArg::makeInt((int64_t)" << pname << "));\n";
+                    } else if (is_pointer) {
+                        impl << "        args.push_back(SDOM::CAPI::CallArg::makePtr((void*)" << pname << "));\n";
+                    } else {
+                        // Unknown type: safer to marshal as integer rather than casting integer->pointer.
+                        impl << "        // Unknown parameter type '" << pt << "' -- marshalling as integer by default.\n";
+                        impl << "        args.push_back(SDOM::CAPI::CallArg::makeInt((int64_t)" << pname << "));\n";
+                    }
+                }
+
+                // invoke dispatcher
+                impl << "        SDOM::CAPI::CallResult r = SDOM::CAPI::invokeCallable(\"" << ti.name << "." << fi.name << "\", args);\n";
+
+                // convert CallResult back to C return
+                if (cret == "void") {
+                    impl << "        (void)r; return;\n";
+                } else if (is_return_cstring(cret)) {
+                    impl << "        if (r.kind == SDOM::CAPI::CallArg::Kind::CString) return SDOM_StrDup(r.s.c_str());\n";
+                    impl << "        if (r.kind == SDOM::CAPI::CallArg::Kind::Ptr && r.v.p) return (const char*)r.v.p;\n";
+                    impl << "        return nullptr;\n";
+                } else if (cret == "int" || cret == "long") {
+                    impl << "        if (r.kind == SDOM::CAPI::CallArg::Kind::Int) return (" << cret << ")r.v.i;\n";
+                    impl << "        return 0;\n";
+                } else if (cret.find("uint") != std::string::npos || cret == "size_t") {
+                    impl << "        if (r.kind == SDOM::CAPI::CallArg::Kind::UInt) return (" << cret << ")r.v.u;\n";
+                    impl << "        if (r.kind == SDOM::CAPI::CallArg::Kind::Int) return (" << cret << ")r.v.i;\n";
+                    impl << "        return 0;\n";
+                } else if (cret == "bool") {
+                    impl << "        if (r.kind == SDOM::CAPI::CallArg::Kind::Bool) return r.v.b;\n";
+                    impl << "        return false;\n";
+                } else {
+                    // treat as pointer/handle
+                    impl << "        if (r.kind == SDOM::CAPI::CallArg::Kind::Ptr) return (" << cret << ")r.v.p;\n";
+                    impl << "        return (" << cret << ")0;\n";
+                }
+
+                impl << "    } catch(...) {\n";
+                // exception path: return defaults
+                impl << "        " << map_return_default(cret);
+                impl << "    }\n";
+                impl << "}\n\n";
+            }
+        }
+
+        impl << "} // extern C\n";
+
+        // write impl to disk in outputDir and repo src/CAPI
+        std::filesystem::path impl_out = outputDir;
+        impl_out /= "sdom_capi_objects_generated.cpp";
+        std::ofstream ifh(impl_out.string(), std::ios::trunc);
+        if (ifh) { ifh << impl.str(); ifh.close(); }
+
+        // attempt to copy into repo include/src if available
+        std::filesystem::path cwd = std::filesystem::current_path();
+        std::filesystem::path repo_root;
+        for (auto p2 = cwd; ; p2 = p2.parent_path()) {
+            if (p2 == p2.parent_path()) break;
+            if (std::filesystem::exists(p2 / "CMakeLists.txt")) { repo_root = p2; break; }
+        }
+        if (!repo_root.empty()) {
+            try {
+                std::filesystem::path repo_impl_dir = repo_root / "src" / "CAPI";
+                std::error_code ec2;
+                std::filesystem::create_directories(repo_impl_dir, ec2);
+                if (!ec2) {
+                    std::filesystem::path repo_impl = repo_impl_dir / "sdom_capi_objects_generated.cpp";
+                    std::ofstream rif(repo_impl.string(), std::ios::trunc);
+                    if (rif) { rif << impl.str(); rif.close(); }
+                }
+            } catch(...) {}
+        }
     } catch (...) {
         return false;
+    }
+
+    // Before invoking generators, register any GenericCallable entries found
+    // in the snapshot into the runtime dispatcher so generated wrappers can
+    // call them via SDOM::CAPI::invokeCallable.
+    for (const auto &ti : types_copy) {
+        for (const auto &fi : ti.functions) {
+            try {
+                // Prefer explicit GenericCallable stored in `callable`
+                if (fi.callable.has_value()) {
+                    if (fi.callable.type() == typeid(SDOM::CAPI::GenericCallable)) {
+                        auto g = std::any_cast<SDOM::CAPI::GenericCallable>(fi.callable);
+                        SDOM::CAPI::registerCallable(ti.name + std::string(".") + fi.name, g);
+                        continue;
+                    }
+                }
+
+                // If the FunctionInfo was registered as a generic runtime entry,
+                // prefer `runtime_handle` (it may contain a GenericCallable) or
+                // fall back to `callable` if it contains the runtime wrapper.
+                if (fi.callable_kind == SDOM::FunctionInfo::CallableKind::GenericRuntime) {
+                    if (fi.runtime_handle.has_value()) {
+                        if (fi.runtime_handle.type() == typeid(SDOM::CAPI::GenericCallable)) {
+                            auto g = std::any_cast<SDOM::CAPI::GenericCallable>(fi.runtime_handle);
+                            SDOM::CAPI::registerCallable(ti.name + std::string(".") + fi.name, g);
+                            continue;
+                        }
+                    }
+                    if (fi.callable.has_value() && fi.callable.type() == typeid(SDOM::CAPI::GenericCallable)) {
+                        auto g = std::any_cast<SDOM::CAPI::GenericCallable>(fi.callable);
+                        SDOM::CAPI::registerCallable(ti.name + std::string(".") + fi.name, g);
+                        continue;
+                    }
+                }
+            } catch(...) {}
+        }
     }
 
     // Invoke any registered binding generators (phase-2) without holding the
@@ -155,6 +384,44 @@ void DataRegistry::addGenerator(std::unique_ptr<IBindingGenerator> generator)
     std::scoped_lock lk(mutex_);
     if (!impl_) impl_ = std::make_unique<Impl>();
     if (generator) impl_->generators.push_back(std::move(generator));
+}
+
+// ---------------------------------------------------------------------------
+// Runtime dispatcher implementation for GenericCallable.
+// Stored here in the same translation unit as DataRegistry to keep the
+// header lightweight. This implements the functions declared in
+// `include/SDOM/SDOM_DataRegistry.hpp` under `SDOM::CAPI::*`.
+// ---------------------------------------------------------------------------
+namespace {
+    // Map from stable name to callable. Protected by `map_mutex`.
+    std::unordered_map<std::string, SDOM::CAPI::GenericCallable> g_callable_map;
+    std::mutex g_callable_mutex;
+}
+
+bool SDOM::CAPI::registerCallable(const std::string& name, GenericCallable fn)
+{
+    std::scoped_lock lk(g_callable_mutex);
+    g_callable_map[name] = std::move(fn);
+    return true;
+}
+
+std::optional<SDOM::CAPI::GenericCallable> SDOM::CAPI::lookupCallable(const std::string& name)
+{
+    std::scoped_lock lk(g_callable_mutex);
+    auto it = g_callable_map.find(name);
+    if (it == g_callable_map.end()) return std::nullopt;
+    return it->second;
+}
+
+SDOM::CAPI::CallResult SDOM::CAPI::invokeCallable(const std::string& name, const std::vector<CallArg>& args)
+{
+    std::optional<GenericCallable> c = lookupCallable(name);
+    if (!c.has_value()) return CallResult::Void();
+    try {
+        return c->operator()(args);
+    } catch (...) {
+        return CallResult::Void();
+    }
 }
 
 } // namespace SDOM

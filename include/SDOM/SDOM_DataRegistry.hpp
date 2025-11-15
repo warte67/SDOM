@@ -27,36 +27,15 @@ struct FunctionInfo {
     bool is_static = false;
     bool exported = true;
     std::any callable; // optional type-erased callable
-    
-    /**
-     * Explicit callable kind to help binding generators decide how to
-     * emit bindings. Generators should prefer an explicit `c_signature`
-     * / `c_name` when present, otherwise fall back to the recorded
-     * callable kind and typed slots below.
-     */
+
     enum class CallableKind : uint8_t { None = 0, CFunctionPtr, CppCallable, LuaRef, PythonRef, GenericRuntime };
     CallableKind callable_kind = CallableKind::None;
 
-    /**
-     * If `callable_kind == CFunctionPtr` this stores the raw function
-     * pointer value reinterpreted as an integer. It is expected to hold
-     * an `extern "C"` function pointer (ABI-stable) when used by
-     * generators or runtime dispatchers.
-     */
     std::uintptr_t c_function_ptr = 0;
 
-    /**
-     * If `callable_kind == LuaRef` this stores the `luaL_ref` integer
-     * value created by the runtime and (optionally) an opaque pointer to
-     * the `lua_State` held in `lua_state_ptr`.
-     */
     int lua_ref = 0;
-    std::uintptr_t lua_state_ptr = 0; // opaque pointer to lua_State if needed
+    std::uintptr_t lua_state_ptr = 0;
 
-    /**
-     * Optional runtime tag (e.g. "lua", "python") and an opaque
-     * runtime_handle for generator/runtime-specific uses.
-     */
     std::string runtime_tag;
     std::any runtime_handle;
 };
@@ -81,9 +60,6 @@ struct TypeInfo {
     std::string category; // optional grouping/category used by generators
 };
 
-// Snapshot of registry metadata passed to generators. This is intentionally
-// lightweight and immutable so generators can't accidentally call back into
-// the live registry and cause deadlocks.
 struct DataRegistrySnapshot {
     std::vector<TypeInfo> types;
 };
@@ -95,20 +71,14 @@ public:
     DataRegistry();
     ~DataRegistry();
 
-    // Non-copyable, non-movable to avoid accidental inline instantiation
-    // of special members that would require a complete IBindingGenerator
-    // type in translation units that include this header.
     DataRegistry(const DataRegistry&) = delete;
     DataRegistry& operator=(const DataRegistry&) = delete;
     DataRegistry(DataRegistry&&) = delete;
     DataRegistry& operator=(DataRegistry&&) = delete;
 
-    // Meyers singleton for fallback during migration
     static DataRegistry& instance();
 
-    // Type-level registration
     bool registerType(const TypeInfo& info);
-    // Alias that matches IDataObject naming: register a complete TypeInfo
     bool registerDataType(const TypeInfo& info);
 
     template<typename Fn>
@@ -120,21 +90,6 @@ public:
         types_[typeName].functions.push_back(std::move(m));
     }
 
-    /**
-     * Register an extern "C" function pointer for the named type.
-     *
-     * This stores the pointer in `FunctionInfo::c_function_ptr` and marks
-     * the callable kind as `CFunctionPtr`. Generators may emit an `extern`
-     * prototype that maps to this function pointer or generate a thin
-     * wrapper that calls it.
-     *
-     * Example:
-     * ```cpp
-     * void my_c_func(int);
-     * FunctionInfo fi{ .name = "DoThing", .param_types = {"int"}, .return_type = "void" };
-     * DataRegistry::instance().registerCFunctionPtr("SomeType", fi, &my_c_func);
-     * ```
-     */
     template<typename R, typename... Args>
     void registerCFunctionPtr(const std::string& typeName, const FunctionInfo& meta, R(*fp)(Args...))
     {
@@ -143,23 +98,11 @@ public:
         m.callable_kind = FunctionInfo::CallableKind::CFunctionPtr;
         m.c_function_ptr = reinterpret_cast<std::uintptr_t>(fp);
         if (m.c_name.empty()) {
-            // best-effort generated name; generators can sanitize further
             m.c_name = std::string("SDOM_CFN_") + typeName + "_" + m.name;
         }
         types_[typeName].functions.push_back(std::move(m));
     }
 
-    /**
-     * Register a Lua function reference (luaL_ref) for the named type.
-     * The registry will store the integer ref and optional lua_State
-     * pointer. Generators can emit C wrappers that dispatch to the Lua
-     * runtime using these refs.
-     *
-     * Note: ownership semantics: the caller is responsible for creating
-     * the luaL_ref and ensuring the `lua_State` remains valid while the
-     * registry holds the ref. Unregistering (and luaL_unref) should be
-     * handled by runtime code when needed.
-     */
     void registerLuaFunction(const std::string& typeName, FunctionInfo meta, int luaRef, void* luaStatePtr = nullptr)
     {
         std::scoped_lock lk(mutex_);
@@ -172,7 +115,6 @@ public:
         types_[typeName].functions.push_back(std::move(meta));
     }
 
-    // Non-template overload: register a FunctionInfo without an associated callable
     void registerFunction(const std::string& typeName, const FunctionInfo& meta);
 
     template<typename Getter, typename Setter = std::nullptr_t>
@@ -187,20 +129,13 @@ public:
         types_[typeName].properties.push_back(std::move(p));
     }
 
-    // Non-template overload: register a PropertyInfo without associated getter/setter callables
     void registerProperty(const std::string& typeName, const PropertyInfo& meta);
 
-    // Query
     const TypeInfo* lookupType(const std::string& name) const;
     std::vector<std::string> listTypes() const;
 
-        // Generator integration point (phase-2): placeholder API will be
-        // implemented once the IBindingGenerator interface is defined.
-        bool generateBindings(const std::string& outDir);
-
-        // Register a custom binding generator. Ownership is transferred into
-        // the registry so generators can be invoked later by generateBindings().
-        void addGenerator(std::unique_ptr<IBindingGenerator> generator);
+    bool generateBindings(const std::string& outDir);
+    void addGenerator(std::unique_ptr<IBindingGenerator> generator);
 
     const std::unordered_map<std::string, TypeInfo>& getAllTypes() const { return types_; }
 
@@ -213,13 +148,64 @@ private:
 
 } // namespace SDOM
 
+// ---------------------------------------------------------------------------
+// Runtime call contract and dispatcher used by generated C API wrappers.
+// This is intentionally small and dependency-free so generators can emit
+// thin wrappers that marshal to this contract at runtime.
+// ---------------------------------------------------------------------------
+namespace SDOM {
+
+namespace CAPI {
+
+struct CallArg {
+    enum class Kind : uint8_t { None = 0, Int = 1, UInt = 2, Double = 3, Bool = 4, CString = 5, Ptr = 6 };
+    Kind kind = Kind::None;
+    union {
+        std::int64_t i;
+        std::uint64_t u;
+        double d;
+        bool b;
+        void* p;
+    } v{};
+    std::string s;
+
+    CallArg() noexcept = default;
+    static CallArg makeInt(std::int64_t x) { CallArg a; a.kind = Kind::Int; a.v.i = x; return a; }
+    static CallArg makeUInt(std::uint64_t x) { CallArg a; a.kind = Kind::UInt; a.v.u = x; return a; }
+    static CallArg makeDouble(double x) { CallArg a; a.kind = Kind::Double; a.v.d = x; return a; }
+    static CallArg makeBool(bool x) { CallArg a; a.kind = Kind::Bool; a.v.b = x; return a; }
+    static CallArg makeCString(const char* cstr) { CallArg a; a.kind = Kind::CString; if (cstr) a.s = cstr; return a; }
+    static CallArg makePtr(void* p) { CallArg a; a.kind = Kind::Ptr; a.v.p = p; return a; }
+};
+
+struct CallResult {
+    CallArg::Kind kind = CallArg::Kind::None;
+    union {
+        std::int64_t i;
+        std::uint64_t u;
+        double d;
+        bool b;
+        void* p;
+    } v{};
+    std::string s;
+
+    static CallResult Void() { return CallResult(); }
+    static CallResult FromInt(std::int64_t x) { CallResult r; r.kind = CallArg::Kind::Int; r.v.i = x; return r; }
+    static CallResult FromUInt(std::uint64_t x) { CallResult r; r.kind = CallArg::Kind::UInt; r.v.u = x; return r; }
+    static CallResult FromDouble(double x) { CallResult r; r.kind = CallArg::Kind::Double; r.v.d = x; return r; }
+    static CallResult FromBool(bool x) { CallResult r; r.kind = CallArg::Kind::Bool; r.v.b = x; return r; }
+    static CallResult FromPtr(void* p) { CallResult r; r.kind = CallArg::Kind::Ptr; r.v.p = p; return r; }
+    static CallResult FromString(std::string s) { CallResult r; r.kind = CallArg::Kind::CString; r.s = std::move(s); return r; }
+};
+
+using GenericCallable = std::function<CallResult(const std::vector<CallArg>&)>;
+
+bool registerCallable(const std::string& name, GenericCallable fn);
+std::optional<GenericCallable> lookupCallable(const std::string& name);
+CallResult invokeCallable(const std::string& name, const std::vector<CallArg>& args);
+
+} // namespace CAPI
+
+} // namespace SDOM
+
 #endif // __SDOM_DATAREGISTRY_HPP__
-// SDOM_DataRegistry.hpp
-#pragma once
-
-
-
-namespace SDOM
-{
-
-} // END namespace SDOM
