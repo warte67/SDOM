@@ -67,6 +67,8 @@
 
 #include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_IconIndex.hpp>
+#include <algorithm>
+#include <cctype>
 
 namespace SDOM
 {
@@ -185,9 +187,22 @@ namespace SDOM
                 IconButton::InitStruct::from_json(j, out);
 
                 // 2. Load ArrowButton-specific fields
-                if (j.contains("direction"))
+                if (auto it = j.find("direction"); it != j.end())
                 {
-                    out.direction = static_cast<ArrowDirection>( j["direction"].get<int>() );
+                    if (it->is_string())
+                    {
+                        std::string dir = it->get<std::string>();
+                        std::transform(dir.begin(), dir.end(), dir.begin(), ::tolower);
+                        auto mapIt = string_to_arrow_direction.find(dir);
+                        if (mapIt != string_to_arrow_direction.end())
+                        {
+                            out.direction = mapIt->second;
+                        }
+                    }
+                    else if (it->is_number_integer())
+                    {
+                        out.direction = static_cast<ArrowDirection>(it->get<int>());
+                    }
                 }
             }
         };

@@ -78,6 +78,7 @@ namespace SDOM
         font_width_ = init.font_width;
         font_height_ = init.font_height;
         font_resource_ = init.font_resource;
+        font_resource_name_ = init.font_resource;
         label_color_ = init.label_color;
     }
 

@@ -3,6 +3,8 @@
 
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
+#include <algorithm>
+#include <cctype>
 
 namespace SDOM
 {
@@ -78,8 +80,23 @@ namespace SDOM
                 if (j.contains("max"))   out.max   = j["max"].get<float>();
                 if (j.contains("value")) out.value = j["value"].get<float>();
 
-                if (j.contains("orientation"))
-                    out.orientation = static_cast<Orientation>( j["orientation"].get<int>() );
+                if (auto it = j.find("orientation"); it != j.end())
+                {
+                    if (it->is_string())
+                    {
+                        std::string key = it->get<std::string>();
+                        std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+                        auto mapIt = string_to_orientation.find(key);
+                        if (mapIt != string_to_orientation.end())
+                        {
+                            out.orientation = mapIt->second;
+                        }
+                    }
+                    else if (it->is_number_integer())
+                    {
+                        out.orientation = static_cast<Orientation>(it->get<int>());
+                    }
+                }
 
                 if (j.contains("icon_resource"))
                     out.icon_resource = j["icon_resource"].get<std::string>();

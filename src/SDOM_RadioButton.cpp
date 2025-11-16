@@ -23,6 +23,13 @@ namespace SDOM
         // compute icon index with local helper to avoid virtual dispatch during construction
         icon_index_ = radioIconIndexFromState(buttonState_);
 
+        selected_ = init.selected;
+        if (selected_)
+        {
+            buttonState_ = ButtonState::Checked;
+            icon_index_ = radioIconIndexFromState(buttonState_);
+        }
+
         // add custom properties here
     } // END: RadioButton::RadioButton(const InitStruct& init)
 

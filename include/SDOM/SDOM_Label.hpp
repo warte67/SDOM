@@ -138,9 +138,9 @@ namespace SDOM
                         init.fontType = it->second;
                 }
 
-                j.value("font_size", init.fontSize);
-                j.value("font_width", init.fontWidth);
-                j.value("font_height", init.fontHeight);
+                init.fontSize = j.value("font_size", init.fontSize);
+                init.fontWidth = j.value("font_width", init.fontWidth);
+                init.fontHeight = j.value("font_height", init.fontHeight);
 
                 if (j.contains("alignment")) {
                     auto it = stringToLabelAlign_.find(j["alignment"].get<std::string>());
@@ -148,25 +148,25 @@ namespace SDOM
                         init.alignment = it->second;
                 }
 
-                j.value("bold", init.bold);
-                j.value("italic", init.italic);
-                j.value("underline", init.underline);
-                j.value("strikethrough", init.strikethrough);
-                j.value("border", init.border);
-                j.value("background", init.background);
-                j.value("outline", init.outline);
-                j.value("dropshadow", init.dropshadow);
-                j.value("wordwrap", init.wordwrap);
-                j.value("auto_resize", init.auto_resize);
+                init.bold = j.value("bold", init.bold);
+                init.italic = j.value("italic", init.italic);
+                init.underline = j.value("underline", init.underline);
+                init.strikethrough = j.value("strikethrough", init.strikethrough);
+                init.border = j.value("border", init.border);
+                init.background = j.value("background", init.background);
+                init.outline = j.value("outline", init.outline);
+                init.dropshadow = j.value("dropshadow", init.dropshadow);
+                init.wordwrap = j.value("wordwrap", init.wordwrap);
+                init.auto_resize = j.value("auto_resize", init.auto_resize);
 
-                j.value("max_width", init.maxWidth);
-                j.value("max_height", init.maxHeight);
-                j.value("border_thickness", init.borderThickness);
-                j.value("outline_thickness", init.outlineThickness);
-                j.value("padding_horiz", init.padding_horiz);
-                j.value("padding_vert", init.padding_vert);
-                j.value("dropshadow_offset_x", init.dropshadowOffsetX);
-                j.value("dropshadow_offset_y", init.dropshadowOffsetY);
+                init.maxWidth = j.value("max_width", init.maxWidth);
+                init.maxHeight = j.value("max_height", init.maxHeight);
+                init.borderThickness = j.value("border_thickness", init.borderThickness);
+                init.outlineThickness = j.value("outline_thickness", init.outlineThickness);
+                init.padding_horiz = j.value("padding_horiz", init.padding_horiz);
+                init.padding_vert = j.value("padding_vert", init.padding_vert);
+                init.dropshadowOffsetX = j.value("dropshadow_offset_x", init.dropshadowOffsetX);
+                init.dropshadowOffsetY = j.value("dropshadow_offset_y", init.dropshadowOffsetY);
             }
         }; // END: struct InitStruct
 
