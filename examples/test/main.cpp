@@ -288,7 +288,7 @@ int main(int argc, char** argv)
     SDOM::Stage::InitStruct stage_init;
     stage_init.name = "mainStage";
     stage_init.type = "Stage";
-    stage_init.color = SDL_Color{16, 32, 8, 255};
+    stage_init.color = SDL_Color{32, 8, 4, 255};
     DisplayHandle rootStage = core.createDisplayObject("Stage", stage_init);
     core.setRootNode(rootStage);
 
@@ -305,39 +305,107 @@ int main(int argc, char** argv)
             {"icon_resource", "internal_icon_16x16"},
             {"color",
                 {
-                    {"r", 32}, {"g", 64}, {"b", 16}, {"a", 255}
+                    {"r", 64}, {"g", 32}, {"b", 32}, {"a", 255}
                 }
             }
         }
     );
     rootStage->addChild(rightMainFrame);
 
-    // Main Group 
-    DisplayHandle mainGroup = factory.createDisplayObjectFromJson(
-        "Group",
-        nlohmann::json{
-            {"name", "mainFrameGroup"},
-            {"type", "Group"},
-            {"x", 450},
-            {"y", 10},
-            {"width", 140},
-            {"height", 70},
-            {"text", "Main Group"},
-            {"icon_resource", "internal_icon_16x16"},
-            {"font_resource", "internal_ttf"},
-            {"font_size", 12},
-            {"color", {
-                {"r", 192}, {"g", 255}, {"b", 192}, {"a", 224}
-            }},
-            {"label_color", {
-                {"r", 192}, {"g", 224}, {"b", 192}, {"a", 255}
-            }}
-        }
-    );
+
+    // === Main Frame Group ======================================================
+    DisplayHandle mainGroup =
+        factory.createDisplayObjectFromJson(
+            "Group",
+            nlohmann::json{
+                {"name", "mainFrameGroup"},
+                {"type", "Group"},
+                {"x", 450},
+                {"y", 10},
+                {"width", 140},
+                {"height", 70},
+                {"text", "Main Group"},
+                {"icon_resource", "internal_icon_16x16"},
+                {"font_resource", "internal_ttf"},
+                {"font_size", 12},
+                {"color",     { {"r",224}, {"g",192}, {"b",192}, {"a",192} }},
+                {"label_color",{ {"r",224}, {"g",192}, {"b",192}, {"a",255} }}
+            }
+        );
     rightMainFrame->addChild(mainGroup);
 
-    rootStage->printTree();
 
+    // === RadioButton #1 =========================================================
+    DisplayHandle rb1 =
+        factory.createDisplayObjectFromJson(
+            "RadioButton",
+            nlohmann::json{
+                {"name", "mainFrameGroup_radioButton_1"},
+                {"type", "RadioButton"},
+                {"x", 460},
+                {"y", 24},
+                {"width", 120},
+                {"height", 16},
+                {"color",       { {"r",255}, {"g",255}, {"b",255}, {"a",255} }},
+                {"label_color", { {"r",255}, {"g",255}, {"b",255}, {"a",255} }},
+                {"font_resource", "internal_ttf"},
+                {"icon_resource", "internal_icon_16x16"},
+                {"font_size", 10},
+                {"selected", true},
+                {"text", "16x16 internal_ttf"}
+            }
+        );
+    mainGroup->addChild(rb1);
+
+
+    // === RadioButton #2 =========================================================
+    DisplayHandle rb2 =
+        factory.createDisplayObjectFromJson(
+            "RadioButton",
+            nlohmann::json{
+                {"name", "mainFrameGroup_radioButton_2"},
+                {"type", "RadioButton"},
+                {"x", 460},
+                {"y", 40},
+                {"width", 120},
+                {"height", 16},
+                {"color",       { {"r",255}, {"g",255}, {"b",255}, {"a",255} }},
+                {"label_color", { {"r",255}, {"g",255}, {"b",255}, {"a",255} }},
+                {"font_resource", "VarelaRound16"},
+                {"icon_resource", "internal_icon_12x12"},
+                {"font_size", 10},
+                {"text", "12x12 Varela TTF"},
+                {"checked", true}  // alias for selected (supported by JSON loader)
+            }
+        );
+    mainGroup->addChild(rb2);
+
+
+    // === RadioButton #3 =========================================================
+    DisplayHandle rb3 =
+        factory.createDisplayObjectFromJson(
+            "RadioButton",
+            nlohmann::json{
+                {"name", "mainFrameGroup_radioButton_3"},
+                {"type", "RadioButton"},
+                {"x", 460},
+                {"y", 56},
+                {"width", 120},
+                {"height", 16},
+                {"color",       { {"r",255}, {"g",255}, {"b",255}, {"a",255} }},
+                {"label_color", { {"r",255}, {"g",255}, {"b",255}, {"a",255} }},
+                {"icon_resource", "internal_icon_8x8"},
+                {"text", "8x8 bmp font"}
+            }
+        );
+    mainGroup->addChild(rb3);
+
+
+
+
+
+
+    rootStage->printTree();
 
     // Start the main loop (no additional config needed)
     // core.setStopAfterUnitTests(true);

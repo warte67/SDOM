@@ -93,31 +93,31 @@ namespace SDOM
 
         if (!root.isValid())
         {
-            errors.push_back("FrontEnd_test1: Core root node is invalid");
+            errors.push_back("Core root node is invalid");
             return true;
         }
 
         if (false)
         {
-            INFO("FrontEnd_test1: Inspecting main stage '" << root.getName()
+            INFO("Inspecting main stage '" << root.getName()
                 << "' [" << root.getType() << "] via MAIN_VARIANT 2 setup");
             std::size_t visited = 0;
             logDisplayTree(root, 0, visited);
-            INFO("FrontEnd_test1: enumerated " << visited << " display object(s) under main stage.");
+            INFO("enumerated " << visited << " display object(s) under main stage.");
         }
 
         // Check for size and color
         if (root->getWidth() != 600 || root->getHeight() != 400)
         {
-            errors.push_back("FrontEnd_test1: Main stage size is invalid");
+            errors.push_back("Main stage size is invalid");
         }
 
-        if (root->getColor().r != 16 || 
-            root->getColor().g != 32|| 
-            root->getColor().b != 8 || 
+        if (root->getColor().r != 32 || 
+            root->getColor().g != 8|| 
+            root->getColor().b != 4 || 
             root->getColor().a != 255)
         {
-            errors.push_back("FrontEnd_test1: Main stage color is invalid");
+            errors.push_back("Main stage color is invalid");
         }
 
         return true; // ✅ finished this frame
@@ -150,33 +150,33 @@ namespace SDOM
         if (frameObject->getHeight() != 390) { errors.push_back("rightMainFrame height mismatch (expected 390, got " + std::to_string(frameObject->getHeight()) + ")"); }
 
         const SDL_Color frameColor = frameObject->getColor();
-        if (frameColor.r != 32 || frameColor.g != 64 || frameColor.b != 16 || frameColor.a != 255)
-            { errors.push_back("FrontEnd_test2: rightMainFrame color mismatch (expected RGBA(32,64,16,255))"); }
+        if (frameColor.r != 64 || frameColor.g != 32 || frameColor.b != 32 || frameColor.a != 255)
+            { errors.push_back("rightMainFrame color mismatch (expected RGBA(64,32,32,255))"); }
 
         SDOM::IPanelObject* panel = dynamic_cast<SDOM::IPanelObject*>(frameObject);
         if (!panel) 
-            { errors.push_back("FrontEnd_test2: rightMainFrame is not an IPanelObject instance"); return true; }
+            { errors.push_back("rightMainFrame is not an IPanelObject instance"); return true; }
 
         const std::string iconResource = panel->getIconResourceName();
         if (iconResource.find("internal_icon_16x16") == std::string::npos) 
-            { errors.push_back("FrontEnd_test2: icon_resource mismatch (expected internal_icon_16x16*, got '" + iconResource + "')"); }
+            { errors.push_back("icon_resource mismatch (expected internal_icon_16x16*, got '" + iconResource + "')"); }
         AssetHandle iconAsset = panel->getSpriteSheet();
         if (!iconAsset.isValid())   
-            { errors.push_back("FrontEnd_test2: icon_resource handle is invalid"); }
+            { errors.push_back("icon_resource handle is invalid"); }
         else if (iconAsset->getType() != SpriteSheet::TypeName) 
-            { errors.push_back("FrontEnd_test2: icon_resource asset is not a SpriteSheet (type='" + iconAsset->getType() + "')"); }
+            { errors.push_back("icon_resource asset is not a SpriteSheet (type='" + iconAsset->getType() + "')"); }
 
         if (panel->getIconWidth() != 16 || panel->getIconHeight() != 16) { 
-            errors.push_back("FrontEnd_test2: icon dimensions mismatch (expected 16x16, got "
+            errors.push_back("icon dimensions mismatch (expected 16x16, got "
                              + std::to_string(panel->getIconWidth()) + "x" + std::to_string(panel->getIconHeight()) + ")"); }
 
         const std::string fontResource = panel->getFontResourceName();
         if (fontResource != "internal_font_8x8")
-            { errors.push_back("FrontEnd_test2: font_resource mismatch (expected internal_font_8x8, got '" + fontResource + "')"); }
+            { errors.push_back("font_resource mismatch (expected internal_font_8x8, got '" + fontResource + "')"); }
         AssetHandle fontAsset = panel->getFontAsset();
-        if (!fontAsset.isValid()) { errors.push_back("FrontEnd_test2: font_resource handle is invalid"); }
+        if (!fontAsset.isValid()) { errors.push_back("font_resource handle is invalid"); }
         if (panel->getFontWidth() != 8 || panel->getFontHeight() != 8) { 
-            errors.push_back("FrontEnd_test2: font dimensions mismatch (expected 8x8, got "
+            errors.push_back("font dimensions mismatch (expected 8x8, got "
                              + std::to_string(panel->getFontWidth()) + "x" + std::to_string(panel->getFontHeight()) + ")"); }
 
         return true; // ✅ finished this frame
