@@ -78,7 +78,8 @@
 
 // #define SOL_ALL_AUTOMAGIC 0
 // #include <sol/sol.hpp>
-#include <external/nlohmann/json.hpp>
+// #include <external/nlohmann/json.hpp>
+#include <json.hpp>
 
 // Garbage Collection / Orphan Retention
 constexpr int ORPHAN_GRACE_PERIOD = 5000; // default grace period for orphaned objects (in milliseconds)

@@ -32,6 +32,10 @@
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_Utils.hpp>
 
+#include <SDOM/SDOM_TruetypeFont.hpp>
+#include <SDOM/SDOM_BitmapFont.hpp>
+#include <SDOM/SDOM_SpriteSheet.hpp>
+
 #include <iostream>
 #include <cassert>
 
@@ -210,20 +214,68 @@ bool Main_UnitTests()
     return done;
 } // END: EventType_UnitTests()
 
+
+
 int main(int argc, char** argv) 
 {
     // headless / no-lua startup for fast unit testing
     SDOM::Core& core = getCore();
-    // SDOM::Core core;
-    // SDOM::setCore(&core);  // see implementation below    
+    Factory& factory = core.getFactory();
 
-    // Apply an explicit Core configuration first so SDL resources and
-    // the Factory are initialized before we create the Stage object.
-    SDOM::Core::CoreConfig cfg; // defaults are reasonable (window + renderer will be created)
+    // Configure Core with windows size, pixel size, etc.
+    SDOM::Core::CoreConfig cfg;
+    cfg.windowWidth = 1200.0f;
+    cfg.windowHeight = 800.0f;
+    cfg.pixelWidth = 2.0f;
+    cfg.pixelHeight = 2.0f;
+    cfg.allowTextureResize = false;
+    cfg.preserveAspectRatio = true;
+    cfg.rendererLogicalPresentation = SDL_LOGICAL_PRESENTATION_LETTERBOX;
+    cfg.windowFlags = SDL_WINDOW_RESIZABLE;
+    cfg.pixelFormat = SDL_PIXELFORMAT_RGBA8888;
+    cfg.color = SDL_Color{8, 0, 16, 255};
     core.configure(cfg);
 
-    // // Disable Lua-driven unit tests for this headless variant
-    // core.getLua()["SDOM_RUN_LUA_UNIT_TESTS"] = false;
+    // register the Main_UnitTests function to be called during the unit test phase
+    core.registerOnUnitTest(Main_UnitTests);
+
+    TruetypeFont::InitStruct varela16;
+    varela16.name = "VarelaRound16";
+    varela16.type = "TruetypeFont";
+    varela16.filename = "./assets/VarelaRound.ttf";
+    varela16.font_size = 16;
+    AssetHandle varela16_handle = factory.createAssetObject("TruetypeFont", varela16);
+
+    TruetypeFont::InitStruct varela32;
+    varela32.name = "VarelaRound32";
+    varela32.type = "TruetypeFont";
+    varela32.filename = "./assets/VarelaRound.ttf";
+    varela32.font_size = 32;
+    AssetHandle varela32_handle = factory.createAssetObject("TruetypeFont", varela32);
+
+    BitmapFont::InitStruct external_font_8x8;
+    external_font_8x8.name = "external_font_8x8";
+    external_font_8x8.type = "BitmapFont";
+    external_font_8x8.filename = "./assets/font_8x8.png";
+    external_font_8x8.font_width = 8;
+    external_font_8x8.font_height = 8;
+    AssetHandle externalFont8x8_handle = factory.createAssetObject("BitmapFont", external_font_8x8);
+
+    BitmapFont::InitStruct external_font_8x12;
+    external_font_8x12.name = "external_font_8x12";
+    external_font_8x12.type = "BitmapFont";
+    external_font_8x12.filename = "./assets/font_8x12.png";
+    external_font_8x12.font_width = 8;
+    external_font_8x12.font_height = 12;
+    AssetHandle externalFont8x12_handle = factory.createAssetObject("BitmapFont", external_font_8x12);
+
+    SpriteSheet::InitStruct external_icon_8x8;
+    external_icon_8x8.name = "external_icon_8x8";
+    external_icon_8x8.type = "SpriteSheet";
+    external_icon_8x8.filename = "./assets/icon_8x8.png";
+    external_icon_8x8.spriteWidth = 8;
+    external_icon_8x8.spriteHeight = 8;
+    AssetHandle externalIcon8x8_handle = factory.createAssetObject("SpriteSheet", external_icon_8x8);
 
     // Register minimal types needed by tests
     core.getFactory().registerDisplayObjectType("Box", TypeCreators{
@@ -233,14 +285,61 @@ int main(int argc, char** argv)
 
     // Now that the Factory is initialized, create the Stage and set it as root
     SDOM::Stage::InitStruct stage_init;
-    stage_init.color = SDL_Color{32, 64, 16, 255};
+    stage_init.name = "mainStage";
+    stage_init.type = "Stage";
+    stage_init.color = SDL_Color{16, 32, 8, 255};
     DisplayHandle rootStage = core.createDisplayObject("Stage", stage_init);
     core.setRootNode(rootStage);
 
-    core.registerOnUnitTest(Main_UnitTests);
+    // Create the right frame
+    DisplayHandle rightMainFrame = factory.createDisplayObjectFromJson("Frame",
+        nlohmann::json{
+            {"name", "rightMainFrame"},
+            {"type", "Frame"},
+            {"text", "This should not be a Label."},
+            {"x", 300},
+            {"y", 5},
+            {"width", 295},
+            {"height", 390},
+            {"icon_resource", "internal_icon_16x16"},
+            {"color",
+                {
+                    {"r", 32}, {"g", 64}, {"b", 16}, {"a", 255}
+                }
+            }
+        }
+    );
+    rootStage->addChild(rightMainFrame);
+
+    // Main Group 
+    DisplayHandle mainGroup = factory.createDisplayObjectFromJson(
+        "Group",
+        nlohmann::json{
+            {"name", "mainFrameGroup"},
+            {"type", "Group"},
+            {"x", 450},
+            {"y", 10},
+            {"width", 140},
+            {"height", 70},
+            {"text", "Main Group"},
+            {"icon_resource", "internal_icon_16x16"},
+            {"font_resource", "internal_ttf"},
+            {"font_size", 12},
+            {"color", {
+                {"r", 255}, {"g", 255}, {"b", 255}, {"a", 96}
+            }},
+            {"label_color", {
+                {"r", 224}, {"g", 192}, {"b", 192}, {"a", 255}
+            }}
+        }
+    );
+    rightMainFrame->addChild(mainGroup);
+
+    rootStage->printTree();
+
 
     // Start the main loop (no additional config needed)
-    core.setStopAfterUnitTests(true);
+    // core.setStopAfterUnitTests(true);
     bool ok = core.run();
     
     return ok ? 0 : 1;
