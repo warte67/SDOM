@@ -29,6 +29,7 @@ namespace SDOM
         font_height_ = init.font_height;
         font_resource_ = init.font_resource;
         icon_resource_ = init.icon_resource;
+        label_color_ = init.label_color;
 
         setTabEnabled(false); // Groups are not tab-enabled by default
         setClickable(false); // Groups are not clickable by default

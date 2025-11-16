@@ -14,7 +14,7 @@ namespace SDOM
 
     public:
         // --- Type Info --- //
-        static constexpr const char* TypeName = "truetype";
+        static constexpr const char* TypeName = "TruetypeFont";
 
         // --- Construction & Initialization --- //
         struct InitStruct : public IFontObject::InitStruct

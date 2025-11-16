@@ -209,7 +209,8 @@ bool Main_UnitTests()
     done &= DataRegistry_UnitTests();
     done &= Event_CAPI_UnitTests();
     done &= EventType_CAPI_UnitTests();    
-    done &= Variant_UnitTests();    
+    done &= Variant_UnitTests();   
+    done &= FrontEnd_UnitTests();
 
     return done;
 } // END: EventType_UnitTests()
@@ -326,10 +327,10 @@ int main(int argc, char** argv)
             {"font_resource", "internal_ttf"},
             {"font_size", 12},
             {"color", {
-                {"r", 255}, {"g", 255}, {"b", 255}, {"a", 96}
+                {"r", 192}, {"g", 255}, {"b", 192}, {"a", 224}
             }},
             {"label_color", {
-                {"r", 224}, {"g", 192}, {"b", 192}, {"a", 255}
+                {"r", 192}, {"g", 224}, {"b", 192}, {"a", 255}
             }}
         }
     );

@@ -227,7 +227,7 @@ namespace SDOM
         // register Frame
         registerDisplayObjectType("Frame", TypeCreators{
             Frame::CreateFromInitStruct,
-            Label::CreateFromJson 
+            Frame::CreateFromJson 
         });
 
         // register Button

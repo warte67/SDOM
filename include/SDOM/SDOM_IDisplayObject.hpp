@@ -160,6 +160,22 @@ namespace SDOM
     {
         SDL_Color c{0,0,0,255};
 
+        if (j.is_object())
+        {
+            const auto readComponent = [&](const char* key, uint8_t& channel)
+            {
+                auto it = j.find(key);
+                if (it != j.end() && it->is_number())
+                    channel = static_cast<uint8_t>(it->get<int>());
+            };
+
+            readComponent("r", c.r);
+            readComponent("g", c.g);
+            readComponent("b", c.b);
+            readComponent("a", c.a);
+            return c;
+        }
+
         if (!j.is_array())
             return c;
 

@@ -108,6 +108,7 @@ namespace SDOM
          : IDataObject()
     {
         name_ = init.name;
+        type_ = init.type.empty() ? TypeName : init.type;
         color_ = init.color;
 
         foregroundColor_ = init.foregroundColor;

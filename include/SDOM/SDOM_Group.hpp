@@ -70,16 +70,8 @@ namespace SDOM
                 if (j.contains("font_size"))
                     out.font_size = j["font_size"].get<int>();
 
-                if (j.contains("label_color") && j["label_color"].is_array() && j["label_color"].size() == 4)
-                {
-                    const auto& c = j["label_color"];
-                    out.label_color = {
-                        c[0].get<uint8_t>(),
-                        c[1].get<uint8_t>(),
-                        c[2].get<uint8_t>(),
-                        c[3].get<uint8_t>()
-                    };
-                }
+                if (j.contains("label_color"))
+                    out.label_color = json_to_color(j["label_color"]);
             }
         }; // END: InitStruct
 
