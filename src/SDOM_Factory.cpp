@@ -732,9 +732,32 @@ namespace SDOM
             ERROR(std::string("Factory::addDisplayObject: Display object with name '") + name + "' already exists (add aborted)");
             return;
         }
-    std::string type = "";
-    if (displayObject) type = displayObject->getType();
-    displayObjects_[name] = std::make_unique<DisplayRecord>(std::move(displayObject), type, 0);
+        std::string type = "";
+        if (displayObject) type = displayObject->getType();
+        displayObjects_[name] = std::make_unique<DisplayRecord>(std::move(displayObject), type, 0);
+
+        auto& entry = displayObjects_[name];
+        if (entry && entry->obj)
+        {
+            if (entry->type.empty())
+            {
+                entry->type = entry->obj->getType();
+                type = entry->type;
+            }
+
+            entry->obj->startup();
+
+            auto& eventManager = getCore().getEventManager();
+            std::unique_ptr<Event> initEvent =
+                std::make_unique<Event>(EventType::OnInit, DisplayHandle{name, type});
+
+            DisplayHandle stageHandle = getCore().getRootNode();
+            if (stageHandle)
+                initEvent->setRelatedTarget(stageHandle);
+
+            eventManager.dispatchEvent(std::move(initEvent), DisplayHandle(name, type));
+        }
+
         try {
             registerDisplayObject(name, DisplayHandle(name, type));
         } catch(...) {}

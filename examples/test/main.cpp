@@ -296,7 +296,7 @@ int main(int argc, char** argv)
         nlohmann::json{
             {"name", "rightMainFrame"},
             {"type", "Frame"},
-            {"text", "This should not be a Label."},
+            {"text", "Hello World."},
             {"x", 300},
             {"y", 5},
             {"width", 295},
