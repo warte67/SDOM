@@ -1,6 +1,8 @@
 var structSDOM_1_1Label_1_1InitStruct =
 [
     [ "InitStruct", "structSDOM_1_1Label_1_1InitStruct.html#a74e0831b1ed060eac9771b7d453e8a9c", null ],
+    [ "from_json", "structSDOM_1_1Label_1_1InitStruct.html#a92373452be5adab3989429b268481a81", null ],
+    [ "from_json", "structSDOM_1_1Label_1_1InitStruct.html#a77c37a87f04d208be4ccbde9c6dc4924", null ],
     [ "alignment", "structSDOM_1_1Label_1_1InitStruct.html#a341277f3403b87a233856de90612eda6", null ],
     [ "anchorBottom", "structSDOM_1_1Label_1_1InitStruct.html#a32a70e8c0dfd503b306761e3ff59897c", null ],
     [ "anchorLeft", "structSDOM_1_1Label_1_1InitStruct.html#a17adc32c048d68ae0d26a9778f7f4827", null ],

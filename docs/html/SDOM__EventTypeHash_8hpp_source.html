@@ -131,35 +131,39 @@ $(function(){initNavTree('SDOM__EventTypeHash_8hpp_source.html','',''); });
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#ifndef SDOM_EVENT_TYPE_HASH_HPP</span></div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#define SDOM_EVENT_TYPE_HASH_HPP</span></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &lt;<a class="code" href="SDOM__Event_8hpp.html">SDOM/SDOM_Event.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &lt;<a class="code" href="SDOM__EventType_8hpp.html">SDOM/SDOM_EventType.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceSDOM.html">SDOM</a> {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">class </span><a class="code hl_class" href="classSDOM_1_1Event.html">Event</a>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">class </span><a class="code hl_class" href="classSDOM_1_1EventType.html">EventType</a>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Custom hash functor for SDOM::EventType to be used in unordered containers</span></div>
-<div class="foldopen" id="foldopen00049" data-start="{" data-end="};">
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="structSDOM_1_1EventTypeHash.html">   49</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structSDOM_1_1EventTypeHash.html">EventTypeHash</a> {</div>
-<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="structSDOM_1_1EventTypeHash.html#a9297282b2bd7e75e16c2ad3bab6899f0">   50</a></span>        std::size_t <a class="code hl_function" href="structSDOM_1_1EventTypeHash.html#a9297282b2bd7e75e16c2ad3bab6899f0">operator()</a>(<span class="keyword">const</span> <a class="code hl_class" href="classSDOM_1_1EventType.html">EventType</a>&amp; eventType) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">return</span> std::hash&lt;std::string&gt;()(eventType.getName());</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        }</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &lt;<a class="code" href="SDOM__Event_8hpp.html">SDOM/SDOM_Event.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &lt;<a class="code" href="SDOM__EventType_8hpp.html">SDOM/SDOM_EventType.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceSDOM.html">SDOM</a> {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">class </span><a class="code hl_class" href="classSDOM_1_1Event.html">Event</a>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">class </span><a class="code hl_class" href="classSDOM_1_1EventType.html">EventType</a>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// Custom hash functor for SDOM::EventType to be used in unordered containers</span></div>
+<div class="foldopen" id="foldopen00053" data-start="{" data-end="};">
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="structSDOM_1_1EventTypeHash.html">   53</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structSDOM_1_1EventTypeHash.html">EventTypeHash</a> {</div>
+<div class="foldopen" id="foldopen00054" data-start="{" data-end="}">
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="structSDOM_1_1EventTypeHash.html#a9297282b2bd7e75e16c2ad3bab6899f0">   54</a></span>        std::size_t <a class="code hl_function" href="structSDOM_1_1EventTypeHash.html#a9297282b2bd7e75e16c2ad3bab6899f0">operator()</a>(<span class="keyword">const</span> <a class="code hl_class" href="classSDOM_1_1EventType.html">EventType</a>&amp; eventType) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            <span class="keywordflow">return</span> std::hash&lt;std::string&gt;()(eventType.getName());</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        }</div>
 </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    };</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    };</div>
 </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>} <span class="comment">// namespace SDOM</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#endif </span><span class="comment">// SDOM_EVENT_TYPE_HASH_HPP</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>} <span class="comment">// namespace SDOM</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#endif </span><span class="comment">// SDOM_EVENT_TYPE_HASH_HPP</span></div>
 <div class="ttc" id="aSDOM__EventType_8hpp_html"><div class="ttname"><a href="SDOM__EventType_8hpp.html">SDOM_EventType.hpp</a></div></div>
 <div class="ttc" id="aSDOM__Event_8hpp_html"><div class="ttname"><a href="SDOM__Event_8hpp.html">SDOM_Event.hpp</a></div></div>
-<div class="ttc" id="aclassSDOM_1_1EventType_html"><div class="ttname"><a href="classSDOM_1_1EventType.html">SDOM::EventType</a></div><div class="ttdef"><b>Definition</b> SDOM_EventType.hpp:73</div></div>
+<div class="ttc" id="aclassSDOM_1_1EventType_html"><div class="ttname"><a href="classSDOM_1_1EventType.html">SDOM::EventType</a></div><div class="ttdef"><b>Definition</b> SDOM_EventType.hpp:79</div></div>
 <div class="ttc" id="aclassSDOM_1_1Event_html"><div class="ttname"><a href="classSDOM_1_1Event.html">SDOM::Event</a></div><div class="ttdef"><b>Definition</b> SDOM_Event.hpp:55</div></div>
 <div class="ttc" id="anamespaceSDOM_html"><div class="ttname"><a href="namespaceSDOM.html">SDOM</a></div><div class="ttdoc">Contains all core classes and utilities for the SDOM library.</div></div>
-<div class="ttc" id="astructSDOM_1_1EventTypeHash_html"><div class="ttname"><a href="structSDOM_1_1EventTypeHash.html">SDOM::EventTypeHash</a></div><div class="ttdef"><b>Definition</b> SDOM_EventTypeHash.hpp:49</div></div>
-<div class="ttc" id="astructSDOM_1_1EventTypeHash_html_a9297282b2bd7e75e16c2ad3bab6899f0"><div class="ttname"><a href="structSDOM_1_1EventTypeHash.html#a9297282b2bd7e75e16c2ad3bab6899f0">SDOM::EventTypeHash::operator()</a></div><div class="ttdeci">std::size_t operator()(const EventType &amp;eventType) const noexcept</div><div class="ttdef"><b>Definition</b> SDOM_EventTypeHash.hpp:50</div></div>
+<div class="ttc" id="astructSDOM_1_1EventTypeHash_html"><div class="ttname"><a href="structSDOM_1_1EventTypeHash.html">SDOM::EventTypeHash</a></div><div class="ttdef"><b>Definition</b> SDOM_EventTypeHash.hpp:53</div></div>
+<div class="ttc" id="astructSDOM_1_1EventTypeHash_html_a9297282b2bd7e75e16c2ad3bab6899f0"><div class="ttname"><a href="structSDOM_1_1EventTypeHash.html#a9297282b2bd7e75e16c2ad3bab6899f0">SDOM::EventTypeHash::operator()</a></div><div class="ttdeci">std::size_t operator()(const EventType &amp;eventType) const noexcept</div><div class="ttdef"><b>Definition</b> SDOM_EventTypeHash.hpp:54</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

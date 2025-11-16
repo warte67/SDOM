@@ -95,34 +95,68 @@ $(function(){initNavTree('structSDOM_1_1AssetTypeCreators.html','','structSDOM_1
 
 <p><code>#include &lt;<a class="el" href="SDOM__Factory_8hpp_source.html">SDOM_Factory.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a2987b61645bd253478960a1201f93734" id="r_a2987b61645bd253478960a1201f93734"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2987b61645bd253478960a1201f93734">InitFn</a> = std::function&lt;std::unique_ptr&lt;<a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a>&gt;(const <a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html">IAssetObject::InitStruct</a>&amp;)&gt;</td></tr>
+<tr class="memitem:adfdf7850125a0e517467e9aebc027fe1" id="r_adfdf7850125a0e517467e9aebc027fe1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adfdf7850125a0e517467e9aebc027fe1">JsonFn</a> = std::function&lt;std::unique_ptr&lt;<a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a>&gt;(const nlohmann::json&amp;)&gt;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ac033aa5570c7f5d83cc9b3d3757307ce" id="r_ac033aa5570c7f5d83cc9b3d3757307ce"><td class="memItemLeft" align="right" valign="top">std::function&lt; std::unique_ptr&lt; <a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a> &gt;(const sol::table &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac033aa5570c7f5d83cc9b3d3757307ce">fromLua</a></td></tr>
-<tr class="memitem:acce95e4ee7a2328e234ea8a9beaf6764" id="r_acce95e4ee7a2328e234ea8a9beaf6764"><td class="memItemLeft" align="right" valign="top">std::function&lt; std::unique_ptr&lt; <a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a> &gt;(const <a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html">IAssetObject::InitStruct</a> &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acce95e4ee7a2328e234ea8a9beaf6764">fromInitStruct</a></td></tr>
+<tr class="memitem:a151d403659639d10ec5291608b1672c2" id="r_a151d403659639d10ec5291608b1672c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a2987b61645bd253478960a1201f93734">InitFn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a151d403659639d10ec5291608b1672c2">fromInitStruct</a></td></tr>
+<tr class="memitem:a2cff24ea7bd86658ed191115245e02ae" id="r_a2cff24ea7bd86658ed191115245e02ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#adfdf7850125a0e517467e9aebc027fe1">JsonFn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cff24ea7bd86658ed191115245e02ae">fromJson</a></td></tr>
 </table>
-<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="acce95e4ee7a2328e234ea8a9beaf6764" name="acce95e4ee7a2328e234ea8a9beaf6764"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acce95e4ee7a2328e234ea8a9beaf6764">&#9670;&#160;</a></span>fromInitStruct</h2>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
+<a id="a2987b61645bd253478960a1201f93734" name="a2987b61645bd253478960a1201f93734"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2987b61645bd253478960a1201f93734">&#9670;&#160;</a></span>InitFn</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::function&lt;std::unique_ptr&lt;<a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a>&gt;(const <a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html">IAssetObject::InitStruct</a>&amp;)&gt; SDOM::AssetTypeCreators::fromInitStruct</td>
+          <td class="memname">using <a class="el" href="#a2987b61645bd253478960a1201f93734">SDOM::AssetTypeCreators::InitFn</a> = std::function&lt;std::unique_ptr&lt;<a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a>&gt;(const <a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html">IAssetObject::InitStruct</a>&amp;)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ac033aa5570c7f5d83cc9b3d3757307ce" name="ac033aa5570c7f5d83cc9b3d3757307ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac033aa5570c7f5d83cc9b3d3757307ce">&#9670;&#160;</a></span>fromLua</h2>
+<a id="adfdf7850125a0e517467e9aebc027fe1" name="adfdf7850125a0e517467e9aebc027fe1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfdf7850125a0e517467e9aebc027fe1">&#9670;&#160;</a></span>JsonFn</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::function&lt;std::unique_ptr&lt;<a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a>&gt;(const sol::table&amp;)&gt; SDOM::AssetTypeCreators::fromLua</td>
+          <td class="memname">using <a class="el" href="#adfdf7850125a0e517467e9aebc027fe1">SDOM::AssetTypeCreators::JsonFn</a> = std::function&lt;std::unique_ptr&lt;<a class="el" href="classSDOM_1_1IAssetObject.html">IAssetObject</a>&gt;(const nlohmann::json&amp;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a151d403659639d10ec5291608b1672c2" name="a151d403659639d10ec5291608b1672c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a151d403659639d10ec5291608b1672c2">&#9670;&#160;</a></span>fromInitStruct</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a2987b61645bd253478960a1201f93734">InitFn</a> SDOM::AssetTypeCreators::fromInitStruct</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2cff24ea7bd86658ed191115245e02ae" name="a2cff24ea7bd86658ed191115245e02ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cff24ea7bd86658ed191115245e02ae">&#9670;&#160;</a></span>fromJson</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#adfdf7850125a0e517467e9aebc027fe1">JsonFn</a> SDOM::AssetTypeCreators::fromJson</td>
         </tr>
       </table>
 </div><div class="memdoc">

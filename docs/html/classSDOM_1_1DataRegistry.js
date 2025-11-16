@@ -13,9 +13,11 @@ var classSDOM_1_1DataRegistry =
     [ "lookupType", "classSDOM_1_1DataRegistry.html#a351e4fb1851500ef070ed605a65e270a", null ],
     [ "operator=", "classSDOM_1_1DataRegistry.html#ac0569c8029b869c233079ff953f302a2", null ],
     [ "operator=", "classSDOM_1_1DataRegistry.html#abe779b1f815c7b9fa91416016193f939", null ],
+    [ "registerCFunctionPtr", "classSDOM_1_1DataRegistry.html#a1de3d98cb44819aaac0205adb4e6ad0a", null ],
     [ "registerDataType", "classSDOM_1_1DataRegistry.html#a401f8c2582bcc018fcb79d26c9410e3f", null ],
     [ "registerFunction", "classSDOM_1_1DataRegistry.html#a640f5c6480ad526de614044f73127331", null ],
     [ "registerFunction", "classSDOM_1_1DataRegistry.html#af817a8f4756ba472215f407baba2af8c", null ],
+    [ "registerLuaFunction", "classSDOM_1_1DataRegistry.html#aaa5e6a40224dcc648aaff05ec1b41369", null ],
     [ "registerProperty", "classSDOM_1_1DataRegistry.html#a6bad54360e9e81695070a5d9b85e0bf0", null ],
     [ "registerProperty", "classSDOM_1_1DataRegistry.html#a07708dc0ebdbd8e4e252e2076cc804e4", null ],
     [ "registerType", "classSDOM_1_1DataRegistry.html#ad60faddc2c5d88ed792e65b4b9feb40b", null ]

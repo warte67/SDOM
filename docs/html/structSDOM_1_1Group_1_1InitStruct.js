@@ -1,6 +1,9 @@
 var structSDOM_1_1Group_1_1InitStruct =
 [
     [ "InitStruct", "structSDOM_1_1Group_1_1InitStruct.html#af5b8f93866339239494f85a8e2e2827c", null ],
+    [ "from_json", "structSDOM_1_1Group_1_1InitStruct.html#ad3c1ffb1fa2bde1be62bef7fbda74df6", null ],
+    [ "from_json", "structSDOM_1_1Group_1_1InitStruct.html#a92373452be5adab3989429b268481a81", null ],
+    [ "from_json", "structSDOM_1_1Group_1_1InitStruct.html#a352abebf6acb5e6a5018c187fb368c9f", null ],
     [ "anchorBottom", "structSDOM_1_1Group_1_1InitStruct.html#a32a70e8c0dfd503b306761e3ff59897c", null ],
     [ "anchorLeft", "structSDOM_1_1Group_1_1InitStruct.html#a17adc32c048d68ae0d26a9778f7f4827", null ],
     [ "anchorRight", "structSDOM_1_1Group_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2", null ],
@@ -24,7 +27,7 @@ var structSDOM_1_1Group_1_1InitStruct =
     [ "isClickable", "structSDOM_1_1Group_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085", null ],
     [ "isEnabled", "structSDOM_1_1Group_1_1InitStruct.html#acda95a896651eee200d55e80ea104150", null ],
     [ "isHidden", "structSDOM_1_1Group_1_1InitStruct.html#af96dbfaee52c56998a0c02de9c57f95b", null ],
-    [ "label_color_", "structSDOM_1_1Group_1_1InitStruct.html#aa3c549defdfaedc3cbf44e9d3e26f859", null ],
+    [ "label_color", "structSDOM_1_1Group_1_1InitStruct.html#af2d45db83d24cc8540cc70b0c97f4cf0", null ],
     [ "name", "structSDOM_1_1Group_1_1InitStruct.html#a312bd5827cbb79cb02d722c9ec979d3f", null ],
     [ "outlineColor", "structSDOM_1_1Group_1_1InitStruct.html#ab41dcfc6259800a732c4eccd40452ae6", null ],
     [ "priority", "structSDOM_1_1Group_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939", null ],

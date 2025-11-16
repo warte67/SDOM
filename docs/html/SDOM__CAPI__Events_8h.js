@@ -1,8 +1,12 @@
 var SDOM__CAPI__Events_8h =
 [
+    [ "SDOM_EventTypeDesc", "structSDOM__EventTypeDesc.html", "structSDOM__EventTypeDesc" ],
+    [ "SDOM_EventDesc", "structSDOM__EventDesc.html", "structSDOM__EventDesc" ],
     [ "SDOM_EVENT_CATEGORY", "group__SDOM__EventMacros.html#ga1931d594f82fd9b94a61b8e6604ee646", null ],
     [ "SDOM_EVENT_INDEX", "group__SDOM__EventMacros.html#ga42c4a3183d22a70459c0706ebe69bc63", null ],
+    [ "SDOM_EventHandle", "SDOM__CAPI__Events_8h.html#aa3c41c6f1b4d48ff8fb0c50d31268605", null ],
     [ "SDOM_EventType", "group__SDOM__EventTypeIDs.html#gadb9759a19991f42eb69deb537c837cd3", null ],
+    [ "SDOM_EventTypeHandle", "SDOM__CAPI__Events_8h.html#accde32a71dd5c9a8dea8bde61a6d5563", null ],
     [ "SDOM_EventTypeId", "SDOM__CAPI__Events_8h.html#af6b078455ef69db9094a0e4144225d5a", null ],
     [ "SDOM_EventType", "group__SDOM__EventTypeIDs.html#gaa0508dec540cd5cee7ffb5fa16cd2d94", [
       [ "SDOM_EVENT_FIRST", "group__SDOM__EventTypeIDs.html#ggaa0508dec540cd5cee7ffb5fa16cd2d94a3b97a0f246f65dcfe609323113d693c5", null ],
@@ -62,5 +66,17 @@ var SDOM__CAPI__Events_8h =
       [ "SDOM_EVENT_USER", "group__SDOM__EventTypeIDs.html#ggaa0508dec540cd5cee7ffb5fa16cd2d94a3a85495bb250849c6668eb5a5f791cf2", null ],
       [ "SDOM_EVENT_LAST", "group__SDOM__EventTypeIDs.html#ggaa0508dec540cd5cee7ffb5fa16cd2d94acae7be244e5a4810bec7bc0e60440aed", null ],
       [ "SDOM_EVENT_ENUM_PADDING", "group__SDOM__EventTypeIDs.html#ggaa0508dec540cd5cee7ffb5fa16cd2d94ad54ac28173f3a44c79313741e19ad1fb", null ]
-    ] ]
+    ] ],
+    [ "SDOM_CreateEvent", "SDOM__CAPI__Events_8h.html#a83c0dc22473855527a33b62fce2d3621", null ],
+    [ "SDOM_CreateEventType", "SDOM__CAPI__Events_8h.html#a3287638edeec694b1ef84fbec62723a1", null ],
+    [ "SDOM_DestroyEvent", "SDOM__CAPI__Events_8h.html#a81c330a711bb4eb403465a3e03ec1194", null ],
+    [ "SDOM_DestroyEventType", "SDOM__CAPI__Events_8h.html#ad9f634e0392095d27b59f7026df2acf9", null ],
+    [ "SDOM_EnumEventTypes", "SDOM__CAPI__Events_8h.html#acae67c02346f5339547d610d9030e622", null ],
+    [ "SDOM_FindEventTypeByName", "SDOM__CAPI__Events_8h.html#ad058edda2a078780faa8f3ea6c467802", null ],
+    [ "SDOM_GetEventDesc", "SDOM__CAPI__Events_8h.html#afa85335ba6b2decfbb37d1765e283bb3", null ],
+    [ "SDOM_GetEventQueueSize", "SDOM__CAPI__Events_8h.html#ac955ce32f835e72c97be8025724ee612", null ],
+    [ "SDOM_GetEventTypeDesc", "SDOM__CAPI__Events_8h.html#a0f23b8837621f74b9792054ed7321e54", null ],
+    [ "SDOM_SendEvent", "SDOM__CAPI__Events_8h.html#aa492e0109fa9ac2979b780dc672c3b05", null ],
+    [ "SDOM_UpdateEvent", "SDOM__CAPI__Events_8h.html#a721d6860b6da776400c93e39ece9646b", null ],
+    [ "SDOM_UpdateEventType", "SDOM__CAPI__Events_8h.html#ac5f0a31941dde21677fc449a082e7da5", null ]
 ];

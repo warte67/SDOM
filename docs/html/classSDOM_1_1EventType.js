@@ -38,7 +38,6 @@ var classSDOM_1_1EventType =
     [ "operator<", "classSDOM_1_1EventType.html#a0f2b0a9ef81f49a1c0bac0b9c8a443a8", null ],
     [ "operator==", "classSDOM_1_1EventType.html#a123a20da9d1b9a0d8323d6a99a9b40f3", null ],
     [ "registerEventType", "classSDOM_1_1EventType.html#a9aa6ac9ec3cbfbac5b3340dd075c827d", null ],
-    [ "registerLua", "classSDOM_1_1EventType.html#af935779818a609d71a1a9508ffdaa36a", null ],
     [ "setBubbles", "classSDOM_1_1EventType.html#a49d1a8bc7ae29dded840e30b679b0cf2", null ],
     [ "setCaptures", "classSDOM_1_1EventType.html#a5f5123139834450372826094c09718c3", null ],
     [ "setCategory", "classSDOM_1_1EventType.html#a61d7ce13807c44f7efcaec6e15a52c4b", null ],

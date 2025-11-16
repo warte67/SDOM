@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['varianttodynamicfn_0',['VariantToDynamicFn',['../classSDOM_1_1Variant.html#a0a5a723ed4ac2b16489588e7a565fb5e',1,'SDOM::Variant']]]
+  ['object_0',['Object',['../structSDOM_1_1VariantStorage.html#aa1900b30e13c7f1b22d1eeb7d7380b51',1,'SDOM::VariantStorage']]]
 ];

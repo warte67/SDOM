@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['dark_0',['DARK',['../classCLR.html#ae551fce83721f6a2f5627dd88524ef3b',1,'CLR']]],
-  ['data_1',['data',['../structSDOM_1_1VariantStorage.html#a472a7df601a64d74c60c8ef68ee97044',1,'SDOM::VariantStorage']]],
-  ['debug_5fregister_5flua_2',['DEBUG_REGISTER_LUA',['../SDOM_8hpp.html#a7860bad07e6389722d5d09638b46d2f8',1,'SDOM.hpp']]],
+  ['d_0',['d',['../structSDOM_1_1CAPI_1_1CallArg.html#afe13cd6ce19776830da9cb04b55b458b',1,'SDOM::CAPI::CallArg::d'],['../structSDOM_1_1CAPI_1_1CallResult.html#a05f539adba413f2ef9038f48a2ae825e',1,'SDOM::CAPI::CallResult::d']]],
+  ['dark_1',['DARK',['../classCLR.html#ae551fce83721f6a2f5627dd88524ef3b',1,'CLR']]],
+  ['data_2',['data',['../structSDOM_1_1VariantStorage.html#a472a7df601a64d74c60c8ef68ee97044',1,'SDOM::VariantStorage']]],
   ['default_5fvalue_3',['default_value',['../structSDOM_1_1PropertyInfo.html#a0fca8865409aa865c46825646b3cf583',1,'SDOM::PropertyInfo']]],
   ['defaultstyle_5f_4',['defaultStyle_',['../classSDOM_1_1Label.html#a8a469d0d7b83e0d76439e53d6cdd3f3b',1,'SDOM::Label']]],
   ['dim_5',['DIM',['../classCLR.html#ae6bf249365e22dd06075824ed57ddfea',1,'CLR']]],
@@ -10,7 +10,7 @@ var searchData=
   ['direction_5f_7',['direction_',['../classSDOM_1_1ArrowButton.html#a305a16f0aa6e69faab547a0931f7b450',1,'SDOM::ArrowButton']]],
   ['disabled_8',['Disabled',['../classSDOM_1_1EventType.html#aa276368587363a849ed1a57a9a1e230a',1,'SDOM::EventType']]],
   ['disabledefaultbehavior_9',['disableDefaultBehavior',['../classSDOM_1_1Event.html#a080aac422b33308070477a6c1fc2c6d6',1,'SDOM::Event']]],
-  ['doc_10',['doc',['../structSDOM_1_1FunctionInfo.html#a7c44eee542660d2d04f945d456a0d895',1,'SDOM::FunctionInfo::doc'],['../structSDOM_1_1PropertyInfo.html#a602e39d00e387f00ad3fb8ffdd693cc7',1,'SDOM::PropertyInfo::doc'],['../structSDOM_1_1TypeInfo.html#ae4d52e47f7f7bdb56863a1d3a1b17a63',1,'SDOM::TypeInfo::doc']]],
+  ['doc_10',['doc',['../structSDOM__EventTypeDesc.html#aefdb08612fc5100272393f955f57b3c6',1,'SDOM_EventTypeDesc::doc'],['../structSDOM_1_1FunctionInfo.html#a7c44eee542660d2d04f945d456a0d895',1,'SDOM::FunctionInfo::doc'],['../structSDOM_1_1PropertyInfo.html#a602e39d00e387f00ad3fb8ffdd693cc7',1,'SDOM::PropertyInfo::doc'],['../structSDOM_1_1TypeInfo.html#ae4d52e47f7f7bdb56863a1d3a1b17a63',1,'SDOM::TypeInfo::doc'],['../structSDOM__EventTypeHandle__.html#a428855975c07900776d17a802a36ff03',1,'SDOM_EventTypeHandle_::doc']]],
   ['drag_11',['Drag',['../classSDOM_1_1EventType.html#a6311cdc9538efcbb20839869ec1b283c',1,'SDOM::EventType']]],
   ['dragging_12',['Dragging',['../classSDOM_1_1EventType.html#a04fb66fb13257ea2b74de3ee379587b2',1,'SDOM::EventType']]],
   ['dragoffsetx_13',['dragOffsetX',['../classSDOM_1_1Event.html#adcf60a899112b260d6b4515aa2eddb30',1,'SDOM::Event']]],

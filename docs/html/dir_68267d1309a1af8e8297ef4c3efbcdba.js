@@ -1,8 +1,9 @@
 var dir_68267d1309a1af8e8297ef4c3efbcdba =
 [
+    [ "CAPI", "dir_f3d31eb03314c5c5243f5262bef64983.html", "dir_f3d31eb03314c5c5243f5262bef64983" ],
     [ "SDOM.cpp", "SDOM_8cpp.html", null ],
     [ "SDOM_ArrowButton.cpp", "SDOM__ArrowButton_8cpp.html", null ],
-    [ "SDOM_AssetHandle.cpp", "SDOM__AssetHandle_8cpp.html", "SDOM__AssetHandle_8cpp" ],
+    [ "SDOM_AssetHandle.cpp", "SDOM__AssetHandle_8cpp.html", null ],
     [ "SDOM_BitmapFont.cpp", "SDOM__BitmapFont_8cpp.html", null ],
     [ "SDOM_Button.cpp", "SDOM__Button_8cpp.html", null ],
     [ "SDOM_CAPI.cpp", "SDOM__CAPI_8cpp.html", "SDOM__CAPI_8cpp" ],
@@ -10,7 +11,6 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_CheckButton.cpp", "SDOM__CheckButton_8cpp.html", null ],
     [ "SDOM_CLR.cpp", "SDOM__CLR_8cpp.html", null ],
     [ "SDOM_Core.cpp", "SDOM__Core_8cpp.html", null ],
-    [ "SDOM_Core_Lua.cpp", "SDOM__Core__Lua_8cpp.html", "SDOM__Core__Lua_8cpp" ],
     [ "SDOM_DataRegistry.cpp", "SDOM__DataRegistry_8cpp.html", "SDOM__DataRegistry_8cpp" ],
     [ "SDOM_DisplayHandle.cpp", "SDOM__DisplayHandle_8cpp.html", null ],
     [ "SDOM_Event.cpp", "SDOM__Event_8cpp.html", null ],
@@ -23,7 +23,6 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_IconButton.cpp", "SDOM__IconButton_8cpp.html", null ],
     [ "SDOM_IDataObject.cpp", "SDOM__IDataObject_8cpp.html", null ],
     [ "SDOM_IDisplayObject.cpp", "SDOM__IDisplayObject_8cpp.html", null ],
-    [ "SDOM_IDisplayObject_Lua.cpp", "SDOM__IDisplayObject__Lua_8cpp.html", "SDOM__IDisplayObject__Lua_8cpp" ],
     [ "SDOM_IFontObject.cpp", "SDOM__IFontObject_8cpp.html", null ],
     [ "SDOM_internal_font_8x12.cpp", "SDOM__internal__font__8x12_8cpp.html", null ],
     [ "SDOM_internal_font_8x8.cpp", "SDOM__internal__font__8x8_8cpp.html", null ],

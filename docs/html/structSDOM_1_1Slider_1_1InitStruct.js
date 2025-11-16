@@ -1,6 +1,9 @@
 var structSDOM_1_1Slider_1_1InitStruct =
 [
     [ "InitStruct", "structSDOM_1_1Slider_1_1InitStruct.html#aa60435655d9a0dfffdc2b3ddd0861034", null ],
+    [ "from_json", "structSDOM_1_1Slider_1_1InitStruct.html#a92373452be5adab3989429b268481a81", null ],
+    [ "from_json", "structSDOM_1_1Slider_1_1InitStruct.html#ace43fab6a501a23ce018b9fd43638aff", null ],
+    [ "from_json", "structSDOM_1_1Slider_1_1InitStruct.html#aca892a749013e52b0877e8940a2d7cbc", null ],
     [ "anchorBottom", "structSDOM_1_1Slider_1_1InitStruct.html#a32a70e8c0dfd503b306761e3ff59897c", null ],
     [ "anchorLeft", "structSDOM_1_1Slider_1_1InitStruct.html#a17adc32c048d68ae0d26a9778f7f4827", null ],
     [ "anchorRight", "structSDOM_1_1Slider_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2", null ],

@@ -111,6 +111,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a401f8c2582bcc018fcb79d26c9410e3f" id="r_a401f8c2582bcc018fcb79d26c9410e3f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a401f8c2582bcc018fcb79d26c9410e3f">registerDataType</a> (const <a class="el" href="structSDOM_1_1TypeInfo.html">TypeInfo</a> &amp;info)</td></tr>
 <tr class="memitem:af817a8f4756ba472215f407baba2af8c" id="r_af817a8f4756ba472215f407baba2af8c"><td class="memTemplParams" colspan="2">template&lt;typename Fn&gt; </td></tr>
 <tr class="memitem:af817a8f4756ba472215f407baba2af8c template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af817a8f4756ba472215f407baba2af8c">registerFunction</a> (const std::string &amp;typeName, const <a class="el" href="structSDOM_1_1FunctionInfo.html">FunctionInfo</a> &amp;meta, Fn &amp;&amp;fn)</td></tr>
+<tr class="memitem:a1de3d98cb44819aaac0205adb4e6ad0a" id="r_a1de3d98cb44819aaac0205adb4e6ad0a"><td class="memTemplParams" colspan="2">template&lt;typename R, typename... Args&gt; </td></tr>
+<tr class="memitem:a1de3d98cb44819aaac0205adb4e6ad0a template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1de3d98cb44819aaac0205adb4e6ad0a">registerCFunctionPtr</a> (const std::string &amp;typeName, const <a class="el" href="structSDOM_1_1FunctionInfo.html">FunctionInfo</a> &amp;meta, R(*fp)(Args...))</td></tr>
+<tr class="memitem:aaa5e6a40224dcc648aaff05ec1b41369" id="r_aaa5e6a40224dcc648aaff05ec1b41369"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa5e6a40224dcc648aaff05ec1b41369">registerLuaFunction</a> (const std::string &amp;typeName, <a class="el" href="structSDOM_1_1FunctionInfo.html">FunctionInfo</a> meta, int luaRef, void *luaStatePtr=nullptr)</td></tr>
 <tr class="memitem:a640f5c6480ad526de614044f73127331" id="r_a640f5c6480ad526de614044f73127331"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a640f5c6480ad526de614044f73127331">registerFunction</a> (const std::string &amp;typeName, const <a class="el" href="structSDOM_1_1FunctionInfo.html">FunctionInfo</a> &amp;meta)</td></tr>
 <tr class="memitem:a07708dc0ebdbd8e4e252e2076cc804e4" id="r_a07708dc0ebdbd8e4e252e2076cc804e4"><td class="memTemplParams" colspan="2">template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </td></tr>
 <tr class="memitem:a07708dc0ebdbd8e4e252e2076cc804e4 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07708dc0ebdbd8e4e252e2076cc804e4">registerProperty</a> (const std::string &amp;typeName, const <a class="el" href="structSDOM_1_1PropertyInfo.html">PropertyInfo</a> &amp;meta, Getter &amp;&amp;getter, Setter &amp;&amp;setter=nullptr)</td></tr>
@@ -387,6 +390,42 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a1de3d98cb44819aaac0205adb4e6ad0a" name="a1de3d98cb44819aaac0205adb4e6ad0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1de3d98cb44819aaac0205adb4e6ad0a">&#9670;&#160;</a></span>registerCFunctionPtr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename R, typename... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::DataRegistry::registerCFunctionPtr </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSDOM_1_1FunctionInfo.html">FunctionInfo</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>meta</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">R(*</td>          <td class="paramname"><span class="paramname"><em>fp&#160;</em></span>)(Args...)&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a401f8c2582bcc018fcb79d26c9410e3f" name="a401f8c2582bcc018fcb79d26c9410e3f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a401f8c2582bcc018fcb79d26c9410e3f">&#9670;&#160;</a></span>registerDataType()</h2>
 
@@ -450,6 +489,45 @@ template&lt;typename Fn&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">Fn &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaa5e6a40224dcc648aaff05ec1b41369" name="aaa5e6a40224dcc648aaff05ec1b41369"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa5e6a40224dcc648aaff05ec1b41369">&#9670;&#160;</a></span>registerLuaFunction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::DataRegistry::registerLuaFunction </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM_1_1FunctionInfo.html">FunctionInfo</a></td>          <td class="paramname"><span class="paramname"><em>meta</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>luaRef</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>luaStatePtr</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;)</td>
         </tr>
       </table>
   </td>

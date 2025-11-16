@@ -1,8 +1,8 @@
 var searchData=
 [
   ['l_0',['L',['../structSDOM_1_1VariantStorage_1_1LuaRefValue.html#aec617479d5933728741ab91cc30e5785',1,'SDOM::VariantStorage::LuaRefValue']]],
-  ['label_5fcolor_1',['label_color',['../structSDOM_1_1Button_1_1InitStruct.html#ac1a87a3078a0921efce544bd59308e86',1,'SDOM::Button::InitStruct::label_color'],['../structSDOM_1_1TristateButton_1_1InitStruct.html#acaa22d991cbb8c75bfc92475cb8b7251',1,'SDOM::TristateButton::InitStruct::label_color']]],
-  ['label_5fcolor_5f_2',['label_color_',['../classSDOM_1_1Button.html#a23a3646ffd3d68592ef042ee187038e7',1,'SDOM::Button::label_color_'],['../structSDOM_1_1Group_1_1InitStruct.html#aa3c549defdfaedc3cbf44e9d3e26f859',1,'SDOM::Group::InitStruct::label_color_'],['../classSDOM_1_1Group.html#afbdbc768f429fdc6277adf3aad4a0b4b',1,'SDOM::Group::label_color_'],['../classSDOM_1_1TristateButton.html#abeaf8c6088be55a34e21c428b2974164',1,'SDOM::TristateButton::label_color_']]],
+  ['label_5fcolor_1',['label_color',['../structSDOM_1_1Button_1_1InitStruct.html#ac1a87a3078a0921efce544bd59308e86',1,'SDOM::Button::InitStruct::label_color'],['../structSDOM_1_1Group_1_1InitStruct.html#af2d45db83d24cc8540cc70b0c97f4cf0',1,'SDOM::Group::InitStruct::label_color'],['../structSDOM_1_1TristateButton_1_1InitStruct.html#acaa22d991cbb8c75bfc92475cb8b7251',1,'SDOM::TristateButton::InitStruct::label_color']]],
+  ['label_5fcolor_5f_2',['label_color_',['../classSDOM_1_1Button.html#a23a3646ffd3d68592ef042ee187038e7',1,'SDOM::Button::label_color_'],['../classSDOM_1_1Group.html#afbdbc768f429fdc6277adf3aad4a0b4b',1,'SDOM::Group::label_color_'],['../classSDOM_1_1TristateButton.html#abeaf8c6088be55a34e21c428b2974164',1,'SDOM::TristateButton::label_color_']]],
   ['label_5fparent_5fresize_5fdebug_3',['LABEL_PARENT_RESIZE_DEBUG',['../SDOM__Label_8cpp.html#ad02881109b9540e1c5f2020a44809548',1,'SDOM_Label.cpp']]],
   ['labelaligntostring_5f_4',['labelAlignToString_',['../classSDOM_1_1Label.html#a3702f224b2b845aae3da34a05a3b762a',1,'SDOM::Label']]],
   ['labelobject_5f_5',['labelObject_',['../classSDOM_1_1Button.html#a6370652b75a3dbdb0a24cb2290cd237e',1,'SDOM::Button::labelObject_'],['../classSDOM_1_1Group.html#a4e145767ec0d136d6e552c8adabb9dc5',1,'SDOM::Group::labelObject_'],['../classSDOM_1_1TristateButton.html#a469ec9474961b9ca3380a16d2e8f4106',1,'SDOM::TristateButton::labelObject_']]],
@@ -24,5 +24,7 @@ var searchData=
   ['lt_5fmagenta_21',['LT_MAGENTA',['../classCLR.html#a135aac68c02461081e49ee6a818cfc52',1,'CLR']]],
   ['lt_5forange_22',['LT_ORANGE',['../classCLR.html#a42181ec7c82e659318736fa4eaec68ed',1,'CLR']]],
   ['lt_5fyellow_23',['LT_YELLOW',['../classCLR.html#a8243058df0e40cdb1644ac3bf2636fdd',1,'CLR']]],
-  ['luahandlename_24',['LuaHandleName',['../classSDOM_1_1AssetHandle.html#a89ebec1fc7fbc6690cca6719c0572923',1,'SDOM::AssetHandle::LuaHandleName'],['../classSDOM_1_1DisplayHandle.html#a7f26dd776b5791179616f81c95481ec0',1,'SDOM::DisplayHandle::LuaHandleName']]]
+  ['lua_5f_24',['lua_',['../classSDOM_1_1Core.html#aca5fc2d4648fc1889e4b870d866ea399',1,'SDOM::Core']]],
+  ['lua_5fref_25',['lua_ref',['../structSDOM_1_1FunctionInfo.html#a96cb9b3858381ad9a508bf2410fd79e5',1,'SDOM::FunctionInfo']]],
+  ['lua_5fstate_5fptr_26',['lua_state_ptr',['../structSDOM_1_1FunctionInfo.html#a2f1672ee27f442a4578705bcf2d12e46',1,'SDOM::FunctionInfo']]]
 ];

@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['validateanchorassignments_0',['validateAnchorAssignments',['../namespaceSDOM.html#aaa33b9318af1f912adda349706e19eba',1,'SDOM']]],
+  ['v_0',['v',['../structSDOM_1_1CAPI_1_1CallArg.html#a846d7142bdae940590e56491f69f400c',1,'SDOM::CAPI::CallArg::v'],['../structSDOM_1_1CAPI_1_1CallResult.html#aa40e861b431954835cdc6c9039a74e1e',1,'SDOM::CAPI::CallResult::v']]],
   ['validateanchorpointstring_1',['validateAnchorPointString',['../namespaceSDOM.html#a1727e4f40877b1a80e5317dc9cd632b2',1,'SDOM']]],
   ['validfor_2',['validFor',['../structSDOM_1_1VariantStorage_1_1LuaRefValue.html#a1ef55e6a8df2e79b2911c25d175ffdbb',1,'SDOM::VariantStorage::LuaRefValue']]],
-  ['value_3',['value',['../structSDOM_1_1IRangeControl_1_1InitStruct.html#ade7acaaf153f0e9242e274ea7cac9b81',1,'SDOM::IRangeControl::InitStruct']]],
+  ['value_3',['value',['../structSDOM_1_1IRangeControl_1_1InitStruct.html#ade7acaaf153f0e9242e274ea7cac9b81',1,'SDOM::IRangeControl::InitStruct::value'],['../structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#a9e0cd658700ca4c2dc0faf4aefed4cb2',1,'SDOM::IRangeControl_scaffold::InitStruct::value']]],
   ['value_5f_4',['value_',['../classSDOM_1_1IRangeControl.html#ac457530e83b61d67e9a97e2cb8fcb4fb',1,'SDOM::IRangeControl']]],
   ['valuechanged_5',['ValueChanged',['../classSDOM_1_1EventType.html#ae64d17162abeb250fb04f81912cda241',1,'SDOM::EventType']]],
   ['variant_6',['Variant',['../classSDOM_1_1Variant.html',1,'SDOM::Variant'],['../classSDOM_1_1Variant.html#a9a02c687a17443c3d5b62aba8d0bc6cf',1,'SDOM::Variant::Variant()'],['../classSDOM_1_1Variant.html#a7e62613587bae54d83fc38e9bdb8dc76',1,'SDOM::Variant::Variant(bool b)'],['../classSDOM_1_1Variant.html#a69ab60faae5f2f899b731175ede8eada',1,'SDOM::Variant::Variant(int32_t i)'],['../classSDOM_1_1Variant.html#a335282d825c3aa49c62fc3f417aa937d',1,'SDOM::Variant::Variant(int64_t i)'],['../classSDOM_1_1Variant.html#a7f82fe77f6fac6d0b9ab0d61089e0117',1,'SDOM::Variant::Variant(double d)'],['../classSDOM_1_1Variant.html#a4183b2e687ad2cec4e4a0213dc1976d9',1,'SDOM::Variant::Variant(const char *s)'],['../classSDOM_1_1Variant.html#aa65f4d4ef1f2a0cfc30f2211559f9e1b',1,'SDOM::Variant::Variant(std::string s)'],['../classSDOM_1_1Variant.html#aa6f0c294d285414f623af5cbe1d3f995',1,'SDOM::Variant::Variant(const std::vector&lt; Variant &gt; &amp;arr)'],['../classSDOM_1_1Variant.html#aa08cace19bae431b721c55167631efdc',1,'SDOM::Variant::Variant(std::vector&lt; Variant &gt; &amp;&amp;arr)'],['../classSDOM_1_1Variant.html#a1b5f194b15a5d4c5f70dcea7245014f6',1,'SDOM::Variant::Variant(const std::unordered_map&lt; std::string, Variant &gt; &amp;obj)'],['../classSDOM_1_1Variant.html#a5de3b83bea657b7c48b98bd214185b18',1,'SDOM::Variant::Variant(std::unordered_map&lt; std::string, Variant &gt; &amp;&amp;obj)'],['../classSDOM_1_1Variant.html#a4368c739007fdd846e099977f17ff38a',1,'SDOM::Variant::Variant(const sol::object &amp;o)'],['../classSDOM_1_1Variant.html#a16a83f3b8b979b376e019dc6382404de',1,'SDOM::Variant::Variant(Variant &amp;&amp;) noexcept=default'],['../classSDOM_1_1Variant.html#a4733367978511d5ea03e38e365b39fba',1,'SDOM::Variant::Variant(const Variant &amp;)=default'],['../classSDOM_1_1Variant.html#a447e275cdd36805aa222f5d2cfc2c09f',1,'SDOM::Variant::Variant(std::shared_ptr&lt; T &gt; p)']]],
@@ -16,12 +16,14 @@ var searchData=
   ['vcpkg_20visual_20studio_20cmake_20integration_13',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md71',1,'']]],
   ['verbose_5ftest_5foutput_14',['VERBOSE_TEST_OUTPUT',['../classSDOM.html#aae2a66a6c54d731022cfdc409fff8b12',1,'SDOM']]],
   ['version_15',['Version',['../classSDOM_1_1Version.html',1,'SDOM::Version'],['../classSDOM_1_1Version.html#a6e669c887def9d4a246e2a72ffd830f9',1,'SDOM::Version::Version()']]],
-  ['vertical_16',['Vertical',['../classSDOM.html#a9cb56e905b36976260e5aa56d30ee933a06ce2a25e5d12c166a36f654dbea6012',1,'SDOM']]],
-  ['visible_17',['Visible',['../classSDOM_1_1EventType.html#a5298b4fe92c491f0c6c7661d902ac35e',1,'SDOM::EventType']]],
-  ['visual_20studio_20cmake_20integration_18',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md71',1,'']]],
-  ['vprogress_5fbottom_19',['VProgress_Bottom',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfba61f75d322ee33243eb1da6f64cc57f85',1,'SDOM']]],
-  ['vprogress_5frail_20',['VProgress_Rail',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfbac80d5173244d130893f34f8811b60a66',1,'SDOM']]],
-  ['vprogress_5fthumb_21',['VProgress_Thumb',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfba59a6081cdd7c8721bae3ba0737421e3c',1,'SDOM']]],
-  ['vprogress_5ftop_22',['VProgress_Top',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfbaff1ae41f44037afaab0c0b7e3389429d',1,'SDOM']]],
-  ['vslider_5frail_23',['VSlider_Rail',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfba85a065792c512733be61732d541402f4',1,'SDOM']]]
+  ['version_5f_16',['version_',['../classSDOM_1_1Core.html#aed4d42d616382744c5959be88b916f0e',1,'SDOM::Core']]],
+  ['vertical_17',['Vertical',['../classSDOM.html#a9cb56e905b36976260e5aa56d30ee933a06ce2a25e5d12c166a36f654dbea6012',1,'SDOM']]],
+  ['visible_18',['Visible',['../classSDOM_1_1EventType.html#a5298b4fe92c491f0c6c7661d902ac35e',1,'SDOM::EventType']]],
+  ['visual_20studio_20cmake_20integration_19',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md71',1,'']]],
+  ['void_20',['Void',['../structSDOM_1_1CAPI_1_1CallResult.html#a8de2f1395bd8fb4119574873527f75fe',1,'SDOM::CAPI::CallResult']]],
+  ['vprogress_5fbottom_21',['VProgress_Bottom',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfba61f75d322ee33243eb1da6f64cc57f85',1,'SDOM']]],
+  ['vprogress_5frail_22',['VProgress_Rail',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfbac80d5173244d130893f34f8811b60a66',1,'SDOM']]],
+  ['vprogress_5fthumb_23',['VProgress_Thumb',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfba59a6081cdd7c8721bae3ba0737421e3c',1,'SDOM']]],
+  ['vprogress_5ftop_24',['VProgress_Top',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfbaff1ae41f44037afaab0c0b7e3389429d',1,'SDOM']]],
+  ['vslider_5frail_25',['VSlider_Rail',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfba85a065792c512733be61732d541402f4',1,'SDOM']]]
 ];

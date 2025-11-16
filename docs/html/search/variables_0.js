@@ -34,5 +34,6 @@ var searchData=
   ['arrow_5fup_5fsmall_31',['ARROW_UP_SMALL',['../classCLR.html#a9df767baa8ebed0cc7a4f48d03040ff7',1,'CLR']]],
   ['arrowicontable_32',['ArrowIconTable',['../classSDOM_1_1ArrowButton.html#a7007d8070fbeab8cc2f8240142a84c80',1,'SDOM::ArrowButton']]],
   ['asciicode_5f_33',['asciiCode_',['../classSDOM_1_1Event.html#acdc58e8939e55256a359fedd78729e4f',1,'SDOM::Event']]],
-  ['auto_5fresize_34',['auto_resize',['../structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e',1,'SDOM::FontStyle::auto_resize'],['../structSDOM_1_1Label_1_1InitStruct.html#a46c743df8645554c8dfd24333ad3c194',1,'SDOM::Label::InitStruct::auto_resize']]]
+  ['assethandlename_34',['AssetHandleName',['../classSDOM_1_1AssetHandle.html#a6f7b051ffef3dee1824f91cff06ae097',1,'SDOM::AssetHandle']]],
+  ['auto_5fresize_35',['auto_resize',['../structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e',1,'SDOM::FontStyle::auto_resize'],['../structSDOM_1_1Label_1_1InitStruct.html#a46c743df8645554c8dfd24333ad3c194',1,'SDOM::Label::InitStruct::auto_resize']]]
 ];

@@ -1,6 +1,10 @@
 var annotated_dup =
 [
     [ "SDOM", "namespaceSDOM.html", [
+      [ "CAPI", "namespaceSDOM_1_1CAPI.html", [
+        [ "CallArg", "structSDOM_1_1CAPI_1_1CallArg.html", "structSDOM_1_1CAPI_1_1CallArg" ],
+        [ "CallResult", "structSDOM_1_1CAPI_1_1CallResult.html", "structSDOM_1_1CAPI_1_1CallResult" ]
+      ] ],
       [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
       [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
       [ "ArrowButton", "classSDOM_1_1ArrowButton.html", "classSDOM_1_1ArrowButton" ],
@@ -59,5 +63,9 @@ var annotated_dup =
     ] ],
     [ "CLR", "classCLR.html", "classCLR" ],
     [ "SDOM", "classSDOM.html", "classSDOM" ],
-    [ "SDOM_CoreConfig", "structSDOM__CoreConfig.html", "structSDOM__CoreConfig" ]
+    [ "SDOM_CoreConfig", "structSDOM__CoreConfig.html", "structSDOM__CoreConfig" ],
+    [ "SDOM_EventDesc", "structSDOM__EventDesc.html", "structSDOM__EventDesc" ],
+    [ "SDOM_EventHandle_", "structSDOM__EventHandle__.html", "structSDOM__EventHandle__" ],
+    [ "SDOM_EventTypeDesc", "structSDOM__EventTypeDesc.html", "structSDOM__EventTypeDesc" ],
+    [ "SDOM_EventTypeHandle_", "structSDOM__EventTypeHandle__.html", "structSDOM__EventTypeHandle__" ]
 ];

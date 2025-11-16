@@ -94,7 +94,6 @@ $(function(){initNavTree('SDOM_8hpp.html','',''); });
 <div class="contents">
 <div class="textblock"><code>#include &lt;SDL3/SDL.h&gt;</code><br />
 <code>#include &lt;SDL3_image/SDL_image.h&gt;</code><br />
-<code>#include &lt;SDL3_mixer/SDL_mixer.h&gt;</code><br />
 <code>#include &lt;SDL3_ttf/SDL_ttf.h&gt;</code><br />
 <code>#include &lt;any&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
@@ -114,7 +113,7 @@ $(function(){initNavTree('SDOM_8hpp.html','',''); });
 <code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &lt;unordered_set&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;sol/sol.hpp&gt;</code><br />
+<code>#include &lt;external/nlohmann/json.hpp&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__SDL__Utils_8hpp_source.html">SDOM/SDOM_SDL_Utils.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__CLR_8hpp_source.html">SDOM/SDOM_CLR.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__DisplayHandle_8hpp_source.html">SDOM/SDOM_DisplayHandle.hpp</a>&gt;</code><br />
@@ -138,9 +137,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ab7cd931b0d8c1fe11b846eb779bfafba" id="r_ab7cd931b0d8c1fe11b846eb779bfafba"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7cd931b0d8c1fe11b846eb779bfafba">DEBUG_LUA_TESTS</a>&#160;&#160;&#160;0</td></tr>
-<tr class="memitem:ae225ab718bd4f5e2221129f026d3d8f1" id="r_ae225ab718bd4f5e2221129f026d3d8f1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae225ab718bd4f5e2221129f026d3d8f1">ERROR</a>(message)</td></tr>
-<tr class="memdesc:ae225ab718bd4f5e2221129f026d3d8f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throws an <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> exception with file and line info.  <br /></td></tr>
+<tr class="memitem:ad17ba5add84d725eb025b97aa9d5d453" id="r_ad17ba5add84d725eb025b97aa9d5d453"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad17ba5add84d725eb025b97aa9d5d453">SDOM_HAS_SDL_MIXER</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memitem:a435175024ad996b2a45d734fa9eea0e3" id="r_a435175024ad996b2a45d734fa9eea0e3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a435175024ad996b2a45d734fa9eea0e3">ERROR</a>(msg)</td></tr>
+<tr class="memdesc:a435175024ad996b2a45d734fa9eea0e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throws an <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> exception with file and line info.  <br /></td></tr>
 <tr class="memitem:aaf99b8fcaa4b837f684ea0505ed34487" id="r_aaf99b8fcaa4b837f684ea0505ed34487"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf99b8fcaa4b837f684ea0505ed34487">WARNING</a>(message)</td></tr>
 <tr class="memdesc:aaf99b8fcaa4b837f684ea0505ed34487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shows a warning message with file and line info.  <br /></td></tr>
 <tr class="memitem:a21a2c7330a04ac78200a986f66609369" id="r_a21a2c7330a04ac78200a986f66609369"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(...)</td></tr>
@@ -157,7 +156,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a7860bad07e6389722d5d09638b46d2f8" id="r_a7860bad07e6389722d5d09638b46d2f8"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7860bad07e6389722d5d09638b46d2f8">DEBUG_REGISTER_LUA</a> = false</td></tr>
 <tr class="memitem:a05b38e54d53b804b5d6da620ec5fc2cc" id="r_a05b38e54d53b804b5d6da620ec5fc2cc"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a05b38e54d53b804b5d6da620ec5fc2cc">ORPHAN_GRACE_PERIOD</a> = 5000</td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
@@ -214,10 +212,10 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_variable" href="classCLR.html#a9c70a18a33cde4874888b21b178000bf">CLR::YELLOW</a> &lt;&lt; (message) &lt;&lt; std::endl &lt;&lt; <a class="code hl_variable" href="classCLR.html#ae551fce83721f6a2f5627dd88524ef3b">CLR::DARK</a> &lt;&lt; \</div>
 <div class="line">    <span class="stringliteral">&quot;      File:  &quot;</span> &lt;&lt; <a class="code hl_variable" href="classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d">CLR::ORANGE</a> &lt;&lt; __FILE__  &lt;&lt; <a class="code hl_variable" href="classCLR.html#ae551fce83721f6a2f5627dd88524ef3b">CLR::DARK</a> &lt;&lt; std::endl &lt;&lt; \</div>
 <div class="line">    <span class="stringliteral">&quot;      Line:  &quot;</span> &lt;&lt; <a class="code hl_variable" href="classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d">CLR::ORANGE</a>  &lt;&lt; __LINE__ &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span> &lt;&lt; std::endl; } <span class="keywordflow">while</span>(0)</div>
-<div class="ttc" id="aclassCLR_html_a3870d8fb9704714a9b5d35631a67be74"><div class="ttname"><a href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a></div><div class="ttdeci">static const std::string RESET</div><div class="ttdoc">ANSI escape sequence to reset formatting.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:245</div></div>
-<div class="ttc" id="aclassCLR_html_a9c70a18a33cde4874888b21b178000bf"><div class="ttname"><a href="classCLR.html#a9c70a18a33cde4874888b21b178000bf">CLR::YELLOW</a></div><div class="ttdeci">static const std::string YELLOW</div><div class="ttdoc">ANSI escape sequence for yellow foreground.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:278</div></div>
-<div class="ttc" id="aclassCLR_html_abac78b3cc1af6f6bc1bc974a19ea044d"><div class="ttname"><a href="classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d">CLR::ORANGE</a></div><div class="ttdeci">static const std::string ORANGE</div><div class="ttdoc">ANSI escape sequence for orange foreground.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:276</div></div>
-<div class="ttc" id="aclassCLR_html_ae551fce83721f6a2f5627dd88524ef3b"><div class="ttname"><a href="classCLR.html#ae551fce83721f6a2f5627dd88524ef3b">CLR::DARK</a></div><div class="ttdeci">static const std::string DARK</div><div class="ttdoc">ANSI escape sequence for dark grey foreground.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:275</div></div>
+<div class="ttc" id="aclassCLR_html_a3870d8fb9704714a9b5d35631a67be74"><div class="ttname"><a href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a></div><div class="ttdeci">static const std::string RESET</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:156</div></div>
+<div class="ttc" id="aclassCLR_html_a9c70a18a33cde4874888b21b178000bf"><div class="ttname"><a href="classCLR.html#a9c70a18a33cde4874888b21b178000bf">CLR::YELLOW</a></div><div class="ttdeci">static const std::string YELLOW</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:187</div></div>
+<div class="ttc" id="aclassCLR_html_abac78b3cc1af6f6bc1bc974a19ea044d"><div class="ttname"><a href="classCLR.html#abac78b3cc1af6f6bc1bc974a19ea044d">CLR::ORANGE</a></div><div class="ttdeci">static const std::string ORANGE</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:185</div></div>
+<div class="ttc" id="aclassCLR_html_ae551fce83721f6a2f5627dd88524ef3b"><div class="ttname"><a href="classCLR.html#ae551fce83721f6a2f5627dd88524ef3b">CLR::DARK</a></div><div class="ttdeci">static const std::string DARK</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:184</div></div>
 </div><!-- fragment -->
 <p>Logs a debug error (non-fatal) with file and line info in dark text. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -248,7 +246,7 @@ Variables</h2></td></tr>
 <div class="line">    _sdom_dbg_oss &lt;&lt; __VA_ARGS__; \</div>
 <div class="line">    std::cout &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3003dd364e606e44a28d3bf3081f624c">CLR::GREEN</a> &lt;&lt; <span class="stringliteral">&quot;[DEBUG] &quot;</span> &lt;&lt; _sdom_dbg_oss.str() &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl; \</div>
 <div class="line">} <span class="keywordflow">while</span>(0)</div>
-<div class="ttc" id="aclassCLR_html_a3003dd364e606e44a28d3bf3081f624c"><div class="ttname"><a href="classCLR.html#a3003dd364e606e44a28d3bf3081f624c">CLR::GREEN</a></div><div class="ttdeci">static const std::string GREEN</div><div class="ttdoc">ANSI escape sequence for green foreground.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:268</div></div>
+<div class="ttc" id="aclassCLR_html_a3003dd364e606e44a28d3bf3081f624c"><div class="ttname"><a href="classCLR.html#a3003dd364e606e44a28d3bf3081f624c">CLR::GREEN</a></div><div class="ttdeci">static const std::string GREEN</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:176</div></div>
 </div><!-- fragment -->
 <p>Logs a debug message in green text. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -260,22 +258,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab7cd931b0d8c1fe11b846eb779bfafba" name="ab7cd931b0d8c1fe11b846eb779bfafba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7cd931b0d8c1fe11b846eb779bfafba">&#9670;&#160;</a></span>DEBUG_LUA_TESTS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DEBUG_LUA_TESTS&#160;&#160;&#160;0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae225ab718bd4f5e2221129f026d3d8f1" name="ae225ab718bd4f5e2221129f026d3d8f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae225ab718bd4f5e2221129f026d3d8f1">&#9670;&#160;</a></span>ERROR</h2>
+<a id="a435175024ad996b2a45d734fa9eea0e3" name="a435175024ad996b2a45d734fa9eea0e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a435175024ad996b2a45d734fa9eea0e3">&#9670;&#160;</a></span>ERROR</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -283,13 +267,17 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">#define ERROR</td>
           <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>message</em></span></td><td>)</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>msg</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">throw</span> <a class="code hl_class" href="classSDOM_1_1Exception.html">SDOM::Exception</a>(message, __FILE__, __LINE__)</div>
-<div class="ttc" id="aclassSDOM_1_1Exception_html"><div class="ttname"><a href="classSDOM_1_1Exception.html">SDOM::Exception</a></div><div class="ttdoc">Custom exception class for SDOM errors.</div><div class="ttdef"><b>Definition</b> SDOM.hpp:225</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                    \</div>
+<div class="line">        std::ostringstream sdom_err_stream__;                               \</div>
+<div class="line">        sdom_err_stream__ &lt;&lt; msg;                                           \</div>
+<div class="line">        <span class="keywordflow">throw</span> <a class="code hl_class" href="classSDOM_1_1Exception.html">SDOM::Exception</a>(sdom_err_stream__.str(), __FILE__, __LINE__); \</div>
+<div class="line">    } <span class="keywordflow">while</span> (0)</div>
+<div class="ttc" id="aclassSDOM_1_1Exception_html"><div class="ttname"><a href="classSDOM_1_1Exception.html">SDOM::Exception</a></div><div class="ttdoc">Custom exception class for SDOM errors.</div><div class="ttdef"><b>Definition</b> SDOM.hpp:227</div></div>
 </div><!-- fragment -->
 <p>Throws an <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> exception with file and line info. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -320,7 +308,7 @@ Variables</h2></td></tr>
 <div class="line">    _sdom_dbg_oss &lt;&lt; __VA_ARGS__; \</div>
 <div class="line">    std::cout &lt;&lt; <a class="code hl_variable" href="classCLR.html#a2ade273b4929536356e6a5a68242a596">CLR::RED</a> &lt;&lt; <span class="stringliteral">&quot;[FAILED] &quot;</span> &lt;&lt; _sdom_dbg_oss.str() &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl; \</div>
 <div class="line">} <span class="keywordflow">while</span>(0)</div>
-<div class="ttc" id="aclassCLR_html_a2ade273b4929536356e6a5a68242a596"><div class="ttname"><a href="classCLR.html#a2ade273b4929536356e6a5a68242a596">CLR::RED</a></div><div class="ttdeci">static const std::string RED</div><div class="ttdoc">ANSI escape sequence for red foreground.</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:267</div></div>
+<div class="ttc" id="aclassCLR_html_a2ade273b4929536356e6a5a68242a596"><div class="ttname"><a href="classCLR.html#a2ade273b4929536356e6a5a68242a596">CLR::RED</a></div><div class="ttdeci">static const std::string RED</div><div class="ttdef"><b>Definition</b> SDOM_CLR.hpp:175</div></div>
 </div><!-- fragment -->
 <p>Logs a failure message in red text. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -375,9 +363,22 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { <span class="keywordflow">if</span> (<a class="code hl_define" href="#ab7cd931b0d8c1fe11b846eb779bfafba">DEBUG_LUA_TESTS</a>) { std::ostringstream _sdom_lua_dbg_oss; _sdom_lua_dbg_oss &lt;&lt; __VA_ARGS__; std::cout &lt;&lt; <a class="code hl_variable" href="classCLR.html#a9c70a18a33cde4874888b21b178000bf">CLR::YELLOW</a> &lt;&lt; <span class="stringliteral">&quot;[LUA-INFO] &quot;</span> &lt;&lt; (_sdom_lua_dbg_oss.str()) &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl; } } <span class="keywordflow">while</span>(0)</div>
-<div class="ttc" id="aSDOM_8hpp_html_ab7cd931b0d8c1fe11b846eb779bfafba"><div class="ttname"><a href="#ab7cd931b0d8c1fe11b846eb779bfafba">DEBUG_LUA_TESTS</a></div><div class="ttdeci">#define DEBUG_LUA_TESTS</div><div class="ttdef"><b>Definition</b> SDOM.hpp:78</div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { <span class="keywordflow">if</span> (DEBUG_LUA_TESTS) { std::ostringstream _sdom_lua_dbg_oss; _sdom_lua_dbg_oss &lt;&lt; __VA_ARGS__; std::cout &lt;&lt; <a class="code hl_variable" href="classCLR.html#a9c70a18a33cde4874888b21b178000bf">CLR::YELLOW</a> &lt;&lt; <span class="stringliteral">&quot;[LUA-INFO] &quot;</span> &lt;&lt; (_sdom_lua_dbg_oss.str()) &lt;&lt; <a class="code hl_variable" href="classCLR.html#a3870d8fb9704714a9b5d35631a67be74">CLR::RESET</a> &lt;&lt; std::endl; } } <span class="keywordflow">while</span>(0)</div>
 </div><!-- fragment -->
+</div>
+</div>
+<a id="ad17ba5add84d725eb025b97aa9d5d453" name="ad17ba5add84d725eb025b97aa9d5d453"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad17ba5add84d725eb025b97aa9d5d453">&#9670;&#160;</a></span>SDOM_HAS_SDL_MIXER</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SDOM_HAS_SDL_MIXER&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
 </div>
 </div>
 <a id="aaf99b8fcaa4b837f684ea0505ed34487" name="aaf99b8fcaa4b837f684ea0505ed34487"></a>
@@ -395,7 +396,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_function" href="namespaceSDOM.html#a956cdc7beea133fe25cae6ef48587da6">SDOM::showWarning</a>(message, __FILE__, __LINE__)</div>
-<div class="ttc" id="anamespaceSDOM_html_a956cdc7beea133fe25cae6ef48587da6"><div class="ttname"><a href="namespaceSDOM.html#a956cdc7beea133fe25cae6ef48587da6">SDOM::showWarning</a></div><div class="ttdeci">void showWarning(const std::string &amp;message, const std::string &amp;file, int line)</div><div class="ttdef"><b>Definition</b> SDOM_Utils.cpp:215</div></div>
+<div class="ttc" id="anamespaceSDOM_html_a956cdc7beea133fe25cae6ef48587da6"><div class="ttname"><a href="namespaceSDOM.html#a956cdc7beea133fe25cae6ef48587da6">SDOM::showWarning</a></div><div class="ttdeci">void showWarning(const std::string &amp;message, const std::string &amp;file, int line)</div><div class="ttdef"><b>Definition</b> SDOM_Utils.cpp:205</div></div>
 </div><!-- fragment -->
 <p>Shows a warning message with file and line info. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -408,28 +409,6 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
-<a id="a7860bad07e6389722d5d09638b46d2f8" name="a7860bad07e6389722d5d09638b46d2f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7860bad07e6389722d5d09638b46d2f8">&#9670;&#160;</a></span>DEBUG_REGISTER_LUA</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool DEBUG_REGISTER_LUA = false</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a05b38e54d53b804b5d6da620ec5fc2cc" name="a05b38e54d53b804b5d6da620ec5fc2cc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a05b38e54d53b804b5d6da620ec5fc2cc">&#9670;&#160;</a></span>ORPHAN_GRACE_PERIOD</h2>
 

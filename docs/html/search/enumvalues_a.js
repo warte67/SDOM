@@ -7,5 +7,5 @@ var searchData=
   ['left_5fmiddle_4',['LEFT_MIDDLE',['../classSDOM.html#adca0aa068ac9fc59e78b78c430a92980ae68c8b7b353db96c91dfc435970b548b',1,'SDOM']]],
   ['left_5ftop_5',['LEFT_TOP',['../classSDOM.html#adca0aa068ac9fc59e78b78c430a92980a5eeb74f28a17e0cdf4b1661c80490df9',1,'SDOM']]],
   ['leftcenter_6',['LeftCenter',['../classSDOM.html#a176e331c0f2e44c038e10b25684370b5ac7304bf037c39d7f1dcc0f8b81398247',1,'SDOM']]],
-  ['luaref_7',['LuaRef',['../classSDOM.html#adb3cee76d315de64056545773bf0d30ca536b11af87c649dc45cd120041d3d958',1,'SDOM']]]
+  ['luaref_7',['LuaRef',['../structSDOM_1_1FunctionInfo.html#a1837c7443e3de62d1abe1ac7581a2425a536b11af87c649dc45cd120041d3d958',1,'SDOM::FunctionInfo::LuaRef'],['../classSDOM.html#adb3cee76d315de64056545773bf0d30ca536b11af87c649dc45cd120041d3d958',1,'SDOM::LuaRef']]]
 ];

@@ -338,6 +338,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a28078404c75bbfb0b0dc92b2b98a4b60" id="r_a28078404c75bbfb0b0dc92b2b98a4b60"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28078404c75bbfb0b0dc92b2b98a4b60">internal_icon_16x16_len</a></td></tr>
 <tr class="memitem:a16d68a857dac2a879169ded0ce2d3c7c" id="r_a16d68a857dac2a879169ded0ce2d3c7c"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16d68a857dac2a879169ded0ce2d3c7c">internal_ttf</a> []</td></tr>
 <tr class="memitem:a7e5b2bb6de31dba821f656a80404ea6a" id="r_a7e5b2bb6de31dba821f656a80404ea6a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e5b2bb6de31dba821f656a80404ea6a">internal_ttf_len</a></td></tr>
+<tr class="memitem:a358e4470a668bb114bd45f53472bb665" id="r_a358e4470a668bb114bd45f53472bb665"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1Core.html">Core</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a358e4470a668bb114bd45f53472bb665">g_core</a></td></tr>
 <tr class="memitem:a5b1c10f9617784e892e61fa68e408794" id="r_a5b1c10f9617784e892e61fa68e408794"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b1c10f9617784e892e61fa68e408794">internal_font_8x12_len</a> = 3340</td></tr>
 <tr class="memitem:ad5424f2748addb58e9280275f4017d46" id="r_ad5424f2748addb58e9280275f4017d46"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5424f2748addb58e9280275f4017d46">internal_font_8x8_len</a> = 2885</td></tr>
 <tr class="memitem:a4cd347d96b005542f3709c6ab6d55beb" id="r_a4cd347d96b005542f3709c6ab6d55beb"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cd347d96b005542f3709c6ab6d55beb">internal_icon_12x12_len</a> = 2246</td></tr>
@@ -366,6 +367,8 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a1ba3fe71c30a46b568259105d73972be" id="r_a1ba3fe71c30a46b568259105d73972be"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; <a class="el" href="#a176e331c0f2e44c038e10b25684370b5">PanelTileOffset</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ba3fe71c30a46b568259105d73972be">panelTileOffsetToString_</a></td></tr>
 <tr class="memitem:a5121ece23da73f686e3ab61c3fc63339" id="r_a5121ece23da73f686e3ab61c3fc63339"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933">Orientation</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5121ece23da73f686e3ab61c3fc63339">orientation_to_string</a></td></tr>
 <tr class="memitem:a7569a3c4255eb2a2cddfdf0cdab60c15" id="r_a7569a3c4255eb2a2cddfdf0cdab60c15"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; std::string, <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933">Orientation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7569a3c4255eb2a2cddfdf0cdab60c15">string_to_orientation</a></td></tr>
+<tr class="memitem:a01cfe5e89347f5cd7216554b454eae65" id="r_a01cfe5e89347f5cd7216554b454eae65"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, <a class="el" href="namespaceSDOM_1_1CAPI.html#af3ee6a7790c29c5330598dd148c4e232">SDOM::CAPI::GenericCallable</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a01cfe5e89347f5cd7216554b454eae65">g_callable_map</a></td></tr>
+<tr class="memitem:ae46716553a1dba1a72be2f9e5a7dbb89" id="r_ae46716553a1dba1a72be2f9e5a7dbb89"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae46716553a1dba1a72be2f9e5a7dbb89">g_callable_mutex</a></td></tr>
 <tr class="memitem:af584a39d2e3cf67afac515bca37e91ba" id="r_af584a39d2e3cf67afac515bca37e91ba"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af584a39d2e3cf67afac515bca37e91ba">s_eventtype_id_mutex</a></td></tr>
 <tr class="memitem:aa8b138842446cb2d2cf817552647fe50" id="r_aa8b138842446cb2d2cf817552647fe50"><td class="memItemLeft" align="right" valign="top">static constexpr unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8b138842446cb2d2cf817552647fe50">SDOM_EVENT_ID_SHIFT</a> = 8</td></tr>
 <tr class="memitem:a46aa961c7fe1079dba58a18e485073df" id="r_a46aa961c7fe1079dba58a18e485073df"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46aa961c7fe1079dba58a18e485073df">SDOM_EVENT_BLOCK_SIZE</a> = (1u &lt;&lt; <a class="el" href="#aa8b138842446cb2d2cf817552647fe50">SDOM_EVENT_ID_SHIFT</a>)</td></tr>
@@ -859,8 +862,8 @@ Static Public Attributes</h2></td></tr>
 <div class="line">        { AnchorPoint::BOTTOM_CENTER,<span class="stringliteral">&quot;bottom_center&quot;</span> },</div>
 <div class="line">        { AnchorPoint::BOTTOM_RIGHT, <span class="stringliteral">&quot;bottom_right&quot;</span> }</div>
 <div class="line">    }</div>
-<div class="ttc" id="aclassSDOM_html_adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1"><div class="ttname"><a href="#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">SDOM::AnchorPoint::TOP_LEFT</a></div><div class="ttdeci">@ TOP_LEFT</div><div class="ttdoc">Top-left corner of the parent.</div><div class="ttdef"><b>Definition</b> SDOM.hpp:271</div></div>
-<div class="ttc" id="aclassSDOM_html_adca0aa068ac9fc59e78b78c430a92980ae4e8367937db13de78dd9a710df92164"><div class="ttname"><a href="#adca0aa068ac9fc59e78b78c430a92980ae4e8367937db13de78dd9a710df92164">SDOM::AnchorPoint::TOP_CENTER</a></div><div class="ttdeci">@ TOP_CENTER</div><div class="ttdoc">Top-center edge of the parent.</div><div class="ttdef"><b>Definition</b> SDOM.hpp:272</div></div>
+<div class="ttc" id="aclassSDOM_html_adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1"><div class="ttname"><a href="#adca0aa068ac9fc59e78b78c430a92980a747385047b85ae751f83adb36435a3c1">SDOM::AnchorPoint::TOP_LEFT</a></div><div class="ttdeci">@ TOP_LEFT</div><div class="ttdoc">Top-left corner of the parent.</div><div class="ttdef"><b>Definition</b> SDOM.hpp:273</div></div>
+<div class="ttc" id="aclassSDOM_html_adca0aa068ac9fc59e78b78c430a92980ae4e8367937db13de78dd9a710df92164"><div class="ttname"><a href="#adca0aa068ac9fc59e78b78c430a92980ae4e8367937db13de78dd9a710df92164">SDOM::AnchorPoint::TOP_CENTER</a></div><div class="ttdeci">@ TOP_CENTER</div><div class="ttdoc">Top-center edge of the parent.</div><div class="ttdef"><b>Definition</b> SDOM.hpp:274</div></div>
 </div><!-- fragment -->
 <p>Maps <a class="el" href="#adca0aa068ac9fc59e78b78c430a92980" title="Reference points for anchoring child edges to a parent.">AnchorPoint</a> enum values to their corresponding string names. </p>
 <p>Used for serialization, debugging, and user interface display. Only the main anchor points are included; aliases are omitted for clarity.</p>
@@ -956,6 +959,64 @@ Static Public Attributes</h2></td></tr>
 <li>Disabling tests does <em>not</em> remove them from compilation; it only prevents automatic execution.</li>
 <li>Useful for CI pipelines or embedded environments where runtime test harnesses are not needed. </li>
 </ul>
+
+</div>
+</div>
+<a id="a01cfe5e89347f5cd7216554b454eae65" name="a01cfe5e89347f5cd7216554b454eae65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01cfe5e89347f5cd7216554b454eae65">&#9670;&#160;</a></span>g_callable_map</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unordered_map&lt;std::string, <a class="el" href="namespaceSDOM_1_1CAPI.html#af3ee6a7790c29c5330598dd148c4e232">SDOM::CAPI::GenericCallable</a>&gt; SDOM::g_callable_map</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae46716553a1dba1a72be2f9e5a7dbb89" name="ae46716553a1dba1a72be2f9e5a7dbb89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae46716553a1dba1a72be2f9e5a7dbb89">&#9670;&#160;</a></span>g_callable_mutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex SDOM::g_callable_mutex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a358e4470a668bb114bd45f53472bb665" name="a358e4470a668bb114bd45f53472bb665"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a358e4470a668bb114bd45f53472bb665">&#9670;&#160;</a></span>g_core</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1Core.html">Core</a>* SDOM::g_core</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1925,6 +1986,7 @@ SDOM_TestOutputConfig</h1>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/SDOM/<a class="el" href="SDOM__BitmapFont_8hpp_source.html">SDOM_BitmapFont.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__CheckButton_8hpp_source.html">SDOM_CheckButton.hpp</a></li>
+<li>include/SDOM/<a class="el" href="SDOM__Label_8hpp_source.html">SDOM_Label.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__RadioButton_8hpp_source.html">SDOM_RadioButton.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM_8hpp_source.html">SDOM.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__IButtonObject_8hpp_source.html">SDOM_IButtonObject.hpp</a></li>
@@ -1934,6 +1996,7 @@ SDOM_TestOutputConfig</h1>
 <li>include/SDOM/<a class="el" href="SDOM__IRangeControl_8hpp_source.html">SDOM_IRangeControl.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__Texture_8hpp_source.html">SDOM_Texture.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__TTFAsset_8hpp_source.html">SDOM_TTFAsset.hpp</a></li>
+<li>src/<a class="el" href="SDOM__DataRegistry_8cpp.html">SDOM_DataRegistry.cpp</a></li>
 <li>src/<a class="el" href="SDOM__EventType_8cpp.html">SDOM_EventType.cpp</a></li>
 <li>src/<a class="el" href="SDOM__internal__font__8x12_8cpp.html">SDOM_internal_font_8x12.cpp</a></li>
 <li>src/<a class="el" href="SDOM__internal__font__8x8_8cpp.html">SDOM_internal_font_8x8.cpp</a></li>

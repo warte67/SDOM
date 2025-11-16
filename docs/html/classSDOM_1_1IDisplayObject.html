@@ -297,19 +297,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a817578463d1fa2c2e9e060c09eaa5a5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Public entrypoint to trigger this object's binding registration.  <br /></td></tr>
 <tr class="memitem:aa08b53a4af124ffa6a4bb547f1f8423d" id="r_aa08b53a4af124ffa6a4bb547f1f8423d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#aa08b53a4af124ffa6a4bb547f1f8423d">registerBindings</a> (const std::string &amp;typeName, <a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> &amp;registry)</td></tr>
 <tr class="memitem:acbee734b61e90b834672ce530f1415aa" id="r_acbee734b61e90b834672ce530f1415aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#acbee734b61e90b834672ce530f1415aa">BIND_INFO</a> (const std::string &amp;typeName, const std::string &amp;typeNameLocal)</td></tr>
-<tr class="memitem:a1947ff718446a6a81cd108b87a475d9f" id="r_a1947ff718446a6a81cd108b87a475d9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a1947ff718446a6a81cd108b87a475d9f">registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua)</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac79673e571c58f21de1541a81548a959" id="r_ac79673e571c58f21de1541a81548a959"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:ac79673e571c58f21de1541a81548a959 template"><td class="memItemLeft" align="right" valign="top">static T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#ac79673e571c58f21de1541a81548a959">lua_value_case_insensitive</a> (const sol::table &amp;tbl, const std::string &amp;key, const T &amp;default_value)</td></tr>
-<tr class="memitem:a7d4f3c380cd2644e37c493ed963035b8" id="r_a7d4f3c380cd2644e37c493ed963035b8"><td class="memItemLeft" align="right" valign="top">static sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a7d4f3c380cd2644e37c493ed963035b8">ensure_sol_table</a> (sol::state_view lua, const std::string &amp;typeName)</td></tr>
-<tr class="memitem:a90dd1b86ac56a3fb85044e6f0fd5528e" id="r_a90dd1b86ac56a3fb85044e6f0fd5528e"><td class="memTemplParams" colspan="2">template&lt;typename T, typename BaseT&gt; </td></tr>
-<tr class="memitem:a90dd1b86ac56a3fb85044e6f0fd5528e template"><td class="memItemLeft" align="right" valign="top">static sol::usertype&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a90dd1b86ac56a3fb85044e6f0fd5528e">register_usertype_with_table</a> (sol::state_view lua, const std::string &amp;typeName)</td></tr>
-<tr class="memitem:a7cf717a8d6314660846762fa5200012d" id="r_a7cf717a8d6314660846762fa5200012d"><td class="memTemplParams" colspan="2">template&lt;typename T, typename BaseT&gt; </td></tr>
-<tr class="memitem:a7cf717a8d6314660846762fa5200012d template"><td class="memItemLeft" align="right" valign="top">static std::pair&lt; sol::table, sol::table &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a7cf717a8d6314660846762fa5200012d">ensure_type_tables</a> (sol::state_view lua, const std::string &amp;typeName)</td></tr>
-<tr class="memitem:a886b4c40c6f1dbb2dea2837e2d0e32ec" id="r_a886b4c40c6f1dbb2dea2837e2d0e32ec"><td class="memTemplParams" colspan="2">template&lt;typename T, typename BaseT&gt; </td></tr>
-<tr class="memitem:a886b4c40c6f1dbb2dea2837e2d0e32ec template"><td class="memItemLeft" align="right" valign="top">static sol::table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a886b4c40c6f1dbb2dea2837e2d0e32ec">getTypeTable</a> (sol::state_view lua, const std::string &amp;typeName)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -324,7 +311,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ab078f5acfa6a288796860a50bcc06526" id="r_ab078f5acfa6a288796860a50bcc06526"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab078f5acfa6a288796860a50bcc06526">IDisplayObject</a> (const IDisplayObject &amp;other)=delete</td></tr>
 <tr class="memitem:af8c4663c22d0b3d8a8c2a1e5983295b5" id="r_af8c4663c22d0b3d8a8c2a1e5983295b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8c4663c22d0b3d8a8c2a1e5983295b5">attachChild_</a> (<a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> child, <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> parent, bool useWorld=false, int worldX=0, int worldY=0)</td></tr>
 <tr class="memitem:a9d22b5fd9345bc320ad573f7841517a3" id="r_a9d22b5fd9345bc320ad573f7841517a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d22b5fd9345bc320ad573f7841517a3">removeOrphan_</a> (const <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &amp;orphan)</td></tr>
-<tr class="memitem:a4552420f853d3aa1a52a839717748019" id="r_a4552420f853d3aa1a52a839717748019"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4552420f853d3aa1a52a839717748019">_registerLuaBindings</a> (const std::string &amp;typeName, sol::state_view lua) override</td></tr>
 <tr class="memitem:a2c90e8b30042962c89fd543fe32e765c" id="r_a2c90e8b30042962c89fd543fe32e765c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c90e8b30042962c89fd543fe32e765c">registerBindingsImpl</a> (const std::string &amp;typeName) override</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-static-methods" class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
@@ -560,39 +546,6 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a4552420f853d3aa1a52a839717748019" name="a4552420f853d3aa1a52a839717748019"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4552420f853d3aa1a52a839717748019">&#9670;&#160;</a></span>_registerLuaBindings()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SDOM::IDisplayObject::_registerLuaBindings </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>lua</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reimplemented from <a class="el" href="classSDOM_1_1IDataObject.html#a23bc81cd1e5150f3d0d28be46dc63a58">SDOM::IDataObject</a>.</p>
-
-<p>Reimplemented in <a class="el" href="classSDOM_1_1IPanelObject.html#a8f53648b12ed00fd11caaa71c50012f1">SDOM::IPanelObject</a>, <a class="el" href="classSDOM_1_1IRangeControl.html#ab58b8654759c03e413c0c56db120b425">SDOM::IRangeControl</a>, <a class="el" href="classSDOM_1_1IRangeControl__scaffold.html#a6fe6f49af16b86776b6071295144c411">SDOM::IRangeControl_scaffold</a>, <a class="el" href="classSDOM_1_1Label.html#a2514e169915eaf59ca8379c21fbdd6cb">SDOM::Label</a>, <a class="el" href="classSDOM_1_1ProgressBar.html#ae17cb128b6035310a33f1932188bd8d7">SDOM::ProgressBar</a>, <a class="el" href="classSDOM_1_1RadioButton.html#a22a705000ab89a7a99d778d83c0b587a">SDOM::RadioButton</a>, <a class="el" href="classSDOM_1_1ScrollBar.html#a0da77780cade8b8eaf82bbf44dd3efc7">SDOM::ScrollBar</a>, <a class="el" href="classSDOM_1_1Slider.html#af8d5e026ec0cdcf191636fc05c142498">SDOM::Slider</a>, <a class="el" href="classSDOM_1_1Stage.html#a4474bda110a05895aff6e228e47ec147">SDOM::Stage</a>, and <a class="el" href="classSDOM_1_1TristateButton.html#ac37cbbb05d48db73bdd8f5dabe46b2ad">SDOM::TristateButton</a>.</p>
-
-</div>
-</div>
 <a id="a290db93bef651c53f48ec32156a8753c" name="a290db93bef651c53f48ec32156a8753c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a290db93bef651c53f48ec32156a8753c">&#9670;&#160;</a></span>activeRegistry()</h2>
 
@@ -999,66 +952,6 @@ template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7d4f3c380cd2644e37c493ed963035b8" name="a7d4f3c380cd2644e37c493ed963035b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d4f3c380cd2644e37c493ed963035b8">&#9670;&#160;</a></span>ensure_sol_table()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">sol::table SDOM::IDataObject::ensure_sol_table </td>
-          <td>(</td>
-          <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>lua</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel inherited">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7cf717a8d6314660846762fa5200012d" name="a7cf717a8d6314660846762fa5200012d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7cf717a8d6314660846762fa5200012d">&#9670;&#160;</a></span>ensure_type_tables()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T, typename BaseT&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::pair&lt; sol::table, sol::table &gt; SDOM::IDataObject::ensure_type_tables </td>
-          <td>(</td>
-          <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>lua</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel inherited">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1953,37 +1846,6 @@ template&lt;typename T, typename BaseT&gt; </div>
 
 </div>
 </div>
-<a id="a886b4c40c6f1dbb2dea2837e2d0e32ec" name="a886b4c40c6f1dbb2dea2837e2d0e32ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a886b4c40c6f1dbb2dea2837e2d0e32ec">&#9670;&#160;</a></span>getTypeTable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T, typename BaseT&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">sol::table SDOM::IDataObject::getTypeTable </td>
-          <td>(</td>
-          <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>lua</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel inherited">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="acd625b31a2f66caeabb6848bb26065e1" name="acd625b31a2f66caeabb6848bb26065e1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acd625b31a2f66caeabb6848bb26065e1">&#9670;&#160;</a></span>getWidth()</h2>
 
@@ -2428,42 +2290,6 @@ template&lt;typename T, typename BaseT&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac79673e571c58f21de1541a81548a959" name="ac79673e571c58f21de1541a81548a959"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac79673e571c58f21de1541a81548a959">&#9670;&#160;</a></span>lua_value_case_insensitive()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">T SDOM::IDataObject::lua_value_case_insensitive </td>
-          <td>(</td>
-          <td class="paramtype">const sol::table &amp;</td>          <td class="paramname"><span class="paramname"><em>tbl</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>key</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const T &amp;</td>          <td class="paramname"><span class="paramname"><em>default_value</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel inherited">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2991,37 +2817,6 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a90dd1b86ac56a3fb85044e6f0fd5528e" name="a90dd1b86ac56a3fb85044e6f0fd5528e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a90dd1b86ac56a3fb85044e6f0fd5528e">&#9670;&#160;</a></span>register_usertype_with_table()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T, typename BaseT&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">sol::usertype&lt; T &gt; SDOM::IDataObject::register_usertype_with_table </td>
-          <td>(</td>
-          <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>lua</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel inherited">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a817578463d1fa2c2e9e060c09eaa5a5a" name="a817578463d1fa2c2e9e060c09eaa5a5a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a817578463d1fa2c2e9e060c09eaa5a5a">&#9670;&#160;</a></span>registerBindings() <span class="overload">[1/2]</span></h2>
 
@@ -3105,35 +2900,6 @@ template&lt;typename T, typename BaseT&gt; </div>
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IDataObject.html#a632d022eb069131af033086f2126f22a">SDOM::IDataObject</a>.</p>
 
 <p>Reimplemented in <a class="el" href="classSDOM_1_1IPanelObject.html#acb9e43602c4927094f333ed411cf198d">SDOM::IPanelObject</a>, <a class="el" href="classSDOM_1_1IRangeControl.html#a2fa3074232b59aa28b720ca30b723f97">SDOM::IRangeControl</a>, <a class="el" href="classSDOM_1_1IRangeControl__scaffold.html#a622caa2d813d4d6cce1a4b8933f54b86">SDOM::IRangeControl_scaffold</a>, <a class="el" href="classSDOM_1_1Label.html#a5efcadd5b147925e0b30da8e51d7e2a8">SDOM::Label</a>, <a class="el" href="classSDOM_1_1ProgressBar.html#a8610db154f8bf96f52d08128bae3462a">SDOM::ProgressBar</a>, <a class="el" href="classSDOM_1_1RadioButton.html#ae9655a7186eace4ea9974964b9ed5abd">SDOM::RadioButton</a>, <a class="el" href="classSDOM_1_1ScrollBar.html#a65da83a47cb9949091fe404c716d5cfc">SDOM::ScrollBar</a>, <a class="el" href="classSDOM_1_1Slider.html#aa477d5c3ae7d4af63e40cd4a83f669c3">SDOM::Slider</a>, <a class="el" href="classSDOM_1_1Stage.html#a75fc510cec5db47f71e516d4cfa90d0d">SDOM::Stage</a>, and <a class="el" href="classSDOM_1_1TristateButton.html#a738e4d0bf30061c20051ae745ad368e2">SDOM::TristateButton</a>.</p>
-
-</div>
-</div>
-<a id="a1947ff718446a6a81cd108b87a475d9f" name="a1947ff718446a6a81cd108b87a475d9f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1947ff718446a6a81cd108b87a475d9f">&#9670;&#160;</a></span>registerLuaBindings()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SDOM::IDataObject::registerLuaBindings </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>lua</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel inherited">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>

@@ -417,48 +417,73 @@ Next up: consistent ordering, documentation quality, full property/function gene
 > 💬 *“When your engine’s first words in the morning are ‘I want a clean ASan report,’ you know it’s growing up.”*
 
 ### 🧩 **Core Engine / Front-End Boundary Rewrite**
-- Began **formal decoupling of Lua/sol2 from the SDOM core**.  
-  All scripting entry points will now route through the **GenericCallable → CAPI → Dispatcher** pipeline.
-- Identified legacy Lua-bound pathways still buried inside event creation, variant conversions, and asset accessors.
-- Decided on a clean front-end boundary:   
+
+- Began the **formal decoupling of Lua/sol2 from the SDOM core**.  
+  All scripting entry points are being rerouted through the new  
+  **GenericCallable → CAPI → Dispatcher** pipeline.
+
+- Identified several legacy Lua-bound pathways still woven into event construction, variant conversions, and asset accessors.
+
+- Set the architectural rule:  
   **Lua becomes a client. SDOM becomes a platform.**
-- Early ASan runs confirm the majority of UB originates in Lua stack misuse, userdata lifetimes, and sol2 auto-bind behaviors.
-  Removing Lua from the core will eliminate these entire error classes.
+
+- Early ASan runs confirm that a *huge percentage* of UB came from:
+  - Lua stack misuse  
+  - sol2 auto-bound temporary objects  
+  - usertype lifecycle mismatches  
+  - destructor order weirdness  
+  Removing Lua from the core eliminates this entire class of issues.
 
 ### 🌟 **Summary**
-Today marks the start of SDOM’s transition from “a C++ engine with Lua inside” → “a language-agnostic engine with a Lua wrapper.”
 
-Unifying metadata and callable paths through the DataRegistry gives us a stable, sanitizer-friendly, scripting-independent core.  Lua becomes optional, swappable, safer — and SDOM gets room to grow cleanly.
+Today marks the beginning of SDOM’s evolution from  
+“a C++ engine *with Lua wired inside*” → **a language-agnostic engine with optional scripting front-ends**.
 
-### 🚧 ToDo Today
-- ✅ Figure out why the application is displaying `SDOM Version: 0.5.218 (early pre-alpha)` instead of `SDOM Version: 0.5.222 (early pre-alpha)`
-- ☐ Fully implement MAIN_VARIANT 2, C++ front end.
-- ☐ Remove All legacy Lua Binders.
-- ☐ Convert all variables to *snake_case*.
-- ☐ Implement a full `Release` build into the `compile` script.
-- ☐ Implement a 100% C++ start up sequence that does not rely on Lua for initialization.
-- ☐ **Refactor `DisplayHandle` to eliminate all embedded Lua-binding state**
-  - ☐ Remove per-instance sol2 usertype tables, closures, and dynamic function binding  
-  - ☐ Convert `DisplayHandle` back into a *pure value type* (`name`, `type`, `formatted_`)  
-  - ☐ Ensure defaulted destructor/copy/move semantics (no heap allocations except `formatted_`)  
-  - ☐ Re-home all Lua binding responsibilities into a **separate static binder layer**  
-  - ☐ Validate under ASan that `DisplayHandle` no longer triggers delayed heap corruption  
-- ☐ Complete the DataRegistry → CAPI Generation Pipeline Audit  
-  - ☐ Verify snapshot → generator → output directory path  
-  - ☐ Ensure generator does not leak C++ types into C  
-  - ☐ Confirm designated initializers produce correct defaults  
-  - ☐ Test generation on multiple types (assets, display objects)  
-  - ☐ Confirm generator handles optional fields correctly  
-  - ☐ Review namespace leakage & symbol export macros  
-- ☐ **JSON Re-Evaluation**  
-  - ☐ Consider re-introducing **JSON serialization** into the DataRegistry  
-  - ☐ Add ability to **initialize the DataRegistry from JSON**  
-  - ☐ Add ability to **serialize/deserialize DOM tree** from JSON  
-    *(As an alternative or complement to Lua-based initialization)*
+By unifying metadata and callable paths through the DataRegistry, SDOM gets:
+- deterministic lifetime behavior  
+- sanitizer compatibility  
+- stable ABI boundaries  
+- no accidental sol2 behavior leaking into the core  
+
+Lua becomes a wrapper — safe, isolated, and completely replaceable.
+
+### 🚧 **ToDo Today**
+
+- ✅ Fix mismatch: app displayed `SDOM Version: 0.5.218 (early pre-alpha)` instead of `0.5.222`
+- ☐ Fully implement **MAIN_VARIANT 2**, pure C++ front-end  
+- ✅ Remove all legacy Lua binders  
+- ☐ Convert all variables to *snake_case*  
+- ✅ Add full `Release` build support to the `compile` script  
+- ☐ Implement a 100% C++ startup sequence (no Lua for initialization)
+
+### 🚧 **DisplayHandle Refactor**
+
+- ✅ Removed all embedded Lua-binding state  
+- ☐ Convert `DisplayHandle` back into a *pure value type* (`name`, `type`, `formatted_`)  
+- ✅ Restore default destructor/copy/move semantics  
+- ✅ Verify under ASan that `DisplayHandle` no longer causes delayed heap corruption  
+
+### 🚧 **DataRegistry → CAPI Generation Pipeline**
+
+- ☐ Audit snapshot → generator → output directory flow  
+- ☐ Ensure generator never leaks C++-only semantics into C  
+- ☐ Validate designated initializers produce correct defaults  
+- ☐ Test generator on assets, display objects, and event types  
+- ☐ Verify optional-field handling  
+- ☐ Review namespace boundaries & symbol-export macros  
 
 
-#### 🤔 *End of Day Reflection*
-> *"_reflechion quote"*
+### 🚧 **JSON Integration**
+
+- ✅ Reintroduce JSON as a supported serialization format  
+- ☐ Initialize DataRegistry from JSON  
+- ☐ Serialize/deserialize the full DOM tree from JSON  
+  *(Eventually replacing — or complementing — Lua initialization)*
+
+
+### 🤔 **End of Day Reflection**
+> *"Clarity isn’t something you find — it’s what remains after everything unnecessary has been removed."_*
+
 
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
@@ -470,6 +495,7 @@ Unifying metadata and callable paths through the DataRegistry gives us a stable,
 ---
 
 ### 🚧 **To-Do (Ongoing)** -- “A ten-day: a period of time scientifically defined as ‘when I get around to it.’
+- ☐ **Core::registerResource()**
 - ☐ Implement C ABI unit-test harness as registry proof-of-concept  
   - ☐ Convert `SDOM_CLR` to a static singleton inheriting from `IDataObject`  
   - ✅ `SDOM_Event` → inherits from `IDataObject`  

@@ -1,6 +1,9 @@
 var structSDOM_1_1CheckButton_1_1InitStruct =
 [
     [ "InitStruct", "structSDOM_1_1CheckButton_1_1InitStruct.html#a5cefc9b7f3f75fbd637a229ca19a5bd2", null ],
+    [ "from_json", "structSDOM_1_1CheckButton_1_1InitStruct.html#a24ea61b660bcc8efda6daa3ab6441f7f", null ],
+    [ "from_json", "structSDOM_1_1CheckButton_1_1InitStruct.html#a92373452be5adab3989429b268481a81", null ],
+    [ "from_json", "structSDOM_1_1CheckButton_1_1InitStruct.html#a97f48eb335002d54a1adbd32158040eb", null ],
     [ "anchorBottom", "structSDOM_1_1CheckButton_1_1InitStruct.html#a32a70e8c0dfd503b306761e3ff59897c", null ],
     [ "anchorLeft", "structSDOM_1_1CheckButton_1_1InitStruct.html#a17adc32c048d68ae0d26a9778f7f4827", null ],
     [ "anchorRight", "structSDOM_1_1CheckButton_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2", null ],

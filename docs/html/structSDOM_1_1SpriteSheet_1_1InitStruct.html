@@ -108,6 +108,11 @@ Inheritance diagram for SDOM::SpriteSheet::InitStruct:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adc102043835faf1d54ede4d60a9b499b" id="r_adc102043835faf1d54ede4d60a9b499b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc102043835faf1d54ede4d60a9b499b">InitStruct</a> ()</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a23c32ffe52dcb34445a9fc9ced243d57" id="r_a23c32ffe52dcb34445a9fc9ced243d57"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#adc102043835faf1d54ede4d60a9b499b">InitStruct</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23c32ffe52dcb34445a9fc9ced243d57">from_json</a> (const nlohmann::json &amp;j)</td></tr>
+<tr class="memitem:aa7c9a208b41704ddfe53995d920c86a1" id="r_aa7c9a208b41704ddfe53995d920c86a1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html#aa7c9a208b41704ddfe53995d920c86a1">from_json</a> (const nlohmann::json &amp;j, <a class="el" href="#adc102043835faf1d54ede4d60a9b499b">InitStruct</a> &amp;out)</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a42419de733957529f6d73206f0d900f6" id="r_a42419de733957529f6d73206f0d900f6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a42419de733957529f6d73206f0d900f6">spriteWidth</a> = 8</td></tr>
@@ -115,7 +120,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a278e34fad435e049527613cacb1cf5c2" id="r_a278e34fad435e049527613cacb1cf5c2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html#a278e34fad435e049527613cacb1cf5c2">name</a> = <a class="el" href="classSDOM_1_1SpriteSheet.html#ab7584b544b2cbe9875685f5475563586">TypeName</a></td></tr>
 <tr class="memitem:a943787c07c8eae0928dcc2cfacbde746" id="r_a943787c07c8eae0928dcc2cfacbde746"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html#a943787c07c8eae0928dcc2cfacbde746">type</a> = <a class="el" href="classSDOM_1_1SpriteSheet.html#ab7584b544b2cbe9875685f5475563586">TypeName</a></td></tr>
 <tr class="memitem:acb48179c035bc7ae27d4e445fd793873" id="r_acb48179c035bc7ae27d4e445fd793873"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html#acb48179c035bc7ae27d4e445fd793873">filename</a> = &quot;&quot;</td></tr>
-<tr class="memitem:a8c427dfbbfee0c61be93bd450bfa089f" id="r_a8c427dfbbfee0c61be93bd450bfa089f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html#a8c427dfbbfee0c61be93bd450bfa089f">isInternal</a> = true</td></tr>
+<tr class="memitem:a0f9fe6a11c456ae5d41203065b41e3ba" id="r_a0f9fe6a11c456ae5d41203065b41e3ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html#a0f9fe6a11c456ae5d41203065b41e3ba">is_internal</a> = true</td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="adc102043835faf1d54ede4d60a9b499b" name="adc102043835faf1d54ede4d60a9b499b"></a>
@@ -137,6 +142,61 @@ Public Attributes</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="aa7c9a208b41704ddfe53995d920c86a1" name="aa7c9a208b41704ddfe53995d920c86a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7c9a208b41704ddfe53995d920c86a1">&#9670;&#160;</a></span>from_json() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::IAssetObject::InitStruct::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const nlohmann::json &amp;</td>          <td class="paramname"><span class="paramname"><em>j</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM_1_1IAssetObject_1_1InitStruct.html">InitStruct</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a23c32ffe52dcb34445a9fc9ced243d57" name="a23c32ffe52dcb34445a9fc9ced243d57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23c32ffe52dcb34445a9fc9ced243d57">&#9670;&#160;</a></span>from_json() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#adc102043835faf1d54ede4d60a9b499b">InitStruct</a> SDOM::SpriteSheet::InitStruct::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const nlohmann::json &amp;</td>          <td class="paramname"><span class="paramname"><em>j</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -166,8 +226,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8c427dfbbfee0c61be93bd450bfa089f" name="a8c427dfbbfee0c61be93bd450bfa089f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c427dfbbfee0c61be93bd450bfa089f">&#9670;&#160;</a></span>isInternal</h2>
+<a id="a0f9fe6a11c456ae5d41203065b41e3ba" name="a0f9fe6a11c456ae5d41203065b41e3ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f9fe6a11c456ae5d41203065b41e3ba">&#9670;&#160;</a></span>is_internal</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -176,7 +236,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool SDOM::IAssetObject::InitStruct::isInternal = true</td>
+          <td class="memname">bool SDOM::IAssetObject::InitStruct::is_internal = true</td>
         </tr>
       </table>
   </td>

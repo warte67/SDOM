@@ -98,6 +98,7 @@ $(function(){initNavTree('SDOM__DataRegistry_8hpp.html','',''); });
 <code>#include &lt;mutex&gt;</code><br />
 <code>#include &lt;any&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
+<code>#include &lt;cstdint&gt;</code><br />
 <code>#include &lt;optional&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
@@ -112,15 +113,28 @@ Classes</h2></td></tr>
 <tr class="memitem:SDOM_3A_3ATypeInfo" id="r_SDOM_3A_3ATypeInfo"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a></td></tr>
 <tr class="memitem:SDOM_3A_3ADataRegistrySnapshot" id="r_SDOM_3A_3ADataRegistrySnapshot"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1DataRegistrySnapshot.html">SDOM::DataRegistrySnapshot</a></td></tr>
 <tr class="memitem:SDOM_3A_3ADataRegistry" id="r_SDOM_3A_3ADataRegistry"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1DataRegistry.html">SDOM::DataRegistry</a></td></tr>
+<tr class="memitem:SDOM_3A_3ACAPI_3A_3ACallArg" id="r_SDOM_3A_3ACAPI_3A_3ACallArg"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1CAPI_1_1CallArg.html">SDOM::CAPI::CallArg</a></td></tr>
+<tr class="memitem:SDOM_3A_3ACAPI_3A_3ACallResult" id="r_SDOM_3A_3ACAPI_3A_3ACallResult"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1CAPI_1_1CallResult.html">SDOM::CAPI::CallResult</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:SDOM" id="r_SDOM"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html">SDOM</a></td></tr>
 <tr class="memdesc:namespaceSDOM"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains all core classes and utilities for the <a class="el" href="namespaceSDOM.html" title="Contains all core classes and utilities for the SDOM library.">SDOM</a> library. <br /></td></tr>
+<tr class="memitem:SDOM_3A_3ACAPI" id="r_SDOM_3A_3ACAPI"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM_1_1CAPI.html">SDOM::CAPI</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a41d75d6f8ee97d32a3980520a0ebbf57" id="r_a41d75d6f8ee97d32a3980520a0ebbf57"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41d75d6f8ee97d32a3980520a0ebbf57">__SDOM_DATAREGISTRY_HPP__</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:af3ee6a7790c29c5330598dd148c4e232" id="r_af3ee6a7790c29c5330598dd148c4e232"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM_1_1CAPI.html#af3ee6a7790c29c5330598dd148c4e232">SDOM::CAPI::GenericCallable</a> = std::function&lt;<a class="el" href="structSDOM_1_1CAPI_1_1CallResult.html">CallResult</a>(const std::vector&lt;<a class="el" href="structSDOM_1_1CAPI_1_1CallArg.html">CallArg</a>&gt;&amp;)&gt;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a25e56504e5fbb435228fe8ce0abe2380" id="r_a25e56504e5fbb435228fe8ce0abe2380"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM_1_1CAPI.html#a25e56504e5fbb435228fe8ce0abe2380">SDOM::CAPI::registerCallable</a> (const std::string &amp;name, <a class="el" href="namespaceSDOM_1_1CAPI.html#af3ee6a7790c29c5330598dd148c4e232">GenericCallable</a> fn)</td></tr>
+<tr class="memitem:a152d46f14569d697221e230a4eff1745" id="r_a152d46f14569d697221e230a4eff1745"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="namespaceSDOM_1_1CAPI.html#af3ee6a7790c29c5330598dd148c4e232">GenericCallable</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM_1_1CAPI.html#a152d46f14569d697221e230a4eff1745">SDOM::CAPI::lookupCallable</a> (const std::string &amp;name)</td></tr>
+<tr class="memitem:a5aa29fc0d97c7115d711b92de32e26da" id="r_a5aa29fc0d97c7115d711b92de32e26da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSDOM_1_1CAPI_1_1CallResult.html">CallResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM_1_1CAPI.html#a5aa29fc0d97c7115d711b92de32e26da">SDOM::CAPI::invokeCallable</a> (const std::string &amp;name, const std::vector&lt; <a class="el" href="structSDOM_1_1CAPI_1_1CallArg.html">CallArg</a> &gt; &amp;args)</td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="a41d75d6f8ee97d32a3980520a0ebbf57" name="a41d75d6f8ee97d32a3980520a0ebbf57"></a>
